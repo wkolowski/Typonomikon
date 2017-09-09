@@ -222,8 +222,8 @@ Definition O (f g : nat -> nat) : Prop :=
     Moglibyśmy, ale nie możemy, gdyż zdania dotyczące złożoności obliczeniowej
     funkcji [head], i ogólnie wszystkich funkcji możliwych do zaimplementowania
     w Coqu, nie są zdaniami Coqa (czyli termami typu [Prop]), lecz zdaniami o
-    Coqu, a więc zdaniami wyrażonymi w metajęzyku (którym jest tutaj mix języka
-    polskiego oraz nieformalnej notacji matematycznej).
+    Coqu, a więc zdaniami wyrażonymi w metajęzyku (którym jest tutaj język
+    polski).
 
     Jest to bardzo istotne spostrzeżenie, więc powtórzmy je, tym razem nieco
     dobitniej: jest niemożliwe, aby w Coqu udowodnić, że jakaś funkcja napisana
@@ -232,7 +232,8 @@ Definition O (f g : nat -> nat) : Prop :=
     Z tego względu nasza definicja [O] oraz ćwiczenia jej dotyczące mają
     jedynie charakter pomocniczy. Ich celem jest pomóc ci zrozumieć, czym
     jest złożoność asymptotyczna. Wszelkie dowodzenie złożoności obliczeniowej
-    będziemy przeprowadzać w sposób tradycyjny, czyli "na kartce". *)
+    będziemy przeprowadzać w sposób tradycyjny, czyli "na kartce" (no, może
+    poza pewną sztuczką, ale o tym później). *)
 
 (** **** Ćwiczenie *)
 
@@ -291,8 +292,6 @@ Qed.
 
 (** * Duże Theta *)
 
-(** ** Definicja i idea *)
-
 Definition Theta (f g : nat -> nat) : Prop := O f g /\ O g f.
 
 (** Definicja [Theta f g] głosi, że [O f g] i [O g f]. Przypomnijmy, że
@@ -310,8 +309,6 @@ Definition Theta (f g : nat -> nat) : Prop := O f g /\ O g f.
       sobie równe". *)
 
 (** **** Ćwiczenie *)
-
-(** Pokaż też, że [Theta] jest relacją równoważności. *)
 
 (* begin hide *)
 Theorem Theta_spec :
@@ -363,3 +360,99 @@ Proof.
   unfold Theta. intros. destruct H. split; assumption.
 Qed.
 (* end hide *)
+
+(** * Złożoność typowych funkcji na listach *)
+
+(** Skoro rozumiesz już, na czym polegają [O] oraz [Theta], przeanalizujemy
+    złożoność typowej funkcji operującej na listach. Zapoznamy się też z
+    dwoma sposobami na sprawdzenie poprawności naszej analizy: mimo, że w
+    Coqu nie można udowodnić, że dana funkcja ma jakąś złożoność obliczeniową,
+    możemy użyć Coqa do upewnienia się, że nie popełniliśmy w naszej analizie
+    nieformalnej pewnych rodzajów błędów.
+
+    Naszą ofiarą będzie funkcja [length]. *)
+
+Print length.
+(* ===> length = 
+        fix length (A : Type) (l : list A) {struct l} : nat :=
+        match l with
+            | [[]] => 0
+            | _ :: t => S (length A t)
+        end
+        : forall A : Type, list A -> nat *)
+
+(** Oznaczmy złożoność tej funkcji w zależności o rozmiaru (długości) listy
+    [l] przez T(n) (pamiętaj, że jest to oznaczenie nieformalne, które nie ma
+    nic wspólnego z Coqiem). Jako, że nasza funkcja wykonuje dopasowanie [l],
+    rozważmy dwa przypadki:
+    - [l] ma postać [[]]. Wtedy rozmiar [l] jest równy 0, a jedyne co robi
+      nasza funkcja, to zwrócenie wyniku, które policzymy jako jedna operacja.
+      Wobec tego T(0) = 1.
+    - [l] ma postać [h :: t]. Wtedy rozmiar [l] jest równy n + 1, gdzie n
+      jest rozmiarem [t]. Nasza funkcja robi dwie rzeczy: rekurencyjnie wywołuje
+      się z argumentem [t], co kosztuje nas T(n) operacji , oraz dostawia do
+      wyniku tego wywołania [S], co kosztuje nas 1 operację. Wobec tego
+      T(n + 1) = T(n) + 1. *)
+
+(** Otrzymaliśmy więc odpowiedź w postaci równania rekurencyjnego T(0) = 1;
+    T(n + 1) = T(n) + 1. Widać na oko, że T(n) = n + 1, a zatem złożoność
+    funkcji [length] to O(n). *)
+
+(** **** Ćwiczenie *)
+
+(** Żeby przekonać się, że powyższy akapit nie kłamie, zaimplementuj [T]
+    w Coqu i udowodnij, że rzeczywiście rośnie ono nie szybciej niż
+    [fun n => n]. *)
+
+(* begin hide *)
+Fixpoint T (n : nat) : nat :=
+match n with
+    | 0 => 1
+    | S n' => S (T n')
+end.
+(* end hide *)
+
+Theorem T_spec_0 : T 0 = 1.
+(* begin hide *)
+Proof. trivial. Qed.
+(* end hide *)
+
+Theorem T_spec_S : forall n : nat, T (S n) = 1 + T n.
+(* begin hide *)
+Proof. trivial. Qed.
+(* end hide *)
+
+Theorem T_sum : forall n : nat, T n = n + 1.
+(* begin hide *)
+Proof.
+  induction n as [| n']; simpl.
+    trivial.
+    rewrite IHn'. trivial.
+Qed.
+(* end hide *)
+
+Theorem O_T_n : O T (fun n => n).
+(* begin hide *)
+Proof.
+  red. exists 2, 1. intros. rewrite T_sum. omega.
+Qed.
+(* end hide *)
+
+(** Prześledźmy jeszcze raz całą analizę, krok po kroku:
+    - oznaczamy złożoność analizowanej funkcji przez T
+    - patrząc na definicję analizowanej funkcji definiujemy T za pomocą równań
+      T(0) = 1 i T(n + 1) = T(n) + 1
+    - rozwiązujemy równanie rekurencyjne i dostajemy T(n) = n + 1
+    - konkludujemy, że złożoność analizowanej funkcji to O(n) *)
+
+(** W celu sprawdzenia analizy robimy następujące rzeczy:
+    - implementujemy T w Coqu
+    - dowodzimy, że rozwiązaliśmy równanie rekurencyjne poprawnie
+    - pokazujemy, że [O T (fun n => n)] zachodzi *)
+
+(** Dzięki powyższej procedurze udało nam się wyeliminować podejrzenie co do
+    tego, że źle rozwiązaliśmy równanie rekurencyjne lub że źle podaliśmy
+    złożoność za pomocą dużego O. Należy jednak po raz kolejny zaznaczyć, że
+    nasza analiza nie jest formalnym dowodem tego, że funkcja [length] ma
+    złożoność O(n). Jest tak dlatego, że pierwsza część naszej analizy jest
+    nieformalna i nie może zostać w Coqu sformalizowana. *)

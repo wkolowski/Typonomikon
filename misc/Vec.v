@@ -41,9 +41,16 @@ Theorem len_vnil :
 Proof. reflexivity. Qed.
 (* end hide *)
 
-Theorem len_vcons :
+Theorem len_vcons' :
   forall (A : Type) (n : nat) (h : A) (t : vec A n),
     len (vcons h t) = S n.
+(* begin hide *)
+Proof. trivial. Qed.
+(* end hide *)
+
+Theorem len_vcons :
+  forall (A : Type) (n : nat) (h : A) (t : vec A n),
+    len (vcons h t) = S (len t).
 (* begin hide *)
 Proof. trivial. Qed.
 (* end hide *)
@@ -888,145 +895,194 @@ Defined.
     odrzucają n pierwszych elementów listy. *)
 
 (* begin hide *)
-Fixpoint take {A : Type} (n : nat) (l : list A) : list A :=
-match n, l with
-    | 0, _ => []
-    | _, [] => []
-    | S n', h :: t => h :: take n' t
-end.
 
-Fixpoint drop {A : Type} (n : nat) (l : list A) : list A :=
-match n, l with
-    | 0, _ => l
-    | _, [] => []
-    | S n', h :: t => drop n' t
-end.
+Fixpoint take {A : Type} {n : nat} (m : nat) (l : vec A n) : vec A (min m n).
+Proof.
+  destruct m as [| m']; simpl.
+    exact vnil.
+    destruct l as [| n h t]; simpl.
+      exact vnil.
+      exact (h :: take _ _ m' t).
+Defined.
+
+Fixpoint drop {A : Type} {n : nat} (m : nat) (l : vec A n) : vec A (n - m).
+Proof.
+  destruct m as [| m']; simpl.
+    rewrite <- minus_n_O. exact l.
+    destruct l as [| n h t]; simpl.
+      exact vnil.
+      apply drop; auto.
+Defined.
+
+Ltac takedrop := intros; repeat
+match goal with
+    | |- context [take _ ?l] => destruct l; compute
+    | |- context [drop _ ?l] => destruct l; compute
+    | |- context [minus_n_O ?n] =>
+        remember (minus_n_O n) as x; dependent destruction x
+    | |- eq_dep ?x ?x => trivial
+end; auto.
+
+Ltac takedrop' := intros; repeat
+match goal with
+    | |- context [take ?n ?l] => induction n; simpl
+    | |- context [drop ?n ?l] => induction n; compute
+    | |- context [minus_n_O ?n] =>
+        remember (minus_n_O n) as x; dependent destruction x
+end; auto.
+
+Ltac td := intros; compute; repeat
+match goal with
+    | |- context [minus_n_O ?n] =>
+        remember (minus_n_O n) as x; dependent destruction x
+end; auto.
 (* end hide *)
 
-Theorem take_nil : forall (A : Type) (n : nat),
-    take n [] = @nil A.
+Theorem take_nil :
+  forall (A : Type) (n : nat),
+    eq_dep (take n []) (@vnil A).
 (* begin hide *)
 Proof.
+  takedrop'.
+Restart. 
   destruct n; simpl; trivial.
 Qed.
 (* end hide *)
 
-Theorem drop_nil : forall (A : Type) (n : nat),
-    drop n [] = @nil A.
+Theorem drop_nil :
+  forall (A : Type) (n : nat),
+    eq_dep (drop n []) (@vnil A).
 (* begin hide *)
 Proof.
-  destruct n; simpl; trivial.
+  destruct n.
+    compute. remember (minus_n_O 0) as x. dependent destruction x.
+      trivial.
+    simpl. trivial.
+Restart.
+  takedrop'.
 Qed.
 (* end hide *)
 
-Theorem take_cons : forall (A : Type) (n : nat) (h : A) (t : list A),
-    take (S n) (h :: t) = h :: take n t.
+Theorem take_cons :
+  forall (A : Type) (n m : nat) (h : A) (t : vec A n),
+    take (S m) (h :: t) = h :: take m t.
 (* begin hide *)
 Proof.
   trivial.
 Qed.
 (* end hide *)
 
-Theorem drop_cons : forall (A : Type) (n : nat) (h : A) (t : list A),
-    drop (S n) (h :: t) = drop n t.
+Theorem drop_cons :
+  forall (A : Type) (n m : nat) (h : A) (t : vec A n),
+    drop (S m) (h :: t) = drop m t.
 (* begin hide *)
 Proof.
   trivial.
 Qed.
 (* end hide *)
 
-Theorem take_0 : forall (A : Type) (l : list A),
+Theorem take_0 :
+  forall (A : Type) (n : nat) (l : vec A n),
     take 0 l = [].
 (* begin hide *)
 Proof.
+  takedrop.
+Restart.
   destruct l; simpl; trivial.
 Qed.
 (* end hide *)
 
-Theorem drop_0 : forall (A : Type) (l : list A),
-    drop 0 l = l.
+Theorem drop_0 :
+  forall (A : Type) (n : nat) (l : vec A n),
+    eq_dep (drop 0 l) l.
 (* begin hide *)
-Proof.
-  destruct l; simpl; trivial.
-Qed.
+Proof. takedrop. Qed.
 (* end hide *)
 
-Theorem take_length : forall (A : Type) (l : list A),
-    take (length l) l = l.
+Theorem take_length :
+  forall (A : Type) (n : nat) (l : vec A n),
+    eq_dep (take n l) l.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl.
+  induction l as [| n h t]; simpl.
     trivial.
     rewrite IHt. trivial.
 Qed.
 (* end hide *)
 
-Theorem drop_length : forall (A : Type) (l : list A),
-    drop (length l) l = [].
+Theorem drop_length :
+  forall (A : Type) (n : nat) (l : vec A n),
+    eq_dep (drop n l) [].
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl.
-    trivial.
-    rewrite IHt. trivial.
+  induction l as [| n h t]; td.
 Qed.
 (* end hide *)
 
-Theorem take_length' : forall (A : Type) (n : nat) (l : list A),
-    length l <= n -> take n l = l.
+Theorem take_length' :
+  forall (A : Type) (n m : nat) (l : vec A n),
+    n <= m -> eq_dep (take m l) l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; intros.
-    simpl. destruct l; inversion H; trivial.
-    destruct l as [| h t]; simpl.
+  intros A n m. generalize dependent n.
+  induction m as [| m']; intros.
+    assert (n = 0) by omega. subst.
+      dependent destruction l. apply take_nil.
+    dependent destruction l.
+      apply take_nil.
+      simpl. rewrite IHm'; auto; omega.
+Qed.
+(* end hide *)
+
+Theorem drop_length' :
+  forall (A : Type) (m n : nat) (l : vec A n),
+    n <= m -> eq_dep (drop m l) [].
+(* begin hide *)
+Proof.
+  induction m as [| m']; intros.
+    rewrite drop_0. dependent destruction l; try omega. trivial.
+    destruct l as [| n h t]; simpl.
       trivial.
-      rewrite IHn'.
-        trivial.
-        simpl in H. apply le_S_n in H. assumption.
+      rewrite IHm'; auto; omega.
 Qed.
 (* end hide *)
 
-Theorem drop_length' : forall (A : Type) (n : nat) (l : list A),
-    length l <= n -> drop n l = [].
+Theorem length_take :
+  forall (A : Type) (m n : nat) (l : vec A n),
+    n <= m -> len (take n l) = n.
 (* begin hide *)
 Proof.
-  induction n as [| n']; intros.
-    simpl. destruct l; inversion H; trivial.
-    destruct l as [| h t]; simpl.
-      trivial.
-      rewrite IHn'.
-        trivial.
-        simpl in H. apply le_S_n in H. assumption.
+  induction m as [| m']; intros.
+    dependent destruction l; try omega. compute. trivial.
+    destruct l as [| n h t].
+      compute. trivial.
+      simpl. rewrite len_vcons, IHm'; auto; omega.
 Qed.
 (* end hide *)
 
-Theorem length_take : forall (A : Type) (n : nat) (l : list A),
-    n <= length l -> length (take n l) = n.
+Theorem drop_take :
+  forall (A : Type) (m n : nat) (l : vec A n),
+    m <= n -> len (drop m l) = n - m.
 (* begin hide *)
 Proof.
-  induction n as [| n']; destruct l as [| h t];
-  simpl; inversion 1; subst; trivial;
-  f_equal; apply IHn'; apply le_S_n in H; assumption.
+  induction m as [| m']; intros.
+    rewrite drop_0. compute. trivial.
+    destruct l as [| n h t]; simpl.
+      compute. trivial.
+      rewrite IHm'; omega.
 Qed.
-
-Theorem drop_take : forall (A : Type) (n : nat) (l : list A),
-    n <= length l -> length (drop n l) = length l - n.
-(* begin hide *)
-Proof.
-  induction n as [| n']; destruct l as [| h t];
-  simpl; inversion 1; subst; trivial;
-  f_equal; apply IHn'; apply le_S_n in H; assumption.
-Qed.
+(* end hide *)
 
 Theorem take_map :
-    forall (A B : Type) (f : A -> B) (n : nat) (l : list A),
-        map f (take n l) = take n (map f l).
+  forall (A B : Type) (f : A -> B) (m n : nat) (l : vec A n),
+    map f (take m l) = take m (map f l).
 (* begin hide *)
 Proof.
-  induction n as [| n'].
+  induction m as [| m']; simpl.
     trivial.
-    destruct l as [| h t]; simpl.
-      trivial.
-      rewrite IHn'. trivial.
+    destruct l as [| n h t]; simpl; try rewrite IHm'; trivial.
+Restart.
+  induction m; destruct l; simpl; intros; rewrite ?IHm; auto.
 Qed.
 (* end hide *)
 
