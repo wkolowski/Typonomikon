@@ -4,6 +4,9 @@ Import ListNotations.
 Definition len {A : Type} (la : list A) : nat :=
     fold_right (fun _ n => S n) 0 la.
 
+Print fold_right.
+Print fold_left.
+
 Eval simpl in len [1; 2; 3].
 
 Goal forall (A : Type) (l1 l2 : list A),
