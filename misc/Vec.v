@@ -257,6 +257,16 @@ match l with
 end.
 (* end hide *)
 
+Notation "[ ]" := vnil.
+Notation "h :: t" := (vcons h t).
+Notation "l1 ++ l2" := (app l1 l2).
+
+Theorem rev_nil :
+  forall (A : Type), rev [] = @vnil A.
+(* begin hide *)
+Proof. trivial. Qed.
+(* end hide *)
+
 Theorem rev_length :
   forall (A : Type) (n : nat) (l : vec A n),
     len (rev l) = len l.
@@ -332,10 +342,6 @@ Proof.
   intros; intro. apply H. subst. constructor.
 Qed.
 (* end hide *)
-
-Notation "[ ]" := vnil.
-Notation "h :: t" := (vcons h t).
-Notation "l1 ++ l2" := (app l1 l2).
 
 Theorem elem_inv_tail :
   forall (A : Type) (n : nat) (x h : A) (t : vec A n),
@@ -935,6 +941,8 @@ Ltac td := intros; compute; repeat
 match goal with
     | |- context [minus_n_O ?n] =>
         remember (minus_n_O n) as x; dependent destruction x
+    | H : context [minus_n_O ?n] |- _ =>
+        remember (minus_n_O n) as x; dependent destruction x
 end; auto.
 (* end hide *)
 
@@ -1010,7 +1018,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_length :
+Theorem drop_all :
   forall (A : Type) (n : nat) (l : vec A n),
     eq_dep (drop n l) [].
 (* begin hide *)
@@ -1087,103 +1095,100 @@ Qed.
 (* end hide *)
 
 Theorem drop_map :
-    forall (A B : Type) (f : A -> B) (n : nat) (l : list A),
-        map f (drop n l) = drop n (map f l).
+  forall (A B : Type) (f : A -> B) (m n : nat) (l : vec A n),
+    eq_dep (map f (drop m l)) (drop m (map f l)).
 (* begin hide *)
 Proof.
-  induction n as [| n'].
-    trivial.
-    destruct l as [| h t]; simpl.
+  induction m as [| m']; intros.
+    rewrite ?drop_0. trivial.
+    destruct l; simpl.
       trivial.
-      rewrite IHn'. trivial.
+      apply IHm'.
 Qed.
 (* end hide *)
 
-Theorem take_elem : forall (A : Type) (n : nat) (l : list A) (x : A),
-    elem x (take n l) -> elem x l.
+Theorem take_elem :
+  forall (A : Type) (m n : nat) (l : vec A n) (x : A),
+    elem x (take m l) -> elem x l.
 (* begin hide *)
 Proof.
-  induction n as [| n'].
+  induction m as [| m'].
     simpl. inversion 1.
-    destruct l as [| h t]; simpl.
+    destruct l as [| n h t]; simpl; inversion 1; subst; constructor.
+      apply IHm'. apply inj_pair2 in H4. subst. assumption.
+Qed.
+(* end hide *)
+
+Print Assumptions take_elem.
+
+Theorem drop_elem :
+  forall (A : Type) (m n : nat) (l : vec A n) (x : A),
+    elem x (drop m l) -> elem x l.
+(* begin hide *)
+Proof.
+  induction m as [| m']. td.
+    rewrite drop_0 in H. assumption.
+    destruct l as [| n h t]; simpl.
       inversion 1.
-      intros. inversion H; subst; constructor. apply IHn'. assumption.
+      intros. constructor. apply IHm'. assumption.
 Qed.
 (* end hide *)
 
-Theorem drop_elem : forall (A : Type) (n : nat) (l : list A) (x : A),
-    elem x (drop n l) -> elem x l.
+Theorem take_take :
+  forall (A : Type) (m m' n : nat) (l : vec A n),
+    eq_dep (take m (take m' l)) (take m' (take m l)).
 (* begin hide *)
 Proof.
-  induction n as [| n'].
-    simpl. trivial.
-    destruct l as [| h t]; simpl.
-      inversion 1.
-      intros. constructor. apply IHn'. assumption.
+  induction m; destruct m'; intros; trivial.
+  destruct l as [| n h t]; simpl; try rewrite IHm; trivial.
 Qed.
 (* end hide *)
 
-Theorem take_take : forall (A : Type) (n m : nat) (l : list A),
-    take m (take n l) = take n (take m l).
+Lemma drop_S :
+  forall (A : Type) (m m' n : nat) (l : vec A n),
+    eq_dep (drop (S m) (drop m' l)) (drop m' (drop (S m) l)).
 (* begin hide *)
 Proof.
-  induction n as [| n']; intros.
-    destruct m; trivial.
-    destruct m as [| m'].
-      simpl. trivial.
-      destruct l as [| h t]; simpl.
-        trivial.
-        rewrite IHn'. trivial.
-Qed.
-(* end hide *)
-
-Lemma drop_S : forall (A : Type) (n m : nat) (l : list A),
-    drop (S m) (drop n l) = drop m (drop (S n) l).
-(* begin hide *)
-Proof.
-  induction n as [| n']; intros.
-    destruct l; simpl; try rewrite drop_nil; trivial.
-    destruct l as [| h t].
-      simpl. rewrite drop_nil. trivial.
-      do 2 rewrite drop_cons. rewrite IHn'. trivial.
-Qed.
+  induction m; destruct l; simpl.
+    Check drop_nil.
+    remember (drop m' (@vnil A)) as x. dependent destruction x. trivial.
+    remember (drop m' (a :: l)) as x. dependent destruction x.
+Admitted.
 (* end hide *) 
 
-Theorem drop_drop : forall (A : Type) (n m : nat) (l : list A),
-    drop m (drop n l) = drop n (drop m l).
+Theorem drop_drop :
+  forall (A : Type) (m m' n : nat) (l : vec A n),
+    eq_dep (drop m (drop m' l)) (drop m' (drop m l)).
 (* begin hide *)
 Proof.
-  induction n as [| n']; intros.
-    destruct m; trivial.
-    induction m as [| m'].
-      simpl. trivial.
-      induction l as [| h t].
-        simpl. trivial.
-        repeat rewrite drop_cons in *. rewrite IHn'. rewrite drop_S. trivial. 
+  induction m; intros.
+    rewrite ?drop_0. trivial.
+    rewrite drop_S. trivial.
 Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem take_drop_rev : forall (A : Type) (n : nat) (l : list A),
-    take n (rev l) = rev (drop (length l - n) l).
+Theorem take_drop_rev :
+  forall (A : Type) (m n : nat) (l : vec A n),
+    eq_dep (take m (rev l)) (rev (drop (n - m) l)).
 Proof.
-  induction n as [| n']; intros.
-    rewrite <- minus_n_O. rewrite drop_length. simpl. trivial.
-    destruct l as [| h t].
-      simpl. trivial.
+  induction m as [| m']; intros.
+    rewrite take_0, <- minus_n_O, drop_all. simpl. trivial.
+    destruct l.
+      rewrite ?rev_nil. rewrite take_nil, drop_nil. simpl. trivial.
+      
+      SearchAbout rev.
 Abort.
 (* end hide *)
 
-Theorem take_drop : forall (A : Type) (n m : nat) (l : list A),
-    take m (drop n l) = drop n (take (n + m) l).
+Theorem take_drop :
+  forall (A : Type) (m m' n : nat) (l : vec A n),
+    eq_dep (take m (drop m' l)) (drop m' (take (m + m') l)).
 (* begin hide *)
 Proof.
-  induction n as [| n']; intros.
-    simpl. trivial.
-    destruct l as [| h t]; simpl.
-      rewrite take_nil. trivial.
-      rewrite IHn'. trivial.
-Qed.
+  induction m; intros.
+    simpl. rewrite take_length'.
+Admitted.
 (* end hide *)
 
 (** *** [filter] *)
@@ -1192,7 +1197,8 @@ Qed.
     funkcja [p] zwraca [true], a usuwa te, dla których zwraca [false]. *)
 
 (* begin hide *)
-Fixpoint filter {A : Type} (f : A -> bool) (l : list A) : list A :=
+Fixpoint filter {A : Type} {n : nat} (f : A -> bool) (l : vec A n)
+  : vec A n :=
 match l with
     | [] => []
     | h :: t => if f h then h :: filter f t else filter f t

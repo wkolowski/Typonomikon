@@ -10,6 +10,8 @@
 Section boolean_functions.
 Variables b b1 b2 b3 : bool.
 
+(** * Definicje *)
+
 (** Zdefiniuj następujące funkcje boolowskie:
     - [negb] (negacja)
     - [andb] (koniunkcja)
@@ -66,18 +68,20 @@ Definition norb (b1 b2 : bool) : bool := negb (orb b1 b2).
 Notation "b1 && b2" := (andb b1 b2).
 Notation "b1 || b2" := (orb b1 b2).
 
-(** Udowodnij następujące twierdzenia. *)
+(** * Twierdzenia *)
+
+(** Udowodnij, że zdefiniowane przez ciebie funkcje mają spodziewane
+    właściwości. *)
 
 (* begin hide *)
 Ltac solve_bool := intros; match goal with
     | b : bool |- _ => destruct b; clear b; solve_bool
-    (*| H : true = false |- _ => inversion H
-    | |- ?x = ?x => idtac x; trivial*)
     | _ => simpl; auto
 end.
 (* end hide *)
 
-(* Właściwości negacji *)
+(** *** Właściwości negacji *)
+
 Theorem negb_inv : negb (negb b) = b.
 (* begin hide *)
 Proof. solve_bool. Qed.
@@ -88,7 +92,8 @@ Theorem negb_ineq : negb b <> b.
 Proof. destruct b; discriminate. Qed.
 (* end hide *)
 
-(* Eliminacja *)
+(** *** Eliminacja *)
+
 Theorem andb_elim_l : b1 && b2 = true -> b1 = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
@@ -109,16 +114,7 @@ Theorem orb_elim : b1 || b2 = true -> b1 = true \/ b2 = true.
 Proof. solve_bool. Qed.
 (* end hide *)
 
-(* Elementy neutralne i anihilujące *)
-Theorem andb_false_annihilation_l : false && b = false.
-(* begin hide *)
-Proof. solve_bool. Qed.
-(* end hide *)
-
-Theorem andb_false_annihilation_r : b && false = false.
-(* begin hide *)
-Proof. solve_bool. Qed.
-(* end hide *)
+(** *** Elementy neutralne *)
 
 Theorem andb_true_neutral_l : true && b = b.
 (* begin hide *)
@@ -126,16 +122,6 @@ Proof. solve_bool. Qed.
 (* end hide *)
 
 Theorem andb_true_neutral_r : b && true = b.
-(* begin hide *)
-Proof. solve_bool. Qed.
-(* end hide *)
-
-Theorem orb_true_annihilation_l :  true || b = true.
-(* begin hide *)
-Proof. solve_bool. Qed.
-(* end hide *)
-
-Theorem orb_true_annihilation_r :  b || true = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
@@ -150,18 +136,30 @@ Theorem orb_false_neutral_r : b || false = b.
 Proof. solve_bool. Qed.
 (* end hide *)
 
-(* Przemienność *)
-Theorem andb_comm : b1 && b2 = b2 && b1.
+(** *** Anihilacja *)
+
+Theorem andb_false_annihilation_l : false && b = false.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem orb_comm : b1 || b2 = b2 || b1.
+Theorem andb_false_annihilation_r : b && false = false.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-(* Łączność *)
+Theorem orb_true_annihilation_l :  true || b = true.
+(* begin hide *)
+Proof. solve_bool. Qed.
+(* end hide *)
+
+Theorem orb_true_annihilation_r :  b || true = true.
+(* begin hide *)
+Proof. solve_bool. Qed.
+(* end hide *)
+
+(** *** Łączność *)
+
 Theorem andb_assoc : b1 && (b2 && b3) = (b1 && b2) && b3.
 (* begin hide *)
 Proof. solve_bool. Qed.
@@ -172,7 +170,20 @@ Theorem orb_assoc : b1 || (b2 || b3) = (b1 || b2) || b3.
 Proof. solve_bool. Qed.
 (* end hide *)
 
-(* Rozdzielność *)
+(** *** Przemienność *)
+
+Theorem andb_comm : b1 && b2 = b2 && b1.
+(* begin hide *)
+Proof. solve_bool. Qed.
+(* end hide *)
+
+Theorem orb_comm : b1 || b2 = b2 || b1.
+(* begin hide *)
+Proof. solve_bool. Qed.
+(* end hide *)
+
+(** *** Rozdzielność *)
+
 Theorem andb_dist_orb : b1 && (b2 || b3) = (b1 && b2) || (b1 && b3).
 (* begin hide *)
 Proof. solve_bool. Qed.
@@ -183,7 +194,8 @@ Theorem orb_dist_andb : b1 || (b2 && b3) = (b1 || b2) && (b1 || b3).
 Proof. solve_bool. Qed.
 (* end hide *)
 
-(* Negacja *)
+(** *** Wyłączony środek i niesprzeczność *)
+
 Theorem andb_negb : b && negb b = false.
 (* begin hide *)
 Proof. solve_bool. Qed.
@@ -194,7 +206,8 @@ Theorem orb_negb : b || negb b = true.
 Proof. solve_bool. Qed.
 (* end hide *)
 
-(* de Morgan *)
+(** *** Prawa de Morgana *)
+
 Theorem negb_andb : negb (b1 && b2) = negb b1 || negb b2.
 (* begin hide *)
 Proof. solve_bool. Qed.
@@ -205,7 +218,8 @@ Theorem negb_orb : negb (b1 || b2) = negb b1 && negb b2.
 Proof. solve_bool. Qed.
 (* end hide *)
 
-(* eqb, xorb, norb, nandb *)
+(** *** [eqb], [xorb], [norb], [nandb] *)
+
 Theorem eqb_spec : eqb b1 b2 = true -> b1 = b2.
 (* begin hide *)
 Proof. solve_bool. Qed.
@@ -236,7 +250,8 @@ Theorem nandb_spec : nandb b1 b2 = negb (b1 && b2).
 Proof. solve_bool. Qed.
 (* end hide *)
 
-(* Różne *)
+(** *** Różne *)
+
 Theorem andb_eq_orb : b1 && b2 = b1 || b2 -> b1 = b2.
 (* begin hide *)
 Proof. solve_bool. Qed.
