@@ -71,37 +71,6 @@ match n with
     | S (S n') => H n' (nat_ind_2 P H0 H1 H n')
 end.
 
-Fixpoint div2 (n : nat) : nat :=
-match n with
-    | 0 => 0
-    | 1 => 0
-    | S (S n') => S (div2 n')
-end.
-
-Fixpoint mod2 (n : nat) : D :=
-match n with
-    | 0 => O
-    | 1 => I
-    | S (S n') => mod2 n'
-end.
-
-Theorem div2_le : forall n : nat,
-    div2 n <= n.
-Proof.
-  induction n as [| | n'] using nat_ind_2; simpl; intros; auto.
-    unfold lt in *. apply Le.le_n_S. apply le_S. assumption.
-Qed.
-
-Theorem div2_lt : forall n : nat,
-    0 <> n -> div2 n < n.
-Proof.
-  destruct n using nat_ind_2; simpl; intros.
-    contradiction H. trivial.
-    simpl. auto.
-    unfold lt. do 2 apply Le.le_n_S. apply div2_le.
-Qed.
-
-
 Program Fixpoint nat_to_bin (n : nat) {measure n} : bin :=
     let (a, b) := (div2 n, mod2 n) in
     match a, b with

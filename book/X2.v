@@ -15,6 +15,8 @@
 
 Module MyNat.
 
+(** *** Definicja i notacje *)
+
 (** Zdefiniuj liczby naturalne. *)
 
 (* begin hide *)
@@ -25,6 +27,8 @@ Inductive nat : Set :=
 
 Notation "0" := O.
 Notation "1" := (S 0).
+
+(** *** [0] i [S] *)
 
 (** Udowodnij właściwości zera i następnika. *)
 
@@ -58,6 +62,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** *** Poprzednik *)
+
 (** Zdefiniuj funkcję zwracającą poprzednik danej liczby naturalnej.
     Poprzednikiem [0] jest [0]. *)
 
@@ -82,6 +88,8 @@ Proof.
   trivial.
 Qed.
 (* end hide *)
+
+(** *** Dodawanie *)
 
 (** Zdefiniuj dodawanie (rekurencyjnie po pierwszym argumencie) i
     udowodnij jego właściwości. *)
@@ -147,7 +155,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem no_annihilation_l :
+Theorem plus_no_annihilation_l :
     ~ exists a : nat, forall n : nat, plus a n = a.
 (* begin hide *)
 Proof.
@@ -158,7 +166,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem no_annihilation_r :
+Theorem plus_no_annihilation_r :
     ~ exists a : nat, forall n : nat, plus n a = a.
 (* begin hide *)
 Proof.
@@ -170,7 +178,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem no_inverse_l :
+Theorem plus_no_inverse_l :
     ~ forall n : nat, exists i : nat, plus i n = 0.
 (* begin hide *)
 Proof.
@@ -179,7 +187,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem no_inverse_r :
+Theorem plus_no_inverse_r :
     ~ forall n : nat, exists i : nat, plus n i = 0.
 (* begin hide *)
 Proof.
@@ -187,106 +195,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Pokaż, że [plus' n m = n + m] *)
-
-Fixpoint plus' (n m : nat) : nat :=
-match m with
-    | 0 => n
-    | S m' => plus' (S n) m'
-end.
-
-Theorem plus'_0_r : forall n : nat, plus' n 0 = n.
-(* begin hide *)
-Proof.
-  simpl. trivial.
-Qed.
-(* end hide *)
-
-Theorem plus'_S : forall n m : nat, plus' (S n) m = S (plus' n m).
-(* begin hide *)
-Proof.
-  intros. generalize dependent n. induction m as [| m']; simpl; intros.
-    trivial.
-    rewrite IHm'. trivial.
-Qed.
-(* end hide *)
-
-Theorem plus'_0_l : forall n : nat, plus' 0 n = n.
-(* begin hide *)
-Proof.
-  induction n as [| n'].
-    trivial.
-    simpl. rewrite plus'_S. rewrite IHn'. trivial.
-Qed.
-(* end hide *)
-
-Theorem plus'_comm : forall n m : nat, plus' n m = plus' m n.
-(* begin hide *)
-Proof.
-  intros. generalize dependent n. induction m as [| m']; simpl; intros.
-    rewrite plus'_0_l. trivial.
-    rewrite IHm'. simpl. trivial.
-Qed.
-(* end hide *)
-
-Theorem plus'_is_plus : forall n m : nat, plus' n m = plus n m.
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl; intro.
-    apply plus'_0_l.
-    rewrite <- IHn'. rewrite plus'_S. trivial.
-Qed.
-(* end hide *)
-
-(** Udowodnij powyższe twierdzenie bez używania lematów pomocniczych. *)
-
-Theorem plus'_is_plus_no_lemmas : forall n m : nat,
-    plus' n m = plus n m.
-(* begin hide *)
-Proof.
-  intros n m. generalize dependent n.
-  induction m as [| m']; simpl; intros.
-    rewrite plus_0_r. trivial.
-    rewrite IHm'. simpl. rewrite (plus_comm n (S _)). simpl.
-      rewrite plus_comm. trivial.
-Qed.
-(* end hide *)
-
-(** Udowodnij analogiczne twierdzenia dla [plus''] i [plus'''] *)
-
-Fixpoint plus'' (n m : nat) : nat :=
-match n with
-    | 0 => m
-    | S n' => plus'' n' (S m)
-end.
-
-Theorem plus''_is_plus : forall n m : nat, plus'' n m = plus n m.
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl.
-    trivial.
-    intro. rewrite IHn'. rewrite plus_comm. simpl.
-      rewrite plus_comm. trivial.
-Qed.
-(* end hide *)
-
-Fixpoint plus''' (n m : nat) : nat :=
-match m with
-    | 0 => n
-    | S m' => S (plus''' n m')
-end.
-
-Theorem plus'''_is_plus : forall n m : nat,
-    plus''' n m = plus n m.
-(* begin hide *)
-Proof.
-  intros n m. generalize dependent n.
-  induction m as [| m']; simpl; intros.
-    rewrite plus_0_r. trivial.
-    rewrite IHm'. rewrite (plus_comm n (S m')). simpl.
-      rewrite plus_comm. trivial.
-Qed.
-(* end hide *)
+(** *** Odejmowanie *)
 
 (** Zdefiniuj odejmowanie i udowodnij jego właściwości. *)
 
@@ -398,6 +307,8 @@ Proof.
   intro. specialize (H 1 0). simpl in H. inversion H.
 Qed.
 (* end hide *)
+
+(** *** Mnożenie *)
 
 (** Zdefiniuj mnożenie i udowodnij jego właściwości. *)
 
@@ -549,6 +460,8 @@ Proof.
   intro. simpl. rewrite plus_0_r. trivial.
 Qed.
 (* end hide *)
+
+(** *** Porządek [<=] *)
 
 (** Zdefiniuj relację "mniejszy lub równy" i udowodnij jej właściwości. *)
 
@@ -791,6 +704,41 @@ Proof.
 Qed.
 (* end hide *)
 
+(** *** Porządek [lt] *)
+
+Definition lt (n m : nat) : Prop := S n <= m.
+
+Notation "n < m" := (lt n m).
+
+Theorem lt_irrefl :
+  forall n : nat, ~ n < n.
+(* begin hide *)
+Proof.
+  unfold lt, not; intros. apply le_Sn_n in H. assumption.
+Qed.
+(* end hide *)
+
+Theorem lt_trans :
+  forall a b c : nat, a < b -> b < c -> a < c.
+(* begin hide *)
+Proof.
+  unfold lt; intros. destruct b.
+    inversion H.
+    destruct c as [| [| c']].
+      inversion H0.
+      inversion H0. inversion H2.
+      apply le_S_n in H0. constructor. eapply le_trans; eauto.
+Qed.
+(* end hide *)
+
+Theorem lt_asym :
+  forall n m : nat, n < m -> ~ m < n.
+Proof.
+  unfold lt, not; intros.
+Abort.
+
+(** *** Minimum i maksimum *)
+
 (** Zdefiniuj minimum i maksimum oraz udowodnij ich właściwości. *)
 
 (* begin hide *)
@@ -954,6 +902,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** *** Potęgowanie *)
+
 (** Zdefiniuj potęgowanie i udowodnij jego właściwości. *)
 
 (* begin hide *)
@@ -962,20 +912,19 @@ match m with
     | 0 => 1
     | S m' => mult n (pow n m')
 end.
-
-Theorem pow_0_l : forall n : nat, n <> 0 -> pow 0 n = 0.
-(* begin hide *)
-Proof.
-  destruct n; simpl.
-    intro. contradiction H. trivial.
-    trivial.
-Qed.
 (* end hide *)
 
 Theorem pow_0_r : forall n : nat, pow n 0 = 1.
 (* begin hide *)
 Proof.
   simpl. trivial.
+Qed.
+(* end hide *)
+
+Theorem pow_0_l : forall n : nat, pow 0 (S n) = 0.
+(* begin hide *)
+Proof.
+  destruct n; simpl; trivial.
 Qed.
 (* end hide *)
 
@@ -1069,6 +1018,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** *** Reflekcja *)
+
 (** Zdefiniuj funkcję [leb], która sprawdza, czy [n <= m]. *)
 
 (* begin hide *)
@@ -1135,6 +1086,66 @@ Proof.
 Qed.
 (* end hide *)
 
+(** *** Alternatywne definicje dodawania *)
+
+(** Udowodnij, że poniższe alternatywne metody zdefiniowania dodawania
+    rzeczywiście definiują dodawanie. *)
+
+Fixpoint plus' (n m : nat) : nat :=
+match m with
+    | 0 => n
+    | S m' => S (plus' n m')
+end.
+
+Theorem plus'_is_plus :
+  forall n m : nat, plus' n m = plus n m.
+(* begin hide *)
+Proof.
+  intros n m. generalize dependent n.
+  induction m as [| m']; simpl; intros.
+    rewrite plus_0_r. trivial.
+    rewrite IHm'. rewrite (plus_comm n (S m')). simpl.
+      rewrite plus_comm. trivial.
+Qed.
+(* end hide *)
+
+Fixpoint plus'' (n m : nat) : nat :=
+match n with
+    | 0 => m
+    | S n' => plus'' n' (S m)
+end.
+
+Theorem plus''_is_plus :
+  forall n m : nat, plus'' n m = plus n m.
+(* begin hide *)
+Proof.
+  induction n as [| n']; simpl.
+    trivial.
+    intro. rewrite IHn'. rewrite plus_comm. simpl.
+      rewrite plus_comm. trivial.
+Qed.
+(* end hide *)
+
+Fixpoint plus''' (n m : nat) : nat :=
+match m with
+    | 0 => n
+    | S m' => plus''' (S n) m'
+end.
+
+Theorem plus'''_is_plus_no_lemmas : forall n m : nat,
+    plus''' n m = plus n m.
+(* begin hide *)
+Proof.
+  intros n m. generalize dependent n.
+  induction m as [| m']; simpl; intros.
+    rewrite plus_0_r. trivial.
+    rewrite IHm'. simpl. rewrite (plus_comm n (S _)). simpl.
+      rewrite plus_comm. trivial.
+Qed.
+(* end hide *)
+
+(** *** Dzielenie przez 2 *)
+
 (** Pokaż, że indukcję na liczbach naturalnych można robić "co 2".
     Wskazówka: taktyk można używać nie tylko do dowodzenia. Przypomnij
     sobie, że taktyki to programy, które generują dowody, zaś dowody
@@ -1144,7 +1155,7 @@ Qed.
     dowolnych termów. W niektórych przypadkach jest to bardzo częsta
     praktyka. *)
 
-Fixpoint ind_by_2 (P : nat -> Prop) (H0 : P 0) (H1 : P 1)
+Fixpoint nat_ind_2 (P : nat -> Prop) (H0 : P 0) (H1 : P 1)
     (HSS : forall n : nat, P n -> P (S (S n))) (n : nat) : P n.
 (* begin hide *)
 Proof.
@@ -1152,265 +1163,124 @@ Proof.
     apply H0.
     destruct n.
       apply H1.
-      apply HSS. apply ind_by_2; auto.
+      apply HSS. apply nat_ind_2; auto.
 Qed.
+(* end hide *)
 
-End MyNat.
+(** Zdefiniuj dzielenie całkowitoliczbowe przez [2] oraz funkcję obliczającą
+    resztę z dzielenia przez [2]. *)
+
+(* begin hide *)
+Fixpoint div2 (n : nat) : nat :=
+match n with
+    | 0 => 0
+    | 1 => 0
+    | S (S n') => S (div2 n')
+end.
+
+Fixpoint mod2 (n : nat) : nat :=
+match n with
+    | 0 => 0
+    | 1 => 1
+    | S (S n') => mod2 n'
+end.
+(* end hide *)
+
+Notation "2" := (S (S 0)).
+
+Theorem div2_even :
+  forall n : nat, div2 (mult 2 n) = n.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; simpl; intros; trivial.
+  rewrite plus_0_r in *. rewrite <- ?plus_n_Sm. simpl. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Theorem div2_odd :
+  forall n : nat, div2 (S (mult 2 n)) = n.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; simpl; intros; trivial.
+  rewrite plus_0_r in *. rewrite <- ?plus_n_Sm. simpl. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Theorem mod2_even : forall n : nat, mod2 (mult 2 n) = 0.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; simpl; intros; trivial.
+  rewrite plus_0_r, <- ?plus_n_Sm in *. simpl. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Theorem mod2_odd :
+  forall n : nat, mod2 (S (mult 2 n)) = 1.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; simpl; intros; trivial.
+  rewrite plus_0_r, <- ?plus_n_Sm in *. simpl. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Theorem div2_mod2_spec :
+  forall n : nat, plus (mult 2 (div2 n)) (mod2 n) = n.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; simpl; intros; trivial.
+  rewrite plus_0_r in *. rewrite <- plus_n_Sm. simpl. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Theorem div2_le :
+  forall n : nat, div2 n <= n.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; simpl; intros; trivial; try (repeat constructor; fail).
+  apply le_n_S. constructor. assumption.
+Qed.
+(* end hide *)
+
+Theorem div2_pres_le :
+  forall n m : nat, n <= m -> div2 n <= div2 m.
+(* begin hide *)
+Proof.
+  induction n using nat_ind_2; simpl; intros; try apply le_0_n.
+  destruct m as [| [| m']]; simpl.
+    inversion H. 
+    inversion H. inversion H1.
+    apply le_n_S, IHn. do 2 apply le_S_n. assumption.
+Qed.  
+(* end hide *)
+
+Theorem mod2_le :
+  forall n : nat, mod2 n <= n.
+(* begin hide *)
+Proof.
+  apply nat_ind_2; simpl; intros; trivial; repeat constructor; assumption.
+Qed.
+(* end hide *)
+
+Theorem mod2_not_pres_e :
+  exists n m : nat, n <= m /\ mod2 m <= mod2 n.
+(* begin hide *)
+Proof.
+  exists (S (S (S 0))), (S (S (S (S 0)))). simpl.
+  split; repeat constructor.
+Qed.
+(* end hide *)
 
 (* begin hide *)
 
-Fixpoint factorial (n : nat) : nat :=
-match n with
-    | 0 => 1
-    | S n' => mult n (factorial n')
-end.
-
-Function binom (n k : nat) : nat :=
-match n, k with
-    | 0, 0 => 1
-    | 0, _ => 0
-    | _, 0 => 1 
-    | S n', S k' => plus (binom n' k') (binom n' k)
-end.
-
-Fixpoint double (n : nat) : nat :=
-match n with
-    | 0 => 0
-    | S n' => S (S (double n'))
-end.
-
-Lemma binom_0_r :
-  forall n : nat, binom n 0 = 1.
+(* Theorem div2_lt : forall n : nat,
+    0 <> n -> div2 n < n.
 Proof.
-  destruct n; simpl; trivial.
-Qed.
-
-Lemma binom_0_l :
-  forall n : nat, binom 0 (S n) = 0.
-Proof.
-  simpl. trivial.
-Qed.
-
-Lemma binom_1_r :
-  forall n : nat, binom n 1 = n.
-Proof.
-  induction n as [| n']; simpl.
-    trivial.
-    rewrite IHn', binom_0_r. simpl. trivial.
-Qed.
-
-Require Import Omega.
-
-Lemma binom_gt :
-  forall n k : nat, n < k -> binom n k = 0.
-Proof.
-  induction n as [| n']; destruct k as [| k']; simpl;
-  try (inversion 1; trivial; fail); intro.
-    rewrite !IHn'; omega.
-Qed.
-
-Lemma binom_n : forall n : nat, binom n n = 1.
-Proof.
-  induction n as [| n']; simpl.
-    trivial.
-    rewrite IHn', binom_gt; omega.
-Qed.
-
-Theorem binom_sym :
-  forall n k : nat, k < n -> binom n k = binom n (minus n k).
-Proof.
-  induction n as [| n']; destruct k as [| k']; simpl; intros.
-    trivial.
-    omega.
-    rewrite binom_n, binom_gt; omega.
-    case_eq (n' - k'); intros; subst.
-      omega.
-      assert (S k' = n' - n). omega. rewrite <- H0, H1, <- !IHn'; omega.
-Qed.
-
-Goal forall n k : nat,
-  k * binom (S n) (S k) = n * binom n k.
-Proof.
-  simpl.
-  induction n as [| n']; destruct k as [| k']; simpl; try omega.
-Abort.
-
-Theorem binom_spec :
-  forall n k : nat,
-    k <= n -> fact k * fact (n - k) * binom n k = fact n.
-Proof.
-  induction n as [| n']; destruct k as [| k'].
-    trivial.
-    inversion 1.
-    intros. simpl. omega.
-    intros. simpl.
-      rewrite !mult_plus_distr_r, !mult_plus_distr_l.
-      rewrite IHn'; try omega.
-      rewrite <- !plus_assoc. f_equal.
-      rewrite <- 2!(mult_assoc k'). rewrite IHn'; try omega.
-Restart.
-  intros n k.
-  functional induction binom n k; intros; simpl; try omega.
-    destruct k. inversion y. omega.
-    destruct n; simpl; omega.
-    destruct n', k'; simpl in *; try omega.
-      rewrite binom_0_r, <- plus_n_O, <- minus_n_O in *.
-        assert (0 <= S n') by omega.
-        specialize (IHn0 H0). rewrite mult_comm. simpl.
-        rewrite binom_1_r. trivial.
-      assert (S k' <= S n') by omega.
-        specialize (IHn0 H0).
-        rewrite <- !IHn0.
-        rewrite !mult_plus_distr_r, !mult_plus_distr_l.
-        repeat (rewrite ?mult_assoc, ?plus_assoc, ?IHn0). f_equal.
-Abort.
-
-
-(*Lemma double_plus : forall n, double n = n + n .
-induction n as [| n'].
-Case "n = 0". reflexivity.
-Case "n = S n'". simpl. rewrite IHn'. rewrite plus_n_Sm. trivial.
-Qed.
-
-Theorem plus_ble_compat_l : forall a b c : nat,
-ble_nat a b = true -> ble_nat (c + a) (c + b) = true.
-induction a as [| a']; intros.
-Case "a = 0". rewrite plus_0_r. induction c as [| c'].
-    SCase "c = 0". apply H.
-    SCase "c = S c'". simpl. apply IHc'.
-Case "a = S a'". induction c as [| c'].
-    SCase "c = 0". simpl plus. apply H.
-    SCase "c = S c'". simpl. apply IHc'.
-Qed.
-*)
-
-(*
-Theorem plus_ble_compat_r : forall a b c : nat,
-ble_nat a b = true -> ble_nat (a + c) (b + c) = true.
-induction a as [| a']; intros.
-Case "a = 0". induction c as [| c'].
-    SCase "c = 0". apply H.
-    SCase "c = S c'". rewrite <- plus_n_Sm, <- plus_n_Sm. apply IHc'.
-Case "a = S a'". induction c as [| c'].
-    SCase "c = 0". rewrite plus_0_r, plus_0_r. apply H.
-    SCase "c = S c'". rewrite <- plus_n_Sm, <- plus_n_Sm. apply IHc'.
-Qed.
-
-
-
-
-Theorem ble_nat_refl : forall n : nat, true = ble_nat n n.
-induction n as [| n'].
-Case "n = 0". reflexivity.
-Case "n = S n'". simpl. rewrite IHn'. reflexivity.
-Qed.
-
-Theorem zero_nbeq_S : forall n : nat, beq_nat 0 (S n) = false.
-intro. reflexivity.
-Qed.
-
-Theorem S_nbeq_0 : forall n : nat, beq_nat (S n) 0 = false.
-intro. reflexivity.
-Qed.
-
-Theorem plus_id_example : forall n m : nat, n = m -> n + n = m + m.
-intros. rewrite H. trivial. Abort.
-
-Theorem plus_id_exercise : forall a b c : nat, a = b -> b = c -> a + b = b + c.
-intros. rewrite H, H0. trivial. Abort.
-
-Theorem mult_0_plus : forall n m : nat, (0 + n) * m = n * m.
-intros. simpl. trivial. Abort.
-
-Theorem mult_S_1 : forall n m : nat,  m = S n ->  m * (1 + n) = m * m.
-intros. simpl. rewrite <- H. trivial. Abort.
-
-Theorem plus_1_neq_0_firsttry : forall n : nat, beq_nat (n + 1) 0 = false.
-intro.
-destruct n as [| n']; reflexivity. Abort.
-
-Theorem zero_nbeq_plus_1 : forall n : nat, beq_nat 0 (n + 1) = false.
-intro.
-destruct n; reflexivity.
-Qed.
-
-Theorem double_induction: forall (P : nat -> nat -> Prop), P 0 0 ->
-(forall m : nat, P m 0 -> P (S m) 0) -> (forall n : nat, P 0 n -> P 0 (S n)) ->
-(forall m n : nat, P m n -> P (S m) (S n)) -> forall m n : nat, P m n.
-intros P P00 Im In IS. induction m as [| m']; intros.
-Case "m = 0". induction n as [| n'].
-    SCase "n = 0". apply P00.
-    SCase "n = S n'". apply In. apply IHn'.
-Case "m = S m'". induction n as [| n'].
-    SCase "n = 0". apply Im. apply IHm'.
-    SCase "n = S n'". apply IS. apply IHm'.
-Qed.
-
-Lemma S_not_eq : forall n m : nat, S n <> S m -> n <> m.
-intros n m. unfold not. intros. apply H. apply f_equal. apply H0.
-Qed.
-
-Theorem beq_nat_0_l : forall n, beq_nat 0 n = true -> n = 0.
-intros. induction n as [| n'].
-Case "n = 0". trivial.
-Case "n = S n'". inversion H.
-Qed.
-
-Theorem beq_nat_0_r : forall n, beq_nat n 0 = true -> n = 0.
-intros. induction n as [| n'].
-Case "n = 0". trivial.
-Case "n = S n'". inversion H.
-Qed.
-
-Theorem beq_nat_refl : forall n : nat, true = beq_nat n n.
-induction n as [| n'].
-Case "n = 0". trivial.
-Case "n = S n'". simpl. apply IHn'.
-Qed.
-
-Theorem beq_nat_true : forall n m : nat, beq_nat n m = true -> n = m.
-induction n as [| n']; intros.
-Case "n = 0". destruct m as [|m'].
-    SCase "m = 0". trivial.
-    SCase "m = S m'". inversion H.
-Case "n = Sn'". destruct m as [| m'].
-    SCase "m = 0". inversion H.
-    SCase "m = S m'". apply f_equal. apply IHn'. simpl in H. apply H.
-Qed.
-
-Lemma beq_nat_false : forall (n m : nat), beq_nat n m = false -> n <> m.
-induction n as [| n']; intros.
-Case "n = 0". destruct m as [| m'].
-    SCase "m = 0". inversion H.
-    SCase "m = S m'". discriminate.
-Case "n = S n'". destruct m as [| m'].
-    SCase "m = 0". discriminate.
-    SCase "m = S m'". simpl in H. apply IHn' in H. apply not_eq_S. apply H.
-Qed.
-
-Lemma beq_nat_false2 : forall (n m : nat), n <> m -> beq_nat n m = false.
-induction n as [| n']; intros.
-Case "n = 0". destruct m as [| m'].
-    SCase "m = 0". contradiction H. trivial.
-    SCase "m = S n'". reflexivity.
-Case "n = S n'". destruct m as [| m'].
-    SCase "m = 0". trivial.
-    SCase "m = S m'". simpl. apply IHn'. apply S_not_eq in H. apply H.
-Qed.
-
-Theorem beq_nat_sym : forall (n m : nat), beq_nat n m = beq_nat m n.
-intros. destruct (beq_nat n m) eqn: eq_n_m.
-Case "n = m". apply beq_nat_true in eq_n_m. rewrite eq_n_m. apply beq_nat_refl.
-Case "n =/= m". apply beq_nat_false in eq_n_m. symmetry. apply beq_nat_false2.
-    unfold not. unfold not in eq_n_m. intro. apply eq_n_m. symmetry. apply H.
-Qed.
-
-Theorem beq_nat_trans : forall n m p : nat,
-beq_nat n m = true -> beq_nat m p = true -> beq_nat n p = true.
-intros. apply beq_nat_true in H. apply beq_nat_true in H0.
-rewrite H, H0. symmetry; apply beq_nat_refl.
-Qed.
-*)
-
+  destruct n using nat_ind_2; simpl; intros.
+    contradiction H. trivial.
+    simpl. auto.
+    unfold lt. do 2 apply Le.le_n_S. apply div2_le.
+Qed. *)
 (* end hide *)
 
+
+End MyNat.

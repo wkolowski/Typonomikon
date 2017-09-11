@@ -32,7 +32,7 @@ Class Enumerable (A : Type) : Type :=
 {
     size : A -> nat;
     enum : nat -> list A;
-    enum_spec : forall (n : nat) (x : A), size x <= n <-> In x (enum n)
+    enum_spec : forall (n : nat) (x : A), size x = n <-> In x (enum n)
 }.
 
 Arguments size [A Enumerable] _.
@@ -44,22 +44,45 @@ Instance Enumerable_bool : Enumerable bool :=
     enum n :=
     match n with
         | 0 => []
-        | _ => [false; true]
+        | 1 => [false; true]
+        | _ => []
     end
 }.
 Proof.
   Require Import Omega.
-  destruct n, x; compute; repeat split; auto; omega.
+  destruct n as [| [| n']], x; compute; repeat split; auto; omega.
 Defined.
 
-Instance all_lists {A : Type} (E: Enumerable A) (n : nat)
+Fixpoint bind {A B : Type} (x : list A) (f : A -> list B) : list B :=
+match x with
+    | [] => []
+    | h :: t => f h ++ bind t f
+end.
+
+Fixpoint all_lists {A : Type} (E : Enumerable A) (n : nat)
   : list (list A) :=
 match n with
-    | 0 => []
-    | S n' => 
+    | 0 => [[]]
+    | 1 => map (fun x => [x]) (enum A 1)
+    | S n' =>
+        bind (enum A 1) (fun h =>
+        bind (all_lists E n') (fun t => [h :: t]))
+end.
+
+Compute all_lists (Enumerable_bool) 3.
 
 
 Instance Enumerable_list {A : Type} (FA : Enumerable A) : Enumerable (list A) :=
 {
-    size := @length A
+    size := @length A;
+    enum := all_lists FA
 }.
+Proof.
+  induction n as [| n']; simpl.
+    destruct x; simpl; split; auto.
+      inversion 1.
+      destruct 1; inversion H.
+    destruct x; simpl; split; auto.
+      inversion 1.
+      destruct n'.
+Abort.
