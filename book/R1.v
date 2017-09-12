@@ -1454,9 +1454,12 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem or_dist_and : P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
 (* begin hide *)
 Ltac leftright t := ((left; t) || (right; t)).
+(* end hide *)
+
+Theorem or_dist_and : P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
+(* begin hide *)
 Proof.
   split; intros.
     destruct H as [p | [q r]].
