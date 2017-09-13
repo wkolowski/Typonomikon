@@ -2,6 +2,7 @@ Require Import List.
 Import ListNotations.
 
 Require Export Coq.Classes.SetoidClass.
+Require Import Coq.Classes.RelationClasses.
 
 Set Implicit Arguments.
 
@@ -32,6 +33,24 @@ Proof.
   intros. apply Permutation_length in H. simpl in H.
   destruct l; inversion H. trivial.
 Qed.
+(* end hide *)
+
+Theorem Permutation_length_1:
+  forall (A : Type) (a b : A), Permutation [a] [b] -> a = b.
+(* begin hide *)
+Proof.
+  intros. remember [a] as la; remember [b] as lb.
+  generalize dependent b; generalize dependent a.
+  induction H; intros; inversion Heqla; inversion Heqlb; subst.
+    trivial.
+    apply IHPermutation1.
+      trivial.
+      remember [b] as lb. induction H0; subst; clear H; auto.
+        inversion Heqlb; subst. apply Permutation_length in H0.
+          destruct l; inversion H0. trivial.
+        inversion Heqlb.
+        rewrite IHPermutation3; auto.
+Admitted.
 (* end hide *)
 
 Theorem Permutation_nil_cons :
@@ -67,7 +86,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Permutation_Equivalence:
+Instance Permutation_Equivalence:
   forall A : Type, RelationClasses.Equivalence (Permutation (A := A)).
 (* begin hide *)
 Proof.
@@ -98,11 +117,16 @@ Proof.
 Qed.
 (* end hide *)
 
-(*Permutation_in':
+Theorem Permutation_in' :
   forall A : Type,
-  Morphisms.Proper
-    (Morphisms.respectful eq (Morphisms.respectful (Permutation (A:=A)) iff))
-    (List.In (A:=A))*)
+    Proper (eq ==> @Permutation A ==> iff) (@In A).
+(* begin hide*)
+Proof.
+  unfold Proper, respectful; intros.
+  subst. split; intro H; eapply Permutation_in; eauto.
+  symmetry. assumption.
+Qed.
+(* end hide *)
 
 Theorem Permutation_app_head :
   forall (A : Type) (l tl tl' : list A),
@@ -134,7 +158,10 @@ Proof.
   induction H; simpl; intros; eauto.
   eapply perm_trans.
     apply perm_swap.
-    do 2 constructor. apply Permutation_app_head. assumption.
+    do 2 constructor. apply Permutation_app_head. trivial.
+    (*induction l as [| h t]; simpl.
+      assumption.
+      rewrite IHt. trivial.*)
 Qed.
 (* end hide *)
 
@@ -154,10 +181,9 @@ Theorem Permutation_add_inside :
     Permutation (l1 ++ x :: l2) (l1' ++ x :: l2').
 (* begin hide *)
 Proof.
-  intros. (* rewrite H. *) apply Permutation_app'; eauto.
+  intros. rewrite H, H0. trivial.
 Qed.
 (* end hide *)
-
 
 Theorem Permutation_cons_append :
   forall (A : Type) (l : list A) (x : A),
@@ -175,73 +201,168 @@ Theorem Permutation_app_comm :
   forall (A : Type) (l l' : list A), Permutation (l ++ l') (l' ++ l).
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl; intros; rewrite ?app_nil_r; auto.
-  induction l' as [| h' t']; simpl; rewrite ?app_nil_r; auto.
-Restart.
   induction l as [| h t]; destruct l' as [| h' t'];
   simpl; rewrite ?app_nil_r; auto.
-  specialize (IHt (h' :: t')). eapply Permutation_trans.
-    apply Permutation_cons_append.
-  rewrite app_comm_cons.
-Permutation_cons_app:
-  forall (A : Type) (l l1 l2 : list A) (a : A),
-  Permutation l (l1 ++ l2) -> Permutation (a :: l) (l1 ++ a :: l2)
-Permutation_Add:
-  forall (A : Type) (a : A) (l l' : list A),
-  List.Add a l l' -> Permutation (a :: l) l'
-Permutation_middle:
-  forall (A : Type) (l1 l2 : list A) (a : A),
-  Permutation (a :: (l1 ++ l2)%list) (l1 ++ a :: l2)
-Permutation_rev: forall (A : Type) (l : list A), Permutation l (List.rev l)
-Permutation_rev':
+  rewrite IHt. simpl. rewrite perm_swap. constructor.
+  rewrite app_comm_cons. replace (t' ++ h :: t) with ((t' ++ [h]) ++ t).
+    apply Permutation_app_tail. apply Permutation_cons_append.
+    rewrite <- app_assoc. simpl. trivial.
+Qed.
+(* end hide *)
+
+Theorem Permutation_cons_app :
+  forall (A : Type) (l l1 l2 : list A) (x : A),
+    Permutation l (l1 ++ l2) -> Permutation (x :: l) (l1 ++ x :: l2).
+(* begin hide *)
+Proof.
+  intros. rewrite H, <- (Permutation_app_comm (x :: l2)). simpl.
+  constructor. apply Permutation_app_comm.
+Qed.
+(* end hide *)
+    Check List.Add.
+
+Compute @List.Add nat 42 [] [1].
+
+Print List.Add.
+
+Theorem Permutation_middle :
+  forall (A : Type) (l1 l2 : list A) (x : A),
+    Permutation (x :: (l1 ++ l2)) (l1 ++ x :: l2).
+(* begin hide *)
+Proof.
+  intros. apply Permutation_cons_app. trivial.
+Qed.
+(* end hide *)
+
+Theorem Permutation_rev :
+  forall (A : Type) (l : list A), Permutation l (rev l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; simpl; trivial.
+  rewrite <- Permutation_cons_app.
+    reflexivity.
+    rewrite app_nil_r. assumption.
+Qed.
+(* end hide *)
+
+Instance Permutation_rev' :
   forall A : Type,
-  Morphisms.Proper
-    (Morphisms.respectful (Permutation (A:=A)) (Permutation (A:=A)))
-    (List.rev (A:=A))
-Permutation_length:
-  forall (A : Type) (l l' : list A), Permutation l l' -> length l = length l'
-Permutation_length':
+    Proper (@Permutation A ==> @Permutation A) (@rev A).
+(* begin hide *)
+Proof.
+  unfold Proper, respectful; intros.
+  rewrite <- ?Permutation_rev. assumption.
+Qed.
+(* end hide *)
+
+Theorem Permutation_length' :
   forall A : Type,
-  Morphisms.Proper (Morphisms.respectful (Permutation (A:=A)) eq)
-    (length (A:=A))
-Permutation_ind_bis:
-  forall (A : Type) (P : list A -> list A -> Prop),
-  P nil nil ->
-  (forall (x : A) (l l' : list A),
-   Permutation l l' -> P l l' -> P (x :: l)%list (x :: l')%list) ->
-  (forall (x y : A) (l l' : list A),
-   Permutation l l' -> P l l' -> P (y :: x :: l)%list (x :: y :: l')%list) ->
-  (forall l l' l'' : list A,
-   Permutation l l' -> P l l' -> Permutation l' l'' -> P l' l'' -> P l l'') ->
-  forall l l' : list A, Permutation l l' -> P l l'
-Permutation_nil_app_cons:
-  forall (A : Type) (l l' : list A) (x : A), ~ Permutation nil (l ++ x :: l')
-Permutation_Add_inv:
-  forall (A : Type) (a : A) (l1 l2 : list A),
-  Permutation l1 l2 ->
-  forall l1' l2' : list A,
-  List.Add a l1' l1 -> List.Add a l2' l2 -> Permutation l1' l2'
-Permutation_app_inv:
-  forall (A : Type) (l1 l2 l3 l4 : list A) (a : A),
-  Permutation (l1 ++ a :: l2) (l3 ++ a :: l4) ->
-  Permutation (l1 ++ l2) (l3 ++ l4)
-Permutation_cons_inv:
-  forall (A : Type) (l l' : list A) (a : A),
-  Permutation (a :: l) (a :: l') -> Permutation l l'
-Permutation_cons_app_inv:
-  forall (A : Type) (l l1 l2 : list A) (a : A),
-  Permutation (a :: l) (l1 ++ a :: l2) -> Permutation l (l1 ++ l2)
-Permutation_app_inv_l:
+    Proper (@Permutation A ==> eq) (@length A).
+(* begin hide *)
+Proof.
+  unfold Proper, respectful; intros.
+  apply Permutation_length. assumption.
+Qed.
+(* end hide *)
+
+Fixpoint Permutation_ind_bis
+  (A : Type) (P : list A -> list A -> Prop)
+  (Hnil : P [] [])
+  (Hskip : forall (x : A) (l l' : list A),
+   Permutation l l' -> P l l' -> P (x :: l) (x :: l'))
+  (Hswap : forall (x y : A) (l l' : list A),
+   Permutation l l' -> P l l' -> P (y :: x :: l) (x :: y :: l'))
+  (Htrans : forall l l' l'' : list A,
+   Permutation l l' -> P l l' -> Permutation l' l'' -> P l' l'' -> P l l'')
+  (l l' : list A) (H : Permutation l l') : P l l'.
+(* begin hide *)
+Proof.
+  destruct H.
+    apply Hnil.
+    apply Hskip.
+      assumption.
+      apply Permutation_ind_bis; auto.
+    Focus 2. apply Htrans with l'; try assumption.
+      apply Permutation_ind_bis; auto.
+      apply Permutation_ind_bis; auto.
+    apply Hswap.
+      reflexivity.
+      apply Permutation_ind_bis. 1-4: auto.
+      induction l as [| h t]; simpl. trivial.
+Abort.
+
+Theorem Permutation_nil_app_cons :
+  forall (A : Type) (l l' : list A) (x : A), ~ Permutation [] (l ++ x :: l').
+(* begin hide *)
+Proof.
+  intros; intro.
+  rewrite <- Permutation_middle in H.
+  apply Permutation_nil_cons in H. assumption.
+Qed.
+(* end hide *)
+
+Theorem Permutation_cons_inv :
+  forall (A : Type) (l l' : list A) (x : A),
+    Permutation (x :: l) (x :: l') -> Permutation l l'.
+(* begin hide *)
+Proof.
+  intros. remember (x :: l) as l1. remember (x :: l') as l2.
+  generalize dependent l; generalize dependent l'.
+  generalize dependent x.
+Restart.
+  induction l as [| h t]; destruct l' as [| h' t']; simpl; intros.
+    trivial.
+    apply Permutation_length in H. inversion H.
+    apply Permutation_length in H. inversion H.
+Admitted.
+
+Theorem Permutation_app_inv :
+  forall (A : Type) (l1 l2 l3 l4 : list A) (x : A),
+    Permutation (l1 ++ x :: l2) (l3 ++ x :: l4) ->
+    Permutation (l1 ++ l2) (l3 ++ l4).
+(* begin hide *)
+Proof.
+  intros. rewrite <- ?Permutation_middle in H.
+  apply Permutation_cons_inv in H. assumption.
+Qed.
+(* end hide *)
+
+Theorem Permutation_cons_app_inv :
+  forall (A : Type) (l l1 l2 : list A) (x : A),
+    Permutation (x :: l) (l1 ++ x :: l2) -> Permutation l (l1 ++ l2).
+(* begin hide *)
+Proof.
+  intros. rewrite <- Permutation_middle in H.
+  apply Permutation_cons_inv in H. assumption.
+Qed.
+(* end hide *)
+
+Theorem Permutation_app_inv_l :
   forall (A : Type) (l l1 l2 : list A),
-  Permutation (l ++ l1) (l ++ l2) -> Permutation l1 l2
-Permutation_app_inv_r:
+    Permutation (l ++ l1) (l ++ l2) -> Permutation l1 l2.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; simpl; intros.
+    assumption.
+    apply IHt. eapply Permutation_cons_inv. eassumption.
+Qed.
+(* end hide *)
+
+Theorem Permutation_app_inv_r :
   forall (A : Type) (l l1 l2 : list A),
-  Permutation (l1 ++ l) (l2 ++ l) -> Permutation l1 l2
+    Permutation (l1 ++ l) (l2 ++ l) -> Permutation l1 l2.
+(* begin hide *)
+Proof.
+  intros.
+  rewrite (Permutation_app_comm l1 l) in H.
+  rewrite (Permutation_app_comm l2 l) in H.
+  eapply Permutation_app_inv_l. eassumption.
+Qed.
+(* end hide *)
+
 Permutation_length_1_inv:
   forall (A : Type) (a : A) (l : list A),
   Permutation (a :: nil) l -> l = (a :: nil)%list
-Permutation_length_1:
-  forall (A : Type) (a b : A), Permutation (a :: nil) (b :: nil) -> a = b
 Permutation_length_2_inv:
   forall (A : Type) (a1 a2 : A) (l : list A),
   Permutation (a1 :: (a2 :: nil)%list) l ->
