@@ -2,55 +2,126 @@
 
 Require Import Arith.
 
-Definition injective {A B : Type} (f : A -> B) : Prop :=
-    forall x x' : A, f x = f x' -> x = x'.
+(** Prerekwizyty:
+    - [Empty_set], [unit], [prod], [sum] i funkcje
+    - właściwości konstruktorów? *)
 
-(** TODO: trzeba tu coś napisać, ale na razie nie mam czasu. *)
+(** W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.
+    Trzeba przyznać na wstępie, że rozdział będzie raczej matematyczny. *)
+
+(** * Injekcje *)
+
+(** TODO ACHTUNG: to pojęcie zostało użyte implicite przy opisywaniu
+    właściciwości konstruktorów. *)
+
+Definition injective {A B : Type} (f : A -> B) : Prop :=
+  forall x x' : A, f x = f x' -> x = x'.
+
+(** Objaśnienia zacznijmy od nazwy. Po łacinie "iacere" znaczy "rzucać",
+    zaś "in" znaczy "w, do". W językach romańskich samo słowo "injekcja"
+    oznacza zaś zastrzyk. Bliższym matematycznemu znaczeniu byłoby jednak
+    tłumaczenie "wstrzyknięcie". Jeżeli funkcja jest injekcją, to możemy
+    też powiedzieć, że jest "injektywna".
+
+    Podstawowa idea jest prosta: jeżeli funkcja jest injekcją, to identyczne
+    jej wartości pochodzą od równych argumentów.
+
+    Przekonajmy się na przykładzie. *)
+
+Goal injective (fun n : nat => 2 + n).
+Proof.
+  unfold injective; intros. destruct x, x'; cbn in *.
+    trivial.
+    inversion H.
+    inversion H.
+    inversion H. trivial.
+Qed.
+
+(** Funkcja [fun n : nat => 2 + n], czyli dodanie [2] z lewej strony, jest
+    injekcją, gdyż jeżeli [2 + n = 2 + n'], to rozwiązując równanie dostajemy
+    [n = n']. Jeżeli wartości funkcji są równe, to argumenty również muszą
+    być równe.
+
+    Zobaczmy też kontrprzykład. *)
+
+Goal ~ injective (fun n : nat => n * n - n).
+Proof.
+  unfold injective, not; intros.
+  specialize (H 0 1). simpl in H. specialize (H eq_refl). inversion H.
+Qed.
+
+(** Funkcja f(n) = n^2 - n nie jest injekcją, gdyż mamy zarówno f(0) = 0
+    jak i f(1) = 0. Innymi słowy: są dwa nierówne argumenty (0 i 1), dla
+    których wartość funkcji jest taka sama (0).
+
+    A oto alternatywna definicja. *)
 
 Definition injective' {A B : Type} (f : A -> B) : Prop :=
-    forall x x' : A, x <> x' -> f x <> f x'.
+  forall x x' : A, x <> x' -> f x <> f x'.
 
-Theorem injective_is_injective' : forall (A B : Type) (f : A -> B),
+(** Głosi ona, że funkcja injektywna to funkcja, która dla różnych argumentów
+    przyjmuje różne wartości. Innymi słowy, injekcja to funkcja, która
+    zachowuje relację [<>]. Przykład 1 możemy sparafrazować następująco:
+    jeżeli [n] jest różn od [n'], to wtedy [2 + n] jest różne od [2 + n'].
+
+    Definicja ta jest równoważna poprzedniej, ale tylko pod warunkiem, że
+    przyjmiemy logikę klasyczną. W logice konstruktywnej pierwsza definicja
+    jest ogólniejsza od drugiej. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że [injective] jest mocniejsze od [injective']. Pokaż też, że w
+    logice klasycznej są one równoważne. *)
+
+Theorem injective_injective' :
+  forall (A B : Type) (f : A -> B),
     injective f -> injective' f.
 (* begin hide *)
 Proof.
-  unfold injective, injective'; intros.
-  intro. apply H0. apply H. assumption.
+  unfold injective, injective', not; intros.
+  apply H0. apply H. assumption.
 Qed.
 (* end hide *)
 
-Theorem injective'_is_injective_classic : forall (A B : Type) (f : A -> B)
-    (EM : forall P : Prop, P \/ ~ P), injective' f -> injective f.
+Theorem injective'_injective :
+  (forall P : Prop, ~ ~ P -> P) ->
+  forall (A B : Type) (f : A -> B),
+    injective' f -> injective f.
 (* begin hide *)
 Proof.
-  unfold injective, injective'; intros.
-  destruct (EM (x = x')).
-    assumption.
-    cut False.
-      inversion 1.
-      unfold not in H. apply (H x x').
-        intro. apply H1. assumption.
-        assumption.
+  unfold injective, injective', not; intros.
+  apply H. intro. apply (H0 x x'); assumption.
 Qed.
 (* end hide *)
 
-Theorem id_injective : forall A : Type,
-    injective (fun x : A => x).
+(** Udowodnij, że różne funkcje są lub nie są injektywne. *)
+
+Theorem id_injective :
+  forall A : Type, injective (fun x : A => x).
 (* begin hide *)
 Proof.
   intro. unfold injective. trivial.
 Qed.
 (* end hide *)
 
-Theorem S_injective : injective (fun n : nat => S n).
+Theorem S_injective : injective S.
 (* begin hide *)
 Proof.
   red. inversion 1. trivial.
 Qed.
 (* end hide *)
 
-Theorem add_k_left_inj : forall k : nat,
-    injective (fun n : nat => k + n).
+Theorem const_unit_inj :
+  forall (A : Type) (a : A),
+    injective (fun _ : unit => a).
+(* begin hide *)
+Proof.
+  unfold injective; intros. destruct x, x'. trivial.
+Qed.
+(* end hide *)
+
+Theorem add_k_left_inj :
+  forall k : nat, injective (fun n : nat => k + n).
 (* begin hide *)
 Proof.
   red. induction k as [| k']; simpl; intros.
@@ -59,8 +130,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mul_k_inj : forall k : nat, k <> 0 ->
-    injective (fun n : nat => k * n).
+Theorem mul_k_inj :
+  forall k : nat, k <> 0 -> injective (fun n : nat => k * n).
 (* begin hide *)
 Proof.
   red. intros k H x x'. generalize dependent k. generalize dependent x'.
@@ -84,18 +155,22 @@ Proof.
 Qed.
 (* end hide *)
 
+Theorem const_2elem_not_inj :
+  forall (A B : Type) (b : B),
+    (exists a a' : A, a <> a') -> ~ injective (fun _ : A => b).
 (* begin hide *)
-Definition empty_A_to_A {A : Type} (x : sum Empty_set A) : A :=
-match x with
-    | inl e => match e with end
-    | inr a => a
-end. (* end hide *)
+Proof.
+  unfold injective, not; intros. destruct H as [a [a' H]].
+  specialize (H0 a a' eq_refl). contradiction.
+Qed.
+(* end hide *)
+
+Theorem mul_k_0_not_inj :
+  ~ injective (fun n : nat => 0 * n).
 (* begin hide *)
-(*Proof.
-  destruct x.
-    destruct e.
-    assumption.
-Qed.*)
+Proof.
+  simpl. apply const_2elem_not_inj. exists 0, 1. inversion 1.
+Qed.
 (* end hide *)
 
 Theorem pred_not_injective : ~ injective pred.
@@ -104,6 +179,34 @@ Proof.
   unfold injective; intro. specialize (H 0 1 eq_refl). inversion H.
 Qed.
 (* end hide *)
+
+(** Jedną z ważnych właśściwości injekcji jest to, że są składalne:
+    złożenie dwóch injekcji daj injekcję. *)
+
+Theorem inj_comp :
+  forall (A B C : Type) (f : A -> B) (g : B -> C),
+    injective f -> injective g -> injective (fun x : A => g (f x)).
+(* begin hide *)
+Proof.
+  unfold injective; intros.
+  specialize (H0 _ _ H1). specialize (H _ _ H0). assumption.
+Qed.
+(* end hide *)
+
+(** Ta właściwość jest dziwna. Być może kiedyś wymyślę dla niej jakąś
+    bajkę. *)
+
+Theorem LOLWUT :
+  forall (A B C : Type) (f : A -> B) (g : B -> C),
+    injective g -> injective (fun x : A => g (f x)) -> injective f.
+(* begin hide *)
+Proof.
+  unfold injective; intros.
+  apply H0. rewrite H1. trivial.
+Qed.
+(* end hide *)
+
+(** Surjekcje *)
 
 Definition surjective {A B : Type} (f : A -> B) : Prop :=
     forall b : B, exists a : A, f a = b.
