@@ -17,8 +17,10 @@
 # rm (...) kasuje śmieci pozostałe po kompilacji plików .v
 
 coqc book/*v;
-coqdoc --body-only --with-header HEAD_PREPEND --no-lib-name --lib-subtitles --parse-comments --no-index --toc --toc-depth 2 -d html book/*v;
-cp css/*css html/;
-cp js/* html/;
-mv html/toc.html html/index.html;
+rm -rf htmls/
+mkdir htmls/
+coqdoc --body-only --with-header HEAD_PREPEND --no-lib-name --lib-subtitles --parse-comments --no-index --toc --toc-depth 2 -d htmls book/*v;
+cp css/*css htmls/;
+cp js/* htmls/;
+mv htmls/toc.html htmls/index.html;
 #rm book/*glob book/*vo
