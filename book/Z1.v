@@ -4,7 +4,8 @@ Require Import Arith.
 
 (** Prerekwizyty:
     - [Empty_set], [unit], [prod], [sum] i funkcje
-    - właściwości konstruktorów? *)
+    - właściwości konstruktorów?
+    - [exists!] *)
 
 (** W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.
     Trzeba przyznać na wstępie, że rozdział będzie raczej matematyczny. *)
@@ -23,6 +24,10 @@ Definition injective {A B : Type} (f : A -> B) : Prop :=
     tłumaczenie "wstrzyknięcie". Jeżeli funkcja jest injekcją, to możemy
     też powiedzieć, że jest "injektywna". Inną nazwą jest "funkcja
     różnowartościowa".
+
+    en.wikipedia.org/wiki/Bijection,%%20injection%%20and%%20surjection
+
+    Tutaj można zapoznać się z obrazkami poglądowymi.
 
     Podstawowa idea jest prosta: jeżeli funkcja jest injekcją, to identyczne
     jej wartości pochodzą od równych argumentów.
@@ -182,7 +187,7 @@ Qed.
 (* end hide *)
 
 (** Jedną z ważnych właściwości injekcji jest to, że są składalne:
-    złożenie dwóch injekcji daj injekcję. *)
+    złożenie dwóch injekcji daje injekcję. *)
 
 Theorem inj_comp :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
@@ -206,6 +211,49 @@ Proof.
   apply H. rewrite H0. trivial.
 Qed.
 (* end hide *)
+
+(** Na zakończenie należy dodać do naszej interpretacji pojęcia "injekcja"
+    jeszcze jedną ideę. Mianowicie jeżeli istnieje injekcja [f : A -> B],
+    to ilość elementów typu [A] jest mniejsza lub równa liczbie elementów
+    typu [B], a więc typ [A] jest w pewien sposób mniejszy od [B].
+
+    [f] musi przyporządkować każdemu elementowi [A] jakiś element [B]. Gdy
+    elementów [A] jest więcej niż [B], to z konieczności któryś z elementów
+    [B] będzie obrazem dwóch lub więcej elementów [A].
+
+    Wobec powyższego stwierdzenie "złożenie injekcji jest injekcją" możemy
+    zinterpretować po prostu jako stwierdzenie, że relacja porządku, jaką
+    jest istnienie injekcji, jest przechodnia. (TODO: to wymagałoby relacji
+    jako prerekwizytu). *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że nie istnieje injekcja z [bool] w [unit]. Znaczy to, że
+    [bool] ma więcej elementów, czyli jest większy, niż [unit]. *)
+
+Theorem no_inj_bool_unit :
+  ~ exists f : bool -> unit, injective f.
+(* begin hide *)
+Proof.
+  unfold not, injective; intros. destruct H as [f H].
+  specialize (H true false). destruct (f true), (f false).
+  specialize (H eq_refl). inversion H.
+Qed.
+(* end hide *)
+
+(** Pokaż, że istnieje injekcja z typu pustego w każdy inny. Znaczy to,
+    że [Empty_set] ma nie więcej elementów, niż każdy inny typ (co nie
+    powinno nas dziwić, gdyż [Empty_set] nie ma żadnych elementów). *)
+
+Theorem inj_Empty_set_A :
+  forall A : Type, exists f : Empty_set -> A, injective f.
+(* begin hide *)
+Proof.
+  intro. exists (fun e : Empty_set => match e with end).
+  red. inversion x.
+Qed.
+(* end hide *)
+
 
 (** * Surjekcje *)
 
@@ -235,12 +283,10 @@ Qed.
     jej główną zaletą jest nazwa — [cbn] to trzy litery, a [simpl] aż pięć,
     więc zaoszczędzimy sobie pisania.
 
-    Powyższe twierdzenie stwierdza "funkcja [pred] jest surjekcją", czyli,
+    Powyższe twierdzenie głosi, że "funkcja [pred] jest surjekcją", czyli,
     parafrazując, "każda liczba naturalna jest poprzednikiem innej liczby
-    naturalnej".
-
-    Nie powinno nas to zaskakiwać, wszakże każda liczba naturalna jest
-    poprzednikiem swojego następnika, tzn. [pred (S n) = n]. *)
+    naturalnej". Nie powinno nas to zaskakiwać, wszakże każda liczba naturalna
+    jest poprzednikiem swojego następnika, tzn. [pred (S n) = n]. *)
 
 Theorem S_not_surjective : ~ surjective S.
 Proof.
@@ -285,10 +331,16 @@ Qed.
 (** Zbadaj, czy wymienione funkcje są surjekcjami. Sformułuj i udowodnij
     odpowiednie twierdzenia.
 
-    Funkcje: dodawanie (rozważ osobno zero), odejmowanie, mnożenie (rozważ
-    1 osobno). *)
+    Funkcje: identyczność, dodawanie (rozważ zero osobno), odejmowanie,
+    mnożenie (rozważ 1 osobno). *)
 
 (* begin hide *)
+Theorem id_sur :
+  forall A : Type, surjective (fun x : A => x).
+Proof.
+  red; intros. exists b. trivial.
+Qed.
+
 Theorem plus_0_l_sur : surjective (fun n : nat => 0 + n).
 Proof.
   red; intros. exists b. trivial.
@@ -358,13 +410,91 @@ Proof.
 Qed.
 (* end hide *)
 
+(** Tak jak istnienie injekcji [f : A -> B] oznacza, że [A] jest mniejszy
+    od [B], gdyż ma mniej (lub tyle samo) elementów, tak istnieje surjekcji
+    [f : A -> B] oznacza, że [A] jest większy niż [B], gdyż ma więcej (lub
+    tyle samo) elementów.
+
+    Jest tak na mocy samej definicji: każdy element przeciwdziedziny jest
+    obrazem jakiegoś elementu dziedziny. Nie jest powiedziane, ile jest
+    tych elementów, ale wiadomo, że co najmniej jeden.
+
+    Podobnie jak w przypadku injekcji, fakt że złożenie surjekcji jest
+    surjekcją możemy traktować jako stwierdzenie, że porządek, jakim jest
+    istnienie surjekcji, jest przechodni. (TODO) *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że nie istnieje surjekcja z [unit] w [bool]. Oznacza to, że [unit]
+    nie jest większy niż [bool]. *)
+
+Theorem no_sur_unit_bool :
+  ~ exists f : unit -> bool, surjective f.
+(* begin hide *)
+Proof.
+  unfold surjective, not; intros.
+  destruct H as [f H]. destruct (H true), (H false).
+  destruct x, x0. rewrite H0 in H1. inversion H1.
+Qed.
+(* end hide *)
+
+(** Pokaż, że istnieje surjekcja z każdego typu niepustego w [unit].
+    Oznacza to, że każdy typ niepusty ma co najmniej tyle samo elementów,
+    co [unit], tzn. każdy typ nie pusty ma co najmniej jeden element. *)
+
+Theorem sur_A_unit :
+  forall (A : Type) (nonempty : A), exists f : A -> unit, surjective f.
+(* begin hide *)
+Proof.
+  unfold surjective; intros. exists (fun _ => tt).
+  destruct b. exists nonempty. trivial.
+Qed.
+(* end hide *)
+
+(** * Bijekcje *)
+
 Definition bijective {A B : Type} (f : A -> B) : Prop :=
-    injective f /\ surjective f.
+  injective f /\ surjective f.
+
+(** Po łacinie przedrostek "bi-" oznacza "dwa". Bijekcja to funkcja, która
+    jest zarówno injekcją, jak i surjekcją. *)
+
+Theorem id_bij : forall A : Type, bijective (fun x : A => x).
+Proof.
+  split; intros.
+    apply id_injective.
+    apply id_sur.
+Qed.
+
+Theorem S_not_bij : ~ bijective S.
+Proof.
+  unfold bijective; intro. destruct H.
+  apply S_not_surjective. assumption.
+Qed.
+
+(** Pozostawię przykłady bez komentarza — są one po prostu konsekwencją tego,
+    co już wiesz na temat injekcji i surjekcji.
+
+    Ponieważ bijekcja jest surjekcją, to każdy element jej przeciwdziedziny
+    jest obrazem jakiegoś elementu jej dziedziny (obraz elementu [x] to po
+    prostu [f x]). Ponieważ jest injekcją, to element ten jest unikalny.
+
+    Bijekcja jest więc taką funkcją, że każdy element jej przeciwdziedziny
+    jest obrazem dokładnie jednego elementu jej dziedziny. Ten właśnie fakt
+    wyraża poniższa definicja alternatywna.
+
+    TODO: [exists!] nie zostało dotychczas opisane, a chyba nie powinno być
+    opisane tutaj. *)
 
 Definition bijective' {A B : Type} (f : A -> B) : Prop :=
-    forall b : B, exists! a : A, f a = b.
+  forall b : B, exists! a : A, f a = b.
 
-Theorem bijectives_equiv : forall (A B : Type) (f : A -> B),
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że obie definicje są równoważne. *)
+
+Theorem bijective_bijective' :
+  forall (A B : Type) (f : A -> B),
     bijective f <-> bijective' f.
 (* begin hide *)
 Proof.
@@ -381,6 +511,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** **** Ćwiczenie *)
+
 Require Import List.
 Import ListNotations.
 
@@ -389,6 +521,10 @@ match n with
     | 0 => []
     | S n' => tt :: unary n'
 end.
+
+(** Funkcja [unary] reprezentuje liczbę naturalną [n] za pomocą listy
+    zawierającej [n] kopii termu [tt]. Udowodnij, że [unary] jest
+    bijekcją. *)
 
 Theorem unary_bij : bijective unary.
 (* begin hide *)
@@ -404,4 +540,80 @@ Proof.
       destruct h. f_equal. assumption.
 Qed.
 (* end hide *)
+
+(** Jak już powiedzieliśmy, bijekcje dziedziczą właściwości, które mają
+    zarówno injekcje, jak i surjekcje. Wobec tego możemy skonkludować,
+    że złożenie bijekcji jest bijekcją. Nie mają one jednak "dziwnej
+    własciwości".
+
+    TODO UWAGA: od teraz twierdzenia, które pozostawię bez dowodu, z
+    automatu stają się ćwiczeniami. *)
+
+Theorem bij_comp :
+  forall (A B C : Type) (f : A -> B) (g : B -> C),
+    bijective f -> bijective g -> bijective (fun x : A => g (f x)).
+(* begin hide *)
+Proof.
+  unfold bijective; intros. destruct H, H0. split.
+    apply inj_comp; assumption.
+    apply sur_comp; assumption.
+Qed.
+(* end hide *)
+
+(** Bijekcje mają też interpretacje w idei rozmiaru oraz ilości elementów.
+    Jeżeli istnieje bijekcja [f : A -> B], to znaczy, że typy [A] oraz [B]
+    mają dokładnie tyle samo elementów, czyli są "tak samo duże".
+
+    Nie powinno nas zatem dziwić, że relacja istnienia bijekcji jest
+    relacją równoważności:
+    - każdy typ ma tyle samo elementów, co on sam
+    - jeżeli typ [A] ma tyle samo elementów co [B], to [B] ma tyle samo
+      elementów, co [A]
+    - jeżeli [A] ma tyle samo elementów co [B], a [B] tyle samo elementów
+      co [C], to [A] ma tyle samo elementów co [C] *)
+
+(** **** Ćwiczenie *)
+
+(** Jeżeli między [A] i [B] istnieje bijekcja, to mówimy, że [A] i [B] są
+    równoliczne (ang. equipotent). Pokaż, że relacja równoliczności jest
+    relacją równoważności. TODO: prerekwizyt: relacje równoważności *)
+
+Definition equipotent (A B : Type) : Prop :=
+  exists f : A -> B, bijective f.
+
+Notation "A ~ B" := (equipotent A B) (at level 40).
+
+(** Równoliczność [A] i [B] będziemy oznaczać przez [A ~ B]. Nie należy
+    notacji [~] mylić z notacją [~] oznaczającej negację logiczną. Ciężko
+    jednak jest je pomylić, gdyż pierwsza zawsze bierze dwa argumenty, a
+    druga tylko jeden. *)
+
+Theorem equipotent_refl :
+  forall A : Type, A ~ A.
+(* begin hide *)
+Proof.
+  red. intro. exists (fun x : A => x). apply id_bij.
+Qed.
+(* end hide *)
+
+Theorem equipotent_sym :
+  forall A B : Type, A ~ B -> B ~ A.
+(* begin hide *)
+Proof.
+  unfold equipotent, bijective; intros. destruct H as [f [Hinj Hsur]].
+  red in Hsur. assert (B -> A).
+    intro b. Fail destruct (Hsur b) as [a H].
+Admitted.
+(* end hide *)
+
+Theorem equipotent_trans :
+  forall A B C : Type, A ~ B -> B ~ C -> A ~ C.
+(* begin hide *)
+Proof.
+  unfold equipotent; intros. destruct H as [f Hf], H0 as [g Hg].
+  exists (fun x : A => g (f x)). apply bij_comp; assumption.
+Qed.
+(* end hide *)
+
+(** * Inwolucje *)
 
