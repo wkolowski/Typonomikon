@@ -21,7 +21,8 @@ Definition injective {A B : Type} (f : A -> B) : Prop :=
     zaś "in" znaczy "w, do". W językach romańskich samo słowo "injekcja"
     oznacza zaś zastrzyk. Bliższym matematycznemu znaczeniu byłoby jednak
     tłumaczenie "wstrzyknięcie". Jeżeli funkcja jest injekcją, to możemy
-    też powiedzieć, że jest "injektywna".
+    też powiedzieć, że jest "injektywna". Inną nazwą jest "funkcja
+    różnowartościowa".
 
     Podstawowa idea jest prosta: jeżeli funkcja jest injekcją, to identyczne
     jej wartości pochodzą od równych argumentów.
@@ -180,7 +181,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Jedną z ważnych właśściwości injekcji jest to, że są składalne:
+(** Jedną z ważnych właściwości injekcji jest to, że są składalne:
     złożenie dwóch injekcji daj injekcję. *)
 
 Theorem inj_comp :
@@ -198,23 +199,162 @@ Qed.
 
 Theorem LOLWUT :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
-    injective g -> injective (fun x : A => g (f x)) -> injective f.
+    injective (fun x : A => g (f x)) -> injective f.
 (* begin hide *)
 Proof.
   unfold injective; intros.
-  apply H0. rewrite H1. trivial.
+  apply H. rewrite H0. trivial.
 Qed.
 (* end hide *)
 
-(** Surjekcje *)
+(** * Surjekcje *)
+
+(** Drugim ważnym rodzajem funkcji są surjekcje. *)
 
 Definition surjective {A B : Type} (f : A -> B) : Prop :=
     forall b : B, exists a : A, f a = b.
 
+(** I znów zacznijmy od nazwy. Po francusku "sur" znaczy "na", zaś słowo
+    "iacere" już znamy (po łac. "rzucać"). Słowo "surjekcja" moglibyśmy
+    więc przetłumaczyć jako "pokrycie". Tym bowiem w istocie jest surjekcja
+    — jest to funkcja, która "pokrywa" całą swoją przeciwdziedzinę.
+
+    Owo "pokrywanie" w definicji wyraziliśmy w ten sposób: dla każdego
+    elementu [b] przeciwdziedziny [B] istnieje taki element [a] dziedziny
+    [A], że [f a = b].
+
+    Zobaczmy przykład i kontrprzykład. *)
+
+Theorem pred_surjective : surjective pred.
+Proof.
+  unfold surjective; intros. exists (S b). cbn. trivial.
+Qed.
+
+(** TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki [simpl]
+    używać będziemy taktyki [cbn]. Różni się ona nieznacznie od [simpl], ale
+    jej główną zaletą jest nazwa — [cbn] to trzy litery, a [simpl] aż pięć,
+    więc zaoszczędzimy sobie pisania.
+
+    Powyższe twierdzenie stwierdza "funkcja [pred] jest surjekcją", czyli,
+    parafrazując, "każda liczba naturalna jest poprzednikiem innej liczby
+    naturalnej".
+
+    Nie powinno nas to zaskakiwać, wszakże każda liczba naturalna jest
+    poprzednikiem swojego następnika, tzn. [pred (S n) = n]. *)
+
 Theorem S_not_surjective : ~ surjective S.
-(* begin hide *)
 Proof.
   unfold surjective; intro. destruct (H 0). inversion H0.
+Qed.
+
+(** Surjekcją nie jest za to konstruktor [S]. To również nie powinno nas
+    dziwić: istnieje przecież liczba naturalna, która nie jest następnikiem
+    żadnej innej. Jest nią oczywiście zero.
+
+    Surjekcje cieszą się właściwościami podobnymi do tych, jakie są udziałem
+    injekcji. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że złożenie surjekcji jest surjekcją. Udowodnij też "dziwną
+    właściwość" surjekcji. *)
+
+Theorem sur_comp :
+  forall (A B C : Type) (f : A -> B) (g : B -> C),
+    surjective f -> surjective g -> surjective (fun x : A => g (f x)).
+(* begin hide *)
+Proof.
+  unfold surjective; intros A B C f g Hf Hg c.
+  destruct (Hg c) as [b Heq]. destruct (Hf b) as [a Heq'].
+  subst. exists a. trivial.
+Qed.
+(* end hide *)
+
+Theorem LOLWUT_sur :
+  forall (A B C : Type) (f : A -> B) (g : B -> C),
+    surjective (fun x : A => g (f x)) -> surjective g.
+(* begin hide *)
+Proof.
+  unfold surjective; intros A B C f g Hgf c.
+  destruct (Hgf c) as [a Heq]. subst. exists (f a). trivial.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Zbadaj, czy wymienione funkcje są surjekcjami. Sformułuj i udowodnij
+    odpowiednie twierdzenia.
+
+    Funkcje: dodawanie (rozważ osobno zero), odejmowanie, mnożenie (rozważ
+    1 osobno). *)
+
+(* begin hide *)
+Theorem plus_0_l_sur : surjective (fun n : nat => 0 + n).
+Proof.
+  red; intros. exists b. trivial.
+Qed.
+
+Theorem plus_0_r_sur : surjective (fun n : nat => n + 0).
+Proof.
+  red; intros. exists b. rewrite <- plus_n_O. trivial.
+Qed.
+
+Theorem plus_Sn_l_not_sur :
+  forall k : nat, ~ surjective (fun n : nat => S k + n).
+Proof.
+  unfold surjective, not; intros. specialize (H 0).
+  destruct H as [a H]. inversion H.
+Qed.
+
+Theorem plus_Sn_r_not_sur :
+  forall k : nat, ~ surjective (fun n : nat => n + S k).
+Proof.
+  unfold surjective, not; intros. specialize (H 0).
+  destruct H as [a H]. rewrite plus_comm in H. inversion H.
+Qed.
+
+Theorem minus_sur :
+  forall k : nat, surjective (fun n : nat => n - k).
+Proof.
+  red; intros. exists (k + b). rewrite minus_plus. trivial.
+Qed.
+
+Theorem mult_1_l_sur : surjective (fun n : nat => 1 * n).
+Proof.
+  red; intros. exists b. Search (1 * _). apply Nat.mul_1_l.
+Qed.
+
+Theorem mult_1_r_sur : surjective (fun n : nat => n * 1).
+Proof.
+  red; intros. exists b. apply Nat.mul_1_r.
+Qed.
+
+Theorem mult_0_l_not_sur : ~ surjective (fun n : nat => 0 * n).
+Proof.
+  unfold surjective, not; intros. specialize (H 1).
+  destruct H as [a H]. simpl in H. inversion H.
+Qed.
+
+Theorem mult_0_r_not_sur : ~ surjective (fun n : nat => n * 0).
+Proof.
+  unfold surjective, not; intros. specialize (H 1).
+  destruct H as [a H]. rewrite Nat.mul_0_r in H. inversion H.
+Qed.
+
+Theorem mult_SS_l_not_sur :
+  forall k : nat, ~ surjective (fun n : nat => S (S k) * n).
+Proof.
+  unfold surjective, not; intros. specialize (H 1).
+  destruct H as [a H]. destruct a as [| a']; simpl in H.
+    rewrite Nat.mul_0_r in H. inversion H.
+    inversion H. rewrite plus_comm in H1. inversion H1.
+Qed.
+
+Theorem mult_SS_r_not_sur :
+  forall k : nat, ~ surjective (fun n : nat => n * S (S k)).
+Proof.
+  unfold surjective, not; intros. specialize (H 1).
+  destruct H as [a H]. destruct a as [| a']; inversion H.
 Qed.
 (* end hide *)
 

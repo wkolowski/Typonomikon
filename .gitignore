@@ -6,3 +6,4 @@ htmls/
 lect/
 *~
 **.aux
+makefile
