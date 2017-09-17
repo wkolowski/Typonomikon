@@ -617,3 +617,66 @@ Qed.
 
 (** * Inwolucje *)
 
+Definition involutive {A : Type} (f : A -> A) : Prop :=
+  forall x : A, f (f x) = x.
+
+(** Kolejnym ważnym (choć nie aż tak ważnym) rodzajem funkcji są inwolucje.
+    Po łacinie "volvere" znaczy "obracać się". Inwolucja to funkcja, która
+    niczym Chuck Norris wykonuje półobrót — w tym sensie, że zaaplikowanie
+    jej dwukrotnie daje cały obrót, a więc stan wyjściowy.
+
+    Mówiąc bardziej po ludzku, inwolucja to funkcja, która jest swoją własną
+    odwrotnością. Spotkaliśmy się już z przykładami inwolucji: najbardziej
+    trywialnym z nich jest funkcja identycznościowa, bardziej oświecającym
+    zaś funkcja [rev], która odwraca listę — odwrócenie listy dwukrotnie
+    daje wyjściową listę. Inwolucją jest też [negb]. *)
+
+Theorem id_inv :
+  forall A : Type, involutive (fun x : A => x).
+(* begin hide *)
+Proof.
+  red; intros. trivial.
+Qed.
+(* end hide *)
+
+Theorem rev_inv :
+  forall A : Type, involutive (@rev A).
+(* begin hide *)
+Proof.
+  red; intros. apply rev_involutive.
+Qed.
+(* end hide *)
+
+Theorem negb_inv : involutive negb.
+(* begin hide *)
+Proof.
+  red. destruct x; cbn; trivial.
+Qed.
+(* end hide *)
+
+(** Ponieważ każda inwolucja ma odwrotność (którą jest ona sama), każda
+    inwolucja jest z automatu bijekcją. *)
+
+Theorem inv_bij :
+  forall (A : Type) (f : A -> A), involutive f -> bijective f.
+(* begin hide *)
+Proof.
+  unfold involutive, bijective; intros. split; red; intros.
+    rewrite <- (H x), <- (H x'). rewrite H0. trivial.
+    exists (f b). apply H.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Function count_inv (n : nat) : nat :=
+match n with
+    | 0 => 1
+    | 1 => 1
+    | S ((S n'') as n') => count_inv n' + (n - 1) * count_inv n''
+end.
+
+Compute count_inv 6.
+Compute map count_inv [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11].
+(* end hide *)
+
+
