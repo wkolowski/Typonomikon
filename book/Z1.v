@@ -1,14 +1,227 @@
-(** * Z1: Teoria funkcji (alfa, TODO) *)
+(** * Z1: Funkcje *)
 
 Require Import Arith.
 
 (** Prerekwizyty:
     - [Empty_set], [unit], [prod], [sum] i funkcje
     - właściwości konstruktorów?
-    - [exists!] *)
+    - [exists!]
+    - równość [eq] *)
 
 (** W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.
     Trzeba przyznać na wstępie, że rozdział będzie raczej matematyczny. *)
+
+(** * Funkcje *)
+
+(** Potrafisz już posługiwać się funkcjami. Mimo tego zróbmy krótkie
+    przypomnienie.
+
+    Typ funkcji (niezależnych) z [A] w [B] oznaczamy przez [A -> B]. W
+    Coqu funkcje możemy konstruować za pomocą abstrakcji (np. [fun n :
+    nat => n + n]) albo za pomocą rekursji strukturalnej. Eliminować zaś
+    możemy je za pomocą aplikacji: jeżeli [f : A -> B] oraz [x : A], to
+    [f x : B].
+
+    Funkcje wyrażają ideę przyporządkowania: każdemu elementowi dziedziny
+    funkcja przyporządkowuje element przeciwdziedziny. Jednak status
+    dziedziny i przeciwdziedziny nie jest taki sam: każdemu elementowi
+    dziedziny coś odpowiada, jednak mogą istnieć elementy przeciwdziedziny,
+    które nie są obrazem żadnego elementu dziedziny.
+
+    Co więcej, w Coqu wszystkie funkcje są konstruktywne, tzn. mogą zostać
+    obliczone. Jest to coś, co bardzo mocno odróżnia Coqa oraz rachunek
+    konstrukcji (jego teoretyczną podstawę) od innych systemów formalnych. *)
+
+Definition app {A B : Type} (f : A -> B) (x : A) : B := f x.
+
+Definition app' {A B : Type} (x : A) (f : A -> B) : B := f x.
+
+Notation "f $ x" := (app f x) (left associativity, at level 110).
+
+Notation "x $> f" := (app' x f) (right associativity, at level 60).
+
+Check plus (2 + 2) (3 + 3).
+Check plus $ 2 + 2 $ 3 + 3.
+
+Check (fun n : nat => n + n) 21.
+Check 21 $> fun n : nat => n + n.
+
+(** Najważniejszą rzeczą, jaką możemy zrobić z funkcją, jest zaaplikowanie
+    jej do argumentu. Jest to tak częsta operacja, że zdefiniujemy sobie
+    dwie notacje, które pozwolą nam zaoszczędzić kilka stuknięć w klawiaturę.
+
+    Uwaga techniczna: nie możemy przypisać notacji do wyrażenia "f x", gdyż
+    zepsuło by to wyświetanie. Z tego powodu musimy napisać dwie osobne
+    funkcje [app] i [app'] i do nich przypisać notacje.
+
+    Notacja [$] będzie nam służyć do niepisania nawiasów: jeżeli argumentami
+    funkcji będą skomplikowane termy, zamiast pisać wokół nich parę nawiasów,
+    będziemy mogli wstawić tylko jeden symbol dolara "$$". Dzięki temu zamiast
+    2n nawiasów napiszemy tylko n znaków "$$" (choć trzeba przyznać, że
+    będziemy musieli pisać więcej spacji).
+
+    Notacja [$>] umożliwi nam pisanie aplikacji w odwrotnej kolejności. Dzięki
+    temu będziemy mogli np. pomijać nawiasy w abstrakcji. Jako, że nie da się
+    zrobić notacji "x f", jest to najlepsze dostępne nam rozwiązanie. *)
+
+Definition comp {A B C : Type} (f : A -> B) (g : B -> C)
+  : A -> C := fun x : A => g (f x).
+
+Notation "f .> g" := (comp f g) (left associativity, at level 40).
+
+(** Najważniejszą operacją, jaką możemy wykonywać na funkcjach, jest złożenie.
+    Jedynym warunkiem jest, aby przeciwdziedzina pierwszej funkcji była taka
+    sama, jak dziedzina drugiej funkcji. Składanie funkcji jest łączne.
+
+    Uwaga techniczna: jeżeli prezentuję jakieś twierdzenie bez dowodu, to
+    znaczy, że dowód jest ćwiczeniem. *)
+
+Theorem comp_assoc :
+  forall (A B C D : Type) (f : A -> B) (g : B -> C) (h : C -> D),
+    (f .> g) .> h = f .> (g .> h).
+(* begin hide *)
+Proof. trivial. Qed.
+(* end hide *)
+
+Definition id (A : Type) : A -> A := fun x : A => x.
+
+(** Najważniejszą funkcją w całym kosmosie jest identyczność. Jest to funkcja,
+    która nie robi zupełnie nic. Jej waga jest w tym, że jest ona elementem
+    neutranym składania funkcji. *)
+
+Theorem id_left :
+  forall (A B : Type) (f : A -> B), id A .> f = f.
+(* begin hide *)
+Proof. trivial. Qed.
+(* end hide *)
+
+Theorem id_right :
+  forall (A B : Type) (f : A -> B), f .> id B = f.
+(* begin hide *)
+Proof. trivial. Qed.
+(* end hide *)
+
+Definition const {A B : Type} (b : B) : A -> B := fun _ => b.
+
+(** Funkcja stała to funkcja, która ignoruje swój drugi argument i zawsze
+    zwraca pierwszy argument. *)
+
+Definition flip {A B C : Type} (f : A -> B -> C)
+  : B -> A -> C := fun (b : B) (a : A) => f a b.
+
+(** [flip] to całkiem przydatny kombinator (funkcja wyższego rzędu), który
+    zamienia miejscami argumenty funkcji dwuargumentowej. *)
+
+Fixpoint iter {A : Type} (n : nat) (f : A -> A) : A -> A :=
+match n with
+    | 0 => id A
+    | S n' => f .> iter n' f
+end.
+
+(** Ostatnim przydatnim kombinatorem jest [iter]. Służy on do składania
+    funkcji samej ze sobą [n] razy. Oczywiście funkcja, aby można ją było
+    złożyć ze sobą, musi mieć identyczną dziedzinę i przeciwdziedzinę. *)
+
+(** * Aksjomat ekstensjonalności *)
+
+(** Ważną kwestią jest ustalenie, kiedy dwie funkcje są równe. Zacznijmy od
+    tego, że istnieją dwie koncepcje równości:
+    - intensjonalna — funkcje są zdefiniowane przez identyczne (czyli
+      konwertowalne) wyrażenia
+    - ekstensjonalna — wartości funkcji dla każdego argumentu są równe *)
+
+Print eq.
+(* ===> Inductive eq (A : Type) (x : A) : A -> Prop :=  eq_refl : x = x *)
+
+(** Podstawowym i domyślnym rodzajem równości w Coqu jest równość
+    intensjonalna, której właściwości już znasz. Każda funkcja, na mocy
+    konstruktora [eq_refl], jest równa samej sobie. Prawdą jest też mniej
+    oczywisty fakt: każda funkcja jest równa swojej ekspansji eta. *)
+
+Theorem eta_expansion :
+  forall (A B : Type) (f : A -> B), f = fun x : A => f x.
+Proof.
+  trivial.
+Qed.
+
+Print Assumptions eta_expansion.
+(* ===> Closed under the global context *)
+
+(** Ekspansja eta funkcji [f] to nic innego, jak funkcja anonimowa, która
+    bierze [x] i zwraca [f x]. Nazwa pochodzi od greckiej litery η (eta).
+    Powyższe twierdzenie jest trywialne, gdyż równość zachodzi na mocy
+    konwersji.
+
+    Warto podkreślić, że jego prawdziwość nie zależy od żadnych aksjomatów.
+    Stwierdzenie to możemy zweryfikować za pomocą komendy [Print Assumptions],
+    która wyświetla listę aksjomatów, które zostały wykorzystane w definicji
+    danego termu. Napis "Closed under the global context" oznacza, że żadnego
+    aksjomatu nie użyto. *)
+
+Theorem plus_1_eq :
+  (fun n : nat => 1 + n) = (fun n : nat => n + 1).
+Proof.
+  trivial.
+  Fail rewrite plus_comm. (* No i co teraz? *)
+Abort.
+
+(** Równość intensjonalna ma jednak swoje wady. Główną z nich jest to, że
+    jest ona bardzo restrykcyjna. Widać to dobrze na powyższym przykładzie:
+    nie jesteśmy w stanie udowodnić, że funkcje [fun n : nat => 1 + n] oraz
+    [fun n : nat => n + 1] są równe, gdyż zostały zdefiniowane za pomocą
+    innych termów. Mimo, że termy te są równe, to nie są konwertowalne, a
+    zatem funkcje też nie są konwertowalne. Nie znaczy to jednak, że nie są
+    równe — po prostu nie jesteśmy w stanie w żaden sposób pokazać, że są. *)
+
+Require Import FunctionalExtensionality.
+
+Check @functional_extensionality.
+(* ===> @functional_extensionality
+          : forall (A B : Type) (f g : A -> B),
+              (forall x : A, f x = g x) -> f = g *)
+
+(** Z tarapatów wybawić nas może jedynie aksjomat ekstensjonalności dla
+    funkcji, zwany w Coqu [functional_extensionality] (dla funkcji, które
+    nie są zależne) lub [functional_extensionality_dep] (dla funkcji
+    zależnych).
+
+    Aksjomat ten głosi, że [f] i [g] są równe, jeżeli są równe dla wszystkich
+    argumentów. Jest on bardzo użyteczny, a przy tym nie ma żadnych smutnych
+    konsekwencji i jest kompatybilny z wieloma innymi aksjomatami. Z tych
+    właśnie powodów jest on jednym z najczęściej używanych w Coqu aksjomatów.
+    My też będziemy go wykorzystywać. *)
+
+Theorem plus_1_eq :
+  (fun n : nat => 1 + n) = (fun n : nat => n + 1).
+Proof.
+  extensionality n. rewrite plus_comm. trivial.
+Qed.
+
+(** Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
+    [f = g], to taktyka [extensionality x] przekształca go w cel postaci
+    [f x = g x], o ile tylko nazwa [x] nie jest już wykorzystana na coś
+    innego.
+
+    Dzięki zastosowaniu aksjomatu nie musimy już polegać na konwertowalności
+    termów definiujących funkcje. Wystarczy udowodnić, że są one równe. W
+    tym przypadku robimy to za pomocą twierdzenia [plus_comm]. *)
+
+(** **** Ćwiczenie *)
+
+(** Użyj aksjomatu ekstensjonalności, żeby pokazać, że dwie funkcje binarne
+    są równe wtedy i tylko wtedy, gdy ich wartości dla wszystkich argumentów
+    są równe. *)
+
+Theorem binary_funext :
+  forall (A B C : Type) (f g : A -> B -> C),
+    f = g <-> forall (a : A) (b : B), f a b = g a b.
+(* begin hide *)
+Proof.
+  split; intros.
+    subst. trivial.
+    extensionality a. extensionality b. apply H.
+Qed.
+(* end hide *)
 
 (** * Injekcje *)
 
@@ -103,10 +316,10 @@ Qed.
 (** Udowodnij, że różne funkcje są lub nie są injektywne. *)
 
 Theorem id_injective :
-  forall A : Type, injective (fun x : A => x).
+  forall A : Type, injective (id A).
 (* begin hide *)
 Proof.
-  intro. unfold injective. trivial.
+  intro. unfold injective, id. trivial.
 Qed.
 (* end hide *)
 
@@ -191,11 +404,11 @@ Qed.
 
 Theorem inj_comp :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
-    injective f -> injective g -> injective (fun x : A => g (f x)).
+    injective f -> injective g -> injective (f .> g).
 (* begin hide *)
 Proof.
-  unfold injective; intros.
-  specialize (H0 _ _ H1). specialize (H _ _ H0). assumption.
+  unfold injective, comp; intros.
+  apply H, H0. assumption.
 Qed.
 (* end hide *)
 
@@ -204,10 +417,10 @@ Qed.
 
 Theorem LOLWUT :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
-    injective (fun x : A => g (f x)) -> injective f.
+    injective (f .> g) -> injective f.
 (* begin hide *)
 Proof.
-  unfold injective; intros.
+  unfold injective, comp; intros.
   apply H. rewrite H0. trivial.
 Qed.
 (* end hide *)
@@ -307,10 +520,10 @@ Qed.
 
 Theorem sur_comp :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
-    surjective f -> surjective g -> surjective (fun x : A => g (f x)).
+    surjective f -> surjective g -> surjective (f .> g).
 (* begin hide *)
 Proof.
-  unfold surjective; intros A B C f g Hf Hg c.
+  unfold surjective, comp; intros A B C f g Hf Hg c.
   destruct (Hg c) as [b Heq]. destruct (Hf b) as [a Heq'].
   subst. exists a. trivial.
 Qed.
@@ -318,10 +531,10 @@ Qed.
 
 Theorem LOLWUT_sur :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
-    surjective (fun x : A => g (f x)) -> surjective g.
+    surjective (f .> g) -> surjective g.
 (* begin hide *)
 Proof.
-  unfold surjective; intros A B C f g Hgf c.
+  unfold surjective, comp; intros A B C f g Hgf c.
   destruct (Hgf c) as [a Heq]. subst. exists (f a). trivial.
 Qed.
 (* end hide *)
@@ -336,7 +549,7 @@ Qed.
 
 (* begin hide *)
 Theorem id_sur :
-  forall A : Type, surjective (fun x : A => x).
+  forall A : Type, surjective (id A).
 Proof.
   red; intros. exists b. trivial.
 Qed.
@@ -459,7 +672,7 @@ Definition bijective {A B : Type} (f : A -> B) : Prop :=
 (** Po łacinie przedrostek "bi-" oznacza "dwa". Bijekcja to funkcja, która
     jest zarówno injekcją, jak i surjekcją. *)
 
-Theorem id_bij : forall A : Type, bijective (fun x : A => x).
+Theorem id_bij : forall A : Type, bijective (@id A).
 Proof.
   split; intros.
     apply id_injective.
@@ -551,10 +764,10 @@ Qed.
 
 Theorem bij_comp :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
-    bijective f -> bijective g -> bijective (fun x : A => g (f x)).
+    bijective f -> bijective g -> bijective (f .> g).
 (* begin hide *)
 Proof.
-  unfold bijective; intros. destruct H, H0. split.
+  unfold bijective, comp; intros. destruct H, H0. split.
     apply inj_comp; assumption.
     apply sur_comp; assumption.
 Qed.
@@ -592,7 +805,7 @@ Theorem equipotent_refl :
   forall A : Type, A ~ A.
 (* begin hide *)
 Proof.
-  red. intro. exists (fun x : A => x). apply id_bij.
+  red. intro. exists (id A). apply id_bij.
 Qed.
 (* end hide *)
 
@@ -611,7 +824,7 @@ Theorem equipotent_trans :
 (* begin hide *)
 Proof.
   unfold equipotent; intros. destruct H as [f Hf], H0 as [g Hg].
-  exists (fun x : A => g (f x)). apply bij_comp; assumption.
+  exists (f .> g). apply bij_comp; assumption.
 Qed.
 (* end hide *)
 
@@ -632,7 +845,7 @@ Definition involutive {A : Type} (f : A -> A) : Prop :=
     daje wyjściową listę. Inwolucją jest też [negb]. *)
 
 Theorem id_inv :
-  forall A : Type, involutive (fun x : A => x).
+  forall A : Type, involutive (id A).
 (* begin hide *)
 Proof.
   red; intros. trivial.
@@ -654,8 +867,70 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Ponieważ każda inwolucja ma odwrotność (którą jest ona sama), każda
-    inwolucja jest z automatu bijekcją. *)
+(** Żeby nie odgrzewać starych kotletów, przyjrzyjmy się funkcji [weird]. *)
+
+Fixpoint weird {A : Type} (l : list A) : list A :=
+match l with
+    | [] => []
+    | [x] => [x]
+    | x :: y :: t => y :: x :: weird t
+end.
+
+Theorem weird_inv :
+  forall A : Type, involutive (@weird A).
+(* begin hide *)
+Proof.
+  Functional Scheme weird_ind := Induction for weird Sort Prop.
+  red; intros. functional induction (weird x); cbn; trivial.
+    rewrite IHl. trivial.
+Qed.
+(* end hide *)
+
+(** Funkcja ta zamienia miejscami bloki elementów listy o długości dwa.
+    Nietrudno zauważyć, że dwukrotne takie przestawienie jest identycznością.
+    UWAGA TODO: dowód wymaga specjalnej reguły indukcyjnej. *)
+
+Theorem flip_inv :
+  forall A : Type, involutive (@flip A A A).
+(* begin hide *)
+Proof.
+  red; intros. unfold flip. extensionality b; extensionality a. trivial.
+Qed.
+(* end hide *)
+
+(** Inwolucją jest też kombinator [flip], który poznaliśmy na początku
+    rozdziału. Przypomnijmy, że zamienia on miejscami argumenty funkcji
+    binarnej. Nie dziwota, że dwukrotna taka zamiana daje oryginalną
+    funkcję. *)
+
+Goal ~ involutive (@rev nat .> weird).
+(* begin hide *)
+Proof.
+  unfold involutive, not; intro. specialize (H [1; 2; 3]).
+  cbn in H. inversion H.
+Qed.
+(* end hide *)
+
+(** Okazuje się, że złożenie inwolucji wcale nie musi być inwolucją. Wynika
+    to z faktu, że funcje [weird] i [rev] są w pewien sposób niekompatybilne
+    — pierwsze wywołanie każdej z nich przeszkadza drugiemu wywołaniu drugiej
+    z nich odwrócić efekt pierwszego wywołania. *)
+
+Theorem comp_inv :
+  forall (A : Type) (f g : A -> A),
+    involutive f -> involutive g -> f .> g = g .> f -> involutive (f .> g).
+(* begin hide *)
+Proof.
+  unfold involutive. intros.
+  assert (forall x, (f .> g) x = (g .> f) x).
+    rewrite H1. trivial.
+    unfold comp in *. rewrite <- H2, H, H0. trivial.
+Qed.
+(* end hide *)
+
+(** Kryterium to jest rozstrzygające — jeżeli inwolucje komutują ze sobą
+    (czyli są "kompatybilne", [f .> g = g .> f]), to ich złożenie również
+    jest inwolucją. *)
 
 Theorem inv_bij :
   forall (A : Type) (f : A -> A), involutive f -> bijective f.
@@ -667,8 +942,11 @@ Proof.
 Qed.
 (* end hide *)
 
+(** Ponieważ każda inwolucja ma odwrotność (którą jest ona sama), każda
+    inwolucja jest z automatu bijekcją. *)
+
 (* begin hide *)
-Function count_inv (n : nat) : nat :=
+Fixpoint count_inv (n : nat) : nat :=
 match n with
     | 0 => 1
     | 1 => 1
@@ -679,4 +957,182 @@ Compute count_inv 6.
 Compute map count_inv [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11].
 (* end hide *)
 
+(** **** Ćwiczenie *)
+
+(** Rozważmy funkcje rzeczywiste f(x) = ax^n, f(x) = ax^(-n), f(x) = sin(x),
+    f(x) = cos(x), f(x) = a/x, f(x) = a - x, f(x) = e^x. Które z nich są
+    inwolucjami? *)
+
+(** * Uogólnione inwolucje *)
+
+(** Pojęcie inwolucji można nieco uogólnić. Żeby to zrobić, przeformułujmy
+    najpierw definicję inwolucji. *)
+
+Definition involutive' {A : Type} (f : A -> A) : Prop :=
+  f .> f = id A.
+
+(** Nowa definicja głosi, że inwolucja to taka funkcja, że jej złożenie
+    ze sobą jest identycznością. Jeżeli funkcje [f .> f] i [id A]
+    zaaplikujemy do argumentu [x], otrzymamy oryginalną definicję. Nowa
+    definicja jest równoważna starej na mocy aksjomatu ekstensjonalności
+    dla funkcji. *)
+
+Theorem involutive_involutive' :
+  forall (A : Type) (f : A -> A), involutive f <-> involutive' f.
+(* begin hide *)
+Proof.
+  unfold involutive, involutive'; split; intros.
+    unfold comp, id. extensionality x. apply H.
+    change x with (id A x) at 2. rewrite <- H. trivial.
+Qed.
+(* end hide *)
+
+(** Pójdźmy o krok dalej. Zamiast składania [.>] użyjmy kombinatora [iter 2],
+    który ma taki sam efekt. *)
+
+Definition involutive'' {A : Type} (f : A -> A) : Prop :=
+  iter 2 f = id A.
+
+Theorem involutive'_involutive'' :
+  forall (A : Type) (f : A -> A), involutive' f <-> involutive'' f.
+(* begin hide *)
+Proof.
+  unfold involutive', involutive''; split; intros.
+    unfold iter. rewrite <- H at 2. trivial.
+    assumption.
+Qed.
+(* end hide *)
+
+(** Droga do uogólnienia została już prawie przebyta. Nasze dotychczasowe
+    inwolucje nazwiemy uogólnionymi inwolucjami rzędu 2. Definicję
+    uogólnionej inwolucji otrzymamy, zastępując w definicji 2 przez [n]. *)
+
+Definition gen_involutive {A : Type} (n : nat) (f : A -> A)
+  : Prop := iter n f = id A.
+
+(** Nie żeby pojęcie to było jakoś szczególnie często spotykane lub nawet
+    przydatne — wymyśliłem je na poczekaniu. Spróbujmy znaleźć jakąś
+    uogólnioną inwolucję o rzędzie większym niż 2. *)
+
+Fixpoint weirder {A : Type} (l : list A) : list A :=
+match l with
+    | [] => []
+    | [x] => [x]
+    | [x; y] => [x; y]
+    | x :: y :: z :: t => y :: z :: x :: weirder t
+end.
+
+Compute weirder [1; 2; 3; 4; 5].
+Compute iter 3 weirder [1; 2; 3; 4; 5].
+
+Theorem weirder_inv_3 :
+  forall A : Type, gen_involutive 3 (@weirder A).
+(* begin hide *)
+Proof.
+  Functional Scheme weirder_ind := Induction for weirder Sort Prop.
+  unfold gen_involutive; intros. extensionality l.
+  functional induction (weirder l); cbn; trivial.
+  unfold iter in IHl0. rewrite id_right in IHl0. unfold comp in IHl0.
+  rewrite IHl0. trivial.
+Qed.
+(* end hide *)
+
+(** * Idempotencja *)
+
+Definition idempotent {A : Type} (f : A -> A) : Prop :=
+  forall x : A, f (f x) = f x.
+
+(** Kolejnym rodzajem funkcji są funkcje idempotente. Po łacinie "idem"
+    znaczy "taki sam", zaś "potentia" oznacza "moc". Funkcja idempotentna
+    to taka, której wynik jest taki sam niezależnie od tego, ile razy
+    zostanie zaaplikowana.
+
+    Przykłady można mnożyć. Idempotentne jest wciśnięcie guzika w windzie
+    — jeżeli np. wciśniemy "2", to po wjechaniu na drugi piętro kolejne
+    wciśnięcia guzika "2" nie będą miały żadnego efektu.
+
+    Idempotentne jest również sortowanie. Jeżeli posortujemy listę, to jest
+    ona posortowana i kolejne sortowania niczego w niej nie zmienią. Problemem
+    sortowania zajmiemy się w przyszłych rozdziałach. *)
+
+Theorem id_idem :
+  forall A : Type, idempotent (id A).
+(* begin hide *)
+Proof.
+  unfold idempotent. trivial.
+Qed.
+(* end hide *)
+
+Theorem const_idem :
+  forall (A B : Type) (b : B), idempotent (const b).
+(* begin hide *)
+Proof.
+  unfold idempotent. trivial.
+Qed.
+(* end hide *)
+
+Require Import X3.
+
+Theorem take_idem :
+  forall (A : Type) (n : nat), idempotent (@take A n).
+(* begin hide *)
+Proof.
+  Functional Scheme take_ind := Induction for take Sort Prop.
+  unfold idempotent; intros.
+  functional induction @take A n x; cbn; try rewrite IHl; trivial.
+Restart.
+  unfold idempotent; intros.
+  rewrite take_length'.
+    trivial.
+    apply length_take'.
+Qed.
+(* end hide *)
+
+(** Identyczność jest idempotentna — niezrobienie niczego dowolną ilość
+    razy jest wszakże ciągle niezrobieniem niczego. Podobnież funkcja
+    stała jest idempotentna — zwracanie tej samej wartości daje zawsze
+    ten sam efekt, niezależnie od ilości powtórzeń.
+
+    Ciekawszym przykładem, który jednak nie powinien cię zaskoczyć, jest
+    funkcja [take] dla dowolnego [n : nat]. Wzięcie [n] elementów z listy
+    [l] daje nam listę mającą co najwyżej [n] elementów. Próba wzięcia
+    [n] elementów z takiej listy niczego nie zmieni, gdyż jej długość jest
+    mniejsza lub równa ilości elementów, które chcemy wziąć. *)
+
+Theorem comp_idem :
+  forall (A : Type) (f g : A -> A),
+    idempotent f -> idempotent g -> f .> g = g .> f ->
+      idempotent (f .> g).
+(* begin hide *)
+Proof.
+  unfold idempotent. intros.
+  assert (forall x, (f .> g) x = (g .> f) x).
+    rewrite H1. trivial.
+    unfold comp in *. rewrite <- H2, H, H0. trivial.
+Qed.
+(* end hide *)
+
+(** Jeżeli chodzi o składanie funkcji idempotentnych, sytuacja jest podobna
+    do tej, jaka jest udziałem inwolucji. *)
+
+(** * Uogólniona idempotencja *)
+
+(** Podobnie jak w przypadku inwolutywności, pojęcie idempotencji możemy
+    uogólnić na pojęcie idempotencji rzędu n — po zaaplikowaniu funkcji
+    n razy kolejne aplikacje przestają mieć jakiekolwiek efekty. *)
+
+Definition gen_idempotent {A : Type} (n : nat) (f : A -> A)
+  : Prop := forall k : nat, iter (k + n) f = iter n f.
+
+(** Zdaje mi się ono jednak być mocno bezużyteczne. TODO: wymyślić jakieś
+    przykłady. *)
+
+(** * Punkty stałe *)
+
+(** Kolejnym ważnym pojęciem jest pojęcie punktu stałego (ang. "fixed point",
+    często skracane do "fixpoint"). Właśnie od niego bierze się nazwa
+    komendy [Fixpoint], służącej do definiowania funkcji rekurencyjnych. *)
+
+Definition fixpoint {A : Type} (f : A -> A) (x : A)
+  : Prop := f x = x.
 
