@@ -825,7 +825,7 @@ Qed.
 (* end hide *)
 
 Theorem take_length' : forall (A : Type) (n : nat) (l : list A),
-    length l <= n -> take n l = l.
+  length l <= n -> take n l = l.
 (* begin hide *)
 Proof.
   induction n as [| n']; intros.
@@ -839,7 +839,7 @@ Qed.
 (* end hide *)
 
 Theorem drop_length' : forall (A : Type) (n : nat) (l : list A),
-    length l <= n -> drop n l = [].
+  length l <= n -> drop n l = [].
 (* begin hide *)
 Proof.
   induction n as [| n']; intros.
@@ -860,6 +860,19 @@ Proof.
   simpl; inversion 1; subst; trivial;
   f_equal; apply IHn'; apply le_S_n in H; assumption.
 Qed.
+
+Theorem length_take' :
+  forall (A : Type) (n : nat) (l : list A),
+    length (take n l) <= n.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    trivial.
+    destruct l as [| h t]; cbn.
+      apply le_0_n.
+      apply le_n_S. apply IHn'.
+Qed.
+(* end hide *)
 
 Theorem drop_take : forall (A : Type) (n : nat) (l : list A),
     n <= length l -> length (drop n l) = length l - n.
