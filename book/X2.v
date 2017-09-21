@@ -1132,8 +1132,8 @@ match m with
     | S m' => plus''' (S n) m'
 end.
 
-Theorem plus'''_is_plus_no_lemmas : forall n m : nat,
-    plus''' n m = plus n m.
+Theorem plus'''_is_plus :
+  forall n m : nat, plus''' n m = plus n m.
 (* begin hide *)
 Proof.
   intros n m. generalize dependent n.
@@ -1282,5 +1282,90 @@ Proof.
 Qed. *)
 (* end hide *)
 
+(** *** Podzielność *)
+
+Definition divides (k n : nat) : Prop :=
+  exists m : nat, mult k m = n.
+
+Notation "k | n" := (divides k n) (at level 40).
+
+(** [k] dzieli [n] jeżeli [n] jest wielokrotnością [k]. Udowodnij podstawowe
+    właściwości relacji "dzieli". *)
+
+Theorem divides_0 :
+  forall n : nat, n | 0.
+(* begin hide *)
+Proof.
+  intro. red. exists 0. apply mult_0_r.
+Qed.
+(* end hide *)
+
+Theorem not_divides_0 :
+  forall n : nat, n <> 0 -> ~ 0 | n.
+(* begin hide *)
+Proof.
+  unfold not, divides; intros. destruct H0 as [m Hm].
+  rewrite mult_0_l in Hm. congruence.
+Qed.
+(* end hide *)
+
+Theorem divides_1 :
+  forall n : nat, 1 | n.
+(* begin hide *)
+Proof.
+  intro. red. exists n. apply mult_1_l.
+Qed.
+(* end hide *)
+
+Theorem divides_refl :
+  forall n : nat, n | n.
+(* begin hide *)
+Proof.
+  intro. red. exists 1. apply mult_1_r.
+Qed.
+(* end hide *)
+
+Theorem divides_trans :
+  forall k n m : nat, k | n -> n | m -> k | m.
+(* begin hide *)
+Proof.
+  unfold divides; intros.
+  destruct H as [c1 H1], H0 as [c2 H2].
+  exists (mult c1 c2). rewrite mult_assoc. rewrite H1, H2. trivial.
+Qed.
+(* end hide *)
+
+Theorem divides_plus :
+  forall k n m : nat, k | n -> k | m -> k | plus n m.
+(* begin hide *)
+Proof.
+  unfold divides; intros.
+  destruct H as [c1 H1], H0 as [c2 H2].
+  exists (plus c1 c2). rewrite mult_plus_distr_l. rewrite H1, H2. trivial.
+Qed.
+(* end hide *)
+
+Theorem divides_mult_l :
+  forall k n m : nat, k | n -> k | mult n m.
+(* begin hide *)
+Proof.
+  unfold divides. destruct 1 as [c H].
+  exists (mult c m). rewrite mult_assoc. rewrite H. trivial.
+Qed.
+(* end hide *)
+
+Theorem divides_mult_r :
+  forall k n m : nat, k | m -> k | mult n m.
+(* begin hide *)
+Proof.
+  intros. rewrite mult_comm. apply divides_mult_l. assumption.
+Qed.
+(* end hide *)
+
+(*Theorem divides_lt :
+  forall k n : nat, n < k -> ~ k | *)
+
+Definition prime (p : nat) : Prop :=
+  forall k : nat, k | p -> k = 1 \/ k = p.
 
 End MyNat.

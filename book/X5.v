@@ -31,11 +31,89 @@
       być ze sobą w relacji, tzn. zdanie zwracane dla nich przez relację
       może być prawdziwe, a dla innych nie. *)
 
-Definition rel {A : Type} : Type := A -> A -> Prop.
+(** * Heterogeniczne relacje binarne *)
 
-Require Import Relations.
+Definition hrel (A B : Type) : Type := A -> B -> Prop.
 
-Print relation.
+(** Najważniejszym rodzajem relacji są relacje binarne, czyli relacje
+    biorące dwa argumenty. To właśnie im poświęcimy ten rozdział, pominiemy
+    zaś relacje biorące trzy i więcej argumentów. *)
 
-(** Najważniejszym rodzajem relacji są homogeniczne relacje binarne, czyli
-    relacje biorące dwa argumenty tego samego typu. *)
+Class LeftUnique {A B : Type} (R : hrel A B) : Prop :=
+{
+    left_unique : forall (a a' : A) (b : B), R a b -> R a' b -> a = a'
+}.
+
+Class RightUnique {A B : Type} (R : hrel A B) : Prop :=
+{
+    right_unique : forall (a : A) (b b' : B), R a b -> R a b' -> b = b'
+}.
+
+Class LeftTotal {A B : Type} (R : hrel A B) : Prop :=
+{
+    left_total : forall a : A, exists b : B, R a b
+}.
+
+Class RightTotal {A B : Type} (R : hrel A B) : Prop :=
+{
+    right_total : forall b : B, exists a : A, R a b
+}.
+
+(** * Homogeniczne relacje binarne *)
+
+Definition rel (A : Type) : Type := hrel A A.
+
+Class Reflexive {A : Type} (R : rel A) : Prop :=
+{
+    reflexive : forall x : A, R x x
+}.
+
+Class Irreflexive {A : Type} (R : rel A) : Prop :=
+{
+    irreflexive : exists x : A, ~ R x x
+}.
+
+Class Antireflexive {A : Type} (R : rel A) : Prop :=
+{
+    antireflexive : forall x : A, ~ R x x
+}.
+
+Class WeakReflexive {A : Type} (R : rel A) : Prop :=
+{
+    wreflexive : forall x y : A, R x y -> x = y
+}.
+
+Class Symmetric {A : Type} (R : rel A) : Prop :=
+{
+    symmetric : forall x y : A, R x y -> R y x
+}.
+
+Class Asymmetric {A : Type} (R : rel A) : Prop :=
+{
+    asymmetric : exists x y : A, R x y /\ ~ R y x
+}.
+
+Class Antisymmetric {A : Type} (R : rel A) : Prop :=
+{
+    antisymmetric : forall x y : A, R x y -> ~ R x y
+}.
+
+Class WeakAntisymmetric {A : Type} (R : rel A) : Prop :=
+{
+    wantisymmetric : forall x y : A, R x y -> R y x -> x = y
+}.
+
+Class Transitive {A : Type} (R : rel A) : Prop :=
+{
+    transitive : forall x y z : A, R x y -> R y z -> R x z
+}.
+
+Class Total {A : Type} (R : rel A) : Prop :=
+{
+    total : forall x y : A, R x y \/ R y x
+}.
+
+Class Trichotomous {A : Type} (R : rel A) : Prop :=
+{
+    trichotomous : forall x y : A, R x y \/ x = y \/ R y x
+}.
