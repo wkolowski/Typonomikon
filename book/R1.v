@@ -1359,7 +1359,7 @@ Qed.
     z biblioteki standardowej znajdziesz tu:
     https://coq.inria.fr/refman/tactic-index.html *)
 
-(** * Zadania (beta) *)
+(** * Zadania *)
 (** Uwaga: niektóre zadania mogą pokrywać się z ćwiczeniami, które
     występują w tekście.
     Uwaga TODO: dodać ćwiczenia do sekcji Kombinatory taktyk. *)
@@ -1385,6 +1385,8 @@ Ltac search := unfold not; intros; match goal with
     | |- _ \/ _ => left; search || right; search
     | _ => eauto; fail
 end.
+
+Ltac leftright t := ((left; t) || (right; t)).
 (* end hide *)
 
 (* Przemienność *)
@@ -1452,10 +1454,6 @@ Proof.
 Restart.
   search.
 Qed.
-(* end hide *)
-
-(* begin hide *)
-Ltac leftright t := ((left; t) || (right; t)).
 (* end hide *)
 
 Theorem or_dist_and : P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
