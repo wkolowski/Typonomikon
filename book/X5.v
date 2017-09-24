@@ -15,7 +15,7 @@ Import ListNotations.
     relacji, ich właściwości, a także zależności i przekształcenia między
     nimi. Rozdział będzie raczej matematyczny. *)
 
-(** * Relacje *)
+(** * Relacje binarne *)
 
 (** Zacznijmy od przypomnienia klasyfikacji zdań, predykatów i relacji:
     - zdania to obiekty typu [Prop]. Twierdzą one coś na temat świata:
@@ -94,14 +94,17 @@ Compute map (collatz' 1000) [1; 2; 3; 4; 5; 6; 7; 8; 9].
 Compute collatz' 1000 2487.
 (* end hide *)
 
-(** * Heterogeniczne relacje binarne *)
-
 Definition hrel (A B : Type) : Type := A -> B -> Prop.
 
 (** Najważniejszym rodzajem relacji są relacje binarne, czyli relacje
     biorące dwa argumenty. To właśnie im poświęcimy ten rozdział, pominiemy
-    zaś relacje biorące trzy i więcej argumentów. Zacznijmy od zdefiniowania
-    podstawowych opreacji na relacjach. *)
+    zaś relacje biorące trzy i więcej argumentów. Określenia "relacja binarna"
+    będę używał zarówno na określenie relacji binarnych heterogenicznych
+    (czyli biorących dwa argumnty różnych typów) jak i na określenie relacji
+    binarnych homogenicznych (czyli biorących dwa argumenty tego samego
+    typu). *)
+
+(** * Identyczność relacji *)
 
 Definition subrelation {A B : Type} (R S : hrel A B) : Prop :=
   forall (a : A) (b : B), R a b -> S a b.
@@ -168,6 +171,8 @@ Qed.
 
 (** Uporawszy się z pojęciem "identyczności" relacji możemy przejść dalej,
     a mianowicie do operacji, jakie możemy wykonywać na relacjach. *)
+
+(** * Operacje na relacjach *)
 
 Definition Rcomp {A B C : Type} (R : hrel A B) (S : hrel B C)
   : hrel A C := fun (a : A) (c : C) => exists b : B, R a b /\ S b c.
@@ -261,7 +266,7 @@ Definition RFalse {A B : Type} : hrel A B :=
 (* begin hide *)
 Ltac wut :=
   unfold subrelation, same_hrel, Rcomp, Rid, Rinv, Rnot, Rand, Ror;
-  repeat split; intros; firstorder.
+  repeat split; intros; firstorder; subst; eauto.
 (* end hide *)
 
 Theorem Rnot_double :
@@ -367,6 +372,8 @@ Proof. wut. Qed.
     nim spotkamy. Tymczasem przyjrzyjmy się bliżej specjalnym rodzajom
     relacji. *)
 
+(** * Rodzaje relacji heterogenicznych *)
+
 Class LeftUnique {A B : Type} (R : hrel A B) : Prop :=
 {
     left_unique : forall (a a' : A) (b : B), R a b -> R a' b -> a = a'
@@ -429,7 +436,7 @@ Qed.
 (** **** Ćwiczenie *)
 
 (** Znajdź przykład relacji, która jest lewostronnie unikalna, ale nie jest
-    prawostronnie unikana.
+    prawostronnie unikalna.
 
     Znajdź przykad relacji, która jest prawostronnie unikalna, ale nie jest
     lewostronnie unikalna. *)
@@ -520,8 +527,85 @@ Proof.
 Qed.
 (* end hide *)
 
+Class Functional {A B : Type} (R : hrel A B) : Prop :=
+{
+    F_LT :> LeftTotal R;
+    F_RU :> RightUnique R;
+}.
 
+(** Lewostronną totalność i prawostronną unikalność możemy połączyć, by
+    uzyskać pojęcie relacji funkcyjnej. Relacja funkcyjna to relacja,
+    która ma właściwości takie, jak funkcje — każdy lewostronny argument
+    [a : A] jest w relacji z dokładnie jednym [b : B] po prawej stronie. *)
 
+Instance Fun_to_Functional {A B : Type} (f : A -> B)
+  : Functional (fun (a : A) (b : B) => f a = b).
+(* begin hide *)
+Proof.
+  repeat split; intros.
+    exists (f a). trivial.
+    subst. trivial.
+Qed.
+(* end hide *)
+
+Definition Functional_to_Fun
+  {A B : Type} (R : hrel A B) (F : Functional R) : A -> B.
+Proof.
+  intro a. destruct F. destruct F_LT0.
+  Fail destruct (left_total0 a).
+Abort.
+
+(** Z każdej funkcji można w prosty sposób zrobić relację funkcyjną, ale
+    bez dodatkowych aksjomatów nie jesteśmy w stanie z relacji funkcyjnej
+    zrobić funkcji. Przemilczając kwestie aksjomatów możemy powiedzieć
+    więc, że relacje funkcyjne odpowiadają funkcjom.
+
+    Co więcej, relacje funkcyjne, która są lewostronnie unikalne odpowiadają
+    funkcjom injektywnym, a te które są prawostronnie totalne — funkcjom
+    surjektywnym. Relacje spełniające wszystkie cztery warunki odpowiadają
+    bijekcjom. *)
+
+Instance LU_Rand :
+  forall (A B : Type) (R S : hrel A B),
+    LeftUnique R -> LeftUnique S -> LeftUnique (Rand R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Instance RU_Rand :
+  forall (A B : Type) (R S : hrel A B),
+    RightUnique R -> RightUnique S -> RightUnique (Rand R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Ror_not_LU :
+  exists (A B : Type) (R S : hrel A B),
+    LeftUnique R /\ LeftUnique S /\ ~ LeftUnique (Ror R S).
+(* begin hide *)
+Proof.
+  exists bool, bool.
+  exists (@Rid bool), (fun b b' => b = negb b').
+  wut. destruct 1.
+  cut (true = false).
+    inversion 1.
+    apply left_unique0 with false; auto.
+Qed.
+(* end hide *)
+
+Theorem Ror_not_RU :
+  exists (A B : Type) (R S : hrel A B),
+    RightUnique R /\ RightUnique S /\ ~ RightUnique (Ror R S).
+(* begin hide *)
+Proof.
+  exists bool, bool.
+  exists (@Rid bool), (fun b b' => b = negb b').
+  wut. destruct b, b'; cbn in H0; congruence. destruct 1.
+  cut (true = false).
+    inversion 1.
+    apply right_unique0 with false; auto.
+Qed.
+(* end hide *)
 
 
 
@@ -529,10 +613,70 @@ Qed.
 
 Definition rel (A : Type) : Type := hrel A A.
 
+(** Relacje homogeniczne to takie, których wszystkie argumenty są tego
+    samego typu. Warunek ten pozwala nam na wyrażenie całej gamy nowych
+    właściwości, które relacje takie mogą posiadać. *)
+
 Class Reflexive {A : Type} (R : rel A) : Prop :=
 {
     reflexive : forall x : A, R x x
 }.
+
+(** Relacja [R] jest zwrotna (ang. reflexive), jeżeli każdy [x : A] jest
+    w relacji sam ze sobą. *)
+
+Instance Reflexive_eq {A : Type} : Reflexive (@eq A).
+(* begin hide *)
+Proof.
+  split. intro. apply eq_refl.
+Qed.
+(* end hide *)
+
+(** Najważniejszym przykładem relacji zwrotnej jest równość. Przypomnij
+    sobie, że [eq] ma tylko jeden konstruktor [eq_refl], który głosi,
+    że każdy obiekt jest równy samemu sobie. *)
+
+Theorem eq_subrelation_Reflexive :
+  forall (A : Type) (R : rel A), Reflexive R ->
+    subrelation (@eq A) R.
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+(** Równość jest "najmniejszą" relacją zwrotną w tym sensie, że jest ona
+    subrelacją każdej relacji zwrotnej. Intuicyjnym uzasadnieniem jest
+    fakt, że w definicji [eq] poza konstruktorem [eq_refl], który daje
+    zwrotność, nie ma niczego innego. *)
+
+Instance Reflexive_empty :
+  forall R : rel Empty_set, Reflexive R.
+(* begin hide *)
+Proof.
+  split. destruct x.
+Qed.
+(* end hide *)
+
+Instance Reflexive_Rand :
+  forall (A : Type) (R S : rel A),
+    Reflexive R -> Reflexive S -> Reflexive (Rand R S).
+(* begin hide *)
+Proof.
+  destruct 1, 1. do 2 split; auto.
+Qed.
+(* end hide *)
+
+Instance Reflexive_Ror :
+  forall (A : Type) (R S : rel A),
+    Reflexive R -> Reflexive S -> Reflexive (Ror R S).
+(* begin hide *)
+Proof.
+  destruct 1, 1. unfold Ror; split; auto.
+Qed.
+(* end hide *)
+
+(** Jak widać, koniunkcja i dysjunkcja relacji zwrotnych również są zwrotne.
+    Okazuje się też, że wszystkie relacje na [Empty_set] (a więc także na
+    wszystkich innych typach pustych) są zwrotne. *)
 
 Class Irreflexive {A : Type} (R : rel A) : Prop :=
 {
@@ -543,6 +687,82 @@ Class Antireflexive {A : Type} (R : rel A) : Prop :=
 {
     antireflexive : forall x : A, ~ R x x
 }.
+
+(** Kolejne dwie właściwości to pochodne zwrotności. Relacja niezwrotna to
+    taka, która nie jest zwrotna. Relacja antyzwrotna to taka, że żaden
+    [x : A] nie jest w relacji sam ze sobą. Zauważ, że pojęcie te zasadniczo
+    różnią się od siebie.
+
+    Uwaga terminologiczna: w innych pracach to, co nazwaliśmy [Antireflexive]
+    bywa zazwyczaj nazywane [Irreflexive]. Ja przyjąłem następujące reguły
+    tworzenia nazwa różnych rodzajów relacji:
+    - "podstawowa" własność nie ma przedrostka, np. "zwrotna", "reflexive"
+    - zanegowana własność ma przedrostek "nie" (lub podobny w nazwach
+      angielskich), np. "niezwrotny", "irreflexive"
+    - przeciwieństwo tej właściwości ma przedrostek "anty-" (po angielsku
+      "anti-"), np. "antyzwrotna", "antireflexive" *)
+
+Instance Irreflexive_Rand :
+  forall (A : Type) (R S : rel A),
+    Irreflexive R -> Irreflexive S -> Irreflexive (Rand R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Irreflexive_Ror_not :
+  exists (A : Type) (R S : rel A),
+    Irreflexive R /\ Irreflexive S /\ ~ Irreflexive (Ror R S).
+(* begin hide *)
+Proof.
+  exists bool.
+  pose (R := fun x y : bool => if x then x = negb y else x = y).
+  pose (S := fun x y : bool => if x then x = y else x = negb y).
+  exists R, S; unfold R, S; wut.
+    exists true; cbn. inversion 1.
+    exists false; cbn. inversion 1.
+    destruct 1. destruct irreflexive0 as [b H]. apply H. destruct b; auto.
+Qed.
+(* end hide *)
+
+(** O ile koniunkcja relacji niezwrotnych nie jest zwrotna, o tyle
+    dysjunkcja już niekoniecznie. *)
+
+Theorem Antireflexive_empty :
+  forall R : rel Empty_set, Antireflexive R.
+(* begin hide *)
+Proof.
+  split. destruct x.
+Qed.
+(* end hide *)
+
+Instance Antireflexive_Rand :
+  forall (A : Type) (R S : rel A),
+    Antireflexive R -> Antireflexive S -> Antireflexive (Rand R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Instance Antireflexive_Ror :
+  forall (A : Type) (R S : rel A),
+    Antireflexive R -> Antireflexive S -> Antireflexive (Ror R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rnot_nonempty_not_Reflexive :
+  forall (A : Type) (nonempty : A) (R : rel A),
+    Reflexive R -> Antireflexive (Rnot R).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+(** Podobnie jak w przypadku relacji zwrotnych, każda relacja na typie
+    pustym jest antyzwrotna. Koniunkcja i dysjunkcja relacji zachowują
+    także antyzwrotność.
+
+    Dzięki ostatniemu twierdzeniu widać też, czym naprawdę są właściwości
+    poprzedzone przedrostkiem "anty-": negacja relacji zwrotnej jest
+    antyzwrotna. *)
 
 Class WeakReflexive {A : Type} (R : rel A) : Prop :=
 {
