@@ -44,56 +44,6 @@ Import ListNotations.
     tymi metodami definiować także przez indukcję, dzięki czemu możemy
     wyrazić więcej konceptów niż za pomocą rekursji. *)
 
-(** **** Ćwiczenie *)
-
-(** Funkcję Collatza klasycznie definiuje się w ten sposób: jeżeli n
-    jest parzyste, to f(n) = n/2. W przeciwnym przypadku f(n) = 3n + 1.
-    Zaimplementuj tę funkcję w Coqu. Zastanów się, jakiego mechanizmu
-    użyć: funkcji rekurencyjnej czy relacji induktywnej?
-
-    Udowodnij, że f(42) = 1. *)
-
-(* begin hide *)
-Inductive collatz : nat -> nat -> Prop :=
-    | c_even : forall n : nat, collatz (2 * n) n
-    | c_odd : forall n : nat, collatz (1 + 2 * n) (4 + 6 * n)
-    | c_trans : forall a b c : nat,
-        collatz a b -> collatz b c -> collatz a c.
-
-Hint Constructors collatz.
-
-Theorem collatz_42 : collatz 42 1.
-Proof.
-  apply c_trans with 21.
-    change 42 with (2 * 21). constructor.
-  apply c_trans with 64.
-    change 21 with (1 + 2 * 10). constructor.
-  apply c_trans with 2.
-    Focus 2. apply (c_even 1).
-  apply c_trans with 4.
-    Focus 2. apply (c_even 2).
-  apply c_trans with 8.
-    Focus 2. apply (c_even 4).
-  apply c_trans with 16.
-    Focus 2. apply (c_even 8).
-  apply c_trans with (32).
-    Focus 2. apply (c_even 16).
-  apply (c_even 32).
-Qed.
-
-Fixpoint collatz' (fuel n : nat) : list nat :=
-match fuel with
-    | 0 => []
-    | S fuel' =>
-        if leb n 1 then [n] else
-            let h := if even n then div2 n else 1 + 3 * n
-            in n :: collatz' fuel' h
-end.
-
-Compute map (collatz' 1000) [1; 2; 3; 4; 5; 6; 7; 8; 9].
-Compute collatz' 1000 2487.
-(* end hide *)
-
 Definition hrel (A B : Type) : Type := A -> B -> Prop.
 
 (** Najważniejszym rodzajem relacji są relacje binarne, czyli relacje
@@ -433,6 +383,72 @@ Qed.
     [Rinv]. Okazuje się, że zamiana miejscami argumentów relacji lewostronnie
     unikalnej daje relację prawostronnie unikalną i vice versa. *)
 
+Instance LU_Rand :
+  forall (A B : Type) (R S : hrel A B),
+    LeftUnique R -> LeftUnique (Rand R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Instance RU_Rand :
+  forall (A B : Type) (R S : hrel A B),
+    RightUnique R -> RightUnique (Rand R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Ror_not_LU :
+  exists (A B : Type) (R S : hrel A B),
+    LeftUnique R /\ LeftUnique S /\ ~ LeftUnique (Ror R S).
+(* begin hide *)
+Proof.
+  exists bool, bool.
+  exists (@Rid bool), (fun b b' => b = negb b').
+  wut. destruct 1.
+  cut (true = false).
+    inversion 1.
+    apply left_unique0 with false; auto.
+Qed.
+(* end hide *)
+
+Theorem Ror_not_RU :
+  exists (A B : Type) (R S : hrel A B),
+    RightUnique R /\ RightUnique S /\ ~ RightUnique (Ror R S).
+(* begin hide *)
+Proof.
+  exists bool, bool.
+  exists (@Rid bool), (fun b b' => b = negb b').
+  wut. destruct b, b'; cbn in H0; congruence. destruct 1.
+  cut (true = false).
+    inversion 1.
+    apply right_unique0 with false; auto.
+Qed.
+(* end hide *)
+
+(** Koniunkcja relacji unikalnej z inną daje relację unikalną, ale dysjunkcja
+    nawet dwóch relacji unikalnych nie musi dawać w wyniku relacji unikalnej.
+    Wynika to z interpretacji operacji na relacjach jako operacji na
+    kolekcjach par.
+
+    Wyobraźmy sobie, że relacja [R : hrel A B] to kolekcja par [p : A * B].
+    Jeżeli para jest elementem kolekcji, to jej pierwszy komponent jest w
+    relacji [R] z jej drugim komponentem. Dysjunkcję relacji [R] i [S] w
+    takim układzie stanowi kolekcja, która zawiera zarówno pary z kolekcji
+    odpowiadającej [R], jak i te z kolekcji odpowiadającej [S]. Koniunkcja
+    odpowiada kolekcji par, które są zarówno w kolekcji odpowiadającej [R],
+    jak i tej odpowiadającej [S].
+
+    Tak więc dysjunkcja [R] i [S] może do [R] "dorzucić" jakieś pary, ale
+    nie może ich zabrać. Analogicznie, koniunkcja [R] i [S] może zabrać
+    pary z [R], ale nie może ich dodać.
+
+    Teraz interpretacja naszego wyniku jest prosta. W przypadku relacji
+    lewostronnie unikalnych jeżeli każde [b : B] jest w relacji z co
+    najwyżej jednym [a : A], to potencjalne zabranie jakichś par z tej
+    relacji niczego nie zmieni. Z drugiej strony, nawet jeżeli obie relacje
+    są lewostronnie unikalne, to dodanie do [R] par z [S] może spowodować
+    wystąpienie powtórzeń, co niszczy unikalność. *)
+
 (** **** Ćwiczenie *)
 
 (** Znajdź przykład relacji, która jest lewostronnie unikalna, ale nie jest
@@ -493,6 +509,76 @@ Class RightTotal {A B : Type} (R : hrel A B) : Prop :=
     Za pojęciem tym nie stoją jakieś wielkie intuicje: relacja lewostronnie
     totalna to po prostu taka, w której żaden element [a : A] nie jest
     "osamotniony". *)
+
+Instance RightTotal_Rinv
+  {A B : Type} (R : hrel A B) (LT : LeftTotal R) : RightTotal (Rinv R).
+(* begin hide *)
+Proof.
+  unfold Rinv; split. intro a. destruct LT.
+  destruct (left_total0 a) as [b H]. exists b. assumption.
+Qed.
+(* end hide *)
+
+Instance LeftTotal_Rinv
+  {A B : Type} (R : hrel A B) (RT : RightTotal R) : LeftTotal (Rinv R).
+(* begin hide *)
+Proof.
+  unfold Rinv; split. intro a. destruct RT.
+  destruct (right_total0 a) as [b H]. exists b. assumption.
+Qed.
+(* end hide *)
+
+(** Między lewo- i prawostronną totalnością występuje podobna symetria jak
+    między dwoma formami unikalności: relacja odwrotna do lewostronnie
+    totalnej jest prawostronnie totalna i vice versa. *)
+
+Theorem LT_Ror :
+  forall (A B : Type) (R S : hrel A B),
+    LeftTotal R -> LeftTotal (Ror R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem RT_Ror :
+  forall (A B : Type) (R S : hrel A B),
+    RightTotal R -> RightTotal (Ror R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rand_not_LT :
+  exists (A B : Type) (R S : hrel A B),
+    LeftTotal R /\ LeftTotal S /\ ~ LeftTotal (Rand R S).
+(* begin hide *)
+Proof.
+  exists bool, bool.
+  exists (@Rid bool), (fun b b' => b = negb b').
+  wut.
+    exists (negb a). destruct a; trivial.
+    destruct 1. destruct (left_total0 true).
+      destruct x, H; cbn in H0; try congruence.
+Qed.
+(* end hide *)
+
+Theorem Rand_not_RT :
+  exists (A B : Type) (R S : hrel A B),
+    RightTotal R /\ RightTotal S /\ ~ RightTotal (Rand R S).
+(* begin hide *)
+Proof.
+  exists bool, bool.
+  exists (@Rid bool), (fun b b' => b = negb b').
+  wut.
+    destruct 1. destruct (right_total0 true).
+      destruct x, H; cbn in H0; try congruence.
+Qed.
+(* end hide *)
+
+(** Związki totalności z koniunkcją i dysjunkcją relacji są podobne jak
+    w przypadku unikalności, lecz tym razem to dysjunkcja zachowuje
+    właściwość, a koniunkcja ją niszczy. Wynika to z tego, że dysjunkcja
+    nie zabiera żadnych par z relacji, więc nie może uszkodzić totalności.
+    Z drugiej strony koniunkcja może zabrać jakąś parę, a wtedy relacja
+    przestaje być totalna. *)
 
 (** **** Ćwiczenie *)
 
@@ -565,51 +651,104 @@ Abort.
     surjektywnym. Relacje spełniające wszystkie cztery warunki odpowiadają
     bijekcjom. *)
 
-Instance LU_Rand :
-  forall (A B : Type) (R S : hrel A B),
-    LeftUnique R -> LeftUnique S -> LeftUnique (Rand R S).
-(* begin hide *)
-Proof. wut. Qed.
-(* end hide *)
-
-Instance RU_Rand :
-  forall (A B : Type) (R S : hrel A B),
-    RightUnique R -> RightUnique S -> RightUnique (Rand R S).
-(* begin hide *)
-Proof. wut. Qed.
-(* end hide *)
-
-Theorem Ror_not_LU :
+Theorem Rand_not_Functional :
   exists (A B : Type) (R S : hrel A B),
-    LeftUnique R /\ LeftUnique S /\ ~ LeftUnique (Ror R S).
+    Functional R /\ Functional S /\ ~ Functional (Rand R S).
 (* begin hide *)
 Proof.
   exists bool, bool.
   exists (@Rid bool), (fun b b' => b = negb b').
-  wut. destruct 1.
-  cut (true = false).
-    inversion 1.
-    apply left_unique0 with false; auto.
+  wut.
+    exists (negb a). destruct a; trivial.
+    destruct b, b'; cbn in H0; congruence.
+    destruct 1. destruct F_LT0. destruct (left_total0 true).
+      destruct x, H; cbn in H0; congruence.
 Qed.
 (* end hide *)
 
-Theorem Ror_not_RU :
+Theorem Ror_not_Functional :
   exists (A B : Type) (R S : hrel A B),
-    RightUnique R /\ RightUnique S /\ ~ RightUnique (Ror R S).
+    Functional R /\ Functional S /\ ~ Functional (Ror R S).
 (* begin hide *)
 Proof.
   exists bool, bool.
   exists (@Rid bool), (fun b b' => b = negb b').
-  wut. destruct b, b'; cbn in H0; congruence. destruct 1.
-  cut (true = false).
-    inversion 1.
-    apply right_unique0 with false; auto.
+  wut.
+    exists (negb a). destruct a; trivial.
+    destruct b, b'; cbn in H0; congruence.
+    destruct 1. destruct F_RU0.
+      cut (false = true).
+        inversion 1.
+        apply right_unique0 with false; auto.
 Qed.
 (* end hide *)
 
+(** Ani koniunkcje, ani dysjunkcje relacji funkcyjnych nie musza być wcale
+    relacjami funkcyjnymi. Jest to po części konsekwencją właściwości
+    relacji lewostronnie totalnych i prawostronnie unikalnych: pierwsze
+    mają problem z [Rand], a drugie z [Ror]. *)
 
+(** **** Ćwiczenie *)
 
-(** * Homogeniczne relacje binarne *)
+(** Możesz zadawać sobie pytanie: po co nam w ogóle pojęcie relacji
+    funkcyjnej, skoro mamy funkcje? Funkcje muszą być obliczalne (ang.
+    computable) i to na mocy definicji, zaś relacje — niekonieczne.
+    Czasem prościej może być najpierw zdefiniować relację, a dopiero
+    później pokazać, że jest funkcyjna. Czasem zdefiniowanie danego
+    bytu jako funkcji może być niemożliwe.
+
+    Funkcję Collatza klasycznie definiuje się w ten sposób: jeżeli n
+    jest parzyste, to f(n) = n/2. W przeciwnym przypadku f(n) = 3n + 1.
+
+    Zaimplementuj tę funkcję w Coqu. Spróbuj zaimplementować ją zarówno
+    jako funkcję rekurencyjną, jak i relację. Czy twoja funkcja dokładnie
+    odpowiada powyższej specyfikacji? Czy jesteś w stanie pokazać, że twoja
+    relacja jest funkcyjna?
+
+    Udowodnij, że f(42) = 1. *)
+
+(* begin hide *)
+Fixpoint collatz' (fuel n : nat) : list nat :=
+match fuel with
+    | 0 => []
+    | S fuel' =>
+        if leb n 1 then [n] else
+            let h := if even n then div2 n else 1 + 3 * n
+            in n :: collatz' fuel' h
+end.
+
+Compute map (collatz' 1000) [1; 2; 3; 4; 5; 6; 7; 8; 9].
+Compute collatz' 1000 2487.
+
+Inductive collatz : nat -> nat -> Prop :=
+    | c_even : forall n : nat, collatz (2 * n) n
+    | c_odd : forall n : nat, collatz (1 + 2 * n) (4 + 6 * n)
+    | c_trans : forall a b c : nat,
+        collatz a b -> collatz b c -> collatz a c.
+
+Hint Constructors collatz.
+
+Theorem collatz_42 : collatz 42 1.
+Proof.
+  apply c_trans with 21.
+    change 42 with (2 * 21). constructor.
+  apply c_trans with 64.
+    change 21 with (1 + 2 * 10). constructor.
+  apply c_trans with 2.
+    Focus 2. apply (c_even 1).
+  apply c_trans with 4.
+    Focus 2. apply (c_even 2).
+  apply c_trans with 8.
+    Focus 2. apply (c_even 4).
+  apply c_trans with 16.
+    Focus 2. apply (c_even 8).
+  apply c_trans with (32).
+    Focus 2. apply (c_even 16).
+  apply (c_even 32).
+Qed.
+(* end hide *)
+
+(** * Rodzaje relacji homogenicznych *)
 
 Definition rel (A : Type) : Type := hrel A A.
 
@@ -667,16 +806,24 @@ Qed.
 
 Instance Reflexive_Ror :
   forall (A : Type) (R S : rel A),
-    Reflexive R -> Reflexive S -> Reflexive (Ror R S).
+    Reflexive R -> Reflexive (Ror R S).
 (* begin hide *)
 Proof.
-  destruct 1, 1. unfold Ror; split; auto.
+  destruct 1. unfold Ror; split. auto.
 Qed.
 (* end hide *)
 
-(** Jak widać, koniunkcja i dysjunkcja relacji zwrotnych również są zwrotne.
+(** Jak widać, koniunkcja relacji zwrotnych także jest zwrotna. Dysjunkcja
+    posiada natomiast dużo mocniejszą właściwość: dysjunkcja dowolnej relacji
+    z relacją zwrotną daje relację zwrotną. Tak więc dysjunkcja [R] z [eq]
+    pozwala nam łatwo "dodać" zwrotność do [R]. Głębszym rozważaniom na tego
+    typu tematy oddamy się w kolejnych podrozdziałach.
+
     Okazuje się też, że wszystkie relacje na [Empty_set] (a więc także na
-    wszystkich innych typach pustych) są zwrotne. *)
+    wszystkich innych typach pustych) są zwrotne. Nie powinno cię to w
+    żaden sposób zaskakiwać — jest to tzw. pusta prawda (ang. vacuous
+    truth), zgodnie z którą wszystkie zdania kwantyfikowane uniwersalnie
+    po typie pustym są prawdziwe. Wszyscy w pustym pokoju są debilami. *)
 
 Class Irreflexive {A : Type} (R : rel A) : Prop :=
 {
@@ -690,12 +837,12 @@ Class Antireflexive {A : Type} (R : rel A) : Prop :=
 
 (** Kolejne dwie właściwości to pochodne zwrotności. Relacja niezwrotna to
     taka, która nie jest zwrotna. Relacja antyzwrotna to taka, że żaden
-    [x : A] nie jest w relacji sam ze sobą. Zauważ, że pojęcie te zasadniczo
+    [x : A] nie jest w relacji sam ze sobą. Zauważ, że pojęcia te zasadniczo
     różnią się od siebie.
 
     Uwaga terminologiczna: w innych pracach to, co nazwaliśmy [Antireflexive]
     bywa zazwyczaj nazywane [Irreflexive]. Ja przyjąłem następujące reguły
-    tworzenia nazwa różnych rodzajów relacji:
+    tworzenia nazw różnych rodzajów relacji:
     - "podstawowa" własność nie ma przedrostka, np. "zwrotna", "reflexive"
     - zanegowana własność ma przedrostek "nie" (lub podobny w nazwach
       angielskich), np. "niezwrotny", "irreflexive"
@@ -704,12 +851,12 @@ Class Antireflexive {A : Type} (R : rel A) : Prop :=
 
 Instance Irreflexive_Rand :
   forall (A : Type) (R S : rel A),
-    Irreflexive R -> Irreflexive S -> Irreflexive (Rand R S).
+    Irreflexive R -> Irreflexive (Rand R S).
 (* begin hide *)
 Proof. wut. Qed.
 (* end hide *)
 
-Theorem Irreflexive_Ror_not :
+Theorem Ror_not_Irreflexive :
   exists (A : Type) (R S : rel A),
     Irreflexive R /\ Irreflexive S /\ ~ Irreflexive (Ror R S).
 (* begin hide *)
@@ -724,8 +871,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(** O ile koniunkcja relacji niezwrotnych nie jest zwrotna, o tyle
-    dysjunkcja już niekoniecznie. *)
+(** Koniunkcja dowolnej relacji z relacją niezwrotną daje relację niezwrotną.
+    Tak więc za pomocą koniunkcji i dysjunkcji możemy łatwo "dodawać" i
+    "odbierać" zwrotność różnym relacjom. Okazuje się też, że dysjunkcja nie
+    zachowuje niezwrotności. *)
 
 Theorem Antireflexive_empty :
   forall R : rel Empty_set, Antireflexive R.
@@ -735,9 +884,15 @@ Proof.
 Qed.
 (* end hide *)
 
+Instance Antireflexive_neq :
+  forall (A : Type), Antireflexive (fun x y : A => x <> y).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
 Instance Antireflexive_Rand :
   forall (A : Type) (R S : rel A),
-    Antireflexive R -> Antireflexive S -> Antireflexive (Rand R S).
+    Antireflexive R -> Antireflexive (Rand R S).
 (* begin hide *)
 Proof. wut. Qed.
 (* end hide *)
@@ -749,7 +904,7 @@ Instance Antireflexive_Ror :
 Proof. wut. Qed.
 (* end hide *)
 
-Theorem Rnot_nonempty_not_Reflexive :
+Instance Antireflexive_Rnot_nonempty :
   forall (A : Type) (nonempty : A) (R : rel A),
     Reflexive R -> Antireflexive (Rnot R).
 (* begin hide *)
@@ -757,22 +912,52 @@ Proof. wut. Qed.
 (* end hide *)
 
 (** Podobnie jak w przypadku relacji zwrotnych, każda relacja na typie
-    pustym jest antyzwrotna. Koniunkcja i dysjunkcja relacji zachowują
-    także antyzwrotność.
+    pustym jest antyzwrotna, sztampowym zaś przykładem relacji antyzwrotnej
+    jest nierówność [<>]. Ze względu na sposób działania ludzkiego mózgu
+    antyzwrotna jest cała masa relacji znanych nam z codziennego życia:
+    "bycie matką", "bycie ojcem", "bycie synem", "bycie córką", "bycie nad",
+    "byciem pod", "bycie za", "bycie przed", etc.
+
+    Koniunkcja dowolnej relacji z relacją antyzwrotną daje nam relację
+    antyzwrotną, zaś dysjunkcja jedynie zachowuje właściwość bycia relacją
+    antyzwrotną.
 
     Dzięki ostatniemu twierdzeniu widać też, czym naprawdę są właściwości
     poprzedzone przedrostkiem "anty-": negacja relacji zwrotnej jest
     antyzwrotna. *)
 
-Class WeakReflexive {A : Type} (R : rel A) : Prop :=
-{
-    wreflexive : forall x y : A, R x y -> x = y
-}.
-
 Class Symmetric {A : Type} (R : rel A) : Prop :=
 {
     symmetric : forall x y : A, R x y -> R y x
 }.
+
+(** Relacja jest symetryczna, jeżeli kolejność podawania argumentów nie
+    ma znaczenia. Przykładami ze świata rzeczywistego mogą być np. relacje
+    "jest blisko", "jest obok", "jest naprzeciwko". *)
+
+Theorem Symmetric_Rand :
+  forall (A : Type) (R S : rel A ),
+    Symmetric R -> Symmetric S -> Symmetric (Rand R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Symmetric_Ror :
+  forall (A : Type) (R S : rel A ),
+    Symmetric R -> Symmetric S -> Symmetric (Ror R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Symmetric_Rnot :
+  forall (A : Type) (R : rel A ),
+    Symmetric R -> Symmetric (Rnot R).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+(** Symetria jest zachowywana zarówno przez koniunkcję i dysjunkcję, jak
+    i przez negację. *)
 
 Class Asymmetric {A : Type} (R : rel A) : Prop :=
 {
