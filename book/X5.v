@@ -179,6 +179,28 @@ Qed.
 Definition Rinv {A B : Type} (R : hrel A B) : hrel B A :=
   fun (b : B) (a : A) => R a b.
 
+(** [Rinv] to operacja, która zamienia miejscami argumenty relacji. Relację
+    [Rinv R] będziemy nazywać relacją odwrotną do [R]. *)
+
+Theorem Rinv_Rcomp :
+  forall (A B C : Type) (R : hrel A B) (S : hrel B C),
+    same_hrel (Rinv (Rcomp R S)) (Rcomp (Rinv S) (Rinv R)).
+(* begin hide *)
+Proof.
+  compute; split; intros; firstorder.
+Qed.
+(* end hide *)
+
+Theorem Rinv_Rid :
+  forall A : Type, same_hrel (@Rid A) (Rinv (@Rid A)).
+(* begin hide *)
+Proof. compute. firstorder. Qed.
+(* end hide *)
+
+(** Złożenie dwóch relacji możemy odwrócić, składając ich odwrotności w
+    odwrotnej kolejności. Odwrotnością relacji identycznościowej jest
+    zaś ona sama. *)
+
 Definition Rnot {A B : Type} (R : hrel A B) : hrel A B :=
   fun (a : A) (b : B) => ~ R a b.
 
@@ -189,13 +211,9 @@ Definition Ror {A B : Type} (R S : hrel A B) : hrel A B :=
   fun (a : A) (b : B) => R a b \/ S a b.
 
 Definition Rdiff {A B : Type} (R S : hrel A B) : hrel A B :=
-  fun (a : A) (b : B) => R a b /\ ~ S a b.
+  fun (a : A) (b : B) => R a b /\ ~ S a b. (* TODO *)
 
-(** A oto pozostałe operacje, jakie wykonywać możemy na funkcjach. [Rinv]
-    zamienia miejscami argumenty relacji [R]. Relację [Rinv R] będziemy
-    nazywać relacją odwrotną do [R].
-
-    Pozostałe trzy operacje na relacjach odpowiadają spójnikom logicznym —
+(** Pozostałe trzy operacje na relacjach odpowiadają spójnikom logicznym —
     mamy więc negację relacji oraz koniunkcję i dysjunkcję dwóch relacji.
     Zauważ, że operacje te możemy wykonywać jedynie na relacjach o takich
     samych typach argumentów.
@@ -236,7 +254,8 @@ Qed.
 (* end hide *)
 
 Theorem Rand_comm :
-  forall (A B : Type) (R S : hrel A B), Rand R S <--> Rand S R.
+  forall (A B : Type) (R S : hrel A B),
+    Rand R S <--> Rand S R.
 (* begin hide *)
 Proof.
   wut.
@@ -339,6 +358,28 @@ Class RightUnique {A B : Type} (R : hrel A B) : Prop :=
     jest w relacji z co najwyżej jednym [a : A]. Analogicznie definiujemy
     relacje prawostronnie unikalne. *)
 
+Instance LeftUnique_Rcomp :
+  forall (A B C : Type) (R : hrel A B) (S : hrel B C),
+    LeftUnique R -> LeftUnique S -> LeftUnique (Rcomp R S).
+(* begin hide *)
+Proof.
+  wut. specialize (left_unique0 _ _ _ H0 H2). subst.
+  apply left_unique1 with x0; assumption.
+Qed.
+(* end hide *)
+
+Instance RightUnique_Rcomp :
+  forall (A B C : Type) (R : hrel A B) (S : hrel B C),
+    RightUnique R -> RightUnique S -> RightUnique (Rcomp R S).
+(* begin hide *)
+Proof.
+  wut. specialize (right_unique1 _ _ _ H H1). subst.
+  apply right_unique0 with x0; assumption.
+Qed.
+(* end hide *)
+
+(** Składanie zachowuje oba rodzaje relacji unikalnych. TODO. *)
+
 Instance LeftUnique_eq (A : Type) : LeftUnique (@eq A).
 (* begin hide *)
 Proof.
@@ -362,19 +403,21 @@ Defined.
     nie są homogeniczne. W szczególności jest ono różne od pojęcia relacji
     przechodniej, które pojawi się już niedługo. *)
 
-Instance RightUnique_Rinv
-  {A B : Type} (R : hrel A B) (LU : LeftUnique R) : RightUnique (Rinv R).
-(* begin hide *)
-Proof.
-  split. unfold Rinv; intros. apply left_unique with a; assumption.
-Qed.
-(* end hide *)
-
-Instance LeftUnique_Rinv
-  {A B : Type} (R : hrel A B) (RU : RightUnique R) : LeftUnique (Rinv R).
+Instance LeftUnique_Rinv :
+  forall (A B : Type) (R : hrel A B),
+    RightUnique R -> LeftUnique (Rinv R).
 (* begin hide *)
 Proof.
   split. unfold Rinv; intros. apply right_unique with b; assumption.
+Qed.
+(* end hide *)
+
+Instance RightUnique_Rinv :
+  forall (A B : Type) (R : hrel A B),
+    LeftUnique R -> RightUnique (Rinv R).
+(* begin hide *)
+Proof.
+  split. unfold Rinv; intros. apply left_unique with a; assumption.
 Qed.
 (* end hide *)
 
@@ -383,21 +426,21 @@ Qed.
     [Rinv]. Okazuje się, że zamiana miejscami argumentów relacji lewostronnie
     unikalnej daje relację prawostronnie unikalną i vice versa. *)
 
-Instance LU_Rand :
+Instance LeftUnique_Rand :
   forall (A B : Type) (R S : hrel A B),
     LeftUnique R -> LeftUnique (Rand R S).
 (* begin hide *)
 Proof. wut. Qed.
 (* end hide *)
 
-Instance RU_Rand :
+Instance RightUnique_Rand :
   forall (A B : Type) (R S : hrel A B),
     RightUnique R -> RightUnique (Rand R S).
 (* begin hide *)
 Proof. wut. Qed.
 (* end hide *)
 
-Theorem Ror_not_LU :
+Theorem Ror_not_LeftUnique :
   exists (A B : Type) (R S : hrel A B),
     LeftUnique R /\ LeftUnique S /\ ~ LeftUnique (Ror R S).
 (* begin hide *)
@@ -411,7 +454,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Ror_not_RU :
+Theorem Ror_not_RightUnique :
   exists (A B : Type) (R S : hrel A B),
     RightUnique R /\ RightUnique S /\ ~ RightUnique (Ror R S).
 (* begin hide *)
@@ -510,43 +553,70 @@ Class RightTotal {A B : Type} (R : hrel A B) : Prop :=
     totalna to po prostu taka, w której żaden element [a : A] nie jest
     "osamotniony". *)
 
-Instance RightTotal_Rinv
-  {A B : Type} (R : hrel A B) (LT : LeftTotal R) : RightTotal (Rinv R).
+Instance LeftTotal_Rcomp :
+  forall (A B C : Type) (R : hrel A B) (S : hrel B C),
+    LeftTotal R -> LeftTotal S -> LeftTotal (Rcomp R S).
 (* begin hide *)
 Proof.
-  unfold Rinv; split. intro a. destruct LT.
+  wut.
+  destruct (left_total1 a) as [b H].
+  destruct (left_total0 b) as [c H'].
+  exists c, b. split; assumption.
+Qed.
+(* end hide *)
+
+Instance RightTotal_Rcomp :
+  forall (A B C : Type) (R : hrel A B) (S : hrel B C),
+    RightTotal R -> RightTotal S -> RightTotal (Rcomp R S).
+(* begin hide *)
+Proof.
+  wut. rename b into c.
+  destruct (right_total0 c) as [b H].
+  destruct (right_total1 b) as [a H'].
+  exists a, b. split; assumption.
+Qed.
+(* end hide *)
+
+Instance RightTotal_Rinv :
+  forall (A B : Type) (R : hrel A B),
+    LeftTotal R -> RightTotal (Rinv R).
+(* begin hide *)
+Proof.
+  unfold Rinv; split. intro a. destruct H.
   destruct (left_total0 a) as [b H]. exists b. assumption.
 Qed.
 (* end hide *)
 
-Instance LeftTotal_Rinv
-  {A B : Type} (R : hrel A B) (RT : RightTotal R) : LeftTotal (Rinv R).
+Instance LeftTotal_Rinv :
+  forall (A B : Type) (R : hrel A B),
+    RightTotal R -> LeftTotal (Rinv R).
 (* begin hide *)
 Proof.
-  unfold Rinv; split. intro a. destruct RT.
+  unfold Rinv; split. intro a. destruct H.
   destruct (right_total0 a) as [b H]. exists b. assumption.
 Qed.
 (* end hide *)
 
 (** Między lewo- i prawostronną totalnością występuje podobna symetria jak
     między dwoma formami unikalności: relacja odwrotna do lewostronnie
-    totalnej jest prawostronnie totalna i vice versa. *)
+    totalnej jest prawostronnie totalna i vice versa. Totalność również
+    jest zachowywana przez składanie. *)
 
-Theorem LT_Ror :
+Theorem LeftTotal_Ror :
   forall (A B : Type) (R S : hrel A B),
     LeftTotal R -> LeftTotal (Ror R S).
 (* begin hide *)
 Proof. wut. Qed.
 (* end hide *)
 
-Theorem RT_Ror :
+Theorem RightTotal_Ror :
   forall (A B : Type) (R S : hrel A B),
     RightTotal R -> RightTotal (Ror R S).
 (* begin hide *)
 Proof. wut. Qed.
 (* end hide *)
 
-Theorem Rand_not_LT :
+Theorem Rand_not_LeftTotal :
   exists (A B : Type) (R S : hrel A B),
     LeftTotal R /\ LeftTotal S /\ ~ LeftTotal (Rand R S).
 (* begin hide *)
@@ -560,7 +630,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rand_not_RT :
+Theorem Rand_not_RightTotal :
   exists (A B : Type) (R S : hrel A B),
     RightTotal R /\ RightTotal S /\ ~ RightTotal (Rand R S).
 (* begin hide *)
@@ -624,7 +694,7 @@ Class Functional {A B : Type} (R : hrel A B) : Prop :=
     która ma właściwości takie, jak funkcje — każdy lewostronny argument
     [a : A] jest w relacji z dokładnie jednym [b : B] po prawej stronie. *)
 
-Instance Fun_to_Functional {A B : Type} (f : A -> B)
+Instance fun_to_Functional {A B : Type} (f : A -> B)
   : Functional (fun (a : A) (b : B) => f a = b).
 (* begin hide *)
 Proof.
@@ -634,7 +704,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Definition Functional_to_Fun
+Definition Functional_to_fun
   {A B : Type} (R : hrel A B) (F : Functional R) : A -> B.
 Proof.
   intro a. destruct F. destruct F_LT0.
@@ -650,6 +720,46 @@ Abort.
     funkcjom injektywnym, a te które są prawostronnie totalne — funkcjom
     surjektywnym. Relacje spełniające wszystkie cztery warunki odpowiadają
     bijekcjom. *)
+
+Instance Functional_Rcomp :
+  forall (A B C : Type) (R : hrel A B) (S : hrel B C),
+    Functional R -> Functional S -> Functional (Rcomp R S).
+(* begin hide *)
+Proof.
+  destruct 1, 1; split.
+    apply LeftTotal_Rcomp; assumption.
+    apply RightUnique_Rcomp; assumption.
+Qed.
+(* end hide *)
+
+(** Złożenie relacji funkcyjnych również jest relacją funkcyjną. Nie powinno
+    nas to dziwić — wszakże relacje funkcyjne odpowiadają funkcjom, a złożenie
+    funkcji jest przecież funkcją. Jeżeli lepiej mu się przyjrzeć, to okazuje
+    się, że składanie funkcji odpowiada składaniu relacji, a stąd już prosta
+    droga do wniosku, że złożenie relacji funkcyjnych jest relacją funkcyjną. *)
+
+Theorem Rinv_not_Functional :
+  exists (A B : Type) (R : hrel A B),
+    Functional R /\ ~ Functional (Rinv R).
+(* begin hide *)
+Proof.
+  exists bool, bool, (fun b b' => b' = true). split.
+    wut.
+    destruct 1. destruct F_LT0. destruct (left_total0 false) as [b H].
+      destruct b; inversion H.
+Qed.
+(* end hide *)
+
+(** Odwrotność relacji funkcyjnej nie musi być funkcyjna. Dobrą wizualicją
+    tego faktu może być np. funkcja f(x) = x^2 na liczbach rzeczywistych.
+    Z pewnością jest to funkcja, a zatem relacja funkcyjna. Widać to na jej
+    wykresie — każdemu punktowi dziedziny odpowiada dokładnie jeden punkt
+    przeciwdziedziny. Jednak po wykonaniu operacji [Rinv], której odpowiada
+    tutaj obrócenie układu współrzędnych o 90 stopni, nie otrzymujemy wcale
+    wykresu funkcji. Wprost przeciwnie — niektórym punktom z osi X na takim
+    wykresie odpowiadają dwa punkty na osi Y (np. punktowi 4 odpowiadają 2
+    i -2). Stąd wnioskujemy, że odwrócenie relacji funkcyjnej f nie daje w
+    wyniku relacji funkcyjnej. *)
 
 Theorem Rand_not_Functional :
   exists (A B : Type) (R S : hrel A B),
@@ -683,7 +793,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Ani koniunkcje, ani dysjunkcje relacji funkcyjnych nie musza być wcale
+(** Ani koniunkcje, ani dysjunkcje relacji funkcyjnych nie muszą być wcale
     relacjami funkcyjnymi. Jest to po części konsekwencją właściwości
     relacji lewostronnie totalnych i prawostronnie unikalnych: pierwsze
     mają problem z [Rand], a drugie z [Ror]. *)
@@ -795,6 +905,22 @@ Proof.
 Qed.
 (* end hide *)
 
+(** Okazuje się, że wszystkie relacje na [Empty_set] (a więc także na
+    wszystkich innych typach pustych) są zwrotne. Nie powinno cię to w
+    żaden sposób zaskakiwać — jest to tzw. pusta prawda (ang. vacuous
+    truth), zgodnie z którą wszystkie zdania kwantyfikowane uniwersalnie
+    po typie pustym są prawdziwe. Wszyscy w pustym pokoju są debilami. *)
+
+Theorem Reflexive_Rcomp :
+  forall (A : Type) (R S : rel A),
+    Reflexive R -> Reflexive S -> Reflexive (Rcomp R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+(** Złożenie relacji zwrotnych jest relacją zwrotną. Dowód jest tak prosty,
+    że nie ma sensu nawet próbować uzasdniać to intuicyjnie. *)
+
 Instance Reflexive_Rand :
   forall (A : Type) (R S : rel A),
     Reflexive R -> Reflexive S -> Reflexive (Rand R S).
@@ -816,14 +942,9 @@ Qed.
 (** Jak widać, koniunkcja relacji zwrotnych także jest zwrotna. Dysjunkcja
     posiada natomiast dużo mocniejszą właściwość: dysjunkcja dowolnej relacji
     z relacją zwrotną daje relację zwrotną. Tak więc dysjunkcja [R] z [eq]
-    pozwala nam łatwo "dodać" zwrotność do [R]. Głębszym rozważaniom na tego
-    typu tematy oddamy się w kolejnych podrozdziałach.
-
-    Okazuje się też, że wszystkie relacje na [Empty_set] (a więc także na
-    wszystkich innych typach pustych) są zwrotne. Nie powinno cię to w
-    żaden sposób zaskakiwać — jest to tzw. pusta prawda (ang. vacuous
-    truth), zgodnie z którą wszystkie zdania kwantyfikowane uniwersalnie
-    po typie pustym są prawdziwe. Wszyscy w pustym pokoju są debilami. *)
+    pozwala nam łatwo "dodać" zwrotność do [R]. Słownie dysjunkcja z [eq]
+    odpowiada zwrotowi "lub równy", który możemy spotkać np. w wyrażeniach
+    "mniejszy lub równy", "większy lub równy". *)
 
 Class Irreflexive {A : Type} (R : rel A) : Prop :=
 {
@@ -848,6 +969,20 @@ Class Antireflexive {A : Type} (R : rel A) : Prop :=
       angielskich), np. "niezwrotny", "irreflexive"
     - przeciwieństwo tej właściwości ma przedrostek "anty-" (po angielsku
       "anti-"), np. "antyzwrotna", "antireflexive" *)
+
+Theorem Rcomp_not_Irreflexive :
+  exists (A : Type) (R S : rel A),
+    Irreflexive R /\ Irreflexive S /\ ~ Irreflexive (Rcomp R S).
+(* begin hide *)
+Proof.
+  exists bool. pose (R := fun b b' => b = negb b').
+  exists R, R. cut (Irreflexive R).
+    Focus 2. split. exists true. unfold R. inversion 1.
+    wut. destruct 1 as [[b Hb]]. apply Hb. destruct b.
+      exists false. unfold R. auto.
+      exists true. unfold R. auto.
+Qed.
+(* end hide *)
 
 Instance Irreflexive_Rand :
   forall (A : Type) (R S : rel A),
@@ -884,10 +1019,29 @@ Proof.
 Qed.
 (* end hide *)
 
+Theorem eq_nonempty_not_Antireflexive :
+  forall A : Type, A -> ~ Antireflexive (@eq A).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hid e*)
+
 Instance Antireflexive_neq :
   forall (A : Type), Antireflexive (fun x y : A => x <> y).
 (* begin hide *)
 Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rcomp_not_Antireflexive :
+  exists (A : Type) (R S : rel A),
+    Antireflexive R /\ Antireflexive S /\ ~ Antireflexive (Rcomp R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' => b = negb b').
+  exists bool, R, R. cut (Antireflexive R).
+    Focus 2. split. unfold R. destruct x; inversion 1.
+    wut. destruct 1. apply antireflexive1 with true.
+      exists false. unfold R. auto.
+Qed.
 (* end hide *)
 
 Instance Antireflexive_Rand :
@@ -935,6 +1089,35 @@ Class Symmetric {A : Type} (R : rel A) : Prop :=
     ma znaczenia. Przykładami ze świata rzeczywistego mogą być np. relacje
     "jest blisko", "jest obok", "jest naprzeciwko". *)
 
+Instance Symmetric_eq :
+  forall A : Type, Symmetric (@eq A).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rcomp_not_Symmetric :
+  exists (A : Type) (R S : rel A),
+    Symmetric R /\ Symmetric S /\ ~ Symmetric (Rcomp R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => if b then b = negb b' else True).
+  pose (S := fun b b' : bool => if negb b' then b = negb b' else True).
+  exists bool, R, S. repeat split.
+    unfold R. destruct x, y; auto.
+    unfold S. destruct x, y; cbn; auto.
+    unfold Rcomp. destruct 1. edestruct (symmetric0 false true).
+      Focus 2. unfold R, S in H. destruct x, H; cbn in *; congruence.
+      exists true. unfold R, S. cbn. auto.
+Qed.
+(* end hide *)
+
+Instance Symmetric_Rinv :
+  forall (A : Type) (R : rel A),
+    Symmetric R -> Symmetric (Rinv R).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
 Theorem Symmetric_Rand :
   forall (A : Type) (R S : rel A ),
     Symmetric R -> Symmetric S -> Symmetric (Rand R S).
@@ -964,27 +1147,482 @@ Class Asymmetric {A : Type} (R : rel A) : Prop :=
     asymmetric : exists x y : A, R x y /\ ~ R y x
 }.
 
+Theorem empty_not_Asymmetric :
+  forall R : rel Empty_set, ~ Asymmetric R.
+(* begin hide *)
+Proof.
+  unfold not. wut. destruct x.
+Qed.
+(* end hide *)
+
+Theorem Rcomp_not_Asymmetric :
+  exists (A : Type) (R S : rel A),
+    Asymmetric R /\ Asymmetric S /\ ~ Asymmetric (Rcomp R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => if b then b = negb b' else False).
+  pose (S := fun b b' : bool => if negb b' then b = negb b' else False).
+  exists bool, R, S. repeat split.
+    exists true, false. cbn. auto.
+    exists true, false. cbn. auto.
+    unfold Rcomp; destruct 1.
+      destruct asymmetric0 as [b1 [b2 [[b3 H] H']]].
+      destruct b1, b2, b3; cbn in H; destruct H; inversion H; inversion H0.
+Qed.
+(* end hide *)
+
+Instance Asymmetric_Rinv :
+  forall (A : Type) (R : rel A),
+    Asymmetric R -> Asymmetric (Rinv R).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rand_not_Asymmetric :
+  exists (A : Type) (R S : rel A),
+    Asymmetric R /\ Asymmetric S /\ ~ Asymmetric (Rand R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => if b then b = negb b' else False).
+  pose (S := fun b b' : bool => if negb b' then b = negb b' else False).
+  exists bool, R, S. repeat split.
+    exists true, false. cbn. auto.
+    exists true, false. cbn. auto.
+    unfold Rand; destruct 1.
+      destruct asymmetric0 as [b1 [b2 [[H1 H2] H3]]].
+      destruct b1, b2; cbn in *; intuition.
+Abort.
+(* end hide *)
+
+Theorem Ror_not_Asymmetric :
+  exists (A : Type) (R S : rel A),
+    Asymmetric R /\ Asymmetric S /\ ~ Asymmetric (Ror R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => if b then True else False).
+  pose (S := fun b b' : bool => if b' then True else False).
+  exists bool, R, S. repeat split; intros.
+    exists true, false. cbn. auto.
+    exists false, true. cbn. auto.
+    destruct 1. destruct asymmetric0 as [x [y [H H']]].
+      destruct x, y; firstorder.
+Qed.
+(* end hide *)
+
 Class Antisymmetric {A : Type} (R : rel A) : Prop :=
 {
     antisymmetric : forall x y : A, R x y -> ~ R x y
 }.
+
+Theorem Antisymmetric_empty :
+  forall R : rel Empty_set, Antisymmetric R.
+(* begin hide *)
+Proof. wut. destruct x. Qed.
+(* end hide *)
+
+Theorem eq_nonempty_not_Antisymmetric :
+  forall A : Type, A -> ~ Antisymmetric (@eq A).
+(* begin hide *)
+Proof.
+  intros A x. destruct 1. apply (antisymmetric0 x x); trivial.
+Qed.
+(* end hide *)
+
+Instance Antisymmetric_Rcomp :
+  forall (A : Type) (R S : rel A),
+    Antisymmetric R -> Antisymmetric S -> Antisymmetric (Rcomp R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Instance Antisymmetric_Rinv :
+  forall (A : Type) (R : rel A),
+    Antisymmetric R -> Antisymmetric (Rinv R).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Instance Antisymmetric_Rand :
+  forall (A : Type) (R S : rel A),
+    Antisymmetric R -> Antisymmetric S -> Antisymmetric (Rand R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Instance Antisymmetric_Ror :
+  forall (A : Type) (R S : rel A),
+    Antisymmetric R -> Antisymmetric S -> Antisymmetric (Ror R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Goal
+  forall (A : Type) (R : rel A),
+    Antisymmetric R -> Antisymmetric (Rnot R).
+Proof.
+  wut. intro.
+Abort.
+
+Theorem Rnot_not_Antisymmetric :
+  exists (A : Type) (R : rel A),
+    Antisymmetric R /\ ~ Antisymmetric (Rnot R).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => b = negb b').
+  exists bool, R. repeat split; intros.
+    destruct x, y; compute in *; intuition.
+Abort.
+(* end hide *)
 
 Class WeakAntisymmetric {A : Type} (R : rel A) : Prop :=
 {
     wantisymmetric : forall x y : A, R x y -> R y x -> x = y
 }.
 
+Instance WeakAntisymmetric_eq :
+  forall A : Type, WeakAntisymmetric (@eq A).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rcomp_not_WeakAntisymmetric :
+  exists (A : Type) (R S : rel A),
+    WeakAntisymmetric R /\ WeakAntisymmetric S /\
+      ~ WeakAntisymmetric (Rcomp R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool =>
+    if orb (andb b (negb b')) (andb (negb b) (negb b')) then True else False).
+  pose (S := fun b b' : bool =>
+    if orb (andb (negb b) b') (andb (negb b) (negb b')) then True else False).
+  exists bool, R, S. repeat split.
+    destruct x, y; cbn; do 2 inversion 1; auto.
+    destruct x, y; cbn; do 2 inversion 1; auto.
+    unfold Rcomp; destruct 1. cut (true = false).
+      inversion 1.
+      apply wantisymmetric0.
+        exists false. cbn. auto.
+        exists false. cbn. auto.
+Qed.
+(* end hide *)
+
+Instance WeakAntisymmetric_Rinv :
+  forall (A : Type) (R : rel A),
+    WeakAntisymmetric R -> WeakAntisymmetric (Rinv R).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Instance WeakAntisymmetric_Rand :
+  forall (A : Type) (R S : rel A),
+    WeakAntisymmetric R -> WeakAntisymmetric S ->
+      WeakAntisymmetric (Rand R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Ror_not_WeakAntisymmetric :
+  exists (A : Type) (R S : rel A),
+    WeakAntisymmetric R /\ WeakAntisymmetric S /\
+      ~ WeakAntisymmetric (Ror R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool =>
+    if orb (andb b (negb b')) (andb (negb b) (negb b')) then True else False).
+  pose (S := fun b b' : bool =>
+    if orb (andb (negb b) b') (andb (negb b) (negb b')) then True else False).
+  exists bool, R, S. repeat split.
+    destruct x, y; cbn; do 2 inversion 1; auto.
+    destruct x, y; cbn; do 2 inversion 1; auto.
+    unfold Ror; destruct 1. cut (true = false).
+      inversion 1.
+      apply wantisymmetric0; cbn; auto.
+Qed.
+(* end hide *)
+
+Theorem Rnot_not_WeakAntisymmetric :
+  exists (A : Type) (R : rel A),
+    WeakAntisymmetric R /\ ~ WeakAntisymmetric (Rnot R).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => if andb b b' then True else False).
+  exists bool, R. repeat split; intros.
+    destruct x, y; compute in *; intuition.
+    unfold Rnot; destruct 1.
+      cut (true = false).
+        inversion 1.
+        apply wantisymmetric0; auto.
+Qed.
+(* end hide *)
+
 Class Transitive {A : Type} (R : rel A) : Prop :=
 {
     transitive : forall x y z : A, R x y -> R y z -> R x z
 }.
+
+Instance Transitive_eq :
+  forall A : Type, Transitive (@eq A).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rcomp_not_Transitive :
+  exists (A : Type) (R S : rel A),
+    Transitive R /\ Transitive S /\ ~ Transitive (Rcomp R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : option bool =>
+    match b, b' with
+      | None, _ => True
+      | _, _ => False
+    end).
+  pose (S := fun b b' : option bool =>
+    match b, b' with
+      | Some _, _ => True
+      | _, _ => False
+    end).
+  exists (option bool), R, S. repeat split; intros.
+    destruct x as [[] |], y as [[] |], z as [[] |]; cbn in *; intuition.
+    destruct x as [[] |], y as [[] |], z as [[] |]; cbn in *; intuition.
+    unfold Rcomp; destruct 1.
+      destruct (transitive0 None (Some true) None).
+        exists (Some true). cbn. auto.
+Abort.
+(* end hide *)
+
+Instance Transitive_Rinv :
+  forall (A : Type) (R : rel A),
+    Transitive R -> Transitive (Rinv R).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Instance Transitive_Rand :
+  forall (A : Type) (R S : rel A),
+    Transitive R -> Transitive S -> Transitive (Rand R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Ror_not_Transitive :
+  exists (A : Type) (R S : rel A),
+    Transitive R /\ Transitive S /\ ~ Transitive (Ror R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => if b then True else False).
+  pose (S := fun b b' : bool => if b' then True else False).
+  exists bool, R, S. wut. destruct 1.
+  specialize (transitive0 false true false). cbn in *.
+  destruct transitive0; firstorder.
+Qed.
+(* end hide *)
+
+Theorem Rnot_not_Transitive :
+  exists (A : Type) (R : rel A),
+    Transitive R /\ ~ Transitive (Rnot R).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => if andb b b' then True else False).
+  exists bool, R. repeat split; intros.
+    destruct x, y, z; compute in *; auto.
+    unfold Rnot; destruct 1.
+      eapply (transitive0 true false true); cbn; auto.
+Qed.
+(* end hide *)
 
 Class Total {A : Type} (R : rel A) : Prop :=
 {
     total : forall x y : A, R x y \/ R y x
 }.
 
+Theorem Rcomp_not_Total :
+  exists (A : Type) (R S : rel A),
+    Total R /\ Total S /\ ~ Total (Rcomp R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' =>
+  match b, b' with
+      | true, _ => True
+      | false, false => True
+      | _, _ => False
+  end).
+  pose (S := fun b b' =>
+  match b, b' with
+      | false, _ => True
+      | true, true => True
+      | _, _ => False
+  end).
+  exists bool, R, R. repeat split; intros.
+    destruct x, y; cbn; auto.
+    destruct x, y; cbn; auto.
+    unfold Rcomp; destruct 1.
+      destruct (total0 true false) as [[b H] | [b H]].
+Abort.
+(* end hide *)
+
+Instance Total_Rinv :
+  forall (A : Type) (R : rel A),
+    Total R -> Total (Rinv R).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rand_not_Total :
+  exists (A : Type) (R S : rel A),
+    Total R /\ Total S /\ ~ Total (Rand R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' =>
+  match b, b' with
+      | true, _ => True
+      | false, false => True
+      | _, _ => False
+  end).
+  pose (S := fun b b' =>
+  match b, b' with
+      | false, _ => True
+      | true, true => True
+      | _, _ => False
+  end).
+  exists bool, R, R. repeat split; intros.
+    destruct x, y; cbn; auto.
+    destruct x, y; cbn; auto.
+    unfold Rand; destruct 1.
+Abort.
+(* end hide *)
+
+Instance Total_Ror :
+  forall (A : Type) (R S : rel A),
+    Total R -> Total S -> Total (Ror R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rnot_not_Total :
+  exists (A : Type) (R : rel A),
+    Total R /\ ~ Total (Rnot R).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => b = negb b' \/ b = b).
+  exists bool, R. repeat split; intros.
+    destruct x, y; compute; auto.
+    unfold Rnot; destruct 1.
+      destruct (total0 true false); compute in *; intuition.
+Qed.
+(* end hide *)
+
+Instance Total_Reflexive :
+  forall (A : Type) (R : rel A),
+    Total R -> Reflexive R.
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
 Class Trichotomous {A : Type} (R : rel A) : Prop :=
 {
     trichotomous : forall x y : A, R x y \/ x = y \/ R y x
 }.
+
+Instance Trichotomous_eq :
+  forall A : Type, Trichotomous (@eq A).
+(* begin hide *)
+Proof.
+(* TODO *)
+Abort.
+(* end hide *)
+
+Theorem Rcomp_not_Trichotomous :
+  exists (A : Type) (R S : rel A),
+    Trichotomous R /\ Trichotomous S /\ Trichotomous (Rcomp R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => b = negb b').
+Abort.
+(* end hide *)
+
+Instance Trichotomous_Rinv :
+  forall (A : Type) (R : rel A),
+    Trichotomous R -> Trichotomous (Rinv R).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rand_not_Trichotomous :
+  exists (A : Type) (R S : rel A),
+    Trichotomous R /\ Trichotomous S /\ Trichotomous (Rand R S).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => b = negb b').
+Abort.
+(* end hide *)
+
+Instance Trichotomous_Ror :
+  forall (A : Type) (R S : rel A),
+    Trichotomous R -> Trichotomous S -> Trichotomous (Ror R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rnot_not_Trichotomous :
+  exists (A : Type) (R : rel A),
+    Trichotomous R /\ ~ Trichotomous (Rnot R).
+(* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => b = negb b').
+  exists bool, R. repeat split; intros.
+    destruct x, y; compute; auto.
+    unfold Rnot; destruct 1.
+      destruct (trichotomous0 true false); compute in *.
+      apply H. trivial.
+      destruct H; intuition.
+Qed.
+(* end hide *)
+
+Class Dense {A : Type} (R : rel A) : Prop :=
+{
+    dense : forall x y : A, R x y -> exists z : A, R x z /\ R z y
+}.
+
+Instance Dense_eq :
+  forall A : Type, Dense (@eq A).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rcomp_not_Dense :
+  exists (A : Type) (R S : rel A),
+    Dense R /\ Dense S /\ ~ Dense (Rcomp R S).
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Instance Dense_Rinv :
+  forall (A : Type) (R : rel A),
+    Dense R -> Dense (Rinv R).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rand_not_Dense :
+  exists (A : Type) (R S : rel A),
+    Dense R /\ Dense S /\ ~ Dense (Rand R S).
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Instance Dense_Ror :
+  forall (A : Type) (R S : rel A),
+    Dense R -> Dense S -> Dense (Ror R S).
+(* begin hide *)
+Proof. wut. Qed.
+(* end hide *)
+
+Theorem Rnot_not_Dense :
+  exists (A : Type) (R : rel A),
+    Dense R /\ ~ Dense (Rnot R).
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
