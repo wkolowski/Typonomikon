@@ -243,7 +243,7 @@ Definition O (f g : nat -> nat) : Prop :=
 
 Lemma O_refl :
   forall f : nat -> nat, O f f.
-(* begin hid e*)
+(* begin hide *)
 Proof.
   intros. red. exists 1, 0. intros. simpl. rewrite <- plus_n_O. trivial.
 Qed.
@@ -302,7 +302,7 @@ Definition Omega (f g : nat -> nat) : Prop := O g f.
 
 Lemma Omega_refl :
   forall f : nat -> nat, Omega f f.
-(* begin hid e*)
+(* begin hide *)
 Proof.
   intros. red. apply O_refl.
 Qed.
