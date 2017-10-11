@@ -19,7 +19,7 @@
 
 (** [Prop], jak już wiesz, jest sortem zdań logicznych. Jeżeli
     [x : A] oraz [A : Prop] (tzn. [A] jest sortu [Prop]), to typ
-    [P] możemy interpretować jako zdanie logiczne, a term [x]
+    [A] możemy interpretować jako zdanie logiczne, a term [x]
     jako jego dowód. Na przykład [I] jest dowodem zdania [True],
     tzn. [I : True], zaś term [42] nie jest dowodem [True], gdyż
     [42 : nat]. *)
