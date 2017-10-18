@@ -860,6 +860,7 @@ Proof.
   simpl; inversion 1; subst; trivial;
   f_equal; apply IHn'; apply le_S_n in H; assumption.
 Qed.
+(* end hide *)
 
 Theorem length_take' :
   forall (A : Type) (n : nat) (l : list A),
@@ -882,6 +883,7 @@ Proof.
   simpl; inversion 1; subst; trivial;
   f_equal; apply IHn'; apply le_S_n in H; assumption.
 Qed.
+(* end hide *)
 
 Theorem take_map :
     forall (A B : Type) (f : A -> B) (n : nat) (l : list A),
@@ -2096,6 +2098,37 @@ Proof.
 Qed. *)
 (* end hide *)
 
+(** *** Dziwne (TODO) *)
+
+Fixpoint revapp {A : Type} (l1 l2 : list A) : list A :=
+match l1 with
+    | [] => l2
+    | h :: t => revapp t (h :: l2)
+end.
+
+Definition app' {A : Type} (l1 l2 : list A) : list A :=
+  revapp (revapp l1 []) l2.
+
+Theorem revapp_spec :
+  forall (A : Type) (l1 l2 : list A),
+    revapp l1 l2 = rev l1 ++ l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros; trivial.
+    rewrite IHt, <- app_assoc. cbn. trivial.
+Qed.
+(* end hide *)
+
+Theorem app'_spec :
+  forall (A : Type) (l1 l2 : list A),
+    l1 ++ l2 = app' l1 l2.
+(* begin hide *)
+Proof.
+  unfold app'. intros. rewrite !revapp_spec, app_nil_r, rev_inv. trivial.
+Qed.
+(* end hide *)
+
+
 (** *** Niestandardowe reguły indukcyjne *)
 
 (** Wyjaśnienia nadejdą już wkrótce. *)
@@ -2161,4 +2194,3 @@ Proof.
     apply (IH [h] t); auto.
 Qed.
 (* end hide *)
-
