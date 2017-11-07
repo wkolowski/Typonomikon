@@ -421,7 +421,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_rev : forall (A B : Type) (f : A -> B) (l : list A),
+Theorem map_rev :
+  forall (A B : Type) (f : A -> B) (l : list A),
     map f (rev l) = rev (map f l).
 (* begin hide *)
 Proof.
@@ -431,7 +432,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_ext_elem : forall (A B : Type) (f g : A -> B) (l : list A),
+Theorem map_ext_elem :
+  forall (A B : Type) (f g : A -> B) (l : list A),
     (forall x : A, elem x l -> f x = g x) -> map f l = map g l.
 (* begin hide *)
 Proof.
@@ -464,7 +466,8 @@ match lla with
 end.
 (* end hide *)
 
-Theorem join_app : forall (A : Type) (l1 l2 : list (list A)),
+Theorem join_app :
+  forall (A : Type) (l1 l2 : list (list A)),
     join (l1 ++ l2) = join l1 ++ join l2.
 (* begin hide *)
 Proof.

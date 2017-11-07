@@ -8,6 +8,20 @@ match l with
     | x :: y :: t => x :: div2 t
 end.
 
+Check R_div2.
+Check R_div2_rect.
+Check div2_equation.
+Check div2_rect.
+Check R_div2_correct.
+Check R_div2_complete.
+
+Print R_div2.
+Print R_div2_rect.
+Print div2_equation.
+Print div2_rect.
+Print R_div2_correct.
+Print R_div2_complete.
+
 Inductive R_div2' {A : Type} : list A -> list A -> Prop :=
     | c0 : R_div2' [] []
     | c1 : forall x : A, R_div2' [x] []
@@ -25,7 +39,7 @@ Theorem R_div2'_complete :
   forall (A : Type) (l l' : list A),
     R_div2' l l' -> div2 l = l'.
 Proof.
-  induction 1; cbn; subst; trivial.
+  induction 1. Focus 3. cbn; subst; trivial.
 Qed.
 
 Fixpoint div2_ind'
@@ -60,5 +74,6 @@ Proof.
   apply (@div2_ind (fun A l l' => l <> [] -> length l' < length l)); intros.
     contradiction.
     cbn. auto.
-    cbn.
+    destruct t as [| h1 [| h2 t']]; cbn in *; auto.
+      apply lt_n_S.
 Abort.

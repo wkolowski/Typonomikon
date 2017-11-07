@@ -656,7 +656,7 @@ Qed.
 
 (** Wszystkie dowody powinny być nie dłuższe niż pół linijki. *)
 
-(** **** Ćwiczenie. *)
+(** **** Ćwiczenie *)
 
 Fixpoint plus' (n m : nat) : nat :=
 match m with
