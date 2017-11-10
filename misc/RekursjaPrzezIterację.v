@@ -14,9 +14,10 @@ match n with
     | S n' => f (iter n' f x)
 end.
 
-Definition facF_terminates : forall n : nat,
-    {v : nat | exists p : nat, forall (k : nat) (f : nat -> nat),
-        p < k -> iter k fac_F f n = v}.
+Definition facF_terminates :
+  forall n : nat, {v : nat |
+    exists p : nat, forall (k : nat) (f : nat -> nat),
+      p < k -> iter k fac_F f n = v}.
 Proof.
   induction n as [| n' [v H]].
     exists 1. exists 42. destruct k; simpl; intros.
@@ -127,13 +128,3 @@ Restart.
         omega.
         simpl in *. apply le_n_S. apply IHn'.
 Qed.
-
-Inductive collatz : nat -> nat -> Prop :=
-    | collatz_even : forall n : nat, collatz (2 * n) n
-    | collatz_odd : forall n : nat, collatz (2 * n + 1) (6 * n + 4).
-
-(*Fixpoint collatzf (fuel n : nat) : option nat :=
-match fuel with
-    | 0 => None
-    | S n' => *)
-

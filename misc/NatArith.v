@@ -1,10 +1,68 @@
-(* begin hide *)
+Module range.
 
-Fixpoint factorial (n : nat) : nat :=
+Require Import List.
+Import ListNotations.
+
+Fixpoint range (n : nat) : list nat :=
+match n with
+    | 0 => [0]
+    | S n' => n :: range n'
+end.
+
+End range.
+
+Module Factorial.
+
+Require Import Arith.
+
+Fixpoint fac (n : nat) : nat :=
 match n with
     | 0 => 1
-    | S n' => mult n (factorial n')
+    | S n' => mult n (fac n')
 end.
+
+Theorem le_1_fac : forall n : nat, 1 <= fac n.
+Proof.
+  induction n as [| n']; simpl.
+    auto.
+    apply le_plus_trans. assumption.
+Qed.
+
+Theorem le_lin_fac : forall n : nat, n <= fac n.
+Proof.
+  induction n as [| n']; simpl.
+    auto.
+    replace (S n') with (1 + n'); auto.
+    apply plus_le_compat.
+      apply le_1_fac.
+      replace n' with (n' * 1) at 1.
+        apply mult_le_compat_l. apply le_1_fac.
+        rewrite mult_comm. simpl. rewrite plus_comm. simpl. trivial.
+Qed.
+
+Fixpoint pow2 (n : nat) : nat :=
+match n with
+    | 0 => 1
+    | S n' => 2 * pow2 n'
+end.
+
+Theorem le_exp_Fac : forall n : nat,
+    4 <= n -> pow2 n <= fac n.
+Proof.
+  induction 1; simpl.
+    repeat constructor.
+    rewrite plus_0_r. apply plus_le_compat.
+      assumption.
+      replace (pow2 m) with (1 * pow2 m).
+        apply mult_le_compat.
+          apply le_trans with 4; auto.
+          assumption.
+        rewrite mult_1_l. trivial.
+Qed.
+
+End Factorial.
+
+Module Binom.
 
 Function binom (n k : nat) : nat :=
 match n, k with
@@ -106,6 +164,46 @@ Restart.
         repeat (rewrite ?mult_assoc, ?plus_assoc, ?IHn0). f_equal.
 Abort.
 
+End Binom.
+
+Module Div2.
+
+Require Import Div2.
+
+Fixpoint evenb (n : nat) : bool :=
+match n with
+    | 0 => true
+    | 1 => false
+    | S (S n') => evenb n'
+end.
+
+Require Import ZArith.
+
+Fixpoint quickMul (fuel n m : nat) : nat :=
+match fuel with
+    | 0 => 42
+    | S fuel' => match n with
+        | 0 => 0
+        | _ => let res := quickMul fuel' (div2 n) m in
+            if evenb n then res + res else (m + res) + res
+        end
+end.
+
+Time Eval compute in 430 * 110.
+Time Eval compute in quickMul 1000 430 110.
+
+Require Import Recdef.
+
+Function qm (n m : nat) {measure id n} : nat :=
+match n with
+    | 0 => 0
+    | _ => let r := qm (div2 n) m in
+        if evenb n then 2 * r else m + 2 * r
+end.
+Proof.
+Abort.
+
+End Div2.
 
 (*Lemma double_plus : forall n, double n = n + n .
 induction n as [| n'].

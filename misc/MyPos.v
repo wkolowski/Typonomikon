@@ -30,12 +30,7 @@ Eval compute in pos_even_bool pos_25.
 Eval compute in pos_even_bool pos_24.
 Eval compute in pos_even_bool (O H).
 
-(*Fixpoint pos_div4 (p : positive) : Z := match p with
-    | H => Z0
-    | I k*)
-
 Inductive Rat : Set :=
     | One : Rat
     | N : Rat -> Rat
     | D : Rat -> Rat.
-

@@ -126,36 +126,44 @@
     również pożyczonej od Martina-Löfa). *)
 
 (** * Literatura *)
-(** Mimo, iż Coq liczy sobie dobre 27 lat, przystępnej literatury na
-    jego temat jest jak na lekarstwo, choć stan ten na szczęście
-    ulega ostatnio szybkim zmianom. Z dostępnych pozycji polecenia
+
+(** ** Książki *)
+
+(** Mimo, iż Coq liczy sobie dobre 27 lat, książek na jego temat zaczęło
+    przybywać dopiero od kilku lat. Z dostępnych pozycji polecenia
     godne są:
-    - Software Foundations Benjamina Pierce'a — książka dwuczęściowa,
-      zawierająca dobre wprowadzenie do języka Coq (aczkolwiek
-      pomijająca niektóre mechanizmy, jak klasy, oraz skupiająca
-      się moim zdaniem zbyt mało na automatyzacji) oraz część
-      dotyczącą teorii języków programowania, definiowania ich
-      składni i semantyki w Coqu oraz dowodzenia ich własności.
-      Dostępna za darmo tutaj: cis.upenn.edu/~bcpierce/sf/current
+    - Software Foundations — trzytomowa seria dostępna za darmo
+      tutaj: https://softwarefoundations.cis.upenn.edu/
+      W jej skład wchodzą:
+      - Logical Foundations, której głównym autorem jest Benjamin
+        Pierce — bardzo przystępne acz niekompletne wprowadzenie do
+        Coqa. Omawia podstawy programowania funkcyjnego, rekursję i
+        indukcję strukturalną, polimorfizm, podstawy logiki i prostą
+        automatyzację.
+      - Programming Language Foundations, której głównym autorem jest
+        Benjamin Pierce — wprowadzenie do teorii języków programowania.
+        Omawia definiowanie ich składni i semantyki, dowodzenie ich
+        własności oraz podstawy systemów typów i proste optymalizacje.
+        Zawiera też kilka rozdziałów na temat bardziej zaawansowanej
+        automatyzacji.
+      - Verified Functional Algorithms, której autorem jest Andrew
+        Appel — jak sama nazwa wskazuje skupia się ona na algorytmach,
+        adaptowaniu ich do realiów języków funkcyjnych oraz weryfikacją
+        poprawności ich działania. Nie jest ona jeszcze dopracowana, ale
+        pewnie zmieni się to w przyszłości.
     - Coq'Art, której autorami są Yves Bertot oraz Pierre Castéran —
       książka nieco szerzej opisująca język Coq, poświęca sporo
       miejsca rachunkowi konstrukcj i aspektom teoretycznym, zawiera
       także rozdziały dotyczące automatyzacji, silnej specyfikacji,
       koindukcji, zaawansowanej rekurencji i reflekcji. Wersja
-      angielska jest płatna, zaś wersja francuska jest dostępna za
-      darmo tu: labri.fr/perso/casteran/CoqArt
-    - Certified Programming with Dependent Types Adama Chlipali —
-      książka dla zaawansowanych, traktująca o praktycznym użyciu
-      typów zależnych oraz kładąca bardzo mocny nacisk na
+      francuska jest dostępna za darmo pod adresem
+      https://www.labri.fr/perso/casteran/CoqArt/
+      Wersję angielską można za darmo pobrać z rosyjskich stron z
+      książkami, ale broń Boże tego nie rób! Piractwo to grzech.
+    - Certified Programming with Dependent Types autorstwa Adama
+      Chlipali — książka dla zaawansowanych, traktująca o praktycznym
+      użyciu typów zależnych oraz kładąca bardzo mocny nacisk na
       automatyzację, dostępna za darmo tu: adam.chlipala.net/cpdt
-    - Verified Functional Algorithms, której autorem jest Andrew
-      Appel, to trzecia część cyklu Software Foundations. Jak sama
-      nazwa wskazuje skupia się ona na algorytmach, adaptowaniu ich
-      do realiów języków funkcyjnych oraz weryfikacją poprawności
-      ich działania. Analiza algorytmów jest odsunięta na dalszy
-      plan, gdyż jest niemożliwe, aby w Coqu formalnie udowodnić
-      złożoność jakiegoś algorytmu. Dostępna jest za darmo tutaj:
-      https://www.cs.princeton.edu/~appel/vfa/
     - Mathematical Components Book, dostępna za darmo tutaj:
       https://math-comp.github.io/mcb/book.pdf, to książka dotycząca
       biblioteki o nazwie Mathematical Components. Zawiera ona
@@ -177,11 +185,29 @@
       17 -> 29 -> 13 -> 12 -> (3) -> (6) -> 7 -> 8 -> 9 -> 10 -> 21 ->
       22 -> 25 -> 26 -> 27 -> 18 -> 19 -> 20 -> 24 -> 23 -> (11) ->
       (14) -> (15) -> (16) -> (28) -> (30), gdzie nawiasy okrągłe
-      oznaczają rozdziały opcjonalne (niezbyt ciekawe lub nieprzydatne) *)
+      oznaczają rozdziały opcjonalne (niezbyt ciekawe lub nieprzydatne)
+    - Formal Reasoning About Programs — powstająca książka Adama
+      Chlipali. Nie wiem o czym jest i nie polecam czytać dopóki jest
+      oznaczona jako draft. Dostępna tu: http://adam.chlipala.net/frap/ *)
 
 (** Zalecana kolejność czytania:
     SF, część 1 -> (Coq'Art) -> (MCB) -> SF, część 2 i 3 -> CPDT ->
     Manual *)
+
+(** ** Blogi *)
+
+(** W Internecie można też dokopać się do blogów, na których przynajmniej
+    część postów dotyczy Coqa. Nie czytam ich, bo póki co nie mam na to
+    czasu, więc wszystkie linki wrzucam w ciemno, żebyś nie musiał sam
+    szukać:
+    - http://www.cis.upenn.edu/~aarthur/poleiro/
+    - http://coq-blog.clarus.me/
+    - https://gmalecha.github.io/
+    - http://seb.mondet.org/blog/index.html
+    - https://homes.cs.washington.edu/~jrw12/#blog
+    - https://pjreddie.com/coq-tactics/ (uwaga na swoje zdrowie psychiczne)
+    - http://gallium.inria.fr/blog/
+    - http://ilyasergey.net/pnp/ *)
 
 (** * Sprawy techniczne *)
 (** Kurs ten tworzę z myślą o osobach, które potrafią programować w

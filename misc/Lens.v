@@ -47,4 +47,3 @@ Instance Lens_Point_nat : Lens Point nat :=
 
 Eval compute in pt.
 Eval compute in over (fun n => n + 1) pt.
-

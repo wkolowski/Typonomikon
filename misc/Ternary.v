@@ -7,7 +7,7 @@ Inductive bool3 : Set :=
     | false : bool3
     | unknown : bool3.
 
-Fixpoint andb3 (b1 b2 : bool3) : bool3 :=
+Definition andb3 (b1 b2 : bool3) : bool3 :=
 match b1, b2 with
     | true, true => true
     | false, _ => false
@@ -15,7 +15,7 @@ match b1, b2 with
     | _, _ => unknown
 end.
 
-Fixpoint orb3 (b1 b2 : bool3) : bool3 :=
+Definition orb3 (b1 b2 : bool3) : bool3 :=
 match b1, b2 with
     | false, false => false
     | true, _ => true
@@ -39,29 +39,28 @@ end.
 Notation "b1 & b2" := (andb3 b1 b2) (at level 40).
 Notation "b1 | b2" := (orb3 b1 b2) (at level 40).
 
-Theorem andb3_comm : forall b1 b2 : bool3,
-    b1 & b2 = b2 & b1.
+Theorem andb3_comm :
+  forall b1 b2 : bool3, b1 & b2 = b2 & b1.
 Proof. solve_bool3. Qed.
 
-Theorem orb3_comm : forall b1 b2 : bool3,
-    b1 | b2 = b2 | b1.
+Theorem orb3_comm :
+  forall b1 b2 : bool3, b1 | b2 = b2 | b1.
 Proof. solve_bool3. Qed.
 
-Theorem andb3_dist_orb3 : forall b1 b2 b3 : bool3,
+Theorem andb3_dist_orb3 :
+  forall b1 b2 b3 : bool3,
     b1 & (b2 | b3) = (b1 & b2) | (b1 & b3).
 Proof. solve_bool3. Qed.
 
-Theorem orb3_dist_andb3 : forall b1 b2 b3 : bool3,
+Theorem orb3_dist_andb3 :
+  forall b1 b2 b3 : bool3,
     b1 | (b2 & b3) = (b1 | b2) & (b1 | b3).
 Proof. solve_bool3. Qed.
 
-Theorem andb3_true_neutral_l : forall b : bool3,
-    andb3 true b = b.
+Theorem andb3_true_neutral_l :
+  forall b : bool3, andb3 true b = b.
 Proof. solve_bool3. Qed.
 
-Theorem andb3_true_neutral_r : forall b : bool3,
-    andb3 b true = b.
+Theorem andb3_true_neutral_r :
+  forall b : bool3, andb3 b true = b.
 Proof. solve_bool3. Qed.
-
-(* ETC *)
-

@@ -45,4 +45,3 @@ match ma with
     | Some a => f a
     | None => None
 end.
-

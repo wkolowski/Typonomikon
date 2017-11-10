@@ -1,10 +1,8 @@
 **vo
 **v.d
 **glob
-**html
-htmls/
-lect/
-*~
 **.aux
+**~
+htmls/
 makefile
 book/Seminar.v

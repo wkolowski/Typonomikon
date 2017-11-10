@@ -5,41 +5,44 @@ To repozytorium zawiera źródła mojej [książki](https://zeimer.github.io/)
 W sumie nie wiem, dlaczego wstawiłem je osobno, zamiast wrzucić do jednego repo razem z książką...
 
 Co tu się dzieje:
-- book/ zawiera pliki .v, które stanowią źródła książki
-- build.sh i rebuild.sh to skrypty służące odpowiednio do budowania i budowania od nowa książki
-- css/ i js/ to style i kod js, który daje książce w miarę znośny wygląd. Ukradzione ze starej wersji [Software Foundations](https://softwarefoundations.cis.upenn.edu/)
-- extra/ zawiera nagłówek i stopkę, które dodają analitiksy i inne takie
-- makefile to makefile, a make_makefile.sh generuje nowy makefile od zera
-- misc/ to rzeczy, z których będą powstawać przyszłe rozdziały. Póki co jest tu burdl.
+- book/ zawiera pliki .v, które stanowią źródła książki. Źródła jednego rozdziału (Seminar: Induction) nie są dostępne.
+- build.sh i rebuild.sh to skrypty służące odpowiednio do budowania i budowania od nowa książki.
+- css/ i js/ to style i kod js, które dają książce w miarę znośny wygląd. Ukradzione ze starej wersji [Software Foundations](https://softwarefoundations.cis.upenn.edu/)
+- extra/ zawiera nagłówek i stopkę, które dodają analitiksy i inne takie, a także okładkę, również ukradzioną z Software Foundations.
+- make_makefile.sh generuje nowy makefile od zera.
+- thrash/ zawiera fragmenty rozdziałów, które zostały wycięte albo skopiowane na zapas z jakichś dziwnych powodów (np. refaktoringu).
+- todo/ zawiera pliki .v o wysokim priorytecie, z których będą powstawać przyszłe rozdziały.
+- misc/ zawier pliki .v o niskim priorytecie z jakimiś kodami, z których może kiedyś coś będzie. 10.11.17 udało mi się tu posprzątać, więc powinien być w miarę porządek.
 - README.md to ten plik
 
 Książkę można skompilować za pomocą polecenia
 ```bash
 ./rebuild.sh
 ```
-Polecenie to usuwa wszystkie śmieci typu .vo, .v.d, .glob, holder htmls/, tworzy nowego makefile'a, kompiluje od zera wszystkie pliki .v znajdujące się w book/, generuje pliki .html z komentarzy, dodaje nagłówek i stopkę z extra/ i podmienia style oraz js na właściwe.
+Polecenie to usuwa wszystkie śmieci typu .vo, .v.d, .glob, folder htmls/, tworzy nowego makefile'a, kompiluje od zera wszystkie pliki .v znajdujące się w book/, generuje pliki .html z komentarzy, dodaje nagłówek, stopkę i okładkę z extra/ i podmienia style oraz js na właściwe.
 
 ## Ogłoszenia parafialne
 
-W tak zwanym międzyczasie trochę zmieniła się moja koncepcja na temat tego, jak ta książka powinna wyglądać. W mojej nowej wizji występują dwa typy rozdziałów:
-- rozdziały teoretyczne opisują Coqa, stojące za nim idee, jego podstawy teoretyczne oraz różne quirki związane z jego użytkowaniem. W kluczowych momentach prezentują niewielkie ilości zadań sprawdzających zrozumienie materiału. Będę je numerował (póki co) literą R.
-- rozdziały stosowane będą opisywać różne rzeczy z dziedziny informatyki i matematyki, a twoim zadaniem będzie ich implementacja i formalna weryfikacja w Coqu. Będę je numerował literą X.
+Chwilowo książka składa się z następujących 3 typów rozdziałów:
+- rozdziały oznaczone literą R opisują Coqa, stojące za nim idee, jego podstawy teoretyczne oraz różne quirki związane z jego użytkowaniem. W kluczowych momentach prezentują niewielkie ilości zadań sprawdzających zrozumienie materiału.
+- rozdziały oznaczone literą X opisują (choć to chyba za mocne słowo) różne rzeczy z dziedziny informatyki i matematyki. Zawierają głównie duże ilość zadań, które możesz wykonać.
+- jest też jeden rozdział po angielsku (Seminar: Induction). Są to moje notatki z seminarium. Kiedyś może przetłumaczę na polski (ale prędzej przetłumaczę wszystko inne na angielski).
 
-W dalszej perspektywie powstaną rozdziały stosowane dotyczące różnych, mniej lub bardziej konkretnych rzeczy: konkretnych typów induktywnych (list niepustych, wektorów, drzew, typów używanych w silnych specyfikacjach), struktur danych (stosy, ciągi, drzewa wyszukiwań, kolejki), relacji, porządków etc.
-
-Mam nadzieję, że mój zapał nie będzie słomiany.
+W dalszej perspektywie powstaną rozdziały stosowane dotyczące różnych, mniej lub bardziej konkretnych rzeczy: konkretnych typów induktywnych (list niepustych, wektorów, drzew, typów używanych w silnych specyfikacjach), struktur danych (stosy, ciągi, drzewa wyszukiwań, kolejki), porządków, struktur algebraicznych, funktorów, monad i innych dziwnych rzeczy, które nie interesują normalnych ludzi.
 
 ## TODO
 
-Bardziej bliskie TODO:
-- zapewnić kompatybilność z Coqiem 8.6
+Bliskie TODO:
+- taktyki
+- reflekcja
+
+Średnie TODO:
 - dokończyć podrozdział o regułach komputacji
 - dokończyć rozdział o funkcjach (więcej ukrytej teorii kategorii)
 - dokończyć rozdział o relacjach
 
-Bardziej dalekie TODO:
+Dalekie TODO:
 - Wygląd:
-  - okładka
   - zwijane, rozwijane dowody
 - Logika:
   - reflekcja
@@ -53,15 +56,8 @@ Bardziej dalekie TODO:
   - rekursja przez iterację
   - Bove-Capretta
   - rekursja dobrze ufundowana
-  - Komenda Function
 - Indukcja:
-  - jak dokładnie działa indukcja
-  - proste reguły eliminacji
-  - coś o generalizowaniu hipotezy indukcyjnej
   - foldy
-  - skomplikowane reguły eliminacji
-  - reguły dla Prop
-  - reguły dla indukcji wzajemnej
   - reguły dla indukcji dobrze ufundowanej
 - Typy:
   - opisać lepiej produkt zależny
@@ -93,10 +89,10 @@ Bardziej dalekie TODO:
   - Listy niepuste (nel)
   - Wektory (vec)
   - Drzewa binarne
-  - lensy ? (ho ho, to się nie stanie — bo nie umiem)
+  - lensy? (ho ho, to się nie stanie — bo nie umiem)
 - Inne:
   - definiowanie przez dowód
-  - być może koindukcja
+  - być może koindukcja (a może lepiej nie...)
   - wzbogacanie struktur danych
 - Sugestie:
   - być może przesunąć Empty_set i unit za Enumeracje, a prod i sum za Właściwości konstruktorów. Wcisnąć tu ukrytą teorię kategorii.

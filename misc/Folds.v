@@ -60,6 +60,9 @@ Inductive BTree (A : Type) : Type :=
     | Empty : BTree A
     | Node : A -> BTree A -> BTree A -> BTree A.
 
+Arguments Empty [A].
+Arguments Node [A] _ _ _.
+
 Fixpoint foldBT {A B : Type} (b : B) (f : A -> B -> B -> B)
     (btb : BTree A) : B :=
 match btb with

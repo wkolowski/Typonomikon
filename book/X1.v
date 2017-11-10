@@ -230,39 +230,52 @@ Theorem eqb_spec' : eqb b1 b2 = false -> b1 <> b2.
 Proof. destruct b1, b2; do 2 inversion 1. Qed.
 (* end hide *)
 
-Theorem xorb_spec : xorb b1 b2 = negb (eqb b1 b2).
+Theorem xorb_spec :
+  xorb b1 b2 = negb (eqb b1 b2).
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem xorb_spec' : xorb b1 b2 = true -> b1 <> b2.
+Theorem xorb_spec' :
+  xorb b1 b2 = true -> b1 <> b2.
 (* begin hide *)
 Proof. destruct b1, b2; do 2 inversion 1. Qed.
 (* end hide *)
 
-Theorem norb_spec : norb b1 b2 = negb (b1 || b2).
+Theorem norb_spec :
+  norb b1 b2 = negb (b1 || b2).
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem nandb_spec : nandb b1 b2 = negb (b1 && b2).
+Theorem nandb_spec :
+  nandb b1 b2 = negb (b1 && b2).
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
 (** *** Różne *)
 
-Theorem andb_eq_orb : b1 && b2 = b1 || b2 -> b1 = b2.
+Theorem andb_eq_orb :
+  b1 && b2 = b1 || b2 -> b1 = b2.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem all3_spec :  (b1 && b1) || (negb b1 || negb b2) = true.
+Theorem all3_spec :
+  (b1 && b2) || (negb b1 || negb b2) = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem noncontradiction_bool : negb (eqb b (negb b)) = true.
+Theorem noncontradiction_bool :
+  negb (eqb b (negb b)) = true.
+(* begin hide *)
+Proof. solve_bool. Qed.
+(* end hide *)
+
+Theorem excluded_middle_bool :
+  b || negb b = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)

@@ -13,10 +13,11 @@
 # -d htmls book/*v wrzuca pliki .html wygenerowane z poszczególnych rozdziałów do htmls/
 # cp css/*css htmls/ przerzuca style do htmls/ (coqdoc generuje swoje które wszystko psują). Te z css są lepsze i z nimi wszystko jest ładnie.
 # cp js/* htmls/ przerzuca pliki .js do htmls/ (są potrzebne żeby wszystko ładnie się wyświetlało)
-# mv (...) zmienia toc.html na index.html, żeby na github.io wszystko się od razu ładnie wyświetlało
+# Update 2017-11-08: mv (...) wrzuca do htmls/ okładkę razem ze zdjęciem. 
 
 make
 coqdoc --with-footer extra/footer.html --with-header extra/header.html --no-lib-name --lib-subtitles --parse-comments --no-index --toc --toc-depth 2 -d htmls book/*v
 cp css/*css htmls/
 cp js/* htmls/
-mv htmls/toc.html htmls/index.html
+cp extra/index.html htmls/
+cp extra/*jpg htmls/

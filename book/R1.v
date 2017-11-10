@@ -1676,6 +1676,17 @@ Restart.
 Qed.
 (* end hide *)
 
+Theorem ex_dist_and :
+  forall (A : Type) (P Q : A -> Prop),
+    (exists x : A, P x /\ Q x) ->
+      (exists y : A, P y) /\ (exists z : A, Q z).
+(* begin hide *)
+Proof.
+  intros. destruct H as [x H]. destruct H.
+  split; exists x; assumption.
+Qed.
+(* end hide *)
+
 (* Inne *)
 Theorem forall_or_imp :
     (forall x : A, P x) \/ (forall x : A, Q x) -> (forall x : A, P x \/ Q x).
