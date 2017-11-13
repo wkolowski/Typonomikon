@@ -1,4 +1,4 @@
-(** * R2 : Indukcja i rekursja *)
+(** * R2: Indukcja i rekursja *)
 
 (** W poprzednim rozdziale dowiedzieliśmy się już co nieco o typach, a
     także spotkaliśmy kilka z nich oraz kilka sposobów tworzenia nowych
@@ -318,7 +318,8 @@ Eval cbv in negb true.
     Jeżeli nam się powiedzie, mamy całkowitą pewność, że funkcja
     rzeczywiście posiada żądaną własność. *)
 
-Theorem negb_involutive : forall b : bool, negb (negb b) = b.
+Theorem negb_involutive :
+  forall b : bool, negb (negb b) = b.
 Proof.
   intros. destruct b.
     simpl. reflexivity.
@@ -363,7 +364,8 @@ Qed.
     - https://coq.inria.fr/refman/tactic-index.html
     - https://coq.inria.fr/refman/Reference-Manual010.html *)
 
-Theorem negb_involutive' : forall b : bool, negb (negb b) = b.
+Theorem negb_involutive' :
+  forall b : bool, negb (negb b) = b.
 Proof.
   destruct b; simpl; reflexivity.
 Qed.
@@ -377,7 +379,8 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-Theorem andb_assoc : forall b1 b2 b3 : bool,
+Theorem andb_assoc :
+  forall b1 b2 b3 : bool,
     andb b1 (andb b2 b3) = andb (andb b1 b2) b3.
 (* begin hide *)
 Proof.
@@ -385,7 +388,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem andb_comm : forall b1 b2 : bool,
+Theorem andb_comm :
+  forall b1 b2 : bool,
     andb b1 b2 = andb b2 b1.
 (* begin hide *)
 Proof.
@@ -393,7 +397,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem orb_assoc : forall b1 b2 b3 : bool,
+Theorem orb_assoc :
+  forall b1 b2 b3 : bool,
     orb b1 (orb b2 b3) = orb (orb b1 b2) b3.
 (* begin hide *)
 Proof.
@@ -401,7 +406,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem orb_comm : forall b1 b2 : bool,
+Theorem orb_comm :
+  forall b1 b2 : bool,
     orb b1 b2 = orb b2 b1.
 (* begin hide *)
 Proof.
@@ -509,7 +515,8 @@ end.
     sprawdzenia poprawności naszej definicji spróbujemy udowodnić, że
     posiada ona właściwości, których się spodziewamy. *)
 
-Theorem plus_O_n : forall n : nat, plus 0 n = n.
+Theorem plus_O_n :
+  forall n : nat, plus 0 n = n.
 Proof.
   intro. simpl. trivial.
 Qed.
@@ -518,7 +525,8 @@ Qed.
     wynika wprost z definicji (spróbuj zredukować "ręcznie" wyrażenie
     [0 + n]). *)
 
-Theorem plus_n_O_try1 : forall n : nat, plus n 0 = n.
+Theorem plus_n_O_try1 :
+  forall n : nat, plus n 0 = n.
 Proof.
   intro. destruct n.
     trivial.
@@ -535,7 +543,8 @@ Abort.
     działa taktyka [f_equal]. Nie pomogła nam ona jednak — po jej
     użyciu mamy do pokazania to samo, co na początku, czyli [n + 0 = n]. *)
 
-Theorem plus_n_O : forall n : nat, plus n 0 = n.
+Theorem plus_n_O :
+  forall n : nat, plus n 0 = n.
 Proof.
   intro. induction n.
     trivial.
@@ -564,7 +573,8 @@ Qed.
     rekurencyjnych argumentów konstruktora. Właśnie tego było nam
     trzeba: założenie indukcyjne pozwala nam dokończyć dowód. *)
 
-Theorem plus_comm : forall n m : nat, plus n m = plus m n.
+Theorem plus_comm :
+  forall n m : nat, plus n m = plus m n.
 Proof.
   induction n as [| n']; simpl; intros.
     rewrite plus_n_O. trivial.
@@ -608,14 +618,16 @@ match n with
 end.
 (* end hide *)
 
-Theorem mult_0_l : forall n : nat, mult 0 n = 0.
+Theorem mult_0_l :
+  forall n : nat, mult 0 n = 0.
 (* begin hide *)
 Proof.
   induction n; trivial.
 Qed.
 (* end hide *)
 
-Theorem mult_0_r : forall n : nat, mult n 0 = 0.
+Theorem mult_0_r :
+  forall n : nat, mult n 0 = 0.
 (* begin hide *)
 Proof.
   induction n as [| n'].
@@ -626,7 +638,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem mult_1_l : forall n : nat, mult 1 n = n.
+Theorem mult_1_l :
+  forall n : nat, mult 1 n = n.
 (* begin hide *)
 Proof.
   destruct n as [| n'].
@@ -637,7 +650,8 @@ Restart.
 Qed.
 (* end hide*)
 
-Theorem mult_1_r : forall n : nat, mult n 1 = n.
+Theorem mult_1_r :
+  forall n : nat, mult n 1 = n.
 (* begin hide *)
 Proof.
   induction n.
@@ -664,14 +678,16 @@ match m with
     | S m' => plus' (S n) m'
 end.
 
-Theorem plus'_n_0 : forall n : nat, plus' n 0 = n.
+Theorem plus'_n_0 :
+  forall n : nat, plus' n 0 = n.
 (* begin hide *)
 Proof.
   simpl. trivial.
 Qed.
 (* end hide *)
 
-Theorem plus'_S : forall n m : nat, plus' (S n) m = S (plus' n m).
+Theorem plus'_S :
+  forall n m : nat, plus' (S n) m = S (plus' n m).
 (* begin hide *)
 Proof.
   intros. generalize dependent n. induction m as [| m']; simpl; intros.
@@ -680,7 +696,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus'_0_n : forall n : nat, plus' 0 n = n.
+Theorem plus'_0_n :
+  forall n : nat, plus' 0 n = n.
 (* begin hide *)
 Proof.
   induction n as [| n'].
@@ -689,7 +706,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus'_comm : forall n m : nat, plus' n m = plus' m n.
+Theorem plus'_comm :
+  forall n m : nat, plus' n m = plus' m n.
 (* begin hide *)
 Proof.
   intros. generalize dependent n. induction m as [| m']; simpl; intros.
@@ -698,7 +716,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus'_is_plus : forall n m : nat, plus' n m = plus n m.
+Theorem plus'_is_plus :
+  forall n m : nat, plus' n m = plus n m.
 (* begin hide *)
 Proof.
   induction n as [| n']; simpl; intro.
@@ -763,7 +782,8 @@ end.
     Zauważ też, że funkcja ta zwraca zdania logiczne, a nie wartości
     boolowskie. *)
 
-Theorem some_not_none : forall (A : Type) (a : A), Some a <> None.
+Theorem some_not_none :
+  forall (A : Type) (a : A), Some a <> None.
 Proof.
   unfold not; intros. change False with (isSome (@None A)).
   rewrite <- H. simpl. trivial.
@@ -801,7 +821,8 @@ Qed.
     jest ukryta w definicji negacji: [Some a <> None] to tak naprawdę
     [Some a = None -> False]. *)
 
-Theorem some_inj : forall (A : Type) (x y : A),
+Theorem some_inj :
+  forall (A : Type) (x y : A),
     Some x = Some y -> x = y.
 Proof.
   intros. injection H. trivial.
@@ -822,8 +843,8 @@ Qed.
     więc [injection H] przekształciło cel do postaci [x = y -> x = y],
     który jest trywialny. *)
 
-Theorem some_inj' : forall (A : Type) (x y : A),
-    Some x = Some y -> x = y.
+Theorem some_inj' :
+  forall (A : Type) (x y : A), Some x = Some y -> x = y.
 Proof.
   inversion 1. trivial.
 Qed.
@@ -839,8 +860,8 @@ Qed.
     a następnie przepisała ją w celu (który miał postać [x = y]), dając
     cel postaci [y = y]. *)
 
-Theorem some_inj'' : forall (A : Type) (x y : A),
-    Some x = Some y -> x = y.
+Theorem some_inj'' :
+  forall (A : Type) (x y : A), Some x = Some y -> x = y.
 Proof.
   injection 1. intro. subst. trivial.
 Qed.
@@ -878,9 +899,10 @@ Inductive rational : Set :=
       forall (sign : bool) (numerator denominator : nat),
         denominator <> 0 -> rational.
 
-Axiom rational_eq : forall (s s' : bool) (p p' q q' : nat)
+Axiom rational_eq :
+  forall (s s' : bool) (p p' q q' : nat)
     (H : q <> 0) (H' : q' <> 0), p * q' = p' * q ->
-    mk_rational s p q H = mk_rational s' p' q' H'.
+      mk_rational s p q H = mk_rational s' p' q' H'.
 
 (** Typ [rational] ma reprezentować liczby wymierne. Znak jest typu
     [bool] — możemy interpretować, że [true] oznacza obecność znaku
@@ -1031,14 +1053,14 @@ Eval compute in [1; 2; 3] ++ [4; 5; 6].
     naszego kodu jest udowodnienie, że posiada on pożądane przez
     nas właściwości. *)
 
-Theorem app_nil_l : forall (A : Type) (l : list A),
-    [] ++ l = l.
+Theorem app_nil_l :
+  forall (A : Type) (l : list A), [] ++ l = l.
 Proof.
   intros. simpl. reflexivity.
 Qed.
 
-Theorem app_nil_r : forall (A : Type) (l : list A),
-    l ++ [] = l.
+Theorem app_nil_r :
+  forall (A : Type) (l : list A), l ++ [] = l.
 Proof.
   induction l as [| h t].
     simpl. reflexivity.
@@ -1061,7 +1083,8 @@ Qed.
 (** **** Ćwiczenie *)
 (** Pokaż, że [app] jest łączne. *)
 
-Theorem app_assoc : forall (A : Type) (l1 l2 l3 : list A),
+Theorem app_assoc :
+  forall (A : Type) (l1 l2 l3 : list A),
     l1 ++ (l2 ++ l3) = (l1 ++ l2) ++ l3.
 (* begin hide *)
 Proof.
@@ -1075,8 +1098,8 @@ Qed.
 (** Pokaż, że [app] nie jest przemienne. Wskazówka: może ci się
     przydać taktyka [specialize]. *)
 
-Theorem app_not_comm : ~ forall (A : Type) (l1 l2 : list A),
-    l1 ++ l2 = l2 ++ l1.
+Theorem app_not_comm :
+  ~ forall (A : Type) (l1 l2 : list A), l1 ++ l2 = l2 ++ l1.
 (* begin hide *)
 Proof.
   intro. specialize (H nat [0] [1]). simpl in H. inversion H.
@@ -1098,23 +1121,24 @@ end.
 (** **** Ćwiczenie *)
 (** Udowodnij poprawność swojej implementacji funkcji [length]. *)
 
-Theorem length_nil : forall A : Type,
-    length (@nil A) = 0.
+Theorem length_nil :
+  forall A : Type, length (@nil A) = 0.
 (* begin hide *)
 Proof.
   intro. simpl. reflexivity.
 Qed.
 (* end hide *)
 
-Theorem length_cons : forall (A : Type) (h : A) (t : list A),
-    length (h :: t) <> 0.
+Theorem length_cons :
+  forall (A : Type) (h : A) (t : list A), length (h :: t) <> 0.
 (* begin hide *)
 Proof.
   simpl. intros. inversion 1.
 Qed.
 (* end hide *)
 
-Theorem app_length : forall (A : Type) (l1 l2 : list A),
+Theorem app_length :
+  forall (A : Type) (l1 l2 : list A),
     length (l1 ++ l2) = length l1 + length l2.
 (* begin hide *)
 Proof.
@@ -1496,7 +1520,7 @@ Inductive Empty_set : Set := .
     to mamy sprzeczność. *)
 
 Definition create {A : Type} (x : Empty_set) : A :=
-    match x with end.
+  match x with end.
 
 (** Jeżeli mamy term typu [Empty_set], to możemy w sposób niemal magiczny
     wyczarować term dowolnego typu [A], używając pattern matchingu z
@@ -1505,7 +1529,8 @@ Definition create {A : Type} (x : Empty_set) : A :=
 (** **** Ćwiczenie *)
 (** Udowodnij, że powyższa funkcja jest unikalna. *)
 
-Theorem create_unique : forall (A : Type) (f : Empty_set -> A),
+Theorem create_unique :
+  forall (A : Type) (f : Empty_set -> A),
     (forall x : Empty_set, create x = f x).
 (* begin hide *)
 Proof.
@@ -1516,8 +1541,8 @@ Qed.
 (** **** Ćwiczenie *)
 (** Pokaż, że nie istnieją funkcje z typu niepustego w pusty. *)
 
-Theorem no_fun_from_nonempty_to_empty : forall (A : Type) (a : A)
-    (f : A -> Empty_set), False.
+Theorem no_fun_from_nonempty_to_empty :
+  forall (A : Type) (a : A) (f : A -> Empty_set), False.
 (* begin hide *)
 Proof.
   intros. specialize (f a). destruct f.
@@ -1546,7 +1571,8 @@ Definition delete {A : Type} (a : A) : unit := tt.
 (** **** Ćwiczenie *)
 (** Pokaż, że funkcja [delete] jest unikalna. *)
 
-Theorem delete_unique : forall (A : Type) (f : A -> unit),
+Theorem delete_unique :
+  forall (A : Type) (f : A -> unit),
     (forall x : A, delete x = f x).
 (* begin hide *)
 Proof.
@@ -1584,7 +1610,8 @@ match p with
 end.
 (* end hide *)
 
-Theorem proj_spec : forall (A B : Type) (p : prod A B),
+Theorem proj_spec :
+  forall (A B : Type) (p : prod A B),
     p = pair (fst p) (snd p).
 (* begin hide *)
 Proof.
@@ -1609,14 +1636,16 @@ Arguments inr [A] [B] _.
 (** **** Ćwiczenie *)
 (** Pokaż, że suma nie ma projekcji. *)
 
-Theorem sum_no_fst : forall (proj : forall A B : Type, sum A B -> A), False.
+Theorem sum_no_fst :
+  forall (proj : forall A B : Type, sum A B -> A), False.
 (* begin hide *)
 Proof.
   intros. apply proj with nat. apply inr. exact 0.
 Qed.
 (* end hide *)
 
-Theorem sum_no_snd : forall (proj : forall A B : Type, sum A B -> B), False.
+Theorem sum_no_snd :
+  forall (proj : forall A B : Type, sum A B -> B), False.
 (* begin hide *)
 Proof.
   intros. apply proj with nat. apply inl. exact 0.
@@ -1635,7 +1664,8 @@ End ImportantTypes.
 Inductive Empty : Type :=
     | c : Empty_set -> Empty.
 
-Theorem Empty_is_empty : forall empty : Empty, False.
+Theorem Empty_is_empty :
+  forall empty : Empty, False.
 Proof.
   intro. destruct empty. destruct e.
 Qed.
@@ -1685,8 +1715,8 @@ Inductive InfiniteList (A : Type) : Type :=
     nieskończone (i to tylko przy nierealnym założeniu, że możliwe jest
     zakończenie konstrukcji liczącej sobie nieskończoność kroków). *)
 
-Theorem InfiniteList_is_empty : forall A : Type,
-    InfiniteList A -> False.
+Theorem InfiniteList_is_empty :
+  forall A : Type, InfiniteList A -> False.
 Proof.
   intros A l. induction l as [h t]. exact IHt.
 Qed.
@@ -1708,7 +1738,8 @@ Qed.
     Czy ten konfundujący fakt nie oznacza jednak, że [list A], czyli typ
     zwykłych list, również jest pusty? Spróbujmy pokazać, że tak jest. *)
 
-Theorem list_empty : forall (A : Type), list A -> False.
+Theorem list_empty :
+  forall (A : Type), list A -> False.
 Proof.
   intros A l. induction l as [| h t].
     Focus 2. exact IHt.
@@ -1972,8 +2003,8 @@ Require Import Arith.
     Jak udowodnić, że suma liczb parzystych jest parzysta? Być może
     właśnie pomyślałeś o indukcji. Spróbujmy zatem: *)
 
-Theorem even_sum_failed1 : forall n m : nat,
-    even n -> even m -> even (n + m).
+Theorem even_sum_failed1 :
+  forall n m : nat, even n -> even m -> even (n + m).
 Proof.
   induction n as [| n']; simpl; intros.
     trivial.
@@ -1993,8 +2024,8 @@ Abort.
     się też, że [n] może być jedynie postaci [0] lub [S (S n')]. Dzięki
     temu powinniśmy uniknąć problemu z poprzedniej próby. *)
 
-Theorem even_sum_failed2 : forall n m : nat,
-    even n -> even m -> even (n + m).
+Theorem even_sum_failed2 :
+  forall n m : nat, even n -> even m -> even (n + m).
 Proof.
   intros n m Hn Hm. destruct Hn, Hm; simpl.
     constructor.
@@ -2008,8 +2039,8 @@ Abort.
     problemów nie będzie jednak indukcja po [n] lub [m], lecz po dowodzie na
     to, że [n] jest parzyste. *)
 
-Theorem even_sum : forall n m : nat,
-    even n -> even m -> even (n + m).
+Theorem even_sum :
+  forall n m : nat, even n -> even m -> even (n + m).
 Proof.
   intros n m Hn Hm. induction Hn as [| n' Hn'].
     simpl. assumption.
@@ -2032,8 +2063,8 @@ Qed.
 (** Przy następnych ćwiczeniach mogą przydać ci się taktyki [replace]
     oraz [assert]. *)
 
-Theorem stupid_example_replace : forall n : nat,
-    n + 0 = n.
+Theorem stupid_example_replace :
+  forall n : nat, n + 0 = n.
 Proof.
   intro. replace (n + 0) with (0 + n).
     trivial.
@@ -2046,8 +2077,8 @@ Qed.
     w którym musimy udowodnić, że [t = t']. Można też zastosować ją
     w hipotezie, pisząc [replace t with t' in H]. *)
 
-Theorem stupid_example_assert : forall n : nat,
-    n + 0 + 0 = n.
+Theorem stupid_example_assert :
+  forall n : nat, n + 0 + 0 = n.
 Proof.
   intro. assert (H : n + 0 = n).
     apply plus_0_r.
@@ -2062,7 +2093,8 @@ Qed.
 (** Udowodnij poniższe twierdzenia. Zanim zaczniesz, zastanów się, po czym
     należy przeprowadzić indukcję: po wartości, czy po dowodzie? *)
 
-Theorem double_is_even : forall n : nat, even (2 * n).
+Theorem double_is_even :
+  forall n : nat, even (2 * n).
 (* begin hide *)
 Proof.
   induction n as [| n']; simpl in *.
@@ -2072,8 +2104,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem even_is_double : forall n : nat,
-    even n -> exists k : nat, n = 2 * k.
+Theorem even_is_double :
+  forall n : nat, even n -> exists k : nat, n = 2 * k.
 (* begin hide *)
 Proof.
   induction 1.
@@ -2192,15 +2224,15 @@ Qed.
     Coqa, którą jest konwertowalność. 
 *)
 
-Theorem eq_refl_alpha : forall A : Type,
-    eq (fun x : A => x) (fun y : A => y).
+Theorem eq_refl_alpha :
+  forall A : Type, eq (fun x : A => x) (fun y : A => y).
 Proof.
   intro. change (fun x : A => x) with (fun y : A => y).
   apply eq_refl.
 Qed.
 
-Theorem eq_refl_beta : forall m : nat,
-    eq ((fun n : nat => n + n) m) (m + m).
+Theorem eq_refl_beta :
+  forall m : nat, eq ((fun n : nat => n + n) m) (m + m).
 Proof.
   intro. simpl. apply eq_refl.
 Qed.
@@ -2213,7 +2245,7 @@ Proof.
 Qed.
 
 Theorem eq_refl_iota :
-    eq 42 (match 0 with | 0 => 42 | _ => 13 end).
+  eq 42 (match 0 with | 0 => 42 | _ => 13 end).
 Proof.
   simpl. apply eq_refl.
 Qed.
@@ -2578,7 +2610,7 @@ End MutInd.
     element, a mianowicie polimorficzną funkcję identycznościową. *)
 
 Definition id' : forall A : Set, A -> A :=
-    fun (A : Set) (x : A) => x.
+  fun (A : Set) (x : A) => x.
 
 (** **** Ćwiczenie *)
 (** Zdefiniuj wszystkie elementy następujących typów lub udowodnij, że
@@ -2595,7 +2627,8 @@ Definition id' : forall A : Set, A -> A :=
     - [forall A : Set, list A -> A] *)
 
 (* begin hide *)
-Theorem no_such_fun : (forall A B : Set, A -> B) -> False.
+Theorem no_such_fun :
+  (forall A B : Set, A -> B) -> False.
 Proof.
   intros. exact (X nat False 42).
 Qed.
@@ -2968,7 +3001,8 @@ Defined.
 
 (** ** Rozstrzygalność *)
 
-Theorem excluded_middle : forall P : Prop, P \/ ~ P.
+Theorem excluded_middle :
+  forall P : Prop, P \/ ~ P.
 Proof.
   intro. left.
 Restart.
@@ -3025,7 +3059,8 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-Theorem eq_nat_dec : forall n m : nat, n = m \/ ~ n = m.
+Theorem eq_nat_dec :
+  forall n m : nat, n = m \/ ~ n = m.
 (* begin hide *)
 Proof.
   induction n as [| n']; destruct m as [| m'].
@@ -3130,7 +3165,7 @@ Inductive ex (A : Type) (P : A -> Prop) : Prop :=
     większa. Następnie zastanów się, jak działa taktyka [exists]. *)
 
 Theorem exists_greater :
-    forall n : nat, ex nat (fun k : nat => n < k).
+  forall n : nat, ex nat (fun k : nat => n < k).
 (* begin hide *)
 Proof.
   intro. apply (ex_intro _ _ (S n)). unfold lt. apply le_n.

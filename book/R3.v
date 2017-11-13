@@ -1,5 +1,39 @@
+(** * R3: Taktyki i automatyzacja *)
 
+(** Znasz już sporą część języka termów Coqa (zwanego Gallina) i potrafisz
+    dowodzić przeróżnych właściwości programów. Po osięgnięciu pewnego
+    poziomu zaawansowania i obycia (nazywanego zazwyczaj "mathematical
+    maturity") ręczne klepanie dowodów przestaje być produktywne, a staje
+    się nudne i męczące. Czas więc najwyższy nauczyć się pisać programy,
+    które będą dowodzić poprawności innych programów za nas.
 
+    W tym rozdziale poznamy podstawy języka [Ltac], który służy do tworzenia
+    własnych taktyk. Jego składnię przedstawiono i skrupulatnie opisano tu:
+    https://coq.inria.fr/refman/ltac.html
+
+    Choć przykładowe twierdzenie znaczy więcej niż 0x3E8 słów i postaram się
+    dokładnie zilustrować każdy istotny moim zdaniem konstrukt języka [Lac],
+    to i tak polecam zapoznać się z powyższym linkiem. *)
+
+(** * Kombinatory *)
+
+Ltac existNatFrom n :=
+  exists n || existNatFrom (S n).
+
+Ltac existNat := existNatFrom O.
+
+Goal exists m, m = 1.
+  Fail (existNat; reflexivity).
+Abort.
+
+Ltac existNatFrom' n :=
+  exists n + existNatFrom' (S n).
+
+Ltac existNat' := existNatFrom' O.
+
+Goal exists m, m = 15.
+  existNat'; reflexivity.
+Qed.
 
 Theorem involution_unequal_negb : forall (f : bool -> bool) (b : bool),
     f (f b) = b -> f b <> b -> f b = negb b.
@@ -116,7 +150,7 @@ Hypotheses A B C D E F G H I J : Prop.
 
 (** * Wyszukiwanie *)
 
-Ltac search := try assumption; (left; search) || (right; search).
+Ltac search := try assumption; (left; search) + (right; search).
 
 Theorem search_0 :
     I -> A \/ B \/ C \/ D \/ E \/ F \/ G \/ I \/ J.
@@ -181,8 +215,8 @@ Theorem and_perm_1 : A /\ B /\ C /\ D /\ E /\ F /\ G /\ H /\ I /\ J ->
 Proof. solve_and_perm. Qed.
 
 Theorem and_perm_2 :
-    (A /\ B) /\ (C /\ (D /\ E)) /\ (((F /\ G) /\ H) /\ I) /\ J ->
-    (I /\ I /\ J) /\ ((A /\ B /\ (A /\ B)) /\ J) /\ (C /\ (E /\ (D /\ F /\ F))).
+  (A /\ B) /\ (C /\ (D /\ E)) /\ (((F /\ G) /\ H) /\ I) /\ J ->
+  (I /\ I /\ J) /\ ((A /\ B /\ (A /\ B)) /\ J) /\ (C /\ (E /\ (D /\ F /\ F))).
 Proof. solve_and_perm. Qed.
 
 (** Permutacje dysjunktywne. *)
@@ -223,17 +257,5 @@ Proof. negtac. Qed.
 Theorem neg_100_200 : negn 100 A -> negn 200 A.
 Proof. negtac. Qed.
 
-Theorem neg_42_1000 : negn 42 A -> negn 2000 A.
+Theorem neg_42_1000 : negn 42 A -> negn 200 A.
 Proof. negtac. Qed.
-
-(* Theorem neg_SS : forall (n : nat) (P : Prop),
-    negn n P -> negn (S (S n)) P.
-Proof. *)
-
-(* Theorem troll : forall n : nat, n = 42 \/ n <> 42.
-Proof.
-  induction n.
-    auto.
-    destruct IHn.
-      right. subst. discriminate. *)
-      

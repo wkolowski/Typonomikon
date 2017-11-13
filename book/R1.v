@@ -951,7 +951,8 @@ Print impl_refl''.
     jest funkcja zależna, czyli pewne uogólnienie zwykłej funkcji,
     która jest interpretacją obliczeniową implikacji. *)
 
-Theorem general_to_particular : forall P : nat -> Prop,
+Theorem general_to_particular :
+  forall P : nat -> Prop,
     (forall n : nat, P n) -> P 42.
 Proof.
   intros. apply H.
@@ -972,7 +973,8 @@ Qed.
     jego momencie. Jej użycie nie jest wymagane, by ukończyć
     powyższy dowód — spróbuj wstawić w jej miejsce [Qed]. *)
 
-Theorem and_proj1'' : forall (P Q : nat -> Prop),
+Theorem and_proj1'' :
+  forall (P Q : nat -> Prop),
     (forall n : nat, P n /\ Q n) -> (forall n : nat, P n).
 Proof.
   intros P Q H k. destruct (H k). assumption.
@@ -990,7 +992,8 @@ Qed.
     napisalibyśmy [destruct (H 42)]. *)
 
 (** **** Ćwiczenie *)
-Theorem all_dist : forall (A : Type) (P Q : A -> Prop),
+Theorem all_dist :
+  forall (A : Type) (P Q : A -> Prop),
     (forall x : A, P x /\ Q x) <->
     (forall x : A, P x) /\ (forall x : A, Q x).
 (* begin hide *)
@@ -1088,7 +1091,8 @@ Qed.
     którego elementami są zwykłe pary. *)
 
 (** **** Ćwiczenie *)
-Theorem ex_or_dist : forall (A : Type) (P Q : A -> Prop),
+Theorem ex_or_dist :
+  forall (A : Type) (P Q : A -> Prop),
     (exists x : A, P x \/ Q x) <->
     (exists x : A, P x) \/ (exists x : A, Q x).
 (* begin hide *)
@@ -1108,7 +1112,8 @@ Qed.
 (** Przyjrzyjmy się jeszcze raz twierdzeniu [iff_intro] (lekko
     zmodernizowanemu przy pomocy kwantyfikacji uniwersalnej). *)
 
-Theorem iff_intro' : forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
+Theorem iff_intro' :
+  forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
   intros. split.
     intro. apply H. assumption.
@@ -1133,7 +1138,8 @@ Qed.
 
 (** ** [;] (średnik) *)
 
-Theorem iff_intro'' : forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
+Theorem iff_intro'' :
+  forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
   split; intros; [apply H | apply H0]; assumption.
 Qed.
@@ -1204,12 +1210,13 @@ Qed.
       jakąś funkcjonalność i udowodnić, że po jej dodaniu
       system wciąż działa poprawnie *)
 
-(** Następujące ćwiczenia rozwiąż najpierw najpierw z jak największym
-    zrozumieniem, a następnie zautomatyzuj tak, aby całość była
-    rozwiązywana w jednym kroku przez pojedynczą (złożoną) taktykę. *)
+(** Następujące ćwiczenia rozwiąż najpierw z jak największym zrozumieniem,
+    a następnie zautomatyzuj tak, aby całość była rozwiązywana w jednym
+    kroku przez pojedynczą taktykę. *)
 
 (** **** Ćwiczenie *)
-Theorem or_comm_ex : forall P Q : Prop, P \/ Q -> Q \/ P.
+Theorem or_comm_ex :
+  forall P Q : Prop, P \/ Q -> Q \/ P.
 (* begin hide *)
 Proof.
   intros; destruct H; [right | left]; assumption.
@@ -1217,7 +1224,8 @@ Qed.
 (* end hide *)
 
 (** **** Ćwiczenie *)
-Theorem diamond : forall P Q R S : Prop,
+Theorem diamond :
+  forall P Q R S : Prop,
     (P -> Q) \/ (P -> R) -> (Q -> S) -> (R -> S) -> P -> S.
 (* begin hide *)
 Proof.
@@ -1231,7 +1239,8 @@ Qed.
 
 (** ** [||] (alternatywa) *)
 
-Theorem iff_intro''' : forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
+Theorem iff_intro''' :
+  forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
   split; intros; apply H0 || apply H; assumption.
 Qed.
@@ -1263,7 +1272,8 @@ Qed.
 
 (** ** [idtac], [do] oraz [repeat] *)
 
-Theorem idtac_do_example : forall P Q R S : Prop, P -> S \/ R \/ Q \/ P.
+Theorem idtac_do_example :
+  forall P Q R S : Prop, P -> S \/ R \/ Q \/ P.
 Proof.
   idtac. intros. do 3 right. assumption.
 Qed.
@@ -1286,7 +1296,8 @@ Qed.
     alternatywą, więc kolejne użycie [right] zawiodłoby, a wtedy
     cała taktyka [do 4 right] również zawiodłaby. *)
 
-Theorem repeat_example : forall P A B C D E F : Prop,
+Theorem repeat_example :
+  forall P A B C D E F : Prop,
     P -> A \/ B \/ C \/ D \/ E \/ F \/ P.
 Proof.
   intros. repeat right. assumption.
@@ -1309,7 +1320,8 @@ Qed.
 
 (** ** [try] i [fail] *)
 
-Theorem iff_intro4 : forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
+Theorem iff_intro4 :
+  forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
   split; intros; try (apply H0; assumption; fail);
   try (apply H; assumption; fail).
@@ -1622,7 +1634,7 @@ Hypotheses P Q R S : A -> Prop.
 
 (* Projekcje *)
 Theorem forall_and_proj1 :
-    (forall x : A, P x /\ Q x) -> (forall x : A, P x).
+  (forall x : A, P x /\ Q x) -> (forall x : A, P x).
 (* begin hide *)
 Proof.
   intros. destruct (H x). assumption.
@@ -1630,7 +1642,7 @@ Qed.
 (* end hide *)
 
 Theorem forall_and_proj2 :
-    (forall x : A, P x /\ Q x) -> (forall x : A, Q x).
+  (forall x : A, P x /\ Q x) -> (forall x : A, Q x).
 (* begin hide *)
 Proof.
   intros. destruct (H x). assumption.
@@ -1639,8 +1651,8 @@ Qed.
 
 (* Rozdzielność *)
 Theorem forall_dist_and :
-    (forall x : A, P x /\ Q x) <->
-    (forall x : A, P x) /\ (forall x : A, Q x).
+  (forall x : A, P x /\ Q x) <->
+  (forall x : A, P x) /\ (forall x : A, Q x).
 (* begin hide *)
 Proof.
   split.
@@ -1657,7 +1669,8 @@ Qed.
 (* end hide *)
 
 Theorem exists_dist_or :
-    (exists x : A, P x \/ Q x) <-> (exists x : A, P x) \/ (exists x : A, Q x).
+  (exists x : A, P x \/ Q x) <->
+  (exists x : A, P x) \/ (exists x : A, Q x).
 (* begin hide *)
 Proof.
   split; intros.
@@ -1689,7 +1702,7 @@ Qed.
 
 (* Inne *)
 Theorem forall_or_imp :
-    (forall x : A, P x) \/ (forall x : A, Q x) -> (forall x : A, P x \/ Q x).
+  (forall x : A, P x) \/ (forall x : A, Q x) -> (forall x : A, P x \/ Q x).
 (* begin hide *)
 Proof.
   destruct 1; intros.
@@ -1701,15 +1714,15 @@ Qed.
 (* end hide *)
 
 Theorem forall_imp_imp :
-    (forall x : A, P x -> Q x) -> (forall x : A, P x) -> (forall x : A, Q x).
+  (forall x : A, P x -> Q x) -> (forall x : A, P x) -> (forall x : A, Q x).
 (* begin hide *)
 Proof.
   intros. apply H. apply H0.
 Qed.
 (* end hide *)
 
-Theorem forall_inhabited_nondep : forall R : Prop,
-    A -> ((forall x : A, R) <-> R).
+Theorem forall_inhabited_nondep :
+  forall R : Prop, A -> ((forall x : A, R) <-> R).
 (* begin hide *)
 Proof.
   split; intros.
@@ -1720,7 +1733,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem forall_or_nondep : forall R : Prop,
+Theorem forall_or_nondep :
+  forall R : Prop,
     (forall x : A, P x) \/ R -> (forall x : A, P x \/ R).
 (* begin hide *)
 Proof.
@@ -1730,7 +1744,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem forall_nondep_impl : forall R : Prop,
+Theorem forall_nondep_impl :
+  forall R : Prop,
     (forall x : A, R -> P x) <-> (R -> forall x : A, P x).
 (* begin hide *)
 Proof.
@@ -1746,9 +1761,10 @@ End exercises_predicate.
 
 (** ** Paradoks golibrody *)
 
-Theorem barber_paradox : forall (man : Type) (barber : man)
+Theorem barber_paradox :
+  forall (man : Type) (barber : man)
     (shaves : man -> man -> Prop),
-    (forall x : man, shaves barber x <-> ~ shaves x x) -> False.
+      (forall x : man, shaves barber x <-> ~ shaves x x) -> False.
 (* begin hide *)
 Proof.
   intros. destruct (H barber). apply H0.
@@ -1894,8 +1910,8 @@ End exercises_classical.
 
 (** ** Paradoks pijoka *)
 
-Theorem drinker_paradox : forall (man : Type)
-  (drinks : man -> Prop) (random_guy : man),
+Theorem drinker_paradox :
+  forall (man : Type) (drinks : man -> Prop) (random_guy : man),
     exists drinker : man, drinks drinker ->
       forall x : man, drinks x.
 (* begin hide *)

@@ -204,10 +204,18 @@
     - http://coq-blog.clarus.me/
     - https://gmalecha.github.io/
     - http://seb.mondet.org/blog/index.html
-    - https://homes.cs.washington.edu/~jrw12/#blog
     - https://pjreddie.com/coq-tactics/ (uwaga na swoje zdrowie psychiczne)
     - http://gallium.inria.fr/blog/
-    - http://ilyasergey.net/pnp/ *)
+    - http://ilyasergey.net/pnp/
+    - https://homes.cs.washington.edu/~jrw12/#blog *)
+
+(** ** Inne *)
+
+(** Coq ma też swój subreddit na Reddicie (można tu znaleźć różne rzeczy, w
+    tym linki do prac naukowych) oraz tag na StackOverflow, gdzie można
+    zadawać i odpowiadać na pytania:
+    - https://www.reddit.com/r/Coq/
+    - https://stackoverflow.com/questions/tagged/coq *)
 
 (** * Sprawy techniczne *)
 (** Kurs ten tworzę z myślą o osobach, które potrafią programować w
