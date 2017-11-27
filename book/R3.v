@@ -1,21 +1,117 @@
 (** * R3: Taktyki i automatyzacja *)
 
-(** Znasz już sporą część języka termów Coqa (zwanego Gallina) i potrafisz
-    dowodzić przeróżnych właściwości programów. Po osięgnięciu pewnego
-    poziomu zaawansowania i obycia (nazywanego zazwyczaj "mathematical
-    maturity") ręczne klepanie dowodów przestaje być produktywne, a staje
-    się nudne i męczące. Czas więc najwyższy nauczyć się pisać programy,
-    które będą dowodzić poprawności innych programów za nas.
+(** Matematycy uważają, że po osiągnięciu pewnego poziomu zaawansowania i
+    obycia (nazywanego zazwyczaj "mathematical maturity") skrupulatne
+    rozpisywanie każdego kroku dowodu przestaje mieć sens i pozwalają
+    sobie zarzucić je na rzecz bardziej wysokopoziomowego opisu rozumowania.
+
+    Myślę, że ta sytuacja ma miejsce w twoim przypadku — znasz już sporą
+    część języka termów Coqa (zwanego Gallina) i potrafisz dowodzić różnych
+    właściwości programów. Doszedłeś do punktu, w którym ręczne klepanie
+    dowodów przestaje być produktywne, a staje się nudne i męczące.
+
+    Niestety, natura dowodu formalnego nie pozwala nam od tak po prostu
+    pominąć mało ciekawych kroków. Czy chcemy czy nie, aby Coq przyjął
+    dowód, kroki te muszą zostać wykonane. Wcale nie znaczy to jednak,
+    że to my musimy je wykonać — mogą zrobić to za nas programy.
+
+    Te programy to oczywiście taktyki. Większość prymitywnych taktyk, jak
+    [intro], [destruct], czy [assumption] już znamy. Choć nie wiesz o tym,
+    używaliśmy też wielokrotnie taktyk całkiem zaawansowanych, takich jak
+    [induction] czy [inversion], bez których nasze formalne życie byłoby
+    drogą przez mękę.
+
+    Wszystkie one są jednak taktykami wbudowanymi, danymi nam z góry przez
+    Coqowych bogów i nie mamy wpływu na ich działanie. Jeżeli nie jesteśmy
+    w stanie zrobić czegoś za ich pomocą, jesteśmy zgubieni. Czas najwyższy
+    nauczyć się pisać własne taktyki, które pomogą nam wykonywać mało ciekawe
+    kroki w dowodach, a w dalszej perspektywnie także przeprowadzać bardziej
+    zaawansowane rozumowania zupełnie automatycznie.
 
     W tym rozdziale poznamy podstawy języka [Ltac], który służy do tworzenia
     własnych taktyk. Jego składnię przedstawiono i skrupulatnie opisano tu:
     https://coq.inria.fr/refman/ltac.html
 
-    Choć przykładowe twierdzenie znaczy więcej niż 0x3E8 słów i postaram się
-    dokładnie zilustrować każdy istotny moim zdaniem konstrukt języka [Lac],
-    to i tak polecam zapoznać się z powyższym linkiem. *)
+    Choć przykład znaczy więcej niż 0x3E8 stron manuala i postaram się
+    dokładnie zilustrować każdy istotny moim zdaniem konstrukt języka
+    [Ltac], to i tak polecam zapoznać się z powyższym linkiem.
 
-(** * Kombinatory *)
+    Upewnij się też, że rozumiesz dokładnie, jak działają podstawowe
+    kombinatory taktyk, które zostały omówione w rozdziale 1, gdyż nie
+    będziemy omawiać ich drugi raz. *)
+
+(** * Zarządzanie celami i selektory *)
+
+(** Dowodząc (lub konstruując cokolwiek za pomocą taktyk) mamy do rozwiązania
+    jeden lub więcej celów. Cele są ponumerowane i domyślnie zawsze pracujemy
+    nad tym, który ma numer 1.
+
+    Jednak wcale nie musi tak być — możemy zaznaczyć inny cel i zacząć nad
+    nim pracować. Służy do tego komenda [Focus]. Cel o numerze n możemy
+    zaznaczyć komendą [Focus n]. Jeżeli to zrobimy, wszystkie pozostałe cele
+    chwilowo znikają. Do stanu domyślnego, w którym pracujemy nad celem nr 1
+    i wszystkie cele są widoczne możemy wrócić za pomocą komendy [Unfocus]. *)
+
+Goal forall P Q R : Prop, P /\ Q /\ R -> R /\ Q /\ P.
+Proof.
+  repeat split.
+  Focus 3.
+  Unfocus.
+  Focus 2.
+Abort.
+
+(** Komenda [Focus] jest użyteczna głównie gdy któryś z dalszych celów jest
+    łatwiejszy niż obecny. Możemy wtedy przełączyć się na niego, rozwiązać
+    go i wyniesione stąd doświadczenie przenieść na trudniejsze cele. Jest
+    wskazane, żeby po zakończeniu dowodu zrefaktoryzować go tak, aby komenda
+    [Focus] w nim nie występowała.
+
+    Nie jest też tak, że zawsze musimy pracować nad celem o numerze 1. Możemy
+    pracować na dowolnym zbiorze celów. Do wybierania celów, na które chcemy
+    zadziałać taktykami, służą selektory. Jest ich kilka i mają taką składnię:
+    - [n: t] — użyj taktyki t na n-tym celu. [1: t] jest równoważne [t].
+    - [a-b: t] — użyj taktyki t na wszystkich celach o numerach od a do b
+    - [a1-b1, a2-b2, ..., aN-bN: t] — użyj taktyki [t] na wszystkich celach
+      o numerach od a1 do b1, od a2 do b2, ..., od aN do bN (zamiast aK-bK
+      możemy też użyć pojedynczej liczby)
+    - [all: t] ­- użyj [t] na wszystkich celach *)
+
+Goal forall P Q R : Prop, P /\ Q /\ R -> R /\ Q /\ P.
+Proof.
+  destruct 1 as [H [H' H'']]. repeat split.
+  3: assumption. 2: assumption. 1: assumption.
+Restart.
+  destruct 1 as [H [H' H'']]. repeat split.
+  1-2: assumption. assumption.
+Restart.
+  destruct 1 as [H [H' H'']]. repeat split.
+  1-2, 3: assumption.
+Restart.
+  destruct 1 as [H [H' H'']]. repeat split.
+  all: assumption.
+Qed.
+
+(** Selektory przydają się głównie gdy chcemy napisać taktykę rozwiązującą
+    wszystkie cele i sprawdzamy jej działanie na każdym celu z osobna. *)
+
+Goal True /\ True.
+Proof.
+  split.
+  let n := numgoals in idtac n.
+  all: let n := numgoals in idtac n.
+Abort.
+
+(** Ilość celów możemy policzyć za pomocą taktyki [numgoals]. Liczy ona
+    wszystkie cele, na które działa, więc jeżeli nie użyjemy żadnego
+    selektora, zwróci ona 1. Nie jest ona zbyt użyteczna (poza bardzo
+    skomplikowanymi taktykami, które z jakichś powodów nie operują tylko na
+    jednym celu, lecz na wszystkich).
+
+    Z wiązaniem [let] w kontekście taktyk spotkamy się już niedługo. *)
+
+(** * Podstawowe rodzaje bytów *)
+
+(** * Backtracking *)
 
 Ltac existNatFrom n :=
   exists n || existNatFrom (S n).
@@ -35,24 +131,16 @@ Goal exists m, m = 15.
   existNat'; reflexivity.
 Qed.
 
-Theorem involution_unequal_negb : forall (f : bool -> bool) (b : bool),
-    f (f b) = b -> f b <> b -> f b = negb b.
-Proof.
-  destruct b; simpl; intros.
-    destruct (f true). contradiction H0; trivial. trivial.
-    destruct (f false). trivial. contradiction H0; trivial.
-Qed.
+(** * Dopasowanie celu *)
 
+(** * Dopasowanie termu *)
 
-(** ** Notacje *)
+(** * Inne wesołe rzeczy *)
 
-Notation "b1 && b2" := (andb b1 b2).
-Notation "b1 || b2" := (orb b1 b2).
-
-(** Coq dysponuje również potężnym systemem notacji, które pozwalają
-    nam uprościć sposób zapisywania funkcji, typów czy predykatów. *)
+(* begin hide *)
 
 (** * Ltac — język taktyk *)
+Require Import Bool.
 
 Theorem andb_dist_orb : forall b1 b2 b3 : bool,
     b1 && (b2 || b3) = (b1 && b2) || (b1 && b3).
@@ -259,3 +347,4 @@ Proof. negtac. Qed.
 
 Theorem neg_42_1000 : negn 42 A -> negn 200 A.
 Proof. negtac. Qed.
+(* end hide *)

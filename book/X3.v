@@ -94,7 +94,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_length : forall (A : Type) (l1 l2 : list A),
+Theorem app_length :
+  forall (A : Type) (l1 l2 : list A),
     length (l1 ++ l2) = length l1 + length l2.
 (* begin hide *)
 Proof.
