@@ -2904,6 +2904,8 @@ Inductive EHBTree : nat -> Type :=
     Nie jest to problemem, gdyż subtypowanie możemy zasymulować za
     pomocą sum zależnych, a te zdefiniować możemy induktywnie. *)
 
+Module sigma.
+
 Inductive sigT (A : Type) (P : A -> Type) : Type :=
     | existT : forall x : A, P x -> sigT A P.
 
@@ -2998,6 +3000,8 @@ Defined.
     jest listą posortowaną. Następnie zdefiniuj typ list liczb naturalnych
     posortowanych według relacji [<=] i skonstruuj term tego typu
     odpowiadający liście [[42; 666; 1337]]. *)
+
+End sigma.
 
 (** ** Rozstrzygalność *)
 
@@ -3210,15 +3214,21 @@ end.
 
 End sumor.
 
-(** ** Cztery rodzaje reguł *)
+(** ** Pięć rodzajów reguł *)
 
-(** Być może jeszcze tego nie zauważyłeś, ale większość logiki konstruktywnej
-    oraz programowania funkcyjnego kręci się wokół czterech rodzajów reguł.
+(** Być może jeszcze tego nie zauważyłeś, ale większość logiki konstruktywnej,
+    programowania funkcyjnego, a przede wszystkim teorii typów kręci się wokół
+    pięciu rodzajów reguł.
     Są to reguły:
     - formacji (ang. formation rules)
     - wprowadzania (ang. introduction rules)
     - eliminacji (ang. elimination rules)
-    - obliczania (ang. computation rules) *)
+    - obliczania (ang. computation rules)
+    - unikalności (ang. uniqueness principles) *)
+
+(** W tym podrozdziale przyjrzymy się wszystkim pięciu typom reguł. Zobaczymy
+    jak wyglądają, skąd się biorą i do czego służą. Podrozdział będzie miał
+    charakter mocno teoretyczny. *)
 
 (** *** Reguły formacji *)
 
@@ -3368,9 +3378,10 @@ Check @pair.
     o osąd [x : T], to [fun x => y] jest termem typu [A -> B] w kontekście
     Γ.
 
-    Nie przejmuj się, jeżeli nie rozumiesz powyższej reguły. Znajomość
-    reguł wprowadzania nie jest nam potrzebna, by skutecznie posługiwać
-    się Coqiem.
+    Powyższa reguła nazywana jest "lambda abstrakcją" (gdyż zazwyczaj jest
+    zapisywana przy użyciu symbolu λ zamiast słowa kluczowego [fun], jak
+    w Coqu). Nie przejmuj się, jeżeli jej. Znajomość reguł wprowadzania nie
+    jest nam potrzebna, by skutecznie posługiwać się Coqiem.
 
     Należy też dodać, że reguła ta jest nieco uproszczona. Pełniejszy
     opis teoretyczny induktywnego rachunku konstrukcji można znaleźć
@@ -3611,7 +3622,213 @@ End EliminationRules.
 
 (** *** Reguły obliczania *)
 
-(** TODO *)
+(** Poznawszy reguły wprowadzania i eliminacji możemy zadać sobie pytanie:
+    jakie są między nimi związki? Jedną z odpowiedzi na to pytanie dają
+    reguły obliczania, które określają, w jaki sposób reguły eliminacji
+    działają na obiekty stworzone za pomocą reguł wprowadzania. Zobaczmy
+    o co chodzi na przykładzie. *)
+
+(*
+    A : Type, B : Type, x : A |- e : B, t : A
+    -----------------------------------------
+    (fun x : A => e) t ≡ e{x/t}
+*)
+
+(** Powyższa reguła nazywa się "redukcja beta". Mówi ona, jaki efekt ma
+    aplikacja funkcji zrobionej za pomocą lambda abstrakcji do argumentu,
+    przy czym aplikacja jest regułą eliminacji dla funkcji, a lambda
+    abstrakcja — regułą wprowadzania.
+
+    Możemy odczytać ją tak: jeżeli [A] i [B] są typami, zaś [e] termem
+    typu [B], w którym występuje zmienna wolna [x] typu [A], to wyrażenie
+    [(fun x : A => e) t] redukuje się (symbol ≡) do [e], w którym w miejsce
+    zmiennej [x] podstawiono term [t].
+
+    Zauważ, że zarówno symbol ≡ jak i notacja [e{x/t}] są tylko nieformalnymi
+    zapisami i nie mają żadnego znaczenia w Coqu.
+
+    Nie jest tak, że dla każdego typu jest tylko jedna reguła obliczania.
+    Jako, że reguły obliczania pokazują związek między regułami eliminacji
+    i wprowadzania, ich ilość można przybliżyć prostym wzorem:
+
+    ## reguł obliczania = ## reguł eliminacji * ## reguł wprowadzania,
+
+    gdzie ## to nieformalny symbol oznaczający "ilość". W Coqowej praktyce
+    zazwyczaj oznacza to, że reguł obliczania jest nieskończenie wiele,
+    gdyż możemy wymyślić sobie nieskończenie wiele reguł eliminacji.
+    Przykładem typu, który ma więcej niż jedną regułę obliczania dla danej
+    reguły eliminacji, jest [bool]: *)
+
+(*
+    P : bool -> Type, x : P true, y : P false
+    -----------------------------------------
+    bool_rect P x y true ≡ x
+
+    P : bool -> Type, x : P true, y : P false
+    -----------------------------------------
+    bool_rect P x y false ≡ y
+*)
+
+(** Typ [bool] ma dwie reguły wprowadzania pochodzące od dwóch konstruktorów,
+    a zatem ich związki z regułą eliminacji [bool_rect] będą opisywać dwie
+    reguły obliczania. Pierwsza z nich mówi, że [bool_rect P x y true]
+    redukuje się do [x], a druga, że [bool_rect P x y false] redukuje się do
+    [y].
+
+    Gdyby zastąpić w nich regułe [bool_rect] przez nieco prostszą regułę, w
+    której nie występują typy zależne, to można by powyższe reguły zapisać
+    tak: *)
+
+(*
+    A : Type, x : A, y : A
+    -----------------------------------------
+    if true then x else y ≡ x
+
+    A : Type, x : A, y : A
+    -----------------------------------------
+    if false then x else y ≡ y
+*)
+
+(** Wygląda dużo bardziej znajomo, prawda?
+
+    Na zakończenie wypadałoby napisać, skąd biorą się reguły obliczania. W
+    nieco mniej formalnych pracach teoretycznych na temat teorii typów są
+    one zazwyczaj uznawane za byty podstawowe, z których następnie wywodzi
+    się reguły obliczania takich konstrukcji, jak np. [match].
+
+    W Coqu jest na odwrót. Tak jak reguły eliminacji pochodzą od pattern
+    matchingu i rekursji, tak reguły obliczania pochdzą od opisanych już
+    wcześniej reguł redukcji (beta, delta, jota i zeta), a także konwersji
+    alfa. *)
+
+(** **** Ćwiczenie *)
+
+(** Napisz reguły obliczania dla liczb naturalnych oraz list (dla reguł
+    eliminacji [nat_ind] oraz [list_ind]). *)
+
+(* begin hide *)
+
+(*  Liczbt naturalne.
+
+    P : nat -> Prop, H0 : P 0, HS : forall n : nat, P n -> P (S n)
+    --------------------------------------------------------------
+    nat_ind P H0 HS 0 ≡ H0
+
+    P : nat -> Prop, H0 : P 0, HS : forall n : nat, P n -> P (S n), n : nat
+    -----------------------------------------------------------------------
+    nat_ind P H0 HS (S n) ≡ HS n (nat_ind P H0 HS n)
+
+    Listy.
+
+    A : Type, P : list A -> Prop, Hnil : P [],
+    Hcons : forall (h : A) (t : list A), P t -> P (h :: t)
+    ------------------------------------------------------
+    list_ind A P Hnil Hcons [] ≡ Hnil
+
+    A : Type, P : list A -> Prop, Hnil : P [],
+    Hcons : forall (h : A) (t : list A), P t -> P (h :: t),
+    h : A, t : list A
+    -------------------------------------------------------
+    list_ind A P Hnil Hcons (h :: t) ≡
+    Hcons h t (list_ind A P Hnil Hcons t) *)
+
+(* end hide *)
+
+(** *** Reguły unikalności *)
+
+(** Kolejną odpowiedzią na pytanie o związki między regułami wprowadzania
+    i eliminacji są reguły unikalności. Są one dualne do reguł obliczania
+    i określają, w jaki sposób reguły wprowadzania działają na obiekty
+    pochodzące od reguł eliminacji. Przyjrzyjmy się przykładowi. *)
+
+(*
+    A : Type, B : Type, f : A -> B
+    ------------------------------
+    (fun x : A => f x) ≡ f
+*)
+
+(** Powyższa reguła unikalności dla funkcji jest nazywana "redukcją eta".
+    Stwierdza ona, że funkcja stworzona za pomocą abstrakcji [fun x : A],
+    której ciałem jest aplikacja [f x] jest definicyjnie równa funkcji [f].
+    Regułą wprowadzania dla funkcji jest oczywiście abstrakcja, a regułą
+    eliminacji — aplikacja.
+
+    Reguły unikalności różnią się jednak dość mocno od reguł obliczania,
+    gdyż zamiast równości definicyjnej ≡ mogą czasem używać standardowej,
+    zdaniowej równości Coqa, czyli [=]. Nie do końca pasuje też do nich
+    stwierdzenie, że określają działanie reguł wprowadzania na reguły
+    eliminacji, gdyż zamiast reguł eliminacji mogą w nich występować
+    inne byty, zdefiniowane jednak za pomocą reguł eliminacji. Zobaczmy
+    o co chodzi na przykładzie. *)
+
+(*
+    A : Type, B : Type, p : A * B
+    --------------------------------
+    (fst p, snd p) = p
+*)
+
+(** Powyższa reguła głosi, że para, której pierwszym elementem jest pierwszy
+    element pary [p], a drugim elementem — drugi element pary [p], jest w
+    istocie równa parze [p]. W Coqu możemy ją wyrazić (i udowodnić) tak: *)
+
+Theorem prod_uniq :
+  forall (A B : Type) (p : A * B),
+    (fst p, snd p) = p.
+Proof.
+  destruct p. cbn. trivial.
+Qed.
+
+(** Podsumowując, reguły unikalności występują w dwóch rodzajach:
+    - dane nam z góry, niemożliwe do wyrażenia bezpośrednio w Coqu i
+      używające równości definicyjnej, jak w przypadku redukcji eta
+      dla funkcji
+    - możliwe do wyrażenia i udowodnienia w Coqu, używające zwykłej
+      równości, jak dla produktów i w ogólności dla typów induktywnych *)
+
+(** **** Ćwiczenie *)
+
+(** Sformułuj reguły unikalności dla funkcji zależnych ([forall]), sum
+    zależnych ([sigT]) i [unit] (zapisz je w notacji z poziomą kreską).
+    Zdecyduj, gdzie w powyższej klasyfikacji mieszczą się te reguły.
+    Jeżeli to możliwe, wyraź je i udowodnij w Coqu. *)
+
+(* begin hide *)
+
+(*
+    A : Type, P : A -> Type, f : forall x : A, P x
+    ----------------------------------------------
+    (fun x : A => f x) ≡ f
+*)
+
+(*
+    A : Type, P : A -> Type, p : {x : A & P x}
+    ------------------------------------------
+    (projT1 p, projT2 p) = p
+*)
+
+(*
+    u : unit
+    --------
+    u = tt
+*)
+
+(** Reguła dla funkcji jest pierwszego typu, zaś reguły dla sum zależnych i
+    [unit] są drugiego typu. *)
+
+Theorem sigT_uniq :
+  forall (A : Type) (P : A -> Type) (p : {x : A & P x}),
+    existT P (projT1 p) (projT2 p) = p.
+Proof.
+  intros. destruct p. cbn. f_equal.
+Qed.
+
+Theorem unit_uniq :
+  forall u : unit, u = tt.
+Proof.
+  destruct u. trivial.
+Qed.
+
+(* end hide *)
 
 (** * Rekursja *)
 

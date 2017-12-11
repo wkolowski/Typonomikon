@@ -1115,7 +1115,8 @@ Qed.
 (** Jeżeli chodzi o składanie funkcji idempotentnych, sytuacja jest podobna
     do tej, jaka jest udziałem inwolucji. *)
 
-(** * Uogólniona idempotencja *)
+(* begin hide *)
+(** * Uogólniona idempotencja (TODO) *)
 
 (** Podobnie jak w przypadku inwolutywności, pojęcie idempotencji możemy
     uogólnić na pojęcie idempotencji rzędu n — po zaaplikowaniu funkcji
@@ -1124,10 +1125,11 @@ Qed.
 Definition gen_idempotent {A : Type} (n : nat) (f : A -> A)
   : Prop := forall k : nat, iter (k + n) f = iter n f.
 
-(** Zdaje mi się ono jednak być mocno bezużyteczne. TODO: wymyślić jakieś
-    przykłady. *)
+(** Zdaje mi się ono jednak być mocno bezużyteczne.*)
 
-(** * Punkty stałe *)
+(* TODO: wymyślić jakieś przykłady. *)
+
+(** * Punkty stałe (TODO) *)
 
 (** Kolejnym ważnym pojęciem jest pojęcie punktu stałego (ang. "fixed point",
     często skracane do "fixpoint"). Właśnie od niego bierze się nazwa
@@ -1136,3 +1138,4 @@ Definition gen_idempotent {A : Type} (n : nat) (f : A -> A)
 Definition fixpoint {A : Type} (f : A -> A) (x : A)
   : Prop := f x = x.
 
+(* end hide *)

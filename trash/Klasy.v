@@ -1,3 +1,8 @@
+
+Reguły unikalności wyrażają unikalność funkcji, których dziedziną lub
+    przeciwdziedziną jest dany typ.
+
+    W tym drugim przypadku 
 (** * Klasy *)
 
 (** W językach obiektowych występuje pojęcie interfejsu. Oznacza

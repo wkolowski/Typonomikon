@@ -207,7 +207,8 @@
     - https://pjreddie.com/coq-tactics/ (uwaga na swoje zdrowie psychiczne)
     - http://gallium.inria.fr/blog/
     - http://ilyasergey.net/pnp/
-    - https://homes.cs.washington.edu/~jrw12/#blog *)
+    - https://homes.cs.washington.edu/~jrw12/#blog
+    - http://osa1.net/tags/coq *)
 
 (** ** Inne *)
 

@@ -10,7 +10,7 @@ Co tu się dzieje:
 - css/ i js/ to style i kod js, które dają książce w miarę znośny wygląd. Ukradzione ze starej wersji [Software Foundations](https://softwarefoundations.cis.upenn.edu/)
 - extra/ zawiera nagłówek i stopkę, które dodają analitiksy i inne takie, a także okładkę, również ukradzioną z Software Foundations.
 - make_makefile.sh generuje nowy makefile od zera.
-- thrash/ zawiera fragmenty rozdziałów, które zostały wycięte albo skopiowane na zapas z jakichś dziwnych powodów (np. refaktoringu).
+- trash/ zawiera fragmenty rozdziałów, które zostały wycięte albo skopiowane na zapas z jakichś dziwnych powodów (np. refaktoringu).
 - todo/ zawiera pliki .v o wysokim priorytecie, z których będą powstawać przyszłe rozdziały.
 - misc/ zawier pliki .v o niskim priorytecie z jakimiś kodami, z których może kiedyś coś będzie. 10.11.17 udało mi się tu posprzątać, więc powinien być w miarę porządek.
 - README.md to ten plik
@@ -33,11 +33,10 @@ W dalszej perspektywie powstaną rozdziały stosowane dotyczące różnych, mnie
 ## TODO
 
 Bliskie TODO:
-- taktyki
-- reflekcja
+- taktyki (już się robią)
+- reflekcja (niestety po angielsku)
 
 Średnie TODO:
-- dokończyć podrozdział o regułach komputacji
 - dokończyć rozdział o funkcjach (więcej ukrytej teorii kategorii)
 - dokończyć rozdział o relacjach
 
@@ -45,7 +44,7 @@ Dalekie TODO:
 - Wygląd:
   - zwijane, rozwijane dowody
 - Logika:
-  - reflekcja
+  - porządna reflekcja
   - różne alternatywne definicje równości (np. JMeq, eq_dep)
   - aksjomaty
 - Rekursja:
@@ -64,10 +63,6 @@ Dalekie TODO:
   - dodać podrozdział o zależnych typach induktywnych
   - dodać podrozdział o typach induktywnych z nieskończoną ilością argumentów rekurencyjnych (A -> T)
   - o silnych specyfikacjach
-- R3: Automatyzacja i taktyki
-  - proofsearch (zadania chyba już są w misc/)
-  - auto, eauto, intuition, omega etc.
-  - przykłady: automatyzacja dowodów o funkcjach boolowskich i relacjach, ale wymyślić też coś innego
 - R4: Matematyka
   - setoidy
   - częściowe porządki/teoria krat
@@ -83,13 +78,12 @@ Dalekie TODO:
   - Zrób zadania z definiowania induktywnych typów i predykatów
 - Kontent:
   - Arytmetyka binarna (liczby naturalne, dodatnie i całkowite)
-  - Typ [option]
+  - Typ option
   - Przerobić ćwiczenia z logiki na rozdział
   - Logika ternarna
   - Listy niepuste (nel)
   - Wektory (vec)
   - Drzewa binarne
-  - lensy? (ho ho, to się nie stanie — bo nie umiem)
 - Inne:
   - definiowanie przez dowód
   - być może koindukcja (a może lepiej nie...)
