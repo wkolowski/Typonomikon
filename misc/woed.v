@@ -1,3 +1,12 @@
+
+
+(*    Wzorce dopasowujące typ wyglądają prawie tak samo jak wzorce, których
+    używamy w definicjach przez pattern matching, ale nazwy zmiennych
+    muszą być poprzedzone symbolem [?], zaś same wzorce mogą być nieliniowe,
+    czyli te same zmienne mogą występować w wielu różnych miejscach.
+
+    Uff, koniec wesołej pisaninki — zobaczmy w końcu przykłady! *)
+
 Require Import Bool.
 
 Theorem andb_dist_orb : forall b1 b2 b3 : bool,
