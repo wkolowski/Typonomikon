@@ -303,7 +303,7 @@ Theorem nat_ind_bin (P : nat -> Prop) (H0 : P 0)
     (n : nat) : P n.
 Proof.
   pose proof bin_to_nat_sur. red in H. destruct (H n) as [b H'].
-  rewrite <- H'. induction b as [| p].
+  rewrite <- H'. destruct b as [| p].
     simpl. apply H0.
     generalize dependent n. induction p as [| p' | p']; intros.
       simpl. change 1 with (1 + 2 * 0). apply Hx2p1. assumption.

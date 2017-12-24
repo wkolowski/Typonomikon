@@ -161,7 +161,7 @@ Goal True.
 Proof.
   Fail let x := 42 in pose x.
   let x := constr:(42) in pose x.
-  let x := auto in idtac x.
+  let x := split in idtac x.
 Abort.
 
 (** W Ltacu, podobnie jak w języku Gallina, mamy do dyspozycji konstrukt
@@ -184,7 +184,7 @@ Abort.
     drugiej taktyki jest więc dodanie termu [42 : nat] do kontekstu,
     nazwanego domyślnie [n] (co jest, o dziwo, dość rozsądną nazwą).
 
-    Wyrażenie [let x := auto in idtac x] pokazuje nam, że taktyki również
+    Wyrażenie [let x := split in idtac x] pokazuje nam, że taktyki również
     są wyrażeniami Ltaca i mogą być przypisywane do zmiennych (a także
     wyświetlane za pomocą taktyki [idtac]) tak jak każde inne wyrażenie. *)
 
@@ -340,7 +340,7 @@ Abort.
     kombinatorem alternatywy [+], ma wiele sukcesów i wobec tego
     [exactly_once existsNat'] zawodzi. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (existsNat'') *)
 
 (** Przepisz taktykę [existsNat'] za pomocą konstruktu [let rec] —
     całość ma wyglądać tak: [Ltac existsNat'' := let rec ...] *)
@@ -355,7 +355,7 @@ Proof.
   existsNat''; reflexivity.
 Qed.
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (exists_length_3_letrec) *)
 
 (** Udowodnij poniższe twierdzenie za pomocą pojedynczej taktyki, która
     generuje wszystkie możliwe listy wartości boolowskich. Całość zrób za
@@ -364,7 +364,8 @@ Qed.
 Require Import List.
 Import ListNotations.
 
-Goal exists l : list bool, length l = 3.
+Theorem exists_length_3_letrec :
+  exists l : list bool, length l = 3.
 (* begin hide *)
 Proof.
   let rec
@@ -373,31 +374,36 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (trivial_goal) *)
 
 (** Znajdź taki trywialnie prawdziwy cel i taką taktykę, która wywołuje
     [existsNat'], że taktyka ta nie skończy pracy i nigdy nie znajdzie
     dowodu, mimo że dla człowieka znalezienie dowodu jest banalne. *)
 
 (* begin hide *)
-Goal (exists n : nat, n = S n) \/ True.
+Lemma trivial_goal :
+  (exists n : nat, n = S n) \/ True.
 Proof.
   Fail Timeout 1 (left; existsNat'; reflexivity) + (right; trivial).
 Abort.
 (* end hide *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (search) *)
 
-(** Napisz taktykę [search], która potrafi udowodnić poniższe twierdzenia.
-    Użyj rekursji, ale nie używaj konstruktu [let rec]. *)
+(** Napisz taktykę [search], która potrafi udowodnić cel będący dowolnie
+    złożoną dysjunkcją pod warunkiem, że jeden z jej członów zachodzi na
+    mocy założenia. Użyj rekursji, ale nie używaj konstruktu [let rec].
 
-Section search.
-
-Hypotheses A B C D E F G H I J : Prop.
+    Wskazówka: jeżeli masz problem, udowodnij połowę poniższych twierdzeń
+    ręcznie i spróbuj dostrzec powtarzający si wzorzec. *)
 
 (* begin hide *)
 Ltac search := try assumption; (left; search) + (right; search).
 (* end hide *)
+
+Section search.
+
+Hypotheses A B C D E F G H I J : Prop.
 
 Theorem search_0 :
   I -> A \/ B \/ C \/ D \/ E \/ F \/ G \/ I \/ J.
@@ -429,7 +435,7 @@ Proof. search. Qed.
 
 End search.
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (tryif) *)
 
 (** Zbadaj samodzielnie na podstawie dokumentacji, jak działa kombinator
     [tryif t1 then t2 else t3]. Wymyśl jakiś mądry przykład, który dobrze
@@ -455,8 +461,6 @@ End search.
     oznacza "dopasuj cokolwiek".
 
     Zobaczmy, jak to wygląda na przykładach. *)
-
-Section Match.
 
 Goal
   forall P Q R S : Prop, P -> Q -> R -> S.
@@ -674,7 +678,7 @@ Abort.
     kolejność wzorców ma znaczenie i to nawet w przypadku, gdy któryś z
     nich (tak jak [_]) pasuje do wszystkiego. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (destr_and) *)
 
 (** Napisz taktykę [destr_and], która rozbija wszystkie koniunkcje, które
     znajdzie w kontekście, a następnie udowodni cel, jeżeli zachodzi on na
@@ -683,7 +687,7 @@ Abort.
     Dla przykładu, kontekst [H : P /\ Q /\ R |- _] powinien zostać
     przekształcony w [H : P, H0 : Q, H1 : R].
 
-    Jeżeli to możliwe, nie używaj kombinatora [;]. *)
+    Jeżeli to możliwe, nie używaj kombinatora [;] *)
 
 (* begin hide *)
 Ltac destr_and := intros; repeat
@@ -693,13 +697,196 @@ match goal with
 end.
 (* end hide *)
 
-Example destr_and_1 :
-  forall P Q : Prop, P /\ Q -> P.
+Section destr_and.
+
+Hypotheses A B C D E F G H I J : Prop.
+
+Theorem destruct_0 :
+    A /\ B /\ C /\ D /\ E /\ F /\ G /\ H /\ I /\ J -> D.
 Proof. destr_and. Qed.
 
-Example destr_and_2 :
-  forall P Q R S : Prop, P /\ Q /\ R /\ S -> S.
+Theorem destruct_1 :
+    ((((((((A /\ B) /\ C) /\ D) /\ E) /\ F) /\ G) /\ H) /\ I) /\ J -> F.
 Proof. destr_and. Qed.
+
+Theorem destruct_2 :
+    A /\ ~ B /\ (C \/ C \/ C \/ C) /\ ((((D /\ I) /\ I) /\ I) /\ J) -> I.
+Proof. destr_and. Qed.
+
+End destr_and.
+
+(** **** Ćwiczenie (solve_and_perm) *)
+
+(** Napisz taktykę [solve_and_perm], która będzie potrafiła rozwiązywać
+    cele postaci [P_1 /\ P_2 /\ ... /\ P_n -> P_i1 /\ P_i2 /\ ... /\ P_iN],
+    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są w
+    niej te same zdania, ale występujące w innej kolejności. *)
+
+(* begin hide *)
+Ltac solve_and_perm := intros; repeat
+match goal with
+    | H : _ /\ _ |- _ => destruct H
+end; repeat split; try assumption.
+(* end hide *)
+
+Section solve_and_perm.
+
+Hypotheses A B C D E F G H I J : Prop.
+
+Theorem and_perm_0 :
+  A /\ B /\ C /\ D /\ E /\ F /\ G /\ H /\ I /\ J ->
+  J /\ I /\ H /\ G /\ F /\ E /\ D /\ C /\ B /\ A.
+Proof. solve_and_perm. Qed.
+
+Theorem and_perm_1 :
+  A /\ B /\ C /\ D /\ E /\ F /\ G /\ H /\ I /\ J ->
+  (((((((((A /\ B) /\ C) /\ D) /\ E) /\ F) /\ G) /\ H) /\ I) /\ J).
+Proof. solve_and_perm. Qed.
+
+Theorem and_perm_2 :
+  (A /\ B) /\ (C /\ (D /\ E)) /\ (((F /\ G) /\ H) /\ I) /\ J ->
+  (I /\ I /\ J) /\ ((A /\ B /\ (A /\ B)) /\ J) /\ (C /\ (E /\ (D /\ F /\ F))).
+Proof. solve_and_perm. Qed.
+
+End solve_and_perm.
+
+(** **** Ćwiczenie (solve_or_perm) *)
+
+(** Napisz taktykę [solve_or_perm], która będzie potrafiła rozwiązywać
+    cele postaci [P_1 \/ P_2 \/ ... \/ P_n -> P_i1 \/ P_i2 \/ ... \/ P_iN],
+    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są
+    w niej te same zdania, ale występujące w innej kolejności.
+
+    Wskazówka: wykorzystaj taktykę [search] z jednego z poprzednich
+    ćwiczeń. *)
+
+(* begin hide *)
+Ltac solve_or_perm := intros; repeat
+match goal with
+    | H : _ \/ _ |- _ => destruct H
+end; search.
+(* end hide *)
+
+Section solve_or_perm.
+
+Hypotheses A B C D E F G H I J : Prop.
+
+Theorem or_perm_0 :
+  A \/ B \/ C \/ D \/ E \/ F \/ G \/ H \/ I \/ J ->
+  J \/ I \/ H \/ G \/ F \/ E \/ D \/ C \/ B \/ A.
+Proof. solve_or_perm. Qed.
+
+Theorem or_perm_1 :
+  A \/ B \/ C \/ D \/ E \/ F \/ G \/ H \/ I \/ J ->
+  (((((((((A \/ B) \/ C) \/ D) \/ E) \/ F) \/ G) \/ H) \/ I) \/ J).
+Proof. solve_or_perm. Qed.
+
+Theorem or_perm_2 :
+  (A \/ B) \/ (C \/ (D \/ E)) \/ (((F \/ G) \/ H) \/ I) \/ J ->
+  (I \/ H \/ J) \/ ((A \/ B \/ (G \/ B)) \/ J) \/ (C \/ (E \/ (D \/ F \/ F))).
+Proof. solve_or_perm. Qed.
+
+Theorem or_perm_3 :
+  A \/ B \/ C \/ D \/ E \/ F \/ G \/ H \/ I \/ J ->
+  (((((((((A \/ B) \/ C) \/ D) \/ E) \/ F) \/ G) \/ H) \/ I) \/ J).
+Proof. solve_or_perm. Qed.
+
+End solve_or_perm.
+
+(** **** Ćwiczenie (negn) *)
+
+Section negn.
+
+Require Import Arith.
+
+(** Napisz funkcję [negn : nat -> Prop -> Prop], gdzie [negn n P] zwraca
+    zdanie [P] zanegowane [n] razy. *)
+
+(* begin hide *)
+Fixpoint negn (n : nat) (P : Prop) : Prop :=
+match n with
+    | 0 => P
+    | S n' => ~ negn n' P
+end.
+(* end hide *)
+
+Eval cbn in negn 10 True.
+(* ===> = ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ True : Prop *)
+
+(** Udowodnij poniższe lematy. *)
+
+Lemma dbl_neg :
+  forall P : Prop, P -> ~ ~ P.
+(* begin hide *)
+Proof.
+  unfold not. auto.
+Qed.
+(* end hide *)
+
+Lemma double_n :
+  forall n : nat, 2 * n = n + n.
+(* begin hide *)
+Proof.
+  cbn. intro. rewrite <- plus_n_O. trivial.
+Qed.
+(* end hide *)
+
+(** Przydadzą ci się one do pokazania dwóch właściwości fukncji [negn].
+    Zanim przystąpisz do dowodzenia drugiego z nich, spróbuj zgadnąć,
+    po którym argumencie najprościej będzie przeprowadzić indukcję. *)
+
+Theorem even_neg :
+  forall (n : nat) (P : Prop), P -> negn (2 * n) P.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    trivial.
+    rewrite <- plus_n_O, Nat.add_comm. cbn. apply dbl_neg.
+      rewrite <- double_n. apply IHn'. assumption.
+Qed.
+(* end hide *)
+
+Theorem even_neg' :
+  forall (n k : nat) (P : Prop),
+    negn (2 * n) P -> negn (2 * (n + k)) P.
+(* begin hide *)
+Proof.
+  induction k as [| k']; intros.
+    rewrite <- plus_n_O. assumption.
+    cbn. repeat (rewrite <- (Nat.add_comm (S _)); cbn).
+      apply dbl_neg. replace _ with (negn (2 * (n + k')) P).
+        apply IHk'. assumption.
+        f_equal. cbn. rewrite <- !plus_n_O, (Nat.add_comm n). trivial.
+Qed.
+(* end hide *)
+
+(** Napisz taktykę [negtac], która będzie potrafiła udowadniać cele postaci
+    [forall P : Prop, negn (2 * n) P -> negn (2 * (n + k)) P], gdzie
+    [n] oraz [k] są stałymi. Nie używaj twierdzeń, które udowodniłeś wyżej.
+
+    Wskazówka: przydatny może byc konstrukt [match reverse goal]. *)
+
+(* begin hide *)
+Ltac negtac := simpl; unfold not; intros;
+match reverse goal with
+    | H : _ -> False |- False => apply H; clear H; negtac
+    | _ => try assumption
+end.
+(* end hide *)
+
+Theorem neg_2_14 :
+  forall P : Prop, negn 2 P -> negn 14 P.
+Proof. negtac. Qed.
+
+Theorem neg_100_200 :
+  forall P : Prop, negn 100 P -> negn 200 P.
+Proof. negtac. Qed.
+
+Theorem neg_42_1000 :
+  forall P : Prop, negn 42 P -> negn 200 P.
+Proof. negtac. Qed.
+
+End negn.
 
 (** * Wzorce i unifikacja *)
 
@@ -856,7 +1043,7 @@ Abort.
     (listą jednoelementową) zawierającym wartość, do której będziemy mogli
     odnosić się za pomocą nazwy [x], zaś prawą stroną jest lista pusta. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (my_assumption) *)
 
 (** Napisz taktykę [my_assumption], która działa tak samo, jak [assumption].
     Nie używaj [assumption] — użyj [match]a. *)
@@ -874,7 +1061,7 @@ Proof.
   intros. my_assumption.
 Qed.
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (forward) *)
 
 (** Napisz taktykę [forward], która wyspecjalizuje wszystkie znalezione w
     kontekście implikacje, o ile oczywiście ich przesłanki również będą
@@ -901,8 +1088,6 @@ Proof. forward. Qed.
 Example forward_2 :
   forall P Q R S : Prop, (P -> Q -> R) -> (S -> Q -> P -> R).
 Proof. forward. Qed.
-
-End Match.
 
 (** * Narzędzia przydatne przy dopasowywaniu *)
 
@@ -945,6 +1130,28 @@ Abort.
 (** Druga z powyższych taktyk działa podobnie, ale dzięki zastosowaniu
     [repeat multimatch] ujawnia nam ona wszystkie podtermy pasujące do wzorca
     [?x = ?y]. *)
+
+(** **** Ćwiczenie (podtermy) *)
+
+(** Oblicz ile podtermów ma term [42]. Następnie napisz taktykę [nat_subterm],
+    która potrafi wypisać wszystkie podtermy dowolnej liczby naturalnej, która
+    znajduje się w celu. Wymyśl odpowiedni cel i przetestuj na nim swoje
+    obliczenia. *)
+
+(* begin hide *)
+(** Odpowiedź: term [42] ma 42 podtermy, czyli tyle, ile razy występuje w nim
+    konstruktor [S]. *)
+
+Ltac nat_subterm :=
+  repeat multimatch goal with
+      | |- context [S ?x] => idtac x
+  end.
+
+Goal @length nat [] = 42.
+Proof.
+  nat_subterm.
+Abort.
+(* end hide *)
 
 (** ** Generowanie nieużywanych nazw *)
 
@@ -1065,21 +1272,7 @@ Abort.
       które powoduje, że nawet mimo użycia kombinatora [try] cała taktyka
       [try match ...] zawodzi. *)
 
-(** * Dopasowanie termu *)
-
-(* begin hide *)
-(** TODO:
-    - match expr
-    - lazymatch expr
-    - multimatch expr
-    - type of term
-    - eval redexpr
-    - constr/uconstr/ltac
-    - type_term ?
-*)
-(* end hide *)
-
-(** * Inne wesołe rzeczy *)
+(** * Inne (mało) wesołe rzeczy *)
 
 (** Ten podrozdział będzie wesołą zbieraninką różnych niezbyt przydatnych
     (przynajmniej dla mnie) konstruktów języka Ltac, które nie zostały
@@ -1168,56 +1361,280 @@ Abort.
 (** * Przydatne taktyki *)
 
 (* begin hide *)
-(** TODO: [auto], [constructor], [tauto], [firstorder], [omega], [lia],
-    [econstructor], [decompose] *)
+(** TODO:
+    - [constructor]
+    - [congruence]
+    - [decompose] *)
 (* end hide *)
 
-(** ** [omega] *)
+(** W tym podrozdziale przyjrzymy się garści przydatnych taktyk małego
+    kalibru (potężne kobyły potrafiące czynić cuda omówimy później). Póki
+    co będą one wymienione w kolejności (mniej lub bardziej) alfabetycznej.
 
-Require Import Arith.
+    Uwaga: przykłady użycia taktyk, których reimplementacja będzie
+    ćwiczeniem, zostały połączone z testami w ćwiczeniach żeby nie pisać dwa
+    razy tego samego. *)
 
-Lemma filter_length :
-  forall (A : Type) (f : A -> bool) (l : list A),
-    length (filter f l) <= length l.
-Proof.
-  induction l; cbn; try destruct (f a); cbn.
-    trivial.
-    apply le_n_S. assumption.
-    eapply le_trans; eauto.
-Qed.
+(** ** [clear] *)
 
-Print filter_length.
-(* ===> proofterm liczący sobie 14 linijek *)
+(** [clear] to niesamowicie użyteczna taktyka, dzięki której możemy zrobić
+    porządek w kontekście. Można używać jej na nastepujące sposoby:
+    - [clear x] usuwa [x] z kontekstu. Jeżeli [x] nie ma w kontekście lub są
+      w nim jakieś rzeczy zależne od [x], taktyka zawodzi. Można usunąć wiele
+      rzeczy na raz: [clear x_1 ... x_N].
+    - [clear -x] usuwa z kontekstu wszystko poza [x].
+    - [clear dependent x] usuwa z kontekstu [x] i wszystkie rzeczy, które od
+      niego zależą. Taktyka ta zawodzi jedynie gdy [x] nie ma w kontekście.
+    - [clear] usuwa z kontekstu absolutnie wszystko. Serdecznie nie polecam.
+    - [clearbody x] usuwa definicję [x] (jeżeli jakąś posiada). *)
 
-(** Oto jedna ze standardowych właściwości list: filtrowanie nie zwiększa
-    jej rozmiaru. Term skonstruowany powyższym dowodem, będący świadkiem
-    tego faktu, liczy sobie 14 linijek. W pewnym sensie jest on jednak
-    mało zadowalający: każdy z trzech przypadków musimy rozwiązać ręcznie.
-    Naprawmy to za pomocą taktyki [omega]. *)
+(** **** Ćwiczenie (tru) *)
 
-Require Import Omega.
+(** Napisz taktykę [tru], która czyści kontekst z dowodów na [True] oraz
+    potrafi udowodnić cel [True].
 
-Lemma filter_length' :
-  forall (A : Type) (f : A -> bool) (l : list A),
-    length (filter f l) <= length l.
-Proof.
-  induction l; cbn; try destruct (f a); cbn; omega.
-Qed.
+    Dla przykładu, taktyka ta powinna przekształcać kontekst
+    [a, b, c : True, p : P |- _] w [p : P |- _].
 
-Print filter_length'.
-(* ===> 317 linijek dowodu *)
-
-(** Nie wdawajmy się na razie w szczegóły dotyczące tej taktyki — poznamy ją
-    w następnym podrozdziale. Zamiast tego skoncentrujmy się na pewnej małej
-    katastrofie, którą wywołała nasza leniwość: prooftrm wygenerowany przez
-    taktykę [omega] liczy sobie 317 linijek, czyli ponad 300 więcej niż ten,
-    który powstał w wyniku mniej automatycznego dowodu. *)
-
-(** * Zmienne egzystencjalne i ich taktyki *)
+    Wskazówka: przydatna może być taktyka [clear]. *)
 
 (* begin hide *)
-(** TODO: [eauto], [econstructor], [eexists], [edestruct] *)
+Ltac tru := intros; repeat
+match goal with
+    | H : True |- _ => clear H
+end; trivial.
 (* end hide *)
+
+Section tru.
+
+Example tru_0 :
+  forall P : Prop, True -> True -> True -> P.
+Proof.
+  tru. (* Kontekst: [P : Prop |- P] *)
+Abort.
+
+Example tru_1 : True.
+Proof. tru. Qed.
+
+End tru.
+
+(** ** [pose] i [remember] *)
+
+Goal 2 + 2 = 4.
+Proof.
+  intros.
+  pose (a := 2 + 2).
+  remember (2 + 2) as b.
+Abort.
+
+(** Taktyka [pose (x := t)] dodaje do kontekstu zmienną [x] (pod warunkiem,
+    że nazwa ta nie jest zajęta), która zostaje zdefiniowana za pomocą termu
+    [t].
+
+    Taktyka [remember t as x] zastępuje wszystkie wystąpienia termu [t]
+    w kontekście zmienną [x] (pod warunkiem, że nazwa ta nie jest zajęta) i
+    dodaje do kontekstu równanie postaci [x = t].
+
+    W powyższym przykładzie działają one następująco: [pose (a := 2 + 2)]
+    dodaje do kontekstu wiązanie [a := 2 + 2], zaś [remember (2 + 2) as b]
+    dodaje do kontekstu równanie [Heqb : b = 2 + 2] i zastępuje przez [b]
+    wszystkie wystąpienia [2 + 2] — także to w definicji [a].
+
+    Taktyki te przydają się w tak wielu różnych sytuacjach, że nie ma co
+    próbować ich tu wymieniać. Użyjesz ich jeszcze nie raz. *)
+
+(** **** Ćwiczenie (set) *)
+
+(** Taktyki te są jedynie wariantami bardziej ogólnej taktyki [set].
+    Przeczytaj jej dokumentację w manualu. *)
+
+(** ** [rename] *)
+
+(** **** Ćwiczenie (satans_neighbour_not_even) *)
+
+(** To ćwiczenie dotyczy bardziej kombinatorów taktyk i automatyzacji,
+    niż definicji induktywnych. Przydać mogą ci się następujące taktyki,
+    których dotąd nie omawialiśmy:
+    - [rename x into y] zmienia nazwę [x] na [y] (jeżeli mieliśmy w
+      kontekście [x : A], to teraz zamiast tego będziemy mieli [y : A])
+      lub zawodzi, gdy [x] nie ma w kontekście albo nazwa [y] jest już
+      zajęta *)
+
+Theorem satans_neighbour_not_even : ~ even 667.
+(* begin hide *)
+(* Proof.
+  intro.
+  Time repeat (inversion H; clear H H0; rename H1 into H; try (clear n0)).
+Qed. *)
+Abort.
+(* end hide *)
+
+
+(** ** [admit] *)
+
+Module admit.
+
+Lemma forgery :
+  forall P Q : Prop, P -> Q /\ P.
+Proof.
+  intros. split.
+    admit.
+    assumption.
+Admitted.
+
+Print forgery.
+(* ===> *** [[ forgery : forall P : Prop, P -> ~ P /\ P ]] *)
+
+End admit.
+
+(** [admit] to taktyka-oszustwo, która rozwiązuje dowolny cel. Nie jest ona
+    rzecz jasna wszechwiedząca i przez to rozwiązanego za jej pomocą celu
+    nie można zapisać za pomocą komend [Qed] ani [Defined], a jedynie za
+    pomocą komendy [Admitted], która oszukańczo udowodnione twierdzenie
+    przekształca w aksjomat.
+
+    W CoqIDE oszustwo jest dobrze widoczne, gdyż zarówno taktyka [admit]
+    jak i komenda [Admitted] podświetlają się na żółto, a nie na zielono,
+    tak jak prawdziwe dowody. Wyświetlenie [Print]em dowodu zakończonego
+    komendą [Admitted] również pokazuje, że ma on status aksjomatu.
+
+    Na koniec zauważmy, że komendy [Admitted] możemy użyć również bez
+    wczesniejszego użycia taktyki [admit]. Różnica między tymi dwoma bytami
+    jest taka, że taktyka [admit] służy do "udowodnienia" pojedynczego celu,
+    a komenda [Admitted] — całego twierdzenia. *)
+
+(** ** [case_eq] *)
+
+(** [case_eq] to taktyka podobna do taktyki [destruct], ale nieco mądrzejsza,
+    gdyż nie zdarza jej się "zapominać", jaka była struktura rozbitego przez
+    nią termu. *)
+
+Goal
+  forall n : nat, n + n = 42.
+Proof.
+  intros. destruct (n + n).
+Restart.
+  intros. case_eq (n + n); intro.
+Abort.
+
+(** Różnice między [destruct] i [case_eq] dobrze ilustruje powyższy przykład.
+    [destruct] nadaje się jedynie do rozbijania termów, które są zmiennymi.
+    Jeżeli rozbijemy coś, co nie jest zmienną (np. term [n + n]), to utracimy
+    część informacji na jego temat. [case_eq] potrafi rozbijać dowolne termy,
+    gdyż poza samym rozbiciem dodaje też do celu dodatkową hipotezę, która
+    zawiera równanie "pamiętające" informacje o rozbitym termie, o których
+    zwykły [destruct] zapomina. *)
+
+(** **** Ćwiczenie *)
+
+(** Napisz taktykę [my_case_eq t Heq], która działa tak jak [case_eq t], ale
+    nie dodaje równania jako hipotezę na początku celu, tylko bezpośrednio
+    do kontekstu i nazywa je [Heq]. Użyj taktyk [remember] oraz [destruct]. *)
+
+(* begin hide *)
+Ltac my_case_eq t Heq :=
+  let x := fresh "x" in remember t as x;
+  match goal with
+      | H : x = t |- _ => symmetry in H; rename H into Heq
+  end;
+  destruct x.
+(* end hide *)
+
+Goal
+  forall n : nat, n + n = 42.
+Proof.
+  intros. destruct (n + n).
+Restart.
+  intros. case_eq (n + n); intro.
+Restart.
+  intros. my_case_eq (n + n) H.
+Abort.
+
+(** ** [contradiction] *)
+
+(** [contradiction] to taktyka, która wprowadza do kontekstu wszystko co się
+    da, a potem próbuje znaleźć sprzeczność. Potrafi rozpoznawać hipotezy
+    takie jak [False], [x <> x], [~ True]. Potrafi też znaleźć dwie hipotezy,
+    które są ze sobą ewidentnie sprzeczne, np. [P] oraz [~ P]. Nie potrafi
+    jednak wykrywać lepiej ukrytych sprzeczności, np. nie jest w stanie
+    odróżnić [true] od [false]. *)
+
+(** **** Ćwiczenie (my_contradiction) *)
+
+(** Napisz taktykę [my_contradiction], która działa tak jak standardowa
+    taktyka [contradiction], a do tego jest w stanie udowodnić dowolny
+    cel, jeżeli w kontekście jest hipoteza postaci [true = false] lub
+    [false = true]. *)
+
+(* begin hide *)
+Ltac my_contradiction := intros;
+match goal with
+    | H : False |- _ => destruct H
+    | H : ~ True |- _ => destruct (H I)
+    | H : ?x <> ?x |- _ => destruct (H eq_refl)
+    | H : ~ ?P, H' : ?P |- _ => destruct (H H')
+    | H : true = false |- _ => inversion H
+    | H : false = true |- _ => inversion H
+end.
+(* end hide *)
+
+Section my_contradiction.
+
+Example my_contradiction_0 :
+  forall P : Prop, False -> P.
+Proof.
+  contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+Example my_contradiction_1 :
+  forall P : Prop, ~ True -> P.
+Proof.
+  contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+Example my_contradiction_2 :
+  forall (P : Prop) (n : nat), n <> n -> P.
+Proof.
+  contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+Example my_contradiction_3 :
+  forall P Q : Prop, P -> ~ P -> Q.
+Proof.
+  contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+Example my_contradiction_4 :
+  forall P : Prop, true = false -> P.
+Proof.
+  try contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+Example my_contradiction_5 :
+  forall P : Prop, false = true -> P.
+Proof.
+  try contradiction.
+Restart.
+  my_contradiction.
+Qed.
+
+End my_contradiction.
+
+(** **** Ćwiczenie (taktyki dla sprzeczności) *)
+
+(** Innymi taktykami, które mogą przydać się przy rozumowaniach przez
+    sprowadzenie do sprzeczności, są [absurd], [contradict] i [exfalso].
+    Przeczytaj ich opisy w manualu i zbadaj ich działanie. *)
 
 (** * Mniej przydatne taktyki *)
 
@@ -1227,4 +1644,348 @@ Print filter_length'.
     - first
     - solve
 *)
+(* end hide *)
+
+(** * Automatyzacja *)
+
+(** ** [btauto] *)
+
+(** [btauto] to taktyka, która potrafi rozwiązywać równania boolowskie, czyli
+    cele postaci [x = y], gdzie [x] i [y] są wyrażeniami mogącymi zawierać
+    boolowskie koniunkcje, dysjunkcje, negacje i inne rzeczy (patrz manual).
+
+    Taktykę można zaimportować komendą [Require Import Btauto]. Uwaga: nie
+    potrafi ona wprowadzać zmiennych do kontekstu. *)
+
+(** **** Ćwiczenie (my_btauto) *)
+
+(** Napisz następujące taktyki:
+    - [my_btauto] — taktyka podobna do [btauto]. Potrafi rozwiązywać cele,
+      które są kwantyfikowanymi równaniami na wyrażeniach boolowskich,
+      składającymi się z dowolnych funkcji boolowskich (np. [andb], [orb]).
+      W przeciwieństwie do [btauto] powinna umieć wprowadzać zmienne do
+      kontekstu.
+    - [my_btauto_rec] — tak samo jak [my_btauto], ale bez używana
+      kombinatora [repeat]. Możesz używać jedynie rekurencji.
+    - [my_btauto_iter] — tak samo jak [my_btauto], ale bez używania
+      rekurencji. Możesz używać jedynie kombinatora [repeat].
+    - [my_btauto_no_intros] — tak samo jak [my_btauto], ale bez używania
+      taktyk [intro] oraz [intros]. *)
+
+(** Uwaga: twoja implementacja taktyki [my_btauto] będzie diametralnie różnić
+    się od implementacji taktyki [btauto] z biblioteki standardowej. [btauto]
+    jest zaimplementowana za pomocą reflekcji. Dowód przez reflekcję omówimy
+    później. *)
+
+(* begin hide *)
+Ltac my_btauto := intros; repeat
+match goal with
+    | b : bool |- _ => destruct b
+end; cbn; reflexivity.
+
+Ltac my_btauto_rec := intros;
+match goal with
+    | b : bool |- _ => destruct b; my_btauto_rec
+    | _ => cbn; reflexivity
+end.
+
+Ltac my_btauto_iter := my_btauto.
+
+Ltac my_btauto_no_intros := repeat
+match goal with
+    | |- forall b : bool, _ => destruct b
+end; cbn; reflexivity.
+(* end hide *)
+
+Section my_btauto.
+
+Require Import Bool.
+Require Import Btauto.
+
+Theorem andb_dist_orb :
+  forall b1 b2 b3 : bool,
+    b1 && (b2 || b3) = (b1 && b2) || (b1 && b3).
+Proof.
+  intros. btauto.
+Restart.
+  my_btauto.
+Restart.
+  my_btauto_rec.
+Restart.
+  my_btauto_iter.
+Restart.
+  my_btauto_no_intros.
+Qed.
+
+Theorem negb_if :
+  forall b1 b2 b3 : bool,
+    negb (if b1 then b2 else b3) = if negb b1 then negb b3 else negb b2.
+Proof.
+  intros. btauto.
+Restart.
+  my_btauto.
+Restart.
+  my_btauto_rec.
+Restart.
+  my_btauto_iter.
+Restart.
+  my_btauto_no_intros.
+Qed.
+
+(** Przetestuj działanie swoich taktyk na reszcie twierdzeń z rozdziału
+    o logice boolowskiej. *)
+
+End my_btauto.
+
+(** ** [omega] i [abstract] *)
+
+(** [omega] to taktyka, która potrafi rozwiązywać cele dotyczące arytmetyki
+    Presburgera. Jej szerszy opis można znaleźć w manualu. Na nasze potrzeby
+    przez arytmetykę Presburgera możemy rozumieć równania ([=]), nie-równania
+    ([<>]) oraz nierówności ([<], [<=], [>], [>=]) na typie [nat], które mogą
+    zawierać zmienne, [0], [S], dodawanie i mnożenie przez stałą. Dodatkowo
+    zdania tej postaci mogą być połączone spójnikami [/\], [\/], [->] oraz
+    [~], ale nie mogą być kwantyfikowane — [omega] nie umie wprowadzać
+    zmiennych do kontekstu. *)
+
+Require Import Arith Omega.
+
+Example omega_0 :
+  forall n : nat, n + n = 2 * n.
+Proof. intro. omega. Qed.
+
+Example omega_1 :
+  forall n m : nat, 2 * n + 1 <> 2 * m.
+Proof. intros. omega. Qed.
+
+Example omega_2 :
+  forall n m : nat, n * m = m * n.
+Proof. intros. try omega. Abort.
+
+(** Jedną z wad taktyki [omega] jest rozmiar generowanych przez nią termów.
+    Są tak wielkie, że wszelkie próby rozwinięcia definicji czy dowodów,
+    które zostały przy jej pomocy skonstruowane, muszą z konieczności źle
+    się skończyć. Zobaczmy to na przykładzie. *)
+
+Lemma filter_length :
+  forall (A : Type) (f : A -> bool) (l : list A),
+    length (filter f l) <= length l.
+Proof.
+  induction l; cbn; try destruct (f a); cbn; omega.
+Qed.
+
+Print filter_length.
+(* ===> Proofterm o długości 317 linijek. *)
+
+(** Oto jedna ze standardowych właściwości list: filtrowanie nie zwiększa
+    jej rozmiaru. Term skonstruowany powyższym dowodem, będący świadkiem
+    tego faktu, liczy sobie 317 linijek długości (wypisaniu, wklejeniu do
+    CoqIDE i usunięciu tego, co do termu nie należy). *)
+
+Lemma filter_length' :
+  forall (A : Type) (f : A -> bool) (l : list A),
+    length (filter f l) <= length l.
+Proof.
+  induction l; cbn; try destruct (f a); cbn.
+    trivial.
+    apply le_n_S. assumption.
+    eapply le_trans; eauto.
+Qed.
+
+Print filter_length'.
+(* ===> Proofterm o długości 14 linijek. *)
+
+(** Jak widać, ręczny dowód tego faktu daje w wyniku proofterm, który jest
+    o ponad 300 linijk krótszy niż ten wyprodukowany przez taktykę [omega].
+    Mogłoby się zdawać, że jesteśmy w sytuacji bez wyjścia: albo dowodzimy
+    ręcznie, albo prooftermy będą tak wielkie, że nie będziemy mogli ich
+    odwijać. Możemy jednak zjeść ciastko i mieć ciastko, a wszystko to za
+    sprawą taktyki [abstract] i towarzyszącej jej komendy [Qed exporting]. *)
+
+Lemma filter_length'' :
+  forall (A : Type) (f : A -> bool) (l : list A),
+    length (filter f l) <= length l.
+Proof.
+  induction l; cbn; try destruct (f a); cbn; abstract omega.
+Qed exporting.
+
+(* begin hide *)
+(* [Qed exporting] psuje kolorowanie. Trzeba naprawić. *)
+
+Goal False. Abort.
+(* end hide *)
+
+Print filter_length''.
+(* ===> Proofterm o długości 13 linijek. *)
+
+(** Taktyka [abstract t] działa tak jak [t], ale z tą różnicą, że ukrywa term
+    wygenerowany przez [t] w zewnętrznym lemacie. Po zakończeniu dowodu możemy
+    zakończyć go komendą [Qed exporting], co spowoduje zapisanie go w takiej
+    skróconej postaci z odwołaniami do zewnętrznych lematów, albo standardowym
+    [Qed], przez co term będzie wyglądał tak, jakbyśmy wcale nie użyli taktyki
+    [abstract]. *)
+
+(** ** [auto] (TODO) *)
+(** ** [autorewrite] (TODO) *)
+(** ** [firstorder] (TODO) *)
+(** ** [lia] (TODO) *)
+(** ** [tauto] (TODO) *)
+
+(** **** Ćwiczenie (my_tauto) *)
+
+(** Napisz taktykę [my_tauto], która będzie potrafiła rozwiązać jak najwięcej
+    tautologii konstruktywnego rachunku zdań.
+
+    Wskazówka: połącz taktyki z poprzednich ćwiczeń. Przetestuj swoją taktykę
+    na ćwiczeniach z rozdziału pierwszego — być może ujawni to problemy, o
+    których nie pomyślałeś.
+
+    Nie używaj żadnej zaawansowanej automatyzacji. Użyj jedynie [unfold],
+    [intro], [repeat], [match], [destruct], [clear], [exact], [split],
+    [specialize] i [apply]. *)
+
+(* begin hide *)
+Ltac my_tauto :=
+  unfold not in *; repeat
+multimatch goal with
+    | H : ?P |- ?P => exact H
+    | H : False |- _ => destruct H
+    | H : True |- _ => clear H
+    | |- True => exact I
+    | H : _ /\ _ |- _ => destruct H
+    | |- _ /\ _ => split
+    | H : _ <-> _ |- _ => destruct H
+    | |- _ <-> _ => split
+    | H : _ \/ _ |- _ => destruct H
+    | |- _ \/ _ => (left + right); my_tauto; fail
+    | |- _ -> _ => intro
+    | H : ?P -> ?Q, H' : ?P |- _ => specialize (H H')
+    | H : _ -> _ |- _ => apply H
+end.
+
+Section my_tauto.
+
+Hypotheses P Q R S : Prop.
+
+Theorem and_comm : P /\ Q -> Q /\ P.
+Proof. my_tauto. Qed.
+
+Theorem or_comm : P \/ Q -> Q \/ P.
+Proof. my_tauto. Qed.
+
+Theorem and_assoc : P /\ (Q /\ R) <-> (P /\ Q) /\ R.
+Proof. my_tauto. Qed.
+
+Theorem or_assoc : P \/ (Q \/ R) <-> (P \/ Q) \/ R.
+Proof. my_tauto. Qed.
+
+Theorem and_dist_or : P /\ (Q \/ R) <-> (P /\ Q) \/ (P /\ R).
+Proof. my_tauto. Qed.
+
+Theorem or_dist_and : P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
+Proof. my_tauto. Qed.
+
+Theorem imp_dist_imp : (P -> Q -> R) <-> ((P -> Q) -> (P -> R)).
+Proof. my_tauto. Qed.
+
+Theorem curry : (P /\ Q -> R) -> (P -> Q -> R).
+Proof. intros. assert (P /\ Q). my_tauto. my_tauto. Qed.
+
+Theorem uncurry : (P -> Q -> R) -> (P /\ Q -> R).
+Proof. my_tauto. Qed.
+
+Theorem deMorgan_1 : ~(P \/ Q) <-> ~P /\ ~Q.
+Proof. my_tauto. Qed.
+
+Theorem deMorgan_2 : ~P \/ ~Q -> ~(P /\ Q).
+Proof. my_tauto. Qed.
+
+Theorem noncontradiction' : ~(P /\ ~P).
+Proof. my_tauto. Qed.
+
+Theorem noncontradiction_v2 : ~(P <-> ~P).
+Proof. my_tauto. Qed.
+
+Theorem em_irrefutable : ~~(P \/ ~P).
+Proof. my_tauto. Qed.
+
+Theorem and_false_annihilation : P /\ False <-> False.
+Proof. my_tauto. Qed.
+
+Theorem or_false_neutral : P \/ False <-> P.
+Proof. my_tauto. Qed.
+
+Theorem and_true_neutral : P /\ True <-> P.
+Proof. my_tauto. Qed.
+
+Theorem or_true_annihilation : P \/ True <-> True.
+Proof. my_tauto. Qed.
+
+Theorem or_imp_and : (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
+Proof. my_tauto. Qed.
+
+Theorem and_not_imp : P /\ ~Q -> ~(P -> Q).
+Proof. my_tauto. Qed.
+
+Theorem or_not_imp : ~P \/ Q -> (P -> Q).
+Proof. my_tauto. Qed.
+
+Theorem contraposition : (P -> Q) -> (~Q -> ~P).
+Proof. my_tauto. Qed.
+
+Theorem absurd : ~P -> P -> Q.
+Proof. my_tauto. Qed.
+
+Theorem impl_and : (P -> Q /\ R) -> ((P -> Q) /\ (P -> R)).
+Proof. my_tauto. Qed.
+
+End my_tauto.
+(* end hide *)
+
+(** * Zmienne egzystencjalne i ich taktyki *)
+
+(* begin hide *)
+(** TODO: [eauto], [econstructor], [eexists], [edestruct] *)
+(* end hide *)
+
+(** * Dopasowanie termu, programowanie funkcyjne w Ltacu i dowód przez
+      reflekcję *)
+
+(* begin hide *)
+(** TODO:
+    - match expr
+    - lazymatch expr
+    - multimatch expr
+    - type of term
+    - eval redexpr
+    - constr/uconstr/ltac
+    - type_term ?
+*)
+(* end hide *)
+
+(* begin hide *)
+Function evenb (n : nat) : bool :=
+match n with
+    | 0 => true
+    | 1 => false
+    | S (S n') => evenb n'
+end.
+
+Lemma evenb_spec :
+  forall n : nat, evenb n = true -> even n.
+Proof.
+  intros. functional induction evenb n.
+    constructor.
+    congruence.
+    constructor. auto.
+Qed.
+
+Goal even 666.
+Proof.
+  apply evenb_spec. cbn. trivial.
+Qed.
+
+Print Unnamed_thm.
+Print evenb_spec.
+
 (* end hide *)

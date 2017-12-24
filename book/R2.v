@@ -1935,7 +1935,7 @@ Qed.
     [H1 : even 1] na to, że [1] jest parzyste. Jak pokazać, że [1] nie
     jest parzyste, już wiemy. *)
 
-(** **** Ćwiczenie. *)
+(** **** Ćwiczenie (odd) *)
 (** Zdefiniuj induktywny predykat [odd], który ma oznaczać "bycie liczbą
     nieparzystą" i udowodnij, że zachowuje się on jak należy. *)
 
@@ -1971,26 +1971,6 @@ Theorem two_not_odd : ~ odd 2.
 Proof.
   inversion 1. inversion H1.
 Qed.
-(* end hide *)
-
-(** **** Ćwiczenie (chyba trudne). *)
-(** To ćwiczenie dotyczy bardziej kombinatorów taktyk i automatyzacji,
-    niż definicji induktywnych. Przydać mogą ci się następujące taktyki,
-    których dotąd nie omawialiśmy:
-    - [clear x] usuwa [x] z kontekstu (jeżeli mieliśmy w kontekście [x : A],
-      to teraz już go nie ma) lub zawodzi, gdy [x] nie ma w kontekście
-    - [rename x into y] zmienia nazwę [x] na [y] (jeżeli mieliśmy w
-      kontekście [x : A], to teraz zamiast tego będziemy mieli [y : A])
-      lub zawodzi, gdy [x] nie ma w kontekście albo nazwa [y] jest już
-      zajęta *)
-
-Theorem satans_neighbour_not_even : ~ even 667.
-(* begin hide *)
-(*Proof.
-  intro.
-  Time repeat (inversion H; clear H H0; rename H1 into H; try (clear n0)).
-Qed. *)
-Abort.
 (* end hide *)
 
 (** ** Indukcja po dowodzie *)
@@ -2427,7 +2407,7 @@ Lemma even_plus_failed_1 :
 Proof.
   induction n; intros.
     assumption.
-    simpl. constructor. inversion H; subst; clear H.
+    simpl. constructor. inversion H; subst.
 Abort.
 
 (** Nasza indukcja po [n] zawiodła, gdyż nasza hipoteza indukcyjna ma w
@@ -2474,7 +2454,7 @@ Lemma odd_even_plus_failed :
 Proof.
   induction n; intros.
     inversion H.
-    simpl. constructor. inversion H; subst; clear H.
+    simpl. constructor. inversion H; subst.
 Abort.
 
 (** Niestety — nie dla psa kiełbasa, gdyż natykamy się na problemy bliźniaczo
