@@ -2040,6 +2040,7 @@ Qed.
       [S (S n')], zaś [Hn'] jest dowodem na to, że [n'] jest parzyste. *)
 
 (** *** Taktyki [replace] i [assert]. *)
+
 (** Przy następnych ćwiczeniach mogą przydać ci się taktyki [replace]
     oraz [assert]. *)
 
@@ -2493,7 +2494,8 @@ Theorem even_plus :
 with odd_even_plus :
   forall n m : nat, odd n -> even m -> odd (n + m).
 Proof.
-  auto. auto.
+  assumption.
+  assumption.
 Fail Qed.
 Restart.
   destruct n as [| n']; simpl; intros.

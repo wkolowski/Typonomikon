@@ -2163,6 +2163,7 @@ Goal
 (* begin hide *)
 Proof.
   rel.
+Abort.
 
 Theorem Rcomp_not_Trichotomous :
   exists (A : Type) (R S : rel A),

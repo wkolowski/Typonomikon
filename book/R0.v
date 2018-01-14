@@ -153,7 +153,7 @@
         pewnie zmieni się to w przyszłości.
     - Coq'Art, której autorami są Yves Bertot oraz Pierre Castéran —
       książka nieco szerzej opisująca język Coq, poświęca sporo
-      miejsca rachunkowi konstrukcj i aspektom teoretycznym, zawiera
+      miejsca rachunkowi konstrukcji i aspektom teoretycznym. Zawiera
       także rozdziały dotyczące automatyzacji, silnej specyfikacji,
       koindukcji, zaawansowanej rekurencji i reflekcji. Wersja
       francuska jest dostępna za darmo pod adresem
@@ -197,13 +197,16 @@
 (** ** Blogi *)
 
 (** W Internecie można też dokopać się do blogów, na których przynajmniej
-    część postów dotyczy Coqa. Nie czytam ich, bo póki co nie mam na to
-    czasu, więc wszystkie linki wrzucam w ciemno, żebyś nie musiał sam
-    szukać:
-    - http://www.cis.upenn.edu/~aarthur/poleiro/
+    część postów dotyczy Coqa. Póki co nie miałem czasu wszystkich przeczytać
+    i wobec tego większość linków wrzucam w ciemno:
+    - http://www.cis.upenn.edu/~aarthur/poleiro/ (znajdziesz tu posty na
+      temat parsowania, kombinatorycznej teorii gier, czytelnego
+      strukturyzowania dowodu, unikania automatycznego generowania nazw,
+      przeszukiwania, algorytmów sortowania oraz dowodzenia przez reflekcję).
     - http://coq-blog.clarus.me/
     - https://gmalecha.github.io/
-    - http://seb.mondet.org/blog/index.html
+    - http://seb.mondet.org/blog/index.html (znajdziesz tu 3 posty na temat
+      silnych specyfikacji)
     - https://pjreddie.com/coq-tactics/ (uwaga na swoje zdrowie psychiczne)
     - http://gallium.inria.fr/blog/
     - http://ilyasergey.net/pnp/
