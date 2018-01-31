@@ -1,19 +1,17 @@
 # CoqBook
 
-To repozytorium zawiera źródła mojej [książki](https://zeimer.github.io/)
+To repozytorium zawiera źródła mojej [książki](https://zeimer.github.io/).
 
 W sumie nie wiem, dlaczego wstawiłem je osobno, zamiast wrzucić do jednego repo razem z książką...
 
 Co tu się dzieje:
-- book/ zawiera pliki .v, które stanowią źródła książki. Źródła jednego rozdziału (Seminar: Induction) nie są dostępne.
-- build.sh i rebuild.sh to skrypty służące odpowiednio do budowania i budowania od nowa książki.
+- book/ zawiera pliki .v, które stanowią źródła książki. EDIT 31.1.18: od teraz dostępne są też źródła rozdziału "Seminar: Induction".
 - css/ i js/ to style i kod js, które dają książce w miarę znośny wygląd. Ukradzione ze starej wersji [Software Foundations](https://softwarefoundations.cis.upenn.edu/)
 - extra/ zawiera nagłówek i stopkę, które dodają analitiksy i inne takie, a także okładkę, również ukradzioną z Software Foundations.
-- make_makefile.sh generuje nowy makefile od zera.
 - trash/ zawiera fragmenty rozdziałów, które zostały wycięte albo skopiowane na zapas z jakichś dziwnych powodów (np. refaktoringu).
 - todo/ zawiera pliki .v o wysokim priorytecie, z których będą powstawać przyszłe rozdziały.
-- misc/ zawier pliki .v o niskim priorytecie z jakimiś kodami, z których może kiedyś coś będzie. 10.11.17 udało mi się tu posprzątać, więc powinien być w miarę porządek.
-- README.md to ten plik
+- misc/ zawier pliki .v o niskim priorytecie z jakimiś kodami, z których może kiedyś coś będzie.
+- build.sh i rebuild.sh to skrypty służące odpowiednio do budowania i budowania od nowa książki. make_makefile.sh generuje nowy makefile od zera.
 
 Książkę można skompilować za pomocą polecenia
 ```bash
@@ -33,18 +31,17 @@ W dalszej perspektywie powstaną rozdziały stosowane dotyczące różnych, mnie
 ## TODO
 
 Bliskie TODO:
-- taktyki (już się robią)
-- reflekcja (niestety po angielsku)
+- R4: spis taktyk (już się robi)
+- R5: reflekcja. EDIT 31.1.18: Hurra! Rozdział o reflekcji będzie po polsku.
 
 Średnie TODO:
 - dokończyć rozdział o funkcjach (więcej ukrytej teorii kategorii)
 - dokończyć rozdział o relacjach
-
+- opisać foldy dla list
 Dalekie TODO:
 - Wygląd:
   - zwijane, rozwijane dowody
 - Logika:
-  - porządna reflekcja
   - różne alternatywne definicje równości (np. JMeq, eq_dep)
   - aksjomaty
 - Rekursja:
@@ -55,6 +52,7 @@ Dalekie TODO:
   - rekursja przez iterację
   - Bove-Capretta
   - rekursja dobrze ufundowana
+  - rekursja polimorficzna
 - Indukcja:
   - foldy
   - reguły dla indukcji dobrze ufundowanej
@@ -63,30 +61,24 @@ Dalekie TODO:
   - dodać podrozdział o zależnych typach induktywnych
   - dodać podrozdział o typach induktywnych z nieskończoną ilością argumentów rekurencyjnych (A -> T)
   - o silnych specyfikacjach
-- R4: Matematyka
+- R ileś tam: Matematyka
   - setoidy
   - częściowe porządki/teoria krat
   - monoidy/teoria grup
-- R5: Funktory i monady
-  - Funktory: przykłady na option i list, zadania na tree, state, reader, writer
-  - Funktory aplikatywne
-  - Monady
-  - Alternative
-  - MonadPlus
+- R ileś tam + 1: przegląd Haskellowego podwórka. Jeżeli nie możesz się doczekać, patrz [tu](https://github.com/Zeimer/HSLib)
 - R6: Teoria Kategorii — ho ho, pieśń przyszłości! Achtung: przemycać tego jak najwięcej.
 - Zadania TODO:
   - Zrób zadania z definiowania induktywnych typów i predykatów
 - Kontent:
   - Arytmetyka binarna (liczby naturalne, dodatnie i całkowite)
-  - Typ option
+  - Typ option (przy okazji funktorów)
   - Przerobić ćwiczenia z logiki na rozdział
   - Logika ternarna
   - Listy niepuste (nel)
   - Wektory (vec)
-  - Drzewa binarne
+  - Drzewa binarne, wisienki, RoseTree, sterty...
 - Inne:
   - definiowanie przez dowód
   - być może koindukcja (a może lepiej nie...)
-  - wzbogacanie struktur danych
 - Sugestie:
   - być może przesunąć Empty_set i unit za Enumeracje, a prod i sum za Właściwości konstruktorów. Wcisnąć tu ukrytą teorię kategorii.

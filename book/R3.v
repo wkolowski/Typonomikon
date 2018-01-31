@@ -71,8 +71,8 @@ Abort.
     zadziałać taktykami, służą selektory. Jest ich kilka i mają taką składnię:
     - [n: t] — użyj taktyki t na n-tym celu. [1: t] jest równoważne [t].
     - [a-b: t] — użyj taktyki t na wszystkich celach o numerach od a do b
-    - [a1-b1, a2-b2, ..., aN-bN: t] — użyj taktyki [t] na wszystkich celach
-      o numerach od a1 do b1, od a2 do b2, ..., od aN do bN (zamiast aK-bK
+    - [a_1-b_1, ..., a_n-b_n: t] — użyj taktyki [t] na wszystkich celach
+      o numerach od a_1 do b_1, ..., od a_n do b_n (zamiast a_i-b_i
       możemy też użyć pojedynczej liczby)
     - [all: t] ­- użyj [t] na wszystkich celach
     - zamiast [t], w powyższych przypadkach możemy też użyć wyrażenia
@@ -118,12 +118,43 @@ Qed.
 (** Nie wszystko jednak stracone! Żeby móc używać wyrażeń zawierających
     selektory jako argumenty taktyk, możemy posłużyć się słowem [only].
     Mimo tego, i tak nie możemy napisać [repeat split; only all: ...],
-    gdyż kończy się to błędem skadni.
+    gdyż kończy się to błędem skadni. *)
 
-    Jeżeli wątpisz w użyteczność selektorów... cóż, nie dziwię ci się.
-    Selektory przydają się głównie gdy chcemy napisać taktykę rozwiązującą
-    wszystkie cele i sprawdzamy jej działanie na każdym celu z osobna. W
-    pozostałych przypadkach są tylko zbędnym balastem. *)
+Goal forall P Q R S : Prop, P -> P /\ Q /\ R /\ S.
+Proof.
+  repeat split.
+  revgoals. all: revgoals. all: revgoals.
+  swap 1 3. all: swap 1 3. all: swap 1 3.
+  cycle 42. all: cycle 3. all: cycle -3.
+Abort.
+
+(** Jest jeszcze kilka innych taktyk do żonglowania celami. Pamiętaj, że
+    wszystkie z nich działają na liście celów wybranych selektorami —
+    domyślnie wybrany jest tylko cel numer 1 i wtedy taktyki te nie mają
+    żadnego skutku.
+
+    [revgoals] odwraca kolejność celów, na których działa. W naszym przypadku
+    [revgoals] nie robi nic (odwraca kolejność celu [P] na [P]), natomiast
+    [all: revgoals] zamienia kolejność celów z [P — Q — R — S] na
+    [S — R — Q — P].
+
+    [swap n m] zamienia miejscami cele n-ty i m-ty. W przykładzie [swap 1 3]
+    nic nie robi, gdyś domyślnie wybrany jest tylko cel numer 1, a zatem nie
+    można zamienić go miejscami z celem nr 3, którego nie ma. [all: swap 1 3]
+    zamienia kolejność celów z [P — Q — R — S] na [R — Q — P — S].
+
+    [cycle n] przesuwa cele cyklicznie o [n] do przodu (lub do tyłu, jeżeli
+    argument jest liczbą ujemną). W naszym przykładzie [cycle 42] nic nie robi
+    (przesuwa cyklicznie cel [P] o 42 miejsca, co daje w wyniku [P]), zaś
+    [all: cycle 3] zamienia kolejność celów z [P — Q — R — S] na
+    [S — P — Q — R].
+
+    Taktyki te nie są zbyt użyteczne, a przynajmniej ja nigdy ich nie użyłem,
+    ale dla kompletności wypadało o nich wspomnieć. Jeżeli wątpisz w
+    użyteczność selektorów... cóż, nie dziwię ci się. Selektory przydają się
+    głównie gdy chcemy napisać taktykę rozwiązującą wszystkie cele i
+    sprawdzamy jej działanie na każdym celu z osobna. W pozostałych przypadkach
+    są tylko zbędnym balastem. *)
 
 (** * Podstawy języka Ltac *)
 

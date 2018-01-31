@@ -13,29 +13,203 @@
 (* end hide *)
 
 (** Stare powiedzenie głosi: nie wymyślaj koła na nowo. Aby uczynić zadość
-    duchom przodków, którzy je wymyślili, w niniejszym rozdziale zapoznamy
-    się z różnymi przydatnymi taktykami, które prędzej czy później i tak
-    sami byśmy wymyślili, gdyby zaszła taka potrzeba.
+    duchom przodków, którzy je wymyślili (zarówno koło, jak i przysłowie),
+    w niniejszym rozdziale zapoznamy się z różnymi przydatnymi taktykami,
+    które prędzej czy później i tak sami byśmy wymyślili, gdyby zaszła taka
+    potrzeba.
 
     Aby jednak nie popaść w inny grzech i nie posługiwać się czarami, których
     nie rozumiemy, w ramach ćwiczeń część z poniżej omówionych taktyk będziemy
     mogli zaimplementować jako ćwiczenie.
 
     Omówimy kolejno:
+    - taktykę [refine]
     - drobne taktyki służące głównie do kontrolowania tego, co dzieje się
       w kontekście
     - "średnie" taktyki, wcielające w życie pewien konkretny sposób
       rozumowania
+    - taktyki służące do rozumowania na temat relacji równoważności
+    - taktyki służące do przeprowadzania obliczeń (TODO: oby)
     - procedury decyzyjne, które potrafią zupełnie same rozwiązać cele
       należące do pewnej konkretnej klasy, np. cele dotyczące funkcji
       boolowskich albo nierówności liniowych na liczbach całkowitych *)
 
-(** Powyższa klasyfikacja jest jedynie przybliżona i nie należy brać jej zbyt
-    poważnie.
-
-    Uwaga: przykłady użycia taktyk, których reimplementacja będzie
+(** Uwaga: przykłady użycia taktyk, których reimplementacja będzie
     ćwiczeniem, zostały połączone z testami w ćwiczeniach żeby nie pisać dwa
     razy tego samego. *)
+
+(** * [refine] — matka wszystkich taktyk *)
+
+(** Fama głosi, że w zamierzchłych czasach, gdy nie było jeszcze taktyk,
+    a światem Coqa rządził Chaos (objawiający się dowodzeniem przez ręczne
+    wpisywanie termów), jeden z Coqowych bogów imieniem He-fait-le-stos, w
+    przebłysku kreatywnego geniuszu wymyślił dedukcję naturalną i stworzył
+    pierwszą taktykę, której nadał imię [refine]. Pomysł przyjał się i od
+    tej pory Coqowi bogowie poczęli używać jej do tworzenia coraz to innych
+    taktyk. Tak [refine] stała się matką wszystkich taktyk.
+
+    Oczywiście legenda ta jest nieprawdziwa — deduckcję naturalną wymyślił
+    Gerhard Gentzen, a podstawowe taktyki są zaimplementowane w Ocamlu. Nie
+    umniejsza to jednak mocy taktyki [refine]. Jej działanie podobne jest
+    do taktyki [exact], z tym że term będący jej argumentem może też zawierać
+    dziury [_]. Jeżeli naszym celem jest [G], to taktyka [refine g] rozwiązuje
+    cel, jeżeli [g] jest termem typu [G], i generuje taką ilość podcelów, ile
+    [g] zawiera dziur, albo zawodzi, jeżeli [g] nie jest typu [G].
+
+    Zobaczmy działanie taktyki [refine] na przykładach. *)
+
+Example refine_0 : 42 = 42.
+Proof.
+  refine eq_refl.
+Qed.
+
+(** W powyższym przykładzie używamy [refine] tak jak użylibyśmy [exact]a.
+    [eq_refl] jest typu [42 = 42], gdyż Coq domyśla się, że tak naprawdę
+    chodzi nam o [@eq_refl nat 42]. Ponieważ [eq_refl] zawiera 0 dziur,
+    [refine eq_refl] rozwiązuje cel i nie generuje podcelów. *)
+
+Example refine_1 :
+  forall P Q : Prop, P /\ Q -> Q /\ P.
+Proof.
+  refine (fun P Q : Prop => _).
+  refine (fun H => match H with | conj p q => _ end).
+  refine (conj _ _ ).
+    refine q.
+    refine p.
+Restart.
+  intros P Q. intro H. destruct H as [p q]. split.
+    exact q.
+    exact p.
+Qed.
+
+(** W tym przykładzie chcemy pokazać przemienność konunkcji. Ponieważ nasz
+    cel jest kwantyfikacją uniwersalną, jego dowodem musi być jakaś funkcja
+    zależna. Funkcję tę konstruujemy taktyką [refine (fun P Q : Prop => _)].
+    Nie podajemy jednak ciała funkcji, zastępując je dzurą [_], bo chcemy
+    podać je później. W związku z tym nasz obecny cel zostaje rozwiązany, a
+    w zamian dostajemy nowy cel postaci [P /\ Q -> Q /\ P], gdyż takiego
+    typu jest ciało naszej funkcji. To jednak nie wszystko: w kontekście
+    pojawiają się [P Q : Prop]. Wynika to z tego, że [P] i [Q] mogą zostać
+    użyte w definicji ciała naszej funkcji.
+
+    Jako, że naszym celem jest implikacja, jej dowodem musi być funkcja.
+    Taktyka [refine (fun H => match H with | conj p q => _ end)] pozwala
+    nam tę funkcję skonstruować. Ciałem naszej funkcji jest dopasowanie
+    zawierające dziurę. Wypełnienie jej będzie naszym kolejnym celem. Przy
+    jego rozwiązywaniu będziemy mogli skorzystać z [H], [p] i [q]. Pierwsza
+    z tych hipotez pochodzi o wiązania [fun H => ...], zaś [p] i [q] znajdą
+    się w kontekście dzięki temu, że zostały związane podczas dopasowania
+    [conj p q].
+
+    Teraz naszym celem jest [Q /\ P]. Ponieważ dowody koniunkcji są postaci
+    [conj l r], gdzie [l] jest dowodem pierwszego członu, a [r] drugiego,
+    używamy taktyki [refine (conj _ _)], by osobno skonstruować oba człony.
+    Tym razem nasz proofterm zawiera dwie dziury, więc wygenerowane zostaną
+    dwa podcele. Obydwa zachodzą na mocy założenia, a rozwiązujemy je także
+    za pomocą [refine].
+
+    Powyższy przykład pokazuje, że [refine] potrafi zastąpić cała gamę
+    przeróżnych taktyk, które dotychczas uważaliśmy za podstawowe: [intros],
+    [intro], [destruct], [split] oraz [exact]. Określenie "matka wszystkich
+    taktyk" wydaje się całkiem uzasadnione. *)
+
+(** **** Ćwiczenie (my_exact) *)
+
+(** Napisz taktykę [my_exact], która działa tak, jak [exact]. Użyj taktyki
+    [refine]. *)
+
+(* begin hide *)
+Ltac my_exact t := refine t.
+(* end hide *)
+
+Example my_exact_0 :
+  forall P : Prop, P -> P.
+Proof.
+  intros. my_exact H.
+Qed.
+
+(** **** Ćwiczenie (my_intro) *)
+
+(** Zaimplementuj taktykę [my_intro1], która działa tak, jak [intro], czyli
+    próbuje wprowadzić do kontekstu zmienną o domyślnej nazwie. Zaimplementuj
+    też taktykę [my_intro2 x], która działa tak jak [intro x], czyli próbuje
+    wprowadzić do kontekstu zmienną o nazwie [x]. Użyj taktyki [refine].
+
+    Bonus: przeczytaj dokumentację na temat notacji dla taktyk (komenda
+    [Tactic Notation]) i napisz taktykę [my_intro], która działa tak jak
+    [my_intro1], gdy nie dostanie argumentu, a tak jak [my_intro2], gdy
+    dostanie argument. *)
+
+(* begin hide *)
+Ltac my_intro1 := refine (fun _ => _).
+Ltac my_intro2 x := refine (fun x => _).
+
+Tactic Notation "my_intro" := my_intro1.
+Tactic Notation "my_intro" ident(x) := my_intro2 x.
+(* end hide *)
+
+Example my_intro_0 :
+  forall P : Prop, P -> P.
+Proof.
+  my_intro1. my_intro2 H. my_exact H.
+Restart.
+  my_intro. my_intro H. my_exact H.
+Qed.
+
+(** **** Ćwiczenie (my_apply) *)
+
+(** Napisz taktykę [my_apply H], która działa tak jak [apply H]. Użyj taktyki
+    [refine]. *)
+
+(* begin hide *)
+Ltac my_apply H := refine (H _).
+(* end hide *)
+
+Example my_apply_0 :
+  forall P Q : Prop, P -> (P -> Q) -> Q.
+Proof.
+  my_intro P. my_intro Q. my_intro p. my_intro H.
+  my_apply H. my_exact p.
+Qed.
+
+(** **** Ćwiczenie (taktyki dla konstruktorów 1) *)
+
+(** Napisz taktyki:
+    - [my_split], która działa tak samo jak [split]
+    - [my_left] i [my_right], które działają tak jak [left] i [right]
+    - [my_exists], która działa tak samo jak [exists] *)
+
+(** Użyj taktyki [refine]. *)
+
+(* begin hide *)
+Ltac my_split := refine (conj _ _).
+Ltac my_left := refine (or_introl _).
+Ltac my_right := refine (or_intror _).
+Ltac my_exists n := refine (ex_intro _ n _).
+(* end hide *)
+
+Example my_split_0 :
+  forall P Q : Prop, P -> Q -> P /\ Q.
+Proof.
+  my_intro P; my_intro Q; my_intro p; my_intro q.
+  my_split.
+    my_exact p.
+    my_exact q.
+Qed.
+
+Example my_left_right_0 :
+  forall P : Prop, P -> P \/ P.
+Proof.
+  my_intro P; my_intro p. my_left. my_exact p.
+Restart.
+  my_intro P; my_intro p. my_right. my_exact p.
+Qed.
+
+Example my_exists_0 :
+  exists n : nat, n = 42.
+Proof.
+  my_exists 42. reflexivity.
+Qed.
 
 (** * Drobne taktyki *)
 
@@ -74,9 +248,7 @@ Abort.
     potrafi udowodnić cel [True].
 
     Dla przykładu, taktyka ta powinna przekształcać kontekst
-    [a, b, c : True, p : P |- _] w [p : P |- _].
-
-    Wskazówka: przydatna może być taktyka [clear]. *)
+    [a, b, c : True, p : P |- _] w [p : P |- _]. *)
 
 (* begin hide *)
 Ltac tru := intros; repeat
@@ -119,6 +291,42 @@ Theorem satans_neighbour_not_even : ~ even 667.
 Abort.
 (* end hide *)
 
+(** **** Ćwiczenie (my_destruct_and) *)
+
+(** Napisz taktykę [my_destruct H p q], która działa jak [destruct H as [p q]],
+    gdzie [H] jest dowodem koniunkcji. Użyj taktyk [refine] i [clear].
+
+    Bonus 1: zaimplementuj taktykę [my_destruct_and H], która działa tak jak
+    [destruct H], gdy [H] jest dowodem koniunkcji.
+
+    Bonus 2: zastanów się, jak (albo czy) można zaimplementować taktykę
+    [destruct x], gdzie [x] jest dowolnego typu induktywnego. *)
+
+(* begin hide *)
+Ltac my_destruct_and_named H p q := refine (
+match H with
+    | conj p q => _
+end); clear H.
+
+Ltac my_destruct_and_unnamed H :=
+  let p := fresh in let q := fresh in my_destruct_and_named H p q.
+
+Tactic Notation "my_destruct_and" ident(H) ident(p) ident(q) :=
+  my_destruct_and_named H p q.
+Tactic Notation "my_destruct_and" ident(H) :=
+  my_destruct_and_unnamed H.
+(* end hide *)
+
+Example my_destruct_and_0 :
+  forall P Q : Prop, P /\ Q -> P.
+Proof.
+  my_intro P; my_intro Q; my_intro H.
+  my_destruct_and H p q. my_exact p.
+Restart.
+  my_intro P; my_intro Q; my_intro H.
+  my_destruct_and H. my_exact H0.
+Qed.
+
 (** ** [fold] *)
 
 (** [fold] to taktyka służąca do zwijania definicji. Jej działanie jest
@@ -149,7 +357,25 @@ Restart.
   intros. unfold plus. my_fold plus.
 Abort.
 
-(** ** [move] (TODO) *)
+(** ** [move] *)
+
+Example move_0 :
+  forall P Q R S T : Prop, P /\ Q /\ R /\ S /\ T -> T.
+Proof.
+  destruct 1 as [p [q [r [s t]]]].
+  move p after t.
+  move p before s.
+  move p at top.
+  move p at bottom.
+Abort.
+
+(** [move] to taktyka służąca do zmieniania kolejności obiektów w kontekście.
+    Jej działanie jest tak ewidentnie oczywiste, ż nie ma zbytniego sensu,
+    aby je opisywać. *)
+
+(** **** Ćwiczenie *)
+
+(** Przeczytaj dokładny opis działania taktyki [move] w manualu. *)
 
 (** ** [pose] i [remember] *)
 
@@ -262,7 +488,7 @@ Abort.
     zawiera równanie "pamiętające" informacje o rozbitym termie, o których
     zwykły [destruct] zapomina. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (my_case_eq) *)
 
 (** Napisz taktykę [my_case_eq t Heq], która działa tak jak [case_eq t], ale
     nie dodaje równania jako hipotezę na początku celu, tylko bezpośrednio
@@ -409,7 +635,7 @@ Print or.
     więc następuje nawrót i aplikowany jest konstruktor [or_intror], a wtedy
     [assumption] rozwiązuje cel. *)
 
-(** **** Ćwiczenie (taktyki dla konstruktorów) *)
+(** **** Ćwiczenie (taktyki dla konstruktorów 2) *)
 
 (** Jaki jest związek taktyki [constructor] z taktykami [split], [left],
     [right] i [exists]? *)
@@ -744,149 +970,14 @@ Proof.
     cbn. f_equal. rewrite plus_comm_rec. reflexivity.
 Qed.
 
-(** ** [refine] *)
+(** ** [rewrite] i [autorewrite] (TODO) *)
 
-(** Fama głosi, że w zamierzchłych czasach, gdy nie było jeszcze taktyk,
-    a światem Coqa rządził Chaos (objawiający się dowodzeniem przez ręczne
-    wpisywanie termów), jeden z Coqowych bogów imieniem He-fait-le-stos, w
-    przebłysku kreatywnego geniuszu wymyślił dedukcję naturalną i stworzył
-    pierwszą taktykę, której nadał imię [refine]. Pomysł przyjał się i od
-    tej pory Coqowi bogowie poczęli używać jej do tworzenia coraz to innych
-    taktyk. Tak [refine] stała się matką wszystkich taktyk.
+(** ** Taktyki dla redukcji i obliczeń *)
 
-    Oczywiście legenda ta jest nieprawdziwa — deduckcję naturalną wymyślił
-    Gerhard Gentzen, a podstawowe taktyki są zaimplementowane w Ocamlu. Nie
-    umniejsza to jednak mocy taktyki [refine]. Jej działanie podobne jest
-    do taktyki [exact], z tym że term będący jej argumentem może też zawierać
-    dziury [_]. Jeżeli naszym celem jest [G], to taktyka [refine g] rozwiązuje
-    cel, jeżeli [g] jest termem typu [G], i generuje taką ilość podcelów, ile
-    [g] zawiera dziur, albo zawodzi, jeżeli [g] nie jest typu [G].
-
-    Zobaczmy działanie taktyki [refine] na przykładach. *)
-
-Example refine_0 : 42 = 42.
-Proof.
-  refine eq_refl.
-Qed.
-
-(** W powyższym przykładzie używamy [refine] tak jak użylibyśmy [exact]a.
-    [eq_refl] jest typu [42 = 42], gdyż Coq domyśla się, że tak naprawdę
-    chodzi nam o [@eq_refl nat 42]. Ponieważ [eq_refl] zawiera 0 dziur,
-    [refine eq_refl] rozwiązuje cel i nie generuje podcelów. *)
-
-Example refine_1 :
-  forall P Q : Prop, P /\ Q -> Q /\ P.
-Proof.
-  refine (fun P Q : Prop => _).
-  refine (fun H => match H with | conj p q => _ end).
-  refine (conj _ _ ).
-    refine q.
-    refine p.
-Restart.
-  intros P Q. intro H. elim H; intros p q. split.
-    exact q.
-    exact p.
-Qed.
-
-(** W tym przykładzie chcemy pokazać przemienność konunkcji. Ponieważ nasz
-    cel jest kwantyfikacją uniwersalną, jego dowodem musi być jakaś funkcja
-    zależna. Funkcję tę konstruujemy taktyką [refine (fun P Q : Prop => _)].
-    Nie podajemy jednak ciała funkcji, zastępując je dzurą [_], bo chcemy
-    podać je później. W związku z tym nasz obecny cel zostaje rozwiązany, a
-    w zamian dostajemy nowy cel postaci [P /\ Q -> Q /\ P], gdyż takiego
-    typu jest ciało naszej funkcji. To jednak nie wszystko: w kontekście
-    pojawiają się [P Q : Prop]. Wynika to z tego, że [P] i [Q] mogą zostać
-    użyte w definicji ciała naszej funkcji.
-
-    Jako, że naszym celem jest implikacja, jej dowodem musi być funkcja.
-    Taktyka [refine (fun H => match H with | conj p q => _ end)] pozwala
-    nam tę funkcję skonstruować. Ciałem naszej funkcji jest dopasowanie
-    zawierające dziurę. Wypełnienie jej będzie naszym kolejnym celem. Przy
-    jego rozwiązywaniu będziemy mogli skorzystać z [H], [p] i [q]. Pierwsza
-    z tych hipotez pochodzi o wiązania [fun H => ...], zaś [p] i [q] znajdą
-    się w kontekście dzięki temu, że zostały związane podczas dopasowania
-    [conj p q].
-
-    Teraz naszym celem jest [Q /\ P]. Ponieważ dowody koniunkcji są postaci
-    [conj l r], gdzie [l] jest dowodem pierwszego członu, a [r] drugiego,
-    używamy taktyki [refine (conj _ _)], by osobno skonstruować oba człony.
-    Tym razem nasz proofterm zawiera dwie dziury, więc wygenerowane zostaną
-    dwa podcele. Obydwa zachodzą na mocy założenia, a rozwiązujemy je także
-    za pomocą [refine].
-
-    Powyższy przykład pokazuje, że [refine] potrafi zastąpić cała gamę
-    przeróżnych taktyk, które dotychczas uważaliśmy za podstawowe: [intros],
-    [intro], [elim] (bardzo prymitywna forma taktyki [destruct]), [split]
-    oraz [exact]. Określenie "matka wszystkich taktyk" wydaje się całkiem
-    uzasadnione. *)
-
-(** **** Ćwiczenie (my_exact) *)
-
-(** Napisz taktykę [my_exact], która działa tak, jak [exact]. Użyj taktyki
-    [refine]. *)
-
-(* begin hide *)
-Ltac my_exact t := refine t.
-(* end hide *)
-
-Example my_exact_0 :
-  forall P : Prop, P -> P.
-Proof.
-  intros. my_exact H.
-Qed.
-
-(** **** Ćwiczenie [my_intro] *)
-
-(** Zaimplementuj taktykę [my_intro1], która działa tak, jak [intro], czyli
-    próbuje wprowadzić do kontekstu zmienną o domyślnej nazwie. Zaimplementuj
-    też taktykę [my_intro2 x], która działa tak jak [intro x], czyli próbuje
-    wprowadzić do kontekstu zmienną o nazwie [x].
-
-    Bonus: przeczytaj dokumentację na temat notacji dla taktyk (komenda
-    [Tactic Notation]) i napisz taktykę [my_intro], która działa tak jak
-    [my_intro1], gdy nie dostanie argumentu, a tak jak [my_intro2], gdy
-    dostanie argument. *)
-
-(* begin hide *)
-Ltac my_intro1 := refine (fun _ => _).
-Ltac my_intro2 x := refine (fun x => _).
-
-Tactic Notation "my_intro" := my_intro1.
-Tactic Notation "my_intro" ident(x) := my_intro2 x.
-(* end hide *)
-
-Example my_intro_0 :
-  forall P : Prop, P -> P.
-Proof.
-  my_intro1. my_intro2 H. my_exact H.
-Restart.
-  my_intro. my_intro H. my_exact H.
-Qed.
-
-(** **** Ćwiczenie (my_apply) *)
-
-(** Napisz taktykę [my_apply H], która działa tak jak [apply H]. *)
-
-(* begin hide *)
-Ltac my_apply H := refine (H _).
-(* end hide *)
-
-Example my_apply_0 :
-  forall P Q : Prop, P -> (P -> Q) -> Q.
-Proof.
-  my_intro P. my_intro Q. my_intro p. my_intro H.
-  my_apply H. my_exact p.
-Qed.
-
-(** ** [rewrite] *)
-
-(* begin hide *)
-(** TODO:
-    - [revgoals], [swap], [cycle] i inne zarządzanie celami
+(** TODO: omówić następujące rzeczy:
     - [cbn], [cbv], [simpl], [hnf], [compute], [vm_compute],
       [native_compute], [lazy], [red] i inne taktyki do redukcji.
 *)
-(* end hide *)
 
 (** * Taktyki dla równości i równoważności *)
 
@@ -1212,7 +1303,6 @@ Qed.
 (** * Automatyzacja *)
 
 (** ** [auto] i [trivial] (TODO) *)
-(** ** [autorewrite] (TODO) *)
 
 (** ** [btauto] *)
 

@@ -850,7 +850,8 @@ Qed.
     nas to dziwić — wszakże relacje funkcyjne odpowiadają funkcjom, a złożenie
     funkcji jest przecież funkcją. Jeżeli lepiej mu się przyjrzeć, to okazuje
     się, że składanie funkcji odpowiada składaniu relacji, a stąd już prosta
-    droga do wniosku, że złożenie relacji funkcyjnych jest relacją funkcyjną. *)
+    droga do wniosku, że złożenie relacji funkcyjnych jest relacją funkcyjną.
+*)
 
 Theorem Rinv_not_Functional :
   exists (A B : Type) (R : hrel A B),
@@ -2002,8 +2003,10 @@ Proof.
   pose (S := fun n m : nat =>
     lookup (n, m) [(1, 2); (3, 4)] = true).
   exists nat, R, S. repeat split.
-    destruct x as [| [| [|]]], y as [| [| [|]]], z as [| [| [|]]]; compute; try congruence.
-    destruct x as [| [| [| [|]]]], y as [| [| [| [|]]]], z as [| [| [| [|]]]]; compute; try congruence.
+    destruct x as [| [| [|]]], y as [| [| [|]]], z as [| [| [|]]]; compute;
+      try congruence.
+    destruct x as [| [| [| [|]]]], y as [| [| [| [|]]]], z as [| [| [| [|]]]];
+      compute; try congruence.
     unfold Rcomp; destruct 1.
       destruct (transitive0 0 2 4).
         exists 1. compute. auto.
