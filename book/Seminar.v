@@ -636,8 +636,8 @@ Inductive even : nat -> Prop :=
     | even0 : even 0
     | evenSS : forall n : nat, even n -> even (S (S n)).
 
-(** Here we have nothing before the final semicolon (the one after [even]),
-    so there aren't any parameters. However, after the semicolon we see
+(** Here we have nothing before the final colon (the one after [even]),
+    so there aren't any parameters. However, after the colon we see
     [nat -> Prop], which means [even] is a family of propositions indexed
     by a natural number, i.e. a predicate on [nat]. We can verify this
     with the command [Check]: *)
@@ -2016,7 +2016,7 @@ match n with
 end.
 
 (** Note: we use [Function] only to get the functional induction principle
-    so that we will later be abl to compare it to our own.
+    so that we will later be able to compare it to our own.
 
     [div2] is an ordinary structurally recursive function. Nothing fancy. *)
 
