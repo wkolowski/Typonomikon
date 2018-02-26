@@ -207,10 +207,11 @@
     - https://gmalecha.github.io/
     - http://seb.mondet.org/blog/index.html (znajdziesz tu 3 posty na temat
       silnych specyfikacji)
-    - https://pjreddie.com/coq-tactics/ (uwaga na swoje zdrowie psychiczne)
-    - http://gallium.inria.fr/blog/
+    - http://gallium.inria.fr/blog/ (znajdziesz tu posty na temat mechanizmu
+      ewaluacji, inwersji, weryfikacji parserów oraz pisania pluginów do Coqa;
+      większość materiału jest już dość leciwa)
     - http://ilyasergey.net/pnp/
-    - https://homes.cs.washington.edu/~jrw12/#blog
+    - https://homes.cs.washington.edu/~jrw12/##blog
     - http://osa1.net/tags/coq *)
 
 (** ** Inne *)

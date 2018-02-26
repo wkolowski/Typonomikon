@@ -34,18 +34,11 @@ Qed.
 Print Unnamed_thm.
 Print evenb_spec.
 
-(* end hide *)
-
-(* begin hide *)
-
 (** Wrzucić tu przykład z porządkiem leksykograficznym z bloga Mondet.
     Dać też przykład z permutacjami? *)
 
-(* end hide *)
-
 (** * Matching terms *)
 
-(* begin hide *)
 (** TODO:
     - match expr
     - lazymatch expr
@@ -55,18 +48,12 @@ Print evenb_spec.
     - constr/uconstr/ltac
     - type_term ?
 
-    Taktyki:
-    - [has_evar], [is_evar], [is_var]
-    - [unify]
-    - [constr_eq]
-*)
-(* end hide *)
+    Taktyki: [has_evar], [is_evar], [is_var], [unify], [constr_eq],
+    [instantiate], [quote] *)
 
 (** * Functional programming in Ltac *)
 
 (** * Big scale reflection *)
-
-(* begin hide *)
 
 (** Wklej tu przykład z permutacjami, wyrażenia boolowskie, formuły
     logiczne i upraszczanie w monoidzie. *)

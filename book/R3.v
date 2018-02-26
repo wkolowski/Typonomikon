@@ -1408,4 +1408,5 @@ Abort.
     Ltaca pozwalające dopasowywać termy, dzięki którym jesteśmy w stanie
     np. napisać taktykę, która odróżni [2 + 2] od [4]. Jeżeli odczuwasz
     niedosyt po przeczytaniu tego rozdziału, to uszy do góry — zapoznamy
-    się z nimi już niedługo, przy omawianiu dowodu przez reflekcję. *)
+    się z nimi już niedługo, przy omawianiu dowodu przez reflekcję. Zanim
+    to jednak nastąpi, zrobimy przegląd taktyk wbudowanych. *)

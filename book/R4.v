@@ -1,26 +1,18 @@
 (** * R4: Spis przydatnych taktyk *)
 
 (* begin hide *)
-(** TODO:
-    - [evar]
-    - [compare]
-    - [simplify_eq]
-    - [induction], [inversion], [destruct]
-    - [dependent induction], [dependent inversion], [dependent destruction]
-    - [dependent rewrite]
-    - [easy], [elim], [elimtype], [enough]
-*)
+(* TODO: [induction], [inversion], [destruct] *)
 (* end hide *)
 
 (** Stare powiedzenie głosi: nie wymyślaj koła na nowo. Aby uczynić zadość
-    duchom przodków, którzy je wymyślili (zarówno koło, jak i przysłowie),
+    duchom przodków, którzy je wymyślili (zarówno koło, jak i powiedzenie),
     w niniejszym rozdziale zapoznamy się z różnymi przydatnymi taktykami,
     które prędzej czy później i tak sami byśmy wymyślili, gdyby zaszła taka
     potrzeba.
 
     Aby jednak nie popaść w inny grzech i nie posługiwać się czarami, których
-    nie rozumiemy, w ramach ćwiczeń część z poniżej omówionych taktyk będziemy
-    mogli zaimplementować jako ćwiczenie.
+    nie rozumiemy, część z poniżej omówionych taktyk zaimplementujemy jako
+    ćwiczenie.
 
     Omówimy kolejno:
     - taktykę [refine]
@@ -29,7 +21,7 @@
     - "średnie" taktyki, wcielające w życie pewien konkretny sposób
       rozumowania
     - taktyki służące do rozumowania na temat relacji równoważności
-    - taktyki służące do przeprowadzania obliczeń (TODO: oby)
+    - taktyki służące do przeprowadzania obliczeń
     - procedury decyzyjne, które potrafią zupełnie same rozwiązać cele
       należące do pewnej konkretnej klasy, np. cele dotyczące funkcji
       boolowskich albo nierówności liniowych na liczbach całkowitych *)
@@ -793,8 +785,8 @@ Abort.
 (** [fix] to taktyka służąca do dowodzenia bezpośrednio przez rekursję. W
     związku z tym nadeszła dobra pora, żeby pokazać wszystkie możliwe sposoby
     na użycie rekursji w Coqu. Żeby dużo nie pisać, przyjrzyjmy się przykładom:
-    zdefiniujemy/udowodnimy regułę ndukcyjną dla liczb naturalnych, którą
-    powinieneś znać ja własną kieszeń (a jeżeli nie, to marsz robić zadania
+    zdefiniujemy/udowodnimy regułę indukcyjną dla liczb naturalnych, którą
+    powinieneś znać jak własną kieszeń (a jeżeli nie, to marsz robić zadania
     z liczb naturalnych!). *)
 
 Definition nat_ind_fix_term
@@ -908,7 +900,7 @@ Defined.
 
 (** Taktyki [functional induction] i [functional inversion] są związane z
     pojęciem indukcji funkcyjnej. Dość szczegółowy opis tej pierwszej jest
-    w notatkach na seminarium: https://zeimer.github.io/Seminar.html#lab229
+    w notatkach na seminarium: https://zeimer.github.io/Seminar.html##lab247
 
     Drugą z nich póki co pominiemy. Kiedyś z pewnością napiszę coś więcej
     o indukcji funkcyjnej lub chociaż przetłumaczę zalinkowane notatki na
@@ -970,16 +962,9 @@ Proof.
     cbn. f_equal. rewrite plus_comm_rec. reflexivity.
 Qed.
 
-(** ** [rewrite] i [autorewrite] (TODO) *)
-
-(** ** Taktyki dla redukcji i obliczeń *)
-
-(** TODO: omówić następujące rzeczy:
-    - [cbn], [cbv], [simpl], [hnf], [compute], [vm_compute],
-      [native_compute], [lazy], [red] i inne taktyki do redukcji.
-*)
-
 (** * Taktyki dla równości i równoważności *)
+
+(** ** [reflexivity], [symmetry] i [transitivity] *)
 
 Require Import Arith.
 
@@ -1057,7 +1042,7 @@ Instance Transitive_eq_ext :
   forall A B : Type, Transitive (@eq_ext A B).
 Proof.
   unfold Transitive, eq_ext. intros A B f g h H H' x.
-  transitivity (g x); auto.
+  transitivity (g x); [apply H | apply H'].
 Defined.
 
 (** Użycie w dowodach taktyk [symmetry] i [transitivity] jest legalne, gdyż
@@ -1076,6 +1061,8 @@ Qed.
     [symmetry] i [transitivity] dowodząc faktów na temat relacji [eq_ext].
     To jednak wciąż nie wyczerpuje naszego arsenału taktyk do radzenia sobie
     z relacjami równoważności. *)
+
+(** ** [f_equal] *)
 
 Check f_equal.
 (* ===> f_equal : forall (A B : Type) (f : A -> B) (x y : A),
@@ -1300,9 +1287,98 @@ Proof.
   intros. f_equiv. assumption.
 Qed.
 
+(** ** [rewrite] *)
+
+(** Powinieneś być już nieźle wprawiony w używaniu taktyki [rewrite]. Czas
+    najwyższy więc opisać wszystkie jej możliwości.
+
+    Podstawowe wywołanie tej taktyki ma postać [rewrite H], gdzie [H] jest
+    typu [forall (x_1 : A_1) ... (x_n : A_n), R t_1 t_2], zaś [R] to [eq]
+    lub dowolna relacja równoważności. Przypomnijmy, że relacja równoważności
+    to relacja, która jest zwrotna, symetryczna i przechodnia.
+
+    [rewrite H] znajduje pierwszy podterm celu, który pasuje do [t_1] i
+    zamienia go na [t_2], generując podcele [A_1], ..., [A_n], z których
+    część (a często całość) jest rozwiązywana automatycznie. *)
+
+Check plus_n_Sm.
+(* ===> plus_n_Sm :
+          forall n m : nat, S (n + m) = n + S m *)
+
+Goal 2 + 3 = 6 -> 4 + 4 = 42.
+Proof.
+  intro.
+  rewrite <- plus_n_Sm.
+  rewrite plus_n_Sm.
+  rewrite <- plus_n_Sm.
+  rewrite -> plus_n_Sm.
+  rewrite <- !plus_n_Sm.
+  Fail rewrite <- !plus_n_Sm.
+  rewrite <- ?plus_n_Sm.
+  rewrite 4!plus_n_Sm.
+  rewrite <- 3?plus_n_Sm.
+  rewrite 2 plus_n_Sm.
+Abort.
+
+(** Powyższy skrajnie bezsensowny przykład ilustruje fakt, że działanie
+    taktyki [rewrite] możemy zmieniać, poprzedzając hipotezę [H] następującymi
+    modyfikatorami:
+    - [rewrite -> H] oznacza to samo, co [rewrite H]
+    - [rewrite <- H] zamienia pierwsze wystąpienie [t_2] na [t_1], czyli
+      przepisuje z prawa na lewo
+    - [rewrite ?H] przepisuje [H] 0 lub więcej razy
+    - [rewrite n?H] przepisuje [H] co najwyżej n razy
+    - [rewrite !H] przepisuje [H] 1 lub więcej razy
+    - [rewrite n!H] lub [rewrite n H] przepisuje [H] dokładnie n razy *)
+
+(** Zauważmy, że modyfikator [<-] można łączyć z modyfikatorami określającymi
+    ilość przepisań. *)
+
+Lemma rewrite_ex_1 :
+  forall n m : nat, 42 = 42 -> S (n + m) = n + S m.
+Proof.
+  intros. apply plus_n_Sm.
+Qed.
+
+Goal 2 + 3 = 6 -> 5 + 5 = 12 -> (4 + 4) + ((5 + 5) + (6 + 6)) = 42.
+Proof.
+  intros.
+  rewrite <- plus_n_Sm, <- plus_n_Sm.
+  rewrite <- plus_n_Sm in H.
+  rewrite <- plus_n_Sm in * |-.
+  rewrite !plus_n_Sm in *.
+  rewrite <- rewrite_ex_1. 2: reflexivity.
+  rewrite <- rewrite_ex_1 by reflexivity.
+Abort.
+
+(** Pozostałe warianty taktyki [rewrite] przedstawiają się następująco:
+    - [rewrite H_1, ..., H_n] przepisuje kolejno hipotezy [H_1], ..., [H_n].
+      Każdą z hipotez możemy poprzedzić osobnym zestawem modyfikatorów.
+    - [rewrite H in H'] przepisuje [H] nie w celu, ale w hipotezie [H']
+    - [rewrite H in * |-] przepisuje [H] we wszystkich hipotezach
+      różnych od [H]
+    - [rewrite H in *] przepisuje [H] we wszystkich hipotezach różnych
+      od [H] oraz w celu
+    - [rewrite H by tac] działa jak [rewrite H], ale używa taktyki [tac] do
+      rozwiązania tych podcelów, które nie mogły zostać rozwiązane
+      automatycznie *)
+
+(** Jest jeszcze wariant [rewrite H at n] (wymagający zaimportowania modułu
+    [Setoid]), który zamienia n-te (licząc od lewej) wystąpienie [t_1] na
+    [t_2]. Zauważmy, że [rewrite H] znaczy to samo, co [rewrite H at 1]. *)
+
+(** * Taktyki dla redukcji i obliczeń (TODO) *)
+
+(** Omówić następujące rzeczy:
+    - [cbn], [cbv], [simpl], [hnf], [compute], [vm_compute],
+      [native_compute], [lazy], [red] i inne taktyki do redukcji.
+*)
+
 (** * Automatyzacja *)
 
 (** ** [auto] i [trivial] (TODO) *)
+
+(** ** [autorewrite] i [autounfold] (TODO) *)
 
 (** ** [btauto] *)
 
@@ -1450,6 +1526,13 @@ Proof.
 Qed.
 (* end hide *)
 
+(** **** Ćwiczenie (injection i simplify_eq) *)
+
+(** Kolejne dwie taktyki do walki z konstruktorami typów induktywnych to
+    [injection] i [simplify_eq]. Przeczytaj ich opisy w manualu. Zbadaj,
+    czy są one w jakikolwiek sposób przydatne (wskazówka: porównaj je z
+    taktykami [inversion] i [congruence]. *)
+
 (** ** [decide equality] *)
 
 Inductive C : Type :=
@@ -1493,6 +1576,10 @@ Theorem C_eq_dec' :
   forall x y : C, {x = y} + {x <> y}.
 Proof. decide equality. Defined.
 
+(** **** Ćwiczenie *)
+
+(** Pokrewną taktyce [decide equality] jest taktyka [compare]. Przeczytaj
+    w manualu, co robi i jak działa. *)
 
 (** ** [omega] i [abstract] *)
 
@@ -1546,7 +1633,9 @@ Proof.
   induction l; cbn; try destruct (f a); cbn.
     trivial.
     apply le_n_S. assumption.
-    eapply le_trans; eauto.
+    apply le_trans with (length l).
+      assumption.
+      apply le_S. apply le_n.
 Qed.
 
 Print filter_length'.
@@ -1582,25 +1671,7 @@ Print filter_length''.
     [Qed], przez co term będzie wyglądał tak, jakbyśmy wcale nie użyli taktyki
     [abstract]. *)
 
-(** ** [ring], [field] i tympodobne (TODO) *)
-
-(* begin hide *)
-(** TODO:
-    - [ring], [ring_simplify]
-    - [field], [field_simplify], [field_simplify_eq] *)
-
-Require Import Ring.
-
-(** Pierścień to struktura algebraiczna składająca się z pewnego typu A oraz
-    działań + i *, które zachowują się mniej więcej tak, jak dodawanie i
-    mnożenie liczb całkowitych. Przykładów jest sporo: liczby wymierne i
-    rzeczywiste z dodawaniem i mnożeniem, wartości boolowskie z dysjunkcją i
-    koniunkcją oraz wiele innych, których nie wymienię, gdyż są dla nas zbyt
-    abstrakcyjne. *)
-
-(** ** [lia]. [lra], [nia], [nra], [nsatz], [psatz] (TODO) *)
-
-(** * Procedury decyzyjne dla logiki *)
+(** ** Procedury decyzyjne dla logiki *)
 
 Example tauto_0 :
   forall A B C D : Prop,
@@ -1783,8 +1854,145 @@ Proof. my_tauto. Qed.
 End my_tauto.
 (* end hide *)
 
+(** * Pierścienie, ciała i arytmetyka *)
+
+(** Pierścień (ang. ring) to struktura algebraiczna składająca się z pewnego
+    typu A oraz działań + i *, które zachowują się mniej więcej tak, jak
+    dodawanie i mnożenie liczb całkowitych. Przykładów jest sporo: liczby
+    wymierne i rzeczywiste z dodawaniem i mnożeniem, wartości boolowskie z
+    dysjunkcją i koniunkcją oraz wiele innych, których na razie nie wymienię.
+
+    Kiedyś z pewnością napiszę coś na temat algebry oraz pierścieni, ale z
+    taktykami do radzenia sobie z nimi możemy zapoznać się już teraz. W Coqu
+    dostępne są dwie taktyki do radzenia sobie z pierścieniami: taktyka
+    [ring_simplify] potrafi upraszczać wyrażenia w pierścieniach, zaś taktyka
+    [ring] potrafi rozwiązywać równania wielomianowe w pierścieniach.
+
+    Ciało (ang. field) to pierścień na sterydach, w którym poza dodawaniem,
+    odejmowaniem i mnożeniem jest także dzielenie. Przykładami ciał są
+    liczby wymierne oraz liczby rzeczywiste, ale nie liczby naturalne ani
+    całkowite (bo dzielenie naturalne/całkowitoliczbowe nie jest odwrotnością
+    mnożenia). Je też kiedyś pewnie opiszę.
+
+    W Coqu są 3 taktyki pomagające w walce z ciałami: [field_simplify]
+    upraszcza wyrażenia w ciałach, [field_simplify_eq] upraszcza cele,
+    które są równaniami w ciałach, zaś [field] rozwiązuje równania w
+    ciałach. *)
+
+(** **** Ćwiczenie (pierścienie i ciała) *)
+
+(** Przyczytaj w manualu opis 5 wymienionych wyżej taktyk:
+    https://coq.inria.fr/refman/ring.html *)
+
 (** * Zmienne egzystencjalne i ich taktyki *)
 
-(* begin hide *)
-(** TODO: [eauto], [econstructor], [eexists], [edestruct] i inne *)
-(* end hide *)
+(** TODO: napisać o co chodzi ze zmiennymi egzystencjalnymi. Opisać taktykę
+    [evar] i wspomnieć o taktykach takich jak [eauto], [econstructor],
+    [eexists], [edestruct], [erewrite] etc., a także taktykę [shelve]
+    i komendę [Unshelve]. *)
+
+(** * Taktyki do radzenia sobie z typami zależnymi *)
+
+(** TODO: opisać taktyki [dependent induction], [dependent inversion],
+    [dependent destruction], [dependent rewrite] etc. *)
+
+(** * Dodatkowe ćwiczenia *)
+
+(** **** Ćwiczenie (assert) *)
+
+(** Znasz już taktyki [assert], [cut] i [specialize]. Okazuje się, że dwie
+    ostatnie są jedynie wariantami taktyki [assert]. Przeczytaj w manualu
+    opis taktyki [assert] i wszystkich jej wariantów. *)
+
+(** **** Ćwiczenie (easy i now) *)
+
+(** Taktykami, których nie miałem nigdy okazji użyć, są [easy] i jej
+    wariant [now]. Przeczytaj ich opisy w manualu. Zbadaj, czy są do
+    czegokolwiek przydatne oraz czy są wygodne w porównaniu z innymi
+    taktykami służącymi do podobnych celów. *)
+
+(** **** Ćwiczenie (inversion_sigma) *)
+
+(** Przeczytaj w manualu o wariantach taktyki [inversion]. Szczególnie
+    interesująca wydaje się taktyka [inversion_sigma], która pojawiła
+    się w wersji 8.7 Coqa. Zbadaj ją. Wymyśl jakiś przykład jej użycia. *)
+
+(** **** Ćwiczenie (pattern) *)
+
+(** Przypomnijmy, że podstawą wszelkich obliczeń w Coqu jest redkucja
+    beta. Redukuje ona aplikację funkcji, np. [(fun n : nat => 2 * n) 42]
+    betaredukuje się do [2 * 42]. Jej wykonywanie jest jednym z głównych
+    zadań taktyk obliczeniowych.
+
+    Przeciwieństwem redukcji beta jest ekspansja beta. Pozwala ona zamienić
+    dowolny term na aplikację jakiejś funkcji do jakiegoś argumentu, np.
+    term [2 * 42] można betaekspandować do [(fun n : nat => 2 * n) 42].
+
+    O ile redukcja beta jest trywialna do automatycznego wykonania, o tyle
+    ekspansja beta już nie, gdyż występuje tu duża dowolność. Dla przykładu,
+    term [2 * 42] można też betaekspandować do [(fun n : nat => n * 42) 2].
+
+    Ekspansję beta implementuje taktyka [pattern]. Rozumowanie za jej pomocą
+    nie jest zbyt częstne, ale niemniej jednak kilka razy mi się przydało.
+    Przeczytaj opis taktyki [pattern] w manuaulu.
+
+    TODO: być może ćwiczenie to warto byłoby rozszerzyć do pełnoprawnego
+    podrozdziału. *)
+
+(** **** Ćwiczenie (arytmetyka) *)
+
+(** Poza taktykami radzącymi sobie z pierścieniami i ciałami jest też wiele
+    taktyk do walki z arytmetyką. Poza omówioną już taktyką [omega] są to
+    [lia], [nia], [lra], [nra]. Nazwy taktyk można zdekodować w następujący
+    sposób:
+    - l — linear
+    - n — nonlinar
+    - i — integer
+    - r — real/rational
+    - a — arithmetic *)
+
+(** Spróbuj ogarnąć, co one robią:
+    https://coq.inria.fr/refman/micromega.html *)
+
+(** **** Ćwiczenie (wyższa magia) *)
+
+(** Spróbuj ogarnąć, co robią taktyki [nsatz], [psatz] i [fourier]. *)
+
+(** * Inne języki taktyk *)
+
+(** TODO: napisać coś. *)
+
+(** **** Ćwiczenie (ssreflect) *)
+
+(** ssreflect to język taktyk oparty na [Ltac]u, ale mocno od niego odmienny,
+    zarówno pod względem filozoficznym jak i praktycznym. Dysponuje on swoim
+    własnym zestawem taktyk, bardzo mocno różniących się od taktyk opisanych
+    w niniejszym rozdziale.
+
+    Od wersji 8.7 Coqa język ten jet dostępny w bibliotece standardowej, mimo
+    że nie jest z nią w pełni kompatybilny. Poświęcony mu rozdział manuala
+    dostępny jest tu: https://coq.inria.fr/refman/ssreflect.html
+
+    Najbardziej wartościowym moim zdaniem elementem języka ssreflect jest
+    taktyka [rewrite], dużo potężniejsza od tej opisanej w tym rozdziale.
+    Jest ona warta uwagi, gdyż:
+    - daje jeszcze większą kontrolę nad przepisywaniem, niż standardowa
+      taktyka [rewrite]
+    - pozwala łączyć kroki przepisywania z odwijaniem definicji i wykonywaniem
+      obliczeń, a więc zastępuje taktyki [unfold], [fold], [change], [replace],
+      [cbn], [simpl] etc.
+    - daje większe możliwości radzenia sobie z generowanymi przez siebie
+      podcelami *)
+
+(** Jeżeli nie chce ci się czytać na temat języka ssreflect, zapoznaj się
+    chociaż z jego taktyką [rewrite]:
+    https://coq.inria.fr/refman/ssreflect.html##hevea_tactic265 *)
+
+(** * Konkluzja *)
+
+(** TODO: napisać coś. TODO: więcej linków.
+
+    Jeżeli uważasz moje opisy taktyk za upośledzone, nie jesteś jeszcze
+    stracony! Opisy niektórych taktyk dostępne są też tu:
+    - pjreddie.com/coq-tactics/
+    - cs.cornell.edu/courses/cs3110/2017fa/a5/coq-tactics-cheatsheet.html *)

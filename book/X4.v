@@ -1023,7 +1023,10 @@ match l with
 end.
 
 Compute weirder [1; 2; 3; 4; 5].
+(* ===> = [2; 3; 1; 4; 5] : list nat *)
+
 Compute iter 3 weirder [1; 2; 3; 4; 5].
+(* ===> = [1; 2; 3; 4; 5] : list nat *)
 
 Theorem weirder_inv_3 :
   forall A : Type, gen_involutive 3 (@weirder A).
