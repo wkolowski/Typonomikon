@@ -1,9 +1,5 @@
 (** * R4: Spis przydatnych taktyk *)
 
-(* begin hide *)
-(* TODO: [induction], [inversion], [destruct] *)
-(* end hide *)
-
 (** Stare powiedzenie głosi: nie wymyślaj koła na nowo. Aby uczynić zadość
     duchom przodków, którzy je wymyślili (zarówno koło, jak i powiedzenie),
     w niniejszym rozdziale zapoznamy się z różnymi przydatnymi taktykami,
@@ -22,9 +18,8 @@
       rozumowania
     - taktyki służące do rozumowania na temat relacji równoważności
     - taktyki służące do przeprowadzania obliczeń
-    - procedury decyzyjne, które potrafią zupełnie same rozwiązać cele
-      należące do pewnej konkretnej klasy, np. cele dotyczące funkcji
-      boolowskich albo nierówności liniowych na liczbach całkowitych *)
+    - procedury decyzyjne
+    - ogólne taktyki służące do automatyzacji *)
 
 (** Uwaga: przykłady użycia taktyk, których reimplementacja będzie
     ćwiczeniem, zostały połączone z testami w ćwiczeniach żeby nie pisać dwa
@@ -1374,11 +1369,12 @@ Abort.
       [native_compute], [lazy], [red] i inne taktyki do redukcji.
 *)
 
-(** * Automatyzacja *)
+(** * Procedury decyzyjne *)
 
-(** ** [auto] i [trivial] (TODO) *)
-
-(** ** [autorewrite] i [autounfold] (TODO) *)
+(** Procedury decyzyjne to taktyki, które potrafią zupełnie same rozwiązywać
+    cele należące do pewnej konkretnej klasy, np. cele dotyczące funkcji
+    boolowskich albo nierówności liniowych na liczbach całkowitych. W tym
+    podrozdziale omówimy najprzydatniejsze z nich. *)
 
 (** ** [btauto] *)
 
@@ -1563,6 +1559,24 @@ Proof.
       Focus 4. destruct (IHx1 y1), (IHx2 y2), (IHx3 y3); subst; auto.
         1-7: right; congruence.
       1-3: right; congruence.
+Restart.
+  induction x; destruct y; try (right; congruence).
+    left; trivial.
+    destruct (IHx y); firstorder congruence.
+(*    repeat match goal with
+        | H : forall _, {_} + {_} |- _ =>
+            let H' := fresh "H" in edestruct H as [H' | H']; clear H;
+              [rewrite H'; clear H' | idtac]
+    end; firstorder (try congruence).*)
+    destruct (IHx1 y1), (IHx2 y2); firstorder congruence.
+    destruct (IHx1 y1), (IHx2 y2), (IHx3 y3); firstorder congruence.
+Restart.
+  induction x; destruct y;
+  repeat match goal with
+      | H : forall _, {_} + {_} |- _ => edestruct H; clear H
+      | H : _ = _ |- _ => rewrite H in *; clear H
+  end; firstorder congruence.
+  Unshelve. all: auto.
 Defined.
 (* end hide *)
 
@@ -1656,9 +1670,10 @@ Proof.
 Qed exporting.
 
 (* begin hide *)
-(* [Qed exporting] psuje kolorowanie. Trzeba naprawić. *)
 
+(* [Qed exporting] psuje kolorowanie. Trzeba naprawić. *)
 Goal False. Abort.
+
 (* end hide *)
 
 Print filter_length''.
@@ -1854,6 +1869,72 @@ Proof. my_tauto. Qed.
 End my_tauto.
 (* end hide *)
 
+(** * Ogólne taktyki automatyzacyjne *)
+
+(** W tym podrozdziale omówimy pozostałe taktyki przydające się przy
+    automatyzacji. Ich cechą wspólną jest rozszerzalność — za pomocą
+    specjalnych baz podpowiedzi będziemy mogli nauczyć je radzić sobie
+    z każdym celem. *)
+
+(** ** [auto] i [trivial] (TODO) *)
+
+(** [auto] jest najbardziej ogólną taktyką służącą do automatyzacji. *)
+
+Example auto_ex0 :
+  forall (P : Prop), P -> P.
+Proof. auto. Qed.
+
+Example auto_ex1 :
+  forall A B C D E : Prop,
+    (A -> B) -> (B -> C) -> (C -> D) -> (D -> E) -> A -> E.
+Proof. auto. Qed.
+
+Example auto_ex2 :
+  forall (A : Type) (x : A), x = x.
+Proof. auto. Qed.
+
+Example auto_ex3 :
+  forall (A : Type) (x y : A), x = y -> y = x.
+Proof. auto. Qed.
+
+(** [auto] potrafi używać założeń, aplikować hipotezy i zna podstawowe
+    własności równości — całkiem nieźle. Wprawdzie nie wystarczy to do
+    udowodnienia żadnego nietrywialnego twierdzenia, ale przyda się z
+    pewnością do rozwiązywania prostych podcelów generowanych przez
+    inne taktyki. Często spotykanym idiomem jest [t; auto] — "użyj
+    taktyki [t] i pozbądź się prostych podcelów za pomocą [auto]". *)
+
+Example auto_ex4 :
+  forall A B C D E F : Prop,
+    (A -> B) -> (B -> C) -> (C -> D) -> (D -> E) -> (E -> F) -> A -> F.
+Proof.
+  auto.
+Restart.
+  auto 6.
+Qed.
+
+(** Nietrudno jednak znaleźć cel, z którym [auto] nie jest w stanie sobie
+    poradzić. Powyższa porażka może się wydawać zaskakująca, gdyż [auto]
+    potrafiło rozwiązać bliźniaczo podobny cel [auto_ex1]. Okazuje się
+    jednak, że zbyt wiele implikacji to dla [auto] (a przynajmniej jego
+    podstawowego wariantu) mur nie do przejścia.
+
+    Wynika to ze sposobu działania tej taktyki. [auto] szuka dowodu mniej
+    lub bardziej na ślepo — wykonuje pierwszy z brzegu możliwy krok, po
+    czym sprawdza, czy to rozwiązuje cel. Jeżeli nie, wykonuje kolejne
+    kroki, a jeżeli nie da się już nic więcej zrobić, wykonuje nawrót i
+    próbuje dowodzić w inny sposób. 
+
+*)
+
+Example auto_ex5 :
+  forall (A : Type) (x y z : A), x = y -> y = z -> x = z.
+Proof. auto. Abort.
+
+(** TODO *)
+
+(** ** [autorewrite] i [autounfold] (TODO) *)
+
 (** * Pierścienie, ciała i arytmetyka *)
 
 (** Pierścień (ang. ring) to struktura algebraiczna składająca się z pewnego
@@ -1884,16 +1965,16 @@ End my_tauto.
 (** Przyczytaj w manualu opis 5 wymienionych wyżej taktyk:
     https://coq.inria.fr/refman/ring.html *)
 
-(** * Zmienne egzystencjalne i ich taktyki *)
+(** * Zmienne egzystencjalne i ich taktyki (TODO) *)
 
-(** TODO: napisać o co chodzi ze zmiennymi egzystencjalnymi. Opisać taktykę
+(** Napisać o co chodzi ze zmiennymi egzystencjalnymi. Opisać taktykę
     [evar] i wspomnieć o taktykach takich jak [eauto], [econstructor],
     [eexists], [edestruct], [erewrite] etc., a także taktykę [shelve]
     i komendę [Unshelve]. *)
 
-(** * Taktyki do radzenia sobie z typami zależnymi *)
+(** * Taktyki do radzenia sobie z typami zależnymi (TODO) *)
 
-(** TODO: opisać taktyki [dependent induction], [dependent inversion],
+(** Opisać taktyki [dependent induction], [dependent inversion],
     [dependent destruction], [dependent rewrite] etc. *)
 
 (** * Dodatkowe ćwiczenia *)
@@ -1960,20 +2041,26 @@ End my_tauto.
 
 (** * Inne języki taktyk *)
 
-(** TODO: napisać coś. *)
+(** Ltac w pewnym sensie nie jest jedynym językiem taktyk, jakiego możemy
+    użyć do dowodzenia w Coqu — są inne. Głównymi konkurentami Ltaca są:
+    - Rtac: gmalecha.github.io/reflections/2016/rtac-technical-overview
+    - Mtac: plv.mpi-sws.org/mtac/
+    - ssreflect: coq.inria.fr/refman/ssreflect.html oraz
+      math-comp.github.io/math-comp/ *)
+
+(** Pierwsze dwa, [Rtac] i [Mtac], faktycznie są osobnymi językami taktyk,
+    znacznie różniącymi się od Ltaca. Nie będziemy się nimi zajmować,
+    gdyż ich droga do praktycznej użyteczności jest jeszcze dość długa.
+
+    ssreflect to nieco inna bajka. Nie jest on w zasadzie osobnym językiem
+    taktyk, lecz jest oparty na Ltacu. Różni się on od niego filozofią,
+    podstawowym zestawem taktyk i stylem dowodzenia. Od wersji 8.7 Coqa
+    język ten jet dostępny w bibliotece standardowej, mimo że nie jest z
+    nią w pełni kompatybilny. *)
 
 (** **** Ćwiczenie (ssreflect) *)
 
-(** ssreflect to język taktyk oparty na [Ltac]u, ale mocno od niego odmienny,
-    zarówno pod względem filozoficznym jak i praktycznym. Dysponuje on swoim
-    własnym zestawem taktyk, bardzo mocno różniących się od taktyk opisanych
-    w niniejszym rozdziale.
-
-    Od wersji 8.7 Coqa język ten jet dostępny w bibliotece standardowej, mimo
-    że nie jest z nią w pełni kompatybilny. Poświęcony mu rozdział manuala
-    dostępny jest tu: https://coq.inria.fr/refman/ssreflect.html
-
-    Najbardziej wartościowym moim zdaniem elementem języka ssreflect jest
+(** Najbardziej wartościowym moim zdaniem elementem języka ssreflect jest
     taktyka [rewrite], dużo potężniejsza od tej opisanej w tym rozdziale.
     Jest ona warta uwagi, gdyż:
     - daje jeszcze większą kontrolę nad przepisywaniem, niż standardowa
@@ -1984,15 +2071,22 @@ End my_tauto.
     - daje większe możliwości radzenia sobie z generowanymi przez siebie
       podcelami *)
 
-(** Jeżeli nie chce ci się czytać na temat języka ssreflect, zapoznaj się
-    chociaż z jego taktyką [rewrite]:
-    https://coq.inria.fr/refman/ssreflect.html##hevea_tactic265 *)
+(** Przeczytaj rozdział manuala opisujący język ssreflect. Jeżeli nie
+    chce ci się tego robić, zapoznaj się chociaż z jego taktyką [rewrite]:
+    coq.inria.fr/refman/ssreflect.html##hevea_tactic265 *)
 
 (** * Konkluzja *)
 
-(** TODO: napisać coś. TODO: więcej linków.
-
-    Jeżeli uważasz moje opisy taktyk za upośledzone, nie jesteś jeszcze
-    stracony! Opisy niektórych taktyk dostępne są też tu:
+(** W niniejszym rozdziale przyjrzeliśmy się bliżej znacznej części Coqowych
+    taktyk. Moje ich opisanie nie jest aż tak kompletne i szczegółowe jak to
+    z manuala, ale nadrabia (mam nadzieję) wplecionymi w tekst przykładami i
+    zadaniami. Jeżeli jednak uważasz je za upośledzone, nie jesteś jeszcze
+    stracony! Alternatywne opisy niektórych taktyk dostępne są też tu:
     - pjreddie.com/coq-tactics/
-    - cs.cornell.edu/courses/cs3110/2017fa/a5/coq-tactics-cheatsheet.html *)
+    - cs.cornell.edu/courses/cs3110/2017fa/a5/coq-tactics-cheatsheet.html
+    - typesofnote.com/posts/coq-cheat-sheet.html *)
+
+(** Poznawszy podstawy Ltaca oraz całe zoo przeróżnych taktyk, do zostania
+    pełnoprawnym inżynierem dowodu (ang. proof engineer, ukute przez analogię
+    do software engineer) brakuje ci jeszcze tylko umiejętności dowodzenia
+    przez reflekcję, którą zajmiemy się już niedługo. *)

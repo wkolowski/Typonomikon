@@ -212,7 +212,8 @@
       większość materiału jest już dość leciwa)
     - http://ilyasergey.net/pnp/
     - https://homes.cs.washington.edu/~jrw12/##blog
-    - http://osa1.net/tags/coq *)
+    - http://osa1.net/tags/coq
+    - http://coqhott.gforge.inria.fr/blog/ *)
 
 (** ** Inne *)
 
