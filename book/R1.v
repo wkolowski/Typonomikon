@@ -124,9 +124,9 @@ Check P.
     zawsze i wszędzie, ale nie są wolne od problemów.
 
     Pierwszą, praktyczną przeszkodą jest rozmiar tabelek — rośnie on
-    wykładniczo wzrast ze wzrostem ilości zmiennych zdaniowych, co
-    czyni tę metodę skrajnie niewydajną i obliczeniożerną, a więc
-    niepraktyczną dla twierdzeń większych niż zabawkowe.
+    wykładniczo wraz ze wzrostem ilości zmiennych zdaniowych, co czyni
+    tę metodę skrajnie niewydajną i obliczeniożerną, a więc niepraktyczną
+    dla twierdzeń większych niż zabawkowe.
 
     Druga przeszkoda, natury filozoficznej, i bardziej fundamentalna
     od pierwszej to poczynione implicite założenie, że każde zdanie

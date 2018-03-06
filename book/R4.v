@@ -1876,7 +1876,7 @@ End my_tauto.
     specjalnych baz podpowiedzi będziemy mogli nauczyć je radzić sobie
     z każdym celem. *)
 
-(** ** [auto] i [trivial] (TODO) *)
+(** ** [auto] i [trivial] *)
 
 (** [auto] jest najbardziej ogólną taktyką służącą do automatyzacji. *)
 
@@ -1904,32 +1904,218 @@ Proof. auto. Qed.
     inne taktyki. Często spotykanym idiomem jest [t; auto] — "użyj
     taktyki [t] i pozbądź się prostych podcelów za pomocą [auto]". *)
 
-Example auto_ex4 :
-  forall A B C D E F : Prop,
-    (A -> B) -> (B -> C) -> (C -> D) -> (D -> E) -> (E -> F) -> A -> F.
+Section auto_ex4.
+
+Parameter P : Prop.
+Parameter p : P.
+
+Example auto_ex4 : P.
+Proof.
+  auto.
+Restart.
+  auto using p.
+Qed.
+
+(** Jak widać na powyższym przykładzie, [auto] nie widzi aksjomatów (ani
+    definicji/lematów/twierdzeń etc.), nawet jeżeli zostały zadeklarowane
+    dwie linijki wyżej. Tej przykrej sytuacji możemy jednak łatwo zaradzić,
+    pisząc [auto using t_1, ..., t_n]. Ten wariant taktyki [auto]
+    widzi definicje termów [t_1], ..., [t_n].
+
+    Co jednak w sytuacji, gdy będziemy wielokrotnie chcieli, żeby [auto]
+    widziało pewne definicje? Nietrudno wyobrazić sobie ogrom pisaniny,
+    którą mogłoby spowodować użycie do tego celu klauzuli [using]. Na
+    szczęście możemy temu zaradzić za pomocą podpowiedzi, które bytują
+    w specjalnych bazach. *)
+
+Hint Resolve p : my_hint_db.
+
+Example auto_ex4' : P.
+Proof. auto with my_hint_db. Qed.
+
+(** Komenda [Hint Resolve ident : db_name] dodaje lemat o nazwie [ident]
+    do bazy podpowiedzi o nazwie [db_name]. Dzięki temu taktyka [auto with
+    db_1 ... db_n] widzi wszystkie lematy dodane do baz [db_1], ..., [db_n].
+    Jeżeli to dla ciebie wciąż zbyt wiele pisania, uszy do góry! *)
+
+Example auto_ex4'' : P.
+Proof. auto with *. Qed.
+
+(** Taktyka [auto with *] widzi wszystkie możliwe bazy podpowiedzi. *)
+
+Hint Resolve p.
+
+Example auto_ex4''' : P.
+Proof. auto. Qed.
+
+(** Komenda [Hint Resolve ident] dodaje lemat o nazwie [ident] do bazy
+    podpowiedzi o nazwie [core]. Taktyka [auto] jest zaś równoważna
+    taktyce [auto with core]. Dzięki temu nie musimy pisać już nic ponad
+    zwykłe [auto]. *)
+
+End auto_ex4.
+
+(** Tym oto sposobem, używając komendy [Hint Resolve], jesteśmy w stanie
+    zaznajomić [auto] z różnej maści lematami i twierdzeniami, które
+    udowodniliśmy. Komendy tej możemy używać po każdym lemacie, dzięki
+    czemu taktyka [auto] rośnie w siłę w miarę rozwoju naszej teorii. *)
+
+Example auto_ex5 : even 8.
+Proof.
+  auto.
+Restart.
+  auto using even0, evenSS.
+Qed.
+
+(** Kolejną słabością [auto] jest fakt, że taktyka ta nie potrafi budować
+    wartości typów induktywnych. Na szczęście możemy temu zaradzić używając
+    klauzuli [using c_1 ... c_n], gdzie [c_1], ..., [c_n] są konstruktorami
+    naszego typu, lub dodając je jako podpowiedzi za pomocą komendy [Hint
+    Resolve c_1 ... c_n : db_name]. *)
+
+Hint Constructors even.
+
+Example auto_ex5' : even 8.
+Proof. auto. Qed.
+
+(** Żeby jednak za dużo nie pisać (wypisanie nazw wszystkich konstruktorów
+    mogłoby być bolesne), możemy posłużyć się komendą [Hint Constructors
+    I : db_name], która dodaje konstruktory typu induktywnego [I] do bazy
+    podpowiedzi [db_name]. *)
+
+Example auto_ex6 : even 10.
 Proof.
   auto.
 Restart.
   auto 6.
 Qed.
 
-(** Nietrudno jednak znaleźć cel, z którym [auto] nie jest w stanie sobie
-    poradzić. Powyższa porażka może się wydawać zaskakująca, gdyż [auto]
-    potrafiło rozwiązać bliźniaczo podobny cel [auto_ex1]. Okazuje się
-    jednak, że zbyt wiele implikacji to dla [auto] (a przynajmniej jego
-    podstawowego wariantu) mur nie do przejścia.
+(** Kolejnym celem, wobec którego [auto] jest bezsilne, jest [even 10].
+    Jak widać, nie wystarczy dodać konstruktorów typu induktywnego jako
+    podpowiedzi, żeby wszystko było cacy. Niemoc [auto] wynika ze sposobu
+    działania tej taktyki. Wykonuje ona przeszukiwanie w głąb z nawrotami,
+    które działa mniej więcej tak:
+    - zrób pierwszy lepszy możliwy krok dowodu
+    - jeżeli nie da się nic więcej zrobić, a cel nie został udowodniony,
+      wykonaj nawrót i spróbuj czegoś innego
+    - w przeciwnym wypadku wykonaj następny krok dowodu i powtarzaj
+      całą procedurę *)
 
-    Wynika to ze sposobu działania tej taktyki. [auto] szuka dowodu mniej
-    lub bardziej na ślepo — wykonuje pierwszy z brzegu możliwy krok, po
-    czym sprawdza, czy to rozwiązuje cel. Jeżeli nie, wykonuje kolejne
-    kroki, a jeżeli nie da się już nic więcej zrobić, wykonuje nawrót i
-    próbuje dowodzić w inny sposób. 
+(** Żeby ograniczyć czas poświęcony na szukanie dowodu, który może być
+    potencjalnie bardzo długi, [auto] ogranicza się do wykonania jedynie
+    kilku kroków w głąb (domyślnie jest to 5). *)
 
-*)
+Print auto_ex5'.
+(* ===> evenSS 6 (evenSS 4 (evenSS 2 (evenSS 0 even0)))
+        : even 8 *)
 
-Example auto_ex5 :
+Print auto_ex6.
+(* ===> evenSS 8 (evenSS 6 (evenSS 4 (evenSS 2 (evenSS 0 even0))))
+        : even 10 *)
+
+(** [auto] jest w stanie udowodnić [even 8], gdyż dowód tego faktu wymaga
+    jedynie 5 kroków, mianowicie czeterokrotnego zaaplikowania konstruktora
+    [evenSS] oraz jednokrotnego zaaplikowania [even0]. Jednak 5 kroków nie
+    wystarcza już, by udowodnić [even 10], gdyż tutaj dowód liczy sobie 6
+    kroków: 5 użyć [evenSS] oraz 1 użycie [even0].
+
+    Nie wszystko jednak stracone — możemy kontrolować głębokość, na jaką
+    [auto] zapuszcza się, poszukując dowodu, piząc [auto n]. Zauważmy, że
+    [auto] jest równoważne taktyce [auto 5]. *)
+
+Example auto_ex7 :
   forall (A : Type) (x y z : A), x = y -> y = z -> x = z.
-Proof. auto. Abort.
+Proof.
+  auto.
+Restart.
+  Fail auto using eq_trans.
+Abort.
+
+(** Kolejnym problemem taktyki [auto] jest udowodnienie, że równość jest
+    relacją przechodnią. Tym razem jednak problem jest poważniejszy, gdyż
+    nie pomaga nawet próba użycia klauzuli [using eq_trans], czyli wskazanie
+    [auto] dokładnie tego samego twierdzenia, którego próbujemy dowieść!
+
+    Powód znów jest dość prozaiczny i wynika ze sposobu działania taktyki
+    [auto] oraz postaci naszego celu. Otóż konkluzja celu jest postaci
+    [x = z], czyli występują w niej zmienne [x] i [z], zaś kwantyfikujemy
+    nie tylko po [x] i [z], ale także po [A] i [y].
+
+    Wywnioskowanie, co wstawić za [A] nie stanowi problemu, gdyż musi to
+    być typ [x] i [z]. Problemem jest jednak zgadnięcie, co wstawić za [y],
+    gdyż w ogólności możliwości może być wiele (nawet nieskończenie wiele).
+    Taktyka [auto] działa w ten sposób, że nawet nie próbuje tego zgadywać. *)
+
+Hint Extern 0 =>
+match goal with
+    | H : ?x = ?y, H' : ?y = ?z |- ?x = ?z => apply (@eq_trans _ x y z)
+end : extern_db.
+
+Example auto_ex7 :
+  forall (A : Type) (x y z : A), x = y -> y = z -> x = z.
+Proof. auto with extern_db. Qed.
+
+(** Jest jednak sposób, żeby uporać się i z tym problemem: jest nim komenda
+    [Hint Extern]. Jej ogólna postać to [Hint Extern n pattern => tactic : db].
+    W jej wyniku do bazy podpowiedzi [db] zostanie dodana podpowiedź, która
+    sprawi, że w dowolnym momencie dowodu taktyka [auto], jeżeli wypróbowała
+    już wszystkie podpowiedzi o koszcie mniejszym niż [n] i cel pasuje do
+    wzorca [pattern], to spróbuje użyć taktyki [tac].
+
+    W naszym przypadku koszt podpowiedzi wynosi 0, a więc podpowiedź będzie
+    odpalana niemal na samym początku dowodu. Wzorzec [pattern] został
+    pominięty, a więc [auto] użyje naszej podpowiedzi niezależnie od tego,
+    jak wygląda cel. Ostatecznie jeżeli w konktekście będą odpowiednie
+    równania, to zaaplikowany zostanie lemat [@eq_trans _ x y z], wobec
+    czego wygenerowane zostaną dwa podcele, [x = y] oraz [y = z], które
+    [auto] będzie potrafiło rozwiązać już bez naszej pomocy. *)
+
+Hint Extern 0 (?x = ?z) =>
+match goal with
+    | H : ?x = ?y, H' : ?y = ?z |- _ => apply (@eq_trans _ x y z)
+end.
+
+Example auto_ex7' :
+  forall (A : Type) (x y z : A), x = y -> y = z -> x = z.
+Proof. auto. Qed.
+
+(** A tak wygląda wersja [Hint Extern], w której nie pominięto wzorca
+    [pattern]. Jest ona rzecz jasna równoważna z poprzednią.
+
+    Jest to dobry moment, by opisać dokładniej działanie taktyki [auto].
+    [auto] najpierw próbuje rozwiązać cel za pomocą taktyki [assumption].
+    Jeżeli się to nie powiedzie, to [auto] używa taktyki [intros], a
+    następnie tymczasowo dodaje do bazy podpowiedzi wszystkie hipotezy.
+    Następnie przeszukuje ona bazę podpowiedzi dopasowując cel do wzorca
+    stowarzyszonego z każdą podpowiedzią, zaczynając od podpowiedzi o
+    najmniejszym koszcie (podpowiedzi pochodzące od komend [Hint Resolve]
+    oraz [Hint Constructors] są skojarzone z pewnymi domyślnymi kosztami
+    i wzorcami). Następnie [auto] rekurencyjnie wywołuje się na podcelach
+    (chyba, że przekroczona została maksymalna głębokość przeszukiwania —
+    wtedy następuje nawrót). *)
+
+Example trivial_ex0 :
+  forall (P : Prop), P -> P.
+Proof. trivial. Qed.
+
+Example trivial_ex1 :
+  forall A B C D E : Prop,
+    (A -> B) -> (B -> C) -> (C -> D) -> (D -> E) -> A -> E.
+Proof. trivial. Abort.
+
+Example trivial_ex2 :
+  forall (A : Type) (x : A), x = x.
+Proof. trivial. Qed.
+
+Example trivial_ex3 :
+  forall (A : Type) (x y : A), x = y -> y = x.
+Proof. trivial. Abort.
+
+Example trivial_ex5 : even 8.
+Proof.
+  trivial.
+Abort.
+
 
 (** TODO *)
 
