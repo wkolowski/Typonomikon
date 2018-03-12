@@ -46,16 +46,29 @@ Print evenb_spec.
     - type of term
     - eval redexpr
     - constr/uconstr/ltac
-    - type_term ?
+    - type_term ? *)
 
-    Taktyki: [has_evar], [is_evar], [is_var], [unify], [constr_eq],
-    [instantiate], [quote] *)
+(** * Tactics for dealing with unification *)
+
+(** TODO:
+    - [has_evar], [is_evar], [is_var]
+    - [unify]
+    - [constr_eq]
+    - [instantiate]
+    - [quote] *)
 
 (** * Functional programming in Ltac *)
 
+(** Wstawić tutaj przykłady podobne do tych, które opisuje Chlipala. Być
+    może jakiś większy development, tzn. zaprogramować listy w dwóch
+    wersjach (zwykłe i zrobione produktem i unitem). *)
+
 (** * Big scale reflection *)
 
-(** Wklej tu przykład z permutacjami, wyrażenia boolowskie, formuły
-    logiczne i upraszczanie w monoidzie. *)
+(** Przykłady:
+    - logika boolowska, czyli legitne [btauto]
+    - permutacje
+    - formuły logiczne
+    - upraszczanie w monoidzie *)
 
 (* end hide *)

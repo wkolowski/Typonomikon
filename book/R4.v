@@ -1364,11 +1364,6 @@ Abort.
 
 (** * Taktyki dla redukcji i obliczeń (TODO) *)
 
-(** Omówić następujące rzeczy:
-    - [cbn], [cbv], [simpl], [hnf], [compute], [vm_compute],
-      [native_compute], [lazy], [red] i inne taktyki do redukcji.
-*)
-
 (** * Procedury decyzyjne *)
 
 (** Procedury decyzyjne to taktyki, które potrafią zupełnie same rozwiązywać
@@ -2085,7 +2080,7 @@ Proof. auto. Qed.
     Jest to dobry moment, by opisać dokładniej działanie taktyki [auto].
     [auto] najpierw próbuje rozwiązać cel za pomocą taktyki [assumption].
     Jeżeli się to nie powiedzie, to [auto] używa taktyki [intros], a
-    następnie tymczasowo dodaje do bazy podpowiedzi wszystkie hipotezy.
+    następnie dodaje do tymczasowej bazy podpowiedzi wszystkie hipotezy.
     Następnie przeszukuje ona bazę podpowiedzi dopasowując cel do wzorca
     stowarzyszonego z każdą podpowiedzią, zaczynając od podpowiedzi o
     najmniejszym koszcie (podpowiedzi pochodzące od komend [Hint Resolve]
@@ -2111,15 +2106,154 @@ Example trivial_ex3 :
   forall (A : Type) (x y : A), x = y -> y = x.
 Proof. trivial. Abort.
 
-Example trivial_ex5 : even 8.
+Example trivial_ex5 : even 0.
+Proof. trivial. Qed.
+
+Example trivial_ex5' : even 8.
+Proof. trivial. Abort.
+
+(** Taktyka [trivial], którą już znasz, działa dokładnie tak samo jak [auto],
+    ale jest nierekurencyjna. To tłumaczy, dlaczego potrafi ona posługiwać
+    się założeniami i zna właciwości równości, ale nie umie używać implikacji
+    i nie radzi sobie z celami pokroju [even 8], mimo że potrafi udowodnić
+    [even 0]. *)
+
+(** **** Ćwiczenie (auto i trivial) *)
+
+(** Przeczytaj w manualu dokładny opis działania taktyk [auto] oraz [trivial]:
+    https://coq.inria.fr/refman/tactics.html##hevea_tactic161 *)
+
+(** ** [autorewrite] i [autounfold] *)
+
+(** [autorewrite] to bardzo pożyteczna taktyka umożliwiająca zautomatyzowanie
+    części dowodów opierających się na przepisywaniu.
+
+    Dlaczego tylko części? Zastanówmy się, jak zazwyczaj przebiegają dowody
+    przez przepisywanie. W moim odczuciu są dwa rodzaje takich dowodów:
+    - dowody pierwszego rodzaju to te, w których wszystkie przepisania mają
+      charakter upraszczający i dzięki temu możemy przepisywać zupełnie
+      bezmyślnie
+    - dowody drugiego rodzaju to te, w których niektóre przepisania nie mają
+      charakteru upraszczającego albo muszą zostać wykonane bardzo precyzyjnie.
+      W takich przypadkach nie możemy przepisywać bezmyślnie, bo grozi to
+      zapętleniem taktyki [rewrite] lub po prostu porażką *)
+
+(** Dowody pierwszego rodzaju ze względu na swoją bezmyślność są dobrymi
+    kandydatami do automatyzacji. Właśnie tutaj do gry wkracza taktyka
+    [autorewrite]. *)
+
+Section autorewrite_ex.
+
+Variable A : Type.
+Variable l1 l2 l3 l4 l5 : list A.
+
+(** Zacznijmy od przykładu (a raczej ćwiczenia): udowodnij poniższe
+    twierdzenie. Następnie udowodnij je w jednej linijce. *)
+
+Example autorewrite_intro :
+  rev (rev (l1 ++ rev (rev l2 ++ rev l3) ++ rev l4) ++ rev (rev l5)) =
+  (rev (rev (rev l5 ++ l1)) ++ (l3 ++ rev (rev l2))) ++ rev l4.
+(* begin hide *)
 Proof.
-  trivial.
-Abort.
+  rewrite ?rev_involutive.
+  rewrite <- ?app_assoc.
+  rewrite ?rev_app_distr.
+  rewrite ?rev_involutive.
+  rewrite <- ?app_assoc.
+  reflexivity.
+Restart.
+  rewrite ?rev_app_distr, ?rev_involutive, <- ?app_assoc. reflexivity.
+Qed.
+(* end hide *)
 
+(** Ten dowód nie był zbyt twórczy ani przyjemny, prawda? Wyobraź sobie
+    teraz, co by było, gdybyś musiał udowodnić 100 takich twierdzeń (i
+    to w czasach, gdy jeszcze nie można było pisać [rewrite ?t_0, ..., ?t_n]).
+    Jest to dość ponura wizja. *)
 
-(** TODO *)
+Hint Rewrite rev_app_distr rev_involutive : list_rw.
+Hint Rewrite <- app_assoc : list_rw.
 
-(** ** [autorewrite] i [autounfold] (TODO) *)
+Example autorewrite_ex :
+  rev (rev (l1 ++ rev (rev l2 ++ rev l3) ++ rev l4) ++ rev (rev l5)) =
+  (rev (rev (rev l5 ++ l1)) ++ (l3 ++ rev (rev l2))) ++ rev l4.
+Proof.
+  autorewrite with list_rw. reflexivity.
+Qed.
+
+End autorewrite_ex.
+
+(** Komenda [Hint Rewrite [<-] ident_0 ... ident_n : db_name] dodaje
+    podpowiedzi [ident_0], ..., [ident_n] do bazy podpowidzi [db_nam].
+    Domyślnie będą one przepisywane z lewa na prawo, chyba że dodamy
+    przełącznik [<-] — wtedy wszystkie będą przepisywane z prawa na
+    lewo. W szczególności znaczy to, że jeżeli chcemy niektóre lematy
+    przepisywać w jedną stronę, a inne w drugą, to musimy komendy
+    [Hint Rewrite] użyć dwukrotnie.
+
+    Sama taktyka [autorewrite with db_0 ... db_n] przepisuje lematy ze
+    wszystkich baz podpowiedzi [db_0], ..., [db_n] tak długo, jak to
+    tylko możliwe (czyli tak długo, jak przepisywanie skutkuje dokonaniem
+    postępu).
+
+    Jest kilka ważnych cech, które powinna posiadać baza podpowiedzi:
+    - przede wszystkim nie może zawierać tego samego twierdzenia do
+      przepisywania w obydwie strony. Jeżeli tak się stanie, taktyka
+      [autorewrite] się zapętli, gdyż przepisanie tego twierdzenia w
+      jedną lub drugą stronę zawsze będzie możliwe
+    - w ogólności, nie może zawierać żadnego zbioru twierdzeń, których
+      przepisywanie powoduje zapętlenie
+    - baza powinna być deterministyczna, tzn. jedne przepisania nie
+      powinny blokować kolejnych
+    - wszystkie przepisywania powinny być upraszczające *)
+
+(** Oczywiście dwa ostatnie kryteria nie są zbyt ścisłe — ciężko sprawdzić
+    determinizm systemu przepisywania, zaś samo pojęcie "uproszczenia" jest
+    bardzo zwodnicze i niejasne. *)
+
+(** **** Ćwiczenie (autorewrite) *)
+
+(** Przeczytaj opis taktyki [autorewrite] w manualu:
+    https://coq.inria.fr/refman/tactics.html##hevea_tactic165 *)
+
+Section autounfold_ex.
+
+Definition wut : nat := 1.
+Definition wut' : nat := 1.
+
+Hint Unfold wut wut' : wut_db.
+
+Example autounfold_ex : wut = wut'.
+Proof.
+  autounfold.
+  autounfold with wut_db.
+Restart.
+  auto.
+Qed.
+
+(** Na koniec omówimy taktykę [autounfold]. Działa ona na podobnej zasadzie
+    jak [autorewrite]. Za pomocą komendy [Hint Unfold] dodajemy definicje do
+    do bazy podpowiedzi, dzięki czemu taktyka [autounfold with db_0, ..., db_n]
+    potrafi odwinąć wszystkie definicje z baz [db_0], ..., [db_n].
+
+    Jak pokazuje nasz głupi przykład, jest ona średnio użyteczna, gdyż taktyka
+    [auto] potrafi (przynajmniej do pewnego stopnia) odwijać definicje. Moim
+    zdaniem najlepiej sprawdza się ona w zestawieniu z taktyką [autorewrite]
+    i kombinatorem [repeat], gdy potrzebujemy na przemian przepisywać lematy
+    i odwijać definicje. *)
+
+End autounfold_ex.
+
+(** **** Ćwiczenie (autounfold) *)
+
+(** Przeczytaj w manualu opis taktyki [autounfold]:
+    https://coq.inria.fr/refman/tactics.html##hevea_tactic164 *)
+
+(** **** Ćwiczenie (bazy podpowiedzi) *)
+
+(** Przeczytaj w manualu dokładny opis działania systemu baz podpowiedzi
+    oraz komend pozwalających go kontrolować:
+    https://coq.inria.fr/refman/tactics.html##sec415 *)
 
 (** * Pierścienie, ciała i arytmetyka *)
 

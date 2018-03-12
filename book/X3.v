@@ -1,10 +1,13 @@
 (** * X3: Listy *)
 
-Require Import Arith.
-
 (** Lista to najprostsza i najczęściej używana w programowaniu funkcyjnym
     struktura danych. Czas więc przeżyć na własnej skórze ich implementację
     w bibliotece standardowej. *)
+
+Require Import Arith.
+
+(** W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
+    naturalnych, które możemy znaleźć w module [Arith]. *)
 
 (** Zdefiniuj [list] (bez podglądania). *)
 
@@ -21,6 +24,8 @@ Notation "[]" := nil.
 Notation "x :: y" := (cons x y) (at level 60, right associativity).
 Notation "[ x ; .. ; y ]" := (cons x .. (cons y nil) ..).
 
+(** *** [length] *)
+
 (** Zdefiniuj funkcję [length], która oblicza długość listy. *)
 
 (* begin hide *)
@@ -31,12 +36,14 @@ match l with
 end.
 (* end hide *)
 
-Theorem length_nil : forall A : Type, length (@nil A) = 0.
+Lemma length_nil :
+  forall A : Type, length (@nil A) = 0.
 (* begin hide *)
 Proof. reflexivity. Qed.
 (* end hide *)
 
-Theorem length_cons : forall (A : Type) (h : A) (t : list A),
+Lemma length_cons :
+  forall (A : Type) (h : A) (t : list A),
     exists n : nat, length (h :: t) = S n.
 (* begin hide *)
 Proof.
@@ -44,7 +51,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem length_0 : forall (A : Type) (l : list A),
+Lemma length_0 :
+  forall (A : Type) (l : list A),
     length l = 0 -> l = [].
 (* begin hide *)
 Proof.
@@ -68,13 +76,15 @@ end.
 
 Notation "l1 ++ l2" := (app l1 l2).
 
-Theorem app_nil_l : forall (A : Type) (l : list A),
+Lemma app_nil_l :
+  forall (A : Type) (l : list A),
     [] ++ l = l.
 (* begin hide *)
 Proof. reflexivity. Qed.
 (* end hide *)
 
-Theorem app_nil_r : forall (A : Type) (l : list A),
+Lemma app_nil_r :
+  forall (A : Type) (l : list A),
     l ++ [] = l.
 (* begin hide *)
 Proof.
@@ -84,7 +94,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_assoc : forall (A : Type) (l1 l2 l3 : list A),
+Lemma app_assoc :
+  forall (A : Type) (l1 l2 l3 : list A),
     l1 ++ (l2 ++ l3) = (l1 ++ l2) ++ l3.
 (* begin hide *)
 Proof.
@@ -94,7 +105,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_length :
+Lemma length_app :
   forall (A : Type) (l1 l2 : list A),
     length (l1 ++ l2) = length l1 + length l2.
 (* begin hide *)
@@ -105,13 +116,15 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_cons : forall (A : Type) (x : A) (l1 l2 : list A),
+Lemma app_cons :
+  forall (A : Type) (x : A) (l1 l2 : list A),
     (x :: l1) ++ l2 = x :: (l1 ++ l2).
 (* begin hide *)
 Proof. trivial. Qed.
 (* end hide *)
 
-Theorem app_cons2 : forall (A : Type) (x : A) (l1 l2 : list A),
+Lemma app_cons2 :
+  forall (A : Type) (x : A) (l1 l2 : list A),
     l1 ++ x :: l2 = (l1 ++ [x]) ++ l2.
 (* begin hide *)
 Proof.
@@ -121,7 +134,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem no_infinite_cons : forall (A : Type) (x : A) (l : list A),
+Lemma no_infinite_cons :
+  forall (A : Type) (x : A) (l : list A),
     l = x :: l -> False.
 (* begin hide *)
 Proof.
@@ -131,7 +145,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem no_infinite_app : forall (A : Type) (l l' : list A),
+Lemma no_infinite_app :
+  forall (A : Type) (l l' : list A),
     l' <> [] -> l = l' ++ l -> False.
 (* begin hide *)
 Proof.
@@ -142,13 +157,14 @@ Proof.
       inversion H0. apply IHt with (l' ++ [a]).
         intro. assert (length (l' ++ [a]) = length (@nil A)).
           rewrite H1. trivial.
-          rewrite app_length in H4. simpl in H4. rewrite plus_comm in H4.
+          rewrite length_app in H4. simpl in H4. rewrite plus_comm in H4.
             inversion H4.
         rewrite <- app_cons2. assumption.
 Qed.
 (* end hide *)
 
-Theorem app_inv1 : forall (A : Type) (l l1 l2 : list A),
+Lemma app_inv_l :
+  forall (A : Type) (l l1 l2 : list A),
     l ++ l1 = l ++ l2 -> l1 = l2.
 (* begin hide *)
 Proof.
@@ -158,7 +174,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_inv2 : forall (A : Type) (l l1 l2 : list A),
+Lemma app_inv_r :
+  forall (A : Type) (l l1 l2 : list A),
     l1 ++ l = l2 ++ l -> l1 = l2.
 (* begin hide *)
 Proof.
@@ -173,7 +190,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_eq_nil : forall (A : Type) (l1 l2 : list A),
+Lemma app_eq_nil :
+  forall (A : Type) (l1 l2 : list A),
     l1 ++ l2 = [] -> l1 = [] /\ l2 = [].
 (* begin hide *)
 Proof.
@@ -182,6 +200,8 @@ Proof.
     inversion H.
 Qed.
 (* end hide *)
+
+(** *** [rev] *)
 
 (** Zdefiniuj funkcję [rev], która odwraca listę. *)
 
@@ -193,17 +213,19 @@ match l with
 end.
 (* end hide *)
 
-Theorem rev_length : forall (A : Type) (l : list A),
+Lemma length_rev :
+  forall (A : Type) (l : list A),
     length (rev l) = length l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl.
     trivial.
-    rewrite app_length, plus_comm. simpl. rewrite IHt. trivial.
+    rewrite length_app, plus_comm. simpl. rewrite IHt. trivial.
 Qed.
 (* end hide *)
 
-Theorem rev_app : forall (A : Type) (l1 l2 : list A),
+Lemma rev_app :
+  forall (A : Type) (l1 l2 : list A),
     rev (l1 ++ l2) = rev l2 ++ rev l1.
 (* begin hide *)
 Proof.
@@ -213,7 +235,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem rev_inv : forall (A : Type) (l : list A),
+Lemma rev_inv :
+  forall (A : Type) (l : list A),
     rev (rev l) = l.
 (* begin hide *)
 Proof.
@@ -222,6 +245,8 @@ Proof.
     rewrite rev_app. rewrite IHt. simpl. trivial.
 Qed.
 (* end hide *)
+
+(** *** [elem] *)
 
 (** Zdefiniuj induktywny predykat [elem]. [elem x l] jest spełniony, gdy
     [x] jest elementem listy [l]. *)
@@ -234,12 +259,14 @@ Inductive elem {A : Type} : A -> list A -> Prop :=
         elem x t -> elem x (h :: t).
 (* end hide *)
 
-Theorem elem_nil : forall (A : Type) (x : A), ~ elem x [].
+Lemma elem_nil :
+  forall (A : Type) (x : A), ~ elem x [].
 (* begin hide *)
 Proof. inversion 1. Qed.
 (* end hide *)
 
-Theorem elem_inv_head : forall (A : Type) (x h : A) (t : list A),
+Lemma elem_inv_head :
+  forall (A : Type) (x h : A) (t : list A),
     ~ elem x (h :: t) -> x <> h.
 (* begin hide *)
 Proof.
@@ -247,7 +274,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_inv_tail : forall (A : Type) (x h : A) (t : list A),
+Lemma elem_inv_tail :
+  forall (A : Type) (x h : A) (t : list A),
     ~ elem x (h :: t) -> ~ elem x t.
 (* begin hide *)
 Proof.
@@ -255,7 +283,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem_app1 : forall (A : Type) (x : A) (l1 l2 : list A),
+Lemma elem_app_l :
+  forall (A : Type) (x : A) (l1 l2 : list A),
     elem x l2 -> elem x (l1 ++ l2).
 (* begin hide *)
 Proof.
@@ -265,7 +294,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_app2 : forall (A : Type) (x : A) (l1 l2 : list A),
+Lemma elem_app_r :
+  forall (A : Type) (x : A) (l1 l2 : list A),
     elem x l1 -> elem x (l1 ++ l2).
 (* begin hide *)
 Proof.
@@ -275,7 +305,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_app_or : forall (A : Type) (x : A) (l1 l2 : list A),
+Lemma elem_app_or :
+  forall (A : Type) (x : A) (l1 l2 : list A),
     elem x (l1 ++ l2) -> elem x l1 \/ elem x l2.
 (* begin hide *)
 Proof.
@@ -289,31 +320,33 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_or_app : forall (A : Type) (x : A) (l1 l2 : list A),
+Lemma elem_or_app :
+  forall (A : Type) (x : A) (l1 l2 : list A),
     elem x l1 \/ elem x l2 -> elem x (l1 ++ l2).
 (* begin hide *)
 Proof.
   destruct 1.
     inversion H; subst.
       simpl. constructor.
-      simpl. constructor. apply elem_app2. assumption.
-    apply elem_app1. assumption.
+      simpl. constructor. apply elem_app_r. assumption.
+    apply elem_app_l. assumption.
 Qed.
 (* end hide *)
 
-Theorem elem_rev : forall (A : Type) (x : A) (l : list A),
+Lemma elem_rev :
+  forall (A : Type) (x : A) (l : list A),
     elem x l -> elem x (rev l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl; intros.
     assumption.
     inversion H; subst.
-      apply elem_app1. constructor.
-      apply elem_app2. apply IHt. assumption.
+      apply elem_app_l. constructor.
+      apply elem_app_r. apply IHt. assumption.
 Qed.
 (* end hide *)
 
-Theorem elem_rev_conv :
+Lemma elem_rev_conv :
   forall (A : Type) (x : A) (l : list A),
     elem x (rev l) -> elem x l.
 (* begin hide *)
@@ -325,10 +358,13 @@ Proof.
       inversion H; subst.
         left.
         inversion H2.
+Restart.
+  intros. apply elem_rev in H. rewrite rev_inv in H. assumption.
 Qed.
 (* end hide *)
 
-Theorem elem_split : forall (A : Type) (x : A) (l : list A),
+Lemma elem_split :
+  forall (A : Type) (x : A) (l : list A),
     elem x l -> exists l1 l2 : list A, l = l1 ++ x :: l2.
 (* begin hide *)
 Proof.
@@ -341,6 +377,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** *** [map] *)
+
 (** Zdefiniuj funkcję [map], która aplikuje funkcję [f] do każdego
     elementu listy. *)
 
@@ -352,7 +390,8 @@ match la with
 end.
 (* end hide *)
 
-Theorem map_id : forall (A : Type) (l : list A),
+Lemma map_id :
+  forall (A : Type) (l : list A),
     map id l = l.
 (* begin hide *)
 Proof.
@@ -362,8 +401,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_comp : forall (A B C : Type) (f : A -> B) (g : B -> C)
-    (l : list A), map g (map f l) = map (fun x : A => g (f x)) l.
+Lemma map_comp :
+  forall (A B C : Type) (f : A -> B) (g : B -> C) (l : list A),
+    map g (map f l) = map (fun x : A => g (f x)) l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl.
@@ -372,7 +412,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_length : forall (A B : Type) (f : A -> B) (l : list A),
+Lemma length_map :
+  forall (A B : Type) (f : A -> B) (l : list A),
     length (map f l) = length l.
 (* begin hide *)
 Proof.
@@ -382,7 +423,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_app : forall (A B : Type) (f : A -> B) (l1 l2 : list A),
+Lemma map_app :
+  forall (A B : Type) (f : A -> B) (l1 l2 : list A),
     map f (l1 ++ l2) = map f l1 ++ map f l2.
 (* begin hide *)
 Proof.
@@ -392,8 +434,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_map :
-    forall (A B : Type) (f : A -> B) (l : list A) (x : A),
+Lemma elem_map :
+  forall (A B : Type) (f : A -> B) (l : list A) (x : A),
     elem x l -> elem (f x) (map f l).
 (* begin hide *)
 Proof.
@@ -403,7 +445,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_map_conv : forall (A B : Type) (f : A -> B) (l : list A) (y : B),
+Lemma elem_map_conv :
+  forall (A B : Type) (f : A -> B) (l : list A) (y : B),
     elem y (map f l) <-> exists x : A, f x = y /\ elem x l.
 (* begin hide *)
 Proof.
@@ -422,7 +465,19 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_rev :
+Lemma elem_map_conv' :
+  forall (A B : Type) (f : A -> B) (l : list A) (x : A),
+    (forall x y : A, f x = f y -> x = y) ->
+      elem (f x) (map f l) -> elem x l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; inversion 2; subst.
+    specialize (H _ _ H3). subst. constructor.
+    constructor. apply IHt; assumption.
+Qed.
+(* end hide *)
+
+Lemma map_rev :
   forall (A B : Type) (f : A -> B) (l : list A),
     map f (rev l) = rev (map f l).
 (* begin hide *)
@@ -433,7 +488,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_ext_elem :
+Lemma map_ext_elem :
   forall (A B : Type) (f g : A -> B) (l : list A),
     (forall x : A, elem x l -> f x = g x) -> map f l = map g l.
 (* begin hide *)
@@ -447,7 +502,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_ext : forall (A B : Type) (f g : A -> B) (l : list A),
+Lemma map_ext :
+  forall (A B : Type) (f g : A -> B) (l : list A),
     (forall x : A, f x = g x) -> map f l = map g l.
 (* begin hide *)
 Proof.
@@ -456,6 +512,8 @@ Proof.
     rewrite H, IHt; trivial.
 Qed.
 (* end hide *)
+
+(** *** [join] *)
 
 (** Napisz funkcję [join], która spłaszcza listę list. *)
 
@@ -467,7 +525,7 @@ match lla with
 end.
 (* end hide *)
 
-Theorem join_app :
+Lemma join_app :
   forall (A : Type) (l1 l2 : list (list A)),
     join (l1 ++ l2) = join l1 ++ join l2.
 (* begin hide *)
@@ -478,7 +536,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem join_map : forall (A B : Type) (f : A -> B) (l : list (list A)),
+Lemma map_join :
+  forall (A B : Type) (f : A -> B) (l : list (list A)),
     map f (join l) = join (map (map f) l).
 (* begin hide *)
 Proof.
@@ -488,34 +547,69 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [repeat] (TODO: nastąpiła duplikacja) *)
+(** *** [replicate] *)
 
-(** Zdefiniuj funkcję [repeat], która zwraca listę [n] powtórzeń wartości
-    [x]. *)
+(** Napsiz funkcję [replicate], która powiela dany element [n] razy, tworząc
+    listę. *)
 
 (* begin hide *)
-Fixpoint repeat {A : Type} (n : nat) (x : A) : list A :=
+Fixpoint replicate {A : Type} (n : nat) (x : A) : list A :=
 match n with
     | 0 => []
-    | S n' => x :: repeat n' x
+    | S n' => x :: replicate n' x
 end.
 (* end hide *)
 
-Theorem repeat_length : forall (A : Type) (n : nat) (x : A),
-    length (repeat n x) = n.
+Lemma length_replicate :
+  forall (A : Type) (n : nat) (x : A),
+    length (replicate n x) = n.
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl; intro; try rewrite IHn'; trivial.
+  induction n as [| n']; simpl; intros; try rewrite IHn'; trivial.
 Qed.
 (* end hide *)
 
-Theorem repeat_elem : forall (A : Type) (n : nat) (x y : A),
-    elem x (repeat n y) -> x = y.
+Lemma replicate_plus :
+  forall (A : Type) (n m : nat) (x : A),
+    replicate (n + m) x = replicate n x ++ replicate m x.
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl; intros; inversion H; subst.
-    trivial.
-    apply IHn'. assumption.
+  induction n as [| n']; simpl; intros; try rewrite IHn'; trivial.
+Qed.
+(* end hide *)
+
+Lemma rev_replicate :
+  forall (A : Type) (n : nat) (x : A),
+    rev (replicate n x) = replicate n x.
+(* begin hide *)
+Proof.
+  induction n as [| n']; simpl; intros; trivial.
+  change [x] with (replicate 1 x).
+  rewrite IHn', <- replicate_plus, plus_comm. simpl. trivial.
+Qed.
+(* end hide *)
+
+Lemma elem_replicate :
+  forall (A : Type) (n : nat) (x y : A),
+    elem y (replicate n x) <-> n <> 0 /\ x = y.
+(* begin hide *)
+Proof.
+  split.
+    induction n as [| n']; simpl; inversion 1; subst.
+      split; auto.
+      destruct (IHn' H2). auto.
+    intros [H H']. rewrite H'. destruct n as [| n'].
+      contradiction H. trivial.
+      simpl. left.
+Qed.
+(* end hide *)
+
+Lemma map_replicate :
+  forall (A B : Type) (f : A -> B) (n : nat) (x : A),
+    map f (replicate n x) = replicate n (f x).
+(* begin hide *)
+Proof.
+  induction n as [| n']; simpl; intro; try rewrite IHn'; trivial.
 Qed.
 (* end hide *)
 
@@ -533,7 +627,8 @@ match n, l with
 end.
 (* end hide *)
 
-Theorem nth_length : forall (A : Type) (n : nat) (l : list A),
+Lemma nth_length :
+  forall (A : Type) (n : nat) (l : list A),
     n < length l -> exists x : A, nth n l = Some x.
 (* begin hide *)
 Proof.
@@ -548,7 +643,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_elem : forall (A : Type) (n : nat) (l : list A),
+Lemma nth_elem :
+  forall (A : Type) (n : nat) (l : list A),
     n < length l -> exists x : A, nth n l = Some x /\ elem x l.
 (* begin hide *)
 Proof.
@@ -561,7 +657,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_elem_conv : forall (A : Type) (x : A) (l : list A),
+Lemma nth_elem_conv :
+  forall (A : Type) (x : A) (l : list A),
     elem x l -> exists n : nat, nth n l = Some x.
 (* begin hide *)
 Proof.
@@ -571,7 +668,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_overflow : forall (A : Type) (n : nat) (l : list A),
+Lemma nth_overflow :
+  forall (A : Type) (n : nat) (l : list A),
     length l <= n -> ~ exists x : A, nth n l = Some x.
 (* begin hide *)
 Proof.
@@ -583,7 +681,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_app1 : forall (A : Type) (n : nat) (l1 l2 : list A),
+Lemma nth_app_l :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
     n < length l1 -> nth n (l1 ++ l2) = nth n l1.
 (* begin hide *)
 Proof.
@@ -595,7 +694,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_app2 : forall (A : Type) (n : nat) (l1 l2 : list A),
+Lemma nth_app_r :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
     length l1 <= n -> nth n (l1 ++ l2) = nth (n - length l1) l2.
 (* begin hide *)
 Proof.
@@ -609,9 +709,10 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_split : forall (A : Type) (n : nat) (l : list A) (x : A),
+Lemma nth_split :
+  forall (A : Type) (n : nat) (l : list A) (x : A),
     nth n l = Some x -> exists l1 l2 : list A,
-        l = l1 ++ x :: l2 /\ length l1 = n.
+      l = l1 ++ x :: l2 /\ length l1 = n.
 (* begin hide *)
 Proof.
   induction n as [| n'].
@@ -625,7 +726,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_None : forall (A : Type) (n : nat) (l : list A),
+Lemma nth_None :
+  forall (A : Type) (n : nat) (l : list A),
     nth n l = None -> length l <= n.
 (* begin hide *)
 Proof.
@@ -637,7 +739,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_Some : forall (A : Type) (n : nat) (l : list A) (x : A),
+Lemma nth_Some :
+  forall (A : Type) (n : nat) (l : list A) (x : A),
     nth n l = Some x -> n < length l.
 (* begin hide *)
 Proof.
@@ -649,15 +752,30 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_nth :
-    forall (A B : Type) (f : A -> B) (n : nat) (l : list A) (x : A),
-        nth n l = Some x -> nth n (map f l) = Some (f x).
+Lemma nth_map :
+  forall (A B : Type) (f : A -> B) (n : nat) (l : list A) (x : A),
+    nth n l = Some x -> nth n (map f l) = Some (f x).
 (* begin hide *)
 Proof.
   induction n as [| n'].
     destruct l as [| h t]; simpl; inversion 1; trivial.
     destruct l as [| h t]; simpl; inversion 1; trivial.
       rewrite (IHn' t x); [trivial | assumption].
+Qed.
+(* end hide *)
+
+Lemma nth_replicate :
+  forall (A : Type) (i n : nat) (x : A),
+    i < n -> nth i (replicate n x) = Some x.
+(* begin hide *)
+Proof.
+  induction i as [| i']; destruct n as [| n']; simpl; intros.
+    inversion H.
+    reflexivity.
+    inversion H.
+    rewrite IHi'.
+      trivial.
+      apply lt_S_n. assumption.
 Qed.
 (* end hide *)
 
@@ -681,30 +799,39 @@ match l with
 end.
 (* end hide *)
 
-Theorem head_nil : forall (A : Type),
-    head [] = (@None A).
+Lemma head_nil :
+  forall (A : Type), head [] = (@None A).
 (* begin hide *)
 Proof.
   simpl. trivial.
 Qed.
 (* end hide *)
 
-Theorem last_nil : forall (A : Type), last [] = (@None A).
-(* begin hide *)
-Proof.
-  simpl. trivial.
-Qed.
-(* end hide *)
-
-Theorem head_nth: forall (A : Type) (l : list A),
-    head l = nth 0 l.
+Lemma head_nth :
+  forall (A : Type) (l : list A), head l = nth 0 l.
 (* begin hide *)
 Proof.
   destruct l as [| h t]; simpl; trivial.
 Qed.
 (* end hide *)
 
-Theorem last_nth : forall (A : Type) (l : list A),
+Lemma head_replicate :
+  forall (A : Type) (n : nat) (x : A),
+    head (replicate (S n) x) = Some x.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma last_nil :
+  forall (A : Type), last [] = (@None A).
+(* begin hide *)
+Proof.
+  simpl. trivial.
+Qed.
+(* end hide *)
+
+Lemma last_nth :
+  forall (A : Type) (l : list A),
     last l = nth (length l - 1) l.
 (* begin hide *)
 Proof.
@@ -713,6 +840,17 @@ Proof.
     destruct t.
       simpl. trivial.
       rewrite IHt. simpl. rewrite <- minus_n_O. trivial.
+Qed.
+(* end hide *)
+
+Lemma last_replicate :
+  forall (A : Type) (n : nat) (x : A),
+    last (replicate (S n) x) = Some x.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn in *; intros.
+    reflexivity.
+    rewrite IHn'. reflexivity.
 Qed.
 (* end hide *)
 
@@ -733,10 +871,72 @@ Fixpoint init {A : Type} (l : list A) : option (list A) :=
 match l with
     | [] => None
     | h :: t => match init t with
-        | None => Some [h]
+        | None => Some []
         | Some t' => Some (h :: t')
     end
 end.
+(* end hide *)
+
+Lemma tail_replicate_0 :
+  forall (A : Type) (x : A),
+    tail (replicate 0 x) = None.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma tail_replicate_S :
+  forall (A : Type) (n : nat) (x : A),
+    tail (replicate (S n) x) = Some (replicate n x).
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma tail_replicate :
+  forall (A : Type) (n : nat) (x : A),
+    tail (replicate n x) =
+    match n with
+        | 0 => None
+        | S n' => Some (replicate n' x)
+    end.
+(* begin hide *)
+Proof.
+  destruct n; intros.
+    apply tail_replicate_0.
+    apply tail_replicate_S.
+Qed.
+(* end hide *)
+
+Lemma init_replicate_0 :
+  forall (A : Type) (x : A),
+    init (replicate 0 x) = None.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma init_replicate_S :
+  forall (A : Type) (n : nat) (x : A),
+    init (replicate (S n) x) = Some (replicate n x).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn in *; intros.
+    reflexivity.
+    rewrite IHn'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma init_replicate :
+  forall (A : Type) (n : nat) (x : A),
+    init (replicate n x) =
+    match n with
+        | 0 => None
+        | S n' => Some (replicate n' x)
+    end.
+(* begin hide *)
+Proof.
+  destruct n; intros.
+    apply init_replicate_0.
+    apply init_replicate_S.
+Qed.
 (* end hide *)
 
 (** *** [take] i [drop] *)
@@ -760,7 +960,8 @@ match n, l with
 end.
 (* end hide *)
 
-Theorem take_nil : forall (A : Type) (n : nat),
+Lemma take_nil :
+  forall (A : Type) (n : nat),
     take n [] = @nil A.
 (* begin hide *)
 Proof.
@@ -768,7 +969,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_nil : forall (A : Type) (n : nat),
+Lemma drop_nil :
+  forall (A : Type) (n : nat),
     drop n [] = @nil A.
 (* begin hide *)
 Proof.
@@ -776,7 +978,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_cons : forall (A : Type) (n : nat) (h : A) (t : list A),
+Lemma take_cons :
+  forall (A : Type) (n : nat) (h : A) (t : list A),
     take (S n) (h :: t) = h :: take n t.
 (* begin hide *)
 Proof.
@@ -784,7 +987,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_cons : forall (A : Type) (n : nat) (h : A) (t : list A),
+Lemma drop_cons :
+  forall (A : Type) (n : nat) (h : A) (t : list A),
     drop (S n) (h :: t) = drop n t.
 (* begin hide *)
 Proof.
@@ -792,7 +996,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_0 : forall (A : Type) (l : list A),
+Lemma take_0 :
+  forall (A : Type) (l : list A),
     take 0 l = [].
 (* begin hide *)
 Proof.
@@ -800,7 +1005,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_0 : forall (A : Type) (l : list A),
+Lemma drop_0 :
+  forall (A : Type) (l : list A),
     drop 0 l = l.
 (* begin hide *)
 Proof.
@@ -808,7 +1014,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_length : forall (A : Type) (l : list A),
+Lemma take_length :
+  forall (A : Type) (l : list A),
     take (length l) l = l.
 (* begin hide *)
 Proof.
@@ -818,7 +1025,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_length : forall (A : Type) (l : list A),
+Lemma drop_length :
+  forall (A : Type) (l : list A),
     drop (length l) l = [].
 (* begin hide *)
 Proof.
@@ -828,8 +1036,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_length' : forall (A : Type) (n : nat) (l : list A),
-  length l <= n -> take n l = l.
+Lemma take_length' :
+  forall (A : Type) (n : nat) (l : list A),
+    length l <= n -> take n l = l.
 (* begin hide *)
 Proof.
   induction n as [| n']; intros.
@@ -842,8 +1051,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_length' : forall (A : Type) (n : nat) (l : list A),
-  length l <= n -> drop n l = [].
+Lemma drop_length' :
+  forall (A : Type) (n : nat) (l : list A),
+    length l <= n -> drop n l = [].
 (* begin hide *)
 Proof.
   induction n as [| n']; intros.
@@ -856,7 +1066,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem length_take : forall (A : Type) (n : nat) (l : list A),
+Lemma length_take :
+  forall (A : Type) (n : nat) (l : list A),
     n <= length l -> length (take n l) = n.
 (* begin hide *)
 Proof.
@@ -866,7 +1077,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem length_take' :
+Lemma length_take' :
   forall (A : Type) (n : nat) (l : list A),
     length (take n l) <= n.
 (* begin hide *)
@@ -879,7 +1090,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_take : forall (A : Type) (n : nat) (l : list A),
+Lemma length_drop :
+  forall (A : Type) (n : nat) (l : list A),
     n <= length l -> length (drop n l) = length l - n.
 (* begin hide *)
 Proof.
@@ -889,9 +1101,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_map :
-    forall (A B : Type) (f : A -> B) (n : nat) (l : list A),
-        map f (take n l) = take n (map f l).
+Lemma take_map :
+  forall (A B : Type) (f : A -> B) (n : nat) (l : list A),
+    take n (map f l) = map f (take n l).
 (* begin hide *)
 Proof.
   induction n as [| n'].
@@ -902,9 +1114,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_map :
-    forall (A B : Type) (f : A -> B) (n : nat) (l : list A),
-        map f (drop n l) = drop n (map f l).
+Lemma drop_map :
+  forall (A B : Type) (f : A -> B) (n : nat) (l : list A),
+    drop n (map f l) = map f (drop n l).
 (* begin hide *)
 Proof.
   induction n as [| n'].
@@ -915,7 +1127,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_elem : forall (A : Type) (n : nat) (l : list A) (x : A),
+Lemma elem_take :
+  forall (A : Type) (n : nat) (l : list A) (x : A),
     elem x (take n l) -> elem x l.
 (* begin hide *)
 Proof.
@@ -927,7 +1140,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_elem : forall (A : Type) (n : nat) (l : list A) (x : A),
+Lemma elem_drop :
+  forall (A : Type) (n : nat) (l : list A) (x : A),
     elem x (drop n l) -> elem x l.
 (* begin hide *)
 Proof.
@@ -939,7 +1153,23 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_take : forall (A : Type) (n m : nat) (l : list A),
+Lemma take_take_min :
+  forall (A : Type) (n m : nat) (l : list A),
+    take m (take n l) = take (min n m) l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    rewrite take_nil. reflexivity.
+    induction l as [| h t]; cbn.
+      rewrite !take_nil. reflexivity.
+      destruct m as [| m']; cbn.
+        reflexivity.
+        rewrite IHn'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma take_take_comm :
+  forall (A : Type) (n m : nat) (l : list A),
     take m (take n l) = take n (take m l).
 (* begin hide *)
 Proof.
@@ -950,10 +1180,13 @@ Proof.
       destruct l as [| h t]; simpl.
         trivial.
         rewrite IHn'. trivial.
+Restart.
+  intros. rewrite !take_take_min, Nat.min_comm. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma drop_S : forall (A : Type) (n m : nat) (l : list A),
+Lemma drop_S_drop :
+  forall (A : Type) (n m : nat) (l : list A),
     drop (S m) (drop n l) = drop m (drop (S n) l).
 (* begin hide *)
 Proof.
@@ -965,7 +1198,21 @@ Proof.
 Qed.
 (* end hide *) 
 
-Theorem drop_drop : forall (A : Type) (n m : nat) (l : list A),
+Lemma drop_drop_plus :
+  forall (A : Type) (n m : nat) (l : list A),
+    drop m (drop n l) = drop (n + m) l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    induction l as [| h t]; cbn.
+      rewrite drop_nil. reflexivity.
+      apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma drop_drop_comm :
+  forall (A : Type) (n m : nat) (l : list A),
     drop m (drop n l) = drop n (drop m l).
 (* begin hide *)
 Proof.
@@ -975,39 +1222,110 @@ Proof.
       simpl. trivial.
       induction l as [| h t].
         simpl. trivial.
-        repeat rewrite drop_cons in *. rewrite IHn'. rewrite drop_S. trivial. 
+        rewrite ?drop_cons in *. rewrite IHn'. rewrite drop_S_drop. trivial.
+Restart.
+  intros. rewrite !drop_drop_plus. f_equal. apply plus_comm.
+Qed.
+(* end hide *)
+
+Lemma take_app_l :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
+    n <= length l1 -> take n (l1 ++ l2) = take n l1.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    induction l1 as [| h1 t1]; cbn; intros.
+      inversion H.
+      rewrite IHn'.
+        reflexivity.
+        apply le_S_n. assumption.
+Qed.
+(* end hide *)
+
+Lemma take_app_r :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
+    length l1 < n -> take n (l1 ++ l2) = l1 ++ take (n - length l1) l2.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    inversion H.
+    destruct l1; cbn.
+      reflexivity.
+      rewrite IHn'.
+        reflexivity.
+        apply lt_S_n. assumption.
+Qed.
+(* end hide *)
+
+Lemma drop_app_l :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
+    n <= length l1 -> drop n (l1 ++ l2) = drop n l1 ++ l2.
+(* begin hide *)
+Proof.
+  induction n as [| n']; induction l1 as [| h1 t2]; cbn; firstorder.
+  inversion H.
+Qed.
+(* end hide *)
+
+Lemma drop_app_r :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
+    length l1 < n -> drop n (l1 ++ l2) = drop (n - length l1) l2.
+(* begin hide *)
+Proof.
+  induction n as [| n']; induction l1 as [| h1 t2]; cbn; firstorder.
+  inversion H.
 Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem take_drop_rev :
+Lemma take_rev_aux :
   forall (A : Type) (n : nat) (l : list A),
-    take n (rev l) = rev (drop (length l - n) l).
+    take n l = rev (drop (length (rev l) - n) (rev l)).
 Proof.
   induction n as [| n']; intros.
-    rewrite <- minus_n_O. rewrite drop_length. simpl. trivial.
-    destruct l as [| h t]; simpl; trivial.
-Restart.
-  intros A n l. generalize dependent n.
-  induction l as [| h t]; simpl; intros.
-    apply take_nil.
-    destruct n as [| n'].
-      simpl. rewrite drop_length. simpl. trivial.
-Restart.
-(*  intros. remember (rev l) as revl.
-  functional induction @take A n revl; subst.
-    rewrite <- minus_n_O, drop_length. trivial.
-    destruct l; simpl in *.
-      trivial.
-      change [a] with (rev [a]) in Heqrevl. rewrite <- rev_app in Heqrevl.
-        assert (length (@nil A) = length (a :: l)).
-          rewrite <- (rev_length _ (a :: l)). simpl in *. rewrite <- Heqrevl.
-            trivial.
-          inversion H.*)
-Abort. (* TODO *)
+    rewrite <- minus_n_O. rewrite drop_length. cbn. reflexivity.
+    induction l as [| h t]; cbn; auto.
+      rewrite IHn'. rewrite length_app, plus_comm. cbn. rewrite drop_app_l.
+        rewrite rev_app. cbn. reflexivity.
+        apply Nat.le_sub_l.
+Qed.
 (* end hide *)
 
-Theorem take_drop : forall (A : Type) (n m : nat) (l : list A),
+Lemma take_rev :
+  forall (A : Type) (n : nat) (l : list A),
+    take n (rev l) = rev (drop (length l - n) l).
+(* begin hide *)
+Proof.
+  intros. rewrite take_rev_aux, !rev_inv. reflexivity.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Lemma drop_rev_aux :
+  forall (A : Type) (n : nat) (l : list A),
+    drop n l = rev (take (length (rev l) - n) (rev l)).
+Proof.
+  induction n as [| n']; intros.
+    rewrite <- minus_n_O, take_length, rev_inv. cbn. reflexivity.
+    induction l as [| h t]; cbn; auto.
+      rewrite IHn'. rewrite length_app, plus_comm. cbn. rewrite take_app_l.
+        reflexivity.
+        apply Nat.le_sub_l.
+Qed.
+(* end hide *)
+
+Lemma drop_rev :
+  forall (A : Type) (n : nat) (l : list A),
+    drop n (rev l) = rev (take (length l - n) l).
+(* begin hide *)
+Proof.
+  intros. rewrite drop_rev_aux, !rev_inv. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma take_drop :
+  forall (A : Type) (n m : nat) (l : list A),
     take m (drop n l) = drop n (take (n + m) l).
 (* begin hide *)
 Proof.
@@ -1016,6 +1334,25 @@ Proof.
     destruct l as [| h t]; simpl.
       rewrite take_nil. trivial.
       rewrite IHn'. trivial.
+Qed.
+(* end hide *)
+
+Lemma take_replicate :
+  forall (A : Type) (m n : nat) (x : A),
+    take m (replicate n x) = replicate (min m n) x.
+(* begin hide *)
+Proof.
+  induction m as [| m']; destruct n as [| n']; simpl; intros; trivial.
+  rewrite IHm'. trivial.
+Qed.
+(* end hide *)
+
+Lemma drop_replicate :
+  forall (A : Type) (m n : nat) (x : A),
+    drop m (replicate n x) = replicate (n - m) x.
+(* begin hide *)
+Proof.
+  induction m as [| m']; destruct n as [| n']; simpl; intros; trivial.
 Qed.
 (* end hide *)
 
@@ -1032,7 +1369,8 @@ match l with
 end.
 (* end hide *)
 
-Theorem filter_false : forall (A : Type) (l : list A),
+Lemma filter_false :
+  forall (A : Type) (l : list A),
     filter (fun _ => false) l = [].
 (* begin hide *)
 Proof.
@@ -1040,7 +1378,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem filter_true : forall (A : Type) (l : list A),
+Lemma filter_true :
+  forall (A : Type) (l : list A),
     filter (fun _ => true) l = l.
 (* begin hide *)
 Proof.
@@ -1050,9 +1389,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem filter_spec :
-    forall (A : Type) (p : A -> bool) (l : list A) (x : A),
-        p x = false -> ~ elem x (filter p l).
+Lemma filter_spec :
+  forall (A : Type) (p : A -> bool) (l : list A) (x : A),
+    p x = false -> ~ elem x (filter p l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl; intros.
@@ -1065,9 +1404,24 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem filter_app :
-    forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-        filter p (l1 ++ l2) = filter p l1 ++ filter p l2.
+Lemma filter_spec_conv :
+  forall (A : Type) (p : A -> bool) (l : list A) (x : A),
+    elem x (filter p l) -> p x = true /\ elem x l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    case_eq (p h); intros; rewrite H0 in *.
+      inversion H; subst; clear H.
+        repeat constructor. assumption.
+        destruct (IHt _ H3). firstorder constructor. assumption.
+      destruct (IHt _ H). firstorder constructor. assumption.
+Qed.
+(* end hide *)
+
+Lemma filter_app :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    filter p (l1 ++ l2) = filter p l1 ++ filter p l2.
 (* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; simpl; intros.
@@ -1076,9 +1430,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem filter_rev :
-    forall (A : Type) (p : A -> bool) (l : list A),
-        filter p (rev l) = rev (filter p l).
+Lemma filter_rev :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    filter p (rev l) = rev (filter p l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl.
@@ -1089,21 +1443,32 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem filter_comm :
-    forall (A : Type) (f g : A -> bool) (l : list A),
-        filter f (filter g l) = filter g (filter f l).
+Lemma filter_andb :
+  forall (A : Type) (f g : A -> bool) (l : list A),
+    filter f (filter g l) = filter (fun x : A => andb (f x) (g x)) l.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl.
-    trivial.
-    case_eq (f h); case_eq (g h); intros;
-    simpl; repeat rewrite H; repeat rewrite H0; rewrite IHt; trivial.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    case_eq (g h); case_eq (f h); cbn; intros; rewrite ?H, ?H0, ?IHt; auto.
+Qed.
+
+(* end hide *)
+Lemma filter_comm :
+  forall (A : Type) (f g : A -> bool) (l : list A),
+    filter f (filter g l) = filter g (filter f l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    case_eq (f h); case_eq (g h); cbn; intros;
+      rewrite ?H, ?H0, IHt; trivial.
 Qed.
 (* end hide *)
 
-Theorem filter_idempotent :
-    forall (A : Type) (f : A -> bool) (l : list A),
-        filter f (filter f l) = filter f l.
+Lemma filter_idempotent :
+  forall (A : Type) (f : A -> bool) (l : list A),
+    filter f (filter f l) = filter f l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl.
@@ -1112,9 +1477,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem filter_map :
-    forall (A B : Type) (f : A -> B) (p : B -> bool) (l : list A),
-        filter p (map f l) = map f (filter (fun x : A => p (f x)) l).
+Lemma filter_map :
+  forall (A B : Type) (f : A -> B) (p : B -> bool) (l : list A),
+    filter p (map f l) = map f (filter (fun x : A => p (f x)) l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl.
@@ -1123,31 +1488,39 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem filter_repeat_false :
-    forall (A : Type) (p : A -> bool) (n : nat) (x : A),
-        p x = false -> filter p (repeat n x) = [].
+Lemma filter_replicate_true :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    p x = true -> filter p (replicate n x) = replicate n x.
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl; intros.
-    trivial.
-    rewrite H. apply IHn'. assumption.
+  induction n as [| n']; simpl; intros; try rewrite H, IHn'; trivial.
 Qed.
 (* end hide *)
 
-Theorem filter_repeat_true :
-    forall (A : Type) (p : A -> bool) (n : nat) (x : A),
-        p x = true -> filter p (repeat n x) = repeat n x.
+Lemma filter_replicate_false :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    p x = false -> filter p (replicate n x) = [].
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl; intros.
-    trivial.
-    rewrite H. rewrite IHn'; [trivial | assumption].
+  induction n as [| n']; simpl; intros; try rewrite H, IHn'; trivial.
 Qed.
 (* end hide *)
 
-Theorem filter_length :
-    forall (A : Type) (p : A -> bool) (l : list A),
-        length (filter p l) <= length l.
+Lemma filter_replicate :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    filter p (replicate n x) =
+    if p x then replicate n x else [].
+(* begin hide *)
+Proof.
+  intros. case_eq (p x); intros.
+    apply filter_replicate_true; assumption.
+    apply filter_replicate_false; assumption.
+Qed.
+(* end hide *)
+
+Lemma length_filter :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    length (filter p l) <= length l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl; intros.
@@ -1160,14 +1533,14 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem filter_join :
-    forall (A : Type) (p : A -> bool) (lla : list (list A)),
-        join (map (filter p) lla) = filter p (join lla).
+Lemma filter_join :
+  forall (A : Type) (p : A -> bool) (lla : list (list A)),
+    filter p (join lla) = join (map (filter p) lla).
 (* begin hide *)
 Proof.
   induction lla as [| hl tl]; simpl.
-    trivial.
-    rewrite filter_app. rewrite IHtl. trivial.
+    reflexivity.
+    rewrite filter_app, IHtl. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1191,7 +1564,8 @@ match l with
 end.
 (* end hide *)
 
-Theorem takeWhile_false : forall (A : Type) (l : list A),
+Lemma takeWhile_false :
+  forall (A : Type) (l : list A),
     takeWhile (fun _ => false) l = [].
 (* begin hide *)
 Proof.
@@ -1199,7 +1573,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem dropWhile_false : forall (A : Type) (l : list A),
+Lemma dropWhile_false :
+  forall (A : Type) (l : list A),
     dropWhile (fun _ => false) l = l.
 (* begin hide *)
 Proof.
@@ -1207,9 +1582,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem takeWhile_spec :
-    forall (A : Type) (p : A -> bool) (l : list A) (x : A),
-        elem x (takeWhile p l) -> p x = true.
+Lemma takeWhile_spec :
+  forall (A : Type) (p : A -> bool) (l : list A) (x : A),
+    elem x (takeWhile p l) -> p x = true.
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl; intros.
@@ -1222,28 +1597,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* begin hide *)
-(*Theorem takeWhile_spec' :
-    forall (A : Type) (p : A -> bool) (l : list A) (x : A),
-        elem x l -> ~ elem x (takeWhile p l) -> p x = false.
-Proof.
-  induction l as [| h t]; simpl; intros.
-    inversion H.
-    case_eq (p h); inversion H; subst; intro; rewrite H1 in H0.
-      cut False. inversion 1. apply H0. constructor.
-      apply IHt.
-        assumption.
-        apply elem_inv_tail with h. assumption.
-      assumption.
-      apply IHt.
-        assumption.
-        apply elem_inv_tail with h. assumption.
-  *)
-(* end hide *)  
-
-Theorem dropWhile_spec :
-    forall (A : Type) (p : A -> bool) (l : list A) (x : A),
-        elem x l -> ~ elem x (dropWhile p l) -> p x = true.
+Lemma dropWhile_spec :
+  forall (A : Type) (p : A -> bool) (l : list A) (x : A),
+    elem x l -> ~ elem x (dropWhile p l) -> p x = true.
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl; intros.
@@ -1256,22 +1612,22 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem takeWhile_idempotent :
-    forall (A : Type) (p : A -> bool) (l : list A),
-        takeWhile p (takeWhile p l) = takeWhile p l.
+Lemma takeWhile_idempotent :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    takeWhile p (takeWhile p l) = takeWhile p l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl.
     trivial.
-    case_eq (p h); simpl; intro.
+    case_eq (p h); cbn; intro.
       rewrite H. rewrite IHt. trivial.
       trivial.
 Qed.
 (* end hide *)
 
-Theorem dropWhile_idempotent :
-    forall (A : Type) (p : A -> bool) (l : list A),
-        dropWhile p (dropWhile p l) = dropWhile p l.
+Lemma dropWhile_idempotent :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    dropWhile p (dropWhile p l) = dropWhile p l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; simpl.
@@ -1280,32 +1636,71 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem takeWhile_repeat :
-    forall (A : Type) (p : A -> bool) (n : nat) (x : A),
-        p x = true -> takeWhile p (repeat n x) = repeat n x.
+Lemma takeWhile_replicate_true :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    p x = true -> takeWhile p (replicate n x) = replicate n x.
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl; intros.
-    trivial.
-    rewrite H, IHn'; trivial.
+  induction n as [| n']; simpl; intros; try rewrite H, IHn'; trivial.
 Qed.
 (* end hide *)
 
-Theorem dropWhile_repeat :
-    forall (A : Type) (p : A -> bool) (n : nat) (x : A),
-        p x = true -> dropWhile p (repeat n x) = [].
+Lemma takeWhile_replicate_false :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    p x = false -> takeWhile p (replicate n x) = [].
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl; intros.
-    trivial.
-    rewrite H, IHn'; trivial.
+  destruct n as [| n']; simpl; intros; try rewrite H; trivial.
+Qed.
+(* end hide *)
+
+Lemma takeWhile_replicate :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    takeWhile p (replicate n x) =
+    if p x then replicate n x else [].
+(* begin hide *)
+Proof.
+  intros. case_eq (p x); intros.
+    apply takeWhile_replicate_true. assumption.
+    apply takeWhile_replicate_false. assumption.
+Qed.
+(* end hide *)
+
+Lemma dropWhile_replicate_true :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    p x = true -> dropWhile p (replicate n x) = [].
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros; rewrite ?H, ?IHn'; trivial.
+Qed.
+(* end hide *)
+
+Lemma dropWhile_replicate_false :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    p x = false -> dropWhile p (replicate n x) = replicate n x.
+(* begin hide *)
+Proof.
+  destruct n as [| n']; cbn; intros; rewrite ?H; trivial.
+Qed.
+(* end hide *)
+
+Lemma dropWhile_replicate :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    dropWhile p (replicate n x) =
+    if p x then [] else replicate n x.
+(* begin hide *)
+Proof.
+  intros. case_eq (p x); intros.
+    apply dropWhile_replicate_true. assumption.
+    apply dropWhile_replicate_false. assumption.
 Qed.
 (* end hide *)
 
 (** *** [partition] *)
 
 (** Napisz funkcję [partition], która dzieli listę [l] na listy
-    elementów spełniających i niespełniających pewnego warunku boolowskiego. *)
+    elementów spełniających i niespełniających pewnego warunku
+    boolowskiego. *)
 
 (* begin hide *)
 Fixpoint partition {A : Type} (p : A -> bool) (l : list A)
@@ -1317,7 +1712,8 @@ match l with
 end.
 (* end hide *)
 
-Theorem partition_spec : forall (A : Type) (p : A -> bool) (l : list A),
+Lemma partition_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
     partition p l = (filter p l, filter (fun x => negb (p x)) l).
 (* begin hide *)
 Proof.
@@ -1341,19 +1737,19 @@ match la, lb with
 end.
 (* end hide *)
 
-Theorem zip_nil_l :
+Lemma zip_nil_l :
   forall (A B : Type) (l : list B), zip (@nil A) l = [].
 (* begin hide *)
 Proof. simpl. trivial. Qed.
 (* end hide *)
 
-Theorem zip_nil_r :
+Lemma zip_nil_r :
   forall (A B : Type) (l : list A), zip l (@nil B) = [].
 (* begin hide *)
 Proof. destruct l; simpl; trivial. Qed.
 (* end hide *)
 
-Theorem zip_length :
+Lemma length_zip :
   forall (A B : Type) (la : list A) (lb : list B),
     length (zip la lb) = min (length la) (length lb).
 (* begin hide *)
@@ -1366,7 +1762,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem zip_not_rev :
+Lemma zip_not_rev :
   exists (A B : Type) (la : list A) (lb : list B),
     zip (rev la) (rev lb) <> rev (zip la lb).
 (* begin hide *)
@@ -1376,7 +1772,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem zip_head :
+Lemma head_zip :
   forall (A B : Type) (la : list A) (lb : list B) (a : A) (b : B),
     head la = Some a -> head lb = Some b -> head (zip la lb) = Some (a, b).
 (* begin hide *)
@@ -1386,7 +1782,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem zip_tail :
+Lemma tail_zip :
   forall (A B : Type) (la ta : list A) (lb tb : list B),
     tail la = Some ta -> tail lb = Some tb ->
       tail (zip la lb) = Some (zip ta tb).
@@ -1400,7 +1796,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem zip_not_app :
+Lemma zip_not_app :
   exists (A B : Type) (la la' : list A) (lb lb' : list B),
     zip (la ++ la') (lb ++ lb') <> zip la lb ++ zip la' lb'.
 (* begin hide *)
@@ -1410,7 +1806,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem zip_map :
+Lemma zip_map :
   forall (A B A' B' : Type) (f : A -> A') (g : B -> B')
   (la : list A) (lb : list B),
     zip (map f la) (map g lb) =
@@ -1422,7 +1818,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem zip_not_filter :
+Lemma zip_not_filter :
   exists (A B : Type) (pa : A -> bool) (pb : B -> bool)
   (la : list A) (lb : list B),
     zip (filter pa la) (filter pb lb) <>
@@ -1436,7 +1832,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem zip_take :
+Lemma zip_take :
   forall (A B : Type) (n : nat) (la : list A) (lb : list B),
     zip (take n la) (take n lb) = take n (zip la lb).
 (* begin hide *)
@@ -1448,7 +1844,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem zip_drop :
+Lemma zip_drop :
   forall (A B : Type) (n : nat) (la : list A) (lb : list B),
     zip (drop n la) (drop n lb) = drop n (zip la lb).
 (* begin hide *)
@@ -1460,7 +1856,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem zip_elem :
+Lemma elem_zip :
   forall (A B : Type) (a : A) (b : B) (la : list A) (lb : list B),
     elem (a, b) (zip la lb) -> elem a la /\ elem b lb.
 (* begin hide *)
@@ -1473,7 +1869,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem zip_not_elem :
+Lemma zip_not_elem :
   exists (A B : Type) (a : A) (b : B) (la : list A) (lb : list B),
     elem a la /\ elem b lb /\ ~ elem (a, b) (zip la lb).
 (* begin hide *)
@@ -1484,6 +1880,16 @@ Proof.
     repeat constructor.
     repeat constructor.
     inversion 1; subst. inversion H2; subst. inversion H3.
+Qed.
+(* end hide *)
+
+Lemma zip_replicate :
+  forall (A B : Type) (n m : nat) (a : A) (b : B),
+    zip (replicate n a) (replicate m b) = replicate (min n m) (a, b).
+(* begin hide *)
+Proof.
+  induction n as [| n']; destruct m as [| m'];
+  cbn; intros; rewrite ?IHn'; trivial.
 Qed.
 (* end hide *)
 
@@ -1501,7 +1907,7 @@ match l with
 end.
 (* end hide *)
 
-Theorem intersperse_length :
+Lemma length_intersperse :
   forall (A : Type) (x : A) (l : list A),
     length (intersperse x l) = 2 * length l - 1.
 (* begin hide *)
@@ -1511,7 +1917,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem intersperse_app_last2 :
+Lemma intersperse_app_last2 :
   forall (A : Type) (x y z : A) (l : list A),
     intersperse x (l ++ [y; z]) =
     intersperse x (l ++ [y]) ++ [x; z].
@@ -1522,7 +1928,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem intersperse_rev :
+Lemma intersperse_rev :
   forall (A : Type) (x : A) (l : list A),
     intersperse x (rev l) = rev (intersperse x l).
 (* begin hide *)
@@ -1533,19 +1939,30 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma intersperse_app :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    intersperse x (l1 ++ l2) =
+    match l1 with
+        | [] => intersperse x l2
+        | h1 :: t1 =>
+            match l2 with
+                | [] => intersperse x l1
+                | h2 :: t2 => intersperse x l1 ++ x :: intersperse x l2
+            end
+    end.
 (* begin hide *)
-Theorem intersperse_app :
-  forall (A : Type) (x : A) (l l' : list A),
-    intersperse x (l ++ l') = intersperse x l ++ intersperse x l'.
 Proof.
-  induction l as [| h [| hh t]]; simpl.
-    trivial.
-    destruct l'; trivial.
-    destruct l' as [| h' t']; simpl.
-Abort.
+  Functional Scheme intersperse_ind := Induction for intersperse Sort Prop.
+  intros.
+  functional induction @intersperse A x l1; cbn.
+    reflexivity.
+    reflexivity.
+    cbn in *. rewrite IHl.
+      functional induction @intersperse A x l2; reflexivity.
+Qed.
 (* end hide *)
 
-Theorem intersperse_filter :
+Lemma filter_intersperse :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
     p x = false -> filter p (intersperse x l) = filter p l.
 (* begin hide *)
@@ -1555,207 +1972,13 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem intersperse_map :
+Lemma intersperse_map :
   forall (A B : Type) (f : A -> B) (l : list A) (a : A) (b : B),
     f a = b -> intersperse b (map f l) = map f (intersperse a l).
 (* begin hide *)
 Proof.
   induction l as [| h [| h' t]]; simpl; trivial; intros.
   rewrite H. simpl in *. rewrite (IHl _ _ H). trivial.
-Qed.
-(* end hide *)
-
-(* begin hide *)
-(* TODO *)
-Theorem intersperse_join :
-  forall (A : Type) (x : A) (l : list (list A)),
-    intersperse x (join l) = join (intersperse [x] (map (intersperse x) l)).
-Proof.
-  induction l as [| h [| h' t]]; simpl; trivial.
-    rewrite !app_nil_r. trivial.
-    simpl in *. rewrite <- IHl.
-Abort.
-(* end hide *)
-
-(** *** [replicate] *)
-
-(** Napsiz funkcję [replicate], która powiela dany element [n] razy, tworząc
-    listę. *)
-
-(* begin hide *)
-Fixpoint replicate {A : Type} (n : nat) (x : A) : list A :=
-match n with
-    | 0 => []
-    | S n' => x :: replicate n' x
-end.
-(* end hide *)
-
-Theorem replicate_length :
-  forall (A : Type) (n : nat) (x : A),
-    length (replicate n x) = n.
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl; intros; try rewrite IHn'; trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_plus_app :
-  forall (A : Type) (n m : nat) (x : A),
-    replicate (n + m) x = replicate n x ++ replicate m x.
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl; intros; try rewrite IHn'; trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_rev :
-  forall (A : Type) (n : nat) (x : A),
-    rev (replicate n x) = replicate n x.
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl; intros; trivial.
-  change [x] with (replicate 1 x).
-  rewrite IHn', <- replicate_plus_app, plus_comm. simpl. trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_elem :
-  forall (A : Type) (n : nat) (x y : A),
-    elem y (replicate n x) <-> n <> 0 /\ x = y.
-(* begin hide *)
-Proof.
-  split.
-    induction n as [| n']; simpl; inversion 1; subst.
-      split; auto.
-      destruct (IHn' H2). auto.
-    intros [H H']. rewrite H'. destruct n as [| n'].
-      contradiction H. trivial.
-      simpl. left.
-Qed.
-(* end hide *)
-
-Theorem replicate_map :
-  forall (A B : Type) (f : A -> B) (n : nat) (x : A),
-    map f (replicate n x) = replicate n (f x).
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl; intro; try rewrite IHn'; trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_nth :
-  forall (A : Type) (i n : nat) (x : A),
-    i < n -> nth i (replicate n x) = Some x.
-(* begin hide *)
-Proof.
-  induction i as [| i']; destruct n as [| n']; simpl; intros.
-    omega.
-    trivial.
-    omega.
-    rewrite IHi'.
-      trivial.
-      apply lt_S_n. assumption.
-Qed.
-(* end hide *)
-
-Theorem replicate_head :
-  forall (A : Type) (n : nat) (x : A),
-    head (replicate (S n) x) = Some x.
-(* begin hide *)
-Proof.
-  simpl. trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_tail :
-  forall (A : Type) (n : nat) (x : A),
-    tail (replicate (S n) x) = Some (replicate n x).
-(* begin hide *)
-Proof.
-  simpl. trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_take :
-  forall (A : Type) (m n : nat) (x : A),
-    take m (replicate n x) = replicate (min m n) x.
-(* begin hide *)
-Proof.
-  induction m as [| m']; destruct n as [| n']; simpl; intros; trivial.
-  rewrite IHm'. trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_drop :
-  forall (A : Type) (m n : nat) (x : A),
-    drop m (replicate n x) = replicate (n - m) x.
-(* begin hide *)
-Proof.
-  induction m as [| m']; destruct n as [| n']; simpl; intros; trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_filter_true :
-  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
-    p x = true -> filter p (replicate n x) = replicate n x.
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl; intros; try rewrite H, IHn'; trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_filter_false :
-  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
-    p x = false -> filter p (replicate n x) = [].
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl; intros; try rewrite H, IHn'; trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_takeWhile_true :
-  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
-    p x = true -> takeWhile p (replicate n x) = replicate n x.
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl; intros; try rewrite H, IHn'; trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_takeWhile_false :
-  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
-    p x = false -> takeWhile p (replicate n x) = [].
-(* begin hide *)
-Proof.
-  destruct n as [| n']; simpl; intros; try rewrite H; trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_dropWhile_true :
-  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
-    p x = true -> dropWhile p (replicate n x) = [].
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl; intros; try rewrite H, IHn'; trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_dropWhile_false :
-  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
-    p x = false -> dropWhile p (replicate n x) = replicate n x.
-(* begin hide *)
-Proof.
-  destruct n as [| n']; simpl; intros; try rewrite H; trivial.
-Qed.
-(* end hide *)
-
-Theorem replicate_zip :
-  forall (A B : Type) (n m : nat) (a : A) (b : B),
-    zip (replicate n a) (replicate m b) = replicate (min n m) (a, b).
-(* begin hide *)
-Proof.
-  induction n as [| n']; destruct m as [| m'];
-  simpl; intros; try rewrite IHn'; trivial.
 Qed.
 (* end hide *)
 
@@ -1773,7 +1996,7 @@ match la, lb with
 end.
 (* end hide *)
 
-Theorem zipWith_spec :
+Lemma zipWith_spec :
   forall (A B C : Type) (f : A -> B -> C) (la : list A) (lb : list B),
     zipWith f la lb = map (fun x => f (fst x) (snd x)) (zip la lb).
 (* begin hide *)
@@ -1783,7 +2006,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [unzip] (odtąd TODO!) *)
+(** *** [unzip] *)
 
 (** Zdefiniuj funkcję [unzip], która jest w pewnym sensie "odwrotna"
     do [zip]. *)
@@ -1797,7 +2020,7 @@ match l with
 end.
 (* end hide *)
 
-Theorem zip_unzip :
+Lemma zip_unzip :
   forall (A B : Type) (l : list (A * B)),
     zip (fst (unzip l)) (snd (unzip l)) = l.
 (* begin hide *)
@@ -1808,7 +2031,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem unzip_zip :
+Lemma unzip_zip :
   exists (A B : Type) (la : list A) (lb : list B),
     unzip (zip la lb) <> (la, lb).
 (* begin hide *)
@@ -1831,7 +2054,7 @@ match l with
 end.
 (* end hide *)
 
-Theorem find_spec :
+Lemma find_spec :
   forall (A : Type) (p : A -> bool) (l : list A),
     (exists x : A, find p l = Some x) <->
     (exists (h : A) (t : list A), filter p l = h :: t).
@@ -1874,7 +2097,7 @@ match l with
 end.
 (* end hide *)
 
-Theorem findIndex_spec :
+Lemma findIndex_spec :
   forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     findIndex p l = Some n -> exists x : A, nth n l = Some x /\ p x = true.
 (* begin hide *)
@@ -1907,11 +2130,6 @@ Definition findIndices {A : Type} (p : A -> bool) (l : list A) : list nat :=
       | [] => []
       | h :: t => if p h then n :: f t (S n) else f t (S n)
   end) l 0.
-
-(*Theorem findIndices_spec :
-  forall (A : Type) (p : A -> bool) (l : list A) (indices : list nat),
-    findIndices p l = indices -> forall n : nat, elem n indices ->*)
-
 (* end hide *)
 
 (** *** Zwijanie *)
@@ -1945,34 +2163,34 @@ Functional Scheme foldr_ind := Induction for foldr Sort Prop.
 Functional Scheme foldl_ind := Induction for foldl Sort Prop.
 
 Definition lengthF {A : Type} (l : list A) : nat :=
-    foldr (fun _ => S) 0 l.
+  foldr (fun _ => S) 0 l.
 
 Definition appF {A : Type} (l1 l2 : list A) : list A :=
-    foldr (@cons A) l2 l1.
+  foldr (@cons A) l2 l1.
 
 Definition revF {A : Type} (l : list A) : list A :=
-    foldr (fun h t => t ++ [h]) [] l.
+  foldr (fun h t => t ++ [h]) [] l.
 
 Definition revF' {A : Type} (l : list A) : list A :=
-    foldl (fun t h => h :: t) [] l.
+  foldl (fun t h => h :: t) [] l.
 
 Definition mapF {A B : Type} (f : A -> B) (l : list A) : list B :=
-    foldr (fun h t => f h :: t) [] l.
+  foldr (fun h t => f h :: t) [] l.
 
 Definition joinF {A : Type} (l : list (list A)) : list A :=
-    foldr app [] l.
+  foldr app [] l.
 
 Definition filterF {A : Type} (p : A -> bool) (l : list A) : list A :=
-    foldr (fun h t => if p h then h :: t else t) [] l.
+  foldr (fun h t => if p h then h :: t else t) [] l.
 
 Definition takeWhileF {A : Type} (p : A -> bool) (l : list A) : list A :=
-    foldr (fun h t => if p h then h :: t else []) [] l.
+  foldr (fun h t => if p h then h :: t else []) [] l.
 
 (*Definition dropWhileF {A : Type} (p : A -> bool) (l : list A) : list A :=
-    foldr (fun h t => if p h then t else h :: t) [] l.*)
+  foldr (fun h t => if p h then t else h :: t) [] l.*)
 
 (*Definition dropWhileF {A : Type} (p : A -> bool) (l : list A) : list A :=
-    foldl (fun t h => if p h then t else h :: t) [] l.*)
+  foldl (fun t h => if p h then t else h :: t) [] l.*)
 
 Ltac solve_fold := intros;
 match goal with
@@ -1990,7 +2208,8 @@ end.
 
 (* end hide *)
 
-Theorem lengthF_spec : forall (A : Type) (l : list A),
+Lemma lengthF_spec :
+  forall (A : Type) (l : list A),
     lengthF l = length l.
 (* begin hide *)
 Proof.
@@ -2002,7 +2221,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem appF_spec : forall (A : Type) (l1 l2 : list A),
+Lemma appF_spec :
+  forall (A : Type) (l1 l2 : list A),
     appF l1 l2 = l1 ++ l2.
 (* begin hide *)
 Proof.
@@ -2014,7 +2234,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem revF_spec : forall (A : Type) (l : list A),
+Lemma revF_spec :
+  forall (A : Type) (l : list A),
     revF l = rev l.
 (* begin hide *)
 Proof.
@@ -2027,7 +2248,8 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem revF'_spec : forall (A : Type) (l : list A),
+Lemma revF'_spec :
+  forall (A : Type) (l : list A),
     revF' l = rev l.
 Proof.
   unfold revF'. intros. replace (rev l) with (rev l ++ []).
@@ -2039,7 +2261,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mapF_spec : forall (A B : Type) (f : A -> B) (l : list A),
+Lemma mapF_spec :
+  forall (A B : Type) (f : A -> B) (l : list A),
     mapF f l = map f l.
 (* begin hide *)
 Proof.
@@ -2051,7 +2274,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem joinF_spec : forall (A : Type) (l : list (list A)),
+Lemma joinF_spec :
+  forall (A : Type) (l : list (list A)),
     joinF l = join l.
 (* begin hide *)
 Proof.
@@ -2063,7 +2287,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem filterF_spec : forall (A : Type) (p : A -> bool) (l : list A),
+Lemma filterF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
     filterF p l = filter p l.
 (* begin hide *)
 Proof.
@@ -2075,7 +2300,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem takeWhileF_spec : forall (A : Type) (p : A -> bool) (l : list A),
+Lemma takeWhileF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
     takeWhileF p l = takeWhile p l.
 (* begin hide *)
 Proof.
@@ -2087,22 +2313,7 @@ Restart.
 Qed.
 (* end hide *)
 
-(* begin hide *)
-(* Theorem dropWhileF_spec : forall (A : Type) (p : A -> bool) (l : list A),
-    dropWhileF p l = dropWhile p l.
-(* begin hide *)
-Proof.
-  unfold dropWhileF; intros. remember [] as acc.
-  generalize dependent acc.
-  induction l as [| h t]; simpl; intros.
-    trivial.
-    destruct (p h).
-      rewrite IHt; trivial.
-      rewrite IHt.
-Qed. *)
-(* end hide *)
-
-(** *** Dziwne (TODO) *)
+(** *** Dziwne *)
 
 Fixpoint revapp {A : Type} (l1 l2 : list A) : list A :=
 match l1 with
@@ -2113,7 +2324,7 @@ end.
 Definition app' {A : Type} (l1 l2 : list A) : list A :=
   revapp (revapp l1 []) l2.
 
-Theorem revapp_spec :
+Lemma revapp_spec :
   forall (A : Type) (l1 l2 : list A),
     revapp l1 l2 = rev l1 ++ l2.
 (* begin hide *)
@@ -2123,7 +2334,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app'_spec :
+Lemma app'_spec :
   forall (A : Type) (l1 l2 : list A),
     l1 ++ l2 = app' l1 l2.
 (* begin hide *)
@@ -2132,15 +2343,16 @@ Proof.
 Qed.
 (* end hide *)
 
-
 (** *** Niestandardowe reguły indukcyjne *)
 
 (** Wyjaśnienia nadejdą już wkrótce. *)
 
 Fixpoint list_ind_2
-  (A : Type) (P : list A -> Prop) (H0 : P []) (H1 : forall x : A, P [x])
+  (A : Type) (P : list A -> Prop)
+  (H0 : P [])
+  (H1 : forall x : A, P [x])
   (H2 : forall (x y : A) (l : list A), P l -> P (x :: y :: l))
-  (l : list A) : P l.
+    (l : list A) : P l.
 (* begin hide *)
 Proof.
   destruct l as [| x [| y l]]; simpl; auto.
@@ -2148,9 +2360,10 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem list_ind_rev :
+Lemma list_ind_rev :
   forall (A : Type) (P : list A -> Prop)
-    (Hnil : P []) (Hsnoc : forall (h : A) (t : list A), P t -> P (t ++ [h]))
+    (Hnil : P [])
+    (Hsnoc : forall (h : A) (t : list A), P t -> P (t ++ [h]))
       (l : list A), P l.
 (* begin hide *)
 Proof.
@@ -2162,7 +2375,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem list_ind_app_l :
+Lemma list_ind_app_l :
   forall (A : Type) (P : list A -> Prop)
   (Hnil : P []) (IH : forall l l' : list A, P l -> P (l' ++ l))
     (l : list A), P l.
@@ -2174,7 +2387,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem list_ind_app_r :
+Lemma list_ind_app_r :
   forall (A : Type) (P : list A -> Prop)
   (Hnil : P []) (IH : forall l l' : list A, P l -> P (l ++ l'))
     (l : list A), P l.
@@ -2186,7 +2399,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem list_ind_app :
+Lemma list_ind_app :
   forall (A : Type) (P : list A -> Prop)
   (Hnil : P []) (Hsingl : forall x : A, P [x])
   (IH : forall l l' : list A, P l -> P l' -> P (l ++ l'))
@@ -2197,4 +2410,19 @@ Proof.
     assumption.
     apply (IH [h] t); auto.
 Qed.
+(* end hide *)
+
+(* begin hide *)
+(** lista TODO:
+    - TODO: opisz niestandardowe reguły indukcyjne dla list
+    - TODO: opisz zwijanie
+    - TODO: ogarnąć "Dziwne"
+    - TODO: popracować nad [find], [findIndex], [findIndices] i ogólnie
+      nad funkcjami na listach dla typów mających jakieś specjalne rzeczy
+    - TODO: różne induktywne predykaty dla list (permutacje, [NoDup] etc.)
+    - TODO: zadania dla [unzip]
+    - TODO: zadania dla [zipWith]
+    - TODO: zadania dla [partition]
+    - TODO: zadania dla [tail] i [init]
+    - TODO: zadania dla [head] i [last] *)
 (* end hide *)

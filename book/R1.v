@@ -90,6 +90,7 @@ Check P.
     z jakimi typami masz do czynienia. *)
 
 (** * Typy a zbiory *)
+
 (** Z filozoficznego punktu widzenia należy stanowczo odróżnić
     typy od zbiorów, znanych chociażby z teorii zbiorów ZF,
     która jest najpowszechniej używaną podstawą współczesnej
@@ -115,9 +116,10 @@ Check P.
       zbioru potęgowego mówi, że dla każdego zbioru istnieje zbiór
       wszystkich jego podzbiorów). Teoria typów mówi, w jaki sposób
       obiekty mogą być konstruowane — różnica być może ciężko
-      dostrzegalna dla niewprawionego oka, ale znaczna. *)
+      dostrzegalna dla niewprawionego oka, ale znaczna *)
 
 (** * Logika klasyczna i konstruktywna *)
+
 (** Jak udowodnić twierdzenie, by komputer mógł zweryfikować nasz
     dowód? Jedną z metod dowodzenia używanych w logice klasycznej
     są tabelki prawdy. Są one metodą skuteczną, gdyż działają
@@ -150,6 +152,7 @@ Check P.
     jakieś istnieje, ale nie wiemy, jak je skonstruować. *)
 
 (** * Dedukcja naturalna i taktyki *)
+
 (** Ważną konkluzją płynącą z powyższych rozważań jest fakt, że
     logika konstruktywna ma interpretację obliczeniową — każdy
     dowód można interpretować jako pewien program.
@@ -189,6 +192,7 @@ Check P.
     wziąć się do konkretów! *)
 
 (** * Konstruktywny rachunek zdań *)
+
 (** Nadszedł dobry moment na to, żebyś odpalił CoqIDE. Sesja
     interaktywna w CoqIDE przebiega następująco: edytujemy plik
     z rozszerzeniem .v wpisując komendy. Po kliknięciu przycisku
@@ -203,7 +207,8 @@ Check P.
     coq.inria.fr/refman/Reference-Manual018.html *)
 
 (** ** Implikacja *)
-(** Zacznijmy od czegoś prostego: pokażemy, że P implikuje P. *)
+
+(** Zacznijmy od czegoś prostego: pokażemy, że [P] implikuje [P]. *)
 
 Theorem impl_refl : P -> P.
 Proof.
@@ -346,7 +351,8 @@ Print impl_refl'.
     skonstruowany przez taktyki jest poprawnie typowany,
     a następnie zaakceptował nasz dowód. *)
 
-Theorem modus_ponens : (P -> Q) -> P -> Q.
+Theorem modus_ponens :
+  (P -> Q) -> P -> Q.
 Proof.
   intros. apply H. assumption.
 Qed.
@@ -400,16 +406,20 @@ Qed.
     proste — być może także przewidzieć), jaki proofterm zostanie
     wygenerowany. Powodzenia! *)
 
-(** **** Ćwiczenie *)
-Theorem impl_trans : (P -> Q) -> (Q -> R) -> (P -> R).
+(** **** Ćwiczenie (implikacja) *)
+
+(** Udowodnij poniższe twierdzenia. *)
+
+Theorem impl_trans :
+  (P -> Q) -> (Q -> R) -> (P -> R).
 (* begin hide *)
 Proof.
   intros. apply H0. apply H. assumption.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie  *)
-Theorem impl_permute : (P -> Q -> R) -> (Q -> P -> R).
+Theorem impl_permute :
+  (P -> Q -> R) -> (Q -> P -> R).
 (* begin hide *)
 Proof.
   intros. apply H.
@@ -418,8 +428,8 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
-Theorem impl_dist : (P -> Q -> R) -> ((P -> Q) -> (P -> R)).
+Theorem impl_dist :
+  (P -> Q -> R) -> ((P -> Q) -> (P -> R)).
 (* begin hide *)
 Proof.
   intros. apply H.
@@ -428,8 +438,12 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie. Udowodnij to twierdzenie bez używania [apply]. *)
-Theorem modus_ponens' : (P -> Q) -> P -> Q.
+(** **** Ćwiczenie (bez [apply])*)
+
+(** Udowodnij następujące twierdzenie bez używania taktyki [apply]. *)
+
+Theorem modus_ponens' :
+  (P -> Q) -> P -> Q.
 (* begin hide *)
 Proof.
    intro. assumption.
@@ -597,7 +611,10 @@ Qed.
     obliczeniowej implikacji. Konstruktywna negacja różni się od tej
     klasycznej, o czym przekonasz się w ćwiczeniu. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (negacja) *)
+
+(** Udowodnij poniższe twierdzenia. *)
+
 Theorem not_False : ~False.
 (* begin hide *)
 Proof.
@@ -605,7 +622,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
 Theorem not_True : ~True -> False.
 (* begin hide *)
 Proof.
@@ -613,7 +629,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie. Czy odwrotna implikacja również zachodzi? *)
+(** **** Ćwiczenie (podwójna negacja) *)
+
+(** Udowodnij poniższe twierdzenia. Zastanów się, czy można udowodnić
+    [~~P -> P]. *)
+
 Theorem dbl_neg_intro : P -> ~~P.
 (* begin hide *)
 Proof.
@@ -621,7 +641,21 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie. Czym to twierdzenie różni się od poprzedniego? *)
+Theorem double_neg_elim_irrefutable :
+  ~~ (~~ P -> P).
+(* begin hide *)
+Proof.
+  intro. apply H. intro. cut False.
+    inversion 1.
+    apply H0. intro. apply H. intro. assumption.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie (potrójna negacja) *)
+
+(** Udowodnij poniższe twierdzenie. Jakie są różnice między negacją, podwójną
+    negacją i potrójną negacją? *)
+
 Theorem triple_neg_rev : ~~~P -> ~P.
 (* begin hide *)
 Proof.
@@ -684,7 +718,10 @@ Qed.
     pierwszego członu koniunkcji, a drugi element — drugiego
     członu koniunkcji. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (koniunkcja) *)
+
+(** Udowodnij poniższe twierdzenia. *)
+
 Theorem and_proj2 : P /\ Q -> Q.
 (* begin hide *)
 Proof.
@@ -692,7 +729,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
 Theorem and3_intro : P -> Q -> R -> P /\ Q /\ R.
 (* begin hide *)
 Proof.
@@ -700,7 +736,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
 Theorem and3_proj : P /\ Q /\ R -> Q.
 (* begin hide *)
 Proof.
@@ -708,7 +743,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
 Theorem noncontradiction : ~(P /\ ~P).
 (* begin hide *)
 Proof.
@@ -720,7 +754,9 @@ Qed.
 
 (** Równoważność zdaniowa jest w Coqu oznaczana [<->]. Symbol ten,
     jak (prawie) każdy jest jedynie notacją — równoważność
-    nazywa się [iff]. *)
+    nazywa się [iff]. Jest to skrót od ang. "if and only if". Po
+    polsku zdanie [P <-> Q] możemy odczytać jako "P wtedy i tylko
+    wtedy, gdy Q". *)
 
 Print iff.
 (* ===> fun A B : Prop => (A -> B) /\ (B -> A)
@@ -756,7 +792,10 @@ Qed.
     również wzorzec, służący w klauzuli [as] do nadawania nazw
     zmiennym. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (równoważność zdaniowa) *)
+
+(** Udowodnij poniższe twierdzenia. *)
+
 Theorem iff_refl : P <-> P.
 (* begin hide *)
 Proof.
@@ -766,7 +805,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
 Theorem iff_symm : (P <-> Q) -> (Q <-> P).
 (* begin hide *)
 Proof.
@@ -776,7 +814,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
 Theorem iff_trans: (P <-> Q) -> (Q <-> R) -> (P <-> R).
 (* begin hide *)
 Proof.
@@ -786,7 +823,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
 Theorem iff_not : (P <-> Q) -> (~P <-> ~Q).
 (* begin hide *)
 Proof.
@@ -796,7 +832,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
 Theorem curry_uncurry : (P -> Q -> R) <-> (P /\ Q -> R).
 (* begin hide *)
 Proof.
@@ -810,17 +845,19 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Alternatywa *)
+(** ** Dysjunkcja *)
 
 Theorem or_left : P -> P \/ Q.
 Proof.
   intro. left. assumption.
 Qed.
 
-(** Symbol [\/] oznacza alternatywę (zwaną też czasem dysjunkcją)
-    dwóch zdań logicznych. Żeby dowieść alternatywy [P \/ Q],
-    musimy udowonić albo lewy, albo prawy jej człon. Taktyki [left]
-    oraz [right] pozwalają nam wybrać, którego z nich chcemy dowodzić. *)
+(** Symbol [\/] oznacza dysjunkcję dwóch zdań logicznych. W języku polskim
+    czasem używa się też określenia "alternatywa", ale będziemy się tego
+    wystrzegać, rezerwując to słowo dla czegoś innego. Żeby dowieść
+    dysjunkcji [P \/ Q], musimy udowonić albo lewy, albo prawy jej człon.
+    Taktyki [left] oraz [right] pozwalają nam wybrać, którego z nich chcemy
+    dowodzić. *)
 
 Theorem or_comm_impl : P \/ Q -> Q \/ P.
 Proof.
@@ -829,25 +866,28 @@ Proof.
     left. assumption.
 Qed.
 
-(** Zauważmy, że użycie taktyki destruct zmieniło nam ilość celów.
+(** Zauważmy, że użycie taktyki [destruct] zmieniło nam ilość celów.
     Wynika to z faktu, że nie wiemy, który człon hipotezy [P \/ Q] jest
     prawdziwy, więc dla każdego przypadku musimy przeprowadzić osobny
     dowód. Inaczej wygląda też wzorzec służący do rozbicia tej
-    hipotezy — w przypadku alternatywy ma on postać [[nazwa1 | nazwa2]].
+    hipotezy — w przypadku dysjunkcji ma on postać [[nazwa1 | nazwa2]].
 
-    Interpretacja obliczeniowa alternatywy jest następująca: jest to
-    suma rozłączna dwóch zdań. Dowód alternatywy to dowód jednego z jej
-    członów z dodatkową informacją o tym, który to człon.
+    Interpretacja obliczeniowa dysjunkcji jest następująca: jest to
+    suma rozłączna dwóch zdań. Dowód dysjunkcji to dowód jednego z
+    jej członów z dodatkową informacją o tym, który to człon.
 
-    To ostatnie stwierdzenie odróżnia alternatywę konstruktywną od
-    klasycznej: klasyczna alternatywa to stwierdzenie "któres z tych
+    To ostatnie stwierdzenie odróżnia dysjunkcję konstruktywną od
+    klasycznej: klasyczna dysjunkcja to stwierdzenie "któres z tych
     dwóch zdań jest prawdziwe (lub oba)", zaś konstruktywna to
     stwierdzenie "lewy człon jest prawdziwy albo prawy człon jest
     prawdziwy (albo oba, ale i tak dowodzimy tylko jednego)". Jest
     to znaczna różnica — w przypadku logiki klasycznej nie wiemy,
     który człon jest prawdziwy. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (dysjunkcja) *)
+
+(** Udowodnij poniższe twierdzenia. *)
+
 Theorem or_right : Q -> P \/ Q.
 (* begin hide *)
 Proof.
@@ -855,7 +895,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
 Theorem or_big : Q -> P \/ Q \/ R.
 (* begin hide *)
 Proof.
@@ -863,7 +902,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
 Theorem or3_comm_impl : P \/ Q \/ R -> R \/ Q \/ P.
 (* begin hide *)
 Proof.
@@ -872,7 +910,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie. Czy odwrotna implikacja również zachodzi? *)
+(** **** Ćwiczenie (dysjunkcja i implikacja) *)
+
+(** Udowodnij poniższe twierdzenie. Następnie zastanów się, czy odwrotna
+    implikacja również zachodzi. *)
+
 Theorem or_impl : ~P \/ Q -> (P -> Q).
 (* begin hide *)
 Proof.
@@ -902,7 +944,7 @@ End constructive_propositional_logic.
 
 (** ** Kwantyfikacja uniwersalna *)
 
-(** Zobaczmy o co chodzi na znanym nam już przykładzie zrotności
+(** Zobaczmy o co chodzi na znanym nam już przykładzie zwrotności
     implikacji: *)
 
 Theorem impl_refl'' : forall P : Prop, P -> P.
@@ -991,7 +1033,10 @@ Qed.
     udowodnić szybciej, jeżeli zamiast [specialize] i [assumption]
     napisalibyśmy [destruct (H 42)]. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (kwantyfikacja uniwersalna) *)
+
+(** Udowodnij poniższe twierdzenie. *)
+
 Theorem all_dist :
   forall (A : Type) (P Q : A -> Prop),
     (forall x : A, P x /\ Q x) <->
@@ -1017,7 +1062,8 @@ Qed.
 (** Zdania egzystencjalne to zdania postaci "istnieje obiekt x,
     który ma właściwość P". W Coqu prezentują się tak: *)
 
-Theorem ex_example1 : exists n : nat, n = 0.
+Theorem ex_example1 :
+  exists n : nat, n = 0.
 Proof.
   exists 0. trivial.
 Qed.
@@ -1036,7 +1082,8 @@ Qed.
     jest 0". Następnie pozostaje nam udowodnić, iż rzeczywiście [0 = 0],
     co jest trywialne. *)
 
-Theorem ex_example2 : ~ exists n : nat, 0 = S n.
+Theorem ex_example2 :
+  ~ exists n : nat, 0 = S n.
 Proof.
   intro. destruct H as [n H]. inversion H.
 Qed.
@@ -1052,9 +1099,9 @@ Qed.
     - udowodnienie koniunkcji wymaga udowodnienia obydwu członów z osobna,
       więc dowód koniunkcji można rozbić na dowody poszczególnych członów
       (podobna sytuacja zachodzi w przypadku równoważności)
-    - udowodnienie alternatywy wymaga udowodnienia któregoś z członów, więc
-      dowód alternatywy można rozbić, uzyskując dwa osobne podcele, a w
-      każdym z nich dowód jednego z członów tej alternatywy
+    - udowodnienie dysjunkcji wymaga udowodnienia któregoś z członów,
+      więc dowód dysjunkcji można rozbić, uzyskując dwa osobne podcele,
+      a w każdym z nich dowód jednego z członów tej dysjunkcji
     - udowodnienie zdania egzystencjalnego wymaga wskazania obiektu i
       podania dowodu żądanej własności, więc dowód takiego zdania
       możemy rozbić, uzyskując ten obiekt i dowód jego własności *)
@@ -1090,7 +1137,10 @@ Qed.
     elementami są pary zależne, jest uogólnieniem produktu [A * B],
     którego elementami są zwykłe pary. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (kwantyfikacja egzystencjalna) *)
+
+(** Udowodnij poniższe twierdzenie. *)
+
 Theorem ex_or_dist :
   forall (A : Type) (P Q : A -> Prop),
     (exists x : A, P x \/ Q x) <->
@@ -1107,13 +1157,101 @@ Proof.
 Qed.
 (* end hide *)
 
+(** * Paradoks golibrody *)
+
+(** Języki naturalne, jakimi ludzie posługują się w życiu codziennym
+    (polski, angielski suahili, język indian Navajo) zawierają spory
+    zestaw spójników oraz kwantyfikatorów ("i", "a", "oraz", "lub",
+    "albo", "jeżeli ... to", "pod warunkiem, że ", "wtedy", i wiele
+    innych).
+
+    Należy z całą stanowczością zaznaczyć, że te spójniki i kwantyfikatory,
+    a w szczególności ich intuicyjna interpretacja, znacznie różnią się
+    od analogicznych spójników i kwantyfikatorów logicznych, które mieliśmy
+    okazję poznać w tym rozdziale. Żeby to sobie uświadomić, zapoznamy się
+    z pewnego rodzaju "paradoksem". *)
+
+Theorem barbers_paradox :
+  forall (man : Type) (barber : man)
+    (shaves : man -> man -> Prop),
+      (forall x : man, shaves barber x <-> ~ shaves x x) -> False.
+(* begin hide *)
+Proof.
+  intros. destruct (H barber). apply H0.
+    apply H1. intro. apply H0; assumption.
+    apply H1. intro. apply H0; assumption.
+Qed.
+(* end hide *)
+
+(** Twierdzenie to formułowane jest zazwyczaj tak: nie istnieje człowiek,
+    który goli wszystkich tych (i tylko tych), którzy sami siebie nie golą.
+
+    Ale cóż takiego znaczy to przedziwne zdanie? Czy matematyka dają nam
+    magiczną, aprioryczną wiedzę o fryzjerach?
+
+    Odczytajmy je poetycko. Wyobraźmy sobie pewne miasteczko. Typ [man]
+    będzie reprezentował jego mieszkańców. Niech term [barber] typu [man]
+    oznacza hipotetycznego golibrodę. Hipotetycznego, gdyż samo użycie
+    jakiejś nazwy nie powoduje automatycznie, że nazywany obiekt istnieje
+    (przykładów jest masa, np. jednorożce, sprawiedliwość społeczna).
+
+    Mamy też relację [shaves]. Będziemy ją interpretować w ten sposób, że
+    [shaves a b] zachodzi, gdy [a] goli brodę [b]. Nasza hipoteza
+    [forall x : man, shaves barber x <-> ~ shaves x x] jest zawoalowanym
+    sposobem podania następującej definicji: golibrodą nazwiemy te osoby,
+    który golą wszystkie te i tylko te osoby, które same siebie nie golą.
+
+    Póki co sytuacja rozwija się w całkiem niekontrowersyjny sposób. Żeby
+    zburzyć tę sielankę, możemy zadać sobie następujące pytanie: czy
+    golibroda rzeczywiście istnieje? Dziwne to pytanie, gdy na każdym
+    rogu ulicy można spotkać fryzjera, ale nie dajmy się zwieść.
+
+    W myśl rzymskich sentencji "quis custodiet ipsos custodes?" ("kto będzie
+    pilnował strażników?") oraz "medice, cure te ipsum!" ("lekarzu, wylecz
+    sam siebie!") możemy zadać dużo bardziej konkretne pytanie: kto goli
+    brody golibrody? A idąc jeszcze krok dalej: czy golibroda goli sam siebie?
+
+    Rozstrzygnięcie jest banalne i wynika wprost z definicji: jeśli golibroda
+    ([barber]) to ten, kto goli ([shaves barber x]) wszystkich tych i tylko
+    tych ([forall x : man]), którzy sami siebie nie golą ([~ shaves x x]), to
+    podstawiając [barber] za [x] otrzymujemy sprzeczność: [shaves barber
+    barber] zachodzi wtedy i tylko wtedy, gdy [~ shaves barber barber].
+
+    Tak więc golibroda, zupełnie jak Święty Mikołaj, nie istnieje. Zdanie to
+    nie ma jednak wiele wspólnego ze światem rzeczywistym: wynika ono jedynie
+    z takiej a nie innej, przyjętej przez nas całkowicie arbitralnie definicji
+    słowa "golibroda". Można to łatwo zobrazować, przeformułowywując powyższe
+    twierdzenie z użyciem innych nazw: *)
+
+Theorem barbers_paradox' :
+  forall (A : Type) (x : A) (P : A -> A -> Prop),
+    (forall y : A, P x y <-> ~ P y y) -> False.
+(* begin hide *)
+Proof.
+  intros. destruct (H x). apply H0.
+    apply H1. intro. apply H0; assumption.
+    apply H1. intro. apply H0; assumption.
+Qed.
+(* end hide *)
+
+(** Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
+    goli sam siebie?" jest konsekwencją wyłącznie formy powyższego zdania
+    logicznego i nie mówi nic o rzeczywistoświatych golibrodach.
+
+    Paradoksalność całego "paradoksu" bierze się z tego, że typom, zmiennym
+    i relacjom specjalnie nadano takie nazwy, żeby zwykły człowiek bez
+    głębszych dywagacji nad definicją słowa "golibroda" przjął, że golibroda
+    istnieje. Robiąc tak, wpada w sidła pułapki zastawionej przez logika i
+    zostaje trafiony paradoksalną konkluzją: golibroda nie istnieje. *)
+
 (** * Kombinatory taktyk *)
 
 (** Przyjrzyjmy się jeszcze raz twierdzeniu [iff_intro] (lekko
     zmodernizowanemu przy pomocy kwantyfikacji uniwersalnej). *)
 
 Theorem iff_intro' :
-  forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
+  forall P Q : Prop,
+    (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
   intros. split.
     intro. apply H. assumption.
@@ -1139,7 +1277,8 @@ Qed.
 (** ** [;] (średnik) *)
 
 Theorem iff_intro'' :
-  forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
+  forall P Q : Prop,
+    (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
   split; intros; [apply H | apply H0]; assumption.
 Qed.
@@ -1210,11 +1349,12 @@ Qed.
       jakąś funkcjonalność i udowodnić, że po jej dodaniu
       system wciąż działa poprawnie *)
 
-(** Następujące ćwiczenia rozwiąż najpierw z jak największym zrozumieniem,
+(** **** Ćwiczenie (średnik) *)
+
+(** Poniższe twierdzenia udowodnij najpierw z jak największym zrozumieniem,
     a następnie zautomatyzuj tak, aby całość była rozwiązywana w jednym
     kroku przez pojedynczą taktykę. *)
 
-(** **** Ćwiczenie *)
 Theorem or_comm_ex :
   forall P Q : Prop, P \/ Q -> Q \/ P.
 (* begin hide *)
@@ -1223,7 +1363,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
 Theorem diamond :
   forall P Q R S : Prop,
     (P -> Q) \/ (P -> R) -> (Q -> S) -> (R -> S) -> P -> S.
@@ -1240,7 +1379,8 @@ Qed.
 (** ** [||] (alternatywa) *)
 
 Theorem iff_intro''' :
-  forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
+  forall P Q : Prop,
+    (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
   split; intros; apply H0 || apply H; assumption.
 Qed.
@@ -1273,7 +1413,8 @@ Qed.
 (** ** [idtac], [do] oraz [repeat] *)
 
 Theorem idtac_do_example :
-  forall P Q R S : Prop, P -> S \/ R \/ Q \/ P.
+  forall P Q R S : Prop,
+    P -> S \/ R \/ Q \/ P.
 Proof.
   idtac. intros. do 3 right. assumption.
 Qed.
@@ -1290,10 +1431,10 @@ Qed.
     czyli kończy się sukcesem nic nie robiąc.
 
     W naszym przypadku użycie taktyki [do 3 right] sprawi, że
-    przy wyborze członu alternatywy, którego chcemy dowodzić,
+    przy wyborze członu dysjunkcji, którego chcemy dowodzić,
     trzykrotnie pójdziemy w prawo. Zauważmy, że taktyka [do 4 right]
     zawiodłaby, gdyż po 3 użyciach [right] cel nie byłby już
-    alternatywą, więc kolejne użycie [right] zawiodłoby, a wtedy
+    dysjunkcją, więc kolejne użycie [right] zawiodłoby, a wtedy
     cała taktyka [do 4 right] również zawiodłaby. *)
 
 Theorem repeat_example :
@@ -1312,16 +1453,17 @@ Qed.
     nią celu zostanie użyte [repeat t].
 
     W naszym przypadku [repeat right] ma taki efekt, że przy wyborze
-    członu alternatywy wybieramy człon będący najbardziej na prawo,
-    tzn. dopóki cel jest alternatywą, aplikowana jest taktyka [right],
-    która wybiera prawy człon. Kiedy nasz cel przestaje być alternatywą,
+    członu dysjunkcji wybieramy człon będący najbardziej na prawo,
+    tzn. dopóki cel jest dysjunkcją, aplikowana jest taktyka [right],
+    która wybiera prawy człon. Kiedy nasz cel przestaje być dysjunkcją,
     taktyka [right] zawodzi i wtedy taktyka [repeat right] kończy swoje
     działanie sukcesem. *)
 
 (** ** [try] i [fail] *)
 
 Theorem iff_intro4 :
-  forall P Q : Prop, (P -> Q) -> (Q -> P) -> (P <-> Q).
+  forall P Q : Prop,
+    (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
   split; intros; try (apply H0; assumption; fail);
   try (apply H; assumption; fail).
@@ -1372,13 +1514,20 @@ Qed.
     https://coq.inria.fr/refman/tactic-index.html *)
 
 (** * Zadania *)
-(** Uwaga: niektóre zadania mogą pokrywać się z ćwiczeniami, które
-    występują w tekście.
-    Uwaga TODO: dodać ćwiczenia do sekcji Kombinatory taktyk. *)
+
+(** Poniższe zadania stanowią (chyba) kompletny zbiór praw rządzących
+    logikami konstruktywną i klasyczną (w szczególności, niektóre z
+    zadań mogą pokrywać się z ćwiczeniami zawartymi w tekście). Wróć
+    do nich za jakiś czas, gdy czas przetrzebi trochę twoją pamięć
+    (np. za tydzień).
+
+    Rozwiąż wszystkie zadania dwukrotnie: raz ręcznie, zaś za drugim
+    razem w sposób zautomatyzowany. *)
 
 (** ** Konstruktywny rachunek zdań *)
 
 Section exercises_propositional.
+
 Hypotheses P Q R S : Prop.
 
 (** Komenda [Hypotheses] formalnie działa jak wprowadzenie aksjomatu,
@@ -1401,8 +1550,10 @@ end.
 Ltac leftright t := ((left; t) || (right; t)).
 (* end hide *)
 
-(* Przemienność *)
-Theorem and_comm : P /\ Q -> Q /\ P.
+(** *** Przemienność *)
+
+Theorem and_comm :
+  P /\ Q -> Q /\ P.
 (* begin hide *)
 Proof.
   destruct 1; split; assumption.
@@ -1411,15 +1562,18 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem or_comm : P \/ Q -> Q \/ P.
+Theorem or_comm :
+  P \/ Q -> Q \/ P.
 (* begin hide *)
 Proof.
   destruct 1; [right | left]; assumption.
 Qed.
 (* end hide *)
 
-(* Łączność *)
-Theorem and_assoc : P /\ (Q /\ R) <-> (P /\ Q) /\ R.
+(** *** Łączność *)
+
+Theorem and_assoc :
+  P /\ (Q /\ R) <-> (P /\ Q) /\ R.
 (* begin hide *)
 Proof.
   split; intros.
@@ -1435,7 +1589,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem or_assoc : P \/ (Q \/ R) <-> (P \/ Q) \/ R.
+Theorem or_assoc :
+  P \/ (Q \/ R) <-> (P \/ Q) \/ R.
 (* begin hide *)
 Proof.
   split; intros.
@@ -1452,8 +1607,10 @@ Restart.
 Qed.
 (* end hide *)
 
-(* Rozdzielność *)
-Theorem and_dist_or : P /\ (Q \/ R) <-> (P /\ Q) \/ (P /\ R).
+(** *** Rozdzielność *)
+
+Theorem and_dist_or :
+  P /\ (Q \/ R) <-> (P /\ Q) \/ (P /\ R).
 (* begin hide *)
 Proof.
   split; intros.
@@ -1468,7 +1625,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem or_dist_and : P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
+Theorem or_dist_and :
+  P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
 (* begin hide *)
 Proof.
   split; intros.
@@ -1497,7 +1655,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem imp_dist_imp : (P -> Q -> R) <-> ((P -> Q) -> (P -> R)).
+Theorem imp_dist_imp :
+  (P -> Q -> R) <-> ((P -> Q) -> (P -> R)).
 (* begin hide *)
 Proof.
   split; intros.
@@ -1514,8 +1673,10 @@ Restart.
 Qed.
 (* end hide *)
 
-(* Kuryfikacja *)
-Theorem curry : (P /\ Q -> R) -> (P -> Q -> R).
+(** *** Kuryfikacja i dekuryfikacja *)
+
+Theorem curry :
+  (P /\ Q -> R) -> (P -> Q -> R).
 (* begin hide *)
 Proof.
   intros; apply H; split; assumption.
@@ -1524,24 +1685,30 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem uncurry : (P -> Q -> R) -> (P /\ Q -> R).
+Theorem uncurry :
+  (P -> Q -> R) -> (P /\ Q -> R).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-(* De Morgan *)
-Theorem deMorgan_1 : ~(P \/ Q) <-> ~P /\ ~Q.
+(** *** Prawa de Morgana *)
+
+Theorem deMorgan_1 :
+  ~(P \/ Q) <-> ~P /\ ~Q.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem deMorgan_2 : ~P \/ ~Q -> ~(P /\ Q).
+Theorem deMorgan_2 :
+  ~P \/ ~Q -> ~(P /\ Q).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-(* Niesprzeczność i zasada wyłączonego środka *)
-Theorem noncontradiction' : ~(P /\ ~P).
+(** *** Niesprzeczność i zasada wyłączonego środka *)
+
+Theorem noncontradiction' :
+  ~(P /\ ~P).
 (* begin hide *)
 Proof.
   unfold not; intros. destruct H. apply H0. assumption.
@@ -1550,64 +1717,78 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem noncontradiction_v2 : ~(P <-> ~P).
+Theorem noncontradiction_v2 :
+  ~ (P <-> ~P).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem em_irrefutable : ~~(P \/ ~P).
+Theorem em_irrefutable :
+  ~~ (P \/ ~P).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-(* Elementy neutralne i anihilujące *)
-Theorem and_false_annihilation : P /\ False <-> False.
+(** *** Elementy neutralne i anihilujące *)
+
+Theorem and_false_annihilation :
+  P /\ False <-> False.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem or_false_neutral : P \/ False <-> P.
+Theorem or_false_neutral :
+  P \/ False <-> P.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem and_true_neutral : P /\ True <-> P.
+Theorem and_true_neutral :
+  P /\ True <-> P.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem or_true_annihilation : P \/ True <-> True.
+Theorem or_true_annihilation :
+  P \/ True <-> True.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-(* Różne *)
-Theorem or_imp_and : (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
+(** *** Inne *)
+
+Theorem or_imp_and :
+  (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem and_not_imp : P /\ ~Q -> ~(P -> Q).
+Theorem and_not_imp :
+  P /\ ~Q -> ~(P -> Q).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem or_not_imp : ~P \/ Q -> (P -> Q).
+Theorem or_not_imp :
+  ~P \/ Q -> (P -> Q).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem contraposition : (P -> Q) -> (~Q -> ~P).
+Theorem contraposition :
+  (P -> Q) -> (~Q -> ~P).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem absurd : ~P -> P -> Q.
+Theorem absurd :
+  ~P -> P -> Q.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem impl_and : (P -> Q /\ R) -> ((P -> Q) /\ (P -> R)).
+Theorem impl_and :
+  (P -> Q /\ R) -> ((P -> Q) /\ (P -> R)).
 (* begin hide *)
 Proof.
   split; intro H'; destruct (H H'); assumption.
@@ -1628,11 +1809,13 @@ Check and_comm.
 
 (** ** Konstruktywny rachunek predykatów *)
 
-Section exercises_predicate. 
+Section exercises_predicate.
+
 Variable A : Type.
 Hypotheses P Q R S : A -> Prop.
 
-(* Projekcje *)
+(** *** Projekcje *)
+
 Theorem forall_and_proj1 :
   (forall x : A, P x /\ Q x) -> (forall x : A, P x).
 (* begin hide *)
@@ -1649,7 +1832,8 @@ Proof.
 Qed.
 (* end hide *)
 
-(* Rozdzielność *)
+(** *** Rozdzielność *)
+
 Theorem forall_dist_and :
   (forall x : A, P x /\ Q x) <->
   (forall x : A, P x) /\ (forall x : A, Q x).
@@ -1700,7 +1884,8 @@ Proof.
 Qed.
 (* end hide *)
 
-(* Inne *)
+(** *** Inne *)
+
 Theorem forall_or_imp :
   (forall x : A, P x) \/ (forall x : A, Q x) -> (forall x : A, P x \/ Q x).
 (* begin hide *)
@@ -1759,85 +1944,12 @@ Qed.
 
 End exercises_predicate.
 
-(** ** Paradoks golibrody *)
-
-Theorem barber_paradox :
-  forall (man : Type) (barber : man)
-    (shaves : man -> man -> Prop),
-      (forall x : man, shaves barber x <-> ~ shaves x x) -> False.
-(* begin hide *)
-Proof.
-  intros. destruct (H barber). apply H0.
-    apply H1. intro. apply H0; assumption.
-    apply H1. intro. apply H0; assumption.
-Qed.
-(* end hide *)
-
-(** Twierdzenie to formułowane jest zazwyczaj tak: nie istnieje człowiek,
-    który goli wszystkich tych (i tylko tych), którzy sami siebie nie golą.
-
-    Ale cóż takiego znaczy to przedziwne zdanie? Czy matematyka dają nam
-    magiczną, aprioryczną wiedzę o fryzjerach?
-
-    Odczytajmy je poetycko. Wyobraźmy sobie pewne miasteczko. Typ [man]
-    będzie reprezentował jego mieszkańców. Niech term [barber] typu [man]
-    oznacza hipotetycznego golibrodę. Hipotetycznego, gdyż samo użycie
-    jakiejś nazwy nie powoduje automatycznie, że nazywany obiekt istnieje
-    (przykładów jest masa, np. jednorożce).
-
-    Mamy też relację [shaves]. Będziemy ją interpretować w ten sposób, że
-    [shaves a b] zachodzi, gdy [a] goli brodę [b]. Nasza hipoteza
-    [forall x : man, shaves barber x <-> ~ shaves x x] jest zawoalowanym
-    sposobem podania następującej definicji: golibrodą nazwiemy te osoby,
-    który golą wszystkie te i tylko te osoby, które same siebie nie golą.
-
-    Póki co sytuacja rozwija się w całkiem niekontrowersyjny sposób. Żeby
-    zburzyć tę sielankę, możemy zadać sobie następujące pytanie: czy
-    golibroda rzeczywiście istnieje? Dziwne to pytanie, gdy na każdym
-    rogu ulicy można spotkać fryzjera, ale nie dajmy się zwieść.
-
-    W myśl rzymskich sentencji "quis custodiet ipsos custodes?" ("kto będzie
-    pilnował strażników?") oraz "medice, cure te ipsum!" ("lekarzu, wylecz
-    sam siebie!") możemy zadać dużo bardziej konkretne pytanie: kto goli
-    brody golibrody? A idąc jeszcze krok dalej: czy golibroda goli sam siebie?
-
-    Rozstrzygnięcie jest banalne i wynika wprost z definicji: jeśli golibroda
-    ([barber]) to ten, kto goli ([shaves barber x]) wszystkich tych i tylko
-    tych ([forall x : man]), którzy sami siebie nie golą ([~ shaves x x]), to
-    podstawiając [barber] za [x] otrzymujemy sprzeczność: [shaves barber barber]
-    zachodzi wtedy i tylko wtedy, gdy [~ shaves barber barber].
-
-    Tak więc golibroda, zupełnie jak Święty Mikołaj, nie istnieje. Zdanie to
-    nie ma jednak wiele wspólnego ze światem rzeczywistym: wynika ono jedynie
-    z takiej a nie innej, przyjętej przez nas całkowicie arbitralnie definicji
-    słowa "golibroda". Można to łatwo zobrazować, przeformułowywując powyższe
-    twierdzenie z użyciem innych nazw: *)
-
-Theorem barber_paradox' :
-  forall (A : Type) (x : A) (P : A -> A -> Prop),
-    (forall y : A, P x y <-> ~ P y y) -> False.
-(* begin hide *)
-Proof.
-  intros. destruct (H x). apply H0.
-    apply H1. intro. apply H0; assumption.
-    apply H1. intro. apply H0; assumption.
-Qed.
-(* end hide *)
-
-(** Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
-    goli sam siebie?" jest konsekwencją wyłącznie formy powyższego zdania
-    logicznego i nie mówi nic o rzeczywistoświatych golibrodach.
-
-    Paradoksalność całego "paradoksu" bierze się z tego, że typom, zmiennym
-    i relacjom specjalnie nadano takie nazwy, żeby zwykły człowiek bez
-    głębszych dywagacji nad definicją słowa "golibroda" przjął, że golibroda
-    istnieje. Robiąc tak, wpada w sidła pułapki zastawionej przez logika i
-    zostaje trafiony paradoksalną konkluzją: golibroda nie istnieje. *)
-
 (** ** Klasyczny rachunek zdań (i predykatów) *)
 
 Section exercises_classical.
+
 Require Import Classical.
+
 Hypotheses P Q R S : Prop.
 
 (** Komenda [Require Import] pozwala nam zaimportować żądany
@@ -1910,7 +2022,7 @@ End exercises_classical.
 
 (** ** Paradoks pijoka *)
 
-Theorem drinker_paradox :
+Theorem drinkers_paradox :
   forall (man : Type) (drinks : man -> Prop) (random_guy : man),
     exists drinker : man, drinks drinker ->
       forall x : man, drinks x.
@@ -1947,7 +2059,7 @@ Qed.
     oznacza, że [x] pije. Pojawia się też osoba określona tajemniczym
     mianem [random_guy]. Jest ona konieczna, gdyż nasza poetycka parafraza
     czyni jedno założenie implicite: mianowicie, że w barze ktoś jest.
-    Jest ono konieczne, gdyż gdyby w barze nie byłoby nikogo, to w szcezgóności
+    Jest ono konieczne, gdyż gdyby w barze nie było nikogo, to w szczególności
     nie mogłoby tam być nikogo, kto spełnia jakieś dodatkowe warunki.
 
     I tak docieramy do sedna sprawy: istnieje osoba, którą będziemy zwać
@@ -1995,12 +2107,13 @@ Qed.
     quodlibet_), których w użyliśmy w dowodzie, a które dla zwykłego człowieka
     nie muszą być takie oczywiste. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (logika klasyczna) *)
 
 (** W powyższym dowodzie logiki klasycznej użyłem conajmniej dwukrotnie.
     Zacytuj wszystkie fragmenty dowodu wykorzystujące logikę klasyczną. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (niepusty bar) *)
+
 (** Pokaż, że założenie o tym, że w barze jest conajmniej jeden klient,
     jest konieczne. Co więcej, pokaż że stwierdzenie "w barze jest taki
     klient, że jeżeli on pije, to wszyscy piją" jest równoważne stwierdzeniu
@@ -2015,6 +2128,34 @@ Theorem dp_nonempty :
 Proof.
   split; intros; destruct H as [random_guy _].
     exists random_guy. trivial.
-    apply drinker_paradox. assumption.
+    apply drinkers_paradox. assumption.
 Qed.
+(* end hide *)
+
+(** * Konkluzja *)
+
+(** W niniejszym rozdziale zapoznaliśmy się z logiką konstruktywną.
+    Poznaliśmy  jej składnię, interpretację obliczeniową, nauczyliśmy
+    się dowodzić w systemie dedukcji naturalnej oraz dowiedzieliśmy
+    się, jak to wszystko zrealizować w Coqu. Poznaliśmy też kombinatory
+    taktyk, dzięki którym możemy skrócić i uprościć nasze formalne dowody.
+
+    Zapoznaliśmy się też z logiką klasyczną i jej interpretacją. Poznaliśmy
+    też dwa paradoksy związane z różnicami w interpretacji zdanń w języku
+    naturalnym oraz zdań matematycznych. Jeden z paradoksów dobrze pokazał
+    nam w praktyce, na czym polega różnica między logiką konstruktywną i
+    klasyczną.
+
+    Skoro potrafimy już co nieco dowodzić, czas zapoznać się z jakimiś
+    bytami, o których moglibyśmy czegoś dowieść — w następnym rozdziale
+    zajmiemy się na poważnie typami, programami i obliczeniami oraz
+    udowadnianiem ich właściwości. *)
+
+(* begin hide *)
+(** TODO:
+    - zrefaktoryzować rozdział: opisać zarówno logikę konstruktywną jak i
+      klasyczną oraz przedstawić je obie jako użyteczne
+    - przenieść paradoksy na końce opisów obu logik, żeby zobrazować
+      różnice między językiem naturalnym i matematycznym
+    - przejrzeć zadania *)
 (* end hide *)

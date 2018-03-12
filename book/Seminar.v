@@ -2882,7 +2882,7 @@ Proof.
   Require Import Equality.
   intros P b i s s' H H0 H1.
   gen H; gen H0.
-  dependent induction H1; eauto. (* TODO *)
+  dependent induction H1; eauto.
 Restart.
 (* end hide *)
   intros. ind H1.

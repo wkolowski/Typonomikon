@@ -159,9 +159,6 @@ Proof.
   eapply perm_trans.
     apply perm_swap.
     do 2 constructor. apply Permutation_app_head. trivial.
-    (*induction l as [| h t]; simpl.
-      assumption.
-      rewrite IHt. trivial.*)
 Qed.
 (* end hide *)
 
