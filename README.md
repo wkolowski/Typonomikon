@@ -5,12 +5,12 @@ To repozytorium zawiera źródła mojej [książki](https://zeimer.github.io/).
 W sumie nie wiem, dlaczego wstawiłem je osobno, zamiast wrzucić do jednego repo razem z książką...
 
 Co tu się dzieje:
-- book/ zawiera pliki .v, które stanowią źródła książki. EDIT 31.1.18: od teraz dostępne są też źródła rozdziału "Seminar: Induction".
+- book/ zawiera pliki .v, które stanowią źródła książki.
 - css/ i js/ to style i kod js, które dają książce w miarę znośny wygląd. Ukradzione ze starej wersji [Software Foundations](https://softwarefoundations.cis.upenn.edu/)
 - extra/ zawiera nagłówek i stopkę, które dodają analitiksy i inne takie, a także okładkę, również ukradzioną z Software Foundations.
-- trash/ zawiera fragmenty rozdziałów, które zostały wycięte albo skopiowane na zapas z jakichś dziwnych powodów (np. refaktoringu).
 - todo/ zawiera pliki .v o wysokim priorytecie, z których będą powstawać przyszłe rozdziały.
 - misc/ zawier pliki .v o niskim priorytecie z jakimiś kodami, z których może kiedyś coś będzie.
+- teksty/ to nieco bardziej składne notatki
 - build.sh i rebuild.sh to skrypty służące odpowiednio do budowania i budowania od nowa książki. make_makefile.sh generuje nowy makefile od zera.
 
 Książkę można skompilować za pomocą polecenia
@@ -32,7 +32,7 @@ W dalszej perspektywie powstaną rozdziały stosowane dotyczące różnych, mnie
 
 Bliskie TODO:
 - R4: spis taktyk (już się robi)
-- R5: reflekcja. EDIT 31.1.18: Hurra! Rozdział o reflekcji będzie po polsku.
+- R5: reflekcja.
 
 Średnie TODO:
 - dokończyć rozdział o funkcjach (więcej ukrytej teorii kategorii)
@@ -46,13 +46,13 @@ Dalekie TODO:
   - aksjomaty
 - Rekursja:
   - rekursja strukturalna
-  - rekursja "monotoniczna" (fix w fiksie)
   - rekursja ogonowa
-  - rekursja "po paliwie"
-  - rekursja przez iterację
-  - Bove-Capretta
-  - rekursja dobrze ufundowana
   - rekursja polimorficzna
+  - rekursja "monotoniczna" (fix w fiksie)
+  - rekursja "po paliwie"
+  - rekursja dobrze ufundowana
+  - Bove-Capretta
+  - rekursja przez iterację
 - Indukcja:
   - foldy
   - reguły dla indukcji dobrze ufundowanej
@@ -79,6 +79,5 @@ Dalekie TODO:
   - Drzewa binarne, wisienki, RoseTree, sterty...
 - Inne:
   - definiowanie przez dowód
-  - być może koindukcja (a może lepiej nie...)
 - Sugestie:
   - być może przesunąć Empty_set i unit za Enumeracje, a prod i sum za Właściwości konstruktorów. Wcisnąć tu ukrytą teorię kategorii.

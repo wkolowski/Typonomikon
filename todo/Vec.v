@@ -64,7 +64,7 @@ Fixpoint app {A : Type} {n m : nat} (l1 : vec A n) (l2 : vec A m)
   : vec A (n + m) :=
 match l1 with
     | vnil => l2
-    | vcons _ h t => vcons h (app t l2)
+    | vcons h t => vcons h (app t l2)
 end.
 (* end hide *)
 
@@ -81,7 +81,7 @@ Theorem JMeq_vcons :
     n = m -> JMeq h h' -> JMeq t t' -> JMeq (vcons h t) (vcons h' t').
 (* end hide *)
 Proof.
-  intros. subst. rewrite H1. trivial.
+  intros. subst. rewrite H1. reflexivity.
 Qed.
 (* end hide *)
 
@@ -239,9 +239,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Zdefiniuj funkcję [rev], która odwraca listę. Wskazówka: definicja podobna
-    do tej dla [list] nie zadziała. Napiszę wcześniej funkcję pomocniczą [snoc],
-    która wstawia element na koniec wektora. *)
+(** Zdefiniuj funkcję [rev], która odwraca listę. Wskazówka: definicja
+    podobna do tej dla [list] nie zadziała. Napiszę wcześniej funkcję
+    pomocniczą [snoc], która wstawia element na koniec wektora. *)
 
 (* begin hide *)
 Fixpoint snoc {A : Type} {n : nat} (x : A) (l : vec A n) : vec A (S n) :=
@@ -594,7 +594,8 @@ Qed.
 (** Napisz funkcję [join], która spłaszcza listę list. *)
 
 (* begin hide *)
-Fixpoint join {A : Type} (n m : nat) (lla : vec (vec A n) m) : vec A (m * n) :=
+Fixpoint join {A : Type} (n m : nat) (lla : vec (vec A n) m)
+  : vec A (m * n) :=
 match lla with
     | [] => []
     | h :: t => h ++ join t
@@ -626,7 +627,8 @@ Qed.
 
 (** *** [repeat] (TODO: nastąpiła duplikacja) *)
 
-(** Zdefiniuj funkcję [repeat], która zwraca listę [n] powtórzeń wartości [x]. *)
+(** Zdefiniuj funkcję [repeat], która zwraca listę [n] powtórzeń wartości
+    [x]. *)
 
 (* begin hide *)
 Fixpoint repeat {A : Type} (n : nat) (x : A) : vec A n :=
@@ -1638,7 +1640,8 @@ Qed. *)
 (** *** [partition] *)
 
 (** Napisz funkcję [partition], która dzieli listę [l] na listy
-    elementów spełniających i niespełniających pewnego warunku boolowskiego. *)
+    elementów spełniających i niespełniających pewnego warunku
+    boolowskiego. *)
 
 (* begin hide *)
 Fixpoint partition {A : Type} (p : A -> bool) (l : list A)
@@ -1896,17 +1899,6 @@ Proof.
   induction l as [| h [| h' t]]; simpl; trivial; intros.
   rewrite H. simpl in *. rewrite (IHl _ _ H). trivial.
 Qed.
-(* end hide *)
-
-(* TODO : begin hide *)
-Theorem intersperse_join :
-  forall (A : Type) (x : A) (l : list (list A)),
-    intersperse x (join l) = join (intersperse [x] (map (intersperse x) l)).
-Proof.
-  induction l as [| h [| h' t]]; simpl; trivial.
-    rewrite !app_nil_r. trivial.
-    simpl in *. rewrite <- IHl.
-Abort.
 (* end hide *)
 
 (** *** [replicate] *)
@@ -2320,7 +2312,8 @@ Eval compute in take 2 fives.
 Eval compute in foldr plus 0 fives.
 Eval compute in (fromList sixList).
 Eval compute in (app fives fives).
-(*Eval compute in filter (fun n => match n with | 5 => false | _ => true end) fives.*)
+(*Eval compute in filter (fun n => match n with | 5 => false | _ => true end)
+fives.*)
 
 (*Instance Functor_Vec (n : nat) : Functor (fun A : Set => Vec A n).
 split with (@map n);
@@ -2331,9 +2324,11 @@ Defined.*)
 
 Require Import JMeq.
 
-Theorem JMeq_Cons : forall (A B : Type) (n m : nat) (h1 : A) (h2 : B)
-  (t1 : Vec A n) (t2 : Vec B m), A = B -> n = m -> JMeq h1 h2 -> JMeq t1 t2 ->
-    JMeq (Cons h1 t1) (Cons h2 t2).
+Theorem JMeq_Cons :
+  forall (A B : Type) (n m : nat) (h1 : A) (h2 : B)
+  (t1 : Vec A n) (t2 : Vec B m),
+    A = B -> n = m -> JMeq h1 h2 -> JMeq t1 t2 ->
+      JMeq (Cons h1 t1) (Cons h2 t2).
 Proof.
   intros; subst. rewrite H1, H2. trivial.
 Qed.

@@ -219,7 +219,7 @@ end.
     zrobiono argument [b] — jeżeli było to [true], zwracamy [false], a
     gdy było to [false], zwracamy [true]. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie ([andb] i [orb]) *)
 
 (** Zdefiniuj funkcje [andb] (koniunkcja boolowska) i [orb] (alternatywa
     boolowska). *)
@@ -236,7 +236,6 @@ match b1 with
     | true => true
     | false => b2
 end.
-
 (* end hide *)
 
 (** Zanim odpalimy naszą funkcję, powinniśmy zadać sobie pytanie: w jaki
@@ -294,7 +293,7 @@ Eval cbv in negb true.
     jego wykonania możemy też użyć komend [Eval simpl] oraz [Eval
     compute] (a od wersji Coqa 8.5 także [Eval cbn]). *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (redukcja) *)
 
 (** Zredukuj "ręcznie" programy [andb false false] oraz [orb false true]. *)
 
@@ -377,7 +376,9 @@ Qed.
     w ten sam sposób, więc możemy użyć kombinatora [;] (średnika),
     żeby rozwiązać je oba za jednym zamachem. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (logika boolowska) *)
+
+(** Udowodnij poniższe twierdzenia. *)
 
 Theorem andb_assoc :
   forall b1 b2 b3 : bool,
@@ -413,7 +414,16 @@ Theorem orb_comm :
 Proof.
   destruct b1, b2; simpl; reflexivity.
 Qed.
-(* end hide *) 
+(* end hide *)
+
+Theorem andb_true_elim :
+  forall b1 b2 : bool,
+    andb b1 b2 = true -> b1 = true /\ b2 = true.
+(* begin hide *)
+Proof.
+  destruct b1, b2; cbn; split; auto.
+Qed.
+(* end hide *)
 
 (** ** Konstruktory rekurencyjne *)
 
@@ -507,9 +517,14 @@ end.
     liczby jako kupki [S]-ów, to wywołania rekurencyjne możemy robić
     jedynie po zdjęciu z kupki co najmniej jednego [S]. *)
 
-(** **** Ćwiczenie. *)
+(** **** Ćwiczenie (rekursja niestrukturalna) *)
+
 (** Wymyśl funkcję z liczb naturalnych w liczby naturalne,
     która jest rekurencyjna, ale nie jest strukturalnie rekurencyjna. *)
+
+(* begin hide *)
+(** Odpowiedź: dzielenie. *)
+(* end hide *)
 
 (** Podobnie jak w przypadku funkcji [negb], tak i tym razem w celu
     sprawdzenia poprawności naszej definicji spróbujemy udowodnić, że
@@ -609,7 +624,10 @@ Qed.
     konkluzją danego [rewrite] twierdzenia lub hipotezy jest [a = b], to
     w celu wszystkie [b] zostaną zastąpione przez [a]. *)
 
-(** **** Ćwiczenie. Zdefiniuj mnożenie i udowodnij jego właściwości. *)
+(** **** Ćwiczenie (mnożenie) *)
+
+(** Zdefiniuj mnożenie i udowodnij jego właściwości. *)
+
 (* begin hide *)
 Fixpoint mult (n m : nat) : nat :=
 match n with
@@ -670,7 +688,10 @@ Qed.
 
 (** Wszystkie dowody powinny być nie dłuższe niż pół linijki. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (inne dodawanie) *)
+
+(** Dodawanie można alternatywnie zdefiniować także w sposób przedstawiony
+    poniżej. Udowodnij, że ta definicja jest równoważna poprzedniej. *)
 
 Fixpoint plus' (n m : nat) : nat :=
 match m with
@@ -681,18 +702,17 @@ end.
 Theorem plus'_n_0 :
   forall n : nat, plus' n 0 = n.
 (* begin hide *)
-Proof.
-  simpl. trivial.
-Qed.
+Proof. reflexivity. Qed.
 (* end hide *)
 
 Theorem plus'_S :
   forall n m : nat, plus' (S n) m = S (plus' n m).
 (* begin hide *)
 Proof.
-  intros. generalize dependent n. induction m as [| m']; simpl; intros.
-    trivial.
-    rewrite IHm'. trivial.
+  intros. generalize dependent n.
+  induction m as [| m']; cbn; intros.
+    reflexivity.
+    rewrite IHm'. reflexivity.
 Qed.
 (* end hide *)
 
@@ -806,10 +826,8 @@ Qed.
     do [True], którego udowodnienie jest trywialne. *)
 
 Theorem some_not_none' :
-    forall (A : Type) (a : A), Some a <> None.
-Proof.
-  inversion 1.
-Qed.
+  forall (A : Type) (a : A), Some a <> None.
+Proof. inversion 1. Qed.
 
 (** Cała procedura jest dość skomplikowana — w szczególności wymaga
     napisania funkcji pomocniczej. Na szczęście Coq jest w stanie
@@ -878,11 +896,22 @@ Qed.
     w celu, dając [y = y], ale także w hipotezie [H], dając
     [H : Some y = Some y]. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (zero i jeden) *)
+
+(** Udowodnij poniższe twierdzenie bez używania taktyki [inversion].
+    Żeby było trudniej, nie pisz osobnej funkcji pomocniczej — zdefiniuj
+    swoją funkcję bezpośrednio w miejscu, w którym chcesz jej użyć.  *)
+
 Theorem zero_not_one : 0 <> 1.
 (* begin hide *)
 Proof.
-  inversion 1.
+  intro. change False with
+  ((fun n : nat =>
+  match n with
+      | 0 => False
+      | _ => True
+  end) 0).
+  rewrite H. trivial.
 Qed.
 (* end hide *)
 
@@ -930,10 +959,36 @@ Axiom rational_eq :
     aksjomat [rational_eq] jest sprzeczny, gdyż łamie zasadę
     injektywności konstruktorów. *)
 
-(** **** Ćwiczenie. *)
+(** **** Ćwiczenie (niedobry aksjomat) *)
+
+(** Udowodnij, że aksjomat [rational_eq] jest sprzeczny. Wskazówka: znajdź
+    dwie liczby wymierne, które są równe na mocy tego aksjomatu, ale które
+    można rozróżnić za pomocą dopasowania do wzorca. *)
+
+(* begin hide *)
+Definition q_1_2 : rational :=
+  mk_rational true 1 2 ltac:(inversion 1).
+
+Definition q_2_4 : rational :=
+  mk_rational true 2 4 ltac:(inversion 1).
+
+Lemma q_1_2_eq_q_2_4 : q_1_2 = q_2_4.
+Proof.
+  apply rational_eq. reflexivity.
+Qed.
+(* end hide *)
+
 Theorem rational_eq_inconsistent : False.
 (* begin hide *)
-Abort.
+Proof.
+  change False with
+  ((fun q : rational =>
+  match q with
+      | mk_rational true 1 2 _ => False
+      | _ => True
+  end) q_1_2).
+  rewrite q_1_2_eq_q_2_4. cbn. trivial.
+Qed.
 (* end hide *)
 
 End rational.
@@ -1080,35 +1135,34 @@ Qed.
     ma dwa argumenty — głowę, tutaj nazwaną [h] (jako skrót od ang. head)
     oraz ogon, tutaj nazwany [t] (jako skrót od ang. tail). *)
 
-(** **** Ćwiczenie *)
-(** Pokaż, że [app] jest łączne. *)
+(** **** Ćwiczenie (właściwości funkcji [app])*)
+
+(** Udowodnij poniższe właściwości funkcji [app]. Wskazówka: może ci się
+    przydać taktyka [specialize]. *)
 
 Theorem app_assoc :
   forall (A : Type) (l1 l2 l3 : list A),
     l1 ++ (l2 ++ l3) = (l1 ++ l2) ++ l3.
 (* begin hide *)
 Proof.
-  induction l1 as [| h1 t1]; simpl; intros.
+  induction l1 as [| h1 t1]; cbn; intros.
     reflexivity.
-    f_equal. rewrite <- IHt1. reflexivity.
+    rewrite <- IHt1. reflexivity.
 Qed.
 (* end hide *)
-
-(** **** Ćwiczenie *)
-(** Pokaż, że [app] nie jest przemienne. Wskazówka: może ci się
-    przydać taktyka [specialize]. *)
 
 Theorem app_not_comm :
   ~ forall (A : Type) (l1 l2 : list A), l1 ++ l2 = l2 ++ l1.
 (* begin hide *)
 Proof.
-  intro. specialize (H nat [0] [1]). simpl in H. inversion H.
+  intro. specialize (H nat [0] [1]). cbn in H. inversion H.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
-(** Zdefiniuj funkcję [length], która oblicza długość listy. Jaki
-    powinien być jej typ? *)
+(** **** Ćwiczenie ([length]) *)
+
+(** Zdefiniuj funkcję [length], która oblicza długość listy, a następnie
+    udowodnij poprawność swojej implementacji. *)
 
 (* begin hide *)
 Fixpoint length {A : Type} (l : list A) : nat :=
@@ -1117,9 +1171,6 @@ match l with
     | h :: t => S (length t)
 end.
 (* end hide *)
-
-(** **** Ćwiczenie *)
-(** Udowodnij poprawność swojej implementacji funkcji [length]. *)
 
 Theorem length_nil :
   forall A : Type, length (@nil A) = 0.
@@ -1137,7 +1188,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_length :
+Theorem length_app :
   forall (A : Type) (l1 l2 : list A),
     length (l1 ++ l2) = length l1 + length l2.
 (* begin hide *)
@@ -1148,13 +1199,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Do list jeszcze wrócimy — planuję prędzej czy później dodać masywny
-    zestaw ćwiczeń, polegający w zasadzie na reimplementacji biblioteki
-    standardowej. *) 
-
 End MyList.
 
 (** ** Rekordy *)
+
 (** W wielu językach programowania występują typy rekordów (ang. record
     types). Charakteryzują się one tym, że mają z góry określoną ilość
     pól o potencjalnie różnych typach. W językach imperatywnych rekordy
@@ -1208,7 +1256,8 @@ Check denominator_not_zero.
 
 End rational2.
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (kalendarz) *)
+
 (** Zdefiniuj typ induktywny reprezentujący datę i napisz ręcznie
     wszystkie projekcje. Następnie zdefiniuj rekord reprezentujący
     datę i zachwyć się tym, ile czasu i głupiego pisania zaoszczędziłbyś,
@@ -1219,6 +1268,7 @@ End rational2.
 (* end hide *)
 
 (** ** Klasy *)
+
 (** Mechanizmem ułatwiającym życie jeszcze bardziej niż rekordy są klasy.
     Niech nie zmyli cię ta nazwa — nie mają one nic wspólnego z klasami
     znanymi z języków imperatywnych. Bliżej im raczej do interfejsów,
@@ -1347,7 +1397,8 @@ Defined.
     Coqowi zapamiętać term ze wszystkimi szczegółami. Jeżeli nie wiesz,
     której z tych dwóch komend użyć, użyj [Defined]. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie ([EqDec]) *)
+
 (** Zdefiniuj instancje klasy [EqDec] dla typów [unit] oraz [nat]. *)
 
 (* begin hide *)
@@ -1380,7 +1431,8 @@ Proof.
 Defined.
 (* end hide *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (równość funkcji) *)
+
 (** Czy możliwe jest zdefiniowanie instancji klasy [EqDec] dla typu:
     - [bool -> bool]
     - [bool -> nat]
@@ -1436,6 +1488,7 @@ Defined.
     [_] na coś innego). *)
 
 (** *** Przydatne komendy *)
+
 (** Ponieważ w następnym zadaniu pojawia się stwierdzenie "znajdź",
     czas, aby opisać kilka przydatnych komend. *)
 
@@ -1471,13 +1524,9 @@ SearchPattern (_ + _ = _).
     Dokładny opis wszystkich komend znajdziesz tutaj:
     https://coq.inria.fr/refman/command-index.html *)
 
-(** **** Ćwiczenie *)
-(** Zdefiniuj instancję klasy [EqDec] dla typu [list A]. Wskazówka:
-    znajdź w bibliotece standardowej moduł, który zawiera twierdzenia
-    o właściwościach funkcji [andb]. Jedna z nich przyda ci się.
+(** **** Ćwiczenie (równość list) *)
 
-    Spis modułów biblioteki standardowej jest tu:
-    https://coq.inria.fr/library/ *)
+(** Zdefiniuj instancję klasy [EqDec] dla typu [list A]. *)
 
 (* begin hide *)
 Fixpoint eq_dec_list {A : Type} {eq_dec_A : EqDec A} (l l' : list A)
@@ -1495,15 +1544,23 @@ Instance EqDec_list (A : Type) (eq_dec_A : EqDec A) : EqDec (list A) :=
 Proof.
   induction x as [| h t].
     destruct y; split; trivial; inversion 1.
-    destruct y as [| h' t'].
-      split; inversion 1.
-      split; intro.
-        destruct eq_dec_A. inversion H. f_equal.
-          apply eq_dec_spec0.
-Abort. (* TODO: trzeba zmienić ten przykład na coś weselszego. *)
+    split.
+      induction y as [| h' t']; cbn.
+        inversion 1.
+        intro. destruct eq_dec_A. apply andb_true_elim in H. destruct H.
+          destruct (eq_dec_spec0 h h'), (IHt t').
+            rewrite (H1 H), (H3 H0). reflexivity.
+      intros ->. induction y as [| h' t']; cbn.
+        reflexivity.
+        rewrite IHt'. case_eq (eq_dec h' h'); intro.
+          reflexivity.
+          destruct eq_dec_A; cbn in *. destruct (eq_dec_spec0 h' h').
+            rewrite <- H, H1; reflexivity.
+Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (równość funkcji 2) *)
+
 (** Niech [A] i [B] będą dowolnymi typami. Zastanów się, kiedy możliwe
     jest zdefiniowanie instancji klasy [EqDec] dla [A -> B]. *)
 
@@ -1526,7 +1583,8 @@ Definition create {A : Type} (x : Empty_set) : A :=
     wyczarować term dowolnego typu [A], używając pattern matchingu z
     pustym wzorcem. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie ([create_unique]) *)
+
 (** Udowodnij, że powyższa funkcja jest unikalna. *)
 
 Theorem create_unique :
@@ -1538,7 +1596,8 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie ([no_fun_from_nonempty_to_empty]) *)
+
 (** Pokaż, że nie istnieją funkcje z typu niepustego w pusty. *)
 
 Theorem no_fun_from_nonempty_to_empty :
@@ -1568,7 +1627,7 @@ Definition delete {A : Type} (a : A) : unit := tt.
     Uwaga: określenie "skasować" nie ma nic wspólnego z fizycznym
     niszczeniem albo dealokacją pamięci. Jest to tylko metafora. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie ([delete_unique]) *)
 (** Pokaż, że funkcja [delete] jest unikalna. *)
 
 Theorem delete_unique :
@@ -1595,8 +1654,9 @@ Arguments pair [A] [B] _ _.
     - [snd : forall A B : Type, prod A B -> B] wyciąga z pary jej
       drugi element *)
 
-(** **** Ćwiczenie *)
-(** Zdefiniuj projekcje i udowodnij poprawność swojej definicji. *)
+(** **** Ćwiczenie (projekcje) *)
+
+(** Zdefiniuj projekcje i udowodnij poprawność swoich definicji. *)
 
 (* begin hide *)
 Definition fst {A B : Type} (p : prod A B) : A :=
@@ -1633,7 +1693,8 @@ Arguments inr [A] [B] _.
     w konstruktor [inr]. Suma, w przeciwieństwie do produktu, zdecydowanie
     nie ma projekcji. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (sumy bez projekcji) *)
+
 (** Pokaż, że suma nie ma projekcji. *)
 
 Theorem sum_no_fst :
@@ -1789,7 +1850,8 @@ Inductive true_prop : Prop :=
     rónoważne z [False]), drugie zaś jest prawdziwe (czyli równoważne z [True])
     i to na cztery sposoby! *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (induktywne zdania) *)
+
 Theorem false_prop_iff_False : false_prop <-> False.
 (* begin hide *)
 Proof.
@@ -1803,7 +1865,6 @@ Proof.
   split; inversion 1; constructor.
 Qed.
 (* end hide *)
-
 
 (** ** Induktywne predykaty *)
 
@@ -1936,6 +1997,7 @@ Qed.
     jest parzyste, już wiemy. *)
 
 (** **** Ćwiczenie (odd) *)
+
 (** Zdefiniuj induktywny predykat [odd], który ma oznaczać "bycie liczbą
     nieparzystą" i udowodnij, że zachowuje się on jak należy. *)
 
@@ -2070,7 +2132,8 @@ Qed.
     generuje jeden dodatkowy podcel, w którym musimy skonstruować [x].
     Zawodzi ona, jeżeli nazwa [x] jest już zajęta. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (właściwości [even]) *)
+
 (** Udowodnij poniższe twierdzenia. Zanim zaczniesz, zastanów się, po czym
     należy przeprowadzić indukcję: po wartości, czy po dowodzie? *)
 
@@ -2325,7 +2388,7 @@ with odd : nat -> Prop :=
     - [0] jest parzyste na mocy definicji
     - jeżeli [0] jest parzyste (a jest), to [1] jest nieparzyste
     - jeżeli [1] jest nieparzyste (a jest), to [2] jest parzyste
-    - i tak dalej, ad infiitum
+    - i tak dalej, ad infinitum
 *)
 
 (** Jak widać, za pomocą naszej wzajemnie induktywnej definicji [even] można
@@ -2333,7 +2396,7 @@ with odd : nat -> Prop :=
     jest równoważne staremu [even] z sekcji _Induktywne predykaty_. Podobnie
     [odd] może wygenerować wszystkie liczby nieparzyste i tylko je. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (upewniające) *)
 
 (** Upewnij się, że powyższy akapit nie kłamie. *)
 
@@ -2367,7 +2430,7 @@ Lemma not_even_1 : ~ even 1.
 Proof. inversion 1. inversion H1. Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie (właściwości [even] i [odd]) *)
 
 (** Udowodnij podstawowe właściwości [even] i [odd]. *)
 
@@ -2567,10 +2630,12 @@ End MutInd.
     ćwiczeń w podrozdziale o typie [Empty_set]. *)
 
 (** **** Ćwiczenie *)
+
 (** Udowodnij (nieformalnie, na papierze), że w powyższym akapicie nie
     okłamałem cię. *)
 
 (** **** Ćwiczenie *)
+
 (** Zdefiniuj wszystkie możliwe funkcje typu [unit -> unit], [unit -> bool]
     i [bool -> bool]. *)
 
@@ -2595,6 +2660,7 @@ Definition id' : forall A : Set, A -> A :=
   fun (A : Set) (x : A) => x.
 
 (** **** Ćwiczenie *)
+
 (** Zdefiniuj wszystkie elementy następujących typów lub udowodnij, że
     istnienie choć jednego elementu prowadzi do sprzeczności:
     - [forall A : Set, A -> A -> A]
@@ -3124,7 +3190,7 @@ Inductive sumbool (A B : Prop) : Set :=
     funkcję [inb_nat], która sprawdza, czy liczba naturalna [n]
     jest obecna na liście [l]. *)
 
-(** ** Kwantyfikacja egzystencjalna (alfa) *)
+(** ** Kwantyfikacja egzystencjalna *)
 
 (** Znamy już pary zależne i wiemy, że mogą służyć do reprezentowania
     podtypów, których w Coqu brak. Czas zatem uświadomić sobie kolejny
@@ -3160,7 +3226,7 @@ Qed.
 
 End ex.
 
-(** ** Typy hybrydowe (alfa) *)
+(** ** Typy hybrydowe *)
 
 (** Ostatnim z typów istotnych z punktu widzenia silnych specyfikacji
     jest typ o wdzięcznej nazwie [sumor]. *)
@@ -3179,7 +3245,7 @@ Inductive sumor (A : Type) (B : Prop) : Type :=
     żyje w [Type], a więc jest to specyfikacja i liczy się konkretna
     postać jego termów, a nie jedynie fakt ich istnienia. *)
 
-(** **** Ćwiczenie *)
+(** **** Ćwiczenie ([pred']) *)
 
 (** Zdefiniuj funkcję [pred'], która przypisuje liczbie naturalnej jej
     poprzednik. Poprzednikiem [0] nie powinno być [0]. Mogą przydać ci
@@ -3371,7 +3437,7 @@ Check @pair.
 
 (** **** Ćwiczenie *)
 
-(** Napisz, bez podglądania, jak wyglądają reguły wprowadzania dla
+(** Napisz (bez podglądania) jak wyglądają reguły wprowadzania dla
     [option], [nat] oraz [list]. Następnie zweryfikuj swoje odpowiedzi
     za pomocą komendy [Print]. *)
 

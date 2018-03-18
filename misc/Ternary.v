@@ -1,6 +1,6 @@
 (** * Ternary logic exercise *)
 
-Section ternary.
+Module ternary_unknown.
 
 Inductive bool3 : Set :=
     | true : bool3
@@ -64,3 +64,5 @@ Proof. solve_bool3. Qed.
 Theorem andb3_true_neutral_r :
   forall b : bool3, andb3 b true = b.
 Proof. solve_bool3. Qed.
+
+End ternary_unknown.

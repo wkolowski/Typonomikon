@@ -26,7 +26,7 @@ Proof.
           simpl. trivial.
 Qed.
 
-Fixpoint take' {A : Type} (fuel n : nat) (l : list A) : option (list A) :=
+(*Fixpoint take' {A : Type} (fuel n : nat) (l : list A) : option (list A) :=
 match fuel, n, l with
     | 0, _, _ => None
     | _, 0, _ => Some []
@@ -49,15 +49,15 @@ Proof.
           simpl. trivial.
 Defined.
 
-Eval compute in take' 2 1 [1; 2; 3].
+Eval compute in take' 2 1 [1; 2; 3].*)
 
-Definition safeTake {A : Type} (n : nat) (l : list A) : list A.
+(*Definition safeTake {A : Type} (n : nat) (l : list A) : list A.
     destruct (take'_fuel A n l) as [_ [result _]]. exact result.
 Defined.
 
-Eval compute in safeTake (pred 0) [1; 2; 3].
+Eval compute in safeTake (pred 0) [1; 2; 3].*)
 
-Fixpoint qs {A : Type} (le : A -> A -> bool) (fuel : nat) (l : list A)
+(*Fixpoint qs {A : Type} (le : A -> A -> bool) (fuel : nat) (l : list A)
     : option (list A) :=
 match fuel, l with
     | 0, _ => None
@@ -73,9 +73,11 @@ Definition leb := Compare_dec.leb.
 
 Eval compute in qs leb 15 [5; 99; 15; 1; 1; 0; 2; 5; 6; 1; 13; 42; 55; 11].
 
-Theorem qs_fuel : forall (A : Type) (le : A -> A -> bool) (l : list A),
+Theorem qs_fuel :
+  forall (A : Type) (le : A -> A -> bool) (l : list A),
     exists (fuel : nat) (l' : list A), qs le fuel l = Some l'.
 Proof.
   intros. exists (S (length l)). induction l as [| h t].
     simpl. exists []. trivial.
     destruct IHt. simpl.
+*)

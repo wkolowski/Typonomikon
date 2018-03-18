@@ -71,7 +71,7 @@ match n with
     | S (S n') => H n' (nat_ind_2 P H0 H1 H n')
 end.
 
-Program Fixpoint nat_to_bin (n : nat) {measure n} : bin :=
+(*Program Fixpoint nat_to_bin (n : nat) {measure n} : bin :=
     let (a, b) := (div2 n, mod2 n) in
     match a, b with
         | 0, O => []
@@ -81,4 +81,4 @@ Program Fixpoint nat_to_bin (n : nat) {measure n} : bin :=
 Next Obligation.
   destruct a as [| a'].
     cut False.
-        
+*)

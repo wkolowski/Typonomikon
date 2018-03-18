@@ -2153,9 +2153,9 @@ Qed.
 
 (* begin hide *)
 (** TODO:
-    - zrefaktoryzować rozdział: opisać zarówno logikę konstruktywną jak i
+    - TODO zrefaktoryzować rozdział: opisać zarówno logikę konstruktywną jak i
       klasyczną oraz przedstawić je obie jako użyteczne
-    - przenieść paradoksy na końce opisów obu logik, żeby zobrazować
+    - TODO przenieść paradoksy na końce opisów obu logik, żeby zobrazować
       różnice między językiem naturalnym i matematycznym
     - przejrzeć zadania *)
 (* end hide *)
