@@ -22,39 +22,54 @@ Theorem Permutation_length :
     Permutation l1 l2 -> length l1 = length l2.
 (* begin hide *)
 Proof.
-  induction 1; simpl; congruence.
+  induction 1; cbn; congruence.
 Qed.
 (* end hide *)
 
 Theorem Permutation_nil :
-  forall (A : Type) (l : list A), Permutation [] l -> l = [].
+  forall (A : Type) (l : list A),
+    Permutation [] l -> l = [].
 (* begin hide *)
 Proof.
-  intros. apply Permutation_length in H. simpl in H.
+  intros. apply Permutation_length in H. cbn in H.
   destruct l; inversion H. trivial.
 Qed.
 (* end hide *)
 
 Theorem Permutation_length_1:
-  forall (A : Type) (a b : A), Permutation [a] [b] -> a = b.
+  forall (A : Type) (l1 l2 : list A),
+    length l1 = 1 -> Permutation l1 l2 -> l1 = l2.
 (* begin hide *)
 Proof.
-  intros. remember [a] as la; remember [b] as lb.
-  generalize dependent b; generalize dependent a.
-  induction H; intros; inversion Heqla; inversion Heqlb; subst.
-    trivial.
-    apply IHPermutation1.
-      trivial.
-      remember [b] as lb. induction H0; subst; clear H; auto.
-        inversion Heqlb; subst. apply Permutation_length in H0.
-          destruct l; inversion H0. trivial.
-        inversion Heqlb.
-        rewrite IHPermutation3; auto.
-Admitted.
+  induction 2; cbn in *.
+    reflexivity.
+    destruct l, l'; cbn in *.
+      reflexivity.
+      apply Permutation_nil in H0. inversion H0.
+      inversion H.
+      inversion H.
+    inversion H.
+    rewrite IHPermutation1, IHPermutation2.
+      reflexivity.
+      apply Permutation_length in H0_. rewrite <- H0_. assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+Theorem Permutation_singl :
+  forall (A : Type) (a b : A),
+    Permutation [a] [b] -> a = b.
+(* begin hide *)
+Proof.
+  intros. apply Permutation_length_1 in H.
+    inversion H. reflexivity.
+    cbn. reflexivity.
+Qed.
 (* end hide *)
 
 Theorem Permutation_nil_cons :
-  forall (A : Type) (l : list A) (x : A), ~ Permutation [] (x :: l).
+  forall (A : Type) (l : list A) (x : A),
+    ~ Permutation [] (x :: l).
 (* begin hide *)
 Proof.
   intros; intro. apply Permutation_nil in H. inversion H.
@@ -62,11 +77,12 @@ Qed.
 (* end hide *)
 
 Theorem Permutation_refl :
-  forall (A : Type) (l : list A), Permutation l l.
+  forall (A : Type) (l : list A),
+    Permutation l l.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl; auto.
-Qed.
+  induction l as [| h t]; cbn; auto.
+Defined.
 (* end hide *)
 
 Theorem Permutation_trans :
@@ -94,7 +110,7 @@ Proof.
     apply Permutation_refl.
     apply Permutation_sym.
     apply Permutation_trans.
-Qed.
+Defined.
 (* end hide *)
 
 Instance Permutation_cons :
@@ -111,7 +127,7 @@ Theorem Permutation_in :
     Permutation l l' -> In x l -> In x l'.
 (* begin hide *)
 Proof.
-  induction 1; intros; simpl; auto.
+  induction 1; intros; cbn; auto.
     inversion H0; auto.
     inversion H; auto. inversion H0; auto.
 Qed.
@@ -133,7 +149,7 @@ Theorem Permutation_app_head :
     Permutation tl tl' -> Permutation (l ++ tl) (l ++ tl').
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl; intros; auto.
+  induction l as [| h t]; cbn; intros; auto.
 Qed.
 (* end hide *)
 
@@ -144,7 +160,7 @@ Theorem Permutation_app_tail :
     Permutation l l' -> Permutation (l ++ tl) (l' ++ tl).
 (* begin hide *)
 Proof.
-  induction 1; simpl; intros; eauto.
+  induction 1; cbn; intros; eauto.
 Qed.
 (* end hide *)
 
@@ -155,7 +171,7 @@ Theorem Permutation_app :
 Proof.
   unfold Proper, respectful.
   intros A l m l' m' H. generalize dependent m'; generalize dependent m.
-  induction H; simpl; intros; eauto.
+  induction H; cbn; intros; eauto.
   eapply perm_trans.
     apply perm_swap.
     do 2 constructor. apply Permutation_app_head. trivial.
@@ -187,7 +203,7 @@ Theorem Permutation_cons_append :
     Permutation (x :: l) (l ++ [x]).
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl; intros; auto.
+  induction l as [| h t]; cbn; intros; auto.
   eapply perm_trans.
     apply perm_swap.
     constructor. apply IHt.
@@ -195,15 +211,16 @@ Qed.
 (* end hide *)
 
 Theorem Permutation_app_comm :
-  forall (A : Type) (l l' : list A), Permutation (l ++ l') (l' ++ l).
+  forall (A : Type) (l l' : list A),
+    Permutation (l ++ l') (l' ++ l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; destruct l' as [| h' t'];
-  simpl; rewrite ?app_nil_r; auto.
-  rewrite IHt. simpl. rewrite perm_swap. constructor.
+  cbn; rewrite ?app_nil_r; auto.
+  rewrite IHt. cbn. rewrite perm_swap. constructor.
   rewrite app_comm_cons. replace (t' ++ h :: t) with ((t' ++ [h]) ++ t).
     apply Permutation_app_tail. apply Permutation_cons_append.
-    rewrite <- app_assoc. simpl. trivial.
+    rewrite <- app_assoc. cbn. trivial.
 Qed.
 (* end hide *)
 
@@ -212,33 +229,29 @@ Theorem Permutation_cons_app :
     Permutation l (l1 ++ l2) -> Permutation (x :: l) (l1 ++ x :: l2).
 (* begin hide *)
 Proof.
-  intros. rewrite H, <- (Permutation_app_comm (x :: l2)). simpl.
+  intros. rewrite H, <- (Permutation_app_comm (x :: l2)). cbn.
   constructor. apply Permutation_app_comm.
 Qed.
 (* end hide *)
-    Check List.Add.
-
-Compute @List.Add nat 42 [] [1].
-
-Print List.Add.
 
 Theorem Permutation_middle :
   forall (A : Type) (l1 l2 : list A) (x : A),
-    Permutation (x :: (l1 ++ l2)) (l1 ++ x :: l2).
+    Permutation (l1 ++ x :: l2) (x :: (l1 ++ l2)).
 (* begin hide *)
 Proof.
-  intros. apply Permutation_cons_app. trivial.
+  intros. symmetry. apply Permutation_cons_app. reflexivity.
 Qed.
 (* end hide *)
 
 Theorem Permutation_rev :
-  forall (A : Type) (l : list A), Permutation l (rev l).
+  forall (A : Type) (l : list A),
+    Permutation (rev l) l.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl; trivial.
+  induction l as [| h t]; cbn; trivial.
   rewrite <- Permutation_cons_app.
     reflexivity.
-    rewrite app_nil_r. assumption.
+    rewrite app_nil_r, IHt. reflexivity.
 Qed.
 (* end hide *)
 
@@ -248,7 +261,7 @@ Instance Permutation_rev' :
 (* begin hide *)
 Proof.
   unfold Proper, respectful; intros.
-  rewrite <- ?Permutation_rev. assumption.
+  rewrite ?Permutation_rev. assumption.
 Qed.
 (* end hide *)
 
@@ -285,18 +298,39 @@ Proof.
     apply Hswap.
       reflexivity.
       apply Permutation_ind_bis. 1-4: auto.
-      induction l as [| h t]; simpl. trivial.
-Abort.
+Defined.
 
 Theorem Permutation_nil_app_cons :
-  forall (A : Type) (l l' : list A) (x : A), ~ Permutation [] (l ++ x :: l').
+  forall (A : Type) (l l' : list A) (x : A),
+    ~ Permutation [] (l ++ x :: l').
 (* begin hide *)
 Proof.
   intros; intro.
-  rewrite <- Permutation_middle in H.
+  rewrite Permutation_middle in H.
   apply Permutation_nil_cons in H. assumption.
 Qed.
 (* end hide *)
+
+Lemma Permutation_cons_split :
+  forall (A : Type) (h : A) (t l : list A),
+    Permutation (h :: t) l ->
+      exists l1 l2 : list A, l = l1 ++ h :: l2.
+(* begin hide *)
+Proof.
+  intros. remember (h :: t) as l'.
+  generalize dependent t; generalize dependent h.
+  induction H; intros; inversion Heql'; subst.
+    exists [], l'. cbn. reflexivity.
+    exists [x], l. cbn. reflexivity.
+    destruct (IHPermutation1 _ _ eq_refl) as (l1 & l2 & IH1).
+      destruct l' as [| h' t'].
+        symmetry in H. apply Permutation_nil in H. inversion H.
+        specialize (IHPermutation2 _ _ eq_refl).
+Restart.
+  intros A h t l. generalize dependent t.
+  induction l as [| h' t']; cbn; intros.
+    symmetry in H. apply Permutation_nil in H. inversion H.
+Abort.
 
 Theorem Permutation_cons_inv :
   forall (A : Type) (l l' : list A) (x : A),
@@ -306,8 +340,15 @@ Proof.
   intros. remember (x :: l) as l1. remember (x :: l') as l2.
   generalize dependent l; generalize dependent l'.
   generalize dependent x.
+  induction H; intros.
+    inversion Heql1.
+    inversion Heql1; inversion Heql2; subst. assumption.
+    inversion Heql1; inversion Heql2; subst. reflexivity.
+    rewrite Heql1, Heql2 in *.
+    Search Permutation.
+    specialize (IHPermutation2 _ _ Heql2).
 Restart.
-  induction l as [| h t]; destruct l' as [| h' t']; simpl; intros.
+  induction l as [| h t]; destruct l' as [| h' t']; cbn; intros.
     trivial.
     apply Permutation_length in H. inversion H.
     apply Permutation_length in H. inversion H.
@@ -339,7 +380,7 @@ Theorem Permutation_app_inv_l :
     Permutation (l ++ l1) (l ++ l2) -> Permutation l1 l2.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
     apply IHt. eapply Permutation_cons_inv. eassumption.
 Qed.
