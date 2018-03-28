@@ -32,14 +32,16 @@ Notation "1" := (S 0).
 
 (** Udowodnij właściwości zera i następnika. *)
 
-Theorem neq_0_Sn : forall n : nat, 0 <> S n.
+Lemma neq_0_Sn :
+  forall n : nat, 0 <> S n.
 (* begin hide *)
 Proof.
   do 2 intro. inversion H.
 Qed.
 (* end hide *)
 
-Theorem neq_n_Sn : forall n : nat, n <> S n.
+Lemma neq_n_Sn :
+  forall n : nat, n <> S n.
 (* begin hide *)
 Proof.
   induction n as [| n'].
@@ -48,14 +50,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem not_eq_S : forall n m : nat, n <> m -> S n <> S m.
+Lemma not_eq_S :
+  forall n m : nat, n <> m -> S n <> S m.
 (* begin hide *)
 Proof.
   intros; intro. apply H. inversion H0. trivial.
 Qed.
 (* end hide *)
 
-Theorem S_injective : forall n m : nat, S n = S m -> n = m.
+Lemma S_injective :
+  forall n m : nat, S n = S m -> n = m.
 (* begin hide *)
 Proof.
   inversion 1. trivial.
@@ -75,14 +79,15 @@ match n with
 end.
 (* end hide *)
 
-Theorem pred_0 : pred 0 = 0.
+Lemma pred_0 : pred 0 = 0.
 (* begin hide *)
 Proof.
   trivial.
 Qed.
 (* end hide *)
 
-Theorem pred_Sn : forall n : nat, pred (S n) = n.
+Lemma pred_Sn :
+  forall n : nat, pred (S n) = n.
 (* begin hide *)
 Proof.
   trivial.
@@ -95,20 +100,23 @@ Qed.
     udowodnij jego właściwości. *)
 
 (* begin hide *)
-Fixpoint plus (n m : nat) : nat := match n with
+Fixpoint plus (n m : nat) : nat :=
+match n with
     | 0 => m
     | S n' => S (plus n' m)
 end.
 (* end hide *)
 
-Theorem plus_0_l : forall n : nat, plus 0 n = n.
+Lemma plus_0_l :
+  forall n : nat, plus 0 n = n.
 (* begin hide *)
 Proof.
   intro. simpl. trivial.
 Qed.
 (* end hide *)
 
-Theorem plus_0_r : forall n : nat, plus n 0 = n.
+Lemma plus_0_r :
+  forall n : nat, plus n 0 = n.
 (* begin hide *)
 Proof.
   intro. induction n as [| n'].
@@ -117,7 +125,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus_n_Sm : forall n m : nat, S (plus n m) = plus n (S m).
+Lemma plus_n_Sm :
+  forall n m : nat, S (plus n m) = plus n (S m).
 (* begin hide *)
 Proof.
   induction n as [| n']; simpl; intro.
@@ -126,14 +135,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus_Sn_m : forall n m : nat, plus (S n) m = S (plus n m).
+Lemma plus_Sn_m :
+  forall n m : nat, plus (S n) m = S (plus n m).
 (* begin hide *)
 Proof.
   induction n as [| n']; simpl; trivial.
 Qed.
 (* end hide *)
 
-Theorem plus_assoc : forall a b c : nat,
+Lemma plus_assoc :
+  forall a b c : nat,
     plus a (plus b c) = plus (plus a b) c.
 (* begin hide *)
 Proof.
@@ -143,7 +154,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus_comm : forall n m : nat, plus n m = plus m n.
+Lemma plus_comm :
+  forall n m : nat, plus n m = plus m n.
 (* begin hide *)
 Proof.
   induction n as [| n']; simpl; intros.
@@ -155,8 +167,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus_no_annihilation_l :
-    ~ exists a : nat, forall n : nat, plus a n = a.
+Lemma plus_no_annihilation_l :
+  ~ exists a : nat, forall n : nat, plus a n = a.
 (* begin hide *)
 Proof.
   intro. destruct H as [a H]. specialize (H (S 0)).
@@ -166,8 +178,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus_no_annihilation_r :
-    ~ exists a : nat, forall n : nat, plus n a = a.
+Lemma plus_no_annihilation_r :
+  ~ exists a : nat, forall n : nat, plus n a = a.
 (* begin hide *)
 Proof.
   intro. destruct H as [a H]. specialize (H (S 0)).
@@ -178,8 +190,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus_no_inverse_l :
-    ~ forall n : nat, exists i : nat, plus i n = 0.
+Lemma plus_no_inverse_l :
+  ~ forall n : nat, exists i : nat, plus i n = 0.
 (* begin hide *)
 Proof.
   intro. destruct (H (S 0)) as [i H']. rewrite plus_comm in H'.
@@ -187,11 +199,29 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem plus_no_inverse_r :
-    ~ forall n : nat, exists i : nat, plus n i = 0.
+Lemma plus_no_inverse_r :
+  ~ forall n : nat, exists i : nat, plus n i = 0.
 (* begin hide *)
 Proof.
   intro. destruct (H (S 0)) as [i H']. inversion H'.
+Qed.
+(* end hide *)
+
+Lemma plus_no_inverse_l_strong :
+  forall n i : nat, n <> 0 -> plus i n <> 0.
+(* begin hide *)
+Proof.
+  destruct i; cbn; intros.
+    assumption.
+    inversion 1.
+Qed.
+(* end hide *)
+
+Lemma plus_no_inverse_r_strong :
+  forall n i : nat, n <> 0 -> plus n i <> 0.
+(* begin hide *)
+Proof.
+  intros. rewrite plus_comm. apply plus_no_inverse_l_strong. assumption.
 Qed.
 (* end hide *)
 
@@ -208,31 +238,32 @@ match n, m with
 end.
 (* end hide *)
 
-Theorem minus_pred : forall n : nat,
-    minus n 1 = pred n.
+Lemma minus_pred :
+  forall n : nat, minus n 1 = pred n.
 (* begin hide *)
 Proof.
   repeat (destruct n; simpl; trivial).
 Qed.
 (* end hide *)
 
-Theorem minus_0_l : forall n : nat,
-    minus 0 n = 0.
+Lemma minus_0_l :
+  forall n : nat, minus 0 n = 0.
 (* begin hide *)
 Proof.
   simpl. trivial.
 Qed.
 (* end hide *)
 
-Theorem minus_0_r : forall n : nat,
-    minus n 0 = n.
+Lemma minus_0_r :
+  forall n : nat, minus n 0 = n.
 (* begin hide *)
 Proof.
   destruct n; trivial.
 Qed.
 (* end hide *)
 
-Theorem minus_S : forall n m : nat,
+Lemma minus_S :
+  forall n m : nat,
     minus (S n) (S m) = minus n m.
 (* begin hide *)
 Proof.
@@ -240,14 +271,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem minus_n : forall n : nat, minus n n = 0.
+Lemma minus_n :
+  forall n : nat, minus n n = 0.
 (* begin hide *)
 Proof.
   induction n as [| n']; simpl; trivial.
 Qed.
 (* end hide *)
 
-Theorem minus_plus_l : forall n m : nat,
+Lemma minus_plus_l :
+  forall n m : nat,
     minus (plus n m) n = m.
 (* begin hide *)
 Proof.
@@ -257,7 +290,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem minus_plus_r : forall n m : nat,
+Lemma minus_plus_r :
+  forall n m : nat,
     minus (plus n m) m = n.
 (* begin hide *)
 Proof.
@@ -265,7 +299,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem minus_plus_distr : forall a b c : nat,
+Lemma minus_plus_distr :
+  forall a b c : nat,
     minus a (plus b c) = minus (minus a b) c.
 (* begin hide *)
 Proof.
@@ -277,7 +312,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem minus_exchange : forall a b c : nat,
+Lemma minus_exchange :
+  forall a b c : nat,
     minus (minus a b) c = minus (minus a c) b.
 (* begin hide *)
 Proof.
@@ -292,16 +328,18 @@ Proof.
           rewrite IHb'. trivial.
 Qed.
 
-Theorem minus_not_assoc : ~ forall a b c : nat,
-    minus a (minus b c) = minus (minus a b) c.
+Lemma minus_not_assoc :
+  ~ forall a b c : nat,
+      minus a (minus b c) = minus (minus a b) c.
 (* begin hide *)
 Proof.
   intro. specialize (H 1 1 1). simpl in H. inversion H.
 Qed.
 (* end hide *)
 
-Theorem minus_not_comm : ~ forall n m : nat,
-    minus n m = minus m n.
+Lemma minus_not_comm :
+  ~ forall n m : nat,
+      minus n m = minus m n.
 (* begin hide *)
 Proof.
   intro. specialize (H 1 0). simpl in H. inversion H.
@@ -320,14 +358,16 @@ match n with
 end.
 (* end hide *)
 
-Theorem mult_0_l : forall n : nat, mult 0 n = 0.
+Lemma mult_0_l :
+  forall n : nat, mult 0 n = 0.
 (* begin hide *)
 Proof.
   induction n; trivial.
 Qed.
 (* end hide *)
 
-Theorem mult_0_r : forall n : nat, mult n 0 = 0.
+Lemma mult_0_r :
+  forall n : nat, mult n 0 = 0.
 (* begin hide *)
 Proof.
   induction n as [| n']; simpl.
@@ -338,7 +378,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem mult_1_l : forall n : nat, mult 1 n = n.
+Lemma mult_1_l :
+  forall n : nat, mult 1 n = n.
 (* begin hide *)
 Proof.
   destruct n as [| n'].
@@ -349,7 +390,8 @@ Restart.
 Qed.
 (* end hide*)
 
-Theorem mult_1_r : forall n : nat, mult n 1 = n.
+Lemma mult_1_r :
+  forall n : nat, mult n 1 = n.
 (* begin hide *)
 Proof.
   induction n.
@@ -360,7 +402,8 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem mult_comm : forall n m : nat,
+Lemma mult_comm :
+  forall n m : nat,
     mult n m = mult m n.
 (* begin hide *)
 Proof.
@@ -373,7 +416,8 @@ Proof.
 Qed.
 (* begin hide *)
 
-Theorem mult_plus_distr_l : forall a b c : nat,
+Lemma mult_plus_distr_l :
+  forall a b c : nat,
     mult a (plus b c) = plus (mult a b) (mult a c).
 (* begin hide *)
 Proof.
@@ -384,7 +428,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mult_plus_distr_r : forall a b c : nat,
+Lemma mult_plus_distr_r :
+  forall a b c : nat,
     mult (plus a b) c = plus (mult a c) (mult b c).
 (* begin hide *)
 Proof.
@@ -393,7 +438,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mult_minus_distr_l : forall a b c : nat,
+Lemma mult_minus_distr_l :
+  forall a b c : nat,
     mult a (minus b c) = minus (mult a b) (mult a c).
 (* begin hide *)
 Proof.
@@ -413,7 +459,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mult_minus_distr_r : forall a b c : nat,
+Lemma mult_minus_distr_r :
+  forall a b c : nat,
     mult (minus a b) c = minus (mult a c) (mult b c).
 (* begin hide *)
 Proof.
@@ -422,7 +469,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mult_assoc : forall a b c : nat,
+Lemma mult_assoc :
+  forall a b c : nat,
     mult a (mult b c) = mult (mult a b) c.
 (* begin hide *)
 Proof.
@@ -432,8 +480,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mult_no_inverse_l :
-    ~ forall n : nat, exists i : nat, mult i n = 1.
+Lemma mult_no_inverse_l :
+  ~ forall n : nat, exists i : nat, mult i n = 1.
 (* begin hide *)
 Proof.
   intro. destruct (H (S 1)) as [i H']. rewrite mult_comm in H'.
@@ -443,8 +491,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mult_no_inverse_r :
-    ~ forall n : nat, exists i : nat, mult n i = 1.
+Lemma mult_no_inverse_r :
+  ~ forall n : nat, exists i : nat, mult n i = 1.
 (* begin hide *)
 Proof.
   intro. destruct (H (S 1)) as [i H']. simpl in H'.
@@ -454,7 +502,30 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mult_2_plus : forall n : nat, mult (S (S 0)) n = plus n n.
+Lemma mult_no_inverse_l_strong :
+  forall n i : nat, n <> 1 -> mult i n <> 1.
+(* begin hide *)
+Proof.
+  induction i; cbn; intros.
+    inversion 1.
+    destruct n as [| [| n']]; cbn.
+      rewrite mult_0_r. assumption.
+      contradiction H. reflexivity.
+      inversion 1.
+Qed.
+(* end hide *)
+
+Lemma mult_no_inverse_r_strong :
+  forall n i : nat, n <> 1 -> mult n i <> 1.
+(* begin hide *)
+Proof.
+  intros. rewrite mult_comm.
+  apply mult_no_inverse_l_strong. assumption.
+Qed.
+(* end hide *)
+
+Lemma mult_2_plus :
+  forall n : nat, mult (S (S 0)) n = plus n n.
 (* begin hide *)
 Proof.
   intro. simpl. rewrite plus_0_r. trivial.
@@ -473,7 +544,8 @@ Inductive le (n : nat) : nat -> Prop :=
 
 Notation "n <= m" := (le n m).
 
-Theorem le_0_n : forall n : nat, 0 <= n.
+Lemma le_0_n :
+  forall n : nat, 0 <= n.
 (* begin hide *)
 Proof.
   induction n as [| n'].
@@ -482,14 +554,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_n_Sm : forall n m : nat, n <= m -> n <= S m.
+Lemma le_n_Sm :
+  forall n m : nat, n <= m -> n <= S m.
 (* begin hide *)
 Proof.
   apply le_S.
 Qed.
 (* end hide *)
 
-Theorem le_Sn_m : forall n m : nat, S n <= m -> n <= m.
+Lemma le_Sn_m :
+  forall n m : nat, S n <= m -> n <= m.
 (* begin hide *)
 Proof.
   induction m as [| m'].
@@ -500,7 +574,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_n_S : forall n m : nat, n <= m -> S n <= S m.
+Lemma le_n_S :
+  forall n m : nat, n <= m -> S n <= S m.
 (* begin hide *)
 Proof.
   induction 1.
@@ -509,7 +584,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_S_n : forall n m : nat, S n <= S m -> n <= m.
+Lemma le_S_n :
+  forall n m : nat, S n <= S m -> n <= m.
 (* begin hide *)
 Proof.
   intros n m. generalize dependent n. induction m as [| m'].
@@ -522,7 +598,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_Sn_n : forall n : nat, ~ S n <= n.
+Lemma le_Sn_n :
+  forall n : nat, ~ S n <= n.
 (* begin hide *)
 Proof.
   induction n as [| n']; intro.
@@ -531,14 +608,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_refl : forall n : nat, n <= n.
+Lemma le_refl :
+  forall n : nat, n <= n.
 (* begin hide *)
 Proof.
   apply le_n.
 Qed.
 (* end hide *)
 
-Theorem le_trans : forall a b c : nat,
+Lemma le_trans :
+  forall a b c : nat,
     a <= b -> b <= c -> a <= c.
 (* begin hide *)
 Proof.
@@ -548,7 +627,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_antisym : forall n m : nat,
+Lemma le_antisym :
+  forall n m : nat,
     n <= m -> m <= n -> n = m.
 (* begin hide *)
 Proof.
@@ -560,14 +640,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_pred : forall n : nat, pred n <= n.
+Lemma le_pred :
+  forall n : nat, pred n <= n.
 (* begin hide *)
 Proof.
   destruct n; simpl; repeat constructor.
 Qed.
 (* end hide *)
 
-Theorem le_n_pred : forall n m : nat,
+Lemma le_n_pred :
+  forall n m : nat,
     n <= m -> pred n <= pred m.
 (* begin hide *)
 Proof.
@@ -579,15 +661,17 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem no_le_pred_n : ~ forall n m : nat,
-    pred n <= pred m -> n <= m.
+Lemma no_le_pred_n :
+  ~ forall n m : nat,
+      pred n <= pred m -> n <= m.
 (* begin hide *)
 Proof.
   intro. specialize (H 1 0 (le_n 0)). inversion H.
 Qed.
 (* end hide *)
 
-Theorem le_plus_l : forall a b c : nat,
+Lemma le_plus_l :
+  forall a b c : nat,
     b <= c -> plus a b <= plus a c.
 (* begin hide *)
 Proof.
@@ -597,7 +681,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_plus_r : forall a b c : nat,
+Lemma le_plus_r :
+  forall a b c : nat,
     a <= b -> plus a c <= plus b c.
 (* begin hide *)
 Proof.
@@ -606,7 +691,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_plus : forall a b c d : nat,
+Lemma le_plus :
+  forall a b c d : nat,
     a <= b -> c <= d -> plus a c <= plus b d.
 (* begin hide *)
 Proof.
@@ -616,7 +702,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_minus_S : forall n m : nat,
+Lemma le_minus_S :
+  forall n m : nat,
     minus n (S m) <= minus n m.
 (* begin hide *)
 Proof.
@@ -628,7 +715,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_minus_l : forall a b c : nat,
+Lemma le_minus_l :
+  forall a b c : nat,
     b <= c -> minus a c <= minus a b.
 (* begin hide *)
 Proof.
@@ -640,7 +728,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_minus_r : forall a b c : nat,
+Lemma le_minus_r :
+  forall a b c : nat,
     a <= b -> minus a c <= minus b c.
 (* begin hide *)
 Proof.
@@ -654,7 +743,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_mult_l : forall a b c : nat,
+Lemma le_mult_l :
+  forall a b c : nat,
     b <= c -> mult a b <= mult a c.
 (* begin hide *)
 Proof.
@@ -666,7 +756,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_mult_r : forall a b c : nat,
+Lemma le_mult_r :
+  forall a b c : nat,
     a <= b -> mult a c <= mult b c.
 (* begin hide *)
 Proof.
@@ -675,7 +766,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_mult : forall a b c d : nat,
+Lemma le_mult :
+  forall a b c d : nat,
     a <= b -> c <= d -> mult a c <= mult b d.
 (* begin hide *)
 Proof.
@@ -687,7 +779,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_plus_exists : forall n m : nat,
+Lemma le_plus_exists :
+  forall n m : nat,
     n <= m -> exists k : nat, plus n k = m.
 (* begin hide *)
 Proof.
@@ -710,7 +803,7 @@ Definition lt (n m : nat) : Prop := S n <= m.
 
 Notation "n < m" := (lt n m).
 
-Theorem lt_irrefl :
+Lemma lt_irrefl :
   forall n : nat, ~ n < n.
 (* begin hide *)
 Proof.
@@ -718,7 +811,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem lt_trans :
+Lemma lt_trans :
   forall a b c : nat, a < b -> b < c -> a < c.
 (* begin hide *)
 Proof.
@@ -731,11 +824,17 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem lt_asym :
+Lemma lt_asym :
   forall n m : nat, n < m -> ~ m < n.
+(* begin hide *)
 Proof.
-  unfold lt, not; intros.
-Abort.
+  unfold lt, not; intros. cut (S n <= n).
+    intro. apply le_Sn_n in H1. assumption.
+    apply le_trans with m.
+      assumption.
+      apply le_Sn_m. assumption.
+Qed.
+(* end hide *)
 
 (** *** Minimum i maksimum *)
 
@@ -757,46 +856,36 @@ match n, m with
 end.
 (* end hide *)
 
-Theorem min_0_l : forall n : nat, min 0 n = 0.
+Lemma min_0_l :
+  forall n : nat, min 0 n = 0.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma min_0_r :
+  forall n : nat, min n 0 = 0.
 (* begin hide *)
 Proof.
-  simpl. trivial.
+  destruct n; cbn; reflexivity.
 Qed.
 (* end hide *)
 
-Theorem min_0_r : forall n : nat, min n 0 = 0.
+Lemma max_0_l :
+  forall n : nat, max 0 n = n.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma max_0_r :
+  forall n : nat, max n 0 = n.
 (* begin hide *)
 Proof.
-  destruct n; simpl; trivial.
+  destruct n; cbn; reflexivity.
 Qed.
 (* end hide *)
 
-Theorem max_0_l : forall n : nat, max 0 n = n.
-(* begin hide *)
-Proof.
-  simpl. trivial.
-Qed.
-(* end hide *)
-
-Theorem max_0_r : forall n : nat, max n 0 = n.
-(* begin hide *)
-Proof.
-  destruct n; simpl; trivial.
-Qed.
-(* end hide *)
-
-Theorem min_le : forall n m : nat, n <= m -> min n m = n.
-(* begin hide *)
-Proof.
-  induction n as [| n'].
-    trivial.
-    destruct m as [| m'].
-      inversion 1.
-      intro. simpl. f_equal. apply IHn'. apply le_S_n. assumption.
-Qed.
-(* end hide *)
-
-Theorem max_le : forall n m : nat, n <= m -> max n m = m.
+Lemma min_le :
+  forall n m : nat, n <= m -> min n m = n.
 (* begin hide *)
 Proof.
   induction n as [| n'].
@@ -807,7 +896,20 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem min_assoc : forall a b c : nat,
+Lemma max_le :
+  forall n m : nat, n <= m -> max n m = m.
+(* begin hide *)
+Proof.
+  induction n as [| n'].
+    trivial.
+    destruct m as [| m'].
+      inversion 1.
+      intro. simpl. f_equal. apply IHn'. apply le_S_n. assumption.
+Qed.
+(* end hide *)
+
+Lemma min_assoc :
+  forall a b c : nat,
     min a (min b c) = min (min a b) c.
 (* begin hide *)
 Proof.
@@ -817,7 +919,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem max_assoc : forall a b c : nat,
+Lemma max_assoc :
+  forall a b c : nat,
     max a (max b c) = max (max a b) c.
 (* begin hide *)
 Proof.
@@ -827,36 +930,40 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem min_comm : forall n m : nat, min n m = min m n.
+Lemma min_comm :
+  forall n m : nat, min n m = min m n.
 (* begin hide *)
 Proof.
   induction n as [| n']; destruct m; simpl; try rewrite IHn'; trivial.
 Qed.
 (* end hide *)
 
-Theorem max_comm : forall n m : nat, max n m = max m n.
+Lemma max_comm :
+  forall n m : nat, max n m = max m n.
 (* begin hide *)
 Proof.
   induction n as [| n']; destruct m; simpl; try rewrite IHn'; trivial.
 Qed.
 (* end hide *)
 
-Theorem min_refl : forall n : nat, min n n = n.
+Lemma min_refl :
+  forall n : nat, min n n = n.
 (* begin hide *)
 Proof.
   induction n as [| n']; simpl; try rewrite IHn'; trivial.
 Qed.
 (* end hide *)
 
-Theorem max_refl : forall n : nat, max n n = n.
+Lemma max_refl :
+  forall n : nat, max n n = n.
 (* begin hide *)
 Proof.
   induction n as [| n']; simpl; try rewrite IHn'; trivial.
 Qed.
 (* end hide *)
 
-Theorem min_no_neutr_l :
-    ~ exists e : nat, forall n : nat, min e n = n.
+Lemma min_no_neutr_l :
+  ~ exists e : nat, forall n : nat, min e n = n.
 (* begin hide *)
 Proof.
   intro. destruct H as [e H]. specialize (H (S e)).
@@ -866,8 +973,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem min_no_neutr_r :
-    ~ exists e : nat, forall n : nat, min n e = n.
+Lemma min_no_neutr_r :
+  ~ exists e : nat, forall n : nat, min n e = n.
 (* begin hide *)
 Proof.
   intro. apply min_no_neutr_l. destruct H as [e H].
@@ -875,8 +982,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem max_no_annihilator_l :
-    ~ exists a : nat, forall n : nat, max a n = a.
+Lemma max_no_annihilator_l :
+  ~ exists a : nat, forall n : nat, max a n = a.
 (* begin hide *)
 Proof.
   intro. destruct H as [a H]. specialize (H (S a)).
@@ -884,8 +991,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem max_no_annihilator_r :
-    ~ exists a : nat, forall n : nat, max n a = a.
+Lemma max_no_annihilator_r :
+  ~ exists a : nat, forall n : nat, max n a = a.
 (* begin hide *)
 Proof.
   intro. destruct H as [a H]. apply max_no_annihilator_l.
@@ -893,9 +1000,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem is_it_true :
-    (forall n m : nat, min (S n) m = S (min n m)) \/
-    (~ forall n m : nat, min (S n) m = S (min n m)).
+Lemma is_it_true :
+  (forall n m : nat, min (S n) m = S (min n m)) \/
+  (~ forall n m : nat, min (S n) m = S (min n m)).
 (* begin hide *)
 Proof.
   right. intro. specialize (H 0 0). simpl in H. inversion H.
@@ -914,44 +1021,46 @@ match m with
 end.
 (* end hide *)
 
-Theorem pow_0_r : forall n : nat, pow n 0 = 1.
+Lemma pow_0_r :
+  forall n : nat, pow n 0 = 1.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma pow_0_l :
+  forall n : nat, pow 0 (S n) = 0.
 (* begin hide *)
 Proof.
-  simpl. trivial.
+  destruct n; cbn; reflexivity.
 Qed.
 (* end hide *)
 
-Theorem pow_0_l : forall n : nat, pow 0 (S n) = 0.
-(* begin hide *)
-Proof.
-  destruct n; simpl; trivial.
-Qed.
-(* end hide *)
-
-Theorem pow_1_l : forall n : nat, pow 1 n = 1.
+Lemma pow_1_l :
+  forall n : nat, pow 1 n = 1.
 (* begin hide *)
 Proof.
   induction n as [| n']; simpl; try rewrite plus_0_r; trivial.
 Qed.
 (* end hide *)
 
-Theorem pow_1_r : forall n : nat, pow n 1 = n.
+Lemma pow_1_r :
+  forall n : nat, pow n 1 = n.
 (* begin hide *)
 Proof.
   induction n as [| n']; simpl; try rewrite mult_1_r; trivial.
 Qed.
 (* end hide *)
 
-Theorem pow_no_neutr_l :
-    ~ exists e : nat, forall n : nat, pow e n = n.
+Lemma pow_no_neutr_l :
+  ~ exists e : nat, forall n : nat, pow e n = n.
 (* begin hide *)
 Proof.
   destruct 1 as [e H]. specialize (H 0). simpl in H. inversion H.
 Qed.
 (* end hide *)
 
-Theorem pow_no_annihilator_r :
-    ~ exists a : nat, forall n : nat, pow n a = a.
+Lemma pow_no_annihilator_r :
+  ~ exists a : nat, forall n : nat, pow n a = a.
 (* begin hide *)
 Proof.
   destruct 1 as [a H]. destruct a;
@@ -959,7 +1068,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_pow_l : forall a b c : nat,
+Lemma le_pow_l :
+  forall a b c : nat,
     a <> 0 -> b <= c -> pow a b <= pow a c.
 (* begin hide *)
 Proof.
@@ -974,7 +1084,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem le_pow_r : forall a b c : nat,
+Lemma le_pow_r :
+  forall a b c : nat,
     a <= b -> pow a c <= pow b c.
 (* begin hide *)
 Proof.
@@ -984,7 +1095,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem pow_mult : forall a b c : nat,
+Lemma pow_mult :
+  forall a b c : nat,
     pow (mult a b) c = mult (pow a c) (pow b c).
 (* begin hide *)
 Proof.
@@ -995,7 +1107,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem pow_plus : forall a b c : nat,
+Lemma pow_plus :
+  forall a b c : nat,
     pow a (plus b c) = mult (pow a b) (pow a c).
 (* begin hide *)
 Proof.
@@ -1007,7 +1120,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem pow_pow : forall a b c : nat,
+Lemma pow_pow :
+  forall a b c : nat,
     pow (pow a b) c = pow a (mult b c).
 (* begin hide *)
 Proof.
@@ -1031,7 +1145,8 @@ match n, m with
 end.
 (* end hide *)
 
-Theorem leb_n : forall n : nat,
+Lemma leb_n :
+  forall n : nat,
     leb n n = true.
 (* begin hide *)
 Proof.
@@ -1039,7 +1154,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem leb_spec : forall n m : nat,
+Lemma leb_spec :
+  forall n m : nat,
     n <= m <-> leb n m = true.
 (* begin hide *)
 Proof.
@@ -1075,7 +1191,8 @@ match n, m with
 end.
 (* end hide *)
 
-Theorem eqb_spec : forall n m : nat,
+Lemma eqb_spec :
+  forall n m : nat,
     n = m <-> eqb n m = true.
 (* begin hide *)
 Proof.
@@ -1097,7 +1214,7 @@ match m with
     | S m' => S (plus' n m')
 end.
 
-Theorem plus'_is_plus :
+Lemma plus'_is_plus :
   forall n m : nat, plus' n m = plus n m.
 (* begin hide *)
 Proof.
@@ -1115,7 +1232,7 @@ match n with
     | S n' => plus'' n' (S m)
 end.
 
-Theorem plus''_is_plus :
+Lemma plus''_is_plus :
   forall n m : nat, plus'' n m = plus n m.
 (* begin hide *)
 Proof.
@@ -1132,7 +1249,7 @@ match m with
     | S m' => plus''' (S n) m'
 end.
 
-Theorem plus'''_is_plus :
+Lemma plus'''_is_plus :
   forall n m : nat, plus''' n m = plus n m.
 (* begin hide *)
 Proof.
@@ -1155,8 +1272,9 @@ Qed.
     dowolnych termów. W niektórych przypadkach jest to bardzo częsta
     praktyka. *)
 
-Fixpoint nat_ind_2 (P : nat -> Prop) (H0 : P 0) (H1 : P 1)
-    (HSS : forall n : nat, P n -> P (S (S n))) (n : nat) : P n.
+Fixpoint nat_ind_2
+  (P : nat -> Prop) (H0 : P 0) (H1 : P 1)
+  (HSS : forall n : nat, P n -> P (S (S n))) (n : nat) : P n.
 (* begin hide *)
 Proof.
   destruct n.
@@ -1188,7 +1306,7 @@ end.
 
 Notation "2" := (S (S 0)).
 
-Theorem div2_even :
+Lemma div2_even :
   forall n : nat, div2 (mult 2 n) = n.
 (* begin hide *)
 Proof.
@@ -1197,7 +1315,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem div2_odd :
+Lemma div2_odd :
   forall n : nat, div2 (S (mult 2 n)) = n.
 (* begin hide *)
 Proof.
@@ -1206,7 +1324,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mod2_even : forall n : nat, mod2 (mult 2 n) = 0.
+Lemma mod2_even :
+  forall n : nat, mod2 (mult 2 n) = 0.
 (* begin hide *)
 Proof.
   apply nat_ind_2; simpl; intros; trivial.
@@ -1214,7 +1333,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mod2_odd :
+Lemma mod2_odd :
   forall n : nat, mod2 (S (mult 2 n)) = 1.
 (* begin hide *)
 Proof.
@@ -1223,7 +1342,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem div2_mod2_spec :
+Lemma div2_mod2_spec :
   forall n : nat, plus (mult 2 (div2 n)) (mod2 n) = n.
 (* begin hide *)
 Proof.
@@ -1232,7 +1351,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem div2_le :
+Lemma div2_le :
   forall n : nat, div2 n <= n.
 (* begin hide *)
 Proof.
@@ -1241,7 +1360,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem div2_pres_le :
+Lemma div2_pres_le :
   forall n m : nat, n <= m -> div2 n <= div2 m.
 (* begin hide *)
 Proof.
@@ -1253,7 +1372,7 @@ Proof.
 Qed.  
 (* end hide *)
 
-Theorem mod2_le :
+Lemma mod2_le :
   forall n : nat, mod2 n <= n.
 (* begin hide *)
 Proof.
@@ -1261,7 +1380,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mod2_not_pres_e :
+Lemma mod2_not_pres_e :
   exists n m : nat, n <= m /\ mod2 m <= mod2 n.
 (* begin hide *)
 Proof.
@@ -1270,16 +1389,21 @@ Proof.
 Qed.
 (* end hide *)
 
-(* begin hide *)
-
-(* Theorem div2_lt : forall n : nat,
+Lemma div2_lt :
+  forall n : nat,
     0 <> n -> div2 n < n.
+(* begin hide *)
 Proof.
-  destruct n using nat_ind_2; simpl; intros.
-    contradiction H. trivial.
-    simpl. auto.
-    unfold lt. do 2 apply Le.le_n_S. apply div2_le.
-Qed. *)
+  induction n using nat_ind_2; cbn; intros.
+    contradiction H. reflexivity.
+    apply le_n.
+    unfold lt in *. destruct n as [| n'].
+      cbn. apply le_n.
+      specialize (IHn ltac:(inversion 1)). apply le_n_S.
+        apply le_trans with (S n').
+          assumption.
+          apply le_S, le_n.
+Qed.
 (* end hide *)
 
 (** *** Podzielność *)
@@ -1290,9 +1414,9 @@ Definition divides (k n : nat) : Prop :=
 Notation "k | n" := (divides k n) (at level 40).
 
 (** [k] dzieli [n] jeżeli [n] jest wielokrotnością [k]. Udowodnij podstawowe
-    właściwości relacji "dzieli". *)
+    właściwości tej relacji. *)
 
-Theorem divides_0 :
+Lemma divides_0 :
   forall n : nat, n | 0.
 (* begin hide *)
 Proof.
@@ -1300,7 +1424,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem not_divides_0 :
+Lemma not_divides_0 :
   forall n : nat, n <> 0 -> ~ 0 | n.
 (* begin hide *)
 Proof.
@@ -1309,7 +1433,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem divides_1 :
+Lemma divides_1 :
   forall n : nat, 1 | n.
 (* begin hide *)
 Proof.
@@ -1317,7 +1441,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem divides_refl :
+Lemma divides_refl :
   forall n : nat, n | n.
 (* begin hide *)
 Proof.
@@ -1325,7 +1449,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem divides_trans :
+Lemma divides_trans :
   forall k n m : nat, k | n -> n | m -> k | m.
 (* begin hide *)
 Proof.
@@ -1335,7 +1459,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem divides_plus :
+Lemma divides_plus :
   forall k n m : nat, k | n -> k | m -> k | plus n m.
 (* begin hide *)
 Proof.
@@ -1345,7 +1469,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem divides_mult_l :
+Lemma divides_mult_l :
   forall k n m : nat, k | n -> k | mult n m.
 (* begin hide *)
 Proof.
@@ -1354,7 +1478,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem divides_mult_r :
+Lemma divides_mult_r :
   forall k n m : nat, k | m -> k | mult n m.
 (* begin hide *)
 Proof.
@@ -1362,10 +1486,29 @@ Proof.
 Qed.
 (* end hide *)
 
-(*Theorem divides_lt :
-  forall k n : nat, n < k -> ~ k | *)
+Lemma divides_le :
+  ~ forall k n : nat, k | n -> k <= n.
+(* end hide *)
+Proof.
+  intro. cut (1 <= 0).
+    inversion 1.
+    apply H. red. exists 0. cbn. reflexivity.
+Qed.
+(* end hide *)
 
+(* begin hide *)
 Definition prime (p : nat) : Prop :=
   forall k : nat, k | p -> k = 1 \/ k = p.
+
+Lemma double_not_prime :
+  forall (A : Type) (p : nat),
+    prime p -> ~ prime (mult 2 p).
+Proof.
+  unfold prime, not; intros.
+  destruct (H0 2).
+    red. exists p. reflexivity.
+    inversion H1.
+Abort.
+(* end hide *)
 
 End MyNat.

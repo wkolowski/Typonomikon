@@ -168,6 +168,27 @@ Proof.
 Qed.
 (* end hide *)
 
+Require Import Omega.
+
+Lemma Swap_spec :
+  forall (A : Type) (l1 l2 : list A),
+    Swap l1 l2 ->
+      l1 = l2 \/
+      exists (x y : A) (l1' l2' : list A),
+        l1 = l1' ++ x :: y :: l2' /\
+        l2 = l1' ++ y :: x :: l2'.
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    left. reflexivity.
+    destruct IHSwap; subst.
+      left. reflexivity.
+      destruct H0 as (a & b & l1' & l2' & H1 & H2); subst.
+        right. exists a, b, (x :: l1'), l2'; cbn. split; reflexivity.
+      right. exists y, x, [], l; cbn. split; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma Perm_length :
   forall (A : Type) (l1 l2 : list A),
     Perm l1 l2 -> length l1 = length l2.
@@ -438,8 +459,8 @@ Lemma Perm_cons_app :
     Perm l (l1 ++ l2) -> Perm (x :: l) (l1 ++ x :: l2).
 (* begin hide *)
 Proof.
-  intros. rewrite H, <- (Perm_app_comm (x :: l2)). cbn.
-  apply Perm_skip, Perm_app_comm.
+  intros. rewrite H, <- (Perm_app_com (x :: l2)). cbn.
+  apply Perm_skip, Perm_app_com.
 Qed.
 (* end hide *)
 
@@ -494,6 +515,71 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Perm_cons_split_aux :
+  forall (A : Type) (h : A) (t l1 l2 : list A),
+    Swap (h :: t) l1 -> Perm l1 l2 ->
+      exists l21 l22 : list A,
+        l2 = l21 ++ h :: l22 /\ Perm (l21 ++ l22) t.
+(* begin hide *)
+Proof.
+  intros A h t l1 l2 HS HP. generalize dependent t; revert dependent h.
+  induction HP; intros.
+    apply Swap_spec in H. destruct H; subst.
+      apply Swap_spec in HS. destruct HS; subst.
+        exists [], t; cbn. split; reflexivity.
+        destruct H as (x & y & l1' & l2' & Heq1 & Heq2); subst.
+          destruct l1'; cbn in *; inversion Heq1; subst; clear Heq1.
+            exists [y], l2'; cbn. split; reflexivity.
+            exists [], (l1' ++ y :: x :: l2'); cbn. split.
+              reflexivity.
+              rewrite ?Perm_middle. do 2 constructor.
+      destruct H as (x & y & l1' & l2' & Heq1 & Heq2); subst.
+      apply Swap_spec in HS. destruct HS; subst.
+        destruct l1'; cbn in *; inversion H; subst; clear H.
+          exists [y], l2'; cbn. split; reflexivity.
+          exists [], (l1' ++ y :: x :: l2'); cbn. split.
+            reflexivity.
+            apply Perm_app; try reflexivity. do 2 constructor.
+        destruct H as (x' & y' & l1'' & l2'' & Heq1 & Heq2); subst.
+          destruct l1''; inversion Heq1; subst; clear Heq1; cbn in *.
+            destruct l1'; inversion Heq2; subst; clear Heq2; cbn in *.
+              exists [], (y' :: l2''); cbn. split; reflexivity.
+              destruct l1'; inversion H1; subst; clear H1; cbn.
+                exists [y'; y], l2'; cbn. split; reflexivity.
+                exists [y'], (l1' ++ y :: x :: l2'); cbn. split.
+                  reflexivity.
+                  apply Perm_skip. rewrite ?Perm_middle. do 2 constructor.
+            destruct l1'; inversion Heq2; subst; clear Heq2; cbn in *.
+              exists [y], l2'; cbn. split.
+                reflexivity.
+                rewrite H1, ?Perm_middle. do 2 constructor.
+              destruct l1'; inversion H1; subst; clear H1; cbn in *.
+                destruct l1''; inversion H0; subst; clear H0; cbn in *.
+                  exists [], (x' :: y' :: l2''); cbn. split; reflexivity.
+                  destruct l1''; inversion H2; subst; clear H2; cbn in *.
+                    exists [], (y' :: a0 :: x' :: l2''); cbn. split.
+                      reflexivity.
+                      rewrite Perm_swap. apply Perm_skip. apply Perm_swap.
+                    exists [], (a1 :: a0 :: l1'' ++ y' :: x' :: l2''); cbn.
+                      split.
+                        reflexivity.
+                        rewrite Perm_swap. do 2 apply Perm_skip.
+                          apply Perm_app.
+                            reflexivity.
+                            do 2 constructor.
+                destruct l1''; inversion H0; subst; clear H0; cbn in *.
+                  destruct l1'; inversion H2; subst; clear H2; cbn in *.
+                    exists [], (y' :: y :: x' :: l2'); cbn. split.
+                      reflexivity.
+                      rewrite <- !(Perm_swap y'). apply Perm_skip. do 2 constructor.
+                    exists [], (y' :: x' :: l1' ++ y :: x :: l2'); cbn.
+                      split.
+                        reflexivity.
+                        rewrite Perm_swap. do 2 apply Perm_skip. apply Perm_app.
+                          reflexivity.
+                          do 2 constructor.
+Abort.
+
 Lemma Perm_cons_split :
   forall (A : Type) (h : A) (t l : list A),
     Perm (h :: t) l ->
@@ -501,20 +587,46 @@ Lemma Perm_cons_split :
         l = l1 ++ h :: l2 /\ Perm (l1 ++ l2) t.
 (* begin hide *)
 Proof.
-  inversion 1; subst.
-    apply Swap_cons in H0. destruct H0 as (l1 & l2 & H0); subst.
-      exists l1, l2. cbn.
-    apply Swap_cons in H0. destruct H0 as [l1 [l3 H0]]; subst.
-      inversion H1; subst.
-      
-
+  intros. remember (h :: t) as l'.
+  generalize dependent t; generalize dependent h.
+  induction H; intros; subst.
+    apply Swap_spec in H. destruct H; subst.
+      exists [], t; cbn. split; reflexivity.
+      destruct H as (x & y & l1' & l2' & Heq1 & Heq2); subst.
+        destruct l1'; inversion Heq1; subst; clear Heq1; cbn.
+          exists [y], l2'; cbn. split; reflexivity.
+          exists [], (l1' ++ y :: x :: l2'); cbn. split.
+            reflexivity.
+            apply Perm_app; repeat constructor. reflexivity.
+    apply Swap_spec in H. destruct H; subst.
+      destruct (IHPerm _ _ eq_refl) as (l1 & l2 & Heq & HP); subst.
+        exists l1, l2. split; [reflexivity | assumption].
+      destruct H as (x & y & l1' & l2' & Heq1 & Heq2); subst.
+        destruct l1'; inversion Heq1; subst; clear Heq1; cbn in *.
+          Focus 2. destruct (IHPerm _ _ eq_refl) as (l1 & l2 & H1 & H2).
+            exists l1, l2. split.
+              assumption.
+              rewrite H2. rewrite ?Perm_middle. do 2 constructor.
+          
+          destruct (IHPerm _ _ eq_refl).
+    
+Restart.
   intros. remember (h :: t) as l'.
   generalize dependent t; generalize dependent h.
   induction H; intros; inversion Heql'; subst.
     inversion H; subst; clear H.
-      exists [], l'. cbn. reflexivity.
-      exists [x], l. cbn. reflexivity.
-    apply Swap_cons in H. destruct H as [l1' [l3' H]]. subst.
+      exists [], l'. cbn. split.
+        reflexivity.
+        constructor. symmetry. assumption.
+      exists [x], l. cbn. split; reflexivity.
+    apply Swap_spec in H. destruct H; subst.
+      destruct (IHPerm _ _ eq_refl) as (l1 & l2 & Heq1 & Heq2); subst.
+        exists l1, l2. split; [reflexivity | assumption].
+      destruct H as (x & y & l1' & l2' & Heq1 & Heq2); subst.
+        exists []
+
+
+    apply Swap_cons in H. destruct H as [l1' [l3' H]]. subst. Print Perm.
       destruct l1' as [| h' t']; cbn in *.
         destruct (IHPerm _ _ eq_refl) as (l1 & l2 & IH); subst.
           exists l1, l2. reflexivity.
@@ -669,21 +781,6 @@ Perm_nth:
       FinFun.bFun n f /\
       FinFun.bInjective n f /\
       (forall x : nat, x < n -> List.nth x l' d = List.nth (f x) l d)))
-
-Lemma Swap_spec :
-  forall (A : Type) (l1 l2 : list A),
-    Swap l1 l2 ->
-      length l1 <= 1 /\ length l2 <= 1 \/
-      exists (x y : A) (l1' l2' : list A),
-        l1 = l1' ++ x :: y :: l2' /\
-        l2 = l1' ++ y :: x :: l2'.
-(* begin hide *)
-Proof.
-  induction 1; cbn.
-    left. split; apply le_0_n.
-    decompose [and or] IHSwap; clear IHSwap; subst.
-      destruct l, l'; cbn. Require Import Omega.
-        left; omega.
         
     
 

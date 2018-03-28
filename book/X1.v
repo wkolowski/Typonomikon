@@ -184,12 +184,14 @@ Proof. solve_bool. Qed.
 
 (** *** Rozdzielność *)
 
-Theorem andb_dist_orb : b1 && (b2 || b3) = (b1 && b2) || (b1 && b3).
+Theorem andb_dist_orb :
+  b1 && (b2 || b3) = (b1 && b2) || (b1 && b3).
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem orb_dist_andb : b1 || (b2 && b3) = (b1 || b2) && (b1 || b3).
+Theorem orb_dist_andb :
+  b1 || (b2 && b3) = (b1 || b2) && (b1 || b3).
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
