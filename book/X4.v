@@ -994,7 +994,8 @@ Definition involutive'' {A : Type} (f : A -> A) : Prop :=
   iter 2 f = id A.
 
 Theorem involutive'_involutive'' :
-  forall (A : Type) (f : A -> A), involutive' f <-> involutive'' f.
+  forall (A : Type) (f : A -> A),
+    involutive' f <-> involutive'' f.
 (* begin hide *)
 Proof.
   unfold involutive', involutive''; split; intros.

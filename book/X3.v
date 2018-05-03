@@ -1,8 +1,10 @@
 (** * X3: Listy *)
 
 (** Lista to najprostsza i najczęściej używana w programowaniu funkcyjnym
-    struktura danych. Czas więc przeżyć na własnej skórze ich implementację
-    w bibliotece standardowej. *)
+    struktura danych. Czas więc przeżyć na własnej skórze ich implementację.
+
+    UWAGA: ten rozdział wyewoluował do stanu dość mocno odbiegającego od
+    tego, co jest w bibliotece standardowej — moim zdanem na korzyść. *)
 
 Require Import Arith.
 
@@ -24,7 +26,7 @@ Notation "[]" := nil.
 Notation "x :: y" := (cons x y) (at level 60, right associativity).
 Notation "[ x ; .. ; y ]" := (cons x .. (cons y nil) ..).
 
-(** *** [length] *)
+(** ** [length] *)
 
 (** Zdefiniuj funkcję [length], która oblicza długość listy. *)
 
@@ -62,7 +64,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [app] *)
+(** ** [app] *)
 
 (** Zdefiniuj funkcję [app], która skleja dwie listy. *)
 
@@ -201,7 +203,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [rev] *)
+(** ** [rev] *)
 
 (** Zdefiniuj funkcję [rev], która odwraca listę. *)
 
@@ -246,7 +248,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [map] *)
+(** ** [map] *)
 
 (** Zdefiniuj funkcję [map], która aplikuje funkcję [f] do każdego
     elementu listy. *)
@@ -325,7 +327,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [join] *)
+(** ** [join] *)
 
 (** Napisz funkcję [join], która spłaszcza listę list. *)
 
@@ -370,7 +372,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [replicate] *)
+(** ** [replicate] *)
 
 (** Napsiz funkcję [replicate], która powiela dany element [n] razy, tworząc
     listę. *)
@@ -421,7 +423,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [nth] *)
+(** ** [nth] *)
 
 (** Zdefiniuj funkcję [nth], która zwraca n-ty element listy lub [None],
     gdy nie ma n-tego elementu. *)
@@ -571,7 +573,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [head] i [last] *)
+(** ** [head] i [last] *)
 
 (** Zdefiniuj funkcje [head] i [last], które zwracają odpowiednio pierwszy
     i ostatni element listy (lub [None], jeżeli jest pusta). *)
@@ -736,7 +738,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [tail] i [init] *)
+(** ** [tail] i [init] *)
 
 (** Zdefiniuj funkcje [tail] i [init], które zwracają odpowiednio ogon
     listy oraz wszystko poza jej ostatnim elementem (lub [None], gdy
@@ -881,7 +883,56 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [take] i [drop] *)
+Lemma tail_decomposition :
+  forall (A : Type) (l : list A),
+    l = [] \/
+    exists (h : A) (t : list A),
+      tail l = Some t /\ head l = Some h /\ l = h :: t.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn.
+    left. reflexivity.
+    right. exists h, t. repeat split.
+Qed.
+(* end hide *)
+
+Lemma init_decomposition :
+  forall (A : Type) (l : list A),
+    l = [] \/
+    exists (h : A) (t : list A),
+      init l = Some t /\ last l = Some h /\ l = t ++ [h].
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    left. reflexivity.
+    destruct IHt; subst; cbn.
+      right. exists h, []. repeat split; reflexivity.
+      destruct H as (h' & t' & H1 & H2 & H3).
+        right. rewrite H1, H2, H3. exists h', (h :: t'). repeat split.
+          destruct (t' ++ [h']) eqn: Heq.
+            apply (f_equal length) in Heq.
+              rewrite length_app, plus_comm in Heq. cbn in Heq. inversion Heq.
+            reflexivity.
+Qed.
+(* end hide *)
+
+Lemma bilateral_decomposition :
+  forall (A : Type) (l : list A),
+    l = [] \/
+    (exists x : A, l = [x]) \/
+    exists (x y : A) (l' : list A), l = x :: l' ++ [y].
+(* begin hide *)
+Proof.
+  destruct l as [| h t].
+    left. reflexivity.
+    right. destruct (init_decomposition A t); subst.
+      left. exists h. reflexivity.
+      right. destruct H as (h' & t' & H1 & H2 & H3).
+        exists h, h', t'. rewrite H3. reflexivity.
+Qed.
+(* end hide *)
+
+(** ** [take] i [drop] *)
 
 (** Zdefiniuj funkcje [take] i [drop], które odpowiednio biorą lub
     odrzucają n pierwszych elementów listy. *)
@@ -1273,7 +1324,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [takedrop] *)
+(** ** [takedrop] *)
 
 (** Zdefiniuj przez rekursję funkcję [takedrop], która spełnia poniższą
     specyfikację. *)
@@ -1303,7 +1354,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [filter] *)
+(** ** [filter] *)
 
 (** Napisz funkcję [filter], która zostawia na liście elementy, dla których
     funkcja [p] zwraca [true], a usuwa te, dla których zwraca [false]. *)
@@ -1333,6 +1384,18 @@ Proof.
   induction l as [| h t]; cbn.
     trivial.
     rewrite IHt. trivial.
+Qed.
+(* end hide *)
+
+Lemma filter_andb :
+  forall (A : Type) (f g : A -> bool) (l : list A),
+    filter (fun x : A => andb (f x) (g x)) l =
+    filter f (filter g l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    case_eq (g h); case_eq (f h); cbn; intros; rewrite ?H, ?H0, ?IHt; auto.
 Qed.
 (* end hide *)
 
@@ -1458,18 +1521,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma filter_andb :
-  forall (A : Type) (f g : A -> bool) (l : list A),
-    filter f (filter g l) =
-    filter (fun x : A => andb (f x) (g x)) l.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-    case_eq (g h); case_eq (f h); cbn; intros; rewrite ?H, ?H0, ?IHt; auto.
-Qed.
-(* end hide *)
-
 Lemma filter_comm :
   forall (A : Type) (f g : A -> bool) (l : list A),
     filter f (filter g l) = filter g (filter f l).
@@ -1482,7 +1533,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [partition] *)
+(** ** [partition] *)
 
 (** Napisz funkcję [partition], która dzieli listę [l] na listy
     elementów spełniających i niespełniających pewnego warunku
@@ -1509,7 +1560,53 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [takeWhile] i [dropWhile] *)
+Lemma partition_true :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    partition (fun _ => true) l = (l, []).
+(* begin hide *)
+Proof.
+  intros. rewrite partition_spec, filter_true, filter_false. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma partition_false :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    partition (fun _ => false) l = ([], l).
+(* begin hide *)
+Proof.
+  intros. rewrite partition_spec, filter_true, filter_false. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma partition_cons_true :
+  forall (A : Type) (p : A -> bool) (h : A) (t l1 l2 : list A),
+    p h = true -> partition p t = (l1, l2) ->
+      partition p (h :: t) = (h :: l1, l2).
+(* begin hide *)
+Proof.
+  intros. rewrite partition_spec in *.
+  inversion H0; subst; clear H0. cbn.
+  destruct (p h) eqn: Hph; cbn.
+    reflexivity.
+    congruence.
+Qed.
+(* end hide *)
+
+Lemma partition_cons_false :
+  forall (A : Type) (p : A -> bool) (h : A) (t l1 l2 : list A),
+    p h = false -> partition p t = (l1, l2) ->
+      partition p (h :: t) = (l1, h :: l2).
+(* begin hide *)
+Proof.
+  intros. rewrite partition_spec in *.
+  inversion H0; subst; clear H0. cbn.
+  destruct (p h) eqn: Hph; cbn.
+    congruence.
+    reflexivity.
+Qed.
+(* end hide *)
+
+(** ** [takeWhile] i [dropWhile] *)
 
 (** Zdefiniuj funkcje [takeWhile] oraz [dropWhile], które, dopóki
     funkcja [p] zwraca [true], odpowiednio biorą lub usuwają elementy
@@ -1644,7 +1741,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [takedropWhile] *)
+(** ** [takedropWhile] *)
 
 (** Zdefiniuj rekurencyjną funkcję [takedropWhile], która spełnia poniższą
     specyfikację. *)
@@ -1675,7 +1772,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [zip] *)
+(** ** [zip] *)
 
 (** Napisz funkcję [zip : forall A B : Type, list A -> list B -> list (A * B)],
     która spełnia poniższą specyfikację. Co robi ta funkcja? *)
@@ -1820,7 +1917,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [unzip] *)
+(** ** [unzip] *)
 
 (** Zdefiniuj funkcję [unzip], która jest w pewnym sensie "odwrotna"
     do [zip]. *)
@@ -1854,7 +1951,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [zipWith] *)
+(** ** [zipWith] *)
 
 (** Zdefiniuj funkcję [zipWith], która spełnia poniższą specyfikację. *)
 
@@ -1880,7 +1977,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [unzipWith] *)
+(** ** [unzipWith] *)
 
 (** Zaimplementuj funkcję [unzipWith], która ma się tak do [zipWith], jak
     [unzip] do [zip]. *)
@@ -1914,7 +2011,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [intersperse] *)
+(** ** [intersperse] *)
 
 (** Napisz funkcję [intersperse], który wstawia element [x : A] między
     każde dwa elementy z listy [l : list A]. *)
@@ -1999,11 +2096,14 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [find] *)
+(** ** [find]  i [findLast] *)
 
 (** Napisz funkcję [find], która znajduje pierwszy element na liście,
     który spełnia podany predykat boolowski. Podaj i udowodnij jej
-    specyfikację. *)
+    specyfikację.
+
+    Napisz też funkcję [findLast], która znajduje ostatni element na
+    liście, który spełnia podany predykat boolowski. *)
 
 (* begin hide *)
 Function find {A : Type} (p : A -> bool) (l : list A) : option A :=
@@ -2011,12 +2111,22 @@ match l with
     | [] => None
     | h :: t => if p h then Some h else find p t
 end.
+
+Fixpoint findLast {A : Type} (p : A -> bool) (l : list A) : option A :=
+match l with
+    | [] => None
+    | h :: t =>
+        match findLast p t with
+            | None => if p h then Some h else None
+            | Some x => Some x
+        end
+end.
 (* end hide *)
 
+(* begin hide *)
 Lemma find_spec :
   forall (A : Type) (p : A -> bool) (l : list A),
     find p l = head (filter p l).
-(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
@@ -2044,7 +2154,439 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [findIndex] *)
+Lemma find_length :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    find p l = Some x -> 1 <= length l.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; intros.
+    inversion H.
+    apply le_n_S, le_0_n.
+Qed.
+(* end hide *)
+
+Lemma find_app :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    find p (l1 ++ l2) =
+    match find p l1 with
+        | Some x => Some x
+        | None => find p l2
+    end.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (p h); rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma find_rev :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    find p (rev l) = findLast p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite find_app, IHt. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma find_findLast :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    find p l = findLast p (rev l).
+(* begin hide *)
+Proof.
+  intros. rewrite <- rev_inv at 1. apply find_rev.
+Qed.
+(* end hide *)
+
+Lemma find_map :
+  forall (A B : Type) (f : A -> B) (p : B -> bool) (l : list A),
+    find p (map f l) =
+    match find (fun x : A => p (f x)) l with
+        | None => None
+        | Some a => Some (f a)
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (p (f h)); rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: find_join *)
+
+Lemma find_replicate :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    find p (replicate n x) =
+    match n, p x with
+        | 0, _ => None
+        | _, false => None
+        | _, true => Some x
+    end.
+(* begin hide *)
+Proof.
+  induction n; cbn; intros.
+    reflexivity.
+    destruct (p x) eqn: Hpx.
+      reflexivity.
+      rewrite IHn. destruct n; rewrite ?Hpx; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma find_nth :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    (exists (n : nat) (x : A), nth n l = Some x /\ p x = true) <->
+    find p l <> None.
+(* begin hide *)
+Proof.
+  split.
+    destruct 1 as (n & x & H1 & H2). generalize dependent l.
+      induction n as [| n']; destruct l as [| h t]; cbn in *;
+      inversion 1; subst; clear H1.
+        rewrite H2. inversion 1.
+        destruct (p h).
+          inversion 1.
+          apply IHn'. assumption.
+    induction l as [| h t]; cbn; intros.
+      contradiction H. reflexivity.
+      destruct (p h) eqn: Hph.
+        exists 0, h. cbn. split; [reflexivity | assumption].
+        destruct (IHt H) as (n & x & H1 & H2).
+          exists (S n), x. cbn. split; assumption.
+Qed.
+(* end hide *)
+
+Lemma find_tail :
+  forall (A : Type) (p : A -> bool) (l t : list A),
+    tail l = Some t -> find p t <> None -> find p l <> None.
+(* begin hide *)
+Proof.
+  induction l as [| h t']; cbn; intros; inversion H; subst; clear H.
+  destruct (p h).
+    inversion 1.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma find_init :
+  forall (A : Type) (p : A -> bool) (l t : list A),
+    init l = Some t -> find p t <> None -> find p l <> None.
+(* begin hide *)
+Proof.
+  induction l as [| h t']; cbn; intros.
+    inversion H.
+    destruct (p h) eqn: Hph.
+      inversion 1.
+      destruct (init t').
+        inversion H; subst; clear H. cbn in H0. rewrite Hph in H0.
+          apply IHt' with l.
+            reflexivity.
+            assumption.
+        inversion H; subst; clear H. cbn in H0.
+          contradiction H0. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma find_take :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A) (l : list A),
+    find p (take n l) = Some x -> find p l = Some x.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    inversion H.
+    destruct l as [| h t]; cbn in *; intros.
+      inversion H.
+      destruct (p h).
+        assumption.
+        apply IHn'. assumption.
+Qed.
+(* end hide *)
+
+Lemma find_drop :
+  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+    find p (drop n l) <> None -> find p l <> None.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    assumption.
+    destruct l as [| h t]; cbn in *.
+      contradiction H. reflexivity.
+      destruct (p h) eqn: Hph.
+        inversion 1.
+        apply IHn'. assumption.
+Qed.
+(* end hide *)
+
+Lemma findLast_take :
+  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+    findLast p (take n l) <> None -> findLast p l <> None.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    contradiction H. reflexivity.
+    destruct l as [| h t]; cbn in *.
+      assumption.
+      destruct (findLast p (take n' t)) eqn: Heq.
+        specialize (IHn' _ ltac:(rewrite Heq; inversion 1)).
+          destruct (findLast p t) eqn: Heq'.
+            inversion 1.
+            contradiction IHn'. reflexivity.
+        destruct (findLast p t) eqn: Heq'.
+          inversion 1.
+          assumption.
+Qed.
+(* end hide *)
+
+Lemma findLast_drop :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A) (l : list A),
+    findLast p (drop n l) = Some x -> findLast p l = Some x.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    assumption.
+    destruct l as [| h t]; cbn in *.
+      inversion H.
+      rewrite (IHn' _ _ H). reflexivity.
+Qed.
+(* end hide *)
+
+(** ** [count] *)
+
+(** Napisz funkcję [count], która liczy, ile jest w liście [l] elementów
+    spełniających predykat boolowski [p]. *)
+
+(* begin hide *)
+Fixpoint count {A : Type} (p : A -> bool) (l : list A) : nat :=
+match l with
+    | [] => 0
+    | h :: t => if p h then S (count p t) else count p t
+end.
+(* end hide *)
+
+Lemma count_length :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    count p l <= length l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    apply le_0_n.
+    destruct (p h) eqn: Hph.
+      apply le_n_S. assumption.
+      apply le_S. assumption.
+Qed.
+(* end hide *)
+
+Lemma count_app :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    count p (l1 ++ l2) = count p l1 + count p l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; cbn; intros.
+    reflexivity.
+    rewrite IHt1. destruct (p h1); cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma count_rev :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    count p (rev l) = count p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite count_app, IHt. cbn. destruct (p h); cbn.
+      rewrite plus_comm. cbn. reflexivity.
+      apply plus_0_r.
+Qed.
+(* end hide *)
+
+Lemma count_map :
+  forall (A B : Type) (f : A -> B) (p : B -> bool) (l : list A),
+    count p (map f l) = count (fun x : A => p (f x)) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p (f h)); rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+(* Lemma count_join *)
+
+Lemma count_replicate :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    count p (replicate n x) =
+    if p x then n else 0.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    destruct (p x); reflexivity.
+    rewrite IHn'. destruct (p x); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma count_take :
+  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+    count p (take n l) <= n.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    apply le_0_n.
+    destruct l as [| h t]; cbn.
+      apply le_0_n.
+      destruct (p h).
+        apply le_n_S, IHn'.
+        apply le_S, IHn'.
+Qed.
+(* end hide *)
+
+Lemma count_drop :
+  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+    count p (drop n l) <= length l - n.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    rewrite <- minus_n_O. apply count_length.
+    destruct l as [| h t]; cbn.
+      apply le_0_n.
+      apply IHn'.
+Qed.
+(* end hide *)
+
+(* TODO *)
+
+Lemma count_false :
+  forall (A : Type) (l : list A),
+    count (fun _ => false) l = 0.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma count_true :
+  forall (A : Type) (l : list A),
+    count (fun _ => true) l = length l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma count_negb :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    count (fun x : A => negb (p x)) l = length l - count p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      assumption.
+      rewrite IHt. destruct (count p t) eqn: Heq.
+        rewrite <- minus_n_O. reflexivity.
+        rewrite minus_Sn_m; cbn.
+          reflexivity.
+          rewrite <- Heq. apply count_length.
+Qed.
+(* end hide *)
+
+Lemma count_andb_le_l :
+  forall (A : Type) (p q : A -> bool) (l : list A),
+    count (fun x : A => andb (p x) (q x)) l <= count p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    apply le_0_n.
+    destruct (p h); cbn.
+      destruct (q h).
+        apply le_n_S. assumption.
+        apply le_S. assumption.
+        assumption.
+Qed.
+(* end hide *)
+
+Lemma count_andb_le_r :
+  forall (A : Type) (p q : A -> bool) (l : list A),
+    count (fun x : A => andb (p x) (q x)) l <= count q l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    apply le_0_n.
+    destruct (p h), (q h); cbn.
+      apply le_n_S. assumption.
+      assumption.
+      apply le_S. assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma count_orb :
+  forall (A : Type) (p q : A -> bool) (l : list A),
+    count (fun x : A => orb (p x) (q x)) l =
+    (count p l + count q l) - count (fun x : A => andb (p x) (q x)) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (p h) eqn: Hph, (q h) eqn: Hqh; cbn; rewrite IHt.
+      rewrite <- plus_n_Sm, minus_Sn_m.
+        reflexivity.
+        apply le_plus_trans, count_andb_le_l.
+      rewrite minus_Sn_m; cbn.
+        reflexivity.
+        apply le_plus_trans, count_andb_le_l.
+      rewrite <- plus_n_Sm, minus_Sn_m; cbn.
+        reflexivity.
+        apply le_plus_trans, count_andb_le_l.
+      reflexivity.
+Restart.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    pose (count_andb_le_l A p q).
+      destruct (p h) eqn: Hph, (q h) eqn: Hqh; cbn;
+      rewrite IHt, <- ?plus_n_Sm, ?minus_Sn_m; auto.
+        all: apply le_plus_trans; auto.
+Qed.
+(* end hide *)
+
+Lemma count_orb_le :
+  forall (A : Type) (p q : A -> bool) (l : list A),
+    count (fun x : A => orb (p x) (q x)) l <=
+    count p l + count q l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    apply le_0_n.
+    destruct (p h) eqn: Hph, (q h) eqn: Hqh; cbn; rewrite <- ?plus_n_Sm.
+      apply le_n_S, le_S. assumption.
+      1-2: apply le_n_S; assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma count_andb :
+  forall (A : Type) (p q : A -> bool) (l : list A),
+    count (fun x : A => andb (p x) (q x)) l =
+    count p l + count q l - count (fun x : A => orb (p x) (q x)) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h) eqn: Hph, (q h) eqn: Hqh; cbn; rewrite IHt.
+      rewrite <- plus_n_Sm, minus_Sn_m.
+        reflexivity.
+        apply count_orb_le.
+      reflexivity.
+      rewrite <- plus_n_Sm. cbn. reflexivity.
+      reflexivity.
+Qed.
+(* end hide *)
+
+(** ** [findIndex] *)
 
 (** Napisz funkcję [findIndex], która znajduje indeks pierwszego elementu,
     który spełnia predykat boolowski [p]. *)
@@ -2541,7 +3083,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [findIndices] *)
+(** ** [findIndices] *)
 
 (** Napisz funkcję [findIndices], która znajduje indeksy wszystkich
     elementów listy, które spełniają predykat boolowski [p]. *)
@@ -2566,7 +3108,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [elem] *)
+(** ** [elem] *)
 
 (** Zdefiniuj induktywny predykat [elem]. [elem x l] jest spełniony, gdy
     [x] jest elementem listy [l]. *)
@@ -3025,58 +3567,58 @@ Restart.
 Abort.
 (* end hide *)
 
-(** *** [elem'] *)
+(** ** [In] *)
 
 (** Gratuluję, udało ci się zdefiniować predykat [elem] i dowieść wszystkich
     jego właściwości. To jednak nie koniec zabawy, gdyż predykaty możemy
     definiować nie tylko przez indukcję, ale także przez rekursję. Być może
     taki sposób definiowania jest nawet lepszy? Przyjrzyjmy się poniższej
-    definicji (tak właśnie "bycie elementem" jest zdefiniowane w bibliotece
-    standardowej; nazywa się tam [In]). *)
+    definicji — tak właśnie "bycie elementem" jest zdefiniowane w bibliotece
+    standardowej. *)
 
-Fixpoint elem' {A : Type} (x : A) (l : list A) : Prop :=
+Fixpoint In {A : Type} (x : A) (l : list A) : Prop :=
 match l with
     | [] => False
-    | h :: t => x = h \/ elem' x t
+    | h :: t => x = h \/ In x t
 end.
 
-(** Powyższa definicja jest bardzo podobna do tej induktywnej. [elem' x]
+(** Powyższa definicja jest bardzo podobna do tej induktywnej. [In x]
     dla listy pustej redukuje się do [False], co oznacza, że w pustej
     liście nic nie ma, zaś dla listy mającej głowę i ogon redukuje się do
     zdania "[x] jest głową lub jest elementem ogona".
 
     Definicja taka ma swoje wady i zalety. Największą moim zdaniem wadą jest
-    to, że nie możemy robić indukcji po dowodzie, gdyż dowód faktu [elem' x l]
+    to, że nie możemy robić indukcji po dowodzie, gdyż dowód faktu [In x l]
     nie jest induktywny. Największą zaletą zaś jest fakt, że nie możemy robić
     indukcji po dowodzie — im mniej potencjalnych rzeczy, po których można
     robić indukcję, tym mniej zastanawiania się. Przekonajmy się zatem na
     własnej skórze, która definicja jest "lepsza". *)
 
-Lemma elem'_not_nil :
-  forall (A : Type) (x : A), ~ elem' x [].
+Lemma In_not_nil :
+  forall (A : Type) (x : A), ~ In x [].
 (* begin hide *)
 Proof. inversion 1. Qed.
 (* end hide *)
 
-Lemma elem'_not_cons :
+Lemma In_not_cons :
   forall (A : Type) (x h : A) (t : list A),
-    ~ elem' x (h :: t) -> x <> h /\ ~ elem' x t.
+    ~ In x (h :: t) -> x <> h /\ ~ In x t.
 (* begin hide *)
 Proof.
   split; intro; apply H; [left | right]; assumption.
 Qed.
 (* end hide *)
 
-Lemma elem'_cons :
+Lemma In_cons :
   forall (A : Type) (x h : A) (t : list A),
-    elem' x (h :: t) <-> x = h \/ elem' x t.
+    In x (h :: t) <-> x = h \/ In x t.
 (* begin hide *)
 Proof. reflexivity. Qed.
 (* end hide *)
 
-Lemma elem'_app_l :
+Lemma In_app_l :
   forall (A : Type) (x : A) (l1 l2 : list A),
-    elem' x l1 -> elem' x (l1 ++ l2).
+    In x l1 -> In x (l1 ++ l2).
 (* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn; intros.
@@ -3087,9 +3629,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_app_r :
+Lemma In_app_r :
   forall (A : Type) (x : A) (l1 l2 : list A),
-    elem' x l2 -> elem' x (l1 ++ l2).
+    In x l2 -> In x (l1 ++ l2).
 (* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn; intros.
@@ -3098,18 +3640,18 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_or_app :
+Lemma In_or_app :
   forall (A : Type) (x : A) (l1 l2 : list A),
-    elem' x l1 \/ elem' x l2 -> elem' x (l1 ++ l2).
+    In x l1 \/ In x l2 -> In x (l1 ++ l2).
 (* begin hide *)
 Proof.
-  destruct 1; [apply elem'_app_l | apply elem'_app_r]; assumption.
+  destruct 1; [apply In_app_l | apply In_app_r]; assumption.
 Qed.
 (* end hide *)
 
-Lemma elem'_app_or :
+Lemma In_app_or :
   forall (A : Type) (x : A) (l1 l2 : list A),
-    elem' x (l1 ++ l2) -> elem' x l1 \/ elem' x l2.
+    In x (l1 ++ l2) -> In x l1 \/ In x l2.
 (* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn; intros.
@@ -3122,18 +3664,18 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_app :
+Lemma In_app :
   forall (A : Type) (x : A) (l1 l2 : list A),
-    elem' x (l1 ++ l2) <-> elem' x l1 \/ elem' x l2.
+    In x (l1 ++ l2) <-> In x l1 \/ In x l2.
 (* begin hide *)
 Proof.
-  split; intros; [apply elem'_app_or | apply elem'_or_app]; assumption.
+  split; intros; [apply In_app_or | apply In_or_app]; assumption.
 Qed.
 (* end hide *)
 
-Lemma elem'_spec :
+Lemma In_spec :
   forall (A : Type) (x : A) (l : list A),
-    elem' x l <-> exists l1 l2 : list A, l = l1 ++ x :: l2.
+    In x l <-> exists l1 l2 : list A, l = l1 ++ x :: l2.
 (* begin hide *)
 Proof.
   split.
@@ -3144,13 +3686,13 @@ Proof.
         destruct (IHt H) as (l1 & l2 & IH); subst.
           exists (h :: l1), l2. cbn. reflexivity.
     destruct 1 as (l1 & l2 & H); subst.
-      rewrite elem'_app. right. left. reflexivity.
+      rewrite In_app. right. left. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma elem'_map :
+Lemma In_map :
   forall (A B : Type) (f : A -> B) (l : list A) (x : A),
-    elem' x l -> elem' (f x) (map f l).
+    In x l -> In (f x) (map f l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -3161,9 +3703,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_map_conv :
+Lemma In_map_conv :
   forall (A B : Type) (f : A -> B) (l : list A) (y : B),
-    elem' y (map f l) <-> exists x : A, f x = y /\ elem' x l.
+    In y (map f l) <-> exists x : A, f x = y /\ In x l.
 (* begin hide *)
 Proof.
   split.
@@ -3173,14 +3715,14 @@ Proof.
         exists h. split; trivial. left. reflexivity.
         destruct (IHt H) as (x & H1 & H2). exists x.
           split; trivial. right. assumption.
-    destruct 1 as [x [<- H2]]. apply elem'_map, H2.
+    destruct 1 as [x [<- H2]]. apply In_map, H2.
 Qed.
 (* end hide *)
 
-Lemma elem'_map_conv' :
+Lemma In_map_conv' :
   forall (A B : Type) (f : A -> B) (l : list A) (x : A),
     (forall x y : A, f x = f y -> x = y) ->
-      elem' (f x) (map f l) -> elem' x l.
+      In (f x) (map f l) -> In x l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -3191,9 +3733,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma map_ext_elem' :
+Lemma map_ext_In :
   forall (A B : Type) (f g : A -> B) (l : list A),
-    (forall x : A, elem' x l -> f x = g x) -> map f l = map g l.
+    (forall x : A, In x l -> f x = g x) -> map f l = map g l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -3205,16 +3747,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_join :
+Lemma In_join :
   forall (A : Type) (x : A) (ll : list (list A)),
-    elem' x (join ll) <->
-    exists l : list A, elem' x l /\ elem' l ll.
+    In x (join ll) <->
+    exists l : list A, In x l /\ In l ll.
 (* begin hide *)
 Proof.
   split.
     induction ll as [| h t]; cbn; intros.
       contradiction.
-      rewrite elem'_app in H. destruct H.
+      rewrite In_app in H. destruct H.
         exists h. split; try left; trivial.
         destruct (IHt H) as [l [H1 H2]].
           exists l. split; try right; assumption.
@@ -3222,14 +3764,14 @@ Proof.
     induction ll as [| h t]; cbn in *.
       assumption.
       destruct H2; subst.
-        apply elem'_app_l. assumption.
-        apply elem'_app_r, IHt, H.
+        apply In_app_l. assumption.
+        apply In_app_r, IHt, H.
 Qed.
 (* end hide *)
 
-Lemma elem'_replicate :
+Lemma In_replicate :
   forall (A : Type) (n : nat) (x y : A),
-    elem' y (replicate n x) <-> n <> 0 /\ x = y.
+    In y (replicate n x) <-> n <> 0 /\ x = y.
 (* begin hide *)
 Proof.
   split.
@@ -3242,9 +3784,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma nth_elem' :
+Lemma nth_In :
   forall (A : Type) (n : nat) (l : list A),
-    n < length l -> exists x : A, nth n l = Some x /\ elem' x l.
+    n < length l -> exists x : A, nth n l = Some x /\ In x l.
 (* begin hide *)
 Proof.
   induction n as [| n']; destruct l as [| h t]; cbn; intros.
@@ -3256,9 +3798,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma nth_elem'_conv :
+Lemma nth_In_conv :
   forall (A : Type) (x : A) (l : list A),
-    elem' x l -> exists n : nat, nth n l = Some x.
+    In x l -> exists n : nat, nth n l = Some x.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; inversion 1; subst.
@@ -3267,9 +3809,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma nth_elem'_Some :
+Lemma nth_In_Some :
   forall (A : Type) (x : A) (n : nat) (l : list A),
-    nth n l = Some x -> elem' x l.
+    nth n l = Some x -> In x l.
 (* begin hide *)
 Proof.
   induction n as [| n']; destruct l as [| h t]; cbn.
@@ -3278,33 +3820,33 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_rev_aux :
+Lemma In_rev_aux :
   forall (A : Type) (x : A) (l : list A),
-    elem' x l -> elem' x (rev l).
+    In x l -> In x (rev l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
     assumption.
     inversion H; subst.
-      apply elem'_app_r. left. reflexivity.
-      apply elem'_app_l. apply IHt. assumption.
+      apply In_app_r. left. reflexivity.
+      apply In_app_l. apply IHt. assumption.
 Qed.
 (* end hide *)
 
-Lemma elem'_rev :
+Lemma In_rev :
   forall (A : Type) (x : A) (l : list A),
-    elem' x (rev l) <-> elem' x l.
+    In x (rev l) <-> In x l.
 (* begin hide *)
 Proof.
   split; intro.
-    apply elem'_rev_aux in H. rewrite rev_inv in H. assumption.
-    apply elem'_rev_aux, H.
+    apply In_rev_aux in H. rewrite rev_inv in H. assumption.
+    apply In_rev_aux, H.
 Qed.
 (* end hide *)
 
-Lemma elem'_take :
+Lemma In_take :
   forall (A : Type) (n : nat) (l : list A) (x : A),
-    elem' x (take n l) -> elem' x l.
+    In x (take n l) -> In x l.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
@@ -3317,9 +3859,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_drop :
+Lemma In_drop :
   forall (A : Type) (n : nat) (l : list A) (x : A),
-    elem' x (drop n l) -> elem' x l.
+    In x (drop n l) -> In x l.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
@@ -3330,9 +3872,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_filter :
+Lemma In_filter :
   forall (A : Type) (p : A -> bool) (l : list A) (x : A),
-    elem' x (filter p l) <-> p x = true /\ elem' x l.
+    In x (filter p l) <-> p x = true /\ In x l.
 (* begin hide *)
 Proof.
   split.
@@ -3355,33 +3897,33 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_filter_conv :
+Lemma In_filter_conv :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    elem' x l <->
-    elem' x (filter p l) /\ p x = true \/
-    elem' x (filter (fun x : A => negb (p x)) l) /\ p x = false.
+    In x l <->
+    In x (filter p l) /\ p x = true \/
+    In x (filter (fun x : A => negb (p x)) l) /\ p x = false.
 (* begin hide *)
 Proof.
-  split; rewrite ?elem'_filter.
+  split; rewrite ?In_filter.
   destruct (p x). all: firstorder.
 Qed.
 (* end hide *)
 
-Lemma elem'_partition :
+Lemma In_partition :
   forall (A : Type) (p : A -> bool) (x : A) (l l1 l2 : list A),
     partition p l = (l1, l2) ->
-      elem' x l <->
-      (elem' x l1 /\ p x = true) \/ (elem' x l2 /\ p x = false).
+      In x l <->
+      (In x l1 /\ p x = true) \/ (In x l2 /\ p x = false).
 (* begin hide *)
 Proof.
   intros. rewrite partition_spec in H. inversion H; subst; clear H.
-  rewrite (elem'_filter_conv _ p). reflexivity.
+  rewrite (In_filter_conv _ p). reflexivity.
 Qed.
 (* end hide *)
 
-Lemma elem'_takeWhile :
+Lemma In_takeWhile :
   forall (A : Type) (p : A -> bool) (l : list A) (x : A),
-    elem' x (takeWhile p l) -> elem' x l /\ p x = true.
+    In x (takeWhile p l) -> In x l /\ p x = true.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -3396,9 +3938,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_dropWhile :
+Lemma In_dropWhile :
   forall (A : Type) (p : A -> bool) (l : list A) (x : A),
-    elem' x (dropWhile p l) -> elem' x l.
+    In x (dropWhile p l) -> In x l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -3409,20 +3951,20 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_takeWhile_dropWhile :
+Lemma In_takeWhile_dropWhile :
   forall (A : Type) (p : A -> bool) (l : list A) (x : A),
-    elem' x l ->
-      elem' x (takeWhile p l) \/
-      elem' x (dropWhile p l).
+    In x l ->
+      In x (takeWhile p l) \/
+      In x (dropWhile p l).
 (* begin hide *)
 Proof.
-  intros. apply elem'_app. rewrite takeWhile_dropWhile_spec. assumption.
+  intros. apply In_app. rewrite takeWhile_dropWhile_spec. assumption.
 Qed.
 (* end hide *)
 
-Lemma elem'_dropWhile_conv :
+Lemma In_dropWhile_conv :
   forall (A : Type) (p : A -> bool) (l : list A) (x : A),
-    elem' x l -> ~ elem' x (dropWhile p l) -> p x = true.
+    In x l -> ~ In x (dropWhile p l) -> p x = true.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -3435,9 +3977,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_zip :
+Lemma In_zip :
   forall (A B : Type) (a : A) (b : B) (la : list A) (lb : list B),
-    elem' (a, b) (zip la lb) -> elem' a la /\ elem' b lb.
+    In (a, b) (zip la lb) -> In a la /\ In b lb.
 (* begin hide *)
 Proof.
   induction la as [| ha ta]; cbn; intros.
@@ -3450,9 +3992,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma zip_not_elem' :
+Lemma zip_not_In :
   exists (A B : Type) (a : A) (b : B) (la : list A) (lb : list B),
-    elem' a la /\ elem' b lb /\ ~ elem' (a, b) (zip la lb).
+    In a la /\ In b lb /\ ~ In (a, b) (zip la lb).
 (* begin hide *)
 Proof.
   exists bool, bool. exists true, false.
@@ -3466,10 +4008,10 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem'_intersperse :
+Lemma In_intersperse :
   forall (A : Type) (x y : A) (l : list A),
-    elem' x (intersperse y l) <->
-    elem' x l \/ (x = y /\ 2 <= length l).
+    In x (intersperse y l) <->
+    In x l \/ (x = y /\ 2 <= length l).
 (* begin hide *)
 Proof.
   split.
@@ -3494,7 +4036,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [NoDup] *)
+(** ** [NoDup] *)
 
 (** Zdefiniuj induktywny predykat [NoDup]. Zdanie [NoDup l] jest prawdziwe,
     gdy w [l] nie ma powtarzających się elementów. Udowodnij, że zdefiniowany
@@ -3819,7 +4361,7 @@ Proof.
 Abort.
 (* end hide *)
 
-(** *** [Dup] *)
+(** ** [Dup] *)
 
 (** Powodem problemów z predykatem [NoDup] jest fakt, że jest on w pewnym
     sensie niekonstruktywny. Wynika to wprost z jego definicji: [NoDup l]
@@ -4297,7 +4839,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [Rep] *)
+(** ** [Rep] *)
 
 (** Jeżeli zastanowimy się chwilę, to dojdziemy do wniosku, że [Dup l]
     znaczy "istnieje x, który występuje na liście l co najmniej dwa
@@ -4662,7 +5204,7 @@ Qed.
 (* TODO *)
 (* Lemma Rep_intersperse *)
 
-(** *** [Exists] *)
+(** ** [Exists] *)
 
 (** Zaimplementuj induktywny predykat [Exists]. [Exists P l] zachodzi, gdy
     lista [l] zawiera taki element, który spełnia predykat [P]. *)
@@ -5038,7 +5580,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [Forall] *)
+(** ** [Forall] *)
 
 (** Zaimplementuj induktywny predykat [Forall]. [Forall P l] jest
     spełniony, gdy każdy element listy [l] spełnia predykat [P]. *)
@@ -5200,7 +5742,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: [filter] vs operacje logiczne *)
 Lemma Forall_filter :
   forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A),
     Forall P l -> Forall P (filter p l).
@@ -5374,7 +5915,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [AtLeast] *)
+(** ** [AtLeast] *)
 
 (** Czas uogólnić relację [Rep] oraz predykaty [Exists] i [Forall]. Zdefiniuj
     w tym celu relację [AtLeast]. Zdanie [AtLeast P n l] zachodzi, gdy na
@@ -5843,7 +6384,7 @@ Proof.
 Abort.
 (* end hide *)
 
-(** *** [Exactly] *)
+(** ** [Exactly] *)
 
 (** Zdefiniuj predykat [Exactly]. Zdanie [Exactly P n l] zachodzi, gdy
     na liście [l] występuje dokładnie [n] elementów spełniających predykat
@@ -6126,7 +6667,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [AtMost] (TODO) *)
+(** ** [AtMost] (TODO) *)
 
 (* begin hide *)
 Inductive AtMost  {A : Type} (P : A -> Prop) : nat -> list A -> Prop :=
@@ -6151,7 +6692,7 @@ Proof.
 Abort.
 (* end hide *)
 
-(** *** Zawieranie *)
+(** ** Zawieranie *)
 
 Definition incl {A : Type} (l1 l2 : list A) : Prop :=
   forall x : A, elem x l1 -> elem x l2.
@@ -6432,6 +6973,88 @@ Proof.
   specialize (H0 _ H1). rewrite elem_intersperse.
   inversion H0; subst; firstorder.
 Qed.
+(* end hide *)
+
+(** ** Podlisty jako podtermy *)
+
+(** ** Palindromy *)
+
+(** Palindrom to słowo, które się tak samo od przodu jak i od tyłu.
+
+    Zdefiniuj induktywny predykat [Palindrome], które odpowiada powyższemu
+    pojęciu palindromu, ale dla list elementów dowolnego typu, a nie tylko
+    słów. *)
+
+(* begin hide *)
+Inductive Palindrome {A : Type} : list A -> Prop :=
+    | Palindrome_nil : Palindrome []
+    | Palindrome_singl :
+        forall x : A, Palindrome [x]
+    | Palindrome_1 :
+        forall (x : A) (l : list A),
+          Palindrome l -> Palindrome (x :: l ++ [x]).
+(* end hide *)
+
+(* begin hide *)
+(* Palindromowa indukcja *)
+
+Lemma list_palindrome_ind :
+  forall (A : Type) (P : list A -> Prop),
+    P [] ->
+    (forall x : A, P [x]) ->
+    (forall (x y : A) (l : list A), P l -> P (x :: l ++ [y])) ->
+      forall l : list A, P l.
+Proof.
+  fix 6. destruct l as [| h t].
+    assumption.
+    destruct (init_decomposition A t); subst.
+      apply H0.
+      destruct H2 as (h' & t' & H1' & H2' & H3'). rewrite H3'.
+        apply H1. apply list_palindrome_ind; assumption.
+Abort.
+(* end hide *)
+
+Lemma Palindrome_rev :
+  forall (A : Type) (l : list A),
+    Palindrome l <-> Palindrome (rev l).
+(* begin hide *)
+Proof.
+  split.
+    induction 1; cbn.
+      constructor.
+      constructor.
+      rewrite rev_app. cbn. constructor. assumption.
+    remember (rev l) as l'. intro. generalize dependent l.
+    induction H; intros; apply (f_equal rev) in Heql';
+    rewrite rev_inv in Heql'; rewrite <- Heql'; cbn.
+      constructor.
+      constructor.
+      rewrite rev_app. cbn. constructor. apply IHPalindrome.
+        rewrite rev_inv. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_spec :
+  forall (A : Type) (l : list A),
+    Palindrome l <-> l = rev l.
+(* begin hide *)
+Proof.
+  split.
+    induction 1; cbn.
+      1-2: reflexivity.
+      rewrite rev_app, <- IHPalindrome; cbn. reflexivity.
+(*    generalize dependent l. fix 1. intro.
+      decompose [or] (bilateral_decomposition A l).
+      destruct l as [| h t]; intros.
+        constructor.
+        destruct (init_decomposition A t); subst.
+          constructor.
+          destruct H0 as (h' & t' & H1 & H2 & H3). rewrite H3 in *.
+            cbn in *. rewrite rev_app in *. cbn in *. inversion H; subst.
+            constructor. apply Palindrome_spec. apply (f_equal rev) in H5.
+            rewrite ?rev_app in H5. cbn in H5. inversion H5. rewrite H3.
+            rewrite rev_inv. reflexivity.*)
+Admitted.
 (* end hide *)
 
 (* begin hide *)
