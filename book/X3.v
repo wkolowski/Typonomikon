@@ -238,6 +238,17 @@ match l with
 end.
 (* end hide *)
 
+Lemma isEmpty_rev :
+  forall (A : Type) (l : list A),
+    isEmpty (rev l) = isEmpty l.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn.
+    reflexivity.
+    rewrite isEmpty_app. cbn. rewrite Bool.andb_false_r. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma length_rev :
   forall (A : Type) (l : list A),
     length (rev l) = length l.
@@ -303,6 +314,15 @@ Proof.
   induction l as [| h t]; cbn.
     trivial.
     rewrite IHt. trivial.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_map :
+  forall (A B : Type) (f : A -> B) (l : list A),
+    isEmpty (map f l) = isEmpty l.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -425,6 +445,19 @@ match n with
     | 0 => []
     | S n' => x :: replicate n' x
 end.
+(* end hide *)
+
+Lemma isEmpty_replicate :
+  forall (A : Type) (n : nat) (x : A),
+    isEmpty (replicate n x) =
+    match n with
+        | 0 => true
+        | _ => false
+    end.
+(* begin hide *)
+Proof.
+  destruct n as [| n']; cbn; reflexivity.
+Qed.
 (* end hide *)
 
 Lemma length_replicate :
@@ -993,6 +1026,36 @@ match n, l with
     | _, [] => []
     | S n', h :: t => drop n' t
 end.
+(* end hide *)
+
+Lemma take_isEmpty :
+  forall (A : Type) (n : nat) (l : list A),
+    isEmpty (take n l ) = true <-> n = 0 \/ l = [].
+(* begin hide *)
+Proof.
+  split; destruct n as [| n'], l as [| h t]; cbn; intros; trivial.
+    1-2: left; reflexivity.
+    right. reflexivity.
+    inversion H.
+    destruct H; inversion H.
+Qed.
+(* end hide *)
+
+Lemma drop_isEmpty :
+  forall (A : Type) (n : nat) (l : list A),
+    isEmpty (drop n l ) = true <-> length l <= n \/ l = [].
+(* begin hide *)
+Proof.
+  split; generalize dependent l; generalize dependent n.
+    induction n as [| n'], l as [| h t]; cbn; intros; trivial.
+      left; reflexivity.
+      inversion H.
+      right. reflexivity.
+      destruct (IHn' _ H).
+        left. apply le_n_S. assumption.
+        subst. left. apply le_n_S. cbn. apply le_0_n.
+          left. reflexivity.
+Abort.
 (* end hide *)
 
 Lemma take_nil :
@@ -2493,6 +2556,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma isEmpty_join :
+  forall (A : Type) (p : A -> bool) (l : list (list A)),
+    isEmpty (join l) = all isEmpty l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite isEmpty_app, IHt. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma all_replicate :
   forall (A : Type) (p : A -> bool) (n : nat) (x : A),
     all p (replicate n x) = orb (leb n 0) (p x).
@@ -3810,6 +3884,46 @@ Proof.
 Qed.
 (* end hide *)
 
+(** * Funkcje z porównaniem *)
+
+(** [minBy] i [maxBy] *)
+
+(* begin hide *)
+Fixpoint minBy {A : Type} (cmp : A -> A -> bool) (l : list A) : option A :=
+match l with
+    | [] => None
+    | h :: t =>
+        match minBy cmp t with
+            | None => Some h
+            | Some h' => if cmp h h' then Some h else Some h'
+        end
+end.
+
+Definition maxBy {A : Type} (cmp : A -> A -> bool) (l : list A) : option A :=
+  minBy (fun x y : A => cmp y x) l.
+(* end hide *)
+
+(*
+Lemma minBy_isEmpty 
+Lemma minBy_length *)
+
+Lemma minBy_app :
+  forall (A : Type) (cmp : A -> A -> bool) (l1 l2 : list A),
+    minBy cmp (l1 ++ l2) =
+    match minBy cmp l1, minBy cmp l2 with
+        | None, None => None
+        | Some m, None | None, Some m => Some m
+        | Some m1, Some m2 => if cmp m1 m2 then Some m1 else Some m2
+    end.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; cbn; intros.
+    destruct (minBy cmp l2); reflexivity.
+    rewrite IHt1. destruct (minBy cmp t1), (minBy cmp l2); cbn.
+      destruct (cmp a a0) eqn: Hcmp1, (cmp h1 a) eqn: Hcmp2.
+Abort.
+(* end hie *)
+
 (** * Proste predykaty *)
 
 (** ** [elem] *)
@@ -4269,6 +4383,42 @@ Restart.
         exists h. split; trivial.
         (* TODO: trzeba explicité napisać funkcje pomocniczą. *)
 Abort.
+(* end hide *)
+
+Lemma isEmpty_bind :
+  forall (A B : Type) (f : A -> list B) (l : list A),
+    isEmpty (bind f l) = true <->
+    l = [] \/ l <> [] /\ forall x : A, elem x l -> f x = [].
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      left. reflexivity.
+      right. destruct (f h) eqn: Hfh; cbn in *.
+        destruct (IHt H); subst.
+          split; inversion 1; subst.
+            assumption.
+            inversion H3.
+          destruct H0. split; inversion 1; subst.
+            assumption.
+            apply H1. assumption.
+        inversion H.
+    destruct 1 as [H | [H1 H2]]; subst.
+      cbn. reflexivity.
+      induction l as [| h t]; cbn.
+        contradiction H1. reflexivity.
+        destruct t as [| h' t']; cbn in *.
+          rewrite app_nil_r. rewrite (H2 h).
+            cbn. reflexivity.
+            constructor.
+          rewrite isEmpty_app, (H2 h); cbn.
+            apply IHt.
+              inversion 1.
+              inversion 1; subst.
+                apply H2. do 2 constructor.
+                apply H2. do 2 constructor. assumption.
+            constructor.
+Qed.
 (* end hide *)
 
 (** ** [In] *)
