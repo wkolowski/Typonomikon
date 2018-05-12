@@ -306,7 +306,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma map_comp :
+Lemma map_map :
   forall (A B C : Type) (f : A -> B) (g : B -> C) (l : list A),
     map g (map f l) = map (fun x : A => g (f x)) l.
 (* begin hide *)
@@ -1043,19 +1043,20 @@ Qed.
 
 Lemma drop_isEmpty :
   forall (A : Type) (n : nat) (l : list A),
-    isEmpty (drop n l ) = true <-> length l <= n \/ l = [].
+    isEmpty (drop n l) = true <-> length l <= n.
 (* begin hide *)
 Proof.
   split; generalize dependent l; generalize dependent n.
+    Focus 2. induction n as [| n']; cbn.
+      destruct l; inversion 1. cbn. reflexivity.
+      destruct l as [| h t]; cbn; intros.
+        reflexivity.
+        apply IHn'. apply le_S_n. assumption.
     induction n as [| n'], l as [| h t]; cbn; intros; trivial.
-      left; reflexivity.
       inversion H.
-      right. reflexivity.
-      destruct (IHn' _ H).
-        left. apply le_n_S. assumption.
-        subst. left. apply le_n_S. cbn. apply le_0_n.
-          left. reflexivity.
-Abort.
+      apply le_0_n.
+      apply le_n_S. apply IHn'. assumption.
+Qed.
 (* end hide *)
 
 Lemma take_nil :
@@ -3096,6 +3097,30 @@ Proof.
 Qed.
 (* end hide *)
 
+(* Lemma findIndex_orb :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    findIndex (fun x : A => negb (p x)) l =
+*)
+
+Lemma findIndex_orb :
+  forall (A : Type) (p q : A -> bool) (l : list A),
+    findIndex (fun x : A => orb (p x) (q x)) l =
+    match findIndex p l, findIndex q l with
+        | Some n, Some m => Some (min n m)
+        | Some n, None => Some n
+        | None, Some m => Some m
+        | _, _ => None
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h) eqn: Hph, (q h) eqn: Hqh; cbn; rewrite ?IHt.
+      reflexivity.
+      1-3: destruct (findIndex p t), (findIndex q t); trivial.
+Qed.
+(* end hide *)
+
 (** TODO: [findIndex] i operacje boolowskie. *)
 
 Lemma findIndex_length :
@@ -3871,6 +3896,30 @@ Definition findIndices {A : Type} (p : A -> bool) (l : list A) : list nat :=
       | [] => []
       | h :: t => if p h then n :: f t (S n) else f t (S n)
   end) l 0.
+
+(* TODO *)
+Fixpoint findIndices' {A : Type} (p : A -> bool) (l : list A) : list nat :=  
+match l with
+    | [] => []
+    | h :: t =>
+        if p h
+        then 0 :: map S (findIndices' p t)
+        else map S (findIndices' p t)
+end.
+
+Lemma findIndices'_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    map (plus 0) (findIndices' p l) = findIndices p l.
+Proof.
+  unfold findIndices. intros.
+  remember 0 as n. clear Heqn. generalize dependent n.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (p h); cbn.
+      rewrite plus_0_r. f_equal. rewrite <- IHt, map_map. f_equal.
+        admit.
+      rewrite <- IHt, map_map. cbn. admit.
+Admitted.
 (* end hide *)
 
 Lemma findIndices_false :
@@ -3883,46 +3932,6 @@ Proof.
   induction l as [| h t]; cbn; intros; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
-
-(** * Funkcje z porównaniem *)
-
-(** [minBy] i [maxBy] *)
-
-(* begin hide *)
-Fixpoint minBy {A : Type} (cmp : A -> A -> bool) (l : list A) : option A :=
-match l with
-    | [] => None
-    | h :: t =>
-        match minBy cmp t with
-            | None => Some h
-            | Some h' => if cmp h h' then Some h else Some h'
-        end
-end.
-
-Definition maxBy {A : Type} (cmp : A -> A -> bool) (l : list A) : option A :=
-  minBy (fun x y : A => cmp y x) l.
-(* end hide *)
-
-(*
-Lemma minBy_isEmpty 
-Lemma minBy_length *)
-
-Lemma minBy_app :
-  forall (A : Type) (cmp : A -> A -> bool) (l1 l2 : list A),
-    minBy cmp (l1 ++ l2) =
-    match minBy cmp l1, minBy cmp l2 with
-        | None, None => None
-        | Some m, None | None, Some m => Some m
-        | Some m1, Some m2 => if cmp m1 m2 then Some m1 else Some m2
-    end.
-(* begin hide *)
-Proof.
-  induction l1 as [| h1 t1]; cbn; intros.
-    destruct (minBy cmp l2); reflexivity.
-    rewrite IHt1. destruct (minBy cmp t1), (minBy cmp l2); cbn.
-      destruct (cmp a a0) eqn: Hcmp1, (cmp h1 a) eqn: Hcmp2.
-Abort.
-(* end hie *)
 
 (** * Proste predykaty *)
 
@@ -7938,13 +7947,30 @@ Admitted.
 (* end hide *)
 
 (* begin hide *)
+
+(** Sekcja ukryta *)
+
+
+
+(* end hide *)
+
+(* begin hide *)
 (** lista TODO:
-    - TODO: ogarnąć "Dziwne"
-    - TODO: opisz niestandardowe reguły indukcyjne dla list
-    - TODO: opisz zwijanie i rozwijanie
-    - TODO: popracować nad [find], [findIndex], [findIndices]
-    - TODO: zrób osobno: funkcje na listach dla typów mających jakieś
-            specjalne rzeczy (np. rozstrzygalną równość)
+    - TODO: dodać operację [snoc] (być może wcale nie zrobioną za pomocą
+            [app], tylko normalnie, w celu dydaktycznym)
+    - TODO: przenieść [takeWhile] i [dropWhile] do sekcji funkcji z predykatem
+    - TODO: opisz niestandardowe reguły indukcyjne dla list (najlepiej przed
+            przed funkcją [intersperse]
+    - TODO: przenieść [intersperse] na sam koniec funkcji i dorzucić jeszcze
+            kilka dziwnych (z niestandardowym kształtem indukcji)
+    - TODO: opisz zwijanie i rozwijanie ([fold] i [foldl])
+    - TODO: opisz sumy prefiksowe ([scanr] i [scanl])
+    - TODO: [findIndex] i operacje boolowskie,
+    - TODO: popracować nad [findIndices] (i to w dwóch wersjach - być może
+            jest to dobry pretekst dla wprowadzenia stylu programowania z
+            akumulatorem?)
     - TODO: ogarnąć osobny rozdział z zadaniami dla [option].
-            Stąd zadania dla [head], [last], [tail] i [init] *)
+            Stąd zadania dla [head], [last], [tail] i [init] 
+    - TODO: zrób osobno: funkcje na listach dla typów mających jakieś
+            specjalne rzeczy (np. rozstrzygalną równość)*)
 (* end hide *)
