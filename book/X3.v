@@ -3097,11 +3097,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(* Lemma findIndex_orb :
-  forall (A : Type) (p : A -> bool) (l : list A),
-    findIndex (fun x : A => negb (p x)) l =
-*)
-
 Lemma findIndex_orb :
   forall (A : Type) (p q : A -> bool) (l : list A),
     findIndex (fun x : A => orb (p x) (q x)) l =
@@ -3120,8 +3115,6 @@ Proof.
       1-3: destruct (findIndex p t), (findIndex q t); trivial.
 Qed.
 (* end hide *)
-
-(** TODO: [findIndex] i operacje boolowskie. *)
 
 Lemma findIndex_length :
   forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
@@ -3202,8 +3195,6 @@ Proof.
       apply findIndex_app_None; assumption.
 Qed.
 (* end hide *)
-
-(** TODO: niebezpieczne związki [findIndex] i [rev]. *)
 
 Lemma findIndex_map :
   forall (A B : Type) (p : B -> bool) (f : A -> B) (l : list A) (n : nat),
@@ -3332,7 +3323,55 @@ Proof.
 Qed.
 (* end hide *)
 
-(** TODO: [findIndex] i [last], [init], [tail] *)
+Lemma findIndex_last :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    findIndex p l = Some (length l - 1) <->
+    exists x : A,
+      last l = Some x /\
+      p x = true /\
+      forall (n : nat) (y : A),
+        n < length l - 1 -> nth n l = Some y -> p y = false.
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      inversion H.
+      destruct (p h) eqn: Hph; intros.
+        exists h. inversion H; subst. destruct t; cbn in H1; inversion H1.
+          repeat split; trivial. intros. destruct n; inversion H0.
+        destruct (findIndex p t) eqn: Heq.
+          destruct t; cbn in *; inversion H; subst; clear H.
+            rewrite <- minus_n_O in IHt. specialize (IHt eq_refl).
+            destruct IHt as (x & H1 & H2 & H3). exists x.
+              repeat split; trivial. intros. destruct n as [| n']; cbn in *.
+                inversion H0; subst. assumption.
+                apply (H3 n').
+                  apply lt_S_n. assumption.
+                  assumption.
+          inversion H.
+    destruct 1 as (x & H1 & H2 & H3).
+    induction l as [| h t]; cbn in *.
+      inversion H1.
+      destruct (p h) eqn: Hph.
+        destruct t; inversion H1; subst; clear H1; cbn in *.
+          reflexivity.
+          specialize (H3 0 h ltac:(omega) eq_refl); cbn in H3. congruence.
+        destruct t; inversion H1; subst; clear H1; cbn in *.
+          congruence.
+          destruct (p a) eqn: Hpa.
+            Focus 2. rewrite IHt.
+              rewrite <- minus_n_O. reflexivity.
+              assumption.
+              intros. apply H3 with (S n).
+                apply lt_n_S. rewrite minus_n_O. assumption.
+                cbn. assumption.
+            destruct t; inversion H0; subst; cbn in *.
+              reflexivity.
+              specialize (H3 1 a ltac:(omega) eq_refl). congruence.
+Qed.
+(* end hide *)
+
+(** TODO: [findIndex] [init], [tail] *)
 
 Lemma findIndex_take :
   forall (A : Type) (p : A -> bool) (n m : nat) (l : list A),
@@ -3520,15 +3559,17 @@ Proof.
         inversion H0; reflexivity.
         destruct (p h'); rewrite H.
 Restart.
-  intros. functional induction @intersperse A x l; cbn in *.
+  intros A p x l. functional induction @intersperse A x l; intros; cbn in *.
     inversion H0.
     destruct (p h); inversion H0. reflexivity.
-    rewrite IHl0.
-      destruct (p h); rewrite ?H.
-        inversion H0. reflexivity.
-        destruct (p _x) eqn: H_x.
-          inversion H0; subst.
-Admitted.
+    destruct (p h) eqn: Hph; rewrite ?H.
+      inversion H0. reflexivity.
+      destruct (p _x) eqn: H_x.
+        rewrite (IHl0 _ H eq_refl). inversion H0. reflexivity.
+        destruct (findIndex p _x0) eqn: Heq.
+          rewrite (IHl0 _ H eq_refl). inversion H0. f_equal. omega.
+          inversion H0.
+Qed.
 (* end hide *)
 
 Lemma findIndex_intersperse_false' :
@@ -3931,6 +3972,18 @@ Proof.
   generalize dependent n.
   induction l as [| h t]; cbn; intros; rewrite ?IHt; reflexivity.
 Qed.
+(* end hide *)
+
+Lemma findIndex_rev :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    findIndex p (rev l) = last (findIndices p l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite findIndex_app. rewrite IHt. cbn. destruct (p h) eqn: Hph.
+      cbn.
+Abort.
 (* end hide *)
 
 (** * Proste predykaty *)
@@ -7244,6 +7297,10 @@ Proof.
   induction l as [| h t]; cbn; intros.
     inversion H0. apply le_n.
     destruct (p h) eqn: Hph.
+Restart.
+  induction 2.
+    apply le_0_n.
+    cbn.
 Abort.
 (* end hide *)
 
@@ -7944,33 +8001,4 @@ Proof.
             rewrite ?rev_app in H5. cbn in H5. inversion H5. rewrite H3.
             rewrite rev_inv. reflexivity.*)
 Admitted.
-(* end hide *)
-
-(* begin hide *)
-
-(** Sekcja ukryta *)
-
-
-
-(* end hide *)
-
-(* begin hide *)
-(** lista TODO:
-    - TODO: dodać operację [snoc] (być może wcale nie zrobioną za pomocą
-            [app], tylko normalnie, w celu dydaktycznym)
-    - TODO: przenieść [takeWhile] i [dropWhile] do sekcji funkcji z predykatem
-    - TODO: opisz niestandardowe reguły indukcyjne dla list (najlepiej przed
-            przed funkcją [intersperse]
-    - TODO: przenieść [intersperse] na sam koniec funkcji i dorzucić jeszcze
-            kilka dziwnych (z niestandardowym kształtem indukcji)
-    - TODO: opisz zwijanie i rozwijanie ([fold] i [foldl])
-    - TODO: opisz sumy prefiksowe ([scanr] i [scanl])
-    - TODO: [findIndex] i operacje boolowskie,
-    - TODO: popracować nad [findIndices] (i to w dwóch wersjach - być może
-            jest to dobry pretekst dla wprowadzenia stylu programowania z
-            akumulatorem?)
-    - TODO: ogarnąć osobny rozdział z zadaniami dla [option].
-            Stąd zadania dla [head], [last], [tail] i [init] 
-    - TODO: zrób osobno: funkcje na listach dla typów mających jakieś
-            specjalne rzeczy (np. rozstrzygalną równość)*)
 (* end hide *)

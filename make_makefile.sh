@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 
-coq_makefile -R "book" "" -o makefile book/*v
+coq_makefile -R "." CoqBookPL -o makefile book/*v wd/*v #*v */*v */*/*v

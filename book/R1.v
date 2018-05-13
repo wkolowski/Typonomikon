@@ -2150,12 +2150,3 @@ Qed.
     bytami, o których moglibyśmy czegoś dowieść — w następnym rozdziale
     zajmiemy się na poważnie typami, programami i obliczeniami oraz
     udowadnianiem ich właściwości. *)
-
-(* begin hide *)
-(** TODO:
-    - TODO zrefaktoryzować rozdział: opisać zarówno logikę konstruktywną jak i
-      klasyczną oraz przedstawić je obie jako użyteczne
-    - TODO przenieść paradoksy na końce opisów obu logik, żeby zobrazować
-      różnice między językiem naturalnym i matematycznym
-    - przejrzeć zadania *)
-(* end hide *)

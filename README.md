@@ -11,6 +11,7 @@ Co tu się dzieje:
 - todo/ zawiera pliki .v o wysokim priorytecie, z których będą powstawać przyszłe rozdziały.
 - misc/ zawier pliki .v o niskim priorytecie z jakimiś kodami, z których może kiedyś coś będzie.
 - teksty/ to nieco bardziej składne notatki
+- wd/ to folder do biężącej pracy nad rzeczami, które mają być niewidzialne
 - build.sh i rebuild.sh to skrypty służące odpowiednio do budowania i budowania od nowa książki. make_makefile.sh generuje nowy makefile od zera.
 
 Książkę można skompilować za pomocą polecenia
@@ -69,14 +70,6 @@ Dalekie TODO:
 - R6: Teoria Kategorii — ho ho, pieśń przyszłości! Achtung: przemycać tego jak najwięcej.
 - Zadania TODO:
   - Zrób zadania z definiowania induktywnych typów i predykatów
-- Kontent:
-  - Arytmetyka binarna (liczby naturalne, dodatnie i całkowite)
-  - Typ option (przy okazji funktorów)
-  - Przerobić ćwiczenia z logiki na rozdział
-  - Logika ternarna
-  - Listy niepuste (nel)
-  - Wektory (vec)
-  - Drzewa binarne, wisienki, RoseTree, sterty...
 - Inne:
   - definiowanie przez dowód
 - Sugestie:
