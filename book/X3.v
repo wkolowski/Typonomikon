@@ -6118,7 +6118,28 @@ Qed.
 (* end hide *)
 
 (* TODO *)
-(* Lemma Rep_intersperse *)
+Lemma Rep_intersperse :
+  forall (A : Type) (x y : A) (n : nat) (l : list A),
+    Rep x n (intersperse y l) <->
+    Rep x n l \/ x = y /\ Rep x (S n - length l) l.
+(* begin hide *)
+Proof.
+            Hint Constructors Rep.
+  split.
+    generalize dependent n; generalize dependent x.
+    functional induction @intersperse A y l; cbn; intros.
+      left. assumption.
+      left. assumption.
+      destruct _x0; cbn in *.
+        inv H; auto.
+          inv H2; auto. right. cbn. split; auto.
+          inv H2; auto. right. cbn. rewrite <- minus_n_O. auto.
+        inv H; auto.
+          inv H2; auto.
+            cbn. destruct (IHl0 y n H1).
+              admit.
+Abort.
+(* end hide *)
 
 (** ** [Exists] *)
 
@@ -7459,6 +7480,33 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Exactly_replicate' :
+  forall (A : Type) (P : A -> Prop) (n m : nat) (x : A),
+    Exactly P n (replicate m x) <->
+    n = 0 /\ m = 0 \/
+    n = 0 /\ ~ P x \/
+    n = m /\ P x.
+(* begin hide *)
+Proof.
+  split.
+    generalize dependent n.
+    induction m as [| m']; cbn; inversion 1; subst.
+      left. split; reflexivity.
+      decompose [and or] (IHm' _ H4); subst; clear IHm'.
+        do 2 right. split; trivial.
+        contradiction.
+        do 2 right. split; trivial.
+      decompose [and or] (IHm' _ H4); subst; clear IHm'.
+        right. left. split; trivial.
+        right. left. split; trivial.
+        contradiction.
+    intro. decompose [and or] H; clear H; subst.
+      cbn. constructor.
+      induction m as [| m']; cbn; constructor; assumption.
+      induction m as [| m']; cbn; constructor; assumption.
+Qed.
+(* end hide *)
+
 (** TODO: [Exactly_nth], [head], [tail], [init], [last] *)
 
 Lemma Exactly_take :
@@ -7925,7 +7973,7 @@ Qed.
 
 (** ** Palindromy (TODO) *)
 
-(** Palindrom to słowo, które się tak samo od przodu jak i od tyłu.
+(** Palindrom to słowo, które czyta się tak samo od przodu jak i od tyłu.
 
     Zdefiniuj induktywny predykat [Palindrome], które odpowiada powyższemu
     pojęciu palindromu, ale dla list elementów dowolnego typu, a nie tylko

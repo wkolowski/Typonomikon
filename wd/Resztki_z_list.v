@@ -2,50 +2,6 @@ Add Rec LoadPath "/home/zeimer/Code/Coq".
 
 Require Import CoqBookPL.book.X3.
 
-(** TODO: 
-    - TODO: ogarnąć "Dziwne"
-*)
-
-(** * Funkcje z porównaniem *)
-
-(** [minBy] i [maxBy] *)
-
-(* begin hide *)
-Fixpoint minBy {A : Type} (cmp : A -> A -> bool) (l : list A) : option A :=
-match l with
-    | [] => None
-    | h :: t =>
-        match minBy cmp t with
-            | None => Some h
-            | Some h' => if cmp h h' then Some h else Some h'
-        end
-end.
-
-Definition maxBy {A : Type} (cmp : A -> A -> bool) (l : list A) : option A :=
-  minBy (fun x y : A => cmp y x) l.
-(* end hide *)
-
-(*
-Lemma minBy_isEmpty 
-Lemma minBy_length *)
-
-Lemma minBy_app :
-  forall (A : Type) (cmp : A -> A -> bool) (l1 l2 : list A),
-    minBy cmp (l1 ++ l2) =
-    match minBy cmp l1, minBy cmp l2 with
-        | None, None => None
-        | Some m, None | None, Some m => Some m
-        | Some m1, Some m2 => if cmp m1 m2 then Some m1 else Some m2
-    end.
-(* begin hide *)
-Proof.
-  induction l1 as [| h1 t1]; cbn; intros.
-    destruct (minBy cmp l2); reflexivity.
-    rewrite IHt1. destruct (minBy cmp t1), (minBy cmp l2); cbn.
-      destruct (cmp a a0) eqn: Hcmp1, (cmp h1 a) eqn: Hcmp2.
-Abort.
-(* end hie *)
-
 (** *** Dziwne *)
 
 (** TODO: Wstawić tu jakąś ideologię. *)
@@ -402,12 +358,11 @@ Qed.
 
 Lemma foldl_rev :
   forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
-    foldl f a (rev l) = foldl f a l.
+    foldl f a (rev l) = foldr (flip f) a l.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    rewrite foldl_snoc. rewrite IHt.
+  intros. rewrite <- (rev_inv _ l). rewrite foldr_rev.
+  rewrite rev_inv. reflexivity.
 Qed.
 (* end hide *)
 
