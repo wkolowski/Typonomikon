@@ -8,94 +8,104 @@ Arguments nel_cons [A] _ _.
 Notation "[ x ]" := (singl x).
 Notation "h :: t" := (nel_cons h t).
 
-Parameter len {A : Type} := foldr (fun (_ : A) n => S n) 0.
+Parameter head : forall A : Type, nel A -> A.
 
-Parameter map {A B : Type} (f : A -> B) (l : nel A) : nel B :=
-match l with
-    | [a] => singl (f a)
-    | h :: t => nel_cons (f h) (map f t)
-end.
+Parameter last : forall A : Type, nel A -> A.
 
-(* Parameter map' {A B : Type} (f : A -> B) := fold (fun a b => f a :: b). *)
+Parameter len : forall A : Type, nel A -> nat.
 
-Eval compute in len (nel_cons 5 (singl 2)).
+Parameter snoc : forall A : Type, A -> nel A -> nel A.
 
-Parameter hd {A : Type} (l : nel A) : A :=
-match l with
-    | singl a => a
-    | nel_cons a _ => a
-end.
+Parameter rev : forall A : Type, nel A -> nel A.
 
-Parameter last {A} (l : nel A) : A :=
-match l with
-    | [a] => a
-    | nel_cons _ t => last t
-end.
+Parameter app : forall A : Type, nel A -> nel A -> nel A.
 
-Eval compute in (hd [2]).
+Parameter map : forall A B : Type, (A -> B) -> nel A -> nel B.
 
-Parameter tl {A : Type} (l : nel A) : option (nel A) :=
-match l with
-    | singl _ => None
-    | nel_cons _ t => Some t
-end.
+Parameter join : forall A : Type, nel (nel A) -> nel A.
 
-Theorem map_pres_len : forall {A B : Type} (f : A -> B) (l : nel A),
-    len l = len (map f l).
-Proof.
-  induction l; unfold len in *; simpl; auto.
-Qed.
+Parameter bind : forall A B : Type, (A -> nel B) -> nel A -> nel B.
 
-Parameter app {A} (l1 l2 : nel A) : nel A :=
-match l1 with
-    | singl a => nel_cons a l2
-    | nel_cons h t => nel_cons h (app t l2)
-end.
+Parameter replicate : forall A : Type, nat -> A -> nel A.
 
-Notation "l1 ++ l2" := (app l1 l2).
+Parameter nth : forall A : Type, nat -> nel A -> option A.
 
-Hint Unfold len.
+Parameter tail : forall A : Type, nel A -> option (nel A).
+Parameter tail' : forall A : Type, nel A -> list A.
 
-Theorem app_length : forall {A} (l1 l2 : nel A),
-    len (l1 ++ l2) = len l1 + len l2.
-Proof.
-  induction l1; destruct l2; unfold len in *; simpl;
-  try rewrite IHl1; auto.
-Qed.
+Parameter init : forall A : Type, nel A -> option (nel A).
+Parameter init' : forall A : Type, nel A -> list A.
 
-Parameter nth {A} (n : nat) (l : nel A) : option A :=
-match n with
-    | 0 => Some (hd l)
-    | S n' => match l with
-        | [_] => None
-        | _ :: t => nth n' t
-    end
-end.
+Parameter take : forall A : Type, nat -> nel A -> nel A.
+Parameter take' : forall A : Type, nat -> nel A -> list A.
 
-Inductive inb {A} : A -> nel A -> Prop :=
-    | inb_singl : forall a : A, inb a [a]
-    | inb_cons : forall (a h : A) (t : nel A),
-        inb a t -> inb a (h :: t).
+Parameter drop : forall A : Type, nat -> nel A -> nel A.
+Parameter drop' : forall A : Type, nat -> nel A -> list A.
 
-Parameter rev {A} (l : nel A) : nel A :=
-match l with
-    | [a] => [a]
-    | h :: t =>
-        (fix aux (l acc : nel A) : nel A :=
-        match l with
-            | [a] => a :: acc
-            | h :: t => aux t (h :: acc)
-        end) t (singl h)
-end.
+Parameter takedrop : forall A : Type, nat -> nel A -> nel A * nel A.
+Parameter takedrop' : forall A : Type, nat -> nel A -> list A * list A.
 
-Eval compute in rev (2 :: 3 :: 4 :: 5 :: [6]).
+Parameter zip : forall A B : Type, nel A -> nel B -> nel (A * B).
 
-Parameter zip {A B : Type} (l1 : nel A) (l2 : nel B) : nel (A * B) :=
-match l1, l2 with
-    | [a], [b] => singl (a, b)
-    | [a], h' :: _ => singl (a, h')
-    | h :: _, [b] => singl (h, b)
-    | h :: t, h' :: t' => (h, h') :: zip t t'
-end.
+Parameter unzip : forall A B : Type, nel (A * B) -> nel A * nel B.
 
-(* end hide *)
+Parameter zipWith :
+  forall A B C : Type, (A -> B -> C) -> nel A -> nel B -> nel C.
+
+Parameter unzipWith :
+  forall A B C : Type, (A -> B * C) -> nel A -> nel B * nel C.
+
+Parameter intersperse : forall A : Type, A -> nel A -> nel A.
+
+Parameter any : forall A : Type, (A -> bool) -> nel A -> bool.
+
+Parameter all : forall A : Type, (A -> bool) -> nel A -> bool.
+
+Parameter find : forall A : Type, (A -> bool) -> nel A -> option A.
+
+Parameter findLast : forall A : Type, (A -> bool) -> nel A -> option A.
+
+Parameter findIndex :
+  forall A : Type, (A -> bool) -> nel A -> option nat.
+
+Parameter count : forall A : Type, (A -> bool) -> nel A -> nat.
+
+Parameter filter : forall A : Type, (A -> bool) -> nel A -> list A.
+Parameter partition :
+  forall A : Type, (A -> bool) -> nel A -> list A * list A.
+
+Parameter findIndices :
+  forall A : Type, (A -> bool) -> nel A -> list nat.
+
+Parameter takeWhile : forall A : Type, (A -> bool) -> nel A -> list A.
+
+Parameter dropWhile : forall A : Type, (A -> bool) -> nel A -> list A.
+
+Parameter findIndices' :
+  forall A : Type, (A -> bool) -> nel A -> list nat.
+
+Parameter elem : forall A : Type, A -> nel A -> Prop.
+
+Parameter In : forall A : Type, A -> nel A -> Prop.
+
+Parameter NoDup : forall A : Type, nel A -> Prop.
+
+Parameter Dup : forall A : Type, nel A -> Prop.
+
+Parameter Rep : forall A : Type, A -> nat -> nel A -> Prop.
+
+Parameter Exists : forall A : Type, (A -> Prop) -> nel A -> Prop.
+
+Parameter Forall : forall A : Type, (A -> Prop) -> nel A -> Prop.
+
+Parameter AtLeast : forall A : Type, (A -> Prop) -> nat -> nel A -> Prop.
+
+Parameter Exactly : forall A : Type, (A -> Prop) -> nat -> nel A -> Prop.
+
+Parameter AtMost  : forall A : Type, (A -> Prop) -> nat -> nel A -> Prop.
+
+Parameter incl : forall A : Type, nel A -> nel A -> Prop.
+
+Parameter subnel : forall A : Type, nel A -> nel A -> Prop.
+
+Parameter Palindrome : forall A : Type, nel A -> Prop.
