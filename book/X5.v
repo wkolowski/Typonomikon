@@ -1,5 +1,9 @@
 (** * X5: Relacje *)
 
+(* begin hide *)
+Add Rec LoadPath "/home/zeimer/Code/Coq".
+(* end hide *)
+
 Require Import X4.
 Require Import FunctionalExtensionality.
 
@@ -124,8 +128,9 @@ Qed.
 
 (** * Operacje na relacjach *)
 
-Definition Rcomp {A B C : Type} (R : hrel A B) (S : hrel B C)
-  : hrel A C := fun (a : A) (c : C) => exists b : B, R a b /\ S b c.
+Definition Rcomp
+  {A B C : Type} (R : hrel A B) (S : hrel B C) : hrel A C :=
+    fun (a : A) (c : C) => exists b : B, R a b /\ S b c.
 
 Definition Rid {A : Type} : hrel A A := @eq A.
 
@@ -136,8 +141,9 @@ Definition Rid {A : Type} : hrel A A := @eq A.
     funkcji. *)
 
 Theorem Rcomp_assoc :
-  forall (A B C D : Type) (R : hrel A B) (S : hrel B C) (T : hrel C D),
-    Rcomp R (Rcomp S T) <--> Rcomp (Rcomp R S) T.
+  forall
+    (A B C D : Type) (R : hrel A B) (S : hrel B C) (T : hrel C D),
+      Rcomp R (Rcomp S T) <--> Rcomp (Rcomp R S) T.
 (* begin hide *)
 Proof.
   unfold Rcomp. intros. split; red; intros a d **.
@@ -184,7 +190,7 @@ Definition Rinv {A B : Type} (R : hrel A B) : hrel B A :=
 
 Theorem Rinv_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
-    same_hrel (Rinv (Rcomp R S)) (Rcomp (Rinv S) (Rinv R)).
+    Rinv (Rcomp R S) <--> Rcomp (Rinv S) (Rinv R).
 (* begin hide *)
 Proof.
   compute; split; intros; firstorder.
@@ -298,7 +304,8 @@ Proof. rel. Qed.
 (* end hide *)
 
 Theorem Ror_comm :
-  forall (A B : Type) (R S : hrel A B), Ror R S <--> Ror S R.
+  forall (A B : Type) (R S : hrel A B),
+    Ror R S <--> Ror S R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
@@ -345,12 +352,14 @@ Proof. rel. Qed.
 
 Class LeftUnique {A B : Type} (R : hrel A B) : Prop :=
 {
-    left_unique : forall (a a' : A) (b : B), R a b -> R a' b -> a = a'
+    left_unique :
+      forall (a a' : A) (b : B), R a b -> R a' b -> a = a'
 }.
 
 Class RightUnique {A B : Type} (R : hrel A B) : Prop :=
 {
-    right_unique : forall (a : A) (b b' : B), R a b -> R a b' -> b = b'
+    right_unique :
+      forall (a : A) (b b' : B), R a b -> R a b' -> b = b'
 }.
 
 (** Dwoma podstawowymi rodzajami relacji są relacje unikalne z lewej i prawej
@@ -953,8 +962,10 @@ match fuel with
             in n :: collatz' fuel' h
 end.
 
+(*
 Compute map (collatz' 1000) [1; 2; 3; 4; 5; 6; 7; 8; 9].
 Compute collatz' 1000 2487.
+*)
 
 Inductive collatz : nat -> nat -> Prop :=
     | c_even : forall n : nat, collatz (2 * n) n
@@ -1484,7 +1495,8 @@ Proof. rel. Qed.
 
 Theorem Rcomp_not_Antireflexive :
   exists (A : Type) (R S : rel A),
-    Antireflexive R /\ Antireflexive S /\ ~ Antireflexive (Rcomp R S).
+    Antireflexive R /\ Antireflexive S /\
+    ~ Antireflexive (Rcomp R S).
 (* begin hide *)
 Proof.
   pose (R := fun b b' => b = negb b').
@@ -1830,9 +1842,9 @@ Proof. rel. Qed.
 (* end hide *)
 
 (** Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
-    antysymetryczna, podobnie jak relacja pełna (ale tylko na typie pustym).
-    Relacja pusta jest antysymetryczna, gdyż przesłanka [R x y] występująca
-    w definicji antysymetrii jest zawsze fałszywa. *)
+    antysymetryczna, podobnie jak relacja pełna (ale tylko na typie
+    niepustym). Relacja pusta jest antysymetryczna, gdyż przesłanka [R x y]
+    występująca w definicji antysymetrii jest zawsze fałszywa. *)
 
 (* begin hide *)
 Require Import Arith.
@@ -1849,7 +1861,8 @@ end.
 
 Theorem Rcomp_not_Antisymmetric :
   exists (A : Type) (R S : rel A),
-    Antisymmetric R /\ Antisymmetric S /\ ~ Antisymmetric (Rcomp R S).
+    Antisymmetric R /\ Antisymmetric S /\
+    ~ Antisymmetric (Rcomp R S).
 (* begin hide *)
 Proof.
   pose (R := fun n m : nat =>
@@ -1885,7 +1898,8 @@ Proof. rel. Qed.
 
 Theorem Ror_not_Antisymmetric :
   exists (A : Type) (R S : rel A),
-    Antisymmetric R /\ Antisymmetric S /\ ~ Antisymmetric (Ror R S).
+    Antisymmetric R /\ Antisymmetric S /\
+    ~ Antisymmetric (Ror R S).
 (* begin hide *)
 Proof.
   pose (R := fun n m : nat =>
@@ -2585,8 +2599,10 @@ Proof. rc. Qed.
 (* end hide *)
 
 Inductive symm_clos {A : Type} (R : rel A) : rel A :=
-    | sc_step : forall x y : A, R x y -> symm_clos R x y
-    | sc_symm : forall x y : A, symm_clos R x y -> symm_clos R y x.
+    | sc_step :
+        forall x y : A, R x y -> symm_clos R x y
+    | sc_symm :
+        forall x y : A, symm_clos R x y -> symm_clos R y x.
 
 (* begin hide *)
 Hint Constructors symm_clos.
@@ -2658,7 +2674,8 @@ Proof. tc. Qed.
 
 Theorem tc_smallest :
   forall (A : Type) (R S : rel A),
-    subrelation R S -> Transitive S -> subrelation (trans_clos R) S.
+    subrelation R S -> Transitive S ->
+      subrelation (trans_clos R) S.
 (* begin hide *)
 Proof. tc. Qed.
 (* end hide *)
@@ -2678,10 +2695,14 @@ Proof. tc. Qed.
 (* end hide *)
 
 Inductive equiv_clos {A : Type} (R : rel A) : rel A :=
-    | ec_step : forall x y : A, R x y -> equiv_clos R x y
-    | ec_refl : forall x : A, equiv_clos R x x
-    | ec_symm : forall x y : A, equiv_clos R x y -> equiv_clos R y x
-    | ec_trans : forall x y z : A,
+  | ec_step :
+      forall x y : A, R x y -> equiv_clos R x y
+  | ec_refl :
+      forall x : A, equiv_clos R x x
+  | ec_symm :
+      forall x y : A, equiv_clos R x y -> equiv_clos R y x
+  | ec_trans :
+      forall x y z : A,
         equiv_clos R x y -> equiv_clos R y z -> equiv_clos R x z.
 
 (* begin hide *)
@@ -2707,7 +2728,8 @@ Proof. ec. Qed.
 
 Theorem ec_smallest :
   forall (A : Type) (R S : rel A),
-    subrelation R S -> Equivalence S -> subrelation (equiv_clos R) S.
+    subrelation R S -> Equivalence S ->
+      subrelation (equiv_clos R) S.
 (* begin hide *)
 Proof. ec. Qed.
 (* end hide *)

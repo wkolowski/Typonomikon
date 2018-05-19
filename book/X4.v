@@ -87,7 +87,7 @@ Definition id (A : Type) : A -> A := fun x : A => x.
 
 (** Najważniejszą funkcją w całym kosmosie jest identyczność. Jest to funkcja,
     która nie robi zupełnie nic. Jej waga jest w tym, że jest ona elementem
-    neutranym składania funkcji. *)
+    neutralnym składania funkcji. *)
 
 Theorem id_left :
   forall (A B : Type) (f : A -> B), id A .> f = f.

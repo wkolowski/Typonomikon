@@ -1,9 +1,11 @@
-Inductive BTree (A : Type) : Type :=
-    | empty : BTree A
-    | node : A -> BTree A -> BTree A -> BTree A.
+Add Rec LoadPath "/home/zeimer/Code/Coq".
 
-Arguments empty {A}.
-Arguments node {A} _ _ _.
+Inductive BTree (A : Type) : Type :=
+    | E : BTree A
+    | N : A -> BTree A -> BTree A -> BTree A.
+
+Arguments E {A}.
+Arguments N {A} _ _ _.
 
 (*Parameter elem : forall A : Type, A -> BTree A -> Prop.
 
@@ -39,7 +41,28 @@ Parameter bfs_aux :
 Parameter bfs : forall A : Type, BTree A -> list A.
 
 (** Basic operations *)
-Parameter mirror : forall A : Type, BTree A -> BTree A.
+Parameter mirror' : forall A : Type, BTree A -> BTree A.
+
+Fixpoint mirror {A : Type} (t : BTree A) : BTree A :=
+match t with
+    | E => E
+    | N v l r => N v (mirror r) (mirror l)
+end.
+
+Require Import book.X4.
+
+Lemma mirror_bijective :
+  forall A : Type, bijective (@mirror A).
+Proof.
+  unfold bijective, injective, surjective. split.
+    induction x; destruct x'; cbn; inversion 1; subst; clear H.
+      reflexivity.
+      rewrite (IHx1 _ H3), (IHx2 _ H2). reflexivity.
+    induction b.
+      exists E. cbn. reflexivity.
+      destruct IHb1 as [r Hr], IHb2 as [l Hl].
+        exists (N a l r). cbn. rewrite Hl, Hr. reflexivity.
+Qed.
 
 Parameter complete : forall A : Type, nat -> A -> BTree A.
 

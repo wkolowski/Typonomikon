@@ -1,3 +1,20 @@
+(** Najnowszy plan refaktoringu:
+    - Wstęp
+    - R1: Logika konstruktywna, potem klasyczna
+    - R2: Typy induktywne — enumeracje (na przykładzie dni tygodnia?).
+          Podstawy obliczeń (to co obecnie jest przy opisie typu [bool]).
+    - R3: Logika boolowska (dokładnie wszystko opisać i powiązać z logiką
+          klasyczną) — obecne X1
+    - R4: Typy induktywne — polimorfizm (na przykładzie typu [option]?)
+    - R5: Równość i obliczenia (obecnie fragment R2 i część notatki)
+    - R6: Typy i funkcje — podstawy teorii typów, przemycić teorię
+          kategorii (obecne X4)
+    - R7: Relacje — obecne X5
+    - R8: Typy induktywne — konstruktory rekurencyjne.
+          Arytmetyka Peano — obecne X2) 
+    - R9: Listy
+*)
+
 (** Ogólne plany na rozdziały X:
     - typ [bool] (powinien być osobny rozdział). Inne:
       - boolowska logika ternarna, być może jako tour de force dla
