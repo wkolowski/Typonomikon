@@ -17,7 +17,7 @@ Notation "'insert' l2 'after' n 'in' l1" :=
 
 Require Import Arith.
 
-Lemma insertAfter_nil_l :
+Lemma insert_nil_after :
   forall (A : Type) (n : nat) (l : list A),
     (insert [] after n in l) = l.
 (* begin hide *)
@@ -28,9 +28,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma insertAfter_nil_r :
-  forall (A : Type) (n : nat) (l1 l2 : list A),
-    (insert l2 after n in []) = l2.
+Lemma insert_after_in_nil:
+  forall (A : Type) (n : nat) (l : list A),
+    (insert l after n in []) = l.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros; rewrite ?app_nil_r; reflexivity.
@@ -64,7 +64,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma insertAfter_app :
+Lemma insert_after_0 :
   forall (A : Type) (l1 l2 : list A),
     insert l2 after 0 in l1 = l2 ++ l1.
 (* begin hide *)
@@ -73,28 +73,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma insert_after_length :
-  forall (A : Type) (l1 l2 : list A),
-    insert l2 after length l1 in l1 = l1 ++ l2.
-(* begin hide *)
-Proof.
-  induction l1 as [| h t]; cbn; intros.
-    rewrite app_nil_r. reflexivity.
-    rewrite IHt. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma insert_after_length_in_app :
-  forall (A : Type) (l1 l2 l : list A),
-    insert l after length l1 in (l1 ++ l2) =
-    l1 ++ l ++ l2.
-(* begin hide *)
-Proof.
-  induction l1 as [| h t]; cbn; intros; rewrite ?IHt; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma insert_after_length_gt :
+Lemma insert_after_gt :
   forall (A : Type) (n : nat) (l1 l2 : list A),
     length l1 <= n -> insert l2 after n in l1 = l1 ++ l2.
 (* begin hide *)
@@ -109,7 +88,26 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma insert_after_length_le :
+Lemma insert_after_length :
+  forall (A : Type) (l1 l2 : list A),
+    insert l2 after length l1 in l1 = l1 ++ l2.
+(* begin hide *)
+Proof.
+  intros. rewrite insert_after_gt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma insert_after_length_in_app :
+  forall (A : Type) (l1 l2 l : list A),
+    insert l after length l1 in (l1 ++ l2) =
+    l1 ++ l ++ l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma insert_after_le_in_app :
   forall (A : Type) (n : nat) (l1 l2 l3 : list A),
     n <= length l1 ->
       insert l3 after n in (l1 ++ l2) =
@@ -139,12 +137,28 @@ Proof.
     destruct l as [| h t]; cbn.
       destruct l1 as [| h1 t1]; cbn.
         reflexivity.
-        rewrite insert_after_length_gt.
+        rewrite insert_after_gt.
           reflexivity.
           eapply le_trans with (n' + length t1).
             apply le_plus_r.
             apply plus_le_compat_l, le_S, le_n.
       rewrite IHn'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma insert_after_plus_in_app :
+  forall (A : Type) (l1 l2 l3 : list A) (n : nat),
+    insert l3 after (length l1 + n) in (l1 ++ l2) =
+    l1 ++ insert l3 after n in l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n']; cbn.
+      rewrite plus_0_r, insert_after_length_in_app. reflexivity.
+      rewrite IHt. destruct l2 as [| h' t']; cbn.
+        reflexivity.
+        reflexivity.
 Qed.
 (* end hide *)
 
@@ -161,31 +175,121 @@ Proof.
       reflexivity.
     destruct l1 as [| h t]; cbn.
       rewrite app_nil_r. reflexivity.
-      rewrite IHn', insert_after_length_le.
+      rewrite IHn', insert_after_le_in_app.
         reflexivity.
         rewrite length_rev. apply Nat.le_sub_l.
 Qed.
 (* end hide *)
 
+Lemma minus_wut :
+  forall n m : nat,
+    n <= m -> n - m = 0.
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    destruct m as [| m']; cbn.
+      inversion H.
+      apply IHn', le_S_n. assumption.
+Qed.
+
+Lemma minus_wut' :
+  forall n m : nat,
+    n <= m -> n - (n - m) = n.
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    destruct m as [| m']; cbn.
+      inversion H.
+      rewrite minus_wut.
+        reflexivity.
+        apply le_S_n. assumption.
+Qed.
+
+Lemma minus_wut'' :
+  forall n m : nat,
+    m <= n -> n - (n - m) = m.
+Proof.
+  Require Import Omega.
+  intros. omega.
+Qed.
+
 Lemma insert_after_in_rev :
   forall (A : Type) (n : nat) (l1 l2 : list A),
     insert l2 after n in rev l1 =
     rev (insert rev l2 after (length l1 - n) in l1).
+(* begin hide *)
 Proof.
   intros. rewrite rev_insert_after, rev_inv.
-  Search (?x - (?x - _)).
-Abort.
-(*
-  induction n as [| n']; cbn; intros.
-    rewrite <- minus_n_O, insert_after_length, rev_app, rev_inv.
+  destruct (le_ge_dec (length l1) n).
+    rewrite minus_wut'.
+      rewrite <- length_rev, ?insert_after_gt.
+        1-2: reflexivity.
+        rewrite length_rev. 1-2: assumption.
+    rewrite minus_wut''.
       reflexivity.
-    destruct l1 as [| h t]; cbn.
-      rewrite rev_app, rev_inv. cbn. reflexivity.
-      destruct (rev t ++ [h]) eqn: Heq.
-        apply (f_equal rev) in Heq. rewrite rev_app, rev_inv in Heq.
-          cbn in Heq. inversion Heq.
-        rewrite rev_insert_after, rev_inv. cbn.
-*)
+      unfold ge in g. assumption.
+Qed.
+(* end hide *)
+
+Lemma insert_rev_after :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
+    insert (rev l2) after n in l1 =
+    rev (insert l2 after (length l1 - n) in (rev l1)).
+(* begin hide *)
+Proof.
+  intros. rewrite <- (rev_inv _ l2) at 2.
+  rewrite <- (length_rev _ l1), <- insert_after_in_rev, rev_inv.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma map_insert_after_in :
+  forall (A B : Type) (f : A -> B) (n : nat) (l1 l2 : list A),
+    map f (insert l2 after n in l1) =
+    insert (map f l2) after n in (map f l1).
+(* begin hide *)
+Proof.
+  intros A B f n l1. generalize dependent n.
+  induction l1 as [| h t]; cbn; intros.
+    rewrite ?insert_after_in_nil. reflexivity.
+    destruct n as [| n']; cbn.
+      rewrite map_app. cbn. reflexivity.
+      rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma join_insert_after_in :
+  forall (A : Type) (l1 l2 : list (list A)) (n : nat),
+    join (insert l2 after n in l1) =
+    insert (join l2) after (length (join (take n l1))) in (join l1).
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    rewrite insert_after_in_nil, take_nil. cbn. rewrite app_nil_r.
+      reflexivity.
+    destruct n as [| n']; cbn.
+      rewrite join_app. cbn. reflexivity.
+      rewrite IHt, length_app, insert_after_plus_in_app. reflexivity.
+Qed.
+(* end hide *)
+
+(** TODO: [bind] *)
+
+Lemma insert_after_in_replicate :
+  forall (A : Type) (m n : nat) (x : A) (l : list A),
+    insert l after n in replicate m x =
+    replicate (min n m) x ++ l ++ replicate (m - n) x.
+(* begin hide *)
+Proof.
+  induction m as [| m']; cbn; intros.
+    rewrite insert_after_in_nil, app_nil_r, Min.min_0_r. cbn. reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite IHm'. reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: charakteryzacja *)
 
 (** *** Dziwne *)
 
