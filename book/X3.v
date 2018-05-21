@@ -1189,6 +1189,19 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma length_take'' :
+  forall (A : Type) (n : nat) (l : list A),
+    length (take n l) = min n (length l).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      reflexivity.
+      rewrite IHn'. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma length_drop :
   forall (A : Type) (n : nat) (l : list A),
     n <= length l -> length (drop n l) = length l - n.
@@ -1197,6 +1210,16 @@ Proof.
   induction n as [| n']; destruct l as [| h t];
   cbn; inversion 1; subst; trivial;
   f_equal; apply IHn'; apply le_S_n in H; assumption.
+Qed.
+(* end hide *)
+
+Lemma length_drop' :
+  forall (A : Type) (n : nat) (l : list A),
+    length (drop n l) = length l - n.
+(* begin hide *)
+Proof.
+  induction n as [| n']; destruct l as [| h t]; cbn;
+  rewrite ?IHn'; reflexivity.
 Qed.
 (* end hide *)
 
