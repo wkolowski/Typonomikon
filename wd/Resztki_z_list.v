@@ -2,18 +2,18 @@ Add Rec LoadPath "/home/zeimer/Code/Coq".
 
 Require Import CoqBookPL.book.X3.
 
-Fixpoint insertAfter {A : Type} (n : nat) (l1 l2 : list A) : list A :=
+Fixpoint insertBefore {A : Type} (n : nat) (l1 l2 : list A) : list A :=
 match n with
     | 0 => l2 ++ l1
     | S n' =>
         match l1 with
             | [] => l2
-            | h :: t => h :: insertAfter n' t l2
+            | h :: t => h :: insertBefore n' t l2
         end
 end.
 
 Notation "'insert' l2 'before' n 'in' l1" :=
-  (insertAfter n l1 l2) (at level 40).
+  (insertBefore n l1 l2) (at level 40).
 
 Require Import Arith.
 
@@ -50,7 +50,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma isEmpty_insertAfter :
+Lemma isEmpty_insertBefore :
   forall (A : Type) (n : nat) (l1 l2 : list A),
     isEmpty (insert l2 before n in l1) =
     andb (isEmpty l1) (isEmpty l2).
@@ -63,7 +63,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma length_insertAfter :
+Lemma length_insertBefore :
   forall (A : Type) (n : nat) (l1 l2 : list A),
     length (insert l2 before n in l1) =
     length l1 + length l2.
@@ -402,9 +402,96 @@ Proof.
 Qed.
 (* end hide *)
 
-Check elem_take.
+Lemma elem_insert_before_in :
+  forall (A : Type) (x : A) (l1 l2 : list A) (n : nat),
+    elem x (insert l2 before n in l1) <->
+    elem x l1 \/ elem x l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    rewrite insert_before_in_nil. firstorder. inversion H.
+    destruct n as [| n']; cbn.
+      rewrite elem_app, ?elem_cons'. firstorder congruence.
+      rewrite ?elem_cons', IHt. firstorder congruence.
+Qed.
+(* end hide *)
 
+Lemma In_insert_before_in :
+  forall (A : Type) (x : A) (l1 l2 : list A) (n : nat),
+    In x (insert l2 before n in l1) <->
+    In x l1 \/ In x l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    rewrite insert_before_in_nil. firstorder.
+    destruct n as [| n']; cbn.
+      rewrite In_app; cbn. firstorder congruence.
+      rewrite IHt. firstorder congruence.
+Qed.
+(* end hide *)
 
+Lemma Exists_insert_before_in :
+  forall (A : Type) (P : A -> Prop) (l1 l2 : list A) (n : nat),
+    Exists P (insert l2 before n in l1) <->
+    Exists P l1 \/ Exists P l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    rewrite insert_before_in_nil. firstorder. inversion H.
+    destruct n as [| n']; cbn.
+      rewrite Exists_app; cbn. firstorder congruence.
+      rewrite ?Exists_cons, IHt. firstorder congruence.
+Qed.
+(* end hide *)
+
+Lemma Forall_insert_before_in :
+  forall (A : Type) (P : A -> Prop) (l1 l2 : list A) (n : nat),
+    Forall P (insert l2 before n in l1) <->
+    Forall P l1 /\ Forall P l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    rewrite insert_before_in_nil. firstorder. constructor.
+    destruct n as [| n']; cbn.
+      rewrite Forall_app, Forall_cons'. firstorder congruence.
+      rewrite ?Forall_cons', IHt. firstorder congruence.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_insert_before_in :
+  forall (A : Type) (P : A -> Prop) (l1 l2 : list A) (n m : nat),
+    AtLeast P m (insert l2 before n in l1) <->
+    (exists m1 m2 : nat,
+      AtLeast P m1 l1 /\ AtLeast P m2 l2 /\ m = m1 + m2).
+(* begin hide *)
+Proof.
+  split.
+    revert l2 m n.
+    induction l1 as [| h t]; cbn; intros.
+      exists 0, m. repeat split.
+        constructor.
+        rewrite insert_before_in_nil in H. assumption.
+      destruct n as [| n']; cbn in *.
+        apply AtLeast_app_conv in H. firstorder.
+        destruct t as [| h' t'].
+          rewrite insert_before_in_nil in H.
+            change (h :: l2) with ([h] ++ l2) in H.
+            apply AtLeast_app_conv in H. firstorder.
+          inversion H; subst.
+            exists 0, 0. firstorder constructor.
+            destruct (IHt _ _ _ H4) as (m1 & m2 & IH).
+              exists (S m1), m2. firstorder. constructor; trivial.
+            destruct (IHt _ _ _ H2) as (m1 & m2 & IH).
+              exists m1, m2. firstorder. constructor. assumption.
+    destruct 1 as (m1 & m2 & H1 & H2 & H3); subst.
+      rewrite insert_before_in_char.
+      apply AtLeast_app_comm. rewrite <- app_assoc. apply AtLeast_app.
+        exists m2, m1. split.
+          assumption.
+          pose (AtLeast_take_drop _ _ _ n _ H1).
+            rewrite AtLeast_app. firstorder.
+Qed.
+(* end hide *)
 
 
 (** *** Dziwne *)

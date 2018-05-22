@@ -1483,6 +1483,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma app_take_drop :
+  forall (A : Type) (n : nat) (l : list A),
+    take n l ++ drop n l = l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    destruct l as [| h t]; cbn; rewrite ?IHn'; reflexivity.
+Qed.
+(* end hide *)
+
 (** ** [filter] *)
 
 (** Napisz funkcję [filter], która zostawia na liście elementy, dla których
@@ -6985,7 +6996,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma AtLeast_app :
+Lemma AtLeast_plus_app :
   forall (A : Type) (P : A -> Prop) (n1 n2 : nat) (l1 l2 : list A),
     AtLeast P n1 l1 -> AtLeast P n2 l2 ->
       AtLeast P (n1 + n2) (l1 ++ l2).
@@ -7017,6 +7028,20 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma AtLeast_app :
+  forall (A : Type) (P : A -> Prop) (n : nat) (l1 l2 : list A),
+    AtLeast P n (l1 ++ l2) <->
+    exists n1 n2 : nat,
+      AtLeast P n1 l1 /\ AtLeast P n2 l2 /\ n = n1 + n2.
+(* begin hide *)
+Proof.
+  split.
+    apply AtLeast_app_conv.
+    destruct 1 as (n1 & n2 & H1 & H2 & H3); subst.
+      apply AtLeast_plus_app; assumption.
+Qed.
+(* end hide *)
+
 Lemma AtLeast_app_comm :
   forall (A : Type) (P : A -> Prop) (n : nat) (l1 l2 : list A),
     AtLeast P n (l1 ++ l2) -> AtLeast P n (l2 ++ l1).
@@ -7024,7 +7049,7 @@ Lemma AtLeast_app_comm :
 Proof.
   intros. apply AtLeast_app_conv in H.
   destruct H as (n1 & n2 & H1 & H2 & H3); subst.
-  rewrite plus_comm. apply AtLeast_app; assumption.
+  rewrite plus_comm. apply AtLeast_plus_app; assumption.
 Qed.
 (* end hide *)
 
@@ -7038,7 +7063,7 @@ Proof.
     induction 1; cbn.
       constructor.
       apply AtLeast_app_comm; cbn. constructor; assumption.
-      rewrite <- (plus_0_r n). apply AtLeast_app.
+      rewrite <- (plus_0_r n). apply AtLeast_plus_app.
         assumption.
         constructor.
     split; intro.
@@ -7126,6 +7151,17 @@ Proof.
     destruct l as [| h t].
       assumption.
       constructor. apply IHn', H.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_take_drop :
+  forall (A : Type) (P : A -> Prop) (n m : nat) (l : list A),
+    AtLeast P n l ->
+    exists n1 n2 : nat,
+      AtLeast P n1 (take m l) /\ AtLeast P n2 (drop m l) /\ n = n1 + n2.
+(* begin hide *)
+Proof.
+  intros. apply AtLeast_app. rewrite app_take_drop. assumption.
 Qed.
 (* end hide *)
 
