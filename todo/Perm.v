@@ -275,7 +275,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Fixpoint Permutation_ind_bis
+(*Fixpoint Permutation_ind_bis
   (A : Type) (P : list A -> list A -> Prop)
   (Hnil : P [] [])
   (Hskip : forall (x : A) (l l' : list A),
@@ -297,8 +297,8 @@ Proof.
       apply Permutation_ind_bis; auto.
     apply Hswap.
       reflexivity.
-      apply Permutation_ind_bis. 1-4: auto.
-Defined.
+      apply Permutation_ind_bis. 1-4: auto. reflexivity.
+Defined.*)
 
 Theorem Permutation_nil_app_cons :
   forall (A : Type) (l l' : list A) (x : A),
@@ -311,32 +311,62 @@ Proof.
 Qed.
 (* end hide *)
 
+Ltac inv H := inversion H; subst; clear H.
+
 Lemma Permutation_cons_split :
-  forall (A : Type) (h : A) (t l : list A),
-    Permutation (h :: t) l ->
-      exists l1 l2 : list A, l = l1 ++ h :: l2.
+  forall (A : Type) (l1 l2 : list A),
+    Permutation l1 l2 ->
+    l1 = [] /\ l2 = [] \/
+    exists (h1 h2 : A) (t1 t2 l11 l12 l21 l22 : list A),
+      l1 = h1 :: t1 /\
+      l2 = h2 :: t2 /\
+      l1 = l11 ++ h1 :: l12 /\
+      l2 = l21 ++ h2 :: l22 /\
+      Permutation t1 (l11 ++ l12) /\
+      Permutation t2 (l21 ++ l22).
 (* begin hide *)
 Proof.
-  intros. remember (h :: t) as l'.
-  generalize dependent t; generalize dependent h.
-  induction H; intros; inversion Heql'; subst.
-    exists [], l'. cbn. reflexivity.
-    exists [x], l. cbn. reflexivity.
-    destruct (IHPermutation1 _ _ eq_refl) as (l1 & l2 & IH1).
-      destruct l' as [| h' t'].
-        symmetry in H. apply Permutation_nil in H. inversion H.
-        specialize (IHPermutation2 _ _ eq_refl).
-Restart.
-  intros A h t l. generalize dependent t.
-  induction l as [| h' t']; cbn; intros.
-    symmetry in H. apply Permutation_nil in H. inversion H.
-Abort.
+  induction 1.
+    left. split; trivial.
+    destruct IHPermutation as
+        [[] | (h1 & h2 & t1 & t2 & l11 & l12 & l21 & l22 &
+               H1 & H2 & H3 & H4 & H5 & H6)]; subst.
+      right. exists x, x, [], [], [], [], [], []. firstorder.
+      right. exists x, x, (h1 :: t1), (h2 :: t2), [], (h1 :: t1), [], (h2 :: t2).
+        cbn. firstorder.
+    right. exists y, x, (x :: l), (y :: l), [], (x :: l), [], (y :: l).
+      cbn. firstorder.
+    destruct
+      IHPermutation1 as
+        [[] | (h1 & h2 & t1 & t2 & l11 & l12 & l21 & l22 &
+               H1 & H2 & H3 & H4 & H5 & H6)],
+      IHPermutation2 as
+        [[] | (h1' & h2' & t1' & t2' & l11' & l12' & l21' & l22' &
+               H1' & H2' & H3' & H4' & H5' & H6')];
+    subst.
+      left. split; trivial.
+      inversion H1'.
+      inversion H7.
+      inv H1'. right.
+        exists h1, h2', t1, t2', [], t1, [], t2'. cbn. firstorder.
+Qed.
+(* end hide *)
 
 Theorem Permutation_cons_inv :
   forall (A : Type) (l l' : list A) (x : A),
     Permutation (x :: l) (x :: l') -> Permutation l l'.
 (* begin hide *)
 Proof.
+  intros. pose (H' := H).
+  apply Permutation_cons_split'' in H'.
+  firstorder.
+    inv H0.
+    inv H0; inv H1. induction x4, x5; inv H2; inv H3.
+      admit.
+      Focus 2.
+      
+Restart.
+          
   intros. remember (x :: l) as l1. remember (x :: l') as l2.
   generalize dependent l; generalize dependent l'.
   generalize dependent x.
@@ -345,13 +375,23 @@ Proof.
     inversion Heql1; inversion Heql2; subst. assumption.
     inversion Heql1; inversion Heql2; subst. reflexivity.
     rewrite Heql1, Heql2 in *.
-    Search Permutation.
-    specialize (IHPermutation2 _ _ Heql2).
+    destruct l' as [| h' t'].
+      admit.
+      specialize (IHPermutation1 _ _ eq_refl l0).
 Restart.
   induction l as [| h t]; destruct l' as [| h' t']; cbn; intros.
     trivial.
     apply Permutation_length in H. inversion H.
     apply Permutation_length in H. inversion H.
+Restart.
+  inversion 1; subst.
+    assumption.
+    reflexivity.
+    symmetry in H1.
+      apply Permutation_cons_split in H0.
+      apply Permutation_cons_split in H1.
+      
+    
 Admitted.
 
 Theorem Permutation_app_inv :

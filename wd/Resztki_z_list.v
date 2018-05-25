@@ -493,6 +493,242 @@ Proof.
 Qed.
 (* end hide *)
 
+(** TODO: chyba już nic więcej nie zostało. *)
+
+(** ** [removeFirst] *)
+
+Function removeFirst
+  {A : Type} (p : A -> bool) (l : list A) : option (A * list A) :=
+match l with
+    | [] => None
+    | h :: t =>
+        if p h
+        then Some (h, t)
+        else
+          match removeFirst p t with
+              | None => None
+              | Some (x, l) => Some (x, h :: l)
+          end
+end.
+
+Lemma removeFirst_isEmpty :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    isEmpty l = true -> removeFirst p l = None.
+(* begin hide *)
+Proof.
+  destruct l; cbn.
+    reflexivity.
+    inversion 1.
+Qed.
+(* end hide *)
+
+Lemma removeFirst_length :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    length l = 0 -> removeFirst p l = None.
+(* begin hide *)
+Proof.
+  destruct l; cbn.
+    reflexivity.
+    inversion 1.
+Qed.
+(* end hide *)
+
+Definition oplus {A : Type} (x y : option A) : option A :=
+match x, y with
+    | Some a, _ => Some a
+    | _, Some a => Some a
+    | _, _ => None
+end.
+
+Lemma removeFirst_app :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    removeFirst p (l1 ++ l2) =
+    match removeFirst p l1 with
+        | Some (h, t) => Some (h, t ++ l2)
+        | None =>
+            match removeFirst p l2 with
+                | Some (h, t) => Some (h, l1 ++ t)
+                | None => None
+            end
+    end.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    destruct (removeFirst p l2). destruct p0. 1-2: reflexivity.
+    destruct (p h) eqn: Hph.
+      reflexivity.
+      rewrite IHt. destruct (removeFirst p t).
+        destruct p0; cbn. reflexivity.
+        destruct (removeFirst p l2).
+          destruct p0. 1-2: reflexivity.
+Qed.
+(* end hide *)
+
+Function removeLast
+  {A : Type} (p : A -> bool) (l : list A) : option (A * list A) :=
+match l with
+    | [] => None
+    | h :: t =>
+        if p h
+        then
+          match removeLast p t with
+              | Some (x, l) => Some (x, h :: l)
+              | None => Some (h, t)
+          end
+        else
+          match removeLast p t with
+              | Some (x, l) => Some (x, h :: l)
+              | None => None
+          end
+end.
+
+Lemma removeFirst_rev :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    removeFirst p (rev l) =
+    match removeLast p l with
+        | Some (x, l) => Some (x, rev l)
+        | None => None
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite removeFirst_app, IHt; cbn. destruct (p h) eqn: Hph.
+      destruct (removeLast p t).
+        destruct p0; cbn. 2: rewrite app_nil_r. 1-2: reflexivity.
+      destruct (removeLast p t).
+        destruct p0; cbn. 1-2: reflexivity.
+Restart.
+  intros. functional induction @removeLast A p l; cbn;
+  rewrite ?removeFirst_app, ?IHo, ?e1; cbn; rewrite ?e0.
+    3: rewrite app_nil_r. all: reflexivity.
+Qed.
+(* end hide *)
+
+Lemma removeFirst_map :
+  forall (A B : Type) (p : B -> bool) (f : A -> B) (l : list A),
+    removeFirst p (map f l) =
+    match removeFirst (fun x => p (f x)) l with
+        | Some (x, l) => Some (f x, map f l)
+        | None => None
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p (f h)) eqn: Heq.
+      reflexivity.
+      rewrite IHt. destruct (removeFirst _ t).
+        destruct p0. cbn. 1-2: reflexivity.
+Qed.
+(* end hide *)
+
+Lemma removeFirst_join :
+  forall (A : Type) (p : A -> bool) (l : list (list A)),
+    removeFirst p (join l) =
+    (fix f (l : list (list A)) : option (A * list A) :=
+    match l with
+        | [] => None
+        | hl :: tl =>
+            match removeFirst p hl with
+                | Some (x, l') => Some (x, join (l' :: tl))
+                | None =>
+                    match f tl with
+                        | Some (x, l) => Some (x, hl ++ l)
+                        | None => None
+                    end
+            end
+    end) l.
+(* begin hide *)
+Proof.
+  induction l as [| hl tl]; cbn.
+    reflexivity.
+    rewrite removeFirst_app, IHtl. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma removeFirst_replicate :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    removeFirst p (replicate n x) =
+    if p x
+    then
+        match n with
+            | 0 => None
+            | S n' => Some (x, replicate n' x)
+        end
+    else None.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    destruct (p x); reflexivity.
+    destruct (p x) eqn: Hpx.
+      reflexivity.
+      rewrite IHn', Hpx. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma removeFirst_ :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    removeFirst p l =.
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma removeFirst_ :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    removeFirst p l =.
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma removeFirst_ :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    removeFirst p l =.
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma removeFirst_ :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    removeFirst p l =.
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma removeFirst_ :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    removeFirst p l =.
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma removeFirst_ :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    removeFirst p l =.
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma removeFirst_ :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    removeFirst p l =.
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
 
 (** *** Dziwne *)
 
