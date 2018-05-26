@@ -667,41 +667,150 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma removeFirst_ :
+Lemma removeFirst_nth_None :
   forall (A : Type) (p : A -> bool) (l : list A),
-    removeFirst p l =.
+    removeFirst p l = None <->
+      forall (n : nat) (x : A), nth n l = Some x -> p x = false.
 (* begin hide *)
 Proof.
-
+  split.
+    intros H n. generalize dependent l.
+    induction n as [| n']; destruct l as [| h t];
+    inversion 2; subst; cbn in *.
+      destruct (p x).
+        inversion H.
+        reflexivity.
+      destruct (p h).
+        inversion H.
+        destruct (removeFirst p t) eqn: Heq.
+          destruct p0. inversion H.
+          apply (IHn' _ Heq _ H0).
+    induction l as [| h t]; cbn; intros.
+      reflexivity.
+      destruct (p h) eqn: Hph.
+        specialize (H 0 h eq_refl). congruence.
+        rewrite IHt.
+          reflexivity.
+          intros. apply H with (S n). cbn. assumption.
 Qed.
 (* end hide *)
 
-Lemma removeFirst_ :
-  forall (A : Type) (p : A -> bool) (l : list A),
-    removeFirst p l =.
+Lemma removeFirst_nth_Some :
+  forall (A : Type) (p : A -> bool) (x : A) (l l' : list A),
+    removeFirst p l = Some (x, l') ->
+    exists n : nat, nth n l = Some x /\ p x = true.
 (* begin hide *)
 Proof.
-
+  induction l as [| h t]; cbn.
+    inversion 1.
+    intros. destruct (p h) eqn: Hph.
+      inv H. exists 0. cbn. split; trivial.
+      destruct (removeFirst p t) eqn: Heq.
+        destruct p0. inv H. destruct (IHt _ eq_refl) as (n & H1 & H2).
+          exists (S n). cbn. split; assumption.
+        inv H.
 Qed.
 (* end hide *)
 
-Lemma removeFirst_ :
-  forall (A : Type) (p : A -> bool) (l : list A),
-    removeFirst p l =.
+Lemma removeFirst_nth_Some' :
+  exists (A : Type) (p : A -> bool) (n : nat) (x y : A) (l l' : list A),
+    removeFirst p l = Some (x, l') /\
+    nth n l = Some y /\ p y = true.
 (* begin hide *)
 Proof.
-
+  exists bool, (fun _ => true), 1, true, false, [true; false], [false].
+  cbn. auto.
 Qed.
 (* end hide *)
 
-Lemma removeFirst_ :
-  forall (A : Type) (p : A -> bool) (l : list A),
-    removeFirst p l =.
+Lemma head_removeFirst :
+  forall (A : Type) (p : A -> bool) (x : A) (l l' : list A),
+    removeFirst p l = Some (x, l') ->
+    head l' =
+    match l' with
+        | [] => None
+        | h :: t => if p h then head t else Some h
+   end.
 (* begin hide *)
 Proof.
+  intros. functional induction @removeFirst A p l.
+    inv H.
+    inv H. destruct l' eqn: Heq; cbn.
+      reflexivity.
+Abort.
+(* end hide *)
 
+Lemma removeFirst_None_take :
+  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+    removeFirst p l = None -> removeFirst p (take n l) = None.
+(* begin hide *)
+Proof.
+  intros A p n l. revert n.
+  functional induction @removeFirst A p l; intros.
+    rewrite take_nil. cbn. reflexivity.
+    destruct n; cbn.
+      reflexivity.
+      inv H.
+    destruct n; cbn.
+      reflexivity.
+      rewrite e0, IHo; trivial.
+    inv H.
 Qed.
 (* end hide *)
+
+Lemma removeFirst_take :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A) (l l' : list A),
+    removeFirst p (take n l) = Some (x, l') ->
+      removeFirst p l = Some (x, l' ++ drop n l).
+(* begin hide *)
+Proof.
+  intros A p n x l. revert n x.
+  functional induction @removeFirst A p l; intros.
+    rewrite take_nil in H. inv H.
+    destruct n; cbn in H.
+      inv H.
+      rewrite e0 in H. inv H. cbn. rewrite app_take_drop. reflexivity.
+    destruct n as [| n']; cbn in H.
+      inv H.
+      rewrite e0 in H. cbn. destruct (removeFirst p (take n' t)) eqn: Heq.
+        apply (removeFirst_None_take _ _ n' _) in e1. congruence.
+        inv H.
+    destruct n as [| n']; cbn in *.
+      inv H.
+      rewrite e0 in H. destruct (removeFirst p (take n' t)) eqn: Heq.
+        destruct p0. inv H. rewrite (IHo _ _ _ Heq) in e1. inv e1.
+          reflexivity.
+        inv H.
+Qed.
+(* end hide *)
+
+Fixpoint take' {A : Type} (n : nat) (l : list A) {struct l} : list A :=
+match l, n with
+    | [], _ => []
+    | _, 0 => []
+    | h :: t, S n' => h :: take' n' t
+end.
+
+Lemma removeFirst_take' :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A) (l l' : list A),
+    removeFirst p (take' n l) = Some (x, l') ->
+      removeFirst p l = Some (x, l' ++ drop n l).
+(* begin hide *)
+Proof.
+  intros A p n x l. revert n x.
+  functional induction @removeFirst A p l;
+  destruct n as [| n']; cbn; intros; inv H; rewrite e0 in H1; inv H1.
+    admit.
+    destruct (removeFirst p (take' n' t)) eqn: Heq.
+      admit.
+      inv H0.
+    destruct (removeFirst p (take' n' t)) eqn: Heq.
+      destruct p0. inv H0. rewrite (IHo _ _ _ Heq) in e1. inv e1.
+        cbn. reflexivity.
+      inv H0.
+Admitted.
+(* end hide *)
+
 
 Lemma removeFirst_ :
   forall (A : Type) (p : A -> bool) (l : list A),
