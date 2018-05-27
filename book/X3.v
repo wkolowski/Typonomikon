@@ -2834,6 +2834,19 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma all_any :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    all p l = negb (any (fun x : A => negb (p x)) l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      assumption.
+      reflexivity.
+Qed.
+(* end hide *)
+
 (** ** [find]  i [findLast] *)
 
 (** Napisz funkcję [find], która znajduje pierwszy element na liście,
