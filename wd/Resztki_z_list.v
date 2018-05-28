@@ -1010,7 +1010,7 @@ match l, n with
     | h :: t, S n' => let '(x, l') := remove n' t in (x, h :: l')
 end.
 
-Lemma remove_nth :
+Lemma remove_nth_take_drop :
   forall (A : Type) (l : list A) (n : nat) (x : A),
     nth n l = Some x ->
       remove n l = (Some x, take n l ++ drop (S n) l).
@@ -1058,6 +1058,144 @@ Proof.
       apply lt_S_n in H. rewrite (IHt _ _ H).
         unfold remove'. cbn. destruct (remove n' t). cbn. reflexivity.
 Qed.
+(* end hide *)
+
+Lemma remove'_S_cons :
+  forall (A : Type) (n : nat) (h : A) (t : list A),
+    remove' (S n) (h :: t) = h :: remove' n t.
+(* begin hide *)
+Proof.
+  intros. unfold remove'. cbn. destruct (remove n t). cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove_length_lt :
+  forall (A : Type) (l : list A) (n : nat),
+    n < length l ->
+      exists l' : list A, remove n l = (nth n l, l').
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    destruct n; inversion 1.
+    destruct n as [| n']; intros.
+      exists t. cbn. reflexivity.
+      apply lt_S_n in H. destruct (IHt _ H) as [l' IH].
+        cbn. exists (h :: l'). rewrite IH. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove_length_ge :
+  forall (A : Type) (l : list A) (n : nat),
+    length l <= n -> remove n l = (None, l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n'].
+      inversion H.
+      apply le_S_n in H. rewrite (IHt _ H). reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove_app_lt :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
+    n < length l1 ->
+      remove n (l1 ++ l2) =
+      let '(x, l1') := remove n l1 in (x, l1' ++ l2).
+(* begin hide *)
+Proof.
+  intros A n l1. revert n.
+  induction l1 as [| h t]; cbn; intros.
+    destruct n; inversion H.
+    destruct n as [| n'].
+      reflexivity.
+      apply lt_S_n in H. rewrite (IHt _ _ H).
+        destruct (remove n' t). cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove_app_ge :
+  forall (A : Type) (l1 l2 : list A) (n : nat),
+    length l1 <= n ->
+      remove n (l1 ++ l2) =
+      let '(x, l2') := remove (n - length l1) l2 in (x, l1 ++ l2').
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    rewrite <- minus_n_O. destruct (remove n l2). reflexivity.
+    destruct n as [| n'].
+      inversion H.
+      apply le_S_n in H. rewrite (IHt _ _ H). cbn.
+        destruct (remove (n' - length t)). reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove'_app :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
+    n < length l1 ->
+      remove' n (l1 ++ l2) = remove' n l1 ++ l2.
+(* begin hide *)
+Proof.
+  intros. unfold remove'. rewrite remove_app_lt.
+    destruct (remove n l1). cbn. reflexivity.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma remove_app' :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
+    length l1 <= n ->
+      remove' n (l1 ++ l2) = l1 ++ remove' (n - length l1) l2.
+(* begin hide *)
+Proof.
+  intros. unfold remove'. rewrite remove_app_ge.
+    destruct (remove (n - length l1) l2). cbn. reflexivity.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma remove_rev :
+  forall (A : Type) (l : list A) (n : nat),
+    n < length l ->
+      remove n (rev l) =
+      let '(x, l') := remove (length l - S n) l in (x, rev l').
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n'].
+      destruct t.
+        cbn. reflexivity.
+        rewrite remove_app_lt. cbn in *.
+          specialize (IHt 0 ltac:(omega)). rewrite <- minus_n_O in IHt.
+          match goal with
+              | H : context [let '(_, _) := ?x in _] |- _ => destruct x
+          end.
+          rewrite IHt. cbn. reflexivity.
+        cbn. rewrite length_app, plus_comm. cbn. omega.
+      apply lt_S_n in H. rewrite remove_app_lt.
+Abort.
+(* end hide *)
+
+Lemma remove_map :
+  forall (A B : Type) (f : A -> B) (l : list A) (n : nat),
+    remove n (map f l) =
+    match remove n l with
+        | (None, l) => (None, map f l)
+        | (Some x, l') => (Some (f x), map f l')
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n'].
+      reflexivity.
+      rewrite IHt. destruct (remove n' t), o; cbn.
+        1-2: reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: remove_replicate *)
 
 (** *** Dziwne *)
 
