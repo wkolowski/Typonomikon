@@ -1010,20 +1010,6 @@ match l, n with
     | h :: t, S n' => let '(x, l') := remove n' t in (x, h :: l')
 end.
 
-Lemma remove_nth_take_drop :
-  forall (A : Type) (l : list A) (n : nat) (x : A),
-    nth n l = Some x ->
-      remove n l = (Some x, take n l ++ drop (S n) l).
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    rewrite nth_nil in H. inversion H.
-    destruct n as [| n']; cbn in *.
-      inversion H; subst. reflexivity.
-      rewrite (IHt _ _ H). reflexivity.
-Qed.
-(* end hide *)
-
 Fixpoint ins {A : Type} (n : nat) (x : A) (l : list A) : list A :=
 match n with
     | 0 => x :: l
@@ -1196,6 +1182,70 @@ Qed.
 (* end hide *)
 
 (* TODO: remove_replicate *)
+
+Lemma remove_replicate :
+  forall (A : Type) (n m : nat) (x : A),
+    n < m -> remove n (replicate m x) = (Some x, replicate (m - 1) x).
+(* begin hide *)
+Proof.
+  intros A n m. revert n.
+  induction m as [| m']; cbn; intros.
+    destruct n; inversion H.
+    destruct n as [| n'].
+      rewrite <- minus_n_O. reflexivity.
+      apply lt_S_n in H. rewrite (IHm' _ _ H). destruct m'.
+        destruct n'; inversion H.
+        cbn. rewrite <- minus_n_O. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove_nth_take_drop :
+  forall (A : Type) (l : list A) (n : nat) (x : A),
+    nth n l = Some x <->
+    remove n l = (Some x, take n l ++ drop (S n) l).
+(* begin hide *)
+Proof.
+  split; revert n x.
+    induction l as [| h t]; cbn; intros.
+      rewrite nth_nil in H. inversion H.
+      destruct n as [| n']; cbn in *.
+        inversion H; subst. reflexivity.
+        rewrite (IHt _ _ H). reflexivity.
+    induction l as [| h t]; cbn; intros.
+      inversion H.
+      destruct n as [| n'].
+        inversion H; subst; clear H. cbn. reflexivity.
+        cbn. apply IHt. destruct (remove n' t).
+          inversion H; subst; clear H. destruct t; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove_filter :
+  forall (A : Type) (p : A -> bool) (l l' : list A) (x : A) (n : nat),
+    remove n (filter p l) = (Some x, l') ->
+      exists m : nat,
+      match remove m l with
+          | (None, _) => False
+          | (Some y, l'') => x = y /\ l' = filter p l''
+      end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct (p h) eqn: Hph.
+      destruct n as [| n']; cbn in *.
+        inversion H; subst; clear H. exists 0. split; reflexivity.
+        destruct (remove n' (filter p t)) eqn: Heq.
+          inversion H; subst; clear H. destruct (IHt _ _ _ Heq) as [m IH].
+          exists (S m). destruct (remove m t), o.
+            destruct IH. cbn. rewrite Hph, H0. split; trivial.
+            assumption.
+      destruct (IHt _ _ _ H) as [m IH], (remove m t) eqn: Heq, o.
+        exists (S m). destruct IH. rewrite Heq. cbn. rewrite H0, Hph.
+          split; trivial.
+        contradiction.
+Qed.
+(* end hide *)
 
 (** *** Dziwne *)
 
