@@ -75,6 +75,12 @@ Parameter find : forall A : Type, (A -> bool) -> list A -> option A.
 
 Parameter findLast : forall A : Type, (A -> bool) -> list A -> option A.
 
+Parameter removeFirst :
+  forall A : Type, (A -> bool) -> list A -> option (A * list A).
+
+Parameter removeLast :
+  forall A : Type, (A -> bool) -> list A -> option (A * list A).
+
 Parameter findIndex :
   forall A : Type, (A -> bool) -> list A -> option nat.
 
