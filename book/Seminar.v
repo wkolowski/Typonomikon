@@ -2573,8 +2573,8 @@ Qed.
     It was neither deep nor fundamental and we easily mitigated it by simple
     tactic manipulation.
 
-    The second kind of genrallessness is more fundamental and arises when
-    we are trying to prove a too weak theorem. It may appear paradoxical at
+    The second kind of generalitylessness is more fundamental and arises when
+    we are trying to prove too weak a theorem. It may appear paradoxical at
     first, but sometimes proving a stronger theorem is easier than proving
     a weaker one. Let's see this in an example. *)
 
@@ -2619,7 +2619,7 @@ Abort.
     go around this, we have to devise a stronger version of the theorem,
     but how to do this?
 
-    Let's take a glance at the arguments [rev_acc]: the second one is [[]].
+    Let's take a glance at the arguments of [rev_acc]: the second one is [[]].
     Let's try to generalize the theorem to an arbitrary [acc : list A].
     If we run [rev_acc] with an arbitrary accumulator, it will prepend its
     reversed argument to the accumulator and then return it. Let's try this

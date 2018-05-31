@@ -8619,7 +8619,7 @@ Proof.
       apply H0.
       destruct H2 as (h' & t' & H1' & H2' & H3'). rewrite H3'.
         apply H1. apply list_palindrome_ind; assumption.
-Abort.
+Admitted.
 (* end hide *)
 
 Lemma Palindrome_rev :
@@ -8651,16 +8651,9 @@ Proof.
     induction 1; cbn.
       1-2: reflexivity.
       rewrite rev_app, <- IHPalindrome; cbn. reflexivity.
-(*    generalize dependent l. fix 1. intro.
-      decompose [or] (bilateral_decomposition A l).
-      destruct l as [| h t]; intros.
-        constructor.
-        destruct (init_decomposition A t); subst.
-          constructor.
-          destruct H0 as (h' & t' & H1 & H2 & H3). rewrite H3 in *.
-            cbn in *. rewrite rev_app in *. cbn in *. inversion H; subst.
-            constructor. apply Palindrome_spec. apply (f_equal rev) in H5.
-            rewrite ?rev_app in H5. cbn in H5. inversion H5. rewrite H3.
-            rewrite rev_inv. reflexivity.*)
-Admitted.
+    induction l as [| x | x y l'] using list_palindrome_ind; cbn; intros.
+      1-2: constructor.
+      rewrite rev_app in H. cbn in H. inversion H; subst; clear H.
+        constructor. apply IHl'. apply app_inv_r in H2. assumption.
+Qed.
 (* end hide *)

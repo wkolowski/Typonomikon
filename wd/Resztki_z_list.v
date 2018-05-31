@@ -2,6 +2,266 @@ Add Rec LoadPath "/home/zeimer/Code/Coq".
 
 Require Import CoqBookPL.book.X3.
 
+Fixpoint snoc {A : Type} (x : A) (l : list A) : list A :=
+match l with
+    | [] => [x]
+    | h :: t => h :: snoc x t
+end.
+
+Parameter snoc_isEmpty :
+  forall (A : Type) (x : A) (l : list A),
+    isEmpty l = true -> snoc x l = [x].
+
+Parameter isEmpty_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    isEmpty (snoc x l) = false.
+
+Parameter length_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    length (snoc x l) = S (length l).
+
+Parameter snoc_app :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    snoc x (l1 ++ l2) = l1 ++ snoc x l2.
+
+Parameter app_snoc_l :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    snoc x l1 ++ l2 = l1 ++ x :: l2.
+
+Parameter app_snoc_r :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    l1 ++ snoc x l2 = snoc x (l1 ++ l2).
+
+Parameter snoc_app_singl :
+  forall (A : Type) (x : A) (l : list A),
+    snoc x l = l ++ [x].
+
+Parameter snoc_rev :
+  forall (A : Type) (x : A) (l : list A),
+    snoc x (rev l) = rev (x :: l).
+
+Parameter rev_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    rev (snoc x l) = x :: rev l.
+
+Parameter map_snoc :
+  forall (A B : Type) (f : A -> B) (x : A) (l : list A),
+    map f (snoc x l) = snoc (f x) (map f l).
+
+Parameter join_snoc :
+  forall (A : Type) (x : list A) (l : list (list A)),
+    join (snoc x l) = join l ++ x.
+
+Parameter bind_snoc :
+  forall (A B : Type) (f : A -> list B) (x : A) (l : list A),
+    bind f (snoc x l) = bind f l ++ f x.
+
+Parameter snoc_replicate :
+  forall (A : Type) (x : A) (n : nat),
+    snoc x (replicate n x) = replicate (S n) x.
+
+Parameter nth_snoc_lt :
+  forall (A : Type) (x : A) (n : nat) (l : list A),
+    n < length l -> nth n (snoc x l) = nth n l.
+
+Parameter nth_snoc_length :
+  forall (A : Type) (x : A) (l : list A),
+    nth (length l) (snoc x l) = Some x.
+
+Parameter head_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    head (snoc x l) =
+    if isEmpty l then Some x else head l.
+
+Parameter tail_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    tail (snoc x l) =
+    match tail l with
+        | None => Some []
+        | Some t => Some (snoc x t)
+    end.
+
+Parameter last_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    last (snoc x l) = Some x.
+
+Parameter init_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    init (snoc x l) = Some l.
+
+Parameter take_snoc_lt :
+  forall (A : Type) (x : A) (n : nat) (l : list A),
+    n < length l -> take n (snoc x l) = take n l.
+
+Parameter drop_snoc_lt :
+  forall (A : Type) (x : A) (n : nat) (l : list A),
+    n < length l -> drop n (snoc x l) = snoc x (drop n l).
+
+Parameter filter_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    filter p (snoc x l) =
+    if p x then snoc x (filter p l) else filter p l.
+
+Parameter takeWhile_snoc_all :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    all p l = true ->
+      takeWhile p (snoc x l) =
+      if p x then snoc x l else l.
+
+Parameter dropWhile_snoc_all :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    all (fun x : A => negb (p x)) l = true ->
+      dropWhile p (snoc x l) = snoc x l.
+
+Parameter zipWith_snoc :
+  forall (A B C : Type) (f : A -> B -> C)
+    (a : A) (b : B) (la : list A) (lb : list B),
+      length la = length lb ->
+        zipWith f (snoc a la) (snoc b lb) =
+        snoc (f a b) (zipWith f la lb).
+
+Parameter intersperse_snoc :
+  forall (A : Type) (x y : A) (l : list A),
+    intersperse x (snoc y l) =
+    if isEmpty l
+    then [y]
+    else snoc y (snoc x (intersperse x l)).
+
+Parameter all_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    all p (snoc x l) = andb (all p l) (p x).
+
+Parameter any_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    any p (snoc x l) = orb (any p l) (p x).
+
+Parameter find_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    find p (snoc x l) =
+    match find p l with
+        | None => if p x then Some x else None
+        | Some y => Some y
+    end.
+
+Parameter findLast_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    findLast p (snoc x l) =
+    if p x then Some x else findLast p l.
+
+Parameter removeFirst_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    removeFirst p (snoc x l) =
+    match removeFirst p l with
+        | None => if p x then Some (x, l) else None
+        | Some (h, t) => Some (h, snoc x t)
+    end.
+
+Parameter removeLast_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    removeLast p (snoc x l) =
+    if p x
+    then Some (x, l)
+    else
+      match removeLast p l with
+          | None => None
+          | Some (h, t) => Some (h, snoc x t)
+      end.
+
+Parameter findIndex_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    findIndex p (snoc x l) =
+    match findIndex p l with
+        | None => if p x then Some (length l) else None
+        | Some n => Some n
+    end.
+
+Parameter count_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    count p (snoc x l) = count p l + if p x then 1 else 0.
+
+Parameter findIndices_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    findIndices p (snoc x l) =
+    if p x
+    then snoc (length l) (findIndices p l)
+    else findIndices p l.
+
+Parameter elem_snoc :
+  forall (A : Type) (x y : A) (l : list A),
+    elem x (snoc y l) <-> elem x l \/ x = y.
+
+Parameter In_snoc :
+  forall (A : Type) (x y : A) (l : list A),
+    In x (snoc y l) <-> In x l \/ x = y.
+
+Parameter NoDup_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    NoDup (snoc x l) <-> NoDup l /\ ~ elem x l.
+
+Parameter Dup_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    Dup (snoc x l) <-> Dup l \/ elem x l.
+
+Parameter Rep_S_snoc :
+  forall (A : Type) (x : A) (n : nat) (l : list A),
+    Rep x n l -> Rep x (S n) (snoc x l).
+
+Parameter Rep_snoc :
+  forall (A : Type) (x y : A) (n : nat) (l : list A),
+    Rep x n l -> x <> y -> Rep x n (snoc y l).
+
+Parameter Exists_snoc :
+  forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
+    Exists P (snoc x l) <-> Exists P l \/ P x.
+
+Parameter Forall_snoc :
+  forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
+    Forall P (snoc x l) <-> Forall P l /\ P x.
+
+Parameter AtLeast_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    AtLeast P n l -> AtLeast P n (snoc x l).
+
+Parameter AtLeast_S_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    AtLeast P n l -> P x -> AtLeast P (S n) (snoc x l).
+
+Parameter Exactly_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    Exactly P n l -> ~ P x -> Exactly P n (snoc x l).
+
+Parameter Exactly_S_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    Exactly P n l -> P x -> Exactly P (S n) (snoc x l).
+
+Parameter AtMost_S_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    AtMost P n l -> AtMost P (S n) (snoc x l).
+
+Parameter AtMost_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    AtMost P n l -> ~ P x -> AtMost P n (snoc x l).
+
+Parameter incl_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    incl l (snoc x l).
+
+Parameter incl_snoc_snoc :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    incl l1 l2 -> incl (snoc x l1) (snoc x l2).
+
+Parameter sublist_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    sublist l (snoc x l).
+
+Parameter sublist_snoc_snoc :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    sublist l1 l2 -> sublist (snoc x l1) (snoc x l2).
+
+Parameter Palindrome_cons_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    Palindrome l -> Palindrome (x :: snoc x l).
+
 Fixpoint insertBefore {A : Type} (n : nat) (l1 l2 : list A) : list A :=
 match n with
     | 0 => l2 ++ l1
@@ -495,7 +755,6 @@ Qed.
 
 (** TODO: chyba już nic więcej nie zostało. *)
 
-
 Fixpoint remove
   {A : Type} (n : nat) (l : list A) {struct l} : option A * list A :=
 match l, n with
@@ -504,7 +763,9 @@ match l, n with
     | h :: t, S n' => let '(x, l') := remove n' t in (x, h :: l')
 end.
 
-Fixpoint ins {A : Type} (n : nat) (x : A) (l : list A) : list A :=
+Definition remove' {A : Type} n l := snd (@remove A n l).
+
+(*Fixpoint ins {A : Type} (n : nat) (x : A) (l : list A) : list A :=
 match n with
     | 0 => x :: l
     | S n' =>
@@ -524,7 +785,6 @@ match l with
         end
 end.
 
-Definition remove' {A : Type} n l := snd (@remove A n l).
 
 Lemma remove_insertAt :
   forall (A : Type) (l : list A) (n : nat) (x : A),
@@ -539,7 +799,7 @@ Proof.
         unfold remove'. cbn. destruct (remove n' t). cbn. reflexivity.
 Qed.
 (* end hide *)
-
+*)
 Lemma remove'_S_cons :
   forall (A : Type) (n : nat) (h : A) (t : list A),
     remove' (S n) (h :: t) = h :: remove' n t.
@@ -674,8 +934,6 @@ Proof.
         1-2: reflexivity.
 Qed.
 (* end hide *)
-
-(* TODO: remove_replicate *)
 
 Lemma remove_replicate :
   forall (A : Type) (n m : nat) (x : A),
