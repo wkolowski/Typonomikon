@@ -1,3 +1,5 @@
+(* TODO: [isEmpty] od [count]a wzwyż *)
+
 (** Najnowszy plan refaktoringu:
     - Wstęp
     - R1: Logika konstruktywna, potem klasyczna

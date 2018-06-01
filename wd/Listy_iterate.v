@@ -70,162 +70,164 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma take_iterate :
+  forall (A : Type) (f : A -> A) (n m : nat) (x : A),
+    take (S n) (iterate f x m) = iterate f x (min n m).
+(* begin hide *)
+Proof.
+  intros A f n m. revert n.
+  induction m as [| m']; cbn; intros.
+    rewrite take_nil. rewrite Min.min_0_r. cbn. reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite <- IHm'. cbn. reflexivity.
+Qed.
+(* end hide *)
+
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n
 
 Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
-    iterate f x n
-
-Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
-    iterate f x n
-
-Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
-    iterate f x n
-
-Parameter iterate :
-  forall (A : Type) (f : A -> A) (x : A) (n : nat),
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
     iterate f x n

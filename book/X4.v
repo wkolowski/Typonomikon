@@ -1075,20 +1075,19 @@ Proof.
 Qed.
 (* end hide *)
 
-Require Import X3.
+(* begin hide *)
+Add Rec LoadPath "/home/zeimer/Code/Coq".
+Require Import CoqBookPL.book.X3.
+(* end hide *)
 
 Theorem take_idem :
   forall (A : Type) (n : nat), idempotent (@take A n).
 (* begin hide *)
 Proof.
-  Functional Scheme take_ind := Induction for take Sort Prop.
-  unfold idempotent; intros.
-  functional induction @take A n x; cbn; try rewrite IHl; trivial.
-Restart.
   unfold idempotent; intros.
   rewrite take_length'.
-    trivial.
-    apply length_take'.
+    reflexivity.
+    apply length_take''.
 Qed.
 (* end hide *)
 
