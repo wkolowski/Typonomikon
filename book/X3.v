@@ -974,6 +974,19 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma tail_map :
+  forall (A B : Type) (f : A -> B) (l : list A),
+    tail (map f l) =
+    match l with
+        | [] => None
+        | _ :: t => Some (map f t)
+    end.
+(* begin hide *)
+Proof.
+  destruct l; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma tail_replicate :
   forall (A : Type) (n : nat) (x : A),
     tail (replicate n x) =
@@ -1020,6 +1033,25 @@ Lemma init_rev :
 Proof.
   intros. rewrite <- (rev_inv _ l) at 2. rewrite tail_rev.
   destruct (init (rev l)); rewrite ?rev_inv; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma init_map :
+  forall (A B : Type) (f : A -> B) (l : list A),
+    init (map f l) =
+    match l with
+        | [] => None
+        | h :: t =>
+            match init t with
+                | None => Some []
+                | Some i => Some (map f (h :: i))
+            end
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| x [| y t]]; cbn in *.
+    1-2: reflexivity.
+    rewrite IHl. destruct (init t); cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -3523,6 +3555,21 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma removeLast_rev :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    removeLast p (rev l) =
+    match removeFirst p l with
+        | None => None
+        | Some (x, l) => Some (x, rev l)
+    end.
+(* begin hide *)
+Proof.
+  intros. rewrite <- (rev_inv _ l) at 2. rewrite removeFirst_rev.
+  destruct (removeLast p (rev l)); cbn.
+    destruct p0. rewrite rev_inv. all: reflexivity.
+Qed.
+(* end hide *)
+
 Lemma removeFirst_map :
   forall (A B : Type) (p : B -> bool) (f : A -> B) (l : list A),
     removeFirst p (map f l) =
@@ -4483,6 +4530,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma isEmpty_count_not_0 :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    count p l <> 0 -> isEmpty l = false.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; intros.
+    contradiction.
+    reflexivity.
+Qed.
+(* end hide *)
+
 Lemma count_length :
   forall (A : Type) (p : A -> bool) (l : list A),
     count p l <= length l.
@@ -4624,8 +4682,6 @@ Proof.
       reflexivity.
 Qed.
 (* end hide *)
-
-Print intersperse.
 
 Lemma count_intersperse :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
@@ -4783,23 +4839,25 @@ Qed.
     elementów listy, które spełniają predykat boolowski [p]. *)
 
 (* begin hide *)
-Definition findIndices {A : Type} (p : A -> bool) (l : list A) : list nat :=
+(*Definition findIndices {A : Type} (p : A -> bool) (l : list A) : list nat :=
   (fix f (l : list A) (n : nat) : list nat :=
   match l with
       | [] => []
       | h :: t => if p h then n :: f t (S n) else f t (S n)
   end) l 0.
+*)
 
 (* TODO *)
-Fixpoint findIndices' {A : Type} (p : A -> bool) (l : list A) : list nat :=  
+Fixpoint findIndices {A : Type} (p : A -> bool) (l : list A) : list nat :=  
 match l with
     | [] => []
     | h :: t =>
         if p h
-        then 0 :: map S (findIndices' p t)
-        else map S (findIndices' p t)
+        then 0 :: map S (findIndices p t)
+        else map S (findIndices p t)
 end.
 
+(* TODO:
 Lemma findIndices'_spec :
   forall (A : Type) (p : A -> bool) (l : list A),
     map (plus 0) (findIndices' p l) = findIndices p l.
@@ -4811,31 +4869,282 @@ Proof.
     destruct (p h); cbn.
       rewrite plus_0_r. f_equal. rewrite <- IHt, map_map. f_equal.
         admit.
-      rewrite <- IHt, map_map. cbn. admit.
+      rewrite <- IHt, map_map. f_equal. cbn. admit.
 Admitted.
 (* end hide *)
+*)
 
 Lemma findIndices_false :
   forall (A : Type) (l : list A),
     findIndices (fun _ => false) l = [].
 (* begin hide *)
 Proof.
-  unfold findIndices. intros. remember 0 as n. clear Heqn.
-  generalize dependent n.
   induction l as [| h t]; cbn; intros; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
 
-Lemma findIndex_rev :
-  forall (A : Type) (p : A -> bool) (l : list A),
-    findIndex p (rev l) = last (findIndices p l).
+Fixpoint iterate {A : Type} (f : A -> A) (x : A) (n : nat) : list A :=
+match n with
+    | 0 => [x]
+    | S n' => x :: iterate f (f x) n'
+end.
+
+Lemma findIndices_true :
+  forall (A : Type) (l : list A),
+    findIndices (fun _ => true) l =
+    if isEmpty l then [] else iterate S 0 (length l - 1).
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite findIndex_app. rewrite IHt. cbn. destruct (p h) eqn: Hph.
-      cbn.
-Abort.
+    rewrite IHt. destruct t; cbn.
+      reflexivity.
+      rewrite <- minus_n_O.
+Admitted.
+(* end hide *)
+
+Lemma findIndices_isEmpty_true :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    isEmpty l = true -> findIndices p l = [].
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; intros.
+    reflexivity.
+    inversion H.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_findIndices_not_nil :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    findIndices p l <> [] -> isEmpty l = false.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; intros.
+    contradiction.
+    reflexivity.
+Qed.
+(* end hide *)
+
+Lemma length_findIndices :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    length (findIndices p l) = count p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn; rewrite length_map, ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma findIndices_app :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    findIndices p (l1 ++ l2) =
+    findIndices p l1 ++ map (plus (length l1)) (findIndices p l2).
+(* begin hide *)
+Proof.
+  induction l1 as [| h t ]; cbn; intros.
+    rewrite map_id. reflexivity.
+    rewrite IHt, map_app, map_map. destruct (p h); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma findIndices_rev_aux :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    rev (findIndices p (rev l)) =
+    map (fun n : nat => length l - S n) (findIndices p l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite findIndices_app, ?rev_app, ?IHt, ?length_rev, <- ?map_rev. cbn. destruct (p h); cbn.
+      rewrite <- map_map, plus_0_r, <- minus_n_O. reflexivity.
+      rewrite <- map_map. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma findIndices_rev :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    findIndices p (rev l) =
+    rev (map (fun n : nat => length l - S n) (findIndices p l)).
+(* begin hide *)
+Proof.
+  intros. rewrite <- findIndices_rev_aux, rev_inv. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma rev_findIndices :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    rev (findIndices p l) =
+    map (fun n : nat => length l - S n) (findIndices p (rev l)).
+(* begin hide *)
+Proof.
+  intros. rewrite <- (rev_inv _ l) at 1.
+  rewrite findIndices_rev_aux, length_rev.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma findIndices_map :
+  forall (A B : Type) (f : A -> B) (p : B -> bool) (l : list A),
+    findIndices p (map f l) =
+    findIndices (fun x : A => p (f x)) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: [join], [bind] *)
+
+Lemma findIndices_replicate :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    findIndices p (replicate n x) =
+    match n with
+        | 0 => []
+        | S n' => if p x then iterate S 0 n' else []
+    end.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. destruct (p x).
+      destruct n'; cbn.
+        reflexivity.
+        admit.
+      destruct n'; reflexivity.
+Admitted.
+(* end hide *)
+
+Lemma map_nth_findIndices :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    map (fun n : nat => nth n l) (findIndices p l) =
+    map Some (filter p l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      1-2: rewrite map_map; cbn; rewrite IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_findIndices :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    head (findIndices p l) = findIndex p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      reflexivity.
+      rewrite head_map, <- IHt. destruct (findIndices p t); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma tail_findIndices :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    tail (findIndices p l) =
+    match removeFirst p l with
+        | None => None
+        | Some (_, l') => Some (map S (findIndices p l'))
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h) eqn: Hph; cbn.
+      reflexivity.
+      destruct (findIndices p t); cbn in *.
+        destruct (removeFirst p t).
+          destruct p0. inversion IHt.
+          reflexivity.
+        destruct (removeFirst p t).
+          destruct p0. inversion IHt; subst. cbn. rewrite Hph. reflexivity.
+          inversion IHt.
+Restart.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h) eqn: Hph; cbn.
+      reflexivity.
+      destruct (findIndices p t), (removeFirst p t);
+      try destruct p0; inversion IHt; subst; cbn;
+      rewrite ?Hph; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma last_findIndices :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    last (findIndices p l) =
+    match findIndex p (rev l) with
+        | None => None
+        | Some n => Some (length l - S n)
+    end.
+(* begin hide *)
+Proof.
+  intros.
+  rewrite <- head_rev, <- (rev_inv _ l) at 1.
+  rewrite findIndices_rev_aux. rewrite <- head_findIndices.
+  destruct (findIndices p (rev l)); cbn.
+    reflexivity.
+    rewrite length_rev. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma init_findIndices :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    init (findIndices p l) =
+    match removeLast p l with
+        | None => None
+        | Some (_, l') => Some (findIndices p l')
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h) eqn: Hph; cbn.
+      rewrite init_map. destruct (findIndices p t) eqn: Heq; cbn in *.
+        destruct (removeLast p t).
+          destruct p0. inversion IHt.
+          rewrite Heq. reflexivity.
+        destruct (init l), (removeLast p t); cbn.
+          destruct p0. cbn. rewrite Hph. inversion IHt; subst. cbn.
+            reflexivity.
+          inversion IHt.
+          destruct p0. cbn. rewrite Hph. inversion IHt; subst; cbn.
+            reflexivity.
+          inversion IHt.
+      rewrite init_map. destruct (findIndices p t) eqn: Heq; cbn in *.
+        destruct (removeLast p t).
+          destruct p0. inversion IHt.
+          reflexivity.
+        destruct (init l), (removeLast p t); cbn.
+          destruct p0. cbn. rewrite Hph. inversion IHt; subst; cbn.
+            reflexivity.
+          inversion IHt.
+          destruct p0. cbn. rewrite Hph. inversion IHt; subst; cbn.
+            reflexivity.
+          inversion IHt.
+Restart.
+  intros. pose (init_rev _ (rev (findIndices p l))).
+  rewrite rev_inv in e.
+  pose (removeLast_rev _ p (rev l)). rewrite rev_inv in e0.
+  rewrite e, e0. rewrite rev_findIndices. rewrite tail_map.
+  rewrite findIndices_rev.
+Admitted.
+(* end hide *)
+
+Lemma findIndices_take :
+  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+    findIndices p (take n l) =
+    take (count p (take n l)) (findIndices p l).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      reflexivity.
+      destruct (p h); cbn; rewrite IHn', take_map; reflexivity.
+Qed.
 (* end hide *)
 
 (** * Proste predykaty *)
@@ -5279,24 +5588,23 @@ Lemma elem_findIndices :
       exists x : A, nth n l = Some x /\ p x = true.
 (* begin hide *)
 Proof.
-  unfold findIndices. intros. remember 0 as m. clear Heqm.
-  generalize dependent m; revert dependent n.
   induction l as [| h t]; cbn; intros.
     inversion H.
     destruct (p h) eqn: H'.
-      Focus 2. destruct (IHt _ _ H) as [x [H1 H2]].
-        exists x.
-      inversion H; subst; clear H. 
-Restart.
-  unfold findIndices. intros. remember 0 as m. clear Heqm.
-  generalize dependent m; generalize dependent l.
-  induction n as [| n']; cbn; intros.
-    destruct l as [| h t].
-      inversion H.
-      destruct (p h) eqn: H'.
+      inversion H; subst; clear H; cbn.
         exists h. split; trivial.
-        (* TODO: trzeba explicité napisać funkcje pomocniczą. *)
-Abort.
+        destruct n as [| n']; cbn.
+          exists h. split; trivial.
+          rewrite elem_map_conv in H2. destruct H2 as (n'' & IH1 & IH2).
+            destruct (IHt _ IH2) as (i & IH1' & IH2'). exists i.
+              inversion IH1; subst. split; trivial.
+      destruct n as [| n'].
+        rewrite elem_map_conv in H. destruct H as [n [Hn _]].
+          inversion Hn.
+        rewrite elem_map_conv in H. destruct H as (n'' & H1 & H2).
+          destruct (IHt _ H2) as (x & IH1 & IH2).
+            inversion H1; subst; cbn. exists x. split; trivial.
+Qed.
 (* end hide *)
 
 Lemma isEmpty_bind :
