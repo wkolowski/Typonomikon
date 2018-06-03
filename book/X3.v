@@ -573,6 +573,19 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma nth_overflow' :
+  forall (A : Type) (n : nat) (l : list A),
+    length l <= n -> nth n l = None.
+(* begin hide *)
+Proof.
+  induction n as [| n']; destruct l as [| h t]; cbn.
+    1,3: reflexivity.
+    all: inversion 1; subst.
+      apply IHn', le_n.
+      apply IHn'. apply le_S_n. assumption.
+Qed.
+(* end hide *)
+
 Lemma nth_app_l :
   forall (A : Type) (n : nat) (l1 l2 : list A),
     n < length l1 -> nth n (l1 ++ l2) = nth n l1.
@@ -2986,19 +2999,18 @@ Proof.
 Qed.
 (* end hide *)
 
-(*Lemma all_dropWhile :
+Lemma all_dropWhile :
   forall (A : Type) (p : A -> bool) (l : list A),
-    all (fun x : A => negb (p x)) (dropWhile p l) = true.
+    all p (dropWhile p l) = all p l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     destruct (p h) eqn: Hph; cbn; rewrite ?Hph; cbn.
-      rewrite IHt. reflexivity.
       assumption.
+      reflexivity.
 Qed.
 (* end hide *)
-*)
 
 Lemma all_intersperse :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),

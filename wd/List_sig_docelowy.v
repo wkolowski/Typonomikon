@@ -11,6 +11,8 @@ Notation "[]" := nil.
 Notation "x :: y" := (cons x y) (at level 60, right associativity).
 Notation "[ x ; .. ; y ]" := (cons x .. (cons y nil) ..).
 
+(* Pomysły: collate (SML) *)
+
 Parameter isEmpty : forall A : Type, list A -> bool.
 
 Parameter length : forall A : Type, list A -> nat.
@@ -23,7 +25,7 @@ Parameter app : forall A : Type, list A -> list A -> list A.
 
 Parameter replicate : forall A : Type, nat -> A -> list A.
 (* TODO *)
-Parameter iterate : forall A : Type, (A -> A) -> A -> nat -> list A.
+Parameter iterate : forall A : Type, (A -> A) -> nat -> A -> list A.
 
 Parameter head : forall A : Type, list A -> option A.
 Parameter tail : forall A : Type, list A -> option (list A).
@@ -48,6 +50,9 @@ Parameter takedrop : forall A : Type, nat -> list A -> list A * list A.
 (* TODO: przenazwać [takedrop] na [splitAt]? *)
 
 Parameter map : forall A B : Type, (A -> B) -> list A -> list B.
+(* TODO *)
+Parameter partialMap :
+  forall A B : Type, (A -> option B) -> list A -> list B.
 
 Parameter join : forall A : Type, list (list A) -> list A.
 
