@@ -8925,6 +8925,15 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma incl_cons'' :
+  forall (A : Type) (h : A) (t l : list A),
+    incl l t -> incl l (h :: t).
+(* begin hide *)
+Proof.
+  unfold incl; intros. right. apply H, H0.
+Qed.
+(* end hide *)
+
 Lemma incl_refl :
   forall (A : Type) (l : list A), incl l l.
 (* begin hide *)
