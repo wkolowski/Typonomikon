@@ -205,11 +205,84 @@ Proof.
       destruct (f _x).
         reflexivity.
         cbn.
-      cbn in IHl0. rewrite Hf_x in IHl0.
+      cbn in IHl0.
+Admitted.
+(* end hide *)
+
+Lemma any_pmap :
+  forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
+    any p (pmap f l) =
+    any
+      (fun x : A =>
+      match f x with
+          | Some b => p b
+          | None => false
+      end)
+      l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h); cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
 
-Lemma pmap :
+Lemma all_pmap :
+  forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
+    all p (pmap f l) =
+    all
+      (fun x : A =>
+      match f x with
+          | Some b => p b
+          | None => true
+      end)
+      l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+(*Lemma find_pmap :
+  forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
+    find p (pmap f l) =
+    match find
+      (fun x : A =>
+      match f x with
+          | Some b => p b
+          | None => false
+      end)
+      l
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+*)
+
+Lemma count_pmap :
+  forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
+    count p (pmap f l) =
+    count
+      (fun x : A =>
+      match f x with
+          | Some b => p b
+          | None => false
+      end)
+      l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+(*Lemma findIndices_pmap :
   forall (A B : Type) (f : A -> option B) (l : list A),
     pmap f l =.
 (* begin hide *)
@@ -219,81 +292,55 @@ Proof.
     destruct (f h); cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
+*)
 
-Lemma pmap :
-  forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
+Lemma elem_pmap :
+  forall (A B : Type) (f : A -> option B) (l : list A) (a : A) (b : B),
+    f a = Some b -> elem a l -> elem b (pmap f l).
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+  induction 2; cbn.
+    rewrite H. left.
+    destruct (f h); try right; apply IHelem, H.
 Qed.
 (* end hide *)
 
-Lemma pmap :
-  forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
+Lemma elem_pmap' :
+  forall (A B : Type) (f : A -> option B) (l : list A) (b : B),
+    (exists a : A, elem a l /\ f a = Some b) -> elem b (pmap f l).
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+  destruct 1 as (a & H1 & H2). eapply elem_pmap; eauto.
 Qed.
 (* end hide *)
 
-Lemma pmap :
-  forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
+Lemma elem_pmap_conv :
+  forall (A B : Type) (f : A -> option B) (l : list A) (b : B),
+    elem b (pmap f l) -> exists a : A, elem a l /\ f a = Some b.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+    inversion H.
+    destruct (f h) eqn: Heq; cbn.
+      inversion H; subst; clear H.
+        exists h. split; [left | assumption].
+        destruct (IHt _ H2) as (a & IH1 & IH2).
+          exists a. split; try right; assumption.
+      destruct (IHt _ H) as (a & IH1 & IH2).
+        exists a. split; try right; assumption.
 Qed.
 (* end hide *)
 
-Lemma pmap :
+Lemma incl_pmap :
   forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
+    incl (map Some (pmap f l)) (map f l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma pmap :
-  forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma pmap :
-  forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma pmap :
-  forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+    apply incl_refl.
+    destruct (f h); cbn; rewrite ?IHt.
+      apply incl_cons. assumption.
+      apply incl_cons''. assumption.
 Qed.
 (* end hide *)
 
