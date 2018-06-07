@@ -1126,7 +1126,7 @@ Qed.
     n razy kolejne aplikacje przestają mieć jakiekolwiek efekty. *)
 
 Definition gen_idempotent {A : Type} (n : nat) (f : A -> A)
-  : Prop := forall k : nat, iter (k + n) f = iter n f.
+  : Prop := forall k : nat, iter f (k + n) = iter f n.
 
 (** Zdaje mi się ono jednak być mocno bezużyteczne.*)
 

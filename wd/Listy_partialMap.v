@@ -344,6 +344,7 @@ Proof.
 Qed.
 (* end hide *)
 
+(*
 Lemma pmap :
   forall (A B : Type) (f : A -> option B) (l : list A),
     pmap f l =.
@@ -387,3 +388,5 @@ Proof.
     destruct (f h); cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
+
+*)

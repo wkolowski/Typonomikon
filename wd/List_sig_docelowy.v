@@ -24,7 +24,6 @@ Parameter rev : forall A : Type, list A -> list A.
 Parameter app : forall A : Type, list A -> list A -> list A.
 
 Parameter replicate : forall A : Type, nat -> A -> list A.
-(* TODO *)
 Parameter iterate : forall A : Type, (A -> A) -> nat -> A -> list A.
 
 Parameter head : forall A : Type, list A -> option A.
@@ -46,8 +45,7 @@ Parameter nth_remove :
 
 Parameter take : forall A : Type, nat -> list A -> list A.
 Parameter drop : forall A : Type, nat -> list A -> list A.
-Parameter takedrop : forall A : Type, nat -> list A -> list A * list A.
-(* TODO: przenazwać [takedrop] na [splitAt]? *)
+Parameter span : forall A : Type, nat -> list A -> list A * list A.
 
 Parameter map : forall A B : Type, (A -> B) -> list A -> list B.
 (* TODO *)
@@ -97,15 +95,13 @@ Parameter partition :
 
 Parameter findIndices :
   forall A : Type, (A -> bool) -> list A -> list nat.
-
 Parameter findIndices' :
   forall A : Type, (A -> bool) -> list A -> list nat.
 
 Parameter takeWhile : forall A : Type, (A -> bool) -> list A -> list A.
 Parameter dropWhile : forall A : Type, (A -> bool) -> list A -> list A.
-Parameter takedropWhile :
+Parameter span :
   forall A : Type, (A -> bool) -> list A -> list A * list A.
-(* TODO: przenazwać [takedropWhile] na [span]? *)
 (* TODO: funkcja [break] jak w Haskellu, czyli span (not . p) *)
 
 Parameter elem : forall A : Type, A -> list A -> Prop.

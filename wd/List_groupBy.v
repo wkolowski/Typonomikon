@@ -285,12 +285,6 @@ match l with
          end
 end.
 
-Definition isZero n :=
-match n with
-    | 0 => true
-    | _ => false
-end.
-
 Compute splitBy isZero [1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].
 
 Lemma splitBy_intersperse :
