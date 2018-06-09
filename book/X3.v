@@ -81,6 +81,47 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** [snoc] (TODO) *)
+
+(* begin hide *)
+Fixpoint snoc {A : Type} (x : A) (l : list A) : list A :=
+match l with
+    | [] => [x]
+    | h :: t => h :: snoc x t
+end.
+(* end hide *)
+
+Lemma snoc_isEmpty :
+  forall (A : Type) (x : A) (l : list A),
+    isEmpty l = true -> snoc x l = [x].
+(* begin hide *)
+Proof.
+  destruct l; cbn.
+    reflexivity.
+    inversion 1.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    isEmpty (snoc x l) = false.
+(* begin hide *)
+Proof.
+  destruct l; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma length_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    length (snoc x l) = S (length l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite ?IHt. cbn. reflexivity.
+Qed.
+(* end hide *)
+
 (** ** [app] *)
 
 (** Zdefiniuj funkcję [app], która skleja dwie listy. *)
@@ -141,6 +182,50 @@ Proof.
   induction l1 as [| h1 t1]; cbn; intro.
     trivial.
     rewrite IHt1. trivial.
+Qed.
+(* end hide *)
+
+Lemma snoc_app :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    snoc x (l1 ++ l2) = l1 ++ snoc x l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite ?IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma app_snoc_l :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    snoc x l1 ++ l2 = l1 ++ x :: l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite ?IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma app_snoc_r :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    l1 ++ snoc x l2 = snoc x (l1 ++ l2).
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite ?IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma snoc_app_singl :
+  forall (A : Type) (x : A) (l : list A),
+    snoc x l = l ++ [x].
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite ?IHt. reflexivity.
 Qed.
 (* end hide *)
 
@@ -263,6 +348,28 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma snoc_rev :
+  forall (A : Type) (x : A) (l : list A),
+    snoc x (rev l) = rev (x :: l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite ?IHt. rewrite snoc_app, <- app_assoc. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma rev_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    rev (snoc x l) = x :: rev l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite ?IHt. cbn. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma rev_app :
   forall (A : Type) (l1 l2 : list A),
     rev (l1 ++ l2) = rev l2 ++ rev l1.
@@ -340,6 +447,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma map_snoc :
+  forall (A B : Type) (f : A -> B) (x : A) (l : list A),
+    map f (snoc x l) = snoc (f x) (map f l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite ?IHt. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma map_app :
   forall (A B : Type) (f : A -> B) (l1 l2 : list A),
     map f (l1 ++ l2) = map f l1 ++ map f l2.
@@ -383,6 +501,17 @@ match lla with
     | [] => []
     | h :: t => h ++ join t
 end.
+(* end hide *)
+
+Lemma join_snoc :
+  forall (A : Type) (x : list A) (l : list (list A)),
+    join (snoc x l) = join l ++ x.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    rewrite app_nil_r. reflexivity.
+    rewrite ?IHt, app_assoc. reflexivity.
+Qed.
 (* end hide *)
 
 Lemma join_app :
@@ -437,6 +566,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma bind_snoc :
+  forall (A B : Type) (f : A -> list B) (x : A) (l : list A),
+    bind f (snoc x l) = bind f l ++ f x.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    rewrite app_nil_r. reflexivity.
+    rewrite ?IHt, app_assoc. reflexivity.
+Qed.
+(* end hide *)
+
 (** ** [replicate] *)
 
 (** Napsiz funkcję [replicate], która powiela dany element [n] razy, tworząc
@@ -473,6 +613,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma snoc_replicate :
+  forall (A : Type) (x : A) (n : nat),
+    snoc x (replicate n x) = replicate (S n) x.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. cbn. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma replicate_plus :
   forall (A : Type) (n m : nat) (x : A),
     replicate (n + m) x = replicate n x ++ replicate m x.
@@ -502,7 +653,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** [iterate] i [iter] *)
+(** ** [iterate] i [iter] (TODO) *)
 
 (** Napisz funkcję [iterate]. [iterate f n x] to lista postaci
     [x, f x, f (f x), ..., f (... (f x) ...)] o długości [n].
@@ -544,6 +695,18 @@ Lemma length_iterate :
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros; rewrite ?IHn'; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma snoc_iterate :
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
+    snoc (iter f n x) (iterate f n x) =
+    iterate f (S n) x.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -655,6 +818,16 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma head_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    head (snoc x l) =
+    if isEmpty l then Some x else head l.
+(* begin hide *)
+Proof.
+  destruct l; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma head_app :
   forall (A : Type) (l1 l2 : list A),
     head (l1 ++ l2) =
@@ -735,6 +908,19 @@ Proof.
   destruct l as [| h t]; cbn; intros.
     contradiction.
     reflexivity.
+Qed.
+(* end hide *)
+
+Lemma last_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    last (snoc x l) = Some x.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (snoc x t).
+      inversion IHt.
+      assumption.
 Qed.
 (* end hide *)
 
@@ -891,6 +1077,19 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma tail_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    tail (snoc x l) =
+    match tail l with
+        | None => Some []
+        | Some t => Some (snoc x t)
+    end.
+(* begin hide *)
+Proof.
+  destruct l; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma tail_app :
   forall (A : Type) (l1 l2 : list A),
     tail (l1 ++ l2) =
@@ -959,6 +1158,17 @@ Lemma tail_iterate :
 (* begin hide *)
 Proof.
   destruct n; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma init_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    init (snoc x l) = Some l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite ?IHt. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1182,6 +1392,31 @@ Proof.
     all: inversion 1; subst.
       apply IHn', le_n.
       apply IHn'. apply le_S_n. assumption.
+Qed.
+(* end hide *)
+
+Lemma nth_snoc_lt :
+  forall (A : Type) (x : A) (l : list A) (n : nat),
+    n < length l -> nth n (snoc x l) = nth n l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    destruct n; inversion H.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      apply lt_S_n in H. rewrite ?(IHt _ H).
+        reflexivity.
+Qed.
+(* end hide *)
+
+Lemma nth_snoc_length :
+  forall (A : Type) (x : A) (l : list A),
+    nth (length l) (snoc x l) = Some x.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    assumption.
 Qed.
 (* end hide *)
 
@@ -1550,6 +1785,32 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma take_snoc_lt :
+  forall (A : Type) (x : A) (l : list A) (n : nat),
+    n < length l -> take n (snoc x l) = take n l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    destruct n; inversion H.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite ?(IHt _ (lt_S_n _ _ H)). reflexivity.
+Qed.
+(* end hide *)
+
+Lemma drop_snoc_lt :
+  forall (A : Type) (x : A) (l : list A) (n : nat),
+    n < length l -> drop n (snoc x l) = snoc x (drop n l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    destruct n; inversion H.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite ?(IHt _ (lt_S_n _ _ H)). reflexivity.
+Qed.
+(* end hide *)
+
 Lemma take_map :
   forall (A B : Type) (f : A -> B) (n : nat) (l : list A),
     take n (map f l) = map f (take n l).
@@ -1807,6 +2068,7 @@ Lemma drop_iterate :
   forall (A : Type) (f : A -> A) (n m : nat) (x : A),
     drop m (iterate f n x) =
     iterate f (n - m) (iter f (min n m) x).
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
     rewrite drop_nil. reflexivity.
@@ -2092,6 +2354,21 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma zipWith_snoc :
+  forall
+    (A B C : Type) (f : A -> B -> C)
+    (a : A) (b : B) (la : list A) (lb : list B),
+      length la = length lb ->
+        zipWith f (snoc a la) (snoc b lb) =
+        snoc (f a b) (zipWith f la lb).
+(* begin hide *)
+Proof.
+  induction la as [| ha ta]; destruct lb as [| hb tb]; cbn in *; intros.
+    reflexivity.
+    all: inversion H. rewrite (IHta _ H1). reflexivity.
+Qed.
+(* end hide *)
+
 Lemma zipWith_iterate :
   forall
     (A B C: Type) (fa : A -> A) (fb : B -> B) (g : A -> B -> C)
@@ -2186,6 +2463,23 @@ Lemma length_intersperse :
 Proof.
   induction l as [| h [| h' t]]; cbn in *; trivial.
   rewrite IHl. rewrite plus_0_r, <- minus_n_O, plus_n_Sm. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma intersperse_snoc :
+  forall (A : Type) (x y : A) (l : list A),
+    intersperse x (snoc y l) =
+    if isEmpty l then [y] else snoc y (snoc x (intersperse x l)).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (snoc y t) as [| h' t'] eqn: Heq.
+      apply (f_equal isEmpty) in Heq. cbn in Heq.
+        rewrite isEmpty_snoc in Heq. inversion Heq.
+      destruct t; cbn in *.
+        inversion Heq; subst. reflexivity.
+        rewrite IHt. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2303,6 +2597,19 @@ Proof.
   destruct l as [| h t]; cbn.
     inversion 1.
     intro. apply le_n_S, le_0_n.
+Qed.
+(* end hide *)
+
+Lemma any_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    any p (snoc x l) = orb (any p l) (p x).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    rewrite Bool.orb_false_r. reflexivity.
+    destruct (p h); cbn.
+      reflexivity.
+      assumption.
 Qed.
 (* end hide *)
 
@@ -2581,6 +2888,19 @@ Proof.
   destruct l as [| h t]; cbn; intro.
     inversion H.
     apply le_n_S, le_0_n.
+Qed.
+(* end hide *)
+
+Lemma all_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    all p (snoc x l) = andb (all p l) (p x).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    rewrite Bool.andb_true_r. reflexivity.
+    destruct (p h); cbn.
+      assumption.
+      reflexivity.
 Qed.
 (* end hide *)
 
@@ -2919,7 +3239,7 @@ Qed.
 Lemma isEmpty_find_not_None :
   forall (A : Type) (p : A -> bool) (l : list A),
     find p l <> None -> isEmpty l = false.
-(* begin hdie *)
+(* begin hide *)
 Proof.
   destruct l; cbn; intros.
     contradiction.
@@ -2935,6 +3255,33 @@ Proof.
   destruct l as [| h t]; cbn; intros.
     inversion H.
     apply le_n_S, le_0_n.
+Qed.
+(* end hide *)
+
+Lemma find_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    find p (snoc x l) =
+    match find p l with
+        | None => if p x then Some x else None
+        | Some y => Some y
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma findLast_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    findLast p (snoc x l) =
+    if p x then Some x else findLast p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite IHt. destruct (p x); reflexivity.
 Qed.
 (* end hide *)
 
@@ -3272,6 +3619,47 @@ Proof.
   destruct l; cbn.
     reflexivity.
     inversion 1.
+Qed.
+(* end hide *)
+
+Lemma removeFirst_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    removeFirst p (snoc x l) =
+    match removeFirst p l with
+        | None => if p x then Some (x, l) else None
+        | Some (h, t) => Some (h, snoc x t)
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      reflexivity.
+      rewrite IHt. destruct (removeFirst p t).
+        destruct p0. reflexivity.
+        destruct (p x); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma removeLast_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    removeLast p (snoc x l) =
+    if p x
+    then Some (x, l)
+    else
+      match removeLast p l with
+          | None => None
+          | Some (h, t) => Some (h, snoc x t)
+      end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite IHt. destruct (p x).
+      reflexivity.
+      destruct (removeLast p t).
+        destruct p0. reflexivity.
+        destruct (p h); reflexivity.
 Qed.
 (* end hide *)
 
@@ -3698,6 +4086,25 @@ Proof.
       case_eq (findIndex p t); intros; rewrite H1 in *.
         inversion H; subst; clear H. apply lt_n_S, IHt. reflexivity.
         inversion H.
+Qed.
+(* end hide *)
+
+Lemma findIndex_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    findIndex p (snoc x l) =
+    match findIndex p l with
+        | None => if p x then Some (length l) else None
+        | Some n => Some n
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      reflexivity.
+      rewrite ?IHt. destruct (findIndex p t).
+        reflexivity.
+        destruct (p x); reflexivity.
 Qed.
 (* end hide *)
 
@@ -4207,6 +4614,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma count_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    count p (snoc x l) = count p l + if p x then 1 else 0.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite IHt. destruct (p h); reflexivity.
+Qed.
+(* end hide *)
+
 Lemma count_app :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
     count p (l1 ++ l2) = count p l1 + count p l2.
@@ -4502,6 +4920,18 @@ Proof.
       apply le_trans with (length t).
         assumption.
         apply le_S. apply le_n.
+Qed.
+(* end hide *)
+
+Lemma filter_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    filter p (snoc x l) =
+    if p x then snoc x (filter p l) else filter p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite ?IHt. destruct (p h), (p x); reflexivity.
 Qed.
 (* end hide *)
 
@@ -4916,6 +5346,20 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma findIndices_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    findIndices p (snoc x l) =
+    if p x
+    then snoc (length l) (findIndices p l)
+    else findIndices p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h), (p x); cbn; rewrite IHt, ?map_snoc; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma findIndices_app :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
     findIndices p (l1 ++ l2) =
@@ -5216,6 +5660,33 @@ Proof.
     reflexivity.
     destruct (p h); cbn; trivial.
 Qed.
+(* end hide *)
+
+Lemma takeWhile_snoc_all :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    all p l = true ->
+      takeWhile p (snoc x l) =
+      if p x then snoc x l else l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (p h); cbn in *.
+      rewrite (IHt H). destruct (p x); reflexivity.
+      inversion H.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+(* TODO *)
+Lemma dropWhile_snoc_all :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    all (fun x : A => negb (p x)) l = true ->
+      dropWhile p (snoc x l) = snoc x l.
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+Abort.
 (* end hide *)
 
 Lemma takeWhile_idempotent :
@@ -5533,6 +6004,29 @@ Lemma elem_cons' :
 (* begin hide *)
 Proof.
   split; (inversion 1; subst; [left | right]; trivial).
+Qed.
+(* end hide *)
+
+Lemma elem_snoc :
+  forall (A : Type) (x y : A) (l : list A),
+    elem x (snoc y l) <-> elem x l \/ x = y.
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros; inversion H; subst; clear H.
+      right. reflexivity.
+      inversion H2.
+      do 2 left.
+      destruct (IHt H2).
+        left. right. assumption.
+        right. assumption.
+    destruct 1; subst.
+      induction H; cbn.
+        left.
+        right. assumption.
+      induction l as [| h t]; cbn.
+        left.
+        right. assumption.
 Qed.
 (* end hide *)
 
@@ -6020,6 +6514,23 @@ end.
     robić indukcję, tym mniej zastanawiania się. Przekonajmy się zatem na
     własnej skórze, która definicja jest "lepsza". *)
 
+Lemma In_elem :
+  forall (A : Type) (x : A) (l : list A),
+    In x l <-> elem x l.
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      contradiction.
+      destruct H.
+        subst. left.
+        right. apply IHt, H.
+    induction 1.
+      left. reflexivity.
+      right. assumption.
+Qed.
+(* end hide *)
+
 Lemma In_not_nil :
   forall (A : Type) (x : A), ~ In x [].
 (* begin hide *)
@@ -6040,6 +6551,15 @@ Lemma In_cons :
     In x (h :: t) <-> x = h \/ In x t.
 (* begin hide *)
 Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma In_snoc :
+  forall (A : Type) (x y : A) (l : list A),
+    In x (snoc y l) <-> In x l \/ x = y.
+(* begin hide *)
+Proof.
+  intros. rewrite ?In_elem. apply elem_snoc.
+Qed.
 (* end hide *)
 
 Lemma In_app_l :
@@ -6459,23 +6979,6 @@ Proof.
         inversion H2.
         inversion H2. inversion H0.
         right; left. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma In_elem :
-  forall (A : Type) (x : A) (l : list A),
-    In x l <-> elem x l.
-(* begin hide *)
-Proof.
-  split.
-    induction l as [| h t]; cbn; intros.
-      contradiction.
-      destruct H.
-        subst. left.
-        right. apply IHt, H.
-    induction 1.
-      left. reflexivity.
-      right. assumption.
 Qed.
 (* end hide *)
 
@@ -6908,6 +7411,31 @@ Proof.
     apply le_trans with (length t).
       assumption.
       apply le_S. apply le_refl.
+Qed.
+(* end hide *)
+
+Lemma Dup_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    Dup (snoc x l) <-> Dup l \/ elem x l.
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      inversion H; subst; inversion H1.
+      inversion H; subst; clear H.
+        rewrite elem_snoc in H1. destruct H1.
+          left. constructor. assumption.
+          right. subst. left.
+        destruct (IHt H1).
+          left. right. assumption.
+          do 2 right. assumption.
+    destruct 1.
+      induction H; cbn.
+        left. rewrite elem_snoc. left. assumption.
+        right. assumption.
+      induction H; cbn.
+        left. rewrite elem_snoc. right. reflexivity.
+        right. assumption.
 Qed.
 (* end hide *)
 
@@ -7717,6 +8245,25 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Exists_snoc :
+  forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
+    Exists P (snoc x l) <-> Exists P l \/ P x.
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      inversion H; subst; clear H; [right | left]; assumption.
+      inversion H; subst; clear H.
+        do 2 left. assumption.
+        destruct (IHt H1).
+          left. right. assumption.
+          right. assumption.
+    destruct 1.
+      induction H; cbn; [left | right]; assumption.
+      induction l as [| h t]; cbn; [left | right]; assumption.
+Qed.
+(* end hide *)
+
 Lemma Exists_app :
   forall (A : Type) (P : A -> Prop) (l1 l2 : list A),
     Exists P (l1 ++ l2) <-> Exists P l1 \/ Exists P l2.
@@ -8062,6 +8609,21 @@ Lemma Forall_cons' :
 (* begin hide *)
 Proof.
   split; inversion 1; constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma Forall_snoc :
+  forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
+    Forall P (snoc x l) <-> Forall P l /\ P x.
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      inversion H; subst; clear H. split; assumption.
+      inversion H; subst; clear H. destruct (IHt H3). split.
+        constructor. 1-3: assumption.
+    destruct 1.
+      induction H; cbn; repeat constructor; try assumption.
 Qed.
 (* end hide *)
 
@@ -8425,6 +8987,31 @@ Proof.
     apply le_trans with (length t).
       assumption.
       apply le_S, le_n.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    AtLeast P n l -> AtLeast P n (snoc x l).
+(* begin hide *)
+Proof.
+  induction 1; cbn; constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_S_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    AtLeast P n l -> P x -> AtLeast P (S n) (snoc x l).
+(* begin hide *)
+Proof.
+  induction 1; cbn; intros.
+    induction l as [| h t]; cbn.
+      repeat constructor; assumption.
+      apply AL_skip. assumption.
+    constructor.
+      assumption.
+      apply IHAtLeast, H1.
+    apply AL_skip, IHAtLeast, H0.
 Qed.
 (* end hide *)
 
@@ -8875,6 +9462,22 @@ Restart.
     apply le_0_n.
     cbn.
 Abort.
+(* end hide *)
+
+Lemma AtLeast_1_elem :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    AtLeast P 1 l <-> exists x : A, elem x l /\ P x.
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; inversion 1; subst; clear H.
+      exists h. split; [left | assumption].
+      destruct (IHt H2) as (x & IH1 & IH2).
+        exists x. split; try right; assumption.
+    destruct 1 as (x & H1 & H2). induction H1.
+      repeat constructor. assumption.
+      apply AL_skip, IHelem, H2.
+Qed.
 (* end hide *)
 
 (** ** [Exactly] *)

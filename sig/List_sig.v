@@ -45,7 +45,7 @@ Parameter nth_remove :
 
 Parameter take : forall A : Type, nat -> list A -> list A.
 Parameter drop : forall A : Type, nat -> list A -> list A.
-Parameter takedrop : forall A : Type, nat -> list A -> list A * list A.
+Parameter splitAt : forall A : Type, nat -> list A -> list A * list A.
 
 Parameter map : forall A B : Type, (A -> B) -> list A -> list B.
 (* TODO *)
@@ -102,7 +102,7 @@ Parameter takeWhile : forall A : Type, (A -> bool) -> list A -> list A.
 Parameter dropWhile : forall A : Type, (A -> bool) -> list A -> list A.
 Parameter span :
   forall A : Type, (A -> bool) -> list A -> list A * list A.
-(* TODO: funkcja [break] jak w Haskellu, czyli span (not . p) *)
+(* TODO: funkcja [break] jak w Haskellu, czyli span (not . p) ? *)
 
 Parameter elem : forall A : Type, A -> list A -> Prop.
 Parameter In : forall A : Type, A -> list A -> Prop.
@@ -124,3 +124,6 @@ Parameter incl : forall A : Type, list A -> list A -> Prop.
 Parameter sublist : forall A : Type, list A -> list A -> Prop.
 
 Parameter Palindrome : forall A : Type, list A -> Prop.
+
+Parameter Permutation : forall A : Type, list A -> list A -> Prop.
+Parameter perm : forall (A : Type) (p : A -> bool), list A -> list A -> Prop.

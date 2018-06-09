@@ -42,6 +42,44 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma remove_isEmpty_true :
+  forall (A : Type) (l : list A) (n : nat),
+    isEmpty l = true -> remove n l = None.
+(* begin hide *)
+Proof.
+  destruct l.
+    reflexivity.
+    inversion 1.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_remove_not_None :
+  forall (A : Type) (l : list A) (n : nat),
+    remove n l <> None -> isEmpty l = false.
+(* begin hide *)
+Proof.
+  destruct l; cbn; intros.
+    contradiction.
+    reflexivity.
+Qed.
+(* end hide *)
+
+Lemma length_remove :
+  forall (A : Type) (h : A) (l t : list A) (n : nat),
+    remove n l = Some (h, t) -> length l = S (length t).
+(* begin hide *)
+Proof.
+  induction l as [| h' t']; cbn; intros.
+    inversion H.
+    destruct n as [| n'].
+      inversion H; subst. reflexivity.
+      destruct (remove n' t') eqn: Heq.
+        destruct p. inversion H; subst. cbn.
+          rewrite (IHt' _ _ Heq). reflexivity.
+        inversion H.
+Qed.
+(* end hide *)
+
 Lemma remove_length_lt :
   forall (A : Type) (l : list A) (n : nat),
     n < length l ->
@@ -77,23 +115,26 @@ Qed.
 Lemma remove_app :
   forall (A : Type) (l1 l2 : list A) (n : nat),
     remove n (l1 ++ l2) =
-    match remove n l1, remove n l2 with
-        | None, None => None
-        | None, Some (h, t) => Some (h, l1 ++ t)
-        | Some (h, t), _ => Some (h, t ++ l2)
+    match remove n l1 with
+        | Some (h, t) => Some (h, t ++ l2)
+        | None =>
+            match remove (n - length l1) l2 with
+                | Some (h, t) => Some (h, l1 ++ t)
+                | None => None
+            end
     end.
 (* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn; intros.
-    destruct (remove n l2); try destruct p; reflexivity.
-    destruct (remove n l2).
-      destruct n as [| n']; cbn.
-        reflexivity.
-        rewrite IHt. destruct (remove n' t).
-          destruct p0. reflexivity.
-          destruct (remove n' l2).
-            destruct p0, p.
-Abort.
+    rewrite <- minus_n_O. destruct (remove n l2).
+      destruct p. 1-2: reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite IHt. destruct (remove n' t).
+        destruct p. reflexivity.
+        destruct (remove (n' - length t) l2).
+          destruct p. all: reflexivity.
+Qed.
 (* end hide *)
 
 Lemma remove_app_lt :
@@ -120,21 +161,21 @@ Lemma remove_app_ge :
   forall (A : Type) (l1 l2 : list A) (n : nat),
     length l1 <= n ->
       remove n (l1 ++ l2) =
-      match remove n l2 with
+      match remove (n - length l1) l2 with
           | None => None
           | Some (h, t) => Some (h, l1 ++ t)
       end.
 (* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn; intros.
-    destruct (remove n l2).
+    rewrite <- minus_n_O. destruct (remove n l2).
       destruct p. 1-2: reflexivity.
     destruct n as [| n'].
       inversion H.
       apply le_S_n in H. rewrite (IHt _ _ H).
-        destruct (remove n' l2).
-          destruct p.
-Abort.
+        destruct (remove (n' - length t) l2) eqn: Heq; cbn; rewrite Heq.
+          destruct p. all: reflexivity.
+Qed.
 (* end hide *)
 
 Lemma remove'_app :
@@ -150,6 +191,7 @@ Proof.
 Qed.
 (* end hide *)
 
+
 Lemma remove_app' :
   forall (A : Type) (n : nat) (l1 l2 : list A),
     length l1 <= n ->
@@ -157,7 +199,8 @@ Lemma remove_app' :
 (* begin hide *)
 Proof.
   intros. unfold remove'. rewrite remove_app_ge.
-    destruct (remove (n - length l1) l2). cbn. reflexivity.
+    destruct (remove (n - length l1) l2).
+      destruct p. 1-2: reflexivity.
     assumption.
 Qed.
 (* end hide *)
@@ -166,7 +209,10 @@ Lemma remove_rev :
   forall (A : Type) (l : list A) (n : nat),
     n < length l ->
       remove n (rev l) =
-      let '(x, l') := remove (length l - S n) l in (x, rev l').
+      match remove (length l - S n) l with
+          | None => None
+          | Some (h, t) => Some (h, rev t)
+      end.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -175,13 +221,17 @@ Proof.
       destruct t.
         cbn. reflexivity.
         rewrite remove_app_lt. cbn in *.
-          specialize (IHt 0 ltac:(omega)). rewrite <- minus_n_O in IHt.
-          match goal with
-              | H : context [let '(_, _) := ?x in _] |- _ => destruct x
-          end.
-          rewrite IHt. cbn. reflexivity.
-        cbn. rewrite length_app, plus_comm. cbn. omega.
-      apply lt_S_n in H. rewrite remove_app_lt.
+          rewrite (IHt 0), <- minus_n_O.
+            destruct (length t); cbn.
+              reflexivity.
+              destruct (remove n t).
+                destruct p; cbn. 1-2: reflexivity.
+            apply le_n_S, le_0_n.
+          rewrite length_rev; cbn. apply le_n_S, le_0_n.
+      destruct (rev t) eqn: Heq; cbn.
+        apply (f_equal rev) in Heq. rewrite rev_inv in Heq.
+          rewrite Heq in H. cbn in H. apply lt_S_n in H.
+          destruct n'; inversion H.
 Abort.
 (* end hide *)
 
@@ -189,8 +239,8 @@ Lemma remove_map :
   forall (A B : Type) (f : A -> B) (l : list A) (n : nat),
     remove n (map f l) =
     match remove n l with
-        | (None, l) => (None, map f l)
-        | (Some x, l') => (Some (f x), map f l')
+        | None => None
+        | Some (x, l') => Some (f x, map f l')
     end.
 (* begin hide *)
 Proof.
@@ -198,31 +248,30 @@ Proof.
     reflexivity.
     destruct n as [| n'].
       reflexivity.
-      rewrite IHt. destruct (remove n' t), o; cbn.
-        1-2: reflexivity.
+      rewrite IHt. destruct (remove n' t).
+        destruct p. 1-2: reflexivity.
 Qed.
 (* end hide *)
 
 Lemma remove_replicate :
   forall (A : Type) (n m : nat) (x : A),
-    n < m -> remove n (replicate m x) = (Some x, replicate (m - 1) x).
+    m < n -> remove m (replicate n x) = Some (x, replicate (n - 1) x).
 (* begin hide *)
 Proof.
-  intros A n m. revert n.
-  induction m as [| m']; cbn; intros.
-    destruct n; inversion H.
-    destruct n as [| n'].
+  induction n as [| n']; cbn; intros.
+    destruct m; inversion H.
+    destruct m as [| m'].
       rewrite <- minus_n_O. reflexivity.
-      apply lt_S_n in H. rewrite (IHm' _ _ H). destruct m'.
-        destruct n'; inversion H.
-        cbn. rewrite <- minus_n_O. reflexivity.
+      apply lt_S_n in H. rewrite (IHn' _ _ H). destruct n'; cbn.
+        destruct m'; inversion H.
+        rewrite <- minus_n_O. reflexivity.
 Qed.
 (* end hide *)
 
 Lemma remove_nth_take_drop :
   forall (A : Type) (l : list A) (n : nat) (x : A),
     nth n l = Some x <->
-    remove n l = (Some x, take n l ++ drop (S n) l).
+    remove n l = Some (x, take n l ++ drop (S n) l).
 (* begin hide *)
 Proof.
   split; revert n x.
@@ -236,17 +285,19 @@ Proof.
       destruct n as [| n'].
         inversion H; subst; clear H. cbn. reflexivity.
         cbn. apply IHt. destruct (remove n' t).
-          inversion H; subst; clear H. destruct t; cbn; reflexivity.
+          destruct p. inversion H; subst; clear H.
+            destruct t; cbn; reflexivity.
+          inversion H.
 Qed.
 (* end hide *)
 
 Lemma remove_filter :
   forall (A : Type) (p : A -> bool) (l l' : list A) (x : A) (n : nat),
-    remove n (filter p l) = (Some x, l') ->
+    remove n (filter p l) = Some (x, l') ->
       exists m : nat,
       match remove m l with
-          | (None, _) => False
-          | (Some y, l'') => x = y /\ l' = filter p l''
+          | None => False
+          | Some (y, l'') => x = y /\ l' = filter p l''
       end.
 (* begin hide *)
 Proof.
@@ -256,14 +307,16 @@ Proof.
       destruct n as [| n']; cbn in *.
         inversion H; subst; clear H. exists 0. split; reflexivity.
         destruct (remove n' (filter p t)) eqn: Heq.
-          inversion H; subst; clear H. destruct (IHt _ _ _ Heq) as [m IH].
-          exists (S m). destruct (remove m t), o.
-            destruct IH. cbn. rewrite Hph, H0. split; trivial.
-            assumption.
-      destruct (IHt _ _ _ H) as [m IH], (remove m t) eqn: Heq, o.
-        exists (S m). destruct IH. rewrite Heq. cbn. rewrite H0, Hph.
-          split; trivial.
-        contradiction.
+          destruct p0. inversion H; subst; clear H.
+            destruct (IHt _ _ _ Heq) as [m IH].
+              exists (S m). destruct (remove m t).
+                destruct p0, IH. cbn. rewrite Hph, H0. split; trivial.
+                assumption.
+          inversion H.
+      destruct (IHt _ _ _ H) as (m & IH). exists (S m).
+        destruct (remove m t).
+          destruct p0. cbn. rewrite Hph. assumption.
+          assumption.
 Qed.
 (* end hide *)
 
@@ -271,8 +324,8 @@ Lemma remove_zip :
   forall (A B : Type) (la : list A) (lb : list B) (n : nat),
     remove n (zip la lb) =
     match remove n la, remove n lb with
-        | (Some a, la'), (Some b, lb') => (Some (a, b), zip la' lb')
-        | _, _ => (None, zip la lb)
+        | Some (a, la'), Some (b, lb') => Some ((a, b), zip la' lb')
+        | _, _ => None
     end.
 (* begin hide *)
 Proof.
@@ -281,11 +334,11 @@ Proof.
     destruct lb as [| hb tb]; cbn.
       destruct n as [| n'].
         reflexivity.
-        destruct (remove n' ta), o; reflexivity.
+        destruct (remove n' ta); try destruct p; reflexivity.
       destruct n as [| n'].
         reflexivity.
-        rewrite IHta. destruct (remove n' ta), (remove n' tb), o, o0;
-          cbn; reflexivity.
+        rewrite IHta. destruct (remove n' ta), (remove n' tb);
+          try destruct p; try destruct p0; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -294,9 +347,9 @@ Lemma remove_zipWith :
     (la : list A) (lb : list B) (n : nat),
       remove n (zipWith f la lb) =
       match remove n la, remove n lb with
-          | (Some a, la'), (Some b, lb') =>
-              (Some (f a b), zipWith f la' lb')
-          | _, _ => (None, zipWith f la lb)
+          | Some (a, la'), Some (b, lb') =>
+              Some (f a b, zipWith f la' lb')
+          | _, _ => None
       end.
 (* begin hide *)
 Proof.
@@ -305,29 +358,36 @@ Proof.
     destruct lb as [| hb tb]; cbn.
       destruct n as [| n'].
         reflexivity.
-        destruct (remove n' ta), o; reflexivity.
+        destruct (remove n' ta); try destruct p; reflexivity.
       destruct n as [| n'].
         reflexivity.
-        rewrite IHta. destruct (remove n' ta), (remove n' tb), o, o0;
-          cbn; reflexivity.
+        rewrite IHta. destruct (remove n' ta), (remove n' tb);
+          try destruct p; try destruct p0; cbn; reflexivity.
 Qed.
 (* end hide *)
 
 Lemma elem_remove_nth :
   forall (A : Type) (x : A) (l : list A) (n : nat),
     elem x l -> nth n l <> Some x ->
-      let '(_, l') := remove n l in elem x l'.
+    match remove n l with
+        | None => True
+        | Some (_, l') =>  elem x l'
+    end.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    assumption.
+    trivial.
     destruct n as [| n']; cbn in *.
       inversion H; subst; clear H.
         contradiction H0. reflexivity.
         assumption.
       inversion H; subst; clear H.
-        destruct (remove n' t). left.
-        specialize (IHt _ H3 H0). destruct (remove n' t). right. assumption.
+        destruct (remove n' t).
+          destruct p. left.
+          trivial.
+        specialize (IHt _ H3 H0). destruct (remove n' t).
+          destruct p. right. assumption.
+          trivial.
 Qed.
 (* end hide *)
 
@@ -335,19 +395,19 @@ Lemma Forall_remove :
   forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
     Forall P l ->
     match remove n l with
-        | (None, l') => Forall P l'
-        | (Some x, l') => P x /\ Forall P l'
+        | None => True
+        | Some (x, l') => Forall P l'
     end.
 (* begin hide *)
 Proof.
-  intros A P l n H. revert n.
+  intros. revert n.
   induction H; cbn; intros.
     constructor.
     destruct n as [| n'].
-      split; assumption.
-      specialize (IHForall n'). destruct (remove n' t), o.
-        destruct IHForall. split; try constructor; assumption.
-        constructor; assumption.
+      assumption.
+      specialize (IHForall n'). destruct (remove n' t).
+        destruct p. constructor; assumption.
+        trivial.
 Qed.
 (* end hide *)
 
@@ -355,58 +415,71 @@ Lemma Exists_remove :
   forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
     Exists P l ->
     match remove n l with
-        | (None, l') => Exists P l'
-        | (Some x, l') => ~ P x -> Exists P l'
+        | None => True
+        | Some (x, l') => ~ P x -> Exists P l'
     end.
 (* begin hide *)
 Proof.
-  intros A P l n H. revert n.
+  intros; revert n.
   induction H; cbn; intros.
     destruct n as [| n'].
       intro. contradiction.
-      destruct (remove n' t), o; constructor; assumption.
+      destruct (remove n' t).
+        destruct p. intro. left. assumption.
+        trivial.
     destruct n as [| n'].
       intro. assumption.
-      specialize (IHExists n'). destruct (remove n' t), o.
-        intro. right. apply IHExists, H0.
-        right. assumption.
+      specialize (IHExists n'). destruct (remove n' t).
+        destruct p. intro. right. apply IHExists. assumption.
+        assumption.
 Qed.
 (* end hide *)
 
 Lemma AtLeast_remove :
   forall (A : Type) (P : A -> Prop) (l : list A) (m : nat),
-    AtLeast P m l -> forall n : nat, AtLeast P (m - 1) (remove' n l).
+    AtLeast P m l -> forall n : nat,
+      match remove n l with
+          | None => True
+          | Some (_, l') => AtLeast P (m - 1) l'
+      end.
 (* begin hide *)
 Proof.
   induction 1; cbn; intro m.
-    constructor.
-    rewrite <- minus_n_O. destruct n as [| n'].
-      constructor.
-      destruct m as [| m']; cbn in *.
+    destruct (remove m l).
+      destruct p. 1-2: constructor.
+    destruct m as [| m']; cbn in *.
+      rewrite <- minus_n_O. assumption.
+      specialize (IHAtLeast m'). destruct (remove m' t).
+        destruct p. destruct n as [| n']; cbn in *.
+          constructor.
+          rewrite <- minus_n_O in *. constructor; assumption.
+        trivial.
+    destruct m as [| m']; cbn in *.
+      apply AtLeast_le with n.
         assumption.
-        rewrite remove'_S_cons. constructor.
-          assumption.
-          rewrite <- minus_n_O in IHAtLeast. apply IHAtLeast.
-    destruct n as [| n']; cbn.
-      constructor.
-      rewrite <- minus_n_O. destruct m as [| m']; cbn in *.
-        apply (AtLeast_le _ _ (S n') n').
-          assumption.
-          apply le_S, le_n.
-        rewrite remove'_S_cons. rewrite <- minus_n_O in IHAtLeast.
-          constructor. apply IHAtLeast.
+        destruct n as [| n']; cbn.
+          apply le_n.
+          rewrite <- minus_n_O. apply le_S, le_n.
+      specialize (IHAtLeast m'). destruct (remove m' t).
+        destruct p. constructor. assumption.
+        trivial.
 Qed.
 (* end hide *)
 
 Lemma incl_remove :
   forall (A : Type) (l : list A) (n : nat),
-    let '(_, l') := remove n l in incl l' l.
+    match remove n l with
+        | None => True
+        | Some (_, l') => incl l' l
+    end.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    apply incl_refl.
+    trivial.
     destruct n as [| n'].
       apply incl_cons'.
-      specialize (IHt n'). destruct (remove n' t). apply incl_cons, IHt.
+      specialize (IHt n'). destruct (remove n' t).
+        destruct p. apply incl_cons, IHt.
+        trivial.
 Qed.
 (* end hide *)

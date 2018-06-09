@@ -60,8 +60,6 @@
     - dodaj operacje aplikatywne
     - dodaj operację [snoc] (być może wcale nie zrobioną za pomocą
       [app], tylko normalnie, w celu dydaktycznym)
-    - przenieś [filter], [takeWhile] i [dropWhile] do sekcji funkcji z
-      predykatem
     - opisz niestandardowe reguły indukcyjne dla list (najlepiej przed
       przed funkcją [intersperse].
     - przenieś [intersperse] na sam koniec funkcji i dorzucić jeszcze
