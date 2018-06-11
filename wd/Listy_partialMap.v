@@ -2,16 +2,6 @@ Add Rec LoadPath "/home/zeimer/Code/Coq".
 
 Require Import CoqBookPL.book.X3.
 
-Fixpoint pmap {A B : Type} (f : A -> option B) (l : list A) : list B :=
-match l with
-    | [] => []
-    | h :: t =>
-        match f h with
-            | None => pmap f t
-            | Some x => x :: pmap f t
-        end
-end.
-
 (*
 
 
@@ -46,6 +36,18 @@ findIndex
 count
 findIndices
 *)
+
+(* begin hide *)
+Fixpoint pmap {A B : Type} (f : A -> option B) (l : list A) : list B :=
+match l with
+    | [] => []
+    | h :: t =>
+        match f h with
+            | None => pmap f t
+            | Some x => x :: pmap f t
+        end
+end.
+(* end hide *)
 
 Lemma pmap_app :
   forall (A B : Type) (f : A -> option B) (l1 l2 : list A),

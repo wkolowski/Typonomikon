@@ -1,4 +1,12 @@
-(* TODO: [isEmpty] od [count]a wzwyż *)
+(** TODO:
+    - [isEmpty] od [count]a wzwyż
+    - [insert] od [findIndices]: TODO: find, findLast, removeFirst,
+        removeLast, findIndex
+    - [snoc] od [NoDup]
+    - [pmap] od [elem]
+    - [remove] (trochę brakuje)
+
+*)
 
 (** Najnowszy plan refaktoringu:
     - Wstęp

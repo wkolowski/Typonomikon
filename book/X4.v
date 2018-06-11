@@ -1087,7 +1087,7 @@ Proof.
   unfold idempotent; intros.
   rewrite take_length'.
     reflexivity.
-    apply length_take''.
+    rewrite length_take. apply Nat.le_min_l.
 Qed.
 (* end hide *)
 
@@ -1125,8 +1125,9 @@ Qed.
     uogólnić na pojęcie idempotencji rzędu n — po zaaplikowaniu funkcji
     n razy kolejne aplikacje przestają mieć jakiekolwiek efekty. *)
 
-Definition gen_idempotent {A : Type} (n : nat) (f : A -> A)
-  : Prop := forall k : nat, iter f (k + n) = iter f n.
+Definition gen_idempotent
+  {A : Type} (n : nat) (f : A -> A) : Prop :=
+    forall k : nat, iter f (k + n) = iter f n.
 
 (** Zdaje mi się ono jednak być mocno bezużyteczne.*)
 

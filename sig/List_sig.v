@@ -36,8 +36,8 @@ Parameter init : forall A : Type, list A -> option (list A).
 (* TODO *)
 Parameter unsnoc : forall A : Type, list A -> option (A * list A).
 
-(* TODO *)
 Parameter nth : forall A : Type, nat -> list A -> option A.
+Parameter insert : forall A : Type, list A -> nat -> A -> list A.
 Parameter remove : forall A : Type, nat -> list A -> option (list A).
 Parameter remove' : forall A : Type, nat -> list A -> list A.
 Parameter nth_remove :
@@ -55,6 +55,8 @@ Parameter partialMap :
 Parameter join : forall A : Type, list (list A) -> list A.
 
 Parameter bind : forall A B : Type, (A -> list B) -> list A -> list B.
+
+(* TODO: operacje aplikatywne *)
 
 Parameter zip : forall A B : Type, list A -> list B -> list (A * B).
 
