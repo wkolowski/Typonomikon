@@ -38,4 +38,3 @@ Proof.
         trivial.
 Qed.
 (* end hide *)
-

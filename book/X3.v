@@ -7903,6 +7903,33 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma NoDup_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    NoDup (snoc x l) <-> NoDup l /\ ~ elem x l.
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      split.
+        constructor.
+        inversion 1.
+      inversion H; subst; clear H. split.
+        constructor.
+          intro. apply H2. rewrite elem_snoc. left. assumption.
+          destruct (IHt H3). assumption.
+        inversion 1; subst.
+          apply H2. rewrite elem_snoc. right. reflexivity.
+          destruct (IHt H3). contradiction.
+    destruct 1. induction H; cbn.
+      repeat constructor. inversion 1.
+      constructor.
+        Focus 2. apply IHNoDup. intro. apply H0. right. assumption.
+        intro. rewrite elem_snoc in H2. destruct H2; subst.
+          contradiction.
+          apply H0. left.
+Qed.
+(* end hide *)
+
 Lemma NoDup_app :
   forall (A : Type) (l1 l2 : list A),
     NoDup (l1 ++ l2) <->
@@ -8801,6 +8828,29 @@ Proof.
     apply le_trans with (length l).
       assumption.
       apply le_S, le_n.
+Qed.
+(* end hide *)
+
+Lemma Rep_S_snoc :
+  forall (A : Type) (x : A) (n : nat) (l : list A),
+    Rep x n l -> Rep x (S n) (snoc x l).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    induction l as [| h t]; cbn.
+      repeat constructor.
+      constructor. assumption.
+    1-2: constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma Rep_snoc :
+  forall (A : Type) (x y : A) (n : nat) (l : list A),
+    Rep x n l -> x <> y -> Rep x n (snoc y l).
+(* begin hide *)
+Proof.
+  induction 1; cbn; intro; constructor.
+    1-2: apply IHRep, H0.
 Qed.
 (* end hide *)
 
@@ -10487,6 +10537,28 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Exactly_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    Exactly P n l -> ~ P x -> Exactly P n (snoc x l).
+(* begin hide *)
+Proof.
+  induction 1; cbn; intro.
+    repeat constructor. assumption.
+    1-2: constructor; [assumption | apply IHExactly, H1].
+Qed.
+(* end hide *)
+
+Lemma Exactly_S_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    Exactly P n l -> P x -> Exactly P (S n) (snoc x l).
+(* begin hide *)
+Proof.
+  induction 1; cbn; intro.
+    repeat constructor. assumption.
+    1-2: constructor; [assumption | apply IHExactly, H1].
+Qed.
+(* end hide *)
+
 Lemma Exactly_app :
   forall (A : Type) (P : A -> Prop) (n1 n2 : nat) (l1 l2 : list A),
     Exactly P n1 l1 -> Exactly P n2 l2 -> Exactly P (n1 + n2) (l1 ++ l2).
@@ -10767,6 +10839,30 @@ Proof.
 Abort.
 (* end hide *)
 
+Lemma AtMost_S_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    AtMost P n l -> AtMost P (S n) (snoc x l).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    apply AM_skip. constructor.
+    constructor; assumption.
+    apply AM_skip. assumption.
+Qed.
+(* end hide *)
+
+Lemma AtMost_snoc :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    AtMost P n l -> ~ P x -> AtMost P n (snoc x l).
+(* begin hide *)
+Proof.
+  induction 1; cbn; intro.
+    repeat constructor; assumption.
+    constructor; [assumption | apply IHAtMost, H1].
+    apply AM_skip. apply IHAtMost, H0.
+Qed.
+(* end hide *)
+
 (** ** Zawieranie *)
 
 Definition incl {A : Type} (l1 l2 : list A) : Prop :=
@@ -10841,6 +10937,43 @@ Lemma incl_trans :
 (* begin hide *)
 Proof.
   unfold incl; intros. apply H0, H, H1.
+Qed.
+(* end hide *)
+
+Lemma incl_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    incl l (snoc x l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    apply incl_nil.
+    apply incl_cons. assumption.
+Qed.
+(* end hide *)
+
+Lemma incl_singl_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    incl [x] (snoc x l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    apply incl_refl.
+    apply incl_cons''. assumption.
+Qed.
+(* end hide *)
+
+Lemma incl_snoc_snoc :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    incl l1 l2 -> incl (snoc x l1) (snoc x l2).
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    apply incl_singl_snoc.
+    unfold incl in *. intros x' H'. inversion H'; subst.
+      rewrite elem_snoc. left. apply H. left.
+      apply IHt.
+        intros. apply H. right. assumption.
+        assumption.
 Qed.
 (* end hide *)
 
@@ -11153,6 +11286,25 @@ Proof.
 Admitted.
 (* end hide *)
 
+Lemma Palindrome_cons_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    Palindrome l -> Palindrome (x :: snoc x l).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    apply (Palindrome_1 x []). constructor.
+    apply (Palindrome_1 x [x0]). constructor.
+    rewrite snoc_app. cbn. rewrite snoc_app_singl in *.
+      inversion IHPalindrome; subst.
+        apply (f_equal isEmpty) in H2. rewrite isEmpty_app in H2.
+          cbn in H2. rewrite Bool.andb_false_r in H2. congruence.
+        replace (x :: x0 :: l ++ [x0; x]) with
+                (x :: (x0 :: l ++ [x0]) ++ [x]).
+          apply app_inv_r in H2. subst. do 2 constructor. assumption.
+          cbn. rewrite <- app_assoc. cbn. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma Palindrome_rev :
   forall (A : Type) (l : list A),
     Palindrome l <-> Palindrome (rev l).
@@ -11170,6 +11322,17 @@ Proof.
       constructor.
       rewrite rev_app. cbn. constructor. apply IHPalindrome.
         rewrite rev_inv. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_map :
+  forall (A B : Type) (f : A -> B) (l : list A),
+    Palindrome l -> Palindrome (map f l).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    1-2: constructor.
+    rewrite map_app. cbn. constructor. assumption.
 Qed.
 (* end hide *)
 

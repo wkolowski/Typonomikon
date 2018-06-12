@@ -333,6 +333,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO: z Dup i NoDup jest lipa. *)
+
 Lemma incl_pmap :
   forall (A B : Type) (f : A -> option B) (l : list A),
     incl (map Some (pmap f l)) (map f l).
@@ -343,6 +345,20 @@ Proof.
     destruct (f h); cbn; rewrite ?IHt.
       apply incl_cons. assumption.
       apply incl_cons''. assumption.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_pmap :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    Palindrome l -> Palindrome (pmap f l).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    constructor.
+    destruct (f x); constructor.
+    destruct (f x) eqn: Heq; cbn.
+      rewrite pmap_app. cbn. rewrite Heq. constructor. assumption.
+      rewrite pmap_app. cbn. rewrite Heq, app_nil_r. assumption.
 Qed.
 (* end hide *)
 
