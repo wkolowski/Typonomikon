@@ -1567,7 +1567,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** [insert] *)
+(** ** [insert] *)
 
 (** TODO *)
 
@@ -2513,9 +2513,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Compute last (take 5 (iterate S 5 0)).
-Compute nth 5 (iterate S 5 0).
-
 Lemma last_take :
   forall (A : Type) (n : nat) (l : list A),
     last (take (S n) l) = nth (min n (length l - 1)) l.
@@ -2530,14 +2527,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: tail *)
-
-Compute init (take 5 (iterate S 1 0)).
-Compute Some (take 3 (iterate S 1 0)).
-
-Lemma init_take :
-  forall (A : Type) (n : nat) (l : list A),
-    init (take n l) =
+Lemma tail_take :
+  forall (A : Type) (l : list A) (n : nat),
+    tail (take n l) =
     match n, l with
         | 0, _ => None
         | _, [] => None
@@ -2545,7 +2537,60 @@ Lemma init_take :
     end.
 (* begin hide *)
 Proof.
-Abort.
+  destruct l, n; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma init_take :
+  forall (A : Type) (n : nat) (l : list A),
+    init (take n l) =
+    match n, l with
+        | 0, _ => None
+        | _, [] => None
+        | S n', h :: t => Some (take (min n' (length l - 1)) l)
+    end.
+(* begin hide *)
+Proof.
+  induction n as [| n']; destruct l as [| h t]; cbn.
+    1-3: reflexivity.
+    rewrite IHn'. destruct n', t; cbn.
+      1-3: reflexivity.
+      rewrite <- minus_n_O. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_drop :
+  forall (A : Type) (n : nat) (l : list A),
+    head (drop n l) = nth n l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; destruct l as [| h t]; cbn; trivial.
+Qed.
+(* end hide *)
+
+Lemma last_drop :
+  forall (A : Type) (n : nat) (l : list A),
+    last (drop n l) = if leb (S n) (length l) then last l else None.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    destruct l; reflexivity.
+    destruct l as [| h t]; cbn.
+      reflexivity.
+      rewrite IHn'. destruct t; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma tail_drop :
+  forall (A : Type) (n : nat) (l : list A),
+    tail (drop n l) =
+    if leb (S n) (length l) then Some (drop (S n) l) else None.
+(* begin hide *)
+Proof.
+  induction n as [| n']; destruct l as [| h t]; cbn.
+    1-3: reflexivity.
+    rewrite IHn'. destruct t; reflexivity.
+Qed.
 (* end hide *)
 
 Lemma nth_take :
@@ -2563,6 +2608,21 @@ Proof.
         rewrite IHn'. destruct n'; reflexivity.
 Qed.
 (* end hide *)
+
+Lemma nth_drop :
+  forall (A : Type) (n m : nat) (l : list A),
+    nth m (drop n l) = nth (n + m) l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      apply nth_nil.
+      apply IHn'.
+Qed.
+(* end hide *)
+
+(* TODO: take_remove *)
 
 Lemma take_take :
   forall (A : Type) (n m : nat) (l : list A),
@@ -2694,28 +2754,17 @@ Proof.
 Qed.
 (* end hide *)
 
-(* begin hide *)
-(*Lemma insert_drop :
-  forall (A : Type) (l : list A) (n m : nat) (x : A),
-    insert (drop n l) m x =
-    if isEmpty l then [x] else
-    if leb n m then drop n (insert l (n + m) x) else [].
+Lemma drop_insert :
+  forall (A : Type) (l : list A) (n : nat) (x : A),
+    drop (S n) (insert l n x) = drop n l.
 (* begin hide *)
 Proof.
-  intros. rewrite drop_rev_aux, length_rev, take_rev, rev_inv. insert_rev, insert_take, length_rev.
-  rewrite insert_rev. rewrite take_rev, length_rev.
-  
-  intros A l n. revert l.
-  induction n as [| n']; destruct l as [| h t]; cbn; intros.
-    1-3: reflexivity.
-    rewrite IHn'. destruct t; cbn.
-      destruct m; cbn.
-      Focus 2. rewrite ?IHn'. reflexivity.
+  induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct n as [| n']; cbn.
       reflexivity.
-      rewrite ?IHt. reflexivity.
-Qed.*)
+      rewrite <- (IHt n' x). cbn. reflexivity.
+Qed.
 (* end hide *)
 
 (* TODO: zip, unzip, zipWith, intersperse *)
@@ -2740,6 +2789,19 @@ Proof.
           destruct p. inversion H; subst; clear H.
             destruct t; cbn; reflexivity.
           inversion H.
+Qed.
+(* end hide *)
+
+Lemma take_interesting :
+  forall (A : Type) (l1 l2 : list A),
+    (forall n : nat, take n l1 = take n l2) -> l1 = l2.
+(* begin hide *)
+Proof.
+  intros. specialize (H (max (length l1) (length l2))).
+  rewrite ?take_length' in H.
+    assumption.
+    apply Max.le_max_r.
+    apply Max.le_max_l.
 Qed.
 (* end hide *)
 

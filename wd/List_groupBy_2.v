@@ -6,13 +6,33 @@ Function groupBy
   {A : Type} (p : A -> A -> bool) (l : list A) : list (list A) :=
 match l with
     | [] => []
-    | [x] => [[x]]
-    | x :: (y :: l'') as l' =>
-        match groupBy p l' with
-            | [] => [[x]]
-            | l :: ls => if p x y then (x :: l) :: ls else [x] :: l :: ls
+    | h :: t =>
+        match groupBy p t with
+            | [] => [[h]]
+            | [] :: gs => [h] :: gs
+            | (h' :: t') :: gs =>
+                if p h h'
+                then (h :: h' :: t') :: gs
+                else [h] :: (h' :: t') :: gs
         end
 end.
+
+Compute groupBy orb [true; true; false; false; true].
+
+Lemma head_groupBy :
+  forall (A : Type) (p : A -> A -> bool) (l : list A),
+    ~ head (groupBy p l) = Some [].
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    inversion 1.
+    destruct (groupBy p t).
+      inversion 1.
+      cbn in IHt. destruct l.
+        contradiction.
+        destruct (p h a); cbn; inversion 1.
+Qed.
+(* end hide *)
 
 Lemma isEmpty_groupBy :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
@@ -30,13 +50,15 @@ Lemma length_groupBy :
 Proof.
   intros. functional induction @groupBy A p l;
   rewrite ?e0 in *; try clear e0; cbn in *.
-    1-2: apply le_n.
-    apply le_n_S, le_0_n.
-    apply le_S. assumption.
-    apply le_n_S. assumption.
+    apply le_n.
+    apply le_n_S, IHl0.
+    apply le_S, IHl0.
+    apply le_S, IHl0.
+    apply le_n_S, IHl0.
 Qed.
 (* end hide *)
 
+(*
 Lemma groupBy_app_decomposition :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
     groupBy p l = [] \/
@@ -70,6 +92,113 @@ Proof.
           rewrite <- IH1, e0. cbn. reflexivity.
 Qed.
 (* end hide *)
+*)
+
+Lemma groupBy_middle :
+  forall (A : Type) (p : A -> A -> bool) (l1 l2 : list A) (x y : A),
+    p x y = false ->
+      groupBy p (l1 ++ x :: y :: l2) =
+      groupBy p (l1 ++ [x]) ++ groupBy p (y :: l2).
+(* begin hide *)
+Proof.
+  intros. functional induction @groupBy A p l1; cbn.
+    destruct (groupBy p l2) eqn: Heq.
+      rewrite H. reflexivity.
+      destruct l; cbn; rewrite ?H.
+        reflexivity.
+        destruct (p y a); rewrite H; reflexivity.
+    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
+      destruct t; inversion e0. cbn. destruct (groupBy p l2).
+        rewrite H. destruct (p h x); reflexivity.
+        destruct l; cbn.
+          rewrite H. destruct (p h x); reflexivity.
+          destruct (p y a); rewrite H; destruct (p h x); reflexivity.
+    rewrite (IHl _ _ _ H). destruct t; cbn.
+      destruct (p h x); reflexivity.
+      destruct (groupBy p (t ++ [x])), (groupBy p l2); cbn.
+        destruct (p h a); reflexivity.
+        destruct (p h a); reflexivity.
+        destruct l; cbn.
+          destruct (p h a); reflexivity.
+          destruct (p a a0); cbn; destruct (p h a); reflexivity.
+        destruct l; cbn.
+          destruct (p h a); reflexivity.
+          destruct (p a a0); cbn; destruct (p h a); reflexivity.
+    rewrite (IHl _ _ _ H); clear IHl. destruct t; cbn.
+      destruct (p h x); reflexivity.
+      cbn in *. destruct (groupBy p (t ++ [x])), (groupBy p l2); cbn.
+        1-2: destruct (p h a); reflexivity.
+        destruct l; cbn; destruct (p h a).
+          reflexivity.
+          cbn. reflexivity.
+          destruct (p a a0); cbn; destruct (p h a); reflexivity.
+          destruct (p a a0); cbn; destruct (p h a); reflexivity.
+        destruct l; cbn.
+          destruct (p h a); cbn; reflexivity.
+          destruct (p a a0); cbn; destruct (p h a); reflexivity.
+    rewrite (IHl _ _ _ H); clear IHl. destruct t; cbn.
+      destruct (p h x); reflexivity.
+      cbn in *. destruct (groupBy p (t ++ [x])), (groupBy p l2); cbn.
+        1-2: destruct (p h a); reflexivity.
+        destruct l; cbn; destruct (p h a).
+          reflexivity.
+          cbn. reflexivity.
+          destruct (p a a0); cbn; destruct (p h a); reflexivity.
+          destruct (p a a0); cbn; destruct (p h a); reflexivity.
+        destruct l; cbn.
+          destruct (p h a); cbn; reflexivity.
+          destruct (p a a0); cbn; destruct (p h a); reflexivity.
+Qed.
+(* end hide *)
+
+Fixpoint unsnoc {A : Type} (l : list A) : option (list A * A) :=
+match l with
+    | [] => None
+    | h :: t =>
+        match unsnoc t with
+            | None => Some ([], h)
+            | Some (l, x) => Some (h :: l, x)
+        end
+end.
+
+Lemma unsnoc_spec :
+  forall (A : Type) (l l' : list A) (x : A),
+    unsnoc l = Some (l', x) ->
+      init l = Some l' /\ last l = Some x.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct (unsnoc t) eqn: H_unsnoc.
+      destruct p. destruct (IHt _ _ eq_refl). rewrite H0, H1. split.
+        inversion H. reflexivity.
+        destruct t; inversion H; inversion H0. reflexivity.
+      inversion H; subst. destruct t; cbn in *.
+        split; reflexivity.
+        destruct (unsnoc t); try destruct p; inversion H_unsnoc.
+Qed.
+(* end hide *)
+
+Lemma init_last :
+  forall (A : Type) (l l' : list A) (x : A),
+    init l = Some l' -> last l = Some x -> l = l' ++ [x].
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct (init t) eqn: H_init.
+      inversion H; subst. destruct (last t) eqn: H_last.
+        rewrite (IHt _ _ eq_refl eq_refl). cbn. destruct t; inversion H0.
+          inversion H_last.
+          reflexivity.
+        destruct t.
+          inversion H_init.
+          inversion H0.
+      destruct t.
+        inversion H; inversion H0; cbn. reflexivity.
+        cbn in *. destruct (init t); inversion H_init.
+Qed.
+(* end hide *)
 
 Lemma groupBy_app :
   forall (A : Type) (p : A -> A -> bool) (l1 l2 : list A) (x y : A),
@@ -77,31 +206,17 @@ Lemma groupBy_app :
       groupBy p (l1 ++ l2) = groupBy p l1 ++ groupBy p l2.
 (* begin hide *)
 Proof.
-  intros A p l1. functional induction @groupBy A p l1; cbn; intros.
-    reflexivity.
-    destruct l2 as [| h2 t2]; cbn.
-      reflexivity.
-      destruct t2 as [| h2' t2']; cbn.
-        inversion H; inversion H0; subst. rewrite H1. reflexivity.
-        inversion H; inversion H0; subst. destruct t2'.
-          destruct (p y h2'); rewrite H1; reflexivity.
-          cbn. destruct t2'.
-            destruct (p h2' a), (p y h2'); rewrite ?H1; reflexivity.
-            cbn.
-Restart.
-  induction l1 as [| h t]; cbn; intros.
-    reflexivity.
-    destruct t as [| h' t']; cbn.
-      cbn in *. destruct l2 as [| h'' t'']; cbn.
-        reflexivity.
-        destruct t''; cbn.
-Restart.
-  intros. destruct (groupBy_app_decomposition _ p (l1 ++ l2)).
-    apply (f_equal isEmpty) in H2.
-      rewrite isEmpty_groupBy, isEmpty_app in H2. cbn in H2.
-        destruct l1, l2; inversion H2. cbn. reflexivity.
-      destruct H2.
-Admitted.
+  intros. destruct (init l1) eqn: Heq.
+    destruct l2.
+      cbn. rewrite ?app_nil_r. reflexivity.
+      rewrite (init_last _ _ _ _ Heq H), <- app_assoc. cbn.
+        rewrite groupBy_middle.
+          cbn. reflexivity.
+          inversion H0. assumption.
+    destruct l1; cbn in *.
+      inversion H.
+      destruct (init l1); inversion Heq.
+Qed.
 (* end hide *)
 
 Lemma groupBy_rev :
@@ -113,9 +228,15 @@ Proof.
   functional induction @groupBy A p r;
   apply (f_equal rev) in Heqr;
   rewrite ?rev_inv in Heqr; rewrite <- Heqr; cbn.
-    1-2: reflexivity.
+    reflexivity.
     apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      cbn in e0. congruence.
+      cbn in e0. destruct t; cbn in *.
+        reflexivity.
+        congruence.
+    apply (f_equal head) in e0. cbn in e0. apply head_groupBy in e0.
+      contradiction.
+    
+    
   rewrite ?e0 in *; try clear e0; cbn in *.
 Admitted.
 (* end hide *)

@@ -19,22 +19,20 @@ match l, n with
         end
 end.
 
-Compute remove 2 (iterate S 5 0).
-
 Lemma remove_spec :
   forall (A : Type) (l : list A) (n : nat),
     match remove n l with
-        | None => True
+        | None => length l <= n
         | Some (x, l1, l2) => l = l1 ++ x :: l2
     end.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    trivial.
+    apply le_0_n.
     destruct n as [| n']; cbn.
       reflexivity.
       specialize (IHt n'). destruct (remove n' t).
         destruct p, p. cbn. rewrite <- IHt. reflexivity.
-        trivial.
+        apply le_n_S. assumption.
 Qed.
 (* end hide *)
