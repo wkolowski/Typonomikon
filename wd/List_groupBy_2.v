@@ -17,8 +17,6 @@ match l with
         end
 end.
 
-Compute groupBy orb [true; true; false; false; true].
-
 Lemma head_groupBy :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
     ~ head (groupBy p l) = Some [].
@@ -58,7 +56,76 @@ Proof.
 Qed.
 (* end hide *)
 
-(*
+Ltac gb :=
+match goal with
+    | H : groupBy _ ?l = [] |- _ =>
+        apply (f_equal isEmpty) in H;
+        rewrite isEmpty_groupBy in H;
+        destruct l; inversion H; subst
+    | H : groupBy _ _ = [] :: _ |- _ =>
+        apply (f_equal head), head_groupBy in H; contradiction
+end; cbn; try congruence.
+
+Require Import Arith.
+
+Compute groupBy beq_nat [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].
+Compute groupBy 
+  (fun n m => negb (beq_nat n m))
+  [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].
+
+Lemma groupBy_negb :
+  forall (A : Type) (p : A -> A -> bool) (l : list A),
+    groupBy (fun x y => negb (p x y)) l = groupBy p l.
+(* begin hide *)
+Proof.
+  intros. functional induction @groupBy A p l; cbn.
+    reflexivity.
+    gb.
+    gb.
+    rewrite IHl0, e0, e1.
+Abort.
+(* end hide *)
+
+Lemma groupBy_decomposition :
+  forall (A : Type) (p : A -> A -> bool) (l : list A),
+    l = [] \/ exists n : nat,
+      groupBy p l = take n l :: groupBy p (drop n l).
+(* begin hide *)
+Proof.
+  intros. functional induction @groupBy A p l.
+    left. reflexivity.
+      gb. right. exists 1. cbn. reflexivity.
+      gb.
+    destruct IHl0; subst.
+      cbn in e0. inversion e0.
+      right. destruct H as [n H]. exists (S n). cbn.
+        rewrite e0 in H. inversion H. reflexivity.
+    destruct IHl0; subst.
+      cbn in e0. inversion e0.
+      destruct H as [n H]. rewrite e0 in H. inversion H; subst.
+        right. exists 1. cbn. rewrite e0. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma groupBy_cons :
+  forall (A : Type) (p : A -> A -> bool) (l h : list A) (t : list (list A)),
+    groupBy p l = h :: t -> groupBy p h = [h].
+(* begin hide *)
+Proof.
+  intros. functional induction @groupBy A p l; cbn.
+    inversion H.
+    inversion H; subst. cbn. reflexivity.
+    gb.
+    inversion H; subst; clear H. rewrite e0 in *. cbn in *.
+      specialize (IHl0 _ _ eq_refl). cbn in *. destruct (groupBy p t').
+        rewrite e1. inversion IHl0. reflexivity.
+        destruct l.
+          rewrite e1. inversion IHl0. reflexivity.
+          destruct (p h' a); rewrite e1; inversion IHl0; reflexivity.
+    inversion H; subst; clear H. cbn. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma groupBy_app_decomposition :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
     groupBy p l = [] \/
@@ -68,31 +135,14 @@ Lemma groupBy_app_decomposition :
       groupBy p l = groupBy p l1 ++ groupBy p l2.
 (* begin hide *)
 Proof.
-  intros. functional induction @groupBy A p l; cbn.
-    left. reflexivity.
-    right. left. reflexivity.
-    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      cbn in e0. congruence.
-    rewrite e0 in IHl0.
-      destruct IHl0 as [IH | [IH | (l1 & l2 & IH1 & IH2)]].
-        inversion IH.
-        inversion IH; subst; clear IH. right. left. reflexivity.
-        do 2 right. exists [], (x :: l1 ++ l2). split.
-          cbn. rewrite IH1. reflexivity.
-          cbn. rewrite <- IH1. rewrite e0, e1. reflexivity.
-    rewrite e0 in IHl0.
-      destruct IHl0 as [IH | [IH | (l1 & l2 & IH1 & IH2)]].
-        inversion IH.
-        inversion IH; subst; clear IH. do 2 right.
-          exists [x], (y :: l''). split; cbn.
-            reflexivity.
-            cbn in e0. rewrite e0. reflexivity.
-        do 2 right. exists [x], (l1 ++ l2). split.
-          cbn. rewrite IH1. reflexivity.
-          rewrite <- IH1, e0. cbn. reflexivity.
+  intros. destruct (groupBy_decomposition A p l).
+    left. rewrite H. cbn. reflexivity.
+    destruct H as [n H]. rewrite H. do 2 right.
+      exists (take n l), (drop n l). split.
+        rewrite take_drop_spec. reflexivity.
+         apply groupBy_cons in H. rewrite H. cbn. reflexivity.
 Qed.
 (* end hide *)
-*)
 
 Lemma groupBy_middle :
   forall (A : Type) (p : A -> A -> bool) (l1 l2 : list A) (x y : A),
@@ -107,12 +157,11 @@ Proof.
       destruct l; cbn; rewrite ?H.
         reflexivity.
         destruct (p y a); rewrite H; reflexivity.
-    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      destruct t; inversion e0. cbn. destruct (groupBy p l2).
+    gb. destruct (groupBy p l2).
+      rewrite H. destruct (p h x); reflexivity.
+      destruct l; cbn.
         rewrite H. destruct (p h x); reflexivity.
-        destruct l; cbn.
-          rewrite H. destruct (p h x); reflexivity.
-          destruct (p y a); rewrite H; destruct (p h x); reflexivity.
+        destruct (p y a); rewrite H; destruct (p h x); reflexivity.
     rewrite (IHl _ _ _ H). destruct t; cbn.
       destruct (p h x); reflexivity.
       destruct (groupBy p (t ++ [x])), (groupBy p l2); cbn.
@@ -148,10 +197,27 @@ Proof.
         destruct l; cbn.
           destruct (p h a); cbn; reflexivity.
           destruct (p a a0); cbn; destruct (p h a); reflexivity.
+Restart.
+  Ltac wut H :=
+  match H with
+      | context [match ?x with _ => _ end] => wut x
+      | _ => destruct H
+  end.
+  Ltac dst :=
+  repeat (cbn in *; match goal with
+      | |- ?goal => wut goal
+  end); cbn in *; try congruence; gb.
+
+  intros. functional induction @groupBy A p l1; cbn.
+    dst.
+    gb. dst.
+    gb.
+    1-2: rewrite (IHl _ _ _ H); clear IHl; destruct t; dst.
 Qed.
+
 (* end hide *)
 
-Fixpoint unsnoc {A : Type} (l : list A) : option (list A * A) :=
+(*Fixpoint unsnoc {A : Type} (l : list A) : option (list A * A) :=
 match l with
     | [] => None
     | h :: t =>
@@ -178,6 +244,7 @@ Proof.
         destruct (unsnoc t); try destruct p; inversion H_unsnoc.
 Qed.
 (* end hide *)
+*)
 
 Lemma init_last :
   forall (A : Type) (l l' : list A) (x : A),
@@ -219,25 +286,42 @@ Proof.
 Qed.
 (* end hide *)
 
+(*Lemma groupBy_app' :
+  forall (A : Type) (p : A -> A -> bool) (l1 l2 : list A),
+    groupBy p (l1 ++ l2) =
+    match last l1, head l2 with
+        | None, _ => groupBy p l2
+        | _, None => groupBy p l1
+        | Some x, Some y =>
+            if p x y
+            then groupBy p l1 ++ groupBy p l2
+            else 
+*)
+(* begin hide *)
+
+Lemma groupBy_rev :
+  forall (A : Type) (p : A -> A -> bool) (l : list A),
+    rev (groupBy p l) = map rev (groupBy p (rev l)).
+(* begin hide *)
+Proof.
+  intros. destruct (groupBy_decomposition _ p l).
+    subst. cbn. reflexivity.
+    destruct H as [n H]. rewrite H. cbn.
+Abort.
+(* end hide *)
+
 Lemma groupBy_rev :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
     groupBy p (rev l) = rev (map rev (groupBy p l)).
 (* begin hide *)
 Proof.
-  intros. remember (rev l) as r.
-  functional induction @groupBy A p r;
-  apply (f_equal rev) in Heqr;
-  rewrite ?rev_inv in Heqr; rewrite <- Heqr; cbn.
+  intros.
+  functional induction @groupBy A p l; cbn.
     reflexivity.
     apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      cbn in e0. destruct t; cbn in *.
-        reflexivity.
-        congruence.
-    apply (f_equal head) in e0. cbn in e0. apply head_groupBy in e0.
+      destruct t; inversion e0.  cbn. reflexivity.
+    apply (f_equal head) in e0. apply head_groupBy in e0.
       contradiction.
-    
-    
-  rewrite ?e0 in *; try clear e0; cbn in *.
 Admitted.
 (* end hide *)
 
@@ -246,12 +330,8 @@ Lemma groupBy_rev' :
     groupBy p l = rev (map rev (groupBy p (rev l))).
 (* begin hide *)
 Proof.
-  intros. functional induction @groupBy A p l; cbn.
-    1-2: reflexivity.
-    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      cbn in e0. congruence.
-  rewrite ?e0 in *; try clear e0; cbn in *.
-Admitted.
+  intros. rewrite <- groupBy_rev, rev_inv. reflexivity.
+Qed.
 (* end hide *)
 
 Lemma groupBy_map :
@@ -263,10 +343,10 @@ Proof.
   intros. remember (fun _ => _) as p'.
   functional induction @groupBy A p' l;
   rewrite ?e0 in *; cbn in *; rewrite ?IHl0; trivial.
-    destruct (p (f x) (f y)); cbn.
+    destruct (p (f h) (f h')); cbn.
       reflexivity.
       congruence.
-    destruct (p (f x) (f y)); cbn.
+    destruct (p (f h) (f h')); cbn.
       congruence.
       reflexivity.
 Qed.
@@ -279,16 +359,20 @@ Lemma map_groupBy_groupBy :
 (* begin hide *)
 Proof.
   intros. functional induction @groupBy A p l; cbn.
-    1-3: reflexivity.
-    Focus 2. rewrite e0 in *. cbn in *. rewrite IHl0. reflexivity.
-    rewrite ?e0 in IHl0. cbn in IHl0. inversion IHl0; subst; clear IHl0.
-      rewrite H0. f_equal. destruct l0.
-        reflexivity.
-        cbn in *. destruct l''.
-          inversion e0; subst. rewrite e1. reflexivity.
-          cbn in *. destruct l''.
-            destruct (p y a0); inversion e0; subst; rewrite e1; reflexivity.
-Abort.
+    1-2: reflexivity.
+    gb.
+    rewrite e0 in *. cbn in *. destruct (groupBy p t').
+      rewrite e1. inversion IHl0. reflexivity.
+      destruct l; cbn.
+        rewrite e1. inversion IHl0. reflexivity.
+        destruct (p h' a); rewrite e1.
+          inversion IHl0. reflexivity.
+          inversion IHl0.
+    rewrite e0 in *. cbn in *. destruct (groupBy p t').
+      inversion IHl0. reflexivity.
+      destruct l; inversion IHl0; reflexivity.
+Qed.
+(* end hide *)
 
 Lemma join_groupBy :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
@@ -296,13 +380,15 @@ Lemma join_groupBy :
 (* begin hide *)
 Proof.
   intros. functional induction @groupBy A p l; cbn.
-    1-2: reflexivity.
-    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      inversion e0.
-    rewrite e0 in IHl0. cbn in IHl0. rewrite IHl0. reflexivity.
-    rewrite e0 in IHl0. cbn in IHl0. rewrite IHl0. reflexivity.
+    reflexivity.
+    gb.
+    gb.
+    rewrite <- IHl0, e0. cbn. reflexivity.
+    rewrite <- IHl0, e0. cbn. reflexivity.
 Qed.
 (* end hide *)
+
+(* TODO: bind *)
 
 Definition isZero n :=
   match n with | 0 => true | _ => false end.
@@ -319,9 +405,34 @@ Proof.
     reflexivity.
     induction n' as [| n'']; cbn.
       destruct (p x x); reflexivity.
-      rewrite IHn''. destruct (p x x); reflexivity.
+      rewrite IHn''. destruct (p x x) eqn: H; rewrite H; reflexivity.
 Qed.
 (* end hide *)
+
+Lemma groupBy_take :
+  forall (A : Type) (p : A -> A -> bool) (l : list A) (n : nat),
+    exists m : nat,
+      groupBy p (take n l) = take m (groupBy p l).
+(* begin hide *)
+Proof.
+  intros A p l. functional induction @groupBy A p l; cbn; intros.
+    exists 0. rewrite ?take_nil. cbn. reflexivity.
+    gb. destruct n as [| n']; cbn.
+      exists 0. cbn. reflexivity.
+      exists 1. rewrite take_nil. cbn. reflexivity.
+    gb.
+    destruct n as [| n']; cbn.
+      exists 0. cbn. reflexivity.
+      rewrite e0 in *. destruct (IHl0 n') as [m IH]. exists (S m).
+        cbn. destruct (groupBy p (take n' t)) eqn: Heq.
+          apply (f_equal isEmpty) in Heq.
+            rewrite isEmpty_groupBy, isEmpty_take in Heq.
+              destruct n', t; cbn in Heq; inversion Heq.
+                cbn in e0. inversion e0.
+                cbn in e0.
+Admitted.
+(* end hide *)
+
 
 Lemma any_groupBy :
   forall (A : Type) (q : A -> bool) (p : A -> A -> bool) (l : list A),
@@ -330,10 +441,11 @@ Lemma any_groupBy :
 Proof.
   intros. functional induction @groupBy A p l;
   cbn; rewrite ?Bool.orb_false_r; try rewrite ?e0 in IHl0.
-    1-2: reflexivity.
-    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      cbn in e0. congruence.
-    cbn in IHl0. rewrite <- IHl0. rewrite Bool.orb_assoc. reflexivity.
+    reflexivity.
+    gb.
+    rewrite Bool.orb_false_r. reflexivity.
+    gb.
+    cbn in IHl0. rewrite <- IHl0. rewrite ?Bool.orb_assoc. reflexivity.
     cbn in IHl0. rewrite <- IHl0. reflexivity.
 Qed.
 (* end hide *)
@@ -343,13 +455,14 @@ Lemma all_groupBy :
     all (all q) (groupBy p l) = all q l.
 (* begin hide *)
 Proof.
-  intros. functional induction @groupBy A p l;
-  cbn; rewrite ?Bool.andb_true_r; try rewrite ?e0 in IHl0.
-    1-2: reflexivity.
-    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      cbn in e0. congruence.
-    cbn in IHl0. rewrite <- IHl0. rewrite Bool.andb_assoc. reflexivity.
-    cbn in IHl0. rewrite <- IHl0. reflexivity.
+  intros. functional induction @groupBy A p l; cbn.
+    reflexivity.
+    gb.
+    rewrite Bool.andb_true_r. reflexivity.
+    gb.
+    1-2: rewrite ?e0 in IHl0; cbn in *; rewrite <- IHl0.
+      rewrite ?Bool.andb_assoc. reflexivity.
+      rewrite <- ?Bool.andb_assoc. cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -367,10 +480,9 @@ Proof.
   try rewrite ?e0 in IHl0.
     inversion H.
     inversion H; subst; clear H.
-      apply incl_refl.
+      gb.
       inversion H2.
-    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      cbn in e0. congruence.
+    gb.
     inversion H; subst; clear H.
       apply incl_cons, IHl0. left.
       apply incl_cons'', IHl0. right. assumption.
@@ -387,55 +499,41 @@ Lemma groupBy_elem :
 Proof.
   intros. functional induction @groupBy A p l.
     inversion H.
+    gb.
     inversion H; subst; clear H.
-      exists [x0]. split; constructor.
+      exists [h]. split; constructor.
       inversion H2.
-    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      cbn in e0. congruence.
+    gb.
     rewrite e0 in IHl0. inversion H; subst; clear H.
-      exists (x0 :: l0). split; constructor.
+      exists (h :: h' :: t'). split; constructor.
       destruct (IHl0 _ H2) as (g & IH1 & IH2).
         inversion IH2; subst; clear IH2.
-          exists (x0 :: l0). split.
+          exists (h :: h' :: t'). split.
             right. assumption.
             left.
           exists g. split; try right; assumption.
     rewrite e0 in IHl0. inversion H; subst; clear H.
-      exists [x0]. split; constructor.
+      exists [h]. split; constructor.
       destruct (IHl0 _ H2) as (g & IH1 & IH2).
         inversion IH2; subst; clear IH2.
-          exists l0. split.
+          exists (h' :: t'). split.
             assumption.
             right. left.
           exists g. split; repeat right; assumption.
 Qed.
 (* end hide *)
 
-Function splitBy
-  {A : Type} (p : A -> bool) (l : list A) : list (list A) :=
-match l with
-    | [] => []
-    | [h] => if p h then [] else [[h]]
-    | x :: (y :: t) as t' =>
-        if p y
-        then [x] :: splitBy p t
-        else 
-          match splitBy p t' with
-             | [] => if p x then [] else [[x]]
-             | l :: ls => if p x then l :: ls else (x :: l) :: ls
-         end
-end.
-
-Compute splitBy isZero [1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].
-
-Lemma splitBy_intersperse :
-  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    p x = true -> splitBy p (intersperse x l) = map (fun x => [x]) l.
+Lemma groupBy_elem_nil :
+  forall (A : Type) (p : A -> A -> bool) (l : list A),
+    ~ elem [] (groupBy p l).
 (* begin hide *)
 Proof.
-  intros. functional induction @intersperse A x l; cbn.
-    reflexivity.
-Abort.
+  intros. functional induction @groupBy A p l.
+    inversion 1.
+    intro. inversion H; subst. inversion H2.
+    gb.
+    inversion 1; subst. apply IHl0. rewrite e0. right. assumption.
+    inversion 1; subst. apply IHl0. rewrite e0. assumption.
+Qed.
 (* end hide *)
 
-(* TODO: unsplitBy *)
