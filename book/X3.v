@@ -5545,16 +5545,9 @@ Qed.
 Lemma count_intersperse :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
     count p (intersperse x l) =
-    if p x
-    then
-      match l with
-          | [] => 0
-          | [h] => if p h then 1 else 0
-          | _ :: _ :: _ => count p l + length l - 1
-      end
-    else count p l.
+    count p l + if p x then length l - 1 else 0.
 (* begin hide *)
-Proof. (* TODO *)
+Proof.
   intros. functional induction @intersperse A x l; cbn.
     destruct (p x); reflexivity.
     destruct (p x), (p h); reflexivity.

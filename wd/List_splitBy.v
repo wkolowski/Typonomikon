@@ -47,6 +47,7 @@ Proof.
     reflexivity.
     rewrite e0. reflexivity.
     rewrite e0. reflexivity.
+    destruct (p x), t; rewrite e0.
 Abort.
 
 Lemma splitBy_intersperse :
