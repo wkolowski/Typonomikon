@@ -155,7 +155,7 @@ Abort.
 
 (* TODO: init *)
 
-Lemma nth_intersperse :
+Lemma nth_intersperse_even :
   forall (A : Type) (x : A) (l : list A) (n : nat),
     n < length l ->
       nth (2 * n) (intersperse x l) = nth n l.
@@ -192,24 +192,12 @@ Proof.
         destruct (intersperse x t); inversion Heq.
       destruct t; cbn in *.
         inversion H. inversion H2.
-        destruct n as [| [| n']]; cbn.
-          2: reflexivity.
-          Focus 2. rewrite <- plus_n_Sm. cbn.
-Abort.
+        destruct n as [| n']; cbn.
+          Focus 2. rewrite <- plus_n_Sm
+Admitted.
 (* end hide *)
 
-Lemma intersperse_insert :
-  forall (A : Type) (x y : A) (l : list A) (n : nat),
-    intersperse y (insert l n x) =
-    if leb (length l) 0
-    then insert l n x
-    else insert
-          (insert (insert (intersperse y l) (2 * n) y)
-                  (2 * n) x) (2 * n) y.
-Proof.
-Abort.
-
-(* TODO: remove *)
+(* TODO: insert, remove *)
 
 Lemma take_intersperse :
   forall (A : Type) (x : A) (l : list A) (n : nat),
@@ -230,15 +218,43 @@ Proof.
 Abort.
 (* end hide *)
 
+(* TODO drop, zip, unzip, zipWith *)
+
+(*Lemma pmap_intersperse :
+  forall (A B : Type) (f : A -> option B) (x : A) (l : list A),
+    f x = None ->
+      pmap f (intersperse x l) = pmap f l.
+(* begin hide *)
+Proof.
+  
+
+Qed.
+(* end hide *)
+*)
+
 Lemma any_intersperse :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
     any p (intersperse x l) =
     orb (any p l) (andb (leb 2 (length l)) (p x)).
 (* begin hide *)
 Proof.
-  intros. rewrite intersperse_spec.
-  apply any_intersperse.
-Admitted.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (intersperse x t) eqn: Heq; cbn.
+      destruct t; cbn in *.
+        rewrite ?Bool.orb_false_r. reflexivity.
+        destruct (intersperse x t); inv Heq.
+      destruct t; cbn in *.
+        inv Heq.
+        destruct (intersperse x t) eqn: Heq'; inv Heq.
+          destruct t; cbn in *.
+            rewrite ?Bool.orb_false_r.
+              destruct (p h), (p a), (p x); reflexivity.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (any p t); reflexivity.
+          destruct t; cbn in *.
+            inv Heq'.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (any p t); reflexivity.
+Qed.
 (* end hide *)
 
 Lemma all_intersperse :
@@ -260,6 +276,23 @@ Proof.
         rewrite ?Bool.andb_true_r.
           destruct (p h), (p x), (p a); reflexivity.
         destruct (p h), (p x), (p a), (p a0), (all p t); reflexivity.
+Restart.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (intersperse x t) eqn: Heq; cbn.
+      destruct t; cbn in *.
+        rewrite ?Bool.andb_true_r. reflexivity.
+        destruct (intersperse x t); inv Heq.
+      destruct t; cbn in *.
+        inv Heq.
+        destruct (intersperse x t) eqn: Heq'; inv Heq.
+          destruct t; cbn in *.
+            rewrite ?Bool.andb_true_r.
+              destruct (p h), (p a), (p x); reflexivity.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (all p t); reflexivity.
+          destruct t; cbn in *.
+            inv Heq'.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (all p t); reflexivity.
 Qed.
 (* end hide *)
 
@@ -587,25 +620,58 @@ Qed.
 
 Lemma Exactly_intersperse :
   forall (A : Type) (P : A -> Prop) (x : A) (n : nat) (l : list A),
-    Exactly P n l -> P x -> Exactly P (n + (length l - 1)) (intersperse x l).
+    Exactly P n l -> P x ->
+      Exactly P (n + (length l - 1)) (intersperse x l).
 (* begin hide *)
 Proof.
-  intros. generalize dependent n.
-  functional induction @intersperse A x l; cbn in *; intros.
-    inversion H. cbn. constructor.
-    rewrite plus_0_r. assumption.
-    inversion H; subst; clear H; cbn in *.
+  induction 1; cbn; intros.
+    constructor.
+    destruct (intersperse x t) eqn: Heq.
       constructor.
         assumption.
-        rewrite <- plus_n_Sm. constructor.
-          assumption.
-          specialize (IHl0 n0). cbn in IHl0. rewrite <- minus_n_O in *.
-            apply IHl0. assumption.
-      constructor 3.
+        destruct t; cbn in *.
+          specialize (IHExactly H1). inv IHExactly. constructor.
+          destruct (intersperse x t); inv Heq.
+      constructor.
         assumption.
-        rewrite <- plus_n_Sm. constructor.
-          assumption.
-          specialize (IHl0 n). rewrite <- minus_n_O in *. apply IHl0, H5.
+        destruct t; cbn in *.
+          inv Heq.
+          rewrite <- plus_n_Sm. constructor.
+            assumption.
+            rewrite <- minus_n_O in IHExactly. apply IHExactly, H1.
+    destruct (intersperse x t) eqn: Heq.
+      destruct t; cbn in *.
+        constructor; [assumption | apply IHExactly, H1].
+        destruct (intersperse x t); inv Heq.
+      destruct t; cbn in *.
+        inv Heq.
+        destruct (intersperse x t); inv Heq.
+          constructor.
+            assumption.
+            rewrite <- plus_n_Sm. constructor.
+              assumption.
+              rewrite <- minus_n_O in *. apply IHExactly, H1.
+          constructor.
+            assumption.
+            rewrite <- plus_n_Sm. constructor.
+              assumption.
+              rewrite <- minus_n_O in IHExactly. apply IHExactly, H1.
+Restart.
+  intros. revert dependent n.
+  functional induction @intersperse A x l; cbn; intros.
+    inv H. constructor.
+    destruct t; cbn in *.
+      rewrite plus_0_r. assumption.
+      destruct (intersperse x t); inv e0.
+    destruct t; cbn in *.
+      inv e0.
+      rewrite <- plus_n_Sm. inv H.
+        cbn. do 2 try constructor; try assumption.
+          rewrite <- minus_n_O in IHl0.
+            destruct (intersperse x t); inv e0; apply IHl0; assumption.
+        apply Ex_skip; try constructor; try assumption.
+          rewrite <- minus_n_O in IHl0.
+            destruct (intersperse x t); inv e0; apply IHl0; assumption.
 Qed.
 (* end hide *)
 
@@ -615,13 +681,14 @@ Lemma Exactly_intersperse' :
       Exactly P n (intersperse x l).
 (* begin hide *)
 Proof.
-  intros. generalize dependent n.
-  functional induction @intersperse A x l; cbn in *; intros.
-    inversion H. cbn. constructor.
-    assumption.
-    inversion H; subst; clear H; cbn in *.
-      repeat constructor; try assumption. apply IHl0, H5.
-      repeat constructor; try assumption. apply IHl0, H5.
+  induction 1; cbn; intros.
+    constructor.
+    specialize (IHExactly H1). destruct (intersperse x t).
+      constructor; assumption.
+      do 2 try constructor; assumption.
+    specialize (IHExactly H1). destruct (intersperse x t).
+      inv IHExactly. repeat constructor; assumption.
+      do 2 try constructor; try assumption.
 Qed.
 (* end hide *)
 
