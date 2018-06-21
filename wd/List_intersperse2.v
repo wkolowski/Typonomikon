@@ -159,7 +159,6 @@ Lemma nth_intersperse_even :
   forall (A : Type) (x : A) (l : list A) (n : nat),
     n < length l ->
       nth (2 * n) (intersperse x l) = nth n l.
-(*      nth (2 * n - 1) (intersperse x l) = Some x.*)
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -180,28 +179,39 @@ Qed.
 
 Lemma nth_intersperse_odd :
   forall (A : Type) (x : A) (l : list A) (n : nat),
-    1 < length l -> n < length l ->
+    0 < n -> n < length l ->
       nth (2 * n - 1) (intersperse x l) = Some x.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    destruct n; inversion H.
+    destruct n; inversion H0.
     destruct (intersperse x t) eqn: Heq.
       destruct t; cbn in *.
-        inversion H. inversion H2.
+        destruct n; cbn in *.
+          inversion H.
+          destruct n; cbn in *.
+            inversion H0. inversion H2.
+            inversion H0. inversion H2.
         destruct (intersperse x t); inversion Heq.
       destruct t; cbn in *.
-        inversion H. inversion H2.
+        inversion Heq.
         destruct n as [| n']; cbn.
-          Focus 2. rewrite <- plus_n_Sm
-Admitted.
+          inversion H.
+          destruct n' as [| n'']; cbn.
+            reflexivity.
+            rewrite <- IHt with (S n'').
+              cbn. rewrite <- ?plus_n_Sm, <- minus_n_O, ?plus_0_r.
+                cbn. reflexivity.
+              apply le_n_S, le_0_n.
+              apply lt_S_n. assumption.
+Qed.
 (* end hide *)
 
 (* TODO: insert, remove *)
 
 Lemma take_intersperse :
   forall (A : Type) (x : A) (l : list A) (n : nat),
-    1 < n ->
+    1 < n -> 1 < length l ->
       take (2 * n) (intersperse x l) =
       intersperse x (take n l).
 (* begin hide *)
@@ -209,12 +219,11 @@ Proof.
   induction l as [| h t]; cbn; intros.
     rewrite ?take_nil. cbn. reflexivity.
     destruct (intersperse x t).
-      destruct n; cbn.
-        reflexivity.
-        destruct n; cbn.
+      destruct n as [| [| n']]; cbn.
+        1-2: reflexivity.
+        destruct t; cbn.
           reflexivity.
-          destruct t; cbn.
-            reflexivity.
+          destruct t; cbn in *.
 Abort.
 (* end hide *)
 

@@ -37,6 +37,14 @@ Lemma isEmpty_groupBy :
     isEmpty (groupBy p l) = isEmpty l.
 (* begin hide *)
 Proof.
+  destruct l; cbn.
+    reflexivity.
+    destruct (groupBy p l); cbn.
+      reflexivity.
+      destruct l0; cbn.
+        reflexivity.
+        destruct (p a a0); reflexivity.
+Restart.
   intros. functional induction @groupBy A p l; cbn; reflexivity.
 Qed.
 (* end hide *)

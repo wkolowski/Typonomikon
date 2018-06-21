@@ -4,10 +4,6 @@ Require Import CoqBookPL.book.X3.
 
 (*
 
-
-isEmpty (TODO)
-length
-
 iterate
 
 nth
@@ -17,23 +13,13 @@ tail i init
 take i drop
 takedrop
 
-partition
-
-takeWhile i dropWhile
-takedropWhile
-
 zip
 unzip
 zipWith
 unzipWith
-intersperse
 
-any
-all
-find i findLast
 removeFirst i removeLast
 findIndex
-count
 findIndices
 *)
 
@@ -47,6 +33,41 @@ match l with
             | Some x => x :: pmap f t
         end
 end.
+(* end hide *)
+
+Lemma isEmpty_pmap_false :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    isEmpty (pmap f l) = false -> isEmpty l = false.
+(* begin hide *)
+Proof.
+  destruct l; cbn; intros.
+    assumption.
+    reflexivity.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_pmap_true :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    isEmpty l = true -> isEmpty (pmap f l) = true.
+(* begin hide *)
+Proof.
+  destruct l; cbn; intros.
+    reflexivity.
+    inversion H.
+Qed.
+(* end hide *)
+
+Lemma length_pmap :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    length (pmap f l) <= length l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    apply le_0_n.
+    destruct (f h); cbn.
+      apply le_n_S. assumption.
+      apply le_S. assumption.
+Qed.
 (* end hide *)
 
 Lemma pmap_app :
@@ -145,23 +166,6 @@ Qed.
 
 (* TODO: tail, last, init *)
 
-(* TODO *) Lemma pmap_filter :
-  forall (A B : Type) (p : B -> bool) (f : A -> option B) (l : list A),
-    filter p (pmap f l) =
-    pmap f
-      (filter
-        (fun x : A => match f x with | Some b => p b | _ => false end)
-        l).
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h) eqn: Hfh; cbn; rewrite ?IHt.
-      destruct (p b); cbn; rewrite ?Hfh; reflexivity.
-      reflexivity.
-Qed.
-(* end hide *)
-
 Lemma pmap_zip :
   forall
     (A B C : Type)
@@ -193,22 +197,18 @@ Admitted.
 
 Lemma pmap_intersperse :
   forall (A B : Type) (f : A -> option B) (x : A) (l : list A),
-    pmap f (intersperse x l) =
-    match f x with
+    f x = None -> pmap f (intersperse x l) = pmap f l.
+(*    match f x with
         | None => pmap f l
         | Some y => intersperse y (pmap f l)
-    end.
+    end.*)
 (* begin hide *)
 Proof.
   intros. functional induction @intersperse A x l; cbn.
-    destruct (f x); reflexivity.
-    destruct (f h), (f x); reflexivity.
-    cbn in *. rewrite IHl0. destruct (f h), (f x); try reflexivity.
-      destruct (f _x).
-        reflexivity.
-        cbn.
-      cbn in IHl0.
-Admitted.
+    reflexivity.
+    destruct (f h); reflexivity.
+    cbn in *. rewrite IHl0. destruct (f h); rewrite H; reflexivity.
+Qed.
 (* end hide *)
 
 Lemma any_pmap :
@@ -247,24 +247,44 @@ Proof.
 Qed.
 (* end hide *)
 
-(*Lemma find_pmap :
+Lemma find_pmap :
   forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
     find p (pmap f l) =
-    match find
-      (fun x : A =>
-      match f x with
-          | Some b => p b
-          | None => false
-      end)
-      l
+    let oa :=
+      find (fun x : A => match f x with Some b => p b | _ => false end) l
+    in
+    match oa with
+        | Some a => f a
+        | None => None
+    end.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+    destruct (f h) eqn: Heq; cbn.
+      destruct (p b); cbn.
+        symmetry. assumption.
+        destruct (find _ t); cbn in *; assumption.
+      destruct (find _ t); cbn in *; assumption.
 Qed.
 (* end hide *)
-*)
+
+Lemma findLast_pmap :
+  forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
+    findLast p (pmap f l) =
+    let oa :=
+      findLast
+        (fun x : A => match f x with Some b => p b | _ => false end) l
+    in
+    match oa with
+        | Some a => f a
+        | None => None
+    end.
+(* begin hide *)
+Proof.
+  intros. rewrite <- ?find_rev, <- pmap_rev, find_pmap. reflexivity.
+Qed.
+(* end hide *)
 
 Lemma count_pmap :
   forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
@@ -284,17 +304,63 @@ Proof.
 Qed.
 (* end hide *)
 
-(*Lemma findIndices_pmap :
-  forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
+Definition aux {A B : Type} (p : B -> bool) (f : A -> option B)
+  (dflt : bool) (x : A) : bool :=
+match f x with
+    | Some b => p b
+    | None => dflt
+end.
+
+(* TODO *) Lemma pmap_filter :
+  forall (A B : Type) (p : B -> bool) (f : A -> option B) (l : list A),
+    filter p (pmap f l) =
+    pmap f (filter (aux p f false) l).
+(*      (filter
+        (fun x : A => match f x with | Some b => p b | _ => false end)
+        l).*)
+(* begin hide *)
+Proof.
+unfold aux.  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h) eqn: Hfh; cbn; rewrite ?IHt.
+      destruct (p b); cbn; rewrite ?Hfh; reflexivity.
+      reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pmap_takeWhile :
+  forall (A B : Type) (p : B -> bool) (f : A -> option B) (l : list A),
+    takeWhile p (pmap f l) =
+    pmap f
+      (takeWhile
+        (fun x : A => match f x with | Some b => p b | _ => true end)
+        l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+    destruct (f h) eqn: Hfh; cbn; rewrite ?Hfh, ?IHt.
+      destruct (p b); cbn; rewrite ?Hfh; reflexivity.
+      reflexivity.
 Qed.
 (* end hide *)
-*)
+
+Lemma pmap_dropWhile :
+  forall (A B : Type) (p : B -> bool) (f : A -> option B) (l : list A),
+    dropWhile p (pmap f l) =
+    pmap f
+      (dropWhile
+        (fun x : A => match f x with | Some b => p b | _ => true end)
+        l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h) eqn: Hfh; cbn; rewrite ?Hfh, ?IHt.
+      destruct (p b); cbn; rewrite ?Hfh; reflexivity.
+      reflexivity.
+Qed.
+(* end hide *)
 
 Lemma elem_pmap :
   forall (A B : Type) (f : A -> option B) (l : list A) (a : A) (b : B),
@@ -361,50 +427,3 @@ Proof.
       rewrite pmap_app. cbn. rewrite Heq, app_nil_r. assumption.
 Qed.
 (* end hide *)
-
-(*
-Lemma pmap :
-  forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma pmap :
-  forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma pmap :
-  forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma pmap :
-  forall (A B : Type) (f : A -> option B) (l : list A),
-    pmap f l =.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct (f h); cbn; rewrite ?IHt; reflexivity.
-Qed.
-(* end hide *)
-
-*)
