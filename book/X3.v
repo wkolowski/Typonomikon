@@ -1898,7 +1898,7 @@ Proof.
   induction l as [| h t]; cbn.
     destruct n; inversion 1.
     destruct n as [| n']; cbn; intros.
-      reflexivity. Require Import Arith.
+      reflexivity.
       apply lt_S_n in H. rewrite (IHt _ H). destruct (remove n' t).
         destruct p. all: reflexivity.
 Qed.
@@ -3206,136 +3206,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** [pmap] *)
-
-(** TODO: napisz coś *)
-
-(** * Bardziej skomplikowane funkcje *)
-
-(** TODO: napisz wstęp *)
-
-(** ** [intersperse] *)
-
-(** Napisz funkcję [intersperse], który wstawia element [x : A] między
-    każde dwa elementy z listy [l : list A]. *)
-
-(* begin hide *)
-Fixpoint intersperse {A : Type} (x : A) (l : list A) : list A :=
-match l with
-    | [] => []
-    | [h] => [h]
-    | h :: t => h :: x :: intersperse x t
-end.
-(* end hide *)
-
-Lemma isEmpty_intersperse :
-  forall (A : Type) (x : A) (l : list A),
-    isEmpty (intersperse x l) = isEmpty l.
-(* begin hide *)
-Proof.
-  destruct l as [| h [| h' t]]; cbn; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma length_intersperse :
-  forall (A : Type) (x : A) (l : list A),
-    length (intersperse x l) = 2 * length l - 1.
-(* begin hide *)
-Proof.
-  induction l as [| h [| h' t]]; cbn in *; trivial.
-  rewrite IHl. rewrite plus_0_r, <- minus_n_O, plus_n_Sm. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma intersperse_snoc :
-  forall (A : Type) (x y : A) (l : list A),
-    intersperse x (snoc y l) =
-    if isEmpty l then [y] else snoc y (snoc x (intersperse x l)).
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-    destruct (snoc y t) as [| h' t'] eqn: Heq.
-      apply (f_equal isEmpty) in Heq. cbn in Heq.
-        rewrite isEmpty_snoc in Heq. inversion Heq.
-      destruct t; cbn in *.
-        inversion Heq; subst. reflexivity.
-        rewrite IHt. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma intersperse_app :
-  forall (A : Type) (x : A) (l1 l2 : list A),
-    intersperse x (l1 ++ l2) =
-    match l1, l2 with
-        | [], _ => intersperse x l2
-        | _, [] => intersperse x l1
-        | h1 :: t1, h2 :: t2 =>
-            intersperse x l1 ++ x :: intersperse x l2
-    end.
-(* begin hide *)
-Proof.
-  Functional Scheme intersperse_ind := Induction for intersperse Sort Prop.
-  intros. functional induction @intersperse A x l1; cbn in *.
-    reflexivity.
-    reflexivity.
-    rewrite IHl. destruct l2; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma intersperse_rev :
-  forall (A : Type) (x : A) (l : list A),
-    intersperse x (rev l) = rev (intersperse x l).
-(* begin hide *)
-Proof.
-  induction l as [| h [| h' t]]; cbn in *; trivial.
-  rewrite <- IHl, <- !app_assoc, !intersperse_app. cbn.
-  destruct (rev t); cbn.
-    reflexivity.
-    rewrite <- app_assoc. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma intersperse_map :
-  forall (A B : Type) (f : A -> B) (l : list A) (a : A) (b : B),
-    f a = b -> intersperse b (map f l) = map f (intersperse a l).
-(* begin hide *)
-Proof.
-  induction l as [| h [| h' t]]; cbn; trivial; intros.
-  rewrite H. cbn in *. rewrite (IHl _ _ H). trivial.
-Qed.
-(* end hide *)
-
-Lemma intersperse_iterate :
-  forall (A : Type) (f : A -> A) (n : nat) (x y : A),
-    intersperse y (iterate f n x) =
-    (fix g (n : nat) (x : A) : list A :=
-    match n with
-        | 0 => []
-        | 1 => [x]
-        | S (S n') => x :: y :: (f x) :: g n' (f (f x))
-    end) n x.
-(* begin hide *)
-Proof.
-  fix 3. destruct n as [| [| n']]; cbn; intros.
-    1-2: reflexivity.
-    rewrite <- (intersperse_iterate A f n' (f (f x)) y).
-      destruct (iterate f n' (f (f x))); cbn.
-        reflexivity.
-Abort.
-(* end hide *)
-
-Lemma head_intersperse :
-  forall (A : Type) (x : A) (l : list A),
-    head (intersperse x l) = head l.
-(* begin hide *)
-Proof.
-  destruct l as [| h1 [| h2 t]]; reflexivity.
-Qed.
-(* end hide *)
-
-(** ** [groupBy] *)
-
 (** * Funkcje z predykatem boolowskim *)
 
 (** ** [any] *)
@@ -3570,23 +3440,6 @@ Proof.
       destruct (p h) ; cbn in *.
         inversion H.
         apply IHn'. assumption.
-Qed.
-(* end hide *)
-
-Lemma any_intersperse :
-  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    any p (intersperse x l) =
-    orb (any p l) (andb (leb 2 (length l)) (p x)).
-(* begin hide *)
-Proof.
-  intros. functional induction @intersperse A x l; cbn in *.
-    reflexivity.
-    rewrite ?Bool.orb_false_r. reflexivity.
-    destruct (p h), (p x), (p _x); cbn in *.
-      all: try reflexivity.
-      rewrite Bool.orb_true_r. reflexivity.
-      assumption.
-      rewrite IHl0. destruct _x0; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -3883,20 +3736,6 @@ Proof.
       destruct (p h) ; cbn in *.
         apply IHn'. assumption.
         inversion H.
-Qed.
-(* end hide *)
-
-Lemma all_intersperse :
-  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    all p (intersperse x l) =
-    andb (all p l) (orb (leb (length l) 1) (p x)).
-(* begin hide *)
-Proof.
-  intros. functional induction @intersperse A x l; cbn in *.
-    reflexivity.
-    rewrite ?Bool.andb_true_r. reflexivity.
-    destruct (p h), (p x) eqn: Hpx, (p _x) eqn: Hp_x, _x0; cbn in *;
-    rewrite ?Hpx, ?Hp_x in *; cbn; trivial.
 Qed.
 (* end hide *)
 
@@ -5269,112 +5108,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma findIndex_intersperse_true :
-  forall (A : Type) (p : A -> bool) (x : A) (l : list A) (n : nat),
-    p x = true -> findIndex p (intersperse x l) = Some n -> n <= 1.
-(* begin hide *)
-Proof.
-  intros. functional induction @intersperse A x l; cbn in *.
-    inversion H0.
-    destruct (p h); inversion H0. apply le_0_n.
-    destruct (p h).
-      inversion H0. apply le_0_n.
-      rewrite H in *. inversion H0. apply le_n.
-Qed.
-(* end hide *)
-
-Lemma findIndex_intersperse_true' :
-  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    p x = true -> findIndex p (intersperse x l) =
-    match l with
-        | [] => None
-        | [h] => if p h then Some 0 else None
-        | h :: t => if p h then Some 0 else Some 1
-    end.
-(* begin hide *)
-Proof.
-  intros. functional induction @intersperse A x l; cbn in *.
-    reflexivity.
-    destruct (p h); reflexivity.
-    destruct (p h).
-      reflexivity.
-      rewrite H. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma findIndex_intersperse_false :
-  forall (A : Type) (p : A -> bool) (x : A) (l : list A) (n : nat),
-    p x = false -> findIndex p l = Some n ->
-      findIndex p (intersperse x l) = Some (2 * n).
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    inversion H0.
-    destruct t as [| h' t']; cbn in *.
-      destruct (p h); inversion H0; reflexivity.
-      destruct (p h).
-        inversion H0; reflexivity.
-        destruct (p h'); rewrite H.
-Restart.
-  intros A p x l. functional induction @intersperse A x l; intros; cbn in *.
-    inversion H0.
-    destruct (p h); inversion H0. reflexivity.
-    destruct (p h) eqn: Hph; rewrite ?H.
-      inversion H0. reflexivity.
-      destruct (p _x) eqn: H_x.
-        rewrite (IHl0 _ H eq_refl). inversion H0. reflexivity.
-        destruct (findIndex p _x0) eqn: Heq.
-          rewrite (IHl0 _ H eq_refl). inversion H0. f_equal. omega.
-          inversion H0.
-Qed.
-(* end hide *)
-
-Lemma findIndex_intersperse_false' :
-  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    p x = false -> findIndex p l = None ->
-      findIndex p (intersperse x l) = None.
-(* begin hide *)
-Proof.
-  intros. functional induction @intersperse A x l; cbn in *.
-    reflexivity.
-    destruct (p h); assumption.
-    destruct (p h).
-      assumption.
-      rewrite H, IHl0.
-        reflexivity.
-        destruct (p _x).
-          inversion H0.
-          destruct (findIndex p _x0).
-            inversion H0.
-            reflexivity.
-Qed.
-(* end hide *)
-
-Lemma findIndex_intersperse :
-  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    findIndex p (intersperse x l) =
-    if p x
-    then
-      match l with
-          | [] => None
-          | [h] => if p h then Some 0 else None
-          | h :: t => if p h then Some 0 else Some 1
-      end
-    else
-      match findIndex p l with
-          | None => None
-          | Some n => Some (2 * n)
-      end.
-(* begin hide *)
-Proof.
-  intros. destruct (p x) eqn: H.
-    apply findIndex_intersperse_true'. assumption.
-    destruct (findIndex p l) eqn: H'.
-      apply findIndex_intersperse_false; assumption.
-      apply findIndex_intersperse_false'; assumption.
-Qed.
-(* end hide *)
-
 (** ** [count] *)
 
 (** Napisz funkcję [count], która liczy, ile jest na liście [l] elementów
@@ -5539,20 +5272,6 @@ Proof.
     destruct l as [| h t]; cbn.
       apply le_0_n.
       apply IHn'.
-Qed.
-(* end hide *)
-
-Lemma count_intersperse :
-  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    count p (intersperse x l) =
-    count p l + if p x then length l - 1 else 0.
-(* begin hide *)
-Proof.
-  intros. functional induction @intersperse A x l; cbn.
-    destruct (p x); reflexivity.
-    destruct (p x), (p h); reflexivity.
-    cbn in *. rewrite IHl0.
-      destruct (p x), (p h), (p _x), _x0; cbn in *; omega.
 Qed.
 (* end hide *)
 
@@ -5961,16 +5680,6 @@ Proof.
   exists (fun a : bool => if a then true else false). exists negb.
   exists [false; true], [false; true].
   cbn. inversion 1.
-Qed.
-(* end hide *)
-
-Lemma filter_intersperse_false :
-  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    p x = false -> filter p (intersperse x l) = filter p l.
-(* begin hide *)
-Proof.
-  induction l as [| h [| h' t]]; cbn in *; intros; trivial.
-    rewrite H, (IHl H). reflexivity.
 Qed.
 (* end hide *)
 
@@ -6875,6 +6584,724 @@ Proof.
 Qed.
 (* end hide *)
 
+(** * Sekcja mocno ad hoc *)
+
+(** ** [pmap] *)
+
+(** TODO: napisz coś *)
+
+(* TODO: iterate, nth, last, tail i init, take i drop, takedrop, zip,
+         unzip, zipWith, unzipWith, removeFirst i removeLast, findIndex,
+         findIndices
+*)
+
+(* begin hide *)
+Fixpoint pmap {A B : Type} (f : A -> option B) (l : list A) : list B :=
+match l with
+    | [] => []
+    | h :: t =>
+        match f h with
+            | None => pmap f t
+            | Some x => x :: pmap f t
+        end
+end.
+(* end hide *)
+
+Lemma isEmpty_pmap_false :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    isEmpty (pmap f l) = false -> isEmpty l = false.
+(* begin hide *)
+Proof.
+  destruct l; cbn; intros.
+    assumption.
+    reflexivity.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_pmap_true :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    isEmpty l = true -> isEmpty (pmap f l) = true.
+(* begin hide *)
+Proof.
+  destruct l; cbn; intros.
+    reflexivity.
+    inversion H.
+Qed.
+(* end hide *)
+
+Lemma length_pmap :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    length (pmap f l) <= length l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    apply le_0_n.
+    destruct (f h); cbn.
+      apply le_n_S. assumption.
+      apply le_S. assumption.
+Qed.
+(* end hide *)
+
+Lemma pmap_app :
+  forall (A B : Type) (f : A -> option B) (l1 l2 : list A),
+    pmap f (l1 ++ l2) = pmap f l1 ++ pmap f l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pmap_rev :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    pmap f (rev l) = rev (pmap f l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite pmap_app. cbn. destruct (f h); cbn; rewrite ?IHt, ?app_nil_r.
+      all: reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pmap_map :
+  forall (A B C : Type) (f : A -> B) (g : B -> option C) (l : list A),
+    pmap g (map f l) = pmap (fun x : A => g (f x)) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (g (f h)); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pmap_join :
+  forall (A B : Type) (f : A -> option B) (l : list (list A)),
+    pmap f (join l) = join (map (pmap f) l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite pmap_app. rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pmap_bind :
+  forall (A B C : Type) (f : A -> list B) (g : B -> option C) (l : list A),
+    pmap g (bind f l) = bind (fun x : A => pmap g (f x)) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite pmap_app. rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pmap_replicate :
+  forall (A B : Type) (f : A -> option B) (n : nat) (x : A),
+    pmap f (replicate n x) =
+    match f x with
+        | None => []
+        | Some y => replicate n y
+    end.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    destruct (f x); reflexivity.
+    rewrite IHn'. destruct (f x); reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: iterate *)
+
+Definition isSome {A : Type} (x : option A) : bool :=
+match x with
+    | None => false
+    | _ => true
+end.
+
+Lemma head_pmap :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    head (pmap f l) =
+    match find isSome (map f l) with
+        | None => None
+        | Some x => x
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: tail, last, init *)
+
+Lemma pmap_zip :
+  forall
+    (A B C : Type)
+    (fa : A -> option C) (fb : B -> option C)
+    (la : list A) (lb : list B),
+      pmap
+        (fun '(a, b) =>
+        match fa a, fb b with
+            | Some a', Some b' => Some (a', b')
+            | _, _ => None
+        end)
+        (zip la lb) =
+      zip (pmap fa la) (pmap fb lb).
+(* begin hide *)
+Proof.
+  induction la as [| ha ta]; cbn; intros.
+    reflexivity.
+    destruct lb as [| hb tb]; cbn.
+      destruct (fa ha); cbn.
+        reflexivity.
+        rewrite zip_nil_r. reflexivity.
+      destruct (fa ha) eqn: Ha; cbn.
+        destruct (fb hb) eqn: Hb; cbn.
+          rewrite IHta. reflexivity.
+          rewrite IHta. destruct (pmap fb tb); cbn.
+            rewrite zip_nil_r. reflexivity.
+            destruct ta; cbn.
+Admitted.
+(* end hide *)
+
+Lemma any_pmap :
+  forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
+    any p (pmap f l) =
+    any
+      (fun x : A =>
+      match f x with
+          | Some b => p b
+          | None => false
+      end)
+      l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma all_pmap :
+  forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
+    all p (pmap f l) =
+    all
+      (fun x : A =>
+      match f x with
+          | Some b => p b
+          | None => true
+      end)
+      l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma find_pmap :
+  forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
+    find p (pmap f l) =
+    let oa :=
+      find (fun x : A => match f x with Some b => p b | _ => false end) l
+    in
+    match oa with
+        | Some a => f a
+        | None => None
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h) eqn: Heq; cbn.
+      destruct (p b); cbn.
+        symmetry. assumption.
+        destruct (find _ t); cbn in *; assumption.
+      destruct (find _ t); cbn in *; assumption.
+Qed.
+(* end hide *)
+
+Lemma findLast_pmap :
+  forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
+    findLast p (pmap f l) =
+    let oa :=
+      findLast
+        (fun x : A => match f x with Some b => p b | _ => false end) l
+    in
+    match oa with
+        | Some a => f a
+        | None => None
+    end.
+(* begin hide *)
+Proof.
+  intros. rewrite <- ?find_rev, <- pmap_rev, find_pmap. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma count_pmap :
+  forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
+    count p (pmap f l) =
+    count
+      (fun x : A =>
+      match f x with
+          | Some b => p b
+          | None => false
+      end)
+      l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Definition aux {A B : Type} (p : B -> bool) (f : A -> option B)
+  (dflt : bool) (x : A) : bool :=
+match f x with
+    | Some b => p b
+    | None => dflt
+end.
+
+(* TODO *) Lemma pmap_filter :
+  forall (A B : Type) (p : B -> bool) (f : A -> option B) (l : list A),
+    filter p (pmap f l) =
+    pmap f (filter (aux p f false) l).
+(*      (filter
+        (fun x : A => match f x with | Some b => p b | _ => false end)
+        l).*)
+(* begin hide *)
+Proof.
+unfold aux.  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h) eqn: Hfh; cbn; rewrite ?IHt.
+      destruct (p b); cbn; rewrite ?Hfh; reflexivity.
+      reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pmap_takeWhile :
+  forall (A B : Type) (p : B -> bool) (f : A -> option B) (l : list A),
+    takeWhile p (pmap f l) =
+    pmap f
+      (takeWhile
+        (fun x : A => match f x with | Some b => p b | _ => true end)
+        l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h) eqn: Hfh; cbn; rewrite ?Hfh, ?IHt.
+      destruct (p b); cbn; rewrite ?Hfh; reflexivity.
+      reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pmap_dropWhile :
+  forall (A B : Type) (p : B -> bool) (f : A -> option B) (l : list A),
+    dropWhile p (pmap f l) =
+    pmap f
+      (dropWhile
+        (fun x : A => match f x with | Some b => p b | _ => true end)
+        l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (f h) eqn: Hfh; cbn; rewrite ?Hfh, ?IHt.
+      destruct (p b); cbn; rewrite ?Hfh; reflexivity.
+      reflexivity.
+Qed.
+(* end hide *)
+
+
+(** * Bardziej skomplikowane funkcje *)
+
+(** TODO: napisz wstęp *)
+
+(** ** [intersperse] *)
+
+(** Napisz funkcję [intersperse], który wstawia element [x : A] między
+    każde dwa elementy z listy [l : list A]. *)
+
+(* begin hide *)
+Function intersperse {A : Type} (x : A) (l : list A) : list A :=
+match l with
+    | [] => []
+    | h :: t =>
+        match intersperse x t with
+            | [] => [h]
+            | h' :: t' => h :: x :: h' :: t'
+        end
+end.
+(* end hide *)
+
+Lemma isEmpty_intersperse :
+  forall (A : Type) (x : A) (l : list A),
+    isEmpty (intersperse x l) = isEmpty l.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn.
+    reflexivity.
+    destruct (intersperse x t); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma length_intersperse :
+  forall (A : Type) (x : A) (l : list A),
+    length (intersperse x l) = 2 * length l - 1.
+(* begin hide *)
+Proof.
+  induction l as [| h [| h' t]]; cbn in *.
+    1-2: reflexivity.
+    destruct (intersperse x t); cbn in *.
+      rewrite <- minus_n_O, plus_0_r, <- ?plus_n_Sm in *.
+        destruct t; inversion IHl. cbn. reflexivity.
+      rewrite IHl. rewrite <- ?plus_n_Sm. rewrite <- minus_n_O.
+        reflexivity.
+Qed.
+(* end hide *)
+
+Lemma intersperse_snoc :
+  forall (A : Type) (x y : A) (l : list A),
+    intersperse x (snoc y l) =
+    if isEmpty l then [y] else snoc y (snoc x (intersperse x l)).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite IHt. destruct t; cbn.
+      reflexivity.
+      destruct (intersperse x t); cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma intersperse_app :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    intersperse x (l1 ++ l2) =
+    match l1, l2 with
+        | [], _ => intersperse x l2
+        | _, [] => intersperse x l1
+        | h1 :: t1, h2 :: t2 =>
+            intersperse x l1 ++ x :: intersperse x l2
+    end.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. destruct t, l2; cbn.
+      1,3: reflexivity.
+      destruct (intersperse x l2); reflexivity.
+      destruct (intersperse x t); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma intersperse_rev :
+  forall (A : Type) (x : A) (l : list A),
+    intersperse x (rev l) = rev (intersperse x l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite intersperse_app. destruct (rev t) eqn: Heq.
+      apply (f_equal rev) in Heq. rewrite rev_inv in Heq.
+        cbn in Heq. rewrite Heq. cbn. reflexivity.
+      rewrite IHt. destruct (intersperse x t); cbn.
+        cbn in IHt. destruct (intersperse x l); inversion IHt.
+        rewrite <- ?app_assoc. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma intersperse_map :
+  forall (A B : Type) (f : A -> B) (l : list A) (a : A) (b : B),
+    f a = b -> intersperse b (map f l) = map f (intersperse a l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite (IHt _ _ H). destruct (intersperse a t); cbn.
+      reflexivity.
+      rewrite H. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_intersperse :
+  forall (A : Type) (x : A) (l : list A),
+    head (intersperse x l) = head l.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn.
+    reflexivity.
+    destruct (intersperse x t); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma last_intersperse :
+  forall (A : Type) (x : A) (l : list A),
+    last (intersperse x l) = last l.
+(* begin hide *)
+Proof.
+  intros. pose (H := intersperse_rev _ x (rev l)).
+  rewrite rev_inv in H.
+  rewrite H, last_rev, head_intersperse, head_rev.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma tail_intersperse :
+  forall (A : Type) (x : A) (l : list A),
+    tail (intersperse x l) =
+    match tail l with
+        | None => None
+        | Some [] => Some []
+        | Some (h :: t) => Some (x :: intersperse x t)
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct t; cbn in *.
+      reflexivity.
+      destruct (intersperse x t).
+Abort.
+(* end hide *)
+
+(* TODO: init *)
+
+Lemma nth_intersperse_even :
+  forall (A : Type) (x : A) (l : list A) (n : nat),
+    n < length l ->
+      nth (2 * n) (intersperse x l) = nth n l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    destruct n; inversion H.
+    destruct n as [| n']; cbn.
+      destruct (intersperse x t); reflexivity.
+      destruct (intersperse x t).
+        rewrite nth_nil. destruct t; cbn in *.
+          rewrite nth_nil. reflexivity.
+          apply lt_S_n in H. specialize (IHt _ H).
+            rewrite nth_nil in IHt. destruct n'; cbn in *; inversion IHt.
+              reflexivity.
+        rewrite <- plus_n_Sm. cbn. rewrite <- IHt.
+          cbn. reflexivity.
+          apply lt_S_n. assumption.
+Qed.
+(* end hide *)
+
+Lemma nth_intersperse_odd :
+  forall (A : Type) (x : A) (l : list A) (n : nat),
+    0 < n -> n < length l ->
+      nth (2 * n - 1) (intersperse x l) = Some x.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    destruct n; inversion H0.
+    destruct (intersperse x t) eqn: Heq.
+      destruct t; cbn in *.
+        destruct n; cbn in *.
+          inversion H.
+          destruct n; cbn in *.
+            inversion H0. inversion H2.
+            inversion H0. inversion H2.
+        destruct (intersperse x t); inversion Heq.
+      destruct t; cbn in *.
+        inversion Heq.
+        destruct n as [| n']; cbn.
+          inversion H.
+          destruct n' as [| n'']; cbn.
+            reflexivity.
+            rewrite <- IHt with (S n'').
+              cbn. rewrite <- ?plus_n_Sm, <- minus_n_O, ?plus_0_r.
+                cbn. reflexivity.
+              apply le_n_S, le_0_n.
+              apply lt_S_n. assumption.
+Qed.
+(* end hide *)
+
+(* TODO: insert, remove *)
+
+Lemma take_intersperse :
+  forall (A : Type) (x : A) (l : list A) (n : nat),
+    1 < n -> 1 < length l ->
+      take (2 * n) (intersperse x l) =
+      intersperse x (take n l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    rewrite ?take_nil. cbn. reflexivity.
+    destruct (intersperse x t).
+      destruct n as [| [| n']]; cbn.
+        1-2: reflexivity.
+        destruct t; cbn.
+          reflexivity.
+          destruct t; cbn in *.
+Abort.
+(* end hide *)
+
+(* TODO drop, zip, unzip, zipWith *)
+
+Lemma any_intersperse :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    any p (intersperse x l) =
+    orb (any p l) (andb (leb 2 (length l)) (p x)).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (intersperse x t) eqn: Heq; cbn.
+      destruct t; cbn in *.
+        rewrite ?Bool.orb_false_r. reflexivity.
+        destruct (intersperse x t); inv Heq.
+      destruct t; cbn in *.
+        inv Heq.
+        destruct (intersperse x t) eqn: Heq'; inv Heq.
+          destruct t; cbn in *.
+            rewrite ?Bool.orb_false_r.
+              destruct (p h), (p a), (p x); reflexivity.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (any p t); reflexivity.
+          destruct t; cbn in *.
+            inv Heq'.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (any p t); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma all_intersperse :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    all p (intersperse x l) =
+    andb (all p l) (orb (leb (length l) 1) (p x)).
+(* begin hide *)
+Proof.
+  intros. functional induction @intersperse A x l; cbn in *.
+    reflexivity.
+    destruct t; cbn in *.
+      rewrite ?Bool.andb_true_r. reflexivity.
+      rewrite e0 in *. cbn in *. destruct t; cbn in *.
+        inversion e0.
+        rewrite (IHl0 p). rewrite Bool.andb_assoc. reflexivity.
+    rewrite e0 in *. cbn in *. rewrite IHl0. destruct t; cbn.
+      inversion e0.
+      destruct t; cbn.
+        rewrite ?Bool.andb_true_r.
+          destruct (p h), (p x), (p a); reflexivity.
+        destruct (p h), (p x), (p a), (p a0), (all p t); reflexivity.
+Restart.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (intersperse x t) eqn: Heq; cbn.
+      destruct t; cbn in *.
+        rewrite ?Bool.andb_true_r. reflexivity.
+        destruct (intersperse x t); inv Heq.
+      destruct t; cbn in *.
+        inv Heq.
+        destruct (intersperse x t) eqn: Heq'; inv Heq.
+          destruct t; cbn in *.
+            rewrite ?Bool.andb_true_r.
+              destruct (p h), (p a), (p x); reflexivity.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (all p t); reflexivity.
+          destruct t; cbn in *.
+            inv Heq'.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (all p t); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma findIndex_intersperse :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    findIndex p (intersperse x l) =
+    if p x
+    then
+      match l with
+          | [] => None
+          | [h] => if p h then Some 0 else None
+          | h :: t => if p h then Some 0 else Some 1
+      end
+    else
+      match findIndex p l with
+          | None => None
+          | Some n => Some (2 * n)
+      end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    destruct (p x); reflexivity.
+    destruct (intersperse x t) eqn: Heq; cbn in *.
+      destruct t; cbn in *.
+        destruct (p h), (p x); reflexivity.
+        destruct (intersperse x t); inversion Heq.
+      destruct (p h), (p x), (p a) eqn: Hpa, t;
+      cbn in *; try reflexivity; try inversion Heq.
+        destruct (p a0); cbn.
+          reflexivity.
+          destruct (findIndex p t); inversion IHt.
+        destruct (findIndex p l); cbn in *.
+          destruct (intersperse x t); inversion Heq; subst.
+            rewrite Hpa in *. destruct (findIndex p t).
+              inversion IHt; cbn. f_equal. omega.
+              inversion IHt.
+            rewrite Hpa in *.
+              destruct (findIndex p t); inversion IHt.
+                f_equal. omega.
+          destruct (intersperse x t); inversion Heq; subst;
+          rewrite Hpa in *.
+            destruct (findIndex p t); inversion IHt. reflexivity.
+            destruct (findIndex p t); inversion IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma count_intersperse :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    count p (intersperse x l) =
+    count p l + if p x then length l - 1 else 0.
+(* begin hide *)
+Proof.
+  intros. functional induction @intersperse A x l; cbn.
+    destruct (p x); reflexivity.
+    destruct (p h), (p x), t; cbn; try reflexivity.
+      admit.
+      admit.
+      admit.
+      admit.
+    rewrite e0 in IHl0. cbn in *. specialize (IHl0 p).
+    destruct (p h), (p x), (p h') eqn: Hph';
+    cbn in *; rewrite IHl0; try omega.
+Abort.
+(* end hide *)
+
+Lemma filter_intersperse_false :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    p x = false -> filter p (intersperse x l) = filter p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite <- (IHt H). destruct (intersperse x t); cbn in *.
+      destruct (p h); reflexivity.
+      destruct (p h), (p x), (p a); congruence.
+Qed.
+(* end hide *)
+
+Lemma pmap_intersperse :
+  forall (A B : Type) (f : A -> option B) (x : A) (l : list A),
+    f x = None -> pmap f (intersperse x l) = pmap f l.
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (intersperse x t); cbn.
+      rewrite <- (IHt H). cbn. reflexivity.
+      rewrite H, <- (IHt H). destruct (f h); cbn; destruct (f a); reflexivity.
+Qed.
+(* end hide *)
+
+(** ** [groupBy] *)
+
+(** TODO *)
+
 (** * Proste predykaty *)
 
 (** ** [elem] *)
@@ -7333,31 +7760,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem_intersperse :
-  forall (A : Type) (x y : A) (l : list A),
-    elem x (intersperse y l) <-> elem x l \/ (x = y /\ 2 <= length l).
-(* begin hide *)
-Proof.
-  split.
-    functional induction @intersperse A y l; cbn in *.
-      inversion 1; subst.
-      inversion 1; subst.
-        left. assumption.
-        inversion H2.
-      intro. rewrite !elem_cons' in *. firstorder.
-    intro. decompose [and or] H; clear H.
-      induction H0; cbn.
-        destruct l; left.
-        destruct t.
-          inversion H0.
-          do 2 right. assumption.
-      subst. destruct l as [| h1 [| h2 t]]; cbn in *.
-        inversion H2.
-        inversion H2. inversion H0.
-        right; left.
-Qed.
-(* end hide *)
-
 Lemma elem_findIndices :
   forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     elem n (findIndices p l) ->
@@ -7416,6 +7818,78 @@ Proof.
                 apply H2. do 2 constructor.
                 apply H2. do 2 constructor. assumption.
             constructor.
+Qed.
+(* end hide *)
+
+Lemma elem_pmap :
+  forall (A B : Type) (f : A -> option B) (l : list A) (a : A) (b : B),
+    f a = Some b -> elem a l -> elem b (pmap f l).
+(* begin hide *)
+Proof.
+  induction 2; cbn.
+    rewrite H. left.
+    destruct (f h); try right; apply IHelem, H.
+Qed.
+(* end hide *)
+
+Lemma elem_pmap' :
+  forall (A B : Type) (f : A -> option B) (l : list A) (b : B),
+    (exists a : A, elem a l /\ f a = Some b) -> elem b (pmap f l).
+(* begin hide *)
+Proof.
+  destruct 1 as (a & H1 & H2). eapply elem_pmap; eauto.
+Qed.
+(* end hide *)
+
+Lemma elem_pmap_conv :
+  forall (A B : Type) (f : A -> option B) (l : list A) (b : B),
+    elem b (pmap f l) -> exists a : A, elem a l /\ f a = Some b.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct (f h) eqn: Heq; cbn.
+      inversion H; subst; clear H.
+        exists h. split; [left | assumption].
+        destruct (IHt _ H2) as (a & IH1 & IH2).
+          exists a. split; try right; assumption.
+      destruct (IHt _ H) as (a & IH1 & IH2).
+        exists a. split; try right; assumption.
+Qed.
+(* end hide *)
+
+Lemma elem_intersperse :
+  forall (A : Type) (x y : A) (l : list A),
+    elem x (intersperse y l) <-> elem x l \/ (x = y /\ 2 <= length l).
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      inversion H.
+      destruct (intersperse y t) eqn : Heq.
+        inversion H; subst.
+          do 2 left.
+          inversion H2.
+        inversion H; subst.
+          do 2 left.
+          inversion H2; subst.
+            destruct t; cbn in *.
+              inversion Heq.
+              right. split; trivial. omega.
+            destruct (IHt H3).
+              left. right. assumption.
+              destruct H0. right. split; [assumption | omega].
+    destruct 1.
+      induction H; cbn.
+        destruct (intersperse y l); left.
+        destruct (intersperse y t).
+          inversion IHelem.
+          do 2 right. assumption.
+      destruct H; subst. destruct l as [| h [| h' t]]; cbn.
+        1-2: cbn in H0; omega.
+        destruct (intersperse y t); cbn.
+          right. left.
+          right. left.
 Qed.
 (* end hide *)
 
@@ -7892,27 +8366,8 @@ Lemma In_intersperse :
     In x l \/ (x = y /\ 2 <= length l).
 (* begin hide *)
 Proof.
-  split.
-    functional induction @intersperse A y l; cbn in *; intros.
-      contradiction.
-      destruct H; subst.
-        do 2 left. reflexivity.
-        contradiction.
-      firstorder.
-    intro. decompose [and or] H; clear H.
-      induction l as [| h t]; cbn in *.
-        assumption.
-        destruct t, H0; subst.
-          left. reflexivity.
-          inversion H.
-          left. reflexivity.
-          do 2 right. apply IHt, H.
-      subst. destruct l as [| h1 [| h2 t]]; cbn in *.
-        inversion H2.
-        inversion H2. inversion H0.
-        right; left. reflexivity.
+  intros. rewrite ?In_elem. apply elem_intersperse.
 Qed.
-(* end hide *)
 
 (** ** [NoDup] *)
 
@@ -8221,20 +8676,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma NoDup_intersperse :
-  forall (A : Type) (x : A) (l : list A),
-    NoDup (intersperse x l) -> length l <= 2.
-(* begin hide *)
-Proof.
-  intros. functional induction @intersperse A x l; cbn.
-    apply le_0_n.
-    apply le_S, le_n.
-    destruct _x0; cbn in *.
-      apply le_n.
-      inversion H. inversion H3. contradiction H6. right; left.
-Qed.
-(* end hide *)
-
 Lemma NoDup_zip_conv :
   forall (A B : Type) (la : list A) (lb : list B),
     NoDup (zip la lb) -> NoDup la \/ NoDup lb.
@@ -8246,6 +8687,38 @@ Proof.
       right. constructor.
       inversion H; subst; clear H. destruct (IHta _ H3).
 Abort.
+(* end hide *)
+
+Lemma NoDup_pmap :
+  exists (A B : Type) (f : A -> option B) (l : list A),
+    NoDup l /\ ~ NoDup (pmap f l).
+(* begin hide *)
+Proof.
+  exists bool, unit, (fun _ => Some tt), [true; false]. split.
+    repeat constructor; inversion 1. inversion H2.
+    cbn. inversion 1; subst. apply H2. constructor.
+Qed.
+(* end hide *)
+
+Lemma NoDup_intersperse :
+  forall (A : Type) (x : A) (l : list A),
+    NoDup (intersperse x l) -> length l <= 2.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    apply le_0_n.
+    destruct (intersperse x t) eqn: Heq.
+      destruct t; cbn in *.
+        apply le_S, le_n.
+        destruct (intersperse x t); inversion Heq.
+      inversion H. inversion H3. subst. specialize (IHt H7).
+        destruct t as [| w1 [| w2 z]]; cbn in *.
+          inversion Heq.
+          apply le_n.
+          destruct (intersperse x z).
+            inversion Heq. subst. contradiction H6. right. left.
+            inversion Heq; subst. contradiction H6. right. left.
+Qed.
 (* end hide *)
 
 Lemma NoDup_spec :
@@ -8757,15 +9230,29 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Dup_pmap :
+  exists (A B : Type) (f : A -> option B) (l : list A),
+    Dup l /\ ~ Dup (pmap f l).
+(* begin hide *)
+Proof.
+  exists unit, unit, (fun _ => None), [tt; tt]. split.
+    do 2 constructor.
+    cbn. inversion 1.
+Qed.
+(* end hide *)
+
 Lemma Dup_intersperse :
   forall (A : Type) (x : A) (l : list A),
     Dup (intersperse x l) -> 2 <= length l.
 (* begin hide *)
 Proof.
-  intros. functional induction @intersperse A x l; cbn.
+  induction l as [| h t]; cbn; intros.
     inversion H.
-    apply Dup_singl in H. contradiction.
-    apply le_n_S, le_n_S, le_0_n.
+    destruct (intersperse x t) eqn: Heq.
+      inversion H; inversion H1.
+      destruct t; cbn in *.
+        inversion Heq.
+        apply le_n_S, le_n_S, le_0_n.
 Qed.
 (* end hide *)
 
@@ -9154,7 +9641,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *)
 Lemma Rep_intersperse :
   forall (A : Type) (x y : A) (n : nat) (l : list A),
     Rep x n (intersperse y l) <->
@@ -9162,20 +9648,18 @@ Lemma Rep_intersperse :
 (* begin hide *)
 Proof.
             Hint Constructors Rep.
-  split.
-    generalize dependent n; generalize dependent x.
-    functional induction @intersperse A y l; cbn; intros.
-      left. assumption.
-      left. assumption.
-      destruct _x0; cbn in *.
-        inv H; auto.
-          inv H2; auto. right. cbn. split; auto.
-          inv H2; auto. right. cbn. rewrite <- minus_n_O. auto.
-        inv H; auto.
-          inv H2; auto.
-            cbn. destruct (IHl0 y n H1).
-              admit.
-Abort.
+  split; revert n.
+    induction l as [| h t]; cbn; intros.
+      inversion H; subst. left. constructor.
+      destruct (intersperse y t) eqn: Heq.
+        inv H.
+          left. constructor.
+          inv H2. left. do 2 constructor.
+          inv H2. left. constructor.
+        inv H.
+          left. constructor.
+          inv H2.
+Admitted.
 (* end hide *)
 
 (** ** [Exists] *)
@@ -9204,6 +9688,15 @@ Proof.
     destruct 1 as [x [H1 H2]]. induction H1.
       left. assumption.
       right. apply IHelem; assumption.
+Qed.
+(* end hide *)
+
+Lemma Exists_nil :
+  forall (A : Type) (P : A -> Prop),
+    Exists P [] <-> False.
+(* begin hide *)
+Proof.
+  split; inversion 1.
 Qed.
 (* end hide *)
 
@@ -9558,42 +10051,72 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Exists_intersperse :
-  forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
-    Exists P (intersperse x l) <-> Exists P l \/ (P x /\ 2 <= length l).
+Lemma Exists_pmap :
+  forall (A B : Type) (f : A -> option B) (P : B -> Prop) (l : list A),
+    Exists P (pmap f l) <->
+      Exists (fun x : A => match f x with | Some b => P b | _ => False end) l.
 (* begin hide *)
 Proof.
   split.
-    functional induction @intersperse A x l; cbn in *; intros.
+    induction l as [| h t]; cbn; intros.
       inversion H.
-      left. assumption. 
-      destruct _x0.
-        rewrite !Exists_cons in H. decompose [or] H; clear H.
-          do 2 left; assumption.
-          right. split; try assumption. apply le_n.
-          left; right; left. assumption.
-          inversion H0.
-        rewrite 2!Exists_cons in H. decompose [or] H; clear H.
-          do 2 left. assumption.
-          right. split; try assumption. apply le_n_S, le_n_S, le_0_n.
-          destruct (IHl0 H1).
-            left; right. assumption.
-            right. destruct H. split; try assumption. apply le_S, H0.
-    functional induction @intersperse A x l; cbn in *; intros.
-      decompose [and or] H; clear H.
-        inversion H0.
-        inversion H2.
-      decompose [and or] H; clear H.
-        assumption.
-        inversion H2. inversion H0.
-      rewrite Exists_cons in H. decompose [and or] H; clear H.
+      destruct (f h) eqn: Hfh.
+        inversion H; subst.
+          left. rewrite Hfh. assumption.
+          right. apply IHt. assumption.
+        right. apply IHt. assumption.
+    induction l as [| h t]; cbn; inversion 1; subst; clear H.
+      destruct (f h).
         left. assumption.
-        do 2 right. apply IHl0. left. assumption.
-        destruct _x0; cbn in *.
-          right; left. assumption.
-          do 2 right. apply IHl0. right; split.
-            assumption.
-            apply le_n_S, le_n_S, le_0_n.
+        contradiction.
+      destruct (f h); try right; apply IHt, H1.
+Restart.
+  induction l as [| h t]; cbn; intros.
+    rewrite ?Exists_nil. reflexivity.
+    destruct (f h) eqn: H; cbn.
+      rewrite ?Exists_cons, IHt, H. reflexivity.
+      rewrite ?Exists_cons, IHt, H. tauto.
+Qed.
+(* end hide *)
+
+Lemma Exists_intersperse :
+  forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
+    Exists P (intersperse x l) <->
+    Exists P l \/ (P x /\ 2 <= length l).
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      inversion H.
+      destruct (intersperse x t) eqn: Heq.
+        inv H.
+          do 2 left. assumption.
+          inv H1.
+        inv H.
+          do 2 left. assumption.
+          inv H1.
+            right. split; try assumption. destruct t; cbn in *.
+              inv Heq.
+              apply le_n_S, le_n_S, le_0_n.
+            destruct (IHt H0).
+              left. right. assumption.
+              right. destruct H. split.
+                assumption.
+                destruct t; cbn in *.
+                  inv H1.
+                  apply le_n_S, le_n_S, le_0_n.
+    destruct 1.
+      induction H; cbn.
+        destruct (intersperse x t); left; assumption.
+        destruct (intersperse x t).
+          inv IHExists.
+          do 2 right. assumption.
+      destruct H. destruct l as [| h [| h' t]]; cbn.
+        inv H0.
+        inv H0. inv H2.
+        destruct (intersperse x t); cbn.
+          right. left. assumption.
+          right. left. assumption.
 Qed.
 (* end hide *)
 
@@ -9908,29 +10431,50 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Forall_pmap :
+  forall (A B : Type) (f : A -> option B) (P : B -> Prop) (l : list A),
+    Forall (fun x : A => match f x with | Some b => P b | _ => False end) l ->
+      Forall P (pmap f l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    constructor.
+    inversion H; subst; clear H. destruct (f h).
+      constructor; try apply IHt; assumption.
+      apply IHt. assumption.
+Qed.
+(* end hide *)
+
 Lemma Forall_intersperse :
   forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
-    Forall P (intersperse x l) <-> Forall P l /\ (2 <= length l -> P x).
+    Forall P (intersperse x l) <->
+    Forall P l /\ (2 <= length l -> P x).
 (* begin hide *)
 Proof.
   split.
-    functional induction @intersperse A x l; intros.
-      split.
-        assumption.
-        inversion 1.
-      split.
-        assumption.
-        inversion 1. inversion H2.
-      rewrite !Forall_cons' in *. decompose [and] H; clear H.
-        decompose [and or] (IHl0 H3); clear IHl0. auto.
-    functional induction @intersperse A x l; cbn in *; intros.
+    induction l as [| h t]; cbn; intros.
+      split; [constructor | inversion 1].
+      destruct (intersperse x t) eqn: Heq.
+        inv H. destruct (IHt H3). split.
+          constructor; assumption.
+          intro. apply H0. destruct t as [| h' [| h'' t']]; cbn in *.
+            inv H1. inv H5.
+            inv Heq.
+            apply le_n_S, le_n_S, le_0_n.
+        inv H. inv H3. destruct (IHt H4). split.
+          constructor; assumption.
+          intro. assumption.
+    destruct 1. induction H; cbn in *.
       constructor.
-      destruct H. assumption.
-      destruct _x0; rewrite !Forall_cons' in *.
-        firstorder.
-        decompose [and] H; clear H. edestruct IHl0.
-          firstorder.
-          destruct H4. firstorder.
+      destruct (intersperse x t) eqn: Heq.
+        repeat constructor; assumption.
+        constructor; [assumption | constructor].
+          apply H0. destruct t; cbn in *.
+            inv Heq.
+            apply le_n_S, le_n_S, le_0_n.
+          apply IHForall. intro. apply H0. destruct t; cbn in *.
+            inv Heq.
+            omega.
 Qed.
 (* end hide *)
 
@@ -10463,48 +11007,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma AtLeast_intersperse :
-  forall (A : Type) (P : A -> Prop) (x : A) (n : nat) (l : list A),
-    AtLeast P n l -> P x -> AtLeast P (n + (length l - 1)) (intersperse x l).
-(* begin hide *)
-Proof.
-  intros. generalize dependent n.
-  functional induction @intersperse A x l; cbn in *; intros.
-    inversion H. cbn. constructor.
-    rewrite plus_0_r. assumption.
-    inversion H; subst; clear H; cbn in *.
-      constructor 3. constructor.
-        assumption.
-        specialize (IHl0 0). cbn in IHl0. rewrite <- minus_n_O in *.
-          apply IHl0. constructor.
-      constructor.
-        assumption.
-        rewrite <- plus_n_Sm. constructor.
-          assumption.
-          specialize (IHl0 n0). rewrite <- minus_n_O in *. apply IHl0.
-            assumption.
-      rewrite <- plus_n_Sm. constructor 3. constructor.
-        assumption.
-        specialize (IHl0 n). rewrite <- minus_n_O in *. apply IHl0, H3.
-Qed.
-(* end hide *)
-
-Lemma AtLeast_intersperse' :
-  forall (A : Type) (P : A -> Prop) (x : A) (n : nat) (l : list A),
-    AtLeast P n l -> ~ P x -> AtLeast P n (intersperse x l).
-(* begin hide *)
-Proof.
-  induction 1; cbn; intro.
-    constructor.
-    destruct t.
-      inversion H0; subst. repeat constructor. assumption.
-      repeat constructor; auto.
-    destruct t.
-      inversion H; subst. constructor.
-      repeat constructor; auto.
-Qed.
-(* end hide *)
-
 Lemma AtLeast_findIndices :
   forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A) (n : nat),
     (forall x : A, P x <-> p x = true) ->
@@ -10534,6 +11036,78 @@ Proof.
     destruct 1 as (x & H1 & H2). induction H1.
       repeat constructor. assumption.
       apply AL_skip, IHelem, H2.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_intersperse :
+  forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
+    P x -> AtLeast P (length l - 1) (intersperse x l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    constructor.
+    destruct (intersperse x t) eqn: Heq.
+      destruct t; cbn in *.
+        constructor.
+        destruct (intersperse x t); inv Heq.
+      constructor. destruct t; cbn in *; constructor.
+        assumption.
+        rewrite <- minus_n_O in IHt. apply IHt, H.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_intersperse' :
+  forall (A : Type) (P : A -> Prop) (x : A) (n : nat) (l : list A),
+    AtLeast P n l -> P x ->
+      AtLeast P (n + (length l - 1)) (intersperse x l).
+(* begin hide *)
+Proof.
+  induction 1; cbn; intros.
+    apply AtLeast_intersperse. assumption.
+    destruct (intersperse x t) eqn: Heq.
+      destruct t; cbn in *.
+        inv H0. cbn. repeat constructor; assumption.
+        destruct (intersperse x t); inv Heq.
+      destruct t; cbn in *.
+        inv Heq.
+        rewrite <- plus_n_Sm. constructor.
+          assumption.
+          constructor.
+            assumption.
+            rewrite <- minus_n_O in IHAtLeast. apply IHAtLeast, H1.
+    destruct (intersperse x t) eqn: Heq.
+      destruct t; cbn in *.
+        inv H. cbn. constructor.
+        destruct (intersperse x t); inv Heq.
+      destruct t; cbn in *.
+        inv Heq.
+        rewrite <- plus_n_Sm. apply AL_skip. constructor.
+          assumption.
+          rewrite <- minus_n_O in IHAtLeast. apply IHAtLeast, H0.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_intersperse'' :
+  forall (A : Type) (P : A -> Prop) (x : A) (n : nat) (l : list A),
+    AtLeast P n l -> ~ P x -> AtLeast P n (intersperse x l).
+(* begin hide *)
+Proof.
+  induction 1; cbn; intro.
+    constructor.
+    destruct (intersperse x t) eqn: Heq.
+      constructor.
+        assumption.
+        destruct t; cbn in *.
+          inv H0. constructor.
+          destruct (intersperse x t); inv Heq.
+      constructor.
+        assumption.
+        apply AL_skip. apply IHAtLeast, H1.
+    destruct (intersperse x t) eqn: Heq.
+      constructor. destruct t; cbn in *.
+        inv H. constructor.
+        destruct (intersperse x t); inv Heq.
+      do 2 constructor. apply IHAtLeast, H0.
 Qed.
 (* end hide *)
 
@@ -10831,25 +11405,58 @@ Qed.
 
 Lemma Exactly_intersperse :
   forall (A : Type) (P : A -> Prop) (x : A) (n : nat) (l : list A),
-    Exactly P n l -> P x -> Exactly P (n + (length l - 1)) (intersperse x l).
+    Exactly P n l -> P x ->
+      Exactly P (n + (length l - 1)) (intersperse x l).
 (* begin hide *)
 Proof.
-  intros. generalize dependent n.
-  functional induction @intersperse A x l; cbn in *; intros.
-    inversion H. cbn. constructor.
-    rewrite plus_0_r. assumption.
-    inversion H; subst; clear H; cbn in *.
+  induction 1; cbn; intros.
+    constructor.
+    destruct (intersperse x t) eqn: Heq.
       constructor.
         assumption.
-        rewrite <- plus_n_Sm. constructor.
-          assumption.
-          specialize (IHl0 n0). cbn in IHl0. rewrite <- minus_n_O in *.
-            apply IHl0. assumption.
-      constructor 3.
+        destruct t; cbn in *.
+          specialize (IHExactly H1). inv IHExactly. constructor.
+          destruct (intersperse x t); inv Heq.
+      constructor.
         assumption.
-        rewrite <- plus_n_Sm. constructor.
-          assumption.
-          specialize (IHl0 n). rewrite <- minus_n_O in *. apply IHl0, H5.
+        destruct t; cbn in *.
+          inv Heq.
+          rewrite <- plus_n_Sm. constructor.
+            assumption.
+            rewrite <- minus_n_O in IHExactly. apply IHExactly, H1.
+    destruct (intersperse x t) eqn: Heq.
+      destruct t; cbn in *.
+        constructor; [assumption | apply IHExactly, H1].
+        destruct (intersperse x t); inv Heq.
+      destruct t; cbn in *.
+        inv Heq.
+        destruct (intersperse x t); inv Heq.
+          constructor.
+            assumption.
+            rewrite <- plus_n_Sm. constructor.
+              assumption.
+              rewrite <- minus_n_O in *. apply IHExactly, H1.
+          constructor.
+            assumption.
+            rewrite <- plus_n_Sm. constructor.
+              assumption.
+              rewrite <- minus_n_O in IHExactly. apply IHExactly, H1.
+Restart.
+  intros. revert dependent n.
+  functional induction @intersperse A x l; cbn; intros.
+    inv H. constructor.
+    destruct t; cbn in *.
+      rewrite plus_0_r. assumption.
+      destruct (intersperse x t); inv e0.
+    destruct t; cbn in *.
+      inv e0.
+      rewrite <- plus_n_Sm. inv H.
+        cbn. do 2 try constructor; try assumption.
+          rewrite <- minus_n_O in IHl0.
+            destruct (intersperse x t); inv e0; apply IHl0; assumption.
+        apply Ex_skip; try constructor; try assumption.
+          rewrite <- minus_n_O in IHl0.
+            destruct (intersperse x t); inv e0; apply IHl0; assumption.
 Qed.
 (* end hide *)
 
@@ -10859,13 +11466,14 @@ Lemma Exactly_intersperse' :
       Exactly P n (intersperse x l).
 (* begin hide *)
 Proof.
-  intros. generalize dependent n.
-  functional induction @intersperse A x l; cbn in *; intros.
-    inversion H. cbn. constructor.
-    assumption.
-    inversion H; subst; clear H; cbn in *.
-      repeat constructor; try assumption. apply IHl0, H5.
-      repeat constructor; try assumption. apply IHl0, H5.
+  induction 1; cbn; intros.
+    constructor.
+    specialize (IHExactly H1). destruct (intersperse x t).
+      constructor; assumption.
+      do 2 try constructor; assumption.
+    specialize (IHExactly H1). destruct (intersperse x t).
+      inv IHExactly. repeat constructor; assumption.
+      do 2 try constructor; try assumption.
 Qed.
 (* end hide *)
 
@@ -11254,6 +11862,19 @@ Proof.
 Abort.
 (* end hide *)
 
+Lemma incl_pmap :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    incl (map Some (pmap f l)) (map f l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    apply incl_refl.
+    destruct (f h); cbn; rewrite ?IHt.
+      apply incl_cons. assumption.
+      apply incl_cons''. assumption.
+Qed.
+(* end hide *)
+
 Lemma incl_intersperse :
   forall (A : Type) (x : A) (l1 l2 : list A),
     incl l1 (intersperse x l2) -> incl l1 (x :: l2).
@@ -11323,8 +11944,8 @@ Inductive Palindrome {A : Type} : list A -> Prop :=
 (* end hide *)
 
 (* begin hide *)
-(* Palindromowa indukcja *)
 
+(* Palindromowa indukcja *)
 Lemma list_palindrome_ind :
   forall (A : Type) (P : list A -> Prop),
     P [] ->
@@ -11404,5 +12025,19 @@ Proof.
       1-2: constructor.
       rewrite rev_app in H. cbn in H. inversion H; subst; clear H.
         constructor. apply IHl'. apply app_inv_r in H2. assumption.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_pmap :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    Palindrome l -> Palindrome (pmap f l).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    constructor.
+    destruct (f x); constructor.
+    destruct (f x) eqn: Heq; cbn.
+      rewrite pmap_app. cbn. rewrite Heq. constructor. assumption.
+      rewrite pmap_app. cbn. rewrite Heq, app_nil_r. assumption.
 Qed.
 (* end hide *)

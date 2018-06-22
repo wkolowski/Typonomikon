@@ -3,7 +3,7 @@
     - [insert] od [findIndices]: TODO: find, findLast, removeFirst,
         removeLast, findIndex
     - [snoc] od [NoDup]
-    - [pmap] od [elem]
+    - [pmap] (sprawdź czy jest wszystko)
     - [remove] (trochę brakuje)
 
 *)

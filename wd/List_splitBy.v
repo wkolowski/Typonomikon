@@ -56,14 +56,15 @@ Lemma splitBy_intersperse :
       splitBy p (intersperse x l) = map (fun x => [x]) l.
 (* begin hide *)
 Proof.
-  intros. functional induction @intersperse A x l; cbn.
+  induction l as [| h t]; cbn; intros.
     reflexivity.
-    rewrite H0; [reflexivity | constructor].
-    rewrite H. cbn in *. rewrite IHl0.
-      reflexivity.
-      inversion 1; subst.
-        apply H0. right. left.
-        apply H0. do 2 right. assumption.
+    destruct (intersperse x t); cbn in *.
+      rewrite (H0 _ ltac:(left)), <- (IHt H).
+        reflexivity.
+        intros. apply H0. right. assumption.
+      rewrite H, (IHt H).
+        reflexivity.
+        intros. apply H0. right. assumption.
 Qed.
 (* end hide *)
 
