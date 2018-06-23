@@ -42,14 +42,15 @@ Parameter remove : forall A : Type, nat -> list A -> option (list A).
 Parameter remove' : forall A : Type, nat -> list A -> list A.
 Parameter nth_remove :
   forall A : Type, nat -> list A -> option (A * list A).
+Parameter nth_remove' :
+  forall A : Type, nat -> list A -> option (A * list A * list A).
 
 Parameter take : forall A : Type, nat -> list A -> list A.
 Parameter drop : forall A : Type, nat -> list A -> list A.
 Parameter splitAt : forall A : Type, nat -> list A -> list A * list A.
 
 Parameter map : forall A B : Type, (A -> B) -> list A -> list B.
-(* TODO *)
-Parameter partialMap :
+Parameter pmap :
   forall A B : Type, (A -> option B) -> list A -> list B.
 
 Parameter join : forall A : Type, list (list A) -> list A.
