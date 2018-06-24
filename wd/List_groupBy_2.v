@@ -32,6 +32,21 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma groupBy_is_nil :
+  forall (A : Type) (p : A -> A -> bool) (l : list A),
+    groupBy p l = [] -> l = [].
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (groupBy p t); cbn in *.
+      inversion H.
+      destruct l; cbn in *.
+        inversion H.
+        destruct (p h a); inversion H.
+Qed.
+(* end hide *)
+
 Lemma isEmpty_groupBy :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
     isEmpty (groupBy p l) = isEmpty l.
@@ -147,7 +162,7 @@ Proof.
     left. rewrite H. cbn. reflexivity.
     destruct H as [n H]. rewrite H. do 2 right.
       exists (take n l), (drop n l). split.
-        rewrite take_drop_spec. reflexivity.
+        rewrite app_take_drop. reflexivity.
          apply groupBy_cons in H. rewrite H. cbn. reflexivity.
 Qed.
 (* end hide *)
@@ -225,36 +240,7 @@ Qed.
 
 (* end hide *)
 
-(*Fixpoint unsnoc {A : Type} (l : list A) : option (list A * A) :=
-match l with
-    | [] => None
-    | h :: t =>
-        match unsnoc t with
-            | None => Some ([], h)
-            | Some (l, x) => Some (h :: l, x)
-        end
-end.
-
-Lemma unsnoc_spec :
-  forall (A : Type) (l l' : list A) (x : A),
-    unsnoc l = Some (l', x) ->
-      init l = Some l' /\ last l = Some x.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    inversion H.
-    destruct (unsnoc t) eqn: H_unsnoc.
-      destruct p. destruct (IHt _ _ eq_refl). rewrite H0, H1. split.
-        inversion H. reflexivity.
-        destruct t; inversion H; inversion H0. reflexivity.
-      inversion H; subst. destruct t; cbn in *.
-        split; reflexivity.
-        destruct (unsnoc t); try destruct p; inversion H_unsnoc.
-Qed.
-(* end hide *)
-*)
-
-Lemma init_last :
+(* TODO *) Lemma init_last :
   forall (A : Type) (l l' : list A) (x : A),
     init l = Some l' -> last l = Some x -> l = l' ++ [x].
 (* begin hide *)
@@ -294,7 +280,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(*Lemma groupBy_app' :
+Lemma groupBy_app' :
   forall (A : Type) (p : A -> A -> bool) (l1 l2 : list A),
     groupBy p (l1 ++ l2) =
     match last l1, head l2 with
@@ -303,42 +289,81 @@ Qed.
         | Some x, Some y =>
             if p x y
             then groupBy p l1 ++ groupBy p l2
-            else 
-*)
-(* begin hide *)
-
-Lemma groupBy_rev :
-  forall (A : Type) (p : A -> A -> bool) (l : list A),
-    rev (groupBy p l) = map rev (groupBy p (rev l)).
+            else groupBy p (l1 ++ l2)
+    end.
 (* begin hide *)
 Proof.
-  intros. destruct (groupBy_decomposition _ p l).
-    subst. cbn. reflexivity.
-    destruct H as [n H]. rewrite H. cbn.
-Abort.
+  intros. destruct (last l1) eqn: Hlast, (head l2) eqn: Hinit.
+    destruct (p a a0).
+Admitted.
 (* end hide *)
+Search groupBy.
 
-Lemma groupBy_rev :
+(*Lemma groupBy_head_take :
+  forall
+    (A : Type) (p : A -> A -> bool) (l g : list A) (gs : list (list A)),
+      groupBy p l = g :: gs ->
+        exists n : nat, take n l = g.
+*)
+
+Lemma groupBy_rev_aux :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
-    groupBy p (rev l) = rev (map rev (groupBy p l)).
+    (forall x y : A, p x y = p y x) ->
+      groupBy p l = rev (map rev (groupBy p (rev l))).
 (* begin hide *)
 Proof.
-  intros.
-  functional induction @groupBy A p l; cbn.
+  intros. functional induction @groupBy A p l; cbn.
     reflexivity.
-    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      destruct t; inversion e0.  cbn. reflexivity.
-    apply (f_equal head) in e0. apply head_groupBy in e0.
-      contradiction.
+    apply groupBy_is_nil in e0. rewrite e0. cbn. reflexivity.
+    apply (f_equal head) in e0. cbn in e0.
+      apply head_groupBy in e0. contradiction.
+    Focus 2.
+    pose (groupBy_decomposition A p t). destruct o.
+      rewrite H0 in *. cbn in *. inversion e0.
+      destruct H0 as (n & H'). pose (H'' := H'). rewrite e0 in H''. inv H''.
+        rewrite <- (app_take_drop _ n t) at 2.
+        rewrite rev_app. rewrite <- H1. cbn.
+        rewrite <- ?app_assoc. cbn. rewrite app_assoc.
+        rewrite (groupBy_middle A p (rev (drop n t) ++ rev t') [] h' h).
+          Focus 2. rewrite H. assumption.
+          cbn. rewrite <- app_assoc.
+            change (rev t' ++ [h']) with (rev (h' :: t')).
+            rewrite H1, <- rev_app, app_take_drop, map_app, rev_app.
+            cbn. rewrite <- IHl0.
+              rewrite H'. reflexivity.
+              assumption.
+    pose (groupBy_decomposition A p t). destruct o.
+      rewrite H0 in *. cbn in *. inversion e0.
+      destruct H0 as (n & H'). pose (H'' := H'). rewrite e0 in H''. inv H''.
+Restart.
+  intros. pose (groupBy_decomposition A p l). destruct o.
+    rewrite H0. cbn. reflexivity.
+    destruct H0 as (n & H'). rewrite <- (app_take_drop A n l) at 2.
+      rewrite rev_app. Search groupBy.
 Admitted.
 (* end hide *)
 
-Lemma groupBy_rev' :
+Lemma rev_groupBy :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
-    groupBy p l = rev (map rev (groupBy p (rev l))).
+    (forall x y : A, p x y = p y x) ->
+      rev (groupBy p l) = map rev (groupBy p (rev l)).
 (* begin hide *)
 Proof.
-  intros. rewrite <- groupBy_rev, rev_inv. reflexivity.
+  intros. rewrite groupBy_rev_aux.
+    rewrite rev_inv. reflexivity.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma groupBy_rev :
+  forall (A : Type) (p : A -> A -> bool) (l : list A),
+    (forall x y : A, p x y = p y x) ->
+      groupBy p (rev l) = rev (map rev (groupBy p l)).
+(* begin hide *)
+Proof.
+  intros. rewrite groupBy_rev_aux.
+    rewrite rev_inv. reflexivity.
+    assumption.
 Qed.
 (* end hide *)
 
@@ -441,7 +466,6 @@ Proof.
 Admitted.
 (* end hide *)
 
-
 Lemma any_groupBy :
   forall (A : Type) (q : A -> bool) (p : A -> A -> bool) (l : list A),
     any (any q) (groupBy p l) = any q l.
@@ -478,6 +502,39 @@ Qed.
   forall (A : Type) (q : A -> bool) (p : A -> A -> bool) (l : list A),
     foldl plus 
 *)
+
+Lemma find_groupBy :
+  forall (A : Type) (q : A -> bool) (p : A -> A -> bool) (l : list A),
+    find q l =
+    match find (any q) (groupBy p l) with
+        | None => None
+        | Some g => find q g
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (q h) eqn: Hqh.
+      destruct (groupBy p t); cbn in *.
+        rewrite Hqh. cbn. rewrite Hqh. reflexivity.
+        destruct l as [| h' t']; cbn in *.
+          rewrite Hqh. cbn. rewrite Hqh. reflexivity.
+          destruct (p h h'); cbn.
+            rewrite Hqh. cbn. rewrite Hqh. reflexivity.
+            rewrite Hqh. cbn. rewrite Hqh. reflexivity.
+      destruct (groupBy p t); cbn in *.
+        rewrite Hqh. cbn. assumption.
+        destruct l as [| h' t']; cbn in *.
+          rewrite Hqh. cbn. assumption.
+          destruct (p h h'); cbn.
+            rewrite Hqh. cbn. rewrite IHt. destruct (q h'); cbn.
+              rewrite Hqh. reflexivity.
+              cbn in *. destruct (any q t'); cbn.
+                rewrite Hqh. reflexivity.
+                reflexivity.
+            rewrite Hqh. cbn. assumption.
+Qed.
+(* end hide *)
 
 Lemma groupBy_elem_incl :
   forall (A : Type) (p : A -> A -> bool) (l g : list A),

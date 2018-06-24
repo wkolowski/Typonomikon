@@ -775,23 +775,18 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** [head] i [last] *)
+(** ** [head], [tail] i [uncons] *)
 
-(** Zdefiniuj funkcje [head] i [last], które zwracają odpowiednio pierwszy
-    i ostatni element listy (lub [None], jeżeli jest pusta). *)
+(** *** [head] *)
+
+(** Zdefiniuj funkcję [head], która zwraca głowę (pierwszy element)
+    listy lub [None], gdy lista jest pusta. *)
 
 (* begin hide *)
 Fixpoint head {A : Type} (l : list A) : option A :=
 match l with
     | [] => None
     | h :: _ => Some h
-end.
-
-Function last {A : Type} (l : list A) : option A :=
-match l with
-    | [] => None
-    | [x] => Some x
-    | h :: t => last t
 end.
 (* end hide *)
 
@@ -897,6 +892,158 @@ Proof.
 Qed.
 (* end hide *)
 
+(** *** [tail] *)
+
+(** Zdefiniuj funkcję [tail], która zwraca ogon listy (czyli wszystkie
+    jej elementy poza głową) lub [None], gdy lista jest pusta. *)
+
+(* begin hide *)
+Fixpoint tail {A : Type} (l : list A) : option (list A) :=
+match l with
+    | [] => None
+    | _ :: t => Some t
+end.
+(* end hide *)
+
+Lemma tail_nil :
+  forall A : Type, tail (@nil A) = None.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma tail_cons :
+  forall (A : Type) (h : A) (t : list A),
+    tail (h :: t) = Some t.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma tail_isEmpty_true :
+  forall (A : Type) (l : list A),
+    isEmpty l = true -> tail l = None.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; intros.
+    reflexivity.
+    inversion H.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_tail_not_None :
+  forall (A : Type) (l : list A),
+    tail l <> None -> isEmpty l = false.
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; intros.
+    contradiction.
+    reflexivity.
+Qed.
+(* end hide *)
+
+Lemma tail_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    tail (snoc x l) =
+    match tail l with
+        | None => Some []
+        | Some t => Some (snoc x t)
+    end.
+(* begin hide *)
+Proof.
+  destruct l; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma tail_app :
+  forall (A : Type) (l1 l2 : list A),
+    tail (l1 ++ l2) =
+    match l1 with
+        | [] => tail l2
+        | h :: t => Some (t ++ l2)
+    end.
+(* begin hide *)
+Proof.
+  destruct l1 as [| h t]; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma tail_map :
+  forall (A B : Type) (f : A -> B) (l : list A),
+    tail (map f l) =
+    match l with
+        | [] => None
+        | _ :: t => Some (map f t)
+    end.
+(* begin hide *)
+Proof.
+  destruct l; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma tail_replicate :
+  forall (A : Type) (n : nat) (x : A),
+    tail (replicate n x) =
+    match n with
+        | 0 => None
+        | S n' => Some (replicate n' x)
+    end.
+(* begin hide *)
+Proof. destruct n; reflexivity. Qed.
+(* end hide *)
+
+Lemma tail_iterate :
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
+    tail (iterate f n x) =
+    match n with
+        | 0 => None
+        | S n' => Some (iterate f n' (f x))
+    end.
+(* begin hide *)
+Proof.
+  destruct n; reflexivity.
+Qed.
+(* end hide *)
+
+(** *** [uncons] *)
+
+(** Napisz funkcję [uncons], która zwraca parę złożoną z głowy i ogona
+    listy lub [None], gdy lista jest pusta. Nie używaj funkcji [head]
+    ani [tail]. Udowodnij poniższą specyfikację. *)
+
+(* begin hide *)
+Definition uncons {A : Type} (l : list A) : option (A * list A) :=
+match l with
+    | [] => None
+    | h :: t => Some (h, t)
+end.
+(* end hide *)
+
+Lemma uncons_spec :
+  forall (A : Type) (l : list A),
+    uncons l =
+    match head l, tail l with
+        | Some h, Some t => Some (h, t)
+        | _, _ => None
+    end.
+(* begin hide *)
+Proof. destruct l; reflexivity. Qed.
+(* end hide *)
+
+(** ** [last], [init] i [unsnoc] *)
+
+(** *** [last] *)
+
+(** Zdefiniuj funkcję [last], która zwraca ostatni element listy lub
+    [None], gdy lista jest pusta. *)
+
+(* begin hide *)
+Function last {A : Type} (l : list A) : option A :=
+match l with
+    | [] => None
+    | [x] => Some x
+    | h :: t => last t
+end.
+(* end hide *)
+
 Lemma last_nil :
   forall (A : Type), last [] = (@None A).
 (* begin hide *)
@@ -968,26 +1115,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma last_rev :
-  forall (A : Type) (l : list A),
-    last (rev l) = head l.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-    rewrite last_app. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma head_rev :
-  forall (A : Type) (l : list A),
-    head (rev l) = last l.
-(* begin hide *)
-Proof.
-  intros. rewrite <- last_rev, rev_inv. reflexivity.
-Qed.
-(* end hide *)
-
 Lemma last_replicate_S :
   forall (A : Type) (n : nat) (x : A),
     last (replicate (S n) x) = Some x.
@@ -1031,21 +1158,12 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** [tail] i [init] *)
+(** *** [init] *)
 
-(** Zdefiniuj funkcje [tail] i [init], które zwracają odpowiednio ogon
-    listy oraz wszystko poza jej ostatnim elementem (lub [None], gdy
-    lista jest pusta). *)
-
-(* TODO: rozwinąć *)
+(** Zdefiniuj funkcję [init], która zwraca wszystkie elementy listy poza
+    ostatnim lub [None], gdy lista jest pusta. *)
 
 (* begin hide *)
-Fixpoint tail {A : Type} (l : list A) : option (list A) :=
-match l with
-    | [] => None
-    | _ :: t => Some t
-end.
-
 Fixpoint init {A : Type} (l : list A) : option (list A) :=
 match l with
     | [] => None
@@ -1054,125 +1172,6 @@ match l with
         | Some t' => Some (h :: t')
     end
 end.
-(* end hide *)
-
-Lemma tail_nil :
-  forall A : Type, tail (@nil A) = None.
-(* begin hide *)
-Proof. reflexivity. Qed.
-(* end hide *)
-
-Lemma tail_cons :
-  forall (A : Type) (h : A) (t : list A),
-    tail (h :: t) = Some t.
-(* begin hide *)
-Proof. reflexivity. Qed.
-(* end hide *)
-
-Lemma tail_isEmpty_true :
-  forall (A : Type) (l : list A),
-    isEmpty l = true -> tail l = None.
-(* begin hide *)
-Proof.
-  destruct l as [| h t]; cbn; intros.
-    reflexivity.
-    inversion H.
-Qed.
-(* end hide *)
-
-Lemma isEmpty_tail_not_None :
-  forall (A : Type) (l : list A),
-    tail l <> None -> isEmpty l = false.
-(* begin hide *)
-Proof.
-  destruct l as [| h t]; cbn; intros.
-    contradiction.
-    reflexivity.
-Qed.
-(* end hide *)
-
-Lemma tail_snoc :
-  forall (A : Type) (x : A) (l : list A),
-    tail (snoc x l) =
-    match tail l with
-        | None => Some []
-        | Some t => Some (snoc x t)
-    end.
-(* begin hide *)
-Proof.
-  destruct l; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma tail_app :
-  forall (A : Type) (l1 l2 : list A),
-    tail (l1 ++ l2) =
-    match l1 with
-        | [] => tail l2
-        | h :: t => Some (t ++ l2)
-    end.
-(* begin hide *)
-Proof.
-  destruct l1 as [| h t]; cbn; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma tail_rev :
-  forall (A : Type) (l : list A),
-    tail (rev l) =
-    match init l with
-        | None => None
-        | Some t => Some (rev t)
-    end.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-    rewrite tail_app. destruct (rev t); cbn in *.
-      destruct (init t).
-        inversion IHt.
-        reflexivity.
-      destruct (init t); cbn.
-        inversion IHt; subst. reflexivity.
-        inversion IHt.
-Qed.
-(* end hide *)
-
-Lemma tail_map :
-  forall (A B : Type) (f : A -> B) (l : list A),
-    tail (map f l) =
-    match l with
-        | [] => None
-        | _ :: t => Some (map f t)
-    end.
-(* begin hide *)
-Proof.
-  destruct l; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma tail_replicate :
-  forall (A : Type) (n : nat) (x : A),
-    tail (replicate n x) =
-    match n with
-        | 0 => None
-        | S n' => Some (replicate n' x)
-    end.
-(* begin hide *)
-Proof. destruct n; reflexivity. Qed.
-(* end hide *)
-
-Lemma tail_iterate :
-  forall (A : Type) (f : A -> A) (n : nat) (x : A),
-    tail (iterate f n x) =
-    match n with
-        | 0 => None
-        | S n' => Some (iterate f n' (f x))
-    end.
-(* begin hide *)
-Proof.
-  destruct n; reflexivity.
-Qed.
 (* end hide *)
 
 Lemma init_snoc :
@@ -1201,26 +1200,13 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO *)
 Lemma init_spec :
   forall (A : Type) (l : list A) (x : A),
     init (l ++ [x]) = Some l.
 (* begin hide *)
 Proof.
   intros. rewrite init_app. cbn. rewrite app_nil_r. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma init_rev :
-  forall (A : Type) (l : list A),
-    init (rev l) =
-    match tail l with
-        | None => None
-        | Some t => Some (rev t)
-    end.
-(* begin hide *)
-Proof.
-  intros. rewrite <- (rev_inv _ l) at 2. rewrite tail_rev.
-  destruct (init (rev l)); rewrite ?rev_inv; reflexivity.
 Qed.
 (* end hide *)
 
@@ -1273,6 +1259,111 @@ Proof.
 Qed.
 (* end hide *)
 
+(** *** [unsnoc] *)
+
+(** Zdefiniuj funkcję [unsnoc], która rozbija listę na parę złożoną z
+    ostatniego elementu oraz całej reszty lub zwraca [None] gdy lista
+    jest pusta. Nie używaj funkcji [last] ani [init]. Udowodnij poniższą
+    specyfikację. *)
+
+(* begin hide *)
+Fixpoint unsnoc {A : Type} (l : list A) : option (A * list A) :=
+match l with
+    | [] => None
+    | h :: t =>
+        match unsnoc t with
+            | None => Some (h, [])
+            | Some (last, init) => Some (last, h :: init)
+        end
+end.
+(* end hide *)
+
+Lemma unsnoc_spec :
+  forall (A : Type) (l : list A),
+    unsnoc l =
+    match last l, init l with
+        | Some x, Some l' => Some (x, l')
+        | _, _ => None
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite IHt. destruct (last t) eqn: Hlast, (init t) eqn: Hinit; cbn.
+      destruct t; cbn; inversion IHt. reflexivity.
+      destruct t; cbn.
+        reflexivity.
+        cbn in IHt. destruct (unsnoc t).
+          destruct p. 1-2: inversion IHt.
+      destruct t; cbn in *.
+        inversion Hinit.
+        destruct (unsnoc t); cbn in *.
+          destruct p. 1-2: inversion IHt.
+      destruct t; cbn in *.
+        reflexivity.
+        destruct (unsnoc t); cbn in *.
+          destruct p. 1-2: inversion IHt.
+Qed.
+(* end hide *)
+
+(** *** Dualności [head] i [last], [tail] i [init] oraz ciekawostki *)
+
+Lemma last_rev :
+  forall (A : Type) (l : list A),
+    last (rev l) = head l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite last_app. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma head_rev :
+  forall (A : Type) (l : list A),
+    head (rev l) = last l.
+(* begin hide *)
+Proof.
+  intros. rewrite <- last_rev, rev_inv. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma tail_rev :
+  forall (A : Type) (l : list A),
+    tail (rev l) =
+    match init l with
+        | None => None
+        | Some t => Some (rev t)
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite tail_app. destruct (rev t); cbn in *.
+      destruct (init t).
+        inversion IHt.
+        reflexivity.
+      destruct (init t); cbn.
+        inversion IHt; subst. reflexivity.
+        inversion IHt.
+Qed.
+(* end hide *)
+
+Lemma init_rev :
+  forall (A : Type) (l : list A),
+    init (rev l) =
+    match tail l with
+        | None => None
+        | Some t => Some (rev t)
+    end.
+(* begin hide *)
+Proof.
+  intros. rewrite <- (rev_inv _ l) at 2. rewrite tail_rev.
+  destruct (init (rev l)); rewrite ?rev_inv; reflexivity.
+Qed.
+(* end hide *)
+
+(* begin hide *)
 Lemma tail_decomposition :
   forall (A : Type) (l : list A),
     l = [] \/
@@ -1304,6 +1395,7 @@ Proof.
               rewrite length_app, plus_comm in Heq. cbn in Heq. inversion Heq.
             reflexivity.
 Qed.
+(* end hide *)
 (* end hide *)
 
 Lemma bilateral_decomposition :
@@ -1794,9 +1886,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** [remove] *)
-
-(** TODO *)
+(** ** [remove] (TODO) *)
 
 (* begin hide *)
 Fixpoint remove
@@ -2072,25 +2162,24 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO
 Lemma remove_iterate :
   forall (A : Type) (f : A -> A) (n m : nat) (x : A),
     m < n ->
       remove m (iterate f n x) =
       Some (iter f m x,
             iterate f m x ++
-            map (iter f n) (iterate f (n - m) x)).
+            (iterate f (n - S m) (iter f (S m) x))).
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
     destruct m; inversion H.
     destruct m as [| m']; cbn.
-      Focus 2. rewrite IHn'.
-      rewrite map_iter_iterate.
-      
+      rewrite <- minus_n_O. reflexivity.
+      rewrite IHn'.
+        cbn. reflexivity.
+        apply lt_S_n. assumption.
 Qed.
 (* end hide *)
-*)
 
 (** ** [take] *)
 

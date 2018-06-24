@@ -4,8 +4,6 @@ Require Import CoqBookPL.book.X3.
 
 (** ** [remove] *)
 
-(** Czemu [remove] ma taki dziwny typ? *)
-
 Fixpoint remove
   {A : Type} (n : nat) (l : list A) {struct l}
   : option (A * list A * list A) :=
