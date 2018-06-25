@@ -25,7 +25,8 @@ Inductive list (A : Type) : Type :=
 Arguments nil [A].
 Arguments cons [A] _ _.
 
-Notation "[]" := nil.
+(*Notation "[ ]" := nil.*)
+Notation "[ ]" := nil (format "[ ]").
 Notation "x :: y" := (cons x y) (at level 60, right associativity).
 Notation "[ x ; .. ; y ]" := (cons x .. (cons y nil) ..).
 
