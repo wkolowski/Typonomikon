@@ -31,9 +31,12 @@ W dalszej perspektywie powstaną rozdziały stosowane dotyczące różnych, mnie
 
 ## TODO
 
+Najbliższe TODO:
+- listy
+
 Bliskie TODO:
 - R4: spis taktyk (już się robi)
-- R5: reflekcja.
+- R5: reflekcja
 
 Średnie TODO:
 - dokończyć rozdział o funkcjach (więcej ukrytej teorii kategorii)

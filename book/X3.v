@@ -6,9 +6,9 @@
     UWAGA: ten rozdział wyewoluował do stanu dość mocno odbiegającego od
     tego, co jest w bibliotece standardowej — moim zdanem na korzyść. *)
 
-Require Import Arith.
+Require Export Arith.
 (* begin hide *)
-Require Import Omega.
+Require Export Omega.
 (* end hide *)
 
 (** W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
@@ -2392,6 +2392,8 @@ Proof.
         rewrite IHn', <- minus_n_O. reflexivity.
 Qed.
 (* end hide *)
+
+(* TODO: lepsze last_take *)
 
 Lemma tail_take :
   forall (A : Type) (l : list A) (n : nat),

@@ -1,5 +1,8 @@
 Add Rec LoadPath "/home/zeimer/Code/Coq".
 
+Require Import Arith.
+Require Import Omega.
+
 Require Import CoqBookPL.book.X3.
 
 (** ** [remove] *)
@@ -34,8 +37,6 @@ Proof.
         apply le_n_S. assumption.
 Qed.
 (* end hide *)
-
-Require Import Arith. 
 
 Lemma remove_isEmpty_true :
   forall (A : Type) (l : list A) (n : nat),
@@ -145,8 +146,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Require Import Omega.
-
 Lemma remove_rev_aux :
   forall (A : Type) (l : list A) (n : nat),
     n < length l ->
@@ -232,5 +231,114 @@ Lemma remove_iterate :
     m < n ->
       remove m (iterate f n x) =
       Some (iter f m x,
-            iterate f m x ++
+            iterate f m x,
             (iterate f (n - S m) (iter f (S m) x))).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    destruct m; inversion H.
+    destruct m as [| m']; cbn.
+      rewrite <- minus_n_O. reflexivity.
+      apply lt_S_n in H. rewrite (IHn' _ _ H). reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove_spec' :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    remove n l = Some (x, l1, l2) ->
+      l1 = take n l /\ l2 = drop (S n) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    inversion 1.
+    destruct n as [| n']; cbn.
+      inversion 1; subst. split; reflexivity.
+      destruct (remove n' t) eqn: Heq; intros.
+        destruct p, p. inversion H; subst; clear H.
+          destruct (IHt _ _ _ _ Heq). rewrite H, H0.
+            cbn. split; reflexivity.
+        inversion H.
+Qed.
+(* end hide *)
+
+Lemma remove_head_l :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    remove n l = Some (x, l1, l2) ->
+      head l1 =
+      match n with
+          | 0 => None
+          | _ => head l
+      end.
+(* begin hide *)
+Proof.
+  intros. apply remove_spec' in H. destruct H.
+  rewrite H, ?H0. rewrite head_take. destruct n; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove_head_r :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    remove n l = Some (x, l1, l2) ->
+      head l2 = nth (S n) l.
+(* begin hide *)
+Proof.
+  intros. apply remove_spec' in H. destruct H.
+  rewrite H0. rewrite head_drop. reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: tail, uncons *)
+
+Lemma remove_Some :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    remove n l = Some (x, l1, l2) -> n < length l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct n as [| n'].
+      apply Nat.lt_0_succ.
+      destruct (remove n' t) eqn: Heq.
+        destruct p, p. inversion H; subst; clear H.
+          apply lt_n_S, (IHt _ _ _ _ Heq).
+        inversion H.
+Qed.
+(* end hide *)
+
+Lemma remove_last_l :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    remove n l = Some (x, l1, l2) ->
+      last l1 =
+      match n with
+          | 0 => None
+          | S n' => nth n' l
+      end.
+(* begin hide *)
+Proof.
+  intros. pose (H' := H). apply remove_spec' in H'. destruct H'.
+  rewrite H0. destruct n.
+    cbn. reflexivity.
+    rewrite last_take. apply remove_Some in H.
+    rewrite Min.min_l.
+      reflexivity.
+      omega.
+Qed.
+(* end hide *)
+
+Lemma remove_last_r :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    remove n l = Some (x, l1, l2) ->
+      last l2 =
+      if beq_nat n (length l - 1)
+      then nth (length l - 2) l
+      else last l2.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct n as [| n'].
+      inversion H; subst; clear H. destruct l2; cbn.
+Abort.
+(* end hide *)
+
+(* TODO: init, unsnoc *)

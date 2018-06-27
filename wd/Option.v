@@ -40,4 +40,3 @@ match x with
     | None => None
     | Some a => Some (f a)
 end.
-

@@ -1488,7 +1488,7 @@ Qed.
 
 Lemma divides_le :
   ~ forall k n : nat, k | n -> k <= n.
-(* end hide *)
+(* begin hide *)
 Proof.
   intro. cut (1 <= 0).
     inversion 1.

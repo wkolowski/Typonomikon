@@ -4,7 +4,7 @@
     as notes for my seminar talk whose topic was "Inductive predicates". It
     is a bit broader than that and covers all forms of structural induction,
     including functional induction, and even more. It does not touch the
-    topic of well-founded induction.
+    topic of well-founded induction, though.
 
     The grading policy is at the end. *)
 
