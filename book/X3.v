@@ -1471,8 +1471,7 @@ Proof.
       exists a. cbn. trivial.
     destruct l; cbn in *.
       inversion H.
-      unfold lt in H. cbn in H. apply le_S_n in H.
-        destruct (IHn' _ H) as [x Hx]. exists x. assumption.
+      destruct (IHn' _ (lt_S_n _ _ H)) as [x IH]. exists x. assumption.
 Qed.
 (* end hide *)
 

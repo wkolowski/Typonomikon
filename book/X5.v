@@ -99,18 +99,18 @@ Inductive le' : nat -> nat -> Prop :=
 (* begin hide *)
 Hint Constructors le'.
 
-Theorem le'_refl : forall n : nat, le' n n.
+Lemma le'_refl : forall n : nat, le' n n.
 Proof.
   induction n as [| n']; cbn; auto.
 Qed.
 
-Theorem le'_S : forall n m : nat, le' n m -> le' n (S m).
+Lemma le'_S : forall n m : nat, le' n m -> le' n (S m).
 Proof.
   induction 1; auto.
 Qed.
 (* end hide *)
 
-Theorem le_le'_same : le <--> le'.
+Lemma le_le'_same : le <--> le'.
 (* begin hide *)
 Proof.
   split; red.
@@ -140,7 +140,7 @@ Definition Rid {A : Type} : hrel A A := @eq A.
     że mówiąc o łączności relacji mamy na myśli coś innego, niż w przypadku
     funkcji. *)
 
-Theorem Rcomp_assoc :
+Lemma Rcomp_assoc :
   forall
     (A B C D : Type) (R : hrel A B) (S : hrel B C) (T : hrel C D),
       Rcomp R (Rcomp S T) <--> Rcomp (Rcomp R S) T.
@@ -152,7 +152,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rid_left :
+Lemma Rid_left :
   forall (A B : Type) (R : hrel A B),
     Rcomp (@Rid A) R <--> R.
 (* begin hide *)
@@ -163,7 +163,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rid_right :
+Lemma Rid_right :
   forall (A B : Type) (R : hrel A B),
     Rcomp R (@Rid B) <--> R.
 (* begin hide *)
@@ -188,7 +188,7 @@ Definition Rinv {A B : Type} (R : hrel A B) : hrel B A :=
 (** [Rinv] to operacja, która zamienia miejscami argumenty relacji. Relację
     [Rinv R] będziemy nazywać relacją odwrotną do [R]. *)
 
-Theorem Rinv_Rcomp :
+Lemma Rinv_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
     Rinv (Rcomp R S) <--> Rcomp (Rinv S) (Rinv R).
 (* begin hide *)
@@ -197,7 +197,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rinv_Rid :
+Lemma Rinv_Rid :
   forall A : Type, same_hrel (@Rid A) (Rinv (@Rid A)).
 (* begin hide *)
 Proof. compute. firstorder. Qed.
@@ -247,91 +247,91 @@ repeat match goal with
 end.
 (* end hide *)
 
-Theorem Rnot_double :
+Lemma Rnot_double :
   forall (A B : Type) (R : hrel A B),
     R --> Rnot (Rnot R).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rand_assoc :
+Lemma Rand_assoc :
   forall (A B : Type) (R S T : hrel A B),
     Rand R (Rand S T) <--> Rand (Rand R S) T.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rand_comm :
+Lemma Rand_comm :
   forall (A B : Type) (R S : hrel A B),
     Rand R S <--> Rand S R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rand_RTrue_l :
+Lemma Rand_RTrue_l :
   forall (A B : Type) (R : hrel A B),
     Rand RTrue R <--> R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rand_RTrue_r :
+Lemma Rand_RTrue_r :
   forall (A B : Type) (R : hrel A B),
     Rand R RTrue <--> R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rand_RFalse_l :
+Lemma Rand_RFalse_l :
   forall (A B : Type) (R : hrel A B),
     Rand RFalse R <--> RFalse.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rand_RFalse_r :
+Lemma Rand_RFalse_r :
   forall (A B : Type) (R : hrel A B),
     Rand R RFalse <--> RFalse.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_assoc :
+Lemma Ror_assoc :
   forall (A B : Type) (R S T : hrel A B),
     Ror R (Ror S T) <--> Ror (Ror R S) T.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_comm :
+Lemma Ror_comm :
   forall (A B : Type) (R S : hrel A B),
     Ror R S <--> Ror S R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_RTrue_l :
+Lemma Ror_RTrue_l :
   forall (A B : Type) (R : hrel A B),
     Ror RTrue R <--> RTrue.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_RTrue_r :
+Lemma Ror_RTrue_r :
   forall (A B : Type) (R : hrel A B),
     Ror R RTrue <--> RTrue.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_RFalse_l :
+Lemma Ror_RFalse_l :
   forall (A B : Type) (R : hrel A B),
     Ror RFalse R <--> R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_RFalse_r :
+Lemma Ror_RFalse_r :
   forall (A B : Type) (R : hrel A B),
     Ror R RFalse <--> R.
 (* begin hide *)
@@ -442,7 +442,7 @@ Instance RightUnique_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_not_LeftUnique :
+Lemma Ror_not_LeftUnique :
   exists (A B : Type) (R S : hrel A B),
     LeftUnique R /\ LeftUnique S /\ ~ LeftUnique (Ror R S).
 (* begin hide *)
@@ -455,7 +455,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Ror_not_RightUnique :
+Lemma Ror_not_RightUnique :
   exists (A B : Type) (R S : hrel A B),
     RightUnique R /\ RightUnique S /\ ~ RightUnique (Ror R S).
 (* begin hide *)
@@ -494,7 +494,7 @@ Qed.
     są lewostronnie unikalne, to dodanie do [R] par z [S] może spowodować
     wystąpienie powtórzeń, co niszczy unikalność. *)
 
-Theorem Rnot_not_LeftUnique :
+Lemma Rnot_not_LeftUnique :
   exists (A B : Type) (R : hrel A B),
     LeftUnique R /\ ~ LeftUnique (Rnot R).
 (* begin hide *)
@@ -507,7 +507,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rnot_not_RightUnique :
+Lemma Rnot_not_RightUnique :
   exists (A B : Type) (R : hrel A B),
     LeftUnique R /\ ~ LeftUnique (Rnot R).
 (* begin hide *)
@@ -537,7 +537,7 @@ Definition Rnegb (b b' : bool) : Prop := b = negb b'.
 Definition NRL (b b' : bool) : Prop :=
   if b then b = negb b' else False.
 
-Theorem RTrue_bool_not_LeftUnique :
+Lemma RTrue_bool_not_LeftUnique :
   ~ LeftUnique (@RTrue bool bool).
 Proof.
   compute. destruct 1. cut (true = false).
@@ -545,7 +545,7 @@ Proof.
     rel.
 Qed.
 
-Theorem RTrue_bool_not_RightUnique :
+Lemma RTrue_bool_not_RightUnique :
   ~ RightUnique (@RTrue bool bool).
 Proof.
   compute. destruct 1. cut (true = false).
@@ -564,7 +564,7 @@ Proof.
   split. intros. destruct b; cbn in *; subst; trivial.
 Qed.
 
-Theorem is_zero_not_RightUnique : ~ RightUnique is_zero.
+Lemma is_zero_not_RightUnique : ~ RightUnique is_zero.
 Proof.
   destruct 1. cut (1 = 2).
     inversion 1.
@@ -573,7 +573,7 @@ Qed.
 
 Definition is_zero' : nat -> bool -> Prop := Rinv is_zero.
 
-Theorem is_zero'_not_LeftUnique : ~ LeftUnique is_zero'.
+Lemma is_zero'_not_LeftUnique : ~ LeftUnique is_zero'.
 Proof.
   destruct 1. cut (1 = 2).
     inversion 1.
@@ -677,7 +677,7 @@ Qed.
     totalnej jest prawostronnie totalna i vice versa. Totalność jest również
     zachowywana przez składanie. *)
 
-Theorem Rand_not_LeftTotal :
+Lemma Rand_not_LeftTotal :
   exists (A B : Type) (R S : hrel A B),
     LeftTotal R /\ LeftTotal S /\ ~ LeftTotal (Rand R S).
 (* begin hide *)
@@ -691,7 +691,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rand_not_RightTotal :
+Lemma Rand_not_RightTotal :
   exists (A B : Type) (R S : hrel A B),
     RightTotal R /\ RightTotal S /\ ~ RightTotal (Rand R S).
 (* begin hide *)
@@ -703,14 +703,14 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem LeftTotal_Ror :
+Lemma LeftTotal_Ror :
   forall (A B : Type) (R S : hrel A B),
     LeftTotal R -> LeftTotal (Ror R S).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem RightTotal_Ror :
+Lemma RightTotal_Ror :
   forall (A B : Type) (R S : hrel A B),
     RightTotal R -> RightTotal (Ror R S).
 (* begin hide *)
@@ -724,7 +724,7 @@ Proof. rel. Qed.
     Z drugiej strony koniunkcja może zabrać jakąś parę, a wtedy relacja
     przestaje być totalna. *)
 
-Theorem Rnot_not_LeftTotal :
+Lemma Rnot_not_LeftTotal :
   exists (A B : Type) (R : hrel A B),
     RightTotal R /\ ~ RightTotal (Rnot R).
 (* begin hide *)
@@ -734,7 +734,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rnot_not_RightTotal :
+Lemma Rnot_not_RightTotal :
   exists (A B : Type) (R : hrel A B),
     RightTotal R /\ ~ RightTotal (Rnot R).
 (* begin hide *)
@@ -760,11 +760,11 @@ Qed.
     wymyślona na chama specjalnie na potrzeby zadania. *)
 
 (* begin hide *)
-Theorem RFalse_nonempty_not_LeftTotal :
+Lemma RFalse_nonempty_not_LeftTotal :
   forall A B : Type, A -> ~ LeftTotal (@RFalse A B).
 Proof. rel. Qed.
 
-Theorem RFalse_nonempty_not_RightTotal :
+Lemma RFalse_nonempty_not_RightTotal :
   forall A B : Type, B -> ~ RightTotal (@RFalse A B).
 Proof. rel. Qed.
 
@@ -773,12 +773,12 @@ Proof.
   split. intro. exists (S a). unfold lt. apply le_n.
 Qed.
 
-Theorem lt_not_RightTotal : ~ RightTotal lt.
+Lemma lt_not_RightTotal : ~ RightTotal lt.
 Proof.
   destruct 1. destruct (right_total0 0). inversion H.
 Qed.
 
-Theorem gt_not_LeftTotal : ~ LeftTotal gt.
+Lemma gt_not_LeftTotal : ~ LeftTotal gt.
 Proof.
   destruct 1. destruct (left_total0 0). inversion H.
 Qed.
@@ -823,12 +823,18 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 Definition Functional_to_fun
   {A B : Type} (R : hrel A B) (F : Functional R) : A -> B.
 Proof.
   intro a. destruct F. destruct F_LT0.
-  Fail destruct (left_total0 a).
-Abort.
+  specialize (left_total0 a).
+  Require Import IndefiniteDescription.
+  Search constructive_indefinite_description.
+  apply constructive_indefinite_description in left_total0.
+  destruct left_total0. exact x.
+Qed.
+(* end hide *)
 
 (** Z każdej funkcji można w prosty sposób zrobić relację funkcyjną, ale
     bez dodatkowych aksjomatów nie jesteśmy w stanie z relacji funkcyjnej
@@ -862,7 +868,7 @@ Qed.
     droga do wniosku, że złożenie relacji funkcyjnych jest relacją funkcyjną.
 *)
 
-Theorem Rinv_not_Functional :
+Lemma Rinv_not_Functional :
   exists (A B : Type) (R : hrel A B),
     Functional R /\ ~ Functional (Rinv R).
 (* begin hide *)
@@ -885,7 +891,7 @@ Qed.
     i -2). Stąd wnioskujemy, że odwrócenie relacji funkcyjnej f nie daje w
     wyniku relacji funkcyjnej. *)
 
-Theorem Rand_not_Functional :
+Lemma Rand_not_Functional :
   exists (A B : Type) (R S : hrel A B),
     Functional R /\ Functional S /\ ~ Functional (Rand R S).
 (* begin hide *)
@@ -899,7 +905,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Ror_not_Functional :
+Lemma Ror_not_Functional :
   exists (A B : Type) (R S : hrel A B),
     Functional R /\ Functional S /\ ~ Functional (Ror R S).
 (* begin hide *)
@@ -915,7 +921,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rnot_not_Functional :
+Lemma Rnot_not_Functional :
   exists (A B : Type) (R : hrel A B),
     Functional R /\ ~ Functional (Rnot R).
 (* begin hide *)
@@ -975,7 +981,7 @@ Inductive collatz : nat -> nat -> Prop :=
 
 Hint Constructors collatz.
 
-Theorem collatz_42 : collatz 42 1.
+Lemma collatz_42 : collatz 42 1.
 Proof.
   apply c_trans with 21.
     change 42 with (2 * 21). constructor.
@@ -1032,7 +1038,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rinv_not_Injective :
+Lemma Rinv_not_Injective :
   exists (A B : Type) (R : hrel A B),
     Injective R /\ ~ Injective (Rinv R).
 (* begin hide *)
@@ -1045,7 +1051,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rand_not_Injective :
+Lemma Rand_not_Injective :
   exists (A B : Type) (R S : hrel A B),
     Injective R /\ Injective S /\ ~ Injective (Rand R S).
 (* begin hide *)
@@ -1059,7 +1065,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Ror_not_Injective :
+Lemma Ror_not_Injective :
   exists (A B : Type) (R S : hrel A B),
     Injective R /\ Injective S /\ ~ Injective (Ror R S).
 (* begin hide *)
@@ -1075,7 +1081,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rnot_not_Injective :
+Lemma Rnot_not_Injective :
   exists (A B : Type) (R : hrel A B),
     Injective R /\ ~ Injective (Rnot R).
 (* begin hide *)
@@ -1096,30 +1102,52 @@ Qed.
 (** **** Ćwiczenie *)
 
 (** Znajdź relację, która jest injektywna w sensie [Injective] (jako relacja),
-    ale nie jest injektywna w sensie [injective] (jako funkcja). *)
+    ale nie jest injektywna w sensie [injective] (jako funkcja).
+
+    UPDATE TODO: to ćwiczenie to niezłe kłamstwo :) Ciekawe, kto się
+    skapnął? *)
 
 (* begin hide *)
 Instance Injective_αγόρι :
   Injective (fun (b : bool) (ob : option bool) => Some b = ob).
 Proof.
-  rel. inversion H0. trivial.
+  rel. inversion H0. reflexivity.
 Qed.
 
-Theorem αγόρι_not_inj :
-  ~ injective (Rinv (fun (b : bool) (ob : option bool) => Some b = ob)).
+Lemma αγόρι_not_inj :
+  injective (Rinv (fun (b : bool) (ob : option bool) => Some b = ob)).
 Proof.
-  compute. intro.
-Abort.
+  compute. intros. destruct x, x'.
+    apply (f_equal (fun f => f b)) in H. rewrite <- H. reflexivity.
+    apply (f_equal (fun f => f b)) in H. rewrite <- H. reflexivity.
+    apply (f_equal (fun f => f b)) in H. symmetry. rewrite H. reflexivity.
+    reflexivity.
+Qed.
 
-Theorem rel_inj :
+Lemma rel_inj :
   injective (fun (b : bool) (ob : option bool) => Some b = ob).
 Proof.
-  compute. intros. destruct x, x'; auto.
-    assert ((Some true = None) = (Some false = None)).
-      change (Some true = None) with
-        ((fun ob : option bool => Some true = ob) None).
-        rewrite H. trivial.
-Abort.
+  compute. intros.
+  apply (f_equal (fun f => f (Some x))) in H.
+  pose (p := eq_refl (Some x)).
+  rewrite H in p. inversion p. reflexivity.
+Qed.
+
+Lemma wut :
+  forall (A B : Type) (f : A -> B),
+    injective f <-> Injective (fun (a : A) (b : B) => f a = b).
+Proof.
+  split.
+    compute; intros. repeat split; intros.
+      exists (f a). reflexivity.
+      rewrite <- H0, <- H1. reflexivity.
+      apply H. rewrite H0, H1. reflexivity.
+    destruct 1 as [[[] []] []]. red. intros.
+      apply left_unique0 with (f x').
+        assumption.
+        reflexivity.
+Qed.
+
 (* end hide *)
 
 Class Surjective {A B : Type} (R : hrel A B) : Prop :=
@@ -1155,7 +1183,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rinv_not_Surjective :
+Lemma Rinv_not_Surjective :
   exists (A B : Type) (R : hrel A B),
     Surjective R /\ ~ Surjective (Rinv R).
 (* begin hide *)
@@ -1176,7 +1204,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rand_not_Surjective :
+Lemma Rand_not_Surjective :
   exists (A B : Type) (R S : hrel A B),
     Surjective R /\ Surjective S /\ ~ Surjective (Rand R S).
 (* begin hide *)
@@ -1190,7 +1218,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Ror_not_Surjective :
+Lemma Ror_not_Surjective :
   exists (A B : Type) (R S : hrel A B),
     Surjective R /\ Surjective S /\ ~ Surjective (Ror R S).
 (* begin hide *)
@@ -1206,7 +1234,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rnot_not_Surjective :
+Lemma Rnot_not_Surjective :
   exists (A B : Type) (R : hrel A B),
     Surjective R /\ ~ Surjective (Rnot R).
 (* begin hide *)
@@ -1264,7 +1292,7 @@ Instance Bijective_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rand_not_Bijective :
+Lemma Rand_not_Bijective :
   exists (A B : Type) (R S : hrel A B),
     Bijective R /\ Bijective S /\ ~ Bijective (Rand R S).
 (* begin hide *)
@@ -1278,7 +1306,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Ror_not_Bijective :
+Lemma Ror_not_Bijective :
   exists (A B : Type) (R S : hrel A B),
     Bijective R /\ Bijective S /\ ~ Bijective (Ror R S).
 (* begin hide *)
@@ -1294,7 +1322,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rnot_not_Bijective :
+Lemma Rnot_not_Bijective :
   exists (A B : Type) (R : hrel A B),
     Bijective R /\ ~ Bijective (Rnot R).
 (* begin hide *)
@@ -1377,7 +1405,7 @@ Instance Reflexive_RTrue :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem RFalse_nonempty_not_Reflexive :
+Lemma RFalse_nonempty_not_Reflexive :
   forall A : Type, A -> ~ Reflexive (@RFalse A A).
 (* begin hide *)
 Proof. rel. Qed.
@@ -1391,7 +1419,7 @@ Proof. rel. Qed.
     na typie niepustym, gdyż tam żaden obiekt nie jest w relacji z
     żadnym, a więc nie może także być w relacji z samym sobą. *)
 
-Theorem eq_subrelation_Reflexive :
+Lemma eq_subrelation_Reflexive :
   forall (A : Type) (R : rel A), Reflexive R ->
     subrelation (@eq A) R.
 (* begin hide *)
@@ -1463,19 +1491,19 @@ Proof. rel. Qed.
     "x jest synem y", "x jest córką y", "x jest nad y", "x jest pod y",
     "x jest za y", "x jest przed y", etc. *)
 
-Theorem Antireflexive_empty :
+Lemma Antireflexive_empty :
   forall R : rel Empty_set, Antireflexive R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem eq_nonempty_not_Antireflexive :
+Lemma eq_nonempty_not_Antireflexive :
   forall A : Type, A -> ~ Antireflexive (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem RTrue_nonempty_not_Antireflexive :
+Lemma RTrue_nonempty_not_Antireflexive :
   forall A : Type, A -> ~ Antireflexive (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
@@ -1493,7 +1521,7 @@ Proof. rel. Qed.
     co najmniej jeden element jest w relacji z samym sobą. Antyzwrotna
     jest za to relacja pusta ([RFalse]). *)
 
-Theorem Rcomp_not_Antireflexive :
+Lemma Rcomp_not_Antireflexive :
   exists (A : Type) (R S : rel A),
     Antireflexive R /\ Antireflexive S /\
     ~ Antireflexive (Rcomp R S).
@@ -1559,19 +1587,19 @@ Qed.
     Innym przykładem relacji niezwrotnej jest porządek "większy niż"
     na liczbach naturalnych. Porządkami zajmiemy się już niedługo. *)
 
-Theorem empty_not_Irreflexive :
+Lemma empty_not_Irreflexive :
   forall R : rel Empty_set, ~ Irreflexive R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem eq_empty_not_Irreflexive :
+Lemma eq_empty_not_Irreflexive :
   ~ Irreflexive (@eq Empty_set).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem eq_nonempty_not_Irreflexive :
+Lemma eq_nonempty_not_Irreflexive :
   forall A : Type, A -> ~ Irreflexive (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
@@ -1583,19 +1611,19 @@ Proof. rel. Qed.
     z tego, że nie możemy sprawdzić, czy dowolny typ [A] jest pusty, czy
     też nie. *)
 
-Theorem RTrue_empty_not_Irreflexive :
+Lemma RTrue_empty_not_Irreflexive :
   ~ Irreflexive (@RTrue Empty_set Empty_set).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem RTrue_nonempty_not_Irreflexive :
+Lemma RTrue_nonempty_not_Irreflexive :
   forall A : Type, A -> ~ Irreflexive (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem RFalse_empty_not_Irreflexive :
+Lemma RFalse_empty_not_Irreflexive :
   ~ Irreflexive (@RFalse Empty_set Empty_set).
 (* begin hide *)
 Proof. rel. Qed.
@@ -1612,7 +1640,7 @@ Proof. rel. Qed.
     pustym nie jest ona niezwrotna, ale na dowolnym typie niepustym już
     owszem. *)
 
-Theorem Rcomp_not_Irreflexive :
+Lemma Rcomp_not_Irreflexive :
   exists (A : Type) (R S : rel A),
     Irreflexive R /\ Irreflexive S /\ ~ Irreflexive (Rcomp R S).
 (* begin hide *)
@@ -1642,7 +1670,7 @@ Instance Irreflexive_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_not_Irreflexive :
+Lemma Ror_not_Irreflexive :
   exists (A : Type) (R S : rel A),
     Irreflexive R /\ Irreflexive S /\ ~ Irreflexive (Ror R S).
 (* begin hide *)
@@ -1683,13 +1711,13 @@ Proof. rel. Qed.
 (** Podstawowa zależność między nimi jest taka, że negacja relacji zwrotnej
     jest antyzwrotna, zaś negacja relacji antyzwrotnej jest zwrotna. *)
 
-Theorem Reflexive_Antireflexive_empty :
+Lemma Reflexive_Antireflexive_empty :
   forall R : rel Empty_set, Reflexive R /\ Antireflexive R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Reflexive_Antireflexive_nonempty :
+Lemma Reflexive_Antireflexive_nonempty :
   forall (A : Type) (R : rel A),
     A -> Reflexive R -> Antireflexive R -> False.
 (* begin hide *)
@@ -1730,7 +1758,7 @@ Class Asymmetric {A : Type} (R : rel A) : Prop :=
     ma znaczenia. Przykładami ze świata rzeczywistego mogą być np. relacje
     "jest blisko", "jest obok", "jest naprzeciwko". *)
 
-Theorem Symmetric_char :
+Lemma Symmetric_char :
   forall (A : Type) (R : rel A),
     Symmetric R <-> same_hrel (Rinv R) R.
 (* begin hide *)
@@ -1760,7 +1788,7 @@ Proof. rel. Qed.
 
 (** Równość, relacja pełna i pusta są symetryczne. *)
 
-Theorem Rcomp_not_Symmetric :
+Lemma Rcomp_not_Symmetric :
   exists (A : Type) (R S : rel A),
     Symmetric R /\ Symmetric S /\ ~ Symmetric (Rcomp R S).
 (* begin hide *)
@@ -1815,13 +1843,13 @@ Proof. rel. Qed.
     porównywania: "x jest wyższy od y", "x jest silniejszy od y",
     "x jest bogatszy od y". *)
 
-Theorem Antisymmetric_empty :
+Lemma Antisymmetric_empty :
   forall R : rel Empty_set, Antisymmetric R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem eq_nonempty_not_Antisymmetric :
+Lemma eq_nonempty_not_Antisymmetric :
   forall A : Type, A -> ~ Antisymmetric (@eq A).
 (* begin hide *)
 Proof.
@@ -1829,7 +1857,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem RTrue_nonempty_not_Antisymmetric :
+Lemma RTrue_nonempty_not_Antisymmetric :
   forall A : Type, A -> ~ Antisymmetric (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
@@ -1859,7 +1887,7 @@ match l with
 end.
 (* end hide *)
 
-Theorem Rcomp_not_Antisymmetric :
+Lemma Rcomp_not_Antisymmetric :
   exists (A : Type) (R S : rel A),
     Antisymmetric R /\ Antisymmetric S /\
     ~ Antisymmetric (Rcomp R S).
@@ -1896,7 +1924,7 @@ Instance Antisymmetric_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_not_Antisymmetric :
+Lemma Ror_not_Antisymmetric :
   exists (A : Type) (R S : rel A),
     Antisymmetric R /\ Antisymmetric S /\
     ~ Antisymmetric (Ror R S).
@@ -1919,7 +1947,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rnot_not_Antisymmetric :
+Lemma Rnot_not_Antisymmetric :
   exists (A : Type) (R : rel A),
     Antisymmetric R /\ ~ Antisymmetric (Rnot R).
 (* begin hide *)
@@ -1931,13 +1959,13 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem empty_not_Asymmetric :
+Lemma empty_not_Asymmetric :
   forall R : rel Empty_set, ~ Asymmetric R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rcomp_not_Asymmetric :
+Lemma Rcomp_not_Asymmetric :
   exists (A : Type) (R S : rel A),
     Asymmetric R /\ Asymmetric S /\ ~ Asymmetric (Rcomp R S).
 (* begin hide *)
@@ -1960,7 +1988,7 @@ Instance Asymmetric_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rand_not_Asymmetric :
+Lemma Rand_not_Asymmetric :
   exists (A : Type) (R S : rel A),
     Asymmetric R /\ Asymmetric S /\ ~ Asymmetric (Rand R S).
 (* begin hide *)
@@ -1979,7 +2007,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Ror_not_Asymmetric :
+Lemma Ror_not_Asymmetric :
   exists (A : Type) (R S : rel A),
     Asymmetric R /\ Asymmetric S /\ ~ Asymmetric (Ror R S).
 (* begin hide *)
@@ -2007,7 +2035,7 @@ Instance Transitive_eq :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rcomp_not_Transitive :
+Lemma Rcomp_not_Transitive :
   exists (A : Type) (R S : rel A),
     Transitive R /\ Transitive S /\ ~ Transitive (Rcomp R S).
 (* begin hide *)
@@ -2043,7 +2071,7 @@ Instance Transitive_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_not_Transitive :
+Lemma Ror_not_Transitive :
   exists (A : Type) (R S : rel A),
     Transitive R /\ Transitive S /\ ~ Transitive (Ror R S).
 (* begin hide *)
@@ -2055,7 +2083,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rnot_not_Transitive :
+Lemma Rnot_not_Transitive :
   exists (A : Type) (R : rel A),
     Transitive R /\ ~ Transitive (Rnot R).
 (* begin hide *)
@@ -2076,7 +2104,7 @@ Class Total {A : Type} (R : rel A) : Prop :=
 }.
 
 (* begin hide *)
-Theorem Rcomp_not_Total :
+Lemma Rcomp_not_Total :
   exists (A : Type) (R S : rel A),
     Total R /\ Total S /\ ~ Total (Rcomp R S).
 Proof.
@@ -2088,7 +2116,9 @@ Proof.
     destruct x as [| [| [|]]], y as [| [| [|]]]; compute; auto.
     destruct x as [| [| [|]]], y as [| [| [|]]]; compute; auto.
     unfold Rcomp; destruct 1.
-Abort.
+      specialize (total0 2 1). decompose [and or ex] total0.
+        compute in H. compute in H1. destruct x; cbn in H.
+Admitted.
 (* end hide *)
 
 Instance Total_Rinv :
@@ -2099,7 +2129,7 @@ Proof. rel. Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem Rand_not_Total :
+Lemma Rand_not_Total :
   exists (A : Type) (R S : rel A),
     Total R /\ Total S /\ ~ Total (Rand R S).
 Proof.
@@ -2115,11 +2145,12 @@ Proof.
       | true, true => True
       | _, _ => False
   end).
-  exists bool, R, R. repeat split; intros.
+  exists bool, R, S. repeat split; intros.
     destruct x, y; cbn; auto.
     destruct x, y; cbn; auto.
     unfold Rand; destruct 1.
-Abort.
+      decompose [and or] (total0 false true); cbn in *; assumption.
+Qed.
 (* end hide *)
 
 Instance Total_Ror :
@@ -2129,7 +2160,7 @@ Instance Total_Ror :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rnot_not_Total :
+Lemma Rnot_not_Total :
   exists (A : Type) (R : rel A),
     Total R /\ ~ Total (Rnot R).
 (* begin hide *)
@@ -2166,7 +2197,18 @@ Instance Trichotomous_eq_singleton :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem eq_not_Trichotomous :
+Instance Total_Trichotomous :
+  forall (A : Type) (R : rel A),
+    Total R -> Trichotomous R.
+(* begin hide *)
+Proof.
+  destruct 1. split. intros. destruct (total0 x y).
+    left. assumption.
+    do 2 right. assumption.
+Qed.
+(* end hide *)
+
+Lemma eq_not_Trichotomous :
   exists A : Type, ~ Trichotomous (@eq A).
 (* begin hide *)
 Proof.
@@ -2174,15 +2216,28 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
+Goal
+  exists (A : Type) (R S : rel A),
+    Trichotomous R /\ Trichotomous S /\ ~ Trichotomous (Rcomp R S).
+Proof.
+  pose (Rcomp_not_Total).
+  destruct e as (A & R & S & H1 & H2 & H3).
+  exists A, R, S. split; [idtac | split].
+    apply Total_Trichotomous. assumption.
+    apply Total_Trichotomous. assumption.
+    intro. apply H3.
+Abort.
+
 Goal
   forall (A : Type) (R S : rel A),
     Trichotomous R -> Trichotomous S -> Trichotomous (Rcomp R S).
-(* begin hide *)
 Proof.
-  rel.
+  intros.
 Abort.
+(* end hide *)
 
-Theorem Rcomp_not_Trichotomous :
+Lemma Rcomp_not_Trichotomous :
   exists (A : Type) (R S : rel A),
     Trichotomous R /\ Trichotomous S /\ Trichotomous (Rcomp R S).
 (* begin hide *)
@@ -2204,7 +2259,7 @@ Proof. rel. Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem Rand_not_Trichotomous :
+Lemma Rand_not_Trichotomous :
   exists (A : Type) (R S : rel A),
     Trichotomous R /\ Trichotomous S /\ Trichotomous (Rand R S).
 Proof.
@@ -2219,7 +2274,7 @@ Instance Trichotomous_Ror :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rnot_not_Trichotomous :
+Lemma Rnot_not_Trichotomous :
   exists (A : Type) (R : rel A),
     Trichotomous R /\ ~ Trichotomous (Rnot R).
 (* begin hide *)
@@ -2246,7 +2301,7 @@ Proof. rel. Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem Rcomp_not_Dense :
+Lemma Rcomp_not_Dense :
   exists (A : Type) (R S : rel A),
     Dense R /\ Dense S /\ ~ Dense (Rcomp R S).
 Proof.
@@ -2261,7 +2316,7 @@ Proof. rel. Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem Rand_not_Dense :
+Lemma Rand_not_Dense :
   exists (A : Type) (R S : rel A),
     Dense R /\ Dense S /\ ~ Dense (Rand R S).
 Proof.
@@ -2276,7 +2331,7 @@ Proof. rel. Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem Rnot_not_Dense :
+Lemma Rnot_not_Dense :
   exists (A : Type) (R : rel A),
     Dense R /\ ~ Dense (Rnot R).
 Proof.
@@ -2299,7 +2354,7 @@ Proof. rel. Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem Rcomp_not_Equivalence :
+Lemma Rcomp_not_Equivalence :
   exists (A : Type) (R S : rel A),
     Equivalence R /\ Equivalence S /\ ~ Equivalence (Rcomp R S).
 Proof.
@@ -2321,7 +2376,7 @@ Proof. rel. Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem Ror_not_Equivaence :
+Lemma Ror_not_Equivaence :
   exists (A : Type) (R S : rel A),
     Equivalence R /\ Equivalence S /\ ~ Equivalence (Rcomp R S).
 Proof.
@@ -2329,7 +2384,7 @@ Abort. (* TODO *)
 (* end hide *)
 
 (* begin hide *)
-Theorem Rnot_not_Equivalence :
+Lemma Rnot_not_Equivalence :
   exists (A : Type) (R : rel A),
     Equivalence R /\ ~ Equivalence (Rnot R).
 Proof.
@@ -2358,7 +2413,7 @@ Instance WeakAntisymmetric_eq :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rcomp_not_WeakAntisymmetric :
+Lemma Rcomp_not_WeakAntisymmetric :
   exists (A : Type) (R S : rel A),
     WeakAntisymmetric R /\ WeakAntisymmetric S /\
       ~ WeakAntisymmetric (Rcomp R S).
@@ -2394,7 +2449,7 @@ Instance WeakAntisymmetric_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_not_WeakAntisymmetric :
+Lemma Ror_not_WeakAntisymmetric :
   exists (A : Type) (R S : rel A),
     WeakAntisymmetric R /\ WeakAntisymmetric S /\
       ~ WeakAntisymmetric (Ror R S).
@@ -2413,7 +2468,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rnot_not_WeakAntisymmetric :
+Lemma Rnot_not_WeakAntisymmetric :
   exists (A : Type) (R : rel A),
     WeakAntisymmetric R /\ ~ WeakAntisymmetric (Rnot R).
 (* begin hide *)
@@ -2442,7 +2497,7 @@ Instance WeakAntisymmetric_equiv :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Rcomp_not_WeakAntisymmetric' :
+Lemma Rcomp_not_WeakAntisymmetric' :
   exists (A : Type) (E R S : rel A), forall H : Equivalence E,
     WeakAntisymmetric' H R /\ WeakAntisymmetric' H S /\
       ~ WeakAntisymmetric' H (Rcomp R S).
@@ -2478,7 +2533,7 @@ Instance WeakAntisymmetric'_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem Ror_not_WeakAntisymmetric' :
+Lemma Ror_not_WeakAntisymmetric' :
   exists (A : Type) (E R S : rel A), forall H : Equivalence E,
     WeakAntisymmetric' H R /\ WeakAntisymmetric' H S /\
       ~ WeakAntisymmetric' H (Ror R S).
@@ -2497,7 +2552,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem Rnot_not_WeakAntisymmetric' :
+Lemma Rnot_not_WeakAntisymmetric' :
   exists (A : Type) (E R : rel A), forall H : Equivalence E,
     WeakAntisymmetric' H R /\ ~ WeakAntisymmetric' H (Rnot R).
 (* begin hide *)
@@ -2571,27 +2626,27 @@ Instance Reflexive_rc :
 Proof. rc. Qed.
 (* end hide *)
 
-Theorem subrelation_rc :
+Lemma subrelation_rc :
   forall (A : Type) (R : rel A), subrelation R (refl_clos R).
 (* begin hide *)
 Proof. rc. Qed.
 (* end hide *)
 
-Theorem rc_smallest :
+Lemma rc_smallest :
   forall (A : Type) (R S : rel A),
     subrelation R S -> Reflexive S -> subrelation (refl_clos R) S.
 (* begin hide *)
 Proof. rc. Qed.
 (* end hide *)
 
-Theorem rc_idempotent :
+Lemma rc_idempotent :
   forall (A : Type) (R : rel A),
     refl_clos (refl_clos R) <--> refl_clos R.
 (* begin hide *)
 Proof. rc. Qed.
 (* end hide *)
 
-Theorem rc_Rinv :
+Lemma rc_Rinv :
   forall (A : Type) (R : rel A),
     Rinv (refl_clos (Rinv R)) <--> refl_clos R.
 (* begin hide *)
@@ -2619,27 +2674,27 @@ Instance Symmetric_sc :
 Proof. sc. Qed.
 (* end hide *)
 
-Theorem subrelation_sc :
+Lemma subrelation_sc :
   forall (A : Type) (R : rel A), subrelation R (symm_clos R).
 (* begin hide *)
 Proof. sc. Qed.
 (* end hide *)
 
-Theorem sc_smallest :
+Lemma sc_smallest :
   forall (A : Type) (R S : rel A),
     subrelation R S -> Symmetric S -> subrelation (symm_clos R) S.
 (* begin hide *)
 Proof. sc. Qed.
 (* end hide *)
 
-Theorem sc_idempotent :
+Lemma sc_idempotent :
   forall (A : Type) (R : rel A),
     symm_clos (symm_clos R) <--> symm_clos R.
 (* begin hide *)
 Proof. sc. Qed.
 (* end hide *)
 
-Theorem sc_Rinv :
+Lemma sc_Rinv :
   forall (A : Type) (R : rel A),
     Rinv (symm_clos (Rinv R)) <--> symm_clos R.
 (* begin hide *)
@@ -2666,13 +2721,13 @@ Instance Transitive_tc :
 Proof. tc. Qed.
 (* end hide *)
 
-Theorem subrelation_tc :
+Lemma subrelation_tc :
   forall (A : Type) (R : rel A), subrelation R (trans_clos R).
 (* begin hide *)
 Proof. tc. Qed.
 (* end hide *)
 
-Theorem tc_smallest :
+Lemma tc_smallest :
   forall (A : Type) (R S : rel A),
     subrelation R S -> Transitive S ->
       subrelation (trans_clos R) S.
@@ -2680,14 +2735,14 @@ Theorem tc_smallest :
 Proof. tc. Qed.
 (* end hide *)
 
-Theorem tc_idempotent :
+Lemma tc_idempotent :
   forall (A : Type) (R : rel A),
     trans_clos (trans_clos R) <--> trans_clos R.
 (* begin hide *)
 Proof. tc. Qed.
 (* end hide *)
 
-Theorem tc_Rinv :
+Lemma tc_Rinv :
   forall (A : Type) (R : rel A),
     Rinv (trans_clos (Rinv R)) <--> trans_clos R.
 (* begin hide *)
@@ -2720,13 +2775,13 @@ Instance Equivalence_ec :
 Proof. ec. Qed.
 (* end hide *)
 
-Theorem subrelation_ec :
+Lemma subrelation_ec :
   forall (A : Type) (R : rel A), subrelation R (equiv_clos R).
 (* begin hide *)
 Proof. ec. Qed.
 (* end hide *)
 
-Theorem ec_smallest :
+Lemma ec_smallest :
   forall (A : Type) (R S : rel A),
     subrelation R S -> Equivalence S ->
       subrelation (equiv_clos R) S.
@@ -2734,14 +2789,14 @@ Theorem ec_smallest :
 Proof. ec. Qed.
 (* end hide *)
 
-Theorem ec_idempotent :
+Lemma ec_idempotent :
   forall (A : Type) (R : rel A),
     equiv_clos (equiv_clos R) <--> equiv_clos R.
 (* begin hide *)
 Proof. ec. Qed.
 (* end hide *)
 
-Theorem ec_Rinv :
+Lemma ec_Rinv :
   forall (A : Type) (R : rel A),
     Rinv (equiv_clos (Rinv R)) <--> equiv_clos R.
 (* begin hide *)
@@ -2774,13 +2829,13 @@ Instance Symmetric_rsc :
 Proof. rstc. Qed.
 (* end hide *)
 
-Theorem subrelation_rsc :
+Lemma subrelation_rsc :
   forall (A : Type) (R : rel A), subrelation R (rsc R).
 (* begin hide *)
 Proof. rstc. Qed.
 (* end hide *)
 
-Theorem rsc_smallest :
+Lemma rsc_smallest :
   forall (A : Type) (R S : rel A),
     subrelation R S -> Reflexive S -> Symmetric S ->
       subrelation (rsc R) S.
@@ -2788,14 +2843,14 @@ Theorem rsc_smallest :
 Proof. rstc. Qed.
 (* end hide *)
 
-Theorem rsc_idempotent :
+Lemma rsc_idempotent :
   forall (A : Type) (R : rel A),
     rsc (rsc R) <--> rsc R.
 (* begin hide *)
 Proof. rstc. Qed.
 (* end hide *)
 
-Theorem rsc_Rinv :
+Lemma rsc_Rinv :
   forall (A : Type) (R : rel A),
     Rinv (rsc (Rinv R)) <--> rsc R.
 (* begin hide *)
@@ -2814,13 +2869,13 @@ Instance Equivalence_rstc :
 Proof. rstc. Qed.
 (* end hide *)
 
-Theorem subrelation_rstc :
+Lemma subrelation_rstc :
   forall (A : Type) (R : rel A), subrelation R (rstc R).
 (* begin hide *)
 Proof. rstc. Qed.
 (* end hide *)
 
-Theorem rstc_smallest :
+Lemma rstc_smallest :
   forall (A : Type) (R S : rel A),
     subrelation R S -> Equivalence S -> subrelation (rstc R) S.
 (* begin hide *)
@@ -2828,7 +2883,7 @@ Proof. rstc. Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem rstc_idempotent :
+Lemma rstc_idempotent :
   forall (A : Type) (R : rel A),
     rstc (rstc R) <--> rstc R.
 Proof.
@@ -2836,7 +2891,7 @@ Abort. (* TODO *)
 (* end hide *)
 
 (* begin hide *)
-Theorem rstc_Rinv :
+Lemma rstc_Rinv :
   forall (A : Type) (R : rel A),
     Rinv (rstc (Rinv R)) <--> rstc R.
 Proof.
@@ -2854,7 +2909,7 @@ Instance Antireflexive_rr :
 Proof. rel. Qed.
 (* end hide *)
 
-Theorem rr_rc :
+Lemma rr_rc :
   forall (A : Type) (R : rel A),
     Reflexive R -> refl_clos (rr R) <--> R.
 (* begin hide *)
