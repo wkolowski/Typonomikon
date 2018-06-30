@@ -342,3 +342,166 @@ Abort.
 (* end hide *)
 
 (* TODO: init, unsnoc *)
+
+Lemma take_remove :
+  forall (A : Type) (l l1 l2 : list A) (n m : nat) (x : A),
+    remove n l = Some (x, l1, l2) ->
+      take m l1 = take (min n m) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct n as [| n'].
+      inversion H; subst; cbn. rewrite take_nil. reflexivity.
+      destruct (remove n' t) eqn: Heq.
+        destruct p, p. inv H. destruct m as[| m']; cbn.
+          reflexivity.
+          rewrite (IHt _ _ _ _ _ Heq). reflexivity.
+        inversion H.
+Restart.
+  intros. apply remove_spec' in H. destruct H.
+  rewrite H, take_take. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma take_remove' :
+  forall (A : Type) (l l1 l2 : list A) (n m : nat) (x : A),
+    remove n l = Some (x, l1, l2) ->
+      take m l2 = take m (drop (S n) l).
+(* begin hide *)
+Proof.
+  intros. apply remove_spec' in H.
+  destruct H. subst. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma drop_remove_l :
+  forall (A : Type) (l l1 l2 : list A) (n m : nat) (x : A),
+    remove n l = Some (x, l1, l2) ->
+      drop m l1 = take (n - m) (drop m l).
+(* begin hide *)
+Proof.
+  intros. apply remove_spec' in H. destruct H.
+  subst. rewrite drop_take. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma drop_remove_r :
+  forall (A : Type) (l l1 l2 : list A) (n m : nat) (x : A),
+    remove n l = Some (x, l1, l2) ->
+      drop m l2 = drop (S n + m) l.
+(* begin hide *)
+Proof.
+  intros. apply remove_spec' in H. destruct H.
+  subst. rewrite drop_drop. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove_megaspec :
+  forall (A : Type) (l : list A) (n : nat),
+    match remove n l with
+        | None => length l <= n
+        | Some (x, l1, l2) =>
+            nth n l = Some x /\
+            l1 = take n l /\
+            l2 = drop (S n) l /\
+            l = l1 ++ x :: l2
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    apply le_0_n.
+    destruct n as [| n']; cbn.
+      repeat split.
+      destruct (remove n' t) eqn: Heq.
+        destruct p, p. specialize (IHt n'). rewrite Heq in IHt.
+          decompose [and] IHt; clear IHt. subst. repeat split.
+            assumption.
+            rewrite H3 at 1. reflexivity.
+        specialize (IHt n'). rewrite Heq in IHt. apply le_n_S, IHt.
+Qed.
+(* end hide *)
+
+Lemma remove_zip :
+  forall (A B : Type) (la : list A) (lb : list B) (n : nat),
+    remove n (zip la lb) =
+    match remove n la, remove n lb with
+        | Some (a, la1, la2), Some (b, lb1, lb2) =>
+            Some ((a, b), zip la1 lb1, zip la2 lb2)
+        | _, _ => None
+    end.
+(* begin hide *)
+Proof.
+  intros. assert (H := remove_megaspec A la n). destruct (remove n la).
+    Focus 2. apply remove_length_ge. rewrite length_zip.
+      apply Nat.min_case_strong; intros.
+        assumption.
+        apply le_trans with (length la); assumption.
+    destruct p, p. decompose [and] H; clear H; subst.
+      assert (H := remove_megaspec B lb n). destruct (remove n lb).
+        Focus 2. apply remove_length_ge. rewrite length_zip.
+          apply Nat.min_case_strong; intros.
+            apply le_trans with (length lb); assumption.
+            assumption.
+        destruct p, p. decompose [and] H; clear H; subst.
+          rewrite H4, H6.
+Restart.
+  induction la as [| ha ta]; cbn; intros.
+    reflexivity.
+    destruct lb as [| hb tb]; cbn.
+      destruct n as [| n'].
+        reflexivity.
+        destruct (remove n' ta).
+          destruct p, p. 1-2: reflexivity.
+      destruct n as [| n'].
+        reflexivity.
+        rewrite IHta. destruct (remove n' ta), (remove n' tb).
+          destruct p, p, p0, p. cbn. reflexivity.
+          destruct p, p. 1-3: reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove_zipWith :
+  forall (A B C : Type) (f : A -> B -> C)
+    (la : list A) (lb : list B) (n : nat),
+      remove n (zipWith f la lb) =
+      match remove n la, remove n lb with
+          | Some (a, la1, la2), Some (b, lb1, lb2) =>
+              Some (f a b, zipWith f la1 lb1, zipWith f la2 lb2)
+          | _, _ => None
+      end.
+(* begin hide *)
+Proof.
+  induction la as [| ha ta]; cbn; intros.
+    reflexivity.
+    destruct lb as [| hb tb]; cbn.
+      destruct n as [| n'].
+        reflexivity.
+        destruct (remove n' ta).
+          destruct p, p. 1-2: reflexivity.
+      destruct n as [| n'].
+        reflexivity.
+        rewrite IHta. destruct (remove n' ta), (remove n' tb).
+          destruct p, p, p0, p. cbn. reflexivity.
+          destruct p, p. 1-3: reflexivity.
+Qed.
+(* end hide *)
+
+Lemma count_remove :
+  forall (A : Type) (p : A -> bool) (l l1 l2 : list A) (n : nat) (x : A),
+    remove n l = Some (x, l1, l2) ->
+      count p l = (if p x then 1 else 0) + count p l1 + count p l2.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct n as [| n']; cbn.
+      inversion H; subst; clear H. destruct (p x); reflexivity.
+      destruct (remove n' t) eqn: Heq; cbn in H.
+        destruct p0, p0. inversion H; subst; clear H.
+          cbn. destruct (p h), (p x) eqn: Hpx; cbn;
+          rewrite (IHt _ _ _ _ Heq), Hpx; reflexivity.
+        inversion H.
+Qed.
+(* end hide *)
+

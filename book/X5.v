@@ -2217,38 +2217,16 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-Goal
+Lemma Rcomp_not_Trichotomous :
   exists (A : Type) (R S : rel A),
     Trichotomous R /\ Trichotomous S /\ ~ Trichotomous (Rcomp R S).
 Proof.
-  pose (Rcomp_not_Total).
-  destruct e as (A & R & S & H1 & H2 & H3).
-  exists A, R, S. split; [idtac | split].
-    apply Total_Trichotomous. assumption.
-    apply Total_Trichotomous. assumption.
-    intro. apply H3.
-Abort.
-
-Goal
-  forall (A : Type) (R S : rel A),
-    Trichotomous R -> Trichotomous S -> Trichotomous (Rcomp R S).
-Proof.
-  intros.
-Abort.
-(* end hide *)
-
-Lemma Rcomp_not_Trichotomous :
-  exists (A : Type) (R S : rel A),
-    Trichotomous R /\ Trichotomous S /\ Trichotomous (Rcomp R S).
-(* begin hide *)
-Proof.
-  pose (R := fun n m : nat => n <= m \/
-    lookup (n, m) [(0, 2)] = true).
-  pose (S := fun n m : nat =>
-    lookup (n, m) [(0, 2)] = true).
-  exists nat, R, S. repeat split.
-    destruct x as [| [|]], y as [| [|]]; compute; auto.
-Abort.
+  exists nat, lt, lt. split; [idtac | split].
+    1-2: admit.
+    destruct 1. unfold Rcomp in *. specialize (trichotomous0 0 1).
+      decompose [and or ex] trichotomous0; clear trichotomous0.
+        Require Import Omega. 1-3: omega.
+Admitted.
 (* end hide *)
 
 Instance Trichotomous_Rinv :
@@ -2261,10 +2239,13 @@ Proof. rel. Qed.
 (* begin hide *)
 Lemma Rand_not_Trichotomous :
   exists (A : Type) (R S : rel A),
-    Trichotomous R /\ Trichotomous S /\ Trichotomous (Rand R S).
+    Trichotomous R /\ Trichotomous S /\ ~ Trichotomous (Rand R S).
 Proof.
-  pose (R := fun b b' : bool => b = negb b').
-Abort.
+  exists nat, lt, gt. split; [idtac | split].
+    1-2: admit.
+    destruct 1 as [H]. unfold Rand in H. specialize (H 0 1).
+      decompose [and or] H; clear H; omega.
+Admitted.
 (* end hide *)
 
 (* begin hide *)
@@ -2300,19 +2281,27 @@ Instance Dense_eq :
 Proof. rel. Qed.
 (* end hide *)
 
-(* begin hide *)
-Lemma Rcomp_not_Dense :
-  exists (A : Type) (R S : rel A),
-    Dense R /\ Dense S /\ ~ Dense (Rcomp R S).
-Proof.
-Abort.
-(* end hide *)
-
 Instance Dense_Rinv :
   forall (A : Type) (R : rel A),
     Dense R -> Dense (Rinv R).
 (* begin hide *)
 Proof. rel. Qed.
+(* end hide *)
+
+(* begin hide *)
+Lemma Rcomp_not_Dense :
+  exists (A : Type) (R S : rel A),
+    Dense R /\ Dense S /\ ~ Dense (Rcomp R S).
+Proof.
+  (* TODO: Potrzebna jest dowolna relacja gęsta i antyzwrotna. *)
+  exists nat.
+  assert (R : rel nat). admit.
+  assert (Dense R). admit.
+  assert (Irreflexive R). admit.
+  exists lt, lt. split; [idtac | split].
+    Focus 3.
+    unfold Rcomp, Rinv. destruct 1.
+Abort.
 (* end hide *)
 
 (* begin hide *)
@@ -2354,6 +2343,18 @@ Proof. rel. Qed.
 (* end hide *)
 
 (* begin hide *)
+Lemma Rcomp_Equivalence :
+  forall (A : Type) (R S : rel A),
+    Equivalence R -> Equivalence S -> Equivalence (Rcomp R S).
+Proof.
+  unfold Rcomp.
+  destruct 1 as [[] [] []],
+           1 as [[] [] []].
+  repeat split; intros.
+    rel.
+    destruct H as (b & H1 & H2).
+Abort.
+
 Lemma Rcomp_not_Equivalence :
   exists (A : Type) (R S : rel A),
     Equivalence R /\ Equivalence S /\ ~ Equivalence (Rcomp R S).
@@ -2378,7 +2379,7 @@ Proof. rel. Qed.
 (* begin hide *)
 Lemma Ror_not_Equivaence :
   exists (A : Type) (R S : rel A),
-    Equivalence R /\ Equivalence S /\ ~ Equivalence (Rcomp R S).
+    Equivalence R /\ Equivalence S /\ ~ Equivalence (Ror R S).
 Proof.
 Abort. (* TODO *)
 (* end hide *)

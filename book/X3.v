@@ -5372,6 +5372,27 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma count_take' :
+  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+    count p (take n l) <= min n (count p l).
+(* begin hide *)
+Proof.
+  intros A p n l. revert n.
+  induction l as [| h t]; cbn; intros.
+    rewrite take_nil, Nat.min_0_r. cbn. apply le_n.
+    destruct n as [| n']; cbn.
+      apply le_n.
+      destruct (p h).
+        apply le_n_S, IHt. apply le_trans with (min n' (count p t)).
+          apply IHt.
+          destruct (count p t).
+            rewrite Nat.min_0_r. apply le_n.
+            apply le_trans with (min (S n') (S n)).
+              apply Nat.min_le_compat_r. apply le_S, le_n.
+              cbn. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma count_drop :
   forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
     count p (drop n l) <= length l - n.

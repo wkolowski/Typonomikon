@@ -2492,8 +2492,8 @@ Qed.
     theorem statement. It is easier and quicker than trying to achieve
     the same effect through [intros] and [generalize dependent], but I
     don't consider it to be a good one. I recommend that the order of
-    quantification over the arguments should follow the order of the
-    arguments in the function's definition. *)
+    quantification over the arguments follow the order of the arguments
+    in the function's definition. *)
 
 (** **** Exercise (easy) *)
 
@@ -2573,7 +2573,7 @@ Qed.
     It was neither deep nor fundamental and we easily mitigated it by simple
     tactic manipulation.
 
-    The second kind of generalitylessness is more fundamental and arises when
+    The second kind of lack of generality is more fundamental and arises when
     we are trying to prove too weak a theorem. It may appear paradoxical at
     first, but sometimes proving a stronger theorem is easier than proving
     a weaker one. Let's see this in an example. *)
