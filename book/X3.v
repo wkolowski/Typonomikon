@@ -10677,6 +10677,38 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma AtLeast_cons :
+  forall (A : Type) (P : A -> Prop) (n : nat) (h : A) (t : list A),
+    AtLeast P n (h :: t) <->
+    AtLeast P n t \/ P h /\ AtLeast P (n - 1) t.
+(* begin hide *)
+Proof.
+  split; intros.
+    inv H.
+      left. constructor.
+      right. cbn. rewrite <- minus_n_O. split; assumption.
+      left. assumption.
+    decompose [and or] H; clear H.
+      constructor. assumption.
+      destruct n as [| n'].
+        constructor.
+        cbn in H2. rewrite <- minus_n_O in H2. constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_cons' :
+  forall (A : Type) (P : A -> Prop) (n : nat) (h : A) (t : list A),
+    AtLeast P (S n) (h :: t) -> AtLeast P n t.
+(* begin hide *)
+Proof.
+  intros. inv H.
+    assumption.
+    apply AtLeast_le with (S n).
+      assumption.
+      apply le_S, le_n.
+Qed.
+(* end hide *)
+
 Lemma AtLeast_length :
   forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
     AtLeast P n l -> n <= length l.

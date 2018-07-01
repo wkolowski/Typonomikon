@@ -505,3 +505,187 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma remove_filter :
+  forall (A : Type) (p : A -> bool) (l l1 l2 : list A) (x : A) (n : nat),
+    remove n (filter p l) = Some (x, l1, l2) ->
+      exists m : nat,
+      match remove m l with
+          | None => False
+          | Some (y, l1', l2') =>
+              x = y /\ l1 = filter p l1' /\ l2 = filter p l2'
+      end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct (p h) eqn: Hph.
+      destruct n as [| n']; cbn in *.
+        inversion H; subst; clear H. exists 0. repeat split.
+        destruct (remove n' (filter p t)) eqn: Heq.
+          destruct p0, p0. inversion H; subst; clear H.
+            destruct (IHt _ _ _ _ Heq) as [m IH].
+              exists (S m). destruct (remove m t).
+                destruct p0, p0, IH as (IH1 & IH2 & IH3); subst.
+                  cbn. rewrite Hph. repeat split.
+                assumption.
+          inversion H.
+      destruct (IHt _ _ _ _ H) as (m & IH). exists (S m).
+        destruct (remove m t).
+          destruct p0, p0. cbn. rewrite Hph. assumption.
+          assumption.
+Qed.
+(* end hide *)
+
+(* TODO: intersperse_remove *)
+
+Lemma elem_remove' :
+  forall (A : Type) (l l1 l2 : list A) (n : nat) (x y : A),
+    remove n l = Some (y, l1, l2) ->
+      elem x l <-> x = y \/ elem x l1 \/ elem x l2.
+(* begin hide *)
+Proof.
+  split.
+    intro. revert l1 l2 n y H. induction H0; cbn; intros.
+      destruct n as [| n'].
+        inv H. left. reflexivity.
+        destruct (remove n' l).
+          destruct p, p. inv H. right. do 2 left.
+          inv H.
+      destruct n as [| n'].
+        inv H. do 2 right. assumption.
+        destruct (remove n' t) eqn: Heq.
+          destruct p, p. inv H. decompose [or] (IHelem _ _ _ _ Heq).
+            left. assumption.
+            right. left. right. assumption.
+            do 2 right. assumption.
+          inv H.
+    revert l1 l2 n x y H. induction l as [| h t]; cbn; intros.
+      inv H.
+      destruct n as [| n'].
+        inv H. decompose [or] H0; clear H0.
+          subst. left.
+          inv H1.
+          right. assumption.
+        destruct (remove n' t) eqn: Heq.
+          destruct p, p. inv H. specialize (IHt _ _ _ x _ Heq).
+            decompose [or] H0; clear H0.
+              right. apply IHt. left. assumption.
+              inv H1.
+                left.
+                right. apply IHt. right. left. assumption.
+              right. apply IHt. do 2 right. assumption.
+              inv H.
+Qed.
+(* end hide *)
+
+Lemma Exists_remove :
+  forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
+    remove n l = Some (x, l1, l2) ->
+      Exists P l <-> P x \/ Exists P l1 \/ Exists P l2.
+(* begin hide *)
+Proof.
+  split.
+    intro. revert l1 l2 n x H. induction H0; cbn; intros.
+      destruct n as [| n'].
+        inv H0. left. assumption.
+        destruct (remove n' t).
+          destruct p, p. inv H0. right. do 2 left. assumption.
+          inv H0.
+      destruct n as [| n'].
+        inv H. do 2 right. assumption.
+        destruct (remove n' t) eqn: Heq.
+          destruct p, p. inv H. decompose [or] (IHExists _ _ _ _ Heq).
+            left. assumption.
+            right. left. right. assumption.
+            do 2 right. assumption.
+          inv H.
+    revert l1 l2 n x H. induction l as [| h t]; cbn; intros.
+      inv H.
+      destruct n as [| n'].
+        inv H. decompose [or] H0; clear H0.
+          left. assumption.
+          inv H1.
+          right. assumption.
+        destruct (remove n' t) eqn: Heq.
+          destruct p, p. inv H. specialize (IHt _ _ _ x Heq).
+            decompose [or] H0; clear H0.
+              right. apply IHt. left. assumption.
+              inv H1.
+                left. assumption.
+                right. apply IHt. right. left. assumption.
+              right. apply IHt. do 2 right. assumption.
+              inv H.
+Restart.
+  intros. pose (remove_megaspec A l n). rewrite H in y.
+  decompose [and] y; clear y. rewrite H4; subst; clear H4.
+  rewrite Exists_app, Exists_cons. firstorder.
+Qed.
+(* end hide *)
+
+Lemma Forall_remove :
+  forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
+    remove n l = Some (x, l1, l2) ->
+      Forall P l <-> P x /\ Forall P l1 /\ Forall P l2.
+(* begin hide *)
+Proof.
+  intros. pose (remove_megaspec A l n). rewrite H in y.
+  decompose [and] y; clear y. rewrite H4; subst; clear H4.
+  rewrite Forall_app, Forall_cons'. firstorder.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_remove :
+  forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
+    remove n l = Some (x, l1, l2) ->
+      forall m : nat,
+        AtLeast P m l <-> exists m1 m2 : nat,
+          AtLeast P m1 l1 /\ AtLeast P m2 l2 /\ m = m1 + m2.
+(* begin hide *)
+Proof.
+  intros. pose (remove_megaspec A l n). rewrite H in y.
+  decompose [and] y; clear y. rewrite H4; subst; clear H4.
+  rewrite AtLeast_app. split.
+    destruct 1 as (m1 & m2 & H1 & H2 & H3); subst. 
+Abort.
+(* end hide *)
+
+Lemma Exactly_remove :
+  forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
+    remove n l = Some (x, l1, l2) ->
+      forall m : nat,
+        Exactly P m l <-> exists m1 m2 : nat,
+          Exactly P m1 l1 /\ Exactly P m2 l2 /\
+          (P x /\ m = S (m1 + m2) \/ ~ P x /\ m = m1 + m2).
+(* begin hide *)
+Proof.
+  intros. pose (remove_megaspec A l n). rewrite H in y.
+  decompose [and] y; clear y. rewrite H4; subst; clear H4.
+  Check Exactly_app. split.
+    destruct 1 as (m1 & m2 & H1 & H2 & H3); subst. inv H2.
+      exists m1, 0. repeat split.
+        assumption.
+        constructor.
+Abort.
+(* end hide *)
+
+Lemma incl_remove :
+  forall (A : Type) (l : list A) (n : nat),
+    match remove n l with
+        | None => True
+        | Some (_, l1, l2) => incl l1 l /\ incl l2 l
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    trivial.
+    destruct n as [| n'].
+      split.
+        apply incl_nil.
+        apply incl_cons'.
+      specialize (IHt n'). destruct (remove n' t).
+        destruct p, p. destruct IHt as (IH1 & IH2). split.
+          apply incl_cons, IH1.
+          apply incl_cons'', IH2.
+        trivial.
+Qed.
+(* end hide *)
