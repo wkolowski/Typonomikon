@@ -638,14 +638,10 @@ Lemma AtLeast_remove :
   forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
     remove n l = Some (x, l1, l2) ->
       forall m : nat,
-        AtLeast P m l <-> exists m1 m2 : nat,
+        AtLeast P m l -> exists m1 m2 : nat,
           AtLeast P m1 l1 /\ AtLeast P m2 l2 /\ m = m1 + m2.
 (* begin hide *)
 Proof.
-  intros. pose (remove_megaspec A l n). rewrite H in y.
-  decompose [and] y; clear y. rewrite H4; subst; clear H4.
-  rewrite AtLeast_app. split.
-    destruct 1 as (m1 & m2 & H1 & H2 & H3); subst. 
 Abort.
 (* end hide *)
 
@@ -660,11 +656,7 @@ Lemma Exactly_remove :
 Proof.
   intros. pose (remove_megaspec A l n). rewrite H in y.
   decompose [and] y; clear y. rewrite H4; subst; clear H4.
-  Check Exactly_app. split.
-    destruct 1 as (m1 & m2 & H1 & H2 & H3); subst. inv H2.
-      exists m1, 0. repeat split.
-        assumption.
-        constructor.
+  split.
 Abort.
 (* end hide *)
 

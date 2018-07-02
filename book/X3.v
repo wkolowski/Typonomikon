@@ -5106,6 +5106,25 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma findIndex_spec :
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
+    findIndex p l = Some n ->
+      forall m : nat, m < n ->
+        exists x : A, nth m l = Some x /\ p x = false.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h) eqn: Hph.
+      inv H. inv H0.
+      destruct m as [| m']; cbn.
+        exists h. split; [reflexivity | assumption].
+        destruct (findIndex p t).
+          inv H. apply (IHt _ eq_refl _ (lt_S_n _ _ H0)).
+          inv H.
+Qed.
+(* end hide *)
+
 (** TODO: [findIndex] [init], [tail] *)
 
 Lemma findIndex_take :
@@ -7715,7 +7734,7 @@ Lemma elem_remove_nth :
     elem x l -> nth n l <> Some x ->
     match remove n l with
         | None => True
-        | Some (_, l') =>  elem x l'
+        | Some (_, l') => elem x l'
     end.
 (* begin hide *)
 Proof.
