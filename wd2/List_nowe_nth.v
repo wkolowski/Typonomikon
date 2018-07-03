@@ -197,6 +197,25 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma nth_spec' :
+  forall (A : Type) (l : list A) (n : nat),
+    match nth n l with
+        | None => length l <= n
+        | Some x => l = take n l ++ x :: drop (S n) l
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    apply le_0_n.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      destruct (nth n' t) eqn: Heq.
+        specialize (IHt n'). rewrite Heq in IHt. rewrite IHt at 1.
+          reflexivity.
+        apply le_n_S. specialize (IHt n'). rewrite Heq in IHt. apply IHt.
+Qed.
+(* end hide *)
+
 Lemma nth_map_Some :
   forall (A B : Type) (f : A -> B) (l : list A) (n : nat) (x : A),
     nth n l = Some x -> nth n (map f l) = Some (f x).
@@ -852,5 +871,122 @@ Proof.
     destruct n as [| n'].
       inv H. left. reflexivity.
       right. apply (IHt _ H).
+Qed.
+(* end hide *)
+
+Lemma Dup_nth :
+  forall (A : Type) (l : list A),
+    Dup l <->
+    exists (x : A) (n1 n2 : nat),
+      n1 < n2 /\ nth n1 l = Some x /\ nth n2 l = Some x.
+(* begin hide *)
+Proof.
+  split.
+    intro. apply Dup_spec in H. destruct H as (x & l1 & l2 & l3 & H); subst.
+      exists x, (length l1), (length l1 + length l2 + 1). repeat split.
+        omega.
+        rewrite nth_app_r.
+          rewrite <- minus_n_n. cbn. reflexivity.
+          apply le_n.
+        rewrite nth_app_r.
+          rewrite <- app_cons_l, nth_app_r.
+            replace (nth _ (x :: l3)) with (nth 0 (x :: l3)).
+              cbn. reflexivity.
+              f_equal. 1-3: simpl; omega.
+    destruct 1 as (x & n1 & n2 & H1 & H2 & H3). revert x n1 n2 H1 H2 H3.
+    induction l as [| h t]; cbn; intros.
+      inv H2.
+      destruct n1 as [| n1'], n2 as [| n2'].
+        inv H1.
+        inv H2. constructor. apply nth_elem_Some with n2'. assumption.
+        inv H1.
+        right. apply (IHt _ _ _ (lt_S_n _ _ H1) H2 H3).
+Qed.
+(* end hide *)
+
+Lemma Exists_nth :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    Exists P l -> exists (n : nat) (x : A),
+      nth n l = Some x /\ P x.
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    exists 0, h. split; trivial.
+    destruct IHExists as (n & x & H1 & H2).
+      exists (S n), x. split; assumption.
+Qed.
+(* end hide *)
+
+Lemma Exists_nth' :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    Exists P l <-> exists (n : nat) (x : A),
+      nth n l = Some x /\ P x.
+(* begin hide *)
+Proof.
+  split.
+    induction 1; cbn.
+      exists 0, h. split; trivial.
+      destruct IHExists as (n & x & H1 & H2).
+        exists (S n), x. split; assumption.
+    destruct 1 as (n & x & H1 & H2).
+      pose (nth_spec' A l n). rewrite H1 in y.
+        rewrite y, Exists_app, Exists_cons. right. left. assumption.
+Qed.
+(* end hide *)
+
+Lemma Forall_nth :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    Forall P l <-> forall n : nat, n < length l ->
+      exists x : A, nth n l = Some x /\ P x.
+(* begin hide *)
+Proof.
+  split.
+    induction 1; cbn; intros.
+      inv H.
+      destruct n as [| n']; cbn.
+        exists h. split; trivial.
+        apply IHForall. apply lt_S_n. assumption.
+    induction l as [| h t]; cbn; intros.
+      constructor.
+      destruct (H 0 (Nat.lt_0_succ _)) as [x [H1 H2]]; cbn in *.
+        inv H1. constructor.
+          assumption.
+          apply IHt. intros. apply (H (S n)), lt_n_S. assumption.
+Qed.
+(* end hide *)
+
+Search nth elem.
+
+(* TODO *)
+Lemma iff_elem_nth :
+  forall (A : Type) (x : A) (l : list A),
+    elem x l <-> exists n : nat, nth n l = Some x.
+(* begin hide *)
+Proof.
+  split.
+    induction 1.
+      exists 0. cbn. reflexivity.
+      destruct IHelem as (n & IH). exists (S n). cbn. assumption.
+    destruct 1 as (n & H). revert n H.
+    induction l as [| h t]; cbn; intros.
+      inv H.
+      destruct n as [| n'].
+        inv H. left.
+        right. apply (IHt _ H).
+Qed.
+(* end hide *)
+
+Lemma incl_nth :
+  forall (A : Type) (l1 l2 : list A),
+    incl l1 l2 <->
+    forall (n1 : nat) (x : A), nth n1 l1 = Some x ->
+      exists n2 : nat, nth n2 l2 = Some x.
+(* begin hide *)
+Proof.
+  unfold incl; split; intros.
+    rewrite <- iff_elem_nth. apply H. rewrite iff_elem_nth.
+      exists n1. assumption.
+    rewrite iff_elem_nth in *. destruct H0 as (n & H0).
+      apply H with n. assumption.
 Qed.
 (* end hide *)

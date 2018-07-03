@@ -2729,6 +2729,20 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO: nowe *)
+Lemma nth_spec :
+  forall (A : Type) (l : list A) (n : nat) (x : A),
+    nth n l = Some x -> l = take n l ++ x :: drop (S n) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    rewrite nth_nil in H. inversion H.
+    destruct n as [| n']; cbn in *.
+      inversion H. reflexivity.
+      rewrite (IHt _ _ H) at 1. reflexivity.
+Qed.
+(* end hide *)
+
 (* TODO: drop_remove *)
 
 Lemma drop_S_insert :
