@@ -5,6 +5,8 @@
     - [snoc] od [NoDup]
     - [pmap] (sprawdź czy jest wszystko)
     - [remove] (trochę brakuje)
+    - ogólnie trzeba będzie zrobić gruntowny refaktoring list według
+      planu zawartego w List_sig.v
 
 *)
 
@@ -134,7 +136,9 @@
     - [simpl]
     - [hnf] *)
 
-(** Omówić postacie normalne (o ile gdzieś można znaleźć jakiś ich opis. *)
+(** Omówić postacie normalne (o ile gdzieś można znaleźć jakiś ich opis).
+    Ogólniej: wstawić jakąś zajawkę wcześnie i bardziej szczegółow opis
+    po rozdziale o relacjach. Trzeba by też opisać rachunek lambda. *)
 
 (** * Metafora dla rekursji/indukcji dobrze ufundowanej *)
 

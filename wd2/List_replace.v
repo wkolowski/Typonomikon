@@ -392,6 +392,7 @@ Abort.
 (* end hide *)
 
 (* TODO: uncons, unsnoc *)
+
 (*
 Lemma replace_insert :
   forall (A : Type) (l l' : list A) (n : nat) (x y : A),
@@ -405,7 +406,98 @@ Abort.
 (* end hide *)
 *)
 
-Lemma replace :
+Lemma take_replace :
+  forall (A : Type) (l l' : list A) (n m : nat) (x : A),
+    replace l n x = Some l' ->
+      take m l' =
+      if m <=? n
+      then take m l
+      else take n l ++ x :: take (m - S n) (drop (S n) l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      inv H. destruct m; cbn.
+        reflexivity.
+        rewrite <- minus_n_O. reflexivity.
+      destruct m as [| m']; cbn.
+        reflexivity.
+        destruct (replace t n' x) eqn: Heq; inv H.
+          rewrite (IHt _ _ _ _ Heq). destruct (m' <=? n'); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma drop_replace :
+  forall (A : Type) (l l' : list A) (n m : nat) (x : A),
+    replace l n x = Some l' ->
+      drop m l' =
+      if n <? m
+      then drop m l
+      else take (n - m) (drop m l) ++ x :: drop (S n) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      inv H. destruct m as [| m']; reflexivity.
+      destruct (replace t n' x) eqn: Heq; inv H.
+        destruct m as [| m']; cbn.
+          specialize (IHt _ n' 0 _ Heq). cbn in IHt.
+            rewrite IHt, <- minus_n_O. reflexivity.
+          rewrite (IHt _ _ _ _ Heq). destruct m' as [| m']; cbn.
+            reflexivity.
+            destruct (n' <=? m'); cbn; reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: w drugą stronę dla [take] i [drop] *)
+
+(* TODO: splitAt *)
+
+Lemma replace_zip :
+  forall
+    (A B : Type) (la la' : list A) (lb lb' : list B)
+    (n : nat) (a : A) (b : B),
+      replace la n a = Some la' ->
+      replace lb n b = Some lb' ->
+        replace (zip la lb) n (a, b) = Some (zip la' lb').
+(* begin hide *)
+Proof.
+  induction la as [| ha ta]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      inv H. destruct lb; inv H0. cbn. reflexivity.
+      destruct (replace ta n' a) eqn: Heqa; inv H.
+        destruct lb as [| hb tb]; cbn in *.
+          inv H0.
+          destruct (replace tb n' b) eqn: Heqb; inv H0.
+            rewrite (IHta _ _ _ _ _ _ Heqa Heqb). reflexivity.
+Qed.
+(* end hide *)
+
+Lemma replace_zipWith :
+  forall
+    (A B C : Type) (f : A -> B -> C) (la la' : list A) (lb lb' : list B)
+    (n : nat) (a : A) (b : B),
+      replace la n a = Some la' ->
+      replace lb n b = Some lb' ->
+        replace (zipWith f la lb) n (f a b) = Some (zipWith f la' lb').
+(* begin hide *)
+Proof.
+  induction la as [| ha ta]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      inv H. destruct lb; inv H0. cbn. reflexivity.
+      destruct (replace ta n' a) eqn: Heqa; inv H.
+        destruct lb as [| hb tb]; cbn in *.
+          inv H0.
+          destruct (replace tb n' b) eqn: Heqb; inv H0.
+            rewrite (IHta _ _ _ _ _ _ Heqa Heqb). reflexivity.
+Qed.
+(* end hide *)
+
+Lemma replace_any :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
@@ -418,7 +510,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace :
+Lemma replace_all :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
@@ -431,7 +523,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace :
+Lemma replace_find :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
@@ -444,7 +536,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace :
+Lemma replace_findLast :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
@@ -457,7 +549,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace :
+Lemma replace_removeFirst :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
@@ -470,7 +562,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace :
+Lemma replace_removeLast :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
@@ -483,7 +575,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace :
+Lemma replace_findIndex :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
@@ -496,7 +588,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace :
+Lemma replace_count :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
@@ -509,7 +601,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace :
+Lemma replace_filter :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
@@ -522,7 +614,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace :
+Lemma replace_findIndices :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
@@ -535,7 +627,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace :
+Lemma replace_takeWhile :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
@@ -548,46 +640,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
-    replace l n x = Some l' ->
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    
-    destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
-Qed.
-(* end hide *)
-
-Lemma replace :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
-    replace l n x = Some l' ->
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    
-    destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
-Qed.
-(* end hide *)
-
-Lemma replace :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
-    replace l n x = Some l' ->
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    
-    destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
-Qed.
-(* end hide *)
-
-Lemma replace :
+Lemma replace_dropWhile :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
 (* begin hide *)
