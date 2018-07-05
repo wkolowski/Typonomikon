@@ -497,87 +497,153 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma replace_any :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+Lemma any_replace :
+  forall (A : Type) (p : A -> bool) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
+      any p l' =
+      orb (any p (take n l)) (orb (p x) (any p (drop (S n) l))).
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    
+    inv H.
     destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
+      inv H. cbn. reflexivity.
+      destruct (replace t n' x) eqn: Heq; inv H.
+        cbn. rewrite (IHt _ _ _ Heq), Bool.orb_assoc. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma replace_all :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+Lemma all_replace :
+  forall (A : Type) (p : A -> bool) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
+      all p l' =
+      andb (all p (take n l)) (andb (p x) (all p (drop (S n) l))).
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    
+    inv H.
     destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
+      inv H. cbn. reflexivity.
+      destruct (replace t n' x) eqn: Heq; inv H.
+        cbn. rewrite (IHt _ _ _ Heq), Bool.andb_assoc. reflexivity.
+Restart.
+  intros. rewrite replace_spec in H.
+  destruct (S n <=? length l); inv H.
+  rewrite all_app. cbn. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma replace_find :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+Lemma find_replace :
+  forall (A : Type) (p : A -> bool) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
+      find p l' =
+      match find p (take n l), p x with
+          | Some y, _ => Some y
+          | _, true => Some x
+          | _, _ => find p (drop (S n) l)
+      end.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
-    
-    destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
+  intros. rewrite replace_spec in H.
+  destruct (S n <=? length l); inv H.
+  rewrite find_app. cbn. reflexivity.
 Qed.
 (* end hide *)
 
 Lemma replace_findLast :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+  forall (A : Type) (p : A -> bool) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
+    findLast p l' =
+    match findLast p (drop (S n) l), p x with
+        | Some y, _ => Some y
+        | _, true => Some x
+        | _, _ => findLast p (take n l)
+    end.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
-    
-    destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
+  intros. rewrite replace_spec in H.
+  destruct (S n <=? length l); inv H.
+  rewrite <- find_rev, rev_app, find_app, ?find_rev.
+  destruct l; cbn.
+    destruct (p x); reflexivity.
+    destruct (findLast p (drop n l)), (p x); reflexivity.
 Qed.
 (* end hide *)
 
-Lemma replace_removeFirst :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+Lemma removeFirst_replace :
+  forall (A : Type) (p : A -> bool) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
+      removeFirst p l' =
+      match removeFirst p (take n l), p x, removeFirst p (drop (S n) l) with
+          | Some (y, l''), _, _ => Some (y, l'' ++ x :: drop (S n) l)
+          | _, true, _ => Some (x, take n l ++ drop (S n) l)
+          | _, _, Some (y, l'') => Some (y, take n l ++ x :: l'')
+          | _, _, _ => None
+      end.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
-    
-    destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
+  intros. rewrite replace_spec in H.
+  destruct (S n <=? length l); inv H.
+  rewrite removeFirst_app. cbn.
+    destruct (removeFirst p (take n l)).
+      reflexivity.
+      destruct (p x).
+        reflexivity.
+        destruct l; cbn.
+          reflexivity.
+          destruct (removeFirst p (drop n l)).
+            destruct p0. cbn. all: reflexivity.
 Qed.
 (* end hide *)
 
-Lemma replace_removeLast :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
-    replace l n x = Some l' ->
+Lemma removeLast_app :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    removeLast p (l1 ++ l2) =
+    match removeLast p l2, removeLast p l1 with
+        | Some (y, l'), _ => Some (y, l1 ++ l')
+        | _, Some (y, l') => Some (y, l' ++ l2)
+        | _, _ => None
+    end.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
-    
-    destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
+  induction l1 as [| h t]; cbn; intros.
+    destruct (removeLast p l2).
+      destruct p0. 1-2: reflexivity.
+    rewrite IHt. destruct (removeLast p l2) eqn: Heq.
+      destruct p0. reflexivity.
+      destruct (removeLast p t).
+        destruct p0. cbn. reflexivity.
+        destruct (p h); reflexivity.
 Qed.
 (* end hide *)
 
+Lemma removeLast_replace :
+  forall (A : Type) (p : A -> bool) (l l' : list A) (n : nat) (x : A),
+    replace l n x = Some l' ->
+    removeLast p l' =
+    match removeLast p (drop (S n) l), p x, removeLast p (take n l) with
+        | Some (y, l''), _ , _ => Some (y, take n l ++ x :: l'')
+        | _, true, _ => Some (x, take n l ++ drop (S n) l)
+        | _, _, Some (y, l'') => Some (y, l'' ++ x :: drop (S n) l)
+        | _, _, _ => None
+    end.
+(* begin hide *)
+Proof.
+  intros. rewrite replace_spec in H.
+  destruct (S n <=? length l); inv H.
+  rewrite removeLast_app. cbn. destruct l; cbn.
+    destruct (p x); reflexivity.
+    destruct (removeLast p (drop n l)); cbn.
+      destruct p0. reflexivity.
+      destruct (p x); reflexivity.
+Qed.
+(* end hide *)
+
+(*
 Lemma replace_findIndex :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+  forall (A : Type) (p : A -> bool) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
+      findIndex p l' 
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -652,42 +718,121 @@ Proof.
       destruct (replace t n' x) eqn: Heq.
 Qed.
 (* end hide *)
+*)
 
-Lemma replace :
+Lemma elem_replace' :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
-    replace l n x = Some l' ->
+    replace l n x = Some l' -> elem x l'.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    
+    inv H.
     destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
+      inv H. left.
+      destruct (replace t n' x) eqn: Heq; inv H.
+        right. apply (IHt _ _ _ Heq).
 Qed.
 (* end hide *)
 
-Lemma replace :
+Lemma replace_spec'' :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
-    replace l n x = Some l' ->
+    replace l n x = Some l' -> l' = take n l ++ x :: drop (S n) l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    
-    destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
+    inv H.
+    destruct n as [| n']; cbn.
+      inv H. reflexivity.
+      destruct (replace t n' x) eqn: Heq; inv H.
+        rewrite (IHt _ _ _ Heq). reflexivity.
 Qed.
 (* end hide *)
 
-Lemma replace :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+Lemma elem_replace :
+  forall (A : Type) (l l' : list A) (n : nat) (x y : A),
     replace l n x = Some l' ->
+      elem y l' -> elem y l \/ nth n l' = Some y.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    
-    destruct n as [| n'].
-      
+    inv H.
+    destruct n as [| n']; cbn.
+      inv H. inv H0.
+        right. reflexivity.
+        left. right. assumption.
+      destruct (replace t n' x) eqn: Heq; inv H. inv H0.
+        do 2 left.
+        destruct (IHt _ _ _ _ Heq H2).
+          left. right. assumption.
+          right. assumption.
+Restart.
+  intros. apply replace_spec'' in H. subst.
+  rewrite elem_app in H0. destruct H0.
+    left. apply elem_take with n. assumption.
+    right. Search nth app. rewrite nth_app_r.
+Admitted.
+(* end hide *)
+
+Lemma elem_replace'' :
+  forall (A : Type) (l l' : list A) (n : nat) (x y : A),
+    replace l n x = Some l' ->
+      elem y l' -> elem y l \/ x = y.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n']; cbn.
+      inv H. inv H0.
+        right. reflexivity.
+        left. right. assumption.
+      destruct (replace t n' x) eqn: Heq; inv H. inv H0.
+        do 2 left.
+        destruct (IHt _ _ _ _ Heq H2).
+          left. right. assumption.
+          right. assumption.
+Qed.
+(* end hide *)
+
+Lemma elem_replace_conv :
+  forall (A : Type) (l l' : list A) (n : nat) (x y : A),
+    replace l n x = Some l' ->
+      elem y l -> elem y l' \/ nth n l = Some y.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n']; cbn.
+      inv H. inv H0.
+        right. reflexivity.
+        left. right. assumption.
+      destruct (replace t n' x) eqn: Heq; inv H. inv H0.
+        do 2 left.
+        destruct (IHt _ _ _ _ Heq H2).
+          left. right. assumption.
+          right. assumption.
+Qed.
+(* end hide *)
+
+(* TODO: the same stuff for in *)
+
+Lemma Dup_replace :
+  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+    replace l n x = Some l' ->
+      Dup l' <-> Dup l \/ elem x (take n l) \/ elem x (drop (S n) l).
+(* begin hide *)
+Proof.
+  split; revert l' n x H.
+    induction l as [| h t]; cbn; intros.
+      inv H.
+      destruct n as [| n']; cbn.
+        inv H. inv H0.
+          do 2 right. assumption.
+          left. right. assumption.
+        destruct (replace t n' x) eqn: Heq; inv H. inv H0.
+          pose (elem_replace A t l n' x h Heq H1). destruct o.
+            rewrite <- (app_take_drop A n' t), elem_app in H.
+              destruct H.
+                right. left.
       destruct (replace t n' x) eqn: Heq.
 Qed.
 (* end hide *)
