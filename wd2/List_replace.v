@@ -814,7 +814,7 @@ Qed.
 (* end hide *)
 
 (* TODO: the same stuff for in *)
-
+(*
 Lemma Dup_replace :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
@@ -836,30 +836,183 @@ Proof.
       destruct (replace t n' x) eqn: Heq.
 Qed.
 (* end hide *)
-
-Lemma replace :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
-    replace l n x = Some l' ->
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    
-    destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
-Qed.
-(* end hide *)
-
-Lemma replace :
-  forall (A : Type) (l l' : list A) (n : nat) (x : A),
-    replace l n x = Some l' ->
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    
-    destruct n as [| n'].
-      
-      destruct (replace t n' x) eqn: Heq.
-Qed.
-(* end hide *)
 *)
+Definition Classically (A : Type) : Type :=
+  (forall P : Prop, P \/ ~ P) -> A.
+
+Notation "f $ x" := (f x) (at level 100, only parsing).
+
+Ltac cls := progress unfold Classically; intro LEM.
+
+Lemma Exists_replace :
+  Classically $
+  forall (A : Type) (P : A -> Prop) (l l' : list A) (n : nat) (x : A),
+    replace l n x = Some l' ->
+      Exists P l -> Exists P l' \/ ~ P x.
+(* begin hide *)
+Proof.
+  cls. induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      inv H. destruct (LEM (P x)).
+        do 2 left. assumption.
+        right. assumption.
+      destruct (replace t n' x) eqn: Heq; inv H. inv H0.
+        do 2 left. assumption.
+        destruct (IHt _ _ _ Heq H1).
+          left. right. assumption.
+          right. assumption.
+Qed.
+(* end hide *)
+
+Lemma Exists_replace' :
+  forall (A : Type) (P : A -> Prop) (l l' : list A) (n : nat) (x : A),
+    replace l n x = Some l' -> Exists P l ->
+      Exists P l' \/ exists y : A, nth n l = Some y /\ P y.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      inv H. inv H0.
+        right. exists h. cbn. split; [reflexivity | assumption].
+        left. right. assumption.
+      destruct (replace t n' x) eqn: Heq; inv H. inv H0.
+        do 2 left. assumption.
+        destruct (IHt _ _ _ Heq H1).
+          left. right. assumption.
+          right. cbn. assumption.
+Qed.
+(* end hide *)
+
+Lemma Exists_replace_conv :
+  forall (A : Type) (P : A -> Prop) (l l' : list A) (n : nat) (x : A),
+    replace l n x = Some l' -> Exists P l' ->
+      Exists P l \/ P x.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      inv H. inv H0.
+        right. assumption.
+        left. right. assumption.
+      destruct (replace t n' x) eqn: Heq; inv H. inv H0.
+        do 2 left. assumption.
+        destruct (IHt _ _ _ Heq H1).
+          left. right. assumption.
+          right. assumption.
+Qed.
+(* end hide *)
+
+Lemma Forall_replace :
+  Classically $
+  forall (A : Type) (P : A -> Prop) (l l' : list A) (n : nat) (x : A),
+    replace l n x = Some l' -> Forall P l ->
+      Forall P l' \/ ~ P x.
+(* begin hide *)
+Proof.
+  cls. induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      inv H. destruct (LEM (P x)).
+        inv H0. left. constructor; assumption.
+        right. assumption.
+      destruct (replace t n' x) eqn: Heq; inv H. inv H0.
+        destruct (IHt _ _ _ Heq H3).
+          left. constructor; assumption.
+          right. assumption.
+Qed.
+(* end hide *)
+
+Lemma Forall_replace_conv :
+  Classically $
+  forall (A : Type) (P : A -> Prop) (l l' : list A) (n : nat) (x : A),
+    replace l n x = Some l' -> Forall P l' ->
+      (Forall P l /\ P x) \/
+      exists y : A, nth n l = Some y /\ ~ P y.
+(* begin hide *)
+Proof.
+  cls. induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n']; cbn.
+      inv H. inv H0. destruct (LEM (P h)).
+        left. repeat constructor; assumption.
+        right. exists h. split; trivial.
+      destruct (replace t n' x) eqn: Heq; inv H. inv H0.
+        destruct (IHt _ _ _ Heq H3) as [[IH1 IH2] | IH].
+          left. repeat constructor; assumption.
+          right. assumption.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_replace :
+  forall (A : Type) (P : A -> Prop) (l l' : list A) (n m : nat) (x : A),
+    replace l n x = Some l' -> AtLeast P m l -> AtLeast P (m - 1) l'.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      inv H. inv H0; cbn.
+        constructor.
+        rewrite <- minus_n_O. constructor. assumption.
+        apply AtLeast_le with m.
+          constructor. assumption.
+          omega.
+      destruct (replace t n' x) eqn: Heq; inv H. inv H0; cbn.
+        constructor.
+        rewrite <- minus_n_O. specialize (IHt _ _ _ _ Heq H4).
+          destruct n; cbn in *.
+            constructor.
+            rewrite <- minus_n_O in IHt. constructor; assumption.
+        specialize (IHt _ _ _ _ Heq H2). constructor. assumption.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_replace' :
+  forall (A : Type) (P : A -> Prop) (l l' : list A) (n m : nat) (x : A),
+    replace l n x = Some l' -> AtLeast P m l' -> AtLeast P (m - 1) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      inv H. inv H0; cbn.
+        constructor.
+        rewrite <- minus_n_O. constructor. assumption.
+        apply AtLeast_le with m.
+          constructor. assumption.
+          omega.
+      destruct (replace t n' x) eqn: Heq; inv H. inv H0; cbn.
+        constructor.
+        rewrite <- minus_n_O. specialize (IHt _ _ _ _ Heq H4).
+          destruct n; cbn in *.
+            constructor.
+            rewrite <- minus_n_O in IHt. constructor; assumption.
+        specialize (IHt _ _ _ _ Heq H2). constructor. assumption.
+Qed.
+(* end hide *)
+
+Lemma replace_eq :
+  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+    replace l n x = Some l' ->
+      l = l' <-> nth n l = Some x.
+(* begin hide *)
+Proof.
+  split; revert l' n x H.
+    induction l as [| h t]; cbn; intros.
+      inv H.
+      destruct n as [| n'].
+        inv H. inv H2. cbn. reflexivity.
+        destruct (replace t n' x) eqn: Heq; inv H.
+          inv H2. cbn. apply (IHt _ _ _ Heq eq_refl).
+    induction l as [| h t]; cbn; intros.
+      inv H.
+      destruct n as [| n']; cbn in *.
+        inv H. inv H0. reflexivity.
+        destruct (replace t n' x) eqn: Heq; inv H.
+          rewrite (IHt _ _ _ Heq H0). reflexivity.
+Qed.
+(* end hide *)
+

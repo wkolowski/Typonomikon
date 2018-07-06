@@ -132,7 +132,6 @@ Parameter groupBy :
 
 (** Zwijanie *)
 
-
 Parameter foldr : forall A B : Type, (A -> B -> B) -> B -> list A -> B.
 Parameter foldl : forall A B : Type, (A -> B -> A) -> A -> list B -> A.
 
