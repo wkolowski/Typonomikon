@@ -9,7 +9,6 @@ Notation "[ x ]" := (singl x).
 Notation "h :: t" := (nel_cons h t).
 
 Parameter head : forall A : Type, nel A -> A.
-
 Parameter last : forall A : Type, nel A -> A.
 
 Parameter len : forall A : Type, nel A -> nat.
@@ -20,15 +19,8 @@ Parameter rev : forall A : Type, nel A -> nel A.
 
 Parameter app : forall A : Type, nel A -> nel A -> nel A.
 
-Parameter map : forall A B : Type, (A -> B) -> nel A -> nel B.
-
-Parameter join : forall A : Type, nel (nel A) -> nel A.
-
-Parameter bind : forall A B : Type, (A -> nel B) -> nel A -> nel B.
-
 Parameter replicate : forall A : Type, nat -> A -> nel A.
-
-Parameter nth : forall A : Type, nat -> nel A -> option A.
+Parameter iterate : forall A : Type, nat -> A -> nel A.
 
 Parameter tail : forall A : Type, nel A -> option (nel A).
 Parameter tail' : forall A : Type, nel A -> list A.
@@ -45,24 +37,14 @@ Parameter drop' : forall A : Type, nat -> nel A -> list A.
 Parameter takedrop : forall A : Type, nat -> nel A -> nel A * nel A.
 Parameter takedrop' : forall A : Type, nat -> nel A -> list A * list A.
 
-Parameter zip : forall A B : Type, nel A -> nel B -> nel (A * B).
+Parameter nth : forall A : Type, nat -> nel A -> option A.
 
-Parameter unzip : forall A B : Type, nel (A * B) -> nel A * nel B.
 
-Parameter zipWith :
-  forall A B C : Type, (A -> B -> C) -> nel A -> nel B -> nel C.
-
-Parameter unzipWith :
-  forall A B C : Type, (A -> B * C) -> nel A -> nel B * nel C.
-
-Parameter intersperse : forall A : Type, A -> nel A -> nel A.
 
 Parameter any : forall A : Type, (A -> bool) -> nel A -> bool.
-
 Parameter all : forall A : Type, (A -> bool) -> nel A -> bool.
 
 Parameter find : forall A : Type, (A -> bool) -> nel A -> option A.
-
 Parameter findLast : forall A : Type, (A -> bool) -> nel A -> option A.
 
 Parameter findIndex :
@@ -78,11 +60,33 @@ Parameter findIndices :
   forall A : Type, (A -> bool) -> nel A -> list nat.
 
 Parameter takeWhile : forall A : Type, (A -> bool) -> nel A -> list A.
-
 Parameter dropWhile : forall A : Type, (A -> bool) -> nel A -> list A.
 
 Parameter findIndices' :
   forall A : Type, (A -> bool) -> nel A -> list nat.
+
+
+
+Parameter map : forall A B : Type, (A -> B) -> nel A -> nel B.
+
+Parameter join : forall A : Type, nel (nel A) -> nel A.
+
+Parameter bind : forall A B : Type, (A -> nel B) -> nel A -> nel B.
+
+
+Parameter zip : forall A B : Type, nel A -> nel B -> nel (A * B).
+
+Parameter unzip : forall A B : Type, nel (A * B) -> nel A * nel B.
+
+Parameter zipWith :
+  forall A B C : Type, (A -> B -> C) -> nel A -> nel B -> nel C.
+
+Parameter unzipWith :
+  forall A B C : Type, (A -> B * C) -> nel A -> nel B * nel C.
+
+
+Parameter intersperse : forall A : Type, A -> nel A -> nel A.
+
 
 Parameter elem : forall A : Type, A -> nel A -> Prop.
 

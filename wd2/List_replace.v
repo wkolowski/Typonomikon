@@ -994,6 +994,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO: [Exactly], [AtMost] *)
+
 Lemma replace_eq :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' ->
@@ -1016,3 +1018,56 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO: sublist, incl (chyba nic ciekawego nie ma) *)
+
+Lemma nth_app_l :
+  forall (A : Type) (l1 l2 : list A) (n : nat),
+    length l1 <= n -> nth n (l1 ++ l2) = nth (n - length l1) l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; cbn; intros.
+    rewrite <- minus_n_O. reflexivity.
+    destruct n as [| n']; cbn.
+      inv H.
+      apply IHt1, le_S_n, H.
+Qed.
+(* end hide *)
+
+Lemma replace_Palindrome :
+  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+    replace l n x = Some l' -> Palindrome l ->
+      Palindrome l' <-> length l = 1 /\ n = 0 \/ nth n l = Some x.
+(* begin hide *)
+Proof.
+  split.
+    revert l' n x H. induction H0; cbn; intros.
+      inv H.
+      destruct n as [| n']; cbn.
+        left. split; reflexivity.
+        inv H.
+      destruct n as [| n']; cbn.
+        inv H. inv H1.
+          apply (f_equal length) in H3.
+            rewrite length_app, plus_comm in H3. cbn in H3. inv H3.
+          apply (f_equal last) in H3. rewrite ?last_app in H3.
+            cbn in H3. right. symmetry. assumption.
+        right. destruct (replace (l ++ [x]) n' x0) eqn: Heq; inv H. inv H1.
+          apply length_replace in Heq. rewrite length_app, plus_comm in Heq.
+            cbn in Heq. inv Heq.
+          destruct (beq_nat n' (length l)) eqn: Heq'.
+            apply beq_nat_true in Heq'. subst. rewrite nth_app_l.
+              rewrite minus_diag. cbn. rewrite <- snoc_app_singl in Heq.
+                rewrite replace_snoc_eq in Heq.
+                  inv Heq. rewrite snoc_app_singl in H1.
+                    apply (f_equal last) in H1. rewrite ?last_app in H1.
+                    inv H1. reflexivity.
+                reflexivity.
+              reflexivity.
+            assert (n' < length l).
+              admit.
+              rewrite <- snoc_app_singl, replace_snoc_neq in Heq.
+                destruct (replace l n' x0) eqn: Heq''.
+                  inv Heq. apply (f_equal last) in H3.
+                  rewrite snoc_app_singl, ?last_app in H3. inv H3.
+Abort.
+(* end hide *)

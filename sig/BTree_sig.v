@@ -13,23 +13,24 @@ Parameter elem_decb :
   {A : LinDec} (x : A) (t : BTree A) : bool.
 Parameter isHeap {A : LinDec} : BTree A -> Prop.*)
 
-
-(** Basic observers *)
+(** Helper constructors. *)
 Parameter leaf : forall A : Type, A -> BTree A.
 
+(** Basic observers *)
 Parameter isEmpty : forall A : Type, BTree A -> bool.
 
 Parameter root : forall A : Type, BTree A -> option A.
-Parameter left : forall A : Type, BTree A -> BTree A.
-Parameter right : forall A : Type, BTree A -> BTree A.
+Parameter left : forall A : Type, BTree A -> option (BTree A).
+Parameter right : forall A : Type, BTree A -> option (BTree A).
+
+Parameter unN : forall A : Type, BTree A -> option (A * BTree A * BTree A).
+
+Parameter size : forall A : Type, BTree A -> nat.
+Parameter height : forall A : Type, BTree A -> nat.
 
 (* TODO *)
 Parameter leftmost : forall A : Type, BTree A -> option A.
 Parameter rightmost : forall A : Type, BTree A -> option A.
-
-Parameter size : forall A : Type, BTree A -> nat.
-
-Parameter height : forall A : Type, BTree A -> nat.
 
 Parameter inorder : forall A : Type, BTree A -> list A.
 Parameter preorder : forall A : Type, BTree A -> list A.
@@ -64,7 +65,11 @@ Proof.
         exists (N a l r). cbn. rewrite Hl, Hr. reflexivity.
 Qed.
 
+(** like replicate *)
 Parameter complete : forall A : Type, nat -> A -> BTree A.
+
+Parameter iterate : forall A : Type, (A -> A) -> nat -> A -> BTree A.
+
 
 Parameter index : forall A : Type, list bool -> BTree A -> option A.
 
@@ -118,5 +123,6 @@ Parameter AtLeast : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
 Parameter AtMost : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
 
 Parameter SameStructure : forall A B : Type, BTree A -> BTree B -> Prop.
+Parameter SameShape : forall A B : Type, BTree A -> BTree B -> Prop.
 
 Parameter subtree : forall A : Type, BTree A -> BTree A -> Prop.
