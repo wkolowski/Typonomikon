@@ -2007,6 +2007,34 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma remove_length_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    remove (length l) (snoc x l) = Some (x, l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma remove_snoc_lt :
+  forall (A : Type) (x : A) (l : list A) (n : nat),
+    n < length l ->
+      remove n (snoc x l) =
+      match remove n l with
+          | None => None
+          | Some (h, t) => Some (h, snoc x t)
+      end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct n as [| n'].
+      reflexivity.
+      rewrite (IHt _ (lt_S_n _ _ H)). destruct (remove n' t).
+        destruct p. cbn. all: reflexivity.
+Qed.
+(* end hide *)
+
 Lemma remove_app :
   forall (A : Type) (l1 l2 : list A) (n : nat),
     remove n (l1 ++ l2) =
