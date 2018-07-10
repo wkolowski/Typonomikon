@@ -333,7 +333,7 @@ Proof.
     destruct n as [| n'].
       rewrite <- minus_n_O, <- length_rev, remove_length_snoc, rev_rev.
         reflexivity.
-      rewrite (IHt _ (lt_S_n _ _ H)), remove_snoc.
+      rewrite (IHt _ (lt_S_n _ _ H)), remove_snoc_lt.
         destruct (remove (length t - S n') (rev t)).
           destruct p. rewrite rev_snoc. 1-2: reflexivity.
         rewrite length_rev. omega. (* TODO *)
@@ -698,5 +698,267 @@ Proof.
       rewrite IHt. destruct (intersperse x t); cbn.
         cbn in IHt. destruct (intersperse x l); inversion IHt.
           reflexivity.
+Qed.
+(* end hide *)
+
+(** PREDYKATY *)
+
+Lemma elem_rev_aux :
+  forall (A : Type) (x : A) (l : list A),
+    elem x l -> elem x (rev l).
+(* begin hide *)
+Proof.
+  induction 1; cbn; rewrite elem_snoc.
+    right. reflexivity.
+    left. assumption.
+Qed.
+(* end hide *)
+
+Lemma elem_rev :
+  forall (A : Type) (x : A) (l : list A),
+    elem x (rev l) <-> elem x l.
+(* begin hide *)
+Proof.
+  split; intro.
+    apply elem_rev_aux in H. rewrite rev_rev in H. assumption.
+    apply elem_rev_aux, H.
+Qed.
+(* end hide *)
+
+Lemma In_rev :
+  forall (A : Type) (x : A) (l : list A),
+    In x (rev l) <-> In x l.
+(* begin hide *)
+Proof.
+  intros. rewrite ?In_elem in *. apply elem_rev.
+Qed.
+(* end hide *)
+
+(* TODO: być może dobry przykład do zilustrowania reguły
+         wlog (bez straty ogólności)? *)
+
+Lemma NoDup_rev :
+  forall (A : Type) (l : list A),
+    NoDup (rev l) <-> NoDup l.
+(* begin hide *)
+Proof.
+  assert (forall (A : Type) (l : list A), NoDup l -> NoDup (rev l)).
+    induction 1; cbn.
+      constructor.
+      apply NoDup_snoc; repeat split; intros.
+        assumption.
+        intro. rewrite elem_rev in H1. contradiction.
+  split; intro.
+    rewrite <- rev_rev. apply H. assumption.
+    apply H. assumption.
+Qed.
+(* end hide *)
+
+Lemma Dup_rev :
+  forall (A : Type) (l : list A),
+    Dup (rev l) <-> Dup l.
+(* begin hide *)
+Proof.
+  assert (forall (A : Type) (l : list A), Dup l -> Dup (rev l)).
+    induction 1; cbn; rewrite Dup_snoc, elem_rev.
+      right. assumption.
+      left. assumption.
+    split; intros.
+      rewrite <- rev_rev. apply H. assumption.
+      apply H. assumption.
+Qed.
+(* end hide *)
+
+Lemma Rep_rev :
+  forall (A : Type) (x : A) (n : nat) (l : list A),
+    Rep x n (rev l) <-> Rep x n l.
+(* begin hide *)
+Proof.
+  assert (forall (A : Type) (x : A) (n : nat) (l : list A),
+            Rep x n l -> Rep x n (rev l)).
+    induction 1; cbn.
+      constructor.
+      apply Rep_S_snoc. assumption.
+      apply Rep_snoc. assumption.
+    split; intros.
+      rewrite <- rev_rev. apply H, H0.
+      apply H, H0.
+Qed.
+(* end hide *)
+
+Lemma Exists_rev :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    Exists P (rev l) <-> Exists P l.
+(* begin hide *)
+Proof.
+  intros A P. assert (forall l : list A, Exists P l -> Exists P (rev l)).
+    induction 1; cbn; rewrite Exists_snoc.
+      right. assumption.
+      left. assumption.
+    split; intro.
+      rewrite <- rev_rev. apply H, H0.
+      apply H, H0.
+Qed.
+(* end hide *)
+
+Lemma Forall_rev :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    Forall P (rev l) <-> Forall P l.
+(* begin hide *)
+Proof.
+  intros A P. assert (forall l : list A, Forall P l -> Forall P (rev l)).
+    induction 1; cbn.
+      constructor.
+      rewrite Forall_snoc. split; assumption.
+    split; intro.
+      rewrite <- rev_rev. apply H, H0.
+      apply H, H0.
+Qed.
+(* end hide *)
+
+Lemma AtLeast_rev :
+  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+    AtLeast P n (rev l) <-> AtLeast P n l.
+(* begin hide *)
+Proof.
+  assert (forall (A : Type) P n (l : list A),
+            AtLeast P n l -> AtLeast P n (rev l)).
+    induction 1; cbn.
+      constructor.
+      apply AtLeast_S_snoc; assumption.
+      apply AtLeast_snoc; assumption.
+    split; intro.
+      rewrite <- rev_rev. apply H, H0.
+      apply H, H0.
+Qed.
+(* end hide *)
+
+Lemma Exactly_rev :
+  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+    Exactly P n (rev l) <-> Exactly P n l.
+(* begin hide *)
+Proof.
+  intros A P. assert (forall (n : nat) (l : list A),
+                        Exactly P n l -> Exactly P n (rev l)).
+    induction 1; cbn.
+      constructor.
+      apply Exactly_S_snoc; assumption.
+      apply Exactly_snoc; assumption.
+    split; intros.
+      rewrite <- rev_rev. apply H. assumption.
+      apply H. assumption.
+Qed.
+(* end hide *)
+
+Lemma incl_rev :
+  forall (A : Type) (l : list A), incl (rev l) l.
+(* begin hide *)
+Proof.
+  unfold incl; intros. rewrite <- elem_rev. assumption.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Inductive Palindrome {A : Type} : list A -> Prop :=
+    | Palindrome_nil : Palindrome []
+    | Palindrome_singl :
+        forall x : A, Palindrome [x]
+    | Palindrome_1 :
+        forall (x : A) (l : list A),
+          Palindrome l -> Palindrome (x :: snoc x l).
+(* end hide *)
+
+(* begin hide *)
+
+(* Palindromowa indukcja *)
+Lemma list_palindrome_ind :
+  forall (A : Type) (P : list A -> Prop),
+    P [] ->
+    (forall x : A, P [x]) ->
+    (forall (x y : A) (l : list A), P l -> P (x :: snoc y l)) ->
+      forall l : list A, P l.
+Proof.
+  fix 6. destruct l as [| h t].
+    assumption.
+    destruct (init_decomposition A t); subst.
+      apply H0.
+      destruct H2 as (h' & t' & H1' & H2' & H3'). rewrite H3'.
+Admitted.
+(* end hide *)
+
+Lemma Palindrome_cons_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    Palindrome l -> Palindrome (x :: snoc x l).
+(* begin hide *)
+Proof. constructor. assumption.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_rev :
+  forall (A : Type) (l : list A),
+    Palindrome l <-> Palindrome (rev l).
+(* begin hide *)
+Proof.
+  intro. assert (forall l : list A, Palindrome l -> Palindrome (rev l)).
+    induction 1; cbn.
+      1-2: constructor.
+      rewrite rev_snoc. constructor. assumption.
+    split; intro.
+      apply H, H0.
+      rewrite <- rev_rev. apply H, H0.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_map :
+  forall (A B : Type) (f : A -> B) (l : list A),
+    Palindrome l -> Palindrome (map f l).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    1-2: constructor.
+    rewrite map_snoc. constructor. assumption.
+Qed.
+(* end hide *)
+
+Lemma snoc_inj :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    snoc x l1 = snoc x l2 -> l1 = l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; destruct l2 as [| h2 t2]; cbn; intros.
+    reflexivity.
+    apply (f_equal length) in H. cbn in H. rewrite length_snoc in H. inv H.
+    inv H. destruct t; inv H2.
+    inv H. f_equal. apply IHt. assumption.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_spec :
+  forall (A : Type) (l : list A),
+    Palindrome l <-> l = rev l.
+(* begin hide *)
+Proof.
+  split.
+    induction 1; cbn.
+      1-2: reflexivity.
+      rewrite rev_snoc, <- IHPalindrome; cbn. reflexivity.
+    induction l as [| x | x y l'] using list_palindrome_ind; cbn; intros.
+      1-2: constructor.
+      rewrite rev_snoc in H. cbn in H. inv H.
+        constructor. apply IHl'. apply snoc_inj in H2. assumption.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_pmap :
+  forall (A B : Type) (f : A -> option B) (l : list A),
+    Palindrome l -> Palindrome (pmap f l).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    constructor.
+    destruct (f x); constructor.
+    destruct (f x) eqn: Heq; cbn.
+      rewrite pmap_snoc. rewrite Heq. constructor. assumption.
+      rewrite pmap_snoc. rewrite Heq. assumption.
 Qed.
 (* end hide *)

@@ -1,10 +1,4 @@
 (** TODO:
-    - [isEmpty] od [count]a wzwyż
-    - [insert] od [findIndices]: TODO: find, findLast, removeFirst,
-        removeLast, findIndex
-    - [snoc] od [NoDup]
-    - [pmap] (sprawdź czy jest wszystko)
-    - [remove] (trochę brakuje)
     - ogólnie trzeba będzie zrobić gruntowny refaktoring list według
       planu zawartego w List_sig.v
 

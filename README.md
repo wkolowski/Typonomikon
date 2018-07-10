@@ -8,9 +8,10 @@ Co tu się dzieje:
 - book/ zawiera pliki .v, które stanowią źródła książki.
 - css/ i js/ to style i kod js, które dają książce w miarę znośny wygląd. Ukradzione ze starej wersji [Software Foundations](https://softwarefoundations.cis.upenn.edu/)
 - extra/ zawiera nagłówek i stopkę, które dodają analitiksy i inne takie, a także okładkę, również ukradzioną z Software Foundations.
-- todo/ zawiera pliki .v o wysokim priorytecie, z których będą powstawać przyszłe rozdziały.
-- misc/ zawier pliki .v o niskim priorytecie z jakimiś kodami, z których może kiedyś coś będzie.
+- misc/ zawiera pliki .v o niskim priorytecie z jakimiś kodami, z których może kiedyś coś będzie.
+- sig/ zawiera pliki .v z sygnaturami operacji na niektórych typach, które chcę opisać (trzeba przyznać, że ostatnimi czasy projekt skręcił w kierunku ulepszania biblioteki standardowej)
 - teksty/ to nieco bardziej składne notatki
+- todo/ zawiera pliki .v o wysokim priorytecie. Będą z nich powstawać przyszłe rozdziały i ogólnie przyszły kontent.
 - wd/ to folder do biężącej pracy nad rzeczami, które mają być niewidzialne
 - build.sh i rebuild.sh to skrypty służące odpowiednio do budowania i budowania od nowa książki. make_makefile.sh generuje nowy makefile od zera.
 
@@ -18,7 +19,7 @@ Książkę można skompilować za pomocą polecenia
 ```bash
 ./rebuild.sh
 ```
-Polecenie to usuwa wszystkie śmieci typu .vo, .v.d, .glob, folder htmls/, tworzy nowego makefile'a, kompiluje od zera wszystkie pliki .v znajdujące się w book/, generuje pliki .html z komentarzy, dodaje nagłówek, stopkę i okładkę z extra/ i podmienia style oraz js na właściwe.
+Polecenie to usuwa wszystkie śmieci typu .vo, .v.d, .glob, folder htmls/, tworzy nowego makefile'a, kompiluje od zera wszystkie pliki .v znajdujące się w book/ i wd/, generuje pliki .html z komentarzy, dodaje nagłówek, stopkę i okładkę z extra/ i podmienia style oraz js na właściwe.
 
 ## Ogłoszenia parafialne
 

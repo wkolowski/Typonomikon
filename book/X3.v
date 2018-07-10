@@ -9580,11 +9580,10 @@ Qed.
 
 Lemma Rep_snoc :
   forall (A : Type) (x y : A) (n : nat) (l : list A),
-    Rep x n l -> x <> y -> Rep x n (snoc y l).
+    Rep x n l -> Rep x n (snoc y l).
 (* begin hide *)
 Proof.
-  induction 1; cbn; intro; constructor.
-    1-2: apply IHRep, H0.
+  induction 1; cbn; constructor; assumption.
 Qed.
 (* end hide *)
 
