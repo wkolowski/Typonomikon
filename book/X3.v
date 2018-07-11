@@ -8560,6 +8560,7 @@ Lemma In_intersperse :
 Proof.
   intros. rewrite ?In_elem. apply elem_intersperse.
 Qed.
+(* end hide *)
 
 (** ** [NoDup] *)
 

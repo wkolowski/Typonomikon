@@ -386,21 +386,103 @@ Proof.
 Qed.
 (* end hide *)
 
-(*
 Lemma pmap_rmFirst :
   forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
-    rmFirst p (pmap f l) =
     match
       rmFirst
         (fun x : A => match f x with None => false | Some b => p b end)
         l
     with
-        | None => None
-        | Some (b, x, e) => Some (pmap f b, f x, pmap f e)
+        | None => True
+        | Some (b, x, e) =>
+            exists y : B, f x = Some y /\
+              rmFirst p (pmap f l) = Some (pmap f b, y, pmap f e)
     end.
-    rmFirst p l = Some (b, x, e) -> .
 (* begin hide *)
 Proof.
+  induction l as [| h t]; cbn.
+    trivial.
+    destruct (f h) eqn: Heq.
+      destruct (p b) eqn: Hpb; cbn; rewrite ?Hpb.
+        exists b. split; trivial.
+        destruct (rmFirst _ t); trivial.
+          destruct p0, p0; cbn in *.
+            destruct IHt as (y & IH1 & IH2).
+              exists y. rewrite IH1, IH2, Heq. split; reflexivity.
+      destruct (rmFirst _ t); trivial.
+        destruct p0, p0, IHt as (y & IH1 & IH2).
+          exists y. cbn. rewrite IH1, IH2, Heq. split; reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: intersperse, groupBy *)
+Search rmFirst app.
+
+Lemma elem_rmFirst :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    rmFirst p l = Some (b, x, e) -> 
+      forall y : A, elem y l <-> elem y b \/ y = x \/ elem y e.
+(* begin hide *)
+Proof.
+  intros. apply rmFirst_wut in H.
+  rewrite H, elem_app, elem_cons'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma In_rmFirst :
+  forall (A : Type) (p : A -> bool) (x y : A) (l b e : list A),
+    rmFirst p l = Some (b, x, e) ->
+      In y l <-> In y b \/ y = x \/ In y e.
+(* begin hide *)
+Proof.
+  intros. rewrite ?In_elem. apply elem_rmFirst with p. assumption.
+Qed.
+(* end hide *)
+
+(*
+Lemma Dup_rmFirst :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    rmFirst p l = Some (b, x, e) ->
+      Dup l <-> Dup b \/ Dup e \/ elem x b \/ elem x e \/
+        exists y : A, elem y b /\ elem y e.
+(* begin hide *)
+Proof.
+  split.
+    intro H0. revert b x e H. induction H0; cbn; intros.
+      destruct (p h).
+        inv H0. do 3 right. left. assumption.
+        destruct (rmFirst p t) eqn: Heq.
+          destruct p0, p0. 1-2: inv H0.
+            rewrite (elem_rmFirst _ _ _ _ _ _ Heq) in H.
+              decompose [or] H; clear H.
+                left. constructor; assumption.
+                subst. do 2 right. do 2 left.
+                do 4 right. exists h. split; [constructor | assumption].
+      destruct (p h).
+        inv H. right. left. assumption.
+        destruct (rmFirst p t) eqn: Heq.
+          destruct p0, p0. 1-2: inv H.
+            decompose [or ex and] (IHDup _ _ _ eq_refl); clear IHDup.
+              left. right. assumption.
+              right. left. assumption.
+              do 2 right. left. right. assumption.
+              do 3 right. left. assumption.
+              do 4 right. exists x0. split; [right | idtac]; assumption.
+  revert b x e H. induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h).
+      inv H. decompose [or ex and] H0; clear H0.
+        inv H.
+        right. assumption.
+        inv H.
+        constructor; assumption.
+        inv H1.
+      destruct (rmFirst p t) eqn: Heq.
+        destruct p0, p0. 1-2: inv H. decompose [or ex and] H0; clear H0.
+          inv H.
+            right. eapply IHt.
+    
+    
   induction l as [| h t]; cbn.
     reflexivity.
 
@@ -408,215 +490,83 @@ Qed.
 (* end hide *)
 *)
 
-Lemma rmFirst :
+(* TODO: NoDup, Rep *)
+
+Lemma Exists_rmFirst :
+  forall
+    (A : Type) (P : A -> Prop) (p : A -> bool) (x : A) (l b e : list A),
+      (forall x : A, P x <-> p x = true) ->
+      rmFirst p l = Some (b, x, e) ->
+        Exists P l <-> Exists P b \/ P x \/ Exists P e.
+(* begin hide *)
+Proof.
+  intros. apply rmFirst_wut in H0.
+  rewrite H0, Exists_app, Exists_cons.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Forall_rmFirst :
+  forall
+    (A : Type) (P : A -> Prop) (p : A -> bool) (x : A) (l b e : list A),
+      (forall x : A, P x <-> p x = true) ->
+      rmFirst p l = Some (b, x, e) ->
+        Forall P l <-> Forall P b /\ P x /\ Forall P e.
+(* begin hide *)
+Proof.
+  intros. apply rmFirst_wut in H0.
+  rewrite H0, Forall_app, Forall_cons'.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Exactly_rmFirst :
+  forall
+    (A : Type) (P : A -> Prop) (p : A -> bool)
+    (n : nat)(x : A) (l b e : list A),
+      (forall x : A, P x <-> p x = true) ->
+      rmFirst p l = Some (b, x, e) ->
+        Exactly P n l <->
+        exists n1 n2 : nat,
+          Exactly P n1 b /\ Exactly P n2 e /\
+          if p x then S (n1 + n2) = n else n1 + n2 = n.
+(* begin hide *)
+Proof.
+  intros. apply rmFirst_wut in H0. subst. split; intro.
+    apply Exactly_app_conv in H0.
+      destruct H0 as (n1 & n2 & H1 & H2 & H3). inv H2.
+        destruct (p x) eqn: Hpx.
+          exists n1, n0. repeat split; try assumption. apply plus_n_Sm.
+          rewrite H in H6. congruence.
+        destruct (p x) eqn: Hpx.
+          rewrite H in H6. congruence.
+          exists n1, n2. repeat split; assumption.
+    destruct H0 as (n1 & n2 & IH1 & IH2 & IH3).
+      destruct (p x) eqn: Hpx; subst.
+        apply Exactly_app_comm. cbn. constructor.
+          rewrite H. assumption.
+          apply Exactly_app_comm, Exactly_app; assumption.
+        apply Exactly_app_comm. cbn. constructor.
+          intro. rewrite H in H0. congruence.
+          apply Exactly_app_comm, Exactly_app; assumption.
+Qed.
+(* end hide *)
+
+(* TODO: AtLeast, AtMost *)
+
+Lemma incl_rmFirst :
   forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
+    rmFirst p l = Some (b, x, e) ->
+      incl b l /\ elem x l /\ incl e l.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
+  intros. apply rmFirst_wut in H. subst. repeat split.
+    apply incl_app_l, incl_refl.
+    rewrite elem_app. right. left.
+    apply incl_app_r. constructor. assumption.
 Qed.
 (* end hide *)
 
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
+(* TODO: sublist *)
 
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-Lemma rmFirst :
-  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
-    rmFirst p l = Some (b, x, e) -> .
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-
-Qed.
-(* end hide *)
-
-
-
-Lemma rmLast_rev_aux :
-  forall (A : Type) (p : A -> bool) (l : list A),
-    rmLast p l =
-    match rmFirst p (rev l) with
-        | None => None
-        | Some (b, x, e) => Some (rev e, x, rev b)
-    end.
-(* begin hide *)
-Proof.
-  intros. rewrite rmFirst_rev. destruct (rmLast p l).
-    destruct p0, p0. rewrite ?rev_inv. all: reflexivity.
-Qed.
-(* end hide *)
-
-Lemma rmLast_spec :
-  forall (A : Type) (p : A -> bool) (l : list A),
-    match rmLast p l with
-        | None => forall x : A, elem x l -> p x = false
-        | Some (b, x, e) =>
-            x :: rev b = rev (dropWhile p l) /\
-            e = rev (takeWhile p l) /\
-            Some x = findLast p l /\
-            Some (x, b ++ e) = removeLast p l
-    end.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    inv H.
-    destruct (rmLast p t) eqn: Heq.
-      destruct p0, p0. decompose [and] IHt; clear IHt.
-        destruct (p h) eqn: Hph; cbn; subst. Focus 2.
-          repeat split.
-Abort.
-(* end hide *)
+(* TODO: z palindromami chyba nie będzie nic ciekawego *)
