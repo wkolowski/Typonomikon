@@ -9,8 +9,9 @@
     - listy
     - teoria relacji *)
 
-Require Import X3.
+Require Import CoqBookPL.book.X3.
 Require Import Omega.
+Require Import Nat.
 
 (** Zapoznaliśmy się już z rekursją strukturalną, dzięki której możemy definiować
     proste funkcje, oraz z techniką dowodzenia przez indukcję, dzięki której

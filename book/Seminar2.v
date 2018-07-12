@@ -10,6 +10,7 @@ Inductive even : nat -> Prop :=
     | even0 : even 0
     | evenSS : forall n : nat, even n -> even (S (S n)).
 
+(*
 Function evenb (n : nat) : bool :=
 match n with
     | 0 => true
@@ -33,6 +34,7 @@ Qed.
 
 Print Unnamed_thm.
 Print evenb_spec.
+*)
 
 (** Wrzucić tu przykład z porządkiem leksykograficznym z bloga Mondet.
     Dać też przykład z permutacjami? *)

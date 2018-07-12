@@ -1,8 +1,6 @@
-Add Rec LoadPath "/home/zeimer/Code/Coq".
+Add Rec LoadPath "/home/zeimer/Code".
 
 Require Import CoqBookPL.book.X3.
-
-Require Import Arith.
 
 (** ** [take] *)
 
@@ -277,7 +275,6 @@ Proof.
 (* TODO *)
 Abort.
 (* end hide *)
-
 
 (* TODO: take_remove *)
 

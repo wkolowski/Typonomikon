@@ -6,10 +6,11 @@
     UWAGA: ten rozdział wyewoluował do stanu dość mocno odbiegającego od
     tego, co jest w bibliotece standardowej — moim zdanem na korzyść. *)
 
-Require Export Arith.
 (* begin hide *)
+Require Export Recdef.
 Require Export Omega.
 (* end hide *)
+Require Export Nat.
 
 (** W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
     naturalnych, które możemy znaleźć w module [Arith]. *)
@@ -2527,12 +2528,14 @@ Lemma take_interesting :
     (forall n : nat, take n l1 = take n l2) -> l1 = l2.
 (* begin hide *)
 Proof.
-  intros. specialize (H (max (length l1) (length l2))).
+  intros.
+  (* TODO specialize (H (max (length l1) (length l2))).
   rewrite ?take_length' in H.
     assumption.
     apply Max.le_max_r.
     apply Max.le_max_l.
-Qed.
+Qed. *)
+Abort.
 (* end hide *)
 
 (** ** [drop] *)
@@ -7376,7 +7379,7 @@ Proof.
       rewrite ?Bool.andb_true_r. reflexivity.
       rewrite e0 in *. cbn in *. destruct t; cbn in *.
         inversion e0.
-        rewrite (IHl0 p). rewrite Bool.andb_assoc. reflexivity.
+        rewrite IHl0. rewrite Bool.andb_assoc. reflexivity.
     rewrite e0 in *. cbn in *. rewrite IHl0. destruct t; cbn.
       inversion e0.
       destruct t; cbn.
@@ -7459,7 +7462,7 @@ Proof.
       admit.
       admit.
       admit.
-    rewrite e0 in IHl0. cbn in *. specialize (IHl0 p).
+    rewrite e0 in IHl0. cbn in *.
     destruct (p h), (p x), (p h') eqn: Hph';
     cbn in *; rewrite IHl0; try omega.
 Abort.

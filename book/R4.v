@@ -866,7 +866,7 @@ Definition nat_ind_fix_tac :
 Proof.
   Show Proof.
   (* ===> ?Goal *)
-  fix 4.
+  fix IH 4.
   Show Proof.
   (* ===> (fix nat_ind_fix_tac
                (P : nat -> Prop) (H0 : P 0)
@@ -874,13 +874,14 @@ Proof.
                (n : nat) {struct n} : P n := ... *)
  destruct n as [| n'].
     apply H0.
-    apply HS. apply nat_ind_fix_tac; assumption.
+    apply HS. apply IH; assumption.
 Defined.
 
 (** Taktyki [fix] możemy użyć w dowolnym momencie, aby rozpocząć dowodzenie/
-    definiowanie bezpośrednio przez rekursję. Jako argument musimy podać
-    numer argument głównego. W powyższym przykładzie chcemy robić rekursję
-    po [n], który jest czwarty z kolei (po [P], [H0] i [HS]).
+    definiowanie bezpośrednio przez rekursję. Jej argumentami są nazwa, którą
+    chcemy nadać hipotezie indukcyjnej oraz numer argument głównego. W
+    powyższym przykładzie chcemy robić rekursję po [n], który jest czwarty
+    z kolei (po [P], [H0] i [HS]).
 
     Komenda [Show Proof] pozwala nam odkryć, że użycie taktyki [fix] w
     trybie dowodzenia odpowiada po prostu użyciu konstruktu [fix] lub
@@ -937,7 +938,7 @@ Abort.
 
 (** Zaimplementuj taktykę [rec x], która będzie pomagała przy dowodzeniu
     bezpośrednio przez rekursję po [x]. Taktyka [rec x] ma działać jak
-    [fix n; destruct x], gdzie [n] to pozycja argumentu [x] w celu. Twoja
+    [fix IH n; destruct x], gdzie [n] to pozycja argumentu [x] w celu. Twoja
     taktyka powinna działać tak, żeby poniższy dowód zadziałał bez potrzeby
     wprowadzania modyfikacji.
 
@@ -946,7 +947,7 @@ Abort.
 
 (* begin hide *)
 Ltac rec x :=
-  intros until x; generalize dependent x; fix 1; destruct x.
+  intros until x; generalize dependent x; fix IH 1; destruct x.
 (* end hide *)
 
 Lemma plus_comm_rec :
@@ -954,7 +955,7 @@ Lemma plus_comm_rec :
 Proof.
   rec n.
     reflexivity.
-    cbn. f_equal. rewrite plus_comm_rec. reflexivity.
+    cbn. f_equal. rewrite IH. reflexivity.
 Qed.
 
 (** * Taktyki dla równości i równoważności *)
@@ -1632,8 +1633,8 @@ Print filter_length.
 
 (** Oto jedna ze standardowych właściwości list: filtrowanie nie zwiększa
     jej rozmiaru. Term skonstruowany powyższym dowodem, będący świadkiem
-    tego faktu, liczy sobie 317 linijek długości (wypisaniu, wklejeniu do
-    CoqIDE i usunięciu tego, co do termu nie należy). *)
+    tego faktu, liczy sobie 317 linijek długości (po wypisaniu, wklejeniu
+    do CoqIDE i usunięciu tego, co do termu nie należy). *)
 
 Lemma filter_length' :
   forall (A : Type) (f : A -> bool) (l : list A),
@@ -1657,19 +1658,15 @@ Print filter_length'.
     odwijać. Możemy jednak zjeść ciastko i mieć ciastko, a wszystko to za
     sprawą taktyki [abstract] i towarzyszącej jej komendy [Qed exporting]. *)
 
+(* TODO: w najnowszym Coqu nie działa *)
+
 Lemma filter_length'' :
   forall (A : Type) (f : A -> bool) (l : list A),
     length (filter f l) <= length l.
 Proof.
-  induction l; cbn; try destruct (f a); cbn; abstract omega.
-Qed exporting.
-
-(* begin hide *)
-
-(* [Qed exporting] psuje kolorowanie. Trzeba naprawić. *)
-Goal False. Abort.
-
-(* end hide *)
+  induction l; cbn; try destruct (f a); cbn;
+  abstract omega using lemma_name.
+Qed.
 
 Print filter_length''.
 (* ===> Proofterm o długości 13 linijek. *)

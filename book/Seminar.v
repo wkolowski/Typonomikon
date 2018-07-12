@@ -791,6 +791,9 @@ Inductive P : nat -> nat -> Prop :=
     | c0 : P 0 1
     | c1 : forall n m : nat, P n m -> P (S n) (2 * m).
 
+(* TODO *)
+Require Import FunInd.
+
 Function pow2 (n : nat) : nat :=
 match n with
     | 0 => 1
@@ -1729,7 +1732,10 @@ Check swap_blocks_ind.
     fits the shape of our function's recursion. The principle may look
     intimidating, but if you take a closer look, it just repeats the cases
     found in the [match] in [swap_blocks]' definition. We can use it like
-    this: *)
+    this (but first we have to import the [Recdef] module): *)
+
+(* TODO *)
+Require Import Recdef.
 
 Theorem swap_blocks_involutive :
   forall (A : Type) (l : list A),
@@ -1827,7 +1833,7 @@ Proof.
         trivial.
         simpl in H. apply le_S_n in H. assumption.
 Restart.
-  intros. functional induction @take A n l; cbn.
+  intros. functional induction (@take A n l); cbn.
     destruct _x; inversion H. trivial.
     trivial.
     rewrite IHl0.

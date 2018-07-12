@@ -2,6 +2,10 @@
 
 Require Import Arith.
 
+(* begin hide *)
+Require Import Recdef.
+(* end hide *)
+
 (** Prerekwizyty:
     - [Empty_set], [unit], [prod], [sum] i funkcje
     - właściwości konstruktorów?
