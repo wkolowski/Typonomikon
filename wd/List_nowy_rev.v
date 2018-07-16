@@ -878,7 +878,7 @@ Lemma list_palindrome_ind :
     (forall (x y : A) (l : list A), P l -> P (x :: snoc y l)) ->
       forall l : list A, P l.
 Proof.
-  fix 6. destruct l as [| h t].
+  fix IH 6. destruct l as [| h t].
     assumption.
     destruct (init_decomposition A t); subst.
       apply H0.

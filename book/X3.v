@@ -12180,12 +12180,12 @@ Lemma list_palindrome_ind :
     (forall (x y : A) (l : list A), P l -> P (x :: l ++ [y])) ->
       forall l : list A, P l.
 Proof.
-  fix 6. destruct l as [| h t].
+  fix IH 6. destruct l as [| h t].
     assumption.
     destruct (init_decomposition A t); subst.
       apply H0.
       destruct H2 as (h' & t' & H1' & H2' & H3'). rewrite H3'.
-        apply H1. apply list_palindrome_ind; assumption.
+        apply H1. apply IH; assumption.
 Admitted.
 (* end hide *)
 

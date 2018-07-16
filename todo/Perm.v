@@ -167,7 +167,8 @@ Qed.
 
 Lemma Permutation_app :
   forall (A : Type) (l m l' m' : list A),
-    Permutation l l' -> Permutation m m' -> Permutation (l ++ m) (l' ++ m').
+    Permutation l l' -> Permutation m m' ->
+      Permutation (l ++ m) (l' ++ m').
 (* begin hide *)
 Proof.
   unfold Proper, respectful.
@@ -409,7 +410,6 @@ Proof.
 Qed.
 (* end hide *)
 
-
 Lemma app_lemma'' :
   forall (A : Type) (x y : A) (l11 l12 l21 l22 : list A),
     l11 ++ x :: l12 = l21 ++ y :: l22 ->
@@ -448,6 +448,60 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Permutation_In :
+  forall (A : Type) (l1 l2 : list A),
+    Permutation l1 l2 -> (forall x : A, In x l1 <-> In x l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn; firstorder.
+Qed.
+(* end hide *)
+
+Lemma In_permutation :
+  forall (A : Type) (l1 l2 : list A),
+    (forall x : A, In x l1 <-> In x l2) -> Permutation l1 l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    admit.
+    assert (h = h \/ In h t).
+      left. reflexivity.
+      rewrite H in H0. apply In_spec in H0.
+        destruct H0 as (l1 & l3 & H0); subst.
+        rewrite Permutation_middle. constructor. apply IHt.
+        split; intros.
+          
+(* end hide *)
+
+Lemma Permutation_cons_aux :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    Permutation (x :: l1) l2 ->
+      exists l21 l22 : list A, l2 = l21 ++ x :: l22.
+(* begin hide *)
+Proof.
+  intros. pose (@Permutation_In _ _ _ H x).
+  assert (In x (x :: l1)).
+    left. reflexivity.
+    rewrite i in H0. apply In_spec. assumption.
+Qed.
+(* end hide *)
+
+Lemma Permutation_cons_aux' :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    Permutation (x :: l1) l2 ->
+      exists l21 l22 : list A,
+        l2 = l21 ++ x :: l22 /\ Permutation l1 (l21 ++ l22).
+(* begin hide *)
+Proof.
+  intros. pose (@Permutation_In _ _ _ H x).
+  assert (In x (x :: l1)).
+    left. reflexivity.
+    rewrite i in H0. apply In_spec in H0.
+      destruct H0 as (l21 & l22 & H0); subst.
+        
+Qed.
+(* end hide *)
+
 Lemma Permutation_cons_split' :
   forall (A : Type) (l1 l2 : list A),
     Permutation l1 l2 ->
@@ -458,6 +512,12 @@ Lemma Permutation_cons_split' :
       Permutation (l11 ++ l12) (l21 ++ l22).
 (* begin hide *)
 Proof.
+  destruct l1 as [| h t ]; intros.
+    admit.
+    apply Permutation_cons_aux in H.
+      destruct H as (l21 & l22 & H); subst.
+        right. exists h, [], t, l21, l22. cbn.
+Restart.
   induction 1.
     left. split; reflexivity.
     destruct IHPermutation as
@@ -470,16 +530,20 @@ Proof.
       IHPermutation1 as
         [[] | (x & l11 & l12 & l21 & l22 & IH1 & IH2 & IH3)],
       IHPermutation2 as
-        [[] | (x' & l11' & l12' & l21' & l22' & IH1' & IH2' & IH3')];
+        [[] | (y & l11' & l12' & l21' & l22' & IH1' & IH2' & IH3')];
     subst.
       left. split; reflexivity.
       apply (f_equal length) in IH1'. rewrite length_app in IH1'.
         cbn in *. rewrite <- plus_n_Sm in IH1'. inversion IH1'.
       apply (f_equal length) in H1. rewrite length_app in H1.
         cbn in *. rewrite <- plus_n_Sm in H1. inversion H1.
+      right. apply app_lemma'' in IH1'.
+        decompose [and or ex] IH1'; clear IH1'.
+          subst. exists y, l11, l12, l21', l22'. repeat split.
+            rewrite IH3, IH3'. reflexivity.
+          exists x', x0, (x1 ++ x' :: x2).
 Admitted.
 (* end hide *)
-
 
 Lemma Permutation_cons_inv :
   forall (A : Type) (l1 l2 : list A) (x : A),
@@ -505,20 +569,22 @@ Restart.
         inv Heql1'. inv Heql2'. destruct l' as [| h2 t2].
           symmetry in H. apply Permutation_nil_cons in H. contradiction.
 Restart.
-  intros.
+  induction l1 as [| h1 t1]; cbn.
+    induction l2 as [| h2 t2]; intros.
+      reflexivity.
+      apply Permutation_length_1 in H.
+        inv H.
+        reflexivity.
+    induction l2 as [| h2 t2]; intros.
+      symmetry in H. apply Permutation_length_1 in H.
+        inv H.
+        reflexivity.
+    
     
   
 Admitted.
 
 
-
-Lemma Permutation_In :
-  forall (A : Type) (l1 l2 : list A),
-    Permutation l1 l2 <-> (forall x : A, In x l1 <-> In x l2).
-(* begin hide *)
-Proof.
-  split; intros.
-    induction H; cbn; firstorder.
     revert l2 H.
     induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn; intros.
       reflexivity.
