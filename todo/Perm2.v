@@ -718,7 +718,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Perm_length_1_inv:
+(*Perm_length_1_inv:
   forall (A : Type) (a : A) (l : list A),
   Perm (a :: nil) l -> l = (a :: nil)%list
 Perm_length_2_inv:
@@ -781,9 +781,4 @@ Perm_nth:
       FinFun.bFun n f /\
       FinFun.bInjective n f /\
       (forall x : nat, x < n -> List.nth x l' d = List.nth (f x) l d)))
-        
-    
-
-
-
-
+*)
