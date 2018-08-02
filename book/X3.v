@@ -8678,6 +8678,30 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma NoDup_app_comm :
+  forall (A : Type) (l1 l2 : list A),
+    NoDup (l1 ++ l2) <-> NoDup (l2 ++ l1).
+(* begin hide *)
+Proof.
+  intro.
+  assert (forall l1 l2 : list A, NoDup (l1 ++ l2) -> NoDup (l2 ++ l1)).
+    intros l1 l2. revert l1. induction l2 as [| h t]; cbn; intros.
+      rewrite app_nil_r in H. assumption.
+      constructor.
+        intro. apply NoDup_app in H. decompose [and] H; clear H.
+          apply elem_app_or in H0. destruct H0.
+            inversion H3. contradiction.
+            specialize (H5 _ ltac:(left)). contradiction.
+        apply IHt. apply NoDup_app in H. apply NoDup_app.
+          decompose [and] H; clear H. repeat split.
+            assumption.
+            inversion H2. assumption.
+            intros. specialize (H1 _ H). intro. apply H1. right. assumption.
+            repeat intro. apply (H1 _ H3). right. assumption.
+      intros. split; apply H.
+Qed.
+(* end hide *)
+
 Lemma NoDup_rev :
   forall (A : Type) (l : list A),
     NoDup (rev l) <-> NoDup l.

@@ -513,22 +513,166 @@ Proof.
 Qed.
 (* end hide *)
 
-(*Permutation_length_1_inv:
-  forall (A : Type) (a : A) (l : list A),
-  Permutation (a :: nil) l -> l = (a :: nil)%list
-Permutation_length_2_inv:
-  forall (A : Type) (a1 a2 : A) (l : list A),
-  Permutation (a1 :: (a2 :: nil)%list) l ->
-  l = (a1 :: a2 :: nil)%list \/ l = (a2 :: a1 :: nil)%list
-Permutation_length_2:
-  forall (A : Type) (a1 a2 b1 b2 : A),
-  Permutation (a1 :: (a2 :: nil)%list) (b1 :: (b2 :: nil)%list) ->
-  a1 = b1 /\ a2 = b2 \/ a1 = b2 /\ a2 = b1
-NoDup_Permutation:
-  forall (A : Type) (l l' : list A),
-  List.NoDup l ->
-  List.NoDup l' ->
-  (forall x : A, List.In x l <-> List.In x l') -> Permutation l l'
+Lemma Permutation_antispec :
+  ~ forall (A : Type) (l1 l2 : list A),
+    Permutation l1 l2 <->
+    (forall P : A -> Prop, Exists P l1 <-> Exists P l2).
+(* begin hide *)
+Proof.
+  intro. specialize (H unit [tt] [tt; tt]).
+  assert (forall P : unit -> Prop, Exists P [tt] <-> Exists P [tt; tt]).
+    split; intro.
+      inversion H0; subst.
+        repeat constructor. assumption.
+        inversion H2.
+      inversion H0; subst.
+        constructor. assumption.
+        assumption.
+    rewrite <- H in H0. apply Permutation_length in H0.
+      cbn in H0. inversion H0.
+Qed.
+(* end hide *)
+
+Lemma Permutation_length_1_inv:
+  forall (A : Type) (x : A) (l : list A),
+    Permutation [x] l -> l = [x].
+(* begin hide *)
+Proof.
+  destruct l as [| y [| z t]]; intros.
+    symmetry in H. apply Permutation_nil in H. inversion H.
+    apply Permutation_singl in H. rewrite H. reflexivity.
+    apply Permutation_length in H. cbn in H. inversion H.
+Qed.
+(* end hide *)
+
+(*Lemma Elem_Permutation' :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    Permutation l1 l2 -> elem x l1 ->
+      exists l21 l22 : list A, l2 = l21 ++ x :: l22.
+(* begin hide *)
+Proof.
+  induction 1; cbn; intros.
+    inversion H.
+    inversion H0; subst.
+      exists [], l'. reflexivity.
+      destruct (IHPermutation H3) as (l21 & l22 & IH); subst.
+        exists (x0 :: l21), l22. cbn. reflexivity.
+      inversion H; subst.
+        exists [x0], l. reflexivity.
+        inversion H2; subst.
+          exists [], (y :: l). reflexivity.
+          clear H H2. induction H3.
+            exists [x0; y], l. reflexivity.
+            destruct IHelem as (l21 & l22 & IH).
+              destruct l21 as [| a [| b l21']]; inversion IH; subst.
+                exists [], (y :: h :: t). reflexivity.
+                exists [a], (h :: l22). reflexivity.
+                exists (a :: b :: h :: l21'), l22. reflexivity.
+      destruct (IHPermutation1 H1) as (l21 & l22 & IH1). subst.
+        destruct l''.
+          admit.
+*)
+
+Lemma Permutation_length_2_inv:
+  forall (A : Type) (x y : A) (l : list A),
+    Permutation [x; y] l -> l = [x; y] \/ l = [y; x].
+(* begin hide *)
+Proof.
+  intros.
+  pose (H' := @Permutation_length _ _ _ H).
+  destruct l as [| a [| b [| c t]]]; inversion H'.
+    inversion H; subst.
+      admit.
+      admit.
+Admitted.
+(* end hide *)
+
+Lemma Permutation_length_2:
+  forall (A : Type) (x1 x2 y1 y2 : A),
+    Permutation [x1; x2] [y1; y2] ->
+      x1 = y1 /\ x2 = y2 \/ x1 = y2 /\ x2 = y1.
+(* begin hide *)
+Proof.
+  intros. apply Permutation_length_2_inv in H.
+  destruct H; inversion H; subst.
+    left. split; reflexivity.
+    right. split; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma NoDup_Permutation:
+  forall (A : Type) (l1 l2 : list A),
+    NoDup l1 -> NoDup l2 ->
+      (forall x : A, In x l1 <-> In x l2) -> Permutation l1 l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; cbn; intros.
+    inversion H0; subst.
+      reflexivity.
+      assert False.
+        rewrite (H1 h). left. reflexivity.
+        contradiction.
+    destruct l2 as [| h2 t2]; cbn; intros.
+      specialize (H1 h1). destruct H1. destruct H1. left. reflexivity.
+      inversion H; inversion H0; subst; clear H H0.
+        destruct (H1 h1). destruct H.
+          left. reflexivity.
+          subst. constructor. apply IHt1.
+            1-2: assumption.
+            split; intro.
+              assert (In x (h2 :: t2)).
+                rewrite <- H1. right. assumption.
+                destruct H2.
+                  subst. rewrite In_elem in *. contradiction.
+                  assumption.
+              assert (In x (h2 :: t1)).
+                cbn. rewrite H1. right. assumption.
+                destruct H2; subst.
+                  rewrite In_elem in *. contradiction.
+                  assumption.
+          apply In_spec in H. destruct H as (l1 & l2 & HIn); subst.
+            rewrite Permutation_middle. rewrite perm_swap. constructor.
+            apply IHt1.
+              assumption.
+              constructor.
+                intro. apply H8. apply elem_app_or in H.
+                  apply elem_or_app. destruct H.
+                    left. assumption.
+                    do 2 right. assumption.
+                rewrite NoDup_app_comm in H9. inversion H9.
+                  rewrite NoDup_app_comm. assumption.
+              split; intro.
+                assert (In x (h2 :: l1 ++ h1 :: l2)).
+                  rewrite <- H1. right. assumption.
+                  inversion H2; subst.
+                    left. reflexivity.
+                    apply In_app_or in H3. destruct H3.
+                      right. apply In_or_app. left. assumption.
+                      inversion H3; subst.
+                        rewrite In_elem in *. contradiction.
+                        right. apply In_or_app. right. assumption.
+                assert (In x (h2 :: l1 ++ h1 :: l2)).
+                  cbn in H. destruct H.
+                    subst. left. reflexivity.
+                    apply In_app_or in H. destruct H.
+                      right. apply In_or_app. left. assumption.
+                      right. apply In_or_app. do 2 right. assumption.
+                  specialize (H1 x). rewrite <- H1 in H2. destruct H2.
+                    subst. destruct H.
+                      subst. contradiction H8. apply elem_or_app.
+                        right. left.
+                      apply In_app_or in H. destruct H.
+                        rewrite NoDup_app_comm in H9. inversion H9.
+                          subst. contradiction H6. apply elem_or_app.
+                            right. rewrite <- In_elem. assumption.
+                        rewrite NoDup_app_comm in H9. inversion H9.
+                          subst. contradiction H6. apply elem_or_app.
+                            left. rewrite <- In_elem. assumption.
+                    assumption.
+Qed.
+(* end hide *)
+
+(*
 NoDup_Permutation_bis:
   forall (A : Type) (l l' : list A),
   List.NoDup l ->
