@@ -677,27 +677,76 @@ NoDup_Permutation_bis:
   forall (A : Type) (l l' : list A),
   List.NoDup l ->
   List.NoDup l' ->
-  length l' <= length l -> List.incl l l' -> Permutation l l'
-Permutation_NoDup:
-  forall (A : Type) (l l' : list A),
-  Permutation l l' -> List.NoDup l -> List.NoDup l'
-Permutation_NoDup':
+  length l' <= length l -> List.incl l l' -> Permutation l l' *)
+
+Lemma Permutation_NoDup:
+  forall (A : Type) (l1 l2 : list A),
+    Permutation l1 l2 -> NoDup l1 -> NoDup l2.
+(* begin hide *)
+Proof.
+  induction 1; intros.
+    constructor.
+    inv H0. constructor.
+      rewrite <- In_elem in *. intro. apply H3. eapply Permutation_in.
+        symmetry. eassumption.
+        assumption.
+      apply IHPermutation. assumption.
+    inv H. inv H3. constructor.
+      intro. inv H.
+        apply H2. left.
+        contradiction.
+      constructor.
+        intro. apply H2. right. assumption.
+        assumption.
+    apply IHPermutation2, IHPermutation1, H1.
+Qed.
+(* end hide *)
+
+Lemma Permutation_NoDup':
   forall A : Type,
-  Morphisms.Proper (Morphisms.respectful (Permutation (A:=A)) iff)
-    (List.NoDup (A:=A))
-Permutation_map:
-  forall (A B : Type) (f : A -> B) (l l' : list A),
-  Permutation l l' -> Permutation (List.map f l) (List.map f l')
-Permutation_map':
+    Morphisms.Proper
+      (Morphisms.respectful (Permutation (A:=A)) iff)
+      (NoDup (A:=A)).
+(* begin hide *)
+Proof.
+  unfold Proper, respectful. split; intro.
+    eapply Permutation_NoDup; eauto.
+    eapply Permutation_NoDup.
+      symmetry. all: eassumption.
+Qed.
+(* end hide *)
+
+Lemma Permutation_map:
+  forall (A B : Type) (f : A -> B) (l1 l2 : list A),
+    Permutation l1 l2 -> Permutation (map f l1) (map f l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn; try constructor.
+    assumption.
+    rewrite IHPermutation1. assumption.
+Qed.
+(* end hide *)
+
+Lemma Permutation_map':
   forall (A B : Type) (f : A -> B),
   Morphisms.Proper
     (Morphisms.respectful (Permutation (A:=A)) (Permutation (A:=B)))
-    (List.map f)
-nat_bijection_Permutation:
+    (map f).
+(* begin hide *)
+Proof.
+  unfold Proper, respectful. induction 1; cbn; try constructor.
+    assumption.
+    rewrite IHPermutation1. assumption.
+Qed.
+(* end hide *)
+
+(*nat_bijection_Permutation:
   forall (n : nat) (f : nat -> nat),
   FinFun.bFun n f ->
   FinFun.Injective f -> let l := List.seq 0 n in Permutation (List.map f l) l
-Permutation_nth_error:
+*)
+
+(*Permutation_nth_error:
   forall (A : Type) (l l' : list A),
   Permutation l l' <->
   length l = length l' /\
@@ -721,3 +770,271 @@ Permutation_nth:
       FinFun.bInjective n f /\
       (forall x : nat, x < n -> List.nth x l' d = List.nth (f x) l d)))
 *)
+
+(** Poważne rzeczy *)
+
+Lemma Permutation_join :
+  forall (A : Type) (l1 l2 : list (list A)),
+    Permutation l1 l2 -> Permutation (join l1) (join l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    reflexivity.
+    apply Permutation_app_head, IHPermutation.
+    rewrite Permutation_app_comm, <- app_assoc.
+      apply Permutation_app_head, Permutation_app_comm.
+    rewrite IHPermutation1, IHPermutation2. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Permutation_join_rev :
+  exists (A : Type) (l1 l2 : list (list A)),
+    Permutation (join l1) (join l2) /\ ~ Permutation l1 l2.
+(* begin hide *)
+Proof.
+  exists unit, [], [[]]. cbn. split.
+    reflexivity.
+    intro. apply Permutation_length in H. inversion H.
+Qed.
+(* end hide *)
+
+Lemma Permutation_replicate :
+  forall (A : Type) (n m : nat) (x : A),
+    Permutation (replicate n x) (replicate m x) <-> n = m.
+(* begin hide *)
+Proof.
+  split.
+    revert m x. induction n as [| n']; cbn; intros.
+      apply Permutation_length in H. destruct m; inversion H. reflexivity.
+      destruct m as [| m'].
+        apply Permutation_length in H; cbn in H. inv H.
+        apply f_equal, (IHn' m' x), Permutation_cons_inv with x, H.
+    intros ->. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Permutation_replicate' :
+  forall (A : Type) (n : nat) (x y : A),
+    Permutation (replicate n x) (replicate n y) <-> n = 0 \/ x = y.
+(* begin hide *)
+Proof.
+  split.
+    revert x y. induction n as [| n']; cbn; intros.
+      left. reflexivity.
+      right. pose (H' := @Permutation_in A _ _ x H ltac:(left; reflexivity)).
+        inv H'. reflexivity.
+        apply In_replicate in H0. destruct H0. symmetry. assumption.
+    destruct 1; rewrite H; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Permutation_iterate :
+  forall (A : Type) (f : A -> A) (n m : nat) (x : A),
+    Permutation (iterate f n x) (iterate f m x) <-> n = m.
+(* begin hide *)
+Proof.
+  split.
+    revert f m x. induction n as [| n']; cbn; intros.
+      apply Permutation_length in H. destruct m; inversion H. reflexivity.
+      destruct m as [| m'].
+        apply Permutation_length in H; cbn in H. inv H.
+        apply f_equal, (IHn' f m' (f x)), Permutation_cons_inv with x, H.
+    intros ->. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Permutation_iterate' :
+  forall (A : Type) (f : A -> A) (n : nat) (x y : A),
+    Permutation (iterate f n x) (iterate f n y) <->
+    n = 0 \/ exists k : nat, k < n /\ iter f k y = x.
+(* begin hide *)
+Proof.
+  split.
+    revert f x y. induction n as [| n']; cbn; intros.
+      left. reflexivity.
+      right. pose (H' := @Permutation_in A _ _ x H ltac:(left; reflexivity)).
+        inv H'. exists 0. split.
+          apply le_n_S, le_0_n.
+          cbn. reflexivity.
+        apply In_iterate in H0. destruct H0 as (k & H1 & H2).
+          exists (S k). split.
+            apply lt_n_S. assumption.
+            cbn. symmetry. assumption.
+    destruct 1 as [H | (k & H1 & H2)].
+      rewrite H. reflexivity.
+      rewrite <- H2. induction n as [| 
+Qed.
+(* end hide *)
+
+
+(* TODO: iterate i iter (TODO)
+head, tail i uncons
+last, init i unsnoc *)
+
+Lemma Permutation_insert :
+  forall (A : Type) (l : list A) (n : nat) (x : A),
+    Permutation (insert l n x) (x :: l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite perm_swap. constructor. apply IHt.
+Qed.
+(* end hide *)
+
+Lemma Permutation_take :
+  exists (A : Type) (l1 l2 : list A),
+    Permutation l1 l2 /\
+      exists n : nat, ~ Permutation (take n l1) (take n l2).
+(* begin hide *)
+Proof.
+  exists bool, [true; false], [false; true]. split.
+    constructor.
+    exists 1. cbn. intro. apply Permutation_length_1 in H.
+      congruence.
+      reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Permutation_drop :
+  exists (A : Type) (l1 l2 : list A),
+    Permutation l1 l2 /\
+      exists n : nat, ~ Permutation (drop n l1) (drop n l2).
+(* begin hide *)
+Proof.
+  exists bool, [true; false], [false; true]. split.
+    constructor.
+    exists 1. cbn. intro. apply Permutation_length_1 in H.
+      congruence.
+      reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Permutation_zip :
+  exists (A B : Type) (la1 la2 : list A) (lb1 lb2 : list B),
+    Permutation la1 la2 /\ Permutation lb1 lb2 /\
+      ~ Permutation (zip la1 lb1) (zip la2 lb2).
+(* begin hide *)
+Proof.
+  exists bool, bool,
+    [true; false], [false; true], [false; true; false], [false; false; true].
+  repeat split.
+    apply perm_swap.
+    do 2 constructor.
+    cbn. intro. apply Permutation_length_2 in H. firstorder congruence.
+Qed.
+(* end hide *)
+
+Lemma zipWith_pair :
+  forall (A B : Type) (la : list A) (lb : list B),
+    zipWith pair la lb = zip la lb.
+(* begin hide *)
+Proof.
+  induction la as [| ha ta]; cbn; intros.
+    reflexivity.
+    destruct lb as [| hb tb]; cbn; intros.
+      reflexivity.
+      rewrite IHta. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Permutation_zipWith :
+  exists
+    (A B C : Type) (f : A -> B -> C)
+    (la1 la2 : list A) (lb1 lb2 : list B),
+      Permutation la1 la2 /\
+      Permutation lb1 lb2 /\
+      ~ Permutation (zipWith f la1 lb1) (zipWith f la2 lb2).
+(* begin hide *)
+Proof.
+  destruct (Permutation_zip)
+    as (A & B & la1 & la2 & lb1 & lb2 & H1 & H2 & H3).
+  exists A, B, _, pair, la1, la2, lb1, lb2. repeat split.
+    1-2: assumption.
+    rewrite ?zipWith_pair. assumption.
+Qed.
+(* end hide *)
+
+Lemma Permutation_count :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    Permutation l1 l2 -> count p l1 = count p l2.
+(* begin hide *)
+Proof.
+  induction 1; cbn; try destruct (p x); try destruct (p y); congruence.
+Qed.
+(* end hide *)
+
+Lemma Permutation_count_conv :
+  forall (A : Type) (l1 l2 : list A),
+    (forall p : A -> bool, count p l1 = count p l2) -> Permutation l1 l2.
+(* begin hide *)
+Proof.
+  
+Admitted.
+(* end hide *)
+
+Lemma Permutation_filter :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    Permutation l1 l2 -> Permutation (filter p l1) (filter p l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    reflexivity.
+    destruct (p x); rewrite IHPermutation; reflexivity.
+    destruct (p x), (p y); try constructor; reflexivity.
+    rewrite IHPermutation1, IHPermutation2. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Permutation_pmap :
+  forall (A B : Type) (f : A -> option B) (l1 l2 : list A),
+    Permutation l1 l2 -> Permutation (pmap f l1) (pmap f l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    reflexivity.
+    destruct (f x); rewrite IHPermutation; reflexivity.
+    destruct (f x), (f y); try constructor; reflexivity.
+    rewrite IHPermutation1. assumption.
+Qed.
+(* end hide *)
+
+Lemma Permutation_intersperse :
+  forall (A : Type) (l1 l2 : list A) (x : A),
+    Permutation l1 l2 -> Permutation (intersperse x l1) (intersperse x l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    reflexivity.
+    destruct (intersperse x l), (intersperse x l').
+      reflexivity.
+      1-2: apply Permutation_length in IHPermutation; inv IHPermutation.
+      do 2 constructor. assumption.
+    destruct (intersperse x l).
+      rewrite Permutation_cons_append. constructor.
+      change _ with
+        (Permutation
+          ([y; x; x0] ++ (x :: a :: l0))
+          ([x0; x; y] ++ (x :: a :: l0))).
+        apply Permutation_app_tail.
+          rewrite Permutation_cons_append, perm_swap. reflexivity.
+    rewrite IHPermutation1, IHPermutation2. reflexivity.
+      
+Qed.
+(* end hide *)
+
+Check splitAt.
+
+Search splitAt.
+
+nth
+
+remove (TODO)
+
+splitAt
+
+unzip
+
+unzipWith

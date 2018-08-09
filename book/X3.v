@@ -8331,6 +8331,32 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma In_iterate :
+  forall (A : Type) (f : A -> A) (n : nat) (x y : A),
+    In y (iterate f n x) <-> exists k : nat, k < n /\ y = iter f k x.
+(* begin hide *)
+Proof.
+  split.
+    revert f x y. induction n as [| n']; cbn; intros.
+      contradiction.
+      destruct H.
+        rewrite H. exists 0. cbn. split.
+          apply le_n_S, le_0_n.
+          reflexivity.
+        destruct (IHn' _ _ _ H) as (n & IH1 & IH2). exists (S n). split.
+          apply lt_n_S. assumption.
+          cbn. assumption.
+    (* TODO: In iterate iter *)
+    revert f x y. induction n as [| n']; cbn; intros.
+      destruct H as (k & H1 & H2). inv H1.
+      destruct H as (k & H1 & H2). destruct k as [| k']; cbn in *.
+        left. assumption.
+        right. rewrite H2. apply IHn'. exists k'. split.
+          apply lt_S_n. assumption.
+          reflexivity.
+Qed.
+(* end hide *)
+
 Lemma nth_In :
   forall (A : Type) (n : nat) (l : list A),
     n < length l -> exists x : A, nth n l = Some x /\ In x l.
