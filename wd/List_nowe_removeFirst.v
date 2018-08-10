@@ -416,7 +416,6 @@ Qed.
 (* end hide *)
 
 (* TODO: intersperse, groupBy *)
-Search rmFirst app.
 
 Lemma elem_rmFirst :
   forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
@@ -439,7 +438,17 @@ Proof.
 Qed.
 (* end hide *)
 
-(*
+Lemma Dup_cons :
+  forall (A : Type) (x : A) (l : list A),
+    Dup (x :: l) <-> elem x l \/ Dup l.
+(* begin hide *)
+Proof.
+  split; intros.
+    inv H; [left | right]; assumption.
+    destruct H; constructor; assumption.
+Qed.
+(* end hide *)
+
 Lemma Dup_rmFirst :
   forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
     rmFirst p l = Some (b, x, e) ->
@@ -447,7 +456,7 @@ Lemma Dup_rmFirst :
         exists y : A, elem y b /\ elem y e.
 (* begin hide *)
 Proof.
-  split.
+(*  split.
     intro H0. revert b x e H. induction H0; cbn; intros.
       destruct (p h).
         inv H0. do 3 right. left. assumption.
@@ -481,14 +490,14 @@ Proof.
         destruct p0, p0. 1-2: inv H. decompose [or ex and] H0; clear H0.
           inv H.
             right. eapply IHt.
-    
-    
-  induction l as [| h t]; cbn.
-    reflexivity.
-
+*)
+  intros. apply rmFirst_wut in H. subst.
+  rewrite Dup_app. rewrite Dup_cons. firstorder.
+    inv H0; firstorder.
+    do 2 right. exists x. split; [assumption | left].
+    do 2 right. exists x0. split; try right; assumption.
 Qed.
 (* end hide *)
-*)
 
 (* TODO: NoDup, Rep *)
 

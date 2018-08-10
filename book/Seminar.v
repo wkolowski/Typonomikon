@@ -791,7 +791,6 @@ Inductive P : nat -> nat -> Prop :=
     | c0 : P 0 1
     | c1 : forall n m : nat, P n m -> P (S n) (2 * m).
 
-(* TODO *)
 Require Import FunInd.
 
 Function pow2 (n : nat) : nat :=
@@ -1734,7 +1733,6 @@ Check swap_blocks_ind.
     found in the [match] in [swap_blocks]' definition. We can use it like
     this (but first we have to import the [Recdef] module): *)
 
-(* TODO *)
 Require Import Recdef.
 
 Theorem swap_blocks_involutive :

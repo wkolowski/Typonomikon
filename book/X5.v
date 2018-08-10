@@ -1094,46 +1094,14 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Właściwości relacji injektywnych są podobne jak relacji funkcyjnych.
-    Uwaga: relacje injektywny odpowiadają funkcjom injektywnym, ale same
-    nie muszą być funkcjami injektywnymi. TODO: sprawdzć czy to rzeczywiście
-    jest prawda. *)
+(** Właściwości relacji injektywnych są takie, jak funkcji injektywnych,
+    gdyż te pojęcia ściśle sobie odpowiadają. *)
 
 (** **** Ćwiczenie *)
 
-(** Znajdź relację, która jest injektywna w sensie [Injective] (jako relacja),
-    ale nie jest injektywna w sensie [injective] (jako funkcja).
+(** Udowodnij, że powyższe zdanie nie kłamie. *)
 
-    UPDATE TODO: to ćwiczenie to niezłe kłamstwo :) Ciekawe, kto się
-    skapnął? *)
-
-(* begin hide *)
-Instance Injective_αγόρι :
-  Injective (fun (b : bool) (ob : option bool) => Some b = ob).
-Proof.
-  rel. inversion H0. reflexivity.
-Qed.
-
-Lemma αγόρι_not_inj :
-  injective (Rinv (fun (b : bool) (ob : option bool) => Some b = ob)).
-Proof.
-  compute. intros. destruct x, x'.
-    apply (f_equal (fun f => f b)) in H. rewrite <- H. reflexivity.
-    apply (f_equal (fun f => f b)) in H. rewrite <- H. reflexivity.
-    apply (f_equal (fun f => f b)) in H. symmetry. rewrite H. reflexivity.
-    reflexivity.
-Qed.
-
-Lemma rel_inj :
-  injective (fun (b : bool) (ob : option bool) => Some b = ob).
-Proof.
-  compute. intros.
-  apply (f_equal (fun f => f (Some x))) in H.
-  pose (p := eq_refl (Some x)).
-  rewrite H in p. inversion p. reflexivity.
-Qed.
-
-Lemma wut :
+Lemma injective_Injective :
   forall (A B : Type) (f : A -> B),
     injective f <-> Injective (fun (a : A) (b : B) => f a = b).
 Proof.

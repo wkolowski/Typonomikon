@@ -9,7 +9,6 @@ Class Finite (A : Type) : Type :=
     spec : forall x : A, In x enumerate
 }.
 
-Arguments Finite _.
 Arguments enumerate _ [Finite].
 
 Instance Finite_bool : Finite bool :=
@@ -84,13 +83,17 @@ Instance Enumerable_list {A : Type} (FA : Enumerable A)
     enum := all_lists FA
 }.
 Proof.
-  induction n as [| n']; simpl.
+  induction n as [| n']; cbn.
     destruct x; simpl; split; auto.
       inversion 1.
       destruct 1; inversion H.
-    destruct x; simpl; split; auto.
+    destruct x; cbn; split; auto.
       inversion 1.
       destruct n'.
+        destruct (enum A 1); cbn.
+          inversion 1.
+          
+        
 Abort.
 
 End Enumerable.
@@ -126,7 +129,7 @@ Proof.
   repeat constructor. inversion 1; inversion H0.
 Qed.
 
-Theorem unit_not_bool : ~ unit = bool.
+Theorem unit_not_bool : ~ @eq Type unit bool.
 Proof.
   intro. pose proof unit_no_2. unfold not in H0.
   rewrite H in H0. apply (H0 [true; false]).
@@ -136,27 +139,12 @@ Qed.
 
 Require Import FinFun.
 
-Theorem no_bij_peu_peb :
-  ~ exists f : prod Empty_set unit -> prod Empty_set bool,
-    Bijective f.
-Proof.
-  destruct 1.
-Abort.
-
-Theorem wut : ~ prod Empty_set unit = prod Empty_set bool.
-Proof.
-  intro.
-  remember (prod Empty_set unit) as A.
-  remember (prod Empty_set bool) as B.
-  cut (forall P : Type -> Prop, P A <-> P B).
-    intro.
-Abort.
-
 Goal ~ forall A B C : Type, prod A B = prod A C -> B = C.
 Proof.
-  intro. cut (unit = bool).
+  intro. cut (@eq Type unit bool).
     apply unit_not_bool.
-    specialize (H Empty_set unit bool).
-Abort. (* TODO *)
+    specialize (H Empty_set unit bool). apply H.
+      (* Przydałaby się uniwalencja, ale bozia nie dała. *)
+Admitted.
 
 End Cardinality.

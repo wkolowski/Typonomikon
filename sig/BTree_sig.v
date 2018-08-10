@@ -28,7 +28,6 @@ Parameter unN : forall A : Type, BTree A -> option (A * BTree A * BTree A).
 Parameter size : forall A : Type, BTree A -> nat.
 Parameter height : forall A : Type, BTree A -> nat.
 
-(* TODO *)
 Parameter leftmost : forall A : Type, BTree A -> option A.
 Parameter rightmost : forall A : Type, BTree A -> option A.
 

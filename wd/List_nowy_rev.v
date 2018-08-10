@@ -235,6 +235,33 @@ Qed.
 
 (* TODO: uncons, unsnoc *)
 
+Check uncons.
+
+Lemma rev_uncons :
+  forall (A : Type) (x : A) (l l' : list A),
+    uncons l = Some (x, l') -> Some (rev l') = init (rev l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros; inv H.
+    rewrite init_snoc. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma rev_unsnoc :
+  forall (A : Type) (x : A) (l l' : list A),
+    unsnoc l = Some (x, l') -> Some (rev l') = tail (rev l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros; inv H.
+    destruct (unsnoc t) eqn: H.
+      destruct p. inv H1. rewrite tail_snoc, <- (IHt _ eq_refl).
+        cbn. reflexivity.
+      inv H1. destruct t; inv H; cbn.
+        reflexivity.
+        destruct (unsnoc t); try destruct p; inv H1.
+Qed.
+(* end hide *)
+
 Lemma nth_snoc_lt :
   forall (A : Type) (n : nat) (x : A) (l : list A),
     n < length l -> nth n (snoc x l) = nth n l.
@@ -446,8 +473,6 @@ Proof.
   intros. rewrite drop_rev_aux, rev_rev. reflexivity.
 Qed.
 (* end hide *)
-
-(* TODO: splitAt *)
 
 Lemma zip_not_rev :
   exists (A B : Type) (la : list A) (lb : list B),

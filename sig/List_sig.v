@@ -33,32 +33,36 @@ Parameter iterate : forall A : Type, (A -> A) -> nat -> A -> list A.
 (** Proste rozkładanie na kawałki *)
 Parameter head : forall A : Type, list A -> option A.
 Parameter tail : forall A : Type, list A -> option (list A).
-(* TODO *)Parameter uncons : forall A : Type, list A -> option (A * list A).
+Parameter uncons : forall A : Type, list A -> option (A * list A).
 
 Parameter last : forall A : Type, list A -> option A.
 Parameter init : forall A : Type, list A -> option (list A).
-(* TODO *)Parameter unsnoc : forall A : Type, list A -> option (A * list A).
+Parameter unsnoc : forall A : Type, list A -> option (A * list A).
 
 (** Bardziej skomplikowane rozkładanie na kawałki *)
+
 Parameter nth : forall A : Type, nat -> list A -> option A.
-(* TODO *)
 
-Parameter replace : forall A : Type, list A -> nat -> A -> option (list A).
-(* TODO *)
-Parameter insert : forall A : Type, list A -> nat -> A -> list A.
-Parameter insert' : forall A : Type, list A -> nat -> A -> option (list A).
-
-Parameter remove : forall A : Type, nat -> list A -> option (list A).
-Parameter remove' : forall A : Type, nat -> list A -> list A.
-Parameter nth_remove :
+(* TODO: koncepcja *)
+Parameter remove :
   forall A : Type, nat -> list A -> option (A * list A).
-Parameter nth_remove' :
-  forall A : Type, nat -> list A -> option (A * list A * list A).
+Parameter remove' : forall A : Type, nat -> list A -> option (list A).
+Parameter remove'' : forall A : Type, nat -> list A -> list A.
 
-(** Ucinanie *)
 Parameter take : forall A : Type, nat -> list A -> list A.
 Parameter drop : forall A : Type, nat -> list A -> list A.
 Parameter splitAt : forall A : Type, nat -> list A -> list A * list A.
+
+(* TODO *)
+Parameter decompose :
+  forall A : Type, nat -> list A -> option (list A * A * list A).
+
+(** Modyfikacje *)
+(* TODO *)
+Parameter replace : forall A : Type, list A -> nat -> A -> option (list A).
+(* TODO *)
+Parameter insert : forall A : Type, list A -> nat -> A -> option (list A).
+Parameter insert_orElse : forall A : Type, list A -> nat -> A -> list A.
 
 (** Funkcje z predykatem boolowskim *)
 Parameter any : forall A : Type, (A -> bool) -> list A -> bool.
@@ -71,6 +75,16 @@ Parameter removeFirst :
   forall A : Type, (A -> bool) -> list A -> option (A * list A).
 Parameter removeLast :
   forall A : Type, (A -> bool) -> list A -> option (A * list A).
+
+Parameter takeWhile : forall A : Type, (A -> bool) -> list A -> list A.
+Parameter dropWhile : forall A : Type, (A -> bool) -> list A -> list A.
+Parameter span :
+  forall A : Type, (A -> bool) -> list A -> list A * list A.
+
+Parameter decomposeFirst :
+  forall A : Type, (A -> bool) -> list A -> option (list A * A * list A).
+Parameter decomposeLast :
+  forall A : Type, (A -> bool) -> list A -> option (list A * A * list A).
 
 Parameter findIndex :
   forall A : Type, (A -> bool) -> list A -> option nat.
@@ -85,12 +99,6 @@ Parameter findIndices :
   forall A : Type, (A -> bool) -> list A -> list nat.
 Parameter findIndices' :
   forall A : Type, (A -> bool) -> list A -> list nat.
-
-Parameter takeWhile : forall A : Type, (A -> bool) -> list A -> list A.
-Parameter dropWhile : forall A : Type, (A -> bool) -> list A -> list A.
-Parameter span :
-  forall A : Type, (A -> bool) -> list A -> list A * list A.
-(* TODO: funkcja [break] jak w Haskellu, czyli span (not . p) ? *)
 
 (** Mapowanie i tympodobne *)
 Parameter map : forall A B : Type, (A -> B) -> list A -> list B.
@@ -122,7 +130,6 @@ Parameter groupBy :
   forall A : Type, (A -> A -> bool) -> list A -> list (list A).
 
 (** Zwijanie *)
-
 
 Parameter foldr : forall A B : Type, (A -> B -> B) -> B -> list A -> B.
 Parameter foldl : forall A B : Type, (A -> B -> A) -> A -> list B -> A.
@@ -156,6 +163,5 @@ Parameter sublist : forall A : Type, list A -> list A -> Prop.
 
 Parameter Palindrome : forall A : Type, list A -> Prop.
 
-(* TODO *)
 Parameter Permutation : forall A : Type, list A -> list A -> Prop.
 Parameter perm : forall (A : Type) (p : A -> bool), list A -> list A -> Prop.

@@ -291,7 +291,7 @@ Qed.
 
 Ltac inv H := inversion H; subst; clear H.
 
-Lemma Permutation_cons_split :
+(*Lemma Permutation_cons_split :
   forall (A : Type) (l1 l2 : list A),
     Permutation l1 l2 ->
     l1 = [] /\ l2 = [] \/
@@ -310,7 +310,8 @@ Proof.
         [[] | (h1 & h2 & t1 & t2 & l11 & l12 & l21 & l22 &
                H1 & H2 & H3 & H4 & H5 & H6)]; subst.
       right. exists x, x, [], [], [], [], [], []. firstorder.
-      right. exists x, x, (h1 :: t1), (h2 :: t2), [], (h1 :: t1), [], (h2 :: t2).
+      right. exists x, x, (h1 :: t1), (h2 :: t2), [], (h1 :: t1), [],
+(h2 :: t2).
         cbn. firstorder.
     right. exists y, x, (x :: l), (y :: l), [], (x :: l), [], (y :: l).
       cbn. firstorder.
@@ -329,6 +330,7 @@ Proof.
         exists h1, h2', t1, t2', [], t1, [], t2'. cbn. firstorder.
 Qed.
 (* end hide *)
+*)
 
 Lemma Permutation_In :
   forall (A : Type) (l1 l2 : list A),
@@ -343,8 +345,10 @@ Lemma Permutation_ind' :
   forall (A : Type) (P : list A -> list A -> Prop),
     P [] [] ->
     (forall x l l', Permutation l l' -> P l l' -> P (x :: l) (x :: l')) ->
-    (forall x y l l', Permutation l l' -> P l l' -> P (y :: x :: l) (x :: y :: l')) ->
-    (forall l l' l'', Permutation l l' -> P l l' -> Permutation l' l'' -> P l' l'' -> P l l'') ->
+    (forall x y l l', Permutation l l' -> P l l' ->
+      P (y :: x :: l) (x :: y :: l')) ->
+    (forall l l' l'', Permutation l l' -> P l l' -> Permutation l' l'' ->
+      P l' l'' -> P l l'') ->
     forall l l', Permutation l l' -> P l l'.
 Proof.
   intros A P Hnil Hskip Hswap Htrans.
@@ -846,30 +850,44 @@ Qed.
 Lemma Permutation_iterate' :
   forall (A : Type) (f : A -> A) (n : nat) (x y : A),
     Permutation (iterate f n x) (iterate f n y) <->
-    n = 0 \/ exists k : nat, k < n /\ iter f k y = x.
+    n = 0 \/ x = y \/ exists kx ky : nat,
+      y = iter f kx x /\
+      x = iter f ky y /\
+      S (kx + ky) = n.
 (* begin hide *)
 Proof.
   split.
     revert f x y. induction n as [| n']; cbn; intros.
       left. reflexivity.
-      right. pose (H' := @Permutation_in A _ _ x H ltac:(left; reflexivity)).
-        inv H'. exists 0. split.
-          apply le_n_S, le_0_n.
-          cbn. reflexivity.
-        apply In_iterate in H0. destruct H0 as (k & H1 & H2).
-          exists (S k). split.
-            apply lt_n_S. assumption.
-            cbn. symmetry. assumption.
-    destruct 1 as [H | (k & H1 & H2)].
-      rewrite H. reflexivity.
-      rewrite <- H2. induction n as [| 
-Qed.
+      {
+        assert (H' := @Permutation_in A _ _ x H ltac:(left; reflexivity)).
+        symmetry in H.
+        assert (H'' := @Permutation_in A _ _ y H ltac:(left; reflexivity)).
+        inv H'; inv H''; try (right; left; reflexivity).
+        apply In_iterate in H0. apply In_iterate in H1.
+        destruct H0 as (k1 & H11 & H12), H1 as (k2 & H21 & H22).
+        right. right. exists (S k2), (S k1). cbn.
+Abort.
 (* end hide *)
 
-
-(* TODO: iterate i iter (TODO)
-head, tail i uncons
-last, init i unsnoc *)
+Lemma Permutation_iterate' :
+  forall (A : Type) (f : A -> A) (n : nat) (x y : A),
+    Permutation (iterate f n x) (iterate f n y) ->
+    n = 0 \/ exists k : nat, k < n /\ iter f k y = x.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    left. reflexivity.
+    right. pose (H' := @Permutation_in A _ _ x H ltac:(left; reflexivity)).
+      inv H'. exists 0. split.
+        apply le_n_S, le_0_n.
+        cbn. reflexivity.
+      apply In_iterate in H0. destruct H0 as (k & H1 & H2).
+        exists (S k). split.
+          apply lt_n_S. assumption.
+          cbn. symmetry. assumption.
+Qed.
+(* end hide *)
 
 Lemma Permutation_insert :
   forall (A : Type) (l : list A) (n : nat) (x : A),
@@ -1021,20 +1039,23 @@ Proof.
         apply Permutation_app_tail.
           rewrite Permutation_cons_append, perm_swap. reflexivity.
     rewrite IHPermutation1, IHPermutation2. reflexivity.
-      
 Qed.
 (* end hide *)
 
-Check splitAt.
+Print unzip.
 
-Search splitAt.
+
+
+(* TODO: 
 
 nth
 
-remove (TODO)
+remove
 
 splitAt
 
 unzip
 
 unzipWith
+head, tail i uncons
+last, init i unsnoc *)
