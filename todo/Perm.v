@@ -744,37 +744,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(*nat_bijection_Permutation:
-  forall (n : nat) (f : nat -> nat),
-  FinFun.bFun n f ->
-  FinFun.Injective f -> let l := List.seq 0 n in Permutation (List.map f l) l
-*)
-
-(*Permutation_nth_error:
-  forall (A : Type) (l l' : list A),
-  Permutation l l' <->
-  length l = length l' /\
-  (exists f : nat -> nat,
-     FinFun.Injective f /\
-     (forall n : nat, List.nth_error l' n = List.nth_error l (f n)))
-Permutation_nth_error_bis:
-  forall (A : Type) (l l' : list A),
-  Permutation l l' <->
-  (exists f : nat -> nat,
-     FinFun.Injective f /\
-     FinFun.bFun (length l) f /\
-     (forall n : nat, List.nth_error l' n = List.nth_error l (f n)))
-Permutation_nth:
-  forall (A : Type) (l l' : list A) (d : A),
-  Permutation l l' <->
-  (let n := length l in
-   length l' = n /\
-   (exists f : nat -> nat,
-      FinFun.bFun n f /\
-      FinFun.bInjective n f /\
-      (forall x : nat, x < n -> List.nth x l' d = List.nth (f x) l d)))
-*)
-
 (** Poważne rzeczy *)
 
 Lemma Permutation_join :

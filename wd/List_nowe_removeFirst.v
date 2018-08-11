@@ -213,7 +213,74 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: join, bind *)
+Lemma rmFirst_join :
+  forall (A : Type) (p : A -> bool) (lla : list (list A)),
+    rmFirst p (join lla) =
+    match rmFirst (any p) lla with
+        | None => None
+        | Some (bl, l, el) =>
+            match rmFirst p l with
+                | None => None
+                | Some (b, x, e) => Some (join bl ++ b, x, e ++ join el)
+            end
+    end.
+(* begin hide *)
+Proof.
+  induction lla as [| hl tl]; cbn.
+    reflexivity.
+    rewrite rmFirst_app, IHtl. induction hl as [| h t]; cbn.
+      destruct (rmFirst (any p) tl).
+        destruct p0, p0. destruct (rmFirst p l1).
+          destruct p0, p0. 1-3: reflexivity.
+      destruct (p h) eqn: Hph; cbn.
+        rewrite Hph. reflexivity.
+        destruct (rmFirst p t).
+          destruct p0, p0. destruct (any p t); cbn.
+            rewrite Hph. destruct (rmFirst p t).
+              destruct p0, p0. inv IHt. reflexivity.
+              inv IHt.
+            destruct (rmFirst (any p) tl).
+              destruct p0, p0. destruct (rmFirst p l3).
+                destruct p0, p0. inv IHt. cbn. reflexivity.
+                inv IHt.
+              inv IHt.
+          destruct (rmFirst (any p) tl).
+            destruct p0, p0. destruct (rmFirst p l1).
+              destruct p0, p0. destruct (any p t).
+                cbn. rewrite Hph. destruct (rmFirst p t).
+                  destruct p0, p0. inv IHt. reflexivity.
+                  inv IHt.
+                destruct (rmFirst p l1).
+                  destruct p0, p0. inv IHt. cbn. rewrite H0. reflexivity.
+                  inv IHt.
+              destruct (any p t).
+                cbn. rewrite Hph. destruct (rmFirst p t).
+                  destruct p0, p0. inv IHt.
+                  reflexivity.
+                destruct (rmFirst p l1).
+                  destruct p0, p0. inv IHt.
+                  reflexivity.
+            destruct (any p t).
+              cbn. rewrite Hph. destruct (rmFirst p t).
+                destruct p0, p0. inv IHt.
+                1-2: reflexivity.
+Restart.
+  Ltac rec_destr x :=
+  match x with
+      | context [match ?y with _ => _ end] => rec_destr y
+      | _ => let H := fresh "H" in destruct x eqn: H
+  end.
+  induction lla as [| hl tl]; cbn.
+    reflexivity.
+    rewrite rmFirst_app, IHtl. induction hl as [| h t]; cbn.
+      all: repeat (match goal with
+          | H : context [match ?x with _ => _ end] |- _ => rec_destr x
+          | |- context [match ?x with _ => _ end] => rec_destr x
+      end; cbn in *); try congruence.
+Qed.
+(* end hide *)
+
+(* TODO: bind *)
 
 Lemma rmFirst_replicate :
   forall (A : Type) (p : A -> bool) (n : nat) (x : A),
@@ -417,7 +484,24 @@ Qed.
 
 (* TODO: intersperse, groupBy *)
 
-Lemma elem_rmFirst :
+Lemma elem_rmFirst_None :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    rmFirst p l = None -> forall x : A, elem x l -> p x = false.
+(* begin hide *)
+Proof.
+  induction 2; cbn in H.
+    destruct (p x).
+      inv H.
+      reflexivity.
+    destruct (p h).
+      inv H.
+      apply IHelem. destruct (rmFirst p t).
+        destruct p0, p0. inv H.
+        reflexivity.
+Qed.
+(* end hide *)
+
+Lemma elem_rmFirst_Some :
   forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
     rmFirst p l = Some (b, x, e) -> 
       forall y : A, elem y l <-> elem y b \/ y = x \/ elem y e.
@@ -425,6 +509,21 @@ Lemma elem_rmFirst :
 Proof.
   intros. apply rmFirst_wut in H.
   rewrite H, elem_app, elem_cons'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma elem_rmFirst :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    match rmFirst p l with
+        | None => forall x : A, elem x l -> p x = false
+        | Some (b, x, e) =>
+            forall y : A, elem y l <-> elem y b \/ y = x \/ elem y e
+    end.
+(* begin hide *)
+Proof.
+  intros. destruct (rmFirst p l) eqn: Heq.
+    destruct p0, p0. eapply elem_rmFirst_Some. eassumption.
+    apply elem_rmFirst_None. assumption.
 Qed.
 (* end hide *)
 

@@ -17,6 +17,9 @@ end.
 (* end hide *)
 
 Compute insert (iterate S 5 0) 4 42.
+
+(* Trzeba się zastanowić, czy taki insert ma faktycznie sens. *)
+
 (*
 Lemma insert_0 :
   forall (A : Type) (l : list A) (x : A),
@@ -26,7 +29,6 @@ Proof.
   destruct l. cbn. reflexivity.
 Qed.
 (* end hide *)
-*)
 
 Lemma isEmpty_insert :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
@@ -233,3 +235,4 @@ Proof.
     apply IHt.
 Qed.
 (* end hide *)
+*)

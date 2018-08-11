@@ -3223,6 +3223,18 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma unzip_snoc :
+  forall (A B : Type) (x : A * B) (l : list (A * B)),
+    unzip (snoc x l) =
+      let (la, lb) := unzip l in (snoc (fst x) la, snoc (snd x) lb).
+(* begin hide *)
+Proof.
+  induction l as [| [ha hb] t]; cbn; intros.
+    destruct x. cbn. reflexivity.
+    destruct (unzip t). rewrite IHt. cbn. reflexivity.
+Qed.
+(* end hide *)
+
 (** ** [zipWith] *)
 
 (** Zdefiniuj funkcję [zipWith], która spełnia poniższą specyfikację. *)
@@ -3248,6 +3260,8 @@ Proof.
   cbn; intros; rewrite ?IHta; reflexivity.
 Qed.
 (* end hide *)
+
+(* TODO: zipWith_pair (niezbyt się da) *)
 
 Lemma isEmpty_zipWith :
   forall (A B C : Type) (f : A -> B -> C) (la : list A) (lb : list B),
@@ -3358,6 +3372,30 @@ Proof.
   destruct l as [| h t]; inversion 1; cbn.
     reflexivity.
     destruct (unzipWith f t), (f h). inversion H1; subst. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma unzipWith_spec :
+  forall (A B C : Type) (f : A -> B * C) (l : list A),
+    unzipWith f l = unzip (map f l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite IHt. destruct (unzip (map f t)), (f h). reflexivity.
+Qed.
+(* end hide *)
+
+Lemma unzipWith_id :
+  forall (A B : Type) (l : list (A * B)),
+    unzipWith id l = unzip l.
+(* begin hide *)
+Proof.
+  intros. rewrite unzipWith_spec, map_id. reflexivity.
+Restart.
+  induction l as [| [ha ta] t]; cbn.
+    reflexivity.
+    rewrite IHt. destruct (unzip t). reflexivity.
 Qed.
 (* end hide *)
 
@@ -6065,8 +6103,7 @@ match l with
         else map S (findIndices p t)
 end.
 
-(* TODO:
-Lemma findIndices'_spec :
+(* TODO: Lemma findIndices'_spec :
   forall (A : Type) (p : A -> bool) (l : list A),
     map (plus 0) (findIndices' p l) = findIndices p l.
 Proof.
@@ -12236,7 +12273,7 @@ Proof.
       apply H0.
       destruct H2 as (h' & t' & H1' & H2' & H3'). rewrite H3'.
         apply H1. apply IH; assumption.
-Admitted.
+Admitted. (* TODO: palindromowa indukcja *)
 (* end hide *)
 
 Lemma Palindrome_cons_snoc :

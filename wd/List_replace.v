@@ -765,12 +765,13 @@ Proof.
         destruct (IHt _ _ _ _ Heq H2).
           left. right. assumption.
           right. assumption.
-Restart.
+Qed.
+(* TODO: usuń. Restart.
   intros. apply replace_spec'' in H. subst.
   rewrite elem_app in H0. destruct H0.
     left. apply elem_take with n. assumption.
     right. Search nth app. rewrite nth_app_r.
-Admitted.
+.*)
 (* end hide *)
 
 Lemma elem_replace'' :

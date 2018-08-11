@@ -233,10 +233,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: uncons, unsnoc *)
-
-Check uncons.
-
 Lemma rev_uncons :
   forall (A : Type) (x : A) (l l' : list A),
     uncons l = Some (x, l') -> Some (rev l') = init (rev l).
@@ -494,7 +490,31 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: unzip, unzipWith *)
+Lemma rev_unzip :
+  forall (A B : Type) (l : list (A * B)) (la : list A) (lb : list B),
+    unzip l = (la, lb) -> unzip (rev l) = (rev la, rev lb).
+(* begin hide *)
+Proof.
+  induction l as [| [ha ta] t]; cbn; intros.
+    inv H. cbn. reflexivity.
+    destruct (unzip t). inv H. rewrite unzip_snoc, (IHt _ _ eq_refl).
+      cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma rev_unzipWith :
+  forall (A B C : Type) (f : A -> B * C) (l : list A),
+    unzipWith f (rev l) =
+      let (la, lb) := unzipWith f l in (rev la, rev lb).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (unzipWith f t), (f h) eqn: Heq.
+      rewrite unzipWith_spec, map_snoc, map_rev, unzip_snoc, IHt, Heq in *.
+        cbn. reflexivity.
+Qed.
+(* end hide *)
 
 Lemma any_rev :
   forall (A : Type) (p : A -> bool) (l : list A),
