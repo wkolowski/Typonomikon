@@ -1,4 +1,4 @@
-Add Rec LoadPath "/home/zeimer/Code".
+Add Rec LoadPath "/home/zeimer/Code/Coq".
 
 Require Import CoqBookPL.book.X3.
 
@@ -136,7 +136,34 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: take_join, take_bind *)
+(* TODO: take_join, take_bind (chyba potrzebne będzie decompose) *)
+
+(*Lemma take_join :
+  forall (A : Type) (ll : list (list A)) (n : nat),
+    exists m1 : nat,
+      match nth (S m1) ll with
+          | None => m1 = 0
+          | Some l =>
+              exists m2 : nat,
+                take n (join ll) = join (take m1 ll) ++ take m2 l
+      end.
+(* begin hide *)
+Proof. Print take.
+  induction ll as [| h t]; cbn; intros.
+    exists 0. reflexivity.
+    induction n as [| n'].
+      destruct t; cbn.
+        exists 0. cbn. reflexivity.
+        destruct (IHt 0) as (m1 & IH). exists (S m1). cbn in *.
+          destruct (nth m1 t).
+            
+    destruct (IHt n) as (m1 & IH). exists (S m1).
+      destruct (nth (S m1) t); cbn.
+        destruct IH as (m2 & IH). exists m2. rewrite take_app.
+    
+Qed.
+(* end hide *)
+*)
 
 Lemma take_replicate :
   forall (A : Type) (n m : nat) (x : A),

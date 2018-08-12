@@ -249,7 +249,41 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: join, bind *)
+Lemma replace_join :
+  forall (A : Type) (ll : list (list A)) (n : nat) (x : A) (l : list A),
+    replace (join ll) n x = Some l ->
+      exists n m : nat,
+        match nth n ll with
+            | None => False
+            | Some l' =>
+                match replace l' m x with
+                    | None => False
+                    | Some l'' =>
+                        match replace ll n l'' with
+                            | None => False
+                            | Some ll' => join ll' = l
+                        end
+                end
+        end.
+(* begin hide *)
+Proof.
+  induction ll as [| hl tl]; cbn; intros.
+    inv H.
+    rewrite replace_app in H. destruct (replace hl n x) eqn: Heq.
+      inv H. exists 0. cbn. exists n. rewrite Heq. reflexivity.
+      destruct (replace (join tl) (n - length hl) x) eqn: Heq'; inv H.
+        destruct (IHtl _ _ _ Heq') as (n' & m & IH).
+          exists (S n'), m. cbn. destruct (nth n' tl).
+            destruct (replace l m x).
+              destruct (replace tl n' l1).
+                cbn. rewrite IH. reflexivity.
+                contradiction.
+              contradiction.
+            contradiction.
+Qed.
+(* end hide *)
+
+(* TODO: bind *)
 
 Lemma replace_replicate :
   forall (A : Type) (l l' : list A) (n m : nat) (x y : A),
@@ -720,7 +754,7 @@ Qed.
 (* end hide *)
 *)
 
-Lemma elem_replace' :
+Lemma elem_replace :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' -> elem x l'.
 (* begin hide *)
@@ -748,56 +782,30 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma elem_replace :
-  forall (A : Type) (l l' : list A) (n : nat) (x y : A),
-    replace l n x = Some l' ->
-      elem y l' -> elem y l \/ nth n l' = Some y.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    inv H.
-    destruct n as [| n']; cbn.
-      inv H. inv H0.
-        right. reflexivity.
-        left. right. assumption.
-      destruct (replace t n' x) eqn: Heq; inv H. inv H0.
-        do 2 left.
-        destruct (IHt _ _ _ _ Heq H2).
-          left. right. assumption.
-          right. assumption.
-Qed.
-(* TODO: usuń. Restart.
-  intros. apply replace_spec'' in H. subst.
-  rewrite elem_app in H0. destruct H0.
-    left. apply elem_take with n. assumption.
-    right. Search nth app. rewrite nth_app_r.
-.*)
-(* end hide *)
-
-Lemma elem_replace'' :
-  forall (A : Type) (l l' : list A) (n : nat) (x y : A),
-    replace l n x = Some l' ->
-      elem y l' -> elem y l \/ x = y.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    inv H.
-    destruct n as [| n']; cbn.
-      inv H. inv H0.
-        right. reflexivity.
-        left. right. assumption.
-      destruct (replace t n' x) eqn: Heq; inv H. inv H0.
-        do 2 left.
-        destruct (IHt _ _ _ _ Heq H2).
-          left. right. assumption.
-          right. assumption.
-Qed.
-(* end hide *)
-
-Lemma elem_replace_conv :
+Lemma elem_replace' :
   forall (A : Type) (l l' : list A) (n : nat) (x y : A),
     replace l n x = Some l' ->
       elem y l -> elem y l' \/ nth n l = Some y.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n']; cbn.
+      inv H. inv H0.
+        right. reflexivity.
+        left. right. assumption.
+      destruct (replace t n' x) eqn: Heq; inv H. inv H0.
+        do 2 left.
+        destruct (IHt _ _ _ _ Heq H2).
+          left. right. assumption.
+          right. assumption.
+Qed.
+(* end hide *)
+
+Lemma elem_replace'_conv :
+  forall (A : Type) (l l' : list A) (n : nat) (x y : A),
+    replace l n x = Some l' ->
+      elem y l' -> elem y l \/ x = y.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -848,8 +856,8 @@ Ltac cls := progress unfold Classically; intro LEM.
 Lemma Exists_replace :
   Classically $
   forall (A : Type) (P : A -> Prop) (l l' : list A) (n : nat) (x : A),
-    replace l n x = Some l' ->
-      Exists P l -> Exists P l' \/ ~ P x.
+(*     replace l n x = Some l' ->
+      Exists P l -> Exists P l' \/ ~ P x. *)
 (* begin hide *)
 Proof.
   cls. induction l as [| h t]; cbn; intros.
