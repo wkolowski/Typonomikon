@@ -1,7 +1,33 @@
 (** TODO:
     - ogólnie trzeba będzie zrobić gruntowny refaktoring list według
       planu zawartego w List_sig.v
-
+    - niedokończone funkcje (do niedawna oznaczone jako TODO):
+      - isZero (przenieść do rozdziału o arytmetyce)
+      - isEmpty
+      - snoc
+      - bind
+      - iterate i iter (join, bind)
+      - insert (join, bind, iterate, init)
+      - remove
+      - take (join, bind, last_take, take_remove),
+      - drop (join, bind, remove)
+      - iterate (od removeFirst wzwyż)
+      - removeFirst (removeFirst_zip)
+      - findIndex (init, tail)
+      - filter (tail, init)
+      - findIndices (join, bind, takeWhile, dropWhile)
+      - pmap (iterate, nth, last, tail i init, take i drop, takedrop, zip,
+          unzip, zipWith, unzipWith, removeFirst i removeLast, findIndex,
+          findIndices)
+      - intersperse (init, insert, remove, drop, zip, zipWith, unzip)
+      - groupBy
+      - Rep (join, nth)
+      - AtLeast (nth, head, last, init, tail)
+      - Exactly (join, nth, head, tail, init, last, zip)
+      - AtMost
+      - sublist
+      - Palindrome
+    - napisać wstępy do poszczególnych funkcji
 *)
 
 (** Najnowszy plan refaktoringu:

@@ -79,8 +79,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: nazwy *)
-Lemma nth_snoc_lt :
+Lemma nth_snoc_length_lt :
   forall (A : Type) (x : A) (l : list A) (n : nat),
     n < length l -> nth n (snoc x l) = nth n l.
 (* begin hide *)
@@ -93,7 +92,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma nth_snoc_length :
+Lemma nth_snoc_length_eq :
   forall (A : Type) (x : A) (l : list A),
     nth (length l) (snoc x l) = Some x.
 (* begin hide *)
@@ -182,7 +181,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma nth_spec :
+Lemma nth_spec' :
   forall (A : Type) (l : list A) (n : nat),
     match nth n l with
         | None => length l <= n
@@ -197,7 +196,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma nth_spec' :
+Lemma nth_spec :
   forall (A : Type) (l : list A) (n : nat),
     match nth n l with
         | None => length l <= n
@@ -929,7 +928,7 @@ Proof.
       destruct IHExists as (n & x & H1 & H2).
         exists (S n), x. split; assumption.
     destruct 1 as (n & x & H1 & H2).
-      pose (nth_spec' A l n). rewrite H1 in y.
+      pose (nth_spec A l n). rewrite H1 in y.
         rewrite y, Exists_app, Exists_cons. right. left. assumption.
 Qed.
 (* end hide *)
@@ -955,9 +954,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Search nth elem.
-
-(* TODO *)
 Lemma iff_elem_nth :
   forall (A : Type) (x : A) (l : list A),
     elem x l <-> exists n : nat, nth n l = Some x.
@@ -973,6 +969,15 @@ Proof.
       destruct n as [| n'].
         inv H. left.
         right. apply (IHt _ H).
+Qed.
+(* end hide *)
+
+Lemma iff_In_nth :
+  forall (A : Type) (x : A) (l : list A),
+    In x l <-> exists n : nat, nth n l = Some x.
+(* begin hide *)
+Proof.
+  intros. rewrite In_elem. apply iff_elem_nth.
 Qed.
 (* end hide *)
 

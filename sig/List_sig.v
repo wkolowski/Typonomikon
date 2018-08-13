@@ -11,8 +11,6 @@ Notation "[]" := nil.
 Notation "x :: y" := (cons x y) (at level 60, right associativity).
 Notation "[ x ; .. ; y ]" := (cons x .. (cons y nil) ..).
 
-(* Pomysły: collate (SML) *)
-
 (** Proste obserwatory *)
 
 Parameter isEmpty : forall A : Type, list A -> bool.
@@ -53,14 +51,11 @@ Parameter take : forall A : Type, nat -> list A -> list A.
 Parameter drop : forall A : Type, nat -> list A -> list A.
 Parameter splitAt : forall A : Type, nat -> list A -> list A * list A.
 
-(* TODO *)
-Parameter decompose :
+Parameter split :
   forall A : Type, nat -> list A -> option (list A * A * list A).
 
 (** Modyfikacje *)
-(* TODO *)
 Parameter replace : forall A : Type, list A -> nat -> A -> option (list A).
-(* TODO *)
 Parameter insert : forall A : Type, list A -> nat -> A -> option (list A).
 Parameter insert_orElse : forall A : Type, list A -> nat -> A -> list A.
 

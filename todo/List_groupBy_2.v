@@ -135,11 +135,11 @@ Lemma groupBy_cons :
     groupBy p l = h :: t -> groupBy p h = [h].
 (* begin hide *)
 Proof.
-  intros. functional induction @groupBy A p l; cbn.
-    inversion H.
-    inversion H; subst. cbn. reflexivity.
+  intros A p l. functional induction @groupBy A p l; cbn; intros.
+    inv H.
+    inv H. cbn. reflexivity.
     gb.
-    inversion H; subst; clear H. rewrite e0 in *. cbn in *.
+    inv H. rewrite e0 in *. cbn in *.
       specialize (IHl0 _ _ eq_refl). cbn in *. destruct (groupBy p t').
         rewrite e1. inversion IHl0. reflexivity.
         destruct l.
@@ -174,7 +174,7 @@ Lemma groupBy_middle :
       groupBy p (l1 ++ [x]) ++ groupBy p (y :: l2).
 (* begin hide *)
 Proof.
-  intros. functional induction @groupBy A p l1; cbn.
+  intros A p l1. functional induction @groupBy A p l1; cbn; intros.
     destruct (groupBy p l2) eqn: Heq.
       rewrite H. reflexivity.
       destruct l; cbn; rewrite ?H.
@@ -231,33 +231,11 @@ Restart.
       | |- ?goal => wut goal
   end); cbn in *; try congruence; gb.
 
-  intros. functional induction @groupBy A p l1; cbn.
+  intros A p l1. functional induction @groupBy A p l1; cbn; intros.
     dst.
     gb. dst.
     gb.
     1-2: rewrite (IHl _ _ _ H); clear IHl; destruct t; dst.
-Qed.
-
-(* end hide *)
-
-(* TODO *) Lemma init_last :
-  forall (A : Type) (l l' : list A) (x : A),
-    init l = Some l' -> last l = Some x -> l = l' ++ [x].
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    inversion H.
-    destruct (init t) eqn: H_init.
-      inversion H; subst. destruct (last t) eqn: H_last.
-        rewrite (IHt _ _ eq_refl eq_refl). cbn. destruct t; inversion H0.
-          inversion H_last.
-          reflexivity.
-        destruct t.
-          inversion H_init.
-          inversion H0.
-      destruct t.
-        inversion H; inversion H0; cbn. reflexivity.
-        cbn in *. destruct (init t); inversion H_init.
 Qed.
 (* end hide *)
 
@@ -331,7 +309,6 @@ Proof.
             rewrite H1, <- rev_app, app_take_drop, map_app, rev_app.
             cbn. rewrite <- IHl0.
               rewrite H'. reflexivity.
-              assumption.
     pose (groupBy_decomposition A p t). destruct o.
       rewrite H0 in *. cbn in *. inversion e0.
       destruct H0 as (n & H'). pose (H'' := H'). rewrite e0 in H''. inv H''.
@@ -339,7 +316,7 @@ Restart.
   intros. pose (groupBy_decomposition A p l). destruct o.
     rewrite H0. cbn. reflexivity.
     destruct H0 as (n & H'). rewrite <- (app_take_drop A n l) at 2.
-      rewrite rev_app. Search groupBy.
+      rewrite rev_app.
 Admitted.
 (* end hide *)
 
@@ -420,8 +397,6 @@ Proof.
     rewrite <- IHl0, e0. cbn. reflexivity.
 Qed.
 (* end hide *)
-
-(* TODO: bind *)
 
 Definition isZero n :=
   match n with | 0 => true | _ => false end.
