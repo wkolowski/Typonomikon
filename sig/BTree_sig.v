@@ -69,8 +69,8 @@ Parameter complete : forall A : Type, nat -> A -> BTree A.
 
 Parameter iterate : forall A : Type, (A -> A) -> nat -> A -> BTree A.
 
-
 Parameter index : forall A : Type, list bool -> BTree A -> option A.
+Parameter nth : forall A : Type, nat -> BTree A -> option A.
 
 Parameter take : forall A : Type, nat -> BTree A -> BTree A.
 Parameter drop : forall A : Type, nat -> BTree A -> list (BTree A).
