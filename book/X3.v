@@ -5977,6 +5977,17 @@ Qed.
 
 Lemma all_filter :
   forall (A : Type) (p : A -> bool) (l : list A),
+    all p (filter p l) = true.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (p h) eqn: Hph; cbn; rewrite ?Hph; cbn; assumption.
+Qed.
+(* end hide *)
+
+Lemma all_filter' :
+  forall (A : Type) (p : A -> bool) (l : list A),
     all p l = isEmpty (filter (fun x : A => negb (p x)) l).
 (* begin hide *)
 Proof.
@@ -5986,14 +5997,14 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma all_filter' :
+Lemma filter_all :
   forall (A : Type) (p : A -> bool) (l : list A),
-    all p (filter p l) = true.
+    all p l = true -> filter p l = l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    destruct (p h) eqn: Hph; cbn; rewrite ?Hph; cbn; assumption.
+    destruct (p h) eqn: Hph; cbn in *; rewrite IHt; congruence.
 Qed.
 (* end hide *)
 
