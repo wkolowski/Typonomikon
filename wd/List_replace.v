@@ -856,8 +856,8 @@ Ltac cls := progress unfold Classically; intro LEM.
 Lemma Exists_replace :
   Classically $
   forall (A : Type) (P : A -> Prop) (l l' : list A) (n : nat) (x : A),
-(*     replace l n x = Some l' ->
-      Exists P l -> Exists P l' \/ ~ P x. *)
+    replace l n x = Some l' ->
+      Exists P l -> Exists P l' \/ ~ P x.
 (* begin hide *)
 Proof.
   cls. induction l as [| h t]; cbn; intros.

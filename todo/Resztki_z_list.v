@@ -36,74 +36,8 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Niestandardowe reguły indukcyjne *)
-
-(** Wyjaśnienia nadejdą już wkrótce. *)
-
-Fixpoint list_ind_2
-  (A : Type) (P : list A -> Prop)
-  (H0 : P [])
-  (H1 : forall x : A, P [x])
-  (H2 : forall (x y : A) (l : list A), P l -> P (x :: y :: l))
-    (l : list A) : P l.
-(* begin hide *)
-Proof.
-  destruct l as [| x [| y l]]; cbn; auto.
-  apply H2. apply list_ind_2; auto.
-Qed.
-(* end hide *)
-
-Lemma list_ind_rev :
-  forall (A : Type) (P : list A -> Prop)
-    (Hnil : P [])
-    (Hsnoc : forall (h : A) (t : list A), P t -> P (t ++ [h]))
-      (l : list A), P l.
-(* begin hide *)
-Proof.
-  intros. cut (forall l : list A, P (rev l)); intro.
-    specialize (H (rev l)). rewrite <- rev_inv. assumption.
-    induction l0 as [| h t]; cbn.
-      assumption.
-      apply Hsnoc. assumption.
-Qed.
-(* end hide *)
-
-Lemma list_ind_app_l :
-  forall (A : Type) (P : list A -> Prop)
-  (Hnil : P []) (IH : forall l l' : list A, P l -> P (l' ++ l))
-    (l : list A), P l.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    assumption.
-    apply (IH _ [h]). assumption.
-Qed.
-(* end hide *)
-
-Lemma list_ind_app_r :
-  forall (A : Type) (P : list A -> Prop)
-  (Hnil : P []) (IH : forall l l' : list A, P l -> P (l ++ l'))
-    (l : list A), P l.
-(* begin hide *)
-Proof.
-  induction l as [| h t] using list_ind_rev; cbn.
-    assumption.
-    apply (IH t [h]). assumption.
-Qed.
-(* end hide *)
-
-Lemma list_ind_app :
-  forall (A : Type) (P : list A -> Prop)
-  (Hnil : P []) (Hsingl : forall x : A, P [x])
-  (IH : forall l l' : list A, P l -> P l' -> P (l ++ l'))
-    (l : list A), P l.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    assumption.
-    apply (IH [h] t); auto.
-Qed.
-(* end hide *)
+Definition rev' {A : Type} (l : list A) : list A :=
+  revapp l [].
 
 (** ** [foldr] i [foldl] *)
 

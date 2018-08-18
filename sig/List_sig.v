@@ -143,12 +143,18 @@ Parameter AtMost  : forall A : Type, (A -> Prop) -> nat -> list A -> Prop.
 (** Podlisty jako podtermy *)
 Parameter sublist : forall A : Type, list A -> list A -> Prop.
 
+(** Prefiksy i sufiksy *)
+Parameter prefix : forall A : Type, list A -> list A -> Prop.
+Parameter suffix : forall A : Type, list A -> list A -> Prop.
+
 (** Palindromy *)
 Parameter Palindrome : forall A : Type, list A -> Prop.
 
-(** Listy jako zbiory i multizbiory *)
+(** Listy jako zbiory, multizbiory i ciągi *)
 Parameter incl : forall A : Type, list A -> list A -> Prop.
 Parameter same_elements : forall A : Type, list A -> list A -> Prop.
 
 Parameter Permutation : forall A : Type, list A -> list A -> Prop.
 Parameter perm : forall (A : Type) (p : A -> bool), list A -> list A -> Prop.
+
+Parameter subseq : forall A : Type, list A -> list A -> Prop.

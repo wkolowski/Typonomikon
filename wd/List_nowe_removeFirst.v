@@ -533,7 +533,8 @@ Lemma In_rmFirst :
       In y l <-> In y b \/ y = x \/ In y e.
 (* begin hide *)
 Proof.
-  intros. rewrite ?In_elem. apply elem_rmFirst with p. assumption.
+  intros. rewrite ?In_elem. assert (H' := elem_rmFirst _ p l).
+  rewrite H in H'. rewrite H'. reflexivity.
 Qed.
 (* end hide *)
 
