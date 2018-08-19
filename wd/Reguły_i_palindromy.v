@@ -117,6 +117,29 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Palindrome_inv_2 :
+  forall (A : Type) (x y : A),
+    Palindrome [x; y] -> x = y.
+(* begin hide *)
+Proof.
+  intros. inv H. apply (f_equal last) in H2.
+  rewrite last_app in H2. inv H2. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_inv_3 :
+  forall (A : Type) (x y : A) (l : list A),
+    Palindrome (x :: l ++ [y]) -> x = y.
+(* begin hide *)
+Proof.
+  intros. inv H.
+    apply (f_equal isEmpty) in H2. rewrite isEmpty_app in H2.
+      destruct l; inv H2.
+    apply (f_equal last) in H2. rewrite ?last_app in H2. inv H2.
+      reflexivity.
+Qed.
+(* end hide *)
+
 Lemma nat_ind_2 :
   forall P : nat -> Prop,
     P 0 -> P 1 -> (forall n : nat, P n -> P (S (S n))) ->
@@ -175,6 +198,19 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Palindrome_app' :
+  forall (A : Type) (l1 l2 : list A),
+    Palindrome l2 -> Palindrome (l1 ++ l2 ++ rev l1).
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; cbn; intros.
+    rewrite app_nil_r. assumption.
+    replace _ with (Palindrome (h1 :: (t1 ++ l2 ++ rev t1) ++ [h1])).
+      constructor. apply IHt1. assumption.
+      rewrite ?app_assoc. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma Palindrome_rev :
   forall (A : Type) (l : list A),
     Palindrome l <-> Palindrome (rev l).
@@ -191,6 +227,20 @@ Proof.
 Qed.
 (* end hide *)
 
+Definition lengthOrder {A : Type} (l1 l2 : list A) : Prop :=
+  length l1 < length l2.
+
+Lemma lengthOrder_wf :
+  forall A : Type, well_founded (@lengthOrder A).
+(* begin hide *)
+Proof.
+  unfold well_founded. induction a as [| h t]; cbn.
+    constructor. intros. inv H.
+    inv IHt. constructor. intros. constructor. intros. apply H.
+      cbn in *. unfold lengthOrder in *. cbn in *. omega.
+Qed.
+(* end hide *)
+
 Lemma Palindrome_spec :
   forall (A : Type) (l : list A),
     Palindrome l <-> l = rev l.
@@ -203,13 +253,10 @@ Proof.
     revert l.
     eapply
     (@well_founded_ind _
-      (fun l1 l2 : list A => length l1 < length l2) _
+      _ (@lengthOrder_wf A)
       (fun l : list A => l = rev l -> Palindrome l) _) .
 Unshelve.
-  unfold well_founded. induction a as [| h t]; cbn.
-    constructor. intros. inv H.
-    inv IHt. constructor. intros. constructor. intros. apply H.
-      cbn in *. omega.
+  unfold lengthOrder.
   destruct x as [| h t]; cbn; intros.
     constructor.
     destruct (rev t) eqn: Heq.
@@ -219,6 +266,22 @@ Unshelve.
           rewrite <- plus_n_Sm, <- plus_n_O. apply le_S, le_n.
         rewrite rev_app in Heq. cbn in Heq. inv Heq.
           rewrite H1. symmetry. assumption.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_spec' :
+  forall (A : Type) (l : list A),
+    Palindrome l -> exists l1 l2 : list A,
+      l = l1 ++ l2 ++ rev l1 /\ length l2 <= 1.
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    exists [], []. cbn. split; [reflexivity | apply le_0_n].
+    exists [], [x]. cbn. split; [reflexivity | apply le_n].
+    destruct IHPalindrome as (l1 & l2 & IH1 & IH2). subst.
+      exists (x :: l1), l2. cbn. split.
+        rewrite ?app_assoc. reflexivity.
+        assumption.
 Qed.
 (* end hide *)
 
@@ -250,6 +313,18 @@ Proof.
     constructor.
     rewrite replicate_S, <- rev_replicate. cbn. constructor.
       rewrite rev_replicate. apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_cons_replicate :
+  forall (A : Type) (n : nat) (x y : A),
+    Palindrome (x :: replicate n y) -> n = 0 \/ x = y.
+(* begin hide *)
+Proof.
+  destruct n as [| n']; intros.
+    left. reflexivity.
+    right. rewrite <- snoc_replicate, snoc_app_singl in H.
+      apply Palindrome_inv_3 in H. assumption.
 Qed.
 (* end hide *)
 
@@ -285,7 +360,24 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *) Lemma Palindrome_take :
+Lemma Palindrome_drop :
+  forall (A : Type) (l : list A),
+    (forall n : nat, Palindrome (drop n l)) ->
+      l = [] \/ exists (n : nat) (x : A), l = replicate n x.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    left. reflexivity.
+    right. destruct IHt.
+      intro. specialize (H (S n)). cbn in H. assumption.
+      subst. exists 1, h. cbn. reflexivity.
+      destruct H0 as (n & x & IH). subst. exists (S n), h. cbn.
+        specialize (H 0). cbn in H. apply Palindrome_cons_replicate in H.
+          destruct H; subst; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Palindrome_take :
   forall (A : Type) (l : list A),
     (forall n : nat, Palindrome (take n l)) ->
       l = [] \/ exists (n : nat) (x : A), l = replicate n x.
@@ -297,164 +389,75 @@ Proof.
 Admitted.
 (* end hide *)
 
-(*
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
+Lemma Palindrome_zip :
+  exists (A B : Type) (la : list A) (lb : list B),
+    Palindrome la /\ Palindrome lb /\ ~ Palindrome (zip la lb).
 (* begin hide *)
 Proof.
-  induction 1; cbn; intros.
-
+  exists bool, bool, [true; true], [false; true; false].
+  cbn. repeat split.
+    apply (Palindrome_1 true []). constructor.
+    apply (Palindrome_1 false [true]). constructor.
+    intro. apply Palindrome_inv_2 in H. inv H.
 Qed.
 (* end hide *)
 
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
+(* TODO: unzip, zipWith, unzipWith *)
+
+Lemma Palindrome_find_findLast :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    Palindrome l -> find p l = findLast p l.
 (* begin hide *)
 Proof.
-  induction 1; cbn; intros.
-
+  intros. rewrite find_findLast. apply Palindrome_spec in H.
+  rewrite <- H. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
+Lemma intersperse_app_cons :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    l1 <> [] -> l2 <> [] ->
+      intersperse x (l1 ++ l2) = intersperse x l1 ++ x :: intersperse x l2.
 (* begin hide *)
 Proof.
-  induction 1; cbn; intros.
-
+  intros. rewrite intersperse_app. destruct l1.
+    contradiction.
+    destruct l2.
+      contradiction.
+      reflexivity.
 Qed.
 (* end hide *)
 
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
+Lemma Palindrome_intersperse :
+  forall (A : Type) (x : A) (l : list A),
+    Palindrome l -> Palindrome (intersperse x l).
 (* begin hide *)
 Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
+  intros A x.
+  eapply (@well_founded_ind _
+            _ (@lengthOrder_wf A)
+            (fun l : list A =>
+               Palindrome l -> Palindrome (intersperse x l)) _).
+Unshelve.
+  cbn. intros l IH H. assert (H' := Palindrome_spec' _ _ H).
+  destruct H' as (l1 & l2 & H1 & H2). subst.
+  destruct l1 as [| h1 t1].
+    cbn. rewrite app_nil_r. destruct l2 as [| h2 [| h2' t]]; cbn.
+      1-2: constructor.
+      inv H2. inv H1.
+    destruct l2 as [| h2 [| h2' t2]].
+      rewrite app_nil_l. rewrite intersperse_app_cons.
+        rewrite intersperse_rev. apply (Palindrome_app' _ _ [x]). constructor.
+          inversion 1.
+          intro. apply (f_equal isEmpty) in H0. rewrite isEmpty_rev in H0.
+            inv H0.
+      rewrite 2!intersperse_app_cons.
+        rewrite intersperse_rev. apply (Palindrome_app' _ _ [x; h2; x]).
+          apply (Palindrome_1 x [h2]). constructor.
+          1,3-4: inversion 1.
+          intro. apply (f_equal isEmpty) in H0. rewrite isEmpty_rev in H0.
+            inv H0.
+      inv H2. inv H1.
 Qed.
 (* end hide *)
 
@@ -469,6 +472,33 @@ Proof.
     destruct (f x) eqn: Heq; cbn.
       rewrite pmap_app. cbn. rewrite Heq. constructor. assumption.
       rewrite pmap_app. cbn. rewrite Heq, app_nil_r. assumption.
+Qed.
+(* end hide *)
+
+(* TODO: groupBy *)
+
+Lemma Palindrome_Dup :
+  forall (A : Type) (l : list A),
+    Palindrome l -> length l <= 1 \/ Dup l.
+(* begin hide *)
+Proof.
+  induction 1; cbn; intros.
+    left. apply le_0_n.
+    left. apply le_n.
+    right. constructor. rewrite elem_app. right. left.
+Qed.
+(* end hide *)
+
+(* TODO: incl, sublist, subseq *)
+
+(*
+Lemma Palindrome_ :
+  forall (A : Type) (l : list A),
+    Palindrome l -> .
+(* begin hide *)
+Proof.
+  induction 1; cbn; intros.
+
 Qed.
 (* end hide *)
 *)

@@ -1042,6 +1042,7 @@ Proof.
 Qed.
 (* end hide *)
 
+(*
 Lemma replace_Palindrome :
   forall (A : Type) (l l' : list A) (n : nat) (x : A),
     replace l n x = Some l' -> Palindrome l ->
@@ -1080,3 +1081,4 @@ Proof.
                   rewrite snoc_app_singl, ?last_app in H3. inv H3.
 Abort.
 (* end hide *)
+*)

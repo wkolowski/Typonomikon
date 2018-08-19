@@ -22,6 +22,25 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma prefix_app :
+  forall (A : Type) (l1 l2 l3 : list A),
+    prefix l1 l2 -> prefix l1 (l2 ++ l3).
+(* begin hide *)
+Proof.
+  intros. rewrite prefix_spec in *. destruct H as (l3' & H); subst.
+  exists (l3' ++ l3). rewrite app_assoc. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma prefix_map :
+  forall (A B : Type) (f : A -> B) (l1 l2 : list A),
+    prefix l1 l2 -> prefix (map f l1) (map f l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn; constructor; assumption.
+Qed.
+(* end hide *)
+
 Inductive suffix {A : Type} : list A -> list A -> Prop :=
     | suffix_nil :
         forall l : list A, suffix [] l
@@ -53,18 +72,17 @@ Qed.
 
 Lemma prefix_suffix :
   forall (A : Type) (l1 l2 : list A),
-    prefix l1 l2 <-> suffix (rev l2) (rev l1).
+    prefix l1 l2 <-> suffix (rev l1) (rev l2).
 (* begin hide *)
 Proof.
   split.
     induction 1; cbn.
       constructor.
       rewrite <- ?snoc_app_singl. constructor. assumption.
-    assert (forall l1 l2 : list A, suffix l1 l2 -> prefix (rev l2) (rev l1)).
+    assert (forall l1 l2 : list A, suffix l1 l2 -> prefix (rev l1) (rev l2)).
       induction 1; cbn.
         constructor.
         rewrite ?rev_snoc. constructor. assumption.
       intro. specialize (H _ _ H0). rewrite ?rev_inv in H. assumption.
 Qed.
 (* end hide *)
-

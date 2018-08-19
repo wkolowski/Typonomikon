@@ -200,6 +200,7 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO
 Lemma subseq_rev_l :
   forall (A : Type) (l : list A),
     subseq (rev l) l <-> Palindrome l.
@@ -225,6 +226,7 @@ Proof.
       rewrite rev_app. cbn. constructor. apply subseq_app_r'. assumption.
 Abort.
 (* end hide *)
+*)
 
 Lemma subseq_map : 
   forall (A B : Type) (f : A -> B) (l1 l2 : list A),

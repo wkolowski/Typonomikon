@@ -5,6 +5,8 @@ Require Import Omega.
 
 Require Import CoqBookPL.book.X3.
 
+(** UWAGA! To jest split *)
+
 (** ** [remove] *)
 
 Fixpoint remove

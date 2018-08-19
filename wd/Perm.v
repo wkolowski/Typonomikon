@@ -988,6 +988,7 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO: odwrotność *)
 Lemma Permutation_intersperse :
   forall (A : Type) (l1 l2 : list A) (x : A),
     Permutation l1 l2 -> Permutation (intersperse x l1) (intersperse x l2).
