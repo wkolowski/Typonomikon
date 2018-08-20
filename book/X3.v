@@ -3286,15 +3286,14 @@ Qed.
 
 Lemma zipWith_pair :
   forall (A B : Type) (la : list A) (lb : list B),
-    (forall (A B : Type) (f g : A -> B),
-      (forall x : A, f x = g x) -> f = g) ->
-        zipWith pair la lb = zip la lb.
+    zipWith pair la lb = zip la lb.
 (* begin hide *)
 Proof.
-  intros. rewrite zipWith_spec.
-  replace (fun '(a, b) => (a, b)) with (@id (A * B)%type).
-    rewrite map_id. reflexivity.
-    apply H. destruct x. unfold id. reflexivity.
+  induction la as [| ha ta]; cbn; intros.
+    reflexivity.
+    destruct lb as [| hb tb]; cbn; intros.
+      reflexivity.
+      rewrite IHta. reflexivity.
 Qed.
 (* end hide *)
 
@@ -9117,6 +9116,17 @@ Lemma Dup_nil :
 Proof. inversion 1. Qed.
 (* end hide *)
 
+Lemma Dup_cons :
+  forall (A : Type) (x : A) (l : list A),
+    Dup (x :: l) <-> elem x l \/ Dup l.
+(* begin hide *)
+Proof.
+  split; intro.
+    inv H; [left | right]; assumption.
+    destruct H; constructor; assumption.
+Qed.
+(* end hide *)
+
 Lemma Dup_singl :
   forall (A : Type) (x : A), ~ Dup [x].
 (* begin hide *)
@@ -11855,6 +11865,62 @@ Proof.
     Focus 2.
       induction 1; intros.
         constructor.
+Abort.
+(* end hide *)
+
+Lemma AtMost_0 :
+  forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
+    AtMost P 0 (x :: l) <-> ~ P x /\ AtMost P 0 l.
+(* begin hide *)
+Proof.
+  split; intros.
+    inv H. split; assumption.
+    destruct H. constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma AtMost_cons :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    AtMost P n (x :: l) <->
+    (~ P x /\ AtMost P n l) \/ AtMost P (n - 1) l.
+(* begin hide *)
+Proof.
+  split; intros.
+    inv H; [left | right].
+      split; assumption.
+      cbn. rewrite <- minus_n_O. assumption.
+    decompose [and or] H; clear H.
+      constructor; assumption.
+      destruct n; cbn in *.
+Abort.
+(* end hide *)
+
+Lemma AtMost_S_cons :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    AtMost P (S n) (x :: l) <->
+    (~ P x /\ AtMost P (S n) l) \/ AtMost P n l.
+(* begin hide *)
+Proof.
+  split; intros.
+    inv H; [left | right].
+      split; assumption.
+      cbn. assumption.
+    decompose [and or] H; clear H.
+      constructor; assumption.
+      constructor; assumption.
+Qed.
+(* end hide *)
+
+(* TODO *) Lemma AtMost_1 :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    AtMost P 1 l <-> Exists P l \/ Forall (fun x : A => ~ P x) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    split; intro.
+      right. constructor.
+      constructor.
+    rewrite AtMost_S_cons, Exists_cons, Forall_cons', IHt. firstorder.
 Abort.
 (* end hide *)
 
