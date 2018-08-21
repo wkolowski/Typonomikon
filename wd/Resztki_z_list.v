@@ -2,8 +2,6 @@ Add Rec LoadPath "/home/zeimer/Code/Coq".
 
 Require Import CoqBookPL.book.X3.
 
-
-
 (** *** Dziwne *)
 
 (** TODO: Wstawić tu jakąś ideologię. *)
@@ -74,6 +72,9 @@ Functional Scheme foldl_ind := Induction for foldl Sort Prop.
 Definition lengthF {A : Type} (l : list A) : nat :=
   foldr (fun _ => S) 0 l.
 
+Definition snocF {A : Type} (x : A) (l : list A) : list A :=
+  foldr (@cons A) [x] l.
+
 Definition appF {A : Type} (l1 l2 : list A) : list A :=
   foldr (@cons A) l2 l1.
 
@@ -88,6 +89,30 @@ Definition mapF {A B : Type} (f : A -> B) (l : list A) : list B :=
 
 Definition joinF {A : Type} (l : list (list A)) : list A :=
   foldr app [] l.
+
+Require Import Bool.
+
+Definition allF {A : Type} (p : A -> bool) (l : list A) : bool :=
+  foldr (fun h t => p h && t) true l.
+
+Definition anyF {A : Type} (p : A -> bool) (l : list A) : bool :=
+  foldr (fun h t => p h || t) false l.
+
+Definition findF {A : Type} (p : A -> bool) (l : list A) : option A :=
+  foldr (fun h t => if p h then Some h else t) None l.
+
+(*
+Definition removeFirstF
+  {A : Type} (p : A -> bool) (l : list A) : option A :=
+    foldr (fun h t => if p h then Some t else t) None l.
+*)
+
+Definition findIndexF
+  {A : Type} (p : A -> bool) (l : list A) : option nat :=
+    foldr (fun h t => if p h then Some 0 else t) None l.
+
+Definition countF {A : Type} (p : A -> bool) (l : list A) : nat :=
+  foldr (fun h t => (if p h then 1 else 0) + t) 0 l.
 
 Definition filterF {A : Type} (p : A -> bool) (l : list A) : list A :=
   foldr (fun h t => if p h then h :: t else t) [] l.
@@ -127,6 +152,15 @@ Proof.
     rewrite IHt. trivial.
 Restart.
   intros. unfold lengthF. solve_fold.
+Qed.
+(* end hide *)
+
+Lemma snocF_spec :
+  forall (A : Type) (x : A) (l : list A),
+    snocF x l = snoc x l.
+(* begin hide *)
+Proof.
+  intros. unfold snocF. solve_fold.
 Qed.
 (* end hide *)
 
@@ -193,6 +227,72 @@ Proof.
     rewrite IHt. trivial.
 Restart.
   intros. unfold joinF. solve_fold.
+Qed.
+(* end hide *)
+
+Lemma allF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    allF p l = all p l.
+(* begin hide *)
+Proof.
+  unfold allF. induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      assumption.
+      reflexivity.
+Qed.
+(* end hide *)
+
+Lemma anyF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    anyF p l = any p l.
+(* begin hide *)
+Proof.
+  unfold anyF. induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      reflexivity.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma findF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    findF p l = find p l.
+(* begin hide *)
+Proof.
+  unfold findF. induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      reflexivity.
+      assumption.
+Qed.
+(* end hide *)
+
+(* TODO: Lemma findIndexF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    findIndexF p l = findIndex p l.
+(* begin hide *)
+Proof.
+  unfold findIndexF. induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      reflexivity.
+      assumption.
+Qed.
+(* end hide *)
+*)
+
+Lemma countF_spec :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    countF p l = count p l.
+(* begin hide *)
+Proof.
+  unfold countF. induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn.
+      rewrite IHt. reflexivity.
+      assumption.
 Qed.
 (* end hide *)
 

@@ -151,10 +151,10 @@ Parameter suffix : forall A : Type, list A -> list A -> Prop.
 Parameter Palindrome : forall A : Type, list A -> Prop.
 
 (** Listy jako zbiory, multizbiory i ciągi *)
+Parameter subseq : forall A : Type, list A -> list A -> Prop.
+
 Parameter incl : forall A : Type, list A -> list A -> Prop.
-Parameter same_elements : forall A : Type, list A -> list A -> Prop.
+Parameter SetEquiv : forall A : Type, list A -> list A -> Prop.
 
 Parameter Permutation : forall A : Type, list A -> list A -> Prop.
 Parameter perm : forall (A : Type) (p : A -> bool), list A -> list A -> Prop.
-
-Parameter subseq : forall A : Type, list A -> list A -> Prop.

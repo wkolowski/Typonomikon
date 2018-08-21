@@ -9635,6 +9635,36 @@ Inductive Rep {A : Type} (x : A) : nat -> list A -> Prop :=
           Rep x n l -> Rep x n (y :: l).
 (* end hide *)
 
+Lemma Rep_S_cons :
+  forall (A : Type) (x y : A) (n : nat) (l : list A),
+    Rep x (S n) (y :: l) <-> (x = y /\ Rep x n l) \/ Rep x (S n) l.
+(* begin hide *)
+Proof.
+  split; intros.
+    inv H.
+      left. split; [reflexivity | assumption].
+      right. assumption.
+    decompose [and or] H; clear H; subst; constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma Rep_cons :
+  forall (A : Type) (x y : A) (n : nat) (l : list A),
+    Rep x n (y :: l) <-> (x = y /\ Rep x (n - 1) l) \/ Rep x n l.
+(* begin hide *)
+Proof.
+  split; intros.
+    inv H.
+      right. constructor.
+      left. cbn. rewrite <- minus_n_O. split; [reflexivity | assumption].
+    right. assumption.
+    decompose [and or] H; clear H; subst.
+      destruct n as [| n']; cbn in *; constructor.
+        rewrite <-minus_n_O in H2. assumption.
+      constructor. assumption.
+Qed.
+(* end hide *)
+
 Lemma elem_Rep :
   forall (A : Type) (x : A) (l : list A),
     elem x l -> Rep x 1 l.
@@ -11498,6 +11528,29 @@ Inductive Exactly {A : Type} (P : A -> Prop) : nat -> list A -> Prop :=
     | Ex_skip :
         forall (n : nat) (h : A) (t : list A),
           ~ P h -> Exactly P n t -> Exactly P n (h :: t).
+(* end hide *)
+
+Lemma Exactly_0_cons :
+  forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
+    Exactly P 0 (x :: l) <-> ~ P x /\ Exactly P 0 l.
+(* begin hide *)
+Proof.
+  split; intros.
+    inv H; firstorder.
+    decompose [and or] H; clear H; constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma Exactly_S_cons :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
+    Exactly P (S n) (x :: l) <->
+    P x /\ Exactly P n l \/ ~ P x /\ Exactly P (S n) l.
+(* begin hide *)
+Proof.
+  split; intros.
+    inv H; firstorder.
+    decompose [and or] H; clear H; constructor; assumption.
+Qed.
 (* end hide *)
 
 Lemma Exactly_AtLeast :
