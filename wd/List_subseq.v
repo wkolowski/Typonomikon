@@ -294,7 +294,7 @@ Lemma subseq_nth :
 Proof.
   intros A l1 l2 n x H. revert n x.
   induction H; cbn; intros.
-    rewrite nth_nil in H. congruence.
+    inv H.
     destruct n as [| n']; cbn in H0.
       inv H0. exists 0. cbn. split; [reflexivity | apply le_0_n].
       destruct (IHsubseq _ _ H0) as (m & IH1 & IH2).
@@ -339,24 +339,26 @@ Qed.
 (* end hide *)
 
 Lemma subseq_take :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     subseq (take n l) l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    constructor.
-    destruct l as [| h t]; cbn; constructor. apply IHn'.
+  induction l as [| h t]; cbn; intros.
+    apply subseq_refl.
+    destruct n as [| n']; constructor. apply IHt.
 Qed.
 (* end hide *)
 
 Lemma subseq_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     subseq (drop n l) l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     apply subseq_refl.
-    destruct l; constructor. apply IHn'.
+    destruct n as [| n']; constructor.
+      apply subseq_refl.
+      apply IHt.
 Qed.
 (* end hide *)
 

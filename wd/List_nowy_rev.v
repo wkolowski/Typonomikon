@@ -258,12 +258,12 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma nth_snoc_lt :
+(* TODO *) Lemma nth_snoc_lt :
   forall (A : Type) (n : nat) (x : A) (l : list A),
     n < length l -> nth n (snoc x l) = nth n l.
 (* begin hide *)
 Proof.
-Abort.
+Admitted.
 (* end hide *)
 
 Lemma nth_snoc_eq :
@@ -380,47 +380,50 @@ Qed.
 (* end hide *)
 
 Lemma drop_snoc :
-  forall (A : Type) (n : nat) (x : A) (l : list A),
+  forall (A : Type) (x : A) (l : list A) (n : nat),
     n <= length l -> drop n (snoc x l) = snoc x (drop n l).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    destruct l as [| h t]; cbn in *.
-      inv H.
-      apply IHn', le_S_n. assumption.
+  induction l as [| h t]; cbn; intros.
+    inv H. reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      apply IHt. apply le_S_n. assumption.
 Qed.
 (* end hide *)
 
 Lemma take_snoc :
-  forall (A : Type) (n : nat) (x : A) (l : list A),
+  forall (A : Type) (x : A) (l : list A) (n : nat),
     n <= length l -> take n (snoc x l) = take n l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    destruct l as [| h t]; cbn in *.
-      inv H.
-      f_equal. apply IHn', le_S_n, H.
+  induction l as [| h t]; cbn; intros.
+    inv H. reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      f_equal. apply IHt. apply le_S_n. assumption.
 Qed.
 (* end hide *)
 
 (* begin hide *)
 Lemma take_rev_aux :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     take n l = rev (drop (length (rev l) - n) (rev l)).
 Proof.
-  induction n as [| n']; intros.
-    rewrite <- minus_n_O, drop_length. cbn. reflexivity.
-    destruct l as [| h t]; cbn; auto.
-      rewrite IHn', length_snoc. cbn. rewrite drop_snoc.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [ |n'].
+      rewrite drop_length'.
+        reflexivity.
+        rewrite length_snoc, length_rev, <- minus_n_O. apply le_n.
+      rewrite IHt, length_snoc, drop_snoc; cbn.
         rewrite rev_snoc. reflexivity.
         apply Nat.le_sub_l.
 Qed.
 (* end hide *)
 
 Lemma take_rev :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     take n (rev l) = rev (drop (length l - n) l).
 (* begin hide *)
 Proof.
@@ -429,7 +432,7 @@ Qed.
 (* end hide *)
 
 Lemma rev_take :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     rev (take n l) = drop (length l - n) (rev l).
 (* begin hide *)
 Proof.
@@ -439,21 +442,23 @@ Qed.
 
 (* begin hide *)
 Lemma drop_rev_aux :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     drop n l = rev (take (length (rev l) - n) (rev l)).
 Proof.
-  induction n as [| n']; intros.
-    rewrite <- minus_n_O, take_length, rev_rev. cbn. reflexivity.
-    destruct l as [| h t]; cbn.
-      reflexivity.
-      rewrite IHn', length_snoc. cbn. rewrite take_snoc.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [ |n'].
+      rewrite take_length'.
+        rewrite rev_snoc, rev_rev. reflexivity.
+        rewrite length_snoc, length_rev, <- minus_n_O. apply le_n.
+      rewrite IHt, length_snoc, take_snoc; cbn.
         reflexivity.
         apply Nat.le_sub_l.
 Qed.
 (* end hide *)
 
 Lemma drop_rev :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     drop n (rev l) = rev (take (length l - n) l).
 (* begin hide *)
 Proof.
@@ -462,7 +467,7 @@ Qed.
 (* end hide *)
 
 Lemma rev_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     drop n (rev l) = rev (take (length l - n) l).
 (* begin hide *)
 Proof.

@@ -1091,7 +1091,7 @@ Proof.
   unfold idempotent; intros.
   rewrite take_length'.
     reflexivity.
-    rewrite length_take. apply Nat.le_min_l.
+    rewrite length_take. apply Nat.le_min_r.
 Qed.
 (* end hide *)
 

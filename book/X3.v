@@ -2278,11 +2278,11 @@ Qed.
     elementów. *)
 
 (* begin hide *)
-Fixpoint take {A : Type} (n : nat) (l : list A) : list A :=
-match n, l with
-    | 0, _ => []
-    | _, [] => []
-    | S n', h :: t => h :: take n' t
+Fixpoint take {A : Type} (n : nat) (l : list A) {struct l} : list A :=
+match l, n with
+    | [], _ => []
+    | _, 0 => []
+    | h :: t, S n' => h :: take n' t
 end.
 (* end hide *)
 
@@ -2290,18 +2290,14 @@ Lemma take_0 :
   forall (A : Type) (l : list A),
     take 0 l = [].
 (* begin hide *)
-Proof.
-  destruct l; reflexivity.
-Qed.
+Proof. destruct l; reflexivity. Qed.
 (* end hide *)
 
 Lemma take_nil :
   forall (A : Type) (n : nat),
     take n [] = @nil A.
 (* begin hide *)
-Proof.
-  destruct n; reflexivity.
-Qed.
+Proof. reflexivity. Qed.
 (* end hide *)
 
 Lemma take_S_cons :
@@ -2312,11 +2308,11 @@ Proof. reflexivity. Qed.
 (* end hide *)
 
 Lemma isEmpty_take :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     isEmpty (take n l) = orb (beq_nat 0 n) (isEmpty l).
 (* begin hide *)
 Proof.
-  destruct n as [| n'], l as [| h t]; cbn; intros; trivial.
+  destruct l as [| h t], n as [| n']; cbn; intros; trivial.
 Qed.
 (* end hide *)
 
@@ -2332,30 +2328,24 @@ Qed.
 (* end hide *)
 
 Lemma take_length' :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     length l <= n -> take n l = l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; intros.
-    cbn. destruct l; inversion H; trivial.
-    destruct l as [| h t]; simpl.
-      reflexivity.
-      rewrite IHn'.
-        reflexivity.
-        cbn in H. apply le_S_n in H. assumption.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n'].
+      inversion H.
+      apply le_S_n in H. rewrite (IHt _ H). reflexivity.
 Qed.
 (* end hide *)
 
 Lemma length_take :
-  forall (A : Type) (n : nat) (l : list A),
-    length (take n l) = min n (length l).
+  forall (A : Type) (l : list A) (n : nat),
+    length (take n l) = min (length l) n.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn.
-    reflexivity.
-    destruct l as [| h t]; cbn.
-      reflexivity.
-      rewrite IHn'. reflexivity.
+  induction l as [| h t]; destruct n; cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
 
@@ -2372,18 +2362,25 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma take_app :
+  forall (A : Type) (l1 l2 : list A) (n : nat),
+    take n (l1 ++ l2) = take n l1 ++ take (n - length l1) l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; destruct n; cbn;
+  rewrite ?IHt, ?take_0; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma take_app_l :
-  forall (A : Type) (n : nat) (l1 l2 : list A),
+  forall (A : Type) (l1 l2 : list A) (n : nat),
     n <= length l1 -> take n (l1 ++ l2) = take n l1.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn.
-    reflexivity.
-    induction l1 as [| h1 t1]; cbn; intros.
-      inversion H.
-      rewrite IHn'.
-        reflexivity.
-        apply le_S_n. assumption.
+  induction l1 as [| h t]; destruct n; cbn; rewrite ?take_0.
+    1,3: reflexivity.
+    inversion 1.
+    intro. apply le_S_n in H. rewrite (IHt _ _ H). reflexivity.
 Qed.
 (* end hide *)
 
@@ -2403,37 +2400,54 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma take_app :
-  forall (A : Type) (n : nat) (l1 l2 : list A),
-    take n (l1 ++ l2) = take n l1 ++ take (n - length l1) l2.
+Lemma take_map :
+  forall (A B : Type) (f : A -> B) (l : list A) (n : nat),
+    take n (map f l) = map f (take n l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; destruct n; cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: take_join, take_bind (chyba potrzebne będzie decompose) *)
+
+(*Lemma take_join :
+  forall (A : Type) (ll : list (list A)) (n : nat),
+    exists m1 : nat,
+      match nth (S m1) ll with
+          | None => m1 = 0
+          | Some l =>
+              exists m2 : nat,
+                take n (join ll) = join (take m1 ll) ++ take m2 l
+      end.
+(* begin hide *)
+Proof. Print take.
+  induction ll as [| h t]; cbn; intros.
+    exists 0. reflexivity.
+    induction n as [| n'].
+      destruct t; cbn.
+        exists 0. cbn. reflexivity.
+        destruct (IHt 0) as (m1 & IH). exists (S m1). cbn in *.
+          destruct (nth m1 t).
+            
+    destruct (IHt n) as (m1 & IH). exists (S m1).
+      destruct (nth (S m1) t); cbn.
+        destruct IH as (m2 & IH). exists m2. rewrite take_app.
+    
+Qed.
+(* end hide *)
+*)
+
+Lemma take_replicate :
+  forall (A : Type) (n m : nat) (x : A),
+    take m (replicate n x) = replicate (min n m) x.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
     reflexivity.
-    destruct l1 as [| h t]; cbn; rewrite ?IHn'; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma take_map :
-  forall (A B : Type) (f : A -> B) (n : nat) (l : list A),
-    take n (map f l) = map f (take n l).
-(* begin hide *)
-Proof.
-  induction n as [| n'].
-    trivial.
-    destruct l as [| h t]; simpl.
-      trivial.
-      rewrite IHn'. trivial.
-Qed.
-(* end hide *)
-
-Lemma take_replicate :
-  forall (A : Type) (m n : nat) (x : A),
-    take m (replicate n x) = replicate (min m n) x.
-(* begin hide *)
-Proof.
-  induction m as [| m']; destruct n as [| n'];
-  cbn; intros; rewrite ?IHm'; reflexivity.
+    destruct m as [| m']; cbn.
+      reflexivity.
+      rewrite IHn'. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2443,22 +2457,15 @@ Lemma take_iterate :
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
-    rewrite take_nil. reflexivity.
+    reflexivity.
     destruct m as [| m']; cbn.
       reflexivity.
       rewrite IHn'. reflexivity.
-Restart.
-  intros A f n m. revert n.
-  induction m as [| m']; cbn; intros.
-    rewrite Nat.min_0_r. cbn. reflexivity.
-    destruct n as [| n']; cbn.
-      reflexivity.
-      rewrite IHm'. reflexivity.
 Qed.
 (* end hide *)
 
 Lemma head_take :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     head (take n l) =
     if beq_nat 0 n then None else head l.
 (* begin hide *)
@@ -2469,16 +2476,16 @@ Qed.
 
 Lemma last_take :
   forall (A : Type) (l : list A) (n : nat),
-    last (take (S n) l) = nth (min n (length l - 1)) l.
+    last (take (S n) l) = nth (min (length l - 1) n) l.
 (* begin hide *)
 Proof.
-  intros A l n. revert l.
-  induction n as [| n']; destruct l as [| h t]; cbn.
-    1-3: reflexivity.
-    destruct t; cbn.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct t as [| h' t']; cbn in *.
       reflexivity.
-      specialize (IHn' (a :: t)). cbn in IHn'.
-        rewrite IHn', <- minus_n_O. reflexivity.
+      destruct n; cbn.
+        reflexivity.
+        rewrite IHt, <- minus_n_O. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2497,7 +2504,7 @@ Qed.
 (* end hide *)
 
 Lemma init_take :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     init (take n l) =
     match n, l with
         | 0, _ => None
@@ -2506,27 +2513,29 @@ Lemma init_take :
     end.
 (* begin hide *)
 Proof.
-  induction n as [| n']; destruct l as [| h t]; cbn.
-    1-3: reflexivity.
-    rewrite IHn'. destruct n', t; cbn.
-      1-3: reflexivity.
-      rewrite <- minus_n_O. reflexivity.
+  induction l as [| h t]; cbn; intros.
+    destruct n; reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite IHt. destruct n', t; cbn.
+        1-3: reflexivity.
+        rewrite <- minus_n_O. reflexivity.
 Qed.
 (* end hide *)
 
 Lemma nth_take :
-  forall (A : Type) (n m : nat) (l : list A),
+  forall (A : Type) (l : list A) (n m : nat),
     nth m (take n l) =
     if leb (S m) n then nth m l else None.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    destruct l as [| h t]; cbn.
-      destruct (_ <=? _); reflexivity.
-      destruct m as [| m']; cbn.
-        reflexivity.
-        rewrite IHn'. destruct n'; reflexivity.
+  induction l as [| h t]; destruct n as [| n'];
+  cbn; intros; rewrite ?nth_nil.
+    1,3: reflexivity.
+    destruct (_ <=? _); reflexivity.
+    destruct m as [| m']; cbn.
+      reflexivity.
+      rewrite IHt. destruct n'; reflexivity.
 Qed.
 (* end hide *)
 
@@ -2538,15 +2547,15 @@ Lemma insert_take :
     else snoc x (take n l).
 (* begin hide *)
 Proof.
-  intros A l n. revert l.
-  induction n as [| n']; cbn; intros.
-    destruct m as [| m']; cbn.
-      rewrite insert_0. 1-2: reflexivity.
-    destruct l as [| h t]; cbn.
-      destruct (_ <=? _); reflexivity.
+  induction l as [| h t]; cbn; intros.
+    destruct (m <=? n); reflexivity.
+    destruct n as [| n']; cbn.
+      destruct m as [| m']; reflexivity.
       destruct m as [| m']; cbn.
         reflexivity.
-        rewrite IHn'. destruct (m' <=? n'), (insert t m' x); reflexivity.
+        destruct (m' <=? n') eqn: Heq.
+          f_equal. rewrite IHt, Heq. reflexivity.
+          rewrite IHt, Heq. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2556,27 +2565,44 @@ Lemma take_S_insert :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    rewrite ?take_nil. cbn. reflexivity.
+    reflexivity.
     destruct n as [| n']; cbn.
       reflexivity.
-      specialize (IHt n' x). destruct (insert t n' x).
-        rewrite <- IHt, take_nil. reflexivity.
-        rewrite <- IHt. cbn. reflexivity.
+      rewrite IHt. reflexivity.
 Qed.
 (* end hide *)
 
+Lemma take_insert_lt :
+  forall (A : Type) (l : list A) (n m : nat) (x : A),
+    m < n ->
+      take m (insert l n x) =
+      if isEmpty l
+      then if beq_nat 0 m then [] else [x]
+      else take m l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    destruct m; reflexivity.
+    destruct n as [| n']; cbn.
+      destruct m as [| m']; cbn.
+        reflexivity.
+        inversion H.
+      destruct m as [| m']; cbn.
+        reflexivity.
+        rewrite IHt.
+          destruct t, m'; cbn.
+            1,3-4: reflexivity.
+Abort.
+(* end hide *)
+
+(* TODO: take_remove *)
+
 Lemma take_take :
-  forall (A : Type) (n m : nat) (l : list A),
+  forall (A : Type) (l : list A) (n m : nat),
     take m (take n l) = take (min n m) l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    rewrite take_nil. reflexivity.
-    destruct l as [| h t]; cbn.
-      rewrite !take_nil. reflexivity.
-      destruct m as [| m']; cbn.
-        reflexivity.
-        rewrite IHn'. reflexivity.
+  induction l as [| h t]; destruct n, m; cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
 
@@ -2585,8 +2611,7 @@ Lemma take_interesting :
     (forall n : nat, take n l1 = take n l2) -> l1 = l2.
 (* begin hide *)
 Proof.
-  intros.
-  specialize (H (max (length l1) (length l2))).
+  intros. specialize (H (max (length l1) (length l2))).
   rewrite ?take_length' in H.
     assumption.
     apply Max.le_max_r.
@@ -2594,17 +2619,19 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO: insert_take, insert_drop, zip, unzip, zipWith, intersperse *)
+
 (** ** [drop] *)
 
 (** Zdefiniuj funkcję [drop], która wyrzuca z listy [n] początkowych
     elementów i zwraca to, co zostało. *)
 
 (* begin hide *)
-Fixpoint drop {A : Type} (n : nat) (l : list A) : list A :=
-match n, l with
-    | 0, _ => l
-    | _, [] => []
-    | S n', h :: t => drop n' t
+Fixpoint drop {A : Type} (n : nat) (l : list A) {struct l} : list A :=
+match l, n with
+    | [], _ => []
+    | _, 0 => l
+    | h :: t, S n' => drop n' t
 end.
 (* end hide *)
 
@@ -2612,18 +2639,14 @@ Lemma drop_0 :
   forall (A : Type) (l : list A),
     drop 0 l = l.
 (* begin hide *)
-Proof.
-  destruct l; reflexivity.
-Qed.
+Proof. destruct l; reflexivity. Qed.
 (* end hide *)
 
 Lemma drop_nil :
   forall (A : Type) (n : nat),
     drop n [] = @nil A.
 (* begin hide *)
-Proof.
-  destruct n; reflexivity.
-Qed.
+Proof. reflexivity. Qed.
 (* end hide *)
 
 Lemma drop_S_cons :
@@ -2634,13 +2657,13 @@ Proof. reflexivity. Qed.
 (* end hide *)
 
 Lemma isEmpty_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     isEmpty (drop n l) = leb (length l) n.
 (* begin hide *)
 Proof.
-  induction n as [| n']; destruct l as [| h t]; cbn.
+  induction l as [| h t]; destruct n as [| n']; cbn.
     1-3: reflexivity.
-    rewrite IHn'. reflexivity.
+    apply IHt.
 Qed.
 (* end hide *)
 
@@ -2654,27 +2677,23 @@ Qed.
 (* end hide *)
 
 Lemma drop_length' :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     length l <= n -> drop n l = [].
 (* begin hide *)
 Proof.
-  induction n as [| n']; intros.
-    simpl. destruct l; inversion H; trivial.
-    destruct l as [| h t]; simpl.
-      trivial.
-      rewrite IHn'.
-        trivial.
-        simpl in H. apply le_S_n in H. assumption.
+  induction l as [| h t]; destruct n as [| n']; cbn; intros.
+    1-2: reflexivity.
+    inversion H.
+    apply IHt, le_S_n. assumption.
 Qed.
 (* end hide *)
 
 Lemma length_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     length (drop n l) = length l - n.
 (* begin hide *)
 Proof.
-  induction n as [| n']; destruct l as [| h t]; cbn;
-  rewrite ?IHn'; reflexivity.
+  induction l as [| h t]; destruct n; cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
 
@@ -2691,55 +2710,56 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma drop_app :
+  forall (A : Type) (l1 l2 : list A) (n : nat),
+    drop n (l1 ++ l2) = drop n l1 ++ drop (n - length l1) l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; destruct n; cbn;
+  rewrite ?IHt, ?drop_0; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma drop_app_l :
-  forall (A : Type) (n : nat) (l1 l2 : list A),
+  forall (A : Type) (l1 l2 : list A) (n : nat),
     n <= length l1 -> drop n (l1 ++ l2) = drop n l1 ++ l2.
 (* begin hide *)
 Proof.
-  induction n as [| n']; induction l1 as [| h1 t2]; cbn; firstorder.
-  inversion H.
+  intros. rewrite <- Nat.sub_0_le in H.
+  rewrite drop_app, H, drop_0. reflexivity.
 Qed.
 (* end hide *)
 
 Lemma drop_app_r :
-  forall (A : Type) (n : nat) (l1 l2 : list A),
+  forall (A : Type) (l1 l2 : list A) (n : nat),
     length l1 < n -> drop n (l1 ++ l2) = drop (n - length l1) l2.
 (* begin hide *)
 Proof.
-  induction n as [| n']; induction l1 as [| h1 t2]; cbn; firstorder.
-  inversion H.
-Qed.
-(* end hide *)
-
-Lemma drop_app :
-  forall (A : Type) (n : nat) (l1 l2 : list A),
-    drop n (l1 ++ l2) = drop n l1 ++ drop (n - length l1) l2.
-(* begin hide *)
-Proof.
-  induction n as [| n']; destruct l1;
-  cbn; intros; rewrite ?IHn'; reflexivity.
+  intros. rewrite drop_app, drop_length'.
+    cbn. reflexivity.
+    apply le_trans with (S (length l1)).
+      apply le_S, le_n.
+      assumption.
 Qed.
 (* end hide *)
 
 Lemma drop_map :
-  forall (A B : Type) (f : A -> B) (n : nat) (l : list A),
+  forall (A B : Type) (f : A -> B) (l : list A) (n : nat),
     drop n (map f l) = map f (drop n l).
 (* begin hide *)
 Proof.
-  induction n as [| n'].
-    trivial.
-    destruct l as [| h t]; simpl.
-      trivial.
-      rewrite IHn'. trivial.
+  induction l as [| h t]; destruct n; cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
 
+(* TODO: drop_join, drop_bind *)
+
 Lemma drop_replicate :
-  forall (A : Type) (m n : nat) (x : A),
+  forall (A : Type) (n m : nat) (x : A),
     drop m (replicate n x) = replicate (n - m) x.
 (* begin hide *)
 Proof.
-  induction m as [| m']; destruct n as [| n']; cbn; intros; trivial.
+  induction n as [| n']; destruct m; cbn; intros; rewrite ?IHn'; reflexivity.
 Qed.
 (* end hide *)
 
@@ -2750,7 +2770,7 @@ Lemma drop_iterate :
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
-    rewrite drop_nil. reflexivity.
+    reflexivity.
     destruct m as [| m']; cbn.
       reflexivity.
       rewrite IHn'. reflexivity.
@@ -2758,45 +2778,50 @@ Qed.
 (* end hide *)
 
 Lemma head_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     head (drop n l) = nth n l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; destruct l as [| h t]; cbn; trivial.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n; cbn; trivial.
 Qed.
 (* end hide *)
 
 Lemma last_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     last (drop n l) = if leb (S n) (length l) then last l else None.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    destruct l; reflexivity.
-    destruct l as [| h t]; cbn.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n']; cbn.
       reflexivity.
-      rewrite IHn'. destruct t; reflexivity.
+      rewrite IHt. destruct t; reflexivity.
 Qed.
 (* end hide *)
 
 Lemma tail_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     tail (drop n l) =
     if leb (S n) (length l) then Some (drop (S n) l) else None.
 (* begin hide *)
 Proof.
-  induction n as [| n']; destruct l as [| h t]; cbn.
-    1-3: reflexivity.
-    rewrite IHn'. destruct t; reflexivity.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n']; cbn.
+      rewrite drop_0. reflexivity.
+      rewrite IHt. destruct t; reflexivity.
 Qed.
 (* end hide *)
 
 Lemma init_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     init (drop n l) =
     if n <? length l then Some (drop n (take (length l - 1) l)) else None.
 (* begin hide *)
 Proof.
+(*
   induction n as [| n']; cbn; intros.
     induction l as [| h t]; cbn; intros.
       reflexivity.
@@ -2809,19 +2834,20 @@ Proof.
         reflexivity.
         destruct (n' <=? length t).
           rewrite <- minus_n_O. 1-2: reflexivity.
-Qed.
+*)
+Admitted.
 (* end hide *)
 
 Lemma nth_drop :
-  forall (A : Type) (n m : nat) (l : list A),
+  forall (A : Type) (l : list A) (n m : nat),
     nth m (drop n l) = nth (n + m) l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    destruct l as [| h t]; cbn.
+  induction l as [| h t]; cbn; intros.
+    rewrite ?nth_nil. reflexivity.
+    destruct n as [| n']; cbn.
       reflexivity.
-      apply IHn'.
+      apply IHt.
 Qed.
 (* end hide *)
 
@@ -2831,9 +2857,9 @@ Lemma nth_spec_Some :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    inversion H.
+    inv H.
     destruct n as [| n']; cbn in *.
-      inversion H. reflexivity.
+      rewrite drop_0. inv H. reflexivity.
       rewrite (IHt _ _ H) at 1. reflexivity.
 Qed.
 (* end hide *)
@@ -2849,7 +2875,7 @@ Proof.
   induction l as [| h t]; cbn; intros.
     apply le_0_n.
     destruct n as [| n']; cbn.
-      reflexivity.
+      rewrite drop_0. reflexivity.
       destruct (nth n' t) eqn: Heq.
         specialize (IHt n'). rewrite Heq in IHt. rewrite IHt at 1.
           reflexivity.
@@ -2866,7 +2892,7 @@ Proof.
     reflexivity.
     destruct n as [| n']; cbn.
       reflexivity.
-      rewrite <- (IHt n' x). cbn. reflexivity.
+      rewrite IHt. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2878,21 +2904,17 @@ Lemma insert_drop :
 Proof.
   intros A l n. revert l.
   induction n as [| n']; cbn; intros.
-    reflexivity.
+    rewrite ?drop_0. reflexivity.
     destruct l as [| h t]; cbn.
 Admitted.
 (* end hide *)
 
 Lemma drop_drop :
-  forall (A : Type) (n m : nat) (l : list A),
+  forall (A : Type) (l : list A) (n m : nat),
     drop m (drop n l) = drop (n + m) l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn.
-    reflexivity.
-    destruct l as [| h t]; cbn.
-      rewrite drop_nil. reflexivity.
-      apply IHn'.
+  induction l as [| h t]; destruct n, m; cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
 
@@ -2906,24 +2928,27 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO: zip, unzip, zipWith, intersperse *)
+
 (** *** Dualność [take] i [drop] *)
 
 (* begin hide *)
 Lemma take_rev_aux :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     take n l = rev (drop (length (rev l) - n) (rev l)).
 Proof.
-  induction n as [| n']; intros.
-    rewrite <- minus_n_O. rewrite drop_length. cbn. reflexivity.
-    induction l as [| h t]; cbn; auto.
-      rewrite IHn'. rewrite length_app, plus_comm. cbn. rewrite drop_app_l.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n'].
+      rewrite <- minus_n_O. rewrite drop_length. cbn. reflexivity.
+      rewrite IHt, length_app, plus_comm. cbn. rewrite drop_app_l.
         rewrite rev_app. cbn. reflexivity.
         apply Nat.le_sub_l.
 Qed.
 (* end hide *)
 
 Lemma take_rev :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     take n (rev l) = rev (drop (length l - n) l).
 (* begin hide *)
 Proof.
@@ -2932,7 +2957,7 @@ Qed.
 (* end hide *)
 
 Lemma rev_take :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     rev (take n l) = drop (length l - n) (rev l).
 (* begin hide *)
 Proof.
@@ -2942,13 +2967,17 @@ Qed.
 
 (* begin hide *)
 Lemma drop_rev_aux :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     drop n l = rev (take (length (rev l) - n) (rev l)).
 Proof.
-  induction n as [| n']; intros.
-    rewrite <- minus_n_O, take_length, rev_inv. cbn. reflexivity.
-    induction l as [| h t]; cbn; auto.
-      rewrite IHn'. rewrite length_app, plus_comm. cbn. rewrite take_app_l.
+  (*TODO: drop_rev_aux using rewriting *)
+  intros. rewrite take_rev_aux, ?rev_inv, length_rev.
+Restart.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n'].
+      rewrite <- minus_n_O, take_length, rev_app, rev_inv. cbn. reflexivity.
+      rewrite IHt, length_app, plus_comm. cbn. rewrite take_app_l.
         reflexivity.
         apply Nat.le_sub_l.
 Qed.
@@ -2963,50 +2992,34 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma rev_drop :
-  forall (A : Type) (n : nat) (l : list A),
-    drop n (rev l) = rev (take (length l - n) l).
-(* begin hide *)
-Proof.
-  intros. rewrite drop_rev_aux, !rev_inv. reflexivity.
-Qed.
-(* end hide *)
-
 Lemma take_drop :
-  forall (A : Type) (n m : nat) (l : list A),
+  forall (A : Type) (l : list A) (n m : nat),
     take m (drop n l) = drop n (take (n + m) l).
 (* begin hide *)
 Proof.
-  induction n as [| n']; intros.
-    cbn. trivial.
-    destruct l as [| h t]; cbn.
-      rewrite take_nil. trivial.
-      rewrite IHn'. trivial.
+  induction l as [| h t]; destruct n, m; cbn;
+  rewrite ?IHt, ?take_0; reflexivity.
 Qed.
 (* end hide *)
 
 Lemma drop_take :
-  forall (A : Type) (n m : nat) (l : list A),
+  forall (A : Type) (l : list A) (n m : nat),
     drop m (take n l) = take (n - m) (drop m l).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    rewrite drop_nil. reflexivity.
-    destruct l as [| h t], m as [| m']; cbn.
-      1,3: reflexivity.
-      rewrite take_nil. reflexivity.
-      rewrite IHn'. reflexivity.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n, m; cbn; rewrite ?take_0; trivial.
 Qed.
 (* end hide *)
 
 Lemma app_take_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     take n l ++ drop n l = l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    destruct l as [| h t]; cbn; rewrite ?IHn'; reflexivity.
+  induction l as [| h t]; destruct n as [| n'];
+  cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
 
@@ -3016,7 +3029,7 @@ Lemma insert_take_drop :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    rewrite take_nil, drop_nil. cbn. reflexivity.
+    reflexivity.
     destruct n as [| n']; cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
@@ -3029,18 +3042,40 @@ Lemma remove_nth_take_drop :
 Proof.
   split; revert n x.
     induction l as [| h t]; cbn; intros.
-      inversion H.
+      inv H.
       destruct n as [| n']; cbn in *.
-        inversion H. reflexivity.
+        inv H. rewrite drop_0. reflexivity.
         rewrite (IHt _ _ H). reflexivity.
     induction l as [| h t]; cbn; intros.
-      inversion H.
-      destruct n as [| n']; cbn in *.
-        inversion H. reflexivity.
+      inv H.
+      destruct n as [| n'].
+        inv H. reflexivity.
         apply IHt. destruct (remove n' t).
-          destruct p. inversion H. reflexivity.
-          inversion H.
+          destruct p. inv H. destruct t; reflexivity.
+          inv H.
 Qed.
+(* end hide *)
+
+(* begin hide *)
+(*
+TODO: Lemma removeFirst_take' :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A) (l l' : list A),
+    removeFirst p (take' n l) = Some (x, l') ->
+      removeFirst p l = Some (x, l' ++ drop n l).
+Proof.
+  intros A p n x l. revert n x.
+  functional induction @removeFirst A p l;
+  destruct n as [| n']; cbn; intros; inv H; rewrite e0 in H1; inv H1.
+    admit.
+    destruct (removeFirst p (take' n' t)) eqn: Heq.
+      admit.
+      inv H0.
+    destruct (removeFirst p (take' n' t)) eqn: Heq.
+      destruct p0. inv H0. rewrite (IHo _ _ _ Heq) in e1. inv e1.
+        cbn. reflexivity.
+      inv H0.
+Admitted.
+*)
 (* end hide *)
 
 (** ** [splitAt] *)
@@ -3049,27 +3084,26 @@ Qed.
     specyfikację. *)
 
 (* begin hide *)
-Fixpoint splitAt {A : Type} (n : nat) (l : list A) : list A * list A :=
-match n with
-    | 0 => ([], l)
-    | S n' =>
-        match l with
-            | [] => ([], [])
-            | h :: t =>
-                let '(l1, l2) := splitAt n' t
-                in (h :: l1, l2)
-        end
+Fixpoint splitAt
+  {A : Type} (n : nat) (l : list A) {struct l} : list A * list A :=
+match l, n with
+    | [], _ => ([], [])
+    | _, 0 => ([], l)
+    | h :: t, S n' =>
+        let '(l1, l2) := splitAt n' t in (h :: l1, l2)
 end.
 (* end hide *)
 
 Lemma splitAt_spec :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     splitAt n l = (take n l, drop n l).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     reflexivity.
-    destruct l as [| h t]; cbn; rewrite ?IHn'; reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite IHt. reflexivity.
 Qed.
 (* end hide *)
 
@@ -3201,26 +3235,32 @@ Qed.
 (* end hide *)
 
 Lemma zip_take :
-  forall (A B : Type) (n : nat) (la : list A) (lb : list B),
+  forall (A B : Type) (la : list A) (lb : list B) (n : nat),
     zip (take n la) (take n lb) = take n (zip la lb).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn.
-    trivial.
-    destruct la, lb; cbn; trivial.
-      rewrite IHn'. trivial.
+  induction la as [| ha ta]; cbn; intros.
+    reflexivity.
+    destruct lb as [| hb tb]; cbn.
+      rewrite zip_nil_r. reflexivity.
+      destruct n as [| n']; cbn.
+        reflexivity.
+        rewrite IHta. reflexivity.
 Qed.
 (* end hide *)
 
 Lemma zip_drop :
-  forall (A B : Type) (n : nat) (la : list A) (lb : list B),
+  forall (A B : Type) (la: list A) (lb : list B) (n : nat),
     zip (drop n la) (drop n lb) = drop n (zip la lb).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn.
-    trivial.
-    destruct la, lb; cbn; trivial.
-      rewrite zip_nil_r. trivial.
+  induction la as [| ha ta]; cbn; intros.
+    reflexivity.
+    destruct lb as [| hb tb]; cbn.
+      rewrite zip_nil_r. reflexivity.
+      destruct n as [| n']; cbn.
+        reflexivity.
+        apply IHta.
 Qed.
 (* end hide *)
 
@@ -3691,62 +3731,60 @@ Qed.
 (* end hide *)
 
 Lemma any_take :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     any p (take n l) = true -> any p l = true.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn.
-    inversion 1.
-    destruct l as [| h t]; cbn; intro.
-      inversion H.
-      destruct (p h) ; cbn in *.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn in *.
+      inv H.
+      destruct (p h); cbn in *.
         reflexivity.
-        apply IHn'. assumption.
+        apply IHt with n'. assumption.
 Qed.
 (* end hide *)
 
 Lemma any_take_conv :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     any p l = false -> any p (take n l) = false.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     reflexivity.
-    destruct l as [| h t]; cbn in *.
+    destruct n as [| n']; cbn.
       reflexivity.
-      destruct (p h) ; cbn in *.
+      destruct (p h); cbn in *.
         assumption.
-        apply IHn'. assumption.
+        apply IHt. assumption.
 Qed.
 (* end hide *)
 
 Lemma any_drop :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     any p (drop n l) = true -> any p l = true.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    destruct l as [| h t]; cbn in *.
+    destruct n as [| n']; cbn in *.
       assumption.
-      destruct (p h) ; cbn in *.
-        reflexivity.
-        apply IHn'. assumption.
+      rewrite (IHt _ H). rewrite Bool.orb_true_r. reflexivity.
 Qed.
 (* end hide *)
 
 Lemma any_drop_conv :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     any p l = false -> any p (drop n l) = false.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    assumption.
-    destruct l as [| h t]; cbn in *.
-      reflexivity.
-      destruct (p h) ; cbn in *.
-        inversion H.
-        apply IHn'. assumption.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n']; cbn.
+      assumption.
+      apply IHt. destruct (p h); cbn in H.
+        inv H.
+        assumption.
 Qed.
 (* end hide *)
 
@@ -3981,62 +4019,60 @@ Qed.
 (* end hide *)
 
 Lemma all_take :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     all p (take n l) = false -> all p l = false.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn.
-    inversion 1.
-    destruct l as [| h t]; cbn; intro.
-      inversion H.
-      destruct (p h) ; cbn in *.
-        apply IHn'. assumption.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn in H.
+      inv H.
+      destruct (p h); cbn in *.
+        apply IHt with n'. assumption.
         reflexivity.
 Qed.
 (* end hide *)
 
 Lemma all_take_conv :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     all p l = true -> all p (take n l) = true.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     reflexivity.
-    destruct l as [| h t]; cbn in *.
+    destruct n as [| n']; cbn.
       reflexivity.
-      destruct (p h) ; cbn in *.
-        apply IHn'. assumption.
+      destruct (p h); cbn in *.
+        apply (IHt _ H).
         assumption.
 Qed.
 (* end hide *)
 
 Lemma all_drop :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     all p (drop n l) = false -> all p l = false.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    destruct l as [| h t]; cbn in *.
+    destruct n as [| n']; cbn in *.
       assumption.
-      destruct (p h) ; cbn in *.
-        apply IHn'. assumption.
-        reflexivity.
+      rewrite (IHt _ H), Bool.andb_false_r. reflexivity.
 Qed.
 (* end hide *)
 
 Lemma all_drop_conv :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     all p l = true -> all p (drop n l) = true.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    assumption.
-    destruct l as [| h t]; cbn in *.
-      reflexivity.
-      destruct (p h) ; cbn in *.
-        apply IHn'. assumption.
-        inversion H.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n']; cbn.
+      assumption.
+      apply IHt. destruct (p h); cbn in H.
+        assumption.
+        inv H.
 Qed.
 (* end hide *)
 
@@ -4413,94 +4449,92 @@ Qed.
 (* end hide *)
 
 Lemma find_take_Some :
-  forall (A : Type) (p : A -> bool) (n : nat) (x : A) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat) (x : A),
     find p (take n l) = Some x -> find p l = Some x.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    inversion H.
-    destruct l as [| h t]; cbn in *; intros.
-      inversion H.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn in H.
+      inv H.
       destruct (p h).
         assumption.
-        apply IHn'. assumption.
+        apply IHt with n'. assumption.
 Qed.
 (* end hide *)
 
 Lemma find_take_None :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     find p l = None -> find p (take n l) = None.
 (* begin hide *)
 Proof.
-  intros A p n l. revert n.
   induction l as [| h t]; cbn; intros.
-    rewrite take_nil. cbn. reflexivity.
-    destruct (p h) eqn: Hph.
-      inversion H.
-      destruct n as [| n']; cbn.
-        reflexivity.
-        rewrite Hph. apply IHt, H.
+    reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      destruct (p h) eqn: Hph.
+        assumption.
+        apply IHt. assumption.
 Qed.
 (* end hide *)
  
 Lemma find_drop_not_None :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     find p (drop n l) <> None -> find p l <> None.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    destruct l as [| h t]; cbn in *.
-      contradiction H. reflexivity.
-      destruct (p h) eqn: Hph.
-        inversion 1.
-        apply IHn'. assumption.
+    destruct n as [| n']; cbn in H.
+      assumption.
+      intro. destruct (p h).
+        inv H0.
+        apply IHt with n'; assumption.
 Qed.
 (* end hide *)
 
 Lemma find_drop_None :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     find p l = None -> find p (drop n l) = None.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    assumption.
-    destruct l as [| h t]; cbn.
-      reflexivity.
-      apply IHn'. cbn in H. destruct (p h); congruence.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n']; cbn.
+      assumption.
+      apply IHt. destruct (p h).
+        inv H.
+        assumption.
 Qed.
 (* end hide *)
 
 Lemma findLast_take :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     findLast p (take n l) <> None -> findLast p l <> None.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    contradiction H. reflexivity.
-    destruct l as [| h t]; cbn in *.
-      assumption.
-      destruct (findLast p (take n' t)) eqn: Heq.
-        specialize (IHn' _ ltac:(rewrite Heq; inversion 1)).
-          destruct (findLast p t) eqn: Heq'.
-            inversion 1.
-            contradiction IHn'. reflexivity.
-        destruct (findLast p t) eqn: Heq'.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn in H.
+      contradiction.
+      destruct (findLast p t).
+        inversion 1.
+        destruct (p h).
           inversion 1.
-          assumption.
+          apply IHt with n'. destruct (findLast p (take n' t)); assumption.
 Qed.
 (* end hide *)
 
 Lemma findLast_drop :
-  forall (A : Type) (p : A -> bool) (n : nat) (x : A) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat) (x : A),
     findLast p (drop n l) = Some x -> findLast p l = Some x.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    destruct l as [| h t]; cbn in *.
-      inversion H.
-      rewrite (IHn' _ _ H). reflexivity.
+    destruct n as [| n']; cbn in H.
+      assumption.
+      rewrite (IHt _ _ H). reflexivity.
 Qed.
 (* end hide *)
 
@@ -5317,41 +5351,42 @@ Qed.
 (* end hide *)
 
 Lemma findIndex_take :
-  forall (A : Type) (p : A -> bool) (n m : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n m : nat),
     findIndex p (take n l) = Some m ->
       findIndex p l = Some m /\ m <= n.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    inversion H.
-    destruct l as [| h t]; cbn in *.
-      inversion H.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n']; cbn in H.
+      inv H.
       destruct (p h).
-        inversion H; subst; clear H. split; [reflexivity | apply le_0_n].
-        case_eq (findIndex p (take n' t)); intros; rewrite H0 in *.
-          destruct (IHn' _ _ H0). rewrite H1. inversion H; subst; clear H.
-            split; try reflexivity. apply le_n_S. assumption.
-          inversion H.
+        inv H. split; [reflexivity | apply le_0_n].
+        destruct (findIndex p (take n' t)) eqn: Heq.
+          inv H. destruct (IHt _ _ Heq). rewrite H. split.
+            reflexivity.
+            apply le_n_S. assumption.
+          inv H.
 Qed.
 (* end hide *)
 
 Lemma findIndex_drop :
-  forall (A : Type) (p : A -> bool) (n m : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n m : nat),
     findIndex p l = Some m -> n <= m ->
       findIndex p (drop n l) = Some (m - n).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    rewrite <- minus_n_O. assumption.
-    destruct l as [| h t]; cbn in *.
-      inversion H.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n']; cbn.
+      rewrite <- minus_n_O. assumption.
       destruct (p h).
-        inversion H; subst; clear H. inversion H0.
-        case_eq (findIndex p t); intros; rewrite H1 in *.
-          inversion H; subst; clear H; cbn. apply IHn'.
-            assumption.
+        inv H. inv H0.
+        destruct (findIndex p t) eqn: Heq.
+          inv H. cbn. apply IHt.
+            reflexivity.
             apply le_S_n. assumption.
-          inversion H.
+          inv H.
 Qed.
 (* end hide *)
 
@@ -5566,32 +5601,32 @@ Qed.
 (* end hide *)
 
 Lemma count_take :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     count p (take n l) <= n.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     apply le_0_n.
-    destruct l as [| h t]; cbn.
-      apply le_0_n.
+    destruct n as [| n']; cbn.
+      apply le_n.
       destruct (p h).
-        apply le_n_S, IHn'.
-        apply le_S, IHn'.
+        apply le_n_S. apply IHt.
+        apply le_S. apply IHt.
 Qed.
 (* end hide *)
 
 Lemma count_take' :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     count p (take n l) <= min n (count p l).
 (* begin hide *)
 Proof.
-  intros A p n l. revert n.
   induction l as [| h t]; cbn; intros.
-    rewrite take_nil, Nat.min_0_r. cbn. apply le_n.
+    apply le_0_n.
     destruct n as [| n']; cbn.
       apply le_n.
       destruct (p h).
-        apply le_n_S, IHt. apply le_trans with (min n' (count p t)).
+        apply le_n_S, IHt.
+        apply le_trans with (min n' (count p t)).
           apply IHt.
           destruct (count p t).
             rewrite Nat.min_0_r. apply le_n.
@@ -5602,15 +5637,19 @@ Qed.
 (* end hide *)
 
 Lemma count_drop :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     count p (drop n l) <= length l - n.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    rewrite <- minus_n_O. apply count_length.
-    destruct l as [| h t]; cbn.
-      apply le_0_n.
-      apply IHn'.
+  induction l as [| h t]; cbn; intros.
+    apply le_n.
+    destruct n as [| n']; cbn.
+      destruct (p h).
+        apply le_n_S. specialize (IHt 0).
+          rewrite <- minus_n_O, drop_0 in IHt. assumption.
+        apply le_S. specialize (IHt 0).
+          rewrite <- minus_n_O, drop_0 in IHt. assumption.
+      apply IHt.
 Qed.
 (* end hide *)
 
@@ -6526,7 +6565,7 @@ Lemma findIndices_insert :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    rewrite take_nil, drop_nil, app_nil_r. cbn. reflexivity.
+    rewrite app_nil_r. reflexivity.
     destruct n as [| n']; cbn.
       destruct (p x), (p h); reflexivity.
       rewrite ?IHt, ?map_app, map_map.
@@ -6535,16 +6574,16 @@ Qed.
 (* end hide *)
 
 Lemma findIndices_take :
-  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+  forall (A : Type) (p : A -> bool) (l : list A) (n : nat),
     findIndices p (take n l) =
     take (count p (take n l)) (findIndices p l).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn.
+  induction l as [| h t]; cbn; intros.
     reflexivity.
-    destruct l as [| h t]; cbn.
-      reflexivity.
-      destruct (p h); cbn; rewrite IHn', take_map; reflexivity.
+    destruct n as [| n']; cbn.
+      rewrite take_0. reflexivity.
+      destruct (p h); cbn; rewrite IHt, take_map; reflexivity.
 Qed.
 (* end hide *)
 
@@ -6875,7 +6914,7 @@ Lemma findIndex_spec' :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    rewrite take_nil. reflexivity.
+    reflexivity.
     destruct (p h); cbn.
       inv H. cbn. reflexivity.
       destruct (findIndex p t); inv H.
@@ -7501,10 +7540,11 @@ Lemma take_intersperse :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    rewrite ?take_nil. cbn. reflexivity.
+    reflexivity.
     destruct (intersperse x t).
       destruct n as [| [| n']]; cbn.
-        1-2: reflexivity.
+        reflexivity.
+        rewrite take_0. cbn. reflexivity.
         destruct t; cbn.
           reflexivity.
           destruct t; cbn in *.
@@ -7959,28 +7999,28 @@ Qed.
 (* end hide *)
 
 Lemma elem_take :
-  forall (A : Type) (n : nat) (l : list A) (x : A),
+  forall (A : Type) (l : list A) (n : nat) (x : A),
     elem x (take n l) -> elem x l.
 (* begin hide *)
 Proof.
-  induction n as [| n'].
-    cbn. inversion 1.
-    destruct l as [| h t]; cbn.
-      inversion 1.
-      intros. inversion H; subst; constructor. apply IHn'. assumption.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; inversion H; subst; clear H.
+      left.
+      right. apply (IHt _ _ H2).
 Qed.
 (* end hide *)
 
 Lemma elem_drop :
-  forall (A : Type) (n : nat) (l : list A) (x : A),
+  forall (A : Type) (l : list A) (n : nat) (x : A),
     elem x (drop n l) -> elem x l.
 (* begin hide *)
 Proof.
-  induction n as [| n'].
-    cbn. trivial.
-    destruct l as [| h t]; cbn.
-      inversion 1.
-      intros. constructor. apply IHn'. assumption.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n'].
+      assumption.
+      right. apply (IHt _ _ H).
 Qed.
 (* end hide *)
 
@@ -8581,30 +8621,28 @@ Qed.
 (* end hide *)
 
 Lemma In_take :
-  forall (A : Type) (n : nat) (l : list A) (x : A),
+  forall (A : Type) (l : list A) (n : nat) (x : A),
     In x (take n l) -> In x l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    contradiction.
-    destruct l as [| h t]; cbn in *.
-      assumption.
-      destruct H; subst; [left | right].
-        reflexivity.
-        apply IHn', H.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; inversion H; subst; clear H.
+      left. reflexivity.
+      right. apply (IHt _ _ H0).
 Qed.
 (* end hide *)
 
 Lemma In_drop :
-  forall (A : Type) (n : nat) (l : list A) (x : A),
+  forall (A : Type) (l : list A) (n : nat) (x : A),
     In x (drop n l) -> In x l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    destruct l as [| h t]; cbn.
-      inversion H.
-      right. apply IHn'. assumption.
+    destruct n as [| n'].
+      assumption.
+      right. apply (IHt _ _ H).
 Qed.
 (* end hide *)
 
@@ -8954,28 +8992,29 @@ Qed.
 (* end hide *)
 
 Lemma NoDup_take :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     NoDup l -> NoDup (take n l).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    constructor.
-    inversion H; subst; clear H; constructor.
-      intro. apply H0. apply elem_take with n'. assumption.
-      apply IHn'. assumption.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn; constructor.
+      intro. inversion H; subst; clear H.
+        apply elem_take in H0. contradiction.
+      apply IHt. inversion H. assumption.
 Qed.
 (* end hide *)
 
 Lemma NoDup_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     NoDup l -> NoDup (drop n l).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    inversion H; subst; clear H.
-      constructor.
-      apply IHn', H1.
+    destruct n as [| n']; cbn.
+      assumption.
+      apply IHt. inversion H. assumption.
 Qed.
 (* end hide *)
 
@@ -9458,30 +9497,28 @@ Qed.
 (* end hide *)
 
 Lemma Dup_take :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     Dup (take n l) -> Dup l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    inversion H.
-    destruct l as [| h t]; cbn.
-      assumption.
-      inversion H; subst; clear H.
-        left. apply elem_take in H1. assumption.
-        right. apply IHn'. assumption.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn; inversion H; subst; clear H.
+      constructor. apply elem_take in H1. assumption.
+      right. apply (IHt _ H1).
 Qed.
 (* end hide *)
 
 Lemma Dup_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     Dup (drop n l) -> Dup l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    destruct l as [| h t]; cbn in *.
+    destruct n as [| n']; cbn.
       assumption.
-      right. apply IHn', H.
+      right. apply (IHt _ H).
 Qed.
 (* end hide *)
 
@@ -9965,36 +10002,32 @@ Qed.
 (* end hide *)
 
 Lemma Rep_take :
-  forall (A : Type) (x : A) (n m : nat) (l : list A),
+  forall (A : Type) (x : A) (l : list A) (n m : nat),
     Rep x n (take m l) -> Rep x n l.
 (* begin hide *)
 Proof.
-  intros A x n m. generalize dependent n.
-  induction m as [| m']; cbn; intros.
-    destruct n as [| n'].
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn.
       constructor.
-      inversion H.
-    destruct l as [| h t].
-      assumption.
-      destruct n as [| n'].
-        constructor.
-        inversion H; subst; clear H.
-          constructor. apply IHm', H2.
-          constructor. apply IHm'. assumption.
+      destruct m as [| m']; inversion H; subst; clear H.
+        constructor. apply (IHt _ _ H2).
+        apply Rep_cons_2. apply (IHt _ _ H2).
 Qed.
 (* end hide *)
 
 Lemma Rep_drop :
-  forall (A : Type) (x : A) (n m : nat) (l : list A),
+  forall (A : Type) (x : A) (l : list A) (n m : nat),
     Rep x n (drop m l) -> Rep x n l.
 (* begin hide *)
 Proof.
-  intros A x n m. generalize dependent n.
-  induction m as [| m']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    destruct l as [| h t].
-      assumption.
-      constructor. apply IHm', H.
+    destruct n as [| n']; cbn.
+      constructor.
+      destruct m as [| m'].
+        assumption.
+        apply Rep_cons_2, (IHt _ _ H).
 Qed.
 (* end hide *)
 
@@ -10307,43 +10340,45 @@ Qed.
 (* end hide *)
 
 Lemma Exists_take :
-  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+  forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
     Exists P (take n l) -> Exists P l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    inversion H.
-    destruct l as [| h t]; cbn; inversion H; subst; clear H.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn; inversion H; subst; clear H.
       left. assumption.
-      right. apply IHn', H1.
+      right. apply (IHt _ H1).
 Qed.
 (* end hide *)
 
 Lemma Exists_drop :
-  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+  forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
     Exists P (drop n l) -> Exists P l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    destruct l as [| h t].
+    destruct n as [| n']; cbn.
       assumption.
-      right. apply IHn', H.
+      right. apply (IHt _ H).
 Qed.
 (* end hide *)
 
 Lemma Exists_take_drop :
-  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+  forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
     Exists P l -> Exists P (take n l) \/ Exists P (drop n l).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    right. assumption.
-    destruct l as [| h t]; inversion H; subst; clear H.
-      left; left. assumption.
-      destruct (IHn' _ H1).
-        left; right. assumption.
-        right. assumption.
+  induction l as [| h t]; cbn; intros.
+    left. assumption.
+    destruct n as [| n']; cbn.
+      right. assumption.
+      inversion H; subst; clear H.
+        do 2 left. assumption.
+        destruct (IHt n' H1).
+          left. right. assumption.
+          right. assumption.
 Qed.
 (* end hide *)
 
@@ -10714,45 +10749,45 @@ Qed.
 (* end hide *)
 
 Lemma Forall_take :
-  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+  forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
     Forall P l -> Forall P (take n l).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    constructor.
-    destruct l as [| h t]; cbn.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn.
       constructor.
       inversion H; subst; clear H. constructor.
         assumption.
-        apply IHn'. assumption.
+        apply (IHt _ H3).
 Qed.
 (* end hide *)
 
 Lemma Forall_drop :
-  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+  forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
     Forall P l -> Forall P (drop n l).
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    destruct l as [| h t]; cbn.
-      constructor.
-      inversion H; subst; clear H. apply IHn', H3.
+    destruct n as [| n']; cbn.
+      assumption.
+      inversion H; subst; clear H. apply (IHt _ H3).
 Qed.
 (* end hide *)
 
 Lemma Forall_take_drop :
-  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+  forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
     Forall P (take n l) -> Forall P (drop n l) -> Forall P l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    destruct l as [| h t]; cbn.
-      constructor.
+    destruct n as [| n']; cbn.
+      assumption.
       inversion H; subst; clear H. constructor.
         assumption.
-        apply IHn'; assumption.
+        apply (IHt _ H4 H0).
 Qed.
 (* end hide *)
 
@@ -11279,28 +11314,30 @@ Qed.
 (* end hide *)
 
 Lemma AtLeast_take :
-  forall (A : Type) (P : A -> Prop) (n m : nat) (l : list A),
+  forall (A : Type) (P : A -> Prop) (l : list A) (n m : nat),
     AtLeast P m (take n l) -> AtLeast P m l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    inversion H. constructor.
-    destruct l as [| h t].
-      assumption.
-      inversion H; subst; clear H; constructor; auto.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn; inversion H; subst; clear H.
+      1-3: constructor.
+        assumption.
+        apply (IHt _ _ H4).
+      constructor. apply (IHt _ _ H2).
 Qed.
 (* end hide *)
 
 Lemma AtLeast_drop :
-  forall (A : Type) (P : A -> Prop) (n m : nat) (l : list A),
+  forall (A : Type) (P : A -> Prop) (l : list A) (n m : nat),
     AtLeast P m (drop n l) -> AtLeast P m l.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
+  induction l as [| h t]; cbn; intros.
     assumption.
-    destruct l as [| h t].
+    destruct n as [| n']; cbn.
       assumption.
-      constructor. apply IHn', H.
+      constructor. apply (IHt _ _ H).
 Qed.
 (* end hide *)
 
@@ -11806,36 +11843,57 @@ Qed.
 (* end hide *)
 
 Lemma Exactly_take :
-  forall (A : Type) (P : A -> Prop) (n m1 m2 : nat) (l : list A),
+  forall (A : Type) (P : A -> Prop) (l : list A) (n m1 m2 : nat),
     Exactly P m1 (take n l) -> Exactly P m2 l -> m1 <= m2.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    inversion H. apply le_0_n.
-    destruct l as [| h t].
+  induction l as [| h t]; cbn; intros.
+    inversion H; subst. apply le_0_n.
+    destruct n as [| n']; cbn.
       inversion H. apply le_0_n.
-      inversion H; inversion H0; subst; clear H H0.
-        apply le_n_S, (IHn' _ _ _ H5 H10).
-        contradiction.
-        contradiction.
-        apply (IHn' _ _ _ H5 H10).
+      inversion H; inversion H0; subst; clear H H0; try contradiction.
+        apply le_n_S. apply (IHt _ _ _ H5 H10).
+        apply (IHt _ _ _ H5 H10).
 Qed.
 (* end hide *)
 
 Lemma Exactly_drop :
-  forall (A : Type) (P : A -> Prop) (n m1 m2 : nat) (l : list A),
+  forall (A : Type) (P : A -> Prop) (l : list A) (n m1 m2 : nat),
     Exactly P m1 (drop n l) -> Exactly P m2 l -> m1 <= m2.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros.
-    replace m2 with m1.
-      apply le_n.
-      apply (Exactly_eq _ _ _ _ _ H H0).
-    destruct l as [| h t].
-      inv H; inv H0. apply le_n.
-      inv H0.
-        apply le_S, (IHn' _ _ _ H H5).
-        apply (IHn' _ _ _ H H5).
+  induction l as [| h t]; cbn; intros.
+    inversion H. apply le_0_n.
+    destruct n as [| n']; cbn.
+      inversion H; inversion H0; subst; clear H H0.
+        specialize (IHt 0). rewrite drop_0 in IHt.
+          specialize (IHt _ _ H5 H10). apply le_n_S, IHt.
+        1-2: contradiction.
+        specialize (IHt 0). rewrite drop_0 in IHt.
+          apply (IHt _ _ H5 H10).
+      inversion H0; subst; clear H0.
+        apply le_S. apply (IHt _ _ _ H H5).
+        apply (IHt _ _ _ H H5).
+Qed.
+(* end hide *)
+
+Lemma Exactly_take_drop :
+  forall (A : Type) (P : A -> Prop) (l : list A) (n m : nat),
+    Exactly P n l -> exists n1 n2 : nat,
+      n = n1 + n2 /\ Exactly P n1 (take m l) /\ Exactly P n2 (drop m l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H; subst. exists 0, 0. repeat constructor.
+    inversion H; subst; clear H.
+      destruct m as [| m']; cbn.
+        exists 0, (S n0). repeat constructor; assumption.
+        destruct (IHt _ m' H4) as (n1 & n2 & IH1 & IH2 & IH3); subst.
+          exists (S n1), n2. repeat constructor; assumption.
+      destruct m as [| m']; cbn.
+        exists 0, n. repeat constructor; assumption.
+        destruct (IHt _ m' H4) as (n1 & n2 & IH1 & IH2 & IH3); subst.
+          exists n1, n2. repeat constructor; assumption.
 Qed.
 (* end hide *)
 
@@ -12324,7 +12382,7 @@ Qed.
 (* end hide *)
 
 Lemma incl_take :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     incl (take n l) l.
 (* begin hide *)
 Proof.
@@ -12333,7 +12391,7 @@ Qed.
 (* end hide *)
 
 Lemma incl_drop :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     incl (drop n l) l.
 (* begin hide *)
 Proof.
@@ -12685,20 +12743,21 @@ Qed.
 (* end hide *)
 *)
 
-Lemma SetEquiv_take :
-  forall (A : Type) (n : nat) (l : list A),
+(* TODO *) Lemma SetEquiv_take :
+  forall (A : Type) (l : list A) (n : nat),
     SetEquiv (take n l) l <-> incl (drop n l) (take n l).
 (* begin hide *)
 Proof.
-  split; revert l.
-    induction n as [| n']; cbn; intros.
-      apply SetEquiv_nil_l in H. subst. apply incl_refl.
-      destruct l as [| h t]; cbn.
-        apply incl_refl.
+  split; revert n.
+    induction l as [| h t]; cbn; intros.
+      apply incl_refl.
+      destruct n as [| n']; cbn in *.
+        apply SetEquiv_nil_l in H. inv H.
+        apply incl_cons''. apply IHt.
 Abort.
 (* end hide *)
 
-Lemma SetEquiv_drop :
+(* TODO *) Lemma SetEquiv_drop :
   forall (A : Type) (n : nat) (l : list A),
     SetEquiv (drop n l) l <-> incl (take n l) (drop n l).
 (* begin hide *)

@@ -172,7 +172,7 @@ Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct n as [| n']; cbn.
-      reflexivity.
+      rewrite drop_0. reflexivity.
       rewrite IHt. destruct (length t); cbn.
         reflexivity.
         destruct (n' <=? n); reflexivity.
@@ -454,11 +454,11 @@ Proof.
     destruct n as [| n'].
       inv H. destruct m; cbn.
         reflexivity.
-        rewrite <- minus_n_O. reflexivity.
+        rewrite <- minus_n_O, drop_0. reflexivity.
       destruct m as [| m']; cbn.
-        reflexivity.
+        rewrite take_0. reflexivity.
         destruct (replace t n' x) eqn: Heq; inv H.
-          rewrite (IHt _ _ _ _ Heq). destruct (m' <=? n'); reflexivity.
+          cbn. rewrite (IHt _ _ _ _ Heq). destruct (m' <=? n'); reflexivity.
 Qed.
 (* end hide *)
 
@@ -474,11 +474,13 @@ Proof.
   induction l as [| h t]; cbn; intros.
     inv H.
     destruct n as [| n'].
-      inv H. destruct m as [| m']; reflexivity.
+      inv H. destruct m as [| m']; cbn.
+        rewrite drop_0. reflexivity.
+        reflexivity.
       destruct (replace t n' x) eqn: Heq; inv H.
         destruct m as [| m']; cbn.
           specialize (IHt _ n' 0 _ Heq). cbn in IHt.
-            rewrite IHt, <- minus_n_O. reflexivity.
+            rewrite ?drop_0 in IHt. rewrite IHt, <- minus_n_O. reflexivity.
           rewrite (IHt _ _ _ _ Heq). destruct m' as [| m']; cbn.
             reflexivity.
             destruct (n' <=? m'); cbn; reflexivity.
@@ -541,7 +543,7 @@ Proof.
   induction l as [| h t]; cbn; intros.
     inv H.
     destruct n as [| n'].
-      inv H. cbn. reflexivity.
+      inv H. cbn. rewrite drop_0. reflexivity.
       destruct (replace t n' x) eqn: Heq; inv H.
         cbn. rewrite (IHt _ _ _ Heq), Bool.orb_assoc. reflexivity.
 Qed.
@@ -557,7 +559,7 @@ Proof.
   induction l as [| h t]; cbn; intros.
     inv H.
     destruct n as [| n'].
-      inv H. cbn. reflexivity.
+      inv H. cbn. rewrite drop_0. reflexivity.
       destruct (replace t n' x) eqn: Heq; inv H.
         cbn. rewrite (IHt _ _ _ Heq), Bool.andb_assoc. reflexivity.
 Restart.
@@ -776,7 +778,7 @@ Proof.
   induction l as [| h t]; cbn; intros.
     inv H.
     destruct n as [| n']; cbn.
-      inv H. reflexivity.
+      inv H. rewrite drop_0. reflexivity.
       destruct (replace t n' x) eqn: Heq; inv H.
         rewrite (IHt _ _ _ Heq). reflexivity.
 Qed.

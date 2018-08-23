@@ -97,9 +97,9 @@ Lemma splitAt_length_lt :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    destruct n; inversion H.
+    destruct n; inv H.
     destruct n as [| n']; cbn.
-      exists h. reflexivity.
+      exists h. rewrite drop_0. reflexivity.
       apply lt_S_n in H. destruct (IHt _ H) as [x IH].
         exists x. rewrite IH. cbn. reflexivity.
 Qed.
@@ -319,9 +319,9 @@ Lemma splitAt_spec' :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    inversion 1.
+    inversion 2.
     destruct n as [| n']; cbn.
-      inversion 1; subst. split; reflexivity.
+      inversion 1; subst. rewrite drop_0. split; reflexivity.
       destruct (splitAt n' t) eqn: Heq; intros.
         destruct p, p. inversion H; subst; clear H.
           destruct (IHt _ _ _ _ Heq). rewrite H, H0.
@@ -386,9 +386,9 @@ Lemma splitAt_last_l :
 Proof.
   intros. pose (H' := H). apply splitAt_spec' in H'. destruct H'.
   rewrite H0. destruct n.
-    cbn. reflexivity.
+    rewrite take_0. reflexivity.
     rewrite last_take. apply splitAt_Some in H.
-    rewrite Min.min_l.
+    rewrite Min.min_r.
       reflexivity.
       omega.
 Qed.
@@ -418,16 +418,6 @@ Lemma take_splitAt :
       take m l1 = take (min n m) l.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
-    inversion H.
-    destruct n as [| n'].
-      inversion H; subst; cbn. rewrite take_nil. reflexivity.
-      destruct (splitAt n' t) eqn: Heq.
-        destruct p, p. inv H. destruct m as[| m']; cbn.
-          reflexivity.
-          rewrite (IHt _ _ _ _ _ Heq). reflexivity.
-        inversion H.
-Restart.
   intros. apply splitAt_spec' in H. destruct H.
   rewrite H, take_take. reflexivity.
 Qed.
@@ -481,7 +471,7 @@ Proof.
   induction l as [| h t]; cbn; intros.
     apply le_0_n.
     destruct n as [| n']; cbn.
-      repeat split.
+      repeat split. rewrite drop_0. reflexivity.
       destruct (splitAt n' t) eqn: Heq.
         destruct p, p. specialize (IHt n'). rewrite Heq in IHt.
           decompose [and] IHt; clear IHt. subst. repeat split.
@@ -750,4 +740,3 @@ Proof.
         assumption.
 Qed.
 (* end hide *)
-
