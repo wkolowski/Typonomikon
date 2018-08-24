@@ -737,7 +737,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-Lemma rev_iterate :
+(* TODO *) Lemma rev_iterate :
   forall (A : Type) (f g : A -> A) (n : nat) (x : A),
     (forall x : A, g (f x) = x) ->
       iterate f n x = rev (iterate g n (iter f n x)).
@@ -2012,7 +2012,7 @@ Qed.
 (* end hide *)
 
 (*
-Lemma isEmpty_remove :
+TODO: Lemma isEmpty_remove :
   forall (A : Type) (l : list A) (n : nat),
     isEmpty (remove n l) =
     orb (isEmpty l) (andb (leb (length l) 1) (isZero n)).
@@ -2190,7 +2190,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma remove_rev :
+(* TODO *) Lemma remove_rev :
   forall (A : Type) (l : list A) (n : nat),
     n < length l ->
       remove n (rev l) =
@@ -2572,7 +2572,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma take_insert_lt :
+(* TODO *) Lemma take_insert_lt :
   forall (A : Type) (l : list A) (n m : nat) (x : A),
     m < n ->
       take m (insert l n x) =
@@ -3085,25 +3085,477 @@ Admitted.
 
 (* begin hide *)
 Fixpoint splitAt
-  {A : Type} (n : nat) (l : list A) {struct l} : list A * list A :=
+  {A : Type} (n : nat) (l : list A) {struct l}
+  : option (list A * A * list A) :=
 match l, n with
-    | [], _ => ([], [])
-    | _, 0 => ([], l)
+    | [], _ => None
+    | h :: t, 0 => Some ([], h, t)
     | h :: t, S n' =>
-        let '(l1, l2) := splitAt n' t in (h :: l1, l2)
+        match splitAt n' t with
+            | None => None
+            | Some (l1, x, l2) => Some (h :: l1, x, l2)
+        end
 end.
 (* end hide *)
 
 Lemma splitAt_spec :
   forall (A : Type) (l : list A) (n : nat),
-    splitAt n l = (take n l, drop n l).
+    match splitAt n l with
+        | None => length l <= n
+        | Some (l1, x, l2) => l = l1 ++ x :: l2
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    apply le_0_n.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      specialize (IHt n'). destruct (splitAt n' t).
+        destruct p, p. cbn. rewrite <- IHt. reflexivity.
+        apply le_n_S. assumption.
+Qed.
+(* end hide *)
+
+Lemma splitAt_spec' :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    splitAt n l = Some (l1, x, l2) ->
+      l1 = take n l /\ l2 = drop (S n) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    inversion 2.
+    destruct n as [| n']; cbn.
+      inversion 1; subst. rewrite drop_0. split; reflexivity.
+      destruct (splitAt n' t) eqn: Heq; intros.
+        destruct p, p. inversion H; subst; clear H.
+          destruct (IHt _ _ _ _ Heq). rewrite H, H0.
+            cbn. split; reflexivity.
+        inversion H.
+Qed.
+(* end hide *)
+
+Lemma splitAt_megaspec :
+  forall (A : Type) (l : list A) (n : nat),
+    match splitAt n l with
+        | None => length l <= n
+        | Some (l1, x, l2) =>
+            nth n l = Some x /\
+            l1 = take n l /\
+            l2 = drop (S n) l /\
+            l = l1 ++ x :: l2
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    apply le_0_n.
+    destruct n as [| n']; cbn.
+      repeat split. rewrite drop_0. reflexivity.
+      destruct (splitAt n' t) eqn: Heq.
+        destruct p, p. specialize (IHt n'). rewrite Heq in IHt.
+          decompose [and] IHt; clear IHt. subst. repeat split.
+            assumption.
+            rewrite H3 at 1. reflexivity.
+        specialize (IHt n'). rewrite Heq in IHt. apply le_n_S, IHt.
+Qed.
+(* end hide *)
+
+Lemma splitAt_isEmpty_true :
+  forall (A : Type) (l : list A),
+    isEmpty l = true -> forall n : nat, splitAt n l = None.
+(* begin hide *)
+Proof.
+  destruct l; cbn; intros.
+    reflexivity.
+    inversion H.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_splitAt_false :
+  forall (A : Type) (l : list A) (n : nat),
+    splitAt n l <> None -> isEmpty l = false.
+(* begin hide *)
+Proof.
+  destruct l; cbn; intros.
+    contradiction.
+    reflexivity.
+Qed.
+(* end hide *)
+
+Lemma splitAt_length_inv :
+  forall (A : Type) (l : list A) (n : nat),
+    splitAt n l <> None <-> n < length l.
+(* begin hide *)
+Proof.
+  split; revert n.
+    induction l as [| h t]; cbn; intros.
+      contradiction.
+      destruct n as [| n'].
+        apply le_n_S, le_0_n.
+        apply lt_n_S, IHt. destruct (splitAt n' t); congruence.
+    induction l as [| h t]; cbn; intros.
+      inv H.
+      destruct n as [| n'].
+        inversion 1.
+        destruct (splitAt n' t) eqn: Heq.
+          destruct p, p. congruence.
+          intro. apply (IHt _ (lt_S_n _ _ H)). assumption.
+Qed.
+(* end hide *)
+
+Lemma splitAt_Some_length :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    splitAt n l = Some (l1, x, l2) -> n < length l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct n as [| n'].
+      apply Nat.lt_0_succ.
+      destruct (splitAt n' t) eqn: Heq.
+        destruct p, p. inversion H; subst; clear H.
+          apply lt_n_S, (IHt _ _ _ _ Heq).
+        inversion H.
+Qed.
+(* end hide *)
+
+(* TODO *) (*Lemma splitAt_length_inv :
+  forall (A : Type) (l : list A) (n : nat),
+    match splitAt n l with
+        | None => length l <= n
+        | Some _ => n < length l
+    end.
+(* begin hide *)
+Proof.*)
+
+Lemma splitAt_length_lt :
+  forall (A : Type) (l : list A) (n : nat),
+    n < length l -> exists x : A,
+      splitAt n l = Some (take n l, x, drop (S n) l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    destruct n; inv H.
+    destruct n as [| n']; cbn.
+      exists h. rewrite drop_0. reflexivity.
+      apply lt_S_n in H. destruct (IHt _ H) as [x IH].
+        exists x. rewrite IH. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma splitAt_length_ge :
+  forall (A : Type) (l : list A) (n : nat),
+    length l <= n -> splitAt n l = None.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n']; cbn.
+      inversion H.
+      apply le_S_n in H. rewrite (IHt _ H). reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO Lemma splitAt_length :
+  forall (A : Type) (l : list A) (n : nat),
+    splitAt n l =
+    if n <? length l
+    then
+*)
+
+Lemma splitAt_snoc :
+  forall (A : Type) (l : list A) (n : nat) (x : A),
+    splitAt n (snoc x l) =
+    if n <? length l
+    then
+      match splitAt n l with
+          | None => None
+          | Some (b, y, e) => Some (b, y, snoc x e)
+      end
+    else
+      if beq_nat n (length l)
+      then Some (l, x, [])
+      else None.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    destruct n; reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite IHt. unfold ltb. destruct (length t); cbn.
+        destruct n'; reflexivity.
+        destruct (n' <=? n).
+          destruct (splitAt n' t).
+            destruct p, p. 1-2: reflexivity.
+            destruct (n' =? S n); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma splitAt_app :
+  forall (A : Type) (l1 l2 : list A) (n : nat),
+    splitAt n (l1 ++ l2) =
+    match splitAt n l1 with
+        | Some (l11, x, l12) => Some (l11, x, l12 ++ l2)
+        | None =>
+            match splitAt (n - length l1) l2 with
+                | Some (l21, x, l22) => Some (l1 ++ l21, x, l22)
+                | None => None
+            end
+    end.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    rewrite <- minus_n_O. destruct (splitAt n l2).
+      destruct p, p. 1-2: reflexivity.
+    destruct n as [| n'].
+      reflexivity.
+      rewrite IHt. destruct (splitAt n' t).
+        destruct p, p. reflexivity.
+        cbn. destruct (splitAt (n' - length t) l2).
+          destruct p, p. 1-2: reflexivity.
+Qed.
+(* end hide *)
+
+Lemma splitAt_app_lt :
+  forall (A : Type) (l1 l2 : list A) (n : nat),
+    n < length l1 ->
+      splitAt n (l1 ++ l2) =
+      match splitAt n l1 with
+          | None => None
+          | Some (x, l11, l12) => Some (x, l11, l12 ++ l2)
+      end.
+(* begin hide *)
+Proof.
+  intros. rewrite splitAt_app.
+  destruct (splitAt_length_lt _ l1 n H).
+  rewrite H0. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma splitAt_app_ge :
+  forall (A : Type) (l1 l2 : list A) (n : nat),
+    length l1 <= n ->
+      splitAt n (l1 ++ l2) =
+      match splitAt (n - length l1) l2 with
+          | None => None
+          | Some (l21, x, l22) => Some (l1 ++ l21, x, l22)
+      end.
+(* begin hide *)
+Proof.
+  intros. rewrite splitAt_app, splitAt_length_ge.
+    destruct (splitAt (n - length l1) l2).
+      destruct p, p. 1-2: reflexivity.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma splitAt_rev_aux :
+  forall (A : Type) (l : list A) (n : nat),
+    n < length l ->
+      splitAt n l =
+      match splitAt (length l - S n) (rev l) with
+          | None => None
+          | Some (l1, x, l2) => Some (rev l2, x, rev l1)
+      end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n'].
+      rewrite splitAt_app, splitAt_length_ge.
+        1-2: rewrite length_rev, <- minus_n_O.
+          cbn. rewrite minus_diag, rev_app, rev_inv. cbn. reflexivity.
+        reflexivity.
+      rewrite IHt, splitAt_app; clear IHt.
+        destruct (splitAt (length t - S n') (rev t)) eqn: Heq.
+          destruct p, p. rewrite rev_app. cbn. reflexivity.
+          destruct t; cbn in *.
+            omega.
+            destruct
+              (splitAt_length_lt A (rev t ++ [a]) (length t - n'))
+            as [x H'].
+              rewrite length_app, length_rev. cbn. omega.
+              congruence.
+        apply lt_S_n. assumption.
+Qed.
+(* end hide *)
+
+Lemma splitAt_rev :
+  forall (A : Type) (l : list A) (n : nat),
+    n < length l ->
+      splitAt n (rev l) =
+      match splitAt (length l - S n) l with
+          | None => None
+          | Some (l1, x, l2) => Some (rev l2, x, rev l1)
+      end.
+(* begin hide *)
+Proof.
+  intros. rewrite <- length_rev in H.
+  rewrite (splitAt_rev_aux _ _ _ H).
+  rewrite length_rev, rev_inv. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma splitAt_map :
+  forall (A B : Type) (f : A -> B) (l : list A) (n : nat),
+    splitAt n (map f l) =
+    match splitAt n l with
+        | None => None
+        | Some (l1, x, l2) => Some (map f l1, f x, map f l2)
+    end.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct n as [| n']; cbn.
       reflexivity.
-      rewrite IHt. reflexivity.
+      rewrite IHt. destruct (splitAt n' t).
+        destruct p, p. 1-2: reflexivity.
+Qed.
+(* end hide *)
+
+Lemma splitAt_replicate :
+  forall (A : Type) (n m : nat) (x : A),
+    splitAt m (replicate n x) =
+      if m <? n
+      then Some (replicate m x, x, replicate (n - S m) x)
+      else None.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    destruct m as [| m']; cbn.
+      rewrite <- minus_n_O. reflexivity.
+      rewrite IHn'. unfold ltb. destruct n' as [| n'']; cbn.
+        reflexivity.
+        destruct (m' <=? n''); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma splitAt_iterate :
+  forall (A : Type) (f : A -> A) (n m : nat) (x : A),
+    splitAt m (iterate f n x) =
+    if m <? n
+    then Some (iterate f m x, iter f m x, iterate f (n - S m) (iter f (S m) x))
+    else None.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    destruct m as [| m']; cbn.
+      rewrite <- minus_n_O. reflexivity.
+      rewrite IHn'. unfold ltb. destruct n' as [| n'']; cbn.
+        reflexivity.
+        destruct (m' <=? n''); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma splitAt_head_l :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    splitAt n l = Some (l1, x, l2) ->
+      head l1 =
+      match n with
+          | 0 => None
+          | _ => head l
+      end.
+(* begin hide *)
+Proof.
+  intros. apply splitAt_spec' in H. destruct H.
+  rewrite H, ?H0. rewrite head_take. destruct n; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma splitAt_head_r :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    splitAt n l = Some (l1, x, l2) ->
+      head l2 = nth (S n) l.
+(* begin hide *)
+Proof.
+  intros. apply splitAt_spec' in H. destruct H.
+  rewrite H0. rewrite head_drop. reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: tail, uncons *)
+
+Lemma splitAt_last_l :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    splitAt n l = Some (l1, x, l2) ->
+      last l1 =
+      match n with
+          | 0 => None
+          | S n' => nth n' l
+      end.
+(* begin hide *)
+Proof.
+  intros. pose (H' := H). apply splitAt_spec' in H'. destruct H'.
+  rewrite H0. destruct n.
+    rewrite take_0. reflexivity.
+    rewrite last_take. apply splitAt_Some_length in H.
+    rewrite Min.min_r.
+      reflexivity.
+      omega.
+Qed.
+(* end hide *)
+
+(* TODO *) Lemma splitAt_last_r :
+  forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
+    splitAt n l = Some (l1, x, l2) ->
+      last l2 =
+      if beq_nat n (length l - 1)
+      then nth (length l - 2) l
+      else last l2.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct n as [| n'].
+      inversion H; subst; clear H. destruct l2; cbn.
+Abort.
+(* end hide *)
+
+(* TODO: init, unsnoc *)
+
+Lemma take_splitAt :
+  forall (A : Type) (l l1 l2 : list A) (n m : nat) (x : A),
+    splitAt n l = Some (l1, x, l2) ->
+      take m l1 = take (min n m) l.
+(* begin hide *)
+Proof.
+  intros. apply splitAt_spec' in H. destruct H.
+  rewrite H, take_take. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma take_splitAt' :
+  forall (A : Type) (l l1 l2 : list A) (n m : nat) (x : A),
+    splitAt n l = Some (l1, x, l2) ->
+      take m l2 = take m (drop (S n) l).
+(* begin hide *)
+Proof.
+  intros. apply splitAt_spec' in H.
+  destruct H. subst. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma drop_splitAt_l :
+  forall (A : Type) (l l1 l2 : list A) (n m : nat) (x : A),
+    splitAt n l = Some (l1, x, l2) ->
+      drop m l1 = take (n - m) (drop m l).
+(* begin hide *)
+Proof.
+  intros. apply splitAt_spec' in H. destruct H.
+  subst. rewrite drop_take. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma drop_splitAt_r :
+  forall (A : Type) (l l1 l2 : list A) (n m : nat) (x : A),
+    splitAt n l = Some (l1, x, l2) ->
+      drop m l2 = drop (S n + m) l.
+(* begin hide *)
+Proof.
+  intros. apply splitAt_spec' in H. destruct H.
+  subst. rewrite drop_drop. reflexivity.
 Qed.
 (* end hide *)
 
@@ -3261,6 +3713,45 @@ Proof.
       destruct n as [| n']; cbn.
         reflexivity.
         apply IHta.
+Qed.
+(* end hide *)
+
+Lemma splitAt_zip :
+  forall (A B : Type) (la : list A) (lb : list B) (n : nat),
+    splitAt n (zip la lb) =
+    match splitAt n la, splitAt n lb with
+        | Some (la1, a, la2), Some (lb1, b, lb2) =>
+            Some (zip la1 lb1, (a, b), zip la2 lb2)
+        | _, _ => None
+    end.
+(* begin hide *)
+Proof.
+  intros. assert (H := splitAt_megaspec A la n). destruct (splitAt n la).
+    Focus 2. apply splitAt_length_ge. rewrite length_zip.
+      apply Nat.min_case_strong; intros.
+        assumption.
+        apply le_trans with (length la); assumption.
+    destruct p, p. decompose [and] H; clear H; subst.
+      assert (H := splitAt_megaspec B lb n). destruct (splitAt n lb).
+        Focus 2. apply splitAt_length_ge. rewrite length_zip.
+          apply Nat.min_case_strong; intros.
+            apply le_trans with (length lb); assumption.
+            assumption.
+        destruct p, p. decompose [and] H; clear H; subst.
+          rewrite H4, H6.
+Restart.
+  induction la as [| ha ta]; cbn; intros.
+    reflexivity.
+    destruct lb as [| hb tb]; cbn.
+      destruct n as [| n'].
+        reflexivity.
+        destruct (splitAt n' ta).
+          destruct p, p. 1-2: reflexivity.
+      destruct n as [| n'].
+        reflexivity.
+        rewrite IHta. destruct (splitAt n' ta), (splitAt n' tb).
+          destruct p, p, p0, p. cbn. reflexivity.
+          destruct p, p. 1-3: reflexivity.
 Qed.
 (* end hide *)
 
@@ -3456,6 +3947,32 @@ Proof.
       destruct n as [| n']; cbn.
         reflexivity.
         rewrite IHta. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma splitAt_zipWith :
+  forall (A B C : Type) (f : A -> B -> C)
+    (la : list A) (lb : list B) (n : nat),
+      splitAt n (zipWith f la lb) =
+      match splitAt n la, splitAt n lb with
+          | Some (la1, a, la2), Some (lb1, b, lb2) =>
+              Some (zipWith f la1 lb1, f a b, zipWith f la2 lb2)
+          | _, _ => None
+      end.
+(* begin hide *)
+Proof.
+  induction la as [| ha ta]; cbn; intros.
+    reflexivity.
+    destruct lb as [| hb tb]; cbn.
+      destruct n as [| n'].
+        reflexivity.
+        destruct (splitAt n' ta).
+          destruct p, p. 1-2: reflexivity.
+      destruct n as [| n'].
+        reflexivity.
+        rewrite IHta. destruct (splitAt n' ta), (splitAt n' tb).
+          destruct p, p, p0, p. cbn. reflexivity.
+          destruct p, p. 1-3: reflexivity.
 Qed.
 (* end hide *)
 
@@ -5653,6 +6170,24 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma count_splitAt :
+  forall (A : Type) (p : A -> bool) (l l1 l2 : list A) (n : nat) (x : A),
+    splitAt n l = Some (l1, x, l2) ->
+      count p l = (if p x then 1 else 0) + count p l1 + count p l2.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct n as [| n']; cbn.
+      inversion H; subst; clear H. destruct (p x); reflexivity.
+      destruct (splitAt n' t) eqn: Heq; cbn in H.
+        destruct p0, p0. inversion H; subst; clear H.
+          cbn. destruct (p h), (p x) eqn: Hpx; cbn;
+          rewrite (IHt _ _ _ _ Heq), Hpx; reflexivity.
+        inversion H.
+Qed.
+(* end hide *)
+
 Lemma count_false :
   forall (A : Type) (l : list A),
     count (fun _ => false) l = 0.
@@ -5982,6 +6517,39 @@ Proof.
             assumption.
 Qed.
 (* end hide *)
+
+Lemma splitAt_filter :
+  forall (A : Type) (p : A -> bool) (l l1 l2 : list A) (x : A) (n : nat),
+    splitAt n (filter p l) = Some (l1, x, l2) ->
+      exists m : nat,
+      match splitAt m l with
+          | None => False
+          | Some (l1', y, l2') =>
+              x = y /\ l1 = filter p l1' /\ l2 = filter p l2'
+      end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct (p h) eqn: Hph.
+      destruct n as [| n']; cbn in *.
+        inversion H; subst; clear H. exists 0. repeat split.
+        destruct (splitAt n' (filter p t)) eqn: Heq.
+          destruct p0, p0. inversion H; subst; clear H.
+            destruct (IHt _ _ _ _ Heq) as [m IH].
+              exists (S m). destruct (splitAt m t).
+                destruct p0, p0, IH as (IH1 & IH2 & IH3); subst.
+                  cbn. rewrite Hph. repeat split.
+                assumption.
+          inversion H.
+      destruct (IHt _ _ _ _ H) as (m & IH). exists (S m).
+        destruct (splitAt m t).
+          destruct p0, p0. cbn. rewrite Hph. assumption.
+          assumption.
+Qed.
+(* end hide *)
+
+(* TODO: intersperse_splitAt *)
 
 Lemma filter_insert :
   forall (A : Type) (p : A -> bool) (l : list A) (n : nat) (x : A),
@@ -6978,34 +7546,440 @@ Restart.
 Qed.
 (* end hide *)
 
-(** *** [span] *)
+(** ** [span] *)
 
 (** Zdefiniuj rekurencyjną funkcję [span], która spełnia poniższą
     specyfikację. *)
 
 (* begin hide *)
 Fixpoint span
-  {A : Type} (p : A -> bool) (l : list A) : list A * list A :=
+  {A : Type} (p : A -> bool) (l : list A) : option (list A * A * list A) :=
 match l with
-    | [] => ([], [])
+    | [] => None
     | h :: t =>
-        let
-          '(l1, l2) := span p t
-        in
-          if p h
-          then (h :: l1, l2)
-          else ([], h :: t)
+        if p h
+        then Some ([], h, t)
+        else
+          match span p t with
+              | None => None
+              | Some (b, x, e) => Some (h :: b, x, e)
+          end
 end.
-(* end hide *)
 
 Lemma span_spec :
-  forall (A : Type) (p : A -> bool) (l : list A),
-    span p l = (takeWhile p l, dropWhile p l).
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) -> l = b ++ x :: e.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h) eqn: Hph.
+      inv H. cbn. reflexivity.
+      destruct (span p t).
+        destruct p0, p0. inv H. cbn. f_equal. apply IHt. reflexivity.
+        inv H.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_span :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) ->
+      isEmpty l = false.
+(* begin hide *)
+Proof.
+  destruct l; cbn; intros.
+    inv H.
+    reflexivity.
+Qed.
+(* end hide *)
+
+Lemma length_span :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) -> length b + length e < length l.
+(* begin hide *)
+Proof.
+  intros. apply span_spec in H. subst. rewrite length_app. cbn.
+  rewrite <- plus_n_Sm. apply le_n.
+Qed.
+(* end hide *)
+
+Lemma length_span' :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) ->
+      length b < length l /\
+      length e < length l.
+(* begin hide *)
+Proof.
+  intros. apply length_span in H. omega.
+Qed.
+(* end hide *)
+
+Lemma span_snoc :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    span p (snoc x l) =
+    match span p l with
+        | None => if p x then Some (l, x, []) else None
+        | Some (b, y, e) => Some (b, y, snoc x e)
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (p h).
+      reflexivity.
+      rewrite IHt. destruct (span p t).
+        destruct p0, p0. reflexivity.
+        destruct (p x); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma span_app :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    span p (l1 ++ l2) =
+    match span p l1, span p l2 with
+        | Some (b, x, e), _ => Some (b, x, e ++ l2)
+        | _, Some (b, x, e) => Some (l1 ++ b, x, e)
+        | _, _ => None
+    end.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    destruct (span p l2).
+      destruct p0, p0. 1-2: reflexivity.
+    destruct (p h).
+      reflexivity.
+      rewrite IHt. destruct (span p t).
+        destruct p0, p0. reflexivity.
+        destruct (span p l2).
+          destruct p0, p0. all: reflexivity.
+Qed.
+(* end hide *)
+
+Lemma span_map :
+  forall (A B : Type) (f : A -> B) (p : B -> bool) (l : list A),
+    span p (map f l) =
+    match span (fun x : A => p (f x)) l with
+        | None => None
+        | Some (b, x, e) => Some (map f b, f x, map f e)
+    end.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite IHt. destruct (p h); reflexivity.
+    destruct (p (f h)).
+      reflexivity.
+      rewrite IHt. destruct (span _ t).
+        destruct p0, p0. cbn. all: reflexivity.
+Qed.
+(* end hide *)
+
+Lemma span_join :
+  forall (A : Type) (p : A -> bool) (lla : list (list A)),
+    span p (join lla) =
+    match span (any p) lla with
+        | None => None
+        | Some (bl, l, el) =>
+            match span p l with
+                | None => None
+                | Some (b, x, e) => Some (join bl ++ b, x, e ++ join el)
+            end
+    end.
+(* begin hide *)
+Proof.
+  induction lla as [| hl tl]; cbn.
+    reflexivity.
+    rewrite span_app, IHtl. induction hl as [| h t]; cbn.
+      destruct (span (any p) tl).
+        destruct p0, p0. destruct (span p l1).
+          destruct p0, p0. 1-3: reflexivity.
+      destruct (p h) eqn: Hph; cbn.
+        rewrite Hph. reflexivity.
+        destruct (span p t).
+          destruct p0, p0. destruct (any p t); cbn.
+            rewrite Hph. destruct (span p t).
+              destruct p0, p0. inv IHt. reflexivity.
+              inv IHt.
+            destruct (span (any p) tl).
+              destruct p0, p0. destruct (span p l3).
+                destruct p0, p0. inv IHt. cbn. reflexivity.
+                inv IHt.
+              inv IHt.
+          destruct (span (any p) tl).
+            destruct p0, p0. destruct (span p l1).
+              destruct p0, p0. destruct (any p t).
+                cbn. rewrite Hph. destruct (span p t).
+                  destruct p0, p0. inv IHt. reflexivity.
+                  inv IHt.
+                destruct (span p l1).
+                  destruct p0, p0. inv IHt. cbn. rewrite H0. reflexivity.
+                  inv IHt.
+              destruct (any p t).
+                cbn. rewrite Hph. destruct (span p t).
+                  destruct p0, p0. inv IHt.
+                  reflexivity.
+                destruct (span p l1).
+                  destruct p0, p0. inv IHt.
+                  reflexivity.
+            destruct (any p t).
+              cbn. rewrite Hph. destruct (span p t).
+                destruct p0, p0. inv IHt.
+                1-2: reflexivity.
+Restart.
+  Ltac rec_destr x :=
+  match x with
+      | context [match ?y with _ => _ end] => rec_destr y
+      | _ => let H := fresh "H" in destruct x eqn: H
+  end.
+  induction lla as [| hl tl]; cbn.
+    reflexivity.
+    rewrite span_app, IHtl. induction hl as [| h t]; cbn.
+      all: repeat (match goal with
+          | H : context [match ?x with _ => _ end] |- _ => rec_destr x
+          | |- context [match ?x with _ => _ end] => rec_destr x
+      end; cbn in *); try congruence.
+Qed.
+(* end hide *)
+
+(* TODO: bind *)
+
+Lemma span_replicate :
+  forall (A : Type) (p : A -> bool) (n : nat) (x : A),
+    span p (replicate n x) =
+    if andb (leb 1 n) (p x)
+    then Some ([], x, replicate (n - 1) x)
+    else None.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    destruct (p x) eqn: Hpx.
+      rewrite <- minus_n_O. reflexivity.
+      rewrite IHn'. cbn. destruct n'; cbn; rewrite ?Hpx; reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: iterate *)
+
+Lemma span_any :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) -> any p l = true.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h); cbn.
+      reflexivity.
+      destruct (span p t).
+        destruct p0, p0. inv H. eapply IHt. reflexivity.
+        inv H.
+Qed.
+(* end hide *)
+
+Lemma span_all :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) ->
+      all p l = andb (beq_nat (length b) 0) (all p e).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h); cbn.
+      inv H. cbn. reflexivity.
+      destruct (span p t).
+        destruct p0, p0. all: inv H. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma span_find :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) -> find p l = Some x.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h).
+      inv H. reflexivity.
+      destruct (span p t).
+        destruct p0, p0. all: inv H. eapply IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma span_removeFirst :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) ->
+      removeFirst p l = Some (x, b ++ e).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h).
+      inv H. cbn. reflexivity.
+      destruct (span p t).
+        destruct p0, p0. all: inv H. erewrite IHt; reflexivity.
+Qed.
+(* end hide *)
+
+(* TODO: findIndex *)
+
+Lemma count_span_l :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) -> count p b = 0.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h) eqn: Hph.
+      inv H. cbn. reflexivity.
+      destruct (span p t).
+        destruct p0, p0. all: inv H. cbn. rewrite Hph.
+          eapply IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma count_span_r :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) ->
+      count p e < length l - length b.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h).
+      inv H. cbn. apply le_n_S. apply count_length.
+      destruct (span p t).
+        destruct p0, p0. all: inv H. cbn. apply IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma span_filter :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    span p (filter p l) =
+    match filter p l with
+        | [] => None
+        | h :: t => Some ([], h, t)
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (p h) eqn: Hph; cbn.
+      rewrite Hph. reflexivity.
+      apply IHt.
+Qed.
+(* end hide *)
+
+Lemma filter_span_l :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) -> filter p b = [].
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h) eqn: Hph.
+      inv H. cbn. reflexivity.
+      destruct (span p t).
+        destruct p0, p0. all: inv H. cbn. rewrite Hph.
+          eapply IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma takeWhile_span :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) ->
+      takeWhile (fun x : A => negb (p x)) l = b.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h); cbn.
+      inv H. reflexivity.
+      destruct (span p t).
+        destruct p0, p0. all: inv H. f_equal. eapply IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma dropWhile_span :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) ->
+      dropWhile (fun x : A => negb (p x)) l = x :: e.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h); cbn.
+      inv H. reflexivity.
+      destruct (span p t).
+        destruct p0, p0. all: inv H. eapply IHt. reflexivity.
+Qed.
+(* end hide *)
+
+(** *** Związki [span] i [rev] *)
+
+(** Zdefiniuj funkcję [naps], która działa tak jak [span], tyle że
+    "od tyłu". Udowodnij twierdzenie [span_rev]. *)
+
+(* begin hide *)
+Fixpoint naps
+  {A : Type} (p : A -> bool) (l : list A) : option (list A * A * list A) :=
+match l with
+    | [] => None
+    | h :: t =>
+        match naps p t with
+            | None => if p h then Some ([], h, t) else None
+            | Some (b, x, e) => Some (h :: b, x, e)
+        end
+end.
+(* end hide *)
+
+(* begin hide *)
+Lemma naps_snoc' :
+  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
+    naps p (l ++ [x]) =
+    if p x
+    then Some (l, x, [])
+    else
+      match naps p l with
+          | None => None
+          | Some (b, y, e) => Some (b, y, e ++ [x])
+      end.
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite IHt. destruct (p x) eqn: Hpx.
+      reflexivity.
+      destruct (naps p t) eqn: Heq.
+        destruct p0, p0. reflexivity.
+        destruct (p h); reflexivity.
+Qed.
+(* end hide *)
+
+Lemma span_rev_aux :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    span p l =
+    match naps p (rev l) with
+        | None => None
+        | Some (b, x, e) => Some (rev e, x, rev b)
+    end.
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (p h) eqn: Hph; cbn.
+      rewrite naps_snoc', Hph, rev_inv. cbn. reflexivity.
+      rewrite naps_snoc', Hph, IHt. destruct (naps p (rev t)).
+        destruct p0, p0. rewrite rev_app. cbn. all: reflexivity.
+Qed.
+(* end hide *)
+
+Lemma span_rev :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    span p (rev l) =
+    match naps p l with
+        | None => None
+        | Some (b, x, e) => Some (rev e, x, rev b)
+    end.
+(* begin hide *)
+Proof.
+  intros. rewrite span_rev_aux, rev_inv. reflexivity.
 Qed.
 (* end hide *)
 
@@ -7330,6 +8304,34 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma pmap_span :
+  forall (A B : Type) (f : A -> option B) (p : B -> bool) (l : list A),
+    match
+      span
+        (fun x : A => match f x with None => false | Some b => p b end)
+        l
+    with
+        | None => True
+        | Some (b, x, e) =>
+            exists y : B, f x = Some y /\
+              span p (pmap f l) = Some (pmap f b, y, pmap f e)
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    trivial.
+    destruct (f h) eqn: Heq.
+      destruct (p b) eqn: Hpb; cbn; rewrite ?Hpb.
+        exists b. split; trivial.
+        destruct (span _ t); trivial.
+          destruct p0, p0; cbn in *.
+            destruct IHt as (y & IH1 & IH2).
+              exists y. rewrite IH1, IH2, Heq. split; reflexivity.
+      destruct (span _ t); trivial.
+        destruct p0, p0, IHt as (y & IH1 & IH2).
+          exists y. cbn. rewrite IH1, IH2, Heq. split; reflexivity.
+Qed.
+(* end hide *)
 
 (** * Bardziej skomplikowane funkcje *)
 
@@ -7462,7 +8464,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma tail_intersperse :
+(* TODO *) Lemma tail_intersperse :
   forall (A : Type) (x : A) (l : list A),
     tail (intersperse x l) =
     match tail l with
@@ -7532,7 +8534,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma take_intersperse :
+(* TODO *) Lemma take_intersperse :
   forall (A : Type) (x : A) (l : list A) (n : nat),
     1 < n -> 1 < length l ->
       take (2 * n) (intersperse x l) =
@@ -7569,10 +8571,12 @@ Proof.
           destruct t; cbn in *.
             rewrite ?Bool.orb_false_r.
               destruct (p h), (p a), (p x); reflexivity.
-            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (any p t); reflexivity.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (any p t);
+              reflexivity.
           destruct t; cbn in *.
             inv Heq'.
-            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (any p t); reflexivity.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (any p t);
+              reflexivity.
 Qed.
 (* end hide *)
 
@@ -7608,10 +8612,12 @@ Restart.
           destruct t; cbn in *.
             rewrite ?Bool.andb_true_r.
               destruct (p h), (p a), (p x); reflexivity.
-            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (all p t); reflexivity.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (all p t);
+              reflexivity.
           destruct t; cbn in *.
             inv Heq'.
-            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (all p t); reflexivity.
+            rewrite IHt. destruct (p h), (p x), (p a), (p a0), (all p t);
+              reflexivity.
 Qed.
 (* end hide *)
 
@@ -7658,7 +8664,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma count_intersperse :
+(* TODO *) Lemma count_intersperse :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
     count p (intersperse x l) =
     count p l + if p x then length l - 1 else 0.
@@ -8024,6 +9030,46 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma elem_splitAt' :
+  forall (A : Type) (l l1 l2 : list A) (n : nat) (x y : A),
+    splitAt n l = Some (l1, y, l2) ->
+      elem x l <-> x = y \/ elem x l1 \/ elem x l2.
+(* begin hide *)
+Proof.
+  split.
+    intro. revert l1 l2 n y H. induction H0; cbn; intros.
+      destruct n as [| n'].
+        inv H. left. reflexivity.
+        destruct (splitAt n' l).
+          destruct p, p. inv H. right. do 2 left.
+          inv H.
+      destruct n as [| n'].
+        inv H. do 2 right. assumption.
+        destruct (splitAt n' t) eqn: Heq.
+          destruct p, p. inv H. decompose [or] (IHelem _ _ _ _ Heq).
+            left. assumption.
+            right. left. right. assumption.
+            do 2 right. assumption.
+          inv H.
+    revert l1 l2 n x y H. induction l as [| h t]; cbn; intros.
+      inv H.
+      destruct n as [| n'].
+        inv H. decompose [or] H0; clear H0.
+          subst. left.
+          inv H1.
+          right. assumption.
+        destruct (splitAt n' t) eqn: Heq.
+          destruct p, p. inv H. specialize (IHt _ _ _ x _ Heq).
+            decompose [or] H0; clear H0.
+              right. apply IHt. left. assumption.
+              inv H1.
+                left.
+                right. apply IHt. right. left. assumption.
+              right. apply IHt. do 2 right. assumption.
+              inv H.
+Qed.
+(* end hide *)
+
 Lemma elem_filter :
   forall (A : Type) (p : A -> bool) (l : list A) (x : A),
     elem x (filter p l) <-> p x = true /\ elem x l.
@@ -8132,6 +9178,76 @@ Proof.
         assumption.
         apply IHt; assumption.
       rewrite H1 in H0. contradiction H.
+Qed.
+(* end hide *)
+
+(* TODO: span i intersperse, groupBy *)
+
+Lemma span_spec' :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    match span p l with
+        | None => forall x : A, elem x l -> p x = false
+        | Some (b, x, e) =>
+            b = takeWhile (fun x : A => negb (p x)) l /\
+            Some x = find p l /\
+            x :: e = dropWhile (fun x : A => negb (p x)) l /\
+            Some (x, b ++ e) = removeFirst p l
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h) eqn: Hph; cbn.
+      repeat split; reflexivity.
+      destruct (span p t) eqn: Heq.
+        destruct p0, p0. decompose [and] IHt; clear IHt.
+          rewrite <- H3, ?H, H0. cbn. repeat split. assumption.
+        intros. inv H.
+          assumption.
+          apply IHt. assumption.
+Qed.
+(* end hide *)
+
+Lemma elem_span_None :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    span p l = None -> forall x : A, elem x l -> p x = false.
+(* begin hide *)
+Proof.
+  induction 2; cbn in H.
+    destruct (p x).
+      inv H.
+      reflexivity.
+    destruct (p h).
+      inv H.
+      apply IHelem. destruct (span p t).
+        destruct p0, p0. inv H.
+        reflexivity.
+Qed.
+(* end hide *)
+
+Lemma elem_span_Some :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) -> 
+      forall y : A, elem y l <-> elem y b \/ y = x \/ elem y e.
+(* begin hide *)
+Proof.
+  intros. apply span_spec in H.
+  rewrite H, elem_app, elem_cons'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma elem_span :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    match span p l with
+        | None => forall x : A, elem x l -> p x = false
+        | Some (b, x, e) =>
+            forall y : A, elem y l <-> elem y b \/ y = x \/ elem y e
+    end.
+(* begin hide *)
+Proof.
+  intros. destruct (span p l) eqn: Heq.
+    destruct p0, p0. eapply elem_span_Some. eassumption.
+    apply elem_span_None. assumption.
 Qed.
 (* end hide *)
 
@@ -8748,6 +9864,18 @@ Proof.
         assumption.
         apply IHt; assumption.
       contradiction.
+Qed.
+(* end hide *)
+
+(* TODO: jak elem *)
+Lemma In_span :
+  forall (A : Type) (p : A -> bool) (x y : A) (l b e : list A),
+    span p l = Some (b, x, e) ->
+      In y l <-> In y b \/ y = x \/ In y e.
+(* begin hide *)
+Proof.
+  intros. rewrite ?In_elem. assert (H' := elem_span _ p l).
+  rewrite H in H'. rewrite H'. reflexivity.
 Qed.
 (* end hide *)
 
@@ -9655,6 +10783,23 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Dup_span :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) ->
+      Dup l <-> Dup b \/ Dup e \/ elem x b \/ elem x e \/
+        exists y : A, elem y b /\ elem y e.
+(* begin hide *)
+Proof.
+  intros. apply span_spec in H. subst.
+  rewrite Dup_app, Dup_cons. firstorder.
+    inv H0; firstorder.
+    do 2 right. exists x. split; [assumption | left].
+    do 2 right. exists x0. split; try right; assumption.
+Qed.
+(* end hide *)
+
+(* TODO: NoDup, Rep *)
+
 Lemma Dup_zip :
   forall (A B : Type) (la : list A) (lb : list B),
     Dup (zip la lb) -> Dup la /\ Dup lb.
@@ -10382,6 +11527,51 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Exists_splitAt :
+  forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
+    splitAt n l = Some (l1, x, l2) ->
+      Exists P l <-> P x \/ Exists P l1 \/ Exists P l2.
+(* begin hide *)
+Proof.
+  split.
+    intro. revert l1 l2 n x H. induction H0; cbn; intros.
+      destruct n as [| n'].
+        inv H0. left. assumption.
+        destruct (splitAt n' t).
+          destruct p, p. inv H0. right. do 2 left. assumption.
+          inv H0.
+      destruct n as [| n'].
+        inv H. do 2 right. assumption.
+        destruct (splitAt n' t) eqn: Heq.
+          destruct p, p. inv H. decompose [or] (IHExists _ _ _ _ Heq).
+            left. assumption.
+            right. left. right. assumption.
+            do 2 right. assumption.
+          inv H.
+    revert l1 l2 n x H. induction l as [| h t]; cbn; intros.
+      inv H.
+      destruct n as [| n'].
+        inv H. decompose [or] H0; clear H0.
+          left. assumption.
+          inv H1.
+          right. assumption.
+        destruct (splitAt n' t) eqn: Heq.
+          destruct p, p. inv H. specialize (IHt _ _ _ x Heq).
+            decompose [or] H0; clear H0.
+              right. apply IHt. left. assumption.
+              inv H1.
+                left. assumption.
+                right. apply IHt. right. left. assumption.
+              right. apply IHt. do 2 right. assumption.
+              inv H.
+Restart.
+  intros. pose (splitAt_megaspec A l n). rewrite H in y.
+  decompose [and] y; clear y. rewrite H4; subst; clear H4.
+  rewrite Exists_app, Exists_cons. firstorder.
+Qed.
+(* end hide *)
+
+
 Lemma Exists_filter :
   forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A),
     Exists P (filter p l) -> Exists P l.
@@ -10496,6 +11686,20 @@ Proof.
       right. assumption.
       apply Exists_takeWhile in H0. right; right. assumption.
       apply Exists_dropWhile in H0. right; right. assumption.
+Qed.
+(* end hide *)
+
+Lemma Exists_span :
+  forall
+    (A : Type) (P : A -> Prop) (p : A -> bool) (x : A) (l b e : list A),
+      (forall x : A, P x <-> p x = true) ->
+      span p l = Some (b, x, e) ->
+        Exists P l <-> Exists P b \/ P x \/ Exists P e.
+(* begin hide *)
+Proof.
+  intros. apply span_spec in H0.
+  rewrite H0, Exists_app, Exists_cons.
+  reflexivity.
 Qed.
 (* end hide *)
 
@@ -10791,6 +11995,18 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Forall_splitAt :
+  forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
+    splitAt n l = Some (l1, x, l2) ->
+      Forall P l <-> P x /\ Forall P l1 /\ Forall P l2.
+(* begin hide *)
+Proof.
+  intros. pose (splitAt_megaspec A l n). rewrite H in y.
+  decompose [and] y; clear y. rewrite H4; subst; clear H4.
+  rewrite Forall_app, Forall_cons'. firstorder.
+Qed.
+(* end hide *)
+
 Lemma Forall_filter :
   forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A),
     Forall P l -> Forall P (filter p l).
@@ -10885,6 +12101,20 @@ Lemma Forall_takeWhile_dropWhile :
 Proof.
   intros. rewrite <- (takeWhile_dropWhile_spec _ p), Forall_app.
   split; assumption.
+Qed.
+(* end hide *)
+
+Lemma Forall_span :
+  forall
+    (A : Type) (P : A -> Prop) (p : A -> bool) (x : A) (l b e : list A),
+      (forall x : A, P x <-> p x = true) ->
+      span p l = Some (b, x, e) ->
+        Forall P l <-> Forall P b /\ P x /\ Forall P e.
+(* begin hide *)
+Proof.
+  intros. apply span_spec in H0.
+  rewrite H0, Forall_app, Forall_cons'.
+  reflexivity.
 Qed.
 (* end hide *)
 
@@ -11350,6 +12580,17 @@ Lemma AtLeast_take_drop :
 Proof.
   intros. apply AtLeast_app. rewrite app_take_drop. assumption.
 Qed.
+(* end hide *)
+
+Lemma AtLeast_splitAt :
+  forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
+    splitAt n l = Some (l1, x, l2) ->
+      forall m : nat,
+        AtLeast P m l -> exists m1 m2 : nat,
+          AtLeast P m1 l1 /\ AtLeast P m2 l2 /\ m = m1 + m2.
+(* begin hide *)
+Proof.
+Abort.
 (* end hide *)
 
 Lemma AtLeast_filter :
@@ -11897,6 +13138,21 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Exactly_splitAt :
+  forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
+    splitAt n l = Some (l1, x, l2) ->
+      forall m : nat,
+        Exactly P m l <-> exists m1 m2 : nat,
+          Exactly P m1 l1 /\ Exactly P m2 l2 /\
+          (P x /\ m = S (m1 + m2) \/ ~ P x /\ m = m1 + m2).
+(* begin hide *)
+Proof.
+  intros. pose (splitAt_megaspec A l n). rewrite H in y.
+  decompose [and] y; clear y. rewrite H4; subst; clear H4.
+  split.
+Abort.
+(* end hide *)
+
 Lemma Exactly_filter :
   forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A),
     (forall x : A, P x <-> p x = true) ->
@@ -11946,6 +13202,40 @@ Proof.
       rewrite <- minus_n_O. constructor; assumption.
 Qed.
 (* end hide *)
+
+Lemma Exactly_span :
+  forall
+    (A : Type) (P : A -> Prop) (p : A -> bool)
+    (n : nat)(x : A) (l b e : list A),
+      (forall x : A, P x <-> p x = true) ->
+      span p l = Some (b, x, e) ->
+        Exactly P n l <->
+        exists n1 n2 : nat,
+          Exactly P n1 b /\ Exactly P n2 e /\
+          if p x then S (n1 + n2) = n else n1 + n2 = n.
+(* begin hide *)
+Proof.
+  intros. apply span_spec in H0. subst. split; intro.
+    apply Exactly_app_conv in H0.
+      destruct H0 as (n1 & n2 & H1 & H2 & H3). inv H2.
+        destruct (p x) eqn: Hpx.
+          exists n1, n0. repeat split; try assumption. apply plus_n_Sm.
+          rewrite H in H6. congruence.
+        destruct (p x) eqn: Hpx.
+          rewrite H in H6. congruence.
+          exists n1, n2. repeat split; assumption.
+    destruct H0 as (n1 & n2 & IH1 & IH2 & IH3).
+      destruct (p x) eqn: Hpx; subst.
+        apply Exactly_app_comm. cbn. constructor.
+          rewrite H. assumption.
+          apply Exactly_app_comm, Exactly_app; assumption.
+        apply Exactly_app_comm. cbn. constructor.
+          intro. rewrite H in H0. congruence.
+          apply Exactly_app_comm, Exactly_app; assumption.
+Qed.
+(* end hide *)
+
+(* TODO: span i AtLeast, AtMost *)
 
 Lemma Exactly_intersperse :
   forall (A : Type) (P : A -> Prop) (x : A) (n : nat) (l : list A),
@@ -12399,6 +13689,28 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma incl_splitAt :
+  forall (A : Type) (l : list A) (n : nat),
+    match splitAt n l with
+        | None => True
+        | Some (l1, _, l2) => incl l1 l /\ incl l2 l
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    trivial.
+    destruct n as [| n'].
+      split.
+        apply incl_nil.
+        apply incl_cons'.
+      specialize (IHt n'). destruct (splitAt n' t).
+        destruct p, p. destruct IHt as (IH1 & IH2). split.
+          apply incl_cons, IH1.
+          apply incl_cons'', IH2.
+        assumption.
+Qed.
+(* end hide *)
+
 Lemma incl_filter :
   forall (A : Type) (p : A -> bool) (l : list A),
     incl (filter p l) l.
@@ -12475,6 +13787,21 @@ Proof.
   unfold incl; intros. apply elem_dropWhile in H. assumption.
 Qed.
 (* end hide *)
+
+Lemma incl_span :
+  forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
+    span p l = Some (b, x, e) ->
+      incl b l /\ elem x l /\ incl e l.
+(* begin hide *)
+Proof.
+  intros. apply span_spec in H. subst. repeat split.
+    apply incl_app_l, incl_refl.
+    rewrite elem_app. right. left.
+    apply incl_app_r. constructor. assumption.
+Qed.
+(* end hide *)
+
+(* TODO: span i sublist, palindromy *)
 
 Lemma incl_pmap :
   forall (A B : Type) (f : A -> option B) (l : list A),
@@ -12823,7 +14150,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma SetEquiv_intersperse :
+(* TODO *) Lemma SetEquiv_intersperse :
   forall (A : Type) (x : A) (l : list A),
     2 <= length l -> SetEquiv (intersperse x l) (x :: l).
 (* begin hide *)
@@ -12850,7 +14177,7 @@ Proof.
 Admitted.
 (* end hide *)
 
-Lemma SetEquiv_intersperse_conv :
+(* TODO *) Lemma SetEquiv_intersperse_conv :
   forall (A : Type) (x : A) (l : list A),
     SetEquiv (intersperse x l) (x :: l) -> 2 <= length l \/ elem x l.
 (* begin hide *)
@@ -12898,25 +14225,286 @@ Qed.
 (** ** Podlisty jako podtermy *)
 
 (* begin hide *)
-Inductive sublist {A : Type} : list A -> list A -> Prop :=
-    | sublist_direct :
-        forall (h : A) (t : list A), sublist t (h :: t)
-    | sublist_trans :
-        forall l1 l2 l3 : list A,
-          sublist l1 l2 -> sublist l2 l3 -> sublist l1 l3.
+Inductive Sublist {A : Type} : list A -> list A -> Prop :=
+    | Sublist_direct :
+        forall (h : A) (t : list A), Sublist t (h :: t)
+    | Sublist_cons :
+        forall (x : A) (l1 l2 : list A),
+          Sublist l1 l2 -> Sublist l1 (x :: l2).
 (* end hide *)
 
-Lemma sublist_nil_l :
-  forall (A : Type) (l : list A),
-    l <> nil -> sublist nil l.
+Lemma Sublist_length :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> length l1 < length l2.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intro.
-    contradiction H. reflexivity.
-    destruct t as [| h' t'].
-      constructor.
-      apply sublist_trans with (h' :: t').
-        apply IHt. inversion 1.
-        constructor.
+  induction 1; cbn.
+    apply le_n.
+    apply lt_S. assumption.
 Qed.
 (* end hide *)
+
+Lemma Sublist_cons_l :
+  forall (A : Type) (x : A) (l : list A), ~ Sublist (x :: l) l.
+(* begin hide *)
+Proof.
+  repeat intro. apply Sublist_length in H. cbn in H. omega.
+Qed.
+(* end hide *)
+
+Lemma Sublist_cons_l' :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    Sublist (x :: l1) l2 -> Sublist l1 l2.
+(* begin hide *)
+Proof.
+  intros until 1. revert l1 H.
+  induction l2 as [| h t]; cbn; intros.
+    inv H.
+    inv H.
+      do 2 constructor.
+      constructor. apply IHt. assumption.
+Qed.
+(* end hide *)
+
+Lemma Sublist_nil_cons :
+  forall (A : Type) (x : A) (l : list A), Sublist [] (x :: l).
+(* begin hide *)
+Proof.
+  intros A x l. revert x.
+  induction l as [| h t]; cbn; constructor; apply IHt.
+Qed.
+(* end hide *)
+
+Lemma Sublist_irrefl :
+  forall (A : Type) (l : list A), ~ Sublist l l.
+(* begin hide *)
+Proof.
+  repeat intro. apply Sublist_length in H. omega.
+Qed.
+(* end hide *)
+
+Lemma sublist_antisym :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> ~ Sublist l2 l1.
+(* begin hide *)
+Proof.
+  repeat intro.
+  apply Sublist_length in H.
+  apply Sublist_length in H0.
+  omega.
+Qed.
+(* end hide *)
+
+Lemma Sublist_trans :
+  forall (A : Type) (l1 l2 l3 : list A),
+    Sublist l1 l2 -> Sublist l2 l3 -> Sublist l1 l3.
+(* begin hide *)
+Proof.
+  intros until 1. revert l3.
+  induction H; intros.
+    apply Sublist_cons_l' in H. assumption.
+    apply IHSublist. apply Sublist_cons_l' in H0. assumption.
+Qed.
+(* end hide *)
+
+Lemma Sublist_snoc :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    Sublist l1 l2 -> Sublist (snoc x l1) (snoc x l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn; constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma Sublist_app_l :
+  forall (A : Type) (l1 l2 : list A),
+    l1 <> [] -> Sublist l2 (l1 ++ l2).
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    contradiction.
+    destruct t as [| h' t']; cbn.
+      constructor.
+      constructor. apply IHt. inversion 1.
+Qed.
+(* end hide *)
+
+Lemma Sublist_app_l' :
+  forall (A : Type) (l1 l2 l3 : list A),
+    Sublist l1 l2 -> Sublist l1 (l3 ++ l2).
+(* begin hide *)
+Proof.
+  intros until 1. revert l1 l2 H.
+  induction l3 as [| h t]; cbn; intros.
+    assumption.
+    constructor. apply IHt. assumption.
+Qed.
+(* end hide *)
+
+Lemma Sublist_app_r :
+  forall (A : Type) (l1 l2 l3 : list A),
+    Sublist l1 l2 -> Sublist (l1 ++ l3) (l2 ++ l3).
+(* begin hide *)
+Proof.
+  induction 1; intros; cbn; constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma Sublist_map :
+  forall (A B : Type) (f : A -> B) (l1 l2 : list A),
+    Sublist l1 l2 -> Sublist (map f l1) (map f l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn; constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma Sublist_join :
+  forall (A : Type) (l1 l2 : list (list A)),
+    ~ elem [] l2 -> Sublist l1 l2 -> Sublist (join l1) (join l2).
+(* begin hide *)
+Proof.
+  induction 2; cbn.
+    rewrite elem_cons' in H. destruct h.
+      firstorder.
+      apply Sublist_app_l. inversion 1.
+    apply Sublist_app_l'. apply IHSublist.
+      intro. apply H. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma Sublist_replicate :
+  forall (A : Type) (n m : nat) (x : A),
+    Sublist (replicate n x) (replicate m x) <-> n < m.
+(* begin hide *)
+Proof.
+  split.
+    revert n. induction m as [| m']; cbn; intros.
+      inv H.
+      destruct n as [| n']; cbn in *.
+        apply Nat.lt_0_succ.
+        apply lt_n_S. apply IHm'. inv H.
+          constructor.
+          apply Sublist_cons_l' in H2. assumption.
+(*    revert m. induction n as [| n']; cbn; intros.
+      destruct m as [| m'].
+        inv H.
+        apply Sublist_nil_cons.
+      destruct m as [| m'].
+        inv H.
+        cbn. constructor.*)
+    revert n. induction m as [| m']; cbn; intros.
+      inv H.
+      destruct n as [| n'].
+        cbn. apply Sublist_nil_cons.
+        constructor. destruct n' as [| m''].
+          destruct m' as [| m'']; cbn in *.
+            inv H. inv H1.
+            admit.
+          apply IHm'.
+Abort.
+(* end hide *)
+
+Lemma Sublist_replicate :
+  forall (A : Type) (n m : nat) (x y : A),
+    Sublist (replicate n x) (replicate m y) <-> n < m /\ (n <> 0 -> x = y).
+(* begin hide *)
+Proof.
+  split.
+    revert n x y. induction m as [| m']; cbn; intros.
+      inv H.
+      destruct n as [| n']; cbn in *.
+        split.
+          apply Nat.lt_0_succ.
+          intro. contradiction.
+        inv H.
+          destruct (IHm' n' x y).
+            rewrite <- H3. constructor.
+            split.
+              apply lt_n_S. assumption.
+              intro. destruct m'; inv H3. reflexivity.
+          destruct (IHm' n' x y).
+            apply Sublist_trans with (x :: replicate n' x).
+              constructor.
+              assumption.
+            split.
+              apply lt_n_S. assumption.
+              destruct m'; cbn in H2.
+                inv H2.
+                intro. destruct n' as [| n'']; cbn in *.
+                  inv H2.
+Abort.
+(* end hide *)
+
+(*
+Lemma Sublist_iterate :
+  forall (A : Type) (f : A -> A) (n m : nat) (x y : A),
+    Sublist (iterate f n x) (iterate f m y) -> False.
+(* begin hide *)
+Proof.
+Admitted.
+(* end hide *)
+
+Lemma Sublist_ :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> .
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma Sublist_ :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> .
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma Sublist_ :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> .
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma Sublist_ :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> .
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma Sublist_ :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> .
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma Sublist_ :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> .
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+
+Lemma Sublist_ :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> .
+(* begin hide *)
+Proof.
+
+Qed.
+(* end hide *)
+*)

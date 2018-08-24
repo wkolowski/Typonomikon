@@ -98,6 +98,34 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Prefix_rev_l :
+  forall (A : Type) (l : list A),
+    Prefix (rev l) l -> l = rev l.
+(* begin hide *)
+Proof.
+  intros. apply Prefix_spec in H. destruct H as (l3 & H).
+  rewrite H at 1. apply (f_equal length) in H.
+  rewrite length_app, length_rev, plus_comm in H.
+  destruct l3.
+    rewrite app_nil_r. reflexivity.
+    cbn in H. omega.
+Qed.
+(* end hide *)
+
+Lemma Prefix_rev_r :
+  forall (A : Type) (l : list A),
+    Prefix l (rev l) -> l = rev l.
+(* begin hide *)
+Proof.
+  intros. apply Prefix_spec in H. destruct H as (l3 & H).
+  rewrite H at 1. apply (f_equal length) in H.
+  rewrite length_app, length_rev, plus_comm in H.
+  destruct l3.
+    rewrite app_nil_r. reflexivity.
+    cbn in H. omega.
+Qed.
+(* end hide *)
+
 Lemma Prefix_map :
   forall (A B : Type) (f : A -> B) (l1 l2 : list A),
     Prefix l1 l2 -> Prefix (map f l1) (map f l2).
@@ -598,35 +626,31 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Prefix_AtLeast :
+  forall (A : Type) (l1 l2 : list A),
+    Prefix l1 l2 -> forall (P : A -> Prop) (n : nat),
+      AtLeast P n l1 -> AtLeast P n l2.
+(* begin hide *)
+Proof.
+  induction 1; cbn; intros.
+    inv H. constructor.
+    inv H0; constructor; try apply IHPrefix; assumption.
+Qed.
+(* end hide *)
+
+Lemma Prefix_AtMost :
+  forall (A : Type) (l1 l2 : list A),
+    Prefix l1 l2 -> forall (P : A -> Prop) (n : nat),
+      AtMost P n l2 -> AtMost P n l1.
+(* begin hide *)
+Proof.
+  induction 1; cbn; intros.
+    constructor.
+    inv H0; constructor; try apply IHPrefix; assumption.
+Qed.
+(* end hide *)
+
 Require Import Palindrome.
-
-Lemma Prefix_rev_l :
-  forall (A : Type) (l : list A),
-    Prefix (rev l) l -> l = rev l.
-(* begin hide *)
-Proof.
-  intros. apply Prefix_spec in H. destruct H as (l3 & H).
-  rewrite H at 1. apply (f_equal length) in H.
-  rewrite length_app, length_rev, plus_comm in H.
-  destruct l3.
-    rewrite app_nil_r. reflexivity.
-    cbn in H. omega.
-Qed.
-(* end hide *)
-
-Lemma Prefix_rev_r :
-  forall (A : Type) (l : list A),
-    Prefix l (rev l) -> l = rev l.
-(* begin hide *)
-Proof.
-  intros. apply Prefix_spec in H. destruct H as (l3 & H).
-  rewrite H at 1. apply (f_equal length) in H.
-  rewrite length_app, length_rev, plus_comm in H.
-  destruct l3.
-    rewrite app_nil_r. reflexivity.
-    cbn in H. omega.
-Qed.
-(* end hide *)
 
 Lemma Prefix_Palindrome :
   forall (A : Type) (l : list A),
@@ -649,6 +673,19 @@ Proof.
   exists bool, [true], [false; true]. split.
     constructor.
     intro. inv H.
+Qed.
+(* end hide *)
+
+Lemma incl_Prefix :
+  exists (A : Type) (l1 l2 : list A),
+    incl l1 l2 /\ ~ Prefix l1 l2.
+(* begin hide *)
+Proof.
+  exists bool, [true; true], [true]. split.
+    unfold incl. intros. inv H.
+      constructor.
+      assumption.
+    intro. inv H. inv H1.
 Qed.
 (* end hide *)
 
@@ -681,44 +718,20 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma incl_Prefix :
-  exists (A : Type) (l1 l2 : list A),
-    incl l1 l2 /\ ~ Prefix l1 l2.
-(* begin hide *)
-Proof.
-  exists bool, [true; true], [true]. split.
-    unfold incl. intros. inv H.
-      constructor.
-      assumption.
-    intro. inv H. inv H1.
-Qed.
-(* end hide *)
-
-Lemma Prefix_AtLeast :
-  forall (A : Type) (l1 l2 : list A),
-    Prefix l1 l2 -> forall (P : A -> Prop) (n : nat),
-      AtLeast P n l1 -> AtLeast P n l2.
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-    inv H. constructor.
-    inv H0; constructor; try apply IHPrefix; assumption.
-Qed.
-(* end hide *)
-
-Lemma Prefix_AtMost :
-  forall (A : Type) (l1 l2 : list A),
-    Prefix l1 l2 -> forall (P : A -> Prop) (n : nat),
-      AtMost P n l2 -> AtMost P n l1.
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-    constructor.
-    inv H0; constructor; try apply IHPrefix; assumption.
-Qed.
-(* end hide *)
-
 (* TODO: Exactly - raczej nic z tego *)
+
+Lemma Prefix_spec' :
+  forall (A : Type) (l1 l2 : list A),
+    Prefix l1 l2 <-> exists n : nat, l1 = take n l2.
+(* begin hide *)
+Proof.
+  split.
+    induction 1; cbn.
+      exists 0. rewrite take_0. reflexivity.
+      destruct IHPrefix as (n & IH). exists (S n). rewrite IH. reflexivity.
+    destruct 1 as (n & H); subst. apply Prefix_take_l.
+Qed.
+(* end hide *)
 
 (** ** Sufiksy *)
 
@@ -814,5 +827,26 @@ Proof.
         apply Prefix_refl.
         apply Prefix_app_r. assumption.
       intro. specialize (H _ _ H0). rewrite ?rev_inv in H. assumption.
+Qed.
+(* end hide *)
+
+Lemma Suffix_sublist :
+  forall (A : Type) (l1 l2 : list A),
+    Suffix l1 l2 <-> sublist l1 l2 \/ l1 = l2.
+(* begin hide *)
+Proof.
+  split.
+    induction 1.
+      right. reflexivity.
+      left. destruct IHSuffix; subst.
+        apply sublist_trans with l2.
+          assumption.
+          constructor.
+        constructor.
+    destruct 1; subst.
+      induction H.
+        constructor. apply Suffix_refl.
+        apply Suffix_trans with l2; assumption.
+      apply Suffix_refl.
 Qed.
 (* end hide *)

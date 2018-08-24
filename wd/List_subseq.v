@@ -2,40 +2,40 @@ Add Rec LoadPath "/home/zeimer/Code/Coq".
 
 Require Import CoqBookPL.book.X3.
 
-Inductive subseq {A : Type} : list A -> list A -> Prop :=
-    | subseq_nil :
-        forall l : list A, subseq [] l
-    | subseq_cons :
+Inductive Subseq {A : Type} : list A -> list A -> Prop :=
+    | Subseq_nil :
+        forall l : list A, Subseq [] l
+    | Subseq_cons :
         forall (x : A) (l1 l2 : list A),
-          subseq l1 l2 -> subseq (x :: l1) (x :: l2)
-    | subseq_skip :
+          Subseq l1 l2 -> Subseq (x :: l1) (x :: l2)
+    | Subseq_skip :
         forall (x : A) (l1 l2 : list A),
-          subseq l1 l2 -> subseq l1 (x :: l2).
+          Subseq l1 l2 -> Subseq l1 (x :: l2).
 
-Lemma subseq_refl :
-  forall (A : Type) (l : list A), subseq l l.
+Lemma Subseq_refl :
+  forall (A : Type) (l : list A), Subseq l l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; constructor; assumption.
 Qed.
 (* end hide *)
 
-Lemma subseq_trans : 
+Lemma Subseq_trans : 
   forall (A : Type) (l1 l2 l3 : list A),
-    subseq l1 l2 -> subseq l2 l3 -> subseq l1 l3.
+    Subseq l1 l2 -> Subseq l2 l3 -> Subseq l1 l3.
 (* begin hide *)
 Proof.
   intros A l1 l2 l3 H12 H23. revert l1 H12.
   induction H23; cbn; intros.
     inv H12. constructor.
-    inv H12; constructor; apply IHsubseq; assumption.
-    inv H12; constructor; apply IHsubseq; constructor; assumption.
+    inv H12; constructor; apply IHSubseq; assumption.
+    inv H12; constructor; apply IHSubseq; constructor; assumption.
 Qed.
 (* end hide *)
 
-Lemma subseq_cons_inv :
+Lemma Subseq_cons_inv :
   forall (A : Type) (x : A) (l1 l2 : list A),
-    subseq (x :: l1) (x :: l2) -> subseq l1 l2.
+    Subseq (x :: l1) (x :: l2) -> Subseq l1 l2.
 (* begin hide *)
 Proof.
   intros A x l1 l2. revert l1.
@@ -47,14 +47,14 @@ Proof.
       assumption.
       inv H2.
         constructor. apply IHt1. constructor. assumption.
-        constructor. apply IHt1. apply subseq_skip. assumption.
+        constructor. apply IHt1. apply Subseq_skip. assumption.
 Qed.
 (* end hide *)
 
-Lemma subseq_cons_l_app :
+Lemma Subseq_cons_l_app :
   forall (A : Type) (x : A) (l1 l2 : list A),
-    subseq (x :: l1) l2 ->
-      exists l21 l22 : list A, l2 = l21 ++ x :: l22 /\ subseq l1 l22.
+    Subseq (x :: l1) l2 ->
+      exists l21 l22 : list A, l2 = l21 ++ x :: l22 /\ Subseq l1 l22.
 (* begin hide *)
 Proof.
   intros A x l1 l2. revert l1.
@@ -67,34 +67,34 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_wasym :
+Lemma Subseq_wasym :
   forall (A : Type) (l1 l2 : list A),
-    subseq l1 l2 -> subseq l2 l1 -> l1 = l2.
+    Subseq l1 l2 -> Subseq l2 l1 -> l1 = l2.
 (* begin hide *)
 Proof.
 (*  induction 2.
     inv H. reflexivity.
-    f_equal. apply IHsubseq. apply subseq_cons_inv in H. assumption.
-    apply subseq_cons_l_app in H. destruct H as (l21 & l22 & H1 & H2).
+    f_equal. apply IHSubseq. apply Subseq_cons_inv in H. assumption.
+    apply Subseq_cons_l_app in H. destruct H as (l21 & l22 & H1 & H2).
       subst.
 *)
 (*  induction 1; intros.
     inv H. reflexivity.
-    apply subseq_cons_inv in H0. rewrite (IHsubseq H0). reflexivity.
+    apply Subseq_cons_inv in H0. rewrite (IHSubseq H0). reflexivity.
     inv H0.
-    apply subseq_cons_l_app in H0. destruct H0 as (l21 & l22 & H1 & H2).
+    apply Subseq_cons_l_app in H0. destruct H0 as (l21 & l22 & H1 & H2).
       subst.
 inv H0.
       inv H.
-        apply IHsubseq.
+        apply IHSubseq.
       f_equal. apply IH
 Qed.*)
 Abort.
 (* end hide *)
 
-Lemma subseq_isEmpty_l :
+Lemma Subseq_isEmpty_l :
   forall (A : Type) (l1 l2 : list A),
-    isEmpty l1 = true -> subseq l1 l2.
+    isEmpty l1 = true -> Subseq l1 l2.
 (* begin hide *)
 Proof.
   destruct l1; cbn; intros.
@@ -103,18 +103,18 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_nil_r :
+Lemma Subseq_nil_r :
   forall (A : Type) (l : list A),
-    subseq l [] -> l = [].
+    Subseq l [] -> l = [].
 (* begin hide *)
 Proof.
   inversion 1. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma subseq_length :
+Lemma Subseq_length :
   forall (A : Type) (l1 l2 : list A),
-    subseq l1 l2 -> length l1 <= length l2.
+    Subseq l1 l2 -> length l1 <= length l2.
 (* begin hide *)
 Proof.
   induction 1; cbn.
@@ -124,18 +124,18 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_snoc :
+Lemma Subseq_snoc :
   forall (A : Type) (x : A) (l1 l2 : list A),
-    subseq l1 l2 -> subseq l1 (snoc x l2).
+    Subseq l1 l2 -> Subseq l1 (snoc x l2).
 (* begin hide *)
 Proof.
   induction 1; cbn; constructor; assumption.
 Qed.
 (* end hide *)
 
-Lemma subseq_snoc' :
+Lemma Subseq_snoc' :
   forall (A : Type) (x : A) (l1 l2 : list A),
-    subseq l1 l2 -> subseq (snoc x l1) (snoc x l2).
+    Subseq l1 l2 -> Subseq (snoc x l1) (snoc x l2).
 (* begin hide *)
 Proof.
   induction 1; cbn.
@@ -145,9 +145,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_app_l :
+Lemma Subseq_app_l :
   forall (A : Type) (l1 l2 l3 : list A),
-    subseq l1 l2 -> subseq l1 (l3 ++ l2).
+    Subseq l1 l2 -> Subseq l1 (l3 ++ l2).
 (* begin hide *)
 Proof.
   induction l3 as [| h t]; cbn; intros.
@@ -156,18 +156,18 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_app_r :
+Lemma Subseq_app_r :
   forall (A : Type) (l1 l2 l3 : list A),
-    subseq l1 l2 -> subseq l1 (l2 ++ l3).
+    Subseq l1 l2 -> Subseq l1 (l2 ++ l3).
 (* begin hide *)
 Proof.
   induction 1; cbn; constructor; assumption.
 Qed.
 (* end hide *)
 
-Lemma subseq_app_l' :
+Lemma Subseq_app_l' :
   forall (A : Type) (l1 l2 l3 : list A),
-    subseq l1 l2 -> subseq (l3 ++ l1) (l3 ++ l2).
+    Subseq l1 l2 -> Subseq (l3 ++ l1) (l3 ++ l2).
 (* begin hide *)
 Proof.
   induction l3 as [| h t]; cbn; intros.
@@ -176,20 +176,20 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_app_r' :
+Lemma Subseq_app_r' :
   forall (A : Type) (l1 l2 l3 : list A),
-    subseq l1 l2 -> subseq (l1 ++ l3) (l2 ++ l3).
+    Subseq l1 l2 -> Subseq (l1 ++ l3) (l2 ++ l3).
 (* begin hide *)
 Proof.
   induction 1; cbn.
-    apply subseq_app_l, subseq_refl.
+    apply Subseq_app_l, Subseq_refl.
     1-2: constructor; assumption.
 Qed.
 (* end hide *)
 
-Lemma subseq_app_not_comm :
+Lemma Subseq_app_not_comm :
   exists (A : Type) (l1 l2 l3 : list A),
-    subseq l1 (l2 ++ l3) /\ ~ subseq l1 (l3 ++ l2).
+    Subseq l1 (l2 ++ l3) /\ ~ Subseq l1 (l3 ++ l2).
 (* begin hide *)
 Proof.
   exists bool, [true; false], [true], [false]. cbn. split.
@@ -201,57 +201,57 @@ Qed.
 (* end hide *)
 
 (* TODO
-Lemma subseq_rev_l :
+Lemma Subseq_rev_l :
   forall (A : Type) (l : list A),
-    subseq (rev l) l <-> Palindrome l.
+    Subseq (rev l) l <-> Palindrome l.
 (* begin hide *)
 Proof.
   split.
     induction l as [| h t]; cbn; intros.
       constructor.
     Focus 2. induction 1; cbn.
-      1-2: apply subseq_refl.
-      rewrite rev_app. cbn. constructor. apply subseq_app_r'. assumption.
+      1-2: apply Subseq_refl.
+      rewrite rev_app. cbn. constructor. apply Subseq_app_r'. assumption.
 Abort.
 (* end hide *)
 
-Lemma subseq_rev_r :
+Lemma Subseq_rev_r :
   forall (A : Type) (l : list A),
-    subseq l (rev l) <-> Palindrome l.
+    Subseq l (rev l) <-> Palindrome l.
 (* begin hide *)
 Proof.
   split.
     Focus 2. induction 1; cbn.
-      1-2: apply subseq_refl.
-      rewrite rev_app. cbn. constructor. apply subseq_app_r'. assumption.
+      1-2: apply Subseq_refl.
+      rewrite rev_app. cbn. constructor. apply Subseq_app_r'. assumption.
 Abort.
 (* end hide *)
 *)
 
-Lemma subseq_map : 
+Lemma Subseq_map : 
   forall (A B : Type) (f : A -> B) (l1 l2 : list A),
-    subseq l1 l2 -> subseq (map f l1) (map f l2).
+    Subseq l1 l2 -> Subseq (map f l1) (map f l2).
 (* begin hide *)
 Proof.
   induction 1; cbn; constructor; assumption.
 Qed.
 (* end hide *)
 
-Lemma subseq_join :
+Lemma Subseq_join :
   forall (A : Type) (l1 l2 : list (list A)),
-    subseq l1 l2 -> subseq (join l1) (join l2).
+    Subseq l1 l2 -> Subseq (join l1) (join l2).
 (* begin hide *)
 Proof.
   induction 1; cbn.
     constructor.
-    apply subseq_app_l'. assumption.
-    apply subseq_app_l. assumption.
+    apply Subseq_app_l'. assumption.
+    apply Subseq_app_l. assumption.
 Qed.
 (* end hide *)
 
-Lemma subseq_replicate :
+Lemma Subseq_replicate :
   forall (A : Type) (n m : nat) (x : A),
-    subseq (replicate n x) (replicate m x) <-> n <= m.
+    Subseq (replicate n x) (replicate m x) <-> n <= m.
 (* begin hide *)
 Proof.
   split.
@@ -259,16 +259,16 @@ Proof.
       apply le_0_n.
       destruct m as [| m']; cbn in H.
         inv H.
-        apply le_n_S, IHn'. apply subseq_cons_inv with x. assumption.
+        apply le_n_S, IHn'. apply Subseq_cons_inv with x. assumption.
     induction 1.
-      apply subseq_refl.
+      apply Subseq_refl.
       cbn. constructor. assumption.
 Qed.
 (* end hide *)
 
-Lemma subseq_iterate :
+Lemma Subseq_iterate :
   forall (A : Type) (f : A -> A) (n m : nat) (x : A),
-    subseq (iterate f n x) (iterate f m x) <-> n <= m.
+    Subseq (iterate f n x) (iterate f m x) <-> n <= m.
 (* begin hide *)
 Proof.
   split.
@@ -277,7 +277,7 @@ Proof.
       destruct m as [| m']; cbn in H.
         inv H.
         apply le_n_S, (IHn' f _ (f x)).
-          apply subseq_cons_inv with x. assumption.
+          apply Subseq_cons_inv with x. assumption.
     revert f m x. induction n as [| n']; cbn; intros.
       constructor.
       destruct m as [| m']; cbn.
@@ -286,9 +286,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_nth :
+Lemma Subseq_nth :
   forall (A : Type) (l1 l2 : list A) (n : nat) (x : A),
-    subseq l1 l2 -> nth n l1 = Some x ->
+    Subseq l1 l2 -> nth n l1 = Some x ->
       exists m : nat, nth m l2 = Some x /\ n <= m.
 (* begin hide *)
 Proof.
@@ -297,20 +297,20 @@ Proof.
     inv H.
     destruct n as [| n']; cbn in H0.
       inv H0. exists 0. cbn. split; [reflexivity | apply le_0_n].
-      destruct (IHsubseq _ _ H0) as (m & IH1 & IH2).
+      destruct (IHSubseq _ _ H0) as (m & IH1 & IH2).
         exists (S m). cbn. split.
           assumption.
           apply le_n_S. assumption.
-    destruct (IHsubseq _ _ H0) as (m & IH1 & IH2).
+    destruct (IHSubseq _ _ H0) as (m & IH1 & IH2).
       exists (S m). cbn. split.
         assumption.
         apply le_S. assumption.
 Qed.
 (* end hide *)
 
-Lemma subseq_insert :
+Lemma Subseq_insert :
   forall (A : Type) (l1 l2 : list A) (n : nat) (x : A),
-    subseq l1 l2 -> subseq l1 (insert l2 n x).
+    Subseq l1 l2 -> Subseq l1 (insert l2 n x).
 (* begin hide *)
 Proof.
   intros A l1 l2 n x H. revert n x.
@@ -318,14 +318,14 @@ Proof.
     constructor.
     destruct n as [| n'].
       do 2 constructor. assumption.
-      constructor. apply IHsubseq.
+      constructor. apply IHSubseq.
     destruct n as [| n']; repeat constructor; trivial.
 Qed.
 (* end hide *)
 
-Lemma subseq_remove' :
+Lemma Subseq_remove' :
   forall (A : Type) (l1 l2 : list A) (n : nat),
-    subseq l1 l2 -> subseq (remove' n l1) l2.
+    Subseq l1 l2 -> Subseq (remove' n l1) l2.
 (* begin hide *)
 Proof.
   intros A l1 l2 n H. revert n.
@@ -333,46 +333,46 @@ Proof.
     constructor.
     destruct n as [| n']; cbn.
       constructor. assumption.
-      rewrite remove'_S_cons. constructor. apply IHsubseq.
-    constructor. apply IHsubseq.
+      rewrite remove'_S_cons. constructor. apply IHSubseq.
+    constructor. apply IHSubseq.
 Qed.
 (* end hide *)
 
-Lemma subseq_take :
+Lemma Subseq_take :
   forall (A : Type) (l : list A) (n : nat),
-    subseq (take n l) l.
+    Subseq (take n l) l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    apply subseq_refl.
+    apply Subseq_refl.
     destruct n as [| n']; constructor. apply IHt.
 Qed.
 (* end hide *)
 
-Lemma subseq_drop :
+Lemma Subseq_drop :
   forall (A : Type) (l : list A) (n : nat),
-    subseq (drop n l) l.
+    Subseq (drop n l) l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    apply subseq_refl.
+    apply Subseq_refl.
     destruct n as [| n']; constructor.
-      apply subseq_refl.
+      apply Subseq_refl.
       apply IHt.
 Qed.
 (* end hide *)
 
-Lemma subseq_zip :
+Lemma Subseq_zip :
   forall (A B : Type) (la1 la2 : list A) (lb1 lb2 : list B),
-    subseq la1 la2 -> subseq lb1 lb2 ->
-      subseq (zip la1 lb1) (zip la2 lb2).
+    Subseq la1 la2 -> Subseq lb1 lb2 ->
+      Subseq (zip la1 lb1) (zip la2 lb2).
 (* begin hide *)
 Proof.
   intros until 1. revert lb1 lb2.
   induction H; cbn; intros.
     constructor.
     induction H0; constructor.
-      apply IHsubseq. assumption.
+      apply IHSubseq. assumption.
       destruct l0.
 Abort.
 (* end hide *)
@@ -381,9 +381,9 @@ Inductive bool_le : bool -> bool -> Prop :=
     | ble_refl : forall b : bool, bool_le b b
     | ble_false_true : bool_le false true.
 
-Lemma subseq_all :
+Lemma Subseq_all :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    subseq l1 l2 -> bool_le (all p l2) (all p l1).
+    Subseq l1 l2 -> bool_le (all p l2) (all p l1).
 (* begin hide *)
 Proof.
   induction 1; cbn; intros.
@@ -395,9 +395,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_any :
+Lemma Subseq_any :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    subseq l1 l2 -> bool_le (any p l1) (any p l2).
+    Subseq l1 l2 -> bool_le (any p l1) (any p l2).
 (* begin hide *)
 Proof.
   induction 1; cbn; intros.
@@ -409,41 +409,41 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_all' :
+Lemma Subseq_all' :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    subseq l1 l2 -> all p l2 = true -> all p l1 = true.
+    Subseq l1 l2 -> all p l2 = true -> all p l1 = true.
 (* begin hide *)
 Proof.
   induction 1; cbn; intros.
     reflexivity.
     destruct (p x); cbn in *.
-      apply IHsubseq. assumption.
+      apply IHSubseq. assumption.
       congruence.
     destruct (p x); cbn in *.
-      apply IHsubseq. assumption.
+      apply IHSubseq. assumption.
       congruence.
 Qed.
 (* end hide *)
 
-Lemma subseq_any' :
+Lemma Subseq_any' :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    subseq l1 l2 -> any p l2 = false -> any p l1 = false.
+    Subseq l1 l2 -> any p l2 = false -> any p l1 = false.
 (* begin hide *)
 Proof.
   induction 1; cbn; intros.
     reflexivity.
     destruct (p x); cbn in *.
       congruence.
-      apply IHsubseq. assumption.
+      apply IHSubseq. assumption.
     destruct (p x); cbn in *.
       congruence.
-      apply IHsubseq. assumption.
+      apply IHSubseq. assumption.
 Qed.
 (* end hide *)
 
-Lemma subseq_count :
+Lemma Subseq_count :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    subseq l1 l2 -> count p l1 <= count p l2.
+    Subseq l1 l2 -> count p l1 <= count p l2.
 (* begin hide *)
 Proof.
   induction 1; cbn.
@@ -453,9 +453,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_filter :
+Lemma Subseq_filter :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    subseq l1 l2 -> subseq (filter p l1) (filter p l2).
+    Subseq l1 l2 -> Subseq (filter p l1) (filter p l2).
 (* begin hide *)
 Proof.
   induction 1; cbn.
@@ -465,9 +465,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_filter' :
+Lemma Subseq_filter' :
   forall (A : Type) (p : A -> bool) (l : list A),
-    subseq (filter p l) l.
+    Subseq (filter p l) l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
@@ -476,9 +476,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_takeWhile :
+Lemma Subseq_takeWhile :
   forall (A : Type) (p : A -> bool) (l : list A),
-    subseq (takeWhile p l) l.
+    Subseq (takeWhile p l) l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
@@ -487,9 +487,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_takeWhile' :
+Lemma Subseq_takeWhile' :
   exists (A : Type) (p : A -> bool) (l1 l2 : list A),
-    subseq l1 l2 /\ ~ subseq (takeWhile p l1) (takeWhile p l2).
+    Subseq l1 l2 /\ ~ Subseq (takeWhile p l1) (takeWhile p l2).
 (* begin hide *)
 Proof.
   exists bool, id, [true], [false; true]. cbn. split.
@@ -498,22 +498,22 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_dropWhile :
+Lemma Subseq_dropWhile :
   forall (A : Type) (p : A -> bool) (l : list A),
-    subseq (dropWhile p l) l.
+    Subseq (dropWhile p l) l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     constructor.
     destruct (p h); constructor.
       assumption.
-      apply subseq_refl.
+      apply Subseq_refl.
 Qed.
 (* end hide *)
 
-Lemma subseq_dropWhile' :
+Lemma Subseq_dropWhile' :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    subseq l1 l2 -> subseq (dropWhile p l1) (dropWhile p l2).
+    Subseq l1 l2 -> Subseq (dropWhile p l1) (dropWhile p l2).
 (* begin hide *)
 Proof.
   induction 1; cbn.
@@ -521,15 +521,15 @@ Proof.
     destruct (p x); try constructor; assumption.
     destruct (p x); try constructor.
       assumption.
-      apply subseq_trans with (dropWhile p l2).
+      apply Subseq_trans with (dropWhile p l2).
         assumption.
-        apply subseq_dropWhile.
+        apply Subseq_dropWhile.
 Qed.
 (* end hide *)
 
-Lemma subseq_pmap :
+Lemma Subseq_pmap :
   forall (A B : Type) (f : A -> option B) (l1 l2 : list A),
-    subseq l1 l2 -> subseq (pmap f l1) (pmap f l2).
+    Subseq l1 l2 -> Subseq (pmap f l1) (pmap f l2).
 (* begin hide *)
 Proof.
   induction 1; cbn.
@@ -539,9 +539,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_map_pmap :
+Lemma Subseq_map_pmap :
   forall (A B : Type) (f : A -> option B) (l1 l2 : list A),
-    subseq l1 l2 -> subseq (map Some (pmap f l1)) (map f l2).
+    Subseq l1 l2 -> Subseq (map Some (pmap f l1)) (map f l2).
 (* begin hide *)
 Proof.
   induction 1; cbn.
@@ -551,9 +551,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma subseq_findIndex :
+Lemma Subseq_findIndex :
   exists (A : Type) (p : A -> bool) (l1 l2 : list A) (n m : nat),
-    subseq l1 l2 /\ findIndex p l1 = Some n /\
+    Subseq l1 l2 /\ findIndex p l1 = Some n /\
     findIndex p l2 = Some m /\ m < n.
 (* begin hide *)
 Proof.
@@ -575,9 +575,9 @@ removeFirst i removeLast
 findIndices
 *)
 
-(*Lemma subseq_ 
+(*Lemma Subseq_ 
   forall (A : Type) (l1 l2 : list A),
-    subseq l1 l2 -> .
+    Subseq l1 l2 -> .
 (* begin hide *)
 Proof.
   induction 1; cbn; constructor; assumption.
