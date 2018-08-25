@@ -575,6 +575,15 @@ removeFirst i removeLast
 findIndices
 *)
 
+Lemma Subseq_ 
+  forall (A : Type) (l1 l2 : list A),
+    Subseq l1 l2 -> .
+(* begin hide *)
+Proof.
+  induction 1; cbn; constructor; assumption.
+Qed.
+(* end hide *)
+
 (*Lemma Subseq_ 
   forall (A : Type) (l1 l2 : list A),
     Subseq l1 l2 -> .

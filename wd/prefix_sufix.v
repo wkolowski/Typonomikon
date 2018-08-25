@@ -811,25 +811,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Wzajemne zależności *)
-
-Lemma Prefix_Suffix :
-  forall (A : Type) (l1 l2 : list A),
-    Prefix l1 l2 <-> Suffix (rev l1) (rev l2).
-(* begin hide *)
-Proof.
-  split.
-    induction 1; cbn.
-      apply Suffix_nil_l.
-      rewrite <- ?snoc_app_singl. apply Suffix_snoc. assumption.
-    assert (forall l1 l2 : list A, Suffix l1 l2 -> Prefix (rev l1) (rev l2)).
-      induction 1; cbn.
-        apply Prefix_refl.
-        apply Prefix_app_r. assumption.
-      intro. specialize (H _ _ H0). rewrite ?rev_inv in H. assumption.
-Qed.
-(* end hide *)
-
 Lemma Suffix_sublist :
   forall (A : Type) (l1 l2 : list A),
     Suffix l1 l2 <-> sublist l1 l2 \/ l1 = l2.
@@ -848,5 +829,22 @@ Proof.
         constructor. apply Suffix_refl.
         apply Suffix_trans with l2; assumption.
       apply Suffix_refl.
+Qed.
+(* end hide *)
+
+Lemma Prefix_Suffix :
+  forall (A : Type) (l1 l2 : list A),
+    Prefix l1 l2 <-> Suffix (rev l1) (rev l2).
+(* begin hide *)
+Proof.
+  split.
+    induction 1; cbn.
+      apply Suffix_nil_l.
+      rewrite <- ?snoc_app_singl. apply Suffix_snoc. assumption.
+    assert (forall l1 l2 : list A, Suffix l1 l2 -> Prefix (rev l1) (rev l2)).
+      induction 1; cbn.
+        apply Prefix_refl.
+        apply Prefix_app_r. assumption.
+      intro. specialize (H _ _ H0). rewrite ?rev_inv in H. assumption.
 Qed.
 (* end hide *)
