@@ -1204,6 +1204,17 @@ match l with
 end.
 (* end hide *)
 
+Lemma init_None :
+  forall (A : Type) (l : list A),
+    init l = None -> l = [].
+(* begin hide *)
+Proof.
+  destruct l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (init t); inv H.
+Qed.
+(* end hide *)
+
 Lemma init_snoc :
   forall (A : Type) (x : A) (l : list A),
     init (snoc x l) = Some l.
@@ -1326,6 +1337,17 @@ match l with
             | Some (last, init) => Some (last, h :: init)
         end
 end.
+(* end hide *)
+
+Lemma unsnoc_None :
+  forall (A : Type) (l : list A),
+    unsnoc l = None -> l = [].
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (unsnoc t); try destruct p; inv H.
+Qed.
 (* end hide *)
 
 Lemma unsnoc_spec :
@@ -8437,6 +8459,20 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma intersperse_app_cons :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    l1 <> [] -> l2 <> [] ->
+      intersperse x (l1 ++ l2) = intersperse x l1 ++ x :: intersperse x l2.
+(* begin hide *)
+Proof.
+  intros. rewrite intersperse_app. destruct l1.
+    contradiction.
+    destruct l2.
+      contradiction.
+      reflexivity.
+Qed.
+(* end hide *)
+
 Lemma intersperse_rev :
   forall (A : Type) (x : A) (l : list A),
     intersperse x (rev l) = rev (intersperse x l).
@@ -11835,6 +11871,23 @@ Inductive Forall {A : Type} (P : A -> Prop) : list A -> Prop :=
         forall (h : A) (t : list A), P h -> Forall P t -> Forall P (h :: t).
 (* end hide *)
 
+Lemma Forall_spec :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    Forall P l <-> forall x : A, elem x l -> P x.
+(* begin hide *)
+Proof.
+  split.
+    induction 1; intros.
+      inv H.
+      inv H1.
+        assumption.
+        apply IHForall. assumption.
+    induction l as [| h t]; constructor.
+      apply H. left.
+      apply IHt. intros. apply H. right. assumption.
+Qed.
+(* end hide *)
+
 Lemma Forall_cons' :
   forall (A : Type) (P : A -> Prop) (h : A) (t : list A),
     Forall P (h :: t) <-> P h /\ Forall P t.
@@ -13441,432 +13494,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Podlisty jako podtermy *)
-
-(* begin hide *)
-Inductive Sublist {A : Type} : list A -> list A -> Prop :=
-    | Sublist_direct :
-        forall (h : A) (t : list A), Sublist t (h :: t)
-    | Sublist_cons :
-        forall (x : A) (l1 l2 : list A),
-          Sublist l1 l2 -> Sublist l1 (x :: l2).
-(* end hide *)
-
-Lemma Sublist_length :
-  forall (A : Type) (l1 l2 : list A),
-    Sublist l1 l2 -> length l1 < length l2.
+Lemma AtMost_S :
+  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+    AtMost P n l -> AtMost P (S n) l.
 (* begin hide *)
 Proof.
-  induction 1; cbn.
-    apply le_n.
-    apply lt_S. assumption.
-Qed.
-(* end hide *)
-
-Lemma Sublist_cons_l :
-  forall (A : Type) (x : A) (l : list A), ~ Sublist (x :: l) l.
-(* begin hide *)
-Proof.
-  repeat intro. apply Sublist_length in H. cbn in H. omega.
-Qed.
-(* end hide *)
-
-Lemma Sublist_cons_l' :
-  forall (A : Type) (x : A) (l1 l2 : list A),
-    Sublist (x :: l1) l2 -> Sublist l1 l2.
-(* begin hide *)
-Proof.
-  intros until 1. revert l1 H.
-  induction l2 as [| h t]; cbn; intros.
-    inv H.
-    inv H.
-      do 2 constructor.
-      constructor. apply IHt. assumption.
-Qed.
-(* end hide *)
-
-Lemma Sublist_nil_cons :
-  forall (A : Type) (x : A) (l : list A), Sublist [] (x :: l).
-(* begin hide *)
-Proof.
-  intros A x l. revert x.
-  induction l as [| h t]; cbn; constructor; apply IHt.
-Qed.
-(* end hide *)
-
-Lemma Sublist_irrefl :
-  forall (A : Type) (l : list A), ~ Sublist l l.
-(* begin hide *)
-Proof.
-  repeat intro. apply Sublist_length in H. omega.
-Qed.
-(* end hide *)
-
-Lemma sublist_antisym :
-  forall (A : Type) (l1 l2 : list A),
-    Sublist l1 l2 -> ~ Sublist l2 l1.
-(* begin hide *)
-Proof.
-  repeat intro.
-  apply Sublist_length in H.
-  apply Sublist_length in H0.
-  omega.
-Qed.
-(* end hide *)
-
-Lemma Sublist_trans :
-  forall (A : Type) (l1 l2 l3 : list A),
-    Sublist l1 l2 -> Sublist l2 l3 -> Sublist l1 l3.
-(* begin hide *)
-Proof.
-  intros until 1. revert l3.
-  induction H; intros.
-    apply Sublist_cons_l' in H. assumption.
-    apply IHSublist. apply Sublist_cons_l' in H0. assumption.
-Qed.
-(* end hide *)
-
-Lemma Sublist_snoc :
-  forall (A : Type) (x : A) (l1 l2 : list A),
-    Sublist l1 l2 -> Sublist (snoc x l1) (snoc x l2).
-(* begin hide *)
-Proof.
-  induction 1; cbn; constructor; assumption.
-Qed.
-(* end hide *)
-
-Lemma Sublist_snoc_inv :
-  forall (A : Type) (x y : A) (l1 l2 : list A),
-    Sublist (snoc x l1) (snoc y l2) -> Sublist l1 l2 /\ x = y.
-(* begin hide *)
-Proof.
-  intros.
-  remember (snoc x l1) as l1'.
-  remember (snoc y l2) as l2'.
-  revert l1 l2 Heql1' Heql2'.
-  induction H; cbn; intros; subst.
-    destruct l2 as [| h2 t2]; inv Heql2'.
-      apply (f_equal isEmpty) in H1. rewrite isEmpty_snoc in H1. inv H1.
-      apply snoc_inv in H1. destruct H1; subst. split; constructor.
-    destruct l3 as [| h3 t3]; cbn in *.
-      inv Heql2'. inv H.
-      inv Heql2'. destruct (IHSublist _ _ eq_refl eq_refl); subst.
-        split; constructor. assumption.
-Qed.
-(* end hide *)
-
-Lemma Sublist_app_l :
-  forall (A : Type) (l1 l2 : list A),
-    l1 <> [] -> Sublist l2 (l1 ++ l2).
-(* begin hide *)
-Proof.
-  induction l1 as [| h t]; cbn; intros.
-    contradiction.
-    destruct t as [| h' t']; cbn.
-      constructor.
-      constructor. apply IHt. inversion 1.
-Qed.
-(* end hide *)
-
-Lemma Sublist_app_l' :
-  forall (A : Type) (l1 l2 l3 : list A),
-    Sublist l1 l2 -> Sublist l1 (l3 ++ l2).
-(* begin hide *)
-Proof.
-  intros until 1. revert l1 l2 H.
-  induction l3 as [| h t]; cbn; intros.
-    assumption.
-    constructor. apply IHt. assumption.
-Qed.
-(* end hide *)
-
-Lemma Sublist_app_r :
-  forall (A : Type) (l1 l2 l3 : list A),
-    Sublist l1 l2 -> Sublist (l1 ++ l3) (l2 ++ l3).
-(* begin hide *)
-Proof.
-  induction 1; intros; cbn; constructor; assumption.
-Qed.
-(* end hide *)
-
-Lemma Sublist_map :
-  forall (A B : Type) (f : A -> B) (l1 l2 : list A),
-    Sublist l1 l2 -> Sublist (map f l1) (map f l2).
-(* begin hide *)
-Proof.
-  induction 1; cbn; constructor; assumption.
-Qed.
-(* end hide *)
-
-Lemma Sublist_join :
-  forall (A : Type) (l1 l2 : list (list A)),
-    ~ elem [] l2 -> Sublist l1 l2 -> Sublist (join l1) (join l2).
-(* begin hide *)
-Proof.
-  induction 2; cbn.
-    rewrite elem_cons' in H. destruct h.
-      firstorder.
-      apply Sublist_app_l. inversion 1.
-    apply Sublist_app_l'. apply IHSublist.
-      intro. apply H. right. assumption.
-Qed.
-(* end hide *)
-
-Lemma Sublist_replicate :
-  forall (A : Type) (n m : nat) (x : A),
-    Sublist (replicate n x) (replicate m x) <-> n < m.
-(* begin hide *)
-Proof.
-  split.
-    revert n. induction m as [| m']; cbn; intros.
-      inv H.
-      destruct n as [| n']; cbn in *.
-        apply Nat.lt_0_succ.
-        apply lt_n_S. apply IHm'. inv H.
-          constructor.
-          apply Sublist_cons_l' in H2. assumption.
-    intro. assert (exists k : nat, m = n + S k).
-      revert n H. induction m as [| m']; cbn; intros.
-        inv H.
-        destruct n as [| n'].
-          exists m'. reflexivity.
-          destruct (IHm' _ (lt_S_n _ _ H)) as (k & IH). subst.
-            exists k. rewrite <- ?plus_n_Sm. cbn. reflexivity.
-      destruct H0 as (k & H'). subst.
-        rewrite <- Nat.add_succ_comm, replicate_plus_comm, replicate_plus.
-          apply Sublist_app_l'. cbn. constructor.
-Qed.
-(* end hide *)
-
-Lemma Sublist_replicate' :
-  forall (A : Type) (n m : nat) (x y : A),
-    Sublist (replicate n x) (replicate m y) <->
-    n < m /\ (n <> 0 -> x = y).
-(* begin hide *)
-Proof.
-  split.
-    revert m x y. induction n as [| n'], m as [| m']; intros.
-      inv H.
-      split.
-        apply Nat.lt_0_succ.
-        intro. contradiction.
-      inv H.
-      rewrite <- ?snoc_replicate in H. apply Sublist_snoc_inv in H.
-        destruct H. destruct (IHn' _ _ _ H); subst. split.
-          apply lt_n_S. assumption.
-          reflexivity.
-    destruct 1. destruct n as [| n'].
-      destruct m as [| m'].
-        inv H.
-        cbn. apply Sublist_nil_cons.
-      specialize (H0 ltac:(inversion 1)). subst. rewrite Sublist_replicate.
-        assumption.
-Qed.
-(* end hide *)
-
-Lemma Sublist_iterate :
-  forall (A : Type) (f : A -> A) (n m : nat) (x : A),
-    Sublist (iterate f n x) (iterate f m x) -> False.
-(* begin hide *)
-Proof.
-Admitted.
-(* end hide *)
-
-Lemma Sublist_iterate' :
-  forall (A : Type) (f : A -> A) (n m : nat) (x y : A),
-    Sublist (iterate f n x) (iterate f m y) -> False.
-(* begin hide *)
-Proof.
-Admitted.
-(* end hide *)
-
-Lemma Sublist_tail :
-  forall (A : Type) (l1 l2 : list A),
-    Sublist l1 l2 ->
-    forall t1 t2 : list A, tail l1 = Some t1 -> tail l2 = Some t2 ->
-      Sublist t1 t2.
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-    inv H0. destruct t2; inv H. constructor.
-    inv H1. destruct l1; inv H0. inv H.
-      do 2 constructor.
-      cbn in *. constructor. apply IHSublist; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma Sublist_last :
-  forall (A : Type) (l1 l2 : list A),
-    Sublist l1 l2 -> l1 = [] \/ last l1 = last l2.
-(* begin hide *)
-Proof.
-  induction 1; cbn.
-    destruct t; cbn; [left | right]; reflexivity.
-    destruct IHSublist; [left | right].
-      assumption.
-      rewrite H0. destruct l2; cbn.
-        inv H.
-        reflexivity.
-Qed.
-(* end hide *)
-
-(* TODO: insert, remove, take *)
-
-Lemma Sublist_drop :
-  forall (A : Type) (l1 l2 : list A) (n : nat),
-    Sublist l1 l2 -> n < length l1 -> Sublist (drop n l1) (drop n l2).
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-    destruct n as [| n']; cbn.
-      rewrite drop_0. constructor.
-      destruct t; cbn.
-        inv H.
-Abort.
-(* end hide *)
-
-Lemma Sublist_zip :
-  exists (A B : Type) (la1 la2 : list A) (lb1 lb2 : list A),
-    Sublist la1 la2 /\ Sublist lb1 lb2 /\
-      ~ Sublist (zip la1 lb1) (zip la2 lb2).
-(* begin hide *)
-Proof.
-  exists bool, bool, [true], [false; false; true], [true], [false; true].
-  cbn. firstorder.
-    constructor. constructor.
-    constructor.
-    intro. inv H. inv H2. inv H1.
-Qed.
-(* end hide *)
-
-(* TODO: zipWith, unzip, unzipWith *)
-
-Definition bool_le (b1 b2 : bool) : Prop :=
-match b1, b2 with
-    | false, _ => True
-    | true, false => False
-    | true, true => True
-end.
-
-Lemma Sublist_any_false :
-  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    Sublist l1 l2 -> any p l2 = false -> any p l1 = false.
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-    destruct (any p t); cbn.
-      rewrite Bool.orb_true_r in H. inv H.
-      reflexivity.
-    destruct (p x); cbn in H0.
-      inv H0.
-      apply IHSublist, H0.
-Qed.
-(* end hide *)
-
-Lemma Sublist_any_true :
-  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    Sublist l1 l2 -> any p l1 = true -> any p l2 = true.
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-    rewrite H, Bool.orb_true_r. reflexivity.
-    rewrite (IHSublist H0), Bool.orb_true_r. reflexivity.
-Qed.
-(* end hide *)
-
-(* TODO: Sublist_all *)
-
-Lemma Sublist_findLast :
-  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    Sublist l1 l2 -> forall x : A,
-      findLast p l1 = Some x -> findLast p l2 = Some x.
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-    rewrite H. reflexivity.
-    rewrite (IHSublist _ H0). reflexivity.
-Qed.
-(* end hide *)
-
-Lemma Sublist_removeLast :
-  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    Sublist l1 l2 ->
-      match removeLast p l1, removeLast p l2 with
-          | None, None => True
-          | None, Some (x, l2') => l1 = l2' \/ Sublist l1 l2'
-          | x, None => False
-          | Some (x, l1'), Some (y, l2') => x = y /\ Sublist l1' l2'
-      end.
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-    destruct (removeLast p t) eqn: Heq.
-      destruct p0. split; constructor.
-      destruct (p h); cbn.
-        left. reflexivity.
-        trivial.
-    destruct (removeLast p l1) eqn: Heq1.
-      destruct p0. destruct (removeLast p l2) eqn: Heq2.
-        destruct p0, IHSublist; subst. split.
-          reflexivity.
-          constructor. assumption.
-        inv IHSublist.
-      destruct (removeLast p l2) eqn: Heq2.
-        destruct p0, IHSublist; subst.
-          right. constructor.
-          right. constructor. assumption.
-        destruct (p x).
-          right. assumption.
-          trivial.
-Qed.
-(* end hide *)
-
-Lemma Sublist_findIndex :
-  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    Sublist l1 l2 -> forall n : nat,
-      findIndex p l1 = Some n -> exists m : nat,
-        findIndex p l2 = Some m.
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-    destruct (p h).
-      exists 0. reflexivity.
-      rewrite H. exists (S n). reflexivity.
-Abort.
-(* end hide *)
-
-Lemma Sublist_ :
-  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    Sublist l1 l2 -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-Qed.
-(* end hide *)
-
-Lemma Sublist_ :
-  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    Sublist l1 l2 -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-Qed.
-(* end hide *)
-
-Lemma Sublist_ :
-  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    Sublist l1 l2 -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-Qed.
-(* end hide *)
-
-Lemma Sublist_ :
-  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
-    Sublist l1 l2 -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
+  induction 1; constructor; assumption.
 Qed.
 (* end hide *)

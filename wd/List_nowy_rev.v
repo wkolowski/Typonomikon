@@ -1,6 +1,7 @@
 Add Rec LoadPath "/home/zeimer/Code/Coq".
 
 Require Import CoqBookPL.book.X3.
+Require Import CoqBookPL.wd.Rels.
 
 (* begin hide *)
 Fixpoint rev {A : Type} (l : list A) : list A :=
@@ -900,11 +901,11 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma incl_rev :
-  forall (A : Type) (l : list A), incl (rev l) l.
+Lemma Incl_rev :
+  forall (A : Type) (l : list A), Incl (rev l) l.
 (* begin hide *)
 Proof.
-  unfold incl; intros. rewrite <- elem_rev. assumption.
+  unfold Incl; intros. rewrite <- elem_rev. assumption.
 Qed.
 (* end hide *)
 
