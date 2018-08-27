@@ -2396,7 +2396,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma take_snoc_lt :
+(* TODO: zabij *) Lemma take_snoc_lt :
   forall (A : Type) (x : A) (l : list A) (n : nat),
     n < length l -> take n (snoc x l) = take n l.
 (* begin hide *)
@@ -2406,6 +2406,19 @@ Proof.
     destruct n as [| n']; cbn.
       reflexivity.
       rewrite ?(IHt _ (lt_S_n _ _ H)). reflexivity.
+Qed.
+(* end hide *)
+
+Lemma take_snoc_le :
+  forall (A : Type) (x : A) (l : list A) (n : nat),
+    n <= length l -> take n (snoc x l) = take n l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H. reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      f_equal. apply IHt, le_S_n. assumption.
 Qed.
 (* end hide *)
 
@@ -2744,16 +2757,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma drop_snoc_lt :
+Lemma drop_snoc_le :
   forall (A : Type) (x : A) (l : list A) (n : nat),
-    n < length l -> drop n (snoc x l) = snoc x (drop n l).
+    n <= length l -> drop n (snoc x l) = snoc x (drop n l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    destruct n; inversion H.
+    inv H. reflexivity.
     destruct n as [| n']; cbn.
       reflexivity.
-      rewrite ?(IHt _ (lt_S_n _ _ H)). reflexivity.
+      apply IHt, le_S_n. assumption.
 Qed.
 (* end hide *)
 

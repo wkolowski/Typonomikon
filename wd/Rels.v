@@ -4477,6 +4477,564 @@ findIndex
 findIndices
 *)
 
+(** ** Listy jako cykle *)
+
+Inductive Cycle {A : Type} : list A -> list A -> Prop :=
+    | Cycle_refl : forall l : list A, Cycle l l
+    | Cycle_cyc :
+        forall (x : A) (l1 l2 : list A),
+          Cycle l1 (snoc x l2) -> Cycle l1 (x :: l2).
+
+Lemma lt_plus_S :
+  forall n m : nat,
+    n < m -> exists k : nat, m = S (n + k).
+(* begin hide *)
+Proof.
+  intros n m. revert n.
+  induction m as [| m']; cbn; intros.
+    inv H.
+    destruct n as [| n']; cbn.
+      exists m'. reflexivity.
+      destruct (IHm' _ (lt_S_n _ _ H)) as (k & IH). subst.
+        exists k. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Cycle_spec :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 <-> exists n : nat,
+      l1 = drop n l2 ++ take n l2.
+(* begin hide *)
+Proof.
+  split.
+    induction 1.
+      exists 0. rewrite drop_0, take_0, app_nil_r. reflexivity.
+      destruct IHCycle as (n & IH). subst.
+        destruct (Nat.leb_spec0 n (length l2)).
+          rewrite drop_snoc_le, take_snoc_le; try assumption.
+            exists (S n). cbn. rewrite app_snoc_l. reflexivity.
+          assert (exists k : nat, n = S (length l2 + k)).
+            apply lt_plus_S. omega.
+            destruct H0 as (k & Hk). subst. rewrite drop_length'.
+              rewrite take_length'.
+                exists 1. cbn. rewrite drop_0, take_0. apply snoc_app_singl.
+                rewrite length_snoc. omega.
+              rewrite length_snoc. omega.
+    destruct 1 as (n & H); subst.
+      revert l2. induction n as [| n']; intros.
+        rewrite drop_0, take_0, app_nil_r. constructor.
+        destruct l2 as [| h t]; cbn.
+          constructor.
+          destruct (Nat.leb_spec0 (length t) n').
+            rewrite drop_length', take_length'.
+              constructor.
+              1-2: assumption.
+            specialize (IHn' (snoc h t)). rewrite drop_snoc_le in IHn'.
+              rewrite take_snoc_le in IHn'.
+                constructor. rewrite app_snoc_l in IHn'. assumption.
+                omega.
+              omega.
+Qed.
+(* end hide *)
+
+Lemma Cycle_isEmpty :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> isEmpty l1 = isEmpty l2.
+(* begin hide *)
+Proof.
+  induction 1.
+    reflexivity.
+    cbn in *. rewrite isEmpty_snoc in *. assumption.
+Qed.
+(* end hide *)
+
+Lemma Cycle_nil_l :
+  forall (A : Type) (l : list A),
+    Cycle [] l -> l = [].
+(* begin hide *)
+Proof.
+  intros. apply Cycle_isEmpty in H. destruct l; inv H. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Cycle_nil_r :
+  forall (A : Type) (l : list A),
+    Cycle l [] -> l = [].
+(* begin hide *)
+Proof.
+  intros. apply Cycle_isEmpty in H. destruct l; inv H. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Cycle_length :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> length l1 = length l2.
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    reflexivity.
+    rewrite length_snoc in IHCycle. assumption.
+Qed.
+(* end hide *)
+
+Lemma Cycle_cons :
+  exists (A : Type) (x : A) (l1 l2 : list A),
+    Cycle l1 l2 /\ ~ Cycle (x :: l1) (x :: l2).
+(* begin hide *)
+Proof.
+  exists nat, 0, [1; 2; 3], [3; 1; 2]. split.
+    constructor. cbn. constructor.
+    intro. apply Cycle_spec in H. destruct H as (n & H).
+      destruct n as [| [| [| [| n']]]]; cbn in H; inv H.
+Qed.
+(* end hide *)
+
+Lemma cycle_cons_inv :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    Cycle  (x :: l1) (x :: l2) -> Cycle l1 l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; cbn; intros.
+    apply Cycle_length in H. destruct l2; inv H. constructor.
+Abort.
+(* end hide *)
+
+Lemma Cycle_snoc :
+  exists (A : Type) (x : A) (l1 l2 : list A),
+    Cycle l1 l2 /\ ~ Cycle (snoc x l1) (snoc x l2).
+(* begin hide *)
+Proof.
+  exists nat, 0, [1; 2; 3], [3; 1; 2]. split.
+    constructor. cbn. constructor.
+    intro. apply Cycle_spec in H. destruct H as (n & H).
+      destruct n as [| [| [| [| n']]]]; cbn in H; inv H.
+Qed.
+(* end hide *)
+
+Lemma Cycle_sym :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> Cycle l2 l1.
+(* begin hide *)
+Proof.
+  intros. rewrite Cycle_spec in *. destruct H as (n & H). subst.
+  destruct (Nat.leb_spec0 (length l2) n);
+  eexists; rewrite drop_app, take_app, drop_drop, take_take, length_drop.
+    instantiate (1 := 0). rewrite ?plus_0_r. cbn.
+      rewrite Nat.min_0_r, ?take_0, drop_0, ?app_nil_r.
+        rewrite drop_length', take_length'.
+          cbn. reflexivity.
+          1-2: assumption.
+    instantiate (1 := length l2 - n). rewrite <- le_plus_minus, drop_length.
+      cbn. replace (length l2 - n - (length l2 - n)) with 0.
+      rewrite drop_0, take_drop, <- le_plus_minus, take_length.
+      rewrite Nat.min_0_r, take_0, app_nil_r, app_take_drop. reflexivity.
+      1-3: omega.
+Qed.
+(* end hide *)
+
+Lemma Cycle_snoc_cons :
+  forall (A : Type) (x : A) (l : list A),
+    Cycle  (snoc x l) (x :: l).
+(* begin hide *)
+Proof.
+  repeat constructor.
+Qed.
+(* end hide *)
+
+Lemma Cycle_cons_snoc :
+  forall (A : Type) (x : A) (l : list A),
+    Cycle  (x :: l) (snoc x l).
+(* begin hide *)
+Proof.
+  intros. apply Cycle_sym. apply Cycle_snoc_cons.
+Qed.
+(* end hide *)
+
+Lemma Cycle_cons_snoc' :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    Cycle l1 (x :: l2) -> Cycle l1 (snoc x l2).
+(* begin hide *)
+Proof.
+  intros. inv H.
+    apply Cycle_cons_snoc.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma Cycle_trans :
+  forall (A : Type) (l1 l2 l3 : list A),
+    Cycle l1 l2 -> Cycle l2 l3 -> Cycle l1 l3.
+(* begin hide *)
+Proof.
+  intros until 1. revert l3.
+  induction H; intros.
+    assumption.
+    apply IHCycle. apply Cycle_sym. apply Cycle_cons_snoc'.
+      apply Cycle_sym. assumption.
+Qed.
+(* end hide *)
+
+Lemma Cycle_app :
+  forall (A : Type) (l1 l2 l3 : list A),
+    Cycle l1 (l2 ++ l3) -> Cycle l1 (l3 ++ l2).
+(* begin hide *)
+Proof.
+  intros A l1 l2 l3. revert l1 l2.
+  induction l3 as [| h t]; cbn; intros.
+    rewrite app_nil_r in *. assumption.
+    specialize (IHt l1 (snoc h l2)). constructor. rewrite snoc_app.
+      apply IHt. rewrite snoc_app_singl, <- app_assoc. cbn. assumption.
+Qed.
+(* end hide *)
+
+Lemma Cycle_rev :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> Cycle (rev l1) (rev l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    constructor.
+    rewrite <- snoc_app_singl. apply Cycle_cons_snoc'.
+      rewrite rev_snoc in IHCycle. assumption.
+Qed.
+(* end hide *)
+
+Lemma Cycle_map :
+  forall (A B : Type) (f : A -> B) (l1 l2 : list A),
+    Cycle l1 l2 -> Cycle (map f l1) (map f l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn; constructor.
+    rewrite map_snoc in IHCycle. assumption.
+Qed.
+(* end hide *)
+
+Lemma Cycle_join :
+  forall (A : Type) (l1 l2 : list (list A)),
+    Cycle l1 l2 -> Cycle (join l1) (join l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    constructor.
+    rewrite join_snoc in IHCycle. apply Cycle_app. assumption. 
+Qed.
+(* end hide *)
+
+Lemma Cycle_replicate :
+  forall (A : Type) (n m : nat) (x : A),
+    Cycle (replicate n x) (replicate m x) <-> n = m.
+(* begin hide *)
+Proof.
+  split; intros.
+    apply Cycle_length in H. rewrite ?length_replicate in H. assumption.
+    subst. constructor.
+Qed.
+(* end hide *)
+
+Lemma Cycle_replicate' :
+  forall (A : Type) (n m : nat) (x y : A),
+    Cycle (replicate n x) (replicate m y) <->
+    n = m /\ (n <> 0 -> m <> 0 -> x = y).
+(* begin hide *)
+Proof.
+  split; intros.
+    assert (n = m); subst.
+      apply Cycle_length in H. rewrite ?length_replicate in H. assumption.
+      split.
+        reflexivity.
+        intros. destruct m as [| m']; cbn in *.
+          contradiction.
+          apply Cycle_spec in H. destruct H as (n & H).
+Abort.
+(* end hide *)
+
+Lemma Cycle_iterate :
+  forall (A : Type) (f : A -> A) (n m : nat) (x : A),
+    Cycle (iterate f n x) (iterate f m x) <-> n = m.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_iterate :
+  forall (A : Type) (f : A -> A) (n m : nat) (x y : A),
+    Cycle (iterate f n x) (iterate f m y) <-> n = m.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+(* TODO: head tail etc *)
+
+Lemma Cycle_nth :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> forall (n : nat) (x : A),
+      nth n l1 = Some x -> exists m : nat, nth m l2 = Some x.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_insert :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> forall (n : nat) (x : A),
+      exists m : nat, Cycle (insert l1 n x) (insert l2 m x) .
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_zip :
+  exists (A B : Type) (la1 la2 : list A) (lb1 lb2 : list B),
+    Cycle la1 la2 /\ Cycle lb1 lb2 /\ ~ Cycle (zip la1 lb1) (zip la2 lb2).
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+(* TODO: zipW, unzip, unzipW *)
+
+Lemma Cycle_any :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    Cycle l1 l2 -> any p l1 = any p l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_all :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    Cycle l1 l2 -> all p l1 = all p l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_find :
+  exists (A : Type) (p : A -> bool) (l1 l2 : list A) (x : A),
+    Cycle l1 l2 /\ find p l1 = Some x /\ find p l2 <> Some x.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+(* TODO: findLast, removeFirst, removeLast *)
+
+Lemma Cycle_findIndex :
+  exists (A : Type) (p : A -> bool) (l1 l2 : list A) (n : nat),
+    Cycle l1 l2 /\ findIndex p l1 = Some n /\ findIndex p l2 <> Some n.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_count :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    Cycle l1 l2 -> count p l1 = count p l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_filter :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    Cycle l1 l2 -> Cycle (filter p l1) (filter p l2).
+(* begin hide *)
+Proof.
+  induction 1.
+    constructor.
+    cbn. rewrite filter_snoc in IHCycle. destruct (p x).
+      constructor. assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+(* TODO: findIndices *)
+
+Lemma Cycle_takeWhile :
+  exists (A : Type) (p : A -> bool) (l1 l2 : list A),
+    Cycle l1 l2 /\ ~ Cycle (takeWhile p l1) (takeWhile p l2).
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_dropWhile :
+  exists (A : Type) (p : A -> bool) (l1 l2 : list A),
+    Cycle l1 l2 /\ ~ Cycle (dropWhile p l1) (dropWhile p l2).
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+(* TODO: move *) Lemma pmap_snoc :
+  forall (A B : Type) (f : A -> option B) (a : A) (l : list A),
+    pmap f (snoc a l) =
+    match f a with
+        | None => pmap f l
+        | Some b => snoc b (pmap f l)
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (f h), (f a); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Cycle_pmap :
+  forall (A B : Type) (f : A -> option B) (l1 l2 : list A),
+    Cycle l1 l2 -> Cycle (pmap f l1) (pmap f l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    constructor.
+    rewrite pmap_snoc in IHCycle. destruct (f x).
+      constructor. assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma Cycle_intersperse :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    Cycle l1 l2 -> Cycle (intersperse x l1) (intersperse x l2).
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_Permutation :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> Permutation l1 l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_elem :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> forall x : A, elem x l1 -> elem x l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_In :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> forall x : A, In x l1 -> In x l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_NoDup :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> NoDup l1 -> NoDup l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_Dup :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> Dup l1 -> Dup l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_Rep :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> forall (x : A) (n : nat),
+      Rep x n l1 -> Rep x n l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_Exists :
+  forall (A : Type) (P : A -> Prop) (l1 l2 : list A),
+    Cycle l1 l2 -> Exists P l1 -> Exists P l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_Forall :
+  forall (A : Type) (P : A -> Prop) (l1 l2 : list A),
+    Cycle l1 l2 -> Forall P l1 -> Forall P l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_AtLeast :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> forall (P : A -> Prop) (n : nat),
+      AtLeast P n l1 -> AtLeast P n l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_Exactly :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> forall (P : A -> Prop) (n : nat),
+      Exactly P n l1 -> Exactly P n l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_AtMost :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> forall (P : A -> Prop) (n : nat),
+      AtMost P n l1 -> AtMost P n l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_Sublist :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> True.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_Prefix :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> True.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_Subseq :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> True.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_Incl :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> Incl l1 l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma Cycle_SetEquiv :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> SetEquiv l1 l2.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
 (** * Niestandardowe reguły indukcyjne *)
 
 (** Wyjaśnienia nadejdą już wkrótce. *)

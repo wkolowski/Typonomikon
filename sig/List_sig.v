@@ -142,14 +142,15 @@ Parameter AtLeast : forall A : Type, (A -> Prop) -> nat -> list A -> Prop.
 Parameter Exactly : forall A : Type, (A -> Prop) -> nat -> list A -> Prop.
 Parameter AtMost  : forall A : Type, (A -> Prop) -> nat -> list A -> Prop.
 
-(** Podlisty jako podtermy *)
+(** Listy jako termy *)
 Parameter Sublist : forall A : Type, list A -> list A -> Prop.
 
 (** Prefiksy i sufiksy *)
 Parameter Prefix : forall A : Type, list A -> list A -> Prop.
 Parameter Suffix : forall A : Type, list A -> list A -> Prop.
 
-(** Listy jako ciągi, zbiory i multizbiory *)
+(** Listy jako cykle, ciągi, zbiory i multizbiory *)
+Parameter Cycle: forall A : Type, list A -> list A -> Prop.
 Parameter Subseq : forall A : Type, list A -> list A -> Prop.
 
 Parameter Incl : forall A : Type, list A -> list A -> Prop.
