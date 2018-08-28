@@ -149,8 +149,7 @@ Parameter Sublist : forall A : Type, list A -> list A -> Prop.
 Parameter Prefix : forall A : Type, list A -> list A -> Prop.
 Parameter Suffix : forall A : Type, list A -> list A -> Prop.
 
-(** Listy jako cykle, ciągi, zbiory i multizbiory *)
-Parameter Cycle: forall A : Type, list A -> list A -> Prop.
+(** Listy jako ciągi, zbiory, multizbiory i cykle *)
 Parameter Subseq : forall A : Type, list A -> list A -> Prop.
 
 Parameter Incl : forall A : Type, list A -> list A -> Prop.
@@ -158,6 +157,8 @@ Parameter SetEquiv : forall A : Type, list A -> list A -> Prop.
 
 Parameter Permutation : forall A : Type, list A -> list A -> Prop.
 Parameter perm : forall (A : Type) (p : A -> bool), list A -> list A -> Prop.
+
+Parameter Cycle: forall A : Type, list A -> list A -> Prop.
 
 (** Palindromy *)
 Parameter Palindrome : forall A : Type, list A -> Prop.

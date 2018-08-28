@@ -286,16 +286,79 @@ Qed.
 
 (* TODO: insert, remove, take *)
 
+Lemma Sublist_spec :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> exists n : nat, l1 = drop (S n) l2.
+(* begin hide *)
+Proof.
+  induction 1.
+    exists 0. cbn. rewrite drop_0. reflexivity.
+    destruct IHSublist as (n & IH). rewrite IH.
+      exists (S n). cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Sublist_drop_r :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> forall n : nat, Sublist (drop n l1) l2.
+(* begin hide *)
+Proof.
+  induction 1; intros.
+    revert n h. induction t as [| h' t']; cbn; intros.
+      constructor.
+      destruct n; cbn.
+        constructor.
+        constructor. apply IHt'.
+    constructor. apply IHSublist.
+Qed.
+(* end hide *)
+
 Lemma Sublist_drop :
-  forall (A : Type) (l1 l2 : list A) (n : nat),
-    Sublist l1 l2 -> n < length l1 -> Sublist (drop n l1) (drop n l2).
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> forall n : nat,
+      n < length l2 -> Sublist (drop n l1) (drop n l2).
 (* begin hide *)
 Proof.
   induction 1; cbn; intros.
     destruct n as [| n']; cbn.
       rewrite drop_0. constructor.
-      destruct t; cbn.
-        inv H.
+      revert n' H. induction t as [| h' t']; cbn; intros.
+        inv H. inv H1.
+        destruct n'.
+          rewrite drop_0. constructor.
+          apply IHt'. apply lt_S_n. assumption.
+    destruct n as [| n'].
+      rewrite drop_0. constructor. assumption.
+Restart.
+  intros A l1 l2. revert l1.
+  induction l2 as [| h2 t2]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      rewrite drop_0. assumption.
+      destruct l1 as [| h1 t1]; cbn.
+        revert n' H0. clear IHt2. induction t2 as [| h2' t2']; cbn; intros.
+          inv H0. inv H2.
+          destruct n' as [| n'].
+            apply Sublist_nil_cons.
+            apply IHt2'.
+              apply Sublist_nil_cons.
+              apply lt_S_n. assumption.
+        apply IHt2. inv H. Focus 2.
+Restart.
+  intros. apply Sublist_spec in H. destruct H as (m & H).
+  subst. rewrite drop_drop. rewrite plus_comm, <- plus_n_Sm.
+  revert n m H0.
+  induction l2 as [| h t]; cbn; intros.
+    inv H0.
+Restart.
+  intros * H n. revert l1 l2 H.
+  induction n as [| n']; intros.
+    rewrite ?drop_0. assumption.
+    destruct l2 as [| h2 t2]; cbn.
+      inv H.
+      destruct l1 as [| h1 t1]; cbn.
+        cbn in H0. admit.
+        apply IHn'.
 Abort.
 (* end hide *)
 
@@ -399,7 +462,11 @@ Proof.
     destruct (p h).
       exists 0. reflexivity.
       rewrite H. exists (S n). reflexivity.
-Abort.
+    destruct (p x).
+      exists 0. reflexivity.
+      destruct (IHSublist _ H0) as (m & IH). rewrite IH.
+        exists (S m). reflexivity.
+Qed.
 (* end hide *)
 
 Lemma Sublist_filter :
@@ -2287,16 +2354,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Incl_app_l :
-  forall (A : Type) (l l1 l2 : list A),
-    Incl l l1 -> Incl l (l1 ++ l2).
-(* begin hide *)
-Proof.
-  unfold Incl; intros. apply elem_app_l, H, H0.
-Qed.
-(* end hide *)
-
-Lemma Incl_app_r :
+Lemma Incl_app_rl :
   forall (A : Type) (l l1 l2 : list A),
     Incl l l2 -> Incl l (l1 ++ l2).
 (* begin hide *)
@@ -2305,21 +2363,26 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Incl_app_l_conv :
-  forall (A : Type) (l1 l2 : list A),
-    Incl (l1 ++ l2) l1 -> Incl l2 l1.
+Lemma Incl_app_rr :
+  forall (A : Type) (l l1 l2 : list A),
+    Incl l l1 -> Incl l (l1 ++ l2).
 (* begin hide *)
 Proof.
-  unfold Incl; intros. apply H, elem_app_r, H0.
+  unfold Incl; intros. apply elem_app_l, H, H0.
 Qed.
 (* end hide *)
 
-Lemma Incl_app_r_conv :
-  forall (A : Type) (l1 l2 : list A),
-    Incl (l1 ++ l2) l2 -> Incl l1 l2.
+Lemma Incl_app_l :
+  forall (A : Type) (l1 l2 l3 : list A),
+    Incl (l1 ++ l2) l3 <-> Incl l1 l3 /\ Incl l2 l3.
 (* begin hide *)
 Proof.
-  unfold Incl; intros. apply H, elem_app_l, H0.
+  unfold Incl; repeat split; intros.
+    apply H. rewrite elem_app. left. assumption.
+    apply H. rewrite elem_app. right. assumption.
+    rewrite elem_app in H0. destruct H, H0.
+      apply H. assumption.
+      apply H1. assumption.
 Qed.
 (* end hide *)
 
@@ -2552,9 +2615,9 @@ Lemma Incl_span :
 (* begin hide *)
 Proof.
   intros. apply span_spec in H. subst. repeat split.
-    apply Incl_app_l, Incl_refl.
+    apply Incl_app_rr, Incl_refl.
     rewrite elem_app. right. left.
-    apply Incl_app_r. constructor. assumption.
+    apply Incl_app_rl. constructor. assumption.
 Qed.
 (* end hide *)
 
@@ -2970,17 +3033,26 @@ Qed.
 (* TODO *) Lemma SetEquiv_nth :
   forall (A : Type) (l1 l2 : list A),
     SetEquiv l1 l2 <->
-    forall n : nat, exists m : nat, nth n l1 = nth m l2.
+    (forall n : nat, exists m : nat, nth n l1 = nth m l2) /\
+    (forall n : nat, exists m : nat, nth m l1 = nth n l2).
 (* begin hide *)
 Proof.
-  split; revert l2.
-    induction l1 as [| h1 t1]; cbn; intros.
-      apply SetEquiv_nil_l in H. subst. exists 42. cbn. reflexivity.
-      destruct l2 as [| h2 t2].
-        apply SetEquiv_nil_r in H. inv H.
-        destruct n as [| n']; cbn.
-          exists 0.
-Abort.
+  split; intros.
+    rewrite SetEquiv_Incl in H. destruct H.
+      rewrite Incl_nth in H. rewrite Incl_nth in H0.
+      split; intros.
+        destruct (nth n l1) eqn: Heq1.
+          destruct (H _ _ Heq1) as (m & H'). exists m. symmetry. assumption.
+          exists (length l2). rewrite nth_length_ge; reflexivity.
+        destruct (nth n l2) eqn: Heq1.
+          destruct (H0 _ _ Heq1) as (m & H'). exists m. assumption.
+          exists (length l1). rewrite nth_length_ge; reflexivity.
+    destruct H. rewrite SetEquiv_Incl. split.
+      rewrite Incl_nth. intros. destruct (H n1) as (n2 & Hn2).
+        exists n2. rewrite <- Hn2. assumption.
+      rewrite Incl_nth. intros. destruct (H0 n1) as (n2 & Hn2).
+        exists n2. rewrite Hn2. assumption.
+Qed.
 (* end hide *)
 
 (*Lemma SetEquiv_remove :
@@ -3002,26 +3074,38 @@ Qed.
 (* end hide *)
 *)
 
-(* TODO *) Lemma SetEquiv_take :
+Lemma SetEquiv_take :
   forall (A : Type) (l : list A) (n : nat),
     SetEquiv (take n l) l <-> Incl (drop n l) (take n l).
 (* begin hide *)
 Proof.
-  split; revert n.
-    induction l as [| h t]; cbn; intros.
-      apply Incl_refl.
-      destruct n as [| n']; cbn in *.
-        apply SetEquiv_nil_l in H. inv H.
-        apply Incl_cons''. apply IHt.
-Abort.
+  split; intros.
+    rewrite SetEquiv_Incl in H. destruct H. apply Incl_trans with l.
+      apply Incl_drop.
+      apply H0.
+    rewrite SetEquiv_Incl. split.
+      apply Incl_take.
+      rewrite <- (app_take_drop _ l n) at 1. rewrite Incl_app_l. split.
+        apply Incl_refl.
+        assumption.
+Qed.
 (* end hide *)
 
-(* TODO *) Lemma SetEquiv_drop :
+Lemma SetEquiv_drop :
   forall (A : Type) (n : nat) (l : list A),
     SetEquiv (drop n l) l <-> Incl (take n l) (drop n l).
 (* begin hide *)
 Proof.
-Abort.
+  split; intros.
+    rewrite SetEquiv_Incl in H. destruct H. apply Incl_trans with l.
+      apply Incl_take.
+      apply H0.
+    rewrite SetEquiv_Incl. split.
+      apply Incl_drop.
+      rewrite <- (app_take_drop _ l n) at 1. rewrite Incl_app_l. split.
+        assumption.
+        apply Incl_refl.
+Qed.
 (* end hide *)
 
 Lemma SetEquiv_filter :
@@ -4091,6 +4175,31 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Permutation_replicate'' :
+  forall (A : Type) (n m : nat) (x y : A),
+    Permutation (replicate n x) (replicate m y) <->
+    n = m /\ (n <> 0 -> m <> 0 -> x = y).
+(* begin hide *)
+Proof.
+  split.
+    revert m x y. induction n as [| n']; cbn; intros.
+      apply Permutation_nil_l in H. destruct m; inv H. split.
+        reflexivity.
+        contradiction.
+      destruct m as [| m']; cbn in H.
+        apply Permutation_nil_r in H. inv H.
+        assert (x = y).
+          assert (elem x (y :: replicate m' y)).
+            rewrite <- Permutation_elem. 2: eassumption. left.
+            rewrite elem_cons', elem_replicate in H0. firstorder.
+          subst. apply Permutation_cons_inv in H.
+            destruct (IHn' _ _ _ H). subst. split; reflexivity.
+    destruct 1. subst. rewrite Permutation_replicate'. destruct m as [| m'].
+      left. reflexivity.
+      right. apply H0; inversion 1.
+Qed.
+(* end hide *)
+
 Lemma NoDup_Permutation:
   forall (A : Type) (l1 l2 : list A),
     NoDup l1 -> NoDup l2 ->
@@ -4589,14 +4698,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma cycle_cons_inv :
-  forall (A : Type) (x : A) (l1 l2 : list A),
-    Cycle  (x :: l1) (x :: l2) -> Cycle l1 l2.
+Lemma Cycle_cons_inv :
+  exists (A : Type) (x : A) (l1 l2 : list A),
+    Cycle  (x :: l1) (x :: l2) /\ ~ Cycle l1 l2.
 (* begin hide *)
 Proof.
-  induction l1 as [| h1 t1]; cbn; intros.
-    apply Cycle_length in H. destruct l2; inv H. constructor.
-Abort.
+  exists nat, 3, [2; 3; 1], [1; 3; 2]. split.
+    constructor. cbn. constructor. cbn. constructor.
+    intro. apply Cycle_spec in H. destruct H as (n & H).
+      destruct n as [| [| [| n']]]; inv H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_snoc :
@@ -4731,23 +4842,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Cycle_replicate' :
-  forall (A : Type) (n m : nat) (x y : A),
-    Cycle (replicate n x) (replicate m y) <->
-    n = m /\ (n <> 0 -> m <> 0 -> x = y).
-(* begin hide *)
-Proof.
-  split; intros.
-    assert (n = m); subst.
-      apply Cycle_length in H. rewrite ?length_replicate in H. assumption.
-      split.
-        reflexivity.
-        intros. destruct m as [| m']; cbn in *.
-          contradiction.
-          apply Cycle_spec in H. destruct H as (n & H).
-Abort.
-(* end hide *)
-
 Lemma Cycle_iterate :
   forall (A : Type) (f : A -> A) (n m : nat) (x : A),
     Cycle (iterate f n x) (iterate f m x) <-> n = m.
@@ -4772,7 +4866,19 @@ Lemma Cycle_nth :
       nth n l1 = Some x -> exists m : nat, nth m l2 = Some x.
 (* begin hide *)
 Proof.
-Abort.
+  induction 1; cbn; intros.
+    exists n. assumption.
+    destruct (IHCycle _ _ H0) as (m & IH).
+      destruct (Nat.leb_spec0 (S m) (length l2)).
+        rewrite nth_snoc_length_lt in IH.
+          exists (S m). assumption.
+          assumption.
+        destruct (Nat.eqb_spec m (length l2)).
+          exists 0. rewrite e, nth_snoc_length_eq in IH. assumption.
+          rewrite nth_length_ge in IH.
+            inv IH.
+            rewrite length_snoc. omega.
+Qed.
 (* end hide *)
 
 Lemma Cycle_insert :
@@ -4789,7 +4895,16 @@ Lemma Cycle_zip :
     Cycle la1 la2 /\ Cycle lb1 lb2 /\ ~ Cycle (zip la1 lb1) (zip la2 lb2).
 (* begin hide *)
 Proof.
-Abort.
+  exists
+    bool, bool,
+    [true; false], [false; true],
+    [false; true; true], [true; true; false].
+  repeat split.
+    constructor. cbn. constructor.
+    constructor. cbn. constructor. cbn. constructor.
+    cbn. intro. assert (H' := Cycle_nth _ _ _ H 0 _ eq_refl).
+      destruct H' as (m & H'). destruct m as [| [| m']]; inv H'.
+Qed.
 (* end hide *)
 
 (* TODO: zipW, unzip, unzipW *)
@@ -4799,7 +4914,10 @@ Lemma Cycle_any :
     Cycle l1 l2 -> any p l1 = any p l2.
 (* begin hide *)
 Proof.
-Abort.
+  induction 1; cbn; intros.
+    reflexivity.
+    rewrite IHCycle, any_snoc, Bool.orb_comm. reflexivity.
+Qed.
 (* end hide *)
 
 Lemma Cycle_all :
@@ -4807,7 +4925,10 @@ Lemma Cycle_all :
     Cycle l1 l2 -> all p l1 = all p l2.
 (* begin hide *)
 Proof.
-Abort.
+  induction 1; cbn; intros.
+    reflexivity.
+    rewrite IHCycle, all_snoc, Bool.andb_comm. reflexivity.
+Qed.
 (* end hide *)
 
 Lemma Cycle_find :
@@ -4815,7 +4936,11 @@ Lemma Cycle_find :
     Cycle l1 l2 /\ find p l1 = Some x /\ find p l2 <> Some x.
 (* begin hide *)
 Proof.
-Abort.
+  exists bool, (fun _ => true), [true; false], [false; true], true.
+  repeat split.
+    constructor. cbn. constructor.
+    cbn. inversion 1.
+Qed.
 (* end hide *)
 
 (* TODO: findLast, removeFirst, removeLast *)
@@ -4825,7 +4950,11 @@ Lemma Cycle_findIndex :
     Cycle l1 l2 /\ findIndex p l1 = Some n /\ findIndex p l2 <> Some n.
 (* begin hide *)
 Proof.
-Abort.
+  exists bool, (fun b => b), [true; false], [false; true], 0.
+  repeat split.
+    constructor. cbn. constructor.
+    cbn. inversion 1.
+Qed.
 (* end hide *)
 
 Lemma Cycle_count :
@@ -4833,7 +4962,11 @@ Lemma Cycle_count :
     Cycle l1 l2 -> count p l1 = count p l2.
 (* begin hide *)
 Proof.
-Abort.
+  induction 1; cbn; intros.
+    reflexivity.
+    rewrite IHCycle, count_snoc.
+      destruct (p x); rewrite plus_comm; reflexivity.
+Qed.
 (* end hide *)
 
 Lemma Cycle_filter :
@@ -4856,7 +4989,11 @@ Lemma Cycle_takeWhile :
     Cycle l1 l2 /\ ~ Cycle (takeWhile p l1) (takeWhile p l2).
 (* begin hide *)
 Proof.
-Abort.
+  exists bool, (fun b => b), [true; false], [false; true].
+  repeat split.
+    constructor. cbn. constructor.
+    cbn. inversion 1.
+Qed.
 (* end hide *)
 
 Lemma Cycle_dropWhile :
@@ -4864,21 +5001,10 @@ Lemma Cycle_dropWhile :
     Cycle l1 l2 /\ ~ Cycle (dropWhile p l1) (dropWhile p l2).
 (* begin hide *)
 Proof.
-Abort.
-(* end hide *)
-
-(* TODO: move *) Lemma pmap_snoc :
-  forall (A B : Type) (f : A -> option B) (a : A) (l : list A),
-    pmap f (snoc a l) =
-    match f a with
-        | None => pmap f l
-        | Some b => snoc b (pmap f l)
-    end.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-    destruct (f h), (f a); cbn; rewrite ?IHt; reflexivity.
+  exists bool, (fun b => b), [true; false], [false; true].
+  repeat split.
+    constructor. cbn. constructor.
+    cbn. intro. apply Cycle_length in H. inv H.
 Qed.
 (* end hide *)
 
@@ -4896,11 +5022,15 @@ Qed.
 (* end hide *)
 
 Lemma Cycle_intersperse :
-  forall (A : Type) (x : A) (l1 l2 : list A),
-    Cycle l1 l2 -> Cycle (intersperse x l1) (intersperse x l2).
+  exists (A : Type) (x : A) (l1 l2 : list A),
+    Cycle l1 l2 /\ ~ Cycle (intersperse x l1) (intersperse x l2).
 (* begin hide *)
 Proof.
-Abort.
+  exists nat, 0, [1; 2], [2; 1]. split.
+    do 2 constructor.
+    cbn. intro. apply Cycle_spec in H. destruct H as (n & H).
+      destruct n as [| [| [| n']]]; inv H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_Permutation :
@@ -4908,23 +5038,43 @@ Lemma Cycle_Permutation :
     Cycle l1 l2 -> Permutation l1 l2.
 (* begin hide *)
 Proof.
-Abort.
+  induction 1.
+    reflexivity.
+    rewrite Permutation_cons_snoc. assumption.
+Qed.
 (* end hide *)
 
 Lemma Cycle_elem :
   forall (A : Type) (l1 l2 : list A),
-    Cycle l1 l2 -> forall x : A, elem x l1 -> elem x l2.
+    Cycle l1 l2 -> forall x : A, elem x l1 <-> elem x l2.
 (* begin hide *)
 Proof.
-Abort.
+  intros. apply Permutation_elem, Cycle_Permutation. assumption.
+Qed.
+(* end hide *)
+
+Lemma Cycle_replicate' :
+  forall (A : Type) (n m : nat) (x y : A),
+    Cycle (replicate n x) (replicate m y) <->
+    n = m /\ (n <> 0 -> m <> 0 -> x = y).
+(* begin hide *)
+Proof.
+  split; intros.
+    apply Cycle_Permutation, Permutation_replicate'' in H. assumption.
+    destruct H. subst. destruct m as [| m']; cbn.
+      constructor.
+      specialize (H0 ltac:(inversion 1) ltac:(inversion 1)). subst.
+        constructor.
+Qed.
 (* end hide *)
 
 Lemma Cycle_In :
   forall (A : Type) (l1 l2 : list A),
-    Cycle l1 l2 -> forall x : A, In x l1 -> In x l2.
+    Cycle l1 l2 -> forall x : A, In x l1 <-> In x l2.
 (* begin hide *)
 Proof.
-Abort.
+  intros. apply Permutation_In, Cycle_Permutation, H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_NoDup :
@@ -4932,7 +5082,8 @@ Lemma Cycle_NoDup :
     Cycle l1 l2 -> NoDup l1 -> NoDup l2.
 (* begin hide *)
 Proof.
-Abort.
+  intros until 1. apply Permutation_NoDup, Cycle_Permutation, H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_Dup :
@@ -4940,7 +5091,8 @@ Lemma Cycle_Dup :
     Cycle l1 l2 -> Dup l1 -> Dup l2.
 (* begin hide *)
 Proof.
-Abort.
+  intros until 1. apply Permutation_Dup, Cycle_Permutation, Cycle_sym, H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_Rep :
@@ -4949,7 +5101,8 @@ Lemma Cycle_Rep :
       Rep x n l1 -> Rep x n l2.
 (* begin hide *)
 Proof.
-Abort.
+  intros until 1. apply Permutation_Rep, Cycle_Permutation, Cycle_sym, H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_Exists :
@@ -4957,7 +5110,8 @@ Lemma Cycle_Exists :
     Cycle l1 l2 -> Exists P l1 -> Exists P l2.
 (* begin hide *)
 Proof.
-Abort.
+  intros until 1. apply Permutation_Exists, Cycle_Permutation, Cycle_sym, H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_Forall :
@@ -4965,7 +5119,8 @@ Lemma Cycle_Forall :
     Cycle l1 l2 -> Forall P l1 -> Forall P l2.
 (* begin hide *)
 Proof.
-Abort.
+  intros until 1. apply Permutation_Forall, Cycle_Permutation, Cycle_sym, H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_AtLeast :
@@ -4974,7 +5129,8 @@ Lemma Cycle_AtLeast :
       AtLeast P n l1 -> AtLeast P n l2.
 (* begin hide *)
 Proof.
-Abort.
+  intros until 1. apply Permutation_AtLeast, Cycle_Permutation, Cycle_sym, H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_Exactly :
@@ -4983,7 +5139,8 @@ Lemma Cycle_Exactly :
       Exactly P n l1 -> Exactly P n l2.
 (* begin hide *)
 Proof.
-Abort.
+  intros until 1. apply Permutation_Exactly, Cycle_Permutation, Cycle_sym, H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_AtMost :
@@ -4992,31 +5149,76 @@ Lemma Cycle_AtMost :
       AtMost P n l1 -> AtMost P n l2.
 (* begin hide *)
 Proof.
-Abort.
+  intros until 1. apply Permutation_AtMost, Cycle_Permutation, Cycle_sym, H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_Sublist :
-  forall (A : Type) (l1 l2 : list A),
-    Cycle l1 l2 -> True.
+  exists (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 /\ ~ Sublist l1 l2.
 (* begin hide *)
 Proof.
-Abort.
+  exists unit, [], []. split.
+    constructor.
+    inversion 1.
+Qed.
+(* end hide *)
+
+Lemma Sublist_Cycle :
+  exists (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 /\ ~ Cycle l1 l2.
+(* begin hide *)
+Proof.
+  exists unit, [], [tt]. split.
+    constructor.
+    intro. apply Cycle_length in H. inv H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_Prefix :
-  forall (A : Type) (l1 l2 : list A),
-    Cycle l1 l2 -> True.
+  exists (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 /\ ~ Prefix l1 l2.
 (* begin hide *)
 Proof.
-Abort.
+  exists bool, [false; true], [true; false]. split.
+    do 2 constructor.
+    inversion 1.
+Qed.
+(* end hide *)
+
+Lemma Prefix_Cycle :
+  exists (A : Type) (l1 l2 : list A),
+    Prefix l1 l2 /\ ~ Cycle l1 l2.
+(* begin hide *)
+Proof.
+  exists bool, [], [false]. split.
+    constructor.
+    intro. apply Cycle_length in H. inv H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_Subseq :
-  forall (A : Type) (l1 l2 : list A),
-    Cycle l1 l2 -> True.
+  exists (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 /\ ~ Subseq l1 l2.
 (* begin hide *)
 Proof.
-Abort.
+  exists bool, [false; true], [true; false]. split.
+    do 2 constructor.
+    intro. inv H. inv H2.
+      inv H0.
+      inv H1.
+Qed.
+(* end hide *)
+
+Lemma Subseq_Cycle :
+  exists (A : Type) (l1 l2 : list A),
+    Subseq l1 l2 /\ ~ Cycle l1 l2.
+(* begin hide *)
+Proof.
+  exists bool, [], [false]. split.
+    constructor.
+    intro. apply Cycle_length in H. inv H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_Incl :
@@ -5024,7 +5226,24 @@ Lemma Cycle_Incl :
     Cycle l1 l2 -> Incl l1 l2.
 (* begin hide *)
 Proof.
-Abort.
+  induction 1.
+    apply Incl_refl.
+    unfold Incl in *. intros. specialize (IHCycle _ H0).
+      rewrite elem_snoc in IHCycle. destruct IHCycle.
+        right. assumption.
+        subst. left.
+Qed.
+(* end hide *)
+
+Lemma Incl_Cycle :
+  exists (A : Type) (l1 l2 : list A),
+    Incl l1 l2 /\ ~ Cycle l1 l2.
+(* begin hide *)
+Proof.
+  exists unit, [tt; tt], [tt]. split.
+    unfold Incl. destruct x. constructor.
+    intro. apply Cycle_length in H. inv H.
+Qed.
 (* end hide *)
 
 Lemma Cycle_SetEquiv :
@@ -5032,7 +5251,21 @@ Lemma Cycle_SetEquiv :
     Cycle l1 l2 -> SetEquiv l1 l2.
 (* begin hide *)
 Proof.
-Abort.
+  intros. rewrite SetEquiv_Incl. split; apply Cycle_Incl.
+    assumption.
+    apply Cycle_sym. assumption.
+Qed.
+(* end hide *)
+
+Lemma SetEquiv_Cycle :
+  exists (A : Type) (l1 l2 : list A),
+    SetEquiv l1 l2 /\ ~ Cycle l1 l2.
+(* begin hide *)
+Proof.
+  exists unit, [tt; tt], [tt]. split.
+    rewrite SetEquiv_Incl; unfold Incl. split; destruct x; constructor.
+    intro. apply Cycle_length in H. inv H.
+Qed.
 (* end hide *)
 
 (** * Niestandardowe reguły indukcyjne *)
@@ -5521,18 +5754,14 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO
 Lemma Subseq_rev_l :
   forall (A : Type) (l : list A),
     Subseq (rev l) l <-> Palindrome l.
 (* begin hide *)
 Proof.
   split.
-    induction l as [| h t]; cbn; intros.
-      constructor.
-    Focus 2. induction 1; cbn.
-      1-2: apply Subseq_refl.
-      rewrite rev_app. cbn. constructor. apply Subseq_app_r'. assumption.
+    intro. apply Palindrome_spec. induction l as [| h t]; cbn; intros.
+      reflexivity.
 Abort.
 (* end hide *)
 
@@ -5541,10 +5770,7 @@ Lemma Subseq_rev_r :
     Subseq l (rev l) <-> Palindrome l.
 (* begin hide *)
 Proof.
-  split.
-    Focus 2. induction 1; cbn.
-      1-2: apply Subseq_refl.
-      rewrite rev_app. cbn. constructor. apply Subseq_app_r'. assumption.
+  split. Search Subseq.
+    Focus 2. intro. apply Palindrome_spec in H. rewrite <- H. apply Subseq_refl.
 Abort.
 (* end hide *)
-*)

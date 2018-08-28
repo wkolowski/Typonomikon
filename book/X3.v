@@ -8094,6 +8094,21 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma pmap_snoc :
+  forall (A B : Type) (f : A -> option B) (a : A) (l : list A),
+    pmap f (snoc a l) =
+    match f a with
+        | None => pmap f l
+        | Some b => snoc b (pmap f l)
+    end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (f h), (f a); cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma pmap_app :
   forall (A B : Type) (f : A -> option B) (l1 l2 : list A),
     pmap f (l1 ++ l2) = pmap f l1 ++ pmap f l2.
