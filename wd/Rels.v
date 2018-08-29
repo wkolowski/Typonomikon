@@ -288,13 +288,26 @@ Qed.
 
 Lemma Sublist_spec :
   forall (A : Type) (l1 l2 : list A),
-    Sublist l1 l2 -> exists n : nat, l1 = drop (S n) l2.
+    Sublist l1 l2 <->
+    exists n : nat,
+      n < length l2 /\ l1 = drop (S n) l2.
 (* begin hide *)
 Proof.
-  induction 1.
-    exists 0. cbn. rewrite drop_0. reflexivity.
-    destruct IHSublist as (n & IH). rewrite IH.
-      exists (S n). cbn. reflexivity.
+  split.
+    induction 1; cbn.
+      exists 0. rewrite drop_0. split; [apply Nat.lt_0_succ | reflexivity].
+      destruct IHSublist as (n & IH1 & IH2). subst.
+        exists (S n). split.
+          apply lt_n_S. assumption.
+          reflexivity.
+    destruct 1 as (n & H1 & H2). subst. revert n H1.
+      induction l2 as [| h t]; cbn; intros.
+        inv H1.
+        destruct t as [| h' t']; cbn in *.
+          constructor.
+          destruct n as [| n']; cbn in *.
+            constructor.
+            constructor. apply IHt. apply lt_S_n, H1.
 Qed.
 (* end hide *)
 
@@ -319,46 +332,27 @@ Lemma Sublist_drop :
       n < length l2 -> Sublist (drop n l1) (drop n l2).
 (* begin hide *)
 Proof.
-  induction 1; cbn; intros.
-    destruct n as [| n']; cbn.
-      rewrite drop_0. constructor.
-      revert n' H. induction t as [| h' t']; cbn; intros.
-        inv H. inv H1.
-        destruct n'.
-          rewrite drop_0. constructor.
-          apply IHt'. apply lt_S_n. assumption.
-    destruct n as [| n'].
-      rewrite drop_0. constructor. assumption.
-Restart.
-  intros A l1 l2. revert l1.
-  induction l2 as [| h2 t2]; cbn; intros.
-    inv H.
-    destruct n as [| n'].
-      rewrite drop_0. assumption.
-      destruct l1 as [| h1 t1]; cbn.
-        revert n' H0. clear IHt2. induction t2 as [| h2' t2']; cbn; intros.
-          inv H0. inv H2.
-          destruct n' as [| n'].
-            apply Sublist_nil_cons.
-            apply IHt2'.
-              apply Sublist_nil_cons.
-              apply lt_S_n. assumption.
-        apply IHt2. inv H. Focus 2.
-Restart.
-  intros. apply Sublist_spec in H. destruct H as (m & H).
-  subst. rewrite drop_drop. rewrite plus_comm, <- plus_n_Sm.
-  revert n m H0.
+  intros. rewrite Sublist_spec in *. destruct H as (m & H1 & H2).
+  subst. rewrite length_drop, ?drop_drop.
+  revert n m H0 H1.
   induction l2 as [| h t]; cbn; intros.
     inv H0.
-Restart.
-  intros * H n. revert l1 l2 H.
-  induction n as [| n']; intros.
-    rewrite ?drop_0. assumption.
-    destruct l2 as [| h2 t2]; cbn.
-      inv H.
-      destruct l1 as [| h1 t1]; cbn.
-        cbn in H0. admit.
-        apply IHn'.
+    destruct n as [| n'].
+      rewrite plus_0_r. cbn. exists m. split; [assumption | reflexivity].
+      destruct m as [| m'].
+        cbn. exists 0. split.
+          omega.
+          rewrite drop_drop, plus_comm. cbn. reflexivity.
+        apply lt_S_n in H0. apply lt_S_n in H1.
+          destruct (IHt _ _ H0 H1) as (k & Hk1 & Hk2).
+          exists (S k). split.
+            Focus 2. replace (drop (S m' + S n') t) with
+                             (drop 1 (drop (S m' + n') t)).
+              rewrite Hk2. rewrite ?drop_drop. f_equal. omega.
+              rewrite drop_drop. f_equal. omega.
+            destruct (length t - n') eqn: Hlt.
+              inv Hk1.
+              destruct n as [| n''].
 Abort.
 (* end hide *)
 
@@ -2054,6 +2048,30 @@ Proof.
       do 2 constructor. assumption.
 Qed.
 (* end hide *)
+
+Fixpoint intercalate {A : Type} (l : list A) (ll : list (list A)) : list A :=
+match l, ll with
+    | [], _ => join ll
+    | _, [] => l
+    | h :: t, l :: ls => h :: l ++ intercalate t ls
+end.
+
+Lemma Subseq_spec :
+  forall (A : Type) (l1 l2 : list A),
+    Subseq l1 l2 ->
+      exists ll : list (list A),
+        l2 = intercalate l1 ll.
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    exists (map (fun x => [x]) l). admit.
+    destruct IHSubseq as (ll & IH). subst.
+      exists ([] :: ll). cbn. reflexivity.
+    destruct IHSubseq as (ll & IH). subst. destruct ll as [| hl tl].
+      destruct l1; cbn in *.
+        exists [[x]]. cbn. reflexivity.
+        exists [[x]]. cbn. destruct l1; cbn.
+Abort.
 
 (* TODO:
 bind
@@ -4847,14 +4865,22 @@ Lemma Cycle_iterate :
     Cycle (iterate f n x) (iterate f m x) <-> n = m.
 (* begin hide *)
 Proof.
-Abort.
+  split; intro.
+    apply Cycle_length in H. rewrite ?length_iterate in H. assumption.
+    subst. constructor.
+Qed.
 (* end hide *)
 
-Lemma Cycle_iterate :
+Lemma Cycle_iterate' :
   forall (A : Type) (f : A -> A) (n m : nat) (x y : A),
     Cycle (iterate f n x) (iterate f m y) <-> n = m.
 (* begin hide *)
 Proof.
+  split; intro.
+    apply Cycle_length in H. rewrite ?length_iterate in H. assumption.
+    subst. induction m as [| m']; cbn.
+      constructor.
+      constructor.
 Abort.
 (* end hide *)
 
@@ -4887,7 +4913,13 @@ Lemma Cycle_insert :
       exists m : nat, Cycle (insert l1 n x) (insert l2 m x) .
 (* begin hide *)
 Proof.
-Abort.
+  induction 1; cbn; intros.
+    exists n. constructor.
+    destruct (IHCycle n x0) as (m & IH). rewrite insert_snoc in IH.
+      destruct (m <=? length l2) eqn: Hle.
+        exists (S m). constructor. assumption.
+        exists 1. rewrite insert_0. do 2 (constructor; cbn). assumption.
+Qed.
 (* end hide *)
 
 Lemma Cycle_zip :

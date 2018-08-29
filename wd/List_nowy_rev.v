@@ -312,7 +312,7 @@ Proof.
     reflexivity.
     destruct n as [| n']; cbn.
       replace (S (length t)) with (length (snoc h (rev t))).
-        rewrite insert_snoc, ?rev_snoc, rev_rev. reflexivity.
+        rewrite insert_length, ?rev_snoc, rev_rev. reflexivity.
         rewrite length_snoc, length_rev. reflexivity.
       rewrite ?IHt, snoc_app_singl, insert_app, length_rev.
         assert (length t - n' <= length t).

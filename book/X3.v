@@ -1815,11 +1815,16 @@ Qed.
 (* end hide *)
 
 Lemma insert_snoc :
-  forall (A : Type) (l : list A) (x : A),
-    insert l (length l) x = snoc x l.
+  forall (A : Type) (l : list A) (n : nat) (x y : A),
+    insert (snoc x l) n y =
+    if n <=? length l then snoc x (insert l n y) else snoc y (snoc x l).
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros; rewrite ?IHt; reflexivity.
+  induction l as [| h t]; cbn; intros.
+    destruct n; reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite IHt. destruct (n' <=? length t); reflexivity.
 Qed.
 (* end hide *)
 
@@ -1848,7 +1853,7 @@ Proof.
     reflexivity.
     destruct n as [| n']; cbn.
       replace (S (length t)) with (length (rev t ++ [h])).
-        rewrite insert_snoc, snoc_app, rev_app, rev_snoc, rev_inv.
+        rewrite insert_length, snoc_app, rev_app, rev_snoc, rev_inv.
           cbn. reflexivity.
         rewrite length_app, length_rev, plus_comm. cbn. reflexivity.
       rewrite ?IHt, insert_app, length_rev.
@@ -8405,6 +8410,18 @@ Proof.
       destruct (span _ t); trivial.
         destruct p0, p0, IHt as (y & IH1 & IH2).
           exists y. cbn. rewrite IH1, IH2, Heq. split; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pmap_nth_findIndices :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    pmap (fun n : nat => nth n l) (findIndices p l) =
+    filter p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (p h); cbn; rewrite pmap_map, IHt; reflexivity.
 Qed.
 (* end hide *)
 

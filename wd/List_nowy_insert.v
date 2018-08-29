@@ -20,13 +20,12 @@ Compute insert (iterate S 5 0) 4 42.
 
 (* Trzeba się zastanowić, czy taki insert ma faktycznie sens. *)
 
-(*
 Lemma insert_0 :
   forall (A : Type) (l : list A) (x : A),
-    insert l 0 x = Some (x :: l).
+    insert l 0 x = if isEmpty l then None else Some (x :: l).
 (* begin hide *)
 Proof.
-  destruct l. cbn. reflexivity.
+  destruct l; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -40,6 +39,8 @@ Proof.
     destruct (insert l n x); inv H. cbn. reflexivity.
 Qed.
 (* end hide *)
+
+(* TODO:
 
 Lemma length_insert :
   forall (A : Type) (l : list A) (n : nat) (x : A),
