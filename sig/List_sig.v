@@ -63,16 +63,17 @@ Parameter drop : forall A : Type, list A -> nat -> list A.
 Parameter splitAt :
   forall A : Type, list A -> nat -> option (list A * A * list A).
 
+(** Modyfikacje *)
+Parameter insert : forall A : Type, list A -> nat -> A -> list A.
+Parameter replace : forall A : Type, list A -> nat -> A -> option (list A).
+
+Parameter insert : forall A : Type, list A -> nat -> A -> option (list A).
+Parameter insert_orElse : forall A : Type, list A -> nat -> A -> list A.
+
 (** Pochodne rozkładu na kawałki i jak powinno być*)
 Parameter remove : forall A : Type, nat -> list A -> option (A * list A).
 Parameter remove' : forall A : Type, nat -> list A -> option (list A).
 Parameter remove'' : forall A : Type, nat -> list A -> list A.
-
-(** Modyfikacje *)
-Parameter replace : forall A : Type, list A -> nat -> A -> option (list A).
-Parameter insert : forall A : Type, list A -> nat -> A -> option (list A).
-
-Parameter insert_orElse : forall A : Type, list A -> nat -> A -> list A.
 
 (** Funkcje z predykatem boolowskim *)
 Parameter any : forall A : Type, (A -> bool) -> list A -> bool.

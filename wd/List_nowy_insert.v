@@ -18,7 +18,8 @@ end.
 
 Compute insert (iterate S 5 0) 4 42.
 
-(* Trzeba się zastanowić, czy taki insert ma faktycznie sens. *)
+(* Trzeba się zastanowić, czy taki insert ma faktycznie sens.
+   Prawdopodobnie nie. *)
 
 Lemma insert_0 :
   forall (A : Type) (l : list A) (x : A),
