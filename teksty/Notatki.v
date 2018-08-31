@@ -25,14 +25,12 @@
       - AtLeast (nth, head, last, init, tail)
       - Exactly (join, nth, head, tail, init, last, zip)
       - AtMost
-      - sublist
-      - Palindrome
     - napisać wstępy do poszczególnych funkcji
 *)
 
 (** Najnowszy plan refaktoringu:
     - Wstęp
-    - R1: Logika konstruktywna, potem klasyczna
+    - R1: Logika konstruktywna, potem klasyczna. Zrobić tak żeby można było pisać "Classically $ coś tam".
     - R2: Typy induktywne — enumeracje (na przykładzie dni tygodnia?).
           Podstawy obliczeń (to co obecnie jest przy opisie typu [bool]).
     - R3: Logika boolowska (dokładnie wszystko opisać i powiązać z logiką
@@ -85,11 +83,6 @@
 
 (** TODO dla X3:
     - dokończ [isEmpty]
-    - rozwiń [bind]
-    - przenieś monadowe operacje na koniec
-    - dodaj operacje aplikatywne
-    - dodaj operację [snoc] (być może wcale nie zrobioną za pomocą
-      [app], tylko normalnie, w celu dydaktycznym)
     - opisz niestandardowe reguły indukcyjne dla list (najlepiej przed
       przed funkcją [intersperse].
     - przenieś [intersperse] na sam koniec funkcji i dorzucić jeszcze
@@ -103,9 +96,6 @@
       Stąd zadania dla [head], [last], [tail] i [init]
     - zrób osobno: funkcje na listach dla typów mających jakieś
       specjalne rzeczy (np. rozstrzygalną równość)
-    - palindromy
-    - permutacje
-    - podlisty, podciągi
     - [AtMost]
 *)
 
@@ -223,7 +213,7 @@ Check well_founded_ind.
     - [Writer W] reprezentuje możliwość zapisywania logów.
     - [Future] reprezentuję asynchroniczność. Wartości typu [Future A]
       są w ten sposób, że albo są teraz, albo będą później.
-    - [STM] reprezentuje tranzakcje. Wartościu typu [STM A] są w ten
+    - [STM] reprezentuje transakcje. Wartościu typu [STM A] są w ten
       sposób, że są w jednym kawałku, są transakcjami.
     - [SQL] reprezentuje operacje bazodanowe. Wartości typu [SQL A] są
       w ten sposób, że albo po prostu są, albo są w bazie danych. *)

@@ -356,6 +356,19 @@ Proof.
 Abort.
 (* end hide *)
 
+Lemma Sublist_replace :
+  forall (A : Type) (l1 l2 : list A),
+    Sublist l1 l2 -> forall (l1' l2' : list A) (n : nat) (x : A),
+      replace l1 n x = Some l1' -> replace l2 (n + length l1) x = Some l2' ->
+        Sublist l1' l2'.
+(* begin hide *)
+Proof.
+  intros. rewrite Sublist_spec in *.
+  destruct H as (m & Hm1 & Hm2). subst.
+  rewrite replace_spec in *.
+Abort.
+(* end hide *)
+
 Lemma Sublist_zip :
   exists (A B : Type) (la1 la2 : list A) (lb1 lb2 : list A),
     Sublist la1 la2 /\ Sublist lb1 lb2 /\
@@ -892,6 +905,26 @@ Proof.
       do 2 constructor. specialize (IHPrefix _ x0 (le_0_n (length l1))).
         rewrite ?insert_0 in IHPrefix. inv IHPrefix. assumption.
       constructor. apply IHPrefix. apply le_S_n. assumption.
+Qed.
+(* end hide *)
+
+Lemma Prefix_replace :
+  forall (A : Type) (l1 l2 : list A),
+    Prefix l1 l2 -> forall (n : nat) (x : A),
+      match replace l1 n x, replace l2 n x with
+          | Some l1', Some l2' => Prefix l1' l2'
+          | _, _ => True
+      end.
+(* begin hide *)
+Proof.
+  induction 1; cbn; intros.
+    trivial.
+    destruct n as [| n']; cbn.
+      constructor. assumption.
+      specialize (IHPrefix n' x0).
+        destruct (replace l1 n' x0), (replace l2 n' x0).
+          constructor. assumption.
+          1-3: trivial.
 Qed.
 (* end hide *)
 
@@ -1797,6 +1830,16 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Subseq_replace :
+  forall (A : Type) (l1 l1' l2 : list A) (n : nat) (x : A),
+    Subseq l1 l2 -> replace l1 n x = Some l1' ->
+      exists (m : nat) (l2' : list A),
+        replace l2 m x = Some l2' /\ Subseq l1' l2'.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
 Lemma Subseq_remove' :
   forall (A : Type) (l1 l2 : list A) (n : nat),
     Subseq l1 l2 -> Subseq (remove' n l1) l2.
@@ -2525,6 +2568,31 @@ Lemma Incl_drop :
 Proof.
   unfold Incl; intros. apply elem_drop in H. assumption.
 Qed.
+(* end hide *)
+
+Lemma Incl_insert :
+  forall (A : Type) (l1 l2 : list A) (n m : nat) (x : A),
+    Incl l1 l2 -> Incl (insert l1 n x) (insert l2 m x).
+(* begin hide *)
+Proof.
+  unfold Incl. intros. rewrite elem_insert in *. firstorder.
+Qed.
+(* end hide *)
+
+Lemma Incl_replace :
+  forall (A : Type) (l1 l1' l2 : list A) (n : nat) (x : A),
+    Incl l1 l2 -> replace l1 n x = Some l1' ->
+      exists (m : nat) (l2' : list A),
+        replace l2 m x = Some l2' /\ Incl l1' l2'.
+(* begin hide *)
+Proof. Search Incl nth.
+  unfold Incl. induction l1 as [| h1 t1]; cbn; intros.
+    inv H0.
+    destruct n as [| n']; cbn in *.
+      inv H0. exists 0.
+      Focus 2. destruct (replace t1 n' x) eqn: Heq.
+        inv H0.
+Abort.
 (* end hide *)
 
 Lemma Incl_splitAt :
@@ -3278,8 +3346,8 @@ Defined.
 (* end hide *)
 
 Lemma Permutation_trans :
-  forall (A : Type) (l l' l'' : list A),
-    Permutation l l' -> Permutation l' l'' -> Permutation l l''.
+  forall (A : Type) (l1 l2 l3 : list A),
+    Permutation l1 l2 -> Permutation l2 l3 -> Permutation l1 l3.
 (* begin hide *)
 Proof.
   intros. eapply perm_trans; eauto.
@@ -3287,7 +3355,8 @@ Qed.
 (* end hide *)
 
 Lemma Permutation_sym :
-  forall (A : Type) (l l' : list A), Permutation l l' -> Permutation l' l.
+  forall (A : Type) (l1 l2 : list A),
+    Permutation l1 l2 -> Permutation l2 l1.
 (* begin hide *)
 Proof.
   induction 1; auto. eapply Permutation_trans; eauto.
@@ -4432,8 +4501,8 @@ Lemma Permutation_Forall :
 Proof.
   induction 1; cbn; intros.
     reflexivity.
-    rewrite ?Forall_cons', IHPermutation. reflexivity.
-    rewrite ?Forall_cons'. firstorder.
+    rewrite ?Forall_cons, IHPermutation. reflexivity.
+    rewrite ?Forall_cons. firstorder.
     rewrite IHPermutation1, IHPermutation2. reflexivity.
 Qed.
 (* end hide *)
@@ -5687,6 +5756,24 @@ Proof.
     left. reflexivity.
     right.
 Admitted.
+(* end hide *)
+
+Lemma replace_Palindrome :
+  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+    replace l n x = Some l' -> Palindrome l ->
+      Palindrome l' <-> length l = 1 /\ n = 0 \/ nth n l = Some x.
+(* begin hide *)
+Proof.
+  split.
+    Focus 2. destruct 1 as [[H1 H2] | H1].
+      subst. destruct l as [| h [| h' t]]; inv H; inv H1. constructor.
+      assert (l = l').
+        rewrite replace_nth_eq; eassumption.
+        subst. assumption.
+    intros. apply Palindrome_spec in H0. apply Palindrome_spec in H1.
+      rewrite H0, H1 in H. rewrite replace_rev in H.
+        unfold omap in H.
+Abort.
 (* end hide *)
 
 Lemma Palindrome_zip :
