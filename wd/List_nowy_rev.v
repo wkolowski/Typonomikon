@@ -1,7 +1,6 @@
 Add Rec LoadPath "/home/zeimer/Code/Coq".
 
 Require Import CoqBookPL.book.X3.
-Require Import CoqBookPL.wd.Rels.
 
 (* begin hide *)
 Fixpoint rev {A : Type} (l : list A) : list A :=
