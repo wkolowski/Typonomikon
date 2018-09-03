@@ -10,6 +10,8 @@
 Require Export Recdef.
 Require Export Omega.
 (* end hide *)
+
+Require Export Bool.
 Require Export Nat.
 
 (* begin hide *)
@@ -1552,19 +1554,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma nth_length :
-  forall (A : Type) (l : list A) (n : nat),
-    n < length l -> exists x : A, nth n l = Some x.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    destruct n; inversion H.
-    destruct n as [| n']; cbn.
-      exists h. reflexivity.
-      destruct (IHt _ (lt_S_n _ _ H)) as [x IH]. exists x. assumption.
-Qed.
-(* end hide *)
-
 Lemma nth_length_lt :
   forall (A : Type) (l : list A) (n : nat),
     n < length l -> exists x : A, nth n l = Some x.
@@ -1615,6 +1604,22 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma nth_snoc :
+  forall (A : Type) (x : A) (l : list A) (n : nat),
+    nth n (snoc x l) =
+    if n <? length l then nth n l
+    else if n =? length l then Some x
+    else None.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    destruct n; reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma nth_app :
   forall (A : Type) (l1 l2 : list A) (n : nat),
     nth n (l1 ++ l2) =
@@ -1652,6 +1657,25 @@ Proof.
     assumption.
 Qed.
 (* end hide *)
+
+Lemma nth_rev :
+  forall (A : Type) (l : list A) (n : nat),
+    n < length l -> nth n (rev l) = nth (length l - S n) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (length t - n) eqn: Heq.
+      assert (n = length t) by omega. rewrite nth_app_r.
+        rewrite length_rev, <- H0, minus_diag. cbn. reflexivity.
+        rewrite length_rev, <- H0. reflexivity.
+      rewrite nth_app_l.
+        rewrite IHt.
+          f_equal. omega.
+          omega.
+        rewrite length_rev. omega.
+Qed.
+(* begin hide *)
 
 Lemma nth_split :
   forall (A : Type) (l : list A) (n : nat) (x : A),
@@ -2285,24 +2309,25 @@ Qed.
 Lemma init_drop :
   forall (A : Type) (l : list A) (n : nat),
     init (drop n l) =
-    if n <? length l then Some (drop n (take (length l - 1) l)) else None.
+    if n <? length l
+    then
+      match init l with
+          | None => None
+          | Some l' => Some (drop n l')
+      end
+    else None.
 (* begin hide *)
 Proof.
-(*
-  induction n as [| n']; cbn; intros.
-    induction l as [| h t]; cbn; intros.
-      reflexivity.
-      rewrite IHt. destruct t; cbn in *.
-        reflexivity.
-        rewrite <- minus_n_O. reflexivity.
-    induction l as [| h t]; cbn; intros.
-      reflexivity.
-      rewrite IHn'. destruct t; cbn.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n']; cbn.
+      destruct (init t); rewrite drop_0; reflexivity.
+      rewrite IHt. destruct t; cbn.
         reflexivity.
         destruct (n' <=? length t).
-          rewrite <- minus_n_O. 1-2: reflexivity.
-*)
-Admitted.
+          destruct (init t); cbn.
+            all: reflexivity.
+Qed.
 (* end hide *)
 
 Lemma nth_drop :
@@ -2462,28 +2487,6 @@ Proof.
   induction l as [| h t]; destruct n as [| n'];
   cbn; rewrite ?IHt; reflexivity.
 Qed.
-(* end hide *)
-
-(* begin hide *)
-(*
-TODO: Lemma removeFirst_take' :
-  forall (A : Type) (p : A -> bool) (n : nat) (x : A) (l l' : list A),
-    removeFirst p (take' n l) = Some (x, l') ->
-      removeFirst p l = Some (x, l' ++ drop n l).
-Proof.
-  intros A p n x l. revert n x.
-  functional induction @removeFirst A p l;
-  destruct n as [| n']; cbn; intros; inv H; rewrite e0 in H1; inv H1.
-    admit.
-    destruct (removeFirst p (take' n' t)) eqn: Heq.
-      admit.
-      inv H0.
-    destruct (removeFirst p (take' n' t)) eqn: Heq.
-      destruct p0. inv H0. rewrite (IHo _ _ _ Heq) in e1. inv e1.
-        cbn. reflexivity.
-      inv H0.
-Admitted.
-*)
 (* end hide *)
 
 (** ** [splitAt] *)
@@ -3219,6 +3222,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma insert_spec :
+  forall (A : Type) (l : list A) (n : nat) (x : A),
+    insert l n x = take n l ++ x :: drop n l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct n as [| n']; cbn; rewrite ?IHt; reflexivity.
+Qed.
+(* end hide *)
+
 Lemma insert_take :
   forall (A : Type) (l : list A) (n m : nat) (x : A),
     insert (take n l) m x =
@@ -3254,9 +3268,16 @@ Qed.
 
 (* TODO *) Lemma take_insert :
   forall (A : Type) (l : list A) (n m : nat) (x : A),
-      take m (insert l n x) = l ++ l ++ l.
+    take m (insert l n x) =
+    if m <=? n then take m l else snoc x l.
 (* begin hide *)
 Proof.
+  intros. rewrite insert_spec. rewrite take_app.
+  rewrite take_take. rewrite length_take. 
+  induction l as [| h t]; cbn; intros.
+    destruct m, n; cbn.
+      Focus 4.
+    
 Abort.
 (* end hide *)
 
@@ -3284,17 +3305,6 @@ Proof.
     rewrite ?drop_0. reflexivity.
     destruct l as [| h t]; cbn.
 Admitted.
-(* end hide *)
-
-Lemma insert_take_drop :
-  forall (A : Type) (l : list A) (n : nat) (x : A),
-    insert l n x = take n l ++ x :: drop n l.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct n as [| n']; cbn; rewrite ?IHt; reflexivity.
-Qed.
 (* end hide *)
 
 (* TODO: take_remove *)
@@ -3919,16 +3929,21 @@ Proof.
 Qed.
 (* end hide *)
 
-(*
 Lemma isEmpty_remove :
-  forall (A : Type) (l : list A) (n : nat),
-    isEmpty (remove n l) =
-    orb (isEmpty l) (andb (leb (length l) 1) (isZero n)).
+  forall (A : Type) (l l' : list A) (n : nat) (x : A),
+    remove n l = Some (x, l') ->
+      isEmpty l' = isEmpty l || ((length l <=? 1) && isZero n).
 (* begin hide *)
 Proof.
-  destruct l; cbn.
-Abort.
-*)
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n']; cbn in H.
+      inv H. destruct l'; reflexivity.
+      destruct (remove n' t) eqn: Heq.
+        destruct p. inv H. cbn. rewrite Bool.andb_false_r. reflexivity.
+        inv H.
+Qed.
+(* end hide *)
 
 Lemma length_remove :
   forall (A : Type) (h : A) (l t : list A) (n : nat),
@@ -5138,8 +5153,6 @@ Qed.
 (* end hide *)
 
 (* TODO any i replace *)
-
-Require Import Bool.
 
 Lemma any_replace :
   forall (A : Type) (p : A -> bool) (l l' : list A) (n : nat) (x : A),
@@ -7591,7 +7604,7 @@ Lemma filter_insert :
       filter p (drop n l).
 (* begin hide *)
 Proof.
-  intros. rewrite insert_take_drop, filter_app. cbn.
+  intros. rewrite insert_spec, filter_app. cbn.
   destruct (p x); reflexivity.
 Qed.
 (* end hide *)
@@ -8145,33 +8158,23 @@ Proof.
     destruct (p h) eqn: Hph; cbn.
       rewrite init_map. destruct (findIndices p t) eqn: Heq; cbn in *.
         destruct (removeLast p t).
-          destruct p0. inversion IHt.
+          destruct p0. inv IHt.
           rewrite Heq. reflexivity.
         destruct (init l), (removeLast p t); cbn.
-          destruct p0. cbn. rewrite Hph. inversion IHt; subst. cbn.
-            reflexivity.
-          inversion IHt.
-          destruct p0. cbn. rewrite Hph. inversion IHt; subst; cbn.
-            reflexivity.
-          inversion IHt.
+          destruct p0. cbn. rewrite Hph. inv IHt. reflexivity.
+          inv IHt.
+          destruct p0. cbn. rewrite Hph. inv IHt. reflexivity.
+          inv IHt.
       rewrite init_map. destruct (findIndices p t) eqn: Heq; cbn in *.
         destruct (removeLast p t).
-          destruct p0. inversion IHt.
+          destruct p0. inv IHt.
           reflexivity.
         destruct (init l), (removeLast p t); cbn.
-          destruct p0. cbn. rewrite Hph. inversion IHt; subst; cbn.
-            reflexivity.
-          inversion IHt.
-          destruct p0. cbn. rewrite Hph. inversion IHt; subst; cbn.
-            reflexivity.
-          inversion IHt.
-Restart.
-  intros. pose (init_rev _ (rev (findIndices p l))).
-  rewrite rev_inv in e.
-  pose (removeLast_rev _ p (rev l)). rewrite rev_inv in e0.
-  rewrite e, e0. rewrite rev_findIndices. rewrite tail_map.
-  rewrite findIndices_rev.
-Admitted.
+          destruct p0. cbn. rewrite Hph. inv IHt. reflexivity.
+          inv IHt.
+          destruct p0. cbn. rewrite Hph. inv IHt. reflexivity.
+          inv IHt.
+Qed.
 (* end hide *)
 
 Lemma findIndices_take :
@@ -8324,8 +8327,7 @@ Qed.
 Lemma takeWhile_snoc_all :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
     all p l = true ->
-      takeWhile p (snoc x l) =
-      if p x then snoc x l else l.
+      takeWhile p (snoc x l) = if p x then snoc x l else l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -8339,12 +8341,17 @@ Qed.
 (* begin hide *)
 Lemma dropWhile_snoc_all :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    all (fun x : A => negb (p x)) l = true ->
-      dropWhile p (snoc x l) = snoc x l.
+    all p l = true ->
+      dropWhile p (snoc x l) = if p x then [] else [x].
 Proof.
   induction l as [| h t]; cbn; intros.
-    inversion H.
-Admitted.
+    reflexivity.
+    rewrite IHt.
+      destruct (p x), (p h); cbn in *; congruence || reflexivity.
+      destruct (p h); cbn in H.
+        assumption.
+        congruence.
+Qed.
 (* end hide *)
 
 Lemma takeWhile_idempotent :
@@ -9218,7 +9225,7 @@ Qed.
 (* end hide *)
 
 Lemma pmap_zip :
-  forall
+  exists
     (A B C : Type)
     (fa : A -> option C) (fb : B -> option C)
     (la : list A) (lb : list B),
@@ -9228,23 +9235,17 @@ Lemma pmap_zip :
             | Some a', Some b' => Some (a', b')
             | _, _ => None
         end)
-        (zip la lb) =
+        (zip la lb) <>
       zip (pmap fa la) (pmap fb lb).
 (* begin hide *)
 Proof.
-  induction la as [| ha ta]; cbn; intros.
-    reflexivity.
-    destruct lb as [| hb tb]; cbn.
-      destruct (fa ha); cbn.
-        reflexivity.
-        rewrite zip_nil_r. reflexivity.
-      destruct (fa ha) eqn: Ha; cbn.
-        destruct (fb hb) eqn: Hb; cbn.
-          rewrite IHta. reflexivity.
-          rewrite IHta. destruct (pmap fb tb); cbn.
-            rewrite zip_nil_r. reflexivity.
-            destruct ta; cbn.
-Admitted.
+  exists
+    bool, bool, bool,
+    (fun b : bool => if b then Some b else None),
+    (fun b : bool => if b then None else Some b),
+    [true; true; false], [true; false; false].
+  cbn. inversion 1.
+Qed.
 (* end hide *)
 
 Lemma any_pmap :
@@ -9652,20 +9653,27 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *) Lemma take_intersperse :
+Lemma intersperse_take :
   forall (A : Type) (x : A) (l : list A) (n : nat),
-    1 < n -> 1 < length l ->
-      take (2 * n - 1) (intersperse x l) =
-      intersperse x (take n l).
+    intersperse x (take n l) =
+    take (2 * n - 1) (intersperse x l).
 (* begin hide *)
 Proof.
   intros A x l. functional induction @intersperse A x l; cbn; intros.
-    inv H0.
-    destruct n; cbn.
-      inv H.
-      rewrite <- plus_n_Sm. cbn. rewrite <- IHl0.
-        rewrite e0. cbn. reflexivity.
-Abort.
+    reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite <- plus_n_Sm. cbn. destruct t; cbn in *.
+        reflexivity.
+        destruct (intersperse x t); inv e0.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      rewrite <- plus_n_Sm, IHl0. destruct n' as [| n'']; cbn.
+        rewrite take_0. reflexivity.
+        rewrite <- plus_n_Sm, plus_0_r. cbn. destruct t; cbn in *.
+          inv e0.
+          destruct (intersperse x t); inv e0; reflexivity.
+Qed.
 (* end hide *)
 
 Lemma any_intersperse :
@@ -11507,7 +11515,7 @@ Proof.
       contradiction H. constructor.
       change (h :: t) with ([h] ++ t) in H. rewrite NoDup_app in H.
         contradiction H.
-Abort.
+Abort. (* Ten [Abort] jest umyślny. *)
 (* end hide *)
 
 (** ** [Dup] *)
@@ -13865,15 +13873,34 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *) Lemma AtLeast_splitAt :
+Lemma AtLeast_splitAt :
   forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
     splitAt n l = Some (l1, x, l2) ->
       forall m : nat,
-        AtLeast P m l -> exists m1 m2 : nat,
-          AtLeast P m1 l1 /\ AtLeast P m2 l2 /\ m = m1 + m2.
+        AtLeast P m l ->
+        exists m1 mx m2 : nat,
+          AtLeast P m1 l1 /\ AtLeast P mx [x] /\ AtLeast P m2 l2 /\
+          m1 + mx + m2 = m.
 (* begin hide *)
 Proof.
-Abort.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n']; cbn in *.
+      inv H. inv H0.
+        exists 0, 0, 0. repeat constructor.
+        exists 0, 1, n. repeat constructor; assumption.
+        exists 0, 0, m. repeat constructor. assumption.
+    destruct (splitAt n' t) eqn: Heq.
+      destruct p, p. inv H. inv H0.
+        exists 0, 0, 0. repeat constructor.
+        destruct (IHt _ _ _ _ Heq _ H4) as
+                 (m1 & mx & m2 & IH1 & IH2 & IH3 & IH4).
+          exists (S m1), mx, m2. firstorder. constructor; assumption.
+        destruct (IHt _ _ _ _ Heq _ H2) as
+                 (m1 & mx & m2 & IH1 & IH2 & IH3 & IH4).
+          exists m1, mx, m2. firstorder. apply AL_skip. assumption.
+      inv H.
+Qed.
 (* end hide *)
 
 Lemma AtLeast_insert :
@@ -14536,15 +14563,43 @@ Lemma Exactly_splitAt :
   forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
     splitAt n l = Some (l1, x, l2) ->
       forall m : nat,
-        Exactly P m l <-> exists m1 m2 : nat,
-          Exactly P m1 l1 /\ Exactly P m2 l2 /\
-          (P x /\ m = S (m1 + m2) \/ ~ P x /\ m = m1 + m2).
+        Exactly P m l <->
+        exists m1 mx m2 : nat,
+          Exactly P m1 l1 /\ Exactly P mx [x] /\ Exactly P m2 l2 /\
+          m1 + mx + m2 = m.
 (* begin hide *)
 Proof.
-  intros. pose (splitAt_megaspec A l n). rewrite H in y.
-  decompose [and] y; clear y. rewrite H4; subst; clear H4.
-  split.
-Abort.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n']; cbn in *.
+      inv H. split; intro.
+        inv H.
+          exists 0, 1, n. repeat constructor; assumption.
+          exists 0, 0, m. repeat constructor; assumption.
+          decompose [ex and] H; clear H; subst. inv H1. inv H0.
+            cbn. constructor.
+              assumption.
+              inv H5. cbn. assumption.
+            inv H5. cbn. constructor; assumption.
+    destruct (splitAt n' t) eqn: Heq.
+      destruct p, p. inv H. split; intro.
+        inv H.
+          rewrite (IHt _ _ _ _ Heq) in H4.
+            destruct H4 as (m1 & mx & m2 & IH1 & IH2 & IH3 & IH4); subst.
+            exists (S m1), mx, m2. firstorder (constructor; assumption).
+          rewrite (IHt _ _ _ _ Heq) in H4.
+            destruct H4 as (m1 & mx & m2 & IH1 & IH2 & IH3 & IH4); subst.
+            exists m1, mx, m2. firstorder (constructor; assumption).
+          destruct H as (m1 & mx & m2 & IH1 & IH2 & IH3 & IH4); subst.
+            inv IH1.
+              cbn. constructor.
+                assumption.
+                rewrite (IHt _ _ _ _ Heq). exists n, mx, m2. firstorder.
+              constructor.
+                assumption.
+                rewrite (IHt _ _ _ _ Heq). exists m1, mx, m2. firstorder.
+    inv H.
+Qed.
 (* end hide *)
 
 Lemma Exactly_filter :
@@ -14718,18 +14773,6 @@ Inductive AtMost  {A : Type} (P : A -> Prop) : nat -> list A -> Prop :=
           AtMost P n t -> AtMost P (S n) (h :: t).
 (* end hide *)
 
-Lemma AtMost_NoDup :
-  forall (A : Type) (l : list A),
-    (forall x : A, AtMost (fun y : A => x = y) 1 l) <-> NoDup l.
-(* begin hide *)
-Proof.
-  split.
-    Focus 2.
-      induction 1; intros.
-        constructor.
-Abort.
-(* end hide *)
-
 Lemma AtMost_0 :
   forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
     AtMost P 0 (x :: l) <-> ~ P x /\ AtMost P 0 l.
@@ -14741,20 +14784,13 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma AtMost_cons :
-  forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
-    AtMost P n (x :: l) <->
-    (~ P x /\ AtMost P n l) \/ AtMost P (n - 1) l.
+Lemma AtMost_nil :
+  forall (A : Type) (P : A -> Prop) (n : nat),
+    AtMost P n [] <-> True.
 (* begin hide *)
 Proof.
-  split; intros.
-    inv H; [left | right].
-      split; assumption.
-      cbn. rewrite <- minus_n_O. assumption.
-    decompose [and or] H; clear H.
-      constructor; assumption.
-      destruct n; cbn in *.
-Abort.
+  repeat constructor.
+Qed.
 (* end hide *)
 
 Lemma AtMost_S_cons :
@@ -14771,19 +14807,6 @@ Proof.
       constructor; assumption.
       constructor; assumption.
 Qed.
-(* end hide *)
-
-(* TODO *) Lemma AtMost_1 :
-  forall (A : Type) (P : A -> Prop) (l : list A),
-    AtMost P 1 l <-> Exists P l \/ Forall (fun x : A => ~ P x) l.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    split; intro.
-      right. constructor.
-      constructor.
-    rewrite AtMost_S_cons, Exists_cons, Forall_cons, IHt. firstorder.
-Abort.
 (* end hide *)
 
 Lemma AtMost_S_snoc :
@@ -16912,7 +16935,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Fixpoint intercalate {A : Type} (l : list A) (ll : list (list A)) : list A :=
+(* TODO *) Fixpoint intercalate {A : Type} (l : list A) (ll : list (list A)) : list A :=
 match l, ll with
     | [], _ => join ll
     | _, [] => l
@@ -20529,14 +20552,6 @@ Proof.
       destruct l; inv H3.
 Qed.
 (* end hide *)
-
-Lemma nth_rev :
-  forall (A : Type) (n : nat) (l : list A),
-    n < length l -> nth n (rev l) = nth (length l - S n) l.
-(* begin hide *)
-Proof.
-Admitted.
-(* begin hide *)
 
 Lemma Palindrome_nth :
   forall (A : Type) (l : list A),
