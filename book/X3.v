@@ -6070,6 +6070,21 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma removeFirst_satisfies :
+  forall (A : Type) (p : A -> bool) (l l' : list A) (x : A),
+    removeFirst p l = Some (x, l') -> p x = true.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h) eqn: Hph.
+      inv H. assumption.
+      destruct (removeFirst p t) eqn: Heq.
+        destruct p0. inv H. apply (IHt _ _ eq_refl).
+        inv H.
+Qed.
+(* end hide *)
+
 Lemma removeFirst_length :
   forall (A : Type) (p : A -> bool) (l : list A),
     length l = 0 -> removeFirst p l = None.
@@ -10409,6 +10424,24 @@ Proof.
   intros. destruct (span p l) eqn: Heq.
     destruct p0, p0. eapply elem_span_Some. eassumption.
     apply elem_span_None. assumption.
+Qed.
+(* end hide *)
+
+Lemma elem_removeFirst_None :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    removeFirst p l = None ->
+      forall x : A, elem x l -> p x = false.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H0.
+    destruct (p h) eqn: Hph.
+      inv H.
+      destruct (removeFirst p t) eqn: Heq.
+        destruct p0. inv H.
+        inv H0.
+          assumption.
+          apply IHt; [reflexivity | assumption].
 Qed.
 (* end hide *)
 
@@ -14793,6 +14826,22 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma AtMost_le :
+  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+    AtMost P n l -> forall m : nat, n <= m -> AtMost P m l.
+(* begin hide *)
+Proof.
+  induction 1; intros.
+    constructor.
+    constructor.
+      assumption.
+      apply IHAtMost. assumption.
+    destruct m as [| m'].
+      inv H0.
+      apply AM_skip, IHAtMost, le_S_n, H0.
+Qed.
+(* end hide *)
+
 Lemma AtMost_S_cons :
   forall (A : Type) (P : A -> Prop) (n : nat) (x : A) (l : list A),
     AtMost P (S n) (x :: l) <->
@@ -18990,6 +19039,18 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Permutation_count_replicate_filter :
+  forall (A : Type) (p : A -> bool) (l b e : list A) (x : A),
+    span p l = Some (b, x, e) ->
+      Permutation l (replicate (count p l) x ++ b ++ e).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h) eqn: Hph.
+      cbn. inv H. constructor. apply IHt.
+Abort.
+
 Lemma Permutation_count_conv :
   forall (A : Type) (l1 l2 : list A),
     (forall p : A -> bool, count p l1 = count p l2) -> Permutation l1 l2.
@@ -19032,6 +19093,37 @@ Proof.
   exists bool, id, [true; false], [false; true]. cbn. split.
     constructor.
     intro. apply Permutation_length in H. inv H.
+Qed.
+(* end hide *)
+
+Lemma Permutation_span :
+  forall (A : Type) (p : A -> bool) (l b e : list A) (x : A),
+    span p l = Some (b, x, e) -> Permutation l (b ++ x :: e).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h).
+      inv H. cbn. reflexivity.
+      destruct (span p t) eqn: Heq.
+        destruct p0, p0. inv H. cbn. constructor. apply IHt. reflexivity.
+        inv H.
+Qed.
+(* end hide *)
+
+Lemma Permutation_removeFirst :
+  forall (A : Type) (p : A -> bool) (l l' : list A) (x : A),
+    removeFirst p l = Some (x, l') -> Permutation l (x :: l').
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct (p h).
+      inv H. reflexivity.
+      destruct (removeFirst p t) eqn: Heq.
+        destruct p0. inv H. rewrite perm_swap. constructor. apply IHt.
+          reflexivity.
+        inv H.
 Qed.
 (* end hide *)
 
@@ -19541,26 +19633,33 @@ Qed.
 
 Lemma Cycle_spec :
   forall (A : Type) (l1 l2 : list A),
-    Cycle l1 l2 <-> exists n : nat,
-      l1 = drop n l2 ++ take n l2.
+    Cycle l1 l2 <->
+    exists n : nat, n <= length l1 /\ l1 = drop n l2 ++ take n l2.
 (* begin hide *)
 Proof.
   split.
     induction 1.
-      exists 0. rewrite drop_0, take_0, app_nil_r. reflexivity.
-      destruct IHCycle as (n & IH). subst.
+      exists 0. rewrite drop_0, take_0, app_nil_r. split.
+        apply le_0_n.
+        reflexivity.
+      destruct IHCycle as (n & IH1 & IH2). subst.
         destruct (Nat.leb_spec0 n (length l2)).
           rewrite drop_snoc_le, take_snoc_le; try assumption.
-            exists (S n). cbn. rewrite app_snoc_l. reflexivity.
+            exists (S n). cbn. rewrite app_snoc_l. split.
+              rewrite <- (@app_take_drop _ l2 n) in l.
+                rewrite length_app in *. cbn. omega.
+              reflexivity.
           assert (exists k : nat, n = S (length l2 + k)).
             apply lt_plus_S. omega.
             destruct H0 as (k & Hk). subst. rewrite drop_length'.
               rewrite take_length'.
-                exists 1. cbn. rewrite drop_0, take_0. apply snoc_app_singl.
+                exists 1. cbn. rewrite drop_0, take_0. split.
+                  rewrite length_snoc. omega.
+                  apply snoc_app_singl.
                 rewrite length_snoc. omega.
               rewrite length_snoc. omega.
-    destruct 1 as (n & H); subst.
-      revert l2. induction n as [| n']; intros.
+    destruct 1 as (n & Hle & H); subst.
+      revert l2 Hle. induction n as [| n']; intros.
         rewrite drop_0, take_0, app_nil_r. constructor.
         destruct l2 as [| h t]; cbn.
           constructor.
@@ -19570,7 +19669,8 @@ Proof.
               1-2: assumption.
             specialize (IHn' (snoc h t)). rewrite drop_snoc_le in IHn'.
               rewrite take_snoc_le in IHn'.
-                constructor. rewrite app_snoc_l in IHn'. assumption.
+                constructor. rewrite app_snoc_l in IHn'. cbn in Hle.
+                  apply IHn'. omega.
                 omega.
               omega.
 Qed.
@@ -19623,8 +19723,8 @@ Lemma Cycle_cons :
 Proof.
   exists nat, 0, [1; 2; 3], [3; 1; 2]. split.
     constructor. cbn. constructor.
-    intro. apply Cycle_spec in H. destruct H as (n & H).
-      destruct n as [| [| [| [| n']]]]; cbn in H; inv H.
+    intro. apply Cycle_spec in H. destruct H as (n & H1 & H2).
+      destruct n as [| [| [| [| n']]]]; cbn in H2; inv H2.
 Qed.
 (* end hide *)
 
@@ -19635,8 +19735,8 @@ Lemma Cycle_cons_inv :
 Proof.
   exists nat, 3, [2; 3; 1], [1; 3; 2]. split.
     constructor. cbn. constructor. cbn. constructor.
-    intro. apply Cycle_spec in H. destruct H as (n & H).
-      destruct n as [| [| [| n']]]; inv H.
+    intro. apply Cycle_spec in H. destruct H as (n & H1 & H2).
+      destruct n as [| [| [| n']]]; inv H2.
 Qed.
 (* end hide *)
 
@@ -19647,8 +19747,8 @@ Lemma Cycle_snoc :
 Proof.
   exists nat, 0, [1; 2; 3], [3; 1; 2]. split.
     constructor. cbn. constructor.
-    intro. apply Cycle_spec in H. destruct H as (n & H).
-      destruct n as [| [| [| [| n']]]]; cbn in H; inv H.
+    intro. apply Cycle_spec in H. destruct H as (n & H1 & H2).
+      destruct n as [| [| [| [| n']]]]; cbn in H2; inv H2.
 Qed.
 (* end hide *)
 
@@ -19657,19 +19757,20 @@ Lemma Cycle_sym :
     Cycle l1 l2 -> Cycle l2 l1.
 (* begin hide *)
 Proof.
-  intros. rewrite Cycle_spec in *. destruct H as (n & H). subst.
+  intros. rewrite Cycle_spec in *. destruct H as (n & H1 & H2). subst.
   destruct (Nat.leb_spec0 (length l2) n);
   eexists; rewrite drop_app, take_app, drop_drop, take_take, length_drop.
     instantiate (1 := 0). rewrite ?plus_0_r. cbn.
       rewrite Nat.min_0_r, ?take_0, drop_0, ?app_nil_r.
-        rewrite drop_length', take_length'.
-          cbn. reflexivity.
-          1-2: assumption.
+        rewrite drop_length', take_length'; try assumption. split.
+          apply le_0_n.
+          reflexivity.
     instantiate (1 := length l2 - n). rewrite <- le_plus_minus, drop_length.
       cbn. replace (length l2 - n - (length l2 - n)) with 0.
       rewrite drop_0, take_drop, <- le_plus_minus, take_length.
-      rewrite Nat.min_0_r, take_0, app_nil_r, app_take_drop. reflexivity.
-      1-3: omega.
+      rewrite Nat.min_0_r, take_0, app_nil_r, app_take_drop. split.
+        2: reflexivity.
+        all: omega.
 Qed.
 (* end hide *)
 
@@ -19972,8 +20073,8 @@ Lemma Cycle_intersperse :
 Proof.
   exists nat, 0, [1; 2], [2; 1]. split.
     do 2 constructor.
-    cbn. intro. apply Cycle_spec in H. destruct H as (n & H).
-      destruct n as [| [| [| n']]]; inv H.
+    cbn. intro. apply Cycle_spec in H. destruct H as (n & H1 & H2).
+      destruct n as [| [| [| n']]]; inv H2.
 Qed.
 (* end hide *)
 
