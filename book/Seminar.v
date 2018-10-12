@@ -168,7 +168,7 @@ Qed.
 
 (** Even though there are functions going from [unit] to [bool] and the
     other way around too, they are in no sense equivalences. Particularly,
-    [unit] is not in bijction with [bool]. *)
+    [unit] is not in bijection with [bool]. *)
 
 Theorem unit_not_bool : unit <> bool.
 (* begin hide *)
@@ -349,7 +349,7 @@ Qed.
     of constructors: 0 ([False]), 1 ([BePatient]), 2 or more ([BePatient]
     on steroids with more constructors).
 
-    But what about nonrecursive constructors? Can a propositiona with a
+    But what about nonrecursive constructors? Can a proposition with a
     nonrecursive constructor be false? *)
 
 Inductive LatentFalsity : Prop :=
@@ -374,7 +374,7 @@ Proof. firstorder. Qed.
     of [False] as an argument. Since there isn't one, this constructor can
     never be used to build a proof of [LatentFalsity].
 
-    Our voyage into the land of constructors looks rather grimm. We have
+    Our voyage into the land of constructors looks rather grim. We have
     met false propositions with any number of constructors, recursive or
     not. We have also seen that true propositions can have one or more
     constructors.
@@ -413,7 +413,9 @@ Qed.
 (** **** Exercise (medium) *)
 
 (** Find a simple heuristic for deciding (at the metatheoretical level)
-    whether an inductive proposition can be proven or not. *)
+    whether an inductive proposition can be proven or not. Assume that
+    this inductive proposition's constructors can only refer to other
+    inductive propositions. *)
 
 (* begin hide *)
 (** A proposition is true if it has at least one nonrecursive constructor
@@ -1552,8 +1554,9 @@ end.
     because we can prove [P] for [true] and [false] in any order we like. *)
 
 Definition bool_ind'' :
-  forall (P : bool -> Prop), P false -> P true ->
-    forall b : bool, P b.
+  forall P : bool -> Prop,
+    P false -> P true ->
+      forall b : bool, P b.
 Proof.
   destruct b; assumption.
 Qed.
