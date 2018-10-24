@@ -30,7 +30,8 @@
 
 (** Najnowszy plan refaktoringu:
     - Wstęp
-    - R1: Logika konstruktywna, potem klasyczna. Zrobić tak żeby można było pisać "Classically $ coś tam".
+    - R1: Logika konstruktywna, potem klasyczna. Zrobić tak żeby można było
+          pisać "Classically $ coś tam".
     - R2: Typy induktywne — enumeracje (na przykładzie dni tygodnia?).
           Podstawy obliczeń (to co obecnie jest przy opisie typu [bool]).
     - R3: Logika boolowska (dokładnie wszystko opisać i powiązać z logiką
@@ -84,8 +85,8 @@
 (** TODO dla X3:
     - dokończ [isEmpty]
     - opisz niestandardowe reguły indukcyjne dla list (najlepiej przed
-      przed funkcją [intersperse].
-    - przenieś [intersperse] na sam koniec funkcji i dorzucić jeszcze
+      przed funkcją [intersperse]).
+    - przenieś [intersperse] na sam koniec funkcji i dorzuć jeszcze
       kilka dziwnych (z niestandardowym kształtem indukcji)
     - opisz zwijanie i rozwijanie ([fold] i [foldl])
     - opisz sumy prefiksowe ([scanr] i [scanl])

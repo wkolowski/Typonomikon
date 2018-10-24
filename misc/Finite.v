@@ -1,12 +1,12 @@
-Require Import List.
-Import ListNotations.
+Add Rec LoadPath "/home/zeimer/Code/Coq".
+Require Import X3.
 
 Module Finite.
 
 Class Finite (A : Type) : Type :=
 {
     enumerate : list A;
-    spec : forall x : A, In x enumerate
+    spec : forall x : A, elem x enumerate
 }.
 
 Arguments enumerate _ [Finite].
@@ -16,7 +16,7 @@ Instance Finite_bool : Finite bool :=
     enumerate := [false; true]
 }.
 Proof.
-  destruct x; compute; auto.
+  destruct x; repeat constructor.
 Defined.
 
 Instance Finite_option {A : Type} (FA : Finite A) : Finite (option A) :=
@@ -25,9 +25,31 @@ Instance Finite_option {A : Type} (FA : Finite A) : Finite (option A) :=
 }.
 Proof.
   destruct x.
-    right. apply in_map. apply spec.
-    left. trivial.
+    right. apply elem_map. apply spec.
+    left.
 Defined.
+
+Lemma Finite_nat :
+  Finite nat -> False.
+Proof.
+  intros [l H].
+  pose (n := length l).
+  assert (Incl (iterate S n 0) l).
+    unfold Incl. intros m _. apply H.
+    Search Dup.
+    induction n as [| n']; cbn.
+      apply Incl_nil.
+      unfold Incl. intros m Hm. inv Hm.
+        apply H.
+        apply H.
+
+Lemma Finite_list :
+  forall (A : Type) (x : A),
+    Finite (list A) -> False.
+Proof.
+  intros A x [l H].
+  pose (n := length l).
+Abort.
 
 End Finite.
 

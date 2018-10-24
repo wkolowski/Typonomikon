@@ -1,6 +1,7 @@
 (** * R0: Wstęp *)
 
 (** * Cel *)
+
 (** Celem tego kursu jest zapoznanie czytelnika z kilkoma rzeczami:
     - programowaniem funkcyjnym w duchu Haskella i rodziny ML,
       przeciwstawionym programowaniu imperatywnemu
@@ -21,6 +22,7 @@
     na dogłębne wyjaśnienia przyjdzie w kolejnych rozdziałach. *)
 
 (** * Wybór *)
+
 (** Istnieje wiele środków, które pozwoliłyby nam osiągnąć postawione
     cele, a jako że nie sposób poznać ich wszystkich, musimy dokonać
     wyboru.
@@ -38,7 +40,9 @@
     rozwoju, oraz Coq. Nasz wybór padnie właśnie na ten ostatni język. *)
 
 (** * Programowanie i dowodzenie *)
+
 (** ** Alan Turing i jego maszyna *)
+
 (** Teoretyczna nauka o obliczeniach powstała niedługo przed wynalezieniem
     pierwszych komputerów. Od samego początku definicji obliczalności
     oraz modeli obliczeń było wiele. Choć pokazano później, że wszystkie
@@ -68,6 +72,7 @@
       globalny stan) *)
 
 (** ** Alonzo Church i rachunek λ *)
+
 (** Innym modelem obliczeń, nieco bardziej abstrakcyjnym czy też
     "software'owym" jest rachunek λ, wymyślony przez Alonzo Churcha.
     Nie stał się tak wpływowy jak maszyny Turinga, mimo że jest równie
@@ -95,12 +100,13 @@
     zdania logiczne odpowiadają typom, a dowody — programom. *)
 
 (** ** Martin-Löf, Coquand, CoC, CIC i Coq *)
+
 (** Kolejnego kroku dokonał Jean-Yves Girard, tworząc System F —
     typowany, polimorficzny rachunek λ, który umożliwia reprezentację
     funkcji generycznych, działających na argumentach dowolnego typu
     w ten sam sposób (przykładem niech będzie funkcja identycznościowa).
     System ten został również odkryty niezależnie przez Johna Reynoldsa.
-    
+
     Następna gałąź badań, która przyczyniła się do obecnego kształtu
     języka Coq, została zapoczątkowana przez szwedzkiego matematyka
     imieniem Per Martin-Löf. W swojej intuicjonistycznej teorii
@@ -124,6 +130,75 @@
     obecną podstawą teoretyczną języka Coq (po drobnych rozszerzeniach,
     takich jak dodanie typów koinduktywnych oraz hierarchii uniwersów,
     również pożyczonej od Martina-Löfa). *)
+
+(** * Filozofia i matematyka *)
+
+(** ** Konstruktywizm *)
+
+(** Po co to wszystko, zapytasz? Czy te rzeczy istnieją tylko dlatego, że
+    kilku dziwnym ludziom się nudziło? Nie do końca. Przyjrzyjmy się pewnemu
+    wesołemu twierdzeniu i jego smutnemu dowodowi.
+
+    Twierdzenie: istnieją takie dwie liczby niewymierne a i b, że a ^ b
+    (a podniesione do potęgi b) jest liczbą wymierną.
+
+    Dowód: jeżeli √2 ^ √2 jest niewymierny, to niech a = √2 ^ √2, b = √2.
+    Wtedy a ^ b = (√2 ^ √2) ^ √2 = √2 ^ (√2 * √2) = √2 ^ 2 = 2.
+    W przeciwnym wypadku (czyli gdy √2 ^ √2 jest wymierny) niech
+    a = b = √2. Wtedy a ^ b = √2 ^ √2 jest wymierny na mocy założenia.
+
+    Fajny dowód, co? To teraz dam ci zagadkę: podaj mi dwie niewymierne
+    liczby a i b takie, że a ^ b jest wymierne. Pewnie zerkasz teraz do
+    dowodu, ale zaraz... cóż to? Jak to możliwe, że ten wredny dowód
+    udowadnia istnienie takich liczb, mimo że nie mówi wprost, co to za
+    liczby?
+
+    Tym właśnie jest niekonstruktywizm - możesz pokazać, że coś istnieje,
+    ale bez wskazywania konkretnego obiektu. Możesz np. pokazać, że równanie
+    ma rozwiązanie i wciąż nie wiedzieć, co to za rozwiązanie. Niewesoło,
+    prawda?
+
+    Podobnego zdania był dawno temu holenderski matematyk L. E. J. Brouwer.
+    Obraził się on więc na tego typu dowody i postanowił zrobić swoją własną
+    logikę i oprzeć na niej swoją własną, lepszą matematykę. Powstała w ten
+    sposób logika konstruktywna okazała się być mniej więcej tym samym, co
+    wspomniany wyżej rachunek lambda, choć Brouwer jeszcze o tym nie
+    wiedział. *)
+
+(** ** Praktyka *)
+
+(** W międzyczasie na osiągnięciach wymienionych wyżej panów zaczęto budować
+    wieżę z kości słoniowej. Chociaż nigdy nie dosięgnie ona nieba (można
+    pokazać, że niektóre problemy są niemożliwe do rozwiązania matematycznie
+    ani za pomocą komputerów), to po jakimś czasie zaczęła być przydatna.
+
+    W połowie XIX wieku postawiono problem, który można krótko podsumować
+    tak: czy każdą mapę polityczną świata da się pomalować czterema kolorami?
+
+    Przez bardzo długi czas próbowano go rozwiązywać na różne sposoby, ale
+    wszystkie one zawodziły. Po ponad stu latach prób problem rozwiązali
+    Appel i Haken pokazując, że każdą mapę da się pomalować czterema kolorami.
+    Popełnili oni jednak grzech bardzo ciężki, gdyż użyli do tego komputerów.
+
+    Programy, które napisali, by udowodnić twierdzenie, wiele razy okazały
+    się błędne i musiały być wielokrotnie poprawiane. Sprawiło to, że część
+    matematyków nie uznała ich dowodu, gdyż nie umieli oni ręcznie sprawdzić
+    poprawności wszystkich pomocniczych programów.
+
+    Po upływie kolejnych 30 latach dowód udało się sformalizować w Coqu,
+    co ostatecznio zamknęło sprawę. Morał płynący z tej historii jest dość
+    prosty:
+    - niektóre twierdzenia można udowodnić jedynie sprawdzając dużą ilość
+      przypadków, co jest trudne dla ludzi
+    - można przy dowodzeniu korzystać z komputerów i nie musi to wcale
+      podważać wiary w słuszność dowodu, a może ją wręcz wzmocnić *)
+
+(** ** Homofobia... ekhm, homotopia, czyli quo vadimus? *)
+
+(** To jednak nie koniec niebezpiecznych związków matematyków z komputerami.
+*)
+
+(** TODO *)
 
 (** * Literatura *)
 
@@ -224,6 +299,7 @@
     - https://stackoverflow.com/questions/tagged/coq *)
 
 (** * Sprawy techniczne *)
+
 (** Kurs ten tworzę z myślą o osobach, które potrafią programować w
     jakimś języku imperatywnym oraz znają podstawy logiki klasycznej,
     ale będę się starał uczynić go jak najbardziej zrozumiałym dla
