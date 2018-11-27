@@ -75,11 +75,22 @@
 *)
 
 (** TODO dla R1:
-    - zrefaktoryzować rozdział: opisać zarówno logikę konstruktywną jak i
-      klasyczną oraz przedstawić je obie jako użyteczne
-    - przenieść paradoksy na końce opisów obu logik, żeby zobrazować
-      różnice między językiem naturalnym i matematycznym
-    - przejrzeć zadania
+    - zrefaktoryzować rozdział:
+      - opisać najpierw logikę konstruktywną, a potem klasyczną
+      - przedstawić obie jako użyteczne
+      - na końcu każdego z opisów dać paradoksy, żeby zobrazować
+        różnice między językiem naturalnym i matematycznym
+    - przejrzeć zadania:
+      - wyrzucić zadania mącące (mieszające typy i zdania)
+      - dodać zadanie dotyczące czytania twierdzeń i dowodów
+      - dodać zadania dotyczące czytania formuł (precedencja etc.)
+    - dokończyć ściągę i dać na koniec
+    - być może podzielić rozdział na kilka
+    - potencjalnie pozbyć się sekcji
+    - dodać jakieś wyjaśnienia do ćwiczeń
+    - więcej zadań z exists
+    - zadania z klasycznego rachunku kwantyfikatorów
+    - napisać coś o nazwach zmiennych związanych
 *)
 
 (** TODO dla X3:

@@ -165,7 +165,7 @@
     wspomniany wyżej rachunek lambda, choć Brouwer jeszcze o tym nie
     wiedział. *)
 
-(** ** Praktyka *)
+(** ** Praktyka i homofobia... ekhm, homotopia *)
 
 (** W międzyczasie na osiągnięciach wymienionych wyżej panów zaczęto budować
     wieżę z kości słoniowej. Chociaż nigdy nie dosięgnie ona nieba (można
@@ -175,7 +175,7 @@
     W połowie XIX wieku postawiono problem, który można krótko podsumować
     tak: czy każdą mapę polityczną świata da się pomalować czterema kolorami?
 
-    Przez bardzo długi czas próbowano go rozwiązywać na różne sposoby, ale
+    Przez bardzo długi czas próbowano go rozwiązywać na różne problemy, ale
     wszystkie one zawodziły. Po ponad stu latach prób problem rozwiązali
     Appel i Haken pokazując, że każdą mapę da się pomalować czterema kolorami.
     Popełnili oni jednak grzech bardzo ciężki, gdyż użyli do tego komputerów.
@@ -183,25 +183,10 @@
     Programy, które napisali, by udowodnić twierdzenie, wiele razy okazały
     się błędne i musiały być wielokrotnie poprawiane. Sprawiło to, że część
     matematyków nie uznała ich dowodu, gdyż nie umieli oni ręcznie sprawdzić
-    poprawności wszystkich tych pomocniczych programów.
-
-    Po upływie kolejnych 30 latach dowód udało się sformalizować w Coqu,
-    co ostatecznio zamknęło sprawę. Morał płynący z tej historii jest dość
-    prosty:
-    - niektóre twierdzenia można udowodnić jedynie sprawdzając dużą ilość
-      przypadków, co jest trudne dla ludzi
-    - można przy dowodzeniu korzystać z komputerów i nie musi to wcale
-      podważać wiary w słuszność dowodu, a może ją wręcz wzmocnić *)
-
-(** ** Homofobia... ekhm, homotopia, czyli quo vadimus? *)
-
-(** To jednak nie koniec niebezpiecznych związków matematyków z komputerami.
-
-    Dawno, dawno temu, w nie tak odległej galaktyce (a konkretniej w Rosji)
-    był sobie matematyk nazwiskiem Voevodsky.
-
-
+    poprawności wszystkich pomocniczych programów.
 *)
+
+(** ** Quo vadimus? *)
 
 (** TODO *)
 

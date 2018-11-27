@@ -2671,9 +2671,11 @@ Proof. sc. Qed.
 (* end hide *)
 
 Inductive trans_clos {A : Type} (R : rel A) : rel A :=
-    | tc_step : forall x y : A, R x y -> trans_clos R x y
-    | tc_trans : forall x y z : A,
-        trans_clos R x y -> trans_clos R y z -> trans_clos R x z.
+    | tc_step :
+        forall x y : A, R x y -> trans_clos R x y
+    | tc_trans :
+        forall x y z : A,
+          trans_clos R x y -> trans_clos R y z -> trans_clos R x z.
 
 (* begin hide *)
 Hint Constructors trans_clos.

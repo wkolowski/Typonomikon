@@ -302,7 +302,7 @@ Eval cbv in negb true.
     jedynie do ich definiowania i dowodzenia ich poprawności. Aby użyć
     programu napisanego w Coqu w świecie rzeczywistym, stosuje się
     zazwyczaj mechanizm ekstrakcji, który pozwala z programu napisanego
-    w Coqu atuomatycznie uzyskać program w Scheme, OCamlu lub Haskellu,
+    w Coqu automatycznie uzyskać program w Scheme, OCamlu lub Haskellu,
     które są od Coqa dużo szybsze i dużo powszechniej używane. My jednak
     nie będziemy się tym przejmować. 
 
@@ -338,7 +338,7 @@ Qed.
     musimy udowodnić twierdzenie osobno dla przypadku, gdy
     [b = true] oraz dla [b = false]. Potem przy pomocy
     taktyki [simpl] redukujemy (czyli wykonujemy) programy
-    [negb (negb true)] i [negb (negb false)]. zauważ, że
+    [negb (negb true)] i [negb (negb false)]. Zauważ, że
     byłoby to niemożliwe, gdyby argument był postaci [b]
     (nie można wtedy zaaplikować żadnej redukcji), ale jest
     jak najbardziej możliwe, gdy jest on postaci [true] albo
@@ -423,6 +423,266 @@ Theorem andb_true_elim :
 Proof.
   destruct b1, b2; cbn; split; auto.
 Qed.
+(* end hide *)
+
+(** **** Ćwiczenie (róża kierunków) *)
+
+Module Directions.
+
+(** Zdefiniuj typ opisujący kierunki podstawowe (północ, południe, wschód,
+    zachód - dodatkowe punkty za nadanie im sensownych nazw). *)
+
+(* begin hide *)
+Inductive D : Type :=
+    | N : D
+    | S : D
+    | W : D
+    | E : D.
+(* end hide *)
+
+(** Zdefiniuj funkcje [turnL] i [turnR], które reprezentują obrót o 90
+    stopni przeciwnie/zgodnie z ruchem wskazówek zegara. Sformułuj i
+    udowodnij twierdzenia mówiące, że:
+    - obrót cztery razy w lewo/prawo niczego nie zmienia
+    - obrót trzy razy w prawo to tak naprawdę obrót w lewo (jest to tzw.
+      pierwsze twierdzenie korwinizmu)
+    - obrót trzy razy w lewo to obrót w prawo (jest to tzw. drugie
+      twierdzenie korwinizmu)
+    - obrót w prawo, a potem w lewo niczego nie zmienia
+    - obrót w lewo, a potem w prawo niczego nie zmienia
+    - każdy kierunek to północ, południe, wschód lub zachód (tzn. nie ma
+      innych kierunków) *)
+
+(* begin hide *)
+Definition turnL (d : D) : D :=
+match d with
+    | N => W
+    | W => S
+    | S => E
+    | E => N
+end.
+
+Definition turnR (d : D) : D :=
+match d with
+    | N => E
+    | E => S
+    | S => W
+    | W => N
+end.
+
+Lemma turnL4 :
+  forall d : D, turnL (turnL (turnL (turnL d))) = d.
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma turnR4 :
+  forall d : D, turnR (turnR (turnR (turnR d))) = d.
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma turnL3 :
+  forall d : D, turnL (turnL (turnL d)) = turnR d.
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma turnR3 :
+  forall d : D, turnR (turnR (turnR d)) = turnL d.
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma turnL_turnR :
+  forall d : D, turnL (turnR d) = d.
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma turnR_turnL :
+  forall d : D, turnR (turnL d) = d.
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma D_uniqueness :
+  forall d : D, d = N \/ d = S \/ d = W \/ d = E.
+Proof.
+  destruct d; repeat (left + right); trivial; fail.
+Qed.
+(* end hide *)
+
+(** Zdefiniuj funkcję [opposite], które danemu kierunkowi przyporządkowuje
+    kierunek do niego przeciwny (czyli północy przyporządkowuje południe
+    etc.). Wymyśl i udowodnij jakąś ciekawę specyfikację dla tej funkcji
+    (wskazówka: powiąż ją z [turnL] i [turnR]). *)
+
+(* begin hide *)
+Definition opposite (d : D) : D :=
+match d with
+    | N => S
+    | S => N
+    | W => E
+    | E => W
+end.
+
+Lemma opposite_involutive :
+  forall d : D, opposite (opposite d) = d.
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma opposite_turnL :
+  forall d : D, opposite (turnL d) = turnR d.
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma opposite_turnR :
+  forall d : D, opposite (turnR d) = turnL d.
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma opposite_turnL_comm :
+  forall d : D, opposite (turnL d) = turnL (opposite d).
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma opposite_turnR_comm :
+  forall d : D, opposite (turnR d) = turnR (opposite d).
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+(** Zdefiniuj funkcję [is_opposite], która bierze dwa kierunki i zwraca
+    [true], gdy są one przeciwne oraz [false] w przeciwnym wypadku. Wymyśl
+    i udowodnij jakąś specyfikację dla tej funkcji. Wskazówka: jakie są jej
+    związku z [turnL], [turnR] i [opposite]? *)
+
+(* begin hide *)
+Definition is_opposite (d1 d2 : D) : bool :=
+match d1, d2 with
+    | N, S => true
+    | S, N => true
+    | W, E => true
+    | E, W => true
+    | _, _ => false
+end.
+
+Lemma is_opposite_turnL :
+  forall d1 d2 : D,
+    is_opposite (turnL d1) (turnL d2) = is_opposite d1 d2.
+Proof.
+  destruct d1, d2; cbn; reflexivity.
+Qed.
+
+Lemma is_opposite_turnR :
+  forall d1 d2 : D,
+    is_opposite (turnR d1) (turnR d2) = is_opposite d1 d2.
+Proof.
+  destruct d1, d2; cbn; reflexivity.
+Qed.
+
+Lemma is_opposite_opposite_l :
+  forall d : D, is_opposite (opposite d) d = true.
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma is_opposite_opposite_r :
+  forall d : D, is_opposite d (opposite d) = true.
+Proof.
+  destruct d; cbn; reflexivity.
+Qed.
+
+Lemma is_opposite_comm :
+  forall d1 d2 : D,
+    is_opposite d1 d2 = is_opposite d2 d1.
+Proof.
+  destruct d1, d2; cbn; reflexivity.
+Qed.
+
+(** Pokaż, że funkcje [turnL], [turnR] oraz [opposite] są injekcjami i
+    surjekcjami (co to dokładnie znacz, dowiemy się później). Uwaga: to
+    zadanie wymaga użyci taktyki [inversion], która jest opisana w
+    podrozdziale o polimorfizmie. *)
+
+Lemma turnL_inj :
+  forall x y : D, turnL x = turnL y -> x = y.
+Proof.
+  destruct x, y; cbn; intros; inversion H; reflexivity.
+Qed.
+
+Lemma turnR_inj :
+  forall x y : D, turnR x = turnR y -> x = y.
+Proof.
+  destruct x, y; cbn; intros; inversion H; reflexivity.
+Qed.
+
+Lemma opposite_inj :
+  forall x y : D, opposite x = opposite y -> x = y.
+Proof.
+  destruct x, y; cbn; intros; inversion H; reflexivity.
+Qed.
+
+Lemma turnL_sur :
+  forall y : D, exists x : D, turnL x = y.
+Proof.
+  intro. exists (turnR y). apply turnL_turnR.
+Qed.
+
+Lemma turnR_sur :
+  forall y : D, exists x : D, turnR x = y.
+Proof.
+  intro. exists (turnL y). apply turnR_turnL.
+Qed.
+
+Lemma opposite_sur :
+  forall y : D, exists x : D, opposite x = y.
+Proof.
+  intro. exists (opposite y). apply opposite_involutive.
+Qed.
+
+End Directions.
+
+(** **** Ćwiczenie (dni tygodnia) TODO *)
+
+(* begin hide *)
+Inductive Day : Type :=
+    | Mon : Day
+    | Tue : Day
+    | Wed : Day
+    | Thu : Day
+    | Fri : Day
+    | Sat : Day
+    | Sun : Day.
+
+
+Definition nextDay (d : Day) : Day :=
+match d with
+    | Mon => Tue
+    | Tue => Wed
+    | Wed => Thu
+    | Thu => Fri
+    | Fri => Sat
+    | Sat => Sun
+    | Sun => Mon
+end.
+
+Definition prevDay (d : Day) : Day :=
+match d with
+    | Mon => Sun
+    | Tue => Mon
+    | Wed => Tue
+    | Thu => Wed
+    | Fri => Thu
+    | Sat => Fri
+    | Sun => Sat
+end.
 (* end hide *)
 
 (** ** Konstruktory rekurencyjne *)

@@ -210,13 +210,13 @@ Check P.
 
 (** Zacznijmy od czegoś prostego: pokażemy, że [P] implikuje [P]. *)
 
-Theorem impl_refl : P -> P.
+Lemma impl_refl : P -> P.
 Proof.
   intro dowód_na_to_że_P_zachodzi.
   exact dowód_na_to_że_P_zachodzi.
 Qed.
 
-(** Słowo kluczowe [Theorem] obwieszcza, że chcemy podać twierdzenie.
+(** Słowo kluczowe [Lemma] obwieszcza, że chcemy podać twierdzenie.
     Musi mieć ono nazwę (tutaj [impl_refl]). Samo twierdzenie podane jest
     po dwukropku — twierdzenie jest typem, a jego udowodnienie sprowadza
     się do skonstruowania termu tego typu. Zauważmy też, że każda
@@ -231,7 +231,7 @@ Qed.
     poprawia czytelność, więc warto ją stosować. 
 
     Jeżeli każesz Coqowi zinterpretować komendę zaczynającą się
-    od [Theorem], po prawej stronie ekranu pojawi się stan aktualnie
+    od [Lemma], po prawej stronie ekranu pojawi się stan aktualnie
     przeprowadzanego dowodu.
 
     Od góry mamy: ilość podcelów (rozwiązanie wszystkich kończy dowód)
@@ -291,7 +291,7 @@ Qed.
 
     Dowód kończy się zazwyczaj komendą [Qed], która go zapisuje. *)
 
-Theorem impl_refl' : P -> P.
+Lemma impl_refl' : P -> P.
 Proof.
   intro. assumption.
 Qed.
@@ -351,7 +351,7 @@ Print impl_refl'.
     skonstruowany przez taktyki jest poprawnie typowany,
     a następnie zaakceptował nasz dowód. *)
 
-Theorem modus_ponens :
+Lemma modus_ponens :
   (P -> Q) -> P -> Q.
 Proof.
   intros. apply H. assumption.
@@ -410,7 +410,7 @@ Qed.
 
 (** Udowodnij poniższe twierdzenia. *)
 
-Theorem impl_trans :
+Lemma impl_trans :
   (P -> Q) -> (Q -> R) -> (P -> R).
 (* begin hide *)
 Proof.
@@ -418,7 +418,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem impl_permute :
+Lemma impl_permute :
   (P -> Q -> R) -> (Q -> P -> R).
 (* begin hide *)
 Proof.
@@ -428,7 +428,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem impl_dist :
+Lemma impl_dist :
   (P -> Q -> R) -> ((P -> Q) -> (P -> R)).
 (* begin hide *)
 Proof.
@@ -442,7 +442,7 @@ Qed.
 
 (** Udowodnij następujące twierdzenie bez używania taktyki [apply]. *)
 
-Theorem modus_ponens' :
+Lemma modus_ponens' :
   (P -> Q) -> P -> Q.
 (* begin hide *)
 Proof.
@@ -452,7 +452,7 @@ Qed.
 
 (** ** Fałsz *)
 
-Theorem ex_falso : False -> P.
+Lemma ex_falso : False -> P.
 Proof.
   intro. inversion H.
 Qed.
@@ -481,7 +481,7 @@ Qed.
 
 (** ** Prawda *)
 
-Theorem truth : True.
+Lemma truth : True.
 Proof.
   trivial.
 Qed.
@@ -552,7 +552,7 @@ Print not.
     nie przekonuje cię to rozumowanie, przyjrzyj się uważnie poniższemu
     twierdzeniu. *)
 
-Theorem P_notP : ~P -> P -> False.
+Lemma P_notP : ~P -> P -> False.
 Proof. 
   intros HnotP HP.
   unfold not in HnotP.
@@ -570,7 +570,7 @@ Qed.
     ona zdefiniowana tak, aby uzyskanie fałszu z dwóch sprzecznych
     przesłanek było jak najprostsze. *)
 
-Theorem P_notP' : ~P -> P -> 42 = 666.
+Lemma P_notP' : ~P -> P -> 42 = 666.
 Proof.
   intros. cut False.
     inversion 1.
@@ -615,14 +615,14 @@ Qed.
 
 (** Udowodnij poniższe twierdzenia. *)
 
-Theorem not_False : ~False.
+Lemma not_False : ~False.
 (* begin hide *)
 Proof.
   intro. assumption.
 Qed.
 (* end hide *)
 
-Theorem not_True : ~True -> False.
+Lemma not_True : ~True -> False.
 (* begin hide *)
 Proof.
   intro. apply H. trivial.
@@ -634,14 +634,14 @@ Qed.
 (** Udowodnij poniższe twierdzenia. Zastanów się, czy można udowodnić
     [~~P -> P]. *)
 
-Theorem dbl_neg_intro : P -> ~~P.
+Lemma dbl_neg_intro : P -> ~~P.
 (* begin hide *)
 Proof.
   unfold not. intros. apply H0. assumption.
 Qed.
 (* end hide *)
 
-Theorem double_neg_elim_irrefutable :
+Lemma double_neg_elim_irrefutable :
   ~~ (~~ P -> P).
 (* begin hide *)
 Proof.
@@ -656,7 +656,7 @@ Qed.
 (** Udowodnij poniższe twierdzenie. Jakie są różnice między negacją, podwójną
     negacją i potrójną negacją? *)
 
-Theorem triple_neg_rev : ~~~P -> ~P.
+Lemma triple_neg_rev : ~~~P -> ~P.
 (* begin hide *)
 Proof.
   unfold not. intros. apply H. intro. apply H1. assumption.
@@ -665,7 +665,7 @@ Qed.
 
 (** ** Koniunkcja *)
 
-Theorem and_intro : P -> Q -> P /\ Q.
+Lemma and_intro : P -> Q -> P /\ Q.
 Proof.
   intros. split.
     assumption.
@@ -687,7 +687,7 @@ Qed.
     dla prawego. Ponieważ stary cel został rozwiązany, to do udowodnienia
     pozostają nam tylko te dwa nowe podcele. *)
 
-Theorem and_proj1 : P /\ Q -> P.
+Lemma and_proj1 : P /\ Q -> P.
 Proof.
   intro H. destruct H. assumption.
 Qed.
@@ -700,7 +700,7 @@ Qed.
     rozbita na hipotezy [H : P] oraz [H0 : Q]. Zauważ, że nowe hipotezy
     dostały nowe, domyślne nazwy. *)
 
-Theorem and_proj1' : P /\ Q -> P.
+Lemma and_proj1' : P /\ Q -> P.
 Proof.
   intro HPQ. destruct HPQ as [HP HQ]. assumption.
 Qed.
@@ -722,28 +722,28 @@ Qed.
 
 (** Udowodnij poniższe twierdzenia. *)
 
-Theorem and_proj2 : P /\ Q -> Q.
+Lemma and_proj2 : P /\ Q -> Q.
 (* begin hide *)
 Proof.
   intro. destruct H. assumption.
 Qed.
 (* end hide *)
 
-Theorem and3_intro : P -> Q -> R -> P /\ Q /\ R.
+Lemma and3_intro : P -> Q -> R -> P /\ Q /\ R.
 (* begin hide *)
 Proof.
   intros. split. assumption. split. assumption. assumption.
 Qed.
 (* end hide *)
 
-Theorem and3_proj : P /\ Q /\ R -> Q.
+Lemma and3_proj : P /\ Q /\ R -> Q.
 (* begin hide *)
 Proof.
   intro. destruct H. destruct H0. assumption.
 Qed.
 (* end hide *)
 
-Theorem noncontradiction : ~(P /\ ~P).
+Lemma noncontradiction : ~(P /\ ~P).
 (* begin hide *)
 Proof.
   intro. destruct H. apply H0. assumption.
@@ -771,7 +771,7 @@ Print iff.
     obliczeniowa wywodzi się z interpretacji obliczeniowej koniunkcji
     oraz implikacji. *)
 
-Theorem iff_intro : (P -> Q) -> (Q -> P) -> (P <-> Q).
+Lemma iff_intro : (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
   intros. split.
     intro. apply H. assumption.
@@ -781,7 +781,7 @@ Qed.
 (** Do rozbijania równoważności będących celem służy, tak jak w
     przypadku koniunkcji, taktyka [split]. *)
 
-Theorem iff_proj1 : (P <-> Q) -> (P -> Q).
+Lemma iff_proj1 : (P <-> Q) -> (P -> Q).
 Proof.
   intros. destruct H as [HPQ HQP].
   apply HPQ. assumption.
@@ -796,7 +796,7 @@ Qed.
 
 (** Udowodnij poniższe twierdzenia. *)
 
-Theorem iff_refl : P <-> P.
+Lemma iff_refl : P <-> P.
 (* begin hide *)
 Proof.
   split.
@@ -805,7 +805,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem iff_symm : (P <-> Q) -> (Q <-> P).
+Lemma iff_symm : (P <-> Q) -> (Q <-> P).
 (* begin hide *)
 Proof.
   intro. destruct H. split.
@@ -814,7 +814,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem iff_trans: (P <-> Q) -> (Q <-> R) -> (P <-> R).
+Lemma iff_trans: (P <-> Q) -> (Q <-> R) -> (P <-> R).
 (* begin hide *)
 Proof.
   intros. destruct H, H0. split.
@@ -823,7 +823,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem iff_not : (P <-> Q) -> (~P <-> ~Q).
+Lemma iff_not : (P <-> Q) -> (~P <-> ~Q).
 (* begin hide *)
 Proof.
   intro. destruct H as [HPQ HQP]. split.
@@ -832,7 +832,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem curry_uncurry : (P -> Q -> R) <-> (P /\ Q -> R).
+Lemma curry_uncurry : (P -> Q -> R) <-> (P /\ Q -> R).
 (* begin hide *)
 Proof.
   split.
@@ -847,7 +847,7 @@ Qed.
 
 (** ** Dysjunkcja *)
 
-Theorem or_left : P -> P \/ Q.
+Lemma or_left : P -> P \/ Q.
 Proof.
   intro. left. assumption.
 Qed.
@@ -859,7 +859,7 @@ Qed.
     Taktyki [left] oraz [right] pozwalają nam wybrać, którego z nich chcemy
     dowodzić. *)
 
-Theorem or_comm_impl : P \/ Q -> Q \/ P.
+Lemma or_comm_impl : P \/ Q -> Q \/ P.
 Proof.
   intro. destruct H as [p | q].
     right. assumption.
@@ -888,21 +888,21 @@ Qed.
 
 (** Udowodnij poniższe twierdzenia. *)
 
-Theorem or_right : Q -> P \/ Q.
+Lemma or_right : Q -> P \/ Q.
 (* begin hide *)
 Proof.
   intro. right. assumption.
 Qed.
 (* end hide *)
 
-Theorem or_big : Q -> P \/ Q \/ R.
+Lemma or_big : Q -> P \/ Q \/ R.
 (* begin hide *)
 Proof.
   intro. right. left. assumption.
 Qed.
 (* end hide *)
 
-Theorem or3_comm_impl : P \/ Q \/ R -> R \/ Q \/ P.
+Lemma or3_comm_impl : P \/ Q \/ R -> R \/ Q \/ P.
 (* begin hide *)
 Proof.
   intro. destruct H. right. right. assumption.
@@ -915,7 +915,7 @@ Qed.
 (** Udowodnij poniższe twierdzenie. Następnie zastanów się, czy odwrotna
     implikacja również zachodzi. *)
 
-Theorem or_impl : ~P \/ Q -> (P -> Q).
+Lemma or_impl : ~P \/ Q -> (P -> Q).
 (* begin hide *)
 Proof.
   intros. destruct H.
@@ -937,7 +937,7 @@ End constructive_propositional_logic.
     to).
 
     Zajmiemy się teraz konstruktywnym rachunkiem predykatów. Jest on
-    rozszerzeniem omawianego poprzednio konstruktywnego rachunku zdań
+    rozszerzeniem omówionego przed chwilą konstruktywnego rachunku zdań
     o predykaty oraz kwantyfikatory, które pozwolą
     nam wyrażać takie zależności jak "każdy" oraz "istnieje". Predykaty
     możemy interpretować jako "właściwości obiektów". *)
@@ -947,7 +947,7 @@ End constructive_propositional_logic.
 (** Zobaczmy o co chodzi na znanym nam już przykładzie zwrotności
     implikacji: *)
 
-Theorem impl_refl'' : forall P : Prop, P -> P.
+Lemma impl_refl'' : forall P : Prop, P -> P.
 Proof.
   intros. assumption.
 Qed.
@@ -993,7 +993,7 @@ Print impl_refl''.
     jest funkcja zależna, czyli pewne uogólnienie zwykłej funkcji,
     która jest interpretacją obliczeniową implikacji. *)
 
-Theorem general_to_particular :
+Lemma general_to_particular :
   forall P : nat -> Prop,
     (forall n : nat, P n) -> P 42.
 Proof.
@@ -1013,9 +1013,11 @@ Qed.
 
     Komenda [Restart] pozwala nam zacząć dowód od nowa w dowolnym
     jego momencie. Jej użycie nie jest wymagane, by ukończyć
-    powyższy dowód — spróbuj wstawić w jej miejsce [Qed]. *)
+    powyższy dowód — spróbuj wstawić w jej miejsce [Qed]. Użyłem jej
+    tylko po to, żeby czytelnie zestawić ze sobą sposoby rozumowania
+    w przód i w tył dla kwantyfikacji uniwersalnej. *)
 
-Theorem and_proj1'' :
+Lemma and_proj1'' :
   forall (P Q : nat -> Prop),
     (forall n : nat, P n /\ Q n) -> (forall n : nat, P n).
 Proof.
@@ -1031,13 +1033,15 @@ Qed.
     z hipotezy ogólnej w szczególną, dotycząca tylko [k], a
     potem rozbijemy. Podobnie poprzednie twierdzenie moglibyśmy
     udowodnić szybciej, jeżeli zamiast [specialize] i [assumption]
-    napisalibyśmy [destruct (H 42)]. *)
+    napisalibyśmy [destruct (H 42)] (choć i tak najszybciej jest
+    oczywiście użyć [apply H]. *)
 
 (** **** Ćwiczenie (kwantyfikacja uniwersalna) *)
 
-(** Udowodnij poniższe twierdzenie. *)
+(** Udowodnij poniższe twierdzenie. Co ono oznacza? Przeczytaj je na głos.
+    Zinterpretuj je, tzn. sparafrazuj. *)
 
-Theorem all_dist :
+Lemma all_dist :
   forall (A : Type) (P Q : A -> Prop),
     (forall x : A, P x /\ Q x) <->
     (forall x : A, P x) /\ (forall x : A, Q x).
@@ -1062,7 +1066,7 @@ Qed.
 (** Zdania egzystencjalne to zdania postaci "istnieje obiekt x,
     który ma właściwość P". W Coqu prezentują się tak: *)
 
-Theorem ex_example1 :
+Lemma ex_example1 :
   exists n : nat, n = 0.
 Proof.
   exists 0. trivial.
@@ -1082,7 +1086,7 @@ Qed.
     jest 0". Następnie pozostaje nam udowodnić, iż rzeczywiście [0 = 0],
     co jest trywialne. *)
 
-Theorem ex_example2 :
+Lemma ex_example2 :
   ~ exists n : nat, 0 = S n.
 Proof.
   intro. destruct H as [n H]. inversion H.
@@ -1141,7 +1145,7 @@ Qed.
 
 (** Udowodnij poniższe twierdzenie. *)
 
-Theorem ex_or_dist :
+Lemma ex_or_dist :
   forall (A : Type) (P Q : A -> Prop),
     (exists x : A, P x \/ Q x) <->
     (exists x : A, P x) \/ (exists x : A, Q x).
@@ -1223,7 +1227,7 @@ Qed.
     słowa "golibroda". Można to łatwo zobrazować, przeformułowywując powyższe
     twierdzenie z użyciem innych nazw: *)
 
-Theorem barbers_paradox' :
+Lemma barbers_paradox' :
   forall (A : Type) (x : A) (P : A -> A -> Prop),
     (forall y : A, P x y <-> ~ P y y) -> False.
 (* begin hide *)
@@ -1244,12 +1248,19 @@ Qed.
     istnieje. Robiąc tak, wpada w sidła pułapki zastawionej przez logika i
     zostaje trafiony paradoksalną konkluzją: golibroda nie istnieje. *)
 
+(** * Paradoks pieniądza i kebaba (TODO) *)
+
+(** Przestrzegłem cię już przed nieopatrznym interpretowaniem słów języka
+    naturalnego jako
+
+*)
+
 (** * Kombinatory taktyk *)
 
 (** Przyjrzyjmy się jeszcze raz twierdzeniu [iff_intro] (lekko
     zmodernizowanemu przy pomocy kwantyfikacji uniwersalnej). *)
 
-Theorem iff_intro' :
+Lemma iff_intro' :
   forall P Q : Prop,
     (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
@@ -1276,7 +1287,7 @@ Qed.
 
 (** ** [;] (średnik) *)
 
-Theorem iff_intro'' :
+Lemma iff_intro'' :
   forall P Q : Prop,
     (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
@@ -1355,7 +1366,7 @@ Qed.
     a następnie zautomatyzuj tak, aby całość była rozwiązywana w jednym
     kroku przez pojedynczą taktykę. *)
 
-Theorem or_comm_ex :
+Lemma or_comm_ex :
   forall P Q : Prop, P \/ Q -> Q \/ P.
 (* begin hide *)
 Proof.
@@ -1363,7 +1374,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem diamond :
+Lemma diamond :
   forall P Q R S : Prop,
     (P -> Q) \/ (P -> R) -> (Q -> S) -> (R -> S) -> P -> S.
 (* begin hide *)
@@ -1378,7 +1389,7 @@ Qed.
 
 (** ** [||] (alternatywa) *)
 
-Theorem iff_intro''' :
+Lemma iff_intro''' :
   forall P Q : Prop,
     (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
@@ -1412,7 +1423,7 @@ Qed.
 
 (** ** [idtac], [do] oraz [repeat] *)
 
-Theorem idtac_do_example :
+Lemma idtac_do_example :
   forall P Q R S : Prop,
     P -> S \/ R \/ Q \/ P.
 Proof.
@@ -1437,7 +1448,7 @@ Qed.
     dysjunkcją, więc kolejne użycie [right] zawiodłoby, a wtedy
     cała taktyka [do 4 right] również zawiodłaby. *)
 
-Theorem repeat_example :
+Lemma repeat_example :
   forall P A B C D E F : Prop,
     P -> A \/ B \/ C \/ D \/ E \/ F \/ P.
 Proof.
@@ -1461,7 +1472,7 @@ Qed.
 
 (** ** [try] i [fail] *)
 
-Theorem iff_intro4 :
+Lemma iff_intro4 :
   forall P Q : Prop,
     (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
@@ -1552,7 +1563,7 @@ Ltac leftright t := ((left; t) || (right; t)).
 
 (** *** Przemienność *)
 
-Theorem and_comm :
+Lemma and_comm :
   P /\ Q -> Q /\ P.
 (* begin hide *)
 Proof.
@@ -1562,7 +1573,7 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem or_comm :
+Lemma or_comm :
   P \/ Q -> Q \/ P.
 (* begin hide *)
 Proof.
@@ -1572,7 +1583,7 @@ Qed.
 
 (** *** Łączność *)
 
-Theorem and_assoc :
+Lemma and_assoc :
   P /\ (Q /\ R) <-> (P /\ Q) /\ R.
 (* begin hide *)
 Proof.
@@ -1589,7 +1600,7 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem or_assoc :
+Lemma or_assoc :
   P \/ (Q \/ R) <-> (P \/ Q) \/ R.
 (* begin hide *)
 Proof.
@@ -1609,7 +1620,7 @@ Qed.
 
 (** *** Rozdzielność *)
 
-Theorem and_dist_or :
+Lemma and_dist_or :
   P /\ (Q \/ R) <-> (P /\ Q) \/ (P /\ R).
 (* begin hide *)
 Proof.
@@ -1625,7 +1636,7 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem or_dist_and :
+Lemma or_dist_and :
   P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
 (* begin hide *)
 Proof.
@@ -1655,7 +1666,7 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem imp_dist_imp :
+Lemma imp_dist_imp :
   (P -> Q -> R) <-> ((P -> Q) -> (P -> R)).
 (* begin hide *)
 Proof.
@@ -1675,7 +1686,7 @@ Qed.
 
 (** *** Kuryfikacja i dekuryfikacja *)
 
-Theorem curry :
+Lemma curry :
   (P /\ Q -> R) -> (P -> Q -> R).
 (* begin hide *)
 Proof.
@@ -1685,7 +1696,7 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem uncurry :
+Lemma uncurry :
   (P -> Q -> R) -> (P /\ Q -> R).
 (* begin hide *)
 Abort.
@@ -1693,13 +1704,13 @@ Abort.
 
 (** *** Prawa de Morgana *)
 
-Theorem deMorgan_1 :
+Lemma deMorgan_1 :
   ~(P \/ Q) <-> ~P /\ ~Q.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem deMorgan_2 :
+Lemma deMorgan_2 :
   ~P \/ ~Q -> ~(P /\ Q).
 (* begin hide *)
 Abort.
@@ -1707,7 +1718,7 @@ Abort.
 
 (** *** Niesprzeczność i zasada wyłączonego środka *)
 
-Theorem noncontradiction' :
+Lemma noncontradiction' :
   ~(P /\ ~P).
 (* begin hide *)
 Proof.
@@ -1717,13 +1728,13 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem noncontradiction_v2 :
+Lemma noncontradiction_v2 :
   ~ (P <-> ~P).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem em_irrefutable :
+Lemma em_irrefutable :
   ~~ (P \/ ~P).
 (* begin hide *)
 Abort.
@@ -1731,25 +1742,25 @@ Abort.
 
 (** *** Elementy neutralne i anihilujące *)
 
-Theorem and_false_annihilation :
+Lemma and_false_annihilation :
   P /\ False <-> False.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem or_false_neutral :
+Lemma or_false_neutral :
   P \/ False <-> P.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem and_true_neutral :
+Lemma and_true_neutral :
   P /\ True <-> P.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem or_true_annihilation :
+Lemma or_true_annihilation :
   P \/ True <-> True.
 (* begin hide *)
 Abort.
@@ -1757,37 +1768,37 @@ Abort.
 
 (** *** Inne *)
 
-Theorem or_imp_and :
+Lemma or_imp_and :
   (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem and_not_imp :
+Lemma and_not_imp :
   P /\ ~Q -> ~(P -> Q).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem or_not_imp :
+Lemma or_not_imp :
   ~P \/ Q -> (P -> Q).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem contraposition :
+Lemma contraposition :
   (P -> Q) -> (~Q -> ~P).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem absurd :
+Lemma absurd :
   ~P -> P -> Q.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem impl_and :
+Lemma impl_and :
   (P -> Q /\ R) -> ((P -> Q) /\ (P -> R)).
 (* begin hide *)
 Proof.
@@ -1812,11 +1823,11 @@ Check and_comm.
 Section exercises_predicate.
 
 Variable A : Type.
-Hypotheses P Q R S : A -> Prop.
+Hypotheses P Q : A -> Prop.
 
 (** *** Projekcje *)
 
-Theorem forall_and_proj1 :
+Lemma forall_and_proj1 :
   (forall x : A, P x /\ Q x) -> (forall x : A, P x).
 (* begin hide *)
 Proof.
@@ -1824,7 +1835,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem forall_and_proj2 :
+Lemma forall_and_proj2 :
   (forall x : A, P x /\ Q x) -> (forall x : A, Q x).
 (* begin hide *)
 Proof.
@@ -1834,7 +1845,7 @@ Qed.
 
 (** *** Rozdzielność *)
 
-Theorem forall_dist_and :
+Lemma forall_dist_and :
   (forall x : A, P x /\ Q x) <->
   (forall x : A, P x) /\ (forall x : A, Q x).
 (* begin hide *)
@@ -1852,7 +1863,7 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem exists_dist_or :
+Lemma exists_dist_or :
   (exists x : A, P x \/ Q x) <->
   (exists x : A, P x) \/ (exists x : A, Q x).
 (* begin hide *)
@@ -1873,10 +1884,9 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem ex_dist_and :
-  forall (A : Type) (P Q : A -> Prop),
-    (exists x : A, P x /\ Q x) ->
-      (exists y : A, P y) /\ (exists z : A, Q z).
+Lemma ex_dist_and :
+  (exists x : A, P x /\ Q x) ->
+    (exists y : A, P y) /\ (exists z : A, Q z).
 (* begin hide *)
 Proof.
   intros. destruct H as [x H]. destruct H.
@@ -1886,8 +1896,9 @@ Qed.
 
 (** *** Inne *)
 
-Theorem forall_or_imp :
-  (forall x : A, P x) \/ (forall x : A, Q x) -> (forall x : A, P x \/ Q x).
+Lemma forall_or_imp :
+  (forall x : A, P x) \/ (forall x : A, Q x) ->
+    forall x : A, P x \/ Q x.
 (* begin hide *)
 Proof.
   destruct 1; intros.
@@ -1898,17 +1909,19 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem forall_imp_imp :
-  (forall x : A, P x -> Q x) -> (forall x : A, P x) -> (forall x : A, Q x).
+Lemma forall_imp_imp :
+  (forall x : A, P x -> Q x) ->
+    (forall x : A, P x) -> (forall x : A, Q x).
 (* begin hide *)
 Proof.
   intros. apply H. apply H0.
 Qed.
 (* end hide *)
 
-Theorem forall_inhabited_nondep :
+Lemma forall_inhabited_nondep :
   forall R : Prop, A -> ((forall x : A, R) <-> R).
 (* begin hide *)
+(* TODO: wyrzucić *)
 Proof.
   split; intros.
     apply H. assumption.
@@ -1918,7 +1931,7 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem forall_or_nondep :
+Lemma forall_or_nondep :
   forall R : Prop,
     (forall x : A, P x) \/ R -> (forall x : A, P x \/ R).
 (* begin hide *)
@@ -1929,7 +1942,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem forall_nondep_impl :
+Lemma forall_nondep_impl :
   forall R : Prop,
     (forall x : A, R -> P x) <-> (R -> forall x : A, P x).
 (* begin hide *)
@@ -1964,7 +1977,7 @@ Hypotheses P Q R S : Prop.
 Check classic.
 (* ===> forall P : Prop, P \/ ~ P *)
 
-Theorem imp_and_or : (P -> Q \/ R) -> ((P -> Q) \/ (P -> R)).
+Lemma imp_and_or : (P -> Q \/ R) -> ((P -> Q) \/ (P -> R)).
 (* begin hide *)
 Proof.
   intros. destruct (classic P) as [HP | HnotP].
@@ -1975,22 +1988,22 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem deMorgan_2_conv : ~(P /\ Q) -> ~P \/ ~Q.
+Lemma deMorgan_2_conv : ~(P /\ Q) -> ~P \/ ~Q.
 (* begin hide *)
 Proof. tauto. Qed.
 (* end hide *)
 
-Theorem not_imp : ~(P -> Q) -> P /\ ~Q.
+Lemma not_imp : ~(P -> Q) -> P /\ ~Q.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem imp_not_or : (P -> Q) -> (~P \/ Q).
+Lemma imp_not_or : (P -> Q) -> (~P \/ Q).
 (* begin hide *)
 Proof. tauto. Qed.
 (* end hide *)
 
-Theorem material_implication : (P -> Q) <-> (~P \/ Q).
+Lemma material_implication : (P -> Q) <-> (~P \/ Q).
 (* begin hide *)
 Proof.
   split; intros.
@@ -2003,24 +2016,24 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem contraposition_conv : (~Q -> ~P) -> (P -> Q).
+Lemma contraposition_conv : (~Q -> ~P) -> (P -> Q).
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem excluded_middle : P \/ ~P.
+Lemma excluded_middle : P \/ ~P.
 (* begin hide *)
 Abort.
 (* end hide *)
 
-Theorem peirce : ((P -> Q) -> P) -> P.
+Lemma peirce : ((P -> Q) -> P) -> P.
 (* begin hide *)
 Abort.
 (* end hide *)
 
 End exercises_classical.
 
-(** ** Paradoks pijoka *)
+(** * Paradoks pijoka *)
 
 Theorem drinkers_paradox :
   forall (man : Type) (drinks : man -> Prop) (random_guy : man),
@@ -2030,7 +2043,7 @@ Theorem drinkers_paradox :
 Proof.
   intros. destruct (classic (forall x : man, drinks x)).
     exists random_guy. intros _. assumption.
-    apply not_all_ex_not in H. destruct H.
+    apply not_all_ex_not in H. destruct H. (* TODO: popraw *)
       exists x. intro. contradiction.
 Qed.
 (* end hide *)
@@ -2117,9 +2130,12 @@ Qed.
 (** Pokaż, że założenie o tym, że w barze jest conajmniej jeden klient,
     jest konieczne. Co więcej, pokaż że stwierdzenie "w barze jest taki
     klient, że jeżeli on pije, to wszyscy piją" jest równoważne stwierdzeniu
-    "w barze jest jakiś klient". *)
+    "w barze jest jakiś klient".
 
-Theorem dp_nonempty :
+    Które z tych dwóch implikacji wymagają logiki intuicjonistycznej, a
+    które klasycznej? *)
+
+Lemma dp_nonempty :
   forall (man : Type) (drinks : man -> Prop),
     (exists drinker : man, drinks drinker ->
       forall x : man, drinks x) <->
@@ -2131,6 +2147,49 @@ Proof.
     apply drinkers_paradox. assumption.
 Qed.
 (* end hide *)
+
+(** * Ściąga *)
+
+(** Zauważyłem palącą potrzebę istnienia krótkiej ściągi, dotyczącą podstaw
+    logiki. Oto i ona:
+    - [True] to zdanie zawsze prawdziwe. Można je udowodnić za pomocą
+      taktyki [trivial]. Można je też rozbić za pomocą [destruct], ale
+      nie jest to zbyt użyteczne.
+    - [False] to zdanie zawsze fałszywe. Można je udowodnić tylko jeżeli
+      w kontekście już mamy jakiś inny (zazwyczaj zakamuflowany) dowód
+      [False]. Można je rozbić za pomocą taktyki [destruct], co kończy
+      dowód, bo z fałszu wynika wszystko.
+    - [P /\ Q] to koniunkcja zdań [P] i [Q]. Aby ją udowodnić, używamy
+      taktyki [split] i dowodzimy osobno [P], a osobno [Q]. Jeżeli mamy
+      w kontekście dowód na [P /\ Q], to za pomocą taktyki [destruct]
+      możemy z niego wyciągnąć dowody na [P] i na [Q].
+    - [P \/ Q] to dysjunkcja zdań [P] i [Q]. Aby ją udowodnić, używamy
+      taktyki [left] lub [right], a następnie dowodzimy odpowiednio [P]
+      albo [Q]. Jeżeli mamy w kontekście dowód [H : P \/ Q], to możemy go
+      rozbić za pomocą taktyki [destruct H], co odpowiada rozumowaniu przez
+      przypadki: musimy pokazać, że cel jest prawdziwy zarówno, gdy prawdziwe
+      jest tylko [P], jak i wtedy, gdy prawdziwe jest jedynie [Q]
+    - [P -> Q] to zdanie "[P] implikuje [Q]". Żeby je udowodnić, używamy
+      taktyki [intro] lub [intros], które wprowadzają do kontekstu dowód
+      na [P] będący założeniem. Jeżeli mamy w kontekście dowód [H : P -> Q],
+      to możemy dowieść [Q] za pomocą taktyki [apply H], a następnie będziemy
+      musieli udowodnić [P]. Jeżeli mamy w kontekście [H : P -> Q] oraz
+      [p : P], to możemy uzyskać dowód [p : Q] za pomocą taktyki
+      [apply H in p]. Możemy uzyskać [H : Q] za pomocą [specialize (H p)]
+    - [~ P] to negacja zdania [P]. Faktycznie jest to notacja na [not P],
+      które to samo jest skrótem oznaczającym [P -> False]. Z negacją
+      radzimy sobie za pomocą taktyki [unfold not] albo [unfold not in ...],
+      a następnie postępujemy jak z implikacją.
+    - [P <-> Q] to równoważność zdań [P] i [Q]. Jest to notacja na [iff P Q],
+      które jest skrótem od [(P -> Q) /\ (Q -> P)]. Radzimy sobie z nią za
+      pomocą taktyk [unfold iff] oraz [unfold iff in ...]
+    - [forall x : A, P x] to zdanie mówiące "dla każdego x typu A zachodzi
+      P x". Postępujemy z nim tak jak z implikacją, która jest jego
+      specjalnym przypadkiem.
+    - [exists x : A, P x] to zdanie mówiące "istnieje taki x typu A, który
+      spełnia P". Dowodzimy go za pomocą taktyki [exists a], a następnie
+      musimy pokazać [P a]. Jeżeli mamy taki dowód w kontekście, możemy
+      rozbić go na [a] i [P a] za pomocą taktyki [destruct]. *)
 
 (** * Konkluzja *)
 
