@@ -1248,12 +1248,85 @@ Qed.
     istnieje. Robiąc tak, wpada w sidła pułapki zastawionej przez logika i
     zostaje trafiony paradoksalną konkluzją: golibroda nie istnieje. *)
 
-(** * Paradoks pieniądza i kebaba (TODO) *)
+(** * Paradoks pieniądza i kebaba *)
 
-(** Przestrzegłem cię już przed nieopatrznym interpretowaniem słów języka
-    naturalnego jako
+(** Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka
+    naturalnego za pomocą zdań logiki formalnej. Gdybyś jednak wciąż
+    był skłonny to robić, przyjrzyjmy się kolejnemu "paradoksowi". *)
 
-*)
+Lemma copy :
+  forall P : Prop, P -> P /\ P.
+(* begin hide *)
+Proof.
+  split; assumption.
+Qed.
+(* end hide *)
+
+(** Powyższe niewinnie wyglądające twierdzenie mówi nam, że [P] implikuje
+    [P] i [P]. Spróbujmy przerobić je na paradoks, wymyślając jakąś wesołą
+    interpretację dla [P].
+
+    Niech zdanie [P] znaczy "mam złotówkę". Wtedy powyższe twierdzenie mówi,
+    że jeżeli mam złotówkę, to mam dwa złote. Widać, że jeżeli jedną z tych
+    dwóch złotówek znów wrzucimy do twierdzenia, to będziemy mieli już trzy
+    złote. Tak więc jeżeli mam złotówkę, to mam dowolną ilość pieniędzy.
+
+    Dla jeszcze lepszego efektu powiedzmy, że za 10 złotych możemy kupić
+    kebaba. W ostatecznej formie nasze twierdzenie brzmi więc: jeżeli mam
+    złotówkę, to mogę kupić nieograniczoną ilość kebabów.
+
+    Jak widać, logika formalna (przynajmniej w takiej postaci, w jakiej ją
+    poznajemy) nie nadaje się do rozumowania na temat zasobów. Zasobów, bo
+    tym właśnie są pieniądze i kebaby. Zasoby to byty, które można
+    przetwarzać, przemieszczać i zużywać, ale nie można ich kopiować i
+    tworzyć z niczego. Powyższe twierdzenie dobitnie pokazuje, że zdania
+    logiczne nie mają nic wspólnego z zasobami, gdyż ich dowody mogą być
+    bez ograniczeń kopiowane. *)
+
+(* begin hide *)
+Fixpoint andn (n : nat) (P : Prop) : Prop :=
+match n with
+    | 0 => True
+    | S n' => P /\ andn n' P
+end.
+
+Lemma one_to_many :
+  forall (n : nat) (P : Prop),
+    P -> andn n P.
+Proof.
+  induction n as [| n']; cbn; intros.
+    trivial.
+    split; try apply IHn'; assumption.
+Qed.
+
+Lemma buy_all_kebabs :
+  forall P Q : Prop,
+    (andn 10 P -> Q) -> P -> forall n : nat, andn n Q.
+Proof.
+  intros P Q H p n. revert P Q H p.
+  induction n as [| n']; cbn; intros.
+    trivial.
+    split.
+      apply H. apply (one_to_many 10 P). assumption.
+      apply (IHn' P Q H p).
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie (formalizacja paradoksu) *)
+
+(** UWAGA TODO: to ćwiczenie wymaga znajomości rozdziału 2, w szczególności
+    indukcji i rekursji na liczbach naturalnych.
+
+    Zdefiniuj funkcję [andn : nat -> Prop -> Prop], taką, że [andn n P]
+    to n-krotna koniunkcja zdania [P], np. [andn 5 P] to
+    [P /\ P /\ P /\ P /\ P]. Następnie pokaż, że [P] implikuje [andn n P]
+    dla dowolnego [n].
+
+    Na końcu sformalizuj resztę paradoksu, tzn. zapisz jakoś, co to znaczy
+    mieć złotówkę i że za 10 złotych można kupić kebaba. Wywnioskuj stąd,
+    że mając złotówkę, możemy kupić dowolną liczbę kebabów.
+
+    Szach mat, Turcjo bankrutuj! *)
 
 (** * Kombinatory taktyk *)
 
@@ -2150,7 +2223,9 @@ Qed.
 
 (** * Ściąga *)
 
-(** Zauważyłem palącą potrzebę istnienia krótkiej ściągi, dotyczącą podstaw
+(** https://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf
+
+    Zauważyłem palącą potrzebę istnienia krótkiej ściągi, dotyczącą podstaw
     logiki. Oto i ona:
     - [True] to zdanie zawsze prawdziwe. Można je udowodnić za pomocą
       taktyki [trivial]. Można je też rozbić za pomocą [destruct], ale
@@ -2200,12 +2275,13 @@ Qed.
     taktyk, dzięki którym możemy skrócić i uprościć nasze formalne dowody.
 
     Zapoznaliśmy się też z logiką klasyczną i jej interpretacją. Poznaliśmy
-    też dwa paradoksy związane z różnicami w interpretacji zdanń w języku
+    też dwa paradoksy związane z różnicami w interpretacji zdań w języku
     naturalnym oraz zdań matematycznych. Jeden z paradoksów dobrze pokazał
     nam w praktyce, na czym polega różnica między logiką konstruktywną i
     klasyczną.
 
-    Skoro potrafimy już co nieco dowodzić, czas zapoznać się z jakimiś
-    bytami, o których moglibyśmy czegoś dowieść — w następnym rozdziale
-    zajmiemy się na poważnie typami, programami i obliczeniami oraz
-    udowadnianiem ich właściwości. *)
+    Skoro potrafimy już co nieco dowodzić, a także wiemy, że nasze metody
+    nie nadają się do rozumowania o pieniądzach ani kebabach, nadszedł
+    czas zapoznać się z jakimiś bytami, o których moglibyśmy czegoś
+    dowieść — w następnym rozdziale zajmiemy się na poważnie typami,
+    programami i obliczeniami oraz udowadnianiem ich właściwości. *)

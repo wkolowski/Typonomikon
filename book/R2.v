@@ -605,6 +605,7 @@ Lemma is_opposite_comm :
 Proof.
   destruct d1, d2; cbn; reflexivity.
 Qed.
+(* end hide *)
 
 (** Pokaż, że funkcje [turnL], [turnR] oraz [opposite] są injekcjami i
     surjekcjami (co to dokładnie znacz, dowiemy się później). Uwaga: to
@@ -613,43 +614,60 @@ Qed.
 
 Lemma turnL_inj :
   forall x y : D, turnL x = turnL y -> x = y.
+(* begin hide *)
 Proof.
   destruct x, y; cbn; intros; inversion H; reflexivity.
 Qed.
+(* end hide *)
 
 Lemma turnR_inj :
   forall x y : D, turnR x = turnR y -> x = y.
+(* begin hide *)
 Proof.
   destruct x, y; cbn; intros; inversion H; reflexivity.
 Qed.
+(* end hide *)
 
 Lemma opposite_inj :
   forall x y : D, opposite x = opposite y -> x = y.
+(* begin hide *)
 Proof.
   destruct x, y; cbn; intros; inversion H; reflexivity.
 Qed.
+(* end hide *)
 
 Lemma turnL_sur :
   forall y : D, exists x : D, turnL x = y.
+(* begin hide *)
 Proof.
   intro. exists (turnR y). apply turnL_turnR.
 Qed.
+(* end hide *)
 
 Lemma turnR_sur :
   forall y : D, exists x : D, turnR x = y.
+(* begin hide *)
 Proof.
   intro. exists (turnL y). apply turnR_turnL.
 Qed.
+(* end hide *)
 
 Lemma opposite_sur :
   forall y : D, exists x : D, opposite x = y.
+(* begin hide *)
 Proof.
   intro. exists (opposite y). apply opposite_involutive.
 Qed.
+(* end hide *)
 
 End Directions.
 
-(** **** Ćwiczenie (dni tygodnia) TODO *)
+(** **** Ćwiczenie (różne enumeracje) TODO *)
+
+(** Zdefiniuj typy induktywne reprezentujące:
+    - dni tygodnia
+    - miesiące
+    - kolory podstawowe systemu RGB *)
 
 (* begin hide *)
 Inductive Day : Type :=
@@ -661,7 +679,29 @@ Inductive Day : Type :=
     | Sat : Day
     | Sun : Day.
 
+Inductive Month : Type :=
+    | Jan : Month
+    | Feb : Month
+    | Mar : Month
+    | Apr : Month
+    | May : Month
+    | Jun : Month
+    | Jul : Month
+    | Aug : Month
+    | Sep : Month
+    | Oct : Month
+    | Nov : Month
+    | Dec : Month.
 
+Inductive Color : Type :=
+    | R : Color
+    | G : Color
+    | B : Color.
+(* end hide *)
+
+(** Wymyśl do nich jakieś ciekawe funkcje i twierdzenia. *)
+
+(* begin hide *)
 Definition nextDay (d : Day) : Day :=
 match d with
     | Mon => Tue
@@ -780,7 +820,11 @@ end.
 (** **** Ćwiczenie (rekursja niestrukturalna) *)
 
 (** Wymyśl funkcję z liczb naturalnych w liczby naturalne,
-    która jest rekurencyjna, ale nie jest strukturalnie rekurencyjna. *)
+    która jest rekurencyjna, ale nie jest strukturalnie rekurencyjna.
+    Precyzyjniej pisząc: później okaże się, że wszystkie formy
+    rekurencji to tak naprawdę rekursja strukturalna pod przykrywką.
+    Wymyśl taką definicję, która na pierwszy rzut oka nie jest
+    strukturalnie rekurencyjna. *)
 
 (* begin hide *)
 (** Odpowiedź: dzielenie. *)
@@ -1253,7 +1297,7 @@ Qed.
 
 End rational.
 
-(** ** Typy induktywne — pełna moc *)
+(** ** Typy induktywne — (prawie) pełna moc *)
 
 (** Połączenie funkcji zależnych, konstruktorów rekurencyjnych i
     polimorfizmu pozwala nam na opisywanie (prawie) dowolnych typów.
