@@ -1336,10 +1336,10 @@ Arguments cons [A] _ _.
     Argumenty w nawiasach kwadratowych Coq będzie traktował jako domyślne,
     a te oznaczone podkreślnikiem trzeba będzie zawsze podawać ręcznie.
     Nazwa argumentu domyślnego musi być taka sama jak w definicji typu
-    (w naszym przypadku w definicji [list] argumentem nazywa się [A],
-    więc tak też musimy go nazwać w komendzie arguments). Musimy wypisać
-    wszystkie argumenty danego konstruktora — ich ilość możemy sprawdzić
-    np. komendą [Check].
+    (w naszym przypadku w definicji [list] argument nazywał się [A],
+    więc tak też musimy go nazwać używając komendy [Arguments]). Musimy
+    wypisać wszystkie argumenty danego konstruktora — ich ilość możemy
+    sprawdzić np. komendą [Check].
 
     Warto w tym momencie zauważyć, że Coq zna typy wszystkich termów,
     które zostały skonstruowane — gdyby tak nie było, nie mógłby
@@ -1379,7 +1379,7 @@ Check [0; 1; 2; 3].
 (** Zauważ, że system notacji Coqa jest bardzo silny — ostatnia notacja
     (ta zawierająca [..]) jest rekurencyjna. W innych językach tego typu
     notacje są zazwyczaj wbudowane w język i ograniczają się do podstawowych
-    typów, takich jak listy. *)
+    typów, takich jak listy właśnie. *)
 
 Fixpoint app {A : Type} (l1 l2 : list A) : list A :=
 match l1 with

@@ -53,7 +53,11 @@ end.
 
 (** ** [length] *)
 
-(** Zdefiniuj funkcję [length], która oblicza długość listy. *)
+(** Zdefiniuj funkcję [length], która oblicza długość listy.
+
+    Przykład:
+    [length [1; 2; 3]] = [3]
+*)
 
 (* begin hide *)
 Fixpoint length {A : Type} (l : list A) : nat :=
@@ -90,6 +94,13 @@ Qed.
 (* end hide *)
 
 (** ** [snoc] *)
+
+(** Zdefiniuj funkcję [snoc], która dokleja element [x] na koniec listy
+    [l].
+
+    Przykład:
+    [snoc 42 [1; 2; 3]] = [[1; 2; 3; 42]]
+*)
 
 (* begin hide *)
 Fixpoint snoc {A : Type} (x : A) (l : list A) : list A :=
@@ -148,7 +159,11 @@ Qed.
 
 (** ** [app] *)
 
-(** Zdefiniuj funkcję [app], która skleja dwie listy. *)
+(** Zdefiniuj funkcję [app], która skleja dwie listy.
+
+    Przykład:
+    [app [1; 2; 3] [4; 5; 6]] = [[1; 2; 3; 4; 5; 6]]
+*)
 
 (* begin hide *)
 Fixpoint app {A : Type} (l1 l2 : list A) : list A :=
@@ -340,7 +355,11 @@ Qed.
 
 (** ** [rev] *)
 
-(** Zdefiniuj funkcję [rev], która odwraca listę. *)
+(** Zdefiniuj funkcję [rev], która odwraca listę.
+
+    Przykład:
+    [rev [1; 2; 3]] = [[3; 2; 1]]
+*)
 
 (* begin hide *)
 Fixpoint rev {A : Type} (l : list A) : list A :=
@@ -419,7 +438,11 @@ Qed.
 (** ** [map] *)
 
 (** Zdefiniuj funkcję [map], która aplikuje funkcję [f] do każdego
-    elementu listy. *)
+    elementu listy.
+
+    Przykład:
+    [map isEmpty [[]; [1]; [2; 3]; []]] = [[true; false; false; true]]
+*)
 
 (* begin hide *)
 Fixpoint map {A B : Type} (f : A -> B) (la : list A) : list B :=
@@ -517,7 +540,12 @@ Qed.
 
 (** ** [join] *)
 
-(** Napisz funkcję [join], która spłaszcza listę list. *)
+(** Napisz funkcję [join], która spłaszcza listę list.
+
+    Przykład:
+    [join [[1; 2; 3]; [4; 5; 6]; [7]]] =
+    [[1; 2; 3; 4; 5; 6; 7]]
+*)
 
 (* begin hide *)
 Fixpoint join {A : Type} (lla : list (list A)) : list A :=
@@ -573,6 +601,9 @@ Qed.
 
 (** ** [bind] *)
 
+(** Napisz funkcję [bind], która spełnia specyfikację [bind_spec].
+    Użyj rekursji, ale nie używaj funkcji [join] ani [map]. *)
+
 (* begin hide *)
 Fixpoint bind {A B : Type} (f : A -> list B) (l : list A) : list B :=
 match l with
@@ -603,8 +634,12 @@ Qed.
 
 (** ** [replicate] *)
 
-(** Napsiz funkcję [replicate], która powiela dany element [n] razy, tworząc
-    listę. *)
+(** Napisz funkcję [replicate], która powiela dany element [n] razy, tworząc
+    listę.
+
+    Przykład:
+    [replicate 5 0] = [[0; 0; 0; 0; 0]]
+*)
 
 (* begin hide *)
 Fixpoint replicate {A : Type} (n : nat) (x : A) : list A :=
@@ -690,9 +725,13 @@ Qed.
 (** ** [iterate] i [iter] *)
 
 (** Napisz funkcję [iterate]. [iterate f n x] to lista postaci
-    [x, f x, f (f x), ..., f (... (f x) ...)] o długości [n].
+    [[x, f x, f (f x), ..., f (... (f x) ...)]] o długości [n]. *)
 
-    Napisz też funkcję [iter], która przyda się do podania
+(** Przykład: *)
+
+(** [iterate S 5 0] = [[0; 1; 2; 3; 4]] *)
+
+(** Napisz też funkcję [iter], która przyda się do podania
     charakteryzacji funkcji [iterate]. Zgadnij, czym ma ona być. *)
 
 (* begin hide *)
@@ -811,7 +850,7 @@ Lemma map_iter_iterate :
   forall (A : Type) (f : A -> A) (n m : nat) (x : A),
     map (iter f m) (iterate f n x) =
     iterate f n (iter f m x).
-(* begin ihde *)
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
     reflexivity.
@@ -835,7 +874,11 @@ Qed.
 (** *** [head] *)
 
 (** Zdefiniuj funkcję [head], która zwraca głowę (pierwszy element)
-    listy lub [None], gdy lista jest pusta. *)
+    listy lub [None], gdy lista jest pusta.
+
+    Przykład:
+    [head [1; 2; 3]] = [Some 1]
+*)
 
 (* begin hide *)
 Fixpoint head {A : Type} (l : list A) : option A :=
@@ -950,7 +993,11 @@ Qed.
 (** *** [tail] *)
 
 (** Zdefiniuj funkcję [tail], która zwraca ogon listy (czyli wszystkie
-    jej elementy poza głową) lub [None], gdy lista jest pusta. *)
+    jej elementy poza głową) lub [None], gdy lista jest pusta.
+
+    Przykład:
+    [tail [1; 2; 3]] = [Some [2; 3]]
+*)
 
 (* begin hide *)
 Fixpoint tail {A : Type} (l : list A) : option (list A) :=
@@ -1062,7 +1109,11 @@ Qed.
 
 (** Napisz funkcję [uncons], która zwraca parę złożoną z głowy i ogona
     listy lub [None], gdy lista jest pusta. Nie używaj funkcji [head]
-    ani [tail]. Udowodnij poniższą specyfikację. *)
+    ani [tail]. Udowodnij poniższą specyfikację.
+
+    Przykład:
+    [uncons [1; 2; 3]] = [Some (1, [2; 3])]
+*)
 
 (* begin hide *)
 Definition uncons {A : Type} (l : list A) : option (A * list A) :=
@@ -1088,7 +1139,11 @@ Proof. destruct l; reflexivity. Qed.
 (** *** [last] *)
 
 (** Zdefiniuj funkcję [last], która zwraca ostatni element listy lub
-    [None], gdy lista jest pusta. *)
+    [None], gdy lista jest pusta.
+
+    Przykład:
+    [last [1; 2; 3]] = [Some 3]
+*)
 
 (* begin hide *)
 Function last {A : Type} (l : list A) : option A :=
@@ -1216,7 +1271,11 @@ Qed.
 (** *** [init] *)
 
 (** Zdefiniuj funkcję [init], która zwraca wszystkie elementy listy poza
-    ostatnim lub [None], gdy lista jest pusta. *)
+    ostatnim lub [None], gdy lista jest pusta.
+
+    Przykład:
+    [init [1; 2; 3]] = [Some [1; 2]]
+*)
 
 (* begin hide *)
 Fixpoint init {A : Type} (l : list A) : option (list A) :=
@@ -1350,7 +1409,11 @@ Qed.
 (** Zdefiniuj funkcję [unsnoc], która rozbija listę na parę złożoną z
     ostatniego elementu oraz całej reszty lub zwraca [None] gdy lista
     jest pusta. Nie używaj funkcji [last] ani [init]. Udowodnij poniższą
-    specyfikację. *)
+    specyfikację.
+
+    Przykład:
+    [unsnoc [1; 2; 3]] = [Some (3, [1; 2])]
+*)
 
 (* begin hide *)
 Fixpoint unsnoc {A : Type} (l : list A) : option (A * list A) :=
@@ -1493,6 +1556,7 @@ Proof.
             reflexivity.
 Qed.
 (* end hide *)
+
 (* end hide *)
 
 Lemma bilateral_decomposition :
@@ -1514,7 +1578,14 @@ Qed.
 (** ** [nth] *)
 
 (** Zdefiniuj funkcję [nth], która zwraca n-ty element listy lub [None],
-    gdy nie ma n-tego elementu. *)
+    gdy nie ma n-tego elementu.
+
+    Przykład:
+*)
+
+(** [nth 1 [1; 2; 3]] = [Some 2] *)
+
+(** [nth 42 [1; 2; 3]] = [None] *)
 
 (* begin hide *)
 Fixpoint nth {A : Type} (n : nat) (l : list A) {struct l} : option A :=
@@ -1811,7 +1882,12 @@ Qed.
 (** ** [take] *)
 
 (** Zdefiniuj funkcję [take], która bierze z listy [n] początkowych
-    elementów. *)
+    elementów.
+
+    Przykład:
+*)
+
+(** [take 2 [1; 2; 3]] = [[1; 2]] *)
 
 (* begin hide *)
 Fixpoint take {A : Type} (n : nat) (l : list A) {struct l} : list A :=
@@ -1958,6 +2034,7 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: take_join, take_bind (chyba potrzebne będzie decompose) *)
 
 (*Lemma take_join :
@@ -1969,7 +2046,6 @@ Qed.
               exists m2 : nat,
                 take n (join ll) = join (take m1 ll) ++ take m2 l
       end.
-(* begin hide *)
 Proof. Print take.
   induction ll as [| h t]; cbn; intros.
     exists 0. reflexivity.
@@ -1983,9 +2059,8 @@ Proof. Print take.
       destruct (nth (S m1) t); cbn.
         destruct IH as (m2 & IH). exists m2. rewrite take_app.
     
-Qed.
+Qed.*)
 (* end hide *)
-*)
 
 Lemma take_replicate :
   forall (A : Type) (n m : nat) (x : A),
@@ -2115,7 +2190,12 @@ Qed.
 (** ** [drop] *)
 
 (** Zdefiniuj funkcję [drop], która wyrzuca z listy [n] początkowych
-    elementów i zwraca to, co zostało. *)
+    elementów i zwraca to, co zostało.
+
+    Przykład:
+*)
+
+(** [drop 2 [1; 2; 3]] = [[3]] *)
 
 (* begin hide *)
 Fixpoint drop {A : Type} (n : nat) (l : list A) {struct l} : list A :=
@@ -2243,7 +2323,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: drop_join, drop_bind *)
+(* end hide *)
 
 Lemma drop_replicate :
   forall (A : Type) (n m : nat) (x : A),
@@ -2394,7 +2476,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: zip, unzip, zipWith, intersperse *)
+(* end hide *)
 
 (** *** Dualność [take] i [drop] *)
 
@@ -2491,8 +2575,13 @@ Qed.
 
 (** ** [splitAt] *)
 
-(** Zdefiniuj przez rekursję funkcję [splitAt], która spełnia poniższą
-    specyfikację. *)
+(** Zdefiniuj funkcję [splitAt], która spełnia poniższą specyfikację.
+    Nie używaj take ani drop - użyj rekursji.
+
+    Przykład:
+*)
+
+(** [splitAt 2 [1; 2; 3; 4; 5]] = [Some ([1; 2], 3, [4; 5])] *)
 
 (* begin hide *)
 Fixpoint splitAt
@@ -2629,14 +2718,15 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO *) (*Lemma splitAt_length_inv :
   forall (A : Type) (l : list A) (n : nat),
     match splitAt n l with
         | None => length l <= n
         | Some _ => n < length l
     end.
-(* begin hide *)
 Proof.*)
+(* end hide *)
 
 Lemma splitAt_length_lt :
   forall (A : Type) (l : list A) (n : nat),
@@ -2666,12 +2756,14 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO Lemma splitAt_length :
   forall (A : Type) (l : list A) (n : nat),
     splitAt n l =
     if n <? length l
     then
 *)
+(* end hide *)
 
 Lemma splitAt_snoc :
   forall (A : Type) (l : list A) (n : nat) (x : A),
@@ -2886,7 +2978,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: tail, uncons *)
+(* end hide *)
 
 Lemma splitAt_last_l :
   forall (A : Type) (l l1 l2 : list A) (x : A) (n : nat),
@@ -2974,6 +3068,14 @@ Qed.
 (* end hide *)
 
 (** ** [insert] *)
+
+(** Napisz funkcję [insert], która wstawia do listy [l] na [n]-tą pozycję
+    element [x].
+
+    Przykład:
+*)
+
+(** [insert [1; 2; 3; 4; 5] 2 42] = [[1; 2; 42; 3; 4; 5]] *)
 
 (* begin hide *)
 Fixpoint insert
@@ -3266,11 +3368,12 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *) Lemma take_insert :
+Lemma take_insert :
   forall (A : Type) (l : list A) (n m : nat) (x : A),
     take m (insert l n x) =
     if m <=? n then take m l else snoc x l.
 (* begin hide *)
+(* TODO *) 
 Proof.
   intros. rewrite insert_spec. rewrite take_app.
   rewrite take_take. rewrite length_take. 
@@ -3307,9 +3410,19 @@ Proof.
 Admitted.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: take_remove *)
+(* end hide *)
 
 (** ** [replace] *)
+
+(** Napisz funkcję [replace], która na liście [l] zastępuje element z
+    pozycji [n] elementem [x].
+
+    Przykład:
+*)
+
+(** [replace [1; 2; 3; 4; 5] 2 42] = [[1; 2; 42; 4; 5]] *)
 
 (* begin hide *)
 Fixpoint replace
@@ -3354,18 +3467,18 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (*
 Lemma replace_length :
   forall (A : Type) (l : list A) (x : A) (n : nat),
     n = length l -> replace l n x = None.
-(* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     rewrite H, IHt; reflexivity.
 Qed.
-(* end hide *)
 *)
+(* end hide *)
 
 Lemma replace_length_lt :
   forall (A : Type) (l : list A) (n : nat) (x : A),
@@ -3409,8 +3522,6 @@ Proof.
         assumption.
 Qed.
 (* end hide *)
-
-(*Require Import CoqBookPL.wd.Opcje.*)
 
 Lemma replace_snoc_neq :
   forall (A : Type) (l : list A) (n : nat) (x y : A),
@@ -3604,7 +3715,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: bind *)
+(* end hide *)
 
 Lemma replace_replicate :
   forall (A : Type) (l l' : list A) (n m : nat) (x y : A),
@@ -3689,7 +3802,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: uncons, unsnoc *)
+(* end hide *)
 
 Lemma nth_replace :
   forall (A : Type) (l l' : list A) (n m : nat) (x : A),
@@ -3828,9 +3943,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: w drugą stronę dla [take] i [drop] *)
-
-(* TODO: splitAt *)
+(* begin hide *)
+(* TODO: w drugą stronę dla [take] i [drop], splitAt *)
+(* end hide *)
 
 Lemma replace_insert :
   forall (A : Type) (l : list A) (n : nat) (x y : A),
@@ -3868,6 +3983,20 @@ Qed.
 (* end hide *)
 
 (** ** [remove] *)
+
+(** Napisz funkcję [remove], która bierze liczbę naturalną [n] oraz listę
+    [l] i zwraca parę składającą się z [n]-tego elementu listy [l] oraz
+    tego, co pozostanie na liście po jego usunięciu. Jeżeli lista jest za
+    krótka, funkcja ma zwracać [None].
+
+    Przykład:
+*)
+
+(** [remove 2 [1; 2; 3; 4; 5]] = [Some (3, [1; 2; 4; 5])] *)
+
+(** [remove 42 [1; 2; 3; 4; 5]] = [None] *)
+
+(** Uwaga TODO: w ćwiczeniach jest burdel. *)
 
 (* begin hide *)
 Fixpoint remove
@@ -4280,8 +4409,9 @@ Qed.
 
 (** ** [zip] *)
 
-(** Napisz funkcję [zip : forall A B : Type, list A -> list B -> list (A * B)],
-    która spełnia poniższą specyfikację. Co robi ta funkcja? *)
+(** Napisz funkcję [zip], która bierze dwie listy i skleja je w listę par.
+    Wywnioskuj z poniższej specyfikacji, jak dokładnie ma się zachowywać
+    ta funkcja. *)
 
 (* begin hide *)
 Fixpoint zip {A B : Type} (la : list A) (lb : list B) : list (A * B) :=
@@ -4664,7 +4794,8 @@ Qed.
 
 (** ** [zipWith] *)
 
-(** Zdefiniuj funkcję [zipWith], która spełnia poniższą specyfikację. *)
+(** Zdefiniuj funkcję [zipWith], która spełnia poniższą specyfikację.
+    Nie używaj [zip] and [map]. *)
 
 (* begin hide *)
 Fixpoint zipWith {A B C : Type} (f : A -> B -> C)
@@ -4800,7 +4931,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO : insert *)
+(* end hide *)
 
 Lemma replace_zipWith :
   forall
@@ -4849,7 +4982,7 @@ Qed.
 
 (** ** [unzipWith] *)
 
-(** Zaimplementuj funkcję [unzipWith], która ma się tak do [zipWith], jak
+(** Zdefiniuj funkcję [unzipWith], która ma się tak do [zipWith], jak
     [unzip] do [zip]. *)
 
 (* begin hide *)
@@ -4921,6 +5054,13 @@ Qed.
 (** * Funkcje z predykatem boolowskim *)
 
 (** ** [any] *)
+
+(** Napisz funkcję [any], która sprawdza, czy lista [l] zawiera jakiś
+    element, który spełnia predykat boolowski [p].
+
+    Przykład:
+    [any even [3; 5; 7; 11]] = [false]
+*)
 
 (* begin hide *)
 Fixpoint any {A : Type} (p : A -> bool) (l : list A) : bool :=
@@ -5152,7 +5292,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO any i replace *)
+(* end hide *)
 
 Lemma any_replace :
   forall (A : Type) (p : A -> bool) (l l' : list A) (n : nat) (x : A),
@@ -5242,7 +5384,11 @@ Qed.
 (** ** [all] *)
 
 (** Napisz funkcję [all], która sprawdza, czy wszystkie wartości na liście
-    [l : list A] spełniają predykat [p : A -> bool]. *)
+    [l] spełniają predykat boolowski [p].
+
+    Przykład:
+    [all even [2; 4; 6]] = [true]
+*)
 
 (* begin hide *)
 Fixpoint all {A : Type} (p : A -> bool) (l : list A) : bool :=
@@ -5462,7 +5608,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: all splitAt *)
+(* end hide *)
 
 Lemma all_insert :
   forall (A : Type) (p : A -> bool) (l : list A) (n : nat) (x : A),
@@ -5607,11 +5755,18 @@ Qed.
 (** ** [find]  i [findLast] *)
 
 (** Napisz funkcję [find], która znajduje pierwszy element na liście,
-    który spełnia podany predykat boolowski. Podaj i udowodnij jej
-    specyfikację.
+    który spełnia podany predykat boolowski.
 
-    Napisz też funkcję [findLast], która znajduje ostatni element na
-    liście, który spełnia podany predykat boolowski. *)
+    Przykład:
+    [find even [1; 2; 3; 4]] = [Some 2]
+*)
+
+(** Napisz też funkcję [findLast], która znajduje ostatni element na
+    liście, który spełnia podany predykat boolowski.
+
+    Przykład:
+    [findLast even [1; 2; 3; 4]] = [Some 4]
+*)
 
 (* begin hide *)
 Function find {A : Type} (p : A -> bool) (l : list A) : option A :=
@@ -9835,6 +9990,7 @@ Qed.
 Lemma pmap_intersperse :
   forall (A B : Type) (f : A -> option B) (x : A) (l : list A),
     f x = None -> pmap f (intersperse x l) = pmap f l.
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
