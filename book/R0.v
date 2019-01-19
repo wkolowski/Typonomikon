@@ -173,7 +173,8 @@
     ani za pomocą komputerów), to po jakimś czasie zaczęła być przydatna.
 
     W połowie XIX wieku postawiono problem, który można krótko podsumować
-    tak: czy każdą mapę polityczną świata da się pomalować czterema kolorami?
+    tak: czy każdą mapę polityczną świata da się pomalować czterema kolorami
+    w taki sposób, aby sąsiednie kraje miały inne kolory?
 
     Przez bardzo długi czas próbowano go rozwiązywać na różne sposoby, ale
     wszystkie one zawodziły. Po ponad stu latach prób problem rozwiązali
@@ -185,7 +186,7 @@
     matematyków nie uznała ich dowodu, gdyż nie umieli oni ręcznie sprawdzić
     poprawności wszystkich tych pomocniczych programów.
 
-    Po upływie kolejnych 30 latach dowód udało się sformalizować w Coqu,
+    Po upływie kolejnych 30 lat dowód udało się sformalizować w Coqu,
     co ostatecznio zamknęło sprawę. Morał płynący z tej historii jest dość
     prosty:
     - niektóre twierdzenia można udowodnić jedynie sprawdzając dużą ilość
@@ -197,8 +198,8 @@
 
 (** To jednak nie koniec niebezpiecznych związków matematyków z komputerami.
 
-    Dawno, dawno temu, w nie tak odległej galaktyce (a konkretniej w Rosji)
-    był sobie matematyk nazwiskiem Voevodsky.
+    Nie tak dawno temu w odległej galaktyce (a konkretniej w Rosji) był
+    sobie matematyk nazwiskiem Voevodsky.
 
 
 *)
@@ -210,7 +211,7 @@
 (** ** Książki *)
 
 (** Mimo, iż Coq liczy sobie dobre 27 lat, książek na jego temat zaczęło
-    przybywać dopiero od kilku lat. Z dostępnych pozycji polecenia
+    przybywać dopiero od kilku. Z dostępnych pozycji polecenia
     godne są:
     - Software Foundations — trzytomowa seria dostępna za darmo
       tutaj: https://softwarefoundations.cis.upenn.edu/

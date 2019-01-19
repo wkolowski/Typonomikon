@@ -441,8 +441,9 @@ Qed.
     elementu listy.
 
     Przykład:
-    [map isEmpty [[]; [1]; [2; 3]; []]] = [[true; false; false; true]]
 *)
+
+(** [map isEmpty [[]; [1]; [2; 3]; []]] = [[true; false; false; true]] *)
 
 (* begin hide *)
 Fixpoint map {A B : Type} (f : A -> B) (la : list A) : list B :=
@@ -2185,7 +2186,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: insert_take, insert_drop, zip, unzip, zipWith, intersperse *)
+(* end hide *)
 
 (** ** [drop] *)
 
@@ -4411,7 +4414,12 @@ Qed.
 
 (** Napisz funkcję [zip], która bierze dwie listy i skleja je w listę par.
     Wywnioskuj z poniższej specyfikacji, jak dokładnie ma się zachowywać
-    ta funkcja. *)
+    ta funkcja.
+
+    Przykład:
+*)
+
+(** [zip [1; 3; 5; 7] [2; 4; 6]] = [[(1, 2); (3, 4); (5, 6)]] *)
 
 (* begin hide *)
 Fixpoint zip {A B : Type} (la : list A) (lb : list B) : list (A * B) :=
@@ -4738,7 +4746,12 @@ Qed.
 (** ** [unzip] *)
 
 (** Zdefiniuj funkcję [unzip], która jest w pewnym sensie "odwrotna"
-    do [zip]. *)
+    do [zip].
+
+    Przykład:
+*)
+
+(** [unzip [(1, 2); (3, 4); (5, 6)]] = [([1; 3; 5], [2; 4; 6])] *)
 
 (* begin hide *)
 Fixpoint unzip {A B : Type} (l : list (A * B)) : list A * list B :=
@@ -4794,8 +4807,13 @@ Qed.
 
 (** ** [zipWith] *)
 
-(** Zdefiniuj funkcję [zipWith], która spełnia poniższą specyfikację.
-    Nie używaj [zip] and [map]. *)
+(** Zdefiniuj funkcję [zipWith], która zachowuje się jak połączenie [zip]
+    i [map]. Nie używaj [zip] ani [map] - użyj rekursji.
+
+    Przykład:
+*)
+
+(** [zipWith plus [1; 2; 3] [4; 5; 6]] = [[5; 7; 9]] *)
 
 (* begin hide *)
 Fixpoint zipWith {A B C : Type} (f : A -> B -> C)
@@ -4983,7 +5001,8 @@ Qed.
 (** ** [unzipWith] *)
 
 (** Zdefiniuj funkcję [unzipWith], która ma się tak do [zipWith], jak
-    [unzip] do [zip]. *)
+    [unzip] do [zip]. Oczywiście użyj rekursji i nie używaj żadnych
+    funkcji pomocniczych. *)
 
 (* begin hide *)
 Fixpoint unzipWith
@@ -6171,10 +6190,16 @@ Qed.
 
 (** ** [removeFirst] i [removeLast] *)
 
-(** Napisz funkcje [removeFirst] i [removeLast] o sygnaturach
-    [forall A : Type, (A -> bool) -> list A -> option (A * list A)],
+(** Napisz funkcje [removeFirst] i [removeLast] o sygnaturach,
     które zwracają pierwszy/ostatni element z listy spełniający
-    predykat boolowski [p] oraz resztę listy bez tego elementu. *)
+    predykat boolowski [p] oraz resztę listy bez tego elementu.
+
+    Przykład:
+*)
+
+(** [removeFirst even [1; 2; 3; 4]] = [Some (2, [1; 3; 4])] *)
+
+(** [removeLast even [1; 2; 3; 4]] = [Some (4, [1; 2; 3])] *)
 
 (* begin hide *)
 Function removeFirst
@@ -6685,7 +6710,13 @@ Qed.
 (** ** [findIndex] *)
 
 (** Napisz funkcję [findIndex], która znajduje indeks pierwszego elementu,
-    który spełnia predykat boolowski [p]. *)
+    który spełnia predykat boolowski [p]. Pamiętaj, że indeksy liczone są
+    od 0.
+
+    Przykład:
+*)
+
+(** [findIndex even [1; 3; 4; 5; 7]] = [2] *)
 
 (* begin hide *)
 Function findIndex {A : Type} (p : A -> bool) (l : list A) : option nat :=
@@ -7179,7 +7210,12 @@ Qed.
 (** ** [count] *)
 
 (** Napisz funkcję [count], która liczy, ile jest na liście [l] elementów
-    spełniających predykat boolowski [p]. *)
+    spełniających predykat boolowski [p].
+
+    Przykład:
+*)
+
+(** [count even [1; 2; 3; 4]] = [2] *)
 
 (* begin hide *)
 Fixpoint count {A : Type} (p : A -> bool) (l : list A) : nat :=
@@ -7535,7 +7571,11 @@ Qed.
 (** ** [filter] *)
 
 (** Napisz funkcję [filter], która zostawia na liście elementy, dla których
-    funkcja [p] zwraca [true], a usuwa te, dla których zwraca [false]. *)
+    funkcja [p] zwraca [true], a usuwa te, dla których zwraca [false].
+
+    Przykład: *)
+
+(** [filter even [1; 2; 3; 4]] = [[2; 4]] *)
 
 (* begin hide *)
 Fixpoint filter {A : Type} (f : A -> bool) (l : list A) : list A :=
@@ -7764,7 +7804,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: intersperse_splitAt *)
+(* end hide *)
 
 Lemma filter_insert :
   forall (A : Type) (p : A -> bool) (l : list A) (n : nat) (x : A),
@@ -7964,11 +8006,16 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [partition] *)
+(** ** [partition] *)
 
 (** Napisz funkcję [partition], która dzieli listę [l] na listy
     elementów spełniających i niespełniających pewnego warunku
-    boolowskiego. *)
+    boolowskiego.
+
+    Przykład:
+*)
+
+(** [partition even [1; 2; 3; 4]] = [([2; 4], [1; 3])] *)
 
 (* begin hide *)
 Fixpoint partition {A : Type} (p : A -> bool) (l : list A)
@@ -8040,7 +8087,11 @@ Qed.
 (** ** [findIndices] *)
 
 (** Napisz funkcję [findIndices], która znajduje indeksy wszystkich
-    elementów listy, które spełniają predykat boolowski [p]. *)
+    elementów listy, które spełniają predykat boolowski [p].
+
+    Przykład: *)
+
+(** [findIndices even [1; 1; 2; 3; 5; 8; 13; 21; 34]] = [[2; 5; 8]] *)
 
 (* begin hide *)
 Fixpoint findIndices {A : Type} (p : A -> bool) (l : list A) : list nat :=  
@@ -8361,7 +8412,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: drop, splitAt *)
+(* end hide *)
 
 Lemma findIndices_insert :
   forall (A : Type) (p : A -> bool) (l : list A) (n : nat) (x : A),
@@ -8408,7 +8461,14 @@ Qed.
 
 (** Zdefiniuj funkcje [takeWhile] oraz [dropWhile], które, dopóki
     funkcja [p] zwraca [true], odpowiednio biorą lub usuwają elementy
-    z listy. *)
+    z listy.
+
+    Przykład:
+*)
+
+(** [takeWhile even [2; 4; 6; 1; 8; 10; 12]] = [[2; 4; 6]] *)
+
+(** [dropWhile even [2; 4; 6; 1; 8; 10; 12]] = [[1; 8; 10; 12]] *)
 
 (* begin hide *)
 Fixpoint takeWhile {A : Type} (p : A -> bool) (l : list A) : list A :=
@@ -8801,8 +8861,17 @@ Qed.
 
 (** ** [span] *)
 
-(** Zdefiniuj rekurencyjną funkcję [span], która spełnia poniższą
-    specyfikację. *)
+(** Zdefiniuj funkcję [span], która dzieli listę [l] na listę [b], której
+    elementy nie spełniają predykatu [p], element [x], który spełnia [p]
+    oraz listę [e] zawierającą resztę elementów [l]. Jeżeli na liście nie
+    ma elementu spełniającego [p], funkcja zwraca [None].
+
+    Przykład:
+*)
+
+(** [span even [1; 1; 2; 3; 5; 8]] = [Some ([1; 1], 2, [3; 5; 8])] *)
+
+(** [span even [1; 3; 5]] = [None] *)
 
 (* begin hide *)
 Fixpoint span
@@ -8993,7 +9062,9 @@ Restart.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: bind *)
+(* end hide *)
 
 Lemma span_replicate :
   forall (A : Type) (p : A -> bool) (n : nat) (x : A),
@@ -9011,7 +9082,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: iterate *)
+(* end hide *)
 
 Lemma span_any :
   forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
@@ -9072,7 +9145,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: findIndex *)
+(* end hide *)
 
 Lemma count_span_l :
   forall (A : Type) (p : A -> bool) (x : A) (l b e : list A),
@@ -9213,6 +9288,7 @@ Lemma span_rev_aux :
         | None => None
         | Some (b, x, e) => Some (rev e, x, rev b)
     end.
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
@@ -9239,6 +9315,16 @@ Qed.
 (** * Sekcja mocno ad hoc *)
 
 (** ** [pmap] *)
+
+(** Zdefiniuj funkcję [pmap], która mapuje funkcję [f : A -> option B]
+    po liście [l], ale odpakowuje wyniki zawinięte w [Some], a wyniki
+    równe [None] usuwa.
+
+    Przykład:
+*)
+
+(** [pmap (fun n : nat => if even n then None else Some (n + 42)) [1; 2; 3]]
+    = [[43; 45]] *)
 
 (* begin hide *)
 Fixpoint pmap {A B : Type} (f : A -> option B) (l : list A) : list B :=
@@ -9612,7 +9698,13 @@ Qed.
 (** ** [intersperse] *)
 
 (** Napisz funkcję [intersperse], który wstawia element [x : A] między
-    każde dwa elementy z listy [l : list A]. *)
+    każde dwa elementy z listy [l : list A]. Zastanów się dobrze nad
+    przypadkami bazowymi.
+
+    Przykład:
+*)
+
+(** [intersperse 42 [1; 2; 3]] = [[1; 42; 2; 42; 3]] *)
 
 (* begin hide *)
 Function intersperse {A : Type} (x : A) (l : list A) : list A :=
