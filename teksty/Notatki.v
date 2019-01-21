@@ -1,3 +1,11 @@
+(** Najnowsze TODO:
+    - Wydzielić z R2 nowy rozdział o rekordach, klasach i połączyć to z
+      rozstrzygalnością oraz typem [reflect]
+    - Przemieścić z R2 podrozdziały o sortach i o hierarchii uniwersów.
+    - Przemieścić z R1 podrozdziały "Typy i termy" oraz "Typy a zbiory".
+    - Dodać podrozdział o typach skończonych.
+*)
+
 (** TODO:
     - ogólnie trzeba będzie zrobić gruntowny refaktoring list według
       planu zawartego w List_sig.v
@@ -31,7 +39,8 @@
 (** Najnowszy plan refaktoringu:
     - Wstęp
     - R1: Logika konstruktywna, potem klasyczna. Zrobić tak żeby można było
-          pisać "Classically $ coś tam".
+          pisać "Classically $ coś tam". Na końcu dać podrozdział o
+          kombinatorach taktyk.
     - R2: Typy induktywne — enumeracje (na przykładzie dni tygodnia?).
           Podstawy obliczeń (to co obecnie jest przy opisie typu [bool]).
     - R3: Logika boolowska (dokładnie wszystko opisać i powiązać z logiką

@@ -135,7 +135,10 @@ end.
     - ekstensjonalna — wartości funkcji dla każdego argumentu są równe *)
 
 Print eq.
-(* ===> Inductive eq (A : Type) (x : A) : A -> Prop :=  eq_refl : x = x *)
+(* ===>
+    Inductive eq (A : Type) (x : A) : A -> Prop :=
+        | eq_refl : x = x
+*)
 
 (** Podstawowym i domyślnym rodzajem równości w Coqu jest równość
     intensjonalna, której właściwości już znasz. Każda funkcja, na mocy

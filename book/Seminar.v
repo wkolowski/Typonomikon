@@ -2194,8 +2194,9 @@ Qed.
 Inductive R_div2' : nat -> nat -> Prop :=
     | R_div2'_0 : R_div2' 0 0
     | R_div2'_1 : R_div2' 1 0
-    | R_div2'_2 : forall n r : nat,
-        R_div2' n r -> R_div2' (S (S n)) (S r).
+    | R_div2'_2 :
+        forall n r : nat,
+          R_div2' n r -> R_div2' (S (S n)) (S r).
 
 (** Note: in the names of the following functions we utilize the naming
     conventions of [Function] and [Functional Scheme], but add a ['] at
