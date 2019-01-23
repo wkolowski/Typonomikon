@@ -18072,7 +18072,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Zbiorowa równoważność *)
+(** ** Listy jako zbiory *)
 
 Definition SetEquiv {A : Type} (l1 l2 : list A) : Prop :=
   forall x : A, elem x l1 <-> elem x l2.
@@ -18295,13 +18295,13 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (*Lemma SetEquiv_remove :
   exists (A : Type) (l1 l1' l2 l2' : list A) (n1 n2 : nat),
     remove match remove n l with
         | None => True
         | Some (_, l') => SetEquiv l' l
     end.
-(* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
     trivial.
@@ -18310,9 +18310,8 @@ Proof.
       specialize (IHt n'). destruct (remove n' t).
         destruct p. apply SetEquiv_cons, IHt.
         trivial.
-Qed.
+Qed.*)
 (* end hide *)
-*)
 
 Lemma SetEquiv_take :
   forall (A : Type) (l : list A) (n : nat),
@@ -18603,6 +18602,7 @@ Lemma Permutation_ind' :
     (forall l l' l'', Permutation l l' -> P l l' -> Permutation l' l'' ->
       P l' l'' -> P l l'') ->
     forall l l', Permutation l l' -> P l l'.
+(* begin hide *)
 Proof.
   intros A P Hnil Hskip Hswap Htrans.
   induction 1.
@@ -18617,6 +18617,7 @@ Proof.
           assumption.
     apply Htrans with l'; assumption.
 Qed.
+(* end hide *)
 
 Inductive Elem {A : Type} (x : A) : list A -> list A -> Prop :=
     | es_here :
@@ -18743,20 +18744,20 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (*
 Lemma Permutation_cons_aux :
   forall (A : Type) (x : A) (l1 l2 : list A),
     Permutation (x :: l1) l2 ->
       exists l21 l22 : list A, l2 = l21 ++ x :: l22.
-(* begin hide *)
 Proof.
   intros. pose (@Permutation_In _ _ _ H x).
   assert (In x (x :: l1)).
     left. reflexivity.
     rewrite i in H0. apply In_spec. assumption.
 Qed.
-(* end hide *)
 *)
+(* end hide *)
 
 Lemma Permutation_length :
   forall (A : Type) (l1 l2 : list A),
@@ -18943,18 +18944,18 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (*
 Lemma Permutation_app_inv :
   forall (A : Type) (l1 l2 l3 l4 : list A) (x : A),
     Permutation (l1 ++ x :: l2) (l3 ++ x :: l4) ->
     Permutation (l1 ++ l2) (l3 ++ l4).
-(* begin hide *)
 Proof.
   intros. rewrite ?Permutation_middle in H.
   apply Permutation_cons_inv in H. assumption.
 Qed.
-(* end hide *)
 *)
+(* end hide *)
 
 Lemma Permutation_app_inv_l :
   forall (A : Type) (l1 l2 l3 : list A),
@@ -19065,17 +19066,17 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (*
 Lemma Permutation_cons_middle_inv :
   forall (A : Type) (l l1 l2 : list A) (x : A),
     Permutation (x :: l) (l1 ++ x :: l2) -> Permutation l (l1 ++ l2).
-(* begin hide *)
 Proof.
   intros. rewrite Permutation_middle in H.
   apply Permutation_cons_inv in H. assumption.
 Qed.
-(* end hide *)
 *)
+(* end hide *)
 
 Lemma Permutation_In :
   forall (A : Type) (l1 l2 : list A),
@@ -19138,7 +19139,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: iterate *)
+(* end hide *)
 
 Lemma Permutation_iterate' :
   forall (A : Type) (f : A -> A) (n : nat) (x y : A),
@@ -19835,8 +19838,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: permutacje mają inny styl (można używać symmetry etc.) *)
-
 Lemma Permutation_SetEquiv :
   forall (A : Type) (l1 l2 : list A),
     Permutation l1 l2 -> SetEquiv l1 l2.
@@ -19848,7 +19849,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO:
+(* begin hide *)
+(* TODO: permutacje mają inny styl (można używać symmetry etc).
+   Poza tym:
 
 nth
 
@@ -19869,6 +19872,7 @@ findIndex
 
 findIndices
 *)
+(* end hide *)
 
 (** ** Listy jako cykle *)
 
@@ -21038,18 +21042,6 @@ Qed.
 (* end hide *)
 
 (* TODO: Incl, Sublist, subseq *)
-
-(*
-Lemma Palindrome_ :
-  forall (A : Type) (l : list A),
-    Palindrome l -> .
-(* begin hide *)
-Proof.
-  induction 1; cbn; intros.
-
-Qed.
-(* end hide *)
-*)
 
 Lemma Sublist_Palindrome :
   forall (A : Type) (l1 l2 : list A),

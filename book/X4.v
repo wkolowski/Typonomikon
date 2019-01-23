@@ -110,8 +110,9 @@ Definition const {A B : Type} (b : B) : A -> B := fun _ => b.
 (** Funkcja stała to funkcja, która ignoruje swój drugi argument i zawsze
     zwraca pierwszy argument. *)
 
-Definition flip {A B C : Type} (f : A -> B -> C)
-  : B -> A -> C := fun (b : B) (a : A) => f a b.
+Definition flip
+  {A B C : Type} (f : A -> B -> C) : B -> A -> C :=
+    fun (b : B) (a : A) => f a b.
 
 (** [flip] to całkiem przydatny kombinator (funkcja wyższego rzędu), który
     zamienia miejscami argumenty funkcji dwuargumentowej. *)

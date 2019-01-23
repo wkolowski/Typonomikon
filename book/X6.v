@@ -72,6 +72,10 @@ Proof.
 Qed.
 (* end hide *)
 
+(** TODO: tu opisać kłamstwo
+
+*)
+
 (** * Rozstrzygalność *)
 
 Theorem excluded_middle :

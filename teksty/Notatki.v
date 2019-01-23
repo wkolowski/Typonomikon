@@ -4,6 +4,7 @@
     - Przemieścić z R2 podrozdziały o sortach i o hierarchii uniwersów.
     - Przemieścić z R1 podrozdziały "Typy i termy" oraz "Typy a zbiory".
     - Dodać podrozdział o typach skończonych.
+    - Napisać coś o kodowaniu Churcha.
 *)
 
 (** TODO:

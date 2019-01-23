@@ -15,7 +15,9 @@
 
 Module MyNat.
 
-(** *** Definicja i notacje *)
+(** * Podstawy *)
+
+(** ** Definicja i notacje *)
 
 (** Zdefiniuj liczby naturalne. *)
 
@@ -28,7 +30,7 @@ Inductive nat : Set :=
 Notation "0" := O.
 Notation "1" := (S 0).
 
-(** *** [0] i [S] *)
+(** ** [0] i [S] *)
 
 (** Udowodnij właściwości zera i następnika. *)
 
@@ -66,7 +68,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Poprzednik *)
+(** ** Poprzednik *)
 
 (** Zdefiniuj funkcję zwracającą poprzednik danej liczby naturalnej.
     Poprzednikiem [0] jest [0]. *)
@@ -94,7 +96,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Dodawanie *)
+(** * Proste działania *)
+
+(** ** Dodawanie *)
 
 (** Zdefiniuj dodawanie (rekurencyjnie po pierwszym argumencie) i
     udowodnij jego właściwości. *)
@@ -225,7 +229,64 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Odejmowanie *)
+(** ** Alternatywne definicje dodawania *)
+
+(** Udowodnij, że poniższe alternatywne metody zdefiniowania dodawania
+    rzeczywiście definiują dodawanie. *)
+
+Fixpoint plus' (n m : nat) : nat :=
+match m with
+    | 0 => n
+    | S m' => S (plus' n m')
+end.
+
+Lemma plus'_is_plus :
+  forall n m : nat, plus' n m = plus n m.
+(* begin hide *)
+Proof.
+  intros n m. generalize dependent n.
+  induction m as [| m']; simpl; intros.
+    rewrite plus_0_r. trivial.
+    rewrite IHm'. rewrite (plus_comm n (S m')). simpl.
+      rewrite plus_comm. trivial.
+Qed.
+(* end hide *)
+
+Fixpoint plus'' (n m : nat) : nat :=
+match n with
+    | 0 => m
+    | S n' => plus'' n' (S m)
+end.
+
+Lemma plus''_is_plus :
+  forall n m : nat, plus'' n m = plus n m.
+(* begin hide *)
+Proof.
+  induction n as [| n']; simpl.
+    reflexivity.
+    intro. rewrite IHn', plus_comm. cbn. rewrite plus_comm. reflexivity.
+Qed.
+(* end hide *)
+
+Fixpoint plus''' (n m : nat) : nat :=
+match m with
+    | 0 => n
+    | S m' => plus''' (S n) m'
+end.
+
+Lemma plus'''_is_plus :
+  forall n m : nat, plus''' n m = plus n m.
+(* begin hide *)
+Proof.
+  intros n m. generalize dependent n.
+  induction m as [| m']; cbn; intros.
+    rewrite plus_0_r. reflexivity.
+    rewrite IHm'. cbn. rewrite (plus_comm n (S _)). cbn.
+      rewrite plus_comm. reflexivity.
+Qed.
+(* end hide *)
+
+(** ** Odejmowanie *)
 
 (** Zdefiniuj odejmowanie i udowodnij jego właściwości. *)
 
@@ -346,7 +407,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Mnożenie *)
+(** ** Mnożenie *)
 
 (** Zdefiniuj mnożenie i udowodnij jego właściwości. *)
 
@@ -532,7 +593,105 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Porządek [<=] *)
+(** ** Potęgowanie *)
+
+(** Zdefiniuj potęgowanie i udowodnij jego właściwości. *)
+
+(* begin hide *)
+Fixpoint pow (n m : nat) : nat :=
+match m with
+    | 0 => 1
+    | S m' => mult n (pow n m')
+end.
+(* end hide *)
+
+Lemma pow_0_r :
+  forall n : nat, pow n 0 = 1.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma pow_0_l :
+  forall n : nat, pow 0 (S n) = 0.
+(* begin hide *)
+Proof.
+  destruct n; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pow_1_l :
+  forall n : nat, pow 1 n = 1.
+(* begin hide *)
+Proof.
+  induction n as [| n']; simpl; try rewrite plus_0_r; trivial.
+Qed.
+(* end hide *)
+
+Lemma pow_1_r :
+  forall n : nat, pow n 1 = n.
+(* begin hide *)
+Proof.
+  induction n as [| n']; simpl; try rewrite mult_1_r; trivial.
+Qed.
+(* end hide *)
+
+Lemma pow_no_neutr_l :
+  ~ exists e : nat, forall n : nat, pow e n = n.
+(* begin hide *)
+Proof.
+  destruct 1 as [e H]. specialize (H 0). simpl in H. inversion H.
+Qed.
+(* end hide *)
+
+Lemma pow_no_annihilator_r :
+  ~ exists a : nat, forall n : nat, pow n a = a.
+(* begin hide *)
+Proof.
+  destruct 1 as [a H]. destruct a;
+  [specialize (H 1) | specialize (H 0)]; inversion H.
+Qed.
+(* end hide *)
+
+Lemma pow_plus :
+  forall a b c : nat,
+    pow a (plus b c) = mult (pow a b) (pow a c).
+(* begin hide *)
+Proof.
+  induction b as [| b']; induction c as [| c']; simpl.
+    reflexivity.
+    rewrite plus_0_r. reflexivity.
+    rewrite plus_0_r, mult_1_r. reflexivity.
+    rewrite IHb'. cbn. rewrite !mult_assoc. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pow_mult :
+  forall a b c : nat,
+    pow (mult a b) c = mult (pow a c) (pow b c).
+(* begin hide *)
+Proof.
+  induction c as [| c']; simpl.
+    trivial.
+    rewrite IHc'. repeat rewrite mult_assoc. f_equal.
+      repeat rewrite <- mult_assoc. f_equal. apply mult_comm.
+Qed.
+(* end hide *)
+
+Lemma pow_pow :
+  forall a b c : nat,
+    pow (pow a b) c = pow a (mult b c).
+(* begin hide *)
+Proof.
+  induction c as [| c']; simpl.
+    rewrite mult_0_r. simpl. trivial.
+    rewrite IHc', (mult_comm b (S c')). simpl.
+      rewrite <- pow_plus. rewrite mult_comm. trivial.
+Qed.
+(* end hide *)
+
+(** * Porządek *)
+
+(** ** Porządek [<=] *)
 
 (** Zdefiniuj relację "mniejszy lub równy" i udowodnij jej właściwości. *)
 
@@ -797,7 +956,34 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Porządek [lt] *)
+Lemma le_pow_l :
+  forall a b c : nat,
+    a <> 0 -> b <= c -> pow a b <= pow a c.
+(* begin hide *)
+Proof.
+  induction 2.
+    constructor.
+    destruct a; simpl.
+      contradiction H. trivial.
+      change (pow (S a) b) with (plus 0 (pow (S a) b)).
+        rewrite (plus_comm (pow (S a) m) _). apply le_plus.
+          apply le_0_n.
+          assumption.
+Qed.
+(* end hide *)
+
+Lemma le_pow_r :
+  forall a b c : nat,
+    a <= b -> pow a c <= pow b c.
+(* begin hide *)
+Proof.
+  induction c as [| c']; simpl.
+    constructor.
+    intro. apply le_mult; auto.
+Qed.
+(* end hide *)
+
+(** ** Porządek [<] *)
 
 Definition lt (n m : nat) : Prop := S n <= m.
 
@@ -836,9 +1022,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Minimum i maksimum *)
+(** ** Minimum i maksimum *)
 
-(** Zdefiniuj minimum i maksimum oraz udowodnij ich właściwości. *)
+(** Zdefiniuj operacje brania minimum i maksimum z dwóch liczb naturalnych
+    oraz udowodnij ich właściwości. *)
 
 (* begin hide *)
 Fixpoint min (n m : nat) : nat :=
@@ -1009,130 +1196,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Potęgowanie *)
+(** * Rozstrzygalność *)
 
-(** Zdefiniuj potęgowanie i udowodnij jego właściwości. *)
-
-(* begin hide *)
-Fixpoint pow (n m : nat) : nat :=
-match m with
-    | 0 => 1
-    | S m' => mult n (pow n m')
-end.
-(* end hide *)
-
-Lemma pow_0_r :
-  forall n : nat, pow n 0 = 1.
-(* begin hide *)
-Proof. reflexivity. Qed.
-(* end hide *)
-
-Lemma pow_0_l :
-  forall n : nat, pow 0 (S n) = 0.
-(* begin hide *)
-Proof.
-  destruct n; cbn; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma pow_1_l :
-  forall n : nat, pow 1 n = 1.
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl; try rewrite plus_0_r; trivial.
-Qed.
-(* end hide *)
-
-Lemma pow_1_r :
-  forall n : nat, pow n 1 = n.
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl; try rewrite mult_1_r; trivial.
-Qed.
-(* end hide *)
-
-Lemma pow_no_neutr_l :
-  ~ exists e : nat, forall n : nat, pow e n = n.
-(* begin hide *)
-Proof.
-  destruct 1 as [e H]. specialize (H 0). simpl in H. inversion H.
-Qed.
-(* end hide *)
-
-Lemma pow_no_annihilator_r :
-  ~ exists a : nat, forall n : nat, pow n a = a.
-(* begin hide *)
-Proof.
-  destruct 1 as [a H]. destruct a;
-  [specialize (H 1) | specialize (H 0)]; inversion H.
-Qed.
-(* end hide *)
-
-Lemma le_pow_l :
-  forall a b c : nat,
-    a <> 0 -> b <= c -> pow a b <= pow a c.
-(* begin hide *)
-Proof.
-  induction 2.
-    constructor.
-    destruct a; simpl.
-      contradiction H. trivial.
-      change (pow (S a) b) with (plus 0 (pow (S a) b)).
-        rewrite (plus_comm (pow (S a) m) _). apply le_plus.
-          apply le_0_n.
-          assumption.
-Qed.
-(* end hide *)
-
-Lemma le_pow_r :
-  forall a b c : nat,
-    a <= b -> pow a c <= pow b c.
-(* begin hide *)
-Proof.
-  induction c as [| c']; simpl.
-    constructor.
-    intro. apply le_mult; auto.
-Qed.
-(* end hide *)
-
-Lemma pow_mult :
-  forall a b c : nat,
-    pow (mult a b) c = mult (pow a c) (pow b c).
-(* begin hide *)
-Proof.
-  induction c as [| c']; simpl.
-    trivial.
-    rewrite IHc'. repeat rewrite mult_assoc. f_equal.
-      repeat rewrite <- mult_assoc. f_equal. apply mult_comm.
-Qed.
-(* end hide *)
-
-Lemma pow_plus :
-  forall a b c : nat,
-    pow a (plus b c) = mult (pow a b) (pow a c).
-(* begin hide *)
-Proof.
-  induction b as [| b']; induction c as [| c']; simpl.
-    trivial.
-    rewrite plus_0_r. trivial.
-    rewrite plus_0_r, mult_1_r. trivial.
-    rewrite IHb'. simpl. repeat rewrite mult_assoc. trivial.
-Qed.
-(* end hide *)
-
-Lemma pow_pow :
-  forall a b c : nat,
-    pow (pow a b) c = pow a (mult b c).
-(* begin hide *)
-Proof.
-  induction c as [| c']; simpl.
-    rewrite mult_0_r. simpl. trivial.
-    rewrite IHc', (mult_comm b (S c')). simpl.
-      rewrite <- pow_plus. rewrite mult_comm. trivial.
-Qed.
-(* end hide *)
-
-(** *** Reflekcja *)
+(** ** Rozstrzygalność porządku *)
 
 (** Zdefiniuj funkcję [leb], która sprawdza, czy [n <= m]. *)
 
@@ -1180,6 +1246,8 @@ Restart.
 Qed.
 (* end hide *)
 
+(** ** Rozstrzygalność równości *)
+
 (** Zdefiniuj funkcję [eqb], która sprawdza, czy [n = m]. *)
 
 (* begin hide *)
@@ -1203,65 +1271,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Alternatywne definicje dodawania *)
+(** * Dzielenie i podzielność *)
 
-(** Udowodnij, że poniższe alternatywne metody zdefiniowania dodawania
-    rzeczywiście definiują dodawanie. *)
-
-Fixpoint plus' (n m : nat) : nat :=
-match m with
-    | 0 => n
-    | S m' => S (plus' n m')
-end.
-
-Lemma plus'_is_plus :
-  forall n m : nat, plus' n m = plus n m.
-(* begin hide *)
-Proof.
-  intros n m. generalize dependent n.
-  induction m as [| m']; simpl; intros.
-    rewrite plus_0_r. trivial.
-    rewrite IHm'. rewrite (plus_comm n (S m')). simpl.
-      rewrite plus_comm. trivial.
-Qed.
-(* end hide *)
-
-Fixpoint plus'' (n m : nat) : nat :=
-match n with
-    | 0 => m
-    | S n' => plus'' n' (S m)
-end.
-
-Lemma plus''_is_plus :
-  forall n m : nat, plus'' n m = plus n m.
-(* begin hide *)
-Proof.
-  induction n as [| n']; simpl.
-    trivial.
-    intro. rewrite IHn'. rewrite plus_comm. simpl.
-      rewrite plus_comm. trivial.
-Qed.
-(* end hide *)
-
-Fixpoint plus''' (n m : nat) : nat :=
-match m with
-    | 0 => n
-    | S m' => plus''' (S n) m'
-end.
-
-Lemma plus'''_is_plus :
-  forall n m : nat, plus''' n m = plus n m.
-(* begin hide *)
-Proof.
-  intros n m. generalize dependent n.
-  induction m as [| m']; simpl; intros.
-    rewrite plus_0_r. trivial.
-    rewrite IHm'. simpl. rewrite (plus_comm n (S _)). simpl.
-      rewrite plus_comm. trivial.
-Qed.
-(* end hide *)
-
-(** *** Dzielenie przez 2 *)
+(** ** Dzielenie przez 2 *)
 
 (** Pokaż, że indukcję na liczbach naturalnych można robić "co 2".
     Wskazówka: taktyk można używać nie tylko do dowodzenia. Przypomnij
@@ -1406,7 +1418,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Podzielność *)
+(** ** Podzielność *)
 
 Definition divides (k n : nat) : Prop :=
   exists m : nat, mult k m = n.
@@ -1512,3 +1524,8 @@ Abort.
 (* end hide *)
 
 End MyNat.
+
+(* begin hide *)
+(* TODO: silnia, współczynniki dwumianowe, sumy szeregów, charakteryzowanie
+         predykatów na liczbach naturalnych oraz dziwna indukcja. *)
+(* end hide *)
