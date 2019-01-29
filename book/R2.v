@@ -3078,7 +3078,7 @@ Inductive option' : Type -> Type :=
     | Some' : forall A : Type, A -> option' A
     | None' : forall B : Type, option' B.
 
-(** Taki zabiego daje nam większą swobodę: w każdym konstruktorze
+(** Taki zabieg daje nam większą swobodę: w każdym konstruktorze
     z osobna musimy explicité umieścić kwantyfikację po argumencie
     sortu [Type], dzięki czemu różne konstruktory mogą w konkluzji
     mieć [option'] zaaplikowany do różnych argumentów. *)
@@ -3179,6 +3179,52 @@ Inductive EHBTree : nat -> Type :=
     | EHBT_Node : forall (A : Type) (n m : nat),
         A -> EHBTree n -> EHBTree m -> EHBTree (max n m).
 (* end hide *)
+
+(** ** Indukcja wzajemna a indeksowane rodziny typów *)
+
+Module MutualIndution_vs_InductiveFamilies.
+
+Inductive even : nat -> Prop :=
+    | even0 : even 0
+    | evenS : forall n : nat, odd n -> even (S n)
+
+with odd : nat -> Prop :=
+    | oddS : forall n : nat, even n -> odd (S n).
+
+Goal even 8.
+Proof.
+  repeat constructor.
+Abort.
+
+Goal ~ odd 0.
+Proof.
+  intro. inversion H.
+Abort.
+
+Theorem t1 :
+  forall n m : nat, even n -> even m -> even (n + m)
+
+with t2 :
+  forall n m : nat, odd n -> even m -> odd (n + m).
+Proof.
+  destruct n as [| n']; cbn; intros.
+    assumption.
+    constructor. apply t2.
+      inversion H. assumption.
+      assumption.
+  destruct n as [| n']; cbn; intros.
+    inversion H.
+    constructor. apply t1.
+      inversion H. assumption.
+      assumption.
+Qed.
+
+Inductive even_odd : bool -> nat -> Prop :=
+    | even0' : even_odd true 0
+    | evenS' : forall n : nat, even_odd false n -> even_odd true (S n)
+    | oddS' : forall n : nat, even_odd true n -> even_odd false (S n).
+
+End MutualIndution_vs_InductiveFamilies.
 
 (** ** Sumy zależne i podtypy *)
 
