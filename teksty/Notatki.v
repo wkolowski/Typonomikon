@@ -1,3 +1,10 @@
+(** Sugestie i problemy z koła:
+    - nie trzeba specjalizować hipotezy, żeby przepisać
+    - być może coś więcej o równości (i jej alternatywnej definicji?)
+    - napisać bardziej wprost o deklarowaniu hipotez
+    - ulepszyć ściągę z taktykami i komendami
+*)
+
 (** Najnowsze TODO:
     - Wydzielić z R2 nowy rozdział o rekordach, klasach i połączyć to z
       rozstrzygalnością oraz typem [reflect]
@@ -5,6 +12,15 @@
     - Przemieścić z R1 podrozdziały "Typy i termy" oraz "Typy a zbiory".
     - Dodać podrozdział o typach skończonych.
     - Napisać coś o kodowaniu Churcha.
+    - Napisać coś o rekursji ogonowej i opisać poświęcone jej techniki
+      dowodzenia.
+    - Rozbudować opis równości i konwertowalności o dokładne opisy ewaluacji
+      i taktyk typu cbn/cbv etc.
+    - Opisać relacje prefix/infix/suffix/interfix dla list jako jakotakie
+      ćwiczenie
+    - Pięć sposobów na ogólną rekursję w Coqu: rekursja dobrze ufundowana,
+      rekursja po paliwie, rekursja wydmuszkowa (Coq'Art), teoria dziedzin
+      (computation, CPDT), comp (CPDT), koindukcja (thunk, CPDT). 
 *)
 
 (** TODO:

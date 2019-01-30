@@ -3184,6 +3184,8 @@ Inductive EHBTree : nat -> Type :=
 
 Module MutualIndution_vs_InductiveFamilies.
 
+(** TODO: napisać tu coś. *)
+
 Inductive even : nat -> Prop :=
     | even0 : even 0
     | evenS : forall n : nat, odd n -> even (S n)
@@ -3191,38 +3193,45 @@ Inductive even : nat -> Prop :=
 with odd : nat -> Prop :=
     | oddS : forall n : nat, even n -> odd (S n).
 
-Goal even 8.
-Proof.
-  repeat constructor.
-Abort.
-
-Goal ~ odd 0.
-Proof.
-  intro. inversion H.
-Abort.
-
-Theorem t1 :
-  forall n m : nat, even n -> even m -> even (n + m)
-
-with t2 :
-  forall n m : nat, odd n -> even m -> odd (n + m).
-Proof.
-  destruct n as [| n']; cbn; intros.
-    assumption.
-    constructor. apply t2.
-      inversion H. assumption.
-      assumption.
-  destruct n as [| n']; cbn; intros.
-    inversion H.
-    constructor. apply t1.
-      inversion H. assumption.
-      assumption.
-Qed.
-
 Inductive even_odd : bool -> nat -> Prop :=
     | even0' : even_odd true 0
     | evenS' : forall n : nat, even_odd false n -> even_odd true (S n)
     | oddS' : forall n : nat, even_odd true n -> even_odd false (S n).
+
+Definition even' := even_odd true.
+Definition odd' := even_odd false.
+
+Lemma even_even' :
+  forall n : nat, even n -> even' n
+
+with odd_odd' :
+  forall n : nat, odd n -> odd' n.
+(* begin hide *)
+Proof.
+  destruct n as [| n']; intro.
+    constructor.
+    constructor. apply odd_odd'. inversion H; assumption.
+  destruct n as [| n']; intro.
+    inversion H.
+    constructor. apply even_even'. inversion H; assumption.
+Qed.
+(* end hide *)
+
+Lemma even'_even :
+  forall n : nat, even' n -> even n
+
+with odd'_odd :
+  forall n : nat, odd' n -> odd n.
+(* begin hide *)
+Proof.
+  destruct n as [| n']; intro.
+    constructor.
+    constructor. apply odd'_odd. inversion H; assumption.
+  destruct n as [| n']; intro.
+    inversion H.
+    constructor. apply even'_even. inversion H; assumption.
+Qed.
+(* end hide *)
 
 End MutualIndution_vs_InductiveFamilies.
 
