@@ -3377,6 +3377,49 @@ Qed.
 
 End ex.
 
+(** ** W-typy *)
+
+(** TODO: napisz coś *)
+
+Inductive W (A : Type) (B : A -> Type) : Type :=
+    | sup : forall x : A, (B x -> W A B) -> W A B.
+
+Arguments sup {A B} _ _.
+
+Definition natW : Type :=
+  W bool (fun b : bool => if b then Empty_set else unit).
+
+Definition zeroW : natW :=
+  sup true (fun e : Empty_set => match e with end).
+
+Definition succW (n : natW) : natW :=
+  sup false (fun u : unit => n).
+
+Definition doubleW : natW -> natW :=
+  W_rect _ (fun b : bool => if b then Empty_set else unit) (fun _ => natW)
+    (fun a =>
+      match a with
+          | true => fun _ _ => zeroW
+          | false => fun _ g => succW (succW (g tt))
+      end).
+
+Definition to_nat : natW -> nat :=
+  W_rect _ (fun b : bool => if b then Empty_set else unit) (fun _ => nat)
+    (fun a =>
+      match a with
+          | true => fun _ _ => 0
+          | false => fun _ g => S (g tt)
+      end).
+
+Lemma to_nat_doubleW :
+  forall n : natW,
+    to_nat (doubleW n) = 2 * to_nat n.
+Proof.
+  induction n. destruct x; cbn.
+    reflexivity.
+    rewrite H. cbn. rewrite <- !plus_n_O. rewrite plus_n_Sm. reflexivity.
+Qed.
+
 (** * Rekursja *)
 
 (** Powinieneś już potrafić całkiem sprawnie posługiwać się prostą rekursją,
