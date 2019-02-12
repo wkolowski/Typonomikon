@@ -3386,6 +3386,54 @@ Inductive W (A : Type) (B : A -> Type) : Type :=
 
 Arguments sup {A B} _ _.
 
+Definition boolW : Type :=
+  W bool (fun _ => Empty_set).
+
+Definition trueW : boolW :=
+  sup true (fun e : Empty_set => match e with end).
+
+Definition falseW : boolW :=
+  sup false (fun e : Empty_set => match e with end).
+
+Definition notW : boolW -> boolW :=
+  W_rect bool (fun _ => Empty_set) (fun _ => boolW)
+         (fun b _ _ => if b then falseW else trueW).
+
+Definition bool_boolW (b : bool) : boolW :=
+  if b then trueW else falseW.
+
+Definition boolW_bool : boolW -> bool :=
+  W_rect bool (fun _ => Empty_set) (fun _ => bool) (fun b _ _ => b).
+
+Lemma boolW_bool_notW :
+  forall b : boolW,
+    boolW_bool (notW b) = negb (boolW_bool b).
+(* begin hide *)
+Proof.
+  induction b; cbn. destruct x; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma boolW_bool__bool_boolW :
+  forall b : bool,
+    boolW_bool (bool_boolW b) = b.
+(* begin hide *)
+Proof.
+  destruct b; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma bool_boolW__bool_boolW :
+  forall b : boolW,
+    bool_boolW (boolW_bool b) = b.
+(* begin hide *)
+Proof.
+  unfold bool_boolW, boolW_bool. destruct b, x; cbn.
+    unfold trueW. f_equal. admit.
+    unfold falseW. f_equal. admit.
+Admitted.
+(* end hide *)
+
 Definition natW : Type :=
   W bool (fun b : bool => if b then Empty_set else unit).
 
@@ -3403,7 +3451,7 @@ Definition doubleW : natW -> natW :=
           | false => fun _ g => succW (succW (g tt))
       end).
 
-Definition to_nat : natW -> nat :=
+Definition natW_nat :=
   W_rect _ (fun b : bool => if b then Empty_set else unit) (fun _ => nat)
     (fun a =>
       match a with
@@ -3411,14 +3459,44 @@ Definition to_nat : natW -> nat :=
           | false => fun _ g => S (g tt)
       end).
 
-Lemma to_nat_doubleW :
+Fixpoint nat_natW (n : nat) : natW :=
+match n with
+    | 0 => zeroW
+    | S n' => succW (nat_natW n')
+end.
+
+Lemma natW_nat_doubleW :
   forall n : natW,
-    to_nat (doubleW n) = 2 * to_nat n.
+    natW_nat (doubleW n) = 2 * natW_nat n.
+(* begin hide *)
 Proof.
   induction n. destruct x; cbn.
     reflexivity.
-    rewrite H. cbn. rewrite <- !plus_n_O. rewrite plus_n_Sm. reflexivity.
+    rewrite H. cbn. rewrite <- !plus_n_O, plus_n_Sm. reflexivity.
 Qed.
+(* end hide *)
+
+Lemma natW_nat__nat_natW :
+  forall n : nat,
+    natW_nat (nat_natW n) = n.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    rewrite IHn'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma nat_natW__nat_natW :
+  forall n : natW,
+    nat_natW (natW_nat n) = n.
+(* begin hide *)
+Proof.
+  induction n; destruct x; cbn.
+    unfold zeroW. f_equal. admit.
+    rewrite H. unfold succW. f_equal. admit.
+Admitted.
+(* end hide *)
 
 (** * Rekursja *)
 
