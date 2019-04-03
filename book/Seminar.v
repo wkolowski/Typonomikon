@@ -1064,8 +1064,8 @@ Check list_ind.
     [P] holds for [nilA] and that if it holds for [l], then it holds for
     [consA a l] where [a : A] is arbitrary. Not a big surprise.
 
-    If we look at the principle for [list], it says nearly the same. The
-    only difference is that the type [A] is not fixed. It is a parameter
+    If we look at the principle for [list], it says nearly the same thing.
+    The only difference is that the type [A] is not fixed. It is a parameter
     and this is reflected in the principle: the first quantifier says
     [forall (A : Type)].
 
@@ -1995,9 +1995,9 @@ Qed.
 (** * Functions and functional relations *)
 
 (** After you have learned about the commands [Function] and [Functional
-    Scheme], you may be left wondering, how they work. We will try to
-    answer this question now, but it will be easier if we first see how
-    we can use inductive families to represent functions.
+    Scheme], you may be wondering how they work. We will try to answer
+    this question now, but it will be easier if we first see how we can
+    use inductive families to represent functions.
 
     First we have to explicitly spell out what a function is. There are two
     widely used definitions:
@@ -2038,7 +2038,7 @@ Inductive div2_rel : nat -> nat -> Prop :=
 (** The difference is quite stark: the recursive one ([div2]) tells us how
     to divide a number by two (how to compute the result). The inductive one
     ([div2_rel]) tells us what is the relation between inputs and outputs of
-    a function that divide its argument by two. Nonetheless these two
+    a function that divides its argument by two. Nonetheless these two
     formulations of division are somehow equivalent. *)
 
 Lemma div2_rel_SS :
@@ -2307,8 +2307,9 @@ Proof.
   intros. apply R_div2'_ind.
     assumption.
     assumption.
-    intros. apply R_div2'_complete in H2. subst. apply H1. assumption.
-    apply R_div2'_correct. trivial.
+    intros. apply R_div2'_complete in H2. subst. apply H1.
+      assumption.
+    apply R_div2'_correct. reflexivity.
 Qed.
 
 (** We can prove the induction principle for [div2] by using the induction
