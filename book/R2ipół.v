@@ -1,11 +1,11 @@
-(** * R2ipół : Rekursja *)
+(** * R2ipół : Rekursja (i indukcja) *)
 
 (** W poprzednim rozdziale dość dogłębnie zapoznaliśmy się z mechanizmem
     definiowania induktywnych typów i rodzin typów. Nauczyliśmy się też
     definiować funkcje operujące na ich elementach za pomocą dopasowania
     do wzorca oraz rekursji.
 
-    Indukcja i rekursja są ze sobą bardzo ściśle powiązane. Obie operają
+    Indukcja i rekursja są ze sobą bardzo ściśle powiązane. Obie opierają
     się na autoreferencji, czyli odnoszeniu się do samego siebie:
     - liczba naturalna to zero lub następnik liczby naturalnej
     - długość listy złożonej z głowy i ogona to jeden plus długość ogona *)
@@ -14,7 +14,7 @@
     dokładnie tym samym zjawiskiem. Skoro tak, dlaczego używamy na jego
     opisanie dwóch różnych słów? Cóż, jest to zaszłość historyczna, jak
     wiele innych, które napotkaliśmy. Rozróżniamy zdania i typy/specyfikacje,
-    dowody i termy/programy, relacje i rodziny typów etc., choć te pierwsze
+    relacje i rodziny typów, dowody i termy/programy etc., choć te pierwsze
     są specjalnymi przypadkami tych drugich. Podobnie indukcja pojawiła się
     po raz pierwszy jako technika dowodzenia faktów o liczbach naturalnych,
     zaś rekursja jako technika pisania programów.
@@ -24,55 +24,210 @@
       metodę dowodzenia
     - rekursja będzie oznaczać metodę definiowania funkcji *)
 
+(** W tym rozdziale zbadamy dokładniej rekursję: poznamy różne jej rodzaje,
+    zobaczymy w jaki sposób za jej pomocą można zrobić własne niestandardowe
+    reguły indukcyjne, poznamy rekursję (i indukcję) dobrze ufundowaną oraz
+    zobaczymy, w jaki sposób połączyć indukcję i rekursję, by móc dowodzić
+    poprawności pisanych przez nas funkcji wciśnięciem jednego przycisku
+    (no, prawie). *)
 
+(** * Rodzaje rekursji *)
 
-
-(** TODO *)
-
-
-
-(** Ogólnie funkcja rekurencyjna to taka, która w swojej definicji odnosi
-    się do samej siebie. Rodzaje rekurencji można podzielić w zależności
-    od tego, w jaki sposób to robi:
+(** Funkcja może w swej definicji odwoływać się do samej siebie na różne
+    sposoby. Najważniejszą klasyfikacją jest klasyfikacja ze względu na
+    dozwolone argumenty w wywołaniu rekurencyjnym:
     - Rekursja strukturalna to taka, w której funkcja wywołuje siebie
-      na argumentach będących podtermami poprzednich argumentów
+      na argumentach będących podtermami argumentów z obecnego wywołania.
     - Rekursja dobrze ufundowana to taka, w której funkcja wywołuje siebie
       jedynie na argumentach "mniejszych", gdzie o tym, które argumenty są
       mniejsze, a które większe, decyduje pewna relacja dobrze ufundowana.
-      Intuicyjnie relacja dobrze ufundowana to taka, że nie możemy
-      w nieskończoność robić wywołań rekurencyjnych na coraz mniejszych
-      argumentach, gdyż w końcu trafimy na najmniejszy.
-    - Funkcje f i g są wzajemnie rekurencyjne, gdy funkcja f wywołuje g,
-      a g wywołuje f. To, że f nie wywołuje samej siebie bezpośrednio nie
-      oznacza wcale, że nie jest rekurencyjna. Schemat ten można uogólnić
-      na dowolną ilość funkcji.
-    - Rekursja ogólna to taka, w którym funkcja może odwoływać się do
-      samej siebie w dowolny sposób. *)
+      Intuicyjnie relacja dobrze ufundowana jest jak drabina: schodząc po
+      drabinie w dół kiedyś musimy schodzenie zakończyć. Nie możemy schodzić
+      w nieskończoność. *)
 
-(** ** Rekursja ogólna *)
+(** Mniej ważną klasyfikacją jest klasyfikacja ze względu na... cóż, nie
+    wiem jak to ładnie nazwać:
+    - Rekursja bezpośrednia to taka, w której funkcja f wywołuje siebie
+      samą bezpośrednio.
+    - Rekursja pośrednia to taka, w której funkcja f wywołuje jakąś inną
+      funkcję g, która wywołuje f. To, że f nie wywołuje samej
+      siebie bezpośrednio nie oznacza wcale, że nie jest rekurencyjna.
+    - W szczególności, rekursja wzajemna to taka, w której funkcja f
+      wywołuje funkcję g, a g wywołuje f.
+    - Rzecz jasna rekursję pośrednią oraz wzajemną można uogólnić na dowolną
+      ilość funkcji. *)
 
-(** W Coqu rekursja ogólna nie jest dozwolona. Powód jest prozaiczny:
-    jest ona sprzeczna. W celu zobrazowania spróbujmy zdefiniować za
-    pomocą taktyk następującą funkcję rekurencyjną: *)
+(** Oczywiście powyższe dwie klasyfikacje to tylko wierzchołek góry lodowej,
+    której nie ma sensu zdobywać, gdyż naszym celem jest posługiwanie się
+    rekursją w praktyce, a nie dzielenie włosa na czworo. Wobec tego
+    wszystkie inne rodzaje rekursji (albo nawet wszystkie możliwe rodzaje
+    w ogóle) będziemy nazywać rekursją ogólną.
+
+    Z rekursją wzajemną zapoznaliśmy się już przy okazji badania indukcji
+    wzajemnej w poprzednim rozdziale. W innych funkcyjnych językach
+    programowania używa się jej zazwyczaj ze względów estetycznych, by móc
+    elegancko i czytelnie pisać kod, ale jak widzieliśmy w Coqu jest ona
+    bardzo upierdliwa, więc raczej nie będziemy jej używać. Skupmy się
+    zatem na badaniu rekursji strukturalnej, dobrze ufundowanej i ogólnej. *)
+
+(** * Rekursja ogólna *)
+
+(** W Coqu rekursja ogólna nie jest dozwolona. Powód jest banalny: prowadzi
+    ona do sprzeczności. W celu zobrazowania spróbujmy zdefiniować za pomocą
+    taktyk następującą funkcję rekurencyjną: *)
 
 Fixpoint loop (u : unit) : False.
 Proof.
   apply loop. assumption.
-Abort. (* Coq odrzuca komendę [Qed.] *)
+Fail Qed.
+Abort.
 
 (** Przyjrzyjmy się uważnie definicji funkcji [loop]. Mimo, że udało
     nam się ujrzeć znajomy napis "No more subgoals", próba użycia
-    komendy [Qed] kończy się błędem. Gdyby tak się nie stało, możliwe
-    byłoby skonstruowanie dowodu [False]: *)
+    komendy [Qed] kończy się błędem.
 
-(* Definition the_universe_explodes : False := loop tt. *)
+    Fakt, że konstruujemy funkcję za pomocą taktyk, nie ma tu żadnego
+    znaczenia, lecz służy jedynie lepszemu zobrazowaniu, dlaczego rekursja
+    ogólna jest grzechem. Dokładnie to samo stałoby się, gdybyśmy próbowali
+    zdefiniować [loop] ręcznie: *)
+
+Fail Fixpoint loop (u : unit) : False := loop u.
+
+(** Gdyby tak się nie stało, możliwe byłoby skonstruowanie dowodu [False]: *)
+
+Fail Definition the_universe_explodes : False := loop tt.
 
 (** Aby chronić nas przed tą katastrofą, Coq nakłada na rekurencję
     ograniczenie: argument główny wywołania rekurencyjnego musi być
     strukturalnym podtermem argumentu głównego obecnego wywołania.
-    Innymi słowy, dozwolona jest jedynie rekursja strukturalna. *)
+    Innymi słowy, dozwolona jest jedynie rekursja strukturalna.
 
-(** ** Rekursja strukturalna *)
+    To właśnie napisane jest w komunikacie o błędzie, który dostajemy,
+    próbując przeforsować powyższe definicje: *)
+
+(* Recursive definition of loop is ill-formed.
+   In environment
+   loop : unit -> False
+   u : unit
+   Recursive call to loop has principal argument equal to 
+   "u" instead of a subterm of "u".
+   Recursive definition is: "fun u : unit => loop u". *)
+
+(** Wywołanie rekurencyjne [loop] jest nielegalne, gdyż jego argumentem
+    jest [u], podczas gdy powinien być nim jakiś podterm [u].
+
+    Zanim jednak dowiemy się, czym jest argument główny, czym są podtermy
+    i jak dokładnie Coq weryfikuje poprawność naszych definicji funkcji
+    rekurencyjnych, wróćmy na chwilę do indukcji. Jak się zaraz okaże,
+    nielegalność rekursji ogólnej wymusza również pewne ograniczenia w
+    definicjach induktywnych. *)
+
+(** * Ścisła pozytywność *)
+
+(** Poznana przez nas dotychczas definicja typów induktywnych jest niepełna,
+    gdyż pominęliśmy kryterium ścisłej pozytywności. Rozważmy następujący
+    typ: *)
+
+Fail Inductive wut (A : Type) : Type :=
+    | C : (wut A -> A) -> wut A.
+
+(** Uwaga: poprzedzenie komendą [Fail] innej komendy oznajmia Coqowi, że
+    spodziewamy się, iż komenda zawiedzie. Coq akceptuje komendę [Fail c],
+    jeżeli komenda [c] zawodzi, i wypisuje komunikat o błędzie. Jeżeli
+    komenda [c] zakończy się sukcesem, komenda [Fail c] zwróci błąd.
+
+    Komenda [Fail] jest przydatna w sytuacjach takich jak obecna, gdy
+    chcemy zilustrować fakt, że jakaś komenda zawodzi. *)
+
+(* Error: Non strictly positive occurrence of "wut"
+   in "(wut A -> A) -> wut A". *)
+
+(** Żeby zrozumieć ten komunikat o błędzie, musimy najpierw przypomnieć sobie
+    składnię konstruktorów. Konstruktory typu induktywnego [T] będą mieć (w
+    dość sporym uproszczeniu) postać [arg1 -> ... -> argN -> T] — są to funkcje
+    biorące pewną (być może zerową) ilość argumentów, a ich przeciwdziedziną
+    jest definiowany typ [T].
+
+    Jeżeli definiowany typ [T] nie występuje nigdzie w typach argumentów
+    [arg1 ... argN], sytuacja jest klarowna i wszystko jest w porządku.
+    W przeciwnym wypadku, w zależności od postaci typów argumentów, mogą
+    pojawić się problemy.
+
+    Jeżeli typ któregoś z argumentów jest równy [T], nie ma problemu — jest
+    to po prostu argument rekurencyjny. Jeżeli jest on postaci [A -> T] dla
+    dowolnego typu [A], również nie ma problemu — dzięki argumentom o takich
+    typach możemy reprezentować np. drzewa o nieskończonym współczynniku
+    rozgałęzienia. Mówimy, że w [A -> T] typ [T] występuje w pozycji (ściśle)
+    pozytywnej.
+
+    Problem pojawia się dopiero, gdy typ argumentu jest postaci [T -> A]
+    lub podobnej (np. [A -> T -> B], [T -> T -> A -> B] etc.). W takich
+    przypadkach mówimy, że typ [T] występuje na pozycji negatywnej (albo
+    "nie-ściśle-pozytywnej").
+
+    Pierwszym, stosunkowo błahym problemem jest fakt, że typy łamiące
+    kryterium ścisłej pozytywności nie mają modeli teoriozbiorowych —
+    znaczy to po prostu, że nie można reprezentować ich w teorii zbiorów
+    za pomocą żadnych zbiorów. Dla wielu matematyków stanowi to problem
+    natury praktycznej (są przyzwyczajeni do teorii zbiorów) lub
+    filozoficznej.
+
+    Problem ten wynika z faktu, że konstruktory typów induktywnych są
+    injekcjami, zaś typy argumentów, w których definiowany typ występuje
+    na pozycji negatywnej, są "za duże". Np. w przypadku typu [wut bool]
+    konstruktor [C] jest injekcją z [wut bool -> bool] w [wut bool].
+    Gdybyśmy chcieli interpretować typy jako zbiory, to zbiór
+    [wut bool -> bool] jest "za duży", by można było go wstrzyknąć do
+    [wut bool], gdyż jest w bijekcji ze zbiorem potęgowym [wut bool], a
+    w teorii zbiorów powszechnie wiadomo, że nie ma injekcji ze zbioru
+    potęgowego jakiegoś zbioru do niego samego.
+
+    Nie przejmuj się, jeżeli nie rozumiesz powyższego paragrafu — nie
+    jest to główny powód obowiązywania kryterium ścisłej pozytywności,
+    wszak jako buntownicy zajmujący się teorią typów nie powinniśmy
+    zbytnio przejmować się teorią zbiorów.
+
+    Prawdziwy powód jest inny: dopuszczenie typów łamiących kryterium
+    ścisłej pozytywności prowadzi do sprzeczności. Gdyby były one
+    legalne, legalna byłaby również poniższa definicja: *)
+
+Fail Definition y (A : Type) : A :=
+  let f := (fun x : wut A => match x with | C f' => f' x end)
+  in f (C f).
+
+(** Jak widać, gdyby definicja typu [wut] została dopuszczona,
+    moglibyśmy uzyskać zapętlający się program umożliwiający nam
+    stworzenie elementu dowolnego typu i to bez użycia słowa
+    kluczowego [Fixpoint] (program ten jest nazywany zazwyczaj
+    kombinatorem Y, ang. Y combinator). Stąd już niedaleko do
+    popadnięcia w zupełną sprzeczność: *)
+
+Fail Definition santa_is_a_pedophile : False := y False.
+
+(** **** Ćwiczenie *)
+
+(* Inductive T : Type := *)
+
+(** Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
+    pozytywności. Następnie sprawdź w Coqu, czy udzieliłeś poprawnej
+    odpowiedzi.
+    - [| C1 : T]
+    - [| C2 : bool -> T]
+    - [| C3 : T -> T]
+    - [| C4 : T -> nat -> T]
+    - [| C5 : forall A : Type, T -> A -> T]
+    - [| C6 : forall A : Type, A -> T -> T]
+    - [| C7 : forall A : Type, (A -> T) -> T]
+    - [| C8 : forall A : Type, (T -> A) -> T]
+    - [| C9 : (forall x : T, T) -> T]
+    - [| C10 : (forall (A : Type) (x : T), A) -> T]
+    - [| C11 : forall A B C : Type, A -> (forall x : T, B) -> (C -> T) -> T] *)
+
+(* begin hide *)
+(* C1-C7 są legalne, C8-C11 nie. *)
+(* end hide *)
+
+(** * Rekursja strukturalna *)
 
 (** Przyjrzyjmy się ponownie definicji dodawania: *)
 

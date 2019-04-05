@@ -257,3 +257,25 @@ Check well_founded_ind.
       w ten sposób, że albo po prostu są, albo są w bazie danych. *)
 
 (** * Metafora dla indukcji: domino *)
+
+(** wut *)
+
+(** W poprzednim rozdziale widzieliśmy, ze autoreferencja w definicjach typów
+    ma swoje ograniczenia. W podrozdziale o typach pustych widzieliśmy typ
+    [InfiniteList], którego definicja wyglądała tak: *)
+
+Inductive InfiniteList (A : Type) : Type :=
+    | InfiniteCons : A -> InfiniteList A -> InfiniteList A.
+
+(** Za pomocą indukcji udało nam się udowodnić, że tym ten nie ma żadnych
+    elementów, czyli jest pusty. Wynika to z faktu, że typy induktywne
+    mają jedynie termy o skończonym rozmiarze, a próba użycia konstruktora
+    [InfiniteCons] dowolną ilość razy skutkuje termem, w którym zawsze
+    brakuje nam ogona naszej listy.
+
+    Przykład ten pokazuje, że nie wszystko co napiszemy musi być sensowne.
+
+    
+
+
+*)

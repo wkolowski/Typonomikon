@@ -1,4 +1,4 @@
-(** * R2: Indukcja *)
+(** * R2: Indukcja (i rekursja) *)
 
 (** W poprzednim rozdziale dowiedzieliśmy się już co nieco o typach, a
     także spotkaliśmy kilka z nich oraz kilka sposobów tworzenia nowych
@@ -2654,7 +2654,7 @@ End MyEq.
 
     _Smok ty wysuszony zmoczony smok_ *)
 
-(** Widać gołym okiem, iż próba zredukowania (czyli obliczenia) obieku
+(** Widać gołym okiem, iż próba zredukowania (czyli obliczenia) obiektu
     _smok_ nigdy się nie skończy. Jak już wiemy, niekończące się obliczenia
     w logice odpowiadają sprzeczności, a zatem ani _smoki_, ani _zmoki_ w
     Coqowym świecie nie istnieją.
@@ -2916,111 +2916,6 @@ Qed.
 End MutInd.
 
 (** * Różne *)
-
-(** ** Ścisła pozytywność *)
-
-(** Poznana przez nas dotychczas definicja typów induktywnych jest niepełna,
-    gdyż pominęliśmy kryterium ścisłej pozytywności. Rozważmy następujący
-    typ: *)
-
-Fail Inductive wut (A : Type) : Type :=
-    | C : (wut A -> A) -> wut A.
-
-(** Uwaga: poprzedzenie komendą [Fail] innej komendy oznajmia Coqowi, że
-    spodziewamy się, iż komenda zawiedzie. Coq akceptuje komendę [Fail c],
-    jeżeli komenda [c] zawodzi, i wypisuje komunikat o błędzie. Jeżeli
-    komenda [c] zakończy się sukcesem, komenda [Fail c] zwróci błąd.
-
-    Komenda [Fail] jest przydatna w sytuacjach takich jak obecna, gdy
-    chcemy zilustrować fakt, że jakaś komenda zawodzi. *)
-
-(* Error: Non strictly positive occurrence of "wut"
-   in "(wut A -> A) -> wut A". *)
-
-(** Żeby zrozumieć ten komunikat o błędzie, musimy najpierw przypomnieć sobie
-    składnię konstruktorów. Konstruktory typu induktywnego [T] będą mieć (w
-    dość sporym uproszczeniu) postać [arg1 -> ... -> argN -> T] — są to funkcje
-    biorące pewną (być może zerową) ilość argumentów, a ich przeciwdziedziną
-    jest definiowany typ [T].
-
-    Jeżeli definiowany typ [T] nie występuje nigdzie w typach argumentów
-    [arg1 ... argN], sytuacja jest klarowna i wszystko jest w porządku.
-    W przeciwnym wypadku, w zależności od postaci typów argumentów, mogą
-    pojawić się problemy.
-
-    Jeżeli typ któregoś z argumentów jest równy [T], nie ma problemu — jest
-    to po prostu argument rekurencyjny. Jeżeli jest on postaci [A -> T] dla
-    dowolnego typu [A], również nie ma problemu — dzięki argumentom o takich
-    typach możemy reprezentować np. drzewa o nieskończonym współczynniku
-    rozgałęzienia. Mówimy, że w [A -> T] typ [T] występuje w pozycji (ściśle)
-    pozytywnej.
-
-    Problem pojawia się dopiero, gdy typ argumentu jest postaci [T -> A]
-    lub podobnej (np. [A -> T -> B], [T -> T -> A -> B] etc.). W takich
-    przypadkach mówimy, że typ [T] występuje na pozycji negatywnej (albo
-    "nie-ściśle-pozytywnej").
-
-    Pierwszym, stosunkowo błahym problemem jest fakt, że typy łamiące
-    kryterium ścisłej pozytywności nie mają modeli teoriozbiorowych —
-    znaczy to po prostu, że nie można reprezentować ich w teorii zbiorów
-    za pomocą żadnych zbiorów. Dla wielu matematyków stanowi to problem
-    natury praktycznej (są przyzwyczajeni do teorii zbiorów) lub
-    filozoficznej.
-
-    Problem ten wynika z faktu, że konstruktory typów induktywnych są
-    injekcjami, zaś typy argumentów, w których definiowany typ występuje
-    na pozycji negatywnej, są "za duże". Np. w przypadku typu [wut bool]
-    konstruktor [C] jest injekcją z [wut bool -> bool] w [wut bool].
-    Gdybyśmy chcieli interpretować typy jako zbiory, to zbiór
-    [wut bool -> bool] jest "za duży", by można było go wstrzyknąć do
-    [wut bool], gdyż jest w bijekcji ze zbiorem potęgowym [wut bool], a
-    w teorii zbiorów powszechnie wiadomo, że nie ma injekcji ze zbioru
-    potęgowego jakiegoś zbioru do niego samego.
-
-    Nie przejmuj się, jeżeli nie rozumiesz powyższego paragrafu — nie
-    jest to główny powód obowiązywania kryterium ścisłej pozytywności,
-    wszak jako buntownicy zajmujący się teorią typów nie powinniśmy
-    zbytnio przejmować się teorią zbiorów.
-
-    Prawdziwy powód jest inny: dopuszczenie typów łamiących kryterium
-    ścisłej pozytywności prowadzi do sprzeczności. Gdyby były one
-    legalne, legalna byłaby również poniższa definicja: *)
-
-Fail Definition y (A : Type) : A :=
-  let f := (fun x : wut A => match x with | C f' => f' x end)
-  in f (C f).
-
-(** Jak widać, gdyby definicja typu [wut] została dopuszczona,
-    moglibyśmy uzyskać zapętlający się program umożliwiający nam
-    stworzenie elementu dowolnego typu i to bez użycia słowa
-    kluczowego [Fixpoint] (program ten jest nazywany zazwyczaj
-    kombinatorem Y, ang. Y combinator). Stąd już niedaleko do
-    popadnięcia w zupełną sprzeczność: *)
-
-Fail Definition santa_is_a_pedophile : False := y False.
-
-(** **** Ćwiczenie *)
-
-(* Inductive T : Type := *)
-
-(** Rozstrzygnij, czy typ posiadający jeden z następujących konstruktorów
-    spełnia kryterium ścisłej pozytywności. Następnie sprawdź w Coqu, czy
-    udzieliłeś poprawnej odpowiedzi.
-    - [| C1 : T]
-    - [| C2 : bool -> T]
-    - [| C3 : T -> T]
-    - [| C4 : T -> nat -> T]
-    - [| C5 : forall A : Type, T -> A -> T]
-    - [| C6 : forall A : Type, A -> T -> T]
-    - [| C7 : forall A : Type, (A -> T) -> T]
-    - [| C8 : forall A : Type, (T -> A) -> T]
-    - [| C9 : (forall x : T, T) -> T]
-    - [| C10 : (forall (A : Type) (x : T), A) -> T]
-    - [| C11 : forall A B C : Type, A -> (forall x : T, B) -> (C -> T) -> T] *)
-
-(* begin hide *)
-(* C1-C7 są legalne, C8-C11 nie. *)
-(* end hide *)
 
 (** ** Rodziny typów induktywnych *)
 
