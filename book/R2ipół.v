@@ -1,4 +1,4 @@
-(** * R2ipół : Rekursja (i indukcja) *)
+(** * R2ipół : Rekursja i indukcja *)
 
 (** W poprzednim rozdziale dość dogłębnie zapoznaliśmy się z mechanizmem
     definiowania induktywnych typów i rodzin typów. Nauczyliśmy się też
@@ -527,7 +527,7 @@ end.
 (** Komunikat ten głosi, że argumentem głównym wywołania rekurencyjnego jest
     [0], podczas gdy powinno być nim [n']. Wynika stąd jasno i wyraźnie, że
     jedynymi legalnymi argumentami w wywołaniu rekurencyjnym są te podtermy
-    argumentamu głównego, które zostają ujawnione w wyniku dopasowania do
+    argumentu głównego, które zostają ujawnione w wyniku dopasowania do
     wzorca. Coq nie jest jednak głupi - jest głupszy, niż ci się wydaje, o
     czym świadczy poniższy przykład. *)
 
@@ -538,7 +538,9 @@ match n with
     | S (S n') => fib n' + fib (S n')
 end.
 
-(** Tym razem komunikat o błędzie wygląda następująco: *)
+(** Funkcja ta próbuje policzyć n-tą liczbę Fibonacciego:
+    https://en.wikipedia.org/wiki/Fibonacci_number, ale
+    słabo jej to wychodzi, gdyż dostajemy następujący błąd: *)
 
 (* Recursive definition of fib is ill-formed.
    In environment
@@ -564,9 +566,102 @@ match n with
 end.
 
 (** Tym razem Coq widzi, że [S n'] jest podtermem [S (S n')], gdyż explicite
-    nadaliśmy temu termowi nazwę [n''], używają do tego klauzli [as]. Cóż...
-    kto powiedział, że z maszyną łatwo będzie się dogadać? *)
- 
+    nadaliśmy temu termowi nazwę [n''], używając do tego klauzli [as].
+
+    Ufff...  udało nam się przebrnąć przez techniczne detale działania
+    rekursji strukturalnej. Mogłoby się wydawać, że jest ona mechanizmem
+    bardzo upośledzonym, ale z doświadczenia wiesz już, że w praktyce
+    omówione wyżej problemy występują raczej rzadko.
+
+    Mogłoby się też wydawać, że skoro wywołania rekurencyjne możemy robić
+    tylko na bezpośrednich podtermach dopasowanych we wzorcu, to nie da się
+    zdefiniować prawie żadnej ciekawej funkcji. Jak zobaczymy za chwilę,
+    wcale tak nie jest - dzięki pewnej sztuczce (która jest jednocześnie
+    fundamentalną własnością wszystkich możliwych wszechświatów) za pomocą
+    rekursji strukturalnej można wyrazić rekursję dobrze ufundowaną, która
+    na pierwszy rzut oka jest dużo potężniejsza i daje nam wiele możliwości
+    definiowania różnych ciekawych funkcji. *)
+
 (** * Rekursja dobrze ufundowana *)
+
+(** Próba 1: domino *)
+
+(** Typy induktywne są jak domino - każdy term to jedna kostka, indukcja
+    i rekursja odpowiadają zaś temu co tygryski lubią najbardziej, czyli
+    reakcji łańcuchowej przewracającej wszystkie kostki.
+
+    Typ [unit] to jedna biedna kostka, zaś [bool] to już dwa rodzaje
+    kostek - [true] i [false]. W obu przypadkach nie dzieje się nic
+    ciekawego - żeby wszystkie kostki się przewróciły, musimy pchnąć
+    palcem każdą z osobna.
+
+    Typ [nat] jest już ciekawszy - są dwa rodzaje kostek, [0] i [S],
+    a jeżeli pchniemy kostkę [0] i między kolejnymi kostkami jest
+    odpowiedni odstęp, to równy szlaczek kolejnych kostek przewracać
+    się będzie do końca świata.
+
+    Podobnie dla typu [list A] mamy dwa rodzaje kostek - [nil] i [cons],
+    ale kostki rodzaju [cons] mają różne kolory - są nimi elementy typu
+    [A]. Podobnie jak dla [nat], jeżeli pchniemy kostkę [nil] i odstępy
+    między kolejnymi kostkami są odpowiednie, to kostki będą przewracać
+    się w nieskończoność. Tym razem jednak zamiast jednego szaroburego
+    szlaczka będzie multum kolorowych szlaczków o wspólnych początkach
+    (no chyba, że [A = unit], wtedy dostaniemy taki sam bury szlaczek
+    jak dla [nat]).
+
+    Powyższe malownicze opisy przewracających się kostek domino bardziej
+    przywodzą mi na myśl indukcję, niż rekursję, chociaż wiemy już, że
+    jest to w sumie to samo. Przyjmują one perspektywę "od przodu" -
+    jeżeli przewrócimy początkową kostkę i niczego nie spartaczyliśmy,
+    kolejne kostki będą przewracać się już same.
+
+    Możemy jednak przyjąć inny sposób patrzenia - perspektywę "od tyłu".
+    W tej perspektywie kostka początkowa przewraca się, jeżeli zostanie
+    pchnięta palcem, zaś każda dalsza kostka przewraca się, jeżeli
+    przewracają się wszystkie kostki bezpośrednio ją poprzedzające.
+
+    
+
+*)
+
+(** TODO: drabina *)
+
+(** Wyobraźmy sobie drabinę. Czy zerowy szczebel drabiny jest dostępny?
+    Aby tak było, każdy szczebel poniżej niego musi być dostępny. Weźmy
+    więc dowolny szczebel poniżej zerowego. Jednakże takie szczeble nie
+    istnieją, a zatem zerowy szczebel jest dostępny.
+
+    Czy pierwszy szczebel jest dostępny? Aby tak było, dostępne muszą
+    być wszystkie szczeble poniżej niego, a więc także zerowy, o którym
+    już wiemy, że jest dostępny. Tak więc pierwszy szczebel też jest
+    dostępny.
+
+    A czy szczebel 2 jest dostępny? Tak, bo szczeble 0 i 1 są dostępne.
+    A szczebel 3? Tak, bo 0, 1 i 2 są dostępne. Myślę, że widzisz już,
+    dokąd to zmierza: każdy szczebel tej drabiny jest dostępny.
+
+    Możemy tę dostępność zinterpretować na dwa sposoby. Z jednej strony,
+    jesteśmy w stanie wspiąć się na dowolne wysoki szczebel. Z drugiej
+    strony, nieważne jak wysoko jesteśmy, zawsze będziemy w stanie zejść
+    na ziemię w skończonej liczbie kroków.
+
+    Powyższy przykład pokazuje nam, że relacja [<] jest dobrze ufundowana.
+    A co z relacją [<=]?
+
+    Czy 0 jest dostępne? Jest tak, jeżeli wszystkie n <= 0 są dostępne.
+    Jest jedna taka liczba: 0. Tak więc 0 jest dostępne pod warunkiem,
+    że 0 jest dostępne. Jak widać, wpadliśmy w błędne koło. Jaest tak,
+    bo w relacji [<=] jest nieskończony łańcuch malejący, mianowicie
+    [0 <= 0 <= 0 <= 0 <= ...].
+
+    Alternatywna charakteryzacja dobrego ufundowania głosi, że relacja
+    dobrze ufundowana to taka, w której nie ma nieskończonych łańcuchów
+    malejących. Relacja [<=] nie spełnia tego warunku, nie jest więc
+    relacją dobrze ufundowaną.
+
+    Nasza dobrze ufundowana drabina nie musi być jednak pionowa — mogą
+    być w niej rozgałęzienia. Żeby to sobie uświadomić, rozważmy taki
+    porządek: x y : Z i x < y := |x| < |y|. *)
+
 
 (** * Indukcja funkcyjna *)

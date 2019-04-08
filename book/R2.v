@@ -1,4 +1,4 @@
-(** * R2: Indukcja (i rekursja) *)
+(** * R2: Indukcja i rekursja *)
 
 (** W poprzednim rozdziale dowiedzieliśmy się już co nieco o typach, a
     także spotkaliśmy kilka z nich oraz kilka sposobów tworzenia nowych
