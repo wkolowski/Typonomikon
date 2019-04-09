@@ -575,12 +575,27 @@ end.
 
     Mogłoby się też wydawać, że skoro wywołania rekurencyjne możemy robić
     tylko na bezpośrednich podtermach dopasowanych we wzorcu, to nie da się
-    zdefiniować prawie żadnej ciekawej funkcji. Jak zobaczymy za chwilę,
-    wcale tak nie jest - dzięki pewnej sztuczce (która jest jednocześnie
-    fundamentalną własnością wszystkich możliwych wszechświatów) za pomocą
-    rekursji strukturalnej można wyrazić rekursję dobrze ufundowaną, która
-    na pierwszy rzut oka jest dużo potężniejsza i daje nam wiele możliwości
-    definiowania różnych ciekawych funkcji. *)
+    zdefiniować prawie żadnej ciekawej funkcji. Jak zobaczymy w następnym
+    podrozdziale, wcale tak nie jest - dzięki pewnej sztuczce (która jest
+    jednocześnie fundamentalną własnością wszystkich możliwych wszechświatów)
+    za pomocą rekursji strukturalnej można wyrazić rekursję dobrze ufundowaną,
+    która na pierwszy rzut oka jest dużo potężniejsza i daje nam wiele
+    możliwości definiowania różnych ciekawych funkcji. *)
+
+(** **** Ćwiczenie (dzielenie) *)
+
+(** Zdefiniuj funkcję [div], która implementuje dzielenie całkowitoliczbowe.
+    Żeby uniknąć problemów z dzieleniem przez [0], [div n m] będziemy
+    interpretować jako [n] podzielone przez [S m], czyli np. [div n 0]
+    to n/1, [div n 1] to n/2 etc. Uwaga: to ćwiczenie pojawia się właśnie
+    w tym miejscu nieprzypadkowo. *)
+
+(* begin hide *)
+Fail Fixpoint div (n m : nat) : nat :=
+  if n <? m
+  then n
+  else div (n - m) m.
+(* end hide *)
 
 (** * Rekursja dobrze ufundowana *)
 
@@ -590,8 +605,8 @@ end.
     i rekursja odpowiadają zaś temu co tygryski lubią najbardziej, czyli
     reakcji łańcuchowej przewracającej wszystkie kostki.
 
-    Typ [unit] to jedna biedna kostka, zaś [bool] to już dwa rodzaje
-    kostek - [true] i [false]. W obu przypadkach nie dzieje się nic
+    Typ [unit] to jedna biedna kostka, zaś [bool] to już dwie biedne
+    kostki - [true] i [false]. W obu przypadkach nie dzieje się nic
     ciekawego - żeby wszystkie kostki się przewróciły, musimy pchnąć
     palcem każdą z osobna.
 
@@ -606,7 +621,7 @@ end.
     między kolejnymi kostkami są odpowiednie, to kostki będą przewracać
     się w nieskończoność. Tym razem jednak zamiast jednego szaroburego
     szlaczka będzie multum kolorowych szlaczków o wspólnych początkach
-    (no chyba, że [A = unit], wtedy dostaniemy taki sam bury szlaczek
+    (no chyba, że [A = unit] - wtedy dostaniemy taki sam bury szlaczek
     jak dla [nat]).
 
     Powyższe malownicze opisy przewracających się kostek domino bardziej
@@ -620,48 +635,54 @@ end.
     pchnięta palcem, zaś każda dalsza kostka przewraca się, jeżeli
     przewracają się wszystkie kostki bezpośrednio ją poprzedzające.
 
-    
+    Jeszcze jeden drobny detal: żeby w ogóle móc pchnąć kostki początkowe
+    (w liczbie mnogiej, bo rzecz jasna może być więcej niż jedna), musimy
+    najpierw ustalić, które kostki są tymi początkowymi! Na szczęście nie
+    jest to trudne - są to oczywiście te, których nie poprzedzają inne
+    kostki.
 
+    I tutaj następuje pewien trik logiczno-językowo-wyobraźniowy: możemy
+    o kostkach początkowych myśleć, że przewracają się, gdy przewrócą się
+    wszystkie kostki je poprzedzające, których oczywiście nie ma, a nasz
+    palec wyobrażać sobie po prostu jako fizyczną realizację tej pustej
+    prawdy.
+
+    W ten oto wesoły sposób udało nam się uzyskać definicję elementu
+    dostępnego oraz relacji dobrze ufundowanej. *)
+
+(*
+ Inductive Acc {A : Type} {R : A -> A -> Prop} (x: A) : Prop :=
+     Acc_intro : (forall y:A, R y x -> Acc y) -> Acc x.
 *)
 
-(** TODO: drabina *)
+Inductive Acc {A : Type} (R : A -> A -> Prop) (x : A) : Prop :=
+    | Acc_intro : (forall y : A, R y x -> Acc R y) -> Acc R x.
 
-(** Wyobraźmy sobie drabinę. Czy zerowy szczebel drabiny jest dostępny?
-    Aby tak było, każdy szczebel poniżej niego musi być dostępny. Weźmy
-    więc dowolny szczebel poniżej zerowego. Jednakże takie szczeble nie
-    istnieją, a zatem zerowy szczebel jest dostępny.
+Print Acc.
 
-    Czy pierwszy szczebel jest dostępny? Aby tak było, dostępne muszą
-    być wszystkie szczeble poniżej niego, a więc także zerowy, o którym
-    już wiemy, że jest dostępny. Tak więc pierwszy szczebel też jest
-    dostępny.
+Scheme wut := Induction for Acc Sort Prop.
 
-    A czy szczebel 2 jest dostępny? Tak, bo szczeble 0 i 1 są dostępne.
-    A szczebel 3? Tak, bo 0, 1 i 2 są dostępne. Myślę, że widzisz już,
-    dokąd to zmierza: każdy szczebel tej drabiny jest dostępny.
+Check wut.
+Check Acc_ind.
 
-    Możemy tę dostępność zinterpretować na dwa sposoby. Z jednej strony,
-    jesteśmy w stanie wspiąć się na dowolne wysoki szczebel. Z drugiej
-    strony, nieważne jak wysoko jesteśmy, zawsze będziemy w stanie zejść
-    na ziemię w skończonej liczbie kroków.
+Definition well_founded {A : Type} (R : A -> A -> Prop) : Prop :=
+  forall x : A, Acc R x.
 
-    Powyższy przykład pokazuje nam, że relacja [<] jest dobrze ufundowana.
-    A co z relacją [<=]?
+Theorem well_founded_rect :
+  forall
+    (A : Type) (R : A -> A -> Prop) (wf : well_founded R) (P : A -> Type),
+      (forall x : A, (forall y : A, R y x -> P y) -> P x) ->
+        forall x : A, P x.
+Proof.
+  intros A R wf P IH x.
+  apply Acc_rect with R.
+    intros y H1 H2. apply IH. assumption.
+    apply wf.
+Defined.
 
-    Czy 0 jest dostępne? Jest tak, jeżeli wszystkie n <= 0 są dostępne.
-    Jest jedna taka liczba: 0. Tak więc 0 jest dostępne pod warunkiem,
-    że 0 jest dostępne. Jak widać, wpadliśmy w błędne koło. Jaest tak,
-    bo w relacji [<=] jest nieskończony łańcuch malejący, mianowicie
-    [0 <= 0 <= 0 <= 0 <= ...].
 
-    Alternatywna charakteryzacja dobrego ufundowania głosi, że relacja
-    dobrze ufundowana to taka, w której nie ma nieskończonych łańcuchów
-    malejących. Relacja [<=] nie spełnia tego warunku, nie jest więc
-    relacją dobrze ufundowaną.
 
-    Nasza dobrze ufundowana drabina nie musi być jednak pionowa — mogą
-    być w niej rozgałęzienia. Żeby to sobie uświadomić, rozważmy taki
-    porządek: x y : Z i x < y := |x| < |y|. *)
+
 
 
 (** * Indukcja funkcyjna *)
