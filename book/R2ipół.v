@@ -650,36 +650,110 @@ Fail Fixpoint div (n m : nat) : nat :=
     W ten oto wesoły sposób udało nam się uzyskać definicję elementu
     dostępnego oraz relacji dobrze ufundowanej. *)
 
-(*
- Inductive Acc {A : Type} {R : A -> A -> Prop} (x: A) : Prop :=
-     Acc_intro : (forall y:A, R y x -> Acc y) -> Acc x.
-*)
-
 Inductive Acc {A : Type} (R : A -> A -> Prop) (x : A) : Prop :=
     | Acc_intro : (forall y : A, R y x -> Acc R y) -> Acc R x.
 
-Print Acc.
+(** Kostki domina reprezentuje typ [A], zaś relacja [R] to sposób ułożenia
+    kostek, zaś [x] to pewna konkretna kostka domina. Konstruktor [Acc_intro]
+    mówi, że kostka [x] przewraca się, gdy przewracają się wszystkie kostki
+    ją poprzedzające.
 
-Scheme wut := Induction for Acc Sort Prop.
-
-Check wut.
-Check Acc_ind.
+    To samo nieco mniej bajkowym językiem: element [x] typu [A] jest dostępny
+    w relacji [R], jeżeli każdy poprzedzający go element [y] typu [A] również
+    jest dostępny. *)
 
 Definition well_founded {A : Type} (R : A -> A -> Prop) : Prop :=
   forall x : A, Acc R x.
 
+(** Układ kostek reprezentowany przez [R] przewraca się w całości, jeżeli
+    każda kostka domina przewraca się z osobna.
+
+    Mniej poetycko: relacja jest dobrze ufundowana, jeżeli każdy element
+    typu [A] jest dostępny. *)
+
+(** **** Ćwiczenie (dostępność i ufundowanie) *)
+
+(** Sprawdź, czy relacje [<=], [<] są dobrze ufundowane. *)
+
+(* begin hide *)
+Lemma le_not_Acc :
+  forall n : nat, Acc le n -> False.
+Proof.
+  induction 1. apply (H0 x). reflexivity.
+Qed.
+
+Lemma le_not_wf : ~ well_founded le.
+Proof.
+  unfold well_founded. intro.
+  apply le_not_Acc with 0. apply H.
+Qed.
+
+Lemma wf_lt : well_founded lt.
+Proof.
+  unfold well_founded.
+  induction x as [| n']; constructor; inversion 1; subst.
+    assumption.
+    inversion IHn'. apply H0. assumption.
+Qed.
+(* end hide *)
+
+(** Pokaż, że relacja dobrze ufundowana jest antyzwrotna. *)
+
+(* begin hide *)
+Lemma Acc_antirefl :
+  forall (A : Type) (R : A -> A -> Prop) (x : A),
+    Acc R x -> ~ R x x.
+Proof.
+  induction 1. intro. apply (H0 x); assumption.
+Qed.
+
+Lemma wf_antirefl :
+  forall (A : Type) (R : A -> A -> Prop),
+    well_founded R -> forall x : A, ~ R x x.
+Proof.
+  unfold well_founded. intros.
+  apply Acc_antirefl. apply H.
+Qed.
+(* end hide *)
+
+(** Sprawdź, czy dobrze ufundowane są relacje [le'] i [lt']. *)
+
+Definition le' (f g : nat -> nat) : Prop :=
+  forall n : nat, f n <= g n.
+
+Definition lt' (f g : nat -> nat) : Prop :=
+  forall n : nat, f n < g n.
+
+(* begin hide *)
+Lemma not_wf_le' : ~ well_founded le'.
+Proof.
+  intro. apply (wf_antirefl _ _ H id).
+  unfold le', id. intro. constructor.
+Qed.
+
+Goal
+  well_founded lt'.
+Proof.
+  unfold well_founded. intro h. constructor. unfold lt'.
+Abort.
+(* end hide *)
+
+(** Czas na twierdzenie... *)
+
 Theorem well_founded_rect :
   forall
-    (A : Type) (R : A -> A -> Prop) (wf : well_founded R) (P : A -> Type),
+    (A : Type) (R : A -> A -> Prop)
+    (wf : well_founded R) (P : A -> Type),
       (forall x : A, (forall y : A, R y x -> P y) -> P x) ->
         forall x : A, P x.
+(* begin hide *)
 Proof.
   intros A R wf P IH x.
   apply Acc_rect with R.
     intros y H1 H2. apply IH. assumption.
     apply wf.
 Defined.
-
+(* end hide *)
 
 
 
