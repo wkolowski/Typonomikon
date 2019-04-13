@@ -734,7 +734,16 @@ Qed.
 Goal
   well_founded lt'.
 Proof.
-  unfold well_founded. intro h. constructor. unfold lt'.
+  unfold well_founded. intro f. constructor.
+  pose (n := f 0).
+  assert (n = f 0) by trivial.
+  clearbody n. revert n H.
+  induction n as [| n'].
+    admit.
+  intro. constructor.
+
+ constructor.
+  intro g. unfold lt'. intro H. constructor.
 Abort.
 (* end hide *)
 
