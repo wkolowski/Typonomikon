@@ -599,8 +599,6 @@ Fail Fixpoint div (n m : nat) : nat :=
 
 (** * Rekursja dobrze ufundowana *)
 
-(** Próba 1: domino *)
-
 (** Typy induktywne są jak domino - każdy term to jedna kostka, indukcja
     i rekursja odpowiadają zaś temu co tygryski lubią najbardziej, czyli
     reakcji łańcuchowej przewracającej wszystkie kostki.
@@ -654,7 +652,7 @@ Inductive Acc {A : Type} (R : A -> A -> Prop) (x : A) : Prop :=
     | Acc_intro : (forall y : A, R y x -> Acc R y) -> Acc R x.
 
 (** Kostki domina reprezentuje typ [A], zaś relacja [R] to sposób ułożenia
-    kostek, zaś [x] to pewna konkretna kostka domina. Konstruktor [Acc_intro]
+    kostek, a [x] to pewna konkretna kostka domina. Konstruktor [Acc_intro]
     mówi, że kostka [x] przewraca się, gdy przewracają się wszystkie kostki
     ją poprzedzające.
 
@@ -697,7 +695,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Pokaż, że relacja dobrze ufundowana jest antyzwrotna. *)
+(** Pokaż, że relacja dobrze ufundowana jest antyzwrotna, tzn. *)
 
 (* begin hide *)
 Lemma Acc_antirefl :
@@ -706,10 +704,12 @@ Lemma Acc_antirefl :
 Proof.
   induction 1. intro. apply (H0 x); assumption.
 Qed.
+(* end hide *)
 
 Lemma wf_antirefl :
   forall (A : Type) (R : A -> A -> Prop),
     well_founded R -> forall x : A, ~ R x x.
+(* begin hide *)
 Proof.
   unfold well_founded. intros.
   apply Acc_antirefl. apply H.
@@ -731,20 +731,77 @@ Proof.
   unfold le', id. intro. constructor.
 Qed.
 
+Definition wut {A : Type} (f : nat -> A) : A * (nat -> A) :=
+  (f 0, fun n : nat => f (S n)).
+
+Definition unwut {A : Type} (x : A * (nat -> A)) (n : nat) : A :=
+match n with
+    | 0 => fst x
+    | S n' => snd x n'
+end.
+
+Require Import FunctionalExtensionality.
+
+Lemma wut_unwut :
+  forall {A : Type} (f : nat -> A),
+    unwut (wut f) = f.
+Proof.
+  intros. extensionality n.
+  destruct n as [| n']; cbn; reflexivity.
+Qed.
+
+Lemma unwut_wut :
+  forall {A : Type} (x : A * (nat -> A)),
+    wut (unwut x) = x.
+Proof.
+  intros. destruct x as [a f]. reflexivity.
+Qed.
+
+Lemma wut_ind :
+  forall P : nat * (nat -> nat) -> Prop,
+    (forall f : nat -> nat, P (0, f)) ->
+    (forall (n : nat) (f : nat -> nat), P (n, f) -> P (S n, f)) ->
+      forall x : nat * (nat -> nat), P x.
+Proof.
+  destruct x as [n f].
+  induction n as [| n'].
+    apply H.
+    apply H0. assumption.
+Qed.
+
+Definition Pwut
+  {A : Type} (P : A * (nat -> A) -> Prop)
+  (f : nat -> A) : Prop :=
+    P (wut f).
+
+Definition Punwut
+  {A : Type} (P : (nat -> A) -> Prop)
+  (x : A * (nat -> A)) : Prop := P (unwut x).
+
+Lemma fun_ind :
+  forall (A : Type) (P : (nat -> A) -> Prop),
+    (forall x : A * (nat -> A), Punwut P x) ->
+      forall f : nat -> A, P f.
+Proof.
+  intros. rewrite <- wut_unwut. apply H.
+Qed.
+
+Require Import Omega.
+
 Goal
   well_founded lt'.
 Proof.
-  unfold well_founded. intro f. constructor.
-  pose (n := f 0).
-  assert (n = f 0) by trivial.
-  clearbody n. revert n H.
-  induction n as [| n'].
-    admit.
-  intro. constructor.
-
- constructor.
-  intro g. unfold lt'. intro H. constructor.
-Abort.
+  unfold well_founded.
+  apply fun_ind. destruct x as [n f]. revert f.
+  unfold Punwut, unwut.
+  constructor. unfold lt'. cbn. intro g. revert g.
+  induction n as [| n']; intros.
+    specialize (H 0). cbn in H. inversion H.
+    constructor. intros h H'. apply IHn'.
+      destruct n; cbn.
+        specialize (H 0). specialize (H' 0). cbn in H. omega.
+        specialize (H (S n)). specialize (H' (S n)). cbn in H. omega.
+Qed.
 (* end hide *)
 
 (** Czas na twierdzenie... *)
