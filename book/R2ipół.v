@@ -648,7 +648,7 @@ Fail Fixpoint div (n m : nat) : nat :=
     W ten oto wesoły sposób udało nam się uzyskać definicję elementu
     dostępnego oraz relacji dobrze ufundowanej. *)
 
-Inductive Acc {A : Type} (R : A -> A -> Prop) (x : A) : Prop :=
+Inductive Acc {A : Type} (R : A -> A -> Type) (x : A) : Prop :=
     | Acc_intro : (forall y : A, R y x -> Acc R y) -> Acc R x.
 
 (** Kostki domina reprezentuje typ [A], zaś relacja [R] to sposób ułożenia
@@ -660,14 +660,23 @@ Inductive Acc {A : Type} (R : A -> A -> Prop) (x : A) : Prop :=
     w relacji [R], jeżeli każdy poprzedzający go element [y] typu [A] również
     jest dostępny. *)
 
-Definition well_founded {A : Type} (R : A -> A -> Prop) : Prop :=
+Definition well_founded {A : Type} (R : A -> A -> Type) : Prop :=
   forall x : A, Acc R x.
 
 (** Układ kostek reprezentowany przez [R] przewraca się w całości, jeżeli
     każda kostka domina przewraca się z osobna.
 
     Mniej poetycko: relacja jest dobrze ufundowana, jeżeli każdy element
-    typu [A] jest dostępny. *)
+    typu [A] jest dostępny.
+
+    Uwaga: typem naszej "relacji" nie jest [A -> A -> Prop], lecz
+    [A -> A -> Type], a zatem [R] jest tak naprawdę indeksowaną rodziną
+    typów. Różnica między relacją i rodziną typów jest taka, że relacja,
+    gdy dostanie argumenty, zwraca zdanie, czyli coś typu [Prop], a rodzina
+    typów, gdy dostanie argumenty, zwraca typ, czyli coś typu [Type]. Tak
+    więc pojęcie rodziny typów jest ogólniejsze niż pojęcie relacji. Ta
+    ogólność przyda się nam za kilka chwil aby nie musieć pisać wszystkiego
+    dwa razy. *)
 
 (** **** Ćwiczenie (dostępność i ufundowanie) *)
 
@@ -695,7 +704,8 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Pokaż, że relacja dobrze ufundowana jest antyzwrotna, tzn. *)
+(** Pokaż, że relacja dobrze ufundowana jest antyzwrotna oraz zinterpretuj
+    ten fakt (tzn. powiedz, o co tak naprawdę chodzi w tym stwierdzeniu). *)
 
 (* begin hide *)
 Lemma Acc_antirefl :
@@ -716,7 +726,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Sprawdź, czy dobrze ufundowane są relacje [le'] i [lt']. *)
+(** Sprawdź, czy dobrze ufundowane są relacje [le'] i [lt']. Uwaga:
+    pierwsze zadanie jest bardzo łatwe, drugie jest piekielnie trudne.
+    Jeżeli nie potrafisz rozwiązać go formalnie w Coqu, zrób to na
+    kartce nieformalnie - będzie dużo łatwiej.*)
 
 Definition le' (f g : nat -> nat) : Prop :=
   forall n : nat, f n <= g n.
@@ -788,7 +801,8 @@ Qed.
 
 Require Import Omega.
 
-Goal
+(* TODO: uogólnić na dowolny typ [A] i relację dobrze ufundowaną [R]. *)
+Theorem wf_lt' :
   well_founded lt'.
 Proof.
   unfold well_founded.
@@ -804,25 +818,69 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Czas na twierdzenie... *)
+(** Wiemy już, co to znaczy, że kostka domina jest dostępna (każda kostka
+    ją poprzedzająca jest dostępna, co formalnie wyraża predykat [Acc])
+    oraz że poprawny układ kostek to taki, w którym każda kostka jest
+    dostępna (co formalnie wyraża predykat [well_founded]). Możemy teraz
+    przejść do tego, do czego dążyliśmy od samego początku: udowodnić, że
+    jeżeli poprawnie ustawimy kostki, to wszystkie się przewrócą. *)
 
 Theorem well_founded_rect :
+  forall
+    (A : Type) (R : A -> A -> Type)
+    (wf : well_founded R) (P : A -> Type),
+      (forall x : A, (forall y : A, R y x -> P y) -> P x) ->
+        forall x : A, P x.
+Proof.
+  intros A R wf P IH x.
+  Check Acc_rect.
+  apply Acc_rect with R.
+    intros y H1 H2. apply IH. assumption.
+    apply wf.
+Defined.
+
+Theorem well_founded_ind :
   forall
     (A : Type) (R : A -> A -> Prop)
     (wf : well_founded R) (P : A -> Type),
       (forall x : A, (forall y : A, R y x -> P y) -> P x) ->
         forall x : A, P x.
-(* begin hide *)
 Proof.
-  intros A R wf P IH x.
-  apply Acc_rect with R.
-    intros y H1 H2. apply IH. assumption.
-    apply wf.
+  intros A R wf P H x.
+  apply (well_founded_rect _ _ wf _ H).
+Qed.
+
+Require Import Arith.
+
+Definition div : nat -> nat -> nat.
+Proof.
+  intros n k. revert n.
+  apply (well_founded_rect nat lt wf_lt (fun _ => nat)).
+  intros n IH.
+  case_eq (leb (S n) (S k)); intro.
+    exact 0.
+    refine (S (IH (n - S k) _)).
+      clear IH. revert k H. induction n as [| n']; cbn; intros.
+        inversion H.
+        destruct k as [| k'].
+          rewrite Nat.sub_0_r. apply le_n.
+          unfold lt. apply le_trans with n'.
+            apply IHn'. cbn. assumption.
+            apply le_S, le_n.
+
+(* apply Nat.sub_lt.
+      apply leb_complete_conv, lt_S_n in H. exact H.
+      apply le_n_S, le_0_n. Show Proof.
+*)
+ (*
+      unfold lt. clear IH. revert k n0.
+      induction n as [| n']; cbn; intros.
+        contradiction n0. apply le_n_S, le_0_n.
+        apply le_n_S. apply IHn'.*)
 Defined.
-(* end hide *)
 
+Print div.
 
-
-
+Compute div 2 1.
 
 (** * Indukcja funkcyjna *)
