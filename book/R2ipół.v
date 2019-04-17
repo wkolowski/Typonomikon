@@ -806,7 +806,7 @@ Theorem wf_lt' :
   well_founded lt'.
 Proof.
   unfold well_founded.
-  apply fun_ind. destruct x as [n f]. revert f.
+  apply fun_ind. destruct x as [n f]. (* revert f.*)
   unfold Punwut, unwut.
   constructor. unfold lt'. cbn. intro g. revert g.
   induction n as [| n']; intros.
@@ -816,6 +816,21 @@ Proof.
         specialize (H 0). specialize (H' 0). cbn in H. omega.
         specialize (H (S n)). specialize (H' (S n)). cbn in H. omega.
 Qed.
+
+Lemma wf_lt'' :
+  well_founded lt'.
+Proof.
+  unfold well_founded.
+  intro f.
+  pose (n := f 0); assert (n = f 0) by reflexivity; clearbody n.
+  revert f H.
+(*  induction (lt_wf n).*)
+  induction n as [| n']; intros.
+    admit.
+Admitted.
+
+(** Sprawdź, czy dobrze ufundowana jest poniższa relacja porządku: *)
+
 (* end hide *)
 
 (** Wiemy już, co to znaczy, że kostka domina jest dostępna (każda kostka
