@@ -829,9 +829,12 @@ Proof.
     admit.
 Admitted.
 
-(** Sprawdź, czy dobrze ufundowana jest poniższa relacja porządku: *)
-
 (* end hide *)
+
+(** Sprawdź, czy dobrze ufundowana jest następująca relacja porządku:
+    wszystkie liczby parzyste są mniejsze niż wszystkie liczby nieparzyste,
+    zaś dwie liczby o tej samej parzystości porównujemy według zwykłego
+    porządku [<]. *)
 
 (** Wiemy już, co to znaczy, że kostka domina jest dostępna (każda kostka
     ją poprzedzająca jest dostępna, co formalnie wyraża predykat [Acc])
