@@ -1,5 +1,3 @@
-Add Rec LoadPath "/home/zeimer/Code/Coq".
-
 Require Import CoqBookPL.book.X3.
 
 (* begin hide *)

@@ -1,6 +1,9 @@
 Require Import List.
 Import ListNotations.
 
+(** TODO: w najogólniejszy sposób można to zaprezentować za pomocą (o ironio)
+    koindukcji. *)
+
 Fixpoint take {A : Type} (fuel n : nat) (l : list A) : list A :=
 match fuel, n, l with
     | 0, _, _ => []

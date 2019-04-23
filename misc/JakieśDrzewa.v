@@ -16,57 +16,11 @@ Inductive BTree (A : Type) : Type :=
 Arguments Empty [A].
 Arguments Node [A] _ _ _.
 
-(*Inductive symmetric {A : Type} : BTree A -> Prop :=
-    | symmetric_Empty : symmetric Empty
-    | symmetric_Leaf : forall x : A, symmetric (Node x Empty Empty)
-    | symmetric_Same : forall (x y : A),
-        symmetric (Node x (Node y Empty Empty)) (Node x (Node y Empty Empty))
-    | symmetric_Node : forall (x : A) (l r : BTree A),*)
-
 Fixpoint flip {A : Type} (b : BTree A) : BTree A :=
 match b with
     | Empty => Empty
     | Node x l r => Node x (flip r) (flip l)
 end.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Eval compute in flip (Node 5 (Node 2 Empty Empty) (Node 7 Empty Empty)).
 
@@ -83,8 +37,8 @@ Inductive WeakFlipped {A : Type} : BTree A -> BTree A -> Prop :=
 
 Definition symmetric {A : Type} (b : BTree A) : Prop := WeakFlipped b b.
 
-Theorem flip_flipped : forall (A : Type) (b b' : BTree A),
-    flip b = b' <-> flipped b b'.
+Lemma flip_flipped : forall (A : Type) (b b' : BTree A),
+  flip b = b' <-> flipped b b'.
 Proof.
   split.
     generalize dependent b'. induction b as [| v l r].
@@ -109,7 +63,7 @@ match b, b' with
     | _, _ => false
 end.
 
-Theorem WeakFlipped_reflection : forall (A : Type) (b b' : BTree A),
+Lemma WeakFlipped_reflection : forall (A : Type) (b b' : BTree A),
     reflect (WeakFlipped b b') (isFlipped b b').
 Proof.
   induction b as [| v l Hl r Hr]; destruct b' as [| v' l' r'];
@@ -118,4 +72,3 @@ Proof.
   repeat constructor; try (intro; apply H1 || apply H2; inversion H; subst);
   assumption.
 Qed.
-

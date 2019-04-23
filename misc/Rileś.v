@@ -3,11 +3,20 @@
 Require Import List.
 Import ListNotations.
 
+Require Import FunctionalExtensionality.
+Require Import Omega.
+Require Import Setoid.
+Require Import FinFun.
+
+Require Import NArith.
+Require Import Div2.
+Require Import ZArith.
+
 (** TODO: napisać coś *)
 
 (** * Koindukcja *)
 
-(** TODO: przykład z manuala Agdy *)
+(** ** Strumienie *)
 
 CoInductive Stream (A : Type) : Type :=
 {
@@ -23,6 +32,48 @@ CoInductive bisim {A : Type} (s1 s2 : Stream A) : Prop :=
     hds : hd s1 = hd s2;
     tls : bisim (tl s1) (tl s2);
 }.
+
+Lemma bisim_refl :
+  forall (A : Type) (s : Stream A), bisim s s.
+Proof.
+  cofix CH. constructor; auto.
+Qed.
+
+Lemma bisim_sym :
+  forall (A : Type) (s1 s2 : Stream A),
+    bisim s1 s2 -> bisim s2 s1.
+Proof.
+  cofix CH.
+  destruct 1. constructor; auto.
+Qed.
+
+Lemma bisim_trans :
+  forall (A : Type) (s1 s2 s3 : Stream A),
+    bisim s1 s2 -> bisim s2 s3 -> bisim s1 s3.
+Proof.
+  cofix CH.
+  destruct 1, 1. constructor; eauto. rewrite hds0. assumption.
+Qed.
+
+(** *** Jakieś pierdoły *)
+
+CoFixpoint from' (n : nat) : Stream nat :=
+{|
+    hd := n;
+    tl := from' (S n);
+|}.
+
+CoFixpoint facts' (r n : nat) : Stream nat :=
+{|
+    hd := r;
+    tl := facts' (r * S n) (S n);
+|}.
+
+Definition facts : Stream nat := facts' 1 0.
+
+Compute stake 9 facts.
+
+(** *** Z manuala Agdy *)
 
 CoFixpoint evens {A : Type} (s : Stream A) : Stream A :=
 {|
@@ -57,32 +108,7 @@ Proof.
       cbn. apply CH.
 Qed.
 
-Lemma bisim_refl :
-  forall (A : Type) (s : Stream A), bisim s s.
-Proof.
-  cofix CH. constructor; auto.
-Qed.
-
-Lemma bisim_sym :
-  forall (A : Type) (s1 s2 : Stream A),
-    bisim s1 s2 -> bisim s2 s1.
-Proof.
-  cofix CH.
-  destruct 1. constructor; auto.
-Qed.
-
-Lemma bisim_trans :
-  forall (A : Type) (s1 s2 s3 : Stream A),
-    bisim s1 s2 -> bisim s2 s3 -> bisim s1 s3.
-Proof.
-  cofix CH.
-  destruct 1, 1. constructor; eauto. rewrite hds0. assumption.
-Qed.
-
-Require Import FunctionalExtensionality.
-Require Import Omega.
-Require Import Setoid.
-Require Import FinFun.
+(** *** Bijekcja między strumieniami i funkcjami *)
 
 Instance Equiv_bisim (A : Type) : Equivalence (@bisim A).
 Proof.
@@ -230,7 +256,30 @@ Proof.
     apply bisim_eq. apply memo_index.
 Defined.
 
-(** TODO: kawałek rozdziału 14 z Coq'Art *)
+(** *** Trochę losowości *)
+
+CoFixpoint rand (seed n1 n2 : Z) : Stream Z :=
+{|
+    hd := Zmod seed n2;
+    tl := rand (Zmod seed n2 * n1) n1 n2;
+|}.
+
+CoFixpoint rand' (seed n1 n2 : Z) : Stream Z :=
+{|
+    hd := Zmod seed n2;
+    tl := rand (Zmod (seed * n1) n2) n1 n2;
+|}.
+
+Fixpoint stake {A : Type} (n : nat) (s : Stream A) : list A :=
+match n with
+    | 0 => []
+    | S n' => hd s :: stake n' (tl s)
+end.
+
+Compute stake 10 (rand 1 123456789 987654321).
+Compute stake 10 (rand' 1235 234567890 6652).
+
+(** ** Kolisty *)
 
 CoInductive Conat : Type :=
 {
@@ -243,19 +292,6 @@ CoInductive LList (A : Type) : Type :=
 }.
 
 Arguments uncons {A}.
-
-CoInductive LBTree (A : Type) : Type :=
-{
-    lbtree' : option (A * LBTree A * LBTree A);
-}.
-
-Arguments lbtree' {A}.
-
-(*
-Require Export Setoid.
-
-Require Import Coq.Classes.Morphisms.
-*)
 
 Fixpoint toLList {A : Type} (l : list A) : LList A :=
 {|
@@ -274,51 +310,6 @@ Proof.
     reflexivity.
     f_equal. apply IHt1. assumption.
 Defined.
-
-(*
-Definition isEmpty {A : Set} (t : LBTree A) : Prop :=
-
-Definition L_root {A : Set} (t : LBTree A) : option A := match t with
-    | LEmpty => None
-    | LNode v _ _ => Some v
-end.
-
-Definition L_left_son {A : Set} (t : LBTree A) : option (LBTree A) :=
-match t with
-    | LEmpty => None
-    | LNode _ l _ => Some l
-end.
-
-Definition L_right_son {A : Set} (t : LBTree A) : option (LBTree A) :=
-match t with
-    | LEmpty => None
-    | LNode _ _ r => Some r
-end.
-
-
-Inductive dir : Set := L | R.
-
-Fixpoint L_subtree {A : Set} (l : list dir) (t : LBTree A) : option (LBTree A) :=
-match t, l with
-    | LEmpty, _ => None
-    | t', nil => Some t'
-    | LNode v l r, cons L dirs => L_subtree dirs l
-    | LNode v l r, cons R dirs => L_subtree dirs r
-end.
-
-Fixpoint L_tree_label {A : Set} (l : list dir) (t : LBTree A)
-    : option A := match t, l with
-    | LEmpty, _ => None
-    | LNode v l r, nil => Some v
-    | LNode v l r, cons L dirs => L_tree_label dirs l
-    | LNode v l r, cons R dirs => L_tree_label dirs r
-end.
-    (*| LEmpty => None
-    | LNode v l r => match l with
-        | nil => Some v
-        | cons Left dirs => L_tree_label dirs l
-        | cons Right dirs => L_tree_label dirs r*)
-*)
 
 CoFixpoint from (n : nat) : LList nat :=
 {|
@@ -348,23 +339,6 @@ Eval compute in lnth 511 (from 0).
 
 Definition nats := from 0.
 
-(*
-Definition isEmpty {A : Set} (l : LList A) : Prop := match l with
-    | LNil => True
-    | _ => False
-end.
-
-Definition LTail' {A : Set} (l : LList A) : option (LList A) := match l with
-    | LNil => None
-    | LCons _ t => Some t
-end.
-
-Eval simpl in isEmpty Nats.
-Eval compute in from 3.
-Eval simpl in LHead (LTail (from 3)).
-Eval simpl in LNth 191 (from 341).
-*)
-
 CoFixpoint repeat {A : Type} (x : A) : LList A :=
 {|
     uncons := Some (x, repeat x);
@@ -377,8 +351,6 @@ match uncons l1 with
     | None => l2
     | Some (h, t) => {| uncons := Some (h, lapp t l2) |}
 end.
-
-
 
 (*
 CoFixpoint general_omega {A : Set} (l1 l2 : LList A) : LList A :=
@@ -543,7 +515,7 @@ Proof.
       rewrite p1 in p. inversion p; subst. eapply CH; eauto.
 Qed.
 
-(** Drzewka *)
+(** ** Drzewka *)
 
 CoInductive coBTree (A : Type) : Type :=
 {
@@ -563,36 +535,27 @@ CoFixpoint fmap {A B : Type} (f : A -> B) (t : coBTree A) : coBTree B :=
 
 CoFixpoint ns (n : nat) : coBTree nat :=
 {|
-    root := Some (ns n, n, ns n)
+    root := Some (ns (1 + 2 * n), n, ns (2 + 2 * n))
 |}.
 
-(*
-Definition Tree_comp {A : Type} (t : Tree A) : Tree A :=
-match root t with
-    | None => {| root := None |}
-    | Some p => {| root := Some p |}
+Inductive BTree (A : Type) : Type :=
+    | Empty : BTree A
+    | Node : A -> BTree A -> BTree A -> BTree A.
+
+Arguments Empty {A}.
+Arguments Node {A} _ _ _.
+
+Fixpoint ttake (n : nat) {A : Type} (t : coBTree A) : BTree A :=
+match n with
+    | 0 => Empty
+    | S n' =>
+        match root t with
+            | None => Empty
+            | Some (l, v, r) => Node v (ttake n' l) (ttake n' r)
+        end
 end.
 
-Lemma Tree_comp_eq :
-  forall (A : Type) (t : Tree A),
-    t = Tree_comp t.
-Proof.
-  intros. unfold Tree_comp. destruct t, root0; reflexivity.
-Defined.
-*)
-
-(*
-Lemma fmap_S_ns :
-  forall n : nat,
-    fmap S (ns n) = ns (S n).
-Proof.
-  induction n as [| n'].
-    lazy.
-    rewrite (Tree_comp_eq _ (ns 0)). unfold Tree_comp.
-      destruct (ns 0), root0; cbn. 
-    destruct (ns 0). destruct root0 as [[[l v] r] |]. cbn.
-Restart.
-*)
+Compute ttake 5 (ns 0).
 
 CoInductive tsim {A : Type} (t1 t2 : coBTree A) : Prop :=
 {
@@ -623,11 +586,7 @@ Proof.
     auto.
 Qed.
 
-(** Dziwne rzeczy, rekursja ogólna *)
-
-Set Primitive Projections.
-
-Require Import NArith.
+(** ** Rekursja ogólna *)
 
 CoInductive Div (A : Type) : Type :=
 {
@@ -640,8 +599,6 @@ match n with
     | 1 => false
     | S (S n') => even n'
 end.
-
-Require Import Div2.
 
 (* The name is very unfortunate. *)
 CoFixpoint collatz (n : nat) : Div unit :=
@@ -689,27 +646,7 @@ end.
 Compute map (fun n : nat => take 200 (collatz' n)) [30; 31; 32; 33].
 Compute take 150 (collatz' 12344).
 
-(** Losowania *)
-
-Require Import ZArith.
-
-CoFixpoint rand (seed n1 n2 : Z) : Stream Z :=
-{|
-    hd := Zmod seed n2;
-    tl := rand (Zmod seed n2 * n1) n1 n2;
-|}.
-
-Fixpoint stake {A : Type} (n : nat) (s : Stream A) : list A :=
-match n with
-    | 0 => []
-    | S n' => hd s :: stake n' (tl s)
-end.
-
-Compute stake 10 (rand 1235 234567890 87654321).
-
 (** insertion sort na kolistach *)
-
-Require Import Arith.
 
 CoFixpoint ins (n : nat) (s : LList nat) : LList nat :=
 {|
@@ -738,45 +675,4 @@ CoFixpoint ss (s : LList nat) : LList nat :=
               end
       end
 |}.
-*)
-
-(** wuuut *)
-
-CoFixpoint from' (n : nat) : Stream nat :=
-{|
-    hd := n;
-    tl := from' (S n);
-|}.
-
-CoFixpoint facts' (r n : nat) : Stream nat :=
-{|
-    hd := r;
-    tl := facts' (r * S n) (S n);
-|}.
-
-Definition facts : Stream nat := facts' 1 0.
-
-Compute stake 9 facts.
-
-(*
-Definition injection {A B : Type} (f : A -> B) :=
-  forall a b : A, f a = f b -> a = b.
-
-Theorem injection_id : forall T : Type, injection (fun x : T => x).
-unfold injection. intros. apply H.
-Qed.
-
-Definition surjection {A B : Type} (f : A -> B) :=
-forall b : B, exists a : A, f a = b.
-
-Theorem surjection_id : forall T : Type, surjection (fun x : T => x).
-unfold surjection. intros. exists b. trivial.
-Qed.
-
-Theorem S_inj : injection S.
-unfold injection. intros. inversion H. trivial.
-Qed.
-
-Definition bijection {A B : Type} (f : A -> B) :=
-  injection f /\ surjection f.
 *)

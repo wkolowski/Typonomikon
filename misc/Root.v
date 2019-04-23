@@ -1,7 +1,7 @@
 Require Import Arith.
 Require Import Omega.
 
-Theorem root : forall n : nat, {r : nat | r * r <= n < (S r) * (S r)}.
+Lemma root : forall n : nat, {r : nat | r * r <= n < (S r) * (S r)}.
 Proof.
   induction n as [| n'].
     exists 0. simpl; split.
@@ -73,13 +73,13 @@ Require Import Wf.
 
 Print well_founded_induction.
 
-Theorem div4_lemma : forall n : nat,
+Lemma div4_lemma : forall n : nat,
     S (div4 n) < S (S (S (S n))).
 Proof.
   induction n using nat_ind_4; simpl; omega.
 Qed.
 
-Theorem nat_ind_div4 (P : nat -> Type) (H0 : P 0)
+Lemma nat_ind_div4 (P : nat -> Type) (H0 : P 0)
     (Hdiv : forall n : nat, P (div4 n) -> P n) (n : nat) : P n.
 Proof.
   apply (Fix lt_wf P). intros.
@@ -105,12 +105,11 @@ match goal with
 end;
 repeat rewrite plus_0_r.
 
-Theorem fast_root : forall n : nat, {r : nat | r * r <= n < (S r) * (S r)}.
+Lemma fast_root : forall n : nat, {r : nat | r * r <= n < (S r) * (S r)}.
 Proof.
   induction n using nat_ind_div4.
     * exists 0. omega.
     * destruct IHn as [r [H1 H2]].
       destruct (le_lt_dec ((S (2 * r)) * (S (2 * r))) n).
-        exists (2 * r + 1). nat_simpl. split. omega.
-        Focus 2.
-        
+        exists (2 * r + 1). nat_simpl. split.
+Abort.

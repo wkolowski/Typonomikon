@@ -17522,6 +17522,7 @@ Qed.
 Lemma Incl_length :
   forall (A : Type) (l1 l2 : list A),
     ~ Dup l1 -> Incl l1 l2 -> length l1 <= length l2.
+(* begin hide *)
 Proof.
   unfold Incl. induction l1 as [| h1 t1]; cbn; intros.
     apply le_0_n.
@@ -17531,6 +17532,7 @@ Proof.
         intro. apply H. right. assumption.
         intros. specialize (H0 x ltac:(right; assumption)). inv H0.
 Abort.
+(* end hide *)
 
 Lemma Incl_snoc :
   forall (A : Type) (x : A) (l : list A),
