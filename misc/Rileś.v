@@ -44,7 +44,7 @@ Lemma bisim_sym :
     bisim s1 s2 -> bisim s2 s1.
 Proof.
   cofix CH.
-  destruct 1. constructor; auto.
+  destruct 1 as [hds tls]. constructor; auto.
 Qed.
 
 Lemma bisim_trans :
@@ -52,7 +52,8 @@ Lemma bisim_trans :
     bisim s1 s2 -> bisim s2 s3 -> bisim s1 s3.
 Proof.
   cofix CH.
-  destruct 1, 1. constructor; eauto. rewrite hds0. assumption.
+  destruct 1 as [hds1 tls1], 1 as [hds2 tls2].
+  constructor; eauto. rewrite hds1. assumption.
 Qed.
 
 (** *** Jakieś pierdoły *)
@@ -71,9 +72,15 @@ CoFixpoint facts' (r n : nat) : Stream nat :=
 
 Definition facts : Stream nat := facts' 1 0.
 
-Compute stake 9 facts.
+(*Compute stake 9 facts.*)
 
 (** *** Z manuala Agdy *)
+
+(**
+
+    hd (evens s) := hd s;
+    tl (evens s) := evens (tl (tl s));
+*)
 
 CoFixpoint evens {A : Type} (s : Stream A) : Stream A :=
 {|
@@ -676,3 +683,25 @@ CoFixpoint ss (s : LList nat) : LList nat :=
       end
 |}.
 *)
+
+(** Relacja dobrze ufundowana nie ma nieskończonych łańcuchów malejących *)
+
+CoInductive DecChain {A : Type} (R : A -> A -> Prop) (x : A) : Prop :=
+{
+    hd' : A;
+    R_hd'_x : R hd' x;
+    tl' : DecChain R hd';
+}.
+
+Lemma wf_no_DecChain :
+  forall (A : Type) (R : A -> A -> Prop) (x : A),
+    well_founded R -> DecChain R x -> False.
+Proof.
+  unfold well_founded.
+  intros A R x H C.
+  specialize (H x).
+  revert C.
+  induction H; intro.
+  inversion C.
+  apply H0 with hd'; assumption.
+Qed.

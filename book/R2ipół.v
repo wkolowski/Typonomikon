@@ -901,4 +901,28 @@ Print div.
 
 Compute div 2 1.
 
+Require Import Recdef.
+
+Function div (n m : nat) {measure id n} : nat :=
+  if n <? S m
+  then n
+  else S (div (n - m) m).
+Proof.
+Abort.
+
+
+(** div n m = n/(m + 1) *)
+Definition div : nat -> nat -> nat.
+Proof.
+  apply (@well_founded_induction_type nat lt lt_wf
+    (fun n : nat => nat -> nat)).
+  intros n IH m.
+  destruct (le_lt_dec (S m) n).
+    Focus 2. exact 0.
+    apply S. refine (IH (n - S m) _ m). apply Nat.sub_lt.
+      assumption.
+      apply le_n_S, le_0_n.
+Defined.
+
+Compute div 5 0.
 (** * Indukcja funkcyjna *)
