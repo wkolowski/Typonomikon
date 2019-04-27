@@ -159,7 +159,7 @@ Parameter SetEquiv : forall A : Type, list A -> list A -> Prop.
 Parameter Permutation : forall A : Type, list A -> list A -> Prop.
 Parameter perm : forall (A : Type) (p : A -> bool), list A -> list A -> Prop.
 
-Parameter Cycle: forall A : Type, list A -> list A -> Prop.
+Parameter Cycle : forall A : Type, list A -> list A -> Prop.
 
 (** Palindromy *)
 Parameter Palindrome : forall A : Type, list A -> Prop.
