@@ -823,11 +823,15 @@ Proof.
   unfold well_founded.
   intro f.
   pose (n := f 0); assert (n = f 0) by reflexivity; clearbody n.
-  revert f H.
-(*  induction (lt_wf n).*)
-  induction n as [| n']; intros.
-    admit.
-Admitted.
+  revert n f H.
+  apply (@well_founded_induction nat lt lt_wf
+    (fun n => forall f, n = f 0 -> Acc lt' f)).
+  intros n IH f Heq. constructor. intros g Hlt.
+  unfold lt' in Hlt.
+  apply IH with (g 0).
+    specialize (Hlt 0). omega.
+    reflexivity.
+Qed.
 
 (* end hide *)
 
