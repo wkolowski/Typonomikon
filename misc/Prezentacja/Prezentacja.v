@@ -1,4 +1,4 @@
-(** * Koindukcja (znowu, ale lepiej) *)
+(** * Koindukcja (negatywna, czyli lepsza) *)
 
 (** ** Strumienie *)
 
@@ -56,6 +56,7 @@ CoFixpoint evens {A : Type} (s : Stream A) : Stream A :=
 
     hd (evens s) := hd s;
     tl (evens s) := evens (tl (tl s));
+
 *)
 
 CoFixpoint odds {A : Type} (s : Stream A) : Stream A :=
@@ -117,27 +118,7 @@ CoInductive Infinite {A : Type} (l : LList A) : Prop :=
     inf' : Infinite t;
 }.
 
-(** Zadania:
-
-    1. Zdefiniuj typ potencjalnie nieskończonych drzew binarnych trzymających
-       wartości typu [A] w węzłach, jego relację bipodobieństwa, predykaty
-       "skończony" i "nieskończony" oraz funkcję [mirror], która zwraca
-       lustrzane odbicie drzewa. Udowodnij, że bipodobieństwo jest relacją
-       równoważności i że funkcja [mirror] jest inwolucją
-       (tzn. [mirror (mirror t)] jest bipodobne do [t]), która zachowuje
-       właściwości bycia drzewem skończonym/nieskończonym. Pokaż, że drzewo
-       nie może być jednocześnie skończone i nieskończone.
-
-    2. Znajdź taką rodzinę typów koinduktywnych [C], że dla dowolnego
-       typu [A], [C A] jest w bijekcji z typem funkcji [nat -> A]. Przez
-       bijekcję będziemy tu rozumieć funkcję, która ma odwrotność, z którą
-       w obie strony składa się do identyczności.
-
-       Uwaga: nie da się tego udowodnić bez użycia dodatkowych aksjomatów,
-       które na szczęście są bardzo oczywiste i same się narzucają.
-*)
-
-(** ** Indukcja i rekursja dobrze ufundowana *)
+(** * Indukcja i rekursja dobrze ufundowana *)
 
 Module Wf.
 
@@ -184,25 +165,7 @@ Defined.
 
 End Wf.
 
-(** Zadania:
-
-    3. Sprawdź, czy dobrze ufundowana jest następująca relacja porządku
-       (mam nadzieję, że obrazek jest zrozumiały):
-       [0 < 1 < ... < ω < ω + 1 < ... < 2 * ω]
-
-       Oczywiście najpierw musisz wymyślić, w jaki sposób zdefiniować taką
-       relację.
-
-    4. Niech (B, R) będzie typem wyposażonym w relację dobrze ufundowaną R.
-       Zdefiniuj po współrzędnych relację porządku na funkcjach [A -> B]
-       i rozstrzygnij, czy relacja ta jest dobrze ufundowana.
-
-    5. Zdefiniuj pojęcie "nieskończonego łańcucha malejącego" (oczywiście
-       za pomocą koindukcji) i udowodnij, że jeżeli relacja jest dobrze
-       ufundowana, to nie ma nieskończonych łańcuchów malejących.
-*)
-
-(** Przykład: dzielenie i indukcja funkcyjna *)
+(** ** Przykład: dzielenie i indukcja funkcyjna *)
 
 Require Import Arith.
 Require Import Omega.
@@ -351,42 +314,7 @@ Proof.
     apply le_0_n.
 Defined.
 
-(** Zadanie:
+(** * Plugin Equations *)
 
-    6. Zdefiniuj funkcję [rot2], która bierze funkcję i zamienia miejscami
-       sąsiednie elementy na liście, np. [rot2 [1; 2; 3; 4] = [2; 1; 4; 3]].
-
-       Spróbuj udowodnić przez indukcję, że [rot2] jest inwolucją, tzn.
-       [rot2 (rot2 l) = l]. Wytłumacz, dlaczego się nie da.
-
-       Zdefiniuj ręcznie regułę indukcji dla list, za pomocą której da się
-       udowodnić to twierdzenie.
-
-       Zdefiniuj relację opisującą wykres funkcji [rot2]. Pokaż, że
-       definicja wykresu jest poprawna i pełna oraz wyprowadź z niej
-       regułę indukcji funkcyjnej dla funkcji [rot2]. Użyj jej, żeby
-       jeszcze raz udowodnić, że [rot2] jest inwolucją.
-
-       Na koniec zdefiniuj funkcję [rot2] jeszcze raz, tym razem za pomocą
-       komendy [Function]. Porównaj swoje definicje wykresu oraz reguły
-       indukcji z tymi automatycznie wygenerowanymi. Użyj taktyki [functional
-       induction], żeby jeszcze raz udowodnić twierdzenie.
-*)
-
-(** ** Plugin Equations *)
-
-(** Zabrakło czasu na customowy przykład.
-
-    Zadanie:
-
-    Zainstaluj plugin Equations:
-    https://github.com/mattam82/Coq-Equations
-
-    Przeczytaj tutorial:
-    https://raw.githubusercontent.com/mattam82/Coq-Equations/master/doc/equations_intro.v
-
-    Następnie znajdź jakiś swój dowód przez indukcję, który był skomplikowany
-    i napisz prostszy dowód, najpierw za pomocą komendy [Function] i taktyki
-    [functional induction], a potem za pomocą komendy [Equations] i taktyki
-    [funelim].
-*)
+(** Niestety zabrakło czasu na customowy przykład, a głębsze wyjaśnienia nie
+    miały większego sensu. Żeby dowiedzieć się więcej, zrób zadanie 8. *)
