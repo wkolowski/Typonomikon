@@ -1,3 +1,5 @@
+Require Import Recdef.
+
 Function fact (n : nat) : nat :=
 match n with
     | 0 => 1
@@ -67,8 +69,7 @@ Theorem fibCPS_spec :
   forall (n : nat) (k : nat -> nat),
     fibCPS n k = k (fib n).
 Proof.
-  intros. generalize dependent k.
-  functional induction fib n; intros;
+  intro. functional induction fib n; intros;
     try rewrite fibCPS_eq, IHn0, IHn1; reflexivity.
 Qed.
 

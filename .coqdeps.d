@@ -26,6 +26,8 @@ book/X5.vo book/X5.glob book/X5.v.beautified: book/X5.v book/X4.vo
 book/X5.vio: book/X5.v book/X4.vio
 book/X6.vo book/X6.glob book/X6.v.beautified: book/X6.v
 book/X6.vio: book/X6.v
+book/X7.vo book/X7.glob book/X7.v.beautified: book/X7.v
+book/X7.vio: book/X7.v
 wd/List_nowy_rev.vo wd/List_nowy_rev.glob wd/List_nowy_rev.v.beautified: wd/List_nowy_rev.v book/X3.vo
 wd/List_nowy_rev.vio: wd/List_nowy_rev.v book/X3.vio
 wd/Resztki_z_list.vo wd/Resztki_z_list.glob wd/Resztki_z_list.v.beautified: wd/Resztki_z_list.v book/X3.vo

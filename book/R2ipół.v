@@ -872,6 +872,8 @@ Proof.
   apply (well_founded_rect _ _ wf _ H).
 Qed.
 
+(* begin hide *)
+
 Require Import Arith.
 
 Definition div : nat -> nat -> nat.
@@ -914,9 +916,8 @@ Function div (n m : nat) {measure id n} : nat :=
 Proof.
 Abort.
 
-
 (** div n m = n/(m + 1) *)
-Definition div : nat -> nat -> nat.
+Definition div' : nat -> nat -> nat.
 Proof.
   apply (@well_founded_induction_type nat lt lt_wf
     (fun n : nat => nat -> nat)).
@@ -929,4 +930,7 @@ Proof.
 Defined.
 
 Compute div 5 0.
+
+(* end hide *)
+
 (** * Indukcja funkcyjna *)

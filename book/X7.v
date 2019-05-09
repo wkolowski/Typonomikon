@@ -896,11 +896,3 @@ Proof.
     apply CH. destruct H. firstorder.
 Qed.
 (* end hide *)
-
-Lemma Filter'_bad :
-  forall (A : Type) (f : A -> bool) (s r : Stream A),
-    Filter' (fun _ => false) s r -> (forall x : A, f x = false) -> False.
-(* begin hide *)
-Proof.
-  destruct 1. cbn in *.
-  
