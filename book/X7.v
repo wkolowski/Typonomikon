@@ -896,3 +896,77 @@ Proof.
     apply CH. destruct H. firstorder.
 Qed.
 (* end hide *)
+
+(* begin hide *)
+
+Lemma Stream_coiter :
+  forall (A X : Type),
+    (X -> A) -> (X -> X) -> X -> Stream A.
+Proof.
+  cofix CH.
+  constructor.
+    apply X0, X2.
+    apply (CH _ _ X0 X1 (X1 X2)).
+Defined.
+
+Definition from' : nat -> Stream nat.
+Proof.
+  apply Stream_coiter.
+    exact (fun n => n).
+    exact S.
+Defined.
+
+Print list.
+
+Definition list' (A : Type) : Type :=
+  forall X : Type,
+    X -> (A -> X -> X) -> X.
+
+Definition nil' {A : Type} : list' A :=
+  fun X nil cons => nil.
+
+Definition cons' {A : Type} (x : A) (l : list' A) : list' A :=
+  fun X nil cons => cons x (l X nil cons).
+
+Definition list'_list {A : Type} (l : list' A) : list A :=
+  l _ nil cons.
+
+Compute list'_list (cons' 1 (cons' 2 (cons' 3 nil'))).
+
+Definition Stream' (A : Type) : Type :=
+  {X : Type & X * (X -> A) * (X -> X)}%type.
+
+Lemma Stream'_Stream {A : Type} (s : Stream' A) : Stream A.
+Proof.
+(*  cofix CH.*)
+  destruct s as [X [[x hd] tl]].
+  apply (Stream_coiter A X).
+    exact hd.
+    exact tl.
+    exact x.
+Defined.
+
+Definition Stream_Stream' {A : Type} (s : Stream A) : Stream' A.
+Proof.
+  red. exists (Stream A). exact ((s, hd), tl).
+Defined.
+
+Lemma Streams :
+  forall (A : Type) (s : Stream A),
+    sim (Stream'_Stream (Stream_Stream' s)) s.
+Proof.
+  cofix CH.
+  constructor.
+    cbn. reflexivity.
+    cbn. apply CH.
+Qed.
+
+Lemma Streams' :
+  forall (A : Type) (s : Stream' A),
+    Stream_Stream' (Stream'_Stream s) = s.
+Proof.
+  destruct s as [X [[x hd] tl]]. cbn.
+  unfold Stream_Stream'.
+Abort.
+
+(* end hide *)

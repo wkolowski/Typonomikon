@@ -1,5 +1,3 @@
-Add Rec LoadPath "/home/zeimer/Code/Coq".
-
 Require Import CoqBookPL.book.X3.
 
 Function groupBy
@@ -52,14 +50,6 @@ Lemma isEmpty_groupBy :
     isEmpty (groupBy p l) = isEmpty l.
 (* begin hide *)
 Proof.
-  destruct l; cbn.
-    reflexivity.
-    destruct (groupBy p l); cbn.
-      reflexivity.
-      destruct l0; cbn.
-        reflexivity.
-        destruct (p a a0); reflexivity.
-Restart.
   intros. functional induction @groupBy A p l; cbn; reflexivity.
 Qed.
 (* end hide *)
@@ -126,7 +116,7 @@ Proof.
     destruct IHl0; subst.
       cbn in e0. inversion e0.
       destruct H as [n H]. rewrite e0 in H. inversion H; subst.
-        right. exists 1. cbn. rewrite e0. reflexivity.
+        right. exists 1. cbn. rewrite take_0, drop_0, e0. reflexivity.
 Qed.
 (* end hide *)
 
@@ -275,14 +265,6 @@ Proof.
     destruct (p a a0).
 Admitted.
 (* end hide *)
-Search groupBy.
-
-(*Lemma groupBy_head_take :
-  forall
-    (A : Type) (p : A -> A -> bool) (l g : list A) (gs : list (list A)),
-      groupBy p l = g :: gs ->
-        exists n : nat, take n l = g.
-*)
 
 Lemma groupBy_rev_aux :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
@@ -299,7 +281,7 @@ Proof.
     pose (groupBy_decomposition A p t). destruct o.
       rewrite H0 in *. cbn in *. inversion e0.
       destruct H0 as (n & H'). pose (H'' := H'). rewrite e0 in H''. inv H''.
-        rewrite <- (app_take_drop _ n t) at 2.
+        rewrite <- (app_take_drop _ t n) at 2.
         rewrite rev_app. rewrite <- H1. cbn.
         rewrite <- ?app_assoc. cbn. rewrite app_assoc.
         rewrite (groupBy_middle A p (rev (drop n t) ++ rev t') [] h' h).
@@ -315,7 +297,7 @@ Proof.
 Restart.
   intros. pose (groupBy_decomposition A p l). destruct o.
     rewrite H0. cbn. reflexivity.
-    destruct H0 as (n & H'). rewrite <- (app_take_drop A n l) at 2.
+    destruct H0 as (n & H'). rewrite <- (app_take_drop A l n) at 2.
       rewrite rev_app.
 Admitted.
 (* end hide *)
@@ -427,7 +409,7 @@ Proof.
     exists 0. rewrite ?take_nil. cbn. reflexivity.
     gb. destruct n as [| n']; cbn.
       exists 0. cbn. reflexivity.
-      exists 1. rewrite take_nil. cbn. reflexivity.
+      exists 1. reflexivity.
     gb.
     destruct n as [| n']; cbn.
       exists 0. cbn. reflexivity.
@@ -513,10 +495,10 @@ Qed.
 
 Lemma groupBy_elem_incl :
   forall (A : Type) (p : A -> A -> bool) (l g : list A),
-    elem g (groupBy p l) -> incl g l.
+    elem g (groupBy p l) -> Incl g l.
 (* begin hide *)
 Proof.
-  intros. functional induction @groupBy A p l;
+  intros. revert g H. functional induction @groupBy A p l; intros;
   try rewrite ?e0 in IHl0.
     inversion H.
     inversion H; subst; clear H.
@@ -524,11 +506,11 @@ Proof.
       inversion H2.
     gb.
     inversion H; subst; clear H.
-      apply incl_cons, IHl0. left.
-      apply incl_cons'', IHl0. right. assumption.
+      apply Incl_cons, IHl0. left.
+      apply Incl_cons'', IHl0. right. assumption.
     inversion H; subst; clear H.
-      apply incl_cons, incl_nil.
-      apply incl_cons'', IHl0. assumption.
+      apply Incl_cons, Incl_nil.
+      apply Incl_cons'', IHl0. assumption.
 Qed.
 (* end hide *)
 
@@ -546,7 +528,7 @@ Proof.
     gb.
     rewrite e0 in IHl0. inversion H; subst; clear H.
       exists (h :: h' :: t'). split; constructor.
-      destruct (IHl0 _ H2) as (g & IH1 & IH2).
+      destruct (IHl0 H2) as (g & IH1 & IH2).
         inversion IH2; subst; clear IH2.
           exists (h :: h' :: t'). split.
             right. assumption.
@@ -554,7 +536,7 @@ Proof.
           exists g. split; try right; assumption.
     rewrite e0 in IHl0. inversion H; subst; clear H.
       exists [h]. split; constructor.
-      destruct (IHl0 _ H2) as (g & IH1 & IH2).
+      destruct (IHl0 H2) as (g & IH1 & IH2).
         inversion IH2; subst; clear IH2.
           exists (h' :: t'). split.
             assumption.
@@ -576,4 +558,3 @@ Proof.
     inversion 1; subst. apply IHl0. rewrite e0. assumption.
 Qed.
 (* end hide *)
-

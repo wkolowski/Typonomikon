@@ -1,5 +1,3 @@
-Add Rec LoadPath "/home/zeimer/Code/Coq".
-
 Require Import CoqBookPL.book.X3.
 
 Function groupBy
@@ -160,13 +158,9 @@ Proof.
   intros. functional induction @groupBy A p l; cbn.
     1-3: reflexivity.
     Focus 2. rewrite e0 in *. cbn in *. rewrite IHl0. reflexivity.
-    rewrite ?e0 in IHl0. cbn in IHl0. inversion IHl0; subst; clear IHl0.
-      rewrite H0. f_equal. destruct l0.
-        reflexivity.
-        cbn in *. destruct l''.
-          inversion e0; subst. rewrite e1. reflexivity.
-          cbn in *. destruct l''.
-            destruct (p y a0); inversion e0; subst; rewrite e1; reflexivity.
+    rewrite ?e0 in IHl0. clear e0. cbn in IHl0.
+      inversion IHl0; subst; clear IHl0.
+      rewrite H0. f_equal. functional inversion H0; subst.
 Abort.
 
 Lemma join_groupBy :
@@ -237,25 +231,28 @@ Qed.
     foldl plus 
 *)
 
+Ltac inv H := inversion H; subst; clear H.
+
 Lemma groupBy_elem_incl :
   forall (A : Type) (p : A -> A -> bool) (l g : list A),
-    elem g (groupBy p l) -> incl g l.
+    elem g (groupBy p l) -> Incl g l.
 (* begin hide *)
 Proof.
-  intros. functional induction @groupBy A p l;
+  intros A p l.
+  functional induction @groupBy A p l; intros;
   try rewrite ?e0 in IHl0.
-    inversion H.
-    inversion H; subst; clear H.
-      apply incl_refl.
-      inversion H2.
+    inv H.
+    inv H.
+      apply Incl_refl.
+      inv H2.
     apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
       cbn in e0. congruence.
     inversion H; subst; clear H.
-      apply incl_cons, IHl0. left.
-      apply incl_cons'', IHl0. right. assumption.
+      apply Incl_cons, IHl0. left. 
+      apply Incl_cons'', IHl0. right. assumption.
     inversion H; subst; clear H.
-      apply incl_cons, incl_nil.
-      apply incl_cons'', IHl0. assumption.
+      apply Incl_cons, Incl_nil.
+      apply Incl_cons'', IHl0. assumption.
 Qed.
 (* end hide *)
 
@@ -264,23 +261,23 @@ Lemma groupBy_elem :
     elem x l -> exists g : list A, elem x g /\ elem g (groupBy p l).
 (* begin hide *)
 Proof.
-  intros. functional induction @groupBy A p l.
+  intros A p x l. revert x. functional induction @groupBy A p l; intros.
     inversion H.
     inversion H; subst; clear H.
-      exists [x0]. split; constructor.
+      exists [x]. split; constructor.
       inversion H2.
     apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
       cbn in e0. congruence.
     rewrite e0 in IHl0. inversion H; subst; clear H.
-      exists (x0 :: l0). split; constructor.
+      exists (x :: l0). split; constructor.
       destruct (IHl0 _ H2) as (g & IH1 & IH2).
         inversion IH2; subst; clear IH2.
-          exists (x0 :: l0). split.
+          exists (x :: l0). split.
             right. assumption.
             left.
           exists g. split; try right; assumption.
     rewrite e0 in IHl0. inversion H; subst; clear H.
-      exists [x0]. split; constructor.
+      exists [x]. split; constructor.
       destruct (IHl0 _ H2) as (g & IH1 & IH2).
         inversion IH2; subst; clear IH2.
           exists l0. split.
