@@ -1,17 +1,5 @@
 Require Import X3.
 
-(*
-Definition clist'
-  {A : Type} (P : (forall X : Type, X -> (A -> X -> X) -> X) -> Type)
-  : Type :=
-    forall X : Type,
-      P (fun _ nil _ => nil) ->
-      (forall (h : A) (t : forall X, X -> (A -> X -> X) -> X),
-        P t -> P (fun X nil cons => cons h (t X nil cons))) ->
-      forall l : forall X : Type, X -> (A -> X -> X) -> X, P l.
-*)
-
-
 Definition clist (A : Type) : Type :=
   forall X : Type, X -> (A -> X -> X) -> X.
 
@@ -24,6 +12,37 @@ Definition ccons {A : Type} : A -> clist A -> clist A :=
 Notation "c[]" := cnil.
 Notation "x :c: y" := (ccons x y) (at level 60, right associativity).
 Notation "c[ x ; .. ; y ]" := (ccons x .. (ccons y cnil) ..).
+
+Definition head {A : Type} (l : clist A) : option A :=
+  l (option A) None (fun h _ => Some h).
+
+(*
+Definition tail {A : Type} (l : clist A) : option (clist A) :=
+  l _ None
+    (fun h t => t).
+
+Compute tail c[1; 2; 3].
+*)
+
+Definition null {A : Type} (l : clist A) : bool :=
+  l _ true (fun _ _ => false).
+
+Definition clen {A : Type} (l : clist A) : nat :=
+  l nat 0 (fun _ => S).
+
+Definition snoc {A : Type} (l : clist A) (x : A) : clist A :=
+  fun X nil cons => l _ (c[x] _ nil cons) cons.
+
+Definition rev {A : Type} (l : clist A) : clist A.
+Proof.
+  unfold clist in *.
+  intros X nil cons.
+Abort.
+
+Definition capp {A : Type} (l1 l2 : clist A) : clist A :=
+  fun X nil cons => l1 X (l2 X nil cons) cons.
+
+
 
 Fixpoint fromList {A : Type} (l : list A) : clist A :=
 match l with
@@ -48,15 +67,6 @@ Proof.
   intros. unfold clist in *. compute.
 Abort.
 
-Definition clen {A : Type} (l : clist A) : nat :=
-  l nat 0 (fun _ => S).
-
-Compute clen c[1; 2; 3].
-
-Definition capp {A : Type} (l1 l2 : clist A) : clist A :=
-  fun X nil cons => l1 X (l2 X nil cons) cons.
-
-Compute capp c[1; 2; 3] c[4; 5; 6].
 
 Lemma len_app :
   forall (A : Type) (l1 l2 : clist A),

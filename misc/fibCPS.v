@@ -72,20 +72,3 @@ Proof.
   intro. functional induction fib n; intros;
     try rewrite fibCPS_eq, IHn0, IHn1; reflexivity.
 Qed.
-
-Axiom pi : forall (P : Prop) (p1 p2 : P), p1 = p2.
-
-Inductive Erasable (A : Type) : Prop :=
-    | erasable : A -> Erasable A.
-
-Arguments erasable {A} _.
-
-Axiom Erasable_inj :
-  forall (A : Type) (x y : A), erasable x = erasable y -> x = y.
-
-Theorem wut : False.
-Proof.
-  cut (0 = 1).
-    inversion 1.
-    apply Erasable_inj, pi.
-Qed.

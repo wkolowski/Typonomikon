@@ -111,8 +111,3 @@ match cq with
     | E => None
     | N x q => Some (x, rebuild q)
 end.
-
-
-
-
-    

@@ -641,12 +641,7 @@ Inductive SPermutation {A : Type} : Stream A -> Stream A -> Prop :=
 
 Hint Constructors SPermutation.
 
-(*
-Definition stake n {A} s := @take n A s.
-
-Require Import CoqBookPL.book.X3.
-*)
-
+(* TODO *)
 Require Import Permutation.
 
 Lemma lsapp_scons :
@@ -861,18 +856,6 @@ CoInductive Filter' {A : Type} (f : A -> bool) (s r : Stream A) : Prop :=
       f (hd s) = false -> Filter' f (tl s) r;
 }.
 
-Lemma Filter'_spec :
-  forall (A : Type) (f : A -> bool) (s r : Stream A),
-    Filter' f s r -> Forall r (fun x : A => f x = true).
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct 1. constructor.
-    case_eq (f (hd s)); intro.
-      destruct (Filter'_true0 H). rewrite <- H0. assumption.
-      specialize (Filter'_false0 H).
-Abort.
-
 Lemma Filter'_const_false :
   forall (A : Type) (s r : Stream A),
     Filter' (fun _ => false) s r.
@@ -897,6 +880,8 @@ Proof.
 Qed.
 (* end hide *)
 
+
+
 (* begin hide *)
 
 Lemma Stream_coiter :
@@ -915,23 +900,6 @@ Proof.
     exact (fun n => n).
     exact S.
 Defined.
-
-Print list.
-
-Definition list' (A : Type) : Type :=
-  forall X : Type,
-    X -> (A -> X -> X) -> X.
-
-Definition nil' {A : Type} : list' A :=
-  fun X nil cons => nil.
-
-Definition cons' {A : Type} (x : A) (l : list' A) : list' A :=
-  fun X nil cons => cons x (l X nil cons).
-
-Definition list'_list {A : Type} (l : list' A) : list A :=
-  l _ nil cons.
-
-Compute list'_list (cons' 1 (cons' 2 (cons' 3 nil'))).
 
 Definition Stream' (A : Type) : Type :=
   {X : Type & X * (X -> A) * (X -> X)}%type.
