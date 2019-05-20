@@ -2,6 +2,10 @@
 
 (** TODO: coś tu napisać. *)
 
+(** Zdefiniuj liczby konaturalne oraz ich relację bipodobieństwa. Pokaż,
+    że jest to relacja równoważności. *)
+
+(* begin hide *)
 CoInductive conat : Type :=
 {
     pred : option conat;
@@ -16,7 +20,18 @@ CoInductive sim (n m : conat) : Prop :=
 }.
 
 Axiom sim_eq :
-  forall n m : conat, sim n m -> n = m.
+  forall {n m : conat}, sim n m -> n = m.
+
+Ltac inv H := inversion H; subst; clear H; auto.
+
+Ltac invle H n m :=
+  let n' := fresh n "'" in
+  let m' := fresh m "'" in
+  let H1 := fresh H "1" in
+  let H2 := fresh H "2" in
+  let H3 := fresh H "3" in
+    destruct H as [[| (n' & m' & H1 & H2 & H3)]].
+(* end hide *)
 
 Lemma sim_refl :
   forall n : conat, sim n n.
@@ -54,10 +69,12 @@ Proof.
 Qed.
 (* end hide *)
 
+(** Dzięki poniższemu będziemy mogli używac taktyki [rewrite] do
+    przepisywania [sim] tak samo jak [=]. *)
+
 Require Import Setoid.
 
 Instance Equivalence_sim : Equivalence sim.
-(* begin hide *)
 Proof.
   esplit; red.
     apply sim_refl.
@@ -65,6 +82,11 @@ Proof.
     apply sim_trans.
 Defined.
 
+(** Zdefiniuj zero, następnik oraz liczbę omega - jest to nieskończona
+    liczba konaturalna, która jest sama swoim poprzednikiem. Udowodnij
+    ich kilka podstawowych właściwości. *)
+
+(* begin hide *)
 Definition zero : conat :=
 {|
     pred := None;
@@ -75,6 +97,67 @@ Definition succ (n : conat) : conat :=
     pred := Some n;
 |}.
 
+CoFixpoint omega : conat :=
+{|
+    pred := Some omega;
+|}.
+(* end hide *)
+
+Lemma succ_pred :
+  forall n m : conat,
+    n = succ m <-> pred n = Some m.
+(* begin hide *)
+Proof.
+  split; intro.
+    rewrite H. cbn. reflexivity.
+    destruct n as [[n' |]]; inv H.
+Qed.
+(* end hide *)
+
+Lemma zero_not_omega :
+  ~ sim zero omega.
+(* begin hide *)
+Proof.
+  destruct 1 as [[[H1 H2] | (zero' & omega' & H1 & H2 & H3)]].
+    cbn in H2. inv H2.
+    cbn in H1. inv H1.
+Qed.
+(* end hide *)
+
+Lemma sim_succ_omega :
+  forall n : conat, sim n (succ n) -> sim n omega.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. cbn.
+  destruct H as [[[H1 H2] | (n' & succn' & H1 & H2 & H3)]]; cbn in *.
+    inv H2.
+    right. inv H2. exists n', omega. intuition. apply CH.
+      apply succ_pred in H1. rewrite <- H1. assumption.
+Qed.
+(* end hide *)
+
+Lemma succ_omega :
+  omega = succ omega.
+(* begin hide *)
+Proof.
+  apply sim_eq.
+  constructor. cbn. right. do 2 eexists. intuition.
+Qed.
+(* end hide *)
+
+Lemma sim_succ_succ :
+  forall n m : conat, sim n m -> sim (succ n) (succ m).
+(* begin hide *)
+Proof.
+  constructor. cbn. right. exists n, m. auto.
+Qed.
+(* end hide *)
+
+(** Zdefiniuj dodawanie liczb konaturalnych i udowodnij jego podstawowe
+    właściwości. *)
+
+(* begin hide *)
 CoFixpoint add (n m : conat) : conat :=
 {|
     pred :=
@@ -83,6 +166,7 @@ CoFixpoint add (n m : conat) : conat :=
           | Some n' => Some (add n' m)
       end
 |}.
+(* end hide *)
 
 Lemma add_zero_l :
   forall n : conat, sim (add zero n) n.
@@ -102,6 +186,27 @@ Proof.
   constructor; cbn. destruct n as [[n' |]]; cbn.
     right. do 2 eexists. do 2 split; try reflexivity. apply CH.
     left. auto.
+Qed.
+(* end hide *)
+
+Lemma add_omega_l :
+  forall n : conat, sim (add omega n) omega.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. cbn. right.
+  exists (add omega n), omega. auto.
+Qed.
+(* end hide *)
+
+Lemma add_omega_r :
+  forall n : conat, sim (add n omega) omega.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct n as [[n' |]]; cbn.
+    right. exists (add n' omega), omega. auto.
+    right. exists omega, omega. intuition.
 Qed.
 (* end hide *)
 
@@ -137,33 +242,27 @@ Proof.
 Qed.
 (* end hide *)
 
-Ltac inv H := inversion H; subst; clear H; auto.
-
-Lemma sim_succ_succ :
-  forall n m : conat, sim n m -> sim (succ n) (succ m).
-(* begin hide *)
-Proof.
-  constructor. cbn. right. exists n, m. auto.
-Qed.
-(* end hide *)
-
 Lemma add_comm :
   forall n m : conat, sim (add n m) (add m n).
 (* begin hide *)
 Proof.
   cofix CH.
   constructor. destruct n as [[n' |]], m as [[m' |]]; cbn.
-    Focus 2. right. do 2 eexists. do 2 split; try reflexivity.
-      apply add_zero_r.
-    Focus 2. right. do 2 eexists. do 2 split; try reflexivity.
-      apply sim_sym. apply add_zero_r.
-    Focus 2. auto.
-    specialize (CH n' (succ m')).
+    right. specialize (CH n' (succ m')).
+      do 2 eexists. do 2 split; try reflexivity.
+        rewrite (sim_eq (add_succ_l _ _)) in CH. apply CH.
     right. do 2 eexists. do 2 split; try reflexivity.
-      rewrite (sim_eq _ _ (add_succ_l _ _)) in CH. apply CH.
+      apply add_zero_r.
+    right. do 2 eexists. do 2 split; try reflexivity.
+      apply sim_sym. apply add_zero_r.
+    left. split; reflexivity.
 Qed.
 (* end hide *)
 
+(** Zdefiniuj relację [<=] na liczbach konaturalnych i udowodnij jej
+    podstawowe właściwości. *)
+
+(* begin hide *)
 CoInductive le (n m : conat) : Prop :=
 {
     le' :
@@ -172,6 +271,7 @@ CoInductive le (n m : conat) : Prop :=
         pred n = Some n' /\
         pred m = Some m' /\ le n' m'
 }.
+(* end hide *)
 
 Lemma le_refl :
   forall n : conat, le n n.
@@ -203,79 +303,157 @@ Qed.
 (* end hide *)
 
 Lemma le_sim :
-  forall n n' m m' : conat,
-    sim n n' -> sim m m' -> le n m -> le n' m'.
+  forall n1 n2 m1 m2 : conat,
+    sim n1 n2 -> sim m1 m2 -> le n1 m1 -> le n2 m2.
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct H1. decompose [or ex and] le'0; clear le'0.
-    left. destruct H. decompose [or and ex] sim'0.
-      assumption.
-      congruence.
-    right. exists x, x0. split; [idtac | split].
-      destruct H.
-Abort.
+  constructor. destruct H1 as [[| (n1' & m1' & H1 & H2 & H3)]].
+Restart.
+  intros.
+  rewrite <- (sim_eq H), <- (sim_eq H0). assumption.
+Qed.
 (* end hide *)
 
-Lemma le_add_l :
-  forall n m : conat, le n (add n m).
+Lemma le_0_l :
+  forall n : conat, le zero n.
+(* begin hide *)
+Proof.
+  constructor. left. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma le_0_r :
+  forall n : conat, le n zero -> n = zero.
+(* begin hide *)
+Proof.
+  intros. invle H n zero.
+    destruct n. unfold zero. cbn in H. rewrite H. reflexivity.
+    cbn in *. inv H2.
+Qed.
+(* end hide *)
+
+Lemma le_omega_r :
+  forall n : conat, le n omega.
 (* begin hide *)
 Proof.
   cofix CH.
   constructor. destruct n as [[n' |]]; cbn.
-    right. do 2 eexists. do 2 split; try reflexivity. apply CH.
+    right. exists n', omega. auto.
     left. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma le_add_r :
-  forall n m : conat, le m (add n m).
+Lemma le_omega_l :
+  forall n : conat, le omega n -> sim n omega.
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct n as [[n' |]], m as [[m' |]]; cbn.
-    right. do 2 eexists. do 2 split; try reflexivity.
-Abort.
+  constructor. invle H omega' n; cbn in *.
+    inv H.
+    inv H1. right. do 2 eexists. intuition. exact H2. apply CH. assumption.
+Qed.
 (* end hide *)
-
-Lemma le_add_l' :
-  forall n n' m : conat,
-    le n n' -> le (add n m) (add n' m).
-Proof.
-Admitted.
-
-Lemma le_add_r' :
-  forall n m m' : conat,
-    le m m' -> le (add n m) (add n m').
-Proof.
-Admitted.
-
-Lemma le_add :
-  forall n n' m m' : conat,
-    le n n' -> le m m' -> le (add n m) (add n' m').
-Proof.
-Admitted.
 
 Lemma le_succ_r :
   forall n m : conat, le n m -> le n (succ m).
+(* begin hide *)
 Proof.
-Admitted.
+  cofix CH.
+  constructor. destruct H as [[| (n' & m' & H1 & H2 & H3)]].
+    left. assumption.
+    right. exists n', (succ m'). cbn. intuition. f_equal.
+      destruct m as [[m'' |]]; inv H2.
+Qed.
+(* end hide *)
 
 Lemma le_succ :
   forall n m : conat, le n m -> le (succ n) (succ m).
+(* begin hide *)
 Proof.
-Admitted.
+  constructor. cbn. right. exists n, m. intuition.
+Qed.
+(* end hide *)
 
+Lemma le_add_l :
+  forall a b c : conat,
+    le a b -> le a (add b c).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct H as [[| (n1' & n2' & Hn1 & Hn2 & Hn3)]].
+    left. assumption.
+    right. cbn. rewrite Hn1, Hn2. do 2 eexists. intuition.
+Qed.
+(* end hide *)
 
+Lemma le_add_r :
+  forall a b c : conat,
+    le a c -> le a (add b c).
+(* begin hide *)
+Proof.
+  intros. eapply le_sim.
+    reflexivity.
+    apply add_comm.
+    apply le_add_l. assumption.
+Qed.
+(* end hide *)
 
+Lemma le_add :
+  forall n1 n2 m1 m2 : conat,
+    le n1 n2 -> le m1 m2 -> le (add n1 m1) (add n2 m2).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. cbn.
+  destruct H as [[| (n1' & n2' & Hn1 & Hn2 & Hn3)]].
+    Focus 2. rewrite Hn1, Hn2. right. do 2 eexists. do 2 split.
+      reflexivity.
+      apply CH; assumption.
+    destruct H0 as [[| (m1' & m2' & Hm1 & Hm2 & Hm3)]].
+      rewrite H. left. assumption.
+      rewrite H, Hm1, Hm2. right. exists m1'.
+        destruct (pred n2); eexists; intuition.
+        replace m2 with (succ m2').
+          apply le_add_r, le_succ_r. assumption.
+          symmetry. rewrite succ_pred. assumption.
+Qed.
+(* end hide *)
 
+Lemma le_add_l' :
+  forall n m : conat, le n (add n m).
+(* begin hide *)
+Proof.
+  intros. apply le_add_l. apply le_refl.
+Qed.
+(* end hide *)
 
-CoFixpoint sub (n m : conat) : conat :=
-{|
-    pred :=
-      match pred n, pred m with
-          | _, None => pred n
-          | None, _ => None
-          | Some n', Some m' => Some (sub n' m')
-      end;
-|}.
+Lemma le_add_r' :
+  forall n m : conat, le m (add n m).
+(* begin hide *)
+Proof.
+  intros. apply le_add_r. apply le_refl.
+Qed.
+(* end hide *)
+
+Lemma le_add_l'' :
+  forall n n' m : conat,
+    le n n' -> le (add n m) (add n' m).
+(* begin hide *)
+Proof.
+  intros. apply le_add.
+    assumption.
+    apply le_refl.
+Qed.
+(* end hide *)
+
+Lemma le_add_r'' :
+  forall n m m' : conat,
+    le m m' -> le (add n m) (add n m').
+(* begin hide *)
+Proof.
+  intros. apply le_add.
+    apply le_refl.
+    assumption.
+Qed.
+(* end hide *)
