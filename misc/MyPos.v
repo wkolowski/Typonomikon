@@ -17,7 +17,8 @@ end.
 
 Eval compute in I (I (O H)).
 
-Fixpoint pos_even_bool (p : positive) : bool := match p with
+Fixpoint pos_even_bool (p : positive) : bool :=
+match p with
     | H => false
     | I _ => false
     | O k => true
@@ -26,9 +27,9 @@ end.
 Definition pos_25 := I (O (O (I H))).
 Definition pos_24 := O (O (O (I H))).
 
-Eval compute in pos_even_bool pos_25.
-Eval compute in pos_even_bool pos_24.
-Eval compute in pos_even_bool (O H).
+Compute pos_even_bool pos_25.
+Compute pos_even_bool pos_24.
+Compute pos_even_bool (O H).
 
 Inductive Rat : Set :=
     | One : Rat

@@ -35,7 +35,8 @@ match b with
     | _ => b
 end.
 
-Theorem normalize_spec : forall b : bin, bin_equiv b (normalize b).
+Theorem normalize_spec :
+  forall b : bin, bin_equiv b (normalize b).
 Proof.
   induction b as [| d ds].
     simpl. eauto.
@@ -56,7 +57,7 @@ Definition bin_to_nat (b : bin) : nat :=
 
 Eval compute in bin_to_nat [I; O; I; O; I; O].
 
-Fixpoint divmod2 (n : nat) : nat * D :=
+Function divmod2 (n : nat) : nat * D :=
 match n with
     | 0 => (0, O)
     | 1 => (0, I)
@@ -71,14 +72,46 @@ match n with
     | S (S n') => H n' (nat_ind_2 P H0 H1 H n')
 end.
 
-(*Program Fixpoint nat_to_bin (n : nat) {measure n} : bin :=
-    let (a, b) := (div2 n, mod2 n) in
-    match a, b with
-        | 0, O => []
-        | 0, I => [I]
-        | _, _ => b :: nat_to_bin a
+Lemma divmod2_spec :
+  forall (n m : nat) (d : D),
+    divmod2 n = (m, d) -> m = 0 \/ m < n.
+Proof.
+  induction n using nat_ind_2; cbn; intros.
+    inversion H; subst. left. reflexivity.
+    inversion H; subst. left. reflexivity.
+    destruct (divmod2 n). inversion H; subst. destruct (IHn _ _ eq_refl).
+      right. rewrite H0. do 2 apply le_n_S. apply le_0_n.
+      right. apply le_n_S. apply le_S. assumption.
+Qed.
+
+Require Import Recdef.
+
+Function nat_to_bin' (n : nat) {measure id n} : bin :=
+    let '(a, b) := divmod2 n in
+    match a with
+        | 0 => [b]
+        | _ => b :: nat_to_bin' a
     end.
-Next Obligation.
-  destruct a as [| a'].
-    cut False.
-*)
+Proof.
+  intros.
+  destruct (divmod2_spec _ _ _ teq); subst.
+    inversion H.
+    unfold id. assumption.
+Defined.
+
+Definition nat_to_bin (n : nat) : bin := rev (nat_to_bin' n).
+
+Goal
+  forall n : nat, bin_to_nat (nat_to_bin n) = n.
+Proof.
+  unfold nat_to_bin. intro.
+  functional induction (nat_to_bin' n). cbn.
+    destruct b; cbn.
+      functional inversion e. reflexivity.
+      functional inversion e. reflexivity.
+    cbn. unfold bin_to_nat in IHb. destruct a.
+      contradiction.
+      functional inversion e. subst.
+Abort.
+
+Compute bin_to_nat [I; O; I; I; I; I; I; I; O; I; I; O; I; I; I].

@@ -65,25 +65,3 @@ Proof.
   exists (sub omega omega), omega. intuition.
 Qed.
 (* end hide *)
-
-Inductive Finite : conat -> Prop :=
-    | Finite_zero : Finite zero
-    | Finite_succ : forall n : conat, Finite n -> Finite (succ n).
-
-Lemma omega_not_Finite :
-  ~ Finite omega.
-(* begin hide *)
-Proof.
-  intro. remember omega as n. revert Heqn.
-  induction H; intro.
-    apply (f_equal pred) in Heqn. cbn in Heqn. inv Heqn.
-    apply (f_equal pred) in Heqn. cbn in Heqn. inv Heqn.
-Qed.
-(* end hide *)
-
-Lemma sub_Finite_omega :
-  forall n : conat, Finite n -> sim (sub n omega) zero.
-(* begin hide *)
-Proof.
-Abort.
-(* end hide *)

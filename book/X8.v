@@ -457,3 +457,146 @@ Proof.
     assumption.
 Qed.
 (* end hide *)
+
+Inductive Finite : conat -> Prop :=
+    | Finite_zero : Finite zero
+    | Finite_succ : forall n : conat, Finite n -> Finite (succ n).
+
+Lemma omega_not_Finite :
+  ~ Finite omega.
+(* begin hide *)
+Proof.
+  intro. remember omega as n. revert Heqn.
+  induction H; intro.
+    apply (f_equal pred) in Heqn. cbn in Heqn. inv Heqn.
+    apply (f_equal pred) in Heqn. cbn in Heqn. inv Heqn.
+Qed.
+(* end hide *)
+
+CoInductive Infinite (n : conat) : Prop :=
+{
+    Infinite' :
+      exists n' : conat, pred n = Some n' /\ Infinite n';
+}.
+
+Lemma Infinite_omega :
+(* begin hide *)
+  Infinite omega.
+Proof.
+  cofix CH.
+  constructor. exists omega. split.
+    cbn. reflexivity.
+    apply CH.
+Qed.
+(* end hide *)
+
+Lemma Infinite_omega' :
+  forall n : conat, Infinite n -> sim n omega.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct H as [[n' [H1 H2]]].
+  right. exists n', omega. intuition.
+Qed.
+(* end hide *)
+
+CoInductive Even (n : conat) : Prop :=
+{
+    Even' :
+      pred n = None \/
+      exists n1 n2 : conat,
+        pred n = Some n1 /\ pred n1 = Some n2 /\ Even n2;
+}.
+
+Lemma Even_Omega :
+  Even omega.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. right.
+  exists omega, omega. cbn. intuition.
+Qed.
+(* end hide *)
+
+CoInductive Odd (n : conat) : Prop :=
+{
+    Odd' :
+      n = succ zero \/
+      exists n1 n2 : conat,
+        pred n = Some n1 /\ pred n1 = Some n2 /\ Odd n2;
+}.
+
+Lemma Odd_Omega :
+  Odd omega.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. right.
+  exists omega, omega. cbn. intuition.
+Qed.
+(* end hide *)
+
+Lemma Even_Odd_Infinite :
+  forall n : conat, Even n -> Odd n -> Infinite n.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor.
+  destruct H as [[HE | (n1 & n2 & HE1 & HE2 & HE3)]],
+          H0 as [[HO | (m1 & m2 & HO1 & HO2 & HO3)]];
+  subst; cbn in *.
+    inv HE.
+    congruence.
+    inv HE1. inv HE2.
+    rewrite HO1 in HE1. inv HE1. rewrite HO2 in HE2. inv HE2.
+      exists n1. intuition. constructor. exists n2. intuition.
+Qed.
+(* end hide *)
+
+Lemma wut :
+  forall n m : conat, pred n = pred m -> n = m.
+Proof.
+  destruct n, m. cbn. destruct 1. reflexivity.
+Qed.
+
+Lemma Even_succ :
+  forall n : conat, Odd n -> Even (succ n).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct H as [[H | (n1 & n2 & H1 & H2 & H3)]]; cbn.
+    right. exists n, zero. intuition.
+      rewrite H. cbn. reflexivity.
+      constructor. left. cbn. reflexivity.
+    right. exists n, n1. intuition. replace n1 with (succ n2).
+      apply CH. assumption.
+      apply wut. cbn. symmetry. assumption.
+Qed.
+(* end hide *)
+
+Lemma Odd_succ :
+  forall n : conat, Even n -> Odd (succ n).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct H as [[H | (n1 & n2 & H1 & H2 & H3)]].
+    left. apply sim_eq. apply sim_succ_succ. constructor.
+      left. cbn. auto.
+    right. cbn. exists n, n1. intuition. replace n1 with (succ n2).
+      apply CH. assumption.
+      apply wut. cbn. symmetry. assumption.
+Qed.
+(* end hide *)
+
+Lemma Finite_Even_Odd :
+  forall n : conat, Finite n -> Even n \/ Odd n.
+(* begin hide *)
+Proof.
+  induction 1.
+    left. constructor. left. cbn. reflexivity.
+    destruct IHFinite.
+      right. apply Odd_succ. assumption.
+      left. apply Even_succ. assumption.
+Qed.
+(* end hide *)
+
