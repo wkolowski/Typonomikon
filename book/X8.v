@@ -152,11 +152,21 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma sim_succ_succ :
+Lemma sim_succ :
   forall n m : conat, sim n m -> sim (succ n) (succ m).
 (* begin hide *)
 Proof.
   constructor. cbn. right. exists n, m. auto.
+Qed.
+(* end hide *)
+
+Lemma sim_succ_inv :
+  forall n m : conat, sim (succ n) (succ m) -> sim n m.
+(* begin hide *)
+Proof.
+  destruct 1 as [[[H1 H2] | (n' & m' & H1 & H2 & H3)]].
+    inv H1.
+    cbn in *. inv H1. inv H2.
 Qed.
 (* end hide *)
 
@@ -279,6 +289,28 @@ Proof.
     right. do 2 eexists. do 2 split; try reflexivity.
       apply sim_sym. apply add_zero_r.
     left. split; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sim_add_zero_l :
+  forall n m : conat,
+    sim (add n m) zero -> sim n zero.
+(* begin hide *)
+Proof.
+  destruct 1 as [[[H1 H2] | (n' & m' & H1 & H2 & H3)]].
+    destruct n as [[n' |]]; cbn in *.
+      inv H1.
+      constructor. left. cbn. auto.
+    inv H2.
+Qed.
+(* end hide *)
+
+Lemma sim_add_zero_r :
+  forall n m : conat,
+    sim (add n m) zero -> sim m zero.
+(* begin hide *)
+Proof.
+  intros. rewrite add_comm in H. apply sim_add_zero_l in H. assumption.
 Qed.
 (* end hide *)
 
@@ -908,66 +940,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Definition Sub (n m r : conat) : Prop :=
-  sim (add r m) n.
-
-Lemma Sub_nondet :
-  forall r : conat, Sub omega omega r.
-(* begin hide *)
-Proof.
-  unfold Sub.
-  cofix CH.
-  constructor. destruct r as [[r' |]]; cbn.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-(*
-Definition sub : Type :=
-  {f : conat -> conat -> conat |
-    forall n m r : conat, f n m = Sub n m r}.
-*)
-
-Definition sub : Type :=
-  {f : conat -> conat -> conat |
-    forall n m r : conat, Sub n m r -> f n m = r}.
-
-Lemma sub_cant_exist :
-  sub -> False.
-(* begin hide *)
-Proof.
-  destruct 1 as [f H].
-  assert (f omega omega = zero).
-    apply H. apply Sub_nondet.
-  assert (f omega omega = succ zero).
-    apply H. apply Sub_nondet.
-  rewrite H0 in H1. inv H1.
-Restart.
-  destruct 1 as [f H].
-  cut (zero = succ zero).
-    inversion 1.
-    rewrite <- (H _ _ _ (Sub_nondet (succ zero))).
-    rewrite <- (H _ _ _ (Sub_nondet zero)).
-    reflexivity.
-Qed.
-(* end hide *)
-
-(* begin hide *)
-Fail CoFixpoint mul (n m : conat) : conat :=
-{|
-    pred :=
-      match pred n with
-          | None => None
-          | Some n' =>
-              match pred m with
-                  | None => None
-                  | Some m' => Some (add m' (mul n' m))
-              end
-      end;
-|}.
-(* end hide *)
-
 (** Zdefiniuj predykaty [Finite] i [Infinite], które wiadomo co znaczą.
     Pokaż, że omega jest liczbą nieskończoną i że nie jest skończona,
     oraz że każda liczba nieskończona jest bipodobna do omegi. Pokaż
@@ -1126,7 +1098,7 @@ Lemma Odd_succ :
 Proof.
   cofix CH.
   constructor. destruct H as [[H | (n1 & n2 & H1 & H2 & H3)]].
-    left. apply sim_eq. apply sim_succ_succ. constructor.
+    left. apply sim_eq. apply sim_succ. constructor.
       left. cbn. auto.
     right. cbn. exists n, n1. intuition. replace n1 with (succ n2).
       apply CH. assumption.
@@ -1231,6 +1203,217 @@ Proof.
     constructor. right. exists (add n1 m), (add n2 m).
       cbn. rewrite H1, H2. auto.
 Qed.
+(* end hide *)
+
+(** Było już o dodawaniu, przydałoby się powiedzieć też coś o odejmowaniu.
+    Niestety, ale odejmowania liczb konaturalnych nie da się zdefiniować
+    (a przynajmniej tak mi się wydaje). Nie jest to również coś, co można
+    bezpośrednio udowodnić. Jest to fakt żyjący na metapoziomie, czyli
+    mówiący coś o Coqu, a nie mówiący coś w Coqu. Jest jednak pewien
+    wewnętrzny sposób by upewnić się, że odejmowanie faktycznie nie jest
+    koszerne. *)
+
+Definition Sub (n m r : conat) : Prop :=
+  sim (add r m) n.
+
+(** W tym celu definiujemy relację [Sub], która ma reprezentować wykres
+    funkcji odejmującej, tzn. specyfikować, jaki jest związek argumentów
+    funkcji z jej wynikiem. *)
+
+Definition sub : Type :=
+  {f : conat -> conat -> conat |
+    forall n m r : conat, f n m = r <-> Sub n m r}.
+
+(** Dzięki temu możemy napisać precyzyjny typ, który powinna mieć nasza
+    funkcja - jest to funkcja biorąca dwie liczby konaturalne i zwracająca
+    liczbę konaturalną, która jest poprawna i pełna względem wykresu. *)
+
+Lemma Sub_nondet :
+  forall r : conat, Sub omega omega r.
+(* begin hide *)
+Proof.
+  unfold Sub.
+  cofix CH.
+  constructor. destruct r as [[r' |]]; cbn.
+    right. do 2 eexists. intuition.
+    right. do 2 eexists. intuition.
+Qed.
+(* end hide *)
+
+(** Niestety mimo, że definicja relacji [Sub] jest tak oczywista, jak to
+    tylko możliwe, relacja ta nie jest wykresem żadnej funkcji, gdyż jest
+    niedeterministyczna. *)
+
+Lemma sub_cant_exist :
+  sub -> False.
+(* begin hide *)
+Proof.
+  destruct 1 as [f H].
+  assert (f omega omega = zero).
+    apply H. apply Sub_nondet.
+  assert (f omega omega = succ zero).
+    apply H. apply Sub_nondet.
+  rewrite H0 in H1. inv H1.
+Qed.
+(* end hide *)
+
+(** Problem polega na tym, że [omega - omega] może być dowolną liczbą
+    konaturalną. Bardziej obrazowo:
+    - Chcielibyśmy, żeby [n - n = 0]
+    - Chcielibyśmy, żeby [(n + 1) - n = 1]
+    - Jednak dla [n = omega] daje to [omega - omega = 0] oraz
+      [omega - omega = 1], co prowadzi do sprzeczności *)
+
+(** Dzięki temu możemy skonkludować, że typ [sub] jest pusty, a zatem
+    pożądana przez nas funkcją odejmująca nie może istnieć.
+
+    Najbliższą odejmowaniu operacją, jaką możemy wykonać na liczbach
+    konaturalnych, jest odejmowanie liczby naturalnej od liczby
+    konaturalnej. *)
+
+(* begin hide *)
+Fixpoint subn (n : conat) (m : nat) : conat :=
+match pred n, m with
+    | None, _ => n
+    | _, 0 => n
+    | Some n', S m' => subn n' m'
+end.
+
+Fixpoint from_nat (n : nat) : conat :=
+match n with
+    | 0 => zero
+    | S n' => succ (from_nat n')
+end.
+
+Compute subn (from_nat 6) 5.
+(* end hide *)
+
+(* begin hide *)
+Goal
+  forall n m r1 r2 : conat,
+    Finite n -> Sub n m r1 -> Sub n m r2 -> sim r1 r2.
+Proof.
+  unfold Sub. intros.
+  revert m r1 r2 H0 H1.
+  induction H; intros.
+    apply sim_add_zero_l in H0. apply sim_add_zero_l in H1.
+      rewrite H0, H1. reflexivity.
+    destruct H0 as [[[H01 H02] | (r1' & m1 & H01 & H02 & H03)]],
+             H1 as [[[H11 H12] | (r2' & m2 & H11 & H12 & H13)]];
+    inv H02; inv H12.
+      constructor. inv H01. inv H11.
+      destruct r1 as [[r1'' |]], r2 as [[r2'' |]]; cbn in *.
+        inv H1. inv H2. right. exists r1'', r2''. intuition.
+          eapply IHFinite; eassumption.
+        inv H1. rewrite <- H13 in H03. admit.
+        inv H2. rewrite <- H03 in H13. admit.
+Abort.
+
+Definition sub' : Type :=
+  {f : conat -> conat -> conat |
+    forall n m r : conat, f n m = r -> Sub n m r}.
+(* end hide *)
+
+CoInductive Mul (n m r : conat) : Prop :=
+{
+    Mul' :
+      (n = zero /\ r = zero) \/
+      (m = zero /\ r = zero) \/
+      exists n' m' r' : conat,
+        n = succ n' /\ m = succ m' /\ Mul n' m r' /\ sim r (add r' m);
+}.
+
+Ltac unmul H :=
+  destruct H as [H]; decompose [or and ex] H; clear H; subst.
+
+Lemma Mul_zero_l :
+  forall n r : conat, Mul zero n r -> sim r zero.
+(* begin hide *)
+Proof.
+  intros. unmul H.
+    1-2: reflexivity.
+    inv H1.
+Qed.
+(* end hide *)
+
+Lemma Mul_zero_r:
+  forall n r : conat, Mul n zero r -> sim r zero.
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros. unmul H.
+    1-2: reflexivity.
+    inv H0.
+Qed.
+(* end hide *)
+
+Lemma Mul_one_l :
+  forall n r : conat, Mul (succ zero) n r -> sim n r.
+(* begin hide *)
+Proof.
+  intros. unmul H.
+    inv H1.
+    reflexivity.
+    inv H1. apply Mul_zero_l in H2.
+      rewrite (sim_eq H2) in H4. rewrite add_zero_l in H4.
+      rewrite H4. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Mul_one_r :
+  forall n r : conat, Mul n (succ zero) r -> sim n r.
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros. unmul H.
+    reflexivity.
+    inv H0.
+    constructor. destruct r as [[r' |]]; cbn in *.
+      right. exists x, r'. intuition. apply CH. inv H0.
+        rewrite add_succ_r', (sim_eq (add_zero_r _)) in H4.
+        apply sim_succ_inv in H4. rewrite (sim_eq H4). assumption.
+      inv H0. rewrite add_succ_r' in H4. apply sim_eq in H4. inv H4.
+Qed.
+(* end hide *)
+
+Lemma Mul_det :
+  forall n m r1 r2 : conat, Mul n m r1 -> Mul n m r2 -> sim r1 r2.
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros. unmul H.
+    apply Mul_zero_l in H0. symmetry. assumption.
+    apply Mul_zero_r in H0. symmetry. assumption.
+    unmul H0.
+      inv H1.
+      inv H.
+      inv H. inv H1. rewrite add_succ_r' in H5. rewrite add_succ_r' in H6.
+        rewrite (sim_eq H5), (sim_eq H6). apply sim_succ.
+        replace _ with (sim x1 x4).
+          eapply CH; eassumption.
+Admitted.
+(* end hide *)
+
+Lemma Mul_comm :
+  forall n m r : conat, Mul n m r -> Mul m n r.
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros. unmul H.
+    constructor. right. left. auto.
+    constructor. left. auto.
+    constructor. do 2 right. exists x0, x, x1. intuition.
+Admitted.
+(* end hide *)
+
+Lemma Mul_assoc :
+  forall a b c d r1 r2 s1 s2 : conat,
+    Mul a b r1 -> Mul r1 c r2 ->
+    Mul b c s1 -> Mul a s1 s2 -> sim r2 s2.
+(* begin hide *)
+Proof.
+
+Admitted.
 (* end hide *)
 
 (* begin hide *)
