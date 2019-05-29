@@ -1,14 +1,6 @@
 Require Import List.
 Import ListNotations.
 
-Inductive sorted {A : Type} (R : A -> A -> Prop) : list A -> Prop :=
-    | nil_sorted : sorted R nil
-    (* REST *).
-
-SearchAbout le.
-
-Check [2; 3; 1].
-
 Inductive BTree (A : Type) : Type :=
     | Empty : BTree A
     | Node : A -> BTree A -> BTree A -> BTree A.
