@@ -2,6 +2,10 @@
 
 Require Import book.X3.
 
+(** Ten rozdział będzie o kolistach, czyli koinduktywnych odpowiednikach
+    list różniących się od nich tym, że mogą być potencjalnie
+    nieskończone. *)
+
 CoInductive coList (A : Type) : Type :=
 {
     uncons : option (A * coList A);
@@ -9,23 +13,21 @@ CoInductive coList (A : Type) : Type :=
 
 Arguments uncons {A}.
 
-(** Zdefiniuj [conil], czyli kolistę pustą, oraz [cocons], czyli funkcję,
-    która dokleja do kolisty nową głowę. *)
+(** Przydatny będzie następujący, dość oczywisty fakt dotyczący równości
+    kolist. *)
 
+Lemma eq_uncons :
+  forall (A : Type) (l1 l2 : coList A),
+    uncons l1 = uncons l2 -> l1 = l2.
 (* begin hide *)
-Definition conil {A : Type} : coList A :=
-{|
-    uncons := None;
-|}.
-
-Definition cocons {A : Type} (h : A) (t : coList A) : coList A :=
-{|
-    uncons := Some (h, t);
-|}.
+Proof.
+  destruct l1, l2. cbn. intro. rewrite H. reflexivity.
+Qed.
 (* end hide *)
 
 (** Zdefiniuj relację bipodobieństwa dla kolist. Udowodnij, że jest ona
-    relacją równoważności. *)
+    relacją równoważności. Z powodu konfliktu nazw bipodobieństwo póki
+    co nazywać się będzie [lsim]. *)
 
 (* begin hide *)
 CoInductive lsim {A : Type} (l1 l2 : coList A) : Prop :=
@@ -42,14 +44,6 @@ Hint Constructors lsim.
 
 Axiom eq_lsim :
   forall (A : Type) (l1 l2 : coList A), lsim l1 l2 -> l1 = l2.
-
-Lemma eq_uncons :
-  forall (A : Type) (l1 l2 : coList A),
-    uncons l1 = uncons l2 -> l1 = l2.
-Proof.
-  destruct l1, l2. cbn. intro. rewrite H. reflexivity.
-Qed.
-
 (* end hide *)
 
 Lemma lsim_refl :
@@ -93,8 +87,64 @@ Proof.
 Qed.
 (* end hide *)
 
+(** Przyda się też instancja klasy [Equivalence], żebyśmy przy dowodzeniu
+    o [lsim] mogli używać taktyk [reflexivity], [symmetry] oraz [rewrite]. *)
+
+Instance Equivalence_lsim (A : Type) : Equivalence (@lsim A).
+Proof.
+  esplit; red.
+    apply lsim_refl.
+    apply lsim_symm.
+    apply lsim_trans.
+Defined.
+
+(** Zdefiniuj [conil], czyli kolistę pustą, oraz [cocons], czyli funkcję,
+    która dokleja do kolisty nową głowę. Udowodnij, że [cocons] zachowuje
+    i odbija bipodobieństwo. *)
+
+(* begin hide *)
+Definition conil {A : Type} : coList A :=
+{|
+    uncons := None;
+|}.
+
+Definition cocons {A : Type} (h : A) (t : coList A) : coList A :=
+{|
+    uncons := Some (h, t);
+|}.
+(* end hide *)
+
+Lemma lsim_cocons :
+  forall (A : Type) (x y : A) (l1 l2 : coList A),
+    x = y -> lsim l1 l2 -> lsim (cocons x l1) (cocons y l2).
+(* begin hide *)
+Proof.
+  constructor. cbn. right. do 4 eexists. eauto.
+Qed.
+(* end hide *)
+
+Lemma lsim_cocons_inv :
+  forall (A : Type) (x y : A) (l1 l2 : coList A),
+    lsim (cocons x l1) (cocons y l2) -> x = y /\ lsim l1 l2.
+(* begin hide *)
+Proof.
+  intros. destruct H; decompose [or ex and] lsim'0; clear lsim'0; cbn in *.
+    inv H0.
+    inv H0. inv H. auto.
+Qed.
+(* end hide *)
+
+(** Przygodę z funkcjami na kolistach zaczniemy od długości. Tak jak zwykła,
+    induktywna lista ma długość wyrażającą się liczbą naturalną, tak też i
+    długość kolisty można wyrazić za pomocą liczby konaturalnej.
+
+    Napisz funkcję [len], która oblicza długość kolisty. Pokaż, że
+    bipodobne kolisty mają tę samą długość. Długość kolisty pustej
+    oraz [cocons]a powinny być oczywiste. *)
+
 Require Import X7.
 
+(* begin hide *)
 CoFixpoint len {A : Type} (l : coList A) : conat :=
 {|
     pred :=
@@ -103,6 +153,39 @@ CoFixpoint len {A : Type} (l : coList A) : conat :=
           | Some (_, t) => Some (len t)
       end;
 |}.
+(* end hide *)
+
+Lemma sim_len :
+  forall (A : Type) (l1 l2 : coList A),
+    lsim l1 l2 -> sim (len l1) (len l2).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor.
+  destruct H as [[[H1 H2] | (h1 & t1 & h2 & t2 & H1 & H2 & H3 & H4)]];
+  cbn in *.
+    rewrite H1, H2. left. split; reflexivity.
+    rewrite H1, H2. right. exists (len t1), (len t2). intuition.
+Qed.
+(* end hide *)
+
+Lemma len_conil :
+  forall A : Type,
+    len (@conil A) = zero.
+(* begin hide *)
+Proof.
+  intros. apply eq_pred. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma len_cocons :
+  forall (A : Type) (x : A) (l : coList A),
+    len (cocons x l) = succ (len l).
+(* begin hide *)
+Proof.
+  intros. apply eq_pred. cbn. reflexivity.
+Qed.
+(* end hide *)
 
 (** Zdefiniuj funkcję [snoc], która dostawia element na koniec kolisty. *)
 
@@ -117,12 +200,13 @@ CoFixpoint snoc {A : Type} (l : coList A) (x : A) : coList A :=
 |}.
 (* end hide *)
 
-Lemma len_cocons :
-  forall (A : Type) (x : A) (l : coList A),
-    len (cocons x l) = succ (len l).
+Lemma snoc_cocons :
+  forall (A : Type) (l : coList A) (x y : A),
+    lsim (snoc (cocons x l) y) (cocons x (snoc l y)).
 (* begin hide *)
 Proof.
-  intros. apply eq_pred. cbn. reflexivity.
+  cofix CH.
+  constructor. cbn. right. do 4 eexists. intuition.
 Qed.
 (* end hide *)
 
@@ -139,6 +223,11 @@ Proof.
 Qed.
 (* end hide *)
 
+(** Zdefiniuj funkcję [app], która skleja dwie kolisty. Czy jest to w ogóle
+    możliwe? Czy taka funkcja ma sens? Porównaj z przypadkiem sklejania
+    strumieni. *)
+
+(* begin hide *)
 CoFixpoint app {A : Type} (l1 l2 : coList A) : coList A :=
 {|
     uncons :=
@@ -147,6 +236,7 @@ CoFixpoint app {A : Type} (l1 l2 : coList A) : coList A :=
           | Some (h, t) => Some (h, app t l2)
       end
 |}.
+(* end hide *)
 
 Lemma app_conil_l :
   forall (A : Type) (l : coList A),
@@ -169,19 +259,13 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma app_assoc :
-  forall (A : Type) (l1 l2 l3 : coList A),
-    lsim (app (app l1 l2) l3) (app l1 (app l2 l3)).
+Lemma app_cocons_l :
+  forall (A : Type) (x : A) (l1 l2 : coList A),
+    lsim (app (cocons x l1) l2) (cocons x (app l1 l2)).
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l1 as [[[h1 t1] |]]; cbn.
-    right. do 4 eexists. intuition.
-    destruct l2 as [[[h2 t2] |]]; cbn.
-      right. do 4 eexists. intuition. apply lsim_refl.
-      destruct l3 as [[[h3 t3] |]]; cbn.
-        right. do 4 eexists. intuition. apply lsim_refl.
-        left. split; reflexivity.
+  constructor. cbn. right. do 4 eexists. intuition.
 Qed.
 (* end hide *)
 
@@ -208,7 +292,7 @@ Proof.
   constructor. destruct l1 as [[[h1 t1] |]]; cbn.
     right. do 4 eexists. intuition.
     destruct l2 as [[[h2 t2] |]]; cbn.
-      right. do 4 eexists. intuition. apply lsim_refl.
+      right. do 4 eexists. intuition.
       right. do 4 eexists. intuition.
 Qed.
 (* end hide *)
@@ -225,6 +309,27 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma app_assoc :
+  forall (A : Type) (l1 l2 l3 : coList A),
+    lsim (app (app l1 l2) l3) (app l1 (app l2 l3)).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct l1 as [[[h1 t1] |]]; cbn.
+    right. do 4 eexists. intuition.
+    destruct l2 as [[[h2 t2] |]]; cbn.
+      right. do 4 eexists. intuition.
+      destruct l3 as [[[h3 t3] |]]; cbn.
+        right. do 4 eexists. intuition.
+        left. split; reflexivity.
+Qed.
+(* end hide *)
+
+(** Zdefiniuj funkcję [lmap], która aplikuje funkcję [f : A -> B] do
+    każdego elementu kolisty.
+
+    TODO: wyklarować, dlaczego niektóre rzeczy mają "l" na początku nazwy *)
+
 (* begin hide *)
 CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=
 {|
@@ -234,32 +339,6 @@ CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=
         | Some (h, t) => Some (f h, lmap f t)
     end
 |}.
-(* end hide *)
-
-Lemma lmap_id :
-  forall (A : Type) (l : coList A),
-    lsim (lmap id l) l.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct l as [[[h t] |]]; cbn.
-    right. do 4 eexists. intuition.
-    left. split; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma lmap_compose :
-  forall (A B C : Type) (f : A -> B) (g : B -> C) (l : coList A),
-    lsim (lmap g (lmap f l)) (lmap (fun x => g (f x)) l).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct l as [[[h t]|]]; [right | left]; cbn.
-    exists (g (f h)), (lmap g (lmap f t)),
-           (g (f h)), (lmap (fun x => g (f x)) t).
-      repeat (split; [reflexivity | idtac]). apply CH.
-    do 2 split.
-Qed.
 (* end hide *)
 
 Lemma lmap_conil :
@@ -277,8 +356,9 @@ Lemma lmap_cocons :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. right. exists (f x), (lmap f l), (f x), (lmap f l).
-    cbn. intuition. apply lsim_refl.
+  constructor. right.
+  exists (f x), (lmap f l), (f x), (lmap f l).
+  cbn. intuition.
 Qed.
 (* end hide *)
 
@@ -316,8 +396,33 @@ Proof.
     right. do 4 eexists. eauto.
     destruct l2 as [[[h2 t2] |]]; cbn.
       right. exists (f h2), (lmap f t2), (f h2), (lmap f t2). intuition.
-        apply lsim_refl.
       left. split; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma lmap_id :
+  forall (A : Type) (l : coList A),
+    lsim (lmap id l) l.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct l as [[[h t] |]]; cbn.
+    right. do 4 eexists. intuition.
+    left. split; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma lmap_compose :
+  forall (A B C : Type) (f : A -> B) (g : B -> C) (l : coList A),
+    lsim (lmap g (lmap f l)) (lmap (fun x => g (f x)) l).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct l as [[[h t]|]]; [right | left]; cbn.
+    exists (g (f h)), (lmap g (lmap f t)),
+           (g (f h)), (lmap (fun x => g (f x)) t).
+      repeat (split; [reflexivity | idtac]). apply CH.
+    do 2 split.
 Qed.
 (* end hide *)
 
@@ -332,6 +437,9 @@ Proof.
     left. split; reflexivity.
 Qed.
 (* end hide *)
+
+(** Zdefiniuj funkcję [iterate], która tworzy nieskończoną kolistę przez
+    iterowanie funkcji [f] poczynając od pewnego ustalonego elementu. *)
 
 (* begin hide *)
 CoFixpoint iterate {A : Type} (f : A -> A) (x : A) : coList A :=
@@ -351,6 +459,10 @@ Proof.
 Qed.
 (* end hide *)
 
+(** Zdefiniuj funkcję [piterate], która tworzy kolistę przez iterowanie
+    funkcji częściowej [f : A -> option B] poczynając od pewnego ustalonego
+    elementu. *)
+
 (* begin hide *)
 CoFixpoint piterate {A : Type} (f : A -> option A) (x : A) : coList A :=
 {|
@@ -362,6 +474,161 @@ CoFixpoint piterate {A : Type} (f : A -> option A) (x : A) : coList A :=
 |}.
 (* end hide *)
 
+(** Zdefiniuj funkcję [zipW], która bierze funkcję [f : A -> B -> C] oraz
+    dwie kolisty [l1] i [l2] i zwraca kolistę, której elementy powstają z
+    połączenia odpowiadających sobie elementów [l1] i [l2] za pomocą funkcji
+    [f]. *)
+
+(* begin hide *)
+CoFixpoint zipW {A B C : Type}
+  (f : A -> B -> C) (l1 : coList A) (l2 : coList B) : coList C :=
+{|
+    uncons :=
+      match uncons l1, uncons l2 with
+          | Some (h1, t1), Some (h2, t2) => Some (f h1 h2, zipW f t1 t2)
+          | _, _ => None
+      end;
+|}.
+(* end hide *)
+
+Lemma zipW_conil_l :
+  forall (A B C : Type) (f : A -> B -> C) (l : coList B),
+    lsim (zipW f conil l) conil.
+(* begin hide *)
+Proof.
+  constructor. cbn. left. split; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma zipW_conil_r :
+  forall (A B C : Type) (f : A -> B -> C) (l1 : coList A) (l2 : coList B),
+    sim (len (zipW f l1 l2)) (min (len l1) (len l2)).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor.
+  destruct l1 as [[[h1 t1] |]],
+           l2 as [[[h2 t2] |]];
+  cbn.
+    right. exists (len (zipW f t1 t2)), (min (len t1) (len t2)). eauto.
+    1-3: left; split; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma len_zipW :
+  forall (A B C : Type) (f : A -> B -> C) (l1 : coList A) (l2 : coList B),
+    sim (len (zipW f l1 l2)) (min (len l1) (len l2)).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor.
+  destruct l1 as [[[h1 t1] |]],
+           l2 as [[[h2 t2] |]];
+  cbn.
+    right. exists (len (zipW f t1 t2)), (min (len t1) (len t2)). eauto.
+    1-3: left; split; reflexivity.
+Qed.
+(* end hide *)
+
+(** Napisz funkcję [scan], która przekształca [l : coList A] w kolistę sum
+    częściowych działania [f : B -> A -> B]. *)
+
+(* begin hide *)
+CoFixpoint scan
+  {A B : Type} (l : coList A) (f : B -> A -> B) (b : B) : coList B :=
+{|
+    uncons :=
+      match uncons l with
+          | None => None
+          | Some (h, t) => Some (b, scan t f (f b h))
+      end;
+|}.
+(* end hide *)
+
+Lemma scan_conil :
+  forall (A B : Type) (f : B -> A -> B) (b : B),
+    lsim (scan conil f b) conil.
+(* begin hide *)
+Proof.
+  constructor. cbn. left. split; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma scan_cocons :
+  forall (A B : Type) (x : A) (l : coList A) (f : B -> A -> B) (b : B),
+    lsim (scan (cocons x l) f b) (cocons b (scan l f (f b x))).
+(* begin hide *)
+Proof.
+  constructor. cbn. right. do 4 eexists.
+  repeat (reflexivity || split).
+Qed.
+(* end hide *)
+
+Lemma len_scan :
+  forall (A B : Type) (l : coList A) (f : B -> A -> B) (b : B),
+    sim (len (scan l f b)) (len l).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct l as [[[h t] |]]; cbn.
+    right. do 2 eexists. eauto.
+    left. split; reflexivity.
+Qed.
+(* end hide *)
+
+(** TODO: snoc, app, map, iterate, piterate. *)
+
+(** Napisz funkcję [intersperse], która działa analogicznie jak dla list. *)
+
+(* begin hide *)
+CoFixpoint intersperse {A : Type} (x : A) (l : coList A) : coList A :=
+{|
+    uncons :=
+      match uncons l with
+          | None => None
+          | Some (h, t) =>
+              match uncons t with
+                  | None => Some (h, t)
+                  | Some (h', t') => Some (h, cocons x (intersperse x t))
+              end
+      end;
+|}.
+(* end hide *)
+
+Lemma intersperse_conil :
+  forall (A : Type) (x : A),
+    lsim (intersperse x conil) conil.
+(* begin hide *)
+Proof.
+  constructor. cbn. left. split; reflexivity.
+Qed.
+(* end hide *)
+
+(** Pułapka: czy poniższe twierdzenie jest prawdziwe? *)
+
+Lemma len_intersperse :
+  forall (A : Type) (x : A) (l : coList A),
+    sim (len (intersperse x l)) (succ (add (len l) (len l))).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct l as [[[h1 [[[h2 t] |]]] |]]; cbn.
+    right. do 2 eexists. intuition. rewrite len_cocons. admit.
+    right. exists zero, (succ (succ zero)). intuition.
+      f_equal. apply eq_pred. cbn. reflexivity.
+      do 3 (f_equal; apply eq_pred; cbn). reflexivity.
+Abort.
+(* end hide *)
+
+(** Napisz rekurencyjną funkcję [splitAt]. [splitAt l n] zwraca
+    [Some (begin, x, rest)], gdzie [begin] jest listą reprezentującą
+    początkowy fragment kolisty [l] o długości [n], [x] to element
+    [l] znajdujący się na pozycji [n], zaś [rest] to kolista będącą
+    tym, co z kolisty [l] pozostanie po zabraniu z niej [l] oraz [x].
+    Jeżeli [l] nie ma fragmentu początkowego o długości [n], funkcja
+    [splitAt] zwraca [None]. *)
+
+(* begin hide *)
 Fixpoint splitAt
   {A : Type} (l : coList A) (n : nat) : option (list A * A * coList A) :=
 match n, uncons l with
@@ -373,6 +640,11 @@ match n, uncons l with
             | Some (start, mid, rest) => Some (h :: start, mid, rest)
         end
 end.
+(* end hide *)
+
+(** Funkcji [splitAt] można użyć do zdefiniowania całej gamy funkcji
+    działających na kolistach - rozbierających ją na kawałki, wstawiających,
+    zamieniających i usuwających elementy, etc. *)
 
 Definition nth {A : Type} (l : coList A) (n : nat) : option A :=
 match splitAt l n with
@@ -413,90 +685,12 @@ match splitAt l n with
     | Some (start, _, rest) => Some (app (fromList start) rest)
 end.
 
+(** Zdefiniuj predykaty [Finite] oraz [Infinite], które są spełnione,
+    odpowiednio, przez skończone i nieskończone kolisty. Zastanów się
+    dobrze, czy definicje powinny być induktywne, czy koinduktywne.
 
-(** TODO: zip, unzip *)
-
-(* begin hide *)
-CoFixpoint zipW {A B C : Type}
-  (f : A -> B -> C) (l1 : coList A) (l2 : coList B) : coList C :=
-{|
-    uncons :=
-      match uncons l1, uncons l2 with
-          | Some (h1, t1), Some (h2, t2) => Some (f h1 h2, zipW f t1 t2)
-          | _, _ => None
-      end;
-|}.
-(* end hide *)
-
-
-
-
-(*
-Require Import CoqBookPL.book.X7.
-
-CoFixpoint fromStream {A : Type} (s : Stream A) : coList A :=
-{|
-    uncons := Some (hd s, fromStream (tl s));
-|}.
-
-Lemma Infinite_splitAt :
-  forall (A : Type) (n : nat) (l : coList A),
-    Infinite l ->
-      exists (start : list A) (mid : A) (rest : coList A),
-        splitAt l n = Some (start, mid, rest).
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; intros.
-    destruct H. rewrite p. exists [], h, t. reflexivity.
-    destruct l as [[[h t] |]].
-      destruct H. destruct (IHn' _ H) as (start & mid & rest & spec).
-        exists (h :: start), mid, rest. cbn. inversion p. rewrite spec.
-        reflexivity.
-      inversion H. inversion p.
-Qed.
-(* end hide *)
-*)
-
-(** TODO: modyfikacje *)
-
-(*
-CoFixpoint takeWhile {A : Type} (f : A -> bool) (l : coList A) : coList A :=
-{|
-    uncons :=
-      match uncons l with
-          | None => None
-          | Some (h, t) =>
-              if f h then Some (h, takeWhile f t) else takeWhile f t
-      end;
-|}.
-*)
-
-(* begin hide *)
-CoFixpoint scan
-  {A B : Type} (l : coList A) (f : B -> A -> B) (b : B) : coList B :=
-{|
-    uncons :=
-      match uncons l with
-          | None => None
-          | Some (h, t) => Some (b, scan t f (f b h))
-      end;
-|}.
-(* end hide *)
-
-(* begin hide *)
-CoFixpoint intersperse {A : Type} (x : A) (l : coList A) : coList A :=
-{|
-    uncons :=
-      match uncons l with
-          | None => None
-          | Some (h, t) =>
-              match uncons t with
-                  | None => Some (h, t)
-                  | Some (h', t') => Some (h, cocons x (intersperse x t))
-              end
-      end;
-|}.
-(* end hide *)
+    Udowodnij własności tych predykatów oraz sprawdź, które kolisty
+    i operacje je spełniają. *)
 
 (* begin hide *)
 Inductive Finite {A : Type} : coList A -> Prop :=
@@ -708,21 +902,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Infinite_splitAt :
-  forall (A : Type) (n : nat) (l : coList A),
-    Infinite l ->
-      exists (start : list A) (x : A) (rest : coList A),
-        splitAt l n = Some (start, x, rest).
-(* begin hide *)
-Proof.
-  induction n as [| n']; cbn; intros.
-    destruct H.
-      rewrite p. exists [], h, t. reflexivity.
-      destruct H. rewrite p. destruct (IHn' _ H) as (start & x & rest & IH).
-        rewrite IH. exists (h :: start), x, rest. reflexivity.
-Qed.
-(* end hide *)
-
 Lemma Finite_zipW_l :
   forall (A B C : Type) (f : A -> B -> C) (l1 : coList A) (l2 : coList B),
     Finite l1 -> Finite (zipW f l1 l2).
@@ -782,6 +961,28 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Infinite_splitAt :
+  forall (A : Type) (n : nat) (l : coList A),
+    Infinite l ->
+      exists (start : list A) (x : A) (rest : coList A),
+        splitAt l n = Some (start, x, rest).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    destruct H.
+      rewrite p. exists [], h, t. reflexivity.
+      destruct H. rewrite p. destruct (IHn' _ H) as (start & x & rest & IH).
+        rewrite IH. exists (h :: start), x, rest. reflexivity.
+Qed.
+(* end hide *)
+
+(** Zdefiniuj predykaty [Exists P] oraz [Forall P], które są spełnione
+    przez kolisty, których odpowiednio jakiś/wszystkie elementy spełniają
+    predykat [P]. Zastanów się dobrze, czy definicje powinny być induktywne,
+    czy koinduktywne.
+
+    Sprawdź, które z praw de Morgana zachodzą. *)
+
 Inductive Exists {A : Type} (P : A -> Prop) : coList A -> Prop :=
     | Exists_hd :
         forall (l : coList A) (h : A) (t : coList A),
@@ -797,3 +998,13 @@ CoInductive All {A : Type} (P : A -> Prop) (l : coList A) : Prop :=
       exists (h : A) (t : coList A),
         uncons l = Some (h, t) /\ P h /\ All P t;
 }.
+
+Lemma Exists_not_All :
+  forall (A : Type) (P : A -> Prop) (l : coList A),
+    Exists P l -> ~ All (fun x : A => ~ P x) l.
+(* begin hide *)
+Proof.
+  induction 1; destruct 1 as [[H' | (h' & t' & H1' & H2' & H3')]];
+  congruence.
+Qed.
+(* end hide *)
