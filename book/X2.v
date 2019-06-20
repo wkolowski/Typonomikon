@@ -423,7 +423,7 @@ Lemma mult_0_l :
   forall n : nat, mult 0 n = 0.
 (* begin hide *)
 Proof.
-  induction n; trivial.
+  cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -431,8 +431,8 @@ Lemma mult_0_r :
   forall n : nat, mult n 0 = 0.
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl.
-    trivial.
+  induction n as [| n']; cbn.
+    reflexivity.
     assumption.
 Restart.
   induction n; trivial.
@@ -444,10 +444,10 @@ Lemma mult_1_l :
 (* begin hide *)
 Proof.
   destruct n as [| n'].
-    simpl. trivial.
-    simpl. rewrite plus_0_r. trivial.
+    cbn. trivial.
+    cbn. rewrite plus_0_r. trivial.
 Restart.
-  destruct n; simpl; try rewrite plus_0_r; trivial.
+  destruct n; cbn; try rewrite plus_0_r; trivial.
 Qed.
 (* end hide*)
 
@@ -456,10 +456,10 @@ Lemma mult_1_r :
 (* begin hide *)
 Proof.
   induction n.
-    simpl. trivial.
-    simpl. rewrite IHn. trivial.
+    cbn. trivial.
+    cbn. rewrite IHn. trivial.
 Restart.
-  induction n; simpl; try rewrite IHn; trivial.
+  induction n; cbn; try rewrite IHn; trivial.
 Qed.
 (* end hide *)
 
@@ -472,7 +472,7 @@ Proof.
     rewrite mult_0_l, mult_0_r. trivial.
     induction m as [| m'].
       rewrite mult_0_l, mult_0_r. trivial.
-      simpl in *. rewrite IHn', <- IHm', IHn'. simpl.
+      cbn in *. rewrite IHn', <- IHm', IHn'. simpl.
         do 2 rewrite plus_assoc. rewrite (plus_comm n' m'). trivial.
 Qed.
 (* begin hide *)
