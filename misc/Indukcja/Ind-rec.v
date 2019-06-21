@@ -21,7 +21,13 @@
 
   The real question is, however, different: does induction-recursion solve
   any problems at all? Could we define dom and f without it?
+
+  Another nice example of a werid function would be
+  f 0 = 0
+  f (S n) = f (f n)
 *)
+
+Require Import Omega.
 
 Variables
   (dom : nat -> Type)
@@ -77,8 +83,6 @@ Proof.
     intros. right. exists H, d1, d2. reflexivity.
 Defined.
 
-Require Import Omega.
-
 Lemma f_spec :
   forall (n : nat) (d : dom n),
     n <= 100 -> f n d = 91.
@@ -87,15 +91,15 @@ Proof.
     intros n H H'. omega.
     intros n H d1 d2 IH1 IH2 _.
       destruct (dom_inv _ d1) as [[H' eq] | (H' & d1' & d2' & eq)].
-        Focus 2. rewrite f_eq2. apply IH2. rewrite IH1.
-          omega.
-          assumption.
         destruct (dom_inv _ d2) as [[H'' eq'] | (H'' & d1'' & d2'' & eq')].
-          Focus 2. rewrite f_eq2. apply IH2. assumption.
-            rewrite f_eq2, eq', f_eq1, eq, f_eq1 in *.
+          rewrite f_eq2, eq', f_eq1, eq, f_eq1 in *.
             clear IH1 eq eq' H' H''.
             (* Either n = 100 and then 100 + 11 - 10 - 10 = 111 - 20 = 91
                or n < 100 and then n + 11 - 10 = n + 1 <= 100 and the
                result follows from IH2. omega knows this *)
             omega.
+          rewrite f_eq2. apply IH2. assumption.
+        rewrite f_eq2. apply IH2. rewrite IH1.
+          omega.
+          assumption.
 Defined.
