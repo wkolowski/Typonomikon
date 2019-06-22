@@ -3392,3 +3392,257 @@ Proof.
     rewrite H. unfold succW. f_equal. admit.
 Admitted.
 (* end hide *)
+
+(** * Wyższe czary *)
+
+(** ** Indukcja-indukcja *)
+
+Unset Elimination Schemes.
+
+(** Najwyższy czas nauczyć się czegoś tak zaawansowanego, że nawet w Coqu
+    (pełnym przecież dziwnych rzeczy) tego nie ma i nie zapowiada się na
+    to, że będzie. Mam tutaj na myśli mechanizm definiwania typów, którego
+    nazwa jest wybitnie mało oświecająca: indukcja-indukcja.
+
+    Zanim jednak wyjaśnimy, co to za stfur, przypomnijmy sobie różne,
+    coraz bardziej skomplikowane sposoby definiowania przez indukcję.
+    Przypomnimy sobie też, jak sformułować ich reguły rekursji oraz
+    indukcji. *)
+
+Module enum.
+
+Inductive I : Type :=
+    | c0 : I
+    | c1 : I
+    | c2 : I.
+
+(** Najprymitywniejszymi z typów induktywnych są enumeracje. Definiując je,
+    wymieniamy po prostu wszystkie ich elementy. *)
+
+Definition I_case_nondep_type : Type :=
+  forall P : Type, P -> P -> P -> I -> P.
+
+(** Reguła definiowania przez przypadki jest banalnie prosta: jeżeli w
+    jakimś inny typie [P] uda nam się znaleźć po jednym elemencie dla każdego
+    z elementów naszego typu [I], to możemy zrobić funkcję [I -> P]. *)
+
+Definition I_case_nondep : I_case_nondep_type :=
+  fun (P : Type) (c0' c1' c2' : P) (i : I) =>
+  match i with
+      | c0 => c0'
+      | c1 => c1'
+      | c2 => c2'
+  end.
+
+(** Regułę zdefiniować możemy za pomocą dopasowania do wzorca. *)
+
+Definition I_case_dep_type : Type :=
+  forall (P : I -> Type) (c0' : P c0) (c1' : P c1) (c2' : P c2),
+    forall i : I, P i.
+
+(** Zależną regułę definiowania przez przypadki możemy uzyskać z poprzedniej
+    uzależniając przeciwdziedzinę [P] od dziedziny. *)
+
+Definition I_case_dep : I_case_dep_type :=
+  fun (P : I -> Type) (c0' : P c0) (c1' : P c1) (c2' : P c2) (i : I) =>
+  match i with
+      | c0 => c0'
+      | c1 => c1'
+      | c2 => c2'
+  end.
+
+(** Definicja, jak widać, jest taka sama jak poprzednio, więc obliczeniowo
+    obie reguły zachowują się tak samo. Różnica leży jedynie w typach -
+    druga reguła jest ogólniejsza. *)
+
+End enum.
+
+(* TODO: omówić resztę przykładów. *)
+
+Module rec.
+
+Inductive I : Type :=
+    | x : I -> I
+    | D : I -> I.
+
+Definition I_rec_type : Type :=
+  forall P : Type,  (P -> P) -> (P -> P) -> I -> P.
+
+Fixpoint I_rec (P : Type) (x' : P -> P) (D' : P -> P) (i : I) : P :=
+match i with
+    | x i' => x' (I_rec P x' D' i')
+    | D i' => D' (I_rec P x' D' i')
+end.
+
+Definition I_ind_type : Type :=
+  forall (P : I -> Type)
+    (x' : forall i : I, P i -> P (x i))
+    (D' : forall i : I, P i -> P (D i)),
+      forall i : I, P i.
+
+Fixpoint I_ind (P : I -> Type)
+  (x' : forall i : I, P i -> P (x i)) (D' : forall i : I, P i -> P (D i))
+  (i : I) : P i :=
+match i with
+    | x i' => x' i' (I_ind P x' D' i')
+    | D i' => D' i' (I_ind P x' D' i')
+end.
+
+End rec.
+
+Module param.
+
+Inductive I (A B : Type) : Type :=
+    | c0 : A -> I A B
+    | c1 : B -> I A B
+    | c2 : A -> B -> I A B.
+
+Arguments c0 {A B} _.
+Arguments c1 {A B} _.
+Arguments c2 {A B} _ _.
+
+Definition I_case_nondep_type : Type :=
+  forall (A B P : Type) (c0' : A -> P) (c1' : B -> P) (c2' : A -> B -> P),
+    I A B -> P.
+
+Definition I_case_nondep
+  (A B P : Type) (c0' : A -> P) (c1' : B -> P) (c2' : A -> B -> P)
+  (i : I A B) : P :=
+match i with
+    | c0 a => c0' a
+    | c1 b => c1' b
+    | c2 a b => c2' a b
+end.
+
+Definition I_case_dep_type : Type :=
+  forall (A B : Type) (P : I A B -> Type)
+    (c0' : forall a : A, P (c0 a))
+    (c1' : forall b : B, P (c1 b))
+    (c2' : forall (a : A) (b : B), P (c2 a b)),
+      forall i : I A B, P i.
+
+Definition I_case_dep
+  (A B : Type) (P : I A B -> Type)
+  (c0' : forall a : A, P (c0 a))
+  (c1' : forall b : B, P (c1 b))
+  (c2' : forall (a : A) (b : B), P (c2 a b))
+  (i : I A B) : P i :=
+match i with
+    | c0 a => c0' a
+    | c1 b => c1' b
+    | c2 a b => c2' a b
+end.
+
+End param.
+
+Module mutual.
+
+Inductive Smok : Type :=
+    | Wysuszony : Zmok -> Smok
+
+with Zmok : Type :=
+    | Zmoczony : Smok -> Zmok.
+
+Definition Smok_rec_type : Type :=
+  forall S Z : Type, (Z -> S) -> (S -> Z) -> Smok -> S.
+
+Definition Zmok_rec_type : Type :=
+  forall S Z : Type, (Z -> S) -> (S -> Z) -> Zmok -> Z.
+
+Fixpoint Smok_rec
+  (S Z : Type) (Wy : Z -> S) (Zm : S -> Z) (smok : Smok) : S :=
+match smok with
+    | Wysuszony zmok => Wy (Zmok_rec S Z Wy Zm zmok)
+end
+
+with Zmok_rec
+  (S Z : Type) (Wy : Z -> S) (Zm : S -> Z) (zmok : Zmok) : Z :=
+match zmok with
+    | Zmoczony smok => Zm (Smok_rec S Z Wy Zm smok)
+end.
+
+Definition Smok_ind_type : Type :=
+  forall (S : Smok -> Type) (Z : Zmok -> Type)
+    (Wy : forall zmok : Zmok, Z zmok -> S (Wysuszony zmok))
+    (Zm : forall smok : Smok, S smok -> Z (Zmoczony smok)),
+      forall smok : Smok, S smok.
+
+Definition Zmok_ind_type : Type :=
+  forall (S : Smok -> Type) (Z : Zmok -> Type)
+    (Wy : forall zmok : Zmok, Z zmok -> S (Wysuszony zmok))
+    (Zm : forall smok : Smok, S smok -> Z (Zmoczony smok)),
+      forall zmok : Zmok, Z zmok.
+
+Fixpoint Smok_ind
+  (S : Smok -> Type) (Z : Zmok -> Type)
+  (Wy : forall zmok : Zmok, Z zmok -> S (Wysuszony zmok))
+  (Zm : forall smok : Smok, S smok -> Z (Zmoczony smok))
+  (smok : Smok) : S smok :=
+match smok with
+    | Wysuszony zmok => Wy zmok (Zmok_ind S Z Wy Zm zmok)
+end
+
+with Zmok_ind
+  (S : Smok -> Type) (Z : Zmok -> Type)
+  (Wy : forall zmok : Zmok, Z zmok -> S (Wysuszony zmok))
+  (Zm : forall smok : Smok, S smok -> Z (Zmoczony smok))
+  (zmok : Zmok) : Z zmok :=
+match zmok with
+    | Zmoczony smok => Zm smok (Smok_ind S Z Wy Zm smok)
+end.
+
+End mutual.
+
+Module index.
+
+Inductive I : nat -> Type :=
+    | c0 : bool -> I 0
+    | c42 : nat -> I 42.
+
+Definition I_case_nondep_type : Type :=
+  forall (P : nat -> Type) (c0' : bool -> P 0) (c42' : nat -> P 42),
+    forall n : nat, I n -> P n.
+
+Definition I_case_nondep
+  (P : nat -> Type) (c0' : bool -> P 0) (c42' : nat -> P 42)
+  {n : nat} (i : I n) : P n :=
+match i with
+    | c0 b => c0' b
+    | c42 n => c42' n
+end.
+
+Definition I_case_dep_type : Type :=
+  forall (P : forall n : nat, I n -> Type)
+    (c0' : forall b : bool, P 0 (c0 b))
+    (c42' : forall n : nat, P 42 (c42 n)),
+      forall (n : nat) (i : I n), P n i.
+
+Definition I_case_dep
+  (P : forall n : nat, I n -> Type)
+  (c0' : forall b : bool, P 0 (c0 b))
+  (c42' : forall n : nat, P 42 (c42 n))
+  (n : nat) (i : I n) : P n i :=
+match i with
+    | c0 b => c0' b
+    | c42 n => c42' n
+end.
+
+End index.
+
+Module ind_ind.
+
+Fail
+
+Inductive slist {A : Type} (R : A -> A -> Prop) : Type :=
+    | snil : slist R
+    | scons : forall (h : A) (t : slist A), sle h t -> slist A
+
+with sle {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
+    | sle_snil : forall x : A, sle x snil
+    | sle_scons :
+        forall (h : A) (t : slist A) (p : sle h t) (x : A),
+          R x h -> sle x (scons h t p).
+
+(* ===> The reference slist was not found in the current environment. *)
+
+End ind_ind.

@@ -1,17 +1,21 @@
 (**
 
   If there was induction-induction in Coq, we could use it to define a type
-  of sorted lists like this:
+  of sorted lists like this: *)
 
-Inductive slist {A : Type} (R : A -> A -> Prop) : Type :=
-    | snil : slist R
-    | scons : forall (h : A) (t : slist A), sle h t -> slist A
+  Fail
 
-with sle {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
-    | sle_snil : forall x : A, sle x snil
-    | sle_scons :
-        forall (h : A) (t : slist A) (p : sle h t) (x : A),
-          R x h -> sle x (scons h t p).
+  Inductive slist {A : Type} (R : A -> A -> Prop) : Type :=
+      | snil : slist R
+      | scons : forall (h : A) (t : slist A), sle h t -> slist A
+
+  with sle {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
+      | sle_snil : forall x : A, sle x snil
+      | sle_scons :
+          forall (h : A) (t : slist A) (p : sle h t) (x : A),
+            R x h -> sle x (scons h t p).
+
+(*
 
   Not like we need to - we can of course do the same thing by first defining
   list and only then sortedness. But the goal of this file is to investigate

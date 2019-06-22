@@ -103,3 +103,10 @@ Proof.
           omega.
           assumption.
 Defined.
+
+Goal
+  forall n : nat, n <= 100 -> dom n.
+Proof.
+  destruct n; intro.
+    eapply dom_le100. omega. cbn. eapply dom_le100.
+Abort.

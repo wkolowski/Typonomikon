@@ -114,3 +114,12 @@ Proof.
         eapply graph_functional; eauto.
         subst. eapply graph_le100; eauto. apply IHd2. omega.
 Qed.
+
+(* It remains to prove that ... *)
+Lemma dom_total :
+  forall n : nat, dom n.
+Proof.
+  do 101 try (destruct n).
+    Focus 100. eright. omega. apply f_correct. constructor. omega.
+      cbn.
+Abort.
