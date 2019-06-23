@@ -3395,19 +3395,25 @@ Admitted.
 
 (** * Wyższe czary *)
 
-(** ** Indukcja-indukcja *)
-
-Unset Elimination Schemes.
-
 (** Najwyższy czas nauczyć się czegoś tak zaawansowanego, że nawet w Coqu
     (pełnym przecież dziwnych rzeczy) tego nie ma i nie zapowiada się na
     to, że będzie. Mam tutaj na myśli mechanizm definiwania typów, którego
-    nazwa jest wybitnie mało oświecająca: indukcja-indukcja.
+    nazwa jest wybitnie mało oświecająca: indukcja-indukcja. *)
 
-    Zanim jednak wyjaśnimy, co to za stfur, przypomnijmy sobie różne,
+Unset Elimination Schemes.
+
+(** Powyższa komenda mówi Coqowi, żeby nie generował automatycznie reguł
+    indukcji. Przyda nam się ona, by uniknąć konfliktów nazw z regułami,
+    które będziemy pisać ręcznie. *)
+
+(** ** Przypomnienie *)
+
+(** Zanim jednak wyjaśnimy, co to za stfur, przypomnijmy sobie różne,
     coraz bardziej skomplikowane sposoby definiowania przez indukcję.
     Przypomnimy sobie też, jak sformułować ich reguły rekursji oraz
     indukcji. *)
+
+(** *** Enumeracje *)
 
 Module enum.
 
@@ -3457,7 +3463,7 @@ Definition I_case_dep : I_case_dep_type :=
 
 End enum.
 
-(* TODO: omówić resztę przykładów. *)
+(** *** Konstruktory rekurencjne *)
 
 Module rec.
 
@@ -3465,8 +3471,19 @@ Inductive I : Type :=
     | x : I -> I
     | D : I -> I.
 
+(** Typy induktywne stają się naprawdę induktywne, gdy konstruktory mogą
+    brać argumenty typu, który właśnie definiujemy. Dzięki temu możemy
+    tworzyć type, które mają nieskończenie wiele elementów, z których
+    każdy ma kształt takiego czy innego drzewa. *)
+
 Definition I_rec_type : Type :=
   forall P : Type,  (P -> P) -> (P -> P) -> I -> P.
+
+(** Typ reguły rekursji (czyli rekursora) tworzymy tak jak dla enumeracji:
+    jeżeli w typie [P] znajdziemy rzeczy o takim samym kształcie jak
+    konstruktory typu [I], to możemy zrobić funkcję [I -> P]. W naszym
+    przypadku oba konstruktory mają kształt [I -> I], więc do zdefiniowania
+    naszej funkcji musimy znaleźć odpowiadające im rzeczy typu [P -> P]. *)
 
 Fixpoint I_rec (P : Type) (x' : P -> P) (D' : P -> P) (i : I) : P :=
 match i with
@@ -3474,11 +3491,19 @@ match i with
     | D i' => D' (I_rec P x' D' i')
 end.
 
+(** Definicja rekursora jest prosta. Jeżeli wyobrazimy sobie [i : I] jako
+    drzewo, to węzły z etykietką [x] zastępujemy wywołaniem funkcji [x'],
+    a węzły z etykietką [D] zastępujemy wywołaniami funkcji [D]. *)
+
 Definition I_ind_type : Type :=
   forall (P : I -> Type)
     (x' : forall i : I, P i -> P (x i))
     (D' : forall i : I, P i -> P (D i)),
       forall i : I, P i.
+
+(** Reguła indukcji (czyli induktor - cóż za piękna nazwa!) powstaje z
+    reguły rekursji przez uzależnienie przeciwdziedziny [P] od dziedziny
+    [I]. *)
 
 Fixpoint I_ind (P : I -> Type)
   (x' : forall i : I, P i -> P (x i)) (D' : forall i : I, P i -> P (D i))
@@ -3488,7 +3513,24 @@ match i with
     | D i' => D' i' (I_ind P x' D' i')
 end.
 
+(** Podobnie jak poprzednio, implementacja reguły indukcji jest identyczna
+    jak rekursora, jedynie typy są bardziej ogólnej.
+
+    Uwaga: nazywam reguły nieco inaczej niż te autogenerowane przez Coqa.
+    Dla Coqa reguła indukcji dla [I] to nasze [I_ind] z [P : I -> Type]
+    zastąpionym przez [P : I -> Prop], zaś Coqowe [I_rec] odpowiadałoby
+    naszemu [I_ind] dla [P : I -> Set].
+
+    Jeżeli smuci cię burdel nazewniczy, to nie przejmuj się - kiedyś będzie
+    lepiej. Klasyfikacja reguł jest prosta:
+    - reguły mogą być zależne lub nie, w zależności od tego czy [P] zależy
+      od [I]
+    - reguły mogą być rekurencyjne lub nie
+    - reguły mogą być dla sortu [Type], [Prop] albo nawet [Set] *)
+
 End rec.
+
+(** *** Parametry *)
 
 Module param.
 
@@ -3501,9 +3543,19 @@ Arguments c0 {A B} _.
 Arguments c1 {A B} _.
 Arguments c2 {A B} _ _.
 
+(** Kolejną innowacją są parametry, których głównym zastosowaniem jest
+    polimorfizm. Dzięki parametrom możemy za jednym zamachem (tylko bez
+    skojarzeń z Islamem!) zdefiniować nieskończenie wiele typów, po jednym
+    dla każdego parametru. *)
+
 Definition I_case_nondep_type : Type :=
   forall (A B P : Type) (c0' : A -> P) (c1' : B -> P) (c2' : A -> B -> P),
     I A B -> P.
+
+(** Typ rekursora jest oczywisty: jeżeli znajdziemy rzeczy o kształtach
+    takich jak konstruktory [I] z [I] zastąpionym przez [P], to możemy
+    zrobić funkcję [I -> P]. Jako, że parametry są zawsze takie samo,
+    możemy skwantyfikować je na samym początku. *)
 
 Definition I_case_nondep
   (A B P : Type) (c0' : A -> P) (c1' : B -> P) (c2' : A -> B -> P)
@@ -3514,12 +3566,16 @@ match i with
     | c2 a b => c2' a b
 end.
 
+(** Implementacja jest banalna. *)
+
 Definition I_case_dep_type : Type :=
   forall (A B : Type) (P : I A B -> Type)
     (c0' : forall a : A, P (c0 a))
     (c1' : forall b : B, P (c1 b))
     (c2' : forall (a : A) (b : B), P (c2 a b)),
       forall i : I A B, P i.
+
+(** A regułę indukcję uzyskujemy przez uzależnienie [P] od [I]. *)
 
 Definition I_case_dep
   (A B : Type) (P : I A B -> Type)
@@ -3535,6 +3591,8 @@ end.
 
 End param.
 
+(** *** Indukcja wzajemna *)
+
 Module mutual.
 
 Inductive Smok : Type :=
@@ -3543,11 +3601,45 @@ Inductive Smok : Type :=
 with Zmok : Type :=
     | Zmoczony : Smok -> Zmok.
 
+(** Indukcja wzajemna pozwala definiować na raz wiele typów, które mogą
+    odwoływać się do siebie nawzajem. Cytując klasyków: smok to wysuszony
+    zmok, zmok to zmoczony smok. *)
+
+Definition Smok_case_nondep_type : Type :=
+  forall S : Type, (Zmok -> S) -> Smok -> S.
+
+Definition Zmok_case_nondep_type : Type :=
+  forall Z : Type, (Smok -> Z) -> Zmok -> Z.
+
+(** Reguła niezależnej analizy przypadków dla [Smok]a wygląda banalnie:
+    jeżeli ze [Zmok]a potrafimy wyprodukować [S], to ze [Smok]a też.
+    Dla [Zmok]a jest analogicznie. *)
+
+Definition Smok_case_nondep
+  (S : Type) (Wy : Zmok -> S) (smok : Smok) : S :=
+match smok with
+    | Wysuszony zmok => Wy zmok
+end.
+
+Definition Zmok_case_nondep
+  (Z : Type) (Zm : Smok -> Z) (zmok : Zmok) : Z :=
+match zmok with
+    | Zmoczony smok => Zm smok
+end.
+
+(** Implementacja jest banalna. *)
+
 Definition Smok_rec_type : Type :=
   forall S Z : Type, (Z -> S) -> (S -> Z) -> Smok -> S.
 
 Definition Zmok_rec_type : Type :=
   forall S Z : Type, (Z -> S) -> (S -> Z) -> Zmok -> Z.
+
+(** Typ rekursora jest jednak nieco bardziej zaawansowany. Żeby zdefiniować
+    funkcję typu [Smok -> S], musimy mieć nie tylko rzeczy w kształcie
+    konstruktorów [Smok]a, ale także w kształcie konstruktorów [Zmok]a,
+    gdyż rekurencyjna struktura obu typów jest ze sobą nierozerwalnie
+    związana. *)
 
 Fixpoint Smok_rec
   (S Z : Type) (Wy : Z -> S) (Zm : S -> Z) (smok : Smok) : S :=
@@ -3560,6 +3652,9 @@ with Zmok_rec
 match zmok with
     | Zmoczony smok => Zm (Smok_rec S Z Wy Zm smok)
 end.
+
+(** Implementacja wymaga rekursji wzajemnej, ale poza nie jest jakoś
+    wybitnie groźna. *)
 
 Definition Smok_ind_type : Type :=
   forall (S : Smok -> Type) (Z : Zmok -> Type)
@@ -3591,13 +3686,40 @@ match zmok with
     | Zmoczony smok => Zm smok (Smok_ind S Z Wy Zm smok)
 end.
 
+(** Mając rekursor, napisanie typu reguły indukcji jest banalne, podobnie
+    jak jego implementacja. *)
+
 End mutual.
+
+(** *** Indeksy *)
 
 Module index.
 
 Inductive I : nat -> Type :=
     | c0 : bool -> I 0
     | c42 : nat -> I 42.
+
+(** Ostatnią poznaną przez nas innowacją są typy indeksowane. Tutaj również
+    definiujemy za jednym zamachem (ekhem...) dużo typów, ale nie są one
+    niezależne jak w przypadku parametrów, lecz mogą od siebie wzajemnie
+    zależeć. Słowem, tak naprawdę definiujemy przez indukcję funkcję
+    typu [A_1 -> ... -> A_n -> Type/Prop], gdzie [A_i] to indeksy. *)
+
+Definition I_case_very_nondep_type : Type :=
+  forall (P : Type) (c0' : bool -> P) (c42' : nat -> P),
+    forall n : nat, I n -> P.
+
+Definition I_case_very_nondep
+  (P : Type) (c0' : bool -> P) (c42' : nat -> P)
+  {n : nat} (i : I n) : P :=
+match i with
+    | c0 b => c0' b
+    | c42 n => c42' n
+end.
+
+(** Możliwych reguł analizy przypadków mamy tutaj trochę więcej niż w
+    przypadku parametrów. W powyższej regule [P] nie zależy od indeksu
+    [n : nat]... *)
 
 Definition I_case_nondep_type : Type :=
   forall (P : nat -> Type) (c0' : bool -> P 0) (c42' : nat -> P 42),
@@ -3610,6 +3732,10 @@ match i with
     | c0 b => c0' b
     | c42 n => c42' n
 end.
+
+(** ... a w powyższej tak. Jako, że indeksy zmieniają się pomiędzy
+    konstruktorami, każdy z nich musi kwantyfikować je osobno (co akurat
+    nie jest potrzebne w naszym przykładzie, gdyż jest zbyt prosty). *)
 
 Definition I_case_dep_type : Type :=
   forall (P : forall n : nat, I n -> Type)
@@ -3627,22 +3753,84 @@ match i with
     | c42 n => c42' n
 end.
 
+(** Ogólnie reguła jest taka: reguła niezależna (pierwsza) nie zależy od
+    niczego, a zależna (trzecia) zależy od wszystkiego. Reguła druga jest
+    pośrednia - ot, take ciepłe kluchy. *)
+
 End index.
 
+(** ** Indukcja-indukcja *)
+
 Module ind_ind.
+
+(** Po powtórce nadszedł czas nowości. Zacznijmy od nazwy, która jest iście
+    kretyńska: indukcja-indukcja. Każdy rozsądny człowiek zgodzi się,
+    że dużo lepszą nazwą byłoby coś w stylu "indukcja wzajemna indeksowana".
+
+    Nazwa ta rzuca sporo światła: indukcja-indukcja to jednoczesne połączenie
+    i uogólnienie mechanizmów definiowania typów wzajemnie induktywnych oraz
+    indeksowanych typów induktywnych.
+
+    Typy wzajemnie induktywne mogą odnosić się do siebie nawzajem, ale co
+    to dokładnie znaczy? Ano to, że konstruktory każdego typu mogą brać
+    argumenty wszystkch innych typów definiowanych jednocześnie z nim. To
+    jest clou całej sprawy: konstruktory.
+
+    A co to ma do typów indeksowanych? Ano, zastanówmy się, co by się stało,
+    gdybyśmy chcieli zdefiniować przez wzajemną indukcję typ [A] oraz rodzinę
+    typów [B : A -> Type]. Otóż nie da się: konstruktory [A] mogą odnosić
+    się do [B] i vice-versa, ale [A] nie może być indeksem [B].
+
+    Indukcja-indukcja to coś, co... tam taram tam tam... pozwala właśnie na
+    to: możemy jednocześnie zdefiniować typ i indeksowaną nim rodzinę typów.
+    I wszystko to ukryte pod taką smutną nazwą... lobby teoriotypowe nie
+    chciało, żebyś się o tym dowiedział.
+
+    Czas na przykład! *)
 
 Fail
 
 Inductive slist {A : Type} (R : A -> A -> Prop) : Type :=
     | snil : slist R
-    | scons : forall (h : A) (t : slist A), sle h t -> slist A
+    | scons : forall (h : A) (t : slist A), ok h t -> slist A
 
-with sle {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
-    | sle_snil : forall x : A, sle x snil
-    | sle_scons :
-        forall (h : A) (t : slist A) (p : sle h t) (x : A),
-          R x h -> sle x (scons h t p).
+with ok {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
+    | ok_snil : forall x : A, ok x snil
+    | ok_scons :
+        forall (h : A) (t : slist A) (p : ok h t) (x : A),
+          R x h -> ok x (scons h t p).
 
 (* ===> The reference slist was not found in the current environment. *)
+
+(** Jako się już wcześniej rzekło, indukcja-indukcja nie jest wspierana
+    przez Coqa - powyższa definicja kończy się informacją o błędzie: Coq
+    nie widzi [slist], kiedy czyta indeksy [ok].
+
+    Będziemy zatem musieli poradzić sobie z przykładem jakoś inaczej -
+    po prostu damy go sobie za pomocą aksjomatów. Zanim jednak to zrobimy,
+    omówimy go dokładniej, gdyż deklarowanie aksjomatów jest niebezpieczne
+    i nie chcemy się pomylić.
+
+    Zamysłem powyższego przykładu było zdefiniowanie typu list posortowanych
+    [slist R], gdzie [R] pełni rolę relacji porządku, jednocześnie z relacją
+    [ok : A -> slist R -> Prop], gdzie [ok x l] wyraża, że dostawienie [x]
+    na początek listy [l] daje listę posortowaną.
+
+    Przykład jest oczywiście dość bezsensowny, bo dokładnie to samo można
+    osiągnąć bez używania indukcji-indukcji - wystarczy najpierw zdefiniować
+    listy, a potem relację bycia listą posortowaną, a na koniec zapakować
+    wszystko razem. Nie będziemy się tym jednak przejmować.
+
+    Definicja [slist R] jest następująca:
+    - [snil] to lista pusta
+    - [scons] robi listę z głowy [h] i ogona [t] pod warunkiem, że dostanie
+      też dowód zdania [ok h t] mówiącego, że można dostawić [h] na początek
+      listy [t] *)
+
+(** Definicja [ok] też jest banalna:
+    - każdy [x : A] może być dostawiony do pustej listy
+    - jeżeli mamy listę [scons h t p] oraz element [x], o którym wiemy,
+      że jest mniejsze od [h], tzn. [R x h], to [x] może zostać dostawiony
+      do listy [scons h t p] *)
 
 End ind_ind.
