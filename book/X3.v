@@ -19317,6 +19317,7 @@ Proof.
     destruct (p h) eqn: Hph.
       cbn. inv H. constructor. apply IHt.
 Abort.
+(* end hide *)
 
 Lemma Permutation_count_conv :
   forall (A : Type) (l1 l2 : list A),
@@ -19436,6 +19437,7 @@ Proof.
       rewrite ?Permutation_intersperse_replicate, H0.
         apply Permutation_app_l. assumption.
 Qed.
+(* end hide *)
 
 Lemma Permutation_pmap :
   forall (A B : Type) (f : A -> option B) (l1 l2 : list A),

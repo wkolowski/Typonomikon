@@ -3409,7 +3409,7 @@ Unset Elimination Schemes.
 (** ** Przypomnienie *)
 
 (** Zanim jednak wyjaśnimy, co to za stfur, przypomnijmy sobie różne,
-    coraz bardziej skomplikowane sposoby definiowania przez indukcję.
+    coraz bardziej innowacyjne sposoby definiowania przez indukcję.
     Przypomnimy sobie też, jak sformułować ich reguły rekursji oraz
     indukcji. *)
 
@@ -3767,9 +3767,9 @@ Module ind_ind.
     kretyńska: indukcja-indukcja. Każdy rozsądny człowiek zgodzi się,
     że dużo lepszą nazwą byłoby coś w stylu "indukcja wzajemna indeksowana".
 
-    Nazwa ta rzuca sporo światła: indukcja-indukcja to jednoczesne połączenie
-    i uogólnienie mechanizmów definiowania typów wzajemnie induktywnych oraz
-    indeksowanych typów induktywnych.
+    Ta alternatywna nazwa rzuca sporo światła: indukcja-indukcja to jednoczesne
+    połączenie i uogólnienie mechanizmów definiowania typów wzajemnie induktywnych
+    oraz indeksowanych typów induktywnych.
 
     Typy wzajemnie induktywne mogą odnosić się do siebie nawzajem, ale co
     to dokładnie znaczy? Ano to, że konstruktory każdego typu mogą brać
@@ -3804,7 +3804,9 @@ with ok {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
 
 (** Jako się już wcześniej rzekło, indukcja-indukcja nie jest wspierana
     przez Coqa - powyższa definicja kończy się informacją o błędzie: Coq
-    nie widzi [slist], kiedy czyta indeksy [ok].
+    nie widzi [slist] kiedy czyta indeksy [ok] właśnie dlatego, że nie
+    dopuszcza on możliwości jednoczesnego definiowania rodziny (w tym
+    wypadku relacji) [ok] wraz z jednym z jej indeksów, [slist].
 
     Będziemy zatem musieli poradzić sobie z przykładem jakoś inaczej -
     po prostu damy go sobie za pomocą aksjomatów. Zanim jednak to zrobimy,
@@ -3814,7 +3816,7 @@ with ok {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
     Zamysłem powyższego przykładu było zdefiniowanie typu list posortowanych
     [slist R], gdzie [R] pełni rolę relacji porządku, jednocześnie z relacją
     [ok : A -> slist R -> Prop], gdzie [ok x l] wyraża, że dostawienie [x]
-    na początek listy [l] daje listę posortowaną.
+    na początek listy posortowanej [l] daje listę posortowaną.
 
     Przykład jest oczywiście dość bezsensowny, bo dokładnie to samo można
     osiągnąć bez używania indukcji-indukcji - wystarczy najpierw zdefiniować
@@ -3823,14 +3825,218 @@ with ok {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
 
     Definicja [slist R] jest następująca:
     - [snil] to lista pusta
-    - [scons] robi listę z głowy [h] i ogona [t] pod warunkiem, że dostanie
-      też dowód zdania [ok h t] mówiącego, że można dostawić [h] na początek
-      listy [t] *)
+    - [scons] robi posortowaną listę z głowy [h] i ogona [t] pod warunkiem, że
+      dostanie też dowód zdania [ok h t] mówiącego, że można dostawić [h] na
+      początek listy [t] *)
 
 (** Definicja [ok] też jest banalna:
     - każdy [x : A] może być dostawiony do pustej listy
     - jeżeli mamy listę [scons h t p] oraz element [x], o którym wiemy,
-      że jest mniejsze od [h], tzn. [R x h], to [x] może zostać dostawiony
+      że jest mniejszy od [h], tzn. [R x h], to [x] może zostać dostawiony
       do listy [scons h t p] *)
+
+(** Jak powinny wyglądać reguły rekursji oraz indukcji? Na szczęście wciąż
+    działają schematy, które wypracowaliśmy dotychczas.
+
+    Reguła rekursji mówi, że jeżeli znajdziemy w typie [P] coś o kształcie
+    [slist R], a w relacji [Q] coś o kształcie [ok], to możemy zdefiniować
+    funkcję [slist R -> P] oraz [forall (x : A) (l : slist R), ok x l -> Q].
+
+    Regułe indukcji można uzyskać dodając tyle zależności, ile tylko zdołamy
+    unieść.
+
+    Zobaczmy więc, jak zrealizować to wszystko za pomocą aksjomatów. *)
+
+Axioms
+  (slist : forall {A : Type}, (A -> A -> Prop) -> Type)
+  (ok : forall {A : Type} {R : A -> A -> Prop}, A -> slist R -> Prop).
+
+(** Najpierw musimy zadeklarować [slist], gdyż wymaga tego typ [ok]. Obie
+    definicje wyglądają dokładnie tak, jak nagłówki w powyższej definicji
+    odrzuconej przez Coqa.
+
+    Widać też, że gdybyśmy chcieli zdefiniować rodziny [A] i [B], które są
+    nawzajem swoimi indeksami, to nie moglibyśmy tego zrobić nawet za pomocą
+    aksjomatów. Rodzi to pytanie o to, które dokładnie definicje przez
+    indukcję-indukcję są legalne. Odpowiedź brzmi: nie wiem, ale może kiedyś
+    się dowiem. *)
+
+Axioms
+  (snil : forall {A : Type} {R : A -> A -> Prop}, slist R)
+  (scons :
+    forall {A : Type} {R : A -> A -> Prop} (h : A) (t : slist R),
+      ok h t -> slist R)
+  (ok_snil :
+    forall {A : Type} {R : A -> A -> Prop} (x : A), ok x (@snil _ R))
+  (ok_scons :
+    forall
+      {A : Type} {R : A -> A -> Prop}
+      (h : A) (t : slist R) (p : ok h t)
+      (x : A), R x h -> ok x (scons h t p)).
+
+(** Następnie definiujemy konstruktory: najpierw konstruktory [slist], a potem
+    [ok]. Musimy to zrobić w tej kolejności, bo konstruktor [ok_snil] odnosi
+    się do [snil], a [ok_scons] do [scons].
+
+    Znowu widzimy, że gdyby konstruktory obu typów odnosiły się do siebie
+    nawzajem, to nie moglibyśmy zdefiniować takiego typu aksjomatycznie. *)
+
+Axiom
+  (ind : forall
+    (A : Type) (R : A -> A -> Prop)
+    (P : slist R -> Type)
+    (Q : forall (h : A) (t : slist R), ok h t -> Type)
+    (Psnil : P snil)
+    (Pscons :
+      forall (h : A) (t : slist R) (p : ok h t),
+        P t -> Q h t p -> P (scons h t p))
+    (Qok_snil : forall x : A, Q x snil (ok_snil x))
+    (Qok_scons :
+      forall
+        (h : A) (t : slist R) (p : ok h t)
+        (x : A) (H : R x h),
+          P t -> Q h t p -> Q x (scons h t p) (ok_scons h t p x H)),
+    {f : (forall l : slist R, P l) &
+    {g : (forall (h : A) (t : slist R) (p : ok h t), Q h t p) &
+      f snil = Psnil /\
+      (forall (h : A) (t : slist R) (p : ok h t),
+        f (scons h t p) = Pscons h t p (f t) (g h t p)) /\
+      (forall x : A,
+        g x snil (ok_snil x) = Qok_snil x) /\
+      (forall
+        (h : A) (t : slist R) (p : ok h t)
+        (x : A) (H : R x h),
+          g x (scons h t p) (ok_scons h t p x H) =
+          Qok_scons h t p x H (f t) (g h t p))
+    }}).
+
+(** Ugh, co za potfur. Spróbujmy rozłożyć go na czynniki pierwsze.
+
+    Przede wszystkim, żeby za dużo nie pisać, zobaczymy tylko regułę indukcji.
+    Teoretycznie powinny to być dwie reguły (tak jak w przypadku [Smok]a i
+    [Zmok]a) - jedna dla [slist] i jedna dla [ok], ale żeby za dużo nie
+    pisać, możemy zapisać je razem.
+
+    Typ [A] i relacja [R] są parametrami obu definicji, więc skwantyfikowane
+    są na samym początku. Nasza reguła pozwala nam zdefiniować przez wzajemną
+    rekursję dwie funkcje, [f : forall l : slist R, P l] oraz
+    [g : forall (h : A) (t : slist R) (p : ok h t), Q h t p]. Tak więc [P]
+    to kodziedzina [f], a [Q] - [g].
+
+    Teraz potrzebujemy rozważyć wszystkie możliwe przypadki - tak jak przy
+    pattern matchingu. Przypadek [snil] jest dość banalny. Przypadek [scons]
+    jest trochę cięższy. Przede wszystkim chcemy, żeby konkluzja była postaci
+    [P (scons h t p)], ale jak powinny wyglądać hipotezy indukcyjne?
+
+    Jedyna słuszna odpowiedź brzmi: odpowiadają one typom wszystkich możliwych
+    wywołań rekurencyjnych [f] i [g] na strukturalnych podtermach [scons h t p].
+    Jedynymi typami spełniającymi te warunki są [P t] oraz [Q h t p], więc
+    dajemy je sobie jako hipotezy indukcyjne.
+
+    Przypadki dla [Q] wyglądają podobnie: [ok_snil] jest banalne, a w przypadku
+    [ok_scons] konkluzja musi być jedynej słusznej postaci, a hipotezami
+    indukcyjnymi jest wszystko, co pasuje.
+
+    W efekcie otrzymujemy dwie funkcje, [f] i [g]. Tym razem następuje jednak
+    mały twist: ponieważ nasza definicja jest aksjomatyczna, zagwarantować
+    musimy sobie także reguły obliczania, które dotychczas były przemilczywane,
+    bo wynikały z definicji przez dopasowanie do wzorca. Teraz wszystkie te
+    "dopasowania" musimy napisać ręcznie w postaci odpowiednio skwantyfikowanych
+    równań. Widzimy więc, że [Psnil], [Pscons], [Qok_snil] i [Qok_scons]
+    odpowiadają klauzulom w dopasowaniu do wzorca.
+
+    Ufff... udało się. Tak spreparowaną definicją aksjomatyczną możemy się
+    jako-tako posługiwać: *)
+
+Definition rec'
+  {A : Type} {R : A -> A -> Prop}
+  (P : Type) (snil' : P) (scons' : A -> P -> P) :
+  {f : slist R -> P &
+    f snil = snil' /\
+    forall (h : A) (t : slist R) (p : ok h t),
+      f (scons h t p) = scons' h (f t)
+  }.
+Proof.
+  destruct
+  (
+    ind
+    A R
+    (fun _ => P) (fun _ _ _ => True)
+    snil' (fun h _ _ t _ => scons' h t)
+    (fun _ => I) (fun _ _ _ _ _ _ _ => I)
+  )
+  as (f & g & H1 & H2 & H3 & H4).
+  exists f. split.
+    exact H1.
+    exact H2.
+Defined.
+
+(** Możemy na przykład dość łatwo zdefiniować niezależnych rekursor tylko dla
+    [slist], nie odnoszący się w żaden sposób do [ok]. Widzimy jednak, że
+    "programowanie" w taki aksjomatyczny sposób jest dość ciężkie - zamiast
+    eleganckich dopasowań do wzorca musimy ręcznie wpisywać argumenty do
+    reguły indukcyjnej. *)
+
+Require Import List.
+Import ListNotations.
+
+Definition toList'
+  {A : Type} {R : A -> A -> Prop} :
+  {f : slist R -> list A &
+    f snil = [] /\
+    forall (h : A) (t : slist R) (p : ok h t),
+      f (scons h t p) = h :: f t
+  }.
+Proof.
+  exact (rec' (list A) [] cons).
+Defined.
+
+Definition toList
+  {A : Type} {R : A -> A -> Prop} (l : slist R) : list A :=
+match @toList' A R with
+    | existT _ f _ => f l
+end.
+
+(** Używająnie takieg rekursora jest już dużo prostsze, co ilustruje powyższy
+    przykład funkcji, która zapomina o tym, że lista jest posortowana i daje
+    nam zwykłą listę.
+
+    Przykładowe posortowane listy wyglądają tak: *)
+
+Definition slist_01 : slist le :=
+  scons 0
+    (scons 1
+      snil
+      (ok_snil 1))
+    (ok_scons 1 snil (ok_snil 1) 0 (le_S 0 0 (le_n 0))).
+
+(** Niezbyt piękna, prawda? *)
+
+Compute toList slist_01.
+
+(** Utrapieniem jest też to, że nasza funkcja się nie oblicza. Jest tak dlatego,
+    że została zdefiniowana za pomocą reguły indukcji, która jest aksjomatem.
+    Aksjomaty zaś, jak wiadomo (albo i nie - TODO) się nie obliczają.
+
+    Wyniku powyższego wywołania nie będę nawet wklejał, gdyż jest naprawdę
+    ohydny. *)
+
+Lemma toList_slist_01_result :
+  toList slist_01 = [0; 1].
+Proof.
+  unfold toList, slist_01.
+  destruct toList' as (f & H1 & H2).
+  rewrite 2!H2, H1. reflexivity.
+Qed.
+
+(** Najlepsze, co możemy osiągnąć, mając taką definicję, to udowodnienie, że
+    jej wynik faktycznie jest taki, jak się spodziewamy.
+
+    Cóż, to by było na tyle w temacie indukcji-indukcji. Brak Coqowego wsparcia
+    dla niej niestety wydatnie ogranicza praktyczne możliwości posługiwania się
+    nią. Jednak uszy do góry - istnieją już języki, które sobie z nią radzą.
+    Jednym z nich jest wspomniana we wstępie Agda, którą można znaleźć tu:
+    *)
+
 
 End ind_ind.
