@@ -122,4 +122,7 @@ Proof.
   do 101 try (destruct n).
     Focus 100. eright. omega. apply f_correct. constructor. omega.
       cbn.
-Abort.
+Admitted.
+
+Definition f_better (n : nat) : nat :=
+  f n (dom_total n).

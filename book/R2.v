@@ -3767,9 +3767,9 @@ Module ind_ind.
     kretyńska: indukcja-indukcja. Każdy rozsądny człowiek zgodzi się,
     że dużo lepszą nazwą byłoby coś w stylu "indukcja wzajemna indeksowana".
 
-    Ta alternatywna nazwa rzuca sporo światła: indukcja-indukcja to jednoczesne
-    połączenie i uogólnienie mechanizmów definiowania typów wzajemnie induktywnych
-    oraz indeksowanych typów induktywnych.
+    Ta alternatywna nazwa rzuca sporo światła: indukcja-indukcja to połączenie
+    i uogólnienie mechanizmów definiowania typów wzajemnie induktywnych oraz
+    indeksowanych typów induktywnych.
 
     Typy wzajemnie induktywne mogą odnosić się do siebie nawzajem, ale co
     to dokładnie znaczy? Ano to, że konstruktory każdego typu mogą brać
@@ -3929,21 +3929,21 @@ Axiom
     [P (scons h t p)], ale jak powinny wyglądać hipotezy indukcyjne?
 
     Jedyna słuszna odpowiedź brzmi: odpowiadają one typom wszystkich możliwych
-    wywołań rekurencyjnych [f] i [g] na strukturalnych podtermach [scons h t p].
-    Jedynymi typami spełniającymi te warunki są [P t] oraz [Q h t p], więc
-    dajemy je sobie jako hipotezy indukcyjne.
+    wywołań rekurencyjnych [f] i [g] na strukturalnych podtermach
+    [scons h t p]. Jedynymi typami spełniającymi te warunki są [P t] oraz
+    [Q h t p], więc dajemy je sobie jako hipotezy indukcyjne.
 
-    Przypadki dla [Q] wyglądają podobnie: [ok_snil] jest banalne, a w przypadku
+    Przypadki dla [Q] wyglądają podobnie: [ok_snil] jest banalne, a dla
     [ok_scons] konkluzja musi być jedynej słusznej postaci, a hipotezami
     indukcyjnymi jest wszystko, co pasuje.
 
     W efekcie otrzymujemy dwie funkcje, [f] i [g]. Tym razem następuje jednak
     mały twist: ponieważ nasza definicja jest aksjomatyczna, zagwarantować
-    musimy sobie także reguły obliczania, które dotychczas były przemilczywane,
+    musimy sobie także reguły obliczania, które dotychczas były zamilaczne,
     bo wynikały z definicji przez dopasowanie do wzorca. Teraz wszystkie te
-    "dopasowania" musimy napisać ręcznie w postaci odpowiednio skwantyfikowanych
-    równań. Widzimy więc, że [Psnil], [Pscons], [Qok_snil] i [Qok_scons]
-    odpowiadają klauzulom w dopasowaniu do wzorca.
+    "dopasowania" musimy napisać ręcznie w postaci odpowiednio
+    skwantyfikowanych równań. Widzimy więc, że [Psnil], [Pscons], [Qok_snil]
+    i [Qok_scons] odpowiadają klauzulom w dopasowaniu do wzorca.
 
     Ufff... udało się. Tak spreparowaną definicją aksjomatyczną możemy się
     jako-tako posługiwać: *)
@@ -4014,8 +4014,8 @@ Definition slist_01 : slist le :=
 
 Compute toList slist_01.
 
-(** Utrapieniem jest też to, że nasza funkcja się nie oblicza. Jest tak dlatego,
-    że została zdefiniowana za pomocą reguły indukcji, która jest aksjomatem.
+(** Utrapieniem jest też to, że nasza funkcja się nie oblicza. Jest tak, bo
+    została zdefiniowana za pomocą reguły indukcji, która jest aksjomatem.
     Aksjomaty zaś, jak wiadomo (albo i nie - TODO) się nie obliczają.
 
     Wyniku powyższego wywołania nie będę nawet wklejał, gdyż jest naprawdę
@@ -4032,11 +4032,181 @@ Qed.
 (** Najlepsze, co możemy osiągnąć, mając taką definicję, to udowodnienie, że
     jej wynik faktycznie jest taki, jak się spodziewamy.
 
-    Cóż, to by było na tyle w temacie indukcji-indukcji. Brak Coqowego wsparcia
-    dla niej niestety wydatnie ogranicza praktyczne możliwości posługiwania się
-    nią. Jednak uszy do góry - istnieją już języki, które sobie z nią radzą.
-    Jednym z nich jest wspomniana we wstępie Agda, którą można znaleźć tu:
-    *)
+    Cóż, to by było na tyle w temacie indukcji-indukcji. Brak Coqowego
+    wsparcia dla niej niestety wydatnie ogranicza praktyczne możliwości
+    posługiwania się nią. Jednak uszy do góry - istnieją już języki,
+    które sobie z nią radzą. Jednym z nich jest wspomniana we wstępie Agda,
+    którą można znaleźć tu:
+    https://agda.readthedocs.io/en/v2.6.0.1/ *)
 
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj dla list posortowanych funkcję [slen], która liczy ich długość.
+    Udowodnij oczywiste twierdzenie wiążące ze sobą [slen], [toList] oraz
+    [length]. *)
+
+(* begin hide *)
+
+Definition slen'
+  {A : Type} {R : A -> A -> Prop} :
+  {f : slist R -> nat &
+    f snil = 0 /\
+    forall (h : A) (t : slist R) (p : ok h t),
+      f (scons h t p) = S (f t)}.
+Proof.
+  exact (rec' nat 0 (fun _ n => S n)).
+Defined.
+
+Definition slen {A : Type} {R : A -> A -> Prop} (l : slist R) : nat :=
+match slen' with
+    | existT _ f _ => f l
+end.
+
+Lemma slen_toList_length :
+  forall {A : Type} {R : A -> A -> Prop} (l : slist R),
+    slen l = length (toList l).
+Proof.
+  intros A R.
+  eapply (projT1 (
+    ind A R (fun l => slen l = length (toList l))
+      (fun _ _ _ => True)
+      _ _
+      (fun _ => I)
+      (fun _ _ _ _ _ _ _ => I))).
+  Unshelve.
+  all: cbn; unfold slen, toList;
+  destruct slen' as (f & Hf1 & Hf2), toList' as (g & Hg1 & Hg2).
+    rewrite Hf1, Hg1. cbn. reflexivity.
+    intros. rewrite Hf2, Hg2, H. cbn. reflexivity.
+Qed.
+
+(* end hide *)
 
 End ind_ind.
+
+(** **** Ćwiczenie *)
+
+(** Typ drzew wyszukiwań binarnych [BST R], gdzie [R : A -> A -> Prop] jest
+    relacją porządku, składa się z drzew, które mogą być albo puste, albo być
+    węzłem przechowującym wartość [v : A] wraz z dwoma poddrzewami
+    [l r : BST R], przy czym [v] musi być [R]-większe, niż korzeń [l]
+    (chyba, że [l] jest puste) oraz [R]-mniejsze, niż korzeń [r] (chyba, że
+    [r] jest puste).
+
+    Użyj indukcji-indukcji, żeby zdefiniować jednocześnie typ [BST R] oraz
+    relację [ok], gdzie [ok v l r] jest spełnione, gdy wartość [v] może
+    utworzyć węzeł z poddrzewami [l] po lewej i [r] po prawej.
+
+    Najpierw napisz pseudodefinicję, a potem przetłumacz ją na odpowiedni
+    zestaw aksjomatów.
+
+    Następnie użyj swojej aksjomatycznej definicji, aby zdefiniować funkcję
+    [mirror], która tworzy lustrzane odbicie drzewa [b : BST R]. Zauważ, że
+    wynik musi być typu [BST (fun x y => R y x)], gdyż odbicie odwraca
+    porządek. *)
+
+(* begin hide *)
+
+Fail
+
+Inductive BST {A : Type} (R : A -> A -> Prop) : Type :=
+    | E : BST R
+    | N : forall (v : A) (l r : BST R), ok v l r -> BST R
+
+with ok {A : Type} {R : A -> A -> Prop} : A -> BST R -> BST R -> Prop :=
+    | ok_EE : forall v : A, ok v E E
+    | ok_EN :
+        forall (v vl : A) (ll lr : BST R),
+          R vl v -> ok v (N vl ll lr) E
+    | ok_NE :
+        forall (v vr : A) (rl rr : BST R),
+          R v vr -> ok v E (N vr rl rr)
+    | ok_NN :
+        forall (v vl vr : A) (ll lr rl rr : BST R),
+          R vl v -> R v vr -> ok v (N vl ll lr) (N vr rl rr).
+
+Fail
+
+Inductive BST {A : Type} (R : A -> A -> Prop) : Type :=
+    | E : BST R
+    | N : forall (v : A) (l r : BST R), okl v l -> okr v r -> BST R
+
+with okl {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
+    | okl_E : forall v : A, okl v E
+    | okl_N :
+        forall (v vl : A) (ll lr : BST R),
+          R vl v -> okl v (N vl ll lr)
+
+with okr {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
+    | okr_E : forall v : V, okr v E
+    | okr_N :
+        forall (v vr : A) (rl rr : BST R),
+          R v vr -> okr v (N vr rl rr).
+
+Definition inv {A : Type} (R : A -> A -> Prop) : A -> A -> Prop :=
+  fun x y => R y x.
+
+Fail
+
+Inductive BST {A : Type} (R : A -> A -> Prop) : Type :=
+    | E : BST R
+    | N : forall (v : A) (l r : BST R),
+            @ok A R v l -> @ok A (inv R) v r -> BST R
+
+with ok {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
+    | ok_E : forall v : A, ok v E
+    | ok_N :
+        forall (v x : A) (l r : BST R),
+          R x v -> ok v (N x l r).
+(* end hide *)
+
+(* begin hide *)
+
+Fail
+
+Inductive BHeap {A : Type} (R : A -> A -> Prop) : Type :=
+    | E : BHeap R
+    | N : forall (v : A) (l r : BHeap R), ok v l -> ok v r -> BHeap R
+
+with ok {A : Type} {R : A -> A -> Prop} : A -> BHeap R -> Prop :=
+    | ok_E : forall v : A, ok v E
+    | ok_N :
+        forall (v x : A) (l r : BHeap A) (pl : ok x l) (pr : ok x r),
+          R x v -> ok v (N x l r pl pr).
+
+Axioms
+  (BHeap : forall {A : Type} (R : A -> A -> Prop), Type)
+  (ok : forall {A : Type} {R : A -> A -> Prop}, A -> BHeap R -> Prop)
+  (E : forall {A : Type} {R : A -> A -> Prop}, BHeap R)
+  (N :
+    forall
+      {A : Type} {R : A -> A -> Prop}
+      (v : A) (l r : BHeap R),
+        ok v l -> ok v r -> BHeap R)
+  (ok_E : forall {A : Type} {R : A -> A -> Prop} (v : A), ok v (@E _ R))
+  (ok_N :
+    forall
+      {A : Type} {R : A -> A -> Prop}
+      (v x : A) (l r : BHeap R) (pl : ok x l) (pr : ok x r),
+        R x v -> ok v (N x l r pl pr))
+  (ind : forall
+    (A : Type) (R : A -> A -> Prop)
+    (P : BHeap R -> Type)
+    (Q : forall (v : A) (h : BHeap R), ok v h -> Type)
+    (PE : P E)
+    (PN : forall (v : A) (l r : BHeap R) (pl : ok v l) (pr : ok v r),
+            P l -> P r -> Q v l pl -> Q v r pr -> P (N v l r pl pr))
+    (Qok_E :
+      forall v : A, Q (ok_E v E))
+    (Qok_N :
+      forall
+        (v x : A) (l r : BHeap R) (pl : ok x l) (pr : ok x r) (H : R x v),
+          P l -> P r -> Q x l pl -> Q x r pr ->
+            Q v (Node x l r pl pr) (ok_N v l r pl pr H)),
+    {f : forall h : BHeap R, P h &
+    {g : forall 
+
+
+
+
+(* end hide *)
