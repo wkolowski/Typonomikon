@@ -1,4 +1,5 @@
-
+Require Import R2ipół.
+Require Import X3.
 
 Fixpoint rot2 {A : Type} (l : list A) : list A :=
 match l with
@@ -95,6 +96,7 @@ Proof.
         apply le_n.
 Defined.
 
+(*
 Definition rotn' {A : Type} (n : nat) (l : list A) : list A.
 Proof.
   revert l n.
@@ -105,7 +107,7 @@ Proof.
     exact l.
     exact (rev l1 ++ IH l2 H2 n).
 Defined.
-
+*)
 
 (*
 Inductive Rotn {A : Type} : nat -> list A -> list A -> Prop :=
@@ -120,6 +122,7 @@ Inductive Rotn {A : Type} : nat -> list A -> list A -> Prop :=
 
 Require Import Coq.Program.Equality.
 
+(*
 Lemma rotn'_eq :
   forall (A : Type) (n : nat) (l : list A),
     rotn' n l =
@@ -146,3 +149,4 @@ Proof.
     intros [l1 l2] H. specialize (IH l2). rewrite  cbn. dependent rewrite H.
   cbn. dependent destruction (.
 Admitted.
+*)

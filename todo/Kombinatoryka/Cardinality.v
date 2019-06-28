@@ -44,5 +44,3 @@ Proof.
     specialize (H Empty_set unit bool). apply H.
       (* Przydałaby się uniwalencja, ale bozia nie dała. *)
 Admitted.
-
-End Cardinality.

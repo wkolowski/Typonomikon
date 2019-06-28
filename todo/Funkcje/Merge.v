@@ -115,6 +115,20 @@ Lemma merge_eq :
     end.
 Proof.
   intros A f.
+  intros.
+  apply merge_complete. revert l2.
+    induction l1 as [| h1 t1].
+      constructor.
+      induction l2 as [| h2 t2].
+        constructor.
+        specialize (IHt1 (h2 :: t2)); cbn in *.
+          case_eq (f h1 h2); intro H; rewrite ?H.
+            constructor.
+              assumption.
+              destruct t1.
+                constructor.
+Restart.
+  intros A f.
   apply (funind_merge
     (fun l1 l2 r =>
       r =

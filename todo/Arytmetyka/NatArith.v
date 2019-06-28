@@ -64,6 +64,8 @@ End Factorial.
 
 Module Binom.
 
+Require Import Recdef.
+
 Function binom (n k : nat) : nat :=
 match n, k with
     | 0, 0 => 1

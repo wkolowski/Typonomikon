@@ -4086,24 +4086,122 @@ End ind_ind.
 
 (** **** Ćwiczenie *)
 
-(** Typ drzew wyszukiwań binarnych [BST R], gdzie [R : A -> A -> Prop] jest
-    relacją porządku, składa się z drzew, które mogą być albo puste, albo być
-    węzłem przechowującym wartość [v : A] wraz z dwoma poddrzewami
-    [l r : BST R], przy czym [v] musi być [R]-większe, niż korzeń [l]
-    (chyba, że [l] jest puste) oraz [R]-mniejsze, niż korzeń [r] (chyba, że
-    [r] jest puste).
+(** Typ stert binarnych [BHeap R], gdzie [R : A -> A -> Prop] jest relacją
+    porządku, składa się z drzew, które mogą być albo puste, albo być węzłem
+    przechowującym wartość [v : A] wraz z dwoma poddrzewami [l r : BHeap R],
+    przy czym [v] musi być [R]-większe od wszystkich elementów [l] oraz [r].
 
-    Użyj indukcji-indukcji, żeby zdefiniować jednocześnie typ [BST R] oraz
-    relację [ok], gdzie [ok v l r] jest spełnione, gdy wartość [v] może
-    utworzyć węzeł z poddrzewami [l] po lewej i [r] po prawej.
+    Użyj indukcji-indukcji, żeby zdefiniować jednocześnie typ [BHeap R] oraz
+    relację [ok], gdzie [ok v h] zachodzi, gdy [v] jest [R]-większe od
+    wszystkich elementów [h].
 
     Najpierw napisz pseudodefinicję, a potem przetłumacz ją na odpowiedni
     zestaw aksjomatów.
 
     Następnie użyj swojej aksjomatycznej definicji, aby zdefiniować funkcję
-    [mirror], która tworzy lustrzane odbicie drzewa [b : BST R]. Zauważ, że
-    wynik musi być typu [BST (fun x y => R y x)], gdyż odbicie odwraca
-    porządek. *)
+    [mirror], która tworzy lustrzane odbicie sterty [h : BHeap R]. *)
+
+(* begin hide *)
+
+Fail
+
+Inductive BHeap {A : Type} (R : A -> A -> Prop) : Type :=
+    | E : BHeap R
+    | N : forall (v : A) (l r : BHeap R), ok v l -> ok v r -> BHeap R
+
+with ok {A : Type} {R : A -> A -> Prop} : A -> BHeap R -> Prop :=
+    | ok_E : forall v : A, ok v E
+    | ok_N :
+        forall (v x : A) (l r : BHeap A) (pl : ok x l) (pr : ok x r),
+          R x v -> ok v (N x l r pl pr).
+
+Axioms
+  (BHeap : forall {A : Type} (R : A -> A -> Prop), Type)
+  (ok : forall {A : Type} {R : A -> A -> Prop}, A -> BHeap R -> Prop)
+  (E : forall {A : Type} {R : A -> A -> Prop}, BHeap R)
+  (N :
+    forall
+      {A : Type} {R : A -> A -> Prop}
+      (v : A) (l r : BHeap R),
+        ok v l -> ok v r -> BHeap R)
+  (ok_E : forall {A : Type} {R : A -> A -> Prop} (v : A), ok v (@E _ R))
+  (ok_N :
+    forall
+      {A : Type} {R : A -> A -> Prop}
+      (v x : A) (l r : BHeap R) (pl : ok x l) (pr : ok x r),
+        R x v -> ok v (N x l r pl pr))
+  (ind : forall
+    (A : Type) (R : A -> A -> Prop)
+    (P : BHeap R -> Type)
+    (Q : forall (v : A) (h : BHeap R), ok v h -> Type)
+    (PE : P E)
+    (PN : forall (v : A) (l r : BHeap R) (pl : ok v l) (pr : ok v r),
+            P l -> P r -> Q v l pl -> Q v r pr -> P (N v l r pl pr))
+    (Qok_E :
+      forall v : A, Q v E (ok_E v))
+    (Qok_N :
+      forall
+        (v x : A) (l r : BHeap R) (pl : ok x l) (pr : ok x r) (H : R x v),
+          P l -> P r -> Q x l pl -> Q x r pr ->
+            Q v (N x l r pl pr) (ok_N v x l r pl pr H)),
+    {f : forall h : BHeap R, P h &
+    {g : forall (v : A) (h : BHeap R) (p : ok v h), Q v h p |
+      f E = PE /\
+      (forall (v : A) (l r : BHeap R) (pl : ok v l) (pr : ok v r),
+        f (N v l r pl pr) =
+        PN v l r pl pr (f l) (f r) (g v l pl) (g v r pr)) /\
+      (forall v : A, g v E (ok_E v) = Qok_E v) /\
+      (forall
+        (v x : A) (l r : BHeap R) (pl : ok x l) (pr : ok x r) (H : R x v),
+          g v (N x l r pl pr) (ok_N v x l r pl pr H) =
+          Qok_N v x l r pl pr H (f l) (f r) (g x l pl) (g x r pr))
+    }}).
+
+(*
+Definition mirror
+  {A : Type} {R : A -> A -> Prop}
+  :
+  {f : BHeap R -> BHeap R &
+  {g : forall {v : A} {h : BHeap R}, ok v h -> ok v (f h) |
+    f E = E /\
+    (forall (v : A) (l r : BHeap R) (pl : ok v l) (pr : ok v r),
+      f (N v l r pl pr) = N v (f r) (f l) (g v r pr) (g v l pl)) /\
+    (forall v : A, g v E (ok_E v) = ok_E v)
+  }}.
+Proof.
+  Check (
+    ind
+      A R
+      (fun _ => BHeap R)). 
+      (fun _ _ _ => True)
+      E (fun v _ _ _ _ l' r' pl' pr' => N v r' l' pr' pl')
+      (fun _ => I) (fun _ _ _ _ _ _ _ _ _ _ _ => I)
+  ).
+*)
+
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Typ drzew wyszukiwań binarnych [BST R], gdzie [R : A -> A -> Prop] jest
+    relacją porządku, składa się z drzew, które mogą być albo puste, albo być
+    węzłem przechowującym wartość [v : A] wraz z dwoma poddrzewami
+    [l r : BST R], przy czym [v] musi być [R]-większe od wszystkich elemtnów
+    [l] oraz [R]-mniejsze od wszystkich elementów [r].
+
+    Użyj indukcji-indukcji, żeby zdefiniować jednocześnie typ [BST R] wraz
+    z odpowiednimi relacjami zapewniającymi poprawność konstrukcji węzła.
+    Wypróbuj trzy podejścia:
+    - jest jedna relacja, [oklr], gdzie [oklr v l r] oznacza, że z [v], [l] i
+      [r] można zrobić węzeł
+    - są dwie relacje, [okl] i [okr], gdzie [okl v l] oznacza, że [v] jest
+      [R]-większe od wszystkich elementów [l], zaś [okr v r], że [v] jest
+      [R]-mniejsze od wszystkich elementów [r]
+    - jest jedna relacja, [ok], gdzie [ok v t] oznacza, że [v] jest
+      [R]-mniejsze od wszystkich elementów [t] *)
+
+(** Najpierw napisz pseudodefinicję, a potem przetłumacz ją na odpowiedni
+    zestaw aksjomatów. *)
 
 (* begin hide *)
 
@@ -4160,53 +4258,14 @@ with ok {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
           R x v -> ok v (N x l r).
 (* end hide *)
 
-(* begin hide *)
+(** ** Indukcja-rekursja *)
 
-Fail
+(** A oto kolejny potfur do naszej kolekcji: indukcja-rekursja. Nazwa, choć
+    brzmi tak głupio, jak "indukcja-indukcja", niesie ze sobą jednak dużo
+    więcej wyobraźni: indukcja-rekursja pozwala nam jednocześnie definiować
+    typy induktywne oraz operujące na nich funkcje rekurencyjne.
 
-Inductive BHeap {A : Type} (R : A -> A -> Prop) : Type :=
-    | E : BHeap R
-    | N : forall (v : A) (l r : BHeap R), ok v l -> ok v r -> BHeap R
+    Co to dokładnie znaczy? Dotychczas nasz modus operandi wyglądał tak, że
+    najpierw definiowaliśmy jakiś typ *)
 
-with ok {A : Type} {R : A -> A -> Prop} : A -> BHeap R -> Prop :=
-    | ok_E : forall v : A, ok v E
-    | ok_N :
-        forall (v x : A) (l r : BHeap A) (pl : ok x l) (pr : ok x r),
-          R x v -> ok v (N x l r pl pr).
-
-Axioms
-  (BHeap : forall {A : Type} (R : A -> A -> Prop), Type)
-  (ok : forall {A : Type} {R : A -> A -> Prop}, A -> BHeap R -> Prop)
-  (E : forall {A : Type} {R : A -> A -> Prop}, BHeap R)
-  (N :
-    forall
-      {A : Type} {R : A -> A -> Prop}
-      (v : A) (l r : BHeap R),
-        ok v l -> ok v r -> BHeap R)
-  (ok_E : forall {A : Type} {R : A -> A -> Prop} (v : A), ok v (@E _ R))
-  (ok_N :
-    forall
-      {A : Type} {R : A -> A -> Prop}
-      (v x : A) (l r : BHeap R) (pl : ok x l) (pr : ok x r),
-        R x v -> ok v (N x l r pl pr))
-  (ind : forall
-    (A : Type) (R : A -> A -> Prop)
-    (P : BHeap R -> Type)
-    (Q : forall (v : A) (h : BHeap R), ok v h -> Type)
-    (PE : P E)
-    (PN : forall (v : A) (l r : BHeap R) (pl : ok v l) (pr : ok v r),
-            P l -> P r -> Q v l pl -> Q v r pr -> P (N v l r pl pr))
-    (Qok_E :
-      forall v : A, Q (ok_E v E))
-    (Qok_N :
-      forall
-        (v x : A) (l r : BHeap R) (pl : ok x l) (pr : ok x r) (H : R x v),
-          P l -> P r -> Q x l pl -> Q x r pr ->
-            Q v (Node x l r pl pr) (ok_N v l r pl pr H)),
-    {f : forall h : BHeap R, P h &
-    {g : forall 
-
-
-
-
-(* end hide *)
+(** ** Jeszcze straszniejszy potfur *)

@@ -1,4 +1,7 @@
+Require Import X3.
+Require Import X9.
 
+Ltac inv H := inversion H; subst; clear H.
 
 
 CoInductive Rev {A : Type} (l r : coList A) : Prop :=

@@ -57,6 +57,8 @@ Definition bin_to_nat (b : bin) : nat :=
 
 Eval compute in bin_to_nat [I; O; I; O; I; O].
 
+Require Import Recdef.
+
 Function divmod2 (n : nat) : nat * D :=
 match n with
     | 0 => (0, O)

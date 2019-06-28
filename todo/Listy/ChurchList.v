@@ -66,10 +66,3 @@ Lemma fromList_toList :
 Proof.
   intros. unfold clist in *. compute.
 Abort.
-
-
-Lemma len_app :
-  forall (A : Type) (l1 l2 : clist A),
-    len (app l1 l2) = len l1 + len l2.
-Proof.
-  unfold clist, len, app. intros. unfold clist in *.

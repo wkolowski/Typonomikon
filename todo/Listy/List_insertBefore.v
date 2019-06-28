@@ -1,6 +1,4 @@
-Add Rec LoadPath "/home/zeimer/Code/Coq".
-
-Require Import CoqBookPL.book.X3.
+Require Import X3.
 
 Fixpoint insertBefore {A : Type} (n : nat) (l1 l2 : list A) : list A :=
 match n with
@@ -44,7 +42,7 @@ Lemma insert_before_in_char :
 (* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn; intros.
-    rewrite insert_before_in_nil, take_nil, drop_nil, app_nil_r.
+    rewrite insert_before_in_nil, app_nil_r.
       cbn. reflexivity.
     destruct n as [| n']; cbn; rewrite ?IHt; reflexivity.
 Qed.
@@ -294,7 +292,7 @@ Lemma join_insert_before_in :
 (* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn; intros.
-    rewrite insert_before_in_nil, take_nil. cbn. rewrite app_nil_r.
+    rewrite insert_before_in_nil. cbn. rewrite app_nil_r.
       reflexivity.
     destruct n as [| n']; cbn.
       rewrite join_app. cbn. reflexivity.
@@ -453,8 +451,8 @@ Proof.
   induction l1 as [| h t]; cbn; intros.
     rewrite insert_before_in_nil. firstorder. constructor.
     destruct n as [| n']; cbn.
-      rewrite Forall_app, Forall_cons'. firstorder congruence.
-      rewrite ?Forall_cons', IHt. firstorder congruence.
+      rewrite Forall_app, Forall_cons. firstorder congruence.
+      rewrite ?Forall_cons, IHt. firstorder congruence.
 Qed.
 (* end hide *)
 
