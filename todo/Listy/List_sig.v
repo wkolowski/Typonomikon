@@ -67,7 +67,9 @@ Parameter splitAt :
 Parameter insert : forall A : Type, list A -> nat -> A -> list A.
 Parameter replace : forall A : Type, list A -> nat -> A -> option (list A).
 
+(*
 Parameter insert : forall A : Type, list A -> nat -> A -> option (list A).
+*)
 Parameter insert_orElse : forall A : Type, list A -> nat -> A -> list A.
 
 (** Pochodne rozkładu na kawałki i jak powinno być*)

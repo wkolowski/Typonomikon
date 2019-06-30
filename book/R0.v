@@ -327,6 +327,6 @@
     Gdyby ktoś miał problemy z CoqIDE, lekką alternatywą jest ProofWeb:
     http://proofweb.cs.ru.nl/index.html
 
-    Uwaga: kurs powstaje w czasie rzeczywistym. Nie polecam czytać
-    rozdziałów i podrozdziałów oznaczonych jako alfa, bo może to
-    poskutkować nagłym atakiem raka mózgu. *)
+    Uwaga: kurs powstaje w czasie rzeczywistym, więc w niektórych miejscach
+    możesz natknąć się na znacznik TODO, który informuje, że dany fragment
+    nie został jeszcze skończony. *)

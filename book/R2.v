@@ -3874,9 +3874,9 @@ Axioms
       (h : A) (t : slist R) (p : ok h t)
       (x : A), R x h -> ok x (scons h t p)).
 
-(** Następnie definiujemy konstruktory: najpierw konstruktory [slist], a potem
-    [ok]. Musimy to zrobić w tej kolejności, bo konstruktor [ok_snil] odnosi
-    się do [snil], a [ok_scons] do [scons].
+(** Następnie definiujemy konstruktory: najpierw konstruktory [slist], a
+    potem [ok]. Musimy to zrobić w tej kolejności, bo konstruktor [ok_snil]
+    odnosi się do [snil], a [ok_scons] do [scons].
 
     Znowu widzimy, że gdyby konstruktory obu typów odnosiły się do siebie
     nawzajem, to nie moglibyśmy zdefiniować takiego typu aksjomatycznie. *)
@@ -4082,6 +4082,67 @@ Qed.
 
 (* end hide *)
 
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że przykład faktycznie jest bez sensu: zdefiniuje relację
+    [sorted : (A -> A -> Prop) -> list A -> Prop], gdzie [sorted R l]
+    oznacza, że lista [l] jest posortowana według porządku [R]. Używając
+    [sorted] zdefiniuj typ list posortowanych [slist' R], a następnie znajdź
+    dwie funkcje [f : slist R -> slist' R] i [f : slist' R -> slist R],
+    które są swoimi odwrotnościami. *)
+
+(* begin hide *)
+
+Inductive sorted {A : Type} (R : A -> A -> Prop) : list A -> Prop :=
+    | sorted_nil : sorted R []
+    | sorted_singl : forall x : A, sorted R [x]
+    | sorted_cons :
+        forall (x y : A) (t : list A),
+          R x y -> sorted R (y :: t) -> sorted R (x :: y :: t).
+
+Arguments sorted_nil {A R}.
+Arguments sorted_singl {A R} _.
+Arguments sorted_cons {A R x y t} _ _.
+
+Definition slist' {A : Type} (R : A -> A -> Prop) : Type :=
+  {l : list A | sorted R l}.
+
+Lemma toList_sorted :
+  forall {A : Type} {R : A -> A -> Prop} (l : slist R),
+    sorted R (toList l).
+Proof.
+  intros A R.
+  refine (projT1 (ind
+    A R
+    (fun l => sorted R (toList l))
+    (fun x t _ =>
+      t = snil \/
+      exists (h : A) (t' : slist R) (p : ok h t'),
+        t = scons h t' p /\ R x h)
+    _ _ _ _)).
+  1-2: unfold toList; destruct toList' as (f & H1 & H2).
+    rewrite H1. constructor.
+    intros. rewrite H2. decompose [or ex and] H0; clear H0; subst.
+      rewrite H1. constructor.
+      rewrite H2 in *. constructor; assumption.
+    intros. left. reflexivity.
+    intros. decompose [or ex and] H1; clear H1; subst.
+      right. exists h, snil, p. split; trivial.
+      right. exists h, (scons x0 x1 x2), p. split; trivial.
+Qed.
+
+(** TODO *)
+
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Żeby przekonać się, że przykład był naprawdę bezsensowny, zdefiniuj
+    rodzinę typów [blist : (A -> A -> Prop) -> A -> Type], gdzie elementami
+    [blist R x] są listy posortowane, których elementy są [R]-większe od [x].
+    Użyj [blist] do zdefiniowania typu [slist'' R], a następnie udowodnij,
+    że [slist R] i [slist'' R] są sobie równoważne. *)
+
 End ind_ind.
 
 (** **** Ćwiczenie *)
@@ -4102,6 +4163,8 @@ End ind_ind.
     [mirror], która tworzy lustrzane odbicie sterty [h : BHeap R]. *)
 
 (* begin hide *)
+
+Module BHeap.
 
 Fail
 
@@ -4179,6 +4242,8 @@ Proof.
   ).
 *)
 
+End BHeap.
+
 (* end hide *)
 
 (** **** Ćwiczenie *)
@@ -4204,6 +4269,8 @@ Proof.
     zestaw aksjomatów. *)
 
 (* begin hide *)
+
+Module BST.
 
 Fail
 
@@ -4256,6 +4323,9 @@ with ok {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
     | ok_N :
         forall (v x : A) (l r : BST R),
           R x v -> ok v (N x l r).
+
+End BST.
+
 (* end hide *)
 
 (** ** Indukcja-rekursja *)
@@ -4266,6 +4336,156 @@ with ok {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
     typy induktywne oraz operujące na nich funkcje rekurencyjne.
 
     Co to dokładnie znaczy? Dotychczas nasz modus operandi wyglądał tak, że
-    najpierw definiowaliśmy jakiś typ *)
+    najpierw definiowaliśmy jakiś typ induktywny, a potem przez rekursję
+    definiowaliśmy operujące na nim funkcje, np:
+    - najpierw zdefiniowaliśmy typ [nat], a potem dodawanie, mnożenie etc.
+    - najpierw zdefiniowaliśmy typ [list A], a potem [app], [rev] etc. *)
+
+(** Dlaczego mielibyśmy chcieć definiować typ i funkcję jednocześnie? Dla
+    tego samego, co zawsze, czyli zależności - indukcja-rekursja pozwala,
+    żeby definicja typu odnosiła się do funkcji, która to z kolei jest
+    zdefiniowana przez rekursję strukturalną po argumencie o tym typie.
+
+    Zobaczmy dobrze nam już znany bezsensowny przykład, czyli listy
+    posortowane, tym razem zaimplementowane za pomocą indukcji-rekursji. *)
+
+(*
+Inductive slist {A : Type} (R : A -> A -> bool) : Type :=
+    | snil : slist R
+    | scons : forall (h : A) (t : slist R), ok h t = true -> slist R
+
+with
+
+Definition ok
+  {A : Type} {R : A -> A -> bool} (x : A) (t : slist R) : bool :=
+match t with
+    | snil => true
+    | scons h _ _ => R x h
+end.
+*)
+
+(** Coq niestety nie wspiera indukcji-rekursji, a próba napisania powyższej
+    definicji kończy się błędem składni. Podobnie jak poprzednio, pomożemy
+    sobie za pomocą aksjomatów, jednak najpierw prześledźmy definicję.
+
+    Typ slist działa następująco:
+    - [R] to jakiś porządek. Zauważ, że tym razem [R : A -> A -> bool], a
+      więc porządek jest rozstrzygalny
+    - [snil] to lista pusta
+    - [scons h t p] to lista z głową [h] i ogonem [t], zaś [p : ok h t = true]
+      to dowód na to, że dostawienie [h] przed [t] daje listę posortowaną. *)
+
+(** Tym razem jednak [ok] nie jest relacją, lecz funkcją zwracającą [bool],
+    która działa następująco:
+    - dla [snil] zwróć [true] - każde [h : A] można dostawić do listy pustej
+    - dla [scons h _ _] zwróć wynik porównania [x] z [h] *)
+
+(** Istotą mechanizmu indukcji-rekursji w tym przykładzie jest to, że [scons]
+    wymaga dowodu na to, że funkcja [ok] zwraca [true], podczas gdy funkcja
+    ta jest zdefiniowana przez jednocześnie z typem [slist].
+
+    Użycie indukkcji-rekursji do zaimplementowania [slist] ma swoje zalety:
+    dla konkretnych list (złożonych ze stałych, a nie ze zmiennych) dowody
+    [ok h t = true] będą postaci [eq_refl], bo [ok] po prostu obliczy się
+    do [true]. W przypadku indukcji-indukcji dowody na [ok h t] były całkiem
+    sporych rozmiarów drzewami. Innymi słowy, udało nam się zastąpić część
+    termu obliczeniami. Ten intrygujący motyw jeszcze się w przyszłości
+    pojawi, gdy omawiać będziemy dowód przez reflekcję.
+
+    Dosyć gadania! Zobaczmy, jak zakodować powyższą definicję za pomocą
+    aksjomatów. *)
+
+Axioms
+  (slist : forall {A : Type}, (A -> A -> bool) -> Type)
+  (ok : forall {A : Type} {R : A -> A -> bool} (h : A) (t : slist R), bool)
+  (snil :
+    forall {A : Type} {R : A -> A -> bool}, slist R)
+  (scons :
+    forall
+      {A : Type} {R : A -> A -> bool}
+      (h : A) (t : slist R), ok h t = true -> slist R)
+  (ok_snil :
+    forall {A : Type} {R : A -> A -> bool} (x : A),
+      ok x (@snil _ R) = true)
+  (ok_scons :
+    forall
+      {A : Type} {R : A -> A -> bool}
+      (x h : A) (t : slist R) (p : ok h t = true),
+        ok x (scons h t p) = R x h).
+
+(** Najpierw musimy zadeklarować [slist], a następnie [ok], gdyż typ [ok]
+    zależy od [slist]. Obie definicje wyglądają dokładnie tak, jak nagłówki
+    w powyższej definicji odrzuconej przez Coqa.
+
+    Następnym krokiem jest zadeklarowanie konstruktorów [slist] oraz
+    równań definiujących funkcję [ok]. *)
+
+Axiom
+  ind : forall
+    (A : Type) (R : A -> A -> bool)
+    (P : slist R -> Type)
+    (Psnil : P snil)
+    (Pscons :
+      forall (h : A) (t : slist R) (p : ok h t = true),
+        P t -> P (scons h t p)),
+    {f : forall l : slist R, P l |
+      f snil = Psnil /\
+      (forall (h : A) (t : slist R) (p : ok h t = true),
+        f (scons h t p) = Pscons h t p (f t))}.
+
+(** Innym zyskiem z użycia indukcji-rekursji jest postać reguły indukcyjnej:
+    jest ona dużo prostsza, niż w przypadku indukcji-indukcji, gdyż teraz
+    definiujemy tylko jeden typ, zaś towarzysząca mu funkcja nie wymaga w
+    regule niczego specjalnego - po prostu pojawia się w niej tam, gdzie
+    spodziewalibyśm się jej po definicji [slist], ale nie robi niczego
+    ponad to. *)
+
+Definition rev
+  {A : Type} {R : A -> A -> bool}
+  (l : slist R) : slist (fun x y => negb (R x y)).
+Proof.
+  revert l.
+  refine (proj1_sig (ind
+    A R
+    (fun _ => slist (fun x y => negb (R x y)))
+    _ _)).
+    exact snil.
+    intros h t p.
+      refine (proj1_sig (ind
+        A (fun x y => negb (R x y))
+        (fun _ => slist (fun x y => negb (R x y)))
+        _ _)).
+        exact (scons h snil (ok_snil h)).
+        intros. apply (scons h0 t0). assumption.
+Defined.
+
+Fixpoint leb (n m : nat) : bool :=
+match n, m with
+    | 0, _ => true
+    | _, 0 => false
+    | S n', S m' => leb n' m'
+end.
+
+Goal @rev _ leb (scons 2 snil (ok_snil 2)) = scons 2 snil (ok_snil 2).
+Proof.
+  unfold rev.
+  destruct (ind _) as (f & Hf1 & Hf2). cbn in *.
+  rewrite Hf2, Hf1.
+  destruct (ind _) as (g & Hg1 & Hg2). cbn in *.
+  rewrite Hg1. reflexivity.
+Qed.
+
+Require Import JMeq.
+
+Lemma rev_rev :
+  forall (A : Type) (R : A -> A -> bool) (l : slist R),
+    JMeq (rev (rev l)) l.
+Proof.
+  intros A R.
+  refine (proj1_sig (ind
+    A R
+    (fun l => JMeq (rev (rev l)) l)
+    _ _)).
+Abort.
 
 (** ** Jeszcze straszniejszy potfur *)
