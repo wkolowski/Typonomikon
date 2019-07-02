@@ -926,7 +926,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Konstruktywny rachunek predykatów *)
+(** * Konstruktywny rachunek kwantyfikatorów *)
 
 End constructive_propositional_logic.
 
@@ -936,11 +936,11 @@ End constructive_propositional_logic.
     zaśmiecenia. Nasze twierdzenia wciąż są jednak dostępne (sprawdź
     to).
 
-    Zajmiemy się teraz konstruktywnym rachunkiem predykatów. Jest on
+    Zajmiemy się teraz konstruktywnym rachunkiem kwantyfikatorów. Jest on
     rozszerzeniem omówionego przed chwilą konstruktywnego rachunku zdań
-    o predykaty oraz kwantyfikatory, które pozwolą
-    nam wyrażać takie zależności jak "każdy" oraz "istnieje". Predykaty
-    możemy interpretować jako "właściwości obiektów". *)
+    o kwantyfikatory, które pozwolą nam wyrażać takie zależności jak "każdy"
+    oraz "istnieje", oraz o predykaty i relacje, które mózemy interpretować
+    odpowiednio jako właściwości obiektów oraz zależności między obiektami. *)
 
 (** ** Kwantyfikacja uniwersalna *)
 
@@ -1891,9 +1891,9 @@ Check and_comm.
     przypadku Coq dodał do [and_comm] kwantyfikację po [P] i [Q],
     mimo że nie napisaliśmy jej explicite. *)
 
-(** ** Konstruktywny rachunek predykatów *)
+(** ** Konstruktywny rachunek kwantyfikatorów *)
 
-Section exercises_predicate.
+Section QuantifiersExercises.
 
 Variable A : Type.
 Hypotheses P Q : A -> Prop.
@@ -2028,11 +2028,11 @@ Restart.
 Qed.
 (* end hide *)
 
-End exercises_predicate.
+End QuantifiersExercises.
 
-(** ** Klasyczny rachunek zdań (i predykatów) *)
+(** ** Klasyczny rachunek zdań (i kwantyfikatorów) *)
 
-Section exercises_classical.
+Section ClassicalExercises.
 
 Require Import Classical.
 
@@ -2104,7 +2104,7 @@ Lemma peirce : ((P -> Q) -> P) -> P.
 Abort.
 (* end hide *)
 
-End exercises_classical.
+End ClassicalExercises.
 
 (** * Paradoks pijoka *)
 

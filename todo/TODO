@@ -7,14 +7,15 @@ Wstęp i inne tego typu pierdoły
 
 Logika: Podstawy
   Konstruktywny rachunek zdań
-  Konstruktywny rachunek kwantyfikatorów (nazwa "rachunek predykatów" jest do dupsztala, bo są w nim nie tylko predykaty, ale też relacje etc.)
+  Konstruktywny rachunek kwantyfikatorów
   Klasyczny rachunek kwantyfikatorów. Zrobić tak żeby można było pisać "Classically $ coś tam".
   Przedstawić obie logiki jako użyteczne - pluralizm logiczny.
   Paradoks pijoka, czyli esencja klasyczności.
   Paradoks golibrody, czyli związki logiki z rzeczywistością.
   Paradoks pieniądza i kebaba, czyli o zasobach.
   Na końcu dać podrozdział o kombinatorach taktyk (albo i nie).
-  napisać coś o nazwach zmiennych związanych
+  Napisać coś o nazwach zmiennych związanych
+  Przedstawić jakieś bardziej ludzkie definicje predykatu i relacji (tzn. bierze coś i zwraca zdanie).
   Zadania:
     wyrzucić zadania mącące (mieszające typy i zdania)
     dodać zadanie dotyczące czytania twierdzeń i dowodów
@@ -53,6 +54,7 @@ Typy induktywne
   Indukcja-indukcja-rekursja.
   Typy ilorazowe, wyższe typy indutkywne.
   Zadania z definiowania induktywnych typów i predykatów
+  W międzyczasie: omówić ścisłą pozytywność
 Inne
   dodać podrozdział o typach induktywnych z nieskończoną ilością argumentów rekurencyjnych (A -> T)
 
@@ -73,6 +75,8 @@ Rekordy i klasy
   Enumerowanie
   Rozstrzygalność i typ [reflect]
   Rozstrzygalna równość
+  Rozstrzygalność
+  Rodzaje rekordów: induktywne, koinduktywne, primitive projections
 
 Matematyka
   o typach ilorazowych
@@ -80,7 +84,6 @@ Matematyka
   teoria porządków
   monoidy i teoria grup
 
-Rozstrzygalność
 Definiowanie funkcji
   rekursja "prymitywna" (jak w Agdzie)
   rekursja strukturalna
@@ -111,6 +114,7 @@ Spis taktyk
 
 Reflekcja, metapoziom, quote (którego oczywiście w Coqu nie ma, a jak) i inne takie duperele
   Po co reflekcja?
+  Semantyka vs składnia
 
 Listy
   napisać wstępy do poszczególnych funkcji
@@ -153,7 +157,10 @@ Złożoność:
 
 Monady, kontynuacje, efekty
 
-Logika: Aksjomaty
+Logika-Aksjomaty
+  Ekstensjonalność: funext, propext, uniwalencja
+  Relewancja: proof irrelevance, K
+  
 Logika: Uniwersa
   Przemieścić z R2 podrozdziały o sortach i o hierarchii uniwersów. Najlepiej gdzieś na sam koniec
 Logika: równość - przeanalizować alternatywne definicje, opowiedzieć skąd się biorą dowody równości

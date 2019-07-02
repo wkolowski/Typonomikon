@@ -4486,7 +4486,6 @@ Proof.
     A R
     (fun l => JMeq (rev (rev l)) l)
     _ _)).
-    rewrite rev_snil.
 Abort.
 
 (** ** Jeszcze straszniejszy potfur *)

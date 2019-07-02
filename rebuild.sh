@@ -1,21 +1,14 @@
 #!/bin/sh
-# Tym skryptem można zaorać książkę do gołej ziemii i zbudować od nowa. Część skryptu jest opisana w komentarzach do build.sh.
-# make clean kasuje wszystkie pliki .v.d .aux .glob i cholera wie co jeszcze
-# rm makefile kasuje starego makefile'a
+# Tym skryptem można zaorać książkę do gołej ziemii i zbudować od nowa.
 
+# Usuń wszystkie pliki .v.d .aux .glob i cholera wie co jeszcze.
 make clean
 
-rm makefile
-rm -rf htmls/
+# Opróżnij foldery htmls/ i tex/
+rm -rf htmls/* tex/*
 
-mkdir htmls/
-./make_makefile.sh
+# Zrób nowego makefile'a.
+coq_makefile -R "." CoqBookPL -o makefile $(find . -name "*v")
 
+# Zbuduj wersje HTML i PDF książki.
 ./build.sh
-
-#make
-#coqdoc --with-footer extra/footer.html --with-header extra/header.html --no-lib-name --lib-subtitles --parse-comments --no-index --toc --toc-#depth 2 -d htmls book/*v
-#cp css/*css htmls/
-#cp js/* htmls/
-#cp extra/*html htmls/
-#cp extra/*jpg htmls/
