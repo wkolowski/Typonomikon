@@ -11,10 +11,6 @@
 **.tex
 **.toc
 **.sty
-
-makefile
-makefile.conf
+**.synctex.gz
 
 .coqdeps.d
-
-htmls/

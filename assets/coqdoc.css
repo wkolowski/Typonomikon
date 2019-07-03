@@ -389,9 +389,10 @@ tr.infrulemiddle hr {
     width: 700px;
 }
 
-.booktitle { font-size : 600%; line-height: 100%; font-style:bold; }
+.booktitle { font-size : 420%; line-height: 100%; font-style:bold; text-align: center; }
 .authors { font-size : 200%;
-           line-height: 115%;  }
+           line-height: 115%;
+	   text-align: center; }
 .moreauthors { font-size : 170%  }
 .buttons { font-size : 170%;
            margin-left: auto;

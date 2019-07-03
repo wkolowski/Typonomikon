@@ -4440,6 +4440,7 @@ Axiom
     spodziewalibyśm się jej po definicji [slist], ale nie robi niczego
     ponad to. *)
 
+(* begin hide *)
 Definition rev
   {A : Type} {R : A -> A -> bool}
   (l : slist R) : slist (fun x y => negb (R x y)).
@@ -4487,5 +4488,6 @@ Proof.
     (fun l => JMeq (rev (rev l)) l)
     _ _)).
 Abort.
+(* end hide *)
 
 (** ** Jeszcze straszniejszy potfur *)

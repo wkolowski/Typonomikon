@@ -70,6 +70,51 @@ Typy i funkcje
 Typy i relacje
   Obecna wersja (X5) wymaga tutaj klas.
 
+Taktyki do redukcji i obliczeń
+  Posłużyć się następującym systemem nazewniczo-klasyfikacyjnym.
+  Dla każdej literki są trzy relacje: redukcja, ekspansja i konwersja
+  (a może powinna być jeszcze redukcja w wielu krokach?).
+  Bazą jest redukcja, która ma jakąś swoją definicję, pisana jest
+  a -> b. Relacja ekspansji a <- b zdefiniowana jest jako b -> a, zaś
+  relacja konwersji to domknięcie równoważnościowe relacji redukcji.
+  W takim układzie redukcja w wielu krokach to domknięcie zwrotno-
+  przechodnie relacji redukcji. Podobnie dla ekspansji w wielu krokach.
+
+  Mamy następujące relacje redukcji:
+    alfa (zmiana nazwy jednej zmiennej związanej)
+    beta (podstawienie argumentu za parametr formalny w jednym miejscu)
+    delta (odwinięcie jednej definicji) — uwaga: to w sumie nie jest
+      relacja, tylko rodzina relacji parametryzowana/indeksowana nazwami,
+      które chcemy odwinąć
+    eta - unikalność dla funkcji, rekordów etc.
+    iota (wykonanie jednego dopasowania do wzorca)
+    zeta (redukcja pojedynczego [let]a)
+
+  Odpowiadające taktyki:
+    alfa — brak
+    beta — cbn/cbv beta
+    delta — cbn/cbv delta, unfold, fold
+    eta — brak
+    iota — cbn/cbv iota
+    zeta — cbn/cbv zeta
+    ogólna redukcja: cbn, cbv, simpl,
+    konwersja: change
+
+  Omówić następujące taktyki (w kolejności):
+    [pattern] (beta ekspansja)
+    [unfold], [fold] (delta redukcja/ekspansja)
+    [change] (konwertowalność)
+    [cbn]
+    [compute], [vm_compute], [native_compute]
+    [cbv], [lazy]
+    [red]
+    [simpl]
+    [hnf]
+
+  Omówić postacie normalne (o ile gdzieś można znaleźć jakiś ich opis).
+  Ogólniej: wstawić jakąś zajawkę wcześnie i bardziej szczegółowy opis
+  po rozdziale o relacjach. Trzeba by też opisać rachunek lambda.
+
 Rekordy i klasy
   Typy skończone
   Enumerowanie
@@ -155,7 +200,30 @@ Listy
 Złożoność:
   Napisać coś o rekursji ogonowej i opisać poświęcone jej techniki dowodzenia.
 
-Monady, kontynuacje, efekty
+Monady i efekty jako sposoby bycia
+- [Id] nie reprezentuje żadnego efektu. Wartości typu [Id A] są w ten
+  sposób, że po prostu są.
+- [option] reprezentuje częściowość. Wartości typu [option A] są w ten
+  sposób, że albo są, albo ich nie ma
+- [sum E] reprezentuje możliwość wystąpienia błędu. Wartości typu
+  [sum E A] są w ten sposób, że albo są poprawne, albo ich nie ma, gdyż
+  wystąpił błąd typu [E].
+- [list] reprezentuje niedeterminizm (uporządkowany). Wartości typu
+  [list A] są w ten sposób, że może ich być wiele lub może ich nie być
+  wcale i są w sposób uporządkowany.
+- [State S] reprezentuje stan. Wartości typu [State S A] są w ten
+  sposób, że są i mają pamięć, tzn. mogą się zmieniać w zależności
+  od stanu.
+- [Reader R] reprezentuje możliwość odczytania konfiguracji.
+- [Writer W] reprezentuje możliwość zapisywania logów.
+- [Future] reprezentuję asynchroniczność. Wartości typu [Future A]
+  są w ten sposób, że albo są teraz, albo będą później.
+- [STM] reprezentuje transakcje. Wartościu typu [STM A] są w ten
+  sposób, że są w jednym kawałku, są transakcjami.
+- [SQL] reprezentuje operacje bazodanowe. Wartości typu [SQL A] są
+  w ten sposób, że albo po prostu są, albo są w bazie danych.
+
+Kontynuacje i kontrola
 
 Logika-Aksjomaty
   Ekstensjonalność: funext, propext, uniwalencja

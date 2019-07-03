@@ -1,0 +1,987 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-1.8.3.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-88023543-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</head>
+<h1 class="libtitle">R2ipół</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+ W poprzednim rozdziale dość dogłębnie zapoznaliśmy się z mechanizmem
+    definiowania induktywnych typów i rodzin typów. Nauczyliśmy się też
+    definiować funkcje operujące na ich elementach za pomocą dopasowania
+    do wzorca oraz rekursji.
+
+<div class="paragraph"> </div>
+
+    Indukcja i rekursja są ze sobą bardzo ściśle powiązane. Obie opierają
+    się na autoreferencji, czyli odnoszeniu się do samego siebie:
+<ul class="doclist">
+<li> liczba naturalna to zero lub następnik liczby naturalnej
+
+</li>
+<li> długość listy złożonej z głowy i ogona to jeden plus długość ogona 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Można użyć nawet mocniejszego stwierdzenia: indukcja i rekursja są
+    dokładnie tym samym zjawiskiem. Skoro tak, dlaczego używamy na jego
+    opisanie dwóch różnych słów? Cóż, jest to zaszłość historyczna, jak
+    wiele innych, które napotkaliśmy. Rozróżniamy zdania i typy/specyfikacje,
+    relacje i rodziny typów, dowody i termy/programy etc., choć te pierwsze
+    są specjalnymi przypadkami tych drugich. Podobnie indukcja pojawiła się
+    po raz pierwszy jako technika dowodzenia faktów o liczbach naturalnych,
+    zaś rekursja jako technika pisania programów.
+
+<div class="paragraph"> </div>
+
+    Dla jasności, terminów tych będziemy używać w następujący sposób:
+<ul class="doclist">
+<li> indukcja będzie oznaczać metodę definiowania typów oraz
+      metodę dowodzenia
+
+</li>
+<li> rekursja będzie oznaczać metodę definiowania funkcji 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ W tym rozdziale zbadamy dokładniej rekursję: poznamy różne jej rodzaje,
+    zobaczymy w jaki sposób za jej pomocą można zrobić własne niestandardowe
+    reguły indukcyjne, poznamy rekursję (i indukcję) dobrze ufundowaną oraz
+    zobaczymy, w jaki sposób połączyć indukcję i rekursję, by móc dowodzić
+    poprawności pisanych przez nas funkcji wciśnięciem jednego przycisku
+    (no, prawie). 
+<div class="paragraph"> </div>
+
+<a name="lab148"></a><h1 class="section">Rodzaje rekursji</h1>
+
+<div class="paragraph"> </div>
+
+ Funkcja może w swej definicji odwoływać się do samej siebie na różne
+    sposoby. Najważniejszą klasyfikacją jest klasyfikacja ze względu na
+    dozwolone argumenty w wywołaniu rekurencyjnym:
+<ul class="doclist">
+<li> Rekursja strukturalna to taka, w której funkcja wywołuje siebie
+      na argumentach będących podtermami argumentów z obecnego wywołania.
+
+</li>
+<li> Rekursja dobrze ufundowana to taka, w której funkcja wywołuje siebie
+      jedynie na argumentach "mniejszych", gdzie o tym, które argumenty są
+      mniejsze, a które większe, decyduje pewna relacja dobrze ufundowana.
+      Intuicyjnie relacja dobrze ufundowana jest jak drabina: schodząc po
+      drabinie w dół kiedyś musimy schodzenie zakończyć. Nie możemy schodzić
+      w nieskończoność. 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Mniej ważną klasyfikacją jest klasyfikacja ze względu na... cóż, nie
+    wiem jak to ładnie nazwać:
+<ul class="doclist">
+<li> Rekursja bezpośrednia to taka, w której funkcja f wywołuje siebie
+      samą bezpośrednio.
+
+</li>
+<li> Rekursja pośrednia to taka, w której funkcja f wywołuje jakąś inną
+      funkcję g, która wywołuje f. To, że f nie wywołuje samej
+      siebie bezpośrednio nie oznacza wcale, że nie jest rekurencyjna.
+
+</li>
+<li> W szczególności, rekursja wzajemna to taka, w której funkcja f
+      wywołuje funkcję g, a g wywołuje f.
+
+</li>
+<li> Rzecz jasna rekursję pośrednią oraz wzajemną można uogólnić na dowolną
+      ilość funkcji. 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Oczywiście powyższe dwie klasyfikacje to tylko wierzchołek góry lodowej,
+    której nie ma sensu zdobywać, gdyż naszym celem jest posługiwanie się
+    rekursją w praktyce, a nie dzielenie włosa na czworo. Wobec tego
+    wszystkie inne rodzaje rekursji (albo nawet wszystkie możliwe rodzaje
+    w ogóle) będziemy nazywać rekursją ogólną.
+
+<div class="paragraph"> </div>
+
+    Z rekursją wzajemną zapoznaliśmy się już przy okazji badania indukcji
+    wzajemnej w poprzednim rozdziale. W innych funkcyjnych językach
+    programowania używa się jej zazwyczaj ze względów estetycznych, by móc
+    elegancko i czytelnie pisać kod, ale jak widzieliśmy w Coqu jest ona
+    bardzo upierdliwa, więc raczej nie będziemy jej używać. Skupmy się
+    zatem na badaniu rekursji strukturalnej, dobrze ufundowanej i ogólnej. 
+<div class="paragraph"> </div>
+
+<a name="lab149"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Przypomnij sobie podrozdział o indukcji wzajemnej. Następnie wytłumacz,
+    jak przetłumaczyć definicję funkcji za pomocą rekursji wzajemnej na
+    definicję, która nie używa rekursji wzajemnej. 
+<div class="paragraph"> </div>
+
+<a name="lab150"></a><h1 class="section">Rekursja ogólna</h1>
+
+<div class="paragraph"> </div>
+
+ W Coqu rekursja ogólna nie jest dozwolona. Powód jest banalny: prowadzi
+    ona do sprzeczności. W celu zobrazowania spróbujmy zdefiniować za pomocą
+    taktyk następującą funkcję rekurencyjną: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">loop</span> (<span class="id" title="var">u</span> : <span class="id" title="var">unit</span>) : <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">loop</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Przyjrzyjmy się uważnie definicji funkcji <span class="inlinecode"><span class="id" title="var">loop</span></span>. Mimo, że udało
+    nam się ujrzeć znajomy napis "No more subgoals", próba użycia
+    komendy <span class="inlinecode"><span class="id" title="keyword">Qed</span></span> kończy się błędem.
+
+<div class="paragraph"> </div>
+
+    Fakt, że konstruujemy funkcję za pomocą taktyk, nie ma tu żadnego
+    znaczenia, lecz służy jedynie lepszemu zobrazowaniu, dlaczego rekursja
+    ogólna jest grzechem. Dokładnie to samo stałoby się, gdybyśmy próbowali
+    zdefiniować <span class="inlinecode"><span class="id" title="var">loop</span></span> ręcznie: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">loop</span> (<span class="id" title="var">u</span> : <span class="id" title="var">unit</span>) : <span class="id" title="var">False</span> := <span class="id" title="var">loop</span> <span class="id" title="var">u</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Gdyby tak się nie stało, możliwe byłoby skonstruowanie dowodu <span class="inlinecode"><span class="id" title="var">False</span></span>: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <span class="id" title="var">the_universe_explodes</span> : <span class="id" title="var">False</span> := <span class="id" title="var">loop</span> <span class="id" title="var">tt</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Aby chronić nas przed tą katastrofą, Coq nakłada na rekurencję
+    ograniczenie: argument główny wywołania rekurencyjnego musi być
+    strukturalnym podtermem argumentu głównego obecnego wywołania.
+    Innymi słowy, dozwolona jest jedynie rekursja strukturalna.
+
+<div class="paragraph"> </div>
+
+    To właśnie napisane jest w komunikacie o błędzie, który dostajemy,
+    próbując przeforsować powyższe definicje: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Recursive&nbsp;definition&nbsp;of&nbsp;loop&nbsp;is&nbsp;ill-formed.<br/>
+&nbsp;&nbsp;&nbsp;In&nbsp;environment<br/>
+&nbsp;&nbsp;&nbsp;loop&nbsp;:&nbsp;unit&nbsp;-&gt;&nbsp;False<br/>
+&nbsp;&nbsp;&nbsp;u&nbsp;:&nbsp;unit<br/>
+&nbsp;&nbsp;&nbsp;Recursive&nbsp;call&nbsp;to&nbsp;loop&nbsp;has&nbsp;principal&nbsp;argument&nbsp;equal&nbsp;to<br/>
+&nbsp;&nbsp;&nbsp;"u"&nbsp;instead&nbsp;of&nbsp;a&nbsp;subterm&nbsp;of&nbsp;"u".<br/>
+&nbsp;&nbsp;&nbsp;Recursive&nbsp;definition&nbsp;is:&nbsp;"fun&nbsp;u&nbsp;:&nbsp;unit&nbsp;=&gt;&nbsp;loop&nbsp;u".&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Wywołanie rekurencyjne <span class="inlinecode"><span class="id" title="var">loop</span></span> jest nielegalne, gdyż jego argumentem
+    jest <span class="inlinecode"><span class="id" title="var">u</span></span>, podczas gdy powinien być nim jakiś podterm <span class="inlinecode"><span class="id" title="var">u</span></span>.
+
+<div class="paragraph"> </div>
+
+    Zanim jednak dowiemy się, czym jest argument główny, czym są podtermy
+    i jak dokładnie Coq weryfikuje poprawność naszych definicji funkcji
+    rekurencyjnych, wróćmy na chwilę do indukcji. Jak się zaraz okaże,
+    nielegalność rekursji ogólnej wymusza również pewne ograniczenia w
+    definicjach induktywnych. 
+<div class="paragraph"> </div>
+
+<a name="lab151"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Ograniczenia nakładane przez Coqa sprawiają, że wszystkie napisane
+    przez nas funkcje rekurencyjne muszą się kiedyś zatrzymać i zwrócić
+    ostateczny wynik swojego działania. Tak więc nie możemy w Coqu pisać
+    funkcji nieterminujących, czyli takich, które się nie zatrzymują.
+
+<div class="paragraph"> </div>
+
+    Rozważ bardzo interesujące pytanie filozoficzne: czy funkcje, które
+    nigdy się nie zatrzymują (lub nie zatrzymują się tylko dla niektórych
+    argumentów) mogą być w ogóle do czegokolwiek przydatne?
+
+<div class="paragraph"> </div>
+
+    Nie daj się wpuścić w maliny. 
+<div class="paragraph"> </div>
+
+<a name="lab152"></a><h1 class="section">Ścisła pozytywność</h1>
+
+<div class="paragraph"> </div>
+
+ Poznana przez nas dotychczas definicja typów induktywnych jest niepełna,
+    gdyż pominęliśmy kryterium ścisłej pozytywności. Rozważmy następujący
+    typ: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C</span> : (<span class="id" title="var">wut</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">wut</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Uwaga: poprzedzenie komendą <span class="inlinecode"><span class="id" title="var">Fail</span></span> innej komendy oznajmia Coqowi, że
+    spodziewamy się, iż komenda zawiedzie. Coq akceptuje komendę <span class="inlinecode"><span class="id" title="var">Fail</span></span> <span class="inlinecode"><span class="id" title="var">c</span></span>,
+    jeżeli komenda <span class="inlinecode"><span class="id" title="var">c</span></span> zawodzi, i wypisuje komunikat o błędzie. Jeżeli
+    komenda <span class="inlinecode"><span class="id" title="var">c</span></span> zakończy się sukcesem, komenda <span class="inlinecode"><span class="id" title="var">Fail</span></span> <span class="inlinecode"><span class="id" title="var">c</span></span> zwróci błąd.
+
+<div class="paragraph"> </div>
+
+    Komenda <span class="inlinecode"><span class="id" title="var">Fail</span></span> jest przydatna w sytuacjach takich jak obecna, gdy
+    chcemy zilustrować fakt, że jakaś komenda zawodzi. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Error:&nbsp;Non&nbsp;strictly&nbsp;positive&nbsp;occurrence&nbsp;of&nbsp;"wut"<br/>
+&nbsp;&nbsp;&nbsp;in&nbsp;"(wut&nbsp;A&nbsp;-&gt;&nbsp;A)&nbsp;-&gt;&nbsp;wut&nbsp;A".&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Żeby zrozumieć ten komunikat o błędzie, musimy najpierw przypomnieć
+    sobie składnię konstruktorów. Konstruktory typu induktywnego <span class="inlinecode"><span class="id" title="var">T</span></span> będą
+    mieć (w dość sporym uproszczeniu) postać <span class="inlinecode"><span class="id" title="var">arg1</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">...</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">argN</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> —
+    są to funkcje biorące pewną (być może zerową) ilość argumentów, a ich
+    przeciwdziedziną jest definiowany typ <span class="inlinecode"><span class="id" title="var">T</span></span>.
+
+<div class="paragraph"> </div>
+
+    Jeżeli definiowany typ <span class="inlinecode"><span class="id" title="var">T</span></span> nie występuje nigdzie w typach argumentów
+    <span class="inlinecode"><span class="id" title="var">arg1</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="var">argN</span></span>, sytuacja jest klarowna i wszystko jest w porządku.
+    W przeciwnym wypadku, w zależności od postaci typów argumentów, mogą
+    pojawić się problemy.
+
+<div class="paragraph"> </div>
+
+    Jeżeli typ któregoś z argumentów jest równy <span class="inlinecode"><span class="id" title="var">T</span></span>, nie ma problemu — jest
+    to po prostu argument rekurencyjny. Jeżeli jest on postaci <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> dla
+    dowolnego typu <span class="inlinecode"><span class="id" title="var">A</span></span>, również nie ma problemu — dzięki argumentom o takich
+    typach możemy reprezentować np. drzewa o nieskończonym współczynniku
+    rozgałęzienia. Mówimy, że w <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> typ <span class="inlinecode"><span class="id" title="var">T</span></span> występuje w pozycji (ściśle)
+    pozytywnej.
+
+<div class="paragraph"> </div>
+
+    Problem pojawia się dopiero, gdy typ argumentu jest postaci <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span>
+    lub podobnej (np. <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> etc.). W takich
+    przypadkach mówimy, że typ <span class="inlinecode"><span class="id" title="var">T</span></span> występuje na pozycji negatywnej (albo
+    "nie-ściśle-pozytywnej").
+
+<div class="paragraph"> </div>
+
+    Pierwszym, stosunkowo błahym problemem jest fakt, że typy łamiące
+    kryterium ścisłej pozytywności nie mają modeli teoriozbiorowych —
+    znaczy to po prostu, że nie można reprezentować ich w teorii zbiorów
+    za pomocą żadnych zbiorów. Dla wielu matematyków stanowi to problem
+    natury praktycznej (są przyzwyczajeni do teorii zbiorów) lub
+    filozoficznej.
+
+<div class="paragraph"> </div>
+
+    Problem ten wynika z faktu, że konstruktory typów induktywnych są
+    injekcjami, zaś typy argumentów, w których definiowany typ występuje
+    na pozycji negatywnej, są "za duże". Np. w przypadku typu <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span>
+    konstruktor <span class="inlinecode"><span class="id" title="var">C</span></span> jest injekcją z <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> w <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span>.
+    Gdybyśmy chcieli interpretować typy jako zbiory, to zbiór
+    <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> jest "za duży", by można było go wstrzyknąć do
+    <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span>, gdyż jest w bijekcji ze zbiorem potęgowym <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span>, a
+    w teorii zbiorów powszechnie wiadomo, że nie ma injekcji ze zbioru
+    potęgowego jakiegoś zbioru do niego samego.
+
+<div class="paragraph"> </div>
+
+    Nie przejmuj się, jeżeli nie rozumiesz powyższego paragrafu — nie
+    jest to główny powód obowiązywania kryterium ścisłej pozytywności,
+    wszak jako buntownicy zajmujący się teorią typów nie powinniśmy
+    zbytnio przejmować się teorią zbiorów.
+
+<div class="paragraph"> </div>
+
+    Prawdziwy powód jest inny: dopuszczenie typów łamiących kryterium
+    ścisłej pozytywności prowadzi do sprzeczności. Gdyby były one
+    legalne, legalna byłaby również poniższa definicja: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <span class="id" title="var">y</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">A</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">f</span> := (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">wut</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span> | <span class="id" title="var">C</span> <span class="id" title="var">f'</span> =&gt; <span class="id" title="var">f'</span> <span class="id" title="var">x</span> <span class="id" title="keyword">end</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="var">f</span> (<span class="id" title="var">C</span> <span class="id" title="var">f</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać, gdyby definicja typu <span class="inlinecode"><span class="id" title="var">wut</span></span> została dopuszczona,
+    moglibyśmy uzyskać zapętlający się program umożliwiający nam
+    stworzenie elementu dowolnego typu i to bez użycia słowa
+    kluczowego <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> (program ten jest nazywany zazwyczaj
+    kombinatorem Y, ang. Y combinator). Stąd już niedaleko do
+    popadnięcia w zupełną sprzeczność: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <span class="id" title="var">santa_is_a_pedophile</span> : <span class="id" title="var">False</span> := <span class="id" title="var">y</span> <span class="id" title="var">False</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab153"></a><h4 class="section">Ćwiczenie</h4>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Inductive&nbsp;T&nbsp;:&nbsp;Type&nbsp;:=&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
+    pozytywności. Następnie sprawdź w Coqu, czy udzieliłeś poprawnej
+    odpowiedzi.
+<ul class="doclist">
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C2</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C3</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C4</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C5</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C6</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C7</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode">(<span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C8</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode">(<span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C9</span></span> <span class="inlinecode">:</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C10</span></span> <span class="inlinecode">:</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode">(<span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>)</span> <span class="inlinecode">(<span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>),</span> <span class="inlinecode"><span class="id" title="var">A</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C11</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span>
+                  <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">C</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> 
+</li>
+</ul>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab154"></a><h1 class="section">Rekursja strukturalna</h1>
+
+<div class="paragraph"> </div>
+
+ Wiemy już, że rekursja ogólna prowadzi do sprzeczności, a jedyną legalną
+    formą rekursji jest rekursja strukturalna. Funkcje rekurencyjne, które
+    dotychczas pisaliśmy, były strukturalnie rekurencyjne, więc potrafisz
+    już całkiem sprawnie posługiwać się tym rodzajem rekursji. Pozostaje
+    nam zatem zbadać jedynie techniczne detale dotyczące sposobu realizacji
+    rekursji strukturalnej w Coqu. W tym celu przyjrzyjmy się ponownie
+    definicji dodawania: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">plus</span>.<br/>
+<span class="comment">(*&nbsp;plus&nbsp;=<br/>
+&nbsp;&nbsp;&nbsp;fix&nbsp;plus&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;{struct&nbsp;n}&nbsp;:&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;n&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0&nbsp;=&gt;&nbsp;m<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;S&nbsp;p&nbsp;=&gt;&nbsp;S&nbsp;(plus&nbsp;p&nbsp;m)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Możemy zaobserwować parę rzeczy. Pierwsza, techniczna sprawa: po
+    <span class="inlinecode">=</span> widzimy nieznany nam konstrukt <span class="inlinecode"><span class="id" title="keyword">fix</span></span>. Pozwala on tworzyć
+    anonimowe funkcje rekruencyjne, tak jak <span class="inlinecode"><span class="id" title="keyword">fun</span></span> pozwala tworzyć
+    anonimowe funkcje nierekurencyjne. Funkcje zdefiniowane komendami 
+    <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> i <span class="inlinecode"><span class="id" title="keyword">Definition</span></span> są w jęzku termów Coqa reprezentowane
+    odpowiednio za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span> i <span class="inlinecode"><span class="id" title="keyword">fun</span></span>.
+
+<div class="paragraph"> </div>
+
+    Po drugie: za listą argumentów, a przed zwracanym typem, występuje
+    adnotacja <span class="inlinecode">{<span class="id" title="keyword">struct</span></span> <span class="inlinecode"><span class="id" title="var">n</span>}</span>. Wskazuje ona, który z argumentów funkcji
+    jest argumentem głównym. Dotychczas gdy definiowaliśmy funkcje
+    rekurencyjne nigdy nie musieliśmy jej pisać, bo Coq zawsze domyślał
+    się, który argument ma być główny. W poetyckiej polszczyźnie argument
+    główny możemy wskazać mówiąc np., że "funkcja plus zdefiniowana jest
+    przez rekursję po pierwszym argumencie" albo "funkcja plus zdefinowana
+    jest przez rekursję po n".
+
+<div class="paragraph"> </div>
+
+    Czym jest argument główny? Spróbuję wyjasnić to w sposób operacyjny:
+<ul class="doclist">
+<li> jako argument główny możemy wskazać dowolny argument, którego typ
+      jest induktywny
+
+</li>
+<li> Coq wymusza na nas, aby argumentem głównym wywołania rekurencyjnego
+      był podterm argumentu głównego z obecnego wywołania 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Dlaczego taki zabieg chroni nas przed sprzecznością? Przypomnij sobie,
+    że termy typów induktywnych muszą być skończone. Parafrazując: są to
+    drzewa o skończonym rozmiarze. Ich podtermy są od nich mniejsze, więc
+    w kolejnych wywołaniach rekurencyjnych argument główny będzie malał,
+    aż w końcu jego rozmiar skurczy się do zera. Wtedy rekursja zatrzyma
+    się, bo nie będzie już żadnych podtermów, na których można by zrobić
+    wywołanie rekurencyjne.
+
+<div class="paragraph"> </div>
+
+    Żeby lepiej zrozumieć ten mechanizm, zbadajmy najpierw relację bycia
+    podtermem dla typów induktywnych. Relację tę opisują dwie proste zasady:
+<ul class="doclist">
+<li> po pierwsze, jeżeli dany term został zrobiony jakimś konstruktorem,
+      to jego podtermami są rekurencyjne argumenty tego konstruktora.
+      Przykład: <span class="inlinecode">0</span> jest podtermem <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">0</span>, zaś <span class="inlinecode"><span class="id" title="var">nil</span></span> podtermem <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode">42</span> <span class="inlinecode"><span class="id" title="var">nil</span></span>.
+
+</li>
+<li> po drugie, jeżeli <span class="inlinecode"><span class="id" title="var">t1</span></span> jest podtermem <span class="inlinecode"><span class="id" title="var">t2</span></span>, a <span class="inlinecode"><span class="id" title="var">t2</span></span> podtermem <span class="inlinecode"><span class="id" title="var">t3</span></span>,
+      to <span class="inlinecode"><span class="id" title="var">t1</span></span> jest podtermem <span class="inlinecode"><span class="id" title="var">t3</span></span> — własność ta nazywa się przechodniością.
+      Przykład: <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">0</span> jest podtermem <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">0)</span>, a zatem <span class="inlinecode">0</span> jest podtermem
+      <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">0)</span>. Podobnie <span class="inlinecode"><span class="id" title="var">nil</span></span> jest podtermem <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode">666</span> <span class="inlinecode">(<span class="id" title="var">cons</span></span> <span class="inlinecode">42</span> <span class="inlinecode"><span class="id" title="var">nil</span>)</span> 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+<a name="lab155"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj relacje bycia podtermem dla liczb naturalnych i list. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Udowodnij, że przytoczone wyżej przykłady nie są oszustwem.
+    Komenda <span class="inlinecode"><span class="id" title="keyword">Goal</span></span> jest wygodna, gdyż używając jej nie musimy
+    nadawać twierdzeniu nazwy. Użycie <span class="inlinecode"><span class="id" title="keyword">Qed</span></span> zapisze twierdzenie
+    jako <span class="inlinecode"><span class="id" title="var">Unnamed_thm</span></span>, <span class="inlinecode"><span class="id" title="var">Unnamed_thm0</span></span>, <span class="inlinecode"><span class="id" title="var">Unnamed_thm1</span></span> etc. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Goal</span> <span class="id" title="var">subterm_nat</span> 0 (<span class="id" title="var">S</span> 0).<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <span class="id" title="var">subterm_list</span> <span class="id" title="var">nil</span> (<span class="id" title="var">cons</span> 42 <span class="id" title="var">nil</span>).<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab156"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że relacje <span class="inlinecode"><span class="id" title="var">subterm_nat</span></span> oraz <span class="inlinecode"><span class="id" title="var">subterm_list</span></span> są antyzwrotne
+    i przechodnie. Uwaga: to może być całkiem trudne. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subterm_nat_antirefl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, ~ <span class="id" title="var">subterm_nat</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subterm_nat_trans</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subterm_nat</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> -&gt; <span class="id" title="var">subterm_nat</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> -&gt; <span class="id" title="var">subterm_nat</span> <span class="id" title="var">a</span> <span class="id" title="var">c</span>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subterm_list_antirefl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), ~ <span class="id" title="var">subterm_list</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subterm_list_trans</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subterm_list</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">subterm_list</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subterm_list</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać, podtermy liczby naturalnej to liczby naturalne, które są od
+    niej mniejsze, zaś podtermy listy to jej ogon, ogon ogona i tak dalej.
+    Zero i lista pusta nie mają podtermów, gdyż są to przypadki bazowe,
+    pochodzące od konstruktorów, które nie mają argumentów rekurencyjnych.
+
+<div class="paragraph"> </div>
+
+    Dla każdego typu induktywnego możemy zdefiniować relację bycia podtermem
+    podobną do tych dla liczb naturalnych i list. Zauważmy jednak, że nie
+    możemy za jednym zamachem zdefiniować relacji bycia podtermem dla
+    wszystkich typów induktywnych, gdyż nie możemy w Coqu powiedzieć czegoś
+    w stylu "dla wszystkich typów induktywnych". Możemy powiedzieć jedynie
+    "dla wszystkich typów".
+
+<div class="paragraph"> </div>
+
+    Coq nie generuje jednak automatycznie takiej relacji, gdy definiujemy
+    nowy typ induktywny. W jaki zatem sposób Coq sprawdza, czy jeden term
+    jest podtermem drugiego? Otóż... w sumie, to nie sprawdza. Rzućmy okiem
+    na następujący przykład: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">weird</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">unit</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">tt</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">weird</span> 0<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Definicja zdaje się być poprawna: <span class="inlinecode">0</span> to przypadek bazowy, a gdy <span class="inlinecode"><span class="id" title="var">n</span></span>
+    jest postaci <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>, wywołujemy funkcję rekurencyjnie na argumencie
+    <span class="inlinecode">0</span>. <span class="inlinecode">0</span> jest podtermem <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>, a zatem wszystko powinno być dobrze.
+    Dostajemy jednak następujący komunikat o błędzie: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Recursive&nbsp;definition&nbsp;of&nbsp;weird&nbsp;is&nbsp;ill-formed.<br/>
+&nbsp;&nbsp;&nbsp;In&nbsp;environment<br/>
+&nbsp;&nbsp;&nbsp;weird&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;unit<br/>
+&nbsp;&nbsp;&nbsp;n&nbsp;:&nbsp;nat<br/>
+&nbsp;&nbsp;&nbsp;n'&nbsp;:&nbsp;nat<br/>
+&nbsp;&nbsp;&nbsp;Recursive&nbsp;call&nbsp;to&nbsp;weird&nbsp;has&nbsp;principal&nbsp;argument&nbsp;equal&nbsp;to&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;"0"&nbsp;instead&nbsp;of&nbsp;"n'".&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Komunikat ten głosi, że argumentem głównym wywołania rekurencyjnego jest
+    <span class="inlinecode">0</span>, podczas gdy powinno być nim <span class="inlinecode"><span class="id" title="var">n'</span></span>. Wynika stąd jasno i wyraźnie, że
+    jedynymi legalnymi argumentami w wywołaniu rekurencyjnym są te podtermy
+    argumentu głównego, które zostają ujawnione w wyniku dopasowania do
+    wzorca. Coq nie jest jednak głupi - jest głupszy, niż ci się wydaje, o
+    czym świadczy poniższy przykład. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">fib</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1 =&gt; 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">fib</span> <span class="id" title="var">n'</span> + <span class="id" title="var">fib</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Funkcja ta próbuje policzyć n-tą liczbę Fibonacciego:
+    https://en.wikipedia.org/wiki/Fibonacci_number, ale
+    słabo jej to wychodzi, gdyż dostajemy następujący błąd: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Recursive&nbsp;definition&nbsp;of&nbsp;fib&nbsp;is&nbsp;ill-formed.<br/>
+&nbsp;&nbsp;&nbsp;In&nbsp;environment<br/>
+&nbsp;&nbsp;&nbsp;fib&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat<br/>
+&nbsp;&nbsp;&nbsp;n&nbsp;:&nbsp;nat<br/>
+&nbsp;&nbsp;&nbsp;n0&nbsp;:&nbsp;nat<br/>
+&nbsp;&nbsp;&nbsp;n'&nbsp;:&nbsp;nat<br/>
+&nbsp;&nbsp;&nbsp;Recursive&nbsp;call&nbsp;to&nbsp;fib&nbsp;has&nbsp;principal&nbsp;argument&nbsp;equal&nbsp;to&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;"S&nbsp;n'"&nbsp;instead&nbsp;of&nbsp;one&nbsp;of&nbsp;the&nbsp;following&nbsp;variables:&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;"n0"&nbsp;"n'".&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mimo, że <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> jest podtermem <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span>, który pochodzi z dopasowania
+    do wzorca, to Coq nie jest w stanie zauważyć tego faktu. W komunikacie
+    o błędzie pojawia się za to tajemnicza zmienna <span class="inlinecode"><span class="id" title="var">n0</span></span>, której w naszym
+    kodzie nigdzie nie ma. Sposobem na poradzenie sobie z problemem jest
+    pokazanie Coqowi palcem, o co nam chodzi: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">fib</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 1 =&gt; 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span> <span class="id" title="keyword">as</span> <span class="id" title="var">n''</span>) =&gt; <span class="id" title="var">fib</span> <span class="id" title="var">n'</span> + <span class="id" title="var">fib</span> <span class="id" title="var">n''</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tym razem Coq widzi, że <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> jest podtermem <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span>, gdyż explicite
+    nadaliśmy temu termowi nazwę <span class="inlinecode"><span class="id" title="var">n''</span></span>, używając do tego klauzli <span class="inlinecode"><span class="id" title="keyword">as</span></span>.
+
+<div class="paragraph"> </div>
+
+    Ufff...  udało nam się przebrnąć przez techniczne detale działania
+    rekursji strukturalnej. Mogłoby się wydawać, że jest ona mechanizmem
+    bardzo upośledzonym, ale z doświadczenia wiesz już, że w praktyce
+    omówione wyżej problemy występują raczej rzadko.
+
+<div class="paragraph"> </div>
+
+    Mogłoby się też wydawać, że skoro wywołania rekurencyjne możemy robić
+    tylko na bezpośrednich podtermach dopasowanych we wzorcu, to nie da się
+    zdefiniować prawie żadnej ciekawej funkcji. Jak zobaczymy w następnym
+    podrozdziale, wcale tak nie jest - dzięki pewnej sztuczce (która jest
+    jednocześnie fundamentalną własnością wszystkich możliwych wszechświatów)
+    za pomocą rekursji strukturalnej można wyrazić rekursję dobrze ufundowaną,
+    która na pierwszy rzut oka jest dużo potężniejsza i daje nam wiele
+    możliwości definiowania różnych ciekawych funkcji. 
+<div class="paragraph"> </div>
+
+<a name="lab157"></a><h4 class="section">Ćwiczenie (dzielenie)</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">div</span></span>, która implementuje dzielenie całkowitoliczbowe.
+    Żeby uniknąć problemów z dzieleniem przez <span class="inlinecode">0</span>, <span class="inlinecode"><span class="id" title="var">div</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> będziemy
+    interpretować jako <span class="inlinecode"><span class="id" title="var">n</span></span> podzielone przez <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>, czyli np. <span class="inlinecode"><span class="id" title="var">div</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">0</span>
+    to n/1, <span class="inlinecode"><span class="id" title="var">div</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">1</span> to n/2 etc. Uwaga: to ćwiczenie pojawia się właśnie
+    w tym miejscu nieprzypadkowo. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab158"></a><h1 class="section">Rekursja dobrze ufundowana</h1>
+
+<div class="paragraph"> </div>
+
+ Typy induktywne są jak domino - każdy term to jedna kostka, indukcja
+    i rekursja odpowiadają zaś temu co tygryski lubią najbardziej, czyli
+    reakcji łańcuchowej przewracającej wszystkie kostki.
+
+<div class="paragraph"> </div>
+
+    Typ <span class="inlinecode"><span class="id" title="var">unit</span></span> to jedna biedna kostka, zaś <span class="inlinecode"><span class="id" title="var">bool</span></span> to już dwie biedne
+    kostki - <span class="inlinecode"><span class="id" title="var">true</span></span> i <span class="inlinecode"><span class="id" title="var">false</span></span>. W obu przypadkach nie dzieje się nic
+    ciekawego - żeby wszystkie kostki się przewróciły, musimy pchnąć
+    palcem każdą z osobna.
+
+<div class="paragraph"> </div>
+
+    Typ <span class="inlinecode"><span class="id" title="var">nat</span></span> jest już ciekawszy - są dwa rodzaje kostek, <span class="inlinecode">0</span> i <span class="inlinecode"><span class="id" title="var">S</span></span>,
+    a jeżeli pchniemy kostkę <span class="inlinecode">0</span> i między kolejnymi kostkami jest
+    odpowiedni odstęp, to równy szlaczek kolejnych kostek przewracać
+    się będzie do końca świata.
+
+<div class="paragraph"> </div>
+
+    Podobnie dla typu <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> mamy dwa rodzaje kostek - <span class="inlinecode"><span class="id" title="var">nil</span></span> i <span class="inlinecode"><span class="id" title="var">cons</span></span>,
+    ale kostki rodzaju <span class="inlinecode"><span class="id" title="var">cons</span></span> mają różne kolory - są nimi elementy typu
+    <span class="inlinecode"><span class="id" title="var">A</span></span>. Podobnie jak dla <span class="inlinecode"><span class="id" title="var">nat</span></span>, jeżeli pchniemy kostkę <span class="inlinecode"><span class="id" title="var">nil</span></span> i odstępy
+    między kolejnymi kostkami są odpowiednie, to kostki będą przewracać
+    się w nieskończoność. Tym razem jednak zamiast jednego szaroburego
+    szlaczka będzie multum kolorowych szlaczków o wspólnych początkach
+    (no chyba, że <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">unit</span></span> - wtedy dostaniemy taki sam bury szlaczek
+    jak dla <span class="inlinecode"><span class="id" title="var">nat</span></span>).
+
+<div class="paragraph"> </div>
+
+    Powyższe malownicze opisy przewracających się kostek domino bardziej
+    przywodzą mi na myśl indukcję, niż rekursję, chociaż wiemy już, że
+    jest to w sumie to samo. Przyjmują one perspektywę "od przodu" -
+    jeżeli przewrócimy początkową kostkę i niczego nie spartaczyliśmy,
+    kolejne kostki będą przewracać się już same.
+
+<div class="paragraph"> </div>
+
+    Możemy jednak przyjąć inny sposób patrzenia - perspektywę "od tyłu".
+    W tej perspektywie kostka początkowa przewraca się, jeżeli zostanie
+    pchnięta palcem, zaś każda dalsza kostka przewraca się, jeżeli
+    przewracają się wszystkie kostki bezpośrednio ją poprzedzające.
+
+<div class="paragraph"> </div>
+
+    Jeszcze jeden drobny detal: żeby w ogóle móc pchnąć kostki początkowe
+    (w liczbie mnogiej, bo rzecz jasna może być więcej niż jedna), musimy
+    najpierw ustalić, które kostki są tymi początkowymi! Na szczęście nie
+    jest to trudne - są to oczywiście te, których nie poprzedzają inne
+    kostki.
+
+<div class="paragraph"> </div>
+
+    I tutaj następuje pewien trik logiczno-językowo-wyobraźniowy: możemy
+    o kostkach początkowych myśleć, że przewracają się, gdy przewrócą się
+    wszystkie kostki je poprzedzające, których oczywiście nie ma, a nasz
+    palec wyobrażać sobie po prostu jako fizyczną realizację tej pustej
+    prawdy.
+
+<div class="paragraph"> </div>
+
+    W ten oto wesoły sposób udało nam się uzyskać definicję elementu
+    dostępnego oraz relacji dobrze ufundowanej. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Acc</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Acc_intro</span> : (<span class="id" title="keyword">forall</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">Acc</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">Acc</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Kostki domina reprezentuje typ <span class="inlinecode"><span class="id" title="var">A</span></span>, zaś relacja <span class="inlinecode"><span class="id" title="var">R</span></span> to sposób ułożenia
+    kostek, a <span class="inlinecode"><span class="id" title="var">x</span></span> to pewna konkretna kostka domina. Konstruktor <span class="inlinecode"><span class="id" title="var">Acc_intro</span></span>
+    mówi, że kostka <span class="inlinecode"><span class="id" title="var">x</span></span> przewraca się, gdy przewracają się wszystkie kostki
+    ją poprzedzające.
+
+<div class="paragraph"> </div>
+
+    To samo nieco mniej bajkowym językiem: element <span class="inlinecode"><span class="id" title="var">x</span></span> typu <span class="inlinecode"><span class="id" title="var">A</span></span> jest dostępny
+    w relacji <span class="inlinecode"><span class="id" title="var">R</span></span>, jeżeli każdy poprzedzający go element <span class="inlinecode"><span class="id" title="var">y</span></span> typu <span class="inlinecode"><span class="id" title="var">A</span></span> również
+    jest dostępny. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">well_founded</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Acc</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Układ kostek reprezentowany przez <span class="inlinecode"><span class="id" title="var">R</span></span> przewraca się w całości, jeżeli
+    każda kostka domina przewraca się z osobna.
+
+<div class="paragraph"> </div>
+
+    Mniej poetycko: relacja jest dobrze ufundowana, jeżeli każdy element
+    typu <span class="inlinecode"><span class="id" title="var">A</span></span> jest dostępny.
+
+<div class="paragraph"> </div>
+
+    Uwaga: typem naszej "relacji" nie jest <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, lecz
+    <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, a zatem <span class="inlinecode"><span class="id" title="var">R</span></span> jest tak naprawdę indeksowaną rodziną
+    typów. Różnica między relacją i rodziną typów jest taka, że relacja,
+    gdy dostanie argumenty, zwraca zdanie, czyli coś typu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, a rodzina
+    typów, gdy dostanie argumenty, zwraca typ, czyli coś typu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. Tak
+    więc pojęcie rodziny typów jest ogólniejsze niż pojęcie relacji. Ta
+    ogólność przyda się nam za kilka chwil aby nie musieć pisać wszystkiego
+    dwa razy. 
+<div class="paragraph"> </div>
+
+<a name="lab159"></a><h4 class="section">Ćwiczenie (dostępność i ufundowanie)</h4>
+
+<div class="paragraph"> </div>
+
+ Sprawdź, czy relacje <span class="inlinecode">&lt;=</span>, <span class="inlinecode">&lt;</span> są dobrze ufundowane. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Pokaż, że relacja dobrze ufundowana jest antyzwrotna oraz zinterpretuj
+    ten fakt (tzn. powiedz, o co tak naprawdę chodzi w tym stwierdzeniu). 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wf_antirefl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">well_founded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Sprawdź, czy dobrze ufundowane są relacje <span class="inlinecode"><span class="id" title="var">le'</span></span> i <span class="inlinecode"><span class="id" title="var">lt'</span></span>. Uwaga:
+    pierwsze zadanie jest bardzo łatwe, drugie jest piekielnie trudne.
+    Jeżeli nie potrafisz rozwiązać go formalnie w Coqu, zrób to na
+    kartce nieformalnie - będzie dużo łatwiej.
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">le'</span> (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">g</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">lt'</span> (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">g</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Sprawdź, czy dobrze ufundowana jest następująca relacja porządku:
+    wszystkie liczby parzyste są mniejsze niż wszystkie liczby nieparzyste,
+    zaś dwie liczby o tej samej parzystości porównujemy według zwykłego
+    porządku <span class="inlinecode">&lt;</span>. 
+<div class="paragraph"> </div>
+
+ Wiemy już, co to znaczy, że kostka domina jest dostępna (każda kostka
+    ją poprzedzająca jest dostępna, co formalnie wyraża predykat <span class="inlinecode"><span class="id" title="var">Acc</span></span>)
+    oraz że poprawny układ kostek to taki, w którym każda kostka jest
+    dostępna (co formalnie wyraża predykat <span class="inlinecode"><span class="id" title="var">well_founded</span></span>). Możemy teraz
+    przejść do tego, do czego dążyliśmy od samego początku: udowodnić, że
+    jeżeli poprawnie ustawimy kostki, to wszystkie się przewrócą. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">well_founded_rect</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">wf</span> : <span class="id" title="var">well_founded</span> <span class="id" title="var">R</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span> <span class="id" title="keyword">wf</span> <span class="id" title="var">P</span> <span class="id" title="var">IH</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Check</span> <span class="id" title="var">Acc_rect</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Acc_rect</span> <span class="id" title="keyword">with</span> <span class="id" title="var">R</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">y</span> <span class="id" title="var">H1</span> <span class="id" title="var">H2</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="keyword">wf</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">well_founded_ind</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">wf</span> : <span class="id" title="var">well_founded</span> <span class="id" title="var">R</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span> <span class="id" title="keyword">wf</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_rect</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="keyword">wf</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span>).<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab160"></a><h1 class="section">Indukcja funkcyjna</h1>
+
+</div>
+<div class="code">
+</div>

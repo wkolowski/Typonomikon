@@ -1,0 +1,922 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-1.8.3.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-88023543-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</head>
+<div id="toc">
+<a href="R0.html"><h2>R0: Wstęp</h2></a>
+<ul class="doclist">
+<li><a href="R0.html#lab1">Cel</a>
+
+</li>
+<li><a href="R0.html#lab2">Wybór</a>
+
+</li>
+<li><a href="R0.html#lab3">Programowanie i dowodzenie</a>
+<ul class="doclist">
+<li><a href="R0.html#lab4">Alan Turing i jego maszyna</a>
+
+</li>
+<li><a href="R0.html#lab5">Alonzo Church i rachunek λ</a>
+
+</li>
+<li><a href="R0.html#lab6">Martin-Löf, Coquand, CoC, CIC i Coq</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R0.html#lab7">Filozofia i matematyka</a>
+<ul class="doclist">
+<li><a href="R0.html#lab8">Konstruktywizm</a>
+
+</li>
+<li><a href="R0.html#lab9">Praktyka</a>
+
+</li>
+<li><a href="R0.html#lab10">Homofobia... ekhm, homotopia, czyli quo vadimus?</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R0.html#lab11">Literatura</a>
+<ul class="doclist">
+<li><a href="R0.html#lab12">Książki</a>
+
+</li>
+<li><a href="R0.html#lab13">Blogi</a>
+
+</li>
+<li><a href="R0.html#lab14">Inne</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R0.html#lab15">Sprawy techniczne</a>
+
+</li>
+</ul>
+<a href="R1.html"><h2>R1: Logika</h2></a>
+<ul class="doclist">
+<li><a href="R1.html#lab16">Typy i termy</a>
+
+</li>
+<li><a href="R1.html#lab17">Typy a zbiory</a>
+
+</li>
+<li><a href="R1.html#lab18">Logika klasyczna i konstruktywna</a>
+
+</li>
+<li><a href="R1.html#lab19">Dedukcja naturalna i taktyki</a>
+
+</li>
+<li><a href="R1.html#lab20">Konstruktywny rachunek zdań</a>
+<ul class="doclist">
+<li><a href="R1.html#lab21">Implikacja</a>
+
+</li>
+<li><a href="R1.html#lab24">Fałsz</a>
+
+</li>
+<li><a href="R1.html#lab25">Prawda</a>
+
+</li>
+<li><a href="R1.html#lab26">Negacja</a>
+
+</li>
+<li><a href="R1.html#lab30">Koniunkcja</a>
+
+</li>
+<li><a href="R1.html#lab32">Równoważność zdaniowa</a>
+
+</li>
+<li><a href="R1.html#lab34">Dysjunkcja</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R1.html#lab37">Konstruktywny rachunek kwantyfikatorów</a>
+<ul class="doclist">
+<li><a href="R1.html#lab38">Kwantyfikacja uniwersalna</a>
+
+</li>
+<li><a href="R1.html#lab40">Kwantyfikacja egzystencjalna</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R1.html#lab42">Paradoks golibrody</a>
+
+</li>
+<li><a href="R1.html#lab43">Paradoks pieniądza i kebaba</a>
+
+</li>
+<li><a href="R1.html#lab45">Kombinatory taktyk</a>
+<ul class="doclist">
+<li><a href="R1.html#lab46"><span class="inlinecode">;</span> (średnik)</a>
+
+</li>
+<li><a href="R1.html#lab48"><span class="inlinecode">||</span> (alternatywa)</a>
+
+</li>
+<li><a href="R1.html#lab49"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></a>
+
+</li>
+<li><a href="R1.html#lab50"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R1.html#lab51">Zadania</a>
+<ul class="doclist">
+<li><a href="R1.html#lab52">Konstruktywny rachunek zdań</a>
+
+</li>
+<li><a href="R1.html#lab61">Konstruktywny rachunek kwantyfikatorów</a>
+
+</li>
+<li><a href="R1.html#lab65">Klasyczny rachunek zdań (i kwantyfikatorów)</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R1.html#lab66">Paradoks pijoka</a>
+
+</li>
+<li><a href="R1.html#lab69">Ściąga</a>
+
+</li>
+<li><a href="R1.html#lab70">Konkluzja</a>
+
+</li>
+</ul>
+<a href="R2.html"><h2>R2: Indukcja i rekursja</h2></a>
+<ul class="doclist">
+<li><a href="R2.html#lab71">Sorty</a>
+
+</li>
+<li><a href="R2.html#lab72">Hierarchia uniwersów</a>
+
+</li>
+<li><a href="R2.html#lab73">Typy induktywne</a>
+<ul class="doclist">
+<li><a href="R2.html#lab74">Enumeracje</a>
+
+</li>
+<li><a href="R2.html#lab80">Konstruktory rekurencyjne</a>
+
+</li>
+<li><a href="R2.html#lab84">Typy polimorficzne i właściwości konstruktorów</a>
+
+</li>
+<li><a href="R2.html#lab87">Typy induktywne — (prawie) pełna moc</a>
+
+</li>
+<li><a href="R2.html#lab90">Rekordy</a>
+
+</li>
+<li><a href="R2.html#lab92">Klasy</a>
+
+</li>
+<li><a href="R2.html#lab98">Ważne typy induktywne</a>
+
+</li>
+<li><a href="R2.html#lab108">Typy puste</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R2.html#lab109">Induktywne zdania i predykaty</a>
+<ul class="doclist">
+<li><a href="R2.html#lab110">Induktywne zdania</a>
+
+</li>
+<li><a href="R2.html#lab112">Induktywne predykaty</a>
+
+</li>
+<li><a href="R2.html#lab114">Indukcja po dowodzie</a>
+
+</li>
+<li><a href="R2.html#lab117">Definicje stałych i spójników logicznych</a>
+
+</li>
+<li><a href="R2.html#lab120">Równość</a>
+
+</li>
+<li><a href="R2.html#lab121">Indukcja wzajemna</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R2.html#lab124">Różne</a>
+<ul class="doclist">
+<li><a href="R2.html#lab125">Rodziny typów induktywnych</a>
+
+</li>
+<li><a href="R2.html#lab127">Indukcja wzajemna a indeksowane rodziny typów</a>
+
+</li>
+<li><a href="R2.html#lab128">Sumy zależne i podtypy</a>
+
+</li>
+<li><a href="R2.html#lab130">Kwantyfikacja egzystencjalna</a>
+
+</li>
+<li><a href="R2.html#lab132">W-typy</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R2.html#lab133">Wyższe czary</a>
+<ul class="doclist">
+<li><a href="R2.html#lab134">Przypomnienie</a>
+
+</li>
+<li><a href="R2.html#lab140">Indukcja-indukcja</a>
+
+</li>
+<li><a href="R2.html#lab146">Indukcja-rekursja</a>
+
+</li>
+<li><a href="R2.html#lab147">Jeszcze straszniejszy potfur</a>
+
+</li>
+</ul>
+
+</li>
+</ul>
+<a href="R2ipół.html"><h2>R2ipół</h2></a>
+<ul class="doclist">
+<li><a href="R2ipół.html#lab148">Rodzaje rekursji</a>
+
+</li>
+<li><a href="R2ipół.html#lab150">Rekursja ogólna</a>
+
+</li>
+<li><a href="R2ipół.html#lab152">Ścisła pozytywność</a>
+
+</li>
+<li><a href="R2ipół.html#lab154">Rekursja strukturalna</a>
+
+</li>
+<li><a href="R2ipół.html#lab158">Rekursja dobrze ufundowana</a>
+
+</li>
+<li><a href="R2ipół.html#lab160">Indukcja funkcyjna</a>
+
+</li>
+</ul>
+<a href="R3.html"><h2>R3: Ltac — język taktyk</h2></a>
+<ul class="doclist">
+<li><a href="R3.html#lab161">Zarządzanie celami i selektory</a>
+
+</li>
+<li><a href="R3.html#lab162">Podstawy języka Ltac</a>
+
+</li>
+<li><a href="R3.html#lab163">Backtracking</a>
+
+</li>
+<li><a href="R3.html#lab169">Dopasowanie kontekstu i celu</a>
+
+</li>
+<li><a href="R3.html#lab174">Wzorce i unifikacja</a>
+
+</li>
+<li><a href="R3.html#lab177">Narzędzia przydatne przy dopasowywaniu</a>
+<ul class="doclist">
+<li><a href="R3.html#lab178">Dopasowanie podtermu</a>
+
+</li>
+<li><a href="R3.html#lab180">Generowanie nieużywanych nazw</a>
+
+</li>
+<li><a href="R3.html#lab181"><span class="inlinecode"><span class="id" title="tactic">fail</span></span> (znowu)</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R3.html#lab182">Inne (mało) wesołe rzeczy</a>
+
+</li>
+<li><a href="R3.html#lab183">Konkluzja</a>
+
+</li>
+</ul>
+<a href="R4.html"><h2>R4: Spis przydatnych taktyk</h2></a>
+<ul class="doclist">
+<li><a href="R4.html#lab184"><span class="inlinecode"><span class="id" title="tactic">refine</span></span> — matka wszystkich taktyk</a>
+
+</li>
+<li><a href="R4.html#lab189">Drobne taktyki</a>
+<ul class="doclist">
+<li><a href="R4.html#lab190"><span class="inlinecode"><span class="id" title="tactic">clear</span></span></a>
+
+</li>
+<li><a href="R4.html#lab194"><span class="inlinecode"><span class="id" title="tactic">fold</span></span></a>
+
+</li>
+<li><a href="R4.html#lab196"><span class="inlinecode"><span class="id" title="tactic">move</span></span></a>
+
+</li>
+<li><a href="R4.html#lab198"><span class="inlinecode"><span class="id" title="tactic">pose</span></span> i <span class="inlinecode"><span class="id" title="var">remember</span></span></a>
+
+</li>
+<li><a href="R4.html#lab200"><span class="inlinecode"><span class="id" title="tactic">rename</span></span></a>
+
+</li>
+<li><a href="R4.html#lab202"><span class="inlinecode"><span class="id" title="var">admit</span></span></a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R4.html#lab203">Średnie taktyki</a>
+<ul class="doclist">
+<li><a href="R4.html#lab204"><span class="inlinecode"><span class="id" title="var">case_eq</span></span></a>
+
+</li>
+<li><a href="R4.html#lab206"><span class="inlinecode"><span class="id" title="var">contradiction</span></span></a>
+
+</li>
+<li><a href="R4.html#lab209"><span class="inlinecode"><span class="id" title="tactic">constructor</span></span></a>
+
+</li>
+<li><a href="R4.html#lab211"><span class="inlinecode"><span class="id" title="var">decompose</span></span></a>
+
+</li>
+<li><a href="R4.html#lab212"><span class="inlinecode"><span class="id" title="tactic">intros</span></span></a>
+
+</li>
+<li><a href="R4.html#lab214"><span class="inlinecode"><span class="id" title="keyword">fix</span></span></a>
+
+</li>
+<li><a href="R4.html#lab215"><span class="inlinecode"><span class="id" title="var">functional</span></span> <span class="inlinecode"><span class="id" title="tactic">induction</span></span> i <span class="inlinecode"><span class="id" title="var">functional</span></span> <span class="inlinecode"><span class="id" title="tactic">inversion</span></span></a>
+
+</li>
+<li><a href="R4.html#lab216"><span class="inlinecode"><span class="id" title="tactic">generalize</span></span> <span class="inlinecode"><span class="id" title="tactic">dependent</span></span></a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R4.html#lab219">Taktyki dla równości i równoważności</a>
+<ul class="doclist">
+<li><a href="R4.html#lab220"><span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span>, <span class="inlinecode"><span class="id" title="tactic">symmetry</span></span> i <span class="inlinecode"><span class="id" title="tactic">transitivity</span></span></a>
+
+</li>
+<li><a href="R4.html#lab221"><span class="inlinecode"><span class="id" title="tactic">f_equal</span></span></a>
+
+</li>
+<li><a href="R4.html#lab225"><span class="inlinecode"><span class="id" title="tactic">rewrite</span></span></a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R4.html#lab226">Taktyki dla redukcji i obliczeń (TODO)</a>
+
+</li>
+<li><a href="R4.html#lab227">Procedury decyzyjne</a>
+<ul class="doclist">
+<li><a href="R4.html#lab228"><span class="inlinecode"><span class="id" title="var">btauto</span></span></a>
+
+</li>
+<li><a href="R4.html#lab230"><span class="inlinecode"><span class="id" title="tactic">congruence</span></span></a>
+
+</li>
+<li><a href="R4.html#lab234"><span class="inlinecode"><span class="id" title="var">decide</span></span> <span class="inlinecode"><span class="id" title="var">equality</span></span></a>
+
+</li>
+<li><a href="R4.html#lab236"><span class="inlinecode"><span class="id" title="tactic">omega</span></span> i <span class="inlinecode"><span class="id" title="tactic">abstract</span></span></a>
+
+</li>
+<li><a href="R4.html#lab237">Procedury decyzyjne dla logiki</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R4.html#lab239">Ogólne taktyki automatyzacyjne</a>
+<ul class="doclist">
+<li><a href="R4.html#lab240"><span class="inlinecode"><span class="id" title="tactic">auto</span></span> i <span class="inlinecode"><span class="id" title="tactic">trivial</span></span></a>
+
+</li>
+<li><a href="R4.html#lab242"><span class="inlinecode"><span class="id" title="tactic">autorewrite</span></span> i <span class="inlinecode"><span class="id" title="var">autounfold</span></span></a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="R4.html#lab246">Pierścienie, ciała i arytmetyka</a>
+
+</li>
+<li><a href="R4.html#lab248">Zmienne egzystencjalne i ich taktyki (TODO)</a>
+
+</li>
+<li><a href="R4.html#lab249">Taktyki do radzenia sobie z typami zależnymi (TODO)</a>
+
+</li>
+<li><a href="R4.html#lab250">Dodatkowe ćwiczenia</a>
+
+</li>
+<li><a href="R4.html#lab257">Inne języki taktyk</a>
+
+</li>
+<li><a href="R4.html#lab259">Konkluzja</a>
+
+</li>
+</ul>
+<a href="X1.html"><h2>X1: Logika boolowska</h2></a>
+<ul class="doclist">
+<li><a href="X1.html#lab260">Definicje</a>
+
+</li>
+<li><a href="X1.html#lab261">Twierdzenia</a>
+
+</li>
+</ul>
+<a href="X2.html"><h2>X2: Arytmetyka Peano</h2></a>
+<ul class="doclist">
+<li><a href="X2.html#lab273">Podstawy</a>
+<ul class="doclist">
+<li><a href="X2.html#lab274">Definicja i notacje</a>
+
+</li>
+<li><a href="X2.html#lab275"><span class="inlinecode">0</span> i <span class="inlinecode"><span class="id" title="var">S</span></span></a>
+
+</li>
+<li><a href="X2.html#lab276">Poprzednik</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X2.html#lab277">Proste działania</a>
+<ul class="doclist">
+<li><a href="X2.html#lab278">Dodawanie</a>
+
+</li>
+<li><a href="X2.html#lab279">Alternatywne definicje dodawania</a>
+
+</li>
+<li><a href="X2.html#lab280">Odejmowanie</a>
+
+</li>
+<li><a href="X2.html#lab281">Mnożenie</a>
+
+</li>
+<li><a href="X2.html#lab282">Potęgowanie</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X2.html#lab283">Porządek</a>
+<ul class="doclist">
+<li><a href="X2.html#lab284">Porządek <span class="inlinecode">&lt;=</span></a>
+
+</li>
+<li><a href="X2.html#lab285">Porządek <span class="inlinecode">&lt;</span></a>
+
+</li>
+<li><a href="X2.html#lab286">Minimum i maksimum</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X2.html#lab287">Rozstrzygalność</a>
+<ul class="doclist">
+<li><a href="X2.html#lab288">Rozstrzygalność porządku</a>
+
+</li>
+<li><a href="X2.html#lab289">Rozstrzygalność równości</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X2.html#lab290">Dzielenie i podzielność</a>
+<ul class="doclist">
+<li><a href="X2.html#lab291">Dzielenie przez 2</a>
+
+</li>
+<li><a href="X2.html#lab292">Podzielność</a>
+
+</li>
+</ul>
+
+</li>
+</ul>
+<a href="X3.html"><h2>X3: Listy</h2></a>
+<ul class="doclist">
+<li><a href="X3.html#lab293">Proste funkcje</a>
+<ul class="doclist">
+<li><a href="X3.html#lab294"><span class="inlinecode"><span class="id" title="var">isEmpty</span></span></a>
+
+</li>
+<li><a href="X3.html#lab295"><span class="inlinecode"><span class="id" title="var">length</span></span></a>
+
+</li>
+<li><a href="X3.html#lab296"><span class="inlinecode"><span class="id" title="var">snoc</span></span></a>
+
+</li>
+<li><a href="X3.html#lab297"><span class="inlinecode"><span class="id" title="var">app</span></span></a>
+
+</li>
+<li><a href="X3.html#lab298"><span class="inlinecode"><span class="id" title="var">rev</span></span></a>
+
+</li>
+<li><a href="X3.html#lab299"><span class="inlinecode"><span class="id" title="var">map</span></span></a>
+
+</li>
+<li><a href="X3.html#lab300"><span class="inlinecode"><span class="id" title="var">join</span></span></a>
+
+</li>
+<li><a href="X3.html#lab301"><span class="inlinecode"><span class="id" title="var">bind</span></span></a>
+
+</li>
+<li><a href="X3.html#lab302"><span class="inlinecode"><span class="id" title="var">replicate</span></span></a>
+
+</li>
+<li><a href="X3.html#lab303"><span class="inlinecode"><span class="id" title="var">iterate</span></span> i <span class="inlinecode"><span class="id" title="var">iter</span></span></a>
+
+</li>
+<li><a href="X3.html#lab304"><span class="inlinecode"><span class="id" title="var">head</span></span>, <span class="inlinecode"><span class="id" title="var">tail</span></span> i <span class="inlinecode"><span class="id" title="var">uncons</span></span></a>
+
+</li>
+<li><a href="X3.html#lab308"><span class="inlinecode"><span class="id" title="var">last</span></span>, <span class="inlinecode"><span class="id" title="var">init</span></span> i <span class="inlinecode"><span class="id" title="var">unsnoc</span></span></a>
+
+</li>
+<li><a href="X3.html#lab313"><span class="inlinecode"><span class="id" title="var">nth</span></span></a>
+
+</li>
+<li><a href="X3.html#lab314"><span class="inlinecode"><span class="id" title="var">take</span></span></a>
+
+</li>
+<li><a href="X3.html#lab315"><span class="inlinecode"><span class="id" title="var">drop</span></span></a>
+
+</li>
+<li><a href="X3.html#lab317"><span class="inlinecode"><span class="id" title="var">splitAt</span></span></a>
+
+</li>
+<li><a href="X3.html#lab318"><span class="inlinecode"><span class="id" title="var">insert</span></span></a>
+
+</li>
+<li><a href="X3.html#lab319"><span class="inlinecode"><span class="id" title="tactic">replace</span></span></a>
+
+</li>
+<li><a href="X3.html#lab320"><span class="inlinecode"><span class="id" title="var">remove</span></span></a>
+
+</li>
+<li><a href="X3.html#lab321"><span class="inlinecode"><span class="id" title="var">zip</span></span></a>
+
+</li>
+<li><a href="X3.html#lab322"><span class="inlinecode"><span class="id" title="var">unzip</span></span></a>
+
+</li>
+<li><a href="X3.html#lab323"><span class="inlinecode"><span class="id" title="var">zipWith</span></span></a>
+
+</li>
+<li><a href="X3.html#lab324"><span class="inlinecode"><span class="id" title="var">unzipWith</span></span></a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X3.html#lab325">Funkcje z predykatem boolowskim</a>
+<ul class="doclist">
+<li><a href="X3.html#lab326"><span class="inlinecode"><span class="id" title="var">any</span></span></a>
+
+</li>
+<li><a href="X3.html#lab327"><span class="inlinecode"><span class="id" title="var">all</span></span></a>
+
+</li>
+<li><a href="X3.html#lab328"><span class="inlinecode"><span class="id" title="var">find</span></span>  i <span class="inlinecode"><span class="id" title="var">findLast</span></span></a>
+
+</li>
+<li><a href="X3.html#lab329"><span class="inlinecode"><span class="id" title="var">removeFirst</span></span> i <span class="inlinecode"><span class="id" title="var">removeLast</span></span></a>
+
+</li>
+<li><a href="X3.html#lab330"><span class="inlinecode"><span class="id" title="var">findIndex</span></span></a>
+
+</li>
+<li><a href="X3.html#lab331"><span class="inlinecode"><span class="id" title="var">count</span></span></a>
+
+</li>
+<li><a href="X3.html#lab332"><span class="inlinecode"><span class="id" title="var">filter</span></span></a>
+
+</li>
+<li><a href="X3.html#lab333"><span class="inlinecode"><span class="id" title="var">partition</span></span></a>
+
+</li>
+<li><a href="X3.html#lab334"><span class="inlinecode"><span class="id" title="var">findIndices</span></span></a>
+
+</li>
+<li><a href="X3.html#lab335"><span class="inlinecode"><span class="id" title="var">takeWhile</span></span> i <span class="inlinecode"><span class="id" title="var">dropWhile</span></span></a>
+
+</li>
+<li><a href="X3.html#lab336"><span class="inlinecode"><span class="id" title="var">span</span></span></a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X3.html#lab338">Sekcja mocno ad hoc</a>
+<ul class="doclist">
+<li><a href="X3.html#lab339"><span class="inlinecode"><span class="id" title="var">pmap</span></span></a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X3.html#lab340">Bardziej skomplikowane funkcje</a>
+<ul class="doclist">
+<li><a href="X3.html#lab341"><span class="inlinecode"><span class="id" title="var">intersperse</span></span></a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X3.html#lab342">Proste predykaty</a>
+<ul class="doclist">
+<li><a href="X3.html#lab343"><span class="inlinecode"><span class="id" title="var">elem</span></span></a>
+
+</li>
+<li><a href="X3.html#lab344"><span class="inlinecode"><span class="id" title="var">In</span></span></a>
+
+</li>
+<li><a href="X3.html#lab345"><span class="inlinecode"><span class="id" title="var">NoDup</span></span></a>
+
+</li>
+<li><a href="X3.html#lab346"><span class="inlinecode"><span class="id" title="var">Dup</span></span></a>
+
+</li>
+<li><a href="X3.html#lab347"><span class="inlinecode"><span class="id" title="var">Rep</span></span></a>
+
+</li>
+<li><a href="X3.html#lab348"><span class="inlinecode"><span class="id" title="var">Exists</span></span></a>
+
+</li>
+<li><a href="X3.html#lab349"><span class="inlinecode"><span class="id" title="var">Forall</span></span></a>
+
+</li>
+<li><a href="X3.html#lab350"><span class="inlinecode"><span class="id" title="var">AtLeast</span></span></a>
+
+</li>
+<li><a href="X3.html#lab351"><span class="inlinecode"><span class="id" title="var">Exactly</span></span></a>
+
+</li>
+<li><a href="X3.html#lab352"><span class="inlinecode"><span class="id" title="var">AtMost</span></span></a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X3.html#lab353">Relacje między listami</a>
+<ul class="doclist">
+<li><a href="X3.html#lab354">Listy jako termy</a>
+
+</li>
+<li><a href="X3.html#lab355">Prefiksy</a>
+
+</li>
+<li><a href="X3.html#lab356">Sufiksy</a>
+
+</li>
+<li><a href="X3.html#lab357">Listy jako ciągi</a>
+
+</li>
+<li><a href="X3.html#lab358">Zawieranie</a>
+
+</li>
+<li><a href="X3.html#lab359">Listy jako zbiory</a>
+
+</li>
+<li><a href="X3.html#lab360">Listy jako multizbiory</a>
+
+</li>
+<li><a href="X3.html#lab361">Listy jako cykle</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X3.html#lab362">Niestandardowe reguły indukcyjne</a>
+<ul class="doclist">
+<li><a href="X3.html#lab363">Palindromy</a>
+
+</li>
+</ul>
+
+</li>
+</ul>
+<a href="X31.html"><h2>X31: Złożoność obliczeniowa</h2></a>
+<ul class="doclist">
+<li><a href="X31.html#lab364">Czas działania programu</a>
+
+</li>
+<li><a href="X31.html#lab365">Złożoność obliczeniowa</a>
+
+</li>
+<li><a href="X31.html#lab366">Złożoność asymptotyczna</a>
+
+</li>
+<li><a href="X31.html#lab367">Duże O</a>
+<ul class="doclist">
+<li><a href="X31.html#lab368">Definicja i intuicja</a>
+
+</li>
+<li><a href="X31.html#lab369">Złożoność formalna i nieformalna</a>
+
+</li>
+<li><a href="X31.html#lab371">Duże Omega</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X31.html#lab372">Duże Theta</a>
+
+</li>
+<li><a href="X31.html#lab374">Złożoność typowych funkcji na listach</a>
+<ul class="doclist">
+<li><a href="X31.html#lab375">Analiza nieformalna</a>
+
+</li>
+<li><a href="X31.html#lab376">Formalne sprawdzenie</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X31.html#lab379">Złożoność problemu</a>
+
+</li>
+<li><a href="X31.html#lab380">Przyspieszanie funkcji rekurencyjnych</a>
+<ul class="doclist">
+<li><a href="X31.html#lab381">Złożoność <span class="inlinecode"><span class="id" title="var">rev</span></span></a>
+
+</li>
+<li><a href="X31.html#lab382">Pamięć</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X31.html#lab385">Podsumowanie</a>
+
+</li>
+</ul>
+<a href="X4.html"><h2>X4: Funkcje</h2></a>
+<ul class="doclist">
+<li><a href="X4.html#lab386">Funkcje</a>
+
+</li>
+<li><a href="X4.html#lab387">Aksjomat ekstensjonalności</a>
+
+</li>
+<li><a href="X4.html#lab389">Injekcje</a>
+
+</li>
+<li><a href="X4.html#lab392">Surjekcje</a>
+
+</li>
+<li><a href="X4.html#lab396">Bijekcje</a>
+
+</li>
+<li><a href="X4.html#lab400">Inwolucje</a>
+
+</li>
+<li><a href="X4.html#lab402">Uogólnione inwolucje</a>
+
+</li>
+<li><a href="X4.html#lab403">Idempotencja</a>
+
+</li>
+</ul>
+<a href="X5.html"><h2>X5: Relacje</h2></a>
+<ul class="doclist">
+<li><a href="X5.html#lab404">Relacje binarne</a>
+
+</li>
+<li><a href="X5.html#lab405">Identyczność relacji</a>
+
+</li>
+<li><a href="X5.html#lab407">Operacje na relacjach</a>
+
+</li>
+<li><a href="X5.html#lab408">Rodzaje relacji heterogenicznych</a>
+
+</li>
+<li><a href="X5.html#lab411">Rodzaje relacji heterogenicznych v2</a>
+
+</li>
+<li><a href="X5.html#lab414">Rodzaje relacji homogenicznych</a>
+<ul class="doclist">
+<li><a href="X5.html#lab415">Zwrotność</a>
+
+</li>
+<li><a href="X5.html#lab416">Symetria</a>
+
+</li>
+<li><a href="X5.html#lab417">Przechodniość</a>
+
+</li>
+<li><a href="X5.html#lab418">Inne</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X5.html#lab419">Relacje równoważności</a>
+
+</li>
+<li><a href="X5.html#lab420">Słabe relacje homogeniczne</a>
+
+</li>
+<li><a href="X5.html#lab421">Złożone relacje homogeniczne</a>
+
+</li>
+<li><a href="X5.html#lab422">Domknięcia</a>
+
+</li>
+<li><a href="X5.html#lab425">Redukcje</a>
+
+</li>
+</ul>
+<a href="X6.html"><h2>X6: Rozdział z odpadami z R2</h2></a>
+<ul class="doclist">
+<li><a href="X6.html#lab426">Parametryczność</a>
+
+</li>
+<li><a href="X6.html#lab430">Rozstrzygalność</a>
+<ul class="doclist">
+<li><a href="X6.html#lab432">Techniczne apekty rozstrzygalności</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X6.html#lab434">Pięć rodzajów reguł</a>
+<ul class="doclist">
+<li><a href="X6.html#lab435">Reguły formacji</a>
+
+</li>
+<li><a href="X6.html#lab437">Reguły wprowadzania</a>
+
+</li>
+<li><a href="X6.html#lab439">Reguły eliminacji</a>
+
+</li>
+<li><a href="X6.html#lab442">Reguły obliczania</a>
+
+</li>
+<li><a href="X6.html#lab444">Reguły unikalności</a>
+
+</li>
+</ul>
+
+</li>
+<li><a href="X6.html#lab446">Typy hybrydowe</a>
+
+</li>
+<li><a href="X6.html#lab448">Small scale reflection</a>
+
+</li>
+</ul>
+<a href="X7.html"><h2>X7: Liczby konaturalne</h2></a>
+<a href="X8.html"><h2>X8: Strumienie</h2></a>
+<ul class="doclist">
+<li><a href="X8.html#lab449">Bipodobieństwo</a>
+
+</li>
+<li><a href="X8.html#lab450"><span class="inlinecode"><span class="id" title="var">sapp</span></span></a>
+
+</li>
+</ul>
+<a href="X9.html"><h2>X9: Kolisty</h2></a>
+</div>
