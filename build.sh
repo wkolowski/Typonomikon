@@ -32,6 +32,12 @@ cp assets/*css assets/*js assets/*jpg assets/index.html docs/
 # TODO: lambda, eta, i gamma się nie wyświetlają.
 # TODO: symbol pierwiastka kwadratowego źle się wyświetla.
 
+# Skompiluj okładkę.
+latexmk assets/cover.tex -pdf -outdir=tex/                \
+        -interaction=nonstopmode                          \
+        -f                                                \
+        -quiet
+
 # coqdoc book/*v --latex -o tex/Książka.tex generuje pliki .tex i .sty z plików .v i umieszcza je w folderze tex/
 # --inputenc utf8 ustawa odpowiednie kodowanie
 # --no-lib-name --lib-subtitles robi ładniejszy format tytułu dla każdego rozdziału
@@ -39,6 +45,8 @@ cp assets/*css assets/*js assets/*jpg assets/index.html docs/
 # --no-index pozbywa się indeksu (czyli spisu identyfikatorów, definicji, twierdzeń etc.)
 # --toc --toc-depth 2 robi spis treści o głębokości 2
 # -p dodaje do latexowej preambuły linijki ustawiające język polski i naprawiające błędy związane z Unicode
+# Co więcej, -p dodaje pakiet pdfpages, który jest używany do zrobienia strony tytułowej. Całość jest trochę
+# zhakowana, bo -p dodaje też na początku dodatkowe \begin{document}, przez co są 2. Ale działa!
 coqdoc book/*v --latex -o tex/Książka.tex                 \
        --inputenc utf8                                    \
        --no-lib-name --lib-subtitles                      \
@@ -46,9 +54,12 @@ coqdoc book/*v --latex -o tex/Książka.tex                 \
        --no-index                                         \
        --toc --toc-depth 2                                \
        -p "\usepackage[polish]{babel}"                    \
+       -p "\usepackage{pdfpages}"                         \
        -p "\DeclareUnicodeCharacter{221A}{\sqrt{}}"       \
        -p "\DeclareUnicodeCharacter{2208}{\in}"           \
-       -p "\DeclareUnicodeCharacter{2261}{\equiv}"
+       -p "\DeclareUnicodeCharacter{2261}{\equiv}"        \
+       -p "\begin{document}"                              \
+       -p "\includepdf{tex/cover.pdf}"
 
 # Skompiluj źródła .tex książki do PDF i umieść w tex/. Opcje:
 # -interaction=nonstopmode ustawia przetwarzanie w batch mode

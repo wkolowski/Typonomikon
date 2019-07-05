@@ -1,5 +1,3 @@
-Add Rec LoadPath "/home/zeimer/Code/Coq".
-
 Inductive BTree (A : Type) : Type :=
     | E : BTree A
     | N : A -> BTree A -> BTree A -> BTree A.
@@ -49,7 +47,7 @@ match t with
     | N v l r => N v (mirror r) (mirror l)
 end.
 
-Require Import book.X4.
+Require Import G2.
 
 Lemma mirror_bijective :
   forall A : Type, bijective (@mirror A).

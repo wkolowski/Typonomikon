@@ -1,5 +1,5 @@
-Require Import R2ipół.
-Require Import X3.
+Require Import D2.
+Require Import D5.
 
 Fixpoint rot2 {A : Type} (l : list A) : list A :=
 match l with
