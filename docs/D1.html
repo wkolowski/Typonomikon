@@ -1480,7 +1480,7 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
 </div>
 
 <div class="doc">
-<a name="lab100"></a><h2 class="section">Typy induktywne — (prawie) pełna moc</h2>
+<a name="lab100"></a><h2 class="section">Listy, czyli parametry + rekursja</h2>
 
 <div class="paragraph"> </div>
 
@@ -4991,16 +4991,7 @@ Utrapieniem jest też to, że nasza funkcja się nie oblicza. Jest tak, bo
 
 <div class="doc">
 Najlepsze, co możemy osiągnąć, mając taką definicję, to udowodnienie, że
-    jej wynik faktycznie jest taki, jak się spodziewamy.
-
-<div class="paragraph"> </div>
-
-    Cóż, to by było na tyle w temacie indukcji-indukcji. Brak Coqowego
-    wsparcia dla niej niestety wydatnie ogranicza praktyczne możliwości
-    posługiwania się nią. Jednak uszy do góry - istnieją już języki,
-    które sobie z nią radzą. Jednym z nich jest wspomniana we wstępie Agda,
-    którą można znaleźć tu:
-    https://agda.readthedocs.io/en/v2.6.0.1/ 
+    jej wynik faktycznie jest taki, jak się spodziewamy. 
 <div class="paragraph"> </div>
 
 <a name="lab147"></a><h4 class="section">Ćwiczenie</h4>
@@ -5057,7 +5048,125 @@ Najlepsze, co możemy osiągnąć, mając taką definicję, to udowodnienie, ż
 </div>
 
 <div class="doc">
-<a name="lab150"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab150"></a><h4 class="section"> </h4>
+
+<div class="paragraph"> </div>
+
+ Na koniec wypadałoby jeszcze wspomnieć, do czego tak naprawdę można w
+    praktyce użyć indukcji-indukcji (definiowanie list posortowanych nie
+    jest jedną z tych rzeczy, o czym przekonałeś się w ćwiczeniach). Otóż
+    najciekawszym przykładem wydaje się być formalizacja teorii typów, czyli,
+    parafrazując, implementacja Coqa w Coqu.
+
+<div class="paragraph"> </div>
+
+    Żeby się za to zabrać, musimy zdefiniować konteksty, typy i termy, a
+    także relacje konwertowalności dla typów i termów. Są tutaj możliwe dwa
+    podejścia:
+<ul class="doclist">
+<li> Curry'ego (ang. Curry style lub mądrzej extrinsic style) - staramy
+      się definiować wszystko osobno, a potem zdefiniować relacje "term x
+      jest typu A w kontekście Γ", "typ A jest poprawnie sformowany w
+      kontekście Γ" etc. Najważniejszą cechą tego sposobu jest to, że
+      możemy tworzyć termy, którym nie da się przypisać żadnego typu oraz
+      typy, które nie są poprawnie sformowane w żadnym kontekście.
+
+</li>
+<li> Churcha (ang. Church style lub mądrzej intrinsic style) - definiujemy
+      wszystko na raz w jednej wielkiej wzajemnej indukcji. Zamiastów
+      typów definiujemy od razu predykat "typ A jest poprawnie sformowany
+      w kontekście Γ", a zamiast termów definiujemy od razu relację
+      "term x ma typ A w kontekście Γ". Parafrazując - wszystkie termy,
+      które jesteśmy w stanie skonstruować, są poprawnie typowane (a
+      wszystkie typy poprawnie sformowane w swoich kontekstach). 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Zamiast tyle gadać zobaczmy, jak mogłoby to wyglądać w Coqu. Oczywiście
+    będą to same nagłówki, bo podanie tutaj pełnej definicji byłoby mocno
+    zaciemniającym przegięciem. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+Inductive&nbsp;Ctx&nbsp;:&nbsp;Type&nbsp;:=&nbsp;...<br/>
+<br/>
+with&nbsp;Ty&nbsp;:&nbsp;Ctx&nbsp;-&gt;&nbsp;Type&nbsp;:=&nbsp;...<br/>
+<br/>
+with&nbsp;Term&nbsp;:&nbsp;forall&nbsp;Γ&nbsp;:&nbsp;Ctx,&nbsp;Ty&nbsp;Γ&nbsp;-&gt;&nbsp;Type&nbsp;:=&nbsp;...<br/>
+<br/>
+with&nbsp;TyConv&nbsp;:&nbsp;forall&nbsp;Γ&nbsp;:&nbsp;Ctx,&nbsp;Ty&nbsp;Γ&nbsp;-&gt;&nbsp;Ty&nbsp;Γ&nbsp;-&gt;&nbsp;Prop&nbsp;:=&nbsp;...<br/>
+<br/>
+with<br/>
+&nbsp;&nbsp;TermConv&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;(Γ&nbsp;:&nbsp;Ctx)&nbsp;(A&nbsp;:&nbsp;Ty&nbsp;Γ),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Term&nbsp;Γ&nbsp;A&nbsp;-&gt;&nbsp;Term&nbsp;Γ&nbsp;A&nbsp;-&gt;&nbsp;Prop&nbsp;:=&nbsp;...<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nagłówki w tej definicji powinniśmy interpretować tak:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">Ctx</span></span> to typ reprezentujący konteksty.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">Ty</span></span> ma reprezentować typy, ale nie jest to typ, lecz rodzina typów
+      indeksowana kontekstami - każdy typ jest typem w jakimś kontekście,
+      np. <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest typem w kontekście zawierającym <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, a nie
+      jest typem w pustym kontekście.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">Term</span></span> ma reprezentować termy, ale nie jest to typ, lecz rodzina typów
+      indeksowana kontekstami i typami - każdy term ma jakiś typ, a typy,
+      jak już się rzekło, zawsze są typami w jakimś kontekście. Przykład:
+      jeżeli <span class="inlinecode"><span class="id" title="var">x</span></span> jest zmienną, to <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">nil</span></span> jest typu <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> w
+      kontekście, w którym <span class="inlinecode"><span class="id" title="var">x</span></span> jest typu <span class="inlinecode"><span class="id" title="var">A</span></span>, ale nie ma żadnego typu (i nie
+      jest nawet poprawnym termem) w kontekście pustym ani w żadnym, w którym
+      nie występuje <span class="inlinecode"><span class="id" title="var">x</span></span>.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">TyConv</span></span> <span class="inlinecode"><span class="id" title="var">Γ</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> zachodzi, gdy typy <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> są konwertowalne, czyli
+      obliczają się do tego samego (relacja taka jest potrzebna, gdyż w Coqu
+      i ogólnie w teorii typów występować mogą takie typy jak <span class="inlinecode"><span class="id" title="keyword">if</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span> <span class="inlinecode"><span class="id" title="keyword">then</span></span>
+      <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode"><span class="id" title="keyword">else</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span>, który jest konwertowalny z <span class="inlinecode"><span class="id" title="var">nat</span></span>). Jako się rzekło,
+      typy zawsze występują w kontekście, więc konwertowalne mogą być też
+      tylko w kontekście.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">TermConv</span></span> <span class="inlinecode"><span class="id" title="var">Γ</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> znaczy, że termy <span class="inlinecode"><span class="id" title="var">x</span></span> i <span class="inlinecode"><span class="id" title="var">y</span></span> są konwertowalne,
+      np. <span class="inlinecode"><span class="id" title="keyword">if</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span> <span class="inlinecode"><span class="id" title="keyword">then</span></span> <span class="inlinecode">5</span> <span class="inlinecode"><span class="id" title="keyword">else</span></span> <span class="inlinecode">6</span> jest konwertowalne z <span class="inlinecode">5</span>. Ponieważ każdy
+      term ciągnie za sobą swój typ, <span class="inlinecode"><span class="id" title="var">TermConv</span></span> ma jako indeks typ <span class="inlinecode"><span class="id" title="var">A</span></span>, a
+      ponieważ typ ciągnie za sobą kontekst, indeksem <span class="inlinecode"><span class="id" title="var">TermConv</span></span> jest także
+      <span class="inlinecode"><span class="id" title="var">Γ</span></span>. 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Jak widać, indukcji-indukcji jest w powyższym przykładzie na pęczki -
+    jest ona wręcz teleskopowa, gdyż <span class="inlinecode"><span class="id" title="var">Ctx</span></span> jest indeksem <span class="inlinecode"><span class="id" title="var">Ty</span></span>, <span class="inlinecode"><span class="id" title="var">Ctx</span></span> i <span class="inlinecode"><span class="id" title="var">Ty</span></span>
+    są indeksami <span class="inlinecode"><span class="id" title="var">Term</span></span>, a <span class="inlinecode"><span class="id" title="var">Ctx</span></span>, <span class="inlinecode"><span class="id" title="var">Ty</span></span> i <span class="inlinecode"><span class="id" title="var">Term</span></span> są indeksami <span class="inlinecode"><span class="id" title="var">TermConv</span></span>.
+
+<div class="paragraph"> </div>
+
+    Cóż, to by było na tyle w tym temacie. Ława oburzonych wyraża w tym
+    momencie swoje najwyższe oburzenie na brak indukcji-indukcji w Coqu:
+    https://www.sadistic.pl/lawa-oburzonych-vt22270.htm
+
+<div class="paragraph"> </div>
+
+    Jednak uszy do góry - istnieją już języki, które jakoś sobie radzą z
+    indukcją-indukcją. Jednym z nich jest wspomniana we wstępie Agda,
+    którą można znaleźć tu:
+    https://agda.readthedocs.io/en/latest/ 
+<div class="paragraph"> </div>
+
+<a name="lab151"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -5090,7 +5199,7 @@ Najlepsze, co możemy osiągnąć, mając taką definicję, to udowodnienie, ż
 </div>
 
 <div class="doc">
-<a name="lab151"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab152"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -5133,7 +5242,7 @@ Najlepsze, co możemy osiągnąć, mając taką definicję, to udowodnienie, ż
 </div>
 
 <div class="doc">
-<a name="lab152"></a><h2 class="section">Indukcja-rekursja</h2>
+<a name="lab153"></a><h2 class="section">Indukcja-rekursja</h2>
 
 <div class="paragraph"> </div>
 
@@ -5225,7 +5334,8 @@ Coq niestety nie wspiera indukcji-rekursji, a próba napisania powyższej
 
  Istotą mechanizmu indukcji-rekursji w tym przykładzie jest to, że <span class="inlinecode"><span class="id" title="var">scons</span></span>
     wymaga dowodu na to, że funkcja <span class="inlinecode"><span class="id" title="var">ok</span></span> zwraca <span class="inlinecode"><span class="id" title="var">true</span></span>, podczas gdy funkcja
-    ta jest zdefiniowana przez jednocześnie z typem <span class="inlinecode"><span class="id" title="var">slist</span></span>.
+    ta jest zdefiniowana przez rekursję strukturalną po argumencie typu
+    <span class="inlinecode"><span class="id" title="var">slist</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>.
 
 <div class="paragraph"> </div>
 
@@ -5247,13 +5357,15 @@ Coq niestety nie wspiera indukcji-rekursji, a próba napisania powyższej
 <br/>
 <span class="id" title="keyword">Axioms</span><br/>
 &nbsp;&nbsp;(<span class="id" title="var">slist</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">ok</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">slist</span> <span class="id" title="var">R</span>), <span class="id" title="var">bool</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">ok</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>}, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">slist</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">bool</span>)<br/>
 &nbsp;&nbsp;(<span class="id" title="var">snil</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>}, <span class="id" title="var">slist</span> <span class="id" title="var">R</span>)<br/>
 &nbsp;&nbsp;(<span class="id" title="var">scons</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>}<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">slist</span> <span class="id" title="var">R</span>), <span class="id" title="var">ok</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">slist</span> <span class="id" title="var">R</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">slist</span> <span class="id" title="var">R</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ok</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">slist</span> <span class="id" title="var">R</span>)<br/>
 &nbsp;&nbsp;(<span class="id" title="var">ok_snil</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ok</span> <span class="id" title="var">x</span> (@<span class="id" title="var">snil</span> <span class="id" title="var">_</span> <span class="id" title="var">R</span>) = <span class="id" title="var">true</span>)<br/>
@@ -5311,7 +5423,7 @@ Innym zyskiem z użycia indukcji-rekursji jest postać reguły indukcyjnej:
 </div>
 
 <div class="doc">
-<a name="lab153"></a><h2 class="section">Jeszcze straszniejszy potfur</h2>
+<a name="lab154"></a><h2 class="section">Jeszcze straszniejszy potfur</h2>
 
 </div>
 <div class="code">

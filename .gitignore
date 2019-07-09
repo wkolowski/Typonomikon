@@ -8,7 +8,7 @@
 **.fls
 **.log
 **.out
-**.tex
+tex/*.tex
 **.toc
 **.sty
 **.synctex.gz

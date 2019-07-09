@@ -1290,7 +1290,7 @@ Fail Definition santa_is_a_pedophile : False := y False.
 (* C1-C7 są legalne, C8-C11 nie. *)
 (* end hide *)
 
-(** ** Typy induktywne — (prawie) pełna moc *)
+(** ** Listy, czyli parametry + rekursja *)
 
 (** Połączenie funkcji zależnych, konstruktorów rekurencyjnych i
     polimorfizmu pozwala nam na opisywanie (prawie) dowolnych typów.
@@ -3696,14 +3696,7 @@ Proof.
 Qed.
 
 (** Najlepsze, co możemy osiągnąć, mając taką definicję, to udowodnienie, że
-    jej wynik faktycznie jest taki, jak się spodziewamy.
-
-    Cóż, to by było na tyle w temacie indukcji-indukcji. Brak Coqowego
-    wsparcia dla niej niestety wydatnie ogranicza praktyczne możliwości
-    posługiwania się nią. Jednak uszy do góry - istnieją już języki,
-    które sobie z nią radzą. Jednym z nich jest wspomniana we wstępie Agda,
-    którą można znaleźć tu:
-    https://agda.readthedocs.io/en/v2.6.0.1/ *)
+    jej wynik faktycznie jest taki, jak się spodziewamy. *)
 
 (** **** Ćwiczenie *)
 
@@ -3810,6 +3803,88 @@ Qed.
     że [slist R] i [slist'' R] są sobie równoważne. *)
 
 End ind_ind.
+
+(** **** *)
+
+(** Na koniec wypadałoby jeszcze wspomnieć, do czego tak naprawdę można w
+    praktyce użyć indukcji-indukcji (definiowanie list posortowanych nie
+    jest jedną z tych rzeczy, o czym przekonałeś się w ćwiczeniach). Otóż
+    najciekawszym przykładem wydaje się być formalizacja teorii typów, czyli,
+    parafrazując, implementacja Coqa w Coqu.
+
+    Żeby się za to zabrać, musimy zdefiniować konteksty, typy i termy, a
+    także relacje konwertowalności dla typów i termów. Są tutaj możliwe dwa
+    podejścia:
+    - Curry'ego (ang. Curry style lub mądrzej extrinsic style) - staramy
+      się definiować wszystko osobno, a potem zdefiniować relacje "term x
+      jest typu A w kontekście Γ", "typ A jest poprawnie sformowany w
+      kontekście Γ" etc. Najważniejszą cechą tego sposobu jest to, że
+      możemy tworzyć termy, którym nie da się przypisać żadnego typu oraz
+      typy, które nie są poprawnie sformowane w żadnym kontekście.
+    - Churcha (ang. Church style lub mądrzej intrinsic style) - definiujemy
+      wszystko na raz w jednej wielkiej wzajemnej indukcji. Zamiastów
+      typów definiujemy od razu predykat "typ A jest poprawnie sformowany
+      w kontekście Γ", a zamiast termów definiujemy od razu relację
+      "term x ma typ A w kontekście Γ". Parafrazując - wszystkie termy,
+      które jesteśmy w stanie skonstruować, są poprawnie typowane (a
+      wszystkie typy poprawnie sformowane w swoich kontekstach). *)
+
+(** Zamiast tyle gadać zobaczmy, jak mogłoby to wyglądać w Coqu. Oczywiście
+    będą to same nagłówki, bo podanie tutaj pełnej definicji byłoby mocno
+    zaciemniającym przegięciem. *)
+
+(*
+Inductive Ctx : Type := ...
+
+with Ty : Ctx -> Type := ...
+
+with Term : forall Γ : Ctx, Ty Γ -> Type := ...
+
+with TyConv : forall Γ : Ctx, Ty Γ -> Ty Γ -> Prop := ...
+
+with
+  TermConv :
+    forall (Γ : Ctx) (A : Ty Γ),
+      Term Γ A -> Term Γ A -> Prop := ...
+*)
+
+(** Nagłówki w tej definicji powinniśmy interpretować tak:
+    - [Ctx] to typ reprezentujący konteksty.
+    - [Ty] ma reprezentować typy, ale nie jest to typ, lecz rodzina typów
+      indeksowana kontekstami - każdy typ jest typem w jakimś kontekście,
+      np. [list A] jest typem w kontekście zawierającym [A : Type], a nie
+      jest typem w pustym kontekście.
+    - [Term] ma reprezentować termy, ale nie jest to typ, lecz rodzina typów
+      indeksowana kontekstami i typami - każdy term ma jakiś typ, a typy,
+      jak już się rzekło, zawsze są typami w jakimś kontekście. Przykład:
+      jeżeli [x] jest zmienną, to [cons x nil] jest typu [list A] w
+      kontekście, w którym [x] jest typu [A], ale nie ma żadnego typu (i nie
+      jest nawet poprawnym termem) w kontekście pustym ani w żadnym, w którym
+      nie występuje [x].
+    - [TyConv Γ A B] zachodzi, gdy typy [A] i [B] są konwertowalne, czyli
+      obliczają się do tego samego (relacja taka jest potrzebna, gdyż w Coqu
+      i ogólnie w teorii typów występować mogą takie typy jak [if true then
+      nat else bool], który jest konwertowalny z [nat]). Jako się rzekło,
+      typy zawsze występują w kontekście, więc konwertowalne mogą być też
+      tylko w kontekście.
+    - [TermConv Γ A x y] znaczy, że termy [x] i [y] są konwertowalne,
+      np. [if true then 5 else 6] jest konwertowalne z [5]. Ponieważ każdy
+      term ciągnie za sobą swój typ, [TermConv] ma jako indeks typ [A], a
+      ponieważ typ ciągnie za sobą kontekst, indeksem [TermConv] jest także
+      [Γ]. *)
+
+(** Jak widać, indukcji-indukcji jest w powyższym przykładzie na pęczki -
+    jest ona wręcz teleskopowa, gdyż [Ctx] jest indeksem [Ty], [Ctx] i [Ty]
+    są indeksami [Term], a [Ctx], [Ty] i [Term] są indeksami [TermConv].
+
+    Cóż, to by było na tyle w tym temacie. Ława oburzonych wyraża w tym
+    momencie swoje najwyższe oburzenie na brak indukcji-indukcji w Coqu:
+    https://www.sadistic.pl/lawa-oburzonych-vt22270.htm
+
+    Jednak uszy do góry - istnieją już języki, które jakoś sobie radzą z
+    indukcją-indukcją. Jednym z nich jest wspomniana we wstępie Agda,
+    którą można znaleźć tu:
+    https://agda.readthedocs.io/en/latest/ *)
 
 (** **** Ćwiczenie *)
 
@@ -4048,7 +4123,8 @@ end.
 
 (** Istotą mechanizmu indukcji-rekursji w tym przykładzie jest to, że [scons]
     wymaga dowodu na to, że funkcja [ok] zwraca [true], podczas gdy funkcja
-    ta jest zdefiniowana przez jednocześnie z typem [slist].
+    ta jest zdefiniowana przez rekursję strukturalną po argumencie typu
+    [slist R].
 
     Użycie indukkcji-rekursji do zaimplementowania [slist] ma swoje zalety:
     dla konkretnych list (złożonych ze stałych, a nie ze zmiennych) dowody
@@ -4063,13 +4139,15 @@ end.
 
 Axioms
   (slist : forall {A : Type}, (A -> A -> bool) -> Type)
-  (ok : forall {A : Type} {R : A -> A -> bool} (h : A) (t : slist R), bool)
+  (ok :
+    forall {A : Type} {R : A -> A -> bool}, A -> slist R -> bool)
   (snil :
     forall {A : Type} {R : A -> A -> bool}, slist R)
   (scons :
     forall
       {A : Type} {R : A -> A -> bool}
-      (h : A) (t : slist R), ok h t = true -> slist R)
+      (h : A) (t : slist R),
+        ok h t = true -> slist R)
   (ok_snil :
     forall {A : Type} {R : A -> A -> bool} (x : A),
       ok x (@snil _ R) = true)
