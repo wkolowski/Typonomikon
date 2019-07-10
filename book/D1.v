@@ -3063,21 +3063,23 @@ Admitted.
 
 (** Najwyższy czas nauczyć się czegoś tak zaawansowanego, że nawet w Coqu
     (pełnym przecież dziwnych rzeczy) tego nie ma i nie zapowiada się na
-    to, że będzie. Mam tutaj na myśli mechanizm definiwania typów, którego
-    nazwa jest wybitnie mało oświecająca: indukcja-indukcja. *)
+    to, że będzie. Mam tu na myśli mechanizmy takie jak indukcja-indukcja,
+    indukcja-rekursja oraz indukcja-indukcja-rekursja (jak widać, w świecie
+    poważnych uczonych, podobnie jak świecie Goebbelsa, im więcej razy
+    powtórzy się dane słowo, tym więcej płynie z niego mocy). *)
+
+(** ** Przypomnienie *)
+
+(** Zanim jednak wyjaśnimy, co to za stwory, przypomnijmy sobie różne, coraz
+    bardziej innowacyjne sposoby definiowania przez indukcję oraz dowiedzmy
+    się, jak sformułować i udowodnić wynikające z nich reguły rekursji oraz
+    indukcji. *)
 
 Unset Elimination Schemes.
 
 (** Powyższa komenda mówi Coqowi, żeby nie generował automatycznie reguł
     indukcji. Przyda nam się ona, by uniknąć konfliktów nazw z regułami,
     które będziemy pisać ręcznie. *)
-
-(** ** Przypomnienie *)
-
-(** Zanim jednak wyjaśnimy, co to za stfur, przypomnijmy sobie różne,
-    coraz bardziej innowacyjne sposoby definiowania przez indukcję.
-    Przypomnimy sobie też, jak sformułować ich reguły rekursji oraz
-    indukcji. *)
 
 (** *** Enumeracje *)
 
@@ -3563,7 +3565,7 @@ Axiom
         (x : A) (H : R x h),
           P t -> Q h t p -> Q x (scons h t p) (ok_scons h t p x H)),
     {f : (forall l : slist R, P l) &
-    {g : (forall (h : A) (t : slist R) (p : ok h t), Q h t p) &
+    {g : (forall (h : A) (t : slist R) (p : ok h t), Q h t p) |
       f snil = Psnil /\
       (forall (h : A) (t : slist R) (p : ok h t),
         f (scons h t p) = Pscons h t p (f t) (g h t p)) /\
@@ -3617,7 +3619,7 @@ Axiom
 Definition rec'
   {A : Type} {R : A -> A -> Prop}
   (P : Type) (snil' : P) (scons' : A -> P -> P) :
-  {f : slist R -> P &
+  {f : slist R -> P |
     f snil = snil' /\
     forall (h : A) (t : slist R) (p : ok h t),
       f (scons h t p) = scons' h (f t)
@@ -3637,7 +3639,7 @@ Proof.
     exact H2.
 Defined.
 
-(** Możemy na przykład dość łatwo zdefiniować niezależnych rekursor tylko dla
+(** Możemy na przykład dość łatwo zdefiniować niezależny rekursor tylko dla
     [slist], nie odnoszący się w żaden sposób do [ok]. Widzimy jednak, że
     "programowanie" w taki aksjomatyczny sposób jest dość ciężkie - zamiast
     eleganckich dopasowań do wzorca musimy ręcznie wpisywać argumenty do
@@ -3648,7 +3650,7 @@ Import ListNotations.
 
 Definition toList'
   {A : Type} {R : A -> A -> Prop} :
-  {f : slist R -> list A &
+  {f : slist R -> list A |
     f snil = [] /\
     forall (h : A) (t : slist R) (p : ok h t),
       f (scons h t p) = h :: f t
@@ -3658,12 +3660,10 @@ Proof.
 Defined.
 
 Definition toList
-  {A : Type} {R : A -> A -> Prop} (l : slist R) : list A :=
-match @toList' A R with
-    | existT _ f _ => f l
-end.
+  {A : Type} {R : A -> A -> Prop} : slist R -> list A :=
+    proj1_sig toList'.
 
-(** Używająnie takieg rekursora jest już dużo prostsze, co ilustruje powyższy
+(** Używanie takiego rekursora jest już dużo prostsze, co ilustruje powyższy
     przykład funkcji, która zapomina o tym, że lista jest posortowana i daje
     nam zwykłą listę.
 
@@ -3691,7 +3691,7 @@ Lemma toList_slist_01_result :
   toList slist_01 = [0; 1].
 Proof.
   unfold toList, slist_01.
-  destruct toList' as (f & H1 & H2).
+  destruct toList' as (f & H1 & H2); cbn.
   rewrite 2!H2, H1. reflexivity.
 Qed.
 
@@ -3708,7 +3708,7 @@ Qed.
 
 Definition slen'
   {A : Type} {R : A -> A -> Prop} :
-  {f : slist R -> nat &
+  {f : slist R -> nat |
     f snil = 0 /\
     forall (h : A) (t : slist R) (p : ok h t),
       f (scons h t p) = S (f t)}.
@@ -3716,10 +3716,8 @@ Proof.
   exact (rec' nat 0 (fun _ n => S n)).
 Defined.
 
-Definition slen {A : Type} {R : A -> A -> Prop} (l : slist R) : nat :=
-match slen' with
-    | existT _ f _ => f l
-end.
+Definition slen {A : Type} {R : A -> A -> Prop} : slist R -> nat :=
+  proj1_sig slen'.
 
 Lemma slen_toList_length :
   forall {A : Type} {R : A -> A -> Prop} (l : slist R),
@@ -3734,7 +3732,7 @@ Proof.
       (fun _ _ _ _ _ _ _ => I))).
   Unshelve.
   all: cbn; unfold slen, toList;
-  destruct slen' as (f & Hf1 & Hf2), toList' as (g & Hg1 & Hg2).
+  destruct slen' as (f & Hf1 & Hf2), toList' as (g & Hg1 & Hg2); cbn.
     rewrite Hf1, Hg1. cbn. reflexivity.
     intros. rewrite Hf2, Hg2, H. cbn. reflexivity.
 Qed.
@@ -3779,7 +3777,7 @@ Proof.
       exists (h : A) (t' : slist R) (p : ok h t'),
         t = scons h t' p /\ R x h)
     _ _ _ _)).
-  1-2: unfold toList; destruct toList' as (f & H1 & H2).
+  1-2: unfold toList; destruct toList' as (f & H1 & H2); cbn.
     rewrite H1. constructor.
     intros. rewrite H2. decompose [or ex and] H0; clear H0; subst.
       rewrite H1. constructor.
@@ -3852,8 +3850,8 @@ with
     - [Ctx] to typ reprezentujący konteksty.
     - [Ty] ma reprezentować typy, ale nie jest to typ, lecz rodzina typów
       indeksowana kontekstami - każdy typ jest typem w jakimś kontekście,
-      np. [list A] jest typem w kontekście zawierającym [A : Type], a nie
-      jest typem w pustym kontekście.
+      np. [list A] jest typem w kontekście zawierającym [A : Type], ale
+      nie jest typem w pustym kontekście.
     - [Term] ma reprezentować termy, ale nie jest to typ, lecz rodzina typów
       indeksowana kontekstami i typami - każdy term ma jakiś typ, a typy,
       jak już się rzekło, zawsze są typami w jakimś kontekście. Przykład:
@@ -3868,7 +3866,7 @@ with
       typy zawsze występują w kontekście, więc konwertowalne mogą być też
       tylko w kontekście.
     - [TermConv Γ A x y] znaczy, że termy [x] i [y] są konwertowalne,
-      np. [if true then 5 else 6] jest konwertowalne z [5]. Ponieważ każdy
+      np. [if true then 42 else 0] jest konwertowalne z [42]. Ponieważ każdy
       term ciągnie za sobą swój typ, [TermConv] ma jako indeks typ [A], a
       ponieważ typ ciągnie za sobą kontekst, indeksem [TermConv] jest także
       [Γ]. *)
@@ -4071,6 +4069,8 @@ End BST.
 
 (** ** Indukcja-rekursja *)
 
+Module ind_rec.
+
 (** A oto kolejny potfur do naszej kolekcji: indukcja-rekursja. Nazwa, choć
     brzmi tak głupio, jak "indukcja-indukcja", niesie ze sobą jednak dużo
     więcej wyobraźni: indukcja-rekursja pozwala nam jednocześnie definiować
@@ -4093,7 +4093,8 @@ End BST.
 (*
 Inductive slist {A : Type} (R : A -> A -> bool) : Type :=
     | snil : slist R
-    | scons : forall (h : A) (t : slist R), ok h t = true -> slist R
+    | scons :
+        forall (h : A) (t : slist R), ok h t = true -> slist R
 
 with
 
@@ -4106,19 +4107,20 @@ end.
 *)
 
 (** Coq niestety nie wspiera indukcji-rekursji, a próba napisania powyższej
-    definicji kończy się błędem składni. Podobnie jak poprzednio, pomożemy
-    sobie za pomocą aksjomatów, jednak najpierw prześledźmy definicję.
+    definicji kończy się błędem składni, przy którym nie pomaga nawet komenda
+    [Fail]. Podobnie jak poprzednio, pomożemy sobie za pomocą aksjomatów,
+    jednak najpierw prześledźmy definicję.
 
     Typ slist działa następująco:
     - [R] to jakiś porządek. Zauważ, że tym razem [R : A -> A -> bool], a
-      więc porządek jest rozstrzygalny
+      więc porządek jest reprezentowany przez funkcję, która go rozstrzyga
     - [snil] to lista pusta
     - [scons h t p] to lista z głową [h] i ogonem [t], zaś [p : ok h t = true]
       to dowód na to, że dostawienie [h] przed [t] daje listę posortowaną. *)
 
 (** Tym razem jednak [ok] nie jest relacją, lecz funkcją zwracającą [bool],
     która działa następująco:
-    - dla [snil] zwróć [true] - każde [h : A] można dostawić do listy pustej
+    - dla [snil] zwróć [true] - każde [x : A] można dostawić do listy pustej
     - dla [scons h _ _] zwróć wynik porównania [x] z [h] *)
 
 (** Istotą mechanizmu indukcji-rekursji w tym przykładzie jest to, że [scons]
@@ -4158,11 +4160,12 @@ Axioms
         ok x (scons h t p) = R x h).
 
 (** Najpierw musimy zadeklarować [slist], a następnie [ok], gdyż typ [ok]
-    zależy od [slist]. Obie definicje wyglądają dokładnie tak, jak nagłówki
-    w powyższej definicji odrzuconej przez Coqa.
+    zależy od [slist]. Następnym krokiem jest zadeklarowanie konstruktorów
+    [slist], a później równań definiujących funkcję [ok] - koniecznie w tej
+    kolejności, gdyż równania zależą od konstruktorów.
 
-    Następnym krokiem jest zadeklarowanie konstruktorów [slist] oraz
-    równań definiujących funkcję [ok]. *)
+    Jak widać, aksjomaty są bardzo proste i sprowadzają się do przepisania
+    powyższej definicji odrzuconej przez Coqa. *)
 
 Axiom
   ind : forall
@@ -4177,32 +4180,30 @@ Axiom
       (forall (h : A) (t : slist R) (p : ok h t = true),
         f (scons h t p) = Pscons h t p (f t))}.
 
-(** Innym zyskiem z użycia indukcji-rekursji jest postać reguły indukcyjnej:
-    jest ona dużo prostsza, niż w przypadku indukcji-indukcji, gdyż teraz
+(** Innym zyskiem z użycia indukcji-rekursji jest postać reguły indukcyjnej.
+    Jest ona dużo prostsza, niż w przypadku indukcji-indukcji, gdyż teraz
     definiujemy tylko jeden typ, zaś towarzysząca mu funkcja nie wymaga w
     regule niczego specjalnego - po prostu pojawia się w niej tam, gdzie
-    spodziewalibyśm się jej po definicji [slist], ale nie robi niczego
-    ponad to. *)
+    spodziewamy się jej po definicji [slist], ale nie robi niczego
+    ponad to. Może to sugerować, że zamiast indukcji-indukcji, o ile to
+    możliwe, lepiej jest używać indukcji-rekursji, a predykaty i relacje
+    definiować przez rekursję.
 
-(* begin hide *)
-Definition rev
-  {A : Type} {R : A -> A -> bool}
-  (l : slist R) : slist (fun x y => negb (R x y)).
-Proof.
-  revert l.
-  refine (proj1_sig (ind
-    A R
-    (fun _ => slist (fun x y => negb (R x y)))
-    _ _)).
-    exact snil.
-    intros h t p.
-      refine (proj1_sig (ind
-        A (fun x y => negb (R x y))
-        (fun _ => slist (fun x y => negb (R x y)))
-        _ _)).
-        exact (scons h snil (ok_snil h)).
-        intros. apply (scons h0 t0). assumption.
-Defined.
+    Powyższą regułę możemy odczytać następująco:
+    - [A : Type] i [R : A -> A -> bool] to parametry [slist], więc muszą się
+      pojawić
+    - [P : slist R -> Type] to przeciwdziedzina funkcji definiowanej za
+      pomocą reguły
+    - [Psnil] to wynik funkcji dla [snil]
+    - [Pscons] produkuje wynik funkcji dla [scons h t p] z hipotezy
+      indukcyjnej/wywołania rekurencyjnego dla [t]
+    - [f : forall l : slist R, P l] to funkcja zdefiniowana przez regułę,
+      zaś równania formalizują to, co zostało napisane powyżej o [Psnil]
+      i [Pscons] *)
+
+(** Termy induktywno-rekurencyjnego [slist R] wyglądają następująco
+    (najpierw definiujemy sobie funkcję rozstrzygającą standardowy
+    porządek na liczbach naturalnych): *)
 
 Fixpoint leb (n m : nat) : bool :=
 match n, m with
@@ -4211,27 +4212,107 @@ match n, m with
     | S n', S m' => leb n' m'
 end.
 
-Goal @rev _ leb (scons 2 snil (ok_snil 2)) = scons 2 snil (ok_snil 2).
+Definition slist_01 : slist leb :=
+  scons 0
+    (scons 1
+      snil
+      (ok_snil 1))
+    (ok_scons 0 1 snil (ok_snil 1)).
+
+(** Nie wygląda wiele lepiej od poprzedniej, induktywno-induktywnej wersji,
+    prawda? Ta rażąca kiepskość nie jest jednak zasługą indukcji-rekursji,
+    lecz kodowania za pomocą aksjomatów - funkcja [ok] się nie oblicza,
+    więc zamiast [eq_refl] musimy używać aksjomatów [ok_snil] i [ok_scons].
+
+    W tym momencie znów wkracza ława oburzonych i wyraża swoje oburzenie na
+    fakt, że Coq nie wspiera indukcji-rekursji (ale Agda już tak). Gdyby
+    [Coq] wspierał indukcję-rekursję, to ten term wyglądałby tak: *)
+
+Fail Definition slist_01 : slist leb :=
+  scons 0 (scons 1 snil eq_refl) eq_refl.
+
+(** Dużo lepiej, prawda? Na koniec zobaczmy, jak zdefiniować funkcję
+    zapominającą o fakcie, że lista jest posortowana. *)
+
+Require Import List.
+Import ListNotations.
+
+Definition toList'
+  {A : Type} {R : A -> A -> bool} :
+  {f : slist R -> list A |
+    f snil = [] /\
+    forall (h : A) (t : slist R) (p : ok h t = true),
+      f (scons h t p) = h :: f t
+  }.
 Proof.
-  unfold rev.
-  destruct (ind _) as (f & Hf1 & Hf2). cbn in *.
-  rewrite Hf2, Hf1.
-  destruct (ind _) as (g & Hg1 & Hg2). cbn in *.
-  rewrite Hg1. reflexivity.
+  exact (ind A R (fun _ => list A) [] (fun h _ _ r => h :: r)).
+Defined.
+
+Definition toList
+  {A : Type} {R : A -> A -> bool} : slist R -> list A :=
+    proj1_sig toList'.
+
+(** Ponownie jest to dużo prostsze, niż w przypadku indukcji-indukcji -
+    wprawdzie wciąż musimy ręcznie wpisywać termy do reguły indukcji,
+    ale dzięki prostocie reguły jest to znacznie łatwiejsze. Alternatywnie:
+    udało nam się zaoszczędzić trochę czasu na definiowaniu reguły rekursji,
+    co w przypadku indukcji-indukcji było niemal konieczne, żeby nie
+    zwariować. *)
+
+Lemma toList_slist_01_result :
+  toList slist_01 = [0; 1].
+Proof.
+  unfold toList, slist_01.
+  destruct toList' as (f & H1 & H2).
+  cbn. rewrite 2!H2, H1. reflexivity.
 Qed.
 
-Require Import JMeq.
+(** Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
+    równie proste jak poprzednio. *)
 
-Lemma rev_rev :
-  forall (A : Type) (R : A -> A -> bool) (l : slist R),
-    JMeq (rev (rev l)) l.
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj dla list posortowanych funkcję [slen], która liczy ich długość.
+    Udowodnij oczywiste twierdzenie wiążące ze sobą [slen], [toList] oraz
+    [length]. Czy było łatwiej, niż w przypadku indukcji-indukcji? *)
+
+(* begin hide *)
+
+Definition slen'
+  {A : Type} {R : A -> A -> bool} :
+  {f : slist R -> nat |
+    f snil = 0 /\
+    forall (h : A) (t : slist R) (p : ok h t = true),
+      f (scons h t p) = S (f t)}.
+Proof.
+  exact (ind A R (fun _ => nat) 0 (fun _ _ _ n => S n)).
+Defined.
+
+Definition slen {A : Type} {R : A -> A -> bool} : slist R -> nat :=
+  proj1_sig slen'.
+
+Lemma slen_toList_length :
+  forall {A : Type} {R : A -> A -> bool} (l : slist R),
+    slen l = length (toList l).
 Proof.
   intros A R.
-  refine (proj1_sig (ind
-    A R
-    (fun l => JMeq (rev (rev l)) l)
-    _ _)).
-Abort.
+  eapply (proj1_sig
+    (ind A R (fun l : slist R => slen l = length (toList l)) _ _)).
+  Unshelve.
+  all: cbn; unfold slen, toList;
+  destruct slen' as (f & Hf1 & Hf2), toList' as (g & Hg1 & Hg2); cbn.
+    rewrite Hf1, Hg1. cbn. reflexivity.
+    intros. rewrite Hf2, Hg2, H. cbn. reflexivity.
+Qed.
+
+(** Czy było łatwiej, niż zrobić to samo indukcją-indukcją? Tak, ale tylko
+    troszkę. *)
+
 (* end hide *)
+
+(** Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
+    możemy użyć indukcji-rekursji? *)
+
+End ind_rec.
 
 (** ** Jeszcze straszniejszy potfur *)
