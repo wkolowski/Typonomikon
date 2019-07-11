@@ -4311,8 +4311,52 @@ Qed.
 (* end hide *)
 
 (** Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
-    możemy użyć indukcji-rekursji? *)
+    możemy użyć indukcji-rekursji? W świerszczykach dla bystrzaków (czyli
+    tzw. "literaturze naukowej") widzę dwa główne pomysły.
+
+    Pierwszy to zamknięte uniwersum: definiujemy jednocześnie typ kodów
+    [U : Type] oraz funkcję [El : U -> Type], która interpretuje kody jako
+    typy. Uniwersum [U] ma pewne zalety względem "prawdziwego" uniwersum
+    typów [Type], a mianowicie jest ono typem induktywnym, więc pozwala nam
+    definiować funkcje rekurencyjne operujące na kodach. W przypadku [Type]
+    jest to oczywiście niemożliwe, tzn. nie możemy pisać funkcji przez
+    rekursję po "prawdziwych" typach. Przykład ten jest jednak ezoteryczny
+    (i to bardziej niż inne rzeczy w mej pisaninie), więc nie będziemy się
+    nim na razie zajmować - być może przyjdzie na to czas w rozdziale o
+    uniwersach.
+
+    Drugi pomysł jest o wiele bardziej praktyczy, choć nosi dużo smutniejszą
+    nazwę: metoda Bove-Capretta. Pod tą nazwą kryje się sposób definiowania
+    funkcji, pozwalający oddzielić samą definicję od dowodu jej terminacji.
+    Jeżeli ten opis nic ci nie mówi, nie martw się: dotychczas definiowaliśmy
+    tylko tak prymitywne funkcje, że tego typu fikołki nie były nam potrzebne.
+
+    Metoda Bove-Capretta polega na tym, żeby zamiast funkcji [f : A -> B],
+    która nie jest strukturalnie rekurencyjna (na co Coq nie pozwala) napisać
+    funkcję [f : forall x : A, D x -> B], gdzie [D : A -> Type] jest
+    "predykatem dziedziny", który sprawia, że dziwna rekursja z oryginalnej
+    definicji [f] staje się rekursją strukturalną po dowodzie [D x]. Żeby
+    zdefiniować oryginalne [f : A -> B] wystarczy udowodnić, że każde [x : A]
+    spełnia predykat dziedziny.
+
+    Co to wszystko ma wspólnego z indukcją-rekursją? Już piszę. Otóż metoda
+    ta nie wymaga w ogólności indukcji-rekursji - ta staje się potrzebna
+    dopiero, gdy walczymy z bardzo złośliwymi funkcjami, czyli takimi, w
+    których rekursja jest zagnieżdżona, tzn. robimy wywołanie rekurencyjne
+    na wyniku innego wywołania rekurencyjnego. Predykat dziedziny dla takiej
+    funkcji musi zawierać konstruktor w stylu "jeżeli wynik wywołania
+    rekurencyjnego na x należy do dziedziny, to x też należy do dziedziny".
+    To właśnie tu ujawnia się indukcja-rekursja: żeby zdefiniować predykat
+    dziedziny, musimy odwołać się do funkcji, a żeby zdefiniować funkcję,
+    musimy mieć predykat dziedziny.
+
+    Brzmi skomplikowanie? Zaraz zobaczymy prosty, ale sztuczny przykład,
+    który rozjaśni (albo zaciemni) sprawę.
+*)
 
 End ind_rec.
 
 (** ** Jeszcze straszniejszy potfur *)
+
+(** Oczywiście chodzi o indukcję-indukcję-rekursję, która jest nie tylko
+    strasznym potfurem, ale też powinna dostać Oskara za najlepszą nazwę. *)

@@ -5575,7 +5575,58 @@ Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
 
 <div class="doc">
 Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
-    możemy użyć indukcji-rekursji? 
+    możemy użyć indukcji-rekursji? W świerszczykach dla bystrzaków (czyli
+    tzw. "literaturze naukowej") widzę dwa główne pomysły.
+
+<div class="paragraph"> </div>
+
+    Pierwszy to zamknięte uniwersum: definiujemy jednocześnie typ kodów
+    <span class="inlinecode"><span class="id" title="var">U</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> oraz funkcję <span class="inlinecode"><span class="id" title="var">El</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">U</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, która interpretuje kody jako
+    typy. Uniwersum <span class="inlinecode"><span class="id" title="var">U</span></span> ma pewne zalety względem "prawdziwego" uniwersum
+    typów <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, a mianowicie jest ono typem induktywnym, więc pozwala nam
+    definiować funkcje rekurencyjne operujące na kodach. W przypadku <span class="inlinecode"><span class="id" title="keyword">Type</span></span>
+    jest to oczywiście niemożliwe, tzn. nie możemy pisać funkcji przez
+    rekursję po "prawdziwych" typach. Przykład ten jest jednak ezoteryczny
+    (i to bardziej niż inne rzeczy w mej pisaninie), więc nie będziemy się
+    nim na razie zajmować - być może przyjdzie na to czas w rozdziale o
+    uniwersach.
+
+<div class="paragraph"> </div>
+
+    Drugi pomysł jest o wiele bardziej praktyczy, choć nosi dużo smutniejszą
+    nazwę: metoda Bove-Capretta. Pod tą nazwą kryje się sposób definiowania
+    funkcji, pozwalający oddzielić samą definicję od dowodu jej terminacji.
+    Jeżeli ten opis nic ci nie mówi, nie martw się: dotychczas definiowaliśmy
+    tylko tak prymitywne funkcje, że tego typu fikołki nie były nam potrzebne.
+
+<div class="paragraph"> </div>
+
+    Metoda Bove-Capretta polega na tym, żeby zamiast funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>,
+    która nie jest strukturalnie rekurencyjna (na co Coq nie pozwala) napisać
+    funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> jest
+    "predykatem dziedziny", który sprawia, że dziwna rekursja z oryginalnej
+    definicji <span class="inlinecode"><span class="id" title="var">f</span></span> staje się rekursją strukturalną po dowodzie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>. Żeby
+    zdefiniować oryginalne <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> wystarczy udowodnić, że każde <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>
+    spełnia predykat dziedziny.
+
+<div class="paragraph"> </div>
+
+    Co to wszystko ma wspólnego z indukcją-rekursją? Już piszę. Otóż metoda
+    ta nie wymaga w ogólności indukcji-rekursji - ta staje się potrzebna
+    dopiero, gdy walczymy z bardzo złośliwymi funkcjami, czyli takimi, w
+    których rekursja jest zagnieżdżona, tzn. robimy wywołanie rekurencyjne
+    na wyniku innego wywołania rekurencyjnego. Predykat dziedziny dla takiej
+    funkcji musi zawierać konstruktor w stylu "jeżeli wynik wywołania
+    rekurencyjnego na x należy do dziedziny, to x też należy do dziedziny".
+    To właśnie tu ujawnia się indukcja-rekursja: żeby zdefiniować predykat
+    dziedziny, musimy odwołać się do funkcji, a żeby zdefiniować funkcję,
+    musimy mieć predykat dziedziny.
+
+<div class="paragraph"> </div>
+
+    Brzmi skomplikowanie? Zaraz zobaczymy prosty, ale sztuczny przykład,
+    który rozjaśni (albo zaciemni) sprawę.
+
 </div>
 <div class="code">
 
@@ -5588,6 +5639,10 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
 <div class="doc">
 <a name="lab155"></a><h2 class="section">Jeszcze straszniejszy potfur</h2>
 
+<div class="paragraph"> </div>
+
+ Oczywiście chodzi o indukcję-indukcję-rekursję, która jest nie tylko
+    strasznym potfurem, ale też powinna dostać Oskara za najlepszą nazwę. 
 </div>
 <div class="code">
 </div>
