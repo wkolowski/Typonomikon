@@ -4310,6 +4310,8 @@ Qed.
 
 (* end hide *)
 
+End ind_rec.
+
 (** Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     możemy użyć indukcji-rekursji? W świerszczykach dla bystrzaków (czyli
     tzw. "literaturze naukowej") widzę dwa główne pomysły.
@@ -4351,12 +4353,311 @@ Qed.
     musimy mieć predykat dziedziny.
 
     Brzmi skomplikowanie? Zaraz zobaczymy prosty, ale sztuczny przykład,
-    który rozjaśni (albo zaciemni) sprawę.
+    który rozjaśni (albo zaciemni) sprawę, a jest nim legendarna funkcja
+    McCarthy'ego. *)
+
+Fail Fixpoint f (n : nat) : nat :=
+  if leb 101 n then n - 10 else f (f (n + 11)).
+
+(** Ta funkcja jest podobna zupełnie do niczego, co dotychczas widzieliśmy.
+    Działa ona następująco:
+    - jeżeli [n] jest większe od [100] (co wyrażamy za pomocą [leb]
+      jako [leb 101 n]), to zwróć [n - 10]
+    - w przeciwnym wypadku wywołaj rekurencyjnie [f] na [n + 11], a następnie
+      wywołaj [f] na wyniku tamtego wywołania. *)
+
+(** Taka rekursja jest oczywiście nielegalna: [n + 11] nie jest strukturalnym
+    podtermem [n], gdyż jest on niego większe, zaś [f (n + 11)] w ogóle nie
+    wiadomo a priori, jak się ma do [n]. Nie dziwota więc, że Coq odrzuca
+    powyższą definicję.
+
+    Być może wobec tego taka "funkcja" w ogóle nie jest funkcją, a definicja
+    jest wadliwa? Otóż nie tym razem. Okazuje się bowiem, że istnieje funkcja
+    zachowująca się zgodnie z zawartym w definicji równaniem. Żebyśmy mogli
+    w to uwierzyć, zastanówmy się, ile wynosi [f 100].
+
+    [f 100 = f (f 111) = f 101 = 91] - poszło gładko. A co z [99]? Mamy
+    [f 99 = f (f 110) = f 100 = 91] - znowu 91, czyżby spiseg? Dalej:
+    [f 98 = f (f 109) = f 99 = 91] - tak, to na pewno spisek. Teraz możemy
+    zwerbalizować nasze domysły: jeżeli [n <= 100], to [f n = 91]. Jak
+    widać, nieprzypadkowo funkcja ta bywa też nazywana "funkcją 91
+    McCarthy'ego".
+
+    Zobaczmy, jak użyć indukcji-rekursji do zaimplementowania tej funkcji
+    w Coqu. *)
+
+(*
+Inductive D : nat -> Type :=
+    | D_gt100 : forall n : nat, 100 < n -> D n
+    | D_le100 :
+        forall n : nat, n <= 100 ->
+          forall d : D (n + 11), D (f (n + 11) d) -> D n
+
+with Fixpoint f (n : nat) (d : D n) : nat :=
+match d with
+    | D_gt100 n H => n - 10
+    | D_le100 n H d1 d2 => f (f (n + 11) d1) d2
+end.
 *)
 
-End ind_rec.
+(** [D : nat -> Type] to predykat dziedziny. Ma on być zdefiniowany tak,
+    żeby każdy element dziedziny oryginalnej funkcji go spełniał i żeby
+    rekursja strukturalna po dowodzie [D n] odpowiadała rekursji w
+    oryginalnej definicji funkcji.
 
-(** ** Jeszcze straszniejszy potfur *)
+    Uwaga nazewniczna: uparcie nazywam [D] predykatem, mimo że jest ono
+    typu [nat -> Type], czyli rodziną typów. Jest tak, gdyż w bardziej
+    zaawansowanej wersji metody Bove-Capretta [D] faktycznie byłoby typu
+    [nat -> Prop], ale my ułatwimy sobie życie, powołując się na prostotę
+    prezentacji.
 
-(** Oczywiście chodzi o indukcję-indukcję-rekursję, która jest nie tylko
-    strasznym potfurem, ale też powinna dostać Oskara za najlepszą nazwę. *)
+    Mamy więc dwa konstruktory: [D_gt100] odpowiada za przypadek [100 < n]
+    i głosi po prostu, że każde [n : nat] spełniające ten warunek należy
+    do dziedziny - nie ma tu żadnych argumentów rekurencyjnych, bo jest to
+    przypadek bazowy, w którym funkcja ma zwracać [n - 10].
+
+    Konstruktor [D_le100] odpowiada przypadkowi [n <= 100]. Mówi on, że
+    [n : nat] spełniające ten warunek należy do dziedziny pod warunkiem,
+    że [n + 11] oraz [f (n + 11)] także należą do dziedziny. Umożliwi to
+    w definicji [f] zrobienie dwóch wywołań rekurencyjnych na tych właśnie
+    argumentach.
+
+    Jednocześnie z predykatem dziedziny [D] zdefiniowana jest funkcja [f].
+    Zamiast [nat -> nat], jak oryginalna funkcja McCarthy'ego, jest ona
+    typu [forall n : nat, D n -> nat]. Zdefiniowana jest natomiast przez
+    rekursję strukturalną po [D n]: konstruktor [D_gt100] to koniec rekursji
+    i wynik równy [n - 10], zaś [D_le100] to dwa wywołania rekurencyjne.
+    W tej wersji argumentami nie są jednak [n + 11] i [f (n + 11)], tylko
+    [d1] i [d2], czyli dowody na to, że [n + 11] oraz [f (n + 11)] należą
+    do dziedziny funkcji [f]. Dzięki temu rekursja jest strukturalna. *)
+
+Variables
+  (D : nat -> Type)
+  (f : forall n : nat, D n -> nat)
+  (D_gt100 : forall n : nat, 100 < n -> D n)
+  (D_le100 :
+    forall n : nat, n <= 100 ->
+      forall d : D (n + 11), D (f (n + 11) d) -> D n)
+  (f_gt100 :
+    forall (n : nat) (H : 100 < n), f n (D_gt100 n H) = n - 10)
+  (f_le100 :
+    forall
+      (n : nat) (H : n <= 100)
+      (d1 : D (n + 11)) (d2 : D (f (n + 11) d1)),
+        f n (D_le100 n H d1 d2) = f (f (n + 11) d1) d2)
+  (ind :
+    forall
+      (P : forall n : nat, D n -> Type)
+      (P_gt100 :
+        forall (n : nat) (H : 100 < n),
+          P n (D_gt100 n H))
+      (P_le100 :
+        forall
+          (n : nat) (H : n <= 100)
+          (d1 : D (n + 11)) (d2 : D (f (n + 11) d1)),
+            P (n + 11) d1 -> P (f (n + 11) d1) d2 ->
+              P n (D_le100 n H d1 d2)),
+      {g : forall (n : nat) (d : D n), P n d |
+        (forall (n : nat) (H : 100 < n),
+          g n (D_gt100 n H) = P_gt100 n H) /\
+        (forall
+          (n : nat) (H : n <= 100)
+          (d1 : D (n + 11)) (d2 : D (f (n + 11) d1)),
+            g n (D_le100 n H d1 d2) =
+            P_le100 n H d1 d2
+              (g (n + 11) d1)
+              (g (f (n + 11) d1) d2))
+      }).
+
+(** Aksjomatyczna reprezentacja tej definicji działa podobnie jak poprzednio:
+    najpierw deklarujemy [D], potem [f], potem konstruktory [D], potem
+    równania definiujące [f], a na samym końcu regułę indukcji.
+
+    Reguła indukcji powstaje analogicznie jak dla [slist]. Definiujemy tylko
+    jedną rodzinę typów [D], więc reguła da nam tylko jedną funkcję, [g],
+    o typie [forall (n : nat) (d : D n), P n d], gdzie
+    [P : forall n : nat, D n -> Type] reprezentuje przeciwdziedzinę [g].
+    Mamy dwa przypadki: nieindukcyjny [P_gt100] odpowiadający konstruktorowi
+    [D_gt100] oraz [P_le100] odpowiadający za [D_le100], w którym mamy do
+    dyspozycji dwie hipotezy indukcyjne. Otrzymana z reguły funkcja spełnia
+    oczekiwane równania.
+
+    Przekonajmy się, że taka aksjomatyzacja jakoś działa. *)
+
+Require Import Omega.
+
+(** [omega] to taktyka potrafiąca różne arytmetyczne sztuczki. *)
+
+Lemma D_inv :
+  forall (n : nat) (d : D n),
+    {H : 100 < n | d = D_gt100 n H} +
+    {H : n <= 100 &
+      {d1 : D (n + 11) &
+      {d2 : D (f (n + 11) d1) | d = D_le100 n H d1 d2}}}.
+Proof.
+  apply ind.
+    intros. left. exists H. reflexivity.
+    intros. right. exists H, d1, d2. reflexivity.
+Defined.
+
+(** Będziemy też chcieli używać [inversion] na hipotezach postaci [D n],
+    ale [D] nie jest induktywne (tylko aksjomatyczne), więc musimy
+    pożądaną przez nas inwersję zamknąć w lemat. Dowodzimy go oczywiście
+    za pomocą reguły indukcji. *)
+
+Lemma f_spec :
+  forall (n : nat) (d : D n),
+    n <= 100 -> f n d = 91.
+Proof.
+  apply (ind (fun n d => n <= 100 -> f n d = 91)).
+    intros n H H'. omega.
+    intros n H d1 d2 IH1 IH2 _.
+      (* Tutaj używamy inwersji. *)
+      destruct (D_inv _ d1) as
+        [[H' eq] | (H' & d1' & d2' & eq)].
+        destruct (D_inv _ d2) as
+          [[H'' eq'] | (H'' & d1'' & d2'' & eq')].
+          rewrite f_le100, eq', f_gt100, eq, f_gt100 in *.
+            clear IH1 eq eq' H' H''.
+            (* n = 100 i wtedy 100 + 11 - 10 - 10 = 111 - 20 = 91
+               albo n < 100 i wtedy n + 11 - 10 = n + 1 <= 100 i cel
+               wynika z IH2. omega potrafi arytmetykę :) *)
+            omega.
+          rewrite f_le100. apply IH2. assumption.
+        rewrite f_le100. apply IH2. rewrite IH1.
+          omega.
+          assumption.
+Qed.
+
+(** Możemy też udowodnić naszą wcześniejszą obserwację. Dowód ponownie jest
+    dość prosty: najpierw używamy indukcji, a potem naszego inwersjowego
+    lematu na hipotezach postaci [D _ _]. W kluczowych momentach obliczamy
+    funkcję [f] za pomocą definiujących ją równań oraz posługujemy się
+    taktyką [omega] do przemielenia oczywistych, ale skomplikowanych
+    formalnie faktów z zakresu arytmetyki liczb naturalnych.
+
+    Jeżeli czegoś nie rozumiesz, to jesteś debi... a nie, czekaj. Jeżeli
+    czegoś nie rozumiesz, to nie martw się: powyższy przykład miał tylko
+    ilustrować jakieś praktyczne zastosowanie indukcji-rekursji. Do metody
+    Bove-Capretta powrócimy w następnym rozdziale. Pokażemy, jak wyeliminować
+    z niej indukcję-rekursję, tak żeby uzyskane za jej pomocą definicje
+    można było odpalać w Coqu. Zobaczymy też, jakimi sposobami dowodzić, że
+    każdy element dziedziny spełnia predykat dziedziny, co pozwoli nam
+    odzyskać oryginalną definicję funkcji, i dowiemy się, jak z "predykatu"
+    o typie [D : nat -> Type] zrobić prawdziwy predykat [D : nat -> Prop]. *)
+
+(** **** Ćwiczenie *)
+
+(** Przyjrzyjmy się poniższej fikuśnej definicji funkcji: *)
+
+Fail Fixpoint g (n : nat) : nat :=
+match n with
+    | 0 => 0
+    | S n => g (g n)
+end.
+
+(** Polecenie jest następujące:
+    - wytłumacz, dlaczego Coq nie akceptuje tej definicji
+    - wymyśl twierdzenie charakteryzujące tę funkcję
+    - używając metody Bove-Capretta zdefiniuj zmodyfikowaną wersję tej
+      funkcji [g' : forall n : nat, D' n -> nat]
+    - zakoduj swoją definicję aksjomatycznie
+    - udowodnij, że [g'] spełnia wymyśloną wcześniej charakteryzację
+    - udowodnij, że każde [n : nat] spełnia predykat dziedziny [D']
+    - zdefiniuj w Coqu oryginalną funkcję [g : nat -> nat] *)
+
+(* begin hide *)
+
+(** Coq odrzuca definicję, bo [g n] nie jest strukturalnym podtermem [S n].
+
+    Charakteryzacja jest prosta: [forall n : nat, g n = 0]. *)
+
+(*
+Inductive D' : nat -> Type :=
+    | D'_0 : D' 0
+    | D'_S : forall n : nat, D n -> D (g n) -> D (S n)
+
+with Fixpoint g (n : nat) (d : D n) : nat :=
+match d with
+    | D'_0 => 0
+    | D'_S _ d1 d2 => g (g n d1) d2
+end.
+*)
+
+Axioms
+  (D' : nat -> Type)
+  (g : forall n : nat, D' n -> nat)
+  (D'_0 : D' 0)
+  (D'_S : forall (n : nat) (d1 : D' n), D' (g n d1) -> D' (S n))
+  (g_D'_0 : g 0 D'_0 = 0)
+  (g_D'_S :
+    forall (n : nat) (d1 : D' n) (d2 : D' (g n d1)),
+      g (S n) (D'_S n d1 d2) = g (g n d1) d2)
+  (ind' : forall
+    (P : forall n : nat, D' n -> Type)
+    (P0 : P 0 D'_0)
+    (PS :
+      forall (n : nat) (d1 : D' n) (d2 : D' (g n d1)),
+        P n d1 -> P (g n d1) d2 -> P (S n) (D'_S n d1 d2)),
+    {h : forall (n : nat) (d : D' n), P n d |
+      h 0 D'_0 = P0 /\
+      (forall (n : nat) (d1 : D' n) (d2 : D' (g n d1)),
+        h (S n) (D'_S n d1 d2) =
+        PS n d1 d2 (h n d1) (h (g n d1) d2))
+    }).
+
+Lemma g_char :
+  forall (n : nat) (d : D' n), g n d = 0.
+Proof.
+  apply ind'.
+    apply g_D'_0.
+    intros. rewrite g_D'_S. assumption.
+Qed.
+
+Lemma D'_all :
+  forall n : nat, D' n.
+Proof.
+  induction n as [| n'].
+    exact D'_0.
+    apply (D'_S n' IHn'). rewrite g_char. exact D'_0.
+Qed.
+
+Definition g' (n : nat) : nat := g n (D'_all n).
+
+(* end hide *)
+
+(** ** Chimera, czyli jeszcze straszniejszy potfur *)
+
+(** Ufff... przebrnęliśmy przez indukcję-indukcję i indukcję-rekursję. Czy
+    może istnieć jeszcze potężniejszy i bardziej innowacyjny sposób
+    definiowania typów przez indukcję?
+
+    Ależ oczywiście. Jest nim... uwaga uwaga, niespodzianka...
+    indukcja-indukcja-rekursja, która jest nie tylko strasznym potfurem,
+    ale też powinna dostać Oskara za najlepszą nazwę.
+
+    Chodzi tu oczywiście o połączenie indukcji-indukcji i indukcji-rekursji:
+    możemy jednocześnie zdefiniować jakiś typ [A], rodzinę typów [B]
+    indeksowaną [A] oraz operujące na nich funkcje, do których konstruktory
+    [A] i [B] mogą się odwoływać.
+
+    Nie ma tu jakiejś wielkiej filozofii: wszystkiego, co powinieneś wiedzieć
+    o indukcji-indukcji-rekursji, dowiedziałeś się już z dwóch poprzednich
+    podrozdziałów.
+
+    Nie muszę chyba dodawać, że ława oburzonych jest oburzona faktem, że Coq
+    nie wspiera indukcji-indukcji-rekursji (a Agda już tak). *)
+
+(** **** Ćwiczenie (mega trudne) *)
+
+(** Wymyśl jakiś sensowny przykład praktycznego zastosowania
+    indukcji-indukcji-rekursji. *)
+
+(** * Podsumowanie *)
+
+(** To już koniec naszej podróży przez mechanizmy definiowania typów przez
+    indukcję. Istnieje wprawdziwe jeszcze jeden potfur, straszniejszy nawet
+    niż indukcja-indukcja-rekursja, ale jest on zbyt straszny jak na ten
+    rozdział.
+
+    Tak więc, podsumowując, ehhh... nie mam siły na podsumowanie. *)

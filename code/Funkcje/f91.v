@@ -1,5 +1,4 @@
 (*
-
   Another approach to McCarthy's f91 function without using
   induction-recursion.
 
