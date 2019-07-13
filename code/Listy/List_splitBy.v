@@ -1,6 +1,4 @@
-Add Rec LoadPath "/home/zeimer/Code/Coq".
-
-Require Import CoqBookPL.book.X3.
+Require Import D5.
 
 Function splitBy
   {A : Type} (p : A -> bool) (l : list A) : list (list A) :=

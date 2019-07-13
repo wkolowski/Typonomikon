@@ -1,1461 +1,1150 @@
-(** * E2: Liczby konaturalne *)
+(** * E2: Typy i funkcje *)
 
-(** TODO: coś tu napisać. *)
+Require Import Arith.
 
-(** Zdefiniuj liczby konaturalne oraz ich relację bipodobieństwa. Pokaż,
-    że jest to relacja równoważności. *)
-
-(* begin hide *)
-CoInductive conat : Type :=
-{
-    pred : option conat;
-}.
-
-CoInductive sim (n m : conat) : Prop :=
-{
-    sim' :
-      (pred n = None /\ pred m = None) \/
-      exists n' m' : conat,
-        pred n = Some n' /\ pred m = Some m' /\ sim n' m'
-}.
-
-Axiom sim_eq :
-  forall {n m : conat}, sim n m -> n = m.
-
-Lemma eq_pred :
-  forall n m : conat, pred n = pred m -> n = m.
-Proof.
-  destruct n, m. cbn. destruct 1. reflexivity.
-Qed.
-
-Ltac inv H := inversion H; subst; clear H; auto.
-
-Ltac invle H n m :=
-  let n' := fresh n "'" in
-  let m' := fresh m "'" in
-  let H1 := fresh H "1" in
-  let H2 := fresh H "2" in
-  let H3 := fresh H "3" in
-    destruct H as [[| (n' & m' & H1 & H2 & H3)]].
-(* end hide *)
-
-Lemma sim_refl :
-  forall n : conat, sim n n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. exists n', n'. do 2 split; try reflexivity. apply CH.
-    left. do 2 constructor.
-Qed.
-(* end hide *)
-
-Lemma sim_sym :
-  forall n m : conat, sim n m -> sim m n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[[] | (n' & m' & H1 & H2 & H3)]].
-    auto.
-    right. exists m', n'. do 2 (split; auto).
-Qed.
-(* end hide *)
-
-Lemma sim_trans :
-  forall a b c : conat, sim a b -> sim b c -> sim a c.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct H as [[[] | (n' & m' & H1 & H2 & H3)]].
-    left. destruct H0. decompose [ex or and] sim'0; split; congruence.
-    right. destruct H0. decompose [ex or and] sim'0.
-      congruence.
-      exists n', x0. do 2 (try split; auto). eapply CH. eauto. congruence.
-Qed.
-(* end hide *)
-
-(** Dzięki poniższemu będziemy mogli używac taktyki [rewrite] do
-    przepisywania [sim] tak samo jak [=]. *)
-
-Require Import Setoid.
-
-Instance Equivalence_sim : Equivalence sim.
-Proof.
-  esplit; red.
-    apply sim_refl.
-    apply sim_sym.
-    apply sim_trans.
-Defined.
-
-(** Zdefiniuj zero, następnik oraz liczbę omega - jest to nieskończona
-    liczba konaturalna, która jest sama swoim poprzednikiem. Udowodnij
-    ich kilka podstawowych właściwości. *)
-
-(* begin hide *)
-Definition zero : conat :=
-{|
-    pred := None;
-|}.
-
-Definition succ (n : conat) : conat :=
-{|
-    pred := Some n;
-|}.
-
-CoFixpoint omega : conat :=
-{|
-    pred := Some omega;
-|}.
-(* end hide *)
-
-Lemma succ_pred :
-  forall n m : conat,
-    n = succ m <-> pred n = Some m.
-(* begin hide *)
-Proof.
-  split; intro.
-    rewrite H. cbn. reflexivity.
-    destruct n as [[n' |]]; inv H.
-Qed.
-(* end hide *)
-
-Lemma zero_not_omega :
-  ~ sim zero omega.
-(* begin hide *)
-Proof.
-  destruct 1 as [[[H1 H2] | (zero' & omega' & H1 & H2 & H3)]].
-    cbn in H2. inv H2.
-    cbn in H1. inv H1.
-Qed.
-(* end hide *)
-
-Lemma sim_succ_omega :
-  forall n : conat, sim n (succ n) -> sim n omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. cbn.
-  destruct H as [[[H1 H2] | (n' & succn' & H1 & H2 & H3)]]; cbn in *.
-    inv H2.
-    right. inv H2. exists n', omega. intuition. apply CH.
-      apply succ_pred in H1. rewrite <- H1. assumption.
-Qed.
-(* end hide *)
-
-Lemma succ_omega :
-  omega = succ omega.
-(* begin hide *)
-Proof.
-  apply sim_eq.
-  constructor. cbn. right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma sim_succ :
-  forall n m : conat, sim n m -> sim (succ n) (succ m).
-(* begin hide *)
-Proof.
-  constructor. cbn. right. exists n, m. auto.
-Qed.
-(* end hide *)
-
-Lemma sim_succ_inv :
-  forall n m : conat, sim (succ n) (succ m) -> sim n m.
-(* begin hide *)
-Proof.
-  destruct 1 as [[[H1 H2] | (n' & m' & H1 & H2 & H3)]].
-    inv H1.
-    cbn in *. inv H1. inv H2.
-Qed.
-(* end hide *)
-
-(** Zdefiniuj dodawanie liczb konaturalnych i udowodnij jego podstawowe
-    właściwości. *)
-
-(* begin hide *)
-CoFixpoint add (n m : conat) : conat :=
-{|
-    pred :=
-      match pred n with
-          | None => pred m
-          | Some n' => Some (add n' m)
-      end
-|}.
-(* end hide *)
-
-Lemma add_zero_l :
-  forall n : conat, sim (add zero n) n.
-(* begin hide *)
-Proof.
-  constructor; cbn. destruct n as [[n' |]]; cbn.
-    right. exists n', n'. do 2 split; try reflexivity.
-    left. auto.
-Qed.
-(* end hide *)
-
-Lemma add_zero_r :
-  forall n : conat, sim (add n zero) n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor; cbn. destruct n as [[n' |]]; cbn.
-    right. do 2 eexists. do 2 split; try reflexivity. apply CH.
-    left. auto.
-Qed.
-(* end hide *)
-
-Lemma add_omega_l :
-  forall n : conat, sim (add omega n) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. cbn. right.
-  exists (add omega n), omega. auto.
-Qed.
-(* end hide *)
-
-Lemma add_omega_r :
-  forall n : conat, sim (add n omega) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. exists (add n' omega), omega. auto.
-    right. exists omega, omega. intuition.
-Qed.
-(* end hide *)
-
-Lemma add_succ_l :
-  forall n m : conat, sim (add (succ n) m) (add n (succ m)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. do 2 eexists. do 2 split; try reflexivity. apply CH.
-    right. do 2 eexists. do 2 split; try reflexivity. apply add_zero_l.
-Qed.
-(* end hide *)
-
-Lemma add_succ_r :
-  forall n m : conat, sim (add n (succ m)) (add (succ n) m).
-(* begin hide *)
-Proof.
-  intros. apply sim_sym, add_succ_l.
-Qed.
-(* end hide *)
-
-Lemma add_succ_l' :
-  forall n m : conat, sim (add (succ n) m) (succ (add n m)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. cbn. right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma add_succ_r' :
-  forall n m : conat, sim (add n (succ m)) (succ (add n m)).
-(* begin hide *)
-Proof.
-  intros. rewrite <- add_succ_l. apply add_succ_l'.
-Qed.
-(* end hide *)
-
-Lemma add_assoc :
-  forall a b c : conat, sim (add (add a b) c) (add a (add b c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[|]]; cbn.
-    right. do 2 eexists. do 2 split; try reflexivity. apply CH.
-    destruct b as [[|]]; cbn.
-      right. do 2 eexists. do 2 split; try reflexivity. apply sim_refl.
-Qed.
-(* end hide *)
-
-Lemma add_comm :
-  forall n m : conat, sim (add n m) (add m n).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]], m as [[m' |]]; cbn.
-    right. specialize (CH n' (succ m')).
-      do 2 eexists. do 2 split; try reflexivity.
-        rewrite (sim_eq (add_succ_l _ _)) in CH. apply CH.
-    right. do 2 eexists. do 2 split; try reflexivity.
-      apply add_zero_r.
-    right. do 2 eexists. do 2 split; try reflexivity.
-      apply sim_sym. apply add_zero_r.
-    left. split; reflexivity.
-Qed.
-(* end hide *)
-
-Lemma sim_add_zero_l :
-  forall n m : conat,
-    sim (add n m) zero -> sim n zero.
-(* begin hide *)
-Proof.
-  destruct 1 as [[[H1 H2] | (n' & m' & H1 & H2 & H3)]].
-    destruct n as [[n' |]]; cbn in *.
-      inv H1.
-      constructor. left. cbn. auto.
-    inv H2.
-Qed.
-(* end hide *)
-
-Lemma sim_add_zero_r :
-  forall n m : conat,
-    sim (add n m) zero -> sim m zero.
-(* begin hide *)
-Proof.
-  intros. rewrite add_comm in H. apply sim_add_zero_l in H. assumption.
-Qed.
-(* end hide *)
-
-(** Zdefiniuj relację [<=] na liczbach konaturalnych i udowodnij jej
-    podstawowe właściwości. *)
-
-(* begin hide *)
-CoInductive le (n m : conat) : Prop :=
-{
-    le' :
-      pred n = None \/
-      exists n' m' : conat,
-        pred n = Some n' /\
-        pred m = Some m' /\ le n' m'
-}.
-(* end hide *)
-
-Lemma le_refl :
-  forall n : conat, le n n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. do 2 eexists. do 2 split; try reflexivity. apply CH.
-    left. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma le_trans :
-  forall a b c : conat, le a b -> le b c -> le a c.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H, H0.
-  decompose [or ex and] le'0; clear le'0.
-    left. assumption.
-    decompose [or ex and] le'1; clear le'1.
-      congruence.
-      rewrite H in H3. inv H3. right. do 2 eexists. split.
-        eassumption.
-        split.
-          eassumption.
-          eapply CH; eauto.
-Qed.
-(* end hide *)
-
-Lemma le_sim :
-  forall n1 n2 m1 m2 : conat,
-    sim n1 n2 -> sim m1 m2 -> le n1 m1 -> le n2 m2.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H1 as [[| (n1' & m1' & H1 & H2 & H3)]].
-Restart.
-  intros.
-  rewrite <- (sim_eq H), <- (sim_eq H0). assumption.
-Qed.
-(* end hide *)
-
-Lemma le_0_l :
-  forall n : conat, le zero n.
-(* begin hide *)
-Proof.
-  constructor. left. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma le_0_r :
-  forall n : conat, le n zero -> n = zero.
-(* begin hide *)
-Proof.
-  intros. invle H n zero.
-    destruct n. unfold zero. cbn in H. rewrite H. reflexivity.
-    cbn in *. inv H2.
-Qed.
-(* end hide *)
-
-Lemma le_omega_r :
-  forall n : conat, le n omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. exists n', omega. auto.
-    left. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma le_omega_l :
-  forall n : conat, le omega n -> sim n omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. invle H omega' n; cbn in *.
-    inv H.
-    inv H1. right. do 2 eexists. intuition. exact H2. apply CH. assumption.
-Qed.
-(* end hide *)
-
-Lemma le_succ_r :
-  forall n m : conat, le n m -> le n (succ m).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[| (n' & m' & H1 & H2 & H3)]].
-    left. assumption.
-    right. exists n', (succ m'). cbn. intuition. f_equal.
-      destruct m as [[m'' |]]; inv H2.
-Qed.
-(* end hide *)
-
-Lemma le_succ :
-  forall n m : conat, le n m -> le (succ n) (succ m).
-(* begin hide *)
-Proof.
-  constructor. cbn. right. exists n, m. intuition.
-Qed.
-(* end hide *)
-
-Lemma le_add_l :
-  forall a b c : conat,
-    le a b -> le a (add b c).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[| (n1' & n2' & Hn1 & Hn2 & Hn3)]].
-    left. assumption.
-    right. cbn. rewrite Hn1, Hn2. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma le_add_r :
-  forall a b c : conat,
-    le a c -> le a (add b c).
-(* begin hide *)
-Proof.
-  intros. eapply le_sim.
-    reflexivity.
-    apply add_comm.
-    apply le_add_l. assumption.
-Qed.
-(* end hide *)
-
-Lemma le_add :
-  forall n1 n2 m1 m2 : conat,
-    le n1 n2 -> le m1 m2 -> le (add n1 m1) (add n2 m2).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. cbn.
-  destruct H as [[| (n1' & n2' & Hn1 & Hn2 & Hn3)]].
-    destruct H0 as [[| (m1' & m2' & Hm1 & Hm2 & Hm3)]].
-      rewrite H. left. assumption.
-      rewrite H, Hm1, Hm2. right. exists m1'.
-        destruct (pred n2); eexists; intuition.
-        replace m2 with (succ m2').
-          apply le_add_r, le_succ_r. assumption.
-          symmetry. rewrite succ_pred. assumption.
-    rewrite Hn1, Hn2. right. do 2 eexists. do 2 split.
-      reflexivity.
-      apply CH; assumption.
-Qed.
-(* end hide *)
-
-Lemma le_add_l' :
-  forall n m : conat, le n (add n m).
-(* begin hide *)
-Proof.
-  intros. apply le_add_l. apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma le_add_r' :
-  forall n m : conat, le m (add n m).
-(* begin hide *)
-Proof.
-  intros. apply le_add_r. apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma le_add_l'' :
-  forall n n' m : conat,
-    le n n' -> le (add n m) (add n' m).
-(* begin hide *)
-Proof.
-  intros. apply le_add.
-    assumption.
-    apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma le_add_r'' :
-  forall n m m' : conat,
-    le m m' -> le (add n m) (add n m').
-(* begin hide *)
-Proof.
-  intros. apply le_add.
-    apply le_refl.
-    assumption.
-Qed.
-(* end hide *)
-
-(** Zdefiniuj funkcje [min] i [max] i udowodnij ich właściwości. *)
-
-(* begin hide *)
-CoFixpoint min (n m : conat) : conat :=
-{|
-    pred :=
-      match pred n, pred m with
-          | None, _ => None
-          | _, None => None
-          | Some n', Some m' => Some (min n' m')
-      end;
-|}.
-
-CoFixpoint max (n m : conat) : conat :=
-{|
-    pred :=
-      match pred n, pred m with
-          | None, _ => pred m
-          | _, None => pred n
-          | Some n', Some m' => Some (max n' m')
-      end;
-|}.
-(* end hide *)
-
-Lemma min_zero_l :
-  forall n : conat, min zero n = zero.
-(* begin hide *)
-Proof.
-  intros. apply eq_pred. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma min_zero_r :
-  forall n : conat, min n zero = zero.
 (* begin hide *)
-Proof.
-  intros. apply eq_pred. cbn. destruct (pred n); reflexivity.
-Qed.
+Require Import Recdef.
 (* end hide *)
 
-Lemma min_omega_l :
-  forall n : conat, sim (min omega n) n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. do 2 eexists. intuition.
-    left. auto.
-Qed.
-(* end hide *)
-
-Lemma min_omega_r :
-  forall n : conat, sim (min n omega) n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. do 2 eexists. intuition.
-    left. auto.
-Qed.
-(* end hide *)
-
-Lemma min_succ :
-  forall n m : conat,
-    sim (min (succ n) (succ m)) (succ (min n m)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. cbn. right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma max_zero_l :
-  forall n : conat, sim (max zero n) n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. do 2 eexists. intuition.
-    left. auto.
-Qed.
-(* end hide *)
-
-Lemma max_zero_r :
-  forall n : conat, sim (max n zero) n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. do 2 eexists. intuition.
-    left. auto.
-Qed.
-(* end hide *)
-
-Lemma max_omega_l :
-  forall n : conat, sim (max omega n) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma max_omega_r :
-  forall n : conat, sim (max n omega) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma max_succ :
-  forall n m : conat,
-    sim (max (succ n) (succ m)) (succ (max n m)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. cbn. right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma min_assoc :
-  forall a b c : conat, sim (min (min a b) c) (min a (min b c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[a' |]], b as [[b' |]], c as [[c' |]]; cbn; auto.
-    right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma max_assoc :
-  forall a b c : conat, sim (max (max a b) c) (max a (max b c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[a' |]], b as [[b' |]], c as [[c' |]]; cbn; auto.
-    all: right; do 2 eexists; intuition.
-Qed.
-(* end hide *)
-
-Lemma min_comm :
-  forall n m : conat, sim (min n m) (min m n).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]], m as [[m' |]]; cbn; auto.
-    right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma max_comm :
-  forall n m : conat, sim (max n m) (max m n).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct n as [[n' |]], m as [[m' |]]; cbn; auto.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma min_add_l :
-  forall a b c : conat,
-    sim (min (add a b) (add a c)) (add a (min b c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[a' |]], b as [[b' |]], c as [[c' |]]; cbn; auto.
-    all: right; do 2 eexists; intuition.
-Qed.
-(* end hide *)
-
-Lemma min_add_r :
-  forall a b c : conat,
-    sim (min (add a c) (add b c)) (add (min a b) c).
-(* begin hide *)
-Proof.
-  intros.
-  rewrite (sim_eq (add_comm a c)), (sim_eq (add_comm b c)).
-  rewrite min_add_l, add_comm. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma max_add_l :
-  forall a b c : conat,
-    sim (max (add a b) (add a c)) (add a (max b c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[a' |]], b as [[b' |]], c as [[c' |]]; cbn; auto.
-    all: right; do 2 eexists; intuition.
-Qed.
-(* end hide *)
-
-Lemma max_add_r :
-  forall a b c : conat,
-    sim (max (add a c) (add b c)) (add (max a b) c).
-(* begin hide *)
-Proof.
-  intros.
-  rewrite (sim_eq (add_comm a c)), (sim_eq (add_comm b c)).
-  rewrite max_add_l, add_comm. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma min_le :
-  forall n m : conat, le n m -> sim (min n m) n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[H | (n' & m' & H1 & H2 & H3)]]; cbn.
-    rewrite H. left. auto.
-    rewrite H1, H2. right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma max_le :
-  forall n m : conat, le n m -> sim (max n m) m.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[H | (n' & m' & H1 & H2 & H3)]]; cbn.
-    rewrite H. destruct m as [[m' |]]; cbn.
-      right. do 2 eexists. intuition.
-      left. auto.
-    rewrite H1, H2. right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma min_refl :
-  forall n : conat, sim (min n n) n.
-(* begin hide *)
-Proof.
-  intros. apply min_le. apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma max_refl :
-  forall n : conat, sim (max n n) n.
-(* begin hide *)
-Proof.
-  intros. apply max_le. apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma sim_min_max :
-  forall n m : conat,
-    sim (min n m) (max n m) -> sim n m.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[[H1 H2] | (n' & m' & H1 & H2 & H3)]].
-    left. cbn in *. destruct (pred n), (pred m); try congruence. auto.
-    right. cbn in *. destruct (pred n), (pred m); try congruence.
-      do 2 eexists. intuition. apply CH. inv H1. inv H2.
-Qed.
-(* end hide *)
-
-Lemma min_max :
-  forall a b : conat, sim (min a (max a b)) a.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[a' |]], b as [[b' |]]; cbn; auto.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition. rewrite min_refl. apply sim_refl.
-Qed.
-(* end hide *)
-
-Lemma max_min :
-  forall a b : conat, sim (max a (min a b)) a.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[a' |]], b as [[b' |]]; cbn; auto.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
+(** Prerekwizyty:
+    - [Empty_set], [unit], [prod], [sum] i funkcje
+    - właściwości konstruktorów?
+    - [exists!]
+    - równość [eq] *)
 
-Lemma min_max_distr :
-  forall a b c : conat,
-    sim (min a (max b c)) (max (min a b) (min a c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[a' |]], b as [[b' |]], c as [[c' |]]; cbn; auto.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma max_min_distr :
-  forall a b c : conat,
-    sim (max a (min b c)) (min (max a b) (max a c)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct a as [[a' |]], b as [[b' |]], c as [[c' |]]; cbn; auto.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-      rewrite min_comm, min_max. apply sim_refl.
-    right. do 2 eexists. intuition.
-      rewrite min_max. reflexivity.
-    right. do 2 eexists. intuition. rewrite min_refl. reflexivity.
-    right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-(** Zdefiniuj funkcję [div2], która dzieli liczbę konaturalną przez 2
-    (cokolwiek to znaczy). Udowodnij jej właściwości. *)
-
-(* begin hide *)
-CoFixpoint div2 (n : conat) : conat :=
-{|
-    pred :=
-      match pred n with
-          | None => None
-          | Some n' =>
-              match pred n' with
-                  | None => None
-                  | Some n'' => Some (div2 n'')
-              end
-      end;
-|}.
-(* end hide *)
-
-Lemma div2_zero :
-  sim (div2 zero) zero.
-(* begin hide *)
-Proof.
-  constructor. cbn. left. auto.
-Qed.
-(* end hide *)
-
-Lemma div2_omega :
-  sim (div2 omega) omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. cbn. right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma div2_succ :
-  forall n : conat, sim (div2 (succ (succ n))) (succ (div2 n)).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. cbn. right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma div2_add :
-  forall n : conat, sim (div2 (add n n)) n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct n as [[n' |]].
-    right. exists (div2 (add n' n')).
-      replace {| pred := Some n' |} with (succ n').
-        exists n'. intuition. rewrite (sim_eq (add_succ_l' _ _)).
-          rewrite (sim_eq (add_succ_r' _ _)).
-          rewrite (sim_eq (div2_succ _)). cbn. reflexivity.
-      apply eq_pred. cbn. reflexivity.
-    left. cbn. auto.
-Qed.
-(* end hide *)
-
-Lemma le_div2_l_aux :
-  forall n m : conat, le n m -> le (div2 n) m.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[H | (n' & m' & H1 & H2 & H3)]]; cbn.
-    rewrite H. left. reflexivity.
-    rewrite H1. destruct H3 as [[H3 | (n'' & m'' & H31 & H32 & H33)]]; cbn.
-      rewrite H3. left. reflexivity.
-      rewrite H31. right. do 2 eexists. intuition.
-        eassumption.
-        apply CH. apply le_trans with m''.
-          assumption.
-          replace m' with (succ m'').
-            apply le_succ_r. apply le_refl.
-            apply eq_pred. cbn. symmetry. assumption.
-Qed.
-(* end hide *)
-
-Lemma le_div2_l :
-  forall n : conat, le (div2 n) n.
-(* begin hide *)
-Proof.
-  intros. apply le_div2_l_aux, le_refl.
-Qed.
-(* end hide *)
+(** W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.
+    Trzeba przyznać na wstępie, że rozdział będzie raczej matematyczny. *)
 
-Lemma le_div2 :
-  forall n m : conat, le n m -> le (div2 n) (div2 m).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct H as [[H | (n' & m' & H1 & H2 &
-                [[H3 | (n'' & m'' & H31 & H32 & H33)]])]]; cbn.
-    rewrite H. left. reflexivity.
-    rewrite H1, H2, H3. left. reflexivity.
-    rewrite H1, H2, H31, H32. right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
+(** * Funkcje *)
 
-(** Zdefiniuj predykaty [Finite] i [Infinite], które wiadomo co znaczą.
-    Pokaż, że omega jest liczbą nieskończoną i że nie jest skończona,
-    oraz że każda liczba nieskończona jest bipodobna do omegi. Pokaż
-    też, że żadna liczba nie może być jednocześnie skończona i
-    nieskończona. *)
+(** Potrafisz już posługiwać się funkcjami. Mimo tego zróbmy krótkie
+    przypomnienie.
 
-(* begin hide *)
-Inductive Finite : conat -> Prop :=
-    | Finite_zero : Finite zero
-    | Finite_succ : forall n : conat, Finite n -> Finite (succ n).
-
-CoInductive Infinite (n : conat) : Prop :=
-{
-    Infinite' :
-      exists n' : conat, pred n = Some n' /\ Infinite n';
-}.
-(* end hide *)
+    Typ funkcji (niezależnych) z [A] w [B] oznaczamy przez [A -> B]. W
+    Coqu funkcje możemy konstruować za pomocą abstrakcji (np. [fun n :
+    nat => n + n]) albo za pomocą rekursji strukturalnej. Eliminować zaś
+    możemy je za pomocą aplikacji: jeżeli [f : A -> B] oraz [x : A], to
+    [f x : B].
 
-Lemma omega_not_Finite :
-  ~ Finite omega.
-(* begin hide *)
-Proof.
-  intro. remember omega as n. revert Heqn.
-  induction H; intro.
-    apply (f_equal pred) in Heqn. cbn in Heqn. inv Heqn.
-    apply (f_equal pred) in Heqn. cbn in Heqn. inv Heqn.
-Qed.
-(* end hide *)
+    Funkcje wyrażają ideę przyporządkowania: każdemu elementowi dziedziny
+    funkcja przyporządkowuje element przeciwdziedziny. Jednak status
+    dziedziny i przeciwdziedziny nie jest taki sam: każdemu elementowi
+    dziedziny coś odpowiada, jednak mogą istnieć elementy przeciwdziedziny,
+    które nie są obrazem żadnego elementu dziedziny.
 
-Lemma Infinite_omega :
-  Infinite omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. exists omega. split.
-    cbn. reflexivity.
-    apply CH.
-Qed.
-(* end hide *)
+    Co więcej, w Coqu wszystkie funkcje są konstruktywne, tzn. mogą zostać
+    obliczone. Jest to coś, co bardzo mocno odróżnia Coqa oraz rachunek
+    konstrukcji (jego teoretyczną podstawę) od innych systemów formalnych. *)
 
-Lemma Infinite_omega' :
-  forall n : conat, Infinite n -> sim n omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[n' [H1 H2]]].
-  right. exists n', omega. intuition.
-Qed.
-(* end hide *)
+Definition app {A B : Type} (f : A -> B) (x : A) : B := f x.
 
-Lemma Finite_Infinite :
-  forall n : conat, Finite n -> Infinite n -> False.
-(* begin hide *)
-Proof.
-  induction 1; destruct 1 as [(n' & H1 & H2)]; inv H1.
-Qed.
-(* end hide *)
+Definition app' {A B : Type} (x : A) (f : A -> B) : B := f x.
 
-(** Zdefiniuj predykaty [Even] i [Odd]. Pokaż, że omega jest jednocześnie
-    parzysta i nieparzysta. Pokaż, że jeżeli liczba jest jednocześnie
-    parzysta i nieparzysta, to jest nieskończona. Wyciągnij z tego oczywisty
-    wniosek. Pokaż, że każda liczba skończona jest parzysta albo
-    nieparzysta. *)
+Notation "f $ x" := (app f x) (left associativity, at level 110).
 
-(* begin hide *)
-CoInductive Even (n : conat) : Prop :=
-{
-    Even' :
-      pred n = None \/
-      exists n1 n2 : conat,
-        pred n = Some n1 /\ pred n1 = Some n2 /\ Even n2;
-}.
-
-CoInductive Odd (n : conat) : Prop :=
-{
-    Odd' :
-      n = succ zero \/
-      exists n1 n2 : conat,
-        pred n = Some n1 /\ pred n1 = Some n2 /\ Odd n2;
-}.
-(* end hide *)
+Notation "x $> f" := (app' x f) (right associativity, at level 60).
 
-Lemma Even_zero :
-  Even zero.
-(* begin hide *)
-Proof.
-  constructor. left. cbn. reflexivity.
-Qed.
-(* end hide *)
+Check plus (2 + 2) (3 + 3).
+Check plus $ 2 + 2 $ 3 + 3.
 
-Lemma Odd_zero :
-  ~ Odd zero.
-(* begin hide *)
-Proof.
-  destruct 1 as [[H | (n & m & H1 & H2 & H3)]].
-    inv H.
-    inv H1.
-Qed.
-(* end hide *)
+Check (fun n : nat => n + n) 21.
+Check 21 $> fun n : nat => n + n.
 
-Lemma Even_Omega :
-  Even omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. right.
-  exists omega, omega. cbn. intuition.
-Qed.
-(* end hide *)
+(** Najważniejszą rzeczą, jaką możemy zrobić z funkcją, jest zaaplikowanie
+    jej do argumentu. Jest to tak częsta operacja, że zdefiniujemy sobie
+    dwie notacje, które pozwolą nam zaoszczędzić kilka stuknięć w klawiaturę.
 
-Lemma Odd_Omega :
-  Odd omega.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. right.
-  exists omega, omega. cbn. intuition.
-Qed.
-(* end hide *)
+    Uwaga techniczna: nie możemy przypisać notacji do wyrażenia "f x", gdyż
+    zepsuło by to wyświetanie. Z tego powodu musimy napisać dwie osobne
+    funkcje [app] i [app'] i do nich przypisać notacje.
 
-Lemma Even_Odd_Infinite :
-  forall n : conat, Even n -> Odd n -> Infinite n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor.
-  destruct H as [[HE | (n1 & n2 & HE1 & HE2 & HE3)]],
-          H0 as [[HO | (m1 & m2 & HO1 & HO2 & HO3)]];
-  subst; cbn in *.
-    inv HE.
-    congruence.
-    inv HE1. inv HE2.
-    rewrite HO1 in HE1. inv HE1. rewrite HO2 in HE2. inv HE2.
-      exists n1. intuition. constructor. exists n2. intuition.
-Qed.
-(* end hide *)
+    Notacja [$] będzie nam służyć do niepisania nawiasów: jeżeli argumentami
+    funkcji będą skomplikowane termy, zamiast pisać wokół nich parę nawiasów,
+    będziemy mogli wstawić tylko jeden symbol dolara "$$". Dzięki temu zamiast
+    2n nawiasów napiszemy tylko n znaków "$$" (choć trzeba przyznać, że
+    będziemy musieli pisać więcej spacji).
 
-Lemma Even_succ :
-  forall n : conat, Odd n -> Even (succ n).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[H | (n1 & n2 & H1 & H2 & H3)]]; cbn.
-    right. exists n, zero. intuition.
-      rewrite H. cbn. reflexivity.
-      constructor. left. cbn. reflexivity.
-    right. exists n, n1. intuition. replace n1 with (succ n2).
-      apply CH. assumption.
-      apply eq_pred. cbn. symmetry. assumption.
-Qed.
-(* end hide *)
+    Notacja [$>] umożliwi nam pisanie aplikacji w odwrotnej kolejności. Dzięki
+    temu będziemy mogli np. pomijać nawiasy w abstrakcji. Jako, że nie da się
+    zrobić notacji "x f", jest to najlepsze dostępne nam rozwiązanie. *)
 
-Lemma Odd_succ :
-  forall n : conat, Even n -> Odd (succ n).
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[H | (n1 & n2 & H1 & H2 & H3)]].
-    left. apply sim_eq. apply sim_succ. constructor.
-      left. cbn. auto.
-    right. cbn. exists n, n1. intuition. replace n1 with (succ n2).
-      apply CH. assumption.
-      apply eq_pred. cbn. symmetry. assumption.
-Qed.
-(* end hide *)
+Definition comp {A B C : Type} (f : A -> B) (g : B -> C)
+  : A -> C := fun x : A => g (f x).
 
-Lemma Even_succ_inv :
-  forall n : conat, Odd (succ n) -> Even n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[H | (n1 & n2 & H1 & H2 & H3)]]; cbn.
-    inv H.
-    cbn in H1. inv H1. right.
-      destruct H3 as [[H3 | (m1 & m2 & H1' & H2' & H3')]]; subst.
-        exists (succ zero), zero. intuition. apply Even_zero.
-        exists n2, m1. intuition. replace m1 with (succ m2).
-          apply Even_succ. assumption.
-          apply eq_pred. cbn. symmetry. assumption.
-Qed.
-(* end hide *)
+Notation "f .> g" := (comp f g) (left associativity, at level 40).
 
-Lemma Odd_succ_inv :
-  forall n : conat, Even (succ n) -> Odd n.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[H | (n1 & n2 & H1 & H2 & H3)]]; cbn.
-    inv H.
-    cbn in H1. inv H1.
-      destruct H3 as [[H | (n1' & n2' & H1' & H2' & H3')]]; cbn.
-        left. apply eq_pred. cbn. rewrite H2. f_equal.
-          apply eq_pred. cbn. assumption.
-        right. exists n2, n1'. intuition. apply CH.
-          replace (succ n1') with n2.
-            constructor. right. do 2 eexists. eauto.
-            apply eq_pred. cbn. assumption.
-Qed.
-(* end hide *)
+(** Najważniejszą operacją, jaką możemy wykonywać na funkcjach, jest złożenie.
+    Jedynym warunkiem jest, aby przeciwdziedzina pierwszej funkcji była taka
+    sama, jak dziedzina drugiej funkcji. Składanie funkcji jest łączne.
 
-Lemma Finite_Even_Odd :
-  forall n : conat, Finite n -> Even n \/ Odd n.
-(* begin hide *)
-Proof.
-  induction 1.
-    left. constructor. left. cbn. reflexivity.
-    destruct IHFinite.
-      right. apply Odd_succ. assumption.
-      left. apply Even_succ. assumption.
-Qed.
-(* end hide *)
+    Uwaga techniczna: jeżeli prezentuję jakieś twierdzenie bez dowodu, to
+    znaczy, że dowód jest ćwiczeniem. *)
 
-Lemma Finite_not_both_Even_Odd :
-  forall n : conat, Finite n -> ~ (Even n /\ Odd n).
+Theorem comp_assoc :
+  forall (A B C D : Type) (f : A -> B) (g : B -> C) (h : C -> D),
+    (f .> g) .> h = f .> (g .> h).
 (* begin hide *)
-Proof.
-  induction 1; destruct 1.
-    apply Odd_zero. assumption.
-    apply IHFinite. split.
-      apply Even_succ_inv. assumption.
-      apply Odd_succ_inv. assumption.
-Qed.
+Proof. trivial. Qed.
 (* end hide *)
 
-Lemma Even_add_Odd :
-  forall n m : conat, Odd n -> Odd m -> Even (add n m).
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct 1 as [[H | (n1 & n2 & H1 & H2 & H3)]]; intro.
-    rewrite H, (sim_eq (add_succ_l' _ _)), (sim_eq (add_zero_l _)).
-      apply Even_succ. assumption.
-    constructor. right. exists (add n1 m), (add n2 m).
-      cbn. rewrite H1, H2. intuition.
-Qed.
-(* end hide *)
+Definition id (A : Type) : A -> A := fun x : A => x.
 
-Lemma Even_add_Even :
-  forall n m : conat, Even n -> Even m -> Even (add n m).
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct 1 as [[H | (n1 & n2 & H1 & H2 & H3)]]; intro.
-    replace n with zero.
-      rewrite (sim_eq (add_zero_l _)). assumption.
-      apply eq_pred. cbn. auto.
-    constructor. right. exists (add n1 m), (add n2 m).
-      cbn. rewrite H1, H2. auto.
-Qed.
-(* end hide *)
+(** Najważniejszą funkcją w całym kosmosie jest identyczność. Jest to funkcja,
+    która nie robi zupełnie nic. Jej waga jest w tym, że jest ona elementem
+    neutralnym składania funkcji. *)
 
-Lemma Odd_add_Even_Odd :
-  forall n m : conat, Even n -> Odd m -> Odd (add n m).
+Theorem id_left :
+  forall (A B : Type) (f : A -> B), id A .> f = f.
 (* begin hide *)
-Proof.
-  cofix CH.
-  destruct 1 as [[H | (n1 & n2 & H1 & H2 & H3)]]; intro.
-    replace n with zero.
-      rewrite (sim_eq (add_zero_l _)). assumption.
-      apply eq_pred. cbn. auto.
-    constructor. right. exists (add n1 m), (add n2 m).
-      cbn. rewrite H1, H2. auto.
-Qed.
+Proof. trivial. Qed.
 (* end hide *)
 
-(** Było już o dodawaniu, przydałoby się powiedzieć też coś o odejmowaniu.
-    Niestety, ale odejmowania liczb konaturalnych nie da się zdefiniować
-    (a przynajmniej tak mi się wydaje). Nie jest to również coś, co można
-    bezpośrednio udowodnić. Jest to fakt żyjący na metapoziomie, czyli
-    mówiący coś o Coqu, a nie mówiący coś w Coqu. Jest jednak pewien
-    wewnętrzny sposób by upewnić się, że odejmowanie faktycznie nie jest
-    koszerne. *)
-
-Definition Sub (n m r : conat) : Prop :=
-  sim (add r m) n.
-
-(** W tym celu definiujemy relację [Sub], która ma reprezentować wykres
-    funkcji odejmującej, tzn. specyfikować, jaki jest związek argumentów
-    funkcji z jej wynikiem. *)
-
-Definition sub : Type :=
-  {f : conat -> conat -> conat |
-    forall n m r : conat, f n m = r <-> Sub n m r}.
-
-(** Dzięki temu możemy napisać precyzyjny typ, który powinna mieć nasza
-    funkcja - jest to funkcja biorąca dwie liczby konaturalne i zwracająca
-    liczbę konaturalną, która jest poprawna i pełna względem wykresu. *)
-
-Lemma Sub_nondet :
-  forall r : conat, Sub omega omega r.
+Theorem id_right :
+  forall (A B : Type) (f : A -> B), f .> id B = f.
 (* begin hide *)
-Proof.
-  unfold Sub.
-  cofix CH.
-  constructor. destruct r as [[r' |]]; cbn.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-Qed.
+Proof. trivial. Qed.
 (* end hide *)
-
-(** Niestety mimo, że definicja relacji [Sub] jest tak oczywista, jak to
-    tylko możliwe, relacja ta nie jest wykresem żadnej funkcji, gdyż jest
-    niedeterministyczna. *)
 
-Lemma sub_cant_exist :
-  sub -> False.
-(* begin hide *)
-Proof.
-  destruct 1 as [f H].
-  assert (f omega omega = zero).
-    apply H. apply Sub_nondet.
-  assert (f omega omega = succ zero).
-    apply H. apply Sub_nondet.
-  rewrite H0 in H1. inv H1.
-Qed.
-(* end hide *)
+Definition const {A B : Type} (b : B) : A -> B := fun _ => b.
 
-(** Problem polega na tym, że [omega - omega] może być dowolną liczbą
-    konaturalną. Bardziej obrazowo:
-    - Chcielibyśmy, żeby [n - n = 0]
-    - Chcielibyśmy, żeby [(n + 1) - n = 1]
-    - Jednak dla [n = omega] daje to [omega - omega = 0] oraz
-      [omega - omega = 1], co prowadzi do sprzeczności *)
+(** Funkcja stała to funkcja, która ignoruje swój drugi argument i zawsze
+    zwraca pierwszy argument. *)
 
-(** Dzięki temu możemy skonkludować, że typ [sub] jest pusty, a zatem
-    pożądana przez nas funkcją odejmująca nie może istnieć.
+Definition flip
+  {A B C : Type} (f : A -> B -> C) : B -> A -> C :=
+    fun (b : B) (a : A) => f a b.
 
-    Najbliższą odejmowaniu operacją, jaką możemy wykonać na liczbach
-    konaturalnych, jest odejmowanie liczby naturalnej od liczby
-    konaturalnej. *)
+(** [flip] to całkiem przydatny kombinator (funkcja wyższego rzędu), który
+    zamienia miejscami argumenty funkcji dwuargumentowej. *)
 
-(* begin hide *)
-Fixpoint subn (n : conat) (m : nat) : conat :=
-match pred n, m with
-    | None, _ => n
-    | _, 0 => n
-    | Some n', S m' => subn n' m'
-end.
-
-Fixpoint from_nat (n : nat) : conat :=
+Fixpoint iter {A : Type} (n : nat) (f : A -> A) : A -> A :=
 match n with
-    | 0 => zero
-    | S n' => succ (from_nat n')
+    | 0 => id A
+    | S n' => f .> iter n' f
 end.
 
-Compute subn (from_nat 6) 5.
-(* end hide *)
+(** Ostatnim przydatnim kombinatorem jest [iter]. Służy on do składania
+    funkcji samej ze sobą [n] razy. Oczywiście funkcja, aby można ją było
+    złożyć ze sobą, musi mieć identyczną dziedzinę i przeciwdziedzinę. *)
 
-(* begin hide *)
-Goal
-  forall n m r1 r2 : conat,
-    Finite n -> Sub n m r1 -> Sub n m r2 -> sim r1 r2.
+(** * Aksjomat ekstensjonalności *)
+
+(** Ważną kwestią jest ustalenie, kiedy dwie funkcje są równe. Zacznijmy od
+    tego, że istnieją dwie koncepcje równości:
+    - intensjonalna — funkcje są zdefiniowane przez identyczne (czyli
+      konwertowalne) wyrażenia
+    - ekstensjonalna — wartości funkcji dla każdego argumentu są równe *)
+
+Print eq.
+(* ===>
+    Inductive eq (A : Type) (x : A) : A -> Prop :=
+        | eq_refl : x = x
+*)
+
+(** Podstawowym i domyślnym rodzajem równości w Coqu jest równość
+    intensjonalna, której właściwości już znasz. Każda funkcja, na mocy
+    konstruktora [eq_refl], jest równa samej sobie. Prawdą jest też mniej
+    oczywisty fakt: każda funkcja jest równa swojej η-ekspansji. *)
+
+Theorem eta_expansion :
+  forall (A B : Type) (f : A -> B), f = fun x : A => f x.
+Proof. reflexivity. Qed.
+
+Print Assumptions eta_expansion.
+(* ===> Closed under the global context *)
+
+(** η-ekspansja funkcji [f] to nic innego, jak funkcja anonimowa, która
+    bierze [x] i zwraca [f x]. Nazwa pochodzi od greckiej litery η (eta).
+    Powyższe twierdzenie jest trywialne, gdyż równość zachodzi na mocy
+    konwersji.
+
+    Warto podkreślić, że jego prawdziwość nie zależy od żadnych aksjomatów.
+    Stwierdzenie to możemy zweryfikować za pomocą komendy [Print Assumptions],
+    która wyświetla listę aksjomatów, które zostały wykorzystane w definicji
+    danego termu. Napis "Closed under the global context" oznacza, że żadnego
+    aksjomatu nie użyto. *)
+
+Theorem plus_1_eq :
+  (fun n : nat => 1 + n) = (fun n : nat => n + 1).
 Proof.
-  unfold Sub. intros.
-  revert m r1 r2 H0 H1.
-  induction H; intros.
-    apply sim_add_zero_l in H0. apply sim_add_zero_l in H1.
-      rewrite H0, H1. reflexivity.
-    destruct H0 as [[[H01 H02] | (r1' & m1 & H01 & H02 & H03)]],
-             H1 as [[[H11 H12] | (r2' & m2 & H11 & H12 & H13)]];
-    inv H02; inv H12.
-      constructor. inv H01. inv H11.
-      destruct r1 as [[r1'' |]], r2 as [[r2'' |]]; cbn in *.
-        inv H1. inv H2. right. exists r1'', r2''. intuition.
-          eapply IHFinite; eassumption.
-        inv H1. rewrite <- H13 in H03. admit.
-        inv H2. rewrite <- H03 in H13. admit.
+  trivial.
+  Fail rewrite plus_comm. (* No i co teraz? *)
 Abort.
 
-Definition sub' : Type :=
-  {f : conat -> conat -> conat |
-    forall n m r : conat, f n m = r -> Sub n m r}.
-(* end hide *)
+(** Równość intensjonalna ma jednak swoje wady. Główną z nich jest to, że
+    jest ona bardzo restrykcyjna. Widać to dobrze na powyższym przykładzie:
+    nie jesteśmy w stanie udowodnić, że funkcje [fun n : nat => 1 + n] oraz
+    [fun n : nat => n + 1] są równe, gdyż zostały zdefiniowane za pomocą
+    innych termów. Mimo, że termy te są równe, to nie są konwertowalne, a
+    zatem funkcje też nie są konwertowalne. Nie znaczy to jednak, że nie są
+    równe — po prostu nie jesteśmy w stanie w żaden sposób pokazać, że są. *)
 
-CoInductive Mul (n m r : conat) : Prop :=
-{
-    Mul' :
-      (n = zero /\ r = zero) \/
-      (m = zero /\ r = zero) \/
-      exists n' m' r' : conat,
-        n = succ n' /\ m = succ m' /\ Mul n' m r' /\ sim r (add r' m);
-}.
+Require Import FunctionalExtensionality.
 
-Ltac unmul H :=
-  destruct H as [H]; decompose [or and ex] H; clear H; subst.
+Check @functional_extensionality.
+(* ===> @functional_extensionality
+          : forall (A B : Type) (f g : A -> B),
+              (forall x : A, f x = g x) -> f = g *)
 
-Lemma Mul_zero_l :
-  forall n r : conat, Mul zero n r -> sim r zero.
+(** Z tarapatów wybawić nas może jedynie aksjomat ekstensjonalności dla
+    funkcji, zwany w Coqu [functional_extensionality] (dla funkcji, które
+    nie są zależne) lub [functional_extensionality_dep] (dla funkcji
+    zależnych).
+
+    Aksjomat ten głosi, że [f] i [g] są równe, jeżeli są równe dla wszystkich
+    argumentów. Jest on bardzo użyteczny, a przy tym nie ma żadnych smutnych
+    konsekwencji i jest kompatybilny z wieloma innymi aksjomatami. Z tych
+    właśnie powodów jest on jednym z najczęściej używanych w Coqu aksjomatów.
+    My też będziemy go wykorzystywać. *)
+
+Theorem plus_1_eq :
+  (fun n : nat => 1 + n) = (fun n : nat => n + 1).
+Proof.
+  extensionality n. rewrite plus_comm. trivial.
+Qed.
+
+(** Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
+    [f = g], to taktyka [extensionality x] przekształca go w cel postaci
+    [f x = g x], o ile tylko nazwa [x] nie jest już wykorzystana na coś
+    innego.
+
+    Dzięki zastosowaniu aksjomatu nie musimy już polegać na konwertowalności
+    termów definiujących funkcje. Wystarczy udowodnić, że są one równe. W
+    tym przypadku robimy to za pomocą twierdzenia [plus_comm]. *)
+
+(** **** Ćwiczenie *)
+
+(** Użyj aksjomatu ekstensjonalności, żeby pokazać, że dwie funkcje binarne
+    są równe wtedy i tylko wtedy, gdy ich wartości dla wszystkich argumentów
+    są równe. *)
+
+Theorem binary_funext :
+  forall (A B C : Type) (f g : A -> B -> C),
+    f = g <-> forall (a : A) (b : B), f a b = g a b.
 (* begin hide *)
 Proof.
-  intros. unmul H.
-    1-2: reflexivity.
-    inv H1.
+  split; intros.
+    subst. trivial.
+    extensionality a. extensionality b. apply H.
 Qed.
 (* end hide *)
 
-Lemma Mul_zero_r:
-  forall n r : conat, Mul n zero r -> sim r zero.
+(** * Injekcje *)
+
+(** TODO ACHTUNG: to pojęcie zostało użyte implicite przy opisywaniu
+    właściciwości konstruktorów. *)
+
+Definition injective {A B : Type} (f : A -> B) : Prop :=
+  forall x x' : A, f x = f x' -> x = x'.
+
+(** Objaśnienia zacznijmy od nazwy. Po łacinie "iacere" znaczy "rzucać",
+    zaś "in" znaczy "w, do". W językach romańskich samo słowo "injekcja"
+    oznacza zaś zastrzyk. Bliższym matematycznemu znaczeniu byłoby jednak
+    tłumaczenie "wstrzyknięcie". Jeżeli funkcja jest injekcją, to możemy
+    też powiedzieć, że jest "injektywna". Inną nazwą jest "funkcja
+    różnowartościowa".
+
+    en.wikipedia.org/wiki/Bijection,%%20injection%%20and%%20surjection
+
+    Tutaj można zapoznać się z obrazkami poglądowymi.
+
+    Podstawowa idea jest prosta: jeżeli funkcja jest injekcją, to identyczne
+    jej wartości pochodzą od równych argumentów.
+
+    Przekonajmy się na przykładzie. *)
+
+Goal injective (fun n : nat => 2 + n).
+Proof.
+  unfold injective; intros. destruct x, x'; cbn in *.
+    trivial.
+    inversion H.
+    inversion H.
+    inversion H. trivial.
+Qed.
+
+(** Funkcja [fun n : nat => 2 + n], czyli dodanie [2] z lewej strony, jest
+    injekcją, gdyż jeżeli [2 + n = 2 + n'], to rozwiązując równanie dostajemy
+    [n = n']. Jeżeli wartości funkcji są równe, to argumenty również muszą
+    być równe.
+
+    Zobaczmy też kontrprzykład. *)
+
+Goal ~ injective (fun n : nat => n * n - n).
+Proof.
+  unfold injective, not; intros.
+  specialize (H 0 1). simpl in H. specialize (H eq_refl). inversion H.
+Qed.
+
+(** Funkcja f(n) = n^2 - n nie jest injekcją, gdyż mamy zarówno f(0) = 0
+    jak i f(1) = 0. Innymi słowy: są dwa nierówne argumenty (0 i 1), dla
+    których wartość funkcji jest taka sama (0).
+
+    A oto alternatywna definicja. *)
+
+Definition injective' {A B : Type} (f : A -> B) : Prop :=
+  forall x x' : A, x <> x' -> f x <> f x'.
+
+(** Głosi ona, że funkcja injektywna to funkcja, która dla różnych argumentów
+    przyjmuje różne wartości. Innymi słowy, injekcja to funkcja, która
+    zachowuje relację [<>]. Przykład 1 możemy sparafrazować następująco:
+    jeżeli [n] jest różn od [n'], to wtedy [2 + n] jest różne od [2 + n'].
+
+    Definicja ta jest równoważna poprzedniej, ale tylko pod warunkiem, że
+    przyjmiemy logikę klasyczną. W logice konstruktywnej pierwsza definicja
+    jest ogólniejsza od drugiej. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że [injective] jest mocniejsze od [injective']. Pokaż też, że w
+    logice klasycznej są one równoważne. *)
+
+Theorem injective_injective' :
+  forall (A B : Type) (f : A -> B),
+    injective f -> injective' f.
 (* begin hide *)
 Proof.
-  cofix CH.
-  intros. unmul H.
-    1-2: reflexivity.
-    inv H0.
+  unfold injective, injective', not; intros.
+  apply H0. apply H. assumption.
 Qed.
 (* end hide *)
 
-Lemma Mul_one_l :
-  forall n r : conat, Mul (succ zero) n r -> sim n r.
+Theorem injective'_injective :
+  (forall P : Prop, ~ ~ P -> P) ->
+  forall (A B : Type) (f : A -> B),
+    injective' f -> injective f.
 (* begin hide *)
 Proof.
-  intros. unmul H.
-    inv H1.
-    reflexivity.
-    inv H1. apply Mul_zero_l in H2.
-      rewrite (sim_eq H2) in H4. rewrite add_zero_l in H4.
-      rewrite H4. reflexivity.
+  unfold injective, injective', not; intros.
+  apply H. intro. apply (H0 x x'); assumption.
 Qed.
 (* end hide *)
 
-Lemma Mul_one_r :
-  forall n r : conat, Mul n (succ zero) r -> sim n r.
+(** Udowodnij, że różne funkcje są lub nie są injektywne. *)
+
+Theorem id_injective :
+  forall A : Type, injective (id A).
 (* begin hide *)
 Proof.
-  cofix CH.
-  intros. unmul H.
-    reflexivity.
-    inv H0.
-    constructor. destruct r as [[r' |]]; cbn in *.
-      right. exists x, r'. intuition. apply CH. inv H0.
-        rewrite add_succ_r', (sim_eq (add_zero_r _)) in H4.
-        apply sim_succ_inv in H4. rewrite (sim_eq H4). assumption.
-      inv H0. rewrite add_succ_r' in H4. apply sim_eq in H4. inv H4.
+  intro. unfold injective, id. trivial.
 Qed.
 (* end hide *)
 
-Lemma Mul_det :
-  forall n m r1 r2 : conat, Mul n m r1 -> Mul n m r2 -> sim r1 r2.
+Theorem S_injective : injective S.
 (* begin hide *)
 Proof.
-  cofix CH.
-  intros. unmul H.
-    apply Mul_zero_l in H0. symmetry. assumption.
-    apply Mul_zero_r in H0. symmetry. assumption.
-    unmul H0.
-      inv H1.
-      inv H.
-      inv H. inv H1. rewrite add_succ_r' in H5. rewrite add_succ_r' in H6.
-        rewrite (sim_eq H5), (sim_eq H6). apply sim_succ.
-        replace _ with (sim x1 x4).
-          eapply CH; eassumption.
-Admitted.
+  red. inversion 1. trivial.
+Qed.
 (* end hide *)
 
-Lemma Mul_comm :
-  forall n m r : conat, Mul n m r -> Mul m n r.
+Theorem const_unit_inj :
+  forall (A : Type) (a : A),
+    injective (fun _ : unit => a).
 (* begin hide *)
 Proof.
-  cofix CH.
-  intros. unmul H.
-    constructor. right. left. auto.
-    constructor. left. auto.
-    constructor. do 2 right. exists x0, x, x1. intuition.
-Admitted.
+  unfold injective; intros. destruct x, x'. trivial.
+Qed.
 (* end hide *)
 
-Lemma Mul_assoc :
-  forall a b c d r1 r2 s1 s2 : conat,
-    Mul a b r1 -> Mul r1 c r2 ->
-    Mul b c s1 -> Mul a s1 s2 -> sim r2 s2.
+Theorem add_k_left_inj :
+  forall k : nat, injective (fun n : nat => k + n).
 (* begin hide *)
 Proof.
-
-Admitted.
+  red. induction k as [| k']; simpl; intros.
+    assumption.
+    inversion H. apply IHk'. assumption.
+Qed.
 (* end hide *)
 
+Theorem mul_k_inj :
+  forall k : nat, k <> 0 -> injective (fun n : nat => k * n).
 (* begin hide *)
-CoInductive Even2 (n : conat) : Prop :=
-{
-    Even2' :
-      pred n = None \/
-      exists n' : conat,
-        pred n = Some n' /\ Odd2 n';
-}
-
-with Odd2 (n : conat) : Prop :=
-{
-    Odd2' :
-      n = succ zero \/
-      exists n' : conat,
-        pred n = Some n' /\ Even2 n';
-}.
-
-Lemma Even2_add_Odd2 :
-  forall n m : conat, Odd2 n -> Odd2 m -> Even2 (add n m)
-
-with Even2_add_Odd2_Even2 :
-  forall n m : conat, Even2 n -> Odd2 m -> Odd2 (add n m).
 Proof.
-  constructor. destruct H as [[H | (n' & H1 & H2)]].
-    rewrite H. cbn. right. exists m. split.
-      f_equal. apply eq_pred. cbn. reflexivity.
+  red. intros k H x x'. generalize dependent k. generalize dependent x'.
+  induction x as [| y]; induction x' as [| y']; simpl; intros.
+    trivial.
+    do 2 (rewrite mult_comm in H0; simpl in *). destruct k.
+      contradiction H. trivial.
+      simpl in H0. inversion H0.
+    rewrite mult_0_r in H0. rewrite mult_comm in H0. simpl in H0. destruct k.
+      contradiction H. trivial.
+      simpl in H0. inversion H0.
+    f_equal. apply (IHy y' k).
       assumption.
-    cbn. rewrite H1. right. eexists. intuition.
-  constructor.
-  destruct H as [[H | (n' & H1 & H2)]],
-          H0 as [[H' | (m' & H1' & H2')]]; subst; cbn.
-    rewrite H. left. apply sim_eq. rewrite add_comm. constructor.
-      cbn. right. do 2 eexists. intuition. constructor. cbn. left. auto.
-    rewrite H. right. exists m'. intuition.
-    rewrite H1. right. exists (succ n'). split.
-      f_equal. apply sim_eq. rewrite add_comm. constructor. cbn.
-        right. do 2 eexists. intuition. rewrite add_zero_l. apply sim_refl.
-      constructor. cbn. right. exists n'. auto.
-    rewrite H1. right. exists (add n' m). intuition. apply Even2_add_Odd2.
-      assumption.
-      constructor. right. exists m'. auto.
+      SearchPattern (_ * S _ = _).
+      do 2 rewrite mult_succ_r in H0. rewrite plus_comm in H0 at 1.
+        replace (k * y' + k) with (k + k * y') in H0.
+          assert (Hinj : injective (fun n : nat => k + n)).
+            apply add_k_left_inj.
+          red in Hinj. apply Hinj in H0. assumption.
+        apply plus_comm.
 Qed.
+(* end hide *)
+
+Theorem const_2elem_not_inj :
+  forall (A B : Type) (b : B),
+    (exists a a' : A, a <> a') -> ~ injective (fun _ : A => b).
+(* begin hide *)
+Proof.
+  unfold injective, not; intros. destruct H as [a [a' H]].
+  specialize (H0 a a' eq_refl). contradiction.
+Qed.
+(* end hide *)
+
+Theorem mul_k_0_not_inj :
+  ~ injective (fun n : nat => 0 * n).
+(* begin hide *)
+Proof.
+  simpl. apply const_2elem_not_inj. exists 0, 1. inversion 1.
+Qed.
+(* end hide *)
+
+Theorem pred_not_injective : ~ injective pred.
+(* begin hide *)
+Proof.
+  unfold injective; intro. specialize (H 0 1 eq_refl). inversion H.
+Qed.
+(* end hide *)
+
+(** Jedną z ważnych właściwości injekcji jest to, że są składalne:
+    złożenie dwóch injekcji daje injekcję. *)
+
+Theorem inj_comp :
+  forall (A B C : Type) (f : A -> B) (g : B -> C),
+    injective f -> injective g -> injective (f .> g).
+(* begin hide *)
+Proof.
+  unfold injective, comp; intros.
+  apply H, H0. assumption.
+Qed.
+(* end hide *)
+
+(** Ta właściwość jest dziwna. Być może kiedyś wymyślę dla niej jakąś
+    bajkę. *)
+
+Theorem LOLWUT :
+  forall (A B C : Type) (f : A -> B) (g : B -> C),
+    injective (f .> g) -> injective f.
+(* begin hide *)
+Proof.
+  unfold injective, comp; intros.
+  apply H. rewrite H0. trivial.
+Qed.
+(* end hide *)
+
+(** Na zakończenie należy dodać do naszej interpretacji pojęcia "injekcja"
+    jeszcze jedną ideę. Mianowicie jeżeli istnieje injekcja [f : A -> B],
+    to ilość elementów typu [A] jest mniejsza lub równa liczbie elementów
+    typu [B], a więc typ [A] jest w pewien sposób mniejszy od [B].
+
+    [f] musi przyporządkować każdemu elementowi [A] jakiś element [B]. Gdy
+    elementów [A] jest więcej niż [B], to z konieczności któryś z elementów
+    [B] będzie obrazem dwóch lub więcej elementów [A].
+
+    Wobec powyższego stwierdzenie "złożenie injekcji jest injekcją" możemy
+    zinterpretować po prostu jako stwierdzenie, że relacja porządku, jaką
+    jest istnienie injekcji, jest przechodnia. (TODO: to wymagałoby relacji
+    jako prerekwizytu). *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że nie istnieje injekcja z [bool] w [unit]. Znaczy to, że
+    [bool] ma więcej elementów, czyli jest większy, niż [unit]. *)
+
+Theorem no_inj_bool_unit :
+  ~ exists f : bool -> unit, injective f.
+(* begin hide *)
+Proof.
+  unfold not, injective; intros. destruct H as [f H].
+  specialize (H true false). destruct (f true), (f false).
+  specialize (H eq_refl). inversion H.
+Qed.
+(* end hide *)
+
+(** Pokaż, że istnieje injekcja z typu pustego w każdy inny. Znaczy to,
+    że [Empty_set] ma nie więcej elementów, niż każdy inny typ (co nie
+    powinno nas dziwić, gdyż [Empty_set] nie ma żadnych elementów). *)
+
+Theorem inj_Empty_set_A :
+  forall A : Type, exists f : Empty_set -> A, injective f.
+(* begin hide *)
+Proof.
+  intro. exists (fun e : Empty_set => match e with end).
+  red. inversion x.
+Qed.
+(* end hide *)
+
+
+(** * Surjekcje *)
+
+(** Drugim ważnym rodzajem funkcji są surjekcje. *)
+
+Definition surjective {A B : Type} (f : A -> B) : Prop :=
+    forall b : B, exists a : A, f a = b.
+
+(** I znów zacznijmy od nazwy. Po francusku "sur" znaczy "na", zaś słowo
+    "iacere" już znamy (po łac. "rzucać"). Słowo "surjekcja" moglibyśmy
+    więc przetłumaczyć jako "pokrycie". Tym bowiem w istocie jest surjekcja
+    — jest to funkcja, która "pokrywa" całą swoją przeciwdziedzinę.
+
+    Owo "pokrywanie" w definicji wyraziliśmy w ten sposób: dla każdego
+    elementu [b] przeciwdziedziny [B] istnieje taki element [a] dziedziny
+    [A], że [f a = b].
+
+    Zobaczmy przykład i kontrprzykład. *)
+
+Theorem pred_surjective : surjective pred.
+Proof.
+  unfold surjective; intros. exists (S b). cbn. trivial.
+Qed.
+
+(** TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki [simpl]
+    używać będziemy taktyki [cbn]. Różni się ona nieznacznie od [simpl], ale
+    jej główną zaletą jest nazwa — [cbn] to trzy litery, a [simpl] aż pięć,
+    więc zaoszczędzimy sobie pisania.
+
+    Powyższe twierdzenie głosi, że "funkcja [pred] jest surjekcją", czyli,
+    parafrazując, "każda liczba naturalna jest poprzednikiem innej liczby
+    naturalnej". Nie powinno nas to zaskakiwać, wszakże każda liczba naturalna
+    jest poprzednikiem swojego następnika, tzn. [pred (S n) = n]. *)
+
+Theorem S_not_surjective : ~ surjective S.
+Proof.
+  unfold surjective; intro. destruct (H 0). inversion H0.
+Qed.
+
+(** Surjekcją nie jest za to konstruktor [S]. To również nie powinno nas
+    dziwić: istnieje przecież liczba naturalna, która nie jest następnikiem
+    żadnej innej. Jest nią oczywiście zero.
+
+    Surjekcje cieszą się właściwościami podobnymi do tych, jakie są udziałem
+    injekcji. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że złożenie surjekcji jest surjekcją. Udowodnij też "dziwną
+    właściwość" surjekcji. *)
+
+Theorem sur_comp :
+  forall (A B C : Type) (f : A -> B) (g : B -> C),
+    surjective f -> surjective g -> surjective (f .> g).
+(* begin hide *)
+Proof.
+  unfold surjective, comp; intros A B C f g Hf Hg c.
+  destruct (Hg c) as [b Heq]. destruct (Hf b) as [a Heq'].
+  subst. exists a. trivial.
+Qed.
+(* end hide *)
+
+Theorem LOLWUT_sur :
+  forall (A B C : Type) (f : A -> B) (g : B -> C),
+    surjective (f .> g) -> surjective g.
+(* begin hide *)
+Proof.
+  unfold surjective, comp; intros A B C f g Hgf c.
+  destruct (Hgf c) as [a Heq]. subst. exists (f a). trivial.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Zbadaj, czy wymienione funkcje są surjekcjami. Sformułuj i udowodnij
+    odpowiednie twierdzenia.
+
+    Funkcje: identyczność, dodawanie (rozważ zero osobno), odejmowanie,
+    mnożenie (rozważ 1 osobno). *)
+
+(* begin hide *)
+Theorem id_sur :
+  forall A : Type, surjective (id A).
+Proof.
+  red; intros. exists b. trivial.
+Qed.
+
+Theorem plus_0_l_sur : surjective (fun n : nat => 0 + n).
+Proof.
+  red; intros. exists b. trivial.
+Qed.
+
+Theorem plus_0_r_sur : surjective (fun n : nat => n + 0).
+Proof.
+  red; intros. exists b. rewrite <- plus_n_O. trivial.
+Qed.
+
+Theorem plus_Sn_l_not_sur :
+  forall k : nat, ~ surjective (fun n : nat => S k + n).
+Proof.
+  unfold surjective, not; intros. specialize (H 0).
+  destruct H as [a H]. inversion H.
+Qed.
+
+Theorem plus_Sn_r_not_sur :
+  forall k : nat, ~ surjective (fun n : nat => n + S k).
+Proof.
+  unfold surjective, not; intros. specialize (H 0).
+  destruct H as [a H]. rewrite plus_comm in H. inversion H.
+Qed.
+
+Theorem minus_sur :
+  forall k : nat, surjective (fun n : nat => n - k).
+Proof.
+  red; intros. exists (k + b). rewrite minus_plus. trivial.
+Qed.
+
+Theorem mult_1_l_sur : surjective (fun n : nat => 1 * n).
+Proof.
+  red; intros. exists b. Search (1 * _). apply Nat.mul_1_l.
+Qed.
+
+Theorem mult_1_r_sur : surjective (fun n : nat => n * 1).
+Proof.
+  red; intros. exists b. apply Nat.mul_1_r.
+Qed.
+
+Theorem mult_0_l_not_sur : ~ surjective (fun n : nat => 0 * n).
+Proof.
+  unfold surjective, not; intros. specialize (H 1).
+  destruct H as [a H]. simpl in H. inversion H.
+Qed.
+
+Theorem mult_0_r_not_sur : ~ surjective (fun n : nat => n * 0).
+Proof.
+  unfold surjective, not; intros. specialize (H 1).
+  destruct H as [a H]. rewrite Nat.mul_0_r in H. inversion H.
+Qed.
+
+Theorem mult_SS_l_not_sur :
+  forall k : nat, ~ surjective (fun n : nat => S (S k) * n).
+Proof.
+  unfold surjective, not; intros. specialize (H 1).
+  destruct H as [a H]. destruct a as [| a']; simpl in H.
+    rewrite Nat.mul_0_r in H. inversion H.
+    inversion H. rewrite plus_comm in H1. inversion H1.
+Qed.
+
+Theorem mult_SS_r_not_sur :
+  forall k : nat, ~ surjective (fun n : nat => n * S (S k)).
+Proof.
+  unfold surjective, not; intros. specialize (H 1).
+  destruct H as [a H]. destruct a as [| a']; inversion H.
+Qed.
+(* end hide *)
+
+(** Tak jak istnienie injekcji [f : A -> B] oznacza, że [A] jest mniejszy
+    od [B], gdyż ma mniej (lub tyle samo) elementów, tak istnieje surjekcji
+    [f : A -> B] oznacza, że [A] jest większy niż [B], gdyż ma więcej (lub
+    tyle samo) elementów.
+
+    Jest tak na mocy samej definicji: każdy element przeciwdziedziny jest
+    obrazem jakiegoś elementu dziedziny. Nie jest powiedziane, ile jest
+    tych elementów, ale wiadomo, że co najmniej jeden.
+
+    Podobnie jak w przypadku injekcji, fakt że złożenie surjekcji jest
+    surjekcją możemy traktować jako stwierdzenie, że porządek, jakim jest
+    istnienie surjekcji, jest przechodni. (TODO) *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że nie istnieje surjekcja z [unit] w [bool]. Oznacza to, że [unit]
+    nie jest większy niż [bool]. *)
+
+Theorem no_sur_unit_bool :
+  ~ exists f : unit -> bool, surjective f.
+(* begin hide *)
+Proof.
+  unfold surjective, not; intros.
+  destruct H as [f H]. destruct (H true), (H false).
+  destruct x, x0. rewrite H0 in H1. inversion H1.
+Qed.
+(* end hide *)
+
+(** Pokaż, że istnieje surjekcja z każdego typu niepustego w [unit].
+    Oznacza to, że każdy typ niepusty ma co najmniej tyle samo elementów,
+    co [unit], tzn. każdy typ nie pusty ma co najmniej jeden element. *)
+
+Theorem sur_A_unit :
+  forall (A : Type) (nonempty : A), exists f : A -> unit, surjective f.
+(* begin hide *)
+Proof.
+  unfold surjective; intros. exists (fun _ => tt).
+  destruct b. exists nonempty. trivial.
+Qed.
+(* end hide *)
+
+(** * Bijekcje *)
+
+Definition bijective {A B : Type} (f : A -> B) : Prop :=
+  injective f /\ surjective f.
+
+(** Po łacinie przedrostek "bi-" oznacza "dwa". Bijekcja to funkcja, która
+    jest zarówno injekcją, jak i surjekcją. *)
+
+Theorem id_bij : forall A : Type, bijective (@id A).
+Proof.
+  split; intros.
+    apply id_injective.
+    apply id_sur.
+Qed.
+
+Theorem S_not_bij : ~ bijective S.
+Proof.
+  unfold bijective; intro. destruct H.
+  apply S_not_surjective. assumption.
+Qed.
+
+(** Pozostawię przykłady bez komentarza — są one po prostu konsekwencją tego,
+    co już wiesz na temat injekcji i surjekcji.
+
+    Ponieważ bijekcja jest surjekcją, to każdy element jej przeciwdziedziny
+    jest obrazem jakiegoś elementu jej dziedziny (obraz elementu [x] to po
+    prostu [f x]). Ponieważ jest injekcją, to element ten jest unikalny.
+
+    Bijekcja jest więc taką funkcją, że każdy element jej przeciwdziedziny
+    jest obrazem dokładnie jednego elementu jej dziedziny. Ten właśnie fakt
+    wyraża poniższa definicja alternatywna.
+
+    TODO: [exists!] nie zostało dotychczas opisane, a chyba nie powinno być
+    opisane tutaj. *)
+
+Definition bijective' {A B : Type} (f : A -> B) : Prop :=
+  forall b : B, exists! a : A, f a = b.
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że obie definicje są równoważne. *)
+
+Theorem bijective_bijective' :
+  forall (A B : Type) (f : A -> B),
+    bijective f <-> bijective' f.
+(* begin hide *)
+Proof.
+  unfold bijective, bijective', injective, surjective; split; intros.
+    destruct H as [Hinj Hsur]. destruct (Hsur b) as [a H].
+      exists a. red. split; try assumption. intros. apply Hinj.
+      rewrite H, H0. reflexivity.
+    split; intros.
+      destruct (H (f x)) as [a Ha]. destruct Ha as [Ha1 Ha2].
+        rewrite <- (Ha2 x).
+          apply Ha2. rewrite H0. reflexivity.
+          reflexivity.
+      destruct (H b) as [a [H1 H2]]. exists a. assumption.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+Require Import List.
+Import ListNotations.
+
+Fixpoint unary (n : nat) : list unit :=
+match n with
+    | 0 => []
+    | S n' => tt :: unary n'
+end.
+
+(** Funkcja [unary] reprezentuje liczbę naturalną [n] za pomocą listy
+    zawierającej [n] kopii termu [tt]. Udowodnij, że [unary] jest
+    bijekcją. *)
+
+Theorem unary_bij : bijective unary.
+(* begin hide *)
+Proof.
+  unfold bijective, injective, surjective. split.
+    induction x as [| y]; induction x' as [| y']; simpl in *.
+      trivial.
+      inversion 1.
+      inversion 1.
+      inversion 1. f_equal. apply IHy. assumption.
+    intro. exists (length b). induction b as [| h t]; simpl.
+      trivial.
+      destruct h. f_equal. assumption.
+Qed.
+(* end hide *)
+
+(** Jak już powiedzieliśmy, bijekcje dziedziczą właściwości, które mają
+    zarówno injekcje, jak i surjekcje. Wobec tego możemy skonkludować,
+    że złożenie bijekcji jest bijekcją. Nie mają one jednak "dziwnej
+    własciwości".
+
+    TODO UWAGA: od teraz twierdzenia, które pozostawię bez dowodu, z
+    automatu stają się ćwiczeniami. *)
+
+Theorem bij_comp :
+  forall (A B C : Type) (f : A -> B) (g : B -> C),
+    bijective f -> bijective g -> bijective (f .> g).
+(* begin hide *)
+Proof.
+  unfold bijective, comp; intros. destruct H, H0. split.
+    apply inj_comp; assumption.
+    apply sur_comp; assumption.
+Qed.
+(* end hide *)
+
+(** Bijekcje mają też interpretacje w idei rozmiaru oraz ilości elementów.
+    Jeżeli istnieje bijekcja [f : A -> B], to znaczy, że typy [A] oraz [B]
+    mają dokładnie tyle samo elementów, czyli są "tak samo duże".
+
+    Nie powinno nas zatem dziwić, że relacja istnienia bijekcji jest
+    relacją równoważności:
+    - każdy typ ma tyle samo elementów, co on sam
+    - jeżeli typ [A] ma tyle samo elementów co [B], to [B] ma tyle samo
+      elementów, co [A]
+    - jeżeli [A] ma tyle samo elementów co [B], a [B] tyle samo elementów
+      co [C], to [A] ma tyle samo elementów co [C] *)
+
+(** **** Ćwiczenie *)
+
+(** Jeżeli między [A] i [B] istnieje bijekcja, to mówimy, że [A] i [B] są
+    równoliczne (ang. equipotent). Pokaż, że relacja równoliczności jest
+    relacją równoważności. TODO: prerekwizyt: relacje równoważności *)
+
+Definition equipotent (A B : Type) : Prop :=
+  exists f : A -> B, bijective f.
+
+Notation "A ~ B" := (equipotent A B) (at level 40).
+
+(** Równoliczność [A] i [B] będziemy oznaczać przez [A ~ B]. Nie należy
+    notacji [~] mylić z notacją [~] oznaczającej negację logiczną. Ciężko
+    jednak jest je pomylić, gdyż pierwsza zawsze bierze dwa argumenty, a
+    druga tylko jeden. *)
+
+Theorem equipotent_refl :
+  forall A : Type, A ~ A.
+(* begin hide *)
+Proof.
+  red. intro. exists (id A). apply id_bij.
+Qed.
+(* end hide *)
+
+Theorem equipotent_sym :
+  forall A B : Type, A ~ B -> B ~ A.
+(* begin hide *)
+Proof.
+  unfold equipotent, bijective; intros. destruct H as [f [Hinj Hsur]].
+  red in Hsur. assert (B -> A).
+    intro b. Fail destruct (Hsur b) as [a H].
+Admitted.
+(* end hide *)
+
+Theorem equipotent_trans :
+  forall A B C : Type, A ~ B -> B ~ C -> A ~ C.
+(* begin hide *)
+Proof.
+  unfold equipotent; intros. destruct H as [f Hf], H0 as [g Hg].
+  exists (f .> g). apply bij_comp; assumption.
+Qed.
+(* end hide *)
+
+(** * Inwolucje *)
+
+Definition involutive {A : Type} (f : A -> A) : Prop :=
+  forall x : A, f (f x) = x.
+
+(** Kolejnym ważnym (choć nie aż tak ważnym) rodzajem funkcji są inwolucje.
+    Po łacinie "volvere" znaczy "obracać się". Inwolucja to funkcja, która
+    niczym Chuck Norris wykonuje półobrót — w tym sensie, że zaaplikowanie
+    jej dwukrotnie daje cały obrót, a więc stan wyjściowy.
+
+    Mówiąc bardziej po ludzku, inwolucja to funkcja, która jest swoją własną
+    odwrotnością. Spotkaliśmy się już z przykładami inwolucji: najbardziej
+    trywialnym z nich jest funkcja identycznościowa, bardziej oświecającym
+    zaś funkcja [rev], która odwraca listę — odwrócenie listy dwukrotnie
+    daje wyjściową listę. Inwolucją jest też [negb]. *)
+
+Theorem id_inv :
+  forall A : Type, involutive (id A).
+(* begin hide *)
+Proof.
+  red; intros. trivial.
+Qed.
+(* end hide *)
+
+Theorem rev_inv :
+  forall A : Type, involutive (@rev A).
+(* begin hide *)
+Proof.
+  red; intros. apply rev_involutive.
+Qed.
+(* end hide *)
+
+Theorem negb_inv : involutive negb.
+(* begin hide *)
+Proof.
+  red. destruct x; cbn; trivial.
+Qed.
+(* end hide *)
+
+(** Żeby nie odgrzewać starych kotletów, przyjrzyjmy się funkcji [weird]. *)
+
+Fixpoint weird {A : Type} (l : list A) : list A :=
+match l with
+    | [] => []
+    | [x] => [x]
+    | x :: y :: t => y :: x :: weird t
+end.
+
+Theorem weird_inv :
+  forall A : Type, involutive (@weird A).
+(* begin hide *)
+Proof.
+  Functional Scheme weird_ind := Induction for weird Sort Prop.
+  red; intros. functional induction (weird x); cbn; trivial.
+    rewrite IHl. trivial.
+Qed.
+(* end hide *)
+
+(** Funkcja ta zamienia miejscami bloki elementów listy o długości dwa.
+    Nietrudno zauważyć, że dwukrotne takie przestawienie jest identycznością.
+    UWAGA TODO: dowód wymaga specjalnej reguły indukcyjnej. *)
+
+Theorem flip_inv :
+  forall A : Type, involutive (@flip A A A).
+(* begin hide *)
+Proof.
+  red; intros. unfold flip. extensionality b; extensionality a. trivial.
+Qed.
+(* end hide *)
+
+(** Inwolucją jest też kombinator [flip], który poznaliśmy na początku
+    rozdziału. Przypomnijmy, że zamienia on miejscami argumenty funkcji
+    binarnej. Nie dziwota, że dwukrotna taka zamiana daje oryginalną
+    funkcję. *)
+
+Goal ~ involutive (@rev nat .> weird).
+(* begin hide *)
+Proof.
+  unfold involutive, not; intro. specialize (H [1; 2; 3]).
+  cbn in H. inversion H.
+Qed.
+(* end hide *)
+
+(** Okazuje się, że złożenie inwolucji wcale nie musi być inwolucją. Wynika
+    to z faktu, że funcje [weird] i [rev] są w pewien sposób niekompatybilne
+    — pierwsze wywołanie każdej z nich przeszkadza drugiemu wywołaniu drugiej
+    z nich odwrócić efekt pierwszego wywołania. *)
+
+Theorem comp_inv :
+  forall (A : Type) (f g : A -> A),
+    involutive f -> involutive g -> f .> g = g .> f -> involutive (f .> g).
+(* begin hide *)
+Proof.
+  unfold involutive. intros.
+  assert (forall x, (f .> g) x = (g .> f) x).
+    rewrite H1. trivial.
+    unfold comp in *. rewrite <- H2, H, H0. trivial.
+Qed.
+(* end hide *)
+
+(** Kryterium to jest rozstrzygające — jeżeli inwolucje komutują ze sobą
+    (czyli są "kompatybilne", [f .> g = g .> f]), to ich złożenie również
+    jest inwolucją. *)
+
+Theorem inv_bij :
+  forall (A : Type) (f : A -> A), involutive f -> bijective f.
+(* begin hide *)
+Proof.
+  unfold involutive, bijective; intros. split; red; intros.
+    rewrite <- (H x), <- (H x'). rewrite H0. trivial.
+    exists (f b). apply H.
+Qed.
+(* end hide *)
+
+(** Ponieważ każda inwolucja ma odwrotność (którą jest ona sama), każda
+    inwolucja jest z automatu bijekcją. *)
+
+(* begin hide *)
+Fixpoint count_inv (n : nat) : nat :=
+match n with
+    | 0 => 1
+    | 1 => 1
+    | S ((S n'') as n') => count_inv n' + (n - 1) * count_inv n''
+end.
+
+Compute count_inv 6.
+Compute map count_inv [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11].
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Rozważmy funkcje rzeczywiste f(x) = ax^n, f(x) = ax^(-n), f(x) = sin(x),
+    f(x) = cos(x), f(x) = a/x, f(x) = a - x, f(x) = e^x. Które z nich są
+    inwolucjami? *)
+
+(** * Uogólnione inwolucje *)
+
+(** Pojęcie inwolucji można nieco uogólnić. Żeby to zrobić, przeformułujmy
+    najpierw definicję inwolucji. *)
+
+Definition involutive' {A : Type} (f : A -> A) : Prop :=
+  f .> f = id A.
+
+(** Nowa definicja głosi, że inwolucja to taka funkcja, że jej złożenie
+    ze sobą jest identycznością. Jeżeli funkcje [f .> f] i [id A]
+    zaaplikujemy do argumentu [x], otrzymamy oryginalną definicję. Nowa
+    definicja jest równoważna starej na mocy aksjomatu ekstensjonalności
+    dla funkcji. *)
+
+Theorem involutive_involutive' :
+  forall (A : Type) (f : A -> A), involutive f <-> involutive' f.
+(* begin hide *)
+Proof.
+  unfold involutive, involutive'; split; intros.
+    unfold comp, id. extensionality x. apply H.
+    change x with (id A x) at 2. rewrite <- H. trivial.
+Qed.
+(* end hide *)
+
+(** Pójdźmy o krok dalej. Zamiast składania [.>] użyjmy kombinatora [iter 2],
+    który ma taki sam efekt. *)
+
+Definition involutive'' {A : Type} (f : A -> A) : Prop :=
+  iter 2 f = id A.
+
+Theorem involutive'_involutive'' :
+  forall (A : Type) (f : A -> A),
+    involutive' f <-> involutive'' f.
+(* begin hide *)
+Proof.
+  unfold involutive', involutive''; split; intros.
+    unfold iter. rewrite <- H at 2. trivial.
+    assumption.
+Qed.
+(* end hide *)
+
+(** Droga do uogólnienia została już prawie przebyta. Nasze dotychczasowe
+    inwolucje nazwiemy uogólnionymi inwolucjami rzędu 2. Definicję
+    uogólnionej inwolucji otrzymamy, zastępując w definicji 2 przez [n]. *)
+
+Definition gen_involutive {A : Type} (n : nat) (f : A -> A)
+  : Prop := iter n f = id A.
+
+(** Nie żeby pojęcie to było jakoś szczególnie często spotykane lub nawet
+    przydatne — wymyśliłem je na poczekaniu. Spróbujmy znaleźć jakąś
+    uogólnioną inwolucję o rzędzie większym niż 2. *)
+
+Fixpoint weirder {A : Type} (l : list A) : list A :=
+match l with
+    | [] => []
+    | [x] => [x]
+    | [x; y] => [x; y]
+    | x :: y :: z :: t => y :: z :: x :: weirder t
+end.
+
+Compute weirder [1; 2; 3; 4; 5].
+(* ===> = [2; 3; 1; 4; 5] : list nat *)
+
+Compute iter 3 weirder [1; 2; 3; 4; 5].
+(* ===> = [1; 2; 3; 4; 5] : list nat *)
+
+Theorem weirder_inv_3 :
+  forall A : Type, gen_involutive 3 (@weirder A).
+(* begin hide *)
+Proof.
+  Functional Scheme weirder_ind := Induction for weirder Sort Prop.
+  unfold gen_involutive; intros. extensionality l.
+  functional induction (weirder l); cbn; trivial.
+  unfold iter in IHl0. rewrite id_right in IHl0. unfold comp in IHl0.
+  rewrite IHl0. trivial.
+Qed.
+(* end hide *)
+
+(** * Idempotencja *)
+
+Definition idempotent {A : Type} (f : A -> A) : Prop :=
+  forall x : A, f (f x) = f x.
+
+(** Kolejnym rodzajem funkcji są funkcje idempotente. Po łacinie "idem"
+    znaczy "taki sam", zaś "potentia" oznacza "moc". Funkcja idempotentna
+    to taka, której wynik jest taki sam niezależnie od tego, ile razy
+    zostanie zaaplikowana.
+
+    Przykłady można mnożyć. Idempotentne jest wciśnięcie guzika w windzie
+    — jeżeli np. wciśniemy "2", to po wjechaniu na drugi piętro kolejne
+    wciśnięcia guzika "2" nie będą miały żadnego efektu.
+
+    Idempotentne jest również sortowanie. Jeżeli posortujemy listę, to jest
+    ona posortowana i kolejne sortowania niczego w niej nie zmienią. Problemem
+    sortowania zajmiemy się w przyszłych rozdziałach. *)
+
+Theorem id_idem :
+  forall A : Type, idempotent (id A).
+(* begin hide *)
+Proof.
+  unfold idempotent. trivial.
+Qed.
+(* end hide *)
+
+Theorem const_idem :
+  forall (A B : Type) (b : B), idempotent (const b).
+(* begin hide *)
+Proof.
+  unfold idempotent. trivial.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Require Import X3.
+(* end hide *)
+
+Theorem take_idem :
+  forall (A : Type) (n : nat), idempotent (@take A n).
+(* begin hide *)
+Proof.
+  unfold idempotent; intros.
+  rewrite take_length'.
+    reflexivity.
+    rewrite length_take. apply Nat.le_min_r.
+Qed.
+(* end hide *)
+
+(** Identyczność jest idempotentna — niezrobienie niczego dowolną ilość
+    razy jest wszakże ciągle niezrobieniem niczego. Podobnież funkcja
+    stała jest idempotentna — zwracanie tej samej wartości daje zawsze
+    ten sam efekt, niezależnie od ilości powtórzeń.
+
+    Ciekawszym przykładem, który jednak nie powinien cię zaskoczyć, jest
+    funkcja [take] dla dowolnego [n : nat]. Wzięcie [n] elementów z listy
+    [l] daje nam listę mającą co najwyżej [n] elementów. Próba wzięcia
+    [n] elementów z takiej listy niczego nie zmieni, gdyż jej długość jest
+    mniejsza lub równa ilości elementów, które chcemy wziąć. *)
+
+Theorem comp_idem :
+  forall (A : Type) (f g : A -> A),
+    idempotent f -> idempotent g -> f .> g = g .> f ->
+      idempotent (f .> g).
+(* begin hide *)
+Proof.
+  unfold idempotent. intros.
+  assert (forall x, (f .> g) x = (g .> f) x).
+    rewrite H1. trivial.
+    unfold comp in *. rewrite <- H2, H, H0. trivial.
+Qed.
+(* end hide *)
+
+(** Jeżeli chodzi o składanie funkcji idempotentnych, sytuacja jest podobna
+    do tej, jaka jest udziałem inwolucji. *)
+
+(* begin hide *)
+(** * Uogólniona idempotencja (TODO) *)
+
+(** Podobnie jak w przypadku inwolutywności, pojęcie idempotencji możemy
+    uogólnić na pojęcie idempotencji rzędu n — po zaaplikowaniu funkcji
+    n razy kolejne aplikacje przestają mieć jakiekolwiek efekty. *)
+
+Definition gen_idempotent
+  {A : Type} (n : nat) (f : A -> A) : Prop :=
+    forall k : nat, iter f (k + n) = iter f n.
+
+(** Zdaje mi się ono jednak być mocno bezużyteczne.*)
+
+(* TODO: wymyślić jakieś przykłady. *)
+
+(** * Punkty stałe (TODO) *)
+
+(** Kolejnym ważnym pojęciem jest pojęcie punktu stałego (ang. "fixed point",
+    często skracane do "fixpoint"). Właśnie od niego bierze się nazwa
+    komendy [Fixpoint], służącej do definiowania funkcji rekurencyjnych. *)
+
+Definition fixpoint {A : Type} (f : A -> A) (x : A)
+  : Prop := f x = x.
+
 (* end hide *)

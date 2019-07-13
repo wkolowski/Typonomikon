@@ -104,12 +104,3 @@ match goal with
     | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); simpl
 end;
 repeat rewrite plus_0_r.
-
-Lemma fast_root : forall n : nat, {r : nat | r * r <= n < (S r) * (S r)}.
-Proof.
-  induction n using nat_ind_div4.
-    * exists 0. omega.
-    * destruct IHn as [r [H1 H2]].
-      destruct (le_lt_dec ((S (2 * r)) * (S (2 * r))) n).
-        exists (2 * r + 1). nat_simpl. split.
-Abort.

@@ -42,8 +42,6 @@ Abort.
 Definition capp {A : Type} (l1 l2 : clist A) : clist A :=
   fun X nil cons => l1 X (l2 X nil cons) cons.
 
-
-
 Fixpoint fromList {A : Type} (l : list A) : clist A :=
 match l with
     | [] => cnil

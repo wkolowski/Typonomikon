@@ -258,16 +258,14 @@ Ostatnim przydatnim kombinatorem jest <span class="inlinecode"><span class="id" 
 Podstawowym i domyślnym rodzajem równości w Coqu jest równość
     intensjonalna, której właściwości już znasz. Każda funkcja, na mocy
     konstruktora <span class="inlinecode"><span class="id" title="var">eq_refl</span></span>, jest równa samej sobie. Prawdą jest też mniej
-    oczywisty fakt: każda funkcja jest równa swojej ekspansji eta. 
+    oczywisty fakt: każda funkcja jest równa swojej η-ekspansji. 
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">eta_expansion</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>), <span class="id" title="var">f</span> = <span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">x</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Print</span> <span class="id" title="keyword">Assumptions</span> <span class="id" title="var">eta_expansion</span>.<br/>
@@ -277,7 +275,7 @@ Podstawowym i domyślnym rodzajem równości w Coqu jest równość
 </div>
 
 <div class="doc">
-Ekspansja eta funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> to nic innego, jak funkcja anonimowa, która
+η-ekspansja funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> to nic innego, jak funkcja anonimowa, która
     bierze <span class="inlinecode"><span class="id" title="var">x</span></span> i zwraca <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>. Nazwa pochodzi od greckiej litery η (eta).
     Powyższe twierdzenie jest trywialne, gdyż równość zachodzi na mocy
     konwersji.

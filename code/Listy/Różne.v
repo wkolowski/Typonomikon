@@ -1,4 +1,4 @@
-Require Import CoqBookPL.book.X3.
+Require Import D5.
 
 Fixpoint list_eq_dec
   {A : Type} (eq_dec : A -> A -> bool) (l1 l2 : list A) : bool :=

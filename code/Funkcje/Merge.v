@@ -262,4 +262,3 @@ Proof.
     destruct (p h1), (p h2); cbn.
       constructor; auto.
 Abort.
-

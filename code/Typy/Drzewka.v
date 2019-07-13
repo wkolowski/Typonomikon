@@ -1,3 +1,22 @@
+Module drzewka.
+
+Inductive Wisienka (A : Type) : Type :=
+    | L : A -> Wisienka A
+    | N : Wisienka A -> Wisienka A -> Wisienka A.
+
+Inductive Tree (A : Type) : Type :=
+    | E : Tree A
+    | N0 : A -> list (Tree A) -> Tree A.
+
+Inductive DużaWisienka (A : Type) : Type :=
+    | L0 : A -> DużaWisienka A
+    | N1 : list (DużaWisienka A) -> DużaWisienka A.
+
+End drzewka.
+
+(** Pamiętać, że w RCC jest jakotaka implementacja BTree, którą można tu
+    po prostu skopiować. *)
+
 Inductive BTree (A : Type) : Type :=
     | E : BTree A
     | N : A -> BTree A -> BTree A -> BTree A.
@@ -47,7 +66,8 @@ match t with
     | N v l r => N v (mirror r) (mirror l)
 end.
 
-Require Import G2.
+(*
+Require Import E2.
 
 Lemma mirror_bijective :
   forall A : Type, bijective (@mirror A).
@@ -61,6 +81,7 @@ Proof.
       destruct IHb1 as [r Hr], IHb2 as [l Hl].
         exists (N a l r). cbn. rewrite Hl, Hr. reflexivity.
 Qed.
+*)
 
 (** like replicate *)
 Parameter complete : forall A : Type, nat -> A -> BTree A.

@@ -1,4 +1,4 @@
-Require Import CoqBookPL.book.X3.
+Require Import D5.
 
 Function groupBy
   {A : Type} (p : A -> A -> bool) (l : list A) : list (list A) :=

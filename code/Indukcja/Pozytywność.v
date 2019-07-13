@@ -1,3 +1,5 @@
+Module attempt1.
+
 Fail Inductive wut : Type :=
     | C : (wut -> bool) -> wut.
 
@@ -9,11 +11,6 @@ Axioms
     (H : forall f : wut -> bool, P (C f)),
       {f : forall w : wut, P w |
        forall g : wut -> bool, f (C g) = H g}).
-
-Goal forall w : wut, False.
-Proof.
-  Check ind (fun _ => False).
-Abort.
 
 Definition unC (w : wut) : wut -> bool.
 Proof.
@@ -41,6 +38,21 @@ Qed.
 Definition bad (f : wut -> bool) : wut -> bool :=
   fun w : wut => negb (f w).
 
+Lemma C_sur :
+  forall w : wut, {f : wut -> bool | w = C f}.
+Proof.
+  apply ind. intro f. exists f. reflexivity.
+Defined.
+
 Lemma oh_god_why : False.
 Proof.
-Abort.
+  pose (f := fun w : wut => negb (proj1_sig (C_sur w) w)).
+  pose (C_sur (C f)). unfold f in s.
+  destruct s. unfold C_sur in e. destruct (ind _) in e.
+  contradict e.
+  intro. apply C_inj in H.
+  apply (f_equal (fun f => f (C x))) in H.
+  rewrite e0 in H. cbn in H. destruct (x (C x)); inversion H.
+Qed.
+
+End attempt1.

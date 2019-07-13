@@ -1,4 +1,4 @@
-Require Import CoqBookPL.book.X3.
+Require Import D5.
 
 (* begin hide *)
 Fixpoint rev {A : Type} (l : list A) : list A :=
