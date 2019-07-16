@@ -1,5 +1,7 @@
 Module attempt1.
 
+(** Jeden konstruktor negatywny - działa. *)
+
 Fail Inductive wut : Type :=
     | C : (wut -> bool) -> wut.
 
@@ -12,47 +14,144 @@ Axioms
       {f : forall w : wut, P w |
        forall g : wut -> bool, f (C g) = H g}).
 
-Definition unC (w : wut) : wut -> bool.
+Definition bad : wut -> (wut -> bool).
 Proof.
-  exact (proj1_sig (ind (fun _ => wut -> bool) (fun f => f)) w).
+  apply (ind (fun _ => wut -> bool)).
+  intro f. exact f.
 Defined.
 
-Lemma unC_eq :
-  forall f : wut -> bool, unC (C f) = f.
+Lemma bad_sur :
+  forall f : wut -> bool, exists w : wut, bad w = f.
 Proof.
-  intro. unfold unC. destruct (ind _). cbn. rewrite e. reflexivity.
-Qed.
-
-Lemma C_inj_aux :
-  forall x y : wut, x = y -> unC x = unC y.
-Proof.
-  destruct 1. reflexivity.
-Qed.
-
-Lemma C_inj :
-  forall f g : wut -> bool, C f = C g -> f = g.
-Proof.
-  intros. apply C_inj_aux in H. rewrite 2!unC_eq in H. assumption.
-Qed.
-
-Definition bad (f : wut -> bool) : wut -> bool :=
-  fun w : wut => negb (f w).
-
-Lemma C_sur :
-  forall w : wut, {f : wut -> bool | w = C f}.
-Proof.
-  apply ind. intro f. exists f. reflexivity.
+  intro. unfold bad. destruct (ind _).
+  exists (C f). apply e.
 Defined.
 
-Lemma oh_god_why : False.
+Lemma have_mercy_plx : False.
 Proof.
-  pose (f := fun w : wut => negb (proj1_sig (C_sur w) w)).
-  pose (C_sur (C f)). unfold f in s.
-  destruct s. unfold C_sur in e. destruct (ind _) in e.
-  contradict e.
-  intro. apply C_inj in H.
-  apply (f_equal (fun f => f (C x))) in H.
-  rewrite e0 in H. cbn in H. destruct (x (C x)); inversion H.
+  pose (diagonal := fun w => negb (bad w w)).
+  destruct (bad_sur diagonal).
+  unfold diagonal, bad in H. destruct (ind _).
+  apply (f_equal (fun f => f x)) in H.
+  destruct (x0 x x); inversion H.
 Qed.
 
 End attempt1.
+
+Module attempt2.
+
+(** Dwa konstruktory negatywne - działa. *)
+
+Fail Inductive wut : Type :=
+    | C0 : (wut -> bool) -> wut
+    | C1 : (wut -> nat) -> wut.
+
+Axioms
+  (wut : Type)
+  (C0 : (wut -> bool) -> wut)
+  (C1 : (wut -> nat) -> wut)
+  (ind : forall
+    (P : wut -> Type)
+    (PC0 : forall f : wut -> bool, P (C0 f))
+    (PC1 : forall f : wut -> nat, P (C1 f)),
+      {f : forall w : wut, P w |
+        (forall g : wut -> bool, f (C0 g) = PC0 g) /\
+        (forall g : wut -> nat, f (C1 g) = PC1 g)
+      }
+  ).
+
+Definition bad :
+  wut -> (wut -> bool).
+Proof.
+  apply (ind (fun _ => wut -> bool)).
+    intro f. exact f.
+    intros _ _. exact true.
+Defined.
+
+Lemma bad_sur :
+  forall (f : wut -> bool), exists w : wut, bad w = f.
+Proof.
+  intro. unfold bad. destruct (ind _) as (g & H1 & H2).
+  exists (C0 f). apply H1.
+Defined.
+
+Lemma Cantor_ty_dziwko : False.
+Proof.
+  destruct (bad_sur (fun w : wut => negb (bad w w))).
+  unfold bad in H. destruct (ind _).
+  apply (f_equal (fun f => f x)) in H.
+  destruct (x0 x x); inversion H.
+Qed.
+
+End attempt2.
+
+Module attempt3.
+
+(** Jeden konstruktor negatywny z argumentem indukcyjnym w
+    przeciwdziedzinie. *)
+
+Fail Inductive wut : Type :=
+    | C0 : (wut -> wut) -> wut
+    | C1 : nat -> wut.
+
+Axioms
+  (wut : Type)
+  (C0 : (wut -> wut) -> wut)
+  (C1 : nat -> wut)
+  (ind : forall
+    (P : wut -> Type)
+    (PC0 : forall f : wut -> wut, P (C0 f))
+    (PC1 : forall n : nat, P (C1 n)),
+      {f : forall w : wut, P w |
+        (forall g : wut -> wut, f (C0 g) = PC0 g) /\
+        (forall n : nat, f (C1 n) = PC1 n)
+      }
+  ).
+
+Definition bad :
+  wut -> (wut -> wut).
+Proof.
+  apply (ind (fun _ => wut -> wut)).
+    intro f. exact f.
+    intros _ w. exact w.
+Defined.
+
+Lemma bad_sur :
+  forall (f : wut -> wut), exists w : wut, bad w = f.
+Proof.
+  intro. unfold bad. destruct (ind _) as (g & H1 & H2).
+  exists (C0 f). apply H1.
+Defined.
+
+Definition change (w : wut) : wut.
+Proof.
+  revert w.
+  apply (ind (fun _ => wut)).
+    intro. exact (C1 0).
+    intro. apply (C1 (S n)).
+Defined.
+
+Lemma change_neq :
+  forall w : wut, change w <> w.
+Proof.
+  apply ind.
+    intros f H. unfold change in H. destruct (ind _) as (g & H1 & H2).
+      rewrite H1 in H. admit.
+    intros n H. unfold change in H. destruct (ind _) as (g & H1 & H2).
+      rewrite H2 in H. admit.
+Admitted.
+
+Lemma behemot_atakuje : False.
+Proof.
+  destruct (bad_sur (fun w : wut => change (bad w w))).
+  unfold bad in H. destruct (ind _).
+  apply (f_equal (fun f => f x)) in H.
+  apply (change_neq (x0 x x)).
+  symmetry. assumption.
+Qed.
+
+End attempt2.
+
+
+
+(** **** Ćwiczenie *)

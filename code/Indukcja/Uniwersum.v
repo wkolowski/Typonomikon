@@ -44,3 +44,23 @@ Axioms
           PSigma A B (f A) (fun x : El A => f (B x))) /\
         (f UU = PUU)
       }).
+
+(** Czyżby sprzeczność? *)
+
+Definition PiUU : (U -> U) -> U.
+Proof.
+  pose (Pi UU).
+  rewrite El_UU in u. exact u.
+Defined.
+
+Lemma Pi_inj :
+  forall (A : U) (B B' : El A -> U),
+    Pi A B = Pi A B' -> B = B'.
+Proof.
+  apply (
+    ind
+      (fun A : U => forall B B' : El A -> U, Pi A B = Pi A B' -> B = B')
+  ).
+    Focus 4. intros.
+Admitted.
+
