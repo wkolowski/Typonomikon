@@ -88,7 +88,7 @@ End attempt2.
 Module attempt3.
 
 (** Jeden konstruktor negatywny z argumentem indukcyjnym w
-    przeciwdziedzinie. *)
+    przeciwdziedzinie i drugi konstruktor normalny. *)
 
 Fail Inductive wut : Type :=
     | C0 : (wut -> wut) -> wut
@@ -150,8 +150,56 @@ Proof.
   symmetry. assumption.
 Qed.
 
-End attempt2.
+End attempt3.
 
+Module attempt4.
 
+(** Pewnie najgorsze bydle. *)
+
+Fail Inductive wut : Type :=
+    | C : (wut -> wut) -> wut.
+
+Axioms
+  (wut : Type)
+  (C : (wut -> wut) -> wut)
+  (ind : forall
+    (P : wut -> Type)
+    (PC : forall f : wut -> wut, P (C f)),
+      {f : forall w : wut, P w |
+        forall g : wut -> wut, f (C g) = PC g}).
+
+Definition bad :
+  wut -> (wut -> wut).
+Proof.
+  apply (ind (fun _ => wut -> wut)).
+    intro f. exact f.
+Defined.
+
+Lemma bad_sur :
+  forall (f : wut -> wut), exists w : wut, bad w = f.
+Proof.
+  intro. unfold bad. destruct (ind _) as (g & H).
+  exists (C f). apply H.
+Defined.
+
+Definition change : wut -> wut.
+Proof.
+  apply (ind (fun _ => wut)).
+  intro f. apply f. exact (C (fun w => C (fun v => f v))).
+Defined.
+
+Lemma change_neq :
+  forall w : wut, change w <> w.
+Proof.
+  apply ind. intros f H.
+  unfold change in H. destruct (ind _) as (g & eq).
+  rewrite eq in H.
+Admitted.
+
+Lemma behemot_atakuje : False.
+Proof.
+Abort.
+
+End attempt4.
 
 (** **** Ćwiczenie *)

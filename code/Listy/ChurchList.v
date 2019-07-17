@@ -64,3 +64,7 @@ Lemma fromList_toList :
 Proof.
   intros. unfold clist in *. compute.
 Abort.
+
+Definition wut : Type :=
+  forall X : Type, (X -> X) -> X.
+
