@@ -49,135 +49,7 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab16"></a><h1 class="section">Typy i termy</h1>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Section</span> <span class="id" title="var">constructive_propositional_logic</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Mechanizm sekcji nie będzie nas na razie interesował. Użyjemy go,
-    żeby nie zaśmiecać głównej przestrzeni nazw. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Hypothesis</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Zapis <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> oznacza, że term <span class="inlinecode"><span class="id" title="var">x</span></span> jest typu <span class="inlinecode"><span class="id" title="var">A</span></span>. <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> to typ zdań
-    logicznych, więc komendę tę można odczytać następująco:
-    niech <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">Q</span></span> i <span class="inlinecode"><span class="id" title="var">R</span></span> będą zdaniami logicznymi.
-
-<div class="paragraph"> </div>
-
-    Czym są termy? Są to twory o naturze syntaktycznej (składniowej),
-    reprezentujące funkcje, typy, zdania logiczne, predykaty, relacje
-    etc. Polskim słowem o najbliższym znaczeniu jest słowo "wyrażenie".
-    Zamiast prób definiowania termów, co byłoby problematyczne,
-    zobaczmy przykłady:
-<ul class="doclist">
-<li> <span class="inlinecode">2</span> — stałe są termami
-
-</li>
-<li> <span class="inlinecode"><span class="id" title="var">P</span></span> — zmienne są termami
-
-</li>
-<li> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> — typy są termami
-
-</li>
-<li> <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> — λ-abstrakcje (funkcje) są termami
-
-</li>
-<li> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> — aplikacje funkcji do argumentu są termami
-
-</li>
-<li> <span class="inlinecode"><span class="id" title="keyword">if</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span> <span class="inlinecode"><span class="id" title="keyword">then</span></span> <span class="inlinecode">5</span> <span class="inlinecode"><span class="id" title="keyword">else</span></span> <span class="inlinecode">2</span> — konstrukcja if-then-else jest termem 
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
- Nie są to wszystkie występujące w Coqu rodzaje termów — jest
-    ich nieco więcej.
-
-<div class="paragraph"> </div>
-
-    Kolejnym fundamentalnym pojęciem jest pojęcie typu. W Coqu
-    każdy term ma dokładnie jeden, niezmienny typ. Czym są typy?
-    Intuicyjnie można powiedzieć, że typ to rodzaj metki, która
-    dostarcza nam informacji dotyczących danego termu.
-
-<div class="paragraph"> </div>
-
-    Dla przykładu,
-    stwierdzenie <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> informuje nas, że <span class="inlinecode"><span class="id" title="var">x</span></span> jest liczbą
-    naturalną, dzięki czemu wiemy, że możemy użyć go jako argumentu
-    dodawania: term <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> jest poprawnie typowany (ang. well-typed),
-    tzn. <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, a więc możemy skonkludować, że <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> również
-    jest liczbą naturalną.
-
-<div class="paragraph"> </div>
-
-    Innym przykładem niech będzie stwierdzenie <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>,
-    które mówi nam, że <span class="inlinecode"><span class="id" title="var">f</span></span> jest funkcją, która bierze liczbę
-    naturalną i zwraca liczbę naturalną. Dzięki temu wiemy, że term
-    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">2</span> jest poprawnie typowany i jest liczbą naturalną,
-    tzn. <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">2</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, zaś term <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">f</span></span> nie jest poprawnie typowany,
-    a więc próba jego użycia, a nawet napisania byłaby błędem.
-
-<div class="paragraph"> </div>
-
-    Typy są tworami absolutnie kluczowymi. Informują nas, z jakimi
-    obiektami mamy do czynienia i co możemy z nimi zrobić, a Coq
-    pilnuje ścisłego przestrzegania tych reguł. Dzięki temu
-    wykluczona zostaje możliwość popełnienia całej gamy różnych
-    błędów, które występują w językach nietypowanych, takich jak
-    dodanie liczby do ciągu znaków.
-
-<div class="paragraph"> </div>
-
-    Co więcej, system typów Coqa jest jednym z najsilniejszych,
-    jakie dotychczas wymyślono, dzięki czemu umożliwia nam wiele
-    rzeczy, których prawie żaden inny język programowania nie potrafi,
-    jak np. reprezentowanie skomplikowanych obiektów matematycznych
-    i dowodzenie twierdzeń. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Check</span> 2.<br/>
-<span class="comment">(*&nbsp;===&gt;&nbsp;2&nbsp;:&nbsp;nat&nbsp;*)</span><br/>
-
-<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">P</span>.<br/>
-<span class="comment">(*&nbsp;===&gt;&nbsp;P&nbsp;:&nbsp;Prop&nbsp;*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Uwaga techniczna: w komentarzach postaci <span class="comment">(*&nbsp;===&gt;&nbsp;*)</span> będę
-    przedstawiać wyniki wypisywane przez komendy.
-
-<div class="paragraph"> </div>
-
-    Typ każdego termu możemy sprawdzić przy pomocy komendy <span class="inlinecode"><span class="id" title="keyword">Check</span></span>.
-    Jest ona nie do przecenienia. Jeżeli nie rozumiesz, co się
-    dzieje w trakcie dowodu lub dlaczego Coq nie chce zaakceptować
-    jakiejś definicji, użyj komendy <span class="inlinecode"><span class="id" title="keyword">Check</span></span>, żeby sprawdzić,
-    z jakimi typami masz do czynienia. 
-<div class="paragraph"> </div>
-
-<a name="lab17"></a><h1 class="section">Logika klasyczna i konstruktywna</h1>
+<a name="lab16"></a><h1 class="section">Logika klasyczna i konstruktywna</h1>
 
 <div class="paragraph"> </div>
 
@@ -221,7 +93,7 @@ Uwaga techniczna: w komentarzach postaci <span class="comment">(*&nbsp;===&gt;&n
     jakieś istnieje, ale nie wiemy, jak je skonstruować. 
 <div class="paragraph"> </div>
 
-<a name="lab18"></a><h1 class="section">Dedukcja naturalna i taktyki</h1>
+<a name="lab17"></a><h1 class="section">Dedukcja naturalna i taktyki</h1>
 
 <div class="paragraph"> </div>
 
@@ -274,7 +146,7 @@ Uwaga techniczna: w komentarzach postaci <span class="comment">(*&nbsp;===&gt;&n
     wziąć się do konkretów! 
 <div class="paragraph"> </div>
 
-<a name="lab19"></a><h1 class="section">Konstruktywny rachunek zdań</h1>
+<a name="lab18"></a><h1 class="section">Konstruktywny rachunek zdań</h1>
 
 <div class="paragraph"> </div>
 
@@ -286,15 +158,41 @@ Uwaga techniczna: w komentarzach postaci <span class="comment">(*&nbsp;===&gt;&n
     górę) cofa się o jedną komendę do tyłu. Ta interaktywność,
     szczególnie w trakcie przeprowadzania dowodu, jest bardzo
     mocnym atutem Coqa — naucz się ją wykorzystywać, dokładnie
-    obserwując skutki działania każdej komendy.
+    obserwując skutki działania każdej komendy i taktyki.
 
 <div class="paragraph"> </div>
 
     W razie problemów z CoqIDE poszukaj pomocy w manualu:
     coq.inria.fr/refman/Reference-Manual018.html 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <span class="id" title="var">constructive_propositional_logic</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mechanizm sekcji nie będzie nas na razie interesował. Użyjemy go,
+    żeby nie zaśmiecać głównej przestrzeni nazw. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Hypothesis</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zapis <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> oznacza, że term <span class="inlinecode"><span class="id" title="var">x</span></span> jest typu <span class="inlinecode"><span class="id" title="var">A</span></span>. <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> to typ zdań
+    logicznych, więc komendę tę można odczytać następująco: niech <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">Q</span></span>
+    i <span class="inlinecode"><span class="id" title="var">R</span></span> będą zdaniami logicznymi. Używamy tej komendy, gdyż potrzebujemy
+    jakichś zdań logicznych, na których będziemy operować. 
 <div class="paragraph"> </div>
 
-<a name="lab20"></a><h2 class="section">Implikacja</h2>
+<a name="lab19"></a><h2 class="section">Implikacja</h2>
 
 <div class="paragraph"> </div>
 
@@ -449,14 +347,19 @@ Zauważmy, że w Coqowych nazwach można używać apostrofu.
 
 <br/>
 <span class="id" title="keyword">Print</span> <span class="id" title="var">impl_refl'</span>.<br/>
-<span class="comment">(*&nbsp;===&gt;&nbsp;impl_refl'&nbsp;=&nbsp;fun&nbsp;H&nbsp;:&nbsp;P&nbsp;=&gt;&nbsp;H<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;P&nbsp;-&gt;&nbsp;P&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;impl_refl'&nbsp;=&nbsp;fun&nbsp;H&nbsp;:&nbsp;P&nbsp;=&gt;&nbsp;H&nbsp;:&nbsp;P&nbsp;-&gt;&nbsp;P&nbsp;*)</span><br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Wspomnieliśmy wcześniej, że zdania logiczne są typami,
+Uwaga: w komentarzach postaci <span class="comment">(*&nbsp;===&gt;&nbsp;*)</span> będę przedstawiać wyniki
+    wypisywane przez komendy, żeby leniwi czytacze nie musieli sami
+    sprawdzać.
+
+<div class="paragraph"> </div>
+
+    Wspomnieliśmy wcześniej, że zdania logiczne są typami,
     a ich dowody termami. Używając komendy <span class="inlinecode"><span class="id" title="keyword">Print</span></span> możemy
     wyświetlić definicję podanego termu (nie każdego, ale
     na razie się tym nie przejmuj). Jak się okazuje,
@@ -565,7 +468,7 @@ Implikacja jest operatorem łączącym w prawo (ang. right
     wygenerowany. Powodzenia! 
 <div class="paragraph"> </div>
 
-<a name="lab21"></a><h4 class="section">Ćwiczenie (implikacja)</h4>
+<a name="lab20"></a><h4 class="section">Ćwiczenie (implikacja)</h4>
 
 <div class="paragraph"> </div>
 
@@ -589,7 +492,7 @@ Implikacja jest operatorem łączącym w prawo (ang. right
 </div>
 
 <div class="doc">
-<a name="lab22"></a><h4 class="section">Ćwiczenie (bez <span class="inlinecode"><span class="id" title="tactic">apply</span></span>)</h4>
+<a name="lab21"></a><h4 class="section">Ćwiczenie (bez <span class="inlinecode"><span class="id" title="tactic">apply</span></span>)</h4>
 
 <div class="paragraph"> </div>
 
@@ -605,7 +508,7 @@ Implikacja jest operatorem łączącym w prawo (ang. right
 </div>
 
 <div class="doc">
-<a name="lab23"></a><h2 class="section">Fałsz</h2>
+<a name="lab22"></a><h2 class="section">Fałsz</h2>
 
 </div>
 <div class="code">
@@ -649,7 +552,7 @@ Implikacja jest operatorem łączącym w prawo (ang. right
     działania taktyki <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> — dowiemy się tego już niedługo. 
 <div class="paragraph"> </div>
 
-<a name="lab24"></a><h2 class="section">Prawda</h2>
+<a name="lab23"></a><h2 class="section">Prawda</h2>
 
 </div>
 <div class="code">
@@ -694,8 +597,24 @@ Jeżeli przyjrzymy się skonstruowanemu prooftermowi, dostrzeżemy
     użyteczne ani często spotykane, ale czasem się przydaje. 
 <div class="paragraph"> </div>
 
-<a name="lab25"></a><h2 class="section">Negacja</h2>
+<a name="lab24"></a><h3 class="section">Komendy <span class="inlinecode"><span class="id" title="keyword">Check</span></span> i <span class="inlinecode"><span class="id" title="keyword">Locate</span></span></h3>
 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">P</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;P&nbsp;:&nbsp;Prop&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Typ każdego termu możemy sprawdzić przy pomocy komendy <span class="inlinecode"><span class="id" title="keyword">Check</span></span>.
+    Jest ona nie do przecenienia. Jeżeli nie rozumiesz, co się
+    dzieje w trakcie dowodu lub dlaczego Coq nie chce zaakceptować
+    jakiejś definicji, użyj komendy <span class="inlinecode"><span class="id" title="keyword">Check</span></span>, żeby sprawdzić,
+    z jakimi typami masz do czynienia. 
 </div>
 <div class="code">
 
@@ -708,9 +627,9 @@ Jeżeli przyjrzymy się skonstruowanemu prooftermowi, dostrzeżemy
 
 <div class="doc">
 W Coqu negację zdania <span class="inlinecode"><span class="id" title="var">P</span></span> oznaczamy przez <span class="inlinecode">~<span class="id" title="var">P</span></span>. Symbol <span class="inlinecode">~</span>
-    nie jest jednak nazwą negacji — nazwy nie mogą być symbolami.
+    nie jest jednak nazwą negacji — nazwy nie mogą zawierać symboli.
     Jest to jedynie notacja, która ma uczynić zapis krótszym i
-    bardziej podobnym do tego używanego na codzień. Niesie to
+    bardziej podobnym do tego używanego na co dzień. Niesie to
     jednak za sobą pewne konsekwencje — nie możemy np. użyć
     komendy <span class="inlinecode"><span class="id" title="keyword">Print</span></span> <span class="inlinecode">~.</span>, żeby wyświetlić definicję negacji. Jak
     więc poznać nazwę, kryjącą się za jakąś notacją? 
@@ -726,12 +645,15 @@ W Coqu negację zdania <span class="inlinecode"><span class="id" title="var">P</
 
 <div class="doc">
 Możemy to zrobić przy pomocy komendy <span class="inlinecode"><span class="id" title="keyword">Locate</span></span>. Wyświetla ona,
-    do jakich nazw odwołuje się dana notacja. Negacja w Coqu
-    nazywa się <span class="inlinecode"><span class="id" title="var">not</span></span>.
+    do jakich nazw odwołuje się dana notacja. Jak widać, negacja
+    w Coqu nazywa się <span class="inlinecode"><span class="id" title="var">not</span></span>. 
+<div class="paragraph"> </div>
+
+<a name="lab25"></a><h2 class="section">Negacja</h2>
 
 <div class="paragraph"> </div>
 
-    W logice klasycznej negację zdania P można zinterpretować
+ W logice klasycznej negację zdania P można zinterpretować
     po prostu jako spójnik zdaniowy tworzący nowe zdanie, którego
     wartość logiczna jest przeciwna do wartości zdania P.
 

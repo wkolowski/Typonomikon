@@ -14,81 +14,6 @@
       wszystkich obiektów związanych z podaną nazwą
     - język taktyk nazywa się Ltac. Służy do dowodzenia twierdzeń. *)
 
-(** * Typy i termy *)
-
-Section constructive_propositional_logic.
-
-(** Mechanizm sekcji nie będzie nas na razie interesował. Użyjemy go,
-    żeby nie zaśmiecać głównej przestrzeni nazw. *)
-
-Hypothesis P Q R : Prop.
-
-(** Zapis [x : A] oznacza, że term [x] jest typu [A]. [Prop] to typ zdań
-    logicznych, więc komendę tę można odczytać następująco:
-    niech [P], [Q] i [R] będą zdaniami logicznymi.
-
-    Czym są termy? Są to twory o naturze syntaktycznej (składniowej),
-    reprezentujące funkcje, typy, zdania logiczne, predykaty, relacje
-    etc. Polskim słowem o najbliższym znaczeniu jest słowo "wyrażenie".
-    Zamiast prób definiowania termów, co byłoby problematyczne,
-    zobaczmy przykłady:
-    - [2] — stałe są termami
-    - [P] — zmienne są termami
-    - [Prop] — typy są termami
-    - [fun x : nat => x + 2] — λ-abstrakcje (funkcje) są termami
-    - [f x] — aplikacje funkcji do argumentu są termami
-    - [if true then 5 else 2] — konstrukcja if-then-else jest termem *)
-
-(** Nie są to wszystkie występujące w Coqu rodzaje termów — jest
-    ich nieco więcej.
-
-    Kolejnym fundamentalnym pojęciem jest pojęcie typu. W Coqu
-    każdy term ma dokładnie jeden, niezmienny typ. Czym są typy?
-    Intuicyjnie można powiedzieć, że typ to rodzaj metki, która
-    dostarcza nam informacji dotyczących danego termu.
-
-    Dla przykładu,
-    stwierdzenie [x : nat] informuje nas, że [x] jest liczbą
-    naturalną, dzięki czemu wiemy, że możemy użyć go jako argumentu
-    dodawania: term [x + 1] jest poprawnie typowany (ang. well-typed),
-    tzn. [x + 1 : nat], a więc możemy skonkludować, że [x + 1] również
-    jest liczbą naturalną.
-
-    Innym przykładem niech będzie stwierdzenie [f : nat -> nat],
-    które mówi nam, że [f] jest funkcją, która bierze liczbę
-    naturalną i zwraca liczbę naturalną. Dzięki temu wiemy, że term
-    [f 2] jest poprawnie typowany i jest liczbą naturalną,
-    tzn. [f 2 : nat], zaś term [f f] nie jest poprawnie typowany,
-    a więc próba jego użycia, a nawet napisania byłaby błędem.
-
-    Typy są tworami absolutnie kluczowymi. Informują nas, z jakimi
-    obiektami mamy do czynienia i co możemy z nimi zrobić, a Coq
-    pilnuje ścisłego przestrzegania tych reguł. Dzięki temu
-    wykluczona zostaje możliwość popełnienia całej gamy różnych
-    błędów, które występują w językach nietypowanych, takich jak
-    dodanie liczby do ciągu znaków.
-
-    Co więcej, system typów Coqa jest jednym z najsilniejszych,
-    jakie dotychczas wymyślono, dzięki czemu umożliwia nam wiele
-    rzeczy, których prawie żaden inny język programowania nie potrafi,
-    jak np. reprezentowanie skomplikowanych obiektów matematycznych
-    i dowodzenie twierdzeń. *)
-
-Check 2.
-(* ===> 2 : nat *)
-
-Check P.
-(* ===> P : Prop *)
-
-(** Uwaga techniczna: w komentarzach postaci (* ===> *) będę
-    przedstawiać wyniki wypisywane przez komendy.
-
-    Typ każdego termu możemy sprawdzić przy pomocy komendy [Check].
-    Jest ona nie do przecenienia. Jeżeli nie rozumiesz, co się
-    dzieje w trakcie dowodu lub dlaczego Coq nie chce zaakceptować
-    jakiejś definicji, użyj komendy [Check], żeby sprawdzić,
-    z jakimi typami masz do czynienia. *)
-
 (** * Logika klasyczna i konstruktywna *)
 
 (** Jak udowodnić twierdzenie, by komputer mógł zweryfikować nasz
@@ -172,10 +97,22 @@ Check P.
     górę) cofa się o jedną komendę do tyłu. Ta interaktywność,
     szczególnie w trakcie przeprowadzania dowodu, jest bardzo
     mocnym atutem Coqa — naucz się ją wykorzystywać, dokładnie
-    obserwując skutki działania każdej komendy.
+    obserwując skutki działania każdej komendy i taktyki.
 
     W razie problemów z CoqIDE poszukaj pomocy w manualu:
     coq.inria.fr/refman/Reference-Manual018.html *)
+
+Section constructive_propositional_logic.
+
+(** Mechanizm sekcji nie będzie nas na razie interesował. Użyjemy go,
+    żeby nie zaśmiecać głównej przestrzeni nazw. *)
+
+Hypothesis P Q R : Prop.
+
+(** Zapis [x : A] oznacza, że term [x] jest typu [A]. [Prop] to typ zdań
+    logicznych, więc komendę tę można odczytać następująco: niech [P], [Q]
+    i [R] będą zdaniami logicznymi. Używamy tej komendy, gdyż potrzebujemy
+    jakichś zdań logicznych, na których będziemy operować. *)
 
 (** ** Implikacja *)
 
@@ -287,10 +224,13 @@ Qed.
     odpowiada stwierdzeniu "P zachodzi na mocy założenia". *)
 
 Print impl_refl'.
-(* ===> impl_refl' = fun H : P => H
-    : P -> P *)
+(* ===> impl_refl' = fun H : P => H : P -> P *)
 
-(** Wspomnieliśmy wcześniej, że zdania logiczne są typami,
+(** Uwaga: w komentarzach postaci (* ===> *) będę przedstawiać wyniki
+    wypisywane przez komendy, żeby leniwi czytacze nie musieli sami
+    sprawdzać.
+
+    Wspomnieliśmy wcześniej, że zdania logiczne są typami,
     a ich dowody termami. Używając komendy [Print] możemy
     wyświetlić definicję podanego termu (nie każdego, ale
     na razie się tym nie przejmuj). Jak się okazuje,
@@ -477,15 +417,24 @@ Print truth.
     Zdanie [True], w przeciwieństwie do [False], nie jest zbyt
     użyteczne ani często spotykane, ale czasem się przydaje. *)
 
-(** ** Negacja *)
+(** *** Komendy [Check] i [Locate] *)
+
+Check P.
+(* ===> P : Prop *)
+
+(** Typ każdego termu możemy sprawdzić przy pomocy komendy [Check].
+    Jest ona nie do przecenienia. Jeżeli nie rozumiesz, co się
+    dzieje w trakcie dowodu lub dlaczego Coq nie chce zaakceptować
+    jakiejś definicji, użyj komendy [Check], żeby sprawdzić,
+    z jakimi typami masz do czynienia. *)
 
 Check ~P.
 (* ===> ~ P : Prop *)
 
 (** W Coqu negację zdania [P] oznaczamy przez [~P]. Symbol [~]
-    nie jest jednak nazwą negacji — nazwy nie mogą być symbolami.
+    nie jest jednak nazwą negacji — nazwy nie mogą zawierać symboli.
     Jest to jedynie notacja, która ma uczynić zapis krótszym i
-    bardziej podobnym do tego używanego na codzień. Niesie to
+    bardziej podobnym do tego używanego na co dzień. Niesie to
     jednak za sobą pewne konsekwencje — nie możemy np. użyć
     komendy [Print ~.], żeby wyświetlić definicję negacji. Jak
     więc poznać nazwę, kryjącą się za jakąś notacją? *)
@@ -494,10 +443,12 @@ Locate "~".
 (* ===> "~ x" := not x ... *)
 
 (** Możemy to zrobić przy pomocy komendy [Locate]. Wyświetla ona,
-    do jakich nazw odwołuje się dana notacja. Negacja w Coqu
-    nazywa się [not].
+    do jakich nazw odwołuje się dana notacja. Jak widać, negacja
+    w Coqu nazywa się [not]. *)
 
-    W logice klasycznej negację zdania P można zinterpretować
+(** ** Negacja *)
+
+(** W logice klasycznej negację zdania P można zinterpretować
     po prostu jako spójnik zdaniowy tworzący nowe zdanie, którego
     wartość logiczna jest przeciwna do wartości zdania P.
 

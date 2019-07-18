@@ -1177,119 +1177,6 @@ Qed.
 
 End rational.
 
-(** ** Ścisła pozytywność *)
-
-(** Poznana przez nas dotychczas definicja typów induktywnych jest niepełna,
-    gdyż pominęliśmy kryterium ścisłej pozytywności. Rozważmy następujący
-    typ: *)
-
-Fail Inductive wut (A : Type) : Type :=
-    | C : (wut A -> A) -> wut A.
-
-(** Uwaga: poprzedzenie komendą [Fail] innej komendy oznajmia Coqowi, że
-    spodziewamy się, iż komenda zawiedzie. Coq akceptuje komendę [Fail c],
-    jeżeli komenda [c] zawodzi, i wypisuje komunikat o błędzie. Jeżeli
-    komenda [c] zakończy się sukcesem, komenda [Fail c] zwróci błąd.
-
-    Komenda [Fail] jest przydatna w sytuacjach takich jak obecna, gdy
-    chcemy zilustrować fakt, że jakaś komenda zawodzi. *)
-
-(* Error: Non strictly positive occurrence of "wut"
-   in "(wut A -> A) -> wut A". *)
-
-(** Żeby zrozumieć ten komunikat o błędzie, musimy najpierw przypomnieć
-    sobie składnię konstruktorów. Konstruktory typu induktywnego [T] będą
-    mieć (w dość sporym uproszczeniu) postać [arg1 -> ... -> argN -> T] —
-    są to funkcje biorące pewną (być może zerową) ilość argumentów, a ich
-    przeciwdziedziną jest definiowany typ [T].
-
-    Jeżeli definiowany typ [T] nie występuje nigdzie w typach argumentów
-    [arg1 ... argN], sytuacja jest klarowna i wszystko jest w porządku.
-    W przeciwnym wypadku, w zależności od postaci typów argumentów, mogą
-    pojawić się problemy.
-
-    Jeżeli typ któregoś z argumentów jest równy [T], nie ma problemu — jest
-    to po prostu argument rekurencyjny. Jeżeli jest on postaci [A -> T] dla
-    dowolnego typu [A], również nie ma problemu — dzięki argumentom o takich
-    typach możemy reprezentować np. drzewa o nieskończonym współczynniku
-    rozgałęzienia. Mówimy, że w [A -> T] typ [T] występuje w pozycji (ściśle)
-    pozytywnej. Podobnie, [T] występuje na pozycji ściśle pozytywnej w [T].
-
-    Problem pojawia się dopiero, gdy typ argumentu jest postaci [T -> A]
-    lub podobnej (np. [A -> T -> B], [T -> T -> A -> B] etc.). W takich
-    przypadkach mówimy, że typ [T] występuje na pozycji negatywnej (albo
-    "nie-ściśle-pozytywnej").
-
-    Pierwszym, stosunkowo błahym problemem jest fakt, że typy łamiące
-    kryterium ścisłej pozytywności nie mają modeli teoriozbiorowych —
-    znaczy to po prostu, że nie można reprezentować ich w teorii zbiorów
-    za pomocą żadnych zbiorów. Dla wielu matematyków stanowi to problem
-    natury praktycznej (są przyzwyczajeni do teorii zbiorów) lub
-    filozoficznej.
-
-    Problem ten wynika z faktu, że konstruktory typów induktywnych są
-    injekcjami, zaś typy argumentów, w których definiowany typ występuje
-    na pozycji negatywnej, są "za duże". Np. w przypadku typu [wut bool]
-    konstruktor [C] jest injekcją z [wut bool -> bool] w [wut bool].
-    Gdybyśmy chcieli interpretować typy jako zbiory, to zbiór
-    [wut bool -> bool] jest "za duży", by można było go wstrzyknąć do
-    [wut bool], gdyż jest w bijekcji ze zbiorem potęgowym [wut bool], a
-    w teorii zbiorów powszechnie wiadomo, że nie ma injekcji ze zbioru
-    potęgowego jakiegoś zbioru do niego samego.
-
-    Nie przejmuj się, jeżeli nie rozumiesz powyższego paragrafu — nie
-    jest to główny powód obowiązywania kryterium ścisłej pozytywności,
-    wszak jako buntownicy zajmujący się teorią typów nie powinniśmy
-    zbytnio przejmować się teorią zbiorów.
-
-    Prawdziwy powód jest inny: dopuszczenie typów łamiących kryterium
-    ścisłej pozytywności prowadzi do sprzeczności. Gdyby były one
-    legalne, legalna byłaby również poniższa definicja: *)
-
-Fail Definition y (A : Type) : A :=
-  let f := (fun x : wut A => match x with | C f' => f' x end)
-  in f (C f).
-
-(** Jak widać, gdyby definicja typu [wut] została dopuszczona,
-    moglibyśmy uzyskać zapętlający się program umożliwiający nam
-    stworzenie elementu dowolnego typu i to bez użycia słowa
-    kluczowego [Fixpoint] (program ten jest nazywany zazwyczaj
-    kombinatorem Y, ang. Y combinator). Stąd już niedaleko do
-    popadnięcia w zupełną sprzeczność: *)
-
-Fail Definition santa_is_a_pedophile : False := y False.
-
-(** UPDATE: dodatkowe wyjaśnienie. Dlaczego [y] się zapętla? Otóż: *)
-
-(** [y False =
-     let f := ... in f (C f) =
-     let f := ... in match C f with | C f' => f' (C f) end =
-     let f := ... in f (C f)] i tak dalej. *)
-
-(** **** Ćwiczenie *)
-
-(* Inductive T : Type := *)
-
-(** Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
-    pozytywności. Następnie sprawdź w Coqu, czy udzieliłeś poprawnej
-    odpowiedzi.
-    - [| C1 : T]
-    - [| C2 : bool -> T]
-    - [| C3 : T -> T]
-    - [| C4 : T -> nat -> T]
-    - [| C5 : forall A : Type, T -> A -> T]
-    - [| C6 : forall A : Type, A -> T -> T]
-    - [| C7 : forall A : Type, (A -> T) -> T]
-    - [| C8 : forall A : Type, (T -> A) -> T]
-    - [| C9 : (forall x : T, T) -> T]
-    - [| C10 : (forall (A : Type) (x : T), A) -> T]
-    - [| C11 : forall A B C : Type,
-                  A -> (forall x : T, B) -> (C -> T) -> T] *)
-
-(* begin hide *)
-(* C1-C7 są legalne, C8-C11 nie. *)
-(* end hide *)
-
 (** ** Listy, czyli parametry + rekursja *)
 
 (** Połączenie funkcji zależnych, konstruktorów rekurencyjnych i
@@ -4652,6 +4539,116 @@ Definition g' (n : nat) : nat := g n (D'_all n).
 
 (** Wymyśl jakiś sensowny przykład praktycznego zastosowania
     indukcji-indukcji-rekursji. *)
+
+(** * Dobre i złe typy induktywne *)
+
+(** Poznana przez nas dotychczas definicja typów induktywnych (oraz wszelkich
+    ich ulepszeń, jak indukcja-indukcja, indukcja-rekursja etc.) jest
+    niepełna. Tak jak świat pełen jest złoczyńców oszukujących starszych
+    ludzi metodą "na wnuczka", tak nie każdy typ podający się za induktywny
+    faktycznie jest praworządnym obywatelem krainy typów induktywnych. *)
+
+(** ** Ścisła pozytywność *)
+
+(** Na szczęście typy induktywne to istoty bardzo prostolinijne, zaś te złe
+    można odróżnich od tych dobrych gołym okiem, za pomocą bardzo prostego
+    kryterium: złe typy induktywne to te, które nie są ściśle pozytywne.
+
+    Przyjrzyjmy się poniższemu typowemu przypadkowi nielegalnego typu
+    "induktywnego": *)
+
+Fail Inductive wut (A : Type) : Type :=
+    | C : (wut A -> A) -> wut A.
+
+(* ===> The command has indeed failed with message:
+        Non strictly positive occurrence of "wut"
+        in "(wut A -> A) -> wut A". *)
+
+(** Uwaga: poprzedzenie komendą [Fail] innej komendy oznajmia Coqowi, że
+    spodziewamy się, iż komenda zawiedzie. Coq akceptuje komendę [Fail c],
+    jeżeli komenda [c] zawodzi, i wypisuje komunikat o błędzie. Jeżeli
+    komenda [c] zakończy się sukcesem, komenda [Fail c] zwróci błąd.
+
+    Komenda [Fail] jest przydatna w sytuacjach takich jak obecna, gdy
+    chcemy zilustrować fakt, że jakaś komenda zawodzi. *)
+
+(** Żeby zrozumieć ten komunikat o błędzie, musimy najpierw przypomnieć
+    sobie składnię konstruktorów. Konstruktory typu induktywnego [T] będą
+    mieć (w dość sporym uproszczeniu) postać [arg1 -> ... -> argN -> T] —
+    są to funkcje biorące pewną (być może zerową) ilość argumentów, a ich
+    przeciwdziedziną jest definiowany typ [T].
+
+    Jeżeli definiowany typ [T] nie występuje nigdzie w typach argumentów
+    [arg1 ... argN], sytuacja jest klarowna i wszystko jest w porządku.
+    W przeciwnym wypadku, w zależności od postaci typów argumentów, mogą
+    pojawić się problemy.
+
+    Jeżeli typ któregoś z argumentów jest równy [T], nie ma problemu —
+    jest to po prostu argument rekurencyjny. Mówimy, że [T] występuje w
+    [T] ściśle pozytywnie. Jeżeli argument jest postaci [A -> T] dla
+    dowolnego typu [A], również nie ma problemu — dzięki argumentom o takich
+    typach możemy reprezentować np. drzewa o nieskończonym współczynniku
+    rozgałęzienia. Mówimy, że w [A -> T] typ [T] występuje ściśle pozytywnie.
+    To samo, gdy argument jest postaci [A * T] lub [A + T] etc.
+
+    Problem pojawia się dopiero, gdy typ argumentu jest postaci [T -> A]
+    lub podobnej (np. [A -> T -> B], [T -> (T -> A) -> B] etc.). W takich
+    przypadkach mówimy, że typ [T] występuje na pozycji negatywnej (albo
+    "nie-ściśle-pozytywnej").
+
+    Powodem nielegalności negatywnych typów induktywnych (czyli takich,
+    które wyglądają na induktywne, ale mają konstruktory z wystąpieniami
+    negatywnymi) jest to, że prowadzą do sprzeczności (i to na kilka różnych
+    sposobów), a nawet gdyby nie, to podkopują filozoficzną interpretację
+    całej naszej teorii.
+
+    Najbardziej błahy jest przypadek, w którym dostajemy sprzeczność za
+    pomocą jakiejś taniej sztuczki. Gdyby definicja [wut] była legalna,
+    to legalna byłaby również poniższa definicja: *)
+
+Fail Definition y (A : Type) : A :=
+  let f := (fun x : wut A => match x with | C f' => f' x end)
+  in f (C f).
+
+(** Jak widać, gdyby definicja typu [wut] została dopuszczona,
+    moglibyśmy uzyskać zapętlający się program umożliwiający nam
+    stworzenie elementu dowolnego typu i to bez użycia słowa
+    kluczowego [Fixpoint] (program ten jest nazywany zazwyczaj
+    kombinatorem Y, ang. Y combinator). Stąd już niedaleko do
+    popadnięcia w zupełną sprzeczność: *)
+
+Fail Definition santa_is_a_pedophile : False := y False.
+
+(** UPDATE: dodatkowe wyjaśnienie. Dlaczego [y] się zapętla? Otóż: *)
+
+(** [y False =
+     let f := ... in f (C f) =
+     let f := ... in match C f with | C f' => f' (C f) end =
+     let f := ... in f (C f)] i tak dalej. *)
+
+(** **** Ćwiczenie *)
+
+(* Inductive T : Type := *)
+
+(** Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
+    pozytywności. Następnie sprawdź w Coqu, czy udzieliłeś poprawnej
+    odpowiedzi.
+    - [| C1 : T]
+    - [| C2 : bool -> T]
+    - [| C3 : T -> T]
+    - [| C4 : T -> nat -> T]
+    - [| C5 : forall A : Type, T -> A -> T]
+    - [| C6 : forall A : Type, A -> T -> T]
+    - [| C7 : forall A : Type, (A -> T) -> T]
+    - [| C8 : forall A : Type, (T -> A) -> T]
+    - [| C9 : (forall x : T, T) -> T]
+    - [| C10 : (forall (A : Type) (x : T), A) -> T]
+    - [| C11 : forall A B C : Type,
+                  A -> (forall x : T, B) -> (C -> T) -> T] *)
+
+(* begin hide *)
+(* C1-C7 są legalne, C8-C11 nie. *)
+(* end hide *)
 
 (** * Podsumowanie *)
 

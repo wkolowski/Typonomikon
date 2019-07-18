@@ -14,6 +14,15 @@ Axioms
       {f : forall w : wut, P w |
        forall g : wut -> bool, f (C g) = H g}).
 
+Fail Definition bad : bool :=
+  let f (w : wut) : bool :=
+    match w with
+        | C f' => f' w
+    end
+  in f (C f).
+
+(* ===> f (C f) = f (C f) = f (C f) *)
+
 Definition bad : wut -> (wut -> bool).
 Proof.
   apply (ind (fun _ => wut -> bool)).

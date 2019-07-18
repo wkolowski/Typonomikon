@@ -7,6 +7,55 @@
     część teoretyczną, a zadania pominąć (albo w ogóle pominąć cały ten
     rozdział). *)
 
+(** * Typy i termy *)
+
+(**  Czym są termy? Są to twory o naturze syntaktycznej (składniowej),
+    reprezentujące funkcje, typy, zdania logiczne, predykaty, relacje
+    etc. Polskim słowem o najbliższym znaczeniu jest słowo "wyrażenie".
+    Zamiast prób definiowania termów, co byłoby problematyczne,
+    zobaczmy przykłady:
+    - [2] — stałe są termami
+    - [P] — zmienne są termami
+    - [Prop] — typy są termami
+    - [fun x : nat => x + 2] — λ-abstrakcje (funkcje) są termami
+    - [f x] — aplikacje funkcji do argumentu są termami
+    - [if true then 5 else 2] — konstrukcja if-then-else jest termem *)
+
+(** Nie są to wszystkie występujące w Coqu rodzaje termów — jest
+    ich nieco więcej.
+
+    Kolejnym fundamentalnym pojęciem jest pojęcie typu. W Coqu
+    każdy term ma dokładnie jeden, niezmienny typ. Czym są typy?
+    Intuicyjnie można powiedzieć, że typ to rodzaj metki, która
+    dostarcza nam informacji dotyczących danego termu.
+
+    Dla przykładu,
+    stwierdzenie [x : nat] informuje nas, że [x] jest liczbą
+    naturalną, dzięki czemu wiemy, że możemy użyć go jako argumentu
+    dodawania: term [x + 1] jest poprawnie typowany (ang. well-typed),
+    tzn. [x + 1 : nat], a więc możemy skonkludować, że [x + 1] również
+    jest liczbą naturalną.
+
+    Innym przykładem niech będzie stwierdzenie [f : nat -> nat],
+    które mówi nam, że [f] jest funkcją, która bierze liczbę
+    naturalną i zwraca liczbę naturalną. Dzięki temu wiemy, że term
+    [f 2] jest poprawnie typowany i jest liczbą naturalną,
+    tzn. [f 2 : nat], zaś term [f f] nie jest poprawnie typowany,
+    a więc próba jego użycia, a nawet napisania byłaby błędem.
+
+    Typy są tworami absolutnie kluczowymi. Informują nas, z jakimi
+    obiektami mamy do czynienia i co możemy z nimi zrobić, a Coq
+    pilnuje ścisłego przestrzegania tych reguł. Dzięki temu
+    wykluczona zostaje możliwość popełnienia całej gamy różnych
+    błędów, które występują w językach nietypowanych, takich jak
+    dodanie liczby do ciągu znaków.
+
+    Co więcej, system typów Coqa jest jednym z najsilniejszych,
+    jakie dotychczas wymyślono, dzięki czemu umożliwia nam wiele
+    rzeczy, których prawie żaden inny język programowania nie potrafi,
+    jak np. reprezentowanie skomplikowanych obiektów matematycznych
+    i dowodzenie twierdzeń. *)
+
 (** * Typy a zbiory *)
 
 (** Z filozoficznego punktu widzenia należy stanowczo odróżnić

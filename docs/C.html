@@ -32,7 +32,84 @@
     rozdział). 
 <div class="paragraph"> </div>
 
-<a name="lab70"></a><h1 class="section">Typy a zbiory</h1>
+<a name="lab70"></a><h1 class="section">Typy i termy</h1>
+
+<div class="paragraph"> </div>
+
+  Czym są termy? Są to twory o naturze syntaktycznej (składniowej),
+    reprezentujące funkcje, typy, zdania logiczne, predykaty, relacje
+    etc. Polskim słowem o najbliższym znaczeniu jest słowo "wyrażenie".
+    Zamiast prób definiowania termów, co byłoby problematyczne,
+    zobaczmy przykłady:
+<ul class="doclist">
+<li> <span class="inlinecode">2</span> — stałe są termami
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> — zmienne są termami
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> — typy są termami
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> — λ-abstrakcje (funkcje) są termami
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> — aplikacje funkcji do argumentu są termami
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="keyword">if</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span> <span class="inlinecode"><span class="id" title="keyword">then</span></span> <span class="inlinecode">5</span> <span class="inlinecode"><span class="id" title="keyword">else</span></span> <span class="inlinecode">2</span> — konstrukcja if-then-else jest termem 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Nie są to wszystkie występujące w Coqu rodzaje termów — jest
+    ich nieco więcej.
+
+<div class="paragraph"> </div>
+
+    Kolejnym fundamentalnym pojęciem jest pojęcie typu. W Coqu
+    każdy term ma dokładnie jeden, niezmienny typ. Czym są typy?
+    Intuicyjnie można powiedzieć, że typ to rodzaj metki, która
+    dostarcza nam informacji dotyczących danego termu.
+
+<div class="paragraph"> </div>
+
+    Dla przykładu,
+    stwierdzenie <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> informuje nas, że <span class="inlinecode"><span class="id" title="var">x</span></span> jest liczbą
+    naturalną, dzięki czemu wiemy, że możemy użyć go jako argumentu
+    dodawania: term <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> jest poprawnie typowany (ang. well-typed),
+    tzn. <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, a więc możemy skonkludować, że <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> również
+    jest liczbą naturalną.
+
+<div class="paragraph"> </div>
+
+    Innym przykładem niech będzie stwierdzenie <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>,
+    które mówi nam, że <span class="inlinecode"><span class="id" title="var">f</span></span> jest funkcją, która bierze liczbę
+    naturalną i zwraca liczbę naturalną. Dzięki temu wiemy, że term
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">2</span> jest poprawnie typowany i jest liczbą naturalną,
+    tzn. <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">2</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, zaś term <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">f</span></span> nie jest poprawnie typowany,
+    a więc próba jego użycia, a nawet napisania byłaby błędem.
+
+<div class="paragraph"> </div>
+
+    Typy są tworami absolutnie kluczowymi. Informują nas, z jakimi
+    obiektami mamy do czynienia i co możemy z nimi zrobić, a Coq
+    pilnuje ścisłego przestrzegania tych reguł. Dzięki temu
+    wykluczona zostaje możliwość popełnienia całej gamy różnych
+    błędów, które występują w językach nietypowanych, takich jak
+    dodanie liczby do ciągu znaków.
+
+<div class="paragraph"> </div>
+
+    Co więcej, system typów Coqa jest jednym z najsilniejszych,
+    jakie dotychczas wymyślono, dzięki czemu umożliwia nam wiele
+    rzeczy, których prawie żaden inny język programowania nie potrafi,
+    jak np. reprezentowanie skomplikowanych obiektów matematycznych
+    i dowodzenie twierdzeń. 
+<div class="paragraph"> </div>
+
+<a name="lab71"></a><h1 class="section">Typy a zbiory</h1>
 
 <div class="paragraph"> </div>
 
@@ -74,7 +151,7 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab71"></a><h1 class="section">Uniwersa</h1>
+<a name="lab72"></a><h1 class="section">Uniwersa</h1>
 
 <div class="paragraph"> </div>
 
@@ -256,7 +333,7 @@ Co oznacza ten dziwny napis? Otóż w Coqu mamy do czynienia nie z
     Możemy zatem przejść do meritum. 
 <div class="paragraph"> </div>
 
-<a name="lab72"></a><h1 class="section">Pięć rodzajów reguł</h1>
+<a name="lab73"></a><h1 class="section">Pięć rodzajów reguł</h1>
 
 <div class="paragraph"> </div>
 
@@ -288,7 +365,7 @@ Co oznacza ten dziwny napis? Otóż w Coqu mamy do czynienia nie z
     charakter mocno teoretyczny. 
 <div class="paragraph"> </div>
 
-<a name="lab73"></a><h2 class="section">Reguły formacji</h2>
+<a name="lab74"></a><h2 class="section">Reguły formacji</h2>
 
 <div class="paragraph"> </div>
 
@@ -396,7 +473,7 @@ Reguła nie pochodzi z definicji induktywnej, gdyż typ funkcji <span class="inl
     jest typem wbudowanym i nie jest zdefiniowany indukcyjnie. 
 <div class="paragraph"> </div>
 
-<a name="lab74"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab75"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -412,7 +489,7 @@ Reguła nie pochodzi z definicji induktywnej, gdyż typ funkcji <span class="inl
 </div>
 
 <div class="doc">
-<a name="lab75"></a><h2 class="section">Reguły wprowadzania</h2>
+<a name="lab76"></a><h2 class="section">Reguły wprowadzania</h2>
 
 <div class="paragraph"> </div>
 
@@ -518,7 +595,7 @@ Pojawiło się tu kilka nowych rzeczy: litera Γ oznacza kontekst,
     w rozdziałach 4 i 5 manuala: https://coq.inria.fr/refman/toc.html 
 <div class="paragraph"> </div>
 
-<a name="lab76"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab77"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -534,7 +611,7 @@ Pojawiło się tu kilka nowych rzeczy: litera Γ oznacza kontekst,
 </div>
 
 <div class="doc">
-<a name="lab77"></a><h2 class="section">Reguły eliminacji</h2>
+<a name="lab78"></a><h2 class="section">Reguły eliminacji</h2>
 
 <div class="paragraph"> </div>
 
@@ -770,7 +847,7 @@ Póki co wydaje mi się, że udowodnienie słuszności tej reguły będzie dla
     list. 
 <div class="paragraph"> </div>
 
-<a name="lab78"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab79"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -804,7 +881,7 @@ Póki co wydaje mi się, że udowodnienie słuszności tej reguły będzie dla
 </div>
 
 <div class="doc">
-<a name="lab79"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab80"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -835,7 +912,7 @@ Póki co wydaje mi się, że udowodnienie słuszności tej reguły będzie dla
 </div>
 
 <div class="doc">
-<a name="lab80"></a><h2 class="section">Reguły obliczania</h2>
+<a name="lab81"></a><h2 class="section">Reguły obliczania</h2>
 
 <div class="paragraph"> </div>
 
@@ -956,7 +1033,7 @@ Wygląda dużo bardziej znajomo, prawda?
     alfa. 
 <div class="paragraph"> </div>
 
-<a name="lab81"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab82"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -971,7 +1048,7 @@ Wygląda dużo bardziej znajomo, prawda?
 </div>
 
 <div class="doc">
-<a name="lab82"></a><h2 class="section">Reguły unikalności</h2>
+<a name="lab83"></a><h2 class="section">Reguły unikalności</h2>
 
 <div class="paragraph"> </div>
 
@@ -1054,7 +1131,7 @@ Podsumowując, reguły unikalności występują w dwóch rodzajach:
 
 <div class="paragraph"> </div>
 
-<a name="lab83"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab84"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
