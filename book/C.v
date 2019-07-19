@@ -466,8 +466,8 @@ Check @pair.
       funkcji zależnych, czy nie.
     - rekurencyjnym i nierekurencyjnym — te druge służą jedynie do
       przeprowadzania rozumowań przez przypadki oraz definiowania funkcji
-      przez pattern matching, ale bez rekurencji. Niektóre typy nie mają
-      rekurencyjnych reguł eliminacji.
+      przez dopasowanie do wzorca, ale bez rekurencji. Niektóre typy nie
+      mają rekurencyjnych reguł eliminacji.
     - pierwotne i wtórne — dla typu induktywnego [T] Coq generuje regułę
       [T_rect], którą będziemy zwać regułą pierwotną. Jej postać wynika
       wprost z definicji typu [T]. Reguły dla typów nieinduktywnych (np.
@@ -525,8 +525,8 @@ Check @pair.
 
     Jeżeli chodzi o reguły eliminacji, to są one, poza niewielką ilością
     reguł pierwotnych, w pewnym sensie wtórne —
-    możemy budować je z pattern matchingu i rekursji strukturalnej i to
-    właśnie te dwie ostatnie idee są w Coqu ideami pierwotnymi. Jeżeli
+    możemy budować je z dopasowania do wzorca i rekursji strukturalnej i
+    to właśnie te dwie ostatnie idee są w Coqu ideami pierwotnymi. Jeżeli
     chodzi o kontrolę, to możemy swobodnie dodawać nowe reguły eliminacji
     za pomocą twierdzeń lub definiując je bezpośrednio.
 
@@ -682,8 +682,8 @@ End EliminationRules.
     one zazwyczaj uznawane za byty podstawowe, z których następnie wywodzi
     się reguły obliczania takich konstrukcji, jak np. [match].
 
-    W Coqu jest na odwrót. Tak jak reguły eliminacji pochodzą od pattern
-    matchingu i rekursji, tak reguły obliczania pochdzą od opisanych już
+    W Coqu jest na odwrót. Tak jak reguły eliminacji pochodzą od dopasowania
+    do wzorca i rekursji, tak reguły obliczania pochdzą od opisanych już
     wcześniej reguł redukcji (beta, delta, jota i zeta), a także konwersji
     alfa. *)
 

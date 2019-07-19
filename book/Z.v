@@ -106,7 +106,7 @@ Print head.
     za pomocą funkcji [length]).
 
     W ostatnim kroku pozostaje nam policzyć na palcach, ile operacji wykonuje
-    nasza funkcja. Pierwszą operacją jest pattern matching. Druga to zwrócenie
+    nasza funkcja. Pierwszą jest dopasowanie do wzorca. Druga to zwrócenie
     wyniku. Hmmm, czyżby nasza funkcja wykonywała tylko dwie operacje?
 
     Przypomnij sobie, że wzorce są dopasowywane w kolejności od góry do dołu.

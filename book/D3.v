@@ -1,8 +1,8 @@
 (** * D3: Logika boolowska *)
  
 (** Zadania z funkcji boolowskich, sprawdzające radzenie sobie w pracy
-    z enumeracjami, definiowaniem funkcji przez pattern matching i dowodzeniem
-    przez rozbicie na przypadki.
+    z enumeracjami, definiowaniem funkcji przez dopasowanie do wzorca
+    i dowodzeniem przez rozbicie na przypadki.
 
     Chciałem, żeby nazwy twierdzeń odpowiadały tym z biblioteki standardowej,
     ale na razie nie mam siły tego ujednolicić. *)

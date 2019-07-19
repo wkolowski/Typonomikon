@@ -1140,8 +1140,8 @@ Definition gen_idempotent
 
 (** * Punkty stałe (TODO) *)
 
-(** Kolejnym ważnym pojęciem jest pojęcie punktu stałego (ang. "fixed point",
-    często skracane do "fixpoint"). Właśnie od niego bierze się nazwa
+(** Kolejnym ważnym pojęciem jest pojęcie punktu stałego (ang. fixed point,
+    często skracane do fixpoint). Właśnie od niego bierze się nazwa
     komendy [Fixpoint], służącej do definiowania funkcji rekurencyjnych. *)
 
 Definition fixpoint {A : Type} (f : A -> A) (x : A)

@@ -44,8 +44,8 @@ Import ListNotations.
 
 (** Istnieje jednak zasadnicza różnica między definiowaniem "zwykłych"
     funkcji oraz definiowaniem relacji: zwykłe funkcje możemy definiować
-    jedynie przez pattern matching i rekurencję, zaś relacje możemy poza
-    tymi metodami definiować także przez indukcję, dzięki czemu możemy
+    jedynie przez dopasowanie do wzorca i rekurencję, zaś relacje możemy
+    poza tymi metodami definiować także przez indukcję, dzięki czemu możemy
     wyrazić więcej konceptów niż za pomocą rekursji. *)
 
 Definition hrel (A B : Type) : Type := A -> B -> Prop.

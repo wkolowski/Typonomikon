@@ -249,8 +249,8 @@
       https://math-comp.github.io/mcb/book.pdf, to książka dotycząca
       biblioteki o nazwie Mathematical Components. Zawiera ona
       wprowadzenia do Coqa, ale poza tym opisuje też dwie inne rzeczy:
-      - Metodologię dowodzenie zwaną _small scale reflection_
-        (ang. reflekcja na małą skalę), która pozwala wykorzystać
+      - Metodologię dowodzenia zwaną _small scale reflection_
+        (pol. reflekcja na małą skalę), która pozwala wykorzystać
         w dowodach maksimum możliwości obliczeniowych Coqa, a dzięki
         temu uprościć dowody i zorganizować twierdzenia w logiczny
         sposób

@@ -13,7 +13,8 @@ match n with
     | S (S n') => H n' (nat_ind_2 P H0 H1 H n')
 end.
 
-Theorem expand : forall (P : nat -> Prop) (n k : nat),
+Theorem expand :
+  forall (P : nat -> Prop) (n k : nat),
     ~ n <= k -> P (k + (n - k)) -> P n.
 Proof.
   intros. replace n with (k + (n - k)).

@@ -89,11 +89,10 @@ end.
     [:=] ciało funkcji.
 
     Podstawowym narzędziem służącym do definiowania funkcji jest
-    "dopasowywanie do wzorca" (ang. pattern matching; w dalszej części
-    będę używał nazwy angielskiej). Pozwala ono sprawdzić, którego
-    konstruktora użyto do zrobienia dopasowywanej wartości. Podobnym
-    tworem występującym w językach imperatywnych jest instrukcja
-    switch, ale pattern matching jest od niej dużo potężniejszy.
+    dopasowanie do wzorca (ang. pattern matching). Pozwala ono sprawdzić,
+    którego konstruktora użyto do zrobienia dopasowywanej wartości.
+    Podobnym tworem występującym w językach imperatywnych jest instrukcja
+    switch, ale dopasowanie do wzorca jest od niej dużo potężniejsze.
 
     Nasza funkcja działa następująco: sprawdzamy, którym konstruktorem
     zrobiono argument [b] — jeżeli było to [true], zwracamy [false], a
@@ -226,7 +225,7 @@ Qed.
     koniec używamy taktyki [reflexivity], która potrafi udowodnić
     cel postaci [a = a].
 
-    [destruct] jest taktykowym odpowiednikiem pattern matchingu
+    [destruct] jest taktykowym odpowiednikiem dopasowania do wzorca
     i bardzo często jest używany, gdy mamy do czynienia z czymś,
     co zostało za jego pomocą zdefiniowane.
 
@@ -969,8 +968,8 @@ Arguments None [A].
 
     Konstruktory typów induktywnych mają kilka właściwości, o którch
     warto wiedzieć. Po pierwsze, wartości zrobione za pomocą różnych
-    konstruktorów są różne. Jest to konieczne, gdyż za pomocą pattern
-    machingu możemy rozróżnić różne konstruktory — gdyby były one
+    konstruktorów są różne. Jest to konieczne, gdyż za pomocą dopasowania
+    do wzorca możemy rozróżnić różne konstruktory — gdyby były one
     równe, uzyskalibyśmy sprzeczność. *)
 
 Definition isSome {A : Type} (a : option A) : Prop :=
@@ -1437,7 +1436,7 @@ Definition create {A : Type} (x : Empty_set) : A :=
   match x with end.
 
 (** Jeżeli mamy term typu [Empty_set], to możemy w sposób niemal magiczny
-    wyczarować term dowolnego typu [A], używając pattern matchingu z
+    wyczarować term dowolnego typu [A], używając dopasowania do wzorca z
     pustym wzorcem. *)
 
 (** **** Ćwiczenie ([create_unique]) *)
@@ -2166,7 +2165,7 @@ Qed.
     - Redukcja delta odwija definicje. W naszym przypadku zdefiniowaliśmy,
       że [ultimate_answer] oznacza [42], więc redukcja delta w miejsce
       [ultimate_answer] wstawia [42].
-    - Redukcja jota wykonuje pattern matching. W naszym przypadku [0]
+    - Redukcja jota wykonuje dopasowanie do wzorca. W naszym przypadku [0]
       jest termem, który postać jest znana (został on skonstruowany
       konstruktorem [0]) i który pasuje do wzorca [| 0 => 42], a zatem
       redukcja jota zamienia całe wyrażenie od [match] aż do [end]
@@ -3479,9 +3478,10 @@ Axiom
     to kodziedzina [f], a [Q] - [g].
 
     Teraz potrzebujemy rozważyć wszystkie możliwe przypadki - tak jak przy
-    pattern matchingu. Przypadek [snil] jest dość banalny. Przypadek [scons]
-    jest trochę cięższy. Przede wszystkim chcemy, żeby konkluzja była postaci
-    [P (scons h t p)], ale jak powinny wyglądać hipotezy indukcyjne?
+    dopasowaniu do wzorca. Przypadek [snil] jest dość banalny. Przypadek
+    [scons] jest trochę cięższy. Przede wszystkim chcemy, żeby konkluzja
+    była postaci [P (scons h t p)], ale jak powinny wyglądać hipotezy
+    indukcyjne?
 
     Jedyna słuszna odpowiedź brzmi: odpowiadają one typom wszystkich możliwych
     wywołań rekurencyjnych [f] i [g] na strukturalnych podtermach
@@ -4243,6 +4243,8 @@ End ind_rec.
     który rozjaśni (albo zaciemni) sprawę, a jest nim legendarna funkcja
     McCarthy'ego. *)
 
+Module ind_rec_2.
+
 Fail Fixpoint f (n : nat) : nat :=
   if leb 101 n then n - 10 else f (f (n + 11)).
 
@@ -4513,6 +4515,8 @@ Definition g' (n : nat) : nat := g n (D'_all n).
 
 (* end hide *)
 
+End ind_rec_2.
+
 (** ** Chimera, czyli jeszcze straszniejszy potfur *)
 
 (** Ufff... przebrnęliśmy przez indukcję-indukcję i indukcję-rekursję. Czy
@@ -4548,14 +4552,25 @@ Definition g' (n : nat) : nat := g n (D'_all n).
     ludzi metodą "na wnuczka", tak nie każdy typ podający się za induktywny
     faktycznie jest praworządnym obywatelem krainy typów induktywnych. *)
 
-(** ** Ścisła pozytywność *)
-
 (** Na szczęście typy induktywne to istoty bardzo prostolinijne, zaś te złe
     można odróżnich od tych dobrych gołym okiem, za pomocą bardzo prostego
     kryterium: złe typy induktywne to te, które nie są ściśle pozytywne.
+    Zanim jednak dowiemy się, jak rozpoznawać złe typy, poznajmy najpierw
+    dwa powody, dla przez które złe typy induktywne są złe. *)
 
-    Przyjrzyjmy się poniższemu typowemu przypadkowi nielegalnego typu
-    "induktywnego": *)
+(** ** Nieterminacja jako źródło zła we wszechświecie *)
+
+(** _Istnieje teoria, że jeśli kiedyś ktoś się dowie, dlaczego powstał i
+    czemu służy wszechświat, to cały kosmos zniknie i zostanie zastąpiony
+    czymś znacznie dziwaczniejszym i jeszcze bardziej pozbawionym sensu_. *)
+
+(** _Istnieje także teoria, że dawno już tak się stało_. *)
+
+(** Douglas Adams, _Restauracja na końcu wszechświata_ *)
+
+(** Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
+    induktywnego (czyli takiego, który wygląda na induktywny, ale ma
+    konstruktory z negatywnymi wystąpieniami argumentu indukcyjnego): *)
 
 Fail Inductive wut (A : Type) : Type :=
     | C : (wut A -> A) -> wut A.
@@ -4568,71 +4583,345 @@ Fail Inductive wut (A : Type) : Type :=
     spodziewamy się, iż komenda zawiedzie. Coq akceptuje komendę [Fail c],
     jeżeli komenda [c] zawodzi, i wypisuje komunikat o błędzie. Jeżeli
     komenda [c] zakończy się sukcesem, komenda [Fail c] zwróci błąd.
-
     Komenda [Fail] jest przydatna w sytuacjach takich jak obecna, gdy
-    chcemy zilustrować fakt, że jakaś komenda zawodzi. *)
+    chcemy zilustrować fakt, że jakaś komenda zawodzi.
 
-(** Żeby zrozumieć ten komunikat o błędzie, musimy najpierw przypomnieć
-    sobie składnię konstruktorów. Konstruktory typu induktywnego [T] będą
-    mieć (w dość sporym uproszczeniu) postać [arg1 -> ... -> argN -> T] —
-    są to funkcje biorące pewną (być może zerową) ilość argumentów, a ich
-    przeciwdziedziną jest definiowany typ [T].
+    Pierwszym powodem nielegalności nie-ściśle-pozytywnych typów induktywnych
+    jest to, że unieważniają one filozoficzną interpretację teorii typów i
+    ogólnie wszystkiego, co robimy w Coqu. W praktyce problemy filozoficzne
+    mogą też prowadzić do sprzeczności.
 
-    Jeżeli definiowany typ [T] nie występuje nigdzie w typach argumentów
-    [arg1 ... argN], sytuacja jest klarowna i wszystko jest w porządku.
-    W przeciwnym wypadku, w zależności od postaci typów argumentów, mogą
-    pojawić się problemy.
+    Załóżmy, że Coq akceptuje powyższą definicję [wut]. Możemy wtedy napisać
+    następujący program: *)
 
-    Jeżeli typ któregoś z argumentów jest równy [T], nie ma problemu —
-    jest to po prostu argument rekurencyjny. Mówimy, że [T] występuje w
-    [T] ściśle pozytywnie. Jeżeli argument jest postaci [A -> T] dla
-    dowolnego typu [A], również nie ma problemu — dzięki argumentom o takich
-    typach możemy reprezentować np. drzewa o nieskończonym współczynniku
-    rozgałęzienia. Mówimy, że w [A -> T] typ [T] występuje ściśle pozytywnie.
-    To samo, gdy argument jest postaci [A * T] lub [A + T] etc.
-
-    Problem pojawia się dopiero, gdy typ argumentu jest postaci [T -> A]
-    lub podobnej (np. [A -> T -> B], [T -> (T -> A) -> B] etc.). W takich
-    przypadkach mówimy, że typ [T] występuje na pozycji negatywnej (albo
-    "nie-ściśle-pozytywnej").
-
-    Powodem nielegalności negatywnych typów induktywnych (czyli takich,
-    które wyglądają na induktywne, ale mają konstruktory z wystąpieniami
-    negatywnymi) jest to, że prowadzą do sprzeczności (i to na kilka różnych
-    sposobów), a nawet gdyby nie, to podkopują filozoficzną interpretację
-    całej naszej teorii.
-
-    Najbardziej błahy jest przypadek, w którym dostajemy sprzeczność za
-    pomocą jakiejś taniej sztuczki. Gdyby definicja [wut] była legalna,
-    to legalna byłaby również poniższa definicja: *)
-
-Fail Definition y (A : Type) : A :=
-  let f := (fun x : wut A => match x with | C f' => f' x end)
+Fail Definition loop (A : Type) : A :=
+  let f (w : wut A) : A :=
+    match w with
+        | C g => g w
+    end
   in f (C f).
 
-(** Jak widać, gdyby definicja typu [wut] została dopuszczona,
-    moglibyśmy uzyskać zapętlający się program umożliwiający nam
-    stworzenie elementu dowolnego typu i to bez użycia słowa
-    kluczowego [Fixpoint] (program ten jest nazywany zazwyczaj
-    kombinatorem Y, ang. Y combinator). Stąd już niedaleko do
-    popadnięcia w zupełną sprzeczność: *)
+(** Już sam typ tego programu wygląda podejrzanie: dla każdego typu [A]
+    zwraca on element typu [A]. Nie dziwota więc, że możemy uzyskać z niego
+    dowód fałszu. *)
 
-Fail Definition santa_is_a_pedophile : False := y False.
+Fail Definition santa_is_a_pedophile : False := loop False.
 
-(** UPDATE: dodatkowe wyjaśnienie. Dlaczego [y] się zapętla? Otóż: *)
+(** Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
+    problemem - nie z każdego złego typu induktywnego da się tak łatwo dostać
+    sprzeczność (a przynajmniej ja nie umiem; systematyczny sposób dostawania
+    sprzeczności z istnienia takich typów zobaczymy później). W rzeczywistości
+    jest nim nieterminacja.
 
-(** [y False =
-     let f := ... in f (C f) =
-     let f := ... in match C f with | C f' => f' (C f) end =
-     let f := ... in f (C f)] i tak dalej. *)
+    Nieterminacja (ang. nontermination, divergence) lub kolokwialniej
+    "zapętlenie" to sytuacja, w której program nigdy nie skończy się
+    wykonywać. Ta właśnie bolączka jest przypadłością [loop], czego nie
+    trudno domyślić się z nazwy.
+
+    Dlaczego tak jest? Przyjrzyjmy się definicji [loop]. Za pomocą [let]a
+    definiujemy funkcję [f : wut A -> A], która odpakowuje swój argument
+    [w], wyciąga z niego funkcję [g : wut A -> A] i aplikuje [g] do [w].
+    Wynikiem programu jest [f] zaaplikowane do siebie samego zawiniętego
+    w konstruktor [C].
+
+    Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
+    programu:
+
+    [loop A =]
+
+    [let f := ... in f (C f) =]
+
+    [let f := ... in match C f with | C g => g (C f) end =]
+
+    [let f := ... in f (C f)]
+
+    i tak dalej.
+
+    Nie powinno nas to dziwić - praktycznie rzecz biorąc aplikujemy [f] samo
+    do siebie, zaś konstruktor [C] jest tylko pośrednikiem sprawiającym, że
+    typy się zgadzają. Ogólniej sytuacja, w której coś odnosi się samo do
+    siebie, nazywa się autoreferencją i często prowadzi do różnych paradoksów.
+    Innym przykładem może być legendarne zdanie "To zdanie jest fałszywe."
+    Czujesz sprzeczność?
+
+    Innym ciekawym paradoksem autoreferencji jest niniejsza "zagadka":
+
+    Niektóre słowa opisują same siebie, np. słowo "krótki" jest krótkie,
+    ale słowo "długi" nie jest długie. Słowo "polski" jest słowem polskim,
+    ale słowo "niemiecki" nie jest słowem niemieckim. Słowa, które nie
+    opisują same siebie to słowa heterologiczne. Rodzi się pytanie: czy
+    słowo "heterologiczny" jest heterologiczne?
+
+    Czujesz sprzeczność? Innym przyk... dobra, wystarczy tych głupot.
+
+    Przyjrzyjmy się teraz problemom filozoficznym powodowanym przez
+    nieterminację. W skrócie: zmienia ona fundamentalne właściwości
+    obliczeń, co prowadzi do zmiany interpretacji pojęcia typu, zaś
+    to pociąga za sobą kolejne negatywne (nomen omen) skutki, takie
+    jak to, że reguły eliminacji tracą swoje uzasadnienie.
+
+    Brzmi mega groźnie, prawda? Kiedy wspomniałem o tym Sokratesowi, to
+    sturlał się z podłogi na sufit bez pośrednictwa ściany.
+
+    Na szczęście tak naprawdę, to sprawa jest prosta. W Coqu wymagamy, aby
+    każde obliczenie się kończyło. Wartości, czyli końcowe wyniki obliczeń
+    (które są też nazywane postaciami kanonicznymi albo normalnymi), możemy
+    utożsamiać z elementami danego typu. Dla przykładu wynikami obliczania
+    termów typu [bool] są [true] i [false], więc możemy myśleć, że są to
+    elementy typu [bool] i [bool] składa się tylko z nich. To z kolei daje
+    nam uzasadnienie reguły eliminacji (czyli indukcji) dla typu [bool]:
+    żeby udowodnić [P : bool -> Prop] dla wszystkich [b : bool], wystarczy
+    udowodnić [P true] i [P false], gdyż [true] i [false] to jedyne elementy
+    typu [bool].
+
+    Nieterminacja obraca tę jakże piękną filozoficzną wizję w perzynę:
+    nie każde obliczenie się kończy, a przez to powstają nowe, "dziwne"
+    elementy różnych typów. [loop bool] nigdy nie obliczy się do [true] ani
+    do [false], więc możemy traktować je jako nowy element typu [bool]. To
+    sprawia, że [bool], typ z założenia dwuelementowy, ma teraz co najmniej
+    trzy elementy - [true], [false] i [loop bool]. Z tego też powodu reguła
+    eliminacji przestaje obowiązywać, bo wymaga ona dowodów jedynie dla
+    [true] i [false], ale milczy na temat [loop bool]. Moglibyśmy próbować
+    naiwnie ją załatać, uwzględniając ten dodatkowy przypadek, ale tak po
+    prawdzie, to nie wiadomo nawet za bardzo jakie jeszcze paskudztwa
+    rozpanoszyły się w typie [bool] z powodu nieterminacji.
+
+    Morał jest prosty: nieterminacja to wynalazek szatana, a negatywne
+    typy induktywne to też wynalazek szatana. *)
+
+(** ** Twierdzenie Cantora *)
+
+(** Zanim zaczniemy ten rozdział na poważnie, mam dla ciebie wesoły łamaniec
+    językowy:
+
+    Cantor - kanciarz, który skradł z kantoru z Kantonu konarem kontury
+    kartonu Koranicznemu kanarowi, który czasem karał karczystych kafarów
+    czarami za karę za kantowanie i za zakatowanie zza kontuaru
+    kontrkulturowych karłów. *)
+
+(** ** Twierdzenie Cantora w służbie ścisłej pozytywności *)
+
+Module attempt1.
+
+(** Jeden konstruktor negatywny - działa. *)
+
+Fail Inductive wut : Type :=
+    | C : (wut -> bool) -> wut.
+
+Axioms
+  (wut : Type)
+  (C : (wut -> bool) -> wut)
+  (ind : forall
+    (P : wut -> Type)
+    (H : forall f : wut -> bool, P (C f)),
+      {f : forall w : wut, P w |
+       forall g : wut -> bool, f (C g) = H g}).
+
+Fail Definition bad : bool :=
+  let f (w : wut) : bool :=
+    match w with
+        | C f' => f' w
+    end
+  in f (C f).
+
+(* ===> f (C f) = f (C f) = f (C f) *)
+
+Definition bad : wut -> (wut -> bool).
+Proof.
+  apply (ind (fun _ => wut -> bool)).
+  intro f. exact f.
+Defined.
+
+Lemma bad_sur :
+  forall f : wut -> bool, exists w : wut, bad w = f.
+Proof.
+  intro. unfold bad. destruct (ind _).
+  exists (C f). apply e.
+Defined.
+
+Lemma have_mercy_plx : False.
+Proof.
+  pose (diagonal := fun w => negb (bad w w)).
+  destruct (bad_sur diagonal).
+  unfold diagonal, bad in H. destruct (ind _).
+  apply (f_equal (fun f => f x)) in H.
+  destruct (x0 x x); inversion H.
+Qed.
+
+End attempt1.
+
+Module attempt2.
+
+(** Dwa konstruktory negatywne - działa. *)
+
+Fail Inductive wut : Type :=
+    | C0 : (wut -> bool) -> wut
+    | C1 : (wut -> nat) -> wut.
+
+Axioms
+  (wut : Type)
+  (C0 : (wut -> bool) -> wut)
+  (C1 : (wut -> nat) -> wut)
+  (ind : forall
+    (P : wut -> Type)
+    (PC0 : forall f : wut -> bool, P (C0 f))
+    (PC1 : forall f : wut -> nat, P (C1 f)),
+      {f : forall w : wut, P w |
+        (forall g : wut -> bool, f (C0 g) = PC0 g) /\
+        (forall g : wut -> nat, f (C1 g) = PC1 g)
+      }
+  ).
+
+Definition bad :
+  wut -> (wut -> bool).
+Proof.
+  apply (ind (fun _ => wut -> bool)).
+    intro f. exact f.
+    intros _ _. exact true.
+Defined.
+
+Lemma bad_sur :
+  forall (f : wut -> bool), exists w : wut, bad w = f.
+Proof.
+  intro. unfold bad. destruct (ind _) as (g & H1 & H2).
+  exists (C0 f). apply H1.
+Defined.
+
+Lemma Cantor_ty_dziwko : False.
+Proof.
+  destruct (bad_sur (fun w : wut => negb (bad w w))).
+  unfold bad in H. destruct (ind _).
+  apply (f_equal (fun f => f x)) in H.
+  destruct (x0 x x); inversion H.
+Qed.
+
+End attempt2.
+
+Module attempt3.
+
+(** Jeden konstruktor negatywny z argumentem indukcyjnym w
+    przeciwdziedzinie i drugi konstruktor normalny. *)
+
+Fail Inductive wut : Type :=
+    | C0 : (wut -> wut) -> wut
+    | C1 : nat -> wut.
+
+Axioms
+  (wut : Type)
+  (C0 : (wut -> wut) -> wut)
+  (C1 : nat -> wut)
+  (ind : forall
+    (P : wut -> Type)
+    (PC0 : forall f : wut -> wut, P (C0 f))
+    (PC1 : forall n : nat, P (C1 n)),
+      {f : forall w : wut, P w |
+        (forall g : wut -> wut, f (C0 g) = PC0 g) /\
+        (forall n : nat, f (C1 n) = PC1 n)
+      }
+  ).
+
+Definition bad :
+  wut -> (wut -> wut).
+Proof.
+  apply (ind (fun _ => wut -> wut)).
+    intro f. exact f.
+    intros _ w. exact w.
+Defined.
+
+Lemma bad_sur :
+  forall (f : wut -> wut), exists w : wut, bad w = f.
+Proof.
+  intro. unfold bad. destruct (ind _) as (g & H1 & H2).
+  exists (C0 f). apply H1.
+Defined.
+
+Definition change (w : wut) : wut.
+Proof.
+  revert w.
+  apply (ind (fun _ => wut)).
+    intro. exact (C1 0).
+    intro. apply (C1 (S n)).
+Defined.
+
+Lemma change_neq :
+  forall w : wut, change w <> w.
+Proof.
+  apply ind.
+    intros f H. unfold change in H. destruct (ind _) as (g & H1 & H2).
+      rewrite H1 in H. admit.
+    intros n H. unfold change in H. destruct (ind _) as (g & H1 & H2).
+      rewrite H2 in H. admit.
+Admitted.
+
+Lemma behemot_atakuje : False.
+Proof.
+  destruct (bad_sur (fun w : wut => change (bad w w))).
+  unfold bad in H. destruct (ind _).
+  apply (f_equal (fun f => f x)) in H.
+  apply (change_neq (x0 x x)).
+  symmetry. assumption.
+Qed.
+
+End attempt3.
+
+Module attempt4.
+
+(** Pewnie najgorsze bydle. *)
+
+Fail Inductive wut : Type :=
+    | C : (wut -> wut) -> wut.
+
+Axioms
+  (wut : Type)
+  (C : (wut -> wut) -> wut)
+  (ind : forall
+    (P : wut -> Type)
+    (PC : forall f : wut -> wut, P (C f)),
+      {f : forall w : wut, P w |
+        forall g : wut -> wut, f (C g) = PC g}).
+
+Definition bad :
+  wut -> (wut -> wut).
+Proof.
+  apply (ind (fun _ => wut -> wut)).
+    intro f. exact f.
+Defined.
+
+Lemma bad_sur :
+  forall (f : wut -> wut), exists w : wut, bad w = f.
+Proof.
+  intro. unfold bad. destruct (ind _) as (g & H).
+  exists (C f). apply H.
+Defined.
+
+Definition change : wut -> wut.
+Proof.
+  apply (ind (fun _ => wut)).
+  intro f. apply f. exact (C (fun w => C (fun v => f v))).
+Defined.
+
+Lemma change_neq :
+  forall w : wut, change w <> w.
+Proof.
+  apply ind. intros f H.
+  unfold change in H. destruct (ind _) as (g & eq).
+  rewrite eq in H.
+Admitted.
+
+Lemma behemot_atakuje : False.
+Proof.
+Abort.
+
+End attempt4.
 
 (** **** Ćwiczenie *)
 
 (* Inductive T : Type := *)
 
 (** Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
-    pozytywności. Następnie sprawdź w Coqu, czy udzieliłeś poprawnej
-    odpowiedzi.
+    pozytywności. Jeżeli tak, narysuj wesołego jeża. Jeżeli nie, napisz
+    zapętlającą się funkcję podobną do [loop]. Następnie sprawdź w Coqu,
+    czy udzieliłeś poprawnej odpowiedzi.
     - [| C1 : T]
     - [| C2 : bool -> T]
     - [| C3 : T -> T]
@@ -4649,6 +4938,235 @@ Fail Definition santa_is_a_pedophile : False := y False.
 (* begin hide *)
 (* C1-C7 są legalne, C8-C11 nie. *)
 (* end hide *)
+
+(** ** Paradoks Russella i paradoks Girarda (TODO) *)
+
+(** Przyjaźnie wyglądające uniwersum, które jednak podstępnie masakruje
+    zbłąkanych wędrowców. Jak zawsze ciężko nazwać ten paradoks. Chyba
+    najprościej powiedzieć, że jest to jednocześnie paradoks Russella i
+    Girarda. Ciekawe, że udało mi się to wycisnąć z rozważań nad
+    indukcją-rekursją oraz ścisłą pozytywnością. *)
+
+Module Uniwersum.
+
+Axioms
+  (U : Type)
+  (El : U -> Type)
+
+  (Empty : U)
+  (Unit : U)
+  (Nat : U)
+  (Pi : forall (A : U) (B : El A -> U), U)
+  (Sigma : forall (A : U) (B : El A -> U), U)
+  (UU : U)
+
+  (El_Empty : El Empty = Empty_set)
+  (El_Unit : El Unit = unit)
+  (El_Nat : El Nat = nat)
+  (El_Pi :
+    forall (A : U) (B : El A -> U),
+      El (Pi A B) = forall (x : El A), El (B x))
+  (El_Sigma :
+    forall (A : U) (B : El A -> U),
+      El (Pi A B) = {x : El A & El (B x)})
+  (El_UU : El UU = U)
+
+  (ind : forall
+    (P : U -> Type)
+    (PEmpty : P Empty)
+    (PUnit : P Unit)
+    (PNat : P Nat)
+    (PPi :
+      forall (A : U) (B : El A -> U),
+        P A -> (forall x : El A, P (B x)) -> P (Pi A B))
+    (PSigma :
+      forall (A : U) (B : El A -> U),
+        P A -> (forall x : El A, P (B x)) -> P (Sigma A B))
+    (PUU : P UU),
+      {f : forall A : U, P A |
+        (f Empty = PEmpty) /\
+        (f Unit = PUnit) /\
+        (f Nat = PNat) /\
+        (forall (A : U) (B : El A -> U),
+          f (Pi A B) =
+          PPi A B (f A) (fun x : El A => f (B x))) /\
+        (forall (A : U) (B : El A -> U),
+          f (Sigma A B) =
+          PSigma A B (f A) (fun x : El A => f (B x))) /\
+        (f UU = PUU)
+      }).
+
+Definition bad : U -> (U -> U).
+Proof.
+  apply (ind (fun _ => U -> U)).
+    1-3,6: exact (fun u : U => u).
+    intros A B _ _. revert A B.
+      apply (ind (fun A : U => (El A -> U) -> (U -> U))).
+        1-5: intros; assumption.
+        intro f. rewrite El_UU in f. exact f.
+    intros. assumption.
+Defined.
+
+Lemma homotopiczny_czarodziej :
+  forall (A : Type) (P : A -> Type) (x y : A) (p : x = y) (u : P y),
+    eq_rect x P (@eq_rect_r A y P u x p) y p = u.
+Proof.
+  destruct p. cbn. reflexivity.
+Qed.
+
+Lemma bad_sur :
+  forall f : U -> U, exists u : U, f = bad u.
+Proof.
+  intro. unfold bad.
+  destruct (ind _) as [g H]; decompose [and] H; clear H.
+  destruct (ind _) as [h H']; decompose [and] H'; clear H'.
+  pose (f' := eq_rect_r (fun T : Type => T -> U) f El_UU).
+  exists (Pi UU f').
+  rewrite H3. rewrite H11.
+  unfold f'. rewrite homotopiczny_czarodziej. reflexivity.
+Qed.
+
+Definition change : U -> U.
+Proof.
+  apply ind.
+    exact Nat.
+    all: intros; exact Empty.
+Defined.
+
+Definition help : U -> nat.
+Proof.
+  apply ind.
+    exact 0.
+    exact 1.
+    exact 2.
+    intros. exact 3.
+    intros. exact 4.
+    exact 5.
+Defined.
+
+Ltac help H :=
+  apply (f_equal help) in H;
+  cbn in H; unfold help in H;
+  destruct (ind _) as [help Hhelp];
+  decompose [and] Hhelp; clear Hhelp;
+  congruence.
+
+Lemma change_neq :
+  forall u : U, change u <> u.
+Proof.
+  apply ind; unfold change;
+  destruct (ind _) as [f H]; decompose [and] H; clear H;
+  intros; try help H; help H6.
+Qed.
+
+Definition Russel_Girard : False.
+Proof.
+  destruct (bad_sur (fun u : U => change (bad u u))).
+  unfold bad in H. destruct (ind _).
+  apply (f_equal (fun f => f x)) in H.
+  apply (change_neq (x0 x x)).
+  assumption.
+Qed.
+
+End Uniwersum.
+
+Module Russel_Girard.
+
+(** Uproszczona wersja paradoksu - tylko U i Pi. *)
+
+Axioms
+  (U : Type)
+  (El : U -> Type)
+
+  (Pi : forall (A : U) (B : El A -> U), U)
+  (UU : U)
+
+  (El_Pi :
+    forall (A : U) (B : El A -> U),
+      El (Pi A B) = forall (x : El A), El (B x))
+  (El_UU : El UU = U)
+
+  (ind : forall
+    (P : U -> Type)
+    (PPi :
+      forall (A : U) (B : El A -> U),
+        P A -> (forall x : El A, P (B x)) -> P (Pi A B))
+    (PUU : P UU),
+      {f : forall A : U, P A |
+        (forall (A : U) (B : El A -> U),
+          f (Pi A B) =
+          PPi A B (f A) (fun x : El A => f (B x))) /\
+        (f UU = PUU)
+      }).
+
+Definition bad : U -> (U -> U).
+Proof.
+  apply (ind (fun _ => U -> U)).
+    intros A B _ _. revert A B.
+      apply (ind (fun A : U => (El A -> U) -> (U -> U))).
+        intros; assumption.
+        intro f. rewrite El_UU in f. exact f.
+    exact (fun u => u).
+Defined.
+
+Lemma homotopiczny_czarodziej :
+  forall (A : Type) (P : A -> Type) (x y : A) (p : x = y) (u : P y),
+    eq_rect x P (@eq_rect_r A y P u x p) y p = u.
+Proof.
+  destruct p. cbn. reflexivity.
+Qed.
+
+Lemma bad_sur :
+  forall f : U -> U, exists u : U, f = bad u.
+Proof.
+  intro. unfold bad.
+  destruct (ind _) as [g H]; decompose [and] H; clear H.
+  destruct (ind _) as [h H']; decompose [and] H'; clear H'.
+  pose (f' := eq_rect_r (fun T : Type => T -> U) f El_UU).
+  exists (Pi UU f').
+  rewrite H0. rewrite H2.
+  unfold f'. rewrite homotopiczny_czarodziej. reflexivity.
+Qed.
+
+Definition change : U -> U.
+Proof.
+  apply ind.
+    intros. exact UU.
+    exact (Pi UU (fun _ => UU)).
+Defined.
+
+Definition help : U -> bool.
+Proof.
+  apply ind.
+    intros. exact true.
+    exact false.
+Defined.
+
+Ltac help H :=
+  apply (f_equal help) in H;
+  cbn in H; unfold help in H;
+  destruct (ind _) as [help Hhelp];
+  decompose [and] Hhelp; clear Hhelp;
+  congruence.
+
+Lemma change_neq :
+  forall u : U, change u <> u.
+Proof.
+  apply ind; unfold change;
+  destruct (ind _) as [f H]; decompose [and] H; clear H;
+  help H1.
+Qed.
+
+Definition Russel_Girard_simplified : False.
+Proof.
+  destruct (bad_sur (fun u : U => change (bad u u))).
+  unfold bad in H. destruct (ind _); clear a.
+  apply (f_equal (fun f => f x)) in H.
+  apply (change_neq (x0 x x)).
+  assumption.
+Qed.
+
+End Russel_Girard.
 
 (** * Podsumowanie *)
 

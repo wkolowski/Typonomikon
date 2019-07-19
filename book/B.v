@@ -218,7 +218,7 @@ Qed.
     nazwy zazwyczaj nie są dobrym pomysłem, ale w prostych dowodach
     możemy sobie na nie pozwolić.
 
-    Taktyka [assumption] (ang. "założenie") sama potrafi znaleźć
+    Taktyka [assumption] (pol. "założenie") sama potrafi znaleźć
     nazwę hipotezy, która rozwiązuje cel. Jeżeli nie znajdzie
     takiej hipotezy, to zawodzi. Jej użycie w dowodzenie nieformalnym
     odpowiada stwierdzeniu "P zachodzi na mocy założenia". *)
