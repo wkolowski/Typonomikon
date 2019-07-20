@@ -4558,15 +4558,7 @@ End ind_rec_2.
     Zanim jednak dowiemy się, jak rozpoznawać złe typy, poznajmy najpierw
     dwa powody, dla przez które złe typy induktywne są złe. *)
 
-(** ** Nieterminacja jako źródło zła we wszechświecie *)
-
-(** _Istnieje teoria, że jeśli kiedyś ktoś się dowie, dlaczego powstał i
-    czemu służy wszechświat, to cały kosmos zniknie i zostanie zastąpiony
-    czymś znacznie dziwaczniejszym i jeszcze bardziej pozbawionym sensu_. *)
-
-(** _Istnieje także teoria, że dawno już tak się stało_. *)
-
-(** Douglas Adams, _Restauracja na końcu wszechświata_ *)
+(** ** Nieterminacja jako źródło zła na świecie *)
 
 (** Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
     induktywnego (czyli takiego, który wygląda na induktywny, ale ma
@@ -4657,8 +4649,8 @@ Fail Definition santa_is_a_pedophile : False := loop False.
     Przyjrzyjmy się teraz problemom filozoficznym powodowanym przez
     nieterminację. W skrócie: zmienia ona fundamentalne właściwości
     obliczeń, co prowadzi do zmiany interpretacji pojęcia typu, zaś
-    to pociąga za sobą kolejne negatywne (nomen omen) skutki, takie
-    jak to, że reguły eliminacji tracą swoje uzasadnienie.
+    to pociąga za sobą kolejne przykre skutki, takie jak np. to, że
+    reguły eliminacji tracą swoje uzasadnienie.
 
     Brzmi mega groźnie, prawda? Kiedy wspomniałem o tym Sokratesowi, to
     sturlał się z podłogi na sufit bez pośrednictwa ściany.
@@ -4670,9 +4662,9 @@ Fail Definition santa_is_a_pedophile : False := loop False.
     termów typu [bool] są [true] i [false], więc możemy myśleć, że są to
     elementy typu [bool] i [bool] składa się tylko z nich. To z kolei daje
     nam uzasadnienie reguły eliminacji (czyli indukcji) dla typu [bool]:
-    żeby udowodnić [P : bool -> Prop] dla wszystkich [b : bool], wystarczy
-    udowodnić [P true] i [P false], gdyż [true] i [false] to jedyne elementy
-    typu [bool].
+    żeby udowodnić [P : bool -> Prop] dla każdego [b : bool], wystarczy
+    udowodnić [P true] i [P false], gdyż [true] i [false] są jedynymi
+    elementami typu [bool].
 
     Nieterminacja obraca tę jakże piękną filozoficzną wizję w perzynę:
     nie każde obliczenie się kończy, a przez to powstają nowe, "dziwne"
@@ -4694,12 +4686,206 @@ Fail Definition santa_is_a_pedophile : False := loop False.
 (** Zanim zaczniemy ten rozdział na poważnie, mam dla ciebie wesoły łamaniec
     językowy:
 
-    Cantor - kanciarz, który skradł z kantoru z Kantonu konarem kontury
+    Cantor - kanciarz, który skradł zza kurtyny kantoru z Kantonu kontury
     kartonu Koranicznemu kanarowi, który czasem karał karczystych kafarów
-    czarami za karę za kantowanie i za zakatowanie zza kontuaru
-    kontrkulturowych karłów. *)
+    czarami za karę za kantowanie i za zakatowanie zza kontuaru konarem
+    kontrkulturowych kuluarowych karłów.
 
-(** ** Twierdzenie Cantora w służbie ścisłej pozytywności *)
+    Dobra, wystarczy. Reszta tego podrozdziału będzie śmiertelnie poważna,
+    a przyjrzymy się w niej jednemu z mega klasycznych twierdzeń z końca
+    XIX w. głoszącemu mniej więcej, że "zbiór potęgowy zbioru liczb
+    naturalnych ma większą moc od zbioru liczb naturalnych".
+
+    Co za bełkot, pomyślisz zapewne. Ten podrozdział poświęcimy właśnie temu,
+    żeby ów bełkot nieco wyklarować. Jeżeli zaś zastanawiasz się, po co nam
+    to, to odpowiedź jest prosta - na (uogólnionym) twierdzeniu Cantora
+    opierać się będzie nasza systematyczna metoda dowodzenia nielegalności
+    negatywnych typów induktywnych.
+
+    Oczywiście oryginalne sformułowanie twierdzenia powstało na długo przed
+    powstaniem teorii typów czy Coqa, co objawia się np. w tym, że mówi ono
+    o _zbiorze_ liczb naturalnych, podczas gdy my dysponujemy _typem_ liczb
+    naturalnych. Musimy więc oryginalne sformułowanie lekko przeformułować,
+    a także wprowadzić wszystkie niezbędne nam pojęcia. *)
+
+Definition surjective {A B : Type} (f : A -> B) : Prop :=
+  forall b : B, exists a : A, f a = b.
+
+(** Pierwszym niezbędnym pojęciem jest pojęcie surjekcji. Powyższa definicja
+    głosi, że funkcja jest surjektywna, gdy każdy element przeciwdziedziny
+    jest wynikiem funkcji dla pewnego elementu dziedziny. Surjekcja to
+    funkcja, która jest surjektywna.
+
+    O co chodzi w tej definicji? Samo słowo "surjekcja" pochodzi od fr.
+    "sur" - "na" oraz łac. "iacere" - "rzucać". Ubogim tłumaczeniem na
+    polski może być słowo "narzut".
+
+    Idea jest taka, że surjekcja [f : A -> B] "narzuca" swoją dziedzinę
+    [A] na przeciwdziedzinę [B] tak, że [A] "pokrywa" całe [B]. Innymi
+    słowy, każdy element [b : B] jest pokryty przez jakiś element [a : A],
+    co wyraża równość [f a = b]. Oczywiście to [a] nie musi być unikalne -
+    [b] może być pokrywane przez dużo różnych [a]. Jak widać, dokładnie to
+    jest napisane w powyższej definicji.
+
+    Mówiąc jeszcze prościej: jeżeli [f : A -> B] jest surjekcją, to typ
+    [A] jest większy (a precyzyjniej mówiący, nie mniejszy) niż typ [B].
+    Oczywiście nie znaczy to, że jeżeli [f] nie jest surjekcją, to typ
+    [A] jest mniejszy niż [B] - mogą przecież istnieć inne surjekcje.
+    Powiemy, że [A] jest mniejszy od [B], jeżeli nie istnieje żadna
+    surjekcja między nimi.
+
+    Spróbujmy rozrysować to niczym Jacek Gmoch... albo nie, bo nie umiem
+    jeszcze rysować, więc zamiast tego będzie przykład i ćwiczenie. *)
+
+Definition isZero (n : nat) : bool :=
+match n with
+    | 0 => true
+    | _ => false
+end.
+
+Lemma surjective_isZero : surjective isZero.
+Proof.
+  unfold surjective. destruct b.
+    exists 0. cbn. reflexivity.
+    exists 42. cbn. reflexivity.
+Qed.
+
+(** Funkcja [isZero], która sprawdza, czy jej argument jest zerem, jest
+    surjekcją, bo każdy element typu [bool] może być jej wynikiem -
+    [true] jest wynikiem dla [0], zaś [false] jest jej wynikiem dla
+    wszystkich innych argumentów. Wobec tego możemy skonkludować, że
+    typ [nat] jest większy niż typ [bool] i w rzeczywistości faktycznie
+    tak jest: [bool] ma dwa elementy, a [nat] nieskończenie wiele.
+
+    Do kwestii tego, który typ ma ile elementów wrócimy jeszcze w rozdziale
+    o typach i funkcjach. Tam też zapoznamy się lepiej z surjekcjami i
+    innymi rodzajami funkcji. Tymczasem ćwiczenie: *)
+
+(** **** Ćwiczenie *)
+
+(** Czy funkcja [plus 5] jest surjekcją? A funkcja [fun n : nat => minus n 5]?
+    Sprawdź swoje odpowiedzi w Coqu. Na koniec filozoficznie zinterpretuj
+    otrzymany wynik.
+
+    Wskazówka: [minus] to funkcja z biblioteki standardowej, która
+    implementuje odejmowanie liczb naturalnych z obcięciem, tzn. np.
+    [2 - 5 = 0]. Użyj [Print]a, żeby dokładnie zbadać jej definicję. *)
+
+(* begin hide *)
+(* Jest oczywiste, że [+ 5] nie jest surjekcją, zaś [- 5] tak. *)
+(* end hide *)
+
+(** Pozostaje jeszcze kwestia tego, czym jest "zbiór potęgowy zbioru liczb
+    naturalnych". Mimo groźnej nazwy sprawa jest prosta: jest to archaiczne
+    określenie na typ funkcji [nat -> bool]. Każdą funkcję [f : nat -> bool]
+    możemy interpretować jako pewną kolekcję (czyli właśnie zbiór) elementów
+    typu [nat], zaś [f n], czyli wynik [f] na konkretnym [n], mówi nam, czy
+    [n] znajduje się w tej kolekcji, czy nie.
+
+    To w zasadzie wyczerpuje zestaw pojęć potrzebnych nam do sformułowania
+    twierdzenia. Pojawiająca się w oryginalnej wersji "większa moc" to po
+    prostu synonim określenia "większy", które potrafimy już wyrażać za
+    pomocą pojęcia surjekcji. Tak więc nowszą (czyli bardziej postępową)
+    wersję twierdzenia Cantora możemy sformułować następująco: nie istnieje
+    surjekcja z [nat] w [nat -> bool]. Lub jeszcze bardziej obrazowo: [nat]
+    jest mniejsze niż [nat -> bool]. *)
+
+Theorem Cantor :
+  forall f : nat -> (nat -> bool), ~ surjective f.
+Proof.
+  unfold surjective. intros f Hf.
+  pose (g := fun n : nat => negb (f n n)).
+  destruct (Hf g) as [n Hn].
+  apply (f_equal (fun h : nat -> bool => h n)) in Hn.
+  unfold g in Hn. destruct (f n n); inversion Hn.
+Qed.
+
+(** Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
+    dodatek bajecznie prosty i niesamowicie użyteczny - jeżeli będziesz
+    zajmował się w życiu matematyką i informatyką, spotkasz go w jeszcze
+    wielu odsłonach. Metoda stojąca za dowodem nazywana bywa argumentem
+    przekątniowym - choć nazwa ta może się wydawać dziwna, to za chwilę
+    stanie się zupełnia jasna.
+
+    O co więc chodzi w powyższym dowodzie? Po pierwsze zauważmy, że
+    mamy do czynienia z funkcją [f : nat -> (nat -> bool)], czyli
+    funkcją, która bierze liczbę naturalną i zwraca funkcję z liczb
+    naturalnych w [bool]. Pamiętajmy jednak, że [->] łączy w prawo
+    i wobec tego typ [f] możemy zapisać też jako [nat -> nat -> bool].
+    Tak więc [f] jest funkcją, która bierze dwie liczby naturalne i
+    zwraca element typu [bool].
+
+    Dzięki temu zabiegowi możemy wyobrażać sobie [f] jako dwuwymiarową
+    tabelkę, której wiersze i kolumny są indeksowane liczbami naturalnymi,
+    a komórki w tabelce wypełnione są wartościami typu [bool]. Przyjmijmy,
+    że pierwszy argument [f] to indeks wiersza, zaś drugi to indeks kolumny.
+    W takim układzie [f n m] to wartość [n]-tej funkcji na argumencie [m].
+    Wobec tego twierdzenie możemy sparafrazować mówiąc, że każda funkcja
+    [nat -> bool] znajduje się w którymś wierszu tabelki.
+
+    To tyle wyobraźni - możemy już udowodnić twierdzenie. Na początku
+    oczywiście bierzemy dowolne [f] oraz zakładamy, że jest surjekcją,
+    uprzednio odwijając definicję bycia surjekcją.
+
+    Teraz musimy jakoś wyciągnąć sprzeczność z hipotezy [Hf], czyli,
+    używając naszej tabelkowej parafrazy, znaleźć funkcję z [nat] w
+    [bool], która nie znajduje się w tabelce. A nie znajdować się w
+    tabelce, panie Ferdku, to znaczy: różnić się od każdej funkcji z
+    tabelki na jakimś argumencie.
+
+    Zamiast jednak szukać takiej funkcji po omacku, skonstruujmy ją
+    z tego, co mamy pod ręką - czyli z naszej tabelki. Jak przerobić
+    funkcje z tabelki na nową, której w nie ma w tabelce? Tu właśnie
+    ujawnia się geniuszalność Cantora: użyjemy metody przekątniowej,
+    czyli spojrzymy na przekątną naszej tabelki.
+
+    Definiujemy więc nową funkcję [g : nat -> bool] następująco: dla
+    argumentu [n : nat] bierzemy funkcję z [n]-tego wiersza w tabelce,
+    patrzymy na [n]-tą kolumnę, czyli na wartość funkcji na argumencie
+    [n], i zwracamy negację tego, co tam znajdziemy. Czujesz sprzeczność?
+
+    Nasze założenie mówi, że [g] znajduje się w którymś wierszu tabelki -
+    niech ma on numer [n]. Wiemy jednak, że [g] różni się od [n]-tej
+    funkcji z tabelki na argumencie [n], gdyż zdefiniowaliśmy ją jako
+    negację tej właśnie komórki w tabelce. Dostajemy stąd równość [f n n
+    = g n = negb (f n n)], co po analizie przypadków sprowadza się do tego,
+    że [true = false].
+
+    Voilà! Sprzeczność osiągnięta, a zatem początkowe założenie było
+    błędne i nie istnieje żadna surjekcja z [nat] w [nat -> bool]. *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że nie ma surjekcji z [nat] w [nat -> nat]. Czy jest surjekcja
+    z [nat -> bool] w [(nat -> bool) -> bool]? A w [nat -> bool -> bool]? *)
+
+(** ** Uogólnione tw. Cantora w służbie ścisłej pozytywności *)
+
+(** Poznawszy twierdzenie Cantora, możemy powrócić do ścisłej pozytywności,
+    czyż nie? Otóż nie, bo twierdzenie Cantora jest biedne. Żeby czerpać
+    garściami niebotyczne profity, musimy najpierw uogólnić je na dowolne
+    dwa typy [A] i [B] znajdując kryterium mówiące, kiedy nie istnieje
+    surjekcja z [A] w [A -> B]. *)
+
+(** **** Ćwiczenie *)
+
+(** Uogólnij twierdzenie Cantora. Wskazówka: zadanie jest łatwe, gdyż
+    wszystko, czego ci potrzeba, zawarte jest już w zwykłym twierdzeniu
+    Cantora.
+
+    POD ŻADNYM POZOREM NIE PATRZ NIŻEJ! *)
+
+Theorem Cantor' :
+  forall (A B : Type) (f : A -> (A -> B)) (modify : B -> B),
+    (forall x : B, modify x <> x) -> ~ surjective f.
+Proof.
+  unfold surjective. intros A B f modify H Hf.
+  pose (g := fun x : A => modify (f x x)).
+  destruct (Hf g) as [x Hx].
+  apply (f_equal (fun h => h x)) in Hx.
+  unfold g in Hx. apply (H (f x x)).
+  symmetry. assumption.
+Qed.
 
 Module attempt1.
 
@@ -4940,6 +5126,14 @@ End attempt4.
 (* end hide *)
 
 (** ** Paradoks Russella i paradoks Girarda (TODO) *)
+
+(** _Istnieje teoria, że jeśli kiedyś ktoś się dowie, dlaczego powstało i
+    czemu służy uniwersum, to zniknie ono i zostanie zastąpione czymś
+    znacznie dziwaczniejszym i jeszcze bardziej pozbawionym sensu_. *)
+
+(** _Istnieje także teoria, że dawno już tak się stało_. *)
+
+(** Douglas Adams, _Restauracja na końcu wszechświata_ *)
 
 (** Przyjaźnie wyglądające uniwersum, które jednak podstępnie masakruje
     zbłąkanych wędrowców. Jak zawsze ciężko nazwać ten paradoks. Chyba
