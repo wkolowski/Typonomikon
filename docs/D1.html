@@ -5794,7 +5794,7 @@ Polecenie jest następujące:
     indukcji-indukcji-rekursji. 
 <div class="paragraph"> </div>
 
-<a name="lab157"></a><h1 class="section">Dobre i złe typy induktywne</h1>
+<a name="lab157"></a><h1 class="section">Dobre, złe i podejrzane typy induktywne</h1>
 
 <div class="paragraph"> </div>
 
@@ -5806,10 +5806,10 @@ Polecenie jest następujące:
 <div class="paragraph"> </div>
 
  Na szczęście typy induktywne to istoty bardzo prostolinijne, zaś te złe
-    można odróżnich od tych dobrych gołym okiem, za pomocą bardzo prostego
+    można odróżnić od tych dobrych gołym okiem, za pomocą bardzo prostego
     kryterium: złe typy induktywne to te, które nie są ściśle pozytywne.
     Zanim jednak dowiemy się, jak rozpoznawać złe typy, poznajmy najpierw
-    dwa powody, dla przez które złe typy induktywne są złe. 
+    dwa powody, przez które złe typy induktywne są złe. 
 <div class="paragraph"> </div>
 
 <a name="lab158"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
@@ -6160,10 +6160,10 @@ Pozostaje jeszcze kwestia tego, czym jest "zbiór potęgowy zbioru liczb
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">nat</span> -&gt; (<span class="id" title="var">nat</span> -&gt; <span class="id" title="var">bool</span>), ~ <span class="id" title="var">surjective</span> <span class="id" title="var">f</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">surjective</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">Hf</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">g</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">negb</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>)).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">Hf</span> <span class="id" title="var">g</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">n</span> <span class="id" title="var">Hn</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">diagonal</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">negb</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">Hf</span> <span class="id" title="var">diagonal</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">n</span> <span class="id" title="var">Hn</span>].<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">h</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">bool</span> =&gt; <span class="id" title="var">h</span> <span class="id" title="var">n</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">Hn</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">g</span> <span class="id" title="tactic">in</span> <span class="id" title="var">Hn</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>); <span class="id" title="tactic">inversion</span> <span class="id" title="var">Hn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">diagonal</span> <span class="id" title="tactic">in</span> <span class="id" title="var">Hn</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>); <span class="id" title="tactic">inversion</span> <span class="id" title="var">Hn</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -6221,19 +6221,19 @@ Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
 
 <div class="paragraph"> </div>
 
-    Definiujemy więc nową funkcję <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> następująco: dla
-    argumentu <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> bierzemy funkcję z <span class="inlinecode"><span class="id" title="var">n</span></span>-tego wiersza w tabelce,
+    Definiujemy więc nową funkcję <span class="inlinecode"><span class="id" title="var">diagonal</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> następująco:
+    dla argumentu <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> bierzemy funkcję z <span class="inlinecode"><span class="id" title="var">n</span></span>-tego wiersza w tabelce,
     patrzymy na <span class="inlinecode"><span class="id" title="var">n</span></span>-tą kolumnę, czyli na wartość funkcji na argumencie
     <span class="inlinecode"><span class="id" title="var">n</span></span>, i zwracamy negację tego, co tam znajdziemy. Czujesz sprzeczność?
 
 <div class="paragraph"> </div>
 
-    Nasze założenie mówi, że <span class="inlinecode"><span class="id" title="var">g</span></span> znajduje się w którymś wierszu tabelki -
-    niech ma on numer <span class="inlinecode"><span class="id" title="var">n</span></span>. Wiemy jednak, że <span class="inlinecode"><span class="id" title="var">g</span></span> różni się od <span class="inlinecode"><span class="id" title="var">n</span></span>-tej
-    funkcji z tabelki na argumencie <span class="inlinecode"><span class="id" title="var">n</span></span>, gdyż zdefiniowaliśmy ją jako
-    negację tej właśnie komórki w tabelce. Dostajemy stąd równość <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>
-    <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">negb</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">n</span>)</span>, co po analizie przypadków sprowadza się do tego,
-    że <span class="inlinecode"><span class="id" title="var">true</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">false</span></span>.
+    Nasze założenie mówi, że <span class="inlinecode"><span class="id" title="var">diagonal</span></span> znajduje się w którymś wierszu
+    tabelki - niech ma on numer <span class="inlinecode"><span class="id" title="var">n</span></span>. Wiemy jednak, że <span class="inlinecode"><span class="id" title="var">g</span></span> różni się od
+    <span class="inlinecode"><span class="id" title="var">n</span></span>-tej funkcji z tabelki na argumencie <span class="inlinecode"><span class="id" title="var">n</span></span>, gdyż zdefiniowaliśmy ją
+    jako negację tej właśnie komórki w tabelce. Dostajemy stąd równość
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">diagonal</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">negb</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">n</span>)</span>, co po analizie przypadków daje
+    ostatecznie <span class="inlinecode"><span class="id" title="var">true</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">false</span></span> lub <span class="inlinecode"><span class="id" title="var">false</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">true</span></span>.
 
 <div class="paragraph"> </div>
 
@@ -6249,35 +6249,18 @@ Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
     z <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> w <span class="inlinecode">(<span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>? A w <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>? 
 <div class="paragraph"> </div>
 
-<a name="lab162"></a><h2 class="section">Uogólnione tw. Cantora w służbie ścisłej pozytywności</h2>
-
-<div class="paragraph"> </div>
-
  Poznawszy twierdzenie Cantora, możemy powrócić do ścisłej pozytywności,
     czyż nie? Otóż nie, bo twierdzenie Cantora jest biedne. Żeby czerpać
     garściami niebotyczne profity, musimy najpierw uogólnić je na dowolne
     dwa typy <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> znajdując kryterium mówiące, kiedy nie istnieje
     surjekcja z <span class="inlinecode"><span class="id" title="var">A</span></span> w <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>. 
-<div class="paragraph"> </div>
-
-<a name="lab163"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Uogólnij twierdzenie Cantora. Wskazówka: zadanie jest łatwe, gdyż
-    wszystko, czego ci potrzeba, zawarte jest już w zwykłym twierdzeniu
-    Cantora.
-
-<div class="paragraph"> </div>
-
-    POD ŻADNYM POZOREM NIE PATRZ NIŻEJ! 
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">Cantor'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>)) (<span class="id" title="var">modify</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">B</span>, <span class="id" title="var">modify</span> <span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">x</span>) -&gt; ~ <span class="id" title="var">surjective</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>)) (<span class="id" title="var">modify</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span>, <span class="id" title="var">modify</span> <span class="id" title="var">b</span> &lt;&gt; <span class="id" title="var">b</span>) -&gt; ~ <span class="id" title="var">surjective</span> <span class="id" title="var">f</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">surjective</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">f</span> <span class="id" title="var">modify</span> <span class="id" title="var">H</span> <span class="id" title="var">Hf</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">g</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">modify</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>)).<br/>
@@ -6288,332 +6271,197 @@ Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">attempt1</span>.<br/>
+</div>
+
+<div class="doc">
+Uogólnienie jest dość banalne. Najpierw zastępujemy <span class="inlinecode"><span class="id" title="var">nat</span></span> i <span class="inlinecode"><span class="id" title="var">bool</span></span> przez
+    dowolne typy <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span>. W oryginalnym twierdzeniu nie użyliśmy żadnej
+    właściwości liczb naturalnych, więc nie musimy szukać żadnych kryteriów
+    dla typu <span class="inlinecode"><span class="id" title="var">A</span></span>. Nasza tabelka może równie dobrze być indeksowana elementami
+    dowolnego typu - dalej jest to tabelka i dalej ma przekątną.
+
+<div class="paragraph"> </div>
+
+    Twierdzenie było jednak zależne od pewnej właściwości <span class="inlinecode"><span class="id" title="var">bool</span></span>, mianowicie
+    funkcja <span class="inlinecode"><span class="id" title="var">diagonal</span></span> była zdefiniowana jako negacja przekątnej. Było nam
+    jednak potrzeba po prostu funkcji, która dla każdego elementu z przekątnej
+    zwraca element <span class="inlinecode"><span class="id" title="var">bool</span></span> od niego różny. Ponieważ <span class="inlinecode"><span class="id" title="var">bool</span></span> ma dokładnie dwa
+    elementy, to negacja jest jedyną taką funkcją.
+
+<div class="paragraph"> </div>
+
+    Jednak w ogólnym przypadku dobra będzie dowolna <span class="inlinecode"><span class="id" title="var">B</span></span>-endofunkcja bez
+    punktów stałych. Ha! Nagły atak żargonu bezzębnych ryb, co? Zróbmy
+    krótką przerwę, żeby zbadać sposób komunikacji tych czarodziejskich
+    zwierząt pływających po uczelnianych korytarzach.
+
+<div class="paragraph"> </div>
+
+    Endofunkcja to funkcja, która ma taką samą dziedzinę i przeciwdziedzinę.
+    Można się zatem domyślać, że <span class="inlinecode"><span class="id" title="var">B</span></span>-endofunkcja to funkcja o typie <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>.
+    Punkt stały zaś to takie <span class="inlinecode"><span class="id" title="var">x</span></span>, że <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">x</span></span>. Jest to więc dokładnie ta
+    własność, której chcemy, żeby pożądana przez nas funkcja nie miała dla
+    żadnego <span class="inlinecode"><span class="id" title="var">x</span></span>. Jak widać, żargon bezzębnych ryb jest równie zwięzły jak
+    niepenetrowalny dla zwykłych śmiertelników.
+
+<div class="paragraph"> </div>
+
+    Podsumowując: w uogólnionym twierdzeniu Cantora nie wymagamy niczego od
+    <span class="inlinecode"><span class="id" title="var">A</span></span>, zaś od <span class="inlinecode"><span class="id" title="var">B</span></span> wymagamy tylko, żeby istniała funkcja <span class="inlinecode"><span class="id" title="var">modify</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>,
+    która spełnia <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span>,</span> <span class="inlinecode"><span class="id" title="var">modify</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode">&lt;&gt;</span> <span class="inlinecode"><span class="id" title="var">b</span></span>. Dowód twierdzenia jest taki
+    jak poprzednio, przy czym zastępujemy użycie <span class="inlinecode"><span class="id" title="var">negb</span></span> przez <span class="inlinecode"><span class="id" title="var">modify</span></span>. 
+<div class="paragraph"> </div>
+
+<a name="lab162"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Znajdź jedyny słuszny typ <span class="inlinecode"><span class="id" title="var">B</span></span>, dla którego nie istnieje żadna
+    <span class="inlinecode"><span class="id" title="var">B</span></span>-endofunkcja bez punktów stałych.
+
+<div class="paragraph"> </div>
+
+    Podpowiedź: to zadanie jest naprawdę proste i naprawdę istnieje jedyny
+    słuszny typ o tej właściwości.
+
+<div class="paragraph"> </div>
+
+    Pytanie (bardzo trudne): czy da się udowodnić w Coqu, że istnieje
+    dokładnie jeden taki typ? Jeżeli tak, to w jakim sensie typ ten
+    jest unikalny i jakich aksjomatów potrzeba do przepchnięcia dowodu? 
+</div>
+<div class="code">
+
+<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Jeden konstruktor negatywny - działa. 
+<a name="lab163"></a><h2 class="section">Dobro kontra zło: ścisła pozytywność vs negatywność</h2>
+
+<div class="paragraph"> </div>
+
+ Z Cantorem po naszej stronie możemy wreszcie kupić ruble... ekhem,
+    możemy wreszcie zaprezentować ogólną metodę dowodzenia, że negatywne
+    typy induktywne prowadzą do sprzeczności. Mimo szumnej nazwy ogólna
+    metoda nie jest aż taka ogólna i często będziemy musieli się bonusowo
+    napracować. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">wut</span>.<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Example1</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Otworzymy sobie nowy moduł, żeby nie zaśmiecać globalnej przestrzeni
+    nazw - wszystkie nasze złe typy będą się nazywały <span class="inlinecode"><span class="id" title="var">wut</span></span>. Przy okazji,
+    zdecydowanie powinieneś nabrać podejrzeń do tej nazwy - jeżeli coś w
+    tej książce nazywa się <span class="inlinecode"><span class="id" title="var">wut</span></span>, to musi to być złowrogie, podejrzane
+    paskudztwo. 
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Axioms</span><br/>
-&nbsp;&nbsp;(<span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">C</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">wut</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">ind</span> : <span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">H</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>, <span class="id" title="var">P</span> (<span class="id" title="var">C</span> <span class="id" title="var">f</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span>, <span class="id" title="var">P</span> <span class="id" title="var">w</span> |<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>, <span class="id" title="var">f</span> (<span class="id" title="var">C</span> <span class="id" title="var">g</span>) = <span class="id" title="var">H</span> <span class="id" title="var">g</span>}).<br/>
+&nbsp;&nbsp;(<span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">C</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, (<span class="id" title="var">wut</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">wut</span> <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">dcase</span> : <span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">wut</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PC</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">wut</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>, <span class="id" title="var">P</span> (<span class="id" title="var">C</span> <span class="id" title="var">f</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span> <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">w</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : <span class="id" title="var">wut</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>, <span class="id" title="var">f</span> (<span class="id" title="var">C</span> <span class="id" title="var">g</span>) = <span class="id" title="var">PC</span> <span class="id" title="var">g</span>}).<br/>
 
 <br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> : <span class="id" title="var">bool</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">f</span> (<span class="id" title="var">w</span> : <span class="id" title="var">wut</span>) : <span class="id" title="var">bool</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">w</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C</span> <span class="id" title="var">f'</span> =&gt; <span class="id" title="var">f'</span> <span class="id" title="var">w</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="var">f</span> (<span class="id" title="var">C</span> <span class="id" title="var">f</span>).<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">wut</span></span> to aksjomatyczne kodowanie tego samego typu, a którym poprzednio
+    tylko udawaliśmy, że istnieje. Zauważmy, że nie jest nam potrzebna
+    reguła indukcji - wystarczy jeden z prostszych eliminatorów, mianowicie
+    <span class="inlinecode"><span class="id" title="var">dcase</span></span>, czyli zależna reguła analizy przypadków. 
+</div>
+<div class="code">
 
 <br/>
-<span class="comment">(*&nbsp;===&gt;&nbsp;f&nbsp;(C&nbsp;f)&nbsp;=&nbsp;f&nbsp;(C&nbsp;f)&nbsp;=&nbsp;f&nbsp;(C&nbsp;f)&nbsp;*)</span><br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> : <span class="id" title="var">wut</span> -&gt; (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">wut</span> <span class="id" title="var">A</span> -&gt; (<span class="id" title="var">wut</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">dcase</span> <span class="id" title="var">A</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">wut</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>)).<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_sur</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>, <span class="id" title="tactic">exists</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span>, <span class="id" title="var">bad</span> <span class="id" title="var">w</span> = <span class="id" title="var">f</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">C</span> <span class="id" title="var">f</span>). <span class="id" title="tactic">apply</span> <span class="id" title="var">e</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">have_mercy_plx</span> : <span class="id" title="var">False</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">diagonal</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">w</span> =&gt; <span class="id" title="var">negb</span> (<span class="id" title="var">bad</span> <span class="id" title="var">w</span> <span class="id" title="var">w</span>)).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">bad_sur</span> <span class="id" title="var">diagonal</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">diagonal</span>, <span class="id" title="var">bad</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">x0</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>); <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">attempt1</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">attempt2</span>.<br/>
-
-<br/>
 </div>
 
 <div class="doc">
-Dwa konstruktory negatywne - działa. 
+Dlaczego typ <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest nielegalny, a jego definicja za pomocą komendy
+    <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> jest odrzucana przez Coqa? Poza wspomnianymi w poprzednim
+    podrozdziale problemami filozoficznymi wynikającymi z nieterminacji,
+    jest też drugi, bardziej namacalny powód: istnienie typu <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest
+    sprzeczne z (uogólnionym) twierdzeniem Cantora.
+
+<div class="paragraph"> </div>
+
+    Powód tej sprzeczności jest dość prozaiczny: za pomocą konstruktora <span class="inlinecode"><span class="id" title="var">C</span></span>
+    możemy z dowolnej funkcji <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> zrobić element <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>, a skoro
+    tak, to dowolne <span class="inlinecode"><span class="id" title="var">w</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> możemy odpakować i wyjąć z niego funkcję
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span>. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C0</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">wut</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C1</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">nat</span>) -&gt; <span class="id" title="var">wut</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Axioms</span><br/>
-&nbsp;&nbsp;(<span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">C0</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">wut</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">C1</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">nat</span>) -&gt; <span class="id" title="var">wut</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">ind</span> : <span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PC0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>, <span class="id" title="var">P</span> (<span class="id" title="var">C0</span> <span class="id" title="var">f</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PC1</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> (<span class="id" title="var">C1</span> <span class="id" title="var">f</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span>, <span class="id" title="var">P</span> <span class="id" title="var">w</span> |<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>, <span class="id" title="var">f</span> (<span class="id" title="var">C0</span> <span class="id" title="var">g</span>) = <span class="id" title="var">PC0</span> <span class="id" title="var">g</span>) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> (<span class="id" title="var">C1</span> <span class="id" title="var">g</span>) = <span class="id" title="var">PC1</span> <span class="id" title="var">g</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-&nbsp;&nbsp;).<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">wut</span> -&gt; (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">true</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_sur</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">f</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>), <span class="id" title="tactic">exists</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span>, <span class="id" title="var">bad</span> <span class="id" title="var">w</span> = <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">surjective</span> (<span class="id" title="var">bad</span> <span class="id" title="var">A</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> (<span class="id" title="var">g</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">C0</span> <span class="id" title="var">f</span>). <span class="id" title="tactic">apply</span> <span class="id" title="var">H1</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Cantor_ty_dziwko</span> : <span class="id" title="var">False</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">bad_sur</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span> =&gt; <span class="id" title="var">negb</span> (<span class="id" title="var">bad</span> <span class="id" title="var">w</span> <span class="id" title="var">w</span>))).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">x0</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>); <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">attempt2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">attempt3</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Jeden konstruktor negatywny z argumentem indukcyjnym w
-    przeciwdziedzinie i drugi konstruktor normalny. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C0</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>) -&gt; <span class="id" title="var">wut</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C1</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">wut</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Axioms</span><br/>
-&nbsp;&nbsp;(<span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">C0</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>) -&gt; <span class="id" title="var">wut</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">C1</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">wut</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">ind</span> : <span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PC0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>, <span class="id" title="var">P</span> (<span class="id" title="var">C0</span> <span class="id" title="var">f</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PC1</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> (<span class="id" title="var">C1</span> <span class="id" title="var">n</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span>, <span class="id" title="var">P</span> <span class="id" title="var">w</span> |<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>, <span class="id" title="var">f</span> (<span class="id" title="var">C0</span> <span class="id" title="var">g</span>) = <span class="id" title="var">PC0</span> <span class="id" title="var">g</span>) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> (<span class="id" title="var">C1</span> <span class="id" title="var">n</span>) = <span class="id" title="var">PC1</span> <span class="id" title="var">n</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-&nbsp;&nbsp;).<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">wut</span> -&gt; (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">_</span> <span class="id" title="var">w</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">w</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_sur</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">f</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>), <span class="id" title="tactic">exists</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span>, <span class="id" title="var">bad</span> <span class="id" title="var">w</span> = <span class="id" title="var">f</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> (<span class="id" title="var">g</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">C0</span> <span class="id" title="var">f</span>). <span class="id" title="tactic">apply</span> <span class="id" title="var">H1</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="tactic">change</span> (<span class="id" title="var">w</span> : <span class="id" title="var">wut</span>) : <span class="id" title="var">wut</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">w</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">wut</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">exact</span> (<span class="id" title="var">C1</span> 0).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">C1</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)).<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">change_neq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span>, <span class="id" title="tactic">change</span> <span class="id" title="var">w</span> &lt;&gt; <span class="id" title="var">w</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="tactic">change</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> (<span class="id" title="var">g</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H1</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="var">admit</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="tactic">change</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> (<span class="id" title="var">g</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H2</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="var">admit</span>.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">behemot_atakuje</span> : <span class="id" title="var">False</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">bad_sur</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span> =&gt; <span class="id" title="tactic">change</span> (<span class="id" title="var">bad</span> <span class="id" title="var">w</span> <span class="id" title="var">w</span>))).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">change_neq</span> (<span class="id" title="var">x0</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>)).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">attempt3</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">attempt4</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Pewnie najgorsze bydle. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>) -&gt; <span class="id" title="var">wut</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Axioms</span><br/>
-&nbsp;&nbsp;(<span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">C</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>) -&gt; <span class="id" title="var">wut</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">ind</span> : <span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PC</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>, <span class="id" title="var">P</span> (<span class="id" title="var">C</span> <span class="id" title="var">f</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span>, <span class="id" title="var">P</span> <span class="id" title="var">w</span> |<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>, <span class="id" title="var">f</span> (<span class="id" title="var">C</span> <span class="id" title="var">g</span>) = <span class="id" title="var">PC</span> <span class="id" title="var">g</span>}).<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">wut</span> -&gt; (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_sur</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">f</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>), <span class="id" title="tactic">exists</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span>, <span class="id" title="var">bad</span> <span class="id" title="var">w</span> = <span class="id" title="var">f</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> (<span class="id" title="var">g</span> &amp; <span class="id" title="var">H</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">surjective</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">dcase</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">g</span> <span class="id" title="var">H</span>].<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">C</span> <span class="id" title="var">f</span>). <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="tactic">change</span> : <span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">wut</span>)).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">exact</span> (<span class="id" title="var">C</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">w</span> =&gt; <span class="id" title="var">C</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">v</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">v</span>))).<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">change_neq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">w</span> : <span class="id" title="var">wut</span>, <span class="id" title="tactic">change</span> <span class="id" title="var">w</span> &lt;&gt; <span class="id" title="var">w</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="tactic">change</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> (<span class="id" title="var">g</span> &amp; <span class="id" title="var">eq</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">eq</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">behemot_atakuje</span> : <span class="id" title="var">False</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-<span class="id" title="keyword">Abort</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">attempt4</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab164"></a><h4 class="section">Ćwiczenie</h4>
-
+Skoro możemy włożyć dowolną funkcję, to możemy także wyjąć dowolną
+    funkcję, a zatem mamy do czynienia z surjekcją. 
 </div>
 <div class="code">
 
 <br/>
-<span class="comment">(*&nbsp;Inductive&nbsp;T&nbsp;:&nbsp;Type&nbsp;:=&nbsp;*)</span><br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">worst</span> : <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Cantor'</span> (<span class="id" title="var">bad</span> <span class="id" title="var">bool</span>) <span class="id" title="var">negb</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">inversion</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">bad_sur</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
-    pozytywności. Jeżeli tak, narysuj wesołego jeża. Jeżeli nie, napisz
-    zapętlającą się funkcję podobną do <span class="inlinecode"><span class="id" title="var">loop</span></span>. Następnie sprawdź w Coqu,
-    czy udzieliłeś poprawnej odpowiedzi.
-<ul class="doclist">
-<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+W połączeniu zaś z twierdzeniem Cantora surjekcja <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span>)</span>
+    prowadzi do sprzeczności - wystarczy za <span class="inlinecode"><span class="id" title="var">A</span></span> wstawić <span class="inlinecode"><span class="id" title="var">bool</span></span>. 
+</div>
+<div class="code">
 
-</li>
-<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C2</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Example1</span>.<br/>
 
-</li>
-<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C3</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+<br/>
+</div>
 
-</li>
-<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C4</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+<div class="doc">
+Przykład może ci się jednak wydać niezadowalający - typ <span class="inlinecode"><span class="id" title="var">wut</span></span> jest
+    przecież dość nietypowy, bo ma tylko jeden konstruktor. A co, gdy
+    konstruktorów jest więcej?
 
-</li>
-<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C5</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+<div class="paragraph"> </div>
 
-</li>
-<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C6</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
-
-</li>
-<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C7</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode">(<span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
-
-</li>
-<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C8</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode">(<span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
-
-</li>
-<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C9</span></span> <span class="inlinecode">:</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
-
-</li>
-<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C10</span></span> <span class="inlinecode">:</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode">(<span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>)</span> <span class="inlinecode">(<span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>),</span> <span class="inlinecode"><span class="id" title="var">A</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
-
-</li>
-<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C11</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span>
-                  <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">C</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> 
-</li>
-</ul>
-
+    TODO 
 </div>
 <div class="code">
 
@@ -6623,7 +6471,7 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
 </div>
 
 <div class="doc">
-<a name="lab165"></a><h2 class="section">Paradoks Russella i paradoks Girarda (TODO)</h2>
+<a name="lab164"></a><h2 class="section">Paradoks Russella i paradoks Girarda (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -6647,259 +6495,12 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">Uniwersum</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Axioms</span><br/>
-&nbsp;&nbsp;(<span class="id" title="var">U</span> : <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">El</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-<br/>
-&nbsp;&nbsp;(<span class="id" title="var">Empty</span> : <span class="id" title="var">U</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">Unit</span> : <span class="id" title="var">U</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">Nat</span> : <span class="id" title="var">U</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">Pi</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>), <span class="id" title="var">U</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">Sigma</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>), <span class="id" title="var">U</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">UU</span> : <span class="id" title="var">U</span>)<br/>
-<br/>
-&nbsp;&nbsp;(<span class="id" title="var">El_Empty</span> : <span class="id" title="var">El</span> <span class="id" title="var">Empty</span> = <span class="id" title="var">Empty_set</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">El_Unit</span> : <span class="id" title="var">El</span> <span class="id" title="var">Unit</span> = <span class="id" title="var">unit</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">El_Nat</span> : <span class="id" title="var">El</span> <span class="id" title="var">Nat</span> = <span class="id" title="var">nat</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">El_Pi</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">El</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) = <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span>), <span class="id" title="var">El</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>))<br/>
-&nbsp;&nbsp;(<span class="id" title="var">El_Sigma</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">El</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) = {<span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> &amp; <span class="id" title="var">El</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>)})<br/>
-&nbsp;&nbsp;(<span class="id" title="var">El_UU</span> : <span class="id" title="var">El</span> <span class="id" title="var">UU</span> = <span class="id" title="var">U</span>)<br/>
-<br/>
-&nbsp;&nbsp;(<span class="id" title="var">ind</span> : <span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PEmpty</span> : <span class="id" title="var">P</span> <span class="id" title="var">Empty</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PUnit</span> : <span class="id" title="var">P</span> <span class="id" title="var">Unit</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PNat</span> : <span class="id" title="var">P</span> <span class="id" title="var">Nat</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PPi</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">A</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span>, <span class="id" title="var">P</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PSigma</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">A</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span>, <span class="id" title="var">P</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">Sigma</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PUU</span> : <span class="id" title="var">P</span> <span class="id" title="var">UU</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="var">U</span>, <span class="id" title="var">P</span> <span class="id" title="var">A</span> |<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">Empty</span> = <span class="id" title="var">PEmpty</span>) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">Unit</span> = <span class="id" title="var">PUnit</span>) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">Nat</span> = <span class="id" title="var">PNat</span>) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">PPi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> (<span class="id" title="var">f</span> <span class="id" title="var">A</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">f</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>))) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">Sigma</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">PSigma</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> (<span class="id" title="var">f</span> <span class="id" title="var">A</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">f</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>))) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">UU</span> = <span class="id" title="var">PUU</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> : <span class="id" title="var">U</span> -&gt; (<span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;1-3,6: <span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">u</span> : <span class="id" title="var">U</span> =&gt; <span class="id" title="var">u</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>. <span class="id" title="var">revert</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">A</span> : <span class="id" title="var">U</span> =&gt; (<span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>) -&gt; (<span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>))).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-5: <span class="id" title="tactic">intros</span>; <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">El_UU</span> <span class="id" title="tactic">in</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">homotopiczny_czarodziej</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) (<span class="id" title="var">u</span> : <span class="id" title="var">P</span> <span class="id" title="var">y</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_rect</span> <span class="id" title="var">x</span> <span class="id" title="var">P</span> (@<span class="id" title="var">eq_rect_r</span> <span class="id" title="var">A</span> <span class="id" title="var">y</span> <span class="id" title="var">P</span> <span class="id" title="var">u</span> <span class="id" title="var">x</span> <span class="id" title="var">p</span>) <span class="id" title="var">y</span> <span class="id" title="var">p</span> = <span class="id" title="var">u</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_sur</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>, <span class="id" title="tactic">exists</span> <span class="id" title="var">u</span> : <span class="id" title="var">U</span>, <span class="id" title="var">f</span> = <span class="id" title="var">bad</span> <span class="id" title="var">u</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">g</span> <span class="id" title="var">H</span>]; <span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">H</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">h</span> <span class="id" title="var">H'</span>]; <span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">H'</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">H'</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">f'</span> := <span class="id" title="var">eq_rect_r</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">T</span> : <span class="id" title="keyword">Type</span> =&gt; <span class="id" title="var">T</span> -&gt; <span class="id" title="var">U</span>) <span class="id" title="var">f</span> <span class="id" title="var">El_UU</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">UU</span> <span class="id" title="var">f'</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H3</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H11</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">f'</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">homotopiczny_czarodziej</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="tactic">change</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">Nat</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">intros</span>; <span class="id" title="tactic">exact</span> <span class="id" title="var">Empty</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">help</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="var">nat</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> 0.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> 1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> 2.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">exact</span> 3.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">exact</span> 4.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> 5.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Ltac</span> <span class="id" title="var">help</span> <span class="id" title="var">H</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">help</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">unfold</span> <span class="id" title="var">help</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">help</span> <span class="id" title="var">Hhelp</span>];<br/>
-&nbsp;&nbsp;<span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">Hhelp</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">Hhelp</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">congruence</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">change_neq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">u</span> : <span class="id" title="var">U</span>, <span class="id" title="tactic">change</span> <span class="id" title="var">u</span> &lt;&gt; <span class="id" title="var">u</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>; <span class="id" title="tactic">unfold</span> <span class="id" title="tactic">change</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">f</span> <span class="id" title="var">H</span>]; <span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">H</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">H</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>; <span class="id" title="tactic">try</span> <span class="id" title="var">help</span> <span class="id" title="var">H</span>; <span class="id" title="var">help</span> <span class="id" title="var">H6</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">Russel_Girard</span> : <span class="id" title="var">False</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">bad_sur</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">u</span> : <span class="id" title="var">U</span> =&gt; <span class="id" title="tactic">change</span> (<span class="id" title="var">bad</span> <span class="id" title="var">u</span> <span class="id" title="var">u</span>))).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">change_neq</span> (<span class="id" title="var">x0</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>)).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">Uniwersum</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">Russel_Girard</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Uproszczona wersja paradoksu - tylko U i Pi. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Axioms</span><br/>
-&nbsp;&nbsp;(<span class="id" title="var">U</span> : <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">El</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-<br/>
-&nbsp;&nbsp;(<span class="id" title="var">Pi</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>), <span class="id" title="var">U</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">UU</span> : <span class="id" title="var">U</span>)<br/>
-<br/>
-&nbsp;&nbsp;(<span class="id" title="var">El_Pi</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">El</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) = <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span>), <span class="id" title="var">El</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>))<br/>
-&nbsp;&nbsp;(<span class="id" title="var">El_UU</span> : <span class="id" title="var">El</span> <span class="id" title="var">UU</span> = <span class="id" title="var">U</span>)<br/>
-<br/>
-&nbsp;&nbsp;(<span class="id" title="var">ind</span> : <span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PPi</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">A</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span>, <span class="id" title="var">P</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PUU</span> : <span class="id" title="var">P</span> <span class="id" title="var">UU</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="var">U</span>, <span class="id" title="var">P</span> <span class="id" title="var">A</span> |<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">PPi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> (<span class="id" title="var">f</span> <span class="id" title="var">A</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">f</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>))) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">UU</span> = <span class="id" title="var">PUU</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> : <span class="id" title="var">U</span> -&gt; (<span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>. <span class="id" title="var">revert</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">A</span> : <span class="id" title="var">U</span> =&gt; (<span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>) -&gt; (<span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>))).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>; <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">El_UU</span> <span class="id" title="tactic">in</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">u</span> =&gt; <span class="id" title="var">u</span>).<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">homotopiczny_czarodziej</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) (<span class="id" title="var">u</span> : <span class="id" title="var">P</span> <span class="id" title="var">y</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_rect</span> <span class="id" title="var">x</span> <span class="id" title="var">P</span> (@<span class="id" title="var">eq_rect_r</span> <span class="id" title="var">A</span> <span class="id" title="var">y</span> <span class="id" title="var">P</span> <span class="id" title="var">u</span> <span class="id" title="var">x</span> <span class="id" title="var">p</span>) <span class="id" title="var">y</span> <span class="id" title="var">p</span> = <span class="id" title="var">u</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_sur</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>, <span class="id" title="tactic">exists</span> <span class="id" title="var">u</span> : <span class="id" title="var">U</span>, <span class="id" title="var">f</span> = <span class="id" title="var">bad</span> <span class="id" title="var">u</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">g</span> <span class="id" title="var">H</span>]; <span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">H</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">h</span> <span class="id" title="var">H'</span>]; <span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">H'</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">H'</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">f'</span> := <span class="id" title="var">eq_rect_r</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">T</span> : <span class="id" title="keyword">Type</span> =&gt; <span class="id" title="var">T</span> -&gt; <span class="id" title="var">U</span>) <span class="id" title="var">f</span> <span class="id" title="var">El_UU</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">UU</span> <span class="id" title="var">f'</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H2</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">f'</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">homotopiczny_czarodziej</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="tactic">change</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">UU</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">UU</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">UU</span>)).<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">help</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="var">bool</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">true</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">false</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Ltac</span> <span class="id" title="var">help</span> <span class="id" title="var">H</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">help</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">unfold</span> <span class="id" title="var">help</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">help</span> <span class="id" title="var">Hhelp</span>];<br/>
-&nbsp;&nbsp;<span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">Hhelp</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">Hhelp</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">congruence</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">change_neq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">u</span> : <span class="id" title="var">U</span>, <span class="id" title="tactic">change</span> <span class="id" title="var">u</span> &lt;&gt; <span class="id" title="var">u</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>; <span class="id" title="tactic">unfold</span> <span class="id" title="tactic">change</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">f</span> <span class="id" title="var">H</span>]; <span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">H</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">H</span>;<br/>
-&nbsp;&nbsp;<span class="id" title="var">help</span> <span class="id" title="var">H1</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">Russel_Girard_simplified</span> : <span class="id" title="var">False</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">bad_sur</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">u</span> : <span class="id" title="var">U</span> =&gt; <span class="id" title="tactic">change</span> (<span class="id" title="var">bad</span> <span class="id" title="var">u</span> <span class="id" title="var">u</span>))).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>); <span class="id" title="tactic">clear</span> <span class="id" title="var">a</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">change_neq</span> (<span class="id" title="var">x0</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>)).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">Russel_Girard</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab166"></a><h1 class="section">Podsumowanie</h1>
+<a name="lab165"></a><h1 class="section">Podsumowanie</h1>
 
 <div class="paragraph"> </div>
 

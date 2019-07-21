@@ -4544,7 +4544,7 @@ End ind_rec_2.
 (** Wymyśl jakiś sensowny przykład praktycznego zastosowania
     indukcji-indukcji-rekursji. *)
 
-(** * Dobre i złe typy induktywne *)
+(** * Dobre, złe i podejrzane typy induktywne *)
 
 (** Poznana przez nas dotychczas definicja typów induktywnych (oraz wszelkich
     ich ulepszeń, jak indukcja-indukcja, indukcja-rekursja etc.) jest
@@ -4553,10 +4553,10 @@ End ind_rec_2.
     faktycznie jest praworządnym obywatelem krainy typów induktywnych. *)
 
 (** Na szczęście typy induktywne to istoty bardzo prostolinijne, zaś te złe
-    można odróżnich od tych dobrych gołym okiem, za pomocą bardzo prostego
+    można odróżnić od tych dobrych gołym okiem, za pomocą bardzo prostego
     kryterium: złe typy induktywne to te, które nie są ściśle pozytywne.
     Zanim jednak dowiemy się, jak rozpoznawać złe typy, poznajmy najpierw
-    dwa powody, dla przez które złe typy induktywne są złe. *)
+    dwa powody, przez które złe typy induktywne są złe. *)
 
 (** ** Nieterminacja jako źródło zła na świecie *)
 
@@ -4794,10 +4794,10 @@ Theorem Cantor :
   forall f : nat -> (nat -> bool), ~ surjective f.
 Proof.
   unfold surjective. intros f Hf.
-  pose (g := fun n : nat => negb (f n n)).
-  destruct (Hf g) as [n Hn].
+  pose (diagonal := fun n : nat => negb (f n n)).
+  destruct (Hf diagonal) as [n Hn].
   apply (f_equal (fun h : nat -> bool => h n)) in Hn.
-  unfold g in Hn. destruct (f n n); inversion Hn.
+  unfold diagonal in Hn. destruct (f n n); inversion Hn.
 Qed.
 
 (** Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
@@ -4839,17 +4839,17 @@ Qed.
     ujawnia się geniuszalność Cantora: użyjemy metody przekątniowej,
     czyli spojrzymy na przekątną naszej tabelki.
 
-    Definiujemy więc nową funkcję [g : nat -> bool] następująco: dla
-    argumentu [n : nat] bierzemy funkcję z [n]-tego wiersza w tabelce,
+    Definiujemy więc nową funkcję [diagonal : nat -> bool] następująco:
+    dla argumentu [n : nat] bierzemy funkcję z [n]-tego wiersza w tabelce,
     patrzymy na [n]-tą kolumnę, czyli na wartość funkcji na argumencie
     [n], i zwracamy negację tego, co tam znajdziemy. Czujesz sprzeczność?
 
-    Nasze założenie mówi, że [g] znajduje się w którymś wierszu tabelki -
-    niech ma on numer [n]. Wiemy jednak, że [g] różni się od [n]-tej
-    funkcji z tabelki na argumencie [n], gdyż zdefiniowaliśmy ją jako
-    negację tej właśnie komórki w tabelce. Dostajemy stąd równość [f n n
-    = g n = negb (f n n)], co po analizie przypadków sprowadza się do tego,
-    że [true = false].
+    Nasze założenie mówi, że [diagonal] znajduje się w którymś wierszu
+    tabelki - niech ma on numer [n]. Wiemy jednak, że [g] różni się od
+    [n]-tej funkcji z tabelki na argumencie [n], gdyż zdefiniowaliśmy ją
+    jako negację tej właśnie komórki w tabelce. Dostajemy stąd równość
+    [f n n = diagonal n = negb (f n n)], co po analizie przypadków daje
+    ostatecznie [true = false] lub [false = true].
 
     Voilà! Sprzeczność osiągnięta, a zatem początkowe założenie było
     błędne i nie istnieje żadna surjekcja z [nat] w [nat -> bool]. *)
@@ -4859,25 +4859,15 @@ Qed.
 (** Udowodnij, że nie ma surjekcji z [nat] w [nat -> nat]. Czy jest surjekcja
     z [nat -> bool] w [(nat -> bool) -> bool]? A w [nat -> bool -> bool]? *)
 
-(** ** Uogólnione tw. Cantora w służbie ścisłej pozytywności *)
-
 (** Poznawszy twierdzenie Cantora, możemy powrócić do ścisłej pozytywności,
     czyż nie? Otóż nie, bo twierdzenie Cantora jest biedne. Żeby czerpać
     garściami niebotyczne profity, musimy najpierw uogólnić je na dowolne
     dwa typy [A] i [B] znajdując kryterium mówiące, kiedy nie istnieje
     surjekcja z [A] w [A -> B]. *)
 
-(** **** Ćwiczenie *)
-
-(** Uogólnij twierdzenie Cantora. Wskazówka: zadanie jest łatwe, gdyż
-    wszystko, czego ci potrzeba, zawarte jest już w zwykłym twierdzeniu
-    Cantora.
-
-    POD ŻADNYM POZOREM NIE PATRZ NIŻEJ! *)
-
 Theorem Cantor' :
-  forall (A B : Type) (f : A -> (A -> B)) (modify : B -> B),
-    (forall x : B, modify x <> x) -> ~ surjective f.
+  forall {A B : Type} (f : A -> (A -> B)) (modify : B -> B),
+    (forall b : B, modify b <> b) -> ~ surjective f.
 Proof.
   unfold surjective. intros A B f modify H Hf.
   pose (g := fun x : A => modify (f x x)).
@@ -4887,9 +4877,279 @@ Proof.
   symmetry. assumption.
 Qed.
 
-Module attempt1.
+(** Uogólnienie jest dość banalne. Najpierw zastępujemy [nat] i [bool] przez
+    dowolne typy [A] i [B]. W oryginalnym twierdzeniu nie użyliśmy żadnej
+    właściwości liczb naturalnych, więc nie musimy szukać żadnych kryteriów
+    dla typu [A]. Nasza tabelka może równie dobrze być indeksowana elementami
+    dowolnego typu - dalej jest to tabelka i dalej ma przekątną.
 
-(** Jeden konstruktor negatywny - działa. *)
+    Twierdzenie było jednak zależne od pewnej właściwości [bool], mianowicie
+    funkcja [diagonal] była zdefiniowana jako negacja przekątnej. Było nam
+    jednak potrzeba po prostu funkcji, która dla każdego elementu z przekątnej
+    zwraca element [bool] od niego różny. Ponieważ [bool] ma dokładnie dwa
+    elementy, to negacja jest jedyną taką funkcją.
+
+    Jednak w ogólnym przypadku dobra będzie dowolna [B]-endofunkcja bez
+    punktów stałych. Ha! Nagły atak żargonu bezzębnych ryb, co? Zróbmy
+    krótką przerwę, żeby zbadać sposób komunikacji tych czarodziejskich
+    zwierząt pływających po uczelnianych korytarzach.
+
+    Endofunkcja to funkcja, która ma taką samą dziedzinę i przeciwdziedzinę.
+    Można się zatem domyślać, że [B]-endofunkcja to funkcja o typie [B -> B].
+    Punkt stały zaś to takie [x], że [f x = x]. Jest to więc dokładnie ta
+    własność, której chcemy, żeby pożądana przez nas funkcja nie miała dla
+    żadnego [x]. Jak widać, żargon bezzębnych ryb jest równie zwięzły jak
+    niepenetrowalny dla zwykłych śmiertelników.
+
+    Podsumowując: w uogólnionym twierdzeniu Cantora nie wymagamy niczego od
+    [A], zaś od [B] wymagamy tylko, żeby istniała funkcja [modify : B -> B],
+    która spełnia [forall b : B, modify b <> b]. Dowód twierdzenia jest taki
+    jak poprzednio, przy czym zastępujemy użycie [negb] przez [modify]. *)
+
+(** **** Ćwiczenie *)
+
+(** Znajdź jedyny słuszny typ [B], dla którego nie istnieje żadna
+    [B]-endofunkcja bez punktów stałych.
+
+    Podpowiedź: to zadanie jest naprawdę proste i naprawdę istnieje jedyny
+    słuszny typ o tej właściwości.
+
+    Pytanie (bardzo trudne): czy da się udowodnić w Coqu, że istnieje
+    dokładnie jeden taki typ? Jeżeli tak, to w jakim sensie typ ten
+    jest unikalny i jakich aksjomatów potrzeba do przepchnięcia dowodu? *)
+
+(* begin hide *)
+
+Lemma unit_unique_type_without_endofunction_without_fixpoints :
+  (forall {A : Type} (x y : A), {x = y} + {x <> y}) ->
+  forall A : Type,
+    (forall f : A -> A, exists x : A, f x = x) ->
+      exists (f : A -> unit) (g : unit -> A),
+        (forall x : A, g (f x) = x).
+Proof.
+  intros K A H.
+  destruct (H (fun x : A => x)) as [x eq].
+  exists (fun _ => tt), (fun _ => x).
+  intro y.
+  pose (f := fun a : A =>
+    match K A a x with
+        | left _ => y
+        | _ => x
+    end).
+  specialize (H f).
+  destruct H as [z H].
+  unfold f in H.
+  destruct (K A z x); congruence.
+Qed.
+
+(* end hide *)
+
+(** ** Dobro kontra zło: ścisła pozytywność vs negatywność *)
+
+(** Z Cantorem po naszej stronie możemy wreszcie kupić ruble... ekhem,
+    możemy wreszcie zaprezentować ogólną metodę dowodzenia, że negatywne
+    typy induktywne prowadzą do sprzeczności. Mimo szumnej nazwy ogólna
+    metoda nie jest aż taka ogólna i często będziemy musieli się bonusowo
+    napracować. *)
+
+Module Example1.
+
+(** Otworzymy sobie nowy moduł, żeby nie zaśmiecać globalnej przestrzeni
+    nazw - wszystkie nasze złe typy będą się nazywały [wut]. Przy okazji,
+    zdecydowanie powinieneś nabrać podejrzeń do tej nazwy - jeżeli coś w
+    tej książce nazywa się [wut], to musi to być złowrogie, podejrzane
+    paskudztwo. *)
+
+Axioms
+  (wut : Type -> Type)
+  (C : forall {A : Type}, (wut A -> A) -> wut A)
+  (dcase : forall
+    (A : Type)
+    (P : wut A -> Type)
+    (PC : forall f : wut A -> A, P (C f)),
+      {f : forall w : wut A, P w |
+        forall g : wut A -> A, f (C g) = PC g}).
+
+(** [wut] to aksjomatyczne kodowanie tego samego typu, a którym poprzednio
+    tylko udawaliśmy, że istnieje. Zauważmy, że nie jest nam potrzebna
+    reguła indukcji - wystarczy jeden z prostszych eliminatorów, mianowicie
+    [dcase], czyli zależna reguła analizy przypadków. *)
+
+Definition bad (A : Type) : wut A -> (wut A -> A).
+Proof.
+  apply (dcase A (fun _ => wut A -> A)).
+  intro f. exact f.
+Defined.
+
+(** Dlaczego typ [wut A] jest nielegalny, a jego definicja za pomocą komendy
+    [Inductive] jest odrzucana przez Coqa? Poza wspomnianymi w poprzednim
+    podrozdziale problemami filozoficznymi wynikającymi z nieterminacji,
+    jest też drugi, bardziej namacalny powód: istnienie typu [wut A] jest
+    sprzeczne z (uogólnionym) twierdzeniem Cantora.
+
+    Powód tej sprzeczności jest dość prozaiczny: za pomocą konstruktora [C]
+    możemy z dowolnej funkcji [wut A -> A] zrobić element [wut A], a skoro
+    tak, to dowolne [w : wut A] możemy odpakować i wyjąć z niego funkcję
+    [f : wut A -> A]. *)
+
+Lemma bad_sur :
+  forall A : Type, surjective (bad A).
+Proof.
+  unfold surjective. intros A f.
+  unfold bad. destruct (dcase _) as [g H].
+  exists (C f). apply H.
+Qed.
+
+(** Skoro możemy włożyć dowolną funkcję, to możemy także wyjąć dowolną
+    funkcję, a zatem mamy do czynienia z surjekcją. *)
+
+Lemma worst : False.
+Proof.
+  apply (Cantor' (bad bool) negb).
+    destruct b; inversion 1.
+    apply bad_sur.
+Qed.
+
+(** W połączeniu zaś z twierdzeniem Cantora surjekcja [wut A -> (wut A -> A)]
+    prowadzi do sprzeczności - wystarczy za [A] wstawić [bool]. *)
+
+End Example1.
+
+(** Przykład może ci się jednak wydać niezadowalający - typ [wut] jest
+    przecież dość nietypowy, bo ma tylko jeden konstruktor. A co, gdy
+    konstruktorów jest więcej?
+
+    TODO *)
+
+(* begin hide *)
+Module wuut.
+
+Theorem Cantor'' :
+  forall {A B : Type} (f : A -> option (A -> B)),
+    B -> ~ surjective f.
+Proof.
+  unfold surjective. intros A B f b H.
+  destruct (H (Some (fun _ => b))) as [a eq].
+  pose (diagonal a :=
+    match f a with
+        | Some g => g a
+        | _ => ltac:(congruence)
+    end).
+  destruct (H (Some diagonal)) as [a' eq'].
+  unfold diagonal in eq'.
+  
+  apply (f_equal (fun x =>
+    match x with
+        | Some g => g a
+        | None => b
+    end)) in eq'.
+  rewrite eq in eq'.
+  
+Abort.
+
+Axiom
+  (Term : Type -> Type)
+  (Var : forall {V : Type}, V -> Term V)
+  (Lam : forall {V : Type}, (Term V -> Term V) -> Term V)
+  (App : forall {V : Type}, Term V -> Term V -> Term V)
+  (case : forall
+    (V : Type)
+    (P : Term V -> Type)
+    (PVar : forall v : V, P (Var v))
+    (PLam : forall g : Term V -> Term V, P (Lam g))
+    (PApp : forall t1 t2 : Term V, P (App t1 t2)),
+      {f : forall t : Term V, P t |
+        (forall v : V, f (Var v) = PVar v) /\
+        (forall g : Term V -> Term V, f (Lam g) = PLam g) /\
+        (forall t1 t2 : Term V, f (App t1 t2) = PApp t1 t2)}).
+
+Definition bad {V : Type} : Term V -> (Term V -> Term V).
+Proof.
+  apply (case _ (fun _ => Term V -> Term V)).
+    intros _. exact id.
+    intro f. exact f.
+    intros _ _. exact id.
+Defined.
+
+Lemma worst : False.
+Proof.
+  eapply (Cantor' (@bad unit)). Unshelve. all: cycle 1.
+    red. intro f. exists (Lam f). unfold bad. destruct (case _).
+      decompose [and] a. apply H1.
+    apply case; intros.
+      exact (App (Var tt) (Var tt)).
+      exact (Var tt).
+      exact (Var tt).
+    apply case; cbn; intros;
+    destruct (case _) as [f H];
+    decompose [and] H; clear H;
+    rewrite ?H0, ?H2, ?H3.
+Abort.
+
+End wuut.
+
+Module woed.
+
+Fail Inductive harder : Type :=
+    | C : ((harder -> nat) -> nat) -> harder.
+
+Axioms
+  (harder : Type)
+  (C : ((harder -> nat) -> nat) -> harder)
+  (ind : forall
+    (P : harder -> Type)
+    (PC : forall f : (harder -> nat) -> nat, P (C f)),
+      {f : forall h : harder, P h |
+        forall g : (harder -> nat) -> nat,
+          f (C g) = PC g}).
+
+Definition bad : harder -> ((harder -> nat) -> nat).
+Proof.
+  apply (ind (fun _ => (harder -> nat) -> nat)).
+  exact id.
+Defined.
+
+Definition bad' : ((harder -> nat) -> nat) -> (harder -> nat).
+Proof.
+  intros f h.
+  apply (ind (fun _ => harder -> nat)).
+Abort.
+
+Lemma bad_sur :
+  surjective bad.
+Proof.
+  unfold surjective. intro f.
+  exists (C f). unfold bad.
+  destruct (ind _). apply e.
+Qed.
+
+(*
+Fail Definition loop : nat :=
+  let f : harder -> nat :=
+    fun h : harder =>
+    match h with
+        | C g => g f
+    end
+*)
+
+Lemma worst : False.
+Proof.
+Abort.
+
+Definition injective {A B : Type} (f : A -> B) : Prop :=
+  forall x y : A, f x = f y -> x = y.
+
+Lemma CantoriusMaster :
+  forall (A B : Type) (f g : A -> B),
+    injective f -> ~ surjective g.
+Proof.
+  unfold injective, surjective.
+  intros A B f g Hg Hf.
+Abort.
+
+End woed.
+
+Module attempt1.
 
 Fail Inductive wut : Type :=
     | C : (wut -> bool) -> wut.
@@ -4918,20 +5178,12 @@ Proof.
   intro f. exact f.
 Defined.
 
-Lemma bad_sur :
-  forall f : wut -> bool, exists w : wut, bad w = f.
-Proof.
-  intro. unfold bad. destruct (ind _).
-  exists (C f). apply e.
-Defined.
-
 Lemma have_mercy_plx : False.
 Proof.
-  pose (diagonal := fun w => negb (bad w w)).
-  destruct (bad_sur diagonal).
-  unfold diagonal, bad in H. destruct (ind _).
-  apply (f_equal (fun f => f x)) in H.
-  destruct (x0 x x); inversion H.
+  apply (Cantor' bad negb).
+    destruct b; inversion 1.
+    unfold surjective. intro. unfold bad. destruct (ind _).
+      exists (C b). apply e.
 Qed.
 
 End attempt1.
@@ -5096,7 +5348,10 @@ Admitted.
 
 Lemma behemot_atakuje : False.
 Proof.
-Abort.
+  apply (Cantor' bad change).
+    apply change_neq.
+    unfold surjective. apply bad_sur.
+Qed.
 
 End attempt4.
 
@@ -5140,6 +5395,8 @@ End attempt4.
     najprościej powiedzieć, że jest to jednocześnie paradoks Russella i
     Girarda. Ciekawe, że udało mi się to wycisnąć z rozważań nad
     indukcją-rekursją oraz ścisłą pozytywnością. *)
+
+(* begin hide *)
 
 Module Uniwersum.
 
@@ -5361,6 +5618,8 @@ Proof.
 Qed.
 
 End Russel_Girard.
+
+(* end hide *)
 
 (** * Podsumowanie *)
 
