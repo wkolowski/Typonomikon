@@ -119,10 +119,44 @@ Qed.
 
 (** Niezbyt trudno, ale łatwo też nie. *)
 
+Function fill_square (n : nat) : nat * nat :=
+match n with
+    | 0 => (0, 0)
+    | S n' =>
+        match fill_square n' with
+            | (0, m) => (S m, 0)
+            | (S m1, m2) => (m1, S m2)
+        end
+end.
+
+
+Require Import X3.
+
+Check map.
+
+Compute map fill_square (iterate S 50 0).
+
+Definition zigzag_order (x y : nat * nat) : Prop :=
+  exists n m : nat,
+    x = fill_square n /\
+    y = fill_square m /\ n < m.
+
+Function unfill_square (x : nat * nat) {wf zigzag_order} : nat :=
+match x with
+    | (0, 0) => 0
+    | (S n, 0) => S (unfill_square (0, n))
+    | (n, S m) => S (unfill_square (S n, m))
+end.
+Proof.
+  Focus 4. red. destruct a as [n m]. constructor.
+    destruct y as [n' m']. unfold zigzag_order.
+Admitted.
+
 Lemma iso_nat_natnat' :
   iso nat (nat * nat).
 Proof.
-  (* Pewnie trudno. *)
+  exists fill_square, unfill_square. split.
+    intro. functional induction (fill_square a).
 Abort.
 
 (** Trochę generycznych rzeczy. *)
@@ -223,3 +257,67 @@ Qed.
 
 (** Jak trudno jest z takich standardowych izomorfizmów uskładać coś w
     stylu nat ~ list nat? A może nie da się i trzeba robić ręcznie? *)
+
+Require Import vec.
+
+Definition vlist (A : Type) : Type :=
+  {n : nat & vec A n}.
+
+Fixpoint vectorize' {A : Type} (l : list A) : vec A (length l) :=
+match l with
+    | nil => vnil
+    | cons h t => vcons h (vectorize' t)
+end.
+
+Definition vectorize {A : Type} (l : list A) : vlist A :=
+  existT _ (length l) (vectorize' l).
+
+Fixpoint toList {A : Type} {n : nat} (v : vec A n) : list A :=
+match v with
+    | vnil => nil
+    | vcons h t => cons h (toList t)
+end.
+
+Definition listize {A : Type} (v : vlist A) : list A :=
+  toList (projT2 v).
+
+Definition transport
+  {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
+match p with
+    | eq_refl => u
+end.
+
+Lemma sigT_eq :
+  forall
+    {A : Type} (P : A -> Type)
+    {x y : A} (p : x = y)
+    {u : P x} {v : P y} (q : transport P p u = v),
+      existT P x u = existT P y v.
+Proof.
+  destruct p. cbn. destruct 1. reflexivity.
+Defined.
+
+Lemma sigT_eq' :
+  forall
+    {A : Type} (P : A -> Type) {x y : sigT P},
+      x = y ->
+        {p : projT1 x = projT1 y & transport P p (projT2 x) = projT2 y}.
+Proof.
+  destruct 1, x. cbn. exists eq_refl. cbn. reflexivity.
+Defined.
+
+Lemma iso_list_vlist :
+  forall A : Type, iso (list A) (vlist A).
+Proof.
+  intro. exists vectorize, listize. split.
+    induction a as [| h t]; cbn in *.
+      reflexivity.
+      rewrite IHt. reflexivity.
+    destruct b as [n v]. unfold vectorize. cbn.
+      induction v as [| h t]; cbn.
+        reflexivity.
+        apply sigT_eq' in IHv. cbn in IHv. destruct IHv.
+        eapply sigT_eq. Unshelve. all: cycle 1.
+          exact (f_equal S x).
+          admit. (* This needs more HoTT. *)
+Admitted.

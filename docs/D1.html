@@ -545,7 +545,7 @@ Pokaż, że funkcje <span class="inlinecode"><span class="id" title="var">turnL<
 </div>
 
 <div class="doc">
-<a name="lab91"></a><h4 class="section">Ćwiczenie (różne enumeracje) TODO</h4>
+<a name="lab91"></a><h4 class="section">Ćwiczenie (różne enumeracje)</h4>
 
 <div class="paragraph"> </div>
 
@@ -2595,10 +2595,11 @@ Dowód dysjunkcji zdań <span class="inlinecode"><span class="id" title="var">P<
 
 <div class="doc">
 Czym jest równość? To pytanie stawiało sobie wielu filozofów,
-    szczególnie politycznych, a także ekonomistów. Odpowiedź na
-    nie jest jednym z największych osiągnięć matematyki w dziejach:
-    równość to jeden z typów induktywnych, które możemy zdefiniować
-    w Coqu. 
+    szczególnie politycznych, zaś wyjątkowo rzadko nad tą sprawą
+    zastanawiali się sami bojownicy o równość, tak jakby wszystko
+    dokładnie wiedzieli. Odpowiedź na nie jest jednym z największych
+    osiągnięć matematyki w dziejach: równość to jeden z typów induktywnych,
+    które możemy zdefiniować w Coqu. 
 </div>
 <div class="code">
 
@@ -2653,7 +2654,6 @@ Mogłoby wydawać się, że zwrotność nie wystarcza do udowadniania
     zdecydowanie różnią się postacią? Odpowiedź jest prosta: typ <span class="inlinecode"><span class="id" title="var">eq</span></span> w
     rzeczywistości owija jedynie równość pierwotną, wbudowaną w samo jądro
     Coqa, którą jest konwertowalność. 
-
 </div>
 <div class="code">
 
@@ -2689,6 +2689,13 @@ Mogłoby wydawać się, że zwrotność nie wystarcza do udowadniania
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eq_refl_zeta</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">n</span> := 42 <span class="id" title="tactic">in</span> <span class="id" title="var">eq</span> <span class="id" title="var">n</span> 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
@@ -2718,24 +2725,43 @@ Przypomnijmy, co już wiemy o redukcjach:
       jest termem, który postać jest znana (został on skonstruowany
       konstruktorem <span class="inlinecode">0</span>) i który pasuje do wzorca <span class="inlinecode">|</span> <span class="inlinecode">0</span> <span class="inlinecode">=&gt;</span> <span class="inlinecode">42</span>, a zatem
       redukcja jota zamienia całe wyrażenie od <span class="inlinecode"><span class="id" title="keyword">match</span></span> aż do <span class="inlinecode"><span class="id" title="keyword">end</span></span>
-      na <span class="inlinecode">42</span>. 
+      na <span class="inlinecode">42</span>.
+
+</li>
+<li> Redukcja zeta odwija lokalną definicję poczynioną za pomocą <span class="inlinecode"><span class="id" title="keyword">let</span></span>a 
 </li>
 </ul>
 
 <div class="paragraph"> </div>
 
- Termy <span class="inlinecode"><span class="id" title="var">x</span></span> i <span class="inlinecode"><span class="id" title="var">y</span></span> są konwertowalne, gdy za pomocą konwersji alfa oraz
-    redukcji beta, delta i jota można zredukować <span class="inlinecode"><span class="id" title="var">x</span></span> do <span class="inlinecode"><span class="id" title="var">y</span></span> lub <span class="inlinecode"><span class="id" title="var">y</span></span> do <span class="inlinecode"><span class="id" title="var">x</span></span>.
+ Termy <span class="inlinecode"><span class="id" title="var">x</span></span> i <span class="inlinecode"><span class="id" title="var">y</span></span> są konwertowalne, gdy za pomocą serii konwersji alfa
+    oraz redukcji beta, delta, jota i zeta oba redukują się do tego samego
+    termu (który dzięki silnej normalizacji istnieje i jest w postaci
+    kanonicznej).
 
 <div class="paragraph"> </div>
 
     Uważny czytelnik zada sobie w tym momencie pytanie: skoro równość to
     konwertowalność, to jakim cudem równe są termy <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> oraz <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span>,
-    które przecież nie są konwertowalne?
+    gdzie <span class="inlinecode"><span class="id" title="var">n</span></span> jest zmienną, które przecież nie są konwertowalne?
 
 <div class="paragraph"> </div>
 
-    TODO: udzielić odpowiedzi na to pytanie. 
+    Trzeba tutaj dokonać pewnego doprecyzowania. Termy <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> i <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> są
+    konwertowalne dla każdego konkretnego <span class="inlinecode"><span class="id" title="var">n</span></span>, np. <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode">42</span> i <span class="inlinecode">42</span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> są
+    konwertowalne. Konwertowalne nie są natomiast, gdy <span class="inlinecode"><span class="id" title="var">n</span></span> jest zmienną -
+    jest tak dlatego, że nie możemy wykonać redukcji iota, bo nie wiemy, czy
+    <span class="inlinecode"><span class="id" title="var">n</span></span> jest zerem czy następnikiem.
+
+<div class="paragraph"> </div>
+
+    Odpowiedzią na pytanie są reguły eliminacji, głównie dla typów
+    induktywnych. Reguły te mają konkluzje postaci <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">I</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>,
+    więc w szczególności możemy użyć ich dla <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">y</span></span> dla jakiegoś
+    <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>. Dzięki nim przeprowadzaliśmy już wielokrotnie mniej więcej
+    takie rozumowania: <span class="inlinecode"><span class="id" title="var">n</span></span> jest wprawdzie nie wiadomo czym, ale przez
+    indukcję może to być albo <span class="inlinecode">0</span>, albo <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>, gdzie dla <span class="inlinecode"><span class="id" title="var">n'</span></span> zachodzi
+    odpowiednia hipoteza indukcyjna. 
 </div>
 <div class="code">
 
@@ -3384,7 +3410,7 @@ Konstruktor <span class="inlinecode"><span class="id" title="var">vnil</span></s
 </div>
 
 <div class="doc">
-<a name="lab132"></a><h2 class="section">Indukcja wzajemna a indeksowane rodziny typów</h2>
+<a name="lab132"></a><h2 class="section">Indukcja wzajemna a indeksowane rodziny typów (TODO)</h2>
 
 </div>
 <div class="code">
@@ -3396,7 +3422,11 @@ Konstruktor <span class="inlinecode"><span class="id" title="var">vnil</span></s
 </div>
 
 <div class="doc">
-TODO: napisać tu coś. 
+Indukcja wzajemna nie jest zbyt użyteczna. Pierwszym, praktycznym,
+    powodem jest to, jak pewnie zdążyłeś się już na skórze przekonać,
+    że jej używanie jest dość upierdliwe. Drugi, teoretyczny, powód
+    jest taki, że definicje przez indukcję wzajemną możemy zasymulować
+    za pomocą indeksowanych rodzin typów. 
 </div>
 <div class="code">
 
@@ -3409,6 +3439,17 @@ TODO: napisać tu coś.
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">oddS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">odd</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Rzućmy jeszcze raz okiem na znaną nam już definicję predykatów <span class="inlinecode"><span class="id" title="var">even</span></span>
+    i <span class="inlinecode"><span class="id" title="var">odd</span></span> przez indukcję wzajemną. Nie dzieje się tu nic niezwykłego, a
+    najważniejszym spostrzeżeniem, jakie możemy poczynić, jest to, że
+    <span class="inlinecode"><span class="id" title="var">even</span></span> i <span class="inlinecode"><span class="id" title="var">odd</span></span> to dwa byty - nie trzy, nie pięć, ale dwa. 
+</div>
+<div class="code">
+
+<br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">even_odd</span> : <span class="id" title="var">bool</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">even0'</span> : <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> 0<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">evenS'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)<br/>
@@ -3417,6 +3458,19 @@ TODO: napisać tu coś.
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">even'</span> := <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span>.<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">odd'</span> := <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Co z tego wynika? Ano, zamiast definiować przez indukcję wzajemną dwóch
+    predykatów <span class="inlinecode"><span class="id" title="var">even</span></span> i <span class="inlinecode"><span class="id" title="var">odd</span></span> możemy za jednym zamachem zdefiniować relację
+    <span class="inlinecode"><span class="id" title="var">even_odd</span></span>, która jednocześnie odpowiada obu tym predykatom. Kluczem
+    w tej sztuczce jest tutaj dodatkowy indeks, którym jest dwuelementowy
+    typ <span class="inlinecode"><span class="id" title="var">bool</span></span>. Dzięki niemu możemy zakodować definicję <span class="inlinecode"><span class="id" title="var">even</span></span> za pomocą
+    <span class="inlinecode"><span class="id" title="var">even_odd</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span>, zaś <span class="inlinecode"><span class="id" title="var">odd</span></span> jako <span class="inlinecode"><span class="id" title="var">even_odd</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span>. 
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">even_even'</span> :<br/>
@@ -3433,12 +3487,28 @@ TODO: napisać tu coś.
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">odd'</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">odd</span> <span class="id" title="var">n</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Obie definicje są, jak widać (ćwiczenie!), równoważne, choć pod względem
+    estetycznym oczywiście dużo lepiej wypada indukcja wzajemna. 
+</div>
+<div class="code">
+
+<br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">MutualIndution_vs_InductiveFamilies</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
+Na koniec wypada jeszcze powiedzieć, że indeksowane typy induktywne są
+    potężniejsze od typów wzajemnie induktywnych. Wynika to z tego prostego
+    faktu, że przez wzajemną indukcję możemy zdefiniować na raz jedynie
+    skończenie wiele typów, zaś indeksowane typy induktywne indeksowane
+    mogą być typami nieskończonymi. 
+<div class="paragraph"> </div>
+
 <a name="lab133"></a><h2 class="section">Sumy zależne i podtypy</h2>
 
 <div class="paragraph"> </div>
@@ -3663,11 +3733,8 @@ Definiowanie wartości typu <span class="inlinecode"><span class="id" title="var
 </div>
 
 <div class="doc">
-<a name="lab137"></a><h2 class="section">W-typy</h2>
+<a name="lab137"></a><h2 class="section">W-typy (TODO)</h2>
 
-<div class="paragraph"> </div>
-
- TODO: napisz coś 
 </div>
 <div class="code">
 
@@ -3677,6 +3744,32 @@ Definiowanie wartości typu <span class="inlinecode"><span class="id" title="var
 
 <br/>
 <span class="id" title="var">Arguments</span> <span class="id" title="var">sup</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+W-typy (ang. W-types) to typy dobrze ufundowanych drzew (ang.
+    well-founded trees - W to skrót od well-founded), tzn. skończonych drzew
+    o niemal dowolnych kształtach wyznaczanych przez parametry <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span>.
+
+<div class="paragraph"> </div>
+
+    Nie są one zbyt przydatne w praktyce, gdyż wszystko, co można za ich
+    pomocą osiągnąć, można też osiągnąć bez nich zwykłymi typami induktywnymi
+    i będzie to dużo bardziej czytelne. Jednak z tego samego powodu są bardzo
+    ciekawe pod względem teoretycznym - wszystko, co można zrobić za pomocą
+    parametryzowanych typów induktywnych, można też zrobić za pomocą samych
+    W-typów. Dzięki temu można badanie parametryzowanych typów induktywnych,
+    których jest mniej więcej nieskończoność i jeszcze trochę, sprowadzić do
+    badania jednego tylko <span class="inlinecode"><span class="id" title="var">W</span></span>.
+
+<div class="paragraph"> </div>
+
+    Poniżej znajduje się tymczasowa demonstracja tego, jak za pomocą <span class="inlinecode"><span class="id" title="var">W</span></span> i
+    typu pustego <span class="inlinecode"><span class="id" title="var">Empty_set</span></span> zrobić typy <span class="inlinecode"><span class="id" title="var">bool</span></span> i <span class="inlinecode"><span class="id" title="var">nat</span></span>. 
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">boolW</span> : <span class="id" title="keyword">Type</span> :=<br/>
@@ -4771,7 +4864,7 @@ Niezbyt piękna, prawda?
 <div class="doc">
 Utrapieniem jest też to, że nasza funkcja się nie oblicza. Jest tak, bo
     została zdefiniowana za pomocą reguły indukcji, która jest aksjomatem.
-    Aksjomaty zaś, jak wiadomo (albo i nie - TODO) się nie obliczają.
+    Aksjomaty zaś, jak wiadomo, nie obliczają się.
 
 <div class="paragraph"> </div>
 
@@ -6338,7 +6431,7 @@ Uogólnienie jest dość banalne. Najpierw zastępujemy <span class="inlinecode
 </div>
 
 <div class="doc">
-<a name="lab163"></a><h2 class="section">Dobro kontra zło: ścisła pozytywność vs negatywność</h2>
+<a name="lab163"></a><h2 class="section">Dobro kontra zło: ścisła pozytywność vs negatywność (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -6461,7 +6554,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 
 <div class="paragraph"> </div>
 
-    TODO 
+    Przekonajmy się. 
 </div>
 <div class="code">
 
@@ -6500,7 +6593,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab165"></a><h1 class="section">Podsumowanie</h1>
+<a name="lab165"></a><h1 class="section">Podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 

@@ -732,6 +732,8 @@ Qed.
 
 (** Strumienie za pomocą przybliżeń. *)
 
+Module approx.
+
 Print take.
 
 Inductive Vec (A : Type) : nat -> Type :=
@@ -823,6 +825,8 @@ Proof.
     apply CH.
 Qed.
 (* end hide *)
+
+End approx.
 
 (** Pomysł dawno zapomniany: induktywne specyfikacje funkcji. *)
 

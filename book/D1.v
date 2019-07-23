@@ -541,7 +541,7 @@ Qed.
 
 End Directions.
 
-(** **** Ćwiczenie (różne enumeracje) TODO *)
+(** **** Ćwiczenie (różne enumeracje) *)
 
 (** Zdefiniuj typy induktywne reprezentujące:
     - dni tygodnia
@@ -581,6 +581,9 @@ Inductive Color : Type :=
 (** Wymyśl do nich jakieś ciekawe funkcje i twierdzenia. *)
 
 (* begin hide *)
+
+(** TODO *)
+
 Definition nextDay (d : Day) : Day :=
 match d with
     | Mon => Tue
@@ -2085,10 +2088,11 @@ End MyConnectives.
 Module MyEq.
 
 (** Czym jest równość? To pytanie stawiało sobie wielu filozofów,
-    szczególnie politycznych, a także ekonomistów. Odpowiedź na
-    nie jest jednym z największych osiągnięć matematyki w dziejach:
-    równość to jeden z typów induktywnych, które możemy zdefiniować
-    w Coqu. *)
+    szczególnie politycznych, zaś wyjątkowo rzadko nad tą sprawą
+    zastanawiali się sami bojownicy o równość, tak jakby wszystko
+    dokładnie wiedzieli. Odpowiedź na nie jest jednym z największych
+    osiągnięć matematyki w dziejach: równość to jeden z typów induktywnych,
+    które możemy zdefiniować w Coqu. *)
 
 Inductive eq {A : Type} (x : A) : A -> Prop :=
     | eq_refl : eq x x.
@@ -2121,8 +2125,7 @@ Qed.
     Dlaczego [eq_refl] odnosi na tym celu sukces skoro [1 + 41] oraz [42]
     zdecydowanie różnią się postacią? Odpowiedź jest prosta: typ [eq] w
     rzeczywistości owija jedynie równość pierwotną, wbudowaną w samo jądro
-    Coqa, którą jest konwertowalność. 
-*)
+    Coqa, którą jest konwertowalność. *)
 
 Theorem eq_refl_alpha :
   forall A : Type, eq (fun x : A => x) (fun y : A => y).
@@ -2150,6 +2153,12 @@ Proof.
   simpl. apply eq_refl.
 Qed.
 
+Theorem eq_refl_zeta :
+  let n := 42 in eq n 42.
+Proof.
+  reflexivity.
+Qed.
+
 (** Przypomnijmy, co już wiemy o redukcjach:
     - konwersja alfa pozwala nam zmienić nazwę zmiennej związanej w
       funkcji anonimowej nową, jeżeli ta nie jest jeszcze używana.
@@ -2169,16 +2178,31 @@ Qed.
       jest termem, który postać jest znana (został on skonstruowany
       konstruktorem [0]) i który pasuje do wzorca [| 0 => 42], a zatem
       redukcja jota zamienia całe wyrażenie od [match] aż do [end]
-      na [42]. *)
+      na [42].
+    - Redukcja zeta odwija lokalną definicję poczynioną za pomocą [let]a *)
 
-(** Termy [x] i [y] są konwertowalne, gdy za pomocą konwersji alfa oraz
-    redukcji beta, delta i jota można zredukować [x] do [y] lub [y] do [x].
+(** Termy [x] i [y] są konwertowalne, gdy za pomocą serii konwersji alfa
+    oraz redukcji beta, delta, jota i zeta oba redukują się do tego samego
+    termu (który dzięki silnej normalizacji istnieje i jest w postaci
+    kanonicznej).
 
     Uważny czytelnik zada sobie w tym momencie pytanie: skoro równość to
     konwertowalność, to jakim cudem równe są termy [0 + n] oraz [n + 0],
-    które przecież nie są konwertowalne?
+    gdzie [n] jest zmienną, które przecież nie są konwertowalne?
 
-    TODO: udzielić odpowiedzi na to pytanie. *)
+    Trzeba tutaj dokonać pewnego doprecyzowania. Termy [0 + n] i [n + 0] są
+    konwertowalne dla każdego konkretnego [n], np. [0 + 42] i [42 + 0] są
+    konwertowalne. Konwertowalne nie są natomiast, gdy [n] jest zmienną -
+    jest tak dlatego, że nie możemy wykonać redukcji iota, bo nie wiemy, czy
+    [n] jest zerem czy następnikiem.
+
+    Odpowiedzią na pytanie są reguły eliminacji, głównie dla typów
+    induktywnych. Reguły te mają konkluzje postaci [forall x : I, P x],
+    więc w szczególności możemy użyć ich dla [P x := x = y] dla jakiegoś
+    [y : A]. Dzięki nim przeprowadzaliśmy już wielokrotnie mniej więcej
+    takie rozumowania: [n] jest wprawdzie nie wiadomo czym, ale przez
+    indukcję może to być albo [0], albo [S n'], gdzie dla [n'] zachodzi
+    odpowiednia hipoteza indukcyjna. *)
 
 End MyEq.
 
@@ -2627,11 +2651,15 @@ Inductive EHBTree : nat -> Type :=
         A -> EHBTree n -> EHBTree m -> EHBTree (max n m).
 (* end hide *)
 
-(** ** Indukcja wzajemna a indeksowane rodziny typów *)
+(** ** Indukcja wzajemna a indeksowane rodziny typów (TODO) *)
 
 Module MutualIndution_vs_InductiveFamilies.
 
-(** TODO: napisać tu coś. *)
+(** Indukcja wzajemna nie jest zbyt użyteczna. Pierwszym, praktycznym,
+    powodem jest to, jak pewnie zdążyłeś się już na skórze przekonać,
+    że jej używanie jest dość upierdliwe. Drugi, teoretyczny, powód
+    jest taki, że definicje przez indukcję wzajemną możemy zasymulować
+    za pomocą indeksowanych rodzin typów. *)
 
 Inductive even : nat -> Prop :=
     | even0 : even 0
@@ -2640,6 +2668,11 @@ Inductive even : nat -> Prop :=
 with odd : nat -> Prop :=
     | oddS : forall n : nat, even n -> odd (S n).
 
+(** Rzućmy jeszcze raz okiem na znaną nam już definicję predykatów [even]
+    i [odd] przez indukcję wzajemną. Nie dzieje się tu nic niezwykłego, a
+    najważniejszym spostrzeżeniem, jakie możemy poczynić, jest to, że
+    [even] i [odd] to dwa byty - nie trzy, nie pięć, ale dwa. *)
+
 Inductive even_odd : bool -> nat -> Prop :=
     | even0' : even_odd true 0
     | evenS' : forall n : nat, even_odd false n -> even_odd true (S n)
@@ -2647,6 +2680,13 @@ Inductive even_odd : bool -> nat -> Prop :=
 
 Definition even' := even_odd true.
 Definition odd' := even_odd false.
+
+(** Co z tego wynika? Ano, zamiast definiować przez indukcję wzajemną dwóch
+    predykatów [even] i [odd] możemy za jednym zamachem zdefiniować relację
+    [even_odd], która jednocześnie odpowiada obu tym predykatom. Kluczem
+    w tej sztuczce jest tutaj dodatkowy indeks, którym jest dwuelementowy
+    typ [bool]. Dzięki niemu możemy zakodować definicję [even] za pomocą
+    [even_odd true], zaś [odd] jako [even_odd false]. *)
 
 Lemma even_even' :
   forall n : nat, even n -> even' n
@@ -2680,7 +2720,16 @@ Proof.
 Qed.
 (* end hide *)
 
+(** Obie definicje są, jak widać (ćwiczenie!), równoważne, choć pod względem
+    estetycznym oczywiście dużo lepiej wypada indukcja wzajemna. *)
+
 End MutualIndution_vs_InductiveFamilies.
+
+(** Na koniec wypada jeszcze powiedzieć, że indeksowane typy induktywne są
+    potężniejsze od typów wzajemnie induktywnych. Wynika to z tego prostego
+    faktu, że przez wzajemną indukcję możemy zdefiniować na raz jedynie
+    skończenie wiele typów, zaś indeksowane typy induktywne indeksowane
+    mogą być typami nieskończonymi. *)
 
 (** ** Sumy zależne i podtypy *)
 
@@ -2824,14 +2873,28 @@ Qed.
 
 End ex.
 
-(** ** W-typy *)
-
-(** TODO: napisz coś *)
+(** ** W-typy (TODO) *)
 
 Inductive W (A : Type) (B : A -> Type) : Type :=
     | sup : forall x : A, (B x -> W A B) -> W A B.
 
 Arguments sup {A B} _ _.
+
+(** W-typy (ang. W-types) to typy dobrze ufundowanych drzew (ang.
+    well-founded trees - W to skrót od well-founded), tzn. skończonych drzew
+    o niemal dowolnych kształtach wyznaczanych przez parametry [A] i [B].
+
+    Nie są one zbyt przydatne w praktyce, gdyż wszystko, co można za ich
+    pomocą osiągnąć, można też osiągnąć bez nich zwykłymi typami induktywnymi
+    i będzie to dużo bardziej czytelne. Jednak z tego samego powodu są bardzo
+    ciekawe pod względem teoretycznym - wszystko, co można zrobić za pomocą
+    parametryzowanych typów induktywnych, można też zrobić za pomocą samych
+    W-typów. Dzięki temu można badanie parametryzowanych typów induktywnych,
+    których jest mniej więcej nieskończoność i jeszcze trochę, sprowadzić do
+    badania jednego tylko [W].
+
+    Poniżej znajduje się tymczasowa demonstracja tego, jak za pomocą [W] i
+    typu pustego [Empty_set] zrobić typy [bool] i [nat]. *)
 
 Definition boolW : Type :=
   W bool (fun _ => Empty_set).
@@ -3569,7 +3632,7 @@ Compute toList slist_01.
 
 (** Utrapieniem jest też to, że nasza funkcja się nie oblicza. Jest tak, bo
     została zdefiniowana za pomocą reguły indukcji, która jest aksjomatem.
-    Aksjomaty zaś, jak wiadomo (albo i nie - TODO) się nie obliczają.
+    Aksjomaty zaś, jak wiadomo, nie obliczają się.
 
     Wyniku powyższego wywołania nie będę nawet wklejał, gdyż jest naprawdę
     ohydny. *)
@@ -4944,7 +5007,7 @@ Qed.
 
 (* end hide *)
 
-(** ** Dobro kontra zło: ścisła pozytywność vs negatywność *)
+(** ** Dobro kontra zło: ścisła pozytywność vs negatywność (TODO) *)
 
 (** Z Cantorem po naszej stronie możemy wreszcie kupić ruble... ekhem,
     możemy wreszcie zaprezentować ogólną metodę dowodzenia, że negatywne
@@ -5019,7 +5082,7 @@ End Example1.
     przecież dość nietypowy, bo ma tylko jeden konstruktor. A co, gdy
     konstruktorów jest więcej?
 
-    TODO *)
+    Przekonajmy się. *)
 
 (* begin hide *)
 Module wuut.
@@ -5621,7 +5684,7 @@ End Russel_Girard.
 
 (* end hide *)
 
-(** * Podsumowanie *)
+(** * Podsumowanie (TODO) *)
 
 (** To już koniec naszej podróży przez mechanizmy definiowania typów przez
     indukcję. Istnieje wprawdziwe jeszcze jeden potfur, straszniejszy nawet

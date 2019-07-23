@@ -491,7 +491,7 @@ Fail Fixpoint div (n m : nat) : nat :=
   else div (n - m) m.
 (* end hide *)
 
-(** * Rekursja dobrze ufundowana *)
+(** * Rekursja dobrze ufundowana (TODO) *)
 
 (** Typy induktywne są jak domino - każdy term to jedna kostka, indukcja
     i rekursja odpowiadają zaś temu co tygryski lubią najbardziej, czyli
@@ -827,4 +827,4 @@ Compute div 5 0.
 
 (* end hide *)
 
-(** * Indukcja funkcyjna *)
+(** * Indukcja funkcyjna (TODO) *)

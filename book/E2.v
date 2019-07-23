@@ -229,10 +229,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Injekcje *)
+(** * Izomorfizmy, lewe i prawe odwrotności (TODO) *)
 
-(** TODO ACHTUNG: to pojęcie zostało użyte implicite przy opisywaniu
-    właściciwości konstruktorów. *)
+(** * Injekcje *)
 
 Definition injective {A B : Type} (f : A -> B) : Prop :=
   forall x x' : A, f x = f x' -> x = x'.
