@@ -6,6 +6,9 @@ coq_makefile -R "." CoqBookPL -o makefile $(find . -name "*v")
 # Skompiluj pliki .v - dzięki temu mamy pewność, że cały kod z książki działa poprawnie.
 make
 
+# Wywal makefile'a - po co ma zaśmiecać folder?
+rm makefile makefile.conf
+
 # Zbuduj wersję HTML.
 
 # coqdoc book/*v --html -d docs generuje pliki .html z plików .v i umieszcza je w folderze docs/
@@ -69,6 +72,3 @@ latexmk tex/Książka.tex -pdf -outdir=tex/                 \
         -interaction=nonstopmode                          \
         -f                                                \
         -quiet
-
-# Wywal makefile'a - po co ma zaśmiecać folder?
-rm makefile makefile.conf

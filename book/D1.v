@@ -4600,7 +4600,7 @@ End ind_rec_2.
     podrozdziałów.
 
     Nie muszę chyba dodawać, że ława oburzonych jest oburzona faktem, że Coq
-    nie wspiera indukcji-indukcji-rekursji (a Agda już tak). *)
+    nie wspiera indukcji-indukcji-rekursji. *)
 
 (** **** Ćwiczenie (mega trudne) *)
 
@@ -5007,7 +5007,7 @@ Qed.
 
 (* end hide *)
 
-(** ** Dobro kontra zło: ścisła pozytywność vs negatywność (TODO) *)
+(** ** Twierdzenie Cantora jako młot na negatywność *)
 
 (** Z Cantorem po naszej stronie możemy wreszcie kupić ruble... ekhem,
     możemy wreszcie zaprezentować ogólną metodę dowodzenia, że negatywne
@@ -5033,7 +5033,7 @@ Axioms
       {f : forall w : wut A, P w |
         forall g : wut A -> A, f (C g) = PC g}).
 
-(** [wut] to aksjomatyczne kodowanie tego samego typu, a którym poprzednio
+(** [wut] to aksjomatyczne kodowanie tego samego typu, o którym poprzednio
     tylko udawaliśmy, że istnieje. Zauważmy, że nie jest nam potrzebna
     reguła indukcji - wystarczy jeden z prostszych eliminatorów, mianowicie
     [dcase], czyli zależna reguła analizy przypadków. *)
@@ -5082,183 +5082,52 @@ End Example1.
     przecież dość nietypowy, bo ma tylko jeden konstruktor. A co, gdy
     konstruktorów jest więcej?
 
-    Przekonajmy się. *)
+    Początkowo miałem opisać kilka przypadków z większą liczbą konstruktorów,
+    ale stwierdziłem, że jednak mi się nie chce. Zobaczymy, czy będziesz w
+    stanie sam wykombinować, jak się z nimi uporać w ćwiczeniach. *)
+
+(** **** Ćwiczenie *)
+
+(* Inductive T : Type := *)
+
+(** Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
+    pozytywności. Jeżeli tak, narysuj wesołego jeża. Jeżeli nie, napisz
+    zapętlającą się funkcję podobną do [loop] (zakładamy, że typ [T] ma
+    tylko ten jeden konstruktor). Następnie sprawdź w Coqu, czy udzieliłeś
+    poprawnej odpowiedzi.
+    - [| C1 : T]
+    - [| C2 : bool -> T]
+    - [| C3 : T -> T]
+    - [| C4 : T -> nat -> T]
+    - [| C5 : forall A : Type, T -> A -> T]
+    - [| C6 : forall A : Type, A -> T -> T]
+    - [| C7 : forall A : Type, (A -> T) -> T]
+    - [| C8 : forall A : Type, (T -> A) -> T]
+    - [| C9 : (forall x : T, T) -> T]
+    - [| C10 : (forall (A : Type) (x : T), A) -> T]
+    - [| C11 : forall A B C : Type,
+                  A -> (forall x : T, B) -> (C -> T) -> T] *)
 
 (* begin hide *)
-Module wuut.
+(* C1-C7 są legalne, C8-C11 nie. *)
+(* end hide *)
 
-Theorem Cantor'' :
-  forall {A B : Type} (f : A -> option (A -> B)),
-    B -> ~ surjective f.
-Proof.
-  unfold surjective. intros A B f b H.
-  destruct (H (Some (fun _ => b))) as [a eq].
-  pose (diagonal a :=
-    match f a with
-        | Some g => g a
-        | _ => ltac:(congruence)
-    end).
-  destruct (H (Some diagonal)) as [a' eq'].
-  unfold diagonal in eq'.
-  
-  apply (f_equal (fun x =>
-    match x with
-        | Some g => g a
-        | None => b
-    end)) in eq'.
-  rewrite eq in eq'.
-  
-Abort.
+(** **** Ćwiczenie *)
 
-Axiom
-  (Term : Type -> Type)
-  (Var : forall {V : Type}, V -> Term V)
-  (Lam : forall {V : Type}, (Term V -> Term V) -> Term V)
-  (App : forall {V : Type}, Term V -> Term V -> Term V)
-  (case : forall
-    (V : Type)
-    (P : Term V -> Type)
-    (PVar : forall v : V, P (Var v))
-    (PLam : forall g : Term V -> Term V, P (Lam g))
-    (PApp : forall t1 t2 : Term V, P (App t1 t2)),
-      {f : forall t : Term V, P t |
-        (forall v : V, f (Var v) = PVar v) /\
-        (forall g : Term V -> Term V, f (Lam g) = PLam g) /\
-        (forall t1 t2 : Term V, f (App t1 t2) = PApp t1 t2)}).
+(** Poniższe paskudztwo łamie prawo ścisłej pozytywności nie jednym, lecz
+    aż dwoma swoimi konstruktorami.
 
-Definition bad {V : Type} : Term V -> (Term V -> Term V).
-Proof.
-  apply (case _ (fun _ => Term V -> Term V)).
-    intros _. exact id.
-    intro f. exact f.
-    intros _ _. exact id.
-Defined.
+    Zakoduj ten typ aksjomatycznie i udowodnij, że jego istnienie prowadzi
+    do sprzeczności. Metoda jest podobna jak w naszym przykładzie, ale
+    trzeba ją troszkę dostosować do zastanej sytuacji. *)
 
-Lemma worst : False.
-Proof.
-  eapply (Cantor' (@bad unit)). Unshelve. all: cycle 1.
-    red. intro f. exists (Lam f). unfold bad. destruct (case _).
-      decompose [and] a. apply H1.
-    apply case; intros.
-      exact (App (Var tt) (Var tt)).
-      exact (Var tt).
-      exact (Var tt).
-    apply case; cbn; intros;
-    destruct (case _) as [f H];
-    decompose [and] H; clear H;
-    rewrite ?H0, ?H2, ?H3.
-Abort.
-
-End wuut.
-
-Module woed.
-
-Fail Inductive harder : Type :=
-    | C : ((harder -> nat) -> nat) -> harder.
-
-Axioms
-  (harder : Type)
-  (C : ((harder -> nat) -> nat) -> harder)
-  (ind : forall
-    (P : harder -> Type)
-    (PC : forall f : (harder -> nat) -> nat, P (C f)),
-      {f : forall h : harder, P h |
-        forall g : (harder -> nat) -> nat,
-          f (C g) = PC g}).
-
-Definition bad : harder -> ((harder -> nat) -> nat).
-Proof.
-  apply (ind (fun _ => (harder -> nat) -> nat)).
-  exact id.
-Defined.
-
-Definition bad' : ((harder -> nat) -> nat) -> (harder -> nat).
-Proof.
-  intros f h.
-  apply (ind (fun _ => harder -> nat)).
-Abort.
-
-Lemma bad_sur :
-  surjective bad.
-Proof.
-  unfold surjective. intro f.
-  exists (C f). unfold bad.
-  destruct (ind _). apply e.
-Qed.
-
-(*
-Fail Definition loop : nat :=
-  let f : harder -> nat :=
-    fun h : harder =>
-    match h with
-        | C g => g f
-    end
-*)
-
-Lemma worst : False.
-Proof.
-Abort.
-
-Definition injective {A B : Type} (f : A -> B) : Prop :=
-  forall x y : A, f x = f y -> x = y.
-
-Lemma CantoriusMaster :
-  forall (A B : Type) (f g : A -> B),
-    injective f -> ~ surjective g.
-Proof.
-  unfold injective, surjective.
-  intros A B f g Hg Hf.
-Abort.
-
-End woed.
-
-Module attempt1.
-
-Fail Inductive wut : Type :=
-    | C : (wut -> bool) -> wut.
-
-Axioms
-  (wut : Type)
-  (C : (wut -> bool) -> wut)
-  (ind : forall
-    (P : wut -> Type)
-    (H : forall f : wut -> bool, P (C f)),
-      {f : forall w : wut, P w |
-       forall g : wut -> bool, f (C g) = H g}).
-
-Fail Definition bad : bool :=
-  let f (w : wut) : bool :=
-    match w with
-        | C f' => f' w
-    end
-  in f (C f).
-
-(* ===> f (C f) = f (C f) = f (C f) *)
-
-Definition bad : wut -> (wut -> bool).
-Proof.
-  apply (ind (fun _ => wut -> bool)).
-  intro f. exact f.
-Defined.
-
-Lemma have_mercy_plx : False.
-Proof.
-  apply (Cantor' bad negb).
-    destruct b; inversion 1.
-    unfold surjective. intro. unfold bad. destruct (ind _).
-      exists (C b). apply e.
-Qed.
-
-End attempt1.
-
-Module attempt2.
-
-(** Dwa konstruktory negatywne - działa. *)
+Module Exercise1.
 
 Fail Inductive wut : Type :=
     | C0 : (wut -> bool) -> wut
     | C1 : (wut -> nat) -> wut.
 
+(* begin hide *)
 Axioms
   (wut : Type)
   (C0 : (wut -> bool) -> wut)
@@ -5287,26 +5156,34 @@ Proof.
   intro. unfold bad. destruct (ind _) as (g & H1 & H2).
   exists (C0 f). apply H1.
 Defined.
+(* end hide *)
 
-Lemma Cantor_ty_dziwko : False.
+Lemma wut_illegal : False.
+(* begin hide *)
 Proof.
   destruct (bad_sur (fun w : wut => negb (bad w w))).
   unfold bad in H. destruct (ind _).
   apply (f_equal (fun f => f x)) in H.
   destruct (x0 x x); inversion H.
 Qed.
+(* end hide *)
 
-End attempt2.
+End Exercise1.
 
-Module attempt3.
+(** **** Ćwiczenie *)
 
-(** Jeden konstruktor negatywny z argumentem indukcyjnym w
-    przeciwdziedzinie i drugi konstruktor normalny. *)
+(** Poniższe paskudztwo ma jeden konstruktor negatywny, a drugi pozytywny,
+    niczym typowa panienka z borderlinem...
+
+    Polecenie jak w poprzednim ćwiczeniu. *)
+
+Module Exercise2.
 
 Fail Inductive wut : Type :=
     | C0 : (wut -> wut) -> wut
     | C1 : nat -> wut.
 
+(* begin hide *)
 Axioms
   (wut : Type)
   (C0 : (wut -> wut) -> wut)
@@ -5336,12 +5213,27 @@ Proof.
   exists (C0 f). apply H1.
 Defined.
 
-Definition change (w : wut) : wut.
+Definition discern : wut -> bool.
 Proof.
-  revert w.
+  apply ind; intros _.
+    exact true.
+    exact false.
+Defined.
+
+Lemma discern' :
+  forall (f : wut -> wut) (n : nat),
+    C0 f = C1 n -> False.
+Proof.
+  intros. apply (f_equal discern) in H.
+  unfold discern in H. destruct (ind _) as (g & p & q).
+  rewrite p, q in H. inversion H.
+Qed.
+
+Definition change : wut -> wut.
+Proof.
   apply (ind (fun _ => wut)).
     intro. exact (C1 0).
-    intro. apply (C1 (S n)).
+    intro. apply (C0 (fun w => w)).
 Defined.
 
 Lemma change_neq :
@@ -5349,12 +5241,14 @@ Lemma change_neq :
 Proof.
   apply ind.
     intros f H. unfold change in H. destruct (ind _) as (g & H1 & H2).
-      rewrite H1 in H. admit.
+      rewrite H1 in H. eapply discern'. symmetry. exact H.
     intros n H. unfold change in H. destruct (ind _) as (g & H1 & H2).
-      rewrite H2 in H. admit.
-Admitted.
+      rewrite H2 in H. apply discern' in H. assumption.
+Qed.
+(* end hide *)
 
-Lemma behemot_atakuje : False.
+Lemma wut_illegal : False.
+(* begin hide *)
 Proof.
   destruct (bad_sur (fun w : wut => change (bad w w))).
   unfold bad in H. destruct (ind _).
@@ -5362,88 +5256,154 @@ Proof.
   apply (change_neq (x0 x x)).
   symmetry. assumption.
 Qed.
+(* end hide *)
 
-End attempt3.
+End Exercise2.
 
-Module attempt4.
+(** **** Ćwiczenie *)
 
-(** Pewnie najgorsze bydle. *)
+(** Poniższy typ reprezentuje termy beztypowego rachunku lambda, gdzie [V]
+    to typ reprezentujący zmienne. Co to za zwierzątko ten rachunek lambda
+    to my się jeszcze przekonamy... chyba, oby.
+
+    Taki sposób reprezentowania rachunku lambda (i ogólnie składni języków
+    programowania) nazywa się HOAS, co jest skrótem od ang. Higher Order
+    Abstract Syntax. W wielu językach funkcyjnych jest to popularna technika,
+    ale w Coqu, jak zaraz udowodnisz, jest ona nielegalna. Ława oburzonych
+    jest rzecz jasna oburzona! *)
+
+Module Exercise3.
+
+Fail Inductive Term (V : Type) : Type :=
+    | Var : V -> Term V
+    | Lam : (Term V -> Term V) -> Term V
+    | App : Term V -> Term V -> Term V.
+
+(* begin hide *)
+Axiom
+  (Term : Type -> Type)
+  (Var : forall {V : Type}, V -> Term V)
+  (Lam : forall {V : Type}, (Term V -> Term V) -> Term V)
+  (App : forall {V : Type}, Term V -> Term V -> Term V)
+  (case : forall
+    (V : Type)
+    (P : Term V -> Type)
+    (PVar : forall v : V, P (Var v))
+    (PLam : forall g : Term V -> Term V, P (Lam g))
+    (PApp : forall t1 t2 : Term V, P (App t1 t2)),
+      {f : forall t : Term V, P t |
+        (forall v : V, f (Var v) = PVar v) /\
+        (forall g : Term V -> Term V, f (Lam g) = PLam g) /\
+        (forall t1 t2 : Term V, f (App t1 t2) = PApp t1 t2)}).
+
+Definition bad {V : Type} : Term V -> (Term V -> Term V).
+Proof.
+  apply (case _ (fun _ => Term V -> Term V)).
+    intros _. exact (fun x => x).
+    intro f. exact f.
+    intros _ _. exact (fun x => x).
+Defined.
+
+Definition discern {V : Type}  : Term V -> nat.
+Proof.
+  apply (case V (fun _ => nat)); repeat intros _.
+    exact 0.
+    exact 1.
+    exact 2.
+Defined.
+(* end hide *)
+
+Lemma Term_illegal : False.
+(* begin hide *)
+Proof.
+  eapply (Cantor' (@bad unit)). Unshelve. all: cycle 1.
+    red. intro f. exists (Lam f). unfold bad. destruct (case _).
+      decompose [and] a. apply H1.
+    apply case; intros.
+      exact (App (Var tt) (Var tt)).
+      exact (Var tt).
+      exact (Var tt).
+    apply case; cbn; intros;
+    destruct (case _) as [f H];
+    decompose [and] H; clear H;
+    rewrite ?H0, ?H2, ?H3;
+    intro; apply (f_equal discern) in H;
+    unfold discern in H; destruct case; decompose [and] a;
+    congruence.
+Qed.
+(* end hide *)
+
+End Exercise3.
+
+(** **** Ćwiczenie *)
+
+(** Poniższe bydle jest najgorsze z możliwych - póki co nie wiem, jak to
+    udowodnić. Powodzenia! *)
+
+Module Exercise4.
 
 Fail Inductive wut : Type :=
     | C : (wut -> wut) -> wut.
 
+(* begin hide *)
 Axioms
   (wut : Type)
   (C : (wut -> wut) -> wut)
   (ind : forall
     (P : wut -> Type)
-    (PC : forall f : wut -> wut, P (C f)),
+    (PC : forall f : wut -> wut, (forall w : wut, P (f w)) -> P (C f)),
       {f : forall w : wut, P w |
-        forall g : wut -> wut, f (C g) = PC g}).
+        forall g : wut -> wut,
+          f (C g) = PC g (fun w => f (g w))
+      }
+    ).
 
 Definition bad :
   wut -> (wut -> wut).
 Proof.
   apply (ind (fun _ => wut -> wut)).
-    intro f. exact f.
+    intros f _. exact f.
 Defined.
 
 Lemma bad_sur :
-  forall (f : wut -> wut), exists w : wut, bad w = f.
+  surjective bad.
 Proof.
-  intro. unfold bad. destruct (ind _) as (g & H).
-  exists (C f). apply H.
+  unfold surjective. intro f. exists (C f).
+  unfold bad. destruct (ind _). apply e.
 Defined.
 
 Definition change : wut -> wut.
 Proof.
-  apply (ind (fun _ => wut)).
-  intro f. apply f. exact (C (fun w => C (fun v => f v))).
+  apply ind.
+  intros f g. exact (g (C f)).
+(*  intro w. exact (C (fun _ => w)).*)
+
+(*  apply (ind (fun _ => wut)).*)
+  
+(*  intro f. apply f. exact (C (fun _ => C f)).*)
 Defined.
 
 Lemma change_neq :
   forall w : wut, change w <> w.
 Proof.
-  apply ind. intros f H.
-  unfold change in H. destruct (ind _) as (g & eq).
-  rewrite eq in H.
+  apply ind. intros f H' H.
+  pose (H'' := H' (C f)).
+  unfold change in *. destruct (ind _).
 Admitted.
+(* end hide *)
 
-Lemma behemot_atakuje : False.
+Lemma wut_illegal : False.
+(* begin hide *)
 Proof.
   apply (Cantor' bad change).
     apply change_neq.
     unfold surjective. apply bad_sur.
 Qed.
-
-End attempt4.
-
-(** **** Ćwiczenie *)
-
-(* Inductive T : Type := *)
-
-(** Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
-    pozytywności. Jeżeli tak, narysuj wesołego jeża. Jeżeli nie, napisz
-    zapętlającą się funkcję podobną do [loop]. Następnie sprawdź w Coqu,
-    czy udzieliłeś poprawnej odpowiedzi.
-    - [| C1 : T]
-    - [| C2 : bool -> T]
-    - [| C3 : T -> T]
-    - [| C4 : T -> nat -> T]
-    - [| C5 : forall A : Type, T -> A -> T]
-    - [| C6 : forall A : Type, A -> T -> T]
-    - [| C7 : forall A : Type, (A -> T) -> T]
-    - [| C8 : forall A : Type, (T -> A) -> T]
-    - [| C9 : (forall x : T, T) -> T]
-    - [| C10 : (forall (A : Type) (x : T), A) -> T]
-    - [| C11 : forall A B C : Type,
-                  A -> (forall x : T, B) -> (C -> T) -> T] *)
-
-(* begin hide *)
-(* C1-C7 są legalne, C8-C11 nie. *)
 (* end hide *)
 
-(** ** Paradoks Russella i paradoks Girarda (TODO) *)
+End Exercise4.
+
+(** ** Promocja 2 w 1 czyli paradoksy Russella i Girarda (TODO) *)
 
 (** _Istnieje teoria, że jeśli kiedyś ktoś się dowie, dlaczego powstało i
     czemu służy uniwersum, to zniknie ono i zostanie zastąpione czymś

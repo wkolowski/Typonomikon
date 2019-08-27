@@ -5876,7 +5876,7 @@ Polecenie jest następujące:
 <div class="paragraph"> </div>
 
     Nie muszę chyba dodawać, że ława oburzonych jest oburzona faktem, że Coq
-    nie wspiera indukcji-indukcji-rekursji (a Agda już tak). 
+    nie wspiera indukcji-indukcji-rekursji. 
 <div class="paragraph"> </div>
 
 <a name="lab156"></a><h4 class="section">Ćwiczenie (mega trudne)</h4>
@@ -6431,7 +6431,7 @@ Uogólnienie jest dość banalne. Najpierw zastępujemy <span class="inlinecode
 </div>
 
 <div class="doc">
-<a name="lab163"></a><h2 class="section">Dobro kontra zło: ścisła pozytywność vs negatywność (TODO)</h2>
+<a name="lab163"></a><h2 class="section">Twierdzenie Cantora jako młot na negatywność</h2>
 
 <div class="paragraph"> </div>
 
@@ -6473,7 +6473,7 @@ Otworzymy sobie nowy moduł, żeby nie zaśmiecać globalnej przestrzeni
 </div>
 
 <div class="doc">
-<span class="inlinecode"><span class="id" title="var">wut</span></span> to aksjomatyczne kodowanie tego samego typu, a którym poprzednio
+<span class="inlinecode"><span class="id" title="var">wut</span></span> to aksjomatyczne kodowanie tego samego typu, o którym poprzednio
     tylko udawaliśmy, że istnieje. Zauważmy, że nie jest nam potrzebna
     reguła indukcji - wystarczy jeden z prostszych eliminatorów, mianowicie
     <span class="inlinecode"><span class="id" title="var">dcase</span></span>, czyli zależna reguła analizy przypadków. 
@@ -6554,7 +6554,64 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 
 <div class="paragraph"> </div>
 
-    Przekonajmy się. 
+    Początkowo miałem opisać kilka przypadków z większą liczbą konstruktorów,
+    ale stwierdziłem, że jednak mi się nie chce. Zobaczymy, czy będziesz w
+    stanie sam wykombinować, jak się z nimi uporać w ćwiczeniach. 
+<div class="paragraph"> </div>
+
+<a name="lab164"></a><h4 class="section">Ćwiczenie</h4>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Inductive&nbsp;T&nbsp;:&nbsp;Type&nbsp;:=&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
+    pozytywności. Jeżeli tak, narysuj wesołego jeża. Jeżeli nie, napisz
+    zapętlającą się funkcję podobną do <span class="inlinecode"><span class="id" title="var">loop</span></span> (zakładamy, że typ <span class="inlinecode"><span class="id" title="var">T</span></span> ma
+    tylko ten jeden konstruktor). Następnie sprawdź w Coqu, czy udzieliłeś
+    poprawnej odpowiedzi.
+<ul class="doclist">
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C2</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C3</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C4</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C5</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C6</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C7</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode">(<span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C8</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode">(<span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C9</span></span> <span class="inlinecode">:</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C10</span></span> <span class="inlinecode">:</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode">(<span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>)</span> <span class="inlinecode">(<span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>),</span> <span class="inlinecode"><span class="id" title="var">A</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+
+</li>
+<li> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">C11</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span>
+                  <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">C</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> 
+</li>
+</ul>
+
 </div>
 <div class="code">
 
@@ -6564,7 +6621,142 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab164"></a><h2 class="section">Paradoks Russella i paradoks Girarda (TODO)</h2>
+<a name="lab165"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Poniższe paskudztwo łamie prawo ścisłej pozytywności nie jednym, lecz
+    aż dwoma swoimi konstruktorami.
+
+<div class="paragraph"> </div>
+
+    Zakoduj ten typ aksjomatycznie i udowodnij, że jego istnienie prowadzi
+    do sprzeczności. Metoda jest podobna jak w naszym przykładzie, ale
+    trzeba ją troszkę dostosować do zastanej sytuacji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise1</span>.<br/>
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C0</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">wut</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C1</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">nat</span>) -&gt; <span class="id" title="var">wut</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut_illegal</span> : <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise1</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab166"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Poniższe paskudztwo ma jeden konstruktor negatywny, a drugi pozytywny,
+    niczym typowa panienka z borderlinem...
+
+<div class="paragraph"> </div>
+
+    Polecenie jak w poprzednim ćwiczeniu. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise2</span>.<br/>
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C0</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>) -&gt; <span class="id" title="var">wut</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C1</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">wut</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut_illegal</span> : <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise2</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab167"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Poniższy typ reprezentuje termy beztypowego rachunku lambda, gdzie <span class="inlinecode"><span class="id" title="var">V</span></span>
+    to typ reprezentujący zmienne. Co to za zwierzątko ten rachunek lambda
+    to my się jeszcze przekonamy... chyba, oby.
+
+<div class="paragraph"> </div>
+
+    Taki sposób reprezentowania rachunku lambda (i ogólnie składni języków
+    programowania) nazywa się HOAS, co jest skrótem od ang. Higher Order
+    Abstract Syntax. W wielu językach funkcyjnych jest to popularna technika,
+    ale w Coqu, jak zaraz udowodnisz, jest ona nielegalna. Ława oburzonych
+    jest rzecz jasna oburzona! 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise3</span>.<br/>
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Term</span> (<span class="id" title="var">V</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Var</span> : <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Lam</span> : (<span class="id" title="var">Term</span> <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span>) -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">App</span> : <span class="id" title="var">Term</span> <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Term_illegal</span> : <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise3</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab168"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Poniższe bydle jest najgorsze z możliwych - póki co nie wiem, jak to
+    udowodnić. Powodzenia! 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise4</span>.<br/>
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>) -&gt; <span class="id" title="var">wut</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut_illegal</span> : <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise4</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab169"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -6593,7 +6785,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab165"></a><h1 class="section">Podsumowanie (TODO)</h1>
+<a name="lab170"></a><h1 class="section">Podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 
