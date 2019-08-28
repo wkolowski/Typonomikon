@@ -5403,7 +5403,7 @@ Qed.
 
 End Exercise4.
 
-(** ** Promocja 2 w 1 czyli paradoksy Russella i Girarda (TODO) *)
+(** ** Promocja 2 w 1 czyli paradoksy Russella i Girarda *)
 
 (** _Istnieje teoria, że jeśli kiedyś ktoś się dowie, dlaczego powstało i
     czemu służy uniwersum, to zniknie ono i zostanie zastąpione czymś
@@ -5495,8 +5495,125 @@ End Exercise4.
     "Zdanie po prawej jest prawdziwe. Zdanie po lewej jest fałszywe."
 *)
 
+(** Dobra, wystarczy już tych paradoksów... a nie, czekaj. Przecież został
+    nam do omówienia jeszcze paradoks Girarda. Jednak poznawszy już tajniki
+    autoreferencji, powinno pójść jak z płatka.
 
-(** Uproszczona wersja paradoksu - tylko U i Pi. *)
+    Paradoks Girarda to paradoks, który może zaistnieć w wielu systemach
+    formalnych, takich jak teorie typów, języki programowania, logiki i
+    inne takie. Źródłem całego zła jest zazwyczaj stwierdzenie w stylu
+    [Type : Type]. *)
+
+Check Type.
+(* ===> Type : Type *)
+
+(** O nie! Czyżbyśmy właśnie zostali zaatakowani przez paradoks Girarda?
+    W tym miejscu należy przypomnieć (albo obwieścić - niestety nie pamiętam,
+    czy już o tym wspominałem), że [Type] jest w Coqu jedynie synonimem dla
+    czegoś w stylu [Type(i)], gdzie [i] jest "poziomem" sortu [Type], zaś
+    każde [Type(i)] żyje tak naprawdę w jakimś [Type(j)], gdzie [j] jest
+    większe od [i] - typy niższego poziomu żyją w typach wyższego poziomu.
+    Będziesz mógł ów fakt ujrzeć na własne oczy, gdy w CoqIDE zaznaczysz
+    opcję [View > Display universe levels]. *)
+
+Check Type.
+(* ===> Type@{Top.590} : Type@{Top.590+1} *)
+
+(** Jak widać, jest mniej więcej tak jak napisałem wyżej. Nie przejmuj się
+    tym tajemniczym [Top] - to tylko nic nieznaczący bibelocik. W twoim
+    przypadku również poziom uniwersum może być inny niż [590]. Co więcej,
+    poziom ten będzie się zwiększał wraz z każdym odpaleniem komendy [Check
+    Type] (czyżbyś pomyślał właśnie o doliczeniu w ten sposób do zyliona?).
+
+    Skoro już wiemy, że NIE zostaliśmy zaatakowani przez paradoks Girarda,
+    to w czym problem z tym całym [Type : Type]? Jakiś przemądrzały (czyli
+    mądry) adept informatyki teoretycznej mógłby odpowiedzieć, że to zależy
+    od konkretnego systemu formalnego albo coś w tym stylu. Otóż niet! Jak
+    zawsze, chodzi oczywiście o autoreferencję.
+
+    Gdyby ktoś był zainteresowany, to najlepsze dotychczas sformułowanie
+    paradoksu znalazłem (zupełnie przez przypadek, wcale nie szukając) w
+    pracy "An intuitionistic theory of types" Martina-Löfa (swoją drogą,
+    ten koleś wymyślił podstawy dużej części wszystkiego, czym się tutaj
+    zajmujemy). Można ją przeczytać tu (paradoks Girarda jest pod koniec
+    pierwszej sekcji):
+    archive-pml.github.io/martin-lof/pdfs/An-Intuitionistic-Theory-of-Types-1972.pdf
+
+    Nasze sformułowanie paradoksu będzie w sumie podobne do tego z powyższej
+    pracy (co jest w sumie ciekawe, bo wymyśliłem je samodzielnie i to przez
+    przypadek), ale dowód sprzeczności będzie inny - na szczęście dużo
+    prostszy.
+
+    Dobra, koniec tego ględzenia. Czas na konkrety. *)
+
+(*
+Fail Inductive U : Type :=
+    | Pi : forall (A : U) (B : El A -> U), U
+    | UU : U
+
+with El (u : U) : Type :=
+match u with
+    | Pi A B => forall x : El A, B x
+    | UU => U
+end.
+*)
+
+(** Powyższa induktywno-rekurencyjna definicja typu [U] (i interpretującej
+    je funkcji [El]), którą Coq rzecz jasna odrzuca (uczcijmy ławę oburzonych
+    minutą oburzenia) to definicja pewnego uniwersum.
+
+    W tym miejscu wypadałoby wytłumaczyć, czym są uniwersa. Otóż odpowiedź
+    jest dość prosta: uniwersum składa się z typu [U : Type] oraz funkcji
+    [El : U -> Type]. Intuicja w tym wszystkim jest taka, że elementami
+    typu [U] są nazwy typów (czyli bytów sortu [Type]), zaś fukncja [El]
+    zwraca typ, którego nazwę dostanie.
+
+    Choć z definicji widać to na pierwszy rzut oka, to zaskakujący może
+    wydać ci się fakt, że w zasadzie każdy typ można zinterpretować jako
+    uniwersum i to zazwyczaj na bardzo wiele różnych sposobów (tyle ile
+    różnych interpretacji [El] jesteśmy w stanie wymyślić). Najlepiej
+    będzie, jeżeli przemyślisz to wszystko w ramach ćwiczenia. *)
+
+(** **** Ćwiczenie *)
+
+(** Ćwiczenie będzie konceptualne, a składa się na nie kilka łamigłówek:
+    - zinterpretuj [False] jako uniwersum
+    - zinterpretuj [unit] jako uniwersum (ile jest możliwych sposobów?)
+    - czy istnieje uniwersum, które zawiera nazwę samego siebie? Uwaga:
+      to nie jest tak proste, jak może się wydawać na pierwszy rzut oka.
+    - wymyśl ideologicznie słuszną interpretację typu [nat] jako uniwersum
+      (tak, jest taka). Następnie wymyśl jakąś głupią interpretację [nat]
+      jako uniwersum. Dlaczego ta interpretacja jest głupia?
+    - zdefiniuj uniwersum, którego elementami są nazwy typów funkcji z
+      n-krotek liczb naturalnych w liczby naturalne. Uwaga: rozwiązanie
+      jest bardzo eleganckie i możesz się go nie spodziewać.
+    - czy istnieje uniwersum, którego interpretacja jest surjekcją? Czy
+      da się w Coqu udowodnić, że tak jest albo nie jest? Uwaga: tak
+      bardzo podchwytliwe, że aż sam się na to złapałem. *)
+
+(* begin hide *)
+
+(** Odpowiedzi:
+    - [False] to uniwersum puste, w którym nic nie ma - a myślałeś, że co?
+    - [unit] to uniwersum zawierające nazwę jednego, wybranego typu - też
+      niezbyt odkrywcza odpowiedź. Interpretacji jest tyle ile typów.
+    - Tak, istnieje uniwersum zawierające nazwę samego siebie, np. [unit].
+    - Ideologicznie słuszna interpretacja [nat] to uniwersum typów
+      skończonych - [El n] to typ n-elementowy. Głupia interpretacja:
+      każde [n] jest nazwą dla 
+    - Tutaj mały twist, bo tym uniwersum też jest [nat]
+    - Tutaj też trochę twist, bo takie uniwersum oczywiście istnieje i
+      nazywa się... baram bam bam bam... fanfary... [Type]! No cóż, nie
+      tego się spodziewałeś, prawda? A co do tego, czy istnieje takie
+      induktywne uniwersum, to myślę, że dla każdego kandydata z osobna
+      dałoby się pokazać, że nie jest ono wystarczająco dobre. *)
+
+(* end hide *)
+
+(** Skoro wiemy już, czym są uniwersa, przyjrzyjmy się temu, które właśnie
+    zdefiniowaliśmy.
+
+    TODO: jaki to ma związek z indukcją-rekursją? *)
 
 Axioms
   (U : Type)

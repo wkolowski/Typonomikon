@@ -6756,7 +6756,7 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
 </div>
 
 <div class="doc">
-<a name="lab169"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda (TODO)</h2>
+<a name="lab169"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda</h2>
 
 <div class="paragraph"> </div>
 
@@ -6891,7 +6891,107 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
 
 <div class="paragraph"> </div>
 
- Uproszczona wersja paradoksu - tylko U i Pi. 
+ Dobra, wystarczy już tych paradoksów... a nie, czekaj. Przecież został
+    nam do omówienia jeszcze paradoks Girarda. Jednak poznawszy już tajniki
+    autoreferencji, powinno pójść jak z płatka.
+
+<div class="paragraph"> </div>
+
+    Paradoks Girarda to paradoks, który może zaistnieć w wielu systemach
+    formalnych, takich jak teorie typów, języki programowania, logiki i
+    inne takie. Źródłem całego zła jest zazwyczaj stwierdzenie w stylu
+    <span class="inlinecode"><span class="id" title="keyword">Type</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="keyword">Type</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Type&nbsp;:&nbsp;Type&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+O nie! Czyżbyśmy właśnie zostali zaatakowani przez paradoks Girarda?
+    W tym miejscu należy przypomnieć (albo obwieścić - niestety nie pamiętam,
+    czy już o tym wspominałem), że <span class="inlinecode"><span class="id" title="keyword">Type</span></span> jest w Coqu jedynie synonimem dla
+    czegoś w stylu <span class="inlinecode"><span class="id" title="keyword">Type</span>(<span class="id" title="var">i</span>)</span>, gdzie <span class="inlinecode"><span class="id" title="var">i</span></span> jest "poziomem" sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, zaś
+    każde <span class="inlinecode"><span class="id" title="keyword">Type</span>(<span class="id" title="var">i</span>)</span> żyje tak naprawdę w jakimś <span class="inlinecode"><span class="id" title="keyword">Type</span>(<span class="id" title="var">j</span>)</span>, gdzie <span class="inlinecode"><span class="id" title="var">j</span></span> jest
+    większe od <span class="inlinecode"><span class="id" title="var">i</span></span> - typy niższego poziomu żyją w typach wyższego poziomu.
+    Będziesz mógł ów fakt ujrzeć na własne oczy, gdy w CoqIDE zaznaczysz
+    opcję <span class="inlinecode"><span class="id" title="var">View</span></span> <span class="inlinecode">&gt;</span> <span class="inlinecode"><span class="id" title="var">Display</span></span> <span class="inlinecode"><span class="id" title="var">universe</span></span> <span class="inlinecode"><span class="id" title="var">levels</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="keyword">Type</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Type@{Top.590}&nbsp;:&nbsp;Type@{Top.590+1}&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać, jest mniej więcej tak jak napisałem wyżej. Nie przejmuj się
+    tym tajemniczym <span class="inlinecode"><span class="id" title="var">Top</span></span> - to tylko nic nieznaczący bibelocik. W twoim
+    przypadku również poziom uniwersum może być inny niż <span class="inlinecode">590</span>. Co więcej,
+    poziom ten będzie się zwiększał wraz z każdym odpaleniem komendy <span class="inlinecode"><span class="id" title="keyword">Check</span></span>
+    <span class="inlinecode"><span class="id" title="keyword">Type</span></span> (czyżbyś pomyślał właśnie o doliczeniu w ten sposób do zyliona?).
+
+<div class="paragraph"> </div>
+
+    Skoro już wiemy, że NIE zostaliśmy zaatakowani przez paradoks Girarda,
+    to w czym problem z tym całym <span class="inlinecode"><span class="id" title="keyword">Type</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>? Jakiś przemądrzały (czyli
+    mądry) adept informatyki teoretycznej mógłby odpowiedzieć, że to zależy
+    od konkretnego systemu formalnego albo coś w tym stylu. Otóż niet! Jak
+    zawsze, chodzi oczywiście o autoreferencję.
+
+<div class="paragraph"> </div>
+
+    Gdyby ktoś był zainteresowany, to najlepsze dotychczas sformułowanie
+    paradoksu znalazłem (zupełnie przez przypadek, wcale nie szukając) w
+    pracy "An intuitionistic theory of types" Martina-Löfa (swoją drogą,
+    ten koleś wymyślił podstawy dużej części wszystkiego, czym się tutaj
+    zajmujemy). Można ją przeczytać tu (paradoks Girarda jest pod koniec
+    pierwszej sekcji):
+    archive-pml.github.io/martin-lof/pdfs/An-Intuitionistic-Theory-of-Types-1972.pdf
+
+<div class="paragraph"> </div>
+
+    Nasze sformułowanie paradoksu będzie w sumie podobne do tego z powyższej
+    pracy (co jest w sumie ciekawe, bo wymyśliłem je samodzielnie i to przez
+    przypadek), ale dowód sprzeczności będzie inny - na szczęście dużo
+    prostszy.
+
+<div class="paragraph"> </div>
+
+    Dobra, koniec tego ględzenia. Czas na konkrety. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+Fail&nbsp;Inductive&nbsp;U&nbsp;:&nbsp;Type&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Pi&nbsp;:&nbsp;forall&nbsp;(A&nbsp;:&nbsp;U)&nbsp;(B&nbsp;:&nbsp;El&nbsp;A&nbsp;-&gt;&nbsp;U),&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;UU&nbsp;:&nbsp;U<br/>
+<br/>
+with&nbsp;El&nbsp;(u&nbsp;:&nbsp;U)&nbsp;:&nbsp;Type&nbsp;:=<br/>
+match&nbsp;u&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Pi&nbsp;A&nbsp;B&nbsp;=&gt;&nbsp;forall&nbsp;x&nbsp;:&nbsp;El&nbsp;A,&nbsp;B&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;UU&nbsp;=&gt;&nbsp;U<br/>
+end.<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Powyższa induktywno-rekurencyjna definicja typu <span class="inlinecode"><span class="id" title="var">U</span></span>, którą Coq rzecz
+    jasna odrzuca (uczcijmy ławę oburzonych minutą zniesmaczenia) to
+    definicja uniwersum.
+
+<div class="paragraph"> </div>
+
+
 </div>
 <div class="code">
 
@@ -7009,6 +7109,47 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
 
 <div class="paragraph"> </div>
 
+ Najpierw ćwiczenie konceptualne. Dowiedziałeś się w tym podrozdziale, że
+    uniwersa to w sumie to samo co typy: każdy typ można zinterpretować
+    jako uniwersum, a jego elementy jako nazwy typów. Wobec tego parę
+    łamigłówek:
+<ul class="doclist">
+<li> zinterpretuj <span class="inlinecode"><span class="id" title="var">False</span></span> jako uniwersum
+
+</li>
+<li> zinterpretuj <span class="inlinecode"><span class="id" title="var">unit</span></span> jako uniwersum
+
+</li>
+<li> czy istnieje uniwersum, które zawiera nazwę samego siebie? Uwaga:
+      to nie jest tak proste, jak może się wydawać na pierwszy rzut oka.
+
+</li>
+<li> wymyśl ideologicznie słuszną interpretację typu <span class="inlinecode"><span class="id" title="var">nat</span></span> jako uniwersum
+      (tak, jest taka).
+
+</li>
+<li> zdefiniuj uniwersum, którego elementami są nazwy typów funkcji z
+      n-krotek liczb naturalnych w liczby naturalne.
+
+</li>
+<li> czy istnieje uniwersum, którego interpretacja jest surjekcją? Czy
+      da się w Coqu udowodnić, że tak jest albo nie jest? 
+</li>
+</ul>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab175"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
  Tak naprawdę, to w tym podrozdziale byliśmy co najwyżej bieda-Thanosem,
     gdyż uniwersum, z którym się ścieraliśmy, samo było biedne. W niniejszym
     ćwiczeniu zmierzysz się z uniwersum, które zawiera też nazwy typu pustego,
@@ -7065,7 +7206,7 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a name="lab175"></a><h1 class="section">Podsumowanie (TODO)</h1>
+<a name="lab176"></a><h1 class="section">Podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 
