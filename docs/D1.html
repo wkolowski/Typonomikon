@@ -6555,8 +6555,8 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 <div class="paragraph"> </div>
 
     Początkowo miałem opisać kilka przypadków z większą liczbą konstruktorów,
-    ale stwierdziłem, że jednak mi się nie chce. Zobaczymy, czy będziesz w
-    stanie sam wykombinować, jak się z nimi uporać w ćwiczeniach. 
+    ale stwierdziłem, że jednak mi się nie chce. W ćwiczeniach zobaczymy, czy
+    będziesz w stanie sam wykombinować, jak się z nimi uporać. 
 <div class="paragraph"> </div>
 
 <a name="lab164"></a><h4 class="section">Ćwiczenie</h4>
@@ -6771,21 +6771,301 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
  Douglas Adams, <i>Restauracja na końcu wszechświata</i> 
 <div class="paragraph"> </div>
 
- Przyjaźnie wyglądające uniwersum, które jednak podstępnie masakruje
-    zbłąkanych wędrowców. Jak zawsze ciężko nazwać ten paradoks. Chyba
-    najprościej powiedzieć, że jest to jednocześnie paradoks Russella i
-    Girarda. Ciekawe, że udało mi się to wycisnąć z rozważań nad
-    indukcją-rekursją oraz ścisłą pozytywnością. 
+ W dwóch poprzednich podrozdziałach poznaliśmy twierdzenie Cantora i
+    nauczyliśmy się używać go jako młota na negatywne typy induktywne.
+
+<div class="paragraph"> </div>
+
+    W tym podrozdziale zapoznamy się z dwoma paradoksami (a precyzyjniej
+    pisząc, z dwoma wersjami tego samego paradoksu), które okażą się być
+    ściśle powiązane z twierdzeniem Cantora, a które będą służyć nam gdy
+    staniemy w szranki z negatwynymi typami induktywno-rekurencyjnymi
+    (czyli tymi, które definiuje się przez indukcję-rekursję). O tak: w
+    tym podrozdziale, niczym Thanos, staniemy do walki przeciw uniwersum!
+
+<div class="paragraph"> </div>
+
+    Zacznijmy od paradoksu Russella. Jest to bardzo stary paradoks, odkryty
+    w roku 1901 przez... zgadnij kogo... gdy ów człek szukał dziury w całym
+    w naiwnej teorii zbiorów (która to teoria jest już od dawna martwa).
+
+<div class="paragraph"> </div>
+
+    Sformułowanie paradoksu brzmi następująco: niech V będzie zbiorem
+    wszystkich zbiorów, które nie należą same do siebie. Pytanie: czy
+    V należy do V?
+
+<div class="paragraph"> </div>
+
+    Gdzie tu paradoks? Otóż jeżeli V należy do V, to na mocy definicji V,
+    V nie należy do V. Jeżeli zaś V nie należy do V, to na mocy definicji V,
+    V należy do V. Nie trzeba chyba dodawać, że jednoczesne należenie i
+    nienależenie prowadzi do sprzeczności. 
+<div class="paragraph"> </div>
+
+<a name="lab170"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ To genialne ćwiczenie wymyśliłem dzięki zabłądzeniu na esperanckiej
+    Wikipedii (ha! nikt nie spodziewał się esperanckiej Wikipedii w
+    ćwiczeniu dotyczącym paradoksu Russella). Ćwiczenie brzmi tak:
+
+<div class="paragraph"> </div>
+
+    W Wikipedii niektóre artykuły są listami (nie, nie w sensie typu
+    induktywnego :)), np. lista krajów według PKB per capita. Pytanie:
+    czy można stworzyć w Wikipedii listę wszystkich list? Czy na liście
+    wszystkich list ona sama jest wymieniona? Czy można w Wikipedii
+    stworzyć listę wszystkich list, które nie wymieniają same siebie? 
+<div class="paragraph"> </div>
+
+ Na czym tak naprawdę polega paradoks? Jakiś mądry (czyli przemądrzały)
+    filozof mógłby rzec, że na nadużyciu pojęcia zbioru... albo czymś
+    równie absurdalnym. Otóż nie! Paradoks Russella polega na tym samym,
+    co cała masa innych paradoksów, czyli na autoreferencji.
+
+<div class="paragraph"> </div>
+
+    Z autoreferencją spotkaliśmy się już co najmniej raz, w rozdziale
+    pierwszym. Przypomnij sobie, że golibroda goli tych i tylko tych,
+    którzy sami siebie nie golą. Czy golibroda goli sam siebie?
+
+<div class="paragraph"> </div>
+
+    Takie postawienie sprawy daje paradoks. Podobnie z Russellem: V zawiera
+    te i tylko te zbiory, które nie zawierają same siebie. Czy V zawiera
+    V? Wot, paradoks. Żeby lepiej wczuć się w ten klimat, czas na więcej
+    ćwiczeń. 
+<div class="paragraph"> </div>
+
+<a name="lab171"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Poniższą zagadkę pozwolę sobie wesoło nazwać "paradoks hetero". Zagadka
+    brzmi tak:
+
+<div class="paragraph"> </div>
+
+    Niektóre słowa opisują same siebie, np. słowo "krótki" jest "krótkie",
+    a niektóre inne nie, np. słowo "długi" nie jest długie. Podobnie słowo
+    "polski" jest słowem polskim, ale słowo "niemiecki" nie jest słowem
+    niemieckim. Słowa, które nie opisują samych siebie będziemy nazywać
+    słowami heterologicznymi. Pytanie: czy słowo "heterologiczny" jest
+    heterologiczne? 
+<div class="paragraph"> </div>
+
+<a name="lab172"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ A jak jest z poniższym paradoksem wujka Janusza?
+
+<div class="paragraph"> </div>
+
+    Wujek Janusz lubi tych (i tylko tych) członków rodziny, którzy sami
+    siebie nie lubią oraz nie lubi tych (i tylko tych), którzy sami siebie
+    lubią. Czy wujek Janusz lubi sam siebie? 
+<div class="paragraph"> </div>
+
+<a name="lab173"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Powyższe ćwiczenie miało być ostatnim, ale co tam, dam jeszcze trochę.
+    Co czuje serce twoje (ewentualnie: co widzisz przed oczyma duszy swojej)
+    na widok poniższych wesołych zdań?
+
+<div class="paragraph"> </div>
+
+    "To zdanie jest fałszywe."
+
+<div class="paragraph"> </div>
+
+    "Zdanie po prawej jest fałszywe. Zdanie po lewej jest prawdziwe."
+
+<div class="paragraph"> </div>
+
+    "Zdanie po prawej jest prawdziwe. Zdanie po lewej jest fałszywe."
+
+<div class="paragraph"> </div>
+
+ Uproszczona wersja paradoksu - tylko U i Pi. 
 </div>
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Axioms</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">U</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">El</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Pi</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>), <span class="id" title="var">U</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">UU</span> : <span class="id" title="var">U</span>)<br/>
+<br/>
+&nbsp;&nbsp;(<span class="id" title="var">El_Pi</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">El</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) = <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span>), <span class="id" title="var">El</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">El_UU</span> : <span class="id" title="var">El</span> <span class="id" title="var">UU</span> = <span class="id" title="var">U</span>)<br/>
+<br/>
+&nbsp;&nbsp;(<span class="id" title="var">ind</span> : <span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PPi</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">A</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span>, <span class="id" title="var">P</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PUU</span> : <span class="id" title="var">P</span> <span class="id" title="var">UU</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="var">U</span>, <span class="id" title="var">P</span> <span class="id" title="var">A</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">U</span>) (<span class="id" title="var">B</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) =<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">PPi</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> (<span class="id" title="var">f</span> <span class="id" title="var">A</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">El</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">f</span> (<span class="id" title="var">B</span> <span class="id" title="var">x</span>))) /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> <span class="id" title="var">UU</span> = <span class="id" title="var">PUU</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> : <span class="id" title="var">U</span> -&gt; (<span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>. <span class="id" title="var">revert</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">A</span> : <span class="id" title="var">U</span> =&gt; (<span class="id" title="var">El</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">U</span>) -&gt; (<span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>))).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">El_UU</span> <span class="id" title="tactic">in</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">u</span> =&gt; <span class="id" title="var">u</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">homotopiczny_czarodziej</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) (<span class="id" title="var">u</span> : <span class="id" title="var">P</span> <span class="id" title="var">y</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_rect</span> <span class="id" title="var">x</span> <span class="id" title="var">P</span> (@<span class="id" title="var">eq_rect_r</span> <span class="id" title="var">A</span> <span class="id" title="var">y</span> <span class="id" title="var">P</span> <span class="id" title="var">u</span> <span class="id" title="var">x</span> <span class="id" title="var">p</span>) <span class="id" title="var">y</span> <span class="id" title="var">p</span> = <span class="id" title="var">u</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_sur</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">surjective</span> <span class="id" title="var">bad</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">surjective</span>, <span class="id" title="var">bad</span>; <span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">g</span> <span class="id" title="var">Hg</span>]; <span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">Hg</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">Hg</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">h</span> <span class="id" title="var">Hh</span>]; <span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">Hh</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">Hh</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">f'</span> := <span class="id" title="var">eq_rect_r</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">T</span> : <span class="id" title="keyword">Type</span> =&gt; <span class="id" title="var">T</span> -&gt; <span class="id" title="var">U</span>) <span class="id" title="var">f</span> <span class="id" title="var">El_UU</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">UU</span> <span class="id" title="var">f'</span>). <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>, <span class="id" title="var">H2</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">f'</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">homotopiczny_czarodziej</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="tactic">change</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="var">U</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">UU</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">Pi</span> <span class="id" title="var">UU</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">UU</span>)).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">discern</span> : <span class="id" title="var">U</span> -&gt; <span class="id" title="var">bool</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">true</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">help</span> <span class="id" title="var">H</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">discern</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">unfold</span> <span class="id" title="var">discern</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">help</span> <span class="id" title="var">Hhelp</span>];<br/>
+&nbsp;&nbsp;<span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">Hhelp</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">Hhelp</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">congruence</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">change_neq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">u</span> : <span class="id" title="var">U</span>, <span class="id" title="tactic">change</span> <span class="id" title="var">u</span> &lt;&gt; <span class="id" title="var">u</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>; <span class="id" title="tactic">unfold</span> <span class="id" title="tactic">change</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">ind</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">f</span> <span class="id" title="var">H</span>]; <span class="id" title="var">decompose</span> [<span class="id" title="var">and</span>] <span class="id" title="var">H</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">H</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">help</span> <span class="id" title="var">H1</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_not_sur</span> :<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">surjective</span> <span class="id" title="var">bad</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">surjective</span>. <span class="id" title="tactic">intro</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">H</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">u</span> : <span class="id" title="var">U</span> =&gt; <span class="id" title="tactic">change</span> (<span class="id" title="var">bad</span> <span class="id" title="var">u</span> <span class="id" title="var">u</span>))) <span class="id" title="keyword">as</span> [<span class="id" title="var">u</span> <span class="id" title="var">eq</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">u</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">change_neq</span> (<span class="id" title="var">bad</span> <span class="id" title="var">u</span> <span class="id" title="var">u</span>)). <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Russel_Girard_simplified</span> : <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">bad_not_sur</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">bad_sur</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab170"></a><h1 class="section">Podsumowanie (TODO)</h1>
+<a name="lab174"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Tak naprawdę, to w tym podrozdziale byliśmy co najwyżej bieda-Thanosem,
+    gdyż uniwersum, z którym się ścieraliśmy, samo było biedne. W niniejszym
+    ćwiczeniu zmierzysz się z uniwersum, które zawiera też nazwy typu pustego,
+    typu <span class="inlinecode"><span class="id" title="var">unit</span></span> i liczb naturalnych, nazwy produktów, sum i funkcji, a także
+    sum zależnych.
+
+<div class="paragraph"> </div>
+
+    Mówiąc wprost: zakoduj aksjomatycznie poniższą definicję uniwersum <span class="inlinecode"><span class="id" title="var">U</span></span>,
+    a następnie udowodnij, że jest jest ona nielegalna. Nie powinno to być
+    trudne - metoda jest podobna jak w przypadku biednego uniwersum. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">NonPoorUniverse</span>.<br/>
+
+<br/>
+<span class="comment">(*<br/>
+Fail&nbsp;Inductive&nbsp;U&nbsp;:&nbsp;Type&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Empty&nbsp;:&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Unit&nbsp;:&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Nat&nbsp;:&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Prod&nbsp;:&nbsp;U&nbsp;-&gt;&nbsp;U&nbsp;-&gt;&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Sum&nbsp;:&nbsp;U&nbsp;-&gt;&nbsp;U&nbsp;-&gt;&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Arr&nbsp;:&nbsp;U&nbsp;-&gt;&nbsp;U&nbsp;-&gt;&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Pi&nbsp;:&nbsp;forall&nbsp;(A&nbsp;:&nbsp;U)&nbsp;(B&nbsp;:&nbsp;El&nbsp;A&nbsp;-&gt;&nbsp;U),&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Sigma:&nbsp;forall&nbsp;(A&nbsp;:&nbsp;U)&nbsp;(B&nbsp;:&nbsp;El&nbsp;A&nbsp;-&gt;&nbsp;U),&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;UU&nbsp;:&nbsp;U<br/>
+<br/>
+with&nbsp;El&nbsp;(u&nbsp;:&nbsp;U)&nbsp;:&nbsp;Type&nbsp;:=<br/>
+match&nbsp;u&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Empty&nbsp;=&gt;&nbsp;Empty_set<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Unit&nbsp;=&gt;&nbsp;unit<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Nat&nbsp;=&gt;&nbsp;nat<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Prod&nbsp;A&nbsp;B&nbsp;=&gt;&nbsp;El&nbsp;A&nbsp;*&nbsp;El&nbsp;B<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Sum&nbsp;A&nbsp;B&nbsp;=&gt;&nbsp;El&nbsp;A&nbsp;+&nbsp;El&nbsp;B<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Arr&nbsp;A&nbsp;B&nbsp;=&gt;&nbsp;El&nbsp;A&nbsp;-&gt;&nbsp;El&nbsp;B<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Pi&nbsp;A&nbsp;B&nbsp;=&gt;&nbsp;forall&nbsp;x&nbsp;:&nbsp;El&nbsp;A,&nbsp;B&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Sigma&nbsp;A&nbsp;B&nbsp;=&gt;&nbsp;{x&nbsp;:&nbsp;El&nbsp;A&nbsp;&amp;&nbsp;El&nbsp;(B&nbsp;x)}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;UU&nbsp;=&gt;&nbsp;U<br/>
+end.<br/>
+*)</span><br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">U_illegal</span> : <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">NonPoorUniverse</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab175"></a><h1 class="section">Podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 

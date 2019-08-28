@@ -5083,8 +5083,8 @@ End Example1.
     konstruktorów jest więcej?
 
     Początkowo miałem opisać kilka przypadków z większą liczbą konstruktorów,
-    ale stwierdziłem, że jednak mi się nie chce. Zobaczymy, czy będziesz w
-    stanie sam wykombinować, jak się z nimi uporać w ćwiczeniach. *)
+    ale stwierdziłem, że jednak mi się nie chce. W ćwiczeniach zobaczymy, czy
+    będziesz w stanie sam wykombinować, jak się z nimi uporać. *)
 
 (** **** Ćwiczenie *)
 
@@ -5413,138 +5413,88 @@ End Exercise4.
 
 (** Douglas Adams, _Restauracja na końcu wszechświata_ *)
 
-(** Przyjaźnie wyglądające uniwersum, które jednak podstępnie masakruje
-    zbłąkanych wędrowców. Jak zawsze ciężko nazwać ten paradoks. Chyba
-    najprościej powiedzieć, że jest to jednocześnie paradoks Russella i
-    Girarda. Ciekawe, że udało mi się to wycisnąć z rozważań nad
-    indukcją-rekursją oraz ścisłą pozytywnością. *)
+(** W dwóch poprzednich podrozdziałach poznaliśmy twierdzenie Cantora i
+    nauczyliśmy się używać go jako młota na negatywne typy induktywne.
 
-(* begin hide *)
+    W tym podrozdziale zapoznamy się z dwoma paradoksami (a precyzyjniej
+    pisząc, z dwoma wersjami tego samego paradoksu), które okażą się być
+    ściśle powiązane z twierdzeniem Cantora, a które będą służyć nam gdy
+    staniemy w szranki z negatwynymi typami induktywno-rekurencyjnymi
+    (czyli tymi, które definiuje się przez indukcję-rekursję). O tak: w
+    tym podrozdziale, niczym Thanos, staniemy do walki przeciw uniwersum!
 
-Module Uniwersum.
+    Zacznijmy od paradoksu Russella. Jest to bardzo stary paradoks, odkryty
+    w roku 1901 przez... zgadnij kogo... gdy ów człek szukał dziury w całym
+    w naiwnej teorii zbiorów (która to teoria jest już od dawna martwa).
 
-Axioms
-  (U : Type)
-  (El : U -> Type)
+    Sformułowanie paradoksu brzmi następująco: niech V będzie zbiorem
+    wszystkich zbiorów, które nie należą same do siebie. Pytanie: czy
+    V należy do V?
 
-  (Empty : U)
-  (Unit : U)
-  (Nat : U)
-  (Pi : forall (A : U) (B : El A -> U), U)
-  (Sigma : forall (A : U) (B : El A -> U), U)
-  (UU : U)
+    Gdzie tu paradoks? Otóż jeżeli V należy do V, to na mocy definicji V,
+    V nie należy do V. Jeżeli zaś V nie należy do V, to na mocy definicji V,
+    V należy do V. Nie trzeba chyba dodawać, że jednoczesne należenie i
+    nienależenie prowadzi do sprzeczności. *)
 
-  (El_Empty : El Empty = Empty_set)
-  (El_Unit : El Unit = unit)
-  (El_Nat : El Nat = nat)
-  (El_Pi :
-    forall (A : U) (B : El A -> U),
-      El (Pi A B) = forall (x : El A), El (B x))
-  (El_Sigma :
-    forall (A : U) (B : El A -> U),
-      El (Pi A B) = {x : El A & El (B x)})
-  (El_UU : El UU = U)
+(** **** Ćwiczenie *)
 
-  (ind : forall
-    (P : U -> Type)
-    (PEmpty : P Empty)
-    (PUnit : P Unit)
-    (PNat : P Nat)
-    (PPi :
-      forall (A : U) (B : El A -> U),
-        P A -> (forall x : El A, P (B x)) -> P (Pi A B))
-    (PSigma :
-      forall (A : U) (B : El A -> U),
-        P A -> (forall x : El A, P (B x)) -> P (Sigma A B))
-    (PUU : P UU),
-      {f : forall A : U, P A |
-        (f Empty = PEmpty) /\
-        (f Unit = PUnit) /\
-        (f Nat = PNat) /\
-        (forall (A : U) (B : El A -> U),
-          f (Pi A B) =
-          PPi A B (f A) (fun x : El A => f (B x))) /\
-        (forall (A : U) (B : El A -> U),
-          f (Sigma A B) =
-          PSigma A B (f A) (fun x : El A => f (B x))) /\
-        (f UU = PUU)
-      }).
+(** To genialne ćwiczenie wymyśliłem dzięki zabłądzeniu na esperanckiej
+    Wikipedii (ha! nikt nie spodziewał się esperanckiej Wikipedii w
+    ćwiczeniu dotyczącym paradoksu Russella). Ćwiczenie brzmi tak:
 
-Definition bad : U -> (U -> U).
-Proof.
-  apply (ind (fun _ => U -> U)).
-    1-3,6: exact (fun u : U => u).
-    intros A B _ _. revert A B.
-      apply (ind (fun A : U => (El A -> U) -> (U -> U))).
-        1-5: intros; assumption.
-        intro f. rewrite El_UU in f. exact f.
-    intros. assumption.
-Defined.
+    W Wikipedii niektóre artykuły są listami (nie, nie w sensie typu
+    induktywnego :)), np. lista krajów według PKB per capita. Pytanie:
+    czy można stworzyć w Wikipedii listę wszystkich list? Czy na liście
+    wszystkich list ona sama jest wymieniona? Czy można w Wikipedii
+    stworzyć listę wszystkich list, które nie wymieniają same siebie? *)
 
-Lemma homotopiczny_czarodziej :
-  forall (A : Type) (P : A -> Type) (x y : A) (p : x = y) (u : P y),
-    eq_rect x P (@eq_rect_r A y P u x p) y p = u.
-Proof.
-  destruct p. cbn. reflexivity.
-Qed.
+(** Na czym tak naprawdę polega paradoks? Jakiś mądry (czyli przemądrzały)
+    filozof mógłby rzec, że na nadużyciu pojęcia zbioru... albo czymś
+    równie absurdalnym. Otóż nie! Paradoks Russella polega na tym samym,
+    co cała masa innych paradoksów, czyli na autoreferencji.
 
-Lemma bad_sur :
-  forall f : U -> U, exists u : U, f = bad u.
-Proof.
-  intro. unfold bad.
-  destruct (ind _) as [g H]; decompose [and] H; clear H.
-  destruct (ind _) as [h H']; decompose [and] H'; clear H'.
-  pose (f' := eq_rect_r (fun T : Type => T -> U) f El_UU).
-  exists (Pi UU f').
-  rewrite H3. rewrite H11.
-  unfold f'. rewrite homotopiczny_czarodziej. reflexivity.
-Qed.
+    Z autoreferencją spotkaliśmy się już co najmniej raz, w rozdziale
+    pierwszym. Przypomnij sobie, że golibroda goli tych i tylko tych,
+    którzy sami siebie nie golą. Czy golibroda goli sam siebie?
 
-Definition change : U -> U.
-Proof.
-  apply ind.
-    exact Nat.
-    all: intros; exact Empty.
-Defined.
+    Takie postawienie sprawy daje paradoks. Podobnie z Russellem: V zawiera
+    te i tylko te zbiory, które nie zawierają same siebie. Czy V zawiera
+    V? Wot, paradoks. Żeby lepiej wczuć się w ten klimat, czas na więcej
+    ćwiczeń. *)
 
-Definition help : U -> nat.
-Proof.
-  apply ind.
-    exact 0.
-    exact 1.
-    exact 2.
-    intros. exact 3.
-    intros. exact 4.
-    exact 5.
-Defined.
+(** **** Ćwiczenie *)
 
-Ltac help H :=
-  apply (f_equal help) in H;
-  cbn in H; unfold help in H;
-  destruct (ind _) as [help Hhelp];
-  decompose [and] Hhelp; clear Hhelp;
-  congruence.
+(** Poniższą zagadkę pozwolę sobie wesoło nazwać "paradoks hetero". Zagadka
+    brzmi tak:
 
-Lemma change_neq :
-  forall u : U, change u <> u.
-Proof.
-  apply ind; unfold change;
-  destruct (ind _) as [f H]; decompose [and] H; clear H;
-  intros; try help H; help H6.
-Qed.
+    Niektóre słowa opisują same siebie, np. słowo "krótki" jest "krótkie",
+    a niektóre inne nie, np. słowo "długi" nie jest długie. Podobnie słowo
+    "polski" jest słowem polskim, ale słowo "niemiecki" nie jest słowem
+    niemieckim. Słowa, które nie opisują samych siebie będziemy nazywać
+    słowami heterologicznymi. Pytanie: czy słowo "heterologiczny" jest
+    heterologiczne? *)
 
-Definition Russel_Girard : False.
-Proof.
-  destruct (bad_sur (fun u : U => change (bad u u))).
-  unfold bad in H. destruct (ind _).
-  apply (f_equal (fun f => f x)) in H.
-  apply (change_neq (x0 x x)).
-  assumption.
-Qed.
+(** **** Ćwiczenie *)
 
-End Uniwersum.
+(** A jak jest z poniższym paradoksem wujka Janusza?
 
-Module Russel_Girard.
+    Wujek Janusz lubi tych (i tylko tych) członków rodziny, którzy sami
+    siebie nie lubią oraz nie lubi tych (i tylko tych), którzy sami siebie
+    lubią. Czy wujek Janusz lubi sam siebie? *)
+
+(** **** Ćwiczenie *)
+
+(** Powyższe ćwiczenie miało być ostatnim, ale co tam, dam jeszcze trochę.
+    Co czuje serce twoje (ewentualnie: co widzisz przed oczyma duszy swojej)
+    na widok poniższych wesołych zdań?
+
+    "To zdanie jest fałszywe."
+
+    "Zdanie po prawej jest fałszywe. Zdanie po lewej jest prawdziwe."
+
+    "Zdanie po prawej jest prawdziwe. Zdanie po lewej jest fałszywe."
+*)
+
 
 (** Uproszczona wersja paradoksu - tylko U i Pi. *)
 
@@ -5591,14 +5541,13 @@ Proof.
 Qed.
 
 Lemma bad_sur :
-  forall f : U -> U, exists u : U, f = bad u.
+  surjective bad.
 Proof.
-  intro. unfold bad.
-  destruct (ind _) as [g H]; decompose [and] H; clear H.
-  destruct (ind _) as [h H']; decompose [and] H'; clear H'.
+  unfold surjective, bad; intro f.
+  destruct (ind _) as [g Hg]; decompose [and] Hg; clear Hg.
+  destruct (ind _) as [h Hh]; decompose [and] Hh; clear Hh.
   pose (f' := eq_rect_r (fun T : Type => T -> U) f El_UU).
-  exists (Pi UU f').
-  rewrite H0. rewrite H2.
+  exists (Pi UU f'). rewrite H, H2.
   unfold f'. rewrite homotopiczny_czarodziej. reflexivity.
 Qed.
 
@@ -5609,7 +5558,7 @@ Proof.
     exact (Pi UU (fun _ => UU)).
 Defined.
 
-Definition help : U -> bool.
+Definition discern : U -> bool.
 Proof.
   apply ind.
     intros. exact true.
@@ -5617,8 +5566,8 @@ Proof.
 Defined.
 
 Ltac help H :=
-  apply (f_equal help) in H;
-  cbn in H; unfold help in H;
+  apply (f_equal discern) in H;
+  cbn in H; unfold discern in H;
   destruct (ind _) as [help Hhelp];
   decompose [and] Hhelp; clear Hhelp;
   congruence.
@@ -5631,18 +5580,209 @@ Proof.
   help H1.
 Qed.
 
-Definition Russel_Girard_simplified : False.
+Lemma bad_not_sur :
+  ~ surjective bad.
 Proof.
-  destruct (bad_sur (fun u : U => change (bad u u))).
-  unfold bad in H. destruct (ind _); clear a.
-  apply (f_equal (fun f => f x)) in H.
-  apply (change_neq (x0 x x)).
-  assumption.
+  unfold surjective. intro.
+  destruct (H (fun u : U => change (bad u u))) as [u eq].
+  apply (f_equal (fun f => f u)) in eq.
+  apply (change_neq (bad u u)). symmetry. assumption.
 Qed.
 
-End Russel_Girard.
+Definition Russel_Girard_simplified : False.
+Proof.
+  apply bad_not_sur. apply bad_sur.
+Qed.
 
+(** **** Ćwiczenie *)
+
+(** Tak naprawdę, to w tym podrozdziale byliśmy co najwyżej bieda-Thanosem,
+    gdyż uniwersum, z którym się ścieraliśmy, samo było biedne. W niniejszym
+    ćwiczeniu zmierzysz się z uniwersum, które zawiera też nazwy typu pustego,
+    typu [unit] i liczb naturalnych, nazwy produktów, sum i funkcji, a także
+    sum zależnych.
+
+    Mówiąc wprost: zakoduj aksjomatycznie poniższą definicję uniwersum [U],
+    a następnie udowodnij, że jest jest ona nielegalna. Nie powinno to być
+    trudne - metoda jest podobna jak w przypadku biednego uniwersum. *)
+
+Module NonPoorUniverse.
+
+(*
+Fail Inductive U : Type :=
+    | Empty : U
+    | Unit : U
+    | Nat : U
+    | Prod : U -> U -> U
+    | Sum : U -> U -> U
+    | Arr : U -> U -> U
+    | Pi : forall (A : U) (B : El A -> U), U
+    | Sigma: forall (A : U) (B : El A -> U), U
+    | UU : U
+
+with El (u : U) : Type :=
+match u with
+    | Empty => Empty_set
+    | Unit => unit
+    | Nat => nat
+    | Prod A B => El A * El B
+    | Sum A B => El A + El B
+    | Arr A B => El A -> El B
+    | Pi A B => forall x : El A, B x
+    | Sigma A B => {x : El A & El (B x)}
+    | UU => U
+end.
+*)
+
+(* begin hide *)
+Axioms
+  (U : Type)
+  (El : U -> Type)
+
+  (Empty : U)
+  (Unit : U)
+  (Nat : U)
+  (Prod : U -> U -> U)
+  (Sum : U -> U -> U)
+  (Arr : U -> U -> U)
+  (Pi : forall (A : U) (B : El A -> U), U)
+  (Sigma : forall (A : U) (B : El A -> U), U)
+  (UU : U)
+
+  (El_Empty : El Empty = Empty_set)
+  (El_Unit : El Unit = unit)
+  (El_Nat : El Nat = nat)
+  (El_Prod : forall A B : U, El (Prod A B) = (El A * El B)%type)
+  (El_Sum : forall A B : U, El (Sum A B) = (El A + El B)%type)
+  (El_Arr : forall A B : U, El (Arr A B) = El A -> El B)
+  (El_Pi :
+    forall (A : U) (B : El A -> U),
+      El (Pi A B) = forall (x : El A), El (B x))
+  (El_Sigma :
+    forall (A : U) (B : El A -> U),
+      El (Pi A B) = {x : El A & El (B x)})
+  (El_UU : El UU = U)
+
+  (ind : forall
+    (P : U -> Type)
+    (PEmpty : P Empty)
+    (PUnit : P Unit)
+    (PNat : P Nat)
+    (PProd :
+      forall A B : U, P A -> P B -> P (Prod A B))
+    (PSum :
+      forall A B : U, P A -> P B -> P (Sum A B))
+    (PArr :
+      forall A B : U, P A -> P B -> P (Arr A B))
+    (PPi :
+      forall (A : U) (B : El A -> U),
+        P A -> (forall x : El A, P (B x)) -> P (Pi A B))
+    (PSigma :
+      forall (A : U) (B : El A -> U),
+        P A -> (forall x : El A, P (B x)) -> P (Sigma A B))
+    (PUU : P UU),
+      {f : forall A : U, P A |
+        (f Empty = PEmpty) /\
+        (f Unit = PUnit) /\
+        (f Nat = PNat) /\
+        (forall A B : U,
+          f (Prod A B) = PProd A B (f A) (f B)) /\
+        (forall A B : U,
+          f (Sum A B) = PSum A B (f A) (f B)) /\
+        (forall A B : U,
+          f (Arr A B) = PArr A B (f A) (f B)) /\
+        (forall (A : U) (B : El A -> U),
+          f (Pi A B) =
+          PPi A B (f A) (fun x : El A => f (B x))) /\
+        (forall (A : U) (B : El A -> U),
+          f (Sigma A B) =
+          PSigma A B (f A) (fun x : El A => f (B x))) /\
+        (f UU = PUU)
+      }).
+
+Definition bad : U -> (U -> U).
+Proof.
+  apply (ind (fun _ => U -> U)).
+    1-6,8-9: intros; assumption.
+    intros A B _ _. revert A B.
+      apply (ind (fun A : U => (El A -> U) -> (U -> U))).
+        1-8: intros; assumption.
+        intro f. rewrite El_UU in f. exact f.
+Defined.
+
+Lemma homotopiczny_czarodziej :
+  forall (A : Type) (P : A -> Type) (x y : A) (p : x = y) (u : P y),
+    eq_rect x P (@eq_rect_r A y P u x p) y p = u.
+Proof.
+  destruct p. cbn. reflexivity.
+Qed.
+
+Lemma bad_sur :
+  surjective bad.
+Proof.
+  unfold surjective, bad; intro f.
+  destruct (ind _) as [g H]; decompose [and] H; clear H.
+  destruct (ind _) as [h H']; decompose [and] H'; clear H'.
+  pose (f' := eq_rect_r (fun T : Type => T -> U) f El_UU).
+  exists (Pi UU f').
+  rewrite H6. rewrite H17.
+  unfold f'. rewrite homotopiczny_czarodziej. reflexivity.
+Qed.
+
+Definition change : U -> U.
+Proof.
+  apply ind.
+    exact Nat.
+    all: intros; exact Empty.
+Defined.
+
+Definition discern : U -> nat.
+Proof.
+  apply ind; intros.
+    exact 0.
+    exact 1.
+    exact 2.
+    exact 3.
+    exact 4.
+    exact 5.
+    exact 6.
+    exact 7.
+    exact 8.
+Defined.
+
+Ltac help H :=
+  apply (f_equal discern) in H;
+  cbn in H; unfold discern in H;
+  destruct (ind _) as [help Hhelp];
+  decompose [and] Hhelp; clear Hhelp;
+  congruence.
+
+Lemma change_neq :
+  forall u : U, change u <> u.
+Proof.
+  apply ind; unfold change;
+  destruct (ind _) as [f H]; decompose [and] H; clear H;
+  intros; try help H; help H9.
+Qed.
+
+Lemma bad_not_sur :
+  ~ surjective bad.
+Proof.
+  unfold surjective. intro.
+  destruct (H (fun u : U => change (bad u u))) as [u eq].
+  apply (f_equal (fun f => f u)) in eq.
+  apply (change_neq (bad u u)). symmetry. assumption.
+Qed.
 (* end hide *)
+
+Theorem U_illegal : False.
+(* begin hide *)
+Proof.
+  apply bad_not_sur. apply bad_sur.
+Qed.
+(* end hide *)
+
+End NonPoorUniverse.
 
 (** * Podsumowanie (TODO) *)
 
