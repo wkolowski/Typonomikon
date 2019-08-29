@@ -4695,19 +4695,22 @@ Fail Definition santa_is_a_pedophile : False := loop False.
     Nie powinno nas to dziwić - praktycznie rzecz biorąc aplikujemy [f] samo
     do siebie, zaś konstruktor [C] jest tylko pośrednikiem sprawiającym, że
     typy się zgadzają. Ogólniej sytuacja, w której coś odnosi się samo do
-    siebie, nazywa się autoreferencją i często prowadzi do różnych paradoksów.
-    Innym przykładem może być legendarne zdanie "To zdanie jest fałszywe."
-    Czujesz sprzeczność?
+    siebie, nazywa się autoreferencją i często prowadzi do różnych wesołych
+    paradoksów. *)
 
-    Innym ciekawym paradoksem autoreferencji jest niniejsza "zagadka":
+(** **** Ćwiczenie *)
+
+(** Poniższą zagadkę pozwolę sobie wesoło nazwać "paradoks hetero". Zagadka
+    brzmi tak:
 
     Niektóre słowa opisują same siebie, np. słowo "krótki" jest krótkie,
-    ale słowo "długi" nie jest długie. Słowo "polski" jest słowem polskim,
-    ale słowo "niemiecki" nie jest słowem niemieckim. Słowa, które nie
-    opisują same siebie to słowa heterologiczne. Rodzi się pytanie: czy
-    słowo "heterologiczny" jest heterologiczne?
+    a niektóre inne nie, np. słowo "długi" nie jest długie. Podobnie słowo
+    "polski" jest słowem polskim, ale słowo "niemiecki" nie jest słowem
+    niemieckim. Słowa, które nie opisują samych siebie będziemy nazywać
+    słowami heterologicznymi. Pytanie: czy słowo "heterologiczny" jest
+    heterologiczne? *)
 
-    Czujesz sprzeczność? Innym przyk... dobra, wystarczy tych głupot.
+(** Czujesz sprzeczność? Innym przyk... dobra, wystarczy tych głupot.
 
     Przyjrzyjmy się teraz problemom filozoficznym powodowanym przez
     nieterminację. W skrócie: zmienia ona fundamentalne właściwości
@@ -5464,18 +5467,6 @@ End Exercise4.
 
 (** **** Ćwiczenie *)
 
-(** Poniższą zagadkę pozwolę sobie wesoło nazwać "paradoks hetero". Zagadka
-    brzmi tak:
-
-    Niektóre słowa opisują same siebie, np. słowo "krótki" jest "krótkie",
-    a niektóre inne nie, np. słowo "długi" nie jest długie. Podobnie słowo
-    "polski" jest słowem polskim, ale słowo "niemiecki" nie jest słowem
-    niemieckim. Słowa, które nie opisują samych siebie będziemy nazywać
-    słowami heterologicznymi. Pytanie: czy słowo "heterologiczny" jest
-    heterologiczne? *)
-
-(** **** Ćwiczenie *)
-
 (** A jak jest z poniższym paradoksem wujka Janusza?
 
     Wujek Janusz lubi tych (i tylko tych) członków rodziny, którzy sami
@@ -5542,7 +5533,7 @@ Check Type.
     Nasze sformułowanie paradoksu będzie w sumie podobne do tego z powyższej
     pracy (co jest w sumie ciekawe, bo wymyśliłem je samodzielnie i to przez
     przypadek), ale dowód sprzeczności będzie inny - na szczęście dużo
-    prostszy.
+    prostszy (albo i nie...).
 
     Dobra, koniec tego ględzenia. Czas na konkrety. *)
 
@@ -5559,7 +5550,7 @@ end.
 *)
 
 (** Powyższa induktywno-rekurencyjna definicja typu [U] (i interpretującej
-    je funkcji [El]), którą Coq rzecz jasna odrzuca (uczcijmy ławę oburzonych
+    go funkcji [El]), którą Coq rzecz jasna odrzuca (uczcijmy ławę oburzonych
     minutą oburzenia) to definicja pewnego uniwersum.
 
     W tym miejscu wypadałoby wytłumaczyć, czym są uniwersa. Otóż odpowiedź
@@ -5589,7 +5580,7 @@ end.
       jest bardzo eleganckie i możesz się go nie spodziewać.
     - czy istnieje uniwersum, którego interpretacja jest surjekcją? Czy
       da się w Coqu udowodnić, że tak jest albo nie jest? Uwaga: tak
-      bardzo podchwytliwe, że aż sam się na to złapałem. *)
+      bardzo podchwytliwe, że aż sam się złapałem. *)
 
 (* begin hide *)
 
@@ -5611,9 +5602,8 @@ end.
 (* end hide *)
 
 (** Skoro wiemy już, czym są uniwersa, przyjrzyjmy się temu, które właśnie
-    zdefiniowaliśmy.
-
-    TODO: jaki to ma związek z indukcją-rekursją? *)
+    zdefiniowaliśmy. Żebyś nie musiał w rozpaczy przewijać do góry, tak
+    wygląda aksjomatyczne kodowanie tego uniwersum: *)
 
 Axioms
   (U : Type)
@@ -5633,40 +5623,146 @@ Axioms
       forall (A : U) (B : El A -> U),
         P A -> (forall x : El A, P (B x)) -> P (Pi A B))
     (PUU : P UU),
-      {f : forall A : U, P A |
+      {f : forall u : U, P u |
         (forall (A : U) (B : El A -> U),
           f (Pi A B) =
           PPi A B (f A) (fun x : El A => f (B x))) /\
         (f UU = PUU)
-      }).
+      }
+  ).
+
+(** [U] to typ, którego elementami są nazwy typów, zaś [El] jest jego
+    interpretacją. Nazwy możemy tworzyć tylko na dwa sposoby: jeżeli [A : U]
+    jest nazwą typu, zaś [B : El A -> U] jest rodziną nazw typów indeksowaną
+    przez elementy typu [A], to [Pi A B] jest nazwą typu
+    [forall x : El A, El (B x)]. Drugim konstruktorem jest [UU], które
+    oznacza nazwę samego uniwersum, tzn. [El UU = U].
+
+    Reguła indukcji jest dość prosta: jeżeli [P : U -> Type] jest rodziną
+    typów (tych prawdziwych) indeksowaną przez [U] (czyli nazwy typów), to
+    żeby zdefiniować funkcję [f : forall u : U, P u] musimy mieć dwie rzeczy:
+    po pierwsze, musimy pokazać, że [P (Pi A B)] zachodzi, gdy zachodzi [P A]
+    oraz [P (B x)] dla każdego [x : El A]. Po drugie, musi zachodzić [P UU].
+
+    Mimo, że uniwersum wydaje się biedne, jest ono śmiertelnie sprzeczne,
+    gdyż zawiera nazwę samego siebie. Jeżeli rozwiązałeś (poprawnie, a nie
+    na odwal!) ostatnie ćwiczenie, to powinieneś wiedzieć, że niektóre
+    uniwersa mogą zawierać nazwy samego siebie i wcale to a wcale nie daje
+    to żadnych problemów.
+
+    Dlaczego więc w tym przypadku jest inaczej? Skoro [UU] nie jest złe samo
+    w sobie, to problem musi leżeć w [Pi], bo niby gdzie indziej? Zobaczmy
+    więc, gdzie kryje się sprzeczność. W tym celu posłużymy się twierdzeniem
+    Cantora: najpierw pokażemy surjekcję [U -> (U -> U)], a potem, za pomocą
+    metody przekątniowej, że taka surjekcja nie może istnieć. *)
+
+(*
+Definition bad (u : U) : U -> U :=
+match u with
+    | Pi UU B => B
+    | _ => fun u : U => U
+end.
+*)
+
+(** Jeżeli dostajemy [Pi A B], gdzie [A] to [UU], to wtedy [B : El A -> U]
+    tak naprawdę jest typu [U -> U] (bo [El UU = U]). W innych przypadkach
+    wystarczy po prostu zwrócić funkcję identycznościową. Niestety Coq nie
+    wspiera indukcji-rekursji (ława oburzonych), więc funkcję [bad] musimy
+    zdefiniować ręcznie: *)
 
 Definition bad : U -> (U -> U).
 Proof.
   apply (ind (fun _ => U -> U)).
+    Focus 2. exact (fun u : U => u).
     intros A B _ _. revert A B.
       apply (ind (fun A : U => (El A -> U) -> (U -> U))).
         intros; assumption.
-        intro f. rewrite El_UU in f. exact f.
-    exact (fun u => u).
+        intro B. rewrite El_UU in B. exact B.
 Defined.
 
-Lemma homotopiczny_czarodziej :
-  forall (A : Type) (P : A -> Type) (x y : A) (p : x = y) (u : P y),
-    eq_rect x P (@eq_rect_r A y P u x p) y p = u.
+(** Powyższa definicja za pomocą taktyk działa dokładnie tak samo jak
+    nieformalna definicja [bad] za pomocą dopasowania do wzorca. Jedyna
+    różnica jest taka, że [El UU] nie jest definicyjnie równe [U], lecz
+    są one jedynie zdaniowo równe na mocy aksjomatu [El_UU : El UU = U].
+    Musimy więc przepisać go w [B], żeby typy się zgadzały.
+
+    Zanim będziemy mogli pokazać, że [bad] jest surjekcją, czeka nas kilka
+    niemiłych detali technicznych (gdyby [El UU] i [U] były definicyjnie
+    równe, wszystkie te problemy by zniknęły). *)
+
+Check eq_rect.
+(* ===> forall (A : Type) (x : A) (P : A -> Type),
+          P x -> forall y : A, x = y -> P y *)
+
+Check eq_rect_r.
+(* ===> forall (A : Type) (x : A) (P : A -> Type),
+          P x -> forall y : A, y = x -> P y *)
+
+(** [eq_rect] oraz [eq_rect_r] to groźnie wyglądające lematy, ale sprawa tak
+    na prawdę jest dość prosta: to one wykonują całą pracę za każdym razem,
+    kiedy używasz taktyki [rewrite]. Jeżeli cel jest postaci [P x] i użyjemy
+    na nim [rewrite H], gdzie [H : x = y], to [rewrite] zamienia cel na
+    [eq_rect _ _ _ cel _ H], które jest już typu [P y]. [eq_rect_r] działa
+    podobnie, ale tym razem równość jest postaci [y = x] (czyli obrócona).
+
+    Ponieważ w definicji [bad] używaliśmy [rewrite]'a, to przy dowodzeniu,
+    że [bad] jest surjekcją, będziemy musieli zmierzyć się właśnie z
+    [eq_rect] i [eq_rect_r]. Stąd poniższy lemat, który mówi mniej więcej,
+    że jeżeli przepiszemy z prawa na lewo, a potem z lewa na prawo, to tak,
+    jakby nic się nie stało. *)
+
+Lemma right_to_left_to_right :
+  forall
+    (A : Type) (P : A -> Type) (x y : A) (p : x = y) (u : P y),
+      eq_rect x P (@eq_rect_r A y P u x p) y p = u.
 Proof.
   destruct p. cbn. reflexivity.
 Qed.
+
+(** Dowód jest banalny. Ponieważ [eq_rect] i [eq_rect_r] są zdefiniowane
+    przez dopasowanie do wzorca [p : x = y], to wystarczy [p] potraktować
+    [destruct]em, a dalej wszystko już ładnie się oblicza. *)
 
 Lemma bad_sur :
   surjective bad.
 Proof.
   unfold surjective, bad; intro f.
-  destruct (ind _) as [g Hg]; decompose [and] Hg; clear Hg.
-  destruct (ind _) as [h Hh]; decompose [and] Hh; clear Hh.
+  destruct (ind _) as [bad [bad_Pi bad_UU]].
+  destruct (ind _) as [bad' [bad'_Pi bad'_UU]].
   pose (f' := eq_rect_r (fun T : Type => T -> U) f El_UU).
-  exists (Pi UU f'). rewrite H, H2.
-  unfold f'. rewrite homotopiczny_czarodziej. reflexivity.
+  exists (Pi UU f'). unfold f'.
+  rewrite bad_Pi, bad'_UU, right_to_left_to_right. reflexivity.
 Qed.
+
+(** Dlaczego [bad] jest surjekcją? Intuicyjnie pisząc, każdą funkcję
+    [U -> U] możemy włożyć do konstruktora [Pi] jako jego drugi argument,
+    jeżeli tylko zamienimy pierwsze [U] na [El UU]. Skoro każdą możemy
+    tam włożyć, to każdą możemy wyjąć. Ot i cały sekret.
+
+    Technicznie dowód realizujemy tak: odwijamy definicje i wprowadzamy do
+    kontekstu funkcję [f]. Następnie rozbijamy [ind _] pochodzące z definicji
+    [bad], rozkładając w ten sposób definicję [bad] na właściwe [bad] (sama
+    funkcja), [bad'] (wewnętrzna funkcja pomocnicza) oraz równania dla [bad]
+    i [bad'] dla poszczególnych przypadków.
+
+    Następnie musimy znaleźć takie [a : U], że [bad a = f]. Robimy to, co
+    zasugerowałem wyżej, czyli w [f : U -> U] pierwsze [U] zamieniamy na
+    [El UU], uzyskując w ten sposób [f']. Temu właśnie służy użycie
+    [eq_rect_r] (nie używamy [rewrite], bo potrzeba nam większej precyzji).
+
+    Wobec tego szukanym przez nas elementem [U], któremu [bad] przyporządkuje
+    [f], jest [Pi UU f']. Możemy w tym miejscu odwinąć definicję [f']. Gdyby
+    Coq wspierał indukcję-rekursję, to w tym miejscu wystarczyłoby użyć tylko
+    [reflexivity] - [bad (Pi UU f')] obliczyłoby się do [f] na mocy definicji
+    [bad] oraz dzięki temu, że [El UU] obliczyłoby się do [U]. Niestety Coq
+    nie wspiera indukcji rekursji (ława oburzonych), więc musimy wszystkie
+    te trzy kroki obliczeń wykonać ręcznie za pomocą taktyki [rewrite].
+
+    Ufff, udało się! Jeżeli przeraża cię ten dowód - nie martw się. Chodzi
+    w nim o to samo, o co chodziło w poprzednich dowodach bycia surjekcją.
+    Ten jest po prostu trochę bardziej skomplikowany, bo indukcja-rekursja
+    jest nieco bardziej skomplikowana do użycia w Coqu niż prymitywniejsze
+    formy indukcji. *)
 
 Definition change : U -> U.
 Proof.
@@ -5675,6 +5771,13 @@ Proof.
     exact (Pi UU (fun _ => UU)).
 Defined.
 
+(** Teraz czas udowodnić, że [bad] nie jest surjekcją. Zrobimy to metodą
+    przekątniową, a w tym celu potrzebować będziemy funkcji [U -> U], która
+    dla każdego argumentu zwraca coś, co jest od niego różne.
+
+    Na szczęście sprawa jest prosta: jeżeli argumentem jest [Pi A B], to
+    zwracamy [UU], zaś jeżeli [UU], to zwracamy [Pi UU (fun _ => UU)]. *)
+
 Definition discern : U -> bool.
 Proof.
   apply ind.
@@ -5682,20 +5785,43 @@ Proof.
     exact false.
 Defined.
 
-Ltac help H :=
-  apply (f_equal discern) in H;
-  cbn in H; unfold discern in H;
-  destruct (ind _) as [help Hhelp];
-  decompose [and] Hhelp; clear Hhelp;
-  congruence.
+(** Przydałaby się też funkcja, która pozwoli nam rozróżnić konstruktory
+    typu [U]. Normalnie użylibyśmy do tego taktyki [inversion], ale
+    używamy kodowania aksjomatycznego, więc [inversion] nie zadziała i
+    musimy ręcznie zaimplementować sobie coś w jej stylu.
+
+    Nasza funkcja dla [Pi] zwraca [true], a dla [UU] daje [false]. *)
 
 Lemma change_neq :
   forall u : U, change u <> u.
 Proof.
-  apply ind; unfold change;
-  destruct (ind _) as [f H]; decompose [and] H; clear H;
-  help H1.
+  apply ind.
+    intros A B H1 H2 eq.
+      apply (f_equal discern) in eq.
+      unfold change, discern in eq.
+      destruct (ind _) as [d [d_Pi d_UU]],
+               (ind _) as [ch [ch_Pi ch_UU]].
+      rewrite d_Pi, ch_Pi, d_UU in eq. inversion eq.
+    intro eq.
+      apply (f_equal discern) in eq.
+      unfold change, discern in eq.
+      destruct (ind _) as [d [d_Pi d_UU]],
+               (ind _) as [ch [ch_Pi ch_UU]].
+      rewrite ch_UU, d_Pi, d_UU in eq. inversion eq.
 Qed.
+
+(** Wypadałoby też pokazać, ża nasza funkcja działa tak, jak sobie tego
+    życzymy. Dowód jest bardzo prosty, ale aksjomatyczne kodowanie znacznie
+    go zaciemnia.
+
+    Zaczynamy od indukcji po [u : U]. W pierwszym przypadku mamy hipotezę
+    [eq : change (Pi A B) = Pi A B], a skoro tak, to po zaaplikowaniu
+    [discern] musi być także [discern (change (Pi A B)) = discern (Pi A B)].
+
+    Następnie rozkładamy definicje [change] i [discern] na atomy ([change]
+    nazywa się teraz [ch], a [discern] nazywa się [d]). Przepisujemy
+    odpowiednie równania w hipotezie [eq], dzięki czemu uzyskujemy
+    [false = true], co jest sprzeczne. Drugi przypadek jest analogiczny. *)
 
 Lemma bad_not_sur :
   ~ surjective bad.
@@ -5706,10 +5832,25 @@ Proof.
   apply (change_neq (bad u u)). symmetry. assumption.
 Qed.
 
-Definition Russel_Girard_simplified : False.
+(** Teraz możemy już pokazać, że [bad] nie jest surjekcją. W tym celu
+    wyobraźmy sobie [bad] jako kwadratową tabelkę, której wiersze i
+    kolumny są indeksowane przez [U]. Tworzymy nową funkcję [U -> U]
+    biorąc elementy z przekątnej i modyfikując je za pomocą [change].
+
+    Skoro [bad] jest surjekcją, to ta nowa funkcja musi być postaci
+    [bad u] dla jakiegoś [u : U]. Aplikując obie strony jeszcze raz
+    do [u] dostajemy równanie [bad u u = change (bad u u)], które
+    jest sprzeczne na mocy lematu [change_neq]. *)
+
+Definition U_illegal : False.
 Proof.
   apply bad_not_sur. apply bad_sur.
 Qed.
+
+(** Ponieważ [bad] jednocześnie jest i nie jest surjekcją, nastepuje nagły
+    atak sprzeczności. Definicja uniwersum [U] przez indukcję-rekursję jest
+    nielegalna. Tak właśnie prezentują się paradoksy Russella i Girarda w
+    Coqowym wydaniu. *)
 
 (** **** Ćwiczenie *)
 
@@ -5720,7 +5861,7 @@ Qed.
     sum zależnych.
 
     Mówiąc wprost: zakoduj aksjomatycznie poniższą definicję uniwersum [U],
-    a następnie udowodnij, że jest jest ona nielegalna. Nie powinno to być
+    a następnie udowodnij, że jest ona nielegalna. Nie powinno to być
     trudne - metoda jest podobna jak w przypadku biednego uniwersum. *)
 
 Module NonPoorUniverse.
@@ -5827,13 +5968,6 @@ Proof.
         intro f. rewrite El_UU in f. exact f.
 Defined.
 
-Lemma homotopiczny_czarodziej :
-  forall (A : Type) (P : A -> Type) (x y : A) (p : x = y) (u : P y),
-    eq_rect x P (@eq_rect_r A y P u x p) y p = u.
-Proof.
-  destruct p. cbn. reflexivity.
-Qed.
-
 Lemma bad_sur :
   surjective bad.
 Proof.
@@ -5843,7 +5977,7 @@ Proof.
   pose (f' := eq_rect_r (fun T : Type => T -> U) f El_UU).
   exists (Pi UU f').
   rewrite H6. rewrite H17.
-  unfold f'. rewrite homotopiczny_czarodziej. reflexivity.
+  unfold f'. rewrite right_to_left_to_right. reflexivity.
 Qed.
 
 Definition change : U -> U.
