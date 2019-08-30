@@ -4483,6 +4483,15 @@ Ogólnie reguła jest taka: reguła niezależna (pierwsza) nie zależy od
 </div>
 
 <div class="doc">
+Nie zapomnijmy ponownie nakazać Coqowi generowania reguł indukcji. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Elimination</span> <span class="id" title="var">Schemes</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a name="lab145"></a><h2 class="section">Indukcja-indukcja</h2>
 
 </div>
@@ -6564,6 +6573,322 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 
 <a name="lab165"></a><h4 class="section">Ćwiczenie</h4>
 
+<div class="paragraph"> </div>
+
+ Poniższe paskudztwo łamie prawo ścisłej pozytywności nie jednym, lecz
+    aż dwoma swoimi konstruktorami.
+
+<div class="paragraph"> </div>
+
+    Zakoduj ten typ aksjomatycznie i udowodnij, że jego istnienie prowadzi
+    do sprzeczności. Metoda jest podobna jak w naszym przykładzie, ale
+    trzeba ją troszkę dostosować do zastanej sytuacji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise1</span>.<br/>
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C0</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">wut</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C1</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">nat</span>) -&gt; <span class="id" title="var">wut</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut_illegal</span> : <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise1</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab166"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Poniższe paskudztwo ma jeden konstruktor negatywny, a drugi pozytywny,
+    niczym typowa panienka z borderlinem...
+
+<div class="paragraph"> </div>
+
+    Polecenie jak w poprzednim ćwiczeniu. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise2</span>.<br/>
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C0</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>) -&gt; <span class="id" title="var">wut</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C1</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">wut</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut_illegal</span> : <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise2</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab167"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Poniższy typ reprezentuje termy beztypowego rachunku lambda, gdzie <span class="inlinecode"><span class="id" title="var">V</span></span>
+    to typ reprezentujący zmienne. Co to za zwierzątko ten rachunek lambda
+    to my się jeszcze przekonamy... chyba, oby.
+
+<div class="paragraph"> </div>
+
+    Taki sposób reprezentowania rachunku lambda (i ogólnie składni języków
+    programowania) nazywa się HOAS, co jest skrótem od ang. Higher Order
+    Abstract Syntax. W wielu językach funkcyjnych jest to popularna technika,
+    ale w Coqu, jak zaraz udowodnisz, jest ona nielegalna. Ława oburzonych
+    jest rzecz jasna oburzona! 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise3</span>.<br/>
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Term</span> (<span class="id" title="var">V</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Var</span> : <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Lam</span> : (<span class="id" title="var">Term</span> <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span>) -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">App</span> : <span class="id" title="var">Term</span> <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Term_illegal</span> : <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise3</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab168"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Poniższe bydle jest najgorsze z możliwych - póki co nie wiem, jak to
+    udowodnić. Powodzenia! 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise4</span>.<br/>
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>) -&gt; <span class="id" title="var">wut</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut_illegal</span> : <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise4</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab169"></a><h2 class="section">Poradnik rozpoznawania negatywnych typów induktywnych</h2>
+
+<div class="paragraph"> </div>
+
+ Skoro już wiemy, że negatywne typy induktywne są wynalazkiem szatana,
+    to czas podać proste kryterium na ich rozpoznawanie. Jeżeli jesteś
+    sprytny, to pewnie sam zdążyłeś już zauważyć ogólną regułę. Jednak aby
+    nie dyskryminować osób mało sprytnych, trzeba napisać ją wprost.
+
+<div class="paragraph"> </div>
+
+    Kryterium jest banalne. Mając dany typ <span class="inlinecode"><span class="id" title="var">T</span></span> musimy rzucić okiem na jego
+    konstruktory, a konkretniej na ich argumenty. Argumenty nieindukcyjne
+    (czyli o typach, w których nie występuje <span class="inlinecode"><span class="id" title="var">T</span></span>) są zupełnie niegroźnie.
+    Interesować nas powinny jedynie argumenty indukcyjne, czyli takie, w
+    których występuje typ <span class="inlinecode"><span class="id" title="var">T</span></span>.
+
+<div class="paragraph"> </div>
+
+    Niektóre typy argumentów indukcyjnych są niegroźne, np. <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">T</span></span>, <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">T</span></span>,
+    <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">T</span></span> albo <span class="inlinecode">{<span class="id" title="var">t</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">t</span>}</span>, ale powodują one, że Coq nie potrafi
+    wygenerować odpowiedniej reguły indukcji i zadowala się jedynie regułą
+    analizy przypadków. Nie prowadzą one do sprzeczności, ale powinniśmy ich
+    unikać.
+
+<div class="paragraph"> </div>
+
+    Argument typu <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">T</span></span> można zastąpić dwoma argumentami typu <span class="inlinecode"><span class="id" title="var">T</span></span>
+    i podobnie dla <span class="inlinecode">{<span class="id" title="var">t</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">t</span>}</span>. Konstruktor z argumentem typu <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+    możemy rozbić na dwa konstruktory (i powinniśmy, bo jest to bardziej
+    czytelne). Konstruktor z wystąpieniem <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">T</span></span> możemy przerobić na
+    definicję przez indukcję wzajemną (ćwiczenie: sprawdź jak), ale lepiej
+    chyba po prostu zaimplementować regułę indukcji ręcznie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">T0</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c0</span> : <span class="id" title="var">T0</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c1</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">T0</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c2</span> : <span class="id" title="var">T0</span> -&gt; <span class="id" title="var">T0</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c3</span> : <span class="id" title="var">nat</span> * <span class="id" title="var">T0</span> -&gt; <span class="id" title="var">T0</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c4</span> : <span class="id" title="var">T0</span> * <span class="id" title="var">T0</span> -&gt; <span class="id" title="var">T0</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c5</span> : <span class="id" title="var">T0</span> + <span class="id" title="var">T0</span> -&gt; <span class="id" title="var">T0</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c6</span> : <span class="id" title="var">list</span> <span class="id" title="var">T0</span> -&gt; <span class="id" title="var">T0</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Rodzaje nieszkodliwych typów argumentów widać na powyższym przykładzie.
+    Konstruktory <span class="inlinecode"><span class="id" title="var">c0</span></span> i <span class="inlinecode"><span class="id" title="var">c1</span></span> są nieindukcyjne, więc są ok. Konstruktor <span class="inlinecode"><span class="id" title="var">c2</span></span>
+    jest indukcyjny - jest jeden argument typu <span class="inlinecode"><span class="id" title="var">T0</span></span>. Zauważ, że typem
+    konstruktora <span class="inlinecode"><span class="id" title="var">c2</span></span> jest <span class="inlinecode"><span class="id" title="var">T0</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T0</span></span>, ale nie oznacza to, że <span class="inlinecode"><span class="id" title="var">T0</span></span>
+    występuje po lewej stronie strzałki!
+
+<div class="paragraph"> </div>
+
+    Jest tak, gdyż ostatnie wystąpienie <span class="inlinecode"><span class="id" title="var">T0</span></span> jest konkluzją konstruktora
+    <span class="inlinecode"><span class="id" title="var">c2</span></span>. Ważne są tylko wystąpienia po lewej stronie strzałki w argumentach
+    (gdyby konstruktor <span class="inlinecode"><span class="id" title="var">c2</span></span> nie był legalny, to jedynymi legalnymi typami
+    induktywnymi byłyby enumeracje).
+
+<div class="paragraph"> </div>
+
+    Konstruktory <span class="inlinecode"><span class="id" title="var">c3</span></span>, <span class="inlinecode"><span class="id" title="var">c4</span></span>, <span class="inlinecode"><span class="id" title="var">c5</span></span> i <span class="inlinecode"><span class="id" title="var">c6</span></span> są induktywne i również w pełni
+    legalne, ale są one powodem tego, że Coq nie generuje dla <span class="inlinecode"><span class="id" title="var">T0</span></span> reguły
+    indukcji, a jedynie regułę analizy przypadków (choć nazwa się ona
+    <span class="inlinecode"><span class="id" title="var">T0_ind</span></span>). 
+<div class="paragraph"> </div>
+
+<a name="lab170"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zrefaktoryzuj powyższy upośledzony typ. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Problem pojawia się dopiero, gdy typ <span class="inlinecode"><span class="id" title="var">T</span></span> występuje po lewej stronie
+    strzałki, np. <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>, <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>, <span class="inlinecode">(<span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>, lub gdy jest
+    skwantyfikowany uniwersalnie, np. <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span>,
+    <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">t</span>),</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode"><span class="id" title="var">f</span></span>.
+
+<div class="paragraph"> </div>
+
+    W trzech poprzednich podrozdziałach mierzyliśmy się z sytuacjami, gdy
+    typ <span class="inlinecode"><span class="id" title="var">T</span></span> występował bezpośrednio na lewo od strzałki, ale oczywiście
+    może on być dowolnie zagnieżdżony. Dla każdego wystąpienia <span class="inlinecode"><span class="id" title="var">T</span></span> w
+    argumentach możemy policzyć, na lewo od ilu strzałek (albo jako
+    jak mocno zagnieżdżona dziedzina kwantyfikacji) się ono znajduje.
+    Liczbę tę nazywać będziemy niedobrością. W zależności od niedobrości,
+    wystąpienie nazywamy:
+<ul class="doclist">
+<li> 0 - wystąpienie ściśle pozytywne
+
+</li>
+<li> liczba nieparzysta - wystąpienie negatywne
+
+</li>
+<li> liczba parzysta (poza 0) - wystąpienie pozytywne 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Jeżeli w definicji mamy wystąpienie negatywne, to typ możemy nazywać
+    negatywnym typem induktywnym (choć oczywiście nie jest to typ
+    induktywny). Jeżeli nie ma wystąpień negatywnych, ale są wystąpienia
+    pozytywne, to typ nazywamy pozytywnym typem induktywnym (lub nie ściśle
+    pozytywnym typem induktywnym), choć oczywiście również nie jest to typ
+    induktywny. Jeżeli wszystkiego wystąpienia są ściśle pozytywne, to mamy
+    do czynienia po prostu z typem induktywnym.
+
+<div class="paragraph"> </div>
+
+    Podobne nazewnictwo możemy sobie wprowadzić dla konstruktorów
+    (konstruktory negatywne, pozytywne i ściśle pozytywne), ale nie
+    ma sensu, bo za tydzień i zapomnisz o tych mało istotnych detalach.
+    Ważne, żebyś zapamiętał najważniejsze, czyli ideę. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">T1</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T1_0</span> : <span class="id" title="var">T1</span> -&gt; <span class="id" title="var">T1</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T1_1</span> : (<span class="id" title="var">T1</span> -&gt; <span class="id" title="var">T1</span>) -&gt; <span class="id" title="var">T1</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T1_2</span> : ((<span class="id" title="var">T1</span> -&gt; <span class="id" title="var">T1</span>) -&gt; <span class="id" title="var">T1</span>) -&gt; <span class="id" title="var">T1</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T1_3</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">t</span> : <span class="id" title="var">T1</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">T1</span> -&gt; <span class="id" title="keyword">Prop</span>), <span class="id" title="var">P</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">T1</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+W powyższym przykładzie wystąpienie <span class="inlinecode"><span class="id" title="var">T1</span></span> w pierwszym argumencie
+    <span class="inlinecode"><span class="id" title="var">T1_0</span></span> jest ściśle pozytywne (na lewo od 0 strzałek). Pierwsze
+    wystąpienie <span class="inlinecode"><span class="id" title="var">T1</span></span> w <span class="inlinecode"><span class="id" title="var">T1_1</span></span> jest negatywne (na lewo od 1 strzałki),
+    a drugie ściśle pozytywne (na lewo od 0 strzałek). Pierwsze
+    wystąpienie <span class="inlinecode"><span class="id" title="var">T1</span></span> w <span class="inlinecode"><span class="id" title="var">T1_2</span></span> jest pozytywne (na lewo od 2 strzałek),
+    drugie negatywne (na lewo od 1 strzałki), trzecie zaś ściśle
+    pozytywne (na lewo od 0 strzałek). Pierwsze wystąpienie <span class="inlinecode"><span class="id" title="var">T1</span></span> w
+    <span class="inlinecode"><span class="id" title="var">T1_3</span></span> jest negatywne (dziedzina kwantyfikacji), drugie zaś
+    pozytywne (na lewo od jednej strzałki, ale ta strzałka jest w
+    typie, po którym kwantyfikujemy).
+
+<div class="paragraph"> </div>
+
+    Konstruktor <span class="inlinecode"><span class="id" title="var">T1_0</span></span> jest ściśle pozytywne, zaś konstruktory <span class="inlinecode"><span class="id" title="var">T1_1</span></span>,
+    <span class="inlinecode"><span class="id" title="var">T1_2</span></span> oraz <span class="inlinecode"><span class="id" title="var">T1_3</span></span> są negatywne. Wobec tego typ <span class="inlinecode"><span class="id" title="var">T1</span></span> jest negatywnym
+    typem induktywnym (czyli wynalazkiem szatana, którego zaakceptowanie
+    prowadzi do sprzeczności). 
+<div class="paragraph"> </div>
+
+<a name="lab171"></a><h4 class="section">Ćwiczenie</h4>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">T2</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T2_0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : (<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : (<span class="id" title="keyword">forall</span> <span class="id" title="var">t</span> : <span class="id" title="var">T2</span>, <span class="id" title="var">nat</span>), <span class="id" title="keyword">Prop</span>), <span class="id" title="var">T2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T2_1</span> : (((((<span class="id" title="var">T2</span> -&gt; <span class="id" title="var">T2</span>) -&gt; <span class="id" title="var">T2</span>) -&gt; <span class="id" title="var">T2</span>) -&gt; <span class="id" title="var">T2</span>) -&gt; <span class="id" title="var">T2</span>) -&gt; <span class="id" title="var">T2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T2_2</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">T2</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">t</span> : <span class="id" title="var">T2</span>, <span class="id" title="var">nat</span>)) -&gt; <span class="id" title="var">T2</span>) -&gt; <span class="id" title="var">T2</span> -&gt; <span class="id" title="var">T2</span> -&gt; <span class="id" title="var">T2</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Policz niedobrość każdego wstąpienia <span class="inlinecode"><span class="id" title="var">T2</span></span> w powyższym typie. Sklasyfikuj
+    konstruktory jako negatywne, pozytywne lub ściśle pozytywne. Następnie
+    sklasyfikuj sam typ jako negatywny/pozytywny/ściśle pozytywny. 
+<div class="paragraph"> </div>
+
+<a name="lab172"></a><h4 class="section">Ćwiczenie</h4>
+
 </div>
 <div class="code">
 
@@ -6624,142 +6949,7 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
 </div>
 
 <div class="doc">
-<a name="lab166"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Poniższe paskudztwo łamie prawo ścisłej pozytywności nie jednym, lecz
-    aż dwoma swoimi konstruktorami.
-
-<div class="paragraph"> </div>
-
-    Zakoduj ten typ aksjomatycznie i udowodnij, że jego istnienie prowadzi
-    do sprzeczności. Metoda jest podobna jak w naszym przykładzie, ale
-    trzeba ją troszkę dostosować do zastanej sytuacji. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise1</span>.<br/>
-
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C0</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">wut</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C1</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">nat</span>) -&gt; <span class="id" title="var">wut</span>.<br/>
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut_illegal</span> : <span class="id" title="var">False</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise1</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab167"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Poniższe paskudztwo ma jeden konstruktor negatywny, a drugi pozytywny,
-    niczym typowa panienka z borderlinem...
-
-<div class="paragraph"> </div>
-
-    Polecenie jak w poprzednim ćwiczeniu. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise2</span>.<br/>
-
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C0</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>) -&gt; <span class="id" title="var">wut</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C1</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">wut</span>.<br/>
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut_illegal</span> : <span class="id" title="var">False</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise2</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab168"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Poniższy typ reprezentuje termy beztypowego rachunku lambda, gdzie <span class="inlinecode"><span class="id" title="var">V</span></span>
-    to typ reprezentujący zmienne. Co to za zwierzątko ten rachunek lambda
-    to my się jeszcze przekonamy... chyba, oby.
-
-<div class="paragraph"> </div>
-
-    Taki sposób reprezentowania rachunku lambda (i ogólnie składni języków
-    programowania) nazywa się HOAS, co jest skrótem od ang. Higher Order
-    Abstract Syntax. W wielu językach funkcyjnych jest to popularna technika,
-    ale w Coqu, jak zaraz udowodnisz, jest ona nielegalna. Ława oburzonych
-    jest rzecz jasna oburzona! 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise3</span>.<br/>
-
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Term</span> (<span class="id" title="var">V</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Var</span> : <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Lam</span> : (<span class="id" title="var">Term</span> <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span>) -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">App</span> : <span class="id" title="var">Term</span> <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span> -&gt; <span class="id" title="var">Term</span> <span class="id" title="var">V</span>.<br/>
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Term_illegal</span> : <span class="id" title="var">False</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise3</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab169"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Poniższe bydle jest najgorsze z możliwych - póki co nie wiem, jak to
-    udowodnić. Powodzenia! 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercise4</span>.<br/>
-
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C</span> : (<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">wut</span>) -&gt; <span class="id" title="var">wut</span>.<br/>
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut_illegal</span> : <span class="id" title="var">False</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">Exercise4</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab170"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda</h2>
+<a name="lab173"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda</h2>
 
 <div class="paragraph"> </div>
 
@@ -6806,7 +6996,7 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
     nienależenie prowadzi do sprzeczności. 
 <div class="paragraph"> </div>
 
-<a name="lab171"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab174"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6842,7 +7032,7 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
     ćwiczeń. 
 <div class="paragraph"> </div>
 
-<a name="lab172"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab175"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6855,7 +7045,7 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
     lubią. Czy wujek Janusz lubi sam siebie? 
 <div class="paragraph"> </div>
 
-<a name="lab173"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab176"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6992,7 +7182,7 @@ Powyższa induktywno-rekurencyjna definicja typu <span class="inlinecode"><span 
     będzie, jeżeli przemyślisz to wszystko w ramach ćwiczenia. 
 <div class="paragraph"> </div>
 
-<a name="lab174"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab177"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7391,7 +7581,7 @@ Ponieważ <span class="inlinecode"><span class="id" title="var">bad</span></span
     Coqowym wydaniu. 
 <div class="paragraph"> </div>
 
-<a name="lab175"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab178"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7451,7 +7641,11 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a name="lab176"></a><h1 class="section">Podsumowanie (TODO)</h1>
+<a name="lab179"></a><h2 class="section">Pozytywne typy induktywne</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab180"></a><h1 class="section">Podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 

@@ -3376,6 +3376,9 @@ end.
 
 End index.
 
+(** Nie zapomnijmy ponownie nakazać Coqowi generowania reguł indukcji. *)
+Set Elimination Schemes.
+
 (** ** Indukcja-indukcja *)
 
 Module ind_ind.
@@ -5091,32 +5094,6 @@ End Example1.
 
 (** **** Ćwiczenie *)
 
-(* Inductive T : Type := *)
-
-(** Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
-    pozytywności. Jeżeli tak, narysuj wesołego jeża. Jeżeli nie, napisz
-    zapętlającą się funkcję podobną do [loop] (zakładamy, że typ [T] ma
-    tylko ten jeden konstruktor). Następnie sprawdź w Coqu, czy udzieliłeś
-    poprawnej odpowiedzi.
-    - [| C1 : T]
-    - [| C2 : bool -> T]
-    - [| C3 : T -> T]
-    - [| C4 : T -> nat -> T]
-    - [| C5 : forall A : Type, T -> A -> T]
-    - [| C6 : forall A : Type, A -> T -> T]
-    - [| C7 : forall A : Type, (A -> T) -> T]
-    - [| C8 : forall A : Type, (T -> A) -> T]
-    - [| C9 : (forall x : T, T) -> T]
-    - [| C10 : (forall (A : Type) (x : T), A) -> T]
-    - [| C11 : forall A B C : Type,
-                  A -> (forall x : T, B) -> (C -> T) -> T] *)
-
-(* begin hide *)
-(* C1-C7 są legalne, C8-C11 nie. *)
-(* end hide *)
-
-(** **** Ćwiczenie *)
-
 (** Poniższe paskudztwo łamie prawo ścisłej pozytywności nie jednym, lecz
     aż dwoma swoimi konstruktorami.
 
@@ -5405,6 +5382,155 @@ Qed.
 (* end hide *)
 
 End Exercise4.
+
+(** ** Poradnik rozpoznawania negatywnych typów induktywnych *)
+
+(** Skoro już wiemy, że negatywne typy induktywne są wynalazkiem szatana,
+    to czas podać proste kryterium na ich rozpoznawanie. Jeżeli jesteś
+    sprytny, to pewnie sam zdążyłeś już zauważyć ogólną regułę. Jednak aby
+    nie dyskryminować osób mało sprytnych, trzeba napisać ją wprost.
+
+    Kryterium jest banalne. Mając dany typ [T] musimy rzucić okiem na jego
+    konstruktory, a konkretniej na ich argumenty. Argumenty nieindukcyjne
+    (czyli o typach, w których nie występuje [T]) są zupełnie niegroźnie.
+    Interesować nas powinny jedynie argumenty indukcyjne, czyli takie, w
+    których występuje typ [T].
+
+    Niektóre typy argumentów indukcyjnych są niegroźne, np. [T * T], [T + T],
+    [list T] albo [{t : T | P t}], ale powodują one, że Coq nie potrafi
+    wygenerować odpowiedniej reguły indukcji i zadowala się jedynie regułą
+    analizy przypadków. Nie prowadzą one do sprzeczności, ale powinniśmy ich
+    unikać.
+
+    Argument typu [T * T] można zastąpić dwoma argumentami typu [T]
+    i podobnie dla [{t : T | P t}]. Konstruktor z argumentem typu [T + T]
+    możemy rozbić na dwa konstruktory (i powinniśmy, bo jest to bardziej
+    czytelne). Konstruktor z wystąpieniem [list T] możemy przerobić na
+    definicję przez indukcję wzajemną (ćwiczenie: sprawdź jak), ale lepiej
+    chyba po prostu zaimplementować regułę indukcji ręcznie. *)
+
+Inductive T0 : Type :=
+    | c0 : T0
+    | c1 : nat -> T0
+    | c2 : T0 -> T0
+    | c3 : nat * T0 -> T0
+    | c4 : T0 * T0 -> T0
+    | c5 : T0 + T0 -> T0
+    | c6 : list T0 -> T0.
+
+(** Rodzaje nieszkodliwych typów argumentów widać na powyższym przykładzie.
+    Konstruktory [c0] i [c1] są nieindukcyjne, więc są ok. Konstruktor [c2]
+    jest indukcyjny - jest jeden argument typu [T0]. Zauważ, że typem
+    konstruktora [c2] jest [T0 -> T0], ale nie oznacza to, że [T0]
+    występuje po lewej stronie strzałki!
+
+    Jest tak, gdyż ostatnie wystąpienie [T0] jest konkluzją konstruktora
+    [c2]. Ważne są tylko wystąpienia po lewej stronie strzałki w argumentach
+    (gdyby konstruktor [c2] nie był legalny, to jedynymi legalnymi typami
+    induktywnymi byłyby enumeracje).
+
+    Konstruktory [c3], [c4], [c5] i [c6] są induktywne i również w pełni
+    legalne, ale są one powodem tego, że Coq nie generuje dla [T0] reguły
+    indukcji, a jedynie regułę analizy przypadków (choć nazwa się ona
+    [T0_ind]). *)
+
+(** **** Ćwiczenie *)
+
+(** Zrefaktoryzuj powyższy upośledzony typ. *)
+
+(* begin hide *)
+(** TODO *)
+(* end hide *)
+
+(** Problem pojawia się dopiero, gdy typ [T] występuje po lewej stronie
+    strzałki, np. [T -> bool], [T -> T], [(T -> T) -> T], lub gdy jest
+    skwantyfikowany uniwersalnie, np. [forall t : T, P t],
+    [forall f : (forall t : T, P t), Q f].
+
+    W trzech poprzednich podrozdziałach mierzyliśmy się z sytuacjami, gdy
+    typ [T] występował bezpośrednio na lewo od strzałki, ale oczywiście
+    może on być dowolnie zagnieżdżony. Dla każdego wystąpienia [T] w
+    argumentach możemy policzyć, na lewo od ilu strzałek (albo jako
+    jak mocno zagnieżdżona dziedzina kwantyfikacji) się ono znajduje.
+    Liczbę tę nazywać będziemy niedobrością. W zależności od niedobrości,
+    wystąpienie nazywamy:
+    - 0 - wystąpienie ściśle pozytywne
+    - liczba nieparzysta - wystąpienie negatywne
+    - liczba parzysta (poza 0) - wystąpienie pozytywne *)
+
+(** Jeżeli w definicji mamy wystąpienie negatywne, to typ możemy nazywać
+    negatywnym typem induktywnym (choć oczywiście nie jest to typ
+    induktywny). Jeżeli nie ma wystąpień negatywnych, ale są wystąpienia
+    pozytywne, to typ nazywamy pozytywnym typem induktywnym (lub nie ściśle
+    pozytywnym typem induktywnym), choć oczywiście również nie jest to typ
+    induktywny. Jeżeli wszystkiego wystąpienia są ściśle pozytywne, to mamy
+    do czynienia po prostu z typem induktywnym.
+
+    Podobne nazewnictwo możemy sobie wprowadzić dla konstruktorów
+    (konstruktory negatywne, pozytywne i ściśle pozytywne), ale nie
+    ma sensu, bo za tydzień i zapomnisz o tych mało istotnych detalach.
+    Ważne, żebyś zapamiętał najważniejsze, czyli ideę. *)
+
+Fail Inductive T1 : Type :=
+    | T1_0 : T1 -> T1
+    | T1_1 : (T1 -> T1) -> T1
+    | T1_2 : ((T1 -> T1) -> T1) -> T1
+    | T1_3 : forall (t : T1) (P : T1 -> Prop), P t -> T1.
+
+(** W powyższym przykładzie wystąpienie [T1] w pierwszym argumencie
+    [T1_0] jest ściśle pozytywne (na lewo od 0 strzałek). Pierwsze
+    wystąpienie [T1] w [T1_1] jest negatywne (na lewo od 1 strzałki),
+    a drugie ściśle pozytywne (na lewo od 0 strzałek). Pierwsze
+    wystąpienie [T1] w [T1_2] jest pozytywne (na lewo od 2 strzałek),
+    drugie negatywne (na lewo od 1 strzałki), trzecie zaś ściśle
+    pozytywne (na lewo od 0 strzałek). Pierwsze wystąpienie [T1] w
+    [T1_3] jest negatywne (dziedzina kwantyfikacji), drugie zaś
+    pozytywne (na lewo od jednej strzałki, ale ta strzałka jest w
+    typie, po którym kwantyfikujemy).
+
+    Konstruktor [T1_0] jest ściśle pozytywne, zaś konstruktory [T1_1],
+    [T1_2] oraz [T1_3] są negatywne. Wobec tego typ [T1] jest negatywnym
+    typem induktywnym (czyli wynalazkiem szatana, którego zaakceptowanie
+    prowadzi do sprzeczności). *)
+
+(** **** Ćwiczenie *)
+
+Fail Inductive T2 : Type :=
+    | T2_0 : forall f : (forall g : (forall t : T2, nat), Prop), T2
+    | T2_1 : (((((T2 -> T2) -> T2) -> T2) -> T2) -> T2) -> T2
+    | T2_2 :
+      ((forall (n : nat) (P : T2 -> Prop),
+        (forall t : T2, nat)) -> T2) -> T2 -> T2 -> T2.
+
+(** Policz niedobrość każdego wstąpienia [T2] w powyższym typie. Sklasyfikuj
+    konstruktory jako negatywne, pozytywne lub ściśle pozytywne. Następnie
+    sklasyfikuj sam typ jako negatywny/pozytywny/ściśle pozytywny. *)
+
+(** **** Ćwiczenie *)
+
+(* Inductive T : Type := *)
+
+(** Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
+    pozytywności. Jeżeli tak, narysuj wesołego jeża. Jeżeli nie, napisz
+    zapętlającą się funkcję podobną do [loop] (zakładamy, że typ [T] ma
+    tylko ten jeden konstruktor). Następnie sprawdź w Coqu, czy udzieliłeś
+    poprawnej odpowiedzi.
+    - [| C1 : T]
+    - [| C2 : bool -> T]
+    - [| C3 : T -> T]
+    - [| C4 : T -> nat -> T]
+    - [| C5 : forall A : Type, T -> A -> T]
+    - [| C6 : forall A : Type, A -> T -> T]
+    - [| C7 : forall A : Type, (A -> T) -> T]
+    - [| C8 : forall A : Type, (T -> A) -> T]
+    - [| C9 : (forall x : T, T) -> T]
+    - [| C10 : (forall (A : Type) (x : T), A) -> T]
+    - [| C11 : forall A B C : Type,
+                  A -> (forall x : T, B) -> (C -> T) -> T] *)
+
+(* begin hide *)
+(* C1-C7 są legalne, C8-C11 nie. *)
+(* end hide *)
 
 (** ** Promocja 2 w 1 czyli paradoksy Russella i Girarda *)
 
@@ -6034,6 +6160,10 @@ Qed.
 (* end hide *)
 
 End NonPoorUniverse.
+
+(** ** Pozytywne typy induktywne *)
+
+
 
 (** * Podsumowanie (TODO) *)
 
