@@ -5532,6 +5532,169 @@ Fail Inductive T2 : Type :=
 (* C1-C7 są legalne, C8-C11 nie. *)
 (* end hide *)
 
+(** ** Kilka bonusowych pułapek *)
+
+(** Wiemy już, że niektóre typy argumentów indukcyjnych są ok ([T * T],
+    [list T]), a niektóre inne nie ([T -> T], [forall t : T, ...]).
+    Uważny i żądny wiedzy czytelnik (daj boże, żeby tacy istnieli) zeche
+    zapewne postawić sobie pytanie: które dokładnie typy argumentów
+    indukcyjnych są ok, a które są wynalazkiem szatana?
+
+    Najprościej będzie sprawę zbadać empirycznie, czyli na przykładzie.
+    Żeby zaś przykład był reprezentatywny, niech parametrem definicji
+    będzie dowolna funkcja [F : Type -> Type]. *)
+
+Fail Inductive wut (F : Type -> Type) : Type :=
+    | wut_0 : F (wut F) -> wut F.
+(* ===> The command has indeed failed with message:
+        Non strictly positive occurrence of "wut" in
+        "F (wut F) -> wut F". *)
+
+(** Jak widać, jeżeli zaaplikujemy [F] do argumentu indukcyjnego, to Coq
+    krzyczy, że to wystąpienie nie jest ściśle pozytywne. Dlaczego tak
+    jest, skoro [F] nie jest ani strzałką, ani kwantyfikatorem uniwersalnym?
+    Dlatego, że choć nie jest nimi, to może nimi zostać. Jeżeli zdefiniujemy
+    sobie gdzieś na boku [F := fun A : Type => A -> bool], to wtedy
+    [wut_0 F : (wut F -> bool) -> wut F], a z takim diabelstwem już się
+    mierzyliśmy i wiemy, że nie wróży ono niczego dobrego.
+
+    Morał z tej historii jest dość banalny: gdy definiujemy typ induktywny
+    [T], jedynymi prawilnymi typami dla argumentu indukcyjnego są [T] oraz
+    typy funkcji, które mają [T] jako konkluzję ([A -> T], [A -> B -> T]
+    etc.). Wszystkie inne albo rodzą problemy z automatyczną generacją
+    reguł indukcji ([T * T], [list T]), albo prowadzą do sprzeczności
+    ([T -> T], [forall t : T, ...]), albo mogą prowadzić do sprzeczności,
+    jeżeli wstawi się za nie coś niedobrego ([F T]). *)
+
+(** **** Ćwiczenie *)
+
+Module wutF.
+
+Definition F (A : Type) : Type := A -> bool.
+
+(** Zakoduj aksjomatycznie rodzinę typów [wut] z powyższego przykładu.
+    Następnie wstaw za parametr zdefiniowane powyżej [F] i udowodnij,
+    że typ [wut F] prowadzi do sprzeczności. *)
+
+(* begin hide *)
+Axioms
+  (wut : (Type -> Type) -> Type)
+  (wut_0 : forall {F : Type -> Type}, F (wut F) -> wut F)
+  (wut_ind :
+    forall
+      (F : Type -> Type)
+      (P : wut F -> Type)
+      (Pwut_0 : forall x : F (wut F), P (wut_0 x)),
+        {f : forall x : wut F, P x |
+          forall x : F (wut F), f (wut_0 x) = Pwut_0 x}).
+
+Definition bad : wut F -> wut F -> bool.
+Proof.
+  apply (wut_ind F (fun _ => wut F -> bool)).
+  unfold F. intro f. exact f.
+Defined.
+
+Lemma bad_sur :
+  surjective bad.
+Proof.
+  unfold surjective.
+  intro f. exists (wut_0 f).
+  unfold bad. destruct (wut_ind _).
+  rewrite e. reflexivity.
+Qed.
+
+Lemma bad_not_sur :
+  ~ surjective bad.
+Proof.
+  unfold surjective. intro H.
+  destruct (H (fun w : wut F => negb (bad w w))) as [w eq].
+  apply (f_equal (fun f => f w)) in eq.
+  unfold bad in eq. destruct (wut_ind _).
+  destruct (x w w); inversion eq.
+Qed.
+(* end hide *)
+
+Lemma wut_illegal : False.
+(* begin hide *)
+Proof.
+  apply bad_not_sur. apply bad_sur.
+Qed.
+(* end hide *)
+
+End wutF.
+
+(** To jeszcze nie koniec wrażeń na dziś - póki co omówiliśmy wszakże
+    kryterium ścisłej pozytywności jedynie dla bardzo prostych typów
+    induktywnych. Słowem nie zająknęliśmy się nawet na temat typów
+    wzajemnie induktywnych czy indeksowanych typów induktywnych. Nie
+    trudno będzie nam jednak uzupełnić naszą wiedzę, gdyż w przypadku
+    oby tych mechanizmów kryterium ścisłej pozytywności wygląda podobnie
+    jak w znanych nam już przypadkach. *)
+
+Fail Inductive X : Type :=
+    | X0 : X
+    | X1 : (Y -> X) -> X
+
+with Y : Type :=
+    | Y0 : Y
+    | Y1 : (X -> Y) -> Y.
+(* ===> The command has indeed failed with message:
+        Non strictly positive occurrence of "Y" in "(Y -> X) -> X". *)
+
+(** Jak widać, definicja [X] i [Y] przez wzajemną indukcję jest nielegalna,
+    gdyż jedyny argument konstruktora [X3] ma typ [Y -> X]. Mogłoby wydawać
+    się, że wszystko jest w porządku, wszakże [X] występuje tutaj na pozycji
+    ściśle pozytywnej. Jednak ponieważ jest to definicja przez indukcję
+    wzajemną, kryterium ścisłej pozytywności stosuje się nie tylko do
+    wystąpień [X], ale także do wystąpień [Y] - wszystkie wystąpienia [X]
+    oraz [Y] muszą być ściśle pozytywne zarówno w konstruktorach typu [X],
+    jak i w konstruktorach typu [Y]. *)
+
+(** **** Ćwiczenie *)
+
+(** Zakoduj aksjomatycznie definicję typów [X] i [Y]. Spróbuj napisać
+    zapętlającą się funkcję [loop] (czy raczej dwie wzajemnie rekurencyjne
+    zapętlające się funkcje [loopx] i [loopy]), a następnie udowodnij za
+    pomocą twierdzenia Cantora, że typy [X] i [Y] są nielegalne. *)
+
+Module XY.
+
+(* begin hide *)
+
+(** TODO: Axioms *)
+
+Fail Fixpoint loopx (x : X) : Y :=
+match x with
+    | X0 => Y0
+    | X1 f => loopy (loopx (f Y0))
+end
+
+with loopy (y : Y) : X :=
+match y with
+    | Y0 => X0
+    | Y1 f => loopx (loopy (f X0))
+end.
+
+(*
+    loopx (X1 loopy) =
+    loopy (loopx (loopy Y0)) =
+    loopy (loopx X0) =
+    loopy (Y0) =
+    X0
+*)
+
+(** TODO: bad, bad_sur, bad_not_sur *)
+
+(* end hide *)
+
+Lemma XY_illegal : False.
+(* begin hide *)
+Proof.
+Admitted.
+(* end hide *)
+
+End XY.
+
 (** ** Promocja 2 w 1 czyli paradoksy Russella i Girarda *)
 
 (** _Istnieje teoria, że jeśli kiedyś ktoś się dowie, dlaczego powstało i
