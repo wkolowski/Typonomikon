@@ -6882,9 +6882,10 @@ W powyższym przykładzie wystąpienie <span class="inlinecode"><span class="id"
 </div>
 
 <div class="doc">
-Policz niedobrość każdego wstąpienia <span class="inlinecode"><span class="id" title="var">T2</span></span> w powyższym typie. Sklasyfikuj
-    konstruktory jako negatywne, pozytywne lub ściśle pozytywne. Następnie
-    sklasyfikuj sam typ jako negatywny/pozytywny/ściśle pozytywny. 
+Policz niedobrość każdego wstąpienia <span class="inlinecode"><span class="id" title="var">T2</span></span> w powyższej definicji.
+    Sklasyfikuj konstruktory jako negatywne, pozytywne lub ściśle
+    pozytywne. Następnie sklasyfikuj sam typ jako negatywny, pozytywny
+    lub ściśle pozytywny. 
 <div class="paragraph"> </div>
 
 <a name="lab172"></a><h4 class="section">Ćwiczenie</h4>
@@ -7072,7 +7073,11 @@ Jak widać, definicja <span class="inlinecode"><span class="id" title="var">X</s
  Zakoduj aksjomatycznie definicję typów <span class="inlinecode"><span class="id" title="var">X</span></span> i <span class="inlinecode"><span class="id" title="var">Y</span></span>. Spróbuj napisać
     zapętlającą się funkcję <span class="inlinecode"><span class="id" title="var">loop</span></span> (czy raczej dwie wzajemnie rekurencyjne
     zapętlające się funkcje <span class="inlinecode"><span class="id" title="var">loopx</span></span> i <span class="inlinecode"><span class="id" title="var">loopy</span></span>), a następnie udowodnij za
-    pomocą twierdzenia Cantora, że typy <span class="inlinecode"><span class="id" title="var">X</span></span> i <span class="inlinecode"><span class="id" title="var">Y</span></span> są nielegalne. 
+    pomocą twierdzenia Cantora, że typy <span class="inlinecode"><span class="id" title="var">X</span></span> i <span class="inlinecode"><span class="id" title="var">Y</span></span> są nielegalne.
+
+<div class="paragraph"> </div>
+
+    Uwaga: mi nie udało się tego zrobić, więc pewnie jest trudne. 
 </div>
 <div class="code">
 
@@ -7106,7 +7111,7 @@ Jak widać, definicja <span class="inlinecode"><span class="id" title="var">X</s
  Douglas Adams, <i>Restauracja na końcu wszechświata</i> 
 <div class="paragraph"> </div>
 
- W dwóch poprzednich podrozdziałach poznaliśmy twierdzenie Cantora i
+ W poprzednich podrozdziałach poznaliśmy twierdzenie Cantora oraz
     nauczyliśmy się używać go jako młota na negatywne typy induktywne.
 
 <div class="paragraph"> </div>
@@ -7370,6 +7375,9 @@ Skoro wiemy już, czym są uniwersa, przyjrzyjmy się temu, które właśnie
     wygląda aksjomatyczne kodowanie tego uniwersum: 
 </div>
 <div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">PoorUniverse</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Axioms</span><br/>
@@ -7721,8 +7729,16 @@ Ponieważ <span class="inlinecode"><span class="id" title="var">bad</span></span
     atak sprzeczności. Definicja uniwersum <span class="inlinecode"><span class="id" title="var">U</span></span> przez indukcję-rekursję jest
     nielegalna. Tak właśnie prezentują się paradoksy Russella i Girarda w
     Coqowym wydaniu. 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">PoorUniverse</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a name="lab181"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
@@ -7783,11 +7799,215 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a name="lab182"></a><h2 class="section">Pozytywne typy induktywne</h2>
+<a name="lab182"></a><h2 class="section">Pozytywne typy induktywne (i nie tylko)</h2>
 
 <div class="paragraph"> </div>
 
-<a name="lab183"></a><h1 class="section">Podsumowanie (TODO)</h1>
+ To już prawie koniec naszej wędrówki przez świat nielegalnych typów
+    "induktywnych". Dowiedzieliśmy się, że negatywne typy induktywne
+    prowadzą do nieterminacji i nauczyliśmy się wykorzystywać twierdzenie
+    Cantora (a także powiązane z nim paradoksy Russella i Girarda) do
+    dowodzenia nielegalności takich typów.
+
+<div class="paragraph"> </div>
+
+    Poznaliśmy też jednak klasyfikację typów wyglądających na induktywne
+    (ściśle pozytywne, pozytywne, negatywne), a w szczególności pojęcie
+    "niedobrości" indukcyjnego wystąpienia definiowanego typu w konstruktorze
+    (upraszczając, na lewo od ilu strzałek znajduje się to wystąpienie).
+
+<div class="paragraph"> </div>
+
+    Piszę "jednak", gdyż z jej powodu możemy czuć pewien niedosyt - wszystkie
+    dotychczasowe przykłady były typami negatywnymi o niedobrości równej 1.
+    Podczas naszej intelektualnej wędrówki zwiedziliśmy mniej miejscówek,
+    niż moglibyśmy chcieć. W tym podrozdziale spróbujemy ten przykry niedosyt
+    załatać, rozważając (nie ściśle) pozytywne typy induktywne. Zobaczymy
+    formalny dowód na to, że nie są one legalne (lub, precyzyjniej pisząc,
+    dowód na to, że conajmniej jeden z nich nie jest legalny). Zanim jednak
+    to się stanie, zobaczmy, czy wypracowane przez nas techniki działają na
+    negatywne typy induktywne o niedobrości innej niż 1. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">T3</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T3_0</span> : (((<span class="id" title="var">T3</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">T3</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Przyjrzyjmy się powyższej definicji. Występienie indukcyjne typu <span class="inlinecode"><span class="id" title="var">T3</span></span>
+    ma współczynnik niedobrości równy 3, gdyż znajduje się na lewo od 3
+    strzałek. Prawe strony wszystkich z nich to <span class="inlinecode"><span class="id" title="var">bool</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Axioms</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">T3</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">T3_0</span> : (((<span class="id" title="var">T3</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">T3</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">T3_case</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">T3</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PT3_0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : ((<span class="id" title="var">T3</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>, <span class="id" title="var">P</span> (<span class="id" title="var">T3_0</span> <span class="id" title="var">f</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">T3</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : ((<span class="id" title="var">T3</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">T3_0</span> <span class="id" title="var">g</span>) = <span class="id" title="var">PT3_0</span> <span class="id" title="var">g</span>}).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Po ciężkich bojach, przez które przeszedłeś, aksjomatyczne kodowanie
+    tego typu nie powinno cię dziwić. Warto zauważyć jedynie, że do naszej
+    dyspozycji mamy jedynie regułę zależnej analizy przypadków, gdyż nie
+    wiadomo, jak miałyby wyglądać wywołania indukcyjne.
+
+<div class="paragraph"> </div>
+
+    Zanim zobaczymy, jak pokazać nielegalność tego typu metodą Cantora,
+    przypomnijmy sobie pewien kluczowy fakt dotyczący negacji i jego
+    banalne uogólnienie. 
+<div class="paragraph"> </div>
+
+<a name="lab183"></a><h4 class="section">Ćwiczenie</h4>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">triple_negation</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ ~ ~ <span class="id" title="var">P</span> -&gt; ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">triple_arrow</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>, (((<span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) -&gt; <span class="id" title="var">B</span>) -&gt; <span class="id" title="var">B</span>) -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Ćwiczenie to przypomina nam, że jeżeli chodzi o spamowanie negacją, to
+    są w zasadzie tylko trzy sytuacje:
+<ul class="doclist">
+<li> brak negacji
+
+</li>
+<li> pojedyncza negacja
+
+</li>
+<li> podwójna negacja 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Jeżeli mamy do czynienia z większą liczbą negacji, to możemy zdejmować
+    po dwie aż dojdziemy do któregoś z powyższych przypadków. Ponieważ
+    negacja to tylko implikacja, której kodziedziną jest <span class="inlinecode"><span class="id" title="var">False</span></span>, a nie
+    korzystamy w dowodzie z żadnych specjalnych właściwości <span class="inlinecode"><span class="id" title="var">False</span></span>,
+    analogiczna właściwość zachodzi także dla dowolnego innego <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> : <span class="id" title="var">T3</span> -&gt; (<span class="id" title="var">T3</span> -&gt; <span class="id" title="var">bool</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">T3_case</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">T3</span> -&gt; <span class="id" title="var">bool</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">x</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">g</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">g</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
+    cię zaskakiwać. Szczerze pisząc, reszta dowodu również nie jest jakoś
+    specjalnie wymagająca czy oświecająca. 
+<div class="paragraph"> </div>
+
+<a name="lab184"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Dokończ dowód. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_sur</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">surjective</span> <span class="id" title="var">bad</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_not_sur</span> :<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">surjective</span> <span class="id" title="var">bad</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">T3_illegal</span> : <span class="id" title="var">False</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab185"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Napisanie zapętlającej się funkcji <span class="inlinecode"><span class="id" title="var">loop</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T3</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> też nie jest
+    jakoś wybitnie trudne. Napisz ją i udowodnij (nieformlanie), że
+    istnieje takie <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T3</span></span>, że <span class="inlinecode"><span class="id" title="var">loop</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> się zapętla. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;begni&nbsp;hide&nbsp;*)</span><br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">loop</span> (<span class="id" title="var">x</span> : <span class="id" title="var">T3</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T3_0</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">g</span> : <span class="id" title="var">T3</span> -&gt; <span class="id" title="var">bool</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">T3_0</span> <span class="id" title="var">f</span>))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  Niech f := fun g =&gt; g loop
+
+<div class="paragraph"> </div>
+
+  loop (T3_0 f) =
+  f (fun g =&gt; g (T3_0 f))
+  loop (T3_0 f) =
+  ...
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Morał z powyższych rozważań jest prosty: nasze techniki działają także
+    na negatywne typy induktywne o niedobrości równej 3. Myślę, że jesteś
+    całkiem skłonny uwierzyć też, że zadziałają na te o niedobrości równej
+    5, 7 i tak dalej... przynajmniej dopóki wszystkie typy po prawych
+    stronach strzałek będą takie same. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">T4</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T4_0</span> : (((<span class="id" title="var">T4</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">nat</span>) -&gt; <span class="id" title="keyword">Prop</span>) -&gt; <span class="id" title="var">T4</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab186"></a><h1 class="section">Podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 

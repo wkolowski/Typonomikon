@@ -2,6 +2,8 @@
     https://vilhelms.github.io/posts/why-must-inductive-types-be-strictly-positive/
 *)
 
+(** TODO: ścisła pozytywność dla indeksowanych typów induktywnych. *)
+
 Fail Inductive D : Type :=
   | D_intro : (D -> D) -> D.
 

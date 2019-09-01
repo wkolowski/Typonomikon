@@ -5502,9 +5502,10 @@ Fail Inductive T2 : Type :=
       ((forall (n : nat) (P : T2 -> Prop),
         (forall t : T2, nat)) -> T2) -> T2 -> T2 -> T2.
 
-(** Policz niedobrość każdego wstąpienia [T2] w powyższym typie. Sklasyfikuj
-    konstruktory jako negatywne, pozytywne lub ściśle pozytywne. Następnie
-    sklasyfikuj sam typ jako negatywny/pozytywny/ściśle pozytywny. *)
+(** Policz niedobrość każdego wstąpienia [T2] w powyższej definicji.
+    Sklasyfikuj konstruktory jako negatywne, pozytywne lub ściśle
+    pozytywne. Następnie sklasyfikuj sam typ jako negatywny, pozytywny
+    lub ściśle pozytywny. *)
 
 (** **** Ćwiczenie *)
 
@@ -5655,7 +5656,9 @@ with Y : Type :=
 (** Zakoduj aksjomatycznie definicję typów [X] i [Y]. Spróbuj napisać
     zapętlającą się funkcję [loop] (czy raczej dwie wzajemnie rekurencyjne
     zapętlające się funkcje [loopx] i [loopy]), a następnie udowodnij za
-    pomocą twierdzenia Cantora, że typy [X] i [Y] są nielegalne. *)
+    pomocą twierdzenia Cantora, że typy [X] i [Y] są nielegalne.
+
+    Uwaga: mi nie udało się tego zrobić, więc pewnie jest trudne. *)
 
 Module XY.
 
@@ -5681,6 +5684,8 @@ end.
     loopy (loopx X0) =
     loopy (Y0) =
     X0
+
+    dupa konia : (
 *)
 
 (** TODO: bad, bad_sur, bad_not_sur *)
@@ -5705,7 +5710,7 @@ End XY.
 
 (** Douglas Adams, _Restauracja na końcu wszechświata_ *)
 
-(** W dwóch poprzednich podrozdziałach poznaliśmy twierdzenie Cantora i
+(** W poprzednich podrozdziałach poznaliśmy twierdzenie Cantora oraz
     nauczyliśmy się używać go jako młota na negatywne typy induktywne.
 
     W tym podrozdziale zapoznamy się z dwoma paradoksami (a precyzyjniej
@@ -5893,6 +5898,8 @@ end.
 (** Skoro wiemy już, czym są uniwersa, przyjrzyjmy się temu, które właśnie
     zdefiniowaliśmy. Żebyś nie musiał w rozpaczy przewijać do góry, tak
     wygląda aksjomatyczne kodowanie tego uniwersum: *)
+
+Module PoorUniverse.
 
 Axioms
   (U : Type)
@@ -6141,6 +6148,8 @@ Qed.
     nielegalna. Tak właśnie prezentują się paradoksy Russella i Girarda w
     Coqowym wydaniu. *)
 
+End PoorUniverse.
+
 (** **** Ćwiczenie *)
 
 (** Tak naprawdę, to w tym podrozdziale byliśmy co najwyżej bieda-Thanosem,
@@ -6257,6 +6266,14 @@ Proof.
         intro f. rewrite El_UU in f. exact f.
 Defined.
 
+Lemma right_to_left_to_right :
+  forall
+    (A : Type) (P : A -> Type) (x y : A) (p : x = y) (u : P y),
+      eq_rect x P (@eq_rect_r A y P u x p) y p = u.
+Proof.
+  destruct p. cbn. reflexivity.
+Qed.
+
 Lemma bad_sur :
   surjective bad.
 Proof.
@@ -6324,7 +6341,160 @@ Qed.
 
 End NonPoorUniverse.
 
-(** ** Pozytywne typy induktywne *)
+(** ** Pozytywne typy induktywne (i nie tylko) *)
+
+(** To już prawie koniec naszej wędrówki przez świat nielegalnych typów
+    "induktywnych". Dowiedzieliśmy się, że negatywne typy induktywne
+    prowadzą do nieterminacji i nauczyliśmy się wykorzystywać twierdzenie
+    Cantora (a także powiązane z nim paradoksy Russella i Girarda) do
+    dowodzenia nielegalności takich typów.
+
+    Poznaliśmy też jednak klasyfikację typów wyglądających na induktywne
+    (ściśle pozytywne, pozytywne, negatywne), a w szczególności pojęcie
+    "niedobrości" indukcyjnego wystąpienia definiowanego typu w konstruktorze
+    (upraszczając, na lewo od ilu strzałek znajduje się to wystąpienie).
+
+    Piszę "jednak", gdyż z jej powodu możemy czuć pewien niedosyt - wszystkie
+    dotychczasowe przykłady były typami negatywnymi o niedobrości równej 1.
+    Podczas naszej intelektualnej wędrówki zwiedziliśmy mniej miejscówek,
+    niż moglibyśmy chcieć. W tym podrozdziale spróbujemy ten przykry niedosyt
+    załatać, rozważając (nie ściśle) pozytywne typy induktywne. Zobaczymy
+    formalny dowód na to, że nie są one legalne (lub, precyzyjniej pisząc,
+    dowód na to, że conajmniej jeden z nich nie jest legalny). Zanim jednak
+    to się stanie, zobaczmy, czy wypracowane przez nas techniki działają na
+    negatywne typy induktywne o niedobrości innej niż 1. *)
+
+Fail Inductive T3 : Type :=
+    | T3_0 : (((T3 -> bool) -> bool) -> bool) -> T3.
+
+(** Przyjrzyjmy się powyższej definicji. Występienie indukcyjne typu [T3]
+    ma współczynnik niedobrości równy 3, gdyż znajduje się na lewo od 3
+    strzałek. Prawe strony wszystkich z nich to [bool]. *)
+
+Axioms
+  (T3 : Type)
+  (T3_0 : (((T3 -> bool) -> bool) -> bool) -> T3)
+  (T3_case :
+    forall
+      (P : T3 -> Type)
+      (PT3_0 : forall f : ((T3 -> bool) -> bool) -> bool, P (T3_0 f)),
+        {f : forall x : T3, P x |
+          forall g : ((T3 -> bool) -> bool) -> bool,
+            f (T3_0 g) = PT3_0 g}).
+
+(** Po ciężkich bojach, przez które przeszedłeś, aksjomatyczne kodowanie
+    tego typu nie powinno cię dziwić. Warto zauważyć jedynie, że do naszej
+    dyspozycji mamy jedynie regułę zależnej analizy przypadków, gdyż nie
+    wiadomo, jak miałyby wyglądać wywołania indukcyjne.
+
+    Zanim zobaczymy, jak pokazać nielegalność tego typu metodą Cantora,
+    przypomnijmy sobie pewien kluczowy fakt dotyczący negacji i jego
+    banalne uogólnienie. *)
+
+(** **** Ćwiczenie *)
+
+Lemma triple_negation :
+  forall P : Prop, ~ ~ ~ P -> ~ P.
+(* begin hide *)
+Proof.
+  intros P f x. apply f. intro g. apply g. exact x.
+Qed.
+(* end hide *)
+
+Lemma triple_arrow :
+  forall A B : Type, (((A -> B) -> B) -> B) -> (A -> B).
+(* begin hide *)
+Proof.
+  intros A B f x. apply f. intro g. apply g. exact x.
+Qed.
+(* end hide *)
+
+(** Ćwiczenie to przypomina nam, że jeżeli chodzi o spamowanie negacją, to
+    są w zasadzie tylko trzy sytuacje:
+    - brak negacji
+    - pojedyncza negacja
+    - podwójna negacja *)
+
+(** Jeżeli mamy do czynienia z większą liczbą negacji, to możemy zdejmować
+    po dwie aż dojdziemy do któregoś z powyższych przypadków. Ponieważ
+    negacja to tylko implikacja, której kodziedziną jest [False], a nie
+    korzystamy w dowodzie z żadnych specjalnych właściwości [False],
+    analogiczna właściwość zachodzi także dla dowolnego innego [B : Type]. *)
+
+Definition bad : T3 -> (T3 -> bool).
+Proof.
+  apply (T3_case (fun _ => T3 -> bool)).
+  intros f x. apply f. intro g. apply g. exact x.
+Defined.
+
+(** Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
+    cię zaskakiwać. Szczerze pisząc, reszta dowodu również nie jest jakoś
+    specjalnie wymagająca czy oświecająca. *)
+
+(** **** Ćwiczenie *)
+
+(** Dokończ dowód. *)
+
+Lemma bad_sur :
+  surjective bad.
+(* begin hide *)
+Proof.
+  unfold surjective.
+  intro f. exists (T3_0 (fun g => g f)).
+  unfold bad. destruct (T3_case _).
+  rewrite e. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma bad_not_sur :
+  ~ surjective bad.
+(* begin hide *)
+Proof.
+  unfold surjective. intro H.
+  destruct (H (fun x : T3 => negb (bad x x))) as [x eq].
+  apply (f_equal (fun f => f x)) in eq.
+  destruct (bad x x); inversion eq.
+Qed.
+(* end hide *)
+
+Theorem T3_illegal : False.
+(* begin hide *)
+Proof.
+  apply bad_not_sur. exact bad_sur.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Napisanie zapętlającej się funkcji [loop : T3 -> bool] też nie jest
+    jakoś wybitnie trudne. Napisz ją i udowodnij (nieformlanie), że
+    istnieje takie [x : T3], że [loop x] się zapętla. *)
+
+(* begni hide *)
+Fail Fixpoint loop (x : T3) : bool :=
+match x with
+    | T3_0 f => f (fun g : T3 -> bool => g (T3_0 f))
+end.
+
+(**
+  Niech f := fun g => g loop
+
+  loop (T3_0 f) =
+  f (fun g => g (T3_0 f))
+  loop (T3_0 f) =
+  ...
+*)
+
+(* end hide *)
+
+(** Morał z powyższych rozważań jest prosty: nasze techniki działają także
+    na negatywne typy induktywne o niedobrości równej 3. Myślę, że jesteś
+    całkiem skłonny uwierzyć też, że zadziałają na te o niedobrości równej
+    5, 7 i tak dalej... przynajmniej dopóki wszystkie typy po prawych
+    stronach strzałek będą takie same. *)
+
+Fail Inductive T4 : Type :=
+    | T4_0 : (((T4 -> bool) -> nat) -> Prop) -> T4.
 
 
 
