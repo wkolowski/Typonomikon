@@ -7831,6 +7831,9 @@ end.<br/>
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">T3</span>.<br/>
+
+<br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">T3</span> : <span class="id" title="keyword">Type</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T3_0</span> : (((<span class="id" title="var">T3</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">T3</span>.<br/>
 
@@ -7941,10 +7944,6 @@ Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
 &nbsp;&nbsp;<span class="id" title="var">surjective</span> <span class="id" title="var">bad</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_not_sur</span> :<br/>
-&nbsp;&nbsp;~ <span class="id" title="var">surjective</span> <span class="id" title="var">bad</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">T3_illegal</span> : <span class="id" title="var">False</span>.<br/>
 
 <br/>
@@ -7962,30 +7961,9 @@ Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
 <div class="code">
 
 <br/>
-<span class="comment">(*&nbsp;begni&nbsp;hide&nbsp;*)</span><br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">loop</span> (<span class="id" title="var">x</span> : <span class="id" title="var">T3</span>) : <span class="id" title="var">bool</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T3_0</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">g</span> : <span class="id" title="var">T3</span> -&gt; <span class="id" title="var">bool</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">T3_0</span> <span class="id" title="var">f</span>))<br/>
-<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-  Niech f := fun g =&gt; g loop
-
-<div class="paragraph"> </div>
-
-  loop (T3_0 f) =
-  f (fun g =&gt; g (T3_0 f))
-  loop (T3_0 f) =
-  ...
-
-</div>
-<div class="code">
-
-<br/>
-<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">T3</span>.<br/>
 
 <br/>
 </div>
@@ -7994,19 +7972,250 @@ Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
 Morał z powyższych rozważań jest prosty: nasze techniki działają także
     na negatywne typy induktywne o niedobrości równej 3. Myślę, że jesteś
     całkiem skłonny uwierzyć też, że zadziałają na te o niedobrości równej
-    5, 7 i tak dalej... przynajmniej dopóki wszystkie typy po prawych
-    stronach strzałek będą takie same. 
+    5, 7 i tak dalej.
+
+<div class="paragraph"> </div>
+
+    To wszystko jest prawdą jednak tylko wtedy, gdy wszystkie typy po prawych
+    stronach strzałek będą takie same. A co, gdy będą różne? 
 </div>
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">T4</span>.<br/>
+
+<br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">T4</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">T4_0</span> : (((<span class="id" title="var">T4</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">nat</span>) -&gt; <span class="id" title="keyword">Prop</span>) -&gt; <span class="id" title="var">T4</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c0</span> : (((<span class="id" title="var">T4</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">nat</span>) -&gt; <span class="id" title="var">Color</span>) -&gt; <span class="id" title="var">T4</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axioms</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">T4</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">c0</span> : (((<span class="id" title="var">T4</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">nat</span>) -&gt; <span class="id" title="var">Color</span>) -&gt; <span class="id" title="var">T4</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">dcase</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">T4</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Pc0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : ((<span class="id" title="var">T4</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">nat</span>) -&gt; <span class="id" title="var">Color</span>, <span class="id" title="var">P</span> (<span class="id" title="var">c0</span> <span class="id" title="var">f</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">T4</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : ((<span class="id" title="var">T4</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">nat</span>) -&gt; <span class="id" title="var">Color</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">c0</span> <span class="id" title="var">g</span>) = <span class="id" title="var">Pc0</span> <span class="id" title="var">g</span>}).<br/>
 
 <br/>
 </div>
 
 <div class="doc">
+Powyższy przykład jest podobny do poprzedniego, ale tym razem zamiast
+    trzech wystąpień <span class="inlinecode"><span class="id" title="var">bool</span></span> mamy <span class="inlinecode"><span class="id" title="var">bool</span></span>, <span class="inlinecode"><span class="id" title="var">nat</span></span> oraz <span class="inlinecode"><span class="id" title="var">Color</span></span> (to typ, który
+    zdefiniowaliśmy na samym początku tego rozdziału, gdy uczyliśmy się
+    o enumeracjach). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> : <span class="id" title="var">T4</span> -&gt; (<span class="id" title="var">T4</span> -&gt; <span class="id" title="var">bool</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">dcase</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">T4</span> -&gt; <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> : <span class="id" title="var">Color</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">R</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">g</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span> =&gt; <span class="id" title="keyword">if</span> <span class="id" title="var">b</span> <span class="id" title="keyword">then</span> 0 <span class="id" title="keyword">else</span> 1).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<span class="id" title="var">g</span> <span class="id" title="var">x</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nasz modus operandi będzie taki jak poprzednio: spróbujemy wyjąć z
+    elementu <span class="inlinecode"><span class="id" title="var">T4</span></span> funkcję typu <span class="inlinecode"><span class="id" title="var">T4</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>. W tym celu używamy zależnej
+    reguły analizy przypadków i wprowadzamy rzeczy do kontekstu.
+
+<div class="paragraph"> </div>
+
+    Tym razem nie możemy jednak bezpośrednio zaaplikować <span class="inlinecode"><span class="id" title="var">f</span></span>, gdyż jej
+    kodziedziną jest <span class="inlinecode"><span class="id" title="var">Color</span></span>, a my musimy skonstruować coś typu <span class="inlinecode"><span class="id" title="var">bool</span></span>.
+    Możemy temu jednak zaradzić aplikując do celu skonstruowaną naprędce
+    funkcję typu <span class="inlinecode"><span class="id" title="var">Color</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>. Ta funkcja powinna być surjekcją (jeśli
+    nie wierzysz, sprawdź, co się stanie, jeżeli zamienimy ją na funckję
+    stałą).
+
+<div class="paragraph"> </div>
+
+    Możemy już zaaplikować <span class="inlinecode"><span class="id" title="var">f</span></span> i wprowadzić <span class="inlinecode"><span class="id" title="var">g</span></span> do kontekstu. Chcielibyśmy
+    teraz zaaplikować <span class="inlinecode"><span class="id" title="var">g</span></span>, ale nie możemy, bo typy się nie zgadzają - <span class="inlinecode"><span class="id" title="var">g</span></span>
+    zwraca <span class="inlinecode"><span class="id" title="var">bool</span></span>, a my musimy skonstruować liczbę naturalną. Robimy tutaj
+    to samo co poprzednio - aplikujemy do celu jakąś funkcję <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>.
+    Tym razem nie musi ona być surjekcją (nie jest to nawet możliwe, gdyż
+    nie ma surjekcji z <span class="inlinecode"><span class="id" title="var">bool</span></span> w <span class="inlinecode"><span class="id" title="var">nat</span></span>). Dzięki temu możemy zaaplikować <span class="inlinecode"><span class="id" title="var">g</span></span>
+    i zakończyć, używając <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Żeby pokazać, że <span class="inlinecode"><span class="id" title="var">bad</span></span> jest surjekcją, będziemy potrzebować aksjomatu
+    ekstensjonalności dla funkcji (ang. functional extensionality axiom,
+    w skrócie funext). Głosi on, że dwie funkcje <span class="inlinecode"><span class="id" title="var">f</span>,</span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> są równe,
+    jeżeli uda nam się pokazać, że dają równe wyniki dla każdego argumentu
+    (czyli <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>).
+
+<div class="paragraph"> </div>
+
+    Importując powyższy moduł zakładamy prawdziwość tego aksjomatu oraz
+    uzyskujemy dostęp do taktyki <span class="inlinecode"><span class="id" title="tactic">extensionality</span></span>, która ułatwia dowody
+    wymagające użycia ekstensjonalności. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bad_sur</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">surjective</span> <span class="id" title="var">bad</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">surjective</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">bad</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">dcase</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">bad</span> <span class="id" title="var">eq</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">c0</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">g</span> : (<span class="id" title="var">T4</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">nat</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">g</span> <span class="id" title="var">f</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">R</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">G</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">extensionality</span> <span class="id" title="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">f</span> <span class="id" title="var">t</span>); <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dowód jest prawie taki jak zawsze: odwijamy definicję surjektywności i
+    wprowadzamy hipotezy do kontekstu, a następnie odwijamy definicję <span class="inlinecode"><span class="id" title="var">bad</span></span>
+    i rozbijamy ją dla czytelności na właściwą funkcję <span class="inlinecode"><span class="id" title="var">bad</span></span> oraz równanie
+    <span class="inlinecode"><span class="id" title="var">eq</span></span>.
+
+<div class="paragraph"> </div>
+
+    Następnie musimy znaleźć <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T4</span></span>, które <span class="inlinecode"><span class="id" title="var">bad</span></span> mapuje na <span class="inlinecode"><span class="id" title="var">f</span></span>. Zaczynamy
+    od <span class="inlinecode"><span class="id" title="var">c0</span></span>, bo jest to jedyny konstruktor <span class="inlinecode"><span class="id" title="var">T4</span></span>. Bierze on jako argument
+    funkcję typu <span class="inlinecode">((<span class="id" title="var">T4</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Color</span></span>. Żeby ją wyprodukować,
+    bierzemy na wejściu funkcję <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode">(<span class="id" title="var">T4</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> i musimy zrobić
+    coś typu <span class="inlinecode"><span class="id" title="var">Color</span></span>.
+
+<div class="paragraph"> </div>
+
+    Nie może to być jednak byle co - musimy użyć <span class="inlinecode"><span class="id" title="var">f</span></span>, a jedynym sensownym
+    sposobem, żeby to zrobić, jest zaaplikować <span class="inlinecode"><span class="id" title="var">g</span></span> do <span class="inlinecode"><span class="id" title="var">f</span></span>. Musimy zadbać
+    też o to, żeby odwrócić funkcje konwertujące <span class="inlinecode"><span class="id" title="var">Color</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> oraz
+    <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, których użyliśmy w definicji <span class="inlinecode"><span class="id" title="var">bad</span></span>. Pierwsza z nich
+    konwertowała <span class="inlinecode"><span class="id" title="var">R</span></span> (czyli kolor czerwony) na <span class="inlinecode"><span class="id" title="var">true</span></span>, a inne kolory na
+    <span class="inlinecode"><span class="id" title="var">false</span></span>, zaś druga konwertowała <span class="inlinecode"><span class="id" title="var">true</span></span> na <span class="inlinecode">0</span>, a <span class="inlinecode"><span class="id" title="var">false</span></span> na <span class="inlinecode">1</span>.
+    Wobec tego dopasowując <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> musimy przekonwertować <span class="inlinecode">0</span> na <span class="inlinecode"><span class="id" title="var">R</span></span>,
+    zaś <span class="inlinecode">1</span> na coś innego niż <span class="inlinecode"><span class="id" title="var">R</span></span>, np. na <span class="inlinecode"><span class="id" title="var">G</span></span> (czyli kolor zielony).
+
+<div class="paragraph"> </div>
+
+    Znalazłszy odpowiedni argument, możemy przepisać równanie definiujące
+    <span class="inlinecode"><span class="id" title="var">bad</span></span>. To już prawie koniec, ale próba użycia taktyki <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> w
+    tym momencie skończyłaby się porażką. Na ratunek przychodzi nam
+    aksjomat ekstensjonalności, którego używamy pisząc <span class="inlinecode"><span class="id" title="tactic">extensionality</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span>.
+    Dzięki temu pozostaje nam pokazać jedynie, że <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> jest równe tej
+    drugie funkcji dla argumentu <span class="inlinecode"><span class="id" title="var">t</span></span>. W tym celu rozbijamy <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span>, a oba
+    wyrażenia okazują się być konwertowalne. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">T4_illegal</span> : <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Cantor'</span> <span class="id" title="var">bad</span> <span class="id" title="var">negb</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>; <span class="id" title="tactic">inversion</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">bad_sur</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Skoro mamy surjekcję z <span class="inlinecode"><span class="id" title="var">T4</span></span> w <span class="inlinecode"><span class="id" title="var">T4</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>, katastrofy nie da się
+    uniknąć.
+
+<div class="paragraph"> </div>
+
+    Moglibyśmy się też zastanowić nad napisaniem zapętlającej się funkcji
+    <span class="inlinecode"><span class="id" title="var">loop</span></span>, ale coś czuję, że ty coś czujesz, że byłoby to babranie się
+    w niepotrzebnym problemie. Wobec tego (oczywiście o ile dotychczas
+    się nie skapnąłeś) poczuj się oświecony! 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">loop</span> (<span class="id" title="var">x</span> : <span class="id" title="var">T4</span>) : <span class="id" title="var">bool</span> := <span class="id" title="var">bad</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Ha! Tak tak, <span class="inlinecode"><span class="id" title="var">loop</span></span> nie jest niczym innym niż lekko rozmnożoną wersją
+    <span class="inlinecode"><span class="id" title="var">bad</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">loop_nontermination</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">true</span> = <span class="id" title="var">loop</span> (<span class="id" title="var">c0</span> (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">g</span> : (<span class="id" title="var">T4</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">nat</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">g</span> <span class="id" title="var">loop</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">R</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">G</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>)).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">loop</span>, <span class="id" title="var">bad</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">dcase</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">bad</span> <span class="id" title="var">eq</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 5!<span class="id" title="var">eq</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A skoro <span class="inlinecode"><span class="id" title="var">loop</span></span> to tylko inne <span class="inlinecode"><span class="id" title="var">bad</span></span>, to nie powinno cię też wcale a
+    wcale zdziwić, że najbardziej oczywisty argument, dla którego <span class="inlinecode"><span class="id" title="var">loop</span></span>
+    się zapętla, jest żywcem wzięty z dowodu <span class="inlinecode"><span class="id" title="var">bad_sur</span></span> (choć oczywiście
+    musimy zastąpić <span class="inlinecode"><span class="id" title="var">f</span></span> przez <span class="inlinecode"><span class="id" title="var">loop</span></span>).
+
+<div class="paragraph"> </div>
+
+    Oczywiście niemożliwe jest, żeby formalnie udowodnić w Coqu, że coś
+    się zapętla. Powyższy lemat ma być jedynie demonstracją - ręczne
+    rozpisanie tego przykładu byłoby zbyt karkołomne. Jak widać z dowodu,
+    przepisywanie równania definiującego <span class="inlinecode"><span class="id" title="var">bad</span></span> tworzy wesołą piramidkę
+    zrobioną z <span class="inlinecode"><span class="id" title="keyword">match</span></span>y i <span class="inlinecode"><span class="id" title="keyword">if</span></span>ów. Jeżeli chcesz poczuć pełnię zapętlenia,
+    wypbróuj taktykę <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">!<span class="id" title="var">eq</span></span> - zapętli się ona, gdyż równanie <span class="inlinecode"><span class="id" title="var">eq</span></span>
+    można przepisywać w nieskończoność. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">T4</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mogłoby się wydawać, że teraz to już na pewno nasze metody działają na
+    wszystkie możliwe negatywne typy induktywne. Cytując Tadeusza Sznuka:
+    "Nic bardziej mylnego!". 
+<div class="paragraph"> </div>
+
 <a name="lab186"></a><h1 class="section">Podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>

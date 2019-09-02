@@ -6364,6 +6364,8 @@ End NonPoorUniverse.
     to się stanie, zobaczmy, czy wypracowane przez nas techniki działają na
     negatywne typy induktywne o niedobrości innej niż 1. *)
 
+Module T3.
+
 Fail Inductive T3 : Type :=
     | T3_0 : (((T3 -> bool) -> bool) -> bool) -> T3.
 
@@ -6446,21 +6448,12 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma bad_not_sur :
-  ~ surjective bad.
-(* begin hide *)
-Proof.
-  unfold surjective. intro H.
-  destruct (H (fun x : T3 => negb (bad x x))) as [x eq].
-  apply (f_equal (fun f => f x)) in eq.
-  destruct (bad x x); inversion eq.
-Qed.
-(* end hide *)
-
 Theorem T3_illegal : False.
 (* begin hide *)
 Proof.
-  apply bad_not_sur. exact bad_sur.
+  apply (Cantor' bad negb).
+    destruct b; inversion 1.
+    exact bad_sur.
 Qed.
 (* end hide *)
 
@@ -6470,7 +6463,7 @@ Qed.
     jakoś wybitnie trudne. Napisz ją i udowodnij (nieformlanie), że
     istnieje takie [x : T3], że [loop x] się zapętla. *)
 
-(* begni hide *)
+(* begin hide *)
 Fail Fixpoint loop (x : T3) : bool :=
 match x with
     | T3_0 f => f (fun g : T3 -> bool => g (T3_0 f))
@@ -6487,16 +6480,177 @@ end.
 
 (* end hide *)
 
+End T3.
+
 (** Morał z powyższych rozważań jest prosty: nasze techniki działają także
     na negatywne typy induktywne o niedobrości równej 3. Myślę, że jesteś
     całkiem skłonny uwierzyć też, że zadziałają na te o niedobrości równej
-    5, 7 i tak dalej... przynajmniej dopóki wszystkie typy po prawych
-    stronach strzałek będą takie same. *)
+    5, 7 i tak dalej.
+
+    To wszystko jest prawdą jednak tylko wtedy, gdy wszystkie typy po prawych
+    stronach strzałek będą takie same. A co, gdy będą różne? *)
+
+Module T4.
 
 Fail Inductive T4 : Type :=
-    | T4_0 : (((T4 -> bool) -> nat) -> Prop) -> T4.
+    | c0 : (((T4 -> bool) -> nat) -> Color) -> T4.
 
+Axioms
+  (T4 : Type)
+  (c0 : (((T4 -> bool) -> nat) -> Color) -> T4)
+  (dcase :
+    forall
+      (P : T4 -> Type)
+      (Pc0 : forall f : ((T4 -> bool) -> nat) -> Color, P (c0 f)),
+        {f : forall x : T4, P x |
+          forall g : ((T4 -> bool) -> nat) -> Color,
+            f (c0 g) = Pc0 g}).
 
+(** Powyższy przykład jest podobny do poprzedniego, ale tym razem zamiast
+    trzech wystąpień [bool] mamy [bool], [nat] oraz [Color] (to typ, który
+    zdefiniowaliśmy na samym początku tego rozdziału, gdy uczyliśmy się
+    o enumeracjach). *)
+
+Definition bad : T4 -> (T4 -> bool).
+Proof.
+  apply (dcase (fun _ => T4 -> _)).
+  intros f x.
+  apply (
+    fun c : Color =>
+    match c with
+        | R => true
+        | _ => false
+    end).
+  apply f. intro g.
+  apply (fun b : bool => if b then 0 else 1).
+  exact (g x).
+Defined.
+
+(** Nasz modus operandi będzie taki jak poprzednio: spróbujemy wyjąć z
+    elementu [T4] funkcję typu [T4 -> bool]. W tym celu używamy zależnej
+    reguły analizy przypadków i wprowadzamy rzeczy do kontekstu.
+
+    Tym razem nie możemy jednak bezpośrednio zaaplikować [f], gdyż jej
+    kodziedziną jest [Color], a my musimy skonstruować coś typu [bool].
+    Możemy temu jednak zaradzić aplikując do celu skonstruowaną naprędce
+    funkcję typu [Color -> bool]. Ta funkcja powinna być surjekcją (jeśli
+    nie wierzysz, sprawdź, co się stanie, jeżeli zamienimy ją na funckję
+    stałą).
+
+    Możemy już zaaplikować [f] i wprowadzić [g] do kontekstu. Chcielibyśmy
+    teraz zaaplikować [g], ale nie możemy, bo typy się nie zgadzają - [g]
+    zwraca [bool], a my musimy skonstruować liczbę naturalną. Robimy tutaj
+    to samo co poprzednio - aplikujemy do celu jakąś funkcję [bool -> nat].
+    Tym razem nie musi ona być surjekcją (nie jest to nawet możliwe, gdyż
+    nie ma surjekcji z [bool] w [nat]). Dzięki temu możemy zaaplikować [g]
+    i zakończyć, używając [g x]. *)
+
+Require Import FunctionalExtensionality.
+
+(** Żeby pokazać, że [bad] jest surjekcją, będziemy potrzebować aksjomatu
+    ekstensjonalności dla funkcji (ang. functional extensionality axiom,
+    w skrócie funext). Głosi on, że dwie funkcje [f, g : A -> B] są równe,
+    jeżeli uda nam się pokazać, że dają równe wyniki dla każdego argumentu
+    (czyli [forall x : A, f x = g x]).
+
+    Importując powyższy moduł zakładamy prawdziwość tego aksjomatu oraz
+    uzyskujemy dostęp do taktyki [extensionality], która ułatwia dowody
+    wymagające użycia ekstensjonalności. *)
+
+Lemma bad_sur :
+  surjective bad.
+Proof.
+  unfold surjective. intro f.
+  unfold bad. destruct (dcase _) as [bad eq].
+  exists (c0 (
+    fun g : (T4 -> bool) -> nat =>
+    match g f with
+       | 0 => R
+       | _ => G
+    end)).
+  rewrite eq.
+  extensionality t.
+  destruct (f t); reflexivity.
+Qed.
+
+(** Dowód jest prawie taki jak zawsze: odwijamy definicję surjektywności i
+    wprowadzamy hipotezy do kontekstu, a następnie odwijamy definicję [bad]
+    i rozbijamy ją dla czytelności na właściwą funkcję [bad] oraz równanie
+    [eq].
+
+    Następnie musimy znaleźć [a : T4], które [bad] mapuje na [f]. Zaczynamy
+    od [c0], bo jest to jedyny konstruktor [T4]. Bierze on jako argument
+    funkcję typu [((T4 -> bool) -> nat) -> Color]. Żeby ją wyprodukować,
+    bierzemy na wejściu funkcję [g : (T4 -> bool) -> nat] i musimy zrobić
+    coś typu [Color].
+
+    Nie może to być jednak byle co - musimy użyć [f], a jedynym sensownym
+    sposobem, żeby to zrobić, jest zaaplikować [g] do [f]. Musimy zadbać
+    też o to, żeby odwrócić funkcje konwertujące [Color -> bool] oraz
+    [bool -> nat], których użyliśmy w definicji [bad]. Pierwsza z nich
+    konwertowała [R] (czyli kolor czerwony) na [true], a inne kolory na
+    [false], zaś druga konwertowała [true] na [0], a [false] na [1].
+    Wobec tego dopasowując [g f : nat] musimy przekonwertować [0] na [R],
+    zaś [1] na coś innego niż [R], np. na [G] (czyli kolor zielony).
+
+    Znalazłszy odpowiedni argument, możemy przepisać równanie definiujące
+    [bad]. To już prawie koniec, ale próba użycia taktyki [reflexivity] w
+    tym momencie skończyłaby się porażką. Na ratunek przychodzi nam
+    aksjomat ekstensjonalności, którego używamy pisząc [extensionality t].
+    Dzięki temu pozostaje nam pokazać jedynie, że [f t] jest równe tej
+    drugie funkcji dla argumentu [t]. W tym celu rozbijamy [f t], a oba
+    wyrażenia okazują się być konwertowalne. *)
+
+Theorem T4_illegal : False.
+Proof.
+  apply (Cantor' bad negb).
+    destruct b; inversion 1.
+    apply bad_sur.
+Qed.
+
+(** Skoro mamy surjekcję z [T4] w [T4 -> bool], katastrofy nie da się
+    uniknąć.
+
+    Moglibyśmy się też zastanowić nad napisaniem zapętlającej się funkcji
+    [loop], ale coś czuję, że ty coś czujesz, że byłoby to babranie się
+    w niepotrzebnym problemie. Wobec tego (oczywiście o ile dotychczas
+    się nie skapnąłeś) poczuj się oświecony! *)
+
+Definition loop (x : T4) : bool := bad x x.
+
+(** Ha! Tak tak, [loop] nie jest niczym innym niż lekko rozmnożoną wersją
+    [bad]. *)
+
+Lemma loop_nontermination :
+  true = loop (c0 (
+    fun g : (T4 -> bool) -> nat =>
+    match g loop with
+       | 0 => R
+       | _ => G
+    end)).
+Proof.
+  unfold loop, bad. destruct (dcase _) as [bad eq].
+  rewrite 5!eq.
+Abort.
+
+(** A skoro [loop] to tylko inne [bad], to nie powinno cię też wcale a
+    wcale zdziwić, że najbardziej oczywisty argument, dla którego [loop]
+    się zapętla, jest żywcem wzięty z dowodu [bad_sur] (choć oczywiście
+    musimy zastąpić [f] przez [loop]).
+
+    Oczywiście niemożliwe jest, żeby formalnie udowodnić w Coqu, że coś
+    się zapętla. Powyższy lemat ma być jedynie demonstracją - ręczne
+    rozpisanie tego przykładu byłoby zbyt karkołomne. Jak widać z dowodu,
+    przepisywanie równania definiującego [bad] tworzy wesołą piramidkę
+    zrobioną z [match]y i [if]ów. Jeżeli chcesz poczuć pełnię zapętlenia,
+    wypbróuj taktykę [rewrite !eq] - zapętli się ona, gdyż równanie [eq]
+    można przepisywać w nieskończoność. *)
+
+End T4.
+
+(** Mogłoby się wydawać, że teraz to już na pewno nasze metody działają na
+    wszystkie możliwe negatywne typy induktywne. Cytując Tadeusza Sznuka:
+    "Nic bardziej mylnego!". *)
 
 (** * Podsumowanie (TODO) *)
 
