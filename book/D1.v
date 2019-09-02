@@ -6652,6 +6652,178 @@ End T4.
     wszystkie możliwe negatywne typy induktywne. Cytując Tadeusza Sznuka:
     "Nic bardziej mylnego!". *)
 
+Module T5.
+
+Axioms
+  (T5 : Type)
+  (c0 : (((T5 -> nat) -> bool) -> Color) -> T5)
+  (dcase :
+    forall
+      (P : T5 -> Type)
+      (Pc0 : forall f : ((T5 -> nat) -> bool) -> Color, P (c0 f)),
+        {f : forall x : T5, P x |
+          forall g : ((T5 -> nat) -> bool) -> Color,
+            f (c0 g) = Pc0 g}).
+
+(** Rzućmy okiem na powyższy typ. Wygląda podobnie do poprzedniego, ale jest
+    nieco inny - typy [nat] i [bool] zamieniły się miejscami. Jakie rodzi to
+    konsekwencje? Sprawdźmy. *)
+
+Definition bad : T5 -> (T5 -> nat).
+Proof.
+  apply (dcase (fun _ => T5 -> _)).
+  intros f x.
+  apply (
+    fun c : Color =>
+    match c with
+        | R => 0
+        | G => 1
+        | B => 2
+    end).
+  apply f. intro g.
+  apply isZero. exact (g x).
+Defined.
+
+(** Definicja [bad] jest podobna jak poprzednio, ale tym razem konwertujemy
+    [Color] na [nat] za pomocą funkcji, która nie jest surjekcją. *)
+
+Require Import FunctionalExtensionality.
+
+Lemma bad_sur :
+  surjective bad.
+Proof.
+  unfold surjective. intro f.
+  unfold bad. destruct (dcase _) as [bad eq].
+  exists (c0 (
+    fun g : (T5 -> nat) -> bool =>
+    match g f with
+        | true => R
+        | false => B
+    end)).
+  rewrite eq. extensionality t.
+  destruct (f t); cbn.
+    reflexivity.
+Abort.
+
+(** Dowód również przebiega podobnie jak poprzednio. Załamuje się on dopiero,
+    gdy na samym końcu rozbijamy wyrażenie [f t] i upraszczamy używając [cbn].
+    W pierwszym podcelu [0 = 0] jeszcze jakoś udaje się nam udowodnić, ale w
+    drugim naszym oczom ukazuje się cel [2 = S n].
+
+    Problem polega na tym, że [f t] może być dowolną liczbą naturalną, ale
+    zastosowana przez nas funkcja konwertująca [Color -> nat] może zwracać
+    jedynie [0], [1] lub [2]. Teraz widzimy jak na dłoni, skąd wziął się
+    wymóg, by funkcja konwertująca była surjekcją. *)
+
+Definition loop (x : T5) : nat := bad x x.
+
+Lemma loop_nontermination :
+  42 = loop (c0 (
+    fun g : (T5 -> nat) -> bool =>
+    match g loop with
+        | true => R
+        | false => G
+    end)).
+Proof.
+  unfold loop, bad. destruct (dcase _) as [bad eq].
+  rewrite 15!eq.
+Abort.
+
+(** Co ciekawe, mimo że nie jesteśmy w stanie pokazać surjektywności [bad],
+    to wciąż możemy użyć tej funkcji do zdefiniowania zapętlającej się
+    funkcji [loop], zupełnie jak w poprzednim przykładzie.
+
+    Niesmak jednak pozostaje, gdyż szczytem naszych ambicji nie powinno być
+    ograniczanie się do zdefiniowania [loop], lecz do formalnego udowodnienia
+    nielegalności [T5]. Czy wszystko stracone? Czy umrzemy? Tu dramatyczna
+    pauza.
+
+    Nie.
+
+    Okazuje się, że jest pewien trikowy sposób na rozwiązanie tego problemu,
+    a mianowicie: zamiast próbować wyjąć z [T5] funkcję [T5 -> nat], wyjmiemy
+    stamtąd po prostu funckję [T5 -> bool] i to mimo tego, że jej tam nie ma!
+*)
+
+Definition bad' : T5 -> (T5 -> bool).
+Proof.
+  apply (dcase (fun _ => T5 -> _)).
+  intros f x.
+  apply (
+    fun c : Color =>
+    match c with
+        | R => true
+        | _ => false
+    end).
+  apply f. intro g.
+  apply isZero. exact (g x).
+Defined.
+
+(** W kluczowych momentach najpierw konwertujemy [Color] na [bool] tak jak
+    w jednym z poprzednich przykładów, a potem konwertujemy [nat] na [bool]
+    za pomocą funkcji [isZero]. *)
+
+Require Import FunctionalExtensionality.
+
+Lemma bad'_sur :
+  surjective bad'.
+Proof.
+  unfold surjective. intro f.
+  unfold bad'. destruct (dcase _) as [bad' eq].
+  exists (c0 (
+    fun g : (T5 -> nat) -> bool =>
+      if g (fun t : T5 => if f t then 0 else 1) then R else G)).
+  rewrite eq.
+  extensionality t.
+  destruct (f t); cbn; reflexivity.
+Qed.
+
+(** Ponieważ obydwie nasze funkcję konwertujące były surjekcjami, możemy je
+    teraz odwrócić i wykazać ponad wszelką wątpliwość, że [bad'] faktycznie
+    jest surjekcją. *)
+
+Theorem T5_illegal : False.
+Proof.
+  apply (Cantor' bad' negb).
+    destruct b; inversion 1.
+    apply bad'_sur.
+Qed.
+
+(** Spróbujmy podsumować, co tak naprawdę stało się w tym przykładzie.
+
+    Tym razem, mimo że do [T5] możemy włożyć dowolną funkcję [T5 -> nat],
+    to nie możemy jej potem wyjąć, uzyskując surjekcję, gdyż zawadzają
+    nam w tym typy po prawych stronach strzałek ([bool] i [Color]), które
+    mają za mało elementów, żeby móc surjektywnie przekonwertować je na
+    typ [nat].
+
+    Jednak jeżeli mamy wszystkie możliwe funkcje typu [T5 -> nat], to
+    możemy przerobić je (w locie, podczas "wyciągania") na wszystkie
+    możliwe funkcje typu [T5 -> bool], składając je z odpowiednią
+    surjekcją (np. [isZero]). Ponieważ typ [bool] i [Color] jesteśmy
+    w stanie surjektywnie przekonwertować na [bool], reszta procesu
+    działa podobnie jak w poprzednich przykładach. *)
+
+Definition loop' (x : T5) : bool := bad' x x.
+
+Lemma loop_nontermination :
+  true = loop' (c0 (
+    fun g : (T5 -> nat) -> bool =>
+    match g (fun t : T5 => if loop' t then 0 else 1) with
+        | true => R
+        | false => G
+    end)).
+Proof.
+  unfold loop', bad'. destruct (dcase _) as [bad' eq].
+  rewrite 15!eq.
+Abort.
+
+(** Takie trikowe [bad'] wciąż pozwala nam bez większych przeszkód
+    zdefiniować zapętlającą się funkcję [loop']. Osiągnęliśmy więc
+    pełen sukces. *)
+
+End T5.
+
 (** * Podsumowanie (TODO) *)
 
 (** To już koniec naszej podróży przez mechanizmy definiowania typów przez
