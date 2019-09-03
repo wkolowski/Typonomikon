@@ -5822,7 +5822,8 @@ Check Type.
     ten koleś wymyślił podstawy dużej części wszystkiego, czym się tutaj
     zajmujemy). Można ją przeczytać tu (paradoks Girarda jest pod koniec
     pierwszej sekcji):
-    archive-pml.github.io/martin-lof/pdfs/An-Intuitionistic-Theory-of-Types-1972.pdf
+    archive-pml.github.io/martin-lof/pdfs
+    /An-Intuitionistic-Theory-of-Types-1972.pdf
 
     Nasze sformułowanie paradoksu będzie w sumie podobne do tego z powyższej
     pracy (co jest w sumie ciekawe, bo wymyśliłem je samodzielnie i to przez
@@ -6820,9 +6821,157 @@ Abort.
 
 (** Takie trikowe [bad'] wciąż pozwala nam bez większych przeszkód
     zdefiniować zapętlającą się funkcję [loop']. Osiągnęliśmy więc
-    pełen sukces. *)
+    pełen sukces.
+
+    W ogólności nasz trik możnaby sformułować tak: jeżeli mamy konstruktor
+    negatywny typu [T], to możemy wyjąć z niego funkcję [T -> A], gdzie [A]
+    jest najmniejszym z typów występujących po prawych stronach strzałek.
+
+    No, teraz to już na pewno mamy obcykane wszystkie przypadki, prawda?
+    Tadeuszu Sznuku przybywaj: "Otóż nie tym razem!". *)
 
 End T5.
+
+Module T6.
+
+Axioms
+  (T6 : Type)
+  (c0 : (((T6 -> unit) -> bool) -> Color) -> T6)
+  (dcase :
+    forall
+      (P : T6 -> Type)
+      (Pc0 : forall f : ((T6 -> unit) -> bool) -> Color, P (c0 f)),
+        {f : forall x : T6, P x |
+          forall g : ((T6 -> unit) -> bool) -> Color,
+            f (c0 g) = Pc0 g}).
+
+(** Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
+    trik, jest sytuacja, w której po prawej stronie strzałki wystąpi
+    typ [unit]. Oczywiście zgodnie z trikiem możemy z [T6] wyciągnąć
+    surjekcję [T6 -> unit], ale jest ona oczywiście bezużyteczna, bo
+    taką samą możemy zrobić za darmo, stale zwracając po prostu [tt].
+    Surjekcja ta nie wystarcza rzecz jasna, żeby odpalić twierdzenie
+    Cantora.
+
+    Tym razem jednak nie powinniśmy spodziewać się, że upierdliwość tę
+    będzie dało się jakoś obejść. Typ [T6 -> unit] jest jednoelementowy
+    (jedynym elementem jest [fun _ => tt]) podobnie jak [unit]. Bardziej
+    poetycko możemy powiedzieć, że [T6 -> unit] i [unit] są izomorficzne,
+    czyli prawie równe - różnią się tylko nazwami elementów ("nazwa"
+    jedynego elementu [unit]a to [tt]).
+
+    Skoro tak, to typ konstruktora [c0], czyli
+    [(((T6 -> unit) -> bool) -> Color) -> T6)], możemy równie dobrze
+    zapisać jako [((unit -> bool) -> Color) -> T6)]. Zauważmy teraz,
+    że [unit -> bool] jest izomorficzne z [bool], gdyż ma tylko dwa
+    elementy, a mianowicie [fun _ => true] oraz [fun _ => false].
+    Tak więc typ [c0] możemy jeszcze prościej zapisać jako
+    [(bool -> Color) -> T6], a to oznacza, że typ [T6] jest jedynie
+    owijką na funkcje typu [bool -> Color]. Twierdzenie Cantora nie
+    pozwala tutaj uzyskać sprzeczności.
+
+    Czy zatem takie typy sa legalne? Syntaktycznie nie - Coq odrzuca je
+    podobnie jak wszystkie inne negatywne typy induktywne. Semantycznie
+    również nie - o ile nie możemy uzyskać jawnej sprzeczności, to nasze
+    rozważania o nieterminacji wciąż są w mocy.
+
+    Przypomnij sobie poprzedni przykład i nieudaną próbę wyłuskania z
+    [T5] surjekcji [T5 -> nat]. Udało nam się zaimplementować funkcję
+    [bad], której surjektywności nie potrafiliśmy pokazać, ale pomimo
+    tego bez problemu udało nam się użyć jej do napisania funkcji [loop].
+    W obecnym przykładzie jest podobnie i nieterminacja to najlepsze, na
+    co możemy liczyć. *)
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj funkcję [bad], a następnie użyj jej do zdefiniowania funkcji
+    [loop]. Zademonstruj w sposób podobny jak poprzednio, że [loop] się
+    zapętla. *)
+
+(* begin hide *)
+Definition bad : T6 -> (T6 -> unit).
+Proof.
+  apply (dcase (fun _ => T6 -> _)).
+  intros f x.
+  apply (
+    fun c : Color =>
+    match c with
+        | R => tt
+        | G => tt
+        | B => tt
+    end).
+  apply f. intro g.
+  apply (
+    fun u : unit =>
+    match u with
+        | tt => true
+    end).
+  exact (g x).
+Defined.
+
+Definition loop (x : T6) : unit := bad x x.
+
+Lemma loop_nontermination :
+  tt = loop (c0 (
+    fun g : (T6 -> unit) -> bool =>
+    match g loop with
+        | true => R
+        | false => G
+    end)).
+Proof.
+  unfold loop, bad. destruct (dcase _) as [bad eq].
+  rewrite 4!eq.
+Abort.
+(* end hide *)
+
+End T6.
+
+(** No, teraz to już na pewno wiemy wszystko... *)
+
+(** **** Ćwiczenie *)
+
+(** Otóż nie do końca. Ostatnim hamulcowym, groźniejszym nawet niż [unit],
+    jest wystąpienie po prawej stronie strzałki typu (czy raczej zdania)
+    [False]. W tym przypadku nie tylko nie pomaga nam Cantor, ale nie
+    pomaga też nieterminacja, gdyż najzwyczajniej w świecie nie da się
+    zdefiniować żadnej funkcji.
+
+    Jako, że za cholerę nie wiem, co z tym fantem zrobić, zostawiam go tobie
+    jako ćwiczenie: wymyśl metodę pokazywania nielegalności negatywnych typów
+    induktywnych, w których po prawej stronie strzałki jest co najmniej
+    jedno wystąpienie [False]. *)
+
+Module T8.
+
+Axioms
+  (T8 : Type)
+  (c0 : (((T8 -> bool) -> False) -> Color) -> T8)
+  (dcase :
+    forall
+      (P : T8 -> Type)
+      (Pc0 : forall f : ((T8 -> bool) -> False) -> Color, P (c0 f)),
+        {f : forall x : T8, P x |
+          forall g : ((T8 -> bool) -> False) -> Color,
+            f (c0 g) = Pc0 g}).
+
+(* begin hide *)
+
+Definition bad : T8 -> (T8 -> bool).
+Proof.
+  apply (dcase (fun _ => T8 -> _)).
+  intros f x.
+  apply (
+    fun c : Color =>
+    match c with
+        | R => true
+        | _ => false
+    end).
+  apply f. intro g.
+Abort.
+
+(* end hide *)
+
+End T8.
 
 (** * Podsumowanie (TODO) *)
 

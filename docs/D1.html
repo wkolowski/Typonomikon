@@ -7276,7 +7276,8 @@ Jak widać, jest mniej więcej tak jak napisałem wyżej. Nie przejmuj się
     ten koleś wymyślił podstawy dużej części wszystkiego, czym się tutaj
     zajmujemy). Można ją przeczytać tu (paradoks Girarda jest pod koniec
     pierwszej sekcji):
-    archive-pml.github.io/martin-lof/pdfs/An-Intuitionistic-Theory-of-Types-1972.pdf
+    archive-pml.github.io/martin-lof/pdfs
+    /An-Intuitionistic-Theory-of-Types-1972.pdf
 
 <div class="paragraph"> </div>
 
@@ -8456,7 +8457,18 @@ Spróbujmy podsumować, co tak naprawdę stało się w tym przykładzie.
 <div class="doc">
 Takie trikowe <span class="inlinecode"><span class="id" title="var">bad'</span></span> wciąż pozwala nam bez większych przeszkód
     zdefiniować zapętlającą się funkcję <span class="inlinecode"><span class="id" title="var">loop'</span></span>. Osiągnęliśmy więc
-    pełen sukces. 
+    pełen sukces.
+
+<div class="paragraph"> </div>
+
+    W ogólności nasz trik możnaby sformułować tak: jeżeli mamy konstruktor
+    negatywny typu <span class="inlinecode"><span class="id" title="var">T</span></span>, to możemy wyjąć z niego funkcję <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">A</span></span>
+    jest najmniejszym z typów występujących po prawych stronach strzałek.
+
+<div class="paragraph"> </div>
+
+    No, teraz to już na pewno mamy obcykane wszystkie przypadki, prawda?
+    Tadeuszu Sznuku przybywaj: "Otóż nie tym razem!". 
 </div>
 <div class="code">
 
@@ -8464,10 +8476,136 @@ Takie trikowe <span class="inlinecode"><span class="id" title="var">bad'</span><
 <span class="id" title="keyword">End</span> <span class="id" title="var">T5</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">T6</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axioms</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">T6</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">c0</span> : (((<span class="id" title="var">T6</span> -&gt; <span class="id" title="var">unit</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">Color</span>) -&gt; <span class="id" title="var">T6</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">dcase</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">T6</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Pc0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : ((<span class="id" title="var">T6</span> -&gt; <span class="id" title="var">unit</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">Color</span>, <span class="id" title="var">P</span> (<span class="id" title="var">c0</span> <span class="id" title="var">f</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">T6</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : ((<span class="id" title="var">T6</span> -&gt; <span class="id" title="var">unit</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">Color</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">c0</span> <span class="id" title="var">g</span>) = <span class="id" title="var">Pc0</span> <span class="id" title="var">g</span>}).<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-<a name="lab186"></a><h1 class="section">Podsumowanie (TODO)</h1>
+Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
+    trik, jest sytuacja, w której po prawej stronie strzałki wystąpi
+    typ <span class="inlinecode"><span class="id" title="var">unit</span></span>. Oczywiście zgodnie z trikiem możemy z <span class="inlinecode"><span class="id" title="var">T6</span></span> wyciągnąć
+    surjekcję <span class="inlinecode"><span class="id" title="var">T6</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">unit</span></span>, ale jest ona oczywiście bezużyteczna, bo
+    taką samą możemy zrobić za darmo, stale zwracając po prostu <span class="inlinecode"><span class="id" title="var">tt</span></span>.
+    Surjekcja ta nie wystarcza rzecz jasna, żeby odpalić twierdzenie
+    Cantora.
+
+<div class="paragraph"> </div>
+
+    Tym razem jednak nie powinniśmy spodziewać się, że upierdliwość tę
+    będzie dało się jakoś obejść. Typ <span class="inlinecode"><span class="id" title="var">T6</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">unit</span></span> jest jednoelementowy
+    (jedynym elementem jest <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">tt</span></span>) podobnie jak <span class="inlinecode"><span class="id" title="var">unit</span></span>. Bardziej
+    poetycko możemy powiedzieć, że <span class="inlinecode"><span class="id" title="var">T6</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">unit</span></span> i <span class="inlinecode"><span class="id" title="var">unit</span></span> są izomorficzne,
+    czyli prawie równe - różnią się tylko nazwami elementów ("nazwa"
+    jedynego elementu <span class="inlinecode"><span class="id" title="var">unit</span></span>a to <span class="inlinecode"><span class="id" title="var">tt</span></span>).
+
+<div class="paragraph"> </div>
+
+    Skoro tak, to typ konstruktora <span class="inlinecode"><span class="id" title="var">c0</span></span>, czyli
+    <span class="inlinecode">(((<span class="id" title="var">T6</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">unit</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Color</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T6</span>)</span>, możemy równie dobrze
+    zapisać jako <span class="inlinecode">((<span class="id" title="var">unit</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Color</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T6</span>)</span>. Zauważmy teraz,
+    że <span class="inlinecode"><span class="id" title="var">unit</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> jest izomorficzne z <span class="inlinecode"><span class="id" title="var">bool</span></span>, gdyż ma tylko dwa
+    elementy, a mianowicie <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">true</span></span> oraz <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">false</span></span>.
+    Tak więc typ <span class="inlinecode"><span class="id" title="var">c0</span></span> możemy jeszcze prościej zapisać jako
+    <span class="inlinecode">(<span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Color</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T6</span></span>, a to oznacza, że typ <span class="inlinecode"><span class="id" title="var">T6</span></span> jest jedynie
+    owijką na funkcje typu <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Color</span></span>. Twierdzenie Cantora nie
+    pozwala tutaj uzyskać sprzeczności.
+
+<div class="paragraph"> </div>
+
+    Czy zatem takie typy sa legalne? Syntaktycznie nie - Coq odrzuca je
+    podobnie jak wszystkie inne negatywne typy induktywne. Semantycznie
+    również nie - o ile nie możemy uzyskać jawnej sprzeczności, to nasze
+    rozważania o nieterminacji wciąż są w mocy.
+
+<div class="paragraph"> </div>
+
+    Przypomnij sobie poprzedni przykład i nieudaną próbę wyłuskania z
+    <span class="inlinecode"><span class="id" title="var">T5</span></span> surjekcji <span class="inlinecode"><span class="id" title="var">T5</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>. Udało nam się zaimplementować funkcję
+    <span class="inlinecode"><span class="id" title="var">bad</span></span>, której surjektywności nie potrafiliśmy pokazać, ale pomimo
+    tego bez problemu udało nam się użyć jej do napisania funkcji <span class="inlinecode"><span class="id" title="var">loop</span></span>.
+    W obecnym przykładzie jest podobnie i nieterminacja to najlepsze, na
+    co możemy liczyć. 
+<div class="paragraph"> </div>
+
+<a name="lab186"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">bad</span></span>, a następnie użyj jej do zdefiniowania funkcji
+    <span class="inlinecode"><span class="id" title="var">loop</span></span>. Zademonstruj w sposób podobny jak poprzednio, że <span class="inlinecode"><span class="id" title="var">loop</span></span> się
+    zapętla. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">T6</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+No, teraz to już na pewno wiemy wszystko... 
+<div class="paragraph"> </div>
+
+<a name="lab187"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Otóż nie do końca. Ostatnim hamulcowym, groźniejszym nawet niż <span class="inlinecode"><span class="id" title="var">unit</span></span>,
+    jest wystąpienie po prawej stronie strzałki typu (czy raczej zdania)
+    <span class="inlinecode"><span class="id" title="var">False</span></span>. W tym przypadku nie tylko nie pomaga nam Cantor, ale nie
+    pomaga też nieterminacja, gdyż najzwyczajniej w świecie nie da się
+    zdefiniować żadnej funkcji.
+
+<div class="paragraph"> </div>
+
+    Jako, że za cholerę nie wiem, co z tym fantem zrobić, zostawiam go tobie
+    jako ćwiczenie: wymyśl metodę pokazywania nielegalności negatywnych typów
+    induktywnych, w których po prawej stronie strzałki jest co najmniej
+    jedno wystąpienie <span class="inlinecode"><span class="id" title="var">False</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">T8</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axioms</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">T8</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">c0</span> : (((<span class="id" title="var">T8</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">False</span>) -&gt; <span class="id" title="var">Color</span>) -&gt; <span class="id" title="var">T8</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">dcase</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">T8</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Pc0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : ((<span class="id" title="var">T8</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">False</span>) -&gt; <span class="id" title="var">Color</span>, <span class="id" title="var">P</span> (<span class="id" title="var">c0</span> <span class="id" title="var">f</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">T8</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : ((<span class="id" title="var">T8</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">False</span>) -&gt; <span class="id" title="var">Color</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">c0</span> <span class="id" title="var">g</span>) = <span class="id" title="var">Pc0</span> <span class="id" title="var">g</span>}).<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">T8</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab188"></a><h1 class="section">Podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 
