@@ -6586,7 +6586,7 @@ end.
     - Tak, istnieje uniwersum zawierające nazwę samego siebie, np. [unit].
     - Ideologicznie słuszna interpretacja [nat] to uniwersum typów
       skończonych - [El n] to typ n-elementowy. Głupia interpretacja:
-      każde [n] jest nazwą dla 
+      każde [n] jest nazwą dla tego samego typu, np. [nat].
     - Tutaj mały twist, bo tym uniwersum też jest [nat]
     - Tutaj też trochę twist, bo takie uniwersum oczywiście istnieje i
       nazywa się... baram bam bam bam... fanfary... [Type]! No cóż, nie
@@ -7042,7 +7042,135 @@ Qed.
 
 End NonPoorUniverse.
 
-(** ** Pozytywne typy induktywne (i nie tylko) *)
+(** ** Pozytywne typy induktywne *)
+
+(** Na koniec rozprawimy się z pozytywnymi typami "induktywnymi" (ale tylko
+    do pewnego stopnia; tak po prawdzie, to raczej one rozprawią się z
+    nami). *)
+
+Fail Inductive Pos : Type :=
+    | Pos0 : ((Pos -> bool) -> bool) -> Pos.
+(* ===> The command has indeed failed with message:
+        Non strictly positive occurrence of "Pos" in
+        "((Pos -> bool) -> bool) -> Pos". *)
+
+(** Coq odrzuca powyższą definicję typu [Pos], gdyż pierwsze wystąpienie [Pos]
+    w typie konstruktora [Pos0] nie jest ściśle pozytywne. I faktycznie - gdy
+    policzymy niedobrość tego wystąpienia zgodnie z naszym wzorem, to wyjdzie,
+    że wynosi ona 2, gdyż [Pos] występuje na lewo od dwóch strzałek (pamiętaj,
+    że najbardziej zewnętrzna strzałka, czyli ta, na prawo od której też jest
+    [Pos], nie liczy się - wzór dotyczy tylko argumentów konstruktora, a nie
+    całego konstruktora). *)
+
+Axioms
+  (Pos : Type)
+  (Pos0 : ((Pos -> bool) -> bool) -> Pos)
+  (dcase :
+    forall
+      (P : Pos -> Type)
+      (PPos0 : forall g : (Pos -> bool) -> bool, P (Pos0 g)),
+        {f : forall x : Pos, P x |
+          forall g : (Pos -> bool) -> bool,
+            f (Pos0 g) = PPos0 g}).
+
+(** Spróbujmy zawalczyć z typem [Pos] naszą metodą opartą o twierdzenie
+    Cantora. Najpierw kodujemy typ [Pos] aksjomatycznie, a następnie
+    spróbujemy zdefiniować [bad], czyli surjekcję z [Pos] w [Pos -> bool]. *)
+
+Definition bad : Pos -> (Pos -> bool).
+Proof.
+  apply (dcase (fun _ => Pos -> bool)).
+  intros f x.
+  apply f. intro y.
+  apply f. intro z.
+  apply f. intro w.
+  (* ad infinitum *)
+Abort.
+
+(** Mogłoby się wydawać, że wyciągnięcie z [Pos] funkcji [Pos -> bool]
+    nie może być trudniejsze, niż zabranie dziecku cukierka. Niestety
+    jednak nie jest tak, gdyż w [Pos] tak naprawdę nie ma żadnej takiej
+    funkcji - jest funkcja [(Pos -> bool) -> bool], a to już zupełnie
+    coś innego.
+
+    Żeby lepiej zrozumieć tę materię, musimy metaforycznie zinterpretować
+    znany nam już współczynnik niedobrości i wynikający z niego podział
+    na wystąpienia ściśle pozytywne, pozytywne i negatywne. Dzięki tej
+    interpretacji dowiemy się też, dlaczego nieparzysta niedobrość jest
+    negatywna, a niezerowa parzysta jest pozytywna.
+
+    Najprościej jest zinterpretować wystąpienia ściśle pozytywne, gdyż
+    mieliśmy już z nimi sporo do czynienia. Weźmy konstruktor
+    [cons : A -> list A -> list A]. Jest tutaj jedno ściśle pozytywne
+    wystąpienie typu [list A], które możemy interpretować tak: gdy
+    używamy dopasowania do wzorca i dopasuje się [cons h t], to "mamy"
+    element [t] typu [list A]. Ot i cała filozofia.
+
+    Załóżmy teraz na chwilę, że Coq akceptuje negatywne i pozytywne
+    typy induktywne. Co by było, gdybyśmy dopasowali konstruktor postaci
+    [c : (T -> bool) -> T]? Tym razem nie mamy elementu typu [T], lecz
+    funkcję [f : T -> bool]. Parafrazując: musimy "dać" funkcji [f]
+    element typu [T], żeby dostać [bool].
+
+    A co by było, gdybyśmy dopasowali konstruktor postaci
+    [c : ((T -> bool) -> bool) -> T]? Tym razem również nie mamy żadnego
+    elementu typu [T], lecz funkcję [f : ((T -> bool) -> bool)].
+    Parafrazując: musimy dać funkcji [f] jakąś funkcję typu [T -> bool],
+    żeby dostać [bool]. Ale gdy konstruujemy funkcję [T -> bool], to na
+    wejściu dostajemy [T]. Tak więc początkowo nie mamy żadnego [T], ale
+    gdy o nie poprosimy, to możemy je dostać. Ba! Jak pokazuje przykład,
+    możemy dostać bardzo dużo [T].
+
+    Taka właśnie jest różnica między ścisłą pozytywnością (mamy coś),
+    negatywnością (musimy coś dać) i pozytywnością (możemy coś dostać,
+    i to nawet w dużej liczbie sztuk). Zauważmy, że jedynie w przypadku
+    negatywnym możemy wyjąć z [T] funkcję [T -> coś] (chyba, że zawadza
+    nam [unit] lub [False]), bo to jedyny przypadek, gdy żądają od nas
+    [T] (a skoro żądają [T], to muszą mieć funkcję, która coś z tym [T]
+    zrobi). W przypadku pozytywnym nie ma żadnej takiej funkcji - to my
+    dostajemy [T] i musimy coś z niego wyprodukować, więc to my jesteśmy
+    tą funkcją!
+
+    Ufff... mam nadzieję, że powyższa bajeczka jest sformułowana zrozumiale,
+    bo lepszego wytłumaczenia nie udało mi się wymyślić.
+
+    Moglibyśmy w tym miejscu zastanowić się, czy nie uda nam się pokazać
+    sprzeczności choć na metapoziomie, poprzez napisanie nieterminującej
+    funkcji [loop]. Szczerze pisząc, to niezbyt w to wierzę. Przypomnij
+    sobie, że okazało się, że funkcja [loop] jest bardzo ściśle powiązana
+    z funkcją [bad], zaś esencja nieterminacji polegała na przekazaniu
+    do [loop] jako argument czegoś, co zawierało [loop] jako podterm
+    (jeżeli nie zauważyłeś, to wszystkie nasze nieterminujące funkcje
+    udało nam się zdefiniować jedynie za pomocą reguły zależnej analizy
+    przypadków - bez indukcji, bez rekursji!). To daje nam jako taką
+    podstawę by wierzyć, że nawet nieterminacja nie jest w tym przypadku
+    osiągalna. *)
+
+(* begin hide *)
+Definition loop : Pos -> bool.
+Proof.
+  apply dcase.
+  intros f.
+  apply f. intro x.
+Abort.
+
+(* f : (Pos -> bool) -> bool *)
+
+Fail Fixpoint loop (x : Pos) : bool :=
+match x with
+    | Pos0 f => f loop
+end.
+
+(*
+
+    Niech x := Pos0 (fun y : Pos -> bool => 
+
+    loop (Pos0 (fun _ => true)) =
+    (fun _ => true) loop =
+    true
+
+*)
+(* end hide *)
 
 (** * Podsumowanie (TODO) *)
 

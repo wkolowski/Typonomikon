@@ -8603,10 +8603,155 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a name="lab188"></a><h2 class="section">Pozytywne typy induktywne (i nie tylko)</h2>
+<a name="lab188"></a><h2 class="section">Pozytywne typy induktywne</h2>
 
 <div class="paragraph"> </div>
 
+ Na koniec rozprawimy się z pozytywnymi typami "induktywnymi" (ale tylko
+    do pewnego stopnia; tak po prawdzie, to raczej one rozprawią się z
+    nami). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Pos</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Pos0</span> : ((<span class="id" title="var">Pos</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">Pos</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;The&nbsp;command&nbsp;has&nbsp;indeed&nbsp;failed&nbsp;with&nbsp;message:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Non&nbsp;strictly&nbsp;positive&nbsp;occurrence&nbsp;of&nbsp;"Pos"&nbsp;in<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"((Pos&nbsp;-&gt;&nbsp;bool)&nbsp;-&gt;&nbsp;bool)&nbsp;-&gt;&nbsp;Pos".&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Coq odrzuca powyższą definicję typu <span class="inlinecode"><span class="id" title="var">Pos</span></span>, gdyż pierwsze wystąpienie <span class="inlinecode"><span class="id" title="var">Pos</span></span>
+    w typie konstruktora <span class="inlinecode"><span class="id" title="var">Pos0</span></span> nie jest ściśle pozytywne. I faktycznie - gdy
+    policzymy niedobrość tego wystąpienia zgodnie z naszym wzorem, to wyjdzie,
+    że wynosi ona 2, gdyż <span class="inlinecode"><span class="id" title="var">Pos</span></span> występuje na lewo od dwóch strzałek (pamiętaj,
+    że najbardziej zewnętrzna strzałka, czyli ta, na prawo od której też jest
+    <span class="inlinecode"><span class="id" title="var">Pos</span></span>, nie liczy się - wzór dotyczy tylko argumentów konstruktora, a nie
+    całego konstruktora). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Axioms</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">Pos</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Pos0</span> : ((<span class="id" title="var">Pos</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">Pos</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">dcase</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">Pos</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PPos0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : (<span class="id" title="var">Pos</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>, <span class="id" title="var">P</span> (<span class="id" title="var">Pos0</span> <span class="id" title="var">g</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">Pos</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : (<span class="id" title="var">Pos</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">Pos0</span> <span class="id" title="var">g</span>) = <span class="id" title="var">PPos0</span> <span class="id" title="var">g</span>}).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Spróbujmy zawalczyć z typem <span class="inlinecode"><span class="id" title="var">Pos</span></span> naszą metodą opartą o twierdzenie
+    Cantora. Najpierw kodujemy typ <span class="inlinecode"><span class="id" title="var">Pos</span></span> aksjomatycznie, a następnie
+    spróbujemy zdefiniować <span class="inlinecode"><span class="id" title="var">bad</span></span>, czyli surjekcję z <span class="inlinecode"><span class="id" title="var">Pos</span></span> w <span class="inlinecode"><span class="id" title="var">Pos</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">bad</span> : <span class="id" title="var">Pos</span> -&gt; (<span class="id" title="var">Pos</span> -&gt; <span class="id" title="var">bool</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">dcase</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Pos</span> -&gt; <span class="id" title="var">bool</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">z</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">w</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;ad&nbsp;infinitum&nbsp;*)</span><br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mogłoby się wydawać, że wyciągnięcie z <span class="inlinecode"><span class="id" title="var">Pos</span></span> funkcji <span class="inlinecode"><span class="id" title="var">Pos</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>
+    nie może być trudniejsze, niż zabranie dziecku cukierka. Niestety
+    jednak nie jest tak, gdyż w <span class="inlinecode"><span class="id" title="var">Pos</span></span> tak naprawdę nie ma żadnej takiej
+    funkcji - jest funkcja <span class="inlinecode">(<span class="id" title="var">Pos</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>, a to już zupełnie
+    coś innego.
+
+<div class="paragraph"> </div>
+
+    Żeby lepiej zrozumieć tę materię, musimy metaforycznie zinterpretować
+    znany nam już współczynnik niedobrości i wynikający z niego podział
+    na wystąpienia ściśle pozytywne, pozytywne i negatywne. Dzięki tej
+    interpretacji dowiemy się też, dlaczego nieparzysta niedobrość jest
+    negatywna, a niezerowa parzysta jest pozytywna.
+
+<div class="paragraph"> </div>
+
+    Najprościej jest zinterpretować wystąpienia ściśle pozytywne, gdyż
+    mieliśmy już z nimi sporo do czynienia. Weźmy konstruktor
+    <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>. Jest tutaj jedno ściśle pozytywne
+    wystąpienie typu <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>, które możemy interpretować tak: gdy
+    używamy dopasowania do wzorca i dopasuje się <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span>, to "mamy"
+    element <span class="inlinecode"><span class="id" title="var">t</span></span> typu <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>. Ot i cała filozofia.
+
+<div class="paragraph"> </div>
+
+    Załóżmy teraz na chwilę, że Coq akceptuje negatywne i pozytywne
+    typy induktywne. Co by było, gdybyśmy dopasowali konstruktor postaci
+    <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">:</span> <span class="inlinecode">(<span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>? Tym razem nie mamy elementu typu <span class="inlinecode"><span class="id" title="var">T</span></span>, lecz
+    funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>. Parafrazując: musimy "dać" funkcji <span class="inlinecode"><span class="id" title="var">f</span></span>
+    element typu <span class="inlinecode"><span class="id" title="var">T</span></span>, żeby dostać <span class="inlinecode"><span class="id" title="var">bool</span></span>.
+
+<div class="paragraph"> </div>
+
+    A co by było, gdybyśmy dopasowali konstruktor postaci
+    <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">:</span> <span class="inlinecode">((<span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>? Tym razem również nie mamy żadnego
+    elementu typu <span class="inlinecode"><span class="id" title="var">T</span></span>, lecz funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode">((<span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span>.
+    Parafrazując: musimy dać funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> jakąś funkcję typu <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>,
+    żeby dostać <span class="inlinecode"><span class="id" title="var">bool</span></span>. Ale gdy konstruujemy funkcję <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>, to na
+    wejściu dostajemy <span class="inlinecode"><span class="id" title="var">T</span></span>. Tak więc początkowo nie mamy żadnego <span class="inlinecode"><span class="id" title="var">T</span></span>, ale
+    gdy o nie poprosimy, to możemy je dostać. Ba! Jak pokazuje przykład,
+    możemy dostać bardzo dużo <span class="inlinecode"><span class="id" title="var">T</span></span>.
+
+<div class="paragraph"> </div>
+
+    Taka właśnie jest różnica między ścisłą pozytywnością (mamy coś),
+    negatywnością (musimy coś dać) i pozytywnością (możemy coś dostać,
+    i to nawet w dużej liczbie sztuk). Zauważmy, że jedynie w przypadku
+    negatywnym możemy wyjąć z <span class="inlinecode"><span class="id" title="var">T</span></span> funkcję <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">co</span>ś</span> (chyba, że zawadza
+    nam <span class="inlinecode"><span class="id" title="var">unit</span></span> lub <span class="inlinecode"><span class="id" title="var">False</span></span>), bo to jedyny przypadek, gdy żądają od nas
+    <span class="inlinecode"><span class="id" title="var">T</span></span> (a skoro żądają <span class="inlinecode"><span class="id" title="var">T</span></span>, to muszą mieć funkcję, która coś z tym <span class="inlinecode"><span class="id" title="var">T</span></span>
+    zrobi). W przypadku pozytywnym nie ma żadnej takiej funkcji - to my
+    dostajemy <span class="inlinecode"><span class="id" title="var">T</span></span> i musimy coś z niego wyprodukować, więc to my jesteśmy
+    tą funkcją!
+
+<div class="paragraph"> </div>
+
+    Ufff... mam nadzieję, że powyższa bajeczka jest sformułowana zrozumiale,
+    bo lepszego wytłumaczenia nie udało mi się wymyślić.
+
+<div class="paragraph"> </div>
+
+    Moglibyśmy w tym miejscu zastanowić się, czy nie uda nam się pokazać
+    sprzeczności choć na metapoziomie, poprzez napisanie nieterminującej
+    funkcji <span class="inlinecode"><span class="id" title="var">loop</span></span>. Szczerze pisząc, to niezbyt w to wierzę. Przypomnij
+    sobie, że okazało się, że funkcja <span class="inlinecode"><span class="id" title="var">loop</span></span> jest bardzo ściśle powiązana
+    z funkcją <span class="inlinecode"><span class="id" title="var">bad</span></span>, zaś esencja nieterminacji polegała na przekazaniu
+    do <span class="inlinecode"><span class="id" title="var">loop</span></span> jako argument czegoś, co zawierało <span class="inlinecode"><span class="id" title="var">loop</span></span> jako podterm
+    (jeżeli nie zauważyłeś, to wszystkie nasze nieterminujące funkcje
+    udało nam się zdefiniować jedynie za pomocą reguły zależnej analizy
+    przypadków - bez indukcji, bez rekursji!). To daje nam jako taką
+    podstawę by wierzyć, że nawet nieterminacja nie jest w tym przypadku
+    osiągalna. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a name="lab189"></a><h1 class="section">Podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
