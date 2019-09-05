@@ -7172,6 +7172,150 @@ end.
 *)
 (* end hide *)
 
+(** W tym momencie należy sobie zadać zasadnicze pytanie: dlaczego w ogóle
+    pozytywne typy induktywne są nielegalne? Przecież odróżnienie wystąpienia
+    pozytywnego od negatywnego nie jest czymś trudnym, więc Coq nie może ich
+    od tak po prostu nie rozróżniać - musi mieć jakiś powód!
+
+    I faktycznie, powód jest. Nie ma on jednak wiele wspólnego z mechanizmem
+    (pozytywnych) typów induktywnych samym w sobie, a z impredykatywnością
+    sortu [Prop]. Trudne słowo, co? Nie pamiętam, czy już to wyjaśniałem,
+    więc wyjaśnię jeszcze raz.
+
+    Impredykatywność (lub też impredykatywizm) to pewna forma autoreferencji,
+    która czasem jest nieszkodliwa, a czasem wręcz zabójcza. Przyjrzyjmy się
+    następującej definicji: "wujek Janusz to najbardziej wąsata osoba w tym
+    pokoju". Definicja ta jest impredykatywna, gdyż definiuje ona wujka
+    Janusza poprzez wyróżnienie go z pewnej kolekcji osób, ale definicja tej
+    kolekcji osób musi odwoływać się do wujka Janusza ("w pokoju są wujek
+    Janusz, ciocia Grażynak, Sebastianek i Karynka"). W Coqu impredykatywny
+    jest sort [Prop], co ilustruje przykład: *)
+
+Definition X : Prop := forall P : Prop, P.
+
+(** Definicja zdania [X] jest impredykatywna, gdyż kwantyfikujemy w niej po
+    wszystkich zdaniach ([forall P : Prop]), a zatem kwantyfikujemy także
+    po zdaniu [X], które właśnie definiujemy.
+
+    Impredykatywność sortu [Prop] jest niegroźna (no chyba, że pragniemy
+    pozytywnych typów induktywnych, to wtedy nie), ale impredykatywność
+    dla [Type] byłaby zabójcza, co zresztą powinien nam był uświadomić
+    paradoks Russella.
+
+    Dobra, koniec gadania. Poniższy przykład pośrednio pochodzi z sekcji
+    3.1 pracy "Inductively defined types", której autorami są Thierry
+    Coquand oraz Christine Pauling-Mohring, zaś bezpośrednio jest przeróbką
+    kodu wziętego z
+    vilhelms.github.io/posts/why-must-inductive-types-be-strictly-positive *)
+
+Fail Inductive Pos' : Type :=
+    | Pos'0 : ((Pos' -> Prop) -> Prop) -> Pos'.
+
+Axioms
+  (Pos' : Type)
+  (Pos'0 : ((Pos' -> Prop) -> Prop) -> Pos')
+  (dcase' :
+    forall
+      (P : Pos' -> Type)
+      (PPos'0 : forall g : (Pos' -> Prop) -> Prop, P (Pos'0 g)),
+        {f : forall x : Pos', P x |
+          forall g : (Pos' -> Prop) -> Prop,
+            f (Pos'0 g) = PPos'0 g}).
+
+(** Jak widać, podejrzanym typem jest [Pos'], bliźniaczo podobne do [Pos],
+    ale zamiast [bool] występuje tutaj [Prop]. *)
+
+Definition unwrap : Pos' -> ((Pos' -> Prop) -> Prop).
+Proof.
+  apply (dcase' (fun _ => (Pos' -> Prop) -> Prop)).
+  intros f. exact f.
+Defined.
+
+(** Zaczniemy od zdefiniowania funkcji odwijającej konstruktor. *)
+
+Lemma Pos'0_inj :
+  forall x y : (Pos' -> Prop) -> Prop,
+    Pos'0 x = Pos'0 y -> x = y.
+Proof.
+  intros.
+  apply (f_equal unwrap) in H. unfold unwrap in H.
+  destruct (dcase' _) as [unwrap eq].
+  rewrite 2!eq in H.
+  assumption.
+Qed.
+
+(** Dzięki [unwrap] możemy łatwo pokazać, że konstruktor [Pos'0] jest
+    injekcją (to coś, co w przypadku zwykłych typów induktywnych dostajemy
+    za darmo od taktyki [inversion], ale cóż, nie tym razem!). *)
+
+Definition i {A : Type} : A -> (A -> Prop) := 
+  fun x y => x = y.
+
+Lemma i_inj :
+  forall (A : Type) (x y : A), i x = i y -> x = y.
+Proof.
+  unfold i. intros.
+  apply (f_equal (fun f => f y)) in H.
+  rewrite H. reflexivity.
+Qed.
+
+(** Kolejnym krokiem jest zdefiniowanie funkcji [i], która jest injekcją
+    z dowolnego typu [A] w typ [A -> Prop]. Zauważmy, że krok ten w
+    kluczowy sposób korzysta z równości, żyjącej w sorcie [Prop] - gdyby
+    zamiast [Prop] było [bool], nie moglibyśmy zdefiniować tej injekcji. *)
+
+Definition f (P : Pos' -> Prop) : Pos' := Pos'0 (i P).
+
+Lemma f_inj :
+  forall P Q : Pos' -> Prop, f P = f Q -> P = Q.
+Proof.
+  unfold f. intros.
+  apply (f_equal unwrap) in H. unfold unwrap in H.
+  destruct (dcase' _) as [unwrap eq].
+  rewrite 2!eq in H.
+  apply i_inj in H. assumption.
+Qed.
+
+(** Składając ze soba [i] oraz konstruktor [Pos'0] dostajemy injekcję z
+    [Pos' -> Prop] w [Pos']. *)
+
+Definition wut (x : Pos') : Prop :=
+  exists P : Pos' -> Prop, f P = x /\ ~ P x.
+
+Definition x : Pos' := f wut.
+
+(** Tutaj następują największe czary, które używają impredykatywności. Nie
+    mam żadnego dobrej bajeczki, która by je wyjaśniała. *)
+
+Lemma paradox : wut x <-> ~ wut x.
+Proof.
+  split.
+    destruct 1 as (P & H1 & H2). intro H.
+      unfold x in H1. apply f_inj in H1. subst. contradiction.
+    intro H. unfold wut. exists wut. split.
+      unfold x. reflexivity.
+      assumption.
+Qed.
+
+(** [paradox] to twierdzenie, które chwyta esencję całej sprawy. Z lewa na
+    prawo rozbijamy dowód [wut x] i dostajemy predykat [P]. Wiemy, że
+    [f P = x], ale [x = f wut], a ponieważ [f] jest injekcją, to [P = wut].
+    To jednak kończy się sprzecznością, bo [wut x], ale [~ P x].
+
+    Z prawa na lewo jest łatwiej. Mamy [~ wut x] i musimy udowodnić [wut x].
+    Wystarczy, że istnieje pewien predykat, na który wybieramy oczywiście
+    [wut], który spełnia [f wut = x], co jest prawdą na mocy definicji [x],
+    oraz [~ wut x], co zachodzi na mocy założenia. *)
+
+Theorem Pos'_illegal : False.
+Proof.
+  pose paradox. firstorder.
+Qed.
+
+(** No i bum. Jak widać, pozytywne typy induktywne są nielegalne, ale nie
+    ma to z nimi wiele wspólnego, za to ma wiele wspólnego z sortem [Prop]
+    i jego impredykatywnością. *)
+
 (** * Podsumowanie (TODO) *)
 
 (** To już koniec naszej podróży przez mechanizmy definiowania typów przez

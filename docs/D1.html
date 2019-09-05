@@ -8752,6 +8752,228 @@ Mogłoby się wydawać, że wyciągnięcie z <span class="inlinecode"><span cla
 </div>
 
 <div class="doc">
+W tym momencie należy sobie zadać zasadnicze pytanie: dlaczego w ogóle
+    pozytywne typy induktywne są nielegalne? Przecież odróżnienie wystąpienia
+    pozytywnego od negatywnego nie jest czymś trudnym, więc Coq nie może ich
+    od tak po prostu nie rozróżniać - musi mieć jakiś powód!
+
+<div class="paragraph"> </div>
+
+    I faktycznie, powód jest. Nie ma on jednak wiele wspólnego z mechanizmem
+    (pozytywnych) typów induktywnych samym w sobie, a z impredykatywnością
+    sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. Trudne słowo, co? Nie pamiętam, czy już to wyjaśniałem,
+    więc wyjaśnię jeszcze raz.
+
+<div class="paragraph"> </div>
+
+    Impredykatywność (lub też impredykatywizm) to pewna forma autoreferencji,
+    która czasem jest nieszkodliwa, a czasem wręcz zabójcza. Przyjrzyjmy się
+    następującej definicji: "wujek Janusz to najbardziej wąsata osoba w tym
+    pokoju". Definicja ta jest impredykatywna, gdyż definiuje ona wujka
+    Janusza poprzez wyróżnienie go z pewnej kolekcji osób, ale definicja tej
+    kolekcji osób musi odwoływać się do wujka Janusza ("w pokoju są wujek
+    Janusz, ciocia Grażynak, Sebastianek i Karynka"). W Coqu impredykatywny
+    jest sort <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, co ilustruje przykład: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">X</span> : <span class="id" title="keyword">Prop</span> := <span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Definicja zdania <span class="inlinecode"><span class="id" title="var">X</span></span> jest impredykatywna, gdyż kwantyfikujemy w niej po
+    wszystkich zdaniach (<span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>), a zatem kwantyfikujemy także
+    po zdaniu <span class="inlinecode"><span class="id" title="var">X</span></span>, które właśnie definiujemy.
+
+<div class="paragraph"> </div>
+
+    Impredykatywność sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> jest niegroźna (no chyba, że pragniemy
+    pozytywnych typów induktywnych, to wtedy nie), ale impredykatywność
+    dla <span class="inlinecode"><span class="id" title="keyword">Type</span></span> byłaby zabójcza, co zresztą powinien nam był uświadomić
+    paradoks Russella.
+
+<div class="paragraph"> </div>
+
+    Dobra, koniec gadania. Poniższy przykład pośrednio pochodzi z sekcji
+    3.1 pracy "Inductively defined types", której autorami są Thierry
+    Coquand oraz Christine Pauling-Mohring, zaś bezpośrednio jest przeróbką
+    kodu wziętego z
+    vilhelms.github.io/posts/why-must-inductive-types-be-strictly-positive 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Pos'</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Pos'0</span> : ((<span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>) -&gt; <span class="id" title="keyword">Prop</span>) -&gt; <span class="id" title="var">Pos'</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axioms</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">Pos'</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Pos'0</span> : ((<span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>) -&gt; <span class="id" title="keyword">Prop</span>) -&gt; <span class="id" title="var">Pos'</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">dcase'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">PPos'0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : (<span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>) -&gt; <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> (<span class="id" title="var">Pos'0</span> <span class="id" title="var">g</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">Pos'</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : (<span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>) -&gt; <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">Pos'0</span> <span class="id" title="var">g</span>) = <span class="id" title="var">PPos'0</span> <span class="id" title="var">g</span>}).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać, podejrzanym typem jest <span class="inlinecode"><span class="id" title="var">Pos'</span></span>, bliźniaczo podobne do <span class="inlinecode"><span class="id" title="var">Pos</span></span>,
+    ale zamiast <span class="inlinecode"><span class="id" title="var">bool</span></span> występuje tutaj <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">unwrap</span> : <span class="id" title="var">Pos'</span> -&gt; ((<span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>) -&gt; <span class="id" title="keyword">Prop</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">dcase'</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; (<span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>) -&gt; <span class="id" title="keyword">Prop</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zaczniemy od zdefiniowania funkcji odwijającej konstruktor. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Pos'0_inj</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : (<span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>) -&gt; <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Pos'0</span> <span class="id" title="var">x</span> = <span class="id" title="var">Pos'0</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">unwrap</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">unwrap</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">dcase'</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">unwrap</span> <span class="id" title="var">eq</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2!<span class="id" title="var">eq</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dzięki <span class="inlinecode"><span class="id" title="var">unwrap</span></span> możemy łatwo pokazać, że konstruktor <span class="inlinecode"><span class="id" title="var">Pos'0</span></span> jest
+    injekcją (to coś, co w przypadku zwykłych typów induktywnych dostajemy
+    za darmo od taktyki <span class="inlinecode"><span class="id" title="tactic">inversion</span></span>, ale cóż, nie tym razem!). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">i</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">A</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) := <br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> =&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">i_inj</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>), <span class="id" title="var">i</span> <span class="id" title="var">x</span> = <span class="id" title="var">i</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">i</span>. <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">y</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Kolejnym krokiem jest zdefiniowanie funkcji <span class="inlinecode"><span class="id" title="var">i</span></span>, która jest injekcją
+    z dowolnego typu <span class="inlinecode"><span class="id" title="var">A</span></span> w typ <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. Zauważmy, że krok ten w
+    kluczowy sposób korzysta z równości, żyjącej w sorcie <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> - gdyby
+    zamiast <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> było <span class="inlinecode"><span class="id" title="var">bool</span></span>, nie moglibyśmy zdefiniować tej injekcji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">f</span> (<span class="id" title="var">P</span> : <span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">Pos'</span> := <span class="id" title="var">Pos'0</span> (<span class="id" title="var">i</span> <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f_inj</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>, <span class="id" title="var">f</span> <span class="id" title="var">P</span> = <span class="id" title="var">f</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> = <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">unwrap</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">unwrap</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">dcase'</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">unwrap</span> <span class="id" title="var">eq</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2!<span class="id" title="var">eq</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">i_inj</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Składając ze soba <span class="inlinecode"><span class="id" title="var">i</span></span> oraz konstruktor <span class="inlinecode"><span class="id" title="var">Pos'0</span></span> dostajemy injekcję z
+    <span class="inlinecode"><span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> w <span class="inlinecode"><span class="id" title="var">Pos'</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">wut</span> (<span class="id" title="var">x</span> : <span class="id" title="var">Pos'</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">P</span> : <span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>, <span class="id" title="var">f</span> <span class="id" title="var">P</span> = <span class="id" title="var">x</span> /\ ~ <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">x</span> : <span class="id" title="var">Pos'</span> := <span class="id" title="var">f</span> <span class="id" title="var">wut</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tutaj następują największe czary, które używają impredykatywności. Nie
+    mam żadnego dobrej bajeczki, która by je wyjaśniała. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">paradox</span> : <span class="id" title="var">wut</span> <span class="id" title="var">x</span> &lt;-&gt; ~ <span class="id" title="var">wut</span> <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1 <span class="id" title="keyword">as</span> (<span class="id" title="var">P</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span>). <span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">x</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f_inj</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="var">contradiction</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">wut</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">wut</span>. <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">x</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">paradox</span></span> to twierdzenie, które chwyta esencję całej sprawy. Z lewa na
+    prawo rozbijamy dowód <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> i dostajemy predykat <span class="inlinecode"><span class="id" title="var">P</span></span>. Wiemy, że
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">x</span></span>, ale <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span></span>, a ponieważ <span class="inlinecode"><span class="id" title="var">f</span></span> jest injekcją, to <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">wut</span></span>.
+    To jednak kończy się sprzecznością, bo <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>, ale <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>.
+
+<div class="paragraph"> </div>
+
+    Z prawa na lewo jest łatwiej. Mamy <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> i musimy udowodnić <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>.
+    Wystarczy, że istnieje pewien predykat, na który wybieramy oczywiście
+    <span class="inlinecode"><span class="id" title="var">wut</span></span>, który spełnia <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">x</span></span>, co jest prawdą na mocy definicji <span class="inlinecode"><span class="id" title="var">x</span></span>,
+    oraz <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>, co zachodzi na mocy założenia. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">Pos'_illegal</span> : <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> <span class="id" title="var">paradox</span>. <span class="id" title="tactic">firstorder</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+No i bum. Jak widać, pozytywne typy induktywne są nielegalne, ale nie
+    ma to z nimi wiele wspólnego, za to ma wiele wspólnego z sortem <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>
+    i jego impredykatywnością. 
+<div class="paragraph"> </div>
+
 <a name="lab189"></a><h1 class="section">Podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
