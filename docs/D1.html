@@ -3410,7 +3410,7 @@ Konstruktor <span class="inlinecode"><span class="id" title="var">vnil</span></s
 </div>
 
 <div class="doc">
-<a name="lab132"></a><h2 class="section">Indukcja wzajemna a indeksowane rodziny typów (TODO)</h2>
+<a name="lab132"></a><h2 class="section">Indukcja wzajemna a indeksowane rodziny typów</h2>
 
 </div>
 <div class="code">
@@ -3423,10 +3423,10 @@ Konstruktor <span class="inlinecode"><span class="id" title="var">vnil</span></s
 
 <div class="doc">
 Indukcja wzajemna nie jest zbyt użyteczna. Pierwszym, praktycznym,
-    powodem jest to, jak pewnie zdążyłeś się już na skórze przekonać,
-    że jej używanie jest dość upierdliwe. Drugi, teoretyczny, powód
-    jest taki, że definicje przez indukcję wzajemną możemy zasymulować
-    za pomocą indeksowanych rodzin typów. 
+    powodem jest to, że, jak pewnie zdążyłeś się już na własnej skórze
+    przekonać, jej używanie jest dość upierdliwe. Drugi, teoretyczny,
+    powód jest taki, że definicje przez indukcję wzajemną możemy łatwo
+    zasymulować za pomocą indeksowanych rodzin typów. 
 </div>
 <div class="code">
 
@@ -3452,8 +3452,10 @@ Rzućmy jeszcze raz okiem na znaną nam już definicję predykatów <span clas
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">even_odd</span> : <span class="id" title="var">bool</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">even0'</span> : <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">evenS'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">oddS'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">evenS'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">oddS'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">even'</span> := <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span>.<br/>
@@ -3466,8 +3468,8 @@ Rzućmy jeszcze raz okiem na znaną nam już definicję predykatów <span clas
 Co z tego wynika? Ano, zamiast definiować przez indukcję wzajemną dwóch
     predykatów <span class="inlinecode"><span class="id" title="var">even</span></span> i <span class="inlinecode"><span class="id" title="var">odd</span></span> możemy za jednym zamachem zdefiniować relację
     <span class="inlinecode"><span class="id" title="var">even_odd</span></span>, która jednocześnie odpowiada obu tym predykatom. Kluczem
-    w tej sztuczce jest tutaj dodatkowy indeks, którym jest dwuelementowy
-    typ <span class="inlinecode"><span class="id" title="var">bool</span></span>. Dzięki niemu możemy zakodować definicję <span class="inlinecode"><span class="id" title="var">even</span></span> za pomocą
+    w tej sztuczce jest dodatkowy indeks, którym jest dwuelementowy typ
+    <span class="inlinecode"><span class="id" title="var">bool</span></span>. Dzięki niemu możemy zakodować definicję <span class="inlinecode"><span class="id" title="var">even</span></span> za pomocą
     <span class="inlinecode"><span class="id" title="var">even_odd</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span>, zaś <span class="inlinecode"><span class="id" title="var">odd</span></span> jako <span class="inlinecode"><span class="id" title="var">even_odd</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span>. 
 </div>
 <div class="code">
@@ -3733,7 +3735,7 @@ Definiowanie wartości typu <span class="inlinecode"><span class="id" title="var
 </div>
 
 <div class="doc">
-<a name="lab137"></a><h2 class="section">W-typy (TODO)</h2>
+<a name="lab137"></a><h2 class="section">W-typy (dozro)</h2>
 
 </div>
 <div class="code">
@@ -3744,6 +3746,8 @@ Definiowanie wartości typu <span class="inlinecode"><span class="id" title="var
 
 <br/>
 <span class="id" title="var">Arguments</span> <span class="id" title="var">sup</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
 
 <br/>
 </div>
@@ -3757,12 +3761,73 @@ W-typy (ang. W-types) to typy dobrze ufundowanych drzew (ang.
 
     Nie są one zbyt przydatne w praktyce, gdyż wszystko, co można za ich
     pomocą osiągnąć, można też osiągnąć bez nich zwykłymi typami induktywnymi
-    i będzie to dużo bardziej czytelne. Jednak z tego samego powodu są bardzo
-    ciekawe pod względem teoretycznym - wszystko, co można zrobić za pomocą
-    parametryzowanych typów induktywnych, można też zrobić za pomocą samych
-    W-typów. Dzięki temu można badanie parametryzowanych typów induktywnych,
-    których jest mniej więcej nieskończoność i jeszcze trochę, sprowadzić do
-    badania jednego tylko <span class="inlinecode"><span class="id" title="var">W</span></span>.
+    i będzie to dużo bardziej czytelne oraz prostsze w implementacji. Ba!
+    W-typy są nawet nieco słabsze, gdyż go udowodnienia reguły indukcji
+    wymagają aksjomatu ekstensjonalności dla funkcji.
+
+<div class="paragraph"> </div>
+
+    Jednak z tego samego powodu są bardzo ciekawe pod względem teoretycznym -
+    wszystko, co można zrobić za pomocą parametryzowanych typów induktywnych,
+    można też zrobić za pomocą samych W-typów. Dzięki temu możemy badanie
+    parametryzowanych typów induktywnych, których jest mniej więcej
+    nieskończoność i jeszcze trochę, sprowadzić do badania jednego tylko <span class="inlinecode"><span class="id" title="var">W</span></span>
+    (o ile godzimy się na aksjomat ekstensjonalności dla funkcji).
+
+<div class="paragraph"> </div>
+
+    Zanim jednak zobaczymy przykłady ich wykorzystania, zastanówmy się przez
+    kilka chwil, dlaczego są one tak ogólne.
+
+<div class="paragraph"> </div>
+
+    Sprawa jest dość prosta. Rozważmy typ induktywny <span class="inlinecode"><span class="id" title="var">T</span></span> i dowolny z jego
+    konstruktorów <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">X1</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">...</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Xn</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>. Argumenty <span class="inlinecode"><span class="id" title="var">Xi</span></span> możemy podzielić
+    na dwie grupy: argumenty nieindukcyjne (oznaczmy je litera <span class="inlinecode"><span class="id" title="var">A</span></span>) oraz
+    indukcyjne (które są postaci <span class="inlinecode"><span class="id" title="var">T</span></span>). Wobec tego typ <span class="inlinecode"><span class="id" title="var">c</span></span> możemy zapisać jako
+    <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A1</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">...</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Ak</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">...</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>.
+
+<div class="paragraph"> </div>
+
+    W kolejnym kroku łączymy argumenty za pomocą produktu: niech <span class="inlinecode"><span class="id" title="var">A</span></span> będzie
+    równe <span class="inlinecode"><span class="id" title="var">A1</span></span> <span class="inlinecode">*</span> <span class="inlinecode">...</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">Ak</span></span>. Wtedy typ <span class="inlinecode"><span class="id" title="var">c</span></span> wygląda tak:
+    <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">*</span> <span class="inlinecode">...</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>. Zauważmy, że <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">*</span> <span class="inlinecode">...</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">T</span></span> możemy zapisać
+    równoważnie jako <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">B</span></span> to typ mający tyle elementów, ile
+    razy <span class="inlinecode"><span class="id" title="var">T</span></span> występuje w produkcie <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">*</span> <span class="inlinecode">...</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">T</span></span>. Zatem typ <span class="inlinecode"><span class="id" title="var">c</span></span> przedstawia
+    się tak: <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>.
+
+<div class="paragraph"> </div>
+
+    Teraz poczynimy kilka uogólnień. Po pierwsze, na początku założyliśmy,
+    że <span class="inlinecode"><span class="id" title="var">c</span></span> ma skończenie wiele argumentów indukcyjnych, ale postać <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
+    uwzględnia także przypadek, gdy jest ich nieskończenie wiele (tzn. gdy
+    <span class="inlinecode"><span class="id" title="var">c</span></span> miał oryginalnie jakiś argument postaci <span class="inlinecode"><span class="id" title="var">Y</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> dla nieskończonego
+    <span class="inlinecode"><span class="id" title="var">Y</span></span>).
+
+<div class="paragraph"> </div>
+
+    Po drugie, założyliśmy, że <span class="inlinecode"><span class="id" title="var">c</span></span> jest funkcją niezależną. Przypadek, gdy
+    <span class="inlinecode"><span class="id" title="var">c</span></span> jest funkcją zależną możemy pokryć, pozwalając naszemu <span class="inlinecode"><span class="id" title="var">B</span></span> zależeć
+    od <span class="inlinecode"><span class="id" title="var">A</span></span>, tzn. <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. Typ konstruktora <span class="inlinecode"><span class="id" title="var">c</span></span> zyskuje wtedy postać
+    sumy zależnej <span class="inlinecode">{<span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">&amp;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>}</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>. W ostatnim kroku odpakowujemy
+    sumę i <span class="inlinecode"><span class="id" title="var">c</span></span> zyskuje postać <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>.
+
+<div class="paragraph"> </div>
+
+    Jak więc widać, typ każdego konstruktora można przekształcić tak, żeby
+    móc zapisać go jako <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>. Zauważmy też, że jeżeli
+    mamy dwa konstruktory <span class="inlinecode"><span class="id" title="var">c1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A1</span>,</span> <span class="inlinecode"><span class="id" title="var">B1</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> oraz
+    <span class="inlinecode"><span class="id" title="var">c2</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A2</span>,</span> <span class="inlinecode"><span class="id" title="var">B2</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>, to możemy równie dobrze zapisać je
+    za pomocą jednego konstruktora <span class="inlinecode"><span class="id" title="var">c</span></span>: niech <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">A1</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">A2</span></span> i niech
+    <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">(<span class="id" title="var">inl</span></span> <span class="inlinecode"><span class="id" title="var">a1</span>)</span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">B1</span></span> <span class="inlinecode"><span class="id" title="var">a1</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">(<span class="id" title="var">inl</span></span> <span class="inlinecode"><span class="id" title="var">a2</span>)</span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">B2</span></span> <span class="inlinecode"><span class="id" title="var">a2</span></span>. Wtedy konstruktory <span class="inlinecode"><span class="id" title="var">c1</span></span> i
+    <span class="inlinecode"><span class="id" title="var">c2</span></span> są równoważne konstruktorowi <span class="inlinecode"><span class="id" title="var">c</span></span>.
+
+<div class="paragraph"> </div>
+
+    Stosując powyższe przekształcenia możemy sprowadzić każdy typ induktywny
+    do równoważnej postaci z jednym konstruktorem o typie
+    <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>. Skoro tak, to definiujemy nowy typ, w którym
+    <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> są parametrami... i tak powstało <span class="inlinecode"><span class="id" title="var">W</span></span>!
 
 <div class="paragraph"> </div>
 
@@ -3805,6 +3870,9 @@ W-typy (ang. W-types) to typy dobrze ufundowanych drzew (ang.
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">boolW_bool__bool_boolW</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">boolW_bool</span> (<span class="id" title="var">bool_boolW</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">bool_boolW__bool_boolW</span> :<br/>
@@ -8767,12 +8835,12 @@ W tym momencie należy sobie zadać zasadnicze pytanie: dlaczego w ogóle
 <div class="paragraph"> </div>
 
     Impredykatywność (lub też impredykatywizm) to pewna forma autoreferencji,
-    która czasem jest nieszkodliwa, a czasem wręcz zabójcza. Przyjrzyjmy się
-    następującej definicji: "wujek Janusz to najbardziej wąsata osoba w tym
-    pokoju". Definicja ta jest impredykatywna, gdyż definiuje ona wujka
+    która czasem jest nieszkodliwa, a czasem bardzo mordercza. Przyjrzyjmy
+    się następującej definicji: "wujek Janusz to najbardziej wąsata osoba w
+    tym pokoju". Definicja ta jest impredykatywna, gdyż definiuje ona wujka
     Janusza poprzez wyróżnienie go z pewnej kolekcji osób, ale definicja tej
     kolekcji osób musi odwoływać się do wujka Janusza ("w pokoju są wujek
-    Janusz, ciocia Grażynak, Sebastianek i Karynka"). W Coqu impredykatywny
+    Janusz, ciocia Grażynka, Sebastianek i Karynka"). W Coqu impredykatywny
     jest sort <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, co ilustruje przykład: 
 </div>
 <div class="code">
@@ -8791,7 +8859,7 @@ Definicja zdania <span class="inlinecode"><span class="id" title="var">X</span><
 <div class="paragraph"> </div>
 
     Impredykatywność sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> jest niegroźna (no chyba, że pragniemy
-    pozytywnych typów induktywnych, to wtedy nie), ale impredykatywność
+    pozytywnych typów induktywnych, to wtedy jest), ale impredykatywność
     dla <span class="inlinecode"><span class="id" title="keyword">Type</span></span> byłaby zabójcza, co zresztą powinien nam był uświadomić
     paradoks Russella.
 
@@ -8841,7 +8909,7 @@ Jak widać, podejrzanym typem jest <span class="inlinecode"><span class="id" tit
 </div>
 
 <div class="doc">
-Zaczniemy od zdefiniowania funkcji odwijającej konstruktor. 
+Zaczynamy od zdefiniowania funkcji odwijającej konstruktor. 
 </div>
 <div class="code">
 
@@ -8969,9 +9037,9 @@ Tutaj następują największe czary, które używają impredykatywności. Nie
 </div>
 
 <div class="doc">
-No i bum. Jak widać, pozytywne typy induktywne są nielegalne, ale nie
-    ma to z nimi wiele wspólnego, za to ma wiele wspólnego z sortem <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>
-    i jego impredykatywnością. 
+No i bum. Jak widać, pozytywne typy induktywne prowadzą do sprzeczności,
+    ale nie ma to z nimi wiele wspólnego, za to ma wiele wspólnego z sortem
+    <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i jego impredykatywnością. 
 <div class="paragraph"> </div>
 
 <a name="lab189"></a><h1 class="section">Podsumowanie (TODO)</h1>

@@ -2651,15 +2651,15 @@ Inductive EHBTree : nat -> Type :=
         A -> EHBTree n -> EHBTree m -> EHBTree (max n m).
 (* end hide *)
 
-(** ** Indukcja wzajemna a indeksowane rodziny typów (TODO) *)
+(** ** Indukcja wzajemna a indeksowane rodziny typów *)
 
 Module MutualIndution_vs_InductiveFamilies.
 
 (** Indukcja wzajemna nie jest zbyt użyteczna. Pierwszym, praktycznym,
-    powodem jest to, jak pewnie zdążyłeś się już na skórze przekonać,
-    że jej używanie jest dość upierdliwe. Drugi, teoretyczny, powód
-    jest taki, że definicje przez indukcję wzajemną możemy zasymulować
-    za pomocą indeksowanych rodzin typów. *)
+    powodem jest to, że, jak pewnie zdążyłeś się już na własnej skórze
+    przekonać, jej używanie jest dość upierdliwe. Drugi, teoretyczny,
+    powód jest taki, że definicje przez indukcję wzajemną możemy łatwo
+    zasymulować za pomocą indeksowanych rodzin typów. *)
 
 Inductive even : nat -> Prop :=
     | even0 : even 0
@@ -2675,8 +2675,10 @@ with odd : nat -> Prop :=
 
 Inductive even_odd : bool -> nat -> Prop :=
     | even0' : even_odd true 0
-    | evenS' : forall n : nat, even_odd false n -> even_odd true (S n)
-    | oddS' : forall n : nat, even_odd true n -> even_odd false (S n).
+    | evenS' :
+        forall n : nat, even_odd false n -> even_odd true (S n)
+    | oddS' :
+        forall n : nat, even_odd true n -> even_odd false (S n).
 
 Definition even' := even_odd true.
 Definition odd' := even_odd false.
@@ -2684,8 +2686,8 @@ Definition odd' := even_odd false.
 (** Co z tego wynika? Ano, zamiast definiować przez indukcję wzajemną dwóch
     predykatów [even] i [odd] możemy za jednym zamachem zdefiniować relację
     [even_odd], która jednocześnie odpowiada obu tym predykatom. Kluczem
-    w tej sztuczce jest tutaj dodatkowy indeks, którym jest dwuelementowy
-    typ [bool]. Dzięki niemu możemy zakodować definicję [even] za pomocą
+    w tej sztuczce jest dodatkowy indeks, którym jest dwuelementowy typ
+    [bool]. Dzięki niemu możemy zakodować definicję [even] za pomocą
     [even_odd true], zaś [odd] jako [even_odd false]. *)
 
 Lemma even_even' :
@@ -2873,12 +2875,26 @@ Qed.
 
 End ex.
 
-(** ** W-typy (TODO) *)
+(** ** W-typy (dozro) *)
 
 Inductive W (A : Type) (B : A -> Type) : Type :=
     | sup : forall x : A, (B x -> W A B) -> W A B.
 
 Arguments sup {A B} _ _.
+
+(* begin hide *)
+
+(** Agenda (różnice między W i typami induktywnymi):
+    - W potrzebują funext do indukcji
+    - typy induktywne są w Coqu generatywne, a W-typy nie są. Jaśniej:
+      jeżeli mamy moduł parametryczny, to każda instancjacja parametru
+      skutkuje stworzeniem nowego typu induktywnego, mimo że mają one
+      takie same nazwy etc. W-typy są bliższe idei uniwersum nazw na
+      typy induktywne (ale nie do końca)
+    - jeżeli uniwersum ma regułę eliminacji, to [W] umożliwia programowanie
+      generyczne *)
+
+(* end hide *)
 
 (** W-typy (ang. W-types) to typy dobrze ufundowanych drzew (ang.
     well-founded trees - W to skrót od well-founded), tzn. skończonych drzew
@@ -2886,12 +2902,57 @@ Arguments sup {A B} _ _.
 
     Nie są one zbyt przydatne w praktyce, gdyż wszystko, co można za ich
     pomocą osiągnąć, można też osiągnąć bez nich zwykłymi typami induktywnymi
-    i będzie to dużo bardziej czytelne. Jednak z tego samego powodu są bardzo
-    ciekawe pod względem teoretycznym - wszystko, co można zrobić za pomocą
-    parametryzowanych typów induktywnych, można też zrobić za pomocą samych
-    W-typów. Dzięki temu można badanie parametryzowanych typów induktywnych,
-    których jest mniej więcej nieskończoność i jeszcze trochę, sprowadzić do
-    badania jednego tylko [W].
+    i będzie to dużo bardziej czytelne oraz prostsze w implementacji. Ba!
+    W-typy są nawet nieco słabsze, gdyż go udowodnienia reguły indukcji
+    wymagają aksjomatu ekstensjonalności dla funkcji.
+
+    Jednak z tego samego powodu są bardzo ciekawe pod względem teoretycznym -
+    wszystko, co można zrobić za pomocą parametryzowanych typów induktywnych,
+    można też zrobić za pomocą samych W-typów. Dzięki temu możemy badanie
+    parametryzowanych typów induktywnych, których jest mniej więcej
+    nieskończoność i jeszcze trochę, sprowadzić do badania jednego tylko [W]
+    (o ile godzimy się na aksjomat ekstensjonalności dla funkcji).
+
+    Zanim jednak zobaczymy przykłady ich wykorzystania, zastanówmy się przez
+    kilka chwil, dlaczego są one tak ogólne.
+
+    Sprawa jest dość prosta. Rozważmy typ induktywny [T] i dowolny z jego
+    konstruktorów [c : X1 -> ... -> Xn -> T]. Argumenty [Xi] możemy podzielić
+    na dwie grupy: argumenty nieindukcyjne (oznaczmy je litera [A]) oraz
+    indukcyjne (które są postaci [T]). Wobec tego typ [c] możemy zapisać jako
+    [c : A1 -> ... -> Ak -> T -> ... -> T -> T].
+
+    W kolejnym kroku łączymy argumenty za pomocą produktu: niech [A] będzie
+    równe [A1 * ... * Ak]. Wtedy typ [c] wygląda tak:
+    [c : A -> T * ... * T -> T]. Zauważmy, że [T * ... * T] możemy zapisać
+    równoważnie jako [B -> T], gdzie [B] to typ mający tyle elementów, ile
+    razy [T] występuje w produkcie [T * ... * T]. Zatem typ [c] przedstawia
+    się tak: [c : A -> (B -> T) -> T].
+
+    Teraz poczynimy kilka uogólnień. Po pierwsze, na początku założyliśmy,
+    że [c] ma skończenie wiele argumentów indukcyjnych, ale postać [B -> T]
+    uwzględnia także przypadek, gdy jest ich nieskończenie wiele (tzn. gdy
+    [c] miał oryginalnie jakiś argument postaci [Y -> T] dla nieskończonego
+    [Y]).
+
+    Po drugie, założyliśmy, że [c] jest funkcją niezależną. Przypadek, gdy
+    [c] jest funkcją zależną możemy pokryć, pozwalając naszemu [B] zależeć
+    od [A], tzn. [B : A -> Type]. Typ konstruktora [c] zyskuje wtedy postać
+    sumy zależnej [{x : A & B x -> T} -> T]. W ostatnim kroku odpakowujemy
+    sumę i [c] zyskuje postać [c : forall x : A, B x -> T].
+
+    Jak więc widać, typ każdego konstruktora można przekształcić tak, żeby
+    móc zapisać go jako [forall x : A, B x -> T]. Zauważmy też, że jeżeli
+    mamy dwa konstruktory [c1 : forall x : A1, B1 x -> T] oraz
+    [c2 : forall x : A2, B2 x -> T], to możemy równie dobrze zapisać je
+    za pomocą jednego konstruktora [c]: niech [A := A1 + A2] i niech
+    [B (inl a1) := B1 a1, B (inl a2) := B2 a2]. Wtedy konstruktory [c1] i
+    [c2] są równoważne konstruktorowi [c].
+
+    Stosując powyższe przekształcenia możemy sprowadzić każdy typ induktywny
+    do równoważnej postaci z jednym konstruktorem o typie
+    [forall x : A, B x -> T]. Skoro tak, to definiujemy nowy typ, w którym
+    [A] i [B] są parametrami... i tak powstało [W]!
 
     Poniżej znajduje się tymczasowa demonstracja tego, jak za pomocą [W] i
     typu pustego [Empty_set] zrobić typy [bool] i [nat]. *)
@@ -2933,15 +2994,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Require Import FunctionalExtensionality.
+
 Lemma bool_boolW__bool_boolW :
   forall b : boolW,
     bool_boolW (boolW_bool b) = b.
 (* begin hide *)
 Proof.
   unfold bool_boolW, boolW_bool. destruct b, x; cbn.
-    unfold trueW. f_equal. admit.
-    unfold falseW. f_equal. admit.
-Admitted.
+    unfold trueW. f_equal. extensionality e. destruct e.
+    unfold falseW. f_equal. extensionality e. destruct e.
+Qed.
 (* end hide *)
 
 Definition natW : Type :=
@@ -7183,12 +7246,12 @@ end.
     więc wyjaśnię jeszcze raz.
 
     Impredykatywność (lub też impredykatywizm) to pewna forma autoreferencji,
-    która czasem jest nieszkodliwa, a czasem wręcz zabójcza. Przyjrzyjmy się
-    następującej definicji: "wujek Janusz to najbardziej wąsata osoba w tym
-    pokoju". Definicja ta jest impredykatywna, gdyż definiuje ona wujka
+    która czasem jest nieszkodliwa, a czasem bardzo mordercza. Przyjrzyjmy
+    się następującej definicji: "wujek Janusz to najbardziej wąsata osoba w
+    tym pokoju". Definicja ta jest impredykatywna, gdyż definiuje ona wujka
     Janusza poprzez wyróżnienie go z pewnej kolekcji osób, ale definicja tej
     kolekcji osób musi odwoływać się do wujka Janusza ("w pokoju są wujek
-    Janusz, ciocia Grażynak, Sebastianek i Karynka"). W Coqu impredykatywny
+    Janusz, ciocia Grażynka, Sebastianek i Karynka"). W Coqu impredykatywny
     jest sort [Prop], co ilustruje przykład: *)
 
 Definition X : Prop := forall P : Prop, P.
@@ -7198,7 +7261,7 @@ Definition X : Prop := forall P : Prop, P.
     po zdaniu [X], które właśnie definiujemy.
 
     Impredykatywność sortu [Prop] jest niegroźna (no chyba, że pragniemy
-    pozytywnych typów induktywnych, to wtedy nie), ale impredykatywność
+    pozytywnych typów induktywnych, to wtedy jest), ale impredykatywność
     dla [Type] byłaby zabójcza, co zresztą powinien nam był uświadomić
     paradoks Russella.
 
@@ -7231,7 +7294,7 @@ Proof.
   intros f. exact f.
 Defined.
 
-(** Zaczniemy od zdefiniowania funkcji odwijającej konstruktor. *)
+(** Zaczynamy od zdefiniowania funkcji odwijającej konstruktor. *)
 
 Lemma Pos'0_inj :
   forall x y : (Pos' -> Prop) -> Prop,
@@ -7312,9 +7375,9 @@ Proof.
   pose paradox. firstorder.
 Qed.
 
-(** No i bum. Jak widać, pozytywne typy induktywne są nielegalne, ale nie
-    ma to z nimi wiele wspólnego, za to ma wiele wspólnego z sortem [Prop]
-    i jego impredykatywnością. *)
+(** No i bum. Jak widać, pozytywne typy induktywne prowadzą do sprzeczności,
+    ale nie ma to z nimi wiele wspólnego, za to ma wiele wspólnego z sortem
+    [Prop] i jego impredykatywnością. *)
 
 (** * Podsumowanie (TODO) *)
 
