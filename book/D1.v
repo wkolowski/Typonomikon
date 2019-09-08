@@ -2918,12 +2918,12 @@ Arguments sup {A B} _ _.
 
     Sprawa jest dość prosta. Rozważmy typ induktywny [T] i dowolny z jego
     konstruktorów [c : X1 -> ... -> Xn -> T]. Argumenty [Xi] możemy podzielić
-    na dwie grupy: argumenty nieindukcyjne (oznaczmy je litera [A]) oraz
+    na dwie grupy: argumenty nieindukcyjne (oznaczmy je literą [A]) oraz
     indukcyjne (które są postaci [T]). Wobec tego typ [c] możemy zapisać jako
     [c : A1 -> ... -> Ak -> T -> ... -> T -> T].
 
-    W kolejnym kroku łączymy argumenty za pomocą produktu: niech [A] będzie
-    równe [A1 * ... * Ak]. Wtedy typ [c] wygląda tak:
+    W kolejnym kroku łączymy argumenty za pomocą produktu:
+    niech [A := A1 * ... * Ak]. Wtedy typ [c] wygląda tak:
     [c : A -> T * ... * T -> T]. Zauważmy, że [T * ... * T] możemy zapisać
     równoważnie jako [B -> T], gdzie [B] to typ mający tyle elementów, ile
     razy [T] występuje w produkcie [T * ... * T]. Zatem typ [c] przedstawia
@@ -2952,10 +2952,180 @@ Arguments sup {A B} _ _.
     Stosując powyższe przekształcenia możemy sprowadzić każdy typ induktywny
     do równoważnej postaci z jednym konstruktorem o typie
     [forall x : A, B x -> T]. Skoro tak, to definiujemy nowy typ, w którym
-    [A] i [B] są parametrami... i tak powstało [W]!
+    [A] i [B] są parametrami... i bum, tak właśnie powstało [W]!
 
-    Poniżej znajduje się tymczasowa demonstracja tego, jak za pomocą [W] i
-    typu pustego [Empty_set] zrobić typy [bool] i [nat]. *)
+    Podejrzewam, że powyższy opis przyprawia cię o niemały ból głowy. Rzućmy
+    więc okiem na przykład, który powinien być wystarczająco ogólny, żeby
+    wszystko stało się jasne. *)
+
+Print list.
+(* ===> Inductive list (X : Type) : Type :=
+            | nil : list X
+            | cons : X -> list X -> list X *)
+
+(** Spróbujmy zastosować powyższe przekształcenia na typie [list X], żeby
+    otrzymać reprezentację [list] za pomocą [W].
+
+    Zajmijmy się najpierw konstruktorem [nil]. Nie ma on ani argumentów
+    indukcyjnych, ani nieindukcyjnych, co zdaje się nie pasować do naszej
+    ogólnej metody. Jest to jednak jedynie złudzenie: brak argumentów
+    nieindukcyjnych możemy zareprezentować za pomocą argumenu o typie
+    [unit], zaś brak argumentów indukcyjnych możemy zareprezentować
+    argumentem o typie [False -> list X]. Wobec tego typ konstruktora
+    [nil] możemy zapisać jako [unit -> (False -> list X) -> list X].
+
+    Dla [cons]a jest już prościej: argument nieindukcyjny to po prostu [X],
+    zaś jeden argument indukcyjny możemy przedstawić jako [unit -> list X].
+    Nowy typ [cons]a możemy zapisać jako [X -> (unit -> list X) -> list X].
+
+    Pozostaje nam skleić obydwa konstruktory w jeden. Niech [A := unit + X]
+    i niech [B (inl tt) := False, B (inr x) := unit]. W ten sposób dostajemy
+    poniższe kodowanie [list] za pomocą [W] (oczywiście nie jest to jedyne
+    możliwe kodowanie - równie dobrze zamiast [unit + X] moglibyśmy użyć
+    typu [option X]). *)
+
+Module listW.
+
+Definition listW (X : Type) : Type :=
+  W (unit + X) (
+    fun ux : unit + X =>
+    match ux with
+        | inl _ => False
+        | inr _ => unit
+    end).
+
+(** Wartą zauważenia różnicą konceptualną jest to, że jeżeli myślimy
+    Coqowymi typami induktywnymi, to [list] ma dwa konstruktory - [nil]
+    i [cons], ale gdy myślimy za pomocą [W], to sprawa ma się inaczej.
+    Formalnie [listW] ma jeden konstruktor [sup], ale w praktyce jest
+    aż [1 + |X|] konstruktorów, gdzie [|X|] oznacza liczbę elementów
+    typu [X]. Jeden z nich opdowiada [nil], a każdy z pozostałych [|X|]
+    konstruktorów odpowiada [cons x] dla pewnego [x : X]. Jedyną
+    pozostałością po oryginalnej liczbie konstruktorów jest liczba
+    składników, które pojawiają się w sumie [unit + X].
+
+    Oczywiście posługiwanie się [nil] i [cons] jest dużo wygodniejsze niż
+    używanie [sup], więc czas odzyskać utracone konstruktory! *)
+
+Definition nilW (X : Type) : listW X :=
+  sup (inl tt) (fun e : False => match e with end).
+
+Definition consW {X : Type} (h : X) (t : listW X) : listW X :=
+  sup (inr h) (fun _ : unit => t).
+
+(** Zauważ, że [consW] jest jedynie jednym z wielu możliwych kodowań
+    konstruktora [cons]. Inaczej możemy go zakodować np. tak: *)
+
+Definition consW' {X : Type} (h : X) (t : listW X) : listW X :=
+  sup (inr h) (fun u : unit => match u with | tt => t end).
+
+(** Kodowania te nie są konwertowalne, ale jeżeli użyjemy aksjomatu
+    ekstensjonalności dla funkcji, to możemy pokazać, że są równe. *)
+
+Fail Check eq_refl : consW = consW'.
+(* ===> The command has indeed failed with message:
+        The term "eq_refl" has type "consW = consW"
+        while it is expected to have type "consW = consW'". *)
+
+Require Import FunctionalExtensionality.
+
+Lemma consW_consW' :
+  forall {X : Type} (h : X) (t : listW X),
+    consW h t = consW' h t.
+Proof.
+  intros. unfold consW, consW'. f_equal.
+  extensionality u. destruct u.
+  reflexivity.
+Qed.
+
+(** Podobnym mykiem musim posłużyć się, gdy chcemy udowodnić regułę indukcji.
+    Dowód zaczynamy od indukcji po [l] (musimy pamiętać, że nasze [W] jest
+    typem induktywnym, więc ma regułę indukcji), ale nie możemy bezpośrednio
+    użyć hipotez [PnilW] ani [PconsW], gdyż dotyczą one innych kodowań [nil]
+    i [cons] niż te, które pojawiają się w celu. Żeby uporać się z problemem,
+    używamy taktyki [replace], a następnie dowodzimy, że obydwa kodowania są
+    ekstensjoalnie równe. *)
+
+Lemma listW_ind :
+  forall
+    (X : Type) (P : listW X -> Type)
+    (PnilW : P (nilW X))
+    (PconsW : forall (h : X) (t : listW X), P t -> P (consW h t)),
+      forall l : listW X, P l.
+Proof.
+  induction l as [[[] | x] b IH].
+    replace (P (sup (inl tt) b)) with (P (nilW X)).
+      assumption.
+      unfold nilW. do 2 f_equal. extensionality e. destruct e.
+    replace _ with (P (consW x (b tt))).
+      apply PconsW. apply IH.
+      unfold consW. do 2 f_equal.
+        extensionality u. destruct u. reflexivity.
+Defined.
+
+Lemma listW_ind' :
+  forall
+    (X : Type) (P : listW X -> Type)
+    (PnilW : P (nilW X))
+    (PconsW : forall (h : X) (t : listW X), P t -> P (consW h t)),
+      {f : forall l : listW X, P l |
+        f (nilW X) = PnilW /\
+        forall (h : X) (t : listW X), f (consW h t) = PconsW h t (f t)}.
+Proof.
+  esplit. Unshelve. Focus 2.
+    induction l as [[[] | x] b IH].
+      replace (P (sup (inl tt) b)) with (P (nilW X)).
+        assumption.
+        unfold nilW. do 2 f_equal. extensionality e. destruct e.
+      replace _ with (P (consW x (b tt))).
+        apply PconsW. apply IH.
+        unfold consW. do 2 f_equal.
+          extensionality u. destruct u. reflexivity.
+    cbn. split.
+      compute.
+Admitted.
+
+(** Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
+    że typy [list X] oraz [listW X] są izomorficzne, tzn. istnieją funkcje
+    [f : list X -> listW X] oraz [g : listW X -> list X], które są swoimi
+    odwrotnościami. *)
+
+Fixpoint f {X : Type} (l : list X) : listW X :=
+match l with
+    | nil => nilW X
+    | cons h t => consW h (f t)
+end.
+
+Definition g {X : Type} : listW X -> list X.
+Proof.
+  apply listW_ind'.
+    exact nil.
+    intros h _ t. exact (cons h t).
+Defined.
+
+Lemma fg :
+  forall {X : Type} (l : list X),
+    g (f l) = l.
+Proof.
+  induction l as [| h t].
+    unfold g in *. destruct (listW_ind' _) as (g & eq1 & eq2).
+      cbn. apply eq1.
+    unfold g in *; destruct (listW_ind' _) as (g & eq1 & eq2).
+      cbn. rewrite eq2, IHt. reflexivity.
+Qed.
+
+Lemma gf :
+  forall {X : Type} (l : listW X),
+    f (g l) = l.
+Proof.
+  intro.
+  apply listW_ind';
+  unfold g; destruct (listW_ind' _) as (g & eq1 & eq2).
+    rewrite eq1. cbn. reflexivity.
+    intros. rewrite eq2. cbn. rewrite H. reflexivity.
+Qed.
+
+(* begin hide *)
 
 Definition boolW : Type :=
   W bool (fun _ => Empty_set).
@@ -2993,8 +3163,6 @@ Proof.
   destruct b; reflexivity.
 Qed.
 (* end hide *)
-
-Require Import FunctionalExtensionality.
 
 Lemma bool_boolW__bool_boolW :
   forall b : boolW,
@@ -3069,6 +3237,10 @@ Proof.
     unfold zeroW. f_equal. admit.
     rewrite H. unfold succW. f_equal. admit.
 Admitted.
+(* end hide *)
+
+End listW.
+
 (* end hide *)
 
 (** * Wyższe czary *)
