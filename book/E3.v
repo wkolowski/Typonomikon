@@ -1,4 +1,4 @@
-(** * E3: Typy i relacje *)
+(** * E3: Relacje *)
 
 (* begin hide *)
 

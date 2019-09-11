@@ -1,4 +1,4 @@
-(** * E2: Typy i funkcje *)
+(** * E2: Funkcje *)
 
 Require Import Arith.
 

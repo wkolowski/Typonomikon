@@ -1,9 +1,9 @@
-(** * E1: Rekordy i klasy - TODO *)
+(** * E1: Rekordy, klasy i moduły - TODO *)
 
 (** UWAGA: ten rozdział został naprędce posklejany z fragmentów innych,
     więc może nie mieć większego sensu. *)
 
-(** * Rekordy *)
+(** * Rekordy (TODO) *)
 
 (** W wielu językach programowania występują typy rekordów (ang. record
     types). Charakteryzują się one tym, że mają z góry określoną ilość
@@ -69,7 +69,7 @@ End rational2.
 (* TODO : zrób to ćwiczenie *)
 (* end hide *)
 
-(** * Klasy *)
+(** * Klasy (TODO) *)
 
 (** Mechanizmem ułatwiającym życie jeszcze bardziej niż rekordy są klasy.
     Niech nie zmyli cię ta nazwa — nie mają one nic wspólnego z klasami
@@ -364,3 +364,5 @@ Proof.
 Qed.
 
 (* end hide *)
+
+(** * Moduły (TODO) *)
