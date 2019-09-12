@@ -516,28 +516,23 @@ Fail Fixpoint div (n m : nat) : nat :=
     (no chyba, że [A = unit] - wtedy dostaniemy taki sam bury szlaczek
     jak dla [nat]).
 
-    Powyższe malownicze opisy przewracających się kostek domino bardziej
-    przywodzą mi na myśl indukcję, niż rekursję, chociaż wiemy już, że
-    jest to w sumie to samo. Przyjmują one perspektywę "od przodu" -
-    jeżeli przewrócimy początkową kostkę i niczego nie spartaczyliśmy,
-    kolejne kostki będą przewracać się już same.
+    Powyższe malownicze opisy przewracających się kostek domina bardziej
+    przywodzą na myśl indukcję, niż rekursję, chociaż wiemy już, że jest
+    to w sumie to samo. Przyjmują one perspektywę "od przodu" - jeżeli
+    przewrócimy początkową kostkę i niczego nie spartaczyliśmy, kolejne
+    kostki będą przewracać się już same.
 
-    Możemy jednak przyjąć inny sposób patrzenia - perspektywę "od tyłu".
-    W tej perspektywie kostka początkowa przewraca się, jeżeli zostanie
-    pchnięta palcem, zaś każda dalsza kostka przewraca się, jeżeli
-    przewracają się wszystkie kostki bezpośrednio ją poprzedzające.
+    Co to znaczy, że niczego nie spartaczyliśmy, pytasz? Tutaj przydaje
+    się spojrzenie na nasze domino "od tyłu". Żeby kostka domina się
+    przewróciła, muszą przewrócić się na nią wszystkie bezpośrednio
+    poprzedzające ją kostki, a żeby one się przewróciły, to przewrócić
+    muszą się wszystkie poprzedzające je kostki i tak dalej. W związku
+    z tym możemy powiedzieć, że kostka jest dostępna, jeżeli dostępne
+    są wszystkie kostki ją poprzedzające.
 
-    Jeszcze jeden drobny detal: żeby w ogóle móc pchnąć kostki początkowe
-    (w liczbie mnogiej, bo rzecz jasna może być więcej niż jedna), musimy
-    najpierw ustalić, które kostki są tymi początkowymi! Na szczęście nie
-    jest to trudne - są to oczywiście te, których nie poprzedzają inne
-    kostki.
-
-    I tutaj następuje pewien trik logiczno-językowo-wyobraźniowy: możemy
-    o kostkach początkowych myśleć, że przewracają się, gdy przewrócą się
-    wszystkie kostki je poprzedzające, których oczywiście nie ma, a nasz
-    palec wyobrażać sobie po prostu jako fizyczną realizację tej pustej
-    prawdy.
+    Jeszcze jeden drobny detal: kiedy dostępne są kostki, które nie mają
+    żadnych poprzedzających kostek? Odpowiedź: zawsze, a dowodem na to
+    jest nasz palec, który je przewraca.
 
     W ten oto wesoły sposób udało nam się uzyskać definicję elementu
     dostępnego oraz relacji dobrze ufundowanej. *)
@@ -547,30 +542,29 @@ Inductive Acc {A : Type} (R : A -> A -> Type) (x : A) : Prop :=
 
 (** Kostki domina reprezentuje typ [A], zaś relacja [R] to sposób ułożenia
     kostek, a [x] to pewna konkretna kostka domina. Konstruktor [Acc_intro]
-    mówi, że kostka [x] przewraca się, gdy przewracają się wszystkie kostki
-    ją poprzedzające.
+    mówi, że kostka [x] jest dostępna w układzie domina [R], jezeli każda
+    kostka [y], która poprzedza ją w układzie [R], również jest dostępna.
 
-    To samo nieco mniej bajkowym językiem: element [x] typu [A] jest dostępny
-    w relacji [R], jeżeli każdy poprzedzający go element [y] typu [A] również
-    jest dostępny. *)
+    Mniej poetycko: element [x : A] jest [R]-dostępny, jeżeli każdy
+    [R]-mniejszy od niego element [y : A] również jest [R]-dostępny. *)
 
 Definition well_founded {A : Type} (R : A -> A -> Type) : Prop :=
   forall x : A, Acc R x.
 
-(** Układ kostek reprezentowany przez [R] przewraca się w całości, jeżeli
-    każda kostka domina przewraca się z osobna.
+(** Układ kostek reprezentowany przez [R] jest niespartaczony, jeżeli każda
+    kostka domina jest dostępna.
 
-    Mniej poetycko: relacja jest dobrze ufundowana, jeżeli każdy element
-    typu [A] jest dostępny.
+    Mniej poetycko: relacja [R] jest dobrze ufundowana, jeżeli każde [x : A]
+    jest [R]-dostępne.
 
-    Uwaga: typem naszej "relacji" nie jest [A -> A -> Prop], lecz
+    Uwaga: typem naszego układu kostek nie jest [A -> A -> Prop], lecz
     [A -> A -> Type], a zatem [R] jest tak naprawdę indeksowaną rodziną
-    typów. Różnica między relacją i rodziną typów jest taka, że relacja,
-    gdy dostanie argumenty, zwraca zdanie, czyli coś typu [Prop], a rodzina
-    typów, gdy dostanie argumenty, zwraca typ, czyli coś typu [Type]. Tak
-    więc pojęcie rodziny typów jest ogólniejsze niż pojęcie relacji. Ta
-    ogólność przyda się nam za kilka chwil aby nie musieć pisać wszystkiego
-    dwa razy. *)
+    typów, a nie relacją. Różnica między relacją i rodziną typów jest
+    taka, że relacja, gdy dostanie argumenty, zwraca zdanie, czyli coś
+    typu [Prop], a rodzina typów, gdy dostanie argumenty, zwraca typ,
+    czyli coś typu [Type]. Tak więc pojęcie rodziny typów jest ogólniejsze
+    niż pojęcie relacji. Ta ogólność przyda się nam za kilka chwil aby nie
+    musieć pisać wszystkiego dwa razy. *)
 
 (** **** Ćwiczenie (dostępność i ufundowanie) *)
 
@@ -734,12 +728,10 @@ Qed.
     zaś dwie liczby o tej samej parzystości porównujemy według zwykłego
     porządku [<]. *)
 
-(** Wiemy już, co to znaczy, że kostka domina jest dostępna (każda kostka
-    ją poprzedzająca jest dostępna, co formalnie wyraża predykat [Acc])
-    oraz że poprawny układ kostek to taki, w którym każda kostka jest
-    dostępna (co formalnie wyraża predykat [well_founded]). Możemy teraz
-    przejść do tego, do czego dążyliśmy od samego początku: udowodnić, że
-    jeżeli poprawnie ustawimy kostki, to wszystkie się przewrócą. *)
+(** Nasza bajka powoli zbliża się do końca. Czas udowodnić ostateczne
+    twierdzenie, do którego dążyliśmy: jeżeli układ kostek [R] jest
+    niespartaczony (czyli gdy każda kostka jest dostępna), to każda
+    kostka się przewraca. *)
 
 Theorem well_founded_rect :
   forall
@@ -749,11 +741,20 @@ Theorem well_founded_rect :
         forall x : A, P x.
 Proof.
   intros A R wf P IH x.
-  Check Acc_rect.
   apply Acc_rect with R.
-    intros y H1 H2. apply IH. assumption.
+    intros y _ H. apply IH. exact H.
     apply wf.
 Defined.
+
+(** Podobnie jak poprzednio, [A] to typ kostek domina, [R] to układ kostek,
+    zaś [wf : well_founded R] to dowód na to, że układ jest niespartaczony.
+    [P : A -> Type] to dowolna rodzina typów indeksowana przez [A], ale
+    możemy myśleć, że [P x] znaczy "kostka x się przewraca". Mamy jeszcze
+    hipotezę, która głosi, że kostka [x] przewraca się, gdy przewraca się
+    każda kostka, która poprzedza ją w układzie [R].
+
+    Dowód jest banalny. Zaczynamy od wprowadzenia zmiennych do kontekstu.
+*)
 
 Theorem well_founded_ind :
   forall
