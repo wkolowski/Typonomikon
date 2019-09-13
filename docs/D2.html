@@ -573,7 +573,7 @@ Tym razem Coq widzi, że <span class="inlinecode"><span class="id" title="var">S
 </div>
 
 <div class="doc">
-<a name="lab197"></a><h1 class="section">Rekursja dobrze ufundowana (TODO)</h1>
+<a name="lab197"></a><h1 class="section">Rekursja dobrze ufundowana</h1>
 
 <div class="paragraph"> </div>
 
@@ -757,10 +757,10 @@ Sprawdź, czy dobrze ufundowana jest następująca relacja porządku:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span> <span class="id" title="keyword">wf</span> <span class="id" title="var">P</span> <span class="id" title="var">IH</span> <span class="id" title="var">x</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Acc_rect</span> <span class="id" title="keyword">with</span> <span class="id" title="var">R</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">y</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="keyword">wf</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span> <span class="id" title="keyword">wf</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">well_founded</span> <span class="id" title="tactic">in</span> <span class="id" title="keyword">wf</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="keyword">wf</span> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="keyword">wf</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">x</span> <span class="id" title="var">_</span> <span class="id" title="var">IH</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">IH</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
@@ -776,8 +776,27 @@ Podobnie jak poprzednio, <span class="inlinecode"><span class="id" title="var">A
 
 <div class="paragraph"> </div>
 
-    Dowód jest banalny. Zaczynamy od wprowadzenia zmiennych do kontekstu.
+    Dowód jest banalny. Zaczynamy od wprowadzenia zmiennych i hipotez do
+    kontekstu. Następnie odwijamy definicję <span class="inlinecode"><span class="id" title="var">well_founded</span></span>. Teraz hipoteza
+    <span class="inlinecode"><span class="id" title="keyword">wf</span></span> głosi, że każde <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest dostępne. Skoro tak, to specjalizujemy
+    ją dla naszego konkretnego <span class="inlinecode"><span class="id" title="var">x</span></span>, które mamy w kontekście.
 
+<div class="paragraph"> </div>
+
+    Wiemy już zatem, że <span class="inlinecode"><span class="id" title="var">x</span></span> jest dostępne. Jest to kluczowy fakt, gdyż
+    oznacza to, że wszystkie kostki domina poprzedzające <span class="inlinecode"><span class="id" title="var">x</span></span> również są
+    dostępne. Co więcej, <span class="inlinecode"><span class="id" title="var">Acc</span></span> jest zdefiniowane induktywnie, więc możemy
+    pokazać, że <span class="inlinecode"><span class="id" title="var">x</span></span> się przewraca, właśnie przez indukcję po dowodzie
+    dostępności <span class="inlinecode"><span class="id" title="var">x</span></span>.
+
+<div class="paragraph"> </div>
+
+    Przypadek jest jeden (co nie znaczy, że nie ma przypadków bazowych -
+    są nimi kostki domina, których nic nie poprzedza): musimy pokazać, że
+    <span class="inlinecode"><span class="id" title="var">x</span></span> się przewraca przy założeniu, że wszystkie poprzedzające je kostki
+    również się przewracają. To, że <span class="inlinecode"><span class="id" title="var">x</span></span> się przewraca, wynika z hipotezy
+    <span class="inlinecode"><span class="id" title="var">H</span></span>. Pozostaje nam jedynie pokazać, że przewraca się wszystko, co jest
+    przed nim, ale to jest faktem na mocy hipotezy indukcyjnej <span class="inlinecode"><span class="id" title="var">IH</span></span>. 
 </div>
 <div class="code">
 
@@ -792,6 +811,32 @@ Podobnie jak poprzednio, <span class="inlinecode"><span class="id" title="var">A
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span> <span class="id" title="keyword">wf</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span> <span class="id" title="var">x</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_rect</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="keyword">wf</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span>).<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Poprzednie twierdzenie, czyli <span class="inlinecode"><span class="id" title="var">well_founded_rect</span></span>, to twierdzenie o
+    rekursji dobrze ufundowanej. Powyższe, czyli <span class="inlinecode"><span class="id" title="var">well_founded_ind</span></span>,
+    które jest jego specjalizacją dla relacji binarnych (czyli bytów o
+    typie <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>), możemy nazwać twierdzeniem o indukcji dobrze
+    ufundowanej.
+
+<div class="paragraph"> </div>
+
+    Upewnij się, że dobrze rozumiesz oba twierdzenia, a także pojęcia
+    dostępności i dobrego ufundowania, gdyż są one bardzo ważne przy
+    rozwiązywaniu poważniejszych problemów.
+
+<div class="paragraph"> </div>
+
+    Co to są "poważniejsze problemy"? Mam oczywiście na myśli dowodzenie
+    twierdzeń i definiowanie funkcji, którego nie da się zrobić za pomocą
+    prostej indukcji albo banalnego dopasowania do wzorca. W tego typu
+    sytuacjach nieodzowne będzie skorzystanie z indukcji i rekursji
+    dobrze ufundowanej, o czym przekonamy się już niedługo. 
+</div>
+<div class="code">
 
 <br/>
 

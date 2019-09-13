@@ -491,7 +491,7 @@ Fail Fixpoint div (n m : nat) : nat :=
   else div (n - m) m.
 (* end hide *)
 
-(** * Rekursja dobrze ufundowana (TODO) *)
+(** * Rekursja dobrze ufundowana *)
 
 (** Typy induktywne są jak domino - każdy term to jedna kostka, indukcja
     i rekursja odpowiadają zaś temu co tygryski lubią najbardziej, czyli
@@ -537,7 +537,7 @@ Fail Fixpoint div (n m : nat) : nat :=
     W ten oto wesoły sposób udało nam się uzyskać definicję elementu
     dostępnego oraz relacji dobrze ufundowanej. *)
 
-Inductive Acc {A : Type} (R : A -> A -> Type) (x : A) : Prop :=
+Inductive Acc {A : Type} (R : A -> A -> Prop) (x : A) : Prop :=
     | Acc_intro : (forall y : A, R y x -> Acc R y) -> Acc R x.
 
 (** Kostki domina reprezentuje typ [A], zaś relacja [R] to sposób ułożenia
@@ -548,7 +548,7 @@ Inductive Acc {A : Type} (R : A -> A -> Type) (x : A) : Prop :=
     Mniej poetycko: element [x : A] jest [R]-dostępny, jeżeli każdy
     [R]-mniejszy od niego element [y : A] również jest [R]-dostępny. *)
 
-Definition well_founded {A : Type} (R : A -> A -> Type) : Prop :=
+Definition well_founded {A : Type} (R : A -> A -> Prop) : Prop :=
   forall x : A, Acc R x.
 
 (** Układ kostek reprezentowany przez [R] jest niespartaczony, jeżeli każda
@@ -586,10 +586,13 @@ Qed.
 Lemma wf_lt : well_founded lt.
 Proof.
   unfold well_founded.
-  induction x as [| n']; constructor; inversion 1; subst.
-    assumption.
-    inversion IHn'. apply H0. assumption.
-Qed.
+  induction x as [| n'].
+    constructor; inversion 1; subst.
+    constructor; inversion 1; subst.
+      assumption.
+      destruct IHn'. apply H0. assumption.
+Defined.
+
 (* end hide *)
 
 (** Pokaż, że relacja dobrze ufundowana jest antyzwrotna oraz zinterpretuj
@@ -735,15 +738,15 @@ Qed.
 
 Theorem well_founded_rect :
   forall
-    (A : Type) (R : A -> A -> Type)
+    (A : Type) (R : A -> A -> Prop)
     (wf : well_founded R) (P : A -> Type),
       (forall x : A, (forall y : A, R y x -> P y) -> P x) ->
         forall x : A, P x.
 Proof.
-  intros A R wf P IH x.
-  apply Acc_rect with R.
-    intros y _ H. apply IH. exact H.
-    apply wf.
+  intros A R wf P H x.
+  unfold well_founded in wf. specialize (wf x).
+  induction wf as [x _ IH].
+  apply H. exact IH.
 Defined.
 
 (** Podobnie jak poprzednio, [A] to typ kostek domina, [R] to układ kostek,
@@ -753,8 +756,23 @@ Defined.
     hipotezę, która głosi, że kostka [x] przewraca się, gdy przewraca się
     każda kostka, która poprzedza ją w układzie [R].
 
-    Dowód jest banalny. Zaczynamy od wprowadzenia zmiennych do kontekstu.
-*)
+    Dowód jest banalny. Zaczynamy od wprowadzenia zmiennych i hipotez do
+    kontekstu. Następnie odwijamy definicję [well_founded]. Teraz hipoteza
+    [wf] głosi, że każde [x : A] jest dostępne. Skoro tak, to specjalizujemy
+    ją dla naszego konkretnego [x], które mamy w kontekście.
+
+    Wiemy już zatem, że [x] jest dostępne. Jest to kluczowy fakt, gdyż
+    oznacza to, że wszystkie kostki domina poprzedzające [x] również są
+    dostępne. Co więcej, [Acc] jest zdefiniowane induktywnie, więc możemy
+    pokazać, że [x] się przewraca, właśnie przez indukcję po dowodzie
+    dostępności [x].
+
+    Przypadek jest jeden (co nie znaczy, że nie ma przypadków bazowych -
+    są nimi kostki domina, których nic nie poprzedza): musimy pokazać, że
+    [x] się przewraca przy założeniu, że wszystkie poprzedzające je kostki
+    również się przewracają. To, że [x] się przewraca, wynika z hipotezy
+    [H]. Pozostaje nam jedynie pokazać, że przewraca się wszystko, co jest
+    przed nim, ale to jest faktem na mocy hipotezy indukcyjnej [IH]. *)
 
 Theorem well_founded_ind :
   forall
@@ -767,54 +785,95 @@ Proof.
   apply (well_founded_rect _ _ wf _ H).
 Qed.
 
+(** Poprzednie twierdzenie, czyli [well_founded_rect], to twierdzenie o
+    rekursji dobrze ufundowanej. Powyższe, czyli [well_founded_ind],
+    które jest jego specjalizacją dla relacji binarnych (czyli bytów o
+    typie [A -> A -> Prop]), możemy nazwać twierdzeniem o indukcji dobrze
+    ufundowanej.
+
+    Upewnij się, że dobrze rozumiesz oba twierdzenia, a także pojęcia
+    dostępności i dobrego ufundowania, gdyż są one bardzo ważne przy
+    rozwiązywaniu poważniejszych problemów.
+
+    Co to są "poważniejsze problemy"? Mam oczywiście na myśli dowodzenie
+    twierdzeń i definiowanie funkcji, którego nie da się zrobić za pomocą
+    prostej indukcji albo banalnego dopasowania do wzorca. W tego typu
+    sytuacjach nieodzowne będzie skorzystanie z indukcji i rekursji
+    dobrze ufundowanej, o czym przekonamy się już niedługo. *)
+
 (* begin hide *)
 
+Require Import Omega.
 Require Import Arith.
+
+Lemma wf_lt2 : well_founded lt.
+Proof.
+  unfold well_founded.
+  induction x as [| n'].
+    constructor; inversion 1; subst.
+    constructor; inversion 1; subst.
+      assumption.
+      destruct IHn'. apply H0. assumption.
+Defined.
 
 Definition div : nat -> nat -> nat.
 Proof.
-  intros n k. revert n.
-  apply (well_founded_rect nat lt wf_lt (fun _ => nat)).
+  apply (well_founded_rect nat lt wf_lt2 (fun _ => nat -> nat)).
+  intros n IH m.
+  destruct (le_lt_dec (S m) n).
+    Focus 2. exact 0.
+    apply S. refine (IH (n - S m) _ m). apply Nat.sub_lt.
+      assumption.
+      apply le_n_S, le_0_n.
+Restart.
+  intros n m. revert n.
+  apply (well_founded_rect nat lt wf_lt2 (fun _ => nat)).
   intros n IH.
-  case_eq (leb (S n) (S k)); intro.
-    exact 0.
-    refine (S (IH (n - S k) _)).
-      clear IH. revert k H. induction n as [| n']; cbn; intros.
-        inversion H.
-        destruct k as [| k'].
-          rewrite Nat.sub_0_r. apply le_n.
-          unfold lt. apply le_trans with n'.
-            apply IHn'. cbn. assumption.
-            apply le_S, le_n.
-
-(* apply Nat.sub_lt.
-      apply leb_complete_conv, lt_S_n in H. exact H.
-      apply le_n_S, le_0_n. Show Proof.
-*)
- (*
-      unfold lt. clear IH. revert k n0.
-      induction n as [| n']; cbn; intros.
-        contradiction n0. apply le_n_S, le_0_n.
-        apply le_n_S. apply IHn'.*)
+  destruct (le_lt_dec (S m) n).
+    Focus 2. exact 0.
+    apply S. refine (IH (n - S m) _). apply Nat.sub_lt.
+      assumption.
+      apply le_n_S, le_0_n.
 Defined.
 
 Print div.
+Compute div 5 2.
 
-Compute div 2 1.
+Print Nat.sub_lt.
+Print le_n_S.
+Print le_0_n.
+Print Nat.le_0_l.
 
-Require Import Recdef.
+Print well_founded_induction_type.
+Print well_founded_rect.
 
-Function div (n m : nat) {measure id n} : nat :=
-  if n <? S m
-  then n
-  else S (div (n - m) m).
+Print Wf.well_founded.
+Print well_founded.
+
+Print Wf.Acc.
+Print Acc.
+
+Print lt_wf. Print well_founded_ltof. Print ltof.
+Print wf_lt.
+
+Print Nat.nlt_0_r.
+
+Print well_founded_ltof.
+
+Lemma wf_lt3 : Wf.well_founded lt.
 Proof.
-Abort.
+  unfold Wf.well_founded.
+  induction a as [| n'].
+    constructor. intros. apply Nat.nlt_0_r in H. destruct H.
+    constructor. intros. inversion H.
+      assumption.
+      destruct IHn'. apply H2. assumption.
+Defined.
 
 (** div n m = n/(m + 1) *)
 Definition div' : nat -> nat -> nat.
 Proof.
-  apply (@well_founded_induction_type nat lt lt_wf
+  apply (@well_founded_induction_type nat lt wf_lt3
     (fun n : nat => nat -> nat)).
   intros n IH m.
   destruct (le_lt_dec (S m) n).
@@ -824,7 +883,73 @@ Proof.
       apply le_n_S, le_0_n.
 Defined.
 
-Compute div 5 0.
+Compute div' 5 2.
+
+Require Import Arith.
+Require Import Omega.
+
+Definition div'' : nat -> forall k : nat, 0 < k -> nat.
+Proof.
+  apply (@well_founded_induction_type nat lt lt_wf
+    (fun n : nat => forall k : nat, 0 < k -> nat)).
+  intros. destruct (le_lt_dec k x).
+    Focus 2. exact 0.
+    apply S. apply (H (x - k)) with k.
+      apply Nat.sub_lt; assumption.
+      assumption.
+Defined.
+
+Print div''.
+
+Compute div'' 5 2 ltac:(omega).
+
+Inductive divR : nat -> nat -> nat -> Prop :=
+    | divR_lt : forall {n m : nat}, n < S m -> divR n m 0
+    | divR_ge :
+        forall n m r : nat, n >= S m ->
+          divR (n - S m) m r -> divR n m (S r).
+
+Inductive div_dom (m : nat) : nat -> Type :=
+    | div_dom_lt : forall {n : nat}, n < S m -> div_dom m n
+    | div_dom_ge :
+        forall {n : nat}, n >= S m -> div_dom m (n - S m) -> div_dom m n.
+
+Fixpoint div3 {m n : nat} (H : div_dom m n) : nat :=
+match H with
+    | div_dom_lt _ _ => 0
+    | div_dom_ge _ _ H' => S (div3 H')
+end.
+
+Lemma div_dom_all :
+  forall m n : nat, div_dom m n.
+Proof.
+  intro m.
+  apply (well_founded_rect nat lt wf_lt).
+  intros n IH.
+  destruct (le_lt_dec (S m) n).
+    apply div_dom_ge.
+      assumption.
+      apply IH. apply Nat.sub_lt.
+        assumption.
+        apply le_n_S, le_0_n.
+    apply div_dom_lt. assumption.
+Restart.
+  intro m.
+  apply (well_founded_induction_type lt_wf).
+  intros n IH.
+  destruct (le_lt_dec (S m) n).
+    apply div_dom_ge.
+      assumption.
+      apply IH. apply Nat.sub_lt.
+        assumption.
+        apply le_n_S, le_0_n.
+    apply div_dom_lt. assumption.
+Defined.
+
+Definition div3' (n m : nat) : nat :=
+  div3 (div_dom_all m n).
+
+Compute div3' 5 2.
 
 (* end hide *)
 
