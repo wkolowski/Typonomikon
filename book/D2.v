@@ -147,7 +147,7 @@ Fail Definition the_universe_explodes : False := loop tt.
     formą rekursji jest rekursja strukturalna. Funkcje rekurencyjne, które
     dotychczas pisaliśmy, były strukturalnie rekurencyjne, więc potrafisz
     już całkiem sprawnie posługiwać się tym rodzajem rekursji. Pozostaje
-    nam zatem zbadać jedynie techniczne detale dotyczące sposobu realizacji
+    nam zatem jedŭnie zbadać techniczne detale dotyczące sposobu realizacji
     rekursji strukturalnej w Coqu. W tym celu przyjrzyjmy się ponownie
     definicji dodawania: *)
 
@@ -469,12 +469,11 @@ end.
 
     Mogłoby się też wydawać, że skoro wywołania rekurencyjne możemy robić
     tylko na bezpośrednich podtermach dopasowanych we wzorcu, to nie da się
-    zdefiniować prawie żadnej ciekawej funkcji. Jak zobaczymy w następnym
-    podrozdziale, wcale tak nie jest - dzięki pewnej sztuczce (która jest
-    jednocześnie fundamentalną własnością wszystkich możliwych wszechświatów)
-    za pomocą rekursji strukturalnej można wyrazić rekursję dobrze ufundowaną,
-    która na pierwszy rzut oka jest dużo potężniejsza i daje nam wiele
-    możliwości definiowania różnych ciekawych funkcji. *)
+    zdefiniować prawie żadnej ciekawej funkcji. Jak zobaczymy w kolejnych
+    podrozdziałach, wcale tak nie jest. Dzięki pewnej sztuczce za pomocą
+    rekursji strukturalnej można wyrazić rekursję dobrze ufundowaną, która
+    na pierwszy rzut oka jest dużo potężniejsza i daje nam wiele możliwości
+    definiowania różnych ciekawych funkcji. *)
 
 (** **** Ćwiczenie (dzielenie) *)
 
@@ -490,6 +489,139 @@ Fail Fixpoint div (n m : nat) : nat :=
   then n
   else div (n - m) m.
 (* end hide *)
+
+(** * Rekursja po paliwie *)
+
+(** Rekursja dobrze ufundowana to sirius byznys, więc zanim się nią zajmiemy
+    wypadałoby nauczyć się robić robotę na odwal, byle działało. Jakkolwiek
+    nie brzmi to zbyt profesjonalnie, dobrze jest mieć tego typu narzędzie
+    w zanadrzu, choćby w celu szybkiego prototypowania. Czasem zdarza się
+    też, że tego typu luźne podejście do problemu jest jedynym możliwym, bo
+    nikt nie wie, jak to zrobić porządnie.
+
+    Narzędziem, o którym mowa, jest coś, co ja nazywam "rekursją po paliwie".
+    Pozwala ona zasymulować definicję dowolnej funkcji o typie
+    [A1 -> ... -> An -> B] (w tym nawet częściowej czy nieterminującej, co
+    już samo w sobie jest ciekawe) za pomocą funkcji o typie
+    [nat -> A1 -> ... -> An -> option B].
+
+    Trik jest dość banalny: argument typu [nat] jest argumentem głównym,
+    po którym robimy rekursję. Jest on naszym "paliwem", które spalamy
+    przy każdym wywołaniu rekurencyjnym. Jeżeli paliwo się nam skończy,
+    zwracamy [None]. Jeżeli jeszcze starcza paliwa, możemy zdefiniować
+    funkcję tak jak zamierzaliśmy, ale mamy też obowiązki biurokratyczne
+    związane ze sprawdzaniem, czy wyniki wywołań rekurencyjnych to [None]
+    czy [Some].
+
+    Coby za dużo nie godoć, przykład. *)
+
+Require Import List.
+Import ListNotations.
+
+Require Import Nat.
+
+(** Będą nam potrzebne notacje dla list oraz funkcja [even], która sprawdza,
+    czy liczba naturalna jest parzysta. Będziemy chcieli zdefiniować funkcję
+    Collatza. Gdyby Coq wspierał rekursję ogólną, jej definicja wyglądałaby
+    tak: *)
+
+Fail Fixpoint collatz (n : nat) : list nat :=
+match n with
+    | 0 | 1 => [n]
+    | _ => n :: if even n then collatz (div2 n) else collatz (1 + 3 * n)
+end.
+
+(** Jest to bardzo wesoła funkcja. Przypadki bazowe to [0] i [1] - zwracamy
+    wtedy po prostu listę z jednym elementem, odpowiednio [[0]] lub [[1]].
+    Ciekawiej jest dla [n] większego od 1. [n] zostaje głową listy, zaś w
+    kwestii ogona mamy dwa przypadki. Jeżeli [n] jest parzyste, to argumentem
+    wywołania rekurencyjnego jest [n] podzielone przez [2], zaś w przeciwnym
+    przypadku jest to [1 + 3 * n].
+
+    Funkcja ta nie ma żadnego ukrytego celu. Została wymyślona dla zabawy,
+    a przyświecające jej pytanie to: czy funkcja ta kończy pracę dla każdego
+    argumentu, czy może jest jakiś, dla którego się ona zapętla?
+
+    O ile funkcja jest prosta, o tyle odpowiedź jest bardzo skomplikowana i
+    dotychczas nikt nie potrafił jej udzielić. Sprawdzono ręcznie (czyli za
+    pomocą komputerów) bardzo dużo liczb i funkcja ta zawsze kończyła pracę,
+    ale nikt nie umie udowodnić, że dzieje się tak dla wszystkich liczb. *)
+
+Fixpoint collatz (fuel n : nat) : option (list nat) :=
+match fuel with
+    | 0 => None
+    | S fuel' =>
+        match n with
+            | 0 | 1 => Some [n]
+            | _ =>
+                if even n
+                then
+                  match collatz fuel' (div2 n) with
+                      | Some l => Some (n :: l)
+                      | None => None
+                  end
+                else
+                  match collatz fuel' (1 + 3 * n) with
+                      | Some l => Some (n :: l)
+                      | None => None
+                  end
+        end
+end.
+
+(** Definicja funkcji [collatz] za pomocą rekursji po paliwie wygląda dość
+    groźnie, ale tak naprawdę jest całkiem banalna. Oryginalna funkcja była
+    typu [nat -> list nat], a nowa ma typ [nat -> nat -> option (list nat)].
+
+    Zamiast dopasowywać [n] musimy dopasować paliwo, czyli [fuel]. Dla [0]
+    zwracamy [None], a gdy zostało jeszcze trochę paliwa, przechodzimy do
+    właściwej części definicji. W przypadkach bazowych zwracamy [[n]], ale
+    musimy zawinąć je w [Some]. W pozostałych przypadkach sprawdzamy, czy
+    [n] jest parzyste, ale tym razem musimy dopasować wywołanie rekurencyjne
+    żeby sprawdzić, czy zwraca ono [None] czy [Some]. *)
+
+Compute collatz 10 5.
+(* ===> = Some [[5; 16; 8; 4; 2; 1]]
+        : option (list nat) *)
+
+Compute collatz 2 5.
+(* ===> = None
+        : option (list nat) *)
+
+(** Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
+    problemu, oczywiście o ile wystarczy jej paliwa. W powyższych przykładach
+    [10] jednostek paliwa wystarcza, by obliczyć wynik dla [5], ale tylko [2]
+    jednostki paliwa to za mało. Jak więc widać, ilość potrzebnego paliwa
+    zależy od konkretnej wartości na wejściu.
+
+    Interpretacja tego, czym tak naprawdę jest paliwo, też nie jest zbyt
+    trudna. Jest to maksymalna głębokość rekursji, na jaką może pozwolić
+    sobie funkcja. Czym jest głębokość rekursji? Możemy wyobrazić sobie
+    drzewo, którego korzeniem jest obecne wywołanie, a poddrzewami to
+    drzewa dla wywołań rekurencyjnych. Głębokość rekursji jest po prostu
+    głębokością takiego drzewa.
+
+    W przypadku funkcji [collatz] głębokość rekursji jest równa długości
+    zwróconej listy (gdy funkcja zwraca [Some]) lub większa niż ilość
+    paliwa (gdy funkcja zwraca [None]).
+
+    Powyższe rozważania prowadzą nas do techniki, która pozwala z funkcji
+    zrobionej rekursją po paliwie zrobić normalną, pełnoprawną funkcję.
+    Wystarczy znaleźć "funkcję tankującą"
+    [fill_tank : A1 -> ... -> An -> nat], która oblicza, ile paliwa
+    potrzeba dla danych argumentów wejściowych. Funkcja ta powinna mieć
+    tę własność, że gdyby nalejemy tyle paliwa, ile ona każe, zawsze w
+    wyniku dostaniemy [Some].
+
+    Trudnością, z którą nikt dotychczas w przypadku funkcji [collatz] nie
+    potrafił się uporać, jest właśnie znalezienie funkcji tankującej. Jak
+    więc widać, rekursja po paliwie nie zawsze jest fuszerką, lecz bywa
+    czasem faktycznie przydatna. *)
+
+(** **** Ćwiczenie *)
+
+
+
+
 
 (** * Rekursja dobrze ufundowana *)
 
@@ -587,10 +719,11 @@ Lemma wf_lt : well_founded lt.
 Proof.
   unfold well_founded.
   induction x as [| n'].
-    constructor; inversion 1; subst.
-    constructor; inversion 1; subst.
-      assumption.
-      destruct IHn'. apply H0. assumption.
+    constructor. inversion 1.
+    constructor. intros a Ha. constructor. intros b Hb.
+      apply IHn'. apply Nat.lt_le_trans with a.
+        assumption.
+        apply le_S_n. assumption.
 Defined.
 
 (* end hide *)
@@ -803,31 +936,21 @@ Qed.
 
 (* begin hide *)
 
-Require Import Omega.
-Require Import Arith.
-
-Lemma wf_lt2 : well_founded lt.
-Proof.
-  unfold well_founded.
-  induction x as [| n'].
-    constructor; inversion 1; subst.
-    constructor; inversion 1; subst.
-      assumption.
-      destruct IHn'. apply H0. assumption.
-Defined.
-
 Definition div : nat -> nat -> nat.
 Proof.
-  apply (well_founded_rect nat lt wf_lt2 (fun _ => nat -> nat)).
+  apply (@well_founded_rect nat lt wf_lt (fun _ => nat -> nat)).
   intros n IH m.
   destruct (le_lt_dec (S m) n).
     Focus 2. exact 0.
     apply S. refine (IH (n - S m) _ m). apply Nat.sub_lt.
       assumption.
       apply le_n_S, le_0_n.
-Restart.
+Defined.
+
+Definition div' : nat -> nat -> nat.
+Proof.
   intros n m. revert n.
-  apply (well_founded_rect nat lt wf_lt2 (fun _ => nat)).
+  apply (@well_founded_rect nat lt wf_lt).
   intros n IH.
   destruct (le_lt_dec (S m) n).
     Focus 2. exact 0.
@@ -836,72 +959,26 @@ Restart.
       apply le_n_S, le_0_n.
 Defined.
 
-Print div.
-Compute div 5 2.
-
-Print Nat.sub_lt.
-Print le_n_S.
-Print le_0_n.
-Print Nat.le_0_l.
-
-Print well_founded_induction_type.
-Print well_founded_rect.
-
-Print Wf.well_founded.
-Print well_founded.
-
-Print Wf.Acc.
-Print Acc.
-
-Print lt_wf. Print well_founded_ltof. Print ltof.
-Print wf_lt.
-
-Print Nat.nlt_0_r.
-
-Print well_founded_ltof.
-
-Lemma wf_lt3 : Wf.well_founded lt.
+Lemma div_0_r :
+  forall n : nat, div n 0 = n.
 Proof.
-  unfold Wf.well_founded.
-  induction a as [| n'].
-    constructor. intros. apply Nat.nlt_0_r in H. destruct H.
-    constructor. intros. inversion H.
-      assumption.
-      destruct IHn'. apply H2. assumption.
+  apply (well_founded_ind nat lt wf_lt).
+  destruct x as [| n']; intros.
+    cbn. reflexivity.
+    cbn. rewrite <- (minus_n_O n'). Search minus. rewrite Nat.sub_O_n. _r.
+
+
+Lemma wf_lt5 : well_founded lt.
+Proof.
+  unfold well_founded.
+  induction x as [| n'].
+    constructor. inversion 1.
+    constructor. intros a Ha. constructor. intros b Hb.
+      apply IHn'. apply Nat.lt_le_trans with a.
+        assumption.
+        apply le_S_n. assumption.
 Defined.
 
-(** div n m = n/(m + 1) *)
-Definition div' : nat -> nat -> nat.
-Proof.
-  apply (@well_founded_induction_type nat lt wf_lt3
-    (fun n : nat => nat -> nat)).
-  intros n IH m.
-  destruct (le_lt_dec (S m) n).
-    Focus 2. exact 0.
-    apply S. refine (IH (n - S m) _ m). apply Nat.sub_lt.
-      assumption.
-      apply le_n_S, le_0_n.
-Defined.
-
-Compute div' 5 2.
-
-Require Import Arith.
-Require Import Omega.
-
-Definition div'' : nat -> forall k : nat, 0 < k -> nat.
-Proof.
-  apply (@well_founded_induction_type nat lt lt_wf
-    (fun n : nat => forall k : nat, 0 < k -> nat)).
-  intros. destruct (le_lt_dec k x).
-    Focus 2. exact 0.
-    apply S. apply (H (x - k)) with k.
-      apply Nat.sub_lt; assumption.
-      assumption.
-Defined.
-
-Print div''.
-
-Compute div'' 5 2 ltac:(omega).
 
 Inductive divR : nat -> nat -> nat -> Prop :=
     | divR_lt : forall {n m : nat}, n < S m -> divR n m 0
@@ -933,23 +1010,12 @@ Proof.
         assumption.
         apply le_n_S, le_0_n.
     apply div_dom_lt. assumption.
-Restart.
-  intro m.
-  apply (well_founded_induction_type lt_wf).
-  intros n IH.
-  destruct (le_lt_dec (S m) n).
-    apply div_dom_ge.
-      assumption.
-      apply IH. apply Nat.sub_lt.
-        assumption.
-        apply le_n_S, le_0_n.
-    apply div_dom_lt. assumption.
 Defined.
 
 Definition div3' (n m : nat) : nat :=
   div3 (div_dom_all m n).
 
-Compute div3' 5 2.
+Compute div3' 5 0.
 
 (* end hide *)
 
