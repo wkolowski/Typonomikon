@@ -462,15 +462,6 @@ Require Import Arith.
 Definition maxL := fold_right max 0.
 Definition sumL := fold_right plus 0.
 
-
-      (*assert (forall n m : nat, n <= max n m).
-        induction n as [| n']; simpl; intro; trivial.
-          apply Le.le_0_n.
-          destruct m; simpl.
-            apply le_n.
-            apply Le.le_n_S. apply IHn'.
-        apply H.*)
-
 Theorem t : forall l : list nat, sumL l <= length l * maxL l.
 Proof.
   induction l as [| h t]; simpl.
@@ -483,4 +474,3 @@ Proof.
           apply le_n.
           apply Max.le_max_r.
 Qed.
-    

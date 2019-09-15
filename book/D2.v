@@ -1154,7 +1154,6 @@ Print div_subproof.
     na boku odpowiedni lemat arytmetyczny, nazywa go [div_subproof] i
     dowodzi celu za jego pomocą. *)
 
-
 Compute div 5 2.
 (* ===> = 1 : nat *)
 
@@ -1170,42 +1169,81 @@ Lemma div_0_r :
   forall n : nat, div n 0 = n.
 Proof.
   apply (well_founded_ind _ _ wf_lt).
-  destruct x as [| n']; intros.
-    cbn. reflexivity.
-    cbn. (* O Jezu, a cóż to za wojacy... *)
+  intros. unfold div. cbn. (* O Jezu, a cóż to za wojacy... *)
 Abort.
 
-(** Niestety jednak, jak to w życiu, nie ma kolorowo. Próbując udowodnić
-    za pomocą indukcji dobrze ufundowanej, że [n/1 = n], dość szybko
-    atakuje nas pewien problem. O ile w pierwszym przypadku idzie łatwo,
-    o tyle drugi jest już beznadziejny. Nie żeby był nieprawdziwy - co to,
-    to nie. Po prostu w wyniku użycia [cbn] wypływa część definicji ukryta
-    dotychczas w [div_subproof].
+(** Niestety jednak, jak to w życiu, nie ma kolorowo.
 
-    Problem nie pochodzi jednka od taktyki [omega] (ani od [abstract omega]).
-    Jest on dużo ogólniejszy i polega na tym, że w definicji pojawiają się
-    dowody, które są wymagane przez [well_founded_rect], ale które zaburzają
-    jej obliczeniową strukturę.
+    Powyższy lemat głosi, że [n/1 = n]. Ponieważ [div] jest zdefiniowane
+    za pomocą rekursji dobrze ufundowanej, to dowodzić będziemy oczywiście
+    za pomocą indukcji dobrze ufundowanej. Tak, będziemy dowodzić, hmmm...
+    cóż... tylko jak?
 
-    Nie jesteśmy jednak skazani na porażkę (jeszcze). Spróbujmy uporać się
-    z tą przeszkodą za pomocą _równania rekurencyjnego_. Równanie to będzie
-    dowodem na to, że funkcja obliczeniowo zachowuje się tak, jak byśmy
-    sobie tego życzyli. *)
+    Sytuacja wygląda beznadziejnie. Nie żeby lemat był nieprawdziwy - co to,
+    to nie. Po prostu próba odwinięcia definicji i policzenia czegokolwiek
+    daje inny wynik, niż byśmy chcieli - część definicji ukryta dotychczas
+    w [div_subproof] wylewa się i zaśmieca nam ekran.
+
+    Problem nie pochodzi jednak od taktyki [omega] (ani od [abstract omega]).
+    Jest on dużo ogólniejszy i polega na tym, że wewnątrz definicji funkcji
+    pojawiają się dowody, które są wymagane przez [well_founded_rect], ale
+    które zaorywują jej obliczeniową harmonię.
+
+    Nie jesteśmy jednak (jeszcze) skazani na porażkę. Spróbujemy uporać się
+    z tą przeszkodą dzięki _równaniu rekurencyjnemu_. Równanie rekurencyjne
+    to coś, co pozwoli nam użyć taktyki [rewrite] do przepisania wystąpień
+    funkcji [div] do pożądanej postaci zamiast rozwijać je za pomocą taktyki
+    [unfold] lub obliczać za pomocą [cbn]. *)
 
 Lemma div_eq :
   forall n m : nat,
-    div n m = if le_lt_dec (S m) n then S (div (n - S m) m) else 0.
+    div n m = if ltb n (S m) then 0 else S (div (n - S m) m).
 Proof.
   apply (well_founded_ind _ _ wf_lt (fun _ => forall m : nat, _)).
-  destruct x as [| n']; intros IH m.
-    cbn. reflexivity.
-    cbn.
-Abort.
+  intros n IH m.
+  unfold div, well_founded_rect.
+Admitted.
 
 (** Nasz chytry plan się nie powiódł. *)
 
-(** * Indukcja funkcyjna (TODO) *)
+Lemma div_0_r :
+  forall n : nat, div n 0 = n.
+Proof.
+  apply (well_founded_ind _ _ wf_lt).
+  intros. rewrite div_eq.
+  destruct (Nat.ltb_spec x 1).
+    omega.
+    rewrite H; omega.
+Qed.
 
+Lemma div_n_n :
+  forall n : nat, div (S n) n = 1.
+Proof.
+  apply (well_founded_ind _ _ wf_lt).
+  intros. rewrite div_eq, Nat.ltb_irrefl, minus_diag.
+  cbn. reflexivity.
+Qed.
+
+(** Gdyby jednak nasz chytry plan się powiódł, udowodnienie pożądanych
+    właściwości [div] nie stanowiłoby najmniejszego problemu. Powyższe
+    dowody wyglądają dokładnie tak, jak powinny - zaczynamy od indukcji
+    dobrze ufundowanej, następnie rozwijamy [div] za pomocą równania
+    rekurencyjnego i rozważamy przypadki lub przepisujemy, żeby poradzić
+    sobie z [if]em. *)
+
+(** * Indukcja funkcyjna *)
+
+(** Skoro jednak nie dla psa kiełbasa, to musimy znaleźć jakiś sposób na
+    udowodnienie równania rekurencyjnego dla [div]. Zamiast jednak głowić
+    się nad równaniami rekurencyjnymi albo nad funkcją [div], zastanówmy
+    się w całej ogólności: jak dowodzić właściwości funkcji rekurencyjnych?
+
+    No przez indukcję, czy to nie oczywiste? Jasne, ale jak dokładnie owa
+    indukcja ma wyglądać? Odpowiedź jest prostsza niż można się spodziewać.
+    Otóż gdy kupujesz but, ma on pasować do twojej stopy. Podobnie gdy
+    kupujesz gacie, mają one pasować do twojej dupy. Podobnie jest z
+    indukcją: gdy ją stosujemy, ma ona dokładnie pasować do rekurencyjnego
+    kształtu funkcji, do której jest stosowana. *)
 
 Inductive divR : nat -> nat -> nat -> Prop :=
     | divR_lt : forall {n m : nat}, n < S m -> divR n m 0
@@ -1243,3 +1281,180 @@ Definition div3' (n m : nat) : nat :=
   div3 (div_dom_all m n).
 
 Compute div3' 5 0.
+
+(** * Metoda Bove-Capretta *)
+
+(** https://members.loria.fr/DLarchey/files/papers/TYPES_2018_paper_19.pdf
+
+    A robi się to tak:
+    - Zdefiniuj wykres funkcji.
+    - Zdefiniuj predykat dziedziny używając wykresu.
+    - Udowodnij użyteczne rzeczy, np. funkcyjność wykresu.
+    - Zdefiniuj funkcję przez rekursję po predykacie dziedziny wraz z jej
+      specyfikacją.
+    - Wyjmij funkcję i specyfikację za pomocą projekcji. *)
+
+Inductive graph : nat -> nat -> Prop :=
+    | graph_gt100 :
+        forall n : nat, 100 < n -> graph n (n - 10)
+    | graph_le100 :
+        forall n r1 r2 : nat, n <= 100 ->
+          graph (n + 11) r1 -> graph r1 r2 -> graph n r2.
+
+Inductive dom : nat -> Type :=
+    | dom_gt100 :
+        forall n : nat, 100 < n -> dom n
+    | dom_le100 :
+        forall n r : nat, n <= 100 ->
+          graph (n + 11) r -> dom (n + 11) -> dom r -> dom n.
+
+Lemma graph_functional :
+  forall n r1 r2 : nat,
+    graph n r1 -> graph n r2 -> r1 = r2.
+Proof.
+  intros until 1. revert r2.
+  induction H; intros.
+    inversion H0; subst.
+      reflexivity.
+      omega.
+    inversion H2; subst.
+      omega.
+      assert (r1 = r3) by apply (IHgraph1 _ H4); subst.
+        apply (IHgraph2 _ H5).
+Qed.
+
+Fixpoint fD' (n : nat) (d : dom n) : {r : nat | graph n r}.
+Proof.
+  destruct d.
+    exists (n - 10). constructor. assumption.
+    destruct (fD' _ d1) as [r1 g1].
+      destruct (fD' _ d2) as [r2 g2]. exists r2. eapply graph_le100.
+        assumption.
+        exact g1.
+        assert (r1 = r) by (eapply graph_functional; eauto).
+          rewrite H. assumption.
+Defined.
+
+Definition fD (n : nat) (d : dom n) : nat :=
+match fD' n d with
+    | exist _ r _ => r
+end.
+
+Lemma fD_correct :
+  forall (n : nat) (d : dom n), graph n (fD n d).
+Proof.
+  intros. unfold fD. destruct (fD' n d). assumption.
+Qed.
+
+Lemma fD_complete :
+  forall (n r : nat) (d : dom n),
+    graph n r -> fD n d = r.
+Proof.
+  intros. unfold fD. destruct (fD' n d).
+  eapply graph_functional; eauto.
+Qed.
+
+Lemma fD_spec :
+  forall (n r : nat) (d : dom n),
+    fD n d = r <-> graph n r.
+Proof.
+  split; intro.
+    rewrite <- H. apply fD_correct.
+    apply fD_complete. assumption.
+Qed.
+
+Lemma dom_total :
+  forall n : nat, dom n.
+Proof.
+  do 101 try (destruct n).
+Admitted.
+
+Definition f (n : nat) : nat := fD n (dom_total n).
+
+Lemma f_correct :
+  forall n : nat, graph n (f n).
+Proof.
+  intros. apply fD_correct.
+Qed.
+
+Lemma f_complete :
+  forall n r : nat,
+    graph n r -> f n = r.
+Proof.
+  intros. apply fD_complete. assumption.
+Qed.
+
+Lemma f_spec :
+  forall n r : nat,
+    f n = r <-> graph n r.
+Proof.
+  intros. apply fD_spec.
+Qed.
+
+Lemma f_eq :
+  forall n : nat,
+    f n =
+    if leb n 100 then f (f (n + 11)) else n - 10.
+Proof.
+  intros. unfold f. rewrite fD_spec.
+  destruct (Nat.leb_spec0 n 100) as [H | H].
+    eapply graph_le100.
+      assumption.
+      1-2: apply fD_correct.
+    constructor. omega.
+Qed.
+
+Lemma fD_91 :
+  forall (n : nat) (d : dom n),
+    n <= 100 -> fD n d = 91.
+Proof.
+  intros. rewrite fD_spec. revert H.
+  induction d; intro.
+    omega.
+    clear l. inversion d1; subst.
+      inversion d2; subst.
+        clear IHd2. inversion g; subst.
+          eapply graph_le100; eauto. assert (n = 100) by omega.
+            subst. cbn. constructor. omega.
+          omega.
+        eapply graph_le100; eauto.
+      specialize (IHd1 H0). assert (r = 91).
+        eapply graph_functional; eauto.
+        subst. eapply graph_le100; eauto. apply IHd2. omega.
+Qed.
+
+Lemma f_ind :
+  forall
+    (P : nat -> nat -> Prop)
+    (H_gt100 : forall n : nat, 100 < n -> P n (n - 10))
+    (H_le100 :
+      forall n : nat, n <= 100 ->
+        P (n + 11) (f (n + 11)) -> P (f (n + 11)) (f (f (n + 11))) ->
+          P n (f (f (n + 11)))),
+    forall n : nat, P n (f n).
+Proof.
+  intros. unfold f, fD. destruct (fD' n _) as (r & H).
+  induction H.
+    apply H_gt100. assumption.
+    rewrite <- f_spec in *. subst. apply H_le100; assumption.
+Defined.
+
+Lemma f_91 :
+  forall (n : nat),
+    n <= 100 -> f n = 91.
+Proof.
+  apply (f_ind (fun n r => n <= 100 -> r = 91)).
+    intros. omega.
+    intros. destruct (Nat.leb_spec0 (n + 11) 100).
+      apply H1. rewrite H0.
+        omega.
+        assumption.
+      destruct (Nat.leb_spec0 (f (n + 11)) 100).
+        apply H1. assumption.
+        rewrite f_eq in n1. destruct (Nat.leb_spec0 (n + 11) 100).
+          omega.
+          assert (n = 100) by omega. subst. cbn. rewrite 2!f_eq.
+            cbn. reflexivity.
+Qed.
+
+(** * Wszystko razem, tak do kupy *)
