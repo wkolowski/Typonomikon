@@ -621,54 +621,11 @@ Compute collatz 2 5.
 
 (** **** Ćwiczenie *)
 
-(** Sporą zaletą rekursji po paliwie jest to, że definicje zrobionych za
-    jej pomocą funkcji są jasne i czytelne (przynajmniej w porównaniu do
-    rekursji dobrze ufundowanej, o czym już niedługo się przekonamy). To
-    z kolei pozwala nam w dość łatwy sposób dowodzić interesujących nas
-    właściwości tych funkcji.
-
-    Udowodnij, że funkcji [collatz] dla wejść o postaci [pow 2 n] (czyli
-    potęg dwójki) wystarczy [S n] jednostek paliwa.
-
-    Uwaga (trochę złośliwa): jeśli napotkasz trudności w trakcie dowodzenia
-    (a moje uwagi przecież nie biorą się znikąd), to pamiętaj, że mają one
-    charakter arytmetyczny, tzn. są związane z użyciem w definicji funkcji
-    takich jak [pow] czy [div2], nie są zaś spowodowane jakimiś problemami
-    z samą techniką, jaką jest rekursja po paliwie. *)
-
-(* begin hide *)
-
-Lemma pow2_n_SS :
-  forall n : nat, exists m : nat, pow 2 (S n) = S (S m).
-Proof.
-  induction n as [| n']; cbn.
-    exists 0. reflexivity.
-    destruct IHn' as [m IH]. cbn in IH. rewrite IH. cbn.
-      exists (m + (S (S (m + 0)))). reflexivity.
-Qed.
-
-(* TODO *) Lemma collatz_pow2 :
-  forall n : nat, collatz (S n) (pow 2 n) <> None.
-Proof.
-  induction n as [| n'].
-    inversion 1.
-    destruct (pow2_n_SS n') as [m eq]. rewrite eq.
-Abort.
-
-(* end hide *)
-
-(** **** Ćwiczenie *)
-
 (** Zdefiniuj za pomocą rekursji po paliwie funkcję [divFuel], która jest
-    implementacją dzielenia.
-
-    Udowodnij kilka oczywistych właściwości dzielenia:
-    - [divFuel ? n 1 = Some n], tzn. [n/1 = n]. Ile potrzeba paliwa?
-    - [divFuel ? n n = Some 1], tzn. [n/n = 1]. Ile potrzeba paliwa?
-    - przy dzieleniu przez [0] nigdy nie starcza paliwa. *)
+    implementacją dzielenia (takiego zwykłego, a nie sprytnego jak ostatnio,
+    tzn. [divFuel fuel n 0] jest niezdefiniowane). *)
 
 (* begin hide *)
-
 Fixpoint divFuel (fuel n m : nat) : option nat :=
 match fuel with
     | 0 => None
@@ -681,6 +638,22 @@ match fuel with
               | None => None
           end
 end.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Sporą zaletą rekursji po paliwie jest to, że definicje zrobionych za
+    jej pomocą funkcji są jasne i czytelne (przynajmniej w porównaniu do
+    rekursji dobrze ufundowanej, o czym już niedługo się przekonamy). To
+    z kolei pozwala nam w dość łatwy sposób dowodzić interesujących nas
+    właściwości tych funkcji.
+
+    Udowodnij kilka oczywistych właściwości dzielenia:
+    - [divFuel ? n 1 = Some n], tzn. [n/1 = n]. Ile potrzeba paliwa?
+    - [divFuel ? n n = Some 1], tzn. [n/n = 1]. Ile potrzeba paliwa?
+    - przy dzieleniu przez [0] nigdy nie starcza paliwa. *)
+
+(* begin hide *)
 
 Lemma divFuel_1 :
   forall n : nat,
@@ -763,6 +736,38 @@ Proof.
           rewrite H1 in H0. assumption.
           case_eq (divFuel fuel (n - S m) (S m)); intros.
             rewrite H2, H1 in H0. cbn in IH.
+Abort.
+
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że funkcji [collatz] dla wejść o postaci [pow 2 n] (czyli
+    potęg dwójki) wystarczy [S n] jednostek paliwa.
+
+    Uwaga (trochę złośliwa): jeśli napotkasz trudności w trakcie dowodzenia
+    (a moje uwagi przecież nie biorą się znikąd), to pamiętaj, że mają one
+    charakter arytmetyczny, tzn. są związane z użyciem w definicji funkcji
+    takich jak [pow] czy [div2], nie są zaś spowodowane jakimiś problemami
+    z samą techniką, jaką jest rekursja po paliwie. *)
+
+(* begin hide *)
+
+Lemma pow2_n_SS :
+  forall n : nat, exists m : nat, pow 2 (S n) = S (S m).
+Proof.
+  induction n as [| n']; cbn.
+    exists 0. reflexivity.
+    destruct IHn' as [m IH]. cbn in IH. rewrite IH. cbn.
+      exists (m + (S (S (m + 0)))). reflexivity.
+Qed.
+
+(* TODO *) Lemma collatz_pow2 :
+  forall n : nat, collatz (S n) (pow 2 n) <> None.
+Proof.
+  induction n as [| n'].
+    inversion 1.
+    destruct (pow2_n_SS n') as [m eq]. rewrite eq.
 Abort.
 
 (* end hide *)
@@ -1076,52 +1081,130 @@ Qed.
     twierdzeń i definiowanie funkcji, którego nie da się zrobić za pomocą
     prostej indukcji albo banalnego dopasowania do wzorca. W tego typu
     sytuacjach nieodzowne będzie skorzystanie z indukcji i rekursji
-    dobrze ufundowanej, o czym przekonamy się już niedługo. *)
-
-(* begin hide *)
+    dobrze ufundowanej, o czym przekonamy się już natychmiast zaraz. *)
 
 Definition div : nat -> nat -> nat.
 Proof.
   apply (@well_founded_rect nat lt wf_lt (fun _ => nat -> nat)).
   intros n IH m.
   destruct (le_lt_dec (S m) n).
-    Focus 2. exact 0.
-    apply S. refine (IH (n - S m) _ m). apply Nat.sub_lt.
-      assumption.
-      apply le_n_S, le_0_n.
+    2: exact 0.
+    refine (1 + IH (n - S m) _ m). abstract omega.
 Defined.
 
-Definition div' : nat -> nat -> nat.
-Proof.
-  intros n m. revert n.
-  apply (@well_founded_rect nat lt wf_lt).
-  intros n IH.
-  destruct (le_lt_dec (S m) n).
-    Focus 2. exact 0.
-    apply S. refine (IH (n - S m) _). apply Nat.sub_lt.
-      assumption.
-      apply le_n_S, le_0_n.
-Defined.
+(* begin hide *)
+
+(** TODO: wprowadzić kombinator [abstract] za pierwszym razem, gdy użyta
+    zostanie taktyka [omega]. *)
+
+(* end hide *)
+
+(** Poważniejszym problemem jest bowiem definicja dzielenia, z którą borykamy
+    się od samiuśkiego początku niniejszego rozdziału. Powyższy kawałek kodu
+    jest (nieudaną, jak się okaże) próbą uporania się z tym problemem.
+
+    Definiować będziemy w trybie dowodzenia, gdyż przy posługiwaniu się
+    rekursją dobrze ufundowaną zazwyczaj tak jest dużo łatwiej. Zaczynamy
+    od zaaplikowania reguły rekursji dobrze ufundowanej dla typu [nat] i
+    porządku [<] (no i rzecz jasna [wf_lt], czyli dowodu na to, że [lt]
+    jest dobrze ufundowany - bez tego ani rusz). Po typach widać, że
+    rekursja będzie się odbywać po pierwszym argumencie. Wprowadzamy też
+    zmienne do kontekstu. *)
+
+Check le_lt_dec.
+(* ===> le_lt_dec : forall n m : nat, {n <= m} + {m < n} *)
+
+(** Następnie musimy sprawdzić, czy dzielna (czyli [n]) jest mniejsza od
+    dzielnika (czyli [S m] - zauważ, że definiujemy tutaj "sprytną" wersję
+    dzielenia, tzn. [div n m] = [n/(m + 1)], żeby uniknąć problemów z
+    dzieleniem przez [0]). Jeżeli tak, wynikiem jest [0]. Jeżeli nie,
+    wynikiem jest wynik wywołania rekurencyjnego na argumencie [n - S m]
+    powiększony o [1].
+
+    Na koniec musimy jeszcze tylko pokazać, że argument wywołania
+    rekurencyjnego, czyli [n - S m], jest mniejszy od argumentu
+    obecnego wywołania, czyli [n]. Żeby za bardzo nie pobrudzić
+    sobie rąk arytmetyką, zostawiamy ten cel taktyce [omega], ale
+    zawijamy jej użycie w kombinator [abstract], który zapobiega
+    "wylaniu się" rozumowania taktyki [omega] do definicji. *)
+
+Print div.
+(* ===>
+  div =
+  well_founded_rect nat lt wf_lt (fun _ : nat => nat -> nat)
+    (fun (n : nat)
+         (IH : forall y : nat, y < n -> nat -> nat)
+         (m : nat) =>
+    let s := le_lt_dec (S m) n in
+      match s with
+          | left l => 1 + IH (n - S m) (div_subproof n m l) m
+          | right _ => 0
+      end)
+    : nat -> nat -> nat *)
+
+Check div_subproof.
+(* ===> div_subproof
+          : forall n m : nat, S m <= n -> n - S m < n *)
+
+Print div_subproof.
+(* ===> dużo różnych głupot *)
+
+(** Mówiąc wprost, taktyka [abstract omega] zamiast wstawiać do definicji
+    całe rozumowanie, tak jak zrobiłaby to taktyka [omega], dowodzi sobie
+    na boku odpowiedni lemat arytmetyczny, nazywa go [div_subproof] i
+    dowodzi celu za jego pomocą. *)
+
+
+Compute div 5 2.
+(* ===> = 1 : nat *)
+
+(** Jak widać, definicja przechodzi bez problemu, a nasza funkcja elegancko
+    się oblicza (pamiętaj, że [div 5 2] to tak naprawdę [5/3], więc wynikiem
+    faktycznie powinno być [1]).
+
+    Jednak nie samymi definicjami żyje człowiek - czas trochę podowodzić.
+    Spodziewamy się wszakże, że nasze dzielenie spełnia wszystkie
+    właściwości, których się po nim spodziewamy, prawda? *)
 
 Lemma div_0_r :
   forall n : nat, div n 0 = n.
 Proof.
-  apply (well_founded_ind nat lt wf_lt).
+  apply (well_founded_ind _ _ wf_lt).
   destruct x as [| n']; intros.
+    cbn. reflexivity.
+    cbn. (* O Jezu, a cóż to za wojacy... *)
+Abort.
+
+(** Niestety jednak, jak to w życiu, nie ma kolorowo. Próbując udowodnić
+    za pomocą indukcji dobrze ufundowanej, że [n/1 = n], dość szybko
+    atakuje nas pewien problem. O ile w pierwszym przypadku idzie łatwo,
+    o tyle drugi jest już beznadziejny. Nie żeby był nieprawdziwy - co to,
+    to nie. Po prostu w wyniku użycia [cbn] wypływa część definicji ukryta
+    dotychczas w [div_subproof].
+
+    Problem nie pochodzi jednka od taktyki [omega] (ani od [abstract omega]).
+    Jest on dużo ogólniejszy i polega na tym, że w definicji pojawiają się
+    dowody, które są wymagane przez [well_founded_rect], ale które zaburzają
+    jej obliczeniową strukturę.
+
+    Nie jesteśmy jednak skazani na porażkę (jeszcze). Spróbujmy uporać się
+    z tą przeszkodą za pomocą _równania rekurencyjnego_. Równanie to będzie
+    dowodem na to, że funkcja obliczeniowo zachowuje się tak, jak byśmy
+    sobie tego życzyli. *)
+
+Lemma div_eq :
+  forall n m : nat,
+    div n m = if le_lt_dec (S m) n then S (div (n - S m) m) else 0.
+Proof.
+  apply (well_founded_ind _ _ wf_lt (fun _ => forall m : nat, _)).
+  destruct x as [| n']; intros IH m.
     cbn. reflexivity.
     cbn.
 Abort.
 
-Lemma wf_lt5 : well_founded lt.
-Proof.
-  unfold well_founded.
-  induction x as [| n'].
-    constructor. inversion 1.
-    constructor. intros a Ha. constructor. intros b Hb.
-      apply IHn'. apply Nat.lt_le_trans with a.
-        assumption.
-        apply le_S_n. assumption.
-Defined.
+(** Nasz chytry plan się nie powiódł. *)
+
+(** * Indukcja funkcyjna (TODO) *)
 
 
 Inductive divR : nat -> nat -> nat -> Prop :=
@@ -1160,7 +1243,3 @@ Definition div3' (n m : nat) : nat :=
   div3 (div_dom_all m n).
 
 Compute div3' 5 0.
-
-(* end hide *)
-
-(** * Indukcja funkcyjna (TODO) *)

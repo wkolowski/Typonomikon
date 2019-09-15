@@ -1,4 +1,3 @@
-Require Import D2.
 Require Import D5.
 
 Fixpoint rot2 {A : Type} (l : list A) : list A :=

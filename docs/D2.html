@@ -758,24 +758,9 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
 
 <div class="paragraph"> </div>
 
- Sporą zaletą rekursji po paliwie jest to, że definicje zrobionych za
-    jej pomocą funkcji są jasne i czytelne (przynajmniej w porównaniu do
-    rekursji dobrze ufundowanej, o czym już niedługo się przekonamy). To
-    z kolei pozwala nam w dość łatwy sposób dowodzić interesujących nas
-    właściwości tych funkcji.
-
-<div class="paragraph"> </div>
-
-    Udowodnij, że funkcji <span class="inlinecode"><span class="id" title="var">collatz</span></span> dla wejść o postaci <span class="inlinecode"><span class="id" title="var">pow</span></span> <span class="inlinecode">2</span> <span class="inlinecode"><span class="id" title="var">n</span></span> (czyli
-    potęg dwójki) wystarczy <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> jednostek paliwa.
-
-<div class="paragraph"> </div>
-
-    Uwaga (trochę złośliwa): jeśli napotkasz trudności w trakcie dowodzenia
-    (a moje uwagi przecież nie biorą się znikąd), to pamiętaj, że mają one
-    charakter arytmetyczny, tzn. są związane z użyciem w definicji funkcji
-    takich jak <span class="inlinecode"><span class="id" title="var">pow</span></span> czy <span class="inlinecode"><span class="id" title="var">div2</span></span>, nie są zaś spowodowane jakimiś problemami
-    z samą techniką, jaką jest rekursja po paliwie. 
+ Zdefiniuj za pomocą rekursji po paliwie funkcję <span class="inlinecode"><span class="id" title="var">divFuel</span></span>, która jest
+    implementacją dzielenia (takiego zwykłego, a nie sprytnego jak ostatnio,
+    tzn. <span class="inlinecode"><span class="id" title="var">divFuel</span></span> <span class="inlinecode"><span class="id" title="var">fuel</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">0</span> jest niezdefiniowane). 
 </div>
 <div class="code">
 
@@ -789,8 +774,11 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
 
 <div class="paragraph"> </div>
 
- Zdefiniuj za pomocą rekursji po paliwie funkcję <span class="inlinecode"><span class="id" title="var">divFuel</span></span>, która jest
-    implementacją dzielenia.
+ Sporą zaletą rekursji po paliwie jest to, że definicje zrobionych za
+    jej pomocą funkcji są jasne i czytelne (przynajmniej w porównaniu do
+    rekursji dobrze ufundowanej, o czym już niedługo się przekonamy). To
+    z kolei pozwala nam w dość łatwy sposób dowodzić interesujących nas
+    właściwości tych funkcji.
 
 <div class="paragraph"> </div>
 
@@ -831,7 +819,30 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
 </div>
 
 <div class="doc">
-<a name="lab201"></a><h1 class="section">Rekursja dobrze ufundowana</h1>
+<a name="lab201"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że funkcji <span class="inlinecode"><span class="id" title="var">collatz</span></span> dla wejść o postaci <span class="inlinecode"><span class="id" title="var">pow</span></span> <span class="inlinecode">2</span> <span class="inlinecode"><span class="id" title="var">n</span></span> (czyli
+    potęg dwójki) wystarczy <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> jednostek paliwa.
+
+<div class="paragraph"> </div>
+
+    Uwaga (trochę złośliwa): jeśli napotkasz trudności w trakcie dowodzenia
+    (a moje uwagi przecież nie biorą się znikąd), to pamiętaj, że mają one
+    charakter arytmetyczny, tzn. są związane z użyciem w definicji funkcji
+    takich jak <span class="inlinecode"><span class="id" title="var">pow</span></span> czy <span class="inlinecode"><span class="id" title="var">div2</span></span>, nie są zaś spowodowane jakimiś problemami
+    z samą techniką, jaką jest rekursja po paliwie. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab202"></a><h1 class="section">Rekursja dobrze ufundowana</h1>
 
 <div class="paragraph"> </div>
 
@@ -943,7 +954,7 @@ Układ kostek reprezentowany przez <span class="inlinecode"><span class="id" tit
     musieć pisać wszystkiego dwa razy. 
 <div class="paragraph"> </div>
 
-<a name="lab202"></a><h4 class="section">Ćwiczenie (dostępność i ufundowanie)</h4>
+<a name="lab203"></a><h4 class="section">Ćwiczenie (dostępność i ufundowanie)</h4>
 
 <div class="paragraph"> </div>
 
@@ -1092,9 +1103,19 @@ Poprzednie twierdzenie, czyli <span class="inlinecode"><span class="id" title="v
     twierdzeń i definiowanie funkcji, którego nie da się zrobić za pomocą
     prostej indukcji albo banalnego dopasowania do wzorca. W tego typu
     sytuacjach nieodzowne będzie skorzystanie z indukcji i rekursji
-    dobrze ufundowanej, o czym przekonamy się już niedługo. 
+    dobrze ufundowanej, o czym przekonamy się już natychmiast zaraz. 
 </div>
 <div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">div</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (@<span class="id" title="var">well_founded_rect</span> <span class="id" title="var">nat</span> <span class="id" title="var">lt</span> <span class="id" title="var">wf_lt</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="tactic">exact</span> 0.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (1 + <span class="id" title="var">IH</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">_</span> <span class="id" title="var">m</span>). <span class="id" title="tactic">abstract</span> <span class="id" title="tactic">omega</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
 
@@ -1102,8 +1123,177 @@ Poprzednie twierdzenie, czyli <span class="inlinecode"><span class="id" title="v
 </div>
 
 <div class="doc">
-<a name="lab203"></a><h1 class="section">Indukcja funkcyjna (TODO)</h1>
+Poważniejszym problemem jest bowiem definicja dzielenia, z którą borykamy
+    się od samiuśkiego początku niniejszego rozdziału. Powyższy kawałek kodu
+    jest (nieudaną, jak się okaże) próbą uporania się z tym problemem.
+
+<div class="paragraph"> </div>
+
+    Definiować będziemy w trybie dowodzenia, gdyż przy posługiwaniu się
+    rekursją dobrze ufundowaną zazwyczaj tak jest dużo łatwiej. Zaczynamy
+    od zaaplikowania reguły rekursji dobrze ufundowanej dla typu <span class="inlinecode"><span class="id" title="var">nat</span></span> i
+    porządku <span class="inlinecode">&lt;</span> (no i rzecz jasna <span class="inlinecode"><span class="id" title="var">wf_lt</span></span>, czyli dowodu na to, że <span class="inlinecode"><span class="id" title="var">lt</span></span>
+    jest dobrze ufundowany - bez tego ani rusz). Po typach widać, że
+    rekursja będzie się odbywać po pierwszym argumencie. Wprowadzamy też
+    zmienne do kontekstu. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">le_lt_dec</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;le_lt_dec&nbsp;:&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,&nbsp;{n&nbsp;&lt;=&nbsp;m}&nbsp;+&nbsp;{m&nbsp;&lt;&nbsp;n}&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Następnie musimy sprawdzić, czy dzielna (czyli <span class="inlinecode"><span class="id" title="var">n</span></span>) jest mniejsza od
+    dzielnika (czyli <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> - zauważ, że definiujemy tutaj "sprytną" wersję
+    dzielenia, tzn. <span class="inlinecode"><span class="id" title="var">div</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> = <span class="inlinecode"><span class="id" title="var">n</span>/(<span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1)</span>, żeby uniknąć problemów z
+    dzieleniem przez <span class="inlinecode">0</span>). Jeżeli tak, wynikiem jest <span class="inlinecode">0</span>. Jeżeli nie,
+    wynikiem jest wynik wywołania rekurencyjnego na argumencie <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>
+    powiększony o <span class="inlinecode">1</span>.
+
+<div class="paragraph"> </div>
+
+    Na koniec musimy jeszcze tylko pokazać, że argument wywołania
+    rekurencyjnego, czyli <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>, jest mniejszy od argumentu
+    obecnego wywołania, czyli <span class="inlinecode"><span class="id" title="var">n</span></span>. Żeby za bardzo nie pobrudzić
+    sobie rąk arytmetyką, zostawiamy ten cel taktyce <span class="inlinecode"><span class="id" title="tactic">omega</span></span>, ale
+    zawijamy jej użycie w kombinator <span class="inlinecode"><span class="id" title="tactic">abstract</span></span>, który zapobiega
+    "wylaniu się" rozumowania taktyki <span class="inlinecode"><span class="id" title="tactic">omega</span></span> do definicji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">div</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;<br/>
+&nbsp;&nbsp;div&nbsp;=<br/>
+&nbsp;&nbsp;well_founded_rect&nbsp;nat&nbsp;lt&nbsp;wf_lt&nbsp;(fun&nbsp;_&nbsp;:&nbsp;nat&nbsp;=&gt;&nbsp;nat&nbsp;-&gt;&nbsp;nat)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(fun&nbsp;(n&nbsp;:&nbsp;nat)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(IH&nbsp;:&nbsp;forall&nbsp;y&nbsp;:&nbsp;nat,&nbsp;y&nbsp;&lt;&nbsp;n&nbsp;-&gt;&nbsp;nat&nbsp;-&gt;&nbsp;nat)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(m&nbsp;:&nbsp;nat)&nbsp;=&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;s&nbsp;:=&nbsp;le_lt_dec&nbsp;(S&nbsp;m)&nbsp;n&nbsp;in<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;s&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;left&nbsp;l&nbsp;=&gt;&nbsp;1&nbsp;+&nbsp;IH&nbsp;(n&nbsp;-&nbsp;S&nbsp;m)&nbsp;(div_subproof&nbsp;n&nbsp;m&nbsp;l)&nbsp;m<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;right&nbsp;_&nbsp;=&gt;&nbsp;0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">div_subproof</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;div_subproof<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,&nbsp;S&nbsp;m&nbsp;&lt;=&nbsp;n&nbsp;-&gt;&nbsp;n&nbsp;-&nbsp;S&nbsp;m&nbsp;&lt;&nbsp;n&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">div_subproof</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;dużo&nbsp;różnych&nbsp;głupot&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mówiąc wprost, taktyka <span class="inlinecode"><span class="id" title="tactic">abstract</span></span> <span class="inlinecode"><span class="id" title="tactic">omega</span></span> zamiast wstawiać do definicji
+    całe rozumowanie, tak jak zrobiłaby to taktyka <span class="inlinecode"><span class="id" title="tactic">omega</span></span>, dowodzi sobie
+    na boku odpowiedni lemat arytmetyczny, nazywa go <span class="inlinecode"><span class="id" title="var">div_subproof</span></span> i
+    dowodzi celu za jego pomocą. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">div</span> 5 2.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;=&nbsp;1&nbsp;:&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać, definicja przechodzi bez problemu, a nasza funkcja elegancko
+    się oblicza (pamiętaj, że <span class="inlinecode"><span class="id" title="var">div</span></span> <span class="inlinecode">5</span> <span class="inlinecode">2</span> to tak naprawdę <span class="inlinecode">5/3</span>, więc wynikiem
+    faktycznie powinno być <span class="inlinecode">1</span>).
+
+<div class="paragraph"> </div>
+
+    Jednak nie samymi definicjami żyje człowiek - czas trochę podowodzić.
+    Spodziewamy się wszakże, że nasze dzielenie spełnia wszystkie
+    właściwości, których się po nim spodziewamy, prawda? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div_0_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div</span> <span class="id" title="var">n</span> 0 = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_ind</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">wf_lt</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="comment">(*&nbsp;O&nbsp;Jezu,&nbsp;a&nbsp;cóż&nbsp;to&nbsp;za&nbsp;wojacy...&nbsp;*)</span><br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Niestety jednak, jak to w życiu, nie ma kolorowo. Próbując udowodnić
+    za pomocą indukcji dobrze ufundowanej, że <span class="inlinecode"><span class="id" title="var">n</span>/1</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span>, dość szybko
+    atakuje nas pewien problem. O ile w pierwszym przypadku idzie łatwo,
+    o tyle drugi jest już beznadziejny. Nie żeby był nieprawdziwy - co to,
+    to nie. Po prostu w wyniku użycia <span class="inlinecode"><span class="id" title="var">cbn</span></span> wypływa część definicji ukryta
+    dotychczas w <span class="inlinecode"><span class="id" title="var">div_subproof</span></span>.
+
+<div class="paragraph"> </div>
+
+    Problem nie pochodzi jednka od taktyki <span class="inlinecode"><span class="id" title="tactic">omega</span></span> (ani od <span class="inlinecode"><span class="id" title="tactic">abstract</span></span> <span class="inlinecode"><span class="id" title="tactic">omega</span></span>).
+    Jest on dużo ogólniejszy i polega na tym, że w definicji pojawiają się
+    dowody, które są wymagane przez <span class="inlinecode"><span class="id" title="var">well_founded_rect</span></span>, ale które zaburzają
+    jej obliczeniową strukturę. 
+<div class="paragraph"> </div>
+
+<a name="lab204"></a><h1 class="section">Indukcja funkcyjna (TODO)</h1>
 
 </div>
 <div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">divR</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divR_lt</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>}, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divR</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divR_ge</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &gt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">divR</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">divR</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">S</span> <span class="id" title="var">r</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">div_dom</span> (<span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">div_dom_lt</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>}, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">div_dom</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">div_dom_ge</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>}, <span class="id" title="var">n</span> &gt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">div_dom</span> <span class="id" title="var">m</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) -&gt; <span class="id" title="var">div_dom</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">div3</span> {<span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">H</span> : <span class="id" title="var">div_dom</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">H</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">div_dom_lt</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">div_dom_ge</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">div3</span> <span class="id" title="var">H'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div_dom_all</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div_dom</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_rect</span> <span class="id" title="var">nat</span> <span class="id" title="var">lt</span> <span class="id" title="var">wf_lt</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">div_dom_ge</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.sub_lt</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_n_S</span>, <span class="id" title="var">le_0_n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">div_dom_lt</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">div3'</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">div3</span> (<span class="id" title="var">div_dom_all</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">div3'</span> 5 0.<br/>
 </div>
