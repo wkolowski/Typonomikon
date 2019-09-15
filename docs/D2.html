@@ -262,7 +262,7 @@ Wywołanie rekurencyjne <span class="inlinecode"><span class="id" title="var">lo
     formą rekursji jest rekursja strukturalna. Funkcje rekurencyjne, które
     dotychczas pisaliśmy, były strukturalnie rekurencyjne, więc potrafisz
     już całkiem sprawnie posługiwać się tym rodzajem rekursji. Pozostaje
-    nam zatem jedŭnie zbadać techniczne detale dotyczące sposobu realizacji
+    nam zatem jedynie zbadać techniczne detale dotyczące sposobu realizacji
     rekursji strukturalnej w Coqu. W tym celu przyjrzyjmy się ponownie
     definicji dodawania: 
 </div>
@@ -685,17 +685,18 @@ Jest to bardzo wesoła funkcja. Przypadki bazowe to <span class="inlinecode">0</
 
 <div class="doc">
 Definicja funkcji <span class="inlinecode"><span class="id" title="var">collatz</span></span> za pomocą rekursji po paliwie wygląda dość
-    groźnie, ale tak naprawdę jest całkiem banalna. Oryginalna funkcja była
-    typu <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, a nowa ma typ <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span>.
+    groźnie, ale tak naprawdę jest całkiem banalna.
 
 <div class="paragraph"> </div>
 
-    Zamiast dopasowywać <span class="inlinecode"><span class="id" title="var">n</span></span> musimy dopasować paliwo, czyli <span class="inlinecode"><span class="id" title="var">fuel</span></span>. Dla <span class="inlinecode">0</span>
-    zwracamy <span class="inlinecode"><span class="id" title="var">None</span></span>, a gdy zostało jeszcze trochę paliwa, przechodzimy do
-    właściwej części definicji. W przypadkach bazowych zwracamy <span class="inlinecode">[<span class="id" title="var">n</span>]</span>, ale
-    musimy zawinąć je w <span class="inlinecode"><span class="id" title="var">Some</span></span>. W pozostałych przypadkach sprawdzamy, czy
-    <span class="inlinecode"><span class="id" title="var">n</span></span> jest parzyste, ale tym razem musimy dopasować wywołanie rekurencyjne
-    żeby sprawdzić, czy zwraca ono <span class="inlinecode"><span class="id" title="var">None</span></span> czy <span class="inlinecode"><span class="id" title="var">Some</span></span>. 
+    Ponieważ oryginalna funkcja była typu <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, to ta nowa musi
+    być typu <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span>. Tym razem zamiast dopasowywać
+    <span class="inlinecode"><span class="id" title="var">n</span></span> musimy dopasować paliwo, czyli <span class="inlinecode"><span class="id" title="var">fuel</span></span>. Dla <span class="inlinecode">0</span> zwracamy <span class="inlinecode"><span class="id" title="var">None</span></span>, a gdy
+    zostało jeszcze trochę paliwa, przechodzimy do właściwej części definicji.
+    W przypadkach bazowych zwracamy <span class="inlinecode">[<span class="id" title="var">n</span>]</span>, ale  musimy zawinąć je w <span class="inlinecode"><span class="id" title="var">Some</span></span>. W
+    pozostałych przypadkach sprawdzamy, czy <span class="inlinecode"><span class="id" title="var">n</span></span> jest parzyste, a następnie
+    doklejamy odpowiedni ogon, ale musimy dopasować wywołania rekurencyjne
+    żeby sprawdzić, czy zwracają one <span class="inlinecode"><span class="id" title="var">None</span></span> czy <span class="inlinecode"><span class="id" title="var">Some</span></span>. 
 </div>
 <div class="code">
 
@@ -715,18 +716,18 @@ Definicja funkcji <span class="inlinecode"><span class="id" title="var">collatz<
 <div class="doc">
 Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
     problemu, oczywiście o ile wystarczy jej paliwa. W powyższych przykładach
-    <span class="inlinecode">10</span> jednostek paliwa wystarcza, by obliczyć wynik dla <span class="inlinecode">5</span>, ale tylko <span class="inlinecode">2</span>
+    <span class="inlinecode">10</span> jednostek paliwa wystarcza, by obliczyć wynik dla <span class="inlinecode">5</span>, ale <span class="inlinecode">2</span>
     jednostki paliwa to za mało. Jak więc widać, ilość potrzebnego paliwa
     zależy od konkretnej wartości na wejściu.
 
 <div class="paragraph"> </div>
 
-    Interpretacja tego, czym tak naprawdę jest paliwo, też nie jest zbyt
+    Interpretacja tego, czym tak naprawdę jest paliwo, nie jest zbyt
     trudna. Jest to maksymalna głębokość rekursji, na jaką może pozwolić
     sobie funkcja. Czym jest głębokość rekursji? Możemy wyobrazić sobie
-    drzewo, którego korzeniem jest obecne wywołanie, a poddrzewami to
+    drzewo, którego korzeniem jest obecne wywołanie, a poddrzewami są
     drzewa dla wywołań rekurencyjnych. Głębokość rekursji jest po prostu
-    głębokością takiego drzewa.
+    głębokością (czyli wysokością) takiego drzewa.
 
 <div class="paragraph"> </div>
 
@@ -741,22 +742,96 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
     Wystarczy znaleźć "funkcję tankującą"
     <span class="inlinecode"><span class="id" title="var">fill_tank</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A1</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">...</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">An</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, która oblicza, ile paliwa
     potrzeba dla danych argumentów wejściowych. Funkcja ta powinna mieć
-    tę własność, że gdyby nalejemy tyle paliwa, ile ona każe, zawsze w
-    wyniku dostaniemy <span class="inlinecode"><span class="id" title="var">Some</span></span>.
+    tę własność, że gdy nalejemy tyle paliwa, ile ona każe (lub więcej),
+    zawsze w wyniku dostaniemy <span class="inlinecode"><span class="id" title="var">Some</span></span>.
 
 <div class="paragraph"> </div>
 
     Trudnością, z którą nikt dotychczas w przypadku funkcji <span class="inlinecode"><span class="id" title="var">collatz</span></span> nie
     potrafił się uporać, jest właśnie znalezienie funkcji tankującej. Jak
-    więc widać, rekursja po paliwie nie zawsze jest fuszerką, lecz bywa
-    czasem faktycznie przydatna. 
+    więc widać, rekursja po paliwie nie zawsze jest fuszerką czy środkiem
+    prototypowania, lecz czasem bywa faktycznie przydatna do reprezentowania
+    funkcji, których inaczej zaimplementować się nie da. 
 <div class="paragraph"> </div>
 
 <a name="lab198"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
-<a name="lab199"></a><h1 class="section">Rekursja dobrze ufundowana</h1>
+ Sporą zaletą rekursji po paliwie jest to, że definicje zrobionych za
+    jej pomocą funkcji są jasne i czytelne (przynajmniej w porównaniu do
+    rekursji dobrze ufundowanej, o czym już niedługo się przekonamy). To
+    z kolei pozwala nam w dość łatwy sposób dowodzić interesujących nas
+    właściwości tych funkcji.
+
+<div class="paragraph"> </div>
+
+    Udowodnij, że funkcji <span class="inlinecode"><span class="id" title="var">collatz</span></span> dla wejść o postaci <span class="inlinecode"><span class="id" title="var">pow</span></span> <span class="inlinecode">2</span> <span class="inlinecode"><span class="id" title="var">n</span></span> (czyli
+    potęg dwójki) wystarczy <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> jednostek paliwa.
+
+<div class="paragraph"> </div>
+
+    Uwaga (trochę złośliwa): jeśli napotkasz trudności w trakcie dowodzenia
+    (a moje uwagi przecież nie biorą się znikąd), to pamiętaj, że mają one
+    charakter arytmetyczny, tzn. są związane z użyciem w definicji funkcji
+    takich jak <span class="inlinecode"><span class="id" title="var">pow</span></span> czy <span class="inlinecode"><span class="id" title="var">div2</span></span>, nie są zaś spowodowane jakimiś problemami
+    z samą techniką, jaką jest rekursja po paliwie. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab199"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj za pomocą rekursji po paliwie funkcję <span class="inlinecode"><span class="id" title="var">divFuel</span></span>, która jest
+    implementacją dzielenia.
+
+<div class="paragraph"> </div>
+
+    Udowodnij kilka oczywistych właściwości dzielenia:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">divFuel</span></span> <span class="inlinecode">?</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">1</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>, tzn. <span class="inlinecode"><span class="id" title="var">n</span>/1</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span>. Ile potrzeba paliwa?
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">divFuel</span></span> <span class="inlinecode">?</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode">1</span>, tzn. <span class="inlinecode"><span class="id" title="var">n</span>/<span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">1</span>. Ile potrzeba paliwa?
+
+</li>
+<li> przy dzieleniu przez <span class="inlinecode">0</span> nigdy nie starcza paliwa. 
+</li>
+</ul>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab200"></a><h4 class="section">Ćwiczenie (lemat o tankowaniu)</h4>
+
+<div class="paragraph"> </div>
+
+ Pokaż, że jeżeli wystarcza nam paliwa do obliczenia wyniku, ale
+    zatankujemy jeszcze trochę, to dalej będzie nam wystarczać.
+    Wniosek: tankującemu nie dzieje się krzywda. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab201"></a><h1 class="section">Rekursja dobrze ufundowana</h1>
 
 <div class="paragraph"> </div>
 
@@ -868,7 +943,7 @@ Układ kostek reprezentowany przez <span class="inlinecode"><span class="id" tit
     musieć pisać wszystkiego dwa razy. 
 <div class="paragraph"> </div>
 
-<a name="lab200"></a><h4 class="section">Ćwiczenie (dostępność i ufundowanie)</h4>
+<a name="lab202"></a><h4 class="section">Ćwiczenie (dostępność i ufundowanie)</h4>
 
 <div class="paragraph"> </div>
 
@@ -1027,7 +1102,7 @@ Poprzednie twierdzenie, czyli <span class="inlinecode"><span class="id" title="v
 </div>
 
 <div class="doc">
-<a name="lab201"></a><h1 class="section">Indukcja funkcyjna (TODO)</h1>
+<a name="lab203"></a><h1 class="section">Indukcja funkcyjna (TODO)</h1>
 
 </div>
 <div class="code">
