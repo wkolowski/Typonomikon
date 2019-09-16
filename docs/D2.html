@@ -1225,7 +1225,7 @@ Jak widać, definicja przechodzi bez problemu, a nasza funkcja elegancko
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div</span> <span class="id" title="var">n</span> 0 = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_ind</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">wf_lt</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">div</span>. <span class="id" title="var">cbn</span>. <span class="comment">(*&nbsp;O&nbsp;Jezu,&nbsp;a&nbsp;cóż&nbsp;to&nbsp;za&nbsp;wojacy...&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">div</span>. <span class="id" title="var">cbn</span>. <span class="comment">(*&nbsp;O&nbsp;Jezu,&nbsp;a&nbsp;cóż&nbsp;to&nbsp;za&nbsp;wojacy?&nbsp;*)</span><br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
@@ -1259,27 +1259,51 @@ Niestety jednak, jak to w życiu, nie ma kolorowo.
 
     Nie jesteśmy jednak (jeszcze) skazani na porażkę. Spróbujemy uporać się
     z tą przeszkodą dzięki <i>równaniu rekurencyjnemu</i>. Równanie rekurencyjne
-    to coś, co pozwoli nam użyć taktyki <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> do przepisania wystąpień
-    funkcji <span class="inlinecode"><span class="id" title="var">div</span></span> do pożądanej postaci zamiast rozwijać je za pomocą taktyki
-    <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> lub obliczać za pomocą <span class="inlinecode"><span class="id" title="var">cbn</span></span>. 
+    to lemat, którego treść wygląda dokładnie tak, jak pożądana przez nas
+    definicja funkcji, ale która nie może służyć jako definicja z różnych
+    powodów, np. dlatego że nie jest strukturalnie rekurencyjna. Dzięki
+    równaniu rekurencyjnemu możemy użyć taktyki <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> do przepisania
+    wystąpień funkcji <span class="inlinecode"><span class="id" title="var">div</span></span> do pożądanej postaci zamiast rozwijać je za
+    pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> lub obliczać za pomocą <span class="inlinecode"><span class="id" title="var">cbn</span></span>. 
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">div_eq</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">div</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> = <span class="id" title="keyword">if</span> <span class="id" title="var">ltb</span> <span class="id" title="var">n</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="keyword">then</span> 0 <span class="id" title="keyword">else</span> <span class="id" title="var">S</span> (<span class="id" title="var">div</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">div</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> = <span class="id" title="keyword">if</span> <span class="id" title="var">n</span> &lt;? <span class="id" title="var">S</span> <span class="id" title="var">m</span> <span class="id" title="keyword">then</span> 0 <span class="id" title="keyword">else</span> <span class="id" title="var">S</span> (<span class="id" title="var">div</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_ind</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">wf_lt</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">_</span>)).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span> <span class="id" title="var">m</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">div</span>, <span class="id" title="var">well_founded_rect</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">div</span>. <span class="id" title="var">cbn</span>. <span class="comment">(*&nbsp;O&nbsp;Jezu,&nbsp;a&nbsp;cóż to&nbsp;za&nbsp;hołota?&nbsp;*)</span><br/>
 <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Nasz chytry plan się nie powiódł. 
+Powyższe równanie dokładnie opisuje, jak powinna zachowywać się funkcja
+    <span class="inlinecode"><span class="id" title="var">div</span></span>, ale za definicję służyć nie może, gdyż Coq nie byłby w stanie
+    rozpoznać, że <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> jest podtermem <span class="inlinecode"><span class="id" title="var">n</span></span>. Zauważ, że używamy tu <span class="inlinecode">&lt;?</span>
+    (czyli <span class="inlinecode"><span class="id" title="var">ltb</span></span>) zamiast <span class="inlinecode"><span class="id" title="var">le_lt_dec</span></span>. Możemy sobie na to pozwolić, gdyż
+    użycie <span class="inlinecode"><span class="id" title="var">le_lt_dec</span></span> w faktycznej definicji wynikało jedynie z tego, że
+    potrzebowaliśmy dowodu odpowiedniego faktu arytmetycznego, żeby użyć
+    go jako argumentu wywołania rekurencyjnego.
+
+<div class="paragraph"> </div>
+
+    Niestety próba udowodnienia tego równania rekurencyjnego musi skończyć
+    się taką samą porażką, jak próba udowodnienia <span class="inlinecode"><span class="id" title="var">div_0_r</span></span>. Przyczyna jest
+    taka sama jak ostatnio. Zresztą, naiwnym byłoby spodziewać się, że nam
+    się uda - zarówno <span class="inlinecode"><span class="id" title="var">div_0_r</span></span>, jak i <span class="inlinecode"><span class="id" title="var">div_eq</span></span> to nietrywialne właściwości
+    funkcji <span class="inlinecode"><span class="id" title="var">div</span></span>, więc gdybyśmy potrafili udowodnić równanie rekurencyjne,
+    to z dowodem <span class="inlinecode"><span class="id" title="var">div_0_r</span></span> również poradzilibyśmy sobie bez problemu.
+
+<div class="paragraph"> </div>
+
+    Żeby jednak przekonać się o użyteczności równania rekurencyjnego, jego
+    "dowód" kończymy za pomocą komendy <span class="inlinecode"><span class="id" title="var">Admitted</span></span>, która przerywa dowód i
+    zamienia twierdzenie w aksjomat. Dzięki temu za chwilę zobaczymy, ile
+    moglibyśmy zdziałać, mając równanie rekurencyjne. 
 </div>
 <div class="code">
 
@@ -1288,34 +1312,41 @@ Nasz chytry plan się nie powiódł.
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div</span> <span class="id" title="var">n</span> 0 = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_ind</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">wf_lt</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">div_eq</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">Nat.ltb_spec</span> <span class="id" title="var">x</span> 1).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">div_eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">Nat.ltb_spec</span> <span class="id" title="var">n</span> 1).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">omega</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div_n_n</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">n</span> = 1.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_ind</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">wf_lt</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">div_eq</span>, <span class="id" title="var">Nat.ltb_irrefl</span>, <span class="id" title="var">minus_diag</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH</span>; <span class="id" title="tactic">omega</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Gdyby jednak nasz chytry plan się powiódł, udowodnienie pożądanych
-    właściwości <span class="inlinecode"><span class="id" title="var">div</span></span> nie stanowiłoby najmniejszego problemu. Powyższe
-    dowody wyglądają dokładnie tak, jak powinny - zaczynamy od indukcji
-    dobrze ufundowanej, następnie rozwijamy <span class="inlinecode"><span class="id" title="var">div</span></span> za pomocą równania
-    rekurencyjnego i rozważamy przypadki lub przepisujemy, żeby poradzić
-    sobie z <span class="inlinecode"><span class="id" title="keyword">if</span></span>em. 
+Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko.
+    W powyższym zaczynamy od indukcji dobrze ufundowanej po <span class="inlinecode"><span class="id" title="var">n</span></span> (przy użyciu
+    relacji <span class="inlinecode">&lt;</span> i dowodu <span class="inlinecode"><span class="id" title="var">wf_lt</span></span>), wprowadzamy zmienne do kontekstu, po czym
+    przepisujemy równanie rekurencyjne. Po przeprowadzeniu analizy przypadków
+    kończymy za pomocą rozumowań arytmetycznych, używając być może hipotezy
+    indukcyjnej. 
 <div class="paragraph"> </div>
 
-<a name="lab204"></a><h1 class="section">Indukcja funkcyjna</h1>
+<a name="lab204"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zgadnij, jakie jest polecenie tego ćwiczenia, a następnie wykonaj je. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div_n_n</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">n</span> = 1.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab205"></a><h1 class="section">Indukcja funkcyjna</h1>
 
 <div class="paragraph"> </div>
 
@@ -1328,19 +1359,222 @@ Gdyby jednak nasz chytry plan się powiódł, udowodnienie pożądanych
 
     No przez indukcję, czy to nie oczywiste? Jasne, ale jak dokładnie owa
     indukcja ma wyglądać? Odpowiedź jest prostsza niż można się spodziewać.
-    Otóż gdy kupujesz but, ma on pasować do twojej stopy. Podobnie gdy
-    kupujesz gacie, mają one pasować do twojej dupy. Podobnie jest z
-    indukcją: gdy ją stosujemy, ma ona dokładnie pasować do rekurencyjnego
-    kształtu funkcji, do której jest stosowana. 
+    Otóż gdy kupujesz but, ma on pasować do twojej stopy, zaś gdy kupujesz
+    gacie, mają one pasować do twojej dupy. Podobnie jest z indukcją: jej
+    kształt ma pasować do kształtu rekursji, za pomocą której zdefiniowana
+    została funkcja.
+
+<div class="paragraph"> </div>
+
+    Czym jest "kształt" rekursji (i indukcji)? Jest to raczej poetyckie
+    pojęcie, które odnosi się do tego, jak zdefiniowano funkcję - ile
+    jest przypadków, podprzypadków, podpodprzypadków etc., w jaki sposób
+    są w sobie zagnieżdżone, gdzie są wywołania rekurencyjne, ile ich
+    jest i na jakich argumentach etc.
+
+<div class="paragraph"> </div>
+
+    Dowiedziawszy się, czym jest kształt rekursji i indukcji, powinniśmy
+    zacząć szukać sposobu na dopasowanie kształtu indukcji w naszych
+    dowodach do kształtu rekursji funkcji. Dotychczas indukcję zawsze
+    robiliśmy po argumencie głównym, zaś z potencjalnymi niedopasowaniami
+    kształtów radziliśmy sobie robiąc ad hoc analizy przypadków, które
+    uznaliśmy za stosowne.
+
+<div class="paragraph"> </div>
+
+    I tutaj przyda nam się nieco konceptualnej spostrzegawczości. Zauważyć
+    nam bowiem trzeba, że robiąc indukcję po argumencie głównym, kształt
+    indukcji odpowiada kształtowi typu argumentu głównego. Skoro zaś mamy
+    dopasować go do kształtu rekursji funkcji, to nasuwa nam się oczywiste
+    pytanie: czy da się zdefiniować typ, który ma taki sam kształt, jak
+    definicja danej funkcji?
+
+<div class="paragraph"> </div>
+
+    Odpowiedź brzmi: nie, ale da się zdefiniować rodzinę typów
+    (a konkretniej pisząc, rodzinę zdań, czyli relację) o takiej właściwości.
+    Owa relacja zwie się wykresem funkcji. Jaki ma to związek z bazgrołami
+    znanymi ci ze szkoły (zakładam, że wiesz, że wykresem funkcji liniowej
+    jest prosta, wykresem funkcji kwadratowej jest parabola, a wykresy sinusa
+    i cosinusa to takie wesołe szlaczki)?
+
+<div class="paragraph"> </div>
+
+    To, co w szkole nazywa się wykresem funkcji, jest jedynie graficznym
+    przedstawieniem prawdziwego wykresu, czyli relacji. Samo słowo "wykres",
+    wywodzące się w oczywisty sposób od kreślenia, sugeruje, że myślenie o
+    wykresie jak o obrazku było pierwsze, a koncepcja wykresu jako relacji
+    jest późniejsza.
+
+<div class="paragraph"> </div>
+
+    W ramach ciekawostki być może warto napisać, że w dawnych czasach
+    matematycy silnie utożsamiali funkcję z jej wykresem (w sensie
+    obrazka) i przez to byty, których wykresu nie dało się narysować,
+    nie były uznawane za funkcje.
+
+<div class="paragraph"> </div>
+
+    W nieco późniejszym czasie zaszły jednak niemałe zmiany i obecnie
+    panującym zabobonem jest utożsamianie funkcji z wykresem (w sensie
+    relacji), przez co za funkcje uznawane są także byty, których nie
+    da się obliczyć lub nikt nie potrafi pokazać, że terminują (takich
+    jak np. "funkcja" Collatza).
+
+<div class="paragraph"> </div>
+
+    Gdybyś zgłupiał od powyższych czterech akapitów, to przypominam, że
+    dla nas zawarte w nich pojęcia oznaczają to:
+<ul class="doclist">
+<li> Funkcja to byt, którego typem jest <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> lub <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>.
+      Można dać jej coś na wejściu i uzyskać wynik na wyjściu, tzn. można
+      ją obliczyć. W Coqu wszystkie funkcje prędzej czy później kończą się
+      obliczać.
+
+</li>
+<li> Wykres funkcji to relacja opisująca związek argumentu funkcji z jej
+      wynikiem. Każda funkcja ma wykres, ale nie każda relacja jest
+      wykresem jakiejś funkcji.
+
+</li>
+<li> Jeżeli typy <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> da się jakoś sensownie narysować, to możemy
+      narysować obrazek przedstawiający wykres funkcji.
+</li>
+</ul>
+
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">divR</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divR_lt</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>}, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divR</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divR_ge</span> :<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">is_graph</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>), <span class="id" title="var">R</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> &lt;-&gt; <span class="id" title="var">f</span> <span class="id" title="var">a</span> = <span class="id" title="var">b</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Żeby było nam raźniej, tak wygląda formalna definicja stwierdzenia,
+    że relacja <span class="inlinecode"><span class="id" title="var">R</span></span> jest wykresem funkcji <span class="inlinecode"><span class="id" title="var">f</span></span>. Nie będę tłumaczył, co tu
+    jest napisane - powinieneś rozumieć. 
+<div class="paragraph"> </div>
+
+<a name="lab206"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">graph_of</span></span>, która każdej funkcji przyporządkowuje
+    jej wykres. Następnie udowodnij, że faktycznie jest to wykres tej
+    funkcji. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">is_graph_graph_of</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">is_graph</span> <span class="id" title="var">f</span> (<span class="id" title="var">graph_of</span> <span class="id" title="var">f</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab207"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Wymyśl typy <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> oraz relację o typie <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, która nie
+    jest wykresem żadnej funkcji. Następnie udowodnij formalnie, że nie
+    mylisz się. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">divG</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divG_lt</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>}, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divG</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divG_ge</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &gt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">divR</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">divR</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">S</span> <span class="id" title="var">r</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">divG</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">divG</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">S</span> <span class="id" title="var">r</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">divG_complete</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">divG</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">div</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> = <span class="id" title="var">r</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">div_eq</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">Nat.ltb_lt</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">div_eq</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">ge</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">Nat.ltb_ge</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">f_equal</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">divG_correct</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">divG</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">div</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_ind</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">wf_lt</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">div_eq</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">Nat.ltb_spec0</span> <span class="id" title="var">n</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>. <span class="id" title="tactic">omega</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div_ind</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Hlt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">div</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Hge</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &gt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span> (<span class="id" title="var">div</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>) -&gt; <span class="id" title="var">P</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">div</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">div</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Hlt</span> <span class="id" title="var">Hge</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_ind</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">wf_lt</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">Nat.ltb_spec0</span> <span class="id" title="var">n</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Hlt</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Hge</span>, <span class="id" title="var">IH</span>; <span class="id" title="tactic">omega</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab208"></a><h1 class="section">Metoda Bove-Capretta</h1>
+
+<div class="paragraph"> </div>
+
+ https://members.loria.fr/DLarchey/files/papers/TYPES_2018_paper_19.pdf
+
+<div class="paragraph"> </div>
+
+    A robi się to tak:
+<ul class="doclist">
+<li> Zdefiniuj wykres funkcji.
+
+</li>
+<li> Zdefiniuj predykat dziedziny używając wykresu.
+
+</li>
+<li> Udowodnij użyteczne rzeczy, np. funkcyjność wykresu.
+
+</li>
+<li> Zdefiniuj funkcję przez rekursję po predykacie dziedziny wraz z jej
+      specyfikacją.
+
+</li>
+<li> Wyjmij funkcję i specyfikację za pomocą projekcji. 
+</li>
+</ul>
+
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">div_dom</span> (<span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
@@ -1377,40 +1611,6 @@ Gdyby jednak nasz chytry plan się powiódł, udowodnienie pożądanych
 
 <br/>
 <span class="id" title="keyword">Compute</span> <span class="id" title="var">div3'</span> 5 0.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab205"></a><h1 class="section">Metoda Bove-Capretta</h1>
-
-<div class="paragraph"> </div>
-
- https://members.loria.fr/DLarchey/files/papers/TYPES_2018_paper_19.pdf
-
-<div class="paragraph"> </div>
-
-    A robi się to tak:
-<ul class="doclist">
-<li> Zdefiniuj wykres funkcji.
-
-</li>
-<li> Zdefiniuj predykat dziedziny używając wykresu.
-
-</li>
-<li> Udowodnij użyteczne rzeczy, np. funkcyjność wykresu.
-
-</li>
-<li> Zdefiniuj funkcję przez rekursję po predykacie dziedziny wraz z jej
-      specyfikacją.
-
-</li>
-<li> Wyjmij funkcję i specyfikację za pomocą projekcji. 
-</li>
-</ul>
-
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">graph</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
@@ -1596,8 +1796,18 @@ Gdyby jednak nasz chytry plan się powiódł, udowodnienie pożądanych
 </div>
 
 <div class="doc">
-<a name="lab206"></a><h1 class="section">Wszystko razem, tak do kupy</h1>
+<a name="lab209"></a><h1 class="section">Wszystko razem, tak do kupy</h1>
 
+<div class="paragraph"> </div>
+
+ Tu jakieś podsumowanie całego zwierzyńca. 
+<div class="paragraph"> </div>
+
+<a name="lab210"></a><h1 class="section">Uszy do góry</h1>
+
+<div class="paragraph"> </div>
+
+ Tu opis komendy <span class="inlinecode"><span class="id" title="keyword">Function</span></span> i pluginu <span class="inlinecode"><span class="id" title="keyword">Equations</span></span>. 
 </div>
 <div class="code">
 </div>

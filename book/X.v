@@ -1,5 +1,9 @@
 (** * X: Chilowo śmietnik *)
 
+(** Jak sama nazwa wskazuje, niniejszy tymczasowy rozdział robi za śmietnik,
+    czy też raczej zbiornik retencyjny, do którego wylewa się mój strumień
+    świadomości niepasujący gdzie indziej. *)
+
 (** * Parametryczność *)
 
 (** UWAGA TODO: ten podrozdział zawiera do pewnego stopnia kłamstwa (tzn.

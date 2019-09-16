@@ -1169,7 +1169,7 @@ Lemma div_0_r :
   forall n : nat, div n 0 = n.
 Proof.
   apply (well_founded_ind _ _ wf_lt).
-  intros. unfold div. cbn. (* O Jezu, a cóż to za wojacy... *)
+  intros. unfold div. cbn. (* O Jezu, a cóż to za wojacy? *)
 Abort.
 
 (** Niestety jednak, jak to w życiu, nie ma kolorowo.
@@ -1191,45 +1191,71 @@ Abort.
 
     Nie jesteśmy jednak (jeszcze) skazani na porażkę. Spróbujemy uporać się
     z tą przeszkodą dzięki _równaniu rekurencyjnemu_. Równanie rekurencyjne
-    to coś, co pozwoli nam użyć taktyki [rewrite] do przepisania wystąpień
-    funkcji [div] do pożądanej postaci zamiast rozwijać je za pomocą taktyki
-    [unfold] lub obliczać za pomocą [cbn]. *)
+    to lemat, którego treść wygląda dokładnie tak, jak pożądana przez nas
+    definicja funkcji, ale która nie może służyć jako definicja z różnych
+    powodów, np. dlatego że nie jest strukturalnie rekurencyjna. Dzięki
+    równaniu rekurencyjnemu możemy użyć taktyki [rewrite] do przepisania
+    wystąpień funkcji [div] do pożądanej postaci zamiast rozwijać je za
+    pomocą taktyki [unfold] lub obliczać za pomocą [cbn]. *)
 
 Lemma div_eq :
   forall n m : nat,
-    div n m = if ltb n (S m) then 0 else S (div (n - S m) m).
+    div n m = if n <? S m then 0 else S (div (n - S m) m).
 Proof.
   apply (well_founded_ind _ _ wf_lt (fun _ => forall m : nat, _)).
-  intros n IH m.
-  unfold div, well_founded_rect.
+  intros. unfold div. cbn. (* O Jezu, a cóż to za hołota? *)
 Admitted.
 
-(** Nasz chytry plan się nie powiódł. *)
+(** Powyższe równanie dokładnie opisuje, jak powinna zachowywać się funkcja
+    [div], ale za definicję służyć nie może, gdyż Coq nie byłby w stanie
+    rozpoznać, że [n - S m] jest podtermem [n]. Zauważ, że używamy tu [<?]
+    (czyli [ltb]) zamiast [le_lt_dec]. Możemy sobie na to pozwolić, gdyż
+    użycie [le_lt_dec] w faktycznej definicji wynikało jedynie z tego, że
+    potrzebowaliśmy dowodu odpowiedniego faktu arytmetycznego, żeby użyć
+    go jako argumentu wywołania rekurencyjnego.
+
+    Niestety próba udowodnienia tego równania rekurencyjnego musi skończyć
+    się taką samą porażką, jak próba udowodnienia [div_0_r]. Przyczyna jest
+    taka sama jak ostatnio. Zresztą, naiwnym byłoby spodziewać się, że nam
+    się uda - zarówno [div_0_r], jak i [div_eq] to nietrywialne właściwości
+    funkcji [div], więc gdybyśmy potrafili udowodnić równanie rekurencyjne,
+    to z dowodem [div_0_r] również poradzilibyśmy sobie bez problemu.
+
+    Żeby jednak przekonać się o użyteczności równania rekurencyjnego, jego
+    "dowód" kończymy za pomocą komendy [Admitted], która przerywa dowód i
+    zamienia twierdzenie w aksjomat. Dzięki temu za chwilę zobaczymy, ile
+    moglibyśmy zdziałać, mając równanie rekurencyjne. *)
 
 Lemma div_0_r :
   forall n : nat, div n 0 = n.
 Proof.
   apply (well_founded_ind _ _ wf_lt).
-  intros. rewrite div_eq.
-  destruct (Nat.ltb_spec x 1).
+  intros n IH. rewrite div_eq.
+  destruct (Nat.ltb_spec n 1).
     omega.
-    rewrite H; omega.
+    rewrite IH; omega.
 Qed.
+
+(** Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko.
+    W powyższym zaczynamy od indukcji dobrze ufundowanej po [n] (przy użyciu
+    relacji [<] i dowodu [wf_lt]), wprowadzamy zmienne do kontekstu, po czym
+    przepisujemy równanie rekurencyjne. Po przeprowadzeniu analizy przypadków
+    kończymy za pomocą rozumowań arytmetycznych, używając być może hipotezy
+    indukcyjnej. *)
+
+(** **** Ćwiczenie *)
+
+(** Zgadnij, jakie jest polecenie tego ćwiczenia, a następnie wykonaj je. *)
 
 Lemma div_n_n :
   forall n : nat, div (S n) n = 1.
+(* begin hide *)
 Proof.
-  apply (well_founded_ind _ _ wf_lt).
-  intros. rewrite div_eq, Nat.ltb_irrefl, minus_diag.
+  intros n.
+  rewrite div_eq, Nat.ltb_irrefl, minus_diag.
   cbn. reflexivity.
 Qed.
-
-(** Gdyby jednak nasz chytry plan się powiódł, udowodnienie pożądanych
-    właściwości [div] nie stanowiłoby najmniejszego problemu. Powyższe
-    dowody wyglądają dokładnie tak, jak powinny - zaczynamy od indukcji
-    dobrze ufundowanej, następnie rozwijamy [div] za pomocą równania
-    rekurencyjnego i rozważamy przypadki lub przepisujemy, żeby poradzić
-    sobie z [if]em. *)
+(* end hide *)
 
 (** * Indukcja funkcyjna *)
 
@@ -1240,16 +1266,173 @@ Qed.
 
     No przez indukcję, czy to nie oczywiste? Jasne, ale jak dokładnie owa
     indukcja ma wyglądać? Odpowiedź jest prostsza niż można się spodziewać.
-    Otóż gdy kupujesz but, ma on pasować do twojej stopy. Podobnie gdy
-    kupujesz gacie, mają one pasować do twojej dupy. Podobnie jest z
-    indukcją: gdy ją stosujemy, ma ona dokładnie pasować do rekurencyjnego
-    kształtu funkcji, do której jest stosowana. *)
+    Otóż gdy kupujesz but, ma on pasować do twojej stopy, zaś gdy kupujesz
+    gacie, mają one pasować do twojej dupy. Podobnie jest z indukcją: jej
+    kształt ma pasować do kształtu rekursji, za pomocą której zdefiniowana
+    została funkcja.
 
-Inductive divR : nat -> nat -> nat -> Prop :=
-    | divR_lt : forall {n m : nat}, n < S m -> divR n m 0
-    | divR_ge :
+    Czym jest "kształt" rekursji (i indukcji)? Jest to raczej poetyckie
+    pojęcie, które odnosi się do tego, jak zdefiniowano funkcję - ile
+    jest przypadków, podprzypadków, podpodprzypadków etc., w jaki sposób
+    są w sobie zagnieżdżone, gdzie są wywołania rekurencyjne, ile ich
+    jest i na jakich argumentach etc.
+
+    Dowiedziawszy się, czym jest kształt rekursji i indukcji, powinniśmy
+    zacząć szukać sposobu na dopasowanie kształtu indukcji w naszych
+    dowodach do kształtu rekursji funkcji. Dotychczas indukcję zawsze
+    robiliśmy po argumencie głównym, zaś z potencjalnymi niedopasowaniami
+    kształtów radziliśmy sobie robiąc ad hoc analizy przypadków, które
+    uznaliśmy za stosowne.
+
+    I tutaj przyda nam się nieco konceptualnej spostrzegawczości. Zauważyć
+    nam bowiem trzeba, że robiąc indukcję po argumencie głównym, kształt
+    indukcji odpowiada kształtowi typu argumentu głównego. Skoro zaś mamy
+    dopasować go do kształtu rekursji funkcji, to nasuwa nam się oczywiste
+    pytanie: czy da się zdefiniować typ, który ma taki sam kształt, jak
+    definicja danej funkcji?
+
+    Odpowiedź brzmi: nie, ale da się zdefiniować rodzinę typów
+    (a konkretniej pisząc, rodzinę zdań, czyli relację) o takiej właściwości.
+    Owa relacja zwie się wykresem funkcji. Jaki ma to związek z bazgrołami
+    znanymi ci ze szkoły (zakładam, że wiesz, że wykresem funkcji liniowej
+    jest prosta, wykresem funkcji kwadratowej jest parabola, a wykresy sinusa
+    i cosinusa to takie wesołe szlaczki)?
+
+    To, co w szkole nazywa się wykresem funkcji, jest jedynie graficznym
+    przedstawieniem prawdziwego wykresu, czyli relacji. Samo słowo "wykres",
+    wywodzące się w oczywisty sposób od kreślenia, sugeruje, że myślenie o
+    wykresie jak o obrazku było pierwsze, a koncepcja wykresu jako relacji
+    jest późniejsza.
+
+    W ramach ciekawostki być może warto napisać, że w dawnych czasach
+    matematycy silnie utożsamiali funkcję z jej wykresem (w sensie
+    obrazka) i przez to byty, których wykresu nie dało się narysować,
+    nie były uznawane za funkcje.
+
+    W nieco późniejszym czasie zaszły jednak niemałe zmiany i obecnie
+    panującym zabobonem jest utożsamianie funkcji z wykresem (w sensie
+    relacji), przez co za funkcje uznawane są także byty, których nie
+    da się obliczyć lub nikt nie potrafi pokazać, że terminują (takich
+    jak np. "funkcja" Collatza).
+
+    Gdybyś zgłupiał od powyższych czterech akapitów, to przypominam, że
+    dla nas zawarte w nich pojęcia oznaczają to:
+    - Funkcja to byt, którego typem jest [A -> B] lub [forall x : A, B x].
+      Można dać jej coś na wejściu i uzyskać wynik na wyjściu, tzn. można
+      ją obliczyć. W Coqu wszystkie funkcje prędzej czy później kończą się
+      obliczać.
+    - Wykres funkcji to relacja opisująca związek argumentu funkcji z jej
+      wynikiem. Każda funkcja ma wykres, ale nie każda relacja jest
+      wykresem jakiejś funkcji.
+    - Jeżeli typy [A] i [B] da się jakoś sensownie narysować, to możemy
+      narysować obrazek przedstawiający wykres funkcji.*)
+
+Definition is_graph
+  {A B : Type} (f : A -> B) (R : A -> B -> Prop) : Prop :=
+    forall (a : A) (b : B), R a b <-> f a = b.
+
+(** Żeby było nam raźniej, tak wygląda formalna definicja stwierdzenia,
+    że relacja [R] jest wykresem funkcji [f]. Nie będę tłumaczył, co tu
+    jest napisane - powinieneś rozumieć. *)
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj funkcję [graph_of], która każdej funkcji przyporządkowuje
+    jej wykres. Następnie udowodnij, że faktycznie jest to wykres tej
+    funkcji. *)
+
+(* begin hide *)
+Definition graph_of {A B : Type} (f : A -> B) : A -> B -> Prop :=
+  fun (a : A) (b : B) => f a = b.
+(* end hide *)
+
+Lemma is_graph_graph_of :
+  forall (A B : Type) (f : A -> B),
+    is_graph f (graph_of f).
+(* begin hide *)
+Proof.
+  compute. split; trivial.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Wymyśl typy [A] i [B] oraz relację o typie [A -> B -> Prop], która nie
+    jest wykresem żadnej funkcji. Następnie udowodnij formalnie, że nie
+    mylisz się. *)
+
+(* begin hide *)
+Definition complete (_ _ : bool) : Prop := True.
+
+Lemma complete_not_graph :
+  forall f : bool -> bool,
+    ~ is_graph f complete.
+Proof.
+  unfold is_graph, complete. intros f H.
+  destruct (H true (negb (f true))).
+  specialize (H0 I).
+  destruct (f true); inversion H0.
+Qed.
+(* end hide *)
+
+Inductive divG : nat -> nat -> nat -> Prop :=
+    | divG_lt : forall {n m : nat}, n < S m -> divG n m 0
+    | divG_ge :
         forall n m r : nat, n >= S m ->
-          divR (n - S m) m r -> divR n m (S r).
+          divG (n - S m) m r -> divG n m (S r).
+
+Lemma divG_complete :
+  forall n m r : nat,
+    divG n m r -> div n m = r.
+Proof.
+  induction 1.
+    rewrite div_eq. rewrite <- Nat.ltb_lt in H. rewrite H. reflexivity.
+    rewrite div_eq. unfold ge in H. rewrite <- Nat.ltb_ge in H.
+      rewrite H. f_equal. assumption.
+Qed.
+
+Lemma divG_correct :
+  forall n m : nat,
+    divG n m (div n m).
+Proof.
+  apply (well_founded_ind _ _ wf_lt (fun _ => forall m : nat, _)).
+  intros n IH m.
+  rewrite div_eq. destruct (Nat.ltb_spec0 n (S m)).
+    constructor. assumption.
+    constructor.
+      omega.
+      apply IH. omega.
+Qed.
+
+Lemma div_ind :
+  forall
+    (P : nat -> nat -> nat -> Prop)
+    (Hlt : forall n m : nat, n < S m -> P n m (div n m))
+    (Hge : forall n m : nat, n >= S m ->
+             P (n - S m) m (div (n - S m) m) -> P n m (div n m)),
+      forall n m : nat, P n m (div n m).
+Proof.
+  intros P Hlt Hge.
+  apply (well_founded_ind _ _ wf_lt (fun _ => forall m : nat, _)).
+  intros n IH m.
+  destruct (Nat.ltb_spec0 n (S m)).
+    apply Hlt. assumption.
+    apply Hge, IH; omega.
+Qed.
+
+(** * Metoda Bove-Capretta *)
+
+(** https://members.loria.fr/DLarchey/files/papers/TYPES_2018_paper_19.pdf
+
+    A robi się to tak:
+    - Zdefiniuj wykres funkcji.
+    - Zdefiniuj predykat dziedziny używając wykresu.
+    - Udowodnij użyteczne rzeczy, np. funkcyjność wykresu.
+    - Zdefiniuj funkcję przez rekursję po predykacie dziedziny wraz z jej
+      specyfikacją.
+    - Wyjmij funkcję i specyfikację za pomocą projekcji. *)
+
+
 
 Inductive div_dom (m : nat) : nat -> Type :=
     | div_dom_lt : forall {n : nat}, n < S m -> div_dom m n
@@ -1281,18 +1464,6 @@ Definition div3' (n m : nat) : nat :=
   div3 (div_dom_all m n).
 
 Compute div3' 5 0.
-
-(** * Metoda Bove-Capretta *)
-
-(** https://members.loria.fr/DLarchey/files/papers/TYPES_2018_paper_19.pdf
-
-    A robi się to tak:
-    - Zdefiniuj wykres funkcji.
-    - Zdefiniuj predykat dziedziny używając wykresu.
-    - Udowodnij użyteczne rzeczy, np. funkcyjność wykresu.
-    - Zdefiniuj funkcję przez rekursję po predykacie dziedziny wraz z jej
-      specyfikacją.
-    - Wyjmij funkcję i specyfikację za pomocą projekcji. *)
 
 Inductive graph : nat -> nat -> Prop :=
     | graph_gt100 :
@@ -1458,3 +1629,9 @@ Proof.
 Qed.
 
 (** * Wszystko razem, tak do kupy *)
+
+(** Tu jakieś podsumowanie całego zwierzyńca. *)
+
+(** * Uszy do góry *)
+
+(** Tu opis komendy [Function] i pluginu [Equations]. *)
