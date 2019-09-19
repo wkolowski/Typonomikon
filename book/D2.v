@@ -1375,6 +1375,39 @@ Proof.
 Qed.
 (* end hide *)
 
+(** **** Ćwiczenie *)
+
+(** Pokaż, że wszystkie wykresy danej funkcji są równoważne w poniższym
+    sensie. *)
+
+Lemma graph_unique :
+  forall {A B : Type} (f : A -> B) (R S : A -> B -> Prop),
+    is_graph f R -> is_graph f S ->
+      forall (a : A) (b : B), R a b <-> S a b.
+(* begin hide *)
+Proof.
+  unfold is_graph.
+  intros * HR HS; split; intros.
+    rewrite HS, <- HR. assumption.
+    rewrite HR, <- HS. assumption.
+Qed.
+(* end hide *)
+
+(** Jeszcze jedna, techniczna kwestia: wszystkie wykresy danej funkcji są
+    równoważne w tym sensie, że dla ażda funkcja ma dokładnie jeden
+    wykres (co możemy udowodnić odwołując się do aksjomatu ekstensjonalności
+    dla funkcji), ale ten jeden wykres może zostać zdefiniowany na wiele
+    różnych sposobów. Od konkretnego sposobu zdefiniowania wykresu zależy
+    jego użyteczność. Dla przykładu, induktywna definicja wykresu daje nam
+    regułę indukcji, zaś nieinduktywna definicja nie. Nas, jako już się
+    rzekło, będą interesować wykresy funkcji zdefiniowane induktywnie tak,
+
+    żeby konstruktory dokładnie odwzorowywały kształt definicji funkcji. *)
+
+(** Skoro już wiemy czym są wykresy funkcji, czas nauczyć się wykorzystywać
+    je do naszych niecnych celów. Zobaczmy, jak możemy zdefiniować wykres
+    funkcji   *)
+
 Inductive divG : nat -> nat -> nat -> Prop :=
     | divG_lt : forall {n m : nat}, n < S m -> divG n m 0
     | divG_ge :
@@ -1420,7 +1453,7 @@ Proof.
     apply Hge, IH; omega.
 Qed.
 
-(** * Metoda Bove-Capretta *)
+(** * Metoda wykresowo-dziedzinowa *)
 
 (** https://members.loria.fr/DLarchey/files/papers/TYPES_2018_paper_19.pdf
 
@@ -1432,38 +1465,117 @@ Qed.
       specyfikacją.
     - Wyjmij funkcję i specyfikację za pomocą projekcji. *)
 
+Lemma divG_functional :
+  forall n m r1 r2 : nat,
+    divG n m r1 -> divG n m r2 -> r1 = r2.
+Proof.
+  intros until 1. revert r2.
+  induction H; intros.
+    inversion H0; subst.
+      reflexivity.
+      omega.
+    inversion H1; subst.
+      omega.
+      f_equal. apply IHdivG. assumption.
+Qed.
 
+Inductive divD (n m : nat) : Type :=
+    | divD_lt : n < S m -> divD n m
+    | divD_ge :
+        n >= S m -> divD (n - S m) m -> divD n m.
 
-Inductive div_dom (m : nat) : nat -> Type :=
-    | div_dom_lt : forall {n : nat}, n < S m -> div_dom m n
-    | div_dom_ge :
-        forall {n : nat}, n >= S m -> div_dom m (n - S m) -> div_dom m n.
-
-Fixpoint div3 {m n : nat} (H : div_dom m n) : nat :=
+Fixpoint div'_aux {n m : nat} (H : divD n m) : nat :=
 match H with
-    | div_dom_lt _ _ => 0
-    | div_dom_ge _ _ H' => S (div3 H')
+    | divD_lt _ _ _ => 0
+    | divD_ge _ _ _ H' => S (div'_aux H')
 end.
 
-Lemma div_dom_all :
-  forall m n : nat, div_dom m n.
+Lemma divD_all :
+  forall n m : nat, divD n m.
 Proof.
-  intro m.
-  apply (well_founded_rect nat lt wf_lt).
-  intros n IH.
+  apply (well_founded_rect nat lt wf_lt (fun _ => forall m : nat, _)).
+  intros n IH m.
   destruct (le_lt_dec (S m) n).
-    apply div_dom_ge.
+    apply divD_ge.
       assumption.
       apply IH. apply Nat.sub_lt.
         assumption.
         apply le_n_S, le_0_n.
-    apply div_dom_lt. assumption.
+    apply divD_lt. assumption.
 Defined.
 
-Definition div3' (n m : nat) : nat :=
-  div3 (div_dom_all m n).
+Definition div' (n m : nat) : nat :=
+  div'_aux (divD_all n m).
 
-Compute div3' 5 0.
+Lemma div'_aux_divD :
+  forall (n m : nat) (d1 d2 : divD n m),
+    div'_aux d1 = div'_aux d2.
+Proof.
+  induction d1; destruct d2; cbn.
+    reflexivity.
+    omega.
+    omega.
+    f_equal. apply IHd1.
+Qed.
+
+Lemma div'_eq :
+  forall n m : nat,
+    div' n m = if n <? S m then 0 else S (div' (n - S m) m).
+Proof.
+  intros. unfold div'. generalize (divD_all n m) as d.
+  induction d; cbn.
+    rewrite leb_correct.
+      reflexivity.
+      apply le_S_n. assumption.
+    rewrite leb_correct_conv.
+      f_equal. apply div'_aux_divD.
+      omega.
+Qed.
+
+Lemma div'_good :
+  forall n m r : nat,
+    div' n m = r <-> divG n m r.
+Proof.
+  split.
+    unfold div'. revert r. generalize (divD_all n m) as d.
+      induction d; cbn; intros; subst.
+        constructor. assumption.
+        constructor.
+          assumption.
+          apply IHd. reflexivity.
+    induction 1.
+      rewrite div'_eq. rewrite <- Nat.ltb_lt in H. rewrite H. reflexivity.
+      rewrite div'_eq. unfold ge in H. rewrite <- Nat.ltb_ge in H.
+        rewrite H. f_equal. assumption.
+Qed.
+
+Print div'_aux.
+
+Require Import Recdef.
+
+Function div'' (n m : nat) {measure id n} : nat :=
+  if n <? m then 0 else S (div'' (n - S m) m).
+Admitted.
+
+Check div''_ind.
+
+Lemma div'_ind :
+  forall
+    (P : nat -> nat -> nat -> Prop)
+    (Hlt : forall n m : nat, n < S m -> P n m 0)
+    (Hge :
+      forall n m : nat, n >= S m ->
+        P (n - S m) m (div' (n - S m) m) ->
+          P n m (S (div' (n - S m) m))),
+      forall n m : nat, P n m (div' n m).
+Proof.
+  intros P Hlt Hge n m.
+  refine (divG_ind _ _ _ n m (div' n m) _).
+    assumption.
+    intros. rewrite <- div'_good in H0. subst. apply Hge; assumption.
+    rewrite <- div'_good. reflexivity.
+Qed.
+
 
 Inductive graph : nat -> nat -> Prop :=
     | graph_gt100 :
