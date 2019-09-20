@@ -1147,7 +1147,7 @@ Check div_subproof.
           : forall n m : nat, S m <= n -> n - S m < n *)
 
 Print div_subproof.
-(* ===> dużo różnych głupot *)
+(* ===> dużo różnych głupot, szkoda pisać *)
 
 (** Mówiąc wprost, taktyka [abstract omega] zamiast wstawiać do definicji
     całe rozumowanie, tak jak zrobiłaby to taktyka [omega], dowodzi sobie
@@ -1457,13 +1457,9 @@ Definition divG' (n m r : nat) : Prop :=
 (* end hide *)
 
 (** Mamy wykres. Fajnie, ale co możemy z nim zrobić? Jeszcze ważniejsze
-    pytanie brzmi zaś: co powinniśmy z nim zrobić? Pierwsza czynność po
-    zdefiniowaniu wykresu, którą powinniśmy wykonać, to sprawdzenie, czy
-    ów wykres jest relacją funkcyjną, czyli taką, której ostatni argument
-    (czyli wynik) jest zdeterminowany przez pozostałe (czyli przez argumenty
-    funkcji). Jeżeli tak - dobrze. Jeżeli nie - definicja jest błędna. *)
+    pytanie brzmi zaś: co powinniśmy z nim zrobić? *)
 
-Lemma divG_functional :
+Lemma divG_det :
   forall n m r1 r2 : nat,
     divG n m r1 -> divG n m r2 -> r1 = r2.
 Proof.
@@ -1474,8 +1470,18 @@ Proof.
     f_equal. apply IHdivG. assumption.
 Qed.
 
-(** Dowód nie jest zbyt trudny. Robimy indukcję po hipotezie [divG n m r1],
-    ale musimy pamiętać, żeby wcześniej zgeneralizować [r2], gdyż w przeciwnym
+(** Pierwsza czynność po zdefiniowaniu wykresu, którą powinniśmy wykonać,
+    to sprawdzenie, czy ów wykres jest relacją deterministyczną. Relacja
+    deterministyczna to taka, której ostatni argument jest zdeterminowany
+    przez poprzednie.
+
+    Jeżeli tak to dobrze, a jeżeli nie, to definicja na pewno jest błędna,
+    bo wykres ma opisywać funkcję, a żadna funkcja nie może dla tych samych
+    argumentów dawać dwóch różnych wyników. Relacjom deterministycznym (i nie
+    tylko) bliżej przyjrzymy się w rozdziale o relacjach.
+
+    Dowód nie jest zbyt trudny. Robimy indukcję po hipotezie [divG n m r1],
+    ale musimy pamiętać, żeby wcześniej zgeneralizować [r2], bo w przeciwnym
     przypadku nasza hipoteza indukcyjna będzie za mało ogólna. *)
 
 Lemma divG_correct :
@@ -1491,28 +1497,103 @@ Proof.
       apply IH. omega.
 Qed.
 
+(** Kolejna rzecz do udowodnienia to twierdzenie o poprawności, które mówi,
+    że [divG] faktycznie jest wykresem [div]. Zauważ, że moglibyśmy równie
+    dobrze sformułować je za pomocą [is_graph], ale tak jak wyżej będzie
+    praktyczniej.
+
+    Dowód zaczynamy od indukcji dobrze ufundowanej, po czym wprowadzamy
+    zmienne do kontekstu i... aj waj, cóż to takiego? Używamy równania
+    rekurencyjnego do rozpisania [div], po czym kończymy przez rozważenie
+    przypadków.
+
+    Ten dowód pokazuje, że nie udało nam się osiągnąć celu, który sobie
+    postawiliśmy, czyli udowodnienia [div_eq] za pomocą specjalnej formy
+    indukcji. Niestety, bez równania rekurencyjnego nie da się udowodnić
+    twierdzenia o poprawności. Nie powinniśmy jednak za bardzo się tym
+    przejmować - uszy do góry. Póki co dokończmy poszukiwań ostatecznej
+    reguły indukcji, a tym nieszczęsnym równaniem rekurencyjny zajmiemy
+    się później. *)
+
 Lemma divG_complete :
   forall n m r : nat,
-    divG n m r -> div n m = r.
+    divG n m r -> r = div n m.
 Proof.
-  intros. apply divG_functional with n m.
-    apply divG_correct.
+  intros. apply divG_det with n m.
     assumption.
+    apply divG_correct.
 Qed.
+
+(** Kolejną, ostatnią już rzeczą, którą powinniśmy zrobić z wykresem, jest
+    udowodnienie twierdzenia o pełności, które głosi, że jeżeli argumentom
+    [n] i [m] odpowiada na wykresie wynik [r], to [r] jest równe [div n m].
+    Dowód jest banalny i wynika wprost z twierdzeń o determinizmie i
+    poprawności.
+
+    I po co nam to było? Ano wszystkie fikołki, które zrobiliśmy, posłużą
+    nam jako lematy do udowodnienia reguły indukcji funkcyjnej dla [div].
+    Co to za reguła, jak wygląda i skąd ją wziąć? *)
+
+Check divG_ind.
+(* ===>
+  divG_ind :
+    forall
+      P : nat -> nat -> nat -> Prop,
+      (forall n m : nat, n < S m -> P n m 0) ->
+      (forall n m r : nat,
+          n >= S m -> divG (n - S m) m r ->
+            P (n - S m) m r -> P n m (S r)) ->
+        forall n m r : nat, divG n m r -> P n m r *)
+
+(** Pierwowzorem reguły indukcji funkcyjnej dla danej funkcji jest reguła
+    indukcji dla jej wykresu. Reguła indukcji dla [div] to w sumie to samo
+    co powyższa reguła, ale z [r] wyspecjalizowanym do [div n m]. Chcemy
+    też pozbyć się niepotrzebnej przesłanki [divG n m r] (która po
+    podstawieniu za [r] ma postać [divG n m (div n m)]), gdyż nie jest ona
+    potrzebna - jest zawsze prawdziwa na mocy twierdzenia [divG_correct]. *)
 
 Lemma div_ind :
   forall
     (P : nat -> nat -> nat -> Prop)
     (Hlt : forall n m : nat, n < S m -> P n m 0)
-    (Hge : forall n m : nat, n >= S m ->
-             P (n - S m) m (div (n - S m) m) -> P n m (S (div (n - S m) m))),
+    (Hge :
+      forall n m : nat, n >= S m ->
+        P (n - S m) m (div (n - S m) m) -> P n m (S (div (n - S m) m))),
       forall n m : nat, P n m (div n m).
 Proof.
   intros P Hlt Hge n m.
-  refine (divG_ind P Hlt _ n m _ _).
-    intros. apply divG_complete in H0. subst. apply Hge; assumption.
+  apply divG_ind.
+    assumption.
+    intros n' m' r H1 H2.
+      apply divG_complete in H2. subst. apply Hge; assumption.
     apply divG_correct.
 Qed.
+
+(** Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
+    nam ona dowodzić zdań, które zależą od [n m : nat] i wyniku dzielenia,
+    czyli [div n m].
+
+    Są dwa przypadki, jak w docelowej definicji [div]. Gdy [n < S m], czyli
+    dzielna jest mniejsza od dzielnika, wystarczy udowodnić [P n m 0], bo
+    wtedy [div n m] wynosi [0]. W drugim przypadku, czyli gdy [n >= S m],
+    wystarczy udowodnić [P n m (S (div (n - S m) m))] (bo taki jest wynik
+    [div n m] dla [n >= S m]) przy założeniu, że [P] zachodzi dla [n - S m],
+    [m] oraz [div (n - S m) m], bo takie są argumenty oraz wynik wywołania
+    rekurencyjnego.
+
+    Dowód jest prosty. Wprowadzamy zmienne do kontekstu, a następnie za pomocą
+    zwykłego [apply] używamy reguły indukcji [divG_ind] - jako rzekło się
+    powyżej, reguła [div_ind] nie jest niczym innym, niż lekką przeróbką
+    [divG_ind].
+
+    Mamy trzy podcele. Pierwszy odpowiada przesłance [Hlt]. Drugi to
+    przesłanka [Hge], ale musimy wszędzie podstawić [div (n' - S m') m']
+    za [r] - posłuży nam do tego twierdzenie o pełności. Trzeci to zbędna
+    przesłanka [divG n m (div n m)], którą załatwiamy za pomocą twierdzenia
+    o poprawności.
+
+    Włala (lub bardziej wykwintnie: voilà)! Mamy regułę indukcji funkcyjnej
+    dla [div]. Zobaczmy, co i jak można za jej pomocą udowodnić. *)
 
 Lemma div_le :
   forall n m : nat,
@@ -1521,7 +1602,15 @@ Proof.
   refine (div_ind (fun n m r => r <= n) _ _); intros.
     apply le_0_n.
     omega.
-Qed.
+Restart.
+  apply (well_founded_ind _ _ wf_lt (fun n => forall m : nat, _)).
+  intros n IH m.
+  rewrite div_eq. destruct (Nat.ltb_spec n (S m)).
+    apply le_0_n.
+    destruct n as [| n'].
+      inversion H.
+      apply le_n_S. change (S n' - S m) with (n' - m).
+Abort.
 
 (** * Metoda wykresowo-dziedzinowa *)
 
@@ -1580,7 +1669,7 @@ Proof.
       reflexivity.
       apply le_S_n. assumption.
     rewrite leb_correct_conv.
-      f_equal. apply divG_functional with (n - S m) m; apply divG_div'_aux.
+      f_equal. apply divG_det with (n - S m) m; apply divG_div'_aux.
       assumption.
 Qed.
 
@@ -1590,7 +1679,7 @@ Lemma div'_good :
 Proof.
   split; intro.
     subst. apply divG_div'_aux.
-    apply divG_functional with n m.
+    apply divG_det with n m.
       apply divG_div'_aux.
       assumption.
 Qed.
