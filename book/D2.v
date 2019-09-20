@@ -1259,10 +1259,10 @@ Qed.
 
 (** * Indukcja funkcyjna *)
 
-(** Skoro jednak nie dla psa kiełbasa, to musimy znaleźć jakiś sposób na
+(** Skoro nie dla psa kiełbasa, to musimy znaleźć jakiś sposób na
     udowodnienie równania rekurencyjnego dla [div]. Zamiast jednak głowić
     się nad równaniami rekurencyjnymi albo nad funkcją [div], zastanówmy
-    się w całej ogólności: jak dowodzić właściwości funkcji rekurencyjnych?
+    się w pełnej ogólności: jak dowodzić właściwości funkcji rekurencyjnych?
 
     No przez indukcję, czy to nie oczywiste? Jasne, ale jak dokładnie owa
     indukcja ma wyglądać? Odpowiedź jest prostsza niż można się spodziewać.
@@ -1332,8 +1332,10 @@ Definition is_graph
     forall (a : A) (b : B), R a b <-> f a = b.
 
 (** Żeby było nam raźniej, tak wygląda formalna definicja stwierdzenia,
-    że relacja [R] jest wykresem funkcji [f]. Nie będę tłumaczył, co tu
-    jest napisane - powinieneś rozumieć. *)
+    że relacja [R] jest wykresem funkcji [f]. Uwaga: jeżeli funkcja
+    bierze więcej niż jeden argument (tzn. ma typ [A1 -> ... -> An -> B]),
+    to wtedy do powyższej definicji musimy wrzucić jej zmodyfikowaną
+    wersję o typie [A1 * ... * An -> B]. *)
 
 (** **** Ćwiczenie *)
 
@@ -1393,20 +1395,20 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Jeszcze jedna, techniczna kwestia: wszystkie wykresy danej funkcji są
-    równoważne w tym sensie, że dla ażda funkcja ma dokładnie jeden
-    wykres (co możemy udowodnić odwołując się do aksjomatu ekstensjonalności
-    dla funkcji), ale ten jeden wykres może zostać zdefiniowany na wiele
-    różnych sposobów. Od konkretnego sposobu zdefiniowania wykresu zależy
-    jego użyteczność. Dla przykładu, induktywna definicja wykresu daje nam
-    regułę indukcji, zaś nieinduktywna definicja nie. Nas, jako już się
-    rzekło, będą interesować wykresy funkcji zdefiniowane induktywnie tak,
+(** Skoro już wiemy czym są wykresy funkcji, czas nauczyć się definiować
+    induktywne wykresy o kształtach odpowiednich dla naszych niecnych
+    celów. *)
 
-    żeby konstruktory dokładnie odwzorowywały kształt definicji funkcji. *)
+Check div_eq.
+(* ===> div_eq
+        : forall n m : nat,
+            div n m = if n <? S m then 0 else S (div (n - S m) m) *)
 
-(** Skoro już wiemy czym są wykresy funkcji, czas nauczyć się wykorzystywać
-    je do naszych niecnych celów. Zobaczmy, jak możemy zdefiniować wykres
-    funkcji   *)
+(** Zwróćmy tylko uwagę na fakt, że mówiąc o kształcie rekursji (lub po
+    prostu o kształcie definicji) [div] nie mamy na myśli faktycznej
+    definicji, która używa rekursji dobrze ufundowanej i jak już wiemy,
+    jest dość problematyczna, lecz "docelowej" definicji, którą wyraża
+    między innymi równanie rekurencyjne. *)
 
 Inductive divG : nat -> nat -> nat -> Prop :=
     | divG_lt : forall {n m : nat}, n < S m -> divG n m 0
@@ -1414,15 +1416,67 @@ Inductive divG : nat -> nat -> nat -> Prop :=
         forall n m r : nat, n >= S m ->
           divG (n - S m) m r -> divG n m (S r).
 
-Lemma divG_complete :
-  forall n m r : nat,
-    divG n m r -> div n m = r.
+(** [div] jest funkcją typu [nat -> nat -> nat], więc jej wykres to relacja
+    typu [nat -> nat -> nat -> Prop]. Dwa pierwsze argumenty relacji
+    reprezentują wejście, zaś ostatni argument reprezentuje wyjście, tzn.
+    chcemy, żeby [divG n m r] było równoważne [div n m = r].
+
+    Z równania rekurencyjnego widać, że mamy dwa przypadki, czyli konstruktory
+    też będą dwa. Jeden odpowiada przypadkowi, gdy [n < S m], tzn. dzielna jest
+    mniejsza niż dzielnik (pamiętaj, że [div n m] oznacza [n/(m + 1)], żeby
+    uniknąć problemów z dzieleniem przez zero). Konkluzją jest wtedy
+    [divG n m 0], tzn. argumentami są [n] i [m], zaś wynikiem jest [0].
+
+    Drugi przypadek to przyadek rekurencyjny. Jeżeli [n >= S m], tzn. dzielna
+    jest większa lub równa od dzielnika, to konkluzją jest [divG n m (S r)],
+    tzn. argumentami są [n] i [m], zaś wynikiem dzielenia jest [S r]. Czym
+    jest [r]? Jest ono skwantyfikowane w tym konstruktorze i pojawia się w
+    przesłance [divG (n - S m) m r], która mówi, że wynikiem dzielenia
+    [n - S m] przez [m] jest [r]. Przesłanka ta jest wykresowym odpowiednikiem
+    wywołania rekurencyjnego. *)
+
+(** **** Ćwiczenie *)
+
+(** Mimo, że wszystkie wykresy danej funkcji są równoważne, to zdefiniować
+    można je na wiele różnych sposobów. W zależności od sposobu definicja
+    może być użyteczna lub nie, np. przy definicjach induktywnych dostajemy
+    za darmo regułę indukcji.
+
+    Podaj inną definicję wykresu funkcji [div], która nie używa typów
+    induktywnych (ani nie odwołuje się do samej funkcji [div] - to byłoby
+    za łatwe). Użyj kwantyfikatora egzystencjalnego, mnożenia i relacji
+    równości (i niczego więcej).
+
+    Na razie nie musisz dowodzić, że wykres faktycznie jest wykresem [div] -
+    póki co jest to za trudne (co oczywiście nie znaczy, że wolno ci się
+    mylić). Wróćimy do tego dowodu później. *)
+
+(* begin hide *)
+Definition divG' (n m r : nat) : Prop :=
+  exists q : nat, n = r * S m + q.
+(* end hide *)
+
+(** Mamy wykres. Fajnie, ale co możemy z nim zrobić? Jeszcze ważniejsze
+    pytanie brzmi zaś: co powinniśmy z nim zrobić? Pierwsza czynność po
+    zdefiniowaniu wykresu, którą powinniśmy wykonać, to sprawdzenie, czy
+    ów wykres jest relacją funkcyjną, czyli taką, której ostatni argument
+    (czyli wynik) jest zdeterminowany przez pozostałe (czyli przez argumenty
+    funkcji). Jeżeli tak - dobrze. Jeżeli nie - definicja jest błędna. *)
+
+Lemma divG_functional :
+  forall n m r1 r2 : nat,
+    divG n m r1 -> divG n m r2 -> r1 = r2.
 Proof.
-  induction 1.
-    rewrite div_eq. rewrite <- Nat.ltb_lt in H. rewrite H. reflexivity.
-    rewrite div_eq. unfold ge in H. rewrite <- Nat.ltb_ge in H.
-      rewrite H. f_equal. assumption.
+  intros until 1. revert r2.
+  induction H; inversion 1; subst.
+    reflexivity.
+    1-2: omega.
+    f_equal. apply IHdivG. assumption.
 Qed.
+
+(** Dowód nie jest zbyt trudny. Robimy indukcję po hipotezie [divG n m r1],
+    ale musimy pamiętać, żeby wcześniej zgeneralizować [r2], gdyż w przeciwnym
+    przypadku nasza hipoteza indukcyjna będzie za mało ogólna. *)
 
 Lemma divG_correct :
   forall n m : nat,
@@ -1437,20 +1491,36 @@ Proof.
       apply IH. omega.
 Qed.
 
+Lemma divG_complete :
+  forall n m r : nat,
+    divG n m r -> div n m = r.
+Proof.
+  intros. apply divG_functional with n m.
+    apply divG_correct.
+    assumption.
+Qed.
+
 Lemma div_ind :
   forall
     (P : nat -> nat -> nat -> Prop)
-    (Hlt : forall n m : nat, n < S m -> P n m (div n m))
+    (Hlt : forall n m : nat, n < S m -> P n m 0)
     (Hge : forall n m : nat, n >= S m ->
-             P (n - S m) m (div (n - S m) m) -> P n m (div n m)),
+             P (n - S m) m (div (n - S m) m) -> P n m (S (div (n - S m) m))),
       forall n m : nat, P n m (div n m).
 Proof.
-  intros P Hlt Hge.
-  apply (well_founded_ind _ _ wf_lt (fun _ => forall m : nat, _)).
-  intros n IH m.
-  destruct (Nat.ltb_spec0 n (S m)).
-    apply Hlt. assumption.
-    apply Hge, IH; omega.
+  intros P Hlt Hge n m.
+  refine (divG_ind P Hlt _ n m _ _).
+    intros. apply divG_complete in H0. subst. apply Hge; assumption.
+    apply divG_correct.
+Qed.
+
+Lemma div_le :
+  forall n m : nat,
+    div n m <= n.
+Proof.
+  refine (div_ind (fun n m r => r <= n) _ _); intros.
+    apply le_0_n.
+    omega.
 Qed.
 
 (** * Metoda wykresowo-dziedzinowa *)
@@ -1464,20 +1534,6 @@ Qed.
     - Zdefiniuj funkcję przez rekursję po predykacie dziedziny wraz z jej
       specyfikacją.
     - Wyjmij funkcję i specyfikację za pomocą projekcji. *)
-
-Lemma divG_functional :
-  forall n m r1 r2 : nat,
-    divG n m r1 -> divG n m r2 -> r1 = r2.
-Proof.
-  intros until 1. revert r2.
-  induction H; intros.
-    inversion H0; subst.
-      reflexivity.
-      omega.
-    inversion H1; subst.
-      omega.
-      f_equal. apply IHdivG. assumption.
-Qed.
 
 Inductive divD (n m : nat) : Type :=
     | divD_lt : n < S m -> divD n m
@@ -1507,15 +1563,11 @@ Defined.
 Definition div' (n m : nat) : nat :=
   div'_aux (divD_all n m).
 
-Lemma div'_aux_divD :
-  forall (n m : nat) (d1 d2 : divD n m),
-    div'_aux d1 = div'_aux d2.
+Lemma divG_div'_aux :
+  forall (n m : nat) (d : divD n m),
+    divG n m (div'_aux d).
 Proof.
-  induction d1; destruct d2; cbn.
-    reflexivity.
-    omega.
-    omega.
-    f_equal. apply IHd1.
+  induction d; cbn; constructor; assumption.
 Qed.
 
 Lemma div'_eq :
@@ -1528,36 +1580,20 @@ Proof.
       reflexivity.
       apply le_S_n. assumption.
     rewrite leb_correct_conv.
-      f_equal. apply div'_aux_divD.
-      omega.
+      f_equal. apply divG_functional with (n - S m) m; apply divG_div'_aux.
+      assumption.
 Qed.
 
 Lemma div'_good :
   forall n m r : nat,
     div' n m = r <-> divG n m r.
 Proof.
-  split.
-    unfold div'. revert r. generalize (divD_all n m) as d.
-      induction d; cbn; intros; subst.
-        constructor. assumption.
-        constructor.
-          assumption.
-          apply IHd. reflexivity.
-    induction 1.
-      rewrite div'_eq. rewrite <- Nat.ltb_lt in H. rewrite H. reflexivity.
-      rewrite div'_eq. unfold ge in H. rewrite <- Nat.ltb_ge in H.
-        rewrite H. f_equal. assumption.
+  split; intro.
+    subst. apply divG_div'_aux.
+    apply divG_functional with n m.
+      apply divG_div'_aux.
+      assumption.
 Qed.
-
-Print div'_aux.
-
-Require Import Recdef.
-
-Function div'' (n m : nat) {measure id n} : nat :=
-  if n <? m then 0 else S (div'' (n - S m) m).
-Admitted.
-
-Check div''_ind.
 
 Lemma div'_ind :
   forall
@@ -1575,7 +1611,6 @@ Proof.
     intros. rewrite <- div'_good in H0. subst. apply Hge; assumption.
     rewrite <- div'_good. reflexivity.
 Qed.
-
 
 Inductive graph : nat -> nat -> Prop :=
     | graph_gt100 :

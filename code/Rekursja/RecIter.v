@@ -22,19 +22,21 @@ Proof.
   apply well_founded_induction_type with lt.
     apply lt_wf.
     intros. case_eq (le_lt_dec k x); intro.
-      Focus 2. exists 0. exists 0. intros. destruct n_iter; cbn.
-        omega.
-        unfold divF. rewrite H1. trivial.
       destruct (H0 (x - k)) as [v Hv].
-        omega.
+        abstract omega.
         exists (S v). destruct Hv as [p Hp]. exists (S p). intros.
           destruct (n_iter); cbn.
-            omega.
-            unfold divF. rewrite H1. f_equal. apply Hp. omega.
+            abstract omega.
+            unfold divF. rewrite H1. f_equal. apply Hp. abstract omega.
+      exists 0. exists 0. intros. destruct n_iter; cbn.
+        abstract omega.
+        unfold divF. rewrite H1. trivial.
 Defined.
 
 Definition div (n k : nat) (H : 0 < k) : nat :=
   proj1_sig (divF_terminates n k H).
+
+Require Import FunctionalExtensionality.
 
 Theorem div_fix : div = divF div.
 Proof.
@@ -51,12 +53,6 @@ Definition fac_F (f : nat -> nat) (n : nat) : nat :=
 match n with
     | 0 => 1
     | S n' => n * f n'
-end.
-
-Fixpoint iter {A : Type} (n : nat) (f : A -> A) (x : A) : A :=
-match n with
-    | 0 => x
-    | S n' => f (iter n' f x)
 end.
 
 Definition facF_terminates :
@@ -111,7 +107,7 @@ Proof.
 Defined.
 
 Definition take {A : Type} (n : nat) (l : list A) : list A :=
-    proj1_sig (takeF_terminates A n l).
+  proj1_sig (takeF_terminates A n l).
 
 Eval compute in take 3 [2; 3; 5; 7; 11].
 
