@@ -1413,8 +1413,8 @@ Check div_eq.
 Inductive divG : nat -> nat -> nat -> Prop :=
     | divG_lt : forall {n m : nat}, n < S m -> divG n m 0
     | divG_ge :
-        forall n m r : nat, n >= S m ->
-          divG (n - S m) m r -> divG n m (S r).
+        forall n m r : nat,
+          n >= S m -> divG (n - S m) m r -> divG n m (S r).
 
 (** [div] jest funkcją typu [nat -> nat -> nat], więc jej wykres to relacja
     typu [nat -> nat -> nat -> Prop]. Dwa pierwsze argumenty relacji
@@ -1444,15 +1444,16 @@ Inductive divG : nat -> nat -> nat -> Prop :=
 
     Podaj inną definicję wykresu funkcji [div], która nie używa typów
     induktywnych (ani nie odwołuje się do samej funkcji [div] - to byłoby
-    za łatwe). Użyj kwantyfikatora egzystencjalnego, mnożenia i relacji
-    równości (i niczego więcej).
+    za łatwe). Użyj kwantyfikatora egzystencjalnego, mnożenia, dodawania
+    oraz relacji równości (i niczego więcej).
 
-    Na razie nie musisz dowodzić, że wykres faktycznie jest wykresem [div] -
-    póki co jest to za trudne (co oczywiście nie znaczy, że wolno ci się
-    mylić). Wróćimy do tego dowodu później. *)
+    Na razie nie musisz dowodzić, że wykres faktycznie jest wykresem [div]
+    (póki co jest to za trudne), co oczywiście nie znaczy, że wolno ci się
+    mylić - uzasadnij nieformalnie, że wykres faktycznie opisuje funkcję
+    [div]. Do dowodu formalnego wrócimy później. *)
 
-(* begin hide *)
 Definition divG' (n m r : nat) : Prop :=
+(* begin hide *)
   exists q : nat, n = r * S m + q.
 (* end hide *)
 
@@ -1475,14 +1476,16 @@ Qed.
     deterministyczna to taka, której ostatni argument jest zdeterminowany
     przez poprzednie.
 
-    Jeżeli tak to dobrze, a jeżeli nie, to definicja na pewno jest błędna,
-    bo wykres ma opisywać funkcję, a żadna funkcja nie może dla tych samych
-    argumentów dawać dwóch różnych wyników. Relacjom deterministycznym (i nie
-    tylko) bliżej przyjrzymy się w rozdziale o relacjach.
+    Jeżeli wykres jest deterministyczny to dobrze, a jeżeli nie, to definicja
+    na pewno jest błędna, bo wykres ma opisywać funkcję, a żadna funkcja nie
+    może dla tych samych argumentów dawać dwóch różnych wyników. Relacjom
+    deterministycznym (i nie tylko) przyjrzymy się dokładniej w rozdziale o
+    relacjach.
 
-    Dowód nie jest zbyt trudny. Robimy indukcję po hipotezie [divG n m r1],
-    ale musimy pamiętać, żeby wcześniej zgeneralizować [r2], bo w przeciwnym
-    przypadku nasza hipoteza indukcyjna będzie za mało ogólna. *)
+    Dowód nie jest zbyt trudny. Robimy indukcję po dowodzie hipotezy
+    [divG n m r1], ale musimy pamiętać, żeby wcześniej zgeneralizować
+    [r2], bo w przeciwnym przypadku nasza hipoteza indukcyjna będzie
+    za mało ogólna. *)
 
 Lemma divG_correct :
   forall n m : nat,
@@ -1508,11 +1511,11 @@ Qed.
     przypadków.
 
     Ten dowód pokazuje, że nie udało nam się osiągnąć celu, który sobie
-    postawiliśmy, czyli udowodnienia [div_eq] za pomocą specjalnej formy
+    postawiliśmy, czyli udowodnienia [div_eq] za pomocą specjalnej reguły
     indukcji. Niestety, bez równania rekurencyjnego nie da się udowodnić
     twierdzenia o poprawności. Nie powinniśmy jednak za bardzo się tym
     przejmować - uszy do góry. Póki co dokończmy poszukiwań ostatecznej
-    reguły indukcji, a tym nieszczęsnym równaniem rekurencyjny zajmiemy
+    reguły indukcji, a tym nieszczęsnym równaniem rekurencyjnym zajmiemy
     się później. *)
 
 Lemma divG_complete :
@@ -1548,17 +1551,18 @@ Check divG_ind.
 (** Pierwowzorem reguły indukcji funkcyjnej dla danej funkcji jest reguła
     indukcji dla jej wykresu. Reguła indukcji dla [div] to w sumie to samo
     co powyższa reguła, ale z [r] wyspecjalizowanym do [div n m]. Chcemy
-    też pozbyć się niepotrzebnej przesłanki [divG n m r] (która po
-    podstawieniu za [r] ma postać [divG n m (div n m)]), gdyż nie jest ona
-    potrzebna - jest zawsze prawdziwa na mocy twierdzenia [divG_correct]. *)
+    też pozbyć się niepotrzebnej przesłanki [divG n m r] (po podstawieniu
+    za [r] ma ona postać [divG n m (div n m)]), gdyż nie jest potrzebna -
+    jest zawsze prawdziwa na mocy twierdzenia [divG_correct]. *)
 
 Lemma div_ind :
   forall
     (P : nat -> nat -> nat -> Prop)
     (Hlt : forall n m : nat, n < S m -> P n m 0)
     (Hge :
-      forall n m : nat, n >= S m ->
-        P (n - S m) m (div (n - S m) m) -> P n m (S (div (n - S m) m))),
+      forall n m : nat,
+        n >= S m -> P (n - S m) m (div (n - S m) m) ->
+          P n m (S (div (n - S m) m))),
       forall n m : nat, P n m (div n m).
 Proof.
   intros P Hlt Hge n m.
@@ -1599,20 +1603,111 @@ Lemma div_le :
   forall n m : nat,
     div n m <= n.
 Proof.
-  refine (div_ind (fun n m r => r <= n) _ _); intros.
+  apply (div_ind (fun n m r : nat => r <= n)); intros.
     apply le_0_n.
     omega.
-Restart.
+Qed.
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij twierdzenie [div_le] za pomocą indukcji dobrze ufundowanej
+    i równania rekurencyjnego, czyli bez użycia indukcji funkcyjnej. Jak
+    trudny jest ten dowód w porównaniu do powyższego? *)
+
+Lemma div_le' :
+  forall n m : nat,
+    div n m <= n.
+(* begin hide *)
+Proof.
   apply (well_founded_ind _ _ wf_lt (fun n => forall m : nat, _)).
   intros n IH m.
   rewrite div_eq. destruct (Nat.ltb_spec n (S m)).
     apply le_0_n.
-    destruct n as [| n'].
-      inversion H.
-      apply le_n_S. change (S n' - S m) with (n' - m).
-Abort.
+    specialize (IH (n - S m) ltac:(omega) m). omega.
+Qed.
+(* end hide *)
 
-(** * Metoda wykresowo-dziedzinowa *)
+(** **** Ćwiczenie *)
+
+(** Udowodnij za pomocą indukcji funkcyjnej, że twój alternatywny wykres
+    funkcji [div] z jednego z poprzednich ćwiczeń, faktycznie jest
+    wykresem [div].
+
+    Następnie udowodnij to samo za pomocą indukcji dobrze ufundowanej i
+    równania rekurencyjnego. Która metoda dowodzenia jest lepsza (nie,
+    to pytanie nie jest subiektywne - masz udzielić jedynej słusznej
+    odpowiedzi). *)
+
+Lemma divG'_div :
+  forall n m : nat,
+    divG' n m (div n m).
+(* begin hide *)
+Proof.
+  apply (div_ind divG'); unfold divG'; intros.
+    exists n. cbn. reflexivity.
+    destruct H0 as [q IH]. exists q. cbn. omega.
+Qed.
+(* end hide *)
+
+Lemma divG'_div' :
+  forall n m : nat,
+    divG' n m (div n m).
+(* begin hide *)
+Proof.
+  apply (well_founded_ind _ _ wf_lt (fun _ => forall m : nat, _)).
+  intros n IH m. unfold divG' in *.
+  rewrite div_eq. destruct (Nat.ltb_spec n (S m)).
+    exists n. cbn. reflexivity.
+    destruct (IH (n - S m) ltac:(omega) m) as [q IHq].
+      exists q. cbn. omega.
+Qed.
+(* end hide *)
+
+(** * Metoda induktywnej dziedziny *)
+
+(** Póki co nie jest źle - udało nam się wszakże wymyślić jedyną słuszną
+    metodę dowodzenia właściwości funkcji rekurencyjnych. Jednak nasza
+    implementacja kuleje przez to nieszczęsne równanie rekurencyjne. Jak
+    możemy udowodnić je bez używania indukcji funkcyjnej?
+
+    Żeby znaleźć odpowiedź na to pytanie, znowu przyda się nam trochę
+    konceptualnej jasności. Na czym tak naprawdę polega problem? Jak
+    pamiętamy, problem wynika z tego, że definiując [div] przez rekursję
+    dobrze ufundowaną musieliśmy jednocześnie dowodzić, że wywołania
+    rekurencyjne odbywają się na argumencie mniejszym od argumentu obecnego
+    wywołania.
+
+    Tak więc problemem jest połączenie w jednej definicji dwóch dość luźno
+    powiązanych rzeczy, którymi są:
+    - Docelowa definicja, która określa algorytmiczne zachowanie funkcji.
+      Jej manifestacją jest nasze nieszczęsne równanie rekurencyjne. Bywa
+      ona czasem nazywana aspektem algorytmicznym funkcji.
+    - Dowód terminacji, który zapewnia, że definicja docelowa jest legalna
+      i nie prowadzi do sprzeczności. Jego manifestacją są występujące w
+      definicji [div] dowody na to, że wywołanie rekurencyjne ma argument
+      mniejszy od obecnego wywołania. Bywa on czasem nazywany aspektem
+      logicznym funkcji. *)
+
+(** Pani doktur, mamy diagnozę! Tylko co z nią zrobić? Czy jest jakaś metoda,
+    żeby rozdzielić algorytmiczny i logiczny aspekt danej funkcji, a potem
+    poskładać je do kupy?
+
+    Pomyślmy najpierw nad aspektem algorytmicznym. Czy da się zdefiniować
+    funkcję bezpośrednio za pomocą jej definicji docelowej, czyli równania
+    rekurencyjnego? Żeby to zrobić, musielibyśmy mieć możliwość robienia
+    rekursji o dokładnie takim kształcie, jaki ma mieć ta funkcja...
+
+    Eureka! Przecież mamy coś, co pozwala nam na rekursję o dokładnie takim
+    kształcie, a mianowicie induktywny wykres! Ale przecież wykres wiąże
+    ze sobą argumenty i wynik, a my chcemy dopiero zdefiniować coś, co ów
+    wynik obliczy... czyli nie eureka?
+
+    Nie do końca. Możemy zmodyfikować definicję wykresu, wyrzucając z
+    niej wszystkie wzmianki o wyniku, uzyskując w ten sposób induktywną
+    charakteryzację dziedziny naszej funkcji. Pisząc wprost: uzyskamy w
+    ten sposób TODO
+
+*)
 
 (** https://members.loria.fr/DLarchey/files/papers/TYPES_2018_paper_19.pdf
 
@@ -1700,6 +1795,8 @@ Proof.
     intros. rewrite <- div'_good in H0. subst. apply Hge; assumption.
     rewrite <- div'_good. reflexivity.
 Qed.
+
+(** * Metoda induktywnego wykresu i dziedziny *)
 
 Inductive graph : nat -> nat -> Prop :=
     | graph_gt100 :
@@ -1864,10 +1961,15 @@ Proof.
             cbn. reflexivity.
 Qed.
 
-(** * Wszystko razem, tak do kupy *)
+(** * Metoda induktywno-rekurencyjnej dziedziny *)
 
-(** Tu jakieś podsumowanie całego zwierzyńca. *)
+(** * Komenda [Function] *)
 
-(** * Uszy do góry *)
+(** * Plugin [Equations] *)
 
-(** Tu opis komendy [Function] i pluginu [Equations]. *)
+(** * Podsumowanie *)
+
+(** Póki co nie jest źle, wszakże udało nam się odkryć indukcję funkcyjną,
+    czyli metodę dowodzenia właściwości funkcji za pomocą specjalnie do
+    niej dostosowanej reguły indukcji, wywodzącej się od reguły indukcji
+    jej wykresu. *)
