@@ -1445,15 +1445,15 @@ Inductive divG : nat -> nat -> nat -> Prop :=
     Podaj inną definicję wykresu funkcji [div], która nie używa typów
     induktywnych (ani nie odwołuje się do samej funkcji [div] - to byłoby
     za łatwe). Użyj kwantyfikatora egzystencjalnego, mnożenia, dodawania
-    oraz relacji równości (i niczego więcej).
+    oraz relacji równości (i niczego więcej). Nazwij ją [divG'].
 
     Na razie nie musisz dowodzić, że wykres faktycznie jest wykresem [div]
     (póki co jest to za trudne), co oczywiście nie znaczy, że wolno ci się
     mylić - uzasadnij nieformalnie, że wykres faktycznie opisuje funkcję
     [div]. Do dowodu formalnego wrócimy później. *)
 
-Definition divG' (n m r : nat) : Prop :=
 (* begin hide *)
+Definition divG' (n m r : nat) : Prop :=
   exists q : nat, n = r * S m + q.
 (* end hide *)
 
@@ -1568,8 +1568,7 @@ Proof.
   intros P Hlt Hge n m.
   apply divG_ind.
     assumption.
-    intros n' m' r H1 H2.
-      apply divG_complete in H2. subst. apply Hge; assumption.
+    intros. apply divG_complete in H0. subst. apply Hge; assumption.
     apply divG_correct.
 Qed.
 
@@ -1679,9 +1678,10 @@ Qed.
 
     Tak więc problemem jest połączenie w jednej definicji dwóch dość luźno
     powiązanych rzeczy, którymi są:
-    - Docelowa definicja, która określa algorytmiczne zachowanie funkcji.
+    - Docelowa definicja, która określa obliczeniowe zachowanie funkcji.
       Jej manifestacją jest nasze nieszczęsne równanie rekurencyjne. Bywa
-      ona czasem nazywana aspektem algorytmicznym funkcji.
+      ona czasem nazywana aspektem obliczeniowym (albo algorytmicznym)
+      funkcji.
     - Dowód terminacji, który zapewnia, że definicja docelowa jest legalna
       i nie prowadzi do sprzeczności. Jego manifestacją są występujące w
       definicji [div] dowody na to, że wywołanie rekurencyjne ma argument
@@ -1689,10 +1689,10 @@ Qed.
       logicznym funkcji. *)
 
 (** Pani doktur, mamy diagnozę! Tylko co z nią zrobić? Czy jest jakaś metoda,
-    żeby rozdzielić algorytmiczny i logiczny aspekt danej funkcji, a potem
+    żeby rozdzielić obliczeniowy i logiczny aspekt danej funkcji, a potem
     poskładać je do kupy?
 
-    Pomyślmy najpierw nad aspektem algorytmicznym. Czy da się zdefiniować
+    Pomyślmy najpierw nad aspektem obliczeniowym. Czy da się zdefiniować
     funkcję bezpośrednio za pomocą jej definicji docelowej, czyli równania
     rekurencyjnego? Żeby to zrobić, musielibyśmy mieć możliwość robienia
     rekursji o dokładnie takim kształcie, jaki ma mieć ta funkcja...
@@ -1703,32 +1703,68 @@ Qed.
     wynik obliczy... czyli nie eureka?
 
     Nie do końca. Możemy zmodyfikować definicję wykresu, wyrzucając z
-    niej wszystkie wzmianki o wyniku, uzyskując w ten sposób induktywną
-    charakteryzację dziedziny naszej funkcji. Pisząc wprost: uzyskamy w
-    ten sposób TODO
+    niej wszystkie wzmianki o wyniku, uzyskując w ten sposób predykat
+    będący induktywną charakteryzacją dziedziny naszej funkcji. Dzięki
+    niemu możemy zdefiniować zmodyfikowaną wersję funkcji, w której
+    dodatkowym argumentem jest dowód na to, że argumenty należą do
+    dziedziny.
 
-*)
+    Logiczny aspekt funkcji, czyli dowód terminacji, sprowadza się w
+    takiej sytuacji do pokazania, że wszystkie argumenty należą do
+    dziedziny (czyli spełniają predykat dziedziny). Żeby zdefiniować
+    oryginalną funkcję, wystarczy jedynie poskładać oba aspekty do
+    kupy, czyli wstawić dowód terminacji do zmodyfikowanej funkcji.
 
-(** https://members.loria.fr/DLarchey/files/papers/TYPES_2018_paper_19.pdf
+    Żeby nie utonąć w ogólnościach, zobaczmy, jak nasz wspaniały
+    wynalazek radzi sobie z dzieleniem. *)
 
-    A robi się to tak:
-    - Zdefiniuj wykres funkcji.
-    - Zdefiniuj predykat dziedziny używając wykresu.
-    - Udowodnij użyteczne rzeczy, np. funkcyjność wykresu.
-    - Zdefiniuj funkcję przez rekursję po predykacie dziedziny wraz z jej
-      specyfikacją.
-    - Wyjmij funkcję i specyfikację za pomocą projekcji. *)
-
-Inductive divD (n m : nat) : Type :=
-    | divD_lt : n < S m -> divD n m
+Inductive divD : nat -> nat -> Type :=
+    | divD_lt : forall n m : nat, n < S m -> divD n m
     | divD_ge :
-        n >= S m -> divD (n - S m) m -> divD n m.
+        forall n m : nat,
+          n >= S m -> divD (n - S m) m -> divD n m.
+
+(** Tak wygląda predykat dziedziny dla dzielenia. Zauważmy, że tak naprawdę
+    to nie jest to predykat, bo bierze dwa argumenty i co więcej nie zwraca
+    [Prop], lecz [Type]. Nie będziemy się tym jednak przejmować - dla nas
+    [divD] będzie "predykatem dziedziny". Zauważmy też, że nie jest to
+    predykat dziedziny dla [div], lecz dla [div'], czyli zupełnie nowej
+    funkcji, którą zamierzamy zdefiniować.
+
+    Ok, przejdźmy do konkretów. [div'] ma mieć typ [nat -> nat -> nat],
+    a zatem [divD] ma dwa indeksy odpowiadające dwóm argumentom [div'].
+    Pierwszy konstruktor głosi, że jeżeli [n < S m], to oba te argumenty
+    należą do dziedziny (bo będziemy chcieli w tym przypadku zwrócić [0]).
+    Drugi konstruktor głosi, że jeżeli [n >= S m], to para argumentów [n]
+    i [m] należy do dziedziny pod warunkiem, że para argumentów [n - S m]
+    i [m] należy do dziedziny. Jest tak, gdyż w tym przypadku będziemy
+    chcieli zrobić wywołanie rekurencyjne właśnie na [n - S m] oraz [m]. *)
 
 Fixpoint div'_aux {n m : nat} (H : divD n m) : nat :=
 match H with
     | divD_lt _ _ _ => 0
     | divD_ge _ _ _ H' => S (div'_aux H')
 end.
+
+(** Dzięki [divD] możemy zdefiniować funkcję [div'_aux], której typem jest
+    [forall n m : nat, divD n m -> nat]. Jest to funkcja pomocnicza, która
+    posłuży nam do zdefiniowania właściwej funkcji [div'].
+
+    Ponieważ [divD] jest zdefiniowane induktywnie, docelowa definicja [div']
+    jest strukturalnie rekurencyjna po argumencie [H : divD n m], mimo że nie
+    jest strukturalnie rekurencyjna po [n] ani [m]. To właśnie jest magia
+    stojąca za metodą induktywnej dziedziny - możemy sprawić, żeby każda (no,
+    prawie), nawet najdziwniejsza rekursja była strukturalnie rekurencyjna po
+    dowodzie należenia do dziedziny.
+
+    Definicja jest banalna. Gdy natrafimy na konstruktor [divD_lt], zwracamy
+    [0] (bo wiemy, że jednym z argumentów [divD_lt] jest dowód na to, że
+    [n < S m]). Jeżeli trafimy na [divD_ge], to wiemy, że [n >= S m], więc
+    robimy wywołanie rekurencyjne na [H' : divD (n - S m) m] i dorzucamy do
+    wyniku [S].
+
+    W ten sposób zdefiniowaliśmy obliczeniową część [div'], zupełnie nie
+    przejmując się kwestią terminacji. *)
 
 Lemma divD_all :
   forall n m : nat, divD n m.
@@ -1737,15 +1773,40 @@ Proof.
   intros n IH m.
   destruct (le_lt_dec (S m) n).
     apply divD_ge.
-      assumption.
-      apply IH. apply Nat.sub_lt.
-        assumption.
-        apply le_n_S, le_0_n.
+      unfold ge. assumption.
+      apply IH. abstract omega.
     apply divD_lt. assumption.
 Defined.
 
+(** Dowód terminacji jest bliźniaczo podobny do naszej pierwszej definicji
+    [div]. Zaczynamy przez rekursję dobrze ufundowaną z porządkiem [lt] (i
+    dowodem [wf_lt] na to, że [lt] jest dobrze ufundowany), wprowadzamy
+    zmienne do kontekstu, po czym sprawdzamy, który z przypadków zachodzi.
+
+    Jeżeli [n >= S m], używamy konstruktora [divD_ge]. [n >= S m] zachodzi
+    na mocy założenia, zaś [n - S m] i [m] należą do dziedziny na mocy
+    hipotezy indukcyjnej. Gdy [n < S m], [n] i [m] należą do dziedziny na
+    mocy założenia. *)
+
 Definition div' (n m : nat) : nat :=
   div'_aux (divD_all n m).
+
+(** A oto i ostateczna definicja - wstawiamy dowód [divD_all] do funkcji
+    pomocniczej [div'_aux] i uzyskujemy pełnoprawną funkcję dzielącą
+    [div' : nat -> nat -> nat]. *)
+
+Compute div' 666 7.
+(* ===> = 83 : nat *)
+
+(** Jak widać, wynik oblicza się bez problemu. Po raz kolejny przypominam,
+    że [div' n m] oblicza [n/(m + 1)], nie zaś [n/m]. Przypominam też, że
+    dowód [divD_all] koniecznie musimy zakończyć za pomocą komendy [Defined],
+    a nie jak zazwyczaj [Qed], gdyż w przeciwnym przypadku funkcja [div'] nie
+    mogłaby niczego obliczyć. *)
+
+(* begin hide *)
+(** TODO: sprawdzić, czy różnica między [Qed] i [Defined] została omówiona. *)
+(* end hide *)
 
 Lemma divG_div'_aux :
   forall (n m : nat) (d : divD n m),
@@ -1754,29 +1815,31 @@ Proof.
   induction d; cbn; constructor; assumption.
 Qed.
 
-Lemma div'_eq :
+Lemma divG_correct' :
   forall n m : nat,
-    div' n m = if n <? S m then 0 else S (div' (n - S m) m).
+    divG n m (div' n m).
 Proof.
-  intros. unfold div'. generalize (divD_all n m) as d.
-  induction d; cbn.
-    rewrite leb_correct.
-      reflexivity.
-      apply le_S_n. assumption.
-    rewrite leb_correct_conv.
-      f_equal. apply divG_det with (n - S m) m; apply divG_div'_aux.
-      assumption.
+  intros. apply divG_div'_aux.
 Qed.
 
-Lemma div'_good :
+(** Żeby udowodnić regułę indukcji funkcyjnej, będziemy potrzebowali tego
+    samego co poprzednio, czyli twierdzeń o poprawności i pełności funkcji
+    [div'] względem wykresu [divG]. Dowody są jednak dużo prostsze niż
+    ostatnim razem.
+
+    Najpierw dowodzimy, że funkcja pomocnicza [div'_aux] oblicza taki wynik,
+    jakiego spodziewa się wykres [divG]. Dowód jest banalny, bo indukcja po
+    [d : divD n m] ma dokładnie taki kształt, jakiego nam potrzeba. Właściwy
+    dowód dla [div'] uzyskujemy przez wyspecjalizowanie [divG_div'_aux] do
+    [div']. *)
+
+Lemma divG_complete' :
   forall n m r : nat,
-    div' n m = r <-> divG n m r.
+    divG n m r -> r = div' n m.
 Proof.
-  split; intro.
-    subst. apply divG_div'_aux.
-    apply divG_det with n m.
-      apply divG_div'_aux.
-      assumption.
+  intros. apply divG_det with n m.
+    assumption.
+    apply divG_correct'.
 Qed.
 
 Lemma div'_ind :
@@ -1790,13 +1853,60 @@ Lemma div'_ind :
       forall n m : nat, P n m (div' n m).
 Proof.
   intros P Hlt Hge n m.
-  refine (divG_ind _ _ _ n m (div' n m) _).
+  apply divG_ind.
     assumption.
-    intros. rewrite <- div'_good in H0. subst. apply Hge; assumption.
-    rewrite <- div'_good. reflexivity.
+    intros. apply divG_complete' in H0. subst. apply Hge; assumption.
+    apply divG_correct'.
 Qed.
 
+(** Dowód pełności i dowód reguły indukcji funkcyjnej są dokładnie takie
+    same jak poprzednio. Zauważ, że tym razem zupełnie zbędne okazało się
+    równanie rekurencyjne, bez którego nie mogliśmy obyć się ostatnim
+    razem. Jednak jeżeli chcemy, możemy bez problemu je udowodnić, i to
+    nawet na dwa sposoby. *)
+
+Lemma div'_eq :
+  forall n m : nat,
+    div' n m = if n <? S m then 0 else S (div' (n - S m) m).
+Proof.
+  intros. unfold div'. generalize (divD_all n m) as d.
+  induction d; cbn.
+    rewrite leb_correct.
+      reflexivity.
+      apply le_S_n. assumption.
+    rewrite leb_correct_conv.
+      f_equal. apply divG_det with (n - S m) m; apply divG_div'_aux.
+      assumption.
+Restart.
+  intros. apply div'_ind; clear n m; intros; cbn.
+    rewrite leb_correct.
+      reflexivity.
+      abstract omega.
+    rewrite leb_correct_conv.
+      reflexivity.
+      abstract omega.
+Qed.
+
+(** Pierwszy, trudniejszy sposób, to zgeneralizowanie [divD_all n m]
+    do dowolnego [d] oraz indukcja po [d] (to tak, jakbyśmy najpierw
+    udowodnili tę regułę dla [div'_aux], a potem wyspecjalizowali do
+    [div']).
+
+    Drugi, łatwiejszy sposób, realizuje nasz początkowy pomysł, od którego
+    wszystko się zaczęło: dowodzimy równania rekurencyjnego za pomocą reguły
+    indukcji funkcyjnej. *)
+
 (** * Metoda induktywnego wykresu i dziedziny *)
+
+(** https://members.loria.fr/DLarchey/files/papers/TYPES_2018_paper_19.pdf
+
+    A robi się to tak:
+    - Zdefiniuj wykres funkcji.
+    - Zdefiniuj predykat dziedziny używając wykresu.
+    - Udowodnij użyteczne rzeczy, np. funkcyjność wykresu.
+    - Zdefiniuj funkcję przez rekursję po predykacie dziedziny wraz z jej
+      specyfikacją.
+    - Wyjmij funkcję i specyfikację za pomocą projekcji. *)
 
 Inductive graph : nat -> nat -> Prop :=
     | graph_gt100 :
