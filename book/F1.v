@@ -828,3 +828,293 @@ Proof.
     f_equal. apply IHt1. assumption.
 Defined.
 *)
+
+(** * Ćwiczenia *)
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj typ potencjalnie nieskończonych drzew binarnych trzymających
+    wartości typu [A] w węzłach, jego relację bipodobieństwa, predykaty
+    "skończony" i "nieskończony" oraz funkcję [mirror], która zwraca
+    lustrzane odbicie drzewa. Udowodnij, że bipodobieństwo jest relacją
+    równoważności i że funkcja [mirror] jest inwolucją (tzn.
+    [mirror (mirror t)] jest bipodobne do [t]), która zachowuje właściwości
+    bycia drzewem skończonym/nieskończonym. Pokaż, że drzewo nie może być
+    jednocześnie skończone i nieskończone. *)
+
+(* begin hide *)
+Module Zad1.
+
+CoInductive coBTree (A : Type) : Type :=
+{
+    tree : option (coBTree A * A * coBTree A)
+}.
+
+Arguments tree {A} _.
+
+CoInductive sim {A : Type} (t1 t2 : coBTree A) : Prop :=
+{
+    sim' :
+      tree t1 = None /\ tree t2 = None \/
+      exists (v1 v2 : A) (l1 l2 r1 r2 : coBTree A),
+        tree t1 = Some (l1, v1, r1) /\
+        tree t2 = Some (l2, v2, r2) /\
+          sim l1 l2 /\ sim r1 r2
+}.
+
+Lemma sim_refl :
+  forall (A : Type) (t : coBTree A), sim t t.
+Proof.
+  cofix CH.
+  constructor.
+  destruct t as [[[[l v] r] |]]; cbn.
+    right. eauto 10.
+    left. auto.
+Qed.
+
+Lemma sim_sym :
+  forall (A : Type) (t1 t2 : coBTree A),
+    sim t1 t2 -> sim t2 t1.
+Proof.
+  cofix CH.
+  constructor.
+  destruct H as [H]; decompose [ex or and] H; clear H; eauto 20.
+Qed.
+
+Lemma sim_trans :
+  forall (A : Type) (t1 t2 t3 : coBTree A),
+    sim t1 t2 -> sim t2 t3 -> sim t1 t3.
+Proof.
+  cofix CH.
+  constructor.
+  destruct H as [H], H0 as [H0].
+  decompose [ex or and] H; decompose [ex or and] H0; clear H H0.
+    auto.
+    1-2: congruence.
+    rewrite H1 in H6. inversion H6; subst; clear H6. eauto 15.
+Qed.
+
+CoFixpoint mirror {A : Type} (t : coBTree A) : coBTree A :=
+{|
+    tree :=
+      match tree t with
+          | None => None
+          | Some (l, v, r) => Some (mirror r, v, mirror l)
+      end
+|}.
+
+Lemma mirror_involution :
+  forall (A : Type) (t : coBTree A),
+    sim (mirror (mirror t)) t.
+Proof.
+  cofix CH.
+  destruct t as [[[[l v] r] |]];
+  constructor; [right | left].
+    exists v, v, (mirror (mirror l)), l, (mirror (mirror r)), r. auto.
+    auto.
+Qed.
+
+Inductive Finite {A : Type} : coBTree A -> Prop :=
+    | Finite_None : forall t : coBTree A, tree t = None -> Finite t
+    | Finite_Some :
+        forall (v : A) (l r t : coBTree A),
+          Finite l -> Finite r ->
+          tree t = Some (l, v, r) -> Finite t.
+
+CoInductive Infinite {A : Type} (t : coBTree A) : Prop :=
+{
+    root : A;
+    left : coBTree A;
+    right : coBTree A;
+    p : tree t = Some (left, root, right);
+    Infinite_left : Infinite left;
+    Infinite_right : Infinite right;
+}.
+
+Lemma Finite_mirror :
+  forall (A : Type) (t : coBTree A),
+    Finite t -> Finite (mirror t).
+Proof.
+  induction 1.
+    constructor. cbn. rewrite H. reflexivity.
+    eapply Finite_Some.
+      exact IHFinite2.
+      exact IHFinite1.
+      cbn. rewrite H1. reflexivity.
+Qed.
+
+Lemma Infinite_mirror :
+  forall (A : Type) (t : coBTree A),
+    Infinite t -> Infinite (mirror t).
+Proof.
+  cofix CH.
+  inversion 1. econstructor.
+    cbn. rewrite p. reflexivity.
+    apply CH; assumption.
+    apply CH; assumption.
+Qed.
+
+Lemma Finite_Infinite_contradiction :
+  forall (A : Type) (t : coBTree A),
+    Finite t -> Infinite t -> False.
+Proof.
+  induction 1; inversion 1; subst; congruence.
+Qed.
+
+End Zad1.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Znajdź taką rodzinę typów koinduktywnych [C], że dla dowolnego
+    typu [A], [C A] jest w bijekcji z typem funkcji [nat -> A]. Przez
+    bijekcję będziemy tu rozumieć funkcję, która ma odwrotność, z którą
+    w obie strony składa się do identyczności.
+
+    Uwaga: nie da się tego udowodnić bez użycia dodatkowych aksjomatów,
+    które na szczęście są bardzo oczywiste i same się narzucają. *)
+
+(* begin hide *)
+Module Zad2.
+
+Require Import FunctionalExtensionality.
+Require Import FinFun.
+
+CoInductive Stream (A : Type) : Type :=
+{
+    hd : A;
+    tl : Stream A;
+}.
+
+Arguments hd {A}.
+Arguments tl {A}.
+
+CoInductive sim {A : Type} (s1 s2 : Stream A) : Prop :=
+{
+    hds : hd s1 = hd s2;
+    tls : sim (tl s1) (tl s2);
+}.
+
+Axiom sim_eq :
+  forall (A : Type) (s1 s2 : Stream A), sim s1 s2 -> s1 = s2.
+
+CoFixpoint memo_aux {A : Type} (f : nat -> A) (n : nat) : Stream A :=
+{|
+    hd := f n;
+    tl := memo_aux f (S n);
+|}.
+
+Definition memo {A : Type} (f : nat -> A) : Stream A :=
+  memo_aux f 0.
+
+Fixpoint index {A : Type} (s : Stream A) (n : nat) : A :=
+match n with
+    | 0 => hd s
+    | S n' => index (tl s) n'
+end.
+
+Fixpoint drop {A : Type} (n : nat) (s : Stream A) : Stream A :=
+match n with
+    | 0 => s
+    | S n' => drop n' (tl s)
+end.
+
+Lemma tl_drop :
+  forall (A : Type) (n : nat) (s : Stream A),
+    tl (drop n s) = drop (S n) s.
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. cbn. reflexivity.
+Qed.
+
+Lemma memo_index_aux' :
+  forall (f : nat -> nat) (n m : nat),
+    sim (memo_aux f (n + m)) (memo_aux (fun k : nat => f (n + k)) m).
+Proof.
+  cofix CH.
+  constructor; cbn.
+    reflexivity.
+    rewrite plus_n_Sm. apply CH.
+Qed.
+
+Lemma memo_index_aux :
+  forall (A : Type) (s : Stream A) (n : nat),
+    sim (memo_aux (index s) n) (drop n s).
+Proof.
+  cofix CH.
+  constructor; cbn.
+    revert s. induction n as [| n']; cbn in *; intros.
+      reflexivity.
+      apply IHn'.
+    rewrite tl_drop. apply CH.
+Qed.
+
+Lemma memo_index :
+  forall (A : Type) (s : Stream A),
+    sim (memo (index s)) s.
+Proof.
+  intros. unfold memo. apply memo_index_aux.
+Qed.
+
+Lemma index_memo_aux :
+  forall (A : Type) (f : nat -> A) (n : nat),
+    index (memo_aux f n) = fun k : nat => f (k + n).
+Proof.
+  intros. extensionality k. revert n.
+  induction k as [| k']; cbn; intros.
+    reflexivity.
+    rewrite IHk'. rewrite plus_n_Sm. reflexivity.
+Qed.
+
+Lemma index_memo :
+  forall (A : Type) (f : nat -> A),
+    index (memo f) = fun k : nat => f k.
+Proof.
+  intros.
+  replace (fun k : nat => f k) with (fun k : nat => f (k + 0)).
+    apply index_memo_aux.
+    extensionality k. rewrite <- plus_n_O. reflexivity.
+Qed.
+
+Lemma natfun_is_stream_nat :
+  Bijective (@memo nat).
+Proof.
+  red. exists index. split; intros.
+    apply index_memo.
+    apply sim_eq. apply memo_index.
+Qed.
+
+End Zad2.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj pojęcie "nieskończonego łańcucha malejącego" (oczywiście
+    za pomocą koindukcji) i udowodnij, że jeżeli relacja jest dobrze
+    ufundowana, to nie ma nieskończonych łańcuchów malejących. *)
+
+(* begin hide *)
+Module Zad5.
+
+CoInductive DecChain {A : Type} (R : A -> A -> Prop) (x : A) : Type :=
+{
+    hd : A;
+    R_hd_x : R hd x;
+    tl : DecChain R hd;
+}.
+
+Lemma wf_no_DecChain :
+  forall (A : Type) (R : A -> A -> Prop) (x : A),
+    well_founded R -> DecChain R x -> False.
+Proof.
+  unfold well_founded.
+  intros A R x H C.
+  specialize (H x).
+  induction H.
+  inversion C.
+  apply H0 with hd0; assumption.
+Qed.
+
+End Zad5.
+(* end hide *)

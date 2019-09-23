@@ -847,7 +847,7 @@ Definition well_founded {A : Type} (R : A -> A -> Prop) : Prop :=
     niż pojęcie relacji. Ta ogólność przyda się nam za kilka chwil aby nie
     musieć pisać wszystkiego dwa razy. *)
 
-(** **** Ćwiczenie (dostępność i ufundowanie) *)
+(** **** Ćwiczenie *)
 
 (** Sprawdź, czy relacje [<=], [<] są dobrze ufundowane. *)
 
@@ -877,6 +877,8 @@ Defined.
 
 (* end hide *)
 
+(** **** Ćwiczenie *)
+
 (** Pokaż, że relacja dobrze ufundowana jest antyzwrotna oraz zinterpretuj
     ten fakt (tzn. powiedz, o co tak naprawdę chodzi w tym stwierdzeniu). *)
 
@@ -899,119 +901,89 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Sprawdź, czy dobrze ufundowane są relacje [le'] i [lt']. Uwaga:
-    pierwsze zadanie jest bardzo łatwe, drugie jest piekielnie trudne.
-    Jeżeli nie potrafisz rozwiązać go formalnie w Coqu, zrób to na
-    kartce nieformalnie - będzie dużo łatwiej.*)
-
-Definition le' (f g : nat -> nat) : Prop :=
-  forall n : nat, f n <= g n.
-
-Definition lt' (f g : nat -> nat) : Prop :=
-  forall n : nat, f n < g n.
-
-(* begin hide *)
-Lemma not_wf_le' : ~ well_founded le'.
-Proof.
-  intro. apply (wf_antirefl _ _ H id).
-  unfold le', id. intro. constructor.
-Qed.
-
-Definition wut {A : Type} (f : nat -> A) : A * (nat -> A) :=
-  (f 0, fun n : nat => f (S n)).
-
-Definition unwut {A : Type} (x : A * (nat -> A)) (n : nat) : A :=
-match n with
-    | 0 => fst x
-    | S n' => snd x n'
-end.
-
-Require Import FunctionalExtensionality.
-
-Lemma wut_unwut :
-  forall {A : Type} (f : nat -> A),
-    unwut (wut f) = f.
-Proof.
-  intros. extensionality n.
-  destruct n as [| n']; cbn; reflexivity.
-Qed.
-
-Lemma unwut_wut :
-  forall {A : Type} (x : A * (nat -> A)),
-    wut (unwut x) = x.
-Proof.
-  intros. destruct x as [a f]. reflexivity.
-Qed.
-
-Lemma wut_ind :
-  forall P : nat * (nat -> nat) -> Prop,
-    (forall f : nat -> nat, P (0, f)) ->
-    (forall (n : nat) (f : nat -> nat), P (n, f) -> P (S n, f)) ->
-      forall x : nat * (nat -> nat), P x.
-Proof.
-  destruct x as [n f].
-  induction n as [| n'].
-    apply H.
-    apply H0. assumption.
-Qed.
-
-Definition Pwut
-  {A : Type} (P : A * (nat -> A) -> Prop)
-  (f : nat -> A) : Prop :=
-    P (wut f).
-
-Definition Punwut
-  {A : Type} (P : (nat -> A) -> Prop)
-  (x : A * (nat -> A)) : Prop := P (unwut x).
-
-Lemma fun_ind :
-  forall (A : Type) (P : (nat -> A) -> Prop),
-    (forall x : A * (nat -> A), Punwut P x) ->
-      forall f : nat -> A, P f.
-Proof.
-  intros. rewrite <- wut_unwut. apply H.
-Qed.
-
-Require Import Omega.
-
-(* TODO: uogólnić na dowolny typ [A] i relację dobrze ufundowaną [R]. *)
-Theorem wf_lt' :
-  well_founded lt'.
-Proof.
-  unfold well_founded.
-  apply fun_ind. destruct x as [n f]. (* revert f.*)
-  unfold Punwut, unwut.
-  constructor. unfold lt'. cbn. intro g. revert g.
-  induction n as [| n']; intros.
-    specialize (H 0). cbn in H. inversion H.
-    constructor. intros h H'. apply IHn'.
-      destruct n; cbn.
-        specialize (H 0). specialize (H' 0). cbn in H. omega.
-        specialize (H (S n)). specialize (H' (S n)). cbn in H. omega.
-Qed.
-
-Lemma wf_lt'' :
-  well_founded lt'.
-Proof.
-  unfold well_founded.
-  intro f.
-  pose (n := f 0); assert (n = f 0) by reflexivity; clearbody n.
-  revert n f H.
-  apply (@well_founded_induction nat lt lt_wf
-    (fun n => forall f, n = f 0 -> Acc lt' f)).
-  intros n IH f Heq. constructor. intros g Hlt.
-  unfold lt' in Hlt.
-  apply IH with (g 0).
-    specialize (Hlt 0). omega.
-    reflexivity.
-Qed.
-
-(* end hide *)
+(** **** Ćwiczenie *)
 
 (** Sprawdź, czy dobrze ufundowana jest następująca relacja porządku:
     wszystkie liczby parzyste są mniejsze niż wszystkie liczby nieparzyste,
     zaś dwie liczby o tej samej parzystości porównujemy według zwykłego
     porządku [<]. *)
+
+(* begin hide *)
+(** TODO *)
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Sprawdź, czy dobrze ufundowana jest następująca relacja porządku
+    (mam nadzieję, że obrazek jest zrozumiały):
+    0 < 1 < ... < ω < ω + 1 < ... < 2 * ω
+
+     Oczywiście najpierw musisz wymyślić, w jaki sposób zdefiniować taką
+     relację. Uwaga: istnieje bardzo sprytne rozwiązanie. *)
+
+(* begin hide *)
+Module Ex.
+
+Require Import Omega.
+
+Inductive T : Type :=
+    | from0 : nat -> T
+    | fromω : nat -> T
+    | ωω : T.
+
+Definition R (x y : T) : Prop :=
+match x, y with
+    | from0 n, from0 m => n < m
+    | from0 _, _ => True
+    | fromω _, from0 _ => False
+    | fromω n, fromω m => n < m
+    | fromω _, _ => True
+    | ωω, _ => False
+end.
+
+Lemma R_trans :
+  forall a b c : T, R a b -> R b c -> R a c.
+Proof.
+  induction a as [n | n |];
+  destruct b as [m | m |], c as [k | k |]; cbn; try omega; auto.
+Qed.
+
+Lemma Acc_from0 :
+  forall n : nat, Acc R (from0 n).
+Proof.
+  induction n as [| n']; cbn.
+    constructor. destruct y; inversion 1.
+    constructor. destruct y; inversion 1; subst.
+      assumption.
+      inversion IHn'. constructor. intros. apply H0.
+        eapply R_trans; eauto.
+Qed.
+
+Lemma Acc_fromω :
+  forall n : nat, Acc R (fromω n).
+Proof.
+  induction n as [| n']; cbn.
+    constructor. destruct y; inversion 1. apply Acc_from0.
+    constructor. destruct y; inversion 1; subst.
+      apply Acc_from0.
+      assumption.
+      inversion IHn'. constructor. intros. apply H0.
+        eapply R_trans; eauto.
+Qed.
+
+Lemma wf_R : well_founded R.
+Proof.
+  unfold well_founded.
+  destruct x as [m | m |].
+    apply Acc_from0.
+    apply Acc_fromω.
+    constructor. destruct y; inversion 1.
+      apply Acc_from0.
+      apply Acc_fromω.
+Qed.
+
+End Ex.
+(* end hide *)
 
 (** Nasza bajka powoli zbliża się do końca. Czas udowodnić ostateczne
     twierdzenie, do którego dążyliśmy: jeżeli układ kostek [R] jest
@@ -1082,6 +1054,8 @@ Qed.
     prostej indukcji albo banalnego dopasowania do wzorca. W tego typu
     sytuacjach nieodzowne będzie skorzystanie z indukcji i rekursji
     dobrze ufundowanej, o czym przekonamy się już natychmiast zaraz. *)
+
+Require Import Omega.
 
 Definition div : nat -> nat -> nat.
 Proof.
@@ -1257,7 +1231,121 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Indukcja funkcyjna *)
+(** **** Ćwiczenie *)
+
+(** Sprawdź, czy dobrze ufundowane są relacje [le'] i [lt']. Uwaga:
+    pierwsze zadanie jest bardzo łatwe, drugie jest piekielnie trudne.
+    Jeżeli nie potrafisz rozwiązać go formalnie w Coqu, zrób to na
+    kartce nieformalnie - będzie dużo łatwiej.*)
+
+Definition le' (f g : nat -> nat) : Prop :=
+  forall n : nat, f n <= g n.
+
+Definition lt' (f g : nat -> nat) : Prop :=
+  forall n : nat, f n < g n.
+
+(* begin hide *)
+Lemma not_wf_le' : ~ well_founded le'.
+Proof.
+  intro. apply (wf_antirefl _ _ H id).
+  unfold le', id. intro. constructor.
+Qed.
+
+Lemma wf_lt' :
+  well_founded lt'.
+Proof.
+  unfold well_founded.
+  intro f.
+  pose (n := f 0); assert (n = f 0) by reflexivity; clearbody n.
+  revert n f H.
+  apply (@well_founded_ind _ _ wf_lt
+        (fun n => forall f, n = f 0 -> Acc lt' f)).
+  intros n IH f Heq. constructor. intros g Hlt.
+  unfold lt' in Hlt.
+  apply IH with (g 0).
+    specialize (Hlt 0). subst. assumption.
+    reflexivity.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Niech [B : Type] i niech [R : B -> B -> Prop] będzie relacją dobrze
+    ufundowaną. Zdefiniuj po współrzędnych relację porządku na funkcjach
+    o typie [A -> B] i rozstrzygnij, czy relacja ta jest dobrze ufundowana.
+
+    Uwaga: w zależności od okoliczności to zadanie może być trudne lub
+    łatwe. *)
+
+(* begin hide *)
+Module Ex'.
+
+Definition funord
+  (A : Type) {B : Type} (R : B -> B -> Prop) (f g : A -> B) : Prop :=
+    forall x : A, R (f x) (g x).
+
+Lemma Acc_antirefl :
+  forall (A : Type) (R : A -> A -> Prop) (x : A),
+    Acc R x -> ~ R x x.
+Proof.
+  induction 1. intro. apply (H0 x); assumption.
+Qed.
+
+Lemma wf_funord_empty :
+  forall (A B : Type) (R : B -> B -> Prop),
+    (A -> False) -> ~ well_founded (funord A R).
+Proof.
+  unfold well_founded.
+  intros A B R Hempty H.
+  pose (f := fun a : A => match Hempty a with end : B); clearbody f.
+  apply (Acc_antirefl _ (funord A R) f).
+    apply H.
+    unfold funord. intro. contradiction.
+Qed.
+
+Lemma wf_funord_nonempty :
+  forall (A B : Type) (R : B -> B -> Prop) (a : A),
+    well_founded R -> well_founded (funord A R).
+Proof.
+  unfold well_founded.
+  intros A B R a Hwf f.
+  pose (b := f a).
+  assert (b = f a) by reflexivity; clearbody b.
+  revert b f H.
+  apply (@well_founded_ind B R Hwf
+    (fun b => forall f, b = f a -> Acc (funord A R) f)).
+  intros b IH f Heq. constructor. intros g Hord.
+  apply IH with (g a).
+    unfold funord in Hord. specialize (Hord a). subst. apply Hord.
+    reflexivity.
+Qed.
+
+End Ex'.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że jeżeli kodziedzina funkcji [f : A -> B] jest dobrze ufundowana
+    za pomocą relacji [R : B -> B -> Prop], to jej dziedzina również jest
+    dobrze ufundowana. *)
+
+Lemma wf_inverse_image :
+  forall (A B : Type) (f : A -> B) (R : B -> B -> Prop),
+    well_founded R -> well_founded (fun x y : A => R (f x) (f y)).
+(* begin hide *)
+Proof.
+  unfold well_founded.
+  intros A B f R H x.
+  pose (b := f x). assert (b = f x) by reflexivity. clearbody b.
+  specialize (H b). revert x H0. induction H. rename x into b.
+  intros x Heq. constructor. intros.
+  eapply H0. rewrite Heq.
+    eauto.
+    reflexivity.
+Defined.
+(* end hide *)
+
+(** * Indukcja wykresowa *)
 
 (** Skoro nie dla psa kiełbasa, to musimy znaleźć jakiś sposób na
     udowodnienie równania rekurencyjnego dla [div]. Zamiast jednak głowić
@@ -1534,7 +1622,7 @@ Qed.
     poprawności.
 
     I po co nam to było? Ano wszystkie fikołki, które zrobiliśmy, posłużą
-    nam jako lematy do udowodnienia reguły indukcji funkcyjnej dla [div].
+    nam jako lematy do udowodnienia reguły indukcji wykresowej dla [div].
     Co to za reguła, jak wygląda i skąd ją wziąć? *)
 
 Check divG_ind.
@@ -1548,11 +1636,11 @@ Check divG_ind.
             P (n - S m) m r -> P n m (S r)) ->
         forall n m r : nat, divG n m r -> P n m r *)
 
-(** Pierwowzorem reguły indukcji funkcyjnej dla danej funkcji jest reguła
-    indukcji dla jej wykresu. Reguła indukcji dla [div] to w sumie to samo
-    co powyższa reguła, ale z [r] wyspecjalizowanym do [div n m]. Chcemy
-    też pozbyć się niepotrzebnej przesłanki [divG n m r] (po podstawieniu
-    za [r] ma ona postać [divG n m (div n m)]), gdyż nie jest potrzebna -
+(** Pierwowzorem reguły indukcji wykresowej dla danej funkcji jest reguła
+    indukcji jej wykresu. Reguła indukcji dla [div] to w sumie to samo co
+    powyższa reguła, ale z [r] wyspecjalizowanym do [div n m]. Chcemy też
+    pozbyć się niepotrzebnej przesłanki [divG n m r] (po podstawieniu za
+    [r] ma ona postać [divG n m (div n m)]), gdyż nie jest potrzebna -
     jest zawsze prawdziwa na mocy twierdzenia [divG_correct]. *)
 
 Lemma div_ind :
@@ -1595,7 +1683,7 @@ Qed.
     przesłanka [divG n m (div n m)], którą załatwiamy za pomocą twierdzenia
     o poprawności.
 
-    Włala (lub bardziej wykwintnie: voilà)! Mamy regułę indukcji funkcyjnej
+    Włala (lub bardziej wykwintnie: voilà)! Mamy regułę indukcji wykresowej
     dla [div]. Zobaczmy, co i jak można za jej pomocą udowodnić. *)
 
 Lemma div_le :
@@ -1610,7 +1698,7 @@ Qed.
 (** **** Ćwiczenie *)
 
 (** Udowodnij twierdzenie [div_le] za pomocą indukcji dobrze ufundowanej
-    i równania rekurencyjnego, czyli bez użycia indukcji funkcyjnej. Jak
+    i równania rekurencyjnego, czyli bez użycia indukcji wykresowej. Jak
     trudny jest ten dowód w porównaniu do powyższego? *)
 
 Lemma div_le' :
@@ -1628,9 +1716,9 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-(** Udowodnij za pomocą indukcji funkcyjnej, że twój alternatywny wykres
-    funkcji [div] z jednego z poprzednich ćwiczeń, faktycznie jest
-    wykresem [div].
+(** Udowodnij za pomocą indukcji wykresowej, że twój alternatywny
+    wykres funkcji [div] z jednego z poprzednich ćwiczeń faktycznie
+    jest wykresem [div].
 
     Następnie udowodnij to samo za pomocą indukcji dobrze ufundowanej i
     równania rekurencyjnego. Która metoda dowodzenia jest lepsza (nie,
@@ -1667,7 +1755,7 @@ Qed.
 (** Póki co nie jest źle - udało nam się wszakże wymyślić jedyną słuszną
     metodę dowodzenia właściwości funkcji rekurencyjnych. Jednak nasza
     implementacja kuleje przez to nieszczęsne równanie rekurencyjne. Jak
-    możemy udowodnić je bez używania indukcji funkcyjnej?
+    możemy udowodnić je bez używania indukcji wykresowej?
 
     Żeby znaleźć odpowiedź na to pytanie, znowu przyda się nam trochę
     konceptualnej jasności. Na czym tak naprawdę polega problem? Jak
@@ -1822,7 +1910,7 @@ Proof.
   intros. apply divG_div'_aux.
 Qed.
 
-(** Żeby udowodnić regułę indukcji funkcyjnej, będziemy potrzebowali tego
+(** Żeby udowodnić regułę indukcji wykresowej, będziemy potrzebowali tego
     samego co poprzednio, czyli twierdzeń o poprawności i pełności funkcji
     [div'] względem wykresu [divG]. Dowody są jednak dużo prostsze niż
     ostatnim razem.
@@ -1859,7 +1947,7 @@ Proof.
     apply divG_correct'.
 Qed.
 
-(** Dowód pełności i dowód reguły indukcji funkcyjnej są dokładnie takie
+(** Dowód pełności i dowód reguły indukcji wykresowej są dokładnie takie
     same jak poprzednio. Zauważ, że tym razem zupełnie zbędne okazało się
     równanie rekurencyjne, bez którego nie mogliśmy obyć się ostatnim
     razem. Jednak jeżeli chcemy, możemy bez problemu je udowodnić, i to
@@ -1894,7 +1982,11 @@ Qed.
 
     Drugi, łatwiejszy sposób, realizuje nasz początkowy pomysł, od którego
     wszystko się zaczęło: dowodzimy równania rekurencyjnego za pomocą reguły
-    indukcji funkcyjnej. *)
+    indukcji wykresowej. *)
+
+(** **** Ćwiczenie *)
+
+(** TODO: rotn *)
 
 (** * Metoda induktywnego wykresu i dziedziny *)
 
@@ -2075,11 +2167,176 @@ Qed.
 
 (** * Komenda [Function] *)
 
+Require Import Recdef.
+
+(** div' n m = n/(m + 1) *)
+Function div'' (n m : nat) {measure id n} : nat :=
+  if le_lt_dec (S m) n
+  then S (div'' (n - S m) m)
+  else 0.
+Proof.
+  intros. unfold id. omega.
+Defined.
+
+Print R_div''.
+Check R_div''_correct.
+Check R_div''_complete.
+Check div''_ind.
+
+Lemma div''_le :
+  forall n m : nat, div'' n m <= n.
+Proof.
+  intros. functional induction (div'' n m).
+    omega.
+    apply le_0_n.
+Defined.
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj funkcję [rotn] (i wszystkie funkcje pomocnicze) jeszcze raz,
+    tym razem za pomocą komendy [Function]. Porównaj swoje definicje wykresu
+    oraz reguły indukcji z tymi automatycznie wygenerowanymi. Użyj taktyki
+    [functional induction], żeby jeszcze raz udowodnić, że [rotn] jest
+    inwolucją (i wszystkie lematy też). Policz, ile pisania udało ci się
+    dzięki temu zaoszczędzić.
+
+    Czy w twoim rozwiązaniu są lematy, w których użycie indukcji funkcyjnej
+    znacznie utrudnia przeprowadzenie dowodu? W moim jest jeden taki. *)
+
+(* begin hide *)
+Module rotn_Function.
+
+Require Import Recdef.
+
+Require Import List.
+Import ListNotations.
+
+Require Import Omega.
+
+Function split
+  {A : Type} (n : nat) (l : list A)
+  : option (list A * list A) :=
+match n, l with
+    | 0, _ => Some ([], l)
+    | S n', [] => None
+    | S n', h :: t =>
+        match split n' t with
+            | None => None
+            | Some (l1, l2) => Some (h :: l1, l2)
+        end
+end.
+
+Lemma split_length_aux :
+  forall (A : Type) (n : nat) (l l1 l2 : list A),
+    split n l = Some (l1, l2) ->
+      n = 0 \/ length l2 < length l.
+Proof.
+  intros. revert l1 l2 H.
+  functional induction (split n l); inversion 1; subst.
+    left. reflexivity.
+    right. destruct (IHo _ _ e1).
+      subst. cbn in e1. inversion e1; subst. cbn. omega.
+      cbn. omega.
+Qed.
+
+Lemma split_length :
+  forall (A : Type) (n : nat) (l l1 l2 : list A),
+    split (S n) l = Some (l1, l2) -> length l2 < length l.
+Proof.
+  intros. destruct (split_length_aux A (S n) l l1 l2 H).
+    inversion H0.
+    assumption.
+Qed.
+
+Function rotn
+  {A : Type} (n : nat) (l : list A) {measure length l} : list A :=
+match split (S n) l with
+    | None => l
+    | Some (l1, l2) => rev l1 ++ rotn n l2
+end.
+Proof.
+  intros A n l _ l1 l2 _ H.
+  eapply split_length. eassumption.
+Defined.
+
+Arguments rotn {x} _ _.
+
+Compute rotn 1 [1; 2; 3; 4; 5; 6; 7].
+
+Lemma split_app :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
+    length l1 = n -> split n (l1 ++ l2) = Some (l1, l2).
+Proof.
+  induction n as [| n']; cbn; intros.
+    destruct l1; cbn.
+      reflexivity.
+      inversion H.
+    destruct l1 as [| h t]; cbn.
+      inversion H.
+      rewrite IHn'.
+        reflexivity.
+        cbn in H. inversion H. reflexivity.
+Qed.
+
+Lemma split_length' :
+  forall {A : Type} {n : nat} {l1 l2 : list A},
+    split n (l1 ++ l2) = Some (l1, l2) -> length l1 = n.
+Proof.
+  induction n as [| n']; cbn; intros.
+    inversion H. reflexivity.
+    destruct l1 as [| h t]; cbn in *.
+      destruct l2; cbn in H.
+        inversion H.
+        destruct (split n' l2).
+          destruct p. 1-2: inversion H.
+      case_eq (split n' (t ++ l2)).
+        intros [l1' l2'] Heq. eapply f_equal, IHn'.
+          rewrite Heq in H. inversion H; subst. eassumption.
+        intro. rewrite H0 in H. inversion H.
+Qed.
+
+Lemma split_spec :
+  forall (A : Type) (n : nat) (l l1 l2 : list A),
+    split n l = Some (l1, l2) -> l = l1 ++ l2.
+Proof.
+  intros A n l.
+  functional induction (split n l); inversion 1; subst.
+    reflexivity.
+    cbn. f_equal. apply IHo. assumption.
+Qed.
+
+Lemma rotn_involution :
+  forall (A : Type) (n : nat) (l : list A),
+    rotn n (rotn n l) = l.
+Proof.
+  intros. functional induction (rotn n l).
+    rewrite rotn_equation, e. reflexivity.
+    rewrite rotn_equation, split_app, rev_involutive, IHl0.
+      apply split_spec in e. rewrite e. reflexivity.
+      rewrite rev_length. eapply split_length'.
+        rewrite <- e. f_equal. apply split_spec in e. rewrite e. reflexivity.
+Qed.
+
+End rotn_Function.
+(* end hide *)
+
 (** * Plugin [Equations] *)
+
+(** **** Zadanie 8 *)
+
+(** Zainstaluj plugin Equations:
+    https://github.com/mattam82/Coq-Equations
+
+    Przeczytaj tutorial:
+    https://raw.githubusercontent.com/mattam82/Coq-Equations/master/doc/equations_intro.v
+
+    Następnie znajdź jakiś swój dowód przez indukcję, który był skomplikowany
+    i napisz prostszy dowód za pomocą komendy [Equations] i taktyki [funelim].
+*)
 
 (** * Podsumowanie *)
 
-(** Póki co nie jest źle, wszakże udało nam się odkryć indukcję funkcyjną,
+(** Póki co nie jest źle, wszakże udało nam się odkryć indukcję wykresową,
     czyli metodę dowodzenia właściwości funkcji za pomocą specjalnie do
     niej dostosowanej reguły indukcji, wywodzącej się od reguły indukcji
     jej wykresu. *)

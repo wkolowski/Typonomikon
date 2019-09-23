@@ -954,7 +954,7 @@ Układ kostek reprezentowany przez <span class="inlinecode"><span class="id" tit
     musieć pisać wszystkiego dwa razy. 
 <div class="paragraph"> </div>
 
-<a name="lab203"></a><h4 class="section">Ćwiczenie (dostępność i ufundowanie)</h4>
+<a name="lab203"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -968,7 +968,11 @@ Układ kostek reprezentowany przez <span class="inlinecode"><span class="id" tit
 </div>
 
 <div class="doc">
-Pokaż, że relacja dobrze ufundowana jest antyzwrotna oraz zinterpretuj
+<a name="lab204"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Pokaż, że relacja dobrze ufundowana jest antyzwrotna oraz zinterpretuj
     ten fakt (tzn. powiedz, o co tak naprawdę chodzi w tym stwierdzeniu). 
 </div>
 <div class="code">
@@ -984,20 +988,16 @@ Pokaż, że relacja dobrze ufundowana jest antyzwrotna oraz zinterpretuj
 </div>
 
 <div class="doc">
-Sprawdź, czy dobrze ufundowane są relacje <span class="inlinecode"><span class="id" title="var">le'</span></span> i <span class="inlinecode"><span class="id" title="var">lt'</span></span>. Uwaga:
-    pierwsze zadanie jest bardzo łatwe, drugie jest piekielnie trudne.
-    Jeżeli nie potrafisz rozwiązać go formalnie w Coqu, zrób to na
-    kartce nieformalnie - będzie dużo łatwiej.
+<a name="lab205"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Sprawdź, czy dobrze ufundowana jest następująca relacja porządku:
+    wszystkie liczby parzyste są mniejsze niż wszystkie liczby nieparzyste,
+    zaś dwie liczby o tej samej parzystości porównujemy według zwykłego
+    porządku <span class="inlinecode">&lt;</span>. 
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">le'</span> (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">g</span> <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">lt'</span> (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">g</span> <span class="id" title="var">n</span>.<br/>
 
 <br/>
 
@@ -1005,13 +1005,28 @@ Sprawdź, czy dobrze ufundowane są relacje <span class="inlinecode"><span class
 </div>
 
 <div class="doc">
-Sprawdź, czy dobrze ufundowana jest następująca relacja porządku:
-    wszystkie liczby parzyste są mniejsze niż wszystkie liczby nieparzyste,
-    zaś dwie liczby o tej samej parzystości porównujemy według zwykłego
-    porządku <span class="inlinecode">&lt;</span>. 
+<a name="lab206"></a><h4 class="section">Ćwiczenie</h4>
+
 <div class="paragraph"> </div>
 
- Nasza bajka powoli zbliża się do końca. Czas udowodnić ostateczne
+ Sprawdź, czy dobrze ufundowana jest następująca relacja porządku
+    (mam nadzieję, że obrazek jest zrozumiały):
+    0 &lt; 1 &lt; ... &lt; ω &lt; ω + 1 &lt; ... &lt; 2 * ω
+
+<div class="paragraph"> </div>
+
+     Oczywiście najpierw musisz wymyślić, w jaki sposób zdefiniować taką
+     relację. Uwaga: istnieje bardzo sprytne rozwiązanie. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nasza bajka powoli zbliża się do końca. Czas udowodnić ostateczne
     twierdzenie, do którego dążyliśmy: jeżeli układ kostek <span class="inlinecode"><span class="id" title="var">R</span></span> jest
     niespartaczony (czyli gdy każda kostka jest dostępna), to każda
     kostka się przewraca. 
@@ -1106,6 +1121,9 @@ Poprzednie twierdzenie, czyli <span class="inlinecode"><span class="id" title="v
     dobrze ufundowanej, o czym przekonamy się już natychmiast zaraz. 
 </div>
 <div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">div</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>.<br/>
@@ -1330,7 +1348,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
     indukcyjnej. 
 <div class="paragraph"> </div>
 
-<a name="lab204"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab207"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1346,7 +1364,72 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
 </div>
 
 <div class="doc">
-<a name="lab205"></a><h1 class="section">Indukcja funkcyjna</h1>
+<a name="lab208"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Sprawdź, czy dobrze ufundowane są relacje <span class="inlinecode"><span class="id" title="var">le'</span></span> i <span class="inlinecode"><span class="id" title="var">lt'</span></span>. Uwaga:
+    pierwsze zadanie jest bardzo łatwe, drugie jest piekielnie trudne.
+    Jeżeli nie potrafisz rozwiązać go formalnie w Coqu, zrób to na
+    kartce nieformalnie - będzie dużo łatwiej.
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">le'</span> (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">g</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">lt'</span> (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> <span class="id" title="var">n</span> &lt; <span class="id" title="var">g</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab209"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Niech <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> i niech <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> będzie relacją dobrze
+    ufundowaną. Zdefiniuj po współrzędnych relację porządku na funkcjach
+    o typie <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> i rozstrzygnij, czy relacja ta jest dobrze ufundowana.
+
+<div class="paragraph"> </div>
+
+    Uwaga: w zależności od okoliczności to zadanie może być trudne lub
+    łatwe. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab210"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Pokaż, że jeżeli kodziedzina funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> jest dobrze ufundowana
+    za pomocą relacji <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, to jej dziedzina również jest
+    dobrze ufundowana. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wf_inverse_image</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">well_founded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">well_founded</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">R</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">f</span> <span class="id" title="var">y</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab211"></a><h1 class="section">Indukcja wykresowa</h1>
 
 <div class="paragraph"> </div>
 
@@ -1462,7 +1545,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
     wersję o typie <span class="inlinecode"><span class="id" title="var">A1</span></span> <span class="inlinecode">*</span> <span class="inlinecode">...</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">An</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab206"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab212"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1483,7 +1566,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
 </div>
 
 <div class="doc">
-<a name="lab207"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab213"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1499,7 +1582,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
 </div>
 
 <div class="doc">
-<a name="lab208"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab214"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1577,7 +1660,7 @@ Zwróćmy tylko uwagę na fakt, że mówiąc o kształcie rekursji (lub po
     wywołania rekurencyjnego. 
 <div class="paragraph"> </div>
 
-<a name="lab209"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab215"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1716,7 +1799,7 @@ Kolejną, ostatnią już rzeczą, którą powinniśmy zrobić z wykresem, jest
 <div class="paragraph"> </div>
 
     I po co nam to było? Ano wszystkie fikołki, które zrobiliśmy, posłużą
-    nam jako lematy do udowodnienia reguły indukcji funkcyjnej dla <span class="inlinecode"><span class="id" title="var">div</span></span>.
+    nam jako lematy do udowodnienia reguły indukcji wykresowej dla <span class="inlinecode"><span class="id" title="var">div</span></span>.
     Co to za reguła, jak wygląda i skąd ją wziąć? 
 </div>
 <div class="code">
@@ -1737,11 +1820,11 @@ Kolejną, ostatnią już rzeczą, którą powinniśmy zrobić z wykresem, jest
 </div>
 
 <div class="doc">
-Pierwowzorem reguły indukcji funkcyjnej dla danej funkcji jest reguła
-    indukcji dla jej wykresu. Reguła indukcji dla <span class="inlinecode"><span class="id" title="var">div</span></span> to w sumie to samo
-    co powyższa reguła, ale z <span class="inlinecode"><span class="id" title="var">r</span></span> wyspecjalizowanym do <span class="inlinecode"><span class="id" title="var">div</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>. Chcemy
-    też pozbyć się niepotrzebnej przesłanki <span class="inlinecode"><span class="id" title="var">divG</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode"><span class="id" title="var">r</span></span> (po podstawieniu
-    za <span class="inlinecode"><span class="id" title="var">r</span></span> ma ona postać <span class="inlinecode"><span class="id" title="var">divG</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">(<span class="id" title="var">div</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span>)</span>), gdyż nie jest potrzebna -
+Pierwowzorem reguły indukcji wykresowej dla danej funkcji jest reguła
+    indukcji jej wykresu. Reguła indukcji dla <span class="inlinecode"><span class="id" title="var">div</span></span> to w sumie to samo co
+    powyższa reguła, ale z <span class="inlinecode"><span class="id" title="var">r</span></span> wyspecjalizowanym do <span class="inlinecode"><span class="id" title="var">div</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>. Chcemy też
+    pozbyć się niepotrzebnej przesłanki <span class="inlinecode"><span class="id" title="var">divG</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode"><span class="id" title="var">r</span></span> (po podstawieniu za
+    <span class="inlinecode"><span class="id" title="var">r</span></span> ma ona postać <span class="inlinecode"><span class="id" title="var">divG</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">(<span class="id" title="var">div</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span>)</span>), gdyż nie jest potrzebna -
     jest zawsze prawdziwa na mocy twierdzenia <span class="inlinecode"><span class="id" title="var">divG_correct</span></span>. 
 </div>
 <div class="code">
@@ -1799,7 +1882,7 @@ Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
 
 <div class="paragraph"> </div>
 
-    Włala (lub bardziej wykwintnie: voilà)! Mamy regułę indukcji funkcyjnej
+    Włala (lub bardziej wykwintnie: voilà)! Mamy regułę indukcji wykresowej
     dla <span class="inlinecode"><span class="id" title="var">div</span></span>. Zobaczmy, co i jak można za jej pomocą udowodnić. 
 </div>
 <div class="code">
@@ -1818,12 +1901,12 @@ Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
 </div>
 
 <div class="doc">
-<a name="lab210"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab216"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
  Udowodnij twierdzenie <span class="inlinecode"><span class="id" title="var">div_le</span></span> za pomocą indukcji dobrze ufundowanej
-    i równania rekurencyjnego, czyli bez użycia indukcji funkcyjnej. Jak
+    i równania rekurencyjnego, czyli bez użycia indukcji wykresowej. Jak
     trudny jest ten dowód w porównaniu do powyższego? 
 </div>
 <div class="code">
@@ -1837,13 +1920,13 @@ Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
 </div>
 
 <div class="doc">
-<a name="lab211"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab217"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
- Udowodnij za pomocą indukcji funkcyjnej, że twój alternatywny wykres
-    funkcji <span class="inlinecode"><span class="id" title="var">div</span></span> z jednego z poprzednich ćwiczeń, faktycznie jest
-    wykresem <span class="inlinecode"><span class="id" title="var">div</span></span>.
+ Udowodnij za pomocą indukcji wykresowej, że twój alternatywny
+    wykres funkcji <span class="inlinecode"><span class="id" title="var">div</span></span> z jednego z poprzednich ćwiczeń faktycznie
+    jest wykresem <span class="inlinecode"><span class="id" title="var">div</span></span>.
 
 <div class="paragraph"> </div>
 
@@ -1868,14 +1951,14 @@ Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
 </div>
 
 <div class="doc">
-<a name="lab212"></a><h1 class="section">Metoda induktywnej dziedziny</h1>
+<a name="lab218"></a><h1 class="section">Metoda induktywnej dziedziny</h1>
 
 <div class="paragraph"> </div>
 
  Póki co nie jest źle - udało nam się wszakże wymyślić jedyną słuszną
     metodę dowodzenia właściwości funkcji rekurencyjnych. Jednak nasza
     implementacja kuleje przez to nieszczęsne równanie rekurencyjne. Jak
-    możemy udowodnić je bez używania indukcji funkcyjnej?
+    możemy udowodnić je bez używania indukcji wykresowej?
 
 <div class="paragraph"> </div>
 
@@ -2102,7 +2185,7 @@ Jak widać, wynik oblicza się bez problemu. Po raz kolejny przypominam,
 </div>
 
 <div class="doc">
-Żeby udowodnić regułę indukcji funkcyjnej, będziemy potrzebowali tego
+Żeby udowodnić regułę indukcji wykresowej, będziemy potrzebowali tego
     samego co poprzednio, czyli twierdzeń o poprawności i pełności funkcji
     <span class="inlinecode"><span class="id" title="var">div'</span></span> względem wykresu <span class="inlinecode"><span class="id" title="var">divG</span></span>. Dowody są jednak dużo prostsze niż
     ostatnim razem.
@@ -2149,7 +2232,7 @@ Jak widać, wynik oblicza się bez problemu. Po raz kolejny przypominam,
 </div>
 
 <div class="doc">
-Dowód pełności i dowód reguły indukcji funkcyjnej są dokładnie takie
+Dowód pełności i dowód reguły indukcji wykresowej są dokładnie takie
     same jak poprzednio. Zauważ, że tym razem zupełnie zbędne okazało się
     równanie rekurencyjne, bez którego nie mogliśmy obyć się ostatnim
     razem. Jednak jeżeli chcemy, możemy bez problemu je udowodnić, i to
@@ -2193,10 +2276,17 @@ Pierwszy, trudniejszy sposób, to zgeneralizowanie <span class="inlinecode"><spa
 
     Drugi, łatwiejszy sposób, realizuje nasz początkowy pomysł, od którego
     wszystko się zaczęło: dowodzimy równania rekurencyjnego za pomocą reguły
-    indukcji funkcyjnej. 
+    indukcji wykresowej. 
 <div class="paragraph"> </div>
 
-<a name="lab213"></a><h1 class="section">Metoda induktywnego wykresu i dziedziny</h1>
+<a name="lab219"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ TODO: rotn 
+<div class="paragraph"> </div>
+
+<a name="lab220"></a><h1 class="section">Metoda induktywnego wykresu i dziedziny</h1>
 
 <div class="paragraph"> </div>
 
@@ -2410,23 +2500,104 @@ Pierwszy, trudniejszy sposób, to zgeneralizowanie <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-<a name="lab214"></a><h1 class="section">Metoda induktywno-rekurencyjnej dziedziny</h1>
+<a name="lab221"></a><h1 class="section">Metoda induktywno-rekurencyjnej dziedziny</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab215"></a><h1 class="section">Komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span></h1>
+<a name="lab222"></a><h1 class="section">Komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span></h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Recdef</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+div' n m = n/(m + 1) 
+</div>
+<div class="code">
+<span class="id" title="keyword">Function</span> <span class="id" title="var">div''</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) {<span class="id" title="keyword">measure</span> <span class="id" title="var">id</span> <span class="id" title="var">n</span>} : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">S</span> (<span class="id" title="var">div''</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">else</span> 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">id</span>. <span class="id" title="tactic">omega</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">R_div''</span>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">R_div''_correct</span>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">R_div''_complete</span>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">div''_ind</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div''_le</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> &lt;= <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> (<span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_0_n</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab223"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
-<a name="lab216"></a><h1 class="section">Plugin <span class="inlinecode"><span class="id" title="keyword">Equations</span></span></h1>
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">rotn</span></span> (i wszystkie funkcje pomocnicze) jeszcze raz,
+    tym razem za pomocą komendy <span class="inlinecode"><span class="id" title="keyword">Function</span></span>. Porównaj swoje definicje wykresu
+    oraz reguły indukcji z tymi automatycznie wygenerowanymi. Użyj taktyki
+    <span class="inlinecode"><span class="id" title="var">functional</span></span> <span class="inlinecode"><span class="id" title="tactic">induction</span></span>, żeby jeszcze raz udowodnić, że <span class="inlinecode"><span class="id" title="var">rotn</span></span> jest
+    inwolucją (i wszystkie lematy też). Policz, ile pisania udało ci się
+    dzięki temu zaoszczędzić.
 
 <div class="paragraph"> </div>
 
-<a name="lab217"></a><h1 class="section">Podsumowanie</h1>
+    Czy w twoim rozwiązaniu są lematy, w których użycie indukcji funkcyjnej
+    znacznie utrudnia przeprowadzenie dowodu? W moim jest jeden taki. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab224"></a><h1 class="section">Plugin <span class="inlinecode"><span class="id" title="keyword">Equations</span></span></h1>
 
 <div class="paragraph"> </div>
 
- Póki co nie jest źle, wszakże udało nam się odkryć indukcję funkcyjną,
+<a name="lab225"></a><h4 class="section">Zadanie 8</h4>
+
+<div class="paragraph"> </div>
+
+ Zainstaluj plugin Equations:
+    https://github.com/mattam82/Coq-Equations
+
+<div class="paragraph"> </div>
+
+    Przeczytaj tutorial:
+    https://raw.githubusercontent.com/mattam82/Coq-Equations/master/doc/equations_intro.v
+
+<div class="paragraph"> </div>
+
+    Następnie znajdź jakiś swój dowód przez indukcję, który był skomplikowany
+    i napisz prostszy dowód za pomocą komendy <span class="inlinecode"><span class="id" title="keyword">Equations</span></span> i taktyki <span class="inlinecode"><span class="id" title="var">funelim</span></span>.
+
+<div class="paragraph"> </div>
+
+<a name="lab226"></a><h1 class="section">Podsumowanie</h1>
+
+<div class="paragraph"> </div>
+
+ Póki co nie jest źle, wszakże udało nam się odkryć indukcję wykresową,
     czyli metodę dowodzenia właściwości funkcji za pomocą specjalnie do
     niej dostosowanej reguły indukcji, wywodzącej się od reguły indukcji
     jej wykresu. 

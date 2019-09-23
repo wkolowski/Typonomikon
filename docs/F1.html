@@ -46,11 +46,11 @@
 </div>
 
 <div class="doc">
-<a name="lab371"></a><h1 class="section">Koindukcja (TODO)</h1>
+<a name="lab380"></a><h1 class="section">Koindukcja (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab372"></a><h2 class="section">Strumienie (TODO)</h2>
+<a name="lab381"></a><h2 class="section">Strumienie (TODO)</h2>
 
 </div>
 <div class="code">
@@ -103,7 +103,7 @@
 </div>
 
 <div class="doc">
-<a name="lab373"></a><h3 class="section">Jakieś pierdoły</h3>
+<a name="lab382"></a><h3 class="section">Jakieś pierdoły</h3>
 
 </div>
 <div class="code">
@@ -132,7 +132,7 @@
 </div>
 
 <div class="doc">
-<a name="lab374"></a><h3 class="section">Z manuala Agdy</h3>
+<a name="lab383"></a><h3 class="section">Z manuala Agdy</h3>
 
 <div class="paragraph"> </div>
 
@@ -187,7 +187,7 @@
 </div>
 
 <div class="doc">
-<a name="lab375"></a><h3 class="section">Bijekcja między strumieniami i funkcjami</h3>
+<a name="lab384"></a><h3 class="section">Bijekcja między strumieniami i funkcjami</h3>
 
 </div>
 <div class="code">
@@ -362,7 +362,7 @@
 </div>
 
 <div class="doc">
-<a name="lab376"></a><h3 class="section">Trochę losowości</h3>
+<a name="lab385"></a><h3 class="section">Trochę losowości</h3>
 
 </div>
 <div class="code">
@@ -396,7 +396,7 @@
 </div>
 
 <div class="doc">
-<a name="lab377"></a><h2 class="section">Kolisty</h2>
+<a name="lab386"></a><h2 class="section">Kolisty</h2>
 
 </div>
 <div class="code">
@@ -670,7 +670,7 @@ Qed.<br/>
 </div>
 
 <div class="doc">
-<a name="lab378"></a><h2 class="section">Drzewka</h2>
+<a name="lab387"></a><h2 class="section">Drzewka</h2>
 
 </div>
 <div class="code">
@@ -759,7 +759,7 @@ Qed.<br/>
 </div>
 
 <div class="doc">
-<a name="lab379"></a><h2 class="section">Rekursja ogólna</h2>
+<a name="lab388"></a><h2 class="section">Rekursja ogólna</h2>
 
 </div>
 <div class="code">
@@ -1016,4 +1016,68 @@ Proof.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;reflexivity.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;f_equal.&nbsp;apply&nbsp;IHt1.&nbsp;assumption.<br/>
 Defined.<br/>
-*)</span></div>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab389"></a><h1 class="section">Ćwiczenia</h1>
+
+<div class="paragraph"> </div>
+
+<a name="lab390"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj typ potencjalnie nieskończonych drzew binarnych trzymających
+    wartości typu <span class="inlinecode"><span class="id" title="var">A</span></span> w węzłach, jego relację bipodobieństwa, predykaty
+    "skończony" i "nieskończony" oraz funkcję <span class="inlinecode"><span class="id" title="var">mirror</span></span>, która zwraca
+    lustrzane odbicie drzewa. Udowodnij, że bipodobieństwo jest relacją
+    równoważności i że funkcja <span class="inlinecode"><span class="id" title="var">mirror</span></span> jest inwolucją (tzn.
+    <span class="inlinecode"><span class="id" title="var">mirror</span></span> <span class="inlinecode">(<span class="id" title="var">mirror</span></span> <span class="inlinecode"><span class="id" title="var">t</span>)</span> jest bipodobne do <span class="inlinecode"><span class="id" title="var">t</span></span>), która zachowuje właściwości
+    bycia drzewem skończonym/nieskończonym. Pokaż, że drzewo nie może być
+    jednocześnie skończone i nieskończone. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab391"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Znajdź taką rodzinę typów koinduktywnych <span class="inlinecode"><span class="id" title="var">C</span></span>, że dla dowolnego
+    typu <span class="inlinecode"><span class="id" title="var">A</span></span>, <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest w bijekcji z typem funkcji <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span>. Przez
+    bijekcję będziemy tu rozumieć funkcję, która ma odwrotność, z którą
+    w obie strony składa się do identyczności.
+
+<div class="paragraph"> </div>
+
+    Uwaga: nie da się tego udowodnić bez użycia dodatkowych aksjomatów,
+    które na szczęście są bardzo oczywiste i same się narzucają. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab392"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj pojęcie "nieskończonego łańcucha malejącego" (oczywiście
+    za pomocą koindukcji) i udowodnij, że jeżeli relacja jest dobrze
+    ufundowana, to nie ma nieskończonych łańcuchów malejących. 
+</div>
+<div class="code">
+
+<br/>
+</div>
