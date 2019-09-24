@@ -2372,6 +2372,148 @@ Pierwszy, trudniejszy sposób, to zgeneralizowanie <span class="inlinecode"><spa
 
 <div class="paragraph"> </div>
 
+ Odkryliśmy uniwersalną metodę definiowania funkcji i dowodzenia ich
+    właściwości. Czego chcieć więcej?
+
+<div class="paragraph"> </div>
+
+    Po pierwsze, metoda definiowania nie jest uniwersalna (jeszcze), o czym
+    przekonamy się w kolejnych podrozdziałach. Po drugie, mimo że metoda
+    dowodzenia faktycznie jest uniwersalna, to komu normalnemu chciałoby
+    się przy każdej funkcji tyle pisać? Jakieś wykresy, dziedziny, lematy,
+    reguły indukcji, co to ma być?
+
+<div class="paragraph"> </div>
+
+    Czy w celu sprawnego definiowania i dowodzenia właściwości funkcji trzeba
+    zoutsourcować cały proces i zatrudnić milion Hindusów? Na szczęście nie,
+    gdyż bóg dał nam komendę <span class="inlinecode"><span class="id" title="keyword">Function</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Recdef</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Komenda ta żyje w module <span class="inlinecode"><span class="id" title="var">Recdef</span></span>, którego nazwa jest skrótem od słów
+    "recydywista defraudator"... dobra, koniec żartów. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Function</span> <span class="id" title="var">div''</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) {<span class="id" title="keyword">measure</span> <span class="id" title="var">id</span> <span class="id" title="var">n</span>} : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">n</span> &lt;? <span class="id" title="var">S</span> <span class="id" title="var">m</span> <span class="id" title="keyword">then</span> 0 <span class="id" title="keyword">else</span> <span class="id" title="var">S</span> (<span class="id" title="var">div''</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">id</span>. <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">teq</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">leb_complete_conv</span> <span class="id" title="tactic">in</span> <span class="id" title="var">teq</span>. <span class="id" title="tactic">omega</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;div''_tcc&nbsp;is&nbsp;defined<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;div''_terminate&nbsp;is&nbsp;defined<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;div''_ind&nbsp;is&nbsp;defined<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;div''_rec&nbsp;is&nbsp;defined<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;div''_rect&nbsp;is&nbsp;defined<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R_div''_correct&nbsp;is&nbsp;defined<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R_div''_complete&nbsp;is&nbsp;defined&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Definicja zaczyna się od słowa kluczowego <span class="inlinecode"><span class="id" title="keyword">Function</span></span>, następnie mamy
+    nazwę funkcji i argumenty, tak jak w zwykłych definicjach za pomocą
+    <span class="inlinecode"><span class="id" title="keyword">Definition</span></span> czy <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>, a później tajemniczą klauzulę
+    <span class="inlinecode">{<span class="id" title="keyword">measure</span></span> <span class="inlinecode"><span class="id" title="var">id</span></span> <span class="inlinecode"><span class="id" title="var">n</span>}</span>, do której zaraz wrócimy, i zwracany typ. Ciało
+    definicji wygląda dokładnie jak docelowa definicja.
+
+<div class="paragraph"> </div>
+
+    Jednak po kropce definicja nie kończy się - zamiast tego Coq każe nam
+    udowodnić, że wywołanie rekurencyjne <span class="inlinecode"><span class="id" title="var">div''</span></span> odbywa się na argumencie
+    mniejszym niż <span class="inlinecode"><span class="id" title="var">n</span></span>. Po zakończeniu dowodu funkcja zostaje zaakceptowana
+    przez Coqa.
+
+<div class="paragraph"> </div>
+
+    To jednak nie koniec. Komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span> nie tylko pozwala bezboleśnie
+    zdefiniować <span class="inlinecode"><span class="id" title="var">div''</span></span>, ale też generuje dla nas całą masę różnych rzeczy:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">div''_tcc</span></span> to lemat, który mówi, że wszystkie wywołania rekurencyjne
+      są na argumencie mniejszym od obecnego
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">div''_terminate</span></span> to dowód tego, że funkcja terminuje (czyli że się
+      nie zapętla). Jeżeli przyjrzysz się jego typowi, to zobaczysz, że
+      jest podobny zupełnie do niczego. Wynika to z faktu, że komenda
+      <span class="inlinecode"><span class="id" title="keyword">Function</span></span> tak naprawdę nie używa metody induktywnej dziedziny, ale
+      pewnej innej metody definiowania funkcji ogólnie rekurencyjnych.
+      Nie powinno nas to jednak martwić - ważne, że działa.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">div''_ind</span></span> to reguła indukcji wykresowej dla <span class="inlinecode"><span class="id" title="var">div''</span></span>. Jest też jej
+      wariant <span class="inlinecode"><span class="id" title="var">div''_rect</span></span>, czyli "rekursja wykresowa", służąca raczej do
+      definiowania niż dowodzenia.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">R_div''</span></span> to induktywnie zdefiniowany wykres funkcji <span class="inlinecode"><span class="id" title="var">div''</span></span>. Zauważ
+      jednak, że nie jest on relacją, a rodziną typów - nie wiem po co i
+      nie ma co wnikać w takie detale.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">R_div''_correct</span></span> to twierdzenie o poprawności wykresu.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">R_div''_complete</span></span> to twierdzenie o pełności wykresu.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">div''_equation</span></span> to równanie rekurencyjne 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Jak więc widać, nastąpił cud automatyzacji i wszystko robi się samo.
+    To jednak nie koniec udogodnień. Zobaczmy, jak możemy udowodnić jakiś
+    fakt o <span class="inlinecode"><span class="id" title="var">div''</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div''_le</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> &lt;= <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> (<span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_0_n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">leb_complete_conv</span> <span class="id" title="tactic">in</span> <span class="id" title="var">e</span>. <span class="id" title="tactic">omega</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dowodzenie właściwości funkcji zdefiniowanych za pomocą <span class="inlinecode"><span class="id" title="keyword">Function</span></span>
+    jest bajecznie proste. Jeżeli wszystkie argumenty funkcji znajdują
+    się w kontekście, to możemy użyć taktyki <span class="inlinecode"><span class="id" title="var">functional</span></span> <span class="inlinecode"><span class="id" title="tactic">induction</span></span>
+    <span class="inlinecode">(<span class="id" title="var">nazwa_funkcji</span></span> <span class="inlinecode"><span class="id" title="var">argument_1</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="var">argument_n</span>)</span>, która odpala indukcję
+    wykresową dla tej funkcji. Z powodu nazwy tej taktyki indukcja
+    wykresowa bywa też nazywana indukcją funkcyjną.
+
+<div class="paragraph"> </div>
+
+    Wujek Dobra Rada: nigdy nie odwijaj definicji funkcji zdefiniowanych
+    za pomocą <span class="inlinecode"><span class="id" title="keyword">Function</span></span> ani nie próbuj ręcznie aplikować reguły indukcji
+    wykresowej, bo skończy się to jedynie bólem i zgrzytaniem zębów.
+
+<div class="paragraph"> </div>
+
+    Na koniec wypadałoby jedynie dodać, że wcale nie złapaliśmy pana boga
+    za nogi i komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span> nie rozwiązuje wszystkich problemów
+    pierwszego świata. W szczególności niektóre funkcje mogą być tak
+    upierdliwe, że komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span> odmówi współpracy z nimi. Radzeniu
+    sobie z takimi ciężkimi przypadkami poświęcimy kolejne podrozdziały. 
+<div class="paragraph"> </div>
+
 <a name="lab222"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
@@ -2608,6 +2750,115 @@ Pierwszy, trudniejszy sposób, to zgeneralizowanie <span class="inlinecode"><spa
 
 <div class="paragraph"> </div>
 
+ Pozostaje kwestia rekursji wyższego rzędu. Co to? Ano dotychczas nasze
+    wywołania rekurencyjne były specyficzne, a konkretniej pisząc, wszystkie
+    dotychczasowe wywołania rekurencyjne były zaaplikowane do argumentów.
+
+<div class="paragraph"> </div>
+
+    Mogłoby się wydawać, że jest to jedyny możliwy sposób robienia wywołań
+    rekurencyjnych, jednak nie jest tak. Wywołania rekurencyjne mogą mieć
+    również inną, wyższorzędową postać, a mianowicie - możemy przekazać
+    funkcję, którą właśnie definiujemy, jako argument do innej funkcji.
+
+<div class="paragraph"> </div>
+
+    Dlaczego jest to wywołanie rekurencyjne, skoro nie wywołujemy naszej
+    funkcji? Ano dlatego, że tamta funkcja, która dostaje naszą jako
+    argument, dostaje niejako możliwość robienia wywołań rekurencyjnych.
+    W zależności od tego, co robi ta funkcja, wszystko może być ok (np.
+    gdy ignoruje ona naszą funkcję i w ogóle jej nie używa) lub śmiertelnie
+    niebezpieczne (gdy próbuje zrobić wywołanie rekurencyjne na większym
+    argumencie).
+
+<div class="paragraph"> </div>
+
+    Sztoby za dużo nie godoć, bajszpil: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Tree</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">Node</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">Tree</span></span> to typ drzew niepustych, które mogą mieć dowolną (ale skończoną)
+    ilość poddrzew. Spróbujmy zdefiniować funkcję, która zwraca lustrzane
+    odbicie drzewa. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">mirror</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span> =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">x</span> (<span class="id" title="var">rev</span> (<span class="id" title="var">map</span> <span class="id" title="var">mirror</span> <span class="id" title="var">ts</span>))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa, a
+    następnie odwracamy kolejność poddrzew za pomocą <span class="inlinecode"><span class="id" title="var">rev</span></span>. Chociaż poszło
+    gładko, to mamy tu do czynienia z czymś, czego wcześniej nie widzieliśmy.
+    Nie zrobiliśmy żadnego wywołania rekurencyjnego, a mimo to funkcja działa
+    ok. Dlaczego?
+
+<div class="paragraph"> </div>
+
+    Właśnie dlatego, że wywołania rekurencyjne są robione przez funkcję <span class="inlinecode"><span class="id" title="var">map</span></span>.
+    A zatem mamy do czynienia z rekursją wyższego rzędu. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">mab</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">mab</span> (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">B</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; []<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">h</span> :: <span class="id" title="var">mab</span> <span class="id" title="var">t</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Inny przykład: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Tree'</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">forall</span> {<span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>}, (<span class="id" title="var">B</span> -&gt; <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">Node'</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tym razem mamy drzewo, które może mieć naprawdę dowolną ilość poddrzew,
+    ale jego poddrzewa są nieuporządkowane. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">mirror'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node'</span> <span class="id" title="var">x</span> <span class="id" title="var">B</span> <span class="id" title="var">ts</span> =&gt; <span class="id" title="var">Node'</span> <span class="id" title="var">x</span> <span class="id" title="var">B</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span> =&gt; <span class="id" title="var">mirror'</span> (<span class="id" title="var">ts</span> <span class="id" title="var">b</span>))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a name="lab226"></a><h1 class="section">Plugin <span class="inlinecode"><span class="id" title="keyword">Equations</span></span></h1>
 
 <div class="paragraph"> </div>

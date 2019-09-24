@@ -2317,6 +2317,97 @@ End rot.
 
 (** * Komenda [Function] *)
 
+(** Odkryliśmy uniwersalną metodę definiowania funkcji i dowodzenia ich
+    właściwości. Czego chcieć więcej?
+
+    Po pierwsze, metoda definiowania nie jest uniwersalna (jeszcze), o czym
+    przekonamy się w kolejnych podrozdziałach. Po drugie, mimo że metoda
+    dowodzenia faktycznie jest uniwersalna, to komu normalnemu chciałoby
+    się przy każdej funkcji tyle pisać? Jakieś wykresy, dziedziny, lematy,
+    reguły indukcji, co to ma być?
+
+    Czy w celu sprawnego definiowania i dowodzenia właściwości funkcji trzeba
+    zoutsourcować cały proces i zatrudnić milion Hindusów? Na szczęście nie,
+    gdyż bóg dał nam komendę [Function]. *)
+
+Require Import Recdef.
+
+(** Komenda ta żyje w module [Recdef], którego nazwa jest skrótem od słów
+    "recydywista defraudator"... dobra, koniec żartów. *)
+
+Function div'' (n m : nat) {measure id n} : nat :=
+  if n <? S m then 0 else S (div'' (n - S m) m).
+Proof.
+  intros. unfold id. cbn in teq. apply leb_complete_conv in teq. omega.
+Defined.
+(* ===> div''_tcc is defined
+        div''_terminate is defined
+        div''_ind is defined
+        div''_rec is defined
+        div''_rect is defined
+        R_div''_correct is defined
+        R_div''_complete is defined *)
+
+(** Definicja zaczyna się od słowa kluczowego [Function], następnie mamy
+    nazwę funkcji i argumenty, tak jak w zwykłych definicjach za pomocą
+    [Definition] czy [Fixpoint], a później tajemniczą klauzulę
+    [{measure id n}], do której zaraz wrócimy, i zwracany typ. Ciało
+    definicji wygląda dokładnie jak docelowa definicja.
+
+    Jednak po kropce definicja nie kończy się - zamiast tego Coq każe nam
+    udowodnić, że wywołanie rekurencyjne [div''] odbywa się na argumencie
+    mniejszym niż [n]. Po zakończeniu dowodu funkcja zostaje zaakceptowana
+    przez Coqa.
+
+    To jednak nie koniec. Komenda [Function] nie tylko pozwala bezboleśnie
+    zdefiniować [div''], ale też generuje dla nas całą masę różnych rzeczy:
+    - [div''_tcc] to lemat, który mówi, że wszystkie wywołania rekurencyjne
+      są na argumencie mniejszym od obecnego
+    - [div''_terminate] to dowód tego, że funkcja terminuje (czyli że się
+      nie zapętla). Jeżeli przyjrzysz się jego typowi, to zobaczysz, że
+      jest podobny zupełnie do niczego. Wynika to z faktu, że komenda
+      [Function] tak naprawdę nie używa metody induktywnej dziedziny, ale
+      pewnej innej metody definiowania funkcji ogólnie rekurencyjnych.
+      Nie powinno nas to jednak martwić - ważne, że działa.
+    - [div''_ind] to reguła indukcji wykresowej dla [div'']. Jest też jej
+      wariant [div''_rect], czyli "rekursja wykresowa", służąca raczej do
+      definiowania niż dowodzenia.
+    - [R_div''] to induktywnie zdefiniowany wykres funkcji [div'']. Zauważ
+      jednak, że nie jest on relacją, a rodziną typów - nie wiem po co i
+      nie ma co wnikać w takie detale.
+    - [R_div''_correct] to twierdzenie o poprawności wykresu.
+    - [R_div''_complete] to twierdzenie o pełności wykresu.
+    - [div''_equation] to równanie rekurencyjne *)
+
+(** Jak więc widać, nastąpił cud automatyzacji i wszystko robi się samo.
+    To jednak nie koniec udogodnień. Zobaczmy, jak możemy udowodnić jakiś
+    fakt o [div'']. *)
+
+Lemma div''_le :
+  forall n m : nat, div'' n m <= n.
+Proof.
+  intros. functional induction (div'' n m).
+    apply le_0_n.
+    apply leb_complete_conv in e. omega.
+Defined.
+
+(** Dowodzenie właściwości funkcji zdefiniowanych za pomocą [Function]
+    jest bajecznie proste. Jeżeli wszystkie argumenty funkcji znajdują
+    się w kontekście, to możemy użyć taktyki [functional induction
+    (nazwa_funkcji argument_1 ... argument_n)], która odpala indukcję
+    wykresową dla tej funkcji. Z powodu nazwy tej taktyki indukcja
+    wykresowa bywa też nazywana indukcją funkcyjną.
+
+    Wujek Dobra Rada: nigdy nie odwijaj definicji funkcji zdefiniowanych
+    za pomocą [Function] ani nie próbuj ręcznie aplikować reguły indukcji
+    wykresowej, bo skończy się to jedynie bólem i zgrzytaniem zębów.
+
+    Na koniec wypadałoby jedynie dodać, że wcale nie złapaliśmy pana boga
+    za nogi i komenda [Function] nie rozwiązuje wszystkich problemów
+    pierwszego świata. W szczególności niektóre funkcje mogą być tak
+    upierdliwe, że komenda [Function] odmówi współpracy z nimi. Radzeniu
+    sobie z takimi ciężkimi przypadkami poświęcimy kolejne podrozdziały. *)
+
 (** **** Ćwiczenie *)
 
 (** Zdefiniuj funkcję [rot] (i wszystkie funkcje pomocnicze) jeszcze raz,
@@ -2595,6 +2686,73 @@ Qed.
 (** * Metoda induktywno-rekurencyjnej dziedziny *)
 
 (** * Rekursja wyższego rzędu *)
+
+(** Pozostaje kwestia rekursji wyższego rzędu. Co to? Ano dotychczas nasze
+    wywołania rekurencyjne były specyficzne, a konkretniej pisząc, wszystkie
+    dotychczasowe wywołania rekurencyjne były zaaplikowane do argumentów.
+
+    Mogłoby się wydawać, że jest to jedyny możliwy sposób robienia wywołań
+    rekurencyjnych, jednak nie jest tak. Wywołania rekurencyjne mogą mieć
+    również inną, wyższorzędową postać, a mianowicie - możemy przekazać
+    funkcję, którą właśnie definiujemy, jako argument do innej funkcji.
+
+    Dlaczego jest to wywołanie rekurencyjne, skoro nie wywołujemy naszej
+    funkcji? Ano dlatego, że tamta funkcja, która dostaje naszą jako
+    argument, dostaje niejako możliwość robienia wywołań rekurencyjnych.
+    W zależności od tego, co robi ta funkcja, wszystko może być ok (np.
+    gdy ignoruje ona naszą funkcję i w ogóle jej nie używa) lub śmiertelnie
+    niebezpieczne (gdy próbuje zrobić wywołanie rekurencyjne na większym
+    argumencie).
+
+    Sztoby za dużo nie godoć, bajszpil: *)
+
+Inductive Tree (A : Type) : Type :=
+    | Node : A -> list (Tree A) -> Tree A.
+
+Arguments Node {A} _ _.
+
+(** [Tree] to typ drzew niepustych, które mogą mieć dowolną (ale skończoną)
+    ilość poddrzew. Spróbujmy zdefiniować funkcję, która zwraca lustrzane
+    odbicie drzewa. *)
+
+Fixpoint mirror {A : Type} (t : Tree A) : Tree A :=
+match t with
+    | Node x ts => Node x (rev (map mirror ts))
+end.
+
+(** Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa, a
+    następnie odwracamy kolejność poddrzew za pomocą [rev]. Chociaż poszło
+    gładko, to mamy tu do czynienia z czymś, czego wcześniej nie widzieliśmy.
+    Nie zrobiliśmy żadnego wywołania rekurencyjnego, a mimo to funkcja działa
+    ok. Dlaczego?
+
+    Właśnie dlatego, że wywołania rekurencyjne są robione przez funkcję [map].
+    A zatem mamy do czynienia z rekursją wyższego rzędu. *)
+
+
+
+Definition mab {A B : Type} (f : A -> B) :=
+  fix mab (l : list A) : list B :=
+  match l with
+      | [] => []
+      | h :: t => f h :: mab t
+  end.
+
+
+(** Inny przykład: *)
+
+Inductive Tree' (A : Type) : Type :=
+    | Node' : A -> forall {B : Type}, (B -> Tree' A) -> Tree' A.
+
+Arguments Node' {A} _ _ _.
+
+(** Tym razem mamy drzewo, które może mieć naprawdę dowolną ilość poddrzew,
+    ale jego poddrzewa są nieuporządkowane. *)
+
+Fixpoint mirror' {A : Type} (t : Tree' A) : Tree' A :=
+match t with
+    | Node' x B ts => Node' x B (fun b : B => mirror' (ts b))
+end.
 
 
 (** * Plugin [Equations] *)
