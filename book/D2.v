@@ -1750,6 +1750,160 @@ Proof.
 Qed.
 (* end hide *)
 
+(** **** Ćwiczenie *)
+
+(** Napisz funkcję [split] o sygnaturze
+    [split (n : nat) {A : Type} (l : list A) : option (list A * list A)],
+    która rozdziela listę [l] na blok o długości [n] i resztę listy, lub
+    zwraca [None] gdy lista jest za krótka.
+
+    Następnie udowodnij dla tej funkcji regułę indukcji wykresowej i użyj
+    jej do udowodnienia kilku lematów.
+
+    Wszystkie te rzeczy przydadzą się nam w jednym z kolejnych zadań. *)
+
+(* begin hide *)
+Fixpoint split
+  {A : Type} (n : nat) (l : list A) : option (list A * list A) :=
+match n, l with
+    | 0, _ => Some ([], l)
+    | S _, [] => None
+    | S n', h :: t =>
+        match split n' t with
+            | None => None
+            | Some (l1, l2) => Some (h :: l1, l2)
+        end
+end.
+
+Inductive splitG {A : Type} :
+  nat -> list A -> option (list A * list A) -> Prop :=
+    | splitG_0 :
+        forall l : list A, splitG 0 l (Some ([], l))
+    | splitG_1 :
+        forall n : nat, splitG (S n) [] None
+    | splitG_2 :
+        forall (n' : nat) (h : A) (t : list A),
+          splitG n' t None -> splitG (S n') (h :: t) None
+    | splitG_3 :
+        forall (n' : nat) (h : A) (t l1 l2 : list A),
+          splitG n' t (Some (l1, l2)) ->
+            splitG (S n') (h :: t) (Some (h :: l1, l2)).
+
+Lemma splitG_det :
+  forall (A : Type) (n : nat) (l : list A) (r1 r2 : option (list A * list A)),
+    splitG n l r1 -> splitG n l r2 -> r1 = r2.
+Proof.
+  intros until 1. revert r2.
+  induction H;
+    inversion 1; subst; try reflexivity;
+    specialize (IHsplitG _ H5); congruence.
+Qed.
+
+Lemma splitG_correct :
+  forall (A : Type) (n : nat) (l : list A),
+    splitG n l (split n l).
+Proof.
+  induction n as [| n']; cbn.
+    constructor.
+    destruct l as [| h t].
+      constructor.
+      case_eq (split n' t); intros.
+        destruct p. constructor. rewrite <- H. apply IHn'.
+        constructor. rewrite <- H. apply IHn'.
+Qed.
+
+Lemma splitG_complete :
+  forall (A : Type) (n : nat) (l : list A) (r : option (list A * list A)),
+    splitG n l r -> r = split n l.
+Proof.
+  intros. apply splitG_det with n l.
+    assumption.
+    apply splitG_correct.
+Qed.
+
+Lemma split_ind :
+  forall
+    {A : Type} (P : nat -> list A -> option (list A * list A) -> Prop)
+    (H_0 : forall l : list A, P 0 l (Some ([], l)))
+    (H_S_nil : forall n' : nat, P (S n') [] None)
+    (H_S_cons_None :
+      forall (n' : nat) (h : A) (t : list A),
+        split n' t = None -> P n' t None -> P (S n') (h :: t) None)
+    (H_S_cons_Some :
+      forall (n' : nat) (h : A) (t l1 l2 : list A),
+        split n' t = Some (l1, l2) -> P n' t (Some (l1, l2)) ->
+          P (S n') (h :: t) (Some (h :: l1, l2))),
+      forall (n : nat) (l : list A), P n l (split n l).
+Proof.
+  intros.
+  apply splitG_ind.
+    assumption.
+    assumption.
+    clear n l. intros. apply H_S_cons_None.
+      apply splitG_complete in H. auto.
+      assumption.
+    intros. apply H_S_cons_Some.
+      apply splitG_complete in H. auto.
+      assumption.
+    apply splitG_correct.
+Qed.
+(* end hide *)
+
+Definition lengthOrder {A : Type} (l1 l2 : list A) : Prop :=
+  length l1 < length l2.
+
+Lemma wf_lengthOrder :
+  forall A : Type, well_founded (@lengthOrder A).
+Proof.
+  intros. apply (wf_inverse_image _ _ (@length A)). apply wf_lt.
+Defined.
+
+Lemma lengthOrder_split_aux :
+  forall {A : Type} (n : nat) (l : list A) (l1 l2 : list A),
+    split n l = Some (l1, l2) ->
+      n = 0  \/ lengthOrder l2 l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn; intros.
+    left. reflexivity.
+    right. destruct l as [| h t]; cbn in *.
+      inversion H.
+      case_eq (split n' t).
+        intros [l1' l2'] H'. rewrite H' in H. inversion H; subst.
+          destruct (IHn' t l1' l2 H').
+            rewrite H0 in *. cbn in *. inversion H'; subst.
+              apply le_n.
+            apply lt_trans with (length t).
+              assumption.
+              apply le_n.
+        intro. rewrite H0 in H. inversion H.
+Restart.
+  intro A.
+  apply (split_ind (fun n l r => forall l1 l2 : list A,
+                                   r = Some (l1, l2) -> n = 0 \/ _));
+  intros.
+    left. reflexivity.
+    inversion H.
+    inversion H1.
+    inversion H1; subst. right. destruct (H0 _ _ eq_refl).
+      subst. inversion H. red. cbn. apply le_n.
+      red. cbn. eapply lt_trans.
+        exact H2.
+        apply le_n.
+Qed.
+(* end hide *)
+
+Lemma lengthOrder_split :
+  forall (n : nat) (A : Type) (l : list A) (l1 l2 : list A),
+    split (S n) l = Some (l1, l2) -> lengthOrder l2 l.
+(* begin hide *)
+Proof.
+  intros. destruct (lengthOrder_split_aux _ _ _ _ H).
+    inversion H0.
+    assumption.
+Qed.
+(* end hide *)
+
 (** * Metoda induktywnej dziedziny *)
 
 (** Póki co nie jest źle - udało nam się wszakże wymyślić jedyną słuszną
@@ -1986,9 +2140,337 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-(** TODO: rotn *)
+(** Zdefiniuj funkcję [rot], która bierze liczbę [n] oraz listę i zwraca
+    listę, w której bloki o długości dokładnie [n + 1] zostały odwrócone,
+    np.
 
-(** * Metoda induktywnego wykresu i dziedziny *)
+    [rot 0 [1; 2; 3; 4; 5; 6; 7] = [1; 2; 3; 4; 5; 6; 7]]
+
+    [rot 1 [1; 2; 3; 4; 5; 6; 7] = [2; 1; 4; 3; 6; 5; 7]]
+
+    [rot 2 [1; 2; 3; 4; 5; 6; 7] = [3; 2; 1; 6; 5; 4; 7]]
+
+    Wskazówka: rzecz jasna użyj metody induktywnej dziedziny. Nie bez
+    przyczyny także w jednym z poprzednich zadań kazałem ci zdefiniować
+    funkcję [split], która odkraja od listy blok o odpowiedniej długości.
+
+    Następnie zdefiniuj wykres funkcji [rot] i udowodnij jej regułę indukcji
+    wykresowej oraz równanie rekurencyjne. Użyj jej, żeby pokazać, że [rot]
+    jest inwolucją dla dowolnego [n], tzn. [rot n (rot n l) = l]. Uwaga:
+    potrzebne będzie trochę lematów. *)
+
+(* begin hide *)
+Module rot.
+
+Inductive rotD {A : Type} (n : nat) : list A -> Type :=
+    | rotD_None :
+        forall l : list A,
+          split (S n) l = None -> rotD n l
+    | rotD_Some :
+        forall l l1 l2 : list A,
+          split (S n) l = Some (l1, l2) ->
+            rotD n l2 -> rotD n l.
+
+Fixpoint rot_aux {A : Type} {n : nat} {l : list A} (d : rotD n l) : list A :=
+match d with
+    | rotD_None _ _ _ => l
+    | rotD_Some _ _ l1 _ _ d' => rev l1 ++ rot_aux d'
+end.
+
+Lemma rotD_all :
+  forall {A : Type} (n : nat) (l : list A), rotD n l.
+Proof.
+  intros A n.
+  apply (@well_founded_rect _ _ (wf_lengthOrder A) (fun l => _)).
+  intros l IH.
+  case_eq (split (S n) l).
+    intros [l1 l2] H. econstructor 2.
+      eassumption.
+      apply IH. eapply lengthOrder_split. eassumption.
+    intro. constructor. assumption.
+Defined.
+
+Definition rot {A : Type} (n : nat) (l : list A) : list A :=
+  rot_aux (rotD_all n l).
+
+Compute rot 1 [1; 2; 3; 4; 5; 6; 7].
+
+Inductive rotG {A : Type} (n : nat) : list A -> list A -> Prop :=
+    | rotG_None :
+        forall l : list A,
+          split (S n) l = None -> rotG n l l
+    | rotG_Some :
+        forall l l1 l2 r : list A,
+          split (S n) l = Some (l1, l2) ->
+            rotG n l2 r -> rotG n l (rev l1 ++ r).
+
+Lemma rotG_det :
+  forall {A : Type} (n : nat) (l r1 r2 : list A),
+    rotG n l r1 -> rotG n l r2 -> r1 = r2.
+Proof.
+  intros until 1. revert r2.
+  induction H; inversion 1; subst; try congruence.
+    rewrite H in H2. inversion H2; subst. f_equal.
+      apply IHrotG. assumption.
+Qed.
+
+Lemma rotG_correct :
+  forall {A : Type} (n : nat) (l : list A),
+    rotG n l (rot n l).
+Proof.
+  intros. unfold rot. generalize (rotD_all n l) as d.
+  induction d; cbn.
+    constructor. assumption.
+    econstructor; eauto.
+Qed.
+
+Lemma rotG_complete :
+  forall (A : Type) (n : nat) (l r : list A),
+    rotG n l r -> r = rot n l.
+Proof.
+  intros. apply rotG_det with n l.
+    assumption.
+    apply rotG_correct.
+Qed.
+
+Lemma rot_ind :
+  forall
+    (A : Type) (n : nat) (P : list A -> list A -> Prop)
+    (H_None :
+      forall l : list A,
+        split (S n) l = None -> P l l)
+    (H_Some :
+      forall l l1 l2 : list A,
+        split (S n) l = Some (l1, l2) ->
+          P l2 (rot n l2) -> P l (rev l1 ++ rot n l2)),
+    forall l : list A, P l (rot n l).
+Proof.
+  intros.
+  apply rotG_ind with n.
+    assumption.
+    intros. apply rotG_complete in H0. subst. apply H_Some; assumption.
+    apply rotG_correct.
+Qed.
+
+Lemma rot_eq :
+  forall {A : Type} (n : nat) (l : list A),
+    rot n l =
+    match split (S n) l with
+        | None => l
+        | Some (l1, l2) => rev l1 ++ rot n l2
+    end.
+Proof.
+  intros A n.
+  apply (rot_ind A n (fun l r => r = _)); intros.
+    rewrite H. reflexivity.
+    rewrite H. reflexivity.
+Qed.
+
+Lemma split_spec :
+  forall {A : Type} (n : nat) (l l1 l2 : list A),
+    split n l = Some (l1, l2) -> length l1 = n /\ l = l1 ++ l2.
+Proof.
+  intros A.
+  apply (split_ind (fun n l r =>
+    forall l1 l2, r = Some (l1, l2) -> length l1 = n /\ _));
+  intros.
+    inversion H; subst. auto.
+    inversion H.
+    inversion H1.
+    inversion H1. specialize (H0 _ _ eq_refl). cbn. subst.
+      firstorder congruence.
+Qed.
+
+Lemma split_app_length :
+  forall {A : Type} (n : nat) (l1 l2 : list A),
+    length l1 = n -> split n (l1 ++ l2) = Some (l1, l2).
+Proof.
+  intro A.
+  apply (split_ind (fun n l1 r =>
+    forall l2, length l1 = n -> split n (l1 ++ l2) = Some (l1, l2)));
+  intros.
+    destruct l; inversion H. reflexivity.
+    inversion H.
+    cbn. rewrite H0.
+      reflexivity.
+      inversion H1. reflexivity.
+    cbn. rewrite H0.
+      reflexivity.
+      inversion H1. reflexivity.
+Qed.
+
+Lemma rot_rot :
+  forall {A : Type} (n : nat) (l : list A),
+    rot n (rot n l) = l.
+Proof.
+  intros A n.
+  apply (rot_ind A n (fun l r => rot n r = l)); intros.
+    rewrite rot_eq, H. reflexivity.
+    apply split_spec in H. destruct H. subst.
+      rewrite rot_eq, split_app_length.
+        rewrite rev_involutive, H0. reflexivity.
+        rewrite rev_length. assumption.
+Qed.
+
+End rot.
+(* end hide *)
+
+(** * Komenda [Function] *)
+
+Require Import Recdef.
+
+(** div' n m = n/(m + 1) *)
+Function div'' (n m : nat) {measure id n} : nat :=
+  if le_lt_dec (S m) n
+  then S (div'' (n - S m) m)
+  else 0.
+Proof.
+  intros. unfold id. omega.
+Defined.
+
+Print R_div''.
+Check R_div''_correct.
+Check R_div''_complete.
+Check div''_ind.
+
+Lemma div''_le :
+  forall n m : nat, div'' n m <= n.
+Proof.
+  intros. functional induction (div'' n m).
+    omega.
+    apply le_0_n.
+Defined.
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj funkcję [rotn] (i wszystkie funkcje pomocnicze) jeszcze raz,
+    tym razem za pomocą komendy [Function]. Porównaj swoje definicje wykresu
+    oraz reguły indukcji z tymi automatycznie wygenerowanymi. Użyj taktyki
+    [functional induction], żeby jeszcze raz udowodnić, że [rotn] jest
+    inwolucją (i wszystkie lematy też). Policz, ile pisania udało ci się
+    dzięki temu zaoszczędzić.
+
+    Czy w twoim rozwiązaniu są lematy, w których użycie indukcji funkcyjnej
+    znacznie utrudnia przeprowadzenie dowodu? W moim jest jeden taki. *)
+
+(* begin hide *)
+Module rotn_Function.
+
+Require Import Recdef.
+
+Require Import List.
+Import ListNotations.
+
+Require Import Omega.
+
+Function split
+  {A : Type} (n : nat) (l : list A)
+  : option (list A * list A) :=
+match n, l with
+    | 0, _ => Some ([], l)
+    | S n', [] => None
+    | S n', h :: t =>
+        match split n' t with
+            | None => None
+            | Some (l1, l2) => Some (h :: l1, l2)
+        end
+end.
+
+Lemma split_length_aux :
+  forall (A : Type) (n : nat) (l l1 l2 : list A),
+    split n l = Some (l1, l2) ->
+      n = 0 \/ length l2 < length l.
+Proof.
+  intros. revert l1 l2 H.
+  functional induction (split n l); inversion 1; subst.
+    left. reflexivity.
+    right. destruct (IHo _ _ e1).
+      subst. cbn in e1. inversion e1; subst. cbn. omega.
+      cbn. omega.
+Qed.
+
+Lemma split_length :
+  forall (A : Type) (n : nat) (l l1 l2 : list A),
+    split (S n) l = Some (l1, l2) -> length l2 < length l.
+Proof.
+  intros. destruct (split_length_aux A (S n) l l1 l2 H).
+    inversion H0.
+    assumption.
+Qed.
+
+Function rotn
+  {A : Type} (n : nat) (l : list A) {measure length l} : list A :=
+match split (S n) l with
+    | None => l
+    | Some (l1, l2) => rev l1 ++ rotn n l2
+end.
+Proof.
+  intros A n l _ l1 l2 _ H.
+  eapply split_length. eassumption.
+Defined.
+
+Arguments rotn {x} _ _.
+
+Compute rotn 1 [1; 2; 3; 4; 5; 6; 7].
+
+Lemma split_app :
+  forall (A : Type) (n : nat) (l1 l2 : list A),
+    length l1 = n -> split n (l1 ++ l2) = Some (l1, l2).
+Proof.
+  induction n as [| n']; cbn; intros.
+    destruct l1; cbn.
+      reflexivity.
+      inversion H.
+    destruct l1 as [| h t]; cbn.
+      inversion H.
+      rewrite IHn'.
+        reflexivity.
+        cbn in H. inversion H. reflexivity.
+Qed.
+
+Lemma split_length' :
+  forall {A : Type} {n : nat} {l1 l2 : list A},
+    split n (l1 ++ l2) = Some (l1, l2) -> length l1 = n.
+Proof.
+  induction n as [| n']; cbn; intros.
+    inversion H. reflexivity.
+    destruct l1 as [| h t]; cbn in *.
+      destruct l2; cbn in H.
+        inversion H.
+        destruct (split n' l2).
+          destruct p. 1-2: inversion H.
+      case_eq (split n' (t ++ l2)).
+        intros [l1' l2'] Heq. eapply f_equal, IHn'.
+          rewrite Heq in H. inversion H; subst. eassumption.
+        intro. rewrite H0 in H. inversion H.
+Qed.
+
+Lemma split_spec :
+  forall (A : Type) (n : nat) (l l1 l2 : list A),
+    split n l = Some (l1, l2) -> l = l1 ++ l2.
+Proof.
+  intros A n l.
+  functional induction (split n l); inversion 1; subst.
+    reflexivity.
+    cbn. f_equal. apply IHo. assumption.
+Qed.
+
+Lemma rotn_involution :
+  forall (A : Type) (n : nat) (l : list A),
+    rotn n (rotn n l) = l.
+Proof.
+  intros. functional induction (rotn n l).
+    rewrite rotn_equation, e. reflexivity.
+    rewrite rotn_equation, split_app, rev_involutive, IHl0.
+      apply split_spec in e. rewrite e. reflexivity.
+      rewrite rev_length. eapply split_length'.
+        rewrite <- e. f_equal. apply split_spec in e. rewrite e. reflexivity.
+Qed.
+
+End rotn_Function.
+(* end hide *)
+
+(** * Rekursja zagnieżdżona *)
 
 (** https://members.loria.fr/DLarchey/files/papers/TYPES_2018_paper_19.pdf
 
@@ -2165,160 +2647,7 @@ Qed.
 
 (** * Metoda induktywno-rekurencyjnej dziedziny *)
 
-(** * Komenda [Function] *)
-
-Require Import Recdef.
-
-(** div' n m = n/(m + 1) *)
-Function div'' (n m : nat) {measure id n} : nat :=
-  if le_lt_dec (S m) n
-  then S (div'' (n - S m) m)
-  else 0.
-Proof.
-  intros. unfold id. omega.
-Defined.
-
-Print R_div''.
-Check R_div''_correct.
-Check R_div''_complete.
-Check div''_ind.
-
-Lemma div''_le :
-  forall n m : nat, div'' n m <= n.
-Proof.
-  intros. functional induction (div'' n m).
-    omega.
-    apply le_0_n.
-Defined.
-
-(** **** Ćwiczenie *)
-
-(** Zdefiniuj funkcję [rotn] (i wszystkie funkcje pomocnicze) jeszcze raz,
-    tym razem za pomocą komendy [Function]. Porównaj swoje definicje wykresu
-    oraz reguły indukcji z tymi automatycznie wygenerowanymi. Użyj taktyki
-    [functional induction], żeby jeszcze raz udowodnić, że [rotn] jest
-    inwolucją (i wszystkie lematy też). Policz, ile pisania udało ci się
-    dzięki temu zaoszczędzić.
-
-    Czy w twoim rozwiązaniu są lematy, w których użycie indukcji funkcyjnej
-    znacznie utrudnia przeprowadzenie dowodu? W moim jest jeden taki. *)
-
-(* begin hide *)
-Module rotn_Function.
-
-Require Import Recdef.
-
-Require Import List.
-Import ListNotations.
-
-Require Import Omega.
-
-Function split
-  {A : Type} (n : nat) (l : list A)
-  : option (list A * list A) :=
-match n, l with
-    | 0, _ => Some ([], l)
-    | S n', [] => None
-    | S n', h :: t =>
-        match split n' t with
-            | None => None
-            | Some (l1, l2) => Some (h :: l1, l2)
-        end
-end.
-
-Lemma split_length_aux :
-  forall (A : Type) (n : nat) (l l1 l2 : list A),
-    split n l = Some (l1, l2) ->
-      n = 0 \/ length l2 < length l.
-Proof.
-  intros. revert l1 l2 H.
-  functional induction (split n l); inversion 1; subst.
-    left. reflexivity.
-    right. destruct (IHo _ _ e1).
-      subst. cbn in e1. inversion e1; subst. cbn. omega.
-      cbn. omega.
-Qed.
-
-Lemma split_length :
-  forall (A : Type) (n : nat) (l l1 l2 : list A),
-    split (S n) l = Some (l1, l2) -> length l2 < length l.
-Proof.
-  intros. destruct (split_length_aux A (S n) l l1 l2 H).
-    inversion H0.
-    assumption.
-Qed.
-
-Function rotn
-  {A : Type} (n : nat) (l : list A) {measure length l} : list A :=
-match split (S n) l with
-    | None => l
-    | Some (l1, l2) => rev l1 ++ rotn n l2
-end.
-Proof.
-  intros A n l _ l1 l2 _ H.
-  eapply split_length. eassumption.
-Defined.
-
-Arguments rotn {x} _ _.
-
-Compute rotn 1 [1; 2; 3; 4; 5; 6; 7].
-
-Lemma split_app :
-  forall (A : Type) (n : nat) (l1 l2 : list A),
-    length l1 = n -> split n (l1 ++ l2) = Some (l1, l2).
-Proof.
-  induction n as [| n']; cbn; intros.
-    destruct l1; cbn.
-      reflexivity.
-      inversion H.
-    destruct l1 as [| h t]; cbn.
-      inversion H.
-      rewrite IHn'.
-        reflexivity.
-        cbn in H. inversion H. reflexivity.
-Qed.
-
-Lemma split_length' :
-  forall {A : Type} {n : nat} {l1 l2 : list A},
-    split n (l1 ++ l2) = Some (l1, l2) -> length l1 = n.
-Proof.
-  induction n as [| n']; cbn; intros.
-    inversion H. reflexivity.
-    destruct l1 as [| h t]; cbn in *.
-      destruct l2; cbn in H.
-        inversion H.
-        destruct (split n' l2).
-          destruct p. 1-2: inversion H.
-      case_eq (split n' (t ++ l2)).
-        intros [l1' l2'] Heq. eapply f_equal, IHn'.
-          rewrite Heq in H. inversion H; subst. eassumption.
-        intro. rewrite H0 in H. inversion H.
-Qed.
-
-Lemma split_spec :
-  forall (A : Type) (n : nat) (l l1 l2 : list A),
-    split n l = Some (l1, l2) -> l = l1 ++ l2.
-Proof.
-  intros A n l.
-  functional induction (split n l); inversion 1; subst.
-    reflexivity.
-    cbn. f_equal. apply IHo. assumption.
-Qed.
-
-Lemma rotn_involution :
-  forall (A : Type) (n : nat) (l : list A),
-    rotn n (rotn n l) = l.
-Proof.
-  intros. functional induction (rotn n l).
-    rewrite rotn_equation, e. reflexivity.
-    rewrite rotn_equation, split_app, rev_involutive, IHl0.
-      apply split_spec in e. rewrite e. reflexivity.
-      rewrite rev_length. eapply split_length'.
-        rewrite <- e. f_equal. apply split_spec in e. rewrite e. reflexivity.
-Qed.
-
-End rotn_Function.
-(* end hide *)
+(** * Rekursja wyższego rzędu *)
 
 (** * Plugin [Equations] *)
 

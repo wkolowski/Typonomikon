@@ -1951,7 +1951,55 @@ Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
 </div>
 
 <div class="doc">
-<a name="lab218"></a><h1 class="section">Metoda induktywnej dziedziny</h1>
+<a name="lab218"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Napisz funkcję <span class="inlinecode"><span class="id" title="tactic">split</span></span> o sygnaturze
+    <span class="inlinecode"><span class="id" title="tactic">split</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">{<span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>}</span> <span class="inlinecode">(<span class="id" title="var">l</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span>)</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span>)</span>,
+    która rozdziela listę <span class="inlinecode"><span class="id" title="var">l</span></span> na blok o długości <span class="inlinecode"><span class="id" title="var">n</span></span> i resztę listy, lub
+    zwraca <span class="inlinecode"><span class="id" title="var">None</span></span> gdy lista jest za krótka.
+
+<div class="paragraph"> </div>
+
+    Następnie udowodnij dla tej funkcji regułę indukcji wykresowej i użyj
+    jej do udowodnienia kilku lematów.
+
+<div class="paragraph"> </div>
+
+    Wszystkie te rzeczy przydadzą się nam w jednym z kolejnych zadań. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">lengthOrder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">length</span> <span class="id" title="var">l1</span> &lt; <span class="id" title="var">length</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wf_lengthOrder</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">well_founded</span> (@<span class="id" title="var">lengthOrder</span> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">wf_inverse_image</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (@<span class="id" title="var">length</span> <span class="id" title="var">A</span>)). <span class="id" title="tactic">apply</span> <span class="id" title="var">wf_lt</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lengthOrder_split_aux</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">l1</span>, <span class="id" title="var">l2</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> = 0  \/ <span class="id" title="var">lengthOrder</span> <span class="id" title="var">l2</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lengthOrder_split</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">l1</span>, <span class="id" title="var">l2</span>) -&gt; <span class="id" title="var">lengthOrder</span> <span class="id" title="var">l2</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab219"></a><h1 class="section">Metoda induktywnej dziedziny</h1>
 
 <div class="paragraph"> </div>
 
@@ -2279,14 +2327,114 @@ Pierwszy, trudniejszy sposób, to zgeneralizowanie <span class="inlinecode"><spa
     indukcji wykresowej. 
 <div class="paragraph"> </div>
 
-<a name="lab219"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab220"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
- TODO: rotn 
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">rot</span></span>, która bierze liczbę <span class="inlinecode"><span class="id" title="var">n</span></span> oraz listę i zwraca
+    listę, w której bloki o długości dokładnie <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> zostały odwrócone,
+    np.
+
 <div class="paragraph"> </div>
 
-<a name="lab220"></a><h1 class="section">Metoda induktywnego wykresu i dziedziny</h1>
+    <span class="inlinecode"><span class="id" title="var">rot</span></span> <span class="inlinecode">0</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7]</span> <span class="inlinecode">=</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7]</span>
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">rot</span></span> <span class="inlinecode">1</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7]</span> <span class="inlinecode">=</span> <span class="inlinecode">[2;</span> <span class="inlinecode">1;</span> <span class="inlinecode">4;</span> <span class="inlinecode">3;</span> <span class="inlinecode">6;</span> <span class="inlinecode">5;</span> <span class="inlinecode">7]</span>
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">rot</span></span> <span class="inlinecode">2</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7]</span> <span class="inlinecode">=</span> <span class="inlinecode">[3;</span> <span class="inlinecode">2;</span> <span class="inlinecode">1;</span> <span class="inlinecode">6;</span> <span class="inlinecode">5;</span> <span class="inlinecode">4;</span> <span class="inlinecode">7]</span>
+
+<div class="paragraph"> </div>
+
+    Wskazówka: rzecz jasna użyj metody induktywnej dziedziny. Nie bez
+    przyczyny także w jednym z poprzednich zadań kazałem ci zdefiniować
+    funkcję <span class="inlinecode"><span class="id" title="tactic">split</span></span>, która odkraja od listy blok o odpowiedniej długości.
+
+<div class="paragraph"> </div>
+
+    Następnie zdefiniuj wykres funkcji <span class="inlinecode"><span class="id" title="var">rot</span></span> i udowodnij jej regułę indukcji
+    wykresowej oraz równanie rekurencyjne. Użyj jej, żeby pokazać, że <span class="inlinecode"><span class="id" title="var">rot</span></span>
+    jest inwolucją dla dowolnego <span class="inlinecode"><span class="id" title="var">n</span></span>, tzn. <span class="inlinecode"><span class="id" title="var">rot</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">(<span class="id" title="var">rot</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">l</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">l</span></span>. Uwaga:
+    potrzebne będzie trochę lematów. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab221"></a><h1 class="section">Komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span></h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Recdef</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+div' n m = n/(m + 1) 
+</div>
+<div class="code">
+<span class="id" title="keyword">Function</span> <span class="id" title="var">div''</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) {<span class="id" title="keyword">measure</span> <span class="id" title="var">id</span> <span class="id" title="var">n</span>} : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">S</span> (<span class="id" title="var">div''</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">else</span> 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">id</span>. <span class="id" title="tactic">omega</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">R_div''</span>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">R_div''_correct</span>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">R_div''_complete</span>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">div''_ind</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div''_le</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> &lt;= <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> (<span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_0_n</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab222"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">rotn</span></span> (i wszystkie funkcje pomocnicze) jeszcze raz,
+    tym razem za pomocą komendy <span class="inlinecode"><span class="id" title="keyword">Function</span></span>. Porównaj swoje definicje wykresu
+    oraz reguły indukcji z tymi automatycznie wygenerowanymi. Użyj taktyki
+    <span class="inlinecode"><span class="id" title="var">functional</span></span> <span class="inlinecode"><span class="id" title="tactic">induction</span></span>, żeby jeszcze raz udowodnić, że <span class="inlinecode"><span class="id" title="var">rotn</span></span> jest
+    inwolucją (i wszystkie lematy też). Policz, ile pisania udało ci się
+    dzięki temu zaoszczędzić.
+
+<div class="paragraph"> </div>
+
+    Czy w twoim rozwiązaniu są lematy, w których użycie indukcji funkcyjnej
+    znacznie utrudnia przeprowadzenie dowodu? W moim jest jeden taki. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab223"></a><h1 class="section">Rekursja zagnieżdżona</h1>
 
 <div class="paragraph"> </div>
 
@@ -2500,81 +2648,19 @@ Pierwszy, trudniejszy sposób, to zgeneralizowanie <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-<a name="lab221"></a><h1 class="section">Metoda induktywno-rekurencyjnej dziedziny</h1>
+<a name="lab224"></a><h1 class="section">Metoda induktywno-rekurencyjnej dziedziny</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab222"></a><h1 class="section">Komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span></h1>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Recdef</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-div' n m = n/(m + 1) 
-</div>
-<div class="code">
-<span class="id" title="keyword">Function</span> <span class="id" title="var">div''</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) {<span class="id" title="keyword">measure</span> <span class="id" title="var">id</span> <span class="id" title="var">n</span>} : <span class="id" title="var">nat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">S</span> (<span class="id" title="var">div''</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>)<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">else</span> 0.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">id</span>. <span class="id" title="tactic">omega</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Print</span> <span class="id" title="var">R_div''</span>.<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">R_div''_correct</span>.<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">R_div''_complete</span>.<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">div''_ind</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div''_le</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> &lt;= <span class="id" title="var">n</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> (<span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_0_n</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab223"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab225"></a><h1 class="section">Rekursja wyższego rzędu</h1>
 
 <div class="paragraph"> </div>
 
- Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">rotn</span></span> (i wszystkie funkcje pomocnicze) jeszcze raz,
-    tym razem za pomocą komendy <span class="inlinecode"><span class="id" title="keyword">Function</span></span>. Porównaj swoje definicje wykresu
-    oraz reguły indukcji z tymi automatycznie wygenerowanymi. Użyj taktyki
-    <span class="inlinecode"><span class="id" title="var">functional</span></span> <span class="inlinecode"><span class="id" title="tactic">induction</span></span>, żeby jeszcze raz udowodnić, że <span class="inlinecode"><span class="id" title="var">rotn</span></span> jest
-    inwolucją (i wszystkie lematy też). Policz, ile pisania udało ci się
-    dzięki temu zaoszczędzić.
+<a name="lab226"></a><h1 class="section">Plugin <span class="inlinecode"><span class="id" title="keyword">Equations</span></span></h1>
 
 <div class="paragraph"> </div>
 
-    Czy w twoim rozwiązaniu są lematy, w których użycie indukcji funkcyjnej
-    znacznie utrudnia przeprowadzenie dowodu? W moim jest jeden taki. 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab224"></a><h1 class="section">Plugin <span class="inlinecode"><span class="id" title="keyword">Equations</span></span></h1>
-
-<div class="paragraph"> </div>
-
-<a name="lab225"></a><h4 class="section">Zadanie 8</h4>
+<a name="lab227"></a><h4 class="section">Zadanie 8</h4>
 
 <div class="paragraph"> </div>
 
@@ -2593,7 +2679,7 @@ div' n m = n/(m + 1)
 
 <div class="paragraph"> </div>
 
-<a name="lab226"></a><h1 class="section">Podsumowanie</h1>
+<a name="lab228"></a><h1 class="section">Podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
