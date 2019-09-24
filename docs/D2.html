@@ -2370,61 +2370,23 @@ Pierwszy, trudniejszy sposób, to zgeneralizowanie <span class="inlinecode"><spa
 <div class="doc">
 <a name="lab221"></a><h1 class="section">Komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span></h1>
 
-</div>
-<div class="code">
+<div class="paragraph"> </div>
 
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Recdef</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-div' n m = n/(m + 1) 
-</div>
-<div class="code">
-<span class="id" title="keyword">Function</span> <span class="id" title="var">div''</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) {<span class="id" title="keyword">measure</span> <span class="id" title="var">id</span> <span class="id" title="var">n</span>} : <span class="id" title="var">nat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">S</span> (<span class="id" title="var">div''</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>)<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">else</span> 0.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">id</span>. <span class="id" title="tactic">omega</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Print</span> <span class="id" title="var">R_div''</span>.<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">R_div''_correct</span>.<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">R_div''_complete</span>.<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">div''_ind</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div''_le</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> &lt;= <span class="id" title="var">n</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> (<span class="id" title="var">div''</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_0_n</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
 <a name="lab222"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
- Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">rotn</span></span> (i wszystkie funkcje pomocnicze) jeszcze raz,
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">rot</span></span> (i wszystkie funkcje pomocnicze) jeszcze raz,
     tym razem za pomocą komendy <span class="inlinecode"><span class="id" title="keyword">Function</span></span>. Porównaj swoje definicje wykresu
     oraz reguły indukcji z tymi automatycznie wygenerowanymi. Użyj taktyki
-    <span class="inlinecode"><span class="id" title="var">functional</span></span> <span class="inlinecode"><span class="id" title="tactic">induction</span></span>, żeby jeszcze raz udowodnić, że <span class="inlinecode"><span class="id" title="var">rotn</span></span> jest
-    inwolucją (i wszystkie lematy też). Policz, ile pisania udało ci się
-    dzięki temu zaoszczędzić.
+    <span class="inlinecode"><span class="id" title="var">functional</span></span> <span class="inlinecode"><span class="id" title="tactic">induction</span></span>, żeby jeszcze raz udowodnić, że <span class="inlinecode"><span class="id" title="var">rot</span></span> jest
+    inwolucją. Policz, ile pisania udało ci się dzięki temu zaoszczędzić.
 
 <div class="paragraph"> </div>
 
     Czy w twoim rozwiązaniu są lematy, w których użycie indukcji funkcyjnej
-    znacznie utrudnia przeprowadzenie dowodu? W moim jest jeden taki. 
+    znacznie utrudnia przeprowadzenie dowodu? W moim poprzednim rozwiązaniu
+    był jeden taki, ale wynikał z głupoty i już go nie ma. 
 </div>
 <div class="code">
 
@@ -2465,183 +2427,173 @@ div' n m = n/(m + 1)
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">graph</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">graph_gt100</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">graph</span> <span class="id" title="var">n</span> (<span class="id" title="var">n</span> - 10)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">graph_le100</span> :<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">f91G</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">f91G_gt100</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">f91G</span> <span class="id" title="var">n</span> (<span class="id" title="var">n</span> - 10)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">f91G_le100</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= 100 -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">graph</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">r1</span> -&gt; <span class="id" title="var">graph</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> -&gt; <span class="id" title="var">graph</span> <span class="id" title="var">n</span> <span class="id" title="var">r2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f91G</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">r1</span> -&gt; <span class="id" title="var">f91G</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> -&gt; <span class="id" title="var">f91G</span> <span class="id" title="var">n</span> <span class="id" title="var">r2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">dom</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">dom_gt100</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">dom</span> <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">dom_le100</span> :<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">f91D</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">f91D_gt100</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">f91D</span> <span class="id" title="var">n</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">f91D_le100</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= 100 -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">graph</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">r</span> -&gt; <span class="id" title="var">dom</span> (<span class="id" title="var">n</span> + 11) -&gt; <span class="id" title="var">dom</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">dom</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f91G</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">r</span> -&gt; <span class="id" title="var">f91D</span> (<span class="id" title="var">n</span> + 11) -&gt; <span class="id" title="var">f91D</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">f91D</span> <span class="id" title="var">n</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">graph_functional</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f91G_det</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">graph</span> <span class="id" title="var">n</span> <span class="id" title="var">r1</span> -&gt; <span class="id" title="var">graph</span> <span class="id" title="var">n</span> <span class="id" title="var">r2</span> -&gt; <span class="id" title="var">r1</span> = <span class="id" title="var">r2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f91G</span> <span class="id" title="var">n</span> <span class="id" title="var">r1</span> -&gt; <span class="id" title="var">f91G</span> <span class="id" title="var">n</span> <span class="id" title="var">r2</span> -&gt; <span class="id" title="var">r1</span> = <span class="id" title="var">r2</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="tactic">until</span> 1. <span class="id" title="var">revert</span> <span class="id" title="var">r2</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">H0</span>; <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">intros</span> <span class="id" title="var">r</span> <span class="id" title="var">Hr</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">Hr</span>; <span class="id" title="tactic">subst</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">H2</span>; <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">Hr</span>; <span class="id" title="tactic">subst</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">r1</span> = <span class="id" title="var">r3</span>) <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> (<span class="id" title="var">IHgraph1</span> <span class="id" title="var">_</span> <span class="id" title="var">H4</span>); <span class="id" title="tactic">subst</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">IHgraph2</span> <span class="id" title="var">_</span> <span class="id" title="var">H5</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">r1</span> = <span class="id" title="var">r0</span>) <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> (<span class="id" title="var">IHf91G1</span> <span class="id" title="var">_</span> <span class="id" title="var">H3</span>); <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">IHf91G2</span> <span class="id" title="var">_</span> <span class="id" title="var">H4</span>).<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">fD'</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">dom</span> <span class="id" title="var">n</span>) : {<span class="id" title="var">r</span> : <span class="id" title="var">nat</span> | <span class="id" title="var">graph</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span>}.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">d</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">n</span> - 10). <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">fD'</span> <span class="id" title="var">_</span> <span class="id" title="var">d1</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">r1</span> <span class="id" title="var">g1</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">fD'</span> <span class="id" title="var">_</span> <span class="id" title="var">d2</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">r2</span> <span class="id" title="var">g2</span>]. <span class="id" title="tactic">exists</span> <span class="id" title="var">r2</span>. <span class="id" title="tactic">eapply</span> <span class="id" title="var">graph_le100</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">g1</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">r1</span> = <span class="id" title="var">r</span>) <span class="id" title="tactic">by</span> (<span class="id" title="tactic">eapply</span> <span class="id" title="var">graph_functional</span>; <span class="id" title="tactic">eauto</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">fD</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">dom</span> <span class="id" title="var">n</span>) : <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">fD'</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">exist</span> <span class="id" title="var">_</span> <span class="id" title="var">r</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">r</span><br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">f91_aux</span> {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">d</span> : <span class="id" title="var">f91D</span> <span class="id" title="var">n</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">d</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">f91D_gt100</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">n</span> - 10<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">f91D_le100</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">d2</span> =&gt; <span class="id" title="var">f91_aux</span> <span class="id" title="var">d2</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">fD_correct</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">dom</span> <span class="id" title="var">n</span>), <span class="id" title="var">graph</span> <span class="id" title="var">n</span> (<span class="id" title="var">fD</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f91_aux_correct</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">f91D</span> <span class="id" title="var">n</span>), <span class="id" title="var">f91G</span> <span class="id" title="var">n</span> (<span class="id" title="var">f91_aux</span> <span class="id" title="var">d</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">fD</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">fD'</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span>). <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">fD_complete</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">dom</span> <span class="id" title="var">n</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">graph</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">fD</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> = <span class="id" title="var">r</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">fD</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">fD'</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">graph_functional</span>; <span class="id" title="tactic">eauto</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">fD_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">dom</span> <span class="id" title="var">n</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fD</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> = <span class="id" title="var">r</span> &lt;-&gt; <span class="id" title="var">graph</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">intro</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">fD_correct</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">fD_complete</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dom_total</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">dom</span> <span class="id" title="var">n</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">do</span> 101 <span class="id" title="tactic">try</span> (<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>).<br/>
-<span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> := <span class="id" title="var">fD</span> <span class="id" title="var">n</span> (<span class="id" title="var">dom_total</span> <span class="id" title="var">n</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f_correct</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">graph</span> <span class="id" title="var">n</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">fD_correct</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f_complete</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">graph</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">f</span> <span class="id" title="var">n</span> = <span class="id" title="var">r</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">fD_complete</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> <span class="id" title="var">n</span> = <span class="id" title="var">r</span> &lt;-&gt; <span class="id" title="var">graph</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">fD_spec</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f_eq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> <span class="id" title="var">n</span> =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">leb</span> <span class="id" title="var">n</span> 100 <span class="id" title="keyword">then</span> <span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)) <span class="id" title="keyword">else</span> <span class="id" title="var">n</span> - 10.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">fD_spec</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">Nat.leb_spec0</span> <span class="id" title="var">n</span> 100) <span class="id" title="keyword">as</span> [<span class="id" title="var">H</span> | <span class="id" title="var">H</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">graph_le100</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">d</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span> 2.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-2: <span class="id" title="tactic">apply</span> <span class="id" title="var">fD_correct</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">IHd1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">r</span> = <span class="id" title="var">f91_aux</span> <span class="id" title="var">d1</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f91G_det</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">n</span> + 11); <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">subst</span>. <span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">fD_91</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">dom</span> <span class="id" title="var">n</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= 100 -&gt; <span class="id" title="var">fD</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> = 91.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f91_aux_complete</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">f91D</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f91G</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">f91_aux</span> <span class="id" title="var">d</span> = <span class="id" title="var">r</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">fD_spec</span>. <span class="id" title="var">revert</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f91G_det</span> <span class="id" title="keyword">with</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f91_aux_correct</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f91_aux_91</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">f91D</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= 100 -&gt; <span class="id" title="var">f91_aux</span> <span class="id" title="var">d</span> = 91.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f91_aux_complete</span>. <span class="id" title="var">revert</span> <span class="id" title="var">H</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">d</span>; <span class="id" title="tactic">intro</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">clear</span> <span class="id" title="var">l</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">d1</span>; <span class="id" title="tactic">subst</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">d2</span>; <span class="id" title="tactic">subst</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">clear</span> <span class="id" title="var">IHd2</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">g</span>; <span class="id" title="tactic">subst</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">graph_le100</span>; <span class="id" title="tactic">eauto</span>. <span class="id" title="tactic">assert</span> (<span class="id" title="var">n</span> = 100) <span class="id" title="tactic">by</span> <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">clear</span> <span class="id" title="var">IHd2</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">f</span>; <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">f91G_le100</span>; <span class="id" title="tactic">eauto</span>. <span class="id" title="tactic">assert</span> (<span class="id" title="var">n</span> = 100) <span class="id" title="tactic">by</span> <span class="id" title="tactic">omega</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">subst</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">omega</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">graph_le100</span>; <span class="id" title="tactic">eauto</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">f91G_le100</span>; <span class="id" title="tactic">eauto</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHd1</span> <span class="id" title="var">H0</span>). <span class="id" title="tactic">assert</span> (<span class="id" title="var">r</span> = 91).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">graph_functional</span>; <span class="id" title="tactic">eauto</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">subst</span>. <span class="id" title="tactic">eapply</span> <span class="id" title="var">graph_le100</span>; <span class="id" title="tactic">eauto</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IHd2</span>. <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">f91G_det</span>; <span class="id" title="tactic">eauto</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">subst</span>. <span class="id" title="tactic">eapply</span> <span class="id" title="var">f91G_le100</span>; <span class="id" title="tactic">eauto</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IHd2</span>. <span class="id" title="tactic">omega</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f_ind</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f91_aux_ge_100</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">f91D</span> <span class="id" title="var">n</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">f91_aux</span> <span class="id" title="var">d</span> = <span class="id" title="var">n</span> - 10.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">d</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">omega</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f91D_all</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f91D</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_ind</span> <span class="id" title="var">_</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> =&gt; 101 - <span class="id" title="var">n</span> &lt; 101 - <span class="id" title="var">m</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">wf_inverse_image</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">wf_lt</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> <span class="id" title="var">n</span> 100).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">d</span> := (<span class="id" title="var">IH</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="keyword">ltac</span>:(<span class="id" title="tactic">omega</span>))); <span class="id" title="var">clearbody</span> <span class="id" title="var">d</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span> 2 <span class="id" title="keyword">with</span> (<span class="id" title="var">f91_aux</span> <span class="id" title="var">d</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f91_aux_correct</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">d</span>; <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f91_aux_ge_100</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f91_aux_91</span>; <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">f91</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> := <span class="id" title="var">f91_aux</span> (<span class="id" title="var">f91D_all</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f91_correct</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f91G</span> <span class="id" title="var">n</span> (<span class="id" title="var">f91</span> <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f91_aux_correct</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f91_complete</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f91G</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">f91</span> <span class="id" title="var">n</span> = <span class="id" title="var">r</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f91_aux_complete</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f91_ind</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">H_gt100</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">n</span> - 10))<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">H_le100</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= 100 -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> (<span class="id" title="var">n</span> + 11) (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)) -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)) (<span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11))) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)))),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> (<span class="id" title="var">n</span> + 11) (<span class="id" title="var">f91</span> (<span class="id" title="var">n</span> + 11)) -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">f91</span> (<span class="id" title="var">n</span> + 11)) (<span class="id" title="var">f91</span> (<span class="id" title="var">f91</span> (<span class="id" title="var">n</span> + 11))) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">f91</span> (<span class="id" title="var">f91</span> (<span class="id" title="var">n</span> + 11)))),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">f91</span> <span class="id" title="var">n</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">f</span>, <span class="id" title="var">fD</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">fD'</span> <span class="id" title="var">n</span> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> (<span class="id" title="var">r</span> &amp; <span class="id" title="var">H</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H_gt100</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">f_spec</span> <span class="id" title="tactic">in</span> *. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H_le100</span>; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f91G_ind</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f91_complete</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f91_complete</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">subst</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H_le100</span>; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f91_correct</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f_91</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f91_91</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= 100 -&gt; <span class="id" title="var">f</span> <span class="id" title="var">n</span> = 91.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= 100 -&gt; <span class="id" title="var">f91</span> <span class="id" title="var">n</span> = 91.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">f_ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> =&gt; <span class="id" title="var">n</span> &lt;= 100 -&gt; <span class="id" title="var">r</span> = 91)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">Nat.leb_spec0</span> (<span class="id" title="var">n</span> + 11) 100).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H0</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f91_aux_91</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f91_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f91</span> <span class="id" title="var">n</span> = <span class="id" title="keyword">if</span> 100 &lt;? <span class="id" title="var">n</span> <span class="id" title="keyword">then</span> <span class="id" title="var">n</span> - 10 <span class="id" title="keyword">else</span> <span class="id" title="var">f91</span> (<span class="id" title="var">f91</span> (<span class="id" title="var">n</span> + 11)).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f91G_det</span> <span class="id" title="keyword">with</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f91_correct</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">ltb</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">Nat.leb_spec0</span> 101 <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">Nat.leb_spec0</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)) 100).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f_eq</span> <span class="id" title="tactic">in</span> <span class="id" title="var">n1</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">Nat.leb_spec0</span> (<span class="id" title="var">n</span> + 11) 100).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">n</span> = 100) <span class="id" title="tactic">by</span> <span class="id" title="tactic">omega</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> 2!<span class="id" title="var">f_eq</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f91_correct</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f91_correct</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>

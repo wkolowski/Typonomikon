@@ -2317,41 +2317,17 @@ End rot.
 
 (** * Komenda [Function] *)
 
-Require Import Recdef.
-
-(** div' n m = n/(m + 1) *)
-Function div'' (n m : nat) {measure id n} : nat :=
-  if le_lt_dec (S m) n
-  then S (div'' (n - S m) m)
-  else 0.
-Proof.
-  intros. unfold id. omega.
-Defined.
-
-Print R_div''.
-Check R_div''_correct.
-Check R_div''_complete.
-Check div''_ind.
-
-Lemma div''_le :
-  forall n m : nat, div'' n m <= n.
-Proof.
-  intros. functional induction (div'' n m).
-    omega.
-    apply le_0_n.
-Defined.
-
 (** **** Ćwiczenie *)
 
-(** Zdefiniuj funkcję [rotn] (i wszystkie funkcje pomocnicze) jeszcze raz,
+(** Zdefiniuj funkcję [rot] (i wszystkie funkcje pomocnicze) jeszcze raz,
     tym razem za pomocą komendy [Function]. Porównaj swoje definicje wykresu
     oraz reguły indukcji z tymi automatycznie wygenerowanymi. Użyj taktyki
-    [functional induction], żeby jeszcze raz udowodnić, że [rotn] jest
-    inwolucją (i wszystkie lematy też). Policz, ile pisania udało ci się
-    dzięki temu zaoszczędzić.
+    [functional induction], żeby jeszcze raz udowodnić, że [rot] jest
+    inwolucją. Policz, ile pisania udało ci się dzięki temu zaoszczędzić.
 
     Czy w twoim rozwiązaniu są lematy, w których użycie indukcji funkcyjnej
-    znacznie utrudnia przeprowadzenie dowodu? W moim jest jeden taki. *)
+    znacznie utrudnia przeprowadzenie dowodu? W moim poprzednim rozwiązaniu
+    był jeden taki, ale wynikał z głupoty i już go nie ma. *)
 
 (* begin hide *)
 Module rotn_Function.
@@ -2376,16 +2352,37 @@ match n, l with
         end
 end.
 
+Lemma split_spec :
+  forall {A : Type} (n : nat) (l l1 l2 : list A),
+    split n l = Some (l1, l2) -> length l1 = n /\ l = l1 ++ l2.
+Proof.
+  intros A n l.
+  functional induction (split n l); inversion 1; subst; cbn.
+    split; reflexivity.
+    destruct (IHo _ _ e1). subst. split; reflexivity.
+Qed.
+
+Lemma split_app_length :
+  forall {A : Type} (n : nat) (l1 l2 : list A),
+    length l1 = n -> split n (l1 ++ l2) = Some (l1, l2).
+Proof.
+  intros A n l.
+  functional induction (split n l); inversion 1; subst; cbn.
+    rewrite H. cbn. destruct l; inversion H. reflexivity.
+    rewrite IHo; reflexivity.
+    rewrite IHo; reflexivity.
+Qed.
+
 Lemma split_length_aux :
   forall (A : Type) (n : nat) (l l1 l2 : list A),
     split n l = Some (l1, l2) ->
       n = 0 \/ length l2 < length l.
 Proof.
-  intros. revert l1 l2 H.
+  intros A n l.
   functional induction (split n l); inversion 1; subst.
     left. reflexivity.
     right. destruct (IHo _ _ e1).
-      subst. cbn in e1. inversion e1; subst. cbn. omega.
+      subst. cbn in e1. inversion e1; subst. cbn. apply le_n.
       cbn. omega.
 Qed.
 
@@ -2398,73 +2395,31 @@ Proof.
     assumption.
 Qed.
 
-Function rotn
+Function rot
   {A : Type} (n : nat) (l : list A) {measure length l} : list A :=
 match split (S n) l with
     | None => l
-    | Some (l1, l2) => rev l1 ++ rotn n l2
+    | Some (l1, l2) => rev l1 ++ rot n l2
 end.
 Proof.
   intros A n l _ l1 l2 _ H.
-  eapply split_length. eassumption.
+  eapply lengthOrder_split. eassumption.
 Defined.
 
-Arguments rotn {x} _ _.
+Arguments rot {x} _ _.
 
-Compute rotn 1 [1; 2; 3; 4; 5; 6; 7].
+Compute rot 1 [1; 2; 3; 4; 5; 6; 7].
 
-Lemma split_app :
-  forall (A : Type) (n : nat) (l1 l2 : list A),
-    length l1 = n -> split n (l1 ++ l2) = Some (l1, l2).
-Proof.
-  induction n as [| n']; cbn; intros.
-    destruct l1; cbn.
-      reflexivity.
-      inversion H.
-    destruct l1 as [| h t]; cbn.
-      inversion H.
-      rewrite IHn'.
-        reflexivity.
-        cbn in H. inversion H. reflexivity.
-Qed.
-
-Lemma split_length' :
-  forall {A : Type} {n : nat} {l1 l2 : list A},
-    split n (l1 ++ l2) = Some (l1, l2) -> length l1 = n.
-Proof.
-  induction n as [| n']; cbn; intros.
-    inversion H. reflexivity.
-    destruct l1 as [| h t]; cbn in *.
-      destruct l2; cbn in H.
-        inversion H.
-        destruct (split n' l2).
-          destruct p. 1-2: inversion H.
-      case_eq (split n' (t ++ l2)).
-        intros [l1' l2'] Heq. eapply f_equal, IHn'.
-          rewrite Heq in H. inversion H; subst. eassumption.
-        intro. rewrite H0 in H. inversion H.
-Qed.
-
-Lemma split_spec :
-  forall (A : Type) (n : nat) (l l1 l2 : list A),
-    split n l = Some (l1, l2) -> l = l1 ++ l2.
-Proof.
-  intros A n l.
-  functional induction (split n l); inversion 1; subst.
-    reflexivity.
-    cbn. f_equal. apply IHo. assumption.
-Qed.
-
-Lemma rotn_involution :
+Lemma rot_rot :
   forall (A : Type) (n : nat) (l : list A),
-    rotn n (rotn n l) = l.
+    rot n (rot n l) = l.
 Proof.
-  intros. functional induction (rotn n l).
-    rewrite rotn_equation, e. reflexivity.
-    rewrite rotn_equation, split_app, rev_involutive, IHl0.
-      apply split_spec in e. rewrite e. reflexivity.
-      rewrite rev_length. eapply split_length'.
-        rewrite <- e. f_equal. apply split_spec in e. rewrite e. reflexivity.
+  intros. functional induction (rot n l).
+    rewrite rot_equation, e. reflexivity.
+    apply split_spec in e. destruct e. subst.
+      rewrite rot_equation, split_app_length.
+        rewrite rev_involutive, IHl0. reflexivity.
+        rewrite rev_length. assumption.
 Qed.
 
 End rotn_Function.
@@ -2482,172 +2437,165 @@ End rotn_Function.
       specyfikacją.
     - Wyjmij funkcję i specyfikację za pomocą projekcji. *)
 
-Inductive graph : nat -> nat -> Prop :=
-    | graph_gt100 :
-        forall n : nat, 100 < n -> graph n (n - 10)
-    | graph_le100 :
+Inductive f91G : nat -> nat -> Prop :=
+    | f91G_gt100 :
+        forall n : nat, 100 < n -> f91G n (n - 10)
+    | f91G_le100 :
         forall n r1 r2 : nat, n <= 100 ->
-          graph (n + 11) r1 -> graph r1 r2 -> graph n r2.
+          f91G (n + 11) r1 -> f91G r1 r2 -> f91G n r2.
 
-Inductive dom : nat -> Type :=
-    | dom_gt100 :
-        forall n : nat, 100 < n -> dom n
-    | dom_le100 :
+Inductive f91D : nat -> Type :=
+    | f91D_gt100 :
+        forall n : nat, 100 < n -> f91D n
+    | f91D_le100 :
         forall n r : nat, n <= 100 ->
-          graph (n + 11) r -> dom (n + 11) -> dom r -> dom n.
+          f91G (n + 11) r -> f91D (n + 11) -> f91D r -> f91D n.
 
-Lemma graph_functional :
+Lemma f91G_det :
   forall n r1 r2 : nat,
-    graph n r1 -> graph n r2 -> r1 = r2.
+    f91G n r1 -> f91G n r2 -> r1 = r2.
 Proof.
   intros until 1. revert r2.
-  induction H; intros.
-    inversion H0; subst.
+  induction H; intros r Hr.
+    inversion Hr; subst.
       reflexivity.
       omega.
-    inversion H2; subst.
+    inversion Hr; subst.
       omega.
-      assert (r1 = r3) by apply (IHgraph1 _ H4); subst.
-        apply (IHgraph2 _ H5).
+      assert (r1 = r0) by apply (IHf91G1 _ H3); subst.
+        apply (IHf91G2 _ H4).
 Qed.
 
-Fixpoint fD' (n : nat) (d : dom n) : {r : nat | graph n r}.
-Proof.
-  destruct d.
-    exists (n - 10). constructor. assumption.
-    destruct (fD' _ d1) as [r1 g1].
-      destruct (fD' _ d2) as [r2 g2]. exists r2. eapply graph_le100.
-        assumption.
-        exact g1.
-        assert (r1 = r) by (eapply graph_functional; eauto).
-          rewrite H. assumption.
-Defined.
-
-Definition fD (n : nat) (d : dom n) : nat :=
-match fD' n d with
-    | exist _ r _ => r
+Fixpoint f91_aux {n : nat} (d : f91D n) : nat :=
+match d with
+    | f91D_gt100 _ _ => n - 10
+    | f91D_le100 _ _ _ _ _ d2 => f91_aux d2
 end.
 
-Lemma fD_correct :
-  forall (n : nat) (d : dom n), graph n (fD n d).
+Lemma f91_aux_correct :
+  forall (n : nat) (d : f91D n), f91G n (f91_aux d).
 Proof.
-  intros. unfold fD. destruct (fD' n d). assumption.
-Qed.
-
-Lemma fD_complete :
-  forall (n r : nat) (d : dom n),
-    graph n r -> fD n d = r.
-Proof.
-  intros. unfold fD. destruct (fD' n d).
-  eapply graph_functional; eauto.
-Qed.
-
-Lemma fD_spec :
-  forall (n r : nat) (d : dom n),
-    fD n d = r <-> graph n r.
-Proof.
-  split; intro.
-    rewrite <- H. apply fD_correct.
-    apply fD_complete. assumption.
-Qed.
-
-Lemma dom_total :
-  forall n : nat, dom n.
-Proof.
-  do 101 try (destruct n).
-Admitted.
-
-Definition f (n : nat) : nat := fD n (dom_total n).
-
-Lemma f_correct :
-  forall n : nat, graph n (f n).
-Proof.
-  intros. apply fD_correct.
-Qed.
-
-Lemma f_complete :
-  forall n r : nat,
-    graph n r -> f n = r.
-Proof.
-  intros. apply fD_complete. assumption.
-Qed.
-
-Lemma f_spec :
-  forall n r : nat,
-    f n = r <-> graph n r.
-Proof.
-  intros. apply fD_spec.
-Qed.
-
-Lemma f_eq :
-  forall n : nat,
-    f n =
-    if leb n 100 then f (f (n + 11)) else n - 10.
-Proof.
-  intros. unfold f. rewrite fD_spec.
-  destruct (Nat.leb_spec0 n 100) as [H | H].
-    eapply graph_le100.
+  induction d; cbn.
+    constructor. assumption.
+    econstructor 2.
       assumption.
-      1-2: apply fD_correct.
-    constructor. omega.
+      exact IHd1.
+      assert (r = f91_aux d1).
+        apply f91G_det with (n + 11); assumption.
+        subst. assumption.
 Qed.
 
-Lemma fD_91 :
-  forall (n : nat) (d : dom n),
-    n <= 100 -> fD n d = 91.
+Lemma f91_aux_complete :
+  forall (n r : nat) (d : f91D n),
+    f91G n r -> f91_aux d = r.
 Proof.
-  intros. rewrite fD_spec. revert H.
+  intros. apply f91G_det with n.
+    apply f91_aux_correct.
+    assumption.
+Qed.
+
+Lemma f91_aux_91 :
+  forall (n : nat) (d : f91D n),
+    n <= 100 -> f91_aux d = 91.
+Proof.
+  intros. apply f91_aux_complete. revert H.
   induction d; intro.
     omega.
     clear l. inversion d1; subst.
       inversion d2; subst.
-        clear IHd2. inversion g; subst.
-          eapply graph_le100; eauto. assert (n = 100) by omega.
+        clear IHd2. inversion f; subst.
+          eapply f91G_le100; eauto. assert (n = 100) by omega.
             subst. cbn. constructor. omega.
           omega.
-        eapply graph_le100; eauto.
+        eapply f91G_le100; eauto.
       specialize (IHd1 H0). assert (r = 91).
-        eapply graph_functional; eauto.
-        subst. eapply graph_le100; eauto. apply IHd2. omega.
+        eapply f91G_det; eauto.
+        subst. eapply f91G_le100; eauto. apply IHd2. omega.
 Qed.
 
-Lemma f_ind :
+Lemma f91_aux_ge_100 :
+  forall (n : nat) (d : f91D n),
+    100 < n -> f91_aux d = n - 10.
+Proof.
+  destruct d; cbn; omega.
+Qed.
+
+Lemma f91D_all :
+  forall n : nat, f91D n.
+Proof.
+  apply (well_founded_ind _ (fun n m => 101 - n < 101 - m)).
+    apply wf_inverse_image. apply wf_lt.
+    intros n IH. destruct (le_lt_dec n 100).
+      pose (d := (IH (n + 11) ltac:(omega))); clearbody d.
+        constructor 2 with (f91_aux d).
+          assumption.
+          apply f91_aux_correct.
+          assumption.
+          apply IH. inversion d; subst.
+            rewrite f91_aux_ge_100.
+              omega.
+              assumption.
+            rewrite f91_aux_91; omega.
+      constructor. assumption.
+Qed.
+
+Definition f91 (n : nat) : nat := f91_aux (f91D_all n).
+
+Lemma f91_correct :
+  forall n : nat, f91G n (f91 n).
+Proof.
+  intros. apply f91_aux_correct.
+Qed.
+
+Lemma f91_complete :
+  forall n r : nat,
+    f91G n r -> f91 n = r.
+Proof.
+  intros. apply f91_aux_complete. assumption.
+Qed.
+
+Lemma f91_ind :
   forall
     (P : nat -> nat -> Prop)
     (H_gt100 : forall n : nat, 100 < n -> P n (n - 10))
     (H_le100 :
       forall n : nat, n <= 100 ->
-        P (n + 11) (f (n + 11)) -> P (f (n + 11)) (f (f (n + 11))) ->
-          P n (f (f (n + 11)))),
-    forall n : nat, P n (f n).
+        P (n + 11) (f91 (n + 11)) -> P (f91 (n + 11)) (f91 (f91 (n + 11))) ->
+          P n (f91 (f91 (n + 11)))),
+    forall n : nat, P n (f91 n).
 Proof.
-  intros. unfold f, fD. destruct (fD' n _) as (r & H).
-  induction H.
-    apply H_gt100. assumption.
-    rewrite <- f_spec in *. subst. apply H_le100; assumption.
+  intros. apply f91G_ind.
+    assumption.
+    intros. apply f91_complete in H0. apply f91_complete in H2.
+      subst. apply H_le100; assumption.
+    apply f91_correct.
 Defined.
 
-Lemma f_91 :
+Lemma f91_91 :
   forall (n : nat),
-    n <= 100 -> f n = 91.
+    n <= 100 -> f91 n = 91.
 Proof.
-  apply (f_ind (fun n r => n <= 100 -> r = 91)).
-    intros. omega.
-    intros. destruct (Nat.leb_spec0 (n + 11) 100).
-      apply H1. rewrite H0.
+  intros. apply f91_aux_91. assumption.
+Qed.
+
+Lemma f91_eq :
+  forall n : nat,
+    f91 n = if 100 <? n then n - 10 else f91 (f91 (n + 11)).
+Proof.
+  intros. apply f91G_det with n.
+    apply f91_correct.
+    unfold ltb. destruct (Nat.leb_spec0 101 n).
+      constructor. assumption.
+      econstructor.
         omega.
-        assumption.
-      destruct (Nat.leb_spec0 (f (n + 11)) 100).
-        apply H1. assumption.
-        rewrite f_eq in n1. destruct (Nat.leb_spec0 (n + 11) 100).
-          omega.
-          assert (n = 100) by omega. subst. cbn. rewrite 2!f_eq.
-            cbn. reflexivity.
+        apply f91_correct.
+        apply f91_correct.
 Qed.
 
 (** * Metoda induktywno-rekurencyjnej dziedziny *)
 
 (** * Rekursja wyższego rzędu *)
+
 
 (** * Plugin [Equations] *)
 
