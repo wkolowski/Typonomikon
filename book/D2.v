@@ -2518,183 +2518,17 @@ End rotn_Function.
 
 (** * Rekursja zagnieżdżona *)
 
-(** https://members.loria.fr/DLarchey/files/papers/TYPES_2018_paper_19.pdf
-
-    A robi się to tak:
-    - Zdefiniuj wykres funkcji.
-    - Zdefiniuj predykat dziedziny używając wykresu.
-    - Udowodnij użyteczne rzeczy, np. funkcyjność wykresu.
-    - Zdefiniuj funkcję przez rekursję po predykacie dziedziny wraz z jej
-      specyfikacją.
-    - Wyjmij funkcję i specyfikację za pomocą projekcji. *)
-
-Module McCarthy'.
-
-Inductive fG : nat -> nat -> Prop :=
-    | fG_gt100 :
-        forall n : nat, 100 < n -> fG n (n - 10)
-    | fG_le100 :
-        forall n r1 r2 : nat, n <= 100 ->
-          fG (n + 11) r1 -> fG r1 r2 -> fG n r2.
-
-Lemma fG_det :
-  forall n r1 r2 : nat,
-    fG n r1 -> fG n r2 -> r1 = r2.
-Proof.
-  intros until 1. revert r2.
-  induction H; intros r Hr.
-    inversion Hr; subst.
-      reflexivity.
-      omega.
-    inversion Hr; subst.
-      omega.
-      assert (r1 = r0) by apply (IHfG1 _ H3); subst.
-        apply (IHfG2 _ H4).
-Qed.
-
-Inductive fD : nat -> Type :=
-    | fD_gt100 :
-        forall n : nat, 100 < n -> fD n
-    | fD_le100 :
-        forall n r : nat, n <= 100 ->
-          fG (n + 11) r -> fD (n + 11) -> fD r -> fD n.
-
-Fixpoint f_aux {n : nat} (d : fD n) : nat :=
-match d with
-    | fD_gt100 _ _ => n - 10
-    | fD_le100 _ _ _ _ _ d2 => f_aux d2
-end.
-
-Lemma f_aux_correct :
-  forall (n : nat) (d : fD n), fG n (f_aux d).
-Proof.
-  induction d; cbn.
-    constructor. assumption.
-    econstructor 2.
-      assumption.
-      exact IHd1.
-      assert (r = f_aux d1).
-        apply fG_det with (n + 11); assumption.
-        subst. assumption.
-Qed.
-
-Lemma f_aux_complete :
-  forall (n r : nat) (d : fD n),
-    fG n r -> f_aux d = r.
-Proof.
-  intros. apply fG_det with n.
-    apply f_aux_correct.
-    assumption.
-Qed.
-
-Lemma f_aux_91 :
-  forall (n : nat) (d : fD n),
-    n <= 100 -> f_aux d = 91.
-Proof.
-  intros. apply f_aux_complete. revert H.
-  induction d; intro.
-    omega.
-    clear l. inversion d1; subst.
-      inversion d2; subst.
-        clear IHd2. inversion f; subst.
-          eapply fG_le100; eauto. assert (n = 100) by omega.
-            subst. cbn. constructor. omega.
-          omega.
-        eapply fG_le100; eauto.
-      specialize (IHd1 H0). assert (r = 91).
-        eapply fG_det; eauto.
-        subst. eapply fG_le100; eauto. apply IHd2. omega.
-Qed.
-
-Lemma f_aux_ge_100 :
-  forall (n : nat) (d : fD n),
-    100 < n -> f_aux d = n - 10.
-Proof.
-  destruct d; cbn; omega.
-Qed.
-
-Lemma fD_all :
-  forall n : nat, fD n.
-Proof.
-  apply (well_founded_ind _ (fun n m => 101 - n < 101 - m)).
-    apply wf_inverse_image. apply wf_lt.
-    intros n IH. destruct (le_lt_dec n 100).
-      pose (d := (IH (n + 11) ltac:(omega))); clearbody d.
-        constructor 2 with (f_aux d).
-          assumption.
-          apply f_aux_correct.
-          assumption.
-          apply IH. inversion d; subst.
-            rewrite f_aux_ge_100.
-              omega.
-              assumption.
-            rewrite f_aux_91; omega.
-      constructor. assumption.
-Qed.
-
-Definition f (n : nat) : nat := f_aux (fD_all n).
-
-Lemma f_correct :
-  forall n : nat, fG n (f n).
-Proof.
-  intros. apply f_aux_correct.
-Qed.
-
-Lemma f_complete :
-  forall n r : nat,
-    fG n r -> f n = r.
-Proof.
-  intros. apply f_aux_complete. assumption.
-Qed.
-
-Lemma f_ind :
-  forall
-    (P : nat -> nat -> Prop)
-    (H_gt100 : forall n : nat, 100 < n -> P n (n - 10))
-    (H_le100 :
-      forall n : nat, n <= 100 ->
-        P (n + 11) (f (n + 11)) -> P (f (n + 11)) (f (f (n + 11))) ->
-          P n (f (f (n + 11)))),
-    forall n : nat, P n (f n).
-Proof.
-  intros. apply fG_ind.
-    assumption.
-    intros. apply f_complete in H0. apply f_complete in H2.
-      subst. apply H_le100; assumption.
-    apply f_correct.
-Defined.
-
-Lemma f_91 :
-  forall (n : nat),
-    n <= 100 -> f n = 91.
-Proof.
-  intros. apply f_aux_91. assumption.
-Qed.
-
-Lemma f_eq :
-  forall n : nat,
-    f n = if 100 <? n then n - 10 else f (f (n + 11)).
-Proof.
-  intros. apply fG_det with n.
-    apply f_correct.
-    unfold ltb. destruct (Nat.leb_spec0 101 n).
-      constructor. assumption.
-      econstructor.
-        omega.
-        apply f_correct.
-        apply f_correct.
-Qed.
-
-End McCarthy'.
-
-(** * Metoda induktywno-rekurencyjnej dziedziny *)
-
-(** Zaraz zobaczymy prosty, ale sztuczny przykład, który rozjaśni (albo
-    zaciemni) sprawę, a jest nim legendarna funkcja McCarthy'ego. *)
+(** Jakież to diabelstwo może być tak diabelskie, by przeciwstawić się
+    metodzie induktywnej dziedziny oraz komendzie [Function]? Ano ano,
+    rekursja zagnieżdżona. Wywołanie rekurencyjne jest zagnieżdżone,
+    jeżeli jego argumentem jest inne wywołanie rekurencyjne. *)
 
 Module McCarthy.
 
 Fail Fixpoint f (n : nat) : nat :=
+  if leb 101 n then n - 10 else f (f (n + 11)).
+
+Fail Function f (n : nat) {measure id n} : nat :=
   if leb 101 n then n - 10 else f (f (n + 11)).
 
 (** Ta funkcja jest podobna zupełnie do niczego, co dotychczas widzieliśmy.
@@ -2716,13 +2550,380 @@ Fail Fixpoint f (n : nat) : nat :=
 
     [f 100 = f (f 111) = f 101 = 91] - poszło gładko. A co z [99]? Mamy
     [f 99 = f (f 110) = f 100 = 91] - znowu 91, czyżby spiseg? Dalej:
-    [f 98 = f (f 109) = f 99 = 91] - tak, to na pewno spisek. Teraz możemy
+    [f 98 = f (f 109) = f 99 = 91] - tak, to na pewno spiseg. Teraz możemy
     zwerbalizować nasze domysły: jeżeli [n <= 100], to [f n = 91]. Jak
     widać, nieprzypadkowo funkcja ta bywa też nazywana "funkcją 91
     McCarthy'ego".
 
-    Zobaczmy, jak użyć indukcji-rekursji do zaimplementowania tej funkcji
-    w Coqu. *)
+    Czy da się tę funkcję zaimplementować w Coqu? Pewnie! *)
+
+Definition f_troll (n : nat) : nat :=
+  if n <=? 100 then 91 else n - 10.
+
+(** Ehhh... nie tego się spodziewałeś, prawda? [f_troll] jest wprawdzie
+    implementacją opisanej powyżej nieformalnie funkcji [f], ale definicja
+    opiera się na tym, że z góry wiemy, jaki jest wynik [f] dla dowolnego
+    argumentu. Nie trzeba chyba tłumaczyć, że dla żadnej ciekawej funkcji
+    nie będziemy posiadać takiej wiedzy (a sama funkcja McCarthy'ego jest
+    sztuczna, ot co).
+
+    Czy więc da się zaimplementować [f] bezpośrednio, tzn. w sposób dokładnie
+    oddający definicję nieformalną? Otóż tak, da się i to w sumie niewielkim
+    kosztem: wystarczy jedynie nieco zmodyfikować naszą metodę induktywnej
+    dziedziny. Zanim jednak to zrobimy, zobaczmy, dlaczego nie obejdzie się
+    bez modyfikacji. *)
+
+Fail Inductive fD : nat -> Type :=
+  | fD_gt100 : forall n : nat, 100 < n -> fD n
+  | fD_le100 :
+      forall n : nat, n <= 100 ->
+        fD (n + 11) -> fD (f (n + 11)) -> fD n.
+(* ===> The command has indeed failed with message:
+        The reference f was not found in the current environment. *)
+
+(** A oto i źródło całego problemu. Jeżeli [n <= 100], to chcemy zrobić dwa
+    wywołania rekurencyjne: jedno na [n + 11], a drugie na [f (n + 11)].
+    Wobec tego należenie tych dwóch argumentów do dziedziny jest warunkiem
+    należenia [n] do dziedziny i stąd postać całego konstruktora.
+
+    Niestety, definicja jest zła - [f (n + 11)] nie jest poprawnym termem,
+    gdyż [f] nie jest jeszcze zdefiniowane. Mamy więc błędne koło: żeby
+    zdefiniować [f], musimy zdefiniować predykat dziedziny [fD], ale żeby
+    zdefiniować [fD], musimy zdefiniować [f].
+
+    Jak wyrwać się z tego błędnego koła? Ratunek przychodzi ze strony być
+    może nieoczekiwanej, ale za to już bardzo dobrze przez nas poznanej, a
+    jest nim induktywna definicja wykresu. Tak tak - w definicji [fD] możemy
+    (a nawet musimy) zastąpić wystąpienia [f] przez wystąpienia wykresu [f].
+
+    Hej ho, po przykład by się szło. *)
+
+Inductive fG : nat -> nat -> Prop :=
+    | fG_gt100 :
+        forall n : nat, 100 < n -> fG n (n - 10)
+    | fG_le100 :
+        forall n r1 r2 : nat, n <= 100 ->
+          fG (n + 11) r1 -> fG r1 r2 -> fG n r2.
+
+(** Tak wygląda wykres funkcji [f]. Wywołanie rekurencyjne [f (f (n + 11)]]
+    możemy zareprezentować jako dwa argumenty, mianowicie [fG (n + 11) r1]
+    i [fG r1 r2]. Dosłownie odpowiada to wywołaniu rekurencyjnemu w stylu
+    [let r1 := f (n + 11) in let r2 := f r1 in r2]. *)
+
+Lemma fG_det :
+  forall n r1 r2 : nat,
+    fG n r1 -> fG n r2 -> r1 = r2.
+Proof.
+  intros until 1. revert r2.
+  induction H; intros r Hr.
+    inversion Hr; subst.
+      reflexivity.
+      abstract omega.
+    inversion Hr; subst.
+      abstract omega.
+      assert (r1 = r0) by apply (IHfG1 _ H3); subst.
+        apply (IHfG2 _ H4).
+Defined.
+
+(** Po zdefiniowaniu grafu dowodzimy, podobnie jak poprzednio, że jest on
+    relacją deterministyczną. *)
+
+Inductive fD : nat -> Type :=
+    | fD_gt100 :
+        forall n : nat, 100 < n -> fD n
+    | fD_le100 :
+        forall n r : nat, n <= 100 ->
+          fG (n + 11) r -> fD (n + 11) -> fD r -> fD n.
+
+(** A tak wygląda definicja predykatu dziedziny. Zamiast [fD (f (n + 11))]
+    mamy [fD r], gdyż [r] na mocy argumentu [fG (n + 11) r] reprezentuje
+    wynik wywołania rekurencyjnego [f (n + 11)]. *)
+
+Fixpoint f' {n : nat} (d : fD n) : nat :=
+match d with
+    | fD_gt100 _ _ => n - 10
+    | fD_le100 _ _ _ _ _ d2 => f' d2
+end.
+
+(** Definicja funkcji pomocniczej [f'] może być nieco zaskakująca: gdzie
+    podziało się zagnieżdżone wywołanie rekurencyjne? Nie możemy jednak
+    dać się zmylić przeciwnikowi. Ostatnią klauzulę dopasowania do wzorca
+    możemy zapisać jako [| fD_le100 n r H g d1 d2 => f' d2]. Widzimy, że
+    [d2] jest typu [fD r], ale [g : fG (n + 11) r], więc możemy myśleć,
+    że [r] to tak naprawdę [f (n + 11)], a zatem [d2] tak naprawdę jest
+    typu [fD (f (n + 11))]. Jeżeli dodatkowo napiszemy wprost domyślny
+    argument [f'], to wywołanie rekurencyjne miałoby postać
+    [@f' (@f' (n + 11) d1) d2], a więc wszystko się zgadza. Żeby jednak
+    nie rzucać słów na wiatr, udowodnijmy to. *)
+
+Lemma f'_correct :
+  forall (n : nat) (d : fD n), fG n (f' d).
+Proof.
+  induction d; cbn.
+    constructor. assumption.
+    econstructor 2.
+      assumption.
+      exact IHd1.
+      assert (r = f' d1).
+        apply fG_det with (n + 11); assumption.
+        subst. assumption.
+Defined.
+
+(** Dowód twierdzenia o poprawności jest tylko odrobinkę trudniejsze niż
+    ostatnio, gdyż w przypadku wystąpienia w kontekście dwóch hipotez o
+    typie [fG (n + 11) _] musimy użyć twierdzenia o determinizmie wykresu. *)
+
+Lemma f'_complete :
+  forall (n r : nat) (d : fD n),
+    fG n r -> f' d = r.
+Proof.
+  intros. apply fG_det with n.
+    apply f'_correct.
+    assumption.
+Defined.
+
+(** Dowód twierdzenia o pełności pozostaje bez zmian. *)
+
+Lemma fG_le100_spec :
+  forall n r : nat,
+    fG n r -> n <= 100 -> r = 91.
+Proof.
+  induction 1; intro.
+    abstract omega.
+    inversion H0; subst.
+      inversion H1; subst.
+        assert (n = 100) by abstract omega. subst. reflexivity.
+        abstract omega.
+      abstract omega.
+Defined.
+
+Lemma f'_le100 :
+  forall (n : nat) (d : fD n),
+    n <= 100 -> f' d = 91.
+Proof.
+  intros. apply fG_le100_spec with n.
+    apply f'_correct.
+    assumption.
+Defined.
+
+Lemma f'_ge100 :
+  forall (n : nat) (d : fD n),
+    100 < n -> f' d = n - 10.
+Proof.
+  destruct d; cbn; abstract omega.
+Defined.
+
+(** Teraz następuje mały twist. Udowodnienie, że każdy argument spełnia
+    [fD] będzie piekielnie trudne i będziemy w związku z tym potrzebować
+    charakteryzacji funkcji [f']. Zaczynamy więc od udowodnienia, że dla
+    [n <= 100] wynikiem jest [91]. Najpierw robimy to na wykresie, bo tak
+    jest łatwiej, a potem transferujemy wynik na funkcję. Charakteryzację
+    dla [100 < n] dostajemy wprost z definicji. *)
+
+Lemma fD_all :
+  forall n : nat, fD n.
+Proof.
+  apply (well_founded_ind _ (fun n m => 101 - n < 101 - m)).
+    apply wf_inverse_image. apply wf_lt.
+    intros n IH. destruct (le_lt_dec n 100).
+      pose (d := (IH (n + 11) ltac:(abstract omega))). (*; clearbody d. *)
+        constructor 2 with (f' d).
+          assumption.
+          apply f'_correct.
+          assumption.
+          apply IH. inversion d; subst.
+            rewrite f'_ge100.
+              abstract omega.
+              assumption.
+            rewrite f'_le100; abstract omega.
+      constructor. assumption.
+Defined.
+
+Definition f (n : nat) : nat := f' (fD_all n).
+
+Fail Timeout 1 Compute f 101.
+
+(** Niestety, funkcja się nie oblicza i nie wiem nawet dlaczego. Być może
+    jest za dużo wywołań rekurencyjnych. *)
+
+Lemma f_correct :
+  forall n : nat, fG n (f n).
+Proof.
+  intros. apply f'_correct.
+Qed.
+
+Lemma f_complete :
+  forall n r : nat,
+    fG n r -> f n = r.
+Proof.
+  intros. apply f'_complete. assumption.
+Qed.
+
+Lemma f_91 :
+  forall (n : nat),
+    n <= 100 -> f n = 91.
+Proof.
+  intros. apply f'_le100. assumption.
+Qed.
+
+(** Twierdzenia o poprawności i pełności oraz charakteryzacja dla [f]
+    wynikają za darmo z odpowiednich twierdzeń dla [f']. *)
+
+Lemma f_ind :
+  forall
+    (P : nat -> nat -> Prop)
+    (H_gt100 : forall n : nat, 100 < n -> P n (n - 10))
+    (H_le100 :
+      forall n : nat, n <= 100 ->
+        P (n + 11) (f (n + 11)) -> P (f (n + 11)) (f (f (n + 11))) ->
+          P n (f (f (n + 11)))),
+    forall n : nat, P n (f n).
+Proof.
+  intros. apply fG_ind.
+    assumption.
+    intros. apply f_complete in H0. apply f_complete in H2.
+      subst. apply H_le100; assumption.
+    apply f_correct.
+Defined.
+
+(** Reguły indukcji wykresowej dowodzimy tak samo jak poprzednio, czyli za
+    pomocą twierdzeń o pełności i poprawności. *)
+
+Lemma f_eq :
+  forall n : nat,
+    f n = if 100 <? n then n - 10 else f (f (n + 11)).
+Proof.
+  intros. apply fG_det with n.
+    apply f_correct.
+    unfold ltb. destruct (Nat.leb_spec0 101 n).
+      constructor. assumption.
+      econstructor.
+        omega.
+        apply f_correct.
+        apply f_correct.
+Qed.
+
+(** Równanie rekurencyjne najprościej jest udowodnić za pomocą właściwości
+    grafu funkcji [f]. *)
+
+(** **** Ćwiczenie *)
+
+(** Przyjrzyjmy się poniższej fikuśnej definicji funkcji: *)
+
+Fail Fixpoint g (n : nat) : nat :=
+match n with
+    | 0 => 0
+    | S n => g (g n)
+end.
+
+(** Wytłumacz, dlaczego Coq nie akceptuje tej definicji. Następnie wymyśl
+    twierdzenie charakteryzujące tę funkcję, a na koniec zdefiniuj ją za
+    pomocą metody zaprezentowanej w tym podrozdziale. *)
+
+(* begin hide *)
+
+(** Coq odrzuca definicję, bo [g n] nie jest strukturalnym podtermem [S n].
+
+    Charakteryzacja jest prosta: [forall n : nat, g n = 0]. *)
+
+Inductive gG : nat -> nat -> Prop :=
+    | gG_0 : gG 0 0
+    | gG_1 : forall n r1 r2 : nat, gG n r1 -> gG r1 r2 -> gG (S n) r2.
+
+Lemma gG_det :
+  forall n r1 r2 : nat, gG n r1 -> gG n r2 -> r1 = r2.
+Proof.
+  intros until 1. revert r2.
+  induction H; inversion 1; subst.
+    reflexivity.
+    specialize (IHgG1 _ H3). subst. apply IHgG2. assumption.
+Defined.
+
+Inductive gD : nat -> Type :=
+    | gD_0 : gD 0
+    | gD_1 : forall {n r : nat}, gD n -> gG n r -> gD r -> gD (S n).
+
+Fixpoint g' {n : nat} (d : gD n) : nat :=
+match d with
+    | gD_0 => 0
+    | gD_1 d1 _ d2 => g' d2
+end.
+
+Lemma gG_correct' :
+  forall (n : nat) (d : gD n),
+    gG n (g' d).
+Proof.
+  induction d; cbn.
+    constructor.
+    assert (g' d1 = r).
+      apply gG_det with n; assumption.
+      subst. econstructor; eassumption.
+Defined.
+
+Lemma gG_complete' :
+  forall (n r : nat) (d : gD n),
+    gG n r -> r = g' d.
+Proof.
+  intros. apply gG_det with n.
+    assumption.
+    apply gG_correct'.
+Defined.
+
+Lemma g'_eq :
+  forall (n : nat) (d : gD n), g' d = 0.
+Proof.
+  induction d; cbn.
+    reflexivity.
+    assumption.
+Defined.
+
+Lemma gD_all :
+  forall n : nat, gD n.
+Proof.
+  induction n as [| n'].
+    constructor.
+    eapply (gD_1 IHn').
+      apply (gG_correct' _ IHn').
+      rewrite g'_eq. constructor.
+Defined.
+
+Definition g (n : nat) : nat := g' (gD_all n).
+
+Time Compute g 50.
+
+Lemma gG_correct :
+  forall n : nat, gG n (g n).
+Proof.
+  intro. apply gG_correct'.
+Qed.
+
+Lemma gG_complete :
+  forall n r : nat,
+    gG n r -> r = g n.
+Proof.
+  intros. apply gG_complete'. assumption.
+Qed.
+
+Lemma g_ind :
+  forall
+    (P : nat -> nat -> Prop)
+    (P_0 : P 0 0)
+    (P_1 :
+      forall n : nat, P n (g n) -> P (g n) (g (g n)) -> P (S n) (g (g n))),
+    forall n : nat, P n (g n).
+Proof.
+  intros. apply gG_ind.
+    assumption.
+    intros. apply gG_complete in H. apply gG_complete in H1. subst.
+      apply P_1; assumption.
+    apply gG_correct.
+Qed.
+
+End McCarthy.
+
+(** * Metoda induktywno-rekurencyjnej dziedziny *)
+
+Module McCarthy'.
 
 (*
 Inductive D : nat -> Type :=
@@ -2731,10 +2932,10 @@ Inductive D : nat -> Type :=
         forall n : nat, n <= 100 ->
           forall d : D (n + 11), D (f (n + 11) d) -> D n
 
-with Fixpoint f (n : nat) (d : D n) : nat :=
+with Fixpoint f_aux (n : nat) (d : D n) : nat :=
 match d with
     | D_gt100 n H => n - 10
-    | D_le100 n H d1 d2 => f (f (n + 11) d1) d2
+    | D_le100 n H d1 d2 => f_aux (f_aux (n + 11) d1) d2
 end.
 *)
 
@@ -2756,7 +2957,7 @@ end.
 
     Konstruktor [D_le100] odpowiada przypadkowi [n <= 100]. Mówi on, że
     [n : nat] spełniające ten warunek należy do dziedziny pod warunkiem,
-    że [n + 11] oraz [f (n + 11)] także należą do dziedziny. Umożliwi to
+    że [n + 11] oraz [f_aux (n + 11)] także należą do dziedziny. Umożliwi to
     w definicji [f] zrobienie dwóch wywołań rekurencyjnych na tych właśnie
     argumentach.
 
@@ -2765,24 +2966,24 @@ end.
     typu [forall n : nat, D n -> nat]. Zdefiniowana jest natomiast przez
     rekursję strukturalną po [D n]: konstruktor [D_gt100] to koniec rekursji
     i wynik równy [n - 10], zaś [D_le100] to dwa wywołania rekurencyjne.
-    W tej wersji argumentami nie są jednak [n + 11] i [f (n + 11)], tylko
-    [d1] i [d2], czyli dowody na to, że [n + 11] oraz [f (n + 11)] należą
+    W tej wersji argumentami nie są jednak [n + 11] i [f_aux (n + 11)], tylko
+    [d1] i [d2], czyli dowody na to, że [n + 11] oraz [f_aux (n + 11)] należą
     do dziedziny funkcji [f]. Dzięki temu rekursja jest strukturalna. *)
 
 Variables
   (D : nat -> Type)
-  (f : forall n : nat, D n -> nat)
+  (f_aux : forall n : nat, D n -> nat)
   (D_gt100 : forall n : nat, 100 < n -> D n)
   (D_le100 :
     forall n : nat, n <= 100 ->
-      forall d : D (n + 11), D (f (n + 11) d) -> D n)
+      forall d : D (n + 11), D (f_aux (n + 11) d) -> D n)
   (f_gt100 :
-    forall (n : nat) (H : 100 < n), f n (D_gt100 n H) = n - 10)
+    forall (n : nat) (H : 100 < n), f_aux n (D_gt100 n H) = n - 10)
   (f_le100 :
     forall
       (n : nat) (H : n <= 100)
-      (d1 : D (n + 11)) (d2 : D (f (n + 11) d1)),
-        f n (D_le100 n H d1 d2) = f (f (n + 11) d1) d2)
+      (d1 : D (n + 11)) (d2 : D (f_aux (n + 11) d1)),
+        f_aux n (D_le100 n H d1 d2) = f_aux (f_aux (n + 11) d1) d2)
   (ind :
     forall
       (P : forall n : nat, D n -> Type)
@@ -2792,19 +2993,19 @@ Variables
       (P_le100 :
         forall
           (n : nat) (H : n <= 100)
-          (d1 : D (n + 11)) (d2 : D (f (n + 11) d1)),
-            P (n + 11) d1 -> P (f (n + 11) d1) d2 ->
+          (d1 : D (n + 11)) (d2 : D (f_aux (n + 11) d1)),
+            P (n + 11) d1 -> P (f_aux (n + 11) d1) d2 ->
               P n (D_le100 n H d1 d2)),
       {g : forall (n : nat) (d : D n), P n d |
         (forall (n : nat) (H : 100 < n),
           g n (D_gt100 n H) = P_gt100 n H) /\
         (forall
           (n : nat) (H : n <= 100)
-          (d1 : D (n + 11)) (d2 : D (f (n + 11) d1)),
+          (d1 : D (n + 11)) (d2 : D (f_aux (n + 11) d1)),
             g n (D_le100 n H d1 d2) =
             P_le100 n H d1 d2
               (g (n + 11) d1)
-              (g (f (n + 11) d1) d2))
+              (g (f_aux (n + 11) d1) d2))
       }).
 
 (** Aksjomatyczna reprezentacja tej definicji działa podobnie jak poprzednio:
@@ -2822,16 +3023,12 @@ Variables
 
     Przekonajmy się, że taka aksjomatyzacja jakoś działa. *)
 
-Require Import Omega.
-
-(** [omega] to taktyka potrafiąca różne arytmetyczne sztuczki. *)
-
 Lemma D_inv :
   forall (n : nat) (d : D n),
     {H : 100 < n | d = D_gt100 n H} +
     {H : n <= 100 &
       {d1 : D (n + 11) &
-      {d2 : D (f (n + 11) d1) | d = D_le100 n H d1 d2}}}.
+      {d2 : D (f_aux (n + 11) d1) | d = D_le100 n H d1 d2}}}.
 Proof.
   apply ind.
     intros. left. exists H. reflexivity.
@@ -2845,9 +3042,9 @@ Defined.
 
 Lemma f_spec :
   forall (n : nat) (d : D n),
-    n <= 100 -> f n d = 91.
+    n <= 100 -> f_aux n d = 91.
 Proof.
-  apply (ind (fun n d => n <= 100 -> f n d = 91)).
+  apply (ind (fun n d => n <= 100 -> f_aux n d = 91)).
     intros n H H'. omega.
     intros n H d1 d2 IH1 IH2 _.
       (* Tutaj używamy inwersji. *)
@@ -2874,33 +3071,24 @@ Qed.
     taktyką [omega] do przemielenia oczywistych, ale skomplikowanych
     formalnie faktów z zakresu arytmetyki liczb naturalnych. *)
 
-End McCarthy.
+Lemma D_all :
+  forall n : nat, D n.
+Proof.
+  apply (well_founded_ind _ (fun n m => 101 - n < 101 - m)).
+    apply wf_inverse_image. apply wf_lt.
+    intros n IH. destruct (le_lt_dec n 100).
+      pose (d := (IH (n + 11) ltac:(omega))); clearbody d.
+        apply D_le100 with d.
+          assumption.
+          apply IH. destruct (D_inv _ d) as [[H eq] | [H _]].
+            rewrite eq, f_gt100. omega.
+            rewrite f_spec.
+              omega.
+              assumption.
+      apply D_gt100. assumption.
+Qed.
 
-(** **** Ćwiczenie *)
-
-(** Przyjrzyjmy się poniższej fikuśnej definicji funkcji: *)
-
-Fail Fixpoint g (n : nat) : nat :=
-match n with
-    | 0 => 0
-    | S n => g (g n)
-end.
-
-(** Polecenie jest następujące:
-    - wytłumacz, dlaczego Coq nie akceptuje tej definicji
-    - wymyśl twierdzenie charakteryzujące tę funkcję
-    - używając metody Bove-Capretta zdefiniuj zmodyfikowaną wersję tej
-      funkcji [g' : forall n : nat, D' n -> nat]
-    - zakoduj swoją definicję aksjomatycznie
-    - udowodnij, że [g'] spełnia wymyśloną wcześniej charakteryzację
-    - udowodnij, że każde [n : nat] spełnia predykat dziedziny [D']
-    - zdefiniuj w Coqu oryginalną funkcję [g : nat -> nat] *)
-
-(* begin hide *)
-
-(** Coq odrzuca definicję, bo [g n] nie jest strukturalnym podtermem [S n].
-
-    Charakteryzacja jest prosta: [forall n : nat, g n = 0]. *)
+Definition f (n : nat) : nat := f_aux n (D_all n).
 
 (*
 Inductive D' : nat -> Type :=
@@ -2955,6 +3143,7 @@ Qed.
 Definition g' (n : nat) : nat := g n (D'_all n).
 
 (* end hide *)
+End McCarthy'.
 
 (** * Rekursja wyższego rzędu *)
 
