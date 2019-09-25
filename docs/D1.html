@@ -4962,7 +4962,9 @@ Nagłówki w tej definicji powinniśmy interpretować tak:
 <div class="paragraph"> </div>
 
     Następnie użyj swojej aksjomatycznej definicji, aby zdefiniować funkcję
-    <span class="inlinecode"><span class="id" title="var">mirror</span></span>, która tworzy lustrzane odbicie sterty <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">BHeap</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>. 
+    <span class="inlinecode"><span class="id" title="var">mirror</span></span>, która tworzy lustrzane odbicie sterty <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">BHeap</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>. Wskazówka:
+    prawdopodobnie nie uda ci się zdefiniować <span class="inlinecode"><span class="id" title="var">mirror</span></span>. Zastanów się,
+    dlaczego jest tak trudno. 
 </div>
 <div class="code">
 
@@ -5005,7 +5007,13 @@ Nagłówki w tej definicji powinniśmy interpretować tak:
 <div class="paragraph"> </div>
 
  Najpierw napisz pseudodefinicję, a potem przetłumacz ją na odpowiedni
-    zestaw aksjomatów. 
+    zestaw aksjomatów.
+
+<div class="paragraph"> </div>
+
+    Następnie użyj swojej aksjomatycznej definicji, aby zdefiniować funkcję
+    <span class="inlinecode"><span class="id" title="var">mirror</span></span>, która tworzy lustrzane odbicie drzewa <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">BST</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>. Wskazówka:
+    dość możliwe, że ci się nie uda. 
 </div>
 <div class="code">
 
@@ -5369,21 +5377,21 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
 
 <div class="paragraph"> </div>
 
-    Drugi pomysł jest o wiele bardziej praktyczy, choć nosi dużo smutniejszą
-    nazwę: metoda Bove-Capretta. Pod tą nazwą kryje się sposób definiowania
+    Drugi pomysł jest o wiele bardziej praktyczy, a zwie się on metodą
+    induktywnej dziedziny. Pod tą nazwą kryje się sposób definiowania
     funkcji, pozwalający oddzielić samą definicję od dowodu jej terminacji.
     Jeżeli ten opis nic ci nie mówi, nie martw się: dotychczas definiowaliśmy
     tylko tak prymitywne funkcje, że tego typu fikołki nie były nam potrzebne.
 
 <div class="paragraph"> </div>
 
-    Metoda Bove-Capretta polega na tym, żeby zamiast funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>,
-    która nie jest strukturalnie rekurencyjna (na co Coq nie pozwala) napisać
-    funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> jest
-    "predykatem dziedziny", który sprawia, że dziwna rekursja z oryginalnej
-    definicji <span class="inlinecode"><span class="id" title="var">f</span></span> staje się rekursją strukturalną po dowodzie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>. Żeby
-    zdefiniować oryginalne <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> wystarczy udowodnić, że każde <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>
-    spełnia predykat dziedziny.
+    Metoda induktywnej dziedziny polega na tym, żeby zamiast funkcji
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, która nie jest strukturalnie rekurencyjna (na co Coq
+    nie pozwala) napisać funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, gdzie
+    <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> jest "predykatem dziedziny", który sprawia, że dziwna
+    rekursja z oryginalnej definicji <span class="inlinecode"><span class="id" title="var">f</span></span> staje się rekursją strukturalną
+    po dowodzie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>. Żeby zdefiniować oryginalne <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> wystarczy
+    udowodnić, że każde <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> spełnia predykat dziedziny.
 
 <div class="paragraph"> </div>
 
@@ -5395,335 +5403,102 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     funkcji musi zawierać konstruktor w stylu "jeżeli wynik wywołania
     rekurencyjnego na x należy do dziedziny, to x też należy do dziedziny".
     To właśnie tu ujawnia się indukcja-rekursja: żeby zdefiniować predykat
-    dziedziny, musimy odwołać się do funkcji, a żeby zdefiniować funkcję,
-    musimy mieć predykat dziedziny.
+    dziedziny, musimy odwołać się do funkcji (żeby móc powiedzieć coś o
+    wyniku wywołania rekurencyjnego), a żeby zdefiniować funkcję, musimy
+    mieć predykat dziedziny.
 
 <div class="paragraph"> </div>
 
-    Brzmi skomplikowanie? Zaraz zobaczymy prosty, ale sztuczny przykład,
-    który rozjaśni (albo zaciemni) sprawę, a jest nim legendarna funkcja
-    McCarthy'ego. 
+    Brzmi skomplikowanie? Jeżeli czegoś nie rozumiesz, to jesteś debi...
+    a nie, czekaj. Jeżeli czegoś nie rozumiesz, to nie martw się: powyższe
+    przykłady miały tylko ilustrować jakieś praktyczne zastosowania
+    indukcji-rekursji. Do metody induktywnej dziedziny powrócimy w kolejnym
+    rozdziale. Pokażemy, jak wyeliminować z niej indukcję-rekursję, tak żeby
+    uzyskane za jej pomocą definicje można było odpalać w Coqu. Zobaczymy też,
+    jakimi sposobami dowodzić, że każdy element dziedziny spełnia predykat
+    dziedziny, co pozwoli nam odzyskać oryginalną definicję funkcji, a także
+    dowiemy się, jak z "predykatu" o typie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> zrobić prawdziwy
+    predykat <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. O induktywno-rekurencyjnych uniwersach więcej
+    dowiemy się w rozdziale o uniwersach (o ile taki kiedyś powstanie). 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">ind_rec_2</span>.<br/>
-
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">leb</span> 101 <span class="id" title="var">n</span> <span class="id" title="keyword">then</span> <span class="id" title="var">n</span> - 10 <span class="id" title="keyword">else</span> <span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)).<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Ta funkcja jest podobna zupełnie do niczego, co dotychczas widzieliśmy.
-    Działa ona następująco:
-<ul class="doclist">
-<li> jeżeli <span class="inlinecode"><span class="id" title="var">n</span></span> jest większe od <span class="inlinecode">100</span> (co wyrażamy za pomocą <span class="inlinecode"><span class="id" title="var">leb</span></span>
-      jako <span class="inlinecode"><span class="id" title="var">leb</span></span> <span class="inlinecode">101</span> <span class="inlinecode"><span class="id" title="var">n</span></span>), to zwróć <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-</span> <span class="inlinecode">10</span>
-
-</li>
-<li> w przeciwnym wypadku wywołaj rekurencyjnie <span class="inlinecode"><span class="id" title="var">f</span></span> na <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11</span>, a następnie
-      wywołaj <span class="inlinecode"><span class="id" title="var">f</span></span> na wyniku tamtego wywołania. 
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
- Taka rekursja jest oczywiście nielegalna: <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11</span> nie jest strukturalnym
-    podtermem <span class="inlinecode"><span class="id" title="var">n</span></span>, gdyż jest on niego większe, zaś <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span> w ogóle nie
-    wiadomo a priori, jak się ma do <span class="inlinecode"><span class="id" title="var">n</span></span>. Nie dziwota więc, że Coq odrzuca
-    powyższą definicję.
-
-<div class="paragraph"> </div>
-
-    Być może wobec tego taka "funkcja" w ogóle nie jest funkcją, a definicja
-    jest wadliwa? Otóż nie tym razem. Okazuje się bowiem, że istnieje funkcja
-    zachowująca się zgodnie z zawartym w definicji równaniem. Żebyśmy mogli
-    w to uwierzyć, zastanówmy się, ile wynosi <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">100</span>.
-
-<div class="paragraph"> </div>
-
-    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">100</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">111)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">101</span> <span class="inlinecode">=</span> <span class="inlinecode">91</span> - poszło gładko. A co z <span class="inlinecode">99</span>? Mamy
-    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">99</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">110)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">100</span> <span class="inlinecode">=</span> <span class="inlinecode">91</span> - znowu 91, czyżby spiseg? Dalej:
-    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">98</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">109)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">99</span> <span class="inlinecode">=</span> <span class="inlinecode">91</span> - tak, to na pewno spisek. Teraz możemy
-    zwerbalizować nasze domysły: jeżeli <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;=</span> <span class="inlinecode">100</span>, to <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">91</span>. Jak
-    widać, nieprzypadkowo funkcja ta bywa też nazywana "funkcją 91
-    McCarthy'ego".
-
-<div class="paragraph"> </div>
-
-    Zobaczmy, jak użyć indukcji-rekursji do zaimplementowania tej funkcji
-    w Coqu. 
-</div>
-<div class="code">
-
-<br/>
-<span class="comment">(*<br/>
-Inductive&nbsp;D&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;Type&nbsp;:=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;D_gt100&nbsp;:&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;100&nbsp;&lt;&nbsp;n&nbsp;-&gt;&nbsp;D&nbsp;n<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;D_le100&nbsp;:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;n&nbsp;&lt;=&nbsp;100&nbsp;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;d&nbsp;:&nbsp;D&nbsp;(n&nbsp;+&nbsp;11),&nbsp;D&nbsp;(f&nbsp;(n&nbsp;+&nbsp;11)&nbsp;d)&nbsp;-&gt;&nbsp;D&nbsp;n<br/>
-<br/>
-with&nbsp;Fixpoint&nbsp;f&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;(d&nbsp;:&nbsp;D&nbsp;n)&nbsp;:&nbsp;nat&nbsp;:=<br/>
-match&nbsp;d&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;D_gt100&nbsp;n&nbsp;H&nbsp;=&gt;&nbsp;n&nbsp;-&nbsp;10<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;D_le100&nbsp;n&nbsp;H&nbsp;d1&nbsp;d2&nbsp;=&gt;&nbsp;f&nbsp;(f&nbsp;(n&nbsp;+&nbsp;11)&nbsp;d1)&nbsp;d2<br/>
-end.<br/>
-*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> to predykat dziedziny. Ma on być zdefiniowany tak,
-    żeby każdy element dziedziny oryginalnej funkcji go spełniał i żeby
-    rekursja strukturalna po dowodzie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> odpowiadała rekursji w
-    oryginalnej definicji funkcji.
-
-<div class="paragraph"> </div>
-
-    Uwaga nazewniczna: uparcie nazywam <span class="inlinecode"><span class="id" title="var">D</span></span> predykatem, mimo że jest ono
-    typu <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, czyli rodziną typów. Jest tak, gdyż w bardziej
-    zaawansowanej wersji metody Bove-Capretta <span class="inlinecode"><span class="id" title="var">D</span></span> faktycznie byłoby typu
-    <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, ale my ułatwimy sobie życie, powołując się na prostotę
-    prezentacji.
-
-<div class="paragraph"> </div>
-
-    Mamy więc dwa konstruktory: <span class="inlinecode"><span class="id" title="var">D_gt100</span></span> odpowiada za przypadek <span class="inlinecode">100</span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span>
-    i głosi po prostu, że każde <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> spełniające ten warunek należy
-    do dziedziny - nie ma tu żadnych argumentów rekurencyjnych, bo jest to
-    przypadek bazowy, w którym funkcja ma zwracać <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-</span> <span class="inlinecode">10</span>.
-
-<div class="paragraph"> </div>
-
-    Konstruktor <span class="inlinecode"><span class="id" title="var">D_le100</span></span> odpowiada przypadkowi <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;=</span> <span class="inlinecode">100</span>. Mówi on, że
-    <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> spełniające ten warunek należy do dziedziny pod warunkiem,
-    że <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11</span> oraz <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span> także należą do dziedziny. Umożliwi to
-    w definicji <span class="inlinecode"><span class="id" title="var">f</span></span> zrobienie dwóch wywołań rekurencyjnych na tych właśnie
-    argumentach.
-
-<div class="paragraph"> </div>
-
-    Jednocześnie z predykatem dziedziny <span class="inlinecode"><span class="id" title="var">D</span></span> zdefiniowana jest funkcja <span class="inlinecode"><span class="id" title="var">f</span></span>.
-    Zamiast <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, jak oryginalna funkcja McCarthy'ego, jest ona
-    typu <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>. Zdefiniowana jest natomiast przez
-    rekursję strukturalną po <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>: konstruktor <span class="inlinecode"><span class="id" title="var">D_gt100</span></span> to koniec rekursji
-    i wynik równy <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-</span> <span class="inlinecode">10</span>, zaś <span class="inlinecode"><span class="id" title="var">D_le100</span></span> to dwa wywołania rekurencyjne.
-    W tej wersji argumentami nie są jednak <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11</span> i <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span>, tylko
-    <span class="inlinecode"><span class="id" title="var">d1</span></span> i <span class="inlinecode"><span class="id" title="var">d2</span></span>, czyli dowody na to, że <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11</span> oraz <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span> należą
-    do dziedziny funkcji <span class="inlinecode"><span class="id" title="var">f</span></span>. Dzięki temu rekursja jest strukturalna. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Variables</span><br/>
-&nbsp;&nbsp;(<span class="id" title="var">D</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">D</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">nat</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">D_gt100</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">D</span> <span class="id" title="var">n</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">D_le100</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= 100 -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">d</span> : <span class="id" title="var">D</span> (<span class="id" title="var">n</span> + 11), <span class="id" title="var">D</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d</span>) -&gt; <span class="id" title="var">D</span> <span class="id" title="var">n</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">f_gt100</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : 100 &lt; <span class="id" title="var">n</span>), <span class="id" title="var">f</span> <span class="id" title="var">n</span> (<span class="id" title="var">D_gt100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>) = <span class="id" title="var">n</span> - 10)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">f_le100</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt;= 100)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">d1</span> : <span class="id" title="var">D</span> (<span class="id" title="var">n</span> + 11)) (<span class="id" title="var">d2</span> : <span class="id" title="var">D</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> <span class="id" title="var">n</span> (<span class="id" title="var">D_le100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span>) = <span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>) <span class="id" title="var">d2</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">ind</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">D</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P_gt100</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : 100 &lt; <span class="id" title="var">n</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">D_gt100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P_le100</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt;= 100)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">d1</span> : <span class="id" title="var">D</span> (<span class="id" title="var">n</span> + 11)) (<span class="id" title="var">d2</span> : <span class="id" title="var">D</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>) <span class="id" title="var">d2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">D_le100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">g</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">D</span> <span class="id" title="var">n</span>), <span class="id" title="var">P</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> |<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : 100 &lt; <span class="id" title="var">n</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">g</span> <span class="id" title="var">n</span> (<span class="id" title="var">D_gt100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>) = <span class="id" title="var">P_gt100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt;= 100)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">d1</span> : <span class="id" title="var">D</span> (<span class="id" title="var">n</span> + 11)) (<span class="id" title="var">d2</span> : <span class="id" title="var">D</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">g</span> <span class="id" title="var">n</span> (<span class="id" title="var">D_le100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P_le100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">g</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">g</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>) <span class="id" title="var">d2</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Aksjomatyczna reprezentacja tej definicji działa podobnie jak poprzednio:
-    najpierw deklarujemy <span class="inlinecode"><span class="id" title="var">D</span></span>, potem <span class="inlinecode"><span class="id" title="var">f</span></span>, potem konstruktory <span class="inlinecode"><span class="id" title="var">D</span></span>, potem
-    równania definiujące <span class="inlinecode"><span class="id" title="var">f</span></span>, a na samym końcu regułę indukcji.
-
-<div class="paragraph"> </div>
-
-    Reguła indukcji powstaje analogicznie jak dla <span class="inlinecode"><span class="id" title="var">slist</span></span>. Definiujemy tylko
-    jedną rodzinę typów <span class="inlinecode"><span class="id" title="var">D</span></span>, więc reguła da nam tylko jedną funkcję, <span class="inlinecode"><span class="id" title="var">g</span></span>,
-    o typie <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">(<span class="id" title="var">d</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">n</span>),</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">d</span></span>, gdzie
-    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> reprezentuje przeciwdziedzinę <span class="inlinecode"><span class="id" title="var">g</span></span>.
-    Mamy dwa przypadki: nieindukcyjny <span class="inlinecode"><span class="id" title="var">P_gt100</span></span> odpowiadający konstruktorowi
-    <span class="inlinecode"><span class="id" title="var">D_gt100</span></span> oraz <span class="inlinecode"><span class="id" title="var">P_le100</span></span> odpowiadający za <span class="inlinecode"><span class="id" title="var">D_le100</span></span>, w którym mamy do
-    dyspozycji dwie hipotezy indukcyjne. Otrzymana z reguły funkcja spełnia
-    oczekiwane równania.
-
-<div class="paragraph"> </div>
-
-    Przekonajmy się, że taka aksjomatyzacja jakoś działa. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Omega</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<span class="inlinecode"><span class="id" title="tactic">omega</span></span> to taktyka potrafiąca różne arytmetyczne sztuczki. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">D_inv</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">D</span> <span class="id" title="var">n</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">H</span> : 100 &lt; <span class="id" title="var">n</span> | <span class="id" title="var">d</span> = <span class="id" title="var">D_gt100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>} +<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt;= 100 &amp;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">d1</span> : <span class="id" title="var">D</span> (<span class="id" title="var">n</span> + 11) &amp;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">d2</span> : <span class="id" title="var">D</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">d1</span>) | <span class="id" title="var">d</span> = <span class="id" title="var">D_le100</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span>}}}.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ind</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">H</span>, <span class="id" title="var">d1</span>, <span class="id" title="var">d2</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Będziemy też chcieli używać <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> na hipotezach postaci <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>,
-    ale <span class="inlinecode"><span class="id" title="var">D</span></span> nie jest induktywne (tylko aksjomatyczne), więc musimy
-    pożądaną przez nas inwersję zamknąć w lemat. Dowodzimy go oczywiście
-    za pomocą reguły indukcji. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">f_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">D</span> <span class="id" title="var">n</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= 100 -&gt; <span class="id" title="var">f</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> = 91.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> =&gt; <span class="id" title="var">n</span> &lt;= 100 -&gt; <span class="id" title="var">f</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> = 91)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">H'</span>. <span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span> <span class="id" title="var">d1</span> <span class="id" title="var">d2</span> <span class="id" title="var">IH1</span> <span class="id" title="var">IH2</span> <span class="id" title="var">_</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;Tutaj&nbsp;używamy&nbsp;inwersji.&nbsp;*)</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">D_inv</span> <span class="id" title="var">_</span> <span class="id" title="var">d1</span>) <span class="id" title="keyword">as</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[<span class="id" title="var">H'</span> <span class="id" title="var">eq</span>] | (<span class="id" title="var">H'</span> &amp; <span class="id" title="var">d1'</span> &amp; <span class="id" title="var">d2'</span> &amp; <span class="id" title="var">eq</span>)].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">D_inv</span> <span class="id" title="var">_</span> <span class="id" title="var">d2</span>) <span class="id" title="keyword">as</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[<span class="id" title="var">H''</span> <span class="id" title="var">eq'</span>] | (<span class="id" title="var">H''</span> &amp; <span class="id" title="var">d1''</span> &amp; <span class="id" title="var">d2''</span> &amp; <span class="id" title="var">eq'</span>)].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f_le100</span>, <span class="id" title="var">eq'</span>, <span class="id" title="var">f_gt100</span>, <span class="id" title="var">eq</span>, <span class="id" title="var">f_gt100</span> <span class="id" title="tactic">in</span> *.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">clear</span> <span class="id" title="var">IH1</span> <span class="id" title="var">eq</span> <span class="id" title="var">eq'</span> <span class="id" title="var">H'</span> <span class="id" title="var">H''</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;n&nbsp;=&nbsp;100&nbsp;i&nbsp;wtedy&nbsp;100&nbsp;+&nbsp;11&nbsp;-&nbsp;10&nbsp;-&nbsp;10&nbsp;=&nbsp;111&nbsp;-&nbsp;20&nbsp;=&nbsp;91<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;albo&nbsp;n&nbsp;&lt;&nbsp;100&nbsp;i&nbsp;wtedy&nbsp;n&nbsp;+&nbsp;11&nbsp;-&nbsp;10&nbsp;=&nbsp;n&nbsp;+&nbsp;1&nbsp;&lt;=&nbsp;100&nbsp;i&nbsp;cel<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wynika&nbsp;z&nbsp;IH2.&nbsp;omega&nbsp;potrafi&nbsp;arytmetykę&nbsp;:)&nbsp;*)</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f_le100</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IH2</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f_le100</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IH2</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IH1</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Możemy też udowodnić naszą wcześniejszą obserwację. Dowód ponownie jest
-    dość prosty: najpierw używamy indukcji, a potem naszego inwersjowego
-    lematu na hipotezach postaci <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span>. W kluczowych momentach obliczamy
-    funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> za pomocą definiujących ją równań oraz posługujemy się
-    taktyką <span class="inlinecode"><span class="id" title="tactic">omega</span></span> do przemielenia oczywistych, ale skomplikowanych
-    formalnie faktów z zakresu arytmetyki liczb naturalnych.
-
-<div class="paragraph"> </div>
-
-    Jeżeli czegoś nie rozumiesz, to jesteś debi... a nie, czekaj. Jeżeli
-    czegoś nie rozumiesz, to nie martw się: powyższy przykład miał tylko
-    ilustrować jakieś praktyczne zastosowanie indukcji-rekursji. Do metody
-    Bove-Capretta powrócimy w następnym rozdziale. Pokażemy, jak wyeliminować
-    z niej indukcję-rekursję, tak żeby uzyskane za jej pomocą definicje
-    można było odpalać w Coqu. Zobaczymy też, jakimi sposobami dowodzić, że
-    każdy element dziedziny spełnia predykat dziedziny, co pozwoli nam
-    odzyskać oryginalną definicję funkcji, i dowiemy się, jak z "predykatu"
-    o typie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> zrobić prawdziwy predykat <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. 
-<div class="paragraph"> </div>
-
 <a name="lab153"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
- Przyjrzyjmy się poniższej fikuśnej definicji funkcji: 
-</div>
-<div class="code">
+ No cóż, jeszcze raz to samo. Zdefiniuj za pomocą indukcji-rekursji
+    jednocześnie typ stert binarnych <span class="inlinecode"><span class="id" title="var">BHeap</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>
+    rozstrzyga porządek, i funkcję <span class="inlinecode"><span class="id" title="var">ok</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">BHeap</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>, gdzie
+    <span class="inlinecode"><span class="id" title="var">ok</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">true</span></span>, gdy stertę <span class="inlinecode"><span class="id" title="var">h</span></span> można podczepić pod element <span class="inlinecode"><span class="id" title="var">x</span></span>.
 
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">g</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">g</span> <span class="id" title="var">n</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
+<div class="paragraph"> </div>
 
-<br/>
-</div>
+    Najpierw napisz pseudodefinicję, a potem przetłumacz ją na odpowiedni
+    zestaw aksjomatów.
 
-<div class="doc">
-Polecenie jest następujące:
-<ul class="doclist">
-<li> wytłumacz, dlaczego Coq nie akceptuje tej definicji
+<div class="paragraph"> </div>
 
-</li>
-<li> wymyśl twierdzenie charakteryzujące tę funkcję
+    Następnie użyj swojej aksjomatycznej definicji, aby zdefiniować funkcję
+    <span class="inlinecode"><span class="id" title="var">mirror</span></span>, która tworzy lustrzane odbicie sterty <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">BHeap</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>. Wskazówka:
+    tym razem powinno ci się udać.
 
-</li>
-<li> używając metody Bove-Capretta zdefiniuj zmodyfikowaną wersję tej
-      funkcji <span class="inlinecode"><span class="id" title="var">g'</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">D'</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>
+<div class="paragraph"> </div>
 
-</li>
-<li> zakoduj swoją definicję aksjomatycznie
-
-</li>
-<li> udowodnij, że <span class="inlinecode"><span class="id" title="var">g'</span></span> spełnia wymyśloną wcześniej charakteryzację
-
-</li>
-<li> udowodnij, że każde <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> spełnia predykat dziedziny <span class="inlinecode"><span class="id" title="var">D'</span></span>
-
-</li>
-<li> zdefiniuj w Coqu oryginalną funkcję <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> 
-</li>
-</ul>
-
+    Porównaj induktywno-rekurencyjną implementację <span class="inlinecode"><span class="id" title="var">BHeap</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> i <span class="inlinecode"><span class="id" title="var">ok</span></span> z
+    implementacją przez indukcję-indukcję. Która jest bardziej ogólna?
+    Która jest "lżejsza"? Która jest lepsza? 
 </div>
 <div class="code">
 
 <br/>
 
 <br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">ind_rec_2</span>.<br/>
+</div>
+
+<div class="doc">
+<a name="lab154"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ No cóż, jeszcze raz to samo. Zdefiniuj za pomocą indukcji-rekursji
+    jednocześnie typ drzew wyszukiwań binarnych <span class="inlinecode"><span class="id" title="var">BST</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>, gdzie
+    <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> rozstrzyga porządek, oraz funkcje
+    <span class="inlinecode"><span class="id" title="var">oklr</span></span>/<span class="inlinecode"><span class="id" title="var">okl</span></span> i <span class="inlinecode"><span class="id" title="var">okr</span></span>/<span class="inlinecode"><span class="id" title="var">ok</span></span>, które dbają o odpowiednie warunki (wybierz
+    tylko jeden wariant z trzech, które testowałeś w tamtym zadaniu).
+
+<div class="paragraph"> </div>
+
+    Najpierw napisz pseudodefinicję, a potem przetłumacz ją na odpowiedni
+    zestaw aksjomatów.
+
+<div class="paragraph"> </div>
+
+    Następnie użyj swojej aksjomatycznej definicji, aby zdefiniować funkcję
+    <span class="inlinecode"><span class="id" title="var">mirror</span></span>, która tworzy lustrzane odbicie drzewa <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">BST</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>. Wskazówka:
+    tym razem powinno ci się udać.
+
+<div class="paragraph"> </div>
+
+    Porównaj induktywno-rekurencyjną implementację <span class="inlinecode"><span class="id" title="var">BST</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> z implementacją
+    przez indukcję-indukcję. Która jest bardziej ogólna? Która jest
+    "lżejsza"? Która jest lepsza? 
+</div>
+<div class="code">
+
+<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab154"></a><h2 class="section">Chimera, czyli jeszcze straszniejszy potfur</h2>
+<a name="lab155"></a><h2 class="section">Chimera, czyli jeszcze straszniejszy potfur</h2>
 
 <div class="paragraph"> </div>
 
@@ -5756,7 +5531,7 @@ Polecenie jest następujące:
     nie wspiera indukcji-indukcji-rekursji. 
 <div class="paragraph"> </div>
 
-<a name="lab155"></a><h4 class="section">Ćwiczenie (mega trudne)</h4>
+<a name="lab156"></a><h4 class="section">Ćwiczenie (mega trudne)</h4>
 
 <div class="paragraph"> </div>
 
@@ -5771,7 +5546,7 @@ Polecenie jest następujące:
     boże, daj odwagę na omówienie go! 
 <div class="paragraph"> </div>
 
-<a name="lab156"></a><h1 class="section">Dobre, złe i podejrzane typy induktywne</h1>
+<a name="lab157"></a><h1 class="section">Dobre, złe i podejrzane typy induktywne</h1>
 
 <div class="paragraph"> </div>
 
@@ -5789,7 +5564,7 @@ Polecenie jest następujące:
     dwa powody, przez które złe typy induktywne są złe. 
 <div class="paragraph"> </div>
 
-<a name="lab157"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
+<a name="lab158"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
 
 <div class="paragraph"> </div>
 
@@ -5913,7 +5688,7 @@ Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
     paradoksów. 
 <div class="paragraph"> </div>
 
-<a name="lab158"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab159"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -5978,7 +5753,7 @@ Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
     typy induktywne to też wynalazek szatana. 
 <div class="paragraph"> </div>
 
-<a name="lab159"></a><h2 class="section">Twierdzenie Cantora</h2>
+<a name="lab160"></a><h2 class="section">Twierdzenie Cantora</h2>
 
 <div class="paragraph"> </div>
 
@@ -6094,7 +5869,7 @@ Funkcja <span class="inlinecode"><span class="id" title="var">isZero</span></spa
     innymi rodzajami funkcji. Tymczasem ćwiczenie: 
 <div class="paragraph"> </div>
 
-<a name="lab160"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab161"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6221,7 +5996,7 @@ Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
     błędne i nie istnieje żadna surjekcja z <span class="inlinecode"><span class="id" title="var">nat</span></span> w <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab161"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab162"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6292,7 +6067,7 @@ Uogólnienie jest dość banalne. Najpierw zastępujemy <span class="inlinecode
     jak poprzednio, przy czym zastępujemy użycie <span class="inlinecode"><span class="id" title="var">negb</span></span> przez <span class="inlinecode"><span class="id" title="var">modify</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab162"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab163"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6318,7 +6093,7 @@ Uogólnienie jest dość banalne. Najpierw zastępujemy <span class="inlinecode
 </div>
 
 <div class="doc">
-<a name="lab163"></a><h2 class="section">Twierdzenie Cantora jako młot na negatywność</h2>
+<a name="lab164"></a><h2 class="section">Twierdzenie Cantora jako młot na negatywność</h2>
 
 <div class="paragraph"> </div>
 
@@ -6446,7 +6221,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
     będziesz w stanie sam wykombinować, jak się z nimi uporać. 
 <div class="paragraph"> </div>
 
-<a name="lab164"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab165"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6481,7 +6256,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab165"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab166"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6514,7 +6289,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab166"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab167"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6553,7 +6328,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab167"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab168"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6581,7 +6356,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab168"></a><h2 class="section">Poradnik rozpoznawania negatywnych typów induktywnych</h2>
+<a name="lab169"></a><h2 class="section">Poradnik rozpoznawania negatywnych typów induktywnych</h2>
 
 <div class="paragraph"> </div>
 
@@ -6652,7 +6427,7 @@ Rodzaje nieszkodliwych typów argumentów widać na powyższym przykładzie.
     <span class="inlinecode"><span class="id" title="var">T0_ind</span></span>). 
 <div class="paragraph"> </div>
 
-<a name="lab169"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab170"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6740,7 +6515,7 @@ W powyższym przykładzie wystąpienie <span class="inlinecode"><span class="id"
     prowadzi do sprzeczności). 
 <div class="paragraph"> </div>
 
-<a name="lab170"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab171"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6763,7 +6538,7 @@ Policz niedobrość każdego wstąpienia <span class="inlinecode"><span class="
     lub ściśle pozytywny. 
 <div class="paragraph"> </div>
 
-<a name="lab171"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab172"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6825,7 +6600,7 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
 </div>
 
 <div class="doc">
-<a name="lab172"></a><h2 class="section">Kilka bonusowych pułapek</h2>
+<a name="lab173"></a><h2 class="section">Kilka bonusowych pułapek</h2>
 
 <div class="paragraph"> </div>
 
@@ -6873,7 +6648,7 @@ Jak widać, jeżeli zaaplikujemy <span class="inlinecode"><span class="id" title
     jeżeli wstawi się za nie coś niedobrego (<span class="inlinecode"><span class="id" title="var">F</span></span> <span class="inlinecode"><span class="id" title="var">T</span></span>). 
 <div class="paragraph"> </div>
 
-<a name="lab173"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab174"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6944,7 +6719,7 @@ Jak widać, definicja <span class="inlinecode"><span class="id" title="var">X</s
     jak i w konstruktorach typu <span class="inlinecode"><span class="id" title="var">Y</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab174"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab175"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6970,7 +6745,7 @@ Jak widać, definicja <span class="inlinecode"><span class="id" title="var">X</s
 </div>
 
 <div class="doc">
-<a name="lab175"></a><h2 class="section">Jeszcze więcej pułapek</h2>
+<a name="lab176"></a><h2 class="section">Jeszcze więcej pułapek</h2>
 
 <div class="paragraph"> </div>
 
@@ -7045,7 +6820,7 @@ Po ciężkich bojach, przez które przeszedłeś, aksjomatyczne kodowanie
     banalne uogólnienie. 
 <div class="paragraph"> </div>
 
-<a name="lab176"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab177"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -7101,7 +6876,7 @@ Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
     specjalnie wymagająca czy oświecająca. 
 <div class="paragraph"> </div>
 
-<a name="lab177"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab178"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7120,7 +6895,7 @@ Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
 </div>
 
 <div class="doc">
-<a name="lab178"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab179"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7709,7 +7484,7 @@ Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
     co możemy liczyć. 
 <div class="paragraph"> </div>
 
-<a name="lab179"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab180"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7731,7 +7506,7 @@ Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
 No, teraz to już na pewno wiemy wszystko... 
 <div class="paragraph"> </div>
 
-<a name="lab180"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab181"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7774,7 +7549,7 @@ No, teraz to już na pewno wiemy wszystko...
 </div>
 
 <div class="doc">
-<a name="lab181"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda</h2>
+<a name="lab182"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda</h2>
 
 <div class="paragraph"> </div>
 
@@ -7821,7 +7596,7 @@ No, teraz to już na pewno wiemy wszystko...
     nienależenie prowadzi do sprzeczności. 
 <div class="paragraph"> </div>
 
-<a name="lab182"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab183"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7857,7 +7632,7 @@ No, teraz to już na pewno wiemy wszystko...
     ćwiczeń. 
 <div class="paragraph"> </div>
 
-<a name="lab183"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab184"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7870,7 +7645,7 @@ No, teraz to już na pewno wiemy wszystko...
     lubią. Czy wujek Janusz lubi sam siebie? 
 <div class="paragraph"> </div>
 
-<a name="lab184"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab185"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -8008,7 +7783,7 @@ Powyższa induktywno-rekurencyjna definicja typu <span class="inlinecode"><span 
     będzie, jeżeli przemyślisz to wszystko w ramach ćwiczenia. 
 <div class="paragraph"> </div>
 
-<a name="lab185"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab186"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -8418,7 +8193,7 @@ Ponieważ <span class="inlinecode"><span class="id" title="var">bad</span></span
 </div>
 
 <div class="doc">
-<a name="lab186"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab187"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -8478,7 +8253,7 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a name="lab187"></a><h2 class="section">Pozytywne typy induktywne</h2>
+<a name="lab188"></a><h2 class="section">Pozytywne typy induktywne</h2>
 
 <div class="paragraph"> </div>
 
@@ -8849,7 +8624,7 @@ No i bum. Jak widać, pozytywne typy induktywne prowadzą do sprzeczności,
     <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i jego impredykatywnością. 
 <div class="paragraph"> </div>
 
-<a name="lab188"></a><h1 class="section">Podsumowanie</h1>
+<a name="lab189"></a><h1 class="section">Podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
