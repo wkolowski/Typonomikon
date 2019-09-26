@@ -2544,8 +2544,8 @@ Dowodzenie właściwości funkcji zdefiniowanych za pomocą <span class="inline
 
  Jakież to diabelstwo może być tak diabelskie, by przeciwstawić się
     metodzie induktywnej dziedziny oraz komendzie <span class="inlinecode"><span class="id" title="keyword">Function</span></span>? Ano ano,
-    rekursja zagnieżdżona. Wywołanie rekurencyjne jest zagnieżdżone,
-    jeżeli jego argumentem jest inne wywołanie rekurencyjne. 
+    rekursja zagnieżdżona - wywołanie rekurencyjne jest zagnieżdżone,
+    jeżeli jego argumentem jest wynik innego wywołania rekurencyjnego. 
 </div>
 <div class="code">
 
@@ -2554,11 +2554,11 @@ Dowodzenie właściwości funkcji zdefiniowanych za pomocą <span class="inline
 
 <br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">leb</span> 101 <span class="id" title="var">n</span> <span class="id" title="keyword">then</span> <span class="id" title="var">n</span> - 10 <span class="id" title="keyword">else</span> <span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">if</span> 100 &lt;? <span class="id" title="var">n</span> <span class="id" title="keyword">then</span> <span class="id" title="var">n</span> - 10 <span class="id" title="keyword">else</span> <span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)).<br/>
 
 <br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Function</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) {<span class="id" title="keyword">measure</span> <span class="id" title="var">id</span> <span class="id" title="var">n</span>} : <span class="id" title="var">nat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">leb</span> 101 <span class="id" title="var">n</span> <span class="id" title="keyword">then</span> <span class="id" title="var">n</span> - 10 <span class="id" title="keyword">else</span> <span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">if</span> 100 &lt;? <span class="id" title="var">n</span> <span class="id" title="keyword">then</span> <span class="id" title="var">n</span> - 10 <span class="id" title="keyword">else</span> <span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)).<br/>
 
 <br/>
 </div>
@@ -2567,8 +2567,7 @@ Dowodzenie właściwości funkcji zdefiniowanych za pomocą <span class="inline
 Ta funkcja jest podobna zupełnie do niczego, co dotychczas widzieliśmy.
     Działa ona następująco:
 <ul class="doclist">
-<li> jeżeli <span class="inlinecode"><span class="id" title="var">n</span></span> jest większe od <span class="inlinecode">100</span> (co wyrażamy za pomocą <span class="inlinecode"><span class="id" title="var">leb</span></span>
-      jako <span class="inlinecode"><span class="id" title="var">leb</span></span> <span class="inlinecode">101</span> <span class="inlinecode"><span class="id" title="var">n</span></span>), to zwróć <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-</span> <span class="inlinecode">10</span>
+<li> jeżeli <span class="inlinecode"><span class="id" title="var">n</span></span> jest większe od <span class="inlinecode">100</span>, to zwróć <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-</span> <span class="inlinecode">10</span>
 
 </li>
 <li> w przeciwnym wypadku wywołaj rekurencyjnie <span class="inlinecode"><span class="id" title="var">f</span></span> na <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11</span>, a następnie
@@ -2579,7 +2578,7 @@ Ta funkcja jest podobna zupełnie do niczego, co dotychczas widzieliśmy.
 <div class="paragraph"> </div>
 
  Taka rekursja jest oczywiście nielegalna: <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11</span> nie jest strukturalnym
-    podtermem <span class="inlinecode"><span class="id" title="var">n</span></span>, gdyż jest on niego większe, zaś <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span> w ogóle nie
+    podtermem <span class="inlinecode"><span class="id" title="var">n</span></span>, gdyż jest od niego większe, zaś <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span> w ogóle nie
     wiadomo a priori, jak się ma do <span class="inlinecode"><span class="id" title="var">n</span></span>. Nie dziwota więc, że Coq odrzuca
     powyższą definicję.
 
@@ -2592,8 +2591,8 @@ Ta funkcja jest podobna zupełnie do niczego, co dotychczas widzieliśmy.
 
 <div class="paragraph"> </div>
 
-    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">100</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">111)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">101</span> <span class="inlinecode">=</span> <span class="inlinecode">91</span> - poszło gładko. A co z <span class="inlinecode">99</span>? Mamy
-    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">99</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">110)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">100</span> <span class="inlinecode">=</span> <span class="inlinecode">91</span> - znowu 91, czyżby spiseg? Dalej:
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">100</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">111)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">101</span> <span class="inlinecode">=</span> <span class="inlinecode">101</span> <span class="inlinecode">-</span> <span class="inlinecode">10</span> <span class="inlinecode">=</span> <span class="inlinecode">91</span> - poszło gładko. A co z <span class="inlinecode">99</span>?
+    Mamy <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">99</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">110)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">100</span> <span class="inlinecode">=</span> <span class="inlinecode">91</span> - znowu 91, czyżby spiseg? Dalej:
     <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">98</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">109)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">99</span> <span class="inlinecode">=</span> <span class="inlinecode">91</span> - tak, to na pewno spiseg. Teraz możemy
     zwerbalizować nasze domysły: jeżeli <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;=</span> <span class="inlinecode">100</span>, to <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">91</span>. Jak
     widać, nieprzypadkowo funkcja ta bywa też nazywana "funkcją 91
@@ -2617,8 +2616,8 @@ Ehhh... nie tego się spodziewałeś, prawda? <span class="inlinecode"><span cl
     implementacją opisanej powyżej nieformalnie funkcji <span class="inlinecode"><span class="id" title="var">f</span></span>, ale definicja
     opiera się na tym, że z góry wiemy, jaki jest wynik <span class="inlinecode"><span class="id" title="var">f</span></span> dla dowolnego
     argumentu. Nie trzeba chyba tłumaczyć, że dla żadnej ciekawej funkcji
-    nie będziemy posiadać takiej wiedzy (a sama funkcja McCarthy'ego jest
-    sztuczna, ot co).
+    nie będziemy posiadać takiej wiedzy (a sama funkcja McCarthy'ego nie
+    jest ciekawa, bo jest sztuczna, ot co!).
 
 <div class="paragraph"> </div>
 
@@ -2636,6 +2635,8 @@ Ehhh... nie tego się spodziewałeś, prawda? <span class="inlinecode"><span cl
 &nbsp;&nbsp;| <span class="id" title="var">fD_le100</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= 100 -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fD</span> (<span class="id" title="var">n</span> + 11) -&gt; <span class="id" title="var">fD</span> (<span class="id" title="var">f</span> (<span class="id" title="var">n</span> + 11)) -&gt; <span class="id" title="var">fD</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
 <span class="comment">(*&nbsp;===&gt;&nbsp;The&nbsp;command&nbsp;has&nbsp;indeed&nbsp;failed&nbsp;with&nbsp;message:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;reference&nbsp;f&nbsp;was&nbsp;not&nbsp;found&nbsp;in&nbsp;the&nbsp;current&nbsp;environment.&nbsp;*)</span><br/>
 
@@ -2673,14 +2674,14 @@ A oto i źródło całego problemu. Jeżeli <span class="inlinecode"><span class
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">fG_gt100</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">fG</span> <span class="id" title="var">n</span> (<span class="id" title="var">n</span> - 10)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">fG_le100</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= 100 -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fG</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">r1</span> -&gt; <span class="id" title="var">fG</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> -&gt; <span class="id" title="var">fG</span> <span class="id" title="var">n</span> <span class="id" title="var">r2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= 100 -&gt; <span class="id" title="var">fG</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">r1</span> -&gt; <span class="id" title="var">fG</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> -&gt; <span class="id" title="var">fG</span> <span class="id" title="var">n</span> <span class="id" title="var">r2</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Tak wygląda wykres funkcji <span class="inlinecode"><span class="id" title="var">f</span></span>. Wywołanie rekurencyjne <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span>]
+Tak wygląda wykres funkcji <span class="inlinecode"><span class="id" title="var">f</span></span>. Wywołanie rekurencyjne <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span>
     możemy zareprezentować jako dwa argumenty, mianowicie <span class="inlinecode"><span class="id" title="var">fG</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span> <span class="inlinecode"><span class="id" title="var">r1</span></span>
     i <span class="inlinecode"><span class="id" title="var">fG</span></span> <span class="inlinecode"><span class="id" title="var">r1</span></span> <span class="inlinecode"><span class="id" title="var">r2</span></span>. Dosłownie odpowiada to wywołaniu rekurencyjnemu w stylu
     <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="var">r1</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="var">r2</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">r1</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">r2</span></span>. 
@@ -2707,8 +2708,8 @@ Tak wygląda wykres funkcji <span class="inlinecode"><span class="id" title="var
 </div>
 
 <div class="doc">
-Po zdefiniowaniu grafu dowodzimy, podobnie jak poprzednio, że jest on
-    relacją deterministyczną. 
+Po zdefiniowaniu wykresu dowodzimy, podobnie łatwo jak poprzednio, że
+    jest on relacją deterministyczną.
 </div>
 <div class="code">
 
@@ -2848,8 +2849,8 @@ Teraz następuje mały twist. Udowodnienie, że każdy argument spełnia
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">well_founded_ind</span> <span class="id" title="var">_</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> =&gt; 101 - <span class="id" title="var">n</span> &lt; 101 - <span class="id" title="var">m</span>)).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">wf_inverse_image</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">wf_lt</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">IH</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> <span class="id" title="var">n</span> 100).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">d</span> := (<span class="id" title="var">IH</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="keyword">ltac</span>:(<span class="id" title="tactic">abstract</span> <span class="id" title="tactic">omega</span>))). <span class="comment">(*;&nbsp;clearbody&nbsp;d.&nbsp;*)</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span> 2 <span class="id" title="keyword">with</span> (<span class="id" title="var">f'</span> <span class="id" title="var">d</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">d</span> : <span class="id" title="var">fD</span> (<span class="id" title="var">n</span> + 11)) <span class="id" title="tactic">by</span> (<span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>; <span class="id" title="tactic">omega</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">fD_le100</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">f'</span> <span class="id" title="var">d</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">f'_correct</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
@@ -2862,17 +2863,69 @@ Teraz następuje mały twist. Udowodnienie, że każdy argument spełnia
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Dowód jest przez indukcję dobrze ufundowaną po <span class="inlinecode"><span class="id" title="var">n</span></span>, a relacja dobrze
+    ufundowana, której używamy, to <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode">101</span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode">101</span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">m</span></span>.
+    Dlaczego akurat taka? Przypomnijmy sobie, jak dokładnie oblicza się
+    funkcja <span class="inlinecode"><span class="id" title="var">f</span></span>, np. dla <span class="inlinecode">95</span>:
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">95</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">106)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">96</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">107)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">97</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">108)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">98</span> <span class="inlinecode">=</span>
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">109)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">99</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">110)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">100</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode">111)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">101</span> <span class="inlinecode">=</span> <span class="inlinecode">91</span>.
+
+<div class="paragraph"> </div>
+
+    Jak więc widać, im dalej w las, tym bardziej zbliżamy się do magicznej
+    liczby <span class="inlinecode">101</span>. Wyrażenie <span class="inlinecode">101</span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">n</span></span> mówi nam, jak blisko przekroczenia
+    <span class="inlinecode">101</span> jesteśmy, a więc <span class="inlinecode">101</span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode">101</span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">m</span></span> oznacza, że każde wywołanie
+    rekurencyjne musi być bliżej <span class="inlinecode">101</span> niż poprzednie wywołanie. Oczywiście
+    zamiast <span class="inlinecode">101</span> może być dowolna większa liczba - jeżeli zbliżamy się do
+    <span class="inlinecode">101</span>, to zbliżamy się także do <span class="inlinecode">1234567890</span>.
+
+<div class="paragraph"> </div>
+
+    Dowód dobrego ufundowania jest banalny, ale tylko pod warunkiem, że
+    zrobiłeś wcześniej odpowiednie ćwiczenie. Jeszcze jedna uwaga: jak
+    wymyślić relację dobrze ufundowaną, jeżeli jest nam potrzebna przy
+    dowodzie takim jak ten? Mógłbym ci tutaj naopowiadać frazesów o...
+    w sumie nie wiem o czym, ale prawda jest taka, że nie wiem, jak się
+    je wymyśla. Tej powyższej wcale nie wymyśliłem sam - znalazłem ją w
+    świerszczyku dla bystrzaków.
+
+<div class="paragraph"> </div>
+
+    Dobra, teraz właściwa część dowodu. Zaczynamy od analizy przypadków.
+    Drugi przypadek, gdy <span class="inlinecode">100</span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span>, jest bardzo łatwy. W pierwszym zaś
+    przypadku z hipotezy indukcyjnej dostajemy <span class="inlinecode"><span class="id" title="var">fD</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11)</span>, tzn.
+    <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">11</span> należy do dziedziny. Skoro tak, to używamy konstruktora
+    <span class="inlinecode"><span class="id" title="var">fD_le100</span></span>, a jako <span class="inlinecode"><span class="id" title="var">r</span></span> (czyli wynik wywołania rekurencyjnego) dajemy
+    mu <span class="inlinecode"><span class="id" title="var">f'</span></span> <span class="inlinecode"><span class="id" title="var">d</span></span>.
+
+<div class="paragraph"> </div>
+
+    Dwa podcele zachodzą na mocy założenia, a jedna wynika z twierdzenia
+    o poprawności. Pozostaje nam zatem pokazać, że <span class="inlinecode"><span class="id" title="var">f'</span></span> <span class="inlinecode"><span class="id" title="var">d</span></span> także należy do
+    dziedziny. W tym celu po raz kolejny używamy hipotezy indukcyjnej. Na
+    zakończenie robimy analizę przypadków po <span class="inlinecode"><span class="id" title="var">d</span></span>, używamy charakteryzacji
+    <span class="inlinecode"><span class="id" title="var">f'</span></span> do uproszczenia celu i kończymy rozumowaniami arytmetycznymi. 
+</div>
+<div class="code">
+
+<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> := <span class="id" title="var">f'</span> (<span class="id" title="var">fD_all</span> <span class="id" title="var">n</span>).<br/>
 
 <br/>
-<span class="id" title="var">Fail</span> <span class="id" title="var">Timeout</span> 1 <span class="id" title="keyword">Compute</span> <span class="id" title="var">f</span> 101.<br/>
+<span class="comment">(*&nbsp;Compute&nbsp;f&nbsp;101.&nbsp;*)</span><br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Niestety, funkcja się nie oblicza i nie wiem nawet dlaczego. Być może
-    jest za dużo wywołań rekurencyjnych. 
+Teraz możemy zdefiniować oryginalne <span class="inlinecode"><span class="id" title="var">f</span></span>. Niestety, funkcja <span class="inlinecode"><span class="id" title="var">f</span></span> się nie
+    oblicza i nie wiem nawet dlaczego. 
 </div>
 <div class="code">
 
@@ -2954,8 +3007,19 @@ Reguły indukcji wykresowej dowodzimy tak samo jak poprzednio, czyli za
 </div>
 
 <div class="doc">
-Równanie rekurencyjne najprościej jest udowodnić za pomocą właściwości
-    grafu funkcji <span class="inlinecode"><span class="id" title="var">f</span></span>. 
+Na koniec również mały twist, gdyż równanie rekurencyjne najprościej jest
+    udowodnić za pomocą właściwości wykresu funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> - jeśli nie wierzysz,
+    to sprawdź (ale będzie to bardzo bolesne sprawdzenie).
+
+<div class="paragraph"> </div>
+
+    Podsumowując: zarówno oryginalna metoda induktywnej dziedziny jak i
+    komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span> nie radzą sobie z zagnieżdżonymi wywołaniami
+    rekurencyjmi, czyli takimi, w których argumentem jest wynik innego
+    wywołania rekurencyjnego. Możemy jednak poradzić sobie z tym problemem
+    za pomocą ulepszonej metody induktywnej dziedziny, w której funkcję w
+    definicji predykatu dziedziny reprezentujemy za pomocą jej induktywnie
+    zdefiniowanego wykresu. 
 <div class="paragraph"> </div>
 
 <a name="lab225"></a><h4 class="section">Ćwiczenie</h4>

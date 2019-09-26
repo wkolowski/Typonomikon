@@ -2520,26 +2520,25 @@ End rotn_Function.
 
 (** Jakież to diabelstwo może być tak diabelskie, by przeciwstawić się
     metodzie induktywnej dziedziny oraz komendzie [Function]? Ano ano,
-    rekursja zagnieżdżona. Wywołanie rekurencyjne jest zagnieżdżone,
-    jeżeli jego argumentem jest inne wywołanie rekurencyjne. *)
+    rekursja zagnieżdżona - wywołanie rekurencyjne jest zagnieżdżone,
+    jeżeli jego argumentem jest wynik innego wywołania rekurencyjnego. *)
 
 Module McCarthy.
 
 Fail Fixpoint f (n : nat) : nat :=
-  if leb 101 n then n - 10 else f (f (n + 11)).
+  if 100 <? n then n - 10 else f (f (n + 11)).
 
 Fail Function f (n : nat) {measure id n} : nat :=
-  if leb 101 n then n - 10 else f (f (n + 11)).
+  if 100 <? n then n - 10 else f (f (n + 11)).
 
 (** Ta funkcja jest podobna zupełnie do niczego, co dotychczas widzieliśmy.
     Działa ona następująco:
-    - jeżeli [n] jest większe od [100] (co wyrażamy za pomocą [leb]
-      jako [leb 101 n]), to zwróć [n - 10]
+    - jeżeli [n] jest większe od [100], to zwróć [n - 10]
     - w przeciwnym wypadku wywołaj rekurencyjnie [f] na [n + 11], a następnie
       wywołaj [f] na wyniku tamtego wywołania. *)
 
 (** Taka rekursja jest oczywiście nielegalna: [n + 11] nie jest strukturalnym
-    podtermem [n], gdyż jest on niego większe, zaś [f (n + 11)] w ogóle nie
+    podtermem [n], gdyż jest od niego większe, zaś [f (n + 11)] w ogóle nie
     wiadomo a priori, jak się ma do [n]. Nie dziwota więc, że Coq odrzuca
     powyższą definicję.
 
@@ -2548,8 +2547,8 @@ Fail Function f (n : nat) {measure id n} : nat :=
     zachowująca się zgodnie z zawartym w definicji równaniem. Żebyśmy mogli
     w to uwierzyć, zastanówmy się, ile wynosi [f 100].
 
-    [f 100 = f (f 111) = f 101 = 91] - poszło gładko. A co z [99]? Mamy
-    [f 99 = f (f 110) = f 100 = 91] - znowu 91, czyżby spiseg? Dalej:
+    [f 100 = f (f 111) = f 101 = 101 - 10 = 91] - poszło gładko. A co z [99]?
+    Mamy [f 99 = f (f 110) = f 100 = 91] - znowu 91, czyżby spiseg? Dalej:
     [f 98 = f (f 109) = f 99 = 91] - tak, to na pewno spiseg. Teraz możemy
     zwerbalizować nasze domysły: jeżeli [n <= 100], to [f n = 91]. Jak
     widać, nieprzypadkowo funkcja ta bywa też nazywana "funkcją 91
@@ -2564,8 +2563,8 @@ Definition f_troll (n : nat) : nat :=
     implementacją opisanej powyżej nieformalnie funkcji [f], ale definicja
     opiera się na tym, że z góry wiemy, jaki jest wynik [f] dla dowolnego
     argumentu. Nie trzeba chyba tłumaczyć, że dla żadnej ciekawej funkcji
-    nie będziemy posiadać takiej wiedzy (a sama funkcja McCarthy'ego jest
-    sztuczna, ot co).
+    nie będziemy posiadać takiej wiedzy (a sama funkcja McCarthy'ego nie
+    jest ciekawa, bo jest sztuczna, ot co!).
 
     Czy więc da się zaimplementować [f] bezpośrednio, tzn. w sposób dokładnie
     oddający definicję nieformalną? Otóż tak, da się i to w sumie niewielkim
@@ -2578,6 +2577,7 @@ Fail Inductive fD : nat -> Type :=
   | fD_le100 :
       forall n : nat, n <= 100 ->
         fD (n + 11) -> fD (f (n + 11)) -> fD n.
+
 (* ===> The command has indeed failed with message:
         The reference f was not found in the current environment. *)
 
@@ -2602,10 +2602,10 @@ Inductive fG : nat -> nat -> Prop :=
     | fG_gt100 :
         forall n : nat, 100 < n -> fG n (n - 10)
     | fG_le100 :
-        forall n r1 r2 : nat, n <= 100 ->
-          fG (n + 11) r1 -> fG r1 r2 -> fG n r2.
+        forall n r1 r2 : nat,
+          n <= 100 -> fG (n + 11) r1 -> fG r1 r2 -> fG n r2.
 
-(** Tak wygląda wykres funkcji [f]. Wywołanie rekurencyjne [f (f (n + 11)]]
+(** Tak wygląda wykres funkcji [f]. Wywołanie rekurencyjne [f (f (n + 11)]
     możemy zareprezentować jako dwa argumenty, mianowicie [fG (n + 11) r1]
     i [fG r1 r2]. Dosłownie odpowiada to wywołaniu rekurencyjnemu w stylu
     [let r1 := f (n + 11) in let r2 := f r1 in r2]. *)
@@ -2625,8 +2625,8 @@ Proof.
         apply (IHfG2 _ H4).
 Defined.
 
-(** Po zdefiniowaniu grafu dowodzimy, podobnie jak poprzednio, że jest on
-    relacją deterministyczną. *)
+(** Po zdefiniowaniu wykresu dowodzimy, podobnie łatwo jak poprzednio, że
+    jest on relacją deterministyczną.*)
 
 Inductive fD : nat -> Type :=
     | fD_gt100 :
@@ -2726,8 +2726,8 @@ Proof.
   apply (well_founded_ind _ (fun n m => 101 - n < 101 - m)).
     apply wf_inverse_image. apply wf_lt.
     intros n IH. destruct (le_lt_dec n 100).
-      pose (d := (IH (n + 11) ltac:(abstract omega))). (*; clearbody d. *)
-        constructor 2 with (f' d).
+      assert (d : fD (n + 11)) by (apply IH; omega).
+        apply fD_le100 with (f' d).
           assumption.
           apply f'_correct.
           assumption.
@@ -2739,12 +2739,48 @@ Proof.
       constructor. assumption.
 Defined.
 
+(** Dowód jest przez indukcję dobrze ufundowaną po [n], a relacja dobrze
+    ufundowana, której używamy, to [fun n m : nat => 101 - n < 101 - m].
+    Dlaczego akurat taka? Przypomnijmy sobie, jak dokładnie oblicza się
+    funkcja [f], np. dla [95]:
+
+    [f 95 = f (f 106) = f 96 = f (f 107) = f 97 = f (f 108) = f 98 =
+    f (f 109) = f 99 = f (f 110) = f 100 = f (f 111) = f 101 = 91].
+
+    Jak więc widać, im dalej w las, tym bardziej zbliżamy się do magicznej
+    liczby [101]. Wyrażenie [101 - n] mówi nam, jak blisko przekroczenia
+    [101] jesteśmy, a więc [101 - n < 101 - m] oznacza, że każde wywołanie
+    rekurencyjne musi być bliżej [101] niż poprzednie wywołanie. Oczywiście
+    zamiast [101] może być dowolna większa liczba - jeżeli zbliżamy się do
+    [101], to zbliżamy się także do [1234567890].
+
+    Dowód dobrego ufundowania jest banalny, ale tylko pod warunkiem, że
+    zrobiłeś wcześniej odpowiednie ćwiczenie. Jeszcze jedna uwaga: jak
+    wymyślić relację dobrze ufundowaną, jeżeli jest nam potrzebna przy
+    dowodzie takim jak ten? Mógłbym ci tutaj naopowiadać frazesów o...
+    w sumie nie wiem o czym, ale prawda jest taka, że nie wiem, jak się
+    je wymyśla. Tej powyższej wcale nie wymyśliłem sam - znalazłem ją w
+    świerszczyku dla bystrzaków.
+
+    Dobra, teraz właściwa część dowodu. Zaczynamy od analizy przypadków.
+    Drugi przypadek, gdy [100 < n], jest bardzo łatwy. W pierwszym zaś
+    przypadku z hipotezy indukcyjnej dostajemy [fD (n + 11)], tzn.
+    [n + 11] należy do dziedziny. Skoro tak, to używamy konstruktora
+    [fD_le100], a jako [r] (czyli wynik wywołania rekurencyjnego) dajemy
+    mu [f' d].
+
+    Dwa podcele zachodzą na mocy założenia, a jedna wynika z twierdzenia
+    o poprawności. Pozostaje nam zatem pokazać, że [f' d] także należy do
+    dziedziny. W tym celu po raz kolejny używamy hipotezy indukcyjnej. Na
+    zakończenie robimy analizę przypadków po [d], używamy charakteryzacji
+    [f'] do uproszczenia celu i kończymy rozumowaniami arytmetycznymi. *)
+
 Definition f (n : nat) : nat := f' (fD_all n).
 
-Fail Timeout 1 Compute f 101.
+(* Compute f 101. *)
 
-(** Niestety, funkcja się nie oblicza i nie wiem nawet dlaczego. Być może
-    jest za dużo wywołań rekurencyjnych. *)
+(** Teraz możemy zdefiniować oryginalne [f]. Niestety, funkcja [f] się nie
+    oblicza i nie wiem nawet dlaczego. *)
 
 Lemma f_correct :
   forall n : nat, fG n (f n).
@@ -2803,8 +2839,17 @@ Proof.
         apply f_correct.
 Qed.
 
-(** Równanie rekurencyjne najprościej jest udowodnić za pomocą właściwości
-    grafu funkcji [f]. *)
+(** Na koniec również mały twist, gdyż równanie rekurencyjne najprościej jest
+    udowodnić za pomocą właściwości wykresu funkcji [f] - jeśli nie wierzysz,
+    to sprawdź (ale będzie to bardzo bolesne sprawdzenie).
+
+    Podsumowując: zarówno oryginalna metoda induktywnej dziedziny jak i
+    komenda [Function] nie radzą sobie z zagnieżdżonymi wywołaniami
+    rekurencyjmi, czyli takimi, w których argumentem jest wynik innego
+    wywołania rekurencyjnego. Możemy jednak poradzić sobie z tym problemem
+    za pomocą ulepszonej metody induktywnej dziedziny, w której funkcję w
+    definicji predykatu dziedziny reprezentujemy za pomocą jej induktywnie
+    zdefiniowanego wykresu. *)
 
 (** **** Ćwiczenie *)
 
