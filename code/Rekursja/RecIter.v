@@ -1,9 +1,21 @@
+(** * Rekursja przez iterację (TODO) *)
+
 Require Import Omega.
 
 Require Import List.
 Import ListNotations.
 
 Require Export Nat.
+
+Require Import FunctionalExtensionality.
+
+Definition collatzF (f : nat -> list nat) (n : nat) : list nat :=
+match n with
+    | 0 | 1 => [n]
+    | _ => n :: if even n then f (div2 n) else f (1 + 3 * n)
+end.
+
+Module bad_div.
 
 Definition divF (f : nat -> forall k : nat, 0 < k -> nat)
   (n k : nat) (H : 0 < k) : nat :=
@@ -36,8 +48,6 @@ Defined.
 Definition div (n k : nat) (H : 0 < k) : nat :=
   proj1_sig (divF_terminates n k H).
 
-Require Import FunctionalExtensionality.
-
 Theorem div_fix : div = divF div.
 Proof.
 Admitted.
@@ -48,6 +58,53 @@ Lemma div_equation :
     if le_lt_dec k n then S (div (n - k) k H) else 0.
 Proof.
 Admitted.
+
+End bad_div.
+
+Module good_div.
+Check iter.
+
+Compute iter 10 S 1.
+Fixpoint iter {A : Type} (n : nat) (f : A -> A) (x : A) : A :=
+match n with
+    | 0 => x
+    | S n' => iter n' f (f x)
+end.
+
+Compute iter 10 S 1.
+
+
+
+Inductive divG : nat -> nat -> nat -> Prop :=
+  | divG_0 : forall n m : nat, n < S m -> divG n m 0
+  | divG_1 : forall n m r : nat,
+               n >= S m -> divG (n - S m) m r -> divG n m (S r).
+
+Definition divF (div : nat -> nat -> nat) (n m : nat) : nat :=
+  if n <? S m then 0 else S (div (n - S m) m).
+
+Require Import Omega.
+
+Theorem divF_terminates :
+  forall n m : nat,
+    {r : nat | exists fuel : nat,
+      forall (more : nat) (f : nat -> nat -> nat),
+        iter (fuel + more) divF f n m = r}.
+Proof.
+  apply (@well_founded_induction_type _ _ lt_wf (fun _ => forall m, _)).
+  intros n IH m.
+  case_eq (ltb n (S m)); intro.
+    exists 0. exists 1. cbn. induction more; cbn; intros.
+      unfold divF. rewrite H. reflexivity.
+      apply IHmore.
+    apply leb_complete_conv in H.
+      destruct (IH (n - S m) ltac:(abstract omega) m) as (r & IH').
+      exists (S r). destruct IH' as [fuel IH'].
+      exists (S fuel). intros. cbn.
+Abort.
+
+End good_div.
+
 
 Definition fac_F (f : nat -> nat) (n : nat) : nat :=
 match n with

@@ -2964,230 +2964,311 @@ Proof.
     apply gG_correct.
 Qed.
 
+(* end hide *)
+
 End McCarthy.
 
 (** * Metoda induktywno-rekurencyjnej dziedziny *)
 
+(** Zapoznawszy się z metodą induktywnej dziedziny i jej ulepszoną wersją,
+    która potrafi poskromić nawet rekursję zagnieżdżoną, dobrze byłoby na
+    koniec podumać sobie trochę, co by było gdyby... Coq raczył wspierać
+    indukcję-rekursję?
+
+    Ano, trochę ułatwiłoby to nasze nędzne życie, gdyż metoda induktywnej
+    dziedziny przepoczwarzyłaby się w metodę induktywno-rekurencyjnej
+    dziedziny: dzięki indukcji-rekursji moglibyśmy jednocześnie zdefiniować
+    funkcję (nawet taką, w której jest rekursja zagnieżdżona) jednocześnie
+    z jej predykatem dziedziny, co oszczędziłoby nam nieco pisania.
+
+    Zobaczmy, jak to wygląda na przykładzie funkcji McCarthy'ego. Ponieważ
+    Coq jednak nie wspiera indukcji-rekursji, będziemy musieli użyć kodowania
+    aksjomatycznego, co zapewne nieco umniejszy atrakcyjności tej metody. *)
+
 Module McCarthy'.
 
 (*
-Inductive D : nat -> Type :=
-    | D_gt100 : forall n : nat, 100 < n -> D n
-    | D_le100 :
+Inductive fD : nat -> Type :=
+    | fD_gt100 : forall n : nat, 100 < n -> fD n
+    | fD_le100 :
         forall n : nat, n <= 100 ->
-          forall d : D (n + 11), D (f (n + 11) d) -> D n
+          forall d : fD (n + 11), fD (f (n + 11) d) -> fD n
 
-with Fixpoint f_aux (n : nat) (d : D n) : nat :=
+with Fixpoint f' (n : nat) (d : fD n) : nat :=
 match d with
-    | D_gt100 n H => n - 10
-    | D_le100 n H d1 d2 => f_aux (f_aux (n + 11) d1) d2
+    | fD_gt100 n H => n - 10
+    | fD_le100 n H d1 d2 => f' (f' (n + 11) d1) d2
 end.
 *)
 
-(** [D : nat -> Type] to predykat dziedziny. Ma on być zdefiniowany tak,
-    żeby każdy element dziedziny oryginalnej funkcji go spełniał i żeby
-    rekursja strukturalna po dowodzie [D n] odpowiadała rekursji w
-    oryginalnej definicji funkcji.
-
-    Uwaga nazewniczna: uparcie nazywam [D] predykatem, mimo że jest ono
-    typu [nat -> Type], czyli rodziną typów. Jest tak, gdyż w bardziej
-    zaawansowanej wersji metody Bove-Capretta [D] faktycznie byłoby typu
-    [nat -> Prop], ale my ułatwimy sobie życie, powołując się na prostotę
-    prezentacji.
-
-    Mamy więc dwa konstruktory: [D_gt100] odpowiada za przypadek [100 < n]
-    i głosi po prostu, że każde [n : nat] spełniające ten warunek należy
-    do dziedziny - nie ma tu żadnych argumentów rekurencyjnych, bo jest to
-    przypadek bazowy, w którym funkcja ma zwracać [n - 10].
-
-    Konstruktor [D_le100] odpowiada przypadkowi [n <= 100]. Mówi on, że
-    [n : nat] spełniające ten warunek należy do dziedziny pod warunkiem,
-    że [n + 11] oraz [f_aux (n + 11)] także należą do dziedziny. Umożliwi to
-    w definicji [f] zrobienie dwóch wywołań rekurencyjnych na tych właśnie
-    argumentach.
-
-    Jednocześnie z predykatem dziedziny [D] zdefiniowana jest funkcja [f].
-    Zamiast [nat -> nat], jak oryginalna funkcja McCarthy'ego, jest ona
-    typu [forall n : nat, D n -> nat]. Zdefiniowana jest natomiast przez
-    rekursję strukturalną po [D n]: konstruktor [D_gt100] to koniec rekursji
-    i wynik równy [n - 10], zaś [D_le100] to dwa wywołania rekurencyjne.
-    W tej wersji argumentami nie są jednak [n + 11] i [f_aux (n + 11)], tylko
-    [d1] i [d2], czyli dowody na to, że [n + 11] oraz [f_aux (n + 11)] należą
-    do dziedziny funkcji [f]. Dzięki temu rekursja jest strukturalna. *)
+(** Tak wyglądałoby induktywno-rekurencyjna definicja zmodyfikowanej funkcji
+    [f'] wraz z jej dziedziną. Ponieważ w definicji [fD] możemy napisać po
+    prostu [fD (f (n + 11) d)], wykres nie jest nam do niczego potrzebny.
+    Definicja funkcji wygląda dokładnie tak samo jak ostatnio. *)
 
 Variables
-  (D : nat -> Type)
-  (f_aux : forall n : nat, D n -> nat)
-  (D_gt100 : forall n : nat, 100 < n -> D n)
-  (D_le100 :
+  (fD : nat -> Type)
+  (f' : forall n : nat, fD n -> nat)
+  (fD_gt100 : forall n : nat, 100 < n -> fD n)
+  (fD_le100 :
     forall n : nat, n <= 100 ->
-      forall d : D (n + 11), D (f_aux (n + 11) d) -> D n)
-  (f_gt100 :
-    forall (n : nat) (H : 100 < n), f_aux n (D_gt100 n H) = n - 10)
-  (f_le100 :
+      forall d : fD (n + 11), fD (f' (n + 11) d) -> fD n)
+  (f'_eq1 :
+    forall (n : nat) (H : 100 < n), f' n (fD_gt100 n H) = n - 10)
+  (f'_eq2 :
     forall
       (n : nat) (H : n <= 100)
-      (d1 : D (n + 11)) (d2 : D (f_aux (n + 11) d1)),
-        f_aux n (D_le100 n H d1 d2) = f_aux (f_aux (n + 11) d1) d2)
-  (ind :
+      (d1 : fD (n + 11)) (d2 : fD (f' (n + 11) d1)),
+        f' n (fD_le100 n H d1 d2) = f' (f' (n + 11) d1) d2)
+  (fD_ind :
     forall
-      (P : forall n : nat, D n -> Type)
+      (P : forall n : nat, fD n -> Type)
       (P_gt100 :
         forall (n : nat) (H : 100 < n),
-          P n (D_gt100 n H))
+          P n (fD_gt100 n H))
       (P_le100 :
         forall
           (n : nat) (H : n <= 100)
-          (d1 : D (n + 11)) (d2 : D (f_aux (n + 11) d1)),
-            P (n + 11) d1 -> P (f_aux (n + 11) d1) d2 ->
-              P n (D_le100 n H d1 d2)),
-      {g : forall (n : nat) (d : D n), P n d |
+          (d1 : fD (n + 11)) (d2 : fD (f' (n + 11) d1)),
+            P (n + 11) d1 -> P (f' (n + 11) d1) d2 ->
+              P n (fD_le100 n H d1 d2)),
+      {g : forall (n : nat) (d : fD n), P n d |
         (forall (n : nat) (H : 100 < n),
-          g n (D_gt100 n H) = P_gt100 n H) /\
+          g n (fD_gt100 n H) = P_gt100 n H) /\
         (forall
           (n : nat) (H : n <= 100)
-          (d1 : D (n + 11)) (d2 : D (f_aux (n + 11) d1)),
-            g n (D_le100 n H d1 d2) =
+          (d1 : fD (n + 11)) (d2 : fD (f' (n + 11) d1)),
+            g n (fD_le100 n H d1 d2) =
             P_le100 n H d1 d2
               (g (n + 11) d1)
-              (g (f_aux (n + 11) d1) d2))
+              (g (f' (n + 11) d1) d2))
       }).
 
-(** Aksjomatyczna reprezentacja tej definicji działa podobnie jak poprzednio:
-    najpierw deklarujemy [D], potem [f], potem konstruktory [D], potem
-    równania definiujące [f], a na samym końcu regułę indukcji.
+(** Aksjomatyczne kodowanie tej definicji działa tak, jak nauczyliśmy się
+    w poprzednim rozdziale: najpierw deklarujemy [fD], potem [f], potem
+    konstruktory [fD], potem równania definiujące [f], a na samym końcu
+    regułę indukcji.
 
-    Reguła indukcji powstaje analogicznie jak dla [slist]. Definiujemy tylko
-    jedną rodzinę typów [D], więc reguła da nam tylko jedną funkcję, [g],
-    o typie [forall (n : nat) (d : D n), P n d], gdzie
-    [P : forall n : nat, D n -> Type] reprezentuje przeciwdziedzinę [g].
+    Reguła indukcji powstaje analogicznie jak dla [slist] z poprzedniego
+    rozdziału. Definiujemy tylko jedną rodzinę typów [fD], więc reguła
+    da nam tylko jedną funkcję, [g], o typie [forall (n : nat) (d : fD n),
+    P n d], gdzie [P : forall n : nat, fD n -> Type] reprezentuje
+    przeciwdziedzinę [g].
+
     Mamy dwa przypadki: nieindukcyjny [P_gt100] odpowiadający konstruktorowi
-    [D_gt100] oraz [P_le100] odpowiadający za [D_le100], w którym mamy do
+    [fD_gt100] oraz [P_le100] odpowiadający za [fD_le100], w którym mamy do
     dyspozycji dwie hipotezy indukcyjne. Otrzymana z reguły funkcja spełnia
-    oczekiwane równania.
+    oczekiwane równania. *)
 
-    Przekonajmy się, że taka aksjomatyzacja jakoś działa. *)
-
-Lemma D_inv :
-  forall (n : nat) (d : D n),
-    {H : 100 < n | d = D_gt100 n H} +
+Lemma fD_inv :
+  forall (n : nat) (d : fD n),
+    {H : 100 < n | d = fD_gt100 n H} +
     {H : n <= 100 &
-      {d1 : D (n + 11) &
-      {d2 : D (f_aux (n + 11) d1) | d = D_le100 n H d1 d2}}}.
+      {d1 : fD (n + 11) &
+      {d2 : fD (f' (n + 11) d1) | d = fD_le100 n H d1 d2}}}.
 Proof.
-  apply ind.
+  apply fD_ind.
     intros. left. exists H. reflexivity.
     intros. right. exists H, d1, d2. reflexivity.
 Defined.
 
-(** Będziemy też chcieli używać [inversion] na hipotezach postaci [D n],
-    ale [D] nie jest induktywne (tylko aksjomatyczne), więc musimy
+(** Będziemy też chcieli używać [inversion] na hipotezach postaci [fD n],
+    ale [fD] nie jest induktywne (tylko aksjomatyczne), więc musimy
     pożądaną przez nas inwersję zamknąć w lemat. Dowodzimy go oczywiście
     za pomocą reguły indukcji. *)
 
 Lemma f_spec :
-  forall (n : nat) (d : D n),
-    n <= 100 -> f_aux n d = 91.
+  forall (n : nat) (d : fD n),
+    n <= 100 -> f' n d = 91.
 Proof.
-  apply (ind (fun n d => n <= 100 -> f_aux n d = 91)).
+  apply (fD_ind (fun n d => n <= 100 -> f' n d = 91)).
     intros n H H'. omega.
     intros n H d1 d2 IH1 IH2 _.
-      (* Tutaj używamy inwersji. *)
-      destruct (D_inv _ d1) as
-        [[H' eq] | (H' & d1' & d2' & eq)].
-        destruct (D_inv _ d2) as
-          [[H'' eq'] | (H'' & d1'' & d2'' & eq')].
-          rewrite f_le100, eq', f_gt100, eq, f_gt100 in *.
-            clear IH1 eq eq' H' H''.
-            (* n = 100 i wtedy 100 + 11 - 10 - 10 = 111 - 20 = 91
-               albo n < 100 i wtedy n + 11 - 10 = n + 1 <= 100 i cel
-               wynika z IH2. omega potrafi arytmetykę :) *)
-            omega.
-          rewrite f_le100. apply IH2. assumption.
-        rewrite f_le100. apply IH2. rewrite IH1.
+      destruct (fD_inv _ d1) as
+            [[H' eq] | (H' & d1' & d2' & eq)].
+        destruct (fD_inv _ d2) as
+              [[H'' eq'] | (H'' & d1'' & d2'' & eq')].
+          rewrite f'_eq2, eq', f'_eq1, eq, f'_eq1 in *.
+            clear IH1 eq eq' H' H''. omega.
+          rewrite f'_eq2. apply IH2. assumption.
+        rewrite f'_eq2. apply IH2. rewrite IH1.
           omega.
           assumption.
 Qed.
 
-(** Możemy też udowodnić naszą wcześniejszą obserwację. Dowód ponownie jest
-    dość prosty: najpierw używamy indukcji, a potem naszego inwersjowego
-    lematu na hipotezach postaci [D _ _]. W kluczowych momentach obliczamy
+(** Możemy też udowodnić charakteryzację funkcji [f]. Dowód wygląda dużo
+    groźniej niż ostatnio, ale to wszystko wina narzutu związanego z
+    aksjomatycznym kodowaniem.
+
+    Dowód idzie tak: najpierw używamy indukcji, a potem naszego inwersjowego
+    lematu na hipotezach postaci [fD _ _]. W kluczowych momentach obliczamy
     funkcję [f] za pomocą definiujących ją równań oraz posługujemy się
     taktyką [omega] do przemielenia oczywistych, ale skomplikowanych
     formalnie faktów z zakresu arytmetyki liczb naturalnych. *)
 
-Lemma D_all :
-  forall n : nat, D n.
+Lemma fD_all :
+  forall n : nat, fD n.
 Proof.
   apply (well_founded_ind _ (fun n m => 101 - n < 101 - m)).
     apply wf_inverse_image. apply wf_lt.
     intros n IH. destruct (le_lt_dec n 100).
-      pose (d := (IH (n + 11) ltac:(omega))); clearbody d.
-        apply D_le100 with d.
+      assert (d : fD (n + 11)) by (apply IH; omega).
+        apply fD_le100 with d.
           assumption.
-          apply IH. destruct (D_inv _ d) as [[H eq] | [H _]].
-            rewrite eq, f_gt100. omega.
+          apply IH. destruct (fD_inv _ d) as [[H eq] | [H _]].
+            rewrite eq, f'_eq1. omega.
             rewrite f_spec.
               omega.
               assumption.
-      apply D_gt100. assumption.
+      apply fD_gt100. assumption.
 Qed.
 
-Definition f (n : nat) : nat := f_aux n (D_all n).
+(** Dowód tego, że wszystkie argumenty spełniają predykat dziedziny, jest
+    taki sam jak ostatnio. Jedyna różnica jest taka, że zamiast [inversion]
+    musimy ręcznie aplikować [fD_inv]. *)
+
+Definition f (n : nat) : nat := f' n (fD_all n).
+
+Compute f 42.
+(* ===> = f' 42 (fD_all 42) : nat *)
+
+(** Mając [f'] oraz dowód [fD_all] możemy zdefiniować [f], które niestety
+    się nie oblicza, gdyż [f'] jest dane aksjomatycznie. *)
+
+Lemma f'_ext :
+  forall (n : nat) (d1 d2 : fD n),
+    f' n d1 = f' n d2.
+Proof.
+  apply (fD_ind (fun _ d1 => forall d2, _)); intros.
+    rewrite f'_eq1. destruct (fD_inv _ d2) as [[H' eq] | [H' _]].
+      rewrite eq, f'_eq1. reflexivity.
+      omega.
+    rewrite f'_eq2. destruct (fD_inv _ d0) as [[H' eq] | (H' & d1' & d2' & eq)].
+      omega.
+      subst. rewrite f'_eq2. specialize (H0 d1').
+        destruct H0. apply H1.
+Qed.
+
+(** Żeby udowodnić regułę indukcyjną, potrzebny nam będzie lemat mówiacy,
+    że konkretny dowód tego, że [n] spełnia predykat dziedziny [fD], nie
+    wpływa na wynik obliczany przez [f']. Dowód jest prosty: używamy
+    indukcji po [d1], a następnie inwersji po pozostałych hipotezach,
+    przepisujemy równania definiujące [f'] i kończymy za pomocą rozumowań
+    arytmetycznych albo hipotezy indukcyjnej. *)
+
+Lemma f_ind :
+  forall
+    (P : nat -> nat -> Prop)
+    (P_gt100 : forall n : nat, 100 < n -> P n (n - 10))
+    (P_le100 :
+      forall n : nat, n <= 100 ->
+        P (n + 11) (f (n + 11)) ->
+        P (f (n + 11)) (f (f (n + 11))) ->
+          P n (f (f (n + 11)))),
+    forall n : nat, P n (f n).
+Proof.
+  intros. apply (fD_ind (fun n d => P n (f' n d))); intros.
+    rewrite f'_eq1. apply P_gt100. assumption.
+    rewrite f'_eq2. specialize (P_le100 _ H).
+      unfold f in P_le100. rewrite !(f'_ext _ _ d1) in P_le100.
+      rewrite !(f'_ext _ _ d2) in P_le100. apply P_le100; assumption.
+Qed.
+
+(** **** Ćwiczenie *)
+
+(** Rozwiąż jeszcze raz ćwiczenie o funkcji [g] z poprzedniego podrozdziału,
+    ale tym razem wykorzystaj metodę induktywno-rekurencyjnej dziedziny
+    zaprezentowaną w niniejszym podrozdziale. *)
+
+Fail Fixpoint g (n : nat) : nat :=
+match n with
+    | 0 => 0
+    | S n => g (g n)
+end.
+
+(* begin hide *)
 
 (*
-Inductive D' : nat -> Type :=
-    | D'_0 : D' 0
-    | D'_S : forall n : nat, D n -> D (g n) -> D (S n)
+Inductive gD : nat -> Type :=
+    | gD_0 : gD 0
+    | gD_S : forall n : nat, gD n -> gD (g n) -> gD (S n)
 
-with Fixpoint g (n : nat) (d : D n) : nat :=
+with Fixpoint g' (n : nat) (d : gD n) : nat :=
 match d with
-    | D'_0 => 0
-    | D'_S _ d1 d2 => g (g n d1) d2
+    | gD_0 => 0
+    | gD_S _ d1 d2 => g' (g' n d1) d2
 end.
 *)
 
 Axioms
-  (D' : nat -> Type)
-  (g : forall n : nat, D' n -> nat)
-  (D'_0 : D' 0)
-  (D'_S : forall (n : nat) (d1 : D' n), D' (g n d1) -> D' (S n))
-  (g_D'_0 : g 0 D'_0 = 0)
-  (g_D'_S :
-    forall (n : nat) (d1 : D' n) (d2 : D' (g n d1)),
-      g (S n) (D'_S n d1 d2) = g (g n d1) d2)
-  (ind' : forall
-    (P : forall n : nat, D' n -> Type)
-    (P0 : P 0 D'_0)
+  (gD : nat -> Type)
+  (g' : forall n : nat, gD n -> nat)
+  (gD_0 : gD 0)
+  (gD_S : forall (n : nat) (d1 : gD n), gD (g' n d1) -> gD (S n))
+  (g'_eq1 : g' 0 gD_0 = 0)
+  (g'_eq2 :
+    forall (n : nat) (d1 : gD n) (d2 : gD (g' n d1)),
+      g' (S n) (gD_S n d1 d2) = g' (g' n d1) d2)
+  (gD_ind : forall
+    (P : forall n : nat, gD n -> Type)
+    (P0 : P 0 gD_0)
     (PS :
-      forall (n : nat) (d1 : D' n) (d2 : D' (g n d1)),
-        P n d1 -> P (g n d1) d2 -> P (S n) (D'_S n d1 d2)),
-    {h : forall (n : nat) (d : D' n), P n d |
-      h 0 D'_0 = P0 /\
-      (forall (n : nat) (d1 : D' n) (d2 : D' (g n d1)),
-        h (S n) (D'_S n d1 d2) =
-        PS n d1 d2 (h n d1) (h (g n d1) d2))
+      forall (n : nat) (d1 : gD n) (d2 : gD (g' n d1)),
+        P n d1 -> P (g' n d1) d2 -> P (S n) (gD_S n d1 d2)),
+    {h : forall (n : nat) (d : gD n), P n d |
+      h 0 gD_0 = P0 /\
+      (forall (n : nat) (d1 : gD n) (d2 : gD (g' n d1)),
+        h (S n) (gD_S n d1 d2) =
+        PS n d1 d2 (h n d1) (h (g' n d1) d2))
     }).
 
-Lemma g_char :
-  forall (n : nat) (d : D' n), g n d = 0.
+Lemma g'_char :
+  forall (n : nat) (d : gD n), g' n d = 0.
 Proof.
-  apply ind'.
-    apply g_D'_0.
-    intros. rewrite g_D'_S. assumption.
+  apply gD_ind.
+    apply g'_eq1.
+    intros. rewrite g'_eq2. assumption.
 Qed.
 
-Lemma D'_all :
-  forall n : nat, D' n.
+Lemma gD_all :
+  forall n : nat, gD n.
 Proof.
   induction n as [| n'].
-    exact D'_0.
-    apply (D'_S n' IHn'). rewrite g_char. exact D'_0.
+    exact gD_0.
+    apply (gD_S n' IHn'). rewrite g'_char. exact gD_0.
 Qed.
 
-Definition g' (n : nat) : nat := g n (D'_all n).
+Definition g (n : nat) : nat := g' n (gD_all n).
+
+Lemma wut :
+  forall (n : nat) (d1 d2 : gD n),
+    g' n d1 = g' n d2.
+Proof.
+  apply (gD_ind (fun _ d1 => forall d2, _)); intros.
+  (*  destruct (gD_inv d2).*)
+Admitted.
+
+Lemma g_ind' :
+  forall
+    (P : nat -> nat -> Prop)
+    (P_0 : P 0 0)
+    (P_S :
+      forall n : nat, P n (g n) -> P (g n) (g (g n)) -> P (S n) (g (g n))),
+    forall n : nat, P n (g n).
+Proof.
+  intros.
+  apply (gD_ind (fun n d => P n (g' n d))).
+    rewrite g'_eq1. assumption.
+    intros. rewrite g'_eq2. specialize (P_S n0).
+      assert (g' n0 d1 = g n0).
+        apply wut.
+        rewrite <- !H1 in P_S. assert (g (g' n0 d1) = g' (g' n0 d1) d2).
+          apply wut.
+          rewrite !H2 in *. apply P_S; assumption.
+Qed.
 
 (* end hide *)
+
 End McCarthy'.
 
 (** * Rekursja wyższego rzędu *)
@@ -3265,7 +3346,7 @@ end.
 
 (** * Plugin [Equations] *)
 
-(** **** Zadanie 8 *)
+(** **** Ćwiczenie *)
 
 (** Zainstaluj plugin Equations:
     https://github.com/mattam82/Coq-Equations
