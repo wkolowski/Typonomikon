@@ -371,6 +371,151 @@ End listW.
 
 (* end hide *)
 
+(** * Indeksowane W-typy (TODO) *)
+
+(** Jak głosi pewna stara książka z Palestyny, nie samymi W-typami żyje
+    człowiek. W szczególności, W-typy mogą uchwycić jedynie dość proste
+    typy induktywne, czyli takie, które wspierają jedynie parametry oraz
+    argumenty indukcyjne. Na chwilę obecną wydaje mi się też, że [W] nie
+    jest w stanie reprezentować typów wzajemnie induktywnych, lecz pewny
+    nie jest jestem.
+
+    Trochę to smutne, gdyż naszą główną motywacją ku poznawaniu [W]-typów
+    jest teoretyczne zrozumienie mechanizmu działania typów induktywnych,
+    a skoro [W] jest biedne, to nie możemy za jego pomocą zrozumieć
+    wszystkich typów induktywnych. Jednak uszy do góry, gdyż na ratunek w
+    naszej misji przychodzą nam indeksowane W-typy!
+
+    Co to za zwierzę, te indeksowane W-typy? Ano coś prawie jak oryginalne
+    W, ale trochę na sterydach. Definicja wygląda tak: *)
+
+Inductive IW
+  (I : Type)
+  (S : I -> Type)
+  (P : forall (i : I), S i -> Type)
+  (r : forall (i : I) (s : S i), P i s -> I)
+  : I -> Type :=
+  | isup :
+      forall (i : I) (s : S i),
+        (forall p : P i s, IW I S P r (r i s p)) -> IW I S P r i.
+
+Arguments isup {I S P r} _ _ _.
+
+(** Prawdopodobnie odczuwasz w tej chwili wielką grozę, co najmniej jakbyś
+    zobaczył samego Cthulhu. Nie martw się - zaraz dokładnie wyjasnimy, co
+    tu się dzieje, a potem rozpracujemy indeksowane W typy na przykładach
+    rodzin typów induktywnych, które powinieneś już dobrze znać.
+
+    Objaśnienia:
+    - [I : Type] to typ indeksów
+    - [S i] to typ kształtów o indeksie [i]. Kształt to konstruktor wraz ze
+      swoimi argumentami nieindukcyjnymi.
+    - [P s] to typ mówiący, ile jest argumentów indukcyjnych o kształcie [s].
+    - [r p] mówi, jak jest indeks argumentu indukcyjnego [p]. *)
+
+(** Konstruktor [isup] mówi, że jeżeli mamy indeks i kształt dla tego
+    indeksu, to jeżeli uda nam się zapchać wszystkie argumenty indukcyjne
+    rzeczami o odpowiednim indeksie, to dostajemy element [IW ...] o takim
+    indeksie jak chcieliśmy.
+
+    Czas na przykład: *)
+
+Inductive Vec (A : Type) : nat -> Type :=
+  | vnil : Vec A 0
+  | vcons : forall n : nat, A -> Vec A n -> Vec A (S n).
+
+(** Na pierwszy ogień idzie [Vec], czyli listy indeksowane długością. Zanim
+    zobaczymy jego reprezentację za pomocą [IW], spróbujmy ujrzeć, jak
+    powinna ona wyglądać.
+
+    Przede wszystkim musimy zauważyć, że typem indeksów [I] jest [nat].
+    Konstruktory są dwa, przy czym [vnil] nie bierze argumentów, zaś
+    [vcons] bierze trzy, czyli indeks [n], głowę listy typu [A] oraz
+    ogon listy typu [Vec A n]. Co ciekawe i oświecające, każdy z tych
+    trzech argumentów pełni inną rolę w reprezentacji za pomocą [IW].
+
+    Głowa listy, czyli [A], jest argumentem nieindukcyjnym, a zatem w
+    reprezentacji za pomocą [IW] musi być częścią kształtu, czyli typu
+    [S]. Ogon listy, czyli [Vec A n], to argument indukcyjny, a zatem
+    jest on pozycją.
+
+    [n], mimo że występuje jako argument konstruktora i nie jest typu
+    [Vec A m] dla żadnego [m], to nie liczy się ani jako argument
+    nieindukcyjny, ani jako argument indukcyjny. Jest tak dlatego, że
+    jest ono indeksem argumentu o typie [Vec A n], a zatem przy reprezentacji
+    za pomocą [IW] jest to po prostu wynik funkcji [r] dla jedynego jej
+    możliwego wejścia. *)
+
+Definition I_Vec (A : Type) : Type := nat.
+
+Definition S_Vec {A : Type} (i : I_Vec A) : Type :=
+match i with
+    | 0 => unit
+    | S i' => A
+end.
+
+Definition P_Vec {A : Type} {i : I_Vec A} (s : S_Vec i) : Type :=
+match i with
+    | 0 => False
+    | S _ => unit
+end.
+
+Definition r_Vec
+  {A : Type} {i : I_Vec A} {s : S_Vec i} (p : P_Vec s) : I_Vec A.
+Proof.
+  destruct i as [| i']; cbn in p.
+    destruct p.
+    exact i'.
+Defined.
+
+Definition Vec' (A : Type) : nat -> Type :=
+  IW (I_Vec A) (@S_Vec A) (@P_Vec A) (@r_Vec A).
+
+(*
+Definition vnil' {A : Type} : Vec' A 0 := isup 0 tt.
+*)
+
+Fixpoint f {A : Type} {n : nat} (v : Vec A n) : Vec' A n.
+Proof.
+  destruct v.
+    apply (isup 0 tt). cbn. destruct p.
+    apply (@isup _ _ _ (@r_Vec A) (S n) a). cbn. intros _.
+      exact (f _ _ v).
+Defined.
+
+Fixpoint g {A : Type} {n : nat} (v : Vec' A n) : Vec A n.
+Proof.
+  destruct v. destruct i; cbn in s.
+    apply vnil.
+    apply (vcons _ _ s). apply g. apply (i0 tt).
+Defined.
+
+Lemma f_g :
+  forall {A : Type} {n : nat} (v : Vec A n),
+    g (f v) = v.
+Proof.
+  induction v; cbn.
+    reflexivity.
+    rewrite IHv. reflexivity.
+Qed.
+
+Require Import FunctionalExtensionality.
+
+Lemma g_f :
+  forall {A : Type} {n : nat} (v : Vec' A n),
+    f (g v) = v.
+Proof.
+  induction v; destruct i; cbn in *.
+    Focus 2. f_equal. extensionality u. destruct u. apply H.
+    match goal with
+        | |- isup 0 tt ?f = _ => generalize f as g
+    end.
+    assert (forall (P : False -> Type) (f g : forall x : False, P x), f = g).
+      intros. extensionality x. destruct x.
+      intro. rewrite (H0 _ g0 i0). destruct s. reflexivity.
+Qed.
+
+
 (** * M-typy (TODO) *)
 
 (** M-typy to to samo co W-typy, tylko że dualne. Pozdro dla kumatych. *)
