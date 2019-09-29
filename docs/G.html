@@ -24,7 +24,7 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab400"></a><h1 class="section">W-typy (TODO)</h1>
+<a name="lab401"></a><h1 class="section">W-typy (TODO)</h1>
 
 </div>
 <div class="code">
@@ -251,7 +251,7 @@ Kodowania te nie są konwertowalne, ale jeżeli użyjemy aksjomatu
 </div>
 
 <div class="doc">
-Podobnym mykiem musim posłużyć się, gdy chcemy udowodnić regułę indukcji.
+Podobnym mykiem musimy posłużyć się, żeby udowodnić regułę indukcji.
     Dowód zaczynamy od indukcji po <span class="inlinecode"><span class="id" title="var">l</span></span> (musimy pamiętać, że nasze <span class="inlinecode"><span class="id" title="var">W</span></span> jest
     typem induktywnym, więc ma regułę indukcji), ale nie możemy bezpośrednio
     użyć hipotez <span class="inlinecode"><span class="id" title="var">PnilW</span></span> ani <span class="inlinecode"><span class="id" title="var">PconsW</span></span>, gdyż dotyczą one innych kodowań <span class="inlinecode"><span class="id" title="var">nil</span></span>
@@ -357,6 +357,34 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">boolW</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">W</span> <span class="id" title="var">bool</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Empty_set</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">trueW</span> : <span class="id" title="var">boolW</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">sup</span> <span class="id" title="var">true</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">e</span> : <span class="id" title="var">Empty_set</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">e</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">falseW</span> : <span class="id" title="var">boolW</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">sup</span> <span class="id" title="var">false</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">e</span> : <span class="id" title="var">Empty_set</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">e</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">notW</span> : <span class="id" title="var">boolW</span> -&gt; <span class="id" title="var">boolW</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">W_rect</span> <span class="id" title="var">bool</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Empty_set</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">boolW</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">if</span> <span class="id" title="var">b</span> <span class="id" title="keyword">then</span> <span class="id" title="var">falseW</span> <span class="id" title="keyword">else</span> <span class="id" title="var">trueW</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">bool_boolW</span> (<span class="id" title="var">b</span> : <span class="id" title="var">bool</span>) : <span class="id" title="var">boolW</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">b</span> <span class="id" title="keyword">then</span> <span class="id" title="var">trueW</span> <span class="id" title="keyword">else</span> <span class="id" title="var">falseW</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">boolW_bool</span> : <span class="id" title="var">boolW</span> -&gt; <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">W_rect</span> <span class="id" title="var">bool</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Empty_set</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">bool</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">b</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">boolW_bool_notW</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">boolW</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">boolW_bool</span> (<span class="id" title="var">notW</span> <span class="id" title="var">b</span>) = <span class="id" title="var">negb</span> (<span class="id" title="var">boolW_bool</span> <span class="id" title="var">b</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">boolW_bool__bool_boolW</span> :<br/>
@@ -424,13 +452,59 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 <span class="id" title="keyword">End</span> <span class="id" title="var">listW</span>.<br/>
 
 <br/>
-<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
+</div>
+
+<div class="doc">
+<a name="lab402"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Napisałem we wstępie, że W-typy umożliwiają reprezentowanie dowolnych
+    typów induktywnych, ale czy to prawda? Przekonajmy się!
+
+<div class="paragraph"> </div>
+
+    Zdefiniuj za pomocą <span class="inlinecode"><span class="id" title="var">W</span></span> następujące typy i udowodnij, że są one
+    izomorficzne z ich odpowiednikami:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">False</span></span> (czyli <span class="inlinecode"><span class="id" title="var">Empty_set</span></span>)
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">unit</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">bool</span></span>
+
+</li>
+<li> typ o <span class="inlinecode"><span class="id" title="var">n</span></span> elementach
+
+</li>
+<li> liczby naturalne
+
+</li>
+<li> produkt
+
+</li>
+<li> sumę
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Załóżmy teraz, że żyjemy w świecie, w którym nie ma typów induktywnych.
+    Jakich typów, oprócz <span class="inlinecode"><span class="id" title="var">W</span></span>, potrzebujemy, by móc zdefiniować wszystkie
+    powyższe typy? 
+</div>
+<div class="code">
+
+<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab401"></a><h1 class="section">Indeksowane W-typy</h1>
+<a name="lab403"></a><h1 class="section">Indeksowane W-typy</h1>
 
 <div class="paragraph"> </div>
 
@@ -709,7 +783,7 @@ W drugą stronę jest łatwiej. Definicja idzie oczywiście przez rekursję
 </div>
 
 <div class="doc">
-Dowód odwrotności w jedną strnę jest banalny - indukcja po <span class="inlinecode"><span class="id" title="var">v</span></span> idzie
+Dowód odwrotności w jedną stronę jest banalny - indukcja po <span class="inlinecode"><span class="id" title="var">v</span></span> idzie
     gładko, bo <span class="inlinecode"><span class="id" title="var">v</span></span> jest typu <span class="inlinecode"><span class="id" title="var">Vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
 </div>
 <div class="code">
@@ -745,7 +819,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
     do udowodnienia, że argumenty indukcyjne są równe. 
 <div class="paragraph"> </div>
 
-<a name="lab402"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab404"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -771,13 +845,36 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
 
 <div class="paragraph"> </div>
 
-<a name="lab403"></a><h1 class="section">M-typy (TODO)</h1>
+<a name="lab405"></a><h1 class="section">M-typy (TODO)</h1>
 
+<div class="paragraph"> </div>
+
+ M-typy to to samo co W-typy, tylko że dualne. Pozdro dla kumatych. 
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">F1</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Naszą motywacją do badania W-typów było to, że są one jedynym
+    pierścieniem, tj. pozwalają uchwycić wszystkie typy induktywne
+    za pomocą jednego (oczywiście o ile mamy też <span class="inlinecode"><span class="id" title="var">False</span></span>, <span class="inlinecode"><span class="id" title="var">unit</span></span>,
+    <span class="inlinecode"><span class="id" title="var">bool</span></span>, <span class="inlinecode"><span class="id" title="var">prod</span></span> i <span class="inlinecode"><span class="id" title="var">sum</span></span>).
+
+<div class="paragraph"> </div>
+
+    Podobnie możemy postawić sobie zadanie zbadania wszystkich typów
+    koinduktywnych. Odpowiedź na to pytanie jest (zupełnie nieprzypadkowo)
+    analogiczna do tej dla typów induktywnych, a są nią M-typy. Skąd nazwa?
+    Zauważ, że M to nic innego jak W postawione na głowie - podobnie esencja
+    M-typów jest taka sama jak W-typów, ale interpretacja jest postawiona
+    na głowie. 
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">M</span> (<span class="id" title="var">S</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">S</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
@@ -791,6 +888,33 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
 <span class="id" title="var">Arguments</span> <span class="id" title="var">position</span> {<span class="id" title="var">S</span> <span class="id" title="var">P</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><span class="id" title="var">M</span></span> wygląda właśnie tak.
+    W tym celu rozważmy dowolny typ koinduktywny <span class="inlinecode"><span class="id" title="var">C</span></span> i przyjmijmy, że ma on
+    pola <span class="inlinecode"><span class="id" title="var">f1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">X1</span></span>, ..., <span class="inlinecode"><span class="id" title="var">fn</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Xn</span></span>. Argumenty możemy podzielić na dwie grupy:
+    koindukcyjne (których typem jest <span class="inlinecode"><span class="id" title="var">C</span></span> lub funkcje postaci <span class="inlinecode"><span class="id" title="var">Y</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span>) oraz
+    niekoindukcyjne (oznaczmy ich typy przez <span class="inlinecode"><span class="id" title="var">A</span></span>).
+
+<div class="paragraph"> </div>
+
+    Oczywiście wszystkie niekoindukcyjne pola o typach <span class="inlinecode"><span class="id" title="var">A1</span></span>, ..., <span class="inlinecode"><span class="id" title="var">Ak</span></span> możemy
+    połączyć w jedno wielgachne pole o typie <span class="inlinecode"><span class="id" title="var">A1</span></span> <span class="inlinecode">*</span> <span class="inlinecode">...</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">Ak</span></span> i tym właśnie
+    jest występujące w <span class="inlinecode"><span class="id" title="var">M</span></span> pole <span class="inlinecode"><span class="id" title="var">shape</span></span>.
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+    TODO 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">transport</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>} {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) (<span class="id" title="var">u</span> : <span class="id" title="var">P</span> <span class="id" title="var">x</span>) : <span class="id" title="var">P</span> <span class="id" title="var">y</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
@@ -801,8 +925,9 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">siM</span> {<span class="id" title="var">S</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">P</span> : <span class="id" title="var">S</span> -&gt; <span class="id" title="keyword">Type</span>} (<span class="id" title="var">m1</span> <span class="id" title="var">m2</span> : <span class="id" title="var">M</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">shapes</span> : <span class="id" title="var">shape</span> <span class="id" title="var">m1</span> = <span class="id" title="var">shape</span> <span class="id" title="var">m2</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">positions</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">p</span> : <span class="id" title="var">P</span> (<span class="id" title="var">shape</span> <span class="id" title="var">m1</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">siM</span> (<span class="id" title="var">position</span> <span class="id" title="var">m1</span> <span class="id" title="var">p</span>) (<span class="id" title="var">position</span> <span class="id" title="var">m2</span> (<span class="id" title="var">transport</span> <span class="id" title="var">shapes</span> <span class="id" title="var">p</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">positions</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">p</span> : <span class="id" title="var">P</span> (<span class="id" title="var">shape</span> <span class="id" title="var">m1</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">siM</span> (<span class="id" title="var">position</span> <span class="id" title="var">m1</span> <span class="id" title="var">p</span>) (<span class="id" title="var">position</span> <span class="id" title="var">m2</span> (<span class="id" title="var">transport</span> <span class="id" title="var">shapes</span> <span class="id" title="var">p</span>))<br/>
 }.<br/>
 
 <br/>
@@ -848,13 +973,32 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">coListM</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">M</span> (<span class="id" title="var">option</span> <span class="id" title="var">A</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">option</span> <span class="id" title="var">A</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">False</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">unit</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">fff</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) : <span class="id" title="var">coListM</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">uncons</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; {| <span class="id" title="var">shape</span> := <span class="id" title="var">None</span>; <span class="id" title="var">position</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">e</span> : <span class="id" title="var">False</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">e</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span> |}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) =&gt; {| <span class="id" title="var">shape</span> := <span class="id" title="var">Some</span> <span class="id" title="var">h</span>; <span class="id" title="var">position</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; @<span class="id" title="var">fff</span> <span class="id" title="var">_</span> <span class="id" title="var">t</span> |}<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-M-typy to to samo co W-typy, tylko że dualne. Pozdro dla kumatych. 
+<a name="lab406"></a><h1 class="section">Indeksowane M-typy?</h1>
+
 <div class="paragraph"> </div>
 
-<a name="lab404"></a><h1 class="section">Kodowanie Churcha (TODO)</h1>
+ Nie dla psa kiełbasa. 
+<div class="paragraph"> </div>
+
+<a name="lab407"></a><h1 class="section">Kodowanie Churcha (TODO)</h1>
 
 <div class="paragraph"> </div>
 

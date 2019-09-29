@@ -163,7 +163,7 @@ Proof.
   reflexivity.
 Qed.
 
-(** Podobnym mykiem musim posłużyć się, gdy chcemy udowodnić regułę indukcji.
+(** Podobnym mykiem musimy posłużyć się, żeby udowodnić regułę indukcji.
     Dowód zaczynamy od indukcji po [l] (musimy pamiętać, że nasze [W] jest
     typem induktywnym, więc ma regułę indukcji), ale nie możemy bezpośrednio
     użyć hipotez [PnilW] ani [PconsW], gdyż dotyczą one innych kodowań [nil]
@@ -252,8 +252,6 @@ Proof.
     rewrite eq1. cbn. reflexivity.
     intros. rewrite eq2. cbn. rewrite H. reflexivity.
 Qed.
-
-(* begin hide *)
 
 Definition boolW : Type :=
   W bool (fun _ => Empty_set).
@@ -362,12 +360,67 @@ Lemma nat_natW__nat_natW :
 (* begin hide *)
 Proof.
   induction n; destruct x; cbn.
-    unfold zeroW. f_equal. admit.
-    rewrite H. unfold succW. f_equal. admit.
-Admitted.
+    unfold zeroW. f_equal. extensionality e. destruct e.
+    rewrite H. unfold succW. f_equal. extensionality u.
+      destruct u. reflexivity.
+Qed.
 (* end hide *)
 
 End listW.
+
+(** **** Ćwiczenie *)
+
+(** Napisałem we wstępie, że W-typy umożliwiają reprezentowanie dowolnych
+    typów induktywnych, ale czy to prawda? Przekonajmy się!
+
+    Zdefiniuj za pomocą [W] następujące typy i udowodnij, że są one
+    izomorficzne z ich odpowiednikami:
+    - [False] (czyli [Empty_set])
+    - [unit]
+    - [bool]
+    - typ o [n] elementach
+    - liczby naturalne
+    - produkt
+    - sumę
+
+    Załóżmy teraz, że żyjemy w świecie, w którym nie ma typów induktywnych.
+    Jakich typów, oprócz [W], potrzebujemy, by móc zdefiniować wszystkie
+    powyższe typy? *)
+
+(* begin hide *)
+
+(* TODO *)
+
+(** Odpowiedź: zdaje się, że potrzebujemy 0, 1, 2, *, + *)
+
+Print W.
+
+Definition FalseW : Type :=
+  W False (fun _ => False).
+
+Definition unitW : Type :=
+  W unit (fun _ => False).
+
+Definition boolW : Type :=
+  W bool (fun _ => False).
+
+Definition prodW (A B : Type) : Type :=
+  W (A * B) (fun _ => False).
+
+Definition sumW (A B : Type) : Type :=
+  W (A + B) (fun _ => False).
+
+Definition natW : Type :=
+  W bool (fun b : bool => if b then False else unit).
+
+Definition Fin (n : natW) : Type.
+Proof.
+  apply (W_rect _ _ (fun _ : natW => Type)).
+    destruct x; intros.
+      exact False.
+      exact (option (X tt)).
+    exact n.
+Defined.
 
 (* end hide *)
 
@@ -545,7 +598,7 @@ Proof.
     rewrite IHv. reflexivity.
 Qed.
 
-(** Dowód odwrotności w jedną strnę jest banalny - indukcja po [v] idzie
+(** Dowód odwrotności w jedną stronę jest banalny - indukcja po [v] idzie
     gładko, bo [v] jest typu [Vec A n]. *)
 
 Require Import FunctionalExtensionality.
@@ -583,7 +636,21 @@ Qed.
 
 (** * M-typy (TODO) *)
 
+(** M-typy to to samo co W-typy, tylko że dualne. Pozdro dla kumatych. *)
+
 Require Import F1.
+
+(** Naszą motywacją do badania W-typów było to, że są one jedynym
+    pierścieniem, tj. pozwalają uchwycić wszystkie typy induktywne
+    za pomocą jednego (oczywiście o ile mamy też [False], [unit],
+    [bool], [prod] i [sum]).
+
+    Podobnie możemy postawić sobie zadanie zbadania wszystkich typów
+    koinduktywnych. Odpowiedź na to pytanie jest (zupełnie nieprzypadkowo)
+    analogiczna do tej dla typów induktywnych, a są nią M-typy. Skąd nazwa?
+    Zauważ, że M to nic innego jak W postawione na głowie - podobnie esencja
+    M-typów jest taka sama jak W-typów, ale interpretacja jest postawiona
+    na głowie. *)
 
 CoInductive M (S : Type) (P : S -> Type) : Type :=
 {
@@ -594,6 +661,63 @@ CoInductive M (S : Type) (P : S -> Type) : Type :=
 Arguments shape {S P}.
 Arguments position {S P} _ _.
 
+(** Zastanówmy się przez chwilę, dlaczego definicja [M] wygląda właśnie tak.
+    W tym celu rozważmy dowolny typ koinduktywny [C] i przyjmijmy, że ma on
+    pola [f1 : X1], ..., [fn : Xn]. Argumenty możemy podzielić na dwie grupy:
+    koindukcyjne (których typem jest [C] lub funkcje postaci [Y -> C]) oraz
+    niekoindukcyjne (oznaczmy ich typy przez [A]).
+
+    Oczywiście wszystkie niekoindukcyjne pola o typach [A1], ..., [Ak] możemy
+    połączyć w jedno wielgachne pole o typie [A1 * ... * Ak] i tym właśnie
+    jest występujące w [M] pole [shape].
+
+    
+
+    TODO *)
+
+(* begin hide *)
+
+(**    Wszystkie pola nie
+    indukcyjne (które są postaci [T]). Wobec tego typ [c] możemy zapisać jako
+    [c : A1 -> ... -> Ak -> T -> ... -> T -> T].
+
+    W kolejnym kroku łączymy argumenty za pomocą produktu:
+    niech [A := A1 * ... * Ak]. Wtedy typ [c] wygląda tak:
+    [c : A -> T * ... * T -> T]. Zauważmy, że [T * ... * T] możemy zapisać
+    równoważnie jako [B -> T], gdzie [B] to typ mający tyle elementów, ile
+    razy [T] występuje w produkcie [T * ... * T]. Zatem typ [c] przedstawia
+    się tak: [c : A -> (B -> T) -> T].
+
+    Teraz poczynimy kilka uogólnień. Po pierwsze, na początku założyliśmy,
+    że [c] ma skończenie wiele argumentów indukcyjnych, ale postać [B -> T]
+    uwzględnia także przypadek, gdy jest ich nieskończenie wiele (tzn. gdy
+    [c] miał oryginalnie jakiś argument postaci [Y -> T] dla nieskończonego
+    [Y]).
+
+    Po drugie, założyliśmy, że [c] jest funkcją niezależną. Przypadek, gdy
+    [c] jest funkcją zależną możemy pokryć, pozwalając naszemu [B] zależeć
+    od [A], tzn. [B : A -> Type]. Typ konstruktora [c] zyskuje wtedy postać
+    sumy zależnej [{x : A & B x -> T} -> T]. W ostatnim kroku odpakowujemy
+    sumę i [c] zyskuje postać [c : forall x : A, B x -> T].
+
+    Jak więc widać, typ każdego konstruktora można przekształcić tak, żeby
+    móc zapisać go jako [forall x : A, B x -> T]. Zauważmy też, że jeżeli
+    mamy dwa konstruktory [c1 : forall x : A1, B1 x -> T] oraz
+    [c2 : forall x : A2, B2 x -> T], to możemy równie dobrze zapisać je
+    za pomocą jednego konstruktora [c]: niech [A := A1 + A2] i niech
+    [B (inl a1) := B1 a1, B (inl a2) := B2 a2]. Wtedy konstruktory [c1] i
+    [c2] są równoważne konstruktorowi [c].
+
+    Stosując powyższe przekształcenia możemy sprowadzić każdy typ induktywny
+    do równoważnej postaci z jednym konstruktorem o typie
+    [forall x : A, B x -> T]. Skoro tak, to definiujemy nowy typ, w którym
+    [A] i [B] są parametrami... i bum, tak właśnie powstało [W]!
+
+*)
+
+(* end hide *)
+
+
 Definition transport
   {A : Type} {P : A -> Type} {x y : A} (p : x = y) (u : P x) : P y :=
 match p with
@@ -603,8 +727,9 @@ end.
 CoInductive siM {S : Type} {P : S -> Type} (m1 m2 : M S P) : Prop :=
 {
     shapes : shape m1 = shape m2;
-    positions : forall p : P (shape m1),
-                  siM (position m1 p) (position m2 (transport shapes p))
+    positions :
+      forall p : P (shape m1),
+        siM (position m1 p) (position m2 (transport shapes p))
 }.
 
 Definition P_Stream (A : Type) : A -> Type := fun _ => unit.
@@ -643,9 +768,22 @@ Proof.
     destruct p. cbn. apply CH.
 Qed.
 
+Definition coListM (A : Type) : Type :=
+  M (option A) (fun x : option A =>
+                match x with
+                  | None => False
+                  | Some _ => unit
+                end).
 
+CoFixpoint fff {A : Type} (l : coList A) : coListM A :=
+match uncons l with
+    | None => {| shape := None; position := fun e : False => match e with end |}
+    | Some (h, t) => {| shape := Some h; position := fun _ => @fff _ t |}
+end.
 
-(** M-typy to to samo co W-typy, tylko że dualne. Pozdro dla kumatych. *)
+(** * Indeksowane M-typy? *)
+
+(** Nie dla psa kiełbasa. *)
 
 (** * Kodowanie Churcha (TODO) *)
 

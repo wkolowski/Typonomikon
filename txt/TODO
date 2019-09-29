@@ -32,13 +32,13 @@ Część 1: Teoria typów w Coqowej wersji
     zadania z klasycznego rachunku kwantyfikatorów
 
 (C) Podstawy teorii typów:
-  Przypomnienie dedukcji naturalnej z rozdziału 1.
+  Przedstawić materiał z rozdziału A za pomocą dedukcji naturalnej (z kontekstami rzecz jasna).
   Curry-Howard
-  Przemieścić z R1 podrozdziały "Typy i termy".
+  Przedstawić jeszcze raz to samo, ale tym razem z prooftermami.
+  Omówić obliczenia i postacie normalne (o ile gdzieś można znaleźć jakiś ich opis).
   Pięć rodzajów reguł
   HoTT-bookowa teoria typów: pusty, unit, bool, nat, produkt, suma, funkcje, produkt zależy, suma zależna, uniwersa, równość
-
-Ogólnie: Rozdział o logice powinien zawierać omówienie dedukcji naturalnej. Dzięki temu można wprowadzić korespondencję CH, a z niej wywieść pięć rodzajów reguł i opisać teorię typów w stylu HoTTbooka.
+  Ale nie można zaniedbać formalnej prezentacji teorii typów.
 
 (D1) Typy induktywne
   Enumeracje, czyli sumy nazwane.
@@ -58,7 +58,6 @@ Ogólnie: Rozdział o logice powinien zawierać omówienie dedukcji naturalnej. 
   Indukcja-indukcja.
   Indukcja-rekursja.
   Indukcja-indukcja-rekursja.
-  Typy ilorazowe, wyższe typy indutkywne.
   Zadania z definiowania induktywnych typów i predykatów
   W międzyczasie: omówić ścisłą pozytywność
 Inne
@@ -139,14 +138,7 @@ Inne
     ogólne liściowe RoseTree
     jakieś inne? (węzłowe niepuste)
 
-(E1) Typy koinduktywne
-  Rekordy, parametry i korekursja.
-
-(E2, E3, E4, E5) liczby konaturalne, strumienie, kolisty, kodrzewa.
-
-(F) Bonusowy rozdział teoretyczny: kodowanie Churcha dla typów induktywnych i koinduktywnych
-
-(G1) Rekordy i klasy
+(E1) Rekordy i klasy
   Typy skończone
   Enumerowanie
   Rozstrzygalność i typ [reflect]
@@ -155,7 +147,7 @@ Inne
   Rodzaje rekordów: induktywne, koinduktywne, primitive projections
   Silne specyfikacje
 
-(G2) Typy i funkcje
+(E2) Typy i funkcje
   Aksjomat ekstensjonalności
   Lewa i prawa skracalność
   Lewa i prawa odwrotność
@@ -164,10 +156,9 @@ Inne
   Inwolucja i idempotencja
   Przemycać jak najwięcej teorii kategorii
 
-(G3) Typy i relacje
-  Obecna wersja (X5) wymaga tutaj klas.
+(E3) Typy i relacje
+  Odnośnie mechanizmu redukcji:
 
-(G4) Jak dokładnie działa redukcja?
   Posłużyć się następującym systemem nazewniczo-klasyfikacyjnym.
   Dla każdej literki są trzy relacje: redukcja, ekspansja i konwersja
   (a może powinna być jeszcze redukcja w wielu krokach?).
@@ -177,7 +168,44 @@ Inne
   W takim układzie redukcja w wielu krokach to domknięcie zwrotno-
   przechodnie relacji redukcji. Podobnie dla ekspansji w wielu krokach.
 
-  Mamy następujące relacje redukcji:
+  Podsumowując: zdefiniować na relacjach rzeczy, których można by użyć
+  przy formalizacji teorii typów, ale tylko w celu objaśnienia.
+
+(F1) Typy koinduktywne
+  Rekordy, parametry i korekursja.
+
+(F2, F3, F4, F5) liczby konaturalne, strumienie, kolisty, kodrzewa.
+
+(G) Bonusowy rozdział teoretyczny
+  Kodowanie Churcha
+  Być może inne kodowania
+  Jedyny pierścień wyższego rzędu, czyli W-typy i M-typy
+  Jedyny pierścień pierwszego rzędu, czyli uniwersa kodów na typy induktywne i koinduktywne
+  Uwaga: wyższy rząd vs pierwszy rząd
+
+(H1) Uniwersa
+  Zadanie: nat <> Type : )
+  Relewancja: Prop, SProp, propext i proof irrelevance
+
+(H2) Równość
+  Opowiedzieć skąd się biorą dowody równości
+  Aksjomat K
+  Interpretacja homotopiczna
+  Aksjomat Uniwalencji
+  Wyższe typy induktywne
+
+Cześć 2: Metapoziom, czyli taktyki
+
+(I1) Ltac
+  być może przenieść tu z rozdziału 1 fragment o kombinatorach taktyk
+
+(I2) Spis taktyk
+  nieopisane taktyki: [induction], [inversion], [destruct]
+  przerobić "drobne taktyki" na "taktyki do zarządzania kontekstem"
+  przenieść opis taktyki [pattern] (i odpowiadające zadanie) do części o taktykach dla redukcji
+  Taktyki dla redukcji i obliczeń:  Mamy następujące relacje redukcji:
+
+  Mamy następujące redukcje:
     alfa (zmiana nazwy jednej zmiennej związanej)
     beta (podstawienie argumentu za parametr formalny w jednym miejscu)
     delta (odwinięcie jednej definicji) — uwaga: to w sumie nie jest
@@ -208,38 +236,8 @@ Inne
     [simpl]
     [hnf]
 
-  Omówić postacie normalne (o ile gdzieś można znaleźć jakiś ich opis).
-  Ogólniej: wstawić jakąś zajawkę wcześnie i bardziej szczegółowy opis
-  po rozdziale o relacjach. Trzeba by też opisać rachunek lambda.
-
-(H1) Uniwersa
-  Przemieścić z R2 podrozdziały o sortach i o hierarchii uniwersów. Najlepiej gdzieś na sam koniec
-  Zadanie: nat <> Type : )
-  Relewancja: Prop, SProp, propext i proof irrelevance
-
-(H2) Równość
-  Opowiedzieć skąd się biorą dowody równości
-  Aksjomat K
-  Interpretacja homotopiczna
-  Aksjomat Uniwalencji
-  Wyższe typy induktywne
-
-(H3) Alternatywne podejścia do równości
-  Przeanalizować alternatywne definicje
-  Setoidy
-
-Cześć 2: Metapoziom, czyli taktyki
-
-(I1) Ltac
-  być może przenieść tu z rozdziału 1 fragment o kombinatorach taktyk
-
-(I2) Spis taktyk
-  nieopisane taktyki: [induction], [inversion], [destruct]
-  przerobić "drobne taktyki" na "taktyki do zarządzania kontekstem"
-  przenieść opis taktyki [pattern] (i odpowiadające zadanie) do części o taktykach dla redukcji
-
 (I3) Reflekcja, metapoziom, quote (którego oczywiście w Coqu nie ma, a jak) i inne takie duperele
-  Po co reflekcja?
+  Po co prostemu chłopu reflekcja?
   Semantyka vs składnia
 
 Część 3: Podstawy matematyki

@@ -36,7 +36,7 @@
 
 <div class="paragraph"> </div>
 
-  Czym są termy? Są to twory o naturze syntaktycznej (składniowej),
+ Czym są termy? Są to twory o naturze syntaktycznej (składniowej),
     reprezentujące funkcje, typy, zdania logiczne, predykaty, relacje
     etc. Polskim słowem o najbliższym znaczeniu jest słowo "wyrażenie".
     Zamiast prób definiowania termów, co byłoby problematyczne,
@@ -109,7 +109,86 @@
     i dowodzenie twierdzeń. 
 <div class="paragraph"> </div>
 
-<a name="lab71"></a><h1 class="section">Typy a zbiory</h1>
+<a name="lab71"></a><h1 class="section">Typy i termy, kanoniczność i uzasadnienie reguł eliminacji</h1>
+
+<div class="paragraph"> </div>
+
+ Co to są termy? Po polsku: wyrażenia. Są to napisy zbudowane według
+    pewnych reguł (które będziemy chcieli poznać), które mogą oznaczać
+    przeróżne rzeczy: zdania logiczne i ich dowody, programy i ich
+    specyfikacje, obiekty matematyczne takie jak liczby czy funkcje,
+    struktury danych takie jak napisy czy listy.
+
+<div class="paragraph"> </div>
+
+    Najważniejszym, co wiemy o każdym termie, jest jego typ. Co to jest typ?
+    To taki klasyfikator, który mówi, czego możemy się po termie spodziewać -
+    można liczyć za pomocą liczb, ale nie za pomocą wartości logicznych.
+    Można dowodzić zdań, ale nie napisów. Można skleić ze sobą dwa napisy,
+    ale nie napis i funkcję etc.
+
+<div class="paragraph"> </div>
+
+    Każdy term ma tylko jeden typ, więc każdy typ możemy sobie wyobrazić jako
+    wielki worek z termami. Dla przykładu, typ <span class="inlinecode"><span class="id" title="var">nat</span></span>, czyli typ liczb
+    naturalnych, to worek, w którym są takie wyrażenia, jak:
+<ul class="doclist">
+<li> <span class="inlinecode">42</span>
+
+</li>
+<li> <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode">2</span>
+
+</li>
+<li> <span class="inlinecode">10</span> <span class="inlinecode">*</span> <span class="inlinecode">10</span>
+
+</li>
+<li> jeżeli słowo "dupa" zawiera "i", to <span class="inlinecode">123</span>, a w przeciwnym wypadku <span class="inlinecode">765</span>
+
+</li>
+<li> długość listy <span class="inlinecode">[<span class="id" title="var">a</span>,</span> <span class="inlinecode"><span class="id" title="var">b</span>,</span> <span class="inlinecode"><span class="id" title="var">c</span>,</span> <span class="inlinecode"><span class="id" title="var">d</span>,</span> <span class="inlinecode"><span class="id" title="var">e</span>]</span>
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Najważniejsze termy są nazywane elementami. Dla <span class="inlinecode"><span class="id" title="var">nat</span></span> są to <span class="inlinecode">0</span>, <span class="inlinecode">1</span>,
+    <span class="inlinecode">2</span>, <span class="inlinecode">3</span>, <span class="inlinecode">4</span>, <span class="inlinecode">5</span> i tak dalej. Elementy wyróżnia to, że są w postaci
+    normalnej (zwanej też postacią kanoniczną). Znaczy to intuicyjnie, że
+    są one ostatecznymi wynikami obliczeń, np.:
+<ul class="doclist">
+<li> obliczenie <span class="inlinecode">42</span> daje <span class="inlinecode">42</span>
+
+</li>
+<li> obliczenie <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> daje <span class="inlinecode">4</span>
+
+</li>
+<li> obliczenie <span class="inlinecode">10</span> <span class="inlinecode">*</span> <span class="inlinecode">10</span> daje <span class="inlinecode">100</span>
+
+</li>
+<li> obliczenie ... daje <span class="inlinecode">765</span>
+
+</li>
+<li> obliczenie długości listy daje <span class="inlinecode">5</span>
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Czym dokładnie są obliczenia, dowiemy się później. Na razie wystarczy
+    nam wiedzieć, że każdy term zamknięty, czyli taki, o którym wiadomo
+    wystarczająco dużo, oblicza się do postaci normalnej, np. 5 + 1 oblicza
+    się do 6. Jeżeli jednak czegoś nie wiadomo, to term się nie oblicza, np.
+    n + 1 nie wiadomo ile wynosi, jeżeli nie wiadomo, co oznacza n.
+
+<div class="paragraph"> </div>
+
+    Podsumowując, każdy element jest termem, a każdy term oblicza się do
+    postaci normalnej, czyli do elementu. 
+<div class="paragraph"> </div>
+
+<a name="lab72"></a><h1 class="section">Typy a zbiory</h1>
 
 <div class="paragraph"> </div>
 
@@ -151,7 +230,7 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab72"></a><h1 class="section">Uniwersa</h1>
+<a name="lab73"></a><h1 class="section">Uniwersa</h1>
 
 <div class="paragraph"> </div>
 
@@ -333,7 +412,7 @@ Co oznacza ten dziwny napis? Otóż w Coqu mamy do czynienia nie z
     Możemy zatem przejść do meritum. 
 <div class="paragraph"> </div>
 
-<a name="lab73"></a><h1 class="section">Pięć rodzajów reguł</h1>
+<a name="lab74"></a><h1 class="section">Pięć rodzajów reguł</h1>
 
 <div class="paragraph"> </div>
 
@@ -365,7 +444,7 @@ Co oznacza ten dziwny napis? Otóż w Coqu mamy do czynienia nie z
     charakter mocno teoretyczny. 
 <div class="paragraph"> </div>
 
-<a name="lab74"></a><h2 class="section">Reguły formacji</h2>
+<a name="lab75"></a><h2 class="section">Reguły formacji</h2>
 
 <div class="paragraph"> </div>
 
@@ -473,7 +552,7 @@ Reguła nie pochodzi z definicji induktywnej, gdyż typ funkcji <span class="inl
     jest typem wbudowanym i nie jest zdefiniowany indukcyjnie. 
 <div class="paragraph"> </div>
 
-<a name="lab75"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab76"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -489,7 +568,7 @@ Reguła nie pochodzi z definicji induktywnej, gdyż typ funkcji <span class="inl
 </div>
 
 <div class="doc">
-<a name="lab76"></a><h2 class="section">Reguły wprowadzania</h2>
+<a name="lab77"></a><h2 class="section">Reguły wprowadzania</h2>
 
 <div class="paragraph"> </div>
 
@@ -595,7 +674,7 @@ Pojawiło się tu kilka nowych rzeczy: litera Γ oznacza kontekst,
     w rozdziałach 4 i 5 manuala: https://coq.inria.fr/refman/toc.html 
 <div class="paragraph"> </div>
 
-<a name="lab77"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab78"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -611,7 +690,7 @@ Pojawiło się tu kilka nowych rzeczy: litera Γ oznacza kontekst,
 </div>
 
 <div class="doc">
-<a name="lab78"></a><h2 class="section">Reguły eliminacji</h2>
+<a name="lab79"></a><h2 class="section">Reguły eliminacji</h2>
 
 <div class="paragraph"> </div>
 
@@ -847,7 +926,7 @@ Póki co wydaje mi się, że udowodnienie słuszności tej reguły będzie dla
     list. 
 <div class="paragraph"> </div>
 
-<a name="lab79"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab80"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -881,7 +960,7 @@ Póki co wydaje mi się, że udowodnienie słuszności tej reguły będzie dla
 </div>
 
 <div class="doc">
-<a name="lab80"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab81"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -912,7 +991,7 @@ Póki co wydaje mi się, że udowodnienie słuszności tej reguły będzie dla
 </div>
 
 <div class="doc">
-<a name="lab81"></a><h2 class="section">Reguły obliczania</h2>
+<a name="lab82"></a><h2 class="section">Reguły obliczania</h2>
 
 <div class="paragraph"> </div>
 
@@ -1033,7 +1112,7 @@ Wygląda dużo bardziej znajomo, prawda?
     alfa. 
 <div class="paragraph"> </div>
 
-<a name="lab82"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab83"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1048,7 +1127,7 @@ Wygląda dużo bardziej znajomo, prawda?
 </div>
 
 <div class="doc">
-<a name="lab83"></a><h2 class="section">Reguły unikalności</h2>
+<a name="lab84"></a><h2 class="section">Reguły unikalności</h2>
 
 <div class="paragraph"> </div>
 
@@ -1131,7 +1210,7 @@ Podsumowując, reguły unikalności występują w dwóch rodzajach:
 
 <div class="paragraph"> </div>
 
-<a name="lab84"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab85"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
