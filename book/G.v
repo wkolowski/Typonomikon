@@ -371,7 +371,7 @@ End listW.
 
 (* end hide *)
 
-(** * Indeksowane W-typy (TODO) *)
+(** * Indeksowane W-typy *)
 
 (** Jak głosi pewna stara książka z Palestyny, nie samymi W-typami żyje
     człowiek. W szczególności, W-typy mogą uchwycić jedynie dość proste
@@ -424,41 +424,58 @@ Inductive Vec (A : Type) : nat -> Type :=
   | vnil : Vec A 0
   | vcons : forall n : nat, A -> Vec A n -> Vec A (S n).
 
-(** Na pierwszy ogień idzie [Vec], czyli listy indeksowane długością. Zanim
-    zobaczymy jego reprezentację za pomocą [IW], spróbujmy ujrzeć, jak
-    powinna ona wyglądać.
+Arguments vcons {A n} _ _.
 
-    Przede wszystkim musimy zauważyć, że typem indeksów [I] jest [nat].
-    Konstruktory są dwa, przy czym [vnil] nie bierze argumentów, zaś
-    [vcons] bierze trzy, czyli indeks [n], głowę listy typu [A] oraz
-    ogon listy typu [Vec A n]. Co ciekawe i oświecające, każdy z tych
-    trzech argumentów pełni inną rolę w reprezentacji za pomocą [IW].
-
-    Głowa listy, czyli [A], jest argumentem nieindukcyjnym, a zatem w
-    reprezentacji za pomocą [IW] musi być częścią kształtu, czyli typu
-    [S]. Ogon listy, czyli [Vec A n], to argument indukcyjny, a zatem
-    jest on pozycją.
-
-    [n], mimo że występuje jako argument konstruktora i nie jest typu
-    [Vec A m] dla żadnego [m], to nie liczy się ani jako argument
-    nieindukcyjny, ani jako argument indukcyjny. Jest tak dlatego, że
-    jest ono indeksem argumentu o typie [Vec A n], a zatem przy reprezentacji
-    za pomocą [IW] jest to po prostu wynik funkcji [r] dla jedynego jej
-    możliwego wejścia. *)
+(** Na pierwszy ogień idzie [Vec], czyli listy indeksowane długością. Jak
+    wygląda jego reprezentacja za pomocą [IW]? *)
 
 Definition I_Vec (A : Type) : Type := nat.
+
+(** Przede wszystkim musimy zauważyć, że typem indeksów [I] jest [nat]. *)
 
 Definition S_Vec {A : Type} (i : I_Vec A) : Type :=
 match i with
     | 0 => unit
-    | S i' => A
+    | S _ => A
 end.
+
+(** Typ kształtów definiujemy przez dopasowanie indeksu do wzorca, bo dla
+    różnych indeksów mamy różne możliwe kształty. Konstruktor [vnil] jest
+    jedynym konstruktorem o indeksie [0] i nie bierze on żadnych argumentów
+    nieindukcyjnych, stąd w powyższej definicji klauzula [| 0 => unit].
+    Konstruktor [vcons] jest jedynym konstruktorem o indeksie niezerowym i
+    niezależnie od indeksu bierze on jeden argument nieindukcyjny typu [A],
+    stąd klauzula [| S _ => A]. *)
 
 Definition P_Vec {A : Type} {i : I_Vec A} (s : S_Vec i) : Type :=
 match i with
     | 0 => False
     | S _ => unit
 end.
+
+(** Typ pozycji różwnież definiujemy przez dopasowanie indeksu do wzorca,
+    bo różne kształty będą miały różne pozycje, a przecież kształty też są
+    zdefiniowane przez dopasowanie indeksu. Konstruktor [vnil] nie bierze
+    argumentów indukcyjnych i stąd klauzula [| 0 => False]. Konstruktor
+    [vcons] bierze jeden argument indukcyjny i stąd klauzula [| S _ => unit].
+
+    Zauważmy, że niebranie argumentu nieindukcyjnego reprezentujemy inaczej
+    niż niebranie argumentu indukcyjnego.
+
+    [vnil] nie bierze argumentów nieindukcyjnych, co w typie kształtów [S_Vec]
+    reprezentujemy za pomocą typu [unit]. Możemy myśleć o tym tak, że [vnil]
+    bierze jeden argument typu [unit]. Ponieważ [unit] ma tylko jeden element,
+    to i tak z góry wiadomo, że będziemy musieli jako ten argument wstawić
+    [tt].
+
+    [vnil] nie bierze też argumentów indukcyjnych, co w typue pozycji [P_Vec]
+    reprezentujemy za pomocą typu [False]. Możemy myśleć o tym tak, że jest
+    tyle samo argumentów indukcyjnych, co dowodów [False], czyli zero.
+
+    Podsumowując, różnica jest taka, że dla argumentów nieindukcyjnych typ
+    [X] oznacza "weź element typu X", zaś dla argumentów indukcyjnych typ
+    [X] oznacza "weź tyle elementów typu, który właśnie definiujemy, ile
+    jest elementów typu X". *)
 
 Definition r_Vec
   {A : Type} {i : I_Vec A} {s : S_Vec i} (p : P_Vec s) : I_Vec A.
@@ -468,12 +485,29 @@ Proof.
     exact i'.
 Defined.
 
+(** Pozostaje nam tylko zdefiniować funkcję, która pozycjom argumentów
+    indukcyjnym w poszczególnych kształtach przyporządkowuje ich indeksy.
+    Definiujemy tę funkcję przez dowód, gdyż Coq dość słabo rodzi sobie z
+    dopasowaniem do wzorca przy typach zależnych.
+
+    Ponieważ kształty są zdefiniowane przez dopasowanie indeksu do wzorca,
+    to zaczynamy od rozbicia indeksu na przypadki. Gdy indeks wynosi zero,
+    to mamy do czynienia z reprezentacją konstruktora [vnil], który nie
+    bierze żadnych argumentów indukcyjnych, co ujawnia się pod postacią
+    sprzeczności. Gdy indeks wynosi [S i'], mamy do czynienia z konstruktorem
+    [vcons i'], który tworzy element typu [Vec A (S i')], zaś bierze element
+    typu [Vec A i']. Wobec tego w tym przypadku zwracamy [i']. *)
+
 Definition Vec' (A : Type) : nat -> Type :=
   IW (I_Vec A) (@S_Vec A) (@P_Vec A) (@r_Vec A).
 
-(*
-Definition vnil' {A : Type} : Vec' A 0 := isup 0 tt.
-*)
+(** Tak wygląda ostateczna definicja [Vec'] - wrzucamy do [IW] odpowiednie
+    indeksy, kształty, pozycje oraz funkcję przypisującą indeksy pozycjom.
+
+    Spróbujmy przekonać się, że typy [Vec A n] oraz [Vec' A n] są
+    izomorficzne. W tym celu musimy zdefiniować funkcje
+    [f : Vec A n -> Vec' A n] oraz [g : Vec' A n -> Vec A n], które są
+    swoimi odwrotnościami. *)
 
 Fixpoint f {A : Type} {n : nat} (v : Vec A n) : Vec' A n.
 Proof.
@@ -483,12 +517,24 @@ Proof.
       exact (f _ _ v).
 Defined.
 
+(** Najłatwiej definiować nam będzie za pomocą taktyk. Definicja [f] idzie
+    przez rekursję strukturalną po [v]. [isup 0 tt] to reprezentacja [vnil],
+    zaś [@isup _ _ _ (@r_Vec A) (S n) a] to reprezentacja [vcons a]. Dość
+    nieczytelne, prawda? Dlatego właśnie nikt w praktyce nie używa
+    indeksowanych W-typów. *)
+
 Fixpoint g {A : Type} {n : nat} (v : Vec' A n) : Vec A n.
 Proof.
-  destruct v. destruct i; cbn in s.
+  destruct v as [[| i'] s p]; cbn in s.
     apply vnil.
-    apply (vcons _ _ s). apply g. apply (i0 tt).
+    apply (vcons s). apply g. apply (p tt).
 Defined.
+
+(** W drugą stronę jest łatwiej. Definicja idzie oczywiście przez rekursję
+    po [v] (pamiętajmy, że [Vec' A n] to tylko specjalny przypadek [IW],
+    zaś [IW] jest induktywne). Po rozbiciu [v] na komponenty sprawdzamy,
+    jaki ma ono indeks. Jeżeli [0], zwracamy [vnil]. Jeżeli niezerowy, to
+    zwracamy [vcons] z głową [s] rekurencyjnie obliczonym ogonem. *)
 
 Lemma f_g :
   forall {A : Type} {n : nat} (v : Vec A n),
@@ -499,24 +545,105 @@ Proof.
     rewrite IHv. reflexivity.
 Qed.
 
+(** Dowód odwrotności w jedną strnę jest banalny - indukcja po [v] idzie
+    gładko, bo [v] jest typu [Vec A n]. *)
+
 Require Import FunctionalExtensionality.
 
 Lemma g_f :
   forall {A : Type} {n : nat} (v : Vec' A n),
     f (g v) = v.
 Proof.
-  induction v; destruct i; cbn in *.
-    Focus 2. f_equal. extensionality u. destruct u. apply H.
-    match goal with
-        | |- isup 0 tt ?f = _ => generalize f as g
-    end.
-    assert (forall (P : False -> Type) (f g : forall x : False, P x), f = g).
-      intros. extensionality x. destruct x.
-      intro. rewrite (H0 _ g0 i0). destruct s. reflexivity.
+  induction v as [[| i'] s p IH]; unfold I_Vec in *; cbn in *.
+    destruct s. f_equal. extensionality x. destruct x.
+    f_equal. extensionality u. destruct u. apply IH.
+Qed.
+
+(** W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
+    posłużyć się aksjomatem ekstensjonalności dla funkcji. Wynika to z faktu,
+    że w [IW] reprezentujemy argumenty indukcyjne wszystkie na raz za pomocą
+    pojedynczej funkcji.
+
+    Zaczynamy przez indukcję po [v] i rozbijamy indeks żeby sprawdzić, z
+    którym kształtem mamy do czynienia. Kluczowym krokime jest odwinięcie
+    definicji [I_Vec] - bez tego taktyka [f_equal] nie zadziała tak jak
+    powinna. W obu przypadkach kończymy przez użycie ekstensjonalności
+    do udowodnienia, że argumenty indukcyjne są równe. *)
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj za pomocą [IW] następujące predykaty/relacje/rodziny typów:
+    - [even] i [odd]
+    - typ drzew binarnych trzymających wartości w węzłach, indeksowany
+      wysokością
+    - to samo co wyżej, ale indeksowany ilością elementów
+    - porządek [<=] dla liczb naturalnych
+    - relację [Perm : list A -> list A -> Prop] mówiącą, że [l1] i [l2]
+      są swoimi permutacjami *)
+
+(** * M-typy (TODO) *)
+
+Require Import F1.
+
+CoInductive M (S : Type) (P : S -> Type) : Type :=
+{
+    shape : S;
+    position : P shape -> M S P
+}.
+
+Arguments shape {S P}.
+Arguments position {S P} _ _.
+
+Definition transport
+  {A : Type} {P : A -> Type} {x y : A} (p : x = y) (u : P x) : P y :=
+match p with
+    | eq_refl => u
+end.
+
+CoInductive siM {S : Type} {P : S -> Type} (m1 m2 : M S P) : Prop :=
+{
+    shapes : shape m1 = shape m2;
+    positions : forall p : P (shape m1),
+                  siM (position m1 p) (position m2 (transport shapes p))
+}.
+
+Definition P_Stream (A : Type) : A -> Type := fun _ => unit.
+
+Definition Stream' (A : Type) : Type := M A (P_Stream A).
+
+CoFixpoint ff {A : Type} (s : Stream A) : Stream' A :=
+{|
+    shape := hd s;
+    position _ := ff (tl s);
+|}.
+
+CoFixpoint gg {A : Type} (s : Stream' A) : Stream A :=
+{|
+    hd := shape s;
+    tl := gg (position s tt);
+|}.
+
+Lemma ff_gg :
+  forall {A : Type} (s : Stream A),
+    bisim (gg (ff s)) s.
+Proof.
+  cofix CH.
+  constructor; cbn.
+    reflexivity.
+    apply CH.
+Qed.
+
+Lemma gg_ff :
+  forall {A : Type} (s : Stream' A),
+    siM (ff (gg s)) s.
+Proof.
+  cofix CH.
+  econstructor. Unshelve.
+    Focus 2. cbn. reflexivity.
+    destruct p. cbn. apply CH.
 Qed.
 
 
-(** * M-typy (TODO) *)
 
 (** M-typy to to samo co W-typy, tylko że dualne. Pozdro dla kumatych. *)
 
