@@ -3170,9 +3170,24 @@ Proof.
   intros. apply (fD_ind (fun n d => P n (f' n d))); intros.
     rewrite f'_eq1. apply P_gt100. assumption.
     rewrite f'_eq2. specialize (P_le100 _ H).
-      unfold f in P_le100. rewrite !(f'_ext _ _ d1) in P_le100.
-      rewrite !(f'_ext _ _ d2) in P_le100. apply P_le100; assumption.
+      unfold f in P_le100.
+      rewrite !(f'_ext _ _ d1), !(f'_ext _ _ d2) in P_le100.
+      apply P_le100; assumption.
 Qed.
+
+(** Dowód samej reguły też jest dość prosty. Zaczynamy od indukcji po
+    dowodzie faktu, że [n : nat] spełnia predykat dziedziny [fD] (którym
+    to dowodem jest [fD_all n], a który schowany jest w definicji [f]).
+    W przypadku nierekurencyjnym przepisujemy równanie definiujące [f']
+    i kończymy założeniem.
+
+    W przypadku rekurencyjnym również zaczynamy od przepisania definicji
+    [f']. Następnie korzystamy z założenia [P_le100], choć technicznie
+    jest to dość skomplikowane - najpierw specjalizujemy je częściowo
+    za pomocą hipotezy [H], a potem odwijamy definicję [f] i dwukrotnie
+    korzystamy z lematu [f'_ext], żeby typy się zgadzały. Po tej obróbce
+    możemy śmiało skorzystać z [P_le100] - jej przesłanki zachodzą na mocy
+    założenia. *)
 
 (** **** Ćwiczenie *)
 
@@ -3271,11 +3286,13 @@ Qed.
 
 End McCarthy'.
 
-(** * Rekursja wyższego rzędu *)
+(** * Rekursja wyższego rzędu (TODO) *)
 
-(** Pozostaje kwestia rekursji wyższego rzędu. Co to? Ano dotychczas nasze
-    wywołania rekurencyjne były specyficzne, a konkretniej pisząc, wszystkie
-    dotychczasowe wywołania rekurencyjne były zaaplikowane do argumentów.
+(** ACHTUNG: bardzo upośledzona wersja alfa.
+
+    Pozostaje kwestia rekursji wyższego rzędu. Co to takiego? Ano dotychczas
+    wszystkie nasze wywołania rekurencyjne były konkretne, czyli zaaplikowane
+    do argumentów.
 
     Mogłoby się wydawać, że jest to jedyny możliwy sposób robienia wywołań
     rekurencyjnych, jednak nie jest tak. Wywołania rekurencyjne mogą mieć
@@ -3287,8 +3304,8 @@ End McCarthy'.
     argument, dostaje niejako możliwość robienia wywołań rekurencyjnych.
     W zależności od tego, co robi ta funkcja, wszystko może być ok (np.
     gdy ignoruje ona naszą funkcję i w ogóle jej nie używa) lub śmiertelnie
-    niebezpieczne (gdy próbuje zrobić wywołanie rekurencyjne na większym
-    argumencie).
+    niebezpieczne (gdy próbuje zrobić wywołanie rekurencyjne na strukturalnie
+    większym argumencie).
 
     Sztoby za dużo nie godoć, bajszpil: *)
 
@@ -3306,14 +3323,15 @@ match t with
     | Node x ts => Node x (rev (map mirror ts))
 end.
 
-(** Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa, a
-    następnie odwracamy kolejność poddrzew za pomocą [rev]. Chociaż poszło
-    gładko, to mamy tu do czynienia z czymś, czego wcześniej nie widzieliśmy.
-    Nie zrobiliśmy żadnego wywołania rekurencyjnego, a mimo to funkcja działa
-    ok. Dlaczego?
+(** Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa za
+    pomocą [map mirror], a następnie odwracamy kolejność poddrzew z użyciem
+    [rev]. Chociaż poszło gładko, to mamy tu do czynienia z czymś, czego
+    wcześniej nie widzieliśmy. Nie ma tu żadnego wywołania rekurencyjnego,
+    a mimo to funkcja działa ok. Dlaczego? Właśnie dlatego, że wywołania
+    rekurencyjne są robione przez funkcję [map]. Mamy więc do czynienia z
+    rekursją wyższego rzędu. *)
 
-    Właśnie dlatego, że wywołania rekurencyjne są robione przez funkcję [map].
-    A zatem mamy do czynienia z rekursją wyższego rzędu. *)
+Print Forall2.
 
 Inductive mirrorG {A : Type} : Tree A -> Tree A -> Prop :=
   | mirrorG_0 :

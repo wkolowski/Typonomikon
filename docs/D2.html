@@ -3324,14 +3324,32 @@ Mając <span class="inlinecode"><span class="id" title="var">f'</span></span> or
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">fD_ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span> =&gt; <span class="id" title="var">P</span> <span class="id" title="var">n</span> (<span class="id" title="var">f'</span> <span class="id" title="var">n</span> <span class="id" title="var">d</span>))); <span class="id" title="tactic">intros</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f'_eq1</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">P_gt100</span>. <span class="id" title="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">f'_eq2</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">P_le100</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">f</span> <span class="id" title="tactic">in</span> <span class="id" title="var">P_le100</span>. <span class="id" title="tactic">rewrite</span> !(<span class="id" title="var">f'_ext</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">d1</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">P_le100</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> !(<span class="id" title="var">f'_ext</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">d2</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">P_le100</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">P_le100</span>; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">f</span> <span class="id" title="tactic">in</span> <span class="id" title="var">P_le100</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> !(<span class="id" title="var">f'_ext</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">d1</span>), !(<span class="id" title="var">f'_ext</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">d2</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">P_le100</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">P_le100</span>; <span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
+Dowód samej reguły też jest dość prosty. Zaczynamy od indukcji po
+    dowodzie faktu, że <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> spełnia predykat dziedziny <span class="inlinecode"><span class="id" title="var">fD</span></span> (którym
+    to dowodem jest <span class="inlinecode"><span class="id" title="var">fD_all</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>, a który schowany jest w definicji <span class="inlinecode"><span class="id" title="var">f</span></span>).
+    W przypadku nierekurencyjnym przepisujemy równanie definiujące <span class="inlinecode"><span class="id" title="var">f'</span></span>
+    i kończymy założeniem.
+
+<div class="paragraph"> </div>
+
+    W przypadku rekurencyjnym również zaczynamy od przepisania definicji
+    <span class="inlinecode"><span class="id" title="var">f'</span></span>. Następnie korzystamy z założenia <span class="inlinecode"><span class="id" title="var">P_le100</span></span>, choć technicznie
+    jest to dość skomplikowane - najpierw specjalizujemy je częściowo
+    za pomocą hipotezy <span class="inlinecode"><span class="id" title="var">H</span></span>, a potem odwijamy definicję <span class="inlinecode"><span class="id" title="var">f</span></span> i dwukrotnie
+    korzystamy z lematu <span class="inlinecode"><span class="id" title="var">f'_ext</span></span>, żeby typy się zgadzały. Po tej obróbce
+    możemy śmiało skorzystać z <span class="inlinecode"><span class="id" title="var">P_le100</span></span> - jej przesłanki zachodzą na mocy
+    założenia. 
+<div class="paragraph"> </div>
+
 <a name="lab228"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
@@ -3358,13 +3376,17 @@ Mając <span class="inlinecode"><span class="id" title="var">f'</span></span> or
 </div>
 
 <div class="doc">
-<a name="lab229"></a><h1 class="section">Rekursja wyższego rzędu</h1>
+<a name="lab229"></a><h1 class="section">Rekursja wyższego rzędu (TODO)</h1>
 
 <div class="paragraph"> </div>
 
- Pozostaje kwestia rekursji wyższego rzędu. Co to? Ano dotychczas nasze
-    wywołania rekurencyjne były specyficzne, a konkretniej pisząc, wszystkie
-    dotychczasowe wywołania rekurencyjne były zaaplikowane do argumentów.
+ ACHTUNG: bardzo upośledzona wersja alfa.
+
+<div class="paragraph"> </div>
+
+    Pozostaje kwestia rekursji wyższego rzędu. Co to takiego? Ano dotychczas
+    wszystkie nasze wywołania rekurencyjne były konkretne, czyli zaaplikowane
+    do argumentów.
 
 <div class="paragraph"> </div>
 
@@ -3380,8 +3402,8 @@ Mając <span class="inlinecode"><span class="id" title="var">f'</span></span> or
     argument, dostaje niejako możliwość robienia wywołań rekurencyjnych.
     W zależności od tego, co robi ta funkcja, wszystko może być ok (np.
     gdy ignoruje ona naszą funkcję i w ogóle jej nie używa) lub śmiertelnie
-    niebezpieczne (gdy próbuje zrobić wywołanie rekurencyjne na większym
-    argumencie).
+    niebezpieczne (gdy próbuje zrobić wywołanie rekurencyjne na strukturalnie
+    większym argumencie).
 
 <div class="paragraph"> </div>
 
@@ -3416,18 +3438,18 @@ Mając <span class="inlinecode"><span class="id" title="var">f'</span></span> or
 </div>
 
 <div class="doc">
-Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa, a
-    następnie odwracamy kolejność poddrzew za pomocą <span class="inlinecode"><span class="id" title="var">rev</span></span>. Chociaż poszło
-    gładko, to mamy tu do czynienia z czymś, czego wcześniej nie widzieliśmy.
-    Nie zrobiliśmy żadnego wywołania rekurencyjnego, a mimo to funkcja działa
-    ok. Dlaczego?
-
-<div class="paragraph"> </div>
-
-    Właśnie dlatego, że wywołania rekurencyjne są robione przez funkcję <span class="inlinecode"><span class="id" title="var">map</span></span>.
-    A zatem mamy do czynienia z rekursją wyższego rzędu. 
+Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa za
+    pomocą <span class="inlinecode"><span class="id" title="var">map</span></span> <span class="inlinecode"><span class="id" title="var">mirror</span></span>, a następnie odwracamy kolejność poddrzew z użyciem
+    <span class="inlinecode"><span class="id" title="var">rev</span></span>. Chociaż poszło gładko, to mamy tu do czynienia z czymś, czego
+    wcześniej nie widzieliśmy. Nie ma tu żadnego wywołania rekurencyjnego,
+    a mimo to funkcja działa ok. Dlaczego? Właśnie dlatego, że wywołania
+    rekurencyjne są robione przez funkcję <span class="inlinecode"><span class="id" title="var">map</span></span>. Mamy więc do czynienia z
+    rekursją wyższego rzędu. 
 </div>
 <div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">Forall2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">mirrorG</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Tree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>

@@ -1,18 +1,34 @@
-Module drzewka.
+Module wisienki.
 
 Inductive Wisienka (A : Type) : Type :=
     | L : A -> Wisienka A
     | N : Wisienka A -> Wisienka A -> Wisienka A.
 
+Inductive FinWisienka (A : Type) : Type :=
+    | L0 : A -> FinWisienka A
+    | N0 : list (FinWisienka A) -> FinWisienka A.
+
+Inductive InfWisienka (A : Type) : Type :=
+    | L1 : A -> InfWisienka A
+    | N1 : forall {B : Type}, (B -> InfWisienka A) -> InfWisienka A.
+
+End wisienki.
+
+Module NodeTrees.
+
+Inductive BTree (A : Type) : Type :=
+    | E : BTree A
+    | N : A -> BTree A -> BTree A -> BTree A.
+
 Inductive Tree (A : Type) : Type :=
-    | E : Tree A
+    | E0 : Tree A
     | N0 : A -> list (Tree A) -> Tree A.
 
-Inductive DużaWisienka (A : Type) : Type :=
-    | L0 : A -> DużaWisienka A
-    | N1 : list (DużaWisienka A) -> DużaWisienka A.
+Inductive InfTree (A : Type) : Type :=
+    | E1 : InfTree A
+    | N1 : A -> forall {B : Type}, (B -> InfTree A) -> InfTree A.
 
-End drzewka.
+End NodeTrees.
 
 (** Pamiętać, że w RCC jest jakotaka implementacja BTree, którą można tu
     po prostu skopiować. *)
@@ -144,3 +160,4 @@ Parameter SameStructure : forall A B : Type, BTree A -> BTree B -> Prop.
 Parameter SameShape : forall A B : Type, BTree A -> BTree B -> Prop.
 
 Parameter subtree : forall A : Type, BTree A -> BTree A -> Prop.
+Parameter Subterm : forall A : Type, BTree A -> BTree A -> Prop.

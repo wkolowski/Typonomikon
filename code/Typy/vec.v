@@ -35,20 +35,20 @@ Arguments vcons [A n] _ _.
 Definition len {A : Type} {n : nat} (_ : vec A n) : nat := n.
 (* end hide *)
 
-Theorem len_vnil :
+Lemma len_vnil :
   forall A : Type, len (@vnil A) = 0.
 (* begin hide *)
 Proof. reflexivity. Qed.
 (* end hide *)
 
-Theorem len_vcons' :
+Lemma len_vcons' :
   forall (A : Type) (n : nat) (h : A) (t : vec A n),
     len (vcons h t) = S n.
 (* begin hide *)
 Proof. trivial. Qed.
 (* end hide *)
 
-Theorem len_vcons :
+Lemma len_vcons :
   forall (A : Type) (n : nat) (h : A) (t : vec A n),
     len (vcons h t) = S (len t).
 (* begin hide *)
@@ -70,13 +70,13 @@ end.
 
 Notation "l1 +++ l2" := (app l1 l2) (at level 40).
 
-Theorem app_vnil_l :
+Lemma app_vnil_l :
   forall (A : Type) (n : nat) (l : vec A n), vnil +++ l = l.
 (* begin hide *)
 Proof. reflexivity. Qed.
 (* end hide *)
 
-Theorem JMeq_vcons :
+Lemma JMeq_vcons :
   forall (A : Type) (n m : nat) (h h' : A) (t : vec A n) (t' : vec A m),
     n = m -> JMeq h h' -> JMeq t t' -> JMeq (vcons h t) (vcons h' t').
 (* end hide *)
@@ -85,7 +85,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_vnil_r :
+Lemma app_vnil_r :
   forall (A : Type) (n : nat) (l : vec A n), JMeq (l +++ vnil) l.
 (* begin hide *)
 Proof.
@@ -95,7 +95,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_vnil_r' :
+Lemma app_vnil_r' :
   forall (A : Type) (n : nat) (l : vec A n), eq_dep (l +++ vnil) l.
 (* begin hide *)
 Proof.
@@ -103,7 +103,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_assoc :
+Lemma app_assoc :
   forall (A : Type) (x y z : nat) (l1 : vec A x) (l2 : vec A y) (l3 : vec A z),
     eq_dep (l1 +++ (l2 +++ l3)) ((l1 +++ l2) +++ l3).
 (* begin hide *)
@@ -114,7 +114,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_assoc' :
+Lemma app_assoc' :
   forall (A : Type) (x y z : nat) (l1 : vec A x) (l2 : vec A y) (l3 : vec A z),
     JMeq (l1 +++ (l2 +++ l3)) ((l1 +++ l2) +++ l3).
 (* begin hide *)
@@ -125,7 +125,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_len :
+Lemma app_len :
   forall (A : Type) (n m : nat) (l1 : vec A n) (l2 : vec A m),
     len (l1 +++ l2) = len l1 + len l2.
 (* begin hide *)
@@ -134,14 +134,14 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_cons :
+Lemma app_cons :
   forall (A : Type) (n m : nat) (x : A) (l1 : vec A n) (l2 : vec A m),
     (vcons x l1) +++ l2 = vcons x (l1 +++ l2).
 (* begin hide *)
 Proof. trivial. Qed.
 (* end hide *)
 
-Theorem app_cons2 :
+Lemma app_cons2 :
   forall (A : Type) (n m : nat) (x : A) (l1 : vec A n) (l2 : vec A m),
     JMeq (l1 +++ vcons x l2) ((l1 +++ (vcons x vnil)) +++ l2).
 (* begin hide *)
@@ -152,7 +152,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_cons2' :
+Lemma app_cons2' :
   forall (A : Type) (n m : nat) (x : A) (l1 : vec A n) (l2 : vec A m),
     eq_dep (l1 +++ vcons x l2) ((l1 +++ (vcons x vnil)) +++ l2).
 (* begin hide *)
@@ -165,7 +165,7 @@ Qed.
 
 Require Import Omega.
 
-Theorem no_infinite_cons :
+Lemma no_infinite_cons :
   forall (A : Type) (n : nat) (h : A) (t : vec A n),
     eq_dep t (vcons h t) -> False.
 (* begin hide *)
@@ -174,7 +174,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem no_infinite_app :
+Lemma no_infinite_app :
   forall (A : Type) (n m : nat) (l : vec A n) (l' : vec A m),
     ~ eq_dep l' vnil -> eq_dep l (l' +++ l) -> False.
 (* begin hide *)
@@ -187,7 +187,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_inv1 :
+Lemma app_inv1 :
   forall (A : Type) (n m : nat) (l : vec A n) (l1 l2 : vec A m),
     l +++ l1 = l +++ l2 -> l1 = l2.
 (* begin hide *)
@@ -211,7 +211,7 @@ Qed.
 
 Require Import Coq.Program.Equality.
 
-Theorem app_inv2 :
+Lemma app_inv2 :
   forall (A : Type) (n m : nat) (l : vec A n) (l1 l2 : vec A m),
     eq_dep (l1 +++ l) (l2 +++ l) -> eq_dep l1 l2.
 (* begin hide *)
@@ -228,7 +228,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem app_eq_nil :
+Lemma app_eq_nil :
   forall (A : Type) (n m : nat) (l1 : vec A n) (l2 : vec A m),
     eq_dep (l1 +++ l2) vnil -> eq_dep l1 vnil /\ eq_dep l2 vnil.
 (* begin hide *)
@@ -261,20 +261,20 @@ Notation "[ ]" := vnil.
 Notation "h :: t" := (vcons h t).
 Notation "l1 ++ l2" := (app l1 l2).
 
-Theorem rev_nil :
+Lemma rev_nil :
   forall (A : Type), rev [] = @vnil A.
 (* begin hide *)
 Proof. trivial. Qed.
 (* end hide *)
 
-Theorem rev_length :
+Lemma rev_length :
   forall (A : Type) (n : nat) (l : vec A n),
     len (rev l) = len l.
 (* begin hide *)
 Proof. trivial. Qed.
 (* end hide *)
 
-Theorem snoc_app :
+Lemma snoc_app :
   forall (A : Type) (x : A) (n m : nat) (l1 : vec A n) (l2 : vec A m),
     eq_dep (snoc x (l1 +++ l2)) (l1 +++ snoc x l2).
 (* begin hide *)
@@ -285,7 +285,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem rev_app :
+Lemma rev_app :
   forall (A : Type) (n m : nat) (l1 : vec A n) (l2 : vec A m),
     eq_dep (rev (l1 +++ l2)) (rev l2 +++ rev l1).
 (* begin hide *)
@@ -305,7 +305,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem rev_inv :
+Lemma rev_inv :
   forall (A : Type) (n : nat) (l : vec A n), rev (rev l) = l.
 (* begin hide *)
 Proof.
@@ -328,13 +328,13 @@ Inductive elem {A : Type} : A -> forall n : nat, vec A n -> Prop :=
 Hint Constructors elem.
 (* end hide *)
 
-Theorem elem_nil :
+Lemma elem_nil :
   forall (A : Type) (x : A), ~ elem x vnil.
 (* begin hide *)
 Proof. inversion 1. Qed.
 (* end hide *)
 
-Theorem elem_inv_head :
+Lemma elem_inv_head :
   forall (A : Type) (n : nat) (x h : A) (t : vec A n),
     ~ elem x (vcons h t) -> x <> h.
 (* begin hide *)
@@ -343,7 +343,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_inv_tail :
+Lemma elem_inv_tail :
   forall (A : Type) (n : nat) (x h : A) (t : vec A n),
     ~ elem x (h :: t) -> ~ elem x t.
 (* begin hide *)
@@ -352,7 +352,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_app_l :
+Lemma elem_app_l :
   forall (A : Type) (n m : nat) (x : A) (l1 : vec A n) (l2 : vec A m),
     elem x l1 -> elem x (l1 ++ l2).
 (* begin hide *)
@@ -372,7 +372,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_app_or :
+Lemma elem_app_or :
   forall (A : Type) (n m : nat) (x : A) (l1 : vec A n) (l2 : vec A m),
     elem x (l1 ++ l2) -> elem x l1 \/ elem x l2.
 (* begin hide *)
@@ -387,7 +387,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_or_app :
+Lemma elem_or_app :
   forall (A : Type) (n m : nat) (x : A) (l1 : vec A n) (l2 : vec A m),
     elem x l1 \/ elem x l2 -> elem x (l1 ++ l2).
 (* begin hide *)
@@ -396,7 +396,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_snoc :
+Lemma elem_snoc :
   forall (A : Type) (n : nat) (x : A) (l : vec A n),
     elem x (snoc x l).
 (* begin hide *)
@@ -405,7 +405,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_snoc' :
+Lemma elem_snoc' :
   forall (A : Type) (n : nat) (x y : A) (l : vec A n),
     elem x l -> elem x (snoc y l).
 (* begin hide *)
@@ -415,7 +415,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_snoc'' :
+Lemma elem_snoc'' :
   forall (A : Type) (n : nat) (x y : A) (l : vec A n),
     elem x (snoc y l) <-> x = y \/ elem x l.
 (* begin hide *)
@@ -436,7 +436,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_rev :
+Lemma elem_rev :
   forall (A : Type) (n : nat) (x : A) (l : vec A n),
     elem x l -> elem x (rev l).
 (* begin hide *)
@@ -448,7 +448,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_rev_conv :
+Lemma elem_rev_conv :
   forall (A : Type) (n : nat) (x : A) (l : vec A n),
     elem x (rev l) -> elem x l.
 (* begin hide *)
@@ -459,7 +459,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_split :
+Lemma elem_split :
   forall (A : Type) (n : nat) (x : A) (l : vec A n),
     elem x l -> exists (m1 m2 : nat) (l1 : vec A m1) (l2 : vec A m2),
       eq_dep l (l1 ++ x :: l2).
@@ -483,7 +483,7 @@ match la with
 end.
 (* end hide *)
 
-Theorem map_id : forall (A : Type) (n : nat) (l : vec A n),
+Lemma map_id : forall (A : Type) (n : nat) (l : vec A n),
   map id l = l.
 (* begin hide *)
 Proof.
@@ -491,7 +491,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_comp :
+Lemma map_comp :
   forall (A B C : Type) (n : nat) (f : A -> B) (g : B -> C)
     (l : vec A n), map g (map f l) = map (fun x : A => g (f x)) l.
 (* begin hide *)
@@ -502,7 +502,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_length :
+Lemma map_length :
   forall (A B : Type) (n : nat) (f : A -> B) (l : vec A n),
     len (map f l) = len l.
 (* begin hide *)
@@ -513,7 +513,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_app :
+Lemma map_app :
   forall (A B : Type) (n m : nat) (f : A -> B) (l1 : vec A n) (l2 : vec A m),
     map f (l1 ++ l2) = map f l1 ++ map f l2.
 (* begin hide *)
@@ -524,7 +524,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_map :
+Lemma elem_map :
   forall (A B : Type) (n : nat) (f : A -> B) (l : vec A n) (x : A),
     elem x l -> elem (f x) (map f l).
 (* begin hide *)
@@ -535,7 +535,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem elem_map_conv :
+Lemma elem_map_conv :
   forall (A B : Type) (n : nat) (f : A -> B) (l : vec A n) (y : B),
     elem y (map f l) <-> exists x : A, f x = y /\ elem x l.
 (* begin hide *)
@@ -551,7 +551,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_snoc :
+Lemma map_snoc :
   forall (A B : Type) (n : nat) (f : A -> B) (x : A) (l : vec A n),
     map f (snoc x l) = snoc (f x) (map f l).
 (* begin hide *)
@@ -560,7 +560,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_rev :
+Lemma map_rev :
   forall (A B : Type) (n : nat) (f : A -> B) (l : vec A n),
     map f (rev l) = rev (map f l).
 (* begin hide *)
@@ -571,7 +571,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_ext_elem :
+Lemma map_ext_elem :
   forall (A B : Type) (n : nat) (f g : A -> B) (l : vec A n),
     (forall x : A, elem x l -> f x = g x) -> map f l = map g l.
 (* begin hide *)
@@ -582,7 +582,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_ext :
+Lemma map_ext :
   forall (A B : Type) (n : nat) (f g : A -> B) (l : vec A n),
     (forall x : A, f x = g x) -> map f l = map g l.
 (* begin hide *)
@@ -602,7 +602,7 @@ match lla with
 end.
 (* end hide *)
 
-Theorem join_app :
+Lemma join_app :
   forall (A : Type) (n n' m m' : nat) (l1 : vec (vec A n) m)
   (l2 : vec (vec A n) m'),
     eq_dep (join (l1 ++ l2)) (join l1 ++ join l2).
@@ -614,7 +614,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem join_map :
+Lemma join_map :
   forall (A B : Type) (n m : nat) (f : A -> B) (l : vec (vec A n) m),
     map f (join l) = join (map (map f) l).
 (* begin hide *)
@@ -638,7 +638,7 @@ match n with
 end.
 (* end hide *)
 
-Theorem repeat_len :
+Lemma repeat_len :
   forall (A : Type) (n : nat) (x : A),
     len (repeat n x) = n.
 (* begin hide *)
@@ -647,7 +647,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem repeat_elem :
+Lemma repeat_elem :
   forall (A : Type) (n : nat) (x y : A),
     elem x (repeat n y) -> x = y.
 (* begin hide *)
@@ -672,7 +672,7 @@ match m, l with
 end.
 (* end hide *)
 
-Theorem nth_len :
+Lemma nth_len :
   forall (A : Type) (m n : nat) (l : vec A n),
     m < n -> exists x : A, nth m l = Some x.
 (* begin hide *)
@@ -685,7 +685,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_elem :
+Lemma nth_elem :
   forall (A : Type) (m n : nat) (l : vec A n),
     m < n -> exists x : A, nth m l = Some x /\ elem x l.
 (* begin hide *)
@@ -695,7 +695,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_elem_conv :
+Lemma nth_elem_conv :
   forall (A : Type) (n : nat) (x : A) (l : vec A n),
     elem x l -> exists m : nat, nth m l = Some x.
 (* begin hide *)
@@ -707,7 +707,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_overflow :
+Lemma nth_overflow :
   forall (A : Type) (m n : nat) (l : vec A n),
     n <= m -> ~ exists x : A, nth m l = Some x.
 (* begin hide *)
@@ -720,7 +720,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_app1 :
+Lemma nth_app1 :
   forall (A : Type) (m n1 n2 : nat) (l1 : vec A n1) (l2 : vec A n2),
     m < n1 -> nth m (l1 ++ l2) = nth m l1.
 (* begin hide *)
@@ -733,7 +733,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_app2 :
+Lemma nth_app2 :
   forall (A : Type) (m n1 n2 : nat) (l1 : vec A n1) (l2 : vec A n2),
     n1 <= m -> nth m (l1 ++ l2) = nth (m - n1) l2.
 (* begin hide *)
@@ -743,7 +743,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_split :
+Lemma nth_split :
   forall (A : Type) (m n : nat) (l : vec A n) (x : A),
     nth m l = Some x -> exists (n1 n2 : nat) (l1 : vec A n1) (l2 : vec A n2),
       eq_dep l (l1 ++ x :: l2) /\ n1 = m.
@@ -756,7 +756,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_None :
+Lemma nth_None :
   forall (A : Type) (m n : nat) (l : vec A n),
     nth m l = None -> n <= m.
 (* begin hide *)
@@ -769,7 +769,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem nth_Some :
+Lemma nth_Some :
   forall (A : Type) (m n : nat) (l : vec A n) (x : A),
     nth m l = Some x -> m < n.
 (* begin hide *)
@@ -782,7 +782,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem map_nth :
+Lemma map_nth :
     forall (A B : Type) (m n : nat) (f : A -> B) (l : vec A n) (x : A),
       nth m l = Some x -> nth m (map f l) = Some (f x).
 (* begin hide *)
@@ -824,14 +824,14 @@ match l with
 end.*)
 (* end hide *)
 
-Theorem head_cons :
+Lemma head_cons :
   forall (A : Type) (n : nat) (h : A) (t : vec A n),
     head (h :: t) = h.
 (* begin hide *)
 Proof. simpl. trivial. Qed.
 (* end hide *)
 
-Theorem last_snoc :
+Lemma last_snoc :
   forall (A : Type) (n : nat) (h : A) (t : vec A n),
     last (snoc h t) = h.
 (* begin hide *)
@@ -840,7 +840,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem head_nth:
+Lemma head_nth:
   forall (A : Type) (n : nat) (l : vec A (S n)),
     Some (head l) = nth 0 l.
 (* begin hide *)
@@ -849,7 +849,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem last_nth : forall (A : Type) (n : nat) (l : vec A (S n)),
+Lemma last_nth : forall (A : Type) (n : nat) (l : vec A (S n)),
   Some (last l) = nth n l.
 (* begin hide *)
 Proof.
@@ -946,7 +946,7 @@ match goal with
 end; auto.
 (* end hide *)
 
-Theorem take_nil :
+Lemma take_nil :
   forall (A : Type) (n : nat),
     eq_dep (take n []) (@vnil A).
 (* begin hide *)
@@ -957,7 +957,7 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem drop_nil :
+Lemma drop_nil :
   forall (A : Type) (n : nat),
     eq_dep (drop n []) (@vnil A).
 (* begin hide *)
@@ -971,7 +971,7 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem take_cons :
+Lemma take_cons :
   forall (A : Type) (n m : nat) (h : A) (t : vec A n),
     take (S m) (h :: t) = h :: take m t.
 (* begin hide *)
@@ -980,7 +980,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_cons :
+Lemma drop_cons :
   forall (A : Type) (n m : nat) (h : A) (t : vec A n),
     drop (S m) (h :: t) = drop m t.
 (* begin hide *)
@@ -989,7 +989,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_0 :
+Lemma take_0 :
   forall (A : Type) (n : nat) (l : vec A n),
     take 0 l = [].
 (* begin hide *)
@@ -1000,14 +1000,14 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem drop_0 :
+Lemma drop_0 :
   forall (A : Type) (n : nat) (l : vec A n),
     eq_dep (drop 0 l) l.
 (* begin hide *)
 Proof. takedrop. Qed.
 (* end hide *)
 
-Theorem take_length :
+Lemma take_length :
   forall (A : Type) (n : nat) (l : vec A n),
     eq_dep (take n l) l.
 (* begin hide *)
@@ -1018,7 +1018,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_all :
+Lemma drop_all :
   forall (A : Type) (n : nat) (l : vec A n),
     eq_dep (drop n l) [].
 (* begin hide *)
@@ -1027,7 +1027,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_length' :
+Lemma take_length' :
   forall (A : Type) (n m : nat) (l : vec A n),
     n <= m -> eq_dep (take m l) l.
 (* begin hide *)
@@ -1042,7 +1042,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_length' :
+Lemma drop_length' :
   forall (A : Type) (m n : nat) (l : vec A n),
     n <= m -> eq_dep (drop m l) [].
 (* begin hide *)
@@ -1055,7 +1055,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem length_take :
+Lemma length_take :
   forall (A : Type) (m n : nat) (l : vec A n),
     n <= m -> len (take n l) = n.
 (* begin hide *)
@@ -1068,7 +1068,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem drop_take :
+Lemma drop_take :
   forall (A : Type) (m n : nat) (l : vec A n),
     m <= n -> len (drop m l) = n - m.
 (* begin hide *)
@@ -1081,7 +1081,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_map :
+Lemma take_map :
   forall (A B : Type) (f : A -> B) (m n : nat) (l : vec A n),
     map f (take m l) = take m (map f l).
 (* begin hide *)
@@ -1094,7 +1094,7 @@ Restart.
 Qed.
 (* end hide *)
 
-Theorem drop_map :
+Lemma drop_map :
   forall (A B : Type) (f : A -> B) (m n : nat) (l : vec A n),
     eq_dep (map f (drop m l)) (drop m (map f l)).
 (* begin hide *)
@@ -1107,7 +1107,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_elem :
+Lemma take_elem :
   forall (A : Type) (m n : nat) (l : vec A n) (x : A),
     elem x (take m l) -> elem x l.
 (* begin hide *)
@@ -1121,7 +1121,7 @@ Qed.
 
 Print Assumptions take_elem.
 
-Theorem drop_elem :
+Lemma drop_elem :
   forall (A : Type) (m n : nat) (l : vec A n) (x : A),
     elem x (drop m l) -> elem x l.
 (* begin hide *)
@@ -1134,7 +1134,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem take_take :
+Lemma take_take :
   forall (A : Type) (m m' n : nat) (l : vec A n),
     eq_dep (take m (take m' l)) (take m' (take m l)).
 (* begin hide *)
@@ -1156,7 +1156,7 @@ Proof.
 Admitted.
 (* end hide *) 
 
-Theorem drop_drop :
+Lemma drop_drop :
   forall (A : Type) (m m' n : nat) (l : vec A n),
     eq_dep (drop m (drop m' l)) (drop m' (drop m l)).
 (* begin hide *)
@@ -1168,7 +1168,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-Theorem take_drop_rev :
+Lemma take_drop_rev :
   forall (A : Type) (m n : nat) (l : vec A n),
     eq_dep (take m (rev l)) (rev (drop (n - m) l)).
 Proof.
@@ -1181,7 +1181,7 @@ Proof.
 Abort.
 (* end hide *)
 
-Theorem take_drop :
+Lemma take_drop :
   forall (A : Type) (m m' n : nat) (l : vec A n),
     eq_dep (take m (drop m' l)) (drop m' (take (m + m') l)).
 (* begin hide *)
@@ -1233,7 +1233,7 @@ match l with
     | cons x xs => Cons x (fromList xs)
 end.
 
-Theorem toList_length : forall (n : nat) (v : Vec A n),
+Lemma toList_length : forall (n : nat) (v : Vec A n),
     length (toList v) = n.
 Proof.
   induction v; simpl; try rewrite IHv; trivial.
@@ -1277,7 +1277,7 @@ Defined.*)
 
 Require Import JMeq.
 
-Theorem JMeq_Cons :
+Lemma JMeq_Cons :
   forall (A B : Type) (n m : nat) (h1 : A) (h2 : B)
   (t1 : Vec A n) (t2 : Vec B m),
     A = B -> n = m -> JMeq h1 h2 -> JMeq t1 t2 ->
@@ -1286,7 +1286,7 @@ Proof.
   intros; subst. rewrite H1, H2. trivial.
 Qed.
 
-Theorem toList_fromList : forall (A : Type) (n : nat) (v : Vec A n),
+Lemma toList_fromList : forall (A : Type) (n : nat) (v : Vec A n),
     JMeq (fromList (toList v)) v.
 Proof.
   induction v; simpl.
@@ -1329,7 +1329,7 @@ Print JMeq_eq.
 
 Require Import Program.
 
-Theorem wut_1 : forall (A : Type) (n m : nat),
+Lemma wut_1 : forall (A : Type) (n m : nat),
     n <> m -> Vec A n <> Vec A m.
 Proof.
   induction n as [| n'].
@@ -1337,12 +1337,12 @@ Proof.
       intros. contradiction H. trivial.
       intros. intro. inversion H0.
 
-Theorem wwwut : forall (A : Type) (n m : nat),
+Lemma wwwut : forall (A : Type) (n m : nat),
     Vec A n = Vec A m -> n = m.
 Proof.
   intros. dependent destruction H.
 
-Theorem vec_wut : forall (A B : Type) (n m : nat) (h1 : A) (h2 : B)
+Lemma vec_wut : forall (A B : Type) (n m : nat) (h1 : A) (h2 : B)
     (t1 : Vec A n) (t2 : Vec B m), n = m ->
         JMeq h1 h2 -> JMeq t1 t2 -> JMeq (Cons h1 t1) (Cons h2 t2).
 Proof.
@@ -1350,7 +1350,7 @@ Proof.
     apply inj_pair2 in H. subst. trivial.
 Qed.
 
-Theorem vec_wut' : forall (A B : Type) (n m : nat) (h1 : A) (h2 : B)
+Lemma vec_wut' : forall (A B : Type) (n m : nat) (h1 : A) (h2 : B)
     (t1 : Vec A n) (t2 : Vec B m),
         JMeq h1 h2 -> JMeq t1 t2 -> JMeq (Cons h1 t1) (Cons h2 t2).
 Proof.
@@ -1364,18 +1364,18 @@ Inductive Wydmuszka (A : Type) (n : nat) : Type :=
     | WydNil : Wydmuszka A n
     | WyCons : A -> Wydmuszka A n -> Wydmuszka A n.
 
-Theorem wydmuszka_inversion : forall (A B : Type) (n m : nat)
+Lemma wydmuszka_inversion : forall (A B : Type) (n m : nat)
     (w1 : Wydmuszka A n) (w2 : Wydmuszka B m), JMeq w1 w2 -> n = m.
 Proof.
   intros. inversion H.
 
-Theorem all_len : forall (A : Type) (n : nat) (v : Vec A n),
+Lemma all_len : forall (A : Type) (n : nat) (v : Vec A n),
     len v = n.
 Proof.
   intros. compute. trivial.
 Qed.
 
-Theorem all_len2 : forall (A : Type) (n m : nat) (v : Vec A n),
+Lemma all_len2 : forall (A : Type) (n m : nat) (v : Vec A n),
     Vec A n = Vec A m -> len v = m.
 Proof.
   intros. destruct H. *)

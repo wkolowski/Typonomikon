@@ -641,13 +641,13 @@ Qed.
 Require Import F1.
 
 (** Naszą motywacją do badania W-typów było to, że są one jedynym
-    pierścieniem, tj. pozwalają uchwycić wszystkie typy induktywne
-    za pomocą jednego (oczywiście o ile mamy też [False], [unit],
-    [bool], [prod] i [sum]).
+    pierścieniem (w sensie Władcy Pierścieni, a nie algebry abstrakcyjnej),
+    tj. pozwalają uchwycić wszystkie typy induktywne za pomocą jednego
+    (oczywiście o ile mamy też [False], [unit], [bool], [prod] i [sum]).
 
     Podobnie możemy postawić sobie zadanie zbadania wszystkich typów
-    koinduktywnych. Odpowiedź na to pytanie jest (zupełnie nieprzypadkowo)
-    analogiczna do tej dla typów induktywnych, a są nią M-typy. Skąd nazwa?
+    koinduktywnych. Rozwiązanie zadania jest (zupełnie nieprzypadkowo)
+    analogiczne do tego dla typów induktywnych, a są nim M-typy. Skąd nazwa?
     Zauważ, że M to nic innego jak W postawione na głowie - podobnie esencja
     M-typów jest taka sama jak W-typów, ale interpretacja jest postawiona
     na głowie. *)
@@ -664,25 +664,32 @@ Arguments position {S P} _ _.
 (** Zastanówmy się przez chwilę, dlaczego definicja [M] wygląda właśnie tak.
     W tym celu rozważmy dowolny typ koinduktywny [C] i przyjmijmy, że ma on
     pola [f1 : X1], ..., [fn : Xn]. Argumenty możemy podzielić na dwie grupy:
-    koindukcyjne (których typem jest [C] lub funkcje postaci [Y -> C]) oraz
+    koindukcyjne (których typem jest [C] lub funkcje postaci [B -> C]) oraz
     niekoindukcyjne (oznaczmy ich typy przez [A]).
 
     Oczywiście wszystkie niekoindukcyjne pola o typach [A1], ..., [Ak] możemy
     połączyć w jedno wielgachne pole o typie [A1 * ... * Ak] i tym właśnie
-    jest występujące w [M] pole [shape].
+    jest występujące w [M] pole [shape]. Podobnie jak w przypadku W-typów,
+    typ [S] będziemy nazywać typem kształtów.
 
-    
+    Pozostała nam jeszcze garść pól typu [C] (lub w nieco ogólniejszym
+    przypadku, o typach [B1 -> C], ..., [Bn -> C]. Nie trudno zauważyć,
+    że można połączyć je w typ [B1 + ... + Bn -> C]. Nie tłumaczy to
+    jednak tego, że typ pozycji zależy od konkretnego kształtu.
 
-    TODO *)
+    Źródeł można doszukiwać się w jeszcze jednej, nieco bardziej złożonej
+    postaci destruktorów. Żeby za dużo nie mącić, rozważmy przykład. Niech
+    [C] ma destruktor postaci [nat -> C + nat]. Jak dokodować ten destruktor
+    do [shape] i [position]? Otóż dorzucamy do [shape] nowy komponent, czyli
+    [shape' := shape * nat -> option nat].
+
+    A psu w dupę z tym wszystkim. TODO *)
 
 (* begin hide *)
 
-(**    Wszystkie pola nie
-    indukcyjne (które są postaci [T]). Wobec tego typ [c] możemy zapisać jako
-    [c : A1 -> ... -> Ak -> T -> ... -> T -> T].
+(**
 
-    W kolejnym kroku łączymy argumenty za pomocą produktu:
-    niech [A := A1 * ... * Ak]. Wtedy typ [c] wygląda tak:
+Wtedy typ [c] wygląda tak:
     [c : A -> T * ... * T -> T]. Zauważmy, że [T * ... * T] możemy zapisać
     równoważnie jako [B -> T], gdzie [B] to typ mający tyle elementów, ile
     razy [T] występuje w produkcie [T * ... * T]. Zatem typ [c] przedstawia
@@ -780,6 +787,15 @@ match uncons l with
     | None => {| shape := None; position := fun e : False => match e with end |}
     | Some (h, t) => {| shape := Some h; position := fun _ => @fff _ t |}
 end.
+
+Print coBTree.
+
+Definition coBTreeM (A : Type) : Type :=
+  M (option A) (fun x : option A =>
+                match x with
+                  | None => False
+                  | Some _ => bool
+                end).
 
 (** * Indeksowane M-typy? *)
 
