@@ -4421,10 +4421,41 @@ End BST'.
     Nie muszę chyba dodawać, że ława oburzonych jest oburzona faktem, że Coq
     nie wspiera indukcji-indukcji-rekursji. *)
 
-(** **** Ćwiczenie (mega trudne) *)
+(** **** Ćwiczenie (jednak nie takie trudne jak myślałem) *)
 
 (** Wymyśl jakiś sensowny przykład praktycznego zastosowania
     indukcji-indukcji-rekursji. *)
+
+(* begin hide *)
+
+(** Otóż jest takie, i to nawet bardziej oczywiste niż może się wydawać.
+    Przypomnij sobie metodę induktywno-rekurencyjnej dziedziny, czyli
+    jedno z typowych zastosowań indukcji-rekursji. Tutaj zaczynamy od
+    typu [I : Type], na którym chcemy zdefiniować funkcję o niestandardowym
+    kształcie rekursji. W tym celu definiujemy dziedzinę [D : I -> Type]
+    wraz z funkcją [f : forall i : I, D i -> R].
+
+    Zauważmy, jaki jest związek typu [I] z funkcją [f]: najpierw jest typ,
+    potem funkcja. Co jednak, gdy musimy [I] oraz [f] zdefiniować razem za
+    pomocą indukcji-rekursji? Wtedy [f] może być zdefiniowane jedynie za
+    pomocą rekursji strukturalnej po [I], co wyklucza rekursję o fikuśnym
+    kształcie...
+
+    I tu wchodzi indukcja-indukcja-rekursja, cała na biało. Możemy użyć
+    jej w taki sposób, że definiujemy jednocześnie:
+    - typ [I], który odnosi się do funkcji [f]
+    - predykat dziedziny [D : I -> Type], który jest indeksowany przez [I]
+    - funkcję [f], która zdefiniowana jest przez rekursję strukturalną po
+      dowodzie należenia do dziedziny
+
+    Jak widać, typ zależy od funkcji, funkcja od predykatu, a predykat od
+    typu i koło się zamyka.
+
+    Następuje jednak skądinąd uzasadnione pytanie: czy faktycznie istnieje
+    jakaś sytuacja, w której powyższy schemat działania jest tym słusznym?
+    Odpowiedź póki co może być tylko jedna: nie wiem, ale się domyślam. *)
+
+(* end hide *)
 
 (** Na koniec dodam jeszcze na zachętę (albo zniechętę, zależy jakie kto
     ma podejście), że istnieje jeszcze jeden potfur, straszniejszy nawet
