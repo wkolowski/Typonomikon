@@ -4141,61 +4141,21 @@ Qed.
 End ind_rec.
 
 (** Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
-    możemy użyć indukcji-rekursji? W świerszczykach dla bystrzaków (czyli
-    tzw. "literaturze naukowej") widzę dwa główne pomysły.
+    można użyć indukcji-rekursji (poza rzecz jasna głupimi strukturami
+    danych, jak listy posortowane)? W świerszczykach dla bystrzaków
+    (czyli tzw. "literaturze naukowej") przewija się głównie jeden (ale
+    jakże użyteczny) pomysł: zamknięte uniwersa.
 
-    Pierwszy to zamknięte uniwersum: definiujemy jednocześnie typ kodów
-    [U : Type] oraz funkcję [El : U -> Type], która interpretuje kody jako
-    typy. Uniwersum [U] ma pewne zalety względem "prawdziwego" uniwersum
-    typów [Type], a mianowicie jest ono typem induktywnym, więc pozwala nam
-    definiować funkcje rekurencyjne operujące na kodach. W przypadku [Type]
-    jest to oczywiście niemożliwe, tzn. nie możemy pisać funkcji przez
-    rekursję po "prawdziwych" typach. Przykład ten jest jednak ezoteryczny
-    (i to bardziej niż inne rzeczy w mej pisaninie), więc nie będziemy się
-    nim na razie zajmować - być może przyjdzie na to czas w rozdziale o
-    uniwersach.
+    Chodzi o to, że definiujemy jednocześnie typ kodów [U : Type] oraz
+    funkcję [El : U -> Type], która interpretuje kody jako typy. Takie
+    uniwersum [U] ma pewne zalety względem "prawdziwego" uniwersum typów
+    [Type], a mianowicie jest ono typem induktywnym, więc pozwala nam na
+    definiowanie funkcji rekurencyjnych operujących na kodach. W przypadku
+    [Type] jest to oczywiście niemożliwe, tzn. nie można definiować funkcji
+    przez rekursję po "prawdziwych" typach.
 
-    Drugi pomysł jest o wiele bardziej praktyczy, a zwie się on metodą
-    induktywnej dziedziny. Pod tą nazwą kryje się sposób definiowania
-    funkcji, pozwalający oddzielić samą definicję od dowodu jej terminacji.
-    Jeżeli ten opis nic ci nie mówi, nie martw się: dotychczas definiowaliśmy
-    tylko tak prymitywne funkcje, że tego typu fikołki nie były nam potrzebne.
-
-    Metoda induktywnej dziedziny polega na tym, żeby zamiast funkcji
-    [f : A -> B], która nie jest strukturalnie rekurencyjna (na co Coq
-    nie pozwala) napisać funkcję [f : forall x : A, D x -> B], gdzie
-    [D : A -> Type] jest "predykatem dziedziny", który sprawia, że dziwna
-    rekursja z oryginalnej definicji [f] staje się rekursją strukturalną
-    po dowodzie [D x]. Żeby zdefiniować oryginalne [f : A -> B] wystarczy
-    udowodnić, że każde [x : A] spełnia predykat dziedziny.
-
-    Co to wszystko ma wspólnego z indukcją-rekursją? Już piszę. Otóż metoda
-    ta nie wymaga w ogólności indukcji-rekursji - ta staje się potrzebna
-    dopiero, gdy walczymy z bardzo złośliwymi funkcjami, czyli takimi, w
-    których rekursja jest zagnieżdżona, tzn. robimy wywołanie rekurencyjne
-    na wyniku innego wywołania rekurencyjnego. Predykat dziedziny dla takiej
-    funkcji musi zawierać konstruktor w stylu "jeżeli wynik wywołania
-    rekurencyjnego na x należy do dziedziny, to x też należy do dziedziny".
-    To właśnie tu ujawnia się indukcja-rekursja: żeby zdefiniować predykat
-    dziedziny, musimy odwołać się do funkcji (żeby móc powiedzieć coś o
-    wyniku wywołania rekurencyjnego), a żeby zdefiniować funkcję, musimy
-    mieć predykat dziedziny.
-
-    Brzmi skomplikowanie? Jeżeli czegoś nie rozumiesz, to jesteś debi...
-    a nie, czekaj. Jeżeli czegoś nie rozumiesz, to nie martw się: powyższe
-    przykłady miały tylko ilustrować jakieś praktyczne zastosowania
-    indukcji-rekursji. Do metody induktywnej dziedziny powrócimy w kolejnym
-    rozdziale. Pokażemy, jak wyeliminować z niej indukcję-rekursję, tak żeby
-    uzyskane za jej pomocą definicje można było odpalać w Coqu. Zobaczymy też,
-    jakimi sposobami dowodzić, że każdy element dziedziny spełnia predykat
-    dziedziny, co pozwoli nam odzyskać oryginalną definicję funkcji, a także
-    dowiemy się, jak z "predykatu" o typie [D : nat -> Type] zrobić prawdziwy
-    predykat [D : nat -> Prop]. O induktywno-rekurencyjnych uniwersach więcej
-    dowiemy się w rozdziale o uniwersach (o ile taki kiedyś powstanie). *)
-
-(* begin hide *)
-(** TODO: ^ o ile taki kiedyś powstanie ^ *)
-(* end hide *)
+    Panie, po co komu coś takiego? Ano, do programowania generycznego. A co
+    to takiego, programowanie generyczne? TODO *)
 
 (** **** Ćwiczenie *)
 
@@ -4399,20 +4359,65 @@ Defined.
 End BST'.
 (* end hide *)
 
-(** ** Chimera, czyli jeszcze straszniejszy potfur *)
+(** ** Indeksowana indukcja-rekursja *)
+
+(** Drugi pomysł jest o wiele bardziej praktyczy, a zwie się on metodą
+    induktywnej dziedziny. Pod tą nazwą kryje się sposób definiowania
+    funkcji, pozwalający oddzielić samą definicję od dowodu jej terminacji.
+    Jeżeli ten opis nic ci nie mówi, nie martw się: dotychczas definiowaliśmy
+    tylko tak prymitywne funkcje, że tego typu fikołki nie były nam potrzebne.
+
+    Metoda induktywnej dziedziny polega na tym, żeby zamiast funkcji
+    [f : A -> B], która nie jest strukturalnie rekurencyjna (na co Coq
+    nie pozwala) napisać funkcję [f : forall x : A, D x -> B], gdzie
+    [D : A -> Type] jest "predykatem dziedziny", który sprawia, że dziwna
+    rekursja z oryginalnej definicji [f] staje się rekursją strukturalną
+    po dowodzie [D x]. Żeby zdefiniować oryginalne [f : A -> B] wystarczy
+    udowodnić, że każde [x : A] spełnia predykat dziedziny.
+
+    Co to wszystko ma wspólnego z indeksowaną indukcją-rekursją? Już piszę.
+    Otóż metoda
+    ta nie wymaga w ogólności indukcji-rekursji - ta staje się potrzebna
+    dopiero, gdy walczymy z bardzo złośliwymi funkcjami, czyli takimi, w
+    których rekursja jest zagnieżdżona, tzn. robimy wywołanie rekurencyjne
+    na wyniku innego wywołania rekurencyjnego. Predykat dziedziny dla takiej
+    funkcji musi zawierać konstruktor w stylu "jeżeli wynik wywołania
+    rekurencyjnego na x należy do dziedziny, to x też należy do dziedziny".
+    To właśnie tu ujawnia się indukcja-rekursja: żeby zdefiniować predykat
+    dziedziny, musimy odwołać się do funkcji (żeby móc powiedzieć coś o
+    wyniku wywołania rekurencyjnego), a żeby zdefiniować funkcję, musimy
+    mieć predykat dziedziny.
+
+    Brzmi skomplikowanie? Jeżeli czegoś nie rozumiesz, to jesteś debi...
+    a nie, czekaj. Jeżeli czegoś nie rozumiesz, to nie martw się: powyższe
+    przykłady miały tylko ilustrować jakieś praktyczne zastosowania
+    indukcji-rekursji. Do metody induktywnej dziedziny powrócimy w kolejnym
+    rozdziale. Pokażemy, jak wyeliminować z niej indukcję-rekursję, tak żeby
+    uzyskane za jej pomocą definicje można było odpalać w Coqu. Zobaczymy też,
+    jakimi sposobami dowodzić, że każdy element dziedziny spełnia predykat
+    dziedziny, co pozwoli nam odzyskać oryginalną definicję funkcji, a także
+    dowiemy się, jak z "predykatu" o typie [D : nat -> Type] zrobić prawdziwy
+    predykat [D : nat -> Prop]. O induktywno-rekurencyjnych uniwersach więcej
+    dowiemy się w rozdziale o uniwersach (o ile taki kiedyś powstanie). *)
+
+(* begin hide *)
+(** TODO: ^ o ile taki kiedyś powstanie ^ *)
+(* end hide *)
+
+(** ** Indukcja-indukcja-rekursja *)
 
 (** Ufff... przebrnęliśmy przez indukcję-indukcję i indukcję-rekursję. Czy
-    może istnieć jeszcze potężniejszy i bardziej innowacyjny sposób
+    mogą istnieć jeszcze potężniejsze i bardziej innowacyjne sposoby
     definiowania typów przez indukcję?
 
     Ależ oczywiście. Jest nim... uwaga uwaga, niespodzianka...
-    indukcja-indukcja-rekursja, która jest nie tylko strasznym potfurem,
-    ale też powinna dostać Oskara za najlepszą nazwę.
+    indukcja-indukcja-rekursja, która jest nie tylko strasznym
+    potfurem, ale też powinna dostać Oskara za najlepszą nazwę.
 
     Chodzi tu oczywiście o połączenie indukcji-indukcji i indukcji-rekursji:
     możemy jednocześnie zdefiniować jakiś typ [A], rodzinę typów [B]
-    indeksowaną [A] oraz operujące na nich funkcje, do których konstruktory
-    [A] i [B] mogą się odwoływać.
+    indeksowaną przez [A] oraz operujące na nich funkcje, do których
+    konstruktory [A] i [B] mogą się odwoływać.
 
     Nie ma tu jakiejś wielkiej filozofii: wszystkiego, co powinieneś wiedzieć
     o indukcji-indukcji-rekursji, dowiedziałeś się już z dwóch poprzednich
@@ -4456,6 +4461,12 @@ End BST'.
     Odpowiedź póki co może być tylko jedna: nie wiem, ale się domyślam. *)
 
 (* end hide *)
+
+(** ** Wyższe typy induktywne *)
+
+(** TODO *)
+
+(** ** Chimera, czyli najstraszniejszy potfur *)
 
 (** Na koniec dodam jeszcze na zachętę (albo zniechętę, zależy jakie kto
     ma podejście), że istnieje jeszcze jeden potfur, straszniejszy nawet

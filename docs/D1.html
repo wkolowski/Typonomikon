@@ -5359,76 +5359,27 @@ Udowodnienie, że nasza funkcja daje taki wynik jak chcieliśmy, jest
 
 <div class="doc">
 Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
-    możemy użyć indukcji-rekursji? W świerszczykach dla bystrzaków (czyli
-    tzw. "literaturze naukowej") widzę dwa główne pomysły.
+    można użyć indukcji-rekursji (poza rzecz jasna głupimi strukturami
+    danych, jak listy posortowane)? W świerszczykach dla bystrzaków
+    (czyli tzw. "literaturze naukowej") przewija się głównie jeden (ale
+    jakże użyteczny) pomysł: zamknięte uniwersa.
 
 <div class="paragraph"> </div>
 
-    Pierwszy to zamknięte uniwersum: definiujemy jednocześnie typ kodów
-    <span class="inlinecode"><span class="id" title="var">U</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> oraz funkcję <span class="inlinecode"><span class="id" title="var">El</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">U</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, która interpretuje kody jako
-    typy. Uniwersum <span class="inlinecode"><span class="id" title="var">U</span></span> ma pewne zalety względem "prawdziwego" uniwersum
-    typów <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, a mianowicie jest ono typem induktywnym, więc pozwala nam
-    definiować funkcje rekurencyjne operujące na kodach. W przypadku <span class="inlinecode"><span class="id" title="keyword">Type</span></span>
-    jest to oczywiście niemożliwe, tzn. nie możemy pisać funkcji przez
-    rekursję po "prawdziwych" typach. Przykład ten jest jednak ezoteryczny
-    (i to bardziej niż inne rzeczy w mej pisaninie), więc nie będziemy się
-    nim na razie zajmować - być może przyjdzie na to czas w rozdziale o
-    uniwersach.
+    Chodzi o to, że definiujemy jednocześnie typ kodów <span class="inlinecode"><span class="id" title="var">U</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> oraz
+    funkcję <span class="inlinecode"><span class="id" title="var">El</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">U</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, która interpretuje kody jako typy. Takie
+    uniwersum <span class="inlinecode"><span class="id" title="var">U</span></span> ma pewne zalety względem "prawdziwego" uniwersum typów
+    <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, a mianowicie jest ono typem induktywnym, więc pozwala nam na
+    definiowanie funkcji rekurencyjnych operujących na kodach. W przypadku
+    <span class="inlinecode"><span class="id" title="keyword">Type</span></span> jest to oczywiście niemożliwe, tzn. nie można definiować funkcji
+    przez rekursję po "prawdziwych" typach.
 
 <div class="paragraph"> </div>
 
-    Drugi pomysł jest o wiele bardziej praktyczy, a zwie się on metodą
-    induktywnej dziedziny. Pod tą nazwą kryje się sposób definiowania
-    funkcji, pozwalający oddzielić samą definicję od dowodu jej terminacji.
-    Jeżeli ten opis nic ci nie mówi, nie martw się: dotychczas definiowaliśmy
-    tylko tak prymitywne funkcje, że tego typu fikołki nie były nam potrzebne.
-
+    Panie, po co komu coś takiego? Ano, do programowania generycznego. A co
+    to takiego, programowanie generyczne? TODO 
 <div class="paragraph"> </div>
 
-    Metoda induktywnej dziedziny polega na tym, żeby zamiast funkcji
-    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, która nie jest strukturalnie rekurencyjna (na co Coq
-    nie pozwala) napisać funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, gdzie
-    <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> jest "predykatem dziedziny", który sprawia, że dziwna
-    rekursja z oryginalnej definicji <span class="inlinecode"><span class="id" title="var">f</span></span> staje się rekursją strukturalną
-    po dowodzie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>. Żeby zdefiniować oryginalne <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> wystarczy
-    udowodnić, że każde <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> spełnia predykat dziedziny.
-
-<div class="paragraph"> </div>
-
-    Co to wszystko ma wspólnego z indukcją-rekursją? Już piszę. Otóż metoda
-    ta nie wymaga w ogólności indukcji-rekursji - ta staje się potrzebna
-    dopiero, gdy walczymy z bardzo złośliwymi funkcjami, czyli takimi, w
-    których rekursja jest zagnieżdżona, tzn. robimy wywołanie rekurencyjne
-    na wyniku innego wywołania rekurencyjnego. Predykat dziedziny dla takiej
-    funkcji musi zawierać konstruktor w stylu "jeżeli wynik wywołania
-    rekurencyjnego na x należy do dziedziny, to x też należy do dziedziny".
-    To właśnie tu ujawnia się indukcja-rekursja: żeby zdefiniować predykat
-    dziedziny, musimy odwołać się do funkcji (żeby móc powiedzieć coś o
-    wyniku wywołania rekurencyjnego), a żeby zdefiniować funkcję, musimy
-    mieć predykat dziedziny.
-
-<div class="paragraph"> </div>
-
-    Brzmi skomplikowanie? Jeżeli czegoś nie rozumiesz, to jesteś debi...
-    a nie, czekaj. Jeżeli czegoś nie rozumiesz, to nie martw się: powyższe
-    przykłady miały tylko ilustrować jakieś praktyczne zastosowania
-    indukcji-rekursji. Do metody induktywnej dziedziny powrócimy w kolejnym
-    rozdziale. Pokażemy, jak wyeliminować z niej indukcję-rekursję, tak żeby
-    uzyskane za jej pomocą definicje można było odpalać w Coqu. Zobaczymy też,
-    jakimi sposobami dowodzić, że każdy element dziedziny spełnia predykat
-    dziedziny, co pozwoli nam odzyskać oryginalną definicję funkcji, a także
-    dowiemy się, jak z "predykatu" o typie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> zrobić prawdziwy
-    predykat <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. O induktywno-rekurencyjnych uniwersach więcej
-    dowiemy się w rozdziale o uniwersach (o ile taki kiedyś powstanie). 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-</div>
-
-<div class="doc">
 <a name="lab154"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
@@ -5498,26 +5449,83 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
 </div>
 
 <div class="doc">
-<a name="lab156"></a><h2 class="section">Chimera, czyli jeszcze straszniejszy potfur</h2>
+<a name="lab156"></a><h2 class="section">Indeksowana indukcja-rekursja</h2>
+
+<div class="paragraph"> </div>
+
+ Drugi pomysł jest o wiele bardziej praktyczy, a zwie się on metodą
+    induktywnej dziedziny. Pod tą nazwą kryje się sposób definiowania
+    funkcji, pozwalający oddzielić samą definicję od dowodu jej terminacji.
+    Jeżeli ten opis nic ci nie mówi, nie martw się: dotychczas definiowaliśmy
+    tylko tak prymitywne funkcje, że tego typu fikołki nie były nam potrzebne.
+
+<div class="paragraph"> </div>
+
+    Metoda induktywnej dziedziny polega na tym, żeby zamiast funkcji
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, która nie jest strukturalnie rekurencyjna (na co Coq
+    nie pozwala) napisać funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, gdzie
+    <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> jest "predykatem dziedziny", który sprawia, że dziwna
+    rekursja z oryginalnej definicji <span class="inlinecode"><span class="id" title="var">f</span></span> staje się rekursją strukturalną
+    po dowodzie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>. Żeby zdefiniować oryginalne <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> wystarczy
+    udowodnić, że każde <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> spełnia predykat dziedziny.
+
+<div class="paragraph"> </div>
+
+    Co to wszystko ma wspólnego z indeksowaną indukcją-rekursją? Już piszę.
+    Otóż metoda
+    ta nie wymaga w ogólności indukcji-rekursji - ta staje się potrzebna
+    dopiero, gdy walczymy z bardzo złośliwymi funkcjami, czyli takimi, w
+    których rekursja jest zagnieżdżona, tzn. robimy wywołanie rekurencyjne
+    na wyniku innego wywołania rekurencyjnego. Predykat dziedziny dla takiej
+    funkcji musi zawierać konstruktor w stylu "jeżeli wynik wywołania
+    rekurencyjnego na x należy do dziedziny, to x też należy do dziedziny".
+    To właśnie tu ujawnia się indukcja-rekursja: żeby zdefiniować predykat
+    dziedziny, musimy odwołać się do funkcji (żeby móc powiedzieć coś o
+    wyniku wywołania rekurencyjnego), a żeby zdefiniować funkcję, musimy
+    mieć predykat dziedziny.
+
+<div class="paragraph"> </div>
+
+    Brzmi skomplikowanie? Jeżeli czegoś nie rozumiesz, to jesteś debi...
+    a nie, czekaj. Jeżeli czegoś nie rozumiesz, to nie martw się: powyższe
+    przykłady miały tylko ilustrować jakieś praktyczne zastosowania
+    indukcji-rekursji. Do metody induktywnej dziedziny powrócimy w kolejnym
+    rozdziale. Pokażemy, jak wyeliminować z niej indukcję-rekursję, tak żeby
+    uzyskane za jej pomocą definicje można było odpalać w Coqu. Zobaczymy też,
+    jakimi sposobami dowodzić, że każdy element dziedziny spełnia predykat
+    dziedziny, co pozwoli nam odzyskać oryginalną definicję funkcji, a także
+    dowiemy się, jak z "predykatu" o typie <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> zrobić prawdziwy
+    predykat <span class="inlinecode"><span class="id" title="var">D</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. O induktywno-rekurencyjnych uniwersach więcej
+    dowiemy się w rozdziale o uniwersach (o ile taki kiedyś powstanie). 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab157"></a><h2 class="section">Indukcja-indukcja-rekursja</h2>
 
 <div class="paragraph"> </div>
 
  Ufff... przebrnęliśmy przez indukcję-indukcję i indukcję-rekursję. Czy
-    może istnieć jeszcze potężniejszy i bardziej innowacyjny sposób
+    mogą istnieć jeszcze potężniejsze i bardziej innowacyjne sposoby
     definiowania typów przez indukcję?
 
 <div class="paragraph"> </div>
 
     Ależ oczywiście. Jest nim... uwaga uwaga, niespodzianka...
-    indukcja-indukcja-rekursja, która jest nie tylko strasznym potfurem,
-    ale też powinna dostać Oskara za najlepszą nazwę.
+    indukcja-indukcja-rekursja, która jest nie tylko strasznym
+    potfurem, ale też powinna dostać Oskara za najlepszą nazwę.
 
 <div class="paragraph"> </div>
 
     Chodzi tu oczywiście o połączenie indukcji-indukcji i indukcji-rekursji:
     możemy jednocześnie zdefiniować jakiś typ <span class="inlinecode"><span class="id" title="var">A</span></span>, rodzinę typów <span class="inlinecode"><span class="id" title="var">B</span></span>
-    indeksowaną <span class="inlinecode"><span class="id" title="var">A</span></span> oraz operujące na nich funkcje, do których konstruktory
-    <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> mogą się odwoływać.
+    indeksowaną przez <span class="inlinecode"><span class="id" title="var">A</span></span> oraz operujące na nich funkcje, do których
+    konstruktory <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> mogą się odwoływać.
 
 <div class="paragraph"> </div>
 
@@ -5531,7 +5539,7 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     nie wspiera indukcji-indukcji-rekursji. 
 <div class="paragraph"> </div>
 
-<a name="lab157"></a><h4 class="section">Ćwiczenie (jednak nie takie trudne jak myślałem)</h4>
+<a name="lab158"></a><h4 class="section">Ćwiczenie (jednak nie takie trudne jak myślałem)</h4>
 
 <div class="paragraph"> </div>
 
@@ -5546,14 +5554,25 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
 </div>
 
 <div class="doc">
-Na koniec dodam jeszcze na zachętę (albo zniechętę, zależy jakie kto
+<a name="lab159"></a><h2 class="section">Wyższe typy induktywne</h2>
+
+<div class="paragraph"> </div>
+
+ TODO 
+<div class="paragraph"> </div>
+
+<a name="lab160"></a><h2 class="section">Chimera, czyli najstraszniejszy potfur</h2>
+
+<div class="paragraph"> </div>
+
+ Na koniec dodam jeszcze na zachętę (albo zniechętę, zależy jakie kto
     ma podejście), że istnieje jeszcze jeden potfur, straszniejszy nawet
     niż indukcja-indukcja-rekursja, ale jest on zbyt straszny jak na ten
     rozdział i być może w ogóle zbyt straszny jak na tę książkę - panie
     boże, daj odwagę na omówienie go! 
 <div class="paragraph"> </div>
 
-<a name="lab158"></a><h1 class="section">Dobre, złe i podejrzane typy induktywne</h1>
+<a name="lab161"></a><h1 class="section">Dobre, złe i podejrzane typy induktywne</h1>
 
 <div class="paragraph"> </div>
 
@@ -5571,7 +5590,7 @@ Na koniec dodam jeszcze na zachętę (albo zniechętę, zależy jakie kto
     dwa powody, przez które złe typy induktywne są złe. 
 <div class="paragraph"> </div>
 
-<a name="lab159"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
+<a name="lab162"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
 
 <div class="paragraph"> </div>
 
@@ -5695,7 +5714,7 @@ Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
     paradoksów. 
 <div class="paragraph"> </div>
 
-<a name="lab160"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab163"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -5760,7 +5779,7 @@ Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
     typy induktywne to też wynalazek szatana. 
 <div class="paragraph"> </div>
 
-<a name="lab161"></a><h2 class="section">Twierdzenie Cantora</h2>
+<a name="lab164"></a><h2 class="section">Twierdzenie Cantora</h2>
 
 <div class="paragraph"> </div>
 
@@ -5876,7 +5895,7 @@ Funkcja <span class="inlinecode"><span class="id" title="var">isZero</span></spa
     innymi rodzajami funkcji. Tymczasem ćwiczenie: 
 <div class="paragraph"> </div>
 
-<a name="lab162"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab165"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6003,7 +6022,7 @@ Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
     błędne i nie istnieje żadna surjekcja z <span class="inlinecode"><span class="id" title="var">nat</span></span> w <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab163"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab166"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6074,7 +6093,7 @@ Uogólnienie jest dość banalne. Najpierw zastępujemy <span class="inlinecode
     jak poprzednio, przy czym zastępujemy użycie <span class="inlinecode"><span class="id" title="var">negb</span></span> przez <span class="inlinecode"><span class="id" title="var">modify</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab164"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab167"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6100,7 +6119,7 @@ Uogólnienie jest dość banalne. Najpierw zastępujemy <span class="inlinecode
 </div>
 
 <div class="doc">
-<a name="lab165"></a><h2 class="section">Twierdzenie Cantora jako młot na negatywność</h2>
+<a name="lab168"></a><h2 class="section">Twierdzenie Cantora jako młot na negatywność</h2>
 
 <div class="paragraph"> </div>
 
@@ -6228,7 +6247,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
     będziesz w stanie sam wykombinować, jak się z nimi uporać. 
 <div class="paragraph"> </div>
 
-<a name="lab166"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab169"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6263,7 +6282,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab167"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab170"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6296,7 +6315,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab168"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab171"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6335,7 +6354,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab169"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab172"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6363,7 +6382,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab170"></a><h2 class="section">Poradnik rozpoznawania negatywnych typów induktywnych</h2>
+<a name="lab173"></a><h2 class="section">Poradnik rozpoznawania negatywnych typów induktywnych</h2>
 
 <div class="paragraph"> </div>
 
@@ -6434,7 +6453,7 @@ Rodzaje nieszkodliwych typów argumentów widać na powyższym przykładzie.
     <span class="inlinecode"><span class="id" title="var">T0_ind</span></span>). 
 <div class="paragraph"> </div>
 
-<a name="lab171"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab174"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6522,7 +6541,7 @@ W powyższym przykładzie wystąpienie <span class="inlinecode"><span class="id"
     prowadzi do sprzeczności). 
 <div class="paragraph"> </div>
 
-<a name="lab172"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab175"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6545,7 +6564,7 @@ Policz niedobrość każdego wstąpienia <span class="inlinecode"><span class="
     lub ściśle pozytywny. 
 <div class="paragraph"> </div>
 
-<a name="lab173"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab176"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6607,7 +6626,7 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
 </div>
 
 <div class="doc">
-<a name="lab174"></a><h2 class="section">Kilka bonusowych pułapek</h2>
+<a name="lab177"></a><h2 class="section">Kilka bonusowych pułapek</h2>
 
 <div class="paragraph"> </div>
 
@@ -6655,7 +6674,7 @@ Jak widać, jeżeli zaaplikujemy <span class="inlinecode"><span class="id" title
     jeżeli wstawi się za nie coś niedobrego (<span class="inlinecode"><span class="id" title="var">F</span></span> <span class="inlinecode"><span class="id" title="var">T</span></span>). 
 <div class="paragraph"> </div>
 
-<a name="lab175"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab178"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6726,7 +6745,7 @@ Jak widać, definicja <span class="inlinecode"><span class="id" title="var">X</s
     jak i w konstruktorach typu <span class="inlinecode"><span class="id" title="var">Y</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab176"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab179"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6752,7 +6771,7 @@ Jak widać, definicja <span class="inlinecode"><span class="id" title="var">X</s
 </div>
 
 <div class="doc">
-<a name="lab177"></a><h2 class="section">Jeszcze więcej pułapek</h2>
+<a name="lab180"></a><h2 class="section">Jeszcze więcej pułapek</h2>
 
 <div class="paragraph"> </div>
 
@@ -6827,7 +6846,7 @@ Po ciężkich bojach, przez które przeszedłeś, aksjomatyczne kodowanie
     banalne uogólnienie. 
 <div class="paragraph"> </div>
 
-<a name="lab178"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab181"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6883,7 +6902,7 @@ Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
     specjalnie wymagająca czy oświecająca. 
 <div class="paragraph"> </div>
 
-<a name="lab179"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab182"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6902,7 +6921,7 @@ Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
 </div>
 
 <div class="doc">
-<a name="lab180"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab183"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7491,7 +7510,7 @@ Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
     co możemy liczyć. 
 <div class="paragraph"> </div>
 
-<a name="lab181"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab184"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7513,7 +7532,7 @@ Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
 No, teraz to już na pewno wiemy wszystko... 
 <div class="paragraph"> </div>
 
-<a name="lab182"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab185"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7556,7 +7575,7 @@ No, teraz to już na pewno wiemy wszystko...
 </div>
 
 <div class="doc">
-<a name="lab183"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda</h2>
+<a name="lab186"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda</h2>
 
 <div class="paragraph"> </div>
 
@@ -7603,7 +7622,7 @@ No, teraz to już na pewno wiemy wszystko...
     nienależenie prowadzi do sprzeczności. 
 <div class="paragraph"> </div>
 
-<a name="lab184"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab187"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7639,7 +7658,7 @@ No, teraz to już na pewno wiemy wszystko...
     ćwiczeń. 
 <div class="paragraph"> </div>
 
-<a name="lab185"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab188"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7652,7 +7671,7 @@ No, teraz to już na pewno wiemy wszystko...
     lubią. Czy wujek Janusz lubi sam siebie? 
 <div class="paragraph"> </div>
 
-<a name="lab186"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab189"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7790,7 +7809,7 @@ Powyższa induktywno-rekurencyjna definicja typu <span class="inlinecode"><span 
     będzie, jeżeli przemyślisz to wszystko w ramach ćwiczenia. 
 <div class="paragraph"> </div>
 
-<a name="lab187"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab190"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -8200,7 +8219,7 @@ Ponieważ <span class="inlinecode"><span class="id" title="var">bad</span></span
 </div>
 
 <div class="doc">
-<a name="lab188"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab191"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -8260,7 +8279,7 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a name="lab189"></a><h2 class="section">Pozytywne typy induktywne</h2>
+<a name="lab192"></a><h2 class="section">Pozytywne typy induktywne</h2>
 
 <div class="paragraph"> </div>
 
@@ -8631,7 +8650,7 @@ No i bum. Jak widać, pozytywne typy induktywne prowadzą do sprzeczności,
     <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i jego impredykatywnością. 
 <div class="paragraph"> </div>
 
-<a name="lab190"></a><h1 class="section">Podsumowanie</h1>
+<a name="lab193"></a><h1 class="section">Podsumowanie</h1>
 
 <div class="paragraph"> </div>
 

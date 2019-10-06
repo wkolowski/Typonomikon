@@ -1,0 +1,48 @@
+digraph
+{
+  node[shape=rectangle]
+
+  enumeracje			->
+  {
+    "argumenty nieindukcyjne"
+    "argumenty indukcyjne"
+    "argumenty interwałowe"
+
+    parametry
+    indeksy
+  }
+
+  "argumenty indukcyjne"	->
+  {
+    "indukcja wzajemna"
+    "indukcja-rekursja"
+    "wyższa indukcja"
+  }
+
+  "argumenty interwałowe"	-> "wyższa indukcja"
+
+  "indukcja wzajemna"		-> "indukcja-indukcja"
+
+  indeksy			->
+  {
+    "indukcja-indukcja"
+    "indeksowana indukcja-rekursja"
+  }
+
+  "indukcja-indukcja"		-> "indukcja-indukcja-rekursja"
+
+  "indukcja-rekursja"		->
+  {
+    "indeksowana indukcja-rekursja"
+    "indukcja-indukcja-rekursja"
+  }
+
+  "indukcja-indukcja-rekursja"	-> "wyższa indukcja-indukcja-rekursja"
+  "wyższa indukcja"		-> "wyższa indukcja-indukcja-rekursja"
+
+  /* Przerywana linia z A do B oznacza relację "można zasymulować A za pomocą B". */
+  edge[style=dotted]
+
+  "indukcja wzajemna"		-> indeksy
+  
+}
