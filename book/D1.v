@@ -4144,18 +4144,71 @@ End ind_rec.
     można użyć indukcji-rekursji (poza rzecz jasna głupimi strukturami
     danych, jak listy posortowane)? W świerszczykach dla bystrzaków
     (czyli tzw. "literaturze naukowej") przewija się głównie jeden (ale
-    jakże użyteczny) pomysł: zamknięte uniwersa.
+    jakże użyteczny) pomysł: uniwersa.
 
-    Chodzi o to, że definiujemy jednocześnie typ kodów [U : Type] oraz
-    funkcję [El : U -> Type], która interpretuje kody jako typy. Takie
-    uniwersum [U] ma pewne zalety względem "prawdziwego" uniwersum typów
-    [Type], a mianowicie jest ono typem induktywnym, więc pozwala nam na
-    definiowanie funkcji rekurencyjnych operujących na kodach. W przypadku
-    [Type] jest to oczywiście niemożliwe, tzn. nie można definiować funkcji
-    przez rekursję po "prawdziwych" typach.
+    Czym są uniwersa i co mają wspólnego z indukcją-rekursją? Najlepiej
+    będzie przekonać się na przykładzie programowania generycznego: *)
 
-    Panie, po co komu coś takiego? Ano, do programowania generycznego. A co
-    to takiego, programowanie generyczne? TODO *)
+(** **** Ćwiczenie (zdecydowanie za trudne) *)
+
+(** Zaimplementuj generyczną funkcję [flatten], która spłaszcza dowolnie
+    zagnieżdżone listy list do jednej, płaskiej listy.
+
+    [flatten 5 = [5]]
+
+    [flatten [1; 2; 3] = [1; 2; 3]]
+
+    [flatten [[1]; [2]; [3]] = [1; 2; 3]]
+
+    [flatten [[[1; 2]]; [[3]]; [[4; 5]; [6]]] = [1; 2; 3; 4; 5; 6]] *)
+
+(** Trudne, prawda? Ale robialne, a robi się to tak.
+
+    W typach argumentów [flatten] na powyższym przykładzie widać pewien
+    wzorzec: są to kolejno [nat], [list nat], [list (list nat)],
+    [list (list (list nat))] i tak dalej. Możemy ten "wzorzec" bez problemu
+    opisać za pomocą następującego typu: *)
+
+Inductive FlattenType : Type :=
+    | Nat : FlattenType
+    | List : FlattenType -> FlattenType.
+
+(** Żeby było śmieszniej, [FlattenType] to dokładnie to samo co [nat], ale
+    przemilczmy to. Co dalej? Możemy myśleć o elementach [FlattenType] jak
+    o kodach prawdziwych typów, a skoro są to kody, to można też napisać
+    funkcję dekodującą: *)
+
+Fixpoint decode (t : FlattenType) : Type :=
+match t with
+    | Nat => nat
+    | List t' => list (decode t')
+end.
+
+(** [decode] każdemu kodowi przyporządkowuje odpowiadający mu typ. O
+    kodach możemy myśleć jak o nazwach - [Nat] to nazwa [nat], zaś
+    [List t'] to nazwa typu [list (decode t')], np. [List (List Nat)]
+    to nazwa typu [list (list nat)].
+
+    Para [(FlattenType, decode)] jest przykładem uniwersum.
+
+    Uniwersum to, najprościej pisząc, worek, który zawiera jakieś typy.
+    Formalnie uniwersum składa się z typu kodów (czyli "nazw" typów) oraz
+    funkcji dekodującej, która przyporządkowuje kodom prawdziwe typy.
+
+    Programowanie generyczne to programowanie funkcji, które operują na
+    kolekcjach typów o dowolnych kształtach, czyli na uniwersach właśnie.
+    Generyczność od polimorfizmu różni się tym, że funkcja polimorficzna
+    działa dla dowolnego typu, zaś generyczna tylko dla typu o pasującym
+    kształcie.
+
+    Jak dokończyć implementację funkcji [flatten]? Kluczowe jest zauważenie,
+    że możemy zdefiniować [flatten] przez rekursję strutkuralną po argumencie
+    domyślnym typu [FlattenType]. Ostatni problem to jak zrobić, żeby Coq sam
+    zgadywał kod danego typu - dowiemy się tego w rozdziale o klasach.
+
+    Co to wszystko ma wspólnego z uniwersami? Ano, jeżeli chcemy definiować
+    bardzo zaawansowane funkcje generyczne, musimy mieć do dyspozycji bardzo
+    potężne uniwersa i to je właśnie zapewnia nam indukcja-rekursja. *)
 
 (** **** Ćwiczenie *)
 

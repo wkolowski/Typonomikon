@@ -5362,25 +5362,114 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     można użyć indukcji-rekursji (poza rzecz jasna głupimi strukturami
     danych, jak listy posortowane)? W świerszczykach dla bystrzaków
     (czyli tzw. "literaturze naukowej") przewija się głównie jeden (ale
-    jakże użyteczny) pomysł: zamknięte uniwersa.
+    jakże użyteczny) pomysł: uniwersa.
 
 <div class="paragraph"> </div>
 
-    Chodzi o to, że definiujemy jednocześnie typ kodów <span class="inlinecode"><span class="id" title="var">U</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> oraz
-    funkcję <span class="inlinecode"><span class="id" title="var">El</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">U</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, która interpretuje kody jako typy. Takie
-    uniwersum <span class="inlinecode"><span class="id" title="var">U</span></span> ma pewne zalety względem "prawdziwego" uniwersum typów
-    <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, a mianowicie jest ono typem induktywnym, więc pozwala nam na
-    definiowanie funkcji rekurencyjnych operujących na kodach. W przypadku
-    <span class="inlinecode"><span class="id" title="keyword">Type</span></span> jest to oczywiście niemożliwe, tzn. nie można definiować funkcji
-    przez rekursję po "prawdziwych" typach.
+    Czym są uniwersa i co mają wspólnego z indukcją-rekursją? Najlepiej
+    będzie przekonać się na przykładzie programowania generycznego: 
+<div class="paragraph"> </div>
+
+<a name="lab154"></a><h4 class="section">Ćwiczenie (zdecydowanie za trudne)</h4>
 
 <div class="paragraph"> </div>
 
-    Panie, po co komu coś takiego? Ano, do programowania generycznego. A co
-    to takiego, programowanie generyczne? TODO 
+ Zaimplementuj generyczną funkcję <span class="inlinecode"><span class="id" title="var">flatten</span></span>, która spłaszcza dowolnie
+    zagnieżdżone listy list do jednej, płaskiej listy.
+
 <div class="paragraph"> </div>
 
-<a name="lab154"></a><h4 class="section">Ćwiczenie</h4>
+    <span class="inlinecode"><span class="id" title="var">flatten</span></span> <span class="inlinecode">5</span> <span class="inlinecode">=</span> <span class="inlinecode">[5]</span>
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">flatten</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span> <span class="inlinecode">=</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">flatten</span></span> <span class="inlinecode">[[1];</span> <span class="inlinecode">[2];</span> <span class="inlinecode">[3]]</span> <span class="inlinecode">=</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">flatten</span></span> <span class="inlinecode">[[[1;</span> <span class="inlinecode">2]];</span> <span class="inlinecode">[[3]];</span> <span class="inlinecode">[[4;</span> <span class="inlinecode">5];</span> <span class="inlinecode">[6]]]</span> <span class="inlinecode">=</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6]</span> 
+<div class="paragraph"> </div>
+
+ Trudne, prawda? Ale robialne, a robi się to tak.
+
+<div class="paragraph"> </div>
+
+    W typach argumentów <span class="inlinecode"><span class="id" title="var">flatten</span></span> na powyższym przykładzie widać pewien
+    wzorzec: są to kolejno <span class="inlinecode"><span class="id" title="var">nat</span></span>, <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span>,
+    <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span>))</span> i tak dalej. Możemy ten "wzorzec" bez problemu
+    opisać za pomocą następującego typu: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">FlattenType</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Nat</span> : <span class="id" title="var">FlattenType</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">List</span> : <span class="id" title="var">FlattenType</span> -&gt; <span class="id" title="var">FlattenType</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Żeby było śmieszniej, <span class="inlinecode"><span class="id" title="var">FlattenType</span></span> to dokładnie to samo co <span class="inlinecode"><span class="id" title="var">nat</span></span>, ale
+    przemilczmy to. Co dalej? Możemy myśleć o elementach <span class="inlinecode"><span class="id" title="var">FlattenType</span></span> jak
+    o kodach prawdziwych typów, a skoro są to kody, to można też napisać
+    funkcję dekodującą: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">decode</span> (<span class="id" title="var">t</span> : <span class="id" title="var">FlattenType</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Nat</span> =&gt; <span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">List</span> <span class="id" title="var">t'</span> =&gt; <span class="id" title="var">list</span> (<span class="id" title="var">decode</span> <span class="id" title="var">t'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">decode</span></span> każdemu kodowi przyporządkowuje odpowiadający mu typ. O
+    kodach możemy myśleć jak o nazwach - <span class="inlinecode"><span class="id" title="var">Nat</span></span> to nazwa <span class="inlinecode"><span class="id" title="var">nat</span></span>, zaś
+    <span class="inlinecode"><span class="id" title="var">List</span></span> <span class="inlinecode"><span class="id" title="var">t'</span></span> to nazwa typu <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">decode</span></span> <span class="inlinecode"><span class="id" title="var">t'</span>)</span>, np. <span class="inlinecode"><span class="id" title="var">List</span></span> <span class="inlinecode">(<span class="id" title="var">List</span></span> <span class="inlinecode"><span class="id" title="var">Nat</span>)</span>
+    to nazwa typu <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode">(<span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span>.
+
+<div class="paragraph"> </div>
+
+    Para <span class="inlinecode">(<span class="id" title="var">FlattenType</span>,</span> <span class="inlinecode"><span class="id" title="var">decode</span>)</span> jest przykładem uniwersum.
+
+<div class="paragraph"> </div>
+
+    Uniwersum to, najprościej pisząc, worek, który zawiera jakieś typy.
+    Formalnie uniwersum składa się z typu kodów (czyli "nazw" typów) oraz
+    funkcji dekodującej, która przyporządkowuje kodom prawdziwe typy.
+
+<div class="paragraph"> </div>
+
+    Programowanie generyczne to programowanie funkcji, które operują na
+    kolekcjach typów o dowolnych kształtach, czyli na uniwersach właśnie.
+    Generyczność od polimorfizmu różni się tym, że funkcja polimorficzna
+    działa dla dowolnego typu, zaś generyczna tylko dla typu o pasującym
+    kształcie.
+
+<div class="paragraph"> </div>
+
+    Jak dokończyć implementację funkcji <span class="inlinecode"><span class="id" title="var">flatten</span></span>? Kluczowe jest zauważenie,
+    że możemy zdefiniować <span class="inlinecode"><span class="id" title="var">flatten</span></span> przez rekursję strutkuralną po argumencie
+    domyślnym typu <span class="inlinecode"><span class="id" title="var">FlattenType</span></span>. Ostatni problem to jak zrobić, żeby Coq sam
+    zgadywał kod danego typu - dowiemy się tego w rozdziale o klasach.
+
+<div class="paragraph"> </div>
+
+    Co to wszystko ma wspólnego z uniwersami? Ano, jeżeli chcemy definiować
+    bardzo zaawansowane funkcje generyczne, musimy mieć do dyspozycji bardzo
+    potężne uniwersa i to je właśnie zapewnia nam indukcja-rekursja. 
+<div class="paragraph"> </div>
+
+<a name="lab155"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -5414,7 +5503,7 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
 </div>
 
 <div class="doc">
-<a name="lab155"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab156"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -5449,7 +5538,7 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
 </div>
 
 <div class="doc">
-<a name="lab156"></a><h2 class="section">Indeksowana indukcja-rekursja</h2>
+<a name="lab157"></a><h2 class="section">Indeksowana indukcja-rekursja</h2>
 
 <div class="paragraph"> </div>
 
@@ -5506,7 +5595,7 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
 </div>
 
 <div class="doc">
-<a name="lab157"></a><h2 class="section">Indukcja-indukcja-rekursja</h2>
+<a name="lab158"></a><h2 class="section">Indukcja-indukcja-rekursja</h2>
 
 <div class="paragraph"> </div>
 
@@ -5539,7 +5628,7 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     nie wspiera indukcji-indukcji-rekursji. 
 <div class="paragraph"> </div>
 
-<a name="lab158"></a><h4 class="section">Ćwiczenie (jednak nie takie trudne jak myślałem)</h4>
+<a name="lab159"></a><h4 class="section">Ćwiczenie (jednak nie takie trudne jak myślałem)</h4>
 
 <div class="paragraph"> </div>
 
@@ -5554,14 +5643,14 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
 </div>
 
 <div class="doc">
-<a name="lab159"></a><h2 class="section">Wyższe typy induktywne</h2>
+<a name="lab160"></a><h2 class="section">Wyższe typy induktywne</h2>
 
 <div class="paragraph"> </div>
 
  TODO 
 <div class="paragraph"> </div>
 
-<a name="lab160"></a><h2 class="section">Chimera, czyli najstraszniejszy potfur</h2>
+<a name="lab161"></a><h2 class="section">Chimera, czyli najstraszniejszy potfur</h2>
 
 <div class="paragraph"> </div>
 
@@ -5572,7 +5661,7 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     boże, daj odwagę na omówienie go! 
 <div class="paragraph"> </div>
 
-<a name="lab161"></a><h1 class="section">Dobre, złe i podejrzane typy induktywne</h1>
+<a name="lab162"></a><h1 class="section">Dobre, złe i podejrzane typy induktywne</h1>
 
 <div class="paragraph"> </div>
 
@@ -5590,7 +5679,7 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     dwa powody, przez które złe typy induktywne są złe. 
 <div class="paragraph"> </div>
 
-<a name="lab162"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
+<a name="lab163"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
 
 <div class="paragraph"> </div>
 
@@ -5714,7 +5803,7 @@ Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
     paradoksów. 
 <div class="paragraph"> </div>
 
-<a name="lab163"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab164"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -5779,7 +5868,7 @@ Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
     typy induktywne to też wynalazek szatana. 
 <div class="paragraph"> </div>
 
-<a name="lab164"></a><h2 class="section">Twierdzenie Cantora</h2>
+<a name="lab165"></a><h2 class="section">Twierdzenie Cantora</h2>
 
 <div class="paragraph"> </div>
 
@@ -5895,7 +5984,7 @@ Funkcja <span class="inlinecode"><span class="id" title="var">isZero</span></spa
     innymi rodzajami funkcji. Tymczasem ćwiczenie: 
 <div class="paragraph"> </div>
 
-<a name="lab165"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab166"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6022,7 +6111,7 @@ Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
     błędne i nie istnieje żadna surjekcja z <span class="inlinecode"><span class="id" title="var">nat</span></span> w <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab166"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab167"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6093,7 +6182,7 @@ Uogólnienie jest dość banalne. Najpierw zastępujemy <span class="inlinecode
     jak poprzednio, przy czym zastępujemy użycie <span class="inlinecode"><span class="id" title="var">negb</span></span> przez <span class="inlinecode"><span class="id" title="var">modify</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab167"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab168"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6119,7 +6208,7 @@ Uogólnienie jest dość banalne. Najpierw zastępujemy <span class="inlinecode
 </div>
 
 <div class="doc">
-<a name="lab168"></a><h2 class="section">Twierdzenie Cantora jako młot na negatywność</h2>
+<a name="lab169"></a><h2 class="section">Twierdzenie Cantora jako młot na negatywność</h2>
 
 <div class="paragraph"> </div>
 
@@ -6247,7 +6336,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
     będziesz w stanie sam wykombinować, jak się z nimi uporać. 
 <div class="paragraph"> </div>
 
-<a name="lab169"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab170"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6282,7 +6371,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab170"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab171"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6315,7 +6404,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab171"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab172"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6354,7 +6443,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab172"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab173"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6382,7 +6471,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inlin
 </div>
 
 <div class="doc">
-<a name="lab173"></a><h2 class="section">Poradnik rozpoznawania negatywnych typów induktywnych</h2>
+<a name="lab174"></a><h2 class="section">Poradnik rozpoznawania negatywnych typów induktywnych</h2>
 
 <div class="paragraph"> </div>
 
@@ -6453,7 +6542,7 @@ Rodzaje nieszkodliwych typów argumentów widać na powyższym przykładzie.
     <span class="inlinecode"><span class="id" title="var">T0_ind</span></span>). 
 <div class="paragraph"> </div>
 
-<a name="lab174"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab175"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6541,7 +6630,7 @@ W powyższym przykładzie wystąpienie <span class="inlinecode"><span class="id"
     prowadzi do sprzeczności). 
 <div class="paragraph"> </div>
 
-<a name="lab175"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab176"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6564,7 +6653,7 @@ Policz niedobrość każdego wstąpienia <span class="inlinecode"><span class="
     lub ściśle pozytywny. 
 <div class="paragraph"> </div>
 
-<a name="lab176"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab177"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6626,7 +6715,7 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
 </div>
 
 <div class="doc">
-<a name="lab177"></a><h2 class="section">Kilka bonusowych pułapek</h2>
+<a name="lab178"></a><h2 class="section">Kilka bonusowych pułapek</h2>
 
 <div class="paragraph"> </div>
 
@@ -6674,7 +6763,7 @@ Jak widać, jeżeli zaaplikujemy <span class="inlinecode"><span class="id" title
     jeżeli wstawi się za nie coś niedobrego (<span class="inlinecode"><span class="id" title="var">F</span></span> <span class="inlinecode"><span class="id" title="var">T</span></span>). 
 <div class="paragraph"> </div>
 
-<a name="lab178"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab179"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6745,7 +6834,7 @@ Jak widać, definicja <span class="inlinecode"><span class="id" title="var">X</s
     jak i w konstruktorach typu <span class="inlinecode"><span class="id" title="var">Y</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab179"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab180"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6771,7 +6860,7 @@ Jak widać, definicja <span class="inlinecode"><span class="id" title="var">X</s
 </div>
 
 <div class="doc">
-<a name="lab180"></a><h2 class="section">Jeszcze więcej pułapek</h2>
+<a name="lab181"></a><h2 class="section">Jeszcze więcej pułapek</h2>
 
 <div class="paragraph"> </div>
 
@@ -6846,7 +6935,7 @@ Po ciężkich bojach, przez które przeszedłeś, aksjomatyczne kodowanie
     banalne uogólnienie. 
 <div class="paragraph"> </div>
 
-<a name="lab181"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab182"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6902,7 +6991,7 @@ Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
     specjalnie wymagająca czy oświecająca. 
 <div class="paragraph"> </div>
 
-<a name="lab182"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab183"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6921,7 +7010,7 @@ Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
 </div>
 
 <div class="doc">
-<a name="lab183"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab184"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7510,7 +7599,7 @@ Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
     co możemy liczyć. 
 <div class="paragraph"> </div>
 
-<a name="lab184"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab185"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7532,7 +7621,7 @@ Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
 No, teraz to już na pewno wiemy wszystko... 
 <div class="paragraph"> </div>
 
-<a name="lab185"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab186"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7575,7 +7664,7 @@ No, teraz to już na pewno wiemy wszystko...
 </div>
 
 <div class="doc">
-<a name="lab186"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda</h2>
+<a name="lab187"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda</h2>
 
 <div class="paragraph"> </div>
 
@@ -7622,7 +7711,7 @@ No, teraz to już na pewno wiemy wszystko...
     nienależenie prowadzi do sprzeczności. 
 <div class="paragraph"> </div>
 
-<a name="lab187"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab188"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7658,7 +7747,7 @@ No, teraz to już na pewno wiemy wszystko...
     ćwiczeń. 
 <div class="paragraph"> </div>
 
-<a name="lab188"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab189"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7671,7 +7760,7 @@ No, teraz to już na pewno wiemy wszystko...
     lubią. Czy wujek Janusz lubi sam siebie? 
 <div class="paragraph"> </div>
 
-<a name="lab189"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab190"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7809,7 +7898,7 @@ Powyższa induktywno-rekurencyjna definicja typu <span class="inlinecode"><span 
     będzie, jeżeli przemyślisz to wszystko w ramach ćwiczenia. 
 <div class="paragraph"> </div>
 
-<a name="lab190"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab191"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -8219,7 +8308,7 @@ Ponieważ <span class="inlinecode"><span class="id" title="var">bad</span></span
 </div>
 
 <div class="doc">
-<a name="lab191"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab192"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -8279,7 +8368,7 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a name="lab192"></a><h2 class="section">Pozytywne typy induktywne</h2>
+<a name="lab193"></a><h2 class="section">Pozytywne typy induktywne</h2>
 
 <div class="paragraph"> </div>
 
@@ -8650,7 +8739,7 @@ No i bum. Jak widać, pozytywne typy induktywne prowadzą do sprzeczności,
     <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i jego impredykatywnością. 
 <div class="paragraph"> </div>
 
-<a name="lab193"></a><h1 class="section">Podsumowanie</h1>
+<a name="lab194"></a><h1 class="section">Podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
