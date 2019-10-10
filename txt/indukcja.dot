@@ -34,8 +34,9 @@ digraph
   "indukcja-rekursja"		->
   {
     "indeksowana indukcja-rekursja"
-    "indukcja-indukcja-rekursja"
   }
+
+  "indeksowana indukcja-rekursja" -> "indukcja-indukcja-rekursja"
 
   "indukcja-indukcja-rekursja"	-> "wyższa indukcja-indukcja-rekursja"
   "wyższa indukcja"		-> "wyższa indukcja-indukcja-rekursja"
@@ -44,5 +45,7 @@ digraph
   edge[style=dotted]
 
   "indukcja wzajemna"		-> indeksy
+
+  indeksy			-> "indukcja-rekursja"
   
 }

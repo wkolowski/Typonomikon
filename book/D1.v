@@ -4140,76 +4140,6 @@ Qed.
 
 End ind_rec.
 
-(** Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
-    można użyć indukcji-rekursji (poza rzecz jasna głupimi strukturami
-    danych, jak listy posortowane)? W świerszczykach dla bystrzaków
-    (czyli tzw. "literaturze naukowej") przewija się głównie jeden (ale
-    jakże użyteczny) pomysł: uniwersa.
-
-    Czym są uniwersa i co mają wspólnego z indukcją-rekursją? Najlepiej
-    będzie przekonać się na przykładzie programowania generycznego: *)
-
-(** **** Ćwiczenie (zdecydowanie za trudne) *)
-
-(** Zaimplementuj generyczną funkcję [flatten], która spłaszcza dowolnie
-    zagnieżdżone listy list do jednej, płaskiej listy.
-
-    [flatten 5 = [5]]
-
-    [flatten [1; 2; 3] = [1; 2; 3]]
-
-    [flatten [[1]; [2]; [3]] = [1; 2; 3]]
-
-    [flatten [[[1; 2]]; [[3]]; [[4; 5]; [6]]] = [1; 2; 3; 4; 5; 6]] *)
-
-(** Trudne, prawda? Ale robialne, a robi się to tak.
-
-    W typach argumentów [flatten] na powyższym przykładzie widać pewien
-    wzorzec: są to kolejno [nat], [list nat], [list (list nat)],
-    [list (list (list nat))] i tak dalej. Możemy ten "wzorzec" bez problemu
-    opisać za pomocą następującego typu: *)
-
-Inductive FlattenType : Type :=
-    | Nat : FlattenType
-    | List : FlattenType -> FlattenType.
-
-(** Żeby było śmieszniej, [FlattenType] to dokładnie to samo co [nat], ale
-    przemilczmy to. Co dalej? Możemy myśleć o elementach [FlattenType] jak
-    o kodach prawdziwych typów, a skoro są to kody, to można też napisać
-    funkcję dekodującą: *)
-
-Fixpoint decode (t : FlattenType) : Type :=
-match t with
-    | Nat => nat
-    | List t' => list (decode t')
-end.
-
-(** [decode] każdemu kodowi przyporządkowuje odpowiadający mu typ. O
-    kodach możemy myśleć jak o nazwach - [Nat] to nazwa [nat], zaś
-    [List t'] to nazwa typu [list (decode t')], np. [List (List Nat)]
-    to nazwa typu [list (list nat)].
-
-    Para [(FlattenType, decode)] jest przykładem uniwersum.
-
-    Uniwersum to, najprościej pisząc, worek, który zawiera jakieś typy.
-    Formalnie uniwersum składa się z typu kodów (czyli "nazw" typów) oraz
-    funkcji dekodującej, która przyporządkowuje kodom prawdziwe typy.
-
-    Programowanie generyczne to programowanie funkcji, które operują na
-    kolekcjach typów o dowolnych kształtach, czyli na uniwersach właśnie.
-    Generyczność od polimorfizmu różni się tym, że funkcja polimorficzna
-    działa dla dowolnego typu, zaś generyczna tylko dla typu o pasującym
-    kształcie.
-
-    Jak dokończyć implementację funkcji [flatten]? Kluczowe jest zauważenie,
-    że możemy zdefiniować [flatten] przez rekursję strutkuralną po argumencie
-    domyślnym typu [FlattenType]. Ostatni problem to jak zrobić, żeby Coq sam
-    zgadywał kod danego typu - dowiemy się tego w rozdziale o klasach.
-
-    Co to wszystko ma wspólnego z uniwersami? Ano, jeżeli chcemy definiować
-    bardzo zaawansowane funkcje generyczne, musimy mieć do dyspozycji bardzo
-    potężne uniwersa i to je właśnie zapewnia nam indukcja-rekursja. *)
-
 (** **** Ćwiczenie *)
 
 (** No cóż, jeszcze raz to samo. Zdefiniuj za pomocą indukcji-rekursji
@@ -4412,13 +4342,103 @@ Defined.
 End BST'.
 (* end hide *)
 
+(** Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
+    można użyć indukcji-rekursji (poza rzecz jasna głupimi strukturami
+    danych, jak listy posortowane)? W świerszczykach dla bystrzaków
+    (czyli tzw. "literaturze naukowej") przewija się głównie jeden (ale
+    jakże użyteczny) pomysł: uniwersa.
+
+    Czym są uniwersa i co mają wspólnego z indukcją-rekursją? Najlepiej
+    będzie przekonać się na przykładzie programowania generycznego: *)
+
+(** **** Ćwiczenie (zdecydowanie za trudne) *)
+
+(** Zaimplementuj generyczną funkcję [flatten], która spłaszcza dowolnie
+    zagnieżdżone listy list do jednej, płaskiej listy.
+
+    [flatten 5 = [5]]
+
+    [flatten [1; 2; 3] = [1; 2; 3]]
+
+    [flatten [[1]; [2]; [3]] = [1; 2; 3]]
+
+    [flatten [[[1; 2]]; [[3]]; [[4; 5]; [6]]] = [1; 2; 3; 4; 5; 6]] *)
+
+(** Trudne, prawda? Ale robialne, a robi się to tak.
+
+    W typach argumentów [flatten] na powyższym przykładzie widać pewien
+    wzorzec: są to kolejno [nat], [list nat], [list (list nat)],
+    [list (list (list nat))] i tak dalej. Możemy ten "wzorzec" bez problemu
+    opisać za pomocą następującego typu: *)
+
+Inductive FlattenType : Type :=
+    | Nat : FlattenType
+    | List : FlattenType -> FlattenType.
+
+(** Żeby było śmieszniej, [FlattenType] to dokładnie to samo co [nat], ale
+    przemilczmy to. Co dalej? Możemy myśleć o elementach [FlattenType] jak
+    o kodach prawdziwych typów, a skoro są to kody, to można też napisać
+    funkcję dekodującą: *)
+
+Fixpoint decode (t : FlattenType) : Type :=
+match t with
+    | Nat => nat
+    | List t' => list (decode t')
+end.
+
+(** [decode] każdemu kodowi przyporządkowuje odpowiadający mu typ. O
+    kodach możemy myśleć jak o nazwach - [Nat] to nazwa [nat], zaś
+    [List t'] to nazwa typu [list (decode t')], np. [List (List Nat)]
+    to nazwa typu [list (list nat)].
+
+    Para [(FlattenType, decode)] jest przykładem uniwersum.
+
+    Uniwersum to, najprościej pisząc, worek, który zawiera jakieś typy.
+    Formalnie uniwersum składa się z typu kodów (czyli "nazw" typów) oraz
+    funkcji dekodującej, która przyporządkowuje kodom prawdziwe typy.
+
+    Programowanie generyczne to programowanie funkcji, które operują na
+    kolekcjach typów o dowolnych kształtach, czyli na uniwersach właśnie.
+    Generyczność od polimorfizmu różni się tym, że funkcja polimorficzna
+    działa dla dowolnego typu, zaś generyczna - tylko dla typu o pasującym
+    kształcie.
+
+    Jak dokończyć implementację funkcji [flatten]? Kluczowe jest zauważenie,
+    że możemy zdefiniować [flatten] przez rekursję strutkuralną po argumencie
+    domyślnym typu [FlattenType]. Ostatni problem to jak zrobić, żeby Coq sam
+    zgadywał kod danego typu - dowiemy się tego w rozdziale o klasach.
+
+    Co to wszystko ma wspólnego z uniwersami? Ano, jeżeli chcemy definiować
+    bardzo zaawansowane funkcje generyczne, musimy mieć do dyspozycji bardzo
+    potężne uniwersa i to właśnie je zapewnia nam indukcja-rekursja. Ponieważ
+    w powyższym przykładzie generyczność nie była zbyt wyrafinowana, nie było
+    potrzeby używania indukcji-rekursji, jednak uszy do góry: przykład nieco
+    bardziej skomplikowanego uniwersum pojawi się jeszcze w tym rozdziale. *)
+
+(** **** Ćwiczenia *)
+
+(** Nieco podchwytliwe zadanie: zdefiniuj uniwersum funkcji [nat -> nat],
+    [nat -> (nat -> nat)], [(nat -> nat) -> nat],
+    [(nat -> nat) -> (nat -> nat)] i tak dalej, dowolnie zagnieżdżonych.
+
+    Zagadka: czy potrzebna jest nam indukcja-rekursja? *)
+
 (** ** Indeksowana indukcja-rekursja *)
 
-(** Drugi pomysł jest o wiele bardziej praktyczy, a zwie się on metodą
-    induktywnej dziedziny. Pod tą nazwą kryje się sposób definiowania
-    funkcji, pozwalający oddzielić samą definicję od dowodu jej terminacji.
-    Jeżeli ten opis nic ci nie mówi, nie martw się: dotychczas definiowaliśmy
-    tylko tak prymitywne funkcje, że tego typu fikołki nie były nam potrzebne.
+(** Za siedmioma górami, za siedmioma lasami, za siedmioma rzekami, za
+    siedmioma budkami telefonicznymi, nawet za indukcją-rekursją (choć
+    tylko o kroczek) leży indeksowana indukcja-rekursja, czyli połączenie
+    indukcji-rekursji oraz indeksowanych rodzin typów.
+
+    Jako, że w porównaniu do zwykłej indukcji-rekursji nie ma tu za wiele
+    innowacyjności, przejdźmy od razu do przykładu przydatnej techniki,
+    którą nasza tytułowa bohaterka umożliwia, a zwie się on metodą
+    induktywnej dziedziny.
+
+    Pod tą nazwą kryje się sposób definiowania funkcji, pozwalający oddzielić
+    samą definicję od dowodu jej terminacji. Jeżeli ten opis nic ci nie mówi,
+    nie martw się: dotychczas definiowaliśmy tylko tak prymitywne funkcje, że
+    tego typu fikołki nie były nam potrzebne.
 
     Metoda induktywnej dziedziny polega na tym, żeby zamiast funkcji
     [f : A -> B], która nie jest strukturalnie rekurencyjna (na co Coq
@@ -4429,33 +4449,28 @@ End BST'.
     udowodnić, że każde [x : A] spełnia predykat dziedziny.
 
     Co to wszystko ma wspólnego z indeksowaną indukcją-rekursją? Już piszę.
-    Otóż metoda
-    ta nie wymaga w ogólności indukcji-rekursji - ta staje się potrzebna
-    dopiero, gdy walczymy z bardzo złośliwymi funkcjami, czyli takimi, w
-    których rekursja jest zagnieżdżona, tzn. robimy wywołanie rekurencyjne
-    na wyniku innego wywołania rekurencyjnego. Predykat dziedziny dla takiej
-    funkcji musi zawierać konstruktor w stylu "jeżeli wynik wywołania
-    rekurencyjnego na x należy do dziedziny, to x też należy do dziedziny".
-    To właśnie tu ujawnia się indukcja-rekursja: żeby zdefiniować predykat
-    dziedziny, musimy odwołać się do funkcji (żeby móc powiedzieć coś o
-    wyniku wywołania rekurencyjnego), a żeby zdefiniować funkcję, musimy
-    mieć predykat dziedziny.
+    Otóż metoda ta nie wymaga w ogólności indukcji-rekursji - ta staje się
+    potrzebna dopiero, gdy walczymy z bardzo złośliwymi funkcjami, czyli
+    takimi, w których rekursja jest zagnieżdżona, tzn. robimy wywołanie
+    rekurencyjne na wyniku poprzedniego wywołania rekurencyjnego.
+
+    Predykat dziedziny dla takiej funkcji musi zawierać konstruktor w stylu
+    "jeżeli wynik wywołania rekurencyjnego na x należy do dziedziny, to x też
+    należy do dziedziny".To właśnie tu ujawnia się indukcja-rekursja: żeby
+    zdefiniować predykat dziedziny, musimy odwołać się do funkcji (żeby móc
+    powiedzieć coś o wyniku wywołania rekurencyjnego), a żeby zdefiniować
+    funkcję, musimy mieć predykat dziedziny.
 
     Brzmi skomplikowanie? Jeżeli czegoś nie rozumiesz, to jesteś debi...
-    a nie, czekaj. Jeżeli czegoś nie rozumiesz, to nie martw się: powyższe
-    przykłady miały tylko ilustrować jakieś praktyczne zastosowania
-    indukcji-rekursji. Do metody induktywnej dziedziny powrócimy w kolejnym
-    rozdziale. Pokażemy, jak wyeliminować z niej indukcję-rekursję, tak żeby
-    uzyskane za jej pomocą definicje można było odpalać w Coqu. Zobaczymy też,
-    jakimi sposobami dowodzić, że każdy element dziedziny spełnia predykat
-    dziedziny, co pozwoli nam odzyskać oryginalną definicję funkcji, a także
-    dowiemy się, jak z "predykatu" o typie [D : nat -> Type] zrobić prawdziwy
-    predykat [D : nat -> Prop]. O induktywno-rekurencyjnych uniwersach więcej
-    dowiemy się w rozdziale o uniwersach (o ile taki kiedyś powstanie). *)
-
-(* begin hide *)
-(** TODO: ^ o ile taki kiedyś powstanie ^ *)
-(* end hide *)
+    a nie, czekaj. Jeżeli czegoś nie rozumiesz, to nie martw się: powyższy
+    przykład miał na celu jedynie zilustrować jakieś praktyczne zastosowanie
+    indeksowanej indukcji-rekursji. Do metody induktywnej dziedziny powrócimy
+    w kolejnym rozdziale. Pokażemy, jak wyeliminować z niej indukcję-rekursję,
+    tak żeby uzyskane za jej pomocą definicje można było odpalać w Coqu.
+    Zobaczymy też, jakimi sposobami dowodzić, że każdy element dziedziny
+    spełnia predykat dziedziny, co pozwoli nam odzyskać oryginalną definicję
+    funkcji, a także dowiemy się, jak z "predykatu" o typie [D : nat -> Type]
+    zrobić prawdziwy predykat [D : nat -> Prop]. *)
 
 (** ** Indukcja-indukcja-rekursja *)
 
