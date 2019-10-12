@@ -4469,14 +4469,14 @@ end.
     tak żeby uzyskane za jej pomocą definicje można było odpalać w Coqu.
     Zobaczymy też, jakimi sposobami dowodzić, że każdy element dziedziny
     spełnia predykat dziedziny, co pozwoli nam odzyskać oryginalną definicję
-    funkcji, a także dowiemy się, jak z "predykatu" o typie [D : nat -> Type]
-    zrobić prawdziwy predykat [D : nat -> Prop]. *)
+    funkcji, a także dowiemy się, jak z "predykatu" o typie [D : A -> Type]
+    zrobić prawdziwy predykat [D : A -> Prop]. *)
 
 (** ** Indukcja-indukcja-rekursja *)
 
-(** Ufff... przebrnęliśmy przez indukcję-indukcję i indukcję-rekursję. Czy
-    mogą istnieć jeszcze potężniejsze i bardziej innowacyjne sposoby
-    definiowania typów przez indukcję?
+(** Ufff... przebrnęliśmy przez indukcję-indukcję i (indeksowaną)
+    indukcję-rekursję. Czy mogą istnieć jeszcze potężniejsze i bardziej
+    innowacyjne sposoby definiowania typów przez indukcję?
 
     Ależ oczywiście. Jest nim... uwaga uwaga, niespodzianka...
     indukcja-indukcja-rekursja, która jest nie tylko strasznym
@@ -4489,21 +4489,16 @@ end.
 
     Nie ma tu jakiejś wielkiej filozofii: wszystkiego, co powinieneś wiedzieć
     o indukcji-indukcji-rekursji, dowiedziałeś się już z dwóch poprzednich
-    podrozdziałów.
+    podrozdziałów. Nie muszę chyba dodawać, że ława oburzonych jest oburzona
+    faktem, że Coq nie wspiera indukcji-indukcji-rekursji.
 
-    Nie muszę chyba dodawać, że ława oburzonych jest oburzona faktem, że Coq
-    nie wspiera indukcji-indukcji-rekursji. *)
+    Rodzi się jednak to samo super poważne pytanie co zawsze, czyli do czego
+    można tego tałatajstwa użyć? Przez całkiem długi czas nie miałem pomysłu,
+    ale okazuje się, że jest jedno takie zastosowanie i w sumie narzuca się
+    ono samo.
 
-(** **** Ćwiczenie (jednak nie takie trudne jak myślałem) *)
-
-(** Wymyśl jakiś sensowny przykład praktycznego zastosowania
-    indukcji-indukcji-rekursji. *)
-
-(* begin hide *)
-
-(** Otóż jest takie, i to nawet bardziej oczywiste niż może się wydawać.
-    Przypomnij sobie metodę induktywno-rekurencyjnej dziedziny, czyli
-    jedno z typowych zastosowań indukcji-rekursji. Tutaj zaczynamy od
+    Przypomnij sobie metodę induktywno-rekurencyjnej dziedziny, czyli jedno
+    ze sztandarowych zastosowań indeksowanej indukcji-rekursji. Zaczynamy od
     typu [I : Type], na którym chcemy zdefiniować funkcję o niestandardowym
     kształcie rekursji. W tym celu definiujemy dziedzinę [D : I -> Type]
     wraz z funkcją [f : forall i : I, D i -> R].
@@ -4528,13 +4523,7 @@ end.
     jakaś sytuacja, w której powyższy schemat działania jest tym słusznym?
     Odpowiedź póki co może być tylko jedna: nie wiem, ale się domyślam. *)
 
-(* end hide *)
-
-(** ** Wyższe typy induktywne *)
-
-(** TODO *)
-
-(** ** Chimera, czyli najstraszniejszy potfur *)
+(** ** Najstraszniejszy potfur *)
 
 (** Na koniec dodam jeszcze na zachętę (albo zniechętę, zależy jakie kto
     ma podejście), że istnieje jeszcze jeden potfur, straszniejszy nawet

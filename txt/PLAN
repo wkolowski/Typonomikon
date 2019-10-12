@@ -1,0 +1,293 @@
+Część 0: Wstęp
+
+(A) Wstęp i inne tego typu pierdoły
+
+Część 1: Teoria typów w Coqowej wersji
+
+(B) Logika: Podstawy
+  Konstruktywny rachunek zdań
+  Konstruktywny rachunek kwantyfikatorów
+  Klasyczny rachunek kwantyfikatorów. Zrobić tak żeby można było pisać "Classically $ coś tam".
+  Przedstawić obie logiki jako użyteczne - pluralizm logiczny.
+  Paradoks pijoka, czyli esencja klasyczności.
+  Paradoks golibrody, czyli związki logiki z rzeczywistością.
+  Paradoks pieniądza i kebaba, czyli o zasobach.
+  Na końcu dać podrozdział o kombinatorach taktyk (albo i nie).
+  Napisać coś o nazwach zmiennych związanych
+  Przedstawić jakieś bardziej ludzkie definicje predykatu i relacji (tzn. bierze coś i zwraca zdanie).
+  Zadania:
+    wyrzucić zadania mącące (mieszające typy i zdania)
+    dodać zadanie dotyczące czytania twierdzeń i dowodów
+    dodać zadania dotyczące czytania formuł (precedencja etc.)
+    modelowanie różnych sytuacji za pomocą zdań i predykatów. Rozwiązywanie zagadek logicznych.
+    dodać jakieś wyjaśnienia do ćwiczeń
+    więcej zadań z exists
+    zadania z klasycznego rachunku kwantyfikatorów
+
+(C) Podstawy teorii typów:
+  Przedstawić materiał z rozdziału A za pomocą dedukcji naturalnej (z kontekstami rzecz jasna).
+  Curry-Howard
+  Przedstawić jeszcze raz to samo, ale tym razem z prooftermami.
+  Omówić obliczenia i postacie normalne (o ile gdzieś można znaleźć jakiś ich opis).
+  Pięć rodzajów reguł
+  HoTT-bookowa teoria typów: pusty, unit, bool, nat, produkt, suma, funkcje, produkt zależy, suma zależna, uniwersa, równość
+  Ale nie można zaniedbać formalnej prezentacji teorii typów.
+
+(D1) Typy induktywne
+  Enumeracje, czyli sumy nazwane.
+    Kontent: ewaluacja (to co obecnie jest przy opisie typu [bool]).
+    Przykładowe typy: kierunki, kolory RGB, dni tygodnia, uprawnienia dostępu (R, W, RW, etc.), pusty, unit
+    Ćwiczenia: logika boolowska. Dokładnie wszystko opisać i powiązać z logiką klasyczną
+  Parametry.
+    Kontent: polimorfizm.
+    Przykładowe typy: prod, sum.
+    Ćwiczenia: typ option.
+  Konstruktory rekurencyjne.
+    Kontent: rekursja.
+    Przykładowe typy: nat
+    Ćwiczenia: arytmetyka Peano.
+  Indukcja wzajemna.
+  Indeksy, czyli predykaty i relacje
+  Indeksy v2, czyli typy danych ostro chwycone za mordę.
+  Indukcja-indukcja.
+  Indukcja-rekursja.
+  Indukcja-indukcja-rekursja.
+  Zadania z definiowania induktywnych typów i predykatów
+  W międzyczasie: omówić ścisłą pozytywność
+Inne
+  dodać podrozdział o typach induktywnych z nieskończoną ilością argumentów rekurencyjnych (A -> T)
+
+(D2) Definiowanie funkcji
+  rekursja "prymitywna" (jak w Agdzie)
+  rekursja strukturalna
+  rekursja polimorficzna
+  rekursja "monotoniczna" (fix w fiksie)
+  rekursja paliwowa
+  rekursja dobrze ufundowana
+  metoda Bove-Capretta z trickiem wycinającym indukcję-rekursję
+  rekursja przez iterację
+  rekursja wydmuszkowa (Coq'Art)
+  teoria dziedzin (computation, CPDT)
+  comp (CPDT)
+  koindukcja (thunk, CPDT)
+
+(D3) Logika boolowska
+
+(D4) Arytmetyka Peano
+
+(D5) Listy
+  napisać wstępy do poszczególnych funkcji
+  Dodać przykładowe wywołania funkcji do ćwiczeń.
+  ogólnie trzeba będzie zrobić gruntowny refaktoring list według planu zawartego w List_sig.v
+  opisz niestandardowe reguły indukcyjne dla list (najlepiej przed funkcją [intersperse])
+  przenieś [intersperse] na sam koniec funkcji i dorzuć jeszcze kilka dziwnych (z niestandardowym kształtem indukcji)
+  opisz zwijanie i rozwijanie ([fold] i [foldl])
+  opisz sumy prefiksowe ([scanr] i [scanl])
+  zrób osobno: funkcje na listach dla typów mających jakieś specjalne rzeczy (np. rozstrzygalną równość)
+  Opisać relacje prefix/infix/suffix/interfix dla list jako jakotakie ćwiczenie
+  niedokończone funkcje (do niedawna oznaczone jako TODO):
+    isZero (przenieść do rozdziału o arytmetyce)
+    isEmpty
+    snoc
+    bind
+    iterate i iter (join, bind)
+    insert (join, bind, iterate, init)
+    remove
+    take (join, bind, last_take, take_remove),
+    drop (join, bind, remove)
+    iterate (od removeFirst wzwyż)
+    removeFirst (removeFirst_zip)
+    findIndex (init, tail)
+    filter (tail, init)
+    findIndices (join, bind, takeWhile, dropWhile)
+    pmap (iterate, nth, last, tail i init, take i drop, takedrop, zip,
+          unzip, zipWith, unzipWith, removeFirst i removeLast, findIndex,
+          findIndices)
+    intersperse (init, insert, remove, drop, zip, zipWith, unzip)
+    groupBy
+    Rep (join, nth)
+    AtLeast (nth, head, last, init, tail)
+    Exactly (join, nth, head, tail, init, last, zip)
+    AtMost
+    popracować nad [findIndices] (i to w dwóch wersjach - być może jest to dobry pretekst dla wprowadzenia stylu programowania z akumulatorem?)
+    Najnowsze: ćwiczenia z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
+
+(D6) Ogólne plany na rozdziały X:
+  boolowska logika ternarna, być może jako tour de force dla automatyzacji? albo test kreatywności
+  typ option (być może przy okazji funktory?) Stąd zadania dla [head], [last], [tail] i [init]
+  wcisnąć tu rozdział o produktach, sumach i funkcjach?
+  arytmetyka i typ [nat]. Reszta arytmetyki:
+    liczby dodatnie (positive)
+    binarne liczby naturalne
+    liczby całkowite
+    liczby wymierne
+    systemy liczbowe
+  listy list i ich różne pochodne:
+    listy niepuste nel
+    wektory zależne vec
+    wektory podtypowe (jak w ssreflekcie)
+  drzewa ukorzenione:
+    binarne węzłowe BTree
+    binarne liściowe (wisienki)
+    ogólne węzłowe Tree
+    ogólne liściowe RoseTree
+    jakieś inne? (węzłowe niepuste)
+
+(E1) Rekordy, klasy i moduły
+  Typy skończone
+  Enumerowanie
+  Rozstrzygalność i typ [reflect]
+  Rozstrzygalna równość
+  Rozstrzygalność
+  Rodzaje rekordów: induktywne, koinduktywne, primitive projections
+  Silne specyfikacje
+
+(E2) Typy i funkcje
+  Aksjomat ekstensjonalności
+  Lewa i prawa skracalność
+  Lewa i prawa odwrotność
+  Izomorfizm
+  Injekcja, bijekcja, surjekcja
+  Inwolucja i idempotencja
+  Przemycać jak najwięcej teorii kategorii
+
+(E3) Typy i relacje
+  Odnośnie mechanizmu redukcji:
+
+  Posłużyć się następującym systemem nazewniczo-klasyfikacyjnym.
+  Dla każdej literki są trzy relacje: redukcja, ekspansja i konwersja
+  (a może powinna być jeszcze redukcja w wielu krokach?).
+  Bazą jest redukcja, która ma jakąś swoją definicję, pisana jest
+  a -> b. Relacja ekspansji a <- b zdefiniowana jest jako b -> a, zaś
+  relacja konwersji to domknięcie równoważnościowe relacji redukcji.
+  W takim układzie redukcja w wielu krokach to domknięcie zwrotno-
+  przechodnie relacji redukcji. Podobnie dla ekspansji w wielu krokach.
+
+  Podsumowując: zdefiniować na relacjach rzeczy, których można by użyć
+  przy formalizacji teorii typów, ale tylko w celu objaśnienia.
+
+(F1) Typy koinduktywne
+  Rekordy, parametry i korekursja.
+
+(F2, F3, F4, F5) liczby konaturalne, strumienie, kolisty, kodrzewa.
+
+(G) Bonusowy rozdział teoretyczny
+  Kodowanie Churcha
+  Być może inne kodowania
+  Jedyny pierścień wyższego rzędu, czyli W-typy i M-typy
+  Jedyny pierścień pierwszego rzędu, czyli uniwersa kodów na typy induktywne i koinduktywne
+  Uwaga: wyższy rząd vs pierwszy rząd
+
+(H1) Uniwersa
+  Zadanie: nat <> Type : )
+  Relewancja: Prop, SProp, propext i proof irrelevance
+
+(H2) Równość
+  Opowiedzieć skąd się biorą dowody równości
+  Aksjomat K
+  Interpretacja homotopiczna
+  Aksjomat Uniwalencji
+  Wyższe typy induktywne
+
+Cześć 2: Metapoziom, czyli taktyki
+
+(I1) Ltac
+  być może przenieść tu z rozdziału 1 fragment o kombinatorach taktyk
+
+(I2) Spis taktyk
+  nieopisane taktyki: [induction], [inversion], [destruct]
+  przerobić "drobne taktyki" na "taktyki do zarządzania kontekstem"
+  przenieść opis taktyki [pattern] (i odpowiadające zadanie) do części o taktykach dla redukcji
+  Taktyki dla redukcji i obliczeń:  Mamy następujące relacje redukcji:
+
+  Mamy następujące redukcje:
+    alfa (zmiana nazwy jednej zmiennej związanej)
+    beta (podstawienie argumentu za parametr formalny w jednym miejscu)
+    delta (odwinięcie jednej definicji) — uwaga: to w sumie nie jest
+      relacja, tylko rodzina relacji parametryzowana/indeksowana nazwami,
+      które chcemy odwinąć
+    eta - unikalność dla funkcji, rekordów etc.
+    iota (wykonanie jednego dopasowania do wzorca)
+    zeta (redukcja pojedynczego [let]a)
+
+  Odpowiadające taktyki:
+    alfa — brak
+    beta — cbn/cbv beta
+    delta — cbn/cbv delta, unfold, fold
+    eta — brak
+    iota — cbn/cbv iota
+    zeta — cbn/cbv zeta
+    ogólna redukcja: cbn, cbv, simpl
+    konwersja: change
+
+  Omówić następujące taktyki (w kolejności):
+    [pattern] (beta ekspansja)
+    [unfold], [fold] (delta redukcja/ekspansja)
+    [change] (konwertowalność)
+    [cbn]
+    [compute], [vm_compute], [native_compute]
+    [cbv], [lazy]
+    [red]
+    [simpl]
+    [hnf]
+
+(I3) Reflekcja, metapoziom, quote (którego oczywiście w Coqu nie ma, a jak) i inne takie duperele
+  Po co prostemu chłopu reflekcja?
+  Semantyka vs składnia
+
+Część 3: Podstawy matematyki
+
+Matematyka
+  O typach ilorazowych
+  Setoidy
+  Teoria porządków
+  Monoidy i teoria grup
+  Teoria Kategorii
+
+Część 4: Efekty obliczeniowe dla biedaków
+
+Monady i efekty jako sposoby bycia
+- [Id] nie reprezentuje żadnego efektu. Wartości typu [Id A] są w ten
+  sposób, że po prostu są.
+- [option] reprezentuje częściowość. Wartości typu [option A] są w ten
+  sposób, że albo są, albo ich nie ma
+- [sum E] reprezentuje możliwość wystąpienia błędu. Wartości typu
+  [sum E A] są w ten sposób, że albo są poprawne, albo ich nie ma, gdyż
+  wystąpił błąd typu [E].
+- [list] reprezentuje niedeterminizm (uporządkowany). Wartości typu
+  [list A] są w ten sposób, że może ich być wiele lub może ich nie być
+  wcale i są w sposób uporządkowany.
+- [State S] reprezentuje stan. Wartości typu [State S A] są w ten
+  sposób, że są i mają pamięć, tzn. mogą się zmieniać w zależności
+  od stanu.
+- [Reader R] reprezentuje możliwość odczytania konfiguracji.
+- [Writer W] reprezentuje możliwość zapisywania logów.
+- [Future] reprezentuję asynchroniczność. Wartości typu [Future A]
+  są w ten sposób, że albo są teraz, albo będą później.
+- [STM] reprezentuje transakcje. Wartościu typu [STM A] są w ten
+  sposób, że są w jednym kawałku, są transakcjami.
+- [SQL] reprezentuje operacje bazodanowe. Wartości typu [SQL A] są
+  w ten sposób, że albo po prostu są, albo są w bazie danych.
+
+Kontynuacje i kontrola
+
+Część 5: Funkcyjna algorytmika
+
+(Z) Złożoność:
+  Napisać coś o rekursji ogonowej i opisać poświęcone jej techniki dowodzenia.
+
+Algorytmy i struktury danych:
+    drzewa wyszukiwań
+    sterty
+    sortowanie
+
+==============================================
+
+Inne
+  definiowanie przez dowód
+
+Sugestie i problemy z koła:
+  nie trzeba specjalizować hipotezy, żeby przepisać
+  być może coś więcej o równości (i jej alternatywnej definicji?)
+  napisać bardziej wprost o deklarowaniu hipotez
+  ulepszyć ściągę z taktykami i komendami
