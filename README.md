@@ -1,9 +1,8 @@
 # CoqBook
 
-To repozytorium zawiera źródła mojej [książki](https://zeimer.github.io/CoqBookPL/)
+To repozytorium zawiera źródła mojej [książki](https://zeimer.github.io/CoqBookPL/). Dostępna jest też [wersja PDF](https://github.com/Zeimer/CoqBookPL/raw/master/tex/Ksi%C4%85%C5%BCka.pdf), ale nie polecam, bo jest mało dopracowana i niektóre rzeczy źle się wyświetlają.
 
 Co tu się dzieje:
-
 - assets/ zawiera style css, pliki js, nagłówek i stopkę dodawane do każdej strony oraz materiały do zrobienia okładek. Większość z tego jest ukradziona ze starej wersji [Software Foundations](https://softwarefoundations.cis.upenn.edu/)
 - book/ zawiera źródła książki w postaci zakomentowanych plików .v (hipsterzy nazywają to "literate programming").
 - build.sh to skrypt budujący ze źródeł wersje HTML i PDF książki.

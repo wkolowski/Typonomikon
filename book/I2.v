@@ -1652,13 +1652,15 @@ Print filter_length'.
 (* ===> Proofterm o długości 14 linijek. *)
 
 (** Jak widać, ręczny dowód tego faktu daje w wyniku proofterm, który jest
-    o ponad 300 linijk krótszy niż ten wyprodukowany przez taktykę [omega].
+    o ponad 300 linijek krótszy niż ten wyprodukowany przez taktykę [omega].
     Mogłoby się zdawać, że jesteśmy w sytuacji bez wyjścia: albo dowodzimy
     ręcznie, albo prooftermy będą tak wielkie, że nie będziemy mogli ich
     odwijać. Możemy jednak zjeść ciastko i mieć ciastko, a wszystko to za
     sprawą taktyki [abstract] i towarzyszącej jej komendy [Qed exporting]. *)
 
+(* begin hide *)
 (* TODO: w najnowszym Coqu nie działa *)
+(* end hide *)
 
 Lemma filter_length'' :
   forall (A : Type) (f : A -> bool) (l : list A),

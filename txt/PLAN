@@ -55,7 +55,7 @@ Część 1: Teoria typów w Coqowej wersji
   Zadania z definiowania induktywnych typów i predykatów
   W międzyczasie: omówić ścisłą pozytywność
 Inne
-  dodać podrozdział o typach induktywnych z nieskończoną ilością argumentów rekurencyjnych (A -> T)
+  dodać podrozdział o typach induktywnych z nieskończoną ilością argumentów indukcyjnych (A -> T)
 
 (D2) Definiowanie funkcji
   rekursja "prymitywna" (jak w Agdzie)
@@ -64,7 +64,8 @@ Inne
   rekursja "monotoniczna" (fix w fiksie)
   rekursja paliwowa
   rekursja dobrze ufundowana
-  metoda Bove-Capretta z trickiem wycinającym indukcję-rekursję
+  metoda Bove-Capretta
+  metoda Bove-Capretta z indeksowaną indukcją-rekursją
   rekursja przez iterację
   rekursja wydmuszkowa (Coq'Art)
   teoria dziedzin (computation, CPDT)
@@ -280,14 +281,3 @@ Algorytmy i struktury danych:
     drzewa wyszukiwań
     sterty
     sortowanie
-
-==============================================
-
-Inne
-  definiowanie przez dowód
-
-Sugestie i problemy z koła:
-  nie trzeba specjalizować hipotezy, żeby przepisać
-  być może coś więcej o równości (i jej alternatywnej definicji?)
-  napisać bardziej wprost o deklarowaniu hipotez
-  ulepszyć ściągę z taktykami i komendami

@@ -72,3 +72,5 @@ latexmk tex/Książka.tex -pdf -outdir=tex/                 \
         -interaction=nonstopmode                          \
         -f                                                \
         -quiet
+
+dot txt/indukcja.dot -Tjpg -o txt/indukcja.jpg

@@ -1,11 +1,45 @@
+Istniejące:
+1. W (pod)rozdziale o metodzie induktywnej dziedziny dorzucić wyjaśnienia na temat tego, jak zrobić dziedzinę D : A -> Prop, a nie tylko D : A -> Type.
+
+Rekursja:
+1. Rekursja prymitywna (czyli taka, która ma dokładnie taki sam kształt, jak typ argumentu głównego).
+2. Rekursja monotoniczna, tj. zagnieżdżone fixy.
+3. Rekursja przez iterację.
+4. Rekursja koindukcjowa.
+5. Rekursja wyższego rzędu, tzn. nie w pełni zaaplikowane wywołania rekurencyjne.
+
+Indukcja:
+1. Reguły indukcyjne.
+2. Finitarne i infinitarne typy induktywne (znaleźć na to lepsze nazwy, np. pierwszy i wyższy rząd).
+
+Ćwiczenia:
+1. Ćwiczenia z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
+2. Ćwiczenia z definiowania typów induktywnych (i relacji też).
+3. Ćwiczenia z Uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
+
+Długofalowe:
+1. Użyć jsCoq do zrobienia interaktywnej książki, która wyglądałaby jakoś tak: https://x80.org/rhino-coq/v8.10/
+2. Zrobić zwijane/rozwijane dowody i paragrafy.
+
+Inne:
 1. Linki do manuala nie działają.
-2. Znaleźć prostszy przykład dla podrozdziału o ścisłej pozytywności (ale do której konkretnie części?).
-3. Użyć jsCoq do zrobienia interaktywnej książki, która wyglądałaby jakoś tak: https://x80.org/rhino-coq/v8.10/
-4. Zrobić zwijane/rozwijane dowody i paragrafy.
-5. W (pod)rozdziale o metodzie induktywnej dziedziny dorzucić wyjaśnienia na temat tego, jak zrobić dziedzinę D : A -> Prop, a nie tylko D : A -> Type.
-6. Omówić rekursję prymitywną, czyli taką, która ma dokładnie taki sam kształt, jak typ argumentu głównego.
-7. Pamiętać o zapomnianych rekursjach, np. zagnieżdżone fixy.
+2. Zamienić wszędzie simpl na cbn.
+3. Znaleźć prostszy przykład dla podrozdziału o ścisłej pozytywności (ale do której konkretnie części?).
 8. Przedstawić kiedyś metodę encode-decode. Wprowadzić ją jako coś do pokazywania izomorfizmów typów.
-9. Ćwiczenia z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
-10. Ćwiczenia z definiowania typów induktywnych (i relacji też).
-11. Dodać obrazek indukcji do skryptu budującego.
+13. Pamiętać o resztkach z rozdziału o listach.
+14. Opisać taktyki dla redukcji i obliczeń.
+15. Opisać podstawy teorii typów.
+16. Poprawić kwestię komendy Qed exporting w I2.
+17. Opisać zmienne egzystencjalne i odpowiadające im taktyki.
+18. Opisać Taktyki do radzenia sobie z typami zależnymi.
+19. Opisać: silnia, współczynniki dwumianowe, sumy szeregów, charakteryzowanie
+20. Opisać: Izomorfizmy, lewe i prawe odwrotności
+22. Opisać exists!
+26. Odkłamać kwestię polimorfizmu, najlepiej przy okazji rozdziału o programowaniu generycznym.
+
+Sugestie i problemy z koła:
+1. Opisać dokładniej definiowanie przez dowód.
+2. Nie trzeba specjalizować hipotezy, żeby przepisać
+3. Być może coś więcej o równości (i jej alternatywnej definicji?)
+4. Napisać bardziej wprost o deklarowaniu hipotez
+5. Ulepszyć ściągę z taktykami i komendami

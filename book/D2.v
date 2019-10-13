@@ -141,6 +141,16 @@ Fail Definition the_universe_explodes : False := loop tt.
 
     Nie daj się wpuścić w maliny. *)
 
+(** * Rekursja prymitywna (TODO *)
+
+(* begin hide *)
+(** Tutaj opisać to, co w Agdzie zwie się "rekursją prymitywną", czyli taką,
+    która dokładnie pasuje do kształtu indukcji w typie, a zatem można ją
+    bezpośrednio przetłumaczyć na regułe indukcji. Co więcej, pojęcie to
+    wydaje się być całkiem użyteczne w kontekście metody Bove-Capretta oraz
+    mówienia o "kształcie rekursji" czy "kształcie indukcji". *)
+(* end hide *)
+
 (** * Rekursja strukturalna *)
 
 (** Wiemy już, że rekursja ogólna prowadzi do sprzeczności, a jedyną legalną
