@@ -2120,7 +2120,7 @@ Proof. trivial. Abort.
 (** **** Ćwiczenie (auto i trivial) *)
 
 (** Przeczytaj w manualu dokładny opis działania taktyk [auto] oraz [trivial]:
-    https://coq.inria.fr/refman/tactics.html##hevea_tactic161 *)
+    https://coq.inria.fr/refman/proof-engine/tactics.html#coq:tacn.auto *)
 
 (** ** [autorewrite] i [autounfold] *)
 
@@ -2213,7 +2213,7 @@ End autorewrite_ex.
 (** **** Ćwiczenie (autorewrite) *)
 
 (** Przeczytaj opis taktyki [autorewrite] w manualu:
-    https://coq.inria.fr/refman/tactics.html##hevea_tactic165 *)
+    coq.inria.fr/refman/proof-engine/tactics.html#coq:tacn.autorewrite *)
 
 Section autounfold_ex.
 
@@ -2246,13 +2246,13 @@ End autounfold_ex.
 (** **** Ćwiczenie (autounfold) *)
 
 (** Przeczytaj w manualu opis taktyki [autounfold]:
-    https://coq.inria.fr/refman/tactics.html##hevea_tactic164 *)
+    coq.inria.fr/refman/proof-engine/tactics.html#coq:tacn.autounfold *)
 
 (** **** Ćwiczenie (bazy podpowiedzi) *)
 
 (** Przeczytaj w manualu dokładny opis działania systemu baz podpowiedzi
     oraz komend pozwalających go kontrolować:
-    https://coq.inria.fr/refman/tactics.html##sec415 *)
+    coq.inria.fr/refman/proof-engine/tactics.html#controlling-automation *)
 
 (** * Pierścienie, ciała i arytmetyka *)
 
@@ -2282,7 +2282,7 @@ End autounfold_ex.
 (** **** Ćwiczenie (pierścienie i ciała) *)
 
 (** Przyczytaj w manualu opis 5 wymienionych wyżej taktyk:
-    https://coq.inria.fr/refman/ring.html *)
+    https://coq.inria.fr/refman/addendum/ring.html *)
 
 (** * Zmienne egzystencjalne i ich taktyki (TODO) *)
 
@@ -2352,7 +2352,7 @@ End autounfold_ex.
     - a — arithmetic *)
 
 (** Spróbuj ogarnąć, co one robią:
-    https://coq.inria.fr/refman/micromega.html *)
+    https://coq.inria.fr/refman/addendum/micromega.html *)
 
 (** **** Ćwiczenie (wyższa magia) *)
 

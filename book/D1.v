@@ -239,8 +239,8 @@ Qed.
     trwają prace nad jego ucywilizowaniem, czego pierwsze efekty
     widać już od wersji 8.5. W chwilach desperacji uratować może
     cię jedynie dokumentacja:
-    - https://coq.inria.fr/refman/tactic-index.html
-    - https://coq.inria.fr/refman/Reference-Manual010.html *)
+    - https://coq.inria.fr/refman/coq-tacindex.html
+    - https://coq.inria.fr/refman/proof-engine/ltac.html *)
 
 Theorem negb_involutive' :
   forall b : bool, negb (negb b) = b.
@@ -1421,7 +1421,7 @@ SearchPattern (_ + _ = _).
     mający po lewej dodawanie, a po prawej cokolwiek.
 
     Dokładny opis wszystkich komend znajdziesz tutaj:
-    https://coq.inria.fr/refman/command-index.html *)
+    https://coq.inria.fr/refman/coq-cmdindex.html *)
 
 (** ** Ważne typy induktywne *)
 

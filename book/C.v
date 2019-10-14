@@ -412,7 +412,7 @@ Check @pair.
 
     Należy też dodać, że reguła ta jest nieco uproszczona. Pełniejszy
     opis teoretyczny induktywnego rachunku konstrukcji można znaleźć
-    w rozdziałach 4 i 5 manuala: https://coq.inria.fr/refman/toc.html *)
+    w manualu: https://coq.inria.fr/refman/language/cic.html *)
 
 (** **** Ćwiczenie *)
 

@@ -357,7 +357,7 @@
     będą polegać na formalizacji jakiejś drobnej teorii lub zastosowaniu
     nabytej wiedzy do rozwiązania jakiegoś typowego problemu.
 
-    Język Coq można pobrać z jego strony domowej: coq.inria.fr
+    Język Coq można pobrać z jego strony domowej: https://coq.inria.fr
 
     Z tej samej strony można pobrać CoqIDE, darmowe IDE stworzone
     specjalnie dla języka Coq. Wprawdzie z Coqa można korzystać

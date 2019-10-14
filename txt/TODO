@@ -22,7 +22,6 @@ Długofalowe:
 2. Zrobić zwijane/rozwijane dowody i paragrafy.
 
 Inne:
-1. Linki do manuala nie działają.
 2. Zamienić wszędzie simpl na cbn.
 3. Znaleźć prostszy przykład dla podrozdziału o ścisłej pozytywności (ale do której konkretnie części?).
 8. Przedstawić kiedyś metodę encode-decode. Wprowadzić ją jako coś do pokazywania izomorfizmów typów.
@@ -31,8 +30,8 @@ Inne:
 15. Opisać podstawy teorii typów.
 16. Poprawić kwestię komendy Qed exporting w I2.
 17. Opisać zmienne egzystencjalne i odpowiadające im taktyki.
-18. Opisać Taktyki do radzenia sobie z typami zależnymi.
-19. Opisać: silnia, współczynniki dwumianowe, sumy szeregów, charakteryzowanie
+18. Opisać taktyki do radzenia sobie z typami zależnymi.
+19. Opisać: silnia, współczynniki dwumianowe, sumy szeregów, charakteryzowanie wzorów rekurencyjnych.
 20. Opisać: Izomorfizmy, lewe i prawe odwrotności
 22. Opisać exists!
 26. Odkłamać kwestię polimorfizmu, najlepiej przy okazji rozdziału o programowaniu generycznym.

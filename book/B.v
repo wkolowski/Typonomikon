@@ -100,7 +100,7 @@
     obserwując skutki działania każdej komendy i taktyki.
 
     W razie problemów z CoqIDE poszukaj pomocy w manualu:
-    coq.inria.fr/refman/Reference-Manual018.html *)
+    https://coq.inria.fr/refman/practical-tools/coqide.html *)
 
 Section constructive_propositional_logic.
 
@@ -1517,7 +1517,7 @@ Qed.
     najpowszechniej używane. Nie są to jednak wszystkie kombinatory
     — jest ich znacznie więcej. Opisy taktyk i kombinatorów
     z biblioteki standardowej znajdziesz tu:
-    https://coq.inria.fr/refman/tactic-index.html *)
+    https://coq.inria.fr/refman/coq-tacindex.html *)
 
 (** * Zadania *)
 
