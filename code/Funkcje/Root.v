@@ -4,27 +4,27 @@ Require Import Omega.
 Lemma root : forall n : nat, {r : nat | r * r <= n < (S r) * (S r)}.
 Proof.
   induction n as [| n'].
-    exists 0. simpl; split.
+    exists 0. cbn; split.
       trivial.
       apply le_n.
     destruct IHn' as [r [H1 H2]].
     destruct (le_lt_dec ((S r) * (S r)) (S n')).
-      exists (S r). simpl; split.
-        simpl in l. assumption.
-        simpl in *. apply lt_n_S.
+      exists (S r). cbn; split.
+        cbn in l. assumption.
+        cbn in *. apply lt_n_S.
         repeat match goal with
             | H : context [?x + S ?y] |- _ =>
-                rewrite (plus_comm x (S y)) in H; simpl in H
+                rewrite (plus_comm x (S y)) in H; cbn in H
             | H : context [?x * S ?y] |- _ =>
-                rewrite (mult_comm x (S y)) in H; simpl in H
-            | |- context [?x + S ?y] => rewrite (plus_comm x (S y)); simpl
-            | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); simpl
+                rewrite (mult_comm x (S y)) in H; cbn in H
+            | |- context [?x + S ?y] => rewrite (plus_comm x (S y)); cbn
+            | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); cbn
         end. omega.
-      exists r. simpl; split.
+      exists r. cbn; split.
         apply le_trans with n'.
           assumption.
           apply le_S. apply le_n.
-        simpl in l. assumption.
+        cbn in l. assumption.
 Defined.
 
 Definition root' (n : nat) : nat.
@@ -76,7 +76,7 @@ Print well_founded_induction.
 Lemma div4_lemma : forall n : nat,
     S (div4 n) < S (S (S (S n))).
 Proof.
-  induction n using nat_ind_4; simpl; omega.
+  induction n using nat_ind_4; cbn; omega.
 Qed.
 
 Lemma nat_ind_div4 (P : nat -> Type) (H0 : P 0)
@@ -86,21 +86,21 @@ Proof.
   destruct x.
     apply H0.
     destruct x.
-      apply Hdiv. simpl. apply H0.
+      apply Hdiv. cbn. apply H0.
       destruct x.
-        apply Hdiv. simpl. apply H0.
+        apply Hdiv. cbn. apply H0.
         destruct x.
-          apply Hdiv. simpl. apply H0.
-          apply Hdiv. simpl. apply X. apply div4_lemma.
+          apply Hdiv. cbn. apply H0.
+          apply Hdiv. cbn. apply X. apply div4_lemma.
 Defined.
 
-Ltac nat_simpl := repeat
+Ltac nat_cbn := repeat
 match goal with
     | H : context [?x + S ?y] |- _ =>
-        rewrite (plus_comm x (S y)) in H; simpl in H
+        rewrite (plus_comm x (S y)) in H; cbn in H
     | H : context [?x * S ?y] |- _ =>
-        rewrite (mult_comm x (S y)) in H; simpl in H
-    | |- context [?x + S ?y] => rewrite (plus_comm x (S y)); simpl
-    | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); simpl
+        rewrite (mult_comm x (S y)) in H; cbn in H
+    | |- context [?x + S ?y] => rewrite (plus_comm x (S y)); cbn
+    | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); cbn
 end;
 repeat rewrite plus_0_r.

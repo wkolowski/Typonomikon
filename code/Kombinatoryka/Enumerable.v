@@ -52,7 +52,7 @@ Instance Enumerable_list {A : Type} (FA : Enumerable A)
 }.
 Proof.
   induction n as [| n']; cbn.
-    destruct x; simpl; split; auto.
+    destruct x; cbn; split; auto.
       inversion 1.
       destruct 1; inversion H.
     destruct x; cbn.

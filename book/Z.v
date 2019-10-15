@@ -243,7 +243,7 @@ Lemma O_refl :
   forall f : nat -> nat, O f f.
 (* begin hide *)
 Proof.
-  intros. red. exists 1, 0. intros. simpl. rewrite <- plus_n_O. trivial.
+  intros. red. exists 1, 0. intros. cbn. rewrite <- plus_n_O. trivial.
 Qed.
 (* end hide *)
 
@@ -269,7 +269,7 @@ Lemma O_asym :
 (* begin hide *)
 Proof.
   unfold O. exists (fun _ => 0), (fun n => n). split.
-    exists 0, 0. intros. simpl. trivial.
+    exists 0, 0. intros. cbn. trivial.
     intro. destruct H as [c [n H]]. assert (n <= S n) by omega.
       specialize (H (S n) H0). omega.
 Qed.
@@ -362,7 +362,7 @@ Proof.
               apply Max.le_max_r.
               trivial.
             assumption.
-          specialize (H2 _ H0). destruct c2; simpl in *.
+          specialize (H2 _ H0). destruct c2; cbn in *.
             omega.
             assert (g n' <= f n').
 Abort.
@@ -462,7 +462,7 @@ Proof. trivial. Qed.
 Theorem T_sum : forall n : nat, T n = n + 1.
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl.
+  induction n as [| n']; cbn.
     trivial.
     rewrite IHn'. trivial.
 Qed.
@@ -545,7 +545,7 @@ Theorem length'_rec_depth :
 (* begin hide *)
 Proof.
   intros. remember (S (length l)) as n.
-  functional induction @length' A n l; try inversion Heqn; subst; simpl.
+  functional induction @length' A n l; try inversion Heqn; subst; cbn.
     trivial.
     rewrite e1 in IHo. specialize (IHo eq_refl). inversion IHo; subst.
       trivial.
@@ -707,9 +707,9 @@ Lemma rev_aux_spec :
     rev_aux l acc = rev l ++ acc.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl; intro.
+  induction l as [| h t]; cbn; intro.
     trivial.
-    rewrite IHt. rewrite <- app_assoc. simpl. trivial.
+    rewrite IHt. rewrite <- app_assoc. cbn. trivial.
 Qed.
 (* end hide *)
 
@@ -717,7 +717,7 @@ Theorem rev'_spec :
   forall (A : Type) (l : list A), rev' l = rev l.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl; rewrite ?rev_aux_spec; trivial.
+  induction l as [| h t]; cbn; rewrite ?rev_aux_spec; trivial.
 Qed.
 (* end hide *)
 
@@ -745,9 +745,9 @@ Theorem to0_spec :
   forall n k : nat, k <= n -> elem k (to0 n).
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl; intros.
+  induction n as [| n']; cbn; intros.
     inversion H; subst; clear H. constructor.
-    destruct k as [| k']; simpl.
+    destruct k as [| k']; cbn.
       constructor. apply IHn'. omega.
       inversion H; subst; clear H.
         constructor.

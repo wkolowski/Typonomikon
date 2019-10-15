@@ -52,7 +52,7 @@ Lemma isSome_or_isNone :
   forall (A : Type) (ma : option A),
     isSome ma || isNone ma = true.
 Proof.
-  destruct ma; simpl; trivial.
+  destruct ma; cbn; trivial.
 Qed.
 
 Definition bind

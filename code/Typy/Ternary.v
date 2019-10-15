@@ -33,7 +33,7 @@ end.
 Ltac solve_bool3 := intros;
 match reverse goal with
     | b : bool3 |- _ => destruct b; solve_bool3
-    | _ => simpl; reflexivity
+    | _ => cbn; reflexivity
 end.
 
 Notation "b1 & b2" := (andb3 b1 b2) (at level 40).

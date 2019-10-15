@@ -90,12 +90,12 @@ end.
 Lemma pred_lemma : forall n m : nat,
     1 <= n -> pred (n + m) = pred n + m.
 Proof.
-  induction 1; simpl; trivial.
+  induction 1; cbn; trivial.
 Qed.
 
 Lemma fact_ge_1 : forall n : nat, 1 <= fac n.
 Proof.
-  induction n as [| n']; simpl.
+  induction n as [| n']; cbn.
     trivial.
     eapply le_trans. eauto. apply le_plus_l.
 Qed.
@@ -103,8 +103,8 @@ Qed.
 Theorem f_fac : forall n : nat, f n = pred (fac (1 + n)).
 Proof.
   induction n as [| n'].
-    simpl. trivial.
-    simpl in *. rewrite pred_lemma. rewrite IHn'. trivial.
+    cbn. trivial.
+    cbn in *. rewrite pred_lemma. rewrite IHn'. trivial.
     eapply le_trans.
       apply fact_ge_1.
       apply le_plus_l.
@@ -181,7 +181,7 @@ Definition bijective {A B : Type} (f : A -> B) : Prop :=
 Theorem pos_to_nat_neq_0 : forall p : pos,
     pos_to_nat p <> 0.
 Proof.
-  induction p as [| p' | p']; simpl; inversion 1.
+  induction p as [| p' | p']; cbn; inversion 1.
   apply IHp'. destruct (pos_to_nat p').
     trivial.
     inversion H.
@@ -189,7 +189,7 @@ Qed.
 
 Theorem pos_to_nat_inj : injective pos_to_nat.
 Proof.
-  red. induction x as [| p1 | p1]; induction x' as [| p2 | p2]; simpl in *.
+  red. induction x as [| p1 | p1]; induction x' as [| p2 | p2]; cbn in *.
     trivial.
     omega.
     inversion 1. assert (pos_to_nat p2 = 0). omega.
@@ -207,7 +207,7 @@ Hint Resolve pos_to_nat_inj.
 
 Theorem bin_to_nat_inj : injective bin_to_nat.
 Proof.
-  red. destruct x, x'; simpl; intro.
+  red. destruct x, x'; cbn; intro.
     trivial.
     cut False. inversion 1. eapply pos_to_nat_neq_0. eauto.
     cut False. inversion 1. eapply pos_to_nat_neq_0. eauto.
@@ -231,21 +231,21 @@ end.*)
 Theorem pos_to_nat_S : forall (p : pos),
     pos_to_nat (succ p) = S (pos_to_nat p).
 Proof.
-  induction p as [| p' | p']; simpl; trivial.
-    rewrite IHp'. simpl. rewrite <- plus_n_Sm. trivial.
+  induction p as [| p' | p']; cbn; trivial.
+    rewrite IHp'. cbn. rewrite <- plus_n_Sm. trivial.
 Qed.
 
 Theorem bin_to_nat_sur : surjective bin_to_nat.
 Proof.
   red. intro n. induction n as [| n'].
-    exists HZ. simpl. trivial.
-    destruct IHn' as [b H]. destruct b; simpl in H.
-      exists (HP HJ). simpl. rewrite H. trivial.
-      destruct p; simpl in H.
-        exists (HP (Z HJ)). simpl. rewrite H. trivial.
-        exists (HP (succ (Z p))). simpl. rewrite H. trivial.
-        exists (HP (succ (J p))). simpl. rewrite pos_to_nat_S.
-          simpl. f_equal. rewrite <- plus_n_Sm. assumption.
+    exists HZ. cbn. trivial.
+    destruct IHn' as [b H]. destruct b; cbn in H.
+      exists (HP HJ). cbn. rewrite H. trivial.
+      destruct p; cbn in H.
+        exists (HP (Z HJ)). cbn. rewrite H. trivial.
+        exists (HP (succ (Z p))). cbn. rewrite H. trivial.
+        exists (HP (succ (J p))). cbn. rewrite pos_to_nat_S.
+          cbn. f_equal. rewrite <- plus_n_Sm. assumption.
 Qed.
 
 Theorem bin_to_nat_bij : bijective bin_to_nat.
@@ -274,11 +274,11 @@ Theorem div2_even_inv : forall n m : nat,
     n + n = m -> n = div2 m.
 Proof.
   intros n m. generalize dependent n.
-  induction m using nat_ind_2; simpl; intros.
+  induction m using nat_ind_2; cbn; intros.
     destruct n; inversion H. trivial.
     destruct n; inversion H.
       rewrite <- plus_n_Sm in H1. inversion H1.
-    rewrite <- (IHm (pred n)); destruct n; inversion H; simpl; trivial.
+    rewrite <- (IHm (pred n)); destruct n; inversion H; cbn; trivial.
       rewrite <- plus_n_Sm in H. inversion H. trivial.
 Qed.
 
@@ -286,16 +286,16 @@ Theorem div2_odd_inv : forall n m : nat,
     S (n + n) = m -> n = div2 m.
 Proof.
   intros n m. generalize dependent n.
-  induction m using nat_ind_2; simpl; intros.
+  induction m using nat_ind_2; cbn; intros.
     inversion H.
     inversion H. destruct n; inversion H1; trivial.
     rewrite <- (IHm (pred n)).
       destruct n.
         inversion H.
-        simpl. trivial.
+        cbn. trivial.
       destruct n.
         inversion H.
-        simpl in *. rewrite <- plus_n_Sm in H. inversion H. trivial. 
+        cbn in *. rewrite <- plus_n_Sm in H. inversion H. trivial. 
 Qed.
 
 Theorem nat_ind_bin (P : nat -> Prop) (H0 : P 0)
@@ -305,12 +305,12 @@ Theorem nat_ind_bin (P : nat -> Prop) (H0 : P 0)
 Proof.
   pose proof bin_to_nat_sur. red in H. destruct (H n) as [b H'].
   rewrite <- H'. destruct b as [| p].
-    simpl. apply H0.
+    cbn. apply H0.
     generalize dependent n. induction p as [| p' | p']; intros.
-      simpl. change 1 with (1 + 2 * 0). apply Hx2p1. assumption.
-      simpl in *. apply Hx2. apply (IHp' (div2 n)).
+      cbn. change 1 with (1 + 2 * 0). apply Hx2p1. assumption.
+      cbn in *. apply Hx2. apply (IHp' (div2 n)).
         apply div2_even_inv. rewrite <- plus_n_O in H'. assumption.
-      simpl in *. apply Hx2p1. apply (IHp' (div2 n)).
+      cbn in *. apply Hx2p1. apply (IHp' (div2 n)).
         apply div2_odd_inv. rewrite <- plus_n_O in H'. assumption.
 Qed.
 
@@ -320,7 +320,7 @@ Proof.
     exists 0. left. trivial.
     destruct IHn' as [k [H | H]].
       exists k. right. rewrite H. trivial.
-      exists (S k). left. rewrite H. simpl. omega.
+      exists (S k). left. rewrite H. cbn. omega.
 Defined.
 
 Fixpoint nat_ind_bin' (P : nat -> Prop) (H0 : P 0)
@@ -394,10 +394,10 @@ Proof.
       (Q := fun (ltr : list (Tree A)) =>
           forall v : A, size (Node v ltr) =
           S (length (fold_right (fun h t => flatten' h ++ t) [] ltr))).
-    rewrite IHt. simpl. trivial.
-    simpl. trivial.
-    simpl. trivial.
-    simpl. intro. f_equal. rewrite app_length.
+    rewrite IHt. cbn. trivial.
+    cbn. trivial.
+    cbn. trivial.
+    cbn. intro. f_equal. rewrite app_length.
       specialize (IHt0 v). inversion IHt0. rewrite H0.
       rewrite IHt. trivial.
 Qed.
@@ -415,7 +415,7 @@ Proof. apply Hpred. assumption. Qed.
 
 Lemma Hplus : forall n m : nat, P (n + m) -> P m.
 Proof.
-  induction n as [| n']; simpl.
+  induction n as [| n']; cbn.
     trivial.
     intros. apply IHn'. apply Hpred. assumption.
 Qed.
@@ -426,7 +426,7 @@ Proof.
     assumption.
     apply Hplus with n'. replace (n' + S (S n')) with (S n' + S n').
       apply Hdbl. assumption.
-      rewrite (plus_comm n'). simpl. f_equal. rewrite plus_comm. trivial.
+      rewrite (plus_comm n'). cbn. f_equal. rewrite plus_comm. trivial.
 Qed.
 
 Theorem nat_ind_dbl_pred : forall n : nat, P n.
@@ -444,15 +444,15 @@ SearchAbout mult. Require Import NPeano.
 Goal forall n : nat, pow 2 (3 + n) > 2 * n.
 Proof.
   induction n as [| n'].
-    simpl. omega.
+    cbn. omega.
     replace (2 ^ (3 + S n')) with (2 ^ (3 + n') + 2 ^ (3 + n')).
-      Focus 2. simpl. omega.
+      Focus 2. cbn. omega.
       replace (2 * S n') with (2 * n' + 2).
         Focus 2. omega.
         apply plus_lt_le_compat.
           omega.
           replace (2 ^ (3 + n')) with (8 * 2 ^ n').
-            Focus 2. simpl. omega.
+            Focus 2. cbn. omega.
             SearchAbout le.
 Abort.
 
@@ -464,7 +464,7 @@ Definition sumL := fold_right plus 0.
 
 Theorem t : forall l : list nat, sumL l <= length l * maxL l.
 Proof.
-  induction l as [| h t]; simpl.
+  induction l as [| h t]; cbn.
     trivial.
     apply Plus.plus_le_compat.
       apply Max.le_max_l.

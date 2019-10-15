@@ -2387,7 +2387,7 @@ End autounfold_ex.
       taktyka [rewrite]
     - pozwala łączyć kroki przepisywania z odwijaniem definicji i wykonywaniem
       obliczeń, a więc zastępuje taktyki [unfold], [fold], [change], [replace],
-      [cbn], [simpl] etc.
+      [cbn], [cbn] etc.
     - daje większe możliwości radzenia sobie z generowanymi przez siebie
       podcelami *)
 

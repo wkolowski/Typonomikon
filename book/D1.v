@@ -168,9 +168,10 @@ Eval cbv in negb true.
 
 (** Żeby zredukować term za jednym zamachem, możemy pominąć nazwy
     redukcji występujące po [cbv] — w taki wypadku zostaną zaaplikowane
-    wszystkie możliwe redukcje, czyli program zostanie wykonany. Do
-    jego wykonania możemy też użyć komend [Eval simpl] oraz [Eval
-    compute] (a od wersji Coqa 8.5 także [Eval cbn]). *)
+    wszystkie możliwe redukcje, czyli program zostanie wykonany. Do jego
+    wykonania możemy też użyć komend [Eval cbn] oraz [Eval compute] (a
+    także [Eval simpl], ale taktyka [simpl] jest przestarzała, więc nie
+    polecam). *)
 
 (** **** Ćwiczenie (redukcja) *)
 
@@ -200,8 +201,8 @@ Theorem negb_involutive :
   forall b : bool, negb (negb b) = b.
 Proof.
   intros. destruct b.
-    simpl. reflexivity.
-    simpl. reflexivity.
+    cbn. reflexivity.
+    cbn. reflexivity.
 Qed.
 
 (** Nasze twierdzenie głosi, że funkcja [negb] jest inwolucją,
@@ -216,7 +217,7 @@ Qed.
     dwa konstruktory, taktyka ta generuje nam dwa podcele:
     musimy udowodnić twierdzenie osobno dla przypadku, gdy
     [b = true] oraz dla [b = false]. Potem przy pomocy
-    taktyki [simpl] redukujemy (czyli wykonujemy) programy
+    taktyki [cbn] redukujemy (czyli wykonujemy) programy
     [negb (negb true)] i [negb (negb false)]. Zauważ, że
     byłoby to niemożliwe, gdyby argument był postaci [b]
     (nie można wtedy zaaplikować żadnej redukcji), ale jest
@@ -232,7 +233,7 @@ Qed.
     Być może poczułeś dyskomfort spowodowany tym, że cel postaci
     [a = a] można udowodnić dwoma różnymi taktykami ([reflexivity]
     oraz [trivial]) albo że termy można redukować na cztery różne
-    sposoby ([Eval simpl], [Eval compute], [Eval cbv], [Eval cbn]).
+    sposoby ([Eval cbn], [Eval cbv], [Eval compute], [Eval simpl]).
     Niestety, będziesz musiał się do tego przyzwyczaić — język
     taktyka Coqa jest strasznie zabałaganiony i niesie ze sobą
     spory bagaż swej mrocznej przeszłości. Na szczęście od niedawna
@@ -245,7 +246,7 @@ Qed.
 Theorem negb_involutive' :
   forall b : bool, negb (negb b) = b.
 Proof.
-  destruct b; simpl; reflexivity.
+  destruct b; cbn; reflexivity.
 Qed.
 
 (** Zauważmy, że nie musimy używać taktyki [intro], żeby wprowadzić
@@ -264,7 +265,7 @@ Theorem andb_assoc :
     andb b1 (andb b2 b3) = andb (andb b1 b2) b3.
 (* begin hide *)
 Proof.
-  destruct b1, b2, b3; simpl; trivial.
+  destruct b1, b2, b3; cbn; trivial.
 Qed.
 (* end hide *)
 
@@ -273,7 +274,7 @@ Theorem andb_comm :
     andb b1 b2 = andb b2 b1.
 (* begin hide *)
 Proof.
-  destruct b1, b2; simpl; trivial.
+  destruct b1, b2; cbn; trivial.
 Qed.
 (* end hide *)
 
@@ -282,7 +283,7 @@ Theorem orb_assoc :
     orb b1 (orb b2 b3) = orb (orb b1 b2) b3.
 (* begin hide *)
 Proof.
-  destruct b1, b2, b3; simpl; trivial.
+  destruct b1, b2, b3; cbn; trivial.
 Qed.
 (* end hide *)
 
@@ -291,7 +292,7 @@ Theorem orb_comm :
     orb b1 b2 = orb b2 b1.
 (* begin hide *)
 Proof.
-  destruct b1, b2; simpl; reflexivity.
+  destruct b1, b2; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -719,7 +720,7 @@ end.
 Theorem plus_O_n :
   forall n : nat, plus 0 n = n.
 Proof.
-  intro. simpl. trivial.
+  intro. cbn. trivial.
 Qed.
 
 (** Tak prosty dowód nie powinien nas dziwić — wszakże twierdzenie to
@@ -731,7 +732,7 @@ Theorem plus_n_O_try1 :
 Proof.
   intro. destruct n.
     trivial.
-    simpl. f_equal.
+    cbn. f_equal.
 Abort.
 
 (** Tym razem nie jest już tak prosto — [n + 0 = n] nie wynika z definicji
@@ -749,7 +750,7 @@ Theorem plus_n_O :
 Proof.
   intro. induction n.
     trivial.
-    simpl. f_equal. assumption.
+    cbn. f_equal. assumption.
 Qed.
 
 (** Do udowodnienia tego twierdzenia musimy posłużyć się indukcją.
@@ -777,11 +778,11 @@ Qed.
 Theorem plus_comm :
   forall n m : nat, plus n m = plus m n.
 Proof.
-  induction n as [| n']; simpl; intros.
+  induction n as [| n']; cbn; intros.
     rewrite plus_n_O. trivial.
     induction m as [| m'].
-      simpl. rewrite plus_n_O. trivial.
-      simpl. rewrite IHn'. rewrite <- IHm'. simpl. rewrite IHn'.
+      cbn. rewrite plus_n_O. trivial.
+      cbn. rewrite IHn'. rewrite <- IHm'. cbn. rewrite IHn'.
         trivial.
 Qed.
 
@@ -835,8 +836,8 @@ Theorem mult_0_r :
 (* begin hide *)
 Proof.
   induction n as [| n'].
-    simpl. trivial.
-    simpl. assumption.
+    cbn. trivial.
+    cbn. assumption.
 Restart.
   induction n; trivial.
 Qed.
@@ -847,10 +848,10 @@ Theorem mult_1_l :
 (* begin hide *)
 Proof.
   destruct n as [| n'].
-    simpl. trivial.
-    simpl. rewrite plus_n_O. trivial.
+    cbn. trivial.
+    cbn. rewrite plus_n_O. trivial.
 Restart.
-  destruct n; simpl; try rewrite plus_n_O; trivial.
+  destruct n; cbn; try rewrite plus_n_O; trivial.
 Qed.
 (* end hide*)
 
@@ -859,10 +860,10 @@ Theorem mult_1_r :
 (* begin hide *)
 Proof.
   induction n.
-    simpl. trivial.
-    simpl. rewrite IHn. trivial.
+    cbn. trivial.
+    cbn. rewrite IHn. trivial.
 Restart.
-  induction n; simpl; try rewrite IHn; trivial.
+  induction n; cbn; try rewrite IHn; trivial.
 Qed.
 (* end hide *)
 
@@ -908,7 +909,7 @@ Theorem plus'_0_n :
 Proof.
   induction n as [| n'].
     trivial.
-    simpl. rewrite plus'_S. rewrite IHn'. trivial.
+    cbn. rewrite plus'_S. rewrite IHn'. trivial.
 Qed.
 (* end hide *)
 
@@ -916,9 +917,9 @@ Theorem plus'_comm :
   forall n m : nat, plus' n m = plus' m n.
 (* begin hide *)
 Proof.
-  intros. generalize dependent n. induction m as [| m']; simpl; intros.
+  intros. generalize dependent n. induction m as [| m']; cbn; intros.
     rewrite plus'_0_n. trivial.
-    rewrite IHm'. simpl. trivial.
+    rewrite IHm'. cbn. trivial.
 Qed.
 (* end hide *)
 
@@ -926,7 +927,7 @@ Theorem plus'_is_plus :
   forall n m : nat, plus' n m = plus n m.
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl; intro.
+  induction n as [| n']; cbn; intro.
     apply plus'_0_n.
     rewrite <- IHn'. rewrite plus'_S. trivial.
 Qed.
@@ -992,7 +993,7 @@ Theorem some_not_none :
   forall (A : Type) (a : A), Some a <> None.
 Proof.
   unfold not; intros. change False with (isSome (@None A)).
-  rewrite <- H. simpl. trivial.
+  rewrite <- H. cbn. trivial.
 Qed.
 
 (** Możemy użyć tej pomocniczej funkcji, aby udowodnić, że konstruktory
@@ -1297,20 +1298,20 @@ Eval compute in [1; 2; 3] ++ [4; 5; 6].
 Theorem app_nil_l :
   forall (A : Type) (l : list A), [] ++ l = l.
 Proof.
-  intros. simpl. reflexivity.
+  intros. cbn. reflexivity.
 Qed.
 
 Theorem app_nil_r :
   forall (A : Type) (l : list A), l ++ [] = l.
 Proof.
   induction l as [| h t].
-    simpl. reflexivity.
-    simpl. rewrite IHt. reflexivity.
+    cbn. reflexivity.
+    cbn. rewrite IHt. reflexivity.
 Qed.
 
 (** Sposoby dowodzenia są analogiczne jak w przypadku liczb naturalnych.
     Pierwsze twierdzenie zachodzi na mocy samej definicji funkcji [app]
-    i dowód sprowadza się do wykonania programu za pomocą taktyki [simpl].
+    i dowód sprowadza się do wykonania programu za pomocą taktyki [cbn].
     Drugie jest analogiczne do twierdzenia [plus_n_0], z tą różnicą, że
     w drugim celu zamiast [f_equal] posłużyliśmy się taktyką [rewrite].
 
@@ -1362,7 +1363,7 @@ Theorem length_nil :
   forall A : Type, length (@nil A) = 0.
 (* begin hide *)
 Proof.
-  intro. simpl. reflexivity.
+  intro. cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1370,7 +1371,7 @@ Theorem length_cons :
   forall (A : Type) (h : A) (t : list A), length (h :: t) <> 0.
 (* begin hide *)
 Proof.
-  simpl. intros. inversion 1.
+  cbn. intros. inversion 1.
 Qed.
 (* end hide *)
 
@@ -1379,7 +1380,7 @@ Theorem length_app :
     length (l1 ++ l2) = length l1 + length l2.
 (* begin hide *)
 Proof.
-  induction l1 as [| h1 t1]; simpl; intros.
+  induction l1 as [| h1 t1]; cbn; intros.
     reflexivity.
     f_equal. rewrite IHt1. reflexivity.
 Qed.
@@ -1534,7 +1535,7 @@ Theorem proj_spec :
     p = pair (fst p) (snd p).
 (* begin hide *)
 Proof.
-  destruct p. simpl. trivial.
+  destruct p. cbn. trivial.
 Qed.
 (* end hide *)
 
@@ -1907,9 +1908,9 @@ Require Import Arith.
 Theorem even_sum_failed1 :
   forall n m : nat, even n -> even m -> even (n + m).
 Proof.
-  induction n as [| n']; simpl; intros.
+  induction n as [| n']; cbn; intros.
     trivial.
-    induction m as [| m']; rewrite plus_comm; simpl; intros.
+    induction m as [| m']; rewrite plus_comm; cbn; intros.
       assumption.
       constructor. rewrite plus_comm. apply IHn'.
 Abort.
@@ -1928,11 +1929,11 @@ Abort.
 Theorem even_sum_failed2 :
   forall n m : nat, even n -> even m -> even (n + m).
 Proof.
-  intros n m Hn Hm. destruct Hn, Hm; simpl.
+  intros n m Hn Hm. destruct Hn, Hm; cbn.
     constructor.
     constructor. assumption.
-    rewrite plus_comm. simpl. constructor. assumption.
-    rewrite plus_comm. simpl. do 2 constructor.
+    rewrite plus_comm. cbn. constructor. assumption.
+    rewrite plus_comm. cbn. do 2 constructor.
 Abort.
 
 (** Niestety, taktyka [destruct] okazała się za słaba. Predykat [even] jest
@@ -1944,8 +1945,8 @@ Theorem even_sum :
   forall n m : nat, even n -> even m -> even (n + m).
 Proof.
   intros n m Hn Hm. induction Hn as [| n' Hn'].
-    simpl. assumption.
-    simpl. constructor. assumption.
+    cbn. assumption.
+    cbn. constructor. assumption.
 Qed.
 
 (** Indukcja po dowodzie działa dokładnie tak samo, jak indukcja, z którą
@@ -2000,9 +2001,9 @@ Theorem double_is_even :
   forall n : nat, even (2 * n).
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl in *.
+  induction n as [| n']; cbn in *.
     constructor.
-    rewrite <- plus_n_O in *. rewrite plus_comm. simpl.
+    rewrite <- plus_n_O in *. rewrite plus_comm. cbn.
       constructor. assumption.
 Qed.
 (* end hide *)
@@ -2013,8 +2014,8 @@ Theorem even_is_double :
 Proof.
   induction 1.
     exists 0. trivial.
-    destruct IHeven. exists (S x). simpl in *. rewrite <- plus_n_O in *.
-      rewrite plus_comm. simpl. do 2 f_equal. assumption.
+    destruct IHeven. exists (S x). cbn in *. rewrite <- plus_n_O in *.
+      rewrite plus_comm. cbn. do 2 f_equal. assumption.
 Qed.
 (* end hide *)
 
@@ -2137,7 +2138,7 @@ Qed.
 Theorem eq_refl_beta :
   forall m : nat, eq ((fun n : nat => n + n) m) (m + m).
 Proof.
-  intro. simpl. apply eq_refl.
+  intro. cbn. apply eq_refl.
 Qed.
 
 Definition ultimate_answer : nat := 42.
@@ -2150,7 +2151,7 @@ Qed.
 Theorem eq_refl_iota :
   eq 42 (match 0 with | 0 => 42 | _ => 13 end).
 Proof.
-  simpl. apply eq_refl.
+  cbn. apply eq_refl.
 Qed.
 
 Theorem eq_refl_zeta :
@@ -2351,7 +2352,7 @@ Lemma even_plus_failed_1 :
 Proof.
   induction n; intros.
     assumption.
-    simpl. constructor. inversion H; subst.
+    cbn. constructor. inversion H; subst.
 Abort.
 
 (** Nasza indukcja po [n] zawiodła, gdyż nasza hipoteza indukcyjna ma w
@@ -2365,7 +2366,7 @@ Abort.
 Lemma even_plus_failed_2 : 
   forall n m : nat, even n -> even m -> even (n + m).
 Proof.
-  induction 1; simpl; intro.
+  induction 1; cbn; intro.
     assumption.
     constructor.
 Abort.
@@ -2398,7 +2399,7 @@ Lemma odd_even_plus_failed :
 Proof.
   induction n; intros.
     inversion H.
-    simpl. constructor. inversion H; subst.
+    cbn. constructor. inversion H; subst.
 Abort.
 
 (** Niestety — nie dla psa kiełbasa, gdyż natykamy się na problemy bliźniaczo
@@ -2441,12 +2442,12 @@ Proof.
   assumption.
 Fail Qed.
 Restart.
-  destruct n as [| n']; simpl; intros.
+  destruct n as [| n']; cbn; intros.
     assumption.
     constructor. apply odd_even_plus.
       inversion H. assumption.
       assumption.
-  destruct n as [| n']; simpl; intros.
+  destruct n as [| n']; cbn; intros.
     inversion H.
     constructor. apply even_plus.
       inversion H. assumption.
@@ -2484,8 +2485,8 @@ Qed.
 Theorem even_double :
   forall n : nat, even (2 * n).
 Proof.
-  induction n as [| n']; simpl in *; constructor.
-  rewrite <- plus_n_O in *. rewrite plus_comm. simpl. constructor.
+  induction n as [| n']; cbn in *; constructor.
+  rewrite <- plus_n_O in *. rewrite plus_comm. cbn. constructor.
     assumption.
 Qed.
 

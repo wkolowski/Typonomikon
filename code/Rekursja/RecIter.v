@@ -118,7 +118,7 @@ Definition facF_terminates :
       p < k -> iter k fac_F f n = v}.
 Proof.
   induction n as [| n' [v H]].
-    exists 1. exists 42. destruct k; simpl; intros.
+    exists 1. exists 42. destruct k; cbn; intros.
       inversion H.
       trivial.
     exists (S n' * v). destruct H as [p H].
@@ -148,11 +148,11 @@ Definition takeF_terminates : forall (A : Type) (n : nat) (l : list A),
         p < k -> (iter k takeF f) n l = v}.
 Proof.
   induction n as [| n'].
-    exists []. exists 42. destruct k; simpl; intros.
+    exists []. exists 42. destruct k; cbn; intros.
       inversion H.
       trivial.
     destruct l as [| h t].
-      exists []. exists 42. destruct k; simpl; intros.
+      exists []. exists 42. destruct k; cbn; intros.
         inversion H.
         trivial.
       destruct (IHn' t) as [v H]. exists (h :: v). destruct H as [p H].
@@ -171,24 +171,24 @@ Eval compute in take 3 [2; 3; 5; 7; 11].
 Theorem take_spec1 : forall (A : Type) (l : list A),
     take 0 l = [].
 Proof.
-  unfold take. simpl. trivial.
+  unfold take. cbn. trivial.
 Qed.
 
 Theorem take_spec2 : forall (A : Type) (n : nat),
     take n [] = @nil A.
 Proof.
-  unfold take; destruct n; simpl; trivial.
+  unfold take; destruct n; cbn; trivial.
 Qed.
 
 Theorem take_spec3 : forall (A : Type) (n : nat) (h : A) (t : list A),
     take (S n) (h :: t) = h :: take n t.
 Proof.
   unfold take. intros.
-  destruct (takeF_terminates A (S n) (h :: t)); simpl.
-  destruct (takeF_terminates A n t); simpl.
+  destruct (takeF_terminates A (S n) (h :: t)); cbn.
+  destruct (takeF_terminates A n t); cbn.
   destruct e as [p H], e0 as [p' H'].
-  specialize (H (S (S (max p p'))) (fun _ => id)). simpl in H.
-  specialize (H' (S (max p p')) (fun _ => id)). simpl in H'.
+  specialize (H (S (S (max p p'))) (fun _ => id)). cbn in H.
+  specialize (H' (S (max p p')) (fun _ => id)). cbn in H'.
   rewrite <- H, <- H'.
     trivial.
     unfold lt. apply Le.le_n_S. apply Max.le_max_r.
@@ -215,14 +215,14 @@ Proof.
   induction n as [| n']; intros.
     rewrite take_spec1. trivial.
     destruct l as [| h t].
-      rewrite take_spec2. simpl. omega.
-      rewrite take_spec3. simpl. apply le_n_S. apply IHn'.
+      rewrite take_spec2. cbn. omega.
+      rewrite take_spec3. cbn. apply le_n_S. apply IHn'.
 Restart.
-  induction n as [| n']; intros; rewrite take_eq; simpl.
+  induction n as [| n']; intros; rewrite take_eq; cbn.
     trivial.
-    destruct l; simpl.
+    destruct l; cbn.
       omega.
-      destruct n'; simpl.
+      destruct n'; cbn.
         omega.
-        simpl in *. apply le_n_S. apply IHn'.
+        cbn in *. apply le_n_S. apply IHn'.
 Qed.

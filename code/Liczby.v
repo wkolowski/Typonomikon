@@ -142,8 +142,8 @@ Theorem normalize_spec :
   forall b : bin, bin_equiv b (normalize b).
 Proof.
   induction b as [| d ds].
-    simpl. eauto.
-    destruct d; simpl.
+    cbn. eauto.
+    destruct d; cbn.
       apply equiv_leading_zeros. assumption.
       constructor.
 Qed.

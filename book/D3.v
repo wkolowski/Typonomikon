@@ -76,7 +76,7 @@ Notation "b1 || b2" := (orb b1 b2).
 (* begin hide *)
 Ltac solve_bool := intros; match goal with
     | b : bool |- _ => destruct b; clear b; solve_bool
-    | _ => simpl; auto
+    | _ => cbn; auto
 end.
 (* end hide *)
 

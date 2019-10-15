@@ -904,7 +904,7 @@ Qed.
     Wskazówka: przydatny może byc konstrukt [match reverse goal]. *)
 
 (* begin hide *)
-Ltac negtac := simpl; unfold not; intros;
+Ltac negtac := cbn; unfold not; intros;
 match reverse goal with
     | H : _ -> False |- False => apply H; clear H; negtac
     | _ => try assumption

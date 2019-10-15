@@ -271,7 +271,7 @@ Qed.
 Goal ~ injective (fun n : nat => n * n - n).
 Proof.
   unfold injective, not; intros.
-  specialize (H 0 1). simpl in H. specialize (H eq_refl). inversion H.
+  specialize (H 0 1). cbn in H. specialize (H eq_refl). inversion H.
 Qed.
 
 (** Funkcja f(n) = n^2 - n nie jest injekcją, gdyż mamy zarówno f(0) = 0
@@ -348,7 +348,7 @@ Theorem add_k_left_inj :
   forall k : nat, injective (fun n : nat => k + n).
 (* begin hide *)
 Proof.
-  red. induction k as [| k']; simpl; intros.
+  red. induction k as [| k']; cbn; intros.
     assumption.
     inversion H. apply IHk'. assumption.
 Qed.
@@ -359,14 +359,14 @@ Theorem mul_k_inj :
 (* begin hide *)
 Proof.
   red. intros k H x x'. generalize dependent k. generalize dependent x'.
-  induction x as [| y]; induction x' as [| y']; simpl; intros.
+  induction x as [| y]; induction x' as [| y']; cbn; intros.
     trivial.
-    do 2 (rewrite mult_comm in H0; simpl in *). destruct k.
+    do 2 (rewrite mult_comm in H0; cbn in *). destruct k.
       contradiction H. trivial.
-      simpl in H0. inversion H0.
-    rewrite mult_0_r in H0. rewrite mult_comm in H0. simpl in H0. destruct k.
+      cbn in H0. inversion H0.
+    rewrite mult_0_r in H0. rewrite mult_comm in H0. cbn in H0. destruct k.
       contradiction H. trivial.
-      simpl in H0. inversion H0.
+      cbn in H0. inversion H0.
     f_equal. apply (IHy y' k).
       assumption.
       SearchPattern (_ * S _ = _).
@@ -393,7 +393,7 @@ Theorem mul_k_0_not_inj :
   ~ injective (fun n : nat => 0 * n).
 (* begin hide *)
 Proof.
-  simpl. apply const_2elem_not_inj. exists 0, 1. inversion 1.
+  cbn. apply const_2elem_not_inj. exists 0, 1. inversion 1.
 Qed.
 (* end hide *)
 
@@ -496,9 +496,9 @@ Proof.
   unfold surjective; intros. exists (S b). cbn. trivial.
 Qed.
 
-(** TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki [simpl]
-    używać będziemy taktyki [cbn]. Różni się ona nieznacznie od [simpl], ale
-    jej główną zaletą jest nazwa — [cbn] to trzy litery, a [simpl] aż pięć,
+(** TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki [cbn]
+    używać będziemy taktyki [cbn]. Różni się ona nieznacznie od [cbn], ale
+    jej główną zaletą jest nazwa — [cbn] to trzy litery, a [cbn] aż pięć,
     więc zaoszczędzimy sobie pisania.
 
     Powyższe twierdzenie głosi, że "funkcja [pred] jest surjekcją", czyli,
@@ -602,7 +602,7 @@ Qed.
 Theorem mult_0_l_not_sur : ~ surjective (fun n : nat => 0 * n).
 Proof.
   unfold surjective, not; intros. specialize (H 1).
-  destruct H as [a H]. simpl in H. inversion H.
+  destruct H as [a H]. cbn in H. inversion H.
 Qed.
 
 Theorem mult_0_r_not_sur : ~ surjective (fun n : nat => n * 0).
@@ -615,7 +615,7 @@ Theorem mult_SS_l_not_sur :
   forall k : nat, ~ surjective (fun n : nat => S (S k) * n).
 Proof.
   unfold surjective, not; intros. specialize (H 1).
-  destruct H as [a H]. destruct a as [| a']; simpl in H.
+  destruct H as [a H]. destruct a as [| a']; cbn in H.
     rewrite Nat.mul_0_r in H. inversion H.
     inversion H. rewrite plus_comm in H1. inversion H1.
 Qed.
@@ -748,12 +748,12 @@ Theorem unary_bij : bijective unary.
 (* begin hide *)
 Proof.
   unfold bijective, injective, surjective. split.
-    induction x as [| y]; induction x' as [| y']; simpl in *.
+    induction x as [| y]; induction x' as [| y']; cbn in *.
       trivial.
       inversion 1.
       inversion 1.
       inversion 1. f_equal. apply IHy. assumption.
-    intro. exists (length b). induction b as [| h t]; simpl.
+    intro. exists (length b). induction b as [| h t]; cbn.
       trivial.
       destruct h. f_equal. assumption.
 Qed.

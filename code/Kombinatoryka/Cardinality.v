@@ -18,7 +18,7 @@ Proof.
     inversion 1.
     destruct t as [| h' t'].
       inversion 1. inversion H1.
-      simpl. do 2 intro. do 2 apply le_S_n in H. inversion H0; subst.
+      cbn. do 2 intro. do 2 apply le_S_n in H. inversion H0; subst.
         destruct h, h'. apply H4. constructor. trivial.
 Qed.
 

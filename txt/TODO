@@ -9,20 +9,19 @@ Rekursja:
 5. Rekursja wyższego rzędu, tzn. nie w pełni zaaplikowane wywołania rekurencyjne.
 
 Indukcja:
-1. Reguły indukcyjne.
+1. W nowym ujęciu podrozdział o regułach indukcyjnych ma być ściśle powiązany z wprowadzeniem rekursji strukturalnej (tzn. nie-prymitywnej).
 2. Finitarne i infinitarne typy induktywne (znaleźć na to lepsze nazwy, np. pierwszy i wyższy rząd).
 
 Ćwiczenia:
 1. Ćwiczenia z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
 2. Ćwiczenia z definiowania typów induktywnych (i relacji też).
-3. Ćwiczenia z Uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
+3. Ćwiczenia z uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
 
 Długofalowe:
 1. Użyć jsCoq do zrobienia interaktywnej książki, która wyglądałaby jakoś tak: https://x80.org/rhino-coq/v8.10/
 2. Zrobić zwijane/rozwijane dowody i paragrafy.
 
 Inne:
-2. Zamienić wszędzie simpl na cbn.
 3. Znaleźć prostszy przykład dla podrozdziału o ścisłej pozytywności (ale do której konkretnie części?).
 8. Przedstawić kiedyś metodę encode-decode. Wprowadzić ją jako coś do pokazywania izomorfizmów typów.
 13. Pamiętać o resztkach z rozdziału o listach.

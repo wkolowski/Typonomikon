@@ -89,7 +89,7 @@ Lemma app_vnil_r :
   forall (A : Type) (n : nat) (l : vec A n), JMeq (l +++ vnil) l.
 (* begin hide *)
 Proof.
-  induction l as [| n h t]; simpl.
+  induction l as [| n h t]; cbn.
     trivial.
     apply JMeq_vcons; auto.
 Qed.
@@ -99,7 +99,7 @@ Lemma app_vnil_r' :
   forall (A : Type) (n : nat) (l : vec A n), eq_dep (l +++ vnil) l.
 (* begin hide *)
 Proof.
-  induction l; simpl; try rewrite IHl; trivial.
+  induction l; cbn; try rewrite IHl; trivial.
 Qed.
 (* end hide *)
 
@@ -108,7 +108,7 @@ Lemma app_assoc :
     eq_dep (l1 +++ (l2 +++ l3)) ((l1 +++ l2) +++ l3).
 (* begin hide *)
 Proof.
-  induction l1 as [| h1 t1]; simpl; intros.
+  induction l1 as [| h1 t1]; cbn; intros.
     trivial.
     rewrite IHl1. trivial.
 Qed.
@@ -119,7 +119,7 @@ Lemma app_assoc' :
     JMeq (l1 +++ (l2 +++ l3)) ((l1 +++ l2) +++ l3).
 (* begin hide *)
 Proof.
-  induction l1 as [| h1 t1]; simpl; intros.
+  induction l1 as [| h1 t1]; cbn; intros.
     trivial.
     apply JMeq_vcons; auto. rewrite plus_assoc. trivial.
 Qed.
@@ -146,7 +146,7 @@ Lemma app_cons2 :
     JMeq (l1 +++ vcons x l2) ((l1 +++ (vcons x vnil)) +++ l2).
 (* begin hide *)
 Proof.
-  induction l1 as [| n h1 t1]; simpl; intros.
+  induction l1 as [| n h1 t1]; cbn; intros.
     trivial.
     apply JMeq_vcons; auto. rewrite <- plus_assoc. f_equal.
 Qed.
@@ -157,7 +157,7 @@ Lemma app_cons2' :
     eq_dep (l1 +++ vcons x l2) ((l1 +++ (vcons x vnil)) +++ l2).
 (* begin hide *)
 Proof.
-  induction l1 as [| n h1 t1]; simpl; intros.
+  induction l1 as [| n h1 t1]; cbn; intros.
     trivial.
     rewrite IHt1. trivial.
 Qed.
@@ -179,7 +179,7 @@ Lemma no_infinite_app :
     ~ eq_dep l' vnil -> eq_dep l (l' +++ l) -> False.
 (* begin hide *)
 Proof.
-  induction l; simpl; intros.
+  induction l; cbn; intros.
     rewrite app_vnil_r' in H0. apply H. rewrite H0. trivial.
     destruct l'.
       contradiction H. trivial.
@@ -192,7 +192,7 @@ Lemma app_inv1 :
     l +++ l1 = l +++ l2 -> l1 = l2.
 (* begin hide *)
 Proof.
-  induction l; simpl; intros.
+  induction l; cbn; intros.
     assumption.
     apply IHl. inversion H. apply inj_pair2 in H1. assumption.
 Qed.
@@ -216,7 +216,7 @@ Lemma app_inv2 :
     eq_dep (l1 +++ l) (l2 +++ l) -> eq_dep l1 l2.
 (* begin hide *)
 Proof.
-  induction l1 as [| h1 t1]; simpl; intros.
+  induction l1 as [| h1 t1]; cbn; intros.
     destruct (is_vnil l2).
       rewrite e. trivial.
       cut False.
@@ -233,7 +233,7 @@ Lemma app_eq_nil :
     eq_dep (l1 +++ l2) vnil -> eq_dep l1 vnil /\ eq_dep l2 vnil.
 (* begin hide *)
 Proof.
-  induction l1 as [| h1 t1]; simpl; intros.
+  induction l1 as [| h1 t1]; cbn; intros.
     split; trivial.
     inversion H.
 Qed.
@@ -279,7 +279,7 @@ Lemma snoc_app :
     eq_dep (snoc x (l1 +++ l2)) (l1 +++ snoc x l2).
 (* begin hide *)
 Proof.
-  induction l1; simpl.
+  induction l1; cbn.
     trivial.
     intros. rewrite IHl1. trivial.
 Qed.
@@ -290,7 +290,7 @@ Lemma rev_app :
     eq_dep (rev (l1 +++ l2)) (rev l2 +++ rev l1).
 (* begin hide *)
 Proof.
-  induction l1 as [| n' h1 t1]; simpl; intro.
+  induction l1 as [| n' h1 t1]; cbn; intro.
     rewrite app_vnil_r'. trivial.
     rewrite IHt1. rewrite snoc_app. trivial. 
 Qed.
@@ -301,7 +301,7 @@ Lemma snoc_rev :
     rev (snoc x l) = vcons x (rev l).
 (* begin hide *)
 Proof.
-  induction l; simpl; try rewrite IHl; trivial.
+  induction l; cbn; try rewrite IHl; trivial.
 Qed.
 (* end hide *)
 
@@ -309,7 +309,7 @@ Lemma rev_inv :
   forall (A : Type) (n : nat) (l : vec A n), rev (rev l) = l.
 (* begin hide *)
 Proof.
-  induction l; simpl.
+  induction l; cbn.
     trivial.
     rewrite snoc_rev, IHl. trivial.
 Qed.
@@ -357,7 +357,7 @@ Lemma elem_app_l :
     elem x l1 -> elem x (l1 ++ l2).
 (* begin hide *)
 Proof.
-  induction 1; simpl; constructor; assumption.
+  induction 1; cbn; constructor; assumption.
 Qed.
 (* end hide *)
 
@@ -366,7 +366,7 @@ Lemma elem_app_r :
     elem x l2 -> elem x (l1 ++ l2).
 (* begin hide *)
 Proof.
-  induction l1 as [| n h t]; simpl; intros.
+  induction l1 as [| n h t]; cbn; intros.
     assumption.
     constructor. apply IHt. assumption.
 Qed.
@@ -377,7 +377,7 @@ Lemma elem_app_or :
     elem x (l1 ++ l2) -> elem x l1 \/ elem x l2.
 (* begin hide *)
 Proof.
-  induction l1 as [| n h1 t1]; simpl; intros.
+  induction l1 as [| n h1 t1]; cbn; intros.
     right. assumption.
     inversion H; subst.
       left. constructor.
@@ -401,7 +401,7 @@ Lemma elem_snoc :
     elem x (snoc x l).
 (* begin hide *)
 Proof.
-  induction l; simpl; constructor; assumption.
+  induction l; cbn; constructor; assumption.
 Qed.
 (* end hide *)
 
@@ -410,7 +410,7 @@ Lemma elem_snoc' :
     elem x l -> elem x (snoc y l).
 (* begin hide *)
 Proof.
-  induction l; simpl; intros; inversion H; subst; clear H; constructor.
+  induction l; cbn; intros; inversion H; subst; clear H; constructor.
   apply inj_pair2 in H4; subst. auto.
 Qed.
 (* end hide *)
@@ -421,7 +421,7 @@ Lemma elem_snoc'' :
 (* begin hide *)
 Proof.
   split.
-    induction l; simpl; intros.
+    induction l; cbn; intros.
       inversion H; subst; clear H; auto.
         apply inj_pair2 in H4. subst. auto.
       inversion H; subst; clear H.
@@ -429,7 +429,7 @@ Proof.
         apply inj_pair2 in H4. subst. destruct (IHl H3); subst; auto.
     destruct 1; subst.
       apply elem_snoc.
-      induction l; simpl; intros.
+      induction l; cbn; intros.
         inversion H.
         inversion H; subst; clear H; constructor.
           apply inj_pair2 in H4; subst. auto.
@@ -441,7 +441,7 @@ Lemma elem_rev :
     elem x l -> elem x (rev l).
 (* begin hide *)
 Proof.
-  induction l as [| n h t]; simpl; intros.
+  induction l as [| n h t]; cbn; intros.
     assumption.
     rewrite elem_snoc''. inversion H; subst; clear H; auto.
       apply inj_pair2 in H4; subst. auto.
@@ -453,7 +453,7 @@ Lemma elem_rev_conv :
     elem x (rev l) -> elem x l.
 (* begin hide *)
 Proof.
-  induction l as [| n h t]; simpl; intros.
+  induction l as [| n h t]; cbn; intros.
     trivial.
     rewrite elem_snoc'' in H. destruct H; subst; constructor; auto.
 Qed.
@@ -465,7 +465,7 @@ Lemma elem_split :
       eq_dep l (l1 ++ x :: l2).
 (* begin hide *)
 Proof.
-  induction l as [| n h t]; simpl; intro H; inversion H; subst; clear H.
+  induction l as [| n h t]; cbn; intro H; inversion H; subst; clear H.
     apply inj_pair2 in H4; subst. do 2 eexists. exists vnil, t. trivial.
     apply inj_pair2 in H4; subst. destruct (IHt H3) as [m1 [m2 [l1 [l2 H]]]].
       exists (S m1), m2, (h :: l1), l2. rewrite H. trivial.
@@ -487,7 +487,7 @@ Lemma map_id : forall (A : Type) (n : nat) (l : vec A n),
   map id l = l.
 (* begin hide *)
 Proof.
-  unfold id. induction l as [| n h t]; simpl; try rewrite IHt; trivial.
+  unfold id. induction l as [| n h t]; cbn; try rewrite IHt; trivial.
 Qed.
 (* end hide *)
 
@@ -496,7 +496,7 @@ Lemma map_comp :
     (l : vec A n), map g (map f l) = map (fun x : A => g (f x)) l.
 (* begin hide *)
 Proof.
-  induction l as [| n h t]; simpl.
+  induction l as [| n h t]; cbn.
     trivial.
     rewrite IHt. trivial.
 Qed.
@@ -507,7 +507,7 @@ Lemma map_length :
     len (map f l) = len l.
 (* begin hide *)
 Proof.
-  induction l as [| n h t]; simpl.
+  induction l as [| n h t]; cbn.
     trivial.
     rewrite ?len_vcons. trivial.
 Qed.
@@ -518,7 +518,7 @@ Lemma map_app :
     map f (l1 ++ l2) = map f l1 ++ map f l2.
 (* begin hide *)
 Proof.
-  induction l1 as [| n h1 t1]; simpl; intros.
+  induction l1 as [| n h1 t1]; cbn; intros.
     trivial.
     rewrite IHt1. trivial.
 Qed.
@@ -529,7 +529,7 @@ Lemma elem_map :
     elem x l -> elem (f x) (map f l).
 (* begin hide *)
 Proof.
-  induction l as [| n h t]; simpl; inversion 1; subst.
+  induction l as [| n h t]; cbn; inversion 1; subst.
     constructor.
     constructor. apply IHt. apply inj_pair2 in H4. subst. assumption.
 Qed.
@@ -541,11 +541,11 @@ Lemma elem_map_conv :
 (* begin hide *)
 Proof.
   split.
-    induction l as [| n h t]; simpl; intros; inversion H; subst; clear H.
+    induction l as [| n h t]; cbn; intros; inversion H; subst; clear H.
       exists h. split; constructor.
       apply inj_pair2 in H4. subst. destruct (IHt H3) as [x IH].
         exists x. intuition constructor; eauto.
-    induction l as [| n h t]; simpl; destruct 1 as [x [Hx1 Hx2]];
+    induction l as [| n h t]; cbn; destruct 1 as [x [Hx1 Hx2]];
     inversion Hx2; subst; constructor.
       apply IHt. exists x. split; trivial. apply inj_pair2 in H3. subst. auto.
 Qed.
@@ -556,7 +556,7 @@ Lemma map_snoc :
     map f (snoc x l) = snoc (f x) (map f l).
 (* begin hide *)
 Proof.
-  induction l; simpl; try rewrite IHl; trivial.
+  induction l; cbn; try rewrite IHl; trivial.
 Qed.
 (* end hide *)
 
@@ -565,7 +565,7 @@ Lemma map_rev :
     map f (rev l) = rev (map f l).
 (* begin hide *)
 Proof.
-  induction l as [| h t]; simpl.
+  induction l as [| h t]; cbn.
     trivial.
     rewrite map_snoc, IHl. trivial.
 Qed.
@@ -576,7 +576,7 @@ Lemma map_ext_elem :
     (forall x : A, elem x l -> f x = g x) -> map f l = map g l.
 (* begin hide *)
 Proof.
-  induction l as [| n h t]; simpl; intros.
+  induction l as [| n h t]; cbn; intros.
     trivial.
     rewrite H, IHt; auto.
 Qed.
@@ -587,7 +587,7 @@ Lemma map_ext :
     (forall x : A, f x = g x) -> map f l = map g l.
 (* begin hide *)
 Proof.
-  induction l as [| n h t]; simpl; intro; try rewrite H, IHt; auto.
+  induction l as [| n h t]; cbn; intro; try rewrite H, IHt; auto.
 Qed.
 (* end hide *)
 
@@ -608,7 +608,7 @@ Lemma join_app :
     eq_dep (join (l1 ++ l2)) (join l1 ++ join l2).
 (* begin hide *)
 Proof.
-  induction l1; simpl; intros.
+  induction l1; cbn; intros.
     trivial.
     rewrite IHl1, app_assoc. trivial.
 Qed.
@@ -619,7 +619,7 @@ Lemma join_map :
     map f (join l) = join (map (map f) l).
 (* begin hide *)
 Proof.
-  induction l; simpl; intros.
+  induction l; cbn; intros.
     trivial.
     rewrite map_app, IHl. trivial.
 Qed.
@@ -643,7 +643,7 @@ Lemma repeat_len :
     len (repeat n x) = n.
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl; intro; try rewrite IHn'; trivial.
+  induction n as [| n']; cbn; intro; try rewrite IHn'; trivial.
 Qed.
 (* end hide *)
 
@@ -652,7 +652,7 @@ Lemma repeat_elem :
     elem x (repeat n y) -> x = y.
 (* begin hide *)
 Proof.
-  induction n as [| n']; simpl; intros; inversion H; subst.
+  induction n as [| n']; cbn; intros; inversion H; subst.
     trivial.
     apply IHn'. apply inj_pair2 in H4; subst. assumption.
 Qed.
@@ -679,7 +679,7 @@ Lemma nth_len :
 Proof.
   induction m as [| m']; destruct l; intros.
     inversion H.
-    exists a. simpl. trivial.
+    exists a. cbn. trivial.
     inversion H.
     apply lt_S_n in H. destruct (IHm' _ l H) as [x Hx]. exists x. assumption.
 Qed.
@@ -690,7 +690,7 @@ Lemma nth_elem :
     m < n -> exists x : A, nth m l = Some x /\ elem x l.
 (* begin hide *)
 Proof.
-  induction m as [| m']; destruct l; simpl; intros; intuition; eauto.
+  induction m as [| m']; destruct l; cbn; intros; intuition; eauto.
   apply lt_S_n in H. destruct (IHm' _ l H) as [x [H1 H2]]. eauto.
 Qed.
 (* end hide *)
@@ -700,8 +700,8 @@ Lemma nth_elem_conv :
     elem x l -> exists m : nat, nth m l = Some x.
 (* begin hide *)
 Proof.
-  induction l as [| n h t]; simpl; inversion 1; subst.
-    exists 0. simpl. trivial.
+  induction l as [| n h t]; cbn; inversion 1; subst.
+    exists 0. cbn. trivial.
     apply inj_pair2 in H4; subst.
       destruct (IHt H3) as [m Hm]. exists (S m). eauto.
 Qed.
@@ -712,7 +712,7 @@ Lemma nth_overflow :
     n <= m -> ~ exists x : A, nth m l = Some x.
 (* begin hide *)
 Proof.
-  induction m as [| m']; destruct l; simpl; intros.
+  induction m as [| m']; destruct l; cbn; intros.
     destruct 1. inversion H0.
     inversion H.
     destruct 1. inversion H0.
@@ -725,7 +725,7 @@ Lemma nth_app1 :
     m < n1 -> nth m (l1 ++ l2) = nth m l1.
 (* begin hide *)
 Proof.
-  induction m as [| m']; destruct l1; simpl; intros.
+  induction m as [| m']; destruct l1; cbn; intros.
     inversion H.
     trivial.
     inversion H.
@@ -738,7 +738,7 @@ Lemma nth_app2 :
     n1 <= m -> nth m (l1 ++ l2) = nth (m - n1) l2.
 (* begin hide *)
 Proof.
-  induction m as [| m']; destruct l1, l2; simpl; auto;
+  induction m as [| m']; destruct l1, l2; cbn; auto;
   try (inversion 1; fail); intros; apply IHm', le_S_n; assumption.
 Qed.
 (* end hide *)
@@ -749,8 +749,8 @@ Lemma nth_split :
       eq_dep l (l1 ++ x :: l2) /\ n1 = m.
 (* begin hide *)
 Proof.
-  induction m as [| m']; destruct l; simpl; inversion 1; subst.
-    do 2 eexists. exists [], l. simpl. eauto.
+  induction m as [| m']; destruct l; cbn; inversion 1; subst.
+    do 2 eexists. exists [], l. cbn. eauto.
     destruct (IHm' _ _ _ H) as [n1 [n2 [l1 [l2 [H2 H3]]]]].
       exists (S n1), n2, (a :: l1), l2. subst. rewrite H2. split; eauto.
 Qed.
@@ -761,7 +761,7 @@ Lemma nth_None :
     nth m l = None -> n <= m.
 (* begin hide *)
 Proof.
-  induction m as [| m']; destruct l; simpl; intros.
+  induction m as [| m']; destruct l; cbn; intros.
     trivial.
     inversion H.
     apply le_0_n.
@@ -774,7 +774,7 @@ Lemma nth_Some :
     nth m l = Some x -> m < n.
 (* begin hide *)
 Proof.
-  induction m as [| m']; destruct l; simpl; intros.
+  induction m as [| m']; destruct l; cbn; intros.
     inversion H.
     red. apply le_n_S. apply le_0_n.
     inversion H.
@@ -787,7 +787,7 @@ Lemma map_nth :
       nth m l = Some x -> nth m (map f l) = Some (f x).
 (* begin hide *)
 Proof.
-  induction m as [| m']; destruct l; simpl; inversion 1; trivial.
+  induction m as [| m']; destruct l; cbn; inversion 1; trivial.
   rewrite (IHm' _ _ l x); auto.
 Qed.
 (* end hide *)
@@ -828,7 +828,7 @@ Lemma head_cons :
   forall (A : Type) (n : nat) (h : A) (t : vec A n),
     head (h :: t) = h.
 (* begin hide *)
-Proof. simpl. trivial. Qed.
+Proof. cbn. trivial. Qed.
 (* end hide *)
 
 Lemma last_snoc :
@@ -836,7 +836,7 @@ Lemma last_snoc :
     last (snoc h t) = h.
 (* begin hide *)
 Proof.
-  induction t; simpl; auto.
+  induction t; cbn; auto.
 Qed.
 (* end hide *)
 
@@ -845,7 +845,7 @@ Lemma head_nth:
     Some (head l) = nth 0 l.
 (* begin hide *)
 Proof.
-  intros. dependent destruction l; simpl. trivial.
+  intros. dependent destruction l; cbn. trivial.
 Qed.
 (* end hide *)
 
@@ -853,8 +853,8 @@ Lemma last_nth : forall (A : Type) (n : nat) (l : vec A (S n)),
   Some (last l) = nth n l.
 (* begin hide *)
 Proof.
-  dependent induction l; simpl.
-  destruct n as [| n']; simpl.
+  dependent induction l; cbn.
+  destruct n as [| n']; cbn.
     trivial.
     apply IHl; auto.
 Qed.
@@ -904,18 +904,18 @@ Defined.
 
 Fixpoint take {A : Type} {n : nat} (m : nat) (l : vec A n) : vec A (min m n).
 Proof.
-  destruct m as [| m']; simpl.
+  destruct m as [| m']; cbn.
     exact vnil.
-    destruct l as [| n h t]; simpl.
+    destruct l as [| n h t]; cbn.
       exact vnil.
       exact (h :: take _ _ m' t).
 Defined.
 
 Fixpoint drop {A : Type} {n : nat} (m : nat) (l : vec A n) : vec A (n - m).
 Proof.
-  destruct m as [| m']; simpl.
+  destruct m as [| m']; cbn.
     rewrite <- minus_n_O. exact l.
-    destruct l as [| n h t]; simpl.
+    destruct l as [| n h t]; cbn.
       exact vnil.
       apply drop; auto.
 Defined.
@@ -931,7 +931,7 @@ end; auto.
 
 Ltac takedrop' := intros; repeat
 match goal with
-    | |- context [take ?n ?l] => induction n; simpl
+    | |- context [take ?n ?l] => induction n; cbn
     | |- context [drop ?n ?l] => induction n; compute
     | |- context [minus_n_O ?n] =>
         remember (minus_n_O n) as x; dependent destruction x
@@ -953,7 +953,7 @@ Lemma take_nil :
 Proof.
   takedrop'.
 Restart. 
-  destruct n; simpl; trivial.
+  destruct n; cbn; trivial.
 Qed.
 (* end hide *)
 
@@ -965,7 +965,7 @@ Proof.
   destruct n.
     compute. remember (minus_n_O 0) as x. dependent destruction x.
       trivial.
-    simpl. trivial.
+    cbn. trivial.
 Restart.
   takedrop'.
 Qed.
@@ -996,7 +996,7 @@ Lemma take_0 :
 Proof.
   takedrop.
 Restart.
-  destruct l; simpl; trivial.
+  destruct l; cbn; trivial.
 Qed.
 (* end hide *)
 
@@ -1012,7 +1012,7 @@ Lemma take_length :
     eq_dep (take n l) l.
 (* begin hide *)
 Proof.
-  induction l as [| n h t]; simpl.
+  induction l as [| n h t]; cbn.
     trivial.
     rewrite IHt. trivial.
 Qed.
@@ -1038,7 +1038,7 @@ Proof.
       dependent destruction l. apply take_nil.
     dependent destruction l.
       apply take_nil.
-      simpl. rewrite IHm'; auto; omega.
+      cbn. rewrite IHm'; auto; omega.
 Qed.
 (* end hide *)
 
@@ -1049,7 +1049,7 @@ Lemma drop_length' :
 Proof.
   induction m as [| m']; intros.
     rewrite drop_0. dependent destruction l; try omega. trivial.
-    destruct l as [| n h t]; simpl.
+    destruct l as [| n h t]; cbn.
       trivial.
       rewrite IHm'; auto; omega.
 Qed.
@@ -1075,9 +1075,9 @@ Lemma drop_take :
 Proof.
   induction m as [| m']; intros.
     rewrite drop_0. compute. trivial.
-    destruct l as [| n h t]; simpl.
+    destruct l as [| n h t]; cbn.
       compute. trivial.
-      rewrite IHm'; omega.
+      reflexivity.
 Qed.
 (* end hide *)
 
@@ -1086,11 +1086,11 @@ Lemma take_map :
     map f (take m l) = take m (map f l).
 (* begin hide *)
 Proof.
-  induction m as [| m']; simpl.
+  induction m as [| m']; cbn.
     trivial.
-    destruct l as [| n h t]; simpl; try rewrite IHm'; trivial.
+    destruct l as [| n h t]; cbn; try rewrite IHm'; trivial.
 Restart.
-  induction m; destruct l; simpl; intros; rewrite ?IHm; auto.
+  induction m; destruct l; cbn; intros; rewrite ?IHm; auto.
 Qed.
 (* end hide *)
 
@@ -1101,7 +1101,7 @@ Lemma drop_map :
 Proof.
   induction m as [| m']; intros.
     rewrite ?drop_0. trivial.
-    destruct l; simpl.
+    destruct l; cbn.
       trivial.
       apply IHm'.
 Qed.
@@ -1113,8 +1113,8 @@ Lemma take_elem :
 (* begin hide *)
 Proof.
   induction m as [| m'].
-    simpl. inversion 1.
-    destruct l as [| n h t]; simpl; inversion 1; subst; constructor.
+    cbn. inversion 1.
+    destruct l as [| n h t]; cbn; inversion 1; subst; constructor.
       apply IHm'. apply inj_pair2 in H4. subst. assumption.
 Qed.
 (* end hide *)
@@ -1128,7 +1128,7 @@ Lemma drop_elem :
 Proof.
   induction m as [| m']. td.
     rewrite drop_0 in H. assumption.
-    destruct l as [| n h t]; simpl.
+    destruct l as [| n h t]; cbn.
       inversion 1.
       intros. constructor. apply IHm'. assumption.
 Qed.
@@ -1140,7 +1140,7 @@ Lemma take_take :
 (* begin hide *)
 Proof.
   induction m; destruct m'; intros; trivial.
-  destruct l as [| n h t]; simpl; try rewrite IHm; trivial.
+  destruct l as [| n h t]; cbn; try rewrite IHm; trivial.
 Qed.
 (* end hide *)
 
@@ -1149,7 +1149,7 @@ Lemma drop_S :
     eq_dep (drop (S m) (drop m' l)) (drop m' (drop (S m) l)).
 (* begin hide *)
 Proof.
-  induction m; destruct l; simpl.
+  induction m; destruct l; cbn.
     Check drop_nil.
     remember (drop m' (@vnil A)) as x. dependent destruction x. trivial.
     remember (drop m' (a :: l)) as x. dependent destruction x.
@@ -1173,9 +1173,9 @@ Lemma take_drop_rev :
     eq_dep (take m (rev l)) (rev (drop (n - m) l)).
 Proof.
   induction m as [| m']; intros.
-    rewrite take_0, <- minus_n_O, drop_all. simpl. trivial.
+    rewrite take_0, <- minus_n_O, drop_all. cbn. trivial.
     destruct l.
-      rewrite ?rev_nil. rewrite take_nil, drop_nil. simpl. trivial.
+      rewrite ?rev_nil. rewrite take_nil, drop_nil. cbn. trivial.
       
       SearchAbout rev.
 Abort.
@@ -1187,7 +1187,7 @@ Lemma take_drop :
 (* begin hide *)
 Proof.
   induction m; intros.
-    simpl. rewrite take_length'.
+    cbn. rewrite take_length'.
 Admitted.
 (* end hide *)
 
@@ -1236,7 +1236,7 @@ end.
 Lemma toList_length : forall (n : nat) (v : Vec A n),
     length (toList v) = n.
 Proof.
-  induction v; simpl; try rewrite IHv; trivial.
+  induction v; cbn; try rewrite IHv; trivial.
 Qed.
 
 Fixpoint app {n m : nat} (v1 : Vec A n) (v2 : Vec A m) : Vec A (n + m) :=
@@ -1289,7 +1289,7 @@ Qed.
 Lemma toList_fromList : forall (A : Type) (n : nat) (v : Vec A n),
     JMeq (fromList (toList v)) v.
 Proof.
-  induction v; simpl.
+  induction v; cbn.
     reflexivity.
     apply JMeq_Cons; auto. apply toList_length.
 Qed.

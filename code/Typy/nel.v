@@ -52,7 +52,7 @@ end.
 Theorem map_pres_len : forall {A B : Type} (f : A -> B) (l : nel A),
     len l = len (map f l).
 Proof.
-  induction l; unfold len in *; simpl; auto.
+  induction l; unfold len in *; cbn; auto.
 Qed.
 
 Fixpoint app {A} (l1 l2 : nel A) : nel A :=
@@ -68,7 +68,7 @@ Hint Unfold len.
 Theorem app_length : forall {A} (l1 l2 : nel A),
     len (l1 ++ l2) = len l1 + len l2.
 Proof.
-  induction l1; destruct l2; unfold len in *; simpl;
+  induction l1; destruct l2; unfold len in *; cbn;
   try rewrite IHl1; auto.
 Qed.
 

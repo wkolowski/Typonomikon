@@ -454,7 +454,7 @@ Funkcja <span class="inlinecode"><span class="id" title="keyword">fun</span></sp
 <span class="id" title="keyword">Goal</span> ~ <span class="id" title="var">injective</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> * <span class="id" title="var">n</span> - <span class="id" title="var">n</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">injective</span>, <span class="id" title="var">not</span>; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">H</span> 0 1). <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">H</span> <span class="id" title="var">eq_refl</span>). <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">H</span> 0 1). <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">H</span> <span class="id" title="var">eq_refl</span>). <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -676,9 +676,9 @@ I znów zacznijmy od nazwy. Po francusku "sur" znaczy "na", zaś słowo
 </div>
 
 <div class="doc">
-TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki <span class="inlinecode"><span class="id" title="tactic">simpl</span></span>
-    używać będziemy taktyki <span class="inlinecode"><span class="id" title="var">cbn</span></span>. Różni się ona nieznacznie od <span class="inlinecode"><span class="id" title="tactic">simpl</span></span>, ale
-    jej główną zaletą jest nazwa — <span class="inlinecode"><span class="id" title="var">cbn</span></span> to trzy litery, a <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> aż pięć,
+TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki <span class="inlinecode"><span class="id" title="var">cbn</span></span>
+    używać będziemy taktyki <span class="inlinecode"><span class="id" title="var">cbn</span></span>. Różni się ona nieznacznie od <span class="inlinecode"><span class="id" title="var">cbn</span></span>, ale
+    jej główną zaletą jest nazwa — <span class="inlinecode"><span class="id" title="var">cbn</span></span> to trzy litery, a <span class="inlinecode"><span class="id" title="var">cbn</span></span> aż pięć,
     więc zaoszczędzimy sobie pisania.
 
 <div class="paragraph"> </div>

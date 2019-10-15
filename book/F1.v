@@ -271,7 +271,7 @@ CoFixpoint repeat {A : Type} (x : A) : coList A :=
     uncons := Some (x, repeat x);
 |}.
 
-Eval simpl in lnth 123 (repeat 5).
+Eval cbn in lnth 123 (repeat 5).
 
 CoFixpoint lapp {A : Type} (l1 l2 : coList A) : coList A :=
 match uncons l1 with
