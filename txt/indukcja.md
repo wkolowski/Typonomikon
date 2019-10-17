@@ -84,6 +84,6 @@ Niektórym formom indukcji z obrazka odpowiadają dość ściśle jakieś formy 
 | Rekursja                      | Skąd się bierze               |
 | ----------------------------- | ----------------------------- |
 | strukturalna                  | termination checker pozwala   |
-| dobrze ufundowana             | rodziny induktywne (bo można zdefiniować Acc) |
-| zagnieżdżone fixy             | fix po prostu tak działa      |
+| dobrze ufundowana             | rodziny induktywne (bo Acc)   |
+| monotoniczna                  | fix po prostu tak działa      |
 | wyższego rzędu                | zagnieżdżone typy induktywne  |

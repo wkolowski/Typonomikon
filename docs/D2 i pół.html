@@ -1,0 +1,199 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-1.8.3.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-88023543-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</head>
+<h1 class="libtitle">D2 i pół</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+ W tym rozdziale będą różne formy indukcji/rekursji, których chwilowo nie
+    chcę wstawiać do głównego tekstu rozdziałów D2 i D3, bo tam nie pasują.
+    Prędzej czy później zostaną one z tymi rozdział zintegrowane (albo i nie -
+    nie mamy pańskiego płaszcza i co nam pan zrobi?). 
+<div class="paragraph"> </div>
+
+<a name="lab194"></a><h1 class="section">Rekursja monotoniczna</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">X3</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">merge</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| [] =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">merge'</span> (<span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">l1</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">cmp</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">h1</span> :: <span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">t1</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">h2</span> :: <span class="id" title="var">merge'</span> <span class="id" title="var">t2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">merge</span> <span class="id" title="var">leb</span> [1; 4; 6; 9] [2; 3; 5; 8].<br/>
+
+<br/>
+<span class="comment">(*<br/>
+Lemma&nbsp;funind_merge&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(P&nbsp;:&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;Prop)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;bool},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;l&nbsp;:&nbsp;list&nbsp;A,&nbsp;P&nbsp;<span class="inlinecode"></span>&nbsp;l&nbsp;l)&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;l&nbsp;:&nbsp;list&nbsp;A,&nbsp;P&nbsp;l&nbsp;<span class="inlinecode"></span>&nbsp;l)&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;(h1&nbsp;h2&nbsp;:&nbsp;A)&nbsp;(t1&nbsp;t2&nbsp;r&nbsp;:&nbsp;list&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;h1&nbsp;h2&nbsp;=&nbsp;true&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;t1&nbsp;(h2&nbsp;::&nbsp;t2)&nbsp;r&nbsp;-&gt;&nbsp;P&nbsp;(h1&nbsp;::&nbsp;t1)&nbsp;(h2&nbsp;::&nbsp;t2)&nbsp;(h1&nbsp;::&nbsp;r))&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;(h1&nbsp;h2&nbsp;:&nbsp;A)&nbsp;(t1&nbsp;t2&nbsp;r&nbsp;:&nbsp;list&nbsp;A),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;h1&nbsp;h2&nbsp;=&nbsp;false&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;(h1&nbsp;::&nbsp;t1)&nbsp;t2&nbsp;r&nbsp;-&gt;&nbsp;P&nbsp;(h1&nbsp;::&nbsp;t1)&nbsp;(h2&nbsp;::&nbsp;t2)&nbsp;(h2&nbsp;::&nbsp;r))&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;l1&nbsp;l2&nbsp;:&nbsp;list&nbsp;A,&nbsp;P&nbsp;l1&nbsp;l2&nbsp;(merge&nbsp;f&nbsp;l1&nbsp;l2).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;unfold&nbsp;merge.&nbsp;destruct&nbsp;(merge'&nbsp;l1&nbsp;l2).&nbsp;cbn.<br/>
+&nbsp;&nbsp;induction&nbsp;m;&nbsp;cbn;&nbsp;auto.<br/>
+Defined.<br/>
+*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">merge_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> =<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span>, <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [], <span class="id" title="var">_</span> =&gt; <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, [] =&gt; <span class="id" title="var">l1</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>, <span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">cmp</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">h1</span> :: <span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">t1</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">h2</span> :: <span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">t2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_merge</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> (<span class="id" title="var">merge</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">merge_length</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">merge</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">length</span> <span class="id" title="var">l1</span> + <span class="id" title="var">length</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">merge_map</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">cmp</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l2</span>) =<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">merge</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">cmp</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">f</span> <span class="id" title="var">y</span>)) <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">merge_rev</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">rev</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">rev</span> (<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Merge_replicate</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> (<span class="id" title="var">replicate</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span>) (<span class="id" title="var">replicate</span> <span class="id" title="var">m</span> <span class="id" title="var">y</span>) =<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">cmp</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">replicate</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span> ++ <span class="id" title="var">replicate</span> <span class="id" title="var">m</span> <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">replicate</span> <span class="id" title="var">m</span> <span class="id" title="var">y</span> ++ <span class="id" title="var">replicate</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;intros.&nbsp;case_eq&nbsp;(cmp&nbsp;x&nbsp;y);&nbsp;intro.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;revert&nbsp;x&nbsp;y&nbsp;m&nbsp;H.&nbsp;induction&nbsp;n&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>;&nbsp;cbn;&nbsp;intros.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;induction&nbsp;m&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>;&nbsp;cbn;&nbsp;intros.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewrite&nbsp;app_nil_r.&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewrite&nbsp;H.&nbsp;f_equal.&nbsp;rewrite&nbsp;&lt;-&nbsp;IHm'.&nbsp;rewrite&nbsp;&lt;-&nbsp;(IHn'&nbsp;_&nbsp;_&nbsp;(S&nbsp;m')&nbsp;H).&nbsp;apply&nbsp;IHn'.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assumption.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specialize&nbsp;(IHn'&nbsp;_&nbsp;_&nbsp;(S&nbsp;m')&nbsp;H).&nbsp;cbn&nbsp;in&nbsp;IHn'.&nbsp;apply&nbsp;IHn'.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;revert&nbsp;x&nbsp;y&nbsp;n&nbsp;H.&nbsp;induction&nbsp;m&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>;&nbsp;cbn;&nbsp;intros.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;n&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>;&nbsp;cbn;&nbsp;intros.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewrite&nbsp;app_nil_r.&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assumption.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specialize&nbsp;(IHm'&nbsp;_&nbsp;_&nbsp;(S&nbsp;n')&nbsp;H).&nbsp;cbn&nbsp;in&nbsp;IHm'.&nbsp;apply&nbsp;IHm'.<br/>
+Qed.<br/>
+<br/>
+Fixpoint&nbsp;ins<br/>
+&nbsp;&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;bool)&nbsp;(l&nbsp;:&nbsp;list&nbsp;A)&nbsp;(x&nbsp;:&nbsp;A)&nbsp;:&nbsp;list&nbsp;A&nbsp;:=<br/>
+match&nbsp;l&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;<span class="inlinecode"></span>&nbsp;=&gt;&nbsp;<span class="inlinecode"><span class="id" title="var">x</span></span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;h&nbsp;::&nbsp;t&nbsp;=&gt;&nbsp;if&nbsp;f&nbsp;x&nbsp;h&nbsp;then&nbsp;x&nbsp;::&nbsp;h&nbsp;::&nbsp;t&nbsp;else&nbsp;h&nbsp;::&nbsp;ins&nbsp;f&nbsp;t&nbsp;x<br/>
+end.<br/>
+<br/>
+Lemma&nbsp;Merge_ins&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;bool}&nbsp;{l&nbsp;:&nbsp;list&nbsp;A}&nbsp;{x&nbsp;:&nbsp;A},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Merge&nbsp;f&nbsp;<span class="inlinecode"><span class="id" title="var">x</span></span>&nbsp;l&nbsp;(ins&nbsp;f&nbsp;l&nbsp;x).<br/>
+Proof.<br/>
+&nbsp;&nbsp;induction&nbsp;l&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span>;&nbsp;cbn;&nbsp;intros.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;case_eq&nbsp;(f&nbsp;x&nbsp;h);&nbsp;auto.<br/>
+Qed.<br/>
+<br/>
+Lemma&nbsp;Merge_ins'&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;bool}&nbsp;{l1&nbsp;l2&nbsp;r&nbsp;:&nbsp;list&nbsp;A}&nbsp;{x&nbsp;:&nbsp;A},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Merge&nbsp;f&nbsp;l1&nbsp;l2&nbsp;r&nbsp;-&gt;&nbsp;Merge&nbsp;f&nbsp;(ins&nbsp;f&nbsp;l1&nbsp;x)&nbsp;l2&nbsp;(ins&nbsp;f&nbsp;r&nbsp;x).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;until&nbsp;1.<br/>
+&nbsp;&nbsp;induction&nbsp;H;&nbsp;cbn&nbsp;in&nbsp;*;&nbsp;intros.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;Merge_ins.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;case_eq&nbsp;(f&nbsp;x&nbsp;h1);&nbsp;constructor;&nbsp;auto.&nbsp;admit.&nbsp;<span class="comment">(*&nbsp;transitivity&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;case_eq&nbsp;(f&nbsp;x&nbsp;h2);&nbsp;intro.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case_eq&nbsp;(f&nbsp;x&nbsp;h1);&nbsp;intro.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor;&nbsp;auto.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;admit.&nbsp;<span class="comment">(*&nbsp;more&nbsp;order&nbsp;properties&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case_eq&nbsp;(f&nbsp;x&nbsp;h1);&nbsp;intro.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor;&nbsp;auto.&nbsp;rewrite&nbsp;H2&nbsp;in&nbsp;IHMerge.&nbsp;apply&nbsp;IHMerge.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor;&nbsp;auto.&nbsp;rewrite&nbsp;H2&nbsp;in&nbsp;IHMerge.&nbsp;apply&nbsp;IHMerge.<br/>
+Admitted.<br/>
+<br/>
+Lemma&nbsp;Merge_all_true&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{p&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;bool}&nbsp;{l&nbsp;:&nbsp;list&nbsp;A}&nbsp;{x&nbsp;:&nbsp;A},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;all&nbsp;(fun&nbsp;y&nbsp;:&nbsp;A&nbsp;=&gt;&nbsp;p&nbsp;x&nbsp;y)&nbsp;l&nbsp;=&nbsp;true&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Merge&nbsp;p&nbsp;<span class="inlinecode"><span class="id" title="var">x</span></span>&nbsp;l&nbsp;(x&nbsp;::&nbsp;l).<br/>
+Proof.<br/>
+&nbsp;&nbsp;induction&nbsp;l&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span>;&nbsp;cbn;&nbsp;intros.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;case_eq&nbsp;(p&nbsp;x&nbsp;h);&nbsp;intro.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor;&nbsp;auto.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewrite&nbsp;H0&nbsp;in&nbsp;H.&nbsp;cbn&nbsp;in&nbsp;H.&nbsp;inv&nbsp;H.<br/>
+Qed.<br/>
+<br/>
+Lemma&nbsp;Merge_filter&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;bool}&nbsp;{p&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;bool}&nbsp;{l1&nbsp;l2&nbsp;r&nbsp;:&nbsp;list&nbsp;A},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Merge&nbsp;f&nbsp;l1&nbsp;l2&nbsp;r&nbsp;-&gt;&nbsp;Merge&nbsp;f&nbsp;(filter&nbsp;p&nbsp;l1)&nbsp;(filter&nbsp;p&nbsp;l2)&nbsp;(filter&nbsp;p&nbsp;r).<br/>
+Proof.<br/>
+&nbsp;&nbsp;induction&nbsp;1;&nbsp;cbn&nbsp;in&nbsp;*.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;1-2:&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;(p&nbsp;h1),&nbsp;(p&nbsp;h2);&nbsp;cbn.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor;&nbsp;auto.<br/>
+Abort.<br/>
+*)</span></div>
