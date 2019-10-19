@@ -3,11 +3,81 @@
     Prędzej czy później zostaną one z tymi rozdział zintegrowane (albo i nie -
     nie mamy pańskiego płaszcza i co nam pan zrobi?). *)
 
-(** * Rekursja monotoniczna *)
+(** * Rekursja zagnieżdżona *)
 
 Require Import X3.
 
-(** TODO: napisz coś. *)
+(** Czas na omówienie pewnej ciekawej, ale średnio użytecznej formy rekursji
+    (z pamięci nie jestem w stanie przytoczyć więcej niż dwóch sztampowych
+    przykładów jej użycia), a jest nią rekursja zagnieżdżona (zwana też
+    czasem rekursją monotoniczną - kwestię najlepszej nazwy dla tego czegoś
+    i jej uzasadnienia omówimy potem).
+
+    Cóż to za zwierzątko, rekursja zagnieżdżona? Żeby się tego dowiedzieć,
+    przypomnijmy sobie najpierw, jak technicznie w Coqu zrealizowana jest
+    rekursja strukturalna. *)
+
+Fixpoint plus (n : nat) : nat -> nat :=
+match n with
+    | 0 => fun m : nat => m
+    | S n' => fun m : nat => S (plus n' m)
+end.
+
+(** Tak oto definicja funkcji plus, lecz zapisana nieco inaczej, niż gdy
+    widzieliśmy ją ostatnim razem. Tym razem prezentujemy ją jako funkcję
+    biorącą jeden argument typu [nat] i zwracającą funkcję z typu [nat] w
+    typ [nat]. *)
+
+Definition plus' : nat -> nat -> nat :=
+  fix f (n : nat) : nat -> nat :=
+  match n with
+      | 0 => fun m : nat => m
+      | S n' => fun m : nat => S (f n' m)
+  end.
+
+(** Ale komenda [Fixpoint] jest jedynie cukrem syntaktycznym - funkcję [plus]
+    możemy równie dobrze zdefiniować bez niej, posługując się jedynie komendą
+    [Definition], a wyrażeniem, które nam to umożliwia, jest [fix]. [fix]
+    działa podobnie jak [fun], ale pozwala dodatkowo nadać definiowanej przez
+    siebie funkcji nazwę, dzięki czemu możemy robić wywołania rekurencyjne.
+
+    Czym więc jest rekursja zagnieżdżona? Z rekursją zagnieżdżoną mamy do
+    czynienia, gdy za pomocą [fix]a (czyli przez rekursję) definiujemy
+    funkcję, która zwraca inną funkcję, i ta zwracana funkcja także jest
+    zdefiniowana za pomocą [fix]a (czyli przez rekursję). Oczywiście to
+    tylko pierwszy krok - wynikowa funkcja również może zwracać funkcję,
+    która jest zdefiniowana za pomocą [fix]a i tak dalej.
+
+    Widać zatem jak na dłoni, że [plus] ani [plus'] nie są przykładami
+    rekursji zagnieżdżonej. Wprawdzie definiują one za pomocą [fix]a
+    (lub komendy [Fixpoint]) funkcję, która zwraca inną funkcję, ale ta
+    zwracana funkcja nie jest zdefiniowana za pomocą [fix]a, lecz za
+    pomocą [fun], a więc nie jest rekurencyjna.
+
+    Podsumowując: rekursja jest zagnieżdżona, jeżeli w definicji
+    funkcji pojawiają się co najmniej dwa wystąpienia [fix], jedno
+    wewnątrz drugiego (przy czym rzecz jasna [Fixpoint] też liczy
+    się jako [fix]).
+
+    No to skoro już wiemy, czas zobaczyć przykład jakiejś funkcji, która
+    jest zdefiniowana przez rekursję zagnieżdżoną. *)
+
+Fixpoint ack (n : nat) : nat -> nat :=
+match n with
+    | 0 => S
+    | S n' =>
+        fix ack' (m : nat) : nat :=
+        match m with
+            | 0 => ack n' 1
+            | S m' => ack n' (ack' m')
+        end
+end.
+
+(** Powyższa, całkiem sławna (choć z innych powodów niż nasze) funkcja
+    zwana jest funkcją Ackermanna, gdyż wymyślił ją... zgadnij kto.
+    Jej definicję możemy zdekodować następująco. *)
+
+(** **** Ćwiczenie *)
 
 Fixpoint merge
   {A : Type} (cmp : A -> A -> bool) (l1 : list A) : list A -> list A :=
@@ -129,7 +199,7 @@ Proof.
 Abort.
 (* end hide *)
 
-Lemma Merge_replicate :
+Lemma merge_replicate :
   forall {A : Type} {cmp : A -> A -> bool} {x y : A} {n m : nat},
     merge cmp (replicate n x) (replicate m y) =
     if cmp x y
