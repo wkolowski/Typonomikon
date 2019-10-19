@@ -86,4 +86,5 @@ Niektórym formom indukcji z obrazka odpowiadają dość ściśle jakieś formy 
 | strukturalna                  | termination checker pozwala   |
 | dobrze ufundowana             | rodziny induktywne (bo Acc)   |
 | monotoniczna                  | fix po prostu tak działa      |
+| ogonowa                       | po prostu można tak           |
 | wyższego rzędu                | zagnieżdżone typy induktywne  |
