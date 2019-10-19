@@ -62,6 +62,56 @@ Definition plus' : nat -> nat -> nat :=
     No to skoro już wiemy, czas zobaczyć przykład jakiejś funkcji, która
     jest zdefiniowana przez rekursję zagnieżdżoną. *)
 
+Fail Fixpoint ack (n m : nat) : nat :=
+match n, m with
+    | 0, m => S m
+    | S n', 0 => ack n' 1
+    | S n', S m' => ack n' (ack (S n') m')
+end.
+
+(* ===> The command has indeed failed with message:
+        Cannot guess decreasing argument of fix. *)
+
+(** Powyższa funkcja zwana jest funkcją Ackermanna, gdyż wymyślił ją...
+    zgadnij kto. Jest ona całkiem sławna, choć z zupełnie innych powodów
+    niż te, dla których my się jej przyglądamy. Nie oblicza ona niczego
+    specjalnie użytecznego - jej wynikami są po prostu bardzo duże liczby.
+    Jeżeli nie wierzysz, spróbuj policzyć ręcznie [ack 4 2] - zdziwisz się.
+
+    Jak widać, Coq nie akceptuje powyższej definicji. Winny temu jest rzecz
+    jasna kształt rekursji. Dla [n] równego [0] zwracamy [S m], co jest ok.
+    Dla [n] postaci [S n'] i [m] równego [0] robimy wywołanie rekurencyjne
+    na [n'] i [1], co również jest ok. Jednak jeżeli [n] i [m] odpowednio
+    są postaci [S n'] i [S m'], to robimy wywołanie rekurencyjne postaci
+    [ack n' (ack (S n') m')]. W wewnętrznym wywołaniu rekurencyjnym pierwszy
+    argument jest taki sam jak obecny. Gdyby argumentem głównym był drugi
+    argument, to jest tym bardziej źle, gdyż w zewnętrznym wywołaniu
+    rekurencyjnym nie jest nim [m'], lecz [ack (S n') m']. Nie ma się więc
+    co dziwić, że Coq nie może zgadnąć, który argument ma być argumentem
+    głównym.
+
+    Mimo, że Coq nie akceptuje tej definicji, to wydaje się ona być całkiem
+    spoko. Żaden z argumentów nie może wprawdzie posłużyć nam za argument
+    główny, ale jeżeli rozważymy ich zachowanie jako całość, to okazuje się,
+    że w każdym wywołaniu rekurencyjnym mamy dwie możliwości:
+    - albo pierwszy argument się zmniejsza
+    - albo pierwszy argument się nie zmienia, ale drugi argument się
+      zmniejsza
+
+    Możemy z tego wywnioskować, że jeżeli wywołamy [ack] na argumentach
+    [n] i [m], to w ogólności najpierw [m] będzie się zmniejszał, ale
+    ponieważ musi kiedyś spaść do zera, to wtedy [n] będzie musiał się
+    zmniejszyć. Oczywiście wtedy w kolejnym wywołaniu zaczynamy znowu z
+    jakimś [m], które potem się zmniejsza, aż w końcu znowu zmniejszy
+    się [n] i tak dalej, aż do chwili, gdy [n] spadnie do zera. Wtedy
+    rekursja musi się skończyć.
+
+    Jednym z typowych zastosowań rekursji zagnieżdżonej jest radzenie
+    sobie z takimi właśnie przypadkami, w których mamy ciąg argumentów
+    i pierwszy maleje, lub pierwszy stoi w miejscu a drugi maleje i tak
+    dalej. Zobaczmy więc, jak techniki tej można użyć do zdefiniowania
+    funkcji Ackermanna. *)
+
 Fixpoint ack (n : nat) : nat -> nat :=
 match n with
     | 0 => S
@@ -73,12 +123,41 @@ match n with
         end
 end.
 
-(** Powyższa, całkiem sławna (choć z innych powodów niż nasze) funkcja
-    zwana jest funkcją Ackermanna, gdyż wymyślił ją... zgadnij kto.
-    Jej definicję możemy zdekodować następująco. *)
+(** Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
+    funkcji. Jest on wprawdzie dokładnie taki sam ([nat -> nat -> nat]),
+    ale zapisujemy go inaczej. Robimy to by podkreslić, że wynikiem [ack]
+    jest funkcja. W przypadku gdy [n] jest postaci [S n'] zdefiniowana
+    jest ona za pomocą [fix]a tak, jak wyglądają dwie ostatnie klauzule
+    dopasowania z oryginalnej definicji, ale z wywołaniem [ack (S n') m']
+    zastąpionym przez [ack' m']. Tak więc funkcja [ack'] reprezentuje
+    częściowo zaaplikowaną funkcję [ack n]. *)
+
+Lemma ack_big :
+  forall n m : nat,
+    n + m <= ack n m.
+Proof.
+  induction n as [| n']; cbn.
+    do 2 constructor.
+    induction m as [| m']; cbn.
+      rewrite <- plus_n_O. specialize (IHn' 1). omega.
+      destruct m'; cbn.
+        specialize (IHn' (ack n' 1)).
+Abort.
 
 (** **** Ćwiczenie *)
 
+Require Import Arith.
+
+(** Zdefiniuj funkcję [merge] o typie
+    [forall (A : Type) (cmp : A -> A -> bool), list A -> list A -> list A],
+    która scala dwie listy posortowane według porządku wyznaczanego przez
+    [cmp] w jedną posortowaną listę. Jeżeli któraś z list posortowana nie
+    jest, wynik może być dowolny.
+
+    Wskazówka: dlaczego niby to ćwiczenie pojawia się w podrozdziale o
+    rekursji zagnieżdżonej? *)
+
+(* begin hide *)
 Fixpoint merge
   {A : Type} (cmp : A -> A -> bool) (l1 : list A) : list A -> list A :=
 match l1 with
@@ -93,10 +172,25 @@ match l1 with
               else h2 :: merge' t2
         end
 end.
-
-Require Import Arith.
+(* end hide *)
 
 Compute merge leb [1; 4; 6; 9] [2; 3; 5; 8].
+(* ===> = [1; 2; 3; 4; 5; 6; 8; 9]
+        : list nat *)
+
+(** Obie listy są posortowane według [leb], więc wynik też jest. *)
+
+Compute merge leb [5; 3; 1] [4; 9].
+(* ===> = [4; 5; 3; 1; 9]
+        : list nat *)
+
+(** Pierwsza lista nie jest posortowana według [leb], więc wynik jest
+    z dupy. *)
+
+(** **** Ćwiczenie *)
+
+(** Skoro już udało ci się zdefiniować [merge], to udowodnij jeszcze parę
+    lematów, cobyś nie miał za dużo wolnego czasu. *)
 
 Lemma merge_eq :
   forall {A : Type} {cmp : A -> A -> bool} {l1 l2 : list A},
