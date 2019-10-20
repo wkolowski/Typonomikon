@@ -88,3 +88,15 @@ Niektórym formom indukcji z obrazka odpowiadają dość ściśle jakieś formy 
 | monotoniczna                  | fix po prostu tak działa      |
 | ogonowa                       | po prostu można tak           |
 | wyższego rzędu                | zagnieżdżone typy induktywne  |
+
+## Problemy
+
+Turbo poważnym problemem jest brak spójności w nazywaniu różnych form rekursji, np.:
+- rekursja zagnieżdżona bierze swoją nazwę od zagnieżdżania fixów jeden w drugim
+- rekursja wyższego rzędu bierze nazwę stąd, że... w sumie nie wiadomo, ale ma to związek z tym, że wywołanie rekurencyjne nie jest w pełni zaaplikowane, czyli funkcja jest argumentem innej funkcji, czyli tamta funkcja jest funkcją wyższego rzędu... skomplikowane
+- rekursja strukturalna bierze nazwę od tego, że argument główny jest strukturalnie mniejszy
+- rekursja ogonowa bierze nazwę z jakichś kompilatorowych slangów
+
+Czy da się jakoś ujednolicić te nazwy, np. nazywać każdy rodzaj rekursji od tej samej cechy, np. od tego, jaki jest argument wywołania rekurencyjnego?
+
+Inny problem jest taki, że to co na obrazku nazywa się rekursją prymitywną, pozwala w szczególności (np. używając zagnieżdżania) zrobić funkcję Ackermanna, która nie jest prymitywnie rekurencyjna według bardziej klasycznego znaczenia tego terminu. Wobec tego przydałby się inny termin... albo i nie - wprowadźmy więcej konfuzji.

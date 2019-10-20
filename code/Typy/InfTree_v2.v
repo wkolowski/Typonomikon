@@ -110,11 +110,12 @@ Parameter findIndex :
 Parameter count : forall A : Type, (A -> bool) -> BTree A -> nat.
 *)
 
-(*
-Fixpoint takeWhile {A : Type} (p : A -> bool) (t : InfTree A) : InfTree A :=
+
+Fixpoint takeWhile
+  {B A : Type} (p : A -> bool) (t : InfTree B A) : InfTree B A :=
 match t with
     | E => E
-    | N x B f => if p x then N x B (fun b : B => takeWhile p (f b)) else E
+    | N x f => if p x then N x (fun b : B => takeWhile p (f b)) else E
 end.
 
 (*
@@ -122,21 +123,21 @@ Parameter findIndices :
   forall A : Type, (A -> bool) -> BTree A -> list (list bool).
 *)
 
-Fixpoint map {A B : Type} (f : A -> B) (t : InfTree A) : InfTree B :=
+Fixpoint map {A B C : Type} (f : B -> C) (t : InfTree A B) : InfTree A C :=
 match t with
     | E => E
-    | N x C g => N (f x) C (fun c : C => map f (g c))
+    | N x g => N (f x) (fun a : A => map f (g a))
 end.
 
-(*
+
 Fixpoint zipWith
-  {A B C : Type} (f : A -> B -> C)
-  (t1 : InfTree A) (t2 : InfTree B) : InfTree C :=
+  {A B C D : Type} (f : B -> C -> D)
+  (t1 : InfTree A B) (t2 : InfTree A C) : InfTree A D :=
 match t1, t2 with
     | E, _ => E
     | _, E => E
-    | N a D f, N b E g => N (f a b) (fun 
-*)
+    | N x g, N y h => N (f x y) (fun a : A => zipWith f (g a) (h a))
+end.
 
 (*
 Parameter unzipWith :
@@ -145,27 +146,26 @@ Parameter unzipWith :
 
 (** Predykaty *)
 
-Inductive Elem {A : Type} (x : A) : InfTree A -> Prop :=
+Inductive Elem {B A : Type} (x : A) : InfTree B A -> Prop :=
     | Elem_here :
-        forall (B : Type) (f : B -> InfTree A),
-          Elem x (N x B f)
+        forall f : B -> InfTree B A, Elem x (N x f)
     | Elem_there :
-        forall (B : Type) (f : B -> InfTree A) (b : B),
-          Elem x (f b) -> Elem x (N x B f).
+        forall (f : B -> InfTree B A) (b : B),
+          Elem x (f b) -> Elem x (N x f).
 
-Inductive Exists {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
+Inductive Exists {B A : Type} (P : A -> Prop) : InfTree B A -> Prop :=
     | Exists_here :
-        forall (x : A) (B : Type) (f : B -> InfTree A),
-          P x -> Exists P (N x B f)
+        forall (x : A) (f : B -> InfTree B A),
+          P x -> Exists P (N x f)
     | Exists_there :
-        forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
-          Exists P (f b) -> Exists P (N x B f).
+        forall (x : A) (f : B -> InfTree B A) (b : B),
+          Exists P (f b) -> Exists P (N x f).
 
-Inductive Forall {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
+Inductive Forall {B A : Type} (P : A -> Prop) : InfTree B A -> Prop :=
     | Forall_E : Forall P E
     | Forall_N :
-        forall (x : A) (B : Type) (f : B -> InfTree A),
-          (forall b : B, Forall P (f b)) -> Forall P (N x B f).
+        forall (x : A) (f : B -> InfTree B A),
+          (forall b : B, Forall P (f b)) -> Forall P (N x f).
 
 (*
 Parameter Dup : forall A : Type, BTree A -> Prop.
@@ -175,26 +175,23 @@ Parameter AtLeast : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
 Parameter AtMost : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
 *)
 
-Inductive SameStructure {A B : Type} : InfTree A -> InfTree B -> Prop :=
+Inductive SameStructure
+  {A B C : Type}
+  : InfTree A B -> InfTree A C -> Prop :=
     | SS_E : SameStructure E E
     | SS_N :
         forall
-          (x : A) (y : B) (C : Type)
-          (f : C -> InfTree A) (g : C -> InfTree B),
-            (forall c : C, SameStructure (f c) (g c)) ->
-              SameStructure (N x C f) (N y C g).
+          (x : B) (y : C)
+          (f : A -> InfTree A B) (g : A -> InfTree A C),
+            (forall a : A, SameStructure (f a) (g a)) ->
+              SameStructure (N x f) (N y g).
 
 (*
-Parameter SameStructure : forall A B : Type, BTree A -> BTree B -> Prop.
 Parameter SameShape : forall A B : Type, BTree A -> BTree B -> Prop.
 *)
 
 Inductive InfTreeDirectSubterm
-  {A : Type} : InfTree A -> InfTree A -> Prop :=
+  {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
     | ITDS_E :
-        forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
-          InfTreeDirectSubterm (f b) (N x B f).
-
-Parameter subtree : forall A : Type, BTree A -> BTree A -> Prop.
-Parameter Subterm : forall A : Type, BTree A -> BTree A -> Prop.
-*)
+        forall (x : A) (f : B -> InfTree B A) (b : B),
+          InfTreeDirectSubterm (f b) (N x f).

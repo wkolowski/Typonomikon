@@ -141,16 +141,6 @@ Fail Definition the_universe_explodes : False := loop tt.
 
     Nie daj się wpuścić w maliny. *)
 
-(** * Rekursja prymitywna (TODO *)
-
-(* begin hide *)
-(** Tutaj opisać to, co w Agdzie zwie się "rekursją prymitywną", czyli taką,
-    która dokładnie pasuje do kształtu indukcji w typie, a zatem można ją
-    bezpośrednio przetłumaczyć na regułe indukcji. Co więcej, pojęcie to
-    wydaje się być całkiem użyteczne w kontekście metody Bove-Capretta oraz
-    mówienia o "kształcie rekursji" czy "kształcie indukcji". *)
-(* end hide *)
-
 (** * Rekursja strukturalna *)
 
 (** Wiemy już, że rekursja ogólna prowadzi do sprzeczności, a jedyną legalną
@@ -3295,82 +3285,6 @@ Qed.
 (* end hide *)
 
 End McCarthy'.
-
-(** * Rekursja wyższego rzędu (TODO) *)
-
-(** ACHTUNG: bardzo upośledzona wersja alfa.
-
-    Pozostaje kwestia rekursji wyższego rzędu. Co to takiego? Ano dotychczas
-    wszystkie nasze wywołania rekurencyjne były konkretne, czyli zaaplikowane
-    do argumentów.
-
-    Mogłoby się wydawać, że jest to jedyny możliwy sposób robienia wywołań
-    rekurencyjnych, jednak nie jest tak. Wywołania rekurencyjne mogą mieć
-    również inną, wyższorzędową postać, a mianowicie - możemy przekazać
-    funkcję, którą właśnie definiujemy, jako argument do innej funkcji.
-
-    Dlaczego jest to wywołanie rekurencyjne, skoro nie wywołujemy naszej
-    funkcji? Ano dlatego, że tamta funkcja, która dostaje naszą jako
-    argument, dostaje niejako możliwość robienia wywołań rekurencyjnych.
-    W zależności od tego, co robi ta funkcja, wszystko może być ok (np.
-    gdy ignoruje ona naszą funkcję i w ogóle jej nie używa) lub śmiertelnie
-    niebezpieczne (gdy próbuje zrobić wywołanie rekurencyjne na strukturalnie
-    większym argumencie).
-
-    Sztoby za dużo nie godoć, bajszpil: *)
-
-Inductive Tree (A : Type) : Type :=
-    | Node : A -> list (Tree A) -> Tree A.
-
-Arguments Node {A} _ _.
-
-(** [Tree] to typ drzew niepustych, które mogą mieć dowolną (ale skończoną)
-    ilość poddrzew. Spróbujmy zdefiniować funkcję, która zwraca lustrzane
-    odbicie drzewa. *)
-
-Fixpoint mirror {A : Type} (t : Tree A) : Tree A :=
-match t with
-    | Node x ts => Node x (rev (map mirror ts))
-end.
-
-(** Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa za
-    pomocą [map mirror], a następnie odwracamy kolejność poddrzew z użyciem
-    [rev]. Chociaż poszło gładko, to mamy tu do czynienia z czymś, czego
-    wcześniej nie widzieliśmy. Nie ma tu żadnego wywołania rekurencyjnego,
-    a mimo to funkcja działa ok. Dlaczego? Właśnie dlatego, że wywołania
-    rekurencyjne są robione przez funkcję [map]. Mamy więc do czynienia z
-    rekursją wyższego rzędu. *)
-
-Print Forall2.
-
-Inductive mirrorG {A : Type} : Tree A -> Tree A -> Prop :=
-  | mirrorG_0 :
-      forall (x : A) (ts rs : list (Tree A)),
-        Forall2 mirrorG ts rs -> mirrorG (Node x ts) (Node x (rev rs)).
-
-Definition mab {A B : Type} (f : A -> B) :=
-  fix mab (l : list A) : list B :=
-  match l with
-      | [] => []
-      | h :: t => f h :: mab t
-  end.
-
-
-(** Inny przykład: *)
-
-Inductive Tree' (A : Type) : Type :=
-    | Node' : A -> forall {B : Type}, (B -> Tree' A) -> Tree' A.
-
-Arguments Node' {A} _ _ _.
-
-(** Tym razem mamy drzewo, które może mieć naprawdę dowolną ilość poddrzew,
-    ale jego poddrzewa są nieuporządkowane. *)
-
-Fixpoint mirror' {A : Type} (t : Tree' A) : Tree' A :=
-match t with
-    | Node' x B ts => Node' x B (fun b : B => mirror' (ts b))
-end.
-
 
 (** * Plugin [Equations] *)
 

@@ -3,6 +3,16 @@
     Prędzej czy później zostaną one z tymi rozdział zintegrowane (albo i nie -
     nie mamy pańskiego płaszcza i co nam pan zrobi?). *)
 
+(** * Rekursja prymitywna (TODO) *)
+
+(* begin hide *)
+(** Tutaj opisać to, co w Agdzie zwie się "rekursją prymitywną", czyli taką,
+    która dokładnie pasuje do kształtu indukcji w typie, a zatem można ją
+    bezpośrednio przetłumaczyć na regułę indukcji. Co więcej, pojęcie to
+    wydaje się być całkiem użyteczne w kontekście metody Bove-Capretta oraz
+    mówienia o "kształcie rekursji" czy "kształcie indukcji". *)
+(* end hide *)
+
 (** * Rekursja zagnieżdżona *)
 
 Require Import X3.
@@ -130,19 +140,86 @@ end.
     jest ona za pomocą [fix]a tak, jak wyglądają dwie ostatnie klauzule
     dopasowania z oryginalnej definicji, ale z wywołaniem [ack (S n') m']
     zastąpionym przez [ack' m']. Tak więc funkcja [ack'] reprezentuje
-    częściowo zaaplikowaną funkcję [ack n]. *)
+    częściową aplikację [ack n]. *)
+
+(* begin hide *)
+Lemma ack_ind :
+  forall
+    (P : nat -> nat -> nat -> Prop)
+    (P0 : forall m : nat, P 0 m (S m))
+    (PS0 : forall n' : nat, P n' 1 (ack n' 1) -> P (S n') 0 (ack (S n') 0))
+    (PSS : forall n' m' : nat,
+      P (S n') m' (ack (S n') m') ->
+      P n' (ack (S n') m') (ack n' (ack (S n') m')) ->
+      P (S n') (S m') (ack (S n') (S m'))),
+        forall n m : nat, P n m (ack n m).
+Proof.
+  induction n as [| n'].
+    cbn. apply P0.
+    induction m as [| m'].
+      apply PS0. apply IHn'.
+      apply PSS.
+        apply IHm'.
+        apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma ack_eq :
+  forall n m : nat,
+    ack n m =
+    match n, m with
+        | 0, _ => S m
+        | S n', 0 => ack n' 1
+        | S n', S m' => ack n' (ack (S n') m')
+    end.
+Proof.
+  destruct n, m; reflexivity.
+Qed.
 
 Lemma ack_big :
   forall n m : nat,
-    n + m <= ack n m.
+    m < ack n m.
 Proof.
-  induction n as [| n']; cbn.
+(* begin hide *)
+  apply ack_ind.
     do 2 constructor.
-    induction m as [| m']; cbn.
-      rewrite <- plus_n_O. specialize (IHn' 1). omega.
-      destruct m'; cbn.
-        specialize (IHn' (ack n' 1)).
-Abort.
+    intros. cbn. omega.
+    intros. rewrite ack_eq. omega.
+Restart.
+(* end hide *)
+  induction n as [| n'].
+    cbn. intro. apply le_n.
+    induction m as [| m'].
+      cbn. apply lt_trans with 1.
+        apply le_n.
+        apply IHn'.
+      specialize (IHn' (ack (S n') m')).
+        rewrite ack_eq. omega.
+Qed.
+
+Lemma ack_big' :
+  forall n1 n2 : nat, n1 <= n2 ->
+    forall m1 m2 : nat, m1 <= m2 ->
+      ack n1 m1 <= ack n2 m2.
+Proof.
+  induction 1.
+    induction 1.
+      reflexivity.
+      rewrite IHle. destruct n1.
+        cbn. apply le_S, le_n.
+        rewrite (ack_eq (S n1) (S m)).
+          pose (ack_big n1 (ack (S n1) m)). omega.
+    induction 1.
+      destruct m1.
+        cbn. apply IHle. do 2 constructor.
+        rewrite (ack_eq (S m) (S m1)).
+          rewrite (IHle (S m1) (ack (S m) m1)).
+            reflexivity.
+            apply ack_big.
+      rewrite (ack_eq (S m)). apply IHle. apply le_trans with (S m0).
+        apply le_S. exact H0.
+        apply ack_big.
+Qed.
 
 (** **** Ćwiczenie *)
 
@@ -175,13 +252,13 @@ end.
 (* end hide *)
 
 Compute merge leb [1; 4; 6; 9] [2; 3; 5; 8].
-(* ===> = [1; 2; 3; 4; 5; 6; 8; 9]
+(* ===> = [[1; 2; 3; 4; 5; 6; 8; 9]]
         : list nat *)
 
 (** Obie listy są posortowane według [leb], więc wynik też jest. *)
 
 Compute merge leb [5; 3; 1] [4; 9].
-(* ===> = [4; 5; 3; 1; 9]
+(* ===> = [[4; 5; 3; 1; 9]]
         : list nat *)
 
 (** Pierwsza lista nie jest posortowana według [leb], więc wynik jest
@@ -448,3 +525,81 @@ Restart.
         admit.
 Abort.
 (* end hide *)
+
+(** * Rekursja wyższego rzędu (TODO) *)
+
+(** ACHTUNG: bardzo upośledzona wersja alfa.
+
+    Pozostaje kwestia rekursji wyższego rzędu. Co to takiego? Ano dotychczas
+    wszystkie nasze wywołania rekurencyjne były konkretne, czyli zaaplikowane
+    do argumentów.
+
+    Mogłoby się wydawać, że jest to jedyny możliwy sposób robienia wywołań
+    rekurencyjnych, jednak nie jest tak. Wywołania rekurencyjne mogą mieć
+    również inną, wyższorzędową postać, a mianowicie - możemy przekazać
+    funkcję, którą właśnie definiujemy, jako argument do innej funkcji.
+
+    Dlaczego jest to wywołanie rekurencyjne, skoro nie wywołujemy naszej
+    funkcji? Ano dlatego, że tamta funkcja, która dostaje naszą jako
+    argument, dostaje niejako możliwość robienia wywołań rekurencyjnych.
+    W zależności od tego, co robi ta funkcja, wszystko może być ok (np.
+    gdy ignoruje ona naszą funkcję i w ogóle jej nie używa) lub śmiertelnie
+    niebezpieczne (gdy próbuje zrobić wywołanie rekurencyjne na strukturalnie
+    większym argumencie).
+
+    Sztoby za dużo nie godoć, bajszpil: *)
+
+Inductive Tree (A : Type) : Type :=
+    | Node : A -> list (Tree A) -> Tree A.
+
+Arguments Node {A} _ _.
+
+(** [Tree] to typ drzew niepustych, które mogą mieć dowolną (ale skończoną)
+    ilość poddrzew. Spróbujmy zdefiniować funkcję, która zwraca lustrzane
+    odbicie drzewa. *)
+
+(*
+Fixpoint mirror {A : Type} (t : Tree A) : Tree A :=
+match t with
+    | Node x ts => Node x (rev (map mirror ts))
+end.
+*)
+
+(** Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa za
+    pomocą [map mirror], a następnie odwracamy kolejność poddrzew z użyciem
+    [rev]. Chociaż poszło gładko, to mamy tu do czynienia z czymś, czego
+    wcześniej nie widzieliśmy. Nie ma tu żadnego wywołania rekurencyjnego,
+    a mimo to funkcja działa ok. Dlaczego? Właśnie dlatego, że wywołania
+    rekurencyjne są robione przez funkcję [map]. Mamy więc do czynienia z
+    rekursją wyższego rzędu. *)
+
+(*
+Print Forall2.
+
+Inductive mirrorG {A : Type} : Tree A -> Tree A -> Prop :=
+  | mirrorG_0 :
+      forall (x : A) (ts rs : list (Tree A)),
+        Forall2 mirrorG ts rs -> mirrorG (Node x ts) (Node x (rev rs)).
+
+Definition mab {A B : Type} (f : A -> B) :=
+  fix mab (l : list A) : list B :=
+  match l with
+      | [] => []
+      | h :: t => f h :: mab t
+  end.
+*)
+
+(** Inny przykład: *)
+
+Inductive Tree' (A : Type) : Type :=
+    | Node' : A -> forall {B : Type}, (B -> Tree' A) -> Tree' A.
+
+Arguments Node' {A} _ _ _.
+
+(** Tym razem mamy drzewo, które może mieć naprawdę dowolną ilość poddrzew,
+    ale jego poddrzewa są nieuporządkowane. *)
+
+Fixpoint mirror' {A : Type} (t : Tree' A) : Tree' A :=
+match t with
+    | Node' x B ts => Node' x B (fun b : B => mirror' (ts b))
+end.

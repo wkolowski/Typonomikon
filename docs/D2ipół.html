@@ -27,7 +27,18 @@ W tym rozdziale będą różne formy indukcji/rekursji, których chwilowo nie
     nie mamy pańskiego płaszcza i co nam pan zrobi?). 
 <div class="paragraph"> </div>
 
-<a name="lab237"></a><h1 class="section">Rekursja zagnieżdżona</h1>
+<a name="lab235"></a><h1 class="section">Rekursja prymitywna (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab236"></a><h1 class="section">Rekursja zagnieżdżona</h1>
 
 </div>
 <div class="code">
@@ -215,28 +226,70 @@ Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
     jest ona za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a tak, jak wyglądają dwie ostatnie klauzule
     dopasowania z oryginalnej definicji, ale z wywołaniem <span class="inlinecode"><span class="id" title="var">ack</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>
     zastąpionym przez <span class="inlinecode"><span class="id" title="var">ack'</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span>. Tak więc funkcja <span class="inlinecode"><span class="id" title="var">ack'</span></span> reprezentuje
-    częściowo zaaplikowaną funkcję <span class="inlinecode"><span class="id" title="var">ack</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+    częściową aplikację <span class="inlinecode"><span class="id" title="var">ack</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
 </div>
 <div class="code">
 
 <br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ack_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ack</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> =<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">S</span> <span class="id" title="var">m</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, 0 =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) <span class="id" title="var">m'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">ack_big</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> + <span class="id" title="var">m</span> &lt;= <span class="id" title="var">ack</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">m</span> &lt; <span class="id" title="var">ack</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>]; <span class="id" title="var">cbn</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>]; <span class="id" title="var">cbn</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">plus_n_O</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHn'</span> 1). <span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m'</span>; <span class="id" title="var">cbn</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHn'</span> (<span class="id" title="var">ack</span> <span class="id" title="var">n'</span> 1)).<br/>
-<span class="id" title="keyword">Abort</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">le_n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">lt_trans</span> <span class="id" title="keyword">with</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHn'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHn'</span> (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) <span class="id" title="var">m'</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">ack_eq</span>. <span class="id" title="tactic">omega</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ack_big'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n1</span> &lt;= <span class="id" title="var">n2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">m1</span> <span class="id" title="var">m2</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">m1</span> &lt;= <span class="id" title="var">m2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ack</span> <span class="id" title="var">n1</span> <span class="id" title="var">m1</span> &lt;= <span class="id" title="var">ack</span> <span class="id" title="var">n2</span> <span class="id" title="var">m2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHle</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">le_S</span>, <span class="id" title="var">le_n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">ack_eq</span> (<span class="id" title="var">S</span> <span class="id" title="var">n1</span>) (<span class="id" title="var">S</span> <span class="id" title="var">m</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">ack_big</span> <span class="id" title="var">n1</span> (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">n1</span>) <span class="id" title="var">m</span>)). <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IHle</span>. <span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">ack_eq</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) (<span class="id" title="var">S</span> <span class="id" title="var">m1</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">IHle</span> (<span class="id" title="var">S</span> <span class="id" title="var">m1</span>) (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m1</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ack_big</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">ack_eq</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>)). <span class="id" title="tactic">apply</span> <span class="id" title="var">IHle</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">le_trans</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">S</span> <span class="id" title="var">m0</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_S</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">H0</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ack_big</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab238"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab237"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -265,7 +318,7 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">merge</
 
 <br/>
 <span class="id" title="keyword">Compute</span> <span class="id" title="var">merge</span> <span class="id" title="var">leb</span> [1; 4; 6; 9] [2; 3; 5; 8].<br/>
-<span class="comment">(*&nbsp;===&gt;&nbsp;=&nbsp;<span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">8;</span> <span class="inlinecode">9</span><br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;=&nbsp;<span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">8;</span> <span class="inlinecode">9]</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;list&nbsp;nat&nbsp;*)</span><br/>
 
 <br/>
@@ -278,7 +331,7 @@ Obie listy są posortowane według <span class="inlinecode"><span class="id" tit
 
 <br/>
 <span class="id" title="keyword">Compute</span> <span class="id" title="var">merge</span> <span class="id" title="var">leb</span> [5; 3; 1] [4; 9].<br/>
-<span class="comment">(*&nbsp;===&gt;&nbsp;=&nbsp;<span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">3;</span> <span class="inlinecode">1;</span> <span class="inlinecode">9</span><br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;=&nbsp;<span class="inlinecode">[4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">3;</span> <span class="inlinecode">1;</span> <span class="inlinecode">9]</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;list&nbsp;nat&nbsp;*)</span><br/>
 
 <br/>
@@ -289,7 +342,7 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
     z dupy. 
 <div class="paragraph"> </div>
 
-<a name="lab239"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab238"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -402,4 +455,129 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> (<span class="id" title="var">filter</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">filter</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>) =<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">filter</span> <span class="id" title="var">p</span> (<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab239"></a><h1 class="section">Rekursja wyższego rzędu (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ ACHTUNG: bardzo upośledzona wersja alfa.
+
+<div class="paragraph"> </div>
+
+    Pozostaje kwestia rekursji wyższego rzędu. Co to takiego? Ano dotychczas
+    wszystkie nasze wywołania rekurencyjne były konkretne, czyli zaaplikowane
+    do argumentów.
+
+<div class="paragraph"> </div>
+
+    Mogłoby się wydawać, że jest to jedyny możliwy sposób robienia wywołań
+    rekurencyjnych, jednak nie jest tak. Wywołania rekurencyjne mogą mieć
+    również inną, wyższorzędową postać, a mianowicie - możemy przekazać
+    funkcję, którą właśnie definiujemy, jako argument do innej funkcji.
+
+<div class="paragraph"> </div>
+
+    Dlaczego jest to wywołanie rekurencyjne, skoro nie wywołujemy naszej
+    funkcji? Ano dlatego, że tamta funkcja, która dostaje naszą jako
+    argument, dostaje niejako możliwość robienia wywołań rekurencyjnych.
+    W zależności od tego, co robi ta funkcja, wszystko może być ok (np.
+    gdy ignoruje ona naszą funkcję i w ogóle jej nie używa) lub śmiertelnie
+    niebezpieczne (gdy próbuje zrobić wywołanie rekurencyjne na strukturalnie
+    większym argumencie).
+
+<div class="paragraph"> </div>
+
+    Sztoby za dużo nie godoć, bajszpil: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Tree</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">Node</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">Tree</span></span> to typ drzew niepustych, które mogą mieć dowolną (ale skończoną)
+    ilość poddrzew. Spróbujmy zdefiniować funkcję, która zwraca lustrzane
+    odbicie drzewa. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+Fixpoint&nbsp;mirror&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(t&nbsp;:&nbsp;Tree&nbsp;A)&nbsp;:&nbsp;Tree&nbsp;A&nbsp;:=<br/>
+match&nbsp;t&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Node&nbsp;x&nbsp;ts&nbsp;=&gt;&nbsp;Node&nbsp;x&nbsp;(rev&nbsp;(map&nbsp;mirror&nbsp;ts))<br/>
+end.<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa za
+    pomocą <span class="inlinecode"><span class="id" title="var">map</span></span> <span class="inlinecode"><span class="id" title="var">mirror</span></span>, a następnie odwracamy kolejność poddrzew z użyciem
+    <span class="inlinecode"><span class="id" title="var">rev</span></span>. Chociaż poszło gładko, to mamy tu do czynienia z czymś, czego
+    wcześniej nie widzieliśmy. Nie ma tu żadnego wywołania rekurencyjnego,
+    a mimo to funkcja działa ok. Dlaczego? Właśnie dlatego, że wywołania
+    rekurencyjne są robione przez funkcję <span class="inlinecode"><span class="id" title="var">map</span></span>. Mamy więc do czynienia z
+    rekursją wyższego rzędu. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+Print&nbsp;Forall2.<br/>
+<br/>
+Inductive&nbsp;mirrorG&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;:&nbsp;Tree&nbsp;A&nbsp;-&gt;&nbsp;Tree&nbsp;A&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
+&nbsp;&nbsp;|&nbsp;mirrorG_0&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;(x&nbsp;:&nbsp;A)&nbsp;(ts&nbsp;rs&nbsp;:&nbsp;list&nbsp;(Tree&nbsp;A)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Forall2&nbsp;mirrorG&nbsp;ts&nbsp;rs&nbsp;-&gt;&nbsp;mirrorG&nbsp;(Node&nbsp;x&nbsp;ts)&nbsp;(Node&nbsp;x&nbsp;(rev&nbsp;rs)).<br/>
+<br/>
+Definition&nbsp;mab&nbsp;{A&nbsp;B&nbsp;:&nbsp;Type}&nbsp;(f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;B)&nbsp;:=<br/>
+&nbsp;&nbsp;fix&nbsp;mab&nbsp;(l&nbsp;:&nbsp;list&nbsp;A)&nbsp;:&nbsp;list&nbsp;B&nbsp;:=<br/>
+&nbsp;&nbsp;match&nbsp;l&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;<span class="inlinecode"></span>&nbsp;=&gt;&nbsp;<span class="inlinecode"></span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;h&nbsp;::&nbsp;t&nbsp;=&gt;&nbsp;f&nbsp;h&nbsp;::&nbsp;mab&nbsp;t<br/>
+&nbsp;&nbsp;end.<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Inny przykład: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Tree'</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">forall</span> {<span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>}, (<span class="id" title="var">B</span> -&gt; <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">Node'</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tym razem mamy drzewo, które może mieć naprawdę dowolną ilość poddrzew,
+    ale jego poddrzewa są nieuporządkowane. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">mirror'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node'</span> <span class="id" title="var">x</span> <span class="id" title="var">B</span> <span class="id" title="var">ts</span> =&gt; <span class="id" title="var">Node'</span> <span class="id" title="var">x</span> <span class="id" title="var">B</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span> =&gt; <span class="id" title="var">mirror'</span> (<span class="id" title="var">ts</span> <span class="id" title="var">b</span>))<br/>
+<span class="id" title="keyword">end</span>.<br/>
 </div>

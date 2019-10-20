@@ -25,26 +25,47 @@ Fail Inductive UnixAcess : Type := R | W | X.
 (** * Parametry *)
 
 (** Zdefiniuj spójniki logiczne i inne podstawowe rzeczy. *)
-(*
-Inductive False : Prop := .
-Inductive True : Prop :=
-Inductive and (P Q : Prop) : Prop :=
-Inductive or (P Q : Prop) : Prop :=
-Inductive ex (A : Type) (P : A -> Prop) : Prop :=
 
-Inductive Empty : Type :=
+Inductive False : Prop := .
+
+Inductive True : Prop :=
+    | I : True.
+
+Inductive and (P Q : Prop) : Prop :=
+    | conj : P -> Q -> and P Q.
+
+Inductive or (P Q : Prop) : Prop :=
+    | or_introl : P -> or P Q
+    | or_intror : Q -> or P Q.
+
+Inductive ex (A : Type) (P : A -> Prop) : Prop :=
+    | ex_intro : forall x : A, P x -> ex A P.
+
+Inductive Empty : Type := .
+
 Inductive unit : Type :=
+    | tt : unit.
+
 Inductive prod (A B : Type) : Type :=
+    | pair : A -> B -> prod A B.
+
 Inductive sum (A B : Type) : Type :=
+    | inl : A -> sum A B
+    | inr : B -> sum A B.
+
 Inductive sig (A : Type) (P : A -> Prop) : Type :=
+    | exist : forall x : A, P x -> sig A P.
+
 Inductive sigT (A : Type) (P : A -> Type) : Type :=
-*)
+    | existT : forall x : A, P x -> sigT A P.
 
 (** * Typy algebraiczne *)
 
 (** Zdefiniuj typ opcji na [A]. *)
-(*Inductive option (A : Type) : Type :=*)
 
+Inductive option (A : Type) : Type :=
+    | None : option A
+    | Some : A -> option A.
 
 (** Podefiniuj co trzeba dla list. *)
 (*
@@ -69,22 +90,50 @@ Inductive Palindrome {A : Type} : list A -> Prop :=
 (** Zdefiniuj typ list niepustych, które trzymają elementy typu [A]. Potem
     zdefiniuj dla nich wszystkie te użyteczne rzeczy co dla list. *)
 
+Inductive nel (A : Type) : Type :=
+    | singl : A -> nel A
+    | cons : A -> nel A -> nel A.
+
 (** Zdefiniuj typ niepustych drzew binarnych, które trzymają wartości typu [A] jedynie
     w liściach. *)
+
+Inductive RBTree (A : Type) : Type :=
+    | Leaf : A -> RBTree A
+    | Node : RBTree A -> RBTree A -> RBTree A.
 
 (** Zdefiniuj typ niepustych drzew o skończonej ilości synów, które trzymają
     wartości typu [A] w liściach. *)
 
+Fail Inductive RFinTree (A : Type) : Type :=
+    | Leaf : A -> RFinTree A
+    | Node : list (RFinTree A) -> RFinTree A.
+
 (** Zdefiniuj typ drzew binarnych, które trzymają elementy typu [A]. *)
-(*Inductive BTree (A : Type) : Type :=*)
+
+Fail Inductive BTree (A : Type) : Type :=
+    | Empty : BTree A
+    | Node : A -> BTree A -> BTree A -> BTree A.
 
 (** Zdefiniuj typ drzew o skończonej ilości synów, które trzymają elementy
     typu [A]. *)
-(*Inductive Tree (A : Type) : Type :=*)
+
+Fail Inductive Tree (A : Type) : Type :=
+    | Empty : Tree A
+    | Node : list (Tree A) -> Tree A.
 
 (** Zdefiniuj typ drzew o dowolnej ilości synów, które trzymają elementy
     typu [A]. *)
-(*Inductive InfTree (A : Type) : Type :=*)
+
+Fail Inductive InfTree (A : Type) : Type :=
+    | Empty : InfTree A
+    | Node : forall (B : Type), (B -> InfTree A) -> InfTree A.
+
+(** Zdefiniuj typ drzew trzymających elementy typu [A], których rozgałęzienie
+    jest wyznaczone przez parametr [B : Type]. *)
+
+Fail Inductive InfTree' (B A : Type) : Type :=
+    | Empty : InfTree' B A
+    | Node : (B -> InfTree' B A) -> InfTree' B A.
 
 (** * Indeksy - predykaty i relacje *)
 
@@ -92,7 +141,14 @@ Inductive Palindrome {A : Type} : list A -> Prop :=
 (*Inductive even : nat -> Prop :=*)
 
 (** Zdefiniuj relację [<=] dla liczb naturalnych i to na dwa różne sposoby. *)
-(*Inductive le (n : nat) : nat -> Prop :=*)
+
+Inductive le (n : nat) : nat -> Prop :=
+    | le_refl : le n n
+    | le_S : forall m : nat, le n m -> le n (S m).
+
+Fail Inductive le : nat -> nat -> Prop :=
+    | le_0 : forall n : nat, le 0 n
+    | le_S_S : forall n m : nat, le n m -> le (S n) (S m).
 
 (** * Indeksy - typy *)
 
@@ -125,16 +181,34 @@ Definition Date : Type :=
   {year : nat & {month : Month & dayInMonth (isGapYear year) month}}.
 
 (** Zdefiniuj typ list indeksowanych długością. *)
-(*Inductive vec (A : Type) : nat -> Type :=*)
+Inductive vec (A : Type) : nat -> Type :=
+    | vnil : vec A 0
+    | vcons : A -> forall {n : nat}, vec A n -> vec A (S n).
 
 (** Zdefiniuj predykat należenia dla [vec]. *)
 (*Inductive elem {A : Type} : A -> forall n : nat, vec A n -> Prop :=*)
 
 (** Zdefiniuj typ list indeksowanych przez minimalny/maksymalny element. *)
 
+Inductive minlist {A : Type} (R : A -> A -> Prop) : A -> Type :=
+    | msingl : forall x : A, minlist R x
+    | mcons_le :
+        forall {min : A} (x : A), R x min -> minlist R min -> minlist R x
+    | mcons_gt :
+        forall {min : A} (x : A), ~ R x min -> minlist R min -> minlist R min.
+
 (** Zdefiniuj typ list indeksowanych przez dowolny monoid. *)
 
-(** * Predykat i relacje dla ko- *)
+(** Zdefiniuj typ drzew binarnych trzymających elementy w węzłach, które są
+    indeksowane wysokością. *)
+
+Inductive hBTree (A : Type) : nat -> Type :=
+    | hEmpty : hBTree A 0
+    | hNode : A -> forall {n m : nat},
+                     hBTree A n -> hBTree A m -> hBTree A (S (max n m)).
+
+
+(** * Predykat i relacje dla koinduktywnych pierdółek. *)
 
 (** Zdefniuj predykat [Finite], [Infinite], [Exists], [All] dla kolist. *)
 (*
