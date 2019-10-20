@@ -24,53 +24,8 @@ Require Import X3.
     i jej uzasadnienia omówimy potem).
 
     Cóż to za zwierzątko, rekursja zagnieżdżona? Żeby się tego dowiedzieć,
-    przypomnijmy sobie najpierw, jak technicznie w Coqu zrealizowana jest
-    rekursja strukturalna. *)
-
-Fixpoint plus (n : nat) : nat -> nat :=
-match n with
-    | 0 => fun m : nat => m
-    | S n' => fun m : nat => S (plus n' m)
-end.
-
-(** Tak oto definicja funkcji plus, lecz zapisana nieco inaczej, niż gdy
-    widzieliśmy ją ostatnim razem. Tym razem prezentujemy ją jako funkcję
-    biorącą jeden argument typu [nat] i zwracającą funkcję z typu [nat] w
-    typ [nat]. *)
-
-Definition plus' : nat -> nat -> nat :=
-  fix f (n : nat) : nat -> nat :=
-  match n with
-      | 0 => fun m : nat => m
-      | S n' => fun m : nat => S (f n' m)
-  end.
-
-(** Ale komenda [Fixpoint] jest jedynie cukrem syntaktycznym - funkcję [plus]
-    możemy równie dobrze zdefiniować bez niej, posługując się jedynie komendą
-    [Definition], a wyrażeniem, które nam to umożliwia, jest [fix]. [fix]
-    działa podobnie jak [fun], ale pozwala dodatkowo nadać definiowanej przez
-    siebie funkcji nazwę, dzięki czemu możemy robić wywołania rekurencyjne.
-
-    Czym więc jest rekursja zagnieżdżona? Z rekursją zagnieżdżoną mamy do
-    czynienia, gdy za pomocą [fix]a (czyli przez rekursję) definiujemy
-    funkcję, która zwraca inną funkcję, i ta zwracana funkcja także jest
-    zdefiniowana za pomocą [fix]a (czyli przez rekursję). Oczywiście to
-    tylko pierwszy krok - wynikowa funkcja również może zwracać funkcję,
-    która jest zdefiniowana za pomocą [fix]a i tak dalej.
-
-    Widać zatem jak na dłoni, że [plus] ani [plus'] nie są przykładami
-    rekursji zagnieżdżonej. Wprawdzie definiują one za pomocą [fix]a
-    (lub komendy [Fixpoint]) funkcję, która zwraca inną funkcję, ale ta
-    zwracana funkcja nie jest zdefiniowana za pomocą [fix]a, lecz za
-    pomocą [fun], a więc nie jest rekurencyjna.
-
-    Podsumowując: rekursja jest zagnieżdżona, jeżeli w definicji
-    funkcji pojawiają się co najmniej dwa wystąpienia [fix], jedno
-    wewnątrz drugiego (przy czym rzecz jasna [Fixpoint] też liczy
-    się jako [fix]).
-
-    No to skoro już wiemy, czas zobaczyć przykład jakiejś funkcji, która
-    jest zdefiniowana przez rekursję zagnieżdżoną. *)
+    rzućmy najpierw okiem na przykład jakiejś funkcji, której definicja
+    wymaga użycia rekursji zagnieżdżonej. *)
 
 Fail Fixpoint ack (n m : nat) : nat :=
 match n, m with
@@ -94,7 +49,8 @@ end.
     na [n'] i [1], co również jest ok. Jednak jeżeli [n] i [m] odpowednio
     są postaci [S n'] i [S m'], to robimy wywołanie rekurencyjne postaci
     [ack n' (ack (S n') m')]. W wewnętrznym wywołaniu rekurencyjnym pierwszy
-    argument jest taki sam jak obecny. Gdyby argumentem głównym był drugi
+    argument jest taki sam jak w obecnym wywołaniu, a zatem pierwszy argument
+    nie może być argumentem głównym. Gdyby argumentem głównym był drugi
     argument, to jest tym bardziej źle, gdyż w zewnętrznym wywołaniu
     rekurencyjnym nie jest nim [m'], lecz [ack (S n') m']. Nie ma się więc
     co dziwić, że Coq nie może zgadnąć, który argument ma być argumentem
@@ -119,8 +75,11 @@ end.
     Jednym z typowych zastosowań rekursji zagnieżdżonej jest radzenie
     sobie z takimi właśnie przypadkami, w których mamy ciąg argumentów
     i pierwszy maleje, lub pierwszy stoi w miejscu a drugi maleje i tak
-    dalej. Zobaczmy więc, jak techniki tej można użyć do zdefiniowania
-    funkcji Ackermanna. *)
+    dalej. Z tego też powodu rekursja zagnieżdżona bywa czasem nazywana
+    rekursją monotoniczną.
+
+    Czas zobaczyć, jak techniki tej można użyć do zdefiniowania funkcji
+    Ackermanna. *)
 
 Fixpoint ack (n : nat) : nat -> nat :=
 match n with
@@ -140,7 +99,64 @@ end.
     jest ona za pomocą [fix]a tak, jak wyglądają dwie ostatnie klauzule
     dopasowania z oryginalnej definicji, ale z wywołaniem [ack (S n') m']
     zastąpionym przez [ack' m']. Tak więc funkcja [ack'] reprezentuje
-    częściową aplikację [ack n]. *)
+    częściową aplikację [ack n].
+
+    Co w powyższej definicji sprawia, że jest to przykład rekursji
+    zagnieżdżonej? *)
+
+Print ack.
+(* ===> ack =
+        fix ack (n : nat) : nat -> nat :=
+          match n with
+          | 0 => S
+          | S n' =>
+              fix ack' (m : nat) : nat :=
+                match m with
+                | 0 => ack n' 1
+                | S m' => ack n' (ack' m')
+                end
+          end
+            : nat -> nat -> nat
+*)
+
+(** Tym, którzy nie pamiętają, przypominam, że komenda [Fixpoint] jest
+    jedynie cukrem syntaktycznym na wyrażenie [fix], które służy do
+    definiowania funkcji rekurencyjnych. [fix] działa podobnie jak [fun],
+    ale pozwala dodatkowo nadać definiowanej przez siebie funkcji nazwę,
+    dzięki czemu możemy robić wywołania rekurencyjne. Tak więc komendę
+    [Fixpoint] możemy zastąpić komendą [Definition] i wyrażeniem [fix].
+
+    Czym więc jest rekursja zagnieżdżona? Z rekursją zagnieżdżoną mamy
+    do czynienia, gdy przez rekursję (czyli za pomocą [fix]a) definiujemy
+    funkcję, która zwraca inną funkcję, i ta zwracana funkcja także jest
+    zdefiniowana przez rekursję (czyli za pomocą [fix]a). Oczywiście to
+    tylko pierwszy krok - wynikowa funkcja również może zwracać funkcję,
+    która jest zdefiniowana przez rekursję i tak dalej.
+
+    Widać zatem jak na dłoni, że [ack] jest zdefiniowane za pomocą rekursji
+    zagnieżdżonej, gdyż w powyższej definicji za pomocą [fix]a definiujemy
+    funkcję, która dla [n] postaci [S n'] zwraca funkcję zdefiniowaną za
+    pomocą kolejnego [fix]a. *)
+
+Definition plus : nat -> nat -> nat :=
+  fix f (n : nat) : nat -> nat :=
+  match n with
+      | 0 => fun m : nat => m
+      | S n' => fun m : nat => S (f n' m)
+  end.
+
+(** Dla balansu, powyższa definicja funkcji [plus] nie jest przykładem
+    rekursji zagnieżdżonej, gdyż o ile definiujemy [plus] przez rekursję
+    i zwracamy funkcję z [nat] w [nat], to funkcja ta zdefiniowana jest
+    za pomocą [fun], a więc nie jest rekurencyjna.
+
+    Podsumowując: rekursja jest zagnieżdżona, gdy w definicji funkcji
+    pojawiają się co najmniej dwa wystąpienia [fix], jedno wewnątrz
+    drugiego. Stąd też pochodzi nazwa "rekursja zagnieżdżona": jeden
+    [fix] jest zagnieżdżony wewnątrz drugiego.
+
+    Dobra, dość tych teoretycznych bajdurzeń. Zobaczmy, jak możemy udowodnić
+    coś ciekawego na temat funkcji [ack]. *)
 
 (* begin hide *)
 Lemma ack_ind :
@@ -176,6 +192,13 @@ Proof.
   destruct n, m; reflexivity.
 Qed.
 
+(** Pierwszą i najważniejszą (bo najbardziej przydatną) rzeczą, której nam
+    trzeba, jest równanie rekurencyjne, które charakteryzuje funkcję [ack]
+    tak, jak nieudanie próbowaliśmy ją początkowo zdefiniować. Jest ono
+    niesamowicie użyteczne, gdyż użycie taktyki [cbn] bardzo często będzie
+    się kończyć odwinięciem definicji [ack], co skutkuje zaśmieceniem naszego
+    drogocennego ekranu i utrudnia rozeznanie w stanie dowodu. *)
+
 Lemma ack_big :
   forall n m : nat,
     m < ack n m.
@@ -193,14 +216,50 @@ Restart.
       cbn. apply lt_trans with 1.
         apply le_n.
         apply IHn'.
-      specialize (IHn' (ack (S n') m')).
-        rewrite ack_eq. omega.
+      rewrite ack_eq. specialize (IHn' (ack (S n') m')). omega.
 Qed.
 
-Lemma ack_big' :
+(** Tadam... w sumie, to zaskoczenia nie ma. Reguła jest prosta: jeżeli
+    funkcja jest zdefiniowana przez rekursję zagnieżdżoną, to dowody
+    będą szły przez zagnieżdżone użycia indukcji.
+
+    W powyższym dowodzie zaczynamy od indukcji po [n], bo jest to argument
+    głównym funkcji [ack]. Pierwszy przypadek jest prosty - trzeba obliczyć
+    i użyć zwrotność porządku. Drugi przypadek jest bardziej wymagający.
+    Zauważ, że nie używamy tutaj taktyki [cbn], ponieważ skończyłoby się to
+    odwinięciem definicji [ack] do nieprzyjemnej postaci.
+
+    W drugim przypadku używamy indukcji po [m], gdyż jest ono argumentem
+    głównym wewnętrznej funkcji [ack']. W pierwszym przypadku znów jest
+    w miarę łatwo: zero jest mniejsze niż jeden, zaś jeden jest mniejsze
+    od [ack n' 1] na mocy hipotezy indukcyjnej (ale tej pochodzącej od
+    indukcji po [n], a nie po [m]!).
+
+    W ostatnim przypadku również nie używamy [cbn] - efekt byłby podobny
+    jak poprzednio, czyli zaśmiecenie ekranu długaśnym [fix]em. Zamiast
+    tego korzystamy z równania rekurencyjnego, które elegancko przepisuje
+    nam [ack] do pożądanej postaci. Dzięki odrobinie spostrzegawczości
+    możemy zauważyć, że po odpowiednim zainstancjowaniu hipotezy indukcyjnej
+    (tej pochodzącej z indukcji po [n], a nie po [m] - tej nie możemy wcale
+    zainstancjować!) dostajemy szlaczek nierówności
+    [m' < ack (S n') m' < ack n' (ack (S n') m')], z którego nasz celu wynika
+    bez problemu - na szczęście nie musimy tego arytmetycznego rozumowania
+    robić ręcznie, bo bozia dała nam taktykę [omega], która potrafi zrobić
+    to sama. *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że funkcja [ack] zachowuje porządek [<=], tzn. na większym
+    lub równym argumencie (czy to pierwszym, czy drugim, czy obydwu) jej
+    wynik również jest większy lub równy.
+
+    Uwaga: to ćwiczenie jest trudne technicznie, ale nie konceptualnie. *)
+
+Lemma ack_monotone :
   forall n1 n2 : nat, n1 <= n2 ->
     forall m1 m2 : nat, m1 <= m2 ->
       ack n1 m1 <= ack n2 m2.
+(* begin hide *)
 Proof.
   induction 1.
     induction 1.
@@ -220,6 +279,7 @@ Proof.
         apply le_S. exact H0.
         apply ack_big.
 Qed.
+(* end hide *)
 
 (** **** Ćwiczenie *)
 
@@ -231,8 +291,8 @@ Require Import Arith.
     [cmp] w jedną posortowaną listę. Jeżeli któraś z list posortowana nie
     jest, wynik może być dowolny.
 
-    Wskazówka: dlaczego niby to ćwiczenie pojawia się w podrozdziale o
-    rekursji zagnieżdżonej? *)
+    Wskazówka: zgadnij, dlaczego to ćwiczenie pojawia się w podrozdziale o
+    rekursji zagnieżdżonej. *)
 
 (* begin hide *)
 Fixpoint merge
@@ -295,31 +355,18 @@ Qed.
 Lemma merge_nil_l :
   forall {A : Type} {cmp : A -> A -> bool} {l : list A},
     merge cmp [] l = l.
+(* begin hide *)
 Proof.
   reflexivity.
 Qed.
+(* end hide *)
 
 Lemma merge_nil_r :
   forall {A : Type} {cmp : A -> A -> bool} {l : list A},
     merge cmp l [] = l.
-Proof.
-  destruct l; reflexivity.
-Qed.
-
-Lemma Permutation_merge :
-  forall {A : Type} {f : A -> A -> bool} {l1 l2 : list A},
-    Permutation (merge f l1 l2) (l1 ++ l2).
 (* begin hide *)
 Proof.
-  induction l1 as [| h1 t1]; cbn.
-    reflexivity.
-    induction l2 as [| h2 t2]; cbn.
-      rewrite app_nil_r. reflexivity.
-      destruct (f h1 h2).
-        rewrite IHt1. reflexivity.
-        rewrite IHt2. rewrite perm_swap.
-          constructor. rewrite Permutation_app_comm.
-            rewrite (Permutation_app_comm _ t1 (h2 :: t2)). reflexivity.
+  destruct l; reflexivity.
 Qed.
 (* end hide *)
 
@@ -338,6 +385,46 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
+Ltac inv H := inversion H; subst.
+
+Lemma merge_rev :
+  forall {A : Type} {cmp : A -> A -> bool} {l1 l2 : list A},
+    merge cmp (rev l1) (rev l2) =
+    rev (merge (fun x y : A => cmp y x) l1 l2).
+Proof.
+  induction l1 as [| h1 t1].
+    intros. cbn. reflexivity.
+    induction l2 as [| h2 t2].
+      cbn. rewrite merge_nil_r. reflexivity.
+      rewrite !merge_eq. cbn [rev].
+        case_eq (rev t1 ++ [h1]); intros.
+          apply (f_equal rev) in H. rewrite rev_app in H. inversion H.
+          case_eq (rev t2 ++ [h2]); intros.
+            apply (f_equal rev) in H0. rewrite rev_app in H0. inversion H0.
+            destruct t1, t2.
+              inv H; inv H0. cbn. admit.
+              inv H. cbn in H0. rewrite merge_nil_l.
+Abort.
+(* end hide *)
+
+(* begin hide *)
+Lemma merge_rev :
+  forall {A : Type} {cmp : A -> A -> bool} {l1 l2 : list A},
+    merge cmp l1 l2 = rev (merge (fun x y : A => cmp y x) (rev l1) (rev l2)).
+Proof.
+  induction l1 as [| h1 t1].
+    intros. cbn. rewrite rev_inv. reflexivity.
+    induction l2 as [| h2 t2].
+      rewrite merge_eq. case_eq (rev t1 ++ [h1]); intros.
+        apply (f_equal length) in H. rewrite length_app, plus_comm in H.
+          inversion H.
+        cbn. rewrite merge_nil_r, rev_app, rev_inv. cbn. reflexivity.
+      rewrite !merge_eq. case_eq (cmp h1 h2); intros.
+        
+Abort.
+(* end hide *)
+
 Lemma merge_map :
   forall {A B : Type} {cmp : B -> B -> bool} {f : A -> B} {l1 l2 : list A},
       merge cmp (map f l1) (map f l2) =
@@ -352,22 +439,6 @@ Proof.
         rewrite <- IHt1. cbn. reflexivity.
         rewrite IHt2. reflexivity.
 Qed.
-(* end hide *)
-
-(* begin hide *)
-Lemma merge_rev :
-  forall {A : Type} {cmp : A -> A -> bool} {l1 l2 : list A},
-    merge cmp l1 l2 = rev (merge (fun x y : A => cmp y x) (rev l1) (rev l2)).
-Proof.
-  induction l1 as [| h1 t1]; cbn.
-    intros. rewrite rev_inv. reflexivity.
-    induction l2 as [| h2 t2]; cbn.
-      rewrite merge_eq. case_eq (rev t1 ++ [h1]); intros.
-        apply (f_equal length) in H. rewrite length_app, plus_comm in H.
-          inversion H.
-        rewrite <- H, rev_app, rev_inv. cbn. reflexivity.
-      rewrite IHt1, IHt2. case_eq (cmp h1 h2); intros.
-Abort.
 (* end hide *)
 
 Lemma merge_replicate :
@@ -492,38 +563,108 @@ Proof.
 Defined.
 (* end hide *)
 
+Lemma all_merge :
+  forall {A : Type} (cmp : A -> A -> bool) (p : A -> bool) (l1 l2 : list A),
+    all p (merge cmp l1 l2) = all p l1 && all p l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1].
+    cbn. reflexivity.
+    induction l2 as [| h2 t2].
+      cbn. rewrite andb_true_r. reflexivity.
+      rewrite merge_eq. destruct (cmp h1 h2).
+        cbn. rewrite IHt1, andb_assoc. cbn. reflexivity.
+        cbn [all]. rewrite IHt2. cbn. rewrite !andb_assoc.
+          destruct (p h1), (p h2); cbn;
+          rewrite ?andb_true_r, ?andb_false_r; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma any_merge :
+  forall {A : Type} (cmp : A -> A -> bool) (p : A -> bool) (l1 l2 : list A),
+    any p (merge cmp l1 l2) = any p l1 || any p l2.
+(* begin hide *)
+Proof.
+  intros. rewrite any_all, all_merge, negb_andb, <- !any_all. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma count_merge :
+  forall {A : Type} (cmp : A -> A -> bool) (p : A -> bool) (l1 l2 : list A),
+    count p (merge cmp l1 l2) = count p l1 + count p l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1].
+    cbn. reflexivity.
+    induction l2 as [| h2 t2].
+      cbn. rewrite <- plus_n_O. reflexivity.
+      rewrite merge_eq. destruct (cmp h1 h2).
+        cbn. rewrite IHt1. cbn. destruct (p h1), (p h2); omega.
+        cbn [count]. rewrite IHt2. cbn. destruct (p h1), (p h2); omega.
+Qed.
+(* end hide *)
+
 Lemma merge_filter :
   forall {A : Type} {cmp : A -> A -> bool} {p : A -> bool} {l1 l2 : list A},
     merge cmp (filter p l1) (filter p l2) =
     filter p (merge cmp l1 l2).
 (* begin hide *)
 Proof.
+  induction l1 as [| h1 t1].
+    cbn. reflexivity.
+    induction l2 as [| h2 t2].
+      cbn. rewrite merge_nil_r. reflexivity.
+      cbn [filter] in *. rewrite (@merge_eq _ _ (h1 :: t1)).
+        case_eq (cmp h1 h2); intros.
+          cbn. case_eq (p h1); case_eq (p h2); intros eq2 eq1;
+          cbn [filter]; rewrite ?eq1, ?eq2 in *.
+            rewrite merge_eq, H, <- IHt1. cbn. rewrite eq2. reflexivity.
+            rewrite <- IHt1. cbn [filter]. rewrite eq2, IHt2.
+Abort.
+(* end hide *)
+
+(* begin hide *)
+Definition extend
+  {A B : Type} (f : A -> option B) (cmp : B -> B -> bool) (x y : A) : bool :=
+match f x, f y with
+    | Some b1, Some b2 => cmp b1 b2
+    | _, _ => false
+end.
+
+Lemma pmap_merge :
+  forall
+    (A B : Type) (f : A -> option B)
+    (cmp : B -> B -> bool) (l1 l2 : list A),
+      merge cmp (pmap f l1) (pmap f l2) =
+      pmap f (merge (extend f cmp) l1 l2).
+Proof.
+  induction l1 as [| h1 t1].
+    cbn. reflexivity.
+    induction l2 as [| h2 t2].
+      cbn. destruct (f h1).
+        cbn. reflexivity.
+        rewrite merge_nil_r. reflexivity.
+      rewrite (@merge_eq _ _ (h1 :: t1)). destruct (extend f cmp h1 h2).
+        cbn [pmap] in *. destruct (f h1), (f h2).
+          rewrite <- IHt1.
+Abort.
+(* end hide *)
+
+Lemma Permutation_merge :
+  forall {A : Type} {f : A -> A -> bool} {l1 l2 : list A},
+    Permutation (merge f l1 l2) (l1 ++ l2).
+(* begin hide *)
+Proof.
   induction l1 as [| h1 t1]; cbn.
     reflexivity.
-    induction l2 as [| h2 t2]; cbn in *.
-      destruct (p h1); cbn.
-        reflexivity.
-        rewrite merge_eq. destruct (filter p t1); reflexivity.
-      case_eq (p h1); case_eq (p h2); case_eq (cmp h1 h2);
-      intros eq1 eq2 eq3;
-      repeat (cbn in *; rewrite ?eq1, ?eq2, ?eq3 in *); cbn.
-        rewrite <- IHt1. cbn. rewrite eq2. reflexivity.
-        rewrite IHt2. reflexivity.
-        Focus 2. rewrite IHt2. reflexivity.
-        Focus 2. rewrite <- IHt1. cbn. rewrite eq2. reflexivity.
-        Focus 4. rewrite IHt2. reflexivity.
-Restart.
-  intros until p.
-  apply (merge_ind (fun l1 l2 r : list A =>
-    merge cmp (filter p l1) (filter p l2) = filter p r));
-  cbn; intros.
-    reflexivity.
-    rewrite merge_eq. destruct (filter p l); reflexivity.
-    destruct (p h1), (p h2); cbn; rewrite ?H.
-      rewrite H0. reflexivity.
-      rewrite <- H0. destruct t2; cbn.
-        admit.
-Abort.
+    induction l2 as [| h2 t2]; cbn.
+      rewrite app_nil_r. reflexivity.
+      destruct (f h1 h2).
+        rewrite IHt1. reflexivity.
+        rewrite IHt2. rewrite perm_swap.
+          constructor. rewrite Permutation_app_comm.
+            rewrite (Permutation_app_comm _ t1 (h2 :: t2)). reflexivity.
+Qed.
 (* end hide *)
 
 (** * Rekursja wyższego rzędu (TODO) *)

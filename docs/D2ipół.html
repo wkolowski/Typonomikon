@@ -59,75 +59,8 @@ Czas na omówienie pewnej ciekawej, ale średnio użytecznej formy rekursji
 <div class="paragraph"> </div>
 
     Cóż to za zwierzątko, rekursja zagnieżdżona? Żeby się tego dowiedzieć,
-    przypomnijmy sobie najpierw, jak technicznie w Coqu zrealizowana jest
-    rekursja strukturalna. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">plus</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">plus</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Tak oto definicja funkcji plus, lecz zapisana nieco inaczej, niż gdy
-    widzieliśmy ją ostatnim razem. Tym razem prezentujemy ją jako funkcję
-    biorącą jeden argument typu <span class="inlinecode"><span class="id" title="var">nat</span></span> i zwracającą funkcję z typu <span class="inlinecode"><span class="id" title="var">nat</span></span> w
-    typ <span class="inlinecode"><span class="id" title="var">nat</span></span>. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">plus'</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">f</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Ale komenda <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> jest jedynie cukrem syntaktycznym - funkcję <span class="inlinecode"><span class="id" title="var">plus</span></span>
-    możemy równie dobrze zdefiniować bez niej, posługując się jedynie komendą
-    <span class="inlinecode"><span class="id" title="keyword">Definition</span></span>, a wyrażeniem, które nam to umożliwia, jest <span class="inlinecode"><span class="id" title="keyword">fix</span></span>. <span class="inlinecode"><span class="id" title="keyword">fix</span></span>
-    działa podobnie jak <span class="inlinecode"><span class="id" title="keyword">fun</span></span>, ale pozwala dodatkowo nadać definiowanej przez
-    siebie funkcji nazwę, dzięki czemu możemy robić wywołania rekurencyjne.
-
-<div class="paragraph"> </div>
-
-    Czym więc jest rekursja zagnieżdżona? Z rekursją zagnieżdżoną mamy do
-    czynienia, gdy za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a (czyli przez rekursję) definiujemy
-    funkcję, która zwraca inną funkcję, i ta zwracana funkcja także jest
-    zdefiniowana za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a (czyli przez rekursję). Oczywiście to
-    tylko pierwszy krok - wynikowa funkcja również może zwracać funkcję,
-    która jest zdefiniowana za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a i tak dalej.
-
-<div class="paragraph"> </div>
-
-    Widać zatem jak na dłoni, że <span class="inlinecode"><span class="id" title="var">plus</span></span> ani <span class="inlinecode"><span class="id" title="var">plus'</span></span> nie są przykładami
-    rekursji zagnieżdżonej. Wprawdzie definiują one za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a
-    (lub komendy <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>) funkcję, która zwraca inną funkcję, ale ta
-    zwracana funkcja nie jest zdefiniowana za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a, lecz za
-    pomocą <span class="inlinecode"><span class="id" title="keyword">fun</span></span>, a więc nie jest rekurencyjna.
-
-<div class="paragraph"> </div>
-
-    Podsumowując: rekursja jest zagnieżdżona, jeżeli w definicji
-    funkcji pojawiają się co najmniej dwa wystąpienia <span class="inlinecode"><span class="id" title="keyword">fix</span></span>, jedno
-    wewnątrz drugiego (przy czym rzecz jasna <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> też liczy
-    się jako <span class="inlinecode"><span class="id" title="keyword">fix</span></span>).
-
-<div class="paragraph"> </div>
-
-    No to skoro już wiemy, czas zobaczyć przykład jakiejś funkcji, która
-    jest zdefiniowana przez rekursję zagnieżdżoną. 
+    rzućmy najpierw okiem na przykład jakiejś funkcji, której definicja
+    wymaga użycia rekursji zagnieżdżonej. 
 </div>
 <div class="code">
 
@@ -161,7 +94,8 @@ Powyższa funkcja zwana jest funkcją Ackermanna, gdyż wymyślił ją...
     na <span class="inlinecode"><span class="id" title="var">n'</span></span> i <span class="inlinecode">1</span>, co również jest ok. Jednak jeżeli <span class="inlinecode"><span class="id" title="var">n</span></span> i <span class="inlinecode"><span class="id" title="var">m</span></span> odpowednio
     są postaci <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> i <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span>, to robimy wywołanie rekurencyjne postaci
     <span class="inlinecode"><span class="id" title="var">ack</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">(<span class="id" title="var">ack</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span> <span class="inlinecode"><span class="id" title="var">m'</span>)</span>. W wewnętrznym wywołaniu rekurencyjnym pierwszy
-    argument jest taki sam jak obecny. Gdyby argumentem głównym był drugi
+    argument jest taki sam jak w obecnym wywołaniu, a zatem pierwszy argument
+    nie może być argumentem głównym. Gdyby argumentem głównym był drugi
     argument, to jest tym bardziej źle, gdyż w zewnętrznym wywołaniu
     rekurencyjnym nie jest nim <span class="inlinecode"><span class="id" title="var">m'</span></span>, lecz <span class="inlinecode"><span class="id" title="var">ack</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>. Nie ma się więc
     co dziwić, że Coq nie może zgadnąć, który argument ma być argumentem
@@ -198,8 +132,13 @@ Powyższa funkcja zwana jest funkcją Ackermanna, gdyż wymyślił ją...
     Jednym z typowych zastosowań rekursji zagnieżdżonej jest radzenie
     sobie z takimi właśnie przypadkami, w których mamy ciąg argumentów
     i pierwszy maleje, lub pierwszy stoi w miejscu a drugi maleje i tak
-    dalej. Zobaczmy więc, jak techniki tej można użyć do zdefiniowania
-    funkcji Ackermanna. 
+    dalej. Z tego też powodu rekursja zagnieżdżona bywa czasem nazywana
+    rekursją monotoniczną.
+
+<div class="paragraph"> </div>
+
+    Czas zobaczyć, jak techniki tej można użyć do zdefiniowania funkcji
+    Ackermanna. 
 </div>
 <div class="code">
 
@@ -226,7 +165,88 @@ Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
     jest ona za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a tak, jak wyglądają dwie ostatnie klauzule
     dopasowania z oryginalnej definicji, ale z wywołaniem <span class="inlinecode"><span class="id" title="var">ack</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>
     zastąpionym przez <span class="inlinecode"><span class="id" title="var">ack'</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span>. Tak więc funkcja <span class="inlinecode"><span class="id" title="var">ack'</span></span> reprezentuje
-    częściową aplikację <span class="inlinecode"><span class="id" title="var">ack</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+    częściową aplikację <span class="inlinecode"><span class="id" title="var">ack</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>.
+
+<div class="paragraph"> </div>
+
+    Co w powyższej definicji sprawia, że jest to przykład rekursji
+    zagnieżdżonej? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">ack</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;ack&nbsp;=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fix&nbsp;ack&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;n&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0&nbsp;=&gt;&nbsp;S<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;S&nbsp;n'&nbsp;=&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fix&nbsp;ack'&nbsp;(m&nbsp;:&nbsp;nat)&nbsp;:&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;m&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0&nbsp;=&gt;&nbsp;ack&nbsp;n'&nbsp;1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;S&nbsp;m'&nbsp;=&gt;&nbsp;ack&nbsp;n'&nbsp;(ack'&nbsp;m')<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;-&gt;&nbsp;nat<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tym, którzy nie pamiętają, przypominam, że komenda <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> jest
+    jedynie cukrem syntaktycznym na wyrażenie <span class="inlinecode"><span class="id" title="keyword">fix</span></span>, które służy do
+    definiowania funkcji rekurencyjnych. <span class="inlinecode"><span class="id" title="keyword">fix</span></span> działa podobnie jak <span class="inlinecode"><span class="id" title="keyword">fun</span></span>,
+    ale pozwala dodatkowo nadać definiowanej przez siebie funkcji nazwę,
+    dzięki czemu możemy robić wywołania rekurencyjne. Tak więc komendę
+    <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> możemy zastąpić komendą <span class="inlinecode"><span class="id" title="keyword">Definition</span></span> i wyrażeniem <span class="inlinecode"><span class="id" title="keyword">fix</span></span>.
+
+<div class="paragraph"> </div>
+
+    Czym więc jest rekursja zagnieżdżona? Z rekursją zagnieżdżoną mamy
+    do czynienia, gdy przez rekursję (czyli za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a) definiujemy
+    funkcję, która zwraca inną funkcję, i ta zwracana funkcja także jest
+    zdefiniowana przez rekursję (czyli za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a). Oczywiście to
+    tylko pierwszy krok - wynikowa funkcja również może zwracać funkcję,
+    która jest zdefiniowana przez rekursję i tak dalej.
+
+<div class="paragraph"> </div>
+
+    Widać zatem jak na dłoni, że <span class="inlinecode"><span class="id" title="var">ack</span></span> jest zdefiniowane za pomocą rekursji
+    zagnieżdżonej, gdyż w powyższej definicji za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a definiujemy
+    funkcję, która dla <span class="inlinecode"><span class="id" title="var">n</span></span> postaci <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> zwraca funkcję zdefiniowaną za
+    pomocą kolejnego <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">plus</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">m</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">f</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dla balansu, powyższa definicja funkcji <span class="inlinecode"><span class="id" title="var">plus</span></span> nie jest przykładem
+    rekursji zagnieżdżonej, gdyż o ile definiujemy <span class="inlinecode"><span class="id" title="var">plus</span></span> przez rekursję
+    i zwracamy funkcję z <span class="inlinecode"><span class="id" title="var">nat</span></span> w <span class="inlinecode"><span class="id" title="var">nat</span></span>, to funkcja ta zdefiniowana jest
+    za pomocą <span class="inlinecode"><span class="id" title="keyword">fun</span></span>, a więc nie jest rekurencyjna.
+
+<div class="paragraph"> </div>
+
+    Podsumowując: rekursja jest zagnieżdżona, gdy w definicji funkcji
+    pojawiają się co najmniej dwa wystąpienia <span class="inlinecode"><span class="id" title="keyword">fix</span></span>, jedno wewnątrz
+    drugiego. Stąd też pochodzi nazwa "rekursja zagnieżdżona": jeden
+    <span class="inlinecode"><span class="id" title="keyword">fix</span></span> jest zagnieżdżony wewnątrz drugiego.
+
+<div class="paragraph"> </div>
+
+    Dobra, dość tych teoretycznych bajdurzeń. Zobaczmy, jak możemy udowodnić
+    coś ciekawego na temat funkcji <span class="inlinecode"><span class="id" title="var">ack</span></span>. 
 </div>
 <div class="code">
 
@@ -246,6 +266,19 @@ Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Pierwszą i najważniejszą (bo najbardziej przydatną) rzeczą, której nam
+    trzeba, jest równanie rekurencyjne, które charakteryzuje funkcję <span class="inlinecode"><span class="id" title="var">ack</span></span>
+    tak, jak nieudanie próbowaliśmy ją początkowo zdefiniować. Jest ono
+    niesamowicie użyteczne, gdyż użycie taktyki <span class="inlinecode"><span class="id" title="var">cbn</span></span> bardzo często będzie
+    się kończyć odwinięciem definicji <span class="inlinecode"><span class="id" title="var">ack</span></span>, co skutkuje zaśmieceniem naszego
+    drogocennego ekranu i utrudnia rozeznanie w stanie dowodu. 
+</div>
+<div class="code">
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">ack_big</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">m</span> &lt; <span class="id" title="var">ack</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
@@ -256,40 +289,73 @@ Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">lt_trans</span> <span class="id" title="keyword">with</span> 1.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_n</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHn'</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHn'</span> (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) <span class="id" title="var">m'</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">ack_eq</span>. <span class="id" title="tactic">omega</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ack_big'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n1</span> &lt;= <span class="id" title="var">n2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">m1</span> <span class="id" title="var">m2</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">m1</span> &lt;= <span class="id" title="var">m2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ack</span> <span class="id" title="var">n1</span> <span class="id" title="var">m1</span> &lt;= <span class="id" title="var">ack</span> <span class="id" title="var">n2</span> <span class="id" title="var">m2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHle</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n1</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">le_S</span>, <span class="id" title="var">le_n</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">ack_eq</span> (<span class="id" title="var">S</span> <span class="id" title="var">n1</span>) (<span class="id" title="var">S</span> <span class="id" title="var">m</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">ack_big</span> <span class="id" title="var">n1</span> (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">n1</span>) <span class="id" title="var">m</span>)). <span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m1</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IHle</span>. <span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">ack_eq</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) (<span class="id" title="var">S</span> <span class="id" title="var">m1</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">IHle</span> (<span class="id" title="var">S</span> <span class="id" title="var">m1</span>) (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m1</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ack_big</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">ack_eq</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>)). <span class="id" title="tactic">apply</span> <span class="id" title="var">IHle</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">le_trans</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">S</span> <span class="id" title="var">m0</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_S</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">H0</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ack_big</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">ack_eq</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHn'</span> (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) <span class="id" title="var">m'</span>)). <span class="id" title="tactic">omega</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
+Tadam... w sumie, to zaskoczenia nie ma. Reguła jest prosta: jeżeli
+    funkcja jest zdefiniowana przez rekursję zagnieżdżoną, to dowody
+    będą szły przez zagnieżdżone użycia indukcji.
+
+<div class="paragraph"> </div>
+
+    W powyższym dowodzie zaczynamy od indukcji po <span class="inlinecode"><span class="id" title="var">n</span></span>, bo jest to argument
+    głównym funkcji <span class="inlinecode"><span class="id" title="var">ack</span></span>. Pierwszy przypadek jest prosty - trzeba obliczyć
+    i użyć zwrotność porządku. Drugi przypadek jest bardziej wymagający.
+    Zauważ, że nie używamy tutaj taktyki <span class="inlinecode"><span class="id" title="var">cbn</span></span>, ponieważ skończyłoby się to
+    odwinięciem definicji <span class="inlinecode"><span class="id" title="var">ack</span></span> do nieprzyjemnej postaci.
+
+<div class="paragraph"> </div>
+
+    W drugim przypadku używamy indukcji po <span class="inlinecode"><span class="id" title="var">m</span></span>, gdyż jest ono argumentem
+    głównym wewnętrznej funkcji <span class="inlinecode"><span class="id" title="var">ack'</span></span>. W pierwszym przypadku znów jest
+    w miarę łatwo: zero jest mniejsze niż jeden, zaś jeden jest mniejsze
+    od <span class="inlinecode"><span class="id" title="var">ack</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">1</span> na mocy hipotezy indukcyjnej (ale tej pochodzącej od
+    indukcji po <span class="inlinecode"><span class="id" title="var">n</span></span>, a nie po <span class="inlinecode"><span class="id" title="var">m</span></span>!).
+
+<div class="paragraph"> </div>
+
+    W ostatnim przypadku również nie używamy <span class="inlinecode"><span class="id" title="var">cbn</span></span> - efekt byłby podobny
+    jak poprzednio, czyli zaśmiecenie ekranu długaśnym <span class="inlinecode"><span class="id" title="keyword">fix</span></span>em. Zamiast
+    tego korzystamy z równania rekurencyjnego, które elegancko przepisuje
+    nam <span class="inlinecode"><span class="id" title="var">ack</span></span> do pożądanej postaci. Dzięki odrobinie spostrzegawczości
+    możemy zauważyć, że po odpowiednim zainstancjowaniu hipotezy indukcyjnej
+    (tej pochodzącej z indukcji po <span class="inlinecode"><span class="id" title="var">n</span></span>, a nie po <span class="inlinecode"><span class="id" title="var">m</span></span> - tej nie możemy wcale
+    zainstancjować!) dostajemy szlaczek nierówności
+    <span class="inlinecode"><span class="id" title="var">m'</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">ack</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span> <span class="inlinecode"><span class="id" title="var">m'</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">ack</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">(<span class="id" title="var">ack</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span> <span class="inlinecode"><span class="id" title="var">m'</span>)</span>, z którego nasz celu wynika
+    bez problemu - na szczęście nie musimy tego arytmetycznego rozumowania
+    robić ręcznie, bo bozia dała nam taktykę <span class="inlinecode"><span class="id" title="tactic">omega</span></span>, która potrafi zrobić
+    to sama. 
+<div class="paragraph"> </div>
+
 <a name="lab237"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że funkcja <span class="inlinecode"><span class="id" title="var">ack</span></span> zachowuje porządek <span class="inlinecode">&lt;=</span>, tzn. na większym
+    lub równym argumencie (czy to pierwszym, czy drugim, czy obydwu) jej
+    wynik również jest większy lub równy.
+
+<div class="paragraph"> </div>
+
+    Uwaga: to ćwiczenie jest trudne technicznie, ale nie konceptualnie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ack_monotone</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n1</span> &lt;= <span class="id" title="var">n2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">m1</span> <span class="id" title="var">m2</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">m1</span> &lt;= <span class="id" title="var">m2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ack</span> <span class="id" title="var">n1</span> <span class="id" title="var">m1</span> &lt;= <span class="id" title="var">ack</span> <span class="id" title="var">n2</span> <span class="id" title="var">m2</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab238"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -309,8 +375,8 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">merge</
 
 <div class="paragraph"> </div>
 
-    Wskazówka: dlaczego niby to ćwiczenie pojawia się w podrozdziale o
-    rekursji zagnieżdżonej? 
+    Wskazówka: zgadnij, dlaczego to ćwiczenie pojawia się w podrozdziale o
+    rekursji zagnieżdżonej. 
 </div>
 <div class="code">
 
@@ -342,7 +408,7 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
     z dupy. 
 <div class="paragraph"> </div>
 
-<a name="lab238"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab239"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -368,22 +434,11 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">merge_nil_l</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> [] <span class="id" title="var">l</span> = <span class="id" title="var">l</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">merge_nil_r</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l</span> [] = <span class="id" title="var">l</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_merge</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> (<span class="id" title="var">merge</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">merge_length</span> :<br/>
@@ -391,12 +446,14 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">merge</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">length</span> <span class="id" title="var">l1</span> + <span class="id" title="var">length</span> <span class="id" title="var">l2</span>.<br/>
 
 <br/>
+
+<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">merge_map</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">cmp</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l2</span>) =<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">merge</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">cmp</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">f</span> <span class="id" title="var">y</span>)) <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
-
-<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">merge_replicate</span> :<br/>
@@ -451,16 +508,38 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> (<span class="id" title="var">merge</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_merge</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span> <span class="id" title="var">p</span> (<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">all</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> &amp;&amp; <span class="id" title="var">all</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">any_merge</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">any</span> <span class="id" title="var">p</span> (<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">any</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> || <span class="id" title="var">any</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">count_merge</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">count</span> <span class="id" title="var">p</span> (<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) = <span class="id" title="var">count</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> + <span class="id" title="var">count</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">merge_filter</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> (<span class="id" title="var">filter</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">filter</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>) =<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">filter</span> <span class="id" title="var">p</span> (<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
 
 <br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_merge</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> (<span class="id" title="var">merge</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>).<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-<a name="lab239"></a><h1 class="section">Rekursja wyższego rzędu (TODO)</h1>
+<a name="lab240"></a><h1 class="section">Rekursja wyższego rzędu (TODO)</h1>
 
 <div class="paragraph"> </div>
 
