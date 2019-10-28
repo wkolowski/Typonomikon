@@ -86,6 +86,11 @@
       na argumentach będących podtermami argumentów z obecnego wywołania.
 
 </li>
+<li> W szczególności rekursja prymitywna to taka, w której funkcja wywołuje
+      siebie jedynie na bezpośrednich podtermach argumentu głównego z obecnego
+      wywołania.
+
+</li>
 <li> Rekursja dobrze ufundowana to taka, w której funkcja wywołuje siebie
       jedynie na argumentach "mniejszych", gdzie o tym, które argumenty są
       mniejsze, a które większe, decyduje pewna relacja dobrze ufundowana.
@@ -254,325 +259,7 @@ Wywołanie rekurencyjne <span class="inlinecode"><span class="id" title="var">lo
     Nie daj się wpuścić w maliny. 
 <div class="paragraph"> </div>
 
-<a name="lab198"></a><h1 class="section">Rekursja strukturalna</h1>
-
-<div class="paragraph"> </div>
-
- Wiemy już, że rekursja ogólna prowadzi do sprzeczności, a jedyną legalną
-    formą rekursji jest rekursja strukturalna. Funkcje rekurencyjne, które
-    dotychczas pisaliśmy, były strukturalnie rekurencyjne, więc potrafisz
-    już całkiem sprawnie posługiwać się tym rodzajem rekursji. Pozostaje
-    nam zatem jedynie zbadać techniczne detale dotyczące sposobu realizacji
-    rekursji strukturalnej w Coqu. W tym celu przyjrzyjmy się ponownie
-    definicji dodawania: 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Print</span> <span class="id" title="var">plus</span>.<br/>
-<span class="comment">(*&nbsp;plus&nbsp;=<br/>
-&nbsp;&nbsp;&nbsp;fix&nbsp;plus&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;{struct&nbsp;n}&nbsp;:&nbsp;nat&nbsp;:=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;n&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0&nbsp;=&gt;&nbsp;m<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;S&nbsp;p&nbsp;=&gt;&nbsp;S&nbsp;(plus&nbsp;p&nbsp;m)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Możemy zaobserwować parę rzeczy. Pierwsza, techniczna sprawa: po
-    <span class="inlinecode">=</span> widzimy nieznany nam konstrukt <span class="inlinecode"><span class="id" title="keyword">fix</span></span>. Pozwala on tworzyć
-    anonimowe funkcje rekruencyjne, tak jak <span class="inlinecode"><span class="id" title="keyword">fun</span></span> pozwala tworzyć
-    anonimowe funkcje nierekurencyjne. Funkcje zdefiniowane komendami 
-    <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> i <span class="inlinecode"><span class="id" title="keyword">Definition</span></span> są w jęzku termów Coqa reprezentowane
-    odpowiednio za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span> i <span class="inlinecode"><span class="id" title="keyword">fun</span></span>.
-
-<div class="paragraph"> </div>
-
-    Po drugie: za listą argumentów, a przed zwracanym typem, występuje
-    adnotacja <span class="inlinecode">{<span class="id" title="keyword">struct</span></span> <span class="inlinecode"><span class="id" title="var">n</span>}</span>. Wskazuje ona, który z argumentów funkcji
-    jest argumentem głównym. Dotychczas gdy definiowaliśmy funkcje
-    rekurencyjne nigdy nie musieliśmy jej pisać, bo Coq zawsze domyślał
-    się, który argument ma być główny. W poetyckiej polszczyźnie argument
-    główny możemy wskazać mówiąc np., że "funkcja plus zdefiniowana jest
-    przez rekursję po pierwszym argumencie" albo "funkcja plus zdefinowana
-    jest przez rekursję po n".
-
-<div class="paragraph"> </div>
-
-    Czym jest argument główny? Spróbuję wyjasnić to w sposób operacyjny:
-<ul class="doclist">
-<li> jako argument główny możemy wskazać dowolny argument, którego typ
-      jest induktywny
-
-</li>
-<li> Coq wymusza na nas, aby argumentem głównym wywołania rekurencyjnego
-      był podterm argumentu głównego z obecnego wywołania 
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
- Dlaczego taki zabieg chroni nas przed sprzecznością? Przypomnij sobie,
-    że termy typów induktywnych muszą być skończone. Parafrazując: są to
-    drzewa o skończonym rozmiarze. Ich podtermy są od nich mniejsze, więc
-    w kolejnych wywołaniach rekurencyjnych argument główny będzie malał,
-    aż w końcu jego rozmiar skurczy się do zera. Wtedy rekursja zatrzyma
-    się, bo nie będzie już żadnych podtermów, na których można by zrobić
-    wywołanie rekurencyjne.
-
-<div class="paragraph"> </div>
-
-    Żeby lepiej zrozumieć ten mechanizm, zbadajmy najpierw relację bycia
-    podtermem dla typów induktywnych. Relację tę opisują dwie proste zasady:
-<ul class="doclist">
-<li> po pierwsze, jeżeli dany term został zrobiony jakimś konstruktorem,
-      to jego podtermami są rekurencyjne argumenty tego konstruktora.
-      Przykład: <span class="inlinecode">0</span> jest podtermem <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">0</span>, zaś <span class="inlinecode"><span class="id" title="var">nil</span></span> podtermem <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode">42</span> <span class="inlinecode"><span class="id" title="var">nil</span></span>.
-
-</li>
-<li> po drugie, jeżeli <span class="inlinecode"><span class="id" title="var">t1</span></span> jest podtermem <span class="inlinecode"><span class="id" title="var">t2</span></span>, a <span class="inlinecode"><span class="id" title="var">t2</span></span> podtermem <span class="inlinecode"><span class="id" title="var">t3</span></span>,
-      to <span class="inlinecode"><span class="id" title="var">t1</span></span> jest podtermem <span class="inlinecode"><span class="id" title="var">t3</span></span> — własność ta nazywa się przechodniością.
-      Przykład: <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">0</span> jest podtermem <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">0)</span>, a zatem <span class="inlinecode">0</span> jest podtermem
-      <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">0)</span>. Podobnie <span class="inlinecode"><span class="id" title="var">nil</span></span> jest podtermem <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode">666</span> <span class="inlinecode">(<span class="id" title="var">cons</span></span> <span class="inlinecode">42</span> <span class="inlinecode"><span class="id" title="var">nil</span>)</span> 
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
-<a name="lab199"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Zdefiniuj relacje bycia podtermem dla liczb naturalnych i list. 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Udowodnij, że przytoczone wyżej przykłady nie są oszustwem.
-    Komenda <span class="inlinecode"><span class="id" title="keyword">Goal</span></span> jest wygodna, gdyż używając jej nie musimy
-    nadawać twierdzeniu nazwy. Użycie <span class="inlinecode"><span class="id" title="keyword">Qed</span></span> zapisze twierdzenie
-    jako <span class="inlinecode"><span class="id" title="var">Unnamed_thm</span></span>, <span class="inlinecode"><span class="id" title="var">Unnamed_thm0</span></span>, <span class="inlinecode"><span class="id" title="var">Unnamed_thm1</span></span> etc. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Goal</span> <span class="id" title="var">subterm_nat</span> 0 (<span class="id" title="var">S</span> 0).<br/>
-
-<br/>
-<span class="id" title="keyword">Goal</span> <span class="id" title="var">subterm_list</span> <span class="id" title="var">nil</span> (<span class="id" title="var">cons</span> 42 <span class="id" title="var">nil</span>).<br/>
-
-<br/>
-
-<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab200"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Udowodnij, że relacje <span class="inlinecode"><span class="id" title="var">subterm_nat</span></span> oraz <span class="inlinecode"><span class="id" title="var">subterm_list</span></span> są antyzwrotne
-    i przechodnie. Uwaga: to może być całkiem trudne. 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subterm_nat_antirefl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, ~ <span class="id" title="var">subterm_nat</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subterm_nat_trans</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subterm_nat</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> -&gt; <span class="id" title="var">subterm_nat</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> -&gt; <span class="id" title="var">subterm_nat</span> <span class="id" title="var">a</span> <span class="id" title="var">c</span>.<br/>
-
-<br/>
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subterm_list_antirefl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), ~ <span class="id" title="var">subterm_list</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">subterm_list_trans</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subterm_list</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">subterm_list</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subterm_list</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
-
-<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Jak widać, podtermy liczby naturalnej to liczby naturalne, które są od
-    niej mniejsze, zaś podtermy listy to jej ogon, ogon ogona i tak dalej.
-    Zero i lista pusta nie mają podtermów, gdyż są to przypadki bazowe,
-    pochodzące od konstruktorów, które nie mają argumentów rekurencyjnych.
-
-<div class="paragraph"> </div>
-
-    Dla każdego typu induktywnego możemy zdefiniować relację bycia podtermem
-    podobną do tych dla liczb naturalnych i list. Zauważmy jednak, że nie
-    możemy za jednym zamachem zdefiniować relacji bycia podtermem dla
-    wszystkich typów induktywnych, gdyż nie możemy w Coqu powiedzieć czegoś
-    w stylu "dla wszystkich typów induktywnych". Możemy powiedzieć jedynie
-    "dla wszystkich typów".
-
-<div class="paragraph"> </div>
-
-    Coq nie generuje jednak automatycznie takiej relacji, gdy definiujemy
-    nowy typ induktywny. W jaki zatem sposób Coq sprawdza, czy jeden term
-    jest podtermem drugiego? Otóż... w sumie, to nie sprawdza. Rzućmy okiem
-    na następujący przykład: 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">weird</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">unit</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">tt</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">weird</span> 0<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Definicja zdaje się być poprawna: <span class="inlinecode">0</span> to przypadek bazowy, a gdy <span class="inlinecode"><span class="id" title="var">n</span></span>
-    jest postaci <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>, wywołujemy funkcję rekurencyjnie na argumencie
-    <span class="inlinecode">0</span>. <span class="inlinecode">0</span> jest podtermem <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>, a zatem wszystko powinno być dobrze.
-    Dostajemy jednak następujący komunikat o błędzie: 
-</div>
-<div class="code">
-
-<br/>
-<span class="comment">(*&nbsp;Recursive&nbsp;definition&nbsp;of&nbsp;weird&nbsp;is&nbsp;ill-formed.<br/>
-&nbsp;&nbsp;&nbsp;In&nbsp;environment<br/>
-&nbsp;&nbsp;&nbsp;weird&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;unit<br/>
-&nbsp;&nbsp;&nbsp;n&nbsp;:&nbsp;nat<br/>
-&nbsp;&nbsp;&nbsp;n'&nbsp;:&nbsp;nat<br/>
-&nbsp;&nbsp;&nbsp;Recursive&nbsp;call&nbsp;to&nbsp;weird&nbsp;has&nbsp;principal&nbsp;argument&nbsp;equal&nbsp;to&nbsp;<br/>
-&nbsp;&nbsp;&nbsp;"0"&nbsp;instead&nbsp;of&nbsp;"n'".&nbsp;*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Komunikat ten głosi, że argumentem głównym wywołania rekurencyjnego jest
-    <span class="inlinecode">0</span>, podczas gdy powinno być nim <span class="inlinecode"><span class="id" title="var">n'</span></span>. Wynika stąd jasno i wyraźnie, że
-    jedynymi legalnymi argumentami w wywołaniu rekurencyjnym są te podtermy
-    argumentu głównego, które zostają ujawnione w wyniku dopasowania do
-    wzorca. Coq nie jest jednak głupi - jest głupszy, niż ci się wydaje, o
-    czym świadczy poniższy przykład. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">fib</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 1 =&gt; 1<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">fib</span> <span class="id" title="var">n'</span> + <span class="id" title="var">fib</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Funkcja ta próbuje policzyć n-tą liczbę Fibonacciego:
-    https://en.wikipedia.org/wiki/Fibonacci_number, ale
-    słabo jej to wychodzi, gdyż dostajemy następujący błąd: 
-</div>
-<div class="code">
-
-<br/>
-<span class="comment">(*&nbsp;Recursive&nbsp;definition&nbsp;of&nbsp;fib&nbsp;is&nbsp;ill-formed.<br/>
-&nbsp;&nbsp;&nbsp;In&nbsp;environment<br/>
-&nbsp;&nbsp;&nbsp;fib&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat<br/>
-&nbsp;&nbsp;&nbsp;n&nbsp;:&nbsp;nat<br/>
-&nbsp;&nbsp;&nbsp;n0&nbsp;:&nbsp;nat<br/>
-&nbsp;&nbsp;&nbsp;n'&nbsp;:&nbsp;nat<br/>
-&nbsp;&nbsp;&nbsp;Recursive&nbsp;call&nbsp;to&nbsp;fib&nbsp;has&nbsp;principal&nbsp;argument&nbsp;equal&nbsp;to&nbsp;<br/>
-&nbsp;&nbsp;&nbsp;"S&nbsp;n'"&nbsp;instead&nbsp;of&nbsp;one&nbsp;of&nbsp;the&nbsp;following&nbsp;variables:&nbsp;<br/>
-&nbsp;&nbsp;&nbsp;"n0"&nbsp;"n'".&nbsp;*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Mimo, że <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> jest podtermem <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span>, który pochodzi z dopasowania
-    do wzorca, to Coq nie jest w stanie zauważyć tego faktu. W komunikacie
-    o błędzie pojawia się za to tajemnicza zmienna <span class="inlinecode"><span class="id" title="var">n0</span></span>, której w naszym
-    kodzie nigdzie nie ma. Sposobem na poradzenie sobie z problemem jest
-    pokazanie Coqowi palcem, o co nam chodzi: 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">fib</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 1 =&gt; 1<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span> <span class="id" title="keyword">as</span> <span class="id" title="var">n''</span>) =&gt; <span class="id" title="var">fib</span> <span class="id" title="var">n'</span> + <span class="id" title="var">fib</span> <span class="id" title="var">n''</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Tym razem Coq widzi, że <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> jest podtermem <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span>, gdyż explicite
-    nadaliśmy temu termowi nazwę <span class="inlinecode"><span class="id" title="var">n''</span></span>, używając do tego klauzli <span class="inlinecode"><span class="id" title="keyword">as</span></span>.
-
-<div class="paragraph"> </div>
-
-    Ufff...  udało nam się przebrnąć przez techniczne detale działania
-    rekursji strukturalnej. Mogłoby się wydawać, że jest ona mechanizmem
-    bardzo upośledzonym, ale z doświadczenia wiesz już, że w praktyce
-    omówione wyżej problemy występują raczej rzadko.
-
-<div class="paragraph"> </div>
-
-    Mogłoby się też wydawać, że skoro wywołania rekurencyjne możemy robić
-    tylko na bezpośrednich podtermach dopasowanych we wzorcu, to nie da się
-    zdefiniować prawie żadnej ciekawej funkcji. Jak zobaczymy w kolejnych
-    podrozdziałach, wcale tak nie jest. Dzięki pewnej sztuczce za pomocą
-    rekursji strukturalnej można wyrazić rekursję dobrze ufundowaną, która
-    na pierwszy rzut oka jest dużo potężniejsza i daje nam wiele możliwości
-    definiowania różnych ciekawych funkcji. 
-<div class="paragraph"> </div>
-
-<a name="lab201"></a><h4 class="section">Ćwiczenie (dzielenie)</h4>
-
-<div class="paragraph"> </div>
-
- Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">div</span></span>, która implementuje dzielenie całkowitoliczbowe.
-    Żeby uniknąć problemów z dzieleniem przez <span class="inlinecode">0</span>, <span class="inlinecode"><span class="id" title="var">div</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> będziemy
-    interpretować jako <span class="inlinecode"><span class="id" title="var">n</span></span> podzielone przez <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>, czyli np. <span class="inlinecode"><span class="id" title="var">div</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">0</span>
-    to n/1, <span class="inlinecode"><span class="id" title="var">div</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">1</span> to n/2 etc. Uwaga: to ćwiczenie pojawia się właśnie
-    w tym miejscu nieprzypadkowo. 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab202"></a><h1 class="section">Rekursja po paliwie</h1>
+<a name="lab198"></a><h1 class="section">Rekursja po paliwie</h1>
 
 <div class="paragraph"> </div>
 
@@ -754,7 +441,7 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
     funkcji, których inaczej zaimplementować się nie da. 
 <div class="paragraph"> </div>
 
-<a name="lab203"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab199"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -770,7 +457,7 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
 </div>
 
 <div class="doc">
-<a name="lab204"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab200"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -803,7 +490,7 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
 </div>
 
 <div class="doc">
-<a name="lab205"></a><h4 class="section">Ćwiczenie (lemat o tankowaniu)</h4>
+<a name="lab201"></a><h4 class="section">Ćwiczenie (lemat o tankowaniu)</h4>
 
 <div class="paragraph"> </div>
 
@@ -819,7 +506,7 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
 </div>
 
 <div class="doc">
-<a name="lab206"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab202"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -842,7 +529,7 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
 </div>
 
 <div class="doc">
-<a name="lab207"></a><h1 class="section">Rekursja dobrze ufundowana</h1>
+<a name="lab203"></a><h1 class="section">Rekursja dobrze ufundowana</h1>
 
 <div class="paragraph"> </div>
 
@@ -954,7 +641,7 @@ Układ kostek reprezentowany przez <span class="inlinecode"><span class="id" tit
     musieć pisać wszystkiego dwa razy. 
 <div class="paragraph"> </div>
 
-<a name="lab208"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab204"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -968,7 +655,7 @@ Układ kostek reprezentowany przez <span class="inlinecode"><span class="id" tit
 </div>
 
 <div class="doc">
-<a name="lab209"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab205"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -988,7 +675,7 @@ Układ kostek reprezentowany przez <span class="inlinecode"><span class="id" tit
 </div>
 
 <div class="doc">
-<a name="lab210"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab206"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1005,7 +692,7 @@ Układ kostek reprezentowany przez <span class="inlinecode"><span class="id" tit
 </div>
 
 <div class="doc">
-<a name="lab211"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab207"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1348,7 +1035,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
     indukcyjnej. 
 <div class="paragraph"> </div>
 
-<a name="lab212"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab208"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1364,7 +1051,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
 </div>
 
 <div class="doc">
-<a name="lab213"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab209"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1389,7 +1076,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
 </div>
 
 <div class="doc">
-<a name="lab214"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab210"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1410,7 +1097,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
 </div>
 
 <div class="doc">
-<a name="lab215"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab211"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1429,7 +1116,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
 </div>
 
 <div class="doc">
-<a name="lab216"></a><h1 class="section">Indukcja wykresowa</h1>
+<a name="lab212"></a><h1 class="section">Indukcja wykresowa</h1>
 
 <div class="paragraph"> </div>
 
@@ -1545,7 +1232,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
     wersję o typie <span class="inlinecode"><span class="id" title="var">A1</span></span> <span class="inlinecode">*</span> <span class="inlinecode">...</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">An</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab217"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab213"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1566,7 +1253,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
 </div>
 
 <div class="doc">
-<a name="lab218"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab214"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1582,7 +1269,7 @@ Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko
 </div>
 
 <div class="doc">
-<a name="lab219"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab215"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1660,7 +1347,7 @@ Zwróćmy tylko uwagę na fakt, że mówiąc o kształcie rekursji (lub po
     wywołania rekurencyjnego. 
 <div class="paragraph"> </div>
 
-<a name="lab220"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab216"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1901,7 +1588,7 @@ Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
 </div>
 
 <div class="doc">
-<a name="lab221"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab217"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1920,7 +1607,7 @@ Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
 </div>
 
 <div class="doc">
-<a name="lab222"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab218"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1951,7 +1638,7 @@ Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
 </div>
 
 <div class="doc">
-<a name="lab223"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab219"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1999,7 +1686,7 @@ Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
 </div>
 
 <div class="doc">
-<a name="lab224"></a><h1 class="section">Metoda induktywnej dziedziny</h1>
+<a name="lab220"></a><h1 class="section">Metoda induktywnej dziedziny</h1>
 
 <div class="paragraph"> </div>
 
@@ -2327,7 +2014,7 @@ Pierwszy, trudniejszy sposób, to zgeneralizowanie <span class="inlinecode"><spa
     indukcji wykresowej. 
 <div class="paragraph"> </div>
 
-<a name="lab225"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab221"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2368,7 +2055,7 @@ Pierwszy, trudniejszy sposób, to zgeneralizowanie <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-<a name="lab226"></a><h1 class="section">Komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span></h1>
+<a name="lab222"></a><h1 class="section">Komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span></h1>
 
 <div class="paragraph"> </div>
 
@@ -2514,7 +2201,7 @@ Dowodzenie właściwości funkcji zdefiniowanych za pomocą <span class="inline
     sobie z takimi ciężkimi przypadkami poświęcimy kolejne podrozdziały. 
 <div class="paragraph"> </div>
 
-<a name="lab227"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab223"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2538,7 +2225,7 @@ Dowodzenie właściwości funkcji zdefiniowanych za pomocą <span class="inline
 </div>
 
 <div class="doc">
-<a name="lab228"></a><h1 class="section">Rekursja zagnieżdżona</h1>
+<a name="lab224"></a><h1 class="section">Rekursja zagnieżdżona</h1>
 
 <div class="paragraph"> </div>
 
@@ -3022,7 +2709,7 @@ Na koniec również mały twist, gdyż równanie rekurencyjne najprościej jest
     zdefiniowanego wykresu. 
 <div class="paragraph"> </div>
 
-<a name="lab229"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab225"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -3056,7 +2743,7 @@ Wytłumacz, dlaczego Coq nie akceptuje tej definicji. Następnie wymyśl
 </div>
 
 <div class="doc">
-<a name="lab230"></a><h1 class="section">Metoda induktywno-rekurencyjnej dziedziny</h1>
+<a name="lab226"></a><h1 class="section">Metoda induktywno-rekurencyjnej dziedziny</h1>
 
 <div class="paragraph"> </div>
 
@@ -3350,7 +3037,7 @@ Dowód samej reguły też jest dość prosty. Zaczynamy od indukcji po
     założenia. 
 <div class="paragraph"> </div>
 
-<a name="lab231"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab227"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -3376,11 +3063,11 @@ Dowód samej reguły też jest dość prosty. Zaczynamy od indukcji po
 </div>
 
 <div class="doc">
-<a name="lab232"></a><h1 class="section">Plugin <span class="inlinecode"><span class="id" title="keyword">Equations</span></span></h1>
+<a name="lab228"></a><h1 class="section">Plugin <span class="inlinecode"><span class="id" title="keyword">Equations</span></span></h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab233"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab229"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -3399,7 +3086,7 @@ Dowód samej reguły też jest dość prosty. Zaczynamy od indukcji po
 
 <div class="paragraph"> </div>
 
-<a name="lab234"></a><h1 class="section">Podsumowanie</h1>
+<a name="lab230"></a><h1 class="section">Podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
