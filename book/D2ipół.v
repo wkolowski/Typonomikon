@@ -920,7 +920,10 @@ end.
     a mimo to funkcja działa ok. Dlaczego? Właśnie dlatego, że wywołania
     rekurencyjne są robione przez funkcję [map]. Mamy więc do czynienia z
     rekursją wyższego rzędu. *)
+
 (*
+Require Import List.
+Import ListNotations.
 Print Forall2.
 
 Inductive mirrorG {A : Type} : Tree A -> Tree A -> Prop :=
