@@ -1,6 +1,7 @@
 Rekursja:
 1. Rekursja prymitywna.
 3. Rekursja wyższego rzędu, tzn. nie w pełni zaaplikowane wywołania rekurencyjne.
+4. Rozstrzygnąć konflikt nazw między rekursją zagnieżdżoną (zagnieżdżone wywołania rekurencyjne) oraz rekursją zagnieżdżoną (zagnieżdżone fixy).
 
 Rekursja ogólna:
 1. W (pod)rozdziale o metodzie induktywnej dziedziny dorzucić wyjaśnienia na temat tego, jak zrobić dziedzinę D : A -> Prop, a nie tylko D : A -> Type.

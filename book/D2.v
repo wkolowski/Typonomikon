@@ -2941,6 +2941,68 @@ Qed.
 
 End McCarthy'.
 
+(** * Metoda induktywnej dziedziny 2 *)
+
+(** Na koniec została nam do omówienia jeszcze jedna drobna kwestia.
+    Poznając metodę induktywnej dziedziny, dowiedzieliśmy się, że
+    "predykat" dziedziny tak naprawdę wcale nie jest predykatem, ale
+    rodziną typów. Czas naprawić ten szkopuł.
+
+    W niniejszym podrozdziale najpierw zapoznamy się (na przykładzie
+    dzielenia - znowu) z wariantem metody induktywnej dziedziny, w
+    którym dziedzina faktycznie jest predykatem, a na koniec podumamy,
+    dlaczego powinno nas to w ogóle obchodzić. *)
+
+Module again.
+
+Inductive divD : nat -> nat -> Prop :=
+    | divD_lt : forall n m : nat, n < S m -> divD n m
+    | divD_ge :
+        forall n m : nat,
+          n >= S m -> divD (n - S m) m -> divD n m.
+
+(** Definicja dziedziny jest taka sama jak ostatnio, ale z tą drobną
+    różnicą, że teraz faktycznie jest to predykat.
+
+    Skoro mamy dziedzinę, spróbujmy zdefiniować funkcję pomocniczą
+    tak samo jak ostatnio. *)
+
+Fail Fixpoint div_aux {n m : nat} (d : divD n m) : nat :=
+match d with
+    | divD_lt _ _ _ => 0
+    | divD_ge _ _ _ d' => S (div_aux d')
+end.
+
+(* ===> The command has indeed failed with message:
+        Incorrect elimination of "d" in the inductive type "divD":
+        the return type has sort "Set" while it should be "Prop".
+        Elimination of an inductive object of sort Prop
+        is not allowed on a predicate in sort Set
+        because proofs can be eliminated only to build proofs. *)
+
+
+Lemma divD_ge_inv :
+  forall n m : nat, n >= S m -> divD n m -> divD (n - S m) m.
+Proof.
+  destruct 2.
+    abstract omega.
+    exact H1.
+Restart.
+  destruct 2.
+    omega.
+    assumption.
+Defined.
+
+Require Import NArith.
+
+Fixpoint div_aux {n m : nat} (d : divD n m) : nat :=
+match le_lt_dec (S m) n with
+    | right _ => 0
+    | left H => S (div_aux (divD_ge_inv n m H d))
+end.
+
+End again.
+
 (** * Plugin [Equations] *)
 
 (** **** Ćwiczenie *)
