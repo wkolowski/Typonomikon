@@ -2980,26 +2980,111 @@ end.
         is not allowed on a predicate in sort Set
         because proofs can be eliminated only to build proofs. *)
 
+(** Cóż, nie da się i nie dziwota - gdyby się dało, to zrobiliśmy tak
+    już na samym początku. Powód porażki jest całkiem prozaiczny -
+    nie możemy definiować programów przez dopasowanie do wzorca dowodów,
+    czyli parafrazując, nie możemy konstruować elementów typów sortów
+    [Set] ani [Type] przez eliminację elementów typów sortu [Prop].
+
+    Wynika to z faktu, że sort [Prop] z założenia dopuszcza możliwość
+    przyjęcia aksjomatu irrelewancji dowodów (ang. proof irrelevance),
+    który głosi, że wszystkie dowody danego zdania są równe. Gdybyśmy
+    mogli dopasowywać do wzorca dowody zdań definiując programy,
+    irrelewancja wyciekłaby do świata programów i wtedy wszystko byłoby
+    równe wszystkiemu, co oczywiście daje sprzeczność.
+
+    Jeżeli powyższy opis nie jest przekonujący, zobaczmy to na szybkim
+    przykładzie. *)
+
+Module proof_irrelevance_example.
+
+Inductive bool' : Prop :=
+    | true' : bool'
+    | false' : bool'.
+
+(** Najpierw definiujemy typ [bool'], który wygląda jak [bool], ale
+    żyje w sorcie [Prop]. *)
+
+Axiom
+  proof_irrelevance : forall (P : Prop) (p1 p2 : P), p1 = p2.
+
+(** Następnie przyjmujemy aksjomat irrelewancji dowodów, przez co
+    [bool'] staje się tym samym co zdanie [True]. *)
+
+Axioms
+  (f : bool' -> bool)
+  (eq1 : f true' = true)
+  (eq2 : f false' = false).
+
+(** Załóżmy, że Coq pozwolił nam zdefiniować funkcję [f : bool' -> bool],
+    która potrafi odróżnić [true'] od [false']. *)
+
+Theorem wut :
+  true = false.
+Proof.
+  rewrite <- eq1.
+  rewrite (proof_irrelevance _ _ false').
+  rewrite eq2.
+  reflexivity.
+Qed.
+
+(** Jak widać, [true] to to samo co [f true'], ale [true'] to [false']
+    na mocy irrelewancji, a [f false'] to przecież [false]. Konkluzja:
+    prawda to fałsz, a tego zdecydowanie nie chcemy. Żeby uniknąć
+    sprzeczności, nie wolno definiować programów przez eliminację zdań.
+
+    Od powyższej zasady są jednak wyjątki, mianowicie przy konstrukcji
+    programów wolno eliminować dowody zdań, które:
+    - nie mają konstruktorów, np. [False]
+    - mają jeden konstruktor, którego wszystkie argumenty również są
+      dowodami zdań
+
+    Powyższy wyjątek od reguły nazywa się "eliminacją singletonów" i
+    jest zupełnie niegroźny, gdyż dla takich zdań możemy bez żadnych
+    aksjomatów udowodnić, że wszystkie ich dowody są równe. *)
+
+End proof_irrelevance_example.
+
+(** Dobra, koniec tej przydługiej dygresji. Wracamy do metody induktywnej
+    dziedziny, gdzie dziedzina naprawdę jest predykatem. Skoro nie możemy
+    zdefiniować funkcji bezpośrednio przez eliminację [d : divD n m], to
+    jak inaczej?
+
+    Tutaj ujawnia się pewna chytra sztuczka: nie możemy dopasować [d] za
+    pomocą [match]a, ale wciąż możemy robić wywołania rekurencyjne na
+    podtermach [d]. Wystarczy więc napisać funkcję, która wyjmuje z [d]
+    jego podterm (oczywiście jedynie pod warunkiem, że [n >= S m], bo
+    tylko wtedy [d] będzie miało jakiś podterm). Ponieważ kodziedziną
+    takiej funkcji będzie [divD (n - S m) m], dopasowanie [d] do wzorca
+    będzie już legalne.
+
+    Brzmi... chytrze? Zobaczmy, jak wygląda to w praktyce. *)
 
 Lemma divD_ge_inv :
   forall n m : nat, n >= S m -> divD n m -> divD (n - S m) m.
 Proof.
   destruct 2.
-    abstract omega.
-    exact H1.
-Restart.
-  destruct 2.
     omega.
-    assumption.
+    exact H1.
 Defined.
 
-Require Import NArith.
+(** Jeżeli mamy [d : divD n m] i wiemy, że [n >= S m], to [d] musiało
+    zostać zrobione konstruktorem [divD_ge]. Możemy to udowodnić po
+    prostu rozbijając [d]. W pierwszym przypadkiem dostajemy sprzeczność
+    arytmetyczną (bo [n >= S m] i jednocześnie [n < S m]), zaś w drugim
+    wynikiem jest pożądany podterm. *)
 
 Fixpoint div_aux {n m : nat} (d : divD n m) : nat :=
 match le_lt_dec (S m) n with
     | right _ => 0
     | left H => S (div_aux (divD_ge_inv n m H d))
 end.
+
+(** Żeby zdefiniować [div_aux], sprawdzamy najpierw, czy mamy do czynienia
+    z przypadkiem [n < S m], czy z [n >= S m]. W pierwszym przypadku po
+    prostu zwracamy [0], zaś w drugim robimy wywołanie rekurencyjne,
+    którego argumentem jest [divD_ge_inv n m H D], które, jak się okazuje,
+    faktycznie jest podtermem [d]. *)
 
 End again.
 

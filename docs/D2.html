@@ -3121,20 +3121,165 @@ Definicja dziedziny jest taka sama jak ostatnio, ale z tą drobną
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;because&nbsp;proofs&nbsp;can&nbsp;be&nbsp;eliminated&nbsp;only&nbsp;to&nbsp;build&nbsp;proofs.&nbsp;*)</span><br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Cóż, nie da się i nie dziwota - gdyby się dało, to zrobiliśmy tak
+    już na samym początku. Powód porażki jest całkiem prozaiczny -
+    nie możemy definiować programów przez dopasowanie do wzorca dowodów,
+    czyli parafrazując, nie możemy konstruować elementów typów sortów
+    <span class="inlinecode"><span class="id" title="keyword">Set</span></span> ani <span class="inlinecode"><span class="id" title="keyword">Type</span></span> przez eliminację elementów typów sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>.
+
+<div class="paragraph"> </div>
+
+    Wynika to z faktu, że sort <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> z założenia dopuszcza możliwość
+    przyjęcia aksjomatu irrelewancji dowodów (ang. proof irrelevance),
+    który głosi, że wszystkie dowody danego zdania są równe. Gdybyśmy
+    mogli dopasowywać do wzorca dowody zdań definiując programy,
+    irrelewancja wyciekłaby do świata programów i wtedy wszystko byłoby
+    równe wszystkiemu, co oczywiście daje sprzeczność.
+
+<div class="paragraph"> </div>
+
+    Jeżeli powyższy opis nie jest przekonujący, zobaczmy to na szybkim
+    przykładzie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">proof_irrelevance_example</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">bool'</span> : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">true'</span> : <span class="id" title="var">bool'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">false'</span> : <span class="id" title="var">bool'</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Najpierw definiujemy typ <span class="inlinecode"><span class="id" title="var">bool'</span></span>, który wygląda jak <span class="inlinecode"><span class="id" title="var">bool</span></span>, ale
+    żyje w sorcie <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Axiom</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">proof_irrelevance</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">p1</span> <span class="id" title="var">p2</span> : <span class="id" title="var">P</span>), <span class="id" title="var">p1</span> = <span class="id" title="var">p2</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Następnie przyjmujemy aksjomat irrelewancji dowodów, przez co
+    <span class="inlinecode"><span class="id" title="var">bool'</span></span> staje się tym samym co zdanie <span class="inlinecode"><span class="id" title="var">True</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Axioms</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">f</span> : <span class="id" title="var">bool'</span> -&gt; <span class="id" title="var">bool</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">eq1</span> : <span class="id" title="var">f</span> <span class="id" title="var">true'</span> = <span class="id" title="var">true</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">eq2</span> : <span class="id" title="var">f</span> <span class="id" title="var">false'</span> = <span class="id" title="var">false</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Załóżmy, że Coq pozwolił nam zdefiniować funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">bool'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>,
+    która potrafi odróżnić <span class="inlinecode"><span class="id" title="var">true'</span></span> od <span class="inlinecode"><span class="id" title="var">false'</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">wut</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">true</span> = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">eq1</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">proof_irrelevance</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">false'</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">eq2</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać, <span class="inlinecode"><span class="id" title="var">true</span></span> to to samo co <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">true'</span></span>, ale <span class="inlinecode"><span class="id" title="var">true'</span></span> to <span class="inlinecode"><span class="id" title="var">false'</span></span>
+    na mocy irrelewancji, a <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">false'</span></span> to przecież <span class="inlinecode"><span class="id" title="var">false</span></span>. Konkluzja:
+    prawda to fałsz, a tego zdecydowanie nie chcemy. Żeby uniknąć
+    sprzeczności, nie wolno definiować programów przez eliminację zdań.
+
+<div class="paragraph"> </div>
+
+    Od powyższej zasady są jednak wyjątki, mianowicie przy konstrukcji
+    programów wolno eliminować dowody zdań, które:
+<ul class="doclist">
+<li> nie mają konstruktorów, np. <span class="inlinecode"><span class="id" title="var">False</span></span>
+
+</li>
+<li> mają jeden konstruktor, którego wszystkie argumenty również są
+      dowodami zdań
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Powyższy wyjątek od reguły nazywa się "eliminacją singletonów" i
+    jest zupełnie niegroźny, gdyż dla takich zdań możemy bez żadnych
+    aksjomatów udowodnić, że wszystkie ich dowody są równe. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">proof_irrelevance_example</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dobra, koniec tej przydługiej dygresji. Wracamy do metody induktywnej
+    dziedziny, gdzie dziedzina naprawdę jest predykatem. Skoro nie możemy
+    zdefiniować funkcji bezpośrednio przez eliminację <span class="inlinecode"><span class="id" title="var">d</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">divD</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>, to
+    jak inaczej?
+
+<div class="paragraph"> </div>
+
+    Tutaj ujawnia się pewna chytra sztuczka: nie możemy dopasować <span class="inlinecode"><span class="id" title="var">d</span></span> za
+    pomocą <span class="inlinecode"><span class="id" title="keyword">match</span></span>a, ale wciąż możemy robić wywołania rekurencyjne na
+    podtermach <span class="inlinecode"><span class="id" title="var">d</span></span>. Wystarczy więc napisać funkcję, która wyjmuje z <span class="inlinecode"><span class="id" title="var">d</span></span>
+    jego podterm (oczywiście jedynie pod warunkiem, że <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&gt;=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>, bo
+    tylko wtedy <span class="inlinecode"><span class="id" title="var">d</span></span> będzie miało jakiś podterm). Ponieważ kodziedziną
+    takiej funkcji będzie <span class="inlinecode"><span class="id" title="var">divD</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span>)</span> <span class="inlinecode"><span class="id" title="var">m</span></span>, dopasowanie <span class="inlinecode"><span class="id" title="var">d</span></span> do wzorca
+    będzie już legalne.
+
+<div class="paragraph"> </div>
+
+    Brzmi... chytrze? Zobaczmy, jak wygląda to w praktyce. 
+</div>
+<div class="code">
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">divD_ge_inv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &gt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 2.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">abstract</span> <span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">H1</span>.<br/>
-<span class="id" title="keyword">Restart</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 2.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">H1</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">NArith</span>.<br/>
+</div>
+
+<div class="doc">
+Jeżeli mamy <span class="inlinecode"><span class="id" title="var">d</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">divD</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> i wiemy, że <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&gt;=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>, to <span class="inlinecode"><span class="id" title="var">d</span></span> musiało
+    zostać zrobione konstruktorem <span class="inlinecode"><span class="id" title="var">divD_ge</span></span>. Możemy to udowodnić po
+    prostu rozbijając <span class="inlinecode"><span class="id" title="var">d</span></span>. W pierwszym przypadkiem dostajemy sprzeczność
+    arytmetyczną (bo <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&gt;=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> i jednocześnie <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>), zaś w drugim
+    wynikiem jest pożądany podterm. 
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">div_aux</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">d</span> : <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) : <span class="id" title="var">nat</span> :=<br/>
@@ -3142,6 +3287,18 @@ Definicja dziedziny jest taka sama jak ostatnio, ale z tą drobną
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">right</span> <span class="id" title="var">_</span> =&gt; 0<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">left</span> <span class="id" title="var">H</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">div_aux</span> (<span class="id" title="var">divD_ge_inv</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span> <span class="id" title="var">d</span>))<br/>
 <span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Żeby zdefiniować <span class="inlinecode"><span class="id" title="var">div_aux</span></span>, sprawdzamy najpierw, czy mamy do czynienia
+    z przypadkiem <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>, czy z <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&gt;=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>. W pierwszym przypadku po
+    prostu zwracamy <span class="inlinecode">0</span>, zaś w drugim robimy wywołanie rekurencyjne,
+    którego argumentem jest <span class="inlinecode"><span class="id" title="var">divD_ge_inv</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="var">D</span></span>, które, jak się okazuje,
+    faktycznie jest podtermem <span class="inlinecode"><span class="id" title="var">d</span></span>. 
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">again</span>.<br/>
