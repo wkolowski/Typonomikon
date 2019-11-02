@@ -3064,7 +3064,7 @@ Lemma divD_ge_inv :
   forall n m : nat, n >= S m -> divD n m -> divD (n - S m) m.
 Proof.
   destruct 2.
-    omega.
+    apply le_not_lt in H. contradiction.
     exact H1.
 Defined.
 
@@ -3074,17 +3074,144 @@ Defined.
     arytmetyczną (bo [n >= S m] i jednocześnie [n < S m]), zaś w drugim
     wynikiem jest pożądany podterm. *)
 
-Fixpoint div_aux {n m : nat} (d : divD n m) : nat :=
+Fixpoint div'_aux {n m : nat} (d : divD n m) : nat :=
 match le_lt_dec (S m) n with
     | right _ => 0
-    | left H => S (div_aux (divD_ge_inv n m H d))
+    | left H => S (div'_aux (divD_ge_inv n m H d))
 end.
 
-(** Żeby zdefiniować [div_aux], sprawdzamy najpierw, czy mamy do czynienia
-    z przypadkiem [n < S m], czy z [n >= S m]. W pierwszym przypadku po
-    prostu zwracamy [0], zaś w drugim robimy wywołanie rekurencyjne,
-    którego argumentem jest [divD_ge_inv n m H D], które, jak się okazuje,
+(** Żeby zdefiniować [div'_aux] (czyli, przypomnijmy, zmodyfikowaną wersję
+    dzielenia, którego argumentem głównym jest [d : divD n m], nie zaś
+    samo [n]), sprawdzamy najpierw, czy mamy do czynienia z przypadkiem
+    [n < S m], czy z [n >= S m]. W pierwszym przypadku po prostu zwracamy
+    [0], zaś w drugim robimy wywołanie rekurencyjne, którego argumentem
+    jest [divD_ge_inv n m H d].
+
+    Term ten, jak się okazuje, jest uznawany przez Coqa za podterm [d],
+    a więc wywołanie rekurencyjne na nim jest legalne. Dlaczego jest to
+    podterm [d]? Jeżeli odwiniemy definicję [divD_ge_inv] i wykonamy
+    występujące tam dopasowanie [d] do wzorca, to wiemy, że nie może być
+    ono postaci [divD_lt _ _ _], a zatem musi być postaci
+    [divD_ge _ _ _ d'] i wynikiem wykonania funkcji jest [d'], które
     faktycznie jest podtermem [d]. *)
+
+Lemma divD_all :
+  forall n m : nat, divD n m.
+Proof.
+  apply (well_founded_rect nat lt wf_lt (fun _ => forall m : nat, _)).
+  intros n IH m.
+  destruct (le_lt_dec (S m) n).
+    apply divD_ge.
+      unfold ge. assumption.
+      apply IH. abstract omega.
+    apply divD_lt. assumption.
+Defined.
+
+(** Dowód tego, że każde [n m : nat] należą do dziedziny, jest dokładnie
+    taki sam jak poprzednio. *)
+
+Definition div' (n m : nat) : nat :=
+  div'_aux (divD_all n m).
+
+Compute div' 666 7.
+(* ===> = 83 : nat *)
+
+(** Ostateczna definicja funkcji [div'] również wygląda identycznie jak
+    poprzednio i tak też się oblicza. *)
+
+Lemma div'_eq1 :
+  forall (n m : nat) (H : n < S m),
+    div'_aux (divD_lt n m H) = 0.
+Proof.
+  unfold div'_aux. intros.
+  destruct (le_lt_dec (S m) n).
+    omega.
+    reflexivity.
+Qed.
+
+Lemma div'_eq2 :
+  forall (n m : nat) (H : n >= S m) (d : divD (n - S m) m),
+    div'_aux (divD_ge n m H d) =
+    S (div'_aux (divD_ge_inv n m H (divD_ge n m H d))).
+Proof.
+  unfold div'_aux at 1. intros.
+  destruct (le_lt_dec (S m) n).
+    reflexivity.
+    omega.
+Qed.
+
+(*
+Lemma div'_aux_eq :
+  forall (n m : nat) (d : divD n m),
+    div'_aux d =
+    match d with
+        | divD_lt _ _ _ => 0
+        | divD_ge _ _ _ d' => S (div'_aux d')
+    end.
+*)
+
+Scheme divD_ind' := Induction for divD Sort Prop.
+
+Lemma divG_div'_aux :
+  forall (n m : nat) (d : divD n m),
+    divG n m (@div'_aux n m d).
+Proof.
+  induction d using divD_ind'.
+    rewrite div'_eq1. constructor. assumption.
+    rewrite div'_eq2. constructor.
+      assumption.
+      apply IHd.
+Qed.
+
+Lemma divG_correct' :
+  forall n m : nat,
+    divG n m (div' n m).
+Proof.
+  intros. apply divG_div'_aux.
+Qed.
+
+Lemma divG_complete' :
+  forall n m r : nat,
+    divG n m r -> r = div' n m.
+Proof.
+  intros. apply divG_det with n m.
+    assumption.
+    apply divG_correct'.
+Qed.
+
+Lemma div'_ind :
+  forall
+    (P : nat -> nat -> nat -> Prop)
+    (Hlt : forall n m : nat, n < S m -> P n m 0)
+    (Hge :
+      forall n m : nat, n >= S m ->
+        P (n - S m) m (div' (n - S m) m) ->
+          P n m (S (div' (n - S m) m))),
+      forall n m : nat, P n m (div' n m).
+Proof.
+  intros P Hlt Hge n m.
+  apply divG_ind.
+    assumption.
+    intros. apply divG_complete' in H0. subst. apply Hge; assumption.
+    apply divG_correct'.
+Qed.
+
+Lemma div'_eq :
+  forall n m : nat,
+    div' n m =
+    match le_lt_dec (S m) n with
+        | right _ => 0
+        | left _ => S (div' (n - S m) m)
+    end.
+Proof.
+  intros. apply div'_ind; intros.
+    destruct (le_lt_dec (S m0) n0).
+      omega.
+      reflexivity.
+    destruct (le_lt_dec (S m0) n0).
+      reflexivity.
+      omega.
+Qed.
 
 End again.
 
