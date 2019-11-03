@@ -1,7 +1,6 @@
 Rekursja:
 1. Rekursja prymitywna.
 3. Rekursja wyższego rzędu, tzn. nie w pełni zaaplikowane wywołania rekurencyjne.
-4. Rozstrzygnąć konflikt nazw między rekursją zagnieżdżoną (zagnieżdżone wywołania rekurencyjne) oraz rekursją zagnieżdżoną (zagnieżdżone fixy).
 
 Rekursja ogólna:
 1. W (pod)rozdziale o metodzie induktywnej dziedziny dorzucić wyjaśnienia na temat tego, jak zrobić dziedzinę D : A -> Prop, a nie tylko D : A -> Type.
@@ -16,6 +15,10 @@ Indukcja:
 1. Ćwiczenia z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
 2. Ćwiczenia z definiowania typów induktywnych (i relacji też).
 3. Ćwiczenia z uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
+
+Nazwy:
+1. Wprowadzić wcześniej określenie "motyw eliminacji". Posługiwać się częściej określeniem "eliminacja" zamiast "indukcja"/"rekursja".
+2. Rozstrzygnąć konflikt nazw między rekursją zagnieżdżoną (zagnieżdżone wywołania rekurencyjne) oraz rekursją zagnieżdżoną (zagnieżdżone fixy).
 
 Długofalowe:
 1. Użyć jsCoq do zrobienia interaktywnej książki, która wyglądałaby jakoś tak: https://x80.org/rhino-coq/v8.10/

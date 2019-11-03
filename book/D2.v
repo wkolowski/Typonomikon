@@ -3117,101 +3117,104 @@ Compute div' 666 7.
 (* ===> = 83 : nat *)
 
 (** Ostateczna definicja funkcji [div'] również wygląda identycznie jak
-    poprzednio i tak też się oblicza. *)
+    poprzednio i podobnie elegancko się oblicza, a skoro tak, to czas
+    udowodnić, że wykresem [div'] jest [divG]. Nie musimy redefiniować
+    wykresu - jest on zdefiniowany dokładnie tak samo jak ostatnio. *)
 
-Lemma div'_eq1 :
-  forall (n m : nat) (H : n < S m),
-    div'_aux (divD_lt n m H) = 0.
-Proof.
-  unfold div'_aux. intros.
-  destruct (le_lt_dec (S m) n).
-    omega.
-    reflexivity.
-Qed.
-
-Lemma div'_eq2 :
-  forall (n m : nat) (H : n >= S m) (d : divD (n - S m) m),
-    div'_aux (divD_ge n m H d) =
-    S (div'_aux (divD_ge_inv n m H (divD_ge n m H d))).
-Proof.
-  unfold div'_aux at 1. intros.
-  destruct (le_lt_dec (S m) n).
-    reflexivity.
-    omega.
-Qed.
-
-(*
-Lemma div'_aux_eq :
+Lemma divG_div'_aux :
   forall (n m : nat) (d : divD n m),
-    div'_aux d =
-    match d with
-        | divD_lt _ _ _ => 0
-        | divD_ge _ _ _ d' => S (div'_aux d')
-    end.
+    divG n m (div'_aux d).
+Proof.
+  Fail induction d.
+  (* ===> The command has indeed failed with message:
+          Abstracting over the terms "n" and "m" leads to a term
+          fun n0 m0 : nat => divG n0 m0 (div'_aux d)
+          which is ill-typed. *)
+Abort.
+
+(** Pierwsza próba dowodu kończy się zupełnie niespodziewaną porażką
+    już przy pierwszym kroku, czyli próbie odpalenia indukcji po [d]. *)
+
+Check divD_ind.
+(* ===>
+  divD_ind :
+    forall P : nat -> nat -> Prop,
+    (forall n m : nat, n < S m -> P n m) ->
+    (forall n m : nat,
+      n >= S m -> divD (n - S m) m -> P (n - S m) m -> P n m) ->
+    forall n n0 : nat, divD n n0 -> P n n0
 *)
 
+(** Powód jest prosty: konkluzja, czyli [divG n m (div'_aux d)] zależy
+    od [d], ale domyślna reguła indukcji wygenerowana przez Coqa, czyli
+    [divD_ind], nie jest ani trochę zależna i nie dopuszcza możliwości,
+    by konkluzja zależała od [d]. Potrzebna jest więc nam zależna reguła
+    indukcji.
+
+    Na szczęście nie musimy implementować jej ręcznie - Coq potrafi
+    zrobić to dla nas automatycznie (ale skoro tak, to dlaczego nie
+    zrobił tego od razu? - nie pytaj, niezbadane są wyroki...). *)
+
 Scheme divD_ind' := Induction for divD Sort Prop.
+
+(** Do generowania reguł indukcji służy komenda [Scheme]. [divD_ind']
+    to nazwa reguły, [Induction for divD] mówi nam, dla jakiego typu
+    lub rodziny typów chcemy regułę, zaś [Sort Prop] mówi, że chcemy
+    regułę, w której przeciwdziedziną motywu jest [Prop] (tak na
+    marginesie - motyw eliminacji to typ lub rodzina typów, której
+    element chcemy za pomocą eliminacji skonstruować - powinienem
+    był wprowadzić tę nazwę wcześniej). *)
+
+(* begin hide *)
+(** TODO: wprowadzić gdzieś wcześniej określenie "motyw eliminacji". *)
+(* end hide *)
+
+Check divD_ind'.
+(* ===>
+  divD_ind' :
+    forall P : forall n n0 : nat, divD n n0 -> Prop,
+    (forall (n m : nat) (l : n < S m), P n m (divD_lt n m l)) ->
+    (forall (n m : nat) (g : n >= S m) (d : divD (n - S m) m),
+      P (n - S m) m d -> P n m (divD_ge n m g d)) ->
+    forall (n n0 : nat) (d : divD n n0), P n n0 d
+*)
+
+(** Jak widać, reguła wygenerowana przez komendę [Scheme] jest zależna,
+    gdyż jednym z argumentów [P] jest [divD n n0]. Czas więc wrócić do
+    dowodu faktu, że [divG] jest wykresem [div']. *)
 
 Lemma divG_div'_aux :
   forall (n m : nat) (d : divD n m),
     divG n m (@div'_aux n m d).
 Proof.
   induction d using divD_ind'.
-    rewrite div'_eq1. constructor. assumption.
-    rewrite div'_eq2. constructor.
-      assumption.
-      apply IHd.
-Qed.
-
-Lemma divG_correct' :
-  forall n m : nat,
-    divG n m (div' n m).
-Proof.
-  intros. apply divG_div'_aux.
-Qed.
-
-Lemma divG_complete' :
-  forall n m r : nat,
-    divG n m r -> r = div' n m.
-Proof.
-  intros. apply divG_det with n m.
-    assumption.
-    apply divG_correct'.
-Qed.
-
-Lemma div'_ind :
-  forall
-    (P : nat -> nat -> nat -> Prop)
-    (Hlt : forall n m : nat, n < S m -> P n m 0)
-    (Hge :
-      forall n m : nat, n >= S m ->
-        P (n - S m) m (div' (n - S m) m) ->
-          P n m (S (div' (n - S m) m))),
-      forall n m : nat, P n m (div' n m).
-Proof.
-  intros P Hlt Hge n m.
-  apply divG_ind.
-    assumption.
-    intros. apply divG_complete' in H0. subst. apply Hge; assumption.
-    apply divG_correct'.
-Qed.
-
-Lemma div'_eq :
-  forall n m : nat,
-    div' n m =
-    match le_lt_dec (S m) n with
-        | right _ => 0
-        | left _ => S (div' (n - S m) m)
-    end.
-Proof.
-  intros. apply div'_ind; intros.
-    destruct (le_lt_dec (S m0) n0).
+    unfold div'_aux. destruct (le_lt_dec (S m) n).
       omega.
-      reflexivity.
-    destruct (le_lt_dec (S m0) n0).
-      reflexivity.
+      constructor. assumption.
+    unfold div'_aux. destruct (le_lt_dec (S m) n).
+      constructor.
+        assumption.
+        exact IHd.
       omega.
 Qed.
+
+(** Indukcję z użyciem innej niż domyślna reguły możemy zrobić za
+    pomocą taktyki [induction ... using ...]. Tym razem reguła jest
+    wystarczająco ogólna, więc indukcja się udaje.
+
+    Następnym krokiem w obu przypadkach jest odwinięcie definicji
+    [div'_aux] i sprawdzenie, czy [n < S m], czy możę [n >= S m].
+    Taki sposób postępowania jest kluczowy, gdyż próba użycia tu
+    taktyki [cbn] skończyłaby się katastrofą - zamiast uprościć
+    cel, wyprulibyśmy z niego flaki, które zalałyby nam ekran, a
+    wtedy nawet przeczytanie celu byłoby trudne - jeżeli nie
+    wierzysz, spróbuj.
+
+    Mamy więc dowód poprawności [div'_aux] względem wykresu. Wszystkie
+    pozostałe dowody przechodzą bez zmian, więc nie będziemy ich tutaj
+    powtarzać.
+
+*)
 
 End again.
 

@@ -3346,46 +3346,101 @@ Dowód tego, że każde <span class="inlinecode"><span class="id" title="var">n<
 
 <div class="doc">
 Ostateczna definicja funkcji <span class="inlinecode"><span class="id" title="var">div'</span></span> również wygląda identycznie jak
-    poprzednio i tak też się oblicza. 
+    poprzednio i podobnie elegancko się oblicza, a skoro tak, to czas
+    udowodnić, że wykresem <span class="inlinecode"><span class="id" title="var">div'</span></span> jest <span class="inlinecode"><span class="id" title="var">divG</span></span>. Nie musimy redefiniować
+    wykresu - jest on zdefiniowany dokładnie tak samo jak ostatnio. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div'_eq1</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">div'_aux</span> (<span class="id" title="var">divD_lt</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span>) = 0.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">divG_div'_aux</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">divG</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">div'_aux</span> <span class="id" title="var">d</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">div'_aux</span>. <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">d</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;===&gt;&nbsp;The&nbsp;command&nbsp;has&nbsp;indeed&nbsp;failed&nbsp;with&nbsp;message:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abstracting&nbsp;over&nbsp;the&nbsp;terms&nbsp;"n"&nbsp;and&nbsp;"m"&nbsp;leads&nbsp;to&nbsp;a&nbsp;term<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fun&nbsp;n0&nbsp;m0&nbsp;:&nbsp;nat&nbsp;=&gt;&nbsp;divG&nbsp;n0&nbsp;m0&nbsp;(div'_aux&nbsp;d)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;is&nbsp;ill-typed.&nbsp;*)</span><br/>
+<span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div'_eq2</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &gt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">divD</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">div'_aux</span> (<span class="id" title="var">divD_ge</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span> <span class="id" title="var">d</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">S</span> (<span class="id" title="var">div'_aux</span> (<span class="id" title="var">divD_ge_inv</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span> (<span class="id" title="var">divD_ge</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span> <span class="id" title="var">d</span>))).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">div'_aux</span> <span class="id" title="tactic">at</span> 1. <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+</div>
+
+<div class="doc">
+Pierwsza próba dowodu kończy się zupełnie niespodziewaną porażką
+    już przy pierwszym kroku, czyli próbie odpalenia indukcji po <span class="inlinecode"><span class="id" title="var">d</span></span>. 
+</div>
+<div class="code">
 
 <br/>
-<span class="comment">(*<br/>
-Lemma&nbsp;div'_aux_eq&nbsp;:<br/>
-&nbsp;&nbsp;forall&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;(d&nbsp;:&nbsp;divD&nbsp;n&nbsp;m),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;div'_aux&nbsp;d&nbsp;=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;d&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;divD_lt&nbsp;_&nbsp;_&nbsp;_&nbsp;=&gt;&nbsp;0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;divD_ge&nbsp;_&nbsp;_&nbsp;_&nbsp;d'&nbsp;=&gt;&nbsp;S&nbsp;(div'_aux&nbsp;d')<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;end.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">divD_ind</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;<br/>
+&nbsp;&nbsp;divD_ind&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;P&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;-&gt;&nbsp;Prop,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,&nbsp;n&nbsp;&lt;&nbsp;S&nbsp;m&nbsp;-&gt;&nbsp;P&nbsp;n&nbsp;m)&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n&nbsp;&gt;=&nbsp;S&nbsp;m&nbsp;-&gt;&nbsp;divD&nbsp;(n&nbsp;-&nbsp;S&nbsp;m)&nbsp;m&nbsp;-&gt;&nbsp;P&nbsp;(n&nbsp;-&nbsp;S&nbsp;m)&nbsp;m&nbsp;-&gt;&nbsp;P&nbsp;n&nbsp;m)&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;n0&nbsp;:&nbsp;nat,&nbsp;divD&nbsp;n&nbsp;n0&nbsp;-&gt;&nbsp;P&nbsp;n&nbsp;n0<br/>
 *)</span><br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Powód jest prosty: konkluzja, czyli <span class="inlinecode"><span class="id" title="var">divG</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">(<span class="id" title="var">div'_aux</span></span> <span class="inlinecode"><span class="id" title="var">d</span>)</span> zależy
+    od <span class="inlinecode"><span class="id" title="var">d</span></span>, ale domyślna reguła indukcji wygenerowana przez Coqa, czyli
+    <span class="inlinecode"><span class="id" title="var">divD_ind</span></span>, nie jest ani trochę zależna i nie dopuszcza możliwości,
+    by konkluzja zależała od <span class="inlinecode"><span class="id" title="var">d</span></span>. Potrzebna jest więc nam zależna reguła
+    indukcji.
+
+<div class="paragraph"> </div>
+
+    Na szczęście nie musimy implementować jej ręcznie - Coq potrafi
+    zrobić to dla nas automatycznie (ale skoro tak, to dlaczego nie
+    zrobił tego od razu? - nie pytaj, niezbadane są wyroki...). 
+</div>
+<div class="code">
+
+<br/>
 <span class="id" title="keyword">Scheme</span> <span class="id" title="var">divD_ind'</span> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <span class="id" title="var">divD</span> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Prop</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Do generowania reguł indukcji służy komenda <span class="inlinecode"><span class="id" title="keyword">Scheme</span></span>. <span class="inlinecode"><span class="id" title="var">divD_ind'</span></span>
+    to nazwa reguły, <span class="inlinecode"><span class="id" title="keyword">Induction</span></span> <span class="inlinecode"><span class="id" title="keyword">for</span></span> <span class="inlinecode"><span class="id" title="var">divD</span></span> mówi nam, dla jakiego typu
+    lub rodziny typów chcemy regułę, zaś <span class="inlinecode"><span class="id" title="keyword">Sort</span></span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> mówi, że chcemy
+    regułę, w której przeciwdziedziną motywu jest <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> (tak na
+    marginesie - motyw eliminacji to typ lub rodzina typów, której
+    element chcemy za pomocą eliminacji skonstruować - powinienem
+    był wprowadzić tę nazwę wcześniej). 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">divD_ind'</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;<br/>
+&nbsp;&nbsp;divD_ind'&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;P&nbsp;:&nbsp;forall&nbsp;n&nbsp;n0&nbsp;:&nbsp;nat,&nbsp;divD&nbsp;n&nbsp;n0&nbsp;-&gt;&nbsp;Prop,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;(l&nbsp;:&nbsp;n&nbsp;&lt;&nbsp;S&nbsp;m),&nbsp;P&nbsp;n&nbsp;m&nbsp;(divD_lt&nbsp;n&nbsp;m&nbsp;l))&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;(g&nbsp;:&nbsp;n&nbsp;&gt;=&nbsp;S&nbsp;m)&nbsp;(d&nbsp;:&nbsp;divD&nbsp;(n&nbsp;-&nbsp;S&nbsp;m)&nbsp;m),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;(n&nbsp;-&nbsp;S&nbsp;m)&nbsp;m&nbsp;d&nbsp;-&gt;&nbsp;P&nbsp;n&nbsp;m&nbsp;(divD_ge&nbsp;n&nbsp;m&nbsp;g&nbsp;d))&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;(n&nbsp;n0&nbsp;:&nbsp;nat)&nbsp;(d&nbsp;:&nbsp;divD&nbsp;n&nbsp;n0),&nbsp;P&nbsp;n&nbsp;n0&nbsp;d<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać, reguła wygenerowana przez komendę <span class="inlinecode"><span class="id" title="keyword">Scheme</span></span> jest zależna,
+    gdyż jednym z argumentów <span class="inlinecode"><span class="id" title="var">P</span></span> jest <span class="inlinecode"><span class="id" title="var">divD</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">n0</span></span>. Czas więc wrócić do
+    dowodu faktu, że <span class="inlinecode"><span class="id" title="var">divG</span></span> jest wykresem <span class="inlinecode"><span class="id" title="var">div'</span></span>. 
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">divG_div'_aux</span> :<br/>
@@ -3393,65 +3448,45 @@ Lemma&nbsp;div'_aux_eq&nbsp;:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">divG</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (@<span class="id" title="var">div'_aux</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">d</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">d</span> <span class="id" title="keyword">using</span> <span class="id" title="var">divD_ind'</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">div'_eq1</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">div'_eq2</span>. <span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHd</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">divG_correct'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">divG</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">div'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">divG_div'_aux</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">divG_complete'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">divG</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">r</span> = <span class="id" title="var">div'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">divG_det</span> <span class="id" title="keyword">with</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">divG_correct'</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div'_ind</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Hlt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> 0)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Hge</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &gt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span> (<span class="id" title="var">div'</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">S</span> (<span class="id" title="var">div'</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>))),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">div'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Hlt</span> <span class="id" title="var">Hge</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">divG_ind</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">divG_complete'</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Hge</span>; <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">divG_correct'</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">div'_eq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">div'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">right</span> <span class="id" title="var">_</span> =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">left</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">div'</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">div'_ind</span>; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m0</span>) <span class="id" title="var">n0</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">div'_aux</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m0</span>) <span class="id" title="var">n0</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">div'_aux</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">IHd</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Indukcję z użyciem innej niż domyślna reguły możemy zrobić za
+    pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="keyword">using</span></span> <span class="inlinecode">...</span>. Tym razem reguła jest
+    wystarczająco ogólna, więc indukcja się udaje.
+
+<div class="paragraph"> </div>
+
+    Następnym krokiem w obu przypadkach jest odwinięcie definicji
+    <span class="inlinecode"><span class="id" title="var">div'_aux</span></span> i sprawdzenie, czy <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>, czy możę <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&gt;=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>.
+    Taki sposób postępowania jest kluczowy, gdyż próba użycia tu
+    taktyki <span class="inlinecode"><span class="id" title="var">cbn</span></span> skończyłaby się katastrofą - zamiast uprościć
+    cel, wyprulibyśmy z niego flaki, które zalałyby nam ekran, a
+    wtedy nawet przeczytanie celu byłoby trudne - jeżeli nie
+    wierzysz, spróbuj.
+
+<div class="paragraph"> </div>
+
+    Mamy więc dowód poprawności <span class="inlinecode"><span class="id" title="var">div'_aux</span></span> względem wykresu. Wszystkie
+    pozostałe dowody przechodzą bez zmian, więc nie będziemy ich tutaj
+    powtarzać.
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">again</span>.<br/>
