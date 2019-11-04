@@ -3463,28 +3463,24 @@ Jak widać, reguła wygenerowana przez komendę <span class="inlinecode"><span 
 
 <div class="doc">
 Indukcję z użyciem innej niż domyślna reguły możemy zrobić za
-    pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="keyword">using</span></span> <span class="inlinecode">...</span>. Tym razem reguła jest
-    wystarczająco ogólna, więc indukcja się udaje.
+    pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode"><span class="id" title="var">d</span></span> <span class="inlinecode"><span class="id" title="keyword">using</span></span> <span class="inlinecode"><span class="id" title="var">divD_ind'</span></span>. Tym razem reguła
+    jest wystarczająco ogólna, więc indukcja się udaje.
 
 <div class="paragraph"> </div>
 
     Następnym krokiem w obu przypadkach jest odwinięcie definicji
-    <span class="inlinecode"><span class="id" title="var">div'_aux</span></span> i sprawdzenie, czy <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>, czy możę <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&gt;=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>.
+    <span class="inlinecode"><span class="id" title="var">div'_aux</span></span> i sprawdzenie, czy <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>, czy może <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&gt;=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>.
     Taki sposób postępowania jest kluczowy, gdyż próba użycia tu
     taktyki <span class="inlinecode"><span class="id" title="var">cbn</span></span> skończyłaby się katastrofą - zamiast uprościć
     cel, wyprulibyśmy z niego flaki, które zalałyby nam ekran, a
-    wtedy nawet przeczytanie celu byłoby trudne - jeżeli nie
+    wtedy nawet przeczytanie celu byłoby trudne. Jeżeli nie
     wierzysz, spróbuj.
 
 <div class="paragraph"> </div>
 
     Mamy więc dowód poprawności <span class="inlinecode"><span class="id" title="var">div'_aux</span></span> względem wykresu. Wszystkie
     pozostałe dowody przechodzą bez zmian, więc nie będziemy ich tutaj
-    powtarzać.
-
-<div class="paragraph"> </div>
-
-
+    powtarzać. 
 </div>
 <div class="code">
 
@@ -3495,6 +3491,179 @@ Indukcję z użyciem innej niż domyślna reguły możemy zrobić za
 </div>
 
 <div class="doc">
+Do rozstrzygnięcia pozostaje nam ostatnia już kwestia - po cholerę
+    w ogóle bawić się w coś takiego? Powyższe trudności z eliminacją
+    <span class="inlinecode"><span class="id" title="var">d</span></span>, dowodzeniem lematów wyciągających z <span class="inlinecode"><span class="id" title="var">d</span></span> podtermy, dowodzeniem
+    przez indukcję po <span class="inlinecode"><span class="id" title="var">d</span></span>, generowaniem lepszych reguł indukcyjnych i
+    unikaniem użycia taktyki <span class="inlinecode"><span class="id" title="var">cbn</span></span> powinny jako żywo uzmysłowić nam,
+    że uczynienie dziedziny <span class="inlinecode"><span class="id" title="var">divD</span></span> prawdziwym predykatem było raczej
+    upośledzonym pomysłem.
+
+<div class="paragraph"> </div>
+
+    Odpowiedź jest krótka i mało przekonująca, a jest nią mechanizm
+    ekstrakcji. Cóż to takiego? Otóż Coq dobrze sprawdza się przy
+    definiowaniu programów i dowodzeniu ich właściwości, ale raczej
+    słabo w ich wykonywaniu (komendy <span class="inlinecode"><span class="id" title="keyword">Compute</span></span> czy <span class="inlinecode"><span class="id" title="keyword">Eval</span></span> są dość
+    kiepskie).
+
+<div class="paragraph"> </div>
+
+    Mechanizm ekstrakcji to coś, co nas z tej nędzy trochę ratuje: daje
+    on nam możliwość przetłumaczenia naszego programu w Coqu na program
+    w jakimś nieco bardziej mainstreamowym języku funkcyjnym (jak OCaml,
+    Haskell czy Scheme), w których programy da się normalnie odpalać i
+    działają nawet szybko.
+
+<div class="paragraph"> </div>
+
+    Mechanizm ten nie będzie nas interesował, ponieważ moim zdaniem jest
+    on ślepą uliczką ewolucji - zamiast niego trzeba będzie po prostu
+    wymyślić sposób efektywnej kompilacji Coqowych programow, ale to już
+    temat na inną bajkę.
+
+<div class="paragraph"> </div>
+
+    Nie będziemy zatem zbytnio zagłębiać się w szczegóły ekstrakcji -
+    zanim zupełnie o niej zapomnimy, zobaczmy tylko jeden przykład. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Extraction</span> <span class="id" title="var">Language</span> <span class="id" title="var">Haskell</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Komenda <span class="inlinecode"><span class="id" title="keyword">Extraction</span></span> <span class="inlinecode"><span class="id" title="var">Language</span></span> ustawia język, do którego chcemy
+    ekstrahować. My użyjemy Haskella, gdyż pozostałych dostępnych
+    języków nie lubię. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Extraction</span> <span class="id" title="var">again.div'</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;div'&nbsp;::&nbsp;Nat&nbsp;-&gt;&nbsp;Nat&nbsp;-&gt;&nbsp;Nat<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;div'&nbsp;=&nbsp;div'_aux&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Komenda <span class="inlinecode"><span class="id" title="keyword">Extraction</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> tłumaczy Coqowy program <span class="inlinecode"><span class="id" title="var">p</span></span> na program
+    Haskellowy. Mimo że nie znamy Haskella, spróbujmy przeczytać
+    wynikowy program.
+
+<div class="paragraph"> </div>
+
+    Wynikiem ekstrakcji jest Haskellowa funkcja <span class="inlinecode"><span class="id" title="var">div'</span></span> o typie
+    <span class="inlinecode"><span class="id" title="var">Nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Nat</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">Nat</span></span> to Haskellowa wersja Coqowego <span class="inlinecode"><span class="id" title="var">nat</span></span>
+    (podwójny dwukropek <span class="inlinecode">::</span> oznacza w Haskellu to samo, co pojedynczy
+    dwukropek <span class="inlinecode">:</span> w Coqu). Funkcja <span class="inlinecode"><span class="id" title="var">div'</span></span> jest zdefiniowana jako... i tu
+    zaskoczenie... <span class="inlinecode"><span class="id" title="var">div'_aux</span></span>. Ale jak to? Rzućmy jeszcze raz okiem na
+    oryginalną, Coqową definicję. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">again.div'</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;again.div'&nbsp;=&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fun&nbsp;n&nbsp;m&nbsp;:&nbsp;nat&nbsp;=&gt;&nbsp;again.div'_aux&nbsp;(again.divD_all&nbsp;n&nbsp;m)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Gdzież w wyekstrahowanym programie podział się dowód <span class="inlinecode"><span class="id" title="var">divD_all</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>?
+    Otóż nie ma go, bo Haskell to zwykły język programowania, w którym
+    nie można dowodzić. O to właśnie chodzi w mechanizmie ekstrakcji -
+    w procesie ekstrakcji wyrzucić z Coqowego programu wszystkie dowody
+    i przetłumaczyć tylko tę część programu, która jest niezbędna, by
+    wyekstrahowany program się obliczał.
+
+<div class="paragraph"> </div>
+
+    Mogłoby się wydawać dziwne, że najpierw w pocie czoła dowodzimy czegoś
+    w Coqu, a potem mechanizm ekstrakcji się tego pozbywa. Jest to jednak
+    całkiem naturalne - skoro udało nam się udowodnić jakąś właściwość
+    naszego programu, to wiemy, że ma on tę właściwość i dowód nie jest
+    nam już do niczego potrzebny, a zatem ekstrakcja może się go pozbyć. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">again.div'_aux</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;again.div'_aux&nbsp;=&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;fix&nbsp;div'_aux&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;(d&nbsp;:&nbsp;again.divD&nbsp;n&nbsp;m)&nbsp;{struct&nbsp;d}&nbsp;:&nbsp;nat&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;le_lt_dec&nbsp;(S&nbsp;m)&nbsp;n&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;left&nbsp;H&nbsp;=&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S&nbsp;(div'_aux&nbsp;(n&nbsp;-&nbsp;S&nbsp;m)&nbsp;m&nbsp;(again.divD_ge_inv&nbsp;n&nbsp;m&nbsp;H&nbsp;d))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;right&nbsp;_&nbsp;=&gt;&nbsp;0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;end<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,&nbsp;again.divD&nbsp;n&nbsp;m&nbsp;-&gt;&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Extraction</span> <span class="id" title="var">again.div'_aux</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;div'_aux&nbsp;::&nbsp;Nat&nbsp;-&gt;&nbsp;Nat&nbsp;-&gt;&nbsp;Nat<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;div'_aux&nbsp;n&nbsp;m&nbsp;=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;le_lt_dec&nbsp;(S&nbsp;m)&nbsp;n&nbsp;of&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left&nbsp;-&gt;&nbsp;S&nbsp;(div'_aux&nbsp;(sub&nbsp;n&nbsp;(S&nbsp;m))&nbsp;m);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right&nbsp;-&gt;&nbsp;O}&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A tak wygląda wyekstrahowana funkcja <span class="inlinecode"><span class="id" title="var">div'_aux</span></span>. Jeżeli pominiemy
+    różnice składniowe między Coqiem i Haskellem (w Coqu typ jest na
+    dole, po dwukropku, a w Haskellu na górze, przed definicją; w Coqu
+    mamy <span class="inlinecode"><span class="id" title="keyword">match</span></span>, a w Haskellu <span class="inlinecode"><span class="id" title="tactic">case</span></span> etc.) to wygląda całkiem podobnie.
+    Kluczową różnicą jest widniejący w Coqowej wersji dowód należenia do
+    dziedziny <span class="inlinecode"><span class="id" title="var">again.divD_ge_inv</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="var">d</span></span>, który w Haskellowym ekstrakcie
+    został usunięty.
+
+<div class="paragraph"> </div>
+
+    Cały ten cyrk z przerabianiem <span class="inlinecode"><span class="id" title="var">divD</span></span> na prawdziwy predykat był po
+    to, żeby dowód należenia do dziedziny mógł zostać usunięty podczas
+    ekstrakcji. Dzięki temu wyekstrahowany program w Haskellu wygląda
+    jak gdyby został napisany ręcznie. Jest też szybszy i krótszy, bo
+    nie ma tam wzmianki o <span class="inlinecode"><span class="id" title="var">divD_all</span></span>, która musiałaby się pojawić, gdyby
+    <span class="inlinecode"><span class="id" title="var">divD</span></span> było rodziną typów, a nie predykatem. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Extraction</span> <span class="id" title="var">div'_aux</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;div'_aux&nbsp;::&nbsp;Nat&nbsp;-&gt;&nbsp;Nat&nbsp;-&gt;&nbsp;DivD&nbsp;-&gt;&nbsp;Nat<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;div'_aux&nbsp;_&nbsp;_&nbsp;h&nbsp;=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;h&nbsp;of&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DivD_lt&nbsp;_&nbsp;_&nbsp;-&gt;&nbsp;O;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DivD_ge&nbsp;n&nbsp;m&nbsp;h'&nbsp;-&gt;&nbsp;S&nbsp;(div'_aux&nbsp;(sub&nbsp;n&nbsp;(S&nbsp;m))&nbsp;m&nbsp;h')}&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tak wygląda ekstrakt oryginalnego <span class="inlinecode"><span class="id" title="var">div'_aux</span></span>, tzn. tego, w którym <span class="inlinecode"><span class="id" title="var">divD</span></span>
+    nie jest predykatem, lecz rodziną typów. W wyekstrahowanym programie, w
+    typie funkcji <span class="inlinecode"><span class="id" title="var">div'_aux</span></span> pojawia się złowieszczy typ <span class="inlinecode"><span class="id" title="var">DivD</span></span>, który jest
+    zupełnie zbędny, bo Haskell (i żaden inny funkcyjny język programowania,
+    który nie jest przeznaczony do dowodzenia) nie narzuca żadnych ograniczeń
+    na wywołania rekurencyjne.
+
+<div class="paragraph"> </div>
+
+    No, to by było na tyle. Życzę ci, żebyś nigdy nie musiał stosować
+    wariantu metody induktywnej dziedziny opisanej w tym podrozdziale
+    ani nie musiał niczego ekstrahować. 
+<div class="paragraph"> </div>
+
 <a name="lab229"></a><h1 class="section">Plugin <span class="inlinecode"><span class="id" title="keyword">Equations</span></span></h1>
 
 <div class="paragraph"> </div>

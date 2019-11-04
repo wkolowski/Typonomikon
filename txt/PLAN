@@ -49,8 +49,8 @@ Część 1: Teoria typów w Coqowej wersji
   Indukcja wzajemna.
   Indeksy, czyli predykaty i relacje
   Indeksy v2, czyli typy danych ostro chwycone za mordę.
-  Indukcja-indukcja.
   Indukcja-rekursja.
+  Indukcja-indukcja.
   Indukcja-indukcja-rekursja.
   Zadania z definiowania induktywnych typów i predykatów
   W międzyczasie: omówić ścisłą pozytywność

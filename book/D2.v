@@ -3199,24 +3199,142 @@ Proof.
 Qed.
 
 (** Indukcję z użyciem innej niż domyślna reguły możemy zrobić za
-    pomocą taktyki [induction ... using ...]. Tym razem reguła jest
-    wystarczająco ogólna, więc indukcja się udaje.
+    pomocą taktyki [induction d using divD_ind']. Tym razem reguła
+    jest wystarczająco ogólna, więc indukcja się udaje.
 
     Następnym krokiem w obu przypadkach jest odwinięcie definicji
-    [div'_aux] i sprawdzenie, czy [n < S m], czy możę [n >= S m].
+    [div'_aux] i sprawdzenie, czy [n < S m], czy może [n >= S m].
     Taki sposób postępowania jest kluczowy, gdyż próba użycia tu
     taktyki [cbn] skończyłaby się katastrofą - zamiast uprościć
     cel, wyprulibyśmy z niego flaki, które zalałyby nam ekran, a
-    wtedy nawet przeczytanie celu byłoby trudne - jeżeli nie
+    wtedy nawet przeczytanie celu byłoby trudne. Jeżeli nie
     wierzysz, spróbuj.
 
     Mamy więc dowód poprawności [div'_aux] względem wykresu. Wszystkie
     pozostałe dowody przechodzą bez zmian, więc nie będziemy ich tutaj
-    powtarzać.
-
-*)
+    powtarzać. *)
 
 End again.
+
+(** Do rozstrzygnięcia pozostaje nam ostatnia już kwestia - po cholerę
+    w ogóle bawić się w coś takiego? Powyższe trudności z eliminacją
+    [d], dowodzeniem lematów wyciągających z [d] podtermy, dowodzeniem
+    przez indukcję po [d], generowaniem lepszych reguł indukcyjnych i
+    unikaniem użycia taktyki [cbn] powinny jako żywo uzmysłowić nam,
+    że uczynienie dziedziny [divD] prawdziwym predykatem było raczej
+    upośledzonym pomysłem.
+
+    Odpowiedź jest krótka i mało przekonująca, a jest nią mechanizm
+    ekstrakcji. Cóż to takiego? Otóż Coq dobrze sprawdza się przy
+    definiowaniu programów i dowodzeniu ich właściwości, ale raczej
+    słabo w ich wykonywaniu (komendy [Compute] czy [Eval] są dość
+    kiepskie).
+
+    Mechanizm ekstrakcji to coś, co nas z tej nędzy trochę ratuje: daje
+    on nam możliwość przetłumaczenia naszego programu w Coqu na program
+    w jakimś nieco bardziej mainstreamowym języku funkcyjnym (jak OCaml,
+    Haskell czy Scheme), w których programy da się normalnie odpalać i
+    działają nawet szybko.
+
+    Mechanizm ten nie będzie nas interesował, ponieważ moim zdaniem jest
+    on ślepą uliczką ewolucji - zamiast niego trzeba będzie po prostu
+    wymyślić sposób efektywnej kompilacji Coqowych programow, ale to już
+    temat na inną bajkę.
+
+    Nie będziemy zatem zbytnio zagłębiać się w szczegóły ekstrakcji -
+    zanim zupełnie o niej zapomnimy, zobaczmy tylko jeden przykład. *)
+
+Extraction Language Haskell.
+
+(** Komenda [Extraction Language] ustawia język, do którego chcemy
+    ekstrahować. My użyjemy Haskella, gdyż pozostałych dostępnych
+    języków nie lubię. *)
+
+Extraction again.div'.
+(* ===> div' :: Nat -> Nat -> Nat
+        div' = div'_aux *)
+
+(** Komenda [Extraction p] tłumaczy Coqowy program [p] na program
+    Haskellowy. Mimo że nie znamy Haskella, spróbujmy przeczytać
+    wynikowy program.
+
+    Wynikiem ekstrakcji jest Haskellowa funkcja [div'] o typie
+    [Nat -> Nat -> Nat], gdzie [Nat] to Haskellowa wersja Coqowego [nat]
+    (podwójny dwukropek [::] oznacza w Haskellu to samo, co pojedynczy
+    dwukropek [:] w Coqu). Funkcja [div'] jest zdefiniowana jako... i tu
+    zaskoczenie... [div'_aux]. Ale jak to? Rzućmy jeszcze raz okiem na
+    oryginalną, Coqową definicję. *)
+
+Print again.div'.
+(* ===> again.div' = 
+        fun n m : nat => again.div'_aux (again.divD_all n m)
+             : nat -> nat -> nat *)
+
+(** Gdzież w wyekstrahowanym programie podział się dowód [divD_all n m]?
+    Otóż nie ma go, bo Haskell to zwykły język programowania, w którym
+    nie można dowodzić. O to właśnie chodzi w mechanizmie ekstrakcji -
+    w procesie ekstrakcji wyrzucić z Coqowego programu wszystkie dowody
+    i przetłumaczyć tylko tę część programu, która jest niezbędna, by
+    wyekstrahowany program się obliczał.
+
+    Mogłoby się wydawać dziwne, że najpierw w pocie czoła dowodzimy czegoś
+    w Coqu, a potem mechanizm ekstrakcji się tego pozbywa. Jest to jednak
+    całkiem naturalne - skoro udało nam się udowodnić jakąś właściwość
+    naszego programu, to wiemy, że ma on tę właściwość i dowód nie jest
+    nam już do niczego potrzebny, a zatem ekstrakcja może się go pozbyć. *)
+
+Print again.div'_aux.
+(* ===>
+    again.div'_aux = 
+    fix div'_aux (n m : nat) (d : again.divD n m) {struct d} : nat :=
+    match le_lt_dec (S m) n with
+        | left H =>
+            S (div'_aux (n - S m) m (again.divD_ge_inv n m H d))
+        | right _ => 0
+    end
+      : forall n m : nat, again.divD n m -> nat *)
+
+Extraction again.div'_aux.
+(* ===>
+    div'_aux :: Nat -> Nat -> Nat
+    div'_aux n m =
+      case le_lt_dec (S m) n of {
+       Left -> S (div'_aux (sub n (S m)) m);
+       Right -> O} *)
+
+(** A tak wygląda wyekstrahowana funkcja [div'_aux]. Jeżeli pominiemy
+    różnice składniowe między Coqiem i Haskellem (w Coqu typ jest na
+    dole, po dwukropku, a w Haskellu na górze, przed definicją; w Coqu
+    mamy [match], a w Haskellu [case] etc.) to wygląda całkiem podobnie.
+    Kluczową różnicą jest widniejący w Coqowej wersji dowód należenia do
+    dziedziny [again.divD_ge_inv n m H d], który w Haskellowym ekstrakcie
+    został usunięty.
+
+    Cały ten cyrk z przerabianiem [divD] na prawdziwy predykat był po
+    to, żeby dowód należenia do dziedziny mógł zostać usunięty podczas
+    ekstrakcji. Dzięki temu wyekstrahowany program w Haskellu wygląda
+    jak gdyby został napisany ręcznie. Jest też szybszy i krótszy, bo
+    nie ma tam wzmianki o [divD_all], która musiałaby się pojawić, gdyby
+    [divD] było rodziną typów, a nie predykatem. *)
+
+Extraction div'_aux.
+(* ===> 
+    div'_aux :: Nat -> Nat -> DivD -> Nat
+    div'_aux _ _ h =
+      case h of {
+       DivD_lt _ _ -> O;
+       DivD_ge n m h' -> S (div'_aux (sub n (S m)) m h')} *)
+
+(** Tak wygląda ekstrakt oryginalnego [div'_aux], tzn. tego, w którym [divD]
+    nie jest predykatem, lecz rodziną typów. W wyekstrahowanym programie, w
+    typie funkcji [div'_aux] pojawia się złowieszczy typ [DivD], który jest
+    zupełnie zbędny, bo Haskell (i żaden inny funkcyjny język programowania,
+    który nie jest przeznaczony do dowodzenia) nie narzuca żadnych ograniczeń
+    na wywołania rekurencyjne.
+
+    No, to by było na tyle. Życzę ci, żebyś nigdy nie musiał stosować
+    wariantu metody induktywnej dziedziny opisanej w tym podrozdziale
+    ani nie musiał niczego ekstrahować. *)
 
 (** * Plugin [Equations] *)
 

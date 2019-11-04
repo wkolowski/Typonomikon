@@ -3,7 +3,6 @@ Rekursja:
 3. Rekursja wyższego rzędu, tzn. nie w pełni zaaplikowane wywołania rekurencyjne.
 
 Rekursja ogólna:
-1. W (pod)rozdziale o metodzie induktywnej dziedziny dorzucić wyjaśnienia na temat tego, jak zrobić dziedzinę D : A -> Prop, a nie tylko D : A -> Type.
 2. Rekursja przez iterację.
 3. Rekursja koindukcjowa.
 
