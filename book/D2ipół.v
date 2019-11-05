@@ -361,17 +361,18 @@ Fail Fixpoint div (n m : nat) : nat :=
   else div (n - m) m.
 (* end hide *)
 
-(** * Rekursja zagnieżdżona *)
+(** * Rekursja monotoniczna *)
 
 Require Import X3.
 
 (** Czas na omówienie pewnej ciekawej, ale średnio użytecznej formy rekursji
     (z pamięci nie jestem w stanie przytoczyć więcej niż dwóch sztampowych
-    przykładów jej użycia), a jest nią rekursja zagnieżdżona (zwana też
-    czasem rekursją monotoniczną - kwestię najlepszej nazwy dla tego czegoś
-    i jej uzasadnienia omówimy potem).
+    przykładów jej użycia), a jest nią rekursja monotoniczna (zwana też
+    czasem rekursją zagnieżdżoną, ale nie będziemy używać tej nazwy, gdyż
+    dotychczas używaliśmy jej na określenie rekursji, w której arguemntem
+    wywołania rekurencyjnego jest wynik innego wywołania rekurencyjnego).
 
-    Cóż to za zwierzątko, rekursja zagnieżdżona? Żeby się tego dowiedzieć,
+    Cóż to za zwierzątko, rekursja monotoniczna? Żeby się tego dowiedzieć,
     przypomnijmy sobie najpierw, jak technicznie w Coqu zrealizowana jest
     rekursja strukturalna. *)
 
@@ -399,7 +400,7 @@ Definition plus' : nat -> nat -> nat :=
     działa podobnie jak [fun], ale pozwala dodatkowo nadać definiowanej przez
     siebie funkcji nazwę, dzięki czemu możemy robić wywołania rekurencyjne.
 
-    Czym więc jest rekursja zagnieżdżona? Z rekursją zagnieżdżoną mamy do
+    Czym więc jest rekursja monotoniczna? Z rekursją monotoniczną mamy do
     czynienia, gdy za pomocą [fix]a (czyli przez rekursję) definiujemy
     funkcję, która zwraca inną funkcję, i ta zwracana funkcja także jest
     zdefiniowana za pomocą [fix]a (czyli przez rekursję). Oczywiście to
@@ -407,18 +408,18 @@ Definition plus' : nat -> nat -> nat :=
     która jest zdefiniowana za pomocą [fix]a i tak dalej.
 
     Widać zatem jak na dłoni, że [plus] ani [plus'] nie są przykładami
-    rekursji zagnieżdżonej. Wprawdzie definiują one za pomocą [fix]a
+    rekursji monotonicznej. Wprawdzie definiują one za pomocą [fix]a
     (lub komendy [Fixpoint]) funkcję, która zwraca inną funkcję, ale ta
     zwracana funkcja nie jest zdefiniowana za pomocą [fix]a, lecz za
     pomocą [fun], a więc nie jest rekurencyjna.
 
-    Podsumowując: rekursja jest zagnieżdżona, jeżeli w definicji
+    Podsumowując: rekursja jest monotoniczna, jeżeli w definicji
     funkcji pojawiają się co najmniej dwa wystąpienia [fix], jedno
     wewnątrz drugiego (przy czym rzecz jasna [Fixpoint] też liczy
     się jako [fix]).
 
     No to skoro już wiemy, czas zobaczyć przykład jakiejś funkcji, która
-    jest zdefiniowana przez rekursję zagnieżdżoną. *)
+    jest zdefiniowana przez rekursję monotoniczną. *)
 
 Fail Fixpoint ack (n m : nat) : nat :=
 match n, m with

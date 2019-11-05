@@ -17,7 +17,6 @@ Indukcja:
 
 Nazwy:
 1. Wprowadzić wcześniej określenie "motyw eliminacji". Posługiwać się częściej określeniem "eliminacja" zamiast "indukcja"/"rekursja".
-2. Rozstrzygnąć konflikt nazw między rekursją zagnieżdżoną (zagnieżdżone wywołania rekurencyjne) oraz rekursją zagnieżdżoną (zagnieżdżone fixy).
 
 Długofalowe:
 1. Użyć jsCoq do zrobienia interaktywnej książki, która wyglądałaby jakoś tak: https://x80.org/rhino-coq/v8.10/

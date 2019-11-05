@@ -354,7 +354,7 @@ Tym razem Coq widzi, że <span class="inlinecode"><span class="id" title="var">S
 </div>
 
 <div class="doc">
-<a name="lab236"></a><h1 class="section">Rekursja zagnieżdżona</h1>
+<a name="lab236"></a><h1 class="section">Rekursja monotoniczna</h1>
 
 </div>
 <div class="code">
@@ -368,13 +368,14 @@ Tym razem Coq widzi, że <span class="inlinecode"><span class="id" title="var">S
 <div class="doc">
 Czas na omówienie pewnej ciekawej, ale średnio użytecznej formy rekursji
     (z pamięci nie jestem w stanie przytoczyć więcej niż dwóch sztampowych
-    przykładów jej użycia), a jest nią rekursja zagnieżdżona (zwana też
-    czasem rekursją monotoniczną - kwestię najlepszej nazwy dla tego czegoś
-    i jej uzasadnienia omówimy potem).
+    przykładów jej użycia), a jest nią rekursja monotoniczna (zwana też
+    czasem rekursją zagnieżdżoną, ale nie będziemy używać tej nazwy, gdyż
+    dotychczas używaliśmy jej na określenie rekursji, w której arguemntem
+    wywołania rekurencyjnego jest wynik innego wywołania rekurencyjnego).
 
 <div class="paragraph"> </div>
 
-    Cóż to za zwierzątko, rekursja zagnieżdżona? Żeby się tego dowiedzieć,
+    Cóż to za zwierzątko, rekursja monotoniczna? Żeby się tego dowiedzieć,
     przypomnijmy sobie najpierw, jak technicznie w Coqu zrealizowana jest
     rekursja strukturalna. 
 </div>
@@ -418,7 +419,7 @@ Ale komenda <span class="inlinecode"><span class="id" title="keyword">Fixpoint</
 
 <div class="paragraph"> </div>
 
-    Czym więc jest rekursja zagnieżdżona? Z rekursją zagnieżdżoną mamy do
+    Czym więc jest rekursja monotoniczna? Z rekursją monotoniczną mamy do
     czynienia, gdy za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a (czyli przez rekursję) definiujemy
     funkcję, która zwraca inną funkcję, i ta zwracana funkcja także jest
     zdefiniowana za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a (czyli przez rekursję). Oczywiście to
@@ -428,14 +429,14 @@ Ale komenda <span class="inlinecode"><span class="id" title="keyword">Fixpoint</
 <div class="paragraph"> </div>
 
     Widać zatem jak na dłoni, że <span class="inlinecode"><span class="id" title="var">plus</span></span> ani <span class="inlinecode"><span class="id" title="var">plus'</span></span> nie są przykładami
-    rekursji zagnieżdżonej. Wprawdzie definiują one za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a
+    rekursji monotonicznej. Wprawdzie definiują one za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a
     (lub komendy <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>) funkcję, która zwraca inną funkcję, ale ta
     zwracana funkcja nie jest zdefiniowana za pomocą <span class="inlinecode"><span class="id" title="keyword">fix</span></span>a, lecz za
     pomocą <span class="inlinecode"><span class="id" title="keyword">fun</span></span>, a więc nie jest rekurencyjna.
 
 <div class="paragraph"> </div>
 
-    Podsumowując: rekursja jest zagnieżdżona, jeżeli w definicji
+    Podsumowując: rekursja jest monotoniczna, jeżeli w definicji
     funkcji pojawiają się co najmniej dwa wystąpienia <span class="inlinecode"><span class="id" title="keyword">fix</span></span>, jedno
     wewnątrz drugiego (przy czym rzecz jasna <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> też liczy
     się jako <span class="inlinecode"><span class="id" title="keyword">fix</span></span>).
@@ -443,7 +444,7 @@ Ale komenda <span class="inlinecode"><span class="id" title="keyword">Fixpoint</
 <div class="paragraph"> </div>
 
     No to skoro już wiemy, czas zobaczyć przykład jakiejś funkcji, która
-    jest zdefiniowana przez rekursję zagnieżdżoną. 
+    jest zdefiniowana przez rekursję monotoniczną. 
 </div>
 <div class="code">
 

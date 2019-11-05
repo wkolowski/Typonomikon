@@ -97,6 +97,31 @@ Turbo poważnym problemem jest brak spójności w nazywaniu różnych form rekur
 - rekursja strukturalna bierze nazwę od tego, że argument główny jest strukturalnie mniejszy
 - rekursja ogonowa bierze nazwę z jakichś kompilatorowych slangów
 
-Czy da się jakoś ujednolicić te nazwy, np. nazywać każdy rodzaj rekursji od tej samej cechy, np. od tego, jaki jest argument wywołania rekurencyjnego?
-
 Inny problem jest taki, że to co na obrazku nazywa się rekursją prymitywną, pozwala w szczególności (np. używając zagnieżdżania) zrobić funkcję Ackermanna, która nie jest prymitywnie rekurencyjna według bardziej klasycznego znaczenia tego terminu. Wobec tego przydałby się inny termin... albo i nie - wprowadźmy więcej konfuzji.
+
+## Nazwy wesoło hasające w stajni Augiasza
+
+Niestety, ale nazwy różnych rodzajów rekursji są dość niejednolite i przypadkowe i to na tyle, że zdarzyło mi się nazwać dwa zupełnie niepowiązane rodzaje rekursji rekursją zagnieżdżoną - pierwszy z nich ma zagnieżdżone wywołania rekurencyjne, a drugi zagnieżdża jeden fix w drugim.
+
+Podziały rekursji ze względu na:
+- sposób ustalenia terminacji:
+  - rekursja prymitywna
+  - rekursja strukturalna
+  - rekursja ogólna
+- postać wywołania rekurencyjnego:
+  - 
+
+
+
+Rekursja po paliwie
+Rekursja dobrze ufundowana
+
+Rekursja zagnieżdżona
+Metoda induktywno-rekurencyjnej dziedziny
+Metoda induktywnej dziedziny 2
+Plugin Equations
+Podsumowanie
+D2ipół
+Rekursja prymitywna (TODO)
+Rekursja zagnieżdżona
+Rekursja wyższego rzędu (TODO)
