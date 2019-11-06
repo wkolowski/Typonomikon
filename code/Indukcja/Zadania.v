@@ -207,6 +207,35 @@ Inductive hBTree (A : Type) : nat -> Type :=
     | hNode : A -> forall {n m : nat},
                      hBTree A n -> hBTree A m -> hBTree A (S (max n m)).
 
+(** Zdefiniuj typ list, które mogą trzymać wartości różnych typów.
+    Typ każdego elementu listy nie jest jednak dowolny - jest on
+    zdeterminowany przez indeks, pod którym element ten występuje
+    na liście. *)
+
+Inductive DepList (P : nat -> Type) : nat -> Type :=
+    | dnil : DepList P 0
+    | dcons : forall {n : nat}, P n -> DepList P n -> DepList P (S n).
+
+Definition P (n : nat) : Type :=
+match n with
+    | 0 => bool
+    | 1 => Set
+    | 2 => nat
+    | _ => Type
+end.
+
+Goal DepList P 4.
+Proof.
+  constructor.
+  cbn. exact Set.
+  constructor.
+  cbn. exact 42.
+  constructor.
+  cbn. exact nat.
+  constructor.
+  cbn. exact true.
+  constructor.
+Qed.
 
 (** * Predykat i relacje dla koinduktywnych pierdółek. *)
 

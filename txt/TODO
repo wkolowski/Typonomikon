@@ -12,7 +12,7 @@ Indukcja:
 
 Ćwiczenia:
 1. Ćwiczenia z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
-2. Ćwiczenia z definiowania typów induktywnych (i relacji też).
+2. Ćwiczenia z definiowania typów induktywnych (i relacji też). W tym takie:
 3. Ćwiczenia z uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
 
 Nazwy:
@@ -28,7 +28,6 @@ Inne:
 13. Pamiętać o resztkach z rozdziału o listach.
 14. Opisać taktyki dla redukcji i obliczeń.
 15. Opisać podstawy teorii typów.
-16. Poprawić kwestię komendy Qed exporting w I2.
 17. Opisać zmienne egzystencjalne i odpowiadające im taktyki.
 18. Opisać taktyki do radzenia sobie z typami zależnymi.
 19. Opisać: silnia, współczynniki dwumianowe, sumy szeregów, charakteryzowanie wzorów rekurencyjnych.
