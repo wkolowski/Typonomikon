@@ -361,6 +361,12 @@ Fail Fixpoint div (n m : nat) : nat :=
   else div (n - m) m.
 (* end hide *)
 
+(** * Jak działa indukcja (nie, nie kuchenka) *)
+
+(** * Rekursja strukturalna (TODO) *)
+
+(** * Reguły eliminacji (TODO) *)
+
 (** * Rekursja monotoniczna *)
 
 Require Import X3.
@@ -874,6 +880,8 @@ Restart.
         admit.
 Abort.
 (* end hide *)
+
+(** * Rząd rżnie głupa, czyli o pierwszym i wyższym rzędzie *)
 
 (** * Rekursja wyższego rzędu (TODO) *)
 

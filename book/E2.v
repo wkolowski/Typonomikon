@@ -4,7 +4,6 @@ Require Import Arith.
 
 (* begin hide *)
 Require Import Recdef.
-(* end hide *)
 
 (** Prerekwizyty:
     - [Empty_set], [unit], [prod], [sum] i funkcje
@@ -12,8 +11,12 @@ Require Import Recdef.
     - [exists!]
     - równość [eq] *)
 
+(* end hide *)
+
 (** W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.
-    Trzeba przyznać na wstępie, że rozdział będzie raczej matematyczny. *)
+    Trzeba przyznać na wstępie, że rozdział będzie raczej matematyczny
+    (co wcale nie powinno cię odstraszać - matematyka jest świetna, a
+    najbardziej praktyczną rzeczą w kosmosie jest dobra teoria). *)
 
 (** * Funkcje *)
 
@@ -36,73 +39,68 @@ Require Import Recdef.
     obliczone. Jest to coś, co bardzo mocno odróżnia Coqa oraz rachunek
     konstrukcji (jego teoretyczną podstawę) od innych systemów formalnych. *)
 
-Definition app {A B : Type} (f : A -> B) (x : A) : B := f x.
-
-Definition app' {A B : Type} (x : A) (f : A -> B) : B := f x.
-
-Notation "f $ x" := (app f x) (left associativity, at level 110).
-
-Notation "x $> f" := (app' x f) (right associativity, at level 60).
+Notation "f $ x" := (f x) (left associativity, at level 110, only parsing).
+Notation "x |> f" := (f x) (right associativity, at level 60, only parsing).
 
 Check plus (2 + 2) (3 + 3).
 Check plus $ 2 + 2 $ 3 + 3.
 
 Check (fun n : nat => n + n) 21.
-Check 21 $> fun n : nat => n + n.
+Check 21 |> fun n : nat => n + n.
 
 (** Najważniejszą rzeczą, jaką możemy zrobić z funkcją, jest zaaplikowanie
     jej do argumentu. Jest to tak częsta operacja, że zdefiniujemy sobie
     dwie notacje, które pozwolą nam zaoszczędzić kilka stuknięć w klawiaturę.
 
-    Uwaga techniczna: nie możemy przypisać notacji do wyrażenia "f x", gdyż
-    zepsuło by to wyświetanie. Z tego powodu musimy napisać dwie osobne
-    funkcje [app] i [app'] i do nich przypisać notacje.
+    Notacja [$] (pożyczona z języka Haskell) będzie nam służyć do niepisania
+    nawiasów: jeżeli argumentami funkcji będą skomplikowane termy, zamiast
+    pisać wokół nich parę nawiasów, będziemy mogli wstawić tylko jeden symbol
+    dolara "$$". Dzięki temu zamiast 2n nawiasów napiszemy tylko n znaków "$$"
+    (choć trzeba przyznać, że będziemy musieli pisać więcej spacji).
 
-    Notacja [$] będzie nam służyć do niepisania nawiasów: jeżeli argumentami
-    funkcji będą skomplikowane termy, zamiast pisać wokół nich parę nawiasów,
-    będziemy mogli wstawić tylko jeden symbol dolara "$$". Dzięki temu zamiast
-    2n nawiasów napiszemy tylko n znaków "$$" (choć trzeba przyznać, że
-    będziemy musieli pisać więcej spacji).
+    Notacja [|>] (pożyczona z języka F##) umożliwi nam pisanie aplikacji w odwrotnej
+    kolejności. Dzięki temu będziemy mogli np. pomijać nawiasy w abstrakcji. Jako,
+    że nie da się zrobić notacji w stylu "x f", jest to najlepsze dostępne nam
+    rozwiązanie. *)
 
-    Notacja [$>] umożliwi nam pisanie aplikacji w odwrotnej kolejności. Dzięki
-    temu będziemy mogli np. pomijać nawiasy w abstrakcji. Jako, że nie da się
-    zrobić notacji "x f", jest to najlepsze dostępne nam rozwiązanie. *)
-
-Definition comp {A B C : Type} (f : A -> B) (g : B -> C)
-  : A -> C := fun x : A => g (f x).
+Definition comp
+  {A B C : Type} (f : A -> B) (g : B -> C) : A -> C :=
+    fun x : A => g (f x).
 
 Notation "f .> g" := (comp f g) (left associativity, at level 40).
 
-(** Najważniejszą operacją, jaką możemy wykonywać na funkcjach, jest złożenie.
-    Jedynym warunkiem jest, aby przeciwdziedzina pierwszej funkcji była taka
-    sama, jak dziedzina drugiej funkcji. Składanie funkcji jest łączne.
+(** Drugą najważniejszą operacją, jaką możemy wykonywać na funkcjach, jest
+    składanie. Jedynym warunkiem jest aby przeciwdziedzina pierwszej funkcji
+    była taka sama, jak dziedzina drugiej funkcji. *)
+
+Lemma comp_assoc :
+  forall (A B C D : Type) (f : A -> B) (g : B -> C) (h : C -> D),
+    (f .> g) .> h = f .> (g .> h).
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+(** Składanie funkcji jest łączne. Zagadka: czy jest przemienne?
 
     Uwaga techniczna: jeżeli prezentuję jakieś twierdzenie bez dowodu, to
     znaczy, że dowód jest ćwiczeniem. *)
 
-Theorem comp_assoc :
-  forall (A B C D : Type) (f : A -> B) (g : B -> C) (h : C -> D),
-    (f .> g) .> h = f .> (g .> h).
-(* begin hide *)
-Proof. trivial. Qed.
-(* end hide *)
-
-Definition id (A : Type) : A -> A := fun x : A => x.
+Definition id {A : Type} : A -> A := fun x : A => x.
 
 (** Najważniejszą funkcją w całym kosmosie jest identyczność. Jest to funkcja,
     która nie robi zupełnie nic. Jej waga jest w tym, że jest ona elementem
     neutralnym składania funkcji. *)
 
-Theorem id_left :
-  forall (A B : Type) (f : A -> B), id A .> f = f.
+Lemma id_left :
+  forall (A B : Type) (f : A -> B), id .> f = f.
 (* begin hide *)
-Proof. trivial. Qed.
+Proof. reflexivity. Qed.
 (* end hide *)
 
-Theorem id_right :
-  forall (A B : Type) (f : A -> B), f .> id B = f.
+Lemma id_right :
+  forall (A B : Type) (f : A -> B), f .> id = f.
 (* begin hide *)
-Proof. trivial. Qed.
+Proof. reflexivity. Qed.
 (* end hide *)
 
 Definition const {A B : Type} (b : B) : A -> B := fun _ => b.
@@ -119,7 +117,7 @@ Definition flip
 
 Fixpoint iter {A : Type} (n : nat) (f : A -> A) : A -> A :=
 match n with
-    | 0 => id A
+    | 0 => id
     | S n' => f .> iter n' f
 end.
 
@@ -146,7 +144,7 @@ Print eq.
     konstruktora [eq_refl], jest równa samej sobie. Prawdą jest też mniej
     oczywisty fakt: każda funkcja jest równa swojej η-ekspansji. *)
 
-Theorem eta_expansion :
+Lemma eta_expansion :
   forall (A B : Type) (f : A -> B), f = fun x : A => f x.
 Proof. reflexivity. Qed.
 
@@ -164,7 +162,7 @@ Print Assumptions eta_expansion.
     danego termu. Napis "Closed under the global context" oznacza, że żadnego
     aksjomatu nie użyto. *)
 
-Theorem plus_1_eq :
+Lemma plus_1_eq :
   (fun n : nat => 1 + n) = (fun n : nat => n + 1).
 Proof.
   trivial.
@@ -197,7 +195,7 @@ Check @functional_extensionality.
     właśnie powodów jest on jednym z najczęściej używanych w Coqu aksjomatów.
     My też będziemy go wykorzystywać. *)
 
-Theorem plus_1_eq :
+Lemma plus_1_eq :
   (fun n : nat => 1 + n) = (fun n : nat => n + 1).
 Proof.
   extensionality n. rewrite plus_comm. trivial.
@@ -218,7 +216,7 @@ Qed.
     są równe wtedy i tylko wtedy, gdy ich wartości dla wszystkich argumentów
     są równe. *)
 
-Theorem binary_funext :
+Lemma binary_funext :
   forall (A B C : Type) (f g : A -> B -> C),
     f = g <-> forall (a : A) (b : B), f a b = g a b.
 (* begin hide *)
@@ -229,7 +227,85 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Izomorfizmy, lewe i prawe odwrotności (TODO) *)
+(** * Odwrotności i izomorfizmy (TODO) *)
+
+Definition has_preinverse {A B : Type} (f : A -> B) : Prop :=
+  exists g : B -> A, g .> f = id.
+
+Definition has_postinverse {A B : Type} (f : A -> B) : Prop :=
+  exists g : B -> A, f .> g = id.
+
+Definition isomorphism {A B : Type} (f : A -> B) : Prop :=
+  exists g : B -> A, g .> f = id /\ f .> g = id.
+
+Lemma iso_has_preinverse :
+  forall {A B : Type} {f : A -> B},
+    isomorphism f -> has_preinverse f.
+(* begin hide *)
+Proof.
+  destruct 1 as (g & Hpre & Hpost).
+  red. exists g. assumption.
+Qed.
+(* end hide *)
+
+Lemma iso_has_postinverse :
+  forall {A B : Type} {f : A -> B},
+    isomorphism f -> has_postinverse f.
+(* begin hide *)
+Proof.
+  destruct 1 as (g & Hpre & Hpost).
+  red. exists g. assumption.
+Qed.
+(* end hide *)
+
+Lemma both_inverses_isomorphism :
+  forall {A B : Type} {f : A -> B},
+    has_preinverse f -> has_postinverse f -> isomorphism f.
+(* begin hide *)
+Proof.
+  destruct 1 as (g1 & Hpre), 1 as (g2 & Hpost).
+  red. exists (g1 .> f .> g2). split.
+    rewrite !comp_assoc, <- (comp_assoc _ _ _ _ f g2 f).
+      rewrite Hpost, id_left, Hpre. reflexivity.
+    rewrite Hpre, id_left, Hpost. reflexivity.
+Qed.
+(* end hide *)
+
+(** * Skracalność *)
+
+Definition precancellable {A B : Type} (f : A -> B) : Prop :=
+  forall (X : Type) (g h : B -> X), f .> g = f .> h -> g = h.
+
+Definition postcancellable {A B : Type} (f : A -> B) : Prop :=
+  forall (X : Type) (g h : X -> A), g .> f = h .> f -> g = h.
+
+Lemma has_preinverse_precancellable :
+  forall {A B : Type} {f : A -> B},
+    has_preinverse f -> precancellable f.
+(* begin hide *)
+Proof.
+  destruct 1 as [g pre].
+  red. intros X h1 h2 H.
+  apply (f_equal (fun x => g .> x)) in H.
+  rewrite <- !comp_assoc, !pre, !id_left in H.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma has_postinverse_postcancellable :
+  forall {A B : Type} {f : A -> B},
+    has_postinverse f -> postcancellable f.
+(* begin hide *)
+Proof.
+  destruct 1 as [g post].
+  red. intros X h1 h2 H.
+  apply (f_equal (fun x => x .> g)) in H.
+  rewrite !comp_assoc, !post, !id_right in H.
+  assumption.
+Qed.
+(* end hide *)
+
+
 
 (** * Injekcje *)
 
@@ -297,7 +373,7 @@ Definition injective' {A B : Type} (f : A -> B) : Prop :=
 (** Pokaż, że [injective] jest mocniejsze od [injective']. Pokaż też, że w
     logice klasycznej są one równoważne. *)
 
-Theorem injective_injective' :
+Lemma injective_injective' :
   forall (A B : Type) (f : A -> B),
     injective f -> injective' f.
 (* begin hide *)
@@ -307,7 +383,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem injective'_injective :
+Lemma injective'_injective :
   (forall P : Prop, ~ ~ P -> P) ->
   forall (A B : Type) (f : A -> B),
     injective' f -> injective f.
@@ -320,22 +396,22 @@ Qed.
 
 (** Udowodnij, że różne funkcje są lub nie są injektywne. *)
 
-Theorem id_injective :
-  forall A : Type, injective (id A).
+Lemma id_injective :
+  forall A : Type, injective (@id A).
 (* begin hide *)
 Proof.
   intro. unfold injective, id. trivial.
 Qed.
 (* end hide *)
 
-Theorem S_injective : injective S.
+Lemma S_injective : injective S.
 (* begin hide *)
 Proof.
   red. inversion 1. trivial.
 Qed.
 (* end hide *)
 
-Theorem const_unit_inj :
+Lemma const_unit_inj :
   forall (A : Type) (a : A),
     injective (fun _ : unit => a).
 (* begin hide *)
@@ -344,7 +420,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem add_k_left_inj :
+Lemma add_k_left_inj :
   forall k : nat, injective (fun n : nat => k + n).
 (* begin hide *)
 Proof.
@@ -354,7 +430,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mul_k_inj :
+Lemma mul_k_inj :
   forall k : nat, k <> 0 -> injective (fun n : nat => k * n).
 (* begin hide *)
 Proof.
@@ -379,7 +455,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem const_2elem_not_inj :
+Lemma const_2elem_not_inj :
   forall (A B : Type) (b : B),
     (exists a a' : A, a <> a') -> ~ injective (fun _ : A => b).
 (* begin hide *)
@@ -389,7 +465,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem mul_k_0_not_inj :
+Lemma mul_k_0_not_inj :
   ~ injective (fun n : nat => 0 * n).
 (* begin hide *)
 Proof.
@@ -397,7 +473,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem pred_not_injective : ~ injective pred.
+Lemma pred_not_injective : ~ injective pred.
 (* begin hide *)
 Proof.
   unfold injective; intro. specialize (H 0 1 eq_refl). inversion H.
@@ -407,7 +483,7 @@ Qed.
 (** Jedną z ważnych właściwości injekcji jest to, że są składalne:
     złożenie dwóch injekcji daje injekcję. *)
 
-Theorem inj_comp :
+Lemma inj_comp :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
     injective f -> injective g -> injective (f .> g).
 (* begin hide *)
@@ -420,7 +496,7 @@ Qed.
 (** Ta właściwość jest dziwna. Być może kiedyś wymyślę dla niej jakąś
     bajkę. *)
 
-Theorem LOLWUT :
+Lemma LOLWUT :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
     injective (f .> g) -> injective f.
 (* begin hide *)
@@ -449,7 +525,7 @@ Qed.
 (** Udowodnij, że nie istnieje injekcja z [bool] w [unit]. Znaczy to, że
     [bool] ma więcej elementów, czyli jest większy, niż [unit]. *)
 
-Theorem no_inj_bool_unit :
+Lemma no_inj_bool_unit :
   ~ exists f : bool -> unit, injective f.
 (* begin hide *)
 Proof.
@@ -463,7 +539,7 @@ Qed.
     że [Empty_set] ma nie więcej elementów, niż każdy inny typ (co nie
     powinno nas dziwić, gdyż [Empty_set] nie ma żadnych elementów). *)
 
-Theorem inj_Empty_set_A :
+Lemma inj_Empty_set_A :
   forall A : Type, exists f : Empty_set -> A, injective f.
 (* begin hide *)
 Proof.
@@ -491,7 +567,7 @@ Definition surjective {A B : Type} (f : A -> B) : Prop :=
 
     Zobaczmy przykład i kontrprzykład. *)
 
-Theorem pred_surjective : surjective pred.
+Lemma pred_surjective : surjective pred.
 Proof.
   unfold surjective; intros. exists (S b). cbn. trivial.
 Qed.
@@ -506,7 +582,7 @@ Qed.
     naturalnej". Nie powinno nas to zaskakiwać, wszakże każda liczba naturalna
     jest poprzednikiem swojego następnika, tzn. [pred (S n) = n]. *)
 
-Theorem S_not_surjective : ~ surjective S.
+Lemma S_not_surjective : ~ surjective S.
 Proof.
   unfold surjective; intro. destruct (H 0). inversion H0.
 Qed.
@@ -523,7 +599,7 @@ Qed.
 (** Pokaż, że złożenie surjekcji jest surjekcją. Udowodnij też "dziwną
     właściwość" surjekcji. *)
 
-Theorem sur_comp :
+Lemma sur_comp :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
     surjective f -> surjective g -> surjective (f .> g).
 (* begin hide *)
@@ -534,7 +610,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem LOLWUT_sur :
+Lemma LOLWUT_sur :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
     surjective (f .> g) -> surjective g.
 (* begin hide *)
@@ -553,65 +629,65 @@ Qed.
     mnożenie (rozważ 1 osobno). *)
 
 (* begin hide *)
-Theorem id_sur :
-  forall A : Type, surjective (id A).
+Lemma id_sur :
+  forall A : Type, surjective (@id A).
 Proof.
   red; intros. exists b. trivial.
 Qed.
 
-Theorem plus_0_l_sur : surjective (fun n : nat => 0 + n).
+Lemma plus_0_l_sur : surjective (fun n : nat => 0 + n).
 Proof.
   red; intros. exists b. trivial.
 Qed.
 
-Theorem plus_0_r_sur : surjective (fun n : nat => n + 0).
+Lemma plus_0_r_sur : surjective (fun n : nat => n + 0).
 Proof.
   red; intros. exists b. rewrite <- plus_n_O. trivial.
 Qed.
 
-Theorem plus_Sn_l_not_sur :
+Lemma plus_Sn_l_not_sur :
   forall k : nat, ~ surjective (fun n : nat => S k + n).
 Proof.
   unfold surjective, not; intros. specialize (H 0).
   destruct H as [a H]. inversion H.
 Qed.
 
-Theorem plus_Sn_r_not_sur :
+Lemma plus_Sn_r_not_sur :
   forall k : nat, ~ surjective (fun n : nat => n + S k).
 Proof.
   unfold surjective, not; intros. specialize (H 0).
   destruct H as [a H]. rewrite plus_comm in H. inversion H.
 Qed.
 
-Theorem minus_sur :
+Lemma minus_sur :
   forall k : nat, surjective (fun n : nat => n - k).
 Proof.
   red; intros. exists (k + b). rewrite minus_plus. trivial.
 Qed.
 
-Theorem mult_1_l_sur : surjective (fun n : nat => 1 * n).
+Lemma mult_1_l_sur : surjective (fun n : nat => 1 * n).
 Proof.
   red; intros. exists b. Search (1 * _). apply Nat.mul_1_l.
 Qed.
 
-Theorem mult_1_r_sur : surjective (fun n : nat => n * 1).
+Lemma mult_1_r_sur : surjective (fun n : nat => n * 1).
 Proof.
   red; intros. exists b. apply Nat.mul_1_r.
 Qed.
 
-Theorem mult_0_l_not_sur : ~ surjective (fun n : nat => 0 * n).
+Lemma mult_0_l_not_sur : ~ surjective (fun n : nat => 0 * n).
 Proof.
   unfold surjective, not; intros. specialize (H 1).
   destruct H as [a H]. cbn in H. inversion H.
 Qed.
 
-Theorem mult_0_r_not_sur : ~ surjective (fun n : nat => n * 0).
+Lemma mult_0_r_not_sur : ~ surjective (fun n : nat => n * 0).
 Proof.
   unfold surjective, not; intros. specialize (H 1).
   destruct H as [a H]. rewrite Nat.mul_0_r in H. inversion H.
 Qed.
 
-Theorem mult_SS_l_not_sur :
+Lemma mult_SS_l_not_sur :
   forall k : nat, ~ surjective (fun n : nat => S (S k) * n).
 Proof.
   unfold surjective, not; intros. specialize (H 1).
@@ -620,7 +696,7 @@ Proof.
     inversion H. rewrite plus_comm in H1. inversion H1.
 Qed.
 
-Theorem mult_SS_r_not_sur :
+Lemma mult_SS_r_not_sur :
   forall k : nat, ~ surjective (fun n : nat => n * S (S k)).
 Proof.
   unfold surjective, not; intros. specialize (H 1).
@@ -646,7 +722,7 @@ Qed.
 (** Pokaż, że nie istnieje surjekcja z [unit] w [bool]. Oznacza to, że [unit]
     nie jest większy niż [bool]. *)
 
-Theorem no_sur_unit_bool :
+Lemma no_sur_unit_bool :
   ~ exists f : unit -> bool, surjective f.
 (* begin hide *)
 Proof.
@@ -660,7 +736,7 @@ Qed.
     Oznacza to, że każdy typ niepusty ma co najmniej tyle samo elementów,
     co [unit], tzn. każdy typ nie pusty ma co najmniej jeden element. *)
 
-Theorem sur_A_unit :
+Lemma sur_A_unit :
   forall (A : Type) (nonempty : A), exists f : A -> unit, surjective f.
 (* begin hide *)
 Proof.
@@ -677,14 +753,14 @@ Definition bijective {A B : Type} (f : A -> B) : Prop :=
 (** Po łacinie przedrostek "bi-" oznacza "dwa". Bijekcja to funkcja, która
     jest zarówno injekcją, jak i surjekcją. *)
 
-Theorem id_bij : forall A : Type, bijective (@id A).
+Lemma id_bij : forall A : Type, bijective (@id A).
 Proof.
   split; intros.
     apply id_injective.
     apply id_sur.
 Qed.
 
-Theorem S_not_bij : ~ bijective S.
+Lemma S_not_bij : ~ bijective S.
 Proof.
   unfold bijective; intro. destruct H.
   apply S_not_surjective. assumption.
@@ -711,7 +787,7 @@ Definition bijective' {A B : Type} (f : A -> B) : Prop :=
 
 (** Udowodnij, że obie definicje są równoważne. *)
 
-Theorem bijective_bijective' :
+Lemma bijective_bijective' :
   forall (A B : Type) (f : A -> B),
     bijective f <-> bijective' f.
 (* begin hide *)
@@ -744,7 +820,7 @@ end.
     zawierającej [n] kopii termu [tt]. Udowodnij, że [unary] jest
     bijekcją. *)
 
-Theorem unary_bij : bijective unary.
+Lemma unary_bij : bijective unary.
 (* begin hide *)
 Proof.
   unfold bijective, injective, surjective. split.
@@ -767,7 +843,7 @@ Qed.
     TODO UWAGA: od teraz twierdzenia, które pozostawię bez dowodu, z
     automatu stają się ćwiczeniami. *)
 
-Theorem bij_comp :
+Lemma bij_comp :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
     bijective f -> bijective g -> bijective (f .> g).
 (* begin hide *)
@@ -806,15 +882,15 @@ Notation "A ~ B" := (equipotent A B) (at level 40).
     jednak jest je pomylić, gdyż pierwsza zawsze bierze dwa argumenty, a
     druga tylko jeden. *)
 
-Theorem equipotent_refl :
+Lemma equipotent_refl :
   forall A : Type, A ~ A.
 (* begin hide *)
 Proof.
-  red. intro. exists (id A). apply id_bij.
+  red. intro. exists id. apply id_bij.
 Qed.
 (* end hide *)
 
-Theorem equipotent_sym :
+Lemma equipotent_sym :
   forall A B : Type, A ~ B -> B ~ A.
 (* begin hide *)
 Proof.
@@ -824,7 +900,7 @@ Proof.
 Admitted.
 (* end hide *)
 
-Theorem equipotent_trans :
+Lemma equipotent_trans :
   forall A B C : Type, A ~ B -> B ~ C -> A ~ C.
 (* begin hide *)
 Proof.
@@ -849,15 +925,15 @@ Definition involutive {A : Type} (f : A -> A) : Prop :=
     zaś funkcja [rev], która odwraca listę — odwrócenie listy dwukrotnie
     daje wyjściową listę. Inwolucją jest też [negb]. *)
 
-Theorem id_inv :
-  forall A : Type, involutive (id A).
+Lemma id_inv :
+  forall A : Type, involutive (@id A).
 (* begin hide *)
 Proof.
   red; intros. trivial.
 Qed.
 (* end hide *)
 
-Theorem rev_inv :
+Lemma rev_inv :
   forall A : Type, involutive (@rev A).
 (* begin hide *)
 Proof.
@@ -865,7 +941,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Theorem negb_inv : involutive negb.
+Lemma negb_inv : involutive negb.
 (* begin hide *)
 Proof.
   red. destruct x; cbn; trivial.
@@ -881,7 +957,7 @@ match l with
     | x :: y :: t => y :: x :: weird t
 end.
 
-Theorem weird_inv :
+Lemma weird_inv :
   forall A : Type, involutive (@weird A).
 (* begin hide *)
 Proof.
@@ -895,7 +971,7 @@ Qed.
     Nietrudno zauważyć, że dwukrotne takie przestawienie jest identycznością.
     UWAGA TODO: dowód wymaga specjalnej reguły indukcyjnej. *)
 
-Theorem flip_inv :
+Lemma flip_inv :
   forall A : Type, involutive (@flip A A A).
 (* begin hide *)
 Proof.
@@ -921,7 +997,7 @@ Qed.
     — pierwsze wywołanie każdej z nich przeszkadza drugiemu wywołaniu drugiej
     z nich odwrócić efekt pierwszego wywołania. *)
 
-Theorem comp_inv :
+Lemma comp_inv :
   forall (A : Type) (f g : A -> A),
     involutive f -> involutive g -> f .> g = g .> f -> involutive (f .> g).
 (* begin hide *)
@@ -937,7 +1013,7 @@ Qed.
     (czyli są "kompatybilne", [f .> g = g .> f]), to ich złożenie również
     jest inwolucją. *)
 
-Theorem inv_bij :
+Lemma inv_bij :
   forall (A : Type) (f : A -> A), involutive f -> bijective f.
 (* begin hide *)
 Proof.
@@ -974,7 +1050,7 @@ Compute map count_inv [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11].
     najpierw definicję inwolucji. *)
 
 Definition involutive' {A : Type} (f : A -> A) : Prop :=
-  f .> f = id A.
+  f .> f = id.
 
 (** Nowa definicja głosi, że inwolucja to taka funkcja, że jej złożenie
     ze sobą jest identycznością. Jeżeli funkcje [f .> f] i [id A]
@@ -982,13 +1058,13 @@ Definition involutive' {A : Type} (f : A -> A) : Prop :=
     definicja jest równoważna starej na mocy aksjomatu ekstensjonalności
     dla funkcji. *)
 
-Theorem involutive_involutive' :
+Lemma involutive_involutive' :
   forall (A : Type) (f : A -> A), involutive f <-> involutive' f.
 (* begin hide *)
 Proof.
   unfold involutive, involutive'; split; intros.
     unfold comp, id. extensionality x. apply H.
-    change x with (id A x) at 2. rewrite <- H. trivial.
+    change x with (id x) at 2. rewrite <- H. reflexivity.
 Qed.
 (* end hide *)
 
@@ -996,9 +1072,9 @@ Qed.
     który ma taki sam efekt. *)
 
 Definition involutive'' {A : Type} (f : A -> A) : Prop :=
-  iter 2 f = id A.
+  iter 2 f = id.
 
-Theorem involutive'_involutive'' :
+Lemma involutive'_involutive'' :
   forall (A : Type) (f : A -> A),
     involutive' f <-> involutive'' f.
 (* begin hide *)
@@ -1014,7 +1090,7 @@ Qed.
     uogólnionej inwolucji otrzymamy, zastępując w definicji 2 przez [n]. *)
 
 Definition gen_involutive {A : Type} (n : nat) (f : A -> A)
-  : Prop := iter n f = id A.
+  : Prop := iter n f = id.
 
 (** Nie żeby pojęcie to było jakoś szczególnie często spotykane lub nawet
     przydatne — wymyśliłem je na poczekaniu. Spróbujmy znaleźć jakąś
@@ -1034,7 +1110,7 @@ Compute weirder [1; 2; 3; 4; 5].
 Compute iter 3 weirder [1; 2; 3; 4; 5].
 (* ===> = [1; 2; 3; 4; 5] : list nat *)
 
-Theorem weirder_inv_3 :
+Lemma weirder_inv_3 :
   forall A : Type, gen_involutive 3 (@weirder A).
 (* begin hide *)
 Proof.
@@ -1064,15 +1140,15 @@ Definition idempotent {A : Type} (f : A -> A) : Prop :=
     ona posortowana i kolejne sortowania niczego w niej nie zmienią. Problemem
     sortowania zajmiemy się w przyszłych rozdziałach. *)
 
-Theorem id_idem :
-  forall A : Type, idempotent (id A).
+Lemma id_idem :
+  forall A : Type, idempotent (@id A).
 (* begin hide *)
 Proof.
   unfold idempotent. trivial.
 Qed.
 (* end hide *)
 
-Theorem const_idem :
+Lemma const_idem :
   forall (A B : Type) (b : B), idempotent (const b).
 (* begin hide *)
 Proof.
@@ -1084,7 +1160,7 @@ Qed.
 Require Import X3.
 (* end hide *)
 
-Theorem take_idem :
+Lemma take_idem :
   forall (A : Type) (n : nat), idempotent (@take A n).
 (* begin hide *)
 Proof.
@@ -1106,7 +1182,7 @@ Qed.
     [n] elementów z takiej listy niczego nie zmieni, gdyż jej długość jest
     mniejsza lub równa ilości elementów, które chcemy wziąć. *)
 
-Theorem comp_idem :
+Lemma comp_idem :
   forall (A : Type) (f g : A -> A),
     idempotent f -> idempotent g -> f .> g = g .> f ->
       idempotent (f .> g).

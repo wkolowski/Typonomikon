@@ -34,28 +34,13 @@
 </div>
 
 <div class="doc">
-Prerekwizyty:
-<ul class="doclist">
-<li> <span class="inlinecode"><span class="id" title="var">Empty_set</span></span>, <span class="inlinecode"><span class="id" title="var">unit</span></span>, <span class="inlinecode"><span class="id" title="var">prod</span></span>, <span class="inlinecode"><span class="id" title="var">sum</span></span> i funkcje
-
-</li>
-<li> właściwości konstruktorów?
-
-</li>
-<li> <span class="inlinecode"><span class="id" title="tactic">exists</span>!</span>
-
-</li>
-<li> równość <span class="inlinecode"><span class="id" title="var">eq</span></span> 
-</li>
-</ul>
-
+W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.
+    Trzeba przyznać na wstępie, że rozdział będzie raczej matematyczny
+    (co wcale nie powinno cię odstraszać - matematyka jest świetna, a
+    najbardziej praktyczną rzeczą w kosmosie jest dobra teoria). 
 <div class="paragraph"> </div>
 
- W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.
-    Trzeba przyznać na wstępie, że rozdział będzie raczej matematyczny. 
-<div class="paragraph"> </div>
-
-<a name="lab352"></a><h1 class="section">Funkcje</h1>
+<a name="lab356"></a><h1 class="section">Funkcje</h1>
 
 <div class="paragraph"> </div>
 
@@ -87,16 +72,8 @@ Prerekwizyty:
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">app</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">B</span> := <span class="id" title="var">f</span> <span class="id" title="var">x</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">app'</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="var">B</span> := <span class="id" title="var">f</span> <span class="id" title="var">x</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Notation</span> &quot;f $ x" := (<span class="id" title="var">app</span> <span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 110).<br/>
-
-<br/>
-<span class="id" title="keyword">Notation</span> &quot;x $&gt; f" := (<span class="id" title="var">app'</span> <span class="id" title="var">x</span> <span class="id" title="var">f</span>) (<span class="id" title="tactic">right</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 60).<br/>
+<span class="id" title="keyword">Notation</span> &quot;f $ x" := (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 110, <span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
+<span class="id" title="keyword">Notation</span> &quot;x |&gt; f" := (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="tactic">right</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 60, <span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Check</span> <span class="id" title="var">plus</span> (2 + 2) (3 + 3).<br/>
@@ -104,7 +81,7 @@ Prerekwizyty:
 
 <br/>
 <span class="id" title="keyword">Check</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + <span class="id" title="var">n</span>) 21.<br/>
-<span class="id" title="keyword">Check</span> 21 $&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Check</span> 21 |&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + <span class="id" title="var">n</span>.<br/>
 
 <br/>
 </div>
@@ -116,29 +93,25 @@ Najważniejszą rzeczą, jaką możemy zrobić z funkcją, jest zaaplikowanie
 
 <div class="paragraph"> </div>
 
-    Uwaga techniczna: nie możemy przypisać notacji do wyrażenia "f x", gdyż
-    zepsuło by to wyświetanie. Z tego powodu musimy napisać dwie osobne
-    funkcje <span class="inlinecode"><span class="id" title="var">app</span></span> i <span class="inlinecode"><span class="id" title="var">app'</span></span> i do nich przypisać notacje.
+    Notacja <span class="inlinecode">$</span> (pożyczona z języka Haskell) będzie nam służyć do niepisania
+    nawiasów: jeżeli argumentami funkcji będą skomplikowane termy, zamiast
+    pisać wokół nich parę nawiasów, będziemy mogli wstawić tylko jeden symbol
+    dolara "$". Dzięki temu zamiast 2n nawiasów napiszemy tylko n znaków "$"
+    (choć trzeba przyznać, że będziemy musieli pisać więcej spacji).
 
 <div class="paragraph"> </div>
 
-    Notacja <span class="inlinecode">$</span> będzie nam służyć do niepisania nawiasów: jeżeli argumentami
-    funkcji będą skomplikowane termy, zamiast pisać wokół nich parę nawiasów,
-    będziemy mogli wstawić tylko jeden symbol dolara "$". Dzięki temu zamiast
-    2n nawiasów napiszemy tylko n znaków "$" (choć trzeba przyznać, że
-    będziemy musieli pisać więcej spacji).
-
-<div class="paragraph"> </div>
-
-    Notacja <span class="inlinecode">$&gt;</span> umożliwi nam pisanie aplikacji w odwrotnej kolejności. Dzięki
-    temu będziemy mogli np. pomijać nawiasy w abstrakcji. Jako, że nie da się
-    zrobić notacji "x f", jest to najlepsze dostępne nam rozwiązanie. 
+    Notacja <span class="inlinecode">|&gt;</span> (pożyczona z języka F#) umożliwi nam pisanie aplikacji w odwrotnej
+    kolejności. Dzięki temu będziemy mogli np. pomijać nawiasy w abstrakcji. Jako,
+    że nie da się zrobić notacji w stylu "x f", jest to najlepsze dostępne nam
+    rozwiązanie. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">comp</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>)<br/>
-&nbsp;&nbsp;: <span class="id" title="var">A</span> -&gt; <span class="id" title="var">C</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">comp</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">C</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Notation</span> &quot;f .&gt; g" := (<span class="id" title="var">comp</span> <span class="id" title="var">f</span> <span class="id" title="var">g</span>) (<span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40).<br/>
@@ -147,9 +120,22 @@ Najważniejszą rzeczą, jaką możemy zrobić z funkcją, jest zaaplikowanie
 </div>
 
 <div class="doc">
-Najważniejszą operacją, jaką możemy wykonywać na funkcjach, jest złożenie.
-    Jedynym warunkiem jest, aby przeciwdziedzina pierwszej funkcji była taka
-    sama, jak dziedzina drugiej funkcji. Składanie funkcji jest łączne.
+Drugą najważniejszą operacją, jaką możemy wykonywać na funkcjach, jest
+    składanie. Jedynym warunkiem jest aby przeciwdziedzina pierwszej funkcji
+    była taka sama, jak dziedzina drugiej funkcji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">comp_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">C</span> -&gt; <span class="id" title="var">D</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span>) .&gt; <span class="id" title="var">h</span> = <span class="id" title="var">f</span> .&gt; (<span class="id" title="var">g</span> .&gt; <span class="id" title="var">h</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Składanie funkcji jest łączne. Zagadka: czy jest przemienne?
 
 <div class="paragraph"> </div>
 
@@ -159,12 +145,7 @@ Najważniejszą operacją, jaką możemy wykonywać na funkcjach, jest złożeni
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">comp_assoc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">C</span> -&gt; <span class="id" title="var">D</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span>) .&gt; <span class="id" title="var">h</span> = <span class="id" title="var">f</span> .&gt; (<span class="id" title="var">g</span> .&gt; <span class="id" title="var">h</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">id</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">id</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">x</span>.<br/>
 
 <br/>
 </div>
@@ -177,12 +158,12 @@ Najważniejszą funkcją w całym kosmosie jest identyczność. Jest to funkcja,
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">id_left</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>), <span class="id" title="var">id</span> <span class="id" title="var">A</span> .&gt; <span class="id" title="var">f</span> = <span class="id" title="var">f</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">id_left</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>), <span class="id" title="var">id</span> .&gt; <span class="id" title="var">f</span> = <span class="id" title="var">f</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">id_right</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>), <span class="id" title="var">f</span> .&gt; <span class="id" title="var">id</span> <span class="id" title="var">B</span> = <span class="id" title="var">f</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">id_right</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>), <span class="id" title="var">f</span> .&gt; <span class="id" title="var">id</span> = <span class="id" title="var">f</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">const</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">b</span>.<br/>
@@ -213,7 +194,7 @@ Funkcja stała to funkcja, która ignoruje swój drugi argument i zawsze
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">iter</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">id</span> <span class="id" title="var">A</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">id</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">f</span> .&gt; <span class="id" title="var">iter</span> <span class="id" title="var">n'</span> <span class="id" title="var">f</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
@@ -226,7 +207,7 @@ Ostatnim przydatnim kombinatorem jest <span class="inlinecode"><span class="id" 
     złożyć ze sobą, musi mieć identyczną dziedzinę i przeciwdziedzinę. 
 <div class="paragraph"> </div>
 
-<a name="lab353"></a><h1 class="section">Aksjomat ekstensjonalności</h1>
+<a name="lab357"></a><h1 class="section">Aksjomat ekstensjonalności</h1>
 
 <div class="paragraph"> </div>
 
@@ -263,7 +244,7 @@ Podstawowym i domyślnym rodzajem równości w Coqu jest równość
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eta_expansion</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eta_expansion</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>), <span class="id" title="var">f</span> = <span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">x</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -291,7 +272,7 @@ Podstawowym i domyślnym rodzajem równości w Coqu jest równość
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_eq</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_1_eq</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; 1 + <span class="id" title="var">n</span>) = (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + 1).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
@@ -341,7 +322,7 @@ Z tarapatów wybawić nas może jedynie aksjomat ekstensjonalności dla
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_eq</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_1_eq</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; 1 + <span class="id" title="var">n</span>) = (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span> + 1).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">extensionality</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_comm</span>. <span class="id" title="tactic">trivial</span>.<br/>
@@ -363,7 +344,7 @@ Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
     tym przypadku robimy to za pomocą twierdzenia <span class="inlinecode"><span class="id" title="var">plus_comm</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab354"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab358"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -374,7 +355,7 @@ Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">binary_funext</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">binary_funext</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> = <span class="id" title="var">g</span> &lt;-&gt; <span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>), <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> = <span class="id" title="var">g</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span>.<br/>
 
@@ -382,11 +363,70 @@ Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
 </div>
 
 <div class="doc">
-<a name="lab355"></a><h1 class="section">Izomorfizmy, lewe i prawe odwrotności (TODO)</h1>
+<a name="lab359"></a><h1 class="section">Odwrotności i izomorfizmy (TODO)</h1>
 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
-<a name="lab356"></a><h1 class="section">Injekcje</h1>
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">has_preinverse</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>, <span class="id" title="var">g</span> .&gt; <span class="id" title="var">f</span> = <span class="id" title="var">id</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">has_postinverse</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>, <span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span> = <span class="id" title="var">id</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">isomorphism</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>, <span class="id" title="var">g</span> .&gt; <span class="id" title="var">f</span> = <span class="id" title="var">id</span> /\ <span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span> = <span class="id" title="var">id</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iso_has_preinverse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isomorphism</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">has_preinverse</span> <span class="id" title="var">f</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iso_has_postinverse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isomorphism</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">has_postinverse</span> <span class="id" title="var">f</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">both_inverses_isomorphism</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">has_preinverse</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">has_postinverse</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">isomorphism</span> <span class="id" title="var">f</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab360"></a><h1 class="section">Skracalność</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">precancellable</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">g</span> <span class="id" title="var">h</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">X</span>), <span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span> = <span class="id" title="var">f</span> .&gt; <span class="id" title="var">h</span> -&gt; <span class="id" title="var">g</span> = <span class="id" title="var">h</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">postcancellable</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">g</span> <span class="id" title="var">h</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">A</span>), <span class="id" title="var">g</span> .&gt; <span class="id" title="var">f</span> = <span class="id" title="var">h</span> .&gt; <span class="id" title="var">f</span> -&gt; <span class="id" title="var">g</span> = <span class="id" title="var">h</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">has_preinverse_precancellable</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">has_preinverse</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">precancellable</span> <span class="id" title="var">f</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">has_postinverse_postcancellable</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">has_postinverse</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">postcancellable</span> <span class="id" title="var">f</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab361"></a><h1 class="section">Injekcje</h1>
 
 </div>
 <div class="code">
@@ -491,7 +531,7 @@ Głosi ona, że funkcja injektywna to funkcja, która dla różnych argumentów
     jest ogólniejsza od drugiej. 
 <div class="paragraph"> </div>
 
-<a name="lab357"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab362"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -501,12 +541,12 @@ Głosi ona, że funkcja injektywna to funkcja, która dla różnych argumentów
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">injective_injective'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">injective_injective'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">injective</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">injective'</span> <span class="id" title="var">f</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">injective'_injective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">injective'_injective</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>) -&gt;<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">injective'</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">injective</span> <span class="id" title="var">f</span>.<br/>
@@ -520,36 +560,36 @@ Udowodnij, że różne funkcje są lub nie są injektywne.
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">id_injective</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">injective</span> (<span class="id" title="var">id</span> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">id_injective</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">injective</span> (@<span class="id" title="var">id</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">S_injective</span> : <span class="id" title="var">injective</span> <span class="id" title="var">S</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">S_injective</span> : <span class="id" title="var">injective</span> <span class="id" title="var">S</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">const_unit_inj</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">const_unit_inj</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">injective</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> : <span class="id" title="var">unit</span> =&gt; <span class="id" title="var">a</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">add_k_left_inj</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_k_left_inj</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">k</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">injective</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">k</span> + <span class="id" title="var">n</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mul_k_inj</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul_k_inj</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">k</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">k</span> &lt;&gt; 0 -&gt; <span class="id" title="var">injective</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">k</span> * <span class="id" title="var">n</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">const_2elem_not_inj</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">const_2elem_not_inj</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">a</span> <span class="id" title="var">a'</span> : <span class="id" title="var">A</span>, <span class="id" title="var">a</span> &lt;&gt; <span class="id" title="var">a'</span>) -&gt; ~ <span class="id" title="var">injective</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">b</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mul_k_0_not_inj</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul_k_0_not_inj</span> :<br/>
 &nbsp;&nbsp;~ <span class="id" title="var">injective</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; 0 * <span class="id" title="var">n</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">pred_not_injective</span> : ~ <span class="id" title="var">injective</span> <span class="id" title="var">pred</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">pred_not_injective</span> : ~ <span class="id" title="var">injective</span> <span class="id" title="var">pred</span>.<br/>
 
 <br/>
 </div>
@@ -561,7 +601,7 @@ Jedną z ważnych właściwości injekcji jest to, że są składalne:
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">inj_comp</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">inj_comp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">injective</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">injective</span> <span class="id" title="var">g</span> -&gt; <span class="id" title="var">injective</span> (<span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span>).<br/>
 
@@ -575,7 +615,7 @@ Ta właściwość jest dziwna. Być może kiedyś wymyślę dla niej jakąś
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">LOLWUT</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">LOLWUT</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">injective</span> (<span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span>) -&gt; <span class="id" title="var">injective</span> <span class="id" title="var">f</span>.<br/>
 
@@ -602,7 +642,7 @@ Na zakończenie należy dodać do naszej interpretacji pojęcia "injekcja"
     jako prerekwizytu). 
 <div class="paragraph"> </div>
 
-<a name="lab358"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab363"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -612,7 +652,7 @@ Na zakończenie należy dodać do naszej interpretacji pojęcia "injekcja"
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">no_inj_bool_unit</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">no_inj_bool_unit</span> :<br/>
 &nbsp;&nbsp;~ <span class="id" title="tactic">exists</span> <span class="id" title="var">f</span> : <span class="id" title="var">bool</span> -&gt; <span class="id" title="var">unit</span>, <span class="id" title="var">injective</span> <span class="id" title="var">f</span>.<br/>
 
 <br/>
@@ -626,14 +666,14 @@ Pokaż, że istnieje injekcja z typu pustego w każdy inny. Znaczy to,
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">inj_Empty_set_A</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">inj_Empty_set_A</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="tactic">exists</span> <span class="id" title="var">f</span> : <span class="id" title="var">Empty_set</span> -&gt; <span class="id" title="var">A</span>, <span class="id" title="var">injective</span> <span class="id" title="var">f</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab359"></a><h1 class="section">Surjekcje</h1>
+<a name="lab364"></a><h1 class="section">Surjekcje</h1>
 
 <div class="paragraph"> </div>
 
@@ -667,7 +707,7 @@ I znów zacznijmy od nazwy. Po francusku "sur" znaczy "na", zaś słowo
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">pred_surjective</span> : <span class="id" title="var">surjective</span> <span class="id" title="var">pred</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">pred_surjective</span> : <span class="id" title="var">surjective</span> <span class="id" title="var">pred</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">surjective</span>; <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">exists</span> (<span class="id" title="var">S</span> <span class="id" title="var">b</span>). <span class="id" title="var">cbn</span>. <span class="id" title="tactic">trivial</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -691,7 +731,7 @@ TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki <span class="inl
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">S_not_surjective</span> : ~ <span class="id" title="var">surjective</span> <span class="id" title="var">S</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">S_not_surjective</span> : ~ <span class="id" title="var">surjective</span> <span class="id" title="var">S</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">surjective</span>; <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">H</span> 0). <span class="id" title="tactic">inversion</span> <span class="id" title="var">H0</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -710,7 +750,7 @@ Surjekcją nie jest za to konstruktor <span class="inlinecode"><span class="id"
     injekcji. 
 <div class="paragraph"> </div>
 
-<a name="lab360"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab365"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -720,12 +760,12 @@ Surjekcją nie jest za to konstruktor <span class="inlinecode"><span class="id"
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">sur_comp</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sur_comp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">surjective</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">surjective</span> <span class="id" title="var">g</span> -&gt; <span class="id" title="var">surjective</span> (<span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">LOLWUT_sur</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">LOLWUT_sur</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">surjective</span> (<span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span>) -&gt; <span class="id" title="var">surjective</span> <span class="id" title="var">g</span>.<br/>
 
@@ -733,7 +773,7 @@ Surjekcją nie jest za to konstruktor <span class="inlinecode"><span class="id"
 </div>
 
 <div class="doc">
-<a name="lab361"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab366"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -771,7 +811,7 @@ Tak jak istnienie injekcji <span class="inlinecode"><span class="id" title="var"
     istnienie surjekcji, jest przechodni. (TODO) 
 <div class="paragraph"> </div>
 
-<a name="lab362"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab367"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -781,7 +821,7 @@ Tak jak istnienie injekcji <span class="inlinecode"><span class="id" title="var"
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">no_sur_unit_bool</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">no_sur_unit_bool</span> :<br/>
 &nbsp;&nbsp;~ <span class="id" title="tactic">exists</span> <span class="id" title="var">f</span> : <span class="id" title="var">unit</span> -&gt; <span class="id" title="var">bool</span>, <span class="id" title="var">surjective</span> <span class="id" title="var">f</span>.<br/>
 
 <br/>
@@ -795,14 +835,14 @@ Pokaż, że istnieje surjekcja z każdego typu niepustego w <span class="inlinec
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">sur_A_unit</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sur_A_unit</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">nonempty</span> : <span class="id" title="var">A</span>), <span class="id" title="tactic">exists</span> <span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">unit</span>, <span class="id" title="var">surjective</span> <span class="id" title="var">f</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab363"></a><h1 class="section">Bijekcje</h1>
+<a name="lab368"></a><h1 class="section">Bijekcje</h1>
 
 </div>
 <div class="code">
@@ -821,7 +861,7 @@ Po łacinie przedrostek "bi-" oznacza "dwa". Bijekcja to funkcja, która
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">id_bij</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">bijective</span> (@<span class="id" title="var">id</span> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">id_bij</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">bijective</span> (@<span class="id" title="var">id</span> <span class="id" title="var">A</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">intros</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">id_injective</span>.<br/>
@@ -829,7 +869,7 @@ Po łacinie przedrostek "bi-" oznacza "dwa". Bijekcja to funkcja, która
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">S_not_bij</span> : ~ <span class="id" title="var">bijective</span> <span class="id" title="var">S</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">S_not_bij</span> : ~ <span class="id" title="var">bijective</span> <span class="id" title="var">S</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">bijective</span>; <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">S_not_surjective</span>. <span class="id" title="tactic">assumption</span>.<br/>
@@ -869,7 +909,7 @@ Pozostawię przykłady bez komentarza — są one po prostu konsekwencją tego,
 </div>
 
 <div class="doc">
-<a name="lab364"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab369"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -878,7 +918,7 @@ Pozostawię przykłady bez komentarza — są one po prostu konsekwencją tego,
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">bijective_bijective'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bijective_bijective'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bijective</span> <span class="id" title="var">f</span> &lt;-&gt; <span class="id" title="var">bijective'</span> <span class="id" title="var">f</span>.<br/>
 
@@ -886,7 +926,7 @@ Pozostawię przykłady bez komentarza — są one po prostu konsekwencją tego,
 </div>
 
 <div class="doc">
-<a name="lab365"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab370"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -913,7 +953,7 @@ Funkcja <span class="inlinecode"><span class="id" title="var">unary</span></span
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">unary_bij</span> : <span class="id" title="var">bijective</span> <span class="id" title="var">unary</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">unary_bij</span> : <span class="id" title="var">bijective</span> <span class="id" title="var">unary</span>.<br/>
 
 <br/>
 </div>
@@ -932,7 +972,7 @@ Jak już powiedzieliśmy, bijekcje dziedziczą właściwości, które mają
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">bij_comp</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bij_comp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bijective</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">bijective</span> <span class="id" title="var">g</span> -&gt; <span class="id" title="var">bijective</span> (<span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span>).<br/>
 
@@ -963,7 +1003,7 @@ Bijekcje mają też interpretacje w idei rozmiaru oraz ilości elementów.
 
 <div class="paragraph"> </div>
 
-<a name="lab366"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab371"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -992,22 +1032,22 @@ Równoliczność <span class="inlinecode"><span class="id" title="var">A</span>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">equipotent_refl</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">equipotent_refl</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> ~ <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">equipotent_sym</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">equipotent_sym</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> ~ <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> ~ <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">equipotent_trans</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">equipotent_trans</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> ~ <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> ~ <span class="id" title="var">C</span> -&gt; <span class="id" title="var">A</span> ~ <span class="id" title="var">C</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab367"></a><h1 class="section">Inwolucje</h1>
+<a name="lab372"></a><h1 class="section">Inwolucje</h1>
 
 </div>
 <div class="code">
@@ -1036,15 +1076,15 @@ Kolejnym ważnym (choć nie aż tak ważnym) rodzajem funkcji są inwolucje.
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">id_inv</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">involutive</span> (<span class="id" title="var">id</span> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">id_inv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">involutive</span> (@<span class="id" title="var">id</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">rev_inv</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rev_inv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">involutive</span> (@<span class="id" title="var">rev</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">negb_inv</span> : <span class="id" title="var">involutive</span> <span class="id" title="var">negb</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_inv</span> : <span class="id" title="var">involutive</span> <span class="id" title="var">negb</span>.<br/>
 
 <br/>
 </div>
@@ -1063,7 +1103,7 @@ Kolejnym ważnym (choć nie aż tak ważnym) rodzajem funkcji są inwolucje.
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">weird_inv</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">weird_inv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">involutive</span> (@<span class="id" title="var">weird</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
@@ -1077,7 +1117,7 @@ Funkcja ta zamienia miejscami bloki elementów listy o długości dwa.
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">flip_inv</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">flip_inv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">involutive</span> (@<span class="id" title="var">flip</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
@@ -1106,7 +1146,7 @@ Okazuje się, że złożenie inwolucji wcale nie musi być inwolucją. Wynika
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">comp_inv</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">comp_inv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">involutive</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">involutive</span> <span class="id" title="var">g</span> -&gt; <span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span> = <span class="id" title="var">g</span> .&gt; <span class="id" title="var">f</span> -&gt; <span class="id" title="var">involutive</span> (<span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span>).<br/>
 
@@ -1121,7 +1161,7 @@ Kryterium to jest rozstrzygające — jeżeli inwolucje komutują ze sobą
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">inv_bij</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">inv_bij</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>), <span class="id" title="var">involutive</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">bijective</span> <span class="id" title="var">f</span>.<br/>
 
 <br/>
@@ -1139,7 +1179,7 @@ Ponieważ każda inwolucja ma odwrotność (którą jest ona sama), każda
 </div>
 
 <div class="doc">
-<a name="lab368"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab373"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1148,7 +1188,7 @@ Ponieważ każda inwolucja ma odwrotność (którą jest ona sama), każda
     inwolucjami? 
 <div class="paragraph"> </div>
 
-<a name="lab369"></a><h1 class="section">Uogólnione inwolucje</h1>
+<a name="lab374"></a><h1 class="section">Uogólnione inwolucje</h1>
 
 <div class="paragraph"> </div>
 
@@ -1159,7 +1199,7 @@ Ponieważ każda inwolucja ma odwrotność (którą jest ona sama), każda
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">involutive'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">f</span> .&gt; <span class="id" title="var">f</span> = <span class="id" title="var">id</span> <span class="id" title="var">A</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">f</span> .&gt; <span class="id" title="var">f</span> = <span class="id" title="var">id</span>.<br/>
 
 <br/>
 </div>
@@ -1174,7 +1214,7 @@ Nowa definicja głosi, że inwolucja to taka funkcja, że jej złożenie
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">involutive_involutive'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">involutive_involutive'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>), <span class="id" title="var">involutive</span> <span class="id" title="var">f</span> &lt;-&gt; <span class="id" title="var">involutive'</span> <span class="id" title="var">f</span>.<br/>
 
 <br/>
@@ -1188,10 +1228,10 @@ Pójdźmy o krok dalej. Zamiast składania <span class="inlinecode">.&gt;</span>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">involutive''</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">iter</span> 2 <span class="id" title="var">f</span> = <span class="id" title="var">id</span> <span class="id" title="var">A</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">iter</span> 2 <span class="id" title="var">f</span> = <span class="id" title="var">id</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">involutive'_involutive''</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">involutive'_involutive''</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">involutive'</span> <span class="id" title="var">f</span> &lt;-&gt; <span class="id" title="var">involutive''</span> <span class="id" title="var">f</span>.<br/>
 
@@ -1207,7 +1247,7 @@ Droga do uogólnienia została już prawie przebyta. Nasze dotychczasowe
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">gen_involutive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>)<br/>
-&nbsp;&nbsp;: <span class="id" title="keyword">Prop</span> := <span class="id" title="var">iter</span> <span class="id" title="var">n</span> <span class="id" title="var">f</span> = <span class="id" title="var">id</span> <span class="id" title="var">A</span>.<br/>
+&nbsp;&nbsp;: <span class="id" title="keyword">Prop</span> := <span class="id" title="var">iter</span> <span class="id" title="var">n</span> <span class="id" title="var">f</span> = <span class="id" title="var">id</span>.<br/>
 
 <br/>
 </div>
@@ -1237,14 +1277,14 @@ Nie żeby pojęcie to było jakoś szczególnie często spotykane lub nawet
 <span class="comment">(*&nbsp;===&gt;&nbsp;=&nbsp;<span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5</span>&nbsp;:&nbsp;list&nbsp;nat&nbsp;*)</span><br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">weirder_inv_3</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">weirder_inv_3</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">gen_involutive</span> 3 (@<span class="id" title="var">weirder</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab370"></a><h1 class="section">Idempotencja</h1>
+<a name="lab375"></a><h1 class="section">Idempotencja</h1>
 
 </div>
 <div class="code">
@@ -1277,17 +1317,17 @@ Kolejnym rodzajem funkcji są funkcje idempotente. Po łacinie "idem"
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">id_idem</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">idempotent</span> (<span class="id" title="var">id</span> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">id_idem</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">idempotent</span> (@<span class="id" title="var">id</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">const_idem</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">const_idem</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>), <span class="id" title="var">idempotent</span> (<span class="id" title="var">const</span> <span class="id" title="var">b</span>).<br/>
 
 <br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">take_idem</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_idem</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>), <span class="id" title="var">idempotent</span> (@<span class="id" title="var">take</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>).<br/>
 
 <br/>
@@ -1310,7 +1350,7 @@ Identyczność jest idempotentna — niezrobienie niczego dowolną ilość
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">comp_idem</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">comp_idem</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">idempotent</span> <span class="id" title="var">f</span> -&gt; <span class="id" title="var">idempotent</span> <span class="id" title="var">g</span> -&gt; <span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span> = <span class="id" title="var">g</span> .&gt; <span class="id" title="var">f</span> -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">idempotent</span> (<span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span>).<br/>
