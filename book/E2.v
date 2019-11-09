@@ -229,14 +229,172 @@ Qed.
 
 (** * Odwrotności i izomorfizmy (TODO) *)
 
-Definition has_preinverse {A B : Type} (f : A -> B) : Prop :=
-  exists g : B -> A, g .> f = id.
+(** W tym podrozdziale zajmiemy się pojęciem funkcji odwrotnej i płynącą z
+    niego mądrością. *)
 
-Definition has_postinverse {A B : Type} (f : A -> B) : Prop :=
-  exists g : B -> A, f .> g = id.
+Definition has_preinverse {A B : Type} (f : A -> B) : Type :=
+  {g : B -> A | forall b : B, f (g b) = b}.
 
-Definition isomorphism {A B : Type} (f : A -> B) : Prop :=
-  exists g : B -> A, g .> f = id /\ f .> g = id.
+Definition has_postinverse {A B : Type} (f : A -> B) : Type :=
+  {g : B -> A | forall a : A, g (f a) = a}.
+
+(** Intuicja jest dość prosta: wiemy ze szkoły, że na liczbach całkowitych
+    odejmowanie jest odwrotnością dodawania (np. a + b - b = a), tzn. jeżeli
+    do a dodamy b, a potem odejmiemy b, to znowu mamy a. Podobnie w liczbach
+    rzeczywistych mnożenie przez liczbę niezerową ma odwrotność w postaci
+    dzielenia, np. (x * y) / y = x.
+
+    Oczywiście pojęcie odwrotności dotyczy nie tylko działań na liczbach,
+    ale także dowolnych funkcji - [g] jest odwrotnością [f], gdy odwraca
+    ono działanie [f] dla dowolnego argumentu [a], tzn. najpierw mamy [a],
+    potem aplikujemy [f] i mamy [f a], zaś na koniec aplikujemy [g] i znów
+    mamy [a], czyli [g (f x) = x]. To właśnie jest napisane w definicji
+    [has_postinverse].
+
+    No właśnie - powyższy opis jest opisem postodwrotności. Nazwa wynika z
+    kolejności - [g] jest postodwrotnością [f], gdy najpierw aplikujemy [f],
+    a potem odwracamy jego działanie za pomocą [g] (po łacinie "post" znaczy
+    "potem", np. "post meridiem" znaczy "po południu").
+
+    Analogicznie, choć może nieco mniej intuicyjnie, prezentuje się definicja
+    preodwrotności (po łacinie "prae" znaczy "przed"). [g] jest preodwrotnością
+    [f], gdy [f] jest postodwrotnością [g]. Innymi słowy: [f] ma preodwrotność,
+    jeżeli odwraca ono działanie jakiejś funkcji.
+
+    Dobra, wystarczy gadania. Czas na ćwiczenia. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że odjęcie [n] jest postodwrotnością dodania [n]. Czy jest także
+    preodwrotnością? *)
+
+Lemma plus_n_has_postinverse_sub_n :
+  forall n : nat,
+    has_postinverse (plus n).
+(* begin hide *)
+Proof.
+  intro. red.
+  exists (fun m : nat => minus m n).
+  induction n as [| n']; cbn; intro m.
+    rewrite <- minus_n_O. reflexivity.
+    apply IHn'.
+Defined.
+(* end hide *)
+
+(* begin hide *)
+Lemma plus_0_has_preinverse :
+  has_preinverse (plus 0).
+Proof.
+  red. exists id. cbn. reflexivity.
+Defined.
+
+Lemma plus_S_has_no_preinverse :
+  forall n : nat,
+    has_preinverse (plus (S n)) -> False.
+Proof.
+  intros n [f eq]. specialize (eq 0). inversion eq.
+Qed.
+(* end hide *)
+
+(** Zauważ, że sortem [has_preinverse] i [has_postinverse] jest [Type], nie
+    zaś [Prop]. Jest tak dlatego, że o ile stwierdzenie "f jest pre/post
+    odwrotnością g" jest zdaniem, to posiadanie odwrotności już nie, gdyż
+    dana funkcja może mieć wiele różnych odwrotności. *)
+
+(** **** Ćwiczenie *)
+
+(** Rozważmy funkcję [app [1; 2; 3]], która dokleja na początek listy liczb
+    naturalnych listę [[1; 2; 3]]. Znajdź dwie różne jej postodwrotności (nie
+    musisz formalnie dowodzić, że są różne - wystarczy nieformalny argument).
+    Czy funkcja ta ma preodwrotność? *)
+
+Require Import List.
+Import ListNotations.
+
+(* begin hide *)
+Goal has_postinverse (app [1; 2; 3]).
+Proof.
+  red. exists (skipn 3). cbn. reflexivity.
+Qed.
+
+Goal has_postinverse (app [1; 2; 3]).
+Proof.
+  red.
+  exists (
+    fun l : list nat =>
+    match l with
+        | [] => []
+        | [_] => []
+        | [x; y] => [y; x]
+        | _ :: _ :: _ :: t => t
+    end).
+  cbn. reflexivity.
+Qed.
+
+(** Widać na oko, że obie odwrotności są różne. Funkcja oczywiście nie ma
+    preodwrotności. *)
+
+Goal has_preinverse (app [1; 2; 3]) -> False.
+Proof.
+  intros [f eq]. specialize (eq []). inversion eq.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Czasem funkcja może mieć naprawdę dużo odwrotności. Pokaż, że funkcja
+    [cons x] dla [x : A] ma ich nieskończenie wiele. Nie musisz dowodzić,
+    że odwrotności są różne (ani że jest ich dużo), jeżeli widać to na
+    pierwszy rzut oka. *)
+
+(** begin hide *)
+
+Definition anticons {A : Type} (n : nat) (x : A) (l : list A) : list A :=
+match l with
+    | [] => repeat x n
+    | _ :: t => t
+end.
+
+Lemma cons_has_lots_of_postinverses :
+  forall (A : Type) (n : nat) (x : A),
+    has_postinverse (cons x).
+Proof.
+  intros. red. exists (anticons n x). cbn. reflexivity.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Dla listowych funkcji widzieliśmy postodwrotności, ale nie widzieliśmy
+    preodwrotności. Może więc preodwrotności nie istnieją? Otóż nie tym
+    razem! Napisz funkcję [cycle : forall A : Type, nat -> list A -> list A],
+    która obraca listę cyklicznie, np.
+
+    [cycle 3 [1; 2; 3; 4; 5] = [4; 5; 1; 2; 3]
+
+    Dla jakich [n] funkcja [cycle n] ma (pre/post)odwrotność? *)
+
+
+(* begin hide *)
+Definition cycle {A : Type} (n : nat) (l : list A) : list A :=
+  skipn n l ++ firstn n l.
+
+Definition uncycle {A : Type} (n : nat) (l : list A) : list A :=
+  cycle (length l - n) l.
+
+Lemma cycle_has_preinverse :
+  forall (A : Type) (n : nat),
+    has_preinverse (@cycle A n).
+Proof.
+  intros. red.
+  exists (uncycle n).
+  unfold uncycle, cycle.
+Abort.
+(* end hide *)
+
+Definition isomorphism {A B : Type} (f : A -> B) : Type :=
+  {g : B -> A | (forall a : A, g (f a) = a) /\
+                (forall b : B, f (g b) = b)}.
 
 Lemma iso_has_preinverse :
   forall {A B : Type} {f : A -> B},
@@ -264,14 +422,13 @@ Lemma both_inverses_isomorphism :
 (* begin hide *)
 Proof.
   destruct 1 as (g1 & Hpre), 1 as (g2 & Hpost).
-  red. exists (g1 .> f .> g2). split.
-    rewrite !comp_assoc, <- (comp_assoc _ _ _ _ f g2 f).
-      rewrite Hpost, id_left, Hpre. reflexivity.
-    rewrite Hpre, id_left, Hpost. reflexivity.
+  red. exists (g1 .> f .> g2). split; intros.
+    unfold comp. rewrite Hpre, Hpost. reflexivity.
+    unfold comp. rewrite Hpost, Hpre. reflexivity.
 Qed.
 (* end hide *)
 
-(** * Skracalność *)
+(** * Skracalność (TODO) *)
 
 Definition precancellable {A B : Type} (f : A -> B) : Prop :=
   forall (X : Type) (g h : B -> X), f .> g = f .> h -> g = h.
@@ -305,8 +462,6 @@ Proof.
 Qed.
 (* end hide *)
 
-
-
 (** * Injekcje *)
 
 Definition injective {A B : Type} (f : A -> B) : Prop :=
@@ -317,11 +472,9 @@ Definition injective {A B : Type} (f : A -> B) : Prop :=
     oznacza zaś zastrzyk. Bliższym matematycznemu znaczeniu byłoby jednak
     tłumaczenie "wstrzyknięcie". Jeżeli funkcja jest injekcją, to możemy
     też powiedzieć, że jest "injektywna". Inną nazwą jest "funkcja
-    różnowartościowa".
+    różnowartościowa". Na wiki można zapoznać się z obrazkami poglądowymi:
 
-    en.wikipedia.org/wiki/Bijection,%%20injection%%20and%%20surjection
-
-    Tutaj można zapoznać się z obrazkami poglądowymi.
+    https://en.wikipedia.org/wiki/Bijection,%%20injection%%20and%%20surjection
 
     Podstawowa idea jest prosta: jeżeli funkcja jest injekcją, to identyczne
     jej wartości pochodzą od równych argumentów.
@@ -366,7 +519,7 @@ Definition injective' {A B : Type} (f : A -> B) : Prop :=
 
     Definicja ta jest równoważna poprzedniej, ale tylko pod warunkiem, że
     przyjmiemy logikę klasyczną. W logice konstruktywnej pierwsza definicja
-    jest ogólniejsza od drugiej. *)
+    jest lepsza od drugiej. *)
 
 (** **** Ćwiczenie *)
 

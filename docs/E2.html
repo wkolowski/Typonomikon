@@ -365,20 +365,163 @@ Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
 <div class="doc">
 <a name="lab359"></a><h1 class="section">Odwrotności i izomorfizmy (TODO)</h1>
 
+<div class="paragraph"> </div>
+
+ W tym podrozdziale zajmiemy się pojęciem funkcji odwrotnej i płynącą z
+    niego mądrością. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">has_preinverse</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>, <span class="id" title="var">g</span> .&gt; <span class="id" title="var">f</span> = <span class="id" title="var">id</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">has_preinverse</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;{<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span> | <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span>, <span class="id" title="var">f</span> (<span class="id" title="var">g</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>}.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">has_postinverse</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>, <span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span> = <span class="id" title="var">id</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">has_postinverse</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;{<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span> | <span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> : <span class="id" title="var">A</span>, <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>) = <span class="id" title="var">a</span>}.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">isomorphism</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>, <span class="id" title="var">g</span> .&gt; <span class="id" title="var">f</span> = <span class="id" title="var">id</span> /\ <span class="id" title="var">f</span> .&gt; <span class="id" title="var">g</span> = <span class="id" title="var">id</span>.<br/>
+</div>
+
+<div class="doc">
+Intuicja jest dość prosta: wiemy ze szkoły, że na liczbach całkowitych
+    odejmowanie jest odwrotnością dodawania (np. a + b - b = a), tzn. jeżeli
+    do a dodamy b, a potem odejmiemy b, to znowu mamy a. Podobnie w liczbach
+    rzeczywistych mnożenie przez liczbę niezerową ma odwrotność w postaci
+    dzielenia, np. (x * y) / y = x.
+
+<div class="paragraph"> </div>
+
+    Oczywiście pojęcie odwrotności dotyczy nie tylko działań na liczbach,
+    ale także dowolnych funkcji - <span class="inlinecode"><span class="id" title="var">g</span></span> jest odwrotnością <span class="inlinecode"><span class="id" title="var">f</span></span>, gdy odwraca
+    ono działanie <span class="inlinecode"><span class="id" title="var">f</span></span> dla dowolnego argumentu <span class="inlinecode"><span class="id" title="var">a</span></span>, tzn. najpierw mamy <span class="inlinecode"><span class="id" title="var">a</span></span>,
+    potem aplikujemy <span class="inlinecode"><span class="id" title="var">f</span></span> i mamy <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>, zaś na koniec aplikujemy <span class="inlinecode"><span class="id" title="var">g</span></span> i znów
+    mamy <span class="inlinecode"><span class="id" title="var">a</span></span>, czyli <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">x</span></span>. To właśnie jest napisane w definicji
+    <span class="inlinecode"><span class="id" title="var">has_postinverse</span></span>.
+
+<div class="paragraph"> </div>
+
+    No właśnie - powyższy opis jest opisem postodwrotności. Nazwa wynika z
+    kolejności - <span class="inlinecode"><span class="id" title="var">g</span></span> jest postodwrotnością <span class="inlinecode"><span class="id" title="var">f</span></span>, gdy najpierw aplikujemy <span class="inlinecode"><span class="id" title="var">f</span></span>,
+    a potem odwracamy jego działanie za pomocą <span class="inlinecode"><span class="id" title="var">g</span></span> (po łacinie "post" znaczy
+    "potem", np. "post meridiem" znaczy "po południu").
+
+<div class="paragraph"> </div>
+
+    Analogicznie, choć może nieco mniej intuicyjnie, prezentuje się definicja
+    preodwrotności (po łacinie "prae" znaczy "przed"). <span class="inlinecode"><span class="id" title="var">g</span></span> jest preodwrotnością
+    <span class="inlinecode"><span class="id" title="var">f</span></span>, gdy <span class="inlinecode"><span class="id" title="var">f</span></span> jest postodwrotnością <span class="inlinecode"><span class="id" title="var">g</span></span>. Innymi słowy: <span class="inlinecode"><span class="id" title="var">f</span></span> ma preodwrotność,
+    jeżeli odwraca ono działanie jakiejś funkcji.
+
+<div class="paragraph"> </div>
+
+    Dobra, wystarczy gadania. Czas na ćwiczenia. 
+<div class="paragraph"> </div>
+
+<a name="lab360"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Pokaż, że odjęcie <span class="inlinecode"><span class="id" title="var">n</span></span> jest postodwrotnością dodania <span class="inlinecode"><span class="id" title="var">n</span></span>. Czy jest także
+    preodwrotnością? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_n_has_postinverse_sub_n</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">has_postinverse</span> (<span class="id" title="var">plus</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zauważ, że sortem <span class="inlinecode"><span class="id" title="var">has_preinverse</span></span> i <span class="inlinecode"><span class="id" title="var">has_postinverse</span></span> jest <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, nie
+    zaś <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. Jest tak dlatego, że o ile stwierdzenie "f jest pre/post
+    odwrotnością g" jest zdaniem, to posiadanie odwrotności już nie, gdyż
+    dana funkcja może mieć wiele różnych odwrotności. 
+<div class="paragraph"> </div>
+
+<a name="lab361"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Rozważmy funkcję <span class="inlinecode"><span class="id" title="var">app</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>, która dokleja na początek listy liczb
+    naturalnych listę <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>. Znajdź dwie różne jej postodwrotności (nie
+    musisz formalnie dowodzić, że są różne - wystarczy nieformalny argument).
+    Czy funkcja ta ma preodwrotność? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab362"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Czasem funkcja może mieć naprawdę dużo odwrotności. Pokaż, że funkcja
+    <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> dla <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> ma ich nieskończenie wiele. Nie musisz dowodzić,
+    że odwrotności są różne (ani że jest ich dużo), jeżeli widać to na
+    pierwszy rzut oka. 
+<div class="paragraph"> </div>
+
+ begin hide 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">anticons</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="tactic">repeat</span> <span class="id" title="var">x</span> <span class="id" title="var">n</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">t</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">cons_has_lots_of_postinverses</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">has_postinverse</span> (<span class="id" title="var">cons</span> <span class="id" title="var">x</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">red</span>. <span class="id" title="tactic">exists</span> (<span class="id" title="var">anticons</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span>). <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab363"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Dla listowych funkcji widzieliśmy postodwrotności, ale nie widzieliśmy
+    preodwrotności. Może więc preodwrotności nie istnieją? Otóż nie tym
+    razem! Napisz funkcję <span class="inlinecode"><span class="id" title="var">cycle</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>,
+    która obraca listę cyklicznie, np.
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">cycle</span></span> <span class="inlinecode">3</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5]</span> <span class="inlinecode">=</span> <span class="inlinecode">[4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>
+
+    <span class="inlinecode"><span class="id" title="var">Dla</span></span> <span class="inlinecode"><span class="id" title="var">jakich</span></span> <span class="inlinecode">[<span class="id" title="var">n</span>]</span> <span class="inlinecode"><span class="id" title="var">funkcja</span></span> <span class="inlinecode">[<span class="id" title="var">cycle</span></span> <span class="inlinecode"><span class="id" title="var">n</span>]</span> <span class="inlinecode"><span class="id" title="var">ma</span></span> <span class="inlinecode">(<span class="id" title="var">pre</span>/<span class="id" title="var">post</span>)<span class="id" title="var">odwrotno</span>ść?</span> <span class="inlinecode"></span>
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">isomorphism</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;{<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span> | (<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> : <span class="id" title="var">A</span>, <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>) = <span class="id" title="var">a</span>) /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span>, <span class="id" title="var">f</span> (<span class="id" title="var">g</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>)}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">iso_has_preinverse</span> :<br/>
@@ -399,7 +542,7 @@ Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
 </div>
 
 <div class="doc">
-<a name="lab360"></a><h1 class="section">Skracalność</h1>
+<a name="lab364"></a><h1 class="section">Skracalność (TODO)</h1>
 
 </div>
 <div class="code">
@@ -426,7 +569,7 @@ Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
 </div>
 
 <div class="doc">
-<a name="lab361"></a><h1 class="section">Injekcje</h1>
+<a name="lab365"></a><h1 class="section">Injekcje</h1>
 
 </div>
 <div class="code">
@@ -444,15 +587,11 @@ Objaśnienia zacznijmy od nazwy. Po łacinie "iacere" znaczy "rzucać",
     oznacza zaś zastrzyk. Bliższym matematycznemu znaczeniu byłoby jednak
     tłumaczenie "wstrzyknięcie". Jeżeli funkcja jest injekcją, to możemy
     też powiedzieć, że jest "injektywna". Inną nazwą jest "funkcja
-    różnowartościowa".
+    różnowartościowa". Na wiki można zapoznać się z obrazkami poglądowymi:
 
 <div class="paragraph"> </div>
 
-    en.wikipedia.org/wiki/Bijection,%20injection%20and%20surjection
-
-<div class="paragraph"> </div>
-
-    Tutaj można zapoznać się z obrazkami poglądowymi.
+    https://en.wikipedia.org/wiki/Bijection,%20injection%20and%20surjection
 
 <div class="paragraph"> </div>
 
@@ -528,10 +667,10 @@ Głosi ona, że funkcja injektywna to funkcja, która dla różnych argumentów
 
     Definicja ta jest równoważna poprzedniej, ale tylko pod warunkiem, że
     przyjmiemy logikę klasyczną. W logice konstruktywnej pierwsza definicja
-    jest ogólniejsza od drugiej. 
+    jest lepsza od drugiej. 
 <div class="paragraph"> </div>
 
-<a name="lab362"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab366"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -642,7 +781,7 @@ Na zakończenie należy dodać do naszej interpretacji pojęcia "injekcja"
     jako prerekwizytu). 
 <div class="paragraph"> </div>
 
-<a name="lab363"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab367"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -673,7 +812,7 @@ Pokaż, że istnieje injekcja z typu pustego w każdy inny. Znaczy to,
 </div>
 
 <div class="doc">
-<a name="lab364"></a><h1 class="section">Surjekcje</h1>
+<a name="lab368"></a><h1 class="section">Surjekcje</h1>
 
 <div class="paragraph"> </div>
 
@@ -750,7 +889,7 @@ Surjekcją nie jest za to konstruktor <span class="inlinecode"><span class="id"
     injekcji. 
 <div class="paragraph"> </div>
 
-<a name="lab365"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab369"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -773,7 +912,7 @@ Surjekcją nie jest za to konstruktor <span class="inlinecode"><span class="id"
 </div>
 
 <div class="doc">
-<a name="lab366"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab370"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -811,7 +950,7 @@ Tak jak istnienie injekcji <span class="inlinecode"><span class="id" title="var"
     istnienie surjekcji, jest przechodni. (TODO) 
 <div class="paragraph"> </div>
 
-<a name="lab367"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab371"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -842,7 +981,7 @@ Pokaż, że istnieje surjekcja z każdego typu niepustego w <span class="inlinec
 </div>
 
 <div class="doc">
-<a name="lab368"></a><h1 class="section">Bijekcje</h1>
+<a name="lab372"></a><h1 class="section">Bijekcje</h1>
 
 </div>
 <div class="code">
@@ -909,7 +1048,7 @@ Pozostawię przykłady bez komentarza — są one po prostu konsekwencją tego,
 </div>
 
 <div class="doc">
-<a name="lab369"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab373"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -926,7 +1065,7 @@ Pozostawię przykłady bez komentarza — są one po prostu konsekwencją tego,
 </div>
 
 <div class="doc">
-<a name="lab370"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab374"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -1003,7 +1142,7 @@ Bijekcje mają też interpretacje w idei rozmiaru oraz ilości elementów.
 
 <div class="paragraph"> </div>
 
-<a name="lab371"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab375"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1047,7 +1186,7 @@ Równoliczność <span class="inlinecode"><span class="id" title="var">A</span>
 </div>
 
 <div class="doc">
-<a name="lab372"></a><h1 class="section">Inwolucje</h1>
+<a name="lab376"></a><h1 class="section">Inwolucje</h1>
 
 </div>
 <div class="code">
@@ -1179,7 +1318,7 @@ Ponieważ każda inwolucja ma odwrotność (którą jest ona sama), każda
 </div>
 
 <div class="doc">
-<a name="lab373"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab377"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1188,7 +1327,7 @@ Ponieważ każda inwolucja ma odwrotność (którą jest ona sama), każda
     inwolucjami? 
 <div class="paragraph"> </div>
 
-<a name="lab374"></a><h1 class="section">Uogólnione inwolucje</h1>
+<a name="lab378"></a><h1 class="section">Uogólnione inwolucje</h1>
 
 <div class="paragraph"> </div>
 
@@ -1284,7 +1423,7 @@ Nie żeby pojęcie to było jakoś szczególnie często spotykane lub nawet
 </div>
 
 <div class="doc">
-<a name="lab375"></a><h1 class="section">Idempotencja</h1>
+<a name="lab379"></a><h1 class="section">Idempotencja</h1>
 
 </div>
 <div class="code">
