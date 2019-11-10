@@ -396,7 +396,7 @@ Intuicja jest dość prosta: wiemy ze szkoły, że na liczbach całkowitych
     ale także dowolnych funkcji - <span class="inlinecode"><span class="id" title="var">g</span></span> jest odwrotnością <span class="inlinecode"><span class="id" title="var">f</span></span>, gdy odwraca
     ono działanie <span class="inlinecode"><span class="id" title="var">f</span></span> dla dowolnego argumentu <span class="inlinecode"><span class="id" title="var">a</span></span>, tzn. najpierw mamy <span class="inlinecode"><span class="id" title="var">a</span></span>,
     potem aplikujemy <span class="inlinecode"><span class="id" title="var">f</span></span> i mamy <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>, zaś na koniec aplikujemy <span class="inlinecode"><span class="id" title="var">g</span></span> i znów
-    mamy <span class="inlinecode"><span class="id" title="var">a</span></span>, czyli <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">x</span></span>. To właśnie jest napisane w definicji
+    mamy <span class="inlinecode"><span class="id" title="var">a</span></span>, czyli <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">a</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">a</span></span>. To właśnie jest napisane w definicji
     <span class="inlinecode"><span class="id" title="var">has_postinverse</span></span>.
 
 <div class="paragraph"> </div>
@@ -404,7 +404,7 @@ Intuicja jest dość prosta: wiemy ze szkoły, że na liczbach całkowitych
     No właśnie - powyższy opis jest opisem postodwrotności. Nazwa wynika z
     kolejności - <span class="inlinecode"><span class="id" title="var">g</span></span> jest postodwrotnością <span class="inlinecode"><span class="id" title="var">f</span></span>, gdy najpierw aplikujemy <span class="inlinecode"><span class="id" title="var">f</span></span>,
     a potem odwracamy jego działanie za pomocą <span class="inlinecode"><span class="id" title="var">g</span></span> (po łacinie "post" znaczy
-    "potem", np. "post meridiem" znaczy "po południu").
+    "po", np. "post meridiem" znaczy "po południu").
 
 <div class="paragraph"> </div>
 
@@ -456,8 +456,7 @@ Zauważ, że sortem <span class="inlinecode"><span class="id" title="var">has_pr
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
-<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
 
 <br/>
 
@@ -473,27 +472,10 @@ Zauważ, że sortem <span class="inlinecode"><span class="id" title="var">has_pr
     <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> dla <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> ma ich nieskończenie wiele. Nie musisz dowodzić,
     że odwrotności są różne (ani że jest ich dużo), jeżeli widać to na
     pierwszy rzut oka. 
-<div class="paragraph"> </div>
-
- begin hide 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">anticons</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="tactic">repeat</span> <span class="id" title="var">x</span> <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">t</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">cons_has_lots_of_postinverses</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">has_postinverse</span> (<span class="id" title="var">cons</span> <span class="id" title="var">x</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">red</span>. <span class="id" title="tactic">exists</span> (<span class="id" title="var">anticons</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span>). <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 
 <br/>
 </div>
@@ -512,7 +494,9 @@ Zauważ, że sortem <span class="inlinecode"><span class="id" title="var">has_pr
 
     <span class="inlinecode"><span class="id" title="var">cycle</span></span> <span class="inlinecode">3</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5]</span> <span class="inlinecode">=</span> <span class="inlinecode">[4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>
 
-    <span class="inlinecode"><span class="id" title="var">Dla</span></span> <span class="inlinecode"><span class="id" title="var">jakich</span></span> <span class="inlinecode">[<span class="id" title="var">n</span>]</span> <span class="inlinecode"><span class="id" title="var">funkcja</span></span> <span class="inlinecode">[<span class="id" title="var">cycle</span></span> <span class="inlinecode"><span class="id" title="var">n</span>]</span> <span class="inlinecode"><span class="id" title="var">ma</span></span> <span class="inlinecode">(<span class="id" title="var">pre</span>/<span class="id" title="var">post</span>)<span class="id" title="var">odwrotno</span>ść?</span> <span class="inlinecode"></span>
+<div class="paragraph"> </div>
+
+    Dla jakich <span class="inlinecode"><span class="id" title="var">n</span></span> funkcja <span class="inlinecode"><span class="id" title="var">cycle</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> ma (pre/post)odwrotność? 
 </div>
 <div class="code">
 
@@ -1071,8 +1055,7 @@ Pozostawię przykłady bez komentarza — są one po prostu konsekwencją tego,
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
-<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">unary</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">list</span> <span class="id" title="var">unit</span> :=<br/>

@@ -8006,6 +8006,19 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma count_filter' :
+  forall (A : Type) (p : A -> bool) (l : list A),
+    count p (filter p l) = count p l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct (p h) eqn: Hph; cbn.
+      rewrite Hph, IHt. reflexivity.
+      assumption.
+Qed.
+(* end hide *)
+
 (** ** [partition] *)
 
 (** Napisz funkcję [partition], która dzieli listę [l] na listy

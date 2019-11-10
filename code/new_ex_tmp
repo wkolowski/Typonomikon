@@ -1,0 +1,547 @@
+Require Import D5.
+
+(** ** [exists] *)
+
+(* begin hide *)
+Fixpoint ex {A : Type} (P : A -> Prop) (l : list A) : Prop :=
+match l with
+    | [] => False
+    | h :: t => P h \/ ex P t
+end.
+(* end hide *)
+
+Lemma ex_spec :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    ex P l <-> exists x : A, elem x l /\ P x.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    firstorder. inversion H.
+    firstorder.
+      exists h. firstorder constructor.
+      exists x. firstorder constructor. assumption.
+      inversion H1; subst; firstorder.
+Qed.
+(* end hide *)
+
+Lemma ex_nil :
+  forall (A : Type) (P : A -> Prop),
+    ex P [] <-> False.
+(* begin hide *)
+Proof.
+  split; inversion 1.
+Qed.
+(* end hide *)
+
+Lemma ex_cons :
+  forall (A : Type) (P : A -> Prop) (h : A) (t : list A),
+    ex P (h :: t) <-> P h \/ ex P t.
+(* begin hide *)
+Proof.
+  split.
+    inversion 1; subst; [left | right]; assumption.
+    destruct 1; [left | right]; assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_length :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    ex P l -> 1 <= length l.
+(* begin hide *)
+Proof.
+  induction 1; cbn; apply le_n_S, le_0_n.
+Qed.
+(* end hide *)
+
+Lemma ex_snoc :
+  forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
+    ex P (snoc x l) <-> ex P l \/ P x.
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      inversion H; subst; clear H; [right | left]; assumption.
+      inversion H; subst; clear H.
+        do 2 left. assumption.
+        destruct (IHt H1).
+          left. right. assumption.
+          right. assumption.
+    destruct 1.
+      induction H; cbn; [left | right]; assumption.
+      induction l as [| h t]; cbn; [left | right]; assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_app :
+  forall (A : Type) (P : A -> Prop) (l1 l2 : list A),
+    ex P (l1 ++ l2) <-> ex P l1 \/ ex P l2.
+(* begin hide *)
+Proof.
+  split.
+    induction l1 as [| h1 t1]; cbn; intros.
+      right. assumption.
+      inversion H; subst; clear H.
+        do 2 left. assumption.
+        destruct (IHt1 H1).
+          left; right. assumption.
+          right. assumption.
+    destruct 1.
+      induction H; cbn.
+        left. assumption.
+        right. assumption.
+      induction l1 as [| h t]; cbn.
+        assumption.
+        right. assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_rev :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    ex P (rev l) <-> ex P l.
+(* begin hide *)
+Proof.
+  intros A P. assert (forall l : list A, ex P l -> ex P (rev l)).
+    induction 1; cbn; rewrite ex_app.
+      right. constructor. assumption.
+      left. assumption.
+    split; intro.
+      rewrite <- rev_inv. apply H, H0.
+      apply H, H0.
+Qed.
+(* end hide *)
+
+Lemma ex_map :
+  forall (A B : Type) (P : B -> Prop) (f : A -> B) (l : list A),
+    ex P (map f l) -> ex (fun x : A => P (f x)) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros;
+  inversion H; subst; clear H.
+    left. assumption.
+    right. apply IHt, H1.
+Qed.
+(* end hide *)
+
+Lemma ex_join :
+  forall (A : Type) (P : A -> Prop) (ll : list (list A)),
+    ex P (join ll) <->
+    ex (fun l : list A => ex  P l) ll.
+(* begin hide *)
+Proof.
+  split.
+    induction ll as [| h t]; cbn; intros.
+      inversion H.
+      rewrite ex_app in H. destruct H.
+        left. assumption.
+        right. apply IHt, H.
+    induction ll as [| h t]; cbn; intros;
+    inversion H; subst; clear H.
+      rewrite ex_app. left. assumption.
+      rewrite ex_app. right. apply IHt, H1.
+Qed.
+(* end hide *)
+
+Lemma ex_replicate :
+  forall (A : Type) (P : A -> Prop) (n : nat) (x : A),
+    ex P (replicate n x) <-> 1 <= n /\ P x.
+(* begin hide *)
+Proof.
+  split.
+    induction n as [| n']; cbn; intros;
+    inversion H; subst; clear H.
+      split.
+        apply le_n_S, le_0_n.
+        assumption.
+      destruct (IHn' H1). split.
+        apply le_trans with n'.
+          assumption.
+          apply le_S, le_n.
+        assumption.
+    destruct 1, n as [| n']; cbn.
+      inversion H.
+      left. assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_nth :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    ex P l <->
+    exists (n : nat) (x : A), nth n l = Some x /\ P x.
+(* begin hide *)
+Proof.
+  split.
+    induction 1; cbn.
+      exists 0, h. split; trivial.
+      destruct IHex as (n & x & H1 & H2).
+        exists (S n), x. split; assumption.
+    destruct 1 as (n & x & H1 & H2).
+      pose (nth_spec A l n). rewrite H1 in y.
+        rewrite y, ex_app, ex_cons. right. left. assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_remove :
+  forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
+    ex P l ->
+    match remove n l with
+        | None => True
+        | Some (x, l') => ~ P x -> ex P l'
+    end.
+(* begin hide *)
+Proof.
+  intros; revert n.
+  induction H; cbn; intros.
+    destruct n as [| n'].
+      intro. contradiction.
+      destruct (remove n' t).
+        destruct p. intro. left. assumption.
+        trivial.
+    destruct n as [| n'].
+      intro. assumption.
+      specialize (IHex n'). destruct (remove n' t).
+        destruct p. intro. right. apply IHex. assumption.
+        assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_take :
+  forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
+    ex P (take n l) -> ex P l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn; inversion H; subst; clear H.
+      left. assumption.
+      right. apply (IHt _ H1).
+Qed.
+(* end hide *)
+
+Lemma ex_drop :
+  forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
+    ex P (drop n l) -> ex P l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct n as [| n']; cbn.
+      assumption.
+      right. apply (IHt _ H).
+Qed.
+(* end hide *)
+
+Lemma ex_take_drop :
+  forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
+    ex P l -> ex P (take n l) \/ ex P (drop n l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    left. assumption.
+    destruct n as [| n']; cbn.
+      right. assumption.
+      inversion H; subst; clear H.
+        do 2 left. assumption.
+        destruct (IHt n' H1).
+          left. right. assumption.
+          right. assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_splitAt :
+  forall (A : Type) (P : A -> Prop) (l l1 l2 : list A) (n : nat) (x : A),
+    splitAt n l = Some (l1, x, l2) ->
+      ex P l <-> P x \/ ex P l1 \/ ex P l2.
+(* begin hide *)
+Proof.
+  split.
+    intro. revert l1 l2 n x H. induction H0; cbn; intros.
+      destruct n as [| n'].
+        inv H0. left. assumption.
+        destruct (splitAt n' t).
+          destruct p, p. inv H0. right. do 2 left. assumption.
+          inv H0.
+      destruct n as [| n'].
+        inv H. do 2 right. assumption.
+        destruct (splitAt n' t) eqn: Heq.
+          destruct p, p. inv H. decompose [or] (IHex _ _ _ _ Heq).
+            left. assumption.
+            right. left. right. assumption.
+            do 2 right. assumption.
+          inv H.
+    revert l1 l2 n x H. induction l as [| h t]; cbn; intros.
+      inv H.
+      destruct n as [| n'].
+        inv H. decompose [or] H0; clear H0.
+          left. assumption.
+          inv H1.
+          right. assumption.
+        destruct (splitAt n' t) eqn: Heq.
+          destruct p, p. inv H. specialize (IHt _ _ _ x Heq).
+            decompose [or] H0; clear H0.
+              right. apply IHt. left. assumption.
+              inv H1.
+                left. assumption.
+                right. apply IHt. right. left. assumption.
+              right. apply IHt. do 2 right. assumption.
+              inv H.
+Restart.
+  intros. pose (splitAt_megaspec A l n). rewrite H in y.
+  decompose [and] y; clear y. rewrite H4; subst; clear H4.
+  rewrite ex_app, ex_cons. firstorder.
+Qed.
+(* end hide *)
+
+Lemma ex_insert :
+  forall (A : Type) (P : A -> Prop) (l : list A) (n : nat) (x : A),
+    ex P (insert l n x) <-> P x \/ ex P l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    rewrite ex_cons, ex_nil. reflexivity.
+    destruct n as [| n'].
+      rewrite !ex_cons. reflexivity.
+      rewrite !ex_cons, IHt. firstorder.
+Qed.
+(* end hide *)
+
+Lemma ex_replace :
+  forall (A : Type) (P : A -> Prop) (l l' : list A) (n : nat) (x : A),
+    replace l n x = Some l' ->
+      ex P l' <->
+      ex P (take n l) \/ P x \/ ex P (drop (S n) l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    destruct n as [| n'].
+      inv H. rewrite ex_nil, ex_cons, drop_0. firstorder.
+      destruct (replace t n' x) eqn: Heq; inv H.
+        rewrite ?ex_cons, (IHt _ _ _ Heq), or_assoc. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma ex_filter :
+  forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A),
+    ex P (filter p l) -> ex P l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inversion H.
+    destruct (p h).
+      inversion H; subst; clear H.
+        left. assumption.
+        right. apply IHt, H1.
+      right. apply IHt, H.
+Qed.
+(* end hide *)
+
+Lemma ex_filter_conv :
+  forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A),
+    ex P l ->
+      ex P (filter p l) \/
+      ex P (filter (fun x : A => negb (p x)) l).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    destruct (p h); cbn.
+      do 2 left. assumption.
+      right; left. assumption.
+    destruct (p h), IHex as [IH | IH]; cbn.
+      left; right. assumption.
+      right. assumption.
+      left. assumption.
+      right; right. assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_filter_compat :
+  forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A),
+    (forall x : A, P x <-> p x = false) -> ~ ex P (filter p l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros; intro.
+    inversion H0.
+    case_eq (p h); intros; rewrite H1 in *.
+      inversion H0; subst; clear H0.
+        rewrite H, H1 in H3. congruence.
+        apply IHt; assumption.
+      apply IHt; assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_partition :
+  forall (A : Type) (P : A -> Prop) (p : A -> bool) (l l1 l2 : list A),
+    partition p l = (l1, l2) ->
+      ex P l <-> ex P l1 \/ ex P l2.
+(* begin hide *)
+Proof.
+  intros. rewrite partition_spec in H.
+  inversion H; subst; clear H. split; intro.
+    apply ex_filter_conv. assumption.
+    destruct H; apply ex_filter in H; assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_takeWhile :
+  forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A),
+    ex P (takeWhile p l) -> ex P l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros;
+  try destruct (p h); inversion H; subst; clear H.
+    left. assumption.
+    right. apply IHt, H1.
+Qed.
+(* end hide *)
+
+Lemma ex_takeWhile_compat :
+  forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A),
+    (forall x : A, P x <-> p x = false) -> ~ ex P (takeWhile p l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros; intro.
+    inversion H0.
+    case_eq (p h); intros; rewrite H1 in *; inversion H0; subst; clear H0.
+        rewrite H, H1 in H3. congruence.
+        apply IHt; assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_dropWhile :
+  forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A),
+    ex P (dropWhile p l) -> ex P l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    assumption.
+    destruct (p h).
+      right. apply IHt, H.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_takeWhile_dropWhile :
+  forall (A : Type) (P : A -> Prop) (p : A -> bool) (l : list A),
+    ex P l -> ex P (takeWhile p l) \/ ex P (dropWhile p l).
+(* begin hide *)
+Proof.
+  induction 1; cbn.
+    destruct (p h).
+      do 2 left. assumption.
+      right; left. assumption.
+    destruct (p h), IHex.
+      left; right. assumption.
+      right. assumption.
+      apply ex_takeWhile in H0. right; right. assumption.
+      apply ex_dropWhile in H0. right; right. assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_span :
+  forall
+    (A : Type) (P : A -> Prop) (p : A -> bool) (x : A) (l b e : list A),
+      (forall x : A, P x <-> p x = true) ->
+      span p l = Some (b, x, e) ->
+        ex P l <-> ex P b \/ P x \/ ex P e.
+(* begin hide *)
+Proof.
+  intros. apply span_spec in H0.
+  rewrite H0, ex_app, ex_cons.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma ex_interesting :
+  forall (A B : Type) (P : A * B -> Prop) (la : list A) (hb : B) (tb : list B),
+    ex (fun a : A => ex (fun b : B => P (a, b)) tb) la ->
+    ex (fun a : A => ex (fun b : B => P (a, b)) (hb :: tb)) la.
+(* begin hide *)
+Proof.
+  induction 1.
+    left. right. assumption.
+    right. assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_zip :
+  forall (A B : Type) (P : A * B -> Prop) (la : list A) (lb : list B),
+    ex P (zip la lb) ->
+      ex (fun a : A => ex (fun b : B => P (a, b)) lb) la.
+(* begin hide *)
+Proof.
+  induction la as [| ha ta]; cbn; intros.
+    inversion H.
+    induction lb as [| hb tb]; inversion H; subst; clear H.
+      left. left. assumption.
+      specialize (IHta _ H1). apply ex_interesting. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma ex_pmap :
+  forall (A B : Type) (f : A -> option B) (P : B -> Prop) (l : list A),
+    ex P (pmap f l) <->
+      ex (fun x : A => match f x with | Some b => P b | _ => False end) l.
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      inversion H.
+      destruct (f h) eqn: Hfh.
+        inversion H; subst.
+          left. rewrite Hfh. assumption.
+          right. apply IHt. assumption.
+        right. apply IHt. assumption.
+    induction l as [| h t]; cbn; inversion 1; subst; clear H.
+      destruct (f h).
+        left. assumption.
+        contradiction.
+      destruct (f h); try right; apply IHt, H1.
+Restart.
+  induction l as [| h t]; cbn; intros.
+    rewrite ?ex_nil. reflexivity.
+    destruct (f h) eqn: H; cbn.
+      rewrite ?ex_cons, IHt, H. reflexivity.
+      rewrite ?ex_cons, IHt, H. tauto.
+Qed.
+(* end hide *)
+
+Lemma ex_intersperse :
+  forall (A : Type) (P : A -> Prop) (x : A) (l : list A),
+    ex P (intersperse x l) <->
+    ex P l \/ (P x /\ 2 <= length l).
+(* begin hide *)
+Proof.
+  split.
+    induction l as [| h t]; cbn; intros.
+      inversion H.
+      destruct (intersperse x t) eqn: Heq.
+        inv H.
+          do 2 left. assumption.
+          inv H1.
+        inv H.
+          do 2 left. assumption.
+          inv H1.
+            right. split; try assumption. destruct t; cbn in *.
+              inv Heq.
+              apply le_n_S, le_n_S, le_0_n.
+            destruct (IHt H0).
+              left. right. assumption.
+              right. destruct H. split.
+                assumption.
+                destruct t; cbn in *.
+                  inv H1.
+                  apply le_n_S, le_n_S, le_0_n.
+    destruct 1.
+      induction H; cbn.
+        destruct (intersperse x t); left; assumption.
+        destruct (intersperse x t).
+          inv IHex.
+          do 2 right. assumption.
+      destruct H. destruct l as [| h [| h' t]]; cbn.
+        inv H0.
+        inv H0. inv H2.
+        destruct (intersperse x t); cbn.
+          right. left. assumption.
+          right. left. assumption.
+Qed.
+(* end hide *)
