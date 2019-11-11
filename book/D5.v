@@ -2576,6 +2576,151 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** [cycle] *)
+
+(** Napisz funkcję [cycle : forall A : Type, nat -> list A -> list A],
+    która obraca listę cyklicznie. Udowodnij jej właściwości. *)
+
+(* begin hide *)
+Fixpoint cycle {A : Type} (n : nat) (l : list A) : list A :=
+match n, l with
+    | 0, _ => l
+    | S n', [] => []
+    | S n', h :: t => cycle n' (snoc h t)
+end.
+(* end hide *)
+
+Compute cycle 3 [1; 2; 3; 4; 5].
+(* ===> [4; 5; 1; 2; 3] : list nat *)
+
+Compute cycle 6 [1; 2; 3; 4; 5].
+(* ===> [2; 3; 4; 5; 1] : list nat *)
+
+Lemma cycle_0 :
+  forall (A : Type) (l : list A),
+    cycle 0 l = l.
+(* begin hide *)
+Proof. reflexivity. Qed.
+(* end hide *)
+
+Lemma cycle_nil :
+  forall (A : Type) (n : nat),
+    @cycle A n [] = [].
+(* begin hide *)
+Proof.
+  destruct n; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma isEmpty_cycle :
+  forall (A : Type) (n : nat) (l : list A),
+    isEmpty (cycle n l) = isEmpty l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      reflexivity.
+      rewrite IHn', isEmpty_snoc. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma length_cycle :
+  forall (A : Type) (n : nat) (l : list A),
+    length (cycle n l) = length l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      reflexivity.
+      rewrite IHn', length_snoc. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma cycle_length_app :
+  forall (A : Type) (l1 l2 : list A) (n : nat),
+    cycle (length l1 + n) (l1 ++ l2) = cycle n (l2 ++ l1).
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; cbn; intros.
+    rewrite app_nil_r. reflexivity.
+    rewrite snoc_app, IHt, app_snoc_l. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma cycle_length :
+  forall (A : Type) (x : A) (l : list A),
+    cycle (length l) l = l.
+(* begin hide *)
+Proof.
+  intros.
+  rewrite (plus_n_O (length l)).
+  rewrite <- (app_nil_r _ l) at 2.
+  rewrite cycle_length_app.
+  cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma cycle_plus_length :
+  forall (A : Type) (n : nat) (l : list A),
+    cycle (length l + n) l = cycle n l.
+(* begin hide *)
+Proof.
+  intros.
+  rewrite <- (app_nil_r _ l) at 2.
+  rewrite cycle_length_app.
+  cbn. reflexivity.
+Qed.
+(* end hide *)
+
+(** Łamigłówka: jaki jest związek [cycle] ze [snoc], i [rev]? *)
+
+Compute cycle 2 [1; 2; 3; 4; 5; 6].
+Compute rev (cycle 4 (rev [1; 2; 3; 4; 5; 6])).
+
+Lemma cycle_map :
+  forall (A B : Type) (f : A -> B) (n : nat) (l : list A),
+    cycle n (map f l) = map f (cycle n l).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      reflexivity.
+      rewrite <- IHn', map_snoc. reflexivity.
+Qed.
+(* end hide *)
+
+(** A z [join] i [bind]? *)
+
+Lemma cycle_replicate :
+  forall (A : Type) (n m : nat) (x : A),
+    cycle m (replicate n x) = replicate n x.
+(* begin hide *)
+Proof.
+  induction m as [| m']; cbn.
+    reflexivity.
+    destruct n as [| n']; cbn.
+      reflexivity.
+      intro. cbn in IHm'. rewrite <- IHm'. f_equal.
+        rewrite snoc_replicate. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma cycle_cycle :
+  forall (A : Type) (n m : nat) (l : list A),
+    cycle n (cycle m l) = cycle (m + n) l.
+(* begin hide *)
+Proof.
+  induction m as [| m']; cbn; intros.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      rewrite cycle_nil. reflexivity.
+      rewrite IHm'. reflexivity.
+Qed.
+(* end hide *)
+
 (** ** [splitAt] *)
 
 (** Zdefiniuj funkcję [splitAt], która spełnia poniższą specyfikację.
@@ -5298,6 +5443,20 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma any_cycle :
+  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+    any p (cycle n l) = any p l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      reflexivity.
+      rewrite IHn', any_snoc. cbn.
+        rewrite orb_comm. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma any_insert :
   forall (A : Type) (p : A -> bool) (l : list A) (n : nat) (x : A),
     any p (insert l n x) = orb (p x) (any p l).
@@ -5757,6 +5916,17 @@ Proof.
     destruct (p h); cbn.
       assumption.
       reflexivity.
+Qed.
+(* end hide *)
+
+Lemma all_cycle :
+  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+    all p (cycle n l) = all p l.
+(* begin hide *)
+Proof.
+  intros. rewrite !all_any.
+  f_equal. rewrite any_cycle.
+  reflexivity.
 Qed.
 (* end hide *)
 
@@ -7418,6 +7588,21 @@ Proof.
         apply le_S. specialize (IHt 0).
           rewrite <- minus_n_O, drop_0 in IHt. assumption.
       apply IHt.
+Qed.
+(* end hide *)
+
+Lemma count_cycle :
+  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+    count p (cycle n l) = count p l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      reflexivity.
+      rewrite IHn', count_snoc. cbn. destruct (p h).
+        rewrite plus_comm. cbn. reflexivity.
+        rewrite <- plus_n_O. reflexivity.
 Qed.
 (* end hide *)
 
@@ -13026,6 +13211,19 @@ Proof.
         destruct (IHt n' H1).
           left. right. assumption.
           right. assumption.
+Qed.
+(* end hide *)
+
+Lemma Exists_cycle :
+  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+    Exists P (cycle n l) <-> Exists P l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      reflexivity.
+      rewrite IHn', Exists_snoc, !Exists_cons. firstorder.
 Qed.
 (* end hide *)
 
@@ -19218,6 +19416,34 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Permutation_cycle :
+  forall (A : Type) (n : nat) (l : list A),
+    Permutation (cycle n l) l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      reflexivity.
+      rewrite IHn'. rewrite Permutation_cons_snoc. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Permutation_filter_cycle :
+  forall (A : Type) (p : A -> bool) (n : nat) (l : list A),
+    Permutation (filter p (cycle n l)) (filter p l).
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    destruct l as [| h t]; cbn.
+      reflexivity.
+      rewrite IHn', filter_snoc; cbn. destruct (p h).
+        rewrite Permutation_cons_snoc. reflexivity.
+        reflexivity.
+Qed.
+(* end hide *)
+
 Lemma Permutation_length_2_inv:
   forall (A : Type) (x y : A) (l : list A),
     Permutation [x; y] l -> l = [x; y] \/ l = [y; x].
@@ -20200,6 +20426,36 @@ Proof.
           rewrite nth_length_ge in IH.
             inv IH.
             rewrite length_snoc. omega.
+Qed.
+(* end hide *)
+
+Lemma Cycle_cycle :
+  forall (A : Type) (n : nat) (l : list A),
+    Cycle (cycle n l) l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    intro. apply Cycle_refl.
+    destruct l as [| h t]; cbn.
+      constructor.
+      eapply Cycle_trans.
+        apply IHn'.
+        constructor. apply Cycle_refl.
+Qed.
+(* end hide *)
+
+Lemma cycle_Cycle :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> exists n : nat, cycle n l1 = l2.
+(* begin hide *)
+Proof.
+  induction 1.
+    exists 0. cbn. reflexivity.
+    destruct IHCycle as [n IH]. exists (n + length l2).
+      apply (f_equal (cycle (length l2))) in IH.
+      rewrite cycle_cycle in IH.
+      rewrite IH, (plus_n_O (length l2)).
+      rewrite snoc_app_singl, cycle_length_app. cbn. reflexivity.
 Qed.
 (* end hide *)
 
