@@ -20,6 +20,15 @@ match l with
     | h :: t => P h /\ all P t
 end.
 
+Lemma all_spec :
+  forall (A : Type) (P : A -> Prop) (l : list A),
+    all P l <-> Forall P l.
+Proof.
+  induction l as [| h t]; cbn.
+    rewrite Forall_nil. reflexivity.
+    rewrite Forall_cons, IHt. reflexivity.
+Qed.
+
 Fixpoint exactly
   {A : Type} (P : A -> Prop) (n : nat) (l : list A) : Prop :=
 match l, n with
@@ -29,6 +38,20 @@ match l, n with
     | h :: t, S n' =>
         (P h /\ exactly P n' t) \/ (~ P h /\ exactly P n t)
 end.
+
+Lemma exactly_spec :
+  forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
+    exactly P n l <-> Exactly P n l.
+Proof.
+  intros. revert n.
+  induction l as [| h t]; cbn.
+    destruct n; cbn.
+      firstorder. apply Ex_0.
+      firstorder. inversion H.
+    destruct n as [| n']; cbn.
+      rewrite IHt, Exactly_0_cons. reflexivity.
+      rewrite !IHt, Exactly_S_cons. reflexivity.
+Qed.
 
 (* begin hide *)
 Fixpoint ex {A : Type} (P : A -> Prop) (l : list A) : Prop :=
