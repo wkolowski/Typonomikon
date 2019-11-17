@@ -22,16 +22,25 @@ Długofalowe:
 1. Użyć jsCoq do zrobienia interaktywnej książki, która wyglądałaby jakoś tak: https://x80.org/rhino-coq/v8.10/
 2. Zrobić zwijane/rozwijane dowody i paragrafy.
 
+Listy:
+1. Opisać na przykładzie list różnice między teorią typów, a hardkorową matematyką konstruktywną opartą na relacjach separacji (apartness).
+2. Dokończyć prace nad funkcjami znajdującymi wszystkie struktury danego rodzaju (permutacje, cykle, podciągi, palindromy etc.).
+3. Dokończyć prace nad różnymi alternatywnymi definicjami permutacji.
+4. Napisać podrozdział poświęcony temu, czy definiować predykaty przez rekursję czy przez indukcję. Użyć jako przykładu takich predykatów jak elem, Exists, Forall, Exactly.
+5. Dokończyć prace nad resztą rzeczy z folderu List/.
+
+Funkcje:
+1. Dokończyć podrozdział o odwrotnościach i izomorfizmach.
+2. Napisać coś o (pre/post)skracalności.
+
 Inne:
 3. Znaleźć prostszy przykład dla podrozdziału o ścisłej pozytywności (ale do której konkretnie części?).
 8. Przedstawić kiedyś metodę encode-decode. Wprowadzić ją jako coś do pokazywania izomorfizmów typów.
-13. Pamiętać o resztkach z rozdziału o listach.
 14. Opisać taktyki dla redukcji i obliczeń.
 15. Opisać podstawy teorii typów.
 17. Opisać zmienne egzystencjalne i odpowiadające im taktyki.
 18. Opisać taktyki do radzenia sobie z typami zależnymi.
 19. Opisać: silnia, współczynniki dwumianowe, sumy szeregów, charakteryzowanie wzorów rekurencyjnych.
-20. Opisać: Izomorfizmy, lewe i prawe odwrotności
 22. Opisać exists!
 26. Odkłamać kwestię polimorfizmu, najlepiej przy okazji rozdziału o programowaniu generycznym.
 

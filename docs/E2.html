@@ -1160,7 +1160,7 @@ Bijekcje mają też interpretacje w idei rozmiaru oraz ilości elementów.
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>, <span class="id" title="var">bijective</span> <span class="id" title="var">f</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Notation</span> &quot;A ~ B" := (<span class="id" title="var">equipotent</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40).<br/>
+<span class="id" title="keyword">Notation</span> &quot;A ~~ B" := (<span class="id" title="var">equipotent</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 10).<br/>
 
 <br/>
 </div>
@@ -1175,15 +1175,15 @@ Równoliczność <span class="inlinecode"><span class="id" title="var">A</span>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">equipotent_refl</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> ~ <span class="id" title="var">A</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> ~~ <span class="id" title="var">A</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">equipotent_sym</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> ~ <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> ~ <span class="id" title="var">A</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> ~~ <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> ~~ <span class="id" title="var">A</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">equipotent_trans</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> ~ <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> ~ <span class="id" title="var">C</span> -&gt; <span class="id" title="var">A</span> ~ <span class="id" title="var">C</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> ~~ <span class="id" title="var">B</span> -&gt; <span class="id" title="var">B</span> ~~ <span class="id" title="var">C</span> -&gt; <span class="id" title="var">A</span> ~~ <span class="id" title="var">C</span>.<br/>
 
 <br/>
 </div>
@@ -1370,7 +1370,7 @@ Pójdźmy o krok dalej. Zamiast składania <span class="inlinecode">.&gt;</span>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">involutive''</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">iter</span> 2 <span class="id" title="var">f</span> = <span class="id" title="var">id</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">iter</span> <span class="id" title="var">f</span> 2 = <span class="id" title="var">id</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">involutive'_involutive''</span> :<br/>
@@ -1388,8 +1388,9 @@ Droga do uogólnienia została już prawie przebyta. Nasze dotychczasowe
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">gen_involutive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>)<br/>
-&nbsp;&nbsp;: <span class="id" title="keyword">Prop</span> := <span class="id" title="var">iter</span> <span class="id" title="var">n</span> <span class="id" title="var">f</span> = <span class="id" title="var">id</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">gen_involutive</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">iter</span> <span class="id" title="var">f</span> <span class="id" title="var">n</span> = <span class="id" title="var">id</span>.<br/>
 
 <br/>
 </div>
@@ -1415,7 +1416,7 @@ Nie żeby pojęcie to było jakoś szczególnie często spotykane lub nawet
 <span class="comment">(*&nbsp;===&gt;&nbsp;=&nbsp;<span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">1;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5</span>&nbsp;:&nbsp;list&nbsp;nat&nbsp;*)</span><br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">iter</span> 3 <span class="id" title="var">weirder</span> [1; 2; 3; 4; 5].<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">iter</span> <span class="id" title="var">weirder</span> 3 [1; 2; 3; 4; 5].<br/>
 <span class="comment">(*&nbsp;===&gt;&nbsp;=&nbsp;<span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5</span>&nbsp;:&nbsp;list&nbsp;nat&nbsp;*)</span><br/>
 
 <br/>
