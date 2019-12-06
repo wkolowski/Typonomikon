@@ -109,7 +109,9 @@ Podziały rekursji ze względu na:
   - rekursja strukturalna
   - rekursja ogólna
 - postać wywołania rekurencyjnego:
-  - 
+  - rekursja zagnieżdżona
+  - rekursja wyższego rzędu
+
 
 
 
@@ -117,11 +119,5 @@ Rekursja po paliwie
 Rekursja dobrze ufundowana
 
 Rekursja zagnieżdżona
-Metoda induktywno-rekurencyjnej dziedziny
-Metoda induktywnej dziedziny 2
-Plugin Equations
 Podsumowanie
-D2ipół
-Rekursja prymitywna (TODO)
 Rekursja zagnieżdżona
-Rekursja wyższego rzędu (TODO)

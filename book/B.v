@@ -2273,3 +2273,73 @@ Proof.
 Qed.
 
 (* end hide *)
+
+(** * UWAGA, odtąd nowe rzeczy *)
+
+(** * Silna negacja *)
+
+(** Poznaliśmy uprzednio pewien spójnik, zapisywany wdzięcznym wygibaskiem
+    [~], a zwany górnolotnie negacją. Powinniśmy się jednak zastanowić: czy
+    spójnik ten jest dla nas zadowalający? Czy pozwala on nam wyrażać nasze
+    przemyślenia w najlepszy możliwy sposób?
+
+    Jeżeli twoja odpowiedź brzmi "tak", to uroczyście oświadczam, że wcale
+    nie masz racji. Zastanówmy się nad następującym zdaniem: "jesteś gruby
+    i mądry". Jak mogłaby wyglądać próba zaprzeczenia temu zdaniu przez
+    osobę, która poczuła się urażona?
+
+    Rozsądek podpowiada: "wcale nie jestem gruby" (oczywiście jest też
+    druga możliwość: "wcale nie jestem mądry", ale raczej nie spodziewamy
+    się jej usłyszeć). Odpowiedź wydaje się całkiem naturalna, prawda? A
+    jak mogłaby wyglądać odpowiedź kogoś, kto za dużo czasu spędza dowodząc
+    w Coqu?
+
+    "Wcale nie jestem gruby i mądry, bo gdybym był, to byłbym mądry, a
+    wtedy wiedziałbym, że nie należy tyle żreć, więc bym nie żarł i nie
+    byłbym gruby, ale na mocy założenia jestem, więc mamy sprzeczność."
+
+    Nie brzmi zbyt naturalnie, prawda? Między odpowiedzią naturalną oraz
+    powyższą opartą na Coqowej logice jest łatwo zauważalna przepaść.
+
+*)
+
+Lemma strong_to_weak_and :
+  forall P Q : Prop, ~ P \/ ~ Q -> ~ (P /\ Q).
+Proof.
+  do 2 destruct 1; contradiction.
+Qed.
+
+Lemma weak_to_strong_and :
+  forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q.
+Proof.
+  intros. left. intro. apply H. split.
+    assumption.
+Abort.
+
+Lemma weak_to_strong_or :
+  forall P Q : Prop, ~ (P \/ Q) -> ~ P /\ ~ Q.
+Proof.
+  split; intro; apply H; [left | right]; assumption.
+Qed.
+
+Lemma strong_to_weak_or :
+  forall P Q : Prop, ~ P /\ ~ Q -> ~ (P \/ Q).
+Proof.
+  do 2 destruct 1; contradiction.
+Qed.
+
+Lemma deMorgan_dbl_neg :
+  (forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q) <->
+  (forall P : Prop, ~ ~ P -> P).
+Proof.
+  split.
+    intros deMorgan P H.
+Abort.
+
+(** * Logika klasyczna jako logika Boga *)
+
+(** * Logika klasyczna jako logika diabła *)
+
+(** * Logika klasyczna jako (coś więcej niż) logika de Morgana *)
+
+(** * Logika klasyczna jako logika Peirce'a *)

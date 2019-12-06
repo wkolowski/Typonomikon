@@ -2626,4 +2626,112 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
 <div class="code">
 
 <br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab70"></a><h1 class="section">UWAGA, odtąd nowe rzeczy</h1>
+
+<div class="paragraph"> </div>
+
+<a name="lab71"></a><h1 class="section">Silna negacja</h1>
+
+<div class="paragraph"> </div>
+
+ Poznaliśmy uprzednio pewien spójnik, zapisywany wdzięcznym wygibaskiem
+    <span class="inlinecode">~</span>, a zwany górnolotnie negacją. Powinniśmy się jednak zastanowić: czy
+    spójnik ten jest dla nas zadowalający? Czy pozwala on nam wyrażać nasze
+    przemyślenia w najlepszy możliwy sposób?
+
+<div class="paragraph"> </div>
+
+    Jeżeli twoja odpowiedź brzmi "tak", to uroczyście oświadczam, że wcale
+    nie masz racji. Zastanówmy się nad następującym zdaniem: "jesteś gruby
+    i mądry". Jak mogłaby wyglądać próba zaprzeczenia temu zdaniu przez
+    osobę, która poczuła się urażona?
+
+<div class="paragraph"> </div>
+
+    Rozsądek podpowiada: "wcale nie jestem gruby" (oczywiście jest też
+    druga możliwość: "wcale nie jestem mądry", ale raczej nie spodziewamy
+    się jej usłyszeć). Odpowiedź wydaje się całkiem naturalna, prawda? A
+    jak mogłaby wyglądać odpowiedź kogoś, kto za dużo czasu spędza dowodząc
+    w Coqu?
+
+<div class="paragraph"> </div>
+
+    "Wcale nie jestem gruby i mądry, bo gdybym był, to byłbym mądry, a
+    wtedy wiedziałbym, że nie należy tyle żreć, więc bym nie żarł i nie
+    byłbym gruby, ale na mocy założenia jestem, więc mamy sprzeczność."
+
+<div class="paragraph"> </div>
+
+    Nie brzmi zbyt naturalnie, prawda? Między odpowiedzią naturalną oraz
+    powyższą opartą na Coqowej logice jest łatwo zauważalna przepaść.
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">strong_to_weak_and</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">Q</span> -&gt; ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">destruct</span> 1; <span class="id" title="var">contradiction</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">weak_to_strong_and</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">weak_to_strong_or</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">intro</span>; <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>; [<span class="id" title="tactic">left</span> | <span class="id" title="tactic">right</span>]; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">strong_to_weak_or</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span> -&gt; ~ (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">destruct</span> 1; <span class="id" title="var">contradiction</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">deMorgan_dbl_neg</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">Q</span>) &lt;-&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">deMorgan</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab72"></a><h1 class="section">Logika klasyczna jako logika Boga</h1>
+
+<div class="paragraph"> </div>
+
+<a name="lab73"></a><h1 class="section">Logika klasyczna jako logika diabła</h1>
+
+<div class="paragraph"> </div>
+
+<a name="lab74"></a><h1 class="section">Logika klasyczna jako (coś więcej niż) logika de Morgana</h1>
+
+<div class="paragraph"> </div>
+
+<a name="lab75"></a><h1 class="section">Logika klasyczna jako logika Peirce'a</h1>
+
+</div>
+<div class="code">
 </div>
