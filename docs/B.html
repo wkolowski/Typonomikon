@@ -2647,32 +2647,88 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
 <div class="paragraph"> </div>
 
     Jeżeli twoja odpowiedź brzmi "tak", to uroczyście oświadczam, że wcale
-    nie masz racji. Zastanówmy się nad następującym zdaniem: "jesteś gruby
-    i mądry". Jak mogłaby wyglądać próba zaprzeczenia temu zdaniu przez
-    osobę, która poczuła się urażona?
+    nie masz racji. Wyobraźmy sobie następującą sytuację: jesteśmy psycho
+    patusem, próbującym pod pozorem podrywu poobrażać przeróżne panienki.
 
 <div class="paragraph"> </div>
 
-    Rozsądek podpowiada: "wcale nie jestem gruby" (oczywiście jest też
-    druga możliwość: "wcale nie jestem mądry", ale raczej nie spodziewamy
-    się jej usłyszeć). Odpowiedź wydaje się całkiem naturalna, prawda? A
-    jak mogłaby wyglądać odpowiedź kogoś, kto za dużo czasu spędza dowodząc
-    w Coqu?
+    Podbijamy do pierwszej z brzegu, która akurat jest normalną dziewczyną,
+    i mówimy: "Hej mała, jesteś gruba i mądra". Nasza oburzona rozmówczyni,
+    jako że jest szczupła, odpowiada nam: "Wcale nie jestem gruba. Spadaj
+    frajerze".
 
 <div class="paragraph"> </div>
 
-    "Wcale nie jestem gruby i mądry, bo gdybym był, to byłbym mądry, a
-    wtedy wiedziałbym, że nie należy tyle żreć, więc bym nie żarł i nie
-    byłbym gruby, ale na mocy założenia jestem, więc mamy sprzeczność."
+    Teraz na cel bierzemy kolejną, która siedzi sobie samotnie przy stoliku
+    w Starbuniu, popija kawkę z papierowego kubka i z uśmiechem na ustach
+    próbuje udowodnić w Coqu jakieś bardzo skomplikowane twierdzenie.
+    Podbijamy do niej i mówimy: "Hej mała, jesteś gruba i mądra". Jako, że
+    ona też jest szczupła, oburza się i odpowiada nam tak:
 
 <div class="paragraph"> </div>
 
-    Nie brzmi zbyt naturalnie, prawda? Między odpowiedzią naturalną oraz
-    powyższą opartą na Coqowej logice jest łatwo zauważalna przepaść.
+    "Czekaj, czekaj, Romeo. Załóżmy, że twój tani podryw jest zgodny z
+    prawdą. Gdybym była gruba i mądra, to byłabym w szczególności mądra,
+    bo P i Q implikuje Q. Ale gdybym była mądra, to wiedziałabym, żeby
+    tyle nie żreć, a skoro tak, to bym nie żarła, więc nie byłabym gruba,
+    ale na mocy założenia jestem, więc twój podryw jest sprzeczny. Jeżeli
+    nie umiesz logiki, nie idę z tobą do łóżka."
 
 <div class="paragraph"> </div>
 
+    Widzisz różnicę w tych dwóch odpowiedziach? Pierwsza z nich wydaje nam
+    się bardzo naturalna, bo przypomina zaprzeczenia, jakich zwykli ludzie
+    używają w codziennych rozmowach. Druga wydaje się zawoalowana i bardziej
+    przypomina dowód w Coqu niż codzienne rozmowy. Między oboma odpowiedziami
+    jest łatwo zauważalna przepaść.
 
+<div class="paragraph"> </div>
+
+    Żeby zrozumieć tę przepaść, wprowadzimy pojęcia silnej i słabej negacji.
+    W powyższym przykładzie silną negacją posłużyła się pierwsza dziewczyna -
+    silną negacją zdania "jesteś gruba i mądra" jest tutaj zdanie "wcale nie
+    jestem gruba". Oczywiście jest też druga możliwość silnego zaprzeczenia
+    temu zdaniu - "nie jestem mądra" - ale z jakichś powodów to zaprzeczenie
+    nie padło. Ciekawe dlaczego? Druga dziewczyna natomiast posłużyła się
+    słabą negacją, odpowiadając "gdybym była gruba i mądra, to... (tutaj
+    długaśne rozumowanie)... więc sprzeczność".
+
+<div class="paragraph"> </div>
+
+    Słaba negacja to ta, którą już znamy, czyli Coqowe <span class="inlinecode"><span class="id" title="var">not</span></span>. Ma ona
+    charakter hipotetyczny, gdyż jest po prostu implikacją, której
+    konkluzją jest <span class="inlinecode"><span class="id" title="var">False</span></span>. W rozumowaniach słownych sprowadza się ona
+    do schematu "gdyby tak było, to wtedy...".
+
+<div class="paragraph"> </div>
+
+    Silna negacja to najbardziej bezpośredni sposób zaprzeczenia danemu
+    zdaniu. W Coqu nie ma żadnego spójnika, który ją wyraża, bo ma ona
+    charakter dość ad hoc - dla każdego zdania musimy sami sobie wymyślić,
+    jak brzmi zdanie, który najsilniej mu przeczy. W rozumowaniach słownych
+    silna negacja sprowadza się zazwyczaj do schematu "nie jest tak".
+
+<div class="paragraph"> </div>
+
+    Spróbujmy przetłumaczyć powyższe rozważania na język logiki. Niech
+    <span class="inlinecode"><span class="id" title="var">P</span></span> oznacza "gruba", zaś <span class="inlinecode"><span class="id" title="var">Q</span></span> - "mądra". Silną negacją zdania <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>
+    jest zdanie <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> ("nie gruba" lub "nie mądra"), zaś jego słabą
+    negacją jest <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span>, czyli <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span> ("jeżeli gruba i
+    mądra, to sprzeczność").
+
+<div class="paragraph"> </div>
+
+    Zauważmy, że o ile słaba negacja jest uniwersalna, tj. słąbą negacją
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> zawsze jest <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span>, to silna negacja jest ad hoc w tym
+    sensie, że gdyby <span class="inlinecode"><span class="id" title="var">P</span></span> było postaci <span class="inlinecode"><span class="id" title="var">P1</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P2</span></span>, to wtedy silną negacją
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> nie jest już <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, a <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P1</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P2</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> - żeby
+    uzyskać silną negację, musimy zanegować <span class="inlinecode"><span class="id" title="var">P</span></span> silnie, a nie słabo.
+
+<div class="paragraph"> </div>
+
+    Dlaczego silna negacja jest silna, a słaba jest słaba, tzn. dlaczego
+    nazwaliśmy je tak a nie inaczej? Wyjaśnia to poniższe twierdzenie oraz
+    poniższa beznadziejna próba udowodnienia pewnego twierdzenia. 
 </div>
 <div class="code">
 
