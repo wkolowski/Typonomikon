@@ -1694,7 +1694,13 @@ Qed.
 Lemma uncurry :
   (P -> Q -> R) -> (P /\ Q -> R).
 (* begin hide *)
-Abort.
+Proof.
+  intros pqr pq.
+  destruct pq as [p q].
+  apply pqr.
+    assumption.
+    assumption.
+Qed.
 (* end hide *)
 
 (** *** Prawa de Morgana *)
@@ -1702,13 +1708,27 @@ Abort.
 Lemma deMorgan_1 :
   ~(P \/ Q) <-> ~P /\ ~Q.
 (* begin hide *)
-Abort.
+Proof.
+  split.
+    intro npq. split.
+      intro p. apply npq. left. assumption.
+      intro q. apply npq. right. assumption.
+    intros npnq npq. destruct npnq as [np nq]. destruct npq.
+      apply np. assumption.
+      apply nq. assumption.
+Qed.
 (* end hide *)
 
 Lemma deMorgan_2 :
   ~P \/ ~Q -> ~(P /\ Q).
 (* begin hide *)
-Abort.
+Proof.
+  intros npnq pq.
+  destruct pq as [p q].
+  destruct npnq as [np | nq].
+    apply np. assumption.
+    apply nq. assumption.
+Qed.
 (* end hide *)
 
 (** *** Niesprzeczność i zasada wyłączonego środka *)
@@ -1726,13 +1746,29 @@ Qed.
 Lemma noncontradiction_v2 :
   ~ (P <-> ~P).
 (* begin hide *)
-Abort.
+Proof.
+  intro H.
+  destruct H as [lr rl].
+  apply lr.
+    apply rl. intro p. apply lr.
+      assumption.
+      assumption.
+    apply rl. intro p. apply lr.
+      assumption.
+      assumption.
+Qed.
 (* end hide *)
 
 Lemma em_irrefutable :
   ~~ (P \/ ~P).
 (* begin hide *)
-Abort.
+Proof.
+  intro H.
+  apply H.
+  right. intro p.
+  apply H.
+  left. assumption.
+Qed.
 (* end hide *)
 
 (** *** Elementy neutralne i anihilujące *)
@@ -1740,25 +1776,45 @@ Abort.
 Lemma and_false_annihilation :
   P /\ False <-> False.
 (* begin hide *)
-Abort.
+Proof.
+  split; intro H.
+    destruct H. contradiction.
+    contradiction.
+Qed.
 (* end hide *)
 
 Lemma or_false_neutral :
   P \/ False <-> P.
 (* begin hide *)
-Abort.
+Proof.
+  split.
+    intro H. destruct H.
+      assumption.
+      contradiction.
+    intro p. left. assumption.
+Qed.
 (* end hide *)
 
 Lemma and_true_neutral :
   P /\ True <-> P.
 (* begin hide *)
-Abort.
+Proof.
+  split.
+    intro H. destruct H as [p t]. assumption.
+    intro p. split.
+      assumption.
+      trivial.
+Qed.
 (* end hide *)
 
 Lemma or_true_annihilation :
   P \/ True <-> True.
 (* begin hide *)
-Abort.
+Proof.
+  split.
+    intros _. trivial.
+    intros _. right. trivial.
+Qed.
 (* end hide *)
 
 (** *** Inne *)
@@ -2333,11 +2389,11 @@ Qed.
 
     Spróbujmy przetłumaczyć powyższe rozważania na język logiki. Niech
     [P] oznacza "gruba", zaś [Q] - "mądra". Silną negacją zdania [P /\ Q]
-    jest zdanie [~ P \/ ~ Q] ("nie gruba" lub "nie mądra"), zaś jego słabą
+    jest zdanie [~ P \/ ~ Q] ("nie gruba lub nie mądra"), zaś jego słabą
     negacją jest [~ (P /\ Q)], czyli [P /\ Q -> False] ("jeżeli gruba i
     mądra, to sprzeczność").
 
-    Zauważmy, że o ile słaba negacja jest uniwersalna, tj. słąbą negacją
+    Zauważmy, że o ile słaba negacja jest uniwersalna, tj. słabą negacją
     [P /\ Q] zawsze jest [~ (P /\ Q)], to silna negacja jest ad hoc w tym
     sensie, że gdyby [P] było postaci [P1 /\ P2], to wtedy silną negacją
     [P /\ Q] nie jest już [~ P \/ ~ Q], a [~ P1 \/ ~ P2 \/ ~ Q] - żeby
@@ -2350,15 +2406,90 @@ Qed.
 Lemma strong_to_weak_and :
   forall P Q : Prop, ~ P \/ ~ Q -> ~ (P /\ Q).
 Proof.
-  do 2 destruct 1; contradiction.
+  intros P Q Hor Hand.
+  destruct Hand as [p q].
+  destruct Hor as [notp | notq].
+    apply notp. assumption.
+    apply notq. assumption.
 Qed.
+
+(** Jak widać, silna negacja koniunkcji pociąga za sobą jej słabą negację.
+    Powód tego jest prosty: jeżeli jeden z koniunktów nie zachodzi, ale
+    założymy, że oba zachodzą, to w szczególności każdy z nich zachodzi
+    osobno i mamy sprzeczność.
+
+    A czy implikacja w drugą stronę zachodzi? *)
 
 Lemma weak_to_strong_and :
   forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q.
 Proof.
-  intros. left. intro. apply H. split.
+  intros P Q notpq. left. intro p. apply notpq. split.
     assumption.
 Abort.
+
+(** Jak widać, nie udało nam się udowodnić odwrotnej implikacji. Powodem nie
+    jest jednak to, że jesteśmy mało zdolni - po prostu konstruktywnie nie da
+    się tego zrobić.
+
+    Powód tego jest prosty: jeżeli wiemy, że [P] i [Q] razem prowadzą do
+    sprzeczności, to wiemy zdecydowanie za mało. Mogą być dwa powody:
+    - [P] i [Q] mogą bez problemu zachodzić osobno, ale być sprzeczne
+      razem
+    - nawet jeżeli któryś z koniunktów prowadzi do sprzeczności, to nie
+      wiemy, który
+
+    Żeby zrozumieć pierwszą możliwość, niech [P] oznacza "siedzę", a [Q] -
+    "stoję". Rozważmy zdanie [P /\ Q], czyli "siedzę i stoję". Żeby nie było
+    za łatwo załóżmy też, że znajdujesz się po drugiej stronie kosmosu i mnie
+    nie widzisz.
+
+    Oczywiście nie mogę jednocześnie siedzieć i stać, gdyż czynności te się
+    wykluczają, więc możesz skonkludować, że [~ (P /\ Q)]. Czy możesz jednak
+    wywnioskować stąd, że [~ P \/ ~ Q], czyli że "nie siedzę lub nie stoję"?
+    Konstruktywnie nie, bo będąc po drugiej stronie kosmosu nie wiesz, której
+    z tych dwóch czynności nie wykonuję.
+
+    Z drugim przypadkiem jest tak samo, jak z końcówką powyższego przykładu:
+    nawet jeżeli zdania [P] i [Q] się wzajemnie nie wykluczają i niesłuszność
+    [P /\ Q] wynika z tego, że któryś z koniunktów nie zachodzi, to możemy po
+    prostu nie wiedzieć, o który z nich chodzi.
+
+    Żeby jeszcze wzmocnić nasze zrozumienie, spróbujmy w zaskakujący sposób
+    rozwinąć definicję (słabej) negacji dla koniunkcji: *)
+
+Lemma not_and_surprising :
+  forall P Q : Prop, ~ (P /\ Q) <-> (P -> ~ Q).
+Proof.
+  split.
+    intros npq p q. apply npq. split.
+      assumption.
+      assumption.
+    intros pnq pq. destruct pq as [p q]. apply pnq.
+      assumption.
+      assumption.
+Qed.
+
+
+
+Lemma not_and_surprising' :
+  forall P Q : Prop, ~ (P /\ Q) <-> (Q -> ~ P).
+(* begin hide *)
+Proof.
+  split.
+    intros npq p q. apply npq. split.
+      assumption.
+      assumption.
+    intros qnp pq. destruct pq as [p q]. apply qnp.
+      assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma mid_neg_conv :
+  forall P Q : Prop, ~ (P /\ Q) -> ((P -> ~ Q) /\ (Q -> ~ P)).
+Proof.
+  firstorder.
+Qed.
 
 Lemma weak_to_strong_or :
   forall P Q : Prop, ~ (P \/ Q) -> ~ P /\ ~ Q.
@@ -2387,3 +2518,49 @@ Abort.
 (** * Logika klasyczna jako (coś więcej niż) logika de Morgana *)
 
 (** * Logika klasyczna jako logika Peirce'a *)
+
+Lemma DNE_irrefutable :
+  forall P : Prop, ~ ~ (~ ~ P -> P).
+Proof.
+  intros P H.
+  apply H.
+  intro nnp.
+  cut False.
+    contradiction.
+    apply nnp. intro p. apply H. intros _. assumption.
+Qed.
+
+Lemma Peirce_irrefutable :
+  forall P Q : Prop, ~ ~ (((P -> Q) -> P) -> P).
+Proof.
+  intros P Q H.
+  apply H. intro pqp.
+  apply pqp. intro p.
+  cut False.
+    contradiction.
+    apply H. intros _. assumption.
+Qed.
+
+Lemma deMorgan_irrefutable :
+  forall P Q : Prop, ~ ~ (~ (P /\ Q) -> ~ P \/ ~ Q).
+Proof.
+  intros P Q H.
+  apply H. intro npq.
+  left. intro p.
+  apply H. intros _.
+  right. intro q.
+  apply npq. split.
+    assumption.
+    assumption.
+Qed.
+
+Lemma material_implication_irrefutable :
+  forall P Q : Prop, ~ ~ ((P -> Q) -> ~ P \/ Q).
+Proof.
+  intros P Q H.
+  apply H. intro pq.
+  left. intro.
+  apply H. intros _.
+  right. apply pq.
+  assumption.
+Qed.
