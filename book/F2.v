@@ -1459,3 +1459,26 @@ Proof.
       constructor. right. exists m'. auto.
 Qed.
 (* end hide *)
+
+(* begin hide *)
+Fixpoint ntc (n : nat) : conat :=
+match n with
+    | 0 => {| pred := None |}
+    | S n' => {| pred := Some (ntc n') |}
+end.
+
+Lemma no_inverse :
+  forall f : conat -> nat,
+    (forall n : nat, f (ntc n) = n) -> False.
+Proof.
+  intros.
+  pose (n := f omega).
+  assert (forall n : nat, f (ntc (S n)) = S (f (ntc n))).
+    induction n0 as [| n'].
+      rewrite !H. reflexivity.
+      rewrite IHn', !H. reflexivity.
+  assert (forall c : conat, f (succ c) = S (f c)).
+    intros [[|]].
+      cbn in H0.
+Abort.
+(* end hide *)
