@@ -2832,8 +2832,27 @@ Jak widać, nie udało nam się udowodnić odwrotnej implikacji. Powodem nie
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+I jeszcze raz... 
+</div>
+<div class="code">
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_and_surprising'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) &lt;-&gt; (<span class="id" title="var">Q</span> -&gt; ~ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak (mam nadzieję) widać, słaba negacja koniunkcji nie jest niczym
+    innym niż stwierdzeniem, że oba koniunkty nie mogą zachodzić razem.
+    Jest to więc coś znacznie słabszego, niż stwierdzenie, że któryś z
+    koniunktów nie zachodzi z osobna. 
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">mid_neg_conv</span> :<br/>
@@ -2843,11 +2862,16 @@ Jak widać, nie udało nam się udowodnić odwrotnej implikacji. Powodem nie
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">weak_to_strong_or</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">intro</span>; <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>; [<span class="id" title="tactic">left</span> | <span class="id" title="tactic">right</span>]; <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+</div>
+
+<div class="doc">
+Jak napisano w Piśmie, nie samą koniunkcją żyje człowiek. Podumajmy
+    więc, jak wygląda silna negacja dysjunkcji. Jeżeli chcemy dosadnie
+    powiedzieć, że <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> nie zachodzi, to najprościej powiedzieć:
+    <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>. Słaba negacja dysjunkcji ma zaś rzecz jasna postać
+    <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span>. 
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">strong_to_weak_or</span> :<br/>
@@ -2855,6 +2879,36 @@ Jak widać, nie udało nam się udowodnić odwrotnej implikacji. Powodem nie
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">destruct</span> 1; <span class="id" title="var">contradiction</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Co jednak dość ciekawe, silna negacja nie zawsze jest silniejsza
+    od słabej (ale z pewnością nie może być od niej słabsza - gdyby
+    mogłaby, to nazywałaby się inaczej). W przypadku dysjunkcji obie
+    negacje są równoważne, co obrazuje poniższe twierdzenie: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">weak_to_strong_or</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">intro</span>; <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>; [<span class="id" title="tactic">left</span> | <span class="id" title="tactic">right</span>]; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to tak naprawdę para implikacji
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>, zaś <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span> to... gdy pomyślimy
+    nad tym odpowiednio mocno... ta sama para implikacji. Jest tak
+    dlatego, że jeżeli <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> implikuje <span class="inlinecode"><span class="id" title="var">R</span></span>, to umieć wyprodukować
+    <span class="inlinecode"><span class="id" title="var">R</span></span> musimy zarówno z samego <span class="inlinecode"><span class="id" title="var">P</span></span>, jak i z samego <span class="inlinecode"><span class="id" title="var">Q</span></span>. 
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">deMorgan_dbl_neg</span> :<br/>
@@ -2923,8 +2977,28 @@ Jak widać, nie udało nam się udowodnić odwrotnej implikacji. Powodem nie
 
 <a name="lab74"></a><h1 class="section">Logika klasyczna jako (coś więcej niż) logika de Morgana</h1>
 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">deMorgan_and_is_weak_LEM</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">Q</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;-&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ <span class="id" title="var">P</span> \/ ~ ~ <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">deMorgan</span> <span class="id" title="var">P</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">deMorgan</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">noncontradiction</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">WLEM</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">WLEM</span> <span class="id" title="var">P</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">WLEM</span> <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H8</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">split</span>; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a name="lab75"></a><h1 class="section">Logika klasyczna jako logika Peirce'a</h1>
 
 </div>
@@ -2979,4 +3053,13 @@ Jak widać, nie udało nam się udowodnić odwrotnej implikacji. Powodem nie
 &nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab76"></a><h1 class="section">Paradoks Curry'ego</h1>
+
+</div>
+<div class="code">
 </div>

@@ -2469,7 +2469,7 @@ Proof.
       assumption.
 Qed.
 
-
+(** I jeszcze raz... *)
 
 Lemma not_and_surprising' :
   forall P Q : Prop, ~ (P /\ Q) <-> (Q -> ~ P).
@@ -2485,11 +2485,33 @@ Proof.
 Qed.
 (* end hide *)
 
+(** Jak (mam nadzieję) widać, słaba negacja koniunkcji nie jest niczym
+    innym niż stwierdzeniem, że oba koniunkty nie mogą zachodzić razem.
+    Jest to więc coś znacznie słabszego, niż stwierdzenie, że któryś z
+    koniunktów nie zachodzi z osobna. *)
+
 Lemma mid_neg_conv :
   forall P Q : Prop, ~ (P /\ Q) -> ((P -> ~ Q) /\ (Q -> ~ P)).
 Proof.
   firstorder.
 Qed.
+
+(** Jak napisano w Piśmie, nie samą koniunkcją żyje człowiek. Podumajmy
+    więc, jak wygląda silna negacja dysjunkcji. Jeżeli chcemy dosadnie
+    powiedzieć, że [P \/ Q] nie zachodzi, to najprościej powiedzieć:
+    [~ P /\ ~ Q]. Słaba negacja dysjunkcji ma zaś rzecz jasna postać
+    [~ (P \/ Q)]. *)
+
+Lemma strong_to_weak_or :
+  forall P Q : Prop, ~ P /\ ~ Q -> ~ (P \/ Q).
+Proof.
+  do 2 destruct 1; contradiction.
+Qed.
+
+(** Co jednak dość ciekawe, silna negacja nie zawsze jest silniejsza
+    od słabej (ale z pewnością nie może być od niej słabsza - gdyby
+    mogłaby, to nazywałaby się inaczej). W przypadku dysjunkcji obie
+    negacje są równoważne, co obrazuje poniższe twierdzenie: *)
 
 Lemma weak_to_strong_or :
   forall P Q : Prop, ~ (P \/ Q) -> ~ P /\ ~ Q.
@@ -2497,11 +2519,12 @@ Proof.
   split; intro; apply H; [left | right]; assumption.
 Qed.
 
-Lemma strong_to_weak_or :
-  forall P Q : Prop, ~ P /\ ~ Q -> ~ (P \/ Q).
-Proof.
-  do 2 destruct 1; contradiction.
-Qed.
+(** Wynika to z faktu, że [~ P /\ ~ Q] to tak naprawdę para implikacji
+    [P -> False] i [Q -> False], zaś [~ (P \/ Q)] to... gdy pomyślimy
+    nad tym odpowiednio mocno... ta sama para implikacji. Jest tak
+    dlatego, że jeżeli [P \/ Q] implikuje [R], to umieć wyprodukować
+    [R] musimy zarówno z samego [P], jak i z samego [Q]. *)
+
 
 Lemma deMorgan_dbl_neg :
   (forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q) <->
@@ -2550,6 +2573,20 @@ Abort.
 
 (** * Logika klasyczna jako (coś więcej niż) logika de Morgana *)
 
+Lemma deMorgan_and_is_weak_LEM :
+  (forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q)
+    <->
+  (forall P : Prop, ~ P \/ ~ ~ P).
+Proof.
+  split.
+    intros deMorgan P. apply deMorgan. apply noncontradiction.
+    intros WLEM P Q H. destruct (WLEM P).
+      left. assumption.
+      destruct (WLEM Q).
+        right. assumption.
+        left. intro. apply H8. intro. apply H. split; assumption.
+Qed.
+
 (** * Logika klasyczna jako logika Peirce'a *)
 
 Lemma DNE_irrefutable :
@@ -2597,3 +2634,5 @@ Proof.
   right. apply pq.
   assumption.
 Qed.
+
+(** * Paradoks Curry'ego *)
