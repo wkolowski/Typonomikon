@@ -319,5 +319,5 @@ Proof.
         apply sigT_eq' in IHv. cbn in IHv. destruct IHv.
         eapply sigT_eq. Unshelve. all: cycle 1.
           exact (f_equal S x).
-          admit. (* This needs more HoTT. *)
+          admit. (* Więcej kubiczności. *)
 Admitted.

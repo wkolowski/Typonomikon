@@ -2182,19 +2182,19 @@ Komenda <span class="inlinecode"><span class="id" title="keyword">Hypotheses</sp
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_not_imp</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">P</span> /\ ~<span class="id" title="var">Q</span> -&gt; ~(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span> -&gt; ~ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_not_imp</span> :<br/>
-&nbsp;&nbsp;~<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">contraposition</span> :<br/>
-&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (~<span class="id" title="var">Q</span> -&gt; ~<span class="id" title="var">P</span>).<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (~ <span class="id" title="var">Q</span> -&gt; ~ <span class="id" title="var">P</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">absurd</span> :<br/>
-&nbsp;&nbsp;~<span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_and</span> :<br/>
@@ -2351,19 +2351,19 @@ Komenda <span class="inlinecode"><span class="id" title="keyword">Require</span>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">imp_and_or</span> : (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> \/ <span class="id" title="var">R</span>) -&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) \/ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>)).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">deMorgan_2_conv</span> : ~(<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) -&gt; ~<span class="id" title="var">P</span> \/ ~<span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">deMorgan_2_conv</span> : ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> \/ ~<span class="id" title="var">Q</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_imp</span> : ~(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> /\ ~<span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_impl</span> : ~ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">imp_not_or</span> : (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (~<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_not_or</span> : (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (~ <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">material_implication</span> : (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) &lt;-&gt; (~<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">contraposition_conv</span> : (~<span class="id" title="var">Q</span> -&gt; ~<span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">contraposition_conv</span> : (~ <span class="id" title="var">Q</span> -&gt; ~ <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">excluded_middle</span> : <span class="id" title="var">P</span> \/ ~<span class="id" title="var">P</span>.<br/>
@@ -2886,8 +2886,10 @@ Jak napisano w Piśmie, nie samą koniunkcją żyje człowiek. Podumajmy
 <div class="doc">
 Co jednak dość ciekawe, silna negacja nie zawsze jest silniejsza
     od słabej (ale z pewnością nie może być od niej słabsza - gdyby
-    mogłaby, to nazywałaby się inaczej). W przypadku dysjunkcji obie
-    negacje są równoważne, co obrazuje poniższe twierdzenie: 
+    mogła, to nazywałaby się inaczej). W przypadku dysjunkcji obie
+    negacje są równoważne, co obrazuje poniższe twierdzenie, które
+    głosi, że słaba negacja implikuje silną (a to razem z powyższym
+    daje równoważność): 
 </div>
 <div class="code">
 
@@ -2970,9 +2972,76 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 <div class="paragraph"> </div>
 
     Jaki morał płynie z tej bajki? Diaboł to bydle złe i przeokrutne,
-    gdyż w logice, którą posługuje się przy podpisywaniu cyrografów
-    (względnie robieniu dili) obowiązuje prawo eliminacji podwójnej
+    gdyż w logice, którą posługuje się przy robieniu dili (względnie
+    podpisywaniu cyrografów) obowiązuje prawo eliminacji podwójnej
     negacji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">DNE</span> : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Prawo to prezentuje się podobnie jak prawo wyłączonego środka: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dne</span> : <span class="id" title="var">DNE</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">DNE</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">nnp</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Po pierwsze, nie da się go konstruktywnie udowodnić. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DNE_irrefutable</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ ~ (~ ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">nnp</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">cut</span> <span class="id" title="var">False</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">nnp</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">_</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Po drugie, jest ono niezaprzeczalne. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DNE_LEM</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">DNE</span> &lt;-&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">DNE</span>. <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">DNE</span> <span class="id" title="var">P</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNE</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">nlem</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">nlem</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">nlem</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">LEM</span> <span class="id" title="var">P</span> <span class="id" title="var">nnp</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">LEM</span> <span class="id" title="var">P</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Po trzecie, jest równoważne prawu wyłączonego środka. 
 <div class="paragraph"> </div>
 
 <a name="lab74"></a><h1 class="section">Logika klasyczna jako (coś więcej niż) logika de Morgana</h1>
@@ -3003,18 +3072,6 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">DNE_irrefutable</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ ~ (~ ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">nnp</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">cut</span> <span class="id" title="var">False</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">nnp</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">_</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Peirce_irrefutable</span> :<br/>
@@ -3062,4 +3119,24 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 
 </div>
 <div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dbl_neg_Peirce</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span>) -&gt; <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">DN</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">DN</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dbl_neg_Peirce'</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span>) -&gt; <span class="id" title="var">P</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Peirce</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Peirce</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">pq</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
 </div>

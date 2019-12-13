@@ -26,6 +26,8 @@ Rekursja ogólna:
 Indukcja:
 1. W nowym ujęciu podrozdział o regułach indukcyjnych ma być ściśle powiązany z wprowadzeniem rekursji strukturalnej (tzn. nie-prymitywnej).
 2. Argumenty indukcyjne pierwszego i wyższego rzędu.
+3. Opisać sposoby indeksowania drzew: żeby uzyskać z typu typ jego indeksów wystarczy wymazać argumenty nierekurencyjne.
+4. Opisać zippery (czyli różniczkowanie typów).
 
 Ćwiczenia:
 1. Ćwiczenia z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
@@ -53,6 +55,7 @@ Funkcje:
 Inne:
 3. Znaleźć prostszy przykład dla podrozdziału o ścisłej pozytywności (ale do której konkretnie części?).
 8. Przedstawić kiedyś metodę encode-decode. Wprowadzić ją jako coś do pokazywania izomorfizmów typów.
+9. Izomorfizmy dla typów induktywnych: każde drzewo jest drzewem o jakiejś wysokości. Uogólniając: każdy element typu induktywnego jest elementem odpowiadającego my typu indeksowanego o pewnym indeksie.
 14. Opisać taktyki dla redukcji i obliczeń.
 15. Opisać podstawy teorii typów.
 17. Opisać zmienne egzystencjalne i odpowiadające im taktyki.

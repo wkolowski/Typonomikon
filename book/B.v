@@ -1822,31 +1822,50 @@ Qed.
 Lemma or_imp_and :
   (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
 (* begin hide *)
-Abort.
+Proof.
+  split.
+    intro H. split.
+      intro p. apply H. left. assumption.
+      intro q. apply H. right. assumption.
+    intros H1 H2. destruct H1 as [pr qr]. destruct H2 as [p | q].
+      apply pr. assumption.
+      apply qr. assumption.
+Qed.
 (* end hide *)
 
 Lemma and_not_imp :
-  P /\ ~Q -> ~(P -> Q).
+  P /\ ~ Q -> ~ (P -> Q).
 (* begin hide *)
-Abort.
+Proof.
+  intros H pq. destruct H as [p nq].
+  apply nq. apply pq. assumption.
+Qed.
 (* end hide *)
 
 Lemma or_not_imp :
-  ~P \/ Q -> (P -> Q).
+  ~ P \/ Q -> (P -> Q).
 (* begin hide *)
-Abort.
+Proof.
+  intros H p. destruct H as [np | q].
+    contradiction.
+    assumption.
+Qed.
 (* end hide *)
 
 Lemma contraposition :
-  (P -> Q) -> (~Q -> ~P).
+  (P -> Q) -> (~ Q -> ~ P).
 (* begin hide *)
-Abort.
+Proof.
+  intros pq nq p. apply nq, pq, p.
+Qed.
 (* end hide *)
 
 Lemma absurd :
-  ~P -> P -> Q.
+  ~ P -> P -> Q.
 (* begin hide *)
-Abort.
+Proof.
+  intros np p. contradiction.
+Qed.
 (* end hide *)
 
 Lemma impl_and :
@@ -2039,19 +2058,25 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma deMorgan_2_conv : ~(P /\ Q) -> ~P \/ ~Q.
+Lemma deMorgan_2_conv : ~ (P /\ Q) -> ~ P \/ ~Q.
 (* begin hide *)
 Proof. tauto. Qed.
 (* end hide *)
 
-Lemma not_imp : ~(P -> Q) -> P /\ ~Q.
+Lemma not_impl : ~ (P -> Q) -> P /\ ~ Q.
 (* begin hide *)
+Proof.
+  intro H. split.
+    cut False.
+      destruct 1.
+      apply H. intro.
 Abort.
 (* end hide *)
 
-Lemma imp_not_or : (P -> Q) -> (~P \/ Q).
+Lemma impl_not_or : (P -> Q) -> (~ P \/ Q).
 (* begin hide *)
-Proof. tauto. Qed.
+Proof.
+Abort.
 (* end hide *)
 
 Lemma material_implication : (P -> Q) <-> (~P \/ Q).
@@ -2067,18 +2092,24 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma contraposition_conv : (~Q -> ~P) -> (P -> Q).
+Lemma contraposition_conv : (~ Q -> ~ P) -> (P -> Q).
 (* begin hide *)
+Proof.
+  intros H p. cut False.
+    destruct 1.
+    apply H.
 Abort.
 (* end hide *)
 
 Lemma excluded_middle : P \/ ~P.
 (* begin hide *)
+Proof.
 Abort.
 (* end hide *)
 
 Lemma peirce : ((P -> Q) -> P) -> P.
 (* begin hide *)
+Proof.
 Abort.
 (* end hide *)
 
@@ -2510,8 +2541,10 @@ Qed.
 
 (** Co jednak dość ciekawe, silna negacja nie zawsze jest silniejsza
     od słabej (ale z pewnością nie może być od niej słabsza - gdyby
-    mogłaby, to nazywałaby się inaczej). W przypadku dysjunkcji obie
-    negacje są równoważne, co obrazuje poniższe twierdzenie: *)
+    mogła, to nazywałaby się inaczej). W przypadku dysjunkcji obie
+    negacje są równoważne, co obrazuje poniższe twierdzenie, które
+    głosi, że słaba negacja implikuje silną (a to razem z powyższym
+    daje równoważność): *)
 
 Lemma weak_to_strong_or :
   forall P Q : Prop, ~ (P \/ Q) -> ~ P /\ ~ Q.
@@ -2567,9 +2600,48 @@ Abort.
     oddał ruskowi walizkę.
 
     Jaki morał płynie z tej bajki? Diaboł to bydle złe i przeokrutne,
-    gdyż w logice, którą posługuje się przy podpisywaniu cyrografów
-    (względnie robieniu dili) obowiązuje prawo eliminacji podwójnej
+    gdyż w logice, którą posługuje się przy robieniu dili (względnie
+    podpisywaniu cyrografów) obowiązuje prawo eliminacji podwójnej
     negacji. *)
+
+Definition DNE : Prop :=
+  forall P : Prop, ~ ~ P -> P.
+
+(** Prawo to prezentuje się podobnie jak prawo wyłączonego środka: *)
+
+Lemma dne : DNE.
+Proof.
+  unfold DNE.
+  intros P nnp.
+Abort.
+
+(** Po pierwsze, nie da się go konstruktywnie udowodnić. *)
+
+Lemma DNE_irrefutable :
+  forall P : Prop, ~ ~ (~ ~ P -> P).
+Proof.
+  intros P H.
+  apply H.
+  intro nnp.
+  cut False.
+    contradiction.
+    apply nnp. intro p. apply H. intros _. assumption.
+Qed.
+
+(** Po drugie, jest ono niezaprzeczalne. *)
+
+Lemma DNE_LEM :
+  DNE <-> forall P : Prop, P \/ ~ P.
+Proof.
+  unfold DNE. split.
+    intros DNE P. apply DNE. intro nlem. apply nlem. right. intro p.
+      apply nlem. left. assumption.
+    intros LEM P nnp. destruct (LEM P).
+      assumption.
+      contradiction.
+Qed.
+
+(** Po trzecie, jest równoważne prawu wyłączonego środka. *)
 
 (** * Logika klasyczna jako (coś więcej niż) logika de Morgana *)
 
@@ -2588,17 +2660,6 @@ Proof.
 Qed.
 
 (** * Logika klasyczna jako logika Peirce'a *)
-
-Lemma DNE_irrefutable :
-  forall P : Prop, ~ ~ (~ ~ P -> P).
-Proof.
-  intros P H.
-  apply H.
-  intro nnp.
-  cut False.
-    contradiction.
-    apply nnp. intro p. apply H. intros _. assumption.
-Qed.
 
 Lemma Peirce_irrefutable :
   forall P Q : Prop, ~ ~ (((P -> Q) -> P) -> P).
@@ -2636,3 +2697,21 @@ Proof.
 Qed.
 
 (** * Paradoks Curry'ego *)
+
+Lemma dbl_neg_Peirce :
+  (forall P Q : Prop, ((P -> Q) -> Q) -> P) ->
+    (forall P Q : Prop, ((P -> Q) -> P) -> P).
+Proof.
+  intros DN P Q H.
+  apply (DN P Q).
+  intro pq. apply pq. apply H. intro. apply pq. assumption.
+Qed.
+
+Lemma dbl_neg_Peirce' :
+  (forall P Q : Prop, ((P -> Q) -> P) -> P) ->
+    (forall P Q : Prop, ((P -> Q) -> Q) -> P).
+Proof.
+  intros Peirce P Q H.
+  apply (Peirce P Q).
+  intro pq.
+Abort.
