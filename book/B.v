@@ -2432,7 +2432,8 @@ Qed.
 
     Dlaczego silna negacja jest silna, a słaba jest słaba, tzn. dlaczego
     nazwaliśmy je tak a nie inaczej? Wyjaśnia to poniższe twierdzenie oraz
-    poniższa beznadziejna próba udowodnienia pewnego twierdzenia. *)
+    następująca po nim beznadziejna próba udowodnienia analogicznego
+    twierdzenia z implikacją idącą w drugą stronę. *)
 
 Lemma strong_to_weak_and :
   forall P Q : Prop, ~ P \/ ~ Q -> ~ (P /\ Q).
@@ -2458,8 +2459,8 @@ Proof.
     assumption.
 Abort.
 
-(** Jak widać, nie udało nam się udowodnić odwrotnej implikacji. Powodem nie
-    jest jednak to, że jesteśmy mało zdolni - po prostu konstruktywnie nie da
+(** Jak widać, nie udało nam się udowodnić odwrotnej implikacji i to wcale
+    nie dlatego, że jesteśmy mało zdolni - po prostu konstruktywnie nie da
     się tego zrobić.
 
     Powód tego jest prosty: jeżeli wiemy, że [P] i [Q] razem prowadzą do
@@ -2569,6 +2570,38 @@ Abort.
 
 (** * Logika klasyczna jako logika Boga *)
 
+Lemma LEM : forall P : Prop, P \/ ~ P.
+Proof.
+  intro P. left.
+Restart.
+  intro P. right. intro p.
+Abort.
+
+Lemma LEM_irrefutable :
+  forall P : Prop, ~ ~ (P \/ ~ P).
+Proof.
+  intros P H.
+  apply H. right. intro p.
+  apply H. left. assumption.
+Qed.
+
+Lemma WLEM :
+  forall P : Prop, ~ P \/ ~ ~ P.
+Proof.
+  intro P. left. intro p.
+Restart.
+  intro P. right. intro np. apply np.
+Abort.
+
+Lemma WLEM_irrefutable :
+  forall P : Prop, ~ ~ (~ P \/ ~ ~ P).
+Proof.
+  intros P H.
+  apply H. left. intro p.
+  apply H. right. intro np.
+  contradiction.
+Qed.
+
 (** * Logika klasyczna jako logika diabła *)
 
 (** Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
@@ -2604,14 +2637,11 @@ Abort.
     podpisywaniu cyrografów) obowiązuje prawo eliminacji podwójnej
     negacji. *)
 
-Definition DNE : Prop :=
-  forall P : Prop, ~ ~ P -> P.
-
 (** Prawo to prezentuje się podobnie jak prawo wyłączonego środka: *)
 
-Lemma dne : DNE.
+Lemma DNE :
+  forall P : Prop, ~ ~ P -> P.
 Proof.
-  unfold DNE.
   intros P nnp.
 Abort.
 
@@ -2631,9 +2661,11 @@ Qed.
 (** Po drugie, jest ono niezaprzeczalne. *)
 
 Lemma DNE_LEM :
-  DNE <-> forall P : Prop, P \/ ~ P.
+  (forall P : Prop, ~ ~ P -> P)
+    <->
+  (forall P : Prop, P \/ ~ P).
 Proof.
-  unfold DNE. split.
+  split.
     intros DNE P. apply DNE. intro nlem. apply nlem. right. intro p.
       apply nlem. left. assumption.
     intros LEM P nnp. destruct (LEM P).
@@ -2645,32 +2677,14 @@ Qed.
 
 (** * Logika klasyczna jako (coś więcej niż) logika de Morgana *)
 
-Lemma deMorgan_and_is_weak_LEM :
-  (forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q)
-    <->
-  (forall P : Prop, ~ P \/ ~ ~ P).
+Lemma deMorgan :
+  forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q.
 Proof.
-  split.
-    intros deMorgan P. apply deMorgan. apply noncontradiction.
-    intros WLEM P Q H. destruct (WLEM P).
-      left. assumption.
-      destruct (WLEM Q).
-        right. assumption.
-        left. intro. apply H8. intro. apply H. split; assumption.
-Qed.
-
-(** * Logika klasyczna jako logika Peirce'a *)
-
-Lemma Peirce_irrefutable :
-  forall P Q : Prop, ~ ~ (((P -> Q) -> P) -> P).
-Proof.
-  intros P Q H.
-  apply H. intro pqp.
-  apply pqp. intro p.
-  cut False.
-    contradiction.
-    apply H. intros _. assumption.
-Qed.
+  intros P Q H. left. intro p. apply H. split.
+    assumption.
+Restart.
+  intros P Q H. right. intro q. apply H. split.
+Abort.
 
 Lemma deMorgan_irrefutable :
   forall P Q : Prop, ~ ~ (~ (P /\ Q) -> ~ P \/ ~ Q).
@@ -2685,6 +2699,38 @@ Proof.
     assumption.
 Qed.
 
+Lemma deMorgan_weak_LEM :
+  (forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q)
+    <->
+  (forall P : Prop, ~ P \/ ~ ~ P).
+Proof.
+  split.
+    intros deMorgan P. apply deMorgan. apply noncontradiction.
+    intros WLEM P Q H. destruct (WLEM P) as [np | nnp].
+      left. assumption.
+      destruct (WLEM Q) as [nq | nnq].
+        right. assumption.
+        left. intro p. apply nnq. intro. apply H. split; assumption.
+Qed.
+
+(** * Logika klasyczna jako logika materialnej implikacji i równoważności *)
+
+Lemma material_implication_conv :
+  forall P Q : Prop, ~ P \/ Q -> (P -> Q).
+Proof.
+  intros P Q H. destruct H as [np | q].
+    intro p. contradiction.
+    intro p. assumption.
+Qed.
+
+Lemma material_implication' :
+  forall P Q : Prop, (P -> Q) -> ~ P \/ Q.
+Proof.
+  intros P Q H. left. intro p. specialize (H p).
+Restart.
+  intros P Q H. right. apply H.
+Abort.
+
 Lemma material_implication_irrefutable :
   forall P Q : Prop, ~ ~ ((P -> Q) -> ~ P \/ Q).
 Proof.
@@ -2696,7 +2742,106 @@ Proof.
   assumption.
 Qed.
 
-(** * Paradoks Curry'ego *)
+Lemma material_implication_LEM :
+  (forall P Q : Prop, (P -> Q) -> ~ P \/ Q)
+    <->
+  (forall P : Prop, P \/ ~ P).
+Proof.
+  split.
+    intros mi P. apply or_comm. apply mi. intro. assumption.
+    intros LEM P Q H. destruct (LEM P) as [p | p].
+      right. apply H. assumption.
+      left. assumption.
+Qed.
+
+Lemma material_equivalence_conv :
+  forall P Q : Prop, (P /\ Q) \/ (~ P /\ ~ Q) -> (P <-> Q).
+Proof.
+  intros P Q H. destruct H as [pq | npnq].
+    destruct pq as [p q]. split.
+      intro p'. assumption.
+      intro q'. assumption.
+    destruct npnq as [np nq]. split.
+      intro p. contradiction.
+      intro q. contradiction.
+Qed.
+
+Lemma material_equivalence :
+  forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q).
+Proof.
+  intros P Q [pq qp]. left. split.
+    apply qp. apply pq.
+Restart.
+  intros P Q [pq qp]. right. split.
+    intro p.
+Abort.
+
+Lemma material_equivalence_irrefutable :
+  forall P Q : Prop, ~ ~ ((P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q)).
+Proof.
+  intros P Q nme.
+  apply nme. intros [pq qp].
+  right. split.
+    intro p. apply nme. intros _. left. split.
+      assumption.
+      apply pq. assumption.
+    intro q. apply nme. intros _. left. split.
+      apply qp. assumption.
+      assumption.
+Qed.
+
+Lemma material_equivalence_LEM :
+  (forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q))
+    <->
+  (forall P : Prop, P \/ ~ P).
+Proof.
+  split.
+    intros me P. destruct (me P P).
+      split; trivial.
+      destruct H. left. assumption.
+      destruct H. right. assumption.
+    intros LEM P Q HPQ. destruct HPQ as [PQ QP].
+      destruct (LEM P) as [p | np], (LEM Q) as [q | nq].
+        left. split; assumption.
+        specialize (PQ p). contradiction.
+        specialize (QP q). contradiction.
+        right. split; assumption.
+Qed.
+
+(** * Logika klasyczna jako logika Peirce'a *)
+
+Lemma Peirce :
+  forall P Q : Prop, ((P -> Q) -> P) -> P.
+Proof.
+  intros P Q H.
+  apply H. intro p.
+Abort.
+
+Lemma Peirce_irrefutable :
+  forall P Q : Prop, ~ ~ (((P -> Q) -> P) -> P).
+Proof.
+  intros P Q H.
+  apply H. intro pqp.
+  apply pqp. intro p.
+  cut False.
+    contradiction.
+    apply H. intros _. assumption.
+Qed.
+
+Lemma Peirce_LEM :
+  (forall P Q : Prop, ((P -> Q) -> P) -> P)
+    <->
+  (forall P : Prop, P \/ ~ P).
+Proof.
+  split.
+    Focus 2. intros LEM P Q H. destruct (LEM P) as [p | np].
+      assumption.
+      apply H. intro. contradiction.
+    intros Peirce P. apply (Peirce _ (~ P)). intro H. right. intro p.
+      apply H.
+        left. assumption.
+        assumption.
+Qed.
 
 Lemma dbl_neg_Peirce :
   (forall P Q : Prop, ((P -> Q) -> Q) -> P) ->
@@ -2715,3 +2860,5 @@ Proof.
   apply (Peirce P Q).
   intro pq.
 Abort.
+
+(** * Paradoks Curry'ego *)
