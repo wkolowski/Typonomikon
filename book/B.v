@@ -2602,6 +2602,16 @@ Proof.
   contradiction.
 Qed.
 
+Lemma LEM_WLEM :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P : Prop, ~ P \/ ~ ~ P).
+Proof.
+  intros LEM P.
+  destruct (LEM P) as [p | np].
+    right. intro np. contradiction.
+    left. assumption.
+Qed.
+
 (** * Logika klasyczna jako logika diabła *)
 
 (** Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
@@ -2843,6 +2853,68 @@ Proof.
         assumption.
 Qed.
 
+(** * Śmieci *)
+
+Lemma consequentia_mirabilis :
+  forall P : Prop, (~ P -> P) -> P.
+Proof.
+  intros P H. apply H. intro p.
+Abort.
+
+Lemma consequentia_mirabilis_irrefutable :
+  forall P : Prop, ~ ~ ((~ P -> P) -> P).
+Proof.
+  intros P H. apply H.
+  intro npp. apply npp.
+  intro p. apply H.
+  intros _. assumption.
+Qed.
+
+Lemma consequentia_mirabilis_LEM :
+  (forall P : Prop, (~ P -> P) -> P)
+    <->
+  (forall P : Prop, P \/ ~ P).
+Proof.
+  split.
+    intros CM P. apply CM. intro notLEM. right. intro p. apply notLEM.
+      left. assumption.
+    intros LEM P H. destruct (LEM P) as [p | np].
+      assumption.
+      apply H. assumption.
+Qed.
+
+Lemma contraposition' :
+  forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
+Proof.
+  intros P Q H p.
+Abort.
+
+Lemma contraposition_irrefutable :
+  forall P Q : Prop, ~ ~ ((~ Q -> ~ P) -> (P -> Q)).
+Proof.
+  intros P Q H. apply H.
+  intros nqnp p. cut False.
+    contradiction.
+    apply nqnp.
+      intro. apply H. intros _ _. assumption.
+      assumption.
+Qed.
+
+Lemma contraposition_LEM :
+  (forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q))
+    <->
+  (forall P : Prop, P \/ ~ P).
+Proof.
+  split.
+    intros C P. apply (C (~ ~ (P \/ ~ P))).
+      intros H1 H2. contradiction.
+      intro H. apply H. right. intro p. apply H. left. assumption.
+    intros LEM P Q H p. destruct (LEM Q) as [q | nq].
+      assumption.
+      specialize (H nq). contradiction.
+Qed.
+
+(* begin hide *)
 Lemma dbl_neg_Peirce :
   (forall P Q : Prop, ((P -> Q) -> Q) -> P) ->
     (forall P Q : Prop, ((P -> Q) -> P) -> P).
@@ -2860,5 +2932,274 @@ Proof.
   apply (Peirce P Q).
   intro pq.
 Abort.
+
+Lemma constructive_dilemma :
+  forall P Q R S : Prop,
+    (P -> R) -> (Q -> S) -> P \/ Q -> R \/ S.
+Proof.
+  intros P Q R S PR QS H.
+  destruct H as [p | q].
+    left. apply PR. assumption.
+    right. apply QS. assumption.
+Qed.
+
+Lemma destructive_dilemma :
+  forall P Q R S : Prop,
+    (P -> R) -> (Q -> S) -> ~ R \/ ~ S -> ~ P \/ ~ Q.
+Proof.
+  intros P Q R S PR QS H.
+  destruct H as [nr | ns].
+    left. intro p. apply nr, PR. assumption.
+    right. intro q. apply ns, QS. assumption.
+Qed.
+
+Lemma idempotency_of_entailment :
+  forall P Q : Prop,
+    (P -> Q) <-> (P -> P -> Q).
+Proof.
+  split.
+    intros pq p1 p2. apply pq. assumption.
+    intros ppq p. apply ppq.
+      assumption.
+      assumption.
+Qed.
+
+(* end hide *)
+
+(** **** Ćwiczenie (żmudne, ale warto) *)
+
+(** Udowodnij, że poniższe prawa logiki klasycznej są równoważne
+    każde z każdym, bez używania prawa wyłączonego środka jako
+    pośrednika. *)
+
+Definition LEM : Prop :=
+  forall P : Prop, P \/ ~ P.
+
+Definition DNE : Prop :=
+  forall P : Prop, ~ ~ P -> P.
+
+Definition CM : Prop :=
+  forall P : Prop, (~ P -> P) -> P.
+
+Definition MI : Prop :=
+  forall P Q : Prop, (P -> Q) -> ~ P \/ Q.
+
+Definition ME : Prop :=
+  forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q).
+
+Definition Peirce : Prop :=
+  forall P Q : Prop, ((P -> Q) -> P) -> P.
+
+Definition Contra : Prop :=
+  forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
+
+Ltac u :=
+  unfold LEM, DNE, CM, MI, ME, Peirce, Contra;
+  split.
+
+(* begin hide *)
+Lemma DNE_CM :
+  DNE <-> CM.
+Proof.
+  u.
+    intros DNE P H. apply DNE. intro np. apply np. apply H. assumption.
+    intros CM P H. apply CM. intro np. contradiction.
+Qed.
+
+Lemma DNE_MI :
+  DNE <-> MI.
+Proof.
+  u.
+    intros DNE P Q pq. apply DNE. intro H. apply H. left. intro p.
+      apply H. right. apply pq. assumption.
+    intros MI P nnp. destruct (MI P P) as [np | p].
+      intro p. assumption.
+      contradiction.
+      assumption.
+Qed.
+
+Lemma DNE_ME :
+  DNE <-> ME.
+Proof.
+  u.
+    intros DNE P Q H. destruct H as [pq qp]. apply DNE.
+      intro H. apply H. right. split.
+        intro p. apply H. left. split.
+          assumption.
+          apply pq. assumption.
+        intro q. apply H. left. split.
+          apply qp. assumption.
+          assumption.
+    intros ME P nnp. destruct (ME P P).
+      split; trivial.
+      destruct H. assumption.
+      destruct H. contradiction.
+Qed.
+
+Lemma DNE_Peirce :
+  DNE <-> Peirce.
+Proof.
+  u.
+    intros DNE P Q.
+    {
+      apply DNE. intro H.
+      apply H. intro pqp.
+      apply DNE. intro np.
+      apply np. apply pqp. intro p.
+      contradiction.
+    }
+    intros Peirce P nnp.
+    {
+      apply (Peirce P (~ P)). intro H. cut False.
+        contradiction.
+        apply nnp. intro p. apply H.
+          assumption.
+          assumption.
+    }
+Qed.
+
+Lemma DNE_Contra :
+  DNE <-> Contra.
+Proof.
+  u.
+    intros DNE P Q nqnp. apply DNE. intro npq. apply nqnp.
+      intro q. apply npq. intros _. assumption.
+      apply DNE. intro np. apply npq. intro p. contradiction.
+    intros Contra P. apply (Contra (~ ~ P) P). intros np nnp.
+      contradiction.
+Qed.
+
+Lemma CM_MI :
+  CM <-> MI.
+Proof.
+  u.
+    intros CM P Q pq. apply CM. intro H. left. intro p. apply H.
+      right. apply pq. assumption.
+    intros MI P H. destruct (MI P P) as [np | p].
+      intro p. assumption.
+      apply H. assumption.
+      assumption.
+Qed.
+
+Lemma CM_ME :
+  CM <-> ME.
+Proof.
+  u.
+    intros CM P Q H. destruct H as [pq qp]. apply CM. intro H.
+      right. split.
+        intro p. apply H. left. split.
+          assumption.
+          apply pq. assumption.
+        intro q. apply H. left. split.
+          apply qp. assumption.
+          assumption.
+    intros ME P H. destruct (ME P P) as [p | np].
+      split; trivial.
+      destruct p. assumption.
+      destruct np. apply H. assumption.
+Qed.
+
+Lemma CM_Peirce :
+  CM <-> Peirce.
+Proof.
+  u.
+    intros CM P Q H. apply CM. intro np. apply H. intro p.
+      contradiction.
+    intros Peirce P. apply Peirce.
+Qed.
+
+Lemma CM_Contra :
+  CM <-> Contra.
+Proof.
+  u.
+    intros CM P Q npnq p. apply CM. intro nq. contradiction npnq.
+    intros Contra P. apply Contra. intros np npp. apply np.
+      apply npp. intro p. contradiction.
+Qed.
+
+Lemma MI_ME :
+  MI <-> ME.
+Proof.
+  u.
+    intros MI P Q [pq qp]. destruct (MI _ _ pq) as [np | q].
+      right. split.
+        assumption.
+        intro q. apply np. apply qp. assumption.
+      left. split.
+        apply qp. assumption.
+        assumption.
+    intros ME P Q pq. destruct (ME P P).
+      split; trivial.
+      right. apply pq. destruct H. assumption.
+      left. destruct H. assumption.
+Qed.
+
+Lemma MI_Peirce :
+  MI <-> Peirce.
+Proof.
+  u.
+    intros MI P Q H. destruct (MI P P).
+      trivial.
+      apply H. intro p. contradiction.
+      assumption.
+    intros Peirce P Q. apply (Peirce _ False). intros H pq.
+      left. intro p. apply H. intros _. right. apply pq. assumption.
+Qed.
+
+Lemma MI_Contra :
+  MI <-> Contra.
+Proof.
+  u.
+    intros MI P Q H p. destruct (MI Q Q).
+      trivial.
+      contradiction H.
+      assumption.
+    intros Contra P Q. apply Contra. intros H1 H2. apply H1.
+      left. intro p. apply H1. right. apply H2. assumption.
+Qed.
+
+Lemma ME_Peirce :
+  ME <-> Peirce.
+Proof.
+  u.
+    intros ME P Q H. destruct (ME P P) as [p | np].
+      split; trivial.
+      destruct p. assumption.
+      destruct np. apply H. intro p. contradiction.
+    intros Peirce P Q [pq qp]. apply (Peirce _ False). intros H.
+      right. split.
+        intro p. apply H. left. split.
+          assumption.
+          apply pq. assumption.
+        intro q. apply H. left. split.
+          apply qp. assumption.
+          assumption.
+Qed.
+
+Lemma ME_Contra :
+  ME <-> Contra.
+Proof.
+  u.
+    intros ME P Q npnq p. destruct (ME Q Q).
+      split; trivial.
+      destruct H. assumption.
+      destruct H. specialize (npnq H). contradiction.
+    intros Contra P Q. apply Contra. intros H [pq qp].
+      apply H. right. split.
+        intro p. apply H. left. split.
+          assumption.
+          apply pq. assumption.
+        intro q. apply H. left. split.
+          apply qp. assumption.
+          assumption.
+Qed.
+
+Lemma Peirce_Contra :
+  Peirce <-> Contra.
+Proof.
+  u.
+    intros Peirce P Q H. eapply Peirce. intros H' p.
+Abort.
+(* end hide *)
 
 (** * Paradoks Curry'ego *)
