@@ -1,17 +1,3 @@
-Logika:
-1.-2. Konstruktywny rachunek zdań.
-1.-1. Konstruktywny rachunek predykatów.
-1.0. Dokładnie opisać kwestię silnej i słabej negacji. Zrobić ściągę.
-1.1. Logika klasyczna jako logika Boga (P \/ ~ P).
-1.2. Logika klasyczna jako logika diabła (~~ P -> P).
-1.3. Logika klasyczna jako logika de Morgana (prawa de Morgana).
-1.4. Logika klasyczna jako logika Peirce'a (prawo Peirce'a).
-1.5. Prawo wyłączonego środka łamie zasadę zachowania informacji.
-1.6. Zrobić porządną ściągę.
-1.7. Zrobić test tak/nie.
-1.8. Zrobić fiszki do nauki nazw praw.
-1.9. Dodać ekstensywniejsze opisy poszczególnych praw logiki klasycznej.
-1.10. Paradoks Curry'ego.
 2. Uzupełnić książkę o rozważania nad apartness (pol. separacja).
 3. Kwestia parametryczności: lam X. lam nil. lam cons. cons X nil - egzotyczna lista
 

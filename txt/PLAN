@@ -4,25 +4,58 @@ Część 0: Wstęp
 
 Część 1: Teoria typów w Coqowej wersji
 
-(B) Logika: Podstawy
-  Konstruktywny rachunek zdań
-  Konstruktywny rachunek kwantyfikatorów
-  Klasyczny rachunek kwantyfikatorów. Zrobić tak żeby można było pisać "Classically $ coś tam".
-  Przedstawić obie logiki jako użyteczne - pluralizm logiczny.
-  Paradoks pijoka, czyli esencja klasyczności.
-  Paradoks golibrody, czyli związki logiki z rzeczywistością.
-  Paradoks pieniądza i kebaba, czyli o zasobach.
-  Na końcu dać podrozdział o kombinatorach taktyk (albo i nie).
+B1: Konstruktywny rachunek zdań.
+  Spójniki:
+  - Implikacja
+  - Koniunkcja
+  - Dysjunkcja
+  - Prawda i fałsz
+  - równoważność
+  Paradoks pieniądza i kebaba
+  Zadania:
+    - zadania wstawić do tekstu, a na koniec dać tylko te, które łączą wiele spójników.
+    - dodać zadanie dotyczące czytania twierdzeń i dowodów
+    - dodać zadania dotyczące czytania formuł (precedencja etc.)
+  Ściąga
+  
+B2: Konstruktywny rachunek kwantyfikatorów.
+  Kwantyfikatory:
+  - uniwersalny
+  - egzystencjalny
   Napisać coś o nazwach zmiennych związanych
   Przedstawić jakieś bardziej ludzkie definicje predykatu i relacji (tzn. bierze coś i zwraca zdanie).
+  Paradoks golibrody
   Zadania:
-    wyrzucić zadania mącące (mieszające typy i zdania)
-    dodać zadanie dotyczące czytania twierdzeń i dowodów
-    dodać zadania dotyczące czytania formuł (precedencja etc.)
-    modelowanie różnych sytuacji za pomocą zdań i predykatów. Rozwiązywanie zagadek logicznych.
-    dodać jakieś wyjaśnienia do ćwiczeń
-    więcej zadań z exists
-    zadania z klasycznego rachunku kwantyfikatorów
+    - modelowanie różnych sytuacji za pomocą zdań i predykatów
+    - rozwiązywanie zagadek logicznych
+    - więcej zadań z exists
+  Ściąga
+
+B3: Logika klasyczna
+  Prawa logiki klasycznej - enumeracja, krótki opis, podział na grupy (LEM, materialna implikacja i równoważność) vs DNE vs (Peirce, consequentia mirabilis) vs kontrapozycja
+  Logika klasyczna jako logika:
+    - Boga (LEM) + prawo zachowania informacji
+    - diabła (DNE).
+    - Peirce'a (Peirce)
+    - kontrapozycji
+  Paradoks pijoka, czyli esencja klasyczności.
+  Paradoks Curry'ego
+  Zadania:
+    - udowodnij równoważność praw każde z każdym
+    - wyrzucić zadania mącące (mieszające typy i zdania)
+  Ściąga
+  
+B4: Reszta
+  Porównanie logiki konstruktywnej i klasycznej - pluralizm logiczny
+  Silna i słaba negacja
+  Logika de Morgana jako coś pomiędzy logiką konstruktywną i klasyczną
+  Inne logiki - krótkie, acz realistyczne podsumowanie (logiki parakonsystentne to guwno)
+  Na końcu dać podrozdział o kombinatorach taktyk
+  Zadania:
+    - rozwiąż wszystkie zadania jeszcze raz, ale tym razem bez używania Module/Section/Hypothesis oraz z jak najkrótszymi dowodami
+  Jakieś podsumowanie
+  Zrobić test tak/nie.
+  Zrobić fiszki do nauki nazw praw.
 
 (C) Podstawy teorii typów:
   Przedstawić materiał z rozdziału A za pomocą dedukcji naturalnej (z kontekstami rzecz jasna).
