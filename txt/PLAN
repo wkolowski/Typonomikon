@@ -6,11 +6,16 @@ Część 1: Teoria typów w Coqowej wersji
 
 B1: Konstruktywny rachunek zdań.
   Spójniki:
-  - Implikacja
+  - Implikacja:
+    - rozumowanie "od tyłu" - apply
+    - rozumowanie "do przodu" - specialize
+    - rozumowanie od tyłu jest lepsze, logika jest bezmyślna
   - Koniunkcja
   - Dysjunkcja
   - Prawda i fałsz
   - równoważność
+  - negacja, silna i słaba
+  - inne spójniki, np. xor. Ćwiczenie kreatywności?
   Paradoks pieniądza i kebaba
   Zadania:
     - zadania wstawić do tekstu, a na koniec dać tylko te, które łączą wiele spójników.
@@ -19,11 +24,13 @@ B1: Konstruktywny rachunek zdań.
   Ściąga
   
 B2: Konstruktywny rachunek kwantyfikatorów.
+  Typy i ich elementy (zestawić ze sobą P : Prop, A : Type, p : P, x : A)
+  Predykaty i relacje
   Kwantyfikatory:
   - uniwersalny
   - egzystencjalny
-  Napisać coś o nazwach zmiennych związanych
-  Przedstawić jakieś bardziej ludzkie definicje predykatu i relacji (tzn. bierze coś i zwraca zdanie).
+  Zmienne związane
+  Predykatywizm - krótki opis.
   Paradoks golibrody
   Zadania:
     - modelowanie różnych sytuacji za pomocą zdań i predykatów
@@ -38,8 +45,9 @@ B3: Logika klasyczna
     - diabła (DNE).
     - Peirce'a (Peirce)
     - kontrapozycji
-  Paradoks pijoka, czyli esencja klasyczności.
+  Paradoks pijoka
   Paradoks Curry'ego
+  (Paradoksy implikacji materialnej?)
   Zadania:
     - udowodnij równoważność praw każde z każdym
     - wyrzucić zadania mącące (mieszające typy i zdania)
@@ -54,6 +62,7 @@ B4: Reszta
   Zadania:
     - rozwiąż wszystkie zadania jeszcze raz, ale tym razem bez używania Module/Section/Hypothesis oraz z jak najkrótszymi dowodami
   Jakieś podsumowanie
+  Taktyka firstorder
   Zrobić test tak/nie.
   Zrobić fiszki do nauki nazw praw.
 
