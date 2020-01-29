@@ -2295,72 +2295,6 @@ Qed.
     dowieść — w następnym rozdziale zajmiemy się na poważnie typami,
     programami i obliczeniami oraz udowadnianiem ich właściwości. *)
 
-(* begin hide *)
-
-(* TODO: klasyczne rzeczy *)
-
-Definition Classically (A : Type) : Type :=
-  (forall P : Prop, P \/ ~ P) -> A.
-
-Notation "f $ x" := (f x) (at level 100, only parsing).
-
-Ltac cls := progress unfold Classically; intro LEM.
-
-(* TODO: zagadka, i to w ssreflekcie *)
-
-From Coq Require Import ssreflect ssrfun ssrbool.
-Set Implicit Arguments.
-Unset Strict Implicit.
-Unset Printing Implicit Defensive.
-
-(** Sesshomaru, Naraku i Inuyasha należą do sekty Warring Era. Każdy członek
-    tej sekty jest albo demonem, albo człowiekiem, albo i jednym i drugim.
-    Żaden człowiek nie lubi deszczu, a wszystkie demony lubią śnieg. Naraku
-    nie cierpi wszystkiego, co lubi Sesshomaru, a lubi wszystko czego nie
-    lubi Sesshomaru. Sesshomaru lubi deszcz i śnieg.
-
-    Wyraź opis powyższego tekstu w logice pierwszego rzędu. Czy jest ktoś,
-    kto jest człowiekiem, ale nie jest demonem? Udowodnij, że twoja odpowiedź
-    jest poprawna. *)
-
-Axioms
-  (WarringEra : Type)
-  (Sesshomaru Naraku Inuyasha : WarringEra)
-  (isHuman isDemon : WarringEra -> Prop)
-  (Thing : Type)
-  (Rain Snow : Thing)
-  (likes : WarringEra -> Thing -> Prop)
-  (H0 : forall x : WarringEra,
-    isHuman x \/ isDemon x \/ (isHuman x /\ isDemon x))
-  (H1 : forall x : WarringEra, isHuman x -> ~ likes x Rain)
-  (H2 : forall x : WarringEra, isDemon x -> likes x Snow)
-  (H3 : forall x : Thing, likes Sesshomaru x -> ~ likes Naraku x)
-  (H4 : forall x : Thing, ~ likes Sesshomaru x -> likes Naraku x)
-  (H5 : likes Sesshomaru Rain)
-  (H6 : likes Sesshomaru Snow).
-
-Lemma isDemon_Sesshomaru :
-  isDemon Sesshomaru.
-Proof.
-  elim: (H0 Sesshomaru) => [| [| []]];
-  by try move/(@H1 _)/(_ H5) => [].
-Qed.
-
-Lemma isHuman_Naraku :
-  isHuman Naraku.
-Proof.
-  elim: (H0 Naraku) => [| [| []]]; try done.
-    by move/(@H2 _)/(H3 H6).
-Qed.
-
-Lemma not_isDemon_Naraku :
-  ~ isDemon Naraku.
-Proof.
-  by move/H2/(H3 H6).
-Qed.
-
-(* end hide *)
-
 (** * UWAGA, odtąd nowe rzeczy *)
 
 (** * Silna negacja *)
@@ -2568,9 +2502,35 @@ Proof.
     intros deMorgan P H.
 Abort.
 
+(** * Logika klasyczna *)
+
+Definition LEM : Prop :=
+  forall P : Prop, P \/ ~ P.
+
+Definition MI : Prop :=
+  forall P Q : Prop, (P -> Q) -> ~ P \/ Q.
+
+Definition ME : Prop :=
+  forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q).
+
+Definition DNE : Prop :=
+  forall P : Prop, ~ ~ P -> P.
+
+Definition CM : Prop :=
+  forall P : Prop, (~ P -> P) -> P.
+
+Definition Peirce : Prop :=
+  forall P Q : Prop, ((P -> Q) -> P) -> P.
+
+Definition Contra : Prop :=
+  forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
+
+Ltac u :=
+  unfold LEM, DNE, CM, MI, ME, Peirce, Contra.
+
 (** * Logika klasyczna jako logika Boga *)
 
-Lemma LEM : forall P : Prop, P \/ ~ P.
+Lemma lem_hard : forall P : Prop, P \/ ~ P.
 Proof.
   intro P. left.
 Restart.
@@ -2585,188 +2545,62 @@ Proof.
   apply H. left. assumption.
 Qed.
 
-Lemma WLEM :
-  forall P : Prop, ~ P \/ ~ ~ P.
+Lemma LEM_DNE :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P : Prop, ~ ~ P -> P).
 Proof.
-  intro P. left. intro p.
-Restart.
-  intro P. right. intro np. apply np.
-Abort.
-
-Lemma WLEM_irrefutable :
-  forall P : Prop, ~ ~ (~ P \/ ~ ~ P).
-Proof.
-  intros P H.
-  apply H. left. intro p.
-  apply H. right. intro np.
-  contradiction.
+  intros LEM P nnp. destruct (LEM P).
+    assumption.
+    contradiction.
 Qed.
 
-Lemma LEM_WLEM :
+Lemma LEM_MI :
   (forall P : Prop, P \/ ~ P) ->
-    (forall P : Prop, ~ P \/ ~ ~ P).
+    (forall P Q : Prop, (P -> Q) -> ~ P \/ Q).
 Proof.
-  intros LEM P.
-  destruct (LEM P) as [p | np].
-    right. intro np. contradiction.
+  intros LEM P Q H. destruct (LEM P) as [p | p].
+    right. apply H. assumption.
     left. assumption.
 Qed.
 
-(** * Logika klasyczna jako logika diabła *)
-
-(** Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
-    sobie pewien rusek. Pewnego razu do ruska przyszedł diaboł (a to,
-    jak wiadomo, coś dużo gorszego niż diabeł) i zaoferował mu taki
-    dil: "dam ci miliard dolarów albo jeżeli dasz mi miliard dolarów,
-    to spełnię dowolne twoje życzenie".
-
-    Rusek trochę skonsternowany, nie bardzo widzi mu się podpisywanie
-    cyrografu krwią. "Nie nie, żadnych cyrografów, ani innych takich
-    kruczków prawnych", zapewnia go diaboł. Rusek myśli sobie tak:
-    "pewnie hajsu nie dostanę, ale przecież nic nie tracę", a mówi:
-    "No dobra, bierę".
-
-    "Świetnie!" - mówi diaboł - "Jeżeli dasz mi miliard dolarów, to
-    spełnie dowolne twoje życzenie". Cóż, rusek był zawiedziony, ale
-    nie zaskoczony - przecież dokładnie tego się spodziewał. Niedługo
-    później diaboł zniknął, a rusek wrócił do pracy w kołchozie.
-
-    Jako, że był przodownikiem pracy i to na dodatek bardzo oszczędnym,
-    bo nie miał dzieci ani baby, szybko udało mu się odłożyć miliard
-    dolarów i jeszcze kilka rubli na walizkę. Wtedy znów pojawił się
-    diaboł.
-
-    "O, cóż za spotkanie. Trzym hajs i spełnij moje życzenie, tak jak
-    się umawialiśmy" - powiedział rusek i podał diabołowi walizkę.
-    "Wisz co" - odpowiedział mu diaboł - "zmieniłem zdanie. Życzenia
-    nie spełnię, ale za to dam ci miliard dolarów. Łapaj" - i diaboł
-    oddał ruskowi walizkę.
-
-    Jaki morał płynie z tej bajki? Diaboł to bydle złe i przeokrutne,
-    gdyż w logice, którą posługuje się przy robieniu dili (względnie
-    podpisywaniu cyrografów) obowiązuje prawo eliminacji podwójnej
-    negacji. *)
-
-(** Prawo to prezentuje się podobnie jak prawo wyłączonego środka: *)
-
-Lemma DNE :
-  forall P : Prop, ~ ~ P -> P.
-Proof.
-  intros P nnp.
-Abort.
-
-(** Po pierwsze, nie da się go konstruktywnie udowodnić. *)
-
-Lemma DNE_irrefutable :
-  forall P : Prop, ~ ~ (~ ~ P -> P).
-Proof.
-  intros P H.
-  apply H.
-  intro nnp.
-  cut False.
-    contradiction.
-    apply nnp. intro p. apply H. intros _. assumption.
-Qed.
-
-(** Po drugie, jest ono niezaprzeczalne. *)
-
-Lemma DNE_LEM :
-  (forall P : Prop, ~ ~ P -> P)
-    <->
-  (forall P : Prop, P \/ ~ P).
-Proof.
-  split.
-    intros DNE P. apply DNE. intro nlem. apply nlem. right. intro p.
-      apply nlem. left. assumption.
-    intros LEM P nnp. destruct (LEM P).
-      assumption.
-      contradiction.
-Qed.
-
-(** Po trzecie, jest równoważne prawu wyłączonego środka. *)
-
-(** * Logika klasyczna jako (coś więcej niż) logika de Morgana *)
-
-Lemma deMorgan :
-  forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q.
-Proof.
-  intros P Q H. left. intro p. apply H. split.
-    assumption.
-Restart.
-  intros P Q H. right. intro q. apply H. split.
-Abort.
-
-Lemma deMorgan_irrefutable :
-  forall P Q : Prop, ~ ~ (~ (P /\ Q) -> ~ P \/ ~ Q).
-Proof.
-  intros P Q H.
-  apply H. intro npq.
-  left. intro p.
-  apply H. intros _.
-  right. intro q.
-  apply npq. split.
-    assumption.
-    assumption.
-Qed.
-
-Lemma deMorgan_WLEM :
-  (forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q)
-    <->
-  (forall P : Prop, ~ P \/ ~ ~ P).
-Proof.
-  split.
-    intros deMorgan P. apply deMorgan. apply noncontradiction.
-    intros WLEM P Q H. destruct (WLEM P) as [np | nnp].
-      left. assumption.
-      destruct (WLEM Q) as [nq | nnq].
-        right. assumption.
-        left. intro p. apply nnq. intro. apply H. split; assumption.
-Qed.
-
-Lemma deMorgan_big :
-  forall (A : Type) (P : A -> Prop),
-    A -> (~ forall x : A, P x) -> exists x : A, ~ P x.
-Proof.
-  intros A P a H.
-  exists a. intro pa.
-  apply H. intro x.
-Abort.
-
-Lemma deMorgan_big_irrefutable :
-  forall (A : Type) (P : A -> Prop),
-    ~ ~ (A -> (~ forall x : A, P x) -> exists x : A, ~ P x).
-Proof.
-  intros A P H1.
-  apply H1. intros a H2.
-  exists a. intro pa.
-Abort.
-
-Lemma LEM_deMorgan_big :
+Lemma LEM_ME :
   (forall P : Prop, P \/ ~ P) ->
-    (forall (A : Type) (P : A -> Prop),
-       (~ forall x : A, P x) -> exists x : A, ~ P x).
+    (forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q)).
 Proof.
-  intros LEM A P H. destruct (LEM (exists x : A, ~ P x)).
+  intros LEM P Q HPQ. destruct HPQ as [PQ QP].
+    destruct (LEM P) as [p | np], (LEM Q) as [q | nq].
+      left. split; assumption.
+      specialize (PQ p). contradiction.
+      specialize (QP q). contradiction.
+      right. split; assumption.
+Qed.
+
+Lemma LEM_Peirce :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P Q : Prop, ((P -> Q) -> P) -> P).
+Proof.
+  intros LEM P Q H. destruct (LEM P) as [p | np].
     assumption.
-    contradiction H. intro x. destruct (LEM (P x)).
-      assumption.
-      contradiction H7. exists x. assumption.
+    apply H. intro. contradiction.
 Qed.
 
-Lemma deMorgan_big_WLEM :
-  (forall (A : Type) (P : A -> Prop),
-     (~ forall x : A, P x) -> exists x : A, ~ P x) ->
-  (forall P : Prop, ~ P \/ ~ ~ P).
+Lemma LEM_CM :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P : Prop, (~ P -> P) -> P).
 Proof.
-  intros DM P.
-    specialize (DM bool (fun b => if b then P else ~ P)).
-    cbn in DM. destruct DM as [b H].
-      intro H. apply (H false). apply (H true).
-      destruct b.
-        left. assumption.
-        right. assumption.
+  intros LEM P H. destruct (LEM P) as [p | np].
+    assumption.
+    apply H. assumption.
 Qed.
 
+Lemma LEM_Contra :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q)).
+Proof.
+  intros LEM P Q H p. destruct (LEM Q) as [q | nq].
+    assumption.
+    specialize (H nq). contradiction.
+Qed.
 
 (** * Logika klasyczna jako logika materialnej implikacji i równoważności *)
 
@@ -2797,16 +2631,52 @@ Proof.
   assumption.
 Qed.
 
-Lemma material_implication_LEM :
-  (forall P Q : Prop, (P -> Q) -> ~ P \/ Q)
-    <->
-  (forall P : Prop, P \/ ~ P).
+Lemma MI_DNE :
+  MI -> DNE.
 Proof.
-  split.
-    intros mi P. apply or_comm. apply mi. intro. assumption.
-    intros LEM P Q H. destruct (LEM P) as [p | p].
-      right. apply H. assumption.
-      left. assumption.
+  u. intros MI P nnp. destruct (MI P P) as [np | p].
+    intro p. assumption.
+    contradiction.
+    assumption.
+Qed.
+
+Lemma MI_CM :
+  MI -> CM.
+Proof.
+  u. intros MI P H. destruct (MI P P) as [np | p].
+    intro p. assumption.
+    apply H. assumption.
+    assumption.
+Qed.
+
+Lemma MI_ME :
+  MI -> ME.
+Proof.
+  u. intros MI P Q [pq qp]. destruct (MI _ _ pq) as [np | q].
+    right. split.
+      assumption.
+      intro q. apply np. apply qp. assumption.
+    left. split.
+      apply qp. assumption.
+      assumption.
+Qed.
+
+Lemma MI_Peirce :
+  MI -> Peirce.
+Proof.
+  u. intros MI P Q H. destruct (MI P P).
+    trivial.
+    apply H. intro p. contradiction.
+    assumption.
+Qed.
+
+Lemma MI_Contra :
+  MI -> Contra.
+Proof.
+  u. intros MI P Q H p. destruct (MI Q Q).
+    trivial.
+    contradiction H.
+    assumption.
 Qed.
 
 Lemma material_equivalence_conv :
@@ -2845,27 +2715,63 @@ Proof.
       assumption.
 Qed.
 
-Lemma material_equivalence_LEM :
-  (forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q))
-    <->
-  (forall P : Prop, P \/ ~ P).
+Lemma ME_LEM :
+  ME -> LEM.
 Proof.
-  split.
-    intros me P. destruct (me P P).
-      split; trivial.
-      destruct H. left. assumption.
-      destruct H. right. assumption.
-    intros LEM P Q HPQ. destruct HPQ as [PQ QP].
-      destruct (LEM P) as [p | np], (LEM Q) as [q | nq].
-        left. split; assumption.
-        specialize (PQ p). contradiction.
-        specialize (QP q). contradiction.
-        right. split; assumption.
+  u. intros ME P. destruct (ME P P).
+    split; trivial.
+    destruct H. left. assumption.
+    destruct H. right. assumption.
+Qed.
+
+Lemma ME_DNE :
+  ME -> DNE.
+Proof.
+  u. intros ME P nnp. destruct (ME P P).
+    split; trivial.
+    destruct H. assumption.
+    destruct H. contradiction.
+Qed.
+
+Lemma ME_MI :
+  ME -> MI.
+Proof.
+  u. intros ME P Q pq. destruct (ME P P).
+    split; trivial.
+    right. apply pq. destruct H. assumption.
+    left. destruct H. assumption.
+Qed.
+
+Lemma ME_CM :
+  ME -> CM.
+Proof.
+  u. intros ME P H. destruct (ME P P) as [p | np].
+    split; trivial.
+    destruct p. assumption.
+    destruct np. apply H. assumption.
+Qed.
+
+Lemma ME_Peirce :
+  ME -> Peirce.
+Proof.
+  u. intros ME P Q H. destruct (ME P P) as [p | np].
+    split; trivial.
+    destruct p. assumption.
+    destruct np. apply H. intro p. contradiction.
+Qed.
+
+Lemma ME_Contra :
+  ME -> Contra.
+Proof.
+  u. intros ME P Q npnq p. destruct (ME Q Q).
+    split; trivial.
+    destruct H. assumption.
+    destruct H. specialize (npnq H). contradiction.
 Qed.
 
 (** * Logika klasyczna jako logika Peirce'a *)
 
-Lemma Peirce :
+Lemma peirce :
   forall P Q : Prop, ((P -> Q) -> P) -> P.
 Proof.
   intros P Q H.
@@ -2881,21 +2787,6 @@ Proof.
   cut False.
     contradiction.
     apply H. intros _. assumption.
-Qed.
-
-Lemma Peirce_LEM :
-  (forall P Q : Prop, ((P -> Q) -> P) -> P)
-    <->
-  (forall P : Prop, P \/ ~ P).
-Proof.
-  split.
-    Focus 2. intros LEM P Q H. destruct (LEM P) as [p | np].
-      assumption.
-      apply H. intro. contradiction.
-    intros Peirce P. apply (Peirce _ (~ P)). intro H. right. intro p.
-      apply H.
-        left. assumption.
-        assumption.
 Qed.
 
 (** * Śmieci *)
@@ -2915,19 +2806,6 @@ Proof.
   intros _. assumption.
 Qed.
 
-Lemma consequentia_mirabilis_LEM :
-  (forall P : Prop, (~ P -> P) -> P)
-    <->
-  (forall P : Prop, P \/ ~ P).
-Proof.
-  split.
-    intros CM P. apply CM. intro notLEM. right. intro p. apply notLEM.
-      left. assumption.
-    intros LEM P H. destruct (LEM P) as [p | np].
-      assumption.
-      apply H. assumption.
-Qed.
-
 Lemma contraposition' :
   forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
 Proof.
@@ -2943,20 +2821,6 @@ Proof.
     apply nqnp.
       intro. apply H. intros _ _. assumption.
       assumption.
-Qed.
-
-Lemma contraposition_LEM :
-  (forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q))
-    <->
-  (forall P : Prop, P \/ ~ P).
-Proof.
-  split.
-    intros C P. apply (C (~ ~ (P \/ ~ P))).
-      intros H1 H2. contradiction.
-      intro H. apply H. right. intro p. apply H. left. assumption.
-    intros LEM P Q H p. destruct (LEM Q) as [q | nq].
-      assumption.
-      specialize (H nq). contradiction.
 Qed.
 
 (* begin hide *)
@@ -2999,31 +2863,6 @@ Qed.
     każde z każdym, bez używania prawa wyłączonego środka jako
     pośrednika. *)
 
-Definition LEM : Prop :=
-  forall P : Prop, P \/ ~ P.
-
-Definition DNE : Prop :=
-  forall P : Prop, ~ ~ P -> P.
-
-Definition CM : Prop :=
-  forall P : Prop, (~ P -> P) -> P.
-
-Definition MI : Prop :=
-  forall P Q : Prop, (P -> Q) -> ~ P \/ Q.
-
-Definition ME : Prop :=
-  forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q).
-
-Definition Peirce : Prop :=
-  forall P Q : Prop, ((P -> Q) -> P) -> P.
-
-Definition Contra : Prop :=
-  forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
-
-Ltac u :=
-  unfold LEM, DNE, CM, MI, ME, Peirce, Contra;
-  split.
-
 (* begin hide *)
 Lemma DNE_CM :
   DNE <-> CM.
@@ -3033,35 +2872,6 @@ Proof.
     intros CM P H. apply CM. intro np. contradiction.
 Qed.
 
-Lemma DNE_MI :
-  DNE <-> MI.
-Proof.
-  u.
-    intros DNE P Q pq. apply DNE. intro H. apply H. left. intro p.
-      apply H. right. apply pq. assumption.
-    intros MI P nnp. destruct (MI P P) as [np | p].
-      intro p. assumption.
-      contradiction.
-      assumption.
-Qed.
-
-Lemma DNE_ME :
-  DNE <-> ME.
-Proof.
-  u.
-    intros DNE P Q H. destruct H as [pq qp]. apply DNE.
-      intro H. apply H. right. split.
-        intro p. apply H. left. split.
-          assumption.
-          apply pq. assumption.
-        intro q. apply H. left. split.
-          apply qp. assumption.
-          assumption.
-    intros ME P nnp. destruct (ME P P).
-      split; trivial.
-      destruct H. assumption.
-      destruct H. contradiction.
-Qed.
 
 Lemma DNE_Peirce :
   DNE <-> Peirce.
@@ -3096,36 +2906,6 @@ Proof.
       contradiction.
 Qed.
 
-Lemma CM_MI :
-  CM <-> MI.
-Proof.
-  u.
-    intros CM P Q pq. apply CM. intro H. left. intro p. apply H.
-      right. apply pq. assumption.
-    intros MI P H. destruct (MI P P) as [np | p].
-      intro p. assumption.
-      apply H. assumption.
-      assumption.
-Qed.
-
-Lemma CM_ME :
-  CM <-> ME.
-Proof.
-  u.
-    intros CM P Q H. destruct H as [pq qp]. apply CM. intro H.
-      right. split.
-        intro p. apply H. left. split.
-          assumption.
-          apply pq. assumption.
-        intro q. apply H. left. split.
-          apply qp. assumption.
-          assumption.
-    intros ME P H. destruct (ME P P) as [p | np].
-      split; trivial.
-      destruct p. assumption.
-      destruct np. apply H. assumption.
-Qed.
-
 Lemma CM_Peirce :
   CM <-> Peirce.
 Proof.
@@ -3143,84 +2923,6 @@ Proof.
     intros Contra P. apply Contra. intros np npp. apply np.
       apply npp. intro p. contradiction.
 Qed.
-
-Lemma MI_ME :
-  MI <-> ME.
-Proof.
-  u.
-    intros MI P Q [pq qp]. destruct (MI _ _ pq) as [np | q].
-      right. split.
-        assumption.
-        intro q. apply np. apply qp. assumption.
-      left. split.
-        apply qp. assumption.
-        assumption.
-    intros ME P Q pq. destruct (ME P P).
-      split; trivial.
-      right. apply pq. destruct H. assumption.
-      left. destruct H. assumption.
-Qed.
-
-Lemma MI_Peirce :
-  MI <-> Peirce.
-Proof.
-  u.
-    intros MI P Q H. destruct (MI P P).
-      trivial.
-      apply H. intro p. contradiction.
-      assumption.
-    intros Peirce P Q. apply (Peirce _ False). intros H pq.
-      left. intro p. apply H. intros _. right. apply pq. assumption.
-Qed.
-
-Lemma MI_Contra :
-  MI <-> Contra.
-Proof.
-  u.
-    intros MI P Q H p. destruct (MI Q Q).
-      trivial.
-      contradiction H.
-      assumption.
-    intros Contra P Q. apply Contra. intros H1 H2. apply H1.
-      left. intro p. apply H1. right. apply H2. assumption.
-Qed.
-
-Lemma ME_Peirce :
-  ME <-> Peirce.
-Proof.
-  u.
-    intros ME P Q H. destruct (ME P P) as [p | np].
-      split; trivial.
-      destruct p. assumption.
-      destruct np. apply H. intro p. contradiction.
-    intros Peirce P Q [pq qp]. apply (Peirce _ False). intros H.
-      right. split.
-        intro p. apply H. left. split.
-          assumption.
-          apply pq. assumption.
-        intro q. apply H. left. split.
-          apply qp. assumption.
-          assumption.
-Qed.
-
-Lemma ME_Contra :
-  ME <-> Contra.
-Proof.
-  u.
-    intros ME P Q npnq p. destruct (ME Q Q).
-      split; trivial.
-      destruct H. assumption.
-      destruct H. specialize (npnq H). contradiction.
-    intros Contra P Q. apply Contra. intros H [pq qp].
-      apply H. right. split.
-        intro p. apply H. left. split.
-          assumption.
-          apply pq. assumption.
-        intro q. apply H. left. split.
-          apply qp. assumption.
-          assumption.
-Qed.
-
 Lemma Peirce_Contra :
   Peirce <-> Contra.
 Proof.
@@ -3367,4 +3069,38 @@ Qed.
 
 (* end hide *)
 
+(* begin hide *)
+
+(** Godel-Dummet *)
+
+Definition GD : Prop :=
+  forall P Q : Prop, (P -> Q) \/ (Q -> P).
+
+Lemma GD_irrefutable :
+  forall P Q : Prop, ~ ~ ((P -> Q) \/ (Q -> P)).
+Proof.
+  intros P Q H.
+  apply H. left. intro p.
+  exfalso.
+  apply H. right. intro q.
+  assumption.
+Qed.
+
+Lemma LEM_GD :
+  LEM -> GD.
+Proof.
+  unfold LEM, GD. intros LEM P Q.
+  destruct (LEM P) as [p | np].
+    right. intros _. assumption.
+    left. intro p. contradiction.
+Qed.
+
+(* TODO
+  unfold GD, LEM. split.
+    intros GD P. destruct (GD P (~ P)) as [pnp | npp].
+      right. intro p. apply pnp; assumption.
+      right. intro p.
+*)
+
+(* end hide *)
 (** * Paradoks Curry'ego *)
