@@ -2530,7 +2530,7 @@ Ltac u :=
 
 (** * Logika klasyczna jako logika Boga *)
 
-Lemma lem_hard : forall P : Prop, P \/ ~ P.
+Lemma LEM_hard : forall P : Prop, P \/ ~ P.
 Proof.
   intro P. left.
 Restart.
@@ -2629,6 +2629,16 @@ Proof.
   apply H. intros _.
   right. apply pq.
   assumption.
+Qed.
+
+Lemma MI_LEM :
+  MI -> LEM.
+Proof.
+  unfold MI, LEM. intros MI P.
+  destruct (MI P P).
+    intro p. assumption.
+    right. assumption.
+    left. assumption.
 Qed.
 
 Lemma MI_DNE :
@@ -2769,9 +2779,197 @@ Proof.
     destruct H. specialize (npnq H). contradiction.
 Qed.
 
+(** * Logika klasyczna jako logika diabła *)
+
+(** Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
+    sobie pewien rusek. Pewnego razu do ruska przyszedł diaboł (a to,
+    jak wiadomo, coś dużo gorszego niż diabeł) i zaoferował mu taki
+    dil: "dam ci miliard dolarów albo jeżeli dasz mi miliard dolarów,
+    to spełnię dowolne twoje życzenie".
+
+    Rusek trochę skonsternowany, nie bardzo widzi mu się podpisywanie
+    cyrografu krwią. "Nie nie, żadnych cyrografów, ani innych takich
+    kruczków prawnych", zapewnia go diaboł. Rusek myśli sobie tak:
+    "pewnie hajsu nie dostanę, ale przecież nic nie tracę", a mówi:
+    "No dobra, bierę".
+
+    "Świetnie!" - mówi diaboł - "Jeżeli dasz mi miliard dolarów, to
+    spełnie dowolne twoje życzenie". Cóż, rusek był zawiedziony, ale
+    nie zaskoczony - przecież dokładnie tego się spodziewał. Niedługo
+    później diaboł zniknął, a rusek wrócił do pracy w kołchozie.
+
+    Jako, że był przodownikiem pracy i to na dodatek bardzo oszczędnym,
+    bo nie miał dzieci ani baby, szybko udało mu się odłożyć miliard
+    dolarów i jeszcze kilka rubli na walizkę. Wtedy znów pojawił się
+    diaboł.
+
+    "O, cóż za spotkanie. Trzym hajs i spełnij moje życzenie, tak jak
+    się umawialiśmy" - powiedział rusek i podał diabołowi walizkę.
+    "Wisz co" - odpowiedział mu diaboł - "zmieniłem zdanie. Życzenia
+    nie spełnię, ale za to dam ci miliard dolarów. Łapaj" - i diaboł
+    oddał ruskowi walizkę.
+
+    Jaki morał płynie z tej bajki? Diaboł to bydle złe i przeokrutne,
+    gdyż w logice, którą posługuje się przy robieniu dili (względnie
+    podpisywaniu cyrografów) obowiązuje prawo eliminacji podwójnej
+    negacji. *)
+
+(** Prawo to prezentuje się podobnie jak prawo wyłączonego środka: *)
+
+Lemma DNE_hard :
+  forall P : Prop, ~ ~ P -> P.
+Proof.
+  intros P nnp.
+Abort.
+
+(** Po pierwsze, nie da się go konstruktywnie udowodnić. *)
+
+Lemma DNE_irrefutable :
+  forall P : Prop, ~ ~ (~ ~ P -> P).
+Proof.
+  intros P H.
+  apply H.
+  intro nnp.
+  cut False.
+    contradiction.
+    apply nnp. intro p. apply H. intros _. assumption.
+Qed.
+
+(** Po drugie, jest ono niezaprzeczalne. *)
+
+(** Po trzecie, jest równoważne prawu wyłączonego środka. *)
+
+Lemma DNE_LEM :
+  DNE -> LEM.
+Proof.
+  intros DNE P. apply DNE.
+  intro H. apply H. right.
+  intro p. apply H. left.
+  assumption.
+Qed.
+
+Lemma DNE_MI :
+  DNE -> MI.
+Proof.
+  intros DNE P Q pq. apply DNE.
+  intro H. apply H. left.
+  intro p. apply H. right.
+  apply pq. assumption.
+Qed.
+
+Lemma DNE_ME :
+  DNE -> ME.
+Proof.
+  intros DNE P Q [pq qp]. apply DNE.
+  intro H. apply H.
+  right. split.
+    intro p. apply H. left. split.
+      assumption.
+      apply pq. assumption.
+    intro q. apply H. left. split.
+      apply qp. assumption.
+        assumption.
+Qed.
+
+Lemma DNE_CM :
+  DNE -> CM.
+Proof.
+  intros DNE P H. apply DNE. intro np. apply np. apply H. assumption.
+Qed.
+
+Lemma DNE_Peirce :
+  DNE -> Peirce.
+Proof.
+  intros DNE P Q. apply DNE.
+  intro H. apply H.
+  intro pqp. apply DNE.
+  intro np. apply np. apply pqp.
+  intro p. contradiction.
+Qed.
+
+Lemma DNE_Contra :
+  DNE -> Contra.
+Proof.
+  intros DNE P Q nqnp. apply DNE.
+  intro npq. apply nqnp.
+    intro q. apply npq. intros _. assumption.
+    apply DNE. intro np. apply npq. intro p. contradiction.
+Qed.
+
 (** * Logika klasyczna jako logika Peirce'a *)
 
-Lemma peirce :
+(** ** Logika cudownych konsekwencji *)
+
+Lemma consequentia_mirabilis :
+  forall P : Prop, (~ P -> P) -> P.
+Proof.
+  intros P H. apply H. intro p.
+Abort.
+
+Lemma consequentia_mirabilis_irrefutable :
+  forall P : Prop, ~ ~ ((~ P -> P) -> P).
+Proof.
+  intros P H. apply H.
+  intro npp. apply npp.
+  intro p. apply H.
+  intros _. assumption.
+Qed.
+
+Lemma CM_LEM :
+  CM -> LEM.
+Proof.
+  intros CM P. apply CM.
+  intro H. right.
+  intro p. apply H.
+  left. assumption.
+Qed.
+
+Lemma CM_MI :
+  CM -> MI.
+Proof.
+  intros CM P Q pq. apply CM.
+  intro H. left.
+  intro p. apply H.
+  right. apply pq. assumption.
+Qed.
+
+Lemma CM_ME :
+  CM -> ME.
+Proof.
+  intros CM P Q H. destruct H as [pq qp]. apply CM. intro H.
+    right. split.
+      intro p. apply H. left. split.
+        assumption.
+        apply pq. assumption.
+      intro q. apply H. left. split.
+        apply qp. assumption.
+        assumption.
+Qed.
+
+Lemma CM_DNE :
+  CM -> DNE.
+Proof.
+  intros CM P H. apply CM. intro np. contradiction.
+Qed.
+
+Lemma CM_Peirce :
+  CM -> Peirce.
+Proof.
+  intros CM P Q H. apply CM.
+  intro np. apply H.
+  intro p. contradiction.
+Qed.
+
+Lemma CM_Contra :
+  CM -> Contra.
+Proof.
+  intros CM P Q npnq p. apply CM.
+  intro nq. contradiction npnq.
+Qed.
+
+(** ** Logika Peirce'a *)
+
+Lemma Peirce_hard :
   forall P Q : Prop, ((P -> Q) -> P) -> P.
 Proof.
   intros P Q H.
@@ -2789,22 +2987,79 @@ Proof.
     apply H. intros _. assumption.
 Qed.
 
-(** * Śmieci *)
-
-Lemma consequentia_mirabilis :
-  forall P : Prop, (~ P -> P) -> P.
+Lemma Peirce_LEM :
+  Peirce -> LEM.
 Proof.
-  intros P H. apply H. intro p.
-Abort.
-
-Lemma consequentia_mirabilis_irrefutable :
-  forall P : Prop, ~ ~ ((~ P -> P) -> P).
-Proof.
-  intros P H. apply H.
-  intro npp. apply npp.
-  intro p. apply H.
-  intros _. assumption.
+  unfold Peirce, LEM.
+  intros Peirce P.
+  apply (Peirce _ (~ P)). intro H.
+  right. intro p. apply H.
+    left. assumption.
+    assumption.
 Qed.
+
+Lemma Peirce_MI :
+  Peirce -> MI.
+Proof.
+  unfold Peirce, MI.
+  intros Peirce P Q.
+  apply (Peirce _ False).
+  intros H pq. left.
+  intro p. apply H.
+  intros _. right.
+  apply pq. assumption.
+Qed.
+
+Lemma Peirce_ME :
+  Peirce -> ME.
+Proof.
+  unfold Peirce, ME.
+  intros Peirce P Q [pq qp]. apply (Peirce _ False). intros H.
+    right. split.
+      intro p. apply H. left. split.
+        assumption.
+        apply pq. assumption.
+      intro q. apply H. left. split.
+        apply qp. assumption.
+        assumption.
+Qed.
+
+Lemma Peirce_DNE :
+  Peirce -> DNE.
+Proof.
+  unfold Peirce, DNE.
+  intros Peirce P nnp.
+  apply (Peirce P (~ P)).
+  intro H. cut False.
+    contradiction.
+    apply nnp. intro p. apply H.
+      assumption.
+      assumption.
+Qed.
+
+Lemma Peirce_CM :
+  Peirce -> CM.
+Proof.
+  unfold Peirce, CM.
+  intros Peirce P.
+  apply Peirce.
+Qed.
+
+Lemma Peirce_Contra :
+  Peirce -> Contra.
+Proof.
+  unfold Peirce, Contra.
+  intros Peirce P Q nqnp p.
+  apply (Peirce Q (~ P)).
+  intro qnp.
+  cut False.
+    contradiction.
+    apply nqnp.
+      intro q. contradiction qnp.
+      assumption.
+Qed.
+
+(** * Logika klasyczna jako logika kontrapozycji *)
 
 Lemma contraposition' :
   forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
@@ -2821,6 +3076,68 @@ Proof.
     apply nqnp.
       intro. apply H. intros _ _. assumption.
       assumption.
+Qed.
+
+Lemma Contra_LEM :
+  Contra -> LEM.
+Proof.
+  unfold Contra, LEM.
+  intros Contra P.
+  apply (Contra (~ ~ (P \/ ~ P))).
+    intros H1 H2. contradiction.
+    intro H. apply H. right. intro p. apply H. left. assumption.
+Qed.
+
+Lemma Contra_MI :
+  Contra -> MI.
+Proof.
+  intros Contra P Q. apply Contra. intros H1 H2. apply H1.
+    left. intro p. apply H1. right. apply H2. assumption.
+Qed.
+
+Lemma Contra_ME :
+  Contra -> ME.
+Proof.
+  intros Contra P Q. apply Contra. intros H [pq qp].
+    apply H. right. split.
+      intro p. apply H. left. split.
+        assumption.
+        apply pq. assumption.
+      intro q. apply H. left. split.
+        apply qp. assumption.
+        assumption.
+Qed.
+
+Lemma Contra_DNE :
+  Contra -> DNE.
+Proof.
+  intros Contra P.
+  apply (Contra (~ ~ P) P).
+  intros np nnp.
+  contradiction.
+Qed.
+
+Lemma Contra_CM :
+  Contra -> CM.
+Proof.
+  unfold Contra, CM.
+  intros Contra P.
+  apply Contra.
+  intros np npp.
+  apply np. apply npp.
+  intro p. contradiction.
+Qed.
+
+Lemma Contra_Peirce :
+  Contra -> Peirce.
+Proof.
+  unfold Contra, Peirce.
+  intros Contra P Q.
+  apply Contra.
+  intros np H.
+  apply np, H.
+  intro p.
+  contradiction.
 Qed.
 
 (* begin hide *)
@@ -2857,250 +3174,4 @@ Qed.
 
 (* end hide *)
 
-(** **** Ćwiczenie (żmudne, ale warto) *)
-
-(** Udowodnij, że poniższe prawa logiki klasycznej są równoważne
-    każde z każdym, bez używania prawa wyłączonego środka jako
-    pośrednika. *)
-
-(* begin hide *)
-Lemma DNE_CM :
-  DNE <-> CM.
-Proof.
-  u.
-    intros DNE P H. apply DNE. intro np. apply np. apply H. assumption.
-    intros CM P H. apply CM. intro np. contradiction.
-Qed.
-
-
-Lemma DNE_Peirce :
-  DNE <-> Peirce.
-Proof.
-  u.
-    intros DNE P Q.
-    {
-      apply DNE. intro H.
-      apply H. intro pqp.
-      apply DNE. intro np.
-      apply np. apply pqp. intro p.
-      contradiction.
-    }
-    intros Peirce P nnp.
-    {
-      apply (Peirce P (~ P)). intro H. cut False.
-        contradiction.
-        apply nnp. intro p. apply H.
-          assumption.
-          assumption.
-    }
-Qed.
-
-Lemma DNE_Contra :
-  DNE <-> Contra.
-Proof.
-  u.
-    intros DNE P Q nqnp. apply DNE. intro npq. apply nqnp.
-      intro q. apply npq. intros _. assumption.
-      apply DNE. intro np. apply npq. intro p. contradiction.
-    intros Contra P. apply (Contra (~ ~ P) P). intros np nnp.
-      contradiction.
-Qed.
-
-Lemma CM_Peirce :
-  CM <-> Peirce.
-Proof.
-  u.
-    intros CM P Q H. apply CM. intro np. apply H. intro p.
-      contradiction.
-    intros Peirce P. apply Peirce.
-Qed.
-
-Lemma CM_Contra :
-  CM <-> Contra.
-Proof.
-  u.
-    intros CM P Q npnq p. apply CM. intro nq. contradiction npnq.
-    intros Contra P. apply Contra. intros np npp. apply np.
-      apply npp. intro p. contradiction.
-Qed.
-Lemma Peirce_Contra :
-  Peirce <-> Contra.
-Proof.
-  u.
-    intros Peirce P Q H. eapply Peirce. intros H' p.
-Abort.
-(* end hide *)
-
-(* begin hide *)
-
-(** Xor w logice intuicjonistycznej - ubaw po pachy. *)
-
-Definition xor (A B : Prop) : Prop :=
-  (A /\ ~ B) \/ (~ A /\ B).
-
-Ltac xor := unfold xor.
-
-Lemma xor_irrefl :
-  forall P : Prop, ~ xor P P.
-Proof.
-  xor. intros A H.
-  destruct H as [[p np] | [np p]].
-    apply np. assumption.
-    apply np. assumption.
-Qed.
-
-Lemma xor_sym :
-  forall P Q : Prop, xor P Q -> xor Q P.
-Proof.
-  xor. intros P Q H.
-  destruct H as [[p nq] | [q np]].
-    right. split; assumption.
-    left. split; assumption.
-Qed.
-
-Lemma xor_sym' :
-  forall P Q : Prop, xor P Q <-> xor Q P.
-Proof.
-  split; apply xor_sym.
-Qed.
-
-Lemma xor_cotrans :
-  LEM ->
-    (forall P Q R : Prop, xor P Q -> xor P R \/ xor Q R).
-Proof.
-  unfold LEM, xor. intros LEM P Q R H.
-  destruct H as [[p nq] | [q np]].
-    destruct (LEM R) as [r | nr].
-      right. right. split; assumption.
-      left. left. split; assumption.
-    destruct (LEM R) as [r | nr].
-      left. right. split; assumption.
-      right. left. split; assumption.
-Qed.
-
-Lemma xor_assoc :
-  forall P Q R : Prop,
-    xor P (xor Q R) <-> xor (xor P Q) R.
-Proof.
-  unfold xor. split.
-    firstorder.
-Abort.
-
-Lemma xor_not_iff :
-  forall P Q : Prop, xor P Q -> ~ (P <-> Q).
-Proof.
-  unfold xor, iff.
-  intros P Q H1 H2.
-  destruct H2 as [pq qp], H1 as [[p nq] | [np q]].
-    apply nq, pq. assumption.
-    apply np, qp. assumption.
-Qed.
-
-Lemma not_iff_xor :
-  LEM ->
-    forall P Q : Prop, ~ (P <-> Q) -> xor P Q.
-Proof.
-  unfold LEM, xor.
-  intros LEM P Q H.
-  destruct (LEM P) as [p | np], (LEM Q) as [q | nq].
-    contradiction H. split; trivial.
-    left. split; assumption.
-    right. split; assumption.
-    contradiction H. split; intro; contradiction.
-Qed.
-
-Lemma xor_spec :
-  forall P Q : Prop, xor P Q <-> (P \/ Q) /\ (~ P \/ ~ Q).
-Proof.
-  unfold xor, iff. split.
-    intros [[p nq] | [np q]].
-      split.
-        left. assumption.
-        right. assumption.
-      split.
-        right. assumption.
-        left. assumption.
-    intros [[p | q] [np | nq]].
-      contradiction.
-      left. split; assumption.
-      right. split; assumption.
-      contradiction.
-Qed.
-
-Lemma xor_False_r :
-  forall P : Prop, xor P False <-> P.
-Proof.
-  unfold xor, iff. split.
-    intro H. destruct H as [[p _] | [_ f]].
-      assumption.
-      contradiction.
-    intro p. left. split.
-      assumption.
-      intro f. contradiction.
-Qed.
-
-Lemma xor_False_l :
-  forall P : Prop, xor False P <-> P.
-Proof.
-  split.
-    intro x. apply xor_sym in x. apply xor_False_r. assumption.
-    intro p. unfold xor. right. split.
-      intro f. contradiction.
-      assumption.
-Qed.
-
-Lemma xor_True_l :
-  forall P : Prop, xor True P <-> ~ P.
-Proof.
-  unfold xor, iff. split.
-    intros [[_ np] | [f _]].
-      assumption.
-      contradiction.
-    intro np. left. split.
-      trivial.
-      assumption.
-Qed.
-
-Lemma xor_True_r :
-  forall P : Prop, xor P True <-> ~ P.
-Proof.
-  intros. rewrite xor_sym' xor_True_l. reflexivity.
-Qed.
-
-(* end hide *)
-
-(* begin hide *)
-
-(** Godel-Dummet *)
-
-Definition GD : Prop :=
-  forall P Q : Prop, (P -> Q) \/ (Q -> P).
-
-Lemma GD_irrefutable :
-  forall P Q : Prop, ~ ~ ((P -> Q) \/ (Q -> P)).
-Proof.
-  intros P Q H.
-  apply H. left. intro p.
-  exfalso.
-  apply H. right. intro q.
-  assumption.
-Qed.
-
-Lemma LEM_GD :
-  LEM -> GD.
-Proof.
-  unfold LEM, GD. intros LEM P Q.
-  destruct (LEM P) as [p | np].
-    right. intros _. assumption.
-    left. intro p. contradiction.
-Qed.
-
-(* TODO
-  unfold GD, LEM. split.
-    intros GD P. destruct (GD P (~ P)) as [pnp | npp].
-      right. intro p. apply pnp; assumption.
-      right. intro p.
-*)
-
-(* end hide *)
 (** * Paradoks Curry'ego *)

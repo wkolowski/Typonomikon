@@ -1,4 +1,4 @@
-
+Require Import B.
 
 (** * Logika klasyczna jako (coś więcej niż) logika de Morgana *)
 
@@ -65,7 +65,7 @@ Proof.
     assumption.
     contradiction H. intro x. destruct (LEM (P x)).
       assumption.
-      contradiction H7. exists x. assumption.
+      contradiction H0. exists x. assumption.
 Qed.
 
 Lemma deMorgan_big_WLEM :
