@@ -1,0 +1,1 @@
+(** * Paradoks Curry'ego *)

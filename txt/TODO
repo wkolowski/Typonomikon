@@ -3,7 +3,8 @@
 
 Rekursja:
 1. Rekursja prymitywna.
-3. Rekursja wyższego rzędu, tzn. nie w pełni zaaplikowane wywołania rekurencyjne.
+2. Rekursja wyższego rzędu, tzn. nie w pełni zaaplikowane wywołania rekurencyjne.
+3. Typy induktywne jako najlepsze typy o pewnej strukturze (np. lista to najlepszy typ o strukturze listy).
 
 Rekursja ogólna:
 2. Rekursja przez iterację.

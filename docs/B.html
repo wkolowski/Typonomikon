@@ -2976,64 +2976,31 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">LEM_DNE</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">LEM</span> <span class="id" title="var">P</span> <span class="id" title="var">nnp</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">LEM</span> <span class="id" title="var">P</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">LEM_MI</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">LEM</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">LEM</span> <span class="id" title="var">P</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> | <span class="id" title="var">p</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">LEM_ME</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) \/ (~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>)).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">LEM</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">HPQ</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">HPQ</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">PQ</span> <span class="id" title="var">QP</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">LEM</span> <span class="id" title="var">P</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> | <span class="id" title="var">np</span>], (<span class="id" title="var">LEM</span> <span class="id" title="var">Q</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">q</span> | <span class="id" title="var">nq</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>; <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">PQ</span> <span class="id" title="var">p</span>). <span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">QP</span> <span class="id" title="var">q</span>). <span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">split</span>; <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">LEM_Peirce</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span>) -&gt; <span class="id" title="var">P</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">LEM</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">LEM</span> <span class="id" title="var">P</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> | <span class="id" title="var">np</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">LEM_CM</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, (~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>) -&gt; <span class="id" title="var">P</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">LEM</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">LEM</span> <span class="id" title="var">P</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> | <span class="id" title="var">np</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">LEM_Contra</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (~ <span class="id" title="var">Q</span> -&gt; ~ <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>)).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">LEM</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">LEM</span> <span class="id" title="var">Q</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">q</span> | <span class="id" title="var">nq</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">H</span> <span class="id" title="var">nq</span>). <span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
@@ -3077,66 +3044,26 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">MI_LEM</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">MI</span> -&gt; <span class="id" title="var">LEM</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">MI</span>, <span class="id" title="var">LEM</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">MI</span> <span class="id" title="var">P</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">MI</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">MI_DNE</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">MI</span> -&gt; <span class="id" title="var">DNE</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">u</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">MI</span> <span class="id" title="var">P</span> <span class="id" title="var">nnp</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">MI</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">np</span> | <span class="id" title="var">p</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">MI_CM</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">MI</span> -&gt; <span class="id" title="var">CM</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">u</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">MI</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">MI</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">np</span> | <span class="id" title="var">p</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">MI_ME</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">MI</span> -&gt; <span class="id" title="var">ME</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">u</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">MI</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> [<span class="id" title="var">pq</span> <span class="id" title="var">qp</span>]. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">MI</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">pq</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">np</span> | <span class="id" title="var">q</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">np</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">qp</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">qp</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">MI_Peirce</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">MI</span> -&gt; <span class="id" title="var">Peirce</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">u</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">MI</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">MI</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">MI_Contra</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">MI</span> -&gt; <span class="id" title="var">Contra</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">u</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">MI</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">MI</span> <span class="id" title="var">Q</span> <span class="id" title="var">Q</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">material_equivalence_conv</span> :<br/>
@@ -3180,62 +3107,26 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">ME_LEM</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">ME</span> -&gt; <span class="id" title="var">LEM</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">u</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">ME</span> <span class="id" title="var">P</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ME</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">ME_DNE</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">ME</span> -&gt; <span class="id" title="var">DNE</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">u</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">ME</span> <span class="id" title="var">P</span> <span class="id" title="var">nnp</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ME</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">ME_MI</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">ME</span> -&gt; <span class="id" title="var">MI</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">u</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">ME</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ME</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">ME_CM</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">ME</span> -&gt; <span class="id" title="var">CM</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">u</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">ME</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ME</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> | <span class="id" title="var">np</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">np</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">ME_Peirce</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">ME</span> -&gt; <span class="id" title="var">Peirce</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">u</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">ME</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ME</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> | <span class="id" title="var">np</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">np</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">ME_Contra</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">ME</span> -&gt; <span class="id" title="var">Contra</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">u</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">ME</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">npnq</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">ME</span> <span class="id" title="var">Q</span> <span class="id" title="var">Q</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">trivial</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">npnq</span> <span class="id" title="var">H</span>). <span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
@@ -3334,65 +3225,26 @@ Po drugie, jest ono niezaprzeczalne.
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">DNE_LEM</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">DNE</span> -&gt; <span class="id" title="var">LEM</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">DNE</span> <span class="id" title="var">P</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNE</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">right</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">DNE_MI</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">DNE</span> -&gt; <span class="id" title="var">MI</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">DNE</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNE</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">right</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">DNE_ME</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">DNE</span> -&gt; <span class="id" title="var">ME</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">DNE</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> [<span class="id" title="var">pq</span> <span class="id" title="var">qp</span>]. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNE</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">qp</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">DNE_CM</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">DNE</span> -&gt; <span class="id" title="var">CM</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">DNE</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNE</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">np</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">np</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">DNE_Peirce</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">DNE</span> -&gt; <span class="id" title="var">Peirce</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">DNE</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNE</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">pqp</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNE</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">np</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">np</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">pqp</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">DNE_Contra</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">DNE</span> -&gt; <span class="id" title="var">Contra</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">DNE</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">nqnp</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNE</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">npq</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">nqnp</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">npq</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">_</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">DNE</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">np</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">npq</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
@@ -3427,60 +3279,26 @@ Po drugie, jest ono niezaprzeczalne.
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">CM_LEM</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">CM</span> -&gt; <span class="id" title="var">LEM</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">CM</span> <span class="id" title="var">P</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">CM</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">right</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">CM_MI</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">CM</span> -&gt; <span class="id" title="var">MI</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">CM</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">CM</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">CM_ME</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">CM</span> -&gt; <span class="id" title="var">ME</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">CM</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">pq</span> <span class="id" title="var">qp</span>]. <span class="id" title="tactic">apply</span> <span class="id" title="var">CM</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">qp</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">CM_DNE</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">CM</span> -&gt; <span class="id" title="var">DNE</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">CM</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">CM</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">np</span>. <span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">CM_Peirce</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">CM</span> -&gt; <span class="id" title="var">Peirce</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">CM</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">CM</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">np</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">CM_Contra</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">CM</span> -&gt; <span class="id" title="var">Contra</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">CM</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">npnq</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">CM</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">nq</span>. <span class="id" title="var">contradiction</span> <span class="id" title="var">npnq</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
@@ -3514,80 +3332,26 @@ Po drugie, jest ono niezaprzeczalne.
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Peirce_LEM</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Peirce</span> -&gt; <span class="id" title="var">LEM</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Peirce</span>, <span class="id" title="var">LEM</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Peirce</span> <span class="id" title="var">P</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Peirce</span> <span class="id" title="var">_</span> (~ <span class="id" title="var">P</span>)). <span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Peirce_MI</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Peirce</span> -&gt; <span class="id" title="var">MI</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Peirce</span>, <span class="id" title="var">MI</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Peirce</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Peirce</span> <span class="id" title="var">_</span> <span class="id" title="var">False</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">_</span>. <span class="id" title="tactic">right</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Peirce_ME</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Peirce</span> -&gt; <span class="id" title="var">ME</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Peirce</span>, <span class="id" title="var">ME</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Peirce</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> [<span class="id" title="var">pq</span> <span class="id" title="var">qp</span>]. <span class="id" title="tactic">apply</span> (<span class="id" title="var">Peirce</span> <span class="id" title="var">_</span> <span class="id" title="var">False</span>). <span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">qp</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Peirce_DNE</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Peirce</span> -&gt; <span class="id" title="var">DNE</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Peirce</span>, <span class="id" title="var">DNE</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Peirce</span> <span class="id" title="var">P</span> <span class="id" title="var">nnp</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Peirce</span> <span class="id" title="var">P</span> (~ <span class="id" title="var">P</span>)).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">cut</span> <span class="id" title="var">False</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">nnp</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Peirce_CM</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Peirce</span> -&gt; <span class="id" title="var">CM</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Peirce</span>, <span class="id" title="var">CM</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Peirce</span> <span class="id" title="var">P</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Peirce</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Peirce_Contra</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Peirce</span> -&gt; <span class="id" title="var">Contra</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Peirce</span>, <span class="id" title="var">Contra</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Peirce</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">nqnp</span> <span class="id" title="var">p</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Peirce</span> <span class="id" title="var">Q</span> (~ <span class="id" title="var">P</span>)).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">qnp</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">cut</span> <span class="id" title="var">False</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">nqnp</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">q</span>. <span class="id" title="var">contradiction</span> <span class="id" title="var">qnp</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
@@ -3620,79 +3384,24 @@ Po drugie, jest ono niezaprzeczalne.
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contra_LEM</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Contra</span> -&gt; <span class="id" title="var">LEM</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Contra</span>, <span class="id" title="var">LEM</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Contra</span> <span class="id" title="var">P</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Contra</span> (~ ~ (<span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>))).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H1</span> <span class="id" title="var">H2</span>. <span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contra_MI</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Contra</span> -&gt; <span class="id" title="var">MI</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Contra</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Contra</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">H1</span> <span class="id" title="var">H2</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H1</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H2</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contra_ME</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Contra</span> -&gt; <span class="id" title="var">ME</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Contra</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Contra</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">H</span> [<span class="id" title="var">pq</span> <span class="id" title="var">qp</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">qp</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contra_DNE</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Contra</span> -&gt; <span class="id" title="var">DNE</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Contra</span> <span class="id" title="var">P</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">Contra</span> (~ ~ <span class="id" title="var">P</span>) <span class="id" title="var">P</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">np</span> <span class="id" title="var">nnp</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contra_CM</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Contra</span> -&gt; <span class="id" title="var">CM</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Contra</span>, <span class="id" title="var">CM</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Contra</span> <span class="id" title="var">P</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Contra</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">np</span> <span class="id" title="var">npp</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">np</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">npp</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Contra_Peirce</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">Contra</span> -&gt; <span class="id" title="var">Peirce</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Contra</span>, <span class="id" title="var">Peirce</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">Contra</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Contra</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">np</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">np</span>, <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab80"></a><h1 class="section">Paradoks Curry'ego</h1>
-
-</div>
-<div class="code">
 </div>

@@ -42,9 +42,8 @@ B3: Logika klasyczna
   Prawa logiki klasycznej - enumeracja, krótki opis, podział na grupy (LEM, materialna implikacja i równoważność) vs DNE vs (Peirce, consequentia mirabilis) vs kontrapozycja
   Logika klasyczna jako logika:
     - Boga (LEM) + prawo zachowania informacji
-    - diabła (DNE).
+    - diabła (DNE i kontrapozycja)
     - Peirce'a (Peirce)
-    - kontrapozycji
   Paradoks pijoka
   Paradoks Curry'ego
   (Paradoksy implikacji materialnej?)
@@ -72,7 +71,7 @@ B4: Reszta
   Przedstawić jeszcze raz to samo, ale tym razem z prooftermami.
   Omówić obliczenia i postacie normalne (o ile gdzieś można znaleźć jakiś ich opis).
   Pięć rodzajów reguł
-  HoTT-bookowa teoria typów: pusty, unit, bool, nat, produkt, suma, funkcje, produkt zależy, suma zależna, uniwersa, równość
+  HoTT-bookowa teoria typów: pusty, unit, bool, nat, produkt, suma, funkcje, produkt zależny, suma zależna, uniwersa, równość
   Ale nie można zaniedbać formalnej prezentacji teorii typów.
 
 (D1) Typy induktywne

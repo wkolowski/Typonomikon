@@ -2548,24 +2548,29 @@ Qed.
 Lemma LEM_DNE :
   (forall P : Prop, P \/ ~ P) ->
     (forall P : Prop, ~ ~ P -> P).
+(* begin hide *)
 Proof.
   intros LEM P nnp. destruct (LEM P).
     assumption.
     contradiction.
 Qed.
+(* end hide *)
 
 Lemma LEM_MI :
   (forall P : Prop, P \/ ~ P) ->
     (forall P Q : Prop, (P -> Q) -> ~ P \/ Q).
+(* begin hide *)
 Proof.
   intros LEM P Q H. destruct (LEM P) as [p | p].
     right. apply H. assumption.
     left. assumption.
 Qed.
+(* end hide *)
 
 Lemma LEM_ME :
   (forall P : Prop, P \/ ~ P) ->
     (forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q)).
+(* begin hide *)
 Proof.
   intros LEM P Q HPQ. destruct HPQ as [PQ QP].
     destruct (LEM P) as [p | np], (LEM Q) as [q | nq].
@@ -2574,33 +2579,40 @@ Proof.
       specialize (QP q). contradiction.
       right. split; assumption.
 Qed.
+(* end hide *)
 
 Lemma LEM_Peirce :
   (forall P : Prop, P \/ ~ P) ->
     (forall P Q : Prop, ((P -> Q) -> P) -> P).
+(* begin hide *)
 Proof.
   intros LEM P Q H. destruct (LEM P) as [p | np].
     assumption.
     apply H. intro. contradiction.
 Qed.
+(* end hide *)
 
 Lemma LEM_CM :
   (forall P : Prop, P \/ ~ P) ->
     (forall P : Prop, (~ P -> P) -> P).
+(* begin hide *)
 Proof.
   intros LEM P H. destruct (LEM P) as [p | np].
     assumption.
     apply H. assumption.
 Qed.
+(* end hide *)
 
 Lemma LEM_Contra :
   (forall P : Prop, P \/ ~ P) ->
     (forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q)).
+(* begin hide *)
 Proof.
   intros LEM P Q H p. destruct (LEM Q) as [q | nq].
     assumption.
     specialize (H nq). contradiction.
 Qed.
+(* end hide *)
 
 (** * Logika klasyczna jako logika materialnej implikacji i równoważności *)
 
@@ -2633,6 +2645,7 @@ Qed.
 
 Lemma MI_LEM :
   MI -> LEM.
+(* begin hide *)
 Proof.
   unfold MI, LEM. intros MI P.
   destruct (MI P P).
@@ -2640,27 +2653,33 @@ Proof.
     right. assumption.
     left. assumption.
 Qed.
+(* end hide *)
 
 Lemma MI_DNE :
   MI -> DNE.
+(* begin hide *)
 Proof.
   u. intros MI P nnp. destruct (MI P P) as [np | p].
     intro p. assumption.
     contradiction.
     assumption.
 Qed.
+(* end hide *)
 
 Lemma MI_CM :
   MI -> CM.
+(* begin hide *)
 Proof.
   u. intros MI P H. destruct (MI P P) as [np | p].
     intro p. assumption.
     apply H. assumption.
     assumption.
 Qed.
+(* end hide *)
 
 Lemma MI_ME :
   MI -> ME.
+(* begin hide *)
 Proof.
   u. intros MI P Q [pq qp]. destruct (MI _ _ pq) as [np | q].
     right. split.
@@ -2670,24 +2689,29 @@ Proof.
       apply qp. assumption.
       assumption.
 Qed.
+(* end hide *)
 
 Lemma MI_Peirce :
   MI -> Peirce.
+(* begin hide *)
 Proof.
   u. intros MI P Q H. destruct (MI P P).
     trivial.
     apply H. intro p. contradiction.
     assumption.
 Qed.
+(* end hide *)
 
 Lemma MI_Contra :
   MI -> Contra.
+(* begin hide *)
 Proof.
   u. intros MI P Q H p. destruct (MI Q Q).
     trivial.
     contradiction H.
     assumption.
 Qed.
+(* end hide *)
 
 Lemma material_equivalence_conv :
   forall P Q : Prop, (P /\ Q) \/ (~ P /\ ~ Q) -> (P <-> Q).
@@ -2727,57 +2751,69 @@ Qed.
 
 Lemma ME_LEM :
   ME -> LEM.
+(* begin hide *)
 Proof.
   u. intros ME P. destruct (ME P P).
     split; trivial.
     destruct H. left. assumption.
     destruct H. right. assumption.
 Qed.
+(* end hide *)
 
 Lemma ME_DNE :
   ME -> DNE.
+(* begin hide *)
 Proof.
   u. intros ME P nnp. destruct (ME P P).
     split; trivial.
     destruct H. assumption.
     destruct H. contradiction.
 Qed.
+(* end hide *)
 
 Lemma ME_MI :
   ME -> MI.
+(* begin hide *)
 Proof.
   u. intros ME P Q pq. destruct (ME P P).
     split; trivial.
     right. apply pq. destruct H. assumption.
     left. destruct H. assumption.
 Qed.
+(* end hide *)
 
 Lemma ME_CM :
   ME -> CM.
+(* begin hide *)
 Proof.
   u. intros ME P H. destruct (ME P P) as [p | np].
     split; trivial.
     destruct p. assumption.
     destruct np. apply H. assumption.
 Qed.
+(* end hide *)
 
 Lemma ME_Peirce :
   ME -> Peirce.
+(* begin hide *)
 Proof.
   u. intros ME P Q H. destruct (ME P P) as [p | np].
     split; trivial.
     destruct p. assumption.
     destruct np. apply H. intro p. contradiction.
 Qed.
+(* end hide *)
 
 Lemma ME_Contra :
   ME -> Contra.
+(* begin hide *)
 Proof.
   u. intros ME P Q npnq p. destruct (ME Q Q).
     split; trivial.
     destruct H. assumption.
     destruct H. specialize (npnq H). contradiction.
 Qed.
+(* end hide *)
 
 (** * Logika klasyczna jako logika diabła *)
 
@@ -2841,24 +2877,29 @@ Qed.
 
 Lemma DNE_LEM :
   DNE -> LEM.
+(* begin hide *)
 Proof.
   intros DNE P. apply DNE.
   intro H. apply H. right.
   intro p. apply H. left.
   assumption.
 Qed.
+(* end hide *)
 
 Lemma DNE_MI :
   DNE -> MI.
+(* begin hide *)
 Proof.
   intros DNE P Q pq. apply DNE.
   intro H. apply H. left.
   intro p. apply H. right.
   apply pq. assumption.
 Qed.
+(* end hide *)
 
 Lemma DNE_ME :
   DNE -> ME.
+(* begin hide *)
 Proof.
   intros DNE P Q [pq qp]. apply DNE.
   intro H. apply H.
@@ -2870,15 +2911,19 @@ Proof.
       apply qp. assumption.
         assumption.
 Qed.
+(* end hide *)
 
 Lemma DNE_CM :
   DNE -> CM.
+(* begin hide *)
 Proof.
   intros DNE P H. apply DNE. intro np. apply np. apply H. assumption.
 Qed.
+(* end hide *)
 
 Lemma DNE_Peirce :
   DNE -> Peirce.
+(* begin hide *)
 Proof.
   intros DNE P Q. apply DNE.
   intro H. apply H.
@@ -2886,15 +2931,18 @@ Proof.
   intro np. apply np. apply pqp.
   intro p. contradiction.
 Qed.
+(* end hide *)
 
 Lemma DNE_Contra :
   DNE -> Contra.
+(* begin hide *)
 Proof.
   intros DNE P Q nqnp. apply DNE.
   intro npq. apply nqnp.
     intro q. apply npq. intros _. assumption.
     apply DNE. intro np. apply npq. intro p. contradiction.
 Qed.
+(* end hide *)
 
 (** * Logika klasyczna jako logika Peirce'a *)
 
@@ -2917,24 +2965,29 @@ Qed.
 
 Lemma CM_LEM :
   CM -> LEM.
+(* begin hide *)
 Proof.
   intros CM P. apply CM.
   intro H. right.
   intro p. apply H.
   left. assumption.
 Qed.
+(* end hide *)
 
 Lemma CM_MI :
   CM -> MI.
+(* begin hide *)
 Proof.
   intros CM P Q pq. apply CM.
   intro H. left.
   intro p. apply H.
   right. apply pq. assumption.
 Qed.
+(* end hide *)
 
 Lemma CM_ME :
   CM -> ME.
+(* begin hide *)
 Proof.
   intros CM P Q H. destruct H as [pq qp]. apply CM. intro H.
     right. split.
@@ -2945,27 +2998,34 @@ Proof.
         apply qp. assumption.
         assumption.
 Qed.
+(* end hide *)
 
 Lemma CM_DNE :
   CM -> DNE.
+(* begin hide *)
 Proof.
   intros CM P H. apply CM. intro np. contradiction.
 Qed.
+(* end hide *)
 
 Lemma CM_Peirce :
   CM -> Peirce.
+(* begin hide *)
 Proof.
   intros CM P Q H. apply CM.
   intro np. apply H.
   intro p. contradiction.
 Qed.
+(* end hide *)
 
 Lemma CM_Contra :
   CM -> Contra.
+(* begin hide *)
 Proof.
   intros CM P Q npnq p. apply CM.
   intro nq. contradiction npnq.
 Qed.
+(* end hide *)
 
 (** ** Logika Peirce'a *)
 
@@ -2989,6 +3049,7 @@ Qed.
 
 Lemma Peirce_LEM :
   Peirce -> LEM.
+(* begin hide *)
 Proof.
   unfold Peirce, LEM.
   intros Peirce P.
@@ -2997,9 +3058,11 @@ Proof.
     left. assumption.
     assumption.
 Qed.
+(* end hide *)
 
 Lemma Peirce_MI :
   Peirce -> MI.
+(* begin hide *)
 Proof.
   unfold Peirce, MI.
   intros Peirce P Q.
@@ -3009,9 +3072,11 @@ Proof.
   intros _. right.
   apply pq. assumption.
 Qed.
+(* end hide *)
 
 Lemma Peirce_ME :
   Peirce -> ME.
+(* begin hide *)
 Proof.
   unfold Peirce, ME.
   intros Peirce P Q [pq qp]. apply (Peirce _ False). intros H.
@@ -3023,9 +3088,11 @@ Proof.
         apply qp. assumption.
         assumption.
 Qed.
+(* end hide *)
 
 Lemma Peirce_DNE :
   Peirce -> DNE.
+(* begin hide *)
 Proof.
   unfold Peirce, DNE.
   intros Peirce P nnp.
@@ -3036,17 +3103,21 @@ Proof.
       assumption.
       assumption.
 Qed.
+(* end hide *)
 
 Lemma Peirce_CM :
   Peirce -> CM.
+(* begin hide *)
 Proof.
   unfold Peirce, CM.
   intros Peirce P.
   apply Peirce.
 Qed.
+(* end hide *)
 
 Lemma Peirce_Contra :
   Peirce -> Contra.
+(* begin hide *)
 Proof.
   unfold Peirce, Contra.
   intros Peirce P Q nqnp p.
@@ -3058,6 +3129,7 @@ Proof.
       intro q. contradiction qnp.
       assumption.
 Qed.
+(* end hide *)
 
 (** * Logika klasyczna jako logika kontrapozycji *)
 
@@ -3080,6 +3152,7 @@ Qed.
 
 Lemma Contra_LEM :
   Contra -> LEM.
+(* begin hide *)
 Proof.
   unfold Contra, LEM.
   intros Contra P.
@@ -3087,16 +3160,20 @@ Proof.
     intros H1 H2. contradiction.
     intro H. apply H. right. intro p. apply H. left. assumption.
 Qed.
+(* end hide *)
 
 Lemma Contra_MI :
   Contra -> MI.
+(* begin hide *)
 Proof.
   intros Contra P Q. apply Contra. intros H1 H2. apply H1.
     left. intro p. apply H1. right. apply H2. assumption.
 Qed.
+(* end hide *)
 
 Lemma Contra_ME :
   Contra -> ME.
+(* begin hide *)
 Proof.
   intros Contra P Q. apply Contra. intros H [pq qp].
     apply H. right. split.
@@ -3107,18 +3184,22 @@ Proof.
         apply qp. assumption.
         assumption.
 Qed.
+(* end hide *)
 
 Lemma Contra_DNE :
   Contra -> DNE.
+(* begin hide *)
 Proof.
   intros Contra P.
   apply (Contra (~ ~ P) P).
   intros np nnp.
   contradiction.
 Qed.
+(* end hide *)
 
 Lemma Contra_CM :
   Contra -> CM.
+(* begin hide *)
 Proof.
   unfold Contra, CM.
   intros Contra P.
@@ -3127,9 +3208,11 @@ Proof.
   apply np. apply npp.
   intro p. contradiction.
 Qed.
+(* end hide *)
 
 Lemma Contra_Peirce :
   Contra -> Peirce.
+(* begin hide *)
 Proof.
   unfold Contra, Peirce.
   intros Contra P Q.
@@ -3139,39 +3222,4 @@ Proof.
   intro p.
   contradiction.
 Qed.
-
-(* begin hide *)
-Lemma constructive_dilemma :
-  forall P Q R S : Prop,
-    (P -> R) -> (Q -> S) -> P \/ Q -> R \/ S.
-Proof.
-  intros P Q R S PR QS H.
-  destruct H as [p | q].
-    left. apply PR. assumption.
-    right. apply QS. assumption.
-Qed.
-
-Lemma destructive_dilemma :
-  forall P Q R S : Prop,
-    (P -> R) -> (Q -> S) -> ~ R \/ ~ S -> ~ P \/ ~ Q.
-Proof.
-  intros P Q R S PR QS H.
-  destruct H as [nr | ns].
-    left. intro p. apply nr, PR. assumption.
-    right. intro q. apply ns, QS. assumption.
-Qed.
-
-Lemma idempotency_of_entailment :
-  forall P Q : Prop,
-    (P -> Q) <-> (P -> P -> Q).
-Proof.
-  split.
-    intros pq p1 p2. apply pq. assumption.
-    intros ppq p. apply ppq.
-      assumption.
-      assumption.
-Qed.
-
 (* end hide *)
-
-(** * Paradoks Curry'ego *)
