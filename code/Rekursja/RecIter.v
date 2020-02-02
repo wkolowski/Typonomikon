@@ -1,7 +1,5 @@
 (** * Rekursja przez iterację (TODO) *)
 
-Require Import Omega.
-
 Require Import List.
 Import ListNotations.
 
@@ -15,6 +13,7 @@ match n with
     | _ => n :: if even n then f (div2 n) else f (1 + 3 * n)
 end.
 
+(*
 Module bad_div.
 
 Definition divF (f : nat -> forall k : nat, 0 < k -> nat)
@@ -35,13 +34,13 @@ Proof.
     apply lt_wf.
     intros. case_eq (le_lt_dec k x); intro.
       destruct (H0 (x - k)) as [v Hv].
-        abstract omega.
+        abstract lia.
         exists (S v). destruct Hv as [p Hp]. exists (S p). intros.
           destruct (n_iter); cbn.
-            abstract omega.
-            unfold divF. rewrite H1. f_equal. apply Hp. abstract omega.
+            abstract lia.
+            unfold divF. rewrite H1. f_equal. apply Hp. abstract lia.
       exists 0. exists 0. intros. destruct n_iter; cbn.
-        abstract omega.
+        abstract lia.
         unfold divF. rewrite H1. trivial.
 Defined.
 
@@ -65,6 +64,7 @@ Module good_div.
 Check iter.
 
 Compute iter 10 S 1.
+
 Fixpoint iter {A : Type} (n : nat) (f : A -> A) (x : A) : A :=
 match n with
     | 0 => x
@@ -73,8 +73,6 @@ end.
 
 Compute iter 10 S 1.
 
-
-
 Inductive divG : nat -> nat -> nat -> Prop :=
   | divG_0 : forall n m : nat, n < S m -> divG n m 0
   | divG_1 : forall n m r : nat,
@@ -82,8 +80,6 @@ Inductive divG : nat -> nat -> nat -> Prop :=
 
 Definition divF (div : nat -> nat -> nat) (n m : nat) : nat :=
   if n <? S m then 0 else S (div (n - S m) m).
-
-Require Import Omega.
 
 Theorem divF_terminates :
   forall n m : nat,
@@ -98,13 +94,12 @@ Proof.
       unfold divF. rewrite H. reflexivity.
       apply IHmore.
     apply leb_complete_conv in H.
-      destruct (IH (n - S m) ltac:(abstract omega) m) as (r & IH').
+      destruct (IH (n - S m) ltac:(abstract lia) m) as (r & IH').
       exists (S r). destruct IH' as [fuel IH'].
       exists (S fuel). intros. cbn.
 Abort.
 
 End good_div.
-
 
 Definition fac_F (f : nat -> nat) (n : nat) : nat :=
 match n with
@@ -126,7 +121,7 @@ Proof.
         inversion H0.
         rewrite H.
           trivial.
-          omega.
+          lia.
 Defined.
 
 Definition fac (n : nat) : nat := proj1_sig (facF_terminates n).
@@ -215,14 +210,15 @@ Proof.
   induction n as [| n']; intros.
     rewrite take_spec1. trivial.
     destruct l as [| h t].
-      rewrite take_spec2. cbn. omega.
+      rewrite take_spec2. cbn. lia.
       rewrite take_spec3. cbn. apply le_n_S. apply IHn'.
 Restart.
   induction n as [| n']; intros; rewrite take_eq; cbn.
     trivial.
     destruct l; cbn.
-      omega.
+      lia.
       destruct n'; cbn.
-        omega.
+        lia.
         cbn in *. apply le_n_S. apply IHn'.
 Qed.
+*)

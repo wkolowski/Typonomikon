@@ -1003,7 +1003,8 @@ Defined.
     gdyż używamy jej na celu postaci [f x = f x].
 
     Uwaga: żeby taktyka [reflexivity] "widziała" ten dowód, musimy skorzystać
-    ze słowa kluczowego [Instance] zamiast z [Theorem] lub [Lemma]. *)
+    ze słowa kluczowego [#[refine]
+Instance] zamiast z [Theorem] lub [Lemma]. *)
 
 Example reflexivity_1 :
   eq_ext (fun _ : nat => 42) (fun _ : nat => 21 + 21).

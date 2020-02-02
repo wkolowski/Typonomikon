@@ -1140,7 +1140,9 @@ Lemma take_take :
 (* begin hide *)
 Proof.
   induction m; destruct m'; intros; trivial.
-  destruct l as [| n h t]; cbn; try rewrite IHm; trivial.
+  destruct l as [| n h t]; cbn.
+    reflexivity.
+    rewrite IHm. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1268,7 +1270,8 @@ Eval compute in (app fives fives).
 (*Eval compute in filter (fun n => match n with | 5 => false | _ => true end)
 fives.*)
 
-(*Instance Functor_Vec (n : nat) : Functor (fun A : Set => Vec A n).
+(*#[refine]
+Instance Functor_Vec (n : nat) : Functor (fun A : Set => Vec A n).
 split with (@map n);
 unfold map; intros; rewrite fn_ext; induction a;
 try rewrite IHa; trivial.

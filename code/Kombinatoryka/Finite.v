@@ -8,6 +8,7 @@ Class Finite (A : Type) : Type :=
 
 Arguments enumerate _ [Finite].
 
+#[refine]
 Instance Finite_bool : Finite bool :=
 {
     enumerate := [false; true]
@@ -16,6 +17,7 @@ Proof.
   destruct x; repeat constructor.
 Defined.
 
+#[refine]
 Instance Finite_option {A : Type} (FA : Finite A) : Finite (option A) :=
 {
     enumerate := None :: map (@Some A) (enumerate A)
@@ -44,6 +46,7 @@ Proof.
   specialize (H0 _ H). apply Nat.lt_irrefl in H0. assumption.
 Qed.
 
+#[refine]
 Instance Finite_list_Empty :
   Finite (list Empty_set) :=
 {|

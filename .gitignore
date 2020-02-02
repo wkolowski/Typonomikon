@@ -1,7 +1,9 @@
-**vo
-**v.d
-**glob
+**.glob
 **.aux
+**.vo
+**.vok
+**.vos
+
 **~
 
 **.fdb_latexmk
@@ -14,3 +16,6 @@ tex/*.tex
 **.synctex.gz
 
 .coqdeps.d
+.makefile.d
+
+.vscode

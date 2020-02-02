@@ -78,7 +78,7 @@ Qed.
 
 (** Jak trudno jest zrobić ciekawsze izomorfizmy? *)
 
-Require Import Recdef.
+Require Import FunInd.
 
 Function div2 (n : nat) : nat + nat :=
 match n with
@@ -129,7 +129,6 @@ match n with
         end
 end.
 
-
 Require Import X3.
 
 Check map.
@@ -141,7 +140,7 @@ Definition zigzag_order (x y : nat * nat) : Prop :=
     x = fill_square n /\
     y = fill_square m /\ n < m.
 
-Function unfill_square (x : nat * nat) {wf zigzag_order} : nat :=
+Function unfill_square (x : nat * nat) {wf zigzag_order x} : nat :=
 match x with
     | (0, 0) => 0
     | (S n, 0) => S (unfill_square (0, n))

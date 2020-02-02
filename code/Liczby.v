@@ -123,6 +123,7 @@ Inductive bin_equiv : bin -> bin -> Prop :=
 
 Hint Constructors bin_equiv.
 
+#[refine]
 Instance bin_setoid : Setoid bin :=
 {
     equiv := bin_equiv

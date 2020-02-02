@@ -12,6 +12,7 @@ Class Enumerable (A : Type) : Type :=
 Arguments size [A Enumerable] _.
 Arguments enum _ [Enumerable] _.
 
+#[refine]
 Instance Enumerable_bool : Enumerable bool :=
 {
     size b := 1;
@@ -44,6 +45,7 @@ end.
 
 Compute all_lists (Enumerable_bool) 3.
 
+#[refine]
 Instance Enumerable_list {A : Type} (FA : Enumerable A)
   : Enumerable (list A) :=
 {

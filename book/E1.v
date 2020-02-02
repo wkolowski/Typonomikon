@@ -113,6 +113,7 @@ Class EqDec (A : Type) : Type :=
     algorytmu. Nie wszystkie typy posiadają tę własność — problematyczne
     są szczególnie te, których elementy są w jakiś sposób "nieskończone". *)
 
+#[refine]
 Instance EqDec_bool : EqDec bool :=
 {
     eq_dec := fun b b' : bool =>
@@ -126,7 +127,8 @@ Proof.
   destruct x, y; split; trivial; inversion 1.
 Defined.
 
-(** Instancje klas definiujemy przy pomocy słowa kluczowego [Instance].
+(** Instancje klas definiujemy przy pomocy słowa kluczowego [#[refine]
+Instance].
     Jeżeli używamy klasy jako interfejsu, który implementować mogą typy,
     to zazwyczaj będziemy potrzebować tylko jednej instancji, więc jej
     nazwa będzie niemal identyczna jak jej typ (dzięki temu łatwo będzie
@@ -204,6 +206,7 @@ Defined.
 (** Zdefiniuj instancje klasy [EqDec] dla typów [unit] oraz [nat]. *)
 
 (* begin hide *)
+#[refine]
 Instance EqDec_unit : EqDec unit :=
 {
     eq_dec := fun _ _ => true
@@ -212,6 +215,7 @@ Proof.
   destruct x, y; split; trivial.
 Defined.
 
+#[refine]
 Instance EqDec_nat : EqDec nat :=
 {
     eq_dec := fix f (n m : nat) :=
@@ -253,6 +257,7 @@ Defined.
     - Nie *)
 (* end hide *)
 
+#[refine]
 Instance EqDec_option (A : Type) (_ : EqDec A) : EqDec (option A) :=
 {
     eq_dec := fun opt1 opt2 : option A =>
@@ -306,6 +311,7 @@ Require Import Bool.
 
 Search (andb _ _ = true -> _).
 
+#[refine]
 Instance EqDec_list (A : Type) (eq_dec_A : EqDec A) : EqDec (list A) :=
 {
     eq_dec := eq_dec_list

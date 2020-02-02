@@ -36,6 +36,7 @@ Class HasStar (A : Type) : Type :=
     no_kidding : interp star = A;
 }.
 
+#[refine]
 Instance HasStar_any (A : Type) : HasStar A | 1 :=
 {
     star := Var A;
@@ -44,6 +45,7 @@ Proof.
   cbn. reflexivity.
 Defined.
 
+#[refine]
 Instance HasStar_list (A : Type) (hs : HasStar A) : HasStar (list A) | 0 :=
 {
     star := List star;
