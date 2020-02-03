@@ -1,4 +1,4 @@
-Require Import B.
+Require Import B W3.
 
 (** Klasyczna dysjunkcja. Panie, na co to komu? *)
 Definition cor (P Q : Prop) : Prop :=
@@ -28,6 +28,30 @@ Proof.
   firstorder.
 Qed.
 
+Lemma cor_True_l :
+  forall P : Prop, cor True P <-> True.
+Proof.
+  firstorder.
+Qed.
+
+Lemma cor_True_r :
+  forall P : Prop, cor P True <-> True.
+Proof.
+  firstorder.
+Qed.
+
+Lemma cor_False_l :
+  forall P : Prop, cor False P <-> ~ ~ P.
+Proof.
+  firstorder.
+Qed.
+
+Lemma cor_False_r :
+  forall P : Prop, cor P False <-> ~ ~ P.
+Proof.
+  firstorder.
+Qed.
+
 Lemma or_cor :
   forall P Q : Prop, P \/ Q -> cor P Q.
 Proof.
@@ -41,4 +65,26 @@ Proof.
   intros P H.
   apply H. right. intro p.
   apply H. left. assumption.
+Qed.
+
+Lemma cor_or_LEM :
+  (forall P Q : Prop, cor P Q -> P \/ Q)
+    <->
+  LEM.
+Proof.
+  unfold cor, LEM; split.
+    intros H P. apply H, cor_LEM.
+    intros LEM P Q H. destruct (LEM (P \/ Q)).
+      assumption.
+      contradiction.
+Qed.
+
+Lemma cand_and_LEM :
+  (forall P Q : Prop, ~ ~ (P /\ Q) -> P /\ Q) ->
+    LEM.
+Proof.
+  unfold LEM. intros H P.
+  destruct (H (P \/ ~ P) True).
+    firstorder.
+    assumption.
 Qed.

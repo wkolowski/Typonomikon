@@ -1,4 +1,4 @@
-Require Import B.
+Require Import W3.
 
 (** * Godel-Dummet *)
 

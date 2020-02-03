@@ -1,4 +1,4 @@
-Require Import B.
+Require Import B W3.
 
 (** * Logika klasyczna jako (coś więcej niż) logika de Morgana *)
 

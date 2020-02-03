@@ -1,4 +1,4 @@
-Require Import B.
+Require Import W3.
 
 Definition WLEM : Prop :=
   forall P : Prop, ~ P \/ ~ ~ P.

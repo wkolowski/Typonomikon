@@ -1,0 +1,383 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-1.8.3.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+</head>
+<h1 class="libtitle">W1: Konstruktywny rachunek zdań [schowany na końcu dla niepoznaki]</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+<a name="lab527"></a><h1 class="section">Zdania i spójniki logiczne</h1>
+
+<div class="paragraph"> </div>
+
+<a name="lab528"></a><h2 class="section">Implikacja</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab529"></a><h3 class="section">Rozumowanie w przód</h3>
+
+<div class="paragraph"> </div>
+
+<a name="lab530"></a><h3 class="section">Rozumowanie w tył</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;rozumowanie&nbsp;od&nbsp;tyłu&nbsp;jest&nbsp;lepsze,&nbsp;logika&nbsp;jest&nbsp;bezmyślna&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab531"></a><h2 class="section">Koniunkcja</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab532"></a><h2 class="section">Dysjunkcja</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab533"></a><h2 class="section">Prawda i fałsz</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab534"></a><h2 class="section">Równoważność </h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab535"></a><h2 class="section">Negacja</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab536"></a><h2 class="section">Silna negacja</h2>
+
+<div class="paragraph"> </div>
+
+ Poznaliśmy uprzednio pewien spójnik, zapisywany wdzięcznym wygibaskiem
+    <span class="inlinecode">~</span>, a zwany górnolotnie negacją. Powinniśmy się jednak zastanowić: czy
+    spójnik ten jest dla nas zadowalający? Czy pozwala on nam wyrażać nasze
+    przemyślenia w najlepszy możliwy sposób?
+
+<div class="paragraph"> </div>
+
+    Jeżeli twoja odpowiedź brzmi "tak", to uroczyście oświadczam, że wcale
+    nie masz racji. Wyobraźmy sobie następującą sytuację: jesteśmy psycho
+    patusem, próbującym pod pozorem podrywu poobrażać przeróżne panienki.
+
+<div class="paragraph"> </div>
+
+    Podbijamy do pierwszej z brzegu, która akurat jest normalną dziewczyną,
+    i mówimy: "Hej mała, jesteś gruba i mądra". Nasza oburzona rozmówczyni,
+    jako że jest szczupła, odpowiada nam: "Wcale nie jestem gruba. Spadaj
+    frajerze".
+
+<div class="paragraph"> </div>
+
+    Teraz na cel bierzemy kolejną, która siedzi sobie samotnie przy stoliku
+    w Starbuniu, popija kawkę z papierowego kubka i z uśmiechem na ustach
+    próbuje udowodnić w Coqu jakieś bardzo skomplikowane twierdzenie.
+    Podbijamy do niej i mówimy: "Hej mała, jesteś gruba i mądra". Jako, że
+    ona też jest szczupła, oburza się i odpowiada nam tak:
+
+<div class="paragraph"> </div>
+
+    "Czekaj, czekaj, Romeo. Załóżmy, że twój tani podryw jest zgodny z
+    prawdą. Gdybym była gruba i mądra, to byłabym w szczególności mądra,
+    bo P i Q implikuje Q. Ale gdybym była mądra, to wiedziałabym, żeby
+    tyle nie żreć, a skoro tak, to bym nie żarła, więc nie byłabym gruba,
+    ale na mocy założenia jestem, więc twój podryw jest sprzeczny. Jeżeli
+    nie umiesz logiki, nie idę z tobą do łóżka."
+
+<div class="paragraph"> </div>
+
+    Widzisz różnicę w tych dwóch odpowiedziach? Pierwsza z nich wydaje nam
+    się bardzo naturalna, bo przypomina zaprzeczenia, jakich zwykli ludzie
+    używają w codziennych rozmowach. Druga wydaje się zawoalowana i bardziej
+    przypomina dowód w Coqu niż codzienne rozmowy. Między oboma odpowiedziami
+    jest łatwo zauważalna przepaść.
+
+<div class="paragraph"> </div>
+
+    Żeby zrozumieć tę przepaść, wprowadzimy pojęcia silnej i słabej negacji.
+    W powyższym przykładzie silną negacją posłużyła się pierwsza dziewczyna -
+    silną negacją zdania "jesteś gruba i mądra" jest tutaj zdanie "wcale nie
+    jestem gruba". Oczywiście jest też druga możliwość silnego zaprzeczenia
+    temu zdaniu - "nie jestem mądra" - ale z jakichś powodów to zaprzeczenie
+    nie padło. Ciekawe dlaczego? Druga dziewczyna natomiast posłużyła się
+    słabą negacją, odpowiadając "gdybym była gruba i mądra, to... (tutaj
+    długaśne rozumowanie)... więc sprzeczność".
+
+<div class="paragraph"> </div>
+
+    Słaba negacja to ta, którą już znamy, czyli Coqowe <span class="inlinecode"><span class="id" title="var">not</span></span>. Ma ona
+    charakter hipotetyczny, gdyż jest po prostu implikacją, której
+    konkluzją jest <span class="inlinecode"><span class="id" title="var">False</span></span>. W rozumowaniach słownych sprowadza się ona
+    do schematu "gdyby tak było, to wtedy...".
+
+<div class="paragraph"> </div>
+
+    Silna negacja to najbardziej bezpośredni sposób zaprzeczenia danemu
+    zdaniu. W Coqu nie ma żadnego spójnika, który ją wyraża, bo ma ona
+    charakter dość ad hoc - dla każdego zdania musimy sami sobie wymyślić,
+    jak brzmi zdanie, który najsilniej mu przeczy. W rozumowaniach słownych
+    silna negacja sprowadza się zazwyczaj do schematu "nie jest tak".
+
+<div class="paragraph"> </div>
+
+    Spróbujmy przetłumaczyć powyższe rozważania na język logiki. Niech
+    <span class="inlinecode"><span class="id" title="var">P</span></span> oznacza "gruba", zaś <span class="inlinecode"><span class="id" title="var">Q</span></span> - "mądra". Silną negacją zdania <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>
+    jest zdanie <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> ("nie gruba lub nie mądra"), zaś jego słabą
+    negacją jest <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span>, czyli <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span> ("jeżeli gruba i
+    mądra, to sprzeczność").
+
+<div class="paragraph"> </div>
+
+    Zauważmy, że o ile słaba negacja jest uniwersalna, tj. słabą negacją
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> zawsze jest <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span>, to silna negacja jest ad hoc w tym
+    sensie, że gdyby <span class="inlinecode"><span class="id" title="var">P</span></span> było postaci <span class="inlinecode"><span class="id" title="var">P1</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P2</span></span>, to wtedy silną negacją
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> nie jest już <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, a <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P1</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P2</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> - żeby
+    uzyskać silną negację, musimy zanegować <span class="inlinecode"><span class="id" title="var">P</span></span> silnie, a nie słabo.
+
+<div class="paragraph"> </div>
+
+    Dlaczego silna negacja jest silna, a słaba jest słaba, tzn. dlaczego
+    nazwaliśmy je tak a nie inaczej? Wyjaśnia to poniższe twierdzenie oraz
+    następująca po nim beznadziejna próba udowodnienia analogicznego
+    twierdzenia z implikacją idącą w drugą stronę. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">strong_to_weak_and</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">Q</span> -&gt; ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">Hor</span> <span class="id" title="var">Hand</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">Hand</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">Hor</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">notp</span> | <span class="id" title="var">notq</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">notp</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">notq</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać, silna negacja koniunkcji pociąga za sobą jej słabą negację.
+    Powód tego jest prosty: jeżeli jeden z koniunktów nie zachodzi, ale
+    założymy, że oba zachodzą, to w szczególności każdy z nich zachodzi
+    osobno i mamy sprzeczność.
+
+<div class="paragraph"> </div>
+
+    A czy implikacja w drugą stronę zachodzi? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">weak_to_strong_and</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">notpq</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">notpq</span>. <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać, nie udało nam się udowodnić odwrotnej implikacji i to wcale
+    nie dlatego, że jesteśmy mało zdolni - po prostu konstruktywnie nie da
+    się tego zrobić.
+
+<div class="paragraph"> </div>
+
+    Powód tego jest prosty: jeżeli wiemy, że <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> razem prowadzą do
+    sprzeczności, to wiemy zdecydowanie za mało. Mogą być dwa powody:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> mogą bez problemu zachodzić osobno, ale być sprzeczne
+      razem
+
+</li>
+<li> nawet jeżeli któryś z koniunktów prowadzi do sprzeczności, to nie
+      wiemy, który
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Żeby zrozumieć pierwszą możliwość, niech <span class="inlinecode"><span class="id" title="var">P</span></span> oznacza "siedzę", a <span class="inlinecode"><span class="id" title="var">Q</span></span> -
+    "stoję". Rozważmy zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, czyli "siedzę i stoję". Żeby nie było
+    za łatwo załóżmy też, że znajdujesz się po drugiej stronie kosmosu i mnie
+    nie widzisz.
+
+<div class="paragraph"> </div>
+
+    Oczywiście nie mogę jednocześnie siedzieć i stać, gdyż czynności te się
+    wykluczają, więc możesz skonkludować, że <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span>. Czy możesz jednak
+    wywnioskować stąd, że <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, czyli że "nie siedzę lub nie stoję"?
+    Konstruktywnie nie, bo będąc po drugiej stronie kosmosu nie wiesz, której
+    z tych dwóch czynności nie wykonuję.
+
+<div class="paragraph"> </div>
+
+    Z drugim przypadkiem jest tak samo, jak z końcówką powyższego przykładu:
+    nawet jeżeli zdania <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> się wzajemnie nie wykluczają i niesłuszność
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> wynika z tego, że któryś z koniunktów nie zachodzi, to możemy po
+    prostu nie wiedzieć, o który z nich chodzi.
+
+<div class="paragraph"> </div>
+
+    Żeby jeszcze wzmocnić nasze zrozumienie, spróbujmy w zaskakujący sposób
+    rozwinąć definicję (słabej) negacji dla koniunkcji: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_and_surprising</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) &lt;-&gt; (<span class="id" title="var">P</span> -&gt; ~ <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">npq</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">npq</span>. <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">pnq</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">pq</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> <span class="id" title="var">q</span>]. <span class="id" title="tactic">apply</span> <span class="id" title="var">pnq</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+I jeszcze raz... 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_and_surprising'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) &lt;-&gt; (<span class="id" title="var">Q</span> -&gt; ~ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak (mam nadzieję) widać, słaba negacja koniunkcji nie jest niczym
+    innym niż stwierdzeniem, że oba koniunkty nie mogą zachodzić razem.
+    Jest to więc coś znacznie słabszego, niż stwierdzenie, że któryś z
+    koniunktów nie zachodzi z osobna. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mid_neg_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) -&gt; ((<span class="id" title="var">P</span> -&gt; ~ <span class="id" title="var">Q</span>) /\ (<span class="id" title="var">Q</span> -&gt; ~ <span class="id" title="var">P</span>)).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">firstorder</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak napisano w Piśmie, nie samą koniunkcją żyje człowiek. Podumajmy
+    więc, jak wygląda silna negacja dysjunkcji. Jeżeli chcemy dosadnie
+    powiedzieć, że <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> nie zachodzi, to najprościej powiedzieć:
+    <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>. Słaba negacja dysjunkcji ma zaś rzecz jasna postać
+    <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">strong_to_weak_or</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span> -&gt; ~ (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">destruct</span> 1; <span class="id" title="var">contradiction</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Co jednak dość ciekawe, silna negacja nie zawsze jest silniejsza
+    od słabej (ale z pewnością nie może być od niej słabsza - gdyby
+    mogła, to nazywałaby się inaczej). W przypadku dysjunkcji obie
+    negacje są równoważne, co obrazuje poniższe twierdzenie, które
+    głosi, że słaba negacja implikuje silną (a to razem z powyższym
+    daje równoważność): 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">weak_to_strong_or</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">intro</span>; <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>; [<span class="id" title="tactic">left</span> | <span class="id" title="tactic">right</span>]; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to tak naprawdę para implikacji
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>, zaś <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span> to... gdy pomyślimy
+    nad tym odpowiednio mocno... ta sama para implikacji. Jest tak
+    dlatego, że jeżeli <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> implikuje <span class="inlinecode"><span class="id" title="var">R</span></span>, to umieć wyprodukować
+    <span class="inlinecode"><span class="id" title="var">R</span></span> musimy zarówno z samego <span class="inlinecode"><span class="id" title="var">P</span></span>, jak i z samego <span class="inlinecode"><span class="id" title="var">Q</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">deMorgan_dbl_neg</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">Q</span>) &lt;-&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">deMorgan</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab537"></a><h2 class="section">Czy Bozia dała inne spójniki logiczne?</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab538"></a><h1 class="section">Paradoks pieniądza i kebaba</h1>
+
+<div class="paragraph"> </div>
+
+<a name="lab539"></a><h1 class="section">Zadania</h1>
+
+<div class="paragraph"> </div>
+
+<ul class="doclist">
+<li> na koniec dać tylko te zadania, które łączą wiele spójników
+<ul class="doclist">
+<li> dodać zadanie dotyczące czytania twierdzeń i dowodów
+
+</li>
+<li> dodać zadania dotyczące czytania formuł (precedencja etc.) 
+</li>
+</ul>
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+<a name="lab540"></a><h1 class="section">Ściąga</h1>
+
+</div>
+<div class="code">
+</div>

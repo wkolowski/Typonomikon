@@ -1,4 +1,4 @@
-Require Import B.
+Require Import B W3.
 
 (** Xor w logice intuicjonistycznej - ubaw po pachy. *)
 
