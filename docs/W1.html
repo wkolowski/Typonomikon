@@ -357,7 +357,81 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 
 <div class="paragraph"> </div>
 
-<a name="lab539"></a><h1 class="section">Zadania</h1>
+ Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka
+    naturalnego za pomocą zdań logiki formalnej. Gdybyś jednak wciąż
+    był skłonny to robić, przyjrzyjmy się kolejnemu "paradoksowi". 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">copy</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> /\ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inlinecode"><span class="id" title="var">P</span></span> implikuje
+    <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">P</span></span>. Spróbujmy przerobić je na paradoks, wymyślając jakąś wesołą
+    interpretację dla <span class="inlinecode"><span class="id" title="var">P</span></span>.
+
+<div class="paragraph"> </div>
+
+    Niech zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> znaczy "mam złotówkę". Wtedy powyższe twierdzenie mówi,
+    że jeżeli mam złotówkę, to mam dwa złote. Widać, że jeżeli jedną z tych
+    dwóch złotówek znów wrzucimy do twierdzenia, to będziemy mieli już trzy
+    złote. Tak więc jeżeli mam złotówkę, to mam dowolną ilość pieniędzy.
+
+<div class="paragraph"> </div>
+
+    Dla jeszcze lepszego efektu powiedzmy, że za 10 złotych możemy kupić
+    kebaba. W ostatecznej formie nasze twierdzenie brzmi więc: jeżeli mam
+    złotówkę, to mogę kupić nieograniczoną ilość kebabów.
+
+<div class="paragraph"> </div>
+
+    Jak widać, logika formalna (przynajmniej w takiej postaci, w jakiej ją
+    poznajemy) nie nadaje się do rozumowania na temat zasobów. Zasobów, bo
+    tym właśnie są pieniądze i kebaby. Zasoby to byty, które można
+    przetwarzać, przemieszczać i zużywać, ale nie można ich kopiować i
+    tworzyć z niczego. Powyższe twierdzenie dobitnie pokazuje, że zdania
+    logiczne nie mają nic wspólnego z zasobami, gdyż ich dowody mogą być
+    bez ograniczeń kopiowane. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab539"></a><h4 class="section">Ćwiczenie (formalizacja paradoksu)</h4>
+
+<div class="paragraph"> </div>
+
+ UWAGA TODO: to ćwiczenie wymaga znajomości rozdziału 2, w szczególności
+    indukcji i rekursji na liczbach naturalnych.
+
+<div class="paragraph"> </div>
+
+    Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">andn</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, taką, że <span class="inlinecode"><span class="id" title="var">andn</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+    to n-krotna koniunkcja zdania <span class="inlinecode"><span class="id" title="var">P</span></span>, np. <span class="inlinecode"><span class="id" title="var">andn</span></span> <span class="inlinecode">5</span> <span class="inlinecode"><span class="id" title="var">P</span></span> to
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Następnie pokaż, że <span class="inlinecode"><span class="id" title="var">P</span></span> implikuje <span class="inlinecode"><span class="id" title="var">andn</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+    dla dowolnego <span class="inlinecode"><span class="id" title="var">n</span></span>.
+
+<div class="paragraph"> </div>
+
+    Na końcu sformalizuj resztę paradoksu, tzn. zapisz jakoś, co to znaczy
+    mieć złotówkę i że za 10 złotych można kupić kebaba. Wywnioskuj stąd,
+    że mając złotówkę, możemy kupić dowolną liczbę kebabów.
+
+<div class="paragraph"> </div>
+
+    Szach mat, Turcjo bankrutuj! 
+<div class="paragraph"> </div>
+
+<a name="lab540"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -376,7 +450,7 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 
 <div class="paragraph"> </div>
 
-<a name="lab540"></a><h1 class="section">Ściąga</h1>
+<a name="lab541"></a><h1 class="section">Ściąga</h1>
 
 </div>
 <div class="code">

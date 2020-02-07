@@ -728,7 +728,128 @@ Qed.
 
 (** * Paradoks pijoka *)
 
+Theorem drinkers_paradox :
+  forall (man : Type) (drinks : man -> Prop) (random_guy : man),
+    exists drinker : man, drinks drinker ->
+      forall x : man, drinks x.
+(* begin hide *)
+Proof.
+(*
+  intros. destruct (classic (forall x : man, drinks x)).
+    exists random_guy. intros _. assumption.
+    apply not_all_ex_not in H. destruct H. (* TODO: popraw *)
+      exists x. intro. contradiction.
+*)
+Admitted.
+(* end hide *)
+
+(** Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
+    dotyczącemu logiki klasycznej. Z angielska zwie się on "drinker's
+    paradox", ja zaś ku powszechnej wesołości używał będę nazwy "paradoks
+    pijoka".
+
+    Zazwyczaj jest on wyrażany mniej więcej tak: w każdym barze jest taki
+    człowiek, że jeżeli on pije, to wszyscy piją. Jak to możliwe? Czy
+    matematyka stwierdza istnienie magicznych ludzi zdolnych popaść swoich
+    barowych towarzyszy w alkoholizm?
+
+    Oczywiście nie. W celu osiągnięcia oświecenia w tej kwestii prześledźmy
+    dowód tego faktu (jeżeli nie udało ci się go wymyślić, pomyśl jeszcze
+    trochę).
+
+    Ustalmy najpierw, jak ma się formalne brzmienie twierdzenia do naszej
+    poetyckiej parafrazy dwa akapity wyżej. Początek "w każdym barze"
+    możemy pominąć i sformalizować sytuację w pewnym konkretnym barze. Nie
+    ma to znaczenia dla prawdziwości tego zdania.
+
+    Sytuację w barze modelujemy za pomocą typu [man], które reprezentuje
+    klientów baru, predykatu [drinks], interpretowanego tak, że [drinks x]
+    oznacza, że [x] pije. Pojawia się też osoba określona tajemniczym
+    mianem [random_guy]. Jest ona konieczna, gdyż nasza poetycka parafraza
+    czyni jedno założenie implicite: mianowicie, że w barze ktoś jest.
+    Jest ono konieczne, gdyż gdyby w barze nie było nikogo, to w szczególności
+    nie mogłoby tam być nikogo, kto spełnia jakieś dodatkowe warunki.
+
+    I tak docieramy do sedna sprawy: istnieje osoba, którą będziemy zwać
+    pijokiem ([exists drinker : man]), taka, że jeżeli ona pije ([drinks
+    drinker]), to wszyscy piją ([forall x : man, drinks x]).
+
+    Dowód jest banalny i opiera się na zasadzie wyłączonego środka, w Coqu
+    zwanej [classic]. Dzięki niej możemy sprowadzić dowód do analizy
+    dwóch przypadków.
+
+    Przypadek 1: wszyscy piją. Cóż, skoro wszyscy piją, to wszyscy piją.
+    Pozostaje nam wskazać pijoka: mógłby to być ktokolwiek, ale z
+    konieczności zostaje nim [random_guy], gdyż do żadnego innego klienta
+    baru nie możemy się odnieść.
+
+    Przypadek 2: nieprawda, że wszyscy piją. Parafrazując: istnieje ktoś,
+    kto nie pije. Jest to obserwacja kluczowa. Skoro kolo przyszedł do baru
+    i nie pije, to z automatu jest podejrzany. Uczyńmy go więc, wbrew
+    zdrowemu rozsądkowi, naszym pijokiem.
+
+    Pozostaje nam udowodnić, że jeżeli pijok pije, to wszyscy piją. Załóżmy
+    więc, że pijok pije. Wiemy jednak skądinąd, że pijok nie pije. Wobec
+    tego mamy sprzeczność i wszyscy piją (a także jedzą naleśniki z betonem
+    serwowane przez gadające ślimaki i robią dużo innych dziwnych rzeczy —
+    wszakże _ex falso quodlibet_).
+
+    Gdzież więc leży paradoksalność całego paradoksu? Wynika ona w znacznej
+    mierze ze znaczenia słowa "jeżeli". W mowie potocznej różni się ono
+    znacznie od tzw. implikacji materialnej, w Coqu reprezentowanej (ale
+    tylko przy założeniu reguły wyłączonego środka) przez implikację ([->]).
+
+    Określenie "taka osoba, że jeżeli ona pije, to wszyscy piją" przeciętny
+    człowiek interpretuje w kategoriach przyczyny i skutku, a więc przypisuje
+    rzeczonej osobie magiczną zdolność zmuszania wszystkich do picia, tak
+    jakby posiadała zdolność wznoszenia toastów za pomocą telepatii.
+
+    Jest to błąd, gdyż zamierzonym znaczeniem słowa jeżeli jest tutaj (ze
+    względu na kontekst matematyczny) implikacja materialna. W jednym z
+    powyższych ćwiczeń udowodniłeś, że w logice klasycznej mamy tautologię
+    [P -> Q <-> ~P \/ Q], a więc że implikacja jest prawdziwa gdy jej
+    przesłanka jest fałszywa lub gdy jej konkluzja jest prawdziwa.
+
+    Do paradoksalności paradoksu swoje cegiełki dokładają też reguły logiki
+    klasycznej (wyłączony środek) oraz logiki konstruktywnej (_ex falso
+    quodlibet_), których w użyliśmy w dowodzie, a które dla zwykłego człowieka
+    nie muszą być takie oczywiste. *)
+
+(** **** Ćwiczenie (logika klasyczna) *)
+
+(** W powyższym dowodzie logiki klasycznej użyłem conajmniej dwukrotnie.
+    Zacytuj wszystkie fragmenty dowodu wykorzystujące logikę klasyczną. *)
+
+(** **** Ćwiczenie (niepusty bar) *)
+
+(** Pokaż, że założenie o tym, że w barze jest conajmniej jeden klient,
+    jest konieczne. Co więcej, pokaż że stwierdzenie "w barze jest taki
+    klient, że jeżeli on pije, to wszyscy piją" jest równoważne stwierdzeniu
+    "w barze jest jakiś klient".
+
+    Które z tych dwóch implikacji wymagają logiki intuicjonistycznej, a
+    które klasycznej? *)
+
+Lemma dp_nonempty :
+  forall (man : Type) (drinks : man -> Prop),
+    (exists drinker : man, drinks drinker ->
+      forall x : man, drinks x) <->
+    (exists x : man, True).
+(* begin hide *)
+Proof.
+  split; intros; destruct H as [random_guy _].
+    exists random_guy. trivial.
+    apply drinkers_paradox. assumption.
+Qed.
+(* end hide *)
+
 (** * Paradoks Curry'ego *)
+
+(** "Jeżeli niniejsze zdanie jest prawdziwe, to Niemcy graniczą z Chinami." *)
+
+(** Inne paradoksy autoreferencji: paradoks Richarda, słowa heterologiczne *)
+
+
 
 (** * Zadania *)
 

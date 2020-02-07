@@ -14,7 +14,7 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab551"></a><h1 class="section">Prawa logiki klasycznej</h1>
+<a name="lab552"></a><h1 class="section">Prawa logiki klasycznej</h1>
 
 </div>
 <div class="code">
@@ -62,7 +62,7 @@ Tu o prawie zachowania informacji.
     A o paradoksach implikacji materialnej? 
 <div class="paragraph"> </div>
 
-<a name="lab552"></a><h1 class="section">Logika klasyczna jako logika Boga</h1>
+<a name="lab553"></a><h1 class="section">Logika klasyczna jako logika Boga</h1>
 
 </div>
 <div class="code">
@@ -118,7 +118,7 @@ Tu o prawie zachowania informacji.
 </div>
 
 <div class="doc">
-<a name="lab553"></a><h1 class="section">Logika klasyczna jako logika materialnej implikacji i równoważności</h1>
+<a name="lab554"></a><h1 class="section">Logika klasyczna jako logika materialnej implikacji i równoważności</h1>
 
 </div>
 <div class="code">
@@ -244,7 +244,7 @@ Tu o prawie zachowania informacji.
 </div>
 
 <div class="doc">
-<a name="lab554"></a><h1 class="section">Logika klasyczna jako logika diabła</h1>
+<a name="lab555"></a><h1 class="section">Logika klasyczna jako logika diabła</h1>
 
 <div class="paragraph"> </div>
 
@@ -362,7 +362,7 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a name="lab555"></a><h1 class="section">Logika klasyczna jako logika kontrapozycji</h1>
+<a name="lab556"></a><h1 class="section">Logika klasyczna jako logika kontrapozycji</h1>
 
 </div>
 <div class="code">
@@ -414,11 +414,11 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a name="lab556"></a><h1 class="section">Logika klasyczna jako logika Peirce'a</h1>
+<a name="lab557"></a><h1 class="section">Logika klasyczna jako logika Peirce'a</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab557"></a><h2 class="section">Logika cudownych konsekwencji</h2>
+<a name="lab558"></a><h2 class="section">Logika cudownych konsekwencji</h2>
 
 </div>
 <div class="code">
@@ -468,7 +468,7 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a name="lab558"></a><h2 class="section">Logika Peirce'a</h2>
+<a name="lab559"></a><h2 class="section">Logika Peirce'a</h2>
 
 </div>
 <div class="code">
@@ -521,22 +521,173 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a name="lab559"></a><h1 class="section">Paradoks pijoka</h1>
+<a name="lab560"></a><h1 class="section">Paradoks pijoka</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">drinkers_paradox</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">man</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">drinks</span> : <span class="id" title="var">man</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">random_guy</span> : <span class="id" title="var">man</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">drinker</span> : <span class="id" title="var">man</span>, <span class="id" title="var">drinks</span> <span class="id" title="var">drinker</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">man</span>, <span class="id" title="var">drinks</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
+    dotyczącemu logiki klasycznej. Z angielska zwie się on "drinker's
+    paradox", ja zaś ku powszechnej wesołości używał będę nazwy "paradoks
+    pijoka".
 
 <div class="paragraph"> </div>
 
-<a name="lab560"></a><h1 class="section">Paradoks Curry'ego</h1>
+    Zazwyczaj jest on wyrażany mniej więcej tak: w każdym barze jest taki
+    człowiek, że jeżeli on pije, to wszyscy piją. Jak to możliwe? Czy
+    matematyka stwierdza istnienie magicznych ludzi zdolnych popaść swoich
+    barowych towarzyszy w alkoholizm?
 
 <div class="paragraph"> </div>
 
-<a name="lab561"></a><h1 class="section">Zadania</h1>
+    Oczywiście nie. W celu osiągnięcia oświecenia w tej kwestii prześledźmy
+    dowód tego faktu (jeżeli nie udało ci się go wymyślić, pomyśl jeszcze
+    trochę).
+
+<div class="paragraph"> </div>
+
+    Ustalmy najpierw, jak ma się formalne brzmienie twierdzenia do naszej
+    poetyckiej parafrazy dwa akapity wyżej. Początek "w każdym barze"
+    możemy pominąć i sformalizować sytuację w pewnym konkretnym barze. Nie
+    ma to znaczenia dla prawdziwości tego zdania.
+
+<div class="paragraph"> </div>
+
+    Sytuację w barze modelujemy za pomocą typu <span class="inlinecode"><span class="id" title="var">man</span></span>, które reprezentuje
+    klientów baru, predykatu <span class="inlinecode"><span class="id" title="var">drinks</span></span>, interpretowanego tak, że <span class="inlinecode"><span class="id" title="var">drinks</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>
+    oznacza, że <span class="inlinecode"><span class="id" title="var">x</span></span> pije. Pojawia się też osoba określona tajemniczym
+    mianem <span class="inlinecode"><span class="id" title="var">random_guy</span></span>. Jest ona konieczna, gdyż nasza poetycka parafraza
+    czyni jedno założenie implicite: mianowicie, że w barze ktoś jest.
+    Jest ono konieczne, gdyż gdyby w barze nie było nikogo, to w szczególności
+    nie mogłoby tam być nikogo, kto spełnia jakieś dodatkowe warunki.
+
+<div class="paragraph"> </div>
+
+    I tak docieramy do sedna sprawy: istnieje osoba, którą będziemy zwać
+    pijokiem (<span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">drinker</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">man</span></span>), taka, że jeżeli ona pije (<span class="inlinecode"><span class="id" title="var">drinks</span></span>
+    <span class="inlinecode"><span class="id" title="var">drinker</span></span>), to wszyscy piją (<span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">man</span>,</span> <span class="inlinecode"><span class="id" title="var">drinks</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>).
+
+<div class="paragraph"> </div>
+
+    Dowód jest banalny i opiera się na zasadzie wyłączonego środka, w Coqu
+    zwanej <span class="inlinecode"><span class="id" title="var">classic</span></span>. Dzięki niej możemy sprowadzić dowód do analizy
+    dwóch przypadków.
+
+<div class="paragraph"> </div>
+
+    Przypadek 1: wszyscy piją. Cóż, skoro wszyscy piją, to wszyscy piją.
+    Pozostaje nam wskazać pijoka: mógłby to być ktokolwiek, ale z
+    konieczności zostaje nim <span class="inlinecode"><span class="id" title="var">random_guy</span></span>, gdyż do żadnego innego klienta
+    baru nie możemy się odnieść.
+
+<div class="paragraph"> </div>
+
+    Przypadek 2: nieprawda, że wszyscy piją. Parafrazując: istnieje ktoś,
+    kto nie pije. Jest to obserwacja kluczowa. Skoro kolo przyszedł do baru
+    i nie pije, to z automatu jest podejrzany. Uczyńmy go więc, wbrew
+    zdrowemu rozsądkowi, naszym pijokiem.
+
+<div class="paragraph"> </div>
+
+    Pozostaje nam udowodnić, że jeżeli pijok pije, to wszyscy piją. Załóżmy
+    więc, że pijok pije. Wiemy jednak skądinąd, że pijok nie pije. Wobec
+    tego mamy sprzeczność i wszyscy piją (a także jedzą naleśniki z betonem
+    serwowane przez gadające ślimaki i robią dużo innych dziwnych rzeczy —
+    wszakże <i>ex falso quodlibet</i>).
+
+<div class="paragraph"> </div>
+
+    Gdzież więc leży paradoksalność całego paradoksu? Wynika ona w znacznej
+    mierze ze znaczenia słowa "jeżeli". W mowie potocznej różni się ono
+    znacznie od tzw. implikacji materialnej, w Coqu reprezentowanej (ale
+    tylko przy założeniu reguły wyłączonego środka) przez implikację (<span class="inlinecode">-&gt;</span>).
+
+<div class="paragraph"> </div>
+
+    Określenie "taka osoba, że jeżeli ona pije, to wszyscy piją" przeciętny
+    człowiek interpretuje w kategoriach przyczyny i skutku, a więc przypisuje
+    rzeczonej osobie magiczną zdolność zmuszania wszystkich do picia, tak
+    jakby posiadała zdolność wznoszenia toastów za pomocą telepatii.
+
+<div class="paragraph"> </div>
+
+    Jest to błąd, gdyż zamierzonym znaczeniem słowa jeżeli jest tutaj (ze
+    względu na kontekst matematyczny) implikacja materialna. W jednym z
+    powyższych ćwiczeń udowodniłeś, że w logice klasycznej mamy tautologię
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">&lt;-&gt;</span> <span class="inlinecode">~<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, a więc że implikacja jest prawdziwa gdy jej
+    przesłanka jest fałszywa lub gdy jej konkluzja jest prawdziwa.
+
+<div class="paragraph"> </div>
+
+    Do paradoksalności paradoksu swoje cegiełki dokładają też reguły logiki
+    klasycznej (wyłączony środek) oraz logiki konstruktywnej (<i>ex falso
+    quodlibet</i>), których w użyliśmy w dowodzie, a które dla zwykłego człowieka
+    nie muszą być takie oczywiste. 
+<div class="paragraph"> </div>
+
+<a name="lab561"></a><h4 class="section">Ćwiczenie (logika klasyczna)</h4>
+
+<div class="paragraph"> </div>
+
+ W powyższym dowodzie logiki klasycznej użyłem conajmniej dwukrotnie.
+    Zacytuj wszystkie fragmenty dowodu wykorzystujące logikę klasyczną. 
+<div class="paragraph"> </div>
+
+<a name="lab562"></a><h4 class="section">Ćwiczenie (niepusty bar)</h4>
+
+<div class="paragraph"> </div>
+
+ Pokaż, że założenie o tym, że w barze jest conajmniej jeden klient,
+    jest konieczne. Co więcej, pokaż że stwierdzenie "w barze jest taki
+    klient, że jeżeli on pije, to wszyscy piją" jest równoważne stwierdzeniu
+    "w barze jest jakiś klient".
+
+<div class="paragraph"> </div>
+
+    Które z tych dwóch implikacji wymagają logiki intuicjonistycznej, a
+    które klasycznej? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dp_nonempty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">man</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">drinks</span> : <span class="id" title="var">man</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">drinker</span> : <span class="id" title="var">man</span>, <span class="id" title="var">drinks</span> <span class="id" title="var">drinker</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">man</span>, <span class="id" title="var">drinks</span> <span class="id" title="var">x</span>) &lt;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">man</span>, <span class="id" title="var">True</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab563"></a><h1 class="section">Paradoks Curry'ego</h1>
+
+<div class="paragraph"> </div>
+
+ "Jeżeli niniejsze zdanie jest prawdziwe, to Niemcy graniczą z Chinami." 
+<div class="paragraph"> </div>
+
+ Inne paradoksy autoreferencji: paradoks Richarda, słowa heterologiczne 
+<div class="paragraph"> </div>
+
+<a name="lab564"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
  wyrzucić zadania mącące (mieszające typy i zdania) 
 <div class="paragraph"> </div>
 
-<a name="lab562"></a><h1 class="section">Ściąga</h1>
+<a name="lab565"></a><h1 class="section">Ściąga</h1>
 
 </div>
 <div class="code">
