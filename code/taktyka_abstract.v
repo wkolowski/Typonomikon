@@ -15,8 +15,8 @@ Proof.
   induction l; cbn; try destruct (f a); cbn.
     constructor.
     
-  transparent_abstract omega using lemma_name.
-  transparent_abstract omega using lemma_name'. Show Proof.
+  transparent_abstract lia using lemma_name.
+  transparent_abstract lia using lemma_name'. Show Proof.
 Qed.
 
 Print filter_length''.

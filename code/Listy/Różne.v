@@ -470,7 +470,7 @@ Proof.
         destruct 1 as (n' & H1 & H2). apply n0. exists n'. split.
           assert (n' <> S m').
             intro. subst. contradiction.
-            omega.
+            lia.
           assumption.
 Qed.
 (* end hide *)

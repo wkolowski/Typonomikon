@@ -1619,21 +1619,21 @@ Proof.
     rewrite IHn', binom_0_r. cbn. trivial.
 Qed.
 
-Require Import Omega.
+Require Import Lia Arith.
 
 Lemma binom_gt :
   forall n k : nat, n < k -> binom n k = 0.
 Proof.
   induction n as [| n']; destruct k as [| k']; cbn;
   try (inversion 1; trivial; fail); intro.
-    rewrite !IHn'; omega.
+    rewrite !IHn'; lia.
 Qed.
 
 Lemma binom_n : forall n : nat, binom n n = 1.
 Proof.
   induction n as [| n']; cbn.
     trivial.
-    rewrite IHn', binom_gt; omega.
+    rewrite IHn', binom_gt; lia.
 Qed.
 
 Theorem binom_sym :
@@ -1641,18 +1641,18 @@ Theorem binom_sym :
 Proof.
   induction n as [| n']; destruct k as [| k']; cbn; intros.
     trivial.
-    omega.
-    rewrite binom_n, binom_gt; omega.
+    inversion H.
+    rewrite binom_n, binom_gt; lia.
     case_eq (n' - k'); intros; subst.
-      omega.
-      assert (S k' = n' - n). omega. rewrite <- H0, H1, <- !IHn'; omega.
+      lia.
+      assert (S k' = n' - n). lia. rewrite <- H0, H1, <- !IHn'; lia.
 Qed.
 
 Goal forall n k : nat,
   k * binom (S n) (S k) = n * binom n k.
 Proof.
   cbn.
-  induction n as [| n']; destruct k as [| k']; cbn; try omega.
+  induction n as [| n']; destruct k as [| k']; cbn; try lia.
 Abort.
 
 Theorem binom_spec :
@@ -1662,23 +1662,23 @@ Proof.
   induction n as [| n']; destruct k as [| k'].
     trivial.
     inversion 1.
-    intros. cbn. omega.
+    intros. cbn. lia.
     intros. cbn.
       rewrite !mult_plus_distr_r, !mult_plus_distr_l.
-      rewrite IHn'; try omega.
+      rewrite IHn'; try lia.
       rewrite <- !plus_assoc. f_equal.
-      rewrite <- 2!(mult_assoc k'). rewrite IHn'; try omega.
+      rewrite <- 2!(mult_assoc k'). rewrite IHn'; try lia.
 Restart.
   intros n k.
-  functional induction binom n k; intros; cbn; try omega.
-    destruct k. inversion y. omega.
-    destruct n; cbn; omega.
-    destruct n', k'; cbn in *; try omega.
+  functional induction binom n k; intros; cbn; try lia.
+    destruct k. inversion y. inversion H.
+    destruct n; cbn; lia.
+    destruct n', k'; cbn in *; try lia.
       rewrite binom_0_r, <- plus_n_O, <- minus_n_O in *.
-        assert (0 <= S n') by omega.
+        assert (0 <= S n') by lia.
         specialize (IHn0 H0). rewrite mult_comm. cbn.
         rewrite binom_1_r. trivial.
-      assert (S k' <= S n') by omega.
+      assert (S k' <= S n') by lia.
         specialize (IHn0 H0).
         rewrite <- !IHn0.
         rewrite !mult_plus_distr_r, !mult_plus_distr_l.

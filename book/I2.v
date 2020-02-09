@@ -1601,7 +1601,11 @@ Proof. decide equality. Defined.
     zawierać zmienne, [0], [S], dodawanie i mnożenie przez stałą. Dodatkowo
     zdania tej postaci mogą być połączone spójnikami [/\], [\/], [->] oraz
     [~], ale nie mogą być kwantyfikowane — [omega] nie umie wprowadzać
-    zmiennych do kontekstu. *)
+    zmiennych do kontekstu.
+
+    Uwaga: ta taktyka jest przestarzała, a jej opis znajduje się tutaj tylko
+    dlatego, że jak go pisałem, to jeszcze nie była. Nie używaj jej! Zamiast
+    [omega] używaj [lia]! *)
 
 Require Import Arith Omega.
 

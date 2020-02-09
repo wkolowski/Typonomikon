@@ -165,7 +165,7 @@ Lemma ex_replicate :
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros.
-    firstorder.
+    firstorder. inversion H.
     firstorder.
 Qed.
 (* end hide *)
@@ -459,7 +459,7 @@ Lemma ex_intersperse :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
-    firstorder.
+    firstorder lia.
     destruct (intersperse x t) eqn: eq; cbn in *.
       rewrite IHt. firstorder. destruct t; cbn in eq.
         inversion H2. inversion H4.

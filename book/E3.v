@@ -2193,7 +2193,7 @@ Proof.
     1-2: admit.
     destruct 1. unfold Rcomp in *. specialize (trichotomous0 0 1).
       decompose [and or ex] trichotomous0; clear trichotomous0.
-        Require Import Omega. 1-3: omega.
+        1-3: admit.
 Admitted.
 (* end hide *)
 
@@ -2212,7 +2212,10 @@ Proof.
   exists nat, lt, gt. split; [idtac | split].
     1-2: admit.
     destruct 1 as [H]. unfold Rand in H. specialize (H 0 1).
-      decompose [and or] H; clear H; omega.
+      decompose [and or] H; clear H.
+        inversion H2.
+        inversion H1.
+        inversion H0.
 Admitted.
 (* end hide *)
 

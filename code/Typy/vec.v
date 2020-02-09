@@ -163,14 +163,14 @@ Proof.
 Qed.
 (* end hide *)
 
-Require Import Omega.
+Require Import Lia Arith.
 
 Lemma no_infinite_cons :
   forall (A : Type) (n : nat) (h : A) (t : vec A n),
     eq_dep t (vcons h t) -> False.
 (* begin hide *)
 Proof.
-  inversion 1. omega.
+  inversion 1. lia.
 Qed.
 (* end hide *)
 
@@ -183,7 +183,7 @@ Proof.
     rewrite app_vnil_r' in H0. apply H. rewrite H0. trivial.
     destruct l'.
       contradiction H. trivial.
-      inversion H0. omega.
+      inversion H0. lia.
 Qed.
 (* end hide *)
 
@@ -685,13 +685,18 @@ Proof.
 Qed.
 (* end hide *)
 
+Require Import Arith.
+
 Lemma nth_elem :
   forall (A : Type) (m n : nat) (l : vec A n),
     m < n -> exists x : A, nth m l = Some x /\ elem x l.
 (* begin hide *)
 Proof.
-  induction m as [| m']; destruct l; cbn; intros; intuition; eauto.
-  apply lt_S_n in H. destruct (IHm' _ l H) as [x [H1 H2]]. eauto.
+  induction m as [| m']; destruct l; cbn; intros.
+    inversion H.
+    eauto.
+    inversion H.
+    apply lt_S_n in H. destruct (IHm' _ l H) as [x [H1 H2]]. eauto.
 Qed.
 (* end hide *)
 
@@ -1034,11 +1039,11 @@ Lemma take_length' :
 Proof.
   intros A n m. generalize dependent n.
   induction m as [| m']; intros.
-    assert (n = 0) by omega. subst.
+    assert (n = 0) by lia. subst.
       dependent destruction l. apply take_nil.
     dependent destruction l.
       apply take_nil.
-      cbn. rewrite IHm'; auto; omega.
+      cbn. rewrite IHm'; auto; lia.
 Qed.
 (* end hide *)
 
@@ -1048,10 +1053,10 @@ Lemma drop_length' :
 (* begin hide *)
 Proof.
   induction m as [| m']; intros.
-    rewrite drop_0. dependent destruction l; try omega. trivial.
+    rewrite drop_0. dependent destruction l; try lia. trivial.
     destruct l as [| n h t]; cbn.
       trivial.
-      rewrite IHm'; auto; omega.
+      rewrite IHm'; auto; lia.
 Qed.
 (* end hide *)
 
@@ -1061,10 +1066,10 @@ Lemma length_take :
 (* begin hide *)
 Proof.
   induction m as [| m']; intros.
-    dependent destruction l; try omega. compute. trivial.
+    dependent destruction l; try lia. compute. trivial.
     destruct l as [| n h t].
       compute. trivial.
-      simpl. rewrite len_vcons, IHm'; auto; omega.
+      simpl. rewrite len_vcons, IHm'; auto; lia.
 Qed.
 (* end hide *)
 

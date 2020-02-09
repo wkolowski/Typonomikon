@@ -34,7 +34,7 @@ match l with
     | h :: t => h + sum t
 end.
 
-Require Import Omega.
+Require Import Lia Arith.
 
 Lemma Finite_nat :
   Finite nat -> False.
@@ -42,7 +42,7 @@ Proof.
   intros [l H].
   specialize (H (S (sum l))).
   assert (forall n : nat, elem n l -> n < S (sum l)).
-    clear H. induction 1; cbn; omega.
+    clear H. induction 1; cbn; lia.
   specialize (H0 _ H). apply Nat.lt_irrefl in H0. assumption.
 Qed.
 
@@ -65,6 +65,6 @@ Proof.
   intros A x [l H].
   specialize (H (x :: join l)).
   assert (forall l' : list A, elem l' l -> length l' < S (length (join l))).
-    clear H. induction 1; cbn; rewrite length_app; omega.
-  specialize (H0 _ H). cbn in H0. omega.
+    clear H. induction 1; cbn; rewrite length_app; lia.
+  specialize (H0 _ H). cbn in H0. lia.
 Qed.

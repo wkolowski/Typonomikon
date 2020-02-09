@@ -538,8 +538,8 @@ Proof.
 (* begin hide *)
   apply ack_ind.
     do 2 constructor.
-    intros. cbn. omega.
-    intros. rewrite ack_eq. omega.
+    intros. cbn. lia.
+    intros. rewrite ack_eq. lia.
 Restart.
 (* end hide *)
   induction n as [| n'].
@@ -549,7 +549,7 @@ Restart.
         apply le_n.
         apply IHn'.
       specialize (IHn' (ack (S n') m')).
-        rewrite ack_eq. omega.
+        rewrite ack_eq. lia.
 Qed.
 
 Lemma ack_big' :
@@ -563,7 +563,7 @@ Proof.
       rewrite IHle. destruct n1.
         cbn. apply le_S, le_n.
         rewrite (ack_eq (S n1) (S m)).
-          pose (ack_big n1 (ack (S n1) m)). omega.
+          pose (ack_big n1 (ack (S n1) m)). lia.
     induction 1.
       destruct m1.
         cbn. apply IHle. do 2 constructor.

@@ -1,5 +1,5 @@
 Require Import Arith.
-Require Import Omega.
+Require Import Lia Arith.
 
 Lemma root : forall n : nat, {r : nat | r * r <= n < (S r) * (S r)}.
 Proof.
@@ -19,7 +19,7 @@ Proof.
                 rewrite (mult_comm x (S y)) in H; cbn in H
             | |- context [?x + S ?y] => rewrite (plus_comm x (S y)); cbn
             | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); cbn
-        end. omega.
+        end. lia.
       exists r. cbn; split.
         apply le_trans with n'.
           assumption.
@@ -76,7 +76,7 @@ Print well_founded_induction.
 Lemma div4_lemma : forall n : nat,
     S (div4 n) < S (S (S (S n))).
 Proof.
-  induction n using nat_ind_4; cbn; omega.
+  induction n using nat_ind_4; cbn; lia.
 Qed.
 
 Lemma nat_ind_div4 (P : nat -> Type) (H0 : P 0)

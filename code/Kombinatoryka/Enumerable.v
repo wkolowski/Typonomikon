@@ -1,6 +1,6 @@
 Require Import X3.
 
-Require Import Omega.
+Require Import Lia Arith.
 
 Class Enumerable (A : Type) : Type :=
 {
@@ -24,7 +24,7 @@ Instance Enumerable_bool : Enumerable bool :=
     end
 }.
 Proof.
-  destruct n as [| [| n']], x; compute; repeat split; auto; omega.
+  destruct n as [| [| n']], x; compute; repeat split; auto; lia.
 Defined.
 
 Fixpoint bind {A B : Type} (x : list A) (f : A -> list B) : list B :=

@@ -28,6 +28,8 @@ Abort.
 
 Require Import D5.
 
+Require Import Wellfounded Lia.
+
 Inductive D {A : Type} (f : A -> A -> bool) : list A -> Type :=
     | D0 : D f []
     | D1 :
@@ -45,8 +47,6 @@ match d with
     | D1 h t d' => h :: sieve' f d'
 end.
 
-Require Import Wellfounded Omega.
-
 Lemma lemma :
   forall A : Type,
     well_founded (fun l1 l2 : list A => length l1 < length l2).
@@ -55,7 +55,7 @@ Proof.
     constructor. inversion 1.
     inversion IHt. constructor. destruct y as [| h' t'].
       constructor. inversion 1.
-      intro. constructor. intros. apply H. cbn in *. omega.
+      intro. constructor. intros. apply H. cbn in *. lia.
 Defined.
 
 Lemma D_all :

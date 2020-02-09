@@ -73,9 +73,9 @@ Proof.
       reflexivity.
       rewrite IHn'. reflexivity.
 Restart.
-  intros. Require Import Omega.
+  intros. Require Import Lia Arith.
   rewrite insert_before_in_char, ?length_app, length_drop.
-    rewrite length_take. apply Min.min_case_strong; intros; omega.
+    rewrite length_take. apply Min.min_case_strong; intros; lia.
 Qed.
 (* end hide *)
 
@@ -236,8 +236,8 @@ Lemma minus_wut'' :
   forall n m : nat,
     m <= n -> n - (n - m) = m.
 Proof.
-  Require Import Omega.
-  intros. omega.
+  Require Import Lia Arith.
+  intros. lia.
 Qed.
 
 Lemma insert_before_in_rev :
@@ -470,7 +470,7 @@ Proof.
         constructor.
         rewrite insert_before_in_nil in H. assumption.
       destruct n as [| n']; cbn in *.
-        apply AtLeast_app_conv in H. firstorder.
+        apply AtLeast_app_conv in H. firstorder lia.
         destruct t as [| h' t'].
           rewrite insert_before_in_nil in H.
             change (h :: l2) with ([h] ++ l2) in H.
@@ -478,7 +478,7 @@ Proof.
           inversion H; subst.
             exists 0, 0. firstorder constructor.
             destruct (IHt _ _ _ H4) as (m1 & m2 & IH).
-              exists (S m1), m2. firstorder. constructor; trivial.
+              exists (S m1), m2. firstorder; subst; constructor; trivial.
             destruct (IHt _ _ _ H2) as (m1 & m2 & IH).
               exists m1, m2. firstorder. constructor. assumption.
     destruct 1 as (m1 & m2 & H1 & H2 & H3); subst.
@@ -487,6 +487,6 @@ Proof.
         exists m2, m1. split.
           assumption.
           pose (AtLeast_take_drop _ _ _ n _ H1).
-            rewrite AtLeast_app. firstorder.
+            rewrite AtLeast_app. firstorder lia.
 Qed.
 (* end hide *)

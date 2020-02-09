@@ -20,7 +20,6 @@ Require Import List.
 Import ListNotations.
 
 Require Import FunctionalExtensionality.
-Require Import Omega.
 Require Import Setoid.
 Require Import FinFun.
 

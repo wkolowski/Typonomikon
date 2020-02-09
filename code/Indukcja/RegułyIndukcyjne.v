@@ -1,7 +1,7 @@
 Require Import Coq.Program.Wf.
 
 Require Import Arith.
-Require Import Omega.
+Require Import Lia Arith.
 
 Require Import Div2.
 
@@ -19,7 +19,7 @@ Theorem expand :
 Proof.
   intros. replace n with (k + (n - k)).
     assumption.
-    omega.
+    lia.
 Defined.
 
 Program Fixpoint nat_ind_k (k : nat) (P : nat -> Prop)
@@ -31,8 +31,8 @@ match le_dec n k with
     | right n_gt_k =>
         expand P n k n_gt_k (H' (n - S k) (nat_ind_k k P H H' (n - S k)))
 end.
-Next Obligation. omega. Defined.
-Next Obligation. omega. Defined.
+Next Obligation. lia. Defined.
+Next Obligation. lia. Defined.
 
 Inductive even : nat -> Prop :=
     | even0 : even 0
@@ -59,12 +59,12 @@ match le_dec n k with
     | right n_gt_k =>
         expand P n k n_gt_k (H' (n - k) (nat_ind_k' k Hk P H H' (n - k)))
 end.
-Next Obligation. omega. Defined.
+Next Obligation. lia. Defined.
 
 Theorem above_7 : forall n : nat,
     exists i j : nat, 8 + n = 3 * i + 5 * j.
 Proof.
-  assert (Hk : 8 <> 0). omega.
+  assert (Hk : 8 <> 0). lia.
   induction n as [| n'] using (nat_ind_k' 8 Hk).
     destruct n. exists 1, 1. auto. destruct n. exists 3, 0. auto.
       destruct n. exists 0, 2. auto. destruct n. exists 2, 1. auto.
@@ -72,7 +72,7 @@ Proof.
       destruct n. exists 3, 1. auto. destruct n. exists 0, 3. auto.
       destruct n. exists 2, 2. auto. repeat (inversion H; clear H; clear H0;
       rename H1 into H).
-    destruct IHn' as [i [j H]]. exists (S i), (S j). omega.
+    destruct IHn' as [i [j H]]. exists (S i), (S j). lia.
 Qed.
 
 Fixpoint fac (n : nat) : nat :=
@@ -142,7 +142,7 @@ match n with
         then (0, n)
         else let (d, m) := divmod (n - k) k H in (S d, m)
 end.
-Next Obligation. omega. Qed.
+Next Obligation. lia. Qed.
 
 Theorem two_not_0 : 2 <> 0.
 Proof. inversion 1. Qed.
@@ -191,16 +191,16 @@ Theorem pos_to_nat_inj : injective pos_to_nat.
 Proof.
   red. induction x as [| p1 | p1]; induction x' as [| p2 | p2]; cbn in *.
     trivial.
-    omega.
-    inversion 1. assert (pos_to_nat p2 = 0). omega.
+    lia.
+    inversion 1. assert (pos_to_nat p2 = 0). lia.
       destruct (pos_to_nat_neq_0 _ H0).
-    omega.
-    intros. f_equal. apply IHp1. omega.
-    intros. cut False; omega.
-    inversion 1. assert (pos_to_nat p1 = 0). omega.
+    lia.
+    intros. f_equal. apply IHp1. lia.
+    intros. cut False; lia.
+    inversion 1. assert (pos_to_nat p1 = 0). lia.
       destruct (pos_to_nat_neq_0 _ H0).
-    omega.
-    inversion 1. f_equal. apply IHp1. omega.
+    lia.
+    inversion 1. f_equal. apply IHp1. lia.
 Qed.
 
 Hint Resolve pos_to_nat_inj.
@@ -320,7 +320,7 @@ Proof.
     exists 0. left. trivial.
     destruct IHn' as [k [H | H]].
       exists k. right. rewrite H. trivial.
-      exists (S k). left. rewrite H. cbn. omega.
+      exists (S k). left. rewrite H. cbn. lia.
 Defined.
 
 Fixpoint nat_ind_bin' (P : nat -> Prop) (H0 : P 0)
@@ -444,15 +444,15 @@ SearchAbout mult. Require Import NPeano.
 Goal forall n : nat, pow 2 (3 + n) > 2 * n.
 Proof.
   induction n as [| n'].
-    cbn. omega.
+    cbn. lia.
     replace (2 ^ (3 + S n')) with (2 ^ (3 + n') + 2 ^ (3 + n')).
-      Focus 2. cbn. omega.
+      Focus 2. cbn. lia.
       replace (2 * S n') with (2 * n' + 2).
-        Focus 2. omega.
+        Focus 2. lia.
         apply plus_lt_le_compat.
-          omega.
+          lia.
           replace (2 ^ (3 + n')) with (8 * 2 ^ n').
-            Focus 2. cbn. omega.
+            Focus 2. cbn. lia.
             SearchAbout le.
 Abort.
 

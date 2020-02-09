@@ -579,7 +579,7 @@ Qed.
 (* begin hide *)
 Module Ex.
 
-Require Import Omega.
+Require Import Lia.
 
 Inductive T : Type :=
     | from0 : nat -> T
@@ -600,7 +600,9 @@ Lemma R_trans :
   forall a b c : T, R a b -> R b c -> R a c.
 Proof.
   induction a as [n | n |];
-  destruct b as [m | m |], c as [k | k |]; cbn; try omega; auto.
+  destruct b as [m | m |],
+           c as [k | k |];
+  cbn; lia.
 Qed.
 
 Lemma Acc_from0 :
@@ -710,7 +712,7 @@ Qed.
     sytuacjach nieodzowne będzie skorzystanie z indukcji i rekursji
     dobrze ufundowanej, o czym przekonamy się już natychmiast zaraz. *)
 
-Require Import Omega.
+Require Import Lia.
 
 Definition div : nat -> nat -> nat.
 Proof.
@@ -718,13 +720,13 @@ Proof.
   intros n IH m.
   destruct (le_lt_dec (S m) n).
     2: exact 0.
-    refine (1 + IH (n - S m) _ m). abstract omega.
+    refine (1 + IH (n - S m) _ m). abstract lia. Show Proof.
 Defined.
 
 (* begin hide *)
 
 (** TODO: wprowadzić kombinator [abstract] za pierwszym razem, gdy użyta
-    zostanie taktyka [omega]. *)
+    zostanie taktyka [lia]. *)
 
 (* end hide *)
 
@@ -753,9 +755,9 @@ Check le_lt_dec.
     Na koniec musimy jeszcze tylko pokazać, że argument wywołania
     rekurencyjnego, czyli [n - S m], jest mniejszy od argumentu
     obecnego wywołania, czyli [n]. Żeby za bardzo nie pobrudzić
-    sobie rąk arytmetyką, zostawiamy ten cel taktyce [omega], ale
+    sobie rąk arytmetyką, zostawiamy ten cel taktyce [lia], ale
     zawijamy jej użycie w kombinator [abstract], który zapobiega
-    "wylaniu się" rozumowania taktyki [omega] do definicji. *)
+    "wylaniu się" rozumowania taktyki [lia] do definicji. *)
 
 Print div.
 (* ===>
@@ -778,8 +780,8 @@ Check div_subproof.
 Print div_subproof.
 (* ===> dużo różnych głupot, szkoda pisać *)
 
-(** Mówiąc wprost, taktyka [abstract omega] zamiast wstawiać do definicji
-    całe rozumowanie, tak jak zrobiłaby to taktyka [omega], dowodzi sobie
+(** Mówiąc wprost, taktyka [abstract lia] zamiast wstawiać do definicji
+    całe rozumowanie, tak jak zrobiłaby to taktyka [lia], dowodzi sobie
     na boku odpowiedni lemat arytmetyczny, nazywa go [div_subproof] i
     dowodzi celu za jego pomocą. *)
 
@@ -813,7 +815,7 @@ Abort.
     daje inny wynik, niż byśmy chcieli - część definicji ukryta dotychczas
     w [div_subproof] wylewa się i zaśmieca nam ekran.
 
-    Problem nie pochodzi jednak od taktyki [omega] (ani od [abstract omega]).
+    Problem nie pochodzi jednak od taktyki [lia] (ani od [abstract lia]).
     Jest on dużo ogólniejszy i polega na tym, że wewnątrz definicji funkcji
     pojawiają się dowody, które są wymagane przez [well_founded_rect], ale
     które zaorywują jej obliczeniową harmonię.
@@ -861,8 +863,8 @@ Proof.
   apply (well_founded_ind _ _ wf_lt).
   intros n IH. rewrite div_eq.
   destruct (Nat.ltb_spec n 1).
-    omega.
-    rewrite IH; omega.
+    lia.
+    rewrite IH; lia.
 Qed.
 
 (** Jak widać, dzięki równaniu rekurencyjnemu dowody przebiegają dość gładko.
@@ -1210,7 +1212,7 @@ Proof.
   intros until 1. revert r2.
   induction H; inversion 1; subst.
     reflexivity.
-    1-2: omega.
+    1-2: lia.
     f_equal. apply IHdivG. assumption.
 Qed.
 
@@ -1239,8 +1241,8 @@ Proof.
   rewrite div_eq. destruct (Nat.ltb_spec0 n (S m)).
     constructor. assumption.
     constructor.
-      omega.
-      apply IH. omega.
+      lia.
+      apply IH. lia.
 Qed.
 
 (** Kolejna rzecz do udowodnienia to twierdzenie o poprawności, które mówi,
@@ -1347,7 +1349,7 @@ Lemma div_le :
 Proof.
   apply (div_ind (fun n m r : nat => r <= n)); intros.
     apply le_0_n.
-    omega.
+    lia.
 Qed.
 
 (** **** Ćwiczenie *)
@@ -1365,7 +1367,7 @@ Proof.
   intros n IH m.
   rewrite div_eq. destruct (Nat.ltb_spec n (S m)).
     apply le_0_n.
-    specialize (IH (n - S m) ltac:(omega) m). omega.
+    specialize (IH (n - S m) ltac:(lia) m). lia.
 Qed.
 (* end hide *)
 
@@ -1387,7 +1389,7 @@ Lemma divG'_div :
 Proof.
   apply (div_ind divG'); unfold divG'; intros.
     exists n. cbn. reflexivity.
-    destruct H0 as [q IH]. exists q. cbn. omega.
+    destruct H0 as [q IH]. exists q. cbn. lia.
 Qed.
 (* end hide *)
 
@@ -1400,8 +1402,8 @@ Proof.
   intros n IH m. unfold divG' in *.
   rewrite div_eq. destruct (Nat.ltb_spec n (S m)).
     exists n. cbn. reflexivity.
-    destruct (IH (n - S m) ltac:(omega) m) as [q IHq].
-      exists q. cbn. omega.
+    destruct (IH (n - S m) ltac:(lia) m) as [q IHq].
+      exists q. cbn. lia.
 Qed.
 (* end hide *)
 
@@ -1671,7 +1673,7 @@ Proof.
   destruct (le_lt_dec (S m) n).
     apply divD_ge.
       unfold ge. assumption.
-      apply IH. abstract omega.
+      apply IH. abstract lia.
     apply divD_lt. assumption.
 Defined.
 
@@ -1778,10 +1780,10 @@ Restart.
   intros. apply div'_ind; clear n m; intros; cbn.
     rewrite leb_correct.
       reflexivity.
-      abstract omega.
+      abstract lia.
     rewrite leb_correct_conv.
       reflexivity.
-      abstract omega.
+      abstract lia.
 Qed.
 
 (** Pierwszy, trudniejszy sposób, to zgeneralizowanie [divD_all n m]
@@ -1993,7 +1995,7 @@ Require Import Recdef.
 Function div'' (n m : nat) {measure id n} : nat :=
   if n <? S m then 0 else S (div'' (n - S m) m).
 Proof.
-  intros. unfold id. cbn in teq. apply leb_complete_conv in teq. omega.
+  intros. unfold id. cbn in teq. apply leb_complete_conv in teq. lia.
 Defined.
 (* ===> div''_tcc is defined
         div''_terminate is defined
@@ -2043,7 +2045,7 @@ Lemma div''_le :
 Proof.
   intros. functional induction (div'' n m).
     apply le_0_n.
-    apply leb_complete_conv in e. omega.
+    apply leb_complete_conv in e. lia.
 Defined.
 
 (** Dowodzenie właściwości funkcji zdefiniowanych za pomocą [Function]
@@ -2082,8 +2084,6 @@ Require Import Recdef.
 
 Require Import List.
 Import ListNotations.
-
-Require Import Omega.
 
 Function split
   {A : Type} (n : nat) (l : list A)
@@ -2129,7 +2129,7 @@ Proof.
     left. reflexivity.
     right. destruct (IHo _ _ e1).
       subst. cbn in e1. inversion e1; subst. cbn. apply le_n.
-      cbn. omega.
+      cbn. lia.
 Qed.
 
 Lemma split_length :
@@ -2273,9 +2273,9 @@ Proof.
   induction H; intros r Hr.
     inversion Hr; subst.
       reflexivity.
-      abstract omega.
+      abstract lia.
     inversion Hr; subst.
-      abstract omega.
+      abstract lia.
       assert (r1 = r0) by apply (IHfG1 _ H3); subst.
         apply (IHfG2 _ H4).
 Defined.
@@ -2344,12 +2344,12 @@ Lemma fG_le100_spec :
     fG n r -> n <= 100 -> r = 91.
 Proof.
   induction 1; intro.
-    abstract omega.
+    abstract lia.
     inversion H0; subst.
       inversion H1; subst.
-        assert (n = 100) by abstract omega. subst. reflexivity.
-        abstract omega.
-      abstract omega.
+        assert (n = 100) by abstract lia. subst. reflexivity.
+        abstract lia.
+      abstract lia.
 Defined.
 
 Lemma f'_le100 :
@@ -2365,7 +2365,7 @@ Lemma f'_ge100 :
   forall (n : nat) (d : fD n),
     100 < n -> f' d = n - 10.
 Proof.
-  destruct d; cbn; abstract omega.
+  destruct d; cbn; abstract lia.
 Defined.
 
 (** Teraz następuje mały twist. Udowodnienie, że każdy argument spełnia
@@ -2381,16 +2381,16 @@ Proof.
   apply (well_founded_ind _ (fun n m => 101 - n < 101 - m)).
     apply wf_inverse_image. apply wf_lt.
     intros n IH. destruct (le_lt_dec n 100).
-      assert (d : fD (n + 11)) by (apply IH; omega).
+      assert (d : fD (n + 11)) by (apply IH; lia).
         apply fD_le100 with (f' d).
           assumption.
           apply f'_correct.
           assumption.
           apply IH. inversion d; subst.
             rewrite f'_ge100.
-              abstract omega.
+              abstract lia.
               assumption.
-            rewrite f'_le100; abstract omega.
+            rewrite f'_le100; abstract lia.
       constructor. assumption.
 Defined.
 
@@ -2489,7 +2489,7 @@ Proof.
     unfold ltb. destruct (Nat.leb_spec0 101 n).
       constructor. assumption.
       econstructor.
-        omega.
+        lia.
         apply f_correct.
         apply f_correct.
 Qed.
@@ -2737,17 +2737,17 @@ Lemma f_spec :
     n <= 100 -> f' n d = 91.
 Proof.
   apply (fD_ind (fun n d => n <= 100 -> f' n d = 91)).
-    intros n H H'. omega.
+    intros n H H'. lia.
     intros n H d1 d2 IH1 IH2 _.
       destruct (fD_inv _ d1) as
             [[H' eq] | (H' & d1' & d2' & eq)].
         destruct (fD_inv _ d2) as
               [[H'' eq'] | (H'' & d1'' & d2'' & eq')].
           rewrite f'_eq2, eq', f'_eq1, eq, f'_eq1 in *.
-            clear IH1 eq eq' H' H''. omega.
+            clear IH1 eq eq' H' H''. lia.
           rewrite f'_eq2. apply IH2. assumption.
         rewrite f'_eq2. apply IH2. rewrite IH1.
-          omega.
+          lia.
           assumption.
 Qed.
 
@@ -2758,7 +2758,7 @@ Qed.
     Dowód idzie tak: najpierw używamy indukcji, a potem naszego inwersjowego
     lematu na hipotezach postaci [fD _ _]. W kluczowych momentach obliczamy
     funkcję [f] za pomocą definiujących ją równań oraz posługujemy się
-    taktyką [omega] do przemielenia oczywistych, ale skomplikowanych
+    taktyką [lia] do przemielenia oczywistych, ale skomplikowanych
     formalnie faktów z zakresu arytmetyki liczb naturalnych. *)
 
 Lemma fD_all :
@@ -2767,13 +2767,13 @@ Proof.
   apply (well_founded_ind _ (fun n m => 101 - n < 101 - m)).
     apply wf_inverse_image. apply wf_lt.
     intros n IH. destruct (le_lt_dec n 100).
-      assert (d : fD (n + 11)) by (apply IH; omega).
+      assert (d : fD (n + 11)) by (apply IH; lia).
         apply fD_le100 with d.
           assumption.
           apply IH. destruct (fD_inv _ d) as [[H eq] | [H _]].
-            rewrite eq, f'_eq1. omega.
+            rewrite eq, f'_eq1. lia.
             rewrite f_spec.
-              omega.
+              lia.
               assumption.
       apply fD_gt100. assumption.
 Qed.
@@ -2797,9 +2797,9 @@ Proof.
   apply (fD_ind (fun _ d1 => forall d2, _)); intros.
     rewrite f'_eq1. destruct (fD_inv _ d2) as [[H' eq] | [H' _]].
       rewrite eq, f'_eq1. reflexivity.
-      omega.
+      lia.
     rewrite f'_eq2. destruct (fD_inv _ d0) as [[H' eq] | (H' & d1' & d2' & eq)].
-      omega.
+      lia.
       subst. rewrite f'_eq2. specialize (H0 d1').
         destruct H0. apply H1.
 Qed.
@@ -3103,7 +3103,7 @@ Proof.
   destruct (le_lt_dec (S m) n).
     apply divD_ge.
       unfold ge. assumption.
-      apply IH. abstract omega.
+      apply IH. abstract lia.
     apply divD_lt. assumption.
 Defined.
 
@@ -3189,13 +3189,13 @@ Lemma divG_div'_aux :
 Proof.
   induction d using divD_ind'.
     unfold div'_aux. destruct (le_lt_dec (S m) n).
-      omega.
+      lia.
       constructor. assumption.
     unfold div'_aux. destruct (le_lt_dec (S m) n).
       constructor.
         assumption.
         exact IHd.
-      omega.
+      lia.
 Qed.
 
 (** Indukcję z użyciem innej niż domyślna reguły możemy zrobić za

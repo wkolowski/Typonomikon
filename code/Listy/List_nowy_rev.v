@@ -286,7 +286,7 @@ Proof.
       2: rewrite length_rev. 1-2: reflexivity.
       rewrite nth_snoc_lt.
         apply IHn', lt_S_n, H.
-        rewrite length_rev. omega.
+        rewrite length_rev. lia.
 Qed.
 (* end hide *)
 
@@ -357,7 +357,7 @@ Proof.
       rewrite (IHt _ (lt_S_n _ _ H)), remove_snoc_lt.
         destruct (remove (length t - S n') (rev t)).
           destruct p. rewrite rev_snoc. 1-2: reflexivity.
-        rewrite length_rev. omega. (* TODO *)
+        rewrite length_rev. lia. (* TODO *)
 Qed.
 (* end hide *)
 

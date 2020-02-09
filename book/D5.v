@@ -8,7 +8,7 @@
 
 (* begin hide *)
 Require Export Recdef.
-Require Export Omega.
+Require Export Lia Arith.
 (* end hide *)
 
 Require Export Bool.
@@ -1738,14 +1738,14 @@ Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct (length t - n) eqn: Heq.
-      assert (n = length t) by omega. rewrite nth_app_r.
+      assert (n = length t) by lia. rewrite nth_app_r.
         rewrite length_rev, <- H0, minus_diag. cbn. reflexivity.
         rewrite length_rev, <- H0. reflexivity.
       rewrite nth_app_l.
         rewrite IHt.
-          f_equal. omega.
-          omega.
-        rewrite length_rev. omega.
+          f_equal. lia.
+          lia.
+        rewrite length_rev. lia.
 Qed.
 (* begin hide *)
 
@@ -3020,11 +3020,11 @@ Proof.
         destruct (splitAt (length t - S n') (rev t)) eqn: Heq.
           destruct p, p. rewrite rev_app. cbn. reflexivity.
           destruct t; cbn in *.
-            omega.
+            lia.
             destruct
               (splitAt_length_lt A (rev t ++ [a]) (length t - n'))
             as [x H'].
-              rewrite length_app, length_rev. cbn. omega.
+              rewrite length_app, length_rev. cbn. lia.
               congruence.
         apply lt_S_n. assumption.
 Qed.
@@ -3146,7 +3146,7 @@ Proof.
     rewrite last_take. apply splitAt_Some_length in H.
     rewrite Min.min_r.
       reflexivity.
-      omega.
+      lia.
 Qed.
 (* end hide *)
 
@@ -3377,11 +3377,11 @@ Proof.
             cbn in H. assumption.
         exists (length hl + m). rewrite <- H, insert_app.
           destruct (Nat.leb_spec (length hl + m) (length hl)).
-            assert (m = 0) by omega. subst.
+            assert (m = 0) by lia. subst.
               rewrite drop_app, drop_length, minus_diag, drop_0, insert_0 in IH.
               rewrite plus_0_r, insert_length, app_snoc_l, <- IH. reflexivity.
             rewrite <- H, drop_app, drop_length, minus_diag, drop_0 in IH.
-              replace (length hl + m - length hl) with m by omega.
+              replace (length hl + m - length hl) with m by lia.
                 rewrite <- IH. reflexivity.
 Qed.
 (* end hide *)
@@ -3790,7 +3790,7 @@ Proof.
           rewrite rev_app. cbn. reflexivity.
           rewrite replace_spec' in Heq.
             inv Heq.
-            rewrite length_rev. unfold lt. omega.
+            rewrite length_rev. unfold lt. lia.
 Qed.
 (* end hide *)
 
@@ -4427,7 +4427,7 @@ Proof.
           destruct p. rewrite rev_app. cbn. reflexivity.
           apply remove_length_lt' in Heq.
             contradiction.
-            rewrite length_rev. omega.
+            rewrite length_rev. lia.
         apply lt_S_n. assumption.
 Qed.
 (* end hide *)
@@ -5718,12 +5718,12 @@ Proof.
       destruct (p h) eqn: Hph; cbn in *.
         apply IHt. intros. destruct t as [| h' t'].
           cbn in H0. inversion H0.
-          destruct (H 1 ltac:(omega)) as (x & H1 & H2); cbn in *.
+          destruct (H 1 ltac:(lia)) as (x & H1 & H2); cbn in *.
             destruct n as [| n']; cbn in *.
               exists h'. inversion H1; subst. split; trivial.
-              destruct (H (S (S n')) ltac:(omega)) as (x' & H1' & H2').
+              destruct (H (S (S n')) ltac:(lia)) as (x' & H1' & H2').
                 cbn in H1'. exists x'. split; trivial.
-        destruct (H 0 ltac:(omega)) as (x & H1 & H2); cbn in *.
+        destruct (H 0 ltac:(lia)) as (x & H1 & H2); cbn in *.
           inversion H1; subst. congruence.
 Qed.
 (* end hide *)
@@ -7232,13 +7232,13 @@ Proof.
       destruct (p h) eqn: Hph.
         destruct t; inversion H1; subst; clear H1; cbn in *.
           reflexivity.
-          specialize (H3 0 h ltac:(omega) eq_refl); cbn in H3. congruence.
+          specialize (H3 0 h ltac:(lia) eq_refl); cbn in H3. congruence.
         destruct t; inversion H1; subst; clear H1; cbn in *.
           congruence.
           destruct (p a) eqn: Hpa.
             destruct t; inversion H0; subst; cbn in *.
               reflexivity.
-              specialize (H3 1 a ltac:(omega) eq_refl). congruence.
+              specialize (H3 1 a ltac:(lia) eq_refl). congruence.
             rewrite IHt.
               rewrite <- minus_n_O. reflexivity.
               assumption.
@@ -7366,13 +7366,13 @@ Proof.
         inv H. exists 0, 0. repeat split; apply le_0_n.
         destruct (findIndex _ (zip ta tb)).
           destruct (IHl _ eq_refl) as (na & nb & H1 & H2 & H3 & H4).
-            rewrite H2. exists 0, (S nb). inv H. repeat split; omega.
+            rewrite H2. exists 0, (S nb). inv H. repeat split; lia.
           inv H.
       destruct (findIndex _ (zip ta tb)).
         destruct (IHl _ eq_refl) as (na & nb & H1 & H2 & H3 & H4).
           rewrite H1, H2. destruct (pb hb).
-            exists (S na), 0. inv H. repeat split; omega.
-            exists (S na), (S nb). inv H. repeat split; omega.
+            exists (S na), 0. inv H. repeat split; lia.
+            exists (S na), (S nb). inv H. repeat split; lia.
         inv H.
 Qed.
 (* end hide *)
@@ -9130,7 +9130,7 @@ Lemma length_span' :
       length e < length l.
 (* begin hide *)
 Proof.
-  intros. apply length_span in H. omega.
+  intros. apply length_span in H. lia.
 Qed.
 (* end hide *)
 
@@ -10235,11 +10235,11 @@ Proof.
         destruct (findIndex p l); cbn in *.
           destruct (intersperse x t); inversion Heq; subst.
             rewrite Hpa in *. destruct (findIndex p t).
-              inversion IHt; cbn. f_equal. omega.
+              inversion IHt; cbn. f_equal. lia.
               inversion IHt.
             rewrite Hpa in *.
               destruct (findIndex p t); inversion IHt.
-                f_equal. omega.
+                f_equal. lia.
           destruct (intersperse x t); inversion Heq; subst;
           rewrite Hpa in *.
             destruct (findIndex p t); inversion IHt. reflexivity.
@@ -10259,8 +10259,8 @@ Proof.
       rewrite <- IHl0, plus_0_r. reflexivity.
       destruct (intersperse x t); inv e0.
     rewrite e0 in IHl0. cbn in IHl0.
-      destruct (p x), (p h), (p h'); rewrite IHl0; try omega.
-        1-4: destruct t; inv e0; cbn; destruct (p a); omega.
+      destruct (p x), (p h), (p h'); rewrite IHl0; try lia.
+        1-4: destruct t; inv e0; cbn; destruct (p a); lia.
 Qed.
 (* end hide *)
 
@@ -11033,10 +11033,10 @@ Proof.
           inversion H2; subst.
             destruct t; cbn in *.
               inversion Heq.
-              right. split; trivial. omega.
+              right. split; trivial. lia.
             destruct (IHt H3).
               left. right. assumption.
-              destruct H0. right. split; [assumption | omega].
+              destruct H0. right. split; [assumption | lia].
     destruct 1.
       induction H; cbn.
         destruct (intersperse y l); left.
@@ -11044,7 +11044,7 @@ Proof.
           inversion IHelem.
           do 2 right. assumption.
       destruct H; subst. destruct l as [| h [| h' t]]; cbn.
-        1-2: cbn in H0; omega.
+        1-2: cbn in H0; lia.
         destruct (intersperse y t); cbn.
           right. left.
           right. left.
@@ -12288,7 +12288,7 @@ Proof.
   split.
     intro. apply Dup_spec in H. destruct H as (x & l1 & l2 & l3 & H); subst.
       exists x, (length l1), (length l1 + length l2 + 1). repeat split.
-        omega.
+        lia.
         rewrite nth_app_r.
           rewrite <- minus_n_n. cbn. reflexivity.
           apply le_n.
@@ -12296,7 +12296,7 @@ Proof.
           rewrite <- app_cons_l, nth_app_r.
             replace (nth _ (x :: l3)) with (nth 0 (x :: l3)).
               cbn. reflexivity.
-              f_equal. 1-3: cbn; omega.
+              f_equal. 1-3: cbn; lia.
     destruct 1 as (x & n1 & n2 & H1 & H2 & H3). revert x n1 n2 H1 H2 H3.
     induction l as [| h t]; cbn; intros.
       inv H2.
@@ -13961,7 +13961,7 @@ Proof.
             apply le_n_S, le_n_S, le_0_n.
           apply IHForall. intro. apply H0. destruct t; cbn in *.
             inv Heq.
-            omega.
+            lia.
 Qed.
 (* end hide *)
 
@@ -14131,7 +14131,7 @@ Proof.
       constructor.
       inversion H; subst; clear H.
         constructor; auto.
-        apply AtLeast_length in H2. omega.
+        apply AtLeast_length in H2. lia.
     induction 1; cbn; constructor; assumption.
 Qed.
 (* end hide *)
@@ -14387,10 +14387,10 @@ Proof.
         exists 0, 0, 0. repeat constructor.
         destruct (IHt _ _ _ _ Heq _ H4) as
                  (m1 & mx & m2 & IH1 & IH2 & IH3 & IH4).
-          exists (S m1), mx, m2. firstorder. constructor; assumption.
+          exists (S m1), mx, m2. subst. firstorder. constructor; assumption.
         destruct (IHt _ _ _ _ Heq _ H2) as
                  (m1 & mx & m2 & IH1 & IH2 & IH3 & IH4).
-          exists m1, mx, m2. firstorder. apply AL_skip. assumption.
+          exists m1, mx, m2. subst. firstorder. apply AL_skip. assumption.
       inv H.
 Qed.
 (* end hide *)
@@ -14428,7 +14428,7 @@ Proof.
         rewrite <- minus_n_O. constructor. assumption.
         apply AtLeast_le with m.
           constructor. assumption.
-          omega.
+          lia.
       destruct (replace t n' x) eqn: Heq; inv H. inv H0; cbn.
         constructor.
         rewrite <- minus_n_O. specialize (IHt _ _ _ _ Heq H4).
@@ -14473,7 +14473,7 @@ Proof.
         rewrite <- minus_n_O. constructor. assumption.
         apply AtLeast_le with m.
           constructor. assumption.
-          omega.
+          lia.
       destruct (replace t n' x) eqn: Heq; inv H. inv H0; cbn.
         constructor.
         rewrite <- minus_n_O. specialize (IHt _ _ _ _ Heq H4).
@@ -14965,7 +14965,7 @@ Proof.
     left. reflexivity.
     right. inversion H; subst; clear H.
       assumption.
-      apply Exactly_length in H4. rewrite length_replicate in H4. omega.
+      apply Exactly_length in H4. rewrite length_replicate in H4. lia.
 Qed.
 (* end hide *)
 
@@ -15392,7 +15392,7 @@ Lemma Sublist_cons_l :
   forall (A : Type) (x : A) (l : list A), ~ Sublist (x :: l) l.
 (* begin hide *)
 Proof.
-  repeat intro. apply Sublist_length in H. cbn in H. omega.
+  repeat intro. apply Sublist_length in H. cbn in H. lia.
 Qed.
 (* end hide *)
 
@@ -15423,7 +15423,7 @@ Lemma Sublist_irrefl :
   forall (A : Type) (l : list A), ~ Sublist l l.
 (* begin hide *)
 Proof.
-  repeat intro. apply Sublist_length in H. omega.
+  repeat intro. apply Sublist_length in H. lia.
 Qed.
 (* end hide *)
 
@@ -15435,7 +15435,7 @@ Proof.
   repeat intro.
   apply Sublist_length in H.
   apply Sublist_length in H0.
-  omega.
+  lia.
 Qed.
 (* end hide *)
 
@@ -15692,15 +15692,15 @@ Proof.
       rewrite plus_0_r. cbn. exists m. split; [assumption | reflexivity].
       destruct m as [| m'].
         cbn. exists 0. split.
-          omega.
+          lia.
           rewrite drop_drop, plus_comm. cbn. reflexivity.
         apply lt_S_n in H0. apply lt_S_n in H1.
           destruct (IHt _ _ H0 H1) as (k & Hk1 & Hk2).
           exists (S k). split.
             Focus 2. replace (drop (S m' + S n') t) with
                              (drop 1 (drop (S m' + n') t)).
-              rewrite Hk2. rewrite ?drop_drop. f_equal. omega.
-              rewrite drop_drop. f_equal. omega.
+              rewrite Hk2. rewrite ?drop_drop. f_equal. lia.
+              rewrite drop_drop. f_equal. lia.
             destruct (length t - n') eqn: Hlt.
               inv Hk1.
               destruct n as [| n''].
@@ -16106,7 +16106,7 @@ Proof.
   rewrite length_app, length_rev, plus_comm in H.
   destruct l3.
     rewrite app_nil_r. reflexivity.
-    cbn in H. omega.
+    cbn in H. lia.
 Qed.
 (* end hide *)
 
@@ -16120,7 +16120,7 @@ Proof.
   rewrite length_app, length_rev, plus_comm in H.
   destruct l3.
     rewrite app_nil_r. reflexivity.
-    cbn in H. omega.
+    cbn in H. lia.
 Qed.
 (* end hide *)
 
@@ -16751,7 +16751,7 @@ Proof.
   apply Suffix_spec in H. destruct H as (l1' & H1).
   apply Suffix_spec in H0. destruct H0 as (l2' & H2).
   subst. apply (f_equal length) in H2. rewrite ?length_app in H2.
-  destruct l2', l1'; cbn in H2; try omega. cbn. reflexivity.
+  destruct l2', l1'; cbn in H2; try lia. cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -16933,7 +16933,7 @@ Proof.
       destruct H0 as (l21 & l22 & H1 & H2). subst.
       apply Subseq_length in H.
       apply Subseq_length in H2.
-      rewrite length_app in H. cbn in H. omega.
+      rewrite length_app in H. cbn in H. lia.
 Qed.
 (* end hide *)
 
@@ -19668,7 +19668,7 @@ Proof.
       destruct (length l1 =? length l2) eqn: Heq.
         apply Nat.eqb_eq in Heq. assumption.
         rewrite Nat.eqb_neq in Heq. apply Permutation_length in H.
-          rewrite ?length_intersperse in H. omega.
+          rewrite ?length_intersperse in H. lia.
       rewrite ?Permutation_intersperse_replicate, H0 in H.
         apply Permutation_app_inv_l in H. assumption.
     assert (length l1 = length l2).
@@ -19832,7 +19832,7 @@ Proof.
                     firstorder.
                 rewrite NoDup_app_comm in H7. inv H7.
                   rewrite NoDup_app_comm. assumption.
-                cbn in *. rewrite length_app in *. cbn in *. omega.
+                cbn in *. rewrite length_app in *. cbn in *. lia.
                 unfold Incl. intros.
                   specialize (H3 x ltac:(right; assumption)).
                     repeat (rewrite ?elem_cons', ?elem_app in *).
@@ -20156,17 +20156,17 @@ Proof.
           rewrite drop_snoc_le, take_snoc_le; try assumption.
             exists (S n). cbn. rewrite app_snoc_l. split.
               rewrite <- (@app_take_drop _ l2 n) in l.
-                rewrite length_app in *. cbn. omega.
+                rewrite length_app in *. cbn. lia.
               reflexivity.
           assert (exists k : nat, n = S (length l2 + k)).
-            apply lt_plus_S. omega.
+            apply lt_plus_S. lia.
             destruct H0 as (k & Hk). subst. rewrite drop_length'.
               rewrite take_length'.
                 exists 1. cbn. rewrite drop_0, take_0. split.
-                  rewrite length_snoc. omega.
+                  rewrite length_snoc. lia.
                   apply snoc_app_singl.
-                rewrite length_snoc. omega.
-              rewrite length_snoc. omega.
+                rewrite length_snoc. lia.
+              rewrite length_snoc. lia.
     destruct 1 as (n & Hle & H); subst.
       revert l2 Hle. induction n as [| n']; intros.
         rewrite drop_0, take_0, app_nil_r. constructor.
@@ -20179,9 +20179,9 @@ Proof.
             specialize (IHn' (snoc h t)). rewrite drop_snoc_le in IHn'.
               rewrite take_snoc_le in IHn'.
                 constructor. rewrite app_snoc_l in IHn'. cbn in Hle.
-                  apply IHn'. omega.
-                omega.
-              omega.
+                  apply IHn'. lia.
+                lia.
+              lia.
 Qed.
 (* end hide *)
 
@@ -20279,7 +20279,7 @@ Proof.
       rewrite drop_0, take_drop, <- le_plus_minus, take_length.
       rewrite Nat.min_0_r, take_0, app_nil_r, app_take_drop. split.
         2: reflexivity.
-        all: omega.
+        all: lia.
 Qed.
 (* end hide *)
 
@@ -20425,7 +20425,7 @@ Proof.
           exists 0. rewrite e, nth_snoc_length_eq in IH. assumption.
           rewrite nth_length_ge in IH.
             inv IH.
-            rewrite length_snoc. omega.
+            rewrite length_snoc. lia.
 Qed.
 (* end hide *)
 
@@ -21012,14 +21012,14 @@ Proof.
     destruct IHn' as (l & IH1 & IH2).
       exists (x :: l ++ [x]). split.
         constructor. assumption.
-        cbn. rewrite length_app. cbn. omega.
+        cbn. rewrite length_app. cbn. lia.
 Restart.
   induction n as [| | n'] using nat_ind_2.
     exists []. split; constructor.
     exists [x]. split; constructor.
     destruct IHn' as (l & IH1 & IH2). exists (x :: l ++ [x]). split.
       constructor. assumption.
-      cbn. rewrite length_app. cbn. omega.
+      cbn. rewrite length_app. cbn. lia.
 Qed.
 (* end hide *)
 
@@ -21087,7 +21087,7 @@ Proof.
   unfold well_founded. induction a as [| h t]; cbn.
     constructor. intros. inv H.
     inv IHt. constructor. intros. constructor. intros. apply H.
-      cbn in *. unfold lengthOrder in *. cbn in *. omega.
+      cbn in *. unfold lengthOrder in *. cbn in *. lia.
 Qed.
 (* end hide *)
 

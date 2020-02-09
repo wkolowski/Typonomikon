@@ -7,7 +7,7 @@
     - teoria relacji *)
 
 Require Import D5.
-Require Import Omega.
+Require Import Lia.
 Require Import Nat.
 
 (** Zapoznaliśmy się już z rekursją strukturalną, dzięki której możemy definiować
@@ -256,11 +256,11 @@ Proof.
   exists (c1 * c2), (max n1 n2). intros.
   destruct (Max.max_spec n1 n2).
     destruct H0. apply Le.le_trans with (c1 * g n').
-      apply H1. omega.
-      rewrite <- Mult.mult_assoc. apply Mult.mult_le_compat_l, H2. omega.
+      apply H1. lia.
+      rewrite <- Mult.mult_assoc. apply Mult.mult_le_compat_l, H2. lia.
     destruct H0. apply Le.le_trans with (c1 * g n').
-      apply H1. omega.
-      rewrite <- Mult.mult_assoc. apply Mult.mult_le_compat_l, H2. omega.
+      apply H1. lia.
+      rewrite <- Mult.mult_assoc. apply Mult.mult_le_compat_l, H2. lia.
 Qed.
 (* end hide *)
 
@@ -270,8 +270,8 @@ Lemma O_asym :
 Proof.
   unfold O. exists (fun _ => 0), (fun n => n). split.
     exists 0, 0. intros. cbn. trivial.
-    intro. destruct H as [c [n H]]. assert (n <= S n) by omega.
-      specialize (H (S n) H0). omega.
+    intro. destruct H as [c [n H]]. assert (n <= S n) by lia.
+      specialize (H (S n) H0). lia.
 Qed.
 (* end hide *)
 
@@ -280,8 +280,8 @@ Lemma O_not_weak_antisym :
 (* begin hide *)
 Proof.
   unfold O. exists (fun _ => 42), (fun _ => 43). repeat split.
-    exists 1, 0. intros. omega.
-    exists 2, 0. intros. omega.
+    exists 1, 0. intros. lia.
+    exists 2, 0. intros. lia.
     intro. cut (42 = 43).
       inversion 1.
       change 42 with ((fun _ => 42) 0) at 1. change 43 with ((fun _ => 43) 0).
@@ -363,7 +363,7 @@ Proof.
               trivial.
             assumption.
           specialize (H2 _ H0). destruct c2; cbn in *.
-            omega.
+            lia.
             assert (g n' <= f n').
 Abort.
 (* end hide *)
@@ -471,7 +471,7 @@ Qed.
 Theorem O_T_n : O T (fun n => n).
 (* begin hide *)
 Proof.
-  red. exists 2, 1. intros. rewrite T_sum. omega.
+  red. exists 2, 1. intros. rewrite T_sum. lia.
 Qed.
 (* end hide *)
 
@@ -748,7 +748,7 @@ Proof.
   induction n as [| n']; cbn; intros.
     inversion H; subst; clear H. constructor.
     destruct k as [| k']; cbn.
-      constructor. apply IHn'. omega.
+      constructor. apply IHn'. lia.
       inversion H; subst; clear H.
         constructor.
         right. apply IHn'. assumption.
