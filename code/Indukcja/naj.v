@@ -17,62 +17,31 @@
 
     Żeby móc patrzeć z tej perspektywy musimy najpierw ustalić, czym
     jest kształt. Uwaga: "kształt" nie jest pojęciem technicznym i nie
-    me ścisłej definicji - używam tego słowa, żeby ułatwić pracę twojej
+    ma ścisłej definicji - używam tego słowa, żeby ułatwić pracę twojej
     wyobraźni.
 
-    Na nasze potrzeby kształtem nazwiemy po prostu rodzinę typów
-    indeksowaną typami, czyli coś typu [Type -> Type]. Przykłady:
-    - [F = fun A : Type => unit + A]
-    - [G = fun A : Type => unit + nat * A]
-    - [H = fun _ : Type => B * C]
+    Czym jest kształt termu? Najprościej rzecz ujmując, jest to drzewko,
+    którego korzeniem jest konstrukt językowy (konstruktor, uprzednio
+    zdefiniowana funkcja lub stała, dopasowanie do wzorca, [let], lub
+    cokolwiek innego) użyty do stworzenia termu, a poddrzewa to argumenty
+    tego konstruktu.
 
-    Uwaga: zdefiniujmy naprędce pewną notację, która przyda nam się
-    już za sekundkę. Jeżeli [f : A -> X] oraz [g : B -> X], to
-    [[f, g] : A + B -> X] jest dane przez [[f, g] (inl a) = f a]
-    oraz [[f, g] (inr b) = g b].
+    Dla przykładu, termy typu [nat] mogą mieć takie kształty:
+    - [0] - stała
+    - [S (S (S 0))] - konstruktor
+    - [plus 0 5], [mult 0 5] - uprzednio zdefiniowana funkcja
+    - [if andb false false then 42 else S 42] - [if]
+    - [match 0 with | 0 => 666 | S _ => 123] - dopasowanie do wzorca
+    - [length [true; false]] - uprzednio zdefiniowana funkcja
+    - [let x := Prop in 16] - [let]
+    - ... i wiele, wiele innych!
 
-    Realizacją danego kształtu [F : Type -> Type] nazwiemy typ
-    [X : Type] wraz z funkcją [f : F X -> X]. Przykłady:
-    - dla [F]: [nat] wraz z funkcją [[fun _ => 0], S]
-    - dla [G]: [nat] wraz z funkcją [[fun _ => 42], plus], gdzie
-      trochę oszukujemy i myślimy, że [plus] ma typ [nat * nat -> nat]
-    - dla [H]: [B * C] wraz z funkcją [fun x : B * C => x] *)
-
-(** Resztki starego podejścia:
-
-    Rozważmy bardzo konkretny przykład, czyli typ [list nat]. Jak jest
-    struktura tego typu? Co to w ogóle jest struktura typu? Lista
-    elementów typu [A] może być albo [nil]em, albo być postaci [cons h t]
-    dla [h : A] i [t : list A]. Tak więc możemy powiedzieć, że strukturą
-    danego typu induktywnego są jego konstruktory. Wobec tego struktura
-    typu [list A] to
-
-    [nil : list nat]
-
-    oraz
-
-    [cons : nat -> list nat -> list nat]
-
-    Możemy niezbyt spostrzegawczo powiedzieć, że typ [list nat] ma
-    strukturę typu [list nat]. Fajnie, ale czy są jakieś inne typy,
-    niekoniecznie induktywne, które mają taką samą strukturę jak
-    [list nat]? I co mogłoby to w ogóle znaczyć, że typ ma jakąś
-    strukturę? Nie wszystkie typy są przecież induktywne, a zatem
-    nie wszystkie mają konstruktory.
-
-    Dla dowolnego typu [X] za jego strukturę będziemy uznawać jakieś
-    funkcje, o których w danej chwili wygodnie nam będzie myśleć jak
-    o jego strukturze.
-
-    Dla ukonkretnienia sytuacji niech naszym [X]em będzie typ [nat].
-    Czy [nat] ma strukturę typu [list nat]? Intuicyjnie mogłoby się
-    wydawać, że nie, wszakże konstruktory typu [nat] wyglądają inaczej
-    niż dla [list nat]. Jednak szukanymi przez nas funkcjami, które
-    dadzą [nat] strukturę [list nat] nie muszą być konstruktory - mogą
-    to być dowolne inne funkcje. I faktycznie, są takie:
-
-    [0 : nat]
-
-    [plus : nat -> nat -> nat]
+    Istnienie tak wielu kształtów jest dość problematyczne, więc
+    musimy nieco uprościć sobie życie. Po pierwsze zauważmy, że
+    każdy konstrukt językowy możemy zawinąć w funkcję, a zatem
+    wszystkie powyższe "kształty" sprowadzają się tak naprawdę do
+    funkcji o przeciwdziedzinie [nat], zaaplikowanych do jakichś
+    argumentów (np. [0] to funkcja [f : unit -> nat :=] zdefiniowana
+    jako [f _ := 0], zaaplikowana do [tt : unit].
 
 *)
