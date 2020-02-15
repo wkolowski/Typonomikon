@@ -12,9 +12,10 @@
     łańcuchową, która będzie przewracać kostki w nieskończoność.
 
     Nie jest to jednak jedyny sposób patrzenia na typy induktywne. W tym
-    podrozdziale spróbuję przedstawić inny, w którym typ induktywny to
-    najlepszy typ do robienia termów o pewnym kształcie, a rekursja to
-    zmiana kształtu z lepszego na gorszy, ale bardziej użyteczny.
+    podrozdziale spróbuję przedstawić inny sposób patrzenia, w którym typ
+    induktywny to najlepszy typ do robienia termów o pewnym kształcie, a
+    rekursja to zmiana kształtu z lepszego na gorszy, ale bardziej
+    użyteczny.
 
     Żeby móc patrzeć z tej perspektywy musimy najpierw ustalić, czym
     jest kształt. Uwaga: "kształt" nie jest pojęciem technicznym i nie
@@ -146,4 +147,119 @@ End wut.
     Widzimy teraz, że [(0, plus)], [(1, mult)], [(true, andb)] oraz
     [(false, orb)] nie są kształtami, lecz realizacjami kształtu
     [F := fun X : Type => 1 + X * X].
-    
+
+    Pora powoli zmierzać ku konkluzji. Na początku powiedzieliśmy, że
+    typ induktywny to najlepszy typ do robienia termów o pewnym kształcie.
+    Jakim kształcie, zapytasz pewnie, i jak objawia się owa najlepszość?
+    Czas się tego dowiedzieć.
+
+    Definiując typ induktywny podajemy jego konstruktory, a całą resztę,
+    czyli możliwość definiowania przez dopasowanie do wzorca i rekursję,
+    reguły eliminacji etc. dostajemy za darmo. Nie dziwota więc, że to
+    właśnie konstruktory są realizacją kształtu, którego dany typ jest
+    najlepszym przykładem.
+
+    Napiszmy to jeszcze raz, dla jasności: typ induktywny to najlepszy
+    sposobem robienia termów o kształcie realizowanym przez jego
+    konstruktory.
+
+    W naszym [nat]owym przykładzie oznacza to, że [nat] jest najlepszym
+    sposobem robienia termów o kształcie [F := fun X => unit + X], czyli
+    termów w kształcie "sznurków" (konstruktor [S] to taki supełek na
+    sznurku, a [0] reprezentuje koniec sznurka). Są też inne realizacje
+    tego sznurkowego kształtu, jak np. stała [42 : nat] i funkcja
+    [plus 8 : nat -> nat] albo stała [true : bool] i funkcja
+    [negb : bool -> bool], albo nawet zdanie [False : Prop] oraz
+    negacja [not : Prop -> Prop], ale żadna z nich nie jest najlepsza.
+
+    Jak objawia się najlepszość typu induktywnego? Ano, dwojako:
+    - po pierwsze, objawia się w postaci rekursora, który bierze jako
+      argument inną realizację danego kształtu i przerabia term typu
+      induktywnego (czyli przedstawiciela najlepszej reprezentacji)
+      na term w tej innej realizacji
+    - po drugie, rekursor jest unikalny
+
+    Żeby nie być gołosłownym, zobaczmy przykłady: *)
+
+Fixpoint nat_rec' {X : Type} (z : X) (s : X -> X) (n : nat) : X :=
+match n with
+    | 0 => z
+    | S n' => s (nat_rec' z s n')
+end.
+
+(** Tak wygląda rekursor dla liczb naturalnych. Widzimy, że "zmiana
+    realizacji" termu o danym kształcie intuicyjnie polega na tym, że
+    bierzemy term i zamieniamy [0] na [z], a [S] na [s], czyli dla
+    przykładu liczba [4] (czyli [S (S (S (S 0)))]) zostanie zamieniona
+    na [s (s (s (s z)))]. Jeszcze konkretniejszy przykład:
+    [nat_rec' true negb] zamieni liczbę [S (S (S (S 0)))] w
+    [negb (negb (negb (negb true)))]. Oczywiście term ten następnie
+    oblicza się do [true]. *)
+
+(** **** Ćwiczenie *)
+
+(** Mamy [nat_rec' true negb : nat -> bool], a zatem zmiana realizacji
+    sznurka z [(0, S)] na [(true, negb)] odpowiada sprawdzeniu jakiejś
+    właściwości liczb naturalnych. Jakiej?
+
+    Pisząc wprost: zdefiniuj bezpośrednio przez rekursję taką funkcję
+    [f : nat -> bool], że [forall n : nat, nat_rec' true negb n = f n]
+    (oczywiście musisz udowodnić, że wszystko się zgadza). *)
+
+(* begin hide *)
+
+Fixpoint even (n : nat) : bool :=
+match n with
+    | 0 => true
+    | S n' => negb (even n')
+end.
+
+Lemma solution :
+  forall n : nat,
+    nat_rec' true negb n = even n.
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    rewrite IHn'. reflexivity.
+Qed.
+
+(* end hide *)
+
+Module wuut.
+
+Axioms
+  (N : Type)
+  (Z : N)
+  (S : N -> N)
+  (N_rec :
+    forall {X : Type} (z : X) (s : X -> X), N -> X)
+  (N_rec_Z :
+    forall {X : Type} (z : X) (s : X -> X),
+      N_rec z s Z = z)
+  (N_rec_S :
+    forall {X : Type} (z : X) (s : X -> X) (n : N),
+      N_rec z s (S n) = s (N_rec z s n))
+  (N_uniq :
+    forall (f : forall {X : Type} (z : X) (s : X -> X), N -> X),
+      (forall {X : Type} (z : X) (s : X -> X),
+        f z s Z = z) ->
+      (forall {X : Type} (z : X) (s : X -> X) (n : N),
+        f z s (S n) = s (f z s n)) ->
+      @f = @N_rec)
+  (N_ind :
+    forall
+      {P : N -> Type}
+      (z : P Z) (s : forall n : N, P n -> P (S n)),
+        forall n : N, P n)
+  (N_ind_Z :
+    forall
+      {P : N -> Type}
+      (z : P Z) (s : forall n : N, P n -> P (S n)),
+        N_ind z s Z = z)
+  (N_ind_S :
+    forall
+      {P : N -> Type}
+      (z : P Z) (s : forall n : N, P n -> P (S n))
+      (n : N),
+        N_ind z s (S n) = s n (N_ind z s n)).
+
