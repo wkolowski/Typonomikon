@@ -680,7 +680,111 @@ match l with
     | cons h t => c h t (list_ind' n c t)
 end.
 
-(** Włala, mamy regułę indukcji. *)
+(** Włala, mamy regułę indukcji.
+
+    Na sam koniec wypadałoby jeszcze opisać drobne detale dotyczące
+    najlepszości. Czy skoro [nat] jest najlepszym typem do robienia
+    termów w kształcie sznurków, to znaczy, że inne realizacje tego
+    kształtu są gorsze? I w jaki sposób objawia się ich gorszość?
+
+    Odpowiedź na pierwsze pytanie jest skomplikowańsza niż bym chciał:
+    [nat] jest najlepsze, ale inne typy też mogą być najlepsze.
+    Rozważmy poniższy typ: *)
+
+Inductive nat' : Type :=
+    | Z' : nat'
+    | S' : nat' -> nat'.
+
+(** Jako, że [nat'] jest typem induktywnym, to jest najlepszym sposobem
+    robienia termów w kształcie [F := fun X => unit + X]. Ale jak to?
+    Przecież najlepsze dla tego kształtu jest [nat]! Tak, to prawda.
+    Czy zatem [nat'] jest gorsze? Nie: oba te typy, [nat] i [nat'],
+    są najlepsze.
+
+    Wynika stąd ciekawa konkluzja: [nat'] to w zasadzie to samo co
+    [nat], tylko inaczej nazwane. Fakt ten łatwo jest udowodnić:
+    mając [nat]owy sznurek możemy za pomocą [nat_rec'] przerobić
+    go na [nat']owy sznurek. Podobnie [nat']owy sznurek można
+    za pomocą [nat'_rec'] przerobić na [nat]owy sznurek. Widać na
+    oko, że obie te funkcje są swoimi odwrotnościami, a zatem typy
+    [nat] i [nat'] są izomorficzne, czyli mają takie same elementy
+    i takie same właściwości. *)
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj funkcje [f : nat -> nat'] i [g : nat -> nat'],
+    które spełniają
+    [forall n : nat, g (f n) = n] oraz
+    [forall n : nat', f (g n) = n]. Nie musisz w tym celu używać
+    [nat_rec'] ani [nat'_rec'] (no chyba, że chcesz). *)
+
+(* begin hide *)
+Module ex.
+
+Fixpoint f (n : nat) : nat' :=
+match n with
+    | 0 => Z'
+    | S n' => S' (f n')
+end.
+
+Fixpoint g (n : nat') : nat :=
+match n with
+    | Z' => 0
+    | S' n' => S (g n')
+end.
+
+Lemma fg :
+  forall n : nat, g (f n) = n.
+Proof.
+  induction n; cbn; rewrite ?IHn; reflexivity.
+Qed.
+
+Lemma gf :
+  forall n : nat', f (g n) = n.
+Proof.
+  induction n; cbn; rewrite ?IHn; reflexivity.
+Qed.
+
+End ex.
+(* end hide *)
+
+(** Drugie pytanie brzmiało: w czym objawia się brak najlepszości innych
+    realizacji danego kształtu? Odpowiedź jest prosta: skoro najlepszość
+    to unikalny rekursor, to brak najlepszości oznacza brak unikalnego
+    rekursora. Przeżyjmy to na przykładzie:
+
+    Używając rekursora dla [nat] możemy podmienić [S] na negację, a
+    [0] na [false], i otrzymać dzięki temu funkcję sprawdzającą, czy
+    długość sznurka (czyli liczby naturalnej) jest nieparzysta. Czy
+    dla innych realizacji tego samego kształtu też możemy tak zrobić?
+
+    Nie zawsze. Rozważmy typ [unit] wraz ze stałą [tt] i funkcją
+    [f := fun _ => tt], które realizują ten sam kształt co [nat],
+    [0] i [S]. Zauważmy, że [tt = f tt], a zatem różne sznurki
+    obliczają się do tej samej wartości.
+
+    Gdybyśmy mieli dla tej realizacji rekursor podmieniający [f] na
+    jakąś funkcję [g], zaś [tt] na stałą [x], to niechybnie doszłoby
+    do katastrofy. Dla przykładu, gdybyśmy próbowali tak jak wyżej
+    sprawdzić, czy długość sznurka jest nieparzysta, zamieniając [tt]
+    na [false], zaś [f] na [negb], to wynikiem zamiany dla [tt] byłoby
+    [false], zaś dla [f tt] byłoby to [negb false = true]. To jednak
+    prowadzi do sprzeczności, bo [tt = f tt], a zatem wyniki podmiany
+    muszą być równe.
+
+    Oczywiście [unit], [tt] i [f] to bardzo patologiczna realizacja
+    sznurkowego kształtu. Czy są jakieś mniej patologiczne realizacje,
+    które umożliwiają podmiankę, która pozwala sprawdzić nieparzystość
+    długości sznurka?
+
+    Tak. Przykładem takiej realizacji jest... [bool], [false] i [negb]
+    (a rzeczona podmianka, czyli rekursor, to w tym przypadku po prostu
+    identyczność).
+
+    Czy znaczy to, że [bool], [false] i [negb] to najlepsza realizacja
+    sznurkowego kształtu? Nie - da się znaleźć całą masę podmianek,
+    które [nat] umożliwia, a [bool], [false] i [negb] - nie (joł, sprawdź
+    to - wcale nie kłamię). *)
 
 Module wuut.
 
@@ -723,50 +827,15 @@ Proof.
       intros m H. rewrite HS, HS', H. reflexivity.
 Qed.
 
+Unset Universe Checking.
+
 Lemma N_rec_ind :
   N_rec -> N_ind.
 Proof.
   unfold N_rec.
   intros N_rec P z s.
-  esplit. Unshelve.
-    Focus 2. intro n. specialize (N_rec {m : N & (P m * m = n)%type}).
-  edestruct (N_rec {n : N & P n}) as (f & HZ & HS). Unshelve.
-    Focus 2. exists Z. assumption.
-    Focus 2. destruct 1 as [n p]. exists (S n). apply s. assumption.
-    exists (fun n : N => projT2 (f n)).
 Abort.
 
-Definition N_rec_Z : Type :=
-  forall {X : Type} (z : X) (s : X -> X),
-    N_rec z s Z = z.
-  (N_rec_S :
-    forall {X : Type} (z : X) (s : X -> X) (n : N),
-      N_rec z s (S n) = s (N_rec z s n))
-  (N_uniq :
-    forall (f : forall {X : Type} (z : X) (s : X -> X), N -> X),
-      (forall {X : Type} (z : X) (s : X -> X),
-        f z s Z = z) ->
-      (forall {X : Type} (z : X) (s : X -> X) (n : N),
-        f z s (S n) = s (f z s n)) ->
-      @f = @N_rec)
-  (N_ind :
-    forall
-      {P : N -> Type}
-      (z : P Z) (s : forall n : N, P n -> P (S n)),
-        forall n : N, P n)
-  (N_ind_Z :
-    forall
-      {P : N -> Type}
-      (z : P Z) (s : forall n : N, P n -> P (S n)),
-        N_ind z s Z = z)
-  (N_ind_S :
-    forall
-      {P : N -> Type}
-      (z : P Z) (s : forall n : N, P n -> P (S n))
-      (n : N),
-        N_ind z s (S n) = s n (N_ind z s n)).
-
-Goal N_ind_S.
 End wuut.
 
 (** * Reguły eliminacji (TODO) *)

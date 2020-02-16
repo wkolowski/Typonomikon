@@ -1,12 +1,8 @@
-1. Wywalić taktykę omega (zdeprekowana).
-
-2. Uzupełnić książkę o rozważania nad apartness (pol. separacja).
-3. Kwestia parametryczności: lam X. lam nil. lam cons. cons X nil - egzotyczna lista
+0. Dodać rozdział o stylu, wcięciach, komentowaniu etc. Patrz tu: https://www.cs.princeton.edu/courses/archive/fall19/cos326/style.php#1
 
 Rekursja:
 1. Rekursja prymitywna.
 2. Rekursja wyższego rzędu, tzn. nie w pełni zaaplikowane wywołania rekurencyjne.
-3. Typy induktywne jako najlepsze typy o pewnej strukturze (np. lista to najlepszy typ o strukturze listy).
 
 Rekursja ogólna:
 2. Rekursja przez iterację.
@@ -15,7 +11,7 @@ Rekursja ogólna:
 Indukcja:
 1. W nowym ujęciu podrozdział o regułach indukcyjnych ma być ściśle powiązany z wprowadzeniem rekursji strukturalnej (tzn. nie-prymitywnej).
 2. Argumenty indukcyjne pierwszego i wyższego rzędu.
-3. Opisać sposoby indeksowania drzew: żeby uzyskać z typu typ jego indeksów wystarczy wymazać argumenty nierekurencyjne.
+3. Opisać sposoby indeksowania drzew: żeby uzyskać z typu typ jego indeksów wystarczy wymazać argumenty nierekurencyjne (albo wstawić za nie unit).
 4. Opisać zippery (czyli różniczkowanie typów).
 
 Ćwiczenia:
@@ -34,7 +30,7 @@ Listy:
 1. Opisać na przykładzie list różnice między teorią typów, a hardkorową matematyką konstruktywną opartą na relacjach separacji (apartness).
 2. Dokończyć prace nad funkcjami znajdującymi wszystkie struktury danego rodzaju (permutacje, cykle, podciągi, palindromy etc.).
 3. Dokończyć prace nad różnymi alternatywnymi definicjami permutacji.
-4. Napisać podrozdział poświęcony temu, czy definiować predykaty przez rekursję czy przez indukcję. Użyć jako przykładu takich predykatów jak elem, Exists, Forall, Exactly.
+4. Napisać podrozdział poświęcony temu, czy definiować predykaty przez rekursję czy przez indukcję. Użyć jako przykładu takich predykatów jak elem, Exists, Forall, Exactly. Jak to się ma do rozstrzygalności.
 5. Dokończyć prace nad resztą rzeczy z folderu List/.
 
 Funkcje:
@@ -51,12 +47,14 @@ Inne:
 18. Opisać taktyki do radzenia sobie z typami zależnymi.
 19. Opisać: silnia, współczynniki dwumianowe, sumy szeregów, charakteryzowanie wzorów rekurencyjnych.
 22. Opisać exists!
-26. Odkłamać kwestię polimorfizmu, najlepiej przy okazji rozdziału o programowaniu generycznym.
+26. Odkłamać kwestię polimorfizmu najlepiej przy okazji rozdziału o programowaniu generycznym.
+26ipół. Kwestia parametryczności: lam X. lam nil. lam cons. cons X nil - egzotyczna lista
 27. Twierdzenie: można zanurzyć liczby naturalne w liczby konaturalne, ale nie można tego zanurzenia odwrócić.
 
 Sugestie i problemy z koła:
 1. Opisać dokładniej definiowanie przez dowód.
-2. Nie trzeba specjalizować hipotezy, żeby przepisać
-3. Być może coś więcej o równości (i jej alternatywnej definicji?)
-4. Napisać bardziej wprost o deklarowaniu hipotez
-5. Ulepszyć ściągę z taktykami i komendami
+2. Nie trzeba specjalizować hipotezy, żeby przepisać.
+3. Być może coś więcej o równości (i jej alternatywnej definicji?).
+4. Napisać bardziej wprost o deklarowaniu hipotez.
+5. Ulepszyć ściągę z taktykami i komendami.
+6. Ludzie po czasie zapominają składni.
