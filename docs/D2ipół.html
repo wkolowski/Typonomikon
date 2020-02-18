@@ -631,7 +631,7 @@ Tym razem Coq widzi, że <span class="inlinecode"><span class="id" title="var">S
 
 </li>
 <li> po drugie, rekursor jest unikalny, czyli powyższa podmiana
-      realizacji może zostać zrealizowana na dokładnie jeden sposób
+      realizacji odbywa się w jedyny słuszny sposób
 
 </li>
 </ul>
@@ -812,9 +812,12 @@ Oczywiście musimy też dostosować typy argumentów. Może to prowadzić
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">list_ind'</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">P</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>}<br/>
-&nbsp;&nbsp;(<span class="id" title="var">n</span> : <span class="id" title="var">P</span> <span class="id" title="var">nil</span>) (<span class="id" title="var">c</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">P</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>))<br/>
-&nbsp;&nbsp;(<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">P</span> <span class="id" title="var">l</span> :=<br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;{<span class="id" title="var">P</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>}<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> : <span class="id" title="var">P</span> <span class="id" title="var">nil</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">c</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">P</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">P</span> <span class="id" title="var">l</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">n</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">c</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> (<span class="id" title="var">list_ind'</span> <span class="id" title="var">n</span> <span class="id" title="var">c</span> <span class="id" title="var">t</span>)<br/>
@@ -903,7 +906,9 @@ Drugie pytanie brzmiało: w czym objawia się brak najlepszości innych
     Nie zawsze. Rozważmy typ <span class="inlinecode"><span class="id" title="var">unit</span></span> wraz ze stałą <span class="inlinecode"><span class="id" title="var">tt</span></span> i funkcją
     <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">tt</span></span>, które realizują ten sam kształt co <span class="inlinecode"><span class="id" title="var">nat</span></span>,
     <span class="inlinecode">0</span> i <span class="inlinecode"><span class="id" title="var">S</span></span>. Zauważmy, że <span class="inlinecode"><span class="id" title="var">tt</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">tt</span></span>, a zatem różne sznurki
-    obliczają się do tej samej wartości.
+    obliczają się do tej samej wartości. Jest to sytuacja zgoła
+    odmienna od <span class="inlinecode"><span class="id" title="var">nat</span></span>owej - różne ilości <span class="inlinecode"><span class="id" title="var">S</span></span>ów dają różne liczby
+    naturalne.
 
 <div class="paragraph"> </div>
 
@@ -913,8 +918,9 @@ Drugie pytanie brzmiało: w czym objawia się brak najlepszości innych
     sprawdzić, czy długość sznurka jest nieparzysta, zamieniając <span class="inlinecode"><span class="id" title="var">tt</span></span>
     na <span class="inlinecode"><span class="id" title="var">false</span></span>, zaś <span class="inlinecode"><span class="id" title="var">f</span></span> na <span class="inlinecode"><span class="id" title="var">negb</span></span>, to wynikiem zamiany dla <span class="inlinecode"><span class="id" title="var">tt</span></span> byłoby
     <span class="inlinecode"><span class="id" title="var">false</span></span>, zaś dla <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">tt</span></span> byłoby to <span class="inlinecode"><span class="id" title="var">negb</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">true</span></span>. To jednak
-    prowadzi do sprzeczności, bo <span class="inlinecode"><span class="id" title="var">tt</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">tt</span></span>, a zatem wyniki podmiany
-    muszą być równe.
+    prowadzi do sprzeczności, bo <span class="inlinecode"><span class="id" title="var">tt</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">tt</span></span>. Wyniki podmiany dla
+    sznurków obliczających się do równych wartości musza być takie
+    same.
 
 <div class="paragraph"> </div>
 
@@ -926,87 +932,105 @@ Drugie pytanie brzmiało: w czym objawia się brak najlepszości innych
 <div class="paragraph"> </div>
 
     Tak. Przykładem takiej realizacji jest... <span class="inlinecode"><span class="id" title="var">bool</span></span>, <span class="inlinecode"><span class="id" title="var">false</span></span> i <span class="inlinecode"><span class="id" title="var">negb</span></span>
-    (a rzeczona podmianka, czyli rekursor, to w tym przypadku po prostu
-    identyczność).
+    (a rzeczona podmianka, to w tym przypadku po prostu funkcja
+    identycznościowa).
 
 <div class="paragraph"> </div>
 
     Czy znaczy to, że <span class="inlinecode"><span class="id" title="var">bool</span></span>, <span class="inlinecode"><span class="id" title="var">false</span></span> i <span class="inlinecode"><span class="id" title="var">negb</span></span> to najlepsza realizacja
     sznurkowego kształtu? Nie - da się znaleźć całą masę podmianek,
     które <span class="inlinecode"><span class="id" title="var">nat</span></span> umożliwia, a <span class="inlinecode"><span class="id" title="var">bool</span></span>, <span class="inlinecode"><span class="id" title="var">false</span></span> i <span class="inlinecode"><span class="id" title="var">negb</span></span> - nie (joł, sprawdź
-    to - wcale nie kłamię). 
+    to - wcale nie kłamię).
+
+<div class="paragraph"> </div>
+
+    Cóż, to by było na tyle. W ramach pożegnania z tym spojrzeniem na
+    typy induktywne napiszę jeszcze tylko, że nie jest ono skuteczne
+    zawsze i wszędzie. Działa jedynie dla prostych typów zrobionych
+    z enumeracji, rekurencji i parametrów. Żeby myśleć w ten sposób
+    np. o indeksowanych rodzinach typów trzeba mieć nieco mocniejszą
+    wyobraźnię. 
+<div class="paragraph"> </div>
+
+<a name="lab244"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Rozważmy poniższe typy:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">unit</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">bool</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">B</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">B</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">nat</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Dla każdego z nich:
+<ul class="doclist">
+<li> znajdź kształt, którego jest on najlepszą realizacją
+
+</li>
+<li> napisz typ rekursora
+
+</li>
+<li> zaimplementuj rekursor
+
+</li>
+<li> zaimplementuj bezpośrednio za pomocą rekursora jakąś ciekawą
+      funkcję
+
+</li>
+<li> z typu rekursora wyprowadź typ reguły indukcji (oczywiście bez
+      podglądania za pomocą komendy <span class="inlinecode"><span class="id" title="keyword">Print</span></span>... nie myśl też o białym
+      niedźwiedziu)
+
+</li>
+<li> zaimplementuj regułę indukcji
+
+</li>
+<li> spróbuj bezpośrednio użyć reguły indukcji, by udowodnić jakiś
+      fakt na temat zaimplementowanej uprzednio za pomocą rekursora
+      funkcji 
+</li>
+</ul>
+
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">wuut</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Axioms</span><br/>
-&nbsp;&nbsp;(<span class="id" title="var">N</span> : <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">Z</span> : <span class="id" title="var">N</span>)<br/>
-&nbsp;&nbsp;(<span class="id" title="var">S</span> : <span class="id" title="var">N</span> -&gt; <span class="id" title="var">N</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">N_rec</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">z</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">X</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="var">N</span> -&gt; <span class="id" title="var">X</span> |<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> <span class="id" title="var">Z</span> = <span class="id" title="var">z</span> /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">N</span>, <span class="id" title="var">f</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) = <span class="id" title="var">s</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>)) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">g</span> : <span class="id" title="var">N</span> -&gt; <span class="id" title="var">X</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">g</span> <span class="id" title="var">Z</span> = <span class="id" title="var">z</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">N</span>, <span class="id" title="var">g</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) = <span class="id" title="var">s</span> (<span class="id" title="var">g</span> <span class="id" title="var">n</span>)) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">N</span>, <span class="id" title="var">g</span> <span class="id" title="var">n</span> = <span class="id" title="var">f</span> <span class="id" title="var">n</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;}.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">N_ind</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">P</span> : <span class="id" title="var">N</span> -&gt; <span class="id" title="keyword">Type</span>}<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">z</span> : <span class="id" title="var">P</span> <span class="id" title="var">Z</span>) (<span class="id" title="var">s</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">N</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">N</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> |<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> <span class="id" title="var">Z</span> = <span class="id" title="var">z</span> /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">N</span>, <span class="id" title="var">f</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) = <span class="id" title="var">s</span> <span class="id" title="var">n</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_ind_rec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">N_ind</span> -&gt; <span class="id" title="var">N_rec</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">N_ind</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">N_ind</span> <span class="id" title="var">P</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">N_ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">P</span>) <span class="id" title="var">z</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">s</span>)) <span class="id" title="keyword">as</span> (<span class="id" title="var">f</span> &amp; <span class="id" title="var">HZ</span> &amp; <span class="id" title="var">HS</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">g</span> <span class="id" title="var">HZ'</span> <span class="id" title="var">HS'</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">N_ind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">g</span> <span class="id" title="var">n</span> = <span class="id" title="var">f</span> <span class="id" title="var">n</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">HZ</span>, <span class="id" title="var">HZ'</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">HS</span>, <span class="id" title="var">HS'</span>, <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Unset</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Checking</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">N_rec_ind</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">N_rec</span> -&gt; <span class="id" title="var">N_ind</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">N_rec</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">N_rec</span> <span class="id" title="var">P</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span>.<br/>
-<span class="id" title="keyword">Abort</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">wuut</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab244"></a><h1 class="section">Reguły eliminacji (TODO)</h1>
+<a name="lab245"></a><h1 class="section">Reguły eliminacji (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab245"></a><h1 class="section">Rekursja monotoniczna</h1>
+<a name="lab246"></a><h1 class="section">Rekursja monotoniczna</h1>
 
 </div>
 <div class="code">
@@ -1258,7 +1282,7 @@ Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
 </div>
 
 <div class="doc">
-<a name="lab246"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab247"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -1311,7 +1335,7 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
     z dupy. 
 <div class="paragraph"> </div>
 
-<a name="lab247"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab248"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1429,11 +1453,11 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 </div>
 
 <div class="doc">
-<a name="lab248"></a><h1 class="section">Rząd rżnie głupa, czyli o pierwszym i wyższym rzędzie</h1>
+<a name="lab249"></a><h1 class="section">Rząd rżnie głupa, czyli o pierwszym i wyższym rzędzie</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab249"></a><h1 class="section">Rekursja wyższego rzędu (TODO)</h1>
+<a name="lab250"></a><h1 class="section">Rekursja wyższego rzędu (TODO)</h1>
 
 <div class="paragraph"> </div>
 

@@ -544,7 +544,7 @@ End wut.
       argument docelową realizację danego kształtu i przerabia term
       typu induktywnego, podmieniając najlepszą realizację na docelową
     - po drugie, rekursor jest unikalny, czyli powyższa podmiana
-      realizacji może zostać zrealizowana na dokładnie jeden sposób
+      realizacji odbywa się w jedyny słuszny sposób
 
     Żeby nie być gołosłownym, zobaczmy przykłady: *)
 
@@ -672,9 +672,12 @@ Definition list_ind'_type : Type :=
     typy: *)
 
 Fixpoint list_ind'
-  {A : Type} {P : list A -> Prop}
-  (n : P nil) (c : forall (h : A) (t : list A), P t -> P (cons h t))
-  (l : list A) : P l :=
+  {A : Type}
+  {P : list A -> Prop}
+  (n : P nil)
+  (c : forall (h : A) (t : list A), P t -> P (cons h t))
+  (l : list A)
+    : P l :=
 match l with
     | nil => n
     | cons h t => c h t (list_ind' n c t)
@@ -761,7 +764,9 @@ End ex.
     Nie zawsze. Rozważmy typ [unit] wraz ze stałą [tt] i funkcją
     [f := fun _ => tt], które realizują ten sam kształt co [nat],
     [0] i [S]. Zauważmy, że [tt = f tt], a zatem różne sznurki
-    obliczają się do tej samej wartości.
+    obliczają się do tej samej wartości. Jest to sytuacja zgoła
+    odmienna od [nat]owej - różne ilości [S]ów dają różne liczby
+    naturalne.
 
     Gdybyśmy mieli dla tej realizacji rekursor podmieniający [f] na
     jakąś funkcję [g], zaś [tt] na stałą [x], to niechybnie doszłoby
@@ -769,8 +774,9 @@ End ex.
     sprawdzić, czy długość sznurka jest nieparzysta, zamieniając [tt]
     na [false], zaś [f] na [negb], to wynikiem zamiany dla [tt] byłoby
     [false], zaś dla [f tt] byłoby to [negb false = true]. To jednak
-    prowadzi do sprzeczności, bo [tt = f tt], a zatem wyniki podmiany
-    muszą być równe.
+    prowadzi do sprzeczności, bo [tt = f tt]. Wyniki podmiany dla
+    sznurków obliczających się do równych wartości musza być takie
+    same.
 
     Oczywiście [unit], [tt] i [f] to bardzo patologiczna realizacja
     sznurkowego kształtu. Czy są jakieś mniej patologiczne realizacje,
@@ -778,14 +784,215 @@ End ex.
     długości sznurka?
 
     Tak. Przykładem takiej realizacji jest... [bool], [false] i [negb]
-    (a rzeczona podmianka, czyli rekursor, to w tym przypadku po prostu
-    identyczność).
+    (a rzeczona podmianka, to w tym przypadku po prostu funkcja
+    identycznościowa).
 
     Czy znaczy to, że [bool], [false] i [negb] to najlepsza realizacja
     sznurkowego kształtu? Nie - da się znaleźć całą masę podmianek,
     które [nat] umożliwia, a [bool], [false] i [negb] - nie (joł, sprawdź
-    to - wcale nie kłamię). *)
+    to - wcale nie kłamię).
 
+    Cóż, to by było na tyle. W ramach pożegnania z tym spojrzeniem na
+    typy induktywne napiszę jeszcze tylko, że nie jest ono skuteczne
+    zawsze i wszędzie. Działa jedynie dla prostych typów zrobionych
+    z enumeracji, rekurencji i parametrów. Żeby myśleć w ten sposób
+    np. o indeksowanych rodzinach typów trzeba mieć nieco mocniejszą
+    wyobraźnię. *)
+
+(** **** Ćwiczenie *)
+
+(** Rozważmy poniższe typy:
+    - [unit]
+    - [bool]
+    - [option A]
+    - [A * B]
+    - [A + B]
+    - [exists x : A, P x]
+    - [nat]
+    - [list A]
+
+    Dla każdego z nich:
+    - znajdź kształt, którego jest on najlepszą realizacją
+    - napisz typ rekursora
+    - zaimplementuj rekursor
+    - zaimplementuj bezpośrednio za pomocą rekursora jakąś ciekawą
+      funkcję
+    - z typu rekursora wyprowadź typ reguły indukcji (oczywiście bez
+      podglądania za pomocą komendy [Print]... nie myśl też o białym
+      niedźwiedziu)
+    - zaimplementuj regułę indukcji
+    - spróbuj bezpośrednio użyć reguły indukcji, by udowodnić jakiś
+      fakt na temat zaimplementowanej uprzednio za pomocą rekursora
+      funkcji *)
+
+(* begin hide *)
+Module solutions.
+
+Open Scope type.
+
+Definition unit_shape : Type -> Type :=
+  fun _ : Type => unit.
+
+Definition unit_rec_type : Type :=
+  forall A : Type, A -> unit -> A.
+
+Definition unit_rec' {A : Type} (x : A) (_ : unit) : A := x.
+
+Definition const_true : unit -> bool := unit_rec' true.
+
+Definition unit_ind_type : Type :=
+  forall P : unit -> Prop, P tt -> forall u : unit, P u.
+
+Definition unit_ind'
+  {P : unit -> Prop} (p : P tt) (u : unit) : P u :=
+match u with
+    | tt => p
+end.
+
+Definition bool_shape : Type -> Type :=
+  fun _ : Type => unit + unit.
+
+Definition bool_rec_type : Type :=
+  forall P : Type, P -> P -> bool -> P.
+
+Definition bool_rec'
+  {P : Type} (t f : P) (b : bool) : P :=
+match b with
+    | true => t
+    | false => f
+end.
+
+Definition rnegb : bool -> bool := bool_rec' false true.
+
+Definition bool_ind_type : Type :=
+  forall P : bool -> Prop,
+    P true -> P false -> forall b : bool, P b.
+
+Definition bool_ind'
+  {P : bool -> Prop} (t : P true) (f : P false) (b : bool) : P b :=
+match b with
+    | true => t
+    | false => f
+end.
+
+Definition rnegb_rnegb :
+  forall b : bool, rnegb (rnegb b) = b :=
+    bool_ind' eq_refl eq_refl.
+
+Definition option_shape (A : Type) : Type -> Type :=
+  fun _ : Type => option A.
+
+Definition option_rec_type : Type :=
+  forall A P : Type, P -> (A -> P) -> option A -> P.
+
+Definition option_rec'
+  {A P : Type} (n : P) (s : A -> P) (o : option A) : P :=
+match o with
+    | None => n
+    | Some a => s a
+end.
+
+Definition option_ind_type : Type :=
+  forall (A : Type) (P : option A -> Type),
+    P None -> (forall a : A, P (Some a)) ->
+      forall o : option A, P o.
+
+Definition option_ind'
+  {A : Type} {P : option A -> Type}
+  (n : P None) (s : forall a : A, P (Some a))
+  (o : option A) : P o :=
+match o with
+    | None => n
+    | Some a => s a
+end.
+
+Definition prod_shape (A B : Type) : Type -> Type :=
+  fun _ : Type => A * B.
+
+Definition prod_rec_type : Type :=
+  forall (A B P : Type), (A -> B -> P) -> A * B -> P.
+
+Definition prod_rec'
+  {A B P : Type} (f : A -> B -> P) (x : A * B) : P :=
+match x with
+    | (a, b) => f a b
+end.
+
+Definition rswap {A B : Type} : A * B -> B * A :=
+  prod_rec' (fun a b => (b, a)).
+
+Definition prod_ind_type : Type :=
+  forall (A B : Type) (P : A * B -> Prop),
+    (forall (a : A) (b : B), P (a, b)) ->
+      forall x : A * B, P x.
+
+Definition prod_ind'
+  {A B : Type} {P : A * B -> Prop}
+  (f : forall (a : A) (b : B), P (a, b))
+  (x : A * B) : P x :=
+match x with
+    | (a, b) => f a b
+end.
+
+Definition rswap_rswap :
+  forall {A B : Type} (x : A * B),
+    rswap (rswap x) = x
+  := fun {A B : Type} => prod_ind' (fun _ _ => eq_refl).
+
+Definition sum_shape (A B : Type) : Type -> Type :=
+  fun _ : Type => A + B.
+
+Definition sum_rec_type : Type :=
+  forall A B P : Type,
+    (A -> P) -> (B -> P) -> A + B -> P.
+
+Definition sum_rec'
+  {A B P : Type} (f : A -> P) (g : B -> P) (x : A + B) : P :=
+match x with
+    | inl a => f a
+    | inr b => g b
+end.
+
+Definition sswap {A B : Type} : A + B -> B + A :=
+  @sum_rec' A B _ inr inl.
+
+Definition sum_ind_type : Type :=
+  forall (A B : Type) (P : A + B -> Prop),
+    (forall a : A, P (inl a)) ->
+    (forall b : B, P (inr b)) ->
+      forall x : A + B, P x.
+
+Definition sum_ind'
+  {A B : Type} {P : A + B -> Prop}
+  (l : forall a : A, P (inl a))
+  (r : forall b : B, P (inr b))
+  (x : A + B)
+    : P x :=
+match x with
+    | inl a => l a
+    | inr b => r b
+end.
+
+Definition sswap_sswap :
+  forall (A B : Type) (x : A + B),
+    sswap (sswap x) = x
+  := fun A B => sum_ind' (fun _ => eq_refl) (fun _ => eq_refl).
+
+Definition nat_shape : Type -> Type :=
+  fun X : Type => unit + X.
+
+Definition nat_rec_type : Type :=
+  forall P : Type, P -> (P -> P) -> nat -> P.
+
+Check @nat_rec'.
+
+(** TODO: reszta tych pierdół. *)
+
+End solutions.
+
+(* end hide *)
+
+(* begin hide *)
 Module wuut.
 
 Axioms
@@ -837,6 +1044,7 @@ Proof.
 Abort.
 
 End wuut.
+(* end hide *)
 
 (** * Reguły eliminacji (TODO) *)
 
