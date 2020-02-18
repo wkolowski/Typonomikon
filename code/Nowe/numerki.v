@@ -106,13 +106,22 @@ match n with
     | S n' => Newton h f (x0 - f x0 / cdiff h f x0) n'
 end.
 
-Compute Newton 1e-5 f2 2 15.
+Fixpoint Newton'
+  (h : float) (f f' : float -> float) (x : float) (n : nat) : float :=
+match n with
+    | 0 => x
+    | S n' => Newton' h f f' (x - f x / f' x) n'
+end.
 
 Compute map (Newton 1e-5 f2 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat.
 
 Definition f3 (x : float) : float := x * x - 2.
 
 Compute map (Newton 1e-5 f3 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat.
+Compute map f3 (map (Newton 1e-5 f3 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat).
+
+Compute map (Newton' 1e-5 f3 (fun x => 2 * x) 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat.
+Compute map f3 (map (Newton 1e-5 f3 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat).
 
 (** * 2.4 Rates of convergence *)
 
@@ -131,5 +140,20 @@ Definition f4 (x : float) : float := x * x * x * x * x - 7 * x * x - 42.
 
 Compute map (Newton 1e-5 f4 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat.
 Compute map f4 (map (Newton 1e-5 f4 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat).
+
 Compute map (Halley 1e-5 f4 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat.
-Compute map f4 (map (Newton 1e-5 f4 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat).
+Compute map f4 (map (Halley 1e-5 f4 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat).
+
+(** * 2.5 Secant method *)
+
+Fixpoint secant
+  (h : float) (f : float -> float) (a b : float) (n : nat) : float :=
+match n with
+    | 0 => a
+    | S n' => secant h f b (b - f b * (b - a) / (f b - f a)) n'
+end.
+
+Compute map (Newton 1e-5 f3 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat.
+Compute map f3 (map (Newton 1e-5 f3 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat).
+Compute map (secant 1e-5 f3 0 1) [0; 1; 2; 3; 4; 5; 6; 7]%nat.
+Compute map f3 (map (secant 1e-5 f3 0 1) [0; 1; 2; 3; 4; 5; 6; 7]%nat).
