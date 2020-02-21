@@ -5,12 +5,21 @@
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
 </head>
-<h1 class="libtitle">D3: Logika boolowska</h1>
+<h1 class="libtitle">D3: Logika boolowska, rozstrzygalność i reflekcja [TODO]</h1>
 
 <div class="code">
 </div>
 
 <div class="doc">
+
+<div class="paragraph"> </div>
+
+ UWAGA: ten rozdział właśnie ulega konceptualnemu przeobrażeinu i
+    może być nie na miejscu, tzn. zawierać rzeczy, o których jeszcze
+    nie było mowy. 
+<div class="paragraph"> </div>
+
+<a name="lab251"></a><h1 class="section">Logika boolowska</h1>
 
 <div class="paragraph"> </div>
 
@@ -33,7 +42,7 @@
 </div>
 
 <div class="doc">
-<a name="lab251"></a><h1 class="section">Definicje</h1>
+<a name="lab252"></a><h1 class="section">Definicje</h1>
 
 <div class="paragraph"> </div>
 
@@ -77,7 +86,7 @@
 </div>
 
 <div class="doc">
-<a name="lab252"></a><h1 class="section">Twierdzenia</h1>
+<a name="lab253"></a><h1 class="section">Twierdzenia</h1>
 
 <div class="paragraph"> </div>
 
@@ -92,7 +101,7 @@
 </div>
 
 <div class="doc">
-<a name="lab253"></a><h3 class="section">Właściwości negacji</h3>
+<a name="lab254"></a><h3 class="section">Właściwości negacji</h3>
 
 </div>
 <div class="code">
@@ -107,7 +116,7 @@
 </div>
 
 <div class="doc">
-<a name="lab254"></a><h3 class="section">Eliminacja</h3>
+<a name="lab255"></a><h3 class="section">Eliminacja</h3>
 
 </div>
 <div class="code">
@@ -128,7 +137,7 @@
 </div>
 
 <div class="doc">
-<a name="lab255"></a><h3 class="section">Elementy neutralne</h3>
+<a name="lab256"></a><h3 class="section">Elementy neutralne</h3>
 
 </div>
 <div class="code">
@@ -149,7 +158,7 @@
 </div>
 
 <div class="doc">
-<a name="lab256"></a><h3 class="section">Anihilacja</h3>
+<a name="lab257"></a><h3 class="section">Anihilacja</h3>
 
 </div>
 <div class="code">
@@ -170,7 +179,7 @@
 </div>
 
 <div class="doc">
-<a name="lab257"></a><h3 class="section">Łączność</h3>
+<a name="lab258"></a><h3 class="section">Łączność</h3>
 
 </div>
 <div class="code">
@@ -185,7 +194,7 @@
 </div>
 
 <div class="doc">
-<a name="lab258"></a><h3 class="section">Przemienność</h3>
+<a name="lab259"></a><h3 class="section">Przemienność</h3>
 
 </div>
 <div class="code">
@@ -200,7 +209,7 @@
 </div>
 
 <div class="doc">
-<a name="lab259"></a><h3 class="section">Rozdzielność</h3>
+<a name="lab260"></a><h3 class="section">Rozdzielność</h3>
 
 </div>
 <div class="code">
@@ -217,7 +226,7 @@
 </div>
 
 <div class="doc">
-<a name="lab260"></a><h3 class="section">Wyłączony środek i niesprzeczność</h3>
+<a name="lab261"></a><h3 class="section">Wyłączony środek i niesprzeczność</h3>
 
 </div>
 <div class="code">
@@ -232,7 +241,7 @@
 </div>
 
 <div class="doc">
-<a name="lab261"></a><h3 class="section">Prawa de Morgana</h3>
+<a name="lab262"></a><h3 class="section">Prawa de Morgana</h3>
 
 </div>
 <div class="code">
@@ -247,7 +256,7 @@
 </div>
 
 <div class="doc">
-<a name="lab262"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">eqb</span></span>, <span class="inlinecode"><span class="id" title="var">xorb</span></span>, <span class="inlinecode"><span class="id" title="var">norb</span></span>, <span class="inlinecode"><span class="id" title="var">nandb</span></span></h3>
+<a name="lab263"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">eqb</span></span>, <span class="inlinecode"><span class="id" title="var">xorb</span></span>, <span class="inlinecode"><span class="id" title="var">norb</span></span>, <span class="inlinecode"><span class="id" title="var">nandb</span></span></h3>
 
 </div>
 <div class="code">
@@ -278,7 +287,7 @@
 </div>
 
 <div class="doc">
-<a name="lab263"></a><h3 class="section">Różne</h3>
+<a name="lab264"></a><h3 class="section">Różne</h3>
 
 </div>
 <div class="code">
@@ -301,4 +310,325 @@
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">boolean_functions</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab265"></a><h1 class="section">Rozstrzygalność</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">excluded_middle</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">left</span>.<br/>
+<span class="id" title="keyword">Restart</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">intro</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Próba udowodnienia tego twierdzenia pokazuje nam zasadniczą różnicę
+    między logiką konstruktywną, która jest domyślną logiką Coqa, oraz
+    logiką klasyczną, najpowszechniej znanym i używanym rodzajem logiki.
+
+<div class="paragraph"> </div>
+
+    Każde zdanie jest, w pewnym "filozoficznym" sensie, prawdziwe lub
+    fałszywe i to właśnie powyższe zdanie oznacza w logice klasycznej.
+    Logika konstruktywna jednak, jak już wiemy, nie jest logiką prawdy,
+    lecz logiką udowadnialności i ma swoją interpretację obliczeniową.
+    Powyższe zdanie w logice konstruktywnej oznacza: program komputerowy
+    <span class="inlinecode"><span class="id" title="var">exluded_middle</span></span> rozstrzyga, czy dowolne zdanie jest prawdziwe, czy
+    fałszywe.
+
+<div class="paragraph"> </div>
+
+    Skonstruowanie programu o takim typie jest w ogólności niemożliwe,
+    gdyż dysponujemy zbyt małą ilością informacji: nie wiemy czym jest
+    zdanie <span class="inlinecode"><span class="id" title="var">P</span></span>, a nie posiadamy żadnego ogólnego sposobu dowodzenia lub
+    obalania zdań o nieznanej nam postaci. Nie możemy np. użyć indukcji,
+    gdyż nie wiemy, czy zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> zostało zdefiniowane induktywnie, czy
+    też nie. W Coqu jedynym sposobem uzyskania termu o typie <span class="inlinecode"><span class="id" title="keyword">forall</span></span>
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> jest przyjęcie go jako aksjomat. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">True_dec</span> : <span class="id" title="var">True</span> \/ ~ <span class="id" title="var">True</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Powyższe dywagacje nie przeszkadzają nam jednak w udowadnianiu,
+    że reguła wyłączonego środka zachodzi dla pewnych konkretnych
+    zdań. Zdanie takie będziemy nazywać zdaniami rozstrzygalnymi
+    (ang. decidable). O pozostałych zdaniach będziemy mówić, że są 
+    nierozstrzygalne (ang. undecidable). Ponieważ w Coqu wszystkie
+    funkcje są rekurencyjne, a dowody to programy, to możemy powyższą
+    definicję rozumieć tak: zdanie jest rozstrzygalne, jeżeli istnieje
+    funkcja rekurencyjna o przeciwdzidzinie <span class="inlinecode"><span class="id" title="var">bool</span></span>, która sprawdza, czy
+    jest ono prawdziwe, czy fałszywe.
+
+<div class="paragraph"> </div>
+
+    Przykładami zdań, predykatów czy problemów rozstrzygalnych są:
+<ul class="doclist">
+<li> sprawdzanie, czy lista jest niepusta
+
+</li>
+<li> sprawdzanie, czy liczba naturalna jest parzysta
+
+</li>
+<li> sprawdzanie, czy dwie liczby naturalne są równe 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Przykładem problemów nierozstrzygalnych są:
+<ul class="doclist">
+<li> dla funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> sprawdzenie, czy
+      <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> — jest to w ogólności niemożliwe,
+      gdyż wymaga wykonania nieskończonej ilości porównań (co nie
+      znaczy, że nie da się rozwiązać tego problemu dla niektórych
+      funkcji)
+
+</li>
+<li> sprawdzenie, czy słowo o nieskończonej długości jest palindromem 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+<a name="lab266"></a><h4 class="section">Ćwiczenie</h4>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eq_nat_dec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> = <span class="id" title="var">m</span> \/ ~ <span class="id" title="var">n</span> = <span class="id" title="var">m</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab267"></a><h2 class="section">Techniczne apekty rozstrzygalności</h2>
+
+<div class="paragraph"> </div>
+
+ Podsumowując powyższe rozważania, moglibyśmy stwierdzić: zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> jest
+    rozstrzygalne, jeżeli istnieje term typu <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Stwierdzenie takie
+    nie zamyka jednak sprawy, gdyż bywa czasem mocno bezużyteczne.
+
+<div class="paragraph"> </div>
+
+    Żeby to zobrazować, spróbujmy użyć twierdzenia <span class="inlinecode"><span class="id" title="var">eq_nat_dec</span></span> do napisania
+    funkcji, która sprawdza, czy liczna naturalna <span class="inlinecode"><span class="id" title="var">n</span></span> występuje na liście
+    liczb naturalnych <span class="inlinecode"><span class="id" title="var">l</span></span>: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">inb_nat</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">eq_nat_dec</span> <span class="id" title="var">n</span> <span class="id" title="var">h</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">or_introl</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">inb_nat</span> <span class="id" title="var">n</span> <span class="id" title="var">t</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Coq nie akceptuje powyższego kodu, racząc nas informacją o błędzie: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Error:<br/>
+&nbsp;&nbsp;&nbsp;Incorrect&nbsp;elimination&nbsp;of&nbsp;"eq_nat_dec&nbsp;n&nbsp;h0"&nbsp;in&nbsp;the&nbsp;inductive&nbsp;type&nbsp;"or":<br/>
+&nbsp;&nbsp;&nbsp;the&nbsp;return&nbsp;type&nbsp;has&nbsp;sort&nbsp;"Type"&nbsp;while&nbsp;it&nbsp;should&nbsp;be&nbsp;"Prop".<br/>
+&nbsp;&nbsp;&nbsp;Elimination&nbsp;of&nbsp;an&nbsp;inductive&nbsp;object&nbsp;of&nbsp;sort&nbsp;Prop<br/>
+&nbsp;&nbsp;&nbsp;is&nbsp;not&nbsp;allowed&nbsp;on&nbsp;a&nbsp;predicate&nbsp;in&nbsp;sort&nbsp;Type<br/>
+&nbsp;&nbsp;&nbsp;because&nbsp;proofs&nbsp;can&nbsp;be&nbsp;eliminated&nbsp;only&nbsp;to&nbsp;build&nbsp;proofs.&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nasza porażka wynika z faktu, że do zdefiniowania funkcji, która
+    jest programem (jej dziedzina i przeciwdziedzina są sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>)
+    próbowaliśmy użyć termu <span class="inlinecode"><span class="id" title="var">eq_nat_dec</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span>, który jest dowodem
+    (konkluzją <span class="inlinecode"><span class="id" title="var">eq_nat_dec</span></span> jest równość, która jest sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>).
+
+<div class="paragraph"> </div>
+
+    Mimo korespondencji Curry'ego-Howarda, która odpowiada za olbrzymie
+    podobieństwo specyfikacji i zdań, programów i dowodów, sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>
+    i sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, są one rozróżniane i niesie to za sobą konsekwencje:
+    podczas gdy programów możemy używać wszędzie, dowodów możemy używać
+    jedynie do konstruowania innych dowodów.
+
+<div class="paragraph"> </div>
+
+    Praktycznie oznacza to, że mimo iż równość liczb naturalnych jest
+    rozstrzygalna, pisząc program nie mamy możliwości jej rozstrzygania
+    za pomocą <span class="inlinecode"><span class="id" title="var">eq_nat_dec</span></span>. To właśnie miałem na myśli pisząc, że termy
+    typu <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> są mocno bezużyteczne.
+
+<div class="paragraph"> </div>
+
+    Uszy do góry: nie wszystko stracone! Jest to tylko drobna przeszkoda,
+    którą bardzo łatwo ominąć: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sumbool</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">left</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">sumbool</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">right</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">sumbool</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Typ <span class="inlinecode"><span class="id" title="var">sumbool</span></span> jest niemal dokładną kopią <span class="inlinecode"><span class="id" title="var">or</span></span>, jednak nie żyje on
+    w <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, lecz w <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. Ta drobna sztuczka, że termy typu
+    <span class="inlinecode"><span class="id" title="var">sumbool</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> formalnie są programami, mimo że ich naturalna
+    interpretacja jest taka sama jak <span class="inlinecode"><span class="id" title="var">or</span></span>, a więc jako dowodu
+    dysjunkcji. 
+<div class="paragraph"> </div>
+
+<a name="lab268"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij twierdzenie <span class="inlinecode"><span class="id" title="var">eq_nat_dec'</span></span> o rozstrzygalności <span class="inlinecode">=</span> na
+    liczbach naturalnych. Użyj typu <span class="inlinecode"><span class="id" title="var">sumbool</span></span>. Następnie napisz
+    funkcję <span class="inlinecode"><span class="id" title="var">inb_nat</span></span>, która sprawdza, czy liczba naturalna <span class="inlinecode"><span class="id" title="var">n</span></span>
+    jest obecna na liście <span class="inlinecode"><span class="id" title="var">l</span></span>. 
+<div class="paragraph"> </div>
+
+<a name="lab269"></a><h1 class="section">Typy hybrydowe</h1>
+
+<div class="paragraph"> </div>
+
+ Ostatnim z typów istotnych z punktu widzenia silnych specyfikacji
+    jest typ o wdzięcznej nazwie <span class="inlinecode"><span class="id" title="var">sumor</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">sumor</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sumor</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">B</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">inleft</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">sumor</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">inright</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">sumor</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak sama nazwa wskazuje, <span class="inlinecode"><span class="id" title="var">sumor</span></span> jest hybrydą sumy rozłącznej <span class="inlinecode"><span class="id" title="var">sum</span></span>
+    oraz dysjunkcji <span class="inlinecode"><span class="id" title="var">or</span></span>. Możemy go interpretować jako typ, którego
+    elementami są elementy <span class="inlinecode"><span class="id" title="var">A</span></span> albo wymówki w stylu "nie mam elementu <span class="inlinecode"><span class="id" title="var">A</span></span>,
+    ponieważ zachodzi zdanie <span class="inlinecode"><span class="id" title="var">B</span></span>". <span class="inlinecode"><span class="id" title="var">B</span></span> nie zależy od <span class="inlinecode"><span class="id" title="var">A</span></span>, a więc jest to
+    zwykła suma (a nie suma zależna, czyli uogólnienie produktu). <span class="inlinecode"><span class="id" title="var">sumor</span></span>
+    żyje w <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, a więc jest to specyfikacja i liczy się konkretna
+    postać jego termów, a nie jedynie fakt ich istnienia. 
+<div class="paragraph"> </div>
+
+<a name="lab270"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">pred'</span></span>)</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">pred'</span></span>, która przypisuje liczbie naturalnej jej
+    poprzednik. Poprzednikiem <span class="inlinecode">0</span> nie powinno być <span class="inlinecode">0</span>. Mogą przydać ci
+    się typ <span class="inlinecode"><span class="id" title="var">sumor</span></span> oraz sposób definiowania za pomocą taktyk, omówiony
+    w podrozdziale dotyczącym sum zależnych. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">sumor</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab271"></a><h1 class="section">Reflekcja w małej skali, czyli jak odbijać żeby się nie zmęczyć</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">even</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">even0</span> : <span class="id" title="var">even</span> 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">evenSS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)).<br/>
+
+<br/>
+<span class="comment">(*<br/>
+Function&nbsp;evenb&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;:&nbsp;bool&nbsp;:=<br/>
+match&nbsp;n&nbsp;with<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0&nbsp;=&gt;&nbsp;true<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;1&nbsp;=&gt;&nbsp;false<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;S&nbsp;(S&nbsp;n')&nbsp;=&gt;&nbsp;evenb&nbsp;n'<br/>
+end.<br/>
+<br/>
+Lemma&nbsp;evenb_spec&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;evenb&nbsp;n&nbsp;=&nbsp;true&nbsp;-&gt;&nbsp;even&nbsp;n.<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;functional&nbsp;induction&nbsp;evenb&nbsp;n.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;congruence.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;constructor.&nbsp;auto.<br/>
+Qed.<br/>
+<br/>
+Goal&nbsp;even&nbsp;666.<br/>
+Proof.<br/>
+&nbsp;&nbsp;apply&nbsp;evenb_spec.&nbsp;cbn.&nbsp;trivial.<br/>
+Qed.<br/>
+<br/>
+Print&nbsp;Unnamed_thm.<br/>
+Print&nbsp;evenb_spec.<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Wrzucić tu przykład z porządkiem leksykograficznym z bloga Mondet.
+    Dać też przykład z permutacjami? 
+<div class="paragraph"> </div>
+
+<a name="lab272"></a><h1 class="section">Poradnik hodowcy, czyli jak nie rozmnażać definicji</h1>
+
+<div class="paragraph"> </div>
+
+<a name="lab273"></a><h1 class="section">Metoda encode-decode, czyli o rozwiązaywaniu problemów,</h1>
+
+      które sami sobie tworzymy 
+<div class="paragraph"> </div>
+
+ Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko
+    zwalcza problemy nieznane w żadnej innej teorii". 
+</div>
+<div class="code">
 </div>

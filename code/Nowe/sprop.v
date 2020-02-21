@@ -15,4 +15,4 @@ Goal
     seq x y -> P x -> P y.
 Proof.
   intros A P x y Hs Hp.
-  destruct Hs.
+Abort.

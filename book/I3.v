@@ -1,43 +1,6 @@
-(** * I3: Reflekcja - pusty *)
+(** * I3: Reflekcja w dużej skali, czyli jak odbijać z rozmachem *)
 
 (** Chwilowo nic tu nie ma. *)
-
-(* begin hide *)
-
-(** * Small scale reflection *)
-
-Inductive even : nat -> Prop :=
-    | even0 : even 0
-    | evenSS : forall n : nat, even n -> even (S (S n)).
-
-(*
-Function evenb (n : nat) : bool :=
-match n with
-    | 0 => true
-    | 1 => false
-    | S (S n') => evenb n'
-end.
-
-Lemma evenb_spec :
-  forall n : nat, evenb n = true -> even n.
-Proof.
-  intros. functional induction evenb n.
-    constructor.
-    congruence.
-    constructor. auto.
-Qed.
-
-Goal even 666.
-Proof.
-  apply evenb_spec. cbn. trivial.
-Qed.
-
-Print Unnamed_thm.
-Print evenb_spec.
-*)
-
-(** Wrzucić tu przykład z porządkiem leksykograficznym z bloga Mondet.
-    Dać też przykład z permutacjami? *)
 
 (** * [Ltac]: manipulowanie termami *)
 

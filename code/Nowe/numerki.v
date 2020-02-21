@@ -157,3 +157,19 @@ Compute map (Newton 1e-5 f3 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat.
 Compute map f3 (map (Newton 1e-5 f3 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat).
 Compute map (secant 1e-5 f3 0 1) [0; 1; 2; 3; 4; 5; 6; 7]%nat.
 Compute map f3 (map (secant 1e-5 f3 0 1) [0; 1; 2; 3; 4; 5; 6; 7]%nat).
+
+(** * 2.7 Some more details on root-finding *)
+
+Definition aitken (x : nat -> float) (n : nat) : float :=
+  let a := x (1 + n)%nat - x n in
+    x n - a * a / (x n - 2 * x (1 + n)%nat + x (2 + n)%nat).
+
+Search float.
+
+(*
+Fixpoint es (x : float) (n : nat) : list float :=
+match n with
+    | 0 => []
+    | S n' => x : es (exp x) n'
+end.
+*)
