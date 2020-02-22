@@ -600,7 +600,6 @@ Inductive even : nat -> Prop :=
     | even0 : even 0
     | evenSS : forall n : nat, even n -> even (S (S n)).
 
-(*
 Function evenb (n : nat) : bool :=
 match n with
     | 0 => true
@@ -617,14 +616,13 @@ Proof.
     constructor. auto.
 Qed.
 
-Goal even 666.
+Lemma wut : even 666.
 Proof.
-  apply evenb_spec. cbn. trivial.
+  apply evenb_spec. cbn. trivial. Show Proof.
 Qed.
 
-Print Unnamed_thm.
-Print evenb_spec.
-*)
+Compute wut.
+
 
 (** Wrzucić tu przykład z porządkiem leksykograficznym z bloga Mondet.
     Dać też przykład z permutacjami? *)
@@ -633,14 +631,28 @@ Print evenb_spec.
 
 (** * Przerwa na reklamy: aksjomaty dotyczące sortu [Prop] *)
 
+Definition PI : Prop :=
+  forall (P : Prop) (x y : P), x = y.
+
+Definition PropExt : Prop :=
+  forall P Q : Prop, P <-> Q -> P = Q.
+
+Definition UIP : Prop :=
+  forall (A : Type) (x : A) (p : x = x), p = eq_refl.
+
+
+
 (** * Sort [SProp], czyli zdania, ale takie jakby inne *)
 
 Set Allow StrictProp.
 
+Inductive sEmpty : SProp := .
+
+Inductive sUnit : SProp :=
+    | stt : sUnit.
+
 Inductive seq {A : Type} (x : A) : A -> SProp :=
     | srefl : seq x x.
-
-Inductive sEmpty : SProp := .
 
 Goal forall A : Type, sEmpty -> A.
 Proof.
@@ -653,10 +665,6 @@ Goal
 Proof.
   intros A P x y Hs Hp.
 Abort.
-
-Check CompareSpec.
-
-Print CompareSpec.
 
 Inductive Box (A : Type) : Prop :=
     | box : A -> Box A.
@@ -674,3 +682,146 @@ Qed.
 
 (** Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko
     zwalcza problemy nieznane w żadnej innej teorii". *)
+
+(** Okazuje się, że sortu [SProp] można całkiem efektywnie użyć do pokazywania,
+    że coś jest zdaniem w sensie HoTTowym. Dzięki temu dowód jest krótszy o
+    całe 33%. Całkiem nieźle. *)
+
+Module encodedecode0.
+
+Fixpoint code (n m : nat) : SProp :=
+match n, m with
+    | 0, 0 => sUnit
+    | S _, 0 => sEmpty
+    | 0, S _ => sEmpty
+    | S n', S m' => code n' m'
+end.
+
+Fixpoint encode_aux (n : nat) : code n n :=
+match n with
+    | 0 => stt
+    | S n' => encode_aux n'
+end.
+
+Definition encode {n m : nat} (p : n = m) : code n m :=
+match p with
+    | eq_refl => encode_aux n
+end.
+
+Fixpoint decode {n m : nat} : code n m -> n = m :=
+match n, m with
+    | 0, 0 => fun _ => eq_refl
+    | 0, S _ => fun c => match c with end
+    | S _, 0 => fun c => match c with end
+    | S n', S m' => fun c => @f_equal _ _ S _ _ (@decode n' m' c)
+end.
+
+Lemma decode_encode :
+  forall (n m : nat) (p : n = m),
+    decode (encode p) = p.
+Proof.
+  destruct p; cbn.
+  induction n as [| n']; cbn.
+    reflexivity.
+    rewrite IHn'. cbn. reflexivity.
+Qed.
+
+Lemma K_nat :
+  forall (n : nat) (p : n = n), p = eq_refl.
+Proof.
+  intros.
+  rewrite <- (decode_encode _ _ p).
+  rewrite <- (decode_encode _ _ eq_refl).
+  reflexivity.
+Qed.
+
+Lemma UIP_nat:
+  forall {n m : nat} (p q : n = m), p = q.
+Proof.
+  intros.
+  rewrite <- (decode_encode _ _ p), <- (decode_encode _ _ q).
+  reflexivity.
+Qed.
+
+End encodedecode0.
+
+Module encodedecode1.
+
+Fixpoint code (n m : nat) : SProp :=
+match n, m with
+    | 0, _ => sUnit
+    | _, 0 => sEmpty
+    | S n', S m' => code n' m'
+end.
+
+Inductive gutle : nat -> nat -> Prop :=
+    | gutle_0 : forall m : nat, gutle 0 m
+    | gutle_SS : forall n m : nat, gutle n m -> gutle (S n) (S m).
+
+Fixpoint encode {n m : nat} (H : gutle n m) : code n m :=
+match H with
+    | gutle_0 _ => stt
+    | gutle_SS _ _ H' => encode H'
+end.
+
+Fixpoint decode (n m : nat) : code n m -> gutle n m :=
+match n, m with
+    | 0, _ => fun _ => gutle_0 m
+    | n', 0 => fun c => match c with end
+    | S n', S m' => fun c => gutle_SS _ _ (decode n' m' c)
+end.
+
+Fixpoint decode_encode
+  {n m : nat} (H : gutle n m) : decode n m (encode H) = H.
+Proof.
+  destruct H; cbn.
+    reflexivity.
+    f_equal. apply decode_encode.
+Defined.
+
+Lemma isProp_gutle :
+  forall {n m : nat} (p q : gutle n m), p = q.
+Proof.
+  intros.
+  rewrite <- (decode_encode p), <- (decode_encode q).
+  reflexivity.
+Qed.
+
+End encodedecode1.
+
+Module encodedecode2.
+
+Fixpoint code (n m : nat) : SProp :=
+match n, m with
+    | 0, _ => sUnit
+    | _, 0 => sEmpty
+    | S n', S m' => code n' m'
+end.
+
+Definition encode :
+  forall {n m : nat}, n <= m -> code n m.
+Proof.
+  induction n as [| n'].
+    cbn. constructor.
+    destruct m as [| m'].
+      inversion 1.
+      cbn. intro. apply IHn'. apply le_S_n. assumption.
+Defined.
+
+Definition decode :
+  forall {n m : nat}, code n m -> n <= m.
+Proof.
+  induction n as [| n'].
+    intros. clear H. induction m as [| m'].
+      constructor.
+      constructor. assumption.
+    destruct m as [| m']; cbn; intro.
+      destruct H.
+      apply le_n_S, IHn'. assumption.
+Defined.
+
+Fixpoint decode_encode
+  {n m : nat} (H : n <= m) : decode (encode H) = H.
+Proof.
+  destruct H.
+Abort.

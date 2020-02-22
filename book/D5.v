@@ -882,7 +882,7 @@ Qed.
 *)
 
 (* begin hide *)
-Fixpoint head {A : Type} (l : list A) : option A :=
+Definition head {A : Type} (l : list A) : option A :=
 match l with
     | [] => None
     | h :: _ => Some h
@@ -1001,7 +1001,7 @@ Qed.
 *)
 
 (* begin hide *)
-Fixpoint tail {A : Type} (l : list A) : option (list A) :=
+Definition tail {A : Type} (l : list A) : option (list A) :=
 match l with
     | [] => None
     | _ :: t => Some t
