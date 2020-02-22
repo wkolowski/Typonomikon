@@ -14,7 +14,7 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab435"></a><h1 class="section">W-typy (TODO)</h1>
+<a name="lab438"></a><h1 class="section">W-typy (TODO)</h1>
 
 </div>
 <div class="code">
@@ -445,7 +445,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a name="lab436"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab439"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -494,7 +494,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a name="lab437"></a><h1 class="section">Indeksowane W-typy</h1>
+<a name="lab440"></a><h1 class="section">Indeksowane W-typy</h1>
 
 <div class="paragraph"> </div>
 
@@ -809,7 +809,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
     do udowodnienia, że argumenty indukcyjne są równe. 
 <div class="paragraph"> </div>
 
-<a name="lab438"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab441"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -835,7 +835,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
 
 <div class="paragraph"> </div>
 
-<a name="lab439"></a><h1 class="section">M-typy (TODO)</h1>
+<a name="lab442"></a><h1 class="section">M-typy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1005,14 +1005,14 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a name="lab440"></a><h1 class="section">Indeksowane M-typy?</h1>
+<a name="lab443"></a><h1 class="section">Indeksowane M-typy?</h1>
 
 <div class="paragraph"> </div>
 
  Nie dla psa kiełbasa. 
 <div class="paragraph"> </div>
 
-<a name="lab441"></a><h1 class="section">Kodowanie Churcha (TODO)</h1>
+<a name="lab444"></a><h1 class="section">Kodowanie Churcha (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1024,7 +1024,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><sp
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">clist</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">X</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">X</span> -&gt; <span class="id" title="var">X</span>) -&gt; <span class="id" title="var">X</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>}, <span class="id" title="var">X</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">X</span> -&gt; <span class="id" title="var">X</span>) -&gt; <span class="id" title="var">X</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">cnil</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">clist</span> <span class="id" title="var">A</span> :=<br/>
@@ -1040,17 +1040,27 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><sp
 <span class="id" title="keyword">Notation</span> &quot;c[ x ; .. ; y ]" := (<span class="id" title="var">ccons</span> <span class="id" title="var">x</span> .. (<span class="id" title="var">ccons</span> <span class="id" title="var">y</span> <span class="id" title="var">cnil</span>) ..).<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">head</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">clist</span> <span class="id" title="var">A</span>) : <span class="id" title="var">option</span> <span class="id" title="var">A</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">l</span> (<span class="id" title="var">option</span> <span class="id" title="var">A</span>) <span class="id" title="var">None</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">h</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h</span>).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">chead</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">clist</span> <span class="id" title="var">A</span>) : <span class="id" title="var">option</span> <span class="id" title="var">A</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">l</span> <span class="id" title="var">_</span> <span class="id" title="var">None</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">h</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h</span>).<br/>
 
 <br/>
-<span class="comment">(*<br/>
-Definition&nbsp;tail&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(l&nbsp;:&nbsp;clist&nbsp;A)&nbsp;:&nbsp;option&nbsp;(clist&nbsp;A)&nbsp;:=<br/>
-&nbsp;&nbsp;l&nbsp;_&nbsp;None<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(fun&nbsp;h&nbsp;t&nbsp;=&gt;&nbsp;t).<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Checking</span>.<br/>
+
 <br/>
-Compute&nbsp;tail&nbsp;c<span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3</span>.<br/>
-*)</span><br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">ctail</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">clist</span> <span class="id" title="var">A</span>) : <span class="id" title="var">option</span> (<span class="id" title="var">clist</span> <span class="id" title="var">A</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">l</span> (@<span class="id" title="var">option</span> (<span class="id" title="var">clist</span> <span class="id" title="var">A</span>)) <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">c</span>[]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">t'</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">ccons</span> <span class="id" title="var">h</span> <span class="id" title="var">t'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">ctail</span> <span class="id" title="var">c</span>[].<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">ctail</span> <span class="id" title="var">c</span>[1].<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">ctail</span> <span class="id" title="var">c</span>[1; 2].<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">ctail</span> <span class="id" title="var">c</span>[1; 2; 3].<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">ctail</span> <span class="id" title="var">c</span>[1; 2; 3; 4].<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">null</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">clist</span> <span class="id" title="var">A</span>) : <span class="id" title="var">bool</span> :=<br/>
@@ -1103,6 +1113,25 @@ Compute&nbsp;tail&nbsp;c<span class="inlinecode">1;</span> <span class="inlineco
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">wut</span> : <span class="id" title="keyword">Type</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>, (<span class="id" title="var">X</span> -&gt; <span class="id" title="var">X</span>) -&gt; <span class="id" title="var">X</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wut_wut</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">wut</span> -&gt; <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">wut</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">w</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">w</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">wlist</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>}, <span class="id" title="var">X</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">X</span> -&gt; <span class="id" title="var">X</span>) -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">X</span>.<br/>
+
+<br/>
 </div>

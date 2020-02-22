@@ -810,7 +810,7 @@ Require Import X3.
 (* end hide *)
 
 Definition clist (A : Type) : Type :=
-  forall X : Type, X -> (A -> X -> X) -> X.
+  forall {X : Type}, X -> (A -> X -> X) -> X.
 
 Definition cnil {A : Type} : clist A :=
   fun X nil cons => nil.
@@ -822,16 +822,24 @@ Notation "c[]" := cnil.
 Notation "x :c: y" := (ccons x y) (at level 60, right associativity).
 Notation "c[ x ; .. ; y ]" := (ccons x .. (ccons y cnil) ..).
 
-Definition head {A : Type} (l : clist A) : option A :=
-  l (option A) None (fun h _ => Some h).
+Definition chead {A : Type} (l : clist A) : option A :=
+  l _ None (fun h _ => Some h).
 
-(*
-Definition tail {A : Type} (l : clist A) : option (clist A) :=
-  l _ None
-    (fun h t => t).
+Unset Universe Checking.
 
-Compute tail c[1; 2; 3].
-*)
+Definition ctail {A : Type} (l : clist A) : option (clist A) :=
+  l (@option (clist A)) None
+    (fun h t =>
+      match t with
+          | None => Some c[]
+          | Some t' => Some (ccons h t')
+      end).
+
+Compute ctail c[].
+Compute ctail c[1].
+Compute ctail c[1; 2].
+Compute ctail c[1; 2; 3].
+Compute ctail c[1; 2; 3; 4].
 
 Definition null {A : Type} (l : clist A) : bool :=
   l _ true (fun _ _ => false).
@@ -874,5 +882,20 @@ Proof.
   intros. unfold clist in *. compute.
 Abort.
 
+Set Universe Checking.
+
 Definition wut : Type :=
   forall X : Type, (X -> X) -> X.
+
+Lemma wut_wut :
+  wut -> False.
+Proof.
+  unfold wut.
+  intro w.
+  apply w.
+  trivial.
+Qed.
+
+Definition wlist (A : Type) : Type :=
+  forall {X : Type}, X -> (A -> list A -> X -> X) -> list A -> X.
+

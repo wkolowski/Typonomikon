@@ -42,7 +42,7 @@
 </div>
 
 <div class="doc">
-<a name="lab252"></a><h1 class="section">Definicje</h1>
+<a name="lab252"></a><h2 class="section">Definicje</h2>
 
 <div class="paragraph"> </div>
 
@@ -86,7 +86,7 @@
 </div>
 
 <div class="doc">
-<a name="lab253"></a><h1 class="section">Twierdzenia</h1>
+<a name="lab253"></a><h2 class="section">Twierdzenia</h2>
 
 <div class="paragraph"> </div>
 
@@ -107,10 +107,10 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">negb_inv</span> : <span class="id" title="var">negb</span> (<span class="id" title="var">negb</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_inv</span> : <span class="id" title="var">negb</span> (<span class="id" title="var">negb</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">negb_ineq</span> : <span class="id" title="var">negb</span> <span class="id" title="var">b</span> &lt;&gt; <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_ineq</span> : <span class="id" title="var">negb</span> <span class="id" title="var">b</span> &lt;&gt; <span class="id" title="var">b</span>.<br/>
 
 <br/>
 </div>
@@ -122,16 +122,16 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_elim_l</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_elim_l</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">true</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_elim_r</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_elim_r</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_elim</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">true</span> /\ <span class="id" title="var">b2</span> = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_elim</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">true</span> /\ <span class="id" title="var">b2</span> = <span class="id" title="var">true</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">orb_elim</span> : <span class="id" title="var">b1</span> || <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">true</span> \/ <span class="id" title="var">b2</span> = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_elim</span> : <span class="id" title="var">b1</span> || <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">true</span> \/ <span class="id" title="var">b2</span> = <span class="id" title="var">true</span>.<br/>
 
 <br/>
 </div>
@@ -143,16 +143,16 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_true_neutral_l</span> : <span class="id" title="var">true</span> &amp;&amp; <span class="id" title="var">b</span> = <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_true_neutral_l</span> : <span class="id" title="var">true</span> &amp;&amp; <span class="id" title="var">b</span> = <span class="id" title="var">b</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_true_neutral_r</span> : <span class="id" title="var">b</span> &amp;&amp; <span class="id" title="var">true</span> = <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_true_neutral_r</span> : <span class="id" title="var">b</span> &amp;&amp; <span class="id" title="var">true</span> = <span class="id" title="var">b</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">orb_false_neutral_l</span> : <span class="id" title="var">false</span> || <span class="id" title="var">b</span> = <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_false_neutral_l</span> : <span class="id" title="var">false</span> || <span class="id" title="var">b</span> = <span class="id" title="var">b</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">orb_false_neutral_r</span> : <span class="id" title="var">b</span> || <span class="id" title="var">false</span> = <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_false_neutral_r</span> : <span class="id" title="var">b</span> || <span class="id" title="var">false</span> = <span class="id" title="var">b</span>.<br/>
 
 <br/>
 </div>
@@ -164,16 +164,16 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_false_annihilation_l</span> : <span class="id" title="var">false</span> &amp;&amp; <span class="id" title="var">b</span> = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_false_annihilation_l</span> : <span class="id" title="var">false</span> &amp;&amp; <span class="id" title="var">b</span> = <span class="id" title="var">false</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_false_annihilation_r</span> : <span class="id" title="var">b</span> &amp;&amp; <span class="id" title="var">false</span> = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_false_annihilation_r</span> : <span class="id" title="var">b</span> &amp;&amp; <span class="id" title="var">false</span> = <span class="id" title="var">false</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">orb_true_annihilation_l</span> :  <span class="id" title="var">true</span> || <span class="id" title="var">b</span> = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_true_annihilation_l</span> :  <span class="id" title="var">true</span> || <span class="id" title="var">b</span> = <span class="id" title="var">true</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">orb_true_annihilation_r</span> :  <span class="id" title="var">b</span> || <span class="id" title="var">true</span> = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_true_annihilation_r</span> :  <span class="id" title="var">b</span> || <span class="id" title="var">true</span> = <span class="id" title="var">true</span>.<br/>
 
 <br/>
 </div>
@@ -185,10 +185,10 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_assoc</span> : <span class="id" title="var">b1</span> &amp;&amp; (<span class="id" title="var">b2</span> &amp;&amp; <span class="id" title="var">b3</span>) = (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>) &amp;&amp; <span class="id" title="var">b3</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_assoc</span> : <span class="id" title="var">b1</span> &amp;&amp; (<span class="id" title="var">b2</span> &amp;&amp; <span class="id" title="var">b3</span>) = (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>) &amp;&amp; <span class="id" title="var">b3</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">orb_assoc</span> : <span class="id" title="var">b1</span> || (<span class="id" title="var">b2</span> || <span class="id" title="var">b3</span>) = (<span class="id" title="var">b1</span> || <span class="id" title="var">b2</span>) || <span class="id" title="var">b3</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_assoc</span> : <span class="id" title="var">b1</span> || (<span class="id" title="var">b2</span> || <span class="id" title="var">b3</span>) = (<span class="id" title="var">b1</span> || <span class="id" title="var">b2</span>) || <span class="id" title="var">b3</span>.<br/>
 
 <br/>
 </div>
@@ -200,10 +200,10 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_comm</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">b2</span> &amp;&amp; <span class="id" title="var">b1</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_comm</span> : <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">b2</span> &amp;&amp; <span class="id" title="var">b1</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">orb_comm</span> : <span class="id" title="var">b1</span> || <span class="id" title="var">b2</span> = <span class="id" title="var">b2</span> || <span class="id" title="var">b1</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_comm</span> : <span class="id" title="var">b1</span> || <span class="id" title="var">b2</span> = <span class="id" title="var">b2</span> || <span class="id" title="var">b1</span>.<br/>
 
 <br/>
 </div>
@@ -215,11 +215,11 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_dist_orb</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_dist_orb</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">b1</span> &amp;&amp; (<span class="id" title="var">b2</span> || <span class="id" title="var">b3</span>) = (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>) || (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b3</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">orb_dist_andb</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_dist_andb</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">b1</span> || (<span class="id" title="var">b2</span> &amp;&amp; <span class="id" title="var">b3</span>) = (<span class="id" title="var">b1</span> || <span class="id" title="var">b2</span>) &amp;&amp; (<span class="id" title="var">b1</span> || <span class="id" title="var">b3</span>).<br/>
 
 <br/>
@@ -232,10 +232,10 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_negb</span> : <span class="id" title="var">b</span> &amp;&amp; <span class="id" title="var">negb</span> <span class="id" title="var">b</span> = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_negb</span> : <span class="id" title="var">b</span> &amp;&amp; <span class="id" title="var">negb</span> <span class="id" title="var">b</span> = <span class="id" title="var">false</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">orb_negb</span> : <span class="id" title="var">b</span> || <span class="id" title="var">negb</span> <span class="id" title="var">b</span> = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">orb_negb</span> : <span class="id" title="var">b</span> || <span class="id" title="var">negb</span> <span class="id" title="var">b</span> = <span class="id" title="var">true</span>.<br/>
 
 <br/>
 </div>
@@ -247,10 +247,10 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">negb_andb</span> : <span class="id" title="var">negb</span> (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>) = <span class="id" title="var">negb</span> <span class="id" title="var">b1</span> || <span class="id" title="var">negb</span> <span class="id" title="var">b2</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_andb</span> : <span class="id" title="var">negb</span> (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>) = <span class="id" title="var">negb</span> <span class="id" title="var">b1</span> || <span class="id" title="var">negb</span> <span class="id" title="var">b2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">negb_orb</span> : <span class="id" title="var">negb</span> (<span class="id" title="var">b1</span> || <span class="id" title="var">b2</span>) = <span class="id" title="var">negb</span> <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">negb</span> <span class="id" title="var">b2</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">negb_orb</span> : <span class="id" title="var">negb</span> (<span class="id" title="var">b1</span> || <span class="id" title="var">b2</span>) = <span class="id" title="var">negb</span> <span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">negb</span> <span class="id" title="var">b2</span>.<br/>
 
 <br/>
 </div>
@@ -262,25 +262,25 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eqb_spec</span> : <span class="id" title="var">eqb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">b2</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eqb_spec</span> : <span class="id" title="var">eqb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">b2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eqb_spec'</span> : <span class="id" title="var">eqb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">false</span> -&gt; <span class="id" title="var">b1</span> &lt;&gt; <span class="id" title="var">b2</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eqb_spec'</span> : <span class="id" title="var">eqb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">false</span> -&gt; <span class="id" title="var">b1</span> &lt;&gt; <span class="id" title="var">b2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">xorb_spec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">xorb_spec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">xorb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">negb</span> (<span class="id" title="var">eqb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">xorb_spec'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">xorb_spec'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">xorb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">b1</span> &lt;&gt; <span class="id" title="var">b2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">norb_spec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">norb_spec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">norb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">negb</span> (<span class="id" title="var">b1</span> || <span class="id" title="var">b2</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">nandb_spec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nandb_spec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">nandb</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> = <span class="id" title="var">negb</span> (<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>).<br/>
 
 <br/>
@@ -293,19 +293,19 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_eq_orb</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andb_eq_orb</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span> = <span class="id" title="var">b1</span> || <span class="id" title="var">b2</span> -&gt; <span class="id" title="var">b1</span> = <span class="id" title="var">b2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">all3_spec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all3_spec</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="var">b1</span> &amp;&amp; <span class="id" title="var">b2</span>) || (<span class="id" title="var">negb</span> <span class="id" title="var">b1</span> || <span class="id" title="var">negb</span> <span class="id" title="var">b2</span>) = <span class="id" title="var">true</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">noncontradiction_bool</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">noncontradiction_bool</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">negb</span> (<span class="id" title="var">eqb</span> <span class="id" title="var">b</span> (<span class="id" title="var">negb</span> <span class="id" title="var">b</span>)) = <span class="id" title="var">true</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">excluded_middle_bool</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">excluded_middle_bool</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">b</span> || <span class="id" title="var">negb</span> <span class="id" title="var">b</span> = <span class="id" title="var">true</span>.<br/>
 
 <br/>
@@ -321,7 +321,7 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">excluded_middle</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">excluded_middle</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">left</span>.<br/>
@@ -360,7 +360,7 @@ Próba udowodnienia tego twierdzenia pokazuje nam zasadniczą różnicę
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">True_dec</span> : <span class="id" title="var">True</span> \/ ~ <span class="id" title="var">True</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">True_dec</span> : <span class="id" title="var">True</span> \/ ~ <span class="id" title="var">True</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">trivial</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -416,7 +416,7 @@ Powyższe dywagacje nie przeszkadzają nam jednak w udowadnianiu,
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eq_nat_dec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_nat_dec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> = <span class="id" title="var">m</span> \/ ~ <span class="id" title="var">n</span> = <span class="id" title="var">m</span>.<br/>
 
 <br/>
@@ -523,57 +523,213 @@ Typ <span class="inlinecode"><span class="id" title="var">sumbool</span></span> 
     jest obecna na liście <span class="inlinecode"><span class="id" title="var">l</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab269"></a><h1 class="section">Typy hybrydowe</h1>
+<a name="lab269"></a><h2 class="section">Kiedy nie warto rozstrzygać?</h2>
 
 <div class="paragraph"> </div>
 
- Ostatnim z typów istotnych z punktu widzenia silnych specyfikacji
-    jest typ o wdzięcznej nazwie <span class="inlinecode"><span class="id" title="var">sumor</span></span>. 
+ Tutaj coś w stylu <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&gt;</span> <span class="inlinecode"><span class="id" title="var">m</span></span> 
+<div class="paragraph"> </div>
+
+<a name="lab270"></a><h2 class="section">Rozstrzygalność jako pułapka na negacjonistów</h2>
+
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">sumor</span>.<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">weak_apart</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sumor</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">B</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">inleft</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">sumor</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">inright</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">sumor</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">unequal</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nil_cons</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>, <span class="id" title="var">unequal</span> <span class="id" title="var">nil</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons_nil</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>, <span class="id" title="var">unequal</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) <span class="id" title="var">nil</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons_cons1</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">h1</span> &lt;&gt; <span class="id" title="var">h2</span> -&gt; <span class="id" title="var">unequal</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">cons</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons_cons2</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">unequal</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">unequal</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">cons</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">neq</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span>, <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nil</span>, <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">False</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nil</span>, <span class="id" title="var">cons</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">True</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>, <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">True</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>, <span class="id" title="var">cons</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span> =&gt; <span class="id" title="var">h1</span> &lt;&gt; <span class="id" title="var">h2</span> \/ <span class="id" title="var">neq</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">unequal</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> &lt;-&gt; <span class="id" title="var">neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">firstorder</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">l2</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>]; <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-2: <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span> 3. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span> 4. <span class="id" title="tactic">apply</span> <span class="id" title="var">IHt1</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">weak_apart</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">param_apart</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">unequal</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">apart</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nil_cons</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>, <span class="id" title="var">unequal</span> <span class="id" title="var">apart</span> <span class="id" title="var">nil</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons_nil</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>, <span class="id" title="var">unequal</span> <span class="id" title="var">apart</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) <span class="id" title="var">nil</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons_cons1</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">apart</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> -&gt; <span class="id" title="var">unequal</span> <span class="id" title="var">apart</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">cons</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons_cons2</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">unequal</span> <span class="id" title="var">apart</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">unequal</span> <span class="id" title="var">apart</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>) (<span class="id" title="var">cons</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">neq</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">apart</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span>, <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nil</span>, <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">False</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nil</span>, <span class="id" title="var">cons</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">True</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>, <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">True</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>, <span class="id" title="var">cons</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span> =&gt; <span class="id" title="var">apart</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> \/ <span class="id" title="var">neq</span> <span class="id" title="var">apart</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">apart</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">unequal</span> <span class="id" title="var">apart</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> &lt;-&gt; <span class="id" title="var">neq</span> <span class="id" title="var">apart</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">firstorder</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">l2</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>]; <span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-2: <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span> 3. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span> 4. <span class="id" title="tactic">apply</span> <span class="id" title="var">IHt1</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">param_apart</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">different</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span>, <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [], [] =&gt; <span class="id" title="var">False</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [], <span class="id" title="var">_</span> =&gt; <span class="id" title="var">True</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, [] =&gt; <span class="id" title="var">True</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>, <span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span> =&gt; <span class="id" title="var">h1</span> &lt;&gt; <span class="id" title="var">h2</span> \/ <span class="id" title="var">different</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">different_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l1</span> &lt;&gt; <span class="id" title="var">l2</span> &lt;-&gt; <span class="id" title="var">different</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">tauto</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">firstorder</span> <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">firstorder</span> <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="tactic">destruct</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">IHt1</span> <span class="id" title="var">t2</span>). <span class="id" title="tactic">firstorder</span> <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">assert</span> (~ (<span class="id" title="var">h1</span> = <span class="id" title="var">h2</span> /\ <span class="id" title="var">t1</span> = <span class="id" title="var">t2</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">firstorder</span> <span class="id" title="tactic">congruence</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Jak sama nazwa wskazuje, <span class="inlinecode"><span class="id" title="var">sumor</span></span> jest hybrydą sumy rozłącznej <span class="inlinecode"><span class="id" title="var">sum</span></span>
-    oraz dysjunkcji <span class="inlinecode"><span class="id" title="var">or</span></span>. Możemy go interpretować jako typ, którego
-    elementami są elementy <span class="inlinecode"><span class="id" title="var">A</span></span> albo wymówki w stylu "nie mam elementu <span class="inlinecode"><span class="id" title="var">A</span></span>,
-    ponieważ zachodzi zdanie <span class="inlinecode"><span class="id" title="var">B</span></span>". <span class="inlinecode"><span class="id" title="var">B</span></span> nie zależy od <span class="inlinecode"><span class="id" title="var">A</span></span>, a więc jest to
-    zwykła suma (a nie suma zależna, czyli uogólnienie produktu). <span class="inlinecode"><span class="id" title="var">sumor</span></span>
-    żyje w <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, a więc jest to specyfikacja i liczy się konkretna
-    postać jego termów, a nie jedynie fakt ich istnienia. 
-<div class="paragraph"> </div>
+<a name="lab271"></a><h2 class="section">Techniczne aspekty rozstrzygalności 2</h2>
 
-<a name="lab270"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">pred'</span></span>)</h4>
-
-<div class="paragraph"> </div>
-
- Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">pred'</span></span>, która przypisuje liczbie naturalnej jej
-    poprzednik. Poprzednikiem <span class="inlinecode">0</span> nie powinno być <span class="inlinecode">0</span>. Mogą przydać ci
-    się typ <span class="inlinecode"><span class="id" title="var">sumor</span></span> oraz sposób definiowania za pomocą taktyk, omówiony
-    w podrozdziale dotyczącym sum zależnych. 
 </div>
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Bool</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">sumor</span>.<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">reflect</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">BoolSpec</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">CompareSpec</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Spec</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">spec</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">Spec</span> <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">spec_aux</span> <span class="id" title="var">H</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">H</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Spec</span> ?<span class="id" title="var">P</span> ?<span class="id" title="var">x</span> =&gt; <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">x</span> <span class="id" title="var">H</span>], <span class="id" title="var">x</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Tactic Notation</span> "spec" <span class="id" title="var">hyp</span>(<span class="id" title="var">H</span>) := <span class="id" title="var">spec_aux</span> <span class="id" title="var">H</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Tactic Notation</span> "spec" <span class="id" title="var">integer</span>(<span class="id" title="var">n</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="tactic">until</span> <span class="id" title="var">n</span>;<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">H</span> : <span class="id" title="var">Spec</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> |- <span class="id" title="var">_</span> =&gt; <span class="id" title="var">spec_aux</span> <span class="id" title="var">H</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">bool</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Spec</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span> =&gt; <span class="id" title="keyword">if</span> <span class="id" title="var">b</span> <span class="id" title="keyword">then</span> <span class="id" title="var">P</span> <span class="id" title="keyword">else</span> <span class="id" title="var">Q</span>) <span class="id" title="var">b</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">BoolSpec</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">spec</span> 1; <span class="id" title="tactic">constructor</span>; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1; <span class="id" title="tactic">constructor</span>; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">bool</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Spec</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span> =&gt; <span class="id" title="keyword">if</span> <span class="id" title="var">b</span> <span class="id" title="keyword">then</span> <span class="id" title="var">P</span> <span class="id" title="keyword">else</span> <span class="id" title="var">Q</span>) <span class="id" title="var">b</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">BoolSpec</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">spec</span> 1; <span class="id" title="tactic">constructor</span>; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1; <span class="id" title="tactic">constructor</span>; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Spec_char</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">x</span> &lt;-&gt; <span class="id" title="var">Spec</span> <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab271"></a><h1 class="section">Reflekcja w małej skali, czyli jak odbijać żeby się nie zmęczyć</h1>
+<a name="lab272"></a><h1 class="section">Reflekcja w małej skali, czyli jak odbijać żeby się nie zmęczyć</h1>
 
 </div>
 <div class="code">
@@ -618,13 +774,71 @@ Wrzucić tu przykład z porządkiem leksykograficznym z bloga Mondet.
     Dać też przykład z permutacjami? 
 <div class="paragraph"> </div>
 
-<a name="lab272"></a><h1 class="section">Poradnik hodowcy, czyli jak nie rozmnażać definicji</h1>
+<a name="lab273"></a><h1 class="section">Poradnik hodowcy, czyli jak nie rozmnażać definicji</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab273"></a><h1 class="section">Metoda encode-decode, czyli o rozwiązaywaniu problemów,</h1>
+<a name="lab274"></a><h1 class="section">Przerwa na reklamy: aksjomaty dotyczące sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span></h1>
 
-      które sami sobie tworzymy 
+<div class="paragraph"> </div>
+
+<a name="lab275"></a><h1 class="section">Sort <span class="inlinecode"><span class="id" title="var">SProp</span></span>, czyli zdania, ale takie jakby inne</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Allow</span> <span class="id" title="var">StrictProp</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">seq</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">SProp</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">srefl</span> : <span class="id" title="var">seq</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sEmpty</span> : <span class="id" title="var">SProp</span> := .<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">sEmpty</span> -&gt; <span class="id" title="var">A</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">seq</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">Hs</span> <span class="id" title="var">Hp</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">CompareSpec</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">CompareSpec</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Box</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">box</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Box</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">Box_sind</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">SetIsType</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SetIsType</span> : <span class="id" title="keyword">Set</span> = <span class="id" title="keyword">Type</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab276"></a><h1 class="section">Metoda encode-decode, czyli o rozwiązaywaniu problemów, które sami sobie tworzymy</h1>
+
 <div class="paragraph"> </div>
 
  Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko

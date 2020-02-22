@@ -16,7 +16,7 @@
 Section boolean_functions.
 Variables b b1 b2 b3 : bool.
 
-(** * Definicje *)
+(** ** Definicje *)
 
 (** Zdefiniuj następujące funkcje boolowskie:
     - [negb] (negacja)
@@ -74,7 +74,7 @@ Definition norb (b1 b2 : bool) : bool := negb (orb b1 b2).
 Notation "b1 && b2" := (andb b1 b2).
 Notation "b1 || b2" := (orb b1 b2).
 
-(** * Twierdzenia *)
+(** ** Twierdzenia *)
 
 (** Udowodnij, że zdefiniowane przez ciebie funkcje mają spodziewane
     właściwości. *)
@@ -88,115 +88,115 @@ end.
 
 (** *** Właściwości negacji *)
 
-Theorem negb_inv : negb (negb b) = b.
+Lemma negb_inv : negb (negb b) = b.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem negb_ineq : negb b <> b.
+Lemma negb_ineq : negb b <> b.
 (* begin hide *)
 Proof. destruct b; discriminate. Qed.
 (* end hide *)
 
 (** *** Eliminacja *)
 
-Theorem andb_elim_l : b1 && b2 = true -> b1 = true.
+Lemma andb_elim_l : b1 && b2 = true -> b1 = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem andb_elim_r : b1 && b2 = true -> b2 = true.
+Lemma andb_elim_r : b1 && b2 = true -> b2 = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem andb_elim : b1 && b2 = true -> b1 = true /\ b2 = true.
+Lemma andb_elim : b1 && b2 = true -> b1 = true /\ b2 = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem orb_elim : b1 || b2 = true -> b1 = true \/ b2 = true.
+Lemma orb_elim : b1 || b2 = true -> b1 = true \/ b2 = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
 (** *** Elementy neutralne *)
 
-Theorem andb_true_neutral_l : true && b = b.
+Lemma andb_true_neutral_l : true && b = b.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem andb_true_neutral_r : b && true = b.
+Lemma andb_true_neutral_r : b && true = b.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem orb_false_neutral_l : false || b = b.
+Lemma orb_false_neutral_l : false || b = b.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem orb_false_neutral_r : b || false = b.
+Lemma orb_false_neutral_r : b || false = b.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
 (** *** Anihilacja *)
 
-Theorem andb_false_annihilation_l : false && b = false.
+Lemma andb_false_annihilation_l : false && b = false.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem andb_false_annihilation_r : b && false = false.
+Lemma andb_false_annihilation_r : b && false = false.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem orb_true_annihilation_l :  true || b = true.
+Lemma orb_true_annihilation_l :  true || b = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem orb_true_annihilation_r :  b || true = true.
+Lemma orb_true_annihilation_r :  b || true = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
 (** *** Łączność *)
 
-Theorem andb_assoc : b1 && (b2 && b3) = (b1 && b2) && b3.
+Lemma andb_assoc : b1 && (b2 && b3) = (b1 && b2) && b3.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem orb_assoc : b1 || (b2 || b3) = (b1 || b2) || b3.
+Lemma orb_assoc : b1 || (b2 || b3) = (b1 || b2) || b3.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
 (** *** Przemienność *)
 
-Theorem andb_comm : b1 && b2 = b2 && b1.
+Lemma andb_comm : b1 && b2 = b2 && b1.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem orb_comm : b1 || b2 = b2 || b1.
+Lemma orb_comm : b1 || b2 = b2 || b1.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
 (** *** Rozdzielność *)
 
-Theorem andb_dist_orb :
+Lemma andb_dist_orb :
   b1 && (b2 || b3) = (b1 && b2) || (b1 && b3).
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem orb_dist_andb :
+Lemma orb_dist_andb :
   b1 || (b2 && b3) = (b1 || b2) && (b1 || b3).
 (* begin hide *)
 Proof. solve_bool. Qed.
@@ -204,59 +204,59 @@ Proof. solve_bool. Qed.
 
 (** *** Wyłączony środek i niesprzeczność *)
 
-Theorem andb_negb : b && negb b = false.
+Lemma andb_negb : b && negb b = false.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem orb_negb : b || negb b = true.
+Lemma orb_negb : b || negb b = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
 (** *** Prawa de Morgana *)
 
-Theorem negb_andb : negb (b1 && b2) = negb b1 || negb b2.
+Lemma negb_andb : negb (b1 && b2) = negb b1 || negb b2.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem negb_orb : negb (b1 || b2) = negb b1 && negb b2.
+Lemma negb_orb : negb (b1 || b2) = negb b1 && negb b2.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
 (** *** [eqb], [xorb], [norb], [nandb] *)
 
-Theorem eqb_spec : eqb b1 b2 = true -> b1 = b2.
+Lemma eqb_spec : eqb b1 b2 = true -> b1 = b2.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem eqb_spec' : eqb b1 b2 = false -> b1 <> b2.
+Lemma eqb_spec' : eqb b1 b2 = false -> b1 <> b2.
 (* begin hide *)
 Proof. destruct b1, b2; do 2 inversion 1. Qed.
 (* end hide *)
 
-Theorem xorb_spec :
+Lemma xorb_spec :
   xorb b1 b2 = negb (eqb b1 b2).
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem xorb_spec' :
+Lemma xorb_spec' :
   xorb b1 b2 = true -> b1 <> b2.
 (* begin hide *)
 Proof. destruct b1, b2; do 2 inversion 1. Qed.
 (* end hide *)
 
-Theorem norb_spec :
+Lemma norb_spec :
   norb b1 b2 = negb (b1 || b2).
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem nandb_spec :
+Lemma nandb_spec :
   nandb b1 b2 = negb (b1 && b2).
 (* begin hide *)
 Proof. solve_bool. Qed.
@@ -264,25 +264,25 @@ Proof. solve_bool. Qed.
 
 (** *** Różne *)
 
-Theorem andb_eq_orb :
+Lemma andb_eq_orb :
   b1 && b2 = b1 || b2 -> b1 = b2.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem all3_spec :
+Lemma all3_spec :
   (b1 && b2) || (negb b1 || negb b2) = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem noncontradiction_bool :
+Lemma noncontradiction_bool :
   negb (eqb b (negb b)) = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Theorem excluded_middle_bool :
+Lemma excluded_middle_bool :
   b || negb b = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
@@ -292,7 +292,7 @@ End boolean_functions.
 
 (** * Rozstrzygalność *)
 
-Theorem excluded_middle :
+Lemma excluded_middle :
   forall P : Prop, P \/ ~ P.
 Proof.
   intro. left.
@@ -320,7 +320,7 @@ Abort.
     też nie. W Coqu jedynym sposobem uzyskania termu o typie [forall
     P : Prop, P \/ ~ P] jest przyjęcie go jako aksjomat. *)
 
-Theorem True_dec : True \/ ~ True.
+Lemma True_dec : True \/ ~ True.
 Proof.
   left. trivial.
 Qed.
@@ -350,7 +350,7 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-Theorem eq_nat_dec :
+Lemma eq_nat_dec :
   forall n m : nat, n = m \/ ~ n = m.
 (* begin hide *)
 Proof.
@@ -429,41 +429,170 @@ Inductive sumbool (A B : Prop) : Type :=
     funkcję [inb_nat], która sprawdza, czy liczba naturalna [n]
     jest obecna na liście [l]. *)
 
-(** * Typy hybrydowe *)
+(** ** Kiedy nie warto rozstrzygać? *)
 
-(** Ostatnim z typów istotnych z punktu widzenia silnych specyfikacji
-    jest typ o wdzięcznej nazwie [sumor]. *)
+(** Tutaj coś w stylu [n < m \/ n = m \/ n > m] *)
 
-Module sumor.
+(** ** Rozstrzygalność jako pułapka na negacjonistów *)
 
-Inductive sumor (A : Type) (B : Prop) : Type :=
-    | inleft : A -> sumor A B
-    | inright : B -> sumor A B.
+Module weak_apart.
 
-(** Jak sama nazwa wskazuje, [sumor] jest hybrydą sumy rozłącznej [sum]
-    oraz dysjunkcji [or]. Możemy go interpretować jako typ, którego
-    elementami są elementy [A] albo wymówki w stylu "nie mam elementu [A],
-    ponieważ zachodzi zdanie [B]". [B] nie zależy od [A], a więc jest to
-    zwykła suma (a nie suma zależna, czyli uogólnienie produktu). [sumor]
-    żyje w [Type], a więc jest to specyfikacja i liczy się konkretna
-    postać jego termów, a nie jedynie fakt ich istnienia. *)
+Inductive unequal {A : Type} : list A -> list A -> Prop :=
+    | nil_cons : forall h t, unequal nil (cons h t)
+    | cons_nil : forall h t, unequal (cons h t) nil
+    | cons_cons1 :
+        forall h1 h2 t1 t2,
+          h1 <> h2 -> unequal (cons h1 t1) (cons h2 t2)
+    | cons_cons2 :
+        forall h1 h2 t1 t2,
+          unequal t1 t2 -> unequal (cons h1 t1) (cons h2 t2).
 
-(** **** Ćwiczenie ([pred']) *)
-
-(** Zdefiniuj funkcję [pred'], która przypisuje liczbie naturalnej jej
-    poprzednik. Poprzednikiem [0] nie powinno być [0]. Mogą przydać ci
-    się typ [sumor] oraz sposób definiowania za pomocą taktyk, omówiony
-    w podrozdziale dotyczącym sum zależnych. *)
-
-(* begin hide *)
-Definition pred' (n : nat) : sumor nat (n = 0) :=
-match n with
-    | 0 => inright _ _ eq_refl
-    | S n' => inleft _ _ n'
+Fixpoint neq {A : Type} (l1 l2 : list A) : Prop :=
+match l1, l2 with
+    | nil, nil => False
+    | nil, cons _ _ => True
+    | cons _ _, nil => True
+    | cons h1 t1, cons h2 t2 => h1 <> h2 \/ neq t1 t2
 end.
-(* end hide *)
 
-End sumor.
+Goal
+  forall {A : Type} (l1 l2 : list A),
+    unequal l1 l2 <-> neq l1 l2.
+Proof.
+  split.
+    induction 1; cbn; firstorder.
+    revert l2. induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn.
+      contradiction.
+      1-2: constructor.
+      destruct 1.
+        constructor 3. assumption.
+        constructor 4. apply IHt1. assumption.
+Qed.
+
+End weak_apart.
+
+Module param_apart.
+
+Inductive unequal
+  {A : Type} (apart : A -> A -> Prop) : list A -> list A -> Prop :=
+    | nil_cons : forall h t, unequal apart nil (cons h t)
+    | cons_nil : forall h t, unequal apart (cons h t) nil
+    | cons_cons1 :
+        forall h1 h2 t1 t2,
+          apart h1 h2 -> unequal apart (cons h1 t1) (cons h2 t2)
+    | cons_cons2 :
+        forall h1 h2 t1 t2,
+          unequal apart t1 t2 -> unequal apart (cons h1 t1) (cons h2 t2).
+
+Fixpoint neq
+  {A : Type} (apart : A -> A -> Prop) (l1 l2 : list A) : Prop :=
+match l1, l2 with
+    | nil, nil => False
+    | nil, cons _ _ => True
+    | cons _ _, nil => True
+    | cons h1 t1, cons h2 t2 => apart h1 h2 \/ neq apart t1 t2
+end.
+
+Goal
+  forall {A : Type} (apart : A -> A -> Prop) (l1 l2 : list A),
+    unequal apart l1 l2 <-> neq apart l1 l2.
+Proof.
+  split.
+    induction 1; cbn; firstorder.
+    revert l2. induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn.
+      contradiction.
+      1-2: constructor.
+      destruct 1.
+        constructor 3. assumption.
+        constructor 4. apply IHt1. assumption.
+Qed.
+
+End param_apart.
+
+Require Import D5.
+
+Fixpoint different {A : Type} (l1 l2 : list A) : Prop :=
+match l1, l2 with
+    | [], [] => False
+    | [], _ => True
+    | _, [] => True
+    | h1 :: t1, h2 :: t2 => h1 <> h2 \/ different t1 t2
+end.
+
+Lemma different_spec :
+  forall (A : Type) (l1 l2 : list A),
+    l1 <> l2 <-> different l1 l2.
+Proof.
+  induction l1 as [| h1 t1]; cbn.
+    destruct l2 as [| h2 t2]; cbn.
+      tauto.
+      firstorder congruence.
+    destruct l2 as [| h2 t2]; cbn.
+      firstorder congruence.
+      split.
+        Focus 2. destruct 1.
+          congruence.
+          destruct (IHt1 t2). firstorder congruence.
+        intro. assert (~ (h1 = h2 /\ t1 = t2)).
+          firstorder congruence.
+Abort.
+
+(** ** Techniczne aspekty rozstrzygalności 2 *)
+
+Require Import Bool.
+
+Print reflect.
+
+Print BoolSpec.
+
+Print CompareSpec.
+
+Inductive Spec {A : Type} (P : A -> Prop) : A -> Prop :=
+    | spec : forall x : A, P x -> Spec P x.
+
+Ltac spec_aux H :=
+match type of H with
+    | Spec ?P ?x => destruct H as [x H], x
+end.
+
+Tactic Notation "spec" hyp(H) := spec_aux H.
+
+Tactic Notation "spec" integer(n) :=
+  intros until n;
+match goal with
+    | H : Spec _ _ |- _ => spec_aux H
+end.
+
+Goal
+  forall (P Q : Prop) (b : bool),
+    Spec (fun b : bool => if b then P else Q) b
+      <->
+    BoolSpec P Q b.
+Proof.
+  split.
+    spec 1; constructor; assumption.
+    destruct 1; constructor; assumption.
+Qed.
+
+Goal
+  forall (P Q : Prop) (b : bool),
+    Spec (fun b : bool => if b then P else Q) b
+      <->
+    BoolSpec P Q b.
+Proof.
+  split.
+    spec 1; constructor; assumption.
+    destruct 1; constructor; assumption.
+Qed.
+
+Lemma Spec_char :
+  forall (A : Type) (P : A -> Prop) (x : A),
+    P x <-> Spec P x.
+Proof.
+  split.
+    intro. constructor. assumption.
+    destruct 1. assumption.
+Qed.
 
 (** * Reflekcja w małej skali, czyli jak odbijać żeby się nie zmęczyć *)
 
@@ -502,8 +631,46 @@ Print evenb_spec.
 
 (** * Poradnik hodowcy, czyli jak nie rozmnażać definicji *)
 
-(** * Metoda encode-decode, czyli o rozwiązaywaniu problemów,
-      które sami sobie tworzymy *)
+(** * Przerwa na reklamy: aksjomaty dotyczące sortu [Prop] *)
+
+(** * Sort [SProp], czyli zdania, ale takie jakby inne *)
+
+Set Allow StrictProp.
+
+Inductive seq {A : Type} (x : A) : A -> SProp :=
+    | srefl : seq x x.
+
+Inductive sEmpty : SProp := .
+
+Goal forall A : Type, sEmpty -> A.
+Proof.
+  destruct 1.
+Qed.
+
+Goal
+  forall {A : Type} (P : A -> Type) (x y : A),
+    seq x y -> P x -> P y.
+Proof.
+  intros A P x y Hs Hp.
+Abort.
+
+Check CompareSpec.
+
+Print CompareSpec.
+
+Inductive Box (A : Type) : Prop :=
+    | box : A -> Box A.
+
+Print Box_sind.
+
+Require Import SetIsType.
+
+Lemma SetIsType : Set = Type.
+Proof.
+  reflexivity.
+Qed.
+
+(** * Metoda encode-decode, czyli o rozwiązaywaniu problemów, które sami sobie tworzymy *)
 
 (** Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko
     zwalcza problemy nieznane w żadnej innej teorii". *)
