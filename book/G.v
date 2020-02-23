@@ -954,10 +954,12 @@ Unset Positivity Checking.
 Inductive IType (i : I) : Type :=
     | intro : Arg i (IType i) -> IType i.
 
+(*
 Fixpoint IType_ind
   {i : I}
   {P : IType i -> Type}
   (intro' : forall a : Arg i (IType i), P (intro a) ->
+*)
 
 Definition iinat := IType inat.
 

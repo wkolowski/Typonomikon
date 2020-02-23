@@ -74,6 +74,7 @@ B4: Reszta
   Pięć rodzajów reguł
   HoTT-bookowa teoria typów: pusty, unit, bool, nat, produkt, suma, funkcje, produkt zależny, suma zależna, uniwersa, równość
   Ale nie można zaniedbać formalnej prezentacji teorii typów.
+  Wprowadzić tutaj nazwę "motyw eliminacji"
 
 (D1) Typy induktywne
   Enumeracje, czyli sumy nazwane.
@@ -113,8 +114,6 @@ Inne
   teoria dziedzin (computation, CPDT)
   comp (CPDT)
   koindukcja (thunk, CPDT)
-
-(D3) Logika boolowska
 
 (D4) Arytmetyka Peano
 
@@ -208,6 +207,19 @@ Inne
 
   Podsumowując: zdefiniować na relacjach rzeczy, których można by użyć
   przy formalizacji teorii typów, ale tylko w celu objaśnienia.
+
+(E4) Nowy rozdział o logice boolowskiej
+1. Tabelki prawdy (definicje) + twierdzenia jako powtórka logiki klasycznej.
+2. Rozstrzygalność:
+  1. Co to.
+  2. Techniczne aspekty.
+  3. Kiedy nie rozstrzygać (protip: kiedy można niskim kosztem rozstrzygnąć coś bardziej informatywnego).
+  4. Reflect, BoolSpec, CompareSpec etc.
+3. Reflekcja małoskalowa.
+4. Napisać podrozdział poświęcony temu, czy definiować predykaty (i rodziny typów) przez rekursję czy przez indukcję. Użyć jako przykładu takich predykatów jak elem, Exists, Forall, Exactly. Jak to się ma do rozstrzygalności.
+5. Aksjomaty dotyczące sortu Prop i jak obejść się bez nich.
+6. Metoda encode-decode, początkowo jako narzędzie do rozwiązywania problemów, których normalni ludzie nie mają i nigdy mieć nie będą. Potem: izomorfizmy typów.
+7. Sort SProp.
 
 (F1) Typy koinduktywne
   Rekordy, parametry i korekursja.

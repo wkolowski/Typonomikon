@@ -825,3 +825,5 @@ Fixpoint decode_encode
 Proof.
   destruct H.
 Abort.
+
+End encodedecode2.
