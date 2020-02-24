@@ -19,3 +19,4 @@ tex/*.tex
 .makefile.d
 
 .vscode
+.lia.cache
