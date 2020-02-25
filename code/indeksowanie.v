@@ -26,7 +26,7 @@ Print nth.
       na indeks [n]. [0] oznacza "już", zaś [S _] oznacza "jeszcze krok"
 
     Ma to sens, czyż nie? Zastanówmy się więc teraz, jak można
-    indeksować inne struktury danych, takie jak drzewa czy wektory (co
+    indeksować inne struktury danych, takie jak wektory czy drzewa (co
     w zasadzie wyczerpuje pytanie, bo elementy każdego typu induktywnego
     to nic innego jak drzewa). *)
 
@@ -53,7 +53,10 @@ Definition nat' : Type := list unit.
 
     Jest w tym sporo mądrości: [list A] to podłużny byt wypełniony
     elementami typu [A], zaś [list unit] to po prostu podłużny byt -
-    jego zawartość jest nieistotna. *)
+    jego zawartość jest nieistotna.
+
+    ACHTUNG: to wszystko kłamstwa, sprawa jest skomplikowańsza niż
+    myślałem. *)
 
 (* 1 + A * X^2 *)
 Module BT.
