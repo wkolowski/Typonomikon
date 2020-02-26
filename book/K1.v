@@ -1,4 +1,4 @@
-(** * Z: Złożoność obliczeniowa *)
+(** * K1: Złożoność obliczeniowa *)
 
 (** Prerekwizyty:
     - rekursja strukturalna
