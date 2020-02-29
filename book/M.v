@@ -98,6 +98,111 @@ Defined.
     Jeżeli nie, to znajdź jakiś warunek na [A], przy którym [Stream A]
     jest przeszukiwalny. *)
 
+(** Trochę własności, pewnie dość oczywistych. *)
+
+Definition search_prod
+  {A B : Type} (SA : Searchable A) (SB : Searchable B)
+  (p : A * B -> bool) : A * B :=
+    let a := search (fun a : A => p (a, search (fun b : B => p (a, b)))) in
+    let b := search (fun b : B => p (a, b)) in
+      (a, b).
+
+#[refine]
+Instance Searchable_prod
+  {A B : Type}
+  (SA : Searchable A) (SB : Searchable B) : Searchable (A * B) :=
+{
+    search := @search_prod _ _ SA SB
+}.
+Proof.
+  intros p H [a b].
+  unfold search_prod in *.
+  destruct SA as [sa Ha], SB as [sb Hb]; cbn in *.
+  specialize (Hb (fun b => p (a, b))); cbn in Hb.
+  apply Hb.
+  specialize (Ha (fun a => p (a, sb (fun b => p (a, b))))). cbn in Ha.
+  apply Ha.
+  assumption.
+Defined.
+
+#[refine]
+Instance Searchable_sum
+  {A B : Type}
+  (SA : Searchable A) (SB : Searchable B) : Searchable (A + B) :=
+{
+    search p :=
+      let a := search (fun a => p (inl a)) in
+      let b := search (fun b => p (inr b)) in
+        if p (inl a) then inl a else inr b
+}.
+Proof.
+  intros p H x.
+  destruct SA as [sa Ha], SB as [sb Hb]; cbn in *.
+  destruct (p (inl (sa (fun a => p (inl a))))) eqn : Heq.
+    congruence.
+    destruct x as [a | b].
+      apply (Ha (fun a => p (inl a))). assumption.
+      apply (Hb (fun b => p (inr b))). assumption.
+Defined.
+
+(** Da się zrobić jakieś ciekawe funkcje? *)
+
+Definition sex
+  {A : Type} {_ : Searchable A} (p : A -> bool) : bool :=
+    p (search p).
+
+Definition sall
+  {A : Type} {_ : Searchable A} (p : A -> bool) : bool :=
+    let p' := fun a => negb (p a) in
+      negb (p' (search p')).
+
+(** Nie każdy [conat] jest zerem, brawo! *)
+Compute
+  sall (fun n => match pred n with | None => true | _ => false end).
+
+(** To samo, tylko bardziej przyjazne sygnatury typów. *)
+
+Inductive ospec
+  {A : Type} (N : Prop) (S : A -> Prop) : option A -> Prop :=
+    | ospec_None : N -> ospec N S None
+    | ospec_Some : forall a : A, S a -> ospec N S (Some a).
+
+Definition search'
+  {A : Type} {SA : Searchable A} (p : A -> bool) : option A :=
+    if p (search p) then Some (search p) else None.
+
+Lemma search'_spec :
+  forall {A : Type} {SA : Searchable A} (p : A -> bool),
+    ospec (forall x : A, p x = false)
+          (fun x : A => p x = true)
+          (search' p).
+Proof.
+  intros. unfold search'.
+  destruct (p (search p)) eqn: H; constructor.
+    assumption.
+    apply search_spec. assumption.
+Qed.
+
+(* begin hide *)
+Require Import W3.
+Check LEM.
+Print LEM.
+
+Search nat conat.
+Search Infinite.
+Search Finite.
+Print Finite.
+
+Inductive Finite' : conat -> Type :=
+    | Finite'_zero : Finite' zero
+    | Finite'_succ : forall n : conat, Finite' n -> Finite' (succ n).
+
+Definition finite_nat {c : conat} (f : Finite c) : nat.
+Proof.
+Abort.
+
+(* end hide *)
+
 (** * Nielegalna topologia *)
 
 (** Tutaj o topologii takiej jak robi Martin Escardó głównie w tej
