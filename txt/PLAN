@@ -215,6 +215,7 @@ Inne
   2. Techniczne aspekty.
   3. Kiedy nie rozstrzygać (protip: kiedy można niskim kosztem rozstrzygnąć coś bardziej informatywnego).
   4. Reflect, BoolSpec, CompareSpec etc.
+  5. Uwaga: w sumie to taki typ sumor jest dla opcji czymś analogicznym jak BoolSpec dla typu bool.
 3. Reflekcja małoskalowa.
 4. Napisać podrozdział poświęcony temu, czy definiować predykaty (i rodziny typów) przez rekursję czy przez indukcję. Użyć jako przykładu takich predykatów jak elem, Exists, Forall, Exactly. Jak to się ma do rozstrzygalności.
 5. Aksjomaty dotyczące sortu Prop i jak obejść się bez nich.
