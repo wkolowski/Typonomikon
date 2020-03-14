@@ -26,9 +26,11 @@ B1: Konstruktywny rachunek zdań.
 B2: Konstruktywny rachunek kwantyfikatorów.
   Typy i ich elementy (zestawić ze sobą P : Prop, A : Type, p : P, x : A)
   Predykaty i relacje
+  Równość
   Kwantyfikatory:
   - uniwersalny
   - egzystencjalny
+  - unikatowy
   Zmienne związane
   Predykatywizm - krótki opis.
   Paradoks golibrody
@@ -58,6 +60,7 @@ B4: Reszta
   Inne logiki?
   Logika de Morgana jako coś pomiędzy logiką konstruktywną i klasyczną
   Inne logiki - krótkie, acz realistyczne podsumowanie (logiki parakonsystentne to guwno)
+  Aksjomaty w stylu ProofIrrelevance, UIP, K, PropExt
   Na końcu dać podrozdział o kombinatorach taktyk
   Zadania:
     - rozwiąż wszystkie zadania jeszcze raz, ale tym razem bez używania Module/Section/Hypothesis oraz z jak najkrótszymi dowodami

@@ -2579,9 +2579,42 @@ Class StrictTotalOrder {A : Type} (R : rel A) : Prop :=
 
 (** * Domknięcia *)
 
+(** Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
+    niepostrzeżenie przywyczajały do monad. *)
+
+Class Closure
+  {A : Type}
+  (Cl : (A -> A -> Prop) -> (A -> A -> Prop)) : Prop :=
+{
+    pres :
+      forall R S : A -> A -> Prop,
+        (forall x y : A, R x y -> S x y) ->
+          forall x y : A, Cl R x y -> Cl S x y;
+    step :
+      forall R : A -> A -> Prop,
+        forall x y : A, R x y -> Cl R x y;
+    join :
+      forall R : A -> A -> Prop,
+        forall x y : A, Cl (Cl R) x y -> Cl R x y;
+}.
+
 Inductive refl_clos {A : Type} (R : rel A) : rel A :=
     | rc_step : forall x y : A, R x y -> refl_clos R x y
     | rc_refl : forall x : A, refl_clos R x x.
+
+#[refine]
+Instance Closure_refl_clos {A : Type} : Closure (@refl_clos A) :=
+{
+    step := rc_step;
+}.
+Proof.
+  induction 2.
+    constructor. apply H. assumption.
+    constructor 2.
+  inversion 1; subst.
+    assumption.
+    constructor 2.
+Qed.
 
 (* begin hide *)
 Hint Constructors refl_clos.

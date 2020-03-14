@@ -1,6 +1,6 @@
 (** * W3: Logika klasyczna [schowana na końcu dla niepoznaki] *)
 
-(** * Prawa logiki klasycznej *)
+(** * Aksjomaty i prawa logiki klasycznej *)
 
 Definition LEM : Prop :=
   forall P : Prop, P \/ ~ P.

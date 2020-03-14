@@ -36,7 +36,6 @@ Inne:
 17. Opisać zmienne egzystencjalne i odpowiadające im taktyki.
 18. Opisać taktyki do radzenia sobie z typami zależnymi.
 19. Opisać: silnia, współczynniki dwumianowe, sumy szeregów, charakteryzowanie wzorów rekurencyjnych.
-22. Opisać exists!
 26. Odkłamać kwestię polimorfizmu najlepiej przy okazji rozdziału o programowaniu generycznym.
 26ipół. Kwestia parametryczności: lam X. lam nil. lam cons. cons X nil - egzotyczna lista
 27. Twierdzenie: można zanurzyć liczby naturalne w liczby konaturalne, ale nie można tego zanurzenia odwrócić.

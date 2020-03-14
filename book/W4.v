@@ -10,6 +10,20 @@
 
 (** jako coś pomiędzy logiką konstruktywną i klasyczną *)
 
+(** * Dziwne aksjomaty i płynące z nich logiki *)
+
+Definition ProofIrrelevance : Prop :=
+  forall (P : Prop) (p q : P), p = q.
+
+Definition UIP : Prop :=
+  forall (A : Type) (x y : A) (p q : x = y), p = q.
+
+Definition K : Prop :=
+  forall (A : Type) (x : A) (p : x = x), p = eq_refl x.
+
+Definition PropositionalExtensionality : Prop :=
+  forall P Q : Prop, (P <-> Q) -> P = Q.
+
 (** * Inne logiki - podsumowanie *)
 
 (** krótkie, acz realistyczne (logiki parakonsystentne to guwno) *)

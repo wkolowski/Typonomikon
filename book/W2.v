@@ -6,11 +6,29 @@
 
 (** * Predykaty i relacje *)
 
+(** * Równość - najważniejsza relacja *)
+
+(** Dobrze byłoby zapoznać się z równością przed pierwszym jej użyciem
+    w rozdziale o typach induktywnych. *)
+
 (** * Kwantyfikatory *)
 
 (** ** Kwantyfikator uniwersalny *)
 
 (** ** Kwantyfikator egzystencjalny *)
+
+(** * Kwantyfikator unikatowy *)
+
+Print unique.
+Search unique.
+
+Definition unique {A : Type} (P : A -> Prop) : Prop :=
+  exists x : A, P x /\ forall y : A, P y -> x = y.
+
+(** Poznawszy relację równości oraz kwantyfikatory uniwersalny i
+    egzystencjalny, możemy zdefiniować inny bardzo ważny "kwantyfikator",
+    a mianowicie kwantyfikator unikatowy, który głosi, że istnieje
+    dokładnie jeden obiekt spełniający daną właściwość. *)
 
 (** * Zmienne związane *)
 

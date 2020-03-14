@@ -14,33 +14,58 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab617"></a><h1 class="section">Porównanie logiki konstruktywnej i klasycznej</h1>
+<a name="lab619"></a><h1 class="section">Porównanie logiki konstruktywnej i klasycznej</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab618"></a><h1 class="section">Pluralizm logiczny</h1>
+<a name="lab620"></a><h1 class="section">Pluralizm logiczny</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab619"></a><h1 class="section">Inne logiki?</h1>
+<a name="lab621"></a><h1 class="section">Inne logiki?</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab620"></a><h1 class="section">Logika de Morgana</h1>
+<a name="lab622"></a><h1 class="section">Logika de Morgana</h1>
 
 <div class="paragraph"> </div>
 
  jako coś pomiędzy logiką konstruktywną i klasyczną 
 <div class="paragraph"> </div>
 
-<a name="lab621"></a><h1 class="section">Inne logiki - podsumowanie</h1>
+<a name="lab623"></a><h1 class="section">Dziwne aksjomaty i płynące z nich logiki</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">ProofIrrelevance</span> : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">p</span> <span class="id" title="var">q</span> : <span class="id" title="var">P</span>), <span class="id" title="var">p</span> = <span class="id" title="var">q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">UIP</span> : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">p</span> <span class="id" title="var">q</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>), <span class="id" title="var">p</span> = <span class="id" title="var">q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">K</span> : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">x</span>), <span class="id" title="var">p</span> = <span class="id" title="var">eq_refl</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">PropositionalExtensionality</span> : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> = <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab624"></a><h1 class="section">Inne logiki - podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
  krótkie, acz realistyczne (logiki parakonsystentne to guwno) 
 <div class="paragraph"> </div>
 
-<a name="lab622"></a><h1 class="section">Kombinatory taktyk</h1>
+<a name="lab625"></a><h1 class="section">Kombinatory taktyk</h1>
 
 <div class="paragraph"> </div>
 
@@ -84,7 +109,7 @@ Jego dowód wygląda dość schematycznie. Taktyka <span class="inlinecode"><spa
     skomplikowane lub jedynie zmieniać niektóre aspekty ich zachowań. 
 <div class="paragraph"> </div>
 
-<a name="lab623"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
+<a name="lab626"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
 
 </div>
 <div class="code">
@@ -190,7 +215,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 
 <div class="paragraph"> </div>
 
-<a name="lab624"></a><h4 class="section">Ćwiczenie (średnik)</h4>
+<a name="lab627"></a><h4 class="section">Ćwiczenie (średnik)</h4>
 
 <div class="paragraph"> </div>
 
@@ -213,7 +238,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 </div>
 
 <div class="doc">
-<a name="lab625"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
+<a name="lab628"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
 
 </div>
 <div class="code">
@@ -260,7 +285,7 @@ Innym przydatnym kombinatorem jest <span class="inlinecode">||</span>, który b�
     <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> będzie miało taki sam efekt, jak <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H0</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab626"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
+<a name="lab629"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
 
 </div>
 <div class="code">
@@ -331,7 +356,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     działanie sukcesem. 
 <div class="paragraph"> </div>
 
-<a name="lab627"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
+<a name="lab630"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
 
 </div>
 <div class="code">
@@ -404,7 +429,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     https://coq.inria.fr/refman/coq-tacindex.html 
 <div class="paragraph"> </div>
 
-<a name="lab628"></a><h1 class="section">Zadania</h1>
+<a name="lab631"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -412,7 +437,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami 
 <div class="paragraph"> </div>
 
-<a name="lab629"></a><h1 class="section">Jakieś podsumowanie</h1>
+<a name="lab632"></a><h1 class="section">Jakieś podsumowanie</h1>
 
 <div class="paragraph"> </div>
 

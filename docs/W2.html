@@ -25,27 +25,58 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab595"></a><h1 class="section">Kwantyfikatory</h1>
+<a name="lab595"></a><h1 class="section">Równość - najważniejsza relacja</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab596"></a><h2 class="section">Kwantyfikator uniwersalny</h2>
+ Dobrze byłoby zapoznać się z równością przed pierwszym jej użyciem
+    w rozdziale o typach induktywnych. 
+<div class="paragraph"> </div>
+
+<a name="lab596"></a><h1 class="section">Kwantyfikatory</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab597"></a><h2 class="section">Kwantyfikator egzystencjalny</h2>
+<a name="lab597"></a><h2 class="section">Kwantyfikator uniwersalny</h2>
 
 <div class="paragraph"> </div>
 
-<a name="lab598"></a><h1 class="section">Zmienne związane</h1>
+<a name="lab598"></a><h2 class="section">Kwantyfikator egzystencjalny</h2>
 
 <div class="paragraph"> </div>
 
-<a name="lab599"></a><h1 class="section">Predykatywizm</h1>
+<a name="lab599"></a><h1 class="section">Kwantyfikator unikatowy</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">unique</span>.<br/>
+<span class="id" title="keyword">Search</span> <span class="id" title="var">unique</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">unique</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> /\ <span class="id" title="keyword">forall</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Poznawszy relację równości oraz kwantyfikatory uniwersalny i
+    egzystencjalny, możemy zdefiniować inny bardzo ważny "kwantyfikator",
+    a mianowicie kwantyfikator unikatowy, który głosi, że istnieje
+    dokładnie jeden obiekt spełniający daną właściwość. 
+<div class="paragraph"> </div>
+
+<a name="lab600"></a><h1 class="section">Zmienne związane</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab600"></a><h1 class="section">Paradoks golibrody</h1>
+<a name="lab601"></a><h1 class="section">Predykatywizm</h1>
+
+<div class="paragraph"> </div>
+
+<a name="lab602"></a><h1 class="section">Paradoks golibrody</h1>
 
 <div class="paragraph"> </div>
 
@@ -153,7 +184,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
     zostaje trafiony paradoksalną konkluzją: golibroda nie istnieje. 
 <div class="paragraph"> </div>
 
-<a name="lab601"></a><h1 class="section">Zadania</h1>
+<a name="lab603"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -172,7 +203,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 
 <div class="paragraph"> </div>
 
-<a name="lab602"></a><h1 class="section">Ściąga</h1>
+<a name="lab604"></a><h1 class="section">Ściąga</h1>
 
 </div>
 <div class="code">
