@@ -58,14 +58,209 @@
 </div>
 
 <div class="doc">
-<a name="lab624"></a><h1 class="section">Inne logiki - podsumowanie</h1>
+<a name="lab624"></a><h1 class="section">Logika modalna</h1>
+
+<div class="paragraph"> </div>
+
+ Logiki modalne to logiki, w których oprócz znanych nam już spójników
+    czy kwantyfikatorów występują też modalności. Czym jest modalność?
+    Najpierw trochę etymologii.
+
+<div class="paragraph"> </div>
+
+    Łacińskie słowo "modus" oznacza "sposób". Występuje ono w takich
+    frazach jak "modus operandi" ("sposób działania") czy "modus vivendi"
+    ("sposób życia"; po dzisiejszemu powiedzielibyśmy "styl życia",
+    a amerykańce - "way of life"). Od niego pochodzi przymiotnik
+    "modalis", który oznacza "dotyczący sposobu", a od niego pochodzą
+    francuskie "modalité" czy angielskie "modality", które znaczą
+    mniej więcej to samo co oryginalne łacińskie "modus", czyli
+    "sposób", ale już w nieco innym kontekście.
+
+<div class="paragraph"> </div>
+
+    W językach naturalnych modalności często występują pod postacią
+    czasowników zwanych na ich cześć modalnymi, takich jak "móc" czy
+    "musieć" - o ile nie mieszkasz na pustyni pod kamieniem, to pewnie
+    spotkałeś się z nimi ucząc się języków obcych.
+
+<div class="paragraph"> </div>
+
+    Jednak nas bardziej będzie interesować inna forma, pod którą
+    modalności występują, czyli przysłówki. Porównajmy poniższe zdania:
+<ul class="doclist">
+<li> Pada deszcz.
+
+</li>
+<li> Chyba pada deszcz.
+
+</li>
+<li> Na pewno pada deszcz.
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Wszystkie mówią o tym samym zjawisku, czyli deszczu, ale robią to
+    w różny sposób (i ten sposób to właśnie modalność!) - pierwszy
+    sposób jest neutralny, drugi wyraża wątpliwość, a trzeci pewność.
+
+<div class="paragraph"> </div>
+
+    Również najpopularniejsze systemy logiki modalnej skupiają się na
+    próbie formalizacji tych dwóch sposobów - możliwości i konieczności.
+    Nie będziemy ich jednak tutaj omawiać, gdyż, z punktu widzenia zarówno
+    matematyki jako i informatyki, tego typu logiki są bezużyteczne.
+
+<div class="paragraph"> </div>
+
+    Zamiast tego spojrzymy jeszcze raz na rzeczy, które już znamy, a
+    których nawet nie podejrzewamy o bycie modalnościami. Najpierw
+    jednak pół-formalna definicja modalności:
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">M</span></span> jest modalnością, gdy:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, czyli <span class="inlinecode"><span class="id" title="var">M</span></span> przekształca zdania w zdania
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode">(<span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Cóż to wszystko oznacza? Jeżeli <span class="inlinecode"><span class="id" title="var">P</span></span> jest zdaniem, to <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> również
+    jest zdaniem, które możemy rozumieć jako "P zachodzi w sposób M".
+    Dla przykładu, jeżeli <span class="inlinecode"><span class="id" title="var">P</span></span> znaczy "pada deszcz", a <span class="inlinecode"><span class="id" title="var">M</span></span> wyraża
+    możliwość, to wtedy <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> znaczy "być może pada deszcz".
+
+<div class="paragraph"> </div>
+
+    Pierwsze prawo mówi, że modalność jest kompatybilna z konsekwencjami
+    danego zdania. Niech <span class="inlinecode"><span class="id" title="var">Q</span></span> znaczy "jest mokro". Wtedy <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> znaczy
+    "jeżeli pada deszcz, to jest mokro". Kompatybilność znaczy, że możemy
+    stąd wywnioskować <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, czyli "jeżeli być może pada deszcz,
+    to być może jest mokro".
+
+<div class="paragraph"> </div>
+
+    Drugie prawo mówi, że jeżeli zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> po prostu zachodzi, to
+    zachodzi też w sposób <span class="inlinecode"><span class="id" title="var">M</span></span>: "jeżeli pada deszcz, to być może pada
+    deszcz". Można to interpretować tak, że modalność modyfikuje
+    znaczenie danego zdania, ale nie wywraca go do góry nogami. Dla
+    przykładu modalnością NIE JEST negacja, gdyż nie spełnia ona tego
+    warunku. Poetycko można by powiedzieć, że zaprzeczenie nie jest
+    sposobem twierdzenia, a nieistnienie nie jest sposobem istnienia.
+
+<div class="paragraph"> </div>
+
+    Trzecie prawo mówi, że potworki w rodzaju "może może może może
+    pada deszcz" znaczą to samo, co "może pada deszcz" (ale już
+    niekoniecznie to samo, co po prostu "pada deszcz"). Jest to
+    dość rozsądne, gdyż w językach naturalnych zazwyczaj tak nie
+    mówimy. A jeżeli już mówimy, np. "bardzo bardzo boli mnie dupa" -
+    to znaczy, że słowo "bardzo" w tym wypadku nie wyraża sposobu
+    bolenia dupy, lecz raczej stopień/intensywność bólu, a zatem
+    "bardzo" NIE JEST modalnością.
+
+<div class="paragraph"> </div>
+
+    Zanim zobaczymy, jak ta definicja ma się do tego, co już wiemy
+    i potrafimy, zadanie: 
+<div class="paragraph"> </div>
+
+<a name="lab625"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że negacja nie jest modalnością. Parafrazując:
+<ul class="doclist">
+<li> napisz, jak wyglądałyby prawa bycia modalnością dla negacji
+
+</li>
+<li> zdecyduj, które z praw negacja łamie, a których nie
+
+</li>
+<li> udowodnij, że prawa te faktycznie nie zachodzą 
+</li>
+</ul>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab626"></a><h2 class="section">Niespodziewana modalność - niezaprzeczalność</h2>
+
+<div class="paragraph"> </div>
+
+ Wiemy już, że negacja nie jest modalnością. Świetnie, ale w takim
+    razie, co nią jest? Otóż przykładem modalności jest... podwójna
+    negacja!
+
+<div class="paragraph"> </div>
+
+    Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
+    Nie ma się czemu dziwić - w języku polskim podwójna negacja
+    ("nikt nic nie wie") 
+<div class="paragraph"> </div>
+
+<a name="lab627"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Pokaż, że podwójna negacja jest modalnością. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (~ ~ <span class="id" title="var">P</span> -&gt; ~ ~ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; ~ ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ ~ ~ ~ <span class="id" title="var">P</span> -&gt; ~ ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+<a name="lab628"></a><h2 class="section">Logika klasyczna jako logika modalna</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab629"></a><h1 class="section">Inne logiki - podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
  krótkie, acz realistyczne (logiki parakonsystentne to guwno) 
 <div class="paragraph"> </div>
 
-<a name="lab625"></a><h1 class="section">Kombinatory taktyk</h1>
+<a name="lab630"></a><h1 class="section">Kombinatory taktyk</h1>
 
 <div class="paragraph"> </div>
 
@@ -109,7 +304,7 @@ Jego dowód wygląda dość schematycznie. Taktyka <span class="inlinecode"><spa
     skomplikowane lub jedynie zmieniać niektóre aspekty ich zachowań. 
 <div class="paragraph"> </div>
 
-<a name="lab626"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
+<a name="lab631"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
 
 </div>
 <div class="code">
@@ -215,7 +410,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 
 <div class="paragraph"> </div>
 
-<a name="lab627"></a><h4 class="section">Ćwiczenie (średnik)</h4>
+<a name="lab632"></a><h4 class="section">Ćwiczenie (średnik)</h4>
 
 <div class="paragraph"> </div>
 
@@ -238,7 +433,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 </div>
 
 <div class="doc">
-<a name="lab628"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
+<a name="lab633"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
 
 </div>
 <div class="code">
@@ -285,7 +480,7 @@ Innym przydatnym kombinatorem jest <span class="inlinecode">||</span>, który b�
     <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> będzie miało taki sam efekt, jak <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H0</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab629"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
+<a name="lab634"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
 
 </div>
 <div class="code">
@@ -356,7 +551,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     działanie sukcesem. 
 <div class="paragraph"> </div>
 
-<a name="lab630"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
+<a name="lab635"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
 
 </div>
 <div class="code">
@@ -429,7 +624,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     https://coq.inria.fr/refman/coq-tacindex.html 
 <div class="paragraph"> </div>
 
-<a name="lab631"></a><h1 class="section">Zadania</h1>
+<a name="lab636"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -437,7 +632,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami 
 <div class="paragraph"> </div>
 
-<a name="lab632"></a><h1 class="section">Jakieś podsumowanie</h1>
+<a name="lab637"></a><h1 class="section">Jakieś podsumowanie</h1>
 
 <div class="paragraph"> </div>
 

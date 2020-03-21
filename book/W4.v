@@ -24,6 +24,158 @@ Definition K : Prop :=
 Definition PropositionalExtensionality : Prop :=
   forall P Q : Prop, (P <-> Q) -> P = Q.
 
+(** * Logika modalna *)
+
+(** Logiki modalne to logiki, w których oprócz znanych nam już spójników
+    czy kwantyfikatorów występują też modalności. Czym jest modalność?
+    Najpierw trochę etymologii.
+
+    Łacińskie słowo "modus" oznacza "sposób". Występuje ono w takich
+    frazach jak "modus operandi" ("sposób działania") czy "modus vivendi"
+    ("sposób życia"; po dzisiejszemu powiedzielibyśmy "styl życia",
+    a amerykańce - "way of life"). Od niego pochodzi przymiotnik
+    "modalis", który oznacza "dotyczący sposobu", a od niego pochodzą
+    francuskie "modalité" czy angielskie "modality", które znaczą
+    mniej więcej to samo co oryginalne łacińskie "modus", czyli
+    "sposób", ale już w nieco innym kontekście.
+
+    W językach naturalnych modalności często występują pod postacią
+    czasowników zwanych na ich cześć modalnymi, takich jak "móc" czy
+    "musieć" - o ile nie mieszkasz na pustyni pod kamieniem, to pewnie
+    spotkałeś się z nimi ucząc się języków obcych.
+
+    Jednak nas bardziej będzie interesować inna forma, pod którą
+    modalności występują, czyli przysłówki. Porównajmy poniższe zdania:
+    - Pada deszcz.
+    - Chyba pada deszcz.
+    - Na pewno pada deszcz.
+
+    Wszystkie mówią o tym samym zjawisku, czyli deszczu, ale robią to
+    w różny sposób (i ten sposób to właśnie modalność!) - pierwszy
+    sposób jest neutralny, drugi wyraża wątpliwość, a trzeci pewność.
+
+    Również najpopularniejsze systemy logiki modalnej skupiają się na
+    próbie formalizacji tych dwóch sposobów - możliwości i konieczności.
+    Nie będziemy ich jednak tutaj omawiać, gdyż, z punktu widzenia zarówno
+    matematyki jako i informatyki, tego typu logiki są bezużyteczne.
+
+    Zamiast tego spojrzymy jeszcze raz na rzeczy, które już znamy, a
+    których nawet nie podejrzewamy o bycie modalnościami. Najpierw
+    jednak pół-formalna definicja modalności:
+
+    [M] jest modalnością, gdy:
+    - [M : Prop -> Prop], czyli [M] przekształca zdania w zdania
+    - [forall P Q : Prop, (P -> Q) -> (M P -> M Q)]
+    - [forall P : Prop, P -> M P]
+    - [forall P : Prop, M (M P) -> M P]
+
+    Cóż to wszystko oznacza? Jeżeli [P] jest zdaniem, to [M P] również
+    jest zdaniem, które możemy rozumieć jako "P zachodzi w sposób M".
+    Dla przykładu, jeżeli [P] znaczy "pada deszcz", a [M] wyraża
+    możliwość, to wtedy [M P] znaczy "być może pada deszcz".
+
+    Pierwsze prawo mówi, że modalność jest kompatybilna z konsekwencjami
+    danego zdania. Niech [Q] znaczy "jest mokro". Wtedy [P -> Q] znaczy
+    "jeżeli pada deszcz, to jest mokro". Kompatybilność znaczy, że możemy
+    stąd wywnioskować [M P -> M Q], czyli "jeżeli być może pada deszcz,
+    to być może jest mokro".
+
+    Drugie prawo mówi, że jeżeli zdanie [P] po prostu zachodzi, to
+    zachodzi też w sposób [M]: "jeżeli pada deszcz, to być może pada
+    deszcz". Można to interpretować tak, że modalność modyfikuje
+    znaczenie danego zdania, ale nie wywraca go do góry nogami. Dla
+    przykładu modalnością NIE JEST negacja, gdyż nie spełnia ona tego
+    warunku. Poetycko można by powiedzieć, że zaprzeczenie nie jest
+    sposobem twierdzenia, a nieistnienie nie jest sposobem istnienia.
+
+    Trzecie prawo mówi, że potworki w rodzaju "może może może może
+    pada deszcz" znaczą to samo, co "może pada deszcz" (ale już
+    niekoniecznie to samo, co po prostu "pada deszcz"). Jest to
+    dość rozsądne, gdyż w językach naturalnych zazwyczaj tak nie
+    mówimy. A jeżeli już mówimy, np. "bardzo bardzo boli mnie dupa" -
+    to znaczy, że słowo "bardzo" w tym wypadku nie wyraża sposobu
+    bolenia dupy, lecz raczej stopień/intensywność bólu, a zatem
+    "bardzo" NIE JEST modalnością.
+
+    Zanim zobaczymy, jak ta definicja ma się do tego, co już wiemy
+    i potrafimy, zadanie: *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że negacja nie jest modalnością. Parafrazując:
+    - napisz, jak wyglądałyby prawa bycia modalnością dla negacji
+    - zdecyduj, które z praw negacja łamie, a których nie
+    - udowodnij, że prawa te faktycznie nie zachodzą *)
+
+(* begin hide *)
+Lemma neg_law1_fails :
+  ~ forall P Q : Prop, (P -> Q) -> (~ P -> ~ Q).
+Proof.
+  intro H.
+  apply (H False True).
+    trivial.
+    intro. assumption.
+    trivial.
+Qed.
+
+Lemma neg_law2_fails :
+  ~ forall P : Prop, P -> ~ P.
+Proof.
+  intro H.
+  apply (H True); trivial.
+Qed.
+(* end hide *)
+
+(** ** Niespodziewana modalność - niezaprzeczalność *)
+
+(** Wiemy już, że negacja nie jest modalnością. Świetnie, ale w takim
+    razie, co nią jest? Otóż przykładem modalności jest... podwójna
+    negacja!
+
+    Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
+    Nie ma się czemu dziwić - w języku polskim podwójna negacja
+    ("nikt nic nie wie") *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że podwójna negacja jest modalnością. *)
+
+Lemma not_not_law1 :
+  forall P Q : Prop, (P -> Q) -> (~ ~ P -> ~ ~ Q).
+(* begin hide *)
+Proof.
+  intros P Q H nnp nq.
+  apply nnp. intro p.
+  apply nq. apply H.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma not_not_law2 :
+  forall P : Prop, P -> ~ ~ P.
+(* begin hide *)
+Proof.
+  intros P p np.
+  apply np, p.
+Qed.
+(* end hide *)
+
+Lemma not_not_law3 :
+  forall P : Prop, ~ ~ ~ ~ P -> ~ ~ P.
+(* begin hide *)
+Proof.
+  intros P n4p np.
+  apply n4p. intro n2p.
+  apply n2p, np.
+Qed.
+(* end hide *)
+
+(** 
+
+*)
+
+(** ** Logika klasyczna jako logika modalna *)
+
 (** * Inne logiki - podsumowanie *)
 
 (** krótkie, acz realistyczne (logiki parakonsystentne to guwno) *)
