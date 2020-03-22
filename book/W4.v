@@ -45,19 +45,20 @@ Definition PropositionalExtensionality : Prop :=
     spotkałeś się z nimi ucząc się języków obcych.
 
     Jednak nas bardziej będzie interesować inna forma, pod którą
-    modalności występują, czyli przysłówki. Porównajmy poniższe zdania:
+    modalności występują, a są to przysłówki. Porównajmy poniższe
+    zdania:
     - Pada deszcz.
-    - Chyba pada deszcz.
+    - Być może pada deszcz.
     - Na pewno pada deszcz.
 
     Wszystkie mówią o tym samym zjawisku, czyli deszczu, ale robią to
     w różny sposób (i ten sposób to właśnie modalność!) - pierwszy
-    sposób jest neutralny, drugi wyraża wątpliwość, a trzeci pewność.
+    sposób jest neutralny, drugi wyraża możliwość, a trzeci pewność.
 
-    Również najpopularniejsze systemy logiki modalnej skupiają się na
-    próbie formalizacji tych dwóch sposobów - możliwości i konieczności.
-    Nie będziemy ich jednak tutaj omawiać, gdyż, z punktu widzenia zarówno
-    matematyki jako i informatyki, tego typu logiki są bezużyteczne.
+    Najpopularniejsze logiki modalne skupiają się na próbie formalizacji
+    właśnie tych dwóch sposobów - możliwości i konieczności. Nie będziemy
+    ich jednak tutaj omawiać, gdyż, z punktu widzenia zarówno matematyki
+    jako i informatyki, tego typu logiki są zupełnie bezużyteczne.
 
     Zamiast tego spojrzymy jeszcze raz na rzeczy, które już znamy, a
     których nawet nie podejrzewamy o bycie modalnościami. Najpierw
@@ -133,8 +134,40 @@ Qed.
     negacja!
 
     Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
-    Nie ma się czemu dziwić - w języku polskim podwójna negacja
-    ("nikt nic nie wie") *)
+    Nie ma się czemu dziwić - w języku polskim podwójna negacja w
+    stylu "nikt nic nie wie" wyraża tak naprawdę pojedynczą negację
+    (choć nazwa "podwójna negacja" jest tu niezbyt trafna - bo słowo
+    "nie" występuje tylko raz, a słowa takie jak "nikt" czy "nic"
+    mają wprawdzie znaczenie negatywne, ale formą negacji nie są),
+    w angielskim natomiast zdanie podwójnie zanegowane ("it's not
+    uncommon") znaczy to samo, co zdanie oznajmiające bez żadnej
+    negacji ("it's common").
+
+    Odstawmy jednak na bok języki naturalne i zastanówmy się, jakąż to
+    modalność wyraża podwójna negacja w naszej Coqowej logice. W tym
+    celu przyjrzyjmy się poniższym zdaniom:
+    - [P] - po prostu stwierdzamy [P], modalność neutralna
+    - [~ P] - zaprzeczamy/obalamy [P]. Można zatem powiedzieć, że [P]
+      jest zaprzeczalne.
+    - [~ ~ P] - zaprzeczamy/obalamy [~ P], czyli zaprzeczamy zaprzeczeniu
+      [P]. Można zatem powiedzieć, że [P] jest niezaprzeczalne.
+
+    I bum, dokonaliśmy naszego odkrycia: podwójna negacja wyraża
+    bardzo subtelną modalność, jaką jest niezaprzeczalność. [~ ~ P]
+    możemy zatem odczytywać jako "niezaprzeczalnie P".
+
+    Czym różni się samo "P" od "niezaprzeczalnie P"? Dla lepszego
+    zrozumienia prześledźmy to na znanym nam już przykładzie, czyli
+    aksjomacie wyłączonego środka.
+
+    Weźmy dowolne zdanie [P]. Nie jesteśmy w stanie udowodnić [P \/ ~ P],
+    gdyż bez żadnej wiedzy o zdaniu [P] nie jesteśmy w stanie zdecydować,
+    czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
+    wcisnąć nam kit, że [~ (P \/ ~ P)], to możemy wziąć jego dowód i
+    wyprowadzić z niego [False], czyli po prostu udowodnić, że
+    [~ ~ (P \/ ~ P)]. Na tym właśnie polega modalność niezaprzeczalności:
+    nawet jeżeli nie da się zdania pokazać wprost, to można obalić jego
+    zaprzeczenie. *)
 
 (** **** Ćwiczenie *)
 
@@ -170,11 +203,103 @@ Proof.
 Qed.
 (* end hide *)
 
-(** 
-
-*)
-
 (** ** Logika klasyczna jako logika modalna *)
+
+Require Import W3.
+
+(** Kolejny przykład modalności jest jeszcze bardziej zaskakujący
+    od poprzedniego. Jest to modalność, którą można wyrazić za
+    pomocą słowa "klasycznie". Wyrażenie "klasycznie P" znaczy,
+    że [P] zachodzi pod warunkiem, że mamy do dyspozycji prawa
+    logiki klasycznej (jak np. prawo wyłączonego środka).
+
+    Formalnie modalność tę możemy zrealizować za pomocą implikacji
+    oraz dowolnego z poznanych przez nas dotychczas aksjomatów, które
+    dają nam pełną moc logiki klasyczne. Dla przykładu: "klasycznie P"
+    możemy wyrazić równoważnie jako [LEM -> P], [DNE -> P], [Contra -> P]
+    i tak dalej.
+
+    Modalność ta jest bardzo wygodnym sposobem na posługiwanie się
+    logiką klasyczną bez brudzenia sobie rączek aksjomatami, a mimo
+    to nie jest zbyt powszechnie znana czy używana. Cóż... *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że "klasycznie" (wyrażone za pomocą [LEM]) faktycznie
+    jest modalnością. *)
+
+Lemma classically_law1 :
+  forall P Q : Prop, (P -> Q) -> ((LEM -> P) -> (LEM -> Q)).
+(* begin hide *)
+Proof.
+  intros P Q H lemp lem.
+  apply H, lemp, lem.
+Qed.
+(* end hide *)
+
+Lemma classically_law2 :
+  forall P : Prop, P -> (LEM -> P).
+(* begin hide *)
+Proof.
+  intros P p lem.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma classically_law3 :
+  forall P : Prop, (LEM -> (LEM -> P)) -> (LEM -> P).
+(* begin hide *)
+Proof.
+  intros P H lem.
+  apply H; assumption.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Dwie z pozoru różne modalności mogą tak naprawdę wyrażać to samo.
+    Dla przykładu, modalność "klasycznie P" możemy wyrazić również za
+    pomocą [DNE -> P].
+
+    Pokaż, że obydwie wersje modalności są równoważne. *)
+
+Lemma classicallies :
+  forall P : Prop, (LEM -> P) <-> (DNE -> P).
+(* begin hide *)
+Proof.
+  split.
+    intros H dne. apply H, DNE_LEM. assumption.
+    intros H lem. apply H. exact (LEM_DNE lem).
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Gdyby powyższe ćwiczenie okazało się zbyt oczywiste, to wiedz, że
+    naprawdę pozornie różne modalności mogą ostatecznie okazać się tym
+    samym. Może się też okazać, że modalność [M] jest silniejsza niż
+    modalność [N], czyli że [forall P : Prop, M P -> N P].
+
+    Zastanów się, jaki jest związek między modalnościmi
+    "niezaprzeczalnie" i "klasycznie". Czy są one tym samym, czy czymś
+    innym? Czy któraś z nich jest mocniejsza od drugiej? *)
+
+(* begin hide *)
+
+Lemma irrefutably_classically :
+  forall P : Prop,
+    (~ ~ P) -> (LEM -> P).
+Proof.
+  intros P nnp LEM. destruct (LEM P).
+    assumption.
+    contradiction.
+Qed.
+
+(** O ile mnie rozum nie myli, to w drugą stronę się nie da. Nie da się
+    też rzecz jasna zaprzeczyć, a zatem zdaje się, że podwójna negacja
+    jest mocniejsza od modalności klasycznej. *)
+
+(* end hide *)
 
 (** * Inne logiki - podsumowanie *)
 
