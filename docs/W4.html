@@ -322,7 +322,13 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 
     Modalność ta jest bardzo wygodnym sposobem na posługiwanie się
     logiką klasyczną bez brudzenia sobie rączek aksjomatami, a mimo
-    to nie jest zbyt powszechnie znana czy używana. Cóż... 
+    to nie jest zbyt powszechnie znana czy używana. Cóż...
+
+<div class="paragraph"> </div>
+
+    Oczywiście modalności można użyć nie tylko do wygodnego użytkowania
+    aksjomatów logiki klasycznej, ale również wszystkich innych
+    aksjomatów, jakie sobie zażyczymy. 
 <div class="paragraph"> </div>
 
 <a name="lab629"></a><h4 class="section">Ćwiczenie</h4>
@@ -355,12 +361,12 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 <div class="paragraph"> </div>
 
  Dwie z pozoru różne modalności mogą tak naprawdę wyrażać to samo.
-    Dla przykładu, modalność "klasycznie P" możemy wyrazić również za
-    pomocą <span class="inlinecode"><span class="id" title="var">DNE</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
+    Dla przykładu, modalność "klasycznie P" możemy wyrazić nie tylko
+    jako <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, ale również jako <span class="inlinecode"><span class="id" title="var">DNE</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
 
 <div class="paragraph"> </div>
 
-    Pokaż, że obydwie wersje modalności są równoważne. 
+    Pokaż, że obydwie definicje tej modalności są równoważne. 
 </div>
 <div class="code">
 
@@ -395,14 +401,147 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 </div>
 
 <div class="doc">
-<a name="lab632"></a><h1 class="section">Inne logiki - podsumowanie</h1>
+<a name="lab632"></a><h2 class="section">Modalność pośrednia</h2>
+
+<div class="paragraph"> </div>
+
+ Poznawszy dwie najważniejsze dla nas modalności, możemy zająć się
+    takimi, które będą miały co najwyżej charakter ciekawostki. Jeżeli
+    nie lubisz ciekawostek i jesteś ogólnie smutnym człowiekiem, to
+    resztę omawianych modalności możesz pominąć.
+
+<div class="paragraph"> </div>
+
+    Modalność pośrednia to... zamiast gadać, przekonaj się sam. 
+<div class="paragraph"> </div>
+
+<a name="lab633"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że modalność pośrednia jest modalnością. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirect_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ((<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>) -&gt; <span class="id" title="var">R</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) -&gt; <span class="id" title="var">R</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirect_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>) -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirect_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, ((<span class="id" title="keyword">forall</span> <span class="id" title="var">R'</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R'</span>) -&gt; <span class="id" title="var">R'</span>) -&gt; <span class="id" title="var">R</span>) -&gt; <span class="id" title="var">R</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>) -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
+    naprawdę chodzi z tą modalnością pośrednią? Jaki sposób wyraża?
+    Skąd nazwa?
+
+<div class="paragraph"> </div>
+
+    Przyjrzyjmy się jeszcze raz definicji. Zdanie "pośrednio P"
+    formalnie wygląda tak: <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span></span>.
+
+<div class="paragraph"> </div>
+
+    Jak odczytać tę definicję? Zacznijmy od tego, że <span class="inlinecode"><span class="id" title="var">R</span></span> jest dowolnym
+    zdaniem. Dalsza część mówi, że jeżeli <span class="inlinecode"><span class="id" title="var">P</span></span> implikuje <span class="inlinecode"><span class="id" title="var">R</span></span>, to <span class="inlinecode"><span class="id" title="var">R</span></span>.
+    Oczywiście <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span></span> możemy odczytać także jako "R jest konsekwencją
+    P", a zatem całą definicję możemy odczytać: zachodzi każda
+    konsekwencja <span class="inlinecode"><span class="id" title="var">P</span></span>.
+
+<div class="paragraph"> </div>
+
+    Zachodzi każda konsekwencja <span class="inlinecode"><span class="id" title="var">P</span></span>... ciekawe, co? Zastanówmy się, w
+    jakich sytuacjach mogą zachodzi wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span>:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> zachodzi - najprostszy przypadek. Skoro <span class="inlinecode"><span class="id" title="var">P</span></span> zachodzi, to
+      jego konsekwencje też. Wszystkie.
+
+</li>
+<li> zachodzi coś mocniejszego od <span class="inlinecode"><span class="id" title="var">P</span></span>, tzn. zachodzi <span class="inlinecode"><span class="id" title="var">Q</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
+      Zachodzą wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span> i być może różne rzeczy,
+      które konsekwencjami <span class="inlinecode"><span class="id" title="var">P</span></span> nie są (bo są np. konsekwencjami <span class="inlinecode"><span class="id" title="var">Q</span></span>)
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Widzimy więc, że by zaszły wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span>, to zachodzić
+    musi <span class="inlinecode"><span class="id" title="var">P</span></span> lub coś od <span class="inlinecode"><span class="id" title="var">P</span></span> mocniejszego. Jednak rzeczy mocniejsze od
+    <span class="inlinecode"><span class="id" title="var">P</span></span> nas tutaj nie interesują - liczy się dla nas najsłabsza z tych
+    wszystkich możliwości, czyli samo <span class="inlinecode"><span class="id" title="var">P</span></span>.
+
+<div class="paragraph"> </div>
+
+    Widać więc (albo i nie, być może moje tłumaczenie jest zagmatwane),
+    że z punktu widzenia konsekwencji danego zdania, zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> oraz
+    zdanie "zachodzą wszystkie konsekwencje P" są równoważne. Wobec
+    tego możemy stwierdzić, że zdanie "zachodzą wszystkie konsekwencje
+    P" to pewien sposób powiedzenia <span class="inlinecode"><span class="id" title="var">P</span></span>, tylko w bardzo pośredni sposób.
+    Stąd też nazwa (swoją drogą, wymyślona autorsko przeze mnie) -
+    modalność pośrednia. 
+<div class="paragraph"> </div>
+
+<a name="lab634"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Pokaż, że jeżeli zachodzą wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span>, to <span class="inlinecode"><span class="id" title="var">P</span></span> też
+    zachodzi. Wskazówka: każde zdanie wynika samo z siebie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_consequences</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>) -&gt; <span class="id" title="var">R</span>) -&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
+    pokazać zarówno <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span>)</span> (prawo
+    <span class="inlinecode"><span class="id" title="var">indirect_law2</span></span>, wymagane przez definicję modalności) jak i
+    <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> (powyższe ćwiczenie),
+    wniosek może być tylko jeden: modalność pośrednia jest dokładnie
+    tym samym, co modalność bezpośrednia, czyli neutralna! Ha! Nie
+    tego się spodziewałeś, co? 
+<div class="paragraph"> </div>
+
+<a name="lab635"></a><h2 class="section">Modalność "... albo i nie"</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab636"></a><h2 class="section">Modalność banalna</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab637"></a><h2 class="section">Każda wymówka to dobra modalność</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab638"></a><h1 class="section">Inne logiki - podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
  krótkie, acz realistyczne (logiki parakonsystentne to guwno) 
 <div class="paragraph"> </div>
 
-<a name="lab633"></a><h1 class="section">Kombinatory taktyk</h1>
+<a name="lab639"></a><h1 class="section">Kombinatory taktyk</h1>
 
 <div class="paragraph"> </div>
 
@@ -446,7 +585,7 @@ Jego dowód wygląda dość schematycznie. Taktyka <span class="inlinecode"><spa
     skomplikowane lub jedynie zmieniać niektóre aspekty ich zachowań. 
 <div class="paragraph"> </div>
 
-<a name="lab634"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
+<a name="lab640"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
 
 </div>
 <div class="code">
@@ -552,7 +691,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 
 <div class="paragraph"> </div>
 
-<a name="lab635"></a><h4 class="section">Ćwiczenie (średnik)</h4>
+<a name="lab641"></a><h4 class="section">Ćwiczenie (średnik)</h4>
 
 <div class="paragraph"> </div>
 
@@ -575,7 +714,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 </div>
 
 <div class="doc">
-<a name="lab636"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
+<a name="lab642"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
 
 </div>
 <div class="code">
@@ -622,7 +761,7 @@ Innym przydatnym kombinatorem jest <span class="inlinecode">||</span>, który b�
     <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> będzie miało taki sam efekt, jak <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H0</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab637"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
+<a name="lab643"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
 
 </div>
 <div class="code">
@@ -693,7 +832,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     działanie sukcesem. 
 <div class="paragraph"> </div>
 
-<a name="lab638"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
+<a name="lab644"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
 
 </div>
 <div class="code">
@@ -766,7 +905,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     https://coq.inria.fr/refman/coq-tacindex.html 
 <div class="paragraph"> </div>
 
-<a name="lab639"></a><h1 class="section">Zadania</h1>
+<a name="lab645"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -774,7 +913,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami 
 <div class="paragraph"> </div>
 
-<a name="lab640"></a><h1 class="section">Jakieś podsumowanie</h1>
+<a name="lab646"></a><h1 class="section">Jakieś podsumowanie</h1>
 
 <div class="paragraph"> </div>
 

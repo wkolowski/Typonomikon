@@ -221,7 +221,11 @@ Require Import W3.
 
     Modalność ta jest bardzo wygodnym sposobem na posługiwanie się
     logiką klasyczną bez brudzenia sobie rączek aksjomatami, a mimo
-    to nie jest zbyt powszechnie znana czy używana. Cóż... *)
+    to nie jest zbyt powszechnie znana czy używana. Cóż...
+
+    Oczywiście modalności można użyć nie tylko do wygodnego użytkowania
+    aksjomatów logiki klasycznej, ale również wszystkich innych
+    aksjomatów, jakie sobie zażyczymy. *)
 
 (** **** Ćwiczenie *)
 
@@ -258,10 +262,10 @@ Qed.
 (** **** Ćwiczenie *)
 
 (** Dwie z pozoru różne modalności mogą tak naprawdę wyrażać to samo.
-    Dla przykładu, modalność "klasycznie P" możemy wyrazić również za
-    pomocą [DNE -> P].
+    Dla przykładu, modalność "klasycznie P" możemy wyrazić nie tylko
+    jako [LEM -> P], ale również jako [DNE -> P].
 
-    Pokaż, że obydwie wersje modalności są równoważne. *)
+    Pokaż, że obydwie definicje tej modalności są równoważne. *)
 
 Lemma classicallies :
   forall P : Prop, (LEM -> P) <-> (DNE -> P).
@@ -300,6 +304,120 @@ Qed.
     jest mocniejsza od modalności klasycznej. *)
 
 (* end hide *)
+
+(** ** Modalność pośrednia *)
+
+(** Poznawszy dwie najważniejsze dla nas modalności, możemy zająć się
+    takimi, które będą miały co najwyżej charakter ciekawostki. Jeżeli
+    nie lubisz ciekawostek i jesteś ogólnie smutnym człowiekiem, to
+    resztę omawianych modalności możesz pominąć.
+
+    Modalność pośrednia to... zamiast gadać, przekonaj się sam. *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że modalność pośrednia jest modalnością. *)
+
+Lemma indirect_law1 :
+  forall P Q : Prop,
+    (P -> Q) -> ((forall R : Prop, (P -> R) -> R) ->
+                 (forall R : Prop, (Q -> R) -> R)).
+(* begin hide *)
+Proof.
+  intros P Q PQ mp R QR.
+  apply QR, mp.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma indirect_law2 :
+  forall P : Prop,
+    P -> (forall R : Prop, (P -> R) -> R).
+(* begin hide *)
+Proof.
+  intros P p R PR.
+  apply PR.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma indirect_law3 :
+  forall P : Prop,
+    (forall R : Prop, ((forall R' : Prop, (P -> R') -> R') -> R) -> R) ->
+      (forall R : Prop, (P -> R) -> R).
+(* begin hide *)
+Proof.
+  intros P H R PR.
+  apply H.
+  intro H'.
+  apply H'.
+  assumption.
+Qed.
+(* end hide *)
+
+(** No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
+    naprawdę chodzi z tą modalnością pośrednią? Jaki sposób wyraża?
+    Skąd nazwa?
+
+    Przyjrzyjmy się jeszcze raz definicji. Zdanie "pośrednio P"
+    formalnie wygląda tak: [forall R : Prop, (P -> R) -> R].
+
+    Jak odczytać tę definicję? Zacznijmy od tego, że [R] jest dowolnym
+    zdaniem. Dalsza część mówi, że jeżeli [P] implikuje [R], to [R].
+    Oczywiście [P -> R] możemy odczytać także jako "R jest konsekwencją
+    P", a zatem całą definicję możemy odczytać: zachodzi każda
+    konsekwencja [P].
+
+    Zachodzi każda konsekwencja [P]... ciekawe, co? Zastanówmy się, w
+    jakich sytuacjach mogą zachodzi wszystkie konsekwencje [P]:
+    - [P] zachodzi - najprostszy przypadek. Skoro [P] zachodzi, to
+      jego konsekwencje też. Wszystkie.
+    - zachodzi coś mocniejszego od [P], tzn. zachodzi [Q] i [Q -> P].
+      Zachodzą wszystkie konsekwencje [P] i być może różne rzeczy,
+      które konsekwencjami [P] nie są (bo są np. konsekwencjami [Q])
+
+    Widzimy więc, że by zaszły wszystkie konsekwencje [P], to zachodzić
+    musi [P] lub coś od [P] mocniejszego. Jednak rzeczy mocniejsze od
+    [P] nas tutaj nie interesują - liczy się dla nas najsłabsza z tych
+    wszystkich możliwości, czyli samo [P].
+
+    Widać więc (albo i nie, być może moje tłumaczenie jest zagmatwane),
+    że z punktu widzenia konsekwencji danego zdania, zdanie [P] oraz
+    zdanie "zachodzą wszystkie konsekwencje P" są równoważne. Wobec
+    tego możemy stwierdzić, że zdanie "zachodzą wszystkie konsekwencje
+    P" to pewien sposób powiedzenia [P], tylko w bardzo pośredni sposób.
+    Stąd też nazwa (swoją drogą, wymyślona autorsko przeze mnie) -
+    modalność pośrednia. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że jeżeli zachodzą wszystkie konsekwencje [P], to [P] też
+    zachodzi. Wskazówka: każde zdanie wynika samo z siebie. *)
+
+Lemma all_consequences :
+  forall P : Prop,
+    (forall R : Prop, (P -> R) -> R) -> P.
+(* begin hide *)
+Proof.
+  intros P H.
+  apply H.
+  trivial.
+Qed.
+(* end hide *)
+
+(** Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
+    pokazać zarówno [P -> (forall R : Prop, (P -> R) -> R)] (prawo
+    [indirect_law2], wymagane przez definicję modalności) jak i
+    [(forall R : Prop, (P -> R) -> R) -> P] (powyższe ćwiczenie),
+    wniosek może być tylko jeden: modalność pośrednia jest dokładnie
+    tym samym, co modalność bezpośrednia, czyli neutralna! Ha! Nie
+    tego się spodziewałeś, co? *)
+
+(** ** Modalność "... albo i nie" *)
+
+(** ** Modalność banalna *)
+
+(** ** Każda wymówka to dobra modalność *)
 
 (** * Inne logiki - podsumowanie *)
 
