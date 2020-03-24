@@ -371,7 +371,7 @@ Qed.
     Zachodzi każda konsekwencja [P]... ciekawe, co? Zastanówmy się, w
     jakich sytuacjach mogą zachodzi wszystkie konsekwencje [P]:
     - [P] zachodzi - najprostszy przypadek. Skoro [P] zachodzi, to
-      jego konsekwencje też. Wszystkie.
+      jego konsekwencje też. Wszystkie. Bez wyjątku.
     - zachodzi coś mocniejszego od [P], tzn. zachodzi [Q] i [Q -> P].
       Zachodzą wszystkie konsekwencje [P] i być może różne rzeczy,
       które konsekwencjami [P] nie są (bo są np. konsekwencjami [Q])
@@ -417,7 +417,85 @@ Qed.
 
 (** ** Modalność banalna *)
 
-(** ** Każda wymówka to dobra modalność *)
+(** ** Pies zjadł mi dowód... :( *)
+
+(** Wyobraźmy sobie następujący dialog, odbywający się na lekcji
+    języka polskiego w jakiejś zapomnianej przez Boga szkole w
+    Pcimiu Dolnym:
+    - (N)auczycielka: Jasiu, zrobiłeś zadanie?
+    - (J)asiu: tak, psze pani.
+    - N: pokaż.
+    - J: Hmmm, yhm, uhm, eeee...
+    - N: czyli nie zrobiłeś.
+    - J: zrobiłem, ale pies mi zjadł.
+
+    Z dialogu jasno wynika, że Jasiu nie zrobił zadania, co jednak nie
+    przeszkadza mu w pokrętny sposób twierdzić, że zrobił. Ten pokrętny
+    sposób jest powszechnie znany jako "wymówka".
+
+    Słowem kluczowym jest tutaj słowo "sposób", które już na pierwszy
+    rzut oka pachnie modalnością. Coś jest na rzeczy, wszakże podanie
+    wymówki jest całkiem sprytnym sposobem na uzasadnienie każdego
+    zdania:
+    - Mam dowód fałszu!
+    - Pokaż.
+    - Pies mi zjadł.
+
+    Musimy pamiętać tylko o dwóch ważnych szczegółach całego procederu.
+    Po pierwsze, nasza wymówka musi być uniwersalna, czyli musimy się
+    jej trzymać jak rzep psiego ogona - nie możemy w trakcie rozumowania
+    zmienić wymówki, bo rozumowanie może się zawalić.
+
+    Drugi, nieco bardziej subtelny detal jest taki, że nie mamy tutaj
+    do czynienia po prostu z "modalnością wymówkową". Zamiast tego,
+    każdej jednej wymówce odpowiada osobna modalność. A zatem mamy
+    modalność "Pies mi zjadł", ale także modalność "Nie mogę teraz
+    dowodzić, bo państwo Izrael bezprawnie okupuje Palestynę"... i
+    wiele innych.
+
+    Jak można tę modalność zareprezentować formalnie w Coqu? Jeżeli
+    [E] jest naszą wymówką, np. "Pies zjadł mi dowód", zaś [P]
+    właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
+    pomocą dysjunkcji, otrzymując [P \/ E], czyli "Pada deszcz lub
+    pies zjadł mi dowód". *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że dla każdej wymówki [E] faktycznie mamy do czynienia
+    z modalnością. *)
+
+Lemma excuse_law1 :
+  forall E P Q : Prop,
+    (P -> Q) -> (E \/ P -> E \/ Q).
+(* begin hide *)
+Proof.
+  intros E P Q pq [e | p].
+    left. assumption.
+    right. apply pq. assumption.
+Qed.
+(* end hide *)
+
+Lemma excuse_law2 :
+  forall E P : Prop, P -> E \/ P.
+(* begin hide *)
+Proof.
+  intros E P p.
+  right.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma excuse_law3 :
+  forall E P : Prop,
+    E \/ (E \/ P) -> E \/ P.
+(* begin hide *)
+Proof.
+  intros E P [e | [e | p]].
+    left. assumption.
+    left. assumption.
+    right. assumption.
+Qed.
+(* end hide *)
 
 (** * Inne logiki - podsumowanie *)
 

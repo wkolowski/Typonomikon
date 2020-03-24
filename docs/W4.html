@@ -467,7 +467,7 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
     jakich sytuacjach mogą zachodzi wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span>:
 <ul class="doclist">
 <li> <span class="inlinecode"><span class="id" title="var">P</span></span> zachodzi - najprostszy przypadek. Skoro <span class="inlinecode"><span class="id" title="var">P</span></span> zachodzi, to
-      jego konsekwencje też. Wszystkie.
+      jego konsekwencje też. Wszystkie. Bez wyjątku.
 
 </li>
 <li> zachodzi coś mocniejszego od <span class="inlinecode"><span class="id" title="var">P</span></span>, tzn. zachodzi <span class="inlinecode"><span class="id" title="var">Q</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
@@ -530,18 +530,118 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 
 <div class="paragraph"> </div>
 
-<a name="lab637"></a><h2 class="section">Każda wymówka to dobra modalność</h2>
+<a name="lab637"></a><h2 class="section">Pies zjadł mi dowód... :(</h2>
 
 <div class="paragraph"> </div>
 
-<a name="lab638"></a><h1 class="section">Inne logiki - podsumowanie</h1>
+ Wyobraźmy sobie następujący dialog, odbywający się na lekcji
+    języka polskiego w jakiejś zapomnianej przez Boga szkole w
+    Pcimiu Dolnym:
+<ul class="doclist">
+<li> (N)auczycielka: Jasiu, zrobiłeś zadanie?
+
+</li>
+<li> (J)asiu: tak, psze pani.
+
+</li>
+<li> N: pokaż.
+
+</li>
+<li> J: Hmmm, yhm, uhm, eeee...
+
+</li>
+<li> N: czyli nie zrobiłeś.
+
+</li>
+<li> J: zrobiłem, ale pies mi zjadł.
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Z dialogu jasno wynika, że Jasiu nie zrobił zadania, co jednak nie
+    przeszkadza mu w pokrętny sposób twierdzić, że zrobił. Ten pokrętny
+    sposób jest powszechnie znany jako "wymówka".
+
+<div class="paragraph"> </div>
+
+    Słowem kluczowym jest tutaj słowo "sposób", które już na pierwszy
+    rzut oka pachnie modalnością. Coś jest na rzeczy, wszakże podanie
+    wymówki jest całkiem sprytnym sposobem na uzasadnienie każdego
+    zdania:
+<ul class="doclist">
+<li> Mam dowód fałszu!
+
+</li>
+<li> Pokaż.
+
+</li>
+<li> Pies mi zjadł.
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Musimy pamiętać tylko o dwóch ważnych szczegółach całego procederu.
+    Po pierwsze, nasza wymówka musi być uniwersalna, czyli musimy się
+    jej trzymać jak rzep psiego ogona - nie możemy w trakcie rozumowania
+    zmienić wymówki, bo rozumowanie może się zawalić.
+
+<div class="paragraph"> </div>
+
+    Drugi, nieco bardziej subtelny detal jest taki, że nie mamy tutaj
+    do czynienia po prostu z "modalnością wymówkową". Zamiast tego,
+    każdej jednej wymówce odpowiada osobna modalność. A zatem mamy
+    modalność "Pies mi zjadł", ale także modalność "Nie mogę teraz
+    dowodzić, bo państwo Izrael bezprawnie okupuje Palestynę"... i
+    wiele innych.
+
+<div class="paragraph"> </div>
+
+    Jak można tę modalność zareprezentować formalnie w Coqu? Jeżeli
+    <span class="inlinecode"><span class="id" title="var">E</span></span> jest naszą wymówką, np. "Pies zjadł mi dowód", zaś <span class="inlinecode"><span class="id" title="var">P</span></span>
+    właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
+    pomocą dysjunkcji, otrzymując <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">E</span></span>, czyli "Pada deszcz lub
+    pies zjadł mi dowód". 
+<div class="paragraph"> </div>
+
+<a name="lab638"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że dla każdej wymówki <span class="inlinecode"><span class="id" title="var">E</span></span> faktycznie mamy do czynienia
+    z modalnością. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">excuse_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">E</span> \/ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">E</span> \/ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">excuse_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">excuse_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">E</span> \/ (<span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>) -&gt; <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab639"></a><h1 class="section">Inne logiki - podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
  krótkie, acz realistyczne (logiki parakonsystentne to guwno) 
 <div class="paragraph"> </div>
 
-<a name="lab639"></a><h1 class="section">Kombinatory taktyk</h1>
+<a name="lab640"></a><h1 class="section">Kombinatory taktyk</h1>
 
 <div class="paragraph"> </div>
 
@@ -585,7 +685,7 @@ Jego dowód wygląda dość schematycznie. Taktyka <span class="inlinecode"><spa
     skomplikowane lub jedynie zmieniać niektóre aspekty ich zachowań. 
 <div class="paragraph"> </div>
 
-<a name="lab640"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
+<a name="lab641"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
 
 </div>
 <div class="code">
@@ -691,7 +791,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 
 <div class="paragraph"> </div>
 
-<a name="lab641"></a><h4 class="section">Ćwiczenie (średnik)</h4>
+<a name="lab642"></a><h4 class="section">Ćwiczenie (średnik)</h4>
 
 <div class="paragraph"> </div>
 
@@ -714,7 +814,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 </div>
 
 <div class="doc">
-<a name="lab642"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
+<a name="lab643"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
 
 </div>
 <div class="code">
@@ -761,7 +861,7 @@ Innym przydatnym kombinatorem jest <span class="inlinecode">||</span>, który b�
     <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> będzie miało taki sam efekt, jak <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H0</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab643"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
+<a name="lab644"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
 
 </div>
 <div class="code">
@@ -832,7 +932,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     działanie sukcesem. 
 <div class="paragraph"> </div>
 
-<a name="lab644"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
+<a name="lab645"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
 
 </div>
 <div class="code">
@@ -905,7 +1005,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     https://coq.inria.fr/refman/coq-tacindex.html 
 <div class="paragraph"> </div>
 
-<a name="lab645"></a><h1 class="section">Zadania</h1>
+<a name="lab646"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -913,7 +1013,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami 
 <div class="paragraph"> </div>
 
-<a name="lab646"></a><h1 class="section">Jakieś podsumowanie</h1>
+<a name="lab647"></a><h1 class="section">Jakieś podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
