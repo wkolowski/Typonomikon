@@ -415,21 +415,110 @@ Qed.
 
 (** ** Modalność "... albo i nie" *)
 
-(** ** Modalność banalna *)
+Lemma ornot_law1 :
+  forall P Q : Prop, (P -> Q) -> (P \/ ~ P -> Q \/ ~ Q).
+Proof.
+  intros P Q H [p | np].
+    left. apply H. assumption.
+    right. intro. apply np.
+Abort.
+
+Lemma ornot_law2 :
+  forall P : Prop, P -> P \/ ~ P.
+Proof.
+  intros P p.
+  left. assumption.
+Qed.
+
+Lemma ornot_law3 :
+  forall P : Prop,
+    (P \/ ~ P) \/ ~ (P \/ ~ P) -> P \/ ~ P.
+Proof.
+  intros P [H | H].
+    assumption.
+    right. intro p. apply H. left. assumption.
+Qed.
+
+(** ** Modalność trywialna *)
+
+(** Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
+    nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
+    chcąc w trywialny sposób powiedzieć [P], wywalamy [P] i zamiast tego
+    mówimy [True]. Wot, modalność jak znalazł. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że modalność trywialna jest modalnością. *)
+
+Lemma trivial_law1 :
+  forall P Q : Prop, (P -> Q) -> (True -> True).
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma trivial_law2 :
+  forall P : Prop, P -> True.
+Proof.
+  trivial.
+Qed.
+
+Lemma trivial_law3 :
+  forall P : Prop, True -> True.
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Skoro [True] to modalność trywialna, to może [False] to modalność
+    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
+    nazwana?
+
+    Sprawdź to. *)
+
+Lemma antitrivial_law1 :
+  forall P Q : Prop, (P -> Q) -> (False -> False).
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma antitrivial_law2 :
+  ~ forall P : Prop, P -> False.
+(* begin hide *)
+Proof.
+  intro H.
+  apply (H True).
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma antitrivial_law3 :
+  forall P : Prop, False -> False.
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
 
 (** ** Pies zjadł mi dowód... :( *)
 
 (** Wyobraźmy sobie następujący dialog, odbywający się na lekcji
     języka polskiego w jakiejś zapomnianej przez Boga szkole w
     Pcimiu Dolnym:
-    - (N)auczycielka: Jasiu, zrobiłeś zadanie?
+    - (N)auczycielka: Jasiu, odrobiłeś zadanie domowe?
     - (J)asiu: tak, psze pani.
     - N: pokaż.
     - J: Hmmm, yhm, uhm, eeee...
-    - N: czyli nie zrobiłeś.
-    - J: zrobiłem, ale pies mi zjadł.
+    - N: czyli nie odrobiłeś.
+    - J: odrobiłem, ale pies mi zjadł.
 
-    Z dialogu jasno wynika, że Jasiu nie zrobił zadania, co jednak nie
+    Z dialogu jasno wynika, że Jasiu nie odrobił zadania, co jednak nie
     przeszkadza mu w pokrętny sposób twierdzić, że zrobił. Ten pokrętny
     sposób jest powszechnie znany jako "wymówka".
 
@@ -439,7 +528,7 @@ Qed.
     zdania:
     - Mam dowód fałszu!
     - Pokaż.
-    - Pies mi zjadł.
+    - Sorry, pies mi zjadł.
 
     Musimy pamiętać tylko o dwóch ważnych szczegółach całego procederu.
     Po pierwsze, nasza wymówka musi być uniwersalna, czyli musimy się
@@ -457,7 +546,9 @@ Qed.
     [E] jest naszą wymówką, np. "Pies zjadł mi dowód", zaś [P]
     właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
     pomocą dysjunkcji, otrzymując [P \/ E], czyli "Pada deszcz lub
-    pies zjadł mi dowód". *)
+    pies zjadł mi dowód". Ze względu na pewne tradycje, modalność
+    tę będziemy jednak reprezentować jako [E \/ P], czyli "Pies
+    zjadł mi dowód lub pada deszcz". *)
 
 (** **** Ćwiczenie *)
 

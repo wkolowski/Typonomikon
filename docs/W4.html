@@ -524,13 +524,108 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 
 <a name="lab635"></a><h2 class="section">Modalność "... albo i nie"</h2>
 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ornot_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> \/ ~ <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span> [<span class="id" title="var">p</span> | <span class="id" title="var">np</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">np</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ornot_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ornot_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) \/ ~ (<span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt; <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> [<span class="id" title="var">H</span> | <span class="id" title="var">H</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab636"></a><h2 class="section">Modalność trywialna</h2>
+
 <div class="paragraph"> </div>
 
-<a name="lab636"></a><h2 class="section">Modalność banalna</h2>
+ Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
+    nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
+    chcąc w trywialny sposób powiedzieć <span class="inlinecode"><span class="id" title="var">P</span></span>, wywalamy <span class="inlinecode"><span class="id" title="var">P</span></span> i zamiast tego
+    mówimy <span class="inlinecode"><span class="id" title="var">True</span></span>. Wot, modalność jak znalazł. 
+<div class="paragraph"> </div>
+
+<a name="lab637"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
-<a name="lab637"></a><h2 class="section">Pies zjadł mi dowód... :(</h2>
+ Pokaż, że modalność trywialna jest modalnością. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">trivial_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">True</span> -&gt; <span class="id" title="var">True</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">trivial_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">True</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">trivial_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">True</span> -&gt; <span class="id" title="var">True</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab638"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Skoro <span class="inlinecode"><span class="id" title="var">True</span></span> to modalność trywialna, to może <span class="inlinecode"><span class="id" title="var">False</span></span> to modalność
+    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
+    nazwana?
+
+<div class="paragraph"> </div>
+
+    Sprawdź to. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">antitrivial_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">False</span> -&gt; <span class="id" title="var">False</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">antitrivial_law2</span> :<br/>
+&nbsp;&nbsp;~ <span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">antitrivial_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">False</span> -&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab639"></a><h2 class="section">Pies zjadł mi dowód... :(</h2>
 
 <div class="paragraph"> </div>
 
@@ -538,7 +633,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     języka polskiego w jakiejś zapomnianej przez Boga szkole w
     Pcimiu Dolnym:
 <ul class="doclist">
-<li> (N)auczycielka: Jasiu, zrobiłeś zadanie?
+<li> (N)auczycielka: Jasiu, odrobiłeś zadanie domowe?
 
 </li>
 <li> (J)asiu: tak, psze pani.
@@ -550,17 +645,17 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 <li> J: Hmmm, yhm, uhm, eeee...
 
 </li>
-<li> N: czyli nie zrobiłeś.
+<li> N: czyli nie odrobiłeś.
 
 </li>
-<li> J: zrobiłem, ale pies mi zjadł.
+<li> J: odrobiłem, ale pies mi zjadł.
 
 </li>
 </ul>
 
 <div class="paragraph"> </div>
 
-    Z dialogu jasno wynika, że Jasiu nie zrobił zadania, co jednak nie
+    Z dialogu jasno wynika, że Jasiu nie odrobił zadania, co jednak nie
     przeszkadza mu w pokrętny sposób twierdzić, że zrobił. Ten pokrętny
     sposób jest powszechnie znany jako "wymówka".
 
@@ -577,7 +672,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 <li> Pokaż.
 
 </li>
-<li> Pies mi zjadł.
+<li> Sorry, pies mi zjadł.
 
 </li>
 </ul>
@@ -604,10 +699,12 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     <span class="inlinecode"><span class="id" title="var">E</span></span> jest naszą wymówką, np. "Pies zjadł mi dowód", zaś <span class="inlinecode"><span class="id" title="var">P</span></span>
     właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
     pomocą dysjunkcji, otrzymując <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">E</span></span>, czyli "Pada deszcz lub
-    pies zjadł mi dowód". 
+    pies zjadł mi dowód". Ze względu na pewne tradycje, modalność
+    tę będziemy jednak reprezentować jako <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, czyli "Pies
+    zjadł mi dowód lub pada deszcz". 
 <div class="paragraph"> </div>
 
-<a name="lab638"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab640"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -634,14 +731,14 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab639"></a><h1 class="section">Inne logiki - podsumowanie</h1>
+<a name="lab641"></a><h1 class="section">Inne logiki - podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
  krótkie, acz realistyczne (logiki parakonsystentne to guwno) 
 <div class="paragraph"> </div>
 
-<a name="lab640"></a><h1 class="section">Kombinatory taktyk</h1>
+<a name="lab642"></a><h1 class="section">Kombinatory taktyk</h1>
 
 <div class="paragraph"> </div>
 
@@ -685,7 +782,7 @@ Jego dowód wygląda dość schematycznie. Taktyka <span class="inlinecode"><spa
     skomplikowane lub jedynie zmieniać niektóre aspekty ich zachowań. 
 <div class="paragraph"> </div>
 
-<a name="lab641"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
+<a name="lab643"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
 
 </div>
 <div class="code">
@@ -791,7 +888,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 
 <div class="paragraph"> </div>
 
-<a name="lab642"></a><h4 class="section">Ćwiczenie (średnik)</h4>
+<a name="lab644"></a><h4 class="section">Ćwiczenie (średnik)</h4>
 
 <div class="paragraph"> </div>
 
@@ -814,7 +911,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 </div>
 
 <div class="doc">
-<a name="lab643"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
+<a name="lab645"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
 
 </div>
 <div class="code">
@@ -861,7 +958,7 @@ Innym przydatnym kombinatorem jest <span class="inlinecode">||</span>, który b�
     <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> będzie miało taki sam efekt, jak <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H0</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab644"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
+<a name="lab646"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
 
 </div>
 <div class="code">
@@ -932,7 +1029,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     działanie sukcesem. 
 <div class="paragraph"> </div>
 
-<a name="lab645"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
+<a name="lab647"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
 
 </div>
 <div class="code">
@@ -1005,7 +1102,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     https://coq.inria.fr/refman/coq-tacindex.html 
 <div class="paragraph"> </div>
 
-<a name="lab646"></a><h1 class="section">Zadania</h1>
+<a name="lab648"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -1013,7 +1110,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami 
 <div class="paragraph"> </div>
 
-<a name="lab647"></a><h1 class="section">Jakieś podsumowanie</h1>
+<a name="lab649"></a><h1 class="section">Jakieś podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
