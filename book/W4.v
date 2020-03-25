@@ -24,6 +24,25 @@ Definition K : Prop :=
 Definition PropositionalExtensionality : Prop :=
   forall P Q : Prop, (P <-> Q) -> P = Q.
 
+Lemma UIP_K : UIP -> K.
+(* begin hide *)
+Proof.
+  unfold UIP, K.
+  intros UIP A x p.
+  apply UIP.
+Qed.
+(* end hide *)
+
+Lemma K_UIP : K -> UIP.
+(* begin hide *)
+Proof.
+  unfold K, UIP.
+  intros K A x y p q.
+  destruct p.
+  symmetry. apply K.
+Qed.
+(* end hide *)
+
 (** * Logika modalna *)
 
 (** Logiki modalne to logiki, w których oprócz znanych nam już spójników
@@ -305,6 +324,155 @@ Qed.
 
 (* end hide *)
 
+(** ** Pies zjadł mi dowód... :( *)
+
+(** Wyobraźmy sobie następujący dialog, odbywający się na lekcji
+    języka polskiego w jakiejś zapomnianej przez Boga szkole w
+    Pcimiu Dolnym:
+    - (N)auczycielka: Jasiu, odrobiłeś zadanie domowe?
+    - (J)asiu: tak, psze pani.
+    - N: pokaż.
+    - J: Hmmm, yhm, uhm, eeee...
+    - N: czyli nie odrobiłeś.
+    - J: odrobiłem, ale pies mi zjadł.
+
+    Z dialogu jasno wynika, że Jasiu nie odrobił zadania, co jednak nie
+    przeszkadza mu w pokrętny sposób twierdzić, że zrobił. Ten pokrętny
+    sposób jest powszechnie znany jako "wymówka".
+
+    Słowem kluczowym jest tutaj słowo "sposób", które już na pierwszy
+    rzut oka pachnie modalnością. Coś jest na rzeczy, wszakże podanie
+    wymówki jest całkiem sprytnym sposobem na uzasadnienie każdego
+    zdania:
+    - Mam dowód fałszu!
+    - Pokaż.
+    - Sorry, pies mi zjadł.
+
+    Musimy pamiętać tylko o dwóch ważnych szczegółach całego procederu.
+    Po pierwsze, nasza wymówka musi być uniwersalna, czyli musimy się
+    jej trzymać jak rzep psiego ogona - nie możemy w trakcie rozumowania
+    zmienić wymówki, bo rozumowanie może się zawalić.
+
+    Drugi, nieco bardziej subtelny detal jest taki, że nie mamy tutaj
+    do czynienia po prostu z "modalnością wymówkową". Zamiast tego,
+    każdej jednej wymówce odpowiada osobna modalność. A zatem mamy
+    modalność "Pies mi zjadł", ale także modalność "Nie mogę teraz
+    dowodzić, bo państwo Izrael bezprawnie okupuje Palestynę"... i
+    wiele innych.
+
+    Jak można tę modalność zareprezentować formalnie w Coqu? Jeżeli
+    [E] jest naszą wymówką, np. "Pies zjadł mi dowód", zaś [P]
+    właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
+    pomocą dysjunkcji, otrzymując [P \/ E], czyli "Pada deszcz lub
+    pies zjadł mi dowód". Ze względu na pewne tradycje, modalność
+    tę będziemy jednak reprezentować jako [E \/ P], czyli "Pies
+    zjadł mi dowód lub pada deszcz". *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że dla każdej wymówki [E] faktycznie mamy do czynienia
+    z modalnością. *)
+
+Lemma excuse_law1 :
+  forall E P Q : Prop,
+    (P -> Q) -> (E \/ P -> E \/ Q).
+(* begin hide *)
+Proof.
+  intros E P Q pq [e | p].
+    left. assumption.
+    right. apply pq. assumption.
+Qed.
+(* end hide *)
+
+Lemma excuse_law2 :
+  forall E P : Prop, P -> E \/ P.
+(* begin hide *)
+Proof.
+  intros E P p.
+  right.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma excuse_law3 :
+  forall E P : Prop,
+    E \/ (E \/ P) -> E \/ P.
+(* begin hide *)
+Proof.
+  intros E P [e | [e | p]].
+    left. assumption.
+    left. assumption.
+    right. assumption.
+Qed.
+(* end hide *)
+
+(** ** Modalność trywialna *)
+
+(** Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
+    nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
+    chcąc w trywialny sposób powiedzieć [P], wywalamy [P] i zamiast tego
+    mówimy [True]. Wot, modalność jak znalazł. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że modalność trywialna jest modalnością. *)
+
+Lemma trivial_law1 :
+  forall P Q : Prop, (P -> Q) -> (True -> True).
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma trivial_law2 :
+  forall P : Prop, P -> True.
+Proof.
+  trivial.
+Qed.
+
+Lemma trivial_law3 :
+  forall P : Prop, True -> True.
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Skoro [True] to modalność trywialna, to może [False] to modalność
+    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
+    nazwana?
+
+    Sprawdź to. *)
+
+Lemma antitrivial_law1 :
+  forall P Q : Prop, (P -> Q) -> (False -> False).
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma antitrivial_law2 :
+  ~ forall P : Prop, P -> False.
+(* begin hide *)
+Proof.
+  intro H.
+  apply (H True).
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma antitrivial_law3 :
+  forall P : Prop, False -> False.
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
 (** ** Modalność pośrednia *)
 
 (** Poznawszy dwie najważniejsze dla nas modalności, możemy zająć się
@@ -410,181 +578,101 @@ Qed.
     [indirect_law2], wymagane przez definicję modalności) jak i
     [(forall R : Prop, (P -> R) -> R) -> P] (powyższe ćwiczenie),
     wniosek może być tylko jeden: modalność pośrednia jest dokładnie
-    tym samym, co modalność bezpośrednia, czyli neutralna! Ha! Nie
-    tego się spodziewałeś, co? *)
+    tym samym, co modalność neutralna. Ha! Nie tego się spodziewałeś,
+    co? *)
 
-(** ** Modalność "... albo i nie" *)
+(** ** Modalność pośrednia v2 *)
 
-Lemma ornot_law1 :
-  forall P Q : Prop, (P -> Q) -> (P \/ ~ P -> Q \/ ~ Q).
-Proof.
-  intros P Q H [p | np].
-    left. apply H. assumption.
-    right. intro. apply np.
-Abort.
+(* begin hide *)
 
-Lemma ornot_law2 :
-  forall P : Prop, P -> P \/ ~ P.
-Proof.
-  intros P p.
-  left. assumption.
-Qed.
+(** TODO: lista monad, które (nie) nadają się na modalności:
+    - Codensity: tak, jako dziwna identyczność
+    - Cont - tak, jako modalność pośrednia
+    - Free - nie
+    - Identity - tak
+    - Lazy - nie
+    - List - nie
+    - Option - chyba raczej nie
+    - Reader - tak
+    - RoseTree - nie
+    - RWS - nie
+    - State - nie
+    - Sum - tak
+    - Writer - nie *)
 
-Lemma ornot_law3 :
-  forall P : Prop,
-    (P \/ ~ P) \/ ~ (P \/ ~ P) -> P \/ ~ P.
-Proof.
-  intros P [H | H].
-    assumption.
-    right. intro p. apply H. left. assumption.
-Qed.
+(* end hide *)
 
-(** ** Modalność trywialna *)
-
-(** Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
-    nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
-    chcąc w trywialny sposób powiedzieć [P], wywalamy [P] i zamiast tego
-    mówimy [True]. Wot, modalność jak znalazł. *)
-
-(** **** Ćwiczenie *)
-
-(** Pokaż, że modalność trywialna jest modalnością. *)
-
-Lemma trivial_law1 :
-  forall P Q : Prop, (P -> Q) -> (True -> True).
+Lemma indirect2_law1 :
+  forall C P Q : Prop,
+    (P -> Q) -> (((P -> C) -> C) -> ((Q -> C) -> C)).
 (* begin hide *)
 Proof.
-  trivial.
+  intros C P Q pq pcc qc.
+  apply pcc. intro p.
+  apply qc, pq. assumption.
 Qed.
 (* end hide *)
 
-Lemma trivial_law2 :
-  forall P : Prop, P -> True.
-Proof.
-  trivial.
-Qed.
-
-Lemma trivial_law3 :
-  forall P : Prop, True -> True.
+Lemma indirect2_law2 :
+  forall C P : Prop, P -> ((P -> C) -> C).
 (* begin hide *)
 Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-(** **** Ćwiczenie *)
-
-(** Skoro [True] to modalność trywialna, to może [False] to modalność
-    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
-    nazwana?
-
-    Sprawdź to. *)
-
-Lemma antitrivial_law1 :
-  forall P Q : Prop, (P -> Q) -> (False -> False).
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma antitrivial_law2 :
-  ~ forall P : Prop, P -> False.
-(* begin hide *)
-Proof.
-  intro H.
-  apply (H True).
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma antitrivial_law3 :
-  forall P : Prop, False -> False.
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-(** ** Pies zjadł mi dowód... :( *)
-
-(** Wyobraźmy sobie następujący dialog, odbywający się na lekcji
-    języka polskiego w jakiejś zapomnianej przez Boga szkole w
-    Pcimiu Dolnym:
-    - (N)auczycielka: Jasiu, odrobiłeś zadanie domowe?
-    - (J)asiu: tak, psze pani.
-    - N: pokaż.
-    - J: Hmmm, yhm, uhm, eeee...
-    - N: czyli nie odrobiłeś.
-    - J: odrobiłem, ale pies mi zjadł.
-
-    Z dialogu jasno wynika, że Jasiu nie odrobił zadania, co jednak nie
-    przeszkadza mu w pokrętny sposób twierdzić, że zrobił. Ten pokrętny
-    sposób jest powszechnie znany jako "wymówka".
-
-    Słowem kluczowym jest tutaj słowo "sposób", które już na pierwszy
-    rzut oka pachnie modalnością. Coś jest na rzeczy, wszakże podanie
-    wymówki jest całkiem sprytnym sposobem na uzasadnienie każdego
-    zdania:
-    - Mam dowód fałszu!
-    - Pokaż.
-    - Sorry, pies mi zjadł.
-
-    Musimy pamiętać tylko o dwóch ważnych szczegółach całego procederu.
-    Po pierwsze, nasza wymówka musi być uniwersalna, czyli musimy się
-    jej trzymać jak rzep psiego ogona - nie możemy w trakcie rozumowania
-    zmienić wymówki, bo rozumowanie może się zawalić.
-
-    Drugi, nieco bardziej subtelny detal jest taki, że nie mamy tutaj
-    do czynienia po prostu z "modalnością wymówkową". Zamiast tego,
-    każdej jednej wymówce odpowiada osobna modalność. A zatem mamy
-    modalność "Pies mi zjadł", ale także modalność "Nie mogę teraz
-    dowodzić, bo państwo Izrael bezprawnie okupuje Palestynę"... i
-    wiele innych.
-
-    Jak można tę modalność zareprezentować formalnie w Coqu? Jeżeli
-    [E] jest naszą wymówką, np. "Pies zjadł mi dowód", zaś [P]
-    właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
-    pomocą dysjunkcji, otrzymując [P \/ E], czyli "Pada deszcz lub
-    pies zjadł mi dowód". Ze względu na pewne tradycje, modalność
-    tę będziemy jednak reprezentować jako [E \/ P], czyli "Pies
-    zjadł mi dowód lub pada deszcz". *)
-
-(** **** Ćwiczenie *)
-
-(** Udowodnij, że dla każdej wymówki [E] faktycznie mamy do czynienia
-    z modalnością. *)
-
-Lemma excuse_law1 :
-  forall E P Q : Prop,
-    (P -> Q) -> (E \/ P -> E \/ Q).
-(* begin hide *)
-Proof.
-  intros E P Q pq [e | p].
-    left. assumption.
-    right. apply pq. assumption.
-Qed.
-(* end hide *)
-
-Lemma excuse_law2 :
-  forall E P : Prop, P -> E \/ P.
-(* begin hide *)
-Proof.
-  intros E P p.
-  right.
+  intros C P p pc.
+  apply pc.
   assumption.
 Qed.
 (* end hide *)
 
-Lemma excuse_law3 :
-  forall E P : Prop,
-    E \/ (E \/ P) -> E \/ P.
+Lemma indirect2_law3 :
+  forall C P : Prop,
+    ((((P -> C) -> C) -> C) -> C) -> ((P -> C) -> C).
 (* begin hide *)
 Proof.
-  intros E P [e | [e | p]].
-    left. assumption.
-    left. assumption.
-    right. assumption.
+  intros C P p4c pc.
+  apply p4c. intro pcc.
+  apply pcc.
+  assumption.
+Qed.
+(* end hide *)
+
+Goal
+  forall C D P : Prop,
+    (((P -> C) -> C) -> ((P -> D) -> D)) -> (C <-> D).
+Proof.
+  intros C D P H. split.
+    intro c. apply H.
+      intros _. assumption.
+      intro p. apply H.
+Abort.
+
+(** ** Modalność "... albo i nie"... albo i nie *)
+
+(** Jeżeli przyjrzymy się naszej modalności wymówkowej... TODO *)
+
+(* begin hide *)
+Lemma ornot_law1 :
+  ~ forall P Q : Prop, (P -> Q) -> (P \/ ~ P -> Q \/ ~ Q).
+Proof.
+Abort.
+(* end hide *)
+
+Lemma ornot_law2 :
+  forall P : Prop, P -> P \/ ~ P.
+(* begin hide *)
+Proof.
+  intros P p.
+  left. assumption.
+Qed.
+(* end hide *)
+
+Lemma ornot_law3 :
+  forall P : Prop,
+    (P \/ ~ P) \/ ~ (P \/ ~ P) -> P \/ ~ P.
+(* begin hide *)
+Proof.
+  intros P [H | H].
+    assumption.
+    right. intro p. apply H. left. assumption.
 Qed.
 (* end hide *)
 
@@ -837,8 +925,8 @@ Qed.
     zawiedzie — dzięki temu [t; fail] również zawiedzie, nie dokonując
     żadnych zmian w celu (nie dokona postępu), a całe [try (t; fail)]
     zakończy się sukcesem, również nie dokonując w celu żadnych zmian.
-    Wobec tego działanie [try (t; fail)] można podsumować tak: "jeżeli [t]
-    rozwiąże cel to użyj jej, a jeżeli nie, to nic nie rób".
+    Wobec tego działanie [try (t; fail)] można podsumować tak: "jeżeli
+    [t] rozwiąże cel to użyj jej, a jeżeli nie, to nic nie rób".
 
     Postaraj się dokładnie zrozumieć, jak opis ten ma się do powyższego
     przykładu — spróbuj usunąć jakieś [try], [fail] lub średnik i zobacz,
@@ -867,6 +955,14 @@ Qed.
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami *)
 
 (** * Jakieś podsumowanie *)
+
+(** Gratulacje! Udało ci się przebrnąć przez pierwszy (poważny) rozdział
+    moich wypocin, czyli rozdział o logice. W nagrodę już nigdy nie
+    będziesz musiał ręcznie walczyć ze spójnikami czy prawami logiki -
+    zrobi to za ciebie taktyka [firstorder]. Jak sama nazwa wskazuje,
+    służy ona do radzenia sobie z czysto logicznymi dowodami w logice
+    pierwszego rzędu (czyli w takiej, gdzie nie kwantyfikujemy po
+    funkcjach albo tympodobnie skomplikowanych rzeczach). *)
 
 (** - taktyka firstorder
     - zrobić test diagnostyczny tak/nie

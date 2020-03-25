@@ -8,6 +8,8 @@
 
 (** * Równość - najważniejsza relacja *)
 
+(** * Równość a równanie *)
+
 (** Dobrze byłoby zapoznać się z równością przed pierwszym jej użyciem
     w rozdziale o typach induktywnych. *)
 
