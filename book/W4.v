@@ -118,7 +118,113 @@ Qed.
     "bardzo" NIE JEST modalnością.
 
     Zanim zobaczymy, jak ta definicja ma się do tego, co już wiemy
-    i potrafimy, zadanie: *)
+    i potrafimy, parę ćwiczeń: *)
+
+(** **** Ćwiczenie (modalność neutralna) *)
+
+(** Jako już się rzekło w przykładzie, zdanie "Pada deszcz" również
+    jest zdaniem modalnym. Modalność występująca w tym zdaniu to
+    modalność identycznościowa (zwana też modalnością neutralną), a
+    wyrażany przez nią sposób to sposób domyślny, czyli w sumie żaden.
+
+    Modalność ta nie ma raczej większego znaczenia (oczywiście o ile
+    przemilaczymy fakt, że większość wszystkich zdań, jakie napotkamy,
+    będzie wyrażać właśnie tę modalność), ale warto ją odnotować dla
+    kompletności teorii - zwykli śmiertelnicy zazwyczaj zapominają o
+    takich banalnych rzeczach, więc trzeba im o tym przypominać.
+
+    Pokaż, że modalność neutralna jest modalnością. *)
+
+Lemma identity_law1 :
+  forall P Q : Prop, (P -> Q) -> (P -> Q).
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma identity_law2 :
+  forall P : Prop, P -> P.
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma identity_law3 :
+  forall P : Prop, P -> P.
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie (modalność trywialna) *)
+
+(** Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
+    nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
+    chcąc w trywialny sposób powiedzieć [P], wypieprzamy zdanie [P] w
+    diabły i zamiast tego mówimy [True]. Wot, modalność jak znalazł.
+
+    Pokaż, że modalność trywialna jest modalnością. *)
+
+Lemma trivial_law1 :
+  forall P Q : Prop, (P -> Q) -> (True -> True).
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma trivial_law2 :
+  forall P : Prop, P -> True.
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma trivial_law3 :
+  forall P : Prop, True -> True.
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Skoro [True] to modalność trywialna, to może [False] to modalność
+    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
+    nazwana?
+
+    Sprawdź to. *)
+
+Lemma antitrivial_law1 :
+  forall P Q : Prop, (P -> Q) -> (False -> False).
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma antitrivial_law2 :
+  ~ forall P : Prop, P -> False.
+(* begin hide *)
+Proof.
+  intro H.
+  apply (H True).
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma antitrivial_law3 :
+  forall P : Prop, False -> False.
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
 
 (** **** Ćwiczenie *)
 
@@ -192,7 +298,7 @@ Qed.
 
 (** Pokaż, że podwójna negacja jest modalnością. *)
 
-Lemma not_not_law1 :
+Lemma irrefutably_law1 :
   forall P Q : Prop, (P -> Q) -> (~ ~ P -> ~ ~ Q).
 (* begin hide *)
 Proof.
@@ -203,7 +309,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma not_not_law2 :
+Lemma irrefutably_law2 :
   forall P : Prop, P -> ~ ~ P.
 (* begin hide *)
 Proof.
@@ -212,7 +318,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma not_not_law3 :
+Lemma irrefutably_law3 :
   forall P : Prop, ~ ~ ~ ~ P -> ~ ~ P.
 (* begin hide *)
 Proof.
@@ -406,74 +512,71 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Modalność trywialna *)
-
-(** Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
-    nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
-    chcąc w trywialny sposób powiedzieć [P], wywalamy [P] i zamiast tego
-    mówimy [True]. Wot, modalność jak znalazł. *)
-
-(** **** Ćwiczenie *)
-
-(** Pokaż, że modalność trywialna jest modalnością. *)
-
-Lemma trivial_law1 :
-  forall P Q : Prop, (P -> Q) -> (True -> True).
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma trivial_law2 :
-  forall P : Prop, P -> True.
-Proof.
-  trivial.
-Qed.
-
-Lemma trivial_law3 :
-  forall P : Prop, True -> True.
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-(** **** Ćwiczenie *)
-
-(** Skoro [True] to modalność trywialna, to może [False] to modalność
-    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
-    nazwana?
-
-    Sprawdź to. *)
-
-Lemma antitrivial_law1 :
-  forall P Q : Prop, (P -> Q) -> (False -> False).
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma antitrivial_law2 :
-  ~ forall P : Prop, P -> False.
-(* begin hide *)
-Proof.
-  intro H.
-  apply (H True).
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma antitrivial_law3 :
-  forall P : Prop, False -> False.
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
 (** ** Modalność pośrednia *)
+
+(* begin hide *)
+
+(** TODO: lista monad, które (nie) nadają się na modalności:
+    - Codensity: tak, jako dziwna identyczność
+    - Cont - tak, jako modalność pośrednia
+    - Free - nie
+    - Identity - tak
+    - Lazy - nie
+    - List - nie
+    - Option - chyba raczej nie
+    - Reader - tak
+    - RoseTree - nie
+    - RWS - nie
+    - State - nie
+    - Sum - tak
+    - Writer - nie *)
+
+(* end hide *)
+
+Lemma indirect2_law1 :
+  forall C P Q : Prop,
+    (P -> Q) -> (((P -> C) -> C) -> ((Q -> C) -> C)).
+(* begin hide *)
+Proof.
+  intros C P Q pq pcc qc.
+  apply pcc. intro p.
+  apply qc, pq. assumption.
+Qed.
+(* end hide *)
+
+Lemma indirect2_law2 :
+  forall C P : Prop, P -> ((P -> C) -> C).
+(* begin hide *)
+Proof.
+  intros C P p pc.
+  apply pc.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma indirect2_law3 :
+  forall C P : Prop,
+    ((((P -> C) -> C) -> C) -> C) -> ((P -> C) -> C).
+(* begin hide *)
+Proof.
+  intros C P p4c pc.
+  apply p4c. intro pcc.
+  apply pcc.
+  assumption.
+Qed.
+(* end hide *)
+
+Goal
+  forall C D P : Prop,
+    (((P -> C) -> C) -> ((P -> D) -> D)) -> (C <-> D).
+Proof.
+  intros C D P H. split.
+    intro c. apply H.
+      intros _. assumption.
+      intro p. apply H.
+Abort.
+
+(** ** Modalność (bez)pośrednia *)
 
 (** Poznawszy dwie najważniejsze dla nas modalności, możemy zająć się
     takimi, które będą miały co najwyżej charakter ciekawostki. Jeżeli
@@ -580,101 +683,6 @@ Qed.
     wniosek może być tylko jeden: modalność pośrednia jest dokładnie
     tym samym, co modalność neutralna. Ha! Nie tego się spodziewałeś,
     co? *)
-
-(** ** Modalność pośrednia v2 *)
-
-(* begin hide *)
-
-(** TODO: lista monad, które (nie) nadają się na modalności:
-    - Codensity: tak, jako dziwna identyczność
-    - Cont - tak, jako modalność pośrednia
-    - Free - nie
-    - Identity - tak
-    - Lazy - nie
-    - List - nie
-    - Option - chyba raczej nie
-    - Reader - tak
-    - RoseTree - nie
-    - RWS - nie
-    - State - nie
-    - Sum - tak
-    - Writer - nie *)
-
-(* end hide *)
-
-Lemma indirect2_law1 :
-  forall C P Q : Prop,
-    (P -> Q) -> (((P -> C) -> C) -> ((Q -> C) -> C)).
-(* begin hide *)
-Proof.
-  intros C P Q pq pcc qc.
-  apply pcc. intro p.
-  apply qc, pq. assumption.
-Qed.
-(* end hide *)
-
-Lemma indirect2_law2 :
-  forall C P : Prop, P -> ((P -> C) -> C).
-(* begin hide *)
-Proof.
-  intros C P p pc.
-  apply pc.
-  assumption.
-Qed.
-(* end hide *)
-
-Lemma indirect2_law3 :
-  forall C P : Prop,
-    ((((P -> C) -> C) -> C) -> C) -> ((P -> C) -> C).
-(* begin hide *)
-Proof.
-  intros C P p4c pc.
-  apply p4c. intro pcc.
-  apply pcc.
-  assumption.
-Qed.
-(* end hide *)
-
-Goal
-  forall C D P : Prop,
-    (((P -> C) -> C) -> ((P -> D) -> D)) -> (C <-> D).
-Proof.
-  intros C D P H. split.
-    intro c. apply H.
-      intros _. assumption.
-      intro p. apply H.
-Abort.
-
-(** ** Modalność "... albo i nie"... albo i nie *)
-
-(** Jeżeli przyjrzymy się naszej modalności wymówkowej... TODO *)
-
-(* begin hide *)
-Lemma ornot_law1 :
-  ~ forall P Q : Prop, (P -> Q) -> (P \/ ~ P -> Q \/ ~ Q).
-Proof.
-Abort.
-(* end hide *)
-
-Lemma ornot_law2 :
-  forall P : Prop, P -> P \/ ~ P.
-(* begin hide *)
-Proof.
-  intros P p.
-  left. assumption.
-Qed.
-(* end hide *)
-
-Lemma ornot_law3 :
-  forall P : Prop,
-    (P \/ ~ P) \/ ~ (P \/ ~ P) -> P \/ ~ P.
-(* begin hide *)
-Proof.
-  intros P [H | H].
-    assumption.
-    right. intro p. apply H. left. assumption.
-Qed.
-(* end hide *)
 
 (** * Inne logiki - podsumowanie *)
 

@@ -72,7 +72,7 @@
     Silna negacja to najbardziej bezpośredni sposób zaprzeczenia danemu
     zdaniu. W Coqu nie ma żadnego spójnika, który ją wyraża, bo ma ona
     charakter dość ad hoc - dla każdego zdania musimy sami sobie wymyślić,
-    jak brzmi zdanie, który najsilniej mu przeczy. W rozumowaniach słownych
+    jak brzmi zdanie, które najsilniej mu przeczy. W rozumowaniach słownych
     silna negacja sprowadza się zazwyczaj do schematu "nie jest tak".
 
     Spróbujmy przetłumaczyć powyższe rozważania na język logiki. Niech
