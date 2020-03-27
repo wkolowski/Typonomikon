@@ -311,94 +311,7 @@
 </div>
 
 <div class="doc">
-<a name="lab630"></a><h2 class="section">Niespodziewana modalność - niezaprzeczalność</h2>
-
-<div class="paragraph"> </div>
-
- Wiemy już, że negacja nie jest modalnością. Świetnie, ale w takim
-    razie, co nią jest? Otóż przykładem modalności jest... podwójna
-    negacja!
-
-<div class="paragraph"> </div>
-
-    Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
-    Nie ma się czemu dziwić - w języku polskim podwójna negacja w
-    stylu "nikt nic nie wie" wyraża tak naprawdę pojedynczą negację
-    (choć nazwa "podwójna negacja" jest tu niezbyt trafna - bo słowo
-    "nie" występuje tylko raz, a słowa takie jak "nikt" czy "nic"
-    mają wprawdzie znaczenie negatywne, ale formą negacji nie są),
-    w angielskim natomiast zdanie podwójnie zanegowane ("it's not
-    uncommon") znaczy to samo, co zdanie oznajmiające bez żadnej
-    negacji ("it's common").
-
-<div class="paragraph"> </div>
-
-    Odstawmy jednak na bok języki naturalne i zastanówmy się, jakąż to
-    modalność wyraża podwójna negacja w naszej Coqowej logice. W tym
-    celu przyjrzyjmy się poniższym zdaniom:
-<ul class="doclist">
-<li> <span class="inlinecode"><span class="id" title="var">P</span></span> - po prostu stwierdzamy <span class="inlinecode"><span class="id" title="var">P</span></span>, modalność neutralna
-
-</li>
-<li> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> - zaprzeczamy/obalamy <span class="inlinecode"><span class="id" title="var">P</span></span>. Można zatem powiedzieć, że <span class="inlinecode"><span class="id" title="var">P</span></span>
-      jest zaprzeczalne.
-
-</li>
-<li> <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> - zaprzeczamy/obalamy <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, czyli zaprzeczamy zaprzeczeniu
-      <span class="inlinecode"><span class="id" title="var">P</span></span>. Można zatem powiedzieć, że <span class="inlinecode"><span class="id" title="var">P</span></span> jest niezaprzeczalne.
-
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
-    I bum, dokonaliśmy naszego odkrycia: podwójna negacja wyraża
-    bardzo subtelną modalność, jaką jest niezaprzeczalność. <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>
-    możemy zatem odczytywać jako "niezaprzeczalnie P".
-
-<div class="paragraph"> </div>
-
-    Czym różni się samo "P" od "niezaprzeczalnie P"? Dla lepszego
-    zrozumienia prześledźmy to na znanym nam już przykładzie, czyli
-    aksjomacie wyłączonego środka.
-
-<div class="paragraph"> </div>
-
-    Weźmy dowolne zdanie <span class="inlinecode"><span class="id" title="var">P</span></span>. Nie jesteśmy w stanie udowodnić <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>,
-    gdyż bez żadnej wiedzy o zdaniu <span class="inlinecode"><span class="id" title="var">P</span></span> nie jesteśmy w stanie zdecydować,
-    czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
-    wcisnąć nam kit, że <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span>, to możemy wziąć jego dowód i
-    wyprowadzić z niego <span class="inlinecode"><span class="id" title="var">False</span></span>, czyli po prostu udowodnić, że
-    <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span>. Na tym właśnie polega modalność niezaprzeczalności:
-    nawet jeżeli nie da się zdania pokazać wprost, to można obalić jego
-    zaprzeczenie. 
-<div class="paragraph"> </div>
-
-<a name="lab631"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Pokaż, że podwójna negacja jest modalnością. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">irrefutably_law1</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (~ ~ <span class="id" title="var">P</span> -&gt; ~ ~ <span class="id" title="var">Q</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">irrefutably_law2</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; ~ ~ <span class="id" title="var">P</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">irrefutably_law3</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ ~ ~ ~ <span class="id" title="var">P</span> -&gt; ~ ~ <span class="id" title="var">P</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab632"></a><h2 class="section">Logika klasyczna jako logika modalna</h2>
+<a name="lab630"></a><h2 class="section">Logika klasyczna jako logika modalna</h2>
 
 </div>
 <div class="code">
@@ -437,7 +350,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
     aksjomatów, jakie sobie zażyczymy. 
 <div class="paragraph"> </div>
 
-<a name="lab633"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab631"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -462,7 +375,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 </div>
 
 <div class="doc">
-<a name="lab634"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab632"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -479,6 +392,77 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">classicallies</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>) &lt;-&gt; (<span class="id" title="var">DNE</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab633"></a><h4 class="section">Ćwiczenie (modalność aksjomatyczna)</h4>
+
+<div class="paragraph"> </div>
+
+ Jeżeli poprawnie i uważnie wykonałeś pierwsze ćwiczenie, to zapewne
+    zauważyłeś, że nie było w nim niczego, co by jakoś bardzo zależało
+    od <span class="inlinecode"><span class="id" title="var">LEM</span></span>.
+
+<div class="paragraph"> </div>
+
+    Nie ma się co dziwić, albowiem modalność klasyczna jest jedynie
+    wcieleniem pewnej ogólniejszej modalności, którą na nasze potrzeby
+    nazwiemy modalnością aksjomatyczną.
+
+<div class="paragraph"> </div>
+
+    Cóż to takiego? Ano, weźmy dowolne zdanie <span class="inlinecode"><span class="id" title="var">A</span></span>. Zdanie <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+    możemy odczytać jako "P, ale tylko pod warunkiem, że A". Widać,
+    że jest to pewien sposób na wyrażenie <span class="inlinecode"><span class="id" title="var">P</span></span>, a zatem jest to
+    modalność.
+
+<div class="paragraph"> </div>
+
+    Udowodnij, że modalność aksjomatyczna jest modalnością. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">axiomatically_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ((<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">Q</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">axiomatically_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">axiomatically_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">A</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>)) -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab634"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Wypadałoby jeszcze wyjaśnić, dlaczego poznaną w poprzednim zadaniu
+    modalność nazwałem modalnością aksjomatyczną, a nie np. "warunkową",
+    "założeniową" albo coś w tym stylu.
+
+<div class="paragraph"> </div>
+
+    Powód tego jest prosty: dawanie jako dodatkowej przesłanki zdania,
+    które nie jest potrzebne w dowodzie, jest dość kretyńskie. Baaaaa!
+    Jeżeli <span class="inlinecode"><span class="id" title="var">A</span></span> nie jest aksjomate, to <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> jest równoważne <span class="inlinecode"><span class="id" title="var">P</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nonaxiomatically</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">A</span> -&gt; ((<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>) &lt;-&gt; <span class="id" title="var">P</span>).<br/>
 
 <br/>
 </div>
@@ -613,7 +597,94 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 </div>
 
 <div class="doc">
-<a name="lab638"></a><h2 class="section">Modalność pośrednia</h2>
+<a name="lab638"></a><h2 class="section">Niespodziewana modalność - niezaprzeczalność</h2>
+
+<div class="paragraph"> </div>
+
+ Wiemy już, że negacja nie jest modalnością. Świetnie, ale w takim
+    razie, co nią jest? Otóż przykładem modalności jest... podwójna
+    negacja!
+
+<div class="paragraph"> </div>
+
+    Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
+    Nie ma się czemu dziwić - w języku polskim podwójna negacja w
+    stylu "nikt nic nie wie" wyraża tak naprawdę pojedynczą negację
+    (choć nazwa "podwójna negacja" jest tu niezbyt trafna - bo słowo
+    "nie" występuje tylko raz, a słowa takie jak "nikt" czy "nic"
+    mają wprawdzie znaczenie negatywne, ale formą negacji nie są),
+    w angielskim natomiast zdanie podwójnie zanegowane ("it's not
+    uncommon") znaczy to samo, co zdanie oznajmiające bez żadnej
+    negacji ("it's common").
+
+<div class="paragraph"> </div>
+
+    Odstawmy jednak na bok języki naturalne i zastanówmy się, jakąż to
+    modalność wyraża podwójna negacja w naszej Coqowej logice. W tym
+    celu przyjrzyjmy się poniższym zdaniom:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> - po prostu stwierdzamy <span class="inlinecode"><span class="id" title="var">P</span></span>, modalność neutralna
+
+</li>
+<li> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> - zaprzeczamy/obalamy <span class="inlinecode"><span class="id" title="var">P</span></span>. Można zatem powiedzieć, że <span class="inlinecode"><span class="id" title="var">P</span></span>
+      jest zaprzeczalne.
+
+</li>
+<li> <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> - zaprzeczamy/obalamy <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, czyli zaprzeczamy zaprzeczeniu
+      <span class="inlinecode"><span class="id" title="var">P</span></span>. Można zatem powiedzieć, że <span class="inlinecode"><span class="id" title="var">P</span></span> jest niezaprzeczalne.
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    I bum, dokonaliśmy naszego odkrycia: podwójna negacja wyraża
+    bardzo subtelną modalność, jaką jest niezaprzeczalność. <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+    możemy zatem odczytywać jako "niezaprzeczalnie P".
+
+<div class="paragraph"> </div>
+
+    Czym różni się samo "P" od "niezaprzeczalnie P"? Dla lepszego
+    zrozumienia prześledźmy to na znanym nam już przykładzie, czyli
+    aksjomacie wyłączonego środka.
+
+<div class="paragraph"> </div>
+
+    Weźmy dowolne zdanie <span class="inlinecode"><span class="id" title="var">P</span></span>. Nie jesteśmy w stanie udowodnić <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>,
+    gdyż bez żadnej wiedzy o zdaniu <span class="inlinecode"><span class="id" title="var">P</span></span> nie jesteśmy w stanie zdecydować,
+    czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
+    wcisnąć nam kit, że <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span>, to możemy wziąć jego dowód i
+    wyprowadzić z niego <span class="inlinecode"><span class="id" title="var">False</span></span>, czyli po prostu udowodnić, że
+    <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span>. Na tym właśnie polega modalność niezaprzeczalności:
+    nawet jeżeli nie da się zdania pokazać wprost, to można obalić jego
+    zaprzeczenie. 
+<div class="paragraph"> </div>
+
+<a name="lab639"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Pokaż, że podwójna negacja jest modalnością. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">irrefutably_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (~ ~ <span class="id" title="var">P</span> -&gt; ~ ~ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">irrefutably_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; ~ ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">irrefutably_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ ~ ~ ~ <span class="id" title="var">P</span> -&gt; ~ ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab640"></a><h2 class="section">Modalność pośrednia</h2>
 
 </div>
 <div class="code">
@@ -649,7 +720,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 </div>
 
 <div class="doc">
-<a name="lab639"></a><h2 class="section">Modalność (bez)pośrednia</h2>
+<a name="lab641"></a><h2 class="section">Modalność (bez)pośrednia</h2>
 
 <div class="paragraph"> </div>
 
@@ -663,7 +734,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
     Modalność pośrednia to... zamiast gadać, przekonaj się sam. 
 <div class="paragraph"> </div>
 
-<a name="lab640"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab642"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -743,7 +814,7 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
     modalność pośrednia. 
 <div class="paragraph"> </div>
 
-<a name="lab641"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab643"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -770,14 +841,74 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     co? 
 <div class="paragraph"> </div>
 
-<a name="lab642"></a><h1 class="section">Inne logiki - podsumowanie</h1>
+<a name="lab644"></a><h2 class="section">Związki między modalnościami</h2>
+
+<div class="paragraph"> </div>
+
+ W ćwiczeniach przekonaliśmy się już, że dwie intensjonalnie różne
+    definicje (na przykład <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">DNE</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>) ekstensjonalnie
+    mogą tak naprawdę definiować to samo (w tym przypadku modalność
+    klasyczną).
+
+<div class="paragraph"> </div>
+
+    Widzieliśmy też, że niektóre modalności są specjalnymi przypadkami
+    innych (niezaprzeczalność jest specjalnym przypadkiem pośredniości,
+    a modalność trywialna jest to modalność wymówkowa z bardzo ogólną
+    i nieprzekonującą wymówką).
+
+<div class="paragraph"> </div>
+
+    Czy to jednak wszystko, co potrafimy powiedzieć o modalnościach i
+    ich wzajemnych związkach? Oczywiście nie. Wiemy przecież choćby, że
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Można ten fakt zinterpretować następująco: modalność
+    neutralna jest silniejsza niż modalność niezaprzeczalna, czyli
+    równoważne: modalność niezaprzeczalna jest słabsza niż modalność
+    neutralna. 
+<div class="paragraph"> </div>
+
+<a name="lab645"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Najbanalniejsze i najnaturalniejsze pytanie w kosmosie, które powinno
+    było przyjść ci do głowy po przeczytaniu powyższego akaptiu, brzmi:
+    która modalność jest najsilniejsza, a która najsłabsza?
+
+<div class="paragraph"> </div>
+
+    No, skoro już takie pytanie przyszło ci do głowy, to znajdź na nie
+    odpowiedź!
+
+<div class="paragraph"> </div>
+
+    Uwaga: nie musisz formalnie dowodzić w Coqu, że masz rację. Prawdę
+    powiedziawszy, gdybyśmy uparli się na pełną formalność, to nie
+    umiemy jeszcze wyrazić odpowiednich twierdzeń.
+
+<div class="paragraph"> </div>
+
+    Wskazówka: sformułuj najpierw, co znaczą słowa "najsilniejszy"
+    oraz "najsłabszy". Następnie przyjrzyj się definicji modalności
+    oraz poszczególnym modalnościom i udowodnionym dotychczas przez
+    nas twierdzeniom. Powinno cię to oświecić. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab646"></a><h1 class="section">Inne logiki - podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
  krótkie, acz realistyczne (logiki parakonsystentne to guwno) 
 <div class="paragraph"> </div>
 
-<a name="lab643"></a><h1 class="section">Kombinatory taktyk</h1>
+<a name="lab647"></a><h1 class="section">Kombinatory taktyk</h1>
 
 <div class="paragraph"> </div>
 
@@ -821,7 +952,7 @@ Jego dowód wygląda dość schematycznie. Taktyka <span class="inlinecode"><spa
     skomplikowane lub jedynie zmieniać niektóre aspekty ich zachowań. 
 <div class="paragraph"> </div>
 
-<a name="lab644"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
+<a name="lab648"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
 
 </div>
 <div class="code">
@@ -927,7 +1058,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 
 <div class="paragraph"> </div>
 
-<a name="lab645"></a><h4 class="section">Ćwiczenie (średnik)</h4>
+<a name="lab649"></a><h4 class="section">Ćwiczenie (średnik)</h4>
 
 <div class="paragraph"> </div>
 
@@ -950,7 +1081,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 </div>
 
 <div class="doc">
-<a name="lab646"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
+<a name="lab650"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
 
 </div>
 <div class="code">
@@ -997,7 +1128,7 @@ Innym przydatnym kombinatorem jest <span class="inlinecode">||</span>, który b�
     <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> będzie miało taki sam efekt, jak <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H0</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab647"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
+<a name="lab651"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
 
 </div>
 <div class="code">
@@ -1068,7 +1199,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     działanie sukcesem. 
 <div class="paragraph"> </div>
 
-<a name="lab648"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
+<a name="lab652"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
 
 </div>
 <div class="code">
@@ -1141,7 +1272,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     https://coq.inria.fr/refman/coq-tacindex.html 
 <div class="paragraph"> </div>
 
-<a name="lab649"></a><h1 class="section">Zadania</h1>
+<a name="lab653"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -1149,7 +1280,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami 
 <div class="paragraph"> </div>
 
-<a name="lab650"></a><h1 class="section">Jakieś podsumowanie</h1>
+<a name="lab654"></a><h1 class="section">Jakieś podsumowanie</h1>
 
 <div class="paragraph"> </div>
 

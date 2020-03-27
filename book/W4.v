@@ -252,82 +252,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Niespodziewana modalność - niezaprzeczalność *)
-
-(** Wiemy już, że negacja nie jest modalnością. Świetnie, ale w takim
-    razie, co nią jest? Otóż przykładem modalności jest... podwójna
-    negacja!
-
-    Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
-    Nie ma się czemu dziwić - w języku polskim podwójna negacja w
-    stylu "nikt nic nie wie" wyraża tak naprawdę pojedynczą negację
-    (choć nazwa "podwójna negacja" jest tu niezbyt trafna - bo słowo
-    "nie" występuje tylko raz, a słowa takie jak "nikt" czy "nic"
-    mają wprawdzie znaczenie negatywne, ale formą negacji nie są),
-    w angielskim natomiast zdanie podwójnie zanegowane ("it's not
-    uncommon") znaczy to samo, co zdanie oznajmiające bez żadnej
-    negacji ("it's common").
-
-    Odstawmy jednak na bok języki naturalne i zastanówmy się, jakąż to
-    modalność wyraża podwójna negacja w naszej Coqowej logice. W tym
-    celu przyjrzyjmy się poniższym zdaniom:
-    - [P] - po prostu stwierdzamy [P], modalność neutralna
-    - [~ P] - zaprzeczamy/obalamy [P]. Można zatem powiedzieć, że [P]
-      jest zaprzeczalne.
-    - [~ ~ P] - zaprzeczamy/obalamy [~ P], czyli zaprzeczamy zaprzeczeniu
-      [P]. Można zatem powiedzieć, że [P] jest niezaprzeczalne.
-
-    I bum, dokonaliśmy naszego odkrycia: podwójna negacja wyraża
-    bardzo subtelną modalność, jaką jest niezaprzeczalność. [~ ~ P]
-    możemy zatem odczytywać jako "niezaprzeczalnie P".
-
-    Czym różni się samo "P" od "niezaprzeczalnie P"? Dla lepszego
-    zrozumienia prześledźmy to na znanym nam już przykładzie, czyli
-    aksjomacie wyłączonego środka.
-
-    Weźmy dowolne zdanie [P]. Nie jesteśmy w stanie udowodnić [P \/ ~ P],
-    gdyż bez żadnej wiedzy o zdaniu [P] nie jesteśmy w stanie zdecydować,
-    czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
-    wcisnąć nam kit, że [~ (P \/ ~ P)], to możemy wziąć jego dowód i
-    wyprowadzić z niego [False], czyli po prostu udowodnić, że
-    [~ ~ (P \/ ~ P)]. Na tym właśnie polega modalność niezaprzeczalności:
-    nawet jeżeli nie da się zdania pokazać wprost, to można obalić jego
-    zaprzeczenie. *)
-
-(** **** Ćwiczenie *)
-
-(** Pokaż, że podwójna negacja jest modalnością. *)
-
-Lemma irrefutably_law1 :
-  forall P Q : Prop, (P -> Q) -> (~ ~ P -> ~ ~ Q).
-(* begin hide *)
-Proof.
-  intros P Q H nnp nq.
-  apply nnp. intro p.
-  apply nq. apply H.
-  assumption.
-Qed.
-(* end hide *)
-
-Lemma irrefutably_law2 :
-  forall P : Prop, P -> ~ ~ P.
-(* begin hide *)
-Proof.
-  intros P p np.
-  apply np, p.
-Qed.
-(* end hide *)
-
-Lemma irrefutably_law3 :
-  forall P : Prop, ~ ~ ~ ~ P -> ~ ~ P.
-(* begin hide *)
-Proof.
-  intros P n4p np.
-  apply n4p. intro n2p.
-  apply n2p, np.
-Qed.
-(* end hide *)
-
 (** ** Logika klasyczna jako logika modalna *)
 
 Require Import W3.
@@ -399,6 +323,74 @@ Proof.
   split.
     intros H dne. apply H, DNE_LEM. assumption.
     intros H lem. apply H. exact (LEM_DNE lem).
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie (modalność aksjomatyczna) *)
+
+(** Jeżeli poprawnie i uważnie wykonałeś pierwsze ćwiczenie, to zapewne
+    zauważyłeś, że nie było w nim niczego, co by jakoś bardzo zależało
+    od [LEM].
+
+    Nie ma się co dziwić, albowiem modalność klasyczna jest jedynie
+    wcieleniem pewnej ogólniejszej modalności, którą na nasze potrzeby
+    nazwiemy modalnością aksjomatyczną.
+
+    Cóż to takiego? Ano, weźmy dowolne zdanie [A]. Zdanie [A -> P]
+    możemy odczytać jako "P, ale tylko pod warunkiem, że A". Widać,
+    że jest to pewien sposób na wyrażenie [P], a zatem jest to
+    modalność.
+
+    Udowodnij, że modalność aksjomatyczna jest modalnością. *)
+
+Lemma axiomatically_law1 :
+  forall A P Q : Prop,
+    (P -> Q) -> ((A -> P) -> (A -> Q)).
+(* begin hide *)
+Proof.
+  intros A P Q pq ap a.
+  apply pq, ap, a.
+Qed.
+(* end hide *)
+
+Lemma axiomatically_law2 :
+  forall A P : Prop,
+    P -> (A -> P).
+(* begin hide *)
+Proof.
+  intros A P p a.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma axiomatically_law3 :
+  forall A P : Prop,
+    (A -> (A -> P)) -> (A -> P).
+(* begin hide *)
+Proof.
+  intros A P aap a.
+  apply aap; assumption.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Wypadałoby jeszcze wyjaśnić, dlaczego poznaną w poprzednim zadaniu
+    modalność nazwałem modalnością aksjomatyczną, a nie np. "warunkową",
+    "założeniową" albo coś w tym stylu.
+
+    Powód tego jest prosty: dawanie jako dodatkowej przesłanki zdania,
+    które nie jest potrzebne w dowodzie, jest dość kretyńskie. Baaaaa!
+    Jeżeli [A] nie jest aksjomate, to [A -> P] jest równoważne [P]. *)
+
+Lemma nonaxiomatically :
+  forall A P : Prop,
+    A -> ((A -> P) <-> P).
+(* begin hide *)
+Proof.
+  intros A P a. split.
+    intro ap. apply ap. assumption.
+    intros p _. assumption.
 Qed.
 (* end hide *)
 
@@ -511,6 +503,83 @@ Proof.
     right. assumption.
 Qed.
 (* end hide *)
+
+(** ** Niespodziewana modalność - niezaprzeczalność *)
+
+(** Wiemy już, że negacja nie jest modalnością. Świetnie, ale w takim
+    razie, co nią jest? Otóż przykładem modalności jest... podwójna
+    negacja!
+
+    Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
+    Nie ma się czemu dziwić - w języku polskim podwójna negacja w
+    stylu "nikt nic nie wie" wyraża tak naprawdę pojedynczą negację
+    (choć nazwa "podwójna negacja" jest tu niezbyt trafna - bo słowo
+    "nie" występuje tylko raz, a słowa takie jak "nikt" czy "nic"
+    mają wprawdzie znaczenie negatywne, ale formą negacji nie są),
+    w angielskim natomiast zdanie podwójnie zanegowane ("it's not
+    uncommon") znaczy to samo, co zdanie oznajmiające bez żadnej
+    negacji ("it's common").
+
+    Odstawmy jednak na bok języki naturalne i zastanówmy się, jakąż to
+    modalność wyraża podwójna negacja w naszej Coqowej logice. W tym
+    celu przyjrzyjmy się poniższym zdaniom:
+    - [P] - po prostu stwierdzamy [P], modalność neutralna
+    - [~ P] - zaprzeczamy/obalamy [P]. Można zatem powiedzieć, że [P]
+      jest zaprzeczalne.
+    - [~ ~ P] - zaprzeczamy/obalamy [~ P], czyli zaprzeczamy zaprzeczeniu
+      [P]. Można zatem powiedzieć, że [P] jest niezaprzeczalne.
+
+    I bum, dokonaliśmy naszego odkrycia: podwójna negacja wyraża
+    bardzo subtelną modalność, jaką jest niezaprzeczalność. [~ ~ P]
+    możemy zatem odczytywać jako "niezaprzeczalnie P".
+
+    Czym różni się samo "P" od "niezaprzeczalnie P"? Dla lepszego
+    zrozumienia prześledźmy to na znanym nam już przykładzie, czyli
+    aksjomacie wyłączonego środka.
+
+    Weźmy dowolne zdanie [P]. Nie jesteśmy w stanie udowodnić [P \/ ~ P],
+    gdyż bez żadnej wiedzy o zdaniu [P] nie jesteśmy w stanie zdecydować,
+    czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
+    wcisnąć nam kit, że [~ (P \/ ~ P)], to możemy wziąć jego dowód i
+    wyprowadzić z niego [False], czyli po prostu udowodnić, że
+    [~ ~ (P \/ ~ P)]. Na tym właśnie polega modalność niezaprzeczalności:
+    nawet jeżeli nie da się zdania pokazać wprost, to można obalić jego
+    zaprzeczenie. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że podwójna negacja jest modalnością. *)
+
+Lemma irrefutably_law1 :
+  forall P Q : Prop, (P -> Q) -> (~ ~ P -> ~ ~ Q).
+(* begin hide *)
+Proof.
+  intros P Q H nnp nq.
+  apply nnp. intro p.
+  apply nq. apply H.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma irrefutably_law2 :
+  forall P : Prop, P -> ~ ~ P.
+(* begin hide *)
+Proof.
+  intros P p np.
+  apply np, p.
+Qed.
+(* end hide *)
+
+Lemma irrefutably_law3 :
+  forall P : Prop, ~ ~ ~ ~ P -> ~ ~ P.
+(* begin hide *)
+Proof.
+  intros P n4p np.
+  apply n4p. intro n2p.
+  apply n2p, np.
+Qed.
+(* end hide *)
+
 
 (** ** Modalność pośrednia *)
 
@@ -683,6 +752,54 @@ Qed.
     wniosek może być tylko jeden: modalność pośrednia jest dokładnie
     tym samym, co modalność neutralna. Ha! Nie tego się spodziewałeś,
     co? *)
+
+(** ** Związki między modalnościami *)
+
+(** W ćwiczeniach przekonaliśmy się już, że dwie intensjonalnie różne
+    definicje (na przykład [LEM -> P] i [DNE -> P]) ekstensjonalnie
+    mogą tak naprawdę definiować to samo (w tym przypadku modalność
+    klasyczną).
+
+    Widzieliśmy też, że niektóre modalności są specjalnymi przypadkami
+    innych (niezaprzeczalność jest specjalnym przypadkiem pośredniości,
+    a modalność trywialna jest to modalność wymówkowa z bardzo ogólną
+    i nieprzekonującą wymówką).
+
+    Czy to jednak wszystko, co potrafimy powiedzieć o modalnościach i
+    ich wzajemnych związkach? Oczywiście nie. Wiemy przecież choćby, że
+    [P -> ~ ~ P]. Można ten fakt zinterpretować następująco: modalność
+    neutralna jest silniejsza niż modalność niezaprzeczalna, czyli
+    równoważne: modalność niezaprzeczalna jest słabsza niż modalność
+    neutralna. *)
+
+(** **** Ćwiczenie *)
+
+(** Najbanalniejsze i najnaturalniejsze pytanie w kosmosie, które powinno
+    było przyjść ci do głowy po przeczytaniu powyższego akaptiu, brzmi:
+    która modalność jest najsilniejsza, a która najsłabsza?
+
+    No, skoro już takie pytanie przyszło ci do głowy, to znajdź na nie
+    odpowiedź!
+
+    Uwaga: nie musisz formalnie dowodzić w Coqu, że masz rację. Prawdę
+    powiedziawszy, gdybyśmy uparli się na pełną formalność, to nie
+    umiemy jeszcze wyrazić odpowiednich twierdzeń.
+
+    Wskazówka: sformułuj najpierw, co znaczą słowa "najsilniejszy"
+    oraz "najsłabszy". Następnie przyjrzyj się definicji modalności
+    oraz poszczególnym modalnościom i udowodnionym dotychczas przez
+    nas twierdzeniom. Powinno cię to oświecić. *)
+
+(* begin hide *)
+
+(** [M] jest najsilniejszą modalność, gdy pociąga za sobą wszystkie
+    inne, czyli dla każdej modalności [N] i zdania [P] mamy [M P -> N P].
+
+    Analogicznie [M] jest najsłabszą modalnością, gdy wynika ona ze
+    wszystkich innych modalności [N]: dla każdego zdania [P] mamy
+    [N P -> M P]. *)
+
+(* end hide *)
 
 (** * Inne logiki - podsumowanie *)
 
