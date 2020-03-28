@@ -21,7 +21,7 @@
 
 <div class="paragraph"> </div>
 
-    Myślę, że ta sytuacja ma miejsce w twoim przypadku — znasz już sporą
+    Myślę, że ta sytuacja ma miejsce w twoim przypadku — znasz już sporą
     część języka termów Coqa (zwanego Gallina) i potrafisz dowodzić różnych
     właściwości programów. Doszedłeś do punktu, w którym ręczne klepanie
     dowodów przestaje być produktywne, a staje się nudne i męczące.
@@ -46,7 +46,7 @@
     Wszystkie one są jednak taktykami wbudowanymi, danymi nam z góry przez
     Coqowych bogów i nie mamy wpływu na ich działanie. Jeżeli nie jesteśmy
     w stanie zrobić czegoś za ich pomocą, jesteśmy zgubieni. Czas najwyższy
-    nauczyć się pisać własne taktyki, które pomogą nam wykonywać mało ciekawe
+    nauczyć się pisać własne taktyki, które pomogą nam wykonywać mało ciekawe
     kroki w dowodach, a w dalszej perspektywie także przeprowadzać bardziej
     zaawansowane rozumowania zupełnie automatycznie.
 
@@ -56,7 +56,7 @@
     własnych taktyk. Jego składnię przedstawiono i skrupulatnie opisano tu:
     https://coq.inria.fr/refman/proof-engine/ltac.htmlsyntax
 
-    Choć przykład znaczy więcej niż 0x3E8 stron manuala i postaram się
+    Choć przykład znaczy więcej niż 0x3E8 stron manuala i postaram się
     dokładnie zilustrować każdy istotny moim zdaniem konstrukt języka
     [Ltac], to i tak polecam zapoznać się z powyższym linkiem.
 
@@ -75,7 +75,7 @@
 
 <div class="paragraph"> </div>
 
-    Jednak wcale nie musi tak być — możemy zaznaczyć inny cel i zacząć nad
+    Jednak wcale nie musi tak być — możemy zaznaczyć inny cel i zacząć nad
     nim pracować. Służy do tego komenda <span class="inlinecode"><span class="id" title="var">Focus</span></span>. Cel o numerze n możemy
     zaznaczyć komendą <span class="inlinecode"><span class="id" title="var">Focus</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. Jeżeli to zrobimy, wszystkie pozostałe cele
     chwilowo znikają. Do stanu domyślnego, w którym pracujemy nad celem nr 1
@@ -97,7 +97,7 @@
 
 <div class="doc">
 Komenda <span class="inlinecode"><span class="id" title="var">Focus</span></span> jest użyteczna głównie gdy któryś z dalszych celów jest
-    łatwiejszy niż obecny. Możemy wtedy przełączyć się na niego, rozwiązać
+    łatwiejszy niż obecny. Możemy wtedy przełączyć się na niego, rozwiązać
     go i wyniesione stąd doświadczenie przenieść na trudniejsze cele. Jest
     wskazane, żeby po zakończeniu dowodu zrefaktoryzować go tak, aby komenda
     <span class="inlinecode"><span class="id" title="var">Focus</span></span> w nim nie występowała.
@@ -105,7 +105,7 @@ Komenda <span class="inlinecode"><span class="id" title="var">Focus</span></span
 <div class="paragraph"> </div>
 
     Nie jest też tak, że zawsze musimy pracować nad celem o numerze 1. Możemy
-    pracować na dowolnym zbiorze celów. Do wybierania celów, na które chcemy
+    pracować na dowolnym zbiorze celów. Do wybierania celów, na które chcemy
     zadziałać taktykami, służą selektory. Jest ich kilka i mają taką składnię:
 <ul class="doclist">
 <li> <span class="inlinecode"><span class="id" title="var">n</span>:</span> <span class="inlinecode"><span class="id" title="var">t</span></span> — użyj taktyki t na n-tym celu. <span class="inlinecode">1:</span> <span class="inlinecode"><span class="id" title="var">t</span></span> jest równoważne <span class="inlinecode"><span class="id" title="var">t</span></span>.
@@ -116,13 +116,13 @@ Komenda <span class="inlinecode"><span class="id" title="var">Focus</span></span
 </li>
 <li> <span class="inlinecode"><span class="id" title="var">a_1</span>-<span class="id" title="var">b_1</span>,</span> <span class="inlinecode">...,</span> <span class="inlinecode"><span class="id" title="var">a_n</span>-<span class="id" title="var">b_n</span>:</span> <span class="inlinecode"><span class="id" title="var">t</span></span> — użyj taktyki <span class="inlinecode"><span class="id" title="var">t</span></span> na wszystkich celach
       o numerach od a_1 do b_1, ..., od a_n do b_n (zamiast a_i-b_i
-      możemy też użyć pojedynczej liczby)
+      możemy też użyć pojedynczej liczby)
 
 </li>
-<li> <span class="inlinecode"><span class="id" title="var">all</span>:</span> <span class="inlinecode"><span class="id" title="var">t</span></span> ­- użyj <span class="inlinecode"><span class="id" title="var">t</span></span> na wszystkich celach
+<li> <span class="inlinecode"><span class="id" title="var">all</span>:</span> <span class="inlinecode"><span class="id" title="var">t</span></span>  �- użyj <span class="inlinecode"><span class="id" title="var">t</span></span> na wszystkich celach
 
 </li>
-<li> zamiast <span class="inlinecode"><span class="id" title="var">t</span></span>, w powyższych przypadkach możemy też użyć wyrażenia
+<li> zamiast <span class="inlinecode"><span class="id" title="var">t</span></span>, w powyższych przypadkach możemy też użyć wyrażenia
       <span class="inlinecode">&gt;</span> <span class="inlinecode"><span class="id" title="var">t_1</span></span> <span class="inlinecode">|</span> <span class="inlinecode">...</span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">t_n</span></span>, które aplikuje taktykę <span class="inlinecode"><span class="id" title="var">t_i</span></span> do i-tego celu
       zaznaczonego danym selektorem 
 </li>
@@ -157,14 +157,14 @@ Komenda <span class="inlinecode"><span class="id" title="var">Focus</span></span
 </div>
 
 <div class="doc">
-Zauważmy, że powyższe selektory działają jedynie, gdy zostaną umieszczone
+Zauważmy, że powyższe selektory działają jedynie, gdy zostaną umieszczone
     przed wszystkimi taktykami, których dotyczą. Próba użycia ich jako
     argumenty dla innych taktyk jest błędem.
 
 <div class="paragraph"> </div>
 
     Dla przykładu, w czwartym z powyższych dowodów nie możemy napisać
-    <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> <span class="inlinecode"><span class="id" title="tactic">split</span>;</span> <span class="inlinecode">1-3:</span> <span class="inlinecode"><span class="id" title="tactic">assumption</span></span>, gdyż kończy się to błędem składni
+    <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> <span class="inlinecode"><span class="id" title="tactic">split</span>;</span> <span class="inlinecode">1-3:</span> <span class="inlinecode"><span class="id" title="tactic">assumption</span></span>, gdyż kończy się to błędem składni
     (nie wspominając o tym, że jest to bez sensu, gdyż dla uzyskania
     pożądanego efektu wystarczy napisać <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> <span class="inlinecode"><span class="id" title="tactic">split</span>;</span> <span class="inlinecode"><span class="id" title="tactic">assumption</span></span>. 
 </div>
@@ -181,10 +181,10 @@ Zauważmy, że powyższe selektory działają jedynie, gdy zostaną umieszczone
 </div>
 
 <div class="doc">
-Nie wszystko jednak stracone! Żeby móc używać wyrażeń zawierających
+Nie wszystko jednak stracone! Żeby móc używać wyrażeń zawierających
     selektory jako argumenty taktyk, możemy posłużyć się słowem <span class="inlinecode"><span class="id" title="var">only</span></span>.
-    Mimo tego, i tak nie możemy napisać <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> <span class="inlinecode"><span class="id" title="tactic">split</span>;</span> <span class="inlinecode"><span class="id" title="var">only</span></span> <span class="inlinecode"><span class="id" title="var">all</span>:</span> <span class="inlinecode">...</span>,
-    gdyż kończy się to błędem skadni. 
+    Mimo tego, i tak nie możemy napisać <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> <span class="inlinecode"><span class="id" title="tactic">split</span>;</span> <span class="inlinecode"><span class="id" title="var">only</span></span> <span class="inlinecode"><span class="id" title="var">all</span>:</span> <span class="inlinecode">...</span>,
+    gdyż kończy się to błędem skadni. 
 </div>
 <div class="code">
 
@@ -217,20 +217,20 @@ Jest jeszcze kilka innych taktyk do żonglowania celami. Pamiętaj, że
 
     <span class="inlinecode"><span class="id" title="var">swap</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> zamienia miejscami cele n-ty i m-ty. W przykładzie <span class="inlinecode"><span class="id" title="var">swap</span></span> <span class="inlinecode">1</span> <span class="inlinecode">3</span>
     nic nie robi, gdyś domyślnie wybrany jest tylko cel numer 1, a zatem nie
-    można zamienić go miejscami z celem nr 3, którego nie ma. <span class="inlinecode"><span class="id" title="var">all</span>:</span> <span class="inlinecode"><span class="id" title="var">swap</span></span> <span class="inlinecode">1</span> <span class="inlinecode">3</span>
+    można zamienić go miejscami z celem nr 3, którego nie ma. <span class="inlinecode"><span class="id" title="var">all</span>:</span> <span class="inlinecode"><span class="id" title="var">swap</span></span> <span class="inlinecode">1</span> <span class="inlinecode">3</span>
     zamienia kolejność celów z <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">S</span></span> na <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">S</span></span>.
 
 <div class="paragraph"> </div>
 
     <span class="inlinecode"><span class="id" title="var">cycle</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> przesuwa cele cyklicznie o <span class="inlinecode"><span class="id" title="var">n</span></span> do przodu (lub do tyłu, jeżeli
-    argument jest liczbą ujemną). W naszym przykładzie <span class="inlinecode"><span class="id" title="var">cycle</span></span> <span class="inlinecode">42</span> nic nie robi
+    argument jest liczbą ujemną). W naszym przykładzie <span class="inlinecode"><span class="id" title="var">cycle</span></span> <span class="inlinecode">42</span> nic nie robi
     (przesuwa cyklicznie cel <span class="inlinecode"><span class="id" title="var">P</span></span> o 42 miejsca, co daje w wyniku <span class="inlinecode"><span class="id" title="var">P</span></span>), zaś
-    <span class="inlinecode"><span class="id" title="var">all</span>:</span> <span class="inlinecode"><span class="id" title="var">cycle</span></span> <span class="inlinecode">3</span> zamienia kolejność celów z <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">S</span></span> na
+    <span class="inlinecode"><span class="id" title="var">all</span>:</span> <span class="inlinecode"><span class="id" title="var">cycle</span></span> <span class="inlinecode">3</span> zamienia kolejność celów z <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">S</span></span> na
     <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">—</span> <span class="inlinecode"><span class="id" title="var">R</span></span>.
 
 <div class="paragraph"> </div>
 
-    Taktyki te nie są zbyt użyteczne, a przynajmniej ja nigdy ich nie użyłem,
+    Taktyki te nie są zbyt użyteczne, a przynajmniej ja nigdy ich nie użyłem,
     ale dla kompletności wypadało o nich wspomnieć. Jeżeli wątpisz w
     użyteczność selektorów... cóż, nie dziwię ci się. Selektory przydają się
     głównie gdy chcemy napisać taktykę rozwiązującą wszystkie cele i
@@ -246,7 +246,7 @@ Jest jeszcze kilka innych taktyk do żonglowania celami. Pamiętaj, że
     Coqa (zwany Gallina), lecz te dwa języki są diametralnie różne:
 <ul class="doclist">
 <li> Ltac jest kompletny w sensie Turinga, a Gallina nie. W szczególności,
-      taktyki mogą się zapętlać i nie rodzi to żadnych problemów natury
+      taktyki mogą się zapętlać i nie rodzi to żadnych problemów natury
       logicznej.
 
 </li>
@@ -254,14 +254,14 @@ Jest jeszcze kilka innych taktyk do żonglowania celami. Pamiętaj, że
       systemem typów.
 
 </li>
-<li> W Ltacu nie możemy definiować typów danych, a jedynie taktyki działające
+<li> W Ltacu nie możemy definiować typów danych, a jedynie taktyki działające
       na kontekstach i celu, podczas gdy Gallina pozwala na definiowanie
       bardzo szerokiej klasy typów i działających na nich funkcji.
 
 </li>
 <li> Ltac, jako metajęzyk jezyka Gallina, posiada dostęp do różnych rzeczy,
       do których Gallina nie ma dostępu, takich jak dopasowanie termów
-      dowolnego typu. Dla przykładu, w Ltacu możemy odróżnić termy <span class="inlinecode">4</span> oraz
+      dowolnego typu. Dla przykładu, w Ltacu możemy odróżnić termy <span class="inlinecode">4</span> oraz
       <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> pomimo tego, że są konwertowalne. 
 </li>
 </ul>
@@ -269,9 +269,9 @@ Jest jeszcze kilka innych taktyk do żonglowania celami. Pamiętaj, że
 <div class="paragraph"> </div>
 
  W Ltacu możemy manipulować trzema rodzajami bytów: taktykami, termami
-    Coqa oraz liczbami całkowitymi — te ostatnie nie są tym samym, co liczby
-    całkowite Coqa i będziemy ich używać sporadycznie. Zanim zobaczymy
-    przykład, przyjrzyjmy się taktyce <span class="inlinecode"><span class="id" title="tactic">pose</span></span> oraz konstruktowi <span class="inlinecode"><span class="id" title="keyword">let</span></span>. 
+    Coqa oraz liczbami całkowitymi — te ostatnie nie są tym samym, co liczby
+    całkowite Coqa i będziemy ich używać sporadycznie. Zanim zobaczymy
+    przykład, przyjrzyjmy się taktyce <span class="inlinecode"><span class="id" title="tactic">pose</span></span> oraz konstruktowi <span class="inlinecode"><span class="id" title="keyword">let</span></span>. 
 </div>
 <div class="code">
 
@@ -288,7 +288,7 @@ Jest jeszcze kilka innych taktyk do żonglowania celami. Pamiętaj, że
 <div class="doc">
 <span class="inlinecode"><span class="id" title="tactic">pose</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> dodaje do kontekstu term o domyślnej nazwie, którego ciałem
     jest <span class="inlinecode"><span class="id" title="var">t</span></span>. Możemy też napisać <span class="inlinecode"><span class="id" title="tactic">pose</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">t</span></span>, dzięki czemu zyskujemy
-    kontrolę nad nazwą termu. 
+    kontrolę nad nazwą termu. 
 </div>
 <div class="code">
 
@@ -307,31 +307,31 @@ Jest jeszcze kilka innych taktyk do żonglowania celami. Pamiętaj, że
 W Ltacu, podobnie jak w języku Gallina, mamy do dyspozycji konstrukt
     <span class="inlinecode"><span class="id" title="keyword">let</span></span>. Za jego pomocą możemy nadać nazwę dowolnemu wyrażeniu języka
     Ltac. Jego działanie jest podobne jak w języku Gallina, a więc nie
-    ma co się nad nim rozwodzić. Jest też konstrukt <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="keyword">rec</span></span>, który
+    ma co się nad nim rozwodzić. Jest też konstrukt <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="keyword">rec</span></span>, który
     odpowiada <span class="inlinecode"><span class="id" title="keyword">fix</span></span>owi Galliny.
 
 <div class="paragraph"> </div>
 
-    Spróbujmy dodać do kontekstu liczbę <span class="inlinecode">42</span>, nazwaną dowolnie. Komendą
-    <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:=</span> <span class="inlinecode">42</span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="tactic">pose</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> nie udaje nam się tego osiągnąć. O przyczynie
+    Spróbujmy dodać do kontekstu liczbę <span class="inlinecode">42</span>, nazwaną dowolnie. Komendą
+    <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:=</span> <span class="inlinecode">42</span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="tactic">pose</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> nie udaje nam się tego osiągnąć. O przyczynie
     niepowodzenia Coq informuje nas wprost: zmienna <span class="inlinecode"><span class="id" title="var">x</span></span> nie jest termem.
-    Czym zatem jest? Jak już się rzekło, Ltac posiada wbudowany typ liczb
+    Czym zatem jest? Jak już się rzekło, Ltac posiada wbudowany typ liczb
     całkowitych, które nie są tym samym, co induktywnie zdefiniowane liczby
     całkowite Coqa. W tym kontekście <span class="inlinecode">42</span> jest więc liczbą całkowitą Ltaca,
     a zatem nie jest termem.
 
 <div class="paragraph"> </div>
 
-    Aby wymusić na Ltacu zinterpretowanie <span class="inlinecode">42</span> jako termu Coqa, musimy
-    posłużyć się zapisem <span class="inlinecode"><span class="id" title="keyword">constr</span>:()</span>. Dzięki niemu argument znajdujący
+    Aby wymusić na Ltacu zinterpretowanie <span class="inlinecode">42</span> jako termu Coqa, musimy
+    posłużyć się zapisem <span class="inlinecode"><span class="id" title="keyword">constr</span>:()</span>. Dzięki niemu argument znajdujący
     się w nawiasach zostanie zinterpretowany jako term. Efektem działania
     drugiej taktyki jest więc dodanie termu <span class="inlinecode">42</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> do kontekstu,
-    nazwanego domyślnie <span class="inlinecode"><span class="id" title="var">n</span></span> (co jest, o dziwo, dość rozsądną nazwą).
+    nazwanego domyślnie <span class="inlinecode"><span class="id" title="var">n</span></span> (co jest, o dziwo, dość rozsądną nazwą).
 
 <div class="paragraph"> </div>
 
     Wyrażenie <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="tactic">split</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="tactic">idtac</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> pokazuje nam, że taktyki również
-    są wyrażeniami Ltaca i mogą być przypisywane do zmiennych (a także
+    są wyrażeniami Ltaca i mogą być przypisywane do zmiennych (a także
     wyświetlane za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">idtac</span></span>) tak jak każde inne wyrażenie. 
 </div>
 <div class="code">
@@ -360,15 +360,15 @@ W Ltacu, podobnie jak w języku Gallina, mamy do dyspozycji konstrukt
 </div>
 
 <div class="doc">
-Dowolną taktykę, której możemy użyć w dowodzie, możemy też nazwać
-    za pomocą komendy <span class="inlinecode"><span class="id" title="keyword">Ltac</span></span> i odwoływać się do niej w dowodach za pomocą
+Dowolną taktykę, której możemy użyć w dowodzie, możemy też nazwać
+    za pomocą komendy <span class="inlinecode"><span class="id" title="keyword">Ltac</span></span> i odwoływać się do niej w dowodach za pomocą
     tej nazwy. Komenda <span class="inlinecode"><span class="id" title="keyword">Ltac</span></span> jest więc taktykowym odpowiednikiem komendy
     <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>.
 
 <div class="paragraph"> </div>
 
     Podobnie jak <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>y i inne definicje, tak i taktyki zdefiniowane
-    za pomocą komendy <span class="inlinecode"><span class="id" title="keyword">Ltac</span></span> mogą brać argumenty, którymi mogą być liczby,
+    za pomocą komendy <span class="inlinecode"><span class="id" title="keyword">Ltac</span></span> mogą brać argumenty, którymi mogą być liczby,
     termy, nazwy hipotez albo inne taktyki.
 
 <div class="paragraph"> </div>
@@ -383,7 +383,7 @@ Dowolną taktykę, której możemy użyć w dowodzie, możemy też nazwać
 
 <div class="paragraph"> </div>
 
- Poznałeś już kombinator alternatywy <span class="inlinecode">||</span>. Nie jest to jednak jedyny
+ Poznałeś już kombinator alternatywy <span class="inlinecode">||</span>. Nie jest to jednak jedyny
     kombinator służący do wyrażania tej idei — są jeszcze kombinatory <span class="inlinecode">+</span>
     oraz <span class="inlinecode"><span class="id" title="var">tryif</span></span> <span class="inlinecode"><span class="id" title="var">t1</span></span> <span class="inlinecode"><span class="id" title="keyword">then</span></span> <span class="inlinecode"><span class="id" title="var">t2</span></span> <span class="inlinecode"><span class="id" title="keyword">else</span></span> <span class="inlinecode"><span class="id" title="var">t3</span></span>. Różnią się one działaniem — <span class="inlinecode">||</span> jest
     left-biased, podczas gdy <span class="inlinecode">+</span> nie jest biased i może powodować
@@ -391,19 +391,19 @@ Dowolną taktykę, której możemy użyć w dowodzie, możemy też nazwać
 
 <div class="paragraph"> </div>
 
-    Nie przestrasz się tych dziwnych słów. Stojące za nimi idee są z grubsza
-    bardzo proste. Wcześniej dowiedziałeś się, że taktyka może zawieść lub
-    zakończyć się sukcesem. W rzeczywistości sprawa jest nieco bardziej
-    ogólna: każda taktyka może zakończyć się dowolną ilością sukcesów. Zero
-    sukcesów oznacza, że taktyka zawodzi. Większość taktyk, które dotychczas
+    Nie przestrasz się tych dziwnych słów. Stojące za nimi idee są z grubsza
+    bardzo proste. Wcześniej dowiedziałeś się, że taktyka może zawieść lub
+    zakończyć się sukcesem. W rzeczywistości sprawa jest nieco bardziej
+    ogólna: każda taktyka może zakończyć się dowolną ilością sukcesów. Zero
+    sukcesów oznacza, że taktyka zawodzi. Większość taktyk, które dotychczas
     poznaliśmy, mogła zakończyć się co najwyżej jednym sukcesem. Są jednak i
     takie, które mogą zakończyć się dwoma lub więcej sukcesami.
 
 <div class="paragraph"> </div>
 
-    Proces dowodzenia za pomocą taktyk można zobrazować za pomocą procesu
+    Proces dowodzenia za pomocą taktyk można zobrazować za pomocą procesu
     przeszukiwania drzewa, którego wierzchołkami są częściowo skonstruowane
-    prooftermy, zaś krawędziami — sukcesy pochodzące od wywoływania taktyk.
+    prooftermy, zaś krawędziami — sukcesy pochodzące od wywoływania taktyk.
     Liśćmi są prooftermy (dowód się udał) lub ślepe zaułki (dowód się nie
     udał).
 
@@ -412,13 +412,13 @@ Dowolną taktykę, której możemy użyć w dowodzie, możemy też nazwać
     W takiej wizualizacji taktyka może wyzwalać backtracking, jeżeli jej
     użycie prowadzi do powstania rozgałęzienia w drzewie. Samo drzewo
     przeszukiwane jest w głąb, a backtracking polega na tym, że jeżeli
-    trafimy na ślepy zaułek (dowód się nie powiódł), to cofamy się (ang.
+    trafimy na ślepy zaułek (dowód się nie powiódł), to cofamy się (ang.
     "to backtrack" — cofać się) do ostatniego punktu rozgałęzienia i
-    próbujemy pójść inną gałęzią.
+    próbujemy pójść inną gałęzią.
 
 <div class="paragraph"> </div>
 
-    Tę intuicję dobrze widać na poniższym przykładzie. 
+    Tę intuicję dobrze widać na poniższym przykładzie. 
 </div>
 <div class="code">
 
@@ -453,11 +453,11 @@ Dowolną taktykę, której możemy użyć w dowodzie, możemy też nazwać
 
 <div class="doc">
 Próba użycia taktyki <span class="inlinecode"><span class="id" title="var">existsNat</span></span>, która używa kombinatora <span class="inlinecode">||</span>, do
-    udowodnienia, że <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">42</span> kończy się niepowodzeniem.
+    udowodnienia, że <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">42</span> kończy się niepowodzeniem.
     Jest tak, gdyż <span class="inlinecode">||</span> nie może powodować backtrackingu — jeżeli taktyka
     <span class="inlinecode"><span class="id" title="var">t1</span></span> dokona postępu, to wtedy <span class="inlinecode"><span class="id" title="var">t1</span></span> <span class="inlinecode">||</span> <span class="inlinecode"><span class="id" title="var">t2</span></span> ma taki sam efekt, jak <span class="inlinecode"><span class="id" title="var">t1</span></span>,
     a w przeciwnym wypadku taki sam jak <span class="inlinecode"><span class="id" title="var">t2</span></span>. Nawet jeżeli zarówno <span class="inlinecode"><span class="id" title="var">t1</span></span>
-    jak i <span class="inlinecode"><span class="id" title="var">t2</span></span> zakończą się sukcesami, to sukcesy <span class="inlinecode"><span class="id" title="var">t1</span></span> <span class="inlinecode">||</span> <span class="inlinecode"><span class="id" title="var">t2</span></span> będą sukcesami
+    jak i <span class="inlinecode"><span class="id" title="var">t2</span></span> zakończą się sukcesami, to sukcesy <span class="inlinecode"><span class="id" title="var">t1</span></span> <span class="inlinecode">||</span> <span class="inlinecode"><span class="id" title="var">t2</span></span> będą sukcesami
     tylko <span class="inlinecode"><span class="id" title="var">t1</span></span>.
 
 <div class="paragraph"> </div>
@@ -466,7 +466,7 @@ Próba użycia taktyki <span class="inlinecode"><span class="id" title="var">exi
     ma co najwyżej jeden sukces i działa jak <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> dla pewnej liczby
     naturalnej <span class="inlinecode"><span class="id" title="var">n</span></span>. Ponieważ użycie <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode">0</span> na celu <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">42</span>
     dokonuje postępu, to taktyka <span class="inlinecode"><span class="id" title="var">existsNat</span></span> ma taki sam efekt, jak <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode">0</span>.
-    Próba użycia <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> zawodzi, a ponieważ nie ma już więcej sukcesów
+    Próba użycia <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> zawodzi, a ponieważ nie ma już więcej sukcesów
     pochodzących od <span class="inlinecode"><span class="id" title="var">existsNat</span></span> do wypróbowania, nie wyzwala backtrackingu.
     Wobec tego cała taktyka <span class="inlinecode"><span class="id" title="var">existsNat</span>;</span> <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> kończy się porażką.
 
@@ -476,7 +476,7 @@ Próba użycia taktyki <span class="inlinecode"><span class="id" title="var">exi
     kombinatorze <span class="inlinecode">+</span>. Sukcesy <span class="inlinecode"><span class="id" title="var">t1</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">t2</span></span> to wszystkie sukcesy <span class="inlinecode"><span class="id" title="var">t1</span></span>, po
     których następują wszystkie sukcesy <span class="inlinecode"><span class="id" title="var">t2</span></span>. Wobec tego zbiór sukcesów
     <span class="inlinecode"><span class="id" title="var">existsNat'</span></span> jest nieskończony i wygląda tak: <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode">0</span>, <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode">1</span>,
-    <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode">2</span>... Użycie taktyki <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span>, które kończy się porażką
+    <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode">2</span>... Użycie taktyki <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span>, które kończy się porażką
     wyzwala backtracking, więc całe wykonanie taktyki można zobrazować tak:
 <ul class="doclist">
 <li> <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode">0;</span> <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> — porażka
@@ -494,7 +494,7 @@ Próba użycia taktyki <span class="inlinecode"><span class="id" title="var">exi
 
 <div class="paragraph"> </div>
 
- Na koniec zaznaczyć należy, że backtracking nie jest za darmo — im go
+ Na koniec zaznaczyć należy, że backtracking nie jest za darmo — im go
     więcej, tym więcej rozgałęzień w naszym drzewie poszukiwań, a zatem
     tym więcej czasu zajmie wykonanie taktyki. W przypadku użycia taktyk
     takich jak <span class="inlinecode"><span class="id" title="var">existsNat</span></span>, które mają nieskończony zbiór sukcesów, dowód
@@ -533,7 +533,7 @@ Powyżej byliśmy w stanie udowodnić to twierdzenie za pomocą taktyki
 <div class="paragraph"> </div>
 
     Innym sposobem okiełznywania backtrackingu jest kombinator <span class="inlinecode"><span class="id" title="var">exactly_once</span></span>,
-    który pozwala upewnić się, że dana taktyka ma dokładnie jeden sukces.
+    który pozwala upewnić się, że dana taktyka ma dokładnie jeden sukces.
     Jeżeli <span class="inlinecode"><span class="id" title="var">t</span></span> zawodzi, to <span class="inlinecode"><span class="id" title="var">exactly_once</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> zawodzi tak jak <span class="inlinecode"><span class="id" title="var">t</span></span>. Jeżeli <span class="inlinecode"><span class="id" title="var">t</span></span>
     ma jeden sukces, <span class="inlinecode"><span class="id" title="var">exactly_once</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> działa tak jak <span class="inlinecode"><span class="id" title="var">t</span></span>. Jeżeli <span class="inlinecode"><span class="id" title="var">t</span></span> ma dwa
     lub więcej sukcesów, <span class="inlinecode"><span class="id" title="var">exactly_once</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> zawodzi. 
@@ -563,8 +563,8 @@ Taktyka <span class="inlinecode"><span class="id" title="var">existsNat</span></
 
 <div class="paragraph"> </div>
 
- Przepisz taktykę <span class="inlinecode"><span class="id" title="var">existsNat'</span></span> za pomocą konstruktu <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="keyword">rec</span></span> —
-    całość ma wyglądać tak: <span class="inlinecode"><span class="id" title="keyword">Ltac</span></span> <span class="inlinecode"><span class="id" title="var">existsNat''</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="keyword">rec</span></span> <span class="inlinecode">...</span> 
+ Przepisz taktykę <span class="inlinecode"><span class="id" title="var">existsNat'</span></span> za pomocą konstruktu <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="keyword">rec</span></span> —
+    całość ma wyglądać tak: <span class="inlinecode"><span class="id" title="keyword">Ltac</span></span> <span class="inlinecode"><span class="id" title="var">existsNat''</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="keyword">rec</span></span> <span class="inlinecode">...</span> 
 </div>
 <div class="code">
 
@@ -622,14 +622,14 @@ Taktyka <span class="inlinecode"><span class="id" title="var">existsNat</span></
 
 <div class="paragraph"> </div>
 
- Napisz taktykę <span class="inlinecode"><span class="id" title="var">search</span></span>, która potrafi udowodnić cel będący dowolnie
-    złożoną dysjunkcją pod warunkiem, że jeden z jej członów zachodzi na
+ Napisz taktykę <span class="inlinecode"><span class="id" title="var">search</span></span>, która potrafi udowodnić cel będący dowolnie
+    złożoną dysjunkcją pod warunkiem, że jeden z jej członów zachodzi na
     mocy założenia. Użyj rekursji, ale nie używaj konstruktu <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="keyword">rec</span></span>.
 
 <div class="paragraph"> </div>
 
     Wskazówka: jeżeli masz problem, udowodnij połowę poniższych twierdzeń
-    ręcznie i spróbuj dostrzec powtarzający si wzorzec. 
+    ręcznie i spróbuj dostrzec powtarzający si wzorzec. 
 </div>
 <div class="code">
 
@@ -702,8 +702,8 @@ Taktyka <span class="inlinecode"><span class="id" title="var">existsNat</span></
 
 <div class="paragraph"> </div>
 
- Precyzyjniej pisząc: sprawdź kiedy odnoszą sukces i zawodzą, czy mogą
-    wyzwalać backtracking oraz wymyśl jakieś mądre przykłady, który dobrze
+ Precyzyjniej pisząc: sprawdź kiedy odnoszą sukces i zawodzą, czy mogą
+    wyzwalać backtracking oraz wymyśl jakieś mądre przykłady, który dobrze
     ukazują ichdziałanie w kontraście do <span class="inlinecode">||</span> i <span class="inlinecode">+</span>. 
 <div class="paragraph"> </div>
 
@@ -729,7 +729,7 @@ Taktyka <span class="inlinecode"><span class="id" title="var">existsNat</span></
     Zamiast wzorców postaci <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">kontekst</span></span> <span class="inlinecode">|-</span> <span class="inlinecode"><span class="id" title="var">cel</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">taktyka</span></span> możemy też używać
     wzorców postaci <span class="inlinecode">|</span> <span class="inlinecode">|-</span> <span class="inlinecode"><span class="id" title="var">cel</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">taktyka</span></span>, które dopasowują jedynie cel, zaś
     kontekst ignorują; wzorców postaci <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">kontekst</span></span> <span class="inlinecode">|-</span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">taktyka</span></span>, które
-    dopasowują jedynie kontekst, a cel ignorują; oraz wzorca <span class="inlinecode"><span class="id" title="var">_</span></span>, który
+    dopasowują jedynie kontekst, a cel ignorują; oraz wzorca <span class="inlinecode"><span class="id" title="var">_</span></span>, który
     oznacza "dopasuj cokolwiek".
 
 <div class="paragraph"> </div>
@@ -754,14 +754,14 @@ Taktyka <span class="inlinecode"><span class="id" title="var">existsNat</span></
 <div class="doc">
 W powyższym przykładzie szukamy w celu zdań logicznych, czyli termów
     typu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i wypisujemy je. Nazwy szukanych obiektów są lokalne dla
-    każdej gałęzi dopasowania i nie muszą pokrywać się z rzeczywistymi
+    każdej gałęzi dopasowania i nie muszą pokrywać się z rzeczywistymi
     nazwami termów w kontekście. W naszym przypadku nazywamy szukane przez
     nas zdanie <span class="inlinecode"><span class="id" title="var">x</span></span>, choć zdania obecne w naszym kontekście tak naprawdę
     nazywają się <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">Q</span></span>, <span class="inlinecode"><span class="id" title="var">R</span></span> oraz <span class="inlinecode"><span class="id" title="var">S</span></span>.
 
 <div class="paragraph"> </div>
 
-    Przeszukiwanie obiektów w kontekście odbywa się w kolejności od
+    Przeszukiwanie obiektów w kontekście odbywa się w kolejności od
     najnowszego do najstarszego. Do wzorca <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> najpierw próbujemy
     dopasować <span class="inlinecode"><span class="id" title="var">H1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">R</span></span>, ale <span class="inlinecode"><span class="id" title="var">R</span></span> to nie <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, więc dopasowanie zawodzi.
     Podobnie dla <span class="inlinecode"><span class="id" title="var">H0</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> oraz <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Następnie natrafiamy na <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>,
@@ -795,7 +795,7 @@ W tym przykładzie podobnie jak wyżej szukamy w kontekście zdań logicznych,
 
 </li>
 <li> znajdujemy dopasowanie <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. Taktyka <span class="inlinecode"><span class="id" title="tactic">idtac</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> wypisuje do okna
-      Messages wiadomość "S" i kończy się sukcesem, ale <span class="inlinecode"><span class="id" title="tactic">fail</span></span> zawodzi.
+      Messages wiadomość "S" i kończy się sukcesem, ale <span class="inlinecode"><span class="id" title="tactic">fail</span></span> zawodzi.
 
 </li>
 <li> Wobec powyższego próbujemy kolejnego dopasowania, tym razem <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>,
@@ -833,14 +833,14 @@ Ten przykład jest podobny do ostatniego, ale <span class="inlinecode"><span cla
     kontekst w kolejności od najstarszego do najnowszego. Dzięki temu od razu
     natrafiamy na dopasowanie <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, potem na <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> etc. Na samym
     końcu próbujemy do <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> dopasować <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">H0</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> i <span class="inlinecode"><span class="id" title="var">H1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">R</span></span>, co
-    kończy się niepowodzeniem.
+    kończy się niepowodzeniem.
 
 <div class="paragraph"> </div>
 
     Zauważmy, że w dwóch ostatnich przykładach nie wystąpił backtracking —
     <span class="inlinecode"><span class="id" title="keyword">match</span></span> nigdy nie wyzwala backtrackingu. Obserwowane działanie <span class="inlinecode"><span class="id" title="keyword">match</span></span>a
     wynika stąd, że jeżeli taktyka po prawej od <span class="inlinecode">=&gt;</span> zawiedzie, to następuje
-    próba znalezienia jakiegoś innego dopasowania wzorca <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. Dopiero
+    próba znalezienia jakiegoś innego dopasowania wzorca <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. Dopiero
     gdy taktyka na prawo od <span class="inlinecode">=&gt;</span> zawiedzie dla wszystkich możliwych takich
     dopasowań, cały <span class="inlinecode"><span class="id" title="keyword">match</span></span> zawodzi. 
 </div>
@@ -861,9 +861,9 @@ Ten przykład jest podobny do ostatniego, ale <span class="inlinecode"><span cla
 </div>
 
 <div class="doc">
-Ten przykład potwierdza naszą powyższą obserwację dotyczącą backtrackingu.
+Ten przykład potwierdza naszą powyższą obserwację dotyczącą backtrackingu.
     Mamy tutaj identyczne dopasowanie jak w pierwszym przykładzie — wypisuje
-    ono <span class="inlinecode"><span class="id" title="var">S</span></span> i kończy się sukcesem, ale tuż po nim następuje taktyka <span class="inlinecode"><span class="id" title="tactic">fail</span></span>,
+    ono <span class="inlinecode"><span class="id" title="var">S</span></span> i kończy się sukcesem, ale tuż po nim następuje taktyka <span class="inlinecode"><span class="id" title="tactic">fail</span></span>,
     przez co cała taktyka <span class="inlinecode"><span class="id" title="keyword">match</span></span> <span class="inlinecode">...;</span> <span class="inlinecode"><span class="id" title="tactic">fail</span></span> zawodzi. Jak widać, nie następuje
     próba ponownego dopasownia wzorca <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. 
 </div>
@@ -911,7 +911,7 @@ Konstrukt <span class="inlinecode"><span class="id" title="keyword">lazymatch</s
     przykładzie działa on następująco:
 <ul class="doclist">
 <li> do wzorca <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> dopasowujemy <span class="inlinecode"><span class="id" title="var">H1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">R</span></span>, a następnie <span class="inlinecode"><span class="id" title="var">H0</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> i
-      <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, co się rzecz jasna nie udaje.
+      <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, co się rzecz jasna nie udaje.
 
 </li>
 <li> Znajdujemy dopasowanie <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i cały <span class="inlinecode"><span class="id" title="var">multimatch</span></span> kończy się
@@ -928,7 +928,7 @@ Konstrukt <span class="inlinecode"><span class="id" title="keyword">lazymatch</s
 
 </li>
 <li> Następują kolejne nawroty i dopasowania do wzorca. Ostatecznie po
-      wyczerpaniu się wszystkich możliwość cała taktyka zawodzi. 
+      wyczerpaniu się wszystkich możliwość cała taktyka zawodzi. 
 </li>
 </ul>
 
@@ -958,9 +958,9 @@ Konstrukt <span class="inlinecode"><span class="id" title="keyword">lazymatch</s
 </div>
 
 <div class="doc">
-Przyjrzyjmy się jeszcze różnicy w zachowaniach <span class="inlinecode"><span class="id" title="keyword">match</span></span>a i <span class="inlinecode"><span class="id" title="var">multimatch</span></span>a
+Przyjrzyjmy się jeszcze różnicy w zachowaniach <span class="inlinecode"><span class="id" title="keyword">match</span></span>a i <span class="inlinecode"><span class="id" title="var">multimatch</span></span>a
     w połączeniu z kombinatorem <span class="inlinecode"><span class="id" title="tactic">repeat</span></span>. Bez <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> oba dopasowania
-    zachowują się identycznie. Użycie <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> przed <span class="inlinecode"><span class="id" title="keyword">match</span></span> nie zmienia w
+    zachowują się identycznie. Użycie <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> przed <span class="inlinecode"><span class="id" title="keyword">match</span></span> nie zmienia w
     tym konkretnym wypadku jego działania, ale w przypadku <span class="inlinecode"><span class="id" title="var">multimatch</span></span>a
     użycie <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> ujawnia wszystkie jego sukcesy.
 
@@ -994,8 +994,8 @@ Przyjrzyjmy się jeszcze różnicy w zachowaniach <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-Dopasowanie celu jest jeszcze prostsze niż dopasowanie hipotezy, bo
-    cel jest tylko jeden i wobec tego nie trzeba dawać mu żadnej nazwy.
+Dopasowanie celu jest jeszcze prostsze niż dopasowanie hipotezy, bo
+    cel jest tylko jeden i wobec tego nie trzeba dawać mu żadnej nazwy.
     Powyższa taktyka <span class="inlinecode"><span class="id" title="tactic">split</span>;</span> <span class="inlinecode"><span class="id" title="keyword">match</span></span> <span class="inlinecode">...</span> działa następująco:
 <ul class="doclist">
 <li> <span class="inlinecode"><span class="id" title="tactic">split</span></span> generuje dwa podcele i wobec tego <span class="inlinecode"><span class="id" title="keyword">match</span></span> działa na
@@ -1051,7 +1051,7 @@ Dopasowanie celu jest jeszcze prostsze niż dopasowanie hipotezy, bo
 
 <div class="doc">
 Pozostało nam jedynie zademonstrować działanie wzorca <span class="inlinecode"><span class="id" title="var">_</span></span>. Pierwsza z
-    powyższych taktyk z sukcesem dopasowuje wzorzec <span class="inlinecode"><span class="id" title="var">_</span></span> (gdyż pasuje on do
+    powyższych taktyk z sukcesem dopasowuje wzorzec <span class="inlinecode"><span class="id" title="var">_</span></span> (gdyż pasuje on do
     każdego kontekstu i celu) i wobec tego do okna Messages zostaje wypisany
     napis "-_-".
 
@@ -1060,7 +1060,7 @@ Pozostało nam jedynie zademonstrować działanie wzorca <span class="inlinecode
     W drugim <span class="inlinecode"><span class="id" title="keyword">match</span></span>u również zostaje dopasowany wzorzec <span class="inlinecode"><span class="id" title="var">_</span></span>, ale taktyka
     <span class="inlinecode"><span class="id" title="tactic">fail</span></span> zawodzi i następuje przejście do kolejnego wzorca, który także
     pasuje. Wobec tego wypisane zostaje "S". Przypomina to nam o tym, że
-    kolejność wzorców ma znaczenie i to nawet w przypadku, gdy któryś z
+    kolejność wzorców ma znaczenie i to nawet w przypadku, gdy któryś z
     nich (tak jak <span class="inlinecode"><span class="id" title="var">_</span></span>) pasuje do wszystkiego. 
 <div class="paragraph"> </div>
 
@@ -1068,7 +1068,7 @@ Pozostało nam jedynie zademonstrować działanie wzorca <span class="inlinecode
 
 <div class="paragraph"> </div>
 
- Napisz taktykę <span class="inlinecode"><span class="id" title="var">destr_and</span></span>, która rozbija wszystkie koniunkcje, które
+ Napisz taktykę <span class="inlinecode"><span class="id" title="var">destr_and</span></span>, która rozbija wszystkie koniunkcje, które
     znajdzie w kontekście, a następnie udowodni cel, jeżeli zachodzi on na
     mocy założenia.
 
@@ -1117,9 +1117,9 @@ Pozostało nam jedynie zademonstrować działanie wzorca <span class="inlinecode
 
 <div class="paragraph"> </div>
 
- Napisz taktykę <span class="inlinecode"><span class="id" title="var">solve_and_perm</span></span>, która będzie potrafiła rozwiązywać
+ Napisz taktykę <span class="inlinecode"><span class="id" title="var">solve_and_perm</span></span>, która będzie potrafiła rozwiązywać
     cele postaci <span class="inlinecode"><span class="id" title="var">P_1</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P_2</span></span> <span class="inlinecode">/\</span> <span class="inlinecode">...</span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P_n</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P_i1</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P_i2</span></span> <span class="inlinecode">/\</span> <span class="inlinecode">...</span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P_iN</span></span>,
-    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są w
+    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są w
     niej te same zdania, ale występujące w innej kolejności. 
 </div>
 <div class="code">
@@ -1161,9 +1161,9 @@ Pozostało nam jedynie zademonstrować działanie wzorca <span class="inlinecode
 
 <div class="paragraph"> </div>
 
- Napisz taktykę <span class="inlinecode"><span class="id" title="var">solve_or_perm</span></span>, która będzie potrafiła rozwiązywać
+ Napisz taktykę <span class="inlinecode"><span class="id" title="var">solve_or_perm</span></span>, która będzie potrafiła rozwiązywać
     cele postaci <span class="inlinecode"><span class="id" title="var">P_1</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">P_2</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">...</span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">P_n</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P_i1</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">P_i2</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">...</span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">P_iN</span></span>,
-    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są
+    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są
     w niej te same zdania, ale występujące w innej kolejności.
 
 <div class="paragraph"> </div>
@@ -1227,7 +1227,7 @@ Pozostało nam jedynie zademonstrować działanie wzorca <span class="inlinecode
 </div>
 
 <div class="doc">
-Napisz funkcję <span class="inlinecode"><span class="id" title="var">negn</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">negn</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> zwraca
+Napisz funkcję <span class="inlinecode"><span class="id" title="var">negn</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">negn</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> zwraca
     zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> zanegowane <span class="inlinecode"><span class="id" title="var">n</span></span> razy. 
 </div>
 <div class="code">
@@ -1260,7 +1260,7 @@ Udowodnij poniższe lematy.
 <div class="doc">
 Przydadzą ci się one do pokazania dwóch właściwości fukncji <span class="inlinecode"><span class="id" title="var">negn</span></span>.
     Zanim przystąpisz do dowodzenia drugiego z nich, spróbuj zgadnąć,
-    po którym argumencie najprościej będzie przeprowadzić indukcję. 
+    po którym argumencie najprościej będzie przeprowadzić indukcję. 
 </div>
 <div class="code">
 
@@ -1277,7 +1277,7 @@ Przydadzą ci się one do pokazania dwóch właściwości fukncji <span class="i
 </div>
 
 <div class="doc">
-Napisz taktykę <span class="inlinecode"><span class="id" title="var">negtac</span></span>, która będzie potrafiła udowadniać cele postaci
+Napisz taktykę <span class="inlinecode"><span class="id" title="var">negtac</span></span>, która będzie potrafiła udowadniać cele postaci
     <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">negn</span></span> <span class="inlinecode">(2</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">negn</span></span> <span class="inlinecode">(2</span> <span class="inlinecode">*</span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">k</span>))</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, gdzie
     <span class="inlinecode"><span class="id" title="var">n</span></span> oraz <span class="inlinecode"><span class="id" title="var">k</span></span> są stałymi. Nie używaj twierdzeń, które udowodniłeś wyżej.
 
@@ -1316,12 +1316,12 @@ Napisz taktykę <span class="inlinecode"><span class="id" title="var">negtac</s
 <div class="paragraph"> </div>
 
  Skoro wiemy już jak działa dopasowywanie kontekstu do wzorca, czas
-    nauczyć się jak dokładnie działają wzorce oraz czym są zmienne
+    nauczyć się jak dokładnie działają wzorce oraz czym są zmienne
     unifikacyjne i sama unifikacja.
 
 <div class="paragraph"> </div>
 
-    Przede wszystkim, jak przekonaliśmy się wyżej, termy są wzorcami.
+    Przede wszystkim, jak przekonaliśmy się wyżej, termy są wzorcami.
     Termy nie zawierają zmiennych unifikacyjnych, a wzorce będące
     termami dopasowują się tylko do identycznych termów. Dopasowanie
     takie nie wiąże żadnych nowych zmiennych. Zobaczmy to na przykładzie. 
@@ -1346,13 +1346,13 @@ Powyższy <span class="inlinecode"><span class="id" title="keyword">match</span>
     następujący sposób:
 <ul class="doclist">
 <li> szukamy w kontekście obiektu <span class="inlinecode"><span class="id" title="var">p</span></span>, którego typ pasuje do wzorca <span class="inlinecode"><span class="id" title="var">P</span></span>.
-      Obiekt, który nazywamy <span class="inlinecode"><span class="id" title="var">p</span></span> w rzeczywistości nie musi nazywać się <span class="inlinecode"><span class="id" title="var">p</span></span>,
-      ale jego typem rzeczywiście musi być <span class="inlinecode"><span class="id" title="var">P</span></span>. W szczególności, wzorzec
-      <span class="inlinecode"><span class="id" title="var">P</span></span> nie pasuje do <span class="inlinecode"><span class="id" title="var">Q</span></span>, gdyż <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> nie są konwertowalne.
+      Obiekt, który nazywamy <span class="inlinecode"><span class="id" title="var">p</span></span> w rzeczywistości nie musi nazywać się <span class="inlinecode"><span class="id" title="var">p</span></span>,
+      ale jego typem rzeczywiście musi być <span class="inlinecode"><span class="id" title="var">P</span></span>. W szczególności, wzorzec
+      <span class="inlinecode"><span class="id" title="var">P</span></span> nie pasuje do <span class="inlinecode"><span class="id" title="var">Q</span></span>, gdyż <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> nie są konwertowalne.
 
 </li>
 <li> jednocześnie żądamy, by cel był postaci <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, gdzie zarówno <span class="inlinecode"><span class="id" title="var">P</span></span>
-      jak i <span class="inlinecode"><span class="id" title="var">Q</span></span> odnoszą się do obiektów z kontekstu, które rzeczywiście tak
+      jak i <span class="inlinecode"><span class="id" title="var">Q</span></span> odnoszą się do obiektów z kontekstu, które rzeczywiście tak
       się nazywają.
 
 </li>
@@ -1386,14 +1386,14 @@ Powyższy <span class="inlinecode"><span class="id" title="keyword">match</span>
 
 <div class="doc">
 Tutaj zamiast <span class="inlinecode"><span class="id" title="var">P</span></span> mamy <span class="inlinecode"><span class="id" title="var">A</span></span>, zaś zamiast <span class="inlinecode"><span class="id" title="var">Q</span></span> jest <span class="inlinecode"><span class="id" title="var">B</span></span>. <span class="inlinecode"><span class="id" title="keyword">match</span></span> identyczny
-    jak poprzednio tym razem zawodzi. Dzieje się tak, gdyż <span class="inlinecode"><span class="id" title="var">P</span></span> odnosi się
-    tu do obiektu z kontekstu, który nazywa się <span class="inlinecode"><span class="id" title="var">P</span></span>. Niestety, w kontekście
+    jak poprzednio tym razem zawodzi. Dzieje się tak, gdyż <span class="inlinecode"><span class="id" title="var">P</span></span> odnosi się
+    tu do obiektu z kontekstu, który nazywa się <span class="inlinecode"><span class="id" title="var">P</span></span>. Niestety, w kontekście
     nie ma obiektu o takiej nazwie, o czym Coq skrzętnie nas informuje.
 
 <div class="paragraph"> </div>
 
     W <span class="inlinecode"><span class="id" title="keyword">match</span></span>u w celu oraz po prawej stronie od <span class="inlinecode">:</span> w hipotezie nie możemy
-    za pomocą nazwy <span class="inlinecode"><span class="id" title="var">P</span></span> dopasować obiektu, który nazywa się <span class="inlinecode"><span class="id" title="var">A</span></span>. Dopasować
+    za pomocą nazwy <span class="inlinecode"><span class="id" title="var">P</span></span> dopasować obiektu, który nazywa się <span class="inlinecode"><span class="id" title="var">A</span></span>. Dopasować
     <span class="inlinecode"><span class="id" title="var">A</span></span> możemy jednak używając wzorca <span class="inlinecode"><span class="id" title="var">A</span></span>. Ale co, gdybyśmy nie wiedzieli,
     jak dokładnie nazywa się poszukiwany obiekt? 
 </div>
@@ -1413,26 +1413,26 @@ Tutaj zamiast <span class="inlinecode"><span class="id" title="var">P</span></sp
 </div>
 
 <div class="doc">
-Jeżeli chcemy dopasować term o nieznanej nam nazwie (lub term, którego
+Jeżeli chcemy dopasować term o nieznanej nam nazwie (lub term, którego
     podtermy mają nieznane nazwy) musimy użyć zmiennych unifikacyjnych.
-    Wizualnie można rozpoznać je po tym, że ich nazwy zaczynają się od
+    Wizualnie można rozpoznać je po tym, że ich nazwy zaczynają się od
     znaku <span class="inlinecode">?</span>. Zmienna unifkacyjna <span class="inlinecode">?<span class="id" title="var">x</span></span> pasuje do dowolnego termu, a
     udane dopasowanie sprawia, że po prawej stronie strzałki <span class="inlinecode">=&gt;</span> możemy
-    do dopasowanego termu odnosić się za pomocą nazwy <span class="inlinecode"><span class="id" title="var">x</span></span>.
+    do dopasowanego termu odnosić się za pomocą nazwy <span class="inlinecode"><span class="id" title="var">x</span></span>.
 
 <div class="paragraph"> </div>
 
     Powyższe dopasowanie działa w następujący sposób:
 <ul class="doclist">
-<li> próbujemy dopasować wzorzec <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode">?<span class="id" title="var">P</span></span> do najświeższej hipotezy w
-      kontekście, czyli <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>. <span class="inlinecode"><span class="id" title="var">p</span></span> jest nazwą tymczasową i wobec tego
+<li> próbujemy dopasować wzorzec <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode">?<span class="id" title="var">P</span></span> do najświeższej hipotezy w
+      kontekście, czyli <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>. <span class="inlinecode"><span class="id" title="var">p</span></span> jest nazwą tymczasową i wobec tego
       pasuje do <span class="inlinecode"><span class="id" title="var">H</span></span>, zaś zmienna unifikacyjna <span class="inlinecode">?<span class="id" title="var">P</span></span> pasuje do dowolnego
       termu, a zatem pasuje także do <span class="inlinecode"><span class="id" title="var">A</span></span>.
 
 </li>
 <li> dopasowanie hipotezy kończy się sukcesem i wskutek tego zmienna
       unifikacyjna <span class="inlinecode">?<span class="id" title="var">P</span></span> zostaje związana z termem <span class="inlinecode"><span class="id" title="var">A</span></span>. Od teraz w dalszych
-      wzorcach będzie ona pasować jedynie do termu <span class="inlinecode"><span class="id" title="var">A</span></span>.
+      wzorcach będzie ona pasować jedynie do termu <span class="inlinecode"><span class="id" title="var">A</span></span>.
 
 </li>
 <li> następuje próba dopasowania celu do wzorca <span class="inlinecode">?<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">?<span class="id" title="var">Q</span></span>. Ponieważ
@@ -1458,7 +1458,7 @@ Jeżeli chcemy dopasować term o nieznanej nam nazwie (lub term, którego
 
 <div class="paragraph"> </div>
 
- Podkreślmy raz jeszcze, że zmienne unifikacyjne mogą występać tylko we
+ Podkreślmy raz jeszcze, że zmienne unifikacyjne mogą występać tylko we
     wzorcach, a więc w hipotezach po prawej stronie dwukropka <span class="inlinecode">:</span> oraz w
     celu. Błędem byłoby napisanie w hipotezie <span class="inlinecode">?<span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode">?<span class="id" title="var">P</span></span>. Podobnie błędem
     byłoby użycie nazwy <span class="inlinecode">?<span class="id" title="var">P</span></span> na prawo od strzałki <span class="inlinecode">=&gt;</span>.
@@ -1475,7 +1475,7 @@ Jeżeli chcemy dopasować term o nieznanej nam nazwie (lub term, którego
 
     Wzorcami liniowymi są wzorce, których używamy podczas definiowania
     zwykłych funkcji przez dopasowanie do wzorca (zauważmy jednak, że
-    tamtejsze zmienne unifikacyjne nie zaczynają się od <span class="inlinecode">?</span>). Ograniczenie
+    tamtejsze zmienne unifikacyjne nie zaczynają się od <span class="inlinecode">?</span>). Ograniczenie
     do wzorców liniowych jest spowodowane faktem, że nie zawsze możliwe
     jest stwierdzenie, czy dwa dowolne termy do siebie pasują.
 
@@ -1510,14 +1510,14 @@ Jeżeli chcemy dopasować term o nieznanej nam nazwie (lub term, którego
 </div>
 
 <div class="doc">
-Zauważmy, że nie musimy używać zmiennych unifikacyjnych do dopasowywania
+Zauważmy, że nie musimy używać zmiennych unifikacyjnych do dopasowywania
     całych termów — w pierwszym z powyższych przykładów używamy zmiennej <span class="inlinecode">?<span class="id" title="var">x</span></span>,
-    aby dopasować jedynie lewą stronę równania, które jest celem.
+    aby dopasować jedynie lewą stronę równania, które jest celem.
 
 <div class="paragraph"> </div>
 
     Ze zmiennych unifikacyjnych oraz stałych, zmiennych i funkcji (a więc
-    także konstruktorów) możemy budować wzorce dopasowujące termy o różnych
+    także konstruktorów) możemy budować wzorce dopasowujące termy o różnych
     fikuśnych kształtach.
 
 <div class="paragraph"> </div>
@@ -1525,7 +1525,7 @@ Zauważmy, że nie musimy używać zmiennych unifikacyjnych do dopasowywania
     W drugim przykładzie wzorzec <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode">?<span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">nil</span></span> dopasowuje równanie,
     którego lewa strona jest listą niepustą o dowolnej głowie, do której
     możemy się odnosić jako <span class="inlinecode"><span class="id" title="var">h</span></span>, oraz dowolnym ogonie, do którego nie
-    chcemy móc się odnosić. Prawa strona tego równania jest listą pustą.
+    chcemy móc się odnosić. Prawa strona tego równania jest listą pustą.
 
 <div class="paragraph"> </div>
 
@@ -1538,7 +1538,7 @@ Zauważmy, że nie musimy używać zmiennych unifikacyjnych do dopasowywania
 
     Ostatni wzorzec pasuje do równania, którego lewa strona jest singletonem
     (listą jednoelementową) zawierającym wartość, do której będziemy mogli
-    odnosić się za pomocą nazwy <span class="inlinecode"><span class="id" title="var">x</span></span>, zaś prawą stroną jest lista pusta. 
+    odnosić się za pomocą nazwy <span class="inlinecode"><span class="id" title="var">x</span></span>, zaś prawą stroną jest lista pusta. 
 <div class="paragraph"> </div>
 
 <a name="lab464"></a><h4 class="section">Ćwiczenie (my_assumption)</h4>
@@ -1567,7 +1567,7 @@ Zauważmy, że nie musimy używać zmiennych unifikacyjnych do dopasowywania
 
 <div class="paragraph"> </div>
 
- Napisz taktykę <span class="inlinecode"><span class="id" title="var">forward</span></span>, która wyspecjalizuje wszystkie znalezione w
+ Napisz taktykę <span class="inlinecode"><span class="id" title="var">forward</span></span>, która wyspecjalizuje wszystkie znalezione w
     kontekście implikacje, o ile oczywiście ich przesłanki również będą
     znajdowały się w kontekście, a następnie rozwiąże cel, jeżeli jest on
     prawdziwy na mocy założenia.
@@ -1603,9 +1603,9 @@ Zauważmy, że nie musimy używać zmiennych unifikacyjnych do dopasowywania
 
 <div class="paragraph"> </div>
 
- Poznawszy już konstrukt <span class="inlinecode"><span class="id" title="keyword">match</span></span> i jego warianty oraz sposób dopasowywania
+ Poznawszy już konstrukt <span class="inlinecode"><span class="id" title="keyword">match</span></span> i jego warianty oraz sposób dopasowywania
     wzorców i rolę unifikacji oraz zmiennych unifikacyjnych w tym procesie,
-    czas rzucić okiem na kilka niezwykle przydatnych narzędzi, które uczynią
+    czas rzucić okiem na kilka niezwykle przydatnych narzędzi, które uczynią
     nasze życie dopasowywacza łatwiejszym. 
 <div class="paragraph"> </div>
 
@@ -1614,7 +1614,7 @@ Zauważmy, że nie musimy używać zmiennych unifikacyjnych do dopasowywania
 <div class="paragraph"> </div>
 
  Pierwszym z nich jest wyrażenie <span class="inlinecode"><span class="id" title="keyword">context</span></span> <span class="inlinecode"><span class="id" title="var">ident</span></span> <span class="inlinecode">[<span class="id" title="var">term</span>]</span>, dzięki któremu
-    możemy tworzyć wzorce dopasowujące podtermy danego termu. Zobaczmy jego
+    możemy tworzyć wzorce dopasowujące podtermy danego termu. Zobaczmy jego
     działanie na przykładzie. 
 </div>
 <div class="code">
@@ -1649,7 +1649,7 @@ W powyższym przykładzie naszym celem jest znalezienie wszystkich równań,
       związana z <span class="inlinecode"><span class="id" title="var">a</span></span>, zaś <span class="inlinecode">?<span class="id" title="var">y</span></span> z <span class="inlinecode"><span class="id" title="var">b</span></span>
 
 </li>
-<li> cały term, którego podterm został dopasowany do wzorca, zostaje
+<li> cały term, którego podterm został dopasowany do wzorca, zostaje
       związany ze zmienną <span class="inlinecode"><span class="id" title="var">G</span></span>, przy czym jego dopasowany podterm zostaje
       specjalnie zaznaczony (po wypisaniu w jego miejscu widać napis "?M-1")
 
@@ -1670,8 +1670,8 @@ W powyższym przykładzie naszym celem jest znalezienie wszystkich równań,
 <div class="paragraph"> </div>
 
  Oblicz ile podtermów ma term <span class="inlinecode">42</span>. Następnie napisz taktykę <span class="inlinecode"><span class="id" title="var">nat_subterm</span></span>,
-    która potrafi wypisać wszystkie podtermy dowolnej liczby naturalnej, która
-    znajduje się w celu. Wymyśl odpowiedni cel i przetestuj na nim swoje
+    która potrafi wypisać wszystkie podtermy dowolnej liczby naturalnej, która
+    znajduje się w celu. Wymyśl odpowiedni cel i przetestuj na nim swoje
     obliczenia. 
 </div>
 <div class="code">
@@ -1713,20 +1713,20 @@ W powyższym przykładzie naszym celem jest znalezienie wszystkich równań,
 <div class="doc">
 Mamy w kontekście liczbę naturalną <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> i chcielibyśmy wprowadzić
     do niego kolejną. Cóż, nie jest to żaden problem — wystarczy nazwać go
-    dowolną nazwą różną od "x". Ale co, jeżeli nie wiemy, jak nazywają się
-    obiekty znajdujące się w kontekście?
+    dowolną nazwą różną od "x". Ale co, jeżeli nie wiemy, jak nazywają się
+    obiekty znajdujące się w kontekście?
 
 <div class="paragraph"> </div>
 
-    Przy intensywnym posługiwaniu się taktykami i automatyzacją jest to nader
+    Przy intensywnym posługiwaniu się taktykami i automatyzacją jest to nader
     częsta możliwość: gdy dopasujemy kontekst za pomocą <span class="inlinecode"><span class="id" title="keyword">match</span></span>a, nie znamy
     oryginalnych nazw dopasowanych termów — możemy odwoływać się do nich
     tylko za pomocą nazw lokalnych, wprowadzonych na potrzeby danego wzorca.
 
 <div class="paragraph"> </div>
 
-    Z odsięczą przychodzi nam generator świeżych nazw o wdzięcznej nazwie
-    <span class="inlinecode"><span class="id" title="tactic">fresh</span></span>. Zazwyczaj będziemy się nim posługiwać w następujący sposób:
+    Z odsięczą przychodzi nam generator świeżych nazw o wdzięcznej nazwie
+    <span class="inlinecode"><span class="id" title="tactic">fresh</span></span>. Zazwyczaj będziemy się nim posługiwać w następujący sposób:
     <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="var">var</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="tactic">fresh</span></span> <span class="inlinecode"><span class="id" title="var">arg_1</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="var">arg_N</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span>. Tutaj <span class="inlinecode"><span class="id" title="var">var</span></span> jest zmienną
     języka <span class="inlinecode"><span class="id" title="keyword">Ltac</span></span>, której wartością jest świeżo wygenerowana nazwa, a <span class="inlinecode"><span class="id" title="var">t</span></span>
     to jakaś taktyka, która w dowolny sposób korzysta z <span class="inlinecode"><span class="id" title="var">var</span></span>.
@@ -1736,22 +1736,22 @@ Mamy w kontekście liczbę naturalną <span class="inlinecode"><span class="id" 
     Powyższe cztery taktyki działają tak:
 <ul class="doclist">
 <li> <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="tactic">fresh</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="tactic">intro</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> — <span class="inlinecode"><span class="id" title="tactic">fresh</span></span> generuje świeżą nazwę, domyślnie
-      jest nią "H". Nazwa ta staje się wartością Ltacowej zmiennej <span class="inlinecode"><span class="id" title="var">x</span></span>. Owa
+      jest nią "H". Nazwa ta staje się wartością Ltacowej zmiennej <span class="inlinecode"><span class="id" title="var">x</span></span>. Owa
       zmienna jest argumentem taktyki <span class="inlinecode"><span class="id" title="tactic">intro</span></span>, dzięki czemu wprowadzony do
       kontekstu obiekt typu <span class="inlinecode"><span class="id" title="var">nat</span></span> zostaje nazwany "H".
 
 </li>
 <li> <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="tactic">fresh</span></span> <span class="inlinecode">&quot;<span class="id" title="var">y</span>&quot;</span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="tactic">intro</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> — jeżeli <span class="inlinecode"><span class="id" title="tactic">fresh</span></span> dostanie jako argument
-      ciąg znaków, to wygeneruje nazwę zaczynającą się od tego ciągu, która
+      ciąg znaków, to wygeneruje nazwę zaczynającą się od tego ciągu, która
       nie jest jeszcze zajęta. Ponieważ nazwa "y" jest wolna, właśnie tak
       zostaje nazwany wprowadzany obiekt.
 
 </li>
 <li> <span class="inlinecode"><span class="id" title="keyword">let</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="tactic">fresh</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="tactic">intro</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> — tutaj mamy mały zamęt. Pierwszy i trzeci
-      <span class="inlinecode"><span class="id" title="var">x</span></span> jest zmienną Ltaca, zaś drugi odnosi się do obiektu z kontekstu.
+      <span class="inlinecode"><span class="id" title="var">x</span></span> jest zmienną Ltaca, zaś drugi odnosi się do obiektu z kontekstu.
       Jeżeli <span class="inlinecode"><span class="id" title="var">arg</span></span> jest obiektem z kontekstu, to <span class="inlinecode"><span class="id" title="tactic">fresh</span></span> <span class="inlinecode"><span class="id" title="var">arg</span></span> tworzy świeżą
-      nazwę zaczynającą się od nazwy, jaką <span class="inlinecode"><span class="id" title="var">arg</span></span> nosi w kontekście. Tutaj
-      nie  ma to znaczenia, gdyż <span class="inlinecode"><span class="id" title="var">x</span></span> nazywa się po prostu "x" i wobec tego
+      nazwę zaczynającą się od nazwy, jaką <span class="inlinecode"><span class="id" title="var">arg</span></span> nosi w kontekście. Tutaj
+      nie  ma to znaczenia, gdyż <span class="inlinecode"><span class="id" title="var">x</span></span> nazywa się po prostu "x" i wobec tego
       <span class="inlinecode"><span class="id" title="tactic">fresh</span></span> generuje nazwę "x0", ale mechanizm ten działa tak samo w
       przypadku zmiennych unifikacyjnych.
 
@@ -1769,15 +1769,15 @@ Mamy w kontekście liczbę naturalną <span class="inlinecode"><span class="id" 
 
 <div class="paragraph"> </div>
 
- Taktykę <span class="inlinecode"><span class="id" title="tactic">fail</span></span> już poznaliśmy, ale nie w jej pełnej krasie. Czas więc
-    odkryć resztę jej możliwości. 
+ Taktykę <span class="inlinecode"><span class="id" title="tactic">fail</span></span> już poznaliśmy, ale nie w jej pełnej krasie. Czas więc
+    odkryć resztę jej możliwości. 
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Goal</span> <span class="id" title="var">False</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="tactic">fail</span> "Hoho, czego się spodziewałeś?" 1.<br/>
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="tactic">fail</span> "Hoho, czego się spodziewałeś?" 1.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
@@ -1790,7 +1790,7 @@ Pierwsza z nich nie jest zbyt spektakularna — możemy do <span class="inlineco
 
 <div class="paragraph"> </div>
 
-    Drugą, znacznie ważniejszą możliwością, jaką daje nam taktyka <span class="inlinecode"><span class="id" title="tactic">fail</span></span>,
+    Drugą, znacznie ważniejszą możliwością, jaką daje nam taktyka <span class="inlinecode"><span class="id" title="tactic">fail</span></span>,
     jest kontrola "poziomu porażki". Dzięki niemu zyskujemy władzę nad
     tym, jak "mocno" taktyka <span class="inlinecode"><span class="id" title="tactic">fail</span></span> zawodzi. Domyśnie wynosi on 0. Użycie
     taktyki <span class="inlinecode"><span class="id" title="tactic">fail</span></span> (która wobec tego oznacza to samo, co <span class="inlinecode"><span class="id" title="tactic">fail</span></span> <span class="inlinecode">0</span>) powouje
@@ -1801,7 +1801,7 @@ Pierwsza z nich nie jest zbyt spektakularna — możemy do <span class="inlineco
 
 <div class="paragraph"> </div>
 
-    Przyjrzyjmy się temu zachowaniu na przykładzie. 
+    Przyjrzyjmy się temu zachowaniu na przykładzie. 
 </div>
 <div class="code">
 
@@ -1830,12 +1830,12 @@ Pierwsza z nich nie jest zbyt spektakularna — możemy do <span class="inlineco
 </div>
 
 <div class="doc">
-Cztery powyższe dopasowania działają następująco:
+Cztery powyższe dopasowania działają następująco:
 <ul class="doclist">
 <li> W pierwszym dopasowana jest pierwsza gałąź. Wyświetlona zostaje
       wiadomość, po czym taktyka <span class="inlinecode"><span class="id" title="tactic">fail</span></span> zawodzi i następuje przejście
       do kolejnej gałęzi. Tutaj też wypisana zostaje wiadomość i cała
-      taktyka <span class="inlinecode"><span class="id" title="keyword">match</span></span> <span class="inlinecode">...</span> kończy się sukcesem.
+      taktyka <span class="inlinecode"><span class="id" title="keyword">match</span></span> <span class="inlinecode">...</span> kończy się sukcesem.
 
 </li>
 <li> W drugim przypadku dopasowana jest pierwsza gałąź, która wypisuje
@@ -1845,7 +1845,7 @@ Cztery powyższe dopasowania działają następująco:
 </li>
 <li> Trzeci przypadek jest podobny do drugiego. <span class="inlinecode"><span class="id" title="tactic">fail</span></span> <span class="inlinecode">1</span> powoduje, że
       cały <span class="inlinecode"><span class="id" title="keyword">match</span></span> zawodzi, ale dzięki kombinatorowi <span class="inlinecode"><span class="id" title="tactic">try</span></span> cała taktyka
-      <span class="inlinecode"><span class="id" title="tactic">try</span></span> <span class="inlinecode"><span class="id" title="keyword">match</span></span> <span class="inlinecode">...</span> kończy się sukcesem.
+      <span class="inlinecode"><span class="id" title="tactic">try</span></span> <span class="inlinecode"><span class="id" title="keyword">match</span></span> <span class="inlinecode">...</span> kończy się sukcesem.
 
 </li>
 <li> Czwarta taktyka jest podobna do trzeciej, ale tym razem po udanym
@@ -1880,7 +1880,7 @@ Cztery powyższe dopasowania działają następująco:
 </div>
 
 <div class="doc">
-Ilość celów możemy policzyć za pomocą taktyki <span class="inlinecode"><span class="id" title="var">numgoals</span></span>. Liczy ona
+Ilość celów możemy policzyć za pomocą taktyki <span class="inlinecode"><span class="id" title="var">numgoals</span></span>. Liczy ona
     wszystkie cele, na które działa, więc jeżeli nie użyjemy żadnego
     selektora, zwróci ona 1. Nie jest ona zbyt użyteczna (poza bardzo
     skomplikowanymi taktykami, które z jakichś powodów nie operują tylko na
@@ -1902,13 +1902,13 @@ Ilość celów możemy policzyć za pomocą taktyki <span class="inlinecode"><s
 <div class="doc">
 Taktyka <span class="inlinecode"><span class="id" title="var">guard</span></span> <span class="inlinecode"><span class="id" title="var">cond</span></span> pozwala nam dokonywać prostych testów na liczbach
     całkowitych Ltaca. Jeżeli warunek zachodzi, taktyka ta zachowuje się
-    jak <span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, czyli kończy się sukcesem i nie robi nic więcej. Jeżeli
+    jak <span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, czyli kończy się sukcesem i nie robi nic więcej. Jeżeli
     warunek nie zachodzi, taktyka zawodzi.
 
 <div class="paragraph"> </div>
 
-    W powyższym przykładzie taktyka <span class="inlinecode"><span class="id" title="var">guard</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&gt;</span> <span class="inlinecode">2</span> kończy się sukcesem,
-    gdyż są 3 cele, a 3 &gt; 2, zaś taktyka <span class="inlinecode"><span class="id" title="var">guard</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode">2</span> zawodzi, bo są
+    W powyższym przykładzie taktyka <span class="inlinecode"><span class="id" title="var">guard</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&gt;</span> <span class="inlinecode">2</span> kończy się sukcesem,
+    gdyż są 3 cele, a 3 &gt; 2, zaś taktyka <span class="inlinecode"><span class="id" title="var">guard</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode">2</span> zawodzi, bo są
     3 cele, a nie jest prawdą, że 3 &lt; 2. 
 </div>
 <div class="code">
@@ -1936,25 +1936,25 @@ Taktyka <span class="inlinecode"><span class="id" title="var">guard</span></span
 <div class="doc">
 Kombinator <span class="inlinecode"><span class="id" title="var">timeout</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> pozwala nam sprawić, żeby taktyka t zawiodła,
     jeżeli jej wykonanie będzie zajmowało dłużej, niż n sekund. Nie jest on
-    zbyt przydatny, gdyż szybkość wykonania danej taktyki jest kwestią mocno
+    zbyt przydatny, gdyż szybkość wykonania danej taktyki jest kwestią mocno
     zależną on sprzętu. Jak można przeczytać w manualu, kombinator ten bywa
     przydatny głównie przy debugowaniu i nie zaleca się, żeby występował w
-    finalnych dowodach, gdyż może powodować problemy z przenośnością.
+    finalnych dowodach, gdyż może powodować problemy z przenośnością.
 
 <div class="paragraph"> </div>
 
     W powyższym przykładzie taktyka <span class="inlinecode"><span class="id" title="var">timeout</span></span> <span class="inlinecode">1</span> <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> <span class="inlinecode"><span class="id" title="tactic">constructor</span></span> kończy się
-    sukcesem, gdyż udowodnienie <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">42</span> zajmuje jej mniej, niż 1 sekundę
+    sukcesem, gdyż udowodnienie <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">42</span> zajmuje jej mniej, niż 1 sekundę
     (przynajmniej na moim komputerze; na twoim taktyka ta może zawieść), ale
-    już udowodnienie <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">1338</span> trwa więcej niż jedną sekundę i wobec tego
+    już udowodnienie <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">1338</span> trwa więcej niż jedną sekundę i wobec tego
     taktyka <span class="inlinecode"><span class="id" title="var">timeout</span></span> <span class="inlinecode">1</span> <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> <span class="inlinecode"><span class="id" title="tactic">constructor</span></span> dla tego celu zawodzi (przynajmniej
     u mnie; jeżeli masz mocny komputer, u ciebie może zadziałać).
 
 <div class="paragraph"> </div>
 
-    Co więcej, kombinator <span class="inlinecode"><span class="id" title="var">timeout</span></span> może zachowywać się różnie dla tego samego
+    Co więcej, kombinator <span class="inlinecode"><span class="id" title="var">timeout</span></span> może zachowywać się różnie dla tego samego
     celu nawet na tym samym komputerze. Na przykład przed chwilą taktyka ta
-    zakończyłą się na moim komputerze sukcesem, mimo że dotychczas zawsze
+    zakończyłą się na moim komputerze sukcesem, mimo że dotychczas zawsze
     zawodziła). 
 </div>
 <div class="code">
@@ -1971,17 +1971,17 @@ Kombinator <span class="inlinecode"><span class="id" title="var">timeout</span><
 </div>
 
 <div class="doc">
-Kolejnym kombinatorem jest <span class="inlinecode"><span class="id" title="var">time</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span>, który odpala taktykę <span class="inlinecode"><span class="id" title="var">t</span></span>, a następnie
+Kolejnym kombinatorem jest <span class="inlinecode"><span class="id" title="var">time</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span>, który odpala taktykę <span class="inlinecode"><span class="id" title="var">t</span></span>, a następnie
     wyświetla informację o czasie, jaki zajęło jej wykonanie. Czas ten jest
     czasem rzeczywistym, tzn. zależy od mocy twojego komputera. Nie jest zbyt
-    stały — zazwyczaj różni się od jednego mierzenia do drugiego, czasem
-    nawet dość znacznie.
+    stały — zazwyczaj różni się od jednego mierzenia do drugiego, czasem
+    nawet dość znacznie.
 
 <div class="paragraph"> </div>
 
     Alternatywą dla taktyki <span class="inlinecode"><span class="id" title="var">time</span></span> jest komenda <span class="inlinecode"><span class="id" title="keyword">Time</span></span>, która robi dokładnie
     to samo. Jeżeli stoisz przed wyborem między tymi dwoma — wybierz komendę
-    <span class="inlinecode"><span class="id" title="keyword">Time</span></span>, gdyż komendy zachowują się zazwyczaj w sposób znacznie bardziej
+    <span class="inlinecode"><span class="id" title="keyword">Time</span></span>, gdyż komendy zachowują się zazwyczaj w sposób znacznie bardziej
     przewidywalny od taktyk. 
 <div class="paragraph"> </div>
 
@@ -1989,7 +1989,7 @@ Kolejnym kombinatorem jest <span class="inlinecode"><span class="id" title="var"
 
 <div class="paragraph"> </div>
 
- W niniejszym rozdziale zapoznaliśmy się z potężną maszynerią, dzięki
+ W niniejszym rozdziale zapoznaliśmy się z potężną maszynerią, dzięki
     której możemy zjeść ciastko i mieć ciastko: dzięki własnym taktykom
     jesteśmy w stanie połączyć Coqową pełnię formalnej poprawności oraz
     typowy dla matematyki uprawianej nieformalnie luźny styl dowodzenia,
@@ -2000,9 +2000,9 @@ Kolejnym kombinatorem jest <span class="inlinecode"><span class="id" title="var"
 
     Ale to jeszcze nie wszystko, gdyż póki co pominięte zostały konstrukty
     Ltaca pozwalające dopasowywać termy, dzięki którym jesteśmy w stanie
-    np. napisać taktykę, która odróżni <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> od <span class="inlinecode">4</span>. Jeżeli odczuwasz
+    np. napisać taktykę, która odróżni <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> od <span class="inlinecode">4</span>. Jeżeli odczuwasz
     niedosyt po przeczytaniu tego rozdziału, to uszy do góry — zapoznamy
-    się z nimi już niedługo, przy omawianiu dowodu przez reflekcję. Zanim
+    się z nimi już niedługo, przy omawianiu dowodu przez reflekcję. Zanim
     to jednak nastąpi, zrobimy przegląd taktyk wbudowanych. 
 </div>
 <div class="code">

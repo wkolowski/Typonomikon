@@ -1198,7 +1198,7 @@ Qed.
 
 (** * Rozstrzygalność *)
 
-(** ** Rozstrzygalność porządku *)
+(** ** Rozstrzygalność porządku *)
 
 (** Zdefiniuj funkcję [leb], która sprawdza, czy [n <= m]. *)
 

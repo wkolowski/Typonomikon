@@ -140,7 +140,7 @@
     wesołemu twierdzeniu i jego smutnemu dowodowi.
 
     Twierdzenie: istnieją takie dwie liczby niewymierne a i b, że a ^ b
-    (a podniesione do potęgi b) jest liczbą wymierną.
+    (a podniesione do potęgi b) jest liczbą wymierną.
 
     Dowód: jeżeli √2 ^ √2 jest niewymierny, to niech a = √2 ^ √2, b = √2.
     Wtedy a ^ b = (√2 ^ √2) ^ √2 = √2 ^ (√2 * √2) = √2 ^ 2 = 2.
@@ -153,16 +153,16 @@
     udowadnia istnienie takich liczb, mimo że nie mówi wprost, co to za
     liczby?
 
-    Tym właśnie jest niekonstruktywizm - możesz pokazać, że coś istnieje,
+    Tym właśnie jest niekonstruktywizm - możesz pokazać, że coś istnieje,
     ale bez wskazywania konkretnego obiektu. Możesz np. pokazać, że równanie
     ma rozwiązanie i wciąż nie wiedzieć, co to za rozwiązanie. Niewesoło,
     prawda?
 
-    Podobnego zdania był dawno temu holenderski matematyk L. E. J. Brouwer.
-    Obraził się on więc na tego typu dowody i postanowił zrobić swoją własną
-    logikę i oprzeć na niej swoją własną, lepszą matematykę. Powstała w ten
+    Podobnego zdania był dawno temu holenderski matematyk L. E. J. Brouwer.
+    Obraził się on więc na tego typu dowody i postanowił zrobić swoją własną
+    logikę i oprzeć na niej swoją własną, lepszą matematykę. Powstała w ten
     sposób logika konstruktywna okazała się być mniej więcej tym samym, co
-    wspomniany wyżej rachunek lambda, choć Brouwer jeszcze o tym nie
+    wspomniany wyżej rachunek lambda, choć Brouwer jeszcze o tym nie
     wiedział. Co ciekawe, Brouwer był przeciwnikiem formalizacji, a jego
     idee sformalizował dopiero jego uczeń, Arend Heyting.
 
@@ -172,22 +172,22 @@
 
 (** W międzyczasie na osiągnięciach wymienionych wyżej panów zaczęto budować
     wieżę z kości słoniowej. Chociaż nigdy nie dosięgnie ona nieba (można
-    pokazać, że niektóre problemy są niemożliwe do rozwiązania matematycznie
-    ani za pomocą komputerów), to po jakimś czasie zaczęła być przydatna.
+    pokazać, że niektóre problemy są niemożliwe do rozwiązania matematycznie
+    ani za pomocą komputerów), to po jakimś czasie zaczęła być przydatna.
 
     W połowie XIX wieku postawiono problem, który można krótko podsumować
-    tak: czy każdą mapę polityczną świata da się pomalować czterema kolorami
+    tak: czy każdą mapę polityczną świata da się pomalować czterema kolorami
     w taki sposób, aby sąsiednie kraje miały inne kolory?
 
-    Przez bardzo długi czas próbowano go rozwiązywać na różne sposoby, ale
+    Przez bardzo długi czas próbowano go rozwiązywać na różne sposoby, ale
     wszystkie one zawodziły. Po ponad stu latach prób problem rozwiązali
-    Appel i Haken pokazując, że każdą mapę da się pomalować czterema kolorami.
-    Popełnili oni jednak grzech bardzo ciężki, gdyż w swoim dowodzie używali
+    Appel i Haken pokazując, że każdą mapę da się pomalować czterema kolorami.
+    Popełnili oni jednak grzech bardzo ciężki, gdyż w swoim dowodzie używali
     komputerów.
 
-    Programy, które napisali, by udowodnić twierdzenie, wiele razy okazały
-    się błędne i musiały być wielokrotnie poprawiane. Sprawiło to, że część
-    matematyków nie uznała ich dowodu, gdyż nie umieli oni ręcznie sprawdzić
+    Programy, które napisali, by udowodnić twierdzenie, wiele razy okazały
+    się błędne i musiały być wielokrotnie poprawiane. Sprawiło to, że część
+    matematyków nie uznała ich dowodu, gdyż nie umieli oni ręcznie sprawdzić
     poprawności wszystkich tych pomocniczych programów.
 
     Po upływie kolejnych 30 lat dowód udało się sformalizować w Coqu,
@@ -195,8 +195,8 @@
     prosty:
     - niektóre twierdzenia można udowodnić jedynie sprawdzając dużą ilość
       przypadków, co jest trudne dla ludzi
-    - można przy dowodzeniu korzystać z komputerów i nie musi to wcale
-      podważać wiary w słuszność dowodu, a może ją wręcz wzmocnić *)
+    - można przy dowodzeniu korzystać z komputerów i nie musi to wcale
+      podważać wiary w słuszność dowodu, a może ją wręcz wzmocnić *)
 
 (** ** Homofobia... ekhm, homotopia, czyli quo vadimus? *)
 
@@ -204,10 +204,10 @@
 
     Nie tak dawno temu w odległej galaktyce (a konkretniej w Rosji, a potem
     w USA) był sobie matematyk nazwiskiem Voevodsky (czyt. "wojewódzki").
-    Zajmował się on takimi dziwnymi rzeczami, jak teoria homotopii czy
+    Zajmował się on takimi dziwnymi rzeczami, jak teoria homotopii czy
     kohomologia motywiczna (nie pytaj co to, bo nawet najstarsi górale
     tego nie wiedzą). Za swoje osiągnięcia w tych dziedzinach otrzymał
-    medal Fieldsa, czyli najbardziej prestiżową nagrodę dla matematyków.
+    medal Fieldsa, czyli najbardziej prestiżową nagrodę dla matematyków.
     Musiał być więc raczej zdolny.
 
     Jego historia jest jednak historią popełniania błędu na błędzie błędem
@@ -215,29 +215,29 @@
     którego znalezienie zajęło 7 lat, a poprawienie - kolejne 6 lat. W
     innym, nieco hardkorowszym przypadku, w jego pracy z 1989 roku inny
     ekspert błąd znalazł w roku 1998, ale Voevodsky nie wierzył, że
-    faktycznie jest tam błąd - obu panom po prostu ciężko się było dogadać.
-    Ostatecznie Voevodsky o swym błędzie przekonał się dopiero w roku 2013.
+    faktycznie jest tam błąd - obu panom po prostu ciężko się było dogadać.
+    Ostatecznie Voevodsky o swym błędzie przekonał się dopiero w roku 2013.
 
     Czy powyższe perypetie świadczą o tym, że Voevodsky jest krętaczem (lub
     po prostu idiotą)? Oczywiście nie. Świadczą one o tym, że matematyka
     uprawiana na wysokim poziomie abstrakcji jest bardzo trudna do ogarnięcia
-    przez ludzi. Ludzie, w tym matematycy, mają ograniczoną ilość pamięci
+    przez ludzi. Ludzie, w tym matematycy, mają ograniczoną ilość pamięci
     oraz umiejętności rozumowania, a na dodatek ślepo ufają autorytetom -
     bardzo skomplikowanych i nudnych twierdzeń z dziedzin, którymi mało kto
     się zajmuje, po prostu (prawie) nikt nie sprawdza.
 
     Powyższe skłoniło Voevodskyego do porzucenia swych dziwnych zainteresowań
-    i zajęcia się czymś równie dziwnym (przynajmniej dla matematyków), czyli
-    formalną weryfikacją rozumowań matematycznych przez komputery. Po długich
+    i zajęcia się czymś równie dziwnym (przynajmniej dla matematyków), czyli
+    formalną weryfikacją rozumowań matematycznych przez komputery. Po długich
     przemyśleniach związał on swe nadzieje właśnie z Coqiem. Jednak duchy
     przeszłości nie przestawały go nawiedzać i to aż do tego stopnia, że
     wymyślił on (do spółki z takimi ludźmi jak Awodey, Warren czy van den
-    Berg) homotopiczną interpretację teorii typów.
+    Berg) homotopiczną interpretację teorii typów.
 
     O co chodzi? W skrócie: typy zamiast programów reprezentują przestrzenie,
     zaś programy to punkty w tych przestrzeniach. Programy, które dają takie
     same wyniki są połączone ścieżkami. Programowanie (i robienie matematyki)
-    staje się więc w takim układzie niczym innym jak rzeźbieniem figurek w
+    staje się więc w takim układzie niczym innym jak rzeźbieniem figurek w
     bardzo abstrakcyjnych przestrzeniach.
 
     Jakkolwiek powyższe brzmi dość groźnie, to jest bardzo użyteczne i
@@ -252,7 +252,7 @@
 (** ** Książki *)
 
 (** Mimo, iż Coq liczy sobie dobre 27 lat, książek na jego temat zaczęło
-    przybywać dopiero od kilku. Z dostępnych pozycji polecenia
+    przybywać dopiero od kilku. Z dostępnych pozycji polecenia
     godne są:
     - Software Foundations — trzytomowa seria dostępna za darmo
       tutaj: https://softwarefoundations.cis.upenn.edu/
@@ -260,7 +260,7 @@
       - Logical Foundations, której głównym autorem jest Benjamin
         Pierce — bardzo przystępne acz niekompletne wprowadzenie do
         Coqa. Omawia podstawy programowania funkcyjnego, rekursję i
-        indukcję strukturalną, polimorfizm, podstawy logiki i prostą
+        indukcję strukturalną, polimorfizm, podstawy logiki i prostą
         automatyzację.
       - Programming Language Foundations, której głównym autorem jest
         Benjamin Pierce — wprowadzenie do teorii języków programowania.
@@ -272,7 +272,7 @@
         Appel — jak sama nazwa wskazuje skupia się ona na algorytmach,
         adaptowaniu ich do realiów języków funkcyjnych oraz weryfikacją
         poprawności ich działania. Nie jest ona jeszcze dopracowana, ale
-        pewnie zmieni się to w przyszłości.
+        pewnie zmieni się to w przyszłości.
     - Coq'Art, której autorami są Yves Bertot oraz Pierre Castéran —
       książka nieco szerzej opisująca język Coq, poświęca sporo
       miejsca rachunkowi konstrukcji i aspektom teoretycznym. Zawiera
@@ -280,7 +280,7 @@
       koindukcji, zaawansowanej rekurencji i reflekcji. Wersja
       francuska jest dostępna za darmo pod adresem
       https://www.labri.fr/perso/casteran/CoqArt/
-      Wersję angielską można za darmo pobrać z rosyjskich stron z
+      Wersję angielską można za darmo pobrać z rosyjskich stron z
       książkami, ale broń Boże tego nie rób! Piractwo to grzech.
     - Certified Programming with Dependent Types autorstwa Adama
       Chlipali — książka dla zaawansowanych, traktująca o praktycznym
@@ -318,8 +318,8 @@
 
 (** ** Blogi *)
 
-(** W Internecie można też dokopać się do blogów, na których przynajmniej
-    część postów dotyczy Coqa. Póki co nie miałem czasu wszystkich przeczytać
+(** W Internecie można też dokopać się do blogów, na których przynajmniej
+    część postów dotyczy Coqa. Póki co nie miałem czasu wszystkich przeczytać
     i wobec tego większość linków wrzucam w ciemno:
     - http://www.cis.upenn.edu/~aarthur/poleiro/ (znajdziesz tu posty na
       temat parsowania, kombinatorycznej teorii gier, czytelnego
@@ -331,7 +331,7 @@
       silnych specyfikacji)
     - http://gallium.inria.fr/blog/ (znajdziesz tu posty na temat mechanizmu
       ewaluacji, inwersji, weryfikacji parserów oraz pisania pluginów do Coqa;
-      większość materiału jest już dość leciwa)
+      większość materiału jest już dość leciwa)
     - http://ilyasergey.net/pnp/
     - https://homes.cs.washington.edu/~jrw12/##blog
     - http://osa1.net/tags/coq
@@ -341,7 +341,7 @@
 
 (** Coq ma też swój subreddit na Reddicie (można tu znaleźć różne rzeczy, w
     tym linki do prac naukowych) oraz tag na StackOverflow, gdzie można
-    zadawać i odpowiadać na pytania:
+    zadawać i odpowiadać na pytania:
     - https://www.reddit.com/r/Coq/
     - https://stackoverflow.com/questions/tagged/coq *)
 
@@ -369,5 +369,5 @@
     http://proofweb.cs.ru.nl/index.html
 
     Uwaga: kurs powstaje w czasie rzeczywistym, więc w niektórych miejscach
-    możesz natknąć się na znacznik TODO, który informuje, że dany fragment
+    możesz natknąć się na znacznik TODO, który informuje, że dany fragment
     nie został jeszcze skończony. *)

@@ -2,8 +2,8 @@
 
 (* begin hide *)
 
-(** Pamiętać o tym, że przy negatywnej koindukcji kryterium ścisłej
-    pozytywnośći też obowiązuje. Powody są mniej więcej takie jak dla
+(** Pamiętać o tym, że przy negatywnej koindukcji kryterium ścisłej
+    pozytywnośći też obowiązuje. Powody są mniej więcej takie jak dla
     typów induktywnych. *)
 
 Fail CoInductive wut : Type :=
@@ -11,7 +11,7 @@ Fail CoInductive wut : Type :=
     haha : wut -> Prop;
 }.
 
-(** Ciężko mi jednak stwierdzić w tej chwili, czy jest jakiś odpowiednik
+(** Ciężko mi jednak stwierdzić w tej chwili, czy jest jakiś odpowiednik
     problemów z nieterminacją. *)
 
 (* end hide *)
@@ -871,13 +871,13 @@ End Zad1.
 
 (** **** Ćwiczenie *)
 
-(** Znajdź taką rodzinę typów koinduktywnych [C], że dla dowolnego
+(** Znajdź taką rodzinę typów koinduktywnych [C], że dla dowolnego
     typu [A], [C A] jest w bijekcji z typem funkcji [nat -> A]. Przez
-    bijekcję będziemy tu rozumieć funkcję, która ma odwrotność, z którą
-    w obie strony składa się do identyczności.
+    bijekcję będziemy tu rozumieć funkcję, która ma odwrotność, z którą
+    w obie strony składa się do identyczności.
 
-    Uwaga: nie da się tego udowodnić bez użycia dodatkowych aksjomatów,
-    które na szczęście są bardzo oczywiste i same się narzucają. *)
+    Uwaga: nie da się tego udowodnić bez użycia dodatkowych aksjomatów,
+    które na szczęście są bardzo oczywiste i same się narzucają. *)
 
 (* begin hide *)
 Module Zad2.

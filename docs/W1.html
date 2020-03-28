@@ -50,7 +50,7 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab585"></a><h2 class="section">Równoważność </h2>
+<a name="lab585"></a><h2 class="section">Równoważność</h2>
 
 <div class="paragraph"> </div>
 
@@ -63,19 +63,19 @@
 <div class="paragraph"> </div>
 
  Poznaliśmy uprzednio pewien spójnik, zapisywany wdzięcznym wygibaskiem
-    <span class="inlinecode">~</span>, a zwany górnolotnie negacją. Powinniśmy się jednak zastanowić: czy
+    <span class="inlinecode">~</span>, a zwany górnolotnie negacją. Powinniśmy się jednak zastanowić: czy
     spójnik ten jest dla nas zadowalający? Czy pozwala on nam wyrażać nasze
     przemyślenia w najlepszy możliwy sposób?
 
 <div class="paragraph"> </div>
 
-    Jeżeli twoja odpowiedź brzmi "tak", to uroczyście oświadczam, że wcale
-    nie masz racji. Wyobraźmy sobie następującą sytuację: jesteśmy psycho
-    patusem, próbującym pod pozorem podrywu poobrażać przeróżne panienki.
+    Jeżeli twoja odpowiedź brzmi "tak", to uroczyście oświadczam, że wcale
+    nie masz racji. Wyobraźmy sobie następującą sytuację: jesteśmy psycho
+    patusem, próbującym pod pozorem podrywu poobrażać przeróżne panienki.
 
 <div class="paragraph"> </div>
 
-    Podbijamy do pierwszej z brzegu, która akurat jest normalną dziewczyną,
+    Podbijamy do pierwszej z brzegu, która akurat jest normalną dziewczyną,
     i mówimy: "Hej mała, jesteś gruba i mądra". Nasza oburzona rozmówczyni,
     jako że jest szczupła, odpowiada nam: "Wcale nie jestem gruba. Spadaj
     frajerze".
@@ -84,9 +84,9 @@
 
     Teraz na cel bierzemy kolejną, która siedzi sobie samotnie przy stoliku
     w Starbuniu, popija kawkę z papierowego kubka i z uśmiechem na ustach
-    próbuje udowodnić w Coqu jakieś bardzo skomplikowane twierdzenie.
-    Podbijamy do niej i mówimy: "Hej mała, jesteś gruba i mądra". Jako, że
-    ona też jest szczupła, oburza się i odpowiada nam tak:
+    próbuje udowodnić w Coqu jakieś bardzo skomplikowane twierdzenie.
+    Podbijamy do niej i mówimy: "Hej mała, jesteś gruba i mądra". Jako, że
+    ona też jest szczupła, oburza się i odpowiada nam tak:
 
 <div class="paragraph"> </div>
 
@@ -99,18 +99,18 @@
 
 <div class="paragraph"> </div>
 
-    Widzisz różnicę w tych dwóch odpowiedziach? Pierwsza z nich wydaje nam
-    się bardzo naturalna, bo przypomina zaprzeczenia, jakich zwykli ludzie
-    używają w codziennych rozmowach. Druga wydaje się zawoalowana i bardziej
-    przypomina dowód w Coqu niż codzienne rozmowy. Między oboma odpowiedziami
+    Widzisz różnicę w tych dwóch odpowiedziach? Pierwsza z nich wydaje nam
+    się bardzo naturalna, bo przypomina zaprzeczenia, jakich zwykli ludzie
+    używają w codziennych rozmowach. Druga wydaje się zawoalowana i bardziej
+    przypomina dowód w Coqu niż codzienne rozmowy. Między oboma odpowiedziami
     jest łatwo zauważalna przepaść.
 
 <div class="paragraph"> </div>
 
-    Żeby zrozumieć tę przepaść, wprowadzimy pojęcia silnej i słabej negacji.
-    W powyższym przykładzie silną negacją posłużyła się pierwsza dziewczyna -
-    silną negacją zdania "jesteś gruba i mądra" jest tutaj zdanie "wcale nie
-    jestem gruba". Oczywiście jest też druga możliwość silnego zaprzeczenia
+    Żeby zrozumieć tę przepaść, wprowadzimy pojęcia silnej i słabej negacji.
+    W powyższym przykładzie silną negacją posłużyła się pierwsza dziewczyna -
+    silną negacją zdania "jesteś gruba i mądra" jest tutaj zdanie "wcale nie
+    jestem gruba". Oczywiście jest też druga możliwość silnego zaprzeczenia
     temu zdaniu - "nie jestem mądra" - ale z jakichś powodów to zaprzeczenie
     nie padło. Ciekawe dlaczego? Druga dziewczyna natomiast posłużyła się
     słabą negacją, odpowiadając "gdybym była gruba i mądra, to... (tutaj
@@ -118,41 +118,41 @@
 
 <div class="paragraph"> </div>
 
-    Słaba negacja to ta, którą już znamy, czyli Coqowe <span class="inlinecode"><span class="id" title="var">not</span></span>. Ma ona
-    charakter hipotetyczny, gdyż jest po prostu implikacją, której
-    konkluzją jest <span class="inlinecode"><span class="id" title="var">False</span></span>. W rozumowaniach słownych sprowadza się ona
+    Słaba negacja to ta, którą już znamy, czyli Coqowe <span class="inlinecode"><span class="id" title="var">not</span></span>. Ma ona
+    charakter hipotetyczny, gdyż jest po prostu implikacją, której
+    konkluzją jest <span class="inlinecode"><span class="id" title="var">False</span></span>. W rozumowaniach słownych sprowadza się ona
     do schematu "gdyby tak było, to wtedy...".
 
 <div class="paragraph"> </div>
 
     Silna negacja to najbardziej bezpośredni sposób zaprzeczenia danemu
     zdaniu. W Coqu nie ma żadnego spójnika, który ją wyraża, bo ma ona
-    charakter dość ad hoc - dla każdego zdania musimy sami sobie wymyślić,
+    charakter dość ad hoc - dla każdego zdania musimy sami sobie wymyślić,
     jak brzmi zdanie, które najsilniej mu przeczy. W rozumowaniach słownych
-    silna negacja sprowadza się zazwyczaj do schematu "nie jest tak".
+    silna negacja sprowadza się zazwyczaj do schematu "nie jest tak".
 
 <div class="paragraph"> </div>
 
-    Spróbujmy przetłumaczyć powyższe rozważania na język logiki. Niech
-    <span class="inlinecode"><span class="id" title="var">P</span></span> oznacza "gruba", zaś <span class="inlinecode"><span class="id" title="var">Q</span></span> - "mądra". Silną negacją zdania <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>
-    jest zdanie <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> ("nie gruba lub nie mądra"), zaś jego słabą
-    negacją jest <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span>, czyli <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span> ("jeżeli gruba i
+    Spróbujmy przetłumaczyć powyższe rozważania na język logiki. Niech
+    <span class="inlinecode"><span class="id" title="var">P</span></span> oznacza "gruba", zaś <span class="inlinecode"><span class="id" title="var">Q</span></span> - "mądra". Silną negacją zdania <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>
+    jest zdanie <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> ("nie gruba lub nie mądra"), zaś jego słabą
+    negacją jest <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span>, czyli <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span> ("jeżeli gruba i
     mądra, to sprzeczność").
 
 <div class="paragraph"> </div>
 
     Zauważmy, że o ile słaba negacja jest uniwersalna, tj. słabą negacją
     <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> zawsze jest <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span>, to silna negacja jest ad hoc w tym
-    sensie, że gdyby <span class="inlinecode"><span class="id" title="var">P</span></span> było postaci <span class="inlinecode"><span class="id" title="var">P1</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P2</span></span>, to wtedy silną negacją
-    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> nie jest już <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, a <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P1</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P2</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> - żeby
-    uzyskać silną negację, musimy zanegować <span class="inlinecode"><span class="id" title="var">P</span></span> silnie, a nie słabo.
+    sensie, że gdyby <span class="inlinecode"><span class="id" title="var">P</span></span> było postaci <span class="inlinecode"><span class="id" title="var">P1</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P2</span></span>, to wtedy silną negacją
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> nie jest już <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, a <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P1</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P2</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> - żeby
+    uzyskać silną negację, musimy zanegować <span class="inlinecode"><span class="id" title="var">P</span></span> silnie, a nie słabo.
 
 <div class="paragraph"> </div>
 
     Dlaczego silna negacja jest silna, a słaba jest słaba, tzn. dlaczego
     nazwaliśmy je tak a nie inaczej? Wyjaśnia to poniższe twierdzenie oraz
     następująca po nim beznadziejna próba udowodnienia analogicznego
-    twierdzenia z implikacją idącą w drugą stronę. 
+    twierdzenia z implikacją idącą w drugą stronę. 
 </div>
 <div class="code">
 
@@ -171,14 +171,14 @@
 </div>
 
 <div class="doc">
-Jak widać, silna negacja koniunkcji pociąga za sobą jej słabą negację.
+Jak widać, silna negacja koniunkcji pociąga za sobą jej słabą negację.
     Powód tego jest prosty: jeżeli jeden z koniunktów nie zachodzi, ale
     założymy, że oba zachodzą, to w szczególności każdy z nich zachodzi
     osobno i mamy sprzeczność.
 
 <div class="paragraph"> </div>
 
-    A czy implikacja w drugą stronę zachodzi? 
+    A czy implikacja w drugą stronę zachodzi? 
 </div>
 <div class="code">
 
@@ -194,20 +194,20 @@ Jak widać, silna negacja koniunkcji pociąga za sobą jej słabą negację.
 </div>
 
 <div class="doc">
-Jak widać, nie udało nam się udowodnić odwrotnej implikacji i to wcale
+Jak widać, nie udało nam się udowodnić odwrotnej implikacji i to wcale
     nie dlatego, że jesteśmy mało zdolni - po prostu konstruktywnie nie da
     się tego zrobić.
 
 <div class="paragraph"> </div>
 
     Powód tego jest prosty: jeżeli wiemy, że <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> razem prowadzą do
-    sprzeczności, to wiemy zdecydowanie za mało. Mogą być dwa powody:
+    sprzeczności, to wiemy zdecydowanie za mało. Mogą być dwa powody:
 <ul class="doclist">
-<li> <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> mogą bez problemu zachodzić osobno, ale być sprzeczne
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> mogą bez problemu zachodzić osobno, ale być sprzeczne
       razem
 
 </li>
-<li> nawet jeżeli któryś z koniunktów prowadzi do sprzeczności, to nie
+<li> nawet jeżeli któryś z koniunktów prowadzi do sprzeczności, to nie
       wiemy, który
 
 </li>
@@ -215,9 +215,9 @@ Jak widać, nie udało nam się udowodnić odwrotnej implikacji i to wcale
 
 <div class="paragraph"> </div>
 
-    Żeby zrozumieć pierwszą możliwość, niech <span class="inlinecode"><span class="id" title="var">P</span></span> oznacza "siedzę", a <span class="inlinecode"><span class="id" title="var">Q</span></span> -
+    Żeby zrozumieć pierwszą możliwość, niech <span class="inlinecode"><span class="id" title="var">P</span></span> oznacza "siedzę", a <span class="inlinecode"><span class="id" title="var">Q</span></span> -
     "stoję". Rozważmy zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, czyli "siedzę i stoję". Żeby nie było
-    za łatwo załóżmy też, że znajdujesz się po drugiej stronie kosmosu i mnie
+    za łatwo załóżmy też, że znajdujesz się po drugiej stronie kosmosu i mnie
     nie widzisz.
 
 <div class="paragraph"> </div>
@@ -231,14 +231,14 @@ Jak widać, nie udało nam się udowodnić odwrotnej implikacji i to wcale
 <div class="paragraph"> </div>
 
     Z drugim przypadkiem jest tak samo, jak z końcówką powyższego przykładu:
-    nawet jeżeli zdania <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> się wzajemnie nie wykluczają i niesłuszność
+    nawet jeżeli zdania <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> się wzajemnie nie wykluczają i niesłuszność
     <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> wynika z tego, że któryś z koniunktów nie zachodzi, to możemy po
     prostu nie wiedzieć, o który z nich chodzi.
 
 <div class="paragraph"> </div>
 
     Żeby jeszcze wzmocnić nasze zrozumienie, spróbujmy w zaskakujący sposób
-    rozwinąć definicję (słabej) negacji dla koniunkcji: 
+    rozwinąć definicję (słabej) negacji dla koniunkcji: 
 </div>
 <div class="code">
 
@@ -272,7 +272,7 @@ I jeszcze raz...
 
 <div class="doc">
 Jak (mam nadzieję) widać, słaba negacja koniunkcji nie jest niczym
-    innym niż stwierdzeniem, że oba koniunkty nie mogą zachodzić razem.
+    innym niż stwierdzeniem, że oba koniunkty nie mogą zachodzić razem.
     Jest to więc coś znacznie słabszego, niż stwierdzenie, że któryś z
     koniunktów nie zachodzi z osobna. 
 </div>
@@ -289,7 +289,7 @@ Jak (mam nadzieję) widać, słaba negacja koniunkcji nie jest niczym
 </div>
 
 <div class="doc">
-Jak napisano w Piśmie, nie samą koniunkcją żyje człowiek. Podumajmy
+Jak napisano w Piśmie, nie samą koniunkcją żyje człowiek. Podumajmy
     więc, jak wygląda silna negacja dysjunkcji. Jeżeli chcemy dosadnie
     powiedzieć, że <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> nie zachodzi, to najprościej powiedzieć:
     <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>. Słaba negacja dysjunkcji ma zaś rzecz jasna postać
@@ -308,9 +308,9 @@ Jak napisano w Piśmie, nie samą koniunkcją żyje człowiek. Podumajmy
 </div>
 
 <div class="doc">
-Co jednak dość ciekawe, silna negacja nie zawsze jest silniejsza
-    od słabej (ale z pewnością nie może być od niej słabsza - gdyby
-    mogła, to nazywałaby się inaczej). W przypadku dysjunkcji obie
+Co jednak dość ciekawe, silna negacja nie zawsze jest silniejsza
+    od słabej (ale z pewnością nie może być od niej słabsza - gdyby
+    mogła, to nazywałaby się inaczej). W przypadku dysjunkcji obie
     negacje są równoważne, co obrazuje poniższe twierdzenie, które
     głosi, że słaba negacja implikuje silną (a to razem z powyższym
     daje równoważność): 
@@ -329,9 +329,9 @@ Co jednak dość ciekawe, silna negacja nie zawsze jest silniejsza
 
 <div class="doc">
 Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to tak naprawdę para implikacji
-    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>, zaś <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span> to... gdy pomyślimy
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>, zaś <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span> to... gdy pomyślimy
     nad tym odpowiednio mocno... ta sama para implikacji. Jest tak
-    dlatego, że jeżeli <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> implikuje <span class="inlinecode"><span class="id" title="var">R</span></span>, to umieć wyprodukować
+    dlatego, że jeżeli <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> implikuje <span class="inlinecode"><span class="id" title="var">R</span></span>, to umieć wyprodukować
     <span class="inlinecode"><span class="id" title="var">R</span></span> musimy zarówno z samego <span class="inlinecode"><span class="id" title="var">P</span></span>, jak i z samego <span class="inlinecode"><span class="id" title="var">Q</span></span>. 
 </div>
 <div class="code">
@@ -357,9 +357,9 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 
 <div class="paragraph"> </div>
 
- Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka
-    naturalnego za pomocą zdań logiki formalnej. Gdybyś jednak wciąż
-    był skłonny to robić, przyjrzyjmy się kolejnemu "paradoksowi". 
+ Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka
+    naturalnego za pomocą zdań logiki formalnej. Gdybyś jednak wciąż
+    był skłonny to robić, przyjrzyjmy się kolejnemu "paradoksowi". 
 </div>
 <div class="code">
 
@@ -372,8 +372,8 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 
 <div class="doc">
 Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inlinecode"><span class="id" title="var">P</span></span> implikuje
-    <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">P</span></span>. Spróbujmy przerobić je na paradoks, wymyślając jakąś wesołą
-    interpretację dla <span class="inlinecode"><span class="id" title="var">P</span></span>.
+    <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">P</span></span>. Spróbujmy przerobić je na paradoks, wymyślając jakąś wesołą
+    interpretację dla <span class="inlinecode"><span class="id" title="var">P</span></span>.
 
 <div class="paragraph"> </div>
 
@@ -386,15 +386,15 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 
     Dla jeszcze lepszego efektu powiedzmy, że za 10 złotych możemy kupić
     kebaba. W ostatecznej formie nasze twierdzenie brzmi więc: jeżeli mam
-    złotówkę, to mogę kupić nieograniczoną ilość kebabów.
+    złotówkę, to mogę kupić nieograniczoną ilość kebabów.
 
 <div class="paragraph"> </div>
 
     Jak widać, logika formalna (przynajmniej w takiej postaci, w jakiej ją
     poznajemy) nie nadaje się do rozumowania na temat zasobów. Zasobów, bo
     tym właśnie są pieniądze i kebaby. Zasoby to byty, które można
-    przetwarzać, przemieszczać i zużywać, ale nie można ich kopiować i
-    tworzyć z niczego. Powyższe twierdzenie dobitnie pokazuje, że zdania
+    przetwarzać, przemieszczać i zużywać, ale nie można ich kopiować i
+    tworzyć z niczego. Powyższe twierdzenie dobitnie pokazuje, że zdania
     logiczne nie mają nic wspólnego z zasobami, gdyż ich dowody mogą być
     bez ograniczeń kopiowane. 
 </div>
@@ -410,7 +410,7 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 
 <div class="paragraph"> </div>
 
- UWAGA TODO: to ćwiczenie wymaga znajomości rozdziału 2, w szczególności
+ UWAGA TODO: to ćwiczenie wymaga znajomości rozdziału 2, w szczególności
     indukcji i rekursji na liczbach naturalnych.
 
 <div class="paragraph"> </div>
@@ -423,8 +423,8 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 <div class="paragraph"> </div>
 
     Na końcu sformalizuj resztę paradoksu, tzn. zapisz jakoś, co to znaczy
-    mieć złotówkę i że za 10 złotych można kupić kebaba. Wywnioskuj stąd,
-    że mając złotówkę, możemy kupić dowolną liczbę kebabów.
+    mieć złotówkę i że za 10 złotych można kupić kebaba. Wywnioskuj stąd,
+    że mając złotówkę, możemy kupić dowolną liczbę kebabów.
 
 <div class="paragraph"> </div>
 
@@ -436,7 +436,7 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 <div class="paragraph"> </div>
 
 <ul class="doclist">
-<li> na koniec dać tylko te zadania, które łączą wiele spójników
+<li> na koniec dać tylko te zadania, które łączą wiele spójników
 <ul class="doclist">
 <li> dodać zadanie dotyczące czytania twierdzeń i dowodów
 

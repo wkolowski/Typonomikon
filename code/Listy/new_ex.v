@@ -3,7 +3,7 @@ Require Import D5.
 (** ** [exists] *)
 
 (** Można zadać sobie pytanie: skoro predykaty takie jak [elem] czy
-    [exists] można zdefiniować zarówno induktywnie jak i przez rekursję,
+    [exists] można zdefiniować zarówno induktywnie jak i przez rekursję,
     który sposób jest lepszy?
 
     Odpowiedź jest prosta: jeżeli możesz użyć rekursji, zrób to. *)

@@ -70,7 +70,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** TODO: tu opisać kłamstwo *)
+(** TODO: tu opisać kłamstwo *)
 
 Inductive path {A : Type} (x : A) : A -> Type :=
     | idpath : path x x.

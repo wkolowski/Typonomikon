@@ -1,7 +1,7 @@
-(** * D3: Logika boolowska, rozstrzygalność i reflekcja [TODO] *)
+(** * D3: Logika boolowska, rozstrzygalność i reflekcja [TODO] *)
 
-(** UWAGA: ten rozdział właśnie ulega konceptualnemu przeobrażeinu i
-    może być nie na miejscu, tzn. zawierać rzeczy, o których jeszcze
+(** UWAGA: ten rozdział właśnie ulega konceptualnemu przeobrażeinu i
+    może być nie na miejscu, tzn. zawierać rzeczy, o których jeszcze
     nie było mowy. *)
 
 (** * Logika boolowska *)
@@ -433,7 +433,7 @@ Inductive sumbool (A B : Prop) : Type :=
 
 (** Tutaj coś w stylu [n < m \/ n = m \/ n > m] *)
 
-(** ** Rozstrzygalność jako pułapka na negacjonistów *)
+(** ** Rozstrzygalność jako pułapka na negacjonistów *)
 
 Module weak_apart.
 
@@ -594,7 +594,7 @@ Proof.
     destruct 1. assumption.
 Qed.
 
-(** * Reflekcja w małej skali, czyli jak odbijać żeby się nie zmęczyć *)
+(** * Reflekcja w małej skali, czyli jak odbijać żeby się nie zmęczyć *)
 
 Inductive even : nat -> Prop :=
     | even0 : even 0
@@ -624,8 +624,8 @@ Qed.
 Compute wut.
 
 
-(** Wrzucić tu przykład z porządkiem leksykograficznym z bloga Mondet.
-    Dać też przykład z permutacjami? *)
+(** Wrzucić tu przykład z porządkiem leksykograficznym z bloga Mondet.
+    Dać też przykład z permutacjami? *)
 
 (** * Poradnik hodowcy, czyli jak nie rozmnażać definicji *)
 
@@ -680,11 +680,11 @@ Qed.
 
 (** * Metoda encode-decode, czyli o rozwiązaywaniu problemów, które sami sobie tworzymy *)
 
-(** Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko
+(** Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko
     zwalcza problemy nieznane w żadnej innej teorii". *)
 
-(** Okazuje się, że sortu [SProp] można całkiem efektywnie użyć do pokazywania,
-    że coś jest zdaniem w sensie HoTTowym. Dzięki temu dowód jest krótszy o
+(** Okazuje się, że sortu [SProp] można całkiem efektywnie użyć do pokazywania,
+    że coś jest zdaniem w sensie HoTTowym. Dzięki temu dowód jest krótszy o
     całe 33%. Całkiem nieźle. *)
 
 Module encodedecode0.

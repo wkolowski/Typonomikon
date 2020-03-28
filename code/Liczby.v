@@ -36,7 +36,7 @@ Inductive Z : Set :=
     | Zpos : BinPos -> Z
     | Zneg : BinPos -> Z.
 
-(** Inaczej liczby całkowite można zrobić za pomocą liczb naturalnych, o
+(** Inaczej liczby całkowite można zrobić za pomocą liczb naturalnych, o
     ile mamy wyższe typy induktywne. *)
 
 (*
@@ -58,7 +58,7 @@ Inductive Z : Type :=
     | Z_isSet : forall (x y : Z) (p q : x = y), p = q.
 *)
 
-(** Liczby wymierne można zrobić naiwnie albo sprytnie, ale oba pomysły są
+(** Liczby wymierne można zrobić naiwnie albo sprytnie, ale oba pomysły są
     głupie. *)
 
 (* Bardzo naiwnie (będzie można ulepszyć, jak bozia da sort SProp). *)

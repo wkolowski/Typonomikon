@@ -30,7 +30,7 @@
 
 <div class="paragraph"> </div>
 
- jako coś pomiędzy logiką konstruktywną i klasyczną 
+ jako coś pomiędzy logiką konstruktywną i klasyczną 
 <div class="paragraph"> </div>
 
 <a name="lab624"></a><h1 class="section">Dziwne aksjomaty i płynące z nich logiki</h1>
@@ -68,8 +68,8 @@
 
 <div class="paragraph"> </div>
 
- Logiki modalne to logiki, w których oprócz znanych nam już spójników
-    czy kwantyfikatorów występują też modalności. Czym jest modalność?
+ Logiki modalne to logiki, w których oprócz znanych nam już spójników
+    czy kwantyfikatorów występują też modalności. Czym jest modalność?
     Najpierw trochę etymologii.
 
 <div class="paragraph"> </div>
@@ -88,18 +88,18 @@
     W językach naturalnych modalności często występują pod postacią
     czasowników zwanych na ich cześć modalnymi, takich jak "móc" czy
     "musieć" - o ile nie mieszkasz na pustyni pod kamieniem, to pewnie
-    spotkałeś się z nimi ucząc się języków obcych.
+    spotkałeś się z nimi ucząc się języków obcych.
 
 <div class="paragraph"> </div>
 
-    Jednak nas bardziej będzie interesować inna forma, pod którą
+    Jednak nas bardziej będzie interesować inna forma, pod którą
     modalności występują, a są to przysłówki. Porównajmy poniższe
     zdania:
 <ul class="doclist">
 <li> Pada deszcz.
 
 </li>
-<li> Być może pada deszcz.
+<li> Być może pada deszcz.
 
 </li>
 <li> Na pewno pada deszcz.
@@ -115,10 +115,10 @@
 
 <div class="paragraph"> </div>
 
-    Najpopularniejsze logiki modalne skupiają się na próbie formalizacji
+    Najpopularniejsze logiki modalne skupiają się na próbie formalizacji
     właśnie tych dwóch sposobów - możliwości i konieczności. Nie będziemy
     ich jednak tutaj omawiać, gdyż, z punktu widzenia zarówno matematyki
-    jako i informatyki, tego typu logiki są zupełnie bezużyteczne.
+    jako i informatyki, tego typu logiki są zupełnie bezużyteczne.
 
 <div class="paragraph"> </div>
 
@@ -153,19 +153,19 @@
 
 <div class="paragraph"> </div>
 
-    Pierwsze prawo mówi, że modalność jest kompatybilna z konsekwencjami
+    Pierwsze prawo mówi, że modalność jest kompatybilna z konsekwencjami
     danego zdania. Niech <span class="inlinecode"><span class="id" title="var">Q</span></span> znaczy "jest mokro". Wtedy <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> znaczy
     "jeżeli pada deszcz, to jest mokro". Kompatybilność znaczy, że możemy
-    stąd wywnioskować <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, czyli "jeżeli być może pada deszcz,
+    stąd wywnioskować <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, czyli "jeżeli być może pada deszcz,
     to być może jest mokro".
 
 <div class="paragraph"> </div>
 
     Drugie prawo mówi, że jeżeli zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> po prostu zachodzi, to
     zachodzi też w sposób <span class="inlinecode"><span class="id" title="var">M</span></span>: "jeżeli pada deszcz, to być może pada
-    deszcz". Można to interpretować tak, że modalność modyfikuje
+    deszcz". Można to interpretować tak, że modalność modyfikuje
     znaczenie danego zdania, ale nie wywraca go do góry nogami. Dla
-    przykładu modalnością NIE JEST negacja, gdyż nie spełnia ona tego
+    przykładu modalnością NIE JEST negacja, gdyż nie spełnia ona tego
     warunku. Poetycko można by powiedzieć, że zaprzeczenie nie jest
     sposobem twierdzenia, a nieistnienie nie jest sposobem istnienia.
 
@@ -174,15 +174,15 @@
     Trzecie prawo mówi, że potworki w rodzaju "może może może może
     pada deszcz" znaczą to samo, co "może pada deszcz" (ale już
     niekoniecznie to samo, co po prostu "pada deszcz"). Jest to
-    dość rozsądne, gdyż w językach naturalnych zazwyczaj tak nie
-    mówimy. A jeżeli już mówimy, np. "bardzo bardzo boli mnie dupa" -
+    dość rozsądne, gdyż w językach naturalnych zazwyczaj tak nie
+    mówimy. A jeżeli już mówimy, np. "bardzo bardzo boli mnie dupa" -
     to znaczy, że słowo "bardzo" w tym wypadku nie wyraża sposobu
     bolenia dupy, lecz raczej stopień/intensywność bólu, a zatem
     "bardzo" NIE JEST modalnością.
 
 <div class="paragraph"> </div>
 
-    Zanim zobaczymy, jak ta definicja ma się do tego, co już wiemy
+    Zanim zobaczymy, jak ta definicja ma się do tego, co już wiemy
     i potrafimy, parę ćwiczeń: 
 <div class="paragraph"> </div>
 
@@ -192,14 +192,14 @@
 
  Jako już się rzekło w przykładzie, zdanie "Pada deszcz" również
     jest zdaniem modalnym. Modalność występująca w tym zdaniu to
-    modalność identycznościowa (zwana też modalnością neutralną), a
+    modalność identycznościowa (zwana też modalnością neutralną), a
     wyrażany przez nią sposób to sposób domyślny, czyli w sumie żaden.
 
 <div class="paragraph"> </div>
 
-    Modalność ta nie ma raczej większego znaczenia (oczywiście o ile
-    przemilaczymy fakt, że większość wszystkich zdań, jakie napotkamy,
-    będzie wyrażać właśnie tę modalność), ale warto ją odnotować dla
+    Modalność ta nie ma raczej większego znaczenia (oczywiście o ile
+    przemilaczymy fakt, że większość wszystkich zdań, jakie napotkamy,
+    będzie wyrażać właśnie tę modalność), ale warto ją odnotować dla
     kompletności teorii - zwykli śmiertelnicy zazwyczaj zapominają o
     takich banalnych rzeczach, więc trzeba im o tym przypominać.
 
@@ -229,7 +229,7 @@
 
 <div class="paragraph"> </div>
 
- Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
+ Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
     nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
     chcąc w trywialny sposób powiedzieć <span class="inlinecode"><span class="id" title="var">P</span></span>, wypieprzamy zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> w
     diabły i zamiast tego mówimy <span class="inlinecode"><span class="id" title="var">True</span></span>. Wot, modalność jak znalazł.
@@ -261,12 +261,12 @@
 <div class="paragraph"> </div>
 
  Skoro <span class="inlinecode"><span class="id" title="var">True</span></span> to modalność trywialna, to może <span class="inlinecode"><span class="id" title="var">False</span></span> to modalność
-    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
+    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
     nazwana?
 
 <div class="paragraph"> </div>
 
-    Sprawdź to. 
+    Sprawdź to. 
 </div>
 <div class="code">
 
@@ -331,21 +331,21 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 
 <div class="paragraph"> </div>
 
-    Formalnie modalność tę możemy zrealizować za pomocą implikacji
+    Formalnie modalność tę możemy zrealizować za pomocą implikacji
     oraz dowolnego z poznanych przez nas dotychczas aksjomatów, które
-    dają nam pełną moc logiki klasyczne. Dla przykładu: "klasycznie P"
+    dają nam pełną moc logiki klasyczne. Dla przykładu: "klasycznie P"
     możemy wyrazić równoważnie jako <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">DNE</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">Contra</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>
     i tak dalej.
 
 <div class="paragraph"> </div>
 
-    Modalność ta jest bardzo wygodnym sposobem na posługiwanie się
+    Modalność ta jest bardzo wygodnym sposobem na posługiwanie się
     logiką klasyczną bez brudzenia sobie rączek aksjomatami, a mimo
     to nie jest zbyt powszechnie znana czy używana. Cóż...
 
 <div class="paragraph"> </div>
 
-    Oczywiście modalności można użyć nie tylko do wygodnego użytkowania
+    Oczywiście modalności można użyć nie tylko do wygodnego użytkowania
     aksjomatów logiki klasycznej, ale również wszystkich innych
     aksjomatów, jakie sobie zażyczymy. 
 <div class="paragraph"> </div>
@@ -380,12 +380,12 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 <div class="paragraph"> </div>
 
  Dwie z pozoru różne modalności mogą tak naprawdę wyrażać to samo.
-    Dla przykładu, modalność "klasycznie P" możemy wyrazić nie tylko
-    jako <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, ale również jako <span class="inlinecode"><span class="id" title="var">DNE</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
+    Dla przykładu, modalność "klasycznie P" możemy wyrazić nie tylko
+    jako <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, ale również jako <span class="inlinecode"><span class="id" title="var">DNE</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
 
 <div class="paragraph"> </div>
 
-    Pokaż, że obydwie definicje tej modalności są równoważne. 
+    Pokaż, że obydwie definicje tej modalności są równoważne. 
 </div>
 <div class="code">
 
@@ -407,7 +407,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 
 <div class="paragraph"> </div>
 
-    Nie ma się co dziwić, albowiem modalność klasyczna jest jedynie
+    Nie ma się co dziwić, albowiem modalność klasyczna jest jedynie
     wcieleniem pewnej ogólniejszej modalności, którą na nasze potrzeby
     nazwiemy modalnością aksjomatyczną.
 
@@ -449,7 +449,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 
  Wypadałoby jeszcze wyjaśnić, dlaczego poznaną w poprzednim zadaniu
     modalność nazwałem modalnością aksjomatyczną, a nie np. "warunkową",
-    "założeniową" albo coś w tym stylu.
+    "założeniową" albo coś w tym stylu.
 
 <div class="paragraph"> </div>
 
@@ -473,9 +473,9 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 <div class="paragraph"> </div>
 
  Gdyby powyższe ćwiczenie okazało się zbyt oczywiste, to wiedz, że
-    naprawdę pozornie różne modalności mogą ostatecznie okazać się tym
-    samym. Może się też okazać, że modalność <span class="inlinecode"><span class="id" title="var">M</span></span> jest silniejsza niż
-    modalność <span class="inlinecode"><span class="id" title="var">N</span></span>, czyli że <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">N</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
+    naprawdę pozornie różne modalności mogą ostatecznie okazać się tym
+    samym. Może się też okazać, że modalność <span class="inlinecode"><span class="id" title="var">M</span></span> jest silniejsza niż
+    modalność <span class="inlinecode"><span class="id" title="var">N</span></span>, czyli że <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">N</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
 
 <div class="paragraph"> </div>
 
@@ -495,8 +495,8 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 
 <div class="paragraph"> </div>
 
- Wyobraźmy sobie następujący dialog, odbywający się na lekcji
-    języka polskiego w jakiejś zapomnianej przez Boga szkole w
+ Wyobraźmy sobie następujący dialog, odbywający się na lekcji
+    języka polskiego w jakiejś zapomnianej przez Boga szkole w
     Pcimiu Dolnym:
 <ul class="doclist">
 <li> (N)auczycielka: Jasiu, odrobiłeś zadanie domowe?
@@ -528,7 +528,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 <div class="paragraph"> </div>
 
     Słowem kluczowym jest tutaj słowo "sposób", które już na pierwszy
-    rzut oka pachnie modalnością. Coś jest na rzeczy, wszakże podanie
+    rzut oka pachnie modalnością. Coś jest na rzeczy, wszakże podanie
     wymówki jest całkiem sprytnym sposobem na uzasadnienie każdego
     zdania:
 <ul class="doclist">
@@ -545,25 +545,25 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 
 <div class="paragraph"> </div>
 
-    Musimy pamiętać tylko o dwóch ważnych szczegółach całego procederu.
-    Po pierwsze, nasza wymówka musi być uniwersalna, czyli musimy się
-    jej trzymać jak rzep psiego ogona - nie możemy w trakcie rozumowania
-    zmienić wymówki, bo rozumowanie może się zawalić.
+    Musimy pamiętać tylko o dwóch ważnych szczegółach całego procederu.
+    Po pierwsze, nasza wymówka musi być uniwersalna, czyli musimy się
+    jej trzymać jak rzep psiego ogona - nie możemy w trakcie rozumowania
+    zmienić wymówki, bo rozumowanie może się zawalić.
 
 <div class="paragraph"> </div>
 
     Drugi, nieco bardziej subtelny detal jest taki, że nie mamy tutaj
     do czynienia po prostu z "modalnością wymówkową". Zamiast tego,
     każdej jednej wymówce odpowiada osobna modalność. A zatem mamy
-    modalność "Pies mi zjadł", ale także modalność "Nie mogę teraz
+    modalność "Pies mi zjadł", ale także modalność "Nie mogę teraz
     dowodzić, bo państwo Izrael bezprawnie okupuje Palestynę"... i
     wiele innych.
 
 <div class="paragraph"> </div>
 
-    Jak można tę modalność zareprezentować formalnie w Coqu? Jeżeli
-    <span class="inlinecode"><span class="id" title="var">E</span></span> jest naszą wymówką, np. "Pies zjadł mi dowód", zaś <span class="inlinecode"><span class="id" title="var">P</span></span>
-    właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
+    Jak można tę modalność zareprezentować formalnie w Coqu? Jeżeli
+    <span class="inlinecode"><span class="id" title="var">E</span></span> jest naszą wymówką, np. "Pies zjadł mi dowód", zaś <span class="inlinecode"><span class="id" title="var">P</span></span>
+    właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
     pomocą dysjunkcji, otrzymując <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">E</span></span>, czyli "Pada deszcz lub
     pies zjadł mi dowód". Ze względu na pewne tradycje, modalność
     tę będziemy jednak reprezentować jako <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, czyli "Pies
@@ -607,12 +607,12 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 
 <div class="paragraph"> </div>
 
-    Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
-    Nie ma się czemu dziwić - w języku polskim podwójna negacja w
+    Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
+    Nie ma się czemu dziwić - w języku polskim podwójna negacja w
     stylu "nikt nic nie wie" wyraża tak naprawdę pojedynczą negację
-    (choć nazwa "podwójna negacja" jest tu niezbyt trafna - bo słowo
+    (choć nazwa "podwójna negacja" jest tu niezbyt trafna - bo słowo
     "nie" występuje tylko raz, a słowa takie jak "nikt" czy "nic"
-    mają wprawdzie znaczenie negatywne, ale formą negacji nie są),
+    mają wprawdzie znaczenie negatywne, ale formą negacji nie są),
     w angielskim natomiast zdanie podwójnie zanegowane ("it's not
     uncommon") znaczy to samo, co zdanie oznajmiające bez żadnej
     negacji ("it's common").
@@ -621,9 +621,9 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 
     Odstawmy jednak na bok języki naturalne i zastanówmy się, jakąż to
     modalność wyraża podwójna negacja w naszej Coqowej logice. W tym
-    celu przyjrzyjmy się poniższym zdaniom:
+    celu przyjrzyjmy się poniższym zdaniom:
 <ul class="doclist">
-<li> <span class="inlinecode"><span class="id" title="var">P</span></span> - po prostu stwierdzamy <span class="inlinecode"><span class="id" title="var">P</span></span>, modalność neutralna
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> - po prostu stwierdzamy <span class="inlinecode"><span class="id" title="var">P</span></span>, modalność neutralna
 
 </li>
 <li> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> - zaprzeczamy/obalamy <span class="inlinecode"><span class="id" title="var">P</span></span>. Można zatem powiedzieć, że <span class="inlinecode"><span class="id" title="var">P</span></span>
@@ -640,23 +640,23 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 
     I bum, dokonaliśmy naszego odkrycia: podwójna negacja wyraża
     bardzo subtelną modalność, jaką jest niezaprzeczalność. <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>
-    możemy zatem odczytywać jako "niezaprzeczalnie P".
+    możemy zatem odczytywać jako "niezaprzeczalnie P".
 
 <div class="paragraph"> </div>
 
-    Czym różni się samo "P" od "niezaprzeczalnie P"? Dla lepszego
-    zrozumienia prześledźmy to na znanym nam już przykładzie, czyli
+    Czym różni się samo "P" od "niezaprzeczalnie P"? Dla lepszego
+    zrozumienia prześledźmy to na znanym nam już przykładzie, czyli
     aksjomacie wyłączonego środka.
 
 <div class="paragraph"> </div>
 
     Weźmy dowolne zdanie <span class="inlinecode"><span class="id" title="var">P</span></span>. Nie jesteśmy w stanie udowodnić <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>,
-    gdyż bez żadnej wiedzy o zdaniu <span class="inlinecode"><span class="id" title="var">P</span></span> nie jesteśmy w stanie zdecydować,
-    czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
+    gdyż bez żadnej wiedzy o zdaniu <span class="inlinecode"><span class="id" title="var">P</span></span> nie jesteśmy w stanie zdecydować,
+    czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
     wcisnąć nam kit, że <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span>, to możemy wziąć jego dowód i
     wyprowadzić z niego <span class="inlinecode"><span class="id" title="var">False</span></span>, czyli po prostu udowodnić, że
-    <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span>. Na tym właśnie polega modalność niezaprzeczalności:
-    nawet jeżeli nie da się zdania pokazać wprost, to można obalić jego
+    <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span>. Na tym właśnie polega modalność niezaprzeczalności:
+    nawet jeżeli nie da się zdania pokazać wprost, to można obalić jego
     zaprzeczenie. 
 <div class="paragraph"> </div>
 
@@ -684,7 +684,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 </div>
 
 <div class="doc">
-<a name="lab640"></a><h2 class="section">Modalność pośrednia</h2>
+<a name="lab640"></a><h2 class="section">Modalność pośrednia</h2>
 
 </div>
 <div class="code">
@@ -720,25 +720,25 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 </div>
 
 <div class="doc">
-<a name="lab641"></a><h2 class="section">Modalność (bez)pośrednia</h2>
+<a name="lab641"></a><h2 class="section">Modalność (bez)pośrednia</h2>
 
 <div class="paragraph"> </div>
 
- Poznawszy dwie najważniejsze dla nas modalności, możemy zająć się
+ Poznawszy dwie najważniejsze dla nas modalności, możemy zająć się
     takimi, które będą miały co najwyżej charakter ciekawostki. Jeżeli
-    nie lubisz ciekawostek i jesteś ogólnie smutnym człowiekiem, to
+    nie lubisz ciekawostek i jesteś ogólnie smutnym człowiekiem, to
     resztę omawianych modalności możesz pominąć.
 
 <div class="paragraph"> </div>
 
-    Modalność pośrednia to... zamiast gadać, przekonaj się sam. 
+    Modalność pośrednia to... zamiast gadać, przekonaj się sam. 
 <div class="paragraph"> </div>
 
 <a name="lab642"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
- Udowodnij, że modalność pośrednia jest modalnością. 
+ Udowodnij, że modalność pośrednia jest modalnością. 
 </div>
 <div class="code">
 
@@ -764,20 +764,20 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 
 <div class="doc">
 No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
-    naprawdę chodzi z tą modalnością pośrednią? Jaki sposób wyraża?
+    naprawdę chodzi z tą modalnością pośrednią? Jaki sposób wyraża?
     Skąd nazwa?
 
 <div class="paragraph"> </div>
 
-    Przyjrzyjmy się jeszcze raz definicji. Zdanie "pośrednio P"
+    Przyjrzyjmy się jeszcze raz definicji. Zdanie "pośrednio P"
     formalnie wygląda tak: <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span></span>.
 
 <div class="paragraph"> </div>
 
     Jak odczytać tę definicję? Zacznijmy od tego, że <span class="inlinecode"><span class="id" title="var">R</span></span> jest dowolnym
     zdaniem. Dalsza część mówi, że jeżeli <span class="inlinecode"><span class="id" title="var">P</span></span> implikuje <span class="inlinecode"><span class="id" title="var">R</span></span>, to <span class="inlinecode"><span class="id" title="var">R</span></span>.
-    Oczywiście <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span></span> możemy odczytać także jako "R jest konsekwencją
-    P", a zatem całą definicję możemy odczytać: zachodzi każda
+    Oczywiście <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span></span> możemy odczytać także jako "R jest konsekwencją
+    P", a zatem całą definicję możemy odczytać: zachodzi każda
     konsekwencja <span class="inlinecode"><span class="id" title="var">P</span></span>.
 
 <div class="paragraph"> </div>
@@ -790,8 +790,8 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
 
 </li>
 <li> zachodzi coś mocniejszego od <span class="inlinecode"><span class="id" title="var">P</span></span>, tzn. zachodzi <span class="inlinecode"><span class="id" title="var">Q</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
-      Zachodzą wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span> i być może różne rzeczy,
-      które konsekwencjami <span class="inlinecode"><span class="id" title="var">P</span></span> nie są (bo są np. konsekwencjami <span class="inlinecode"><span class="id" title="var">Q</span></span>)
+      Zachodzą wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span> i być może różne rzeczy,
+      które konsekwencjami <span class="inlinecode"><span class="id" title="var">P</span></span> nie są (bo są np. konsekwencjami <span class="inlinecode"><span class="id" title="var">Q</span></span>)
 
 </li>
 </ul>
@@ -799,8 +799,8 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
 <div class="paragraph"> </div>
 
     Widzimy więc, że by zaszły wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span>, to zachodzić
-    musi <span class="inlinecode"><span class="id" title="var">P</span></span> lub coś od <span class="inlinecode"><span class="id" title="var">P</span></span> mocniejszego. Jednak rzeczy mocniejsze od
-    <span class="inlinecode"><span class="id" title="var">P</span></span> nas tutaj nie interesują - liczy się dla nas najsłabsza z tych
+    musi <span class="inlinecode"><span class="id" title="var">P</span></span> lub coś od <span class="inlinecode"><span class="id" title="var">P</span></span> mocniejszego. Jednak rzeczy mocniejsze od
+    <span class="inlinecode"><span class="id" title="var">P</span></span> nas tutaj nie interesują - liczy się dla nas najsłabsza z tych
     wszystkich możliwości, czyli samo <span class="inlinecode"><span class="id" title="var">P</span></span>.
 
 <div class="paragraph"> </div>
@@ -808,10 +808,10 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
     Widać więc (albo i nie, być może moje tłumaczenie jest zagmatwane),
     że z punktu widzenia konsekwencji danego zdania, zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> oraz
     zdanie "zachodzą wszystkie konsekwencje P" są równoważne. Wobec
-    tego możemy stwierdzić, że zdanie "zachodzą wszystkie konsekwencje
+    tego możemy stwierdzić, że zdanie "zachodzą wszystkie konsekwencje
     P" to pewien sposób powiedzenia <span class="inlinecode"><span class="id" title="var">P</span></span>, tylko w bardzo pośredni sposób.
     Stąd też nazwa (swoją drogą, wymyślona autorsko przeze mnie) -
-    modalność pośrednia. 
+    modalność pośrednia. 
 <div class="paragraph"> </div>
 
 <a name="lab643"></a><h4 class="section">Ćwiczenie</h4>
@@ -832,12 +832,12 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
 </div>
 
 <div class="doc">
-Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
+Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     pokazać zarówno <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span>)</span> (prawo
-    <span class="inlinecode"><span class="id" title="var">indirect_law2</span></span>, wymagane przez definicję modalności) jak i
+    <span class="inlinecode"><span class="id" title="var">indirect_law2</span></span>, wymagane przez definicję modalności) jak i
     <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">R</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> (powyższe ćwiczenie),
-    wniosek może być tylko jeden: modalność pośrednia jest dokładnie
-    tym samym, co modalność neutralna. Ha! Nie tego się spodziewałeś,
+    wniosek może być tylko jeden: modalność pośrednia jest dokładnie
+    tym samym, co modalność neutralna. Ha! Nie tego się spodziewałeś,
     co? 
 <div class="paragraph"> </div>
 
@@ -845,9 +845,9 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 
 <div class="paragraph"> </div>
 
- W ćwiczeniach przekonaliśmy się już, że dwie intensjonalnie różne
+ W ćwiczeniach przekonaliśmy się już, że dwie intensjonalnie różne
     definicje (na przykład <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">DNE</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>) ekstensjonalnie
-    mogą tak naprawdę definiować to samo (w tym przypadku modalność
+    mogą tak naprawdę definiować to samo (w tym przypadku modalność
     klasyczną).
 
 <div class="paragraph"> </div>
@@ -862,8 +862,8 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     Czy to jednak wszystko, co potrafimy powiedzieć o modalnościach i
     ich wzajemnych związkach? Oczywiście nie. Wiemy przecież choćby, że
     <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Można ten fakt zinterpretować następująco: modalność
-    neutralna jest silniejsza niż modalność niezaprzeczalna, czyli
-    równoważne: modalność niezaprzeczalna jest słabsza niż modalność
+    neutralna jest silniejsza niż modalność niezaprzeczalna, czyli
+    równoważne: modalność niezaprzeczalna jest słabsza niż modalność
     neutralna. 
 <div class="paragraph"> </div>
 
@@ -883,13 +883,13 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 <div class="paragraph"> </div>
 
     Uwaga: nie musisz formalnie dowodzić w Coqu, że masz rację. Prawdę
-    powiedziawszy, gdybyśmy uparli się na pełną formalność, to nie
-    umiemy jeszcze wyrazić odpowiednich twierdzeń.
+    powiedziawszy, gdybyśmy uparli się na pełną formalność, to nie
+    umiemy jeszcze wyrazić odpowiednich twierdzeń.
 
 <div class="paragraph"> </div>
 
     Wskazówka: sformułuj najpierw, co znaczą słowa "najsilniejszy"
-    oraz "najsłabszy". Następnie przyjrzyj się definicji modalności
+    oraz "najsłabszy". Następnie przyjrzyj się definicji modalności
     oraz poszczególnym modalnościom i udowodnionym dotychczas przez
     nas twierdzeniom. Powinno cię to oświecić. 
 </div>
@@ -1280,12 +1280,12 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami 
 <div class="paragraph"> </div>
 
-<a name="lab654"></a><h1 class="section">Jakieś podsumowanie</h1>
+<a name="lab654"></a><h1 class="section">Jakieś podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
- Gratulacje! Udało ci się przebrnąć przez pierwszy (poważny) rozdział
-    moich wypocin, czyli rozdział o logice. W nagrodę już nigdy nie
+ Gratulacje! Udało ci się przebrnąć przez pierwszy (poważny) rozdział
+    moich wypocin, czyli rozdział o logice. W nagrodę już nigdy nie
     będziesz musiał ręcznie walczyć ze spójnikami czy prawami logiki -
     zrobi to za ciebie taktyka <span class="inlinecode"><span class="id" title="tactic">firstorder</span></span>. Jak sama nazwa wskazuje,
     służy ona do radzenia sobie z czysto logicznymi dowodami w logice
@@ -1296,7 +1296,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 <ul class="doclist">
 <li> taktyka firstorder
 <ul class="doclist">
-<li> zrobić test diagnostyczny tak/nie
+<li> zrobić test diagnostyczny tak/nie
 
 </li>
 <li> fiszki do nauki nazw praw 

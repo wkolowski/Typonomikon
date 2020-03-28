@@ -17,16 +17,16 @@ Print filter.
           end
              : forall A : Type, (A -> bool) -> list A -> list A *)
 
-(** Przyjrzyjmy się funkcji [filter] (w nieco zmodyfikowanej wersji -
+(** Przyjrzyjmy się funkcji [filter] (w nieco zmodyfikowanej wersji -
     potrafisz powiedzieć, czym różni się ona od tej z rozdziału o
     listach?). Jest to prosta funkcja, która wyrzuca z listy elementy,
-    które nie spełniają predykatu [p].
+    które nie spełniają predykatu [p].
 
     I cóż, że ze Szwecji? Ano, jest pewna kolosalna różnica między
-    funkcją [filter], którą znamy z Coqa, oraz filtrami, które
+    funkcją [filter], którą znamy z Coqa, oraz filtrami, które
     znamy z różnych programów czy stron internetowych: argumentem
     [filter] jest predykat boolowski, ale filtrowania w rzeczywistym
-    świecie mają zazwyczaj charakter zaznaczenia jakiegoś checkboxa
+    świecie mają zazwyczaj charakter zaznaczenia jakiegoś checkboxa
     w stylu "tylko ze zdjęciem" czy wybrania zakresu cen/ocen. Żadne
     rzeczywistoświatowe filtrowanie raczej nie pozwali nam podać
     predykatu boolowskiego. *)

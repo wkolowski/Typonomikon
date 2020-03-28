@@ -25,7 +25,7 @@
 (** * Programowanie funkcyjne w [Ltac]u *)
 
 (** Wstawić tutaj przykłady podobne do tych, które opisuje Chlipala. Być
-    może jakiś większy development, tzn. zaprogramować listy w dwóch
+    może jakiś większy development, tzn. zaprogramować listy w dwóch
     wersjach (zwykłe i zrobione produktem i unitem). *)
 
 (** * Big scale reflection *)

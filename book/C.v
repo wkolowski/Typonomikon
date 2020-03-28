@@ -1,6 +1,6 @@
 (** * C: Podstawy teorii typów - TODO *)
 
-(** Uwaga: ten rozdział jest póki co posklejany z fragmentów innych
+(** Uwaga: ten rozdział jest póki co posklejany z fragmentów innych
     rozdziałów. Czytając go, weź na to poprawkę. W szczególności zawiera on
     zadania, których nie będziesz w stanie zrobić, bo niezbędny do tego
     materiał jest póki co w kolejnym rozdziale. Możesz więc przeczytać
@@ -65,7 +65,7 @@
     struktury danych takie jak napisy czy listy.
 
     Najważniejszym, co wiemy o każdym termie, jest jego typ. Co to jest typ?
-    To taki klasyfikator, który mówi, czego możemy się po termie spodziewać -
+    To taki klasyfikator, który mówi, czego możemy się po termie spodziewać -
     można liczyć za pomocą liczb, ale nie za pomocą wartości logicznych.
     Można dowodzić zdań, ale nie napisów. Można skleić ze sobą dwa napisy,
     ale nie napis i funkcję etc.
@@ -81,7 +81,7 @@
 
     Najważniejsze termy są nazywane elementami. Dla [nat] są to [0], [1],
     [2], [3], [4], [5] i tak dalej. Elementy wyróżnia to, że są w postaci
-    normalnej (zwanej też postacią kanoniczną). Znaczy to intuicyjnie, że
+    normalnej (zwanej też postacią kanoniczną). Znaczy to intuicyjnie, że
     są one ostatecznymi wynikami obliczeń, np.:
     - obliczenie [42] daje [42]
     - obliczenie [2 + 2] daje [4]
@@ -89,10 +89,10 @@
     - obliczenie ... daje [765]
     - obliczenie długości listy daje [5]
 
-    Czym dokładnie są obliczenia, dowiemy się później. Na razie wystarczy
+    Czym dokładnie są obliczenia, dowiemy się później. Na razie wystarczy
     nam wiedzieć, że każdy term zamknięty, czyli taki, o którym wiadomo
     wystarczająco dużo, oblicza się do postaci normalnej, np. 5 + 1 oblicza
-    się do 6. Jeżeli jednak czegoś nie wiadomo, to term się nie oblicza, np.
+    się do 6. Jeżeli jednak czegoś nie wiadomo, to term się nie oblicza, np.
     n + 1 nie wiadomo ile wynosi, jeżeli nie wiadomo, co oznacza n.
 
     Podsumowując, każdy element jest termem, a każdy term oblicza się do
@@ -134,7 +134,7 @@
     stwierdzeniem, że każdy term ma swój typ, zrodzić musi się pytanie:
     jakiego typu są typy? Zacznijmy od tego, że żeby uniknąć używania mało
     poetyckiego określenia "typy typów", typy typów nazywamy uniwersami.
-    Czasami używa się też nazwy "sort", bo określenie "jest sortu" jest
+    Czasami używa się też nazwy "sort", bo określenie "jest sortu" jest
     znacznie krótsze, niż "należy do uniwersum" albo "żyje w uniwersum". *)
 
 (** [Prop], jak już wiesz, jest uniwersum zdań logicznych. Jeżeli
@@ -183,7 +183,7 @@ Check fun n : nat => n.
     specyfikacją — niektóre typy są przecież zdaniami.
 
     Jeżeli czytasz uważnie, to pewnie wciąż czujesz niedosyt — wszakże
-    uniwersa, jako typy, także są termami. Jakiego zatem typu są uniwersa?
+    uniwersa, jako typy, także są termami. Jakiego zatem typu są uniwersa?
     Przekonajmy się. *)
 
 Check Prop.
@@ -253,8 +253,8 @@ Check Type.
     - obliczania (ang. computation rules)
     - unikalności (ang. uniqueness principles) *)
 
-(** W tym podrozdziale przyjrzymy się wszystkim pięciu typom reguł. Zobaczymy
-    jak wyglądają, skąd się biorą i do czego służą. Podrozdział będzie miał
+(** W tym podrozdziale przyjrzymy się wszystkim pięciu typom reguł. Zobaczymy
+    jak wyglądają, skąd się biorą i do czego służą. Podrozdział będzie miał
     charakter mocno teoretyczny. *)
 
 (** ** Reguły formacji *)
@@ -405,7 +405,7 @@ Check @pair.
     o osąd [x : T], to [fun x => y] jest termem typu [A -> B] w kontekście
     Γ.
 
-    Powyższa reguła nazywana jest "lambda abstrakcją" (gdyż zazwyczaj jest
+    Powyższa reguła nazywana jest "lambda abstrakcją" (gdyż zazwyczaj jest
     zapisywana przy użyciu symbolu λ zamiast słowa kluczowego [fun], jak
     w Coqu). Nie przejmuj się, jeżeli jej. Znajomość reguł wprowadzania nie
     jest nam potrzebna, by skutecznie posługiwać się Coqiem.
@@ -651,7 +651,7 @@ End EliminationRules.
 (** ** Reguły obliczania *)
 
 (** Poznawszy reguły wprowadzania i eliminacji możemy zadać sobie pytanie:
-    jakie są między nimi związki? Jedną z odpowiedzi na to pytanie dają
+    jakie są między nimi związki? Jedną z odpowiedzi na to pytanie dają
     reguły obliczania, które określają, w jaki sposób reguły eliminacji
     działają na obiekty stworzone za pomocą reguł wprowadzania. Zobaczmy
     o co chodzi na przykładzie. *)
@@ -669,11 +669,11 @@ End EliminationRules.
 
     Możemy odczytać ją tak: jeżeli [A] i [B] są typami, zaś [e] termem
     typu [B], w którym występuje zmienna wolna [x] typu [A], to wyrażenie
-    [(fun x : A => e) t] redukuje się (symbol ≡) do [e], w którym w miejsce
+    [(fun x : A => e) t] redukuje się (symbol ≡) do [e], w którym w miejsce
     zmiennej [x] podstawiono term [t].
 
     Zauważ, że zarówno symbol ≡ jak i notacja [e{x/t}] są tylko nieformalnymi
-    zapisami i nie mają żadnego znaczenia w Coqu.
+    zapisami i nie mają żadnego znaczenia w Coqu.
 
     Nie jest tak, że dla każdego typu jest tylko jedna reguła obliczania.
     Jako, że reguły obliczania pokazują związek między regułami eliminacji
@@ -683,8 +683,8 @@ End EliminationRules.
 
     gdzie ## to nieformalny symbol oznaczający "ilość". W Coqowej praktyce
     zazwyczaj oznacza to, że reguł obliczania jest nieskończenie wiele,
-    gdyż możemy wymyślić sobie nieskończenie wiele reguł eliminacji.
-    Przykładem typu, który ma więcej niż jedną regułę obliczania dla danej
+    gdyż możemy wymyślić sobie nieskończenie wiele reguł eliminacji.
+    Przykładem typu, który ma więcej niż jedną regułę obliczania dla danej
     reguły eliminacji, jest [bool]: *)
 
 (*
@@ -698,12 +698,12 @@ End EliminationRules.
 *)
 
 (** Typ [bool] ma dwie reguły wprowadzania pochodzące od dwóch konstruktorów,
-    a zatem ich związki z regułą eliminacji [bool_rect] będą opisywać dwie
+    a zatem ich związki z regułą eliminacji [bool_rect] będą opisywać dwie
     reguły obliczania. Pierwsza z nich mówi, że [bool_rect P x y true]
-    redukuje się do [x], a druga, że [bool_rect P x y false] redukuje się do
+    redukuje się do [x], a druga, że [bool_rect P x y false] redukuje się do
     [y].
 
-    Gdyby zastąpić w nich regułe [bool_rect] przez nieco prostszą regułę, w
+    Gdyby zastąpić w nich regułe [bool_rect] przez nieco prostszą regułę, w
     której nie występują typy zależne, to można by powyższe reguły zapisać
     tak: *)
 
@@ -719,10 +719,10 @@ End EliminationRules.
 
 (** Wygląda dużo bardziej znajomo, prawda?
 
-    Na zakończenie wypadałoby napisać, skąd biorą się reguły obliczania. W
+    Na zakończenie wypadałoby napisać, skąd biorą się reguły obliczania. W
     nieco mniej formalnych pracach teoretycznych na temat teorii typów są
     one zazwyczaj uznawane za byty podstawowe, z których następnie wywodzi
-    się reguły obliczania takich konstrukcji, jak np. [match].
+    się reguły obliczania takich konstrukcji, jak np. [match].
 
     W Coqu jest na odwrót. Tak jak reguły eliminacji pochodzą od dopasowania
     do wzorca i rekursji, tak reguły obliczania pochdzą od opisanych już
@@ -764,7 +764,7 @@ End EliminationRules.
 
 (** ** Reguły unikalności *)
 
-(** Kolejną odpowiedzią na pytanie o związki między regułami wprowadzania
+(** Kolejną odpowiedzią na pytanie o związki między regułami wprowadzania
     i eliminacji są reguły unikalności. Są one dualne do reguł obliczania
     i określają, w jaki sposób reguły wprowadzania działają na obiekty
     pochodzące od reguł eliminacji. Przyjrzyjmy się przykładowi. *)
@@ -775,15 +775,15 @@ End EliminationRules.
     (fun x : A => f x) ≡ f
 *)
 
-(** Powyższa reguła unikalności dla funkcji jest nazywana "redukcją eta".
+(** Powyższa reguła unikalności dla funkcji jest nazywana "redukcją eta".
     Stwierdza ona, że funkcja stworzona za pomocą abstrakcji [fun x : A],
     której ciałem jest aplikacja [f x] jest definicyjnie równa funkcji [f].
     Regułą wprowadzania dla funkcji jest oczywiście abstrakcja, a regułą
     eliminacji — aplikacja.
 
-    Reguły unikalności różnią się jednak dość mocno od reguł obliczania,
-    gdyż zamiast równości definicyjnej ≡ mogą czasem używać standardowej,
-    zdaniowej równości Coqa, czyli [=]. Nie do końca pasuje też do nich
+    Reguły unikalności różnią się jednak dość mocno od reguł obliczania,
+    gdyż zamiast równości definicyjnej ≡ mogą czasem używać standardowej,
+    zdaniowej równości Coqa, czyli [=]. Nie do końca pasuje też do nich
     stwierdzenie, że określają działanie reguł wprowadzania na reguły
     eliminacji, gdyż zamiast reguł eliminacji mogą w nich występować
     inne byty, zdefiniowane jednak za pomocą reguł eliminacji. Zobaczmy

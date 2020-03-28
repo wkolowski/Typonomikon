@@ -8,7 +8,7 @@
 
 (** * Logika de Morgana *)
 
-(** jako coś pomiędzy logiką konstruktywną i klasyczną *)
+(** jako coś pomiędzy logiką konstruktywną i klasyczną *)
 
 (** * Dziwne aksjomaty i płynące z nich logiki *)
 
@@ -45,8 +45,8 @@ Qed.
 
 (** * Logika modalna *)
 
-(** Logiki modalne to logiki, w których oprócz znanych nam już spójników
-    czy kwantyfikatorów występują też modalności. Czym jest modalność?
+(** Logiki modalne to logiki, w których oprócz znanych nam już spójników
+    czy kwantyfikatorów występują też modalności. Czym jest modalność?
     Najpierw trochę etymologii.
 
     Łacińskie słowo "modus" oznacza "sposób". Występuje ono w takich
@@ -61,23 +61,23 @@ Qed.
     W językach naturalnych modalności często występują pod postacią
     czasowników zwanych na ich cześć modalnymi, takich jak "móc" czy
     "musieć" - o ile nie mieszkasz na pustyni pod kamieniem, to pewnie
-    spotkałeś się z nimi ucząc się języków obcych.
+    spotkałeś się z nimi ucząc się języków obcych.
 
-    Jednak nas bardziej będzie interesować inna forma, pod którą
+    Jednak nas bardziej będzie interesować inna forma, pod którą
     modalności występują, a są to przysłówki. Porównajmy poniższe
     zdania:
     - Pada deszcz.
-    - Być może pada deszcz.
+    - Być może pada deszcz.
     - Na pewno pada deszcz.
 
     Wszystkie mówią o tym samym zjawisku, czyli deszczu, ale robią to
     w różny sposób (i ten sposób to właśnie modalność!) - pierwszy
     sposób jest neutralny, drugi wyraża możliwość, a trzeci pewność.
 
-    Najpopularniejsze logiki modalne skupiają się na próbie formalizacji
+    Najpopularniejsze logiki modalne skupiają się na próbie formalizacji
     właśnie tych dwóch sposobów - możliwości i konieczności. Nie będziemy
     ich jednak tutaj omawiać, gdyż, z punktu widzenia zarówno matematyki
-    jako i informatyki, tego typu logiki są zupełnie bezużyteczne.
+    jako i informatyki, tego typu logiki są zupełnie bezużyteczne.
 
     Zamiast tego spojrzymy jeszcze raz na rzeczy, które już znamy, a
     których nawet nie podejrzewamy o bycie modalnościami. Najpierw
@@ -94,42 +94,42 @@ Qed.
     Dla przykładu, jeżeli [P] znaczy "pada deszcz", a [M] wyraża
     możliwość, to wtedy [M P] znaczy "być może pada deszcz".
 
-    Pierwsze prawo mówi, że modalność jest kompatybilna z konsekwencjami
+    Pierwsze prawo mówi, że modalność jest kompatybilna z konsekwencjami
     danego zdania. Niech [Q] znaczy "jest mokro". Wtedy [P -> Q] znaczy
     "jeżeli pada deszcz, to jest mokro". Kompatybilność znaczy, że możemy
-    stąd wywnioskować [M P -> M Q], czyli "jeżeli być może pada deszcz,
+    stąd wywnioskować [M P -> M Q], czyli "jeżeli być może pada deszcz,
     to być może jest mokro".
 
     Drugie prawo mówi, że jeżeli zdanie [P] po prostu zachodzi, to
     zachodzi też w sposób [M]: "jeżeli pada deszcz, to być może pada
-    deszcz". Można to interpretować tak, że modalność modyfikuje
+    deszcz". Można to interpretować tak, że modalność modyfikuje
     znaczenie danego zdania, ale nie wywraca go do góry nogami. Dla
-    przykładu modalnością NIE JEST negacja, gdyż nie spełnia ona tego
+    przykładu modalnością NIE JEST negacja, gdyż nie spełnia ona tego
     warunku. Poetycko można by powiedzieć, że zaprzeczenie nie jest
     sposobem twierdzenia, a nieistnienie nie jest sposobem istnienia.
 
     Trzecie prawo mówi, że potworki w rodzaju "może może może może
     pada deszcz" znaczą to samo, co "może pada deszcz" (ale już
     niekoniecznie to samo, co po prostu "pada deszcz"). Jest to
-    dość rozsądne, gdyż w językach naturalnych zazwyczaj tak nie
-    mówimy. A jeżeli już mówimy, np. "bardzo bardzo boli mnie dupa" -
+    dość rozsądne, gdyż w językach naturalnych zazwyczaj tak nie
+    mówimy. A jeżeli już mówimy, np. "bardzo bardzo boli mnie dupa" -
     to znaczy, że słowo "bardzo" w tym wypadku nie wyraża sposobu
     bolenia dupy, lecz raczej stopień/intensywność bólu, a zatem
     "bardzo" NIE JEST modalnością.
 
-    Zanim zobaczymy, jak ta definicja ma się do tego, co już wiemy
+    Zanim zobaczymy, jak ta definicja ma się do tego, co już wiemy
     i potrafimy, parę ćwiczeń: *)
 
 (** **** Ćwiczenie (modalność neutralna) *)
 
 (** Jako już się rzekło w przykładzie, zdanie "Pada deszcz" również
     jest zdaniem modalnym. Modalność występująca w tym zdaniu to
-    modalność identycznościowa (zwana też modalnością neutralną), a
+    modalność identycznościowa (zwana też modalnością neutralną), a
     wyrażany przez nią sposób to sposób domyślny, czyli w sumie żaden.
 
-    Modalność ta nie ma raczej większego znaczenia (oczywiście o ile
-    przemilaczymy fakt, że większość wszystkich zdań, jakie napotkamy,
-    będzie wyrażać właśnie tę modalność), ale warto ją odnotować dla
+    Modalność ta nie ma raczej większego znaczenia (oczywiście o ile
+    przemilaczymy fakt, że większość wszystkich zdań, jakie napotkamy,
+    będzie wyrażać właśnie tę modalność), ale warto ją odnotować dla
     kompletności teorii - zwykli śmiertelnicy zazwyczaj zapominają o
     takich banalnych rzeczach, więc trzeba im o tym przypominać.
 
@@ -161,7 +161,7 @@ Qed.
 
 (** **** Ćwiczenie (modalność trywialna) *)
 
-(** Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
+(** Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
     nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
     chcąc w trywialny sposób powiedzieć [P], wypieprzamy zdanie [P] w
     diabły i zamiast tego mówimy [True]. Wot, modalność jak znalazł.
@@ -195,10 +195,10 @@ Qed.
 (** **** Ćwiczenie *)
 
 (** Skoro [True] to modalność trywialna, to może [False] to modalność
-    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
+    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
     nazwana?
 
-    Sprawdź to. *)
+    Sprawdź to. *)
 
 Lemma antitrivial_law1 :
   forall P Q : Prop, (P -> Q) -> (False -> False).
@@ -262,17 +262,17 @@ Require Import W3.
     że [P] zachodzi pod warunkiem, że mamy do dyspozycji prawa
     logiki klasycznej (jak np. prawo wyłączonego środka).
 
-    Formalnie modalność tę możemy zrealizować za pomocą implikacji
+    Formalnie modalność tę możemy zrealizować za pomocą implikacji
     oraz dowolnego z poznanych przez nas dotychczas aksjomatów, które
-    dają nam pełną moc logiki klasyczne. Dla przykładu: "klasycznie P"
+    dają nam pełną moc logiki klasyczne. Dla przykładu: "klasycznie P"
     możemy wyrazić równoważnie jako [LEM -> P], [DNE -> P], [Contra -> P]
     i tak dalej.
 
-    Modalność ta jest bardzo wygodnym sposobem na posługiwanie się
+    Modalność ta jest bardzo wygodnym sposobem na posługiwanie się
     logiką klasyczną bez brudzenia sobie rączek aksjomatami, a mimo
     to nie jest zbyt powszechnie znana czy używana. Cóż...
 
-    Oczywiście modalności można użyć nie tylko do wygodnego użytkowania
+    Oczywiście modalności można użyć nie tylko do wygodnego użytkowania
     aksjomatów logiki klasycznej, ale również wszystkich innych
     aksjomatów, jakie sobie zażyczymy. *)
 
@@ -311,10 +311,10 @@ Qed.
 (** **** Ćwiczenie *)
 
 (** Dwie z pozoru różne modalności mogą tak naprawdę wyrażać to samo.
-    Dla przykładu, modalność "klasycznie P" możemy wyrazić nie tylko
-    jako [LEM -> P], ale również jako [DNE -> P].
+    Dla przykładu, modalność "klasycznie P" możemy wyrazić nie tylko
+    jako [LEM -> P], ale również jako [DNE -> P].
 
-    Pokaż, że obydwie definicje tej modalności są równoważne. *)
+    Pokaż, że obydwie definicje tej modalności są równoważne. *)
 
 Lemma classicallies :
   forall P : Prop, (LEM -> P) <-> (DNE -> P).
@@ -332,7 +332,7 @@ Qed.
     zauważyłeś, że nie było w nim niczego, co by jakoś bardzo zależało
     od [LEM].
 
-    Nie ma się co dziwić, albowiem modalność klasyczna jest jedynie
+    Nie ma się co dziwić, albowiem modalność klasyczna jest jedynie
     wcieleniem pewnej ogólniejszej modalności, którą na nasze potrzeby
     nazwiemy modalnością aksjomatyczną.
 
@@ -377,7 +377,7 @@ Qed.
 
 (** Wypadałoby jeszcze wyjaśnić, dlaczego poznaną w poprzednim zadaniu
     modalność nazwałem modalnością aksjomatyczną, a nie np. "warunkową",
-    "założeniową" albo coś w tym stylu.
+    "założeniową" albo coś w tym stylu.
 
     Powód tego jest prosty: dawanie jako dodatkowej przesłanki zdania,
     które nie jest potrzebne w dowodzie, jest dość kretyńskie. Baaaaa!
@@ -397,9 +397,9 @@ Qed.
 (** **** Ćwiczenie *)
 
 (** Gdyby powyższe ćwiczenie okazało się zbyt oczywiste, to wiedz, że
-    naprawdę pozornie różne modalności mogą ostatecznie okazać się tym
-    samym. Może się też okazać, że modalność [M] jest silniejsza niż
-    modalność [N], czyli że [forall P : Prop, M P -> N P].
+    naprawdę pozornie różne modalności mogą ostatecznie okazać się tym
+    samym. Może się też okazać, że modalność [M] jest silniejsza niż
+    modalność [N], czyli że [forall P : Prop, M P -> N P].
 
     Zastanów się, jaki jest związek między modalnościmi
     "niezaprzeczalnie" i "klasycznie". Czy są one tym samym, czy czymś
@@ -424,8 +424,8 @@ Qed.
 
 (** ** Pies zjadł mi dowód... :( *)
 
-(** Wyobraźmy sobie następujący dialog, odbywający się na lekcji
-    języka polskiego w jakiejś zapomnianej przez Boga szkole w
+(** Wyobraźmy sobie następujący dialog, odbywający się na lekcji
+    języka polskiego w jakiejś zapomnianej przez Boga szkole w
     Pcimiu Dolnym:
     - (N)auczycielka: Jasiu, odrobiłeś zadanie domowe?
     - (J)asiu: tak, psze pani.
@@ -439,28 +439,28 @@ Qed.
     sposób jest powszechnie znany jako "wymówka".
 
     Słowem kluczowym jest tutaj słowo "sposób", które już na pierwszy
-    rzut oka pachnie modalnością. Coś jest na rzeczy, wszakże podanie
+    rzut oka pachnie modalnością. Coś jest na rzeczy, wszakże podanie
     wymówki jest całkiem sprytnym sposobem na uzasadnienie każdego
     zdania:
     - Mam dowód fałszu!
     - Pokaż.
     - Sorry, pies mi zjadł.
 
-    Musimy pamiętać tylko o dwóch ważnych szczegółach całego procederu.
-    Po pierwsze, nasza wymówka musi być uniwersalna, czyli musimy się
-    jej trzymać jak rzep psiego ogona - nie możemy w trakcie rozumowania
-    zmienić wymówki, bo rozumowanie może się zawalić.
+    Musimy pamiętać tylko o dwóch ważnych szczegółach całego procederu.
+    Po pierwsze, nasza wymówka musi być uniwersalna, czyli musimy się
+    jej trzymać jak rzep psiego ogona - nie możemy w trakcie rozumowania
+    zmienić wymówki, bo rozumowanie może się zawalić.
 
     Drugi, nieco bardziej subtelny detal jest taki, że nie mamy tutaj
     do czynienia po prostu z "modalnością wymówkową". Zamiast tego,
     każdej jednej wymówce odpowiada osobna modalność. A zatem mamy
-    modalność "Pies mi zjadł", ale także modalność "Nie mogę teraz
+    modalność "Pies mi zjadł", ale także modalność "Nie mogę teraz
     dowodzić, bo państwo Izrael bezprawnie okupuje Palestynę"... i
     wiele innych.
 
-    Jak można tę modalność zareprezentować formalnie w Coqu? Jeżeli
-    [E] jest naszą wymówką, np. "Pies zjadł mi dowód", zaś [P]
-    właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
+    Jak można tę modalność zareprezentować formalnie w Coqu? Jeżeli
+    [E] jest naszą wymówką, np. "Pies zjadł mi dowód", zaś [P]
+    właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
     pomocą dysjunkcji, otrzymując [P \/ E], czyli "Pada deszcz lub
     pies zjadł mi dowód". Ze względu na pewne tradycje, modalność
     tę będziemy jednak reprezentować jako [E \/ P], czyli "Pies
@@ -510,20 +510,20 @@ Qed.
     razie, co nią jest? Otóż przykładem modalności jest... podwójna
     negacja!
 
-    Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
-    Nie ma się czemu dziwić - w języku polskim podwójna negacja w
+    Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
+    Nie ma się czemu dziwić - w języku polskim podwójna negacja w
     stylu "nikt nic nie wie" wyraża tak naprawdę pojedynczą negację
-    (choć nazwa "podwójna negacja" jest tu niezbyt trafna - bo słowo
+    (choć nazwa "podwójna negacja" jest tu niezbyt trafna - bo słowo
     "nie" występuje tylko raz, a słowa takie jak "nikt" czy "nic"
-    mają wprawdzie znaczenie negatywne, ale formą negacji nie są),
+    mają wprawdzie znaczenie negatywne, ale formą negacji nie są),
     w angielskim natomiast zdanie podwójnie zanegowane ("it's not
     uncommon") znaczy to samo, co zdanie oznajmiające bez żadnej
     negacji ("it's common").
 
     Odstawmy jednak na bok języki naturalne i zastanówmy się, jakąż to
     modalność wyraża podwójna negacja w naszej Coqowej logice. W tym
-    celu przyjrzyjmy się poniższym zdaniom:
-    - [P] - po prostu stwierdzamy [P], modalność neutralna
+    celu przyjrzyjmy się poniższym zdaniom:
+    - [P] - po prostu stwierdzamy [P], modalność neutralna
     - [~ P] - zaprzeczamy/obalamy [P]. Można zatem powiedzieć, że [P]
       jest zaprzeczalne.
     - [~ ~ P] - zaprzeczamy/obalamy [~ P], czyli zaprzeczamy zaprzeczeniu
@@ -531,19 +531,19 @@ Qed.
 
     I bum, dokonaliśmy naszego odkrycia: podwójna negacja wyraża
     bardzo subtelną modalność, jaką jest niezaprzeczalność. [~ ~ P]
-    możemy zatem odczytywać jako "niezaprzeczalnie P".
+    możemy zatem odczytywać jako "niezaprzeczalnie P".
 
-    Czym różni się samo "P" od "niezaprzeczalnie P"? Dla lepszego
-    zrozumienia prześledźmy to na znanym nam już przykładzie, czyli
+    Czym różni się samo "P" od "niezaprzeczalnie P"? Dla lepszego
+    zrozumienia prześledźmy to na znanym nam już przykładzie, czyli
     aksjomacie wyłączonego środka.
 
     Weźmy dowolne zdanie [P]. Nie jesteśmy w stanie udowodnić [P \/ ~ P],
-    gdyż bez żadnej wiedzy o zdaniu [P] nie jesteśmy w stanie zdecydować,
-    czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
+    gdyż bez żadnej wiedzy o zdaniu [P] nie jesteśmy w stanie zdecydować,
+    czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
     wcisnąć nam kit, że [~ (P \/ ~ P)], to możemy wziąć jego dowód i
     wyprowadzić z niego [False], czyli po prostu udowodnić, że
-    [~ ~ (P \/ ~ P)]. Na tym właśnie polega modalność niezaprzeczalności:
-    nawet jeżeli nie da się zdania pokazać wprost, to można obalić jego
+    [~ ~ (P \/ ~ P)]. Na tym właśnie polega modalność niezaprzeczalności:
+    nawet jeżeli nie da się zdania pokazać wprost, to można obalić jego
     zaprzeczenie. *)
 
 (** **** Ćwiczenie *)
@@ -581,11 +581,11 @@ Qed.
 (* end hide *)
 
 
-(** ** Modalność pośrednia *)
+(** ** Modalność pośrednia *)
 
 (* begin hide *)
 
-(** TODO: lista monad, które (nie) nadają się na modalności:
+(** TODO: lista monad, które (nie) nadają się na modalności:
     - Codensity: tak, jako dziwna identyczność
     - Cont - tak, jako modalność pośrednia
     - Free - nie
@@ -645,18 +645,18 @@ Proof.
       intro p. apply H.
 Abort.
 
-(** ** Modalność (bez)pośrednia *)
+(** ** Modalność (bez)pośrednia *)
 
-(** Poznawszy dwie najważniejsze dla nas modalności, możemy zająć się
+(** Poznawszy dwie najważniejsze dla nas modalności, możemy zająć się
     takimi, które będą miały co najwyżej charakter ciekawostki. Jeżeli
-    nie lubisz ciekawostek i jesteś ogólnie smutnym człowiekiem, to
+    nie lubisz ciekawostek i jesteś ogólnie smutnym człowiekiem, to
     resztę omawianych modalności możesz pominąć.
 
-    Modalność pośrednia to... zamiast gadać, przekonaj się sam. *)
+    Modalność pośrednia to... zamiast gadać, przekonaj się sam. *)
 
 (** **** Ćwiczenie *)
 
-(** Udowodnij, że modalność pośrednia jest modalnością. *)
+(** Udowodnij, że modalność pośrednia jest modalnością. *)
 
 Lemma indirect_law1 :
   forall P Q : Prop,
@@ -696,16 +696,16 @@ Qed.
 (* end hide *)
 
 (** No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
-    naprawdę chodzi z tą modalnością pośrednią? Jaki sposób wyraża?
+    naprawdę chodzi z tą modalnością pośrednią? Jaki sposób wyraża?
     Skąd nazwa?
 
-    Przyjrzyjmy się jeszcze raz definicji. Zdanie "pośrednio P"
+    Przyjrzyjmy się jeszcze raz definicji. Zdanie "pośrednio P"
     formalnie wygląda tak: [forall R : Prop, (P -> R) -> R].
 
     Jak odczytać tę definicję? Zacznijmy od tego, że [R] jest dowolnym
     zdaniem. Dalsza część mówi, że jeżeli [P] implikuje [R], to [R].
-    Oczywiście [P -> R] możemy odczytać także jako "R jest konsekwencją
-    P", a zatem całą definicję możemy odczytać: zachodzi każda
+    Oczywiście [P -> R] możemy odczytać także jako "R jest konsekwencją
+    P", a zatem całą definicję możemy odczytać: zachodzi każda
     konsekwencja [P].
 
     Zachodzi każda konsekwencja [P]... ciekawe, co? Zastanówmy się, w
@@ -713,21 +713,21 @@ Qed.
     - [P] zachodzi - najprostszy przypadek. Skoro [P] zachodzi, to
       jego konsekwencje też. Wszystkie. Bez wyjątku.
     - zachodzi coś mocniejszego od [P], tzn. zachodzi [Q] i [Q -> P].
-      Zachodzą wszystkie konsekwencje [P] i być może różne rzeczy,
-      które konsekwencjami [P] nie są (bo są np. konsekwencjami [Q])
+      Zachodzą wszystkie konsekwencje [P] i być może różne rzeczy,
+      które konsekwencjami [P] nie są (bo są np. konsekwencjami [Q])
 
     Widzimy więc, że by zaszły wszystkie konsekwencje [P], to zachodzić
-    musi [P] lub coś od [P] mocniejszego. Jednak rzeczy mocniejsze od
-    [P] nas tutaj nie interesują - liczy się dla nas najsłabsza z tych
+    musi [P] lub coś od [P] mocniejszego. Jednak rzeczy mocniejsze od
+    [P] nas tutaj nie interesują - liczy się dla nas najsłabsza z tych
     wszystkich możliwości, czyli samo [P].
 
     Widać więc (albo i nie, być może moje tłumaczenie jest zagmatwane),
     że z punktu widzenia konsekwencji danego zdania, zdanie [P] oraz
     zdanie "zachodzą wszystkie konsekwencje P" są równoważne. Wobec
-    tego możemy stwierdzić, że zdanie "zachodzą wszystkie konsekwencje
+    tego możemy stwierdzić, że zdanie "zachodzą wszystkie konsekwencje
     P" to pewien sposób powiedzenia [P], tylko w bardzo pośredni sposób.
     Stąd też nazwa (swoją drogą, wymyślona autorsko przeze mnie) -
-    modalność pośrednia. *)
+    modalność pośrednia. *)
 
 (** **** Ćwiczenie *)
 
@@ -745,19 +745,19 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
+(** Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     pokazać zarówno [P -> (forall R : Prop, (P -> R) -> R)] (prawo
-    [indirect_law2], wymagane przez definicję modalności) jak i
+    [indirect_law2], wymagane przez definicję modalności) jak i
     [(forall R : Prop, (P -> R) -> R) -> P] (powyższe ćwiczenie),
-    wniosek może być tylko jeden: modalność pośrednia jest dokładnie
-    tym samym, co modalność neutralna. Ha! Nie tego się spodziewałeś,
+    wniosek może być tylko jeden: modalność pośrednia jest dokładnie
+    tym samym, co modalność neutralna. Ha! Nie tego się spodziewałeś,
     co? *)
 
 (** ** Związki między modalnościami *)
 
-(** W ćwiczeniach przekonaliśmy się już, że dwie intensjonalnie różne
+(** W ćwiczeniach przekonaliśmy się już, że dwie intensjonalnie różne
     definicje (na przykład [LEM -> P] i [DNE -> P]) ekstensjonalnie
-    mogą tak naprawdę definiować to samo (w tym przypadku modalność
+    mogą tak naprawdę definiować to samo (w tym przypadku modalność
     klasyczną).
 
     Widzieliśmy też, że niektóre modalności są specjalnymi przypadkami
@@ -768,8 +768,8 @@ Qed.
     Czy to jednak wszystko, co potrafimy powiedzieć o modalnościach i
     ich wzajemnych związkach? Oczywiście nie. Wiemy przecież choćby, że
     [P -> ~ ~ P]. Można ten fakt zinterpretować następująco: modalność
-    neutralna jest silniejsza niż modalność niezaprzeczalna, czyli
-    równoważne: modalność niezaprzeczalna jest słabsza niż modalność
+    neutralna jest silniejsza niż modalność niezaprzeczalna, czyli
+    równoważne: modalność niezaprzeczalna jest słabsza niż modalność
     neutralna. *)
 
 (** **** Ćwiczenie *)
@@ -782,11 +782,11 @@ Qed.
     odpowiedź!
 
     Uwaga: nie musisz formalnie dowodzić w Coqu, że masz rację. Prawdę
-    powiedziawszy, gdybyśmy uparli się na pełną formalność, to nie
-    umiemy jeszcze wyrazić odpowiednich twierdzeń.
+    powiedziawszy, gdybyśmy uparli się na pełną formalność, to nie
+    umiemy jeszcze wyrazić odpowiednich twierdzeń.
 
     Wskazówka: sformułuj najpierw, co znaczą słowa "najsilniejszy"
-    oraz "najsłabszy". Następnie przyjrzyj się definicji modalności
+    oraz "najsłabszy". Następnie przyjrzyj się definicji modalności
     oraz poszczególnym modalnościom i udowodnionym dotychczas przez
     nas twierdzeniom. Powinno cię to oświecić. *)
 
@@ -1079,10 +1079,10 @@ Qed.
 (** rozwiąż wszystkie zadania jeszcze raz, ale tym razem bez używania
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami *)
 
-(** * Jakieś podsumowanie *)
+(** * Jakieś podsumowanie *)
 
-(** Gratulacje! Udało ci się przebrnąć przez pierwszy (poważny) rozdział
-    moich wypocin, czyli rozdział o logice. W nagrodę już nigdy nie
+(** Gratulacje! Udało ci się przebrnąć przez pierwszy (poważny) rozdział
+    moich wypocin, czyli rozdział o logice. W nagrodę już nigdy nie
     będziesz musiał ręcznie walczyć ze spójnikami czy prawami logiki -
     zrobi to za ciebie taktyka [firstorder]. Jak sama nazwa wskazuje,
     służy ona do radzenia sobie z czysto logicznymi dowodami w logice
@@ -1090,5 +1090,5 @@ Qed.
     funkcjach albo tympodobnie skomplikowanych rzeczach). *)
 
 (** - taktyka firstorder
-    - zrobić test diagnostyczny tak/nie
+    - zrobić test diagnostyczny tak/nie
     - fiszki do nauki nazw praw *)

@@ -38,16 +38,16 @@ W-typy (ang. W-types) to typy dobrze ufundowanych drzew (ang.
 
 <div class="paragraph"> </div>
 
-    Nie są one zbyt przydatne w praktyce, gdyż wszystko, co można za ich
+    Nie są one zbyt przydatne w praktyce, gdyż wszystko, co można za ich
     pomocą osiągnąć, można też osiągnąć bez nich zwykłymi typami induktywnymi
     i będzie to dużo bardziej czytelne oraz prostsze w implementacji. Ba!
-    W-typy są nawet nieco słabsze, gdyż go udowodnienia reguły indukcji
+    W-typy są nawet nieco słabsze, gdyż go udowodnienia reguły indukcji
     wymagają aksjomatu ekstensjonalności dla funkcji.
 
 <div class="paragraph"> </div>
 
     Jednak z tego samego powodu są bardzo ciekawe pod względem teoretycznym -
-    wszystko, co można zrobić za pomocą parametryzowanych typów induktywnych,
+    wszystko, co można zrobić za pomocą parametryzowanych typów induktywnych,
     można też zrobić za pomocą samych W-typów. Dzięki temu możemy badanie
     parametryzowanych typów induktywnych, których jest mniej więcej
     nieskończoność i jeszcze trochę, sprowadzić do badania jednego tylko <span class="inlinecode"><span class="id" title="var">W</span></span>
@@ -68,24 +68,24 @@ W-typy (ang. W-types) to typy dobrze ufundowanych drzew (ang.
 
 <div class="paragraph"> </div>
 
-    W kolejnym kroku łączymy argumenty za pomocą produktu:
+    W kolejnym kroku łączymy argumenty za pomocą produktu:
     niech <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">A1</span></span> <span class="inlinecode">*</span> <span class="inlinecode">...</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">Ak</span></span>. Wtedy typ <span class="inlinecode"><span class="id" title="var">c</span></span> wygląda tak:
     <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">*</span> <span class="inlinecode">...</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>. Zauważmy, że <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">*</span> <span class="inlinecode">...</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">T</span></span> możemy zapisać
     równoważnie jako <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">B</span></span> to typ mający tyle elementów, ile
     razy <span class="inlinecode"><span class="id" title="var">T</span></span> występuje w produkcie <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">*</span> <span class="inlinecode">...</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">T</span></span>. Zatem typ <span class="inlinecode"><span class="id" title="var">c</span></span> przedstawia
-    się tak: <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>.
+    się tak: <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>.
 
 <div class="paragraph"> </div>
 
     Teraz poczynimy kilka uogólnień. Po pierwsze, na początku założyliśmy,
     że <span class="inlinecode"><span class="id" title="var">c</span></span> ma skończenie wiele argumentów indukcyjnych, ale postać <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>
     uwzględnia także przypadek, gdy jest ich nieskończenie wiele (tzn. gdy
-    <span class="inlinecode"><span class="id" title="var">c</span></span> miał oryginalnie jakiś argument postaci <span class="inlinecode"><span class="id" title="var">Y</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> dla nieskończonego
+    <span class="inlinecode"><span class="id" title="var">c</span></span> miał oryginalnie jakiś argument postaci <span class="inlinecode"><span class="id" title="var">Y</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span> dla nieskończonego
     <span class="inlinecode"><span class="id" title="var">Y</span></span>).
 
 <div class="paragraph"> </div>
 
-    Po drugie, założyliśmy, że <span class="inlinecode"><span class="id" title="var">c</span></span> jest funkcją niezależną. Przypadek, gdy
+    Po drugie, założyliśmy, że <span class="inlinecode"><span class="id" title="var">c</span></span> jest funkcją niezależną. Przypadek, gdy
     <span class="inlinecode"><span class="id" title="var">c</span></span> jest funkcją zależną możemy pokryć, pozwalając naszemu <span class="inlinecode"><span class="id" title="var">B</span></span> zależeć
     od <span class="inlinecode"><span class="id" title="var">A</span></span>, tzn. <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. Typ konstruktora <span class="inlinecode"><span class="id" title="var">c</span></span> zyskuje wtedy postać
     sumy zależnej <span class="inlinecode">{<span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">&amp;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span>}</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>. W ostatnim kroku odpakowujemy
@@ -103,7 +103,7 @@ W-typy (ang. W-types) to typy dobrze ufundowanych drzew (ang.
 
 <div class="paragraph"> </div>
 
-    Stosując powyższe przekształcenia możemy sprowadzić każdy typ induktywny
+    Stosując powyższe przekształcenia możemy sprowadzić każdy typ induktywny
     do równoważnej postaci z jednym konstruktorem o typie
     <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>. Skoro tak, to definiujemy nowy typ, w którym
     <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> są parametrami... i bum, tak właśnie powstało <span class="inlinecode"><span class="id" title="var">W</span></span>!
@@ -112,7 +112,7 @@ W-typy (ang. W-types) to typy dobrze ufundowanych drzew (ang.
 
     Podejrzewam, że powyższy opis przyprawia cię o niemały ból głowy. Rzućmy
     więc okiem na przykład, który powinien być wystarczająco ogólny, żeby
-    wszystko stało się jasne. 
+    wszystko stało się jasne. 
 </div>
 <div class="code">
 
@@ -127,27 +127,27 @@ W-typy (ang. W-types) to typy dobrze ufundowanych drzew (ang.
 
 <div class="doc">
 Spróbujmy zastosować powyższe przekształcenia na typie <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>, żeby
-    otrzymać reprezentację <span class="inlinecode"><span class="id" title="var">list</span></span> za pomocą <span class="inlinecode"><span class="id" title="var">W</span></span>.
+    otrzymać reprezentację <span class="inlinecode"><span class="id" title="var">list</span></span> za pomocą <span class="inlinecode"><span class="id" title="var">W</span></span>.
 
 <div class="paragraph"> </div>
 
-    Zajmijmy się najpierw konstruktorem <span class="inlinecode"><span class="id" title="var">nil</span></span>. Nie ma on ani argumentów
-    indukcyjnych, ani nieindukcyjnych, co zdaje się nie pasować do naszej
+    Zajmijmy się najpierw konstruktorem <span class="inlinecode"><span class="id" title="var">nil</span></span>. Nie ma on ani argumentów
+    indukcyjnych, ani nieindukcyjnych, co zdaje się nie pasować do naszej
     ogólnej metody. Jest to jednak jedynie złudzenie: brak argumentów
     nieindukcyjnych możemy zareprezentować za pomocą argumenu o typie
-    <span class="inlinecode"><span class="id" title="var">unit</span></span>, zaś brak argumentów indukcyjnych możemy zareprezentować
+    <span class="inlinecode"><span class="id" title="var">unit</span></span>, zaś brak argumentów indukcyjnych możemy zareprezentować
     argumentem o typie <span class="inlinecode"><span class="id" title="var">False</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>. Wobec tego typ konstruktora
-    <span class="inlinecode"><span class="id" title="var">nil</span></span> możemy zapisać jako <span class="inlinecode"><span class="id" title="var">unit</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">False</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>.
+    <span class="inlinecode"><span class="id" title="var">nil</span></span> możemy zapisać jako <span class="inlinecode"><span class="id" title="var">unit</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">False</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>.
 
 <div class="paragraph"> </div>
 
-    Dla <span class="inlinecode"><span class="id" title="var">cons</span></span>a jest już prościej: argument nieindukcyjny to po prostu <span class="inlinecode"><span class="id" title="var">X</span></span>,
-    zaś jeden argument indukcyjny możemy przedstawić jako <span class="inlinecode"><span class="id" title="var">unit</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>.
+    Dla <span class="inlinecode"><span class="id" title="var">cons</span></span>a jest już prościej: argument nieindukcyjny to po prostu <span class="inlinecode"><span class="id" title="var">X</span></span>,
+    zaś jeden argument indukcyjny możemy przedstawić jako <span class="inlinecode"><span class="id" title="var">unit</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>.
     Nowy typ <span class="inlinecode"><span class="id" title="var">cons</span></span>a możemy zapisać jako <span class="inlinecode"><span class="id" title="var">X</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">unit</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>.
 
 <div class="paragraph"> </div>
 
-    Pozostaje nam skleić obydwa konstruktory w jeden. Niech <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">unit</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">X</span></span>
+    Pozostaje nam skleić obydwa konstruktory w jeden. Niech <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">unit</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">X</span></span>
     i niech <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">(<span class="id" title="var">inl</span></span> <span class="inlinecode"><span class="id" title="var">tt</span>)</span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">False</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">(<span class="id" title="var">inr</span></span> <span class="inlinecode"><span class="id" title="var">x</span>)</span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">unit</span></span>. W ten sposób dostajemy
     poniższe kodowanie <span class="inlinecode"><span class="id" title="var">list</span></span> za pomocą <span class="inlinecode"><span class="id" title="var">W</span></span> (oczywiście nie jest to jedyne
     możliwe kodowanie - równie dobrze zamiast <span class="inlinecode"><span class="id" title="var">unit</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">X</span></span> moglibyśmy użyć
@@ -171,7 +171,7 @@ Spróbujmy zastosować powyższe przekształcenia na typie <span class="inlineco
 </div>
 
 <div class="doc">
-Wartą zauważenia różnicą konceptualną jest to, że jeżeli myślimy
+Wartą zauważenia różnicą konceptualną jest to, że jeżeli myślimy
     Coqowymi typami induktywnymi, to <span class="inlinecode"><span class="id" title="var">list</span></span> ma dwa konstruktory - <span class="inlinecode"><span class="id" title="var">nil</span></span>
     i <span class="inlinecode"><span class="id" title="var">cons</span></span>, ale gdy myślimy za pomocą <span class="inlinecode"><span class="id" title="var">W</span></span>, to sprawa ma się inaczej.
     Formalnie <span class="inlinecode"><span class="id" title="var">listW</span></span> ma jeden konstruktor <span class="inlinecode"><span class="id" title="var">sup</span></span>, ale w praktyce jest
@@ -183,7 +183,7 @@ Wartą zauważenia różnicą konceptualną jest to, że jeżeli myślimy
 
 <div class="paragraph"> </div>
 
-    Oczywiście posługiwanie się <span class="inlinecode"><span class="id" title="var">nil</span></span> i <span class="inlinecode"><span class="id" title="var">cons</span></span> jest dużo wygodniejsze niż
+    Oczywiście posługiwanie się <span class="inlinecode"><span class="id" title="var">nil</span></span> i <span class="inlinecode"><span class="id" title="var">cons</span></span> jest dużo wygodniejsze niż
     używanie <span class="inlinecode"><span class="id" title="var">sup</span></span>, więc czas odzyskać utracone konstruktory! 
 </div>
 <div class="code">
@@ -201,7 +201,7 @@ Wartą zauważenia różnicą konceptualną jest to, że jeżeli myślimy
 
 <div class="doc">
 Zauważ, że <span class="inlinecode"><span class="id" title="var">consW</span></span> jest jedynie jednym z wielu możliwych kodowań
-    konstruktora <span class="inlinecode"><span class="id" title="var">cons</span></span>. Inaczej możemy go zakodować np. tak: 
+    konstruktora <span class="inlinecode"><span class="id" title="var">cons</span></span>. Inaczej możemy go zakodować np. tak: 
 </div>
 <div class="code">
 
@@ -213,7 +213,7 @@ Zauważ, że <span class="inlinecode"><span class="id" title="var">consW</span><
 </div>
 
 <div class="doc">
-Kodowania te nie są konwertowalne, ale jeżeli użyjemy aksjomatu
+Kodowania te nie są konwertowalne, ale jeżeli użyjemy aksjomatu
     ekstensjonalności dla funkcji, to możemy pokazać, że są równe. 
 </div>
 <div class="code">
@@ -243,9 +243,9 @@ Kodowania te nie są konwertowalne, ale jeżeli użyjemy aksjomatu
 <div class="doc">
 Podobnym mykiem musimy posłużyć się, żeby udowodnić regułę indukcji.
     Dowód zaczynamy od indukcji po <span class="inlinecode"><span class="id" title="var">l</span></span> (musimy pamiętać, że nasze <span class="inlinecode"><span class="id" title="var">W</span></span> jest
-    typem induktywnym, więc ma regułę indukcji), ale nie możemy bezpośrednio
-    użyć hipotez <span class="inlinecode"><span class="id" title="var">PnilW</span></span> ani <span class="inlinecode"><span class="id" title="var">PconsW</span></span>, gdyż dotyczą one innych kodowań <span class="inlinecode"><span class="id" title="var">nil</span></span>
-    i <span class="inlinecode"><span class="id" title="var">cons</span></span> niż te, które pojawiają się w celu. Żeby uporać się z problemem,
+    typem induktywnym, więc ma regułę indukcji), ale nie możemy bezpośrednio
+    użyć hipotez <span class="inlinecode"><span class="id" title="var">PnilW</span></span> ani <span class="inlinecode"><span class="id" title="var">PconsW</span></span>, gdyż dotyczą one innych kodowań <span class="inlinecode"><span class="id" title="var">nil</span></span>
+    i <span class="inlinecode"><span class="id" title="var">cons</span></span> niż te, które pojawiają się w celu. Żeby uporać się z problemem,
     używamy taktyki <span class="inlinecode"><span class="id" title="tactic">replace</span></span>, a następnie dowodzimy, że obydwa kodowania są
     ekstensjoalnie równe. 
 </div>
@@ -301,7 +301,7 @@ Podobnym mykiem musimy posłużyć się, żeby udowodnić regułę indukcji.
 
 <div class="doc">
 Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
-    że typy <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> oraz <span class="inlinecode"><span class="id" title="var">listW</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> są izomorficzne, tzn. istnieją funkcje
+    że typy <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> oraz <span class="inlinecode"><span class="id" title="var">listW</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> są izomorficzne, tzn. istnieją funkcje
     <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">listW</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> oraz <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">listW</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>, które są swoimi
     odwrotnościami. 
 </div>
@@ -483,7 +483,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 <div class="paragraph"> </div>
 
     Załóżmy teraz, że żyjemy w świecie, w którym nie ma typów induktywnych.
-    Jakich typów, oprócz <span class="inlinecode"><span class="id" title="var">W</span></span>, potrzebujemy, by móc zdefiniować wszystkie
+    Jakich typów, oprócz <span class="inlinecode"><span class="id" title="var">W</span></span>, potrzebujemy, by móc zdefiniować wszystkie
     powyższe typy? 
 </div>
 <div class="code">
@@ -499,18 +499,18 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 <div class="paragraph"> </div>
 
  Jak głosi pewna stara książka z Palestyny, nie samymi W-typami żyje
-    człowiek. W szczególności, W-typy mogą uchwycić jedynie dość proste
+    człowiek. W szczególności, W-typy mogą uchwycić jedynie dość proste
     typy induktywne, czyli takie, które wspierają jedynie parametry oraz
-    argumenty indukcyjne. Na chwilę obecną wydaje mi się też, że <span class="inlinecode"><span class="id" title="var">W</span></span> nie
-    jest w stanie reprezentować typów wzajemnie induktywnych, lecz pewny
+    argumenty indukcyjne. Na chwilę obecną wydaje mi się też, że <span class="inlinecode"><span class="id" title="var">W</span></span> nie
+    jest w stanie reprezentować typów wzajemnie induktywnych, lecz pewny
     nie jest jestem.
 
 <div class="paragraph"> </div>
 
-    Trochę to smutne, gdyż naszą główną motywacją ku poznawaniu <span class="inlinecode"><span class="id" title="var">W</span></span>-typów
+    Trochę to smutne, gdyż naszą główną motywacją ku poznawaniu <span class="inlinecode"><span class="id" title="var">W</span></span>-typów
     jest teoretyczne zrozumienie mechanizmu działania typów induktywnych,
     a skoro <span class="inlinecode"><span class="id" title="var">W</span></span> jest biedne, to nie możemy za jego pomocą zrozumieć
-    wszystkich typów induktywnych. Jednak uszy do góry, gdyż na ratunek w
+    wszystkich typów induktywnych. Jednak uszy do góry, gdyż na ratunek w
     naszej misji przychodzą nam indeksowane W-typy!
 
 <div class="paragraph"> </div>
@@ -539,7 +539,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 
 <div class="doc">
 Prawdopodobnie odczuwasz w tej chwili wielką grozę, co najmniej jakbyś
-    zobaczył samego Cthulhu. Nie martw się - zaraz dokładnie wyjasnimy, co
+    zobaczył samego Cthulhu. Nie martw się - zaraz dokładnie wyjasnimy, co
     tu się dzieje, a potem rozpracujemy indeksowane W typy na przykładach
     rodzin typów induktywnych, które powinieneś już dobrze znać.
 
@@ -564,7 +564,7 @@ Prawdopodobnie odczuwasz w tej chwili wielką grozę, co najmniej jakbyś
 <div class="paragraph"> </div>
 
  Konstruktor <span class="inlinecode"><span class="id" title="var">isup</span></span> mówi, że jeżeli mamy indeks i kształt dla tego
-    indeksu, to jeżeli uda nam się zapchać wszystkie argumenty indukcyjne
+    indeksu, to jeżeli uda nam się zapchać wszystkie argumenty indukcyjne
     rzeczami o odpowiednim indeksie, to dostajemy element <span class="inlinecode"><span class="id" title="var">IW</span></span> <span class="inlinecode">...</span> o takim
     indeksie jak chcieliśmy.
 
@@ -643,12 +643,12 @@ Typ pozycji różwnież definiujemy przez dopasowanie indeksu do wzorca,
 <div class="paragraph"> </div>
 
     Zauważmy, że niebranie argumentu nieindukcyjnego reprezentujemy inaczej
-    niż niebranie argumentu indukcyjnego.
+    niż niebranie argumentu indukcyjnego.
 
 <div class="paragraph"> </div>
 
     <span class="inlinecode"><span class="id" title="var">vnil</span></span> nie bierze argumentów nieindukcyjnych, co w typie kształtów <span class="inlinecode"><span class="id" title="var">S_Vec</span></span>
-    reprezentujemy za pomocą typu <span class="inlinecode"><span class="id" title="var">unit</span></span>. Możemy myśleć o tym tak, że <span class="inlinecode"><span class="id" title="var">vnil</span></span>
+    reprezentujemy za pomocą typu <span class="inlinecode"><span class="id" title="var">unit</span></span>. Możemy myśleć o tym tak, że <span class="inlinecode"><span class="id" title="var">vnil</span></span>
     bierze jeden argument typu <span class="inlinecode"><span class="id" title="var">unit</span></span>. Ponieważ <span class="inlinecode"><span class="id" title="var">unit</span></span> ma tylko jeden element,
     to i tak z góry wiadomo, że będziemy musieli jako ten argument wstawić
     <span class="inlinecode"><span class="id" title="var">tt</span></span>.
@@ -681,9 +681,9 @@ Typ pozycji różwnież definiujemy przez dopasowanie indeksu do wzorca,
 </div>
 
 <div class="doc">
-Pozostaje nam tylko zdefiniować funkcję, która pozycjom argumentów
+Pozostaje nam tylko zdefiniować funkcję, która pozycjom argumentów
     indukcyjnym w poszczególnych kształtach przyporządkowuje ich indeksy.
-    Definiujemy tę funkcję przez dowód, gdyż Coq dość słabo rodzi sobie z
+    Definiujemy tę funkcję przez dowód, gdyż Coq dość słabo rodzi sobie z
     dopasowaniem do wzorca przy typach zależnych.
 
 <div class="paragraph"> </div>
@@ -691,7 +691,7 @@ Pozostaje nam tylko zdefiniować funkcję, która pozycjom argumentów
     Ponieważ kształty są zdefiniowane przez dopasowanie indeksu do wzorca,
     to zaczynamy od rozbicia indeksu na przypadki. Gdy indeks wynosi zero,
     to mamy do czynienia z reprezentacją konstruktora <span class="inlinecode"><span class="id" title="var">vnil</span></span>, który nie
-    bierze żadnych argumentów indukcyjnych, co ujawnia się pod postacią
+    bierze żadnych argumentów indukcyjnych, co ujawnia się pod postacią
     sprzeczności. Gdy indeks wynosi <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">i'</span></span>, mamy do czynienia z konstruktorem
     <span class="inlinecode"><span class="id" title="var">vcons</span></span> <span class="inlinecode"><span class="id" title="var">i'</span></span>, który tworzy element typu <span class="inlinecode"><span class="id" title="var">Vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">i'</span>)</span>, zaś bierze element
     typu <span class="inlinecode"><span class="id" title="var">Vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">i'</span></span>. Wobec tego w tym przypadku zwracamy <span class="inlinecode"><span class="id" title="var">i'</span></span>. 
@@ -711,8 +711,8 @@ Tak wygląda ostateczna definicja <span class="inlinecode"><span class="id" titl
 
 <div class="paragraph"> </div>
 
-    Spróbujmy przekonać się, że typy <span class="inlinecode"><span class="id" title="var">Vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> oraz <span class="inlinecode"><span class="id" title="var">Vec'</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> są
-    izomorficzne. W tym celu musimy zdefiniować funkcje
+    Spróbujmy przekonać się, że typy <span class="inlinecode"><span class="id" title="var">Vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> oraz <span class="inlinecode"><span class="id" title="var">Vec'</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> są
+    izomorficzne. W tym celu musimy zdefiniować funkcje
     <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Vec'</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> oraz <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Vec'</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>, które są
     swoimi odwrotnościami. 
 </div>
@@ -731,9 +731,9 @@ Tak wygląda ostateczna definicja <span class="inlinecode"><span class="id" titl
 </div>
 
 <div class="doc">
-Najłatwiej definiować nam będzie za pomocą taktyk. Definicja <span class="inlinecode"><span class="id" title="var">f</span></span> idzie
-    przez rekursję strukturalną po <span class="inlinecode"><span class="id" title="var">v</span></span>. <span class="inlinecode"><span class="id" title="var">isup</span></span> <span class="inlinecode">0</span> <span class="inlinecode"><span class="id" title="var">tt</span></span> to reprezentacja <span class="inlinecode"><span class="id" title="var">vnil</span></span>,
-    zaś <span class="inlinecode">@<span class="id" title="var">isup</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode">(@<span class="id" title="var">r_Vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span>)</span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> <span class="inlinecode"><span class="id" title="var">a</span></span> to reprezentacja <span class="inlinecode"><span class="id" title="var">vcons</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>. Dość
+Najłatwiej definiować nam będzie za pomocą taktyk. Definicja <span class="inlinecode"><span class="id" title="var">f</span></span> idzie
+    przez rekursję strukturalną po <span class="inlinecode"><span class="id" title="var">v</span></span>. <span class="inlinecode"><span class="id" title="var">isup</span></span> <span class="inlinecode">0</span> <span class="inlinecode"><span class="id" title="var">tt</span></span> to reprezentacja <span class="inlinecode"><span class="id" title="var">vnil</span></span>,
+    zaś <span class="inlinecode">@<span class="id" title="var">isup</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode">(@<span class="id" title="var">r_Vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span>)</span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> <span class="inlinecode"><span class="id" title="var">a</span></span> to reprezentacja <span class="inlinecode"><span class="id" title="var">vcons</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>. Dość
     nieczytelne, prawda? Dlatego właśnie nikt w praktyce nie używa
     indeksowanych W-typów. 
 </div>
@@ -773,7 +773,7 @@ W drugą stronę jest łatwiej. Definicja idzie oczywiście przez rekursję
 </div>
 
 <div class="doc">
-Dowód odwrotności w jedną stronę jest banalny - indukcja po <span class="inlinecode"><span class="id" title="var">v</span></span> idzie
+Dowód odwrotności w jedną stronę jest banalny - indukcja po <span class="inlinecode"><span class="id" title="var">v</span></span> idzie
     gładko, bo <span class="inlinecode"><span class="id" title="var">v</span></span> jest typu <span class="inlinecode"><span class="id" title="var">Vec</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. 
 </div>
 <div class="code">
@@ -796,7 +796,7 @@ Dowód odwrotności w jedną stronę jest banalny - indukcja po <span class="in
 
 <div class="doc">
 W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
-    posłużyć się aksjomatem ekstensjonalności dla funkcji. Wynika to z faktu,
+    posłużyć się aksjomatem ekstensjonalności dla funkcji. Wynika to z faktu,
     że w <span class="inlinecode"><span class="id" title="var">IW</span></span> reprezentujemy argumenty indukcyjne wszystkie na raz za pomocą
     pojedynczej funkcji.
 
@@ -822,14 +822,14 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
       wysokością
 
 </li>
-<li> to samo co wyżej, ale indeksowany ilością elementów
+<li> to samo co wyżej, ale indeksowany ilością elementów
 
 </li>
 <li> porządek <span class="inlinecode">&lt;=</span> dla liczb naturalnych
 
 </li>
-<li> relację <span class="inlinecode"><span class="id" title="var">Perm</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> mówiącą, że <span class="inlinecode"><span class="id" title="var">l1</span></span> i <span class="inlinecode"><span class="id" title="var">l2</span></span>
-      są swoimi permutacjami 
+<li> relację <span class="inlinecode"><span class="id" title="var">Perm</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> mówiącą, że <span class="inlinecode"><span class="id" title="var">l1</span></span> i <span class="inlinecode"><span class="id" title="var">l2</span></span>
+      są swoimi permutacjami 
 </li>
 </ul>
 
@@ -850,14 +850,14 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
 </div>
 
 <div class="doc">
-Naszą motywacją do badania W-typów było to, że są one jedynym
+Naszą motywacją do badania W-typów było to, że są one jedynym
     pierścieniem (w sensie Władcy Pierścieni, a nie algebry abstrakcyjnej),
-    tj. pozwalają uchwycić wszystkie typy induktywne za pomocą jednego
+    tj. pozwalają uchwycić wszystkie typy induktywne za pomocą jednego
     (oczywiście o ile mamy też <span class="inlinecode"><span class="id" title="var">False</span></span>, <span class="inlinecode"><span class="id" title="var">unit</span></span>, <span class="inlinecode"><span class="id" title="var">bool</span></span>, <span class="inlinecode"><span class="id" title="var">prod</span></span> i <span class="inlinecode"><span class="id" title="var">sum</span></span>).
 
 <div class="paragraph"> </div>
 
-    Podobnie możemy postawić sobie zadanie zbadania wszystkich typów
+    Podobnie możemy postawić sobie zadanie zbadania wszystkich typów
     koinduktywnych. Rozwiązanie zadania jest (zupełnie nieprzypadkowo)
     analogiczne do tego dla typów induktywnych, a są nim M-typy. Skąd nazwa?
     Zauważ, że M to nic innego jak W postawione na głowie - podobnie esencja
@@ -881,7 +881,7 @@ Naszą motywacją do badania W-typów było to, że są one jedynym
 </div>
 
 <div class="doc">
-Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><span class="id" title="var">M</span></span> wygląda właśnie tak.
+Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><span class="id" title="var">M</span></span> wygląda właśnie tak.
     W tym celu rozważmy dowolny typ koinduktywny <span class="inlinecode"><span class="id" title="var">C</span></span> i przyjmijmy, że ma on
     pola <span class="inlinecode"><span class="id" title="var">f1</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">X1</span></span>, ..., <span class="inlinecode"><span class="id" title="var">fn</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Xn</span></span>. Argumenty możemy podzielić na dwie grupy:
     koindukcyjne (których typem jest <span class="inlinecode"><span class="id" title="var">C</span></span> lub funkcje postaci <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span>) oraz
@@ -903,9 +903,9 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><sp
 
 <div class="paragraph"> </div>
 
-    Źródeł można doszukiwać się w jeszcze jednej, nieco bardziej złożonej
+    Źródeł można doszukiwać się w jeszcze jednej, nieco bardziej złożonej
     postaci destruktorów. Żeby za dużo nie mącić, rozważmy przykład. Niech
-    <span class="inlinecode"><span class="id" title="var">C</span></span> ma destruktor postaci <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>. Jak dokodować ten destruktor
+    <span class="inlinecode"><span class="id" title="var">C</span></span> ma destruktor postaci <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>. Jak dokodować ten destruktor
     do <span class="inlinecode"><span class="id" title="var">shape</span></span> i <span class="inlinecode"><span class="id" title="var">position</span></span>? Otóż dorzucamy do <span class="inlinecode"><span class="id" title="var">shape</span></span> nowy komponent, czyli
     <span class="inlinecode"><span class="id" title="var">shape'</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">shape</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span>.
 
@@ -1211,8 +1211,8 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><sp
 <div class="paragraph"> </div>
 
  Innym pomysłem na jednorodne reprezentowanie typów induktywnych,
-    trochę podobnym do W-typów, jest stworzenie uniwersum nazw (czyli
-    kodów), które następnie będziemy mogli zinterpretować jako typy
+    trochę podobnym do W-typów, jest stworzenie uniwersum nazw (czyli
+    kodów), które następnie będziemy mogli zinterpretować jako typy
     induktywne. 
 </div>
 <div class="code">

@@ -9,7 +9,7 @@ Require Import Bool.
 
 (** **** Ćwiczenie *)
 
-(** Miło by było pamiętać, że Coq to nie jest jakiś tam biedajęzyk
+(** Miło by było pamiętać, że Coq to nie jest jakiś tam biedajęzyk
     programowania, tylko pełnoprawny system podstaw matematyki (no,
     prawie...). W związku pokaż, że [nat <> Type]. *)
 
@@ -128,7 +128,7 @@ End nat_not_Type.
 (** **** Ćwiczenie *)
 
 (** To samo co wyżej, ale tym razem dla dowolnego typu, który ma
-    rozstrzygalną równość oraz spełnia aksjomat K. *)
+    rozstrzygalną równość oraz spełnia aksjomat K. *)
 
 (* begin hide *)
 Module EqDec_not_Type.

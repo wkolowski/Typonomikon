@@ -24,7 +24,7 @@ Import ListNotations.
 (** Zacznijmy od przypomnienia klasyfikacji zdań, predykatów i relacji:
     - zdania to obiekty typu [Prop]. Twierdzą one coś na temat świata:
       "niebo jest niebieskie", [P -> Q] etc. W uproszczeniu możemy myśleć o
-      nich, że są prawdziwe lub fałszywe, co nie znaczy wcale, że można to
+      nich, że są prawdziwe lub fałszywe, co nie znaczy wcale, że można to
       automatycznie rozstrzygnąć. Udowodnienie zdania [P] to skonstruowanie
       obiektu [p : P]. W Coqu zdania służą nam do podawania specyfikacji
       programów. W celach klasyfikacyjnych możemy uznać, że są to funkcje
@@ -40,7 +40,7 @@ Import ListNotations.
       zależności między obiektami, np. "Grażyna jest matką Karyny",
       [Permutation (l ++ l') (l' ++ ')]. Niektóre kombinacje obiektów mogą
       być ze sobą w relacji, tzn. zdanie zwracane dla nich przez relację
-      może być prawdziwe, a dla innych nie. *)
+      może być prawdziwe, a dla innych nie. *)
 
 (** Istnieje jednak zasadnicza różnica między definiowaniem "zwykłych"
     funkcji oraz definiowaniem relacji: zwykłe funkcje możemy definiować
@@ -53,7 +53,7 @@ Definition hrel (A B : Type) : Type := A -> B -> Prop.
 (** Najważniejszym rodzajem relacji są relacje binarne, czyli relacje
     biorące dwa argumenty. To właśnie im poświęcimy ten rozdział, pominiemy
     zaś relacje biorące trzy i więcej argumentów. Określenia "relacja binarna"
-    będę używał zarówno na określenie relacji binarnych heterogenicznych
+    będę używał zarówno na określenie relacji binarnych heterogenicznych
     (czyli biorących dwa argumnty różnych typów) jak i na określenie relacji
     binarnych homogenicznych (czyli biorących dwa argumenty tego samego
     typu). *)
@@ -70,7 +70,7 @@ Definition same_hrel {A B : Type} (R S : hrel A B) : Prop :=
 
 Notation "R <--> S" := (same_hrel R S) (at level 40).
 
-(** Zacznijmy od ustalenia, jakie relacje będziemy uznawać za "identyczne".
+(** Zacznijmy od ustalenia, jakie relacje będziemy uznawać za "identyczne".
     Okazuje się, że używanie równości [eq] do porównywania zdań nie ma
     zbyt wiele sensu. Jest tak dlatego, że nie interesuje nas postać owych
     zdań, a jedynie ich logiczna zawartość.
@@ -83,7 +83,7 @@ Notation "R <--> S" := (same_hrel R S) (at level 40).
     Formalnie wyrazimy to nieco na około, za pomocą pojęcia subrelacji.
     [R] jest subrelacją [S], jeżeli [R a b] implikuje [S a b] dla
     wszystkich [a : A] i [b : B]. Możemy sobie wyobrażać, że jeżeli [R]
-    jest subrelacją [S], to w relacji [R] są ze sobą tylko niektóre
+    jest subrelacją [S], to w relacji [R] są ze sobą tylko niektóre
     pary argumentów, które są w relacji [S], a inne nie. *)
 
 (** **** Ćwiczenie *)
@@ -93,8 +93,8 @@ Inductive le' : nat -> nat -> Prop :=
     | le'_SS : forall n m : nat, le' n m -> le' (S n) (S m).
 
 (** Udowodnij, że powyższa definicja [le'] porządku "mniejszy lub równy"
-    na liczbach naturalnych jest tą samą relacją, co [le]. Być może
-    przyda ci się kilka lematów pomocniczych. *)
+    na liczbach naturalnych jest tą samą relacją, co [le]. Być może
+    przyda ci się kilka lematów pomocniczych. *)
 
 (* begin hide *)
 Hint Constructors le'.
@@ -123,7 +123,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Uporawszy się z pojęciem "identyczności" relacji możemy przejść dalej,
+(** Uporawszy się z pojęciem "identyczności" relacji możemy przejść dalej,
     a mianowicie do operacji, jakie możemy wykonywać na relacjach. *)
 
 (** * Operacje na relacjach *)
@@ -134,9 +134,9 @@ Definition Rcomp
 
 Definition Rid {A : Type} : hrel A A := @eq A.
 
-(** Podobnie jak w przypadku funkcji, najważniejszą operacją jest składanie
+(** Podobnie jak w przypadku funkcji, najważniejszą operacją jest składanie
     relacji, a najważniejszą relacją — równość. Składanie jest łączne, zaś
-    równość jest elementem neutralnym tego składania. Musimy jednak zauważyć,
+    równość jest elementem neutralnym tego składania. Musimy jednak zauważyć,
     że mówiąc o łączności relacji mamy na myśli coś innego, niż w przypadku
     funkcji. *)
 
@@ -186,7 +186,7 @@ Definition Rinv {A B : Type} (R : hrel A B) : hrel B A :=
   fun (b : B) (a : A) => R a b.
 
 (** [Rinv] to operacja, która zamienia miejscami argumenty relacji. Relację
-    [Rinv R] będziemy nazywać relacją odwrotną do [R]. *)
+    [Rinv R] będziemy nazywać relacją odwrotną do [R]. *)
 
 Lemma Rinv_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
@@ -204,7 +204,7 @@ Proof. compute. firstorder. Qed.
 (* end hide *)
 
 (** Złożenie dwóch relacji możemy odwrócić, składając ich odwrotności w
-    odwrotnej kolejności. Odwrotnością relacji identycznościowej jest
+    odwrotnej kolejności. Odwrotnością relacji identycznościowej jest
     zaś ona sama. *)
 
 Definition Rnot {A B : Type} (R : hrel A B) : hrel A B :=
@@ -221,8 +221,8 @@ Definition Ror {A B : Type} (R S : hrel A B) : hrel A B :=
     Zauważ, że operacje te możemy wykonywać jedynie na relacjach o takich
     samych typach argumentów.
 
-    Sporą część naszego badania relacji przeznaczymy na sprawdzanie, jak
-    powyższe operacj mają się do różnych specjalnych rodzajów relacji. Nim
+    Sporą część naszego badania relacji przeznaczymy na sprawdzanie, jak
+    powyższe operacj mają się do różnych specjalnych rodzajów relacji. Nim
     to się stanie, zbadajmy jednak właściwości samych operacji. *)
 
 Definition RTrue {A B : Type} : hrel A B :=
@@ -345,7 +345,7 @@ Proof. rel. Qed.
 
     Fenomen ten nie jest w żaden sposób specyficzny dla relacji i operacji
     na nich. TODO: mam nadzieję, że w przyszłych rozdziałach jeszcze się z
-    nim spotkamy. Tymczasem przyjrzyjmy się bliżej specjalnym rodzajom
+    nim spotkamy. Tymczasem przyjrzyjmy się bliżej specjalnym rodzajom
     relacji. *)
 
 (** * Rodzaje relacji heterogenicznych *)
@@ -362,7 +362,7 @@ Class RightUnique {A B : Type} (R : hrel A B) : Prop :=
       forall (a : A) (b b' : B), R a b -> R a b' -> b = b'
 }.
 
-(** Dwoma podstawowymi rodzajami relacji są relacje unikalne z lewej i prawej
+(** Dwoma podstawowymi rodzajami relacji są relacje unikalne z lewej i prawej
     strony. Relacja lewostronnie unikalna to taka, dla której każde [b : B]
     jest w relacji z co najwyżej jednym [a : A]. Analogicznie definiujemy
     relacje prawostronnie unikalne. *)
@@ -377,14 +377,14 @@ Instance RightUnique_eq (A : Type) : RightUnique (@eq A).
 Proof. rel. Qed.
 (* end hide *)
 
-(** Najbardziej elementarną intuicję stojącą za tymi koncepcjami można
+(** Najbardziej elementarną intuicję stojącą za tymi koncepcjami można
     przedstawić na przykładzie relacji równości: jeżeli dwa obiekty są
-    równe jakiemuś trzeciemu obiektowi, to muszą być także równe sobie
+    równe jakiemuś trzeciemu obiektowi, to muszą być także równe sobie
     nawzajem.
 
     Pojęcie to jest jednak bardziej ogólne i dotyczy także relacji, które
-    nie są homogeniczne. W szczególności jest ono różne od pojęcia relacji
-    przechodniej, które pojawi się już niedługo. *)
+    nie są homogeniczne. W szczególności jest ono różne od pojęcia relacji
+    przechodniej, które pojawi się już niedługo. *)
 
 Instance LeftUnique_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
@@ -423,10 +423,10 @@ Instance RightUnique_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
-(** Już na pierwszy rzut oka widać, że pojęcia te są w pewien sposób
-    symetryczne. Aby uchwycić tę symetrię, możemy posłużyć się operacją
+(** Już na pierwszy rzut oka widać, że pojęcia te są w pewien sposób
+    symetryczne. Aby uchwycić tę symetrię, możemy posłużyć się operacją
     [Rinv]. Okazuje się, że zamiana miejscami argumentów relacji lewostronnie
-    unikalnej daje relację prawostronnie unikalną i vice versa. *)
+    unikalnej daje relację prawostronnie unikalną i vice versa. *)
 
 Instance LeftUnique_Rand :
   forall (A B : Type) (R S : hrel A B),
@@ -470,7 +470,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Koniunkcja relacji unikalnej z inną daje relację unikalną, ale dysjunkcja
+(** Koniunkcja relacji unikalnej z inną daje relację unikalną, ale dysjunkcja
     nawet dwóch relacji unikalnych nie musi dawać w wyniku relacji unikalnej.
     Wynika to z interpretacji operacji na relacjach jako operacji na
     kolekcjach par.
@@ -491,7 +491,7 @@ Qed.
     lewostronnie unikalnych jeżeli każde [b : B] jest w relacji z co
     najwyżej jednym [a : A], to potencjalne zabranie jakichś par z tej
     relacji niczego nie zmieni. Z drugiej strony, nawet jeżeli obie relacje
-    są lewostronnie unikalne, to dodanie do [R] par z [S] może spowodować
+    są lewostronnie unikalne, to dodanie do [R] par z [S] może spowodować
     wystąpienie powtórzeń, co niszczy unikalność. *)
 
 Lemma Rnot_not_LeftUnique :
@@ -525,7 +525,7 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-(** Znajdź przykład relacji, która:
+(** Znajdź przykład relacji, która:
     - nie jest unikalna ani lewostronnie, ani prawostronnie
     - jest unikalna lewostronnie, ale nie prawostronnie
     - jest unikalna prawostronnie, ale nie nie lewostronnie
@@ -609,7 +609,7 @@ Class RightTotal {A B : Type} (R : hrel A B) : Prop :=
     każde [a : A] jest w relacji z jakimś elementem [B]. Definicja relacji
     prawostronnie totalnej jest analogiczna.
 
-    Za pojęciem tym nie stoją jakieś wielkie intuicje: relacja lewostronnie
+    Za pojęciem tym nie stoją jakieś wielkie intuicje: relacja lewostronnie
     totalna to po prostu taka, w której żaden element [a : A] nie jest
     "osamotniony". *)
 
@@ -625,7 +625,7 @@ Instance RightTotal_eq :
 Proof. rel. Qed.
 (* end hide *)
 
-(** Równość jest relacją totalną, gdyż każdy term [x : A] jest równy samemu
+(** Równość jest relacją totalną, gdyż każdy term [x : A] jest równy samemu
     sobie. *)
 
 Instance LeftTotal_Rcomp :
@@ -672,7 +672,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Między lewo- i prawostronną totalnością występuje podobna symetria jak
+(** Między lewo- i prawostronną totalnością występuje podobna symetria jak
     między dwoma formami unikalności: relacja odwrotna do lewostronnie
     totalnej jest prawostronnie totalna i vice versa. Totalność jest również
     zachowywana przez składanie. *)
@@ -719,8 +719,8 @@ Proof. rel. Qed.
 
 (** Związki totalności z koniunkcją i dysjunkcją relacji są podobne jak
     w przypadku unikalności, lecz tym razem to dysjunkcja zachowuje
-    właściwość, a koniunkcja ją niszczy. Wynika to z tego, że dysjunkcja
-    nie zabiera żadnych par z relacji, więc nie może uszkodzić totalności.
+    właściwość, a koniunkcja ją niszczy. Wynika to z tego, że dysjunkcja
+    nie zabiera żadnych par z relacji, więc nie może uszkodzić totalności.
     Z drugiej strony koniunkcja może zabrać jakąś parę, a wtedy relacja
     przestaje być totalna. *)
 
@@ -744,13 +744,13 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Negacja relacji totalnej nie może być totalna. Nie ma się co dziwić —
+(** Negacja relacji totalnej nie może być totalna. Nie ma się co dziwić —
     negacja wyrzuca z relacji wszystkie pary, których w niej nie było, a
-    więc pozbywa się czynnika odpowiedzialnego za totalność. *)
+    więc pozbywa się czynnika odpowiedzialnego za totalność. *)
 
 (** **** Ćwiczenie *)
 
-(** Znajdź przykład relacji, która:
+(** Znajdź przykład relacji, która:
     - nie jest totalna ani lewostronnie, ani prawostronnie
     - jest totalna lewostronnie, ale nie prawostronnie
     - jest totalna prawostronnie, ale nie nie lewostronnie
@@ -808,7 +808,7 @@ Class Functional {A B : Type} (R : hrel A B) : Prop :=
     F_RU :> RightUnique R;
 }.
 
-(** Lewostronną totalność i prawostronną unikalność możemy połączyć, by
+(** Lewostronną totalność i prawostronną unikalność możemy połączyć, by
     uzyskać pojęcie relacji funkcyjnej. Relacja funkcyjna to relacja,
     która ma właściwości takie, jak funkcje — każdy lewostronny argument
     [a : A] jest w relacji z dokładnie jednym [b : B] po prawej stronie. *)
@@ -836,9 +836,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Z każdej funkcji można w prosty sposób zrobić relację funkcyjną, ale
+(** Z każdej funkcji można w prosty sposób zrobić relację funkcyjną, ale
     bez dodatkowych aksjomatów nie jesteśmy w stanie z relacji funkcyjnej
-    zrobić funkcji. Przemilczając kwestie aksjomatów możemy powiedzieć
+    zrobić funkcji. Przemilczając kwestie aksjomatów możemy powiedzieć
     więc, że relacje funkcyjne odpowiadają funkcjom. *)
 
 Instance Functional_eq :
@@ -861,9 +861,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Złożenie relacji funkcyjnych również jest relacją funkcyjną. Nie powinno
+(** Złożenie relacji funkcyjnych również jest relacją funkcyjną. Nie powinno
     nas to dziwić — wszakże relacje funkcyjne odpowiadają funkcjom, a złożenie
-    funkcji jest przecież funkcją. Jeżeli lepiej mu się przyjrzeć, to okazuje
+    funkcji jest przecież funkcją. Jeżeli lepiej mu się przyjrzeć, to okazuje
     się, że składanie funkcji odpowiada składaniu relacji, a stąd już prosta
     droga do wniosku, że złożenie relacji funkcyjnych jest relacją funkcyjną.
 *)
@@ -880,9 +880,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Odwrotność relacji funkcyjnej nie musi być funkcyjna. Dobrą wizualicją
+(** Odwrotność relacji funkcyjnej nie musi być funkcyjna. Dobrą wizualicją
     tego faktu może być np. funkcja f(x) = x^2 na liczbach rzeczywistych.
-    Z pewnością jest to funkcja, a zatem relacja funkcyjna. Widać to na jej
+    Z pewnością jest to funkcja, a zatem relacja funkcyjna. Widać to na jej
     wykresie — każdemu punktowi dziedziny odpowiada dokładnie jeden punkt
     przeciwdziedziny. Jednak po wykonaniu operacji [Rinv], której odpowiada
     tutaj obrócenie układu współrzędnych o 90 stopni, nie otrzymujemy wcale
@@ -937,14 +937,14 @@ Qed.
 (** Ani koniunkcje, ani dysjunkcje, ani negacje relacji funkcyjnych nie
     muszą być wcale relacjami funkcyjnymi. Jest to po części konsekwencją
     właściwości relacji lewostronnie totalnych i prawostronnie unikalnych:
-    pierwsze mają problem z [Rand], a drugie z [Ror], oba zaś z [Rnot. *)
+    pierwsze mają problem z [Rand], a drugie z [Ror], oba zaś z [Rnot. *)
 
 (** **** Ćwiczenie *)
 
 (** Możesz zadawać sobie pytanie: po co nam w ogóle pojęcie relacji
     funkcyjnej, skoro mamy funkcje? Funkcje muszą być obliczalne (ang.
     computable) i to na mocy definicji, zaś relacje — niekonieczne.
-    Czasem prościej może być najpierw zdefiniować relację, a dopiero
+    Czasem prościej może być najpierw zdefiniować relację, a dopiero
     później pokazać, że jest funkcyjna. Czasem zdefiniowanie danego
     bytu jako funkcji może być niemożliwe.
 
@@ -952,7 +952,7 @@ Qed.
     jest parzyste, to f(n) = n/2. W przeciwnym przypadku f(n) = 3n + 1.
 
     Zaimplementuj tę funkcję w Coqu. Spróbuj zaimplementować ją zarówno
-    jako funkcję rekurencyjną, jak i relację. Czy twoja funkcja dokładnie
+    jako funkcję rekurencyjną, jak i relację. Czy twoja funkcja dokładnie
     odpowiada powyższej specyfikacji? Czy jesteś w stanie pokazać, że twoja
     relacja jest funkcyjna?
 
@@ -1305,7 +1305,7 @@ Qed.
 
 (** Właściwości relacji bijektywnych różnią się jednym szalenie istotnym
     detalem od właściwości relacji funkcyjnych, injektywnych i surjektywnych:
-    odwrotność relacji bijektywnej jest relacją bijektywną. *)
+    odwrotność relacji bijektywnej jest relacją bijektywną. *)
 
 (** * Rodzaje relacji homogenicznych *)
 
@@ -1318,8 +1318,8 @@ Definition rel (A : Type) : Type := hrel A A.
     Uwaga terminologiczna: w innych pracach to, co nazwałem [Antireflexive]
     bywa zazwyczaj nazywane [Irreflexive]. Ja przyjąłem następujące reguły
     tworzenia nazw różnych rodzajów relacji:
-    - "podstawowa" własność nie ma przedrostka, np. "zwrotna", "reflexive"
-    - zanegowana własność ma przedrostek "nie" (lub podobny w nazwach
+    - "podstawowa" własność nie ma przedrostka, np. "zwrotna", "reflexive"
+    - zanegowana własność ma przedrostek "nie" (lub podobny w nazwach
       angielskich), np. "niezwrotny", "irreflexive"
     - przeciwieństwo tej właściwości ma przedrostek "anty-" (po angielsku
       "anti-"), np. "antyzwrotna", "antireflexive" *)
@@ -1355,10 +1355,10 @@ Qed.
 (* end hide *)
 
 (** Okazuje się, że wszystkie relacje na [Empty_set] (a więc także na
-    wszystkich innych typach pustych) są zwrotne. Nie powinno cię to w
+    wszystkich innych typach pustych) są zwrotne. Nie powinno cię to w
     żaden sposób zaskakiwać — jest to tzw. pusta prawda (ang. vacuous
-    truth), zgodnie z którą wszystkie zdania kwantyfikowane uniwersalnie
-    po typie pustym są prawdziwe. Wszyscy w pustym pokoju są debilami. *)
+    truth), zgodnie z którą wszystkie zdania kwantyfikowane uniwersalnie
+    po typie pustym są prawdziwe. Wszyscy w pustym pokoju są debilami. *)
 
 Instance Reflexive_eq {A : Type} : Reflexive (@eq A).
 (* begin hide *)
@@ -1380,7 +1380,7 @@ Proof. rel. Qed.
 (* end hide *)
 
 (** Najważniejszym przykładem relacji zwrotnej jest równość. [eq] jest
-    relacją zwrotną, gdyż ma konstruktor [eq_refl], który głosi, że
+    relacją zwrotną, gdyż ma konstruktor [eq_refl], który głosi, że
     każdy obiekt jest równy samemu sobie. Zwrotna jest też relacja
     [RTrue], gdyż każdy obiekt jest w jej przypadku w relacji z każdym,
     a więc także z samym sobą. Zwrotna nie jest za to relacja [RFalse]
@@ -1395,7 +1395,7 @@ Proof. rel. Qed.
 (* end hide *)
 
 (** Równość jest "najmniejszą" relacją zwrotną w tym sensie, że jest ona
-    subrelacją każdej relacji zwrotnej. Intuicyjnym uzasadnieniem jest
+    subrelacją każdej relacji zwrotnej. Intuicyjnym uzasadnieniem jest
     fakt, że w definicji [eq] poza konstruktorem [eq_refl], który daje
     zwrotność, nie ma niczego innego. *)
 
@@ -1433,12 +1433,12 @@ Qed.
 
 (** Jak widać, złożenie, odwrotność i koniunkcja relacji zwrotnych są zwrotne.
     Dysjunkcja posiada natomiast dużo mocniejszą właściwość: dysjunkcja
-    dowolnej relacji z relacją zwrotną daje relację zwrotną. Tak więc
+    dowolnej relacji z relacją zwrotną daje relację zwrotną. Tak więc
     dysjunkcja [R] z [eq] pozwala nam łatwo "dodać" zwrotność do [R]. Słownie
     dysjunkcja z [eq] odpowiada zwrotowi "lub równy", który możemy spotkać np.
     w wyrażeniach "mniejszy lub równy", "większy lub równy".
 
-    Właściwością odwrotną do zwrotności jest antyzwrotność. Relacja
+    Właściwością odwrotną do zwrotności jest antyzwrotność. Relacja
     antyzwrotna to taka, że żaden [x : A] nie jest w relacji sam ze sobą. *)
 
 Instance Antireflexive_neq :
@@ -1452,7 +1452,7 @@ Instance Antireflexive_lt : Antireflexive lt.
 Proof. rel. Qed.
 (* end hide *)
 
-(** Typowymi przykładami relacji antyzwrotnych są nierówność [<>] oraz
+(** Typowymi przykładami relacji antyzwrotnych są nierówność [<>] oraz
     porządek "mniejszy niż" ([<]) na liczbach naturalnych. Ze względu
     na sposób działania ludzkiego mózgu antyzwrotna jest cała masa relacji
     znanych nam z codziennego życia: "x jest matką y", "x jest ojcem y",
@@ -1483,7 +1483,7 @@ Instance Antireflexive_RFalse :
 Proof. rel. Qed.
 (* end hide *)
 
-(** Równość na typie niepustym nie jest antyzwrotna, gdyż jest zwrotna
+(** Równość na typie niepustym nie jest antyzwrotna, gdyż jest zwrotna
     (wzajemne związki między tymi dwoma pojęciami zbadamy już niedługo).
     Antyzwrotna nie jest także relacja [RTrue] na typie niepustym, gdyż
     co najmniej jeden element jest w relacji z samym sobą. Antyzwrotna
@@ -1523,12 +1523,12 @@ Instance Antireflexive_Ror :
 Proof. rel. Qed.
 (* end hide *)
 
-(** Złożenie relacji antyzwrotnych nie musi być antyzwrotne, ale odwrotność
-    i dysjunkcja już tak, zaś koniunkcja dowolnej relacji z relacją
-    antyzwrotną daje nam relację antyzwrotną. Dzięki temu możemy dowolnej
-    relacji [R] "zabrać" zwrotność koniunkcjując ją z [<>].
+(** Złożenie relacji antyzwrotnych nie musi być antyzwrotne, ale odwrotność
+    i dysjunkcja już tak, zaś koniunkcja dowolnej relacji z relacją
+    antyzwrotną daje nam relację antyzwrotną. Dzięki temu możemy dowolnej
+    relacji [R] "zabrać" zwrotność koniunkcjując ją z [<>].
 
-    Kolejną właściwością jest niezwrotność. Relacja niezwrotna to taka,
+    Kolejną właściwością jest niezwrotność. Relacja niezwrotna to taka,
     która nie jest zwrotna. Zauważ, że pojęcie to zasadniczo różni się
     od pojęcia relacji antyzwrotnej: tutaj mamy kwantyfikator [exists],
     tam zaś [forall]. *)
@@ -1546,14 +1546,14 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Typowym przykładem relacji niezwrotnej jest nierówność [x <> y]. Jako,
+(** Typowym przykładem relacji niezwrotnej jest nierówność [x <> y]. Jako,
     że każdy obiekt jest równy samemu sobie, to żaden obiekt nie może być
     nierówny samemu sobie. Zauważ jednak, że typ [A] musi być niepusty,
-    gdyż w przeciwnym wypadku nie mamy czego dać kwantyfikatorowi
+    gdyż w przeciwnym wypadku nie mamy czego dać kwantyfikatorowi
     [exists].
 
     Innym przykładem relacji niezwrotnej jest porządek "większy niż"
-    na liczbach naturalnych. Porządkami zajmiemy się już niedługo. *)
+    na liczbach naturalnych. Porządkami zajmiemy się już niedługo. *)
 
 Lemma empty_not_Irreflexive :
   forall R : rel Empty_set, ~ Irreflexive R.
@@ -1573,8 +1573,8 @@ Lemma eq_nonempty_not_Irreflexive :
 Proof. rel. Qed.
 (* end hide *)
 
-(** Równość jest zwrotna, a więc nie może być niezwrotna. Zauważ jednak,
-    że musimy podać aż dwa osobne dowody tego faktu: jeden dla typu
+(** Równość jest zwrotna, a więc nie może być niezwrotna. Zauważ jednak,
+    że musimy podać aż dwa osobne dowody tego faktu: jeden dla typu
     pustego [Empty_set], a drugi dla dowolnego typu niepustego. Wynika to
     z tego, że nie możemy sprawdzić, czy dowolny typ [A] jest pusty, czy
     też nie. *)
@@ -1620,8 +1620,8 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Złożenie relacji niezwrotnych nie musi być niezwrotne. Przyjrzyj się
-    uważnie definicji [Rcomp], a z pewnością uda ci się znaleźć jakiś
+(** Złożenie relacji niezwrotnych nie musi być niezwrotne. Przyjrzyj się
+    uważnie definicji [Rcomp], a z pewnością uda ci się znaleźć jakiś
     kontrprzykład. *)
 
 Instance Irreflexive_Rinv :
@@ -1653,13 +1653,13 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Odwrotność relacji niezwrotnej jest niezwrotna. Koniunkcja dowolnej
-    relacji z relacją niezwrotną daje relację niezwrotną. Tak więc za
-    pomocą koniunkcji i dysjunkcji możemy łatwo dawać i zabierać
-    zwrotność różnym relacjom. Okazuje się też, że dysjunkcja nie
+(** Odwrotność relacji niezwrotnej jest niezwrotna. Koniunkcja dowolnej
+    relacji z relacją niezwrotną daje relację niezwrotną. Tak więc za
+    pomocą koniunkcji i dysjunkcji możemy łatwo dawać i zabierać
+    zwrotność różnym relacjom. Okazuje się też, że dysjunkcja nie
     zachowuje niezwrotności.
 
-    Na zakończenie zbadajmy jeszcze, jakie związki zachodzą pomiędzy
+    Na zakończenie zbadajmy jeszcze, jakie związki zachodzą pomiędzy
     zwrotnością, antyzwrotnością i niezwrotnością. *)
 
 Instance Reflexive_Rnot :
@@ -1677,7 +1677,7 @@ Proof. rel. Qed.
 (* end hide *)
 
 (** Podstawowa zależność między nimi jest taka, że negacja relacji zwrotnej
-    jest antyzwrotna, zaś negacja relacji antyzwrotnej jest zwrotna. *)
+    jest antyzwrotna, zaś negacja relacji antyzwrotnej jest zwrotna. *)
 
 Lemma Reflexive_Antireflexive_empty :
   forall R : rel Empty_set, Reflexive R /\ Antireflexive R.
@@ -1702,8 +1702,8 @@ Instance Irreflexive_nonempty_Antireflexive :
 Proof. rel. Qed.
 (* end hide *)
 
-(** Związek między niezwrotnością i antyzwrotnością jest nadzwyczaj prosty:
-    każda relacja antyzwrotna na typie niepustym jest też niezwrotna. *)
+(** Związek między niezwrotnością i antyzwrotnością jest nadzwyczaj prosty:
+    każda relacja antyzwrotna na typie niepustym jest też niezwrotna. *)
 
 (** ** Symetria *)
 
@@ -1733,8 +1733,8 @@ Lemma Symmetric_char :
 Proof. rel. Qed.
 (* end hide *)
 
-(** Alterntywną charakteryzacją symetrii może być stwierdzenie, że relacja
-    symetryczna to taka, która jest swoją własną odwrotnością. *)
+(** Alterntywną charakteryzacją symetrii może być stwierdzenie, że relacja
+    symetryczna to taka, która jest swoją własną odwrotnością. *)
 
 Instance Symmetric_eq :
   forall A : Type, Symmetric (@eq A).
@@ -1754,7 +1754,7 @@ Instance Symmetric_RFalse :
 Proof. rel. Qed.
 (* end hide *)
 
-(** Równość, relacja pełna i pusta są symetryczne. *)
+(** Równość, relacja pełna i pusta są symetryczne. *)
 
 Lemma Rcomp_not_Symmetric :
   exists (A : Type) (R S : rel A),
@@ -1807,7 +1807,7 @@ Proof. rel. Qed.
 
     Relacja antysymetryczna to przeciwieństwo relacji symetrycznej —
     jeżeli [x] jest w relacji z [y], to [y] nie może być w relacji z
-    [x]. Sporą klasę przykładów stanowią różne relacje służące do
+    [x]. Sporą klasę przykładów stanowią różne relacje służące do
     porównywania: "x jest wyższy od y", "x jest silniejszy od y",
     "x jest bogatszy od y". *)
 
@@ -2579,7 +2579,7 @@ Class StrictTotalOrder {A : Type} (R : rel A) : Prop :=
 
 (** * Domknięcia *)
 
-(** Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
+(** Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
     niepostrzeżenie przywyczajały do monad. *)
 
 Class Closure

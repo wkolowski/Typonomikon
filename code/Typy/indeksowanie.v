@@ -2,10 +2,10 @@
 
 Require Import D5.
 
-(** Pamiętasz zapewne funkcję [nth] z rozdziału o listach, której
+(** Pamiętasz zapewne funkcję [nth] z rozdziału o listach, której
     celem było znalezienie [n]-tego elementu na liście [l]. Jeżeli
     twoja implementacja była poprawna i elegancka, to wyglądała
-    zapewne jakoś tak: *)
+    zapewne jakoś tak: *)
 
 Print nth.
 (* ===> nth =
@@ -20,19 +20,19 @@ Print nth.
           end
              : forall A : Type, nat -> list A -> option A *)
 
-(** Obraz wyłaniający się z tej definicji jest prosty:
+(** Obraz wyłaniający się z tej definicji jest prosty:
     - w pustej liście nic nie znajdziemy
     - jeżeli lista jest niepusta, to przemierzamy ją, zerkając co i rusz
-      na indeks [n]. [0] oznacza "już", zaś [S _] oznacza "jeszcze krok"
+      na indeks [n]. [0] oznacza "już", zaś [S _] oznacza "jeszcze krok"
 
-    Ma to sens, czyż nie? Zastanówmy się więc teraz, jak można
+    Ma to sens, czyż nie? Zastanówmy się więc teraz, jak można
     indeksować inne struktury danych, takie jak wektory czy drzewa (co
     w zasadzie wyczerpuje pytanie, bo elementy każdego typu induktywnego
     to nic innego jak drzewa). *)
 
 Definition nat' : Type := list unit.
 
-(** Pierwsza rzecz, którą musimy zauważyć, to to, że liczby naturalne i
+(** Pierwsza rzecz, którą musimy zauważyć, to to, że liczby naturalne i
     listy [unit]ów to w zasadzie to samo. No bo pomyśl:
     - jest [0] i jest [nil]
     - jest [S 0] i jest [tt :: nil]
@@ -41,19 +41,19 @@ Definition nat' : Type := list unit.
 
 (** **** Ćwiczenie *)
 
-(** Pokaż, że typy [nat] i [list unit] są izomorficzne. *)
+(** Pokaż, że typy [nat] i [list unit] są izomorficzne. *)
 
 (* begin hide *)
 (* TODO *)
 (* end hide *)
 
-(** Podsumowując: listy indeksujemy liczbami naturalnymi, które są tym
-    samym co listy [unit]ów. Przypadek? Nie sądzę. Można tę konstatację
-    sparafrazować tak: [list A] indeksujemy za pomocą [list unit].
+(** Podsumowując: listy indeksujemy liczbami naturalnymi, które są tym
+    samym co listy [unit]ów. Przypadek? Nie sądzę. Można tę konstatację
+    sparafrazować tak: [list A] indeksujemy za pomocą [list unit].
 
     Jest w tym sporo mądrości: [list A] to podłużny byt wypełniony
-    elementami typu [A], zaś [list unit] to po prostu podłużny byt -
-    jego zawartość jest nieistotna.
+    elementami typu [A], zaś [list unit] to po prostu podłużny byt -
+    jego zawartość jest nieistotna.
 
     ACHTUNG: to wszystko kłamstwa, sprawa jest skomplikowańsza niż
     myślałem. *)
@@ -187,19 +187,19 @@ end.
 End T2.
 
 (** Przemyślenia: indeksowanie jest dużo bardziej związane z zipperami,
-    niż mi się wydawało. Zipper pozwala sfokusować się na jakimś miejscu
+    niż mi się wydawało. Zipper pozwala sfokusować się na jakimś miejscu
     w strukturze i musimy pamiętać, jak do tego miejsca doszliśmy, tj.
     co pominęliśmy po drodze.
 
-    Jeżeli zależy nam wyłącznie na tym, aby pokazać palcem na dane
+    Jeżeli zależy nam wyłącznie na tym, aby pokazać palcem na dane
     miejsce w strukturze, to nie musimy pamiętać, co pominęliśmy.
     Podsumowując: intuicja dotycząca typów indeksów oraz zipperów
-    jest dość jasna, ale związki z różniczkowaniem są mocno pokrętne.
+    jest dość jasna, ale związki z różniczkowaniem są mocno pokrętne.
 
-    Kwestią jest też jak przenieść te intuicje na indeksowane rodziny.
+    Kwestią jest też jak przenieść te intuicje na indeksowane rodziny.
     Na pewno indeksami [Vec n] jest [Fin n], a skądinąd [Vec n] to
-    [{n : nat & {l : list A | length l = n}}], zaś [Fin n] to [nat],
-    tylko trochę ograniczone.
+    [{n : nat & {l : list A | length l = n}}], zaś [Fin n] to [nat],
+    tylko trochę ograniczone.
 
     Zapewne działa to bardzo dobrze... taki huj, jednak nie. *)
 

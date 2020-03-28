@@ -2,7 +2,7 @@
 (** Możemy jednak zjeść ciastko i mieć ciastko, a wszystko to za
     sprawą taktyki [abstract]. *)
 
-(*    TODO: ta taktyka ostatnimi czasy coś nie za bardzo chce dział*)
+(*    TODO: ta taktyka ostatnimi czasy coś nie za bardzo chce dział*)
 (* begin hide *)
 (* TODO: w najnowszym Coqu nie działa *)
 (* end hide *)
@@ -24,7 +24,7 @@ Print filter_length''.
 
 (** Taktyka [abstract t] działa tak jak [t], ale z tą różnicą, że ukrywa term
     wygenerowany przez [t] w zewnętrznym lemacie. Po zakończeniu dowodu możemy
-    zakończyć go komendą [Qed exporting], co spowoduje zapisanie go w takiej
+    zakończyć go komendą [Qed exporting], co spowoduje zapisanie go w takiej
     skróconej postaci z odwołaniami do zewnętrznych lematów, albo standardowym
     [Qed], przez co term będzie wyglądał tak, jakbyśmy wcale nie użyli taktyki
     [abstract]. *)

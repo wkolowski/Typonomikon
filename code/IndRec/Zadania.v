@@ -87,14 +87,14 @@ Inductive Cycle {A : Type} : list A -> list A -> Prop :=
 Inductive Palindrome {A : Type} : list A -> Prop :=
 *)
 
-(** Zdefiniuj typ list niepustych, które trzymają elementy typu [A]. Potem
+(** Zdefiniuj typ list niepustych, które trzymają elementy typu [A]. Potem
     zdefiniuj dla nich wszystkie te użyteczne rzeczy co dla list. *)
 
 Inductive nel (A : Type) : Type :=
     | singl : A -> nel A
     | cons : A -> nel A -> nel A.
 
-(** Zdefiniuj typ niepustych drzew binarnych, które trzymają wartości typu [A] jedynie
+(** Zdefiniuj typ niepustych drzew binarnych, które trzymają wartości typu [A] jedynie
     w liściach. *)
 
 Inductive RBTree (A : Type) : Type :=
@@ -114,7 +114,7 @@ Fail Inductive BTree (A : Type) : Type :=
     | Empty : BTree A
     | Node : A -> BTree A -> BTree A -> BTree A.
 
-(** Zdefiniuj typ drzew o skończonej ilości synów, które trzymają elementy
+(** Zdefiniuj typ drzew o skończonej ilości synów, które trzymają elementy
     typu [A]. *)
 
 Fail Inductive Tree (A : Type) : Type :=
@@ -140,7 +140,7 @@ Fail Inductive InfTree' (B A : Type) : Type :=
 (** Zdefiniuj predykaty [even] i [odd]. *)
 (*Inductive even : nat -> Prop :=*)
 
-(** Zdefiniuj relację [<=] dla liczb naturalnych i to na dwa różne sposoby. *)
+(** Zdefiniuj relację [<=] dla liczb naturalnych i to na dwa różne sposoby. *)
 
 Inductive le (n : nat) : nat -> Prop :=
     | le_refl : le n n
@@ -152,7 +152,7 @@ Fail Inductive le : nat -> nat -> Prop :=
 
 (** * Indeksy - typy *)
 
-(** Zdefiniuj rodzinę typów [Fin : nat -> Type], gdzie [Fin n] jest typem o
+(** Zdefiniuj rodzinę typów [Fin : nat -> Type], gdzie [Fin n] jest typem o
     [n] elementach. *)
 Inductive Fin : nat -> Type :=
     | FZ : forall n : nat, Fin (S n)
@@ -207,7 +207,7 @@ Inductive hBTree (A : Type) : nat -> Type :=
     | hNode : A -> forall {n m : nat},
                      hBTree A n -> hBTree A m -> hBTree A (S (max n m)).
 
-(** Zdefiniuj typ list, które mogą trzymać wartości różnych typów.
+(** Zdefiniuj typ list, które mogą trzymać wartości różnych typów.
     Typ każdego elementu listy nie jest jednak dowolny - jest on
     zdeterminowany przez indeks, pod którym element ten występuje
     na liście. *)

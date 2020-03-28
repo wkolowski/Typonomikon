@@ -393,9 +393,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Zdefiniuj funkcję [opposite], które danemu kierunkowi przyporządkowuje
+(** Zdefiniuj funkcję [opposite], które danemu kierunkowi przyporządkowuje
     kierunek do niego przeciwny (czyli północy przyporządkowuje południe
-    etc.). Wymyśl i udowodnij jakąś ciekawę specyfikację dla tej funkcji
+    etc.). Wymyśl i udowodnij jakąś ciekawę specyfikację dla tej funkcji
     (wskazówka: powiąż ją z [turnL] i [turnR]). *)
 
 (* begin hide *)
@@ -438,9 +438,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Zdefiniuj funkcję [is_opposite], która bierze dwa kierunki i zwraca
-    [true], gdy są one przeciwne oraz [false] w przeciwnym wypadku. Wymyśl
-    i udowodnij jakąś specyfikację dla tej funkcji. Wskazówka: jakie są jej
+(** Zdefiniuj funkcję [is_opposite], która bierze dwa kierunki i zwraca
+    [true], gdy są one przeciwne oraz [false] w przeciwnym wypadku. Wymyśl
+    i udowodnij jakąś specyfikację dla tej funkcji. Wskazówka: jakie są jej
     związku z [turnL], [turnR] i [opposite]? *)
 
 (* begin hide *)
@@ -487,8 +487,8 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Pokaż, że funkcje [turnL], [turnR] oraz [opposite] są injekcjami i
-    surjekcjami (co to dokładnie znacz, dowiemy się później). Uwaga: to
+(** Pokaż, że funkcje [turnL], [turnR] oraz [opposite] są injekcjami i
+    surjekcjami (co to dokładnie znacz, dowiemy się później). Uwaga: to
     zadanie wymaga użyci taktyki [inversion], która jest opisana w
     podrozdziale o polimorfizmie. *)
 
@@ -579,7 +579,7 @@ Inductive Color : Type :=
     | B : Color.
 (* end hide *)
 
-(** Wymyśl do nich jakieś ciekawe funkcje i twierdzenia. *)
+(** Wymyśl do nich jakieś ciekawe funkcje i twierdzenia. *)
 
 (* begin hide *)
 
@@ -616,7 +616,7 @@ end.
     rozgałęzienia możemy uzyskać, gdy jeden z konstruktorów będzie
     rekurencyjny, tzn. gdy jako argument będzie przyjmował term typu,
     który właśnie definiujemy. Naszym przykładem będą liczby naturalne
-    (choć i tutaj rozgałęzienie będzie nieco zdegenerowane ­- każdy term
+    (choć i tutaj rozgałęzienie będzie nieco zdegenerowane  �- każdy term
     będzie mógł mieć co najwyżej jedno). *)
 
 Module NatDef.
@@ -706,7 +706,7 @@ end.
     która jest rekurencyjna, ale nie jest strukturalnie rekurencyjna.
     Precyzyjniej pisząc: później okaże się, że wszystkie formy
     rekurencji to tak naprawdę rekursja strukturalna pod przykrywką.
-    Wymyśl taką definicję, która na pierwszy rzut oka nie jest
+    Wymyśl taką definicję, która na pierwszy rzut oka nie jest
     strukturalnie rekurencyjna. *)
 
 (* begin hide *)
@@ -877,7 +877,7 @@ Qed.
 
 (** **** Ćwiczenie (inne dodawanie) *)
 
-(** Dodawanie można alternatywnie zdefiniować także w sposób przedstawiony
+(** Dodawanie można alternatywnie zdefiniować także w sposób przedstawiony
     poniżej. Udowodnij, że ta definicja jest równoważna poprzedniej. *)
 
 Fixpoint plus' (n m : nat) : nat :=
@@ -1087,7 +1087,7 @@ Qed.
 
 (** Udowodnij poniższe twierdzenie bez używania taktyki [inversion].
     Żeby było trudniej, nie pisz osobnej funkcji pomocniczej — zdefiniuj
-    swoją funkcję bezpośrednio w miejscu, w którym chcesz jej użyć.  *)
+    swoją funkcję bezpośrednio w miejscu, w którym chcesz jej użyć.  *)
 
 Theorem zero_not_one : 0 <> 1.
 (* begin hide *)
@@ -1150,7 +1150,7 @@ Axiom rational_eq :
 
 (** Udowodnij, że aksjomat [rational_eq] jest sprzeczny. Wskazówka: znajdź
     dwie liczby wymierne, które są równe na mocy tego aksjomatu, ale które
-    można rozróżnić za pomocą dopasowania do wzorca. *)
+    można rozróżnić za pomocą dopasowania do wzorca. *)
 
 (* begin hide *)
 Definition q_1_2 : rational :=
@@ -2090,7 +2090,7 @@ Module MyEq.
 
 (** Czym jest równość? To pytanie stawiało sobie wielu filozofów,
     szczególnie politycznych, zaś wyjątkowo rzadko nad tą sprawą
-    zastanawiali się sami bojownicy o równość, tak jakby wszystko
+    zastanawiali się sami bojownicy o równość, tak jakby wszystko
     dokładnie wiedzieli. Odpowiedź na nie jest jednym z największych
     osiągnięć matematyki w dziejach: równość to jeden z typów induktywnych,
     które możemy zdefiniować w Coqu. *)
@@ -2180,7 +2180,7 @@ Qed.
       konstruktorem [0]) i który pasuje do wzorca [| 0 => 42], a zatem
       redukcja jota zamienia całe wyrażenie od [match] aż do [end]
       na [42].
-    - Redukcja zeta odwija lokalną definicję poczynioną za pomocą [let]a *)
+    - Redukcja zeta odwija lokalną definicję poczynioną za pomocą [let]a *)
 
 (** Termy [x] i [y] są konwertowalne, gdy za pomocą serii konwersji alfa
     oraz redukcji beta, delta, jota i zeta oba redukują się do tego samego
@@ -2191,18 +2191,18 @@ Qed.
     konwertowalność, to jakim cudem równe są termy [0 + n] oraz [n + 0],
     gdzie [n] jest zmienną, które przecież nie są konwertowalne?
 
-    Trzeba tutaj dokonać pewnego doprecyzowania. Termy [0 + n] i [n + 0] są
+    Trzeba tutaj dokonać pewnego doprecyzowania. Termy [0 + n] i [n + 0] są
     konwertowalne dla każdego konkretnego [n], np. [0 + 42] i [42 + 0] są
     konwertowalne. Konwertowalne nie są natomiast, gdy [n] jest zmienną -
-    jest tak dlatego, że nie możemy wykonać redukcji iota, bo nie wiemy, czy
+    jest tak dlatego, że nie możemy wykonać redukcji iota, bo nie wiemy, czy
     [n] jest zerem czy następnikiem.
 
-    Odpowiedzią na pytanie są reguły eliminacji, głównie dla typów
-    induktywnych. Reguły te mają konkluzje postaci [forall x : I, P x],
+    Odpowiedzią na pytanie są reguły eliminacji, głównie dla typów
+    induktywnych. Reguły te mają konkluzje postaci [forall x : I, P x],
     więc w szczególności możemy użyć ich dla [P x := x = y] dla jakiegoś
-    [y : A]. Dzięki nim przeprowadzaliśmy już wielokrotnie mniej więcej
+    [y : A]. Dzięki nim przeprowadzaliśmy już wielokrotnie mniej więcej
     takie rozumowania: [n] jest wprawdzie nie wiadomo czym, ale przez
-    indukcję może to być albo [0], albo [S n'], gdzie dla [n'] zachodzi
+    indukcję może to być albo [0], albo [S n'], gdzie dla [n'] zachodzi
     odpowiednia hipoteza indukcyjna. *)
 
 End MyEq.
@@ -2657,7 +2657,7 @@ Inductive EHBTree : nat -> Type :=
 Module MutualIndution_vs_InductiveFamilies.
 
 (** Indukcja wzajemna nie jest zbyt użyteczna. Pierwszym, praktycznym,
-    powodem jest to, że, jak pewnie zdążyłeś się już na własnej skórze
+    powodem jest to, że, jak pewnie zdążyłeś się już na własnej skórze
     przekonać, jej używanie jest dość upierdliwe. Drugi, teoretyczny,
     powód jest taki, że definicje przez indukcję wzajemną możemy łatwo
     zasymulować za pomocą indeksowanych rodzin typów. *)
@@ -2669,8 +2669,8 @@ Inductive even : nat -> Prop :=
 with odd : nat -> Prop :=
     | oddS : forall n : nat, even n -> odd (S n).
 
-(** Rzućmy jeszcze raz okiem na znaną nam już definicję predykatów [even]
-    i [odd] przez indukcję wzajemną. Nie dzieje się tu nic niezwykłego, a
+(** Rzućmy jeszcze raz okiem na znaną nam już definicję predykatów [even]
+    i [odd] przez indukcję wzajemną. Nie dzieje się tu nic niezwykłego, a
     najważniejszym spostrzeżeniem, jakie możemy poczynić, jest to, że
     [even] i [odd] to dwa byty - nie trzy, nie pięć, ale dwa. *)
 
@@ -2684,11 +2684,11 @@ Inductive even_odd : bool -> nat -> Prop :=
 Definition even' := even_odd true.
 Definition odd' := even_odd false.
 
-(** Co z tego wynika? Ano, zamiast definiować przez indukcję wzajemną dwóch
+(** Co z tego wynika? Ano, zamiast definiować przez indukcję wzajemną dwóch
     predykatów [even] i [odd] możemy za jednym zamachem zdefiniować relację
     [even_odd], która jednocześnie odpowiada obu tym predykatom. Kluczem
     w tej sztuczce jest dodatkowy indeks, którym jest dwuelementowy typ
-    [bool]. Dzięki niemu możemy zakodować definicję [even] za pomocą
+    [bool]. Dzięki niemu możemy zakodować definicję [even] za pomocą
     [even_odd true], zaś [odd] jako [even_odd false]. *)
 
 Lemma even_even' :
@@ -2723,15 +2723,15 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Obie definicje są, jak widać (ćwiczenie!), równoważne, choć pod względem
+(** Obie definicje są, jak widać (ćwiczenie!), równoważne, choć pod względem
     estetycznym oczywiście dużo lepiej wypada indukcja wzajemna. *)
 
 End MutualIndution_vs_InductiveFamilies.
 
 (** Na koniec wypada jeszcze powiedzieć, że indeksowane typy induktywne są
     potężniejsze od typów wzajemnie induktywnych. Wynika to z tego prostego
-    faktu, że przez wzajemną indukcję możemy zdefiniować na raz jedynie
-    skończenie wiele typów, zaś indeksowane typy induktywne indeksowane
+    faktu, że przez wzajemną indukcję możemy zdefiniować na raz jedynie
+    skończenie wiele typów, zaś indeksowane typy induktywne indeksowane
     mogą być typami nieskończonymi. *)
 
 (** ** Sumy zależne i podtypy *)
@@ -2878,12 +2878,12 @@ End ex.
 
 (** * Wyższe czary *)
 
-(** Najwyższy czas nauczyć się czegoś tak zaawansowanego, że nawet w Coqu
-    (pełnym przecież dziwnych rzeczy) tego nie ma i nie zapowiada się na
+(** Najwyższy czas nauczyć się czegoś tak zaawansowanego, że nawet w Coqu
+    (pełnym przecież dziwnych rzeczy) tego nie ma i nie zapowiada się na
     to, że będzie. Mam tu na myśli mechanizmy takie jak indukcja-indukcja,
     indukcja-rekursja oraz indukcja-indukcja-rekursja (jak widać, w świecie
     poważnych uczonych, podobnie jak świecie Goebbelsa, im więcej razy
-    powtórzy się dane słowo, tym więcej płynie z niego mocy). *)
+    powtórzy się dane słowo, tym więcej płynie z niego mocy). *)
 
 (** ** Przypomnienie *)
 
@@ -2896,7 +2896,7 @@ Unset Elimination Schemes.
 
 (** Powyższa komenda mówi Coqowi, żeby nie generował automatycznie reguł
     indukcji. Przyda nam się ona, by uniknąć konfliktów nazw z regułami,
-    które będziemy pisać ręcznie. *)
+    które będziemy pisać ręcznie. *)
 
 (** *** Enumeracje *)
 
@@ -2914,7 +2914,7 @@ Definition I_case_nondep_type : Type :=
   forall P : Type, P -> P -> P -> I -> P.
 
 (** Reguła definiowania przez przypadki jest banalnie prosta: jeżeli w
-    jakimś inny typie [P] uda nam się znaleźć po jednym elemencie dla każdego
+    jakimś inny typie [P] uda nam się znaleźć po jednym elemencie dla każdego
     z elementów naszego typu [I], to możemy zrobić funkcję [I -> P]. *)
 
 Definition I_case_nondep : I_case_nondep_type :=
@@ -2925,14 +2925,14 @@ Definition I_case_nondep : I_case_nondep_type :=
       | c2 => c2'
   end.
 
-(** Regułę zdefiniować możemy za pomocą dopasowania do wzorca. *)
+(** Regułę zdefiniować możemy za pomocą dopasowania do wzorca. *)
 
 Definition I_case_dep_type : Type :=
   forall (P : I -> Type) (c0' : P c0) (c1' : P c1) (c2' : P c2),
     forall i : I, P i.
 
-(** Zależną regułę definiowania przez przypadki możemy uzyskać z poprzedniej
-    uzależniając przeciwdziedzinę [P] od dziedziny. *)
+(** Zależną regułę definiowania przez przypadki możemy uzyskać z poprzedniej
+    uzależniając przeciwdziedzinę [P] od dziedziny. *)
 
 Definition I_case_dep : I_case_dep_type :=
   fun (P : I -> Type) (c0' : P c0) (c1' : P c1) (c2' : P c2) (i : I) =>
@@ -2958,7 +2958,7 @@ Inductive I : Type :=
 
 (** Typy induktywne stają się naprawdę induktywne, gdy konstruktory mogą
     brać argumenty typu, który właśnie definiujemy. Dzięki temu możemy
-    tworzyć type, które mają nieskończenie wiele elementów, z których
+    tworzyć type, które mają nieskończenie wiele elementów, z których
     każdy ma kształt takiego czy innego drzewa. *)
 
 Definition I_rec_type : Type :=
@@ -2986,7 +2986,7 @@ Definition I_ind_type : Type :=
     (D' : forall i : I, P i -> P (D i)),
       forall i : I, P i.
 
-(** Reguła indukcji (czyli induktor - cóż za piękna nazwa!) powstaje z
+(** Reguła indukcji (czyli induktor - cóż za piękna nazwa!) powstaje z
     reguły rekursji przez uzależnienie przeciwdziedziny [P] od dziedziny
     [I]. *)
 
@@ -3001,17 +3001,17 @@ end.
 (** Podobnie jak poprzednio, implementacja reguły indukcji jest identyczna
     jak rekursora, jedynie typy są bardziej ogólnej.
 
-    Uwaga: nazywam reguły nieco inaczej niż te autogenerowane przez Coqa.
+    Uwaga: nazywam reguły nieco inaczej niż te autogenerowane przez Coqa.
     Dla Coqa reguła indukcji dla [I] to nasze [I_ind] z [P : I -> Type]
-    zastąpionym przez [P : I -> Prop], zaś Coqowe [I_rec] odpowiadałoby
+    zastąpionym przez [P : I -> Prop], zaś Coqowe [I_rec] odpowiadałoby
     naszemu [I_ind] dla [P : I -> Set].
 
-    Jeżeli smuci cię burdel nazewniczy, to nie przejmuj się - kiedyś będzie
+    Jeżeli smuci cię burdel nazewniczy, to nie przejmuj się - kiedyś będzie
     lepiej. Klasyfikacja reguł jest prosta:
-    - reguły mogą być zależne lub nie, w zależności od tego czy [P] zależy
+    - reguły mogą być zależne lub nie, w zależności od tego czy [P] zależy
       od [I]
-    - reguły mogą być rekurencyjne lub nie
-    - reguły mogą być dla sortu [Type], [Prop] albo nawet [Set] *)
+    - reguły mogą być rekurencyjne lub nie
+    - reguły mogą być dla sortu [Type], [Prop] albo nawet [Set] *)
 
 End rec.
 
@@ -3039,8 +3039,8 @@ Definition I_case_nondep_type : Type :=
 
 (** Typ rekursora jest oczywisty: jeżeli znajdziemy rzeczy o kształtach
     takich jak konstruktory [I] z [I] zastąpionym przez [P], to możemy
-    zrobić funkcję [I -> P]. Jako, że parametry są zawsze takie samo,
-    możemy skwantyfikować je na samym początku. *)
+    zrobić funkcję [I -> P]. Jako, że parametry są zawsze takie samo,
+    możemy skwantyfikować je na samym początku. *)
 
 Definition I_case_nondep
   (A B P : Type) (c0' : A -> P) (c1' : B -> P) (c2' : A -> B -> P)
@@ -3060,7 +3060,7 @@ Definition I_case_dep_type : Type :=
     (c2' : forall (a : A) (b : B), P (c2 a b)),
       forall i : I A B, P i.
 
-(** A regułę indukcję uzyskujemy przez uzależnienie [P] od [I]. *)
+(** A regułę indukcję uzyskujemy przez uzależnienie [P] od [I]. *)
 
 Definition I_case_dep
   (A B : Type) (P : I A B -> Type)
@@ -3086,8 +3086,8 @@ Inductive Smok : Type :=
 with Zmok : Type :=
     | Zmoczony : Smok -> Zmok.
 
-(** Indukcja wzajemna pozwala definiować na raz wiele typów, które mogą
-    odwoływać się do siebie nawzajem. Cytując klasyków: smok to wysuszony
+(** Indukcja wzajemna pozwala definiować na raz wiele typów, które mogą
+    odwoływać się do siebie nawzajem. Cytując klasyków: smok to wysuszony
     zmok, zmok to zmoczony smok. *)
 
 Definition Smok_case_nondep_type : Type :=
@@ -3097,7 +3097,7 @@ Definition Zmok_case_nondep_type : Type :=
   forall Z : Type, (Smok -> Z) -> Zmok -> Z.
 
 (** Reguła niezależnej analizy przypadków dla [Smok]a wygląda banalnie:
-    jeżeli ze [Zmok]a potrafimy wyprodukować [S], to ze [Smok]a też.
+    jeżeli ze [Zmok]a potrafimy wyprodukować [S], to ze [Smok]a też.
     Dla [Zmok]a jest analogicznie. *)
 
 Definition Smok_case_nondep
@@ -3121,9 +3121,9 @@ Definition Zmok_rec_type : Type :=
   forall S Z : Type, (Z -> S) -> (S -> Z) -> Zmok -> Z.
 
 (** Typ rekursora jest jednak nieco bardziej zaawansowany. Żeby zdefiniować
-    funkcję typu [Smok -> S], musimy mieć nie tylko rzeczy w kształcie
+    funkcję typu [Smok -> S], musimy mieć nie tylko rzeczy w kształcie
     konstruktorów [Smok]a, ale także w kształcie konstruktorów [Zmok]a,
-    gdyż rekurencyjna struktura obu typów jest ze sobą nierozerwalnie
+    gdyż rekurencyjna struktura obu typów jest ze sobą nierozerwalnie
     związana. *)
 
 Fixpoint Smok_rec
@@ -3184,7 +3184,7 @@ Inductive I : nat -> Type :=
     | c0 : bool -> I 0
     | c42 : nat -> I 42.
 
-(** Ostatnią poznaną przez nas innowacją są typy indeksowane. Tutaj również
+(** Ostatnią poznaną przez nas innowacją są typy indeksowane. Tutaj również
     definiujemy za jednym zamachem (ekhem...) dużo typów, ale nie są one
     niezależne jak w przypadku parametrów, lecz mogą od siebie wzajemnie
     zależeć. Słowem, tak naprawdę definiujemy przez indukcję funkcję
@@ -3218,7 +3218,7 @@ match i with
     | c42 n => c42' n
 end.
 
-(** ... a w powyższej tak. Jako, że indeksy zmieniają się pomiędzy
+(** ... a w powyższej tak. Jako, że indeksy zmieniają się pomiędzy
     konstruktorami, każdy z nich musi kwantyfikować je osobno (co akurat
     nie jest potrzebne w naszym przykładzie, gdyż jest zbyt prosty). *)
 
@@ -3259,20 +3259,20 @@ Module ind_ind.
     i uogólnienie mechanizmów definiowania typów wzajemnie induktywnych oraz
     indeksowanych typów induktywnych.
 
-    Typy wzajemnie induktywne mogą odnosić się do siebie nawzajem, ale co
+    Typy wzajemnie induktywne mogą odnosić się do siebie nawzajem, ale co
     to dokładnie znaczy? Ano to, że konstruktory każdego typu mogą brać
     argumenty wszystkch innych typów definiowanych jednocześnie z nim. To
     jest clou całej sprawy: konstruktory.
 
-    A co to ma do typów indeksowanych? Ano, zastanówmy się, co by się stało,
-    gdybyśmy chcieli zdefiniować przez wzajemną indukcję typ [A] oraz rodzinę
+    A co to ma do typów indeksowanych? Ano, zastanówmy się, co by się stało,
+    gdybyśmy chcieli zdefiniować przez wzajemną indukcję typ [A] oraz rodzinę
     typów [B : A -> Type]. Otóż nie da się: konstruktory [A] mogą odnosić
-    się do [B] i vice-versa, ale [A] nie może być indeksem [B].
+    się do [B] i vice-versa, ale [A] nie może być indeksem [B].
 
     Indukcja-indukcja to coś, co... tam taram tam tam... pozwala właśnie na
-    to: możemy jednocześnie zdefiniować typ i indeksowaną nim rodzinę typów.
-    I wszystko to ukryte pod taką smutną nazwą... lobby teoriotypowe nie
-    chciało, żebyś się o tym dowiedział.
+    to: możemy jednocześnie zdefiniować typ i indeksowaną nim rodzinę typów.
+    I wszystko to ukryte pod taką smutną nazwą... lobby teoriotypowe nie
+    chciało, żebyś się o tym dowiedział.
 
     Czas na przykład! *)
 
@@ -3290,25 +3290,25 @@ with ok {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
 
 (* ===> The reference slist was not found in the current environment. *)
 
-(** Jako się już wcześniej rzekło, indukcja-indukcja nie jest wspierana
-    przez Coqa - powyższa definicja kończy się informacją o błędzie: Coq
+(** Jako się już wcześniej rzekło, indukcja-indukcja nie jest wspierana
+    przez Coqa - powyższa definicja kończy się informacją o błędzie: Coq
     nie widzi [slist] kiedy czyta indeksy [ok] właśnie dlatego, że nie
     dopuszcza on możliwości jednoczesnego definiowania rodziny (w tym
     wypadku relacji) [ok] wraz z jednym z jej indeksów, [slist].
 
-    Będziemy zatem musieli poradzić sobie z przykładem jakoś inaczej -
+    Będziemy zatem musieli poradzić sobie z przykładem jakoś inaczej -
     po prostu damy go sobie za pomocą aksjomatów. Zanim jednak to zrobimy,
     omówimy go dokładniej, gdyż deklarowanie aksjomatów jest niebezpieczne
-    i nie chcemy się pomylić.
+    i nie chcemy się pomylić.
 
     Zamysłem powyższego przykładu było zdefiniowanie typu list posortowanych
-    [slist R], gdzie [R] pełni rolę relacji porządku, jednocześnie z relacją
+    [slist R], gdzie [R] pełni rolę relacji porządku, jednocześnie z relacją
     [ok : A -> slist R -> Prop], gdzie [ok x l] wyraża, że dostawienie [x]
-    na początek listy posortowanej [l] daje listę posortowaną.
+    na początek listy posortowanej [l] daje listę posortowaną.
 
-    Przykład jest oczywiście dość bezsensowny, bo dokładnie to samo można
+    Przykład jest oczywiście dość bezsensowny, bo dokładnie to samo można
     osiągnąć bez używania indukcji-indukcji - wystarczy najpierw zdefiniować
-    listy, a potem relację bycia listą posortowaną, a na koniec zapakować
+    listy, a potem relację bycia listą posortowaną, a na koniec zapakować
     wszystko razem. Nie będziemy się tym jednak przejmować.
 
     Definicja [slist R] jest następująca:
@@ -3330,24 +3330,24 @@ with ok {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
     [slist R], a w relacji [Q] coś o kształcie [ok], to możemy zdefiniować
     funkcję [slist R -> P] oraz [forall (x : A) (l : slist R), ok x l -> Q].
 
-    Regułe indukcji można uzyskać dodając tyle zależności, ile tylko zdołamy
+    Regułe indukcji można uzyskać dodając tyle zależności, ile tylko zdołamy
     unieść.
 
-    Zobaczmy więc, jak zrealizować to wszystko za pomocą aksjomatów. *)
+    Zobaczmy więc, jak zrealizować to wszystko za pomocą aksjomatów. *)
 
 Axioms
   (slist : forall {A : Type}, (A -> A -> Prop) -> Type)
   (ok : forall {A : Type} {R : A -> A -> Prop}, A -> slist R -> Prop).
 
-(** Najpierw musimy zadeklarować [slist], gdyż wymaga tego typ [ok]. Obie
-    definicje wyglądają dokładnie tak, jak nagłówki w powyższej definicji
+(** Najpierw musimy zadeklarować [slist], gdyż wymaga tego typ [ok]. Obie
+    definicje wyglądają dokładnie tak, jak nagłówki w powyższej definicji
     odrzuconej przez Coqa.
 
-    Widać też, że gdybyśmy chcieli zdefiniować rodziny [A] i [B], które są
-    nawzajem swoimi indeksami, to nie moglibyśmy tego zrobić nawet za pomocą
+    Widać też, że gdybyśmy chcieli zdefiniować rodziny [A] i [B], które są
+    nawzajem swoimi indeksami, to nie moglibyśmy tego zrobić nawet za pomocą
     aksjomatów. Rodzi to pytanie o to, które dokładnie definicje przez
     indukcję-indukcję są legalne. Odpowiedź brzmi: nie wiem, ale może kiedyś
-    się dowiem. *)
+    się dowiem. *)
 
 Axioms
   (snil : forall {A : Type} {R : A -> A -> Prop}, slist R)
@@ -3363,11 +3363,11 @@ Axioms
       (x : A), R x h -> ok x (scons h t p)).
 
 (** Następnie definiujemy konstruktory: najpierw konstruktory [slist], a
-    potem [ok]. Musimy to zrobić w tej kolejności, bo konstruktor [ok_snil]
+    potem [ok]. Musimy to zrobić w tej kolejności, bo konstruktor [ok_snil]
     odnosi się do [snil], a [ok_scons] do [scons].
 
-    Znowu widzimy, że gdyby konstruktory obu typów odnosiły się do siebie
-    nawzajem, to nie moglibyśmy zdefiniować takiego typu aksjomatycznie. *)
+    Znowu widzimy, że gdyby konstruktory obu typów odnosiły się do siebie
+    nawzajem, to nie moglibyśmy zdefiniować takiego typu aksjomatycznie. *)
 
 Axiom
   (ind : forall
@@ -3401,28 +3401,28 @@ Axiom
 (** Ugh, co za potfur. Spróbujmy rozłożyć go na czynniki pierwsze.
 
     Przede wszystkim, żeby za dużo nie pisać, zobaczymy tylko regułę indukcji.
-    Teoretycznie powinny to być dwie reguły (tak jak w przypadku [Smok]a i
+    Teoretycznie powinny to być dwie reguły (tak jak w przypadku [Smok]a i
     [Zmok]a) - jedna dla [slist] i jedna dla [ok], ale żeby za dużo nie
     pisać, możemy zapisać je razem.
 
-    Typ [A] i relacja [R] są parametrami obu definicji, więc skwantyfikowane
-    są na samym początku. Nasza reguła pozwala nam zdefiniować przez wzajemną
+    Typ [A] i relacja [R] są parametrami obu definicji, więc skwantyfikowane
+    są na samym początku. Nasza reguła pozwala nam zdefiniować przez wzajemną
     rekursję dwie funkcje, [f : forall l : slist R, P l] oraz
     [g : forall (h : A) (t : slist R) (p : ok h t), Q h t p]. Tak więc [P]
-    to kodziedzina [f], a [Q] - [g].
+    to kodziedzina [f], a [Q] - [g].
 
-    Teraz potrzebujemy rozważyć wszystkie możliwe przypadki - tak jak przy
-    dopasowaniu do wzorca. Przypadek [snil] jest dość banalny. Przypadek
+    Teraz potrzebujemy rozważyć wszystkie możliwe przypadki - tak jak przy
+    dopasowaniu do wzorca. Przypadek [snil] jest dość banalny. Przypadek
     [scons] jest trochę cięższy. Przede wszystkim chcemy, żeby konkluzja
-    była postaci [P (scons h t p)], ale jak powinny wyglądać hipotezy
+    była postaci [P (scons h t p)], ale jak powinny wyglądać hipotezy
     indukcyjne?
 
-    Jedyna słuszna odpowiedź brzmi: odpowiadają one typom wszystkich możliwych
-    wywołań rekurencyjnych [f] i [g] na strukturalnych podtermach
-    [scons h t p]. Jedynymi typami spełniającymi te warunki są [P t] oraz
+    Jedyna słuszna odpowiedź brzmi: odpowiadają one typom wszystkich możliwych
+    wywołań rekurencyjnych [f] i [g] na strukturalnych podtermach
+    [scons h t p]. Jedynymi typami spełniającymi te warunki są [P t] oraz
     [Q h t p], więc dajemy je sobie jako hipotezy indukcyjne.
 
-    Przypadki dla [Q] wyglądają podobnie: [ok_snil] jest banalne, a dla
+    Przypadki dla [Q] wyglądają podobnie: [ok_snil] jest banalne, a dla
     [ok_scons] konkluzja musi być jedynej słusznej postaci, a hipotezami
     indukcyjnymi jest wszystko, co pasuje.
 
@@ -3430,9 +3430,9 @@ Axiom
     mały twist: ponieważ nasza definicja jest aksjomatyczna, zagwarantować
     musimy sobie także reguły obliczania, które dotychczas były zamilaczne,
     bo wynikały z definicji przez dopasowanie do wzorca. Teraz wszystkie te
-    "dopasowania" musimy napisać ręcznie w postaci odpowiednio
+    "dopasowania" musimy napisać ręcznie w postaci odpowiednio
     skwantyfikowanych równań. Widzimy więc, że [Psnil], [Pscons], [Qok_snil]
-    i [Qok_scons] odpowiadają klauzulom w dopasowaniu do wzorca.
+    i [Qok_scons] odpowiadają klauzulom w dopasowaniu do wzorca.
 
     Ufff... udało się. Tak spreparowaną definicją aksjomatyczną możemy się
     jako-tako posługiwać: *)
@@ -3460,10 +3460,10 @@ Proof.
     exact H2.
 Defined.
 
-(** Możemy na przykład dość łatwo zdefiniować niezależny rekursor tylko dla
-    [slist], nie odnoszący się w żaden sposób do [ok]. Widzimy jednak, że
+(** Możemy na przykład dość łatwo zdefiniować niezależny rekursor tylko dla
+    [slist], nie odnoszący się w żaden sposób do [ok]. Widzimy jednak, że
     "programowanie" w taki aksjomatyczny sposób jest dość ciężkie - zamiast
-    eleganckich dopasowań do wzorca musimy ręcznie wpisywać argumenty do
+    eleganckich dopasowań do wzorca musimy ręcznie wpisywać argumenty do
     reguły indukcyjnej. *)
 
 Require Import List.
@@ -3484,11 +3484,11 @@ Definition toList
   {A : Type} {R : A -> A -> Prop} : slist R -> list A :=
     proj1_sig toList'.
 
-(** Używanie takiego rekursora jest już dużo prostsze, co ilustruje powyższy
+(** Używanie takiego rekursora jest już dużo prostsze, co ilustruje powyższy
     przykład funkcji, która zapomina o tym, że lista jest posortowana i daje
-    nam zwykłą listę.
+    nam zwykłą listę.
 
-    Przykładowe posortowane listy wyglądają tak: *)
+    Przykładowe posortowane listy wyglądają tak: *)
 
 Definition slist_01 : slist le :=
   scons 0
@@ -3501,7 +3501,7 @@ Definition slist_01 : slist le :=
 
 Compute toList slist_01.
 
-(** Utrapieniem jest też to, że nasza funkcja się nie oblicza. Jest tak, bo
+(** Utrapieniem jest też to, że nasza funkcja się nie oblicza. Jest tak, bo
     została zdefiniowana za pomocą reguły indukcji, która jest aksjomatem.
     Aksjomaty zaś, jak wiadomo, nie obliczają się.
 
@@ -3516,8 +3516,8 @@ Proof.
   rewrite 2!H2, H1. reflexivity.
 Qed.
 
-(** Najlepsze, co możemy osiągnąć, mając taką definicję, to udowodnienie, że
-    jej wynik faktycznie jest taki, jak się spodziewamy. *)
+(** Najlepsze, co możemy osiągnąć, mając taką definicję, to udowodnienie, że
+    jej wynik faktycznie jest taki, jak się spodziewamy. *)
 
 (** **** Ćwiczenie *)
 
@@ -3615,11 +3615,11 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-(** Żeby przekonać się, że przykład był naprawdę bezsensowny, zdefiniuj
-    rodzinę typów [blist : (A -> A -> Prop) -> A -> Type], gdzie elementami
-    [blist R x] są listy posortowane, których elementy są [R]-większe od [x].
+(** Żeby przekonać się, że przykład był naprawdę bezsensowny, zdefiniuj
+    rodzinę typów [blist : (A -> A -> Prop) -> A -> Type], gdzie elementami
+    [blist R x] są listy posortowane, których elementy są [R]-większe od [x].
     Użyj [blist] do zdefiniowania typu [slist'' R], a następnie udowodnij,
-    że [slist R] i [slist'' R] są sobie równoważne. *)
+    że [slist R] i [slist'' R] są sobie równoważne. *)
 
 End ind_ind.
 
@@ -3627,19 +3627,19 @@ End ind_ind.
 
 (** Na koniec wypadałoby jeszcze wspomnieć, do czego tak naprawdę można w
     praktyce użyć indukcji-indukcji (definiowanie list posortowanych nie
-    jest jedną z tych rzeczy, o czym przekonałeś się w ćwiczeniach). Otóż
+    jest jedną z tych rzeczy, o czym przekonałeś się w ćwiczeniach). Otóż
     najciekawszym przykładem wydaje się być formalizacja teorii typów, czyli,
     parafrazując, implementacja Coqa w Coqu.
 
     Żeby się za to zabrać, musimy zdefiniować konteksty, typy i termy, a
-    także relacje konwertowalności dla typów i termów. Są tutaj możliwe dwa
+    także relacje konwertowalności dla typów i termów. Są tutaj możliwe dwa
     podejścia:
     - Curry'ego (ang. Curry style lub mądrzej extrinsic style) - staramy
-      się definiować wszystko osobno, a potem zdefiniować relacje "term x
+      się definiować wszystko osobno, a potem zdefiniować relacje "term x
       jest typu A w kontekście Γ", "typ A jest poprawnie sformowany w
       kontekście Γ" etc. Najważniejszą cechą tego sposobu jest to, że
-      możemy tworzyć termy, którym nie da się przypisać żadnego typu oraz
-      typy, które nie są poprawnie sformowane w żadnym kontekście.
+      możemy tworzyć termy, którym nie da się przypisać żadnego typu oraz
+      typy, które nie są poprawnie sformowane w żadnym kontekście.
     - Churcha (ang. Church style lub mądrzej intrinsic style) - definiujemy
       wszystko na raz w jednej wielkiej wzajemnej indukcji. Zamiastów
       typów definiujemy od razu predykat "typ A jest poprawnie sformowany
@@ -3667,10 +3667,10 @@ with
       Term Γ A -> Term Γ A -> Prop := ...
 *)
 
-(** Nagłówki w tej definicji powinniśmy interpretować tak:
+(** Nagłówki w tej definicji powinniśmy interpretować tak:
     - [Ctx] to typ reprezentujący konteksty.
-    - [Ty] ma reprezentować typy, ale nie jest to typ, lecz rodzina typów
-      indeksowana kontekstami - każdy typ jest typem w jakimś kontekście,
+    - [Ty] ma reprezentować typy, ale nie jest to typ, lecz rodzina typów
+      indeksowana kontekstami - każdy typ jest typem w jakimś kontekście,
       np. [list A] jest typem w kontekście zawierającym [A : Type], ale
       nie jest typem w pustym kontekście.
     - [Term] ma reprezentować termy, ale nie jest to typ, lecz rodzina typów
@@ -3681,15 +3681,15 @@ with
       jest nawet poprawnym termem) w kontekście pustym ani w żadnym, w którym
       nie występuje [x].
     - [TyConv Γ A B] zachodzi, gdy typy [A] i [B] są konwertowalne, czyli
-      obliczają się do tego samego (relacja taka jest potrzebna, gdyż w Coqu
+      obliczają się do tego samego (relacja taka jest potrzebna, gdyż w Coqu
       i ogólnie w teorii typów występować mogą takie typy jak [if true then
-      nat else bool], który jest konwertowalny z [nat]). Jako się rzekło,
+      nat else bool], który jest konwertowalny z [nat]). Jako się rzekło,
       typy zawsze występują w kontekście, więc konwertowalne mogą być też
       tylko w kontekście.
     - [TermConv Γ A x y] znaczy, że termy [x] i [y] są konwertowalne,
       np. [if true then 42 else 0] jest konwertowalne z [42]. Ponieważ każdy
       term ciągnie za sobą swój typ, [TermConv] ma jako indeks typ [A], a
-      ponieważ typ ciągnie za sobą kontekst, indeksem [TermConv] jest także
+      ponieważ typ ciągnie za sobą kontekst, indeksem [TermConv] jest także
       [Γ]. *)
 
 (** Jak widać, indukcji-indukcji jest w powyższym przykładzie na pęczki -
@@ -3700,7 +3700,7 @@ with
     momencie swoje najwyższe oburzenie na brak indukcji-indukcji w Coqu:
     https://www.sadistic.pl/lawa-oburzonych-vt22270.htm
 
-    Jednak uszy do góry - istnieją już języki, które jakoś sobie radzą z
+    Jednak uszy do góry - istnieją już języki, które jakoś sobie radzą z
     indukcją-indukcją. Jednym z nich jest wspomniana we wstępie Agda,
     którą można znaleźć tu:
     https://agda.readthedocs.io/en/latest/ *)
@@ -3708,12 +3708,12 @@ with
 (** **** Ćwiczenie *)
 
 (** Typ stert binarnych [BHeap R], gdzie [R : A -> A -> Prop] jest relacją
-    porządku, składa się z drzew, które mogą być albo puste, albo być węzłem
-    przechowującym wartość [v : A] wraz z dwoma poddrzewami [l r : BHeap R],
-    przy czym [v] musi być [R]-większe od wszystkich elementów [l] oraz [r].
+    porządku, składa się z drzew, które mogą być albo puste, albo być węzłem
+    przechowującym wartość [v : A] wraz z dwoma poddrzewami [l r : BHeap R],
+    przy czym [v] musi być [R]-większe od wszystkich elementów [l] oraz [r].
 
-    Użyj indukcji-indukcji, żeby zdefiniować jednocześnie typ [BHeap R] oraz
-    relację [ok], gdzie [ok v h] zachodzi, gdy [v] jest [R]-większe od
+    Użyj indukcji-indukcji, żeby zdefiniować jednocześnie typ [BHeap R] oraz
+    relację [ok], gdzie [ok v h] zachodzi, gdy [v] jest [R]-większe od
     wszystkich elementów [h].
 
     Najpierw napisz pseudodefinicję, a potem przetłumacz ją na odpowiedni
@@ -3721,7 +3721,7 @@ with
 
     Następnie użyj swojej aksjomatycznej definicji, aby zdefiniować funkcję
     [mirror], która tworzy lustrzane odbicie sterty [h : BHeap R]. Wskazówka:
-    prawdopodobnie nie uda ci się zdefiniować [mirror]. Zastanów się,
+    prawdopodobnie nie uda ci się zdefiniować [mirror]. Zastanów się,
     dlaczego jest tak trudno. *)
 
 (* begin hide *)
@@ -3811,8 +3811,8 @@ End BHeap.
 (** **** Ćwiczenie *)
 
 (** Typ drzew wyszukiwań binarnych [BST R], gdzie [R : A -> A -> Prop] jest
-    relacją porządku, składa się z drzew, które mogą być albo puste, albo być
-    węzłem przechowującym wartość [v : A] wraz z dwoma poddrzewami
+    relacją porządku, składa się z drzew, które mogą być albo puste, albo być
+    węzłem przechowującym wartość [v : A] wraz z dwoma poddrzewami
     [l r : BST R], przy czym [v] musi być [R]-większe od wszystkich elemtnów
     [l] oraz [R]-mniejsze od wszystkich elementów [r].
 
@@ -3820,7 +3820,7 @@ End BHeap.
     z odpowiednimi relacjami zapewniającymi poprawność konstrukcji węzła.
     Wypróbuj trzy podejścia:
     - jest jedna relacja, [oklr], gdzie [oklr v l r] oznacza, że z [v], [l] i
-      [r] można zrobić węzeł
+      [r] można zrobić węzeł
     - są dwie relacje, [okl] i [okr], gdzie [okl v l] oznacza, że [v] jest
       [R]-większe od wszystkich elementów [l], zaś [okr v r], że [v] jest
       [R]-mniejsze od wszystkich elementów [r]
@@ -3832,7 +3832,7 @@ End BHeap.
 
     Następnie użyj swojej aksjomatycznej definicji, aby zdefiniować funkcję
     [mirror], która tworzy lustrzane odbicie drzewa [t : BST R]. Wskazówka:
-    dość możliwe, że ci się nie uda. *)
+    dość możliwe, że ci się nie uda. *)
 
 (* begin hide *)
 
@@ -3906,17 +3906,17 @@ Module ind_rec.
     typy induktywne oraz operujące na nich funkcje rekurencyjne.
 
     Co to dokładnie znaczy? Dotychczas nasz modus operandi wyglądał tak, że
-    najpierw definiowaliśmy jakiś typ induktywny, a potem przez rekursję
+    najpierw definiowaliśmy jakiś typ induktywny, a potem przez rekursję
     definiowaliśmy operujące na nim funkcje, np:
     - najpierw zdefiniowaliśmy typ [nat], a potem dodawanie, mnożenie etc.
     - najpierw zdefiniowaliśmy typ [list A], a potem [app], [rev] etc. *)
 
-(** Dlaczego mielibyśmy chcieć definiować typ i funkcję jednocześnie? Dla
+(** Dlaczego mielibyśmy chcieć definiować typ i funkcję jednocześnie? Dla
     tego samego, co zawsze, czyli zależności - indukcja-rekursja pozwala,
     żeby definicja typu odnosiła się do funkcji, która to z kolei jest
-    zdefiniowana przez rekursję strukturalną po argumencie o tym typie.
+    zdefiniowana przez rekursję strukturalną po argumencie o tym typie.
 
-    Zobaczmy dobrze nam już znany bezsensowny przykład, czyli listy
+    Zobaczmy dobrze nam już znany bezsensowny przykład, czyli listy
     posortowane, tym razem zaimplementowane za pomocą indukcji-rekursji. *)
 
 (*
@@ -3937,7 +3937,7 @@ end.
 
 (** Coq niestety nie wspiera indukcji-rekursji, a próba napisania powyższej
     definicji kończy się błędem składni, przy którym nie pomaga nawet komenda
-    [Fail]. Podobnie jak poprzednio, pomożemy sobie za pomocą aksjomatów,
+    [Fail]. Podobnie jak poprzednio, pomożemy sobie za pomocą aksjomatów,
     jednak najpierw prześledźmy definicję.
 
     Typ slist działa następująco:
@@ -3947,25 +3947,25 @@ end.
     - [scons h t p] to lista z głową [h] i ogonem [t], zaś [p : ok h t = true]
       to dowód na to, że dostawienie [h] przed [t] daje listę posortowaną. *)
 
-(** Tym razem jednak [ok] nie jest relacją, lecz funkcją zwracającą [bool],
+(** Tym razem jednak [ok] nie jest relacją, lecz funkcją zwracającą [bool],
     która działa następująco:
-    - dla [snil] zwróć [true] - każde [x : A] można dostawić do listy pustej
+    - dla [snil] zwróć [true] - każde [x : A] można dostawić do listy pustej
     - dla [scons h _ _] zwróć wynik porównania [x] z [h] *)
 
 (** Istotą mechanizmu indukcji-rekursji w tym przykładzie jest to, że [scons]
     wymaga dowodu na to, że funkcja [ok] zwraca [true], podczas gdy funkcja
-    ta jest zdefiniowana przez rekursję strukturalną po argumencie typu
+    ta jest zdefiniowana przez rekursję strukturalną po argumencie typu
     [slist R].
 
     Użycie indukkcji-rekursji do zaimplementowania [slist] ma swoje zalety:
     dla konkretnych list (złożonych ze stałych, a nie ze zmiennych) dowody
     [ok h t = true] będą postaci [eq_refl], bo [ok] po prostu obliczy się
     do [true]. W przypadku indukcji-indukcji dowody na [ok h t] były całkiem
-    sporych rozmiarów drzewami. Innymi słowy, udało nam się zastąpić część
-    termu obliczeniami. Ten intrygujący motyw jeszcze się w przyszłości
-    pojawi, gdy omawiać będziemy dowód przez reflekcję.
+    sporych rozmiarów drzewami. Innymi słowy, udało nam się zastąpić część
+    termu obliczeniami. Ten intrygujący motyw jeszcze się w przyszłości
+    pojawi, gdy omawiać będziemy dowód przez reflekcję.
 
-    Dosyć gadania! Zobaczmy, jak zakodować powyższą definicję za pomocą
+    Dosyć gadania! Zobaczmy, jak zakodować powyższą definicję za pomocą
     aksjomatów. *)
 
 Axioms
@@ -3988,12 +3988,12 @@ Axioms
       (x h : A) (t : slist R) (p : ok h t = true),
         ok x (scons h t p) = R x h).
 
-(** Najpierw musimy zadeklarować [slist], a następnie [ok], gdyż typ [ok]
+(** Najpierw musimy zadeklarować [slist], a następnie [ok], gdyż typ [ok]
     zależy od [slist]. Następnym krokiem jest zadeklarowanie konstruktorów
     [slist], a później równań definiujących funkcję [ok] - koniecznie w tej
-    kolejności, gdyż równania zależą od konstruktorów.
+    kolejności, gdyż równania zależą od konstruktorów.
 
-    Jak widać, aksjomaty są bardzo proste i sprowadzają się do przepisania
+    Jak widać, aksjomaty są bardzo proste i sprowadzają się do przepisania
     powyższej definicji odrzuconej przez Coqa. *)
 
 Axiom
@@ -4009,16 +4009,16 @@ Axiom
       (forall (h : A) (t : slist R) (p : ok h t = true),
         f (scons h t p) = Pscons h t p (f t))}.
 
-(** Innym zyskiem z użycia indukcji-rekursji jest postać reguły indukcyjnej.
-    Jest ona dużo prostsza, niż w przypadku indukcji-indukcji, gdyż teraz
+(** Innym zyskiem z użycia indukcji-rekursji jest postać reguły indukcyjnej.
+    Jest ona dużo prostsza, niż w przypadku indukcji-indukcji, gdyż teraz
     definiujemy tylko jeden typ, zaś towarzysząca mu funkcja nie wymaga w
     regule niczego specjalnego - po prostu pojawia się w niej tam, gdzie
     spodziewamy się jej po definicji [slist], ale nie robi niczego
     ponad to. Może to sugerować, że zamiast indukcji-indukcji, o ile to
-    możliwe, lepiej jest używać indukcji-rekursji, a predykaty i relacje
-    definiować przez rekursję.
+    możliwe, lepiej jest używać indukcji-rekursji, a predykaty i relacje
+    definiować przez rekursję.
 
-    Powyższą regułę możemy odczytać następująco:
+    Powyższą regułę możemy odczytać następująco:
     - [A : Type] i [R : A -> A -> bool] to parametry [slist], więc muszą się
       pojawić
     - [P : slist R -> Type] to przeciwdziedzina funkcji definiowanej za
@@ -4031,7 +4031,7 @@ Axiom
       i [Pscons] *)
 
 (** Termy induktywno-rekurencyjnego [slist R] wyglądają następująco
-    (najpierw definiujemy sobie funkcję rozstrzygającą standardowy
+    (najpierw definiujemy sobie funkcję rozstrzygającą standardowy
     porządek na liczbach naturalnych): *)
 
 Fixpoint leb (n m : nat) : bool :=
@@ -4051,7 +4051,7 @@ Definition slist_01 : slist leb :=
 (** Nie wygląda wiele lepiej od poprzedniej, induktywno-induktywnej wersji,
     prawda? Ta rażąca kiepskość nie jest jednak zasługą indukcji-rekursji,
     lecz kodowania za pomocą aksjomatów - funkcja [ok] się nie oblicza,
-    więc zamiast [eq_refl] musimy używać aksjomatów [ok_snil] i [ok_scons].
+    więc zamiast [eq_refl] musimy używać aksjomatów [ok_snil] i [ok_scons].
 
     W tym momencie znów wkracza ława oburzonych i wyraża swoje oburzenie na
     fakt, że Coq nie wspiera indukcji-rekursji (ale Agda już tak). Gdyby
@@ -4060,7 +4060,7 @@ Definition slist_01 : slist leb :=
 Fail Definition slist_01 : slist leb :=
   scons 0 (scons 1 snil eq_refl) eq_refl.
 
-(** Dużo lepiej, prawda? Na koniec zobaczmy, jak zdefiniować funkcję
+(** Dużo lepiej, prawda? Na koniec zobaczmy, jak zdefiniować funkcję
     zapominającą o fakcie, że lista jest posortowana. *)
 
 Require Import List.
@@ -4081,10 +4081,10 @@ Definition toList
   {A : Type} {R : A -> A -> bool} : slist R -> list A :=
     proj1_sig toList'.
 
-(** Ponownie jest to dużo prostsze, niż w przypadku indukcji-indukcji -
-    wprawdzie wciąż musimy ręcznie wpisywać termy do reguły indukcji,
+(** Ponownie jest to dużo prostsze, niż w przypadku indukcji-indukcji -
+    wprawdzie wciąż musimy ręcznie wpisywać termy do reguły indukcji,
     ale dzięki prostocie reguły jest to znacznie łatwiejsze. Alternatywnie:
-    udało nam się zaoszczędzić trochę czasu na definiowaniu reguły rekursji,
+    udało nam się zaoszczędzić trochę czasu na definiowaniu reguły rekursji,
     co w przypadku indukcji-indukcji było niemal konieczne, żeby nie
     zwariować. *)
 
@@ -4134,7 +4134,7 @@ Proof.
     intros. rewrite Hf2, Hg2, H. cbn. reflexivity.
 Qed.
 
-(** Czy było łatwiej, niż zrobić to samo indukcją-indukcją? Tak, ale tylko
+(** Czy było łatwiej, niż zrobić to samo indukcją-indukcją? Tak, ale tylko
     troszkę. *)
 
 (* end hide *)
@@ -4146,7 +4146,7 @@ End ind_rec.
 (** No cóż, jeszcze raz to samo. Zdefiniuj za pomocą indukcji-rekursji
     jednocześnie typ stert binarnych [BHeap R], gdzie [R : A -> A -> bool]
     rozstrzyga porządek, i funkcję [ok : A -> BHeap R -> bool], gdzie
-    [ok x h = true], gdy stertę [h] można podczepić pod element [x].
+    [ok x h = true], gdy stertę [h] można podczepić pod element [x].
 
     Najpierw napisz pseudodefinicję, a potem przetłumacz ją na odpowiedni
     zestaw aksjomatów.
@@ -4155,8 +4155,8 @@ End ind_rec.
     [mirror], która tworzy lustrzane odbicie sterty [h : BHeap R]. Wskazówka:
     tym razem powinno ci się udać.
 
-    Porównaj induktywno-rekurencyjną implementację [BHeap R] i [ok] z
-    implementacją przez indukcję-indukcję. Która jest bardziej ogólna?
+    Porównaj induktywno-rekurencyjną implementację [BHeap R] i [ok] z
+    implementacją przez indukcję-indukcję. Która jest bardziej ogólna?
     Która jest "lżejsza"? Która jest lepsza? *)
 
 (* begin hide *)
@@ -4230,7 +4230,7 @@ End BHeap'.
 (** **** Ćwiczenie *)
 
 (** No cóż, jeszcze raz to samo. Zdefiniuj za pomocą indukcji-rekursji
-    jednocześnie typ drzew wyszukiwań binarnych [BST R], gdzie
+    jednocześnie typ drzew wyszukiwań binarnych [BST R], gdzie
     [R : A -> A -> bool] rozstrzyga porządek, oraz funkcje
     [oklr]/[okl] i [okr]/[ok], które dbają o odpowiednie warunki (wybierz
     tylko jeden wariant z trzech, które testowałeś w tamtym zadaniu).
@@ -4242,7 +4242,7 @@ End BHeap'.
     [mirror], która tworzy lustrzane odbicie drzewa [t : BST R]. Wskazówka:
     tym razem powinno ci się udać.
 
-    Porównaj induktywno-rekurencyjną implementację [BST R] z implementacją
+    Porównaj induktywno-rekurencyjną implementację [BST R] z implementacją
     przez indukcję-indukcję. Która jest bardziej ogólna? Która jest
     "lżejsza"? Która jest lepsza? *)
 
@@ -4343,18 +4343,18 @@ Defined.
 End BST'.
 (* end hide *)
 
-(** Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
+(** Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     można użyć indukcji-rekursji (poza rzecz jasna głupimi strukturami
     danych, jak listy posortowane)? W świerszczykach dla bystrzaków
-    (czyli tzw. "literaturze naukowej") przewija się głównie jeden (ale
+    (czyli tzw. "literaturze naukowej") przewija się głównie jeden (ale
     jakże użyteczny) pomysł: uniwersa.
 
     Czym są uniwersa i co mają wspólnego z indukcją-rekursją? Najlepiej
-    będzie przekonać się na przykładzie programowania generycznego: *)
+    będzie przekonać się na przykładzie programowania generycznego: *)
 
 (** **** Ćwiczenie (zdecydowanie za trudne) *)
 
-(** Zaimplementuj generyczną funkcję [flatten], która spłaszcza dowolnie
+(** Zaimplementuj generyczną funkcję [flatten], która spłaszcza dowolnie
     zagnieżdżone listy list do jednej, płaskiej listy.
 
     [flatten 5 = [5]]
@@ -4365,12 +4365,12 @@ End BST'.
 
     [flatten [[[1; 2]]; [[3]]; [[4; 5]; [6]]] = [1; 2; 3; 4; 5; 6]] *)
 
-(** Trudne, prawda? Ale robialne, a robi się to tak.
+(** Trudne, prawda? Ale robialne, a robi się to tak.
 
     W typach argumentów [flatten] na powyższym przykładzie widać pewien
     wzorzec: są to kolejno [nat], [list nat], [list (list nat)],
     [list (list (list nat))] i tak dalej. Możemy ten "wzorzec" bez problemu
-    opisać za pomocą następującego typu: *)
+    opisać za pomocą następującego typu: *)
 
 Inductive FlattenType : Type :=
     | Nat : FlattenType
@@ -4379,7 +4379,7 @@ Inductive FlattenType : Type :=
 (** Żeby było śmieszniej, [FlattenType] to dokładnie to samo co [nat], ale
     przemilczmy to. Co dalej? Możemy myśleć o elementach [FlattenType] jak
     o kodach prawdziwych typów, a skoro są to kody, to można też napisać
-    funkcję dekodującą: *)
+    funkcję dekodującą: *)
 
 Fixpoint decode (t : FlattenType) : Type :=
 match t with
@@ -4400,14 +4400,14 @@ end.
 
     Programowanie generyczne to programowanie funkcji, które operują na
     kolekcjach typów o dowolnych kształtach, czyli na uniwersach właśnie.
-    Generyczność od polimorfizmu różni się tym, że funkcja polimorficzna
-    działa dla dowolnego typu, zaś generyczna - tylko dla typu o pasującym
+    Generyczność od polimorfizmu różni się tym, że funkcja polimorficzna
+    działa dla dowolnego typu, zaś generyczna - tylko dla typu o pasującym
     kształcie.
 
-    Jak dokończyć implementację funkcji [flatten]? Kluczowe jest zauważenie,
-    że możemy zdefiniować [flatten] przez rekursję strutkuralną po argumencie
+    Jak dokończyć implementację funkcji [flatten]? Kluczowe jest zauważenie,
+    że możemy zdefiniować [flatten] przez rekursję strutkuralną po argumencie
     domyślnym typu [FlattenType]. Ostatni problem to jak zrobić, żeby Coq sam
-    zgadywał kod danego typu - dowiemy się tego w rozdziale o klasach.
+    zgadywał kod danego typu - dowiemy się tego w rozdziale o klasach.
 
     Co to wszystko ma wspólnego z uniwersami? Ano, jeżeli chcemy definiować
     bardzo zaawansowane funkcje generyczne, musimy mieć do dyspozycji bardzo
@@ -4436,8 +4436,8 @@ end.
     którą nasza tytułowa bohaterka umożliwia, a zwie się on metodą
     induktywnej dziedziny.
 
-    Pod tą nazwą kryje się sposób definiowania funkcji, pozwalający oddzielić
-    samą definicję od dowodu jej terminacji. Jeżeli ten opis nic ci nie mówi,
+    Pod tą nazwą kryje się sposób definiowania funkcji, pozwalający oddzielić
+    samą definicję od dowodu jej terminacji. Jeżeli ten opis nic ci nie mówi,
     nie martw się: dotychczas definiowaliśmy tylko tak prymitywne funkcje, że
     tego typu fikołki nie były nam potrzebne.
 
@@ -4445,8 +4445,8 @@ end.
     [f : A -> B], która nie jest strukturalnie rekurencyjna (na co Coq
     nie pozwala) napisać funkcję [f : forall x : A, D x -> B], gdzie
     [D : A -> Type] jest "predykatem dziedziny", który sprawia, że dziwna
-    rekursja z oryginalnej definicji [f] staje się rekursją strukturalną
-    po dowodzie [D x]. Żeby zdefiniować oryginalne [f : A -> B] wystarczy
+    rekursja z oryginalnej definicji [f] staje się rekursją strukturalną
+    po dowodzie [D x]. Żeby zdefiniować oryginalne [f : A -> B] wystarczy
     udowodnić, że każde [x : A] spełnia predykat dziedziny.
 
     Co to wszystko ma wspólnego z indeksowaną indukcją-rekursją? Już piszę.
@@ -4455,23 +4455,23 @@ end.
     takimi, w których rekursja jest zagnieżdżona, tzn. robimy wywołanie
     rekurencyjne na wyniku poprzedniego wywołania rekurencyjnego.
 
-    Predykat dziedziny dla takiej funkcji musi zawierać konstruktor w stylu
+    Predykat dziedziny dla takiej funkcji musi zawierać konstruktor w stylu
     "jeżeli wynik wywołania rekurencyjnego na x należy do dziedziny, to x też
-    należy do dziedziny".To właśnie tu ujawnia się indukcja-rekursja: żeby
-    zdefiniować predykat dziedziny, musimy odwołać się do funkcji (żeby móc
+    należy do dziedziny".To właśnie tu ujawnia się indukcja-rekursja: żeby
+    zdefiniować predykat dziedziny, musimy odwołać się do funkcji (żeby móc
     powiedzieć coś o wyniku wywołania rekurencyjnego), a żeby zdefiniować
-    funkcję, musimy mieć predykat dziedziny.
+    funkcję, musimy mieć predykat dziedziny.
 
-    Brzmi skomplikowanie? Jeżeli czegoś nie rozumiesz, to jesteś debi...
-    a nie, czekaj. Jeżeli czegoś nie rozumiesz, to nie martw się: powyższy
-    przykład miał na celu jedynie zilustrować jakieś praktyczne zastosowanie
+    Brzmi skomplikowanie? Jeżeli czegoś nie rozumiesz, to jesteś debi...
+    a nie, czekaj. Jeżeli czegoś nie rozumiesz, to nie martw się: powyższy
+    przykład miał na celu jedynie zilustrować jakieś praktyczne zastosowanie
     indeksowanej indukcji-rekursji. Do metody induktywnej dziedziny powrócimy
     w kolejnym rozdziale. Pokażemy, jak wyeliminować z niej indukcję-rekursję,
     tak żeby uzyskane za jej pomocą definicje można było odpalać w Coqu.
     Zobaczymy też, jakimi sposobami dowodzić, że każdy element dziedziny
-    spełnia predykat dziedziny, co pozwoli nam odzyskać oryginalną definicję
+    spełnia predykat dziedziny, co pozwoli nam odzyskać oryginalną definicję
     funkcji, a także dowiemy się, jak z "predykatu" o typie [D : A -> Type]
-    zrobić prawdziwy predykat [D : A -> Prop]. *)
+    zrobić prawdziwy predykat [D : A -> Prop]. *)
 
 (** ** Indukcja-indukcja-rekursja *)
 
@@ -4484,45 +4484,45 @@ end.
     potfurem, ale też powinna dostać Oskara za najlepszą nazwę.
 
     Chodzi tu oczywiście o połączenie indukcji-indukcji i indukcji-rekursji:
-    możemy jednocześnie zdefiniować jakiś typ [A], rodzinę typów [B]
+    możemy jednocześnie zdefiniować jakiś typ [A], rodzinę typów [B]
     indeksowaną przez [A] oraz operujące na nich funkcje, do których
-    konstruktory [A] i [B] mogą się odwoływać.
+    konstruktory [A] i [B] mogą się odwoływać.
 
-    Nie ma tu jakiejś wielkiej filozofii: wszystkiego, co powinieneś wiedzieć
-    o indukcji-indukcji-rekursji, dowiedziałeś się już z dwóch poprzednich
+    Nie ma tu jakiejś wielkiej filozofii: wszystkiego, co powinieneś wiedzieć
+    o indukcji-indukcji-rekursji, dowiedziałeś się już z dwóch poprzednich
     podrozdziałów. Nie muszę chyba dodawać, że ława oburzonych jest oburzona
     faktem, że Coq nie wspiera indukcji-indukcji-rekursji.
 
-    Rodzi się jednak to samo super poważne pytanie co zawsze, czyli do czego
+    Rodzi się jednak to samo super poważne pytanie co zawsze, czyli do czego
     można tego tałatajstwa użyć? Przez całkiem długi czas nie miałem pomysłu,
     ale okazuje się, że jest jedno takie zastosowanie i w sumie narzuca się
     ono samo.
 
     Przypomnij sobie metodę induktywno-rekurencyjnej dziedziny, czyli jedno
     ze sztandarowych zastosowań indeksowanej indukcji-rekursji. Zaczynamy od
-    typu [I : Type], na którym chcemy zdefiniować funkcję o niestandardowym
+    typu [I : Type], na którym chcemy zdefiniować funkcję o niestandardowym
     kształcie rekursji. W tym celu definiujemy dziedzinę [D : I -> Type]
-    wraz z funkcją [f : forall i : I, D i -> R].
+    wraz z funkcją [f : forall i : I, D i -> R].
 
-    Zauważmy, jaki jest związek typu [I] z funkcją [f]: najpierw jest typ,
+    Zauważmy, jaki jest związek typu [I] z funkcją [f]: najpierw jest typ,
     potem funkcja. Co jednak, gdy musimy [I] oraz [f] zdefiniować razem za
     pomocą indukcji-rekursji? Wtedy [f] może być zdefiniowane jedynie za
-    pomocą rekursji strukturalnej po [I], co wyklucza rekursję o fikuśnym
+    pomocą rekursji strukturalnej po [I], co wyklucza rekursję o fikuśnym
     kształcie...
 
     I tu wchodzi indukcja-indukcja-rekursja, cała na biało. Możemy użyć
     jej w taki sposób, że definiujemy jednocześnie:
-    - typ [I], który odnosi się do funkcji [f]
+    - typ [I], który odnosi się do funkcji [f]
     - predykat dziedziny [D : I -> Type], który jest indeksowany przez [I]
-    - funkcję [f], która zdefiniowana jest przez rekursję strukturalną po
+    - funkcję [f], która zdefiniowana jest przez rekursję strukturalną po
       dowodzie należenia do dziedziny
 
     Jak widać, typ zależy od funkcji, funkcja od predykatu, a predykat od
-    typu i koło się zamyka.
+    typu i koło się zamyka.
 
     Następuje jednak skądinąd uzasadnione pytanie: czy faktycznie istnieje
     jakaś sytuacja, w której powyższy schemat działania jest tym słusznym?
-    Odpowiedź póki co może być tylko jedna: nie wiem, ale się domyślam. *)
+    Odpowiedź póki co może być tylko jedna: nie wiem, ale się domyślam. *)
 
 (** ** Najstraszniejszy potfur *)
 
@@ -4543,12 +4543,12 @@ end.
 (** Na szczęście typy induktywne to istoty bardzo prostolinijne, zaś te złe
     można odróżnić od tych dobrych gołym okiem, za pomocą bardzo prostego
     kryterium: złe typy induktywne to te, które nie są ściśle pozytywne.
-    Zanim jednak dowiemy się, jak rozpoznawać złe typy, poznajmy najpierw
+    Zanim jednak dowiemy się, jak rozpoznawać złe typy, poznajmy najpierw
     dwa powody, przez które złe typy induktywne są złe. *)
 
 (** ** Nieterminacja jako źródło zła na świecie *)
 
-(** Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
+(** Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
     induktywnego (czyli takiego, który wygląda na induktywny, ale ma
     konstruktory z negatywnymi wystąpieniami argumentu indukcyjnego): *)
 
@@ -4569,9 +4569,9 @@ Fail Inductive wut (A : Type) : Type :=
     Pierwszym powodem nielegalności nie-ściśle-pozytywnych typów induktywnych
     jest to, że unieważniają one filozoficzną interpretację teorii typów i
     ogólnie wszystkiego, co robimy w Coqu. W praktyce problemy filozoficzne
-    mogą też prowadzić do sprzeczności.
+    mogą też prowadzić do sprzeczności.
 
-    Załóżmy, że Coq akceptuje powyższą definicję [wut]. Możemy wtedy napisać
+    Załóżmy, że Coq akceptuje powyższą definicję [wut]. Możemy wtedy napisać
     następujący program: *)
 
 Fail Definition loop (A : Type) : A :=
@@ -4588,7 +4588,7 @@ Fail Definition loop (A : Type) : A :=
 Fail Definition santa_is_a_pedophile : False := loop False.
 
 (** Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
-    problemem - nie z każdego złego typu induktywnego da się tak łatwo dostać
+    problemem - nie z każdego złego typu induktywnego da się tak łatwo dostać
     sprzeczność (a przynajmniej ja nie umiem; systematyczny sposób dostawania
     sprzeczności z istnienia takich typów zobaczymy później). W rzeczywistości
     jest nim nieterminacja.
@@ -4596,11 +4596,11 @@ Fail Definition santa_is_a_pedophile : False := loop False.
     Nieterminacja (ang. nontermination, divergence) lub kolokwialniej
     "zapętlenie" to sytuacja, w której program nigdy nie skończy się
     wykonywać. Ta właśnie bolączka jest przypadłością [loop], czego nie
-    trudno domyślić się z nazwy.
+    trudno domyślić się z nazwy.
 
-    Dlaczego tak jest? Przyjrzyjmy się definicji [loop]. Za pomocą [let]a
-    definiujemy funkcję [f : wut A -> A], która odpakowuje swój argument
-    [w], wyciąga z niego funkcję [g : wut A -> A] i aplikuje [g] do [w].
+    Dlaczego tak jest? Przyjrzyjmy się definicji [loop]. Za pomocą [let]a
+    definiujemy funkcję [f : wut A -> A], która odpakowuje swój argument
+    [w], wyciąga z niego funkcję [g : wut A -> A] i aplikuje [g] do [w].
     Wynikiem programu jest [f] zaaplikowane do siebie samego zawiniętego
     w konstruktor [C].
 
@@ -4618,14 +4618,14 @@ Fail Definition santa_is_a_pedophile : False := loop False.
     i tak dalej.
 
     Nie powinno nas to dziwić - praktycznie rzecz biorąc aplikujemy [f] samo
-    do siebie, zaś konstruktor [C] jest tylko pośrednikiem sprawiającym, że
-    typy się zgadzają. Ogólniej sytuacja, w której coś odnosi się samo do
-    siebie, nazywa się autoreferencją i często prowadzi do różnych wesołych
+    do siebie, zaś konstruktor [C] jest tylko pośrednikiem sprawiającym, że
+    typy się zgadzają. Ogólniej sytuacja, w której coś odnosi się samo do
+    siebie, nazywa się autoreferencją i często prowadzi do różnych wesołych
     paradoksów. *)
 
 (** **** Ćwiczenie *)
 
-(** Poniższą zagadkę pozwolę sobie wesoło nazwać "paradoks hetero". Zagadka
+(** Poniższą zagadkę pozwolę sobie wesoło nazwać "paradoks hetero". Zagadka
     brzmi tak:
 
     Niektóre słowa opisują same siebie, np. słowo "krótki" jest krótkie,
@@ -4637,7 +4637,7 @@ Fail Definition santa_is_a_pedophile : False := loop False.
 
 (** Czujesz sprzeczność? Innym przyk... dobra, wystarczy tych głupot.
 
-    Przyjrzyjmy się teraz problemom filozoficznym powodowanym przez
+    Przyjrzyjmy się teraz problemom filozoficznym powodowanym przez
     nieterminację. W skrócie: zmienia ona fundamentalne właściwości
     obliczeń, co prowadzi do zmiany interpretacji pojęcia typu, zaś
     to pociąga za sobą kolejne przykre skutki, takie jak np. to, że
@@ -4653,16 +4653,16 @@ Fail Definition santa_is_a_pedophile : False := loop False.
     termów typu [bool] są [true] i [false], więc możemy myśleć, że są to
     elementy typu [bool] i [bool] składa się tylko z nich. To z kolei daje
     nam uzasadnienie reguły eliminacji (czyli indukcji) dla typu [bool]:
-    żeby udowodnić [P : bool -> Prop] dla każdego [b : bool], wystarczy
+    żeby udowodnić [P : bool -> Prop] dla każdego [b : bool], wystarczy
     udowodnić [P true] i [P false], gdyż [true] i [false] są jedynymi
     elementami typu [bool].
 
-    Nieterminacja obraca tę jakże piękną filozoficzną wizję w perzynę:
-    nie każde obliczenie się kończy, a przez to powstają nowe, "dziwne"
-    elementy różnych typów. [loop bool] nigdy nie obliczy się do [true] ani
-    do [false], więc możemy traktować je jako nowy element typu [bool]. To
+    Nieterminacja obraca tę jakże piękną filozoficzną wizję w perzynę:
+    nie każde obliczenie się kończy, a przez to powstają nowe, "dziwne"
+    elementy różnych typów. [loop bool] nigdy nie obliczy się do [true] ani
+    do [false], więc możemy traktować je jako nowy element typu [bool]. To
     sprawia, że [bool], typ z założenia dwuelementowy, ma teraz co najmniej
-    trzy elementy - [true], [false] i [loop bool]. Z tego też powodu reguła
+    trzy elementy - [true], [false] i [loop bool]. Z tego też powodu reguła
     eliminacji przestaje obowiązywać, bo wymaga ona dowodów jedynie dla
     [true] i [false], ale milczy na temat [loop bool]. Moglibyśmy próbować
     naiwnie ją załatać, uwzględniając ten dodatkowy przypadek, ale tak po
@@ -4670,7 +4670,7 @@ Fail Definition santa_is_a_pedophile : False := loop False.
     rozpanoszyły się w typie [bool] z powodu nieterminacji.
 
     Morał jest prosty: nieterminacja to wynalazek szatana, a negatywne
-    typy induktywne to też wynalazek szatana. *)
+    typy induktywne to też wynalazek szatana. *)
 
 (** ** Twierdzenie Cantora *)
 
@@ -4678,7 +4678,7 @@ Fail Definition santa_is_a_pedophile : False := loop False.
     językowy:
 
     Cantor - kanciarz, który skradł zza kurtyny kantoru z Kantonu kontury
-    kartonu Koranicznemu kanarowi, który czasem karał karczystych kafarów
+    kartonu Koranicznemu kanarowi, który czasem karał karczystych kafarów
     czarami za karę za kantowanie i za zakatowanie zza kontuaru konarem
     kontrkulturowych kuluarowych karłów.
 
@@ -4697,7 +4697,7 @@ Fail Definition santa_is_a_pedophile : False := loop False.
     powstaniem teorii typów czy Coqa, co objawia się np. w tym, że mówi ono
     o _zbiorze_ liczb naturalnych, podczas gdy my dysponujemy _typem_ liczb
     naturalnych. Musimy więc oryginalne sformułowanie lekko przeformułować,
-    a także wprowadzić wszystkie niezbędne nam pojęcia. *)
+    a także wprowadzić wszystkie niezbędne nam pojęcia. *)
 
 Definition surjective {A B : Type} (f : A -> B) : Prop :=
   forall b : B, exists a : A, f a = b.
@@ -4711,17 +4711,17 @@ Definition surjective {A B : Type} (f : A -> B) : Prop :=
     "sur" - "na" oraz łac. "iacere" - "rzucać". Ubogim tłumaczeniem na
     polski może być słowo "narzut".
 
-    Idea jest taka, że surjekcja [f : A -> B] "narzuca" swoją dziedzinę
+    Idea jest taka, że surjekcja [f : A -> B] "narzuca" swoją dziedzinę
     [A] na przeciwdziedzinę [B] tak, że [A] "pokrywa" całe [B]. Innymi
-    słowy, każdy element [b : B] jest pokryty przez jakiś element [a : A],
-    co wyraża równość [f a = b]. Oczywiście to [a] nie musi być unikalne -
-    [b] może być pokrywane przez dużo różnych [a]. Jak widać, dokładnie to
+    słowy, każdy element [b : B] jest pokryty przez jakiś element [a : A],
+    co wyraża równość [f a = b]. Oczywiście to [a] nie musi być unikalne -
+    [b] może być pokrywane przez dużo różnych [a]. Jak widać, dokładnie to
     jest napisane w powyższej definicji.
 
     Mówiąc jeszcze prościej: jeżeli [f : A -> B] jest surjekcją, to typ
-    [A] jest większy (a precyzyjniej mówiący, nie mniejszy) niż typ [B].
+    [A] jest większy (a precyzyjniej mówiący, nie mniejszy) niż typ [B].
     Oczywiście nie znaczy to, że jeżeli [f] nie jest surjekcją, to typ
-    [A] jest mniejszy niż [B] - mogą przecież istnieć inne surjekcje.
+    [A] jest mniejszy niż [B] - mogą przecież istnieć inne surjekcje.
     Powiemy, że [A] jest mniejszy od [B], jeżeli nie istnieje żadna
     surjekcja między nimi.
 
@@ -4749,7 +4749,7 @@ Qed.
     tak jest: [bool] ma dwa elementy, a [nat] nieskończenie wiele.
 
     Do kwestii tego, który typ ma ile elementów wrócimy jeszcze w rozdziale
-    o typach i funkcjach. Tam też zapoznamy się lepiej z surjekcjami i
+    o typach i funkcjach. Tam też zapoznamy się lepiej z surjekcjami i
     innymi rodzajami funkcji. Tymczasem ćwiczenie: *)
 
 (** **** Ćwiczenie *)
@@ -4769,14 +4769,14 @@ Qed.
 (** Pozostaje jeszcze kwestia tego, czym jest "zbiór potęgowy zbioru liczb
     naturalnych". Mimo groźnej nazwy sprawa jest prosta: jest to archaiczne
     określenie na typ funkcji [nat -> bool]. Każdą funkcję [f : nat -> bool]
-    możemy interpretować jako pewną kolekcję (czyli właśnie zbiór) elementów
-    typu [nat], zaś [f n], czyli wynik [f] na konkretnym [n], mówi nam, czy
-    [n] znajduje się w tej kolekcji, czy nie.
+    możemy interpretować jako pewną kolekcję (czyli właśnie zbiór) elementów
+    typu [nat], zaś [f n], czyli wynik [f] na konkretnym [n], mówi nam, czy
+    [n] znajduje się w tej kolekcji, czy nie.
 
     To w zasadzie wyczerpuje zestaw pojęć potrzebnych nam do sformułowania
-    twierdzenia. Pojawiająca się w oryginalnej wersji "większa moc" to po
+    twierdzenia. Pojawiająca się w oryginalnej wersji "większa moc" to po
     prostu synonim określenia "większy", które potrafimy już wyrażać za
-    pomocą pojęcia surjekcji. Tak więc nowszą (czyli bardziej postępową)
+    pomocą pojęcia surjekcji. Tak więc nowszą (czyli bardziej postępową)
     wersję twierdzenia Cantora możemy sformułować następująco: nie istnieje
     surjekcja z [nat] w [nat -> bool]. Lub jeszcze bardziej obrazowo: [nat]
     jest mniejsze niż [nat -> bool]. *)
@@ -4793,9 +4793,9 @@ Qed.
 
 (** Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
     dodatek bajecznie prosty i niesamowicie użyteczny - jeżeli będziesz
-    zajmował się w życiu matematyką i informatyką, spotkasz go w jeszcze
+    zajmował się w życiu matematyką i informatyką, spotkasz go w jeszcze
     wielu odsłonach. Metoda stojąca za dowodem nazywana bywa argumentem
-    przekątniowym - choć nazwa ta może się wydawać dziwna, to za chwilę
+    przekątniowym - choć nazwa ta może się wydawać dziwna, to za chwilę
     stanie się zupełnia jasna.
 
     O co więc chodzi w powyższym dowodzie? Po pierwsze zauważmy, że
@@ -4808,23 +4808,23 @@ Qed.
 
     Dzięki temu zabiegowi możemy wyobrażać sobie [f] jako dwuwymiarową
     tabelkę, której wiersze i kolumny są indeksowane liczbami naturalnymi,
-    a komórki w tabelce wypełnione są wartościami typu [bool]. Przyjmijmy,
-    że pierwszy argument [f] to indeks wiersza, zaś drugi to indeks kolumny.
+    a komórki w tabelce wypełnione są wartościami typu [bool]. Przyjmijmy,
+    że pierwszy argument [f] to indeks wiersza, zaś drugi to indeks kolumny.
     W takim układzie [f n m] to wartość [n]-tej funkcji na argumencie [m].
     Wobec tego twierdzenie możemy sparafrazować mówiąc, że każda funkcja
-    [nat -> bool] znajduje się w którymś wierszu tabelki.
+    [nat -> bool] znajduje się w którymś wierszu tabelki.
 
-    To tyle wyobraźni - możemy już udowodnić twierdzenie. Na początku
+    To tyle wyobraźni - możemy już udowodnić twierdzenie. Na początku
     oczywiście bierzemy dowolne [f] oraz zakładamy, że jest surjekcją,
-    uprzednio odwijając definicję bycia surjekcją.
+    uprzednio odwijając definicję bycia surjekcją.
 
-    Teraz musimy jakoś wyciągnąć sprzeczność z hipotezy [Hf], czyli,
-    używając naszej tabelkowej parafrazy, znaleźć funkcję z [nat] w
-    [bool], która nie znajduje się w tabelce. A nie znajdować się w
+    Teraz musimy jakoś wyciągnąć sprzeczność z hipotezy [Hf], czyli,
+    używając naszej tabelkowej parafrazy, znaleźć funkcję z [nat] w
+    [bool], która nie znajduje się w tabelce. A nie znajdować się w
     tabelce, panie Ferdku, to znaczy: różnić się od każdej funkcji z
     tabelki na jakimś argumencie.
 
-    Zamiast jednak szukać takiej funkcji po omacku, skonstruujmy ją
+    Zamiast jednak szukać takiej funkcji po omacku, skonstruujmy ją
     z tego, co mamy pod ręką - czyli z naszej tabelki. Jak przerobić
     funkcje z tabelki na nową, której w nie ma w tabelce? Tu właśnie
     ujawnia się geniuszalność Cantora: użyjemy metody przekątniowej,
@@ -4836,13 +4836,13 @@ Qed.
     [n], i zwracamy negację tego, co tam znajdziemy. Czujesz sprzeczność?
 
     Nasze założenie mówi, że [diagonal] znajduje się w którymś wierszu
-    tabelki - niech ma on numer [n]. Wiemy jednak, że [g] różni się od
+    tabelki - niech ma on numer [n]. Wiemy jednak, że [g] różni się od
     [n]-tej funkcji z tabelki na argumencie [n], gdyż zdefiniowaliśmy ją
     jako negację tej właśnie komórki w tabelce. Dostajemy stąd równość
     [f n n = diagonal n = negb (f n n)], co po analizie przypadków daje
     ostatecznie [true = false] lub [false = true].
 
-    Voilà! Sprzeczność osiągnięta, a zatem początkowe założenie było
+    Voil� ! Sprzeczność osiągnięta, a zatem początkowe założenie było
     błędne i nie istnieje żadna surjekcja z [nat] w [nat -> bool]. *)
 
 (** **** Ćwiczenie *)
@@ -4868,9 +4868,9 @@ Proof.
   symmetry. assumption.
 Qed.
 
-(** Uogólnienie jest dość banalne. Najpierw zastępujemy [nat] i [bool] przez
+(** Uogólnienie jest dość banalne. Najpierw zastępujemy [nat] i [bool] przez
     dowolne typy [A] i [B]. W oryginalnym twierdzeniu nie użyliśmy żadnej
-    właściwości liczb naturalnych, więc nie musimy szukać żadnych kryteriów
+    właściwości liczb naturalnych, więc nie musimy szukać żadnych kryteriów
     dla typu [A]. Nasza tabelka może równie dobrze być indeksowana elementami
     dowolnego typu - dalej jest to tabelka i dalej ma przekątną.
 
@@ -4878,16 +4878,16 @@ Qed.
     funkcja [diagonal] była zdefiniowana jako negacja przekątnej. Było nam
     jednak potrzeba po prostu funkcji, która dla każdego elementu z przekątnej
     zwraca element [bool] od niego różny. Ponieważ [bool] ma dokładnie dwa
-    elementy, to negacja jest jedyną taką funkcją.
+    elementy, to negacja jest jedyną taką funkcją.
 
     Jednak w ogólnym przypadku dobra będzie dowolna [B]-endofunkcja bez
     punktów stałych. Ha! Nagły atak żargonu bezzębnych ryb, co? Zróbmy
     krótką przerwę, żeby zbadać sposób komunikacji tych czarodziejskich
     zwierząt pływających po uczelnianych korytarzach.
 
-    Endofunkcja to funkcja, która ma taką samą dziedzinę i przeciwdziedzinę.
-    Można się zatem domyślać, że [B]-endofunkcja to funkcja o typie [B -> B].
-    Punkt stały zaś to takie [x], że [f x = x]. Jest to więc dokładnie ta
+    Endofunkcja to funkcja, która ma taką samą dziedzinę i przeciwdziedzinę.
+    Można się zatem domyślać, że [B]-endofunkcja to funkcja o typie [B -> B].
+    Punkt stały zaś to takie [x], że [f x = x]. Jest to więc dokładnie ta
     własność, której chcemy, żeby pożądana przez nas funkcja nie miała dla
     żadnego [x]. Jak widać, żargon bezzębnych ryb jest równie zwięzły jak
     niepenetrowalny dla zwykłych śmiertelników.
@@ -4938,15 +4938,15 @@ Qed.
 (** ** Twierdzenie Cantora jako młot na negatywność *)
 
 (** Z Cantorem po naszej stronie możemy wreszcie kupić ruble... ekhem,
-    możemy wreszcie zaprezentować ogólną metodę dowodzenia, że negatywne
+    możemy wreszcie zaprezentować ogólną metodę dowodzenia, że negatywne
     typy induktywne prowadzą do sprzeczności. Mimo szumnej nazwy ogólna
     metoda nie jest aż taka ogólna i często będziemy musieli się bonusowo
     napracować. *)
 
 Module Example1.
 
-(** Otworzymy sobie nowy moduł, żeby nie zaśmiecać globalnej przestrzeni
-    nazw - wszystkie nasze złe typy będą się nazywały [wut]. Przy okazji,
+(** Otworzymy sobie nowy moduł, żeby nie zaśmiecać globalnej przestrzeni
+    nazw - wszystkie nasze złe typy będą się nazywały [wut]. Przy okazji,
     zdecydowanie powinieneś nabrać podejrzeń do tej nazwy - jeżeli coś w
     tej książce nazywa się [wut], to musi to być złowrogie, podejrzane
     paskudztwo. *)
@@ -4978,8 +4978,8 @@ Defined.
     jest też drugi, bardziej namacalny powód: istnienie typu [wut A] jest
     sprzeczne z (uogólnionym) twierdzeniem Cantora.
 
-    Powód tej sprzeczności jest dość prozaiczny: za pomocą konstruktora [C]
-    możemy z dowolnej funkcji [wut A -> A] zrobić element [wut A], a skoro
+    Powód tej sprzeczności jest dość prozaiczny: za pomocą konstruktora [C]
+    możemy z dowolnej funkcji [wut A -> A] zrobić element [wut A], a skoro
     tak, to dowolne [w : wut A] możemy odpakować i wyjąć z niego funkcję
     [f : wut A -> A]. *)
 
@@ -4991,7 +4991,7 @@ Proof.
   exists (C f). apply H.
 Qed.
 
-(** Skoro możemy włożyć dowolną funkcję, to możemy także wyjąć dowolną
+(** Skoro możemy włożyć dowolną funkcję, to możemy także wyjąć dowolną
     funkcję, a zatem mamy do czynienia z surjekcją. *)
 
 Lemma worst : False.
@@ -5002,15 +5002,15 @@ Proof.
 Qed.
 
 (** W połączeniu zaś z twierdzeniem Cantora surjekcja [wut A -> (wut A -> A)]
-    prowadzi do sprzeczności - wystarczy za [A] wstawić [bool]. *)
+    prowadzi do sprzeczności - wystarczy za [A] wstawić [bool]. *)
 
 End Example1.
 
-(** Przykład może ci się jednak wydać niezadowalający - typ [wut] jest
-    przecież dość nietypowy, bo ma tylko jeden konstruktor. A co, gdy
+(** Przykład może ci się jednak wydać niezadowalający - typ [wut] jest
+    przecież dość nietypowy, bo ma tylko jeden konstruktor. A co, gdy
     konstruktorów jest więcej?
 
-    Początkowo miałem opisać kilka przypadków z większą liczbą konstruktorów,
+    Początkowo miałem opisać kilka przypadków z większą liczbą konstruktorów,
     ale stwierdziłem, że jednak mi się nie chce. W ćwiczeniach zobaczymy, czy
     będziesz w stanie sam wykombinować, jak się z nimi uporać. *)
 
@@ -5021,7 +5021,7 @@ End Example1.
 
     Zakoduj ten typ aksjomatycznie i udowodnij, że jego istnienie prowadzi
     do sprzeczności. Metoda jest podobna jak w naszym przykładzie, ale
-    trzeba ją troszkę dostosować do zastanej sytuacji. *)
+    trzeba ją troszkę dostosować do zastanej sytuacji. *)
 
 Module Exercise1.
 
@@ -5308,17 +5308,17 @@ End Exercise4.
 (** ** Poradnik rozpoznawania negatywnych typów induktywnych *)
 
 (** Skoro już wiemy, że negatywne typy induktywne są wynalazkiem szatana,
-    to czas podać proste kryterium na ich rozpoznawanie. Jeżeli jesteś
-    sprytny, to pewnie sam zdążyłeś już zauważyć ogólną regułę. Jednak aby
-    nie dyskryminować osób mało sprytnych, trzeba napisać ją wprost.
+    to czas podać proste kryterium na ich rozpoznawanie. Jeżeli jesteś
+    sprytny, to pewnie sam zdążyłeś już zauważyć ogólną regułę. Jednak aby
+    nie dyskryminować osób mało sprytnych, trzeba napisać ją wprost.
 
     Kryterium jest banalne. Mając dany typ [T] musimy rzucić okiem na jego
     konstruktory, a konkretniej na ich argumenty. Argumenty nieindukcyjne
     (czyli o typach, w których nie występuje [T]) są zupełnie niegroźnie.
-    Interesować nas powinny jedynie argumenty indukcyjne, czyli takie, w
+    Interesować nas powinny jedynie argumenty indukcyjne, czyli takie, w
     których występuje typ [T].
 
-    Niektóre typy argumentów indukcyjnych są niegroźne, np. [T * T], [T + T],
+    Niektóre typy argumentów indukcyjnych są niegroźne, np. [T * T], [T + T],
     [list T] albo [{t : T | P t}], ale powodują one, że Coq nie potrafi
     wygenerować odpowiedniej reguły indukcji i zadowala się jedynie regułą
     analizy przypadków. Nie prowadzą one do sprzeczności, ale powinniśmy ich
@@ -5326,10 +5326,10 @@ End Exercise4.
 
     Argument typu [T * T] można zastąpić dwoma argumentami typu [T]
     i podobnie dla [{t : T | P t}]. Konstruktor z argumentem typu [T + T]
-    możemy rozbić na dwa konstruktory (i powinniśmy, bo jest to bardziej
+    możemy rozbić na dwa konstruktory (i powinniśmy, bo jest to bardziej
     czytelne). Konstruktor z wystąpieniem [list T] możemy przerobić na
-    definicję przez indukcję wzajemną (ćwiczenie: sprawdź jak), ale lepiej
-    chyba po prostu zaimplementować regułę indukcji ręcznie. *)
+    definicję przez indukcję wzajemną (ćwiczenie: sprawdź jak), ale lepiej
+    chyba po prostu zaimplementować regułę indukcji ręcznie. *)
 
 Inductive T0 : Type :=
     | c0 : T0
@@ -5353,7 +5353,7 @@ Inductive T0 : Type :=
 
     Konstruktory [c3], [c4], [c5] i [c6] są induktywne i również w pełni
     legalne, ale są one powodem tego, że Coq nie generuje dla [T0] reguły
-    indukcji, a jedynie regułę analizy przypadków (choć nazwa się ona
+    indukcji, a jedynie regułę analizy przypadków (choć nazwa się ona
     [T0_ind]). *)
 
 (** **** Ćwiczenie *)
@@ -5364,17 +5364,17 @@ Inductive T0 : Type :=
 (** TODO *)
 (* end hide *)
 
-(** Problem pojawia się dopiero, gdy typ [T] występuje po lewej stronie
+(** Problem pojawia się dopiero, gdy typ [T] występuje po lewej stronie
     strzałki, np. [T -> bool], [T -> T], [(T -> T) -> T], lub gdy jest
     skwantyfikowany uniwersalnie, np. [forall t : T, P t],
     [forall f : (forall t : T, P t), Q f].
 
-    W trzech poprzednich podrozdziałach mierzyliśmy się z sytuacjami, gdy
-    typ [T] występował bezpośrednio na lewo od strzałki, ale oczywiście
+    W trzech poprzednich podrozdziałach mierzyliśmy się z sytuacjami, gdy
+    typ [T] występował bezpośrednio na lewo od strzałki, ale oczywiście
     może on być dowolnie zagnieżdżony. Dla każdego wystąpienia [T] w
     argumentach możemy policzyć, na lewo od ilu strzałek (albo jako
     jak mocno zagnieżdżona dziedzina kwantyfikacji) się ono znajduje.
-    Liczbę tę nazywać będziemy niedobrością. W zależności od niedobrości,
+    Liczbę tę nazywać będziemy niedobrością. W zależności od niedobrości,
     wystąpienie nazywamy:
     - 0 - wystąpienie ściśle pozytywne
     - liczba nieparzysta - wystąpienie negatywne
@@ -5384,8 +5384,8 @@ Inductive T0 : Type :=
     negatywnym typem induktywnym (choć oczywiście nie jest to typ
     induktywny). Jeżeli nie ma wystąpień negatywnych, ale są wystąpienia
     pozytywne, to typ nazywamy pozytywnym typem induktywnym (lub nie ściśle
-    pozytywnym typem induktywnym), choć oczywiście również nie jest to typ
-    induktywny. Jeżeli wszystkiego wystąpienia są ściśle pozytywne, to mamy
+    pozytywnym typem induktywnym), choć oczywiście również nie jest to typ
+    induktywny. Jeżeli wszystkiego wystąpienia są ściśle pozytywne, to mamy
     do czynienia po prostu z typem induktywnym.
 
     Podobne nazewnictwo możemy sobie wprowadzić dla konstruktorów
@@ -5404,7 +5404,7 @@ Fail Inductive T1 : Type :=
     wystąpienie [T1] w [T1_1] jest negatywne (na lewo od 1 strzałki),
     a drugie ściśle pozytywne (na lewo od 0 strzałek). Pierwsze
     wystąpienie [T1] w [T1_2] jest pozytywne (na lewo od 2 strzałek),
-    drugie negatywne (na lewo od 1 strzałki), trzecie zaś ściśle
+    drugie negatywne (na lewo od 1 strzałki), trzecie zaś ściśle
     pozytywne (na lewo od 0 strzałek). Pierwsze wystąpienie [T1] w
     [T1_3] jest negatywne (dziedzina kwantyfikacji), drugie zaś
     pozytywne (na lewo od jednej strzałki, ale ta strzałka jest w
@@ -5424,7 +5424,7 @@ Fail Inductive T2 : Type :=
       ((forall (n : nat) (P : T2 -> Prop),
         (forall t : T2, nat)) -> T2) -> T2 -> T2 -> T2.
 
-(** Policz niedobrość każdego wstąpienia [T2] w powyższej definicji.
+(** Policz niedobrość każdego wstąpienia [T2] w powyższej definicji.
     Sklasyfikuj konstruktory jako negatywne, pozytywne lub ściśle
     pozytywne. Następnie sklasyfikuj sam typ jako negatywny, pozytywny
     lub ściśle pozytywny. *)
@@ -5435,7 +5435,7 @@ Fail Inductive T2 : Type :=
 
 (** Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
     pozytywności. Jeżeli tak, narysuj wesołego jeża. Jeżeli nie, napisz
-    zapętlającą się funkcję podobną do [loop] (zakładamy, że typ [T] ma
+    zapętlającą się funkcję podobną do [loop] (zakładamy, że typ [T] ma
     tylko ten jeden konstruktor). Następnie sprawdź w Coqu, czy udzieliłeś
     poprawnej odpowiedzi.
     - [| C1 : T]
@@ -5463,8 +5463,8 @@ Fail Inductive T2 : Type :=
     zapewne postawić sobie pytanie: które dokładnie typy argumentów
     indukcyjnych są ok, a które są wynalazkiem szatana?
 
-    Najprościej będzie sprawę zbadać empirycznie, czyli na przykładzie.
-    Żeby zaś przykład był reprezentatywny, niech parametrem definicji
+    Najprościej będzie sprawę zbadać empirycznie, czyli na przykładzie.
+    Żeby zaś przykład był reprezentatywny, niech parametrem definicji
     będzie dowolna funkcja [F : Type -> Type]. *)
 
 Fail Inductive wut (F : Type -> Type) : Type :=
@@ -5478,16 +5478,16 @@ Fail Inductive wut (F : Type -> Type) : Type :=
     jest, skoro [F] nie jest ani strzałką, ani kwantyfikatorem uniwersalnym?
     Dlatego, że choć nie jest nimi, to może nimi zostać. Jeżeli zdefiniujemy
     sobie gdzieś na boku [F := fun A : Type => A -> bool], to wtedy
-    [wut_0 F : (wut F -> bool) -> wut F], a z takim diabelstwem już się
+    [wut_0 F : (wut F -> bool) -> wut F], a z takim diabelstwem już się
     mierzyliśmy i wiemy, że nie wróży ono niczego dobrego.
 
     Morał z tej historii jest dość banalny: gdy definiujemy typ induktywny
-    [T], jedynymi prawilnymi typami dla argumentu indukcyjnego są [T] oraz
+    [T], jedynymi prawilnymi typami dla argumentu indukcyjnego są [T] oraz
     typy funkcji, które mają [T] jako konkluzję ([A -> T], [A -> B -> T]
-    etc.). Wszystkie inne albo rodzą problemy z automatyczną generacją
-    reguł indukcji ([T * T], [list T]), albo prowadzą do sprzeczności
-    ([T -> T], [forall t : T, ...]), albo mogą prowadzić do sprzeczności,
-    jeżeli wstawi się za nie coś niedobrego ([F T]). *)
+    etc.). Wszystkie inne albo rodzą problemy z automatyczną generacją
+    reguł indukcji ([T * T], [list T]), albo prowadzą do sprzeczności
+    ([T -> T], [forall t : T, ...]), albo mogą prowadzić do sprzeczności,
+    jeżeli wstawi się za nie coś niedobrego ([F T]). *)
 
 (** **** Ćwiczenie *)
 
@@ -5550,7 +5550,7 @@ End wutF.
     kryterium ścisłej pozytywności jedynie dla bardzo prostych typów
     induktywnych. Słowem nie zająknęliśmy się nawet na temat typów
     wzajemnie induktywnych czy indeksowanych typów induktywnych. Nie
-    trudno będzie nam jednak uzupełnić naszą wiedzę, gdyż w przypadku
+    trudno będzie nam jednak uzupełnić naszą wiedzę, gdyż w przypadku
     oby tych mechanizmów kryterium ścisłej pozytywności wygląda podobnie
     jak w znanych nam już przypadkach. *)
 
@@ -5572,12 +5572,12 @@ with Y : Type :=
     ściśle pozytywnej. Jednak ponieważ jest to definicja przez indukcję
     wzajemną, kryterium ścisłej pozytywności stosuje się nie tylko do
     wystąpień [X], ale także do wystąpień [Y] - wszystkie wystąpienia [X]
-    oraz [Y] muszą być ściśle pozytywne zarówno w konstruktorach typu [X],
+    oraz [Y] muszą być ściśle pozytywne zarówno w konstruktorach typu [X],
     jak i w konstruktorach typu [Y]. *)
 
 (** **** Ćwiczenie *)
 
-(** Zakoduj aksjomatycznie definicję typów [X] i [Y]. Spróbuj napisać
+(** Zakoduj aksjomatycznie definicję typów [X] i [Y]. Spróbuj napisać
     zapętlającą się funkcję [loop] (czy raczej dwie wzajemnie rekurencyjne
     zapętlające się funkcje [loopx] i [loopy]), a następnie udowodnij za
     pomocą twierdzenia Cantora, że typy [X] i [Y] są nielegalne. *)
@@ -5692,24 +5692,24 @@ End XY.
 
 (** ** Jeszcze więcej pułapek *)
 
-(** To już prawie koniec naszej wędrówki przez świat nielegalnych typów
+(** To już prawie koniec naszej wędrówki przez świat nielegalnych typów
     "induktywnych". Dowiedzieliśmy się, że negatywne typy induktywne
-    prowadzą do nieterminacji i nauczyliśmy się wykorzystywać twierdzenie
+    prowadzą do nieterminacji i nauczyliśmy się wykorzystywać twierdzenie
     Cantora do dowodzenia nielegalności takich typów.
 
-    Poznaliśmy też jednak klasyfikację typów wyglądających na induktywne
+    Poznaliśmy też jednak klasyfikację typów wyglądających na induktywne
     (ściśle pozytywne, pozytywne, negatywne), a w szczególności pojęcie
     "niedobrości" indukcyjnego wystąpienia definiowanego typu w konstruktorze
-    (upraszczając, na lewo od ilu strzałek znajduje się to wystąpienie).
+    (upraszczając, na lewo od ilu strzałek znajduje się to wystąpienie).
 
-    Piszę "jednak", gdyż z jej powodu możemy czuć pewien niedosyt - wszystkie
+    Piszę "jednak", gdyż z jej powodu możemy czuć pewien niedosyt - wszystkie
     dotychczasowe przykłady były typami negatywnymi o niedobrości równej 1.
     Podczas naszej intelektualnej wędrówki zwiedziliśmy mniej miejscówek,
     niż moglibyśmy chcieć. W tym podrozdziale spróbujemy ten przykry niedosyt
     załatać, rozważając (nie ściśle) pozytywne typy induktywne. Zobaczymy
     formalny dowód na to, że nie są one legalne (lub, precyzyjniej pisząc,
     dowód na to, że conajmniej jeden z nich nie jest legalny). Zanim jednak
-    to się stanie, zobaczmy, czy wypracowane przez nas techniki działają na
+    to się stanie, zobaczmy, czy wypracowane przez nas techniki działają na
     negatywne typy induktywne o niedobrości innej niż 1. *)
 
 Module T3.
@@ -5718,7 +5718,7 @@ Fail Inductive T3 : Type :=
     | T3_0 : (((T3 -> bool) -> bool) -> bool) -> T3.
 
 (** Przyjrzyjmy się powyższej definicji. Występienie indukcyjne typu [T3]
-    ma współczynnik niedobrości równy 3, gdyż znajduje się na lewo od 3
+    ma współczynnik niedobrości równy 3, gdyż znajduje się na lewo od 3
     strzałek. Prawe strony wszystkich z nich to [bool]. *)
 
 Axioms
@@ -5733,11 +5733,11 @@ Axioms
             f (T3_0 g) = PT3_0 g}).
 
 (** Po ciężkich bojach, przez które przeszedłeś, aksjomatyczne kodowanie
-    tego typu nie powinno cię dziwić. Warto zauważyć jedynie, że do naszej
+    tego typu nie powinno cię dziwić. Warto zauważyć jedynie, że do naszej
     dyspozycji mamy jedynie regułę zależnej analizy przypadków, gdyż nie
-    wiadomo, jak miałyby wyglądać wywołania indukcyjne.
+    wiadomo, jak miałyby wyglądać wywołania indukcyjne.
 
-    Zanim zobaczymy, jak pokazać nielegalność tego typu metodą Cantora,
+    Zanim zobaczymy, jak pokazać nielegalność tego typu metodą Cantora,
     przypomnijmy sobie pewien kluczowy fakt dotyczący negacji i jego
     banalne uogólnienie. *)
 
@@ -5765,7 +5765,7 @@ Qed.
     - pojedyncza negacja
     - podwójna negacja *)
 
-(** Jeżeli mamy do czynienia z większą liczbą negacji, to możemy zdejmować
+(** Jeżeli mamy do czynienia z większą liczbą negacji, to możemy zdejmować
     po dwie aż dojdziemy do któregoś z powyższych przypadków. Ponieważ
     negacja to tylko implikacja, której kodziedziną jest [False], a nie
     korzystamy w dowodzie z żadnych specjalnych właściwości [False],
@@ -5777,7 +5777,7 @@ Proof.
   intros f x. apply f. intro g. apply g. exact x.
 Defined.
 
-(** Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
+(** Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
     cię zaskakiwać. Szczerze pisząc, reszta dowodu również nie jest jakoś
     specjalnie wymagająca czy oświecająca. *)
 
@@ -5807,7 +5807,7 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-(** Napisanie zapętlającej się funkcji [loop : T3 -> bool] też nie jest
+(** Napisanie zapętlającej się funkcji [loop : T3 -> bool] też nie jest
     jakoś wybitnie trudne. Napisz ją i udowodnij (nieformlanie), że
     istnieje takie [x : T3], że [loop x] się zapętla. *)
 
@@ -5835,8 +5835,8 @@ End T3.
     całkiem skłonny uwierzyć też, że zadziałają na te o niedobrości równej
     5, 7 i tak dalej.
 
-    To wszystko jest prawdą jednak tylko wtedy, gdy wszystkie typy po prawych
-    stronach strzałek będą takie same. A co, gdy będą różne? *)
+    To wszystko jest prawdą jednak tylko wtedy, gdy wszystkie typy po prawych
+    stronach strzałek będą takie same. A co, gdy będą różne? *)
 
 Module T4.
 
@@ -5855,7 +5855,7 @@ Axioms
             f (c0 g) = Pc0 g}).
 
 (** Powyższy przykład jest podobny do poprzedniego, ale tym razem zamiast
-    trzech wystąpień [bool] mamy [bool], [nat] oraz [Color] (to typ, który
+    trzech wystąpień [bool] mamy [bool], [nat] oraz [Color] (to typ, który
     zdefiniowaliśmy na samym początku tego rozdziału, gdy uczyliśmy się
     o enumeracjach). *)
 
@@ -5878,16 +5878,16 @@ Defined.
     elementu [T4] funkcję typu [T4 -> bool]. W tym celu używamy zależnej
     reguły analizy przypadków i wprowadzamy rzeczy do kontekstu.
 
-    Tym razem nie możemy jednak bezpośrednio zaaplikować [f], gdyż jej
-    kodziedziną jest [Color], a my musimy skonstruować coś typu [bool].
+    Tym razem nie możemy jednak bezpośrednio zaaplikować [f], gdyż jej
+    kodziedziną jest [Color], a my musimy skonstruować coś typu [bool].
     Możemy temu jednak zaradzić aplikując do celu skonstruowaną naprędce
-    funkcję typu [Color -> bool]. Ta funkcja powinna być surjekcją (jeśli
-    nie wierzysz, sprawdź, co się stanie, jeżeli zamienimy ją na funckję
+    funkcję typu [Color -> bool]. Ta funkcja powinna być surjekcją (jeśli
+    nie wierzysz, sprawdź, co się stanie, jeżeli zamienimy ją na funckję
     stałą).
 
-    Możemy już zaaplikować [f] i wprowadzić [g] do kontekstu. Chcielibyśmy
+    Możemy już zaaplikować [f] i wprowadzić [g] do kontekstu. Chcielibyśmy
     teraz zaaplikować [g], ale nie możemy, bo typy się nie zgadzają - [g]
-    zwraca [bool], a my musimy skonstruować liczbę naturalną. Robimy tutaj
+    zwraca [bool], a my musimy skonstruować liczbę naturalną. Robimy tutaj
     to samo co poprzednio - aplikujemy do celu jakąś funkcję [bool -> nat].
     Tym razem nie musi ona być surjekcją (nie jest to nawet możliwe, gdyż
     nie ma surjekcji z [bool] w [nat]). Dzięki temu możemy zaaplikować [g]
@@ -5898,10 +5898,10 @@ Require Import FunctionalExtensionality.
 (** Żeby pokazać, że [bad] jest surjekcją, będziemy potrzebować aksjomatu
     ekstensjonalności dla funkcji (ang. functional extensionality axiom,
     w skrócie funext). Głosi on, że dwie funkcje [f, g : A -> B] są równe,
-    jeżeli uda nam się pokazać, że dają równe wyniki dla każdego argumentu
+    jeżeli uda nam się pokazać, że dają równe wyniki dla każdego argumentu
     (czyli [forall x : A, f x = g x]).
 
-    Importując powyższy moduł zakładamy prawdziwość tego aksjomatu oraz
+    Importując powyższy moduł zakładamy prawdziwość tego aksjomatu oraz
     uzyskujemy dostęp do taktyki [extensionality], która ułatwia dowody
     wymagające użycia ekstensjonalności. *)
 
@@ -5922,32 +5922,32 @@ Proof.
 Qed.
 
 (** Dowód jest prawie taki jak zawsze: odwijamy definicję surjektywności i
-    wprowadzamy hipotezy do kontekstu, a następnie odwijamy definicję [bad]
-    i rozbijamy ją dla czytelności na właściwą funkcję [bad] oraz równanie
+    wprowadzamy hipotezy do kontekstu, a następnie odwijamy definicję [bad]
+    i rozbijamy ją dla czytelności na właściwą funkcję [bad] oraz równanie
     [eq].
 
     Następnie musimy znaleźć [a : T4], które [bad] mapuje na [f]. Zaczynamy
     od [c0], bo jest to jedyny konstruktor [T4]. Bierze on jako argument
-    funkcję typu [((T4 -> bool) -> nat) -> Color]. Żeby ją wyprodukować,
+    funkcję typu [((T4 -> bool) -> nat) -> Color]. Żeby ją wyprodukować,
     bierzemy na wejściu funkcję [g : (T4 -> bool) -> nat] i musimy zrobić
-    coś typu [Color].
+    coś typu [Color].
 
     Nie może to być jednak byle co - musimy użyć [f], a jedynym sensownym
-    sposobem, żeby to zrobić, jest zaaplikować [g] do [f]. Musimy zadbać
-    też o to, żeby odwrócić funkcje konwertujące [Color -> bool] oraz
+    sposobem, żeby to zrobić, jest zaaplikować [g] do [f]. Musimy zadbać
+    też o to, żeby odwrócić funkcje konwertujące [Color -> bool] oraz
     [bool -> nat], których użyliśmy w definicji [bad]. Pierwsza z nich
     konwertowała [R] (czyli kolor czerwony) na [true], a inne kolory na
     [false], zaś druga konwertowała [true] na [0], a [false] na [1].
     Wobec tego dopasowując [g f : nat] musimy przekonwertować [0] na [R],
-    zaś [1] na coś innego niż [R], np. na [G] (czyli kolor zielony).
+    zaś [1] na coś innego niż [R], np. na [G] (czyli kolor zielony).
 
     Znalazłszy odpowiedni argument, możemy przepisać równanie definiujące
-    [bad]. To już prawie koniec, ale próba użycia taktyki [reflexivity] w
-    tym momencie skończyłaby się porażką. Na ratunek przychodzi nam
-    aksjomat ekstensjonalności, którego używamy pisząc [extensionality t].
-    Dzięki temu pozostaje nam pokazać jedynie, że [f t] jest równe tej
+    [bad]. To już prawie koniec, ale próba użycia taktyki [reflexivity] w
+    tym momencie skończyłaby się porażką. Na ratunek przychodzi nam
+    aksjomat ekstensjonalności, którego używamy pisząc [extensionality t].
+    Dzięki temu pozostaje nam pokazać jedynie, że [f t] jest równe tej
     drugie funkcji dla argumentu [t]. W tym celu rozbijamy [f t], a oba
-    wyrażenia okazują się być konwertowalne. *)
+    wyrażenia okazują się być konwertowalne. *)
 
 Theorem T4_illegal : False.
 Proof.
@@ -5959,14 +5959,14 @@ Qed.
 (** Skoro mamy surjekcję z [T4] w [T4 -> bool], katastrofy nie da się
     uniknąć.
 
-    Moglibyśmy się też zastanowić nad napisaniem zapętlającej się funkcji
-    [loop], ale coś czuję, że ty coś czujesz, że byłoby to babranie się
+    Moglibyśmy się też zastanowić nad napisaniem zapętlającej się funkcji
+    [loop], ale coś czuję, że ty coś czujesz, że byłoby to babranie się
     w niepotrzebnym problemie. Wobec tego (oczywiście o ile dotychczas
-    się nie skapnąłeś) poczuj się oświecony! *)
+    się nie skapnąłeś) poczuj się oświecony! *)
 
 Definition loop (x : T4) : bool := bad x x.
 
-(** Ha! Tak tak, [loop] nie jest niczym innym niż lekko rozmnożoną wersją
+(** Ha! Tak tak, [loop] nie jest niczym innym niż lekko rozmnożoną wersją
     [bad]. *)
 
 Lemma loop_nontermination :
@@ -5981,22 +5981,22 @@ Proof.
   rewrite 5!eq.
 Abort.
 
-(** A skoro [loop] to tylko inne [bad], to nie powinno cię też wcale a
+(** A skoro [loop] to tylko inne [bad], to nie powinno cię też wcale a
     wcale zdziwić, że najbardziej oczywisty argument, dla którego [loop]
     się zapętla, jest żywcem wzięty z dowodu [bad_sur] (choć oczywiście
     musimy zastąpić [f] przez [loop]).
 
-    Oczywiście niemożliwe jest, żeby formalnie udowodnić w Coqu, że coś
-    się zapętla. Powyższy lemat ma być jedynie demonstracją - ręczne
+    Oczywiście niemożliwe jest, żeby formalnie udowodnić w Coqu, że coś
+    się zapętla. Powyższy lemat ma być jedynie demonstracją - ręczne
     rozpisanie tego przykładu byłoby zbyt karkołomne. Jak widać z dowodu,
     przepisywanie równania definiującego [bad] tworzy wesołą piramidkę
-    zrobioną z [match]y i [if]ów. Jeżeli chcesz poczuć pełnię zapętlenia,
-    wypbróuj taktykę [rewrite !eq] - zapętli się ona, gdyż równanie [eq]
-    można przepisywać w nieskończoność. *)
+    zrobioną z [match]y i [if]ów. Jeżeli chcesz poczuć pełnię zapętlenia,
+    wypbróuj taktykę [rewrite !eq] - zapętli się ona, gdyż równanie [eq]
+    można przepisywać w nieskończoność. *)
 
 End T4.
 
-(** Mogłoby się wydawać, że teraz to już na pewno nasze metody działają na
+(** Mogłoby się wydawać, że teraz to już na pewno nasze metody działają na
     wszystkie możliwe negatywne typy induktywne. Cytując Tadeusza Sznuka:
     "Nic bardziej mylnego!". *)
 
@@ -6053,12 +6053,12 @@ Proof.
     reflexivity.
 Abort.
 
-(** Dowód również przebiega podobnie jak poprzednio. Załamuje się on dopiero,
+(** Dowód również przebiega podobnie jak poprzednio. Załamuje się on dopiero,
     gdy na samym końcu rozbijamy wyrażenie [f t] i upraszczamy używając [cbn].
-    W pierwszym podcelu [0 = 0] jeszcze jakoś udaje się nam udowodnić, ale w
+    W pierwszym podcelu [0 = 0] jeszcze jakoś udaje się nam udowodnić, ale w
     drugim naszym oczom ukazuje się cel [2 = S n].
 
-    Problem polega na tym, że [f t] może być dowolną liczbą naturalną, ale
+    Problem polega na tym, że [f t] może być dowolną liczbą naturalną, ale
     zastosowana przez nas funkcja konwertująca [Color -> nat] może zwracać
     jedynie [0], [1] lub [2]. Teraz widzimy jak na dłoni, skąd wziął się
     wymóg, by funkcja konwertująca była surjekcją. *)
@@ -6082,14 +6082,14 @@ Abort.
     funkcji [loop], zupełnie jak w poprzednim przykładzie.
 
     Niesmak jednak pozostaje, gdyż szczytem naszych ambicji nie powinno być
-    ograniczanie się do zdefiniowania [loop], lecz do formalnego udowodnienia
+    ograniczanie się do zdefiniowania [loop], lecz do formalnego udowodnienia
     nielegalności [T5]. Czy wszystko stracone? Czy umrzemy? Tu dramatyczna
     pauza.
 
     Nie.
 
     Okazuje się, że jest pewien trikowy sposób na rozwiązanie tego problemu,
-    a mianowicie: zamiast próbować wyjąć z [T5] funkcję [T5 -> nat], wyjmiemy
+    a mianowicie: zamiast próbować wyjąć z [T5] funkcję [T5 -> nat], wyjmiemy
     stamtąd po prostu funckję [T5 -> bool] i to mimo tego, że jej tam nie ma!
 *)
 
@@ -6126,8 +6126,8 @@ Proof.
   destruct (f t); cbn; reflexivity.
 Qed.
 
-(** Ponieważ obydwie nasze funkcję konwertujące były surjekcjami, możemy je
-    teraz odwrócić i wykazać ponad wszelką wątpliwość, że [bad'] faktycznie
+(** Ponieważ obydwie nasze funkcję konwertujące były surjekcjami, możemy je
+    teraz odwrócić i wykazać ponad wszelką wątpliwość, że [bad'] faktycznie
     jest surjekcją. *)
 
 Theorem T5_illegal : False.
@@ -6137,19 +6137,19 @@ Proof.
     apply bad'_sur.
 Qed.
 
-(** Spróbujmy podsumować, co tak naprawdę stało się w tym przykładzie.
+(** Spróbujmy podsumować, co tak naprawdę stało się w tym przykładzie.
 
-    Tym razem, mimo że do [T5] możemy włożyć dowolną funkcję [T5 -> nat],
+    Tym razem, mimo że do [T5] możemy włożyć dowolną funkcję [T5 -> nat],
     to nie możemy jej potem wyjąć, uzyskując surjekcję, gdyż zawadzają
     nam w tym typy po prawych stronach strzałek ([bool] i [Color]), które
-    mają za mało elementów, żeby móc surjektywnie przekonwertować je na
+    mają za mało elementów, żeby móc surjektywnie przekonwertować je na
     typ [nat].
 
     Jednak jeżeli mamy wszystkie możliwe funkcje typu [T5 -> nat], to
-    możemy przerobić je (w locie, podczas "wyciągania") na wszystkie
+    możemy przerobić je (w locie, podczas "wyciągania") na wszystkie
     możliwe funkcje typu [T5 -> bool], składając je z odpowiednią
     surjekcją (np. [isZero]). Ponieważ typ [bool] i [Color] jesteśmy
-    w stanie surjektywnie przekonwertować na [bool], reszta procesu
+    w stanie surjektywnie przekonwertować na [bool], reszta procesu
     działa podobnie jak w poprzednich przykładach. *)
 
 Definition loop' (x : T5) : bool := bad' x x.
@@ -6167,14 +6167,14 @@ Proof.
 Abort.
 
 (** Takie trikowe [bad'] wciąż pozwala nam bez większych przeszkód
-    zdefiniować zapętlającą się funkcję [loop']. Osiągnęliśmy więc
+    zdefiniować zapętlającą się funkcję [loop']. Osiągnęliśmy więc
     pełen sukces.
 
-    W ogólności nasz trik możnaby sformułować tak: jeżeli mamy konstruktor
-    negatywny typu [T], to możemy wyjąć z niego funkcję [T -> A], gdzie [A]
+    W ogólności nasz trik możnaby sformułować tak: jeżeli mamy konstruktor
+    negatywny typu [T], to możemy wyjąć z niego funkcję [T -> A], gdzie [A]
     jest najmniejszym z typów występujących po prawych stronach strzałek.
 
-    No, teraz to już na pewno mamy obcykane wszystkie przypadki, prawda?
+    No, teraz to już na pewno mamy obcykane wszystkie przypadki, prawda?
     Tadeuszu Sznuku przybywaj: "Otóż nie tym razem!". *)
 
 End T5.
@@ -6196,42 +6196,42 @@ Axioms
     trik, jest sytuacja, w której po prawej stronie strzałki wystąpi
     typ [unit]. Oczywiście zgodnie z trikiem możemy z [T6] wyciągnąć
     surjekcję [T6 -> unit], ale jest ona oczywiście bezużyteczna, bo
-    taką samą możemy zrobić za darmo, stale zwracając po prostu [tt].
-    Surjekcja ta nie wystarcza rzecz jasna, żeby odpalić twierdzenie
+    taką samą możemy zrobić za darmo, stale zwracając po prostu [tt].
+    Surjekcja ta nie wystarcza rzecz jasna, żeby odpalić twierdzenie
     Cantora.
 
     Tym razem jednak nie powinniśmy spodziewać się, że upierdliwość tę
-    będzie dało się jakoś obejść. Typ [T6 -> unit] jest jednoelementowy
+    będzie dało się jakoś obejść. Typ [T6 -> unit] jest jednoelementowy
     (jedynym elementem jest [fun _ => tt]) podobnie jak [unit]. Bardziej
     poetycko możemy powiedzieć, że [T6 -> unit] i [unit] są izomorficzne,
-    czyli prawie równe - różnią się tylko nazwami elementów ("nazwa"
+    czyli prawie równe - różnią się tylko nazwami elementów ("nazwa"
     jedynego elementu [unit]a to [tt]).
 
     Skoro tak, to typ konstruktora [c0], czyli
     [(((T6 -> unit) -> bool) -> Color) -> T6)], możemy równie dobrze
     zapisać jako [((unit -> bool) -> Color) -> T6)]. Zauważmy teraz,
-    że [unit -> bool] jest izomorficzne z [bool], gdyż ma tylko dwa
+    że [unit -> bool] jest izomorficzne z [bool], gdyż ma tylko dwa
     elementy, a mianowicie [fun _ => true] oraz [fun _ => false].
     Tak więc typ [c0] możemy jeszcze prościej zapisać jako
     [(bool -> Color) -> T6], a to oznacza, że typ [T6] jest jedynie
     owijką na funkcje typu [bool -> Color]. Twierdzenie Cantora nie
-    pozwala tutaj uzyskać sprzeczności.
+    pozwala tutaj uzyskać sprzeczności.
 
     Czy zatem takie typy sa legalne? Syntaktycznie nie - Coq odrzuca je
     podobnie jak wszystkie inne negatywne typy induktywne. Semantycznie
-    również nie - o ile nie możemy uzyskać jawnej sprzeczności, to nasze
+    również nie - o ile nie możemy uzyskać jawnej sprzeczności, to nasze
     rozważania o nieterminacji wciąż są w mocy.
 
     Przypomnij sobie poprzedni przykład i nieudaną próbę wyłuskania z
-    [T5] surjekcji [T5 -> nat]. Udało nam się zaimplementować funkcję
+    [T5] surjekcji [T5 -> nat]. Udało nam się zaimplementować funkcję
     [bad], której surjektywności nie potrafiliśmy pokazać, ale pomimo
-    tego bez problemu udało nam się użyć jej do napisania funkcji [loop].
+    tego bez problemu udało nam się użyć jej do napisania funkcji [loop].
     W obecnym przykładzie jest podobnie i nieterminacja to najlepsze, na
     co możemy liczyć. *)
 
 (** **** Ćwiczenie *)
 
-(** Zdefiniuj funkcję [bad], a następnie użyj jej do zdefiniowania funkcji
+(** Zdefiniuj funkcję [bad], a następnie użyj jej do zdefiniowania funkcji
     [loop]. Zademonstruj w sposób podobny jak poprzednio, że [loop] się
     zapętla. *)
 
@@ -6277,14 +6277,14 @@ End T6.
 
 (** **** Ćwiczenie *)
 
-(** Otóż nie do końca. Ostatnim hamulcowym, groźniejszym nawet niż [unit],
+(** Otóż nie do końca. Ostatnim hamulcowym, groźniejszym nawet niż [unit],
     jest wystąpienie po prawej stronie strzałki typu (czy raczej zdania)
     [False]. W tym przypadku nie tylko nie pomaga nam Cantor, ale nie
-    pomaga też nieterminacja, gdyż najzwyczajniej w świecie nie da się
-    zdefiniować żadnej funkcji.
+    pomaga też nieterminacja, gdyż najzwyczajniej w świecie nie da się
+    zdefiniować żadnej funkcji.
 
     Jako, że za cholerę nie wiem, co z tym fantem zrobić, zostawiam go tobie
-    jako ćwiczenie: wymyśl metodę pokazywania nielegalności negatywnych typów
+    jako ćwiczenie: wymyśl metodę pokazywania nielegalności negatywnych typów
     induktywnych, w których po prawej stronie strzałki jest co najmniej
     jedno wystąpienie [False]. *)
 
@@ -6333,13 +6333,13 @@ End T8.
 (** Douglas Adams, _Restauracja na końcu wszechświata_ *)
 
 (** W poprzednich podrozdziałach poznaliśmy twierdzenie Cantora oraz
-    nauczyliśmy się używać go jako młota na negatywne typy induktywne.
+    nauczyliśmy się używać go jako młota na negatywne typy induktywne.
 
     W tym podrozdziale zapoznamy się z dwoma paradoksami (a precyzyjniej
     pisząc, z dwoma wersjami tego samego paradoksu), które okażą się być
     ściśle powiązane z twierdzeniem Cantora, a które będą służyć nam gdy
     staniemy w szranki z negatwynymi typami induktywno-rekurencyjnymi
-    (czyli tymi, które definiuje się przez indukcję-rekursję). O tak: w
+    (czyli tymi, które definiuje się przez indukcję-rekursję). O tak: w
     tym podrozdziale, niczym Thanos, staniemy do walki przeciw uniwersum!
 
     Zacznijmy od paradoksu Russella. Jest to bardzo stary paradoks, odkryty
@@ -6365,14 +6365,14 @@ End T8.
     induktywnego :)), np. lista krajów według PKB per capita. Pytanie:
     czy można stworzyć w Wikipedii listę wszystkich list? Czy na liście
     wszystkich list ona sama jest wymieniona? Czy można w Wikipedii
-    stworzyć listę wszystkich list, które nie wymieniają same siebie? *)
+    stworzyć listę wszystkich list, które nie wymieniają same siebie? *)
 
-(** Na czym tak naprawdę polega paradoks? Jakiś mądry (czyli przemądrzały)
+(** Na czym tak naprawdę polega paradoks? Jakiś mądry (czyli przemądrzały)
     filozof mógłby rzec, że na nadużyciu pojęcia zbioru... albo czymś
     równie absurdalnym. Otóż nie! Paradoks Russella polega na tym samym,
     co cała masa innych paradoksów, czyli na autoreferencji.
 
-    Z autoreferencją spotkaliśmy się już co najmniej raz, w rozdziale
+    Z autoreferencją spotkaliśmy się już co najmniej raz, w rozdziale
     pierwszym. Przypomnij sobie, że golibroda goli tych i tylko tych,
     którzy sami siebie nie golą. Czy golibroda goli sam siebie?
 
@@ -6391,7 +6391,7 @@ End T8.
 
 (** **** Ćwiczenie *)
 
-(** Powyższe ćwiczenie miało być ostatnim, ale co tam, dam jeszcze trochę.
+(** Powyższe ćwiczenie miało być ostatnim, ale co tam, dam jeszcze trochę.
     Co czuje serce twoje (ewentualnie: co widzisz przed oczyma duszy swojej)
     na widok poniższych wesołych zdań?
 
@@ -6402,11 +6402,11 @@ End T8.
     "Zdanie po prawej jest prawdziwe. Zdanie po lewej jest fałszywe."
 *)
 
-(** Dobra, wystarczy już tych paradoksów... a nie, czekaj. Przecież został
-    nam do omówienia jeszcze paradoks Girarda. Jednak poznawszy już tajniki
+(** Dobra, wystarczy już tych paradoksów... a nie, czekaj. Przecież został
+    nam do omówienia jeszcze paradoks Girarda. Jednak poznawszy już tajniki
     autoreferencji, powinno pójść jak z płatka.
 
-    Paradoks Girarda to paradoks, który może zaistnieć w wielu systemach
+    Paradoks Girarda to paradoks, który może zaistnieć w wielu systemach
     formalnych, takich jak teorie typów, języki programowania, logiki i
     inne takie. Źródłem całego zła jest zazwyczaj stwierdzenie w stylu
     [Type : Type]. *)
@@ -6416,7 +6416,7 @@ Check Type.
 
 (** O nie! Czyżbyśmy właśnie zostali zaatakowani przez paradoks Girarda?
     W tym miejscu należy przypomnieć (albo obwieścić - niestety nie pamiętam,
-    czy już o tym wspominałem), że [Type] jest w Coqu jedynie synonimem dla
+    czy już o tym wspominałem), że [Type] jest w Coqu jedynie synonimem dla
     czegoś w stylu [Type(i)], gdzie [i] jest "poziomem" sortu [Type], zaś
     każde [Type(i)] żyje tak naprawdę w jakimś [Type(j)], gdzie [j] jest
     większe od [i] - typy niższego poziomu żyją w typach wyższego poziomu.
@@ -6428,8 +6428,8 @@ Check Type.
 
 (** Jak widać, jest mniej więcej tak jak napisałem wyżej. Nie przejmuj się
     tym tajemniczym [Top] - to tylko nic nieznaczący bibelocik. W twoim
-    przypadku również poziom uniwersum może być inny niż [590]. Co więcej,
-    poziom ten będzie się zwiększał wraz z każdym odpaleniem komendy [Check
+    przypadku również poziom uniwersum może być inny niż [590]. Co więcej,
+    poziom ten będzie się zwiększał wraz z każdym odpaleniem komendy [Check
     Type] (czyżbyś pomyślał właśnie o doliczeniu w ten sposób do zyliona?).
 
     Skoro już wiemy, że NIE zostaliśmy zaatakowani przez paradoks Girarda,
@@ -6438,11 +6438,11 @@ Check Type.
     od konkretnego systemu formalnego albo coś w tym stylu. Otóż niet! Jak
     zawsze, chodzi oczywiście o autoreferencję.
 
-    Gdyby ktoś był zainteresowany, to najlepsze dotychczas sformułowanie
+    Gdyby ktoś był zainteresowany, to najlepsze dotychczas sformułowanie
     paradoksu znalazłem (zupełnie przez przypadek, wcale nie szukając) w
     pracy "An intuitionistic theory of types" Martina-Löfa (swoją drogą,
     ten koleś wymyślił podstawy dużej części wszystkiego, czym się tutaj
-    zajmujemy). Można ją przeczytać tu (paradoks Girarda jest pod koniec
+    zajmujemy). Można ją przeczytać tu (paradoks Girarda jest pod koniec
     pierwszej sekcji):
     archive-pml.github.io/martin-lof/pdfs
     /An-Intuitionistic-Theory-of-Types-1972.pdf
@@ -6467,34 +6467,34 @@ end.
 *)
 
 (** Powyższa induktywno-rekurencyjna definicja typu [U] (i interpretującej
-    go funkcji [El]), którą Coq rzecz jasna odrzuca (uczcijmy ławę oburzonych
+    go funkcji [El]), którą Coq rzecz jasna odrzuca (uczcijmy ławę oburzonych
     minutą oburzenia) to definicja pewnego uniwersum.
 
-    W tym miejscu wypadałoby wytłumaczyć, czym są uniwersa. Otóż odpowiedź
-    jest dość prosta: uniwersum składa się z typu [U : Type] oraz funkcji
+    W tym miejscu wypadałoby wytłumaczyć, czym są uniwersa. Otóż odpowiedź
+    jest dość prosta: uniwersum składa się z typu [U : Type] oraz funkcji
     [El : U -> Type]. Intuicja w tym wszystkim jest taka, że elementami
     typu [U] są nazwy typów (czyli bytów sortu [Type]), zaś fukncja [El]
     zwraca typ, którego nazwę dostanie.
 
     Choć z definicji widać to na pierwszy rzut oka, to zaskakujący może
-    wydać ci się fakt, że w zasadzie każdy typ można zinterpretować jako
+    wydać ci się fakt, że w zasadzie każdy typ można zinterpretować jako
     uniwersum i to zazwyczaj na bardzo wiele różnych sposobów (tyle ile
     różnych interpretacji [El] jesteśmy w stanie wymyślić). Najlepiej
     będzie, jeżeli przemyślisz to wszystko w ramach ćwiczenia. *)
 
 (** **** Ćwiczenie *)
 
-(** Ćwiczenie będzie konceptualne, a składa się na nie kilka łamigłówek:
+(** Ćwiczenie będzie konceptualne, a składa się na nie kilka łamigłówek:
     - zinterpretuj [False] jako uniwersum
     - zinterpretuj [unit] jako uniwersum (ile jest możliwych sposobów?)
     - czy istnieje uniwersum, które zawiera nazwę samego siebie? Uwaga:
-      to nie jest tak proste, jak może się wydawać na pierwszy rzut oka.
+      to nie jest tak proste, jak może się wydawać na pierwszy rzut oka.
     - wymyśl ideologicznie słuszną interpretację typu [nat] jako uniwersum
-      (tak, jest taka). Następnie wymyśl jakąś głupią interpretację [nat]
+      (tak, jest taka). Następnie wymyśl jakąś głupią interpretację [nat]
       jako uniwersum. Dlaczego ta interpretacja jest głupia?
     - zdefiniuj uniwersum, którego elementami są nazwy typów funkcji z
       n-krotek liczb naturalnych w liczby naturalne. Uwaga: rozwiązanie
-      jest bardzo eleganckie i możesz się go nie spodziewać.
+      jest bardzo eleganckie i możesz się go nie spodziewać.
     - czy istnieje uniwersum, którego interpretacja jest surjekcją? Czy
       da się w Coqu udowodnić, że tak jest albo nie jest? Uwaga: tak
       bardzo podchwytliwe, że aż sam się złapałem. *)
@@ -6508,18 +6508,18 @@ end.
     - Tak, istnieje uniwersum zawierające nazwę samego siebie, np. [unit].
     - Ideologicznie słuszna interpretacja [nat] to uniwersum typów
       skończonych - [El n] to typ n-elementowy. Głupia interpretacja:
-      każde [n] jest nazwą dla tego samego typu, np. [nat].
+      każde [n] jest nazwą dla tego samego typu, np. [nat].
     - Tutaj mały twist, bo tym uniwersum też jest [nat]
-    - Tutaj też trochę twist, bo takie uniwersum oczywiście istnieje i
+    - Tutaj też trochę twist, bo takie uniwersum oczywiście istnieje i
       nazywa się... baram bam bam bam... fanfary... [Type]! No cóż, nie
-      tego się spodziewałeś, prawda? A co do tego, czy istnieje takie
+      tego się spodziewałeś, prawda? A co do tego, czy istnieje takie
       induktywne uniwersum, to myślę, że dla każdego kandydata z osobna
-      dałoby się pokazać, że nie jest ono wystarczająco dobre. *)
+      dałoby się pokazać, że nie jest ono wystarczająco dobre. *)
 
 (* end hide *)
 
-(** Skoro wiemy już, czym są uniwersa, przyjrzyjmy się temu, które właśnie
-    zdefiniowaliśmy. Żebyś nie musiał w rozpaczy przewijać do góry, tak
+(** Skoro wiemy już, czym są uniwersa, przyjrzyjmy się temu, które właśnie
+    zdefiniowaliśmy. Żebyś nie musiał w rozpaczy przewijać do góry, tak
     wygląda aksjomatyczne kodowanie tego uniwersum: *)
 
 Module PoorUniverse.
@@ -6552,26 +6552,26 @@ Axioms
 
 (** [U] to typ, którego elementami są nazwy typów, zaś [El] jest jego
     interpretacją. Nazwy możemy tworzyć tylko na dwa sposoby: jeżeli [A : U]
-    jest nazwą typu, zaś [B : El A -> U] jest rodziną nazw typów indeksowaną
+    jest nazwą typu, zaś [B : El A -> U] jest rodziną nazw typów indeksowaną
     przez elementy typu [A], to [Pi A B] jest nazwą typu
     [forall x : El A, El (B x)]. Drugim konstruktorem jest [UU], które
     oznacza nazwę samego uniwersum, tzn. [El UU = U].
 
-    Reguła indukcji jest dość prosta: jeżeli [P : U -> Type] jest rodziną
+    Reguła indukcji jest dość prosta: jeżeli [P : U -> Type] jest rodziną
     typów (tych prawdziwych) indeksowaną przez [U] (czyli nazwy typów), to
-    żeby zdefiniować funkcję [f : forall u : U, P u] musimy mieć dwie rzeczy:
+    żeby zdefiniować funkcję [f : forall u : U, P u] musimy mieć dwie rzeczy:
     po pierwsze, musimy pokazać, że [P (Pi A B)] zachodzi, gdy zachodzi [P A]
-    oraz [P (B x)] dla każdego [x : El A]. Po drugie, musi zachodzić [P UU].
+    oraz [P (B x)] dla każdego [x : El A]. Po drugie, musi zachodzić [P UU].
 
-    Mimo, że uniwersum wydaje się biedne, jest ono śmiertelnie sprzeczne,
-    gdyż zawiera nazwę samego siebie. Jeżeli rozwiązałeś (poprawnie, a nie
-    na odwal!) ostatnie ćwiczenie, to powinieneś wiedzieć, że niektóre
+    Mimo, że uniwersum wydaje się biedne, jest ono śmiertelnie sprzeczne,
+    gdyż zawiera nazwę samego siebie. Jeżeli rozwiązałeś (poprawnie, a nie
+    na odwal!) ostatnie ćwiczenie, to powinieneś wiedzieć, że niektóre
     uniwersa mogą zawierać nazwy samego siebie i wcale to a wcale nie daje
     to żadnych problemów.
 
     Dlaczego więc w tym przypadku jest inaczej? Skoro [UU] nie jest złe samo
     w sobie, to problem musi leżeć w [Pi], bo niby gdzie indziej? Zobaczmy
-    więc, gdzie kryje się sprzeczność. W tym celu posłużymy się twierdzeniem
+    więc, gdzie kryje się sprzeczność. W tym celu posłużymy się twierdzeniem
     Cantora: najpierw pokażemy surjekcję [U -> (U -> U)], a potem, za pomocą
     metody przekątniowej, że taka surjekcja nie może istnieć. *)
 
@@ -6585,9 +6585,9 @@ end.
 
 (** Jeżeli dostajemy [Pi A B], gdzie [A] to [UU], to wtedy [B : El A -> U]
     tak naprawdę jest typu [U -> U] (bo [El UU = U]). W innych przypadkach
-    wystarczy po prostu zwrócić funkcję identycznościową. Niestety Coq nie
-    wspiera indukcji-rekursji (ława oburzonych), więc funkcję [bad] musimy
-    zdefiniować ręcznie: *)
+    wystarczy po prostu zwrócić funkcję identycznościową. Niestety Coq nie
+    wspiera indukcji-rekursji (ława oburzonych), więc funkcję [bad] musimy
+    zdefiniować ręcznie: *)
 
 Definition bad : U -> (U -> U).
 Proof.
@@ -6600,10 +6600,10 @@ Proof.
 Defined.
 
 (** Powyższa definicja za pomocą taktyk działa dokładnie tak samo jak
-    nieformalna definicja [bad] za pomocą dopasowania do wzorca. Jedyna
+    nieformalna definicja [bad] za pomocą dopasowania do wzorca. Jedyna
     różnica jest taka, że [El UU] nie jest definicyjnie równe [U], lecz
     są one jedynie zdaniowo równe na mocy aksjomatu [El_UU : El UU = U].
-    Musimy więc przepisać go w [B], żeby typy się zgadzały.
+    Musimy więc przepisać go w [B], żeby typy się zgadzały.
 
     Zanim będziemy mogli pokazać, że [bad] jest surjekcją, czeka nas kilka
     niemiłych detali technicznych (gdyby [El UU] i [U] były definicyjnie
@@ -6618,14 +6618,14 @@ Check eq_rect_r.
           P x -> forall y : A, y = x -> P y *)
 
 (** [eq_rect] oraz [eq_rect_r] to groźnie wyglądające lematy, ale sprawa tak
-    na prawdę jest dość prosta: to one wykonują całą pracę za każdym razem,
+    na prawdę jest dość prosta: to one wykonują całą pracę za każdym razem,
     kiedy używasz taktyki [rewrite]. Jeżeli cel jest postaci [P x] i użyjemy
     na nim [rewrite H], gdzie [H : x = y], to [rewrite] zamienia cel na
-    [eq_rect _ _ _ cel _ H], które jest już typu [P y]. [eq_rect_r] działa
+    [eq_rect _ _ _ cel _ H], które jest już typu [P y]. [eq_rect_r] działa
     podobnie, ale tym razem równość jest postaci [y = x] (czyli obrócona).
 
     Ponieważ w definicji [bad] używaliśmy [rewrite]'a, to przy dowodzeniu,
-    że [bad] jest surjekcją, będziemy musieli zmierzyć się właśnie z
+    że [bad] jest surjekcją, będziemy musieli zmierzyć się właśnie z
     [eq_rect] i [eq_rect_r]. Stąd poniższy lemat, który mówi mniej więcej,
     że jeżeli przepiszemy z prawa na lewo, a potem z lewa na prawo, to tak,
     jakby nic się nie stało. *)
@@ -6638,9 +6638,9 @@ Proof.
   destruct p. cbn. reflexivity.
 Qed.
 
-(** Dowód jest banalny. Ponieważ [eq_rect] i [eq_rect_r] są zdefiniowane
+(** Dowód jest banalny. Ponieważ [eq_rect] i [eq_rect_r] są zdefiniowane
     przez dopasowanie do wzorca [p : x = y], to wystarczy [p] potraktować
-    [destruct]em, a dalej wszystko już ładnie się oblicza. *)
+    [destruct]em, a dalej wszystko już ładnie się oblicza. *)
 
 Lemma bad_sur :
   surjective bad.
@@ -6653,14 +6653,14 @@ Proof.
   rewrite bad_Pi, bad'_UU, right_to_left_to_right. reflexivity.
 Qed.
 
-(** Dlaczego [bad] jest surjekcją? Intuicyjnie pisząc, każdą funkcję
+(** Dlaczego [bad] jest surjekcją? Intuicyjnie pisząc, każdą funkcję
     [U -> U] możemy włożyć do konstruktora [Pi] jako jego drugi argument,
-    jeżeli tylko zamienimy pierwsze [U] na [El UU]. Skoro każdą możemy
+    jeżeli tylko zamienimy pierwsze [U] na [El UU]. Skoro każdą możemy
     tam włożyć, to każdą możemy wyjąć. Ot i cały sekret.
 
     Technicznie dowód realizujemy tak: odwijamy definicje i wprowadzamy do
-    kontekstu funkcję [f]. Następnie rozbijamy [ind _] pochodzące z definicji
-    [bad], rozkładając w ten sposób definicję [bad] na właściwe [bad] (sama
+    kontekstu funkcję [f]. Następnie rozbijamy [ind _] pochodzące z definicji
+    [bad], rozkładając w ten sposób definicję [bad] na właściwe [bad] (sama
     funkcja), [bad'] (wewnętrzna funkcja pomocnicza) oraz równania dla [bad]
     i [bad'] dla poszczególnych przypadków.
 
@@ -6675,11 +6675,11 @@ Qed.
     [reflexivity] - [bad (Pi UU f')] obliczyłoby się do [f] na mocy definicji
     [bad] oraz dzięki temu, że [El UU] obliczyłoby się do [U]. Niestety Coq
     nie wspiera indukcji rekursji (ława oburzonych), więc musimy wszystkie
-    te trzy kroki obliczeń wykonać ręcznie za pomocą taktyki [rewrite].
+    te trzy kroki obliczeń wykonać ręcznie za pomocą taktyki [rewrite].
 
     Ufff, udało się! Jeżeli przeraża cię ten dowód - nie martw się. Chodzi
     w nim o to samo, o co chodziło w poprzednich dowodach bycia surjekcją.
-    Ten jest po prostu trochę bardziej skomplikowany, bo indukcja-rekursja
+    Ten jest po prostu trochę bardziej skomplikowany, bo indukcja-rekursja
     jest nieco bardziej skomplikowana do użycia w Coqu niż prymitywniejsze
     formy indukcji. *)
 
@@ -6691,7 +6691,7 @@ Proof.
 Defined.
 
 (** Teraz czas udowodnić, że [bad] nie jest surjekcją. Zrobimy to metodą
-    przekątniową, a w tym celu potrzebować będziemy funkcji [U -> U], która
+    przekątniową, a w tym celu potrzebować będziemy funkcji [U -> U], która
     dla każdego argumentu zwraca coś, co jest od niego różne.
 
     Na szczęście sprawa jest prosta: jeżeli argumentem jest [Pi A B], to
@@ -6704,12 +6704,12 @@ Proof.
     exact false.
 Defined.
 
-(** Przydałaby się też funkcja, która pozwoli nam rozróżnić konstruktory
+(** Przydałaby się też funkcja, która pozwoli nam rozróżnić konstruktory
     typu [U]. Normalnie użylibyśmy do tego taktyki [inversion], ale
     używamy kodowania aksjomatycznego, więc [inversion] nie zadziała i
     musimy ręcznie zaimplementować sobie coś w jej stylu.
 
-    Nasza funkcja dla [Pi] zwraca [true], a dla [UU] daje [false]. *)
+    Nasza funkcja dla [Pi] zwraca [true], a dla [UU] daje [false]. *)
 
 Lemma change_neq :
   forall u : U, change u <> u.
@@ -6738,7 +6738,7 @@ Qed.
     [discern] musi być także [discern (change (Pi A B)) = discern (Pi A B)].
 
     Następnie rozkładamy definicje [change] i [discern] na atomy ([change]
-    nazywa się teraz [ch], a [discern] nazywa się [d]). Przepisujemy
+    nazywa się teraz [ch], a [discern] nazywa się [d]). Przepisujemy
     odpowiednie równania w hipotezie [eq], dzięki czemu uzyskujemy
     [false = true], co jest sprzeczne. Drugi przypadek jest analogiczny. *)
 
@@ -6752,8 +6752,8 @@ Proof.
 Qed.
 
 (** Teraz możemy już pokazać, że [bad] nie jest surjekcją. W tym celu
-    wyobraźmy sobie [bad] jako kwadratową tabelkę, której wiersze i
-    kolumny są indeksowane przez [U]. Tworzymy nową funkcję [U -> U]
+    wyobraźmy sobie [bad] jako kwadratową tabelkę, której wiersze i
+    kolumny są indeksowane przez [U]. Tworzymy nową funkcję [U -> U]
     biorąc elementy z przekątnej i modyfikując je za pomocą [change].
 
     Skoro [bad] jest surjekcją, to ta nowa funkcja musi być postaci
@@ -6776,12 +6776,12 @@ End PoorUniverse.
 (** **** Ćwiczenie *)
 
 (** Tak naprawdę, to w tym podrozdziale byliśmy co najwyżej bieda-Thanosem,
-    gdyż uniwersum, z którym się ścieraliśmy, samo było biedne. W niniejszym
+    gdyż uniwersum, z którym się ścieraliśmy, samo było biedne. W niniejszym
     ćwiczeniu zmierzysz się z uniwersum, które zawiera też nazwy typu pustego,
     typu [unit] i liczb naturalnych, nazwy produktów, sum i funkcji, a także
     sum zależnych.
 
-    Mówiąc wprost: zakoduj aksjomatycznie poniższą definicję uniwersum [U],
+    Mówiąc wprost: zakoduj aksjomatycznie poniższą definicję uniwersum [U],
     a następnie udowodnij, że jest ona nielegalna. Nie powinno to być
     trudne - metoda jest podobna jak w przypadku biednego uniwersum. *)
 
@@ -6966,8 +6966,8 @@ End NonPoorUniverse.
 
 (** ** Pozytywne typy induktywne *)
 
-(** Na koniec rozprawimy się z pozytywnymi typami "induktywnymi" (ale tylko
-    do pewnego stopnia; tak po prawdzie, to raczej one rozprawią się z
+(** Na koniec rozprawimy się z pozytywnymi typami "induktywnymi" (ale tylko
+    do pewnego stopnia; tak po prawdzie, to raczej one rozprawią się z
     nami). *)
 
 Fail Inductive Pos : Type :=
@@ -6976,10 +6976,10 @@ Fail Inductive Pos : Type :=
         Non strictly positive occurrence of "Pos" in
         "((Pos -> bool) -> bool) -> Pos". *)
 
-(** Coq odrzuca powyższą definicję typu [Pos], gdyż pierwsze wystąpienie [Pos]
+(** Coq odrzuca powyższą definicję typu [Pos], gdyż pierwsze wystąpienie [Pos]
     w typie konstruktora [Pos0] nie jest ściśle pozytywne. I faktycznie - gdy
     policzymy niedobrość tego wystąpienia zgodnie z naszym wzorem, to wyjdzie,
-    że wynosi ona 2, gdyż [Pos] występuje na lewo od dwóch strzałek (pamiętaj,
+    że wynosi ona 2, gdyż [Pos] występuje na lewo od dwóch strzałek (pamiętaj,
     że najbardziej zewnętrzna strzałka, czyli ta, na prawo od której też jest
     [Pos], nie liczy się - wzór dotyczy tylko argumentów konstruktora, a nie
     całego konstruktora). *)
@@ -6995,9 +6995,9 @@ Axioms
           forall g : (Pos -> bool) -> bool,
             f (Pos0 g) = PPos0 g}).
 
-(** Spróbujmy zawalczyć z typem [Pos] naszą metodą opartą o twierdzenie
+(** Spróbujmy zawalczyć z typem [Pos] naszą metodą opartą o twierdzenie
     Cantora. Najpierw kodujemy typ [Pos] aksjomatycznie, a następnie
-    spróbujemy zdefiniować [bad], czyli surjekcję z [Pos] w [Pos -> bool]. *)
+    spróbujemy zdefiniować [bad], czyli surjekcję z [Pos] w [Pos -> bool]. *)
 
 Definition bad : Pos -> (Pos -> bool).
 Proof.
@@ -7009,23 +7009,23 @@ Proof.
   (* ad infinitum *)
 Abort.
 
-(** Mogłoby się wydawać, że wyciągnięcie z [Pos] funkcji [Pos -> bool]
+(** Mogłoby się wydawać, że wyciągnięcie z [Pos] funkcji [Pos -> bool]
     nie może być trudniejsze, niż zabranie dziecku cukierka. Niestety
     jednak nie jest tak, gdyż w [Pos] tak naprawdę nie ma żadnej takiej
     funkcji - jest funkcja [(Pos -> bool) -> bool], a to już zupełnie
-    coś innego.
+    coś innego.
 
-    Żeby lepiej zrozumieć tę materię, musimy metaforycznie zinterpretować
-    znany nam już współczynnik niedobrości i wynikający z niego podział
+    Żeby lepiej zrozumieć tę materię, musimy metaforycznie zinterpretować
+    znany nam już współczynnik niedobrości i wynikający z niego podział
     na wystąpienia ściśle pozytywne, pozytywne i negatywne. Dzięki tej
-    interpretacji dowiemy się też, dlaczego nieparzysta niedobrość jest
+    interpretacji dowiemy się też, dlaczego nieparzysta niedobrość jest
     negatywna, a niezerowa parzysta jest pozytywna.
 
-    Najprościej jest zinterpretować wystąpienia ściśle pozytywne, gdyż
+    Najprościej jest zinterpretować wystąpienia ściśle pozytywne, gdyż
     mieliśmy już z nimi sporo do czynienia. Weźmy konstruktor
     [cons : A -> list A -> list A]. Jest tutaj jedno ściśle pozytywne
     wystąpienie typu [list A], które możemy interpretować tak: gdy
-    używamy dopasowania do wzorca i dopasuje się [cons h t], to "mamy"
+    używamy dopasowania do wzorca i dopasuje się [cons h t], to "mamy"
     element [t] typu [list A]. Ot i cała filozofia.
 
     Załóżmy teraz na chwilę, że Coq akceptuje negatywne i pozytywne
@@ -7036,34 +7036,34 @@ Abort.
 
     A co by było, gdybyśmy dopasowali konstruktor postaci
     [c : ((T -> bool) -> bool) -> T]? Tym razem również nie mamy żadnego
-    elementu typu [T], lecz funkcję [f : ((T -> bool) -> bool)].
-    Parafrazując: musimy dać funkcji [f] jakąś funkcję typu [T -> bool],
-    żeby dostać [bool]. Ale gdy konstruujemy funkcję [T -> bool], to na
+    elementu typu [T], lecz funkcję [f : ((T -> bool) -> bool)].
+    Parafrazując: musimy dać funkcji [f] jakąś funkcję typu [T -> bool],
+    żeby dostać [bool]. Ale gdy konstruujemy funkcję [T -> bool], to na
     wejściu dostajemy [T]. Tak więc początkowo nie mamy żadnego [T], ale
     gdy o nie poprosimy, to możemy je dostać. Ba! Jak pokazuje przykład,
     możemy dostać bardzo dużo [T].
 
     Taka właśnie jest różnica między ścisłą pozytywnością (mamy coś),
-    negatywnością (musimy coś dać) i pozytywnością (możemy coś dostać,
+    negatywnością (musimy coś dać) i pozytywnością (możemy coś dostać,
     i to nawet w dużej liczbie sztuk). Zauważmy, że jedynie w przypadku
     negatywnym możemy wyjąć z [T] funkcję [T -> coś] (chyba, że zawadza
-    nam [unit] lub [False]), bo to jedyny przypadek, gdy żądają od nas
-    [T] (a skoro żądają [T], to muszą mieć funkcję, która coś z tym [T]
+    nam [unit] lub [False]), bo to jedyny przypadek, gdy żądają od nas
+    [T] (a skoro żądają [T], to muszą mieć funkcję, która coś z tym [T]
     zrobi). W przypadku pozytywnym nie ma żadnej takiej funkcji - to my
-    dostajemy [T] i musimy coś z niego wyprodukować, więc to my jesteśmy
-    tą funkcją!
+    dostajemy [T] i musimy coś z niego wyprodukować, więc to my jesteśmy
+    tą funkcją!
 
     Ufff... mam nadzieję, że powyższa bajeczka jest sformułowana zrozumiale,
-    bo lepszego wytłumaczenia nie udało mi się wymyślić.
+    bo lepszego wytłumaczenia nie udało mi się wymyślić.
 
-    Moglibyśmy w tym miejscu zastanowić się, czy nie uda nam się pokazać
-    sprzeczności choć na metapoziomie, poprzez napisanie nieterminującej
+    Moglibyśmy w tym miejscu zastanowić się, czy nie uda nam się pokazać
+    sprzeczności choć na metapoziomie, poprzez napisanie nieterminującej
     funkcji [loop]. Szczerze pisząc, to niezbyt w to wierzę. Przypomnij
     sobie, że okazało się, że funkcja [loop] jest bardzo ściśle powiązana
     z funkcją [bad], zaś esencja nieterminacji polegała na przekazaniu
     do [loop] jako argument czegoś, co zawierało [loop] jako podterm
     (jeżeli nie zauważyłeś, to wszystkie nasze nieterminujące funkcje
-    udało nam się zdefiniować jedynie za pomocą reguły zależnej analizy
+    udało nam się zdefiniować jedynie za pomocą reguły zależnej analizy
     przypadków - bez indukcji, bez rekursji!). To daje nam jako taką
     podstawę by wierzyć, że nawet nieterminacja nie jest w tym przypadku
     osiągalna. *)
@@ -7094,10 +7094,10 @@ end.
 *)
 (* end hide *)
 
-(** W tym momencie należy sobie zadać zasadnicze pytanie: dlaczego w ogóle
+(** W tym momencie należy sobie zadać zasadnicze pytanie: dlaczego w ogóle
     pozytywne typy induktywne są nielegalne? Przecież odróżnienie wystąpienia
-    pozytywnego od negatywnego nie jest czymś trudnym, więc Coq nie może ich
-    od tak po prostu nie rozróżniać - musi mieć jakiś powód!
+    pozytywnego od negatywnego nie jest czymś trudnym, więc Coq nie może ich
+    od tak po prostu nie rozróżniać - musi mieć jakiś powód!
 
     I faktycznie, powód jest. Nie ma on jednak wiele wspólnego z mechanizmem
     (pozytywnych) typów induktywnych samym w sobie, a z impredykatywnością
@@ -7109,7 +7109,7 @@ end.
     się następującej definicji: "wujek Janusz to najbardziej wąsata osoba w
     tym pokoju". Definicja ta jest impredykatywna, gdyż definiuje ona wujka
     Janusza poprzez wyróżnienie go z pewnej kolekcji osób, ale definicja tej
-    kolekcji osób musi odwoływać się do wujka Janusza ("w pokoju są wujek
+    kolekcji osób musi odwoływać się do wujka Janusza ("w pokoju są wujek
     Janusz, ciocia Grażynka, Sebastianek i Karynka"). W Coqu impredykatywny
     jest sort [Prop], co ilustruje przykład: *)
 
@@ -7121,12 +7121,12 @@ Definition X : Prop := forall P : Prop, P.
 
     Impredykatywność sortu [Prop] jest niegroźna (no chyba, że pragniemy
     pozytywnych typów induktywnych, to wtedy jest), ale impredykatywność
-    dla [Type] byłaby zabójcza, co zresztą powinien nam był uświadomić
+    dla [Type] byłaby zabójcza, co zresztą powinien nam był uświadomić
     paradoks Russella.
 
     Dobra, koniec gadania. Poniższy przykład pośrednio pochodzi z sekcji
     3.1 pracy "Inductively defined types", której autorami są Thierry
-    Coquand oraz Christine Pauling-Mohring, zaś bezpośrednio jest przeróbką
+    Coquand oraz Christine Pauling-Mohring, zaś bezpośrednio jest przeróbką
     kodu wziętego z
     vilhelms.github.io/posts/why-must-inductive-types-be-strictly-positive *)
 
@@ -7206,7 +7206,7 @@ Definition wut (x : Pos') : Prop :=
 
 Definition x : Pos' := f wut.
 
-(** Tutaj następują największe czary, które używają impredykatywności. Nie
+(** Tutaj następują największe czary, które używają impredykatywności. Nie
     mam żadnego dobrej bajeczki, która by je wyjaśniała. *)
 
 Lemma paradox : wut x <-> ~ wut x.
@@ -7222,7 +7222,7 @@ Qed.
 (** [paradox] to twierdzenie, które chwyta esencję całej sprawy. Z lewa na
     prawo rozbijamy dowód [wut x] i dostajemy predykat [P]. Wiemy, że
     [f P = x], ale [x = f wut], a ponieważ [f] jest injekcją, to [P = wut].
-    To jednak kończy się sprzecznością, bo [wut x], ale [~ P x].
+    To jednak kończy się sprzecznością, bo [wut x], ale [~ P x].
 
     Z prawa na lewo jest łatwiej. Mamy [~ wut x] i musimy udowodnić [wut x].
     Wystarczy, że istnieje pewien predykat, na który wybieramy oczywiście
@@ -7240,41 +7240,41 @@ Qed.
 
 (** * Podsumowanie *)
 
-(** To już koniec naszej przydługiej podróży przez mechanizmy definiowania
-    typów przez indukcję. W jej trakcie nauczyliśmy się bardzo wielu rzeczy.
+(** To już koniec naszej przydługiej podróży przez mechanizmy definiowania
+    typów przez indukcję. W jej trakcie nauczyliśmy się bardzo wielu rzeczy.
 
     Zaczęliśmy od definiowania prostych enumeracji, operujących na nich
-    funkcji definiowanych za pomocą dopasowania do wzorca oraz omówienia
+    funkcji definiowanych za pomocą dopasowania do wzorca oraz omówienia
     mechanizmu obliczania wyniku funkcji.
 
     Następnie poznaliśmy różne rozszerzenia tego podstawowego pomysłu
     definiowania typu za pomocą konstruktorów reprezentujących możliwe
     wartości:
-    - rekurencję, dzięki której możemy definiować typy, których
+    - rekurencję, dzięki której możemy definiować typy, których
       termy mają najprzeróżniejsze drzewiaste kształty
     - parametryzowane typy induktywne, których głównym zastosowaniem
       jest definiowanie kontenerów o takich samych kształtach, ale
       różnych przechowywanych typach
-    - indukcję wzajemną, w praktyce niezbyt użyteczną, dzięki której
-      możemy na raz zdefiniować wiele typów odnoszących się do siebie
+    - indukcję wzajemną, w praktyce niezbyt użyteczną, dzięki której
+      możemy na raz zdefiniować wiele typów odnoszących się do siebie
       nawzajem
     - indeksowane rodziny typów induktywnych, dzięki którym możemy
-      przez indukcję definiować predykaty oraz relacje
+      przez indukcję definiować predykaty oraz relacje
     - indukcję-indukcję, dzięki której możemy jednocześnie zdefiniować
-      typ oraz indeksowaną nim rodzinę typów
+      typ oraz indeksowaną nim rodzinę typów
     - indukcję-rekursję, dzięki której możemy jednoczesnie zdefiniować
-      typ oraz funkcję operującą na tym typie *)
+      typ oraz funkcję operującą na tym typie *)
 
-(** Nauczyliśmy się definiować funkcje przez rekursję oraz dowodzić ich
+(** Nauczyliśmy się definiować funkcje przez rekursję oraz dowodzić ich
     właściwości przez indukcję. Poznaliśmy definicje poznanych w pierwszym
     rozdziale spójników logicznych oraz odpowiadających im konstrukcji na
     typach, a także definicję bardzo ważnej rodziny typów, czyli równości.
 
-    Poznaliśmy podstawowe obiekty, którymi musi potrafić posługiwać
+    Poznaliśmy podstawowe obiekty, którymi musi potrafić posługiwać
     się każdy programista, informatyk czy matematyk, a mianowicie
     wartości boolowskie, liczby naturalne oraz listy.
 
-    Nauczyliśmy się formułować i implementować reguły indukcyjne (TODO:
+    Nauczyliśmy się formułować i implementować reguły indukcyjne (TODO:
     opisać to w głównym tekście, a nie dopiero w przypomnieniu), a także,
     co powiązane, programować listy przy pomocy foldów i unfoldów.
 
@@ -7289,7 +7289,7 @@ Qed.
     indukcji-rekursji.
 
     Ostatecznie dowiedzieliśmy się, że pozytywne typy induktywne także są
-    nielegalne, choć jesteśmy wobec nich raczej bezsilni, no chyba że chodzi
+    nielegalne, choć jesteśmy wobec nich raczej bezsilni, no chyba że chodzi
     o impredykatywny (tego słowa też się nauczyliśmy) sort [Prop].
 
     Całkiem sporo, prawda? Nie? No to w kolejnych rozdziałach będzie jeszcze

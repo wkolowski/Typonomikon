@@ -52,7 +52,7 @@ Proof.
 Qed.
 
 (** Jak można się domyślić po przykładach, charakterystyczne izomorfizmy
-    dla prostych typów induktywnych są łatwe. A co z bardziej innowacyjnymi
+    dla prostych typów induktywnych są łatwe. A co z bardziej innowacyjnymi
     rodzajami definicji induktywnych oraz z definicjami koinduktywnymi? Te
     drugie oczywiście polegną bez aksjomatów. O luj, a jednak nie. *)
 
@@ -76,7 +76,7 @@ Proof.
     destruct b; reflexivity.
 Qed.
 
-(** Jak trudno jest zrobić ciekawsze izomorfizmy? *)
+(** Jak trudno jest zrobić ciekawsze izomorfizmy? *)
 
 Require Import FunInd.
 
@@ -209,7 +209,7 @@ Qed.
 
 (** Trzeba przerobić rozdział o typach i funkcjach tak, żeby nie mieszać
     pojęć kategorycznych (wprowadzonych na początku) z teoriozbiorowymi
-    (injekcja, surjekcja, bijekcja). Przedstawić te 3 ostatnie jako
+    (injekcja, surjekcja, bijekcja). Przedstawić te 3 ostatnie jako
     explicite charakteryzacje pojęć kategorycznych. *)
 
 Lemma sum_empty_l :
@@ -255,7 +255,7 @@ Proof.
 Qed.
 
 (** Jak trudno jest z takich standardowych izomorfizmów uskładać coś w
-    stylu nat ~ list nat? A może nie da się i trzeba robić ręcznie? *)
+    stylu nat ~ list nat? A może nie da się i trzeba robić ręcznie? *)
 
 Require Import vec.
 

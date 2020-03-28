@@ -2,15 +2,15 @@
 
 (** * Typy i ich elementy *)
 
-(** Tu zestawić ze sobą P : Prop, A : Type, p : P, x : A *)
+(** Tu zestawić ze sobą P : Prop, A : Type, p : P, x : A *)
 
 (** * Predykaty i relacje *)
 
-(** * Równość - najważniejsza relacja *)
+(** * Równość - najważniejsza relacja *)
 
 (** * Równość a równanie *)
 
-(** Dobrze byłoby zapoznać się z równością przed pierwszym jej użyciem
+(** Dobrze byłoby zapoznać się z równością przed pierwszym jej użyciem
     w rozdziale o typach induktywnych. *)
 
 (** * Kwantyfikatory *)
@@ -30,7 +30,7 @@ Definition unique {A : Type} (P : A -> Prop) : Prop :=
 (** Poznawszy relację równości oraz kwantyfikatory uniwersalny i
     egzystencjalny, możemy zdefiniować inny bardzo ważny "kwantyfikator",
     a mianowicie kwantyfikator unikatowy, który głosi, że istnieje
-    dokładnie jeden obiekt spełniający daną właściwość. *)
+    dokładnie jeden obiekt spełniający daną właściwość. *)
 
 (** * Zmienne związane *)
 
@@ -38,16 +38,16 @@ Definition unique {A : Type} (P : A -> Prop) : Prop :=
 
 (** * Paradoks golibrody *)
 
-(** Języki naturalne, jakimi ludzie posługują się w życiu codziennym
+(** Języki naturalne, jakimi ludzie posługują się w życiu codziennym
     (polski, angielski suahili, język indian Navajo) zawierają spory
     zestaw spójników oraz kwantyfikatorów ("i", "a", "oraz", "lub",
     "albo", "jeżeli ... to", "pod warunkiem, że ", "wtedy", i wiele
     innych).
 
-    Należy z całą stanowczością zaznaczyć, że te spójniki i kwantyfikatory,
-    a w szczególności ich intuicyjna interpretacja, znacznie różnią się
+    Należy z całą stanowczością zaznaczyć, że te spójniki i kwantyfikatory,
+    a w szczególności ich intuicyjna interpretacja, znacznie różnią się
     od analogicznych spójników i kwantyfikatorów logicznych, które mieliśmy
-    okazję poznać w tym rozdziale. Żeby to sobie uświadomić, zapoznamy się
+    okazję poznać w tym rozdziale. Żeby to sobie uświadomić, zapoznamy się
     z pewnego rodzaju "paradoksem". *)
 
 Theorem barbers_paradox :
@@ -72,7 +72,7 @@ Qed.
     będzie reprezentował jego mieszkańców. Niech term [barber] typu [man]
     oznacza hipotetycznego golibrodę. Hipotetycznego, gdyż samo użycie
     jakiejś nazwy nie powoduje automatycznie, że nazywany obiekt istnieje
-    (przykładów jest masa, np. jednorożce, sprawiedliwość społeczna).
+    (przykładów jest masa, np. jednorożce, sprawiedliwość społeczna).
 
     Mamy też relację [shaves]. Będziemy ją interpretować w ten sposób, że
     [shaves a b] zachodzi, gdy [a] goli brodę [b]. Nasza hipoteza
@@ -125,7 +125,7 @@ Qed.
 
 (** * Zadania *)
 
-(** - modelowanie różnych sytuacji za pomocą zdań i predykatów
+(** - modelowanie różnych sytuacji za pomocą zdań i predykatów
     - rozwiązywanie zagadek logicznych
     - więcej zadań z exists *)
 

@@ -16,16 +16,16 @@ Require Import Recdef.
 (** W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.
     Trzeba przyznać na wstępie, że rozdział będzie raczej matematyczny
     (co wcale nie powinno cię odstraszać - matematyka jest świetna, a
-    najbardziej praktyczną rzeczą w kosmosie jest dobra teoria). *)
+    najbardziej praktyczną rzeczą w kosmosie jest dobra teoria). *)
 
 (** * Funkcje *)
 
-(** Potrafisz już posługiwać się funkcjami. Mimo tego zróbmy krótkie
+(** Potrafisz już posługiwać się funkcjami. Mimo tego zróbmy krótkie
     przypomnienie.
 
     Typ funkcji (niezależnych) z [A] w [B] oznaczamy przez [A -> B]. W
-    Coqu funkcje możemy konstruować za pomocą abstrakcji (np. [fun n :
-    nat => n + n]) albo za pomocą rekursji strukturalnej. Eliminować zaś
+    Coqu funkcje możemy konstruować za pomocą abstrakcji (np. [fun n :
+    nat => n + n]) albo za pomocą rekursji strukturalnej. Eliminować zaś
     możemy je za pomocą aplikacji: jeżeli [f : A -> B] oraz [x : A], to
     [f x : B].
 
@@ -33,11 +33,11 @@ Require Import Recdef.
     funkcja przyporządkowuje element przeciwdziedziny. Jednak status
     dziedziny i przeciwdziedziny nie jest taki sam: każdemu elementowi
     dziedziny coś odpowiada, jednak mogą istnieć elementy przeciwdziedziny,
-    które nie są obrazem żadnego elementu dziedziny.
+    które nie są obrazem żadnego elementu dziedziny.
 
     Co więcej, w Coqu wszystkie funkcje są konstruktywne, tzn. mogą zostać
     obliczone. Jest to coś, co bardzo mocno odróżnia Coqa oraz rachunek
-    konstrukcji (jego teoretyczną podstawę) od innych systemów formalnych. *)
+    konstrukcji (jego teoretyczną podstawę) od innych systemów formalnych. *)
 
 Notation "f $ x" := (f x) (left associativity, at level 110, only parsing).
 Notation "x |> f" := (f x) (right associativity, at level 60, only parsing).
@@ -54,13 +54,13 @@ Check 21 |> fun n : nat => n + n.
 
     Notacja [$] (pożyczona z języka Haskell) będzie nam służyć do niepisania
     nawiasów: jeżeli argumentami funkcji będą skomplikowane termy, zamiast
-    pisać wokół nich parę nawiasów, będziemy mogli wstawić tylko jeden symbol
+    pisać wokół nich parę nawiasów, będziemy mogli wstawić tylko jeden symbol
     dolara "$$". Dzięki temu zamiast 2n nawiasów napiszemy tylko n znaków "$$"
     (choć trzeba przyznać, że będziemy musieli pisać więcej spacji).
 
     Notacja [|>] (pożyczona z języka F##) umożliwi nam pisanie aplikacji w odwrotnej
     kolejności. Dzięki temu będziemy mogli np. pomijać nawiasy w abstrakcji. Jako,
-    że nie da się zrobić notacji w stylu "x f", jest to najlepsze dostępne nam
+    że nie da się zrobić notacji w stylu "x f", jest to najlepsze dostępne nam
     rozwiązanie. *)
 
 Definition comp
@@ -122,14 +122,14 @@ match n with
 end.
 
 (** Ostatnim przydatnim kombinatorem jest [iter]. Służy on do składania
-    funkcji samej ze sobą [n] razy. Oczywiście funkcja, aby można ją było
-    złożyć ze sobą, musi mieć identyczną dziedzinę i przeciwdziedzinę. *)
+    funkcji samej ze sobą [n] razy. Oczywiście funkcja, aby można ją było
+    złożyć ze sobą, musi mieć identyczną dziedzinę i przeciwdziedzinę. *)
 
 (** * Aksjomat ekstensjonalności *)
 
 (** Ważną kwestią jest ustalenie, kiedy dwie funkcje są równe. Zacznijmy od
     tego, że istnieją dwie koncepcje równości:
-    - intensjonalna — funkcje są zdefiniowane przez identyczne (czyli
+    - intensjonalna — funkcje są zdefiniowane przez identyczne (czyli
       konwertowalne) wyrażenia
     - ekstensjonalna — wartości funkcji dla każdego argumentu są równe *)
 
@@ -172,8 +172,8 @@ Abort.
 (** Równość intensjonalna ma jednak swoje wady. Główną z nich jest to, że
     jest ona bardzo restrykcyjna. Widać to dobrze na powyższym przykładzie:
     nie jesteśmy w stanie udowodnić, że funkcje [fun n : nat => 1 + n] oraz
-    [fun n : nat => n + 1] są równe, gdyż zostały zdefiniowane za pomocą
-    innych termów. Mimo, że termy te są równe, to nie są konwertowalne, a
+    [fun n : nat => n + 1] są równe, gdyż zostały zdefiniowane za pomocą
+    innych termów. Mimo, że termy te są równe, to nie są konwertowalne, a
     zatem funkcje też nie są konwertowalne. Nie znaczy to jednak, że nie są
     równe — po prostu nie jesteśmy w stanie w żaden sposób pokazać, że są. *)
 
@@ -203,11 +203,11 @@ Qed.
 
 (** Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
     [f = g], to taktyka [extensionality x] przekształca go w cel postaci
-    [f x = g x], o ile tylko nazwa [x] nie jest już wykorzystana na coś
+    [f x = g x], o ile tylko nazwa [x] nie jest już wykorzystana na coś
     innego.
 
-    Dzięki zastosowaniu aksjomatu nie musimy już polegać na konwertowalności
-    termów definiujących funkcje. Wystarczy udowodnić, że są one równe. W
+    Dzięki zastosowaniu aksjomatu nie musimy już polegać na konwertowalności
+    termów definiujących funkcje. Wystarczy udowodnić, że są one równe. W
     tym przypadku robimy to za pomocą twierdzenia [plus_comm]. *)
 
 (** **** Ćwiczenie *)
@@ -238,14 +238,14 @@ Definition has_preinverse {A B : Type} (f : A -> B) : Type :=
 Definition has_postinverse {A B : Type} (f : A -> B) : Type :=
   {g : B -> A | forall a : A, g (f a) = a}.
 
-(** Intuicja jest dość prosta: wiemy ze szkoły, że na liczbach całkowitych
+(** Intuicja jest dość prosta: wiemy ze szkoły, że na liczbach całkowitych
     odejmowanie jest odwrotnością dodawania (np. a + b - b = a), tzn. jeżeli
     do a dodamy b, a potem odejmiemy b, to znowu mamy a. Podobnie w liczbach
-    rzeczywistych mnożenie przez liczbę niezerową ma odwrotność w postaci
+    rzeczywistych mnożenie przez liczbę niezerową ma odwrotność w postaci
     dzielenia, np. (x * y) / y = x.
 
     Oczywiście pojęcie odwrotności dotyczy nie tylko działań na liczbach,
-    ale także dowolnych funkcji - [g] jest odwrotnością [f], gdy odwraca
+    ale także dowolnych funkcji - [g] jest odwrotnością [f], gdy odwraca
     ono działanie [f] dla dowolnego argumentu [a], tzn. najpierw mamy [a],
     potem aplikujemy [f] i mamy [f a], zaś na koniec aplikujemy [g] i znów
     mamy [a], czyli [g (f a) = a]. To właśnie jest napisane w definicji
@@ -253,13 +253,13 @@ Definition has_postinverse {A B : Type} (f : A -> B) : Type :=
 
     No właśnie - powyższy opis jest opisem postodwrotności. Nazwa wynika z
     kolejności - [g] jest postodwrotnością [f], gdy najpierw aplikujemy [f],
-    a potem odwracamy jego działanie za pomocą [g] (po łacinie "post" znaczy
+    a potem odwracamy jego działanie za pomocą [g] (po łacinie "post" znaczy
     "po", np. "post meridiem" znaczy "po południu").
 
-    Analogicznie, choć może nieco mniej intuicyjnie, prezentuje się definicja
+    Analogicznie, choć może nieco mniej intuicyjnie, prezentuje się definicja
     preodwrotności (po łacinie "prae" znaczy "przed"). [g] jest preodwrotnością
     [f], gdy [f] jest postodwrotnością [g]. Innymi słowy: [f] ma preodwrotność,
-    jeżeli odwraca ono działanie jakiejś funkcji.
+    jeżeli odwraca ono działanie jakiejś funkcji.
 
     Dobra, wystarczy gadania. Czas na ćwiczenia. *)
 
@@ -297,14 +297,14 @@ Qed.
 (* end hide *)
 
 (** Zauważ, że sortem [has_preinverse] i [has_postinverse] jest [Type], nie
-    zaś [Prop]. Jest tak dlatego, że o ile stwierdzenie "f jest pre/post
+    zaś [Prop]. Jest tak dlatego, że o ile stwierdzenie "f jest pre/post
     odwrotnością g" jest zdaniem, to posiadanie odwrotności już nie, gdyż
-    dana funkcja może mieć wiele różnych odwrotności. *)
+    dana funkcja może mieć wiele różnych odwrotności. *)
 
 (** **** Ćwiczenie *)
 
-(** Rozważmy funkcję [app [1; 2; 3]], która dokleja na początek listy liczb
-    naturalnych listę [[1; 2; 3]]. Znajdź dwie różne jej postodwrotności (nie
+(** Rozważmy funkcję [app [1; 2; 3]], która dokleja na początek listy liczb
+    naturalnych listę [[1; 2; 3]]. Znajdź dwie różne jej postodwrotności (nie
     musisz formalnie dowodzić, że są różne - wystarczy nieformalny argument).
     Czy funkcja ta ma preodwrotność? *)
 
@@ -330,7 +330,7 @@ Proof.
   cbn. reflexivity.
 Qed.
 
-(** Widać na oko, że obie odwrotności są różne. Funkcja oczywiście nie ma
+(** Widać na oko, że obie odwrotności są różne. Funkcja oczywiście nie ma
     preodwrotności. *)
 
 Goal has_preinverse (app [1; 2; 3]) -> False.
@@ -341,9 +341,9 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-(** Czasem funkcja może mieć naprawdę dużo odwrotności. Pokaż, że funkcja
+(** Czasem funkcja może mieć naprawdę dużo odwrotności. Pokaż, że funkcja
     [cons x] dla [x : A] ma ich nieskończenie wiele. Nie musisz dowodzić,
-    że odwrotności są różne (ani że jest ich dużo), jeżeli widać to na
+    że odwrotności są różne (ani że jest ich dużo), jeżeli widać to na
     pierwszy rzut oka. *)
 
 (* begin hide *)
@@ -364,7 +364,7 @@ Qed.
 (** **** Ćwiczenie *)
 
 (** Dla listowych funkcji widzieliśmy postodwrotności, ale nie widzieliśmy
-    preodwrotności. Może więc preodwrotności nie istnieją? Otóż nie tym
+    preodwrotności. Może więc preodwrotności nie istnieją? Otóż nie tym
     razem!
 
     Dla jakich [n] funkcja [cycle n] ma (pre/post)odwrotność?  *)
@@ -473,18 +473,18 @@ Definition injective {A B : Type} (f : A -> B) : Prop :=
   forall x x' : A, f x = f x' -> x = x'.
 
 (** Objaśnienia zacznijmy od nazwy. Po łacinie "iacere" znaczy "rzucać",
-    zaś "in" znaczy "w, do". W językach romańskich samo słowo "injekcja"
+    zaś "in" znaczy "w, do". W językach romańskich samo słowo "injekcja"
     oznacza zaś zastrzyk. Bliższym matematycznemu znaczeniu byłoby jednak
     tłumaczenie "wstrzyknięcie". Jeżeli funkcja jest injekcją, to możemy
-    też powiedzieć, że jest "injektywna". Inną nazwą jest "funkcja
-    różnowartościowa". Na wiki można zapoznać się z obrazkami poglądowymi:
+    też powiedzieć, że jest "injektywna". Inną nazwą jest "funkcja
+    różnowartościowa". Na wiki można zapoznać się z obrazkami poglądowymi:
 
     https://en.wikipedia.org/wiki/Bijection,%%20injection%%20and%%20surjection
 
     Podstawowa idea jest prosta: jeżeli funkcja jest injekcją, to identyczne
     jej wartości pochodzą od równych argumentów.
 
-    Przekonajmy się na przykładzie. *)
+    Przekonajmy się na przykładzie. *)
 
 Goal injective (fun n : nat => 2 + n).
 Proof.
@@ -496,11 +496,11 @@ Proof.
 Qed.
 
 (** Funkcja [fun n : nat => 2 + n], czyli dodanie [2] z lewej strony, jest
-    injekcją, gdyż jeżeli [2 + n = 2 + n'], to rozwiązując równanie dostajemy
+    injekcją, gdyż jeżeli [2 + n = 2 + n'], to rozwiązując równanie dostajemy
     [n = n']. Jeżeli wartości funkcji są równe, to argumenty również muszą
     być równe.
 
-    Zobaczmy też kontrprzykład. *)
+    Zobaczmy też kontrprzykład. *)
 
 Goal ~ injective (fun n : nat => n * n - n).
 Proof.
@@ -509,7 +509,7 @@ Proof.
 Qed.
 
 (** Funkcja f(n) = n^2 - n nie jest injekcją, gdyż mamy zarówno f(0) = 0
-    jak i f(1) = 0. Innymi słowy: są dwa nierówne argumenty (0 i 1), dla
+    jak i f(1) = 0. Innymi słowy: są dwa nierówne argumenty (0 i 1), dla
     których wartość funkcji jest taka sama (0).
 
     A oto alternatywna definicja. *)
@@ -552,7 +552,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Udowodnij, że różne funkcje są lub nie są injektywne. *)
+(** Udowodnij, że różne funkcje są lub nie są injektywne. *)
 
 Lemma id_injective :
   forall A : Type, injective (@id A).
@@ -651,7 +651,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Ta właściwość jest dziwna. Być może kiedyś wymyślę dla niej jakąś
+(** Ta właściwość jest dziwna. Być może kiedyś wymyślę dla niej jakąś
     bajkę. *)
 
 Lemma LOLWUT :
@@ -670,7 +670,7 @@ Qed.
     typu [B], a więc typ [A] jest w pewien sposób mniejszy od [B].
 
     [f] musi przyporządkować każdemu elementowi [A] jakiś element [B]. Gdy
-    elementów [A] jest więcej niż [B], to z konieczności któryś z elementów
+    elementów [A] jest więcej niż [B], to z konieczności któryś z elementów
     [B] będzie obrazem dwóch lub więcej elementów [A].
 
     Wobec powyższego stwierdzenie "złożenie injekcji jest injekcją" możemy
@@ -681,7 +681,7 @@ Qed.
 (** **** Ćwiczenie *)
 
 (** Udowodnij, że nie istnieje injekcja z [bool] w [unit]. Znaczy to, że
-    [bool] ma więcej elementów, czyli jest większy, niż [unit]. *)
+    [bool] ma więcej elementów, czyli jest większy, niż [unit]. *)
 
 Lemma no_inj_bool_unit :
   ~ exists f : bool -> unit, injective f.
@@ -732,7 +732,7 @@ Qed.
 
 (** TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki [cbn]
     używać będziemy taktyki [cbn]. Różni się ona nieznacznie od [cbn], ale
-    jej główną zaletą jest nazwa — [cbn] to trzy litery, a [cbn] aż pięć,
+    jej główną zaletą jest nazwa — [cbn] to trzy litery, a [cbn] aż pięć,
     więc zaoszczędzimy sobie pisania.
 
     Powyższe twierdzenie głosi, że "funkcja [pred] jest surjekcją", czyli,
@@ -745,7 +745,7 @@ Proof.
   unfold surjective; intro. destruct (H 0). inversion H0.
 Qed.
 
-(** Surjekcją nie jest za to konstruktor [S]. To również nie powinno nas
+(** Surjekcją nie jest za to konstruktor [S]. To również nie powinno nas
     dziwić: istnieje przecież liczba naturalna, która nie jest następnikiem
     żadnej innej. Jest nią oczywiście zero.
 
@@ -874,13 +874,13 @@ Qed.
     tych elementów, ale wiadomo, że co najmniej jeden.
 
     Podobnie jak w przypadku injekcji, fakt że złożenie surjekcji jest
-    surjekcją możemy traktować jako stwierdzenie, że porządek, jakim jest
+    surjekcją możemy traktować jako stwierdzenie, że porządek, jakim jest
     istnienie surjekcji, jest przechodni. (TODO) *)
 
 (** **** Ćwiczenie *)
 
 (** Pokaż, że nie istnieje surjekcja z [unit] w [bool]. Oznacza to, że [unit]
-    nie jest większy niż [bool]. *)
+    nie jest większy niż [bool]. *)
 
 Lemma no_sur_unit_bool :
   ~ exists f : unit -> bool, surjective f.
@@ -930,10 +930,10 @@ Qed.
     co już wiesz na temat injekcji i surjekcji.
 
     Ponieważ bijekcja jest surjekcją, to każdy element jej przeciwdziedziny
-    jest obrazem jakiegoś elementu jej dziedziny (obraz elementu [x] to po
+    jest obrazem jakiegoś elementu jej dziedziny (obraz elementu [x] to po
     prostu [f x]). Ponieważ jest injekcją, to element ten jest unikalny.
 
-    Bijekcja jest więc taką funkcją, że każdy element jej przeciwdziedziny
+    Bijekcja jest więc taką funkcją, że każdy element jej przeciwdziedziny
     jest obrazem dokładnie jednego elementu jej dziedziny. Ten właśnie fakt
     wyraża poniższa definicja alternatywna.
 
@@ -994,13 +994,13 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Jak już powiedzieliśmy, bijekcje dziedziczą właściwości, które mają
+(** Jak już powiedzieliśmy, bijekcje dziedziczą właściwości, które mają
     zarówno injekcje, jak i surjekcje. Wobec tego możemy skonkludować,
-    że złożenie bijekcji jest bijekcją. Nie mają one jednak "dziwnej
+    że złożenie bijekcji jest bijekcją. Nie mają one jednak "dziwnej
     własciwości".
 
-    TODO UWAGA: od teraz twierdzenia, które pozostawię bez dowodu, z
-    automatu stają się ćwiczeniami. *)
+    TODO UWAGA: od teraz twierdzenia, które pozostawię bez dowodu, z
+    automatu stają się ćwiczeniami. *)
 
 Lemma bij_comp :
   forall (A B C : Type) (f : A -> B) (g : B -> C),
@@ -1015,7 +1015,7 @@ Qed.
 
 (** Bijekcje mają też interpretacje w idei rozmiaru oraz ilości elementów.
     Jeżeli istnieje bijekcja [f : A -> B], to znaczy, że typy [A] oraz [B]
-    mają dokładnie tyle samo elementów, czyli są "tak samo duże".
+    mają dokładnie tyle samo elementów, czyli są "tak samo duże".
 
     Nie powinno nas zatem dziwić, że relacja istnienia bijekcji jest
     relacją równoważności:
@@ -1029,16 +1029,16 @@ Qed.
 
 (** Jeżeli między [A] i [B] istnieje bijekcja, to mówimy, że [A] i [B] są
     równoliczne (ang. equipotent). Pokaż, że relacja równoliczności jest
-    relacją równoważności. TODO: prerekwizyt: relacje równoważności *)
+    relacją równoważności. TODO: prerekwizyt: relacje równoważności *)
 
 Definition equipotent (A B : Type) : Prop :=
   exists f : A -> B, bijective f.
 
 Notation "A ~~ B" := (equipotent A B) (at level 10).
 
-(** Równoliczność [A] i [B] będziemy oznaczać przez [A ~ B]. Nie należy
-    notacji [~] mylić z notacją [~] oznaczającej negację logiczną. Ciężko
-    jednak jest je pomylić, gdyż pierwsza zawsze bierze dwa argumenty, a
+(** Równoliczność [A] i [B] będziemy oznaczać przez [A ~ B]. Nie należy
+    notacji [~] mylić z notacją [~] oznaczającej negację logiczną. Ciężko
+    jednak jest je pomylić, gdyż pierwsza zawsze bierze dwa argumenty, a
     druga tylko jeden. *)
 
 Lemma equipotent_refl :
@@ -1079,7 +1079,7 @@ Definition involutive {A : Type} (f : A -> A) : Prop :=
     jej dwukrotnie daje cały obrót, a więc stan wyjściowy.
 
     Mówiąc bardziej po ludzku, inwolucja to funkcja, która jest swoją własną
-    odwrotnością. Spotkaliśmy się już z przykładami inwolucji: najbardziej
+    odwrotnością. Spotkaliśmy się już z przykładami inwolucji: najbardziej
     trywialnym z nich jest funkcja identycznościowa, bardziej oświecającym
     zaś funkcja [rev], która odwraca listę — odwrócenie listy dwukrotnie
     daje wyjściową listę. Inwolucją jest też [negb]. *)
@@ -1154,7 +1154,7 @@ Qed.
 (** Okazuje się, że złożenie inwolucji wcale nie musi być inwolucją. Wynika
     to z faktu, że funcje [weird] i [rev] są w pewien sposób niekompatybilne
     — pierwsze wywołanie każdej z nich przeszkadza drugiemu wywołaniu drugiej
-    z nich odwrócić efekt pierwszego wywołania. *)
+    z nich odwrócić efekt pierwszego wywołania. *)
 
 Lemma comp_inv :
   forall (A : Type) (f g : A -> A),
@@ -1169,7 +1169,7 @@ Qed.
 (* end hide *)
 
 (** Kryterium to jest rozstrzygające — jeżeli inwolucje komutują ze sobą
-    (czyli są "kompatybilne", [f .> g = g .> f]), to ich złożenie również
+    (czyli są "kompatybilne", [f .> g = g .> f]), to ich złożenie również
     jest inwolucją. *)
 
 Lemma inv_bij :
@@ -1206,7 +1206,7 @@ Compute map count_inv [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11].
 (** * Uogólnione inwolucje *)
 
 (** Pojęcie inwolucji można nieco uogólnić. Żeby to zrobić, przeformułujmy
-    najpierw definicję inwolucji. *)
+    najpierw definicję inwolucji. *)
 
 Definition involutive' {A : Type} (f : A -> A) : Prop :=
   f .> f = id.
@@ -1244,7 +1244,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Droga do uogólnienia została już prawie przebyta. Nasze dotychczasowe
+(** Droga do uogólnienia została już prawie przebyta. Nasze dotychczasowe
     inwolucje nazwiemy uogólnionymi inwolucjami rzędu 2. Definicję
     uogólnionej inwolucji otrzymamy, zastępując w definicji 2 przez [n]. *)
 
@@ -1254,7 +1254,7 @@ Definition gen_involutive
 
 (** Nie żeby pojęcie to było jakoś szczególnie często spotykane lub nawet
     przydatne — wymyśliłem je na poczekaniu. Spróbujmy znaleźć jakąś
-    uogólnioną inwolucję o rzędzie większym niż 2. *)
+    uogólnioną inwolucję o rzędzie większym niż 2. *)
 
 Fixpoint weirder {A : Type} (l : list A) : list A :=
 match l with
@@ -1286,7 +1286,7 @@ Qed.
 Definition idempotent {A : Type} (f : A -> A) : Prop :=
   forall x : A, f (f x) = f x.
 
-(** Kolejnym rodzajem funkcji są funkcje idempotente. Po łacinie "idem"
+(** Kolejnym rodzajem funkcji są funkcje idempotente. Po łacinie "idem"
     znaczy "taki sam", zaś "potentia" oznacza "moc". Funkcja idempotentna
     to taka, której wynik jest taki sam niezależnie od tego, ile razy
     zostanie zaaplikowana.
@@ -1295,9 +1295,9 @@ Definition idempotent {A : Type} (f : A -> A) : Prop :=
     — jeżeli np. wciśniemy "2", to po wjechaniu na drugi piętro kolejne
     wciśnięcia guzika "2" nie będą miały żadnego efektu.
 
-    Idempotentne jest również sortowanie. Jeżeli posortujemy listę, to jest
+    Idempotentne jest również sortowanie. Jeżeli posortujemy listę, to jest
     ona posortowana i kolejne sortowania niczego w niej nie zmienią. Problemem
-    sortowania zajmiemy się w przyszłych rozdziałach. *)
+    sortowania zajmiemy się w przyszłych rozdziałach. *)
 
 Lemma id_idem :
   forall A : Type, idempotent (@id A).
@@ -1331,14 +1331,14 @@ Qed.
 (* end hide *)
 
 (** Identyczność jest idempotentna — niezrobienie niczego dowolną ilość
-    razy jest wszakże ciągle niezrobieniem niczego. Podobnież funkcja
+    razy jest wszakże ciągle niezrobieniem niczego. Podobnież funkcja
     stała jest idempotentna — zwracanie tej samej wartości daje zawsze
     ten sam efekt, niezależnie od ilości powtórzeń.
 
     Ciekawszym przykładem, który jednak nie powinien cię zaskoczyć, jest
     funkcja [take] dla dowolnego [n : nat]. Wzięcie [n] elementów z listy
     [l] daje nam listę mającą co najwyżej [n] elementów. Próba wzięcia
-    [n] elementów z takiej listy niczego nie zmieni, gdyż jej długość jest
+    [n] elementów z takiej listy niczego nie zmieni, gdyż jej długość jest
     mniejsza lub równa ilości elementów, które chcemy wziąć. *)
 
 Lemma comp_idem :
@@ -1368,7 +1368,7 @@ Definition gen_idempotent
   {A : Type} (n : nat) (f : A -> A) : Prop :=
     forall k : nat, iter f (k + n) = iter f n.
 
-(** Zdaje mi się ono jednak być mocno bezużyteczne.*)
+(** Zdaje mi się ono jednak być mocno bezużyteczne.*)
 
 (* TODO: wymyślić jakieś przykłady. *)
 

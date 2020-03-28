@@ -334,7 +334,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie (równość funkcji 2) *)
+(** **** Ćwiczenie (równość funkcji 2) *)
 
 (** Niech [A] i [B] będą dowolnymi typami. Zastanów się, kiedy możliwe
     jest zdefiniowanie instancji klasy [EqDec] dla [A -> B]. *)

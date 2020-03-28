@@ -3,7 +3,7 @@
 (** Lista to najprostsza i najczęściej używana w programowaniu funkcyjnym
     struktura danych. Czas więc przeżyć na własnej skórze ich implementację.
 
-    UWAGA: ten rozdział wyewoluował do stanu dość mocno odbiegającego od
+    UWAGA: ten rozdział wyewoluował do stanu dość mocno odbiegającego od
     tego, co jest w bibliotece standardowej — moim zdanem na korzyść. *)
 
 (* begin hide *)
@@ -18,8 +18,8 @@ Require Export Nat.
 Ltac inv H := inversion H; subst; clear H.
 (* end hide *)
 
-(** W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
-    naturalnych, które możemy znaleźć w module [Arith]. *)
+(** W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
+    naturalnych, które możemy znaleźć w module [Arith]. *)
 
 (** Zdefiniuj [list] (bez podglądania). *)
 
@@ -95,7 +95,7 @@ Qed.
 
 (** ** [snoc] *)
 
-(** Zdefiniuj funkcję [snoc], która dokleja element [x] na koniec listy
+(** Zdefiniuj funkcję [snoc], która dokleja element [x] na koniec listy
     [l].
 
     Przykład:
@@ -602,7 +602,7 @@ Qed.
 
 (** ** [bind] *)
 
-(** Napisz funkcję [bind], która spełnia specyfikację [bind_spec].
+(** Napisz funkcję [bind], która spełnia specyfikację [bind_spec].
     Użyj rekursji, ale nie używaj funkcji [join] ani [map]. *)
 
 (* begin hide *)
@@ -725,14 +725,14 @@ Qed.
 
 (** ** [iterate] i [iter] *)
 
-(** Napisz funkcję [iterate]. [iterate f n x] to lista postaci
+(** Napisz funkcję [iterate]. [iterate f n x] to lista postaci
     [[x, f x, f (f x), ..., f (... (f x) ...)]] o długości [n]. *)
 
 (** Przykład: *)
 
 (** [iterate S 5 0] = [[0; 1; 2; 3; 4]] *)
 
-(** Napisz też funkcję [iter], która przyda się do podania
+(** Napisz też funkcję [iter], która przyda się do podania
     charakteryzacji funkcji [iterate]. Zgadnij, czym ma ona być. *)
 
 (* begin hide *)
@@ -1108,9 +1108,9 @@ Qed.
 
 (** *** [uncons] *)
 
-(** Napisz funkcję [uncons], która zwraca parę złożoną z głowy i ogona
+(** Napisz funkcję [uncons], która zwraca parę złożoną z głowy i ogona
     listy lub [None], gdy lista jest pusta. Nie używaj funkcji [head]
-    ani [tail]. Udowodnij poniższą specyfikację.
+    ani [tail]. Udowodnij poniższą specyfikację.
 
     Przykład:
     [uncons [1; 2; 3]] = [Some (1, [2; 3])]
@@ -1407,7 +1407,7 @@ Qed.
 
 (** *** [unsnoc] *)
 
-(** Zdefiniuj funkcję [unsnoc], która rozbija listę na parę złożoną z
+(** Zdefiniuj funkcję [unsnoc], która rozbija listę na parę złożoną z
     ostatniego elementu oraz całej reszty lub zwraca [None] gdy lista
     jest pusta. Nie używaj funkcji [last] ani [init]. Udowodnij poniższą
     specyfikację.
@@ -2578,8 +2578,8 @@ Qed.
 
 (** ** [cycle] *)
 
-(** Napisz funkcję [cycle : forall A : Type, nat -> list A -> list A],
-    która obraca listę cyklicznie. Udowodnij jej właściwości. *)
+(** Napisz funkcję [cycle : forall A : Type, nat -> list A -> list A],
+    która obraca listę cyklicznie. Udowodnij jej właściwości. *)
 
 (* begin hide *)
 Fixpoint cycle {A : Type} (n : nat) (l : list A) : list A :=
@@ -3217,7 +3217,7 @@ Qed.
 
 (** ** [insert] *)
 
-(** Napisz funkcję [insert], która wstawia do listy [l] na [n]-tą pozycję
+(** Napisz funkcję [insert], która wstawia do listy [l] na [n]-tą pozycję
     element [x].
 
     Przykład:
@@ -3564,7 +3564,7 @@ Admitted.
 
 (** ** [replace] *)
 
-(** Napisz funkcję [replace], która na liście [l] zastępuje element z
+(** Napisz funkcję [replace], która na liście [l] zastępuje element z
     pozycji [n] elementem [x].
 
     Przykład:
@@ -4132,10 +4132,10 @@ Qed.
 
 (** ** [remove] *)
 
-(** Napisz funkcję [remove], która bierze liczbę naturalną [n] oraz listę
+(** Napisz funkcję [remove], która bierze liczbę naturalną [n] oraz listę
     [l] i zwraca parę składającą się z [n]-tego elementu listy [l] oraz
     tego, co pozostanie na liście po jego usunięciu. Jeżeli lista jest za
-    krótka, funkcja ma zwracać [None].
+    krótka, funkcja ma zwracać [None].
 
     Przykład:
 *)
@@ -4558,7 +4558,7 @@ Qed.
 (** ** [zip] *)
 
 (** Napisz funkcję [zip], która bierze dwie listy i skleja je w listę par.
-    Wywnioskuj z poniższej specyfikacji, jak dokładnie ma się zachowywać
+    Wywnioskuj z poniższej specyfikacji, jak dokładnie ma się zachowywać
     ta funkcja.
 
     Przykład:
@@ -4952,7 +4952,7 @@ Qed.
 
 (** ** [zipWith] *)
 
-(** Zdefiniuj funkcję [zipWith], która zachowuje się jak połączenie [zip]
+(** Zdefiniuj funkcję [zipWith], która zachowuje się jak połączenie [zip]
     i [map]. Nie używaj [zip] ani [map] - użyj rekursji.
 
     Przykład:
@@ -5145,7 +5145,7 @@ Qed.
 
 (** ** [unzipWith] *)
 
-(** Zdefiniuj funkcję [unzipWith], która ma się tak do [zipWith], jak
+(** Zdefiniuj funkcję [unzipWith], która ma się tak do [zipWith], jak
     [unzip] do [zip]. Oczywiście użyj rekursji i nie używaj żadnych
     funkcji pomocniczych. *)
 
@@ -5219,7 +5219,7 @@ Qed.
 
 (** ** [any] *)
 
-(** Napisz funkcję [any], która sprawdza, czy lista [l] zawiera jakiś
+(** Napisz funkcję [any], która sprawdza, czy lista [l] zawiera jakiś
     element, który spełnia predykat boolowski [p].
 
     Przykład:
@@ -5562,7 +5562,7 @@ Qed.
 (** ** [all] *)
 
 (** Napisz funkcję [all], która sprawdza, czy wszystkie wartości na liście
-    [l] spełniają predykat boolowski [p].
+    [l] spełniają predykat boolowski [p].
 
     Przykład:
     [all even [2; 4; 6]] = [true]
@@ -5950,7 +5950,7 @@ Qed.
     [find even [1; 2; 3; 4]] = [Some 2]
 *)
 
-(** Napisz też funkcję [findLast], która znajduje ostatni element na
+(** Napisz też funkcję [findLast], która znajduje ostatni element na
     liście, który spełnia podany predykat boolowski.
 
     Przykład:
@@ -6361,8 +6361,8 @@ Qed.
 (** ** [removeFirst] i [removeLast] *)
 
 (** Napisz funkcje [removeFirst] i [removeLast] o sygnaturach,
-    które zwracają pierwszy/ostatni element z listy spełniający
-    predykat boolowski [p] oraz resztę listy bez tego elementu.
+    które zwracają pierwszy/ostatni element z listy spełniający
+    predykat boolowski [p] oraz resztę listy bez tego elementu.
 
     Przykład:
 *)
@@ -7379,7 +7379,7 @@ Qed.
 
 (** ** [count] *)
 
-(** Napisz funkcję [count], która liczy, ile jest na liście [l] elementów
+(** Napisz funkcję [count], która liczy, ile jest na liście [l] elementów
     spełniających predykat boolowski [p].
 
     Przykład:
@@ -9059,7 +9059,7 @@ Qed.
 
 (** ** [span] *)
 
-(** Zdefiniuj funkcję [span], która dzieli listę [l] na listę [b], której
+(** Zdefiniuj funkcję [span], która dzieli listę [l] na listę [b], której
     elementy nie spełniają predykatu [p], element [x], który spełnia [p]
     oraz listę [e] zawierającą resztę elementów [l]. Jeżeli na liście nie
     ma elementu spełniającego [p], funkcja zwraca [None].
@@ -9514,7 +9514,7 @@ Qed.
 
 (** ** [pmap] *)
 
-(** Zdefiniuj funkcję [pmap], która mapuje funkcję [f : A -> option B]
+(** Zdefiniuj funkcję [pmap], która mapuje funkcję [f : A -> option B]
     po liście [l], ale odpakowuje wyniki zawinięte w [Some], a wyniki
     równe [None] usuwa.
 
@@ -11053,10 +11053,10 @@ Qed.
 
 (** ** [In] *)
 
-(** Gratuluję, udało ci się zdefiniować predykat [elem] i dowieść wszystkich
-    jego właściwości. To jednak nie koniec zabawy, gdyż predykaty możemy
-    definiować nie tylko przez indukcję, ale także przez rekursję. Być może
-    taki sposób definiowania jest nawet lepszy? Przyjrzyjmy się poniższej
+(** Gratuluję, udało ci się zdefiniować predykat [elem] i dowieść wszystkich
+    jego właściwości. To jednak nie koniec zabawy, gdyż predykaty możemy
+    definiować nie tylko przez indukcję, ale także przez rekursję. Być może
+    taki sposób definiowania jest nawet lepszy? Przyjrzyjmy się poniższej
     definicji — tak właśnie "bycie elementem" jest zdefiniowane w bibliotece
     standardowej. *)
 
@@ -11067,15 +11067,15 @@ match l with
 end.
 
 (** Powyższa definicja jest bardzo podobna do tej induktywnej. [In x]
-    dla listy pustej redukuje się do [False], co oznacza, że w pustej
-    liście nic nie ma, zaś dla listy mającej głowę i ogon redukuje się do
-    zdania "[x] jest głową lub jest elementem ogona".
+    dla listy pustej redukuje się do [False], co oznacza, że w pustej
+    liście nic nie ma, zaś dla listy mającej głowę i ogon redukuje się do
+    zdania "[x] jest głową lub jest elementem ogona".
 
     Definicja taka ma swoje wady i zalety. Największą moim zdaniem wadą jest
-    to, że nie możemy robić indukcji po dowodzie, gdyż dowód faktu [In x l]
-    nie jest induktywny. Największą zaletą zaś jest fakt, że nie możemy robić
+    to, że nie możemy robić indukcji po dowodzie, gdyż dowód faktu [In x l]
+    nie jest induktywny. Największą zaletą zaś jest fakt, że nie możemy robić
     indukcji po dowodzie — im mniej potencjalnych rzeczy, po których można
-    robić indukcję, tym mniej zastanawiania się. Przekonajmy się zatem na
+    robić indukcję, tym mniej zastanawiania się. Przekonajmy się zatem na
     własnej skórze, która definicja jest "lepsza". *)
 
 Lemma In_elem :
@@ -11605,7 +11605,7 @@ Qed.
 (** ** [NoDup] *)
 
 (** Zdefiniuj induktywny predykat [NoDup]. Zdanie [NoDup l] jest prawdziwe,
-    gdy w [l] nie ma powtarzających się elementów. Udowodnij, że zdefiniowall
+    gdy w [l] nie ma powtarzających się elementów. Udowodnij, że zdefiniowall
     przez ciebie predykat posiada pożądane właściwości. *)
 
 (* begin hide *)
@@ -12002,16 +12002,16 @@ Abort. (* Ten [Abort] jest umyślny. *)
 (** Powodem problemów z predykatem [NoDup] jest fakt, że jest on w pewnym
     sensie niekonstruktywny. Wynika to wprost z jego definicji: [NoDup l]
     zachodzi, gdy w [l] nie ma duplikatów. Parafrazując: [NoDup l] zachodzi,
-    gdy _nieprawda_, że w [l] są duplikaty.
+    gdy _nieprawda_, że w [l] są duplikaty.
 
     Jak widać, w naszej definicji implicité występuje negacja. Wobec tego
-    jeżeli spróbujemy za pomocą [NoDup] wyrazić zdanie "na liście [l] są
+    jeżeli spróbujemy za pomocą [NoDup] wyrazić zdanie "na liście [l] są
     duplikaty", to tak naprawdę dostaniemy zdanie "nieprawda, że nieprawda,
     że [l] ma duplikaty".
 
     Dostaliśmy więc po głowie nagłym atakiem podwójnej negacji. Nie ma się
     co dziwić w takiej sytuacji, że nasza "negatywna" definicja predykatu
-    [NoDup] jest nazbyt klasyczna. Możemy jednak uratować sytuację, jeżeli
+    [NoDup] jest nazbyt klasyczna. Możemy jednak uratować sytuację, jeżeli
     zdefiniujemy predykat [Dup] i zanegujemy go.
 
     Zdefiniuj predykat [Dup], który jest spełniony, gdy na liście występują
@@ -12544,11 +12544,11 @@ Qed.
 
 (** ** [Rep] *)
 
-(** Jeżeli zastanowimy się chwilę, to dojdziemy do wniosku, że [Dup l]
+(** Jeżeli zastanowimy się chwilę, to dojdziemy do wniosku, że [Dup l]
     znaczy "istnieje x, który występuje na liście l co najmniej dwa
     razy". Widać więc, że [Dup] jest jedynie specjalnym przypadkiem
     pewngo bardziej ogólnego predykatu [Rep x n] dla dowolnego [x] oraz
-    n = 2. Zdefiniuj relację [Rep]. Zdanie [Rep x n l] zachodzi, gdy
+    n = 2. Zdefiniuj relację [Rep]. Zdanie [Rep x n l] zachodzi, gdy
     element [x] występuje na liście [l] co najmnej [n] razy.
 
     Zastanów się, czy lepsza będzie definicja induktywna, czy rekurencyjna.
@@ -14000,7 +14000,7 @@ Qed.
 
 (** ** [AtLeast] *)
 
-(** Czas uogólnić relację [Rep] oraz predykaty [Exists] i [Forall]. Zdefiniuj
+(** Czas uogólnić relację [Rep] oraz predykaty [Exists] i [Forall]. Zdefiniuj
     w tym celu relację [AtLeast]. Zdanie [AtLeast P n l] zachodzi, gdy na
     liście [l] jest co najmniej [n] elementów spełniających predykat [P]. *)
 
@@ -17644,8 +17644,8 @@ Qed.
 Definition Incl {A : Type} (l1 l2 : list A) : Prop :=
   forall x : A, elem x l1 -> elem x l2.
 
-(** Przyjrzyjmy się powyższej definicji. Intuicyjnie można ją rozumieć tak,
-    że [Incl l1 l2] zachodzi, gdy każdy element listy [l1] choć raz występuje
+(** Przyjrzyjmy się powyższej definicji. Intuicyjnie można ją rozumieć tak,
+    że [Incl l1 l2] zachodzi, gdy każdy element listy [l1] choć raz występuje
     też na liście [l2]. Udowodnij, że relacja ta ma poniższe właściwości. *)
 
 Lemma Incl_nil :
@@ -20937,7 +20937,7 @@ Qed.
 
 (** ** Palindromy *)
 
-(** Palindrom to słowo, które czyta się tak samo od przodu jak i od tyłu.
+(** Palindrom to słowo, które czyta się tak samo od przodu jak i od tyłu.
 
     Zdefiniuj induktywny predykat [Palindrome], które odpowiada powyższemu
     pojęciu palindromu, ale dla list elementów dowolnego typu, a nie tylko

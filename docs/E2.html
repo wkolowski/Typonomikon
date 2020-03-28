@@ -27,21 +27,21 @@
 W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.
     Trzeba przyznać na wstępie, że rozdział będzie raczej matematyczny
     (co wcale nie powinno cię odstraszać - matematyka jest świetna, a
-    najbardziej praktyczną rzeczą w kosmosie jest dobra teoria). 
+    najbardziej praktyczną rzeczą w kosmosie jest dobra teoria). 
 <div class="paragraph"> </div>
 
 <a name="lab377"></a><h1 class="section">Funkcje</h1>
 
 <div class="paragraph"> </div>
 
- Potrafisz już posługiwać się funkcjami. Mimo tego zróbmy krótkie
+ Potrafisz już posługiwać się funkcjami. Mimo tego zróbmy krótkie
     przypomnienie.
 
 <div class="paragraph"> </div>
 
     Typ funkcji (niezależnych) z <span class="inlinecode"><span class="id" title="var">A</span></span> w <span class="inlinecode"><span class="id" title="var">B</span></span> oznaczamy przez <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>. W
-    Coqu funkcje możemy konstruować za pomocą abstrakcji (np. <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span>
-    <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>) albo za pomocą rekursji strukturalnej. Eliminować zaś
+    Coqu funkcje możemy konstruować za pomocą abstrakcji (np. <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span>
+    <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>) albo za pomocą rekursji strukturalnej. Eliminować zaś
     możemy je za pomocą aplikacji: jeżeli <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> oraz <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>, to
     <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span>.
 
@@ -51,13 +51,13 @@ W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.
     funkcja przyporządkowuje element przeciwdziedziny. Jednak status
     dziedziny i przeciwdziedziny nie jest taki sam: każdemu elementowi
     dziedziny coś odpowiada, jednak mogą istnieć elementy przeciwdziedziny,
-    które nie są obrazem żadnego elementu dziedziny.
+    które nie są obrazem żadnego elementu dziedziny.
 
 <div class="paragraph"> </div>
 
     Co więcej, w Coqu wszystkie funkcje są konstruktywne, tzn. mogą zostać
     obliczone. Jest to coś, co bardzo mocno odróżnia Coqa oraz rachunek
-    konstrukcji (jego teoretyczną podstawę) od innych systemów formalnych. 
+    konstrukcji (jego teoretyczną podstawę) od innych systemów formalnych. 
 </div>
 <div class="code">
 
@@ -85,7 +85,7 @@ Najważniejszą rzeczą, jaką możemy zrobić z funkcją, jest zaaplikowanie
 
     Notacja <span class="inlinecode">$</span> (pożyczona z języka Haskell) będzie nam służyć do niepisania
     nawiasów: jeżeli argumentami funkcji będą skomplikowane termy, zamiast
-    pisać wokół nich parę nawiasów, będziemy mogli wstawić tylko jeden symbol
+    pisać wokół nich parę nawiasów, będziemy mogli wstawić tylko jeden symbol
     dolara "$". Dzięki temu zamiast 2n nawiasów napiszemy tylko n znaków "$"
     (choć trzeba przyznać, że będziemy musieli pisać więcej spacji).
 
@@ -93,7 +93,7 @@ Najważniejszą rzeczą, jaką możemy zrobić z funkcją, jest zaaplikowanie
 
     Notacja <span class="inlinecode">|&gt;</span> (pożyczona z języka F#) umożliwi nam pisanie aplikacji w odwrotnej
     kolejności. Dzięki temu będziemy mogli np. pomijać nawiasy w abstrakcji. Jako,
-    że nie da się zrobić notacji w stylu "x f", jest to najlepsze dostępne nam
+    że nie da się zrobić notacji w stylu "x f", jest to najlepsze dostępne nam
     rozwiązanie. 
 </div>
 <div class="code">
@@ -193,8 +193,8 @@ Funkcja stała to funkcja, która ignoruje swój drugi argument i zawsze
 
 <div class="doc">
 Ostatnim przydatnim kombinatorem jest <span class="inlinecode"><span class="id" title="var">iter</span></span>. Służy on do składania
-    funkcji samej ze sobą <span class="inlinecode"><span class="id" title="var">n</span></span> razy. Oczywiście funkcja, aby można ją było
-    złożyć ze sobą, musi mieć identyczną dziedzinę i przeciwdziedzinę. 
+    funkcji samej ze sobą <span class="inlinecode"><span class="id" title="var">n</span></span> razy. Oczywiście funkcja, aby można ją było
+    złożyć ze sobą, musi mieć identyczną dziedzinę i przeciwdziedzinę. 
 <div class="paragraph"> </div>
 
 <a name="lab378"></a><h1 class="section">Aksjomat ekstensjonalności</h1>
@@ -204,7 +204,7 @@ Ostatnim przydatnim kombinatorem jest <span class="inlinecode"><span class="id" 
  Ważną kwestią jest ustalenie, kiedy dwie funkcje są równe. Zacznijmy od
     tego, że istnieją dwie koncepcje równości:
 <ul class="doclist">
-<li> intensjonalna — funkcje są zdefiniowane przez identyczne (czyli
+<li> intensjonalna — funkcje są zdefiniowane przez identyczne (czyli
       konwertowalne) wyrażenia
 
 </li>
@@ -276,8 +276,8 @@ Podstawowym i domyślnym rodzajem równości w Coqu jest równość
 Równość intensjonalna ma jednak swoje wady. Główną z nich jest to, że
     jest ona bardzo restrykcyjna. Widać to dobrze na powyższym przykładzie:
     nie jesteśmy w stanie udowodnić, że funkcje <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode">1</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> oraz
-    <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> są równe, gdyż zostały zdefiniowane za pomocą
-    innych termów. Mimo, że termy te są równe, to nie są konwertowalne, a
+    <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> są równe, gdyż zostały zdefiniowane za pomocą
+    innych termów. Mimo, że termy te są równe, to nie są konwertowalne, a
     zatem funkcje też nie są konwertowalne. Nie znaczy to jednak, że nie są
     równe — po prostu nie jesteśmy w stanie w żaden sposób pokazać, że są. 
 </div>
@@ -324,13 +324,13 @@ Z tarapatów wybawić nas może jedynie aksjomat ekstensjonalności dla
 <div class="doc">
 Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
     <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">g</span></span>, to taktyka <span class="inlinecode"><span class="id" title="tactic">extensionality</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> przekształca go w cel postaci
-    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>, o ile tylko nazwa <span class="inlinecode"><span class="id" title="var">x</span></span> nie jest już wykorzystana na coś
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>, o ile tylko nazwa <span class="inlinecode"><span class="id" title="var">x</span></span> nie jest już wykorzystana na coś
     innego.
 
 <div class="paragraph"> </div>
 
-    Dzięki zastosowaniu aksjomatu nie musimy już polegać na konwertowalności
-    termów definiujących funkcje. Wystarczy udowodnić, że są one równe. W
+    Dzięki zastosowaniu aksjomatu nie musimy już polegać na konwertowalności
+    termów definiujących funkcje. Wystarczy udowodnić, że są one równe. W
     tym przypadku robimy to za pomocą twierdzenia <span class="inlinecode"><span class="id" title="var">plus_comm</span></span>. 
 <div class="paragraph"> </div>
 
@@ -374,16 +374,16 @@ Sposób użycia aksjomatu jest banalnie prosty. Jeżeli mamy cel postaci
 </div>
 
 <div class="doc">
-Intuicja jest dość prosta: wiemy ze szkoły, że na liczbach całkowitych
+Intuicja jest dość prosta: wiemy ze szkoły, że na liczbach całkowitych
     odejmowanie jest odwrotnością dodawania (np. a + b - b = a), tzn. jeżeli
     do a dodamy b, a potem odejmiemy b, to znowu mamy a. Podobnie w liczbach
-    rzeczywistych mnożenie przez liczbę niezerową ma odwrotność w postaci
+    rzeczywistych mnożenie przez liczbę niezerową ma odwrotność w postaci
     dzielenia, np. (x * y) / y = x.
 
 <div class="paragraph"> </div>
 
     Oczywiście pojęcie odwrotności dotyczy nie tylko działań na liczbach,
-    ale także dowolnych funkcji - <span class="inlinecode"><span class="id" title="var">g</span></span> jest odwrotnością <span class="inlinecode"><span class="id" title="var">f</span></span>, gdy odwraca
+    ale także dowolnych funkcji - <span class="inlinecode"><span class="id" title="var">g</span></span> jest odwrotnością <span class="inlinecode"><span class="id" title="var">f</span></span>, gdy odwraca
     ono działanie <span class="inlinecode"><span class="id" title="var">f</span></span> dla dowolnego argumentu <span class="inlinecode"><span class="id" title="var">a</span></span>, tzn. najpierw mamy <span class="inlinecode"><span class="id" title="var">a</span></span>,
     potem aplikujemy <span class="inlinecode"><span class="id" title="var">f</span></span> i mamy <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>, zaś na koniec aplikujemy <span class="inlinecode"><span class="id" title="var">g</span></span> i znów
     mamy <span class="inlinecode"><span class="id" title="var">a</span></span>, czyli <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">a</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">a</span></span>. To właśnie jest napisane w definicji
@@ -393,15 +393,15 @@ Intuicja jest dość prosta: wiemy ze szkoły, że na liczbach całkowitych
 
     No właśnie - powyższy opis jest opisem postodwrotności. Nazwa wynika z
     kolejności - <span class="inlinecode"><span class="id" title="var">g</span></span> jest postodwrotnością <span class="inlinecode"><span class="id" title="var">f</span></span>, gdy najpierw aplikujemy <span class="inlinecode"><span class="id" title="var">f</span></span>,
-    a potem odwracamy jego działanie za pomocą <span class="inlinecode"><span class="id" title="var">g</span></span> (po łacinie "post" znaczy
+    a potem odwracamy jego działanie za pomocą <span class="inlinecode"><span class="id" title="var">g</span></span> (po łacinie "post" znaczy
     "po", np. "post meridiem" znaczy "po południu").
 
 <div class="paragraph"> </div>
 
-    Analogicznie, choć może nieco mniej intuicyjnie, prezentuje się definicja
+    Analogicznie, choć może nieco mniej intuicyjnie, prezentuje się definicja
     preodwrotności (po łacinie "prae" znaczy "przed"). <span class="inlinecode"><span class="id" title="var">g</span></span> jest preodwrotnością
     <span class="inlinecode"><span class="id" title="var">f</span></span>, gdy <span class="inlinecode"><span class="id" title="var">f</span></span> jest postodwrotnością <span class="inlinecode"><span class="id" title="var">g</span></span>. Innymi słowy: <span class="inlinecode"><span class="id" title="var">f</span></span> ma preodwrotność,
-    jeżeli odwraca ono działanie jakiejś funkcji.
+    jeżeli odwraca ono działanie jakiejś funkcji.
 
 <div class="paragraph"> </div>
 
@@ -429,17 +429,17 @@ Intuicja jest dość prosta: wiemy ze szkoły, że na liczbach całkowitych
 
 <div class="doc">
 Zauważ, że sortem <span class="inlinecode"><span class="id" title="var">has_preinverse</span></span> i <span class="inlinecode"><span class="id" title="var">has_postinverse</span></span> jest <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, nie
-    zaś <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. Jest tak dlatego, że o ile stwierdzenie "f jest pre/post
+    zaś <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. Jest tak dlatego, że o ile stwierdzenie "f jest pre/post
     odwrotnością g" jest zdaniem, to posiadanie odwrotności już nie, gdyż
-    dana funkcja może mieć wiele różnych odwrotności. 
+    dana funkcja może mieć wiele różnych odwrotności. 
 <div class="paragraph"> </div>
 
 <a name="lab382"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
- Rozważmy funkcję <span class="inlinecode"><span class="id" title="var">app</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>, która dokleja na początek listy liczb
-    naturalnych listę <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>. Znajdź dwie różne jej postodwrotności (nie
+ Rozważmy funkcję <span class="inlinecode"><span class="id" title="var">app</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>, która dokleja na początek listy liczb
+    naturalnych listę <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span>. Znajdź dwie różne jej postodwrotności (nie
     musisz formalnie dowodzić, że są różne - wystarczy nieformalny argument).
     Czy funkcja ta ma preodwrotność? 
 </div>
@@ -458,9 +458,9 @@ Zauważ, że sortem <span class="inlinecode"><span class="id" title="var">has_pr
 
 <div class="paragraph"> </div>
 
- Czasem funkcja może mieć naprawdę dużo odwrotności. Pokaż, że funkcja
+ Czasem funkcja może mieć naprawdę dużo odwrotności. Pokaż, że funkcja
     <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> dla <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> ma ich nieskończenie wiele. Nie musisz dowodzić,
-    że odwrotności są różne (ani że jest ich dużo), jeżeli widać to na
+    że odwrotności są różne (ani że jest ich dużo), jeżeli widać to na
     pierwszy rzut oka. 
 </div>
 <div class="code">
@@ -476,7 +476,7 @@ Zauważ, że sortem <span class="inlinecode"><span class="id" title="var">has_pr
 <div class="paragraph"> </div>
 
  Dla listowych funkcji widzieliśmy postodwrotności, ale nie widzieliśmy
-    preodwrotności. Może więc preodwrotności nie istnieją? Otóż nie tym
+    preodwrotności. Może więc preodwrotności nie istnieją? Otóż nie tym
     razem!
 
 <div class="paragraph"> </div>
@@ -577,11 +577,11 @@ Abort.<br/>
 
 <div class="doc">
 Objaśnienia zacznijmy od nazwy. Po łacinie "iacere" znaczy "rzucać",
-    zaś "in" znaczy "w, do". W językach romańskich samo słowo "injekcja"
+    zaś "in" znaczy "w, do". W językach romańskich samo słowo "injekcja"
     oznacza zaś zastrzyk. Bliższym matematycznemu znaczeniu byłoby jednak
     tłumaczenie "wstrzyknięcie". Jeżeli funkcja jest injekcją, to możemy
-    też powiedzieć, że jest "injektywna". Inną nazwą jest "funkcja
-    różnowartościowa". Na wiki można zapoznać się z obrazkami poglądowymi:
+    też powiedzieć, że jest "injektywna". Inną nazwą jest "funkcja
+    różnowartościowa". Na wiki można zapoznać się z obrazkami poglądowymi:
 
 <div class="paragraph"> </div>
 
@@ -594,7 +594,7 @@ Objaśnienia zacznijmy od nazwy. Po łacinie "iacere" znaczy "rzucać",
 
 <div class="paragraph"> </div>
 
-    Przekonajmy się na przykładzie. 
+    Przekonajmy się na przykładzie. 
 </div>
 <div class="code">
 
@@ -613,13 +613,13 @@ Objaśnienia zacznijmy od nazwy. Po łacinie "iacere" znaczy "rzucać",
 
 <div class="doc">
 Funkcja <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>, czyli dodanie <span class="inlinecode">2</span> z lewej strony, jest
-    injekcją, gdyż jeżeli <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>, to rozwiązując równanie dostajemy
+    injekcją, gdyż jeżeli <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>, to rozwiązując równanie dostajemy
     <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>. Jeżeli wartości funkcji są równe, to argumenty również muszą
     być równe.
 
 <div class="paragraph"> </div>
 
-    Zobaczmy też kontrprzykład. 
+    Zobaczmy też kontrprzykład. 
 </div>
 <div class="code">
 
@@ -635,7 +635,7 @@ Funkcja <span class="inlinecode"><span class="id" title="keyword">fun</span></sp
 
 <div class="doc">
 Funkcja f(n) = n^2 - n nie jest injekcją, gdyż mamy zarówno f(0) = 0
-    jak i f(1) = 0. Innymi słowy: są dwa nierówne argumenty (0 i 1), dla
+    jak i f(1) = 0. Innymi słowy: są dwa nierówne argumenty (0 i 1), dla
     których wartość funkcji jest taka sama (0).
 
 <div class="paragraph"> </div>
@@ -688,7 +688,7 @@ Głosi ona, że funkcja injektywna to funkcja, która dla różnych argumentów
 </div>
 
 <div class="doc">
-Udowodnij, że różne funkcje są lub nie są injektywne. 
+Udowodnij, że różne funkcje są lub nie są injektywne. 
 </div>
 <div class="code">
 
@@ -742,7 +742,7 @@ Jedną z ważnych właściwości injekcji jest to, że są składalne:
 </div>
 
 <div class="doc">
-Ta właściwość jest dziwna. Być może kiedyś wymyślę dla niej jakąś
+Ta właściwość jest dziwna. Być może kiedyś wymyślę dla niej jakąś
     bajkę. 
 </div>
 <div class="code">
@@ -764,7 +764,7 @@ Na zakończenie należy dodać do naszej interpretacji pojęcia "injekcja"
 <div class="paragraph"> </div>
 
     <span class="inlinecode"><span class="id" title="var">f</span></span> musi przyporządkować każdemu elementowi <span class="inlinecode"><span class="id" title="var">A</span></span> jakiś element <span class="inlinecode"><span class="id" title="var">B</span></span>. Gdy
-    elementów <span class="inlinecode"><span class="id" title="var">A</span></span> jest więcej niż <span class="inlinecode"><span class="id" title="var">B</span></span>, to z konieczności któryś z elementów
+    elementów <span class="inlinecode"><span class="id" title="var">A</span></span> jest więcej niż <span class="inlinecode"><span class="id" title="var">B</span></span>, to z konieczności któryś z elementów
     <span class="inlinecode"><span class="id" title="var">B</span></span> będzie obrazem dwóch lub więcej elementów <span class="inlinecode"><span class="id" title="var">A</span></span>.
 
 <div class="paragraph"> </div>
@@ -780,7 +780,7 @@ Na zakończenie należy dodać do naszej interpretacji pojęcia "injekcja"
 <div class="paragraph"> </div>
 
  Udowodnij, że nie istnieje injekcja z <span class="inlinecode"><span class="id" title="var">bool</span></span> w <span class="inlinecode"><span class="id" title="var">unit</span></span>. Znaczy to, że
-    <span class="inlinecode"><span class="id" title="var">bool</span></span> ma więcej elementów, czyli jest większy, niż <span class="inlinecode"><span class="id" title="var">unit</span></span>. 
+    <span class="inlinecode"><span class="id" title="var">bool</span></span> ma więcej elementów, czyli jest większy, niż <span class="inlinecode"><span class="id" title="var">unit</span></span>. 
 </div>
 <div class="code">
 
@@ -851,7 +851,7 @@ I znów zacznijmy od nazwy. Po francusku "sur" znaczy "na", zaś słowo
 <div class="doc">
 TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki <span class="inlinecode"><span class="id" title="var">cbn</span></span>
     używać będziemy taktyki <span class="inlinecode"><span class="id" title="var">cbn</span></span>. Różni się ona nieznacznie od <span class="inlinecode"><span class="id" title="var">cbn</span></span>, ale
-    jej główną zaletą jest nazwa — <span class="inlinecode"><span class="id" title="var">cbn</span></span> to trzy litery, a <span class="inlinecode"><span class="id" title="var">cbn</span></span> aż pięć,
+    jej główną zaletą jest nazwa — <span class="inlinecode"><span class="id" title="var">cbn</span></span> to trzy litery, a <span class="inlinecode"><span class="id" title="var">cbn</span></span> aż pięć,
     więc zaoszczędzimy sobie pisania.
 
 <div class="paragraph"> </div>
@@ -873,7 +873,7 @@ TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki <span class="inl
 </div>
 
 <div class="doc">
-Surjekcją nie jest za to konstruktor <span class="inlinecode"><span class="id" title="var">S</span></span>. To również nie powinno nas
+Surjekcją nie jest za to konstruktor <span class="inlinecode"><span class="id" title="var">S</span></span>. To również nie powinno nas
     dziwić: istnieje przecież liczba naturalna, która nie jest następnikiem
     żadnej innej. Jest nią oczywiście zero.
 
@@ -940,7 +940,7 @@ Tak jak istnienie injekcji <span class="inlinecode"><span class="id" title="var"
 <div class="paragraph"> </div>
 
     Podobnie jak w przypadku injekcji, fakt że złożenie surjekcji jest
-    surjekcją możemy traktować jako stwierdzenie, że porządek, jakim jest
+    surjekcją możemy traktować jako stwierdzenie, że porządek, jakim jest
     istnienie surjekcji, jest przechodni. (TODO) 
 <div class="paragraph"> </div>
 
@@ -949,7 +949,7 @@ Tak jak istnienie injekcji <span class="inlinecode"><span class="id" title="var"
 <div class="paragraph"> </div>
 
  Pokaż, że nie istnieje surjekcja z <span class="inlinecode"><span class="id" title="var">unit</span></span> w <span class="inlinecode"><span class="id" title="var">bool</span></span>. Oznacza to, że <span class="inlinecode"><span class="id" title="var">unit</span></span>
-    nie jest większy niż <span class="inlinecode"><span class="id" title="var">bool</span></span>. 
+    nie jest większy niż <span class="inlinecode"><span class="id" title="var">bool</span></span>. 
 </div>
 <div class="code">
 
@@ -1018,12 +1018,12 @@ Pozostawię przykłady bez komentarza — są one po prostu konsekwencją tego,
 <div class="paragraph"> </div>
 
     Ponieważ bijekcja jest surjekcją, to każdy element jej przeciwdziedziny
-    jest obrazem jakiegoś elementu jej dziedziny (obraz elementu <span class="inlinecode"><span class="id" title="var">x</span></span> to po
+    jest obrazem jakiegoś elementu jej dziedziny (obraz elementu <span class="inlinecode"><span class="id" title="var">x</span></span> to po
     prostu <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>). Ponieważ jest injekcją, to element ten jest unikalny.
 
 <div class="paragraph"> </div>
 
-    Bijekcja jest więc taką funkcją, że każdy element jej przeciwdziedziny
+    Bijekcja jest więc taką funkcją, że każdy element jej przeciwdziedziny
     jest obrazem dokładnie jednego elementu jej dziedziny. Ten właśnie fakt
     wyraża poniższa definicja alternatywna.
 
@@ -1091,15 +1091,15 @@ Funkcja <span class="inlinecode"><span class="id" title="var">unary</span></span
 </div>
 
 <div class="doc">
-Jak już powiedzieliśmy, bijekcje dziedziczą właściwości, które mają
+Jak już powiedzieliśmy, bijekcje dziedziczą właściwości, które mają
     zarówno injekcje, jak i surjekcje. Wobec tego możemy skonkludować,
-    że złożenie bijekcji jest bijekcją. Nie mają one jednak "dziwnej
+    że złożenie bijekcji jest bijekcją. Nie mają one jednak "dziwnej
     własciwości".
 
 <div class="paragraph"> </div>
 
-    TODO UWAGA: od teraz twierdzenia, które pozostawię bez dowodu, z
-    automatu stają się ćwiczeniami. 
+    TODO UWAGA: od teraz twierdzenia, które pozostawię bez dowodu, z
+    automatu stają się ćwiczeniami. 
 </div>
 <div class="code">
 
@@ -1114,7 +1114,7 @@ Jak już powiedzieliśmy, bijekcje dziedziczą właściwości, które mają
 <div class="doc">
 Bijekcje mają też interpretacje w idei rozmiaru oraz ilości elementów.
     Jeżeli istnieje bijekcja <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, to znaczy, że typy <span class="inlinecode"><span class="id" title="var">A</span></span> oraz <span class="inlinecode"><span class="id" title="var">B</span></span>
-    mają dokładnie tyle samo elementów, czyli są "tak samo duże".
+    mają dokładnie tyle samo elementów, czyli są "tak samo duże".
 
 <div class="paragraph"> </div>
 
@@ -1141,7 +1141,7 @@ Bijekcje mają też interpretacje w idei rozmiaru oraz ilości elementów.
 
  Jeżeli między <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> istnieje bijekcja, to mówimy, że <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> są
     równoliczne (ang. equipotent). Pokaż, że relacja równoliczności jest
-    relacją równoważności. TODO: prerekwizyt: relacje równoważności 
+    relacją równoważności. TODO: prerekwizyt: relacje równoważności 
 </div>
 <div class="code">
 
@@ -1156,9 +1156,9 @@ Bijekcje mają też interpretacje w idei rozmiaru oraz ilości elementów.
 </div>
 
 <div class="doc">
-Równoliczność <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> będziemy oznaczać przez <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">B</span></span>. Nie należy
-    notacji <span class="inlinecode">~</span> mylić z notacją <span class="inlinecode">~</span> oznaczającej negację logiczną. Ciężko
-    jednak jest je pomylić, gdyż pierwsza zawsze bierze dwa argumenty, a
+Równoliczność <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> będziemy oznaczać przez <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">B</span></span>. Nie należy
+    notacji <span class="inlinecode">~</span> mylić z notacją <span class="inlinecode">~</span> oznaczającej negację logiczną. Ciężko
+    jednak jest je pomylić, gdyż pierwsza zawsze bierze dwa argumenty, a
     druga tylko jeden. 
 </div>
 <div class="code">
@@ -1200,7 +1200,7 @@ Kolejnym ważnym (choć nie aż tak ważnym) rodzajem funkcji są inwolucje.
 <div class="paragraph"> </div>
 
     Mówiąc bardziej po ludzku, inwolucja to funkcja, która jest swoją własną
-    odwrotnością. Spotkaliśmy się już z przykładami inwolucji: najbardziej
+    odwrotnością. Spotkaliśmy się już z przykładami inwolucji: najbardziej
     trywialnym z nich jest funkcja identycznościowa, bardziej oświecającym
     zaś funkcja <span class="inlinecode"><span class="id" title="var">rev</span></span>, która odwraca listę — odwrócenie listy dwukrotnie
     daje wyjściową listę. Inwolucją jest też <span class="inlinecode"><span class="id" title="var">negb</span></span>. 
@@ -1273,7 +1273,7 @@ Inwolucją jest też kombinator <span class="inlinecode"><span class="id" title=
 Okazuje się, że złożenie inwolucji wcale nie musi być inwolucją. Wynika
     to z faktu, że funcje <span class="inlinecode"><span class="id" title="var">weird</span></span> i <span class="inlinecode"><span class="id" title="var">rev</span></span> są w pewien sposób niekompatybilne
     — pierwsze wywołanie każdej z nich przeszkadza drugiemu wywołaniu drugiej
-    z nich odwrócić efekt pierwszego wywołania. 
+    z nich odwrócić efekt pierwszego wywołania. 
 </div>
 <div class="code">
 
@@ -1287,7 +1287,7 @@ Okazuje się, że złożenie inwolucji wcale nie musi być inwolucją. Wynika
 
 <div class="doc">
 Kryterium to jest rozstrzygające — jeżeli inwolucje komutują ze sobą
-    (czyli są "kompatybilne", <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">.&gt;</span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">.&gt;</span> <span class="inlinecode"><span class="id" title="var">f</span></span>), to ich złożenie również
+    (czyli są "kompatybilne", <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">.&gt;</span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">.&gt;</span> <span class="inlinecode"><span class="id" title="var">f</span></span>), to ich złożenie również
     jest inwolucją. 
 </div>
 <div class="code">
@@ -1325,7 +1325,7 @@ Ponieważ każda inwolucja ma odwrotność (którą jest ona sama), każda
 <div class="paragraph"> </div>
 
  Pojęcie inwolucji można nieco uogólnić. Żeby to zrobić, przeformułujmy
-    najpierw definicję inwolucji. 
+    najpierw definicję inwolucji. 
 </div>
 <div class="code">
 
@@ -1371,7 +1371,7 @@ Pójdźmy o krok dalej. Zamiast składania <span class="inlinecode">.&gt;</span>
 </div>
 
 <div class="doc">
-Droga do uogólnienia została już prawie przebyta. Nasze dotychczasowe
+Droga do uogólnienia została już prawie przebyta. Nasze dotychczasowe
     inwolucje nazwiemy uogólnionymi inwolucjami rzędu 2. Definicję
     uogólnionej inwolucji otrzymamy, zastępując w definicji 2 przez <span class="inlinecode"><span class="id" title="var">n</span></span>. 
 </div>
@@ -1388,7 +1388,7 @@ Droga do uogólnienia została już prawie przebyta. Nasze dotychczasowe
 <div class="doc">
 Nie żeby pojęcie to było jakoś szczególnie często spotykane lub nawet
     przydatne — wymyśliłem je na poczekaniu. Spróbujmy znaleźć jakąś
-    uogólnioną inwolucję o rzędzie większym niż 2. 
+    uogólnioną inwolucję o rzędzie większym niż 2. 
 </div>
 <div class="code">
 
@@ -1430,7 +1430,7 @@ Nie żeby pojęcie to było jakoś szczególnie często spotykane lub nawet
 </div>
 
 <div class="doc">
-Kolejnym rodzajem funkcji są funkcje idempotente. Po łacinie "idem"
+Kolejnym rodzajem funkcji są funkcje idempotente. Po łacinie "idem"
     znaczy "taki sam", zaś "potentia" oznacza "moc". Funkcja idempotentna
     to taka, której wynik jest taki sam niezależnie od tego, ile razy
     zostanie zaaplikowana.
@@ -1443,9 +1443,9 @@ Kolejnym rodzajem funkcji są funkcje idempotente. Po łacinie "idem"
 
 <div class="paragraph"> </div>
 
-    Idempotentne jest również sortowanie. Jeżeli posortujemy listę, to jest
+    Idempotentne jest również sortowanie. Jeżeli posortujemy listę, to jest
     ona posortowana i kolejne sortowania niczego w niej nie zmienią. Problemem
-    sortowania zajmiemy się w przyszłych rozdziałach. 
+    sortowania zajmiemy się w przyszłych rozdziałach. 
 </div>
 <div class="code">
 
@@ -1468,7 +1468,7 @@ Kolejnym rodzajem funkcji są funkcje idempotente. Po łacinie "idem"
 
 <div class="doc">
 Identyczność jest idempotentna — niezrobienie niczego dowolną ilość
-    razy jest wszakże ciągle niezrobieniem niczego. Podobnież funkcja
+    razy jest wszakże ciągle niezrobieniem niczego. Podobnież funkcja
     stała jest idempotentna — zwracanie tej samej wartości daje zawsze
     ten sam efekt, niezależnie od ilości powtórzeń.
 
@@ -1477,7 +1477,7 @@ Identyczność jest idempotentna — niezrobienie niczego dowolną ilość
     Ciekawszym przykładem, który jednak nie powinien cię zaskoczyć, jest
     funkcja <span class="inlinecode"><span class="id" title="var">take</span></span> dla dowolnego <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>. Wzięcie <span class="inlinecode"><span class="id" title="var">n</span></span> elementów z listy
     <span class="inlinecode"><span class="id" title="var">l</span></span> daje nam listę mającą co najwyżej <span class="inlinecode"><span class="id" title="var">n</span></span> elementów. Próba wzięcia
-    <span class="inlinecode"><span class="id" title="var">n</span></span> elementów z takiej listy niczego nie zmieni, gdyż jej długość jest
+    <span class="inlinecode"><span class="id" title="var">n</span></span> elementów z takiej listy niczego nie zmieni, gdyż jej długość jest
     mniejsza lub równa ilości elementów, które chcemy wziąć. 
 </div>
 <div class="code">

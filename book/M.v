@@ -1,7 +1,7 @@
 (** * M: Porządki i topologia *)
 
-(** Najpierw nawiązanie do tego co było o relacjach i jakieś intuicje
-    o porządkach. Potem trochę porządkologii i może jakieś dziedziny.
+(** Najpierw nawiązanie do tego co było o relacjach i jakieś intuicje
+    o porządkach. Potem trochę porządkologii i może jakieś dziedziny.
     Potem topologia. *)
 
 (** * Legalna topologia *)
@@ -9,8 +9,8 @@
 (** Tutaj o topologii takiej jak robi Martin Escardó, np. w tej pracy:
     "Infinite sets that satisfy the principle of omniscience in any
     variety of constructive mathematics", czyli odkrywamy, że klasycznie
-    [nat] i [conat] są izomorficzne, ale [conat] jest konstruktywnie
-    przeszukiwalne, zaś [nat] nie. Wszystko dzieje się w legalnym Coqu,
+    [nat] i [conat] są izomorficzne, ale [conat] jest konstruktywnie
+    przeszukiwalne, zaś [nat] nie. Wszystko dzieje się w legalnym Coqu,
     z włączonym guard checkerem i bez żadnych homotopii. *)
 
 Require Import F2.
@@ -23,7 +23,7 @@ Class Searchable (A : Type) : Type :=
         p (search p) = false -> forall x : A, p x = false;
 }.
 
-(** Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
+(** Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
     paradoks pijoka:
     - jeżeli pijok pije, to wszyscy piją
     - jeżeli wyszukany element nie spełnia, to żaden nie spełnia *)
@@ -95,10 +95,10 @@ Defined.
 (** **** Ćwiczenie (trudne i niezbadane) *)
 
 (** Czy typ [Stream A] jest przeszukiwalny? Jeżeli tak, udowodnij.
-    Jeżeli nie, to znajdź jakiś warunek na [A], przy którym [Stream A]
+    Jeżeli nie, to znajdź jakiś warunek na [A], przy którym [Stream A]
     jest przeszukiwalny. *)
 
-(** Trochę własności, pewnie dość oczywistych. *)
+(** Trochę własności, pewnie dość oczywistych. *)
 
 Definition search_prod
   {A B : Type} (SA : Searchable A) (SB : Searchable B)
@@ -145,7 +145,7 @@ Proof.
       apply (Hb (fun b => p (inr b))). assumption.
 Defined.
 
-(** Da się zrobić jakieś ciekawe funkcje? *)
+(** Da się zrobić jakieś ciekawe funkcje? *)
 
 Definition sex
   {A : Type} {_ : Searchable A} (p : A -> bool) : bool :=

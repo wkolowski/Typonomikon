@@ -2,7 +2,7 @@
 
 (** TODO: coś tu napisać. *)
 
-(** Zdefiniuj liczby konaturalne oraz ich relację bipodobieństwa. Pokaż,
+(** Zdefiniuj liczby konaturalne oraz ich relację bipodobieństwa. Pokaż,
     że jest to relacja równoważności. *)
 
 (* begin hide *)
@@ -838,7 +838,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Zdefiniuj funkcję [div2], która dzieli liczbę konaturalną przez 2
+(** Zdefiniuj funkcję [div2], która dzieli liczbę konaturalną przez 2
     (cokolwiek to znaczy). Udowodnij jej właściwości. *)
 
 (* begin hide *)
@@ -1205,11 +1205,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Było już o dodawaniu, przydałoby się powiedzieć też coś o odejmowaniu.
-    Niestety, ale odejmowania liczb konaturalnych nie da się zdefiniować
-    (a przynajmniej tak mi się wydaje). Nie jest to również coś, co można
+(** Było już o dodawaniu, przydałoby się powiedzieć też coś o odejmowaniu.
+    Niestety, ale odejmowania liczb konaturalnych nie da się zdefiniować
+    (a przynajmniej tak mi się wydaje). Nie jest to również coś, co można
     bezpośrednio udowodnić. Jest to fakt żyjący na metapoziomie, czyli
-    mówiący coś o Coqu, a nie mówiący coś w Coqu. Jest jednak pewien
+    mówiący coś o Coqu, a nie mówiący coś w Coqu. Jest jednak pewien
     wewnętrzny sposób by upewnić się, że odejmowanie faktycznie nie jest
     koszerne. *)
 
@@ -1224,7 +1224,7 @@ Definition sub : Type :=
   {f : conat -> conat -> conat |
     forall n m r : conat, f n m = r <-> Sub n m r}.
 
-(** Dzięki temu możemy napisać precyzyjny typ, który powinna mieć nasza
+(** Dzięki temu możemy napisać precyzyjny typ, który powinna mieć nasza
     funkcja - jest to funkcja biorąca dwie liczby konaturalne i zwracająca
     liczbę konaturalną, która jest poprawna i pełna względem wykresu. *)
 
@@ -1257,7 +1257,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Problem polega na tym, że [omega - omega] może być dowolną liczbą
+(** Problem polega na tym, że [omega - omega] może być dowolną liczbą
     konaturalną. Bardziej obrazowo:
     - Chcielibyśmy, żeby [n - n = 0]
     - Chcielibyśmy, żeby [(n + 1) - n = 1]

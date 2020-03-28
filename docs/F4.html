@@ -23,7 +23,7 @@
 
 <div class="doc">
 Ten rozdział będzie o kolistach, czyli koinduktywnych odpowiednikach
-    list różniących się od nich tym, że mogą być potencjalnie
+    list różniących się od nich tym, że mogą być potencjalnie
     nieskończone. 
 </div>
 <div class="code">
@@ -41,7 +41,7 @@ Ten rozdział będzie o kolistach, czyli koinduktywnych odpowiednikach
 </div>
 
 <div class="doc">
-Przydatny będzie następujący, dość oczywisty fakt dotyczący równości
+Przydatny będzie następujący, dość oczywisty fakt dotyczący równości
     kolist. 
 </div>
 <div class="code">
@@ -55,9 +55,9 @@ Przydatny będzie następujący, dość oczywisty fakt dotyczący równości
 </div>
 
 <div class="doc">
-Zdefiniuj relację bipodobieństwa dla kolist. Udowodnij, że jest ona
-    relacją równoważności. Z powodu konfliktu nazw bipodobieństwo póki
-    co nazywać się będzie <span class="inlinecode"><span class="id" title="var">lsim</span></span>. 
+Zdefiniuj relację bipodobieństwa dla kolist. Udowodnij, że jest ona
+    relacją równoważności. Z powodu konfliktu nazw bipodobieństwo póki
+    co nazywać się będzie <span class="inlinecode"><span class="id" title="var">lsim</span></span>. 
 </div>
 <div class="code">
 
@@ -100,7 +100,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 
 <div class="doc">
 Zdefiniuj <span class="inlinecode"><span class="id" title="var">conil</span></span>, czyli kolistę pustą, oraz <span class="inlinecode"><span class="id" title="var">cocons</span></span>, czyli funkcję,
-    która dokleja do kolisty nową głowę. Udowodnij, że <span class="inlinecode"><span class="id" title="var">cocons</span></span> zachowuje
+    która dokleja do kolisty nową głowę. Udowodnij, że <span class="inlinecode"><span class="id" title="var">cocons</span></span> zachowuje
     i odbija bipodobieństwo. 
 </div>
 <div class="code">
@@ -122,13 +122,13 @@ Zdefiniuj <span class="inlinecode"><span class="id" title="var">conil</span></sp
 
 <div class="doc">
 Przygodę z funkcjami na kolistach zaczniemy od długości. Tak jak zwykła,
-    induktywna lista ma długość wyrażającą się liczbą naturalną, tak też i
-    długość kolisty można wyrazić za pomocą liczby konaturalnej.
+    induktywna lista ma długość wyrażającą się liczbą naturalną, tak też i
+    długość kolisty można wyrazić za pomocą liczby konaturalnej.
 
 <div class="paragraph"> </div>
 
-    Napisz funkcję <span class="inlinecode"><span class="id" title="var">len</span></span>, która oblicza długość kolisty. Pokaż, że
-    bipodobne kolisty mają tę samą długość. Długość kolisty pustej
+    Napisz funkcję <span class="inlinecode"><span class="id" title="var">len</span></span>, która oblicza długość kolisty. Pokaż, że
+    bipodobne kolisty mają tę samą długość. Długość kolisty pustej
     oraz <span class="inlinecode"><span class="id" title="var">cocons</span></span>a powinny być oczywiste. 
 </div>
 <div class="code">
@@ -224,12 +224,12 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">app</sp
 </div>
 
 <div class="doc">
-Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">lmap</span></span>, która aplikuje funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> do
+Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">lmap</span></span>, która aplikuje funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> do
     każdego elementu kolisty.
 
 <div class="paragraph"> </div>
 
-    TODO: wyklarować, dlaczego niektóre rzeczy mają "l" na początku nazwy 
+    TODO: wyklarować, dlaczego niektóre rzeczy mają "l" na początku nazwy 
 </div>
 <div class="code">
 
@@ -279,7 +279,7 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">lmap</
 </div>
 
 <div class="doc">
-Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">iterate</span></span>, która tworzy nieskończoną kolistę przez
+Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">iterate</span></span>, która tworzy nieskończoną kolistę przez
     iterowanie funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> poczynając od pewnego ustalonego elementu. 
 </div>
 <div class="code">
@@ -364,7 +364,7 @@ Napisz funkcję <span class="inlinecode"><span class="id" title="var">scan</span
 TODO: snoc, app, map, iterate, piterate. 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">intersperse</span></span>, która działa analogicznie jak dla list. 
+ Napisz funkcję <span class="inlinecode"><span class="id" title="var">intersperse</span></span>, która działa analogicznie jak dla list. 
 </div>
 <div class="code">
 
@@ -395,7 +395,7 @@ Pułapka: czy poniższe twierdzenie jest prawdziwe?
 Napisz rekurencyjną funkcję <span class="inlinecode"><span class="id" title="var">splitAt</span></span>. <span class="inlinecode"><span class="id" title="var">splitAt</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> zwraca
     <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode">(<span class="id" title="var">begin</span>,</span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">rest</span>)</span>, gdzie <span class="inlinecode"><span class="id" title="var">begin</span></span> jest listą reprezentującą
     początkowy fragment kolisty <span class="inlinecode"><span class="id" title="var">l</span></span> o długości <span class="inlinecode"><span class="id" title="var">n</span></span>, <span class="inlinecode"><span class="id" title="var">x</span></span> to element
-    <span class="inlinecode"><span class="id" title="var">l</span></span> znajdujący się na pozycji <span class="inlinecode"><span class="id" title="var">n</span></span>, zaś <span class="inlinecode"><span class="id" title="var">rest</span></span> to kolista będącą
+    <span class="inlinecode"><span class="id" title="var">l</span></span> znajdujący się na pozycji <span class="inlinecode"><span class="id" title="var">n</span></span>, zaś <span class="inlinecode"><span class="id" title="var">rest</span></span> to kolista będącą
     tym, co z kolisty <span class="inlinecode"><span class="id" title="var">l</span></span> pozostanie po zabraniu z niej <span class="inlinecode"><span class="id" title="var">l</span></span> oraz <span class="inlinecode"><span class="id" title="var">x</span></span>.
     Jeżeli <span class="inlinecode"><span class="id" title="var">l</span></span> nie ma fragmentu początkowego o długości <span class="inlinecode"><span class="id" title="var">n</span></span>, funkcja
     <span class="inlinecode"><span class="id" title="var">splitAt</span></span> zwraca <span class="inlinecode"><span class="id" title="var">None</span></span>. 
@@ -577,9 +577,9 @@ Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Finite
 </div>
 
 <div class="doc">
-Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Exists</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> oraz <span class="inlinecode"><span class="id" title="var">Forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>, które są spełnione
+Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Exists</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> oraz <span class="inlinecode"><span class="id" title="var">Forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>, które są spełnione
     przez kolisty, których odpowiednio jakiś/wszystkie elementy spełniają
-    predykat <span class="inlinecode"><span class="id" title="var">P</span></span>. Zastanów się dobrze, czy definicje powinny być induktywne,
+    predykat <span class="inlinecode"><span class="id" title="var">P</span></span>. Zastanów się dobrze, czy definicje powinny być induktywne,
     czy koinduktywne.
 
 <div class="paragraph"> </div>

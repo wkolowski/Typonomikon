@@ -14,7 +14,7 @@
 
 <div class="paragraph"> </div>
 
- Uwaga: ten rozdział jest póki co posklejany z fragmentów innych
+ Uwaga: ten rozdział jest póki co posklejany z fragmentów innych
     rozdziałów. Czytając go, weź na to poprawkę. W szczególności zawiera on
     zadania, których nie będziesz w stanie zrobić, bo niezbędny do tego
     materiał jest póki co w kolejnym rozdziale. Możesz więc przeczytać
@@ -112,7 +112,7 @@
 <div class="paragraph"> </div>
 
     Najważniejszym, co wiemy o każdym termie, jest jego typ. Co to jest typ?
-    To taki klasyfikator, który mówi, czego możemy się po termie spodziewać -
+    To taki klasyfikator, który mówi, czego możemy się po termie spodziewać -
     można liczyć za pomocą liczb, ale nie za pomocą wartości logicznych.
     Można dowodzić zdań, ale nie napisów. Można skleić ze sobą dwa napisy,
     ale nie napis i funkcję etc.
@@ -144,7 +144,7 @@
 
     Najważniejsze termy są nazywane elementami. Dla <span class="inlinecode"><span class="id" title="var">nat</span></span> są to <span class="inlinecode">0</span>, <span class="inlinecode">1</span>,
     <span class="inlinecode">2</span>, <span class="inlinecode">3</span>, <span class="inlinecode">4</span>, <span class="inlinecode">5</span> i tak dalej. Elementy wyróżnia to, że są w postaci
-    normalnej (zwanej też postacią kanoniczną). Znaczy to intuicyjnie, że
+    normalnej (zwanej też postacią kanoniczną). Znaczy to intuicyjnie, że
     są one ostatecznymi wynikami obliczeń, np.:
 <ul class="doclist">
 <li> obliczenie <span class="inlinecode">42</span> daje <span class="inlinecode">42</span>
@@ -166,10 +166,10 @@
 
 <div class="paragraph"> </div>
 
-    Czym dokładnie są obliczenia, dowiemy się później. Na razie wystarczy
+    Czym dokładnie są obliczenia, dowiemy się później. Na razie wystarczy
     nam wiedzieć, że każdy term zamknięty, czyli taki, o którym wiadomo
     wystarczająco dużo, oblicza się do postaci normalnej, np. 5 + 1 oblicza
-    się do 6. Jeżeli jednak czegoś nie wiadomo, to term się nie oblicza, np.
+    się do 6. Jeżeli jednak czegoś nie wiadomo, to term się nie oblicza, np.
     n + 1 nie wiadomo ile wynosi, jeżeli nie wiadomo, co oznacza n.
 
 <div class="paragraph"> </div>
@@ -229,7 +229,7 @@
     stwierdzeniem, że każdy term ma swój typ, zrodzić musi się pytanie:
     jakiego typu są typy? Zacznijmy od tego, że żeby uniknąć używania mało
     poetyckiego określenia "typy typów", typy typów nazywamy uniwersami.
-    Czasami używa się też nazwy "sort", bo określenie "jest sortu" jest
+    Czasami używa się też nazwy "sort", bo określenie "jest sortu" jest
     znacznie krótsze, niż "należy do uniwersum" albo "żyje w uniwersum". 
 <div class="paragraph"> </div>
 
@@ -301,7 +301,7 @@ Oczywiście w przypadku typu <span class="inlinecode"><span class="id" title="va
 <div class="paragraph"> </div>
 
     Jeżeli czytasz uważnie, to pewnie wciąż czujesz niedosyt — wszakże
-    uniwersa, jako typy, także są termami. Jakiego zatem typu są uniwersa?
+    uniwersa, jako typy, także są termami. Jakiego zatem typu są uniwersa?
     Przekonajmy się. 
 </div>
 <div class="code">
@@ -429,8 +429,8 @@ Co oznacza ten dziwny napis? Otóż w Coqu mamy do czynienia nie z
 
 <div class="paragraph"> </div>
 
- W tym podrozdziale przyjrzymy się wszystkim pięciu typom reguł. Zobaczymy
-    jak wyglądają, skąd się biorą i do czego służą. Podrozdział będzie miał
+ W tym podrozdziale przyjrzymy się wszystkim pięciu typom reguł. Zobaczymy
+    jak wyglądają, skąd się biorą i do czego służą. Podrozdział będzie miał
     charakter mocno teoretyczny. 
 <div class="paragraph"> </div>
 
@@ -652,7 +652,7 @@ Pojawiło się tu kilka nowych rzeczy: litera Γ oznacza kontekst,
 
 <div class="paragraph"> </div>
 
-    Powyższa reguła nazywana jest "lambda abstrakcją" (gdyż zazwyczaj jest
+    Powyższa reguła nazywana jest "lambda abstrakcją" (gdyż zazwyczaj jest
     zapisywana przy użyciu symbolu λ zamiast słowa kluczowego <span class="inlinecode"><span class="id" title="keyword">fun</span></span>, jak
     w Coqu). Nie przejmuj się, jeżeli jej. Znajomość reguł wprowadzania nie
     jest nam potrzebna, by skutecznie posługiwać się Coqiem.
@@ -986,7 +986,7 @@ Póki co wydaje mi się, że udowodnienie słuszności tej reguły będzie dla
 <div class="paragraph"> </div>
 
  Poznawszy reguły wprowadzania i eliminacji możemy zadać sobie pytanie:
-    jakie są między nimi związki? Jedną z odpowiedzi na to pytanie dają
+    jakie są między nimi związki? Jedną z odpowiedzi na to pytanie dają
     reguły obliczania, które określają, w jaki sposób reguły eliminacji
     działają na obiekty stworzone za pomocą reguł wprowadzania. Zobaczmy
     o co chodzi na przykładzie. 
@@ -1013,13 +1013,13 @@ Powyższa reguła nazywa się "redukcja beta". Mówi ona, jaki efekt ma
 
     Możemy odczytać ją tak: jeżeli <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> są typami, zaś <span class="inlinecode"><span class="id" title="var">e</span></span> termem
     typu <span class="inlinecode"><span class="id" title="var">B</span></span>, w którym występuje zmienna wolna <span class="inlinecode"><span class="id" title="var">x</span></span> typu <span class="inlinecode"><span class="id" title="var">A</span></span>, to wyrażenie
-    <span class="inlinecode">(<span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">e</span>)</span> <span class="inlinecode"><span class="id" title="var">t</span></span> redukuje się (symbol ≡) do <span class="inlinecode"><span class="id" title="var">e</span></span>, w którym w miejsce
+    <span class="inlinecode">(<span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">e</span>)</span> <span class="inlinecode"><span class="id" title="var">t</span></span> redukuje się (symbol ≡) do <span class="inlinecode"><span class="id" title="var">e</span></span>, w którym w miejsce
     zmiennej <span class="inlinecode"><span class="id" title="var">x</span></span> podstawiono term <span class="inlinecode"><span class="id" title="var">t</span></span>.
 
 <div class="paragraph"> </div>
 
     Zauważ, że zarówno symbol ≡ jak i notacja <span class="inlinecode"><span class="id" title="var">e</span>{<span class="id" title="var">x</span>/<span class="id" title="var">t</span>}</span> są tylko nieformalnymi
-    zapisami i nie mają żadnego znaczenia w Coqu.
+    zapisami i nie mają żadnego znaczenia w Coqu.
 
 <div class="paragraph"> </div>
 
@@ -1035,8 +1035,8 @@ Powyższa reguła nazywa się "redukcja beta". Mówi ona, jaki efekt ma
 
     gdzie # to nieformalny symbol oznaczający "ilość". W Coqowej praktyce
     zazwyczaj oznacza to, że reguł obliczania jest nieskończenie wiele,
-    gdyż możemy wymyślić sobie nieskończenie wiele reguł eliminacji.
-    Przykładem typu, który ma więcej niż jedną regułę obliczania dla danej
+    gdyż możemy wymyślić sobie nieskończenie wiele reguł eliminacji.
+    Przykładem typu, który ma więcej niż jedną regułę obliczania dla danej
     reguły eliminacji, jest <span class="inlinecode"><span class="id" title="var">bool</span></span>: 
 </div>
 <div class="code">
@@ -1057,14 +1057,14 @@ Powyższa reguła nazywa się "redukcja beta". Mówi ona, jaki efekt ma
 
 <div class="doc">
 Typ <span class="inlinecode"><span class="id" title="var">bool</span></span> ma dwie reguły wprowadzania pochodzące od dwóch konstruktorów,
-    a zatem ich związki z regułą eliminacji <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> będą opisywać dwie
+    a zatem ich związki z regułą eliminacji <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> będą opisywać dwie
     reguły obliczania. Pierwsza z nich mówi, że <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span>
-    redukuje się do <span class="inlinecode"><span class="id" title="var">x</span></span>, a druga, że <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span> redukuje się do
+    redukuje się do <span class="inlinecode"><span class="id" title="var">x</span></span>, a druga, że <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span> redukuje się do
     <span class="inlinecode"><span class="id" title="var">y</span></span>.
 
 <div class="paragraph"> </div>
 
-    Gdyby zastąpić w nich regułe <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> przez nieco prostszą regułę, w
+    Gdyby zastąpić w nich regułe <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> przez nieco prostszą regułę, w
     której nie występują typy zależne, to można by powyższe reguły zapisać
     tak: 
 </div>
@@ -1089,10 +1089,10 @@ Wygląda dużo bardziej znajomo, prawda?
 
 <div class="paragraph"> </div>
 
-    Na zakończenie wypadałoby napisać, skąd biorą się reguły obliczania. W
+    Na zakończenie wypadałoby napisać, skąd biorą się reguły obliczania. W
     nieco mniej formalnych pracach teoretycznych na temat teorii typów są
     one zazwyczaj uznawane za byty podstawowe, z których następnie wywodzi
-    się reguły obliczania takich konstrukcji, jak np. <span class="inlinecode"><span class="id" title="keyword">match</span></span>.
+    się reguły obliczania takich konstrukcji, jak np. <span class="inlinecode"><span class="id" title="keyword">match</span></span>.
 
 <div class="paragraph"> </div>
 
@@ -1121,7 +1121,7 @@ Wygląda dużo bardziej znajomo, prawda?
 
 <div class="paragraph"> </div>
 
- Kolejną odpowiedzią na pytanie o związki między regułami wprowadzania
+ Kolejną odpowiedzią na pytanie o związki między regułami wprowadzania
     i eliminacji są reguły unikalności. Są one dualne do reguł obliczania
     i określają, w jaki sposób reguły wprowadzania działają na obiekty
     pochodzące od reguł eliminacji. Przyjrzyjmy się przykładowi. 
@@ -1139,7 +1139,7 @@ Wygląda dużo bardziej znajomo, prawda?
 </div>
 
 <div class="doc">
-Powyższa reguła unikalności dla funkcji jest nazywana "redukcją eta".
+Powyższa reguła unikalności dla funkcji jest nazywana "redukcją eta".
     Stwierdza ona, że funkcja stworzona za pomocą abstrakcji <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>,
     której ciałem jest aplikacja <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> jest definicyjnie równa funkcji <span class="inlinecode"><span class="id" title="var">f</span></span>.
     Regułą wprowadzania dla funkcji jest oczywiście abstrakcja, a regułą
@@ -1147,9 +1147,9 @@ Powyższa reguła unikalności dla funkcji jest nazywana "redukcją eta".
 
 <div class="paragraph"> </div>
 
-    Reguły unikalności różnią się jednak dość mocno od reguł obliczania,
-    gdyż zamiast równości definicyjnej ≡ mogą czasem używać standardowej,
-    zdaniowej równości Coqa, czyli <span class="inlinecode">=</span>. Nie do końca pasuje też do nich
+    Reguły unikalności różnią się jednak dość mocno od reguł obliczania,
+    gdyż zamiast równości definicyjnej ≡ mogą czasem używać standardowej,
+    zdaniowej równości Coqa, czyli <span class="inlinecode">=</span>. Nie do końca pasuje też do nich
     stwierdzenie, że określają działanie reguł wprowadzania na reguły
     eliminacji, gdyż zamiast reguł eliminacji mogą w nich występować
     inne byty, zdefiniowane jednak za pomocą reguł eliminacji. Zobaczmy

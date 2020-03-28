@@ -111,7 +111,7 @@ Hypothesis P Q R : Prop.
 
 (** Zapis [x : A] oznacza, że term [x] jest typu [A]. [Prop] to typ zdań
     logicznych, więc komendę tę można odczytać następująco: niech [P], [Q]
-    i [R] będą zdaniami logicznymi. Używamy tej komendy, gdyż potrzebujemy
+    i [R] będą zdaniami logicznymi. Używamy tej komendy, gdyż potrzebujemy
     jakichś zdań logicznych, na których będziemy operować. *)
 
 (** ** Implikacja *)
@@ -444,7 +444,7 @@ Locate "~".
 
 (** Możemy to zrobić przy pomocy komendy [Locate]. Wyświetla ona,
     do jakich nazw odwołuje się dana notacja. Jak widać, negacja
-    w Coqu nazywa się [not]. *)
+    w Coqu nazywa się [not]. *)
 
 (** ** Negacja *)
 
@@ -575,8 +575,8 @@ Qed.
 
 (** **** Ćwiczenie (potrójna negacja) *)
 
-(** Udowodnij poniższe twierdzenie. Jakie są różnice między negacją, podwójną
-    negacją i potrójną negacją? *)
+(** Udowodnij poniższe twierdzenie. Jakie są różnice między negacją, podwójną
+    negacją i potrójną negacją? *)
 
 Lemma triple_neg_rev : ~~~P -> ~P.
 (* begin hide *)
@@ -677,7 +677,7 @@ Qed.
 (** Równoważność zdaniowa jest w Coqu oznaczana [<->]. Symbol ten,
     jak (prawie) każdy jest jedynie notacją — równoważność
     nazywa się [iff]. Jest to skrót od ang. "if and only if". Po
-    polsku zdanie [P <-> Q] możemy odczytać jako "P wtedy i tylko
+    polsku zdanie [P <-> Q] możemy odczytać jako "P wtedy i tylko
     wtedy, gdy Q". *)
 
 Print iff.
@@ -775,8 +775,8 @@ Proof.
 Qed.
 
 (** Symbol [\/] oznacza dysjunkcję dwóch zdań logicznych. W języku polskim
-    czasem używa się też określenia "alternatywa", ale będziemy się tego
-    wystrzegać, rezerwując to słowo dla czegoś innego. Żeby dowieść
+    czasem używa się też określenia "alternatywa", ale będziemy się tego
+    wystrzegać, rezerwując to słowo dla czegoś innego. Żeby dowieść
     dysjunkcji [P \/ Q], musimy udowonić albo lewy, albo prawy jej człon.
     Taktyki [left] oraz [right] pozwalają nam wybrać, którego z nich chcemy
     dowodzić. *)
@@ -936,7 +936,7 @@ Qed.
     Komenda [Restart] pozwala nam zacząć dowód od nowa w dowolnym
     jego momencie. Jej użycie nie jest wymagane, by ukończyć
     powyższy dowód — spróbuj wstawić w jej miejsce [Qed]. Użyłem jej
-    tylko po to, żeby czytelnie zestawić ze sobą sposoby rozumowania
+    tylko po to, żeby czytelnie zestawić ze sobą sposoby rozumowania
     w przód i w tył dla kwantyfikacji uniwersalnej. *)
 
 Lemma and_proj1'' :
@@ -955,7 +955,7 @@ Qed.
     z hipotezy ogólnej w szczególną, dotycząca tylko [k], a
     potem rozbijemy. Podobnie poprzednie twierdzenie moglibyśmy
     udowodnić szybciej, jeżeli zamiast [specialize] i [assumption]
-    napisalibyśmy [destruct (H 42)] (choć i tak najszybciej jest
+    napisalibyśmy [destruct (H 42)] (choć i tak najszybciej jest
     oczywiście użyć [apply H]. *)
 
 (** **** Ćwiczenie (kwantyfikacja uniwersalna) *)
@@ -1085,16 +1085,16 @@ Qed.
 
 (** * Paradoks golibrody *)
 
-(** Języki naturalne, jakimi ludzie posługują się w życiu codziennym
+(** Języki naturalne, jakimi ludzie posługują się w życiu codziennym
     (polski, angielski suahili, język indian Navajo) zawierają spory
     zestaw spójników oraz kwantyfikatorów ("i", "a", "oraz", "lub",
     "albo", "jeżeli ... to", "pod warunkiem, że ", "wtedy", i wiele
     innych).
 
-    Należy z całą stanowczością zaznaczyć, że te spójniki i kwantyfikatory,
-    a w szczególności ich intuicyjna interpretacja, znacznie różnią się
+    Należy z całą stanowczością zaznaczyć, że te spójniki i kwantyfikatory,
+    a w szczególności ich intuicyjna interpretacja, znacznie różnią się
     od analogicznych spójników i kwantyfikatorów logicznych, które mieliśmy
-    okazję poznać w tym rozdziale. Żeby to sobie uświadomić, zapoznamy się
+    okazję poznać w tym rozdziale. Żeby to sobie uświadomić, zapoznamy się
     z pewnego rodzaju "paradoksem". *)
 
 Theorem barbers_paradox :
@@ -1119,7 +1119,7 @@ Qed.
     będzie reprezentował jego mieszkańców. Niech term [barber] typu [man]
     oznacza hipotetycznego golibrodę. Hipotetycznego, gdyż samo użycie
     jakiejś nazwy nie powoduje automatycznie, że nazywany obiekt istnieje
-    (przykładów jest masa, np. jednorożce, sprawiedliwość społeczna).
+    (przykładów jest masa, np. jednorożce, sprawiedliwość społeczna).
 
     Mamy też relację [shaves]. Będziemy ją interpretować w ten sposób, że
     [shaves a b] zachodzi, gdy [a] goli brodę [b]. Nasza hipoteza
@@ -1172,9 +1172,9 @@ Qed.
 
 (** * Paradoks pieniądza i kebaba *)
 
-(** Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka
-    naturalnego za pomocą zdań logiki formalnej. Gdybyś jednak wciąż
-    był skłonny to robić, przyjrzyjmy się kolejnemu "paradoksowi". *)
+(** Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka
+    naturalnego za pomocą zdań logiki formalnej. Gdybyś jednak wciąż
+    był skłonny to robić, przyjrzyjmy się kolejnemu "paradoksowi". *)
 
 Lemma copy :
   forall P : Prop, P -> P /\ P.
@@ -1185,8 +1185,8 @@ Qed.
 (* end hide *)
 
 (** Powyższe niewinnie wyglądające twierdzenie mówi nam, że [P] implikuje
-    [P] i [P]. Spróbujmy przerobić je na paradoks, wymyślając jakąś wesołą
-    interpretację dla [P].
+    [P] i [P]. Spróbujmy przerobić je na paradoks, wymyślając jakąś wesołą
+    interpretację dla [P].
 
     Niech zdanie [P] znaczy "mam złotówkę". Wtedy powyższe twierdzenie mówi,
     że jeżeli mam złotówkę, to mam dwa złote. Widać, że jeżeli jedną z tych
@@ -1195,13 +1195,13 @@ Qed.
 
     Dla jeszcze lepszego efektu powiedzmy, że za 10 złotych możemy kupić
     kebaba. W ostatecznej formie nasze twierdzenie brzmi więc: jeżeli mam
-    złotówkę, to mogę kupić nieograniczoną ilość kebabów.
+    złotówkę, to mogę kupić nieograniczoną ilość kebabów.
 
     Jak widać, logika formalna (przynajmniej w takiej postaci, w jakiej ją
     poznajemy) nie nadaje się do rozumowania na temat zasobów. Zasobów, bo
     tym właśnie są pieniądze i kebaby. Zasoby to byty, które można
-    przetwarzać, przemieszczać i zużywać, ale nie można ich kopiować i
-    tworzyć z niczego. Powyższe twierdzenie dobitnie pokazuje, że zdania
+    przetwarzać, przemieszczać i zużywać, ale nie można ich kopiować i
+    tworzyć z niczego. Powyższe twierdzenie dobitnie pokazuje, że zdania
     logiczne nie mają nic wspólnego z zasobami, gdyż ich dowody mogą być
     bez ograniczeń kopiowane. *)
 
@@ -1236,7 +1236,7 @@ Qed.
 
 (** **** Ćwiczenie (formalizacja paradoksu) *)
 
-(** UWAGA TODO: to ćwiczenie wymaga znajomości rozdziału 2, w szczególności
+(** UWAGA TODO: to ćwiczenie wymaga znajomości rozdziału 2, w szczególności
     indukcji i rekursji na liczbach naturalnych.
 
     Zdefiniuj funkcję [andn : nat -> Prop -> Prop], taką, że [andn n P]
@@ -1245,8 +1245,8 @@ Qed.
     dla dowolnego [n].
 
     Na końcu sformalizuj resztę paradoksu, tzn. zapisz jakoś, co to znaczy
-    mieć złotówkę i że za 10 złotych można kupić kebaba. Wywnioskuj stąd,
-    że mając złotówkę, możemy kupić dowolną liczbę kebabów.
+    mieć złotówkę i że za 10 złotych można kupić kebaba. Wywnioskuj stąd,
+    że mając złotówkę, możemy kupić dowolną liczbę kebabów.
 
     Szach mat, Turcjo bankrutuj! *)
 
@@ -1522,9 +1522,9 @@ Qed.
 (** * Zadania *)
 
 (** Poniższe zadania stanowią (chyba) kompletny zbiór praw rządzących
-    logikami konstruktywną i klasyczną (w szczególności, niektóre z
-    zadań mogą pokrywać się z ćwiczeniami zawartymi w tekście). Wróć
-    do nich za jakiś czas, gdy czas przetrzebi trochę twoją pamięć
+    logikami konstruktywną i klasyczną (w szczególności, niektóre z
+    zadań mogą pokrywać się z ćwiczeniami zawartymi w tekście). Wróć
+    do nich za jakiś czas, gdy czas przetrzebi trochę twoją pamięć
     (np. za tydzień).
 
     Rozwiąż wszystkie zadania dwukrotnie: raz ręcznie, zaś za drugim
@@ -2214,7 +2214,7 @@ Qed.
     klient, że jeżeli on pije, to wszyscy piją" jest równoważne stwierdzeniu
     "w barze jest jakiś klient".
 
-    Które z tych dwóch implikacji wymagają logiki intuicjonistycznej, a
+    Które z tych dwóch implikacji wymagają logiki intuicjonistycznej, a
     które klasycznej? *)
 
 Lemma dp_nonempty :
@@ -2234,18 +2234,18 @@ Qed.
 
 (** https://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf
 
-    Zauważyłem palącą potrzebę istnienia krótkiej ściągi, dotyczącą podstaw
+    Zauważyłem palącą potrzebę istnienia krótkiej ściągi, dotyczącą podstaw
     logiki. Oto i ona:
-    - [True] to zdanie zawsze prawdziwe. Można je udowodnić za pomocą
-      taktyki [trivial]. Można je też rozbić za pomocą [destruct], ale
+    - [True] to zdanie zawsze prawdziwe. Można je udowodnić za pomocą
+      taktyki [trivial]. Można je też rozbić za pomocą [destruct], ale
       nie jest to zbyt użyteczne.
     - [False] to zdanie zawsze fałszywe. Można je udowodnić tylko jeżeli
-      w kontekście już mamy jakiś inny (zazwyczaj zakamuflowany) dowód
-      [False]. Można je rozbić za pomocą taktyki [destruct], co kończy
+      w kontekście już mamy jakiś inny (zazwyczaj zakamuflowany) dowód
+      [False]. Można je rozbić za pomocą taktyki [destruct], co kończy
       dowód, bo z fałszu wynika wszystko.
     - [P /\ Q] to koniunkcja zdań [P] i [Q]. Aby ją udowodnić, używamy
       taktyki [split] i dowodzimy osobno [P], a osobno [Q]. Jeżeli mamy
-      w kontekście dowód na [P /\ Q], to za pomocą taktyki [destruct]
+      w kontekście dowód na [P /\ Q], to za pomocą taktyki [destruct]
       możemy z niego wyciągnąć dowody na [P] i na [Q].
     - [P \/ Q] to dysjunkcja zdań [P] i [Q]. Aby ją udowodnić, używamy
       taktyki [left] lub [right], a następnie dowodzimy odpowiednio [P]
@@ -2258,30 +2258,30 @@ Qed.
       na [P] będący założeniem. Jeżeli mamy w kontekście dowód [H : P -> Q],
       to możemy dowieść [Q] za pomocą taktyki [apply H], a następnie będziemy
       musieli udowodnić [P]. Jeżeli mamy w kontekście [H : P -> Q] oraz
-      [p : P], to możemy uzyskać dowód [p : Q] za pomocą taktyki
-      [apply H in p]. Możemy uzyskać [H : Q] za pomocą [specialize (H p)]
+      [p : P], to możemy uzyskać dowód [p : Q] za pomocą taktyki
+      [apply H in p]. Możemy uzyskać [H : Q] za pomocą [specialize (H p)]
     - [~ P] to negacja zdania [P]. Faktycznie jest to notacja na [not P],
       które to samo jest skrótem oznaczającym [P -> False]. Z negacją
-      radzimy sobie za pomocą taktyki [unfold not] albo [unfold not in ...],
+      radzimy sobie za pomocą taktyki [unfold not] albo [unfold not in ...],
       a następnie postępujemy jak z implikacją.
-    - [P <-> Q] to równoważność zdań [P] i [Q]. Jest to notacja na [iff P Q],
+    - [P <-> Q] to równoważność zdań [P] i [Q]. Jest to notacja na [iff P Q],
       które jest skrótem od [(P -> Q) /\ (Q -> P)]. Radzimy sobie z nią za
-      pomocą taktyk [unfold iff] oraz [unfold iff in ...]
+      pomocą taktyk [unfold iff] oraz [unfold iff in ...]
     - [forall x : A, P x] to zdanie mówiące "dla każdego x typu A zachodzi
       P x". Postępujemy z nim tak jak z implikacją, która jest jego
       specjalnym przypadkiem.
     - [exists x : A, P x] to zdanie mówiące "istnieje taki x typu A, który
       spełnia P". Dowodzimy go za pomocą taktyki [exists a], a następnie
-      musimy pokazać [P a]. Jeżeli mamy taki dowód w kontekście, możemy
+      musimy pokazać [P a]. Jeżeli mamy taki dowód w kontekście, możemy
       rozbić go na [a] i [P a] za pomocą taktyki [destruct]. *)
 
 (** * Konkluzja *)
 
-(** W niniejszym rozdziale zapoznaliśmy się z logiką konstruktywną.
+(** W niniejszym rozdziale zapoznaliśmy się z logiką konstruktywną.
     Poznaliśmy  jej składnię, interpretację obliczeniową, nauczyliśmy
-    się dowodzić w systemie dedukcji naturalnej oraz dowiedzieliśmy
-    się, jak to wszystko zrealizować w Coqu. Poznaliśmy też kombinatory
-    taktyk, dzięki którym możemy skrócić i uprościć nasze formalne dowody.
+    się dowodzić w systemie dedukcji naturalnej oraz dowiedzieliśmy
+    się, jak to wszystko zrealizować w Coqu. Poznaliśmy też kombinatory
+    taktyk, dzięki którym możemy skrócić i uprościć nasze formalne dowody.
 
     Zapoznaliśmy się też z logiką klasyczną i jej interpretacją. Poznaliśmy
     też dwa paradoksy związane z różnicami w interpretacji zdań w języku
@@ -2289,8 +2289,8 @@ Qed.
     nam w praktyce, na czym polega różnica między logiką konstruktywną i
     klasyczną.
 
-    Skoro potrafimy już co nieco dowodzić, a także wiemy, że nasze metody
-    nie nadają się do rozumowania o pieniądzach ani kebabach, nadszedł
-    czas zapoznać się z jakimiś bytami, o których moglibyśmy czegoś
-    dowieść — w następnym rozdziale zajmiemy się na poważnie typami,
+    Skoro potrafimy już co nieco dowodzić, a także wiemy, że nasze metody
+    nie nadają się do rozumowania o pieniądzach ani kebabach, nadszedł
+    czas zapoznać się z jakimiś bytami, o których moglibyśmy czegoś
+    dowieść — w następnym rozdziale zajmiemy się na poważnie typami,
     programami i obliczeniami oraz udowadnianiem ich właściwości. *)

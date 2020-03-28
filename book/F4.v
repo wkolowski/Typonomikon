@@ -3,7 +3,7 @@
 Require Import book.D5.
 
 (** Ten rozdział będzie o kolistach, czyli koinduktywnych odpowiednikach
-    list różniących się od nich tym, że mogą być potencjalnie
+    list różniących się od nich tym, że mogą być potencjalnie
     nieskończone. *)
 
 CoInductive coList (A : Type) : Type :=
@@ -13,7 +13,7 @@ CoInductive coList (A : Type) : Type :=
 
 Arguments uncons {A}.
 
-(** Przydatny będzie następujący, dość oczywisty fakt dotyczący równości
+(** Przydatny będzie następujący, dość oczywisty fakt dotyczący równości
     kolist. *)
 
 Lemma eq_uncons :
@@ -25,9 +25,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Zdefiniuj relację bipodobieństwa dla kolist. Udowodnij, że jest ona
-    relacją równoważności. Z powodu konfliktu nazw bipodobieństwo póki
-    co nazywać się będzie [lsim]. *)
+(** Zdefiniuj relację bipodobieństwa dla kolist. Udowodnij, że jest ona
+    relacją równoważności. Z powodu konfliktu nazw bipodobieństwo póki
+    co nazywać się będzie [lsim]. *)
 
 (* begin hide *)
 CoInductive lsim {A : Type} (l1 l2 : coList A) : Prop :=
@@ -99,7 +99,7 @@ Proof.
 Defined.
 
 (** Zdefiniuj [conil], czyli kolistę pustą, oraz [cocons], czyli funkcję,
-    która dokleja do kolisty nową głowę. Udowodnij, że [cocons] zachowuje
+    która dokleja do kolisty nową głowę. Udowodnij, że [cocons] zachowuje
     i odbija bipodobieństwo. *)
 
 (* begin hide *)
@@ -135,11 +135,11 @@ Qed.
 (* end hide *)
 
 (** Przygodę z funkcjami na kolistach zaczniemy od długości. Tak jak zwykła,
-    induktywna lista ma długość wyrażającą się liczbą naturalną, tak też i
-    długość kolisty można wyrazić za pomocą liczby konaturalnej.
+    induktywna lista ma długość wyrażającą się liczbą naturalną, tak też i
+    długość kolisty można wyrazić za pomocą liczby konaturalnej.
 
-    Napisz funkcję [len], która oblicza długość kolisty. Pokaż, że
-    bipodobne kolisty mają tę samą długość. Długość kolisty pustej
+    Napisz funkcję [len], która oblicza długość kolisty. Pokaż, że
+    bipodobne kolisty mają tę samą długość. Długość kolisty pustej
     oraz [cocons]a powinny być oczywiste. *)
 
 Require Import F2.
@@ -325,10 +325,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Zdefiniuj funkcję [lmap], która aplikuje funkcję [f : A -> B] do
+(** Zdefiniuj funkcję [lmap], która aplikuje funkcję [f : A -> B] do
     każdego elementu kolisty.
 
-    TODO: wyklarować, dlaczego niektóre rzeczy mają "l" na początku nazwy *)
+    TODO: wyklarować, dlaczego niektóre rzeczy mają "l" na początku nazwy *)
 
 (* begin hide *)
 CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=
@@ -438,7 +438,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Zdefiniuj funkcję [iterate], która tworzy nieskończoną kolistę przez
+(** Zdefiniuj funkcję [iterate], która tworzy nieskończoną kolistę przez
     iterowanie funkcji [f] poczynając od pewnego ustalonego elementu. *)
 
 (* begin hide *)
@@ -578,7 +578,7 @@ Qed.
 
 (** TODO: snoc, app, map, iterate, piterate. *)
 
-(** Napisz funkcję [intersperse], która działa analogicznie jak dla list. *)
+(** Napisz funkcję [intersperse], która działa analogicznie jak dla list. *)
 
 (* begin hide *)
 CoFixpoint intersperse {A : Type} (x : A) (l : coList A) : coList A :=
@@ -623,7 +623,7 @@ Abort.
 (** Napisz rekurencyjną funkcję [splitAt]. [splitAt l n] zwraca
     [Some (begin, x, rest)], gdzie [begin] jest listą reprezentującą
     początkowy fragment kolisty [l] o długości [n], [x] to element
-    [l] znajdujący się na pozycji [n], zaś [rest] to kolista będącą
+    [l] znajdujący się na pozycji [n], zaś [rest] to kolista będącą
     tym, co z kolisty [l] pozostanie po zabraniu z niej [l] oraz [x].
     Jeżeli [l] nie ma fragmentu początkowego o długości [n], funkcja
     [splitAt] zwraca [None]. *)
@@ -976,9 +976,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Zdefiniuj predykaty [Exists P] oraz [Forall P], które są spełnione
+(** Zdefiniuj predykaty [Exists P] oraz [Forall P], które są spełnione
     przez kolisty, których odpowiednio jakiś/wszystkie elementy spełniają
-    predykat [P]. Zastanów się dobrze, czy definicje powinny być induktywne,
+    predykat [P]. Zastanów się dobrze, czy definicje powinny być induktywne,
     czy koinduktywne.
 
     Sprawdź, które z praw de Morgana zachodzą. *)

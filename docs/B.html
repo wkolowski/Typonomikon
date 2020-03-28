@@ -178,7 +178,7 @@ Mechanizm sekcji nie będzie nas na razie interesował. Użyjemy go,
 <div class="doc">
 Zapis <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> oznacza, że term <span class="inlinecode"><span class="id" title="var">x</span></span> jest typu <span class="inlinecode"><span class="id" title="var">A</span></span>. <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> to typ zdań
     logicznych, więc komendę tę można odczytać następująco: niech <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">Q</span></span>
-    i <span class="inlinecode"><span class="id" title="var">R</span></span> będą zdaniami logicznymi. Używamy tej komendy, gdyż potrzebujemy
+    i <span class="inlinecode"><span class="id" title="var">R</span></span> będą zdaniami logicznymi. Używamy tej komendy, gdyż potrzebujemy
     jakichś zdań logicznych, na których będziemy operować. 
 <div class="paragraph"> </div>
 
@@ -636,7 +636,7 @@ W Coqu negację zdania <span class="inlinecode"><span class="id" title="var">P</
 <div class="doc">
 Możemy to zrobić przy pomocy komendy <span class="inlinecode"><span class="id" title="keyword">Locate</span></span>. Wyświetla ona,
     do jakich nazw odwołuje się dana notacja. Jak widać, negacja
-    w Coqu nazywa się <span class="inlinecode"><span class="id" title="var">not</span></span>. 
+    w Coqu nazywa się <span class="inlinecode"><span class="id" title="var">not</span></span>. 
 <div class="paragraph"> </div>
 
 <a name="lab25"></a><h2 class="section">Negacja</h2>
@@ -806,8 +806,8 @@ Taktyką, która czasem przydaje się w dowodzeniu negacji i radzeniu
 
 <div class="paragraph"> </div>
 
- Udowodnij poniższe twierdzenie. Jakie są różnice między negacją, podwójną
-    negacją i potrójną negacją? 
+ Udowodnij poniższe twierdzenie. Jakie są różnice między negacją, podwójną
+    negacją i potrójną negacją? 
 </div>
 <div class="code">
 
@@ -933,7 +933,7 @@ Podobnie jak w przypadku taktyki <span class="inlinecode"><span class="id" title
  Równoważność zdaniowa jest w Coqu oznaczana <span class="inlinecode">&lt;-&gt;</span>. Symbol ten,
     jak (prawie) każdy jest jedynie notacją — równoważność
     nazywa się <span class="inlinecode"><span class="id" title="var">iff</span></span>. Jest to skrót od ang. "if and only if". Po
-    polsku zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">&lt;-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> możemy odczytać jako "P wtedy i tylko
+    polsku zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">&lt;-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> możemy odczytać jako "P wtedy i tylko
     wtedy, gdy Q". 
 </div>
 <div class="code">
@@ -1035,8 +1035,8 @@ Równoważnosć znajdującą się w kontekście możemy zaś, tak jak
 
 <div class="doc">
 Symbol <span class="inlinecode">\/</span> oznacza dysjunkcję dwóch zdań logicznych. W języku polskim
-    czasem używa się też określenia "alternatywa", ale będziemy się tego
-    wystrzegać, rezerwując to słowo dla czegoś innego. Żeby dowieść
+    czasem używa się też określenia "alternatywa", ale będziemy się tego
+    wystrzegać, rezerwując to słowo dla czegoś innego. Żeby dowieść
     dysjunkcji <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, musimy udowonić albo lewy, albo prawy jej człon.
     Taktyki <span class="inlinecode"><span class="id" title="tactic">left</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">right</span></span> pozwalają nam wybrać, którego z nich chcemy
     dowodzić. 
@@ -1247,7 +1247,7 @@ Podobnie jak zwykłe funkcje, funkcje zależne możemy aplikować
     Komenda <span class="inlinecode"><span class="id" title="var">Restart</span></span> pozwala nam zacząć dowód od nowa w dowolnym
     jego momencie. Jej użycie nie jest wymagane, by ukończyć
     powyższy dowód — spróbuj wstawić w jej miejsce <span class="inlinecode"><span class="id" title="keyword">Qed</span></span>. Użyłem jej
-    tylko po to, żeby czytelnie zestawić ze sobą sposoby rozumowania
+    tylko po to, żeby czytelnie zestawić ze sobą sposoby rozumowania
     w przód i w tył dla kwantyfikacji uniwersalnej. 
 </div>
 <div class="code">
@@ -1273,7 +1273,7 @@ W powyższym przykładzie próba użycia taktyki <span class="inlinecode"><span 
     z hipotezy ogólnej w szczególną, dotycząca tylko <span class="inlinecode"><span class="id" title="var">k</span></span>, a
     potem rozbijemy. Podobnie poprzednie twierdzenie moglibyśmy
     udowodnić szybciej, jeżeli zamiast <span class="inlinecode"><span class="id" title="tactic">specialize</span></span> i <span class="inlinecode"><span class="id" title="tactic">assumption</span></span>
-    napisalibyśmy <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode">(<span class="id" title="var">H</span></span> <span class="inlinecode">42)</span> (choć i tak najszybciej jest
+    napisalibyśmy <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode">(<span class="id" title="var">H</span></span> <span class="inlinecode">42)</span> (choć i tak najszybciej jest
     oczywiście użyć <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span>. 
 <div class="paragraph"> </div>
 
@@ -1434,7 +1434,7 @@ Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
 
 <div class="paragraph"> </div>
 
- Języki naturalne, jakimi ludzie posługują się w życiu codziennym
+ Języki naturalne, jakimi ludzie posługują się w życiu codziennym
     (polski, angielski suahili, język indian Navajo) zawierają spory
     zestaw spójników oraz kwantyfikatorów ("i", "a", "oraz", "lub",
     "albo", "jeżeli ... to", "pod warunkiem, że ", "wtedy", i wiele
@@ -1442,10 +1442,10 @@ Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
 
 <div class="paragraph"> </div>
 
-    Należy z całą stanowczością zaznaczyć, że te spójniki i kwantyfikatory,
-    a w szczególności ich intuicyjna interpretacja, znacznie różnią się
+    Należy z całą stanowczością zaznaczyć, że te spójniki i kwantyfikatory,
+    a w szczególności ich intuicyjna interpretacja, znacznie różnią się
     od analogicznych spójników i kwantyfikatorów logicznych, które mieliśmy
-    okazję poznać w tym rozdziale. Żeby to sobie uświadomić, zapoznamy się
+    okazję poznać w tym rozdziale. Żeby to sobie uświadomić, zapoznamy się
     z pewnego rodzaju "paradoksem". 
 </div>
 <div class="code">
@@ -1474,7 +1474,7 @@ Twierdzenie to formułowane jest zazwyczaj tak: nie istnieje człowiek,
     będzie reprezentował jego mieszkańców. Niech term <span class="inlinecode"><span class="id" title="var">barber</span></span> typu <span class="inlinecode"><span class="id" title="var">man</span></span>
     oznacza hipotetycznego golibrodę. Hipotetycznego, gdyż samo użycie
     jakiejś nazwy nie powoduje automatycznie, że nazywany obiekt istnieje
-    (przykładów jest masa, np. jednorożce, sprawiedliwość społeczna).
+    (przykładów jest masa, np. jednorożce, sprawiedliwość społeczna).
 
 <div class="paragraph"> </div>
 
@@ -1542,9 +1542,9 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 
 <div class="paragraph"> </div>
 
- Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka
-    naturalnego za pomocą zdań logiki formalnej. Gdybyś jednak wciąż
-    był skłonny to robić, przyjrzyjmy się kolejnemu "paradoksowi". 
+ Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka
+    naturalnego za pomocą zdań logiki formalnej. Gdybyś jednak wciąż
+    był skłonny to robić, przyjrzyjmy się kolejnemu "paradoksowi". 
 </div>
 <div class="code">
 
@@ -1557,8 +1557,8 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 
 <div class="doc">
 Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inlinecode"><span class="id" title="var">P</span></span> implikuje
-    <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">P</span></span>. Spróbujmy przerobić je na paradoks, wymyślając jakąś wesołą
-    interpretację dla <span class="inlinecode"><span class="id" title="var">P</span></span>.
+    <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">P</span></span>. Spróbujmy przerobić je na paradoks, wymyślając jakąś wesołą
+    interpretację dla <span class="inlinecode"><span class="id" title="var">P</span></span>.
 
 <div class="paragraph"> </div>
 
@@ -1571,15 +1571,15 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 
     Dla jeszcze lepszego efektu powiedzmy, że za 10 złotych możemy kupić
     kebaba. W ostatecznej formie nasze twierdzenie brzmi więc: jeżeli mam
-    złotówkę, to mogę kupić nieograniczoną ilość kebabów.
+    złotówkę, to mogę kupić nieograniczoną ilość kebabów.
 
 <div class="paragraph"> </div>
 
     Jak widać, logika formalna (przynajmniej w takiej postaci, w jakiej ją
     poznajemy) nie nadaje się do rozumowania na temat zasobów. Zasobów, bo
     tym właśnie są pieniądze i kebaby. Zasoby to byty, które można
-    przetwarzać, przemieszczać i zużywać, ale nie można ich kopiować i
-    tworzyć z niczego. Powyższe twierdzenie dobitnie pokazuje, że zdania
+    przetwarzać, przemieszczać i zużywać, ale nie można ich kopiować i
+    tworzyć z niczego. Powyższe twierdzenie dobitnie pokazuje, że zdania
     logiczne nie mają nic wspólnego z zasobami, gdyż ich dowody mogą być
     bez ograniczeń kopiowane. 
 </div>
@@ -1595,7 +1595,7 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 
 <div class="paragraph"> </div>
 
- UWAGA TODO: to ćwiczenie wymaga znajomości rozdziału 2, w szczególności
+ UWAGA TODO: to ćwiczenie wymaga znajomości rozdziału 2, w szczególności
     indukcji i rekursji na liczbach naturalnych.
 
 <div class="paragraph"> </div>
@@ -1608,8 +1608,8 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 <div class="paragraph"> </div>
 
     Na końcu sformalizuj resztę paradoksu, tzn. zapisz jakoś, co to znaczy
-    mieć złotówkę i że za 10 złotych można kupić kebaba. Wywnioskuj stąd,
-    że mając złotówkę, możemy kupić dowolną liczbę kebabów.
+    mieć złotówkę i że za 10 złotych można kupić kebaba. Wywnioskuj stąd,
+    że mając złotówkę, możemy kupić dowolną liczbę kebabów.
 
 <div class="paragraph"> </div>
 
@@ -1985,9 +1985,9 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 <div class="paragraph"> </div>
 
  Poniższe zadania stanowią (chyba) kompletny zbiór praw rządzących
-    logikami konstruktywną i klasyczną (w szczególności, niektóre z
-    zadań mogą pokrywać się z ćwiczeniami zawartymi w tekście). Wróć
-    do nich za jakiś czas, gdy czas przetrzebi trochę twoją pamięć
+    logikami konstruktywną i klasyczną (w szczególności, niektóre z
+    zadań mogą pokrywać się z ćwiczeniami zawartymi w tekście). Wróć
+    do nich za jakiś czas, gdy czas przetrzebi trochę twoją pamięć
     (np. za tydzień).
 
 <div class="paragraph"> </div>
@@ -2501,7 +2501,7 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
 
 <div class="paragraph"> </div>
 
-    Które z tych dwóch implikacji wymagają logiki intuicjonistycznej, a
+    Które z tych dwóch implikacji wymagają logiki intuicjonistycznej, a
     które klasycznej? 
 </div>
 <div class="code">
@@ -2525,23 +2525,23 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
 
 <div class="paragraph"> </div>
 
-    Zauważyłem palącą potrzebę istnienia krótkiej ściągi, dotyczącą podstaw
+    Zauważyłem palącą potrzebę istnienia krótkiej ściągi, dotyczącą podstaw
     logiki. Oto i ona:
 <ul class="doclist">
-<li> <span class="inlinecode"><span class="id" title="var">True</span></span> to zdanie zawsze prawdziwe. Można je udowodnić za pomocą
-      taktyki <span class="inlinecode"><span class="id" title="tactic">trivial</span></span>. Można je też rozbić za pomocą <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>, ale
+<li> <span class="inlinecode"><span class="id" title="var">True</span></span> to zdanie zawsze prawdziwe. Można je udowodnić za pomocą
+      taktyki <span class="inlinecode"><span class="id" title="tactic">trivial</span></span>. Można je też rozbić za pomocą <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>, ale
       nie jest to zbyt użyteczne.
 
 </li>
 <li> <span class="inlinecode"><span class="id" title="var">False</span></span> to zdanie zawsze fałszywe. Można je udowodnić tylko jeżeli
-      w kontekście już mamy jakiś inny (zazwyczaj zakamuflowany) dowód
-      <span class="inlinecode"><span class="id" title="var">False</span></span>. Można je rozbić za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>, co kończy
+      w kontekście już mamy jakiś inny (zazwyczaj zakamuflowany) dowód
+      <span class="inlinecode"><span class="id" title="var">False</span></span>. Można je rozbić za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>, co kończy
       dowód, bo z fałszu wynika wszystko.
 
 </li>
 <li> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to koniunkcja zdań <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span>. Aby ją udowodnić, używamy
       taktyki <span class="inlinecode"><span class="id" title="tactic">split</span></span> i dowodzimy osobno <span class="inlinecode"><span class="id" title="var">P</span></span>, a osobno <span class="inlinecode"><span class="id" title="var">Q</span></span>. Jeżeli mamy
-      w kontekście dowód na <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, to za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>
+      w kontekście dowód na <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, to za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>
       możemy z niego wyciągnąć dowody na <span class="inlinecode"><span class="id" title="var">P</span></span> i na <span class="inlinecode"><span class="id" title="var">Q</span></span>.
 
 </li>
@@ -2558,19 +2558,19 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
       na <span class="inlinecode"><span class="id" title="var">P</span></span> będący założeniem. Jeżeli mamy w kontekście dowód <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>,
       to możemy dowieść <span class="inlinecode"><span class="id" title="var">Q</span></span> za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span>, a następnie będziemy
       musieli udowodnić <span class="inlinecode"><span class="id" title="var">P</span></span>. Jeżeli mamy w kontekście <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> oraz
-      <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, to możemy uzyskać dowód <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> za pomocą taktyki
-      <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span>. Możemy uzyskać <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> za pomocą <span class="inlinecode"><span class="id" title="tactic">specialize</span></span> <span class="inlinecode">(<span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="var">p</span>)</span>
+      <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, to możemy uzyskać dowód <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> za pomocą taktyki
+      <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span>. Możemy uzyskać <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> za pomocą <span class="inlinecode"><span class="id" title="tactic">specialize</span></span> <span class="inlinecode">(<span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="var">p</span>)</span>
 
 </li>
 <li> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> to negacja zdania <span class="inlinecode"><span class="id" title="var">P</span></span>. Faktycznie jest to notacja na <span class="inlinecode"><span class="id" title="var">not</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>,
       które to samo jest skrótem oznaczającym <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>. Z negacją
-      radzimy sobie za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">not</span></span> albo <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">not</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode">...</span>,
+      radzimy sobie za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">not</span></span> albo <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">not</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode">...</span>,
       a następnie postępujemy jak z implikacją.
 
 </li>
-<li> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">&lt;-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to równoważność zdań <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span>. Jest to notacja na <span class="inlinecode"><span class="id" title="var">iff</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">Q</span></span>,
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">&lt;-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to równoważność zdań <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span>. Jest to notacja na <span class="inlinecode"><span class="id" title="var">iff</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">Q</span></span>,
       które jest skrótem od <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span> <span class="inlinecode">/\</span> <span class="inlinecode">(<span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span>. Radzimy sobie z nią za
-      pomocą taktyk <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">iff</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">iff</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode">...</span>
+      pomocą taktyk <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">iff</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">iff</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode">...</span>
 
 </li>
 <li> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> to zdanie mówiące "dla każdego x typu A zachodzi
@@ -2580,7 +2580,7 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
 </li>
 <li> <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> to zdanie mówiące "istnieje taki x typu A, który
       spełnia P". Dowodzimy go za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>, a następnie
-      musimy pokazać <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>. Jeżeli mamy taki dowód w kontekście, możemy
+      musimy pokazać <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>. Jeżeli mamy taki dowód w kontekście, możemy
       rozbić go na <span class="inlinecode"><span class="id" title="var">a</span></span> i <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>. 
 </li>
 </ul>
@@ -2591,11 +2591,11 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
 
 <div class="paragraph"> </div>
 
- W niniejszym rozdziale zapoznaliśmy się z logiką konstruktywną.
+ W niniejszym rozdziale zapoznaliśmy się z logiką konstruktywną.
     Poznaliśmy  jej składnię, interpretację obliczeniową, nauczyliśmy
-    się dowodzić w systemie dedukcji naturalnej oraz dowiedzieliśmy
-    się, jak to wszystko zrealizować w Coqu. Poznaliśmy też kombinatory
-    taktyk, dzięki którym możemy skrócić i uprościć nasze formalne dowody.
+    się dowodzić w systemie dedukcji naturalnej oraz dowiedzieliśmy
+    się, jak to wszystko zrealizować w Coqu. Poznaliśmy też kombinatory
+    taktyk, dzięki którym możemy skrócić i uprościć nasze formalne dowody.
 
 <div class="paragraph"> </div>
 
@@ -2607,10 +2607,10 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
 
 <div class="paragraph"> </div>
 
-    Skoro potrafimy już co nieco dowodzić, a także wiemy, że nasze metody
-    nie nadają się do rozumowania o pieniądzach ani kebabach, nadszedł
-    czas zapoznać się z jakimiś bytami, o których moglibyśmy czegoś
-    dowieść — w następnym rozdziale zajmiemy się na poważnie typami,
+    Skoro potrafimy już co nieco dowodzić, a także wiemy, że nasze metody
+    nie nadają się do rozumowania o pieniądzach ani kebabach, nadszedł
+    czas zapoznać się z jakimiś bytami, o których moglibyśmy czegoś
+    dowieść — w następnym rozdziale zajmiemy się na poważnie typami,
     programami i obliczeniami oraz udowadnianiem ich właściwości. 
 </div>
 <div class="code">

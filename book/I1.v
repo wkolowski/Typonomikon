@@ -5,7 +5,7 @@
     rozpisywanie każdego kroku dowodu przestaje mieć sens i pozwalają
     sobie zarzucić je na rzecz bardziej wysokopoziomowego opisu rozumowania.
 
-    Myślę, że ta sytuacja ma miejsce w twoim przypadku — znasz już sporą
+    Myślę, że ta sytuacja ma miejsce w twoim przypadku — znasz już sporą
     część języka termów Coqa (zwanego Gallina) i potrafisz dowodzić różnych
     właściwości programów. Doszedłeś do punktu, w którym ręczne klepanie
     dowodów przestaje być produktywne, a staje się nudne i męczące.
@@ -24,7 +24,7 @@
     Wszystkie one są jednak taktykami wbudowanymi, danymi nam z góry przez
     Coqowych bogów i nie mamy wpływu na ich działanie. Jeżeli nie jesteśmy
     w stanie zrobić czegoś za ich pomocą, jesteśmy zgubieni. Czas najwyższy
-    nauczyć się pisać własne taktyki, które pomogą nam wykonywać mało ciekawe
+    nauczyć się pisać własne taktyki, które pomogą nam wykonywać mało ciekawe
     kroki w dowodach, a w dalszej perspektywie także przeprowadzać bardziej
     zaawansowane rozumowania zupełnie automatycznie.
 
@@ -32,7 +32,7 @@
     własnych taktyk. Jego składnię przedstawiono i skrupulatnie opisano tu:
     https://coq.inria.fr/refman/proof-engine/ltac.html#syntax
 
-    Choć przykład znaczy więcej niż 0x3E8 stron manuala i postaram się
+    Choć przykład znaczy więcej niż 0x3E8 stron manuala i postaram się
     dokładnie zilustrować każdy istotny moim zdaniem konstrukt języka
     [Ltac], to i tak polecam zapoznać się z powyższym linkiem.
 
@@ -46,7 +46,7 @@
     jeden lub więcej celów. Cele są ponumerowane i domyślnie zawsze pracujemy
     nad tym, który ma numer 1.
 
-    Jednak wcale nie musi tak być — możemy zaznaczyć inny cel i zacząć nad
+    Jednak wcale nie musi tak być — możemy zaznaczyć inny cel i zacząć nad
     nim pracować. Służy do tego komenda [Focus]. Cel o numerze n możemy
     zaznaczyć komendą [Focus n]. Jeżeli to zrobimy, wszystkie pozostałe cele
     chwilowo znikają. Do stanu domyślnego, w którym pracujemy nad celem nr 1
@@ -61,21 +61,21 @@ Proof.
 Abort.
 
 (** Komenda [Focus] jest użyteczna głównie gdy któryś z dalszych celów jest
-    łatwiejszy niż obecny. Możemy wtedy przełączyć się na niego, rozwiązać
+    łatwiejszy niż obecny. Możemy wtedy przełączyć się na niego, rozwiązać
     go i wyniesione stąd doświadczenie przenieść na trudniejsze cele. Jest
     wskazane, żeby po zakończeniu dowodu zrefaktoryzować go tak, aby komenda
     [Focus] w nim nie występowała.
 
     Nie jest też tak, że zawsze musimy pracować nad celem o numerze 1. Możemy
-    pracować na dowolnym zbiorze celów. Do wybierania celów, na które chcemy
+    pracować na dowolnym zbiorze celów. Do wybierania celów, na które chcemy
     zadziałać taktykami, służą selektory. Jest ich kilka i mają taką składnię:
     - [n: t] — użyj taktyki t na n-tym celu. [1: t] jest równoważne [t].
     - [a-b: t] — użyj taktyki t na wszystkich celach o numerach od a do b
     - [a_1-b_1, ..., a_n-b_n: t] — użyj taktyki [t] na wszystkich celach
       o numerach od a_1 do b_1, ..., od a_n do b_n (zamiast a_i-b_i
-      możemy też użyć pojedynczej liczby)
-    - [all: t] ­- użyj [t] na wszystkich celach
-    - zamiast [t], w powyższych przypadkach możemy też użyć wyrażenia
+      możemy też użyć pojedynczej liczby)
+    - [all: t]  �- użyj [t] na wszystkich celach
+    - zamiast [t], w powyższych przypadkach możemy też użyć wyrażenia
       [> t_1 | ... | t_n], które aplikuje taktykę [t_i] do i-tego celu
       zaznaczonego danym selektorem *)
 
@@ -100,12 +100,12 @@ Restart.
   all: [> assumption | assumption | assumption].
 Qed.
 
-(** Zauważmy, że powyższe selektory działają jedynie, gdy zostaną umieszczone
+(** Zauważmy, że powyższe selektory działają jedynie, gdy zostaną umieszczone
     przed wszystkimi taktykami, których dotyczą. Próba użycia ich jako
     argumenty dla innych taktyk jest błędem.
 
     Dla przykładu, w czwartym z powyższych dowodów nie możemy napisać
-    [repeat split; 1-3: assumption], gdyż kończy się to błędem składni
+    [repeat split; 1-3: assumption], gdyż kończy się to błędem składni
     (nie wspominając o tym, że jest to bez sensu, gdyż dla uzyskania
     pożądanego efektu wystarczy napisać [repeat split; assumption]. *)
 
@@ -115,10 +115,10 @@ Proof.
   repeat split; only 1-3: assumption.
 Qed.
 
-(** Nie wszystko jednak stracone! Żeby móc używać wyrażeń zawierających
+(** Nie wszystko jednak stracone! Żeby móc używać wyrażeń zawierających
     selektory jako argumenty taktyk, możemy posłużyć się słowem [only].
-    Mimo tego, i tak nie możemy napisać [repeat split; only all: ...],
-    gdyż kończy się to błędem skadni. *)
+    Mimo tego, i tak nie możemy napisać [repeat split; only all: ...],
+    gdyż kończy się to błędem skadni. *)
 
 Goal forall P Q R S : Prop, P -> P /\ Q /\ R /\ S.
 Proof.
@@ -140,16 +140,16 @@ Abort.
 
     [swap n m] zamienia miejscami cele n-ty i m-ty. W przykładzie [swap 1 3]
     nic nie robi, gdyś domyślnie wybrany jest tylko cel numer 1, a zatem nie
-    można zamienić go miejscami z celem nr 3, którego nie ma. [all: swap 1 3]
+    można zamienić go miejscami z celem nr 3, którego nie ma. [all: swap 1 3]
     zamienia kolejność celów z [P — Q — R — S] na [R — Q — P — S].
 
     [cycle n] przesuwa cele cyklicznie o [n] do przodu (lub do tyłu, jeżeli
-    argument jest liczbą ujemną). W naszym przykładzie [cycle 42] nic nie robi
+    argument jest liczbą ujemną). W naszym przykładzie [cycle 42] nic nie robi
     (przesuwa cyklicznie cel [P] o 42 miejsca, co daje w wyniku [P]), zaś
-    [all: cycle 3] zamienia kolejność celów z [P — Q — R — S] na
+    [all: cycle 3] zamienia kolejność celów z [P — Q — R — S] na
     [S — P — Q — R].
 
-    Taktyki te nie są zbyt użyteczne, a przynajmniej ja nigdy ich nie użyłem,
+    Taktyki te nie są zbyt użyteczne, a przynajmniej ja nigdy ich nie użyłem,
     ale dla kompletności wypadało o nich wspomnieć. Jeżeli wątpisz w
     użyteczność selektorów... cóż, nie dziwię ci się. Selektory przydają się
     głównie gdy chcemy napisać taktykę rozwiązującą wszystkie cele i
@@ -161,22 +161,22 @@ Abort.
 (** Ltac jest funkcyjnym językiem programowania, podobnie jak język termów
     Coqa (zwany Gallina), lecz te dwa języki są diametralnie różne:
     - Ltac jest kompletny w sensie Turinga, a Gallina nie. W szczególności,
-      taktyki mogą się zapętlać i nie rodzi to żadnych problemów natury
+      taktyki mogą się zapętlać i nie rodzi to żadnych problemów natury
       logicznej.
     - Ltac jest bardzo słabo typowany, podczas gdy Gallina dysponuje potężnym
       systemem typów.
-    - W Ltacu nie możemy definiować typów danych, a jedynie taktyki działające
+    - W Ltacu nie możemy definiować typów danych, a jedynie taktyki działające
       na kontekstach i celu, podczas gdy Gallina pozwala na definiowanie
       bardzo szerokiej klasy typów i działających na nich funkcji.
     - Ltac, jako metajęzyk jezyka Gallina, posiada dostęp do różnych rzeczy,
       do których Gallina nie ma dostępu, takich jak dopasowanie termów
-      dowolnego typu. Dla przykładu, w Ltacu możemy odróżnić termy [4] oraz
+      dowolnego typu. Dla przykładu, w Ltacu możemy odróżnić termy [4] oraz
       [2 + 2] pomimo tego, że są konwertowalne. *)
 
 (** W Ltacu możemy manipulować trzema rodzajami bytów: taktykami, termami
-    Coqa oraz liczbami całkowitymi — te ostatnie nie są tym samym, co liczby
-    całkowite Coqa i będziemy ich używać sporadycznie. Zanim zobaczymy
-    przykład, przyjrzyjmy się taktyce [pose] oraz konstruktowi [let]. *)
+    Coqa oraz liczbami całkowitymi — te ostatnie nie są tym samym, co liczby
+    całkowite Coqa i będziemy ich używać sporadycznie. Zanim zobaczymy
+    przykład, przyjrzyjmy się taktyce [pose] oraz konstruktowi [let]. *)
 
 Goal True.
 Proof.
@@ -186,7 +186,7 @@ Abort.
 
 (** [pose t] dodaje do kontekstu term o domyślnej nazwie, którego ciałem
     jest [t]. Możemy też napisać [pose x := t], dzięki czemu zyskujemy
-    kontrolę nad nazwą termu. *)
+    kontrolę nad nazwą termu. *)
 
 Goal True.
 Proof.
@@ -198,25 +198,25 @@ Abort.
 (** W Ltacu, podobnie jak w języku Gallina, mamy do dyspozycji konstrukt
     [let]. Za jego pomocą możemy nadać nazwę dowolnemu wyrażeniu języka
     Ltac. Jego działanie jest podobne jak w języku Gallina, a więc nie
-    ma co się nad nim rozwodzić. Jest też konstrukt [let rec], który
+    ma co się nad nim rozwodzić. Jest też konstrukt [let rec], który
     odpowiada [fix]owi Galliny.
 
-    Spróbujmy dodać do kontekstu liczbę [42], nazwaną dowolnie. Komendą
-    [let x := 42 in pose x] nie udaje nam się tego osiągnąć. O przyczynie
+    Spróbujmy dodać do kontekstu liczbę [42], nazwaną dowolnie. Komendą
+    [let x := 42 in pose x] nie udaje nam się tego osiągnąć. O przyczynie
     niepowodzenia Coq informuje nas wprost: zmienna [x] nie jest termem.
-    Czym zatem jest? Jak już się rzekło, Ltac posiada wbudowany typ liczb
+    Czym zatem jest? Jak już się rzekło, Ltac posiada wbudowany typ liczb
     całkowitych, które nie są tym samym, co induktywnie zdefiniowane liczby
     całkowite Coqa. W tym kontekście [42] jest więc liczbą całkowitą Ltaca,
     a zatem nie jest termem.
 
-    Aby wymusić na Ltacu zinterpretowanie [42] jako termu Coqa, musimy
-    posłużyć się zapisem [constr:()]. Dzięki niemu argument znajdujący
+    Aby wymusić na Ltacu zinterpretowanie [42] jako termu Coqa, musimy
+    posłużyć się zapisem [constr:()]. Dzięki niemu argument znajdujący
     się w nawiasach zostanie zinterpretowany jako term. Efektem działania
     drugiej taktyki jest więc dodanie termu [42 : nat] do kontekstu,
-    nazwanego domyślnie [n] (co jest, o dziwo, dość rozsądną nazwą).
+    nazwanego domyślnie [n] (co jest, o dziwo, dość rozsądną nazwą).
 
     Wyrażenie [let x := split in idtac x] pokazuje nam, że taktyki również
-    są wyrażeniami Ltaca i mogą być przypisywane do zmiennych (a także
+    są wyrażeniami Ltaca i mogą być przypisywane do zmiennych (a także
     wyświetlane za pomocą taktyki [idtac]) tak jak każde inne wyrażenie. *)
 
 Ltac garbage n :=
@@ -235,13 +235,13 @@ Proof.
   garbage' 0.
 Abort.
 
-(** Dowolną taktykę, której możemy użyć w dowodzie, możemy też nazwać
-    za pomocą komendy [Ltac] i odwoływać się do niej w dowodach za pomocą
+(** Dowolną taktykę, której możemy użyć w dowodzie, możemy też nazwać
+    za pomocą komendy [Ltac] i odwoływać się do niej w dowodach za pomocą
     tej nazwy. Komenda [Ltac] jest więc taktykowym odpowiednikiem komendy
     [Fixpoint].
 
     Podobnie jak [Fixpoint]y i inne definicje, tak i taktyki zdefiniowane
-    za pomocą komendy [Ltac] mogą brać argumenty, którymi mogą być liczby,
+    za pomocą komendy [Ltac] mogą brać argumenty, którymi mogą być liczby,
     termy, nazwy hipotez albo inne taktyki.
 
     Zapis [Ltac name arg_1 ... arg_n := body] jest jedynie skrótem, który
@@ -251,34 +251,34 @@ Abort.
 
 (** * Backtracking *)
 
-(** Poznałeś już kombinator alternatywy [||]. Nie jest to jednak jedyny
+(** Poznałeś już kombinator alternatywy [||]. Nie jest to jednak jedyny
     kombinator służący do wyrażania tej idei — są jeszcze kombinatory [+]
     oraz [tryif t1 then t2 else t3]. Różnią się one działaniem — [||] jest
     left-biased, podczas gdy [+] nie jest biased i może powodować
     backtracking.
 
-    Nie przestrasz się tych dziwnych słów. Stojące za nimi idee są z grubsza
-    bardzo proste. Wcześniej dowiedziałeś się, że taktyka może zawieść lub
-    zakończyć się sukcesem. W rzeczywistości sprawa jest nieco bardziej
-    ogólna: każda taktyka może zakończyć się dowolną ilością sukcesów. Zero
-    sukcesów oznacza, że taktyka zawodzi. Większość taktyk, które dotychczas
+    Nie przestrasz się tych dziwnych słów. Stojące za nimi idee są z grubsza
+    bardzo proste. Wcześniej dowiedziałeś się, że taktyka może zawieść lub
+    zakończyć się sukcesem. W rzeczywistości sprawa jest nieco bardziej
+    ogólna: każda taktyka może zakończyć się dowolną ilością sukcesów. Zero
+    sukcesów oznacza, że taktyka zawodzi. Większość taktyk, które dotychczas
     poznaliśmy, mogła zakończyć się co najwyżej jednym sukcesem. Są jednak i
     takie, które mogą zakończyć się dwoma lub więcej sukcesami.
 
-    Proces dowodzenia za pomocą taktyk można zobrazować za pomocą procesu
+    Proces dowodzenia za pomocą taktyk można zobrazować za pomocą procesu
     przeszukiwania drzewa, którego wierzchołkami są częściowo skonstruowane
-    prooftermy, zaś krawędziami — sukcesy pochodzące od wywoływania taktyk.
+    prooftermy, zaś krawędziami — sukcesy pochodzące od wywoływania taktyk.
     Liśćmi są prooftermy (dowód się udał) lub ślepe zaułki (dowód się nie
     udał).
 
     W takiej wizualizacji taktyka może wyzwalać backtracking, jeżeli jej
     użycie prowadzi do powstania rozgałęzienia w drzewie. Samo drzewo
     przeszukiwane jest w głąb, a backtracking polega na tym, że jeżeli
-    trafimy na ślepy zaułek (dowód się nie powiódł), to cofamy się (ang.
+    trafimy na ślepy zaułek (dowód się nie powiódł), to cofamy się (ang.
     "to backtrack" — cofać się) do ostatniego punktu rozgałęzienia i
-    próbujemy pójść inną gałęzią.
+    próbujemy pójść inną gałęzią.
 
-    Tę intuicję dobrze widać na poniższym przykładzie. *)
+    Tę intuicję dobrze widać na poniższym przykładzie. *)
 
 Ltac existsNatFrom n :=
   exists n || existsNatFrom (S n).
@@ -301,18 +301,18 @@ Proof.
 Qed.
 
 (** Próba użycia taktyki [existsNat], która używa kombinatora [||], do
-    udowodnienia, że [exists n : nat, n = 42] kończy się niepowodzeniem.
+    udowodnienia, że [exists n : nat, n = 42] kończy się niepowodzeniem.
     Jest tak, gdyż [||] nie może powodować backtrackingu — jeżeli taktyka
     [t1] dokona postępu, to wtedy [t1 || t2] ma taki sam efekt, jak [t1],
     a w przeciwnym wypadku taki sam jak [t2]. Nawet jeżeli zarówno [t1]
-    jak i [t2] zakończą się sukcesami, to sukcesy [t1 || t2] będą sukcesami
+    jak i [t2] zakończą się sukcesami, to sukcesy [t1 || t2] będą sukcesami
     tylko [t1].
 
     Na mocy powyższych rozważań możemy skonkludować, że taktyka [existsNat]
     ma co najwyżej jeden sukces i działa jak [exists n] dla pewnej liczby
     naturalnej [n]. Ponieważ użycie [exists 0] na celu [exists n : nat, n = 42]
     dokonuje postępu, to taktyka [existsNat] ma taki sam efekt, jak [exists 0].
-    Próba użycia [reflexivity] zawodzi, a ponieważ nie ma już więcej sukcesów
+    Próba użycia [reflexivity] zawodzi, a ponieważ nie ma już więcej sukcesów
     pochodzących od [existsNat] do wypróbowania, nie wyzwala backtrackingu.
     Wobec tego cała taktyka [existsNat; reflexivity] kończy się porażką.
 
@@ -320,14 +320,14 @@ Qed.
     kombinatorze [+]. Sukcesy [t1 + t2] to wszystkie sukcesy [t1], po
     których następują wszystkie sukcesy [t2]. Wobec tego zbiór sukcesów
     [existsNat'] jest nieskończony i wygląda tak: [exists 0], [exists 1],
-    [exists 2]... Użycie taktyki [reflexivity], które kończy się porażką
+    [exists 2]... Użycie taktyki [reflexivity], które kończy się porażką
     wyzwala backtracking, więc całe wykonanie taktyki można zobrazować tak:
     - [exists 0; reflexivity] — porażka
     - [exists 1; reflexivity] — porażka
     - ...
     - [exists 42; reflexivity] — sukces *)
 
-(** Na koniec zaznaczyć należy, że backtracking nie jest za darmo — im go
+(** Na koniec zaznaczyć należy, że backtracking nie jest za darmo — im go
     więcej, tym więcej rozgałęzień w naszym drzewie poszukiwań, a zatem
     tym więcej czasu zajmie wykonanie taktyki. W przypadku użycia taktyk
     takich jak [existsNat], które mają nieskończony zbiór sukcesów, dowód
@@ -353,7 +353,7 @@ Abort.
     zatem zawodzi.
 
     Innym sposobem okiełznywania backtrackingu jest kombinator [exactly_once],
-    który pozwala upewnić się, że dana taktyka ma dokładnie jeden sukces.
+    który pozwala upewnić się, że dana taktyka ma dokładnie jeden sukces.
     Jeżeli [t] zawodzi, to [exactly_once t] zawodzi tak jak [t]. Jeżeli [t]
     ma jeden sukces, [exactly_once t] działa tak jak [t]. Jeżeli [t] ma dwa
     lub więcej sukcesów, [exactly_once t] zawodzi. *)
@@ -373,8 +373,8 @@ Abort.
 
 (** **** Ćwiczenie (existsNat'') *)
 
-(** Przepisz taktykę [existsNat'] za pomocą konstruktu [let rec] —
-    całość ma wyglądać tak: [Ltac existsNat'' := let rec ...] *)
+(** Przepisz taktykę [existsNat'] za pomocą konstruktu [let rec] —
+    całość ma wyglądać tak: [Ltac existsNat'' := let rec ...] *)
 
 (* begin hide *)
 Ltac existsNat'' :=
@@ -421,12 +421,12 @@ Abort.
 
 (** **** Ćwiczenie (search) *)
 
-(** Napisz taktykę [search], która potrafi udowodnić cel będący dowolnie
-    złożoną dysjunkcją pod warunkiem, że jeden z jej członów zachodzi na
+(** Napisz taktykę [search], która potrafi udowodnić cel będący dowolnie
+    złożoną dysjunkcją pod warunkiem, że jeden z jej członów zachodzi na
     mocy założenia. Użyj rekursji, ale nie używaj konstruktu [let rec].
 
     Wskazówka: jeżeli masz problem, udowodnij połowę poniższych twierdzeń
-    ręcznie i spróbuj dostrzec powtarzający si wzorzec. *)
+    ręcznie i spróbuj dostrzec powtarzający si wzorzec. *)
 
 (* begin hide *)
 Ltac search := try assumption; (left; search) + (right; search).
@@ -474,8 +474,8 @@ End search.
     - [first [t_1 | ... | t_N]]
     - [solve [t_1 | ... | t_N]] *)
 
-(** Precyzyjniej pisząc: sprawdź kiedy odnoszą sukces i zawodzą, czy mogą
-    wyzwalać backtracking oraz wymyśl jakieś mądre przykłady, który dobrze
+(** Precyzyjniej pisząc: sprawdź kiedy odnoszą sukces i zawodzą, czy mogą
+    wyzwalać backtracking oraz wymyśl jakieś mądre przykłady, który dobrze
     ukazują ichdziałanie w kontraście do [||] i [+]. *)
 
 (** * Dopasowanie kontekstu i celu *)
@@ -494,7 +494,7 @@ End search.
     Zamiast wzorców postaci [| kontekst |- cel => taktyka] możemy też używać
     wzorców postaci [| |- cel => taktyka], które dopasowują jedynie cel, zaś
     kontekst ignorują; wzorców postaci [| kontekst |- _ => taktyka], które
-    dopasowują jedynie kontekst, a cel ignorują; oraz wzorca [_], który
+    dopasowują jedynie kontekst, a cel ignorują; oraz wzorca [_], który
     oznacza "dopasuj cokolwiek".
 
     Zobaczmy, jak to wygląda na przykładach. *)
@@ -510,12 +510,12 @@ Abort.
 
 (** W powyższym przykładzie szukamy w celu zdań logicznych, czyli termów
     typu [Prop] i wypisujemy je. Nazwy szukanych obiektów są lokalne dla
-    każdej gałęzi dopasowania i nie muszą pokrywać się z rzeczywistymi
+    każdej gałęzi dopasowania i nie muszą pokrywać się z rzeczywistymi
     nazwami termów w kontekście. W naszym przypadku nazywamy szukane przez
     nas zdanie [x], choć zdania obecne w naszym kontekście tak naprawdę
     nazywają się [P], [Q], [R] oraz [S].
 
-    Przeszukiwanie obiektów w kontekście odbywa się w kolejności od
+    Przeszukiwanie obiektów w kontekście odbywa się w kolejności od
     najnowszego do najstarszego. Do wzorca [x : Prop] najpierw próbujemy
     dopasować [H1 : R], ale [R] to nie [Prop], więc dopasowanie zawodzi.
     Podobnie dla [H0 : Q] oraz [H : P]. Następnie natrafiamy na [S : Prop],
@@ -539,7 +539,7 @@ Abort.
     - próbujemy do wzorca [x : Prop] dopasować [H1 : R], ale bez powodzenia
       i podobnie dla [H0 : Q] oraz [H : P].
     - znajdujemy dopasowanie [S : Prop]. Taktyka [idtac x] wypisuje do okna
-      Messages wiadomość "S" i kończy się sukcesem, ale [fail] zawodzi.
+      Messages wiadomość "S" i kończy się sukcesem, ale [fail] zawodzi.
     - Wobec powyższego próbujemy kolejnego dopasowania, tym razem [R : Prop],
       które pasuje. [idtac x] wypisuje na ekran "R", ale [fail] znów
       zawodzi.
@@ -561,12 +561,12 @@ Abort.
     kontekst w kolejności od najstarszego do najnowszego. Dzięki temu od razu
     natrafiamy na dopasowanie [P : Prop], potem na [Q : Prop] etc. Na samym
     końcu próbujemy do [x : Prop] dopasować [H : P], [H0 : Q] i [H1 : R], co
-    kończy się niepowodzeniem.
+    kończy się niepowodzeniem.
 
     Zauważmy, że w dwóch ostatnich przykładach nie wystąpił backtracking —
     [match] nigdy nie wyzwala backtrackingu. Obserwowane działanie [match]a
     wynika stąd, że jeżeli taktyka po prawej od [=>] zawiedzie, to następuje
-    próba znalezienia jakiegoś innego dopasowania wzorca [x : Prop]. Dopiero
+    próba znalezienia jakiegoś innego dopasowania wzorca [x : Prop]. Dopiero
     gdy taktyka na prawo od [=>] zawiedzie dla wszystkich możliwych takich
     dopasowań, cały [match] zawodzi. *)
 
@@ -580,9 +580,9 @@ Proof.
   end; fail.
 Abort.
 
-(** Ten przykład potwierdza naszą powyższą obserwację dotyczącą backtrackingu.
+(** Ten przykład potwierdza naszą powyższą obserwację dotyczącą backtrackingu.
     Mamy tutaj identyczne dopasowanie jak w pierwszym przykładzie — wypisuje
-    ono [S] i kończy się sukcesem, ale tuż po nim następuje taktyka [fail],
+    ono [S] i kończy się sukcesem, ale tuż po nim następuje taktyka [fail],
     przez co cała taktyka [match ...; fail] zawodzi. Jak widać, nie następuje
     próba ponownego dopasownia wzorca [x : Prop]. *)
 
@@ -615,7 +615,7 @@ Abort.
 (** [multimatch] to wariant [match]a, który wyzwala backtracking. W powyższym
     przykładzie działa on następująco:
     - do wzorca [x : Prop] dopasowujemy [H1 : R], a następnie [H0 : Q] i
-      [H : P], co się rzecz jasna nie udaje.
+      [H : P], co się rzecz jasna nie udaje.
     - Znajdujemy dopasowanie [S : Prop] i cały [multimatch] kończy się
       sukcesem.
     - Taktyka [fail] zawodzi i wobec tego cała taktyka [multimatch ...; fail]
@@ -624,7 +624,7 @@ Abort.
       Znajdujemy [R : Prop], [multimatch] kończy się sukcesem, ale [fail]
       zawodzi.
     - Następują kolejne nawroty i dopasowania do wzorca. Ostatecznie po
-      wyczerpaniu się wszystkich możliwość cała taktyka zawodzi. *)
+      wyczerpaniu się wszystkich możliwość cała taktyka zawodzi. *)
 
 Goal
   forall P Q R S : Prop, P -> Q -> R -> S.
@@ -644,9 +644,9 @@ Proof.
   end.
 Abort.
 
-(** Przyjrzyjmy się jeszcze różnicy w zachowaniach [match]a i [multimatch]a
+(** Przyjrzyjmy się jeszcze różnicy w zachowaniach [match]a i [multimatch]a
     w połączeniu z kombinatorem [repeat]. Bez [repeat] oba dopasowania
-    zachowują się identycznie. Użycie [repeat] przed [match] nie zmienia w
+    zachowują się identycznie. Użycie [repeat] przed [match] nie zmienia w
     tym konkretnym wypadku jego działania, ale w przypadku [multimatch]a
     użycie [repeat] ujawnia wszystkie jego sukcesy.
 
@@ -669,8 +669,8 @@ Proof.
   end.
 Abort.
 
-(** Dopasowanie celu jest jeszcze prostsze niż dopasowanie hipotezy, bo
-    cel jest tylko jeden i wobec tego nie trzeba dawać mu żadnej nazwy.
+(** Dopasowanie celu jest jeszcze prostsze niż dopasowanie hipotezy, bo
+    cel jest tylko jeden i wobec tego nie trzeba dawać mu żadnej nazwy.
     Powyższa taktyka [split; match ...] działa następująco:
     - [split] generuje dwa podcele i wobec tego [match] działa na
       każdym z nich z osobna
@@ -705,19 +705,19 @@ Proof.
 Abort.
 
 (** Pozostało nam jedynie zademonstrować działanie wzorca [_]. Pierwsza z
-    powyższych taktyk z sukcesem dopasowuje wzorzec [_] (gdyż pasuje on do
+    powyższych taktyk z sukcesem dopasowuje wzorzec [_] (gdyż pasuje on do
     każdego kontekstu i celu) i wobec tego do okna Messages zostaje wypisany
     napis "-_-".
 
     W drugim [match]u również zostaje dopasowany wzorzec [_], ale taktyka
     [fail] zawodzi i następuje przejście do kolejnego wzorca, który także
     pasuje. Wobec tego wypisane zostaje "S". Przypomina to nam o tym, że
-    kolejność wzorców ma znaczenie i to nawet w przypadku, gdy któryś z
+    kolejność wzorców ma znaczenie i to nawet w przypadku, gdy któryś z
     nich (tak jak [_]) pasuje do wszystkiego. *)
 
 (** **** Ćwiczenie (destr_and) *)
 
-(** Napisz taktykę [destr_and], która rozbija wszystkie koniunkcje, które
+(** Napisz taktykę [destr_and], która rozbija wszystkie koniunkcje, które
     znajdzie w kontekście, a następnie udowodni cel, jeżeli zachodzi on na
     mocy założenia.
 
@@ -754,9 +754,9 @@ End destr_and.
 
 (** **** Ćwiczenie (solve_and_perm) *)
 
-(** Napisz taktykę [solve_and_perm], która będzie potrafiła rozwiązywać
+(** Napisz taktykę [solve_and_perm], która będzie potrafiła rozwiązywać
     cele postaci [P_1 /\ P_2 /\ ... /\ P_n -> P_i1 /\ P_i2 /\ ... /\ P_iN],
-    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są w
+    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są w
     niej te same zdania, ale występujące w innej kolejności. *)
 
 (* begin hide *)
@@ -789,9 +789,9 @@ End solve_and_perm.
 
 (** **** Ćwiczenie (solve_or_perm) *)
 
-(** Napisz taktykę [solve_or_perm], która będzie potrafiła rozwiązywać
+(** Napisz taktykę [solve_or_perm], która będzie potrafiła rozwiązywać
     cele postaci [P_1 \/ P_2 \/ ... \/ P_n -> P_i1 \/ P_i2 \/ ... \/ P_iN],
-    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są
+    gdzie prawa strona implikacji jest permutacją lewej strony, tzn. są
     w niej te same zdania, ale występujące w innej kolejności.
 
     Wskazówka: wykorzystaj taktykę [search] z jednego z poprzednich
@@ -836,7 +836,7 @@ Section negn.
 
 Require Import Arith.
 
-(** Napisz funkcję [negn : nat -> Prop -> Prop], gdzie [negn n P] zwraca
+(** Napisz funkcję [negn : nat -> Prop -> Prop], gdzie [negn n P] zwraca
     zdanie [P] zanegowane [n] razy. *)
 
 (* begin hide *)
@@ -870,7 +870,7 @@ Qed.
 
 (** Przydadzą ci się one do pokazania dwóch właściwości fukncji [negn].
     Zanim przystąpisz do dowodzenia drugiego z nich, spróbuj zgadnąć,
-    po którym argumencie najprościej będzie przeprowadzić indukcję. *)
+    po którym argumencie najprościej będzie przeprowadzić indukcję. *)
 
 Theorem even_neg :
   forall (n : nat) (P : Prop), P -> negn (2 * n) P.
@@ -897,7 +897,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Napisz taktykę [negtac], która będzie potrafiła udowadniać cele postaci
+(** Napisz taktykę [negtac], która będzie potrafiła udowadniać cele postaci
     [forall P : Prop, negn (2 * n) P -> negn (2 * (n + k)) P], gdzie
     [n] oraz [k] są stałymi. Nie używaj twierdzeń, które udowodniłeś wyżej.
 
@@ -928,10 +928,10 @@ End negn.
 (** * Wzorce i unifikacja *)
 
 (** Skoro wiemy już jak działa dopasowywanie kontekstu do wzorca, czas
-    nauczyć się jak dokładnie działają wzorce oraz czym są zmienne
+    nauczyć się jak dokładnie działają wzorce oraz czym są zmienne
     unifikacyjne i sama unifikacja.
 
-    Przede wszystkim, jak przekonaliśmy się wyżej, termy są wzorcami.
+    Przede wszystkim, jak przekonaliśmy się wyżej, termy są wzorcami.
     Termy nie zawierają zmiennych unifikacyjnych, a wzorce będące
     termami dopasowują się tylko do identycznych termów. Dopasowanie
     takie nie wiąże żadnych nowych zmiennych. Zobaczmy to na przykładzie. *)
@@ -948,11 +948,11 @@ Qed.
 (** Powyższy [match] nie zawiera zmiennych unifikacyjnych i działa w
     następujący sposób:
     - szukamy w kontekście obiektu [p], którego typ pasuje do wzorca [P].
-      Obiekt, który nazywamy [p] w rzeczywistości nie musi nazywać się [p],
-      ale jego typem rzeczywiście musi być [P]. W szczególności, wzorzec
-      [P] nie pasuje do [Q], gdyż [P] i [Q] nie są konwertowalne.
+      Obiekt, który nazywamy [p] w rzeczywistości nie musi nazywać się [p],
+      ale jego typem rzeczywiście musi być [P]. W szczególności, wzorzec
+      [P] nie pasuje do [Q], gdyż [P] i [Q] nie są konwertowalne.
     - jednocześnie żądamy, by cel był postaci [P \/ Q], gdzie zarówno [P]
-      jak i [Q] odnoszą się do obiektów z kontekstu, które rzeczywiście tak
+      jak i [Q] odnoszą się do obiektów z kontekstu, które rzeczywiście tak
       się nazywają.
     - jeżeli powyższe wzorce zostaną dopasowane, to używamy taktyki [left;
       assumption], która rozwiązuje cel. *)
@@ -973,12 +973,12 @@ Proof.
 Qed.
 
 (** Tutaj zamiast [P] mamy [A], zaś zamiast [Q] jest [B]. [match] identyczny
-    jak poprzednio tym razem zawodzi. Dzieje się tak, gdyż [P] odnosi się
-    tu do obiektu z kontekstu, który nazywa się [P]. Niestety, w kontekście
+    jak poprzednio tym razem zawodzi. Dzieje się tak, gdyż [P] odnosi się
+    tu do obiektu z kontekstu, który nazywa się [P]. Niestety, w kontekście
     nie ma obiektu o takiej nazwie, o czym Coq skrzętnie nas informuje.
 
     W [match]u w celu oraz po prawej stronie od [:] w hipotezie nie możemy
-    za pomocą nazwy [P] dopasować obiektu, który nazywa się [A]. Dopasować
+    za pomocą nazwy [P] dopasować obiektu, który nazywa się [A]. Dopasować
     [A] możemy jednak używając wzorca [A]. Ale co, gdybyśmy nie wiedzieli,
     jak dokładnie nazywa się poszukiwany obiekt? *)
 
@@ -991,21 +991,21 @@ Proof.
   end.
 Qed.
 
-(** Jeżeli chcemy dopasować term o nieznanej nam nazwie (lub term, którego
+(** Jeżeli chcemy dopasować term o nieznanej nam nazwie (lub term, którego
     podtermy mają nieznane nazwy) musimy użyć zmiennych unifikacyjnych.
-    Wizualnie można rozpoznać je po tym, że ich nazwy zaczynają się od
+    Wizualnie można rozpoznać je po tym, że ich nazwy zaczynają się od
     znaku [?]. Zmienna unifkacyjna [?x] pasuje do dowolnego termu, a
     udane dopasowanie sprawia, że po prawej stronie strzałki [=>] możemy
-    do dopasowanego termu odnosić się za pomocą nazwy [x].
+    do dopasowanego termu odnosić się za pomocą nazwy [x].
 
     Powyższe dopasowanie działa w następujący sposób:
-    - próbujemy dopasować wzorzec [p : ?P] do najświeższej hipotezy w
-      kontekście, czyli [H : A]. [p] jest nazwą tymczasową i wobec tego
+    - próbujemy dopasować wzorzec [p : ?P] do najświeższej hipotezy w
+      kontekście, czyli [H : A]. [p] jest nazwą tymczasową i wobec tego
       pasuje do [H], zaś zmienna unifikacyjna [?P] pasuje do dowolnego
       termu, a zatem pasuje także do [A].
     - dopasowanie hipotezy kończy się sukcesem i wskutek tego zmienna
       unifikacyjna [?P] zostaje związana z termem [A]. Od teraz w dalszych
-      wzorcach będzie ona pasować jedynie do termu [A].
+      wzorcach będzie ona pasować jedynie do termu [A].
     - następuje próba dopasowania celu do wzorca [?P \/ ?Q]. Ponieważ
       [?P] zostało związane z [A], to wzorzec [?P \/ ?Q] oznacza tak
       naprawdę [A \/ ?Q]. Zmienna unifikacyjna [?Q] nie została wcześniej
@@ -1019,7 +1019,7 @@ Qed.
       się odpowiednio jako [P] i [Q].
     - taktyka [left; assumption] rozwiązuje cel. *)
 
-(** Podkreślmy raz jeszcze, że zmienne unifikacyjne mogą występać tylko we
+(** Podkreślmy raz jeszcze, że zmienne unifikacyjne mogą występać tylko we
     wzorcach, a więc w hipotezach po prawej stronie dwukropka [:] oraz w
     celu. Błędem byłoby napisanie w hipotezie [?p : ?P]. Podobnie błędem
     byłoby użycie nazwy [?P] na prawo od strzałki [=>].
@@ -1032,7 +1032,7 @@ Qed.
 
     Wzorcami liniowymi są wzorce, których używamy podczas definiowania
     zwykłych funkcji przez dopasowanie do wzorca (zauważmy jednak, że
-    tamtejsze zmienne unifikacyjne nie zaczynają się od [?]). Ograniczenie
+    tamtejsze zmienne unifikacyjne nie zaczynają się od [?]). Ograniczenie
     do wzorców liniowych jest spowodowane faktem, że nie zawsze możliwe
     jest stwierdzenie, czy dwa dowolne termy do siebie pasują.
 
@@ -1058,18 +1058,18 @@ Proof.
   end.
 Abort.
 
-(** Zauważmy, że nie musimy używać zmiennych unifikacyjnych do dopasowywania
+(** Zauważmy, że nie musimy używać zmiennych unifikacyjnych do dopasowywania
     całych termów — w pierwszym z powyższych przykładów używamy zmiennej [?x],
-    aby dopasować jedynie lewą stronę równania, które jest celem.
+    aby dopasować jedynie lewą stronę równania, które jest celem.
 
     Ze zmiennych unifikacyjnych oraz stałych, zmiennych i funkcji (a więc
-    także konstruktorów) możemy budować wzorce dopasowujące termy o różnych
+    także konstruktorów) możemy budować wzorce dopasowujące termy o różnych
     fikuśnych kształtach.
 
     W drugim przykładzie wzorzec [cons ?h _ = nil] dopasowuje równanie,
     którego lewa strona jest listą niepustą o dowolnej głowie, do której
     możemy się odnosić jako [h], oraz dowolnym ogonie, do którego nie
-    chcemy móc się odnosić. Prawa strona tego równania jest listą pustą.
+    chcemy móc się odnosić. Prawa strona tego równania jest listą pustą.
 
     Wzorce radzą sobie bez problemu także z notacjami. Wzorzec [2 :: _ = ?l]
     dopasowuje równanie, którego lewa strona jest listą, której głowa to [2],
@@ -1078,7 +1078,7 @@ Abort.
 
     Ostatni wzorzec pasuje do równania, którego lewa strona jest singletonem
     (listą jednoelementową) zawierającym wartość, do której będziemy mogli
-    odnosić się za pomocą nazwy [x], zaś prawą stroną jest lista pusta. *)
+    odnosić się za pomocą nazwy [x], zaś prawą stroną jest lista pusta. *)
 
 (** **** Ćwiczenie (my_assumption) *)
 
@@ -1100,7 +1100,7 @@ Qed.
 
 (** **** Ćwiczenie (forward) *)
 
-(** Napisz taktykę [forward], która wyspecjalizuje wszystkie znalezione w
+(** Napisz taktykę [forward], która wyspecjalizuje wszystkie znalezione w
     kontekście implikacje, o ile oczywiście ich przesłanki również będą
     znajdowały się w kontekście, a następnie rozwiąże cel, jeżeli jest on
     prawdziwy na mocy założenia.
@@ -1128,15 +1128,15 @@ Proof. forward. Qed.
 
 (** * Narzędzia przydatne przy dopasowywaniu *)
 
-(** Poznawszy już konstrukt [match] i jego warianty oraz sposób dopasowywania
+(** Poznawszy już konstrukt [match] i jego warianty oraz sposób dopasowywania
     wzorców i rolę unifikacji oraz zmiennych unifikacyjnych w tym procesie,
-    czas rzucić okiem na kilka niezwykle przydatnych narzędzi, które uczynią
+    czas rzucić okiem na kilka niezwykle przydatnych narzędzi, które uczynią
     nasze życie dopasowywacza łatwiejszym. *)
 
 (** ** Dopasowanie podtermu *)
 
 (** Pierwszym z nich jest wyrażenie [context ident [term]], dzięki któremu
-    możemy tworzyć wzorce dopasowujące podtermy danego termu. Zobaczmy jego
+    możemy tworzyć wzorce dopasowujące podtermy danego termu. Zobaczmy jego
     działanie na przykładzie. *)
 
 Goal
@@ -1159,7 +1159,7 @@ Abort.
     - wzorzec [?x = ?y] zostaje zunifikowany z pierwszym pasującym podtermem,
       czyli [a = b]. W wyniku dopasowania zmienna unifikacyjna [?x] zostaje
       związana z [a], zaś [?y] z [b]
-    - cały term, którego podterm został dopasowany do wzorca, zostaje
+    - cały term, którego podterm został dopasowany do wzorca, zostaje
       związany ze zmienną [G], przy czym jego dopasowany podterm zostaje
       specjalnie zaznaczony (po wypisaniu w jego miejscu widać napis "?M-1")
     - zostaje wykonana taktyka [idtac G x y] *)
@@ -1171,8 +1171,8 @@ Abort.
 (** **** Ćwiczenie (podtermy) *)
 
 (** Oblicz ile podtermów ma term [42]. Następnie napisz taktykę [nat_subterm],
-    która potrafi wypisać wszystkie podtermy dowolnej liczby naturalnej, która
-    znajduje się w celu. Wymyśl odpowiedni cel i przetestuj na nim swoje
+    która potrafi wypisać wszystkie podtermy dowolnej liczby naturalnej, która
+    znajduje się w celu. Wymyśl odpowiedni cel i przetestuj na nim swoje
     obliczenia. *)
 
 (* begin hide *)
@@ -1212,34 +1212,34 @@ Abort.
 
 (** Mamy w kontekście liczbę naturalną [x : nat] i chcielibyśmy wprowadzić
     do niego kolejną. Cóż, nie jest to żaden problem — wystarczy nazwać go
-    dowolną nazwą różną od "x". Ale co, jeżeli nie wiemy, jak nazywają się
-    obiekty znajdujące się w kontekście?
+    dowolną nazwą różną od "x". Ale co, jeżeli nie wiemy, jak nazywają się
+    obiekty znajdujące się w kontekście?
 
-    Przy intensywnym posługiwaniu się taktykami i automatyzacją jest to nader
+    Przy intensywnym posługiwaniu się taktykami i automatyzacją jest to nader
     częsta możliwość: gdy dopasujemy kontekst za pomocą [match]a, nie znamy
     oryginalnych nazw dopasowanych termów — możemy odwoływać się do nich
     tylko za pomocą nazw lokalnych, wprowadzonych na potrzeby danego wzorca.
 
-    Z odsięczą przychodzi nam generator świeżych nazw o wdzięcznej nazwie
-    [fresh]. Zazwyczaj będziemy się nim posługiwać w następujący sposób:
+    Z odsięczą przychodzi nam generator świeżych nazw o wdzięcznej nazwie
+    [fresh]. Zazwyczaj będziemy się nim posługiwać w następujący sposób:
     [let var := fresh arg_1 ... arg_N in t]. Tutaj [var] jest zmienną
     języka [Ltac], której wartością jest świeżo wygenerowana nazwa, a [t]
     to jakaś taktyka, która w dowolny sposób korzysta z [var].
 
     Powyższe cztery taktyki działają tak:
     - [let x := fresh in intro x] — [fresh] generuje świeżą nazwę, domyślnie
-      jest nią "H". Nazwa ta staje się wartością Ltacowej zmiennej [x]. Owa
+      jest nią "H". Nazwa ta staje się wartością Ltacowej zmiennej [x]. Owa
       zmienna jest argumentem taktyki [intro], dzięki czemu wprowadzony do
       kontekstu obiekt typu [nat] zostaje nazwany "H".
     - [let x := fresh "y" in intro x] — jeżeli [fresh] dostanie jako argument
-      ciąg znaków, to wygeneruje nazwę zaczynającą się od tego ciągu, która
+      ciąg znaków, to wygeneruje nazwę zaczynającą się od tego ciągu, która
       nie jest jeszcze zajęta. Ponieważ nazwa "y" jest wolna, właśnie tak
       zostaje nazwany wprowadzany obiekt.
     - [let x := fresh x in intro x] — tutaj mamy mały zamęt. Pierwszy i trzeci
-      [x] jest zmienną Ltaca, zaś drugi odnosi się do obiektu z kontekstu.
+      [x] jest zmienną Ltaca, zaś drugi odnosi się do obiektu z kontekstu.
       Jeżeli [arg] jest obiektem z kontekstu, to [fresh arg] tworzy świeżą
-      nazwę zaczynającą się od nazwy, jaką [arg] nosi w kontekście. Tutaj
-      nie  ma to znaczenia, gdyż [x] nazywa się po prostu "x" i wobec tego
+      nazwę zaczynającą się od nazwy, jaką [arg] nosi w kontekście. Tutaj
+      nie  ma to znaczenia, gdyż [x] nazywa się po prostu "x" i wobec tego
       [fresh] generuje nazwę "x0", ale mechanizm ten działa tak samo w
       przypadku zmiennych unifikacyjnych.
     - [let x := fresh y in intro x] — jak widać, argumentem [fresh] może też
@@ -1249,19 +1249,19 @@ Abort.
 
 (** ** [fail] (znowu) *)
 
-(** Taktykę [fail] już poznaliśmy, ale nie w jej pełnej krasie. Czas więc
-    odkryć resztę jej możliwości. *)
+(** Taktykę [fail] już poznaliśmy, ale nie w jej pełnej krasie. Czas więc
+    odkryć resztę jej możliwości. *)
 
 Goal False.
 Proof.
-  Fail fail "Hoho, czego się spodziewałeś?" 1.
+  Fail fail "Hoho, czego się spodziewałeś?" 1.
 Abort.
 
 (** Pierwsza z nich nie jest zbyt spektakularna — możemy do [fail] przekazać
     jako argumenty ciągi znaków lub termy, co spowoduje wyświetlenie ich w
     oknie wiadomości.
 
-    Drugą, znacznie ważniejszą możliwością, jaką daje nam taktyka [fail],
+    Drugą, znacznie ważniejszą możliwością, jaką daje nam taktyka [fail],
     jest kontrola "poziomu porażki". Dzięki niemu zyskujemy władzę nad
     tym, jak "mocno" taktyka [fail] zawodzi. Domyśnie wynosi on 0. Użycie
     taktyki [fail] (która wobec tego oznacza to samo, co [fail 0]) powouje
@@ -1270,7 +1270,7 @@ Abort.
     całego obecnego [match]a (tj. wszystkich gałęzi) lub bloku [do]/[repeat]
     i wywołanie [fail (n - 1)].
 
-    Przyjrzyjmy się temu zachowaniu na przykładzie. *)
+    Przyjrzyjmy się temu zachowaniu na przykładzie. *)
 
 Goal False.
 Proof.
@@ -1292,17 +1292,17 @@ Proof.
   end.
 Abort.
 
-(** Cztery powyższe dopasowania działają następująco:
+(** Cztery powyższe dopasowania działają następująco:
     - W pierwszym dopasowana jest pierwsza gałąź. Wyświetlona zostaje
       wiadomość, po czym taktyka [fail] zawodzi i następuje przejście
       do kolejnej gałęzi. Tutaj też wypisana zostaje wiadomość i cała
-      taktyka [match ...] kończy się sukcesem.
+      taktyka [match ...] kończy się sukcesem.
     - W drugim przypadku dopasowana jest pierwsza gałąź, która wypisuje
       wiadomość, ale taktyka [fail 1] powoduje, że cały [match] zawodzi
       i druga gałąź nie jest w ogóle dopasowywana.
     - Trzeci przypadek jest podobny do drugiego. [fail 1] powoduje, że
       cały [match] zawodzi, ale dzięki kombinatorowi [try] cała taktyka
-      [try match ...] kończy się sukcesem.
+      [try match ...] kończy się sukcesem.
     - Czwarta taktyka jest podobna do trzeciej, ale tym razem po udanym
       dopasowaniu pierwszej gałęzi taktyka [fail 2] powoduje, że cały
       [match] zawodzi. Następnie ma miejsce wywołanie taktyki [fail 1],
@@ -1322,7 +1322,7 @@ Proof.
   all: let n := numgoals in idtac n.
 Abort.
 
-(** Ilość celów możemy policzyć za pomocą taktyki [numgoals]. Liczy ona
+(** Ilość celów możemy policzyć za pomocą taktyki [numgoals]. Liczy ona
     wszystkie cele, na które działa, więc jeżeli nie użyjemy żadnego
     selektora, zwróci ona 1. Nie jest ona zbyt użyteczna (poza bardzo
     skomplikowanymi taktykami, które z jakichś powodów nie operują tylko na
@@ -1337,11 +1337,11 @@ Abort.
 
 (** Taktyka [guard cond] pozwala nam dokonywać prostych testów na liczbach
     całkowitych Ltaca. Jeżeli warunek zachodzi, taktyka ta zachowuje się
-    jak [idtac], czyli kończy się sukcesem i nie robi nic więcej. Jeżeli
+    jak [idtac], czyli kończy się sukcesem i nie robi nic więcej. Jeżeli
     warunek nie zachodzi, taktyka zawodzi.
 
-    W powyższym przykładzie taktyka [guard n > 2] kończy się sukcesem,
-    gdyż są 3 cele, a 3 > 2, zaś taktyka [guard n < 2] zawodzi, bo są
+    W powyższym przykładzie taktyka [guard n > 2] kończy się sukcesem,
+    gdyż są 3 cele, a 3 > 2, zaś taktyka [guard n < 2] zawodzi, bo są
     3 cele, a nie jest prawdą, że 3 < 2. *)
 
 Inductive even : nat -> Prop :=
@@ -1360,21 +1360,21 @@ Abort.
 
 (** Kombinator [timeout n t] pozwala nam sprawić, żeby taktyka t zawiodła,
     jeżeli jej wykonanie będzie zajmowało dłużej, niż n sekund. Nie jest on
-    zbyt przydatny, gdyż szybkość wykonania danej taktyki jest kwestią mocno
+    zbyt przydatny, gdyż szybkość wykonania danej taktyki jest kwestią mocno
     zależną on sprzętu. Jak można przeczytać w manualu, kombinator ten bywa
     przydatny głównie przy debugowaniu i nie zaleca się, żeby występował w
-    finalnych dowodach, gdyż może powodować problemy z przenośnością.
+    finalnych dowodach, gdyż może powodować problemy z przenośnością.
 
     W powyższym przykładzie taktyka [timeout 1 repeat constructor] kończy się
-    sukcesem, gdyż udowodnienie [even 42] zajmuje jej mniej, niż 1 sekundę
+    sukcesem, gdyż udowodnienie [even 42] zajmuje jej mniej, niż 1 sekundę
     (przynajmniej na moim komputerze; na twoim taktyka ta może zawieść), ale
-    już udowodnienie [even 1338] trwa więcej niż jedną sekundę i wobec tego
+    już udowodnienie [even 1338] trwa więcej niż jedną sekundę i wobec tego
     taktyka [timeout 1 repeat constructor] dla tego celu zawodzi (przynajmniej
     u mnie; jeżeli masz mocny komputer, u ciebie może zadziałać).
 
-    Co więcej, kombinator [timeout] może zachowywać się różnie dla tego samego
+    Co więcej, kombinator [timeout] może zachowywać się różnie dla tego samego
     celu nawet na tym samym komputerze. Na przykład przed chwilą taktyka ta
-    zakończyłą się na moim komputerze sukcesem, mimo że dotychczas zawsze
+    zakończyłą się na moim komputerze sukcesem, mimo że dotychczas zawsze
     zawodziła). *)
 
 Goal even 666.
@@ -1384,20 +1384,20 @@ Restart.
   Time repeat constructor.
 Abort.
 
-(** Kolejnym kombinatorem jest [time t], który odpala taktykę [t], a następnie
+(** Kolejnym kombinatorem jest [time t], który odpala taktykę [t], a następnie
     wyświetla informację o czasie, jaki zajęło jej wykonanie. Czas ten jest
     czasem rzeczywistym, tzn. zależy od mocy twojego komputera. Nie jest zbyt
-    stały — zazwyczaj różni się od jednego mierzenia do drugiego, czasem
-    nawet dość znacznie.
+    stały — zazwyczaj różni się od jednego mierzenia do drugiego, czasem
+    nawet dość znacznie.
 
     Alternatywą dla taktyki [time] jest komenda [Time], która robi dokładnie
     to samo. Jeżeli stoisz przed wyborem między tymi dwoma — wybierz komendę
-    [Time], gdyż komendy zachowują się zazwyczaj w sposób znacznie bardziej
+    [Time], gdyż komendy zachowują się zazwyczaj w sposób znacznie bardziej
     przewidywalny od taktyk. *)
 
 (** * Konkluzja *)
 
-(** W niniejszym rozdziale zapoznaliśmy się z potężną maszynerią, dzięki
+(** W niniejszym rozdziale zapoznaliśmy się z potężną maszynerią, dzięki
     której możemy zjeść ciastko i mieć ciastko: dzięki własnym taktykom
     jesteśmy w stanie połączyć Coqową pełnię formalnej poprawności oraz
     typowy dla matematyki uprawianej nieformalnie luźny styl dowodzenia,
@@ -1406,7 +1406,7 @@ Abort.
 
     Ale to jeszcze nie wszystko, gdyż póki co pominięte zostały konstrukty
     Ltaca pozwalające dopasowywać termy, dzięki którym jesteśmy w stanie
-    np. napisać taktykę, która odróżni [2 + 2] od [4]. Jeżeli odczuwasz
+    np. napisać taktykę, która odróżni [2 + 2] od [4]. Jeżeli odczuwasz
     niedosyt po przeczytaniu tego rozdziału, to uszy do góry — zapoznamy
-    się z nimi już niedługo, przy omawianiu dowodu przez reflekcję. Zanim
+    się z nimi już niedługo, przy omawianiu dowodu przez reflekcję. Zanim
     to jednak nastąpi, zrobimy przegląd taktyk wbudowanych. *)

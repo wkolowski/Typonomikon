@@ -730,7 +730,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Strumienie za pomocą przybliżeń. *)
+(** Strumienie za pomocą przybliżeń. *)
 
 Module approx.
 

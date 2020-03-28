@@ -1,17 +1,17 @@
 (** * I2: Spis przydatnych taktyk *)
 
-(** Stare powiedzenie głosi: nie wymyślaj koła na nowo. Aby uczynić zadość
+(** Stare powiedzenie głosi: nie wymyślaj koła na nowo. Aby uczynić zadość
     duchom przodków, którzy je wymyślili (zarówno koło, jak i powiedzenie),
     w niniejszym rozdziale zapoznamy się z różnymi przydatnymi taktykami,
     które prędzej czy później i tak sami byśmy wymyślili, gdyby zaszła taka
     potrzeba.
 
-    Aby jednak nie popaść w inny grzech i nie posługiwać się czarami, których
-    nie rozumiemy, część z poniżej omówionych taktyk zaimplementujemy jako
+    Aby jednak nie popaść w inny grzech i nie posługiwać się czarami, których
+    nie rozumiemy, część z poniżej omówionych taktyk zaimplementujemy jako
     ćwiczenie.
 
     Omówimy kolejno:
-    - taktykę [refine]
+    - taktykę [refine]
     - drobne taktyki służące głównie do kontrolowania tego, co dzieje się
       w kontekście
     - "średnie" taktyki, wcielające w życie pewien konkretny sposób
@@ -28,19 +28,19 @@
 (** * [refine] — matka wszystkich taktyk *)
 
 (** Fama głosi, że w zamierzchłych czasach, gdy nie było jeszcze taktyk,
-    a światem Coqa rządził Chaos (objawiający się dowodzeniem przez ręczne
+    a światem Coqa rządził Chaos (objawiający się dowodzeniem przez ręczne
     wpisywanie termów), jeden z Coqowych bogów imieniem He-fait-le-stos, w
-    przebłysku kreatywnego geniuszu wymyślił dedukcję naturalną i stworzył
+    przebłysku kreatywnego geniuszu wymyślił dedukcję naturalną i stworzył
     pierwszą taktykę, której nadał imię [refine]. Pomysł przyjał się i od
     tej pory Coqowi bogowie poczęli używać jej do tworzenia coraz to innych
-    taktyk. Tak [refine] stała się matką wszystkich taktyk.
+    taktyk. Tak [refine] stała się matką wszystkich taktyk.
 
-    Oczywiście legenda ta jest nieprawdziwa — deduckcję naturalną wymyślił
-    Gerhard Gentzen, a podstawowe taktyki są zaimplementowane w Ocamlu. Nie
+    Oczywiście legenda ta jest nieprawdziwa — deduckcję naturalną wymyślił
+    Gerhard Gentzen, a podstawowe taktyki są zaimplementowane w Ocamlu. Nie
     umniejsza to jednak mocy taktyki [refine]. Jej działanie podobne jest
-    do taktyki [exact], z tym że term będący jej argumentem może też zawierać
+    do taktyki [exact], z tym że term będący jej argumentem może też zawierać
     dziury [_]. Jeżeli naszym celem jest [G], to taktyka [refine g] rozwiązuje
-    cel, jeżeli [g] jest termem typu [G], i generuje taką ilość podcelów, ile
+    cel, jeżeli [g] jest termem typu [G], i generuje taką ilość podcelów, ile
     [g] zawiera dziur, albo zawodzi, jeżeli [g] nie jest typu [G].
 
     Zobaczmy działanie taktyki [refine] na przykładach. *)
@@ -69,36 +69,36 @@ Restart.
     exact p.
 Qed.
 
-(** W tym przykładzie chcemy pokazać przemienność konunkcji. Ponieważ nasz
-    cel jest kwantyfikacją uniwersalną, jego dowodem musi być jakaś funkcja
-    zależna. Funkcję tę konstruujemy taktyką [refine (fun P Q : Prop => _)].
-    Nie podajemy jednak ciała funkcji, zastępując je dzurą [_], bo chcemy
-    podać je później. W związku z tym nasz obecny cel zostaje rozwiązany, a
+(** W tym przykładzie chcemy pokazać przemienność konunkcji. Ponieważ nasz
+    cel jest kwantyfikacją uniwersalną, jego dowodem musi być jakaś funkcja
+    zależna. Funkcję tę konstruujemy taktyką [refine (fun P Q : Prop => _)].
+    Nie podajemy jednak ciała funkcji, zastępując je dzurą [_], bo chcemy
+    podać je później. W związku z tym nasz obecny cel zostaje rozwiązany, a
     w zamian dostajemy nowy cel postaci [P /\ Q -> Q /\ P], gdyż takiego
     typu jest ciało naszej funkcji. To jednak nie wszystko: w kontekście
-    pojawiają się [P Q : Prop]. Wynika to z tego, że [P] i [Q] mogą zostać
+    pojawiają się [P Q : Prop]. Wynika to z tego, że [P] i [Q] mogą zostać
     użyte w definicji ciała naszej funkcji.
 
-    Jako, że naszym celem jest implikacja, jej dowodem musi być funkcja.
+    Jako, że naszym celem jest implikacja, jej dowodem musi być funkcja.
     Taktyka [refine (fun H => match H with | conj p q => _ end)] pozwala
-    nam tę funkcję skonstruować. Ciałem naszej funkcji jest dopasowanie
+    nam tę funkcję skonstruować. Ciałem naszej funkcji jest dopasowanie
     zawierające dziurę. Wypełnienie jej będzie naszym kolejnym celem. Przy
-    jego rozwiązywaniu będziemy mogli skorzystać z [H], [p] i [q]. Pierwsza
+    jego rozwiązywaniu będziemy mogli skorzystać z [H], [p] i [q]. Pierwsza
     z tych hipotez pochodzi o wiązania [fun H => ...], zaś [p] i [q] znajdą
-    się w kontekście dzięki temu, że zostały związane podczas dopasowania
+    się w kontekście dzięki temu, że zostały związane podczas dopasowania
     [conj p q].
 
-    Teraz naszym celem jest [Q /\ P]. Ponieważ dowody koniunkcji są postaci
+    Teraz naszym celem jest [Q /\ P]. Ponieważ dowody koniunkcji są postaci
     [conj l r], gdzie [l] jest dowodem pierwszego członu, a [r] drugiego,
-    używamy taktyki [refine (conj _ _)], by osobno skonstruować oba człony.
+    używamy taktyki [refine (conj _ _)], by osobno skonstruować oba człony.
     Tym razem nasz proofterm zawiera dwie dziury, więc wygenerowane zostaną
-    dwa podcele. Obydwa zachodzą na mocy założenia, a rozwiązujemy je także
+    dwa podcele. Obydwa zachodzą na mocy założenia, a rozwiązujemy je także
     za pomocą [refine].
 
-    Powyższy przykład pokazuje, że [refine] potrafi zastąpić cała gamę
+    Powyższy przykład pokazuje, że [refine] potrafi zastąpić cała gamę
     przeróżnych taktyk, które dotychczas uważaliśmy za podstawowe: [intros],
     [intro], [destruct], [split] oraz [exact]. Określenie "matka wszystkich
-    taktyk" wydaje się całkiem uzasadnione. *)
+    taktyk" wydaje się całkiem uzasadnione. *)
 
 (** **** Ćwiczenie (my_exact) *)
 
@@ -117,13 +117,13 @@ Qed.
 
 (** **** Ćwiczenie (my_intro) *)
 
-(** Zaimplementuj taktykę [my_intro1], która działa tak, jak [intro], czyli
-    próbuje wprowadzić do kontekstu zmienną o domyślnej nazwie. Zaimplementuj
-    też taktykę [my_intro2 x], która działa tak jak [intro x], czyli próbuje
-    wprowadzić do kontekstu zmienną o nazwie [x]. Użyj taktyki [refine].
+(** Zaimplementuj taktykę [my_intro1], która działa tak, jak [intro], czyli
+    próbuje wprowadzić do kontekstu zmienną o domyślnej nazwie. Zaimplementuj
+    też taktykę [my_intro2 x], która działa tak jak [intro x], czyli próbuje
+    wprowadzić do kontekstu zmienną o nazwie [x]. Użyj taktyki [refine].
 
-    Bonus: przeczytaj dokumentację na temat notacji dla taktyk (komenda
-    [Tactic Notation]) i napisz taktykę [my_intro], która działa tak jak
+    Bonus: przeczytaj dokumentację na temat notacji dla taktyk (komenda
+    [Tactic Notation]) i napisz taktykę [my_intro], która działa tak jak
     [my_intro1], gdy nie dostanie argumentu, a tak jak [my_intro2], gdy
     dostanie argument. *)
 
@@ -145,7 +145,7 @@ Qed.
 
 (** **** Ćwiczenie (my_apply) *)
 
-(** Napisz taktykę [my_apply H], która działa tak jak [apply H]. Użyj taktyki
+(** Napisz taktykę [my_apply H], która działa tak jak [apply H]. Użyj taktyki
     [refine]. *)
 
 (* begin hide *)
@@ -219,7 +219,7 @@ Restart.
 Abort.
 
 (** [clear] to niesamowicie użyteczna taktyka, dzięki której możemy zrobić
-    porządek w kontekście. Można używać jej na nastepujące sposoby:
+    porządek w kontekście. Można używać jej na nastepujące sposoby:
     - [clear x] usuwa [x] z kontekstu. Jeżeli [x] nie ma w kontekście lub są
       w nim jakieś rzeczy zależne od [x], taktyka zawodzi. Można usunąć wiele
       rzeczy na raz: [clear x_1 ... x_N].
@@ -227,11 +227,11 @@ Abort.
     - [clear dependent x] usuwa z kontekstu [x] i wszystkie rzeczy, które od
       niego zależą. Taktyka ta zawodzi jedynie gdy [x] nie ma w kontekście.
     - [clear] usuwa z kontekstu absolutnie wszystko. Serdecznie nie polecam.
-    - [clearbody x] usuwa definicję [x] (jeżeli [x] jakąś posiada). *)
+    - [clearbody x] usuwa definicję [x] (jeżeli [x] jakąś posiada). *)
 
 (** **** Ćwiczenie (tru) *)
 
-(** Napisz taktykę [tru], która czyści kontekst z dowodów na [True] oraz
+(** Napisz taktykę [tru], która czyści kontekst z dowodów na [True] oraz
     potrafi udowodnić cel [True].
 
     Dla przykładu, taktyka ta powinna przekształcać kontekst
@@ -263,7 +263,7 @@ Inductive even : nat -> Prop :=
     | even0 : even 0
     | evenSS : forall n : nat, even n -> even (S (S n)).
 
-(** Napisz taktykę [even], która potrafi udowodnić poniższy cel. *)
+(** Napisz taktykę [even], która potrafi udowodnić poniższy cel. *)
 
 (* begin hide *)
 Ltac even := unfold not; intros; repeat
@@ -280,10 +280,10 @@ Abort.
 
 (** **** Ćwiczenie (my_destruct_and) *)
 
-(** Napisz taktykę [my_destruct H p q], która działa jak [destruct H as [p q]],
+(** Napisz taktykę [my_destruct H p q], która działa jak [destruct H as [p q]],
     gdzie [H] jest dowodem koniunkcji. Użyj taktyk [refine] i [clear].
 
-    Bonus 1: zaimplementuj taktykę [my_destruct_and H], która działa tak jak
+    Bonus 1: zaimplementuj taktykę [my_destruct_and H], która działa tak jak
     [destruct H], gdy [H] jest dowodem koniunkcji.
 
     Bonus 2: zastanów się, jak (albo czy) można zaimplementować taktykę
@@ -322,7 +322,7 @@ Qed.
 
 (** **** Ćwiczenie (my_fold) *)
 
-(** Napisz taktykę [my_fold x], która działa tak jak [fold x], tj. zastępuje
+(** Napisz taktykę [my_fold x], która działa tak jak [fold x], tj. zastępuje
     we wszystkich miejscach w celu term powstały po rozwinięciu [x] przez [x].
 
     Wskazówka: zapoznaj się z konstruktem [eval] — zajrzyj do 9 rozdziału
@@ -373,7 +373,7 @@ Proof.
   remember (2 + 2) as b.
 Abort.
 
-(** Taktyka [pose (x := t)] dodaje do kontekstu zmienną [x] (pod warunkiem,
+(** Taktyka [pose (x := t)] dodaje do kontekstu zmienną [x] (pod warunkiem,
     że nazwa ta nie jest zajęta), która zostaje zdefiniowana za pomocą termu
     [t].
 
@@ -382,11 +382,11 @@ Abort.
     dodaje do kontekstu równanie postaci [x = t].
 
     W powyższym przykładzie działają one następująco: [pose (a := 2 + 2)]
-    dodaje do kontekstu wiązanie [a := 2 + 2], zaś [remember (2 + 2) as b]
+    dodaje do kontekstu wiązanie [a := 2 + 2], zaś [remember (2 + 2) as b]
     dodaje do kontekstu równanie [Heqb : b = 2 + 2] i zastępuje przez [b]
     wszystkie wystąpienia [2 + 2] — także to w definicji [a].
 
-    Taktyki te przydają się w tak wielu różnych sytuacjach, że nie ma co
+    Taktyki te przydają się w tak wielu różnych sytuacjach, że nie ma co
     próbować ich tu wymieniać. Użyjesz ich jeszcze nie raz. *)
 
 (** **** Ćwiczenie (set) *)
@@ -437,16 +437,16 @@ End admit.
 
 (** [admit] to taktyka-oszustwo, która rozwiązuje dowolny cel. Nie jest ona
     rzecz jasna wszechwiedząca i przez to rozwiązanego za jej pomocą celu
-    nie można zapisać za pomocą komend [Qed] ani [Defined], a jedynie za
+    nie można zapisać za pomocą komend [Qed] ani [Defined], a jedynie za
     pomocą komendy [Admitted], która oszukańczo udowodnione twierdzenie
     przekształca w aksjomat.
 
     W CoqIDE oszustwo jest dobrze widoczne, gdyż zarówno taktyka [admit]
-    jak i komenda [Admitted] podświetlają się na żółto, a nie na zielono,
+    jak i komenda [Admitted] podświetlają się na żółto, a nie na zielono,
     tak jak prawdziwe dowody. Wyświetlenie [Print]em dowodu zakończonego
-    komendą [Admitted] również pokazuje, że ma on status aksjomatu.
+    komendą [Admitted] również pokazuje, że ma on status aksjomatu.
 
-    Na koniec zauważmy, że komendy [Admitted] możemy użyć również bez
+    Na koniec zauważmy, że komendy [Admitted] możemy użyć również bez
     wczesniejszego użycia taktyki [admit]. Różnica między tymi dwoma bytami
     jest taka, że taktyka [admit] służy do "udowodnienia" pojedynczego celu,
     a komenda [Admitted] — całego twierdzenia. *)
@@ -456,8 +456,8 @@ End admit.
 (** ** [case_eq] *)
 
 (** [case_eq] to taktyka podobna do taktyki [destruct], ale nieco mądrzejsza,
-    gdyż nie zdarza jej się "zapominać", jaka była struktura rozbitego przez
-    nią termu. *)
+    gdyż nie zdarza jej się "zapominać", jaka była struktura rozbitego przez
+    nią termu. *)
 
 Goal
   forall n : nat, n + n = 42.
@@ -468,16 +468,16 @@ Restart.
 Abort.
 
 (** Różnice między [destruct] i [case_eq] dobrze ilustruje powyższy przykład.
-    [destruct] nadaje się jedynie do rozbijania termów, które są zmiennymi.
+    [destruct] nadaje się jedynie do rozbijania termów, które są zmiennymi.
     Jeżeli rozbijemy coś, co nie jest zmienną (np. term [n + n]), to utracimy
-    część informacji na jego temat. [case_eq] potrafi rozbijać dowolne termy,
-    gdyż poza samym rozbiciem dodaje też do celu dodatkową hipotezę, która
+    część informacji na jego temat. [case_eq] potrafi rozbijać dowolne termy,
+    gdyż poza samym rozbiciem dodaje też do celu dodatkową hipotezę, która
     zawiera równanie "pamiętające" informacje o rozbitym termie, o których
     zwykły [destruct] zapomina. *)
 
 (** **** Ćwiczenie (my_case_eq) *)
 
-(** Napisz taktykę [my_case_eq t Heq], która działa tak jak [case_eq t], ale
+(** Napisz taktykę [my_case_eq t Heq], która działa tak jak [case_eq t], ale
     nie dodaje równania jako hipotezę na początku celu, tylko bezpośrednio
     do kontekstu i nazywa je [Heq]. Użyj taktyk [remember] oraz [destruct]. *)
 
@@ -503,7 +503,7 @@ Abort.
 (** ** [contradiction] *)
 
 (** [contradiction] to taktyka, która wprowadza do kontekstu wszystko co się
-    da, a potem próbuje znaleźć sprzeczność. Potrafi rozpoznawać hipotezy
+    da, a potem próbuje znaleźć sprzeczność. Potrafi rozpoznawać hipotezy
     takie jak [False], [x <> x], [~ True]. Potrafi też znaleźć dwie hipotezy,
     które są ze sobą ewidentnie sprzeczne, np. [P] oraz [~ P]. Nie potrafi
     jednak wykrywać lepiej ukrytych sprzeczności, np. nie jest w stanie
@@ -512,7 +512,7 @@ Abort.
 (** **** Ćwiczenie (my_contradiction) *)
 
 (** Napisz taktykę [my_contradiction], która działa tak jak standardowa
-    taktyka [contradiction], a do tego jest w stanie udowodnić dowolny
+    taktyka [contradiction], a do tego jest w stanie udowodnić dowolny
     cel, jeżeli w kontekście jest hipoteza postaci [true = false] lub
     [false = true]. *)
 
@@ -582,7 +582,7 @@ End my_contradiction.
 
 (** **** Ćwiczenie (taktyki dla sprzeczności) *)
 
-(** Innymi taktykami, które mogą przydać się przy rozumowaniach przez
+(** Innymi taktykami, które mogą przydać się przy rozumowaniach przez
     sprowadzenie do sprzeczności, są [absurd], [contradict] i [exfalso].
     Przeczytaj ich opisy w manualu i zbadaj ich działanie. *)
 
@@ -614,7 +614,7 @@ Print or.
     Użycie taktyki [constructor] bez liczby oznacza zaaplikowanie pierwszego
     konstruktora, który pasuje do celu, przy czym taktyka ta może wyzwalać
     backtracking. W drugim przykładzie powyżej [constructor] działa jak
-    [apply or_intro] (czyli jak taktyka [left]), gdyż zaaplikowanie tego
+    [apply or_intro] (czyli jak taktyka [left]), gdyż zaaplikowanie tego
     konstruktora nie zawodzi.
 
     W trzecim przykładzie [constructor; assumption] działa tak: najpierw
@@ -639,11 +639,11 @@ Proof.
 Qed.
 
 (** [decompose] to bardzo użyteczna taktyka, która potrafi za jednym zamachem
-    rozbić bardzo skomplikowane hipotezy. [decompose [t_1 ... t_n] H] rozbija
+    rozbić bardzo skomplikowane hipotezy. [decompose [t_1 ... t_n] H] rozbija
     rekurencyjnie hipotezę [H] tak długo, jak jej typem jest jeden z typów
     [t_i]. W powyższym przykładzie [decompose [and ex] H] najpierw rozbija [H],
-    gdyż jest ona koniunkcją, a następnie rozbija powstałe z niej hipotezy,
-    gdyż są one kwantyfikacjami egzystencjalnymi ("exists" jest notacją dla
+    gdyż jest ona koniunkcją, a następnie rozbija powstałe z niej hipotezy,
+    gdyż są one kwantyfikacjami egzystencjalnymi ("exists" jest notacją dla
     [ex]). [decompose] nie usuwa z kontekstu hipotezy, na której działa, więc
     często następuje po niej taktyka [clear]. *)
 
@@ -671,18 +671,18 @@ Abort.
 
 (** Pierwszy przykład to standardowe użycie [intros] — wprowadzamy cztery
     zmienne, która nazywamy kolejno [P], [Q], [R] i [S], po czym wprowadzamy
-    bezimienną hipotezę typu [P /\ Q /\ R], która natychmiast rozbijamy za
+    bezimienną hipotezę typu [P /\ Q /\ R], która natychmiast rozbijamy za
     pomocą wzorca [p [q r]].
 
-    W kolejnym przykładzie mamy już nowości: wzorzec [?] służy do nadania
+    W kolejnym przykładzie mamy już nowości: wzorzec [?] służy do nadania
     zmiennej domyślnej nazwy. W naszym przypadku wprowadzone do kontekstu
-    zdanie zostaje nazwane [P], gdyż taką nazwę nosi w kwantyfikatorze,
+    zdanie zostaje nazwane [P], gdyż taką nazwę nosi w kwantyfikatorze,
     gdy jest jeszcze w celu.
 
     Wzorzec [?P] służy do nadania zmiennej domyślnej nazwy zaczynając się
     od tego, co następuje po znaku [?]. W naszym przypadku do konteksu
     wprowadzona zostaje zmienna [P0], gdyż żądamy nazwy zaczynającej się
-    od "P", ale samo "P" jest już zajęte. Widzimy też wzorzec [(p, (p0, q))],
+    od "P", ale samo "P" jest już zajęte. Widzimy też wzorzec [(p, (p0, q))],
     który służy do rozbicia hipotezy. Wzorce tego rodzaju działają tak samo
     jak wzorce w kwadratowych nawiasach, ale możemy używać ich tylko na
     elementach typu induktywnego z jednym konstruktorem.
@@ -690,22 +690,22 @@ Abort.
     Wzorzec [*] wprowadza do kontekstu wszystkie zmienne kwantyfikowane
     uniwersalnie i zatrzymuje sie na pierwszej nie-zależnej hipotezie. W
     naszym przykładzie uniwersalnie kwantyfikowane są [P], [Q], [R] i [S],
-    więc zostają wprowadzane, ale [P /\ Q /\ R] nie jest już kwantyfikowane
+    więc zostają wprowadzane, ale [P /\ Q /\ R] nie jest już kwantyfikowane
     uniwersalnie — jest przesłanką implikacji — więc nie zostaje wprowadzone.
 
     Wzorzec [**] wprowadza do kontekstu wszystko. Wobec tego [intros **] jest
     synonimem [intros]. Mimo tego nie jest on bezużyteczny — możemy użyć go
-    po innych wzorcach, kiedy nie chcemy już więcej nazywać/rozbijać naszych
+    po innych wzorcach, kiedy nie chcemy już więcej nazywać/rozbijać naszych
     zmiennych. Wtedy dużo szybciej napisać [**] niż [; intros]. W naszym
-    przypadku chcemy nazwać jedynie pierwsze dwie zmienne, a resztę wrzucamy
+    przypadku chcemy nazwać jedynie pierwsze dwie zmienne, a resztę wrzucamy
     do kontekstu jak leci.
 
-    Wzorzec [_] pozwala pozbyć się zmiennej lub hipotezy. Taktyka [intros _]
+    Wzorzec [_] pozwala pozbyć się zmiennej lub hipotezy. Taktyka [intros _]
     jest wobec tego równoważna [intro H; clear H] (przy założeniu, że [H]
     jest wolne), ale dużo bardziej zwięzła w zapisie. Nie możemy jednak
     usunąć zmiennych lub hipotez, od których zależą inne zmienne lub hipotezy.
     W naszym przedostatnim przykładzie bez problemu usuwamy hipotezę [P /\
-    Q /\ R], gdyż żaden term od niej nie zależy. Jednak w ostatnim przykładzie
+    Q /\ R], gdyż żaden term od niej nie zależy. Jednak w ostatnim przykładzie
     nie możemy usunąć [P], gdyż zależy od niego hipoteza [P /\ Q /\ R]. *)
 
 Example intros_1 :
@@ -730,7 +730,7 @@ Restart.
 Abort.
 
 (** Wzorców [->] oraz [<-] możemy użyć, gdy chcemy wprowadzić do kontekstu
-    równanie, przepisać je i natychmiast się go pozbyć. Wobec tego taktyka
+    równanie, przepisać je i natychmiast się go pozbyć. Wobec tego taktyka
     [intros ->] jest równoważna czemuś w stylu [intro H; rewrite H in *;
     clear H] (oczywiście pod warunkiem, że nazwa [H] nie jest zajęta). *)
 
@@ -746,7 +746,7 @@ Abort.
     (i nie tylko) na składowe. W naszym przypadu mamy równanie [(a, b) =
     (c, d)] — zauważmy, że nie jest ono koniunkcją dwóch równości [a = c]
     oraz [b = d], co jasno widać na przykładzie, ale można z niego ową
-    koniunkjcę wywnioskować. Taki właśnie efekt ma wzorzec [= p1 p2] —
+    koniunkjcę wywnioskować. Taki właśnie efekt ma wzorzec [= p1 p2] —
     dodaje on nam do kontekstu hipotezy [p1 : a = c] oraz [p2 : b = d]. *)
 
 Example intros_4 :
@@ -758,21 +758,21 @@ Restart.
 Abort.
 
 (** Taktyka [intros until x] wprowadza do kontekstu wszystkie zmienne jak
-    leci dopóki nie natknie się na taką, która nazywa się "x". Taktyka
+    leci dopóki nie natknie się na taką, która nazywa się "x". Taktyka
     [intros until n], gdzie [n] jest liczbą, wprowadza do kontekstu wszyskto
-    jak leci aż do n-tej nie-zależnej hipotezy (tj. przesłanki implikacji).
+    jak leci aż do n-tej nie-zależnej hipotezy (tj. przesłanki implikacji).
     W naszym przykładzie mamy 3 przesłanki implikacji: [(P -> Q)], [(Q -> R)]
     i [P], więc taktyka [intros until 2] wprowadza do kontekstu dwie pierwsze
     z nich oraz wszystko, co jest poprzedza.
 
-    Wzorzec [x %H_1 ... %H_n] wprowadza do kontekstu zmienną [x], a następnie
+    Wzorzec [x %H_1 ... %H_n] wprowadza do kontekstu zmienną [x], a następnie
     aplikuje do niej po kolei hipotezy [H_1], ..., [H_n]. Taki sam efekt można
     osiągnąć ręcznie za pomocą taktyki [intro x; apply H_1 in x; ... apply H_n
     in x]. *)
 
 (** **** Ćwiczenie (intros) *)
 
-(** Taktyka [intros] ma jeszcze trochę różnych wariantów. Poczytaj o nich
+(** Taktyka [intros] ma jeszcze trochę różnych wariantów. Poczytaj o nich
     w manualu. *)
 
 (** ** [fix] *)
@@ -781,7 +781,7 @@ Abort.
     związku z tym nadeszła dobra pora, żeby pokazać wszystkie możliwe sposoby
     na użycie rekursji w Coqu. Żeby dużo nie pisać, przyjrzyjmy się przykładom:
     zdefiniujemy/udowodnimy regułę indukcyjną dla liczb naturalnych, którą
-    powinieneś znać jak własną kieszeń (a jeżeli nie, to marsz robić zadania
+    powinieneś znać jak własną kieszeń (a jeżeli nie, to marsz robić zadania
     z liczb naturalnych!). *)
 
 Definition nat_ind_fix_term
@@ -836,8 +836,8 @@ Restart.
 Defined.
 
 (** W trzecim podejściu również używamy komendy [Fixpoint], ale tym razem,
-    zamiast ręcznie wpisywać term, definiujemy naszą regułę za pomocą taktyk.
-    Sposób ten jest prawie zawsze (dużo) dłuższy niż poprzedni, ale jego
+    zamiast ręcznie wpisywać term, definiujemy naszą regułę za pomocą taktyk.
+    Sposób ten jest prawie zawsze (dużo) dłuższy niż poprzedni, ale jego
     zaletą jest to, że przy skomplikowanych celach jest dużo ławiejszy do
     ogarnięcia dla człowieka.
 
@@ -852,12 +852,12 @@ Defined.
     Na szczęście ratuje nas komenda [Show Proof], która pokazuje, jak wygląda
     term, która póki co wygenerowały taktyki. Pokazuje on nam term postaci
     [nat_ind_Fixpoint_tac P H0 HS n := nat_ind_Fixpoint_tac P H0 HS n], który
-    próbuje wywołać się rekurencyjnie na tym samym argumencie, na którym sam
+    próbuje wywołać się rekurencyjnie na tym samym argumencie, na którym sam
     został wywołany. Nie jest więc legalny.
 
     Jeżeli z wywołaniami rekurencyjnymi jest wszystko ok, to komenda [Guarded]
     wyświetla przyjazny komunikat. Tak właśnie jest, gdy używamy jej po raz
-    drugi — tym razem wywołanie rekurencyjne odbywa się na [n'], które jest
+    drugi — tym razem wywołanie rekurencyjne odbywa się na [n'], które jest
     podtermem [n]. *)
 
 Definition nat_ind_fix_tac :
@@ -878,9 +878,9 @@ Proof.
 Defined.
 
 (** Taktyki [fix] możemy użyć w dowolnym momencie, aby rozpocząć dowodzenie/
-    definiowanie bezpośrednio przez rekursję. Jej argumentami są nazwa, którą
+    definiowanie bezpośrednio przez rekursję. Jej argumentami są nazwa, którą
     chcemy nadać hipotezie indukcyjnej oraz numer argument głównego. W
-    powyższym przykładzie chcemy robić rekursję po [n], który jest czwarty
+    powyższym przykładzie chcemy robić rekursję po [n], który jest czwarty
     z kolei (po [P], [H0] i [HS]).
 
     Komenda [Show Proof] pozwala nam odkryć, że użycie taktyki [fix] w
@@ -890,22 +890,22 @@ Defined.
     Taktyka [fix] jest bardzo prymitywna i prawie nigdy nie jest używana,
     tak samo jak konstrukt [fix] (najbardziej poręczne są sposoby, które
     widzieliśmy w przykladach 2 i 3), ale była dobrym pretekstem, żeby
-    omówić wszystkie sposoby użycia rekursji w jednym miejscu. *)
+    omówić wszystkie sposoby użycia rekursji w jednym miejscu. *)
 
 (** ** [functional induction] i [functional inversion] *)
 
 (** Taktyki [functional induction] i [functional inversion] są związane z
-    pojęciem indukcji funkcyjnej. Dość szczegółowy opis tej pierwszej jest
+    pojęciem indukcji funkcyjnej. Dość szczegółowy opis tej pierwszej jest
     w notatkach na seminarium: https://zeimer.github.io/Seminar.html##lab247
 
-    Drugą z nich póki co pominiemy. Kiedyś z pewnością napiszę coś więcej
+    Drugą z nich póki co pominiemy. Kiedyś z pewnością napiszę coś więcej
     o indukcji funkcyjnej lub chociaż przetłumaczę zalinkowane notatki na
     polski. *)
 
 (** ** [generalize dependent] *)
 
 (** [generalize dependent] to taktyka będąca przeciwieństwem [intro] — dzięki
-    niej możemy przerzucić rzeczy znajdujące się w kontekście z powrotem do
+    niej możemy przerzucić rzeczy znajdujące się w kontekście z powrotem do
     kontekstu. Nieformalnie odpowiada ona sposobowi rozumowania: aby pokazać,
     że cel zachodzi dla pewnego konkretnego [x], wystarczy czy pokazać, że
     zachodzi dla dowolnego [x].
@@ -914,7 +914,7 @@ Defined.
     zachodzi twierdzenie bardziej szczegółowe. Nazwa [generalize] bierze się
     stąd, że w dedukcji naturalnej nasze rozumowania przeprowadzamy "od tyłu".
     Człon "dependent" bierze się stąd, że żeby zgeneralizować [x], musimy
-    najpierw zgeneralizować wszystkie obiekty, które są od niego zależne. Na
+    najpierw zgeneralizować wszystkie obiekty, które są od niego zależne. Na
     szczęście taktyka [generalize dependent] robi to za nas. *)
 
 Example generalize_dependent_0 :
@@ -925,19 +925,19 @@ Abort.
 
 (** Użycie [intros] wprowadza do kontekstu [n], [m] i [H]. [generalize
     dependent n] przenosi [n] z powrotem do celu, ale wymaga to, aby do
-    celu przenieść również [H], gdyż typ [H], czyli [n = m], zależy od [n]. *)
+    celu przenieść również [H], gdyż typ [H], czyli [n = m], zależy od [n]. *)
 
 (** **** Ćwiczenie (generalize i revert) *)
 
 (** [generalize dependent] jest wariantem taktyki [generalize]. Taktyką o
     niemal identycznym działaniu jest [revert dependent], wariant taktyki
-    [revert]. Przeczytaj dokumentację [generalize] i [revert] w manualu i
+    [revert]. Przeczytaj dokumentację [generalize] i [revert] w manualu i
     sprawdź, jak działają. *)
 
 (** **** Ćwiczenie (my_rec) *)
 
-(** Zaimplementuj taktykę [rec x], która będzie pomagała przy dowodzeniu
-    bezpośrednio przez rekursję po [x]. Taktyka [rec x] ma działać jak
+(** Zaimplementuj taktykę [rec x], która będzie pomagała przy dowodzeniu
+    bezpośrednio przez rekursję po [x]. Taktyka [rec x] ma działać jak
     [fix IH n; destruct x], gdzie [n] to pozycja argumentu [x] w celu. Twoja
     taktyka powinna działać tak, żeby poniższy dowód zadziałał bez potrzeby
     wprowadzania modyfikacji.
@@ -968,29 +968,29 @@ Example reflexivity_0 :
   forall n : nat, n <= n.
 Proof. reflexivity. Qed.
 
-(** Znasz już taktykę [reflexivity]. Mogłoby się wydawać, że służy ona do
+(** Znasz już taktykę [reflexivity]. Mogłoby się wydawać, że służy ona do
     udowadniania celów postaci [x = x] i jest w zasadzie równoważna taktyce
     [apply eq_refl], ale nie jest tak. Taktyka [reflexivity] potrafi rozwiązać
-    każdy cel postaci [R x y], gdzie [R] jest relacją zwrotną, a [x] i [y] są
+    każdy cel postaci [R x y], gdzie [R] jest relacją zwrotną, a [x] i [y] są
     konwertowalne (oczywiście pod warunkiem, że udowodnimy wcześniej, że [R]
     faktycznie jest zwrotna; w powyższym przykładzie odpowiedni fakt został
     zaimportowany z modułu [Arith]).
 
-    Żeby zilustrować ten fakt, zdefiniujmy nową relację zwrotną i zobaczmy,
+    Żeby zilustrować ten fakt, zdefiniujmy nową relację zwrotną i zobaczmy,
     jak użyć taktyki [reflexivity] do radzenia sobie z nią. *)
 
 Definition eq_ext {A B : Type} (f g : A -> B) : Prop :=
   forall x : A, f x = g x.
 
 (** W tym celu definiujemy relację [eq_ext], która głosi, że funkcja
-    [f : A -> B] jest w relacji z funkcją [g : A -> B], jeżeli [f x]
+    [f : A -> B] jest w relacji z funkcją [g : A -> B], jeżeli [f x]
     jest równe [g x] dla dowolnego [x : A]. *)
 
 Require Import RelationClasses.
 
-(** Moduł [RelationClasses] zawiera definicję zwrotności [Reflexive], z której
+(** Moduł [RelationClasses] zawiera definicję zwrotności [Reflexive], z której
     korzysta taktyka [reflexivity]. Jeżeli udowodnimy odpowiednie twierdzenie,
-    będziemy mogli używać taktyki [reflexivity] z relacją [eq_ext]. *)
+    będziemy mogli używać taktyki [reflexivity] z relacją [eq_ext]. *)
 
 Instance Reflexive_eq_ext :
   forall A B : Type, Reflexive (@eq_ext A B).
@@ -1010,9 +1010,9 @@ Example reflexivity_1 :
   eq_ext (fun _ : nat => 42) (fun _ : nat => 21 + 21).
 Proof. reflexivity. Defined.
 
-(** Voilà! Od teraz możemy używać taktyki [reflexivity] z relacją [eq_ext].
+(** Voil� ! Od teraz możemy używać taktyki [reflexivity] z relacją [eq_ext].
 
-    Są jeszcze dwie taktyki, które czasem przydają się przy dowodzeniu
+    Są jeszcze dwie taktyki, które czasem przydają się przy dowodzeniu
     równości (oraz równoważności). *)
 
 Example symmetry_transitivity_0 :
@@ -1023,11 +1023,11 @@ Proof.
     assumption.
 Qed.
 
-(** Mogłoby się wydawać, że taktyka [symmetry] zamienia cel postaci [x = y]
+(** Mogłoby się wydawać, że taktyka [symmetry] zamienia cel postaci [x = y]
     na [y = x], zaś taktyka [transitivity y] rozwiązuje cel postaci [x = z]
     i generuje w zamian dwa cele postaci [x = y] i [y = z]. Rzeczywistość
     jest jednak bardziej hojna: podobnie jak w przypadku [reflexivity],
-    taktyki te działają z dowolnymi relacjami symetrycznymi i przechodnimi. *)
+    taktyki te działają z dowolnymi relacjami symetrycznymi i przechodnimi. *)
 
 Instance Symmetric_eq_ext :
   forall A B : Type, Symmetric (@eq_ext A B).
@@ -1043,7 +1043,7 @@ Proof.
 Defined.
 
 (** Użycie w dowodach taktyk [symmetry] i [transitivity] jest legalne, gdyż
-    nie używamy ich z relacją [eq_ext], a z relacją [=]. *)
+    nie używamy ich z relacją [eq_ext], a z relacją [=]. *)
 
 Example symmetry_transitivity_1 :
   forall (A B : Type) (f g h : A -> B),
@@ -1054,9 +1054,9 @@ Proof.
     assumption.
 Qed.
 
-(** Dzięki powyższym twierdzeniom możemy teraz posługiwać się taktykami
+(** Dzięki powyższym twierdzeniom możemy teraz posługiwać się taktykami
     [symmetry] i [transitivity] dowodząc faktów na temat relacji [eq_ext].
-    To jednak wciąż nie wyczerpuje naszego arsenału taktyk do radzenia sobie
+    To jednak wciąż nie wyczerpuje naszego arsenału taktyk do radzenia sobie
     z relacjami równoważności. *)
 
 (** ** [f_equal] *)
@@ -1068,21 +1068,21 @@ Check f_equal.
 (** [f_equal] to jedna z podstawowych właściwości relacji [eq], która głosi,
     że wszystkie funkcje zachowują równość. Innymi słowy: aby pokazać, że
     wartości zwracane przez funkcję są równe, wystarczy pokazać, że argumenty
-    są równe. Ten sposób rozumowania, choć nie jest ani jedyny, ani skuteczny
+    są równe. Ten sposób rozumowania, choć nie jest ani jedyny, ani skuteczny
     na wszystkie cele postaci [f x = f y], jest wystarczająco częsty, aby mieć
-    swoją własną taktykę, którą zresztą powinieneś już dobrze znać — jest nią
+    swoją własną taktykę, którą zresztą powinieneś już dobrze znać — jest nią
     [f_equal].
 
     Taktyka ta sprowadza się w zasadzie do jak najsprytniejszego aplikowania
-    faktu [f_equal]. Nie potrafi ona wprowadzać zmiennych do kontekstu, a z
+    faktu [f_equal]. Nie potrafi ona wprowadzać zmiennych do kontekstu, a z
     wygenerowanych przez siebie podcelów rozwiązuje jedynie te postaci [x = x],
     ale nie potrafi rozwiązać tych, które zachodzą na mocy założenia. *)
 
 (** **** Ćwiczenie (my_f_equal) *)
 
 (** Napisz taktykę [my_f_equal], która działa jak [f_equal] na sterydach, tj.
-    poza standardową funkcjonalnością [f_equal] potrafi też wprowadzać zmienne
-    do kontekstu oraz rozwiązywać cele prawdziwe na mocy założenia.
+    poza standardową funkcjonalnością [f_equal] potrafi też wprowadzać zmienne
+    do kontekstu oraz rozwiązywać cele prawdziwe na mocy założenia.
 
     Użyj tylko jednej klauzuli [match]a. Nie używaj taktyki [subst]. Bonus:
     wykorzystaj kombinator [first], ale nie wciskaj go na siłę. Z czego
@@ -1131,10 +1131,10 @@ Qed.
 
 (** **** Ćwiczenie (właściwości [f_equal]) *)
 
-(** Przyjrzyj się definicjom [f_equal], [id], [compose], [eq_sym], [eq_trans],
+(** Przyjrzyj się definicjom [f_equal], [id], [compose], [eq_sym], [eq_trans],
     a następnie udowodnij poniższe lematy. Ich sens na razie niech pozostanie
-    ukryty — kiedyś być może napiszę coś na ten temat. Jeżeli intrygują cię
-    one, przyjrzyj się książce https://homotopytypetheory.org/book/ *)
+    ukryty — kiedyś być może napiszę coś na ten temat. Jeżeli intrygują cię
+    one, przyjrzyj się książce https://homotopytypetheory.org/book/ *)
 
 Require Import Coq.Program.Basics.
 
@@ -1196,8 +1196,8 @@ Require Import Classes.Morphisms.
 Definition len_eq {A : Type} (l1 l2 : list A) : Prop :=
   length l1 = length l2.
 
-(** W naszym przykładzie posłużymy się relacją [len_eq], która głosi, że
-    dwie listy są w relacji gdy mają taką samą długość. *)
+(** W naszym przykładzie posłużymy się relacją [len_eq], która głosi, że
+    dwie listy są w relacji gdy mają taką samą długość. *)
 
 Instance Proper_len_eq_map {A : Type} :
   Proper (@len_eq A ==> @len_eq A ==> @len_eq A) (@app A).
@@ -1210,28 +1210,28 @@ Proof.
 Qed.
 
 (** Taktyka [f_equal] działa na celach postaci [f x = f y], gdzie [f] jest
-    dowolne, albowiem wszystkie funkcje zachowują równość. Analogicznie
+    dowolne, albowiem wszystkie funkcje zachowują równość. Analogicznie
     taktyka [f_equiv] działa na celach postaci [R (f x) (f y)], gdzie [R]
-    jest dowolną relacją, ale tylko pod warunkiem, że funkcja [f] zachowuje
-    relację [R].
+    jest dowolną relacją, ale tylko pod warunkiem, że funkcja [f] zachowuje
+    relację [R].
 
     Musi tak być, bo gdyby [f] nie zachowywała [R], to mogłoby jednocześnie
-    zachodzić [R x y] oraz [~ R (f x) (f y)], a wtedy sposób rozumowania
+    zachodzić [R x y] oraz [~ R (f x) (f y)], a wtedy sposób rozumowania
     analogiczny do tego z twierdzenia [f_equal] byłby niepoprawny.
 
     Aby taktyka [f_equiv] "widziała", że [f] zachowuje [R], musimy znów
-    posłużyć się komendą [Instance] i użyć [Proper], które służy do
+    posłużyć się komendą [Instance] i użyć [Proper], które służy do
     zwięzłego wyrażania, które konkretnie relacje i w jaki sposób zachowuje
     dana funkcja.
 
     W naszym przypadku będziemy chcieli pokazać, że jeżeli listy [l1] oraz
-    [l1'] są w relacji [len_eq] (czyli mają taką samą długość) i podobnie
+    [l1'] są w relacji [len_eq] (czyli mają taką samą długość) i podobnie
     dla [l2] oraz [l2'], to wtedy konkatenacja [l1] i [l2] jest w relacji
     [len_eq] z konkatenacją [l1'] i [l2']. Ten właśnie fakt jest wyrażany
     przez zapis [Proper (@len_eq A ==> @len_eq A ==> @len_eq A) (@app A)].
 
     Należy też zauważyć, że strzałka [==>] jest jedynie notacją dla tworu
-    zwanego [respectful], co możemy łatwo sprawdzić komendą [Locate.] *)
+    zwanego [respectful], co możemy łatwo sprawdzić komendą [Locate.] *)
 
 Example f_equiv_0 :
   forall (A B : Type) (f : A -> B) (l1 l1' l2 l2' : list A),
@@ -1243,15 +1243,15 @@ Proof.
     assumption.
 Qed.
 
-(** Voilà! Teraz możemy używać taktyki [f_equiv] z relacją [len_eq] oraz
-    funkcją [app] dokładnie tak, jak taktyki [f_equal] z równością oraz
-    dowolną funkcją.
+(** Voil� ! Teraz możemy używać taktyki [f_equiv] z relacją [len_eq] oraz
+    funkcją [app] dokładnie tak, jak taktyki [f_equal] z równością oraz
+    dowolną funkcją.
 
     Trzeba przyznać, że próba użycia [f_equiv] z różnymi kombinacjami
-    relacji i funkcji może zakończyć się nagłym i niekontrolowanym
+    relacji i funkcji może zakończyć się nagłym i niekontrolowanym
     rozmnożeniem lematów mówiących o tym, że funkcje zachowują relacje.
-    Niestety, nie ma na to żadnego sposobu — jak przekonaliśmy się wyżej,
-    udowodnienie takiego lematu to jedyny sposób, aby upewnić się, że nasz
+    Niestety, nie ma na to żadnego sposobu — jak przekonaliśmy się wyżej,
+    udowodnienie takiego lematu to jedyny sposób, aby upewnić się, że nasz
     sposób rozumowania jest poprawny. *)
 
 (** **** Ćwiczenie (f_equiv_filter) *)
@@ -1263,7 +1263,7 @@ Definition stupid_id {A : Type} (l : list A) : list A :=
   filter (fun _ => true) l.
 
 (** Oto niezbyt mądry sposób na zapisanie funkcji identycznościowej na
-    listach typu [A]. Pokaż, że [stupid_id] zachowuje relację [len_eq],
+    listach typu [A]. Pokaż, że [stupid_id] zachowuje relację [len_eq],
     tak aby poniższy dowód zadziałał bez wpowadzania zmian. *)
 
 (* begin hide *)
@@ -1286,17 +1286,17 @@ Qed.
 
 (** ** [rewrite] *)
 
-(** Powinieneś być już nieźle wprawiony w używaniu taktyki [rewrite]. Czas
-    najwyższy więc opisać wszystkie jej możliwości.
+(** Powinieneś być już nieźle wprawiony w używaniu taktyki [rewrite]. Czas
+    najwyższy więc opisać wszystkie jej możliwości.
 
     Podstawowe wywołanie tej taktyki ma postać [rewrite H], gdzie [H] jest
     typu [forall (x_1 : A_1) ... (x_n : A_n), R t_1 t_2], zaś [R] to [eq]
-    lub dowolna relacja równoważności. Przypomnijmy, że relacja równoważności
+    lub dowolna relacja równoważności. Przypomnijmy, że relacja równoważności
     to relacja, która jest zwrotna, symetryczna i przechodnia.
 
     [rewrite H] znajduje pierwszy podterm celu, który pasuje do [t_1] i
     zamienia go na [t_2], generując podcele [A_1], ..., [A_n], z których
-    część (a często całość) jest rozwiązywana automatycznie. *)
+    część (a często całość) jest rozwiązywana automatycznie. *)
 
 Check plus_n_Sm.
 (* ===> plus_n_Sm :
@@ -1328,8 +1328,8 @@ Abort.
     - [rewrite !H] przepisuje [H] 1 lub więcej razy
     - [rewrite n!H] lub [rewrite n H] przepisuje [H] dokładnie n razy *)
 
-(** Zauważmy, że modyfikator [<-] można łączyć z modyfikatorami określającymi
-    ilość przepisań. *)
+(** Zauważmy, że modyfikator [<-] można łączyć z modyfikatorami określającymi
+    ilość przepisań. *)
 
 Lemma rewrite_ex_1 :
   forall n m : nat, 42 = 42 -> S (n + m) = n + S m.
@@ -1348,16 +1348,16 @@ Proof.
   rewrite <- rewrite_ex_1 by reflexivity.
 Abort.
 
-(** Pozostałe warianty taktyki [rewrite] przedstawiają się następująco:
+(** Pozostałe warianty taktyki [rewrite] przedstawiają się następująco:
     - [rewrite H_1, ..., H_n] przepisuje kolejno hipotezy [H_1], ..., [H_n].
-      Każdą z hipotez możemy poprzedzić osobnym zestawem modyfikatorów.
+      Każdą z hipotez możemy poprzedzić osobnym zestawem modyfikatorów.
     - [rewrite H in H'] przepisuje [H] nie w celu, ale w hipotezie [H']
     - [rewrite H in * |-] przepisuje [H] we wszystkich hipotezach
       różnych od [H]
     - [rewrite H in *] przepisuje [H] we wszystkich hipotezach różnych
       od [H] oraz w celu
     - [rewrite H by tac] działa jak [rewrite H], ale używa taktyki [tac] do
-      rozwiązania tych podcelów, które nie mogły zostać rozwiązane
+      rozwiązania tych podcelów, które nie mogły zostać rozwiązane
       automatycznie *)
 
 (** Jest jeszcze wariant [rewrite H at n] (wymagający zaimportowania modułu
@@ -1368,7 +1368,7 @@ Abort.
 
 (** * Procedury decyzyjne *)
 
-(** Procedury decyzyjne to taktyki, które potrafią zupełnie same rozwiązywać
+(** Procedury decyzyjne to taktyki, które potrafią zupełnie same rozwiązywać
     cele należące do pewnej konkretnej klasy, np. cele dotyczące funkcji
     boolowskich albo nierówności liniowych na liczbach całkowitych. W tym
     podrozdziale omówimy najprzydatniejsze z nich. *)
@@ -1379,8 +1379,8 @@ Abort.
     cele postaci [x = y], gdzie [x] i [y] są wyrażeniami mogącymi zawierać
     boolowskie koniunkcje, dysjunkcje, negacje i inne rzeczy (patrz manual).
 
-    Taktykę można zaimportować komendą [Require Import Btauto]. Uwaga: nie
-    potrafi ona wprowadzać zmiennych do kontekstu. *)
+    Taktykę można zaimportować komendą [Require Import Btauto]. Uwaga: nie
+    potrafi ona wprowadzać zmiennych do kontekstu. *)
 
 (** **** Ćwiczenie (my_btauto) *)
 
@@ -1388,7 +1388,7 @@ Abort.
     - [my_btauto] — taktyka podobna do [btauto]. Potrafi rozwiązywać cele,
       które są kwantyfikowanymi równaniami na wyrażeniach boolowskich,
       składającymi się z dowolnych funkcji boolowskich (np. [andb], [orb]).
-      W przeciwieństwie do [btauto] powinna umieć wprowadzać zmienne do
+      W przeciwieństwie do [btauto] powinna umieć wprowadzać zmienne do
       kontekstu.
     - [my_btauto_rec] — tak samo jak [my_btauto], ale bez używana
       kombinatora [repeat]. Możesz używać jedynie rekurencji.
@@ -1399,7 +1399,7 @@ Abort.
 
 (** Uwaga: twoja implementacja taktyki [my_btauto] będzie diametralnie różnić
     się od implementacji taktyki [btauto] z biblioteki standardowej. [btauto]
-    jest zaimplementowana za pomocą reflekcji. Dowód przez reflekcję omówimy
+    jest zaimplementowana za pomocą reflekcji. Dowód przez reflekcję omówimy
     później. *)
 
 (* begin hide *)
@@ -1491,11 +1491,11 @@ Restart.
   congruence.
 Qed.
 
-(** [congruece] to taktyka, która potrafi rozwiązywać cele dotyczące
+(** [congruece] to taktyka, która potrafi rozwiązywać cele dotyczące
     nieinterpretowanych równości, czyli takie, których prawdziwość zależy
-    jedynie od hipotez postaci [x = y] i które można udowodnić ręcznie za
+    jedynie od hipotez postaci [x = y] i które można udowodnić ręcznie za
     pomocą mniejszej lub większej ilości [rewrite]'ów. [congruence] potrafi
-    też rozwiązywać cele dotyczące konstruktorów. W szczególności wie ona,
+    też rozwiązywać cele dotyczące konstruktorów. W szczególności wie ona,
     że konstruktory są injektywne i potrafi odróżnić [true] od [false]. *)
 
 (** **** Ćwiczenie (congruence) *)
@@ -1507,7 +1507,7 @@ Qed.
 (** Inną taktyką, która potrafi rozróżniać konstruktory, jest [discriminate].
     Zbadaj, jak działa ta taktyka. Znajdź przykład celu, który [discriminate]
     rozwiązuje, a na którym [congruence] zawodzi. Wskazówka: [congruence]
-    niebardzo potrafi odwijać definicje. *)
+    niebardzo potrafi odwijać definicje. *)
 
 (* begin hide *)
 Definition mytrue := true.
@@ -1534,8 +1534,8 @@ Inductive C : Type :=
     | c2 : C -> C -> C
     | c3 : C -> C -> C -> C.
 
-(** Przyjrzyjmy się powyższemu, dosć enigmatycznemu typowi. Czy posiada on
-    rozstrzygalną równość? Odpowiedź jest twierdząca: rozstrzygalną równość
+(** Przyjrzyjmy się powyższemu, dosć enigmatycznemu typowi. Czy posiada on
+    rozstrzygalną równość? Odpowiedź jest twierdząca: rozstrzygalną równość
     posiada każdy typ induktywny, którego konstruktory nie biorą argumentów
     będących dowodami, funkcjami ani termami typów zależnych. *)
 
@@ -1578,7 +1578,7 @@ Defined.
 (* end hide *)
 
 (** Zanim przejdziesz dalej, udowodnij ręcznie powyższe twierdzenie. Przyznasz,
-    że dowód nie jest zbyt przyjemny, prawda? Na szczęście nie musimy robić go
+    że dowód nie jest zbyt przyjemny, prawda? Na szczęście nie musimy robić go
     ręcznie. Na ratunek przychodzi nam taktyka [decide equality], która umie
     udowadniać cele postaci [forall x y : T, {x = y} + {x <> y}], gdzie [T]
     spełnia warunki wymienione powyżej. *)
@@ -1589,21 +1589,21 @@ Proof. decide equality. Defined.
 
 (** **** Ćwiczenie *)
 
-(** Pokrewną taktyce [decide equality] jest taktyka [compare]. Przeczytaj
+(** Pokrewną taktyce [decide equality] jest taktyka [compare]. Przeczytaj
     w manualu, co robi i jak działa. *)
 
 (** ** [omega] *)
 
-(** [omega] to taktyka, która potrafi rozwiązywać cele dotyczące arytmetyki
-    Presburgera. Jej szerszy opis można znaleźć w manualu. Na nasze potrzeby
-    przez arytmetykę Presburgera możemy rozumieć równania ([=]), nie-równania
+(** [omega] to taktyka, która potrafi rozwiązywać cele dotyczące arytmetyki
+    Presburgera. Jej szerszy opis można znaleźć w manualu. Na nasze potrzeby
+    przez arytmetykę Presburgera możemy rozumieć równania ([=]), nie-równania
     ([<>]) oraz nierówności ([<], [<=], [>], [>=]) na typie [nat], które mogą
-    zawierać zmienne, [0], [S], dodawanie i mnożenie przez stałą. Dodatkowo
-    zdania tej postaci mogą być połączone spójnikami [/\], [\/], [->] oraz
-    [~], ale nie mogą być kwantyfikowane — [omega] nie umie wprowadzać
+    zawierać zmienne, [0], [S], dodawanie i mnożenie przez stałą. Dodatkowo
+    zdania tej postaci mogą być połączone spójnikami [/\], [\/], [->] oraz
+    [~], ale nie mogą być kwantyfikowane — [omega] nie umie wprowadzać
     zmiennych do kontekstu.
 
-    Uwaga: ta taktyka jest przestarzała, a jej opis znajduje się tutaj tylko
+    Uwaga: ta taktyka jest przestarzała, a jej opis znajduje się tutaj tylko
     dlatego, że jak go pisałem, to jeszcze nie była. Nie używaj jej! Zamiast
     [omega] używaj [lia]! *)
 
@@ -1657,7 +1657,7 @@ Print filter_length'.
 (* ===> Proofterm o długości 14 linijek. *)
 
 (** Jak widać, ręczny dowód tego faktu daje w wyniku proofterm, który jest
-    o ponad 300 linijek krótszy niż ten wyprodukowany przez taktykę [omega].
+    o ponad 300 linijek krótszy niż ten wyprodukowany przez taktykę [omega].
     Mogłoby się zdawać, że jesteśmy w sytuacji bez wyjścia: albo dowodzimy
     ręcznie, albo prooftermy będą tak wielkie, że nie będziemy mogli ich
     odwijać. *)
@@ -1674,10 +1674,10 @@ Example tauto_1 :
     n = 0 \/ P n -> n <> 0 -> P n.
 Proof. auto. tauto. Qed.
 
-(** [tauto] to taktyka, która potrafi udowodnić każdą tautologię
+(** [tauto] to taktyka, która potrafi udowodnić każdą tautologię
     konstruktywnego rachunku zdań. Taktyka ta radzi sobie także z niektórymi
     nieco bardziej skomplikowanymi celami, w tym takimi, których nie potrafi
-    udowodnić [auto]. [tauto] zawodzi, gdy nie potrafi udowodnić celu. *)
+    udowodnić [auto]. [tauto] zawodzi, gdy nie potrafi udowodnić celu. *)
 
 Example intuition_0 :
   forall (A : Prop) (P : nat -> Prop),
@@ -1690,11 +1690,11 @@ Qed.
     celów, a poza tym nigdy nie zawodzi. Jeżeli nie potrafi rozwiązać celu,
     upraszcza go.
 
-    Może też przyjmować argument: [intuition t] najpierw upraszcza cel, a
-    później próbuje go rozwiązać taktyką [t]. Tak naprawdę [tauto] jest
+    Może też przyjmować argument: [intuition t] najpierw upraszcza cel, a
+    później próbuje go rozwiązać taktyką [t]. Tak naprawdę [tauto] jest
     jedynie synonimem dla [intuition fail], zaś samo [intuition] to synonim
     [intuition auto with *], co też tłumaczy, dlaczego [intuition] potrafi
-    więcej niż [tauto]. *)
+    więcej niż [tauto]. *)
 
 Record and3 (P Q R : Prop) : Prop :=
 {
@@ -1725,10 +1725,10 @@ Qed.
 
 (** Jednak nawet [intuition] nie jest w stanie sprostać niektórym prostym
     dla człowieka celom — powyższy przykład pokazuje, że nie potrafi ona
-    posługiwać się niestandardowymi spójnikami logicznymi, takimi jak
+    posługiwać się niestandardowymi spójnikami logicznymi, takimi jak
     potrójna koniunkcja [and3].
 
-    Najpotężniejszą taktyką potrafiącą dowodzić tautologii jest [firstorder].
+    Najpotężniejszą taktyką potrafiącą dowodzić tautologii jest [firstorder].
     Nie tylko rozumie ona niestandardowe spójniki (co i tak nie ma większego
     praktycznego znaczenia), ale też świetnie radzi sobie z kwantyfikatorami.
     Drugi z powyższych przykładów pokazuje, że potrafi ona dowodzić tautologii
@@ -1736,7 +1736,7 @@ Qed.
 
 (** **** Ćwiczenie (my_tauto) *)
 
-(** Napisz taktykę [my_tauto], która będzie potrafiła rozwiązać jak najwięcej
+(** Napisz taktykę [my_tauto], która będzie potrafiła rozwiązać jak najwięcej
     tautologii konstruktywnego rachunku zdań.
 
     Wskazówka: połącz taktyki z poprzednich ćwiczeń. Przetestuj swoją taktykę
@@ -1847,14 +1847,14 @@ End my_tauto.
 
 (** * Ogólne taktyki automatyzacyjne *)
 
-(** W tym podrozdziale omówimy pozostałe taktyki przydające się przy
-    automatyzacji. Ich cechą wspólną jest rozszerzalność — za pomocą
-    specjalnych baz podpowiedzi będziemy mogli nauczyć je radzić sobie
+(** W tym podrozdziale omówimy pozostałe taktyki przydające się przy
+    automatyzacji. Ich cechą wspólną jest rozszerzalność — za pomocą
+    specjalnych baz podpowiedzi będziemy mogli nauczyć je radzić sobie
     z każdym celem. *)
 
 (** ** [auto] i [trivial] *)
 
-(** [auto] jest najbardziej ogólną taktyką służącą do automatyzacji. *)
+(** [auto] jest najbardziej ogólną taktyką służącą do automatyzacji. *)
 
 Example auto_ex0 :
   forall (P : Prop), P -> P.
@@ -1873,12 +1873,12 @@ Example auto_ex3 :
   forall (A : Type) (x y : A), x = y -> y = x.
 Proof. auto. Qed.
 
-(** [auto] potrafi używać założeń, aplikować hipotezy i zna podstawowe
+(** [auto] potrafi używać założeń, aplikować hipotezy i zna podstawowe
     własności równości — całkiem nieźle. Wprawdzie nie wystarczy to do
     udowodnienia żadnego nietrywialnego twierdzenia, ale przyda się z
     pewnością do rozwiązywania prostych podcelów generowanych przez
     inne taktyki. Często spotykanym idiomem jest [t; auto] — "użyj
-    taktyki [t] i pozbądź się prostych podcelów za pomocą [auto]". *)
+    taktyki [t] i pozbądź się prostych podcelów za pomocą [auto]". *)
 
 Section auto_ex4.
 
@@ -1900,7 +1900,7 @@ Qed.
 
     Co jednak w sytuacji, gdy będziemy wielokrotnie chcieli, żeby [auto]
     widziało pewne definicje? Nietrudno wyobrazić sobie ogrom pisaniny,
-    którą mogłoby spowodować użycie do tego celu klauzuli [using]. Na
+    którą mogłoby spowodować użycie do tego celu klauzuli [using]. Na
     szczęście możemy temu zaradzić za pomocą podpowiedzi, które bytują
     w specjalnych bazach. *)
 
@@ -1912,7 +1912,7 @@ Proof. auto with my_hint_db. Qed.
 (** Komenda [Hint Resolve ident : db_name] dodaje lemat o nazwie [ident]
     do bazy podpowiedzi o nazwie [db_name]. Dzięki temu taktyka [auto with
     db_1 ... db_n] widzi wszystkie lematy dodane do baz [db_1], ..., [db_n].
-    Jeżeli to dla ciebie wciąż zbyt wiele pisania, uszy do góry! *)
+    Jeżeli to dla ciebie wciąż zbyt wiele pisania, uszy do góry! *)
 
 Example auto_ex4'' : P.
 Proof. auto with *. Qed.
@@ -1926,14 +1926,14 @@ Proof. auto. Qed.
 
 (** Komenda [Hint Resolve ident] dodaje lemat o nazwie [ident] do bazy
     podpowiedzi o nazwie [core]. Taktyka [auto] jest zaś równoważna
-    taktyce [auto with core]. Dzięki temu nie musimy pisać już nic ponad
+    taktyce [auto with core]. Dzięki temu nie musimy pisać już nic ponad
     zwykłe [auto]. *)
 
 End auto_ex4.
 
 (** Tym oto sposobem, używając komendy [Hint Resolve], jesteśmy w stanie
     zaznajomić [auto] z różnej maści lematami i twierdzeniami, które
-    udowodniliśmy. Komendy tej możemy używać po każdym lemacie, dzięki
+    udowodniliśmy. Komendy tej możemy używać po każdym lemacie, dzięki
     czemu taktyka [auto] rośnie w siłę w miarę rozwoju naszej teorii. *)
 
 Example auto_ex5 : even 8.
@@ -1943,7 +1943,7 @@ Restart.
   auto using even0, evenSS.
 Qed.
 
-(** Kolejną słabością [auto] jest fakt, że taktyka ta nie potrafi budować
+(** Kolejną słabością [auto] jest fakt, że taktyka ta nie potrafi budować
     wartości typów induktywnych. Na szczęście możemy temu zaradzić używając
     klauzuli [using c_1 ... c_n], gdzie [c_1], ..., [c_n] są konstruktorami
     naszego typu, lub dodając je jako podpowiedzi za pomocą komendy [Hint
@@ -1954,8 +1954,8 @@ Hint Constructors even.
 Example auto_ex5' : even 8.
 Proof. auto. Qed.
 
-(** Żeby jednak za dużo nie pisać (wypisanie nazw wszystkich konstruktorów
-    mogłoby być bolesne), możemy posłużyć się komendą [Hint Constructors
+(** Żeby jednak za dużo nie pisać (wypisanie nazw wszystkich konstruktorów
+    mogłoby być bolesne), możemy posłużyć się komendą [Hint Constructors
     I : db_name], która dodaje konstruktory typu induktywnego [I] do bazy
     podpowiedzi [db_name]. *)
 
@@ -1967,7 +1967,7 @@ Restart.
 Qed.
 
 (** Kolejnym celem, wobec którego [auto] jest bezsilne, jest [even 10].
-    Jak widać, nie wystarczy dodać konstruktorów typu induktywnego jako
+    Jak widać, nie wystarczy dodać konstruktorów typu induktywnego jako
     podpowiedzi, żeby wszystko było cacy. Niemoc [auto] wynika ze sposobu
     działania tej taktyki. Wykonuje ona przeszukiwanie w głąb z nawrotami,
     które działa mniej więcej tak:
@@ -1975,10 +1975,10 @@ Qed.
     - jeżeli nie da się nic więcej zrobić, a cel nie został udowodniony,
       wykonaj nawrót i spróbuj czegoś innego
     - w przeciwnym wypadku wykonaj następny krok dowodu i powtarzaj
-      całą procedurę *)
+      całą procedurę *)
 
-(** Żeby ograniczyć czas poświęcony na szukanie dowodu, który może być
-    potencjalnie bardzo długi, [auto] ogranicza się do wykonania jedynie
+(** Żeby ograniczyć czas poświęcony na szukanie dowodu, który może być
+    potencjalnie bardzo długi, [auto] ogranicza się do wykonania jedynie
     kilku kroków w głąb (domyślnie jest to 5). *)
 
 Print auto_ex5'.
@@ -1989,13 +1989,13 @@ Print auto_ex6.
 (* ===> evenSS 8 (evenSS 6 (evenSS 4 (evenSS 2 (evenSS 0 even0))))
         : even 10 *)
 
-(** [auto] jest w stanie udowodnić [even 8], gdyż dowód tego faktu wymaga
+(** [auto] jest w stanie udowodnić [even 8], gdyż dowód tego faktu wymaga
     jedynie 5 kroków, mianowicie czeterokrotnego zaaplikowania konstruktora
     [evenSS] oraz jednokrotnego zaaplikowania [even0]. Jednak 5 kroków nie
-    wystarcza już, by udowodnić [even 10], gdyż tutaj dowód liczy sobie 6
-    kroków: 5 użyć [evenSS] oraz 1 użycie [even0].
+    wystarcza już, by udowodnić [even 10], gdyż tutaj dowód liczy sobie 6
+    kroków: 5 użyć [evenSS] oraz 1 użycie [even0].
 
-    Nie wszystko jednak stracone — możemy kontrolować głębokość, na jaką
+    Nie wszystko jednak stracone — możemy kontrolować głębokość, na jaką
     [auto] zapuszcza się, poszukując dowodu, piząc [auto n]. Zauważmy, że
     [auto] jest równoważne taktyce [auto 5]. *)
 
@@ -2008,18 +2008,18 @@ Restart.
 Abort.
 
 (** Kolejnym problemem taktyki [auto] jest udowodnienie, że równość jest
-    relacją przechodnią. Tym razem jednak problem jest poważniejszy, gdyż
+    relacją przechodnią. Tym razem jednak problem jest poważniejszy, gdyż
     nie pomaga nawet próba użycia klauzuli [using eq_trans], czyli wskazanie
     [auto] dokładnie tego samego twierdzenia, którego próbujemy dowieść!
 
     Powód znów jest dość prozaiczny i wynika ze sposobu działania taktyki
     [auto] oraz postaci naszego celu. Otóż konkluzja celu jest postaci
-    [x = z], czyli występują w niej zmienne [x] i [z], zaś kwantyfikujemy
+    [x = z], czyli występują w niej zmienne [x] i [z], zaś kwantyfikujemy
     nie tylko po [x] i [z], ale także po [A] i [y].
 
-    Wywnioskowanie, co wstawić za [A] nie stanowi problemu, gdyż musi to
-    być typ [x] i [z]. Problemem jest jednak zgadnięcie, co wstawić za [y],
-    gdyż w ogólności możliwości może być wiele (nawet nieskończenie wiele).
+    Wywnioskowanie, co wstawić za [A] nie stanowi problemu, gdyż musi to
+    być typ [x] i [z]. Problemem jest jednak zgadnięcie, co wstawić za [y],
+    gdyż w ogólności możliwości może być wiele (nawet nieskończenie wiele).
     Taktyka [auto] działa w ten sposób, że nawet nie próbuje tego zgadywać. *)
 
 Hint Extern 0 =>
@@ -2032,19 +2032,19 @@ Example auto_ex7 :
 Proof. auto with extern_db. Qed.
 
 (** Jest jednak sposób, żeby uporać się i z tym problemem: jest nim komenda
-    [Hint Extern]. Jej ogólna postać to [Hint Extern n pattern => tactic : db].
+    [Hint Extern]. Jej ogólna postać to [Hint Extern n pattern => tactic : db].
     W jej wyniku do bazy podpowiedzi [db] zostanie dodana podpowiedź, która
     sprawi, że w dowolnym momencie dowodu taktyka [auto], jeżeli wypróbowała
-    już wszystkie podpowiedzi o koszcie mniejszym niż [n] i cel pasuje do
+    już wszystkie podpowiedzi o koszcie mniejszym niż [n] i cel pasuje do
     wzorca [pattern], to spróbuje użyć taktyki [tac].
 
     W naszym przypadku koszt podpowiedzi wynosi 0, a więc podpowiedź będzie
     odpalana niemal na samym początku dowodu. Wzorzec [pattern] został
     pominięty, a więc [auto] użyje naszej podpowiedzi niezależnie od tego,
-    jak wygląda cel. Ostatecznie jeżeli w konktekście będą odpowiednie
+    jak wygląda cel. Ostatecznie jeżeli w konktekście będą odpowiednie
     równania, to zaaplikowany zostanie lemat [@eq_trans _ x y z], wobec
-    czego wygenerowane zostaną dwa podcele, [x = y] oraz [y = z], które
-    [auto] będzie potrafiło rozwiązać już bez naszej pomocy. *)
+    czego wygenerowane zostaną dwa podcele, [x = y] oraz [y = z], które
+    [auto] będzie potrafiło rozwiązać już bez naszej pomocy. *)
 
 Hint Extern 0 (?x = ?z) =>
 match goal with
@@ -2058,15 +2058,15 @@ Proof. auto. Qed.
 (** A tak wygląda wersja [Hint Extern], w której nie pominięto wzorca
     [pattern]. Jest ona rzecz jasna równoważna z poprzednią.
 
-    Jest to dobry moment, by opisać dokładniej działanie taktyki [auto].
-    [auto] najpierw próbuje rozwiązać cel za pomocą taktyki [assumption].
-    Jeżeli się to nie powiedzie, to [auto] używa taktyki [intros], a
+    Jest to dobry moment, by opisać dokładniej działanie taktyki [auto].
+    [auto] najpierw próbuje rozwiązać cel za pomocą taktyki [assumption].
+    Jeżeli się to nie powiedzie, to [auto] używa taktyki [intros], a
     następnie dodaje do tymczasowej bazy podpowiedzi wszystkie hipotezy.
-    Następnie przeszukuje ona bazę podpowiedzi dopasowując cel do wzorca
-    stowarzyszonego z każdą podpowiedzią, zaczynając od podpowiedzi o
+    Następnie przeszukuje ona bazę podpowiedzi dopasowując cel do wzorca
+    stowarzyszonego z każdą podpowiedzią, zaczynając od podpowiedzi o
     najmniejszym koszcie (podpowiedzi pochodzące od komend [Hint Resolve]
-    oraz [Hint Constructors] są skojarzone z pewnymi domyślnymi kosztami
-    i wzorcami). Następnie [auto] rekurencyjnie wywołuje się na podcelach
+    oraz [Hint Constructors] są skojarzone z pewnymi domyślnymi kosztami
+    i wzorcami). Następnie [auto] rekurencyjnie wywołuje się na podcelach
     (chyba, że przekroczona została maksymalna głębokość przeszukiwania —
     wtedy następuje nawrót). *)
 
@@ -2093,9 +2093,9 @@ Proof. trivial. Qed.
 Example trivial_ex5' : even 8.
 Proof. trivial. Abort.
 
-(** Taktyka [trivial], którą już znasz, działa dokładnie tak samo jak [auto],
+(** Taktyka [trivial], którą już znasz, działa dokładnie tak samo jak [auto],
     ale jest nierekurencyjna. To tłumaczy, dlaczego potrafi ona posługiwać
-    się założeniami i zna właciwości równości, ale nie umie używać implikacji
+    się założeniami i zna właciwości równości, ale nie umie używać implikacji
     i nie radzi sobie z celami pokroju [even 8], mimo że potrafi udowodnić
     [even 0]. *)
 
@@ -2107,19 +2107,19 @@ Proof. trivial. Abort.
 (** ** [autorewrite] i [autounfold] *)
 
 (** [autorewrite] to bardzo pożyteczna taktyka umożliwiająca zautomatyzowanie
-    części dowodów opierających się na przepisywaniu.
+    części dowodów opierających się na przepisywaniu.
 
     Dlaczego tylko części? Zastanówmy się, jak zazwyczaj przebiegają dowody
-    przez przepisywanie. W moim odczuciu są dwa rodzaje takich dowodów:
+    przez przepisywanie. W moim odczuciu są dwa rodzaje takich dowodów:
     - dowody pierwszego rodzaju to te, w których wszystkie przepisania mają
       charakter upraszczający i dzięki temu możemy przepisywać zupełnie
       bezmyślnie
     - dowody drugiego rodzaju to te, w których niektóre przepisania nie mają
-      charakteru upraszczającego albo muszą zostać wykonane bardzo precyzyjnie.
+      charakteru upraszczającego albo muszą zostać wykonane bardzo precyzyjnie.
       W takich przypadkach nie możemy przepisywać bezmyślnie, bo grozi to
       zapętleniem taktyki [rewrite] lub po prostu porażką *)
 
-(** Dowody pierwszego rodzaju ze względu na swoją bezmyślność są dobrymi
+(** Dowody pierwszego rodzaju ze względu na swoją bezmyślność są dobrymi
     kandydatami do automatyzacji. Właśnie tutaj do gry wkracza taktyka
     [autorewrite]. *)
 
@@ -2148,9 +2148,9 @@ Qed.
 (* end hide *)
 
 (** Ten dowód nie był zbyt twórczy ani przyjemny, prawda? Wyobraź sobie
-    teraz, co by było, gdybyś musiał udowodnić 100 takich twierdzeń (i
+    teraz, co by było, gdybyś musiał udowodnić 100 takich twierdzeń (i
     to w czasach, gdy jeszcze nie można było pisać [rewrite ?t_0, ..., ?t_n]).
-    Jest to dość ponura wizja. *)
+    Jest to dość ponura wizja. *)
 
 Hint Rewrite rev_app_distr rev_involutive : list_rw.
 Hint Rewrite <- app_assoc : list_rw.
@@ -2169,27 +2169,27 @@ End autorewrite_ex.
     Domyślnie będą one przepisywane z lewa na prawo, chyba że dodamy
     przełącznik [<-] — wtedy wszystkie będą przepisywane z prawa na
     lewo. W szczególności znaczy to, że jeżeli chcemy niektóre lematy
-    przepisywać w jedną stronę, a inne w drugą, to musimy komendy
-    [Hint Rewrite] użyć dwukrotnie.
+    przepisywać w jedną stronę, a inne w drugą, to musimy komendy
+    [Hint Rewrite] użyć dwukrotnie.
 
     Sama taktyka [autorewrite with db_0 ... db_n] przepisuje lematy ze
     wszystkich baz podpowiedzi [db_0], ..., [db_n] tak długo, jak to
     tylko możliwe (czyli tak długo, jak przepisywanie skutkuje dokonaniem
     postępu).
 
-    Jest kilka ważnych cech, które powinna posiadać baza podpowiedzi:
-    - przede wszystkim nie może zawierać tego samego twierdzenia do
-      przepisywania w obydwie strony. Jeżeli tak się stanie, taktyka
+    Jest kilka ważnych cech, które powinna posiadać baza podpowiedzi:
+    - przede wszystkim nie może zawierać tego samego twierdzenia do
+      przepisywania w obydwie strony. Jeżeli tak się stanie, taktyka
       [autorewrite] się zapętli, gdyż przepisanie tego twierdzenia w
-      jedną lub drugą stronę zawsze będzie możliwe
-    - w ogólności, nie może zawierać żadnego zbioru twierdzeń, których
+      jedną lub drugą stronę zawsze będzie możliwe
+    - w ogólności, nie może zawierać żadnego zbioru twierdzeń, których
       przepisywanie powoduje zapętlenie
-    - baza powinna być deterministyczna, tzn. jedne przepisania nie
-      powinny blokować kolejnych
-    - wszystkie przepisywania powinny być upraszczające *)
+    - baza powinna być deterministyczna, tzn. jedne przepisania nie
+      powinny blokować kolejnych
+    - wszystkie przepisywania powinny być upraszczające *)
 
-(** Oczywiście dwa ostatnie kryteria nie są zbyt ścisłe — ciężko sprawdzić
-    determinizm systemu przepisywania, zaś samo pojęcie "uproszczenia" jest
+(** Oczywiście dwa ostatnie kryteria nie są zbyt ścisłe — ciężko sprawdzić
+    determinizm systemu przepisywania, zaś samo pojęcie "uproszczenia" jest
     bardzo zwodnicze i niejasne. *)
 
 (** **** Ćwiczenie (autorewrite) *)
@@ -2212,15 +2212,15 @@ Restart.
   auto.
 Qed.
 
-(** Na koniec omówimy taktykę [autounfold]. Działa ona na podobnej zasadzie
+(** Na koniec omówimy taktykę [autounfold]. Działa ona na podobnej zasadzie
     jak [autorewrite]. Za pomocą komendy [Hint Unfold] dodajemy definicje do
     do bazy podpowiedzi, dzięki czemu taktyka [autounfold with db_0, ..., db_n]
-    potrafi odwinąć wszystkie definicje z baz [db_0], ..., [db_n].
+    potrafi odwinąć wszystkie definicje z baz [db_0], ..., [db_n].
 
-    Jak pokazuje nasz głupi przykład, jest ona średnio użyteczna, gdyż taktyka
+    Jak pokazuje nasz głupi przykład, jest ona średnio użyteczna, gdyż taktyka
     [auto] potrafi (przynajmniej do pewnego stopnia) odwijać definicje. Moim
-    zdaniem najlepiej sprawdza się ona w zestawieniu z taktyką [autorewrite]
-    i kombinatorem [repeat], gdy potrzebujemy na przemian przepisywać lematy
+    zdaniem najlepiej sprawdza się ona w zestawieniu z taktyką [autorewrite]
+    i kombinatorem [repeat], gdy potrzebujemy na przemian przepisywać lematy
     i odwijać definicje. *)
 
 End autounfold_ex.
@@ -2238,27 +2238,27 @@ End autounfold_ex.
 
 (** * Pierścienie, ciała i arytmetyka *)
 
-(** Pierścień (ang. ring) to struktura algebraiczna składająca się z pewnego
-    typu A oraz działań + i *, które zachowują się mniej więcej tak, jak
+(** Pierścień (ang. ring) to struktura algebraiczna składająca się z pewnego
+    typu A oraz działań + i *, które zachowują się mniej więcej tak, jak
     dodawanie i mnożenie liczb całkowitych. Przykładów jest sporo: liczby
     wymierne i rzeczywiste z dodawaniem i mnożeniem, wartości boolowskie z
     dysjunkcją i koniunkcją oraz wiele innych, których na razie nie wymienię.
 
-    Kiedyś z pewnością napiszę coś na temat algebry oraz pierścieni, ale z
-    taktykami do radzenia sobie z nimi możemy zapoznać się już teraz. W Coqu
+    Kiedyś z pewnością napiszę coś na temat algebry oraz pierścieni, ale z
+    taktykami do radzenia sobie z nimi możemy zapoznać się już teraz. W Coqu
     dostępne są dwie taktyki do radzenia sobie z pierścieniami: taktyka
-    [ring_simplify] potrafi upraszczać wyrażenia w pierścieniach, zaś taktyka
-    [ring] potrafi rozwiązywać równania wielomianowe w pierścieniach.
+    [ring_simplify] potrafi upraszczać wyrażenia w pierścieniach, zaś taktyka
+    [ring] potrafi rozwiązywać równania wielomianowe w pierścieniach.
 
     Ciało (ang. field) to pierścień na sterydach, w którym poza dodawaniem,
     odejmowaniem i mnożeniem jest także dzielenie. Przykładami ciał są
     liczby wymierne oraz liczby rzeczywiste, ale nie liczby naturalne ani
     całkowite (bo dzielenie naturalne/całkowitoliczbowe nie jest odwrotnością
-    mnożenia). Je też kiedyś pewnie opiszę.
+    mnożenia). Je też kiedyś pewnie opiszę.
 
     W Coqu są 3 taktyki pomagające w walce z ciałami: [field_simplify]
     upraszcza wyrażenia w ciałach, [field_simplify_eq] upraszcza cele,
-    które są równaniami w ciałach, zaś [field] rozwiązuje równania w
+    które są równaniami w ciałach, zaś [field] rozwiązuje równania w
     ciałach. *)
 
 (** **** Ćwiczenie (pierścienie i ciała) *)
@@ -2268,64 +2268,64 @@ End autounfold_ex.
 
 (** * Zmienne egzystencjalne i ich taktyki (TODO) *)
 
-(** Napisać o co chodzi ze zmiennymi egzystencjalnymi. Opisać taktykę
+(** Napisać o co chodzi ze zmiennymi egzystencjalnymi. Opisać taktykę
     [evar] i wspomnieć o taktykach takich jak [eauto], [econstructor],
-    [eexists], [edestruct], [erewrite] etc., a także taktykę [shelve]
+    [eexists], [edestruct], [erewrite] etc., a także taktykę [shelve]
     i komendę [Unshelve]. *)
 
 (** * Taktyki do radzenia sobie z typami zależnymi (TODO) *)
 
-(** Opisać taktyki [dependent induction], [dependent inversion],
+(** Opisać taktyki [dependent induction], [dependent inversion],
     [dependent destruction], [dependent rewrite] etc. *)
 
 (** * Dodatkowe ćwiczenia *)
 
 (** **** Ćwiczenie (assert) *)
 
-(** Znasz już taktyki [assert], [cut] i [specialize]. Okazuje się, że dwie
-    ostatnie są jedynie wariantami taktyki [assert]. Przeczytaj w manualu
+(** Znasz już taktyki [assert], [cut] i [specialize]. Okazuje się, że dwie
+    ostatnie są jedynie wariantami taktyki [assert]. Przeczytaj w manualu
     opis taktyki [assert] i wszystkich jej wariantów. *)
 
 (** **** Ćwiczenie (easy i now) *)
 
 (** Taktykami, których nie miałem nigdy okazji użyć, są [easy] i jej
     wariant [now]. Przeczytaj ich opisy w manualu. Zbadaj, czy są do
-    czegokolwiek przydatne oraz czy są wygodne w porównaniu z innymi
+    czegokolwiek przydatne oraz czy są wygodne w porównaniu z innymi
     taktykami służącymi do podobnych celów. *)
 
 (** **** Ćwiczenie (inversion_sigma) *)
 
 (** Przeczytaj w manualu o wariantach taktyki [inversion]. Szczególnie
-    interesująca wydaje się taktyka [inversion_sigma], która pojawiła
-    się w wersji 8.7 Coqa. Zbadaj ją. Wymyśl jakiś przykład jej użycia. *)
+    interesująca wydaje się taktyka [inversion_sigma], która pojawiła
+    się w wersji 8.7 Coqa. Zbadaj ją. Wymyśl jakiś przykład jej użycia. *)
 
 (** **** Ćwiczenie (pattern) *)
 
 (** Przypomnijmy, że podstawą wszelkich obliczeń w Coqu jest redkucja
     beta. Redukuje ona aplikację funkcji, np. [(fun n : nat => 2 * n) 42]
-    betaredukuje się do [2 * 42]. Jej wykonywanie jest jednym z głównych
+    betaredukuje się do [2 * 42]. Jej wykonywanie jest jednym z głównych
     zadań taktyk obliczeniowych.
 
     Przeciwieństwem redukcji beta jest ekspansja beta. Pozwala ona zamienić
-    dowolny term na aplikację jakiejś funkcji do jakiegoś argumentu, np.
-    term [2 * 42] można betaekspandować do [(fun n : nat => 2 * n) 42].
+    dowolny term na aplikację jakiejś funkcji do jakiegoś argumentu, np.
+    term [2 * 42] można betaekspandować do [(fun n : nat => 2 * n) 42].
 
     O ile redukcja beta jest trywialna do automatycznego wykonania, o tyle
-    ekspansja beta już nie, gdyż występuje tu duża dowolność. Dla przykładu,
-    term [2 * 42] można też betaekspandować do [(fun n : nat => n * 42) 2].
+    ekspansja beta już nie, gdyż występuje tu duża dowolność. Dla przykładu,
+    term [2 * 42] można też betaekspandować do [(fun n : nat => n * 42) 2].
 
-    Ekspansję beta implementuje taktyka [pattern]. Rozumowanie za jej pomocą
-    nie jest zbyt częstne, ale niemniej jednak kilka razy mi się przydało.
+    Ekspansję beta implementuje taktyka [pattern]. Rozumowanie za jej pomocą
+    nie jest zbyt częstne, ale niemniej jednak kilka razy mi się przydało.
     Przeczytaj opis taktyki [pattern] w manuaulu.
 
-    TODO: być może ćwiczenie to warto byłoby rozszerzyć do pełnoprawnego
+    TODO: być może ćwiczenie to warto byłoby rozszerzyć do pełnoprawnego
     podrozdziału. *)
 
 (** **** Ćwiczenie (arytmetyka) *)
 
 (** Poza taktykami radzącymi sobie z pierścieniami i ciałami jest też wiele
-    taktyk do walki z arytmetyką. Poza omówioną już taktyką [omega] są to
-    [lia], [nia], [lra], [nra]. Nazwy taktyk można zdekodować w następujący
+    taktyk do walki z arytmetyką. Poza omówioną już taktyką [omega] są to
+    [lia], [nia], [lra], [nra]. Nazwy taktyk można zdekodować w następujący
     sposób:
     - l — linear
     - n — nonlinar
@@ -2338,12 +2338,12 @@ End autounfold_ex.
 
 (** **** Ćwiczenie (wyższa magia) *)
 
-(** Spróbuj ogarnąć, co robią taktyki [nsatz], [psatz] i [fourier]. *)
+(** Spróbuj ogarnąć, co robią taktyki [nsatz], [psatz] i [fourier]. *)
 
 (** * Inne języki taktyk *)
 
 (** Ltac w pewnym sensie nie jest jedynym językiem taktyk, jakiego możemy
-    użyć do dowodzenia w Coqu — są inne. Głównymi konkurentami Ltaca są:
+    użyć do dowodzenia w Coqu — są inne. Głównymi konkurentami Ltaca są:
     - Rtac: gmalecha.github.io/reflections/2016/rtac-technical-overview
     - Mtac: plv.mpi-sws.org/mtac/
     - ssreflect:
@@ -2351,37 +2351,37 @@ End autounfold_ex.
       oraz https://math-comp.github.io/math-comp/ *)
 
 (** Pierwsze dwa, [Rtac] i [Mtac], faktycznie są osobnymi językami taktyk,
-    znacznie różniącymi się od Ltaca. Nie będziemy się nimi zajmować,
-    gdyż ich droga do praktycznej użyteczności jest jeszcze dość długa.
+    znacznie różniącymi się od Ltaca. Nie będziemy się nimi zajmować,
+    gdyż ich droga do praktycznej użyteczności jest jeszcze dość długa.
 
     ssreflect to nieco inna bajka. Nie jest on w zasadzie osobnym językiem
     taktyk, lecz jest oparty na Ltacu. Różni się on od niego filozofią,
     podstawowym zestawem taktyk i stylem dowodzenia. Od wersji 8.7 Coqa
     język ten jet dostępny w bibliotece standardowej, mimo że nie jest z
-    nią w pełni kompatybilny. *)
+    nią w pełni kompatybilny. *)
 
 (** **** Ćwiczenie (ssreflect) *)
 
 (** Najbardziej wartościowym moim zdaniem elementem języka ssreflect jest
     taktyka [rewrite], dużo potężniejsza od tej opisanej w tym rozdziale.
     Jest ona warta uwagi, gdyż:
-    - daje jeszcze większą kontrolę nad przepisywaniem, niż standardowa
+    - daje jeszcze większą kontrolę nad przepisywaniem, niż standardowa
       taktyka [rewrite]
-    - pozwala łączyć kroki przepisywania z odwijaniem definicji i wykonywaniem
+    - pozwala łączyć kroki przepisywania z odwijaniem definicji i wykonywaniem
       obliczeń, a więc zastępuje taktyki [unfold], [fold], [change], [replace],
       [cbn], [cbn] etc.
     - daje większe możliwości radzenia sobie z generowanymi przez siebie
       podcelami *)
 
 (** Przeczytaj rozdział manuala opisujący język ssreflect. Jeżeli nie
-    chce ci się tego robić, zapoznaj się chociaż z jego taktyką [rewrite]. *)
+    chce ci się tego robić, zapoznaj się chociaż z jego taktyką [rewrite]. *)
 
 (** * Konkluzja *)
 
-(** W niniejszym rozdziale przyjrzeliśmy się bliżej znacznej części Coqowych
+(** W niniejszym rozdziale przyjrzeliśmy się bliżej znacznej części Coqowych
     taktyk. Moje ich opisanie nie jest aż tak kompletne i szczegółowe jak to
     z manuala, ale nadrabia (mam nadzieję) wplecionymi w tekst przykładami i
-    zadaniami. Jeżeli jednak uważasz je za upośledzone, nie jesteś jeszcze
+    zadaniami. Jeżeli jednak uważasz je za upośledzone, nie jesteś jeszcze
     stracony! Alternatywne opisy niektórych taktyk dostępne są też tu:
     - pjreddie.com/coq-tactics/
     - cs.cornell.edu/courses/cs3110/2017fa/a5/coq-tactics-cheatsheet.html

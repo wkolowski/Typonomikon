@@ -54,7 +54,7 @@ Prerekwizyty:
 <ul class="doclist">
 <li> zdania to obiekty typu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. Twierdzą one coś na temat świata:
       "niebo jest niebieskie", <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> etc. W uproszczeniu możemy myśleć o
-      nich, że są prawdziwe lub fałszywe, co nie znaczy wcale, że można to
+      nich, że są prawdziwe lub fałszywe, co nie znaczy wcale, że można to
       automatycznie rozstrzygnąć. Udowodnienie zdania <span class="inlinecode"><span class="id" title="var">P</span></span> to skonstruowanie
       obiektu <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. W Coqu zdania służą nam do podawania specyfikacji
       programów. W celach klasyfikacyjnych możemy uznać, że są to funkcje
@@ -74,7 +74,7 @@ Prerekwizyty:
       zależności między obiektami, np. "Grażyna jest matką Karyny",
       <span class="inlinecode"><span class="id" title="var">Permutation</span></span> <span class="inlinecode">(<span class="id" title="var">l</span></span> <span class="inlinecode">++</span> <span class="inlinecode"><span class="id" title="var">l'</span>)</span> <span class="inlinecode">(<span class="id" title="var">l'</span></span> <span class="inlinecode">++</span> <span class="inlinecode">')</span>. Niektóre kombinacje obiektów mogą
       być ze sobą w relacji, tzn. zdanie zwracane dla nich przez relację
-      może być prawdziwe, a dla innych nie. 
+      może być prawdziwe, a dla innych nie. 
 </li>
 </ul>
 
@@ -98,7 +98,7 @@ Prerekwizyty:
 Najważniejszym rodzajem relacji są relacje binarne, czyli relacje
     biorące dwa argumenty. To właśnie im poświęcimy ten rozdział, pominiemy
     zaś relacje biorące trzy i więcej argumentów. Określenia "relacja binarna"
-    będę używał zarówno na określenie relacji binarnych heterogenicznych
+    będę używał zarówno na określenie relacji binarnych heterogenicznych
     (czyli biorących dwa argumnty różnych typów) jak i na określenie relacji
     binarnych homogenicznych (czyli biorących dwa argumenty tego samego
     typu). 
@@ -127,7 +127,7 @@ Najważniejszym rodzajem relacji są relacje binarne, czyli relacje
 </div>
 
 <div class="doc">
-Zacznijmy od ustalenia, jakie relacje będziemy uznawać za "identyczne".
+Zacznijmy od ustalenia, jakie relacje będziemy uznawać za "identyczne".
     Okazuje się, że używanie równości <span class="inlinecode"><span class="id" title="var">eq</span></span> do porównywania zdań nie ma
     zbyt wiele sensu. Jest tak dlatego, że nie interesuje nas postać owych
     zdań, a jedynie ich logiczna zawartość.
@@ -144,7 +144,7 @@ Zacznijmy od ustalenia, jakie relacje będziemy uznawać za "identyczne".
     Formalnie wyrazimy to nieco na około, za pomocą pojęcia subrelacji.
     <span class="inlinecode"><span class="id" title="var">R</span></span> jest subrelacją <span class="inlinecode"><span class="id" title="var">S</span></span>, jeżeli <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span> implikuje <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span> dla
     wszystkich <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span>. Możemy sobie wyobrażać, że jeżeli <span class="inlinecode"><span class="id" title="var">R</span></span>
-    jest subrelacją <span class="inlinecode"><span class="id" title="var">S</span></span>, to w relacji <span class="inlinecode"><span class="id" title="var">R</span></span> są ze sobą tylko niektóre
+    jest subrelacją <span class="inlinecode"><span class="id" title="var">S</span></span>, to w relacji <span class="inlinecode"><span class="id" title="var">R</span></span> są ze sobą tylko niektóre
     pary argumentów, które są w relacji <span class="inlinecode"><span class="id" title="var">S</span></span>, a inne nie. 
 <div class="paragraph"> </div>
 
@@ -163,8 +163,8 @@ Zacznijmy od ustalenia, jakie relacje będziemy uznawać za "identyczne".
 
 <div class="doc">
 Udowodnij, że powyższa definicja <span class="inlinecode"><span class="id" title="var">le'</span></span> porządku "mniejszy lub równy"
-    na liczbach naturalnych jest tą samą relacją, co <span class="inlinecode"><span class="id" title="var">le</span></span>. Być może
-    przyda ci się kilka lematów pomocniczych. 
+    na liczbach naturalnych jest tą samą relacją, co <span class="inlinecode"><span class="id" title="var">le</span></span>. Być może
+    przyda ci się kilka lematów pomocniczych. 
 </div>
 <div class="code">
 
@@ -177,7 +177,7 @@ Udowodnij, że powyższa definicja <span class="inlinecode"><span class="id" tit
 </div>
 
 <div class="doc">
-Uporawszy się z pojęciem "identyczności" relacji możemy przejść dalej,
+Uporawszy się z pojęciem "identyczności" relacji możemy przejść dalej,
     a mianowicie do operacji, jakie możemy wykonywać na relacjach. 
 <div class="paragraph"> </div>
 
@@ -198,9 +198,9 @@ Uporawszy się z pojęciem "identyczności" relacji możemy przejść dalej,
 </div>
 
 <div class="doc">
-Podobnie jak w przypadku funkcji, najważniejszą operacją jest składanie
+Podobnie jak w przypadku funkcji, najważniejszą operacją jest składanie
     relacji, a najważniejszą relacją — równość. Składanie jest łączne, zaś
-    równość jest elementem neutralnym tego składania. Musimy jednak zauważyć,
+    równość jest elementem neutralnym tego składania. Musimy jednak zauważyć,
     że mówiąc o łączności relacji mamy na myśli coś innego, niż w przypadku
     funkcji. 
 </div>
@@ -247,7 +247,7 @@ Składanie funkcji jest łączne, gdyż złożenie trzech funkcji z dowolnie
 
 <div class="doc">
 <span class="inlinecode"><span class="id" title="var">Rinv</span></span> to operacja, która zamienia miejscami argumenty relacji. Relację
-    <span class="inlinecode"><span class="id" title="var">Rinv</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> będziemy nazywać relacją odwrotną do <span class="inlinecode"><span class="id" title="var">R</span></span>. 
+    <span class="inlinecode"><span class="id" title="var">Rinv</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> będziemy nazywać relacją odwrotną do <span class="inlinecode"><span class="id" title="var">R</span></span>. 
 </div>
 <div class="code">
 
@@ -265,7 +265,7 @@ Składanie funkcji jest łączne, gdyż złożenie trzech funkcji z dowolnie
 
 <div class="doc">
 Złożenie dwóch relacji możemy odwrócić, składając ich odwrotności w
-    odwrotnej kolejności. Odwrotnością relacji identycznościowej jest
+    odwrotnej kolejności. Odwrotnością relacji identycznościowej jest
     zaś ona sama. 
 </div>
 <div class="code">
@@ -293,8 +293,8 @@ Pozostałe trzy operacje na relacjach odpowiadają spójnikom logicznym —
 
 <div class="paragraph"> </div>
 
-    Sporą część naszego badania relacji przeznaczymy na sprawdzanie, jak
-    powyższe operacj mają się do różnych specjalnych rodzajów relacji. Nim
+    Sporą część naszego badania relacji przeznaczymy na sprawdzanie, jak
+    powyższe operacj mają się do różnych specjalnych rodzajów relacji. Nim
     to się stanie, zbadajmy jednak właściwości samych operacji. 
 </div>
 <div class="code">
@@ -396,7 +396,7 @@ To nie wszystkie właściwości tych operacji, ale myślę, że widzisz już,
 
     Fenomen ten nie jest w żaden sposób specyficzny dla relacji i operacji
     na nich. TODO: mam nadzieję, że w przyszłych rozdziałach jeszcze się z
-    nim spotkamy. Tymczasem przyjrzyjmy się bliżej specjalnym rodzajom
+    nim spotkamy. Tymczasem przyjrzyjmy się bliżej specjalnym rodzajom
     relacji. 
 <div class="paragraph"> </div>
 
@@ -423,7 +423,7 @@ To nie wszystkie właściwości tych operacji, ale myślę, że widzisz już,
 </div>
 
 <div class="doc">
-Dwoma podstawowymi rodzajami relacji są relacje unikalne z lewej i prawej
+Dwoma podstawowymi rodzajami relacji są relacje unikalne z lewej i prawej
     strony. Relacja lewostronnie unikalna to taka, dla której każde <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span>
     jest w relacji z co najwyżej jednym <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>. Analogicznie definiujemy
     relacje prawostronnie unikalne. 
@@ -440,16 +440,16 @@ Dwoma podstawowymi rodzajami relacji są relacje unikalne z lewej i prawej
 </div>
 
 <div class="doc">
-Najbardziej elementarną intuicję stojącą za tymi koncepcjami można
+Najbardziej elementarną intuicję stojącą za tymi koncepcjami można
     przedstawić na przykładzie relacji równości: jeżeli dwa obiekty są
-    równe jakiemuś trzeciemu obiektowi, to muszą być także równe sobie
+    równe jakiemuś trzeciemu obiektowi, to muszą być także równe sobie
     nawzajem.
 
 <div class="paragraph"> </div>
 
     Pojęcie to jest jednak bardziej ogólne i dotyczy także relacji, które
-    nie są homogeniczne. W szczególności jest ono różne od pojęcia relacji
-    przechodniej, które pojawi się już niedługo. 
+    nie są homogeniczne. W szczególności jest ono różne od pojęcia relacji
+    przechodniej, które pojawi się już niedługo. 
 </div>
 <div class="code">
 
@@ -486,10 +486,10 @@ Składanie zachowuje oba rodzaje relacji unikalnych. Nie ma tu co
 </div>
 
 <div class="doc">
-Już na pierwszy rzut oka widać, że pojęcia te są w pewien sposób
-    symetryczne. Aby uchwycić tę symetrię, możemy posłużyć się operacją
+Już na pierwszy rzut oka widać, że pojęcia te są w pewien sposób
+    symetryczne. Aby uchwycić tę symetrię, możemy posłużyć się operacją
     <span class="inlinecode"><span class="id" title="var">Rinv</span></span>. Okazuje się, że zamiana miejscami argumentów relacji lewostronnie
-    unikalnej daje relację prawostronnie unikalną i vice versa. 
+    unikalnej daje relację prawostronnie unikalną i vice versa. 
 </div>
 <div class="code">
 
@@ -517,7 +517,7 @@ Już na pierwszy rzut oka widać, że pojęcia te są w pewien sposób
 </div>
 
 <div class="doc">
-Koniunkcja relacji unikalnej z inną daje relację unikalną, ale dysjunkcja
+Koniunkcja relacji unikalnej z inną daje relację unikalną, ale dysjunkcja
     nawet dwóch relacji unikalnych nie musi dawać w wyniku relacji unikalnej.
     Wynika to z interpretacji operacji na relacjach jako operacji na
     kolekcjach par.
@@ -544,7 +544,7 @@ Koniunkcja relacji unikalnej z inną daje relację unikalną, ale dysjunkcja
     lewostronnie unikalnych jeżeli każde <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span> jest w relacji z co
     najwyżej jednym <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>, to potencjalne zabranie jakichś par z tej
     relacji niczego nie zmieni. Z drugiej strony, nawet jeżeli obie relacje
-    są lewostronnie unikalne, to dodanie do <span class="inlinecode"><span class="id" title="var">R</span></span> par z <span class="inlinecode"><span class="id" title="var">S</span></span> może spowodować
+    są lewostronnie unikalne, to dodanie do <span class="inlinecode"><span class="id" title="var">R</span></span> par z <span class="inlinecode"><span class="id" title="var">S</span></span> może spowodować
     wystąpienie powtórzeń, co niszczy unikalność. 
 </div>
 <div class="code">
@@ -571,7 +571,7 @@ Negacja relacji unikalnej również nie musi być unikalna. Spróbuj podać
 
 <div class="paragraph"> </div>
 
- Znajdź przykład relacji, która:
+ Znajdź przykład relacji, która:
 <ul class="doclist">
 <li> nie jest unikalna ani lewostronnie, ani prawostronnie
 
@@ -614,7 +614,7 @@ Kolejnymi dwoma rodzajami heterogenicznych relacji binarnych są relacje
 
 <div class="paragraph"> </div>
 
-    Za pojęciem tym nie stoją jakieś wielkie intuicje: relacja lewostronnie
+    Za pojęciem tym nie stoją jakieś wielkie intuicje: relacja lewostronnie
     totalna to po prostu taka, w której żaden element <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> nie jest
     "osamotniony". 
 </div>
@@ -632,7 +632,7 @@ Kolejnymi dwoma rodzajami heterogenicznych relacji binarnych są relacje
 </div>
 
 <div class="doc">
-Równość jest relacją totalną, gdyż każdy term <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest równy samemu
+Równość jest relacją totalną, gdyż każdy term <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest równy samemu
     sobie. 
 </div>
 <div class="code">
@@ -661,7 +661,7 @@ Równość jest relacją totalną, gdyż każdy term <span class="inlinecode">
 </div>
 
 <div class="doc">
-Między lewo- i prawostronną totalnością występuje podobna symetria jak
+Między lewo- i prawostronną totalnością występuje podobna symetria jak
     między dwoma formami unikalności: relacja odwrotna do lewostronnie
     totalnej jest prawostronnie totalna i vice versa. Totalność jest również
     zachowywana przez składanie. 
@@ -694,8 +694,8 @@ Między lewo- i prawostronną totalnością występuje podobna symetria jak
 <div class="doc">
 Związki totalności z koniunkcją i dysjunkcją relacji są podobne jak
     w przypadku unikalności, lecz tym razem to dysjunkcja zachowuje
-    właściwość, a koniunkcja ją niszczy. Wynika to z tego, że dysjunkcja
-    nie zabiera żadnych par z relacji, więc nie może uszkodzić totalności.
+    właściwość, a koniunkcja ją niszczy. Wynika to z tego, że dysjunkcja
+    nie zabiera żadnych par z relacji, więc nie może uszkodzić totalności.
     Z drugiej strony koniunkcja może zabrać jakąś parę, a wtedy relacja
     przestaje być totalna. 
 </div>
@@ -715,16 +715,16 @@ Związki totalności z koniunkcją i dysjunkcją relacji są podobne jak
 </div>
 
 <div class="doc">
-Negacja relacji totalnej nie może być totalna. Nie ma się co dziwić —
+Negacja relacji totalnej nie może być totalna. Nie ma się co dziwić —
     negacja wyrzuca z relacji wszystkie pary, których w niej nie było, a
-    więc pozbywa się czynnika odpowiedzialnego za totalność. 
+    więc pozbywa się czynnika odpowiedzialnego za totalność. 
 <div class="paragraph"> </div>
 
 <a name="lab407"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
- Znajdź przykład relacji, która:
+ Znajdź przykład relacji, która:
 <ul class="doclist">
 <li> nie jest totalna ani lewostronnie, ani prawostronnie
 
@@ -772,7 +772,7 @@ Negacja relacji totalnej nie może być totalna. Nie ma się co dziwić —
 </div>
 
 <div class="doc">
-Lewostronną totalność i prawostronną unikalność możemy połączyć, by
+Lewostronną totalność i prawostronną unikalność możemy połączyć, by
     uzyskać pojęcie relacji funkcyjnej. Relacja funkcyjna to relacja,
     która ma właściwości takie, jak funkcje — każdy lewostronny argument
     <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> jest w relacji z dokładnie jednym <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span> po prawej stronie. 
@@ -789,9 +789,9 @@ Lewostronną totalność i prawostronną unikalność możemy połączyć, by
 </div>
 
 <div class="doc">
-Z każdej funkcji można w prosty sposób zrobić relację funkcyjną, ale
+Z każdej funkcji można w prosty sposób zrobić relację funkcyjną, ale
     bez dodatkowych aksjomatów nie jesteśmy w stanie z relacji funkcyjnej
-    zrobić funkcji. Przemilczając kwestie aksjomatów możemy powiedzieć
+    zrobić funkcji. Przemilczając kwestie aksjomatów możemy powiedzieć
     więc, że relacje funkcyjne odpowiadają funkcjom. 
 </div>
 <div class="code">
@@ -818,9 +818,9 @@ Równość jest rzecz jasna relacją funkcyjną. Funkcją odpowiadającą
 </div>
 
 <div class="doc">
-Złożenie relacji funkcyjnych również jest relacją funkcyjną. Nie powinno
+Złożenie relacji funkcyjnych również jest relacją funkcyjną. Nie powinno
     nas to dziwić — wszakże relacje funkcyjne odpowiadają funkcjom, a złożenie
-    funkcji jest przecież funkcją. Jeżeli lepiej mu się przyjrzeć, to okazuje
+    funkcji jest przecież funkcją. Jeżeli lepiej mu się przyjrzeć, to okazuje
     się, że składanie funkcji odpowiada składaniu relacji, a stąd już prosta
     droga do wniosku, że złożenie relacji funkcyjnych jest relacją funkcyjną.
 
@@ -836,9 +836,9 @@ Złożenie relacji funkcyjnych również jest relacją funkcyjną. Nie powinno
 </div>
 
 <div class="doc">
-Odwrotność relacji funkcyjnej nie musi być funkcyjna. Dobrą wizualicją
+Odwrotność relacji funkcyjnej nie musi być funkcyjna. Dobrą wizualicją
     tego faktu może być np. funkcja f(x) = x^2 na liczbach rzeczywistych.
-    Z pewnością jest to funkcja, a zatem relacja funkcyjna. Widać to na jej
+    Z pewnością jest to funkcja, a zatem relacja funkcyjna. Widać to na jej
     wykresie — każdemu punktowi dziedziny odpowiada dokładnie jeden punkt
     przeciwdziedziny. Jednak po wykonaniu operacji <span class="inlinecode"><span class="id" title="var">Rinv</span></span>, której odpowiada
     tutaj obrócenie układu współrzędnych o 90 stopni, nie otrzymujemy wcale
@@ -871,7 +871,7 @@ Odwrotność relacji funkcyjnej nie musi być funkcyjna. Dobrą wizualicją
 Ani koniunkcje, ani dysjunkcje, ani negacje relacji funkcyjnych nie
     muszą być wcale relacjami funkcyjnymi. Jest to po części konsekwencją
     właściwości relacji lewostronnie totalnych i prawostronnie unikalnych:
-    pierwsze mają problem z <span class="inlinecode"><span class="id" title="var">Rand</span></span>, a drugie z <span class="inlinecode"><span class="id" title="var">Ror</span></span>, oba zaś z <span class="inlinecode"><span class="id" title="var">Rnot</span>.</span> <span class="inlinecode"></span>
+    pierwsze mają problem z <span class="inlinecode"><span class="id" title="var">Rand</span></span>, a drugie z <span class="inlinecode"><span class="id" title="var">Ror</span></span>, oba zaś z <span class="inlinecode"><span class="id" title="var">Rnot</span>.</span> <span class="inlinecode"></span>
 <div class="paragraph"> </div>
 
 <a name="lab409"></a><h4 class="section">Ćwiczenie</h4>
@@ -881,7 +881,7 @@ Ani koniunkcje, ani dysjunkcje, ani negacje relacji funkcyjnych nie
  Możesz zadawać sobie pytanie: po co nam w ogóle pojęcie relacji
     funkcyjnej, skoro mamy funkcje? Funkcje muszą być obliczalne (ang.
     computable) i to na mocy definicji, zaś relacje — niekonieczne.
-    Czasem prościej może być najpierw zdefiniować relację, a dopiero
+    Czasem prościej może być najpierw zdefiniować relację, a dopiero
     później pokazać, że jest funkcyjna. Czasem zdefiniowanie danego
     bytu jako funkcji może być niemożliwe.
 
@@ -893,7 +893,7 @@ Ani koniunkcje, ani dysjunkcje, ani negacje relacji funkcyjnych nie
 <div class="paragraph"> </div>
 
     Zaimplementuj tę funkcję w Coqu. Spróbuj zaimplementować ją zarówno
-    jako funkcję rekurencyjną, jak i relację. Czy twoja funkcja dokładnie
+    jako funkcję rekurencyjną, jak i relację. Czy twoja funkcja dokładnie
     odpowiada powyższej specyfikacji? Czy jesteś w stanie pokazać, że twoja
     relacja jest funkcyjna?
 
@@ -1106,7 +1106,7 @@ Relacje funkcyjne, które są lewostronnie totalne (czyli injektywne) oraz
 <div class="doc">
 Właściwości relacji bijektywnych różnią się jednym szalenie istotnym
     detalem od właściwości relacji funkcyjnych, injektywnych i surjektywnych:
-    odwrotność relacji bijektywnej jest relacją bijektywną. 
+    odwrotność relacji bijektywnej jest relacją bijektywną. 
 <div class="paragraph"> </div>
 
 <a name="lab411"></a><h1 class="section">Rodzaje relacji homogenicznych</h1>
@@ -1131,10 +1131,10 @@ Relacje homogeniczne to takie, których wszystkie argumenty są tego
     bywa zazwyczaj nazywane <span class="inlinecode"><span class="id" title="var">Irreflexive</span></span>. Ja przyjąłem następujące reguły
     tworzenia nazw różnych rodzajów relacji:
 <ul class="doclist">
-<li> "podstawowa" własność nie ma przedrostka, np. "zwrotna", "reflexive"
+<li> "podstawowa" własność nie ma przedrostka, np. "zwrotna", "reflexive"
 
 </li>
-<li> zanegowana własność ma przedrostek "nie" (lub podobny w nazwach
+<li> zanegowana własność ma przedrostek "nie" (lub podobny w nazwach
       angielskich), np. "niezwrotny", "irreflexive"
 
 </li>
@@ -1188,10 +1188,10 @@ Relacja <span class="inlinecode"><span class="id" title="var">R</span></span> je
 
 <div class="doc">
 Okazuje się, że wszystkie relacje na <span class="inlinecode"><span class="id" title="var">Empty_set</span></span> (a więc także na
-    wszystkich innych typach pustych) są zwrotne. Nie powinno cię to w
+    wszystkich innych typach pustych) są zwrotne. Nie powinno cię to w
     żaden sposób zaskakiwać — jest to tzw. pusta prawda (ang. vacuous
-    truth), zgodnie z którą wszystkie zdania kwantyfikowane uniwersalnie
-    po typie pustym są prawdziwe. Wszyscy w pustym pokoju są debilami. 
+    truth), zgodnie z którą wszystkie zdania kwantyfikowane uniwersalnie
+    po typie pustym są prawdziwe. Wszyscy w pustym pokoju są debilami. 
 </div>
 <div class="code">
 
@@ -1211,7 +1211,7 @@ Okazuje się, że wszystkie relacje na <span class="inlinecode"><span class="id"
 
 <div class="doc">
 Najważniejszym przykładem relacji zwrotnej jest równość. <span class="inlinecode"><span class="id" title="var">eq</span></span> jest
-    relacją zwrotną, gdyż ma konstruktor <span class="inlinecode"><span class="id" title="var">eq_refl</span></span>, który głosi, że
+    relacją zwrotną, gdyż ma konstruktor <span class="inlinecode"><span class="id" title="var">eq_refl</span></span>, który głosi, że
     każdy obiekt jest równy samemu sobie. Zwrotna jest też relacja
     <span class="inlinecode"><span class="id" title="var">RTrue</span></span>, gdyż każdy obiekt jest w jej przypadku w relacji z każdym,
     a więc także z samym sobą. Zwrotna nie jest za to relacja <span class="inlinecode"><span class="id" title="var">RFalse</span></span>
@@ -1230,7 +1230,7 @@ Najważniejszym przykładem relacji zwrotnej jest równość. <span class="inlin
 
 <div class="doc">
 Równość jest "najmniejszą" relacją zwrotną w tym sensie, że jest ona
-    subrelacją każdej relacji zwrotnej. Intuicyjnym uzasadnieniem jest
+    subrelacją każdej relacji zwrotnej. Intuicyjnym uzasadnieniem jest
     fakt, że w definicji <span class="inlinecode"><span class="id" title="var">eq</span></span> poza konstruktorem <span class="inlinecode"><span class="id" title="var">eq_refl</span></span>, który daje
     zwrotność, nie ma niczego innego. 
 </div>
@@ -1262,14 +1262,14 @@ Równość jest "najmniejszą" relacją zwrotną w tym sensie, że jest ona
 <div class="doc">
 Jak widać, złożenie, odwrotność i koniunkcja relacji zwrotnych są zwrotne.
     Dysjunkcja posiada natomiast dużo mocniejszą właściwość: dysjunkcja
-    dowolnej relacji z relacją zwrotną daje relację zwrotną. Tak więc
+    dowolnej relacji z relacją zwrotną daje relację zwrotną. Tak więc
     dysjunkcja <span class="inlinecode"><span class="id" title="var">R</span></span> z <span class="inlinecode"><span class="id" title="var">eq</span></span> pozwala nam łatwo "dodać" zwrotność do <span class="inlinecode"><span class="id" title="var">R</span></span>. Słownie
     dysjunkcja z <span class="inlinecode"><span class="id" title="var">eq</span></span> odpowiada zwrotowi "lub równy", który możemy spotkać np.
     w wyrażeniach "mniejszy lub równy", "większy lub równy".
 
 <div class="paragraph"> </div>
 
-    Właściwością odwrotną do zwrotności jest antyzwrotność. Relacja
+    Właściwością odwrotną do zwrotności jest antyzwrotność. Relacja
     antyzwrotna to taka, że żaden <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> nie jest w relacji sam ze sobą. 
 </div>
 <div class="code">
@@ -1285,7 +1285,7 @@ Jak widać, złożenie, odwrotność i koniunkcja relacji zwrotnych są zwrotne.
 </div>
 
 <div class="doc">
-Typowymi przykładami relacji antyzwrotnych są nierówność <span class="inlinecode">&lt;&gt;</span> oraz
+Typowymi przykładami relacji antyzwrotnych są nierówność <span class="inlinecode">&lt;&gt;</span> oraz
     porządek "mniejszy niż" (<span class="inlinecode">&lt;</span>) na liczbach naturalnych. Ze względu
     na sposób działania ludzkiego mózgu antyzwrotna jest cała masa relacji
     znanych nam z codziennego życia: "x jest matką y", "x jest ojcem y",
@@ -1314,7 +1314,7 @@ Typowymi przykładami relacji antyzwrotnych są nierówność <span class="inli
 </div>
 
 <div class="doc">
-Równość na typie niepustym nie jest antyzwrotna, gdyż jest zwrotna
+Równość na typie niepustym nie jest antyzwrotna, gdyż jest zwrotna
     (wzajemne związki między tymi dwoma pojęciami zbadamy już niedługo).
     Antyzwrotna nie jest także relacja <span class="inlinecode"><span class="id" title="var">RTrue</span></span> na typie niepustym, gdyż
     co najmniej jeden element jest w relacji z samym sobą. Antyzwrotna
@@ -1347,14 +1347,14 @@ Równość na typie niepustym nie jest antyzwrotna, gdyż jest zwrotna
 </div>
 
 <div class="doc">
-Złożenie relacji antyzwrotnych nie musi być antyzwrotne, ale odwrotność
-    i dysjunkcja już tak, zaś koniunkcja dowolnej relacji z relacją
-    antyzwrotną daje nam relację antyzwrotną. Dzięki temu możemy dowolnej
-    relacji <span class="inlinecode"><span class="id" title="var">R</span></span> "zabrać" zwrotność koniunkcjując ją z <span class="inlinecode">&lt;&gt;</span>.
+Złożenie relacji antyzwrotnych nie musi być antyzwrotne, ale odwrotność
+    i dysjunkcja już tak, zaś koniunkcja dowolnej relacji z relacją
+    antyzwrotną daje nam relację antyzwrotną. Dzięki temu możemy dowolnej
+    relacji <span class="inlinecode"><span class="id" title="var">R</span></span> "zabrać" zwrotność koniunkcjując ją z <span class="inlinecode">&lt;&gt;</span>.
 
 <div class="paragraph"> </div>
 
-    Kolejną właściwością jest niezwrotność. Relacja niezwrotna to taka,
+    Kolejną właściwością jest niezwrotność. Relacja niezwrotna to taka,
     która nie jest zwrotna. Zauważ, że pojęcie to zasadniczo różni się
     od pojęcia relacji antyzwrotnej: tutaj mamy kwantyfikator <span class="inlinecode"><span class="id" title="tactic">exists</span></span>,
     tam zaś <span class="inlinecode"><span class="id" title="keyword">forall</span></span>. 
@@ -1372,16 +1372,16 @@ Złożenie relacji antyzwrotnych nie musi być antyzwrotne, ale odwrotność
 </div>
 
 <div class="doc">
-Typowym przykładem relacji niezwrotnej jest nierówność <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">&lt;&gt;</span> <span class="inlinecode"><span class="id" title="var">y</span></span>. Jako,
+Typowym przykładem relacji niezwrotnej jest nierówność <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">&lt;&gt;</span> <span class="inlinecode"><span class="id" title="var">y</span></span>. Jako,
     że każdy obiekt jest równy samemu sobie, to żaden obiekt nie może być
     nierówny samemu sobie. Zauważ jednak, że typ <span class="inlinecode"><span class="id" title="var">A</span></span> musi być niepusty,
-    gdyż w przeciwnym wypadku nie mamy czego dać kwantyfikatorowi
+    gdyż w przeciwnym wypadku nie mamy czego dać kwantyfikatorowi
     <span class="inlinecode"><span class="id" title="tactic">exists</span></span>.
 
 <div class="paragraph"> </div>
 
     Innym przykładem relacji niezwrotnej jest porządek "większy niż"
-    na liczbach naturalnych. Porządkami zajmiemy się już niedługo. 
+    na liczbach naturalnych. Porządkami zajmiemy się już niedługo. 
 </div>
 <div class="code">
 
@@ -1401,8 +1401,8 @@ Typowym przykładem relacji niezwrotnej jest nierówność <span class="inlinec
 </div>
 
 <div class="doc">
-Równość jest zwrotna, a więc nie może być niezwrotna. Zauważ jednak,
-    że musimy podać aż dwa osobne dowody tego faktu: jeden dla typu
+Równość jest zwrotna, a więc nie może być niezwrotna. Zauważ jednak,
+    że musimy podać aż dwa osobne dowody tego faktu: jeden dla typu
     pustego <span class="inlinecode"><span class="id" title="var">Empty_set</span></span>, a drugi dla dowolnego typu niepustego. Wynika to
     z tego, że nie możemy sprawdzić, czy dowolny typ <span class="inlinecode"><span class="id" title="var">A</span></span> jest pusty, czy
     też nie. 
@@ -1445,8 +1445,8 @@ Podobnej techniki możemy użyć, aby pokazać, że relacja pełna (<span class=
 </div>
 
 <div class="doc">
-Złożenie relacji niezwrotnych nie musi być niezwrotne. Przyjrzyj się
-    uważnie definicji <span class="inlinecode"><span class="id" title="var">Rcomp</span></span>, a z pewnością uda ci się znaleźć jakiś
+Złożenie relacji niezwrotnych nie musi być niezwrotne. Przyjrzyj się
+    uważnie definicji <span class="inlinecode"><span class="id" title="var">Rcomp</span></span>, a z pewnością uda ci się znaleźć jakiś
     kontrprzykład. 
 </div>
 <div class="code">
@@ -1470,15 +1470,15 @@ Złożenie relacji niezwrotnych nie musi być niezwrotne. Przyjrzyj się
 </div>
 
 <div class="doc">
-Odwrotność relacji niezwrotnej jest niezwrotna. Koniunkcja dowolnej
-    relacji z relacją niezwrotną daje relację niezwrotną. Tak więc za
-    pomocą koniunkcji i dysjunkcji możemy łatwo dawać i zabierać
-    zwrotność różnym relacjom. Okazuje się też, że dysjunkcja nie
+Odwrotność relacji niezwrotnej jest niezwrotna. Koniunkcja dowolnej
+    relacji z relacją niezwrotną daje relację niezwrotną. Tak więc za
+    pomocą koniunkcji i dysjunkcji możemy łatwo dawać i zabierać
+    zwrotność różnym relacjom. Okazuje się też, że dysjunkcja nie
     zachowuje niezwrotności.
 
 <div class="paragraph"> </div>
 
-    Na zakończenie zbadajmy jeszcze, jakie związki zachodzą pomiędzy
+    Na zakończenie zbadajmy jeszcze, jakie związki zachodzą pomiędzy
     zwrotnością, antyzwrotnością i niezwrotnością. 
 </div>
 <div class="code">
@@ -1498,7 +1498,7 @@ Odwrotność relacji niezwrotnej jest niezwrotna. Koniunkcja dowolnej
 
 <div class="doc">
 Podstawowa zależność między nimi jest taka, że negacja relacji zwrotnej
-    jest antyzwrotna, zaś negacja relacji antyzwrotnej jest zwrotna. 
+    jest antyzwrotna, zaś negacja relacji antyzwrotnej jest zwrotna. 
 </div>
 <div class="code">
 
@@ -1529,8 +1529,8 @@ Każda relacja na typie pustym jest jednocześnie zwrotna i antyzwrotna,
 </div>
 
 <div class="doc">
-Związek między niezwrotnością i antyzwrotnością jest nadzwyczaj prosty:
-    każda relacja antyzwrotna na typie niepustym jest też niezwrotna. 
+Związek między niezwrotnością i antyzwrotnością jest nadzwyczaj prosty:
+    każda relacja antyzwrotna na typie niepustym jest też niezwrotna. 
 <div class="paragraph"> </div>
 
 <a name="lab413"></a><h2 class="section">Symetria</h2>
@@ -1575,8 +1575,8 @@ Relacja jest symetryczna, jeżeli kolejność podawania argumentów nie
 </div>
 
 <div class="doc">
-Alterntywną charakteryzacją symetrii może być stwierdzenie, że relacja
-    symetryczna to taka, która jest swoją własną odwrotnością. 
+Alterntywną charakteryzacją symetrii może być stwierdzenie, że relacja
+    symetryczna to taka, która jest swoją własną odwrotnością. 
 </div>
 <div class="code">
 
@@ -1596,7 +1596,7 @@ Alterntywną charakteryzacją symetrii może być stwierdzenie, że relacja
 </div>
 
 <div class="doc">
-Równość, relacja pełna i pusta są symetryczne. 
+Równość, relacja pełna i pusta są symetryczne. 
 </div>
 <div class="code">
 
@@ -1644,7 +1644,7 @@ Pozostałe operacje (odwracanie, koniunkcja, dysjunkcja, negacja)
 
     Relacja antysymetryczna to przeciwieństwo relacji symetrycznej —
     jeżeli <span class="inlinecode"><span class="id" title="var">x</span></span> jest w relacji z <span class="inlinecode"><span class="id" title="var">y</span></span>, to <span class="inlinecode"><span class="id" title="var">y</span></span> nie może być w relacji z
-    <span class="inlinecode"><span class="id" title="var">x</span></span>. Sporą klasę przykładów stanowią różne relacje służące do
+    <span class="inlinecode"><span class="id" title="var">x</span></span>. Sporą klasę przykładów stanowią różne relacje służące do
     porównywania: "x jest wyższy od y", "x jest silniejszy od y",
     "x jest bogatszy od y". 
 </div>
@@ -2063,7 +2063,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 
 <div class="paragraph"> </div>
 
- Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
+ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
     niepostrzeżenie przywyczajały do monad. 
 </div>
 <div class="code">

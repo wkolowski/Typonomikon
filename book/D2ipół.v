@@ -1,23 +1,23 @@
 (** W tym rozdziale będą różne formy indukcji/rekursji, których chwilowo nie
     chcę wstawiać do głównego tekstu rozdziałów D1 i D2, bo tam nie pasują.
-    Prędzej czy później zostaną one z tymi rozdział zintegrowane (albo i nie -
+    Prędzej czy później zostaną one z tymi rozdział zintegrowane (albo i nie -
     nie mamy pańskiego płaszcza i co nam pan zrobi?). *)
 
 (** * Rekursja prymitywna (TODO) *)
 
 (* begin hide *)
-(** Tutaj opisać to, co w Agdzie zwie się "rekursją prymitywną", czyli taką,
+(** Tutaj opisać to, co w Agdzie zwie się "rekursją prymitywną", czyli taką,
     która dokładnie pasuje do kształtu indukcji w typie, a zatem można ją
     bezpośrednio przetłumaczyć na regułę indukcji. Co więcej, pojęcie to
-    wydaje się być całkiem użyteczne w kontekście metody Bove-Capretta oraz
+    wydaje się być całkiem użyteczne w kontekście metody Bove-Capretta oraz
     mówienia o "kształcie rekursji" czy "kształcie indukcji". *)
 (* end hide *)
 
 (** Wiemy już, że rekursja ogólna prowadzi do sprzeczności, a jedyną legalną
-    formą rekursji jest rekursja prymitywna (i niektóre formy rekursji
-    strukturalnej, o czym dowiemy się później). Funkcje rekurencyjne, które
+    formą rekursji jest rekursja prymitywna (i niektóre formy rekursji
+    strukturalnej, o czym dowiemy się później). Funkcje rekurencyjne, które
     dotychczas pisaliśmy, były prymitywnie rekurencyjne, więc potrafisz
-    już całkiem sprawnie posługiwać się tym rodzajem rekursji. Pozostaje
+    już całkiem sprawnie posługiwać się tym rodzajem rekursji. Pozostaje
     nam zatem jedynie zbadać techniczne detale dotyczące sposobu realizacji
     rekursji prymitywnej w Coqu. W tym celu przyjrzyjmy się ponownie
     definicji dodawania: *)
@@ -45,20 +45,20 @@ Print plus.
     się, który argument ma być główny. W poetyckiej polszczyźnie argument
     główny możemy wskazać mówiąc np., że "funkcja plus zdefiniowana jest
     przez rekursję po pierwszym argumencie" albo "funkcja plus zdefinowana
-    jest przez rekursję po n".
+    jest przez rekursję po n".
 
-    Czym jest argument główny? Spróbuję wyjasnić to w sposób operacyjny:
-    - jako argument główny możemy wskazać dowolny argument, którego typ
+    Czym jest argument główny? Spróbuję wyjasnić to w sposób operacyjny:
+    - jako argument główny możemy wskazać dowolny argument, którego typ
       jest induktywny
     - Coq wymusza na nas, aby argumentem głównym wywołania rekurencyjnego
       był podterm argumentu głównego z obecnego wywołania
 
     Dlaczego taki zabieg chroni nas przed sprzecznością? Przypomnij sobie,
-    że termy typów induktywnych muszą być skończone. Parafrazując: są to
+    że termy typów induktywnych muszą być skończone. Parafrazując: są to
     drzewa o skończonej wysokości. Ich podtermy są od nich mniejsze, więc
     w kolejnych wywołaniach rekurencyjnych argument główny będzie malał,
     aż w końcu jego rozmiar skurczy się do zera. Wtedy rekursja zatrzyma
-    się, bo nie będzie już żadnych podtermów, na których można by zrobić
+    się, bo nie będzie już żadnych podtermów, na których można by zrobić
     wywołanie rekurencyjne.
 
     Żeby lepiej zrozumieć ten mechanizm, zbadajmy najpierw relację bycia
@@ -133,7 +133,7 @@ Proof. do 2 constructor. Qed.
 
 (** **** Ćwiczenie *)
 
-(** Udowodnij, że relacje [subterm_nat] oraz [subterm_list] są antyzwrotne
+(** Udowodnij, że relacje [subterm_nat] oraz [subterm_list] są antyzwrotne
     i przechodnie. Uwaga: to może być całkiem trudne. *)
 
 (* begin hide *)
@@ -258,10 +258,10 @@ Qed.
     Zero i lista pusta nie mają podtermów, gdyż są to przypadki bazowe,
     pochodzące od konstruktorów, które nie mają argumentów rekurencyjnych.
 
-    Dla każdego typu induktywnego możemy zdefiniować relację bycia podtermem
-    podobną do tych dla liczb naturalnych i list. Zauważmy jednak, że nie
-    możemy za jednym zamachem zdefiniować relacji bycia podtermem dla
-    wszystkich typów induktywnych, gdyż nie możemy w Coqu powiedzieć czegoś
+    Dla każdego typu induktywnego możemy zdefiniować relację bycia podtermem
+    podobną do tych dla liczb naturalnych i list. Zauważmy jednak, że nie
+    możemy za jednym zamachem zdefiniować relacji bycia podtermem dla
+    wszystkich typów induktywnych, gdyż nie możemy w Coqu powiedzieć czegoś
     w stylu "dla wszystkich typów induktywnych". Możemy powiedzieć jedynie
     "dla wszystkich typów".
 
@@ -276,8 +276,8 @@ match n with
     | S n' => weird 0
 end.
 
-(** Definicja zdaje się być poprawna: [0] to przypadek bazowy, a gdy [n]
-    jest postaci [S n'], wywołujemy funkcję rekurencyjnie na argumencie
+(** Definicja zdaje się być poprawna: [0] to przypadek bazowy, a gdy [n]
+    jest postaci [S n'], wywołujemy funkcję rekurencyjnie na argumencie
     [0]. [0] jest podtermem [S n'], a zatem wszystko powinno być dobrze.
     Dostajemy jednak następujący komunikat o błędzie: *)
 
@@ -333,16 +333,16 @@ end.
 (** Tym razem Coq widzi, że [S n'] jest podtermem [S (S n')], gdyż explicite
     nadaliśmy temu termowi nazwę [n''], używając do tego klauzli [as].
 
-    Ufff...  udało nam się przebrnąć przez techniczne detale działania
+    Ufff...  udało nam się przebrnąć przez techniczne detale działania
     rekursji strukturalnej. Mogłoby się wydawać, że jest ona mechanizmem
     bardzo upośledzonym, ale z doświadczenia wiesz już, że w praktyce
     omówione wyżej problemy występują raczej rzadko.
 
     Mogłoby się też wydawać, że skoro wywołania rekurencyjne możemy robić
     tylko na bezpośrednich podtermach dopasowanych we wzorcu, to nie da się
-    zdefiniować prawie żadnej ciekawej funkcji. Jak zobaczymy w kolejnych
+    zdefiniować prawie żadnej ciekawej funkcji. Jak zobaczymy w kolejnych
     podrozdziałach, wcale tak nie jest. Dzięki pewnej sztuczce za pomocą
-    rekursji strukturalnej można wyrazić rekursję dobrze ufundowaną, która
+    rekursji strukturalnej można wyrazić rekursję dobrze ufundowaną, która
     na pierwszy rzut oka jest dużo potężniejsza i daje nam wiele możliwości
     definiowania różnych ciekawych funkcji. *)
 
@@ -365,32 +365,32 @@ Fail Fixpoint div (n m : nat) : nat :=
 
 (** * Rekursja strukturalna (TODO) *)
 
-(** * Rekursja jako najlepszość *)
+(** * Rekursja jako najlepszość *)
 
-(** Znamy już podstawowe typy induktywne, jak liczby naturalne oraz
-    listy elementów typu [A]. Wiemy też, że ich induktywność objawia
-    się głównie w tym, że możemy definiować funkcje przez rekursję
-    strukturalną po argumentach tych typów oraz dowodzić przez indukcję.
+(** Znamy już podstawowe typy induktywne, jak liczby naturalne oraz
+    listy elementów typu [A]. Wiemy też, że ich induktywność objawia
+    się głównie w tym, że możemy definiować funkcje przez rekursję
+    strukturalną po argumentach tych typów oraz dowodzić przez indukcję.
 
-    W takim podejściu indukcja i sama induktywność typów induktywnych
-    wydają się być czymś w rodzaju domina - wystarczy popchnąć pierwsze
+    W takim podejściu indukcja i sama induktywność typów induktywnych
+    wydają się być czymś w rodzaju domina - wystarczy popchnąć pierwsze
     kilka kostek (przypadki bazowe) i zapewnić, że pozostałe kostki są
-    dobrze ułożone (przypadki rekurencyjne), aby zainicjować reakcję
-    łańcuchową, która będzie przewracać kostki w nieskończoność.
+    dobrze ułożone (przypadki rekurencyjne), aby zainicjować reakcję
+    łańcuchową, która będzie przewracać kostki w nieskończoność.
 
     Nie jest to jednak jedyny sposób patrzenia na typy induktywne. W tym
-    podrozdziale spróbuję przedstawić inny sposób patrzenia, w którym typ
+    podrozdziale spróbuję przedstawić inny sposób patrzenia, w którym typ
     induktywny to najlepszy typ do robienia termów o pewnym kształcie, a
     rekursja to zmiana kształtu z lepszego na gorszy, ale bardziej
     użyteczny.
 
     Żeby móc patrzeć z tej perspektywy musimy najpierw ustalić, czym
     jest kształt. Uwaga: "kształt" nie jest pojęciem technicznym i nie
-    ma ścisłej definicji - używam tego słowa, żeby ułatwić pracę twojej
+    ma ścisłej definicji - używam tego słowa, żeby ułatwić pracę twojej
     wyobraźni.
 
     Czym jest kształt termu? Najprościej rzecz ujmując każdy term jest
-    drzewkiem, którego korzeniem jest jakiś konstrukt językowy (stała,
+    drzewkiem, którego korzeniem jest jakiś konstrukt językowy (stała,
     konstruktor, uprzednio zdefiniowana funkcja, dopasowanie do wzorca,
     [let], lub cokolwiek innego), a jego poddrzewa to argumenty tego
     konstruktu.
@@ -409,18 +409,18 @@ Fail Fixpoint div (n m : nat) : nat :=
     więc żeby zgodnie z przysłowiem od tego przybytku nie rozbolała nas
     głowa, musimy pomyśleć o nich w nieco bardziej jednorodny sposób.
     Rozwiązanie jest na szczęście bajecznie proste: zauważ, że wszystkie
-    powyższe konstrukty językowe można po prostu zawinąć w funkcję, która
-    bierze pewną liczbę argumentów (być może zero) i zwraca coś typu
+    powyższe konstrukty językowe można po prostu zawinąć w funkcję, która
+    bierze pewną liczbę argumentów (być może zero) i zwraca coś typu
     [nat].
 
     To jednak nie w pełni mityguje przyszły-niedoszły ból głowy. O ile
     mamy teraz jednorodny sposób myślenia o kształtach termów, to i tak
-    kształtów tych mogą być olbrzymie ilości. Z tego powodu dokonamy
+    kształtów tych mogą być olbrzymie ilości. Z tego powodu dokonamy
     samoograniczenia i zamiast o wszystkich możliwych kształtach termów
-    będziemy wybiórczo skupiać naszą uwagę tylko na tych kształtach,
-    które akurat będą nas interesować.
+    będziemy wybiórczo skupiać naszą uwagę tylko na tych kształtach,
+    które akurat będą nas interesować.
 
-    Dla przykładu, możemy interesować się termami typu [nat] zrobionymi
+    Dla przykładu, możemy interesować się termami typu [nat] zrobionymi
     wyłącznie za pomocą:
     - konstruktorów [0] i [S]
     - konstruktora [0], stałej [1] oraz funkcji [plus 2]
@@ -430,7 +430,7 @@ Fail Fixpoint div (n m : nat) : nat :=
 
 (** **** Ćwiczenie *)
 
-(** Narysuj jakieś nietrywialne termy typu [nat] o takich kształtach. *)
+(** Narysuj jakieś nietrywialne termy typu [nat] o takich kształtach. *)
 
 (* begin hide *)
 Module wut.
@@ -444,86 +444,86 @@ End wut.
 
 (** **** Ćwiczenie *)
 
-(** Liczbę [n] da się wyrazić za pomocą termu [t], jeżeli [t] oblicza
+(** Liczbę [n] da się wyrazić za pomocą termu [t], jeżeli [t] oblicza
     się do [n], tzn. komenda [Compute t] daje w wyniku [n].
 
-    Pytanie: termy o których z powyższych kształtów mogą wyrazić
+    Pytanie: termy o których z powyższych kształtów mogą wyrazić
     wszystkie liczby naturalne? *)
 
 (** **** Ćwiczenie *)
 
-(** Liczba [n] ma unikalną reprezentację za pomocą termów o danym
+(** Liczba [n] ma unikalną reprezentację za pomocą termów o danym
     kształcie, gdy jest tylko jeden term [t], który reprezentuje [n].
 
     Pytanie: które z powyższych sposobów unikalnie reprezentują
     wszystkie liczby naturalne? *)
 
-(** Sporo już osiągnęliśmy w wyklarowywaniu pojęcia kształtu, ale
-    zatrzymajmy się na chwilę i zastanówmy się, czy jest ono zgodne
+(** Sporo już osiągnęliśmy w wyklarowywaniu pojęcia kształtu, ale
+    zatrzymajmy się na chwilę i zastanówmy się, czy jest ono zgodne
     z naszymi intuicjami.
 
     Okazuje się, że otóż nie do końca, bo w naszej obecnej formulacji
-    kształty [(0, plus)] oraz [(1, mult)] są różne, podczas gdy obrazki
+    kształty [(0, plus)] oraz [(1, mult)] są różne, podczas gdy obrazki
     (narysuj je!) jasno pokazują nam, że np. [plus 0 (plus 0 0)] oraz
-    [mult 1 (mult 1 1)] wyglądają bardzo podobnie, tylko nazwy są różne.
+    [mult 1 (mult 1 1)] wyglądają bardzo podobnie, tylko nazwy są różne.
 
-    Dlatego też modyfikujemy nasze pojęcie kształtu - teraz kształtem
-    zamiast stałych i funkcji, jak [0] i [plus], nazywać będziemy typy
+    Dlatego też modyfikujemy nasze pojęcie kształtu - teraz kształtem
+    zamiast stałych i funkcji, jak [0] i [plus], nazywać będziemy typy
     tych stałych i funkcji. Tak więc kształtem termów zrobionych z [0]
     i [plus] będzie [nat] (bo [0 : nat]) i [nat -> nat -> nat] (bo
-    [plus : nat -> nat -> nat]). Teraz jest już jasne, że [1] i [mult]
-    dają dokładnie ten sam kształt, bo typem [1] jest [nat], zaś typem
+    [plus : nat -> nat -> nat]). Teraz jest już jasne, że [1] i [mult]
+    dają dokładnie ten sam kształt, bo typem [1] jest [nat], zaś typem
     [mult] jest [nat -> nat -> nat].
 
-    Zauważmy, że można nasze pojęcie kształtu jeszcze troszkę uprościć:
-    - po pierwsze, każdą stałą można traktować jako funkcję biorącą
-      argument typu [unit], np. możemy [0 : nat] reprezentować za pomocą
+    Zauważmy, że można nasze pojęcie kształtu jeszcze troszkę uprościć:
+    - po pierwsze, każdą stałą można traktować jako funkcję biorącą
+      argument typu [unit], np. możemy [0 : nat] reprezentować za pomocą
       funkcji [Z : unit -> nat] zdefiniowanej jako
       [Z := fun _ : unit => 0]
-    - po drugie, funkcje biorące wiele argumentów możemy reprezentować za
-      pomocą funkcji biorących jeden argument, np.
-      [plus : nat -> nat -> nat] możemy reprezentować za pomocą
+    - po drugie, funkcje biorące wiele argumentów możemy reprezentować za
+      pomocą funkcji biorących jeden argument, np.
+      [plus : nat -> nat -> nat] możemy reprezentować za pomocą
       [plus' : nat * nat -> nat], który jest zdefiniowany jako
       [plus' := fun '(n, m) => plus n m]
-    - po trzecie, ponieważ kodziedzina wszystkich funkcji jest taka
-      sama (w naszym przypadku [nat]), możemy połączyć wiele funkcji w
-      jedną, np. [0] i [plus] możemy razem reprezentować jako
-      [Zplus : unit + nat * nat -> nat], zdefiniowaną jako
+    - po trzecie, ponieważ kodziedzina wszystkich funkcji jest taka
+      sama (w naszym przypadku [nat]), możemy połączyć wiele funkcji w
+      jedną, np. [0] i [plus] możemy razem reprezentować jako
+      [Zplus : unit + nat * nat -> nat], zdefiniowaną jako
       [Zplus := fun x => match x with | inl _ => 0 | inr (n, m) => plus n m end]
 
     Dzięki tym uproszczeniom (albo utrudnieniom, zależy kogo spytacie)
     możemy teraz jako kształt traktować nie funkcje albo same ich typy,
-    lecz tylko jeden typ, który jest dziedziną takiej połączonej funkcji.
+    lecz tylko jeden typ, który jest dziedziną takiej połączonej funkcji.
     Tak więc zarówno [(0, plus)] jak i [(1, mult)] są kształtu
     [unit + nat * nat]. Ma to sporo sensu: drzewa reprezentujące te termy
-    są albo liściem (reprezentowanym przez [unit]), albo węzłem, który
-    rozgałęzia się na dwa poddrzewa (reprezentowanym przez [nat * nat]).
+    są albo liściem (reprezentowanym przez [unit]), albo węzłem, który
+    rozgałęzia się na dwa poddrzewa (reprezentowanym przez [nat * nat]).
 
-    Ale to jeszcze nie wszystko. Przecież [nat] to nie jedyny typ, w
-    którym można robić termy o kształcie [unit + nat * nat]. Jeżeli
-    przyjrzymy się, jak wyglądają termy zrobione za pomocą ([true, andb])
-    albo [(false, orb)], to okaże się, że... mają one dokładnie ten sam
+    Ale to jeszcze nie wszystko. Przecież [nat] to nie jedyny typ, w
+    którym można robić termy o kształcie [unit + nat * nat]. Jeżeli
+    przyjrzymy się, jak wyglądają termy zrobione za pomocą ([true, andb])
+    albo [(false, orb)], to okaże się, że... mają one dokładnie ten sam
     kształt, mimo że według naszej definicji ich kształt to
-    [unit + bool * bool], czyli niby coś innego.
+    [unit + bool * bool], czyli niby coś innego.
 
     Ostatnim stadium ewolucji naszego pojęcia kształtu jest taki oto
     zestaw definicji:
     - kształt to funkcja [F : Type -> Type]
-    - realizacją kształtu [F] jest typ [X] oraz funkcja [f : F X -> X]
+    - realizacją kształtu [F] jest typ [X] oraz funkcja [f : F X -> X]
 
     Widzimy teraz, że [(0, plus)], [(1, mult)], [(true, andb)] oraz
     [(false, orb)] nie są kształtami, lecz realizacjami kształtu
     [F := fun X : Type => 1 + X * X].
 
-    Pora powoli zmierzać ku konkluzji. Na początku powiedzieliśmy, że
+    Pora powoli zmierzać ku konkluzji. Na początku powiedzieliśmy, że
     typ induktywny to najlepszy typ do robienia termów o pewnym kształcie.
-    Jakim kształcie, zapytasz pewnie, i jak objawia się owa najlepszość?
-    Czas się tego dowiedzieć.
+    Jakim kształcie, zapytasz pewnie, i jak objawia się owa najlepszość?
+    Czas się tego dowiedzieć.
 
-    Definiując typ induktywny podajemy jego konstruktory, a całą resztę,
+    Definiując typ induktywny podajemy jego konstruktory, a całą resztę,
     czyli możliwość definiowania przez dopasowanie do wzorca i rekursję,
     reguły eliminacji etc. dostajemy za darmo. Nie dziwota więc, że to
-    właśnie konstruktory są realizacją kształtu, którego dany typ jest
+    właśnie konstruktory są realizacją kształtu, którego dany typ jest
     najlepszym przykładem.
 
     Napiszmy to jeszcze raz, dla jasności: typ induktywny to najlepszy
@@ -533,20 +533,20 @@ End wut.
     W naszym [nat]owym przykładzie oznacza to, że [nat] jest najlepszym
     sposobem robienia termów o kształcie [F := fun X => unit + X], czyli
     termów w kształcie "sznurków" (konstruktor [S] to taki supełek na
-    sznurku, a [0] reprezentuje koniec sznurka). Są też inne realizacje
+    sznurku, a [0] reprezentuje koniec sznurka). Są też inne realizacje
     tego sznurkowego kształtu, jak np. stała [42 : nat] i funkcja
     [plus 8 : nat -> nat] albo stała [true : bool] i funkcja
     [negb : bool -> bool], albo nawet zdanie [False : Prop] oraz
     negacja [not : Prop -> Prop], ale żadna z nich nie jest najlepsza.
 
-    Jak objawia się najlepszość typu induktywnego? Ano, dwojako:
-    - po pierwsze, objawia się w postaci rekursora, który bierze jako
-      argument docelową realizację danego kształtu i przerabia term
+    Jak objawia się najlepszość typu induktywnego? Ano, dwojako:
+    - po pierwsze, objawia się w postaci rekursora, który bierze jako
+      argument docelową realizację danego kształtu i przerabia term
       typu induktywnego, podmieniając najlepszą realizację na docelową
     - po drugie, rekursor jest unikalny, czyli powyższa podmiana
-      realizacji odbywa się w jedyny słuszny sposób
+      realizacji odbywa się w jedyny słuszny sposób
 
-    Żeby nie być gołosłownym, zobaczmy przykłady: *)
+    Żeby nie być gołosłownym, zobaczmy przykłady: *)
 
 Fixpoint nat_rec' {X : Type} (z : X) (s : X -> X) (n : nat) : X :=
 match n with
@@ -561,7 +561,7 @@ end.
     na [s (s (s (s z)))]. Jeszcze konkretniejszy przykład:
     [nat_rec' true negb] zamieni liczbę [S (S (S (S 0)))] w
     [negb (negb (negb (negb true)))]. Oczywiście term ten następnie
-    oblicza się do [true]. *)
+    oblicza się do [true]. *)
 
 (** **** Ćwiczenie *)
 
@@ -569,9 +569,9 @@ end.
     sznurka z [(0, S)] na [(true, negb)] odpowiada sprawdzeniu jakiejś
     właściwości liczb naturalnych. Jakiej?
 
-    Pisząc wprost: zdefiniuj bezpośrednio przez rekursję taką funkcję
+    Pisząc wprost: zdefiniuj bezpośrednio przez rekursję taką funkcję
     [f : nat -> bool], że [forall n : nat, nat_rec' true negb n = f n]
-    (oczywiście musisz udowodnić, że wszystko się zgadza). *)
+    (oczywiście musisz udowodnić, że wszystko się zgadza). *)
 
 (* begin hide *)
 
@@ -593,7 +593,7 @@ Qed.
 (* end hide *)
 
 (** Uwaga: Coq domyślnie generuje dla typu "rekursor", ale ma on na
-    myśli coś innego, niż my: *)
+    myśli coś innego, niż my: *)
 
 Check nat_rec.
 (* ===> nat_rec :
@@ -603,13 +603,13 @@ Check nat_rec.
               forall n : nat, P n *)
 
 (** Coqowe [nat_rec] to w zasadzie to samo, co [nat_ind], czyli reguła
-    indukcji, tyle że kodziedziną motywu nie jest [Prop], lecz [Set]
+    indukcji, tyle że kodziedziną motywu nie jest [Prop], lecz [Set]
     (możesz myśleć, że [Set] to to samo co [Type]).
 
     Podobieństwo naszego [nat_rec'] oraz reguły indukcji nie jest
     przypadkowe - myślenie o typach induktywnych w przedstawiony wyżej
     sposób jest najlepszym sposobem na spamiętanie wszystkich możliwych
-    reguł rekursji, indukcji i tympodobnych. A robi się to tak (naszym
+    reguł rekursji, indukcji i tympodobnych. A robi się to tak (naszym
     przykładem tym razem będzie typ [list A]).
 
     Krok pierwszy: każda lista to albo [nil : list A] albo
@@ -620,9 +620,9 @@ Check nat_rec.
     robienie termów w kształcie [(nil, cons)].
 
     Krok trzeci: wobec tego mamy (a raczej musimy sobie zrobić)
-    rekursor [list_rec'], który, gdy damy mu inną realizację kształtu
+    rekursor [list_rec'], który, gdy damy mu inną realizację kształtu
     [F := fun X => unit + A * X], to podmieni on [nil] i [cons]y w
-    dowolnej liście [l] na tą inną realizację. Jego typ wygląda tak: *)
+    dowolnej liście [l] na tą inną realizację. Jego typ wygląda tak: *)
 
 Definition list_rec'_type : Type :=
   forall
@@ -630,10 +630,10 @@ Definition list_rec'_type : Type :=
     (P : Type)        (* inna realizacja kształtu - typ *)
     (n : P)           (* inna realizacja kształtu - [nil] *)
     (c : A -> P -> P) (* inna realizacja kształtu - [cons] *)
-    (l : list A),     (* lista, w której chcemy zrobić podmianę *)
+    (l : list A),     (* lista, w której chcemy zrobić podmianę *)
       P.              (* wynik podmiany *)
 
-(** Krócej można ten typ zapisać tak: *)
+(** Krócej można ten typ zapisać tak: *)
 
 Definition list_rec'_type' : Type :=
   forall A P : Type, P -> (A -> P -> P) -> list A -> P.
@@ -659,16 +659,16 @@ Definition list_ind'_type : Type :=
     (c : forall (h : A) (t : list A), P t -> P (cons h t))
     (l : list A), P l.
 
-(** Oczywiście musimy też dostosować typy argumentów. Może to prowadzić
+(** Oczywiście musimy też dostosować typy argumentów. Może to prowadzić
     do pojawienia się nowych argumentów. [c] w rekursorze miało typ
-    [A -> P -> P]. Pierwszy argument typu [A] musimy nazwać [h], żeby
+    [A -> P -> P]. Pierwszy argument typu [A] musimy nazwać [h], żeby
     móc go potem użyć. Ostatnie [P] to konkluzja, która musi być postaci
     [P (cons h t)], ale [t : list A] nigdzie nie ma, więc je dodajemy.
-    Pierwsze [P] zmienia się w hipotezę indukcyjną [P t]. *)
+    Pierwsze [P] zmienia się w hipotezę indukcyjną [P t]. *)
 
 (** Krok piąty: definicja reguły indukcji jest prawie taka sama jak
-    poprzednio (musimy uwzględnić pojawienie się [t : list A] jako
-    argumentu w [c]. Poza tym drobnym detalem zmieniają się tylko
+    poprzednio (musimy uwzględnić pojawienie się [t : list A] jako
+    argumentu w [c]. Poza tym drobnym detalem zmieniają się tylko
     typy: *)
 
 Fixpoint list_ind'
@@ -683,15 +683,15 @@ match l with
     | cons h t => c h t (list_ind' n c t)
 end.
 
-(** Włala, mamy regułę indukcji.
+(** Włala, mamy regułę indukcji.
 
-    Na sam koniec wypadałoby jeszcze opisać drobne detale dotyczące
+    Na sam koniec wypadałoby jeszcze opisać drobne detale dotyczące
     najlepszości. Czy skoro [nat] jest najlepszym typem do robienia
-    termów w kształcie sznurków, to znaczy, że inne realizacje tego
-    kształtu są gorsze? I w jaki sposób objawia się ich gorszość?
+    termów w kształcie sznurków, to znaczy, że inne realizacje tego
+    kształtu są gorsze? I w jaki sposób objawia się ich gorszość?
 
-    Odpowiedź na pierwsze pytanie jest skomplikowańsza niż bym chciał:
-    [nat] jest najlepsze, ale inne typy też mogą być najlepsze.
+    Odpowiedź na pierwsze pytanie jest skomplikowańsza niż bym chciał:
+    [nat] jest najlepsze, ale inne typy też mogą być najlepsze.
     Rozważmy poniższy typ: *)
 
 Inductive nat' : Type :=
@@ -700,7 +700,7 @@ Inductive nat' : Type :=
 
 (** Jako, że [nat'] jest typem induktywnym, to jest najlepszym sposobem
     robienia termów w kształcie [F := fun X => unit + X]. Ale jak to?
-    Przecież najlepsze dla tego kształtu jest [nat]! Tak, to prawda.
+    Przecież najlepsze dla tego kształtu jest [nat]! Tak, to prawda.
     Czy zatem [nat'] jest gorsze? Nie: oba te typy, [nat] i [nat'],
     są najlepsze.
 
@@ -708,9 +708,9 @@ Inductive nat' : Type :=
     [nat], tylko inaczej nazwane. Fakt ten łatwo jest udowodnić:
     mając [nat]owy sznurek możemy za pomocą [nat_rec'] przerobić
     go na [nat']owy sznurek. Podobnie [nat']owy sznurek można
-    za pomocą [nat'_rec'] przerobić na [nat]owy sznurek. Widać na
-    oko, że obie te funkcje są swoimi odwrotnościami, a zatem typy
-    [nat] i [nat'] są izomorficzne, czyli mają takie same elementy
+    za pomocą [nat'_rec'] przerobić na [nat]owy sznurek. Widać na
+    oko, że obie te funkcje są swoimi odwrotnościami, a zatem typy
+    [nat] i [nat'] są izomorficzne, czyli mają takie same elementy
     i takie same właściwości. *)
 
 (** **** Ćwiczenie *)
@@ -751,36 +751,36 @@ Qed.
 End ex.
 (* end hide *)
 
-(** Drugie pytanie brzmiało: w czym objawia się brak najlepszości innych
+(** Drugie pytanie brzmiało: w czym objawia się brak najlepszości innych
     realizacji danego kształtu? Odpowiedź jest prosta: skoro najlepszość
     to unikalny rekursor, to brak najlepszości oznacza brak unikalnego
     rekursora. Przeżyjmy to na przykładzie:
 
-    Używając rekursora dla [nat] możemy podmienić [S] na negację, a
-    [0] na [false], i otrzymać dzięki temu funkcję sprawdzającą, czy
-    długość sznurka (czyli liczby naturalnej) jest nieparzysta. Czy
-    dla innych realizacji tego samego kształtu też możemy tak zrobić?
+    Używając rekursora dla [nat] możemy podmienić [S] na negację, a
+    [0] na [false], i otrzymać dzięki temu funkcję sprawdzającą, czy
+    długość sznurka (czyli liczby naturalnej) jest nieparzysta. Czy
+    dla innych realizacji tego samego kształtu też możemy tak zrobić?
 
     Nie zawsze. Rozważmy typ [unit] wraz ze stałą [tt] i funkcją
     [f := fun _ => tt], które realizują ten sam kształt co [nat],
     [0] i [S]. Zauważmy, że [tt = f tt], a zatem różne sznurki
-    obliczają się do tej samej wartości. Jest to sytuacja zgoła
-    odmienna od [nat]owej - różne ilości [S]ów dają różne liczby
+    obliczają się do tej samej wartości. Jest to sytuacja zgoła
+    odmienna od [nat]owej - różne ilości [S]ów dają różne liczby
     naturalne.
 
     Gdybyśmy mieli dla tej realizacji rekursor podmieniający [f] na
-    jakąś funkcję [g], zaś [tt] na stałą [x], to niechybnie doszłoby
+    jakąś funkcję [g], zaś [tt] na stałą [x], to niechybnie doszłoby
     do katastrofy. Dla przykładu, gdybyśmy próbowali tak jak wyżej
-    sprawdzić, czy długość sznurka jest nieparzysta, zamieniając [tt]
-    na [false], zaś [f] na [negb], to wynikiem zamiany dla [tt] byłoby
+    sprawdzić, czy długość sznurka jest nieparzysta, zamieniając [tt]
+    na [false], zaś [f] na [negb], to wynikiem zamiany dla [tt] byłoby
     [false], zaś dla [f tt] byłoby to [negb false = true]. To jednak
     prowadzi do sprzeczności, bo [tt = f tt]. Wyniki podmiany dla
-    sznurków obliczających się do równych wartości musza być takie
+    sznurków obliczających się do równych wartości musza być takie
     same.
 
     Oczywiście [unit], [tt] i [f] to bardzo patologiczna realizacja
     sznurkowego kształtu. Czy są jakieś mniej patologiczne realizacje,
-    które umożliwiają podmiankę, która pozwala sprawdzić nieparzystość
+    które umożliwiają podmiankę, która pozwala sprawdzić nieparzystość
     długości sznurka?
 
     Tak. Przykładem takiej realizacji jest... [bool], [false] i [negb]
@@ -788,7 +788,7 @@ End ex.
     identycznościowa).
 
     Czy znaczy to, że [bool], [false] i [negb] to najlepsza realizacja
-    sznurkowego kształtu? Nie - da się znaleźć całą masę podmianek,
+    sznurkowego kształtu? Nie - da się znaleźć całą masę podmianek,
     które [nat] umożliwia, a [bool], [false] i [negb] - nie (joł, sprawdź
     to - wcale nie kłamię).
 
@@ -796,7 +796,7 @@ End ex.
     typy induktywne napiszę jeszcze tylko, że nie jest ono skuteczne
     zawsze i wszędzie. Działa jedynie dla prostych typów zrobionych
     z enumeracji, rekurencji i parametrów. Żeby myśleć w ten sposób
-    np. o indeksowanych rodzinach typów trzeba mieć nieco mocniejszą
+    np. o indeksowanych rodzinach typów trzeba mieć nieco mocniejszą
     wyobraźnię. *)
 
 (** **** Ćwiczenie *)
@@ -812,17 +812,17 @@ End ex.
     - [list A]
 
     Dla każdego z nich:
-    - znajdź kształt, którego jest on najlepszą realizacją
+    - znajdź kształt, którego jest on najlepszą realizacją
     - napisz typ rekursora
     - zaimplementuj rekursor
-    - zaimplementuj bezpośrednio za pomocą rekursora jakąś ciekawą
+    - zaimplementuj bezpośrednio za pomocą rekursora jakąś ciekawą
       funkcję
-    - z typu rekursora wyprowadź typ reguły indukcji (oczywiście bez
-      podglądania za pomocą komendy [Print]... nie myśl też o białym
+    - z typu rekursora wyprowadź typ reguły indukcji (oczywiście bez
+      podglądania za pomocą komendy [Print]... nie myśl też o białym
       niedźwiedziu)
-    - zaimplementuj regułę indukcji
-    - spróbuj bezpośrednio użyć reguły indukcji, by udowodnić jakiś
-      fakt na temat zaimplementowanej uprzednio za pomocą rekursora
+    - zaimplementuj regułę indukcji
+    - spróbuj bezpośrednio użyć reguły indukcji, by udowodnić jakiś
+      fakt na temat zaimplementowanej uprzednio za pomocą rekursora
       funkcji *)
 
 (* begin hide *)
@@ -1053,13 +1053,13 @@ End wuut.
 Require Import X3.
 
 (** Czas na omówienie pewnej ciekawej, ale średnio użytecznej formy rekursji
-    (z pamięci nie jestem w stanie przytoczyć więcej niż dwóch sztampowych
+    (z pamięci nie jestem w stanie przytoczyć więcej niż dwóch sztampowych
     przykładów jej użycia), a jest nią rekursja monotoniczna (zwana też
-    czasem rekursją zagnieżdżoną, ale nie będziemy używać tej nazwy, gdyż
+    czasem rekursją zagnieżdżoną, ale nie będziemy używać tej nazwy, gdyż
     dotychczas używaliśmy jej na określenie rekursji, w której arguemntem
     wywołania rekurencyjnego jest wynik innego wywołania rekurencyjnego).
 
-    Cóż to za zwierzątko, rekursja monotoniczna? Żeby się tego dowiedzieć,
+    Cóż to za zwierzątko, rekursja monotoniczna? Żeby się tego dowiedzieć,
     przypomnijmy sobie najpierw, jak technicznie w Coqu zrealizowana jest
     rekursja strukturalna. *)
 
@@ -1069,8 +1069,8 @@ match n with
     | S n' => fun m : nat => S (plus n' m)
 end.
 
-(** Tak oto definicja funkcji plus, lecz zapisana nieco inaczej, niż gdy
-    widzieliśmy ją ostatnim razem. Tym razem prezentujemy ją jako funkcję
+(** Tak oto definicja funkcji plus, lecz zapisana nieco inaczej, niż gdy
+    widzieliśmy ją ostatnim razem. Tym razem prezentujemy ją jako funkcję
     biorącą jeden argument typu [nat] i zwracającą funkcję z typu [nat] w
     typ [nat]. *)
 
@@ -1082,31 +1082,31 @@ Definition plus' : nat -> nat -> nat :=
   end.
 
 (** Ale komenda [Fixpoint] jest jedynie cukrem syntaktycznym - funkcję [plus]
-    możemy równie dobrze zdefiniować bez niej, posługując się jedynie komendą
+    możemy równie dobrze zdefiniować bez niej, posługując się jedynie komendą
     [Definition], a wyrażeniem, które nam to umożliwia, jest [fix]. [fix]
     działa podobnie jak [fun], ale pozwala dodatkowo nadać definiowanej przez
     siebie funkcji nazwę, dzięki czemu możemy robić wywołania rekurencyjne.
 
-    Czym więc jest rekursja monotoniczna? Z rekursją monotoniczną mamy do
-    czynienia, gdy za pomocą [fix]a (czyli przez rekursję) definiujemy
-    funkcję, która zwraca inną funkcję, i ta zwracana funkcja także jest
-    zdefiniowana za pomocą [fix]a (czyli przez rekursję). Oczywiście to
+    Czym więc jest rekursja monotoniczna? Z rekursją monotoniczną mamy do
+    czynienia, gdy za pomocą [fix]a (czyli przez rekursję) definiujemy
+    funkcję, która zwraca inną funkcję, i ta zwracana funkcja także jest
+    zdefiniowana za pomocą [fix]a (czyli przez rekursję). Oczywiście to
     tylko pierwszy krok - wynikowa funkcja również może zwracać funkcję,
     która jest zdefiniowana za pomocą [fix]a i tak dalej.
 
-    Widać zatem jak na dłoni, że [plus] ani [plus'] nie są przykładami
+    Widać zatem jak na dłoni, że [plus] ani [plus'] nie są przykładami
     rekursji monotonicznej. Wprawdzie definiują one za pomocą [fix]a
-    (lub komendy [Fixpoint]) funkcję, która zwraca inną funkcję, ale ta
-    zwracana funkcja nie jest zdefiniowana za pomocą [fix]a, lecz za
+    (lub komendy [Fixpoint]) funkcję, która zwraca inną funkcję, ale ta
+    zwracana funkcja nie jest zdefiniowana za pomocą [fix]a, lecz za
     pomocą [fun], a więc nie jest rekurencyjna.
 
     Podsumowując: rekursja jest monotoniczna, jeżeli w definicji
-    funkcji pojawiają się co najmniej dwa wystąpienia [fix], jedno
-    wewnątrz drugiego (przy czym rzecz jasna [Fixpoint] też liczy
+    funkcji pojawiają się co najmniej dwa wystąpienia [fix], jedno
+    wewnątrz drugiego (przy czym rzecz jasna [Fixpoint] też liczy
     się jako [fix]).
 
-    No to skoro już wiemy, czas zobaczyć przykład jakiejś funkcji, która
-    jest zdefiniowana przez rekursję monotoniczną. *)
+    No to skoro już wiemy, czas zobaczyć przykład jakiejś funkcji, która
+    jest zdefiniowana przez rekursję monotoniczną. *)
 
 Fail Fixpoint ack (n m : nat) : nat :=
 match n, m with
@@ -1119,8 +1119,8 @@ end.
         Cannot guess decreasing argument of fix. *)
 
 (** Powyższa funkcja zwana jest funkcją Ackermanna, gdyż wymyślił ją...
-    zgadnij kto. Jest ona całkiem sławna, choć z zupełnie innych powodów
-    niż te, dla których my się jej przyglądamy. Nie oblicza ona niczego
+    zgadnij kto. Jest ona całkiem sławna, choć z zupełnie innych powodów
+    niż te, dla których my się jej przyglądamy. Nie oblicza ona niczego
     specjalnie użytecznego - jej wynikami są po prostu bardzo duże liczby.
     Jeżeli nie wierzysz, spróbuj policzyć ręcznie [ack 4 2] - zdziwisz się.
 
@@ -1132,30 +1132,30 @@ end.
     [ack n' (ack (S n') m')]. W wewnętrznym wywołaniu rekurencyjnym pierwszy
     argument jest taki sam jak obecny. Gdyby argumentem głównym był drugi
     argument, to jest tym bardziej źle, gdyż w zewnętrznym wywołaniu
-    rekurencyjnym nie jest nim [m'], lecz [ack (S n') m']. Nie ma się więc
-    co dziwić, że Coq nie może zgadnąć, który argument ma być argumentem
+    rekurencyjnym nie jest nim [m'], lecz [ack (S n') m']. Nie ma się więc
+    co dziwić, że Coq nie może zgadnąć, który argument ma być argumentem
     głównym.
 
-    Mimo, że Coq nie akceptuje tej definicji, to wydaje się ona być całkiem
+    Mimo, że Coq nie akceptuje tej definicji, to wydaje się ona być całkiem
     spoko. Żaden z argumentów nie może wprawdzie posłużyć nam za argument
     główny, ale jeżeli rozważymy ich zachowanie jako całość, to okazuje się,
     że w każdym wywołaniu rekurencyjnym mamy dwie możliwości:
     - albo pierwszy argument się zmniejsza
-    - albo pierwszy argument się nie zmienia, ale drugi argument się
+    - albo pierwszy argument się nie zmienia, ale drugi argument się
       zmniejsza
 
     Możemy z tego wywnioskować, że jeżeli wywołamy [ack] na argumentach
-    [n] i [m], to w ogólności najpierw [m] będzie się zmniejszał, ale
-    ponieważ musi kiedyś spaść do zera, to wtedy [n] będzie musiał się
+    [n] i [m], to w ogólności najpierw [m] będzie się zmniejszał, ale
+    ponieważ musi kiedyś spaść do zera, to wtedy [n] będzie musiał się
     zmniejszyć. Oczywiście wtedy w kolejnym wywołaniu zaczynamy znowu z
-    jakimś [m], które potem się zmniejsza, aż w końcu znowu zmniejszy
-    się [n] i tak dalej, aż do chwili, gdy [n] spadnie do zera. Wtedy
-    rekursja musi się skończyć.
+    jakimś [m], które potem się zmniejsza, aż w końcu znowu zmniejszy
+    się [n] i tak dalej, aż do chwili, gdy [n] spadnie do zera. Wtedy
+    rekursja musi się skończyć.
 
-    Jednym z typowych zastosowań rekursji zagnieżdżonej jest radzenie
+    Jednym z typowych zastosowań rekursji zagnieżdżonej jest radzenie
     sobie z takimi właśnie przypadkami, w których mamy ciąg argumentów
     i pierwszy maleje, lub pierwszy stoi w miejscu a drugi maleje i tak
-    dalej. Zobaczmy więc, jak techniki tej można użyć do zdefiniowania
+    dalej. Zobaczmy więc, jak techniki tej można użyć do zdefiniowania
     funkcji Ackermanna. *)
 
 Fixpoint ack (n : nat) : nat -> nat :=
@@ -1169,11 +1169,11 @@ match n with
         end
 end.
 
-(** Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
+(** Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
     funkcji. Jest on wprawdzie dokładnie taki sam ([nat -> nat -> nat]),
     ale zapisujemy go inaczej. Robimy to by podkreslić, że wynikiem [ack]
     jest funkcja. W przypadku gdy [n] jest postaci [S n'] zdefiniowana
-    jest ona za pomocą [fix]a tak, jak wyglądają dwie ostatnie klauzule
+    jest ona za pomocą [fix]a tak, jak wyglądają dwie ostatnie klauzule
     dopasowania z oryginalnej definicji, ale z wywołaniem [ack (S n') m']
     zastąpionym przez [ack' m']. Tak więc funkcja [ack'] reprezentuje
     częściową aplikację [ack n]. *)
@@ -1264,7 +1264,7 @@ Require Import Arith.
 (** Zdefiniuj funkcję [merge] o typie
     [forall (A : Type) (cmp : A -> A -> bool), list A -> list A -> list A],
     która scala dwie listy posortowane według porządku wyznaczanego przez
-    [cmp] w jedną posortowaną listę. Jeżeli któraś z list posortowana nie
+    [cmp] w jedną posortowaną listę. Jeżeli któraś z list posortowana nie
     jest, wynik może być dowolny.
 
     Wskazówka: dlaczego niby to ćwiczenie pojawia się w podrozdziale o
@@ -1302,7 +1302,7 @@ Compute merge leb [5; 3; 1] [4; 9].
 
 (** **** Ćwiczenie *)
 
-(** Skoro już udało ci się zdefiniować [merge], to udowodnij jeszcze parę
+(** Skoro już udało ci się zdefiniować [merge], to udowodnij jeszcze parę
     lematów, cobyś nie miał za dużo wolnego czasu. *)
 
 Lemma merge_eq :
@@ -1572,10 +1572,10 @@ Abort.
     wszystkie nasze wywołania rekurencyjne były konkretne, czyli zaaplikowane
     do argumentów.
 
-    Mogłoby się wydawać, że jest to jedyny możliwy sposób robienia wywołań
+    Mogłoby się wydawać, że jest to jedyny możliwy sposób robienia wywołań
     rekurencyjnych, jednak nie jest tak. Wywołania rekurencyjne mogą mieć
     również inną, wyższorzędową postać, a mianowicie - możemy przekazać
-    funkcję, którą właśnie definiujemy, jako argument do innej funkcji.
+    funkcję, którą właśnie definiujemy, jako argument do innej funkcji.
 
     Dlaczego jest to wywołanie rekurencyjne, skoro nie wywołujemy naszej
     funkcji? Ano dlatego, że tamta funkcja, która dostaje naszą jako
@@ -1592,8 +1592,8 @@ Inductive Tree (A : Type) : Type :=
 
 Arguments Node {A} _ _.
 
-(** [Tree] to typ drzew niepustych, które mogą mieć dowolną (ale skończoną)
-    ilość poddrzew. Spróbujmy zdefiniować funkcję, która zwraca lustrzane
+(** [Tree] to typ drzew niepustych, które mogą mieć dowolną (ale skończoną)
+    ilość poddrzew. Spróbujmy zdefiniować funkcję, która zwraca lustrzane
     odbicie drzewa. *)
 
 (*
@@ -1608,7 +1608,7 @@ end.
     [rev]. Chociaż poszło gładko, to mamy tu do czynienia z czymś, czego
     wcześniej nie widzieliśmy. Nie ma tu żadnego wywołania rekurencyjnego,
     a mimo to funkcja działa ok. Dlaczego? Właśnie dlatego, że wywołania
-    rekurencyjne są robione przez funkcję [map]. Mamy więc do czynienia z
+    rekurencyjne są robione przez funkcję [map]. Mamy więc do czynienia z
     rekursją wyższego rzędu. *)
 
 (*

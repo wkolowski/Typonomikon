@@ -2,7 +2,7 @@ Require Import D5.
 
 (** *** Dziwne *)
 
-(** TODO: Wstawić tu jakąś ideologię. *)
+(** TODO: Wstawić tu jakąś ideologię. *)
 
 Fixpoint revapp {A : Type} (l1 l2 : list A) : list A :=
 match l1 with
@@ -390,7 +390,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Skopiowane z biblioteki standardowej Haskella. Czoś mię się zdaję, że
+(** Skopiowane z biblioteki standardowej Haskella. Czoś mię się zdaję, że
     jednak tewo nie rozumię... *)
 
 Fixpoint scanl

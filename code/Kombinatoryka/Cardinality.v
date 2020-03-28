@@ -42,5 +42,5 @@ Proof.
   intro. cut (@eq Type unit bool).
     apply unit_not_bool.
     specialize (H Empty_set unit bool). apply H.
-      (* Przydałaby się uniwalencja, ale bozia nie dała. *)
+      (* Przydałaby się uniwalencja, ale bozia nie dała. *)
 Admitted.

@@ -25,14 +25,14 @@ Arguments sup {A B} _ _.
     well-founded trees - W to skrót od well-founded), tzn. skończonych drzew
     o niemal dowolnych kształtach wyznaczanych przez parametry [A] i [B].
 
-    Nie są one zbyt przydatne w praktyce, gdyż wszystko, co można za ich
+    Nie są one zbyt przydatne w praktyce, gdyż wszystko, co można za ich
     pomocą osiągnąć, można też osiągnąć bez nich zwykłymi typami induktywnymi
     i będzie to dużo bardziej czytelne oraz prostsze w implementacji. Ba!
-    W-typy są nawet nieco słabsze, gdyż go udowodnienia reguły indukcji
+    W-typy są nawet nieco słabsze, gdyż go udowodnienia reguły indukcji
     wymagają aksjomatu ekstensjonalności dla funkcji.
 
     Jednak z tego samego powodu są bardzo ciekawe pod względem teoretycznym -
-    wszystko, co można zrobić za pomocą parametryzowanych typów induktywnych,
+    wszystko, co można zrobić za pomocą parametryzowanych typów induktywnych,
     można też zrobić za pomocą samych W-typów. Dzięki temu możemy badanie
     parametryzowanych typów induktywnych, których jest mniej więcej
     nieskończoność i jeszcze trochę, sprowadzić do badania jednego tylko [W]
@@ -47,20 +47,20 @@ Arguments sup {A B} _ _.
     indukcyjne (które są postaci [T]). Wobec tego typ [c] możemy zapisać jako
     [c : A1 -> ... -> Ak -> T -> ... -> T -> T].
 
-    W kolejnym kroku łączymy argumenty za pomocą produktu:
+    W kolejnym kroku łączymy argumenty za pomocą produktu:
     niech [A := A1 * ... * Ak]. Wtedy typ [c] wygląda tak:
     [c : A -> T * ... * T -> T]. Zauważmy, że [T * ... * T] możemy zapisać
     równoważnie jako [B -> T], gdzie [B] to typ mający tyle elementów, ile
     razy [T] występuje w produkcie [T * ... * T]. Zatem typ [c] przedstawia
-    się tak: [c : A -> (B -> T) -> T].
+    się tak: [c : A -> (B -> T) -> T].
 
     Teraz poczynimy kilka uogólnień. Po pierwsze, na początku założyliśmy,
     że [c] ma skończenie wiele argumentów indukcyjnych, ale postać [B -> T]
     uwzględnia także przypadek, gdy jest ich nieskończenie wiele (tzn. gdy
-    [c] miał oryginalnie jakiś argument postaci [Y -> T] dla nieskończonego
+    [c] miał oryginalnie jakiś argument postaci [Y -> T] dla nieskończonego
     [Y]).
 
-    Po drugie, założyliśmy, że [c] jest funkcją niezależną. Przypadek, gdy
+    Po drugie, założyliśmy, że [c] jest funkcją niezależną. Przypadek, gdy
     [c] jest funkcją zależną możemy pokryć, pozwalając naszemu [B] zależeć
     od [A], tzn. [B : A -> Type]. Typ konstruktora [c] zyskuje wtedy postać
     sumy zależnej [{x : A & B x -> T} -> T]. W ostatnim kroku odpakowujemy
@@ -74,14 +74,14 @@ Arguments sup {A B} _ _.
     [B (inl a1) := B1 a1, B (inl a2) := B2 a2]. Wtedy konstruktory [c1] i
     [c2] są równoważne konstruktorowi [c].
 
-    Stosując powyższe przekształcenia możemy sprowadzić każdy typ induktywny
+    Stosując powyższe przekształcenia możemy sprowadzić każdy typ induktywny
     do równoważnej postaci z jednym konstruktorem o typie
     [forall x : A, B x -> T]. Skoro tak, to definiujemy nowy typ, w którym
     [A] i [B] są parametrami... i bum, tak właśnie powstało [W]!
 
     Podejrzewam, że powyższy opis przyprawia cię o niemały ból głowy. Rzućmy
     więc okiem na przykład, który powinien być wystarczająco ogólny, żeby
-    wszystko stało się jasne. *)
+    wszystko stało się jasne. *)
 
 Print list.
 (* ===> Inductive list (X : Type) : Type :=
@@ -89,21 +89,21 @@ Print list.
             | cons : X -> list X -> list X *)
 
 (** Spróbujmy zastosować powyższe przekształcenia na typie [list X], żeby
-    otrzymać reprezentację [list] za pomocą [W].
+    otrzymać reprezentację [list] za pomocą [W].
 
-    Zajmijmy się najpierw konstruktorem [nil]. Nie ma on ani argumentów
-    indukcyjnych, ani nieindukcyjnych, co zdaje się nie pasować do naszej
+    Zajmijmy się najpierw konstruktorem [nil]. Nie ma on ani argumentów
+    indukcyjnych, ani nieindukcyjnych, co zdaje się nie pasować do naszej
     ogólnej metody. Jest to jednak jedynie złudzenie: brak argumentów
     nieindukcyjnych możemy zareprezentować za pomocą argumenu o typie
-    [unit], zaś brak argumentów indukcyjnych możemy zareprezentować
+    [unit], zaś brak argumentów indukcyjnych możemy zareprezentować
     argumentem o typie [False -> list X]. Wobec tego typ konstruktora
-    [nil] możemy zapisać jako [unit -> (False -> list X) -> list X].
+    [nil] możemy zapisać jako [unit -> (False -> list X) -> list X].
 
-    Dla [cons]a jest już prościej: argument nieindukcyjny to po prostu [X],
-    zaś jeden argument indukcyjny możemy przedstawić jako [unit -> list X].
+    Dla [cons]a jest już prościej: argument nieindukcyjny to po prostu [X],
+    zaś jeden argument indukcyjny możemy przedstawić jako [unit -> list X].
     Nowy typ [cons]a możemy zapisać jako [X -> (unit -> list X) -> list X].
 
-    Pozostaje nam skleić obydwa konstruktory w jeden. Niech [A := unit + X]
+    Pozostaje nam skleić obydwa konstruktory w jeden. Niech [A := unit + X]
     i niech [B (inl tt) := False, B (inr x) := unit]. W ten sposób dostajemy
     poniższe kodowanie [list] za pomocą [W] (oczywiście nie jest to jedyne
     możliwe kodowanie - równie dobrze zamiast [unit + X] moglibyśmy użyć
@@ -119,7 +119,7 @@ Definition listW (X : Type) : Type :=
         | inr _ => unit
     end).
 
-(** Wartą zauważenia różnicą konceptualną jest to, że jeżeli myślimy
+(** Wartą zauważenia różnicą konceptualną jest to, że jeżeli myślimy
     Coqowymi typami induktywnymi, to [list] ma dwa konstruktory - [nil]
     i [cons], ale gdy myślimy za pomocą [W], to sprawa ma się inaczej.
     Formalnie [listW] ma jeden konstruktor [sup], ale w praktyce jest
@@ -129,7 +129,7 @@ Definition listW (X : Type) : Type :=
     pozostałością po oryginalnej liczbie konstruktorów jest liczba
     składników, które pojawiają się w sumie [unit + X].
 
-    Oczywiście posługiwanie się [nil] i [cons] jest dużo wygodniejsze niż
+    Oczywiście posługiwanie się [nil] i [cons] jest dużo wygodniejsze niż
     używanie [sup], więc czas odzyskać utracone konstruktory! *)
 
 Definition nilW (X : Type) : listW X :=
@@ -139,12 +139,12 @@ Definition consW {X : Type} (h : X) (t : listW X) : listW X :=
   sup (inr h) (fun _ : unit => t).
 
 (** Zauważ, że [consW] jest jedynie jednym z wielu możliwych kodowań
-    konstruktora [cons]. Inaczej możemy go zakodować np. tak: *)
+    konstruktora [cons]. Inaczej możemy go zakodować np. tak: *)
 
 Definition consW' {X : Type} (h : X) (t : listW X) : listW X :=
   sup (inr h) (fun u : unit => match u with | tt => t end).
 
-(** Kodowania te nie są konwertowalne, ale jeżeli użyjemy aksjomatu
+(** Kodowania te nie są konwertowalne, ale jeżeli użyjemy aksjomatu
     ekstensjonalności dla funkcji, to możemy pokazać, że są równe. *)
 
 Fail Check eq_refl : consW = consW'.
@@ -165,9 +165,9 @@ Qed.
 
 (** Podobnym mykiem musimy posłużyć się, żeby udowodnić regułę indukcji.
     Dowód zaczynamy od indukcji po [l] (musimy pamiętać, że nasze [W] jest
-    typem induktywnym, więc ma regułę indukcji), ale nie możemy bezpośrednio
-    użyć hipotez [PnilW] ani [PconsW], gdyż dotyczą one innych kodowań [nil]
-    i [cons] niż te, które pojawiają się w celu. Żeby uporać się z problemem,
+    typem induktywnym, więc ma regułę indukcji), ale nie możemy bezpośrednio
+    użyć hipotez [PnilW] ani [PconsW], gdyż dotyczą one innych kodowań [nil]
+    i [cons] niż te, które pojawiają się w celu. Żeby uporać się z problemem,
     używamy taktyki [replace], a następnie dowodzimy, że obydwa kodowania są
     ekstensjoalnie równe. *)
 
@@ -214,7 +214,7 @@ Proof.
 Admitted.
 
 (** Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
-    że typy [list X] oraz [listW X] są izomorficzne, tzn. istnieją funkcje
+    że typy [list X] oraz [listW X] są izomorficzne, tzn. istnieją funkcje
     [f : list X -> listW X] oraz [g : listW X -> list X], które są swoimi
     odwrotnościami. *)
 
@@ -384,7 +384,7 @@ End listW.
     - sumę
 
     Załóżmy teraz, że żyjemy w świecie, w którym nie ma typów induktywnych.
-    Jakich typów, oprócz [W], potrzebujemy, by móc zdefiniować wszystkie
+    Jakich typów, oprócz [W], potrzebujemy, by móc zdefiniować wszystkie
     powyższe typy? *)
 
 (* begin hide *)
@@ -427,16 +427,16 @@ Defined.
 (** * Indeksowane W-typy *)
 
 (** Jak głosi pewna stara książka z Palestyny, nie samymi W-typami żyje
-    człowiek. W szczególności, W-typy mogą uchwycić jedynie dość proste
+    człowiek. W szczególności, W-typy mogą uchwycić jedynie dość proste
     typy induktywne, czyli takie, które wspierają jedynie parametry oraz
-    argumenty indukcyjne. Na chwilę obecną wydaje mi się też, że [W] nie
-    jest w stanie reprezentować typów wzajemnie induktywnych, lecz pewny
+    argumenty indukcyjne. Na chwilę obecną wydaje mi się też, że [W] nie
+    jest w stanie reprezentować typów wzajemnie induktywnych, lecz pewny
     nie jest jestem.
 
-    Trochę to smutne, gdyż naszą główną motywacją ku poznawaniu [W]-typów
+    Trochę to smutne, gdyż naszą główną motywacją ku poznawaniu [W]-typów
     jest teoretyczne zrozumienie mechanizmu działania typów induktywnych,
     a skoro [W] jest biedne, to nie możemy za jego pomocą zrozumieć
-    wszystkich typów induktywnych. Jednak uszy do góry, gdyż na ratunek w
+    wszystkich typów induktywnych. Jednak uszy do góry, gdyż na ratunek w
     naszej misji przychodzą nam indeksowane W-typy!
 
     Co to za zwierzę, te indeksowane W-typy? Ano coś prawie jak oryginalne
@@ -455,7 +455,7 @@ Inductive IW
 Arguments isup {I S P r} _ _ _.
 
 (** Prawdopodobnie odczuwasz w tej chwili wielką grozę, co najmniej jakbyś
-    zobaczył samego Cthulhu. Nie martw się - zaraz dokładnie wyjasnimy, co
+    zobaczył samego Cthulhu. Nie martw się - zaraz dokładnie wyjasnimy, co
     tu się dzieje, a potem rozpracujemy indeksowane W typy na przykładach
     rodzin typów induktywnych, które powinieneś już dobrze znać.
 
@@ -467,7 +467,7 @@ Arguments isup {I S P r} _ _ _.
     - [r p] mówi, jak jest indeks argumentu indukcyjnego [p]. *)
 
 (** Konstruktor [isup] mówi, że jeżeli mamy indeks i kształt dla tego
-    indeksu, to jeżeli uda nam się zapchać wszystkie argumenty indukcyjne
+    indeksu, to jeżeli uda nam się zapchać wszystkie argumenty indukcyjne
     rzeczami o odpowiednim indeksie, to dostajemy element [IW ...] o takim
     indeksie jak chcieliśmy.
 
@@ -513,10 +513,10 @@ end.
     [vcons] bierze jeden argument indukcyjny i stąd klauzula [| S _ => unit].
 
     Zauważmy, że niebranie argumentu nieindukcyjnego reprezentujemy inaczej
-    niż niebranie argumentu indukcyjnego.
+    niż niebranie argumentu indukcyjnego.
 
     [vnil] nie bierze argumentów nieindukcyjnych, co w typie kształtów [S_Vec]
-    reprezentujemy za pomocą typu [unit]. Możemy myśleć o tym tak, że [vnil]
+    reprezentujemy za pomocą typu [unit]. Możemy myśleć o tym tak, że [vnil]
     bierze jeden argument typu [unit]. Ponieważ [unit] ma tylko jeden element,
     to i tak z góry wiadomo, że będziemy musieli jako ten argument wstawić
     [tt].
@@ -538,15 +538,15 @@ Proof.
     exact i'.
 Defined.
 
-(** Pozostaje nam tylko zdefiniować funkcję, która pozycjom argumentów
+(** Pozostaje nam tylko zdefiniować funkcję, która pozycjom argumentów
     indukcyjnym w poszczególnych kształtach przyporządkowuje ich indeksy.
-    Definiujemy tę funkcję przez dowód, gdyż Coq dość słabo rodzi sobie z
+    Definiujemy tę funkcję przez dowód, gdyż Coq dość słabo rodzi sobie z
     dopasowaniem do wzorca przy typach zależnych.
 
     Ponieważ kształty są zdefiniowane przez dopasowanie indeksu do wzorca,
     to zaczynamy od rozbicia indeksu na przypadki. Gdy indeks wynosi zero,
     to mamy do czynienia z reprezentacją konstruktora [vnil], który nie
-    bierze żadnych argumentów indukcyjnych, co ujawnia się pod postacią
+    bierze żadnych argumentów indukcyjnych, co ujawnia się pod postacią
     sprzeczności. Gdy indeks wynosi [S i'], mamy do czynienia z konstruktorem
     [vcons i'], który tworzy element typu [Vec A (S i')], zaś bierze element
     typu [Vec A i']. Wobec tego w tym przypadku zwracamy [i']. *)
@@ -557,8 +557,8 @@ Definition Vec' (A : Type) : nat -> Type :=
 (** Tak wygląda ostateczna definicja [Vec'] - wrzucamy do [IW] odpowiednie
     indeksy, kształty, pozycje oraz funkcję przypisującą indeksy pozycjom.
 
-    Spróbujmy przekonać się, że typy [Vec A n] oraz [Vec' A n] są
-    izomorficzne. W tym celu musimy zdefiniować funkcje
+    Spróbujmy przekonać się, że typy [Vec A n] oraz [Vec' A n] są
+    izomorficzne. W tym celu musimy zdefiniować funkcje
     [f : Vec A n -> Vec' A n] oraz [g : Vec' A n -> Vec A n], które są
     swoimi odwrotnościami. *)
 
@@ -570,9 +570,9 @@ Proof.
       exact (f _ _ v).
 Defined.
 
-(** Najłatwiej definiować nam będzie za pomocą taktyk. Definicja [f] idzie
-    przez rekursję strukturalną po [v]. [isup 0 tt] to reprezentacja [vnil],
-    zaś [@isup _ _ _ (@r_Vec A) (S n) a] to reprezentacja [vcons a]. Dość
+(** Najłatwiej definiować nam będzie za pomocą taktyk. Definicja [f] idzie
+    przez rekursję strukturalną po [v]. [isup 0 tt] to reprezentacja [vnil],
+    zaś [@isup _ _ _ (@r_Vec A) (S n) a] to reprezentacja [vcons a]. Dość
     nieczytelne, prawda? Dlatego właśnie nikt w praktyce nie używa
     indeksowanych W-typów. *)
 
@@ -598,7 +598,7 @@ Proof.
     rewrite IHv. reflexivity.
 Qed.
 
-(** Dowód odwrotności w jedną stronę jest banalny - indukcja po [v] idzie
+(** Dowód odwrotności w jedną stronę jest banalny - indukcja po [v] idzie
     gładko, bo [v] jest typu [Vec A n]. *)
 
 Require Import FunctionalExtensionality.
@@ -613,7 +613,7 @@ Proof.
 Qed.
 
 (** W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
-    posłużyć się aksjomatem ekstensjonalności dla funkcji. Wynika to z faktu,
+    posłużyć się aksjomatem ekstensjonalności dla funkcji. Wynika to z faktu,
     że w [IW] reprezentujemy argumenty indukcyjne wszystkie na raz za pomocą
     pojedynczej funkcji.
 
@@ -629,10 +629,10 @@ Qed.
     - [even] i [odd]
     - typ drzew binarnych trzymających wartości w węzłach, indeksowany
       wysokością
-    - to samo co wyżej, ale indeksowany ilością elementów
+    - to samo co wyżej, ale indeksowany ilością elementów
     - porządek [<=] dla liczb naturalnych
-    - relację [Perm : list A -> list A -> Prop] mówiącą, że [l1] i [l2]
-      są swoimi permutacjami *)
+    - relację [Perm : list A -> list A -> Prop] mówiącą, że [l1] i [l2]
+      są swoimi permutacjami *)
 
 (** * M-typy (TODO) *)
 
@@ -640,12 +640,12 @@ Qed.
 
 Require Import F1.
 
-(** Naszą motywacją do badania W-typów było to, że są one jedynym
+(** Naszą motywacją do badania W-typów było to, że są one jedynym
     pierścieniem (w sensie Władcy Pierścieni, a nie algebry abstrakcyjnej),
-    tj. pozwalają uchwycić wszystkie typy induktywne za pomocą jednego
+    tj. pozwalają uchwycić wszystkie typy induktywne za pomocą jednego
     (oczywiście o ile mamy też [False], [unit], [bool], [prod] i [sum]).
 
-    Podobnie możemy postawić sobie zadanie zbadania wszystkich typów
+    Podobnie możemy postawić sobie zadanie zbadania wszystkich typów
     koinduktywnych. Rozwiązanie zadania jest (zupełnie nieprzypadkowo)
     analogiczne do tego dla typów induktywnych, a są nim M-typy. Skąd nazwa?
     Zauważ, że M to nic innego jak W postawione na głowie - podobnie esencja
@@ -661,7 +661,7 @@ CoInductive M (S : Type) (P : S -> Type) : Type :=
 Arguments shape {S P}.
 Arguments position {S P} _ _.
 
-(** Zastanówmy się przez chwilę, dlaczego definicja [M] wygląda właśnie tak.
+(** Zastanówmy się przez chwilę, dlaczego definicja [M] wygląda właśnie tak.
     W tym celu rozważmy dowolny typ koinduktywny [C] i przyjmijmy, że ma on
     pola [f1 : X1], ..., [fn : Xn]. Argumenty możemy podzielić na dwie grupy:
     koindukcyjne (których typem jest [C] lub funkcje postaci [B -> C]) oraz
@@ -677,9 +677,9 @@ Arguments position {S P} _ _.
     że można połączyć je w typ [B1 + ... + Bn -> C]. Nie tłumaczy to
     jednak tego, że typ pozycji zależy od konkretnego kształtu.
 
-    Źródeł można doszukiwać się w jeszcze jednej, nieco bardziej złożonej
+    Źródeł można doszukiwać się w jeszcze jednej, nieco bardziej złożonej
     postaci destruktorów. Żeby za dużo nie mącić, rozważmy przykład. Niech
-    [C] ma destruktor postaci [nat -> C + nat]. Jak dokodować ten destruktor
+    [C] ma destruktor postaci [nat -> C + nat]. Jak dokodować ten destruktor
     do [shape] i [position]? Otóż dorzucamy do [shape] nowy komponent, czyli
     [shape' := shape * nat -> option nat].
 
@@ -693,15 +693,15 @@ Wtedy typ [c] wygląda tak:
     [c : A -> T * ... * T -> T]. Zauważmy, że [T * ... * T] możemy zapisać
     równoważnie jako [B -> T], gdzie [B] to typ mający tyle elementów, ile
     razy [T] występuje w produkcie [T * ... * T]. Zatem typ [c] przedstawia
-    się tak: [c : A -> (B -> T) -> T].
+    się tak: [c : A -> (B -> T) -> T].
 
     Teraz poczynimy kilka uogólnień. Po pierwsze, na początku założyliśmy,
     że [c] ma skończenie wiele argumentów indukcyjnych, ale postać [B -> T]
     uwzględnia także przypadek, gdy jest ich nieskończenie wiele (tzn. gdy
-    [c] miał oryginalnie jakiś argument postaci [Y -> T] dla nieskończonego
+    [c] miał oryginalnie jakiś argument postaci [Y -> T] dla nieskończonego
     [Y]).
 
-    Po drugie, założyliśmy, że [c] jest funkcją niezależną. Przypadek, gdy
+    Po drugie, założyliśmy, że [c] jest funkcją niezależną. Przypadek, gdy
     [c] jest funkcją zależną możemy pokryć, pozwalając naszemu [B] zależeć
     od [A], tzn. [B : A -> Type]. Typ konstruktora [c] zyskuje wtedy postać
     sumy zależnej [{x : A & B x -> T} -> T]. W ostatnim kroku odpakowujemy
@@ -715,7 +715,7 @@ Wtedy typ [c] wygląda tak:
     [B (inl a1) := B1 a1, B (inl a2) := B2 a2]. Wtedy konstruktory [c1] i
     [c2] są równoważne konstruktorowi [c].
 
-    Stosując powyższe przekształcenia możemy sprowadzić każdy typ induktywny
+    Stosując powyższe przekształcenia możemy sprowadzić każdy typ induktywny
     do równoważnej postaci z jednym konstruktorem o typie
     [forall x : A, B x -> T]. Skoro tak, to definiujemy nowy typ, w którym
     [A] i [B] są parametrami... i bum, tak właśnie powstało [W]!
@@ -948,8 +948,8 @@ End Scott.
 (** * Kody (nie, nie do gier) *)
 
 (** Innym pomysłem na jednorodne reprezentowanie typów induktywnych,
-    trochę podobnym do W-typów, jest stworzenie uniwersum nazw (czyli
-    kodów), które następnie będziemy mogli zinterpretować jako typy
+    trochę podobnym do W-typów, jest stworzenie uniwersum nazw (czyli
+    kodów), które następnie będziemy mogli zinterpretować jako typy
     induktywne. *)
 
 Inductive sUnit : SProp :=
