@@ -1,12 +1,11 @@
 # Ściąga - modalności
 
-| modalność     | wymowa | Coq | jaki sposób wyraża |
-| --------------| ------ | --- | --------- |
-| neutralna     | brak   | `P` | nic specjalnego |
-| trywialna     | brak   | `True` | nic ciekawego |
-| klasyczna     | klasycznie | `LEM -> P` | logikę klasyczną
-| aksjomatyczna | jeżeli aksjomat to zdanie | `A -> P` | logikę z dodatkowym aksjomatem `A`
-| wymówkowa     | no chyba że <wymówka> | `E \/ P` | tanią wymówkę
-| niezaprzeczalna | niezaprzeczalnie | `~ ~ P` | nie można danego zdania udowodnić wprost, ale nie można go też obalić
-| pośrednia     | brak   | `(P -> C) -> C` | `P`, ale w zawoalowany sposób
-| bezpośrednia  | brak | `forall C : Prop, (P -> C) -> C` | nic specjalnego - jest równoważna modalności neutralnej
+| modalność     | Coq | wymowa    | jaki sposób wyraża |
+| --------------| --- | --------- | ------------------ |
+| neutralna     | `P` | `P`       | zwykły, domyślny   |
+| trywialna     | `True` | brak   | niezbyt ciekawy    |
+| klasyczna     | `LEM -> P` | klasycznie `P` | logikę klasyczną
+| aksjomatyczna | `A -> P` | `P` pod warunkiem, że `A` | logikę z dodatkowym aksjomatem `A`
+| niezaprzeczalna | `~ ~ P` | niezaprzeczalnie `P` | nie można danego zdania udowodnić wprost, ale nie można go też obalić
+| pośrednia     | `(P -> C) -> C` | `C`, o ile wynika z `P` | zawoalowany
+| bezpośrednia  | `forall C : Prop, (P -> C) -> C` | zachodzą wszystkie konsekwencje `P` | nic specjalnego - jest równoważna modalności neutralnej

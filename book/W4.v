@@ -422,6 +422,67 @@ Qed.
 
 (* end hide *)
 
+(** **** Ćwiczenie *)
+
+(** TODO
+
+    Zastanówmy się nad następującą konstrukcją: zdanie [P] wynika ze
+    wszystkich możliwych aksjomatów.
+
+    Czy taki twór jest modalnością? Sprawdź to! *)
+
+Lemma allaxioms_law1 :
+  forall P Q : Prop,
+    (P -> Q) -> ((forall A : Prop, A -> P) -> (forall A : Prop, A -> Q)).
+(* begin hide *)
+Proof.
+  intros P Q pq H A a.
+  apply pq, (H _ a).
+Qed.
+(* end hide *)
+
+Lemma allaxioms_law2 :
+  forall P : Prop,
+    P -> (forall A : Prop, A -> P).
+(* begin hide *)
+Proof.
+  intros P p A a.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma allaxioms_law3 :
+  forall P : Prop,
+    (forall A : Prop, A -> (forall B : Prop, B -> P)) ->
+      (forall A : Prop, A -> P).
+(* begin hide *)
+Proof.
+  intros P H A a.
+  apply (H A a A a).
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** TODO
+
+    Skoro [P] wynika ze wszystkich aksjomatów, to wynika także z mało
+    informatywnego aksjomatu [True]... czyli w sumie po prostu zachodzi,
+    ot tak bez żadnych ceregieli.
+
+    Udowodnij to formalnie. *)
+
+Lemma allaxioms_spec :
+  forall P : Prop,
+    P <-> (forall A : Prop, A -> P).
+(* begin hide *)
+Proof.
+  split.
+    intros p A a. assumption.
+    intro H. apply (H True). trivial.
+Qed.
+(* end hide *)
+
 (** ** Pies zjadł mi dowód... :( *)
 
 (** Wyobraźmy sobie następujący dialog, odbywający się na lekcji
@@ -503,6 +564,64 @@ Proof.
     right. assumption.
 Qed.
 (* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** TODO
+
+    A co, gdyby tak skwantyfikować [E : Prop] i otrzymać w wyniku
+    [forall E : Prop, E \/ P]? Zdanie to znaczy coś w stylu "P zachodzi
+    albo i nie, wymówkę wybierz wybierz sobie sam".
+
+    Udowodnij, że mamy tu do czynienia z modalnością. *)
+
+Lemma anyexcuse_law1 :
+  forall P Q : Prop,
+    (P -> Q) -> ((forall E : Prop, E \/ P) -> (forall E : Prop, E \/ Q)).
+Proof.
+  intros P Q pq H E.
+  destruct (H False).
+    contradiction.
+    right. apply pq. assumption.
+Qed.
+
+Lemma anyexcuse_law2 :
+  forall P : Prop,
+    P -> (forall E : Prop, E \/ P).
+Proof.
+  intros P p E.
+  right.
+  assumption.
+Qed.
+
+Lemma anyexcuse_law3 :
+  forall P : Prop,
+    (forall E1 : Prop, E1 \/ (forall E2 : Prop, E2 \/ P)) ->
+      (forall E : Prop, E \/ P).
+Proof.
+  intros P eep E.
+  destruct (eep False).
+    contradiction.
+    destruct (H False).
+      contradiction.
+      right. assumption.
+Qed.
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że modalność z powyższego ćwiczenia jest równoważna
+    modalności netraulnej. *)
+
+Lemma anyexcuse_spec :
+  forall P : Prop,
+    P <-> (forall E : Prop, E \/ P).
+Proof.
+  split.
+    intros p E. right. assumption.
+    intro H. destruct (H False).
+      contradiction.
+      assumption.
+Qed.
 
 (** ** Niespodziewana modalność - niezaprzeczalność *)
 
@@ -762,20 +881,20 @@ Qed.
 
     Widzieliśmy też, że niektóre modalności są specjalnymi przypadkami
     innych (niezaprzeczalność jest specjalnym przypadkiem pośredniości,
-    a modalność trywialna jest to modalność wymówkowa z bardzo ogólną
+    a modalność trywialna to modalność wymówkowa z bardzo ogólną
     i nieprzekonującą wymówką).
 
     Czy to jednak wszystko, co potrafimy powiedzieć o modalnościach i
     ich wzajemnych związkach? Oczywiście nie. Wiemy przecież choćby, że
     [P -> ~ ~ P]. Można ten fakt zinterpretować następująco: modalność
     neutralna jest silniejsza niż modalność niezaprzeczalna, czyli
-    równoważne: modalność niezaprzeczalna jest słabsza niż modalność
+    równoważnie: modalność niezaprzeczalna jest słabsza niż modalność
     neutralna. *)
 
 (** **** Ćwiczenie *)
 
 (** Najbanalniejsze i najnaturalniejsze pytanie w kosmosie, które powinno
-    było przyjść ci do głowy po przeczytaniu powyższego akaptiu, brzmi:
+    było przyjść ci do głowy po przeczytaniu powyższego akapitu, brzmi:
     która modalność jest najsilniejsza, a która najsłabsza?
 
     No, skoro już takie pytanie przyszło ci do głowy, to znajdź na nie
@@ -789,6 +908,22 @@ Qed.
     oraz "najsłabszy". Następnie przyjrzyj się definicji modalności
     oraz poszczególnym modalnościom i udowodnionym dotychczas przez
     nas twierdzeniom. Powinno cię to oświecić. *)
+
+(** **** Ćwiczenie *)
+
+(** Uwaga: to ćwiczenie jest mocno opcjonalne, przeznaczone dla tych
+    bardziej dociekliwych.
+
+    Skoro wiesz już (z poprzedniego ćwiczenia), która modalność jest
+    najsilniejsza, a która najsłabsza, to najoczywistszym pytaniem,
+    na które powinieneś wpaść, jest: które modalności są pomiędzy?
+
+    TODO
+
+    Jeszcze bardziej łopatologiczna wskazówka: zrób sobie tabelkę,
+    w której każda kratka oznacza parę modalności. Następnie zastanów
+    się, czy pierwsza z tych modalności implikuje drugą, druga
+    pierwszą, a może żadna z tych opcji (albo obie)? *)
 
 (* begin hide *)
 
