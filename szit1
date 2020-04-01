@@ -1,0 +1,27 @@
+
+
+(** Gdyby powyższe ćwiczenie okazało się zbyt oczywiste, to wiedz, że
+    naprawdę pozornie różne modalności mogą ostatecznie okazać się tym
+    samym. Może się też okazać, że modalność [M] jest silniejsza niż
+    modalność [N], czyli że [forall P : Prop, M P -> N P].
+
+    Zastanów się, jaki jest związek między modalnościmi
+    "niezaprzeczalnie" i "klasycznie". Czy są one tym samym, czy czymś
+    innym? Czy któraś z nich jest mocniejsza od drugiej? *)
+
+(* begin hide *)
+
+Lemma irrefutably_classically :
+  forall P : Prop,
+    (~ ~ P) -> (LEM -> P).
+Proof.
+  intros P nnp LEM. destruct (LEM P).
+    assumption.
+    contradiction.
+Qed.
+
+(** O ile mnie rozum nie myli, to w drugą stronę się nie da. Nie da się
+    też rzecz jasna zaprzeczyć, a zatem zdaje się, że podwójna negacja
+    jest mocniejsza od modalności klasycznej. *)
+
+(* end hide *)

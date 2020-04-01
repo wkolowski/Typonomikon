@@ -87,7 +87,7 @@
 
     W językach naturalnych modalności często występują pod postacią
     czasowników zwanych na ich cześć modalnymi, takich jak "móc" czy
-    "musieć" - o ile nie mieszkasz na pustyni pod kamieniem, to pewnie
+    "musieć" - o ile nie mieszkasz pod kamieniem na pustyni, to pewnie
     spotkałeś się z nimi ucząc się języków obcych.
 
 <div class="paragraph"> </div>
@@ -183,114 +183,18 @@
 <div class="paragraph"> </div>
 
     Zanim zobaczymy, jak ta definicja ma się do tego, co już wiemy
-    i potrafimy, parę ćwiczeń: 
+    i potrafimy, ćwiczenie: 
 <div class="paragraph"> </div>
 
-<a name="lab626"></a><h4 class="section">Ćwiczenie (modalność neutralna)</h4>
-
-<div class="paragraph"> </div>
-
- Jako już się rzekło w przykładzie, zdanie "Pada deszcz" również
-    jest zdaniem modalnym. Modalność występująca w tym zdaniu to
-    modalność identycznościowa (zwana też modalnością neutralną), a
-    wyrażany przez nią sposób to sposób domyślny, czyli w sumie żaden.
+<a name="lab626"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
-    Modalność ta nie ma raczej większego znaczenia (oczywiście o ile
-    przemilaczymy fakt, że większość wszystkich zdań, jakie napotkamy,
-    będzie wyrażać właśnie tę modalność), ale warto ją odnotować dla
-    kompletności teorii - zwykli śmiertelnicy zazwyczaj zapominają o
-    takich banalnych rzeczach, więc trzeba im o tym przypominać.
+ Zaczniemy od antyprzykładu.
 
 <div class="paragraph"> </div>
 
-    Pokaż, że modalność neutralna jest modalnością. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">identity_law1</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">identity_law2</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">identity_law3</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab627"></a><h4 class="section">Ćwiczenie (modalność trywialna)</h4>
-
-<div class="paragraph"> </div>
-
- Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
-    nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
-    chcąc w trywialny sposób powiedzieć <span class="inlinecode"><span class="id" title="var">P</span></span>, wypieprzamy zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> w
-    diabły i zamiast tego mówimy <span class="inlinecode"><span class="id" title="var">True</span></span>. Wot, modalność jak znalazł.
-
-<div class="paragraph"> </div>
-
-    Pokaż, że modalność trywialna jest modalnością. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">trivial_law1</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">True</span> -&gt; <span class="id" title="var">True</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">trivial_law2</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">True</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">trivial_law3</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">True</span> -&gt; <span class="id" title="var">True</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab628"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Skoro <span class="inlinecode"><span class="id" title="var">True</span></span> to modalność trywialna, to może <span class="inlinecode"><span class="id" title="var">False</span></span> to modalność
-    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
-    nazwana?
-
-<div class="paragraph"> </div>
-
-    Sprawdź to. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">antitrivial_law1</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">False</span> -&gt; <span class="id" title="var">False</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">antitrivial_law2</span> :<br/>
-&nbsp;&nbsp;~ <span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">False</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">antitrivial_law3</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">False</span> -&gt; <span class="id" title="var">False</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab629"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Udowodnij, że negacja nie jest modalnością. Parafrazując:
+    Udowodnij, że negacja nie jest modalnością. Parafrazując:
 <ul class="doclist">
 <li> napisz, jak wyglądałyby prawa bycia modalnością dla negacji
 
@@ -311,177 +215,99 @@
 </div>
 
 <div class="doc">
-<a name="lab630"></a><h2 class="section">Logika klasyczna jako logika modalna</h2>
+<a name="lab627"></a><h2 class="section">Modalność neutralna: nasza ulubiona</h2>
 
+<div class="paragraph"> </div>
+
+ Jako już się rzekło w jednym z przykładów, zdanie "Pada deszcz"
+    również jest zdaniem modalnym. Modalność występująca w tym zdaniu
+    to modalność neutralna (zwana też modalnością identycznościową), a
+    wyrażany przez nią sposób to sposób zwykły, domyślny, neutralny,
+    czyli w sumie żaden.
+
+<div class="paragraph"> </div>
+
+    Modalność ta nie ma raczej większego znaczenia (oczywiście o ile
+    przemilczymy fakt, że większość wszystkich zdań, jakie napotkamy,
+    będzie wyrażać właśnie tę modalność), ale warto ją odnotować dla
+    kompletności teorii - zwykli śmiertelnicy zazwyczaj zapominają o
+    takich banalnych rzeczach, więc trzeba im o tym przypominać. Nie
+    wspominając już o tym, że jest to idealna modalność na rozgrzewkę
+    ... 
+<div class="paragraph"> </div>
+
+<a name="lab628"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Pokaż, że modalność neutralna faktycznie jest modalnością. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">W3</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">neutrally_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">neutrally_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">neutrally_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Kolejny przykład modalności jest jeszcze bardziej zaskakujący
-    od poprzedniego. Jest to modalność, którą można wyrazić za
-    pomocą słowa "klasycznie". Wyrażenie "klasycznie P" znaczy,
-    że <span class="inlinecode"><span class="id" title="var">P</span></span> zachodzi pod warunkiem, że mamy do dyspozycji prawa
-    logiki klasycznej (jak np. prawo wyłączonego środka).
+<a name="lab629"></a><h2 class="section">Modalność trywialna</h2>
 
 <div class="paragraph"> </div>
 
-    Formalnie modalność tę możemy zrealizować za pomocą implikacji
-    oraz dowolnego z poznanych przez nas dotychczas aksjomatów, które
-    dają nam pełną moc logiki klasyczne. Dla przykładu: "klasycznie P"
-    możemy wyrazić równoważnie jako <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">DNE</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">Contra</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>
-    i tak dalej.
+ Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
+    nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
+    chcąc w trywialny sposób powiedzieć <span class="inlinecode"><span class="id" title="var">P</span></span>, wypieprzamy zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> w
+    diabły i zamiast tego mówimy <span class="inlinecode"><span class="id" title="var">True</span></span>. Wot, modalność jak znalazł. 
+<div class="paragraph"> </div>
+
+<a name="lab630"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
-    Modalność ta jest bardzo wygodnym sposobem na posługiwanie się
-    logiką klasyczną bez brudzenia sobie rączek aksjomatami, a mimo
-    to nie jest zbyt powszechnie znana czy używana. Cóż...
+ Pokaż, że modalność trywialna faktycznie jest modalnością. 
+</div>
+<div class="code">
 
-<div class="paragraph"> </div>
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">trivially_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">True</span> -&gt; <span class="id" title="var">True</span>).<br/>
 
-    Oczywiście modalności można użyć nie tylko do wygodnego użytkowania
-    aksjomatów logiki klasycznej, ale również wszystkich innych
-    aksjomatów, jakie sobie zażyczymy. 
-<div class="paragraph"> </div>
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">trivially_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">True</span>.<br/>
 
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">trivially_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">True</span> -&gt; <span class="id" title="var">True</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a name="lab631"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
- Udowodnij, że "klasycznie" (wyrażone za pomocą <span class="inlinecode"><span class="id" title="var">LEM</span></span>) faktycznie
-    jest modalnością. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">classically_law1</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ((<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">Q</span>)).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">classically_law2</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">classically_law3</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">LEM</span> -&gt; (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>)) -&gt; (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab632"></a><h4 class="section">Ćwiczenie</h4>
+ Skoro <span class="inlinecode"><span class="id" title="var">True</span></span> to modalność trywialna, to może <span class="inlinecode"><span class="id" title="var">False</span></span> to modalność
+    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
+    nazwana? Sprawdź to!
 
 <div class="paragraph"> </div>
 
- Dwie z pozoru różne modalności mogą tak naprawdę wyrażać to samo.
-    Dla przykładu, modalność "klasycznie P" możemy wyrazić nie tylko
-    jako <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, ale również jako <span class="inlinecode"><span class="id" title="var">DNE</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
-
-<div class="paragraph"> </div>
-
-    Pokaż, że obydwie definicje tej modalności są równoważne. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">classicallies</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>) &lt;-&gt; (<span class="id" title="var">DNE</span> -&gt; <span class="id" title="var">P</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab633"></a><h4 class="section">Ćwiczenie (modalność aksjomatyczna)</h4>
-
-<div class="paragraph"> </div>
-
- Jeżeli poprawnie i uważnie wykonałeś pierwsze ćwiczenie, to zapewne
-    zauważyłeś, że nie było w nim niczego, co by jakoś bardzo zależało
-    od <span class="inlinecode"><span class="id" title="var">LEM</span></span>.
-
-<div class="paragraph"> </div>
-
-    Nie ma się co dziwić, albowiem modalność klasyczna jest jedynie
-    wcieleniem pewnej ogólniejszej modalności, którą na nasze potrzeby
-    nazwiemy modalnością aksjomatyczną.
-
-<div class="paragraph"> </div>
-
-    Cóż to takiego? Ano, weźmy dowolne zdanie <span class="inlinecode"><span class="id" title="var">A</span></span>. Zdanie <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>
-    możemy odczytać jako "P, ale tylko pod warunkiem, że A". Widać,
-    że jest to pewien sposób na wyrażenie <span class="inlinecode"><span class="id" title="var">P</span></span>, a zatem jest to
-    modalność.
-
-<div class="paragraph"> </div>
-
-    Udowodnij, że modalność aksjomatyczna jest modalnością. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">axiomatically_law1</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ((<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">Q</span>)).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">axiomatically_law2</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">axiomatically_law3</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">A</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>)) -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab634"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Wypadałoby jeszcze wyjaśnić, dlaczego poznaną w poprzednim zadaniu
-    modalność nazwałem modalnością aksjomatyczną, a nie np. "warunkową",
-    "założeniową" albo coś w tym stylu.
-
-<div class="paragraph"> </div>
-
-    Powód tego jest prosty: dawanie jako dodatkowej przesłanki zdania,
-    które nie jest potrzebne w dowodzie, jest dość kretyńskie. Baaaaa!
-    Jeżeli <span class="inlinecode"><span class="id" title="var">A</span></span> nie jest aksjomate, to <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> jest równoważne <span class="inlinecode"><span class="id" title="var">P</span></span>. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nonaxiomatically</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">A</span> -&gt; ((<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>) &lt;-&gt; <span class="id" title="var">P</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab635"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- Gdyby powyższe ćwiczenie okazało się zbyt oczywiste, to wiedz, że
-    naprawdę pozornie różne modalności mogą ostatecznie okazać się tym
-    samym. Może się też okazać, że modalność <span class="inlinecode"><span class="id" title="var">M</span></span> jest silniejsza niż
-    modalność <span class="inlinecode"><span class="id" title="var">N</span></span>, czyli że <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">M</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">N</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
-
-<div class="paragraph"> </div>
-
-    Zastanów się, jaki jest związek między modalnościmi
-    "niezaprzeczalnie" i "klasycznie". Czy są one tym samym, czy czymś
-    innym? Czy któraś z nich jest mocniejsza od drugiej? 
+    Jeżeli jest to modalność, udowodnij odpowiednie prawa. Jeżeli
+    nie, udowodnij zaprzeczenia odopwiednich praw. A może sytuacja
+    jest patowa i nie da się udowodnić ani w jedną, ani w drugą
+    stronę? 
 </div>
 <div class="code">
 
@@ -491,79 +317,20 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 </div>
 
 <div class="doc">
-<a name="lab636"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab632"></a><h2 class="section">Modalność wymówkowa: pies zjadł mi dowód... :(</h2>
 
 <div class="paragraph"> </div>
 
- TODO
+ To już ostatnia głupia i bezużyteczna modalność, obiecuję! Wszystkie
+    następne będą już praktyczne i przydatne.
 
 <div class="paragraph"> </div>
 
-    Zastanówmy się nad następującą konstrukcją: zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> wynika ze
-    wszystkich możliwych aksjomatów.
-
-<div class="paragraph"> </div>
-
-    Czy taki twór jest modalnością? Sprawdź to! 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">allaxioms_law1</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ((<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>) -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Q</span>)).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">allaxioms_law2</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">allaxioms_law3</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">B</span> -&gt; <span class="id" title="var">P</span>)) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab637"></a><h4 class="section">Ćwiczenie</h4>
-
-<div class="paragraph"> </div>
-
- TODO
-
-<div class="paragraph"> </div>
-
-    Skoro <span class="inlinecode"><span class="id" title="var">P</span></span> wynika ze wszystkich aksjomatów, to wynika także z mało
-    informatywnego aksjomatu <span class="inlinecode"><span class="id" title="var">True</span></span>... czyli w sumie po prostu zachodzi,
-    ot tak bez żadnych ceregieli.
-
-<div class="paragraph"> </div>
-
-    Udowodnij to formalnie. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">allaxioms_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> &lt;-&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab638"></a><h2 class="section">Pies zjadł mi dowód... :(</h2>
-
-<div class="paragraph"> </div>
-
- Wyobraźmy sobie następujący dialog, odbywający się na lekcji
-    języka polskiego w jakiejś zapomnianej przez Boga szkole w
+    Wyobraźmy sobie następujący dialog, odbywający się na lekcji
+    dowodzenia w Coqu w jakiejś zapomnianej przez Boga szkole w
     Pcimiu Dolnym:
 <ul class="doclist">
-<li> (N)auczycielka: Jasiu, odrobiłeś zadanie domowe?
+<li> (N)auczycielka: Jasiu, zrobiłeś zadanie domowe?
 
 </li>
 <li> (J)asiu: tak, psze pani.
@@ -575,17 +342,17 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 <li> J: Hmmm, yhm, uhm, eeee...
 
 </li>
-<li> N: czyli nie odrobiłeś.
+<li> N: czyli nie zrobiłeś.
 
 </li>
-<li> J: odrobiłem, ale pies mi zjadł.
+<li> J: zrobiłem, ale pies mi zjadł.
 
 </li>
 </ul>
 
 <div class="paragraph"> </div>
 
-    Z dialogu jasno wynika, że Jasiu nie odrobił zadania, co jednak nie
+    Z dialogu jasno wynika, że Jasiu nie zrobił zadania, co jednak nie
     przeszkadza mu w pokrętny sposób twierdzić, że zrobił. Ten pokrętny
     sposób jest powszechnie znany jako "wymówka".
 
@@ -634,7 +401,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
     zjadł mi dowód lub pada deszcz". 
 <div class="paragraph"> </div>
 
-<a name="lab639"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab633"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -661,7 +428,92 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 </div>
 
 <div class="doc">
-<a name="lab640"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab634"></a><h2 class="section">Modalność klasyczna: logika klasyczna jako logika modalna</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">W3</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Poznana w poprzednim podrozdziale modalność mogła być dla ciebie
+    dość zaskakująca, wszakże w języku naturalnym nieczęsto robienie
+    wymówek jest wyrażane przez czasowniki modalne czy przysłówki. Co
+    więcej, nie zobaczymy jej już nigdy więcej, bo jest bezużyteczna.
+
+<div class="paragraph"> </div>
+
+    W niniejszym podrozdziale poznamy zaś modalność nawet bardziej
+    zaskakującą, a do tego całkiem przydatną. Jest to modalność,
+    którą można wyrazić za pomocą słowa "klasycznie". Wyrażenie
+    "klasycznie P" znaczy, że <span class="inlinecode"><span class="id" title="var">P</span></span> zachodzi w logice klasycznej,
+    czyli zachodzi pod warunkiem, że mamy do dyspozycji poznane w
+    poprzednich rozdziałach aksjomaty logiki klasycznej.
+
+<div class="paragraph"> </div>
+
+    Formalnie modalność tę możemy zrealizować za pomocą implikacji
+    jako <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Jest to bardzo wygodny sposób na posługiwanie
+    się logiką klasyczną bez brudzenia sobie rączek aksjomatami, a
+    mimo to nie jest zbyt powszechnie znany czy używany. Cóż... ci
+    głupcy nie wiedzą, co tracą. 
+<div class="paragraph"> </div>
+
+<a name="lab635"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że modalność klasyczna faktycznie jest modalnością. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">classically_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ((<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">Q</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">classically_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">classically_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">LEM</span> -&gt; (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>)) -&gt; (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab636"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Dwie modalności zdefiniowane na różne (na pierwszym rzut oka)
+    sposoby mogą mogą tak naprawdę wyrażać to samo. Dla przykładu,
+    modalność "klasycznie P" możemy wyrazić nie tylko jako <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>,
+    ale również jako <span class="inlinecode"><span class="id" title="var">DNE</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">Contra</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> i tak dalej - dowolny 
+    z poznanych przez nas dotychczas aksjomatów, które dają nam pełną
+    moc logiki klasycznej, zadziała tutaj tak samo.
+
+<div class="paragraph"> </div>
+
+    Pokaż, że definicja korzystająca z <span class="inlinecode"><span class="id" title="var">LEM</span></span> jest równoważna tej, w
+    której występuje <span class="inlinecode"><span class="id" title="var">DNE</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">classicallyLEM_classicallyDNE</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>) &lt;-&gt; (<span class="id" title="var">DNE</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab637"></a><h2 class="section">Modalność aksjomatyczna</h2>
 
 <div class="paragraph"> </div>
 
@@ -669,81 +521,79 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 
 <div class="paragraph"> </div>
 
-    A co, gdyby tak skwantyfikować <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i otrzymać w wyniku
-    <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">P</span></span>? Zdanie to znaczy coś w stylu "P zachodzi
-    albo i nie, wymówkę wybierz wybierz sobie sam".
+    Nie ma się co dziwić, albowiem modalność klasyczna jest jedynie
+    wcieleniem pewnej ogólniejszej modalności, którą na nasze potrzeby
+    nazwiemy modalnością aksjomatyczną.
 
 <div class="paragraph"> </div>
 
-    Udowodnij, że mamy tu do czynienia z modalnością. 
+    Cóż to takiego? Ano, weźmy dowolne zdanie <span class="inlinecode"><span class="id" title="var">A</span></span>. Zdanie <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+    możemy odczytać jako "P, pod warunkiem że A". Widać, że jest to
+    pewien sposób na wyrażenie <span class="inlinecode"><span class="id" title="var">P</span></span>, a zatem pozostaje tylko sprawdzić,
+    czy zachodzą wszystkie potrzebne prawa. 
+<div class="paragraph"> </div>
+
+<a name="lab638"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że modalność aksjomatyczna jest modalnością. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">anyexcuse_law1</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ((<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>) -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">Q</span>)).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">pq</span> <span class="id" title="var">H</span> <span class="id" title="var">E</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">H</span> <span class="id" title="var">False</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">axiomatically_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ((<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">Q</span>)).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">anyexcuse_law2</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">p</span> <span class="id" title="var">E</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">right</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">axiomatically_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">anyexcuse_law3</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">E1</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E1</span> \/ (<span class="id" title="keyword">forall</span> <span class="id" title="var">E2</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E2</span> \/ <span class="id" title="var">P</span>)) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">eep</span> <span class="id" title="var">E</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">eep</span> <span class="id" title="var">False</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">H</span> <span class="id" title="var">False</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">axiomatically_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">A</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>)) -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab641"></a><h4 class="section">Ćwiczenie</h4>
+Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
+    nazwałem właśnie "aksjomatyczną", a nie na przykład "warunkową",
+    "założeniową" albo coś w tym stylu.
 
 <div class="paragraph"> </div>
 
- Udowodnij, że modalność z powyższego ćwiczenia jest równoważna
-    modalności netraulnej. 
+    Powód tego jest prosty: dawanie jako dodatkowej przesłanki zdania,
+    które nie jest potrzebne w dowodzie, jest dość kretyńskie. Ba!
+    Jeżeli potrafimy udowodnić <span class="inlinecode"><span class="id" title="var">A</span></span> bez aksjomatów, to <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> jest
+    równoważne <span class="inlinecode"><span class="id" title="var">P</span></span>. 
+<div class="paragraph"> </div>
+
+<a name="lab639"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Sprawdź to! 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">anyexcuse_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> &lt;-&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">E</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">H</span> <span class="id" title="var">False</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nonaxiomatically</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">A</span> -&gt; ((<span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>) &lt;-&gt; <span class="id" title="var">P</span>).<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab642"></a><h2 class="section">Niespodziewana modalność - niezaprzeczalność</h2>
+<a name="lab640"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+<a name="lab641"></a><h2 class="section">Modalność niezaprzeczalna</h2>
 
 <div class="paragraph"> </div>
 
@@ -806,7 +656,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
     zaprzeczenie. 
 <div class="paragraph"> </div>
 
-<a name="lab643"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab642"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -830,12 +680,10 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 </div>
 
 <div class="doc">
-<a name="lab644"></a><h2 class="section">Modalność pośrednia</h2>
+<a name="lab643"></a><h2 class="section">Modalność pośrednia</h2>
 
 </div>
 <div class="code">
-
-<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirect2_law1</span> :<br/>
@@ -866,7 +714,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
 </div>
 
 <div class="doc">
-<a name="lab645"></a><h2 class="section">Modalność (bez)pośrednia</h2>
+<a name="lab644"></a><h2 class="section">Modalność (bez)pośrednia</h2>
 
 <div class="paragraph"> </div>
 
@@ -880,7 +728,7 @@ Kolejny przykład modalności jest jeszcze bardziej zaskakujący
     Modalność pośrednia to... zamiast gadać, przekonaj się sam. 
 <div class="paragraph"> </div>
 
-<a name="lab646"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab645"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -960,7 +808,7 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
     modalność pośrednia. 
 <div class="paragraph"> </div>
 
-<a name="lab647"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab646"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -970,7 +818,7 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_consequences</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirect_direct</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>) -&gt; <span class="id" title="var">R</span>) -&gt; <span class="id" title="var">P</span>.<br/>
 
@@ -987,7 +835,128 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     co? 
 <div class="paragraph"> </div>
 
-<a name="lab648"></a><h2 class="section">Związki między modalnościami</h2>
+<a name="lab647"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ TODO
+
+<div class="paragraph"> </div>
+
+    A co, gdyby tak skwantyfikować <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i otrzymać w wyniku
+    <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">P</span></span>? Zdanie to znaczy coś w stylu "P zachodzi
+    albo i nie, wymówkę wybierz wybierz sobie sam".
+
+<div class="paragraph"> </div>
+
+    Udowodnij, że mamy tu do czynienia z modalnością. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">anyexcuse_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>) -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">Q</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">anyexcuse_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">anyexcuse_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">E1</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E1</span> \/ (<span class="id" title="keyword">forall</span> <span class="id" title="var">E2</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E2</span> \/ <span class="id" title="var">P</span>)) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab648"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że modalność z powyższego ćwiczenia jest równoważna
+    modalności neutralnej. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">anyexcuse_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> &lt;-&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab649"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ TODO
+
+<div class="paragraph"> </div>
+
+    Zastanówmy się nad następującą konstrukcją: zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> wynika ze
+    wszystkich możliwych aksjomatów.
+
+<div class="paragraph"> </div>
+
+    Czy taki twór jest modalnością? Sprawdź to! 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">allaxioms_law1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ((<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>) -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Q</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">allaxioms_law2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">allaxioms_law3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">B</span> -&gt; <span class="id" title="var">P</span>)) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab650"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ TODO
+
+<div class="paragraph"> </div>
+
+    Skoro <span class="inlinecode"><span class="id" title="var">P</span></span> wynika ze wszystkich aksjomatów, to wynika także z mało
+    informatywnego aksjomatu <span class="inlinecode"><span class="id" title="var">True</span></span>... czyli w sumie po prostu zachodzi,
+    ot tak bez żadnych ceregieli.
+
+<div class="paragraph"> </div>
+
+    Udowodnij to formalnie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">allaxioms_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> &lt;-&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab651"></a><h2 class="section">Związki między modalnościami</h2>
 
 <div class="paragraph"> </div>
 
@@ -1013,7 +982,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     neutralna. 
 <div class="paragraph"> </div>
 
-<a name="lab649"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab652"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1040,7 +1009,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     nas twierdzeniom. Powinno cię to oświecić. 
 <div class="paragraph"> </div>
 
-<a name="lab650"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab653"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1072,14 +1041,21 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab651"></a><h1 class="section">Inne logiki - podsumowanie</h1>
+<a name="lab654"></a><h2 class="section">Podsumowanie</h2>
+
+<div class="paragraph"> </div>
+
+ TODO 
+<div class="paragraph"> </div>
+
+<a name="lab655"></a><h1 class="section">Inne logiki - podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
  krótkie, acz realistyczne (logiki parakonsystentne to guwno) 
 <div class="paragraph"> </div>
 
-<a name="lab652"></a><h1 class="section">Kombinatory taktyk</h1>
+<a name="lab656"></a><h1 class="section">Kombinatory taktyk</h1>
 
 <div class="paragraph"> </div>
 
@@ -1123,7 +1099,7 @@ Jego dowód wygląda dość schematycznie. Taktyka <span class="inlinecode"><spa
     skomplikowane lub jedynie zmieniać niektóre aspekty ich zachowań. 
 <div class="paragraph"> </div>
 
-<a name="lab653"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
+<a name="lab657"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
 
 </div>
 <div class="code">
@@ -1229,7 +1205,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 
 <div class="paragraph"> </div>
 
-<a name="lab654"></a><h4 class="section">Ćwiczenie (średnik)</h4>
+<a name="lab658"></a><h4 class="section">Ćwiczenie (średnik)</h4>
 
 <div class="paragraph"> </div>
 
@@ -1252,7 +1228,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 </div>
 
 <div class="doc">
-<a name="lab655"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
+<a name="lab659"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
 
 </div>
 <div class="code">
@@ -1299,7 +1275,7 @@ Innym przydatnym kombinatorem jest <span class="inlinecode">||</span>, który b�
     <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> będzie miało taki sam efekt, jak <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H0</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab656"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
+<a name="lab660"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
 
 </div>
 <div class="code">
@@ -1370,7 +1346,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     działanie sukcesem. 
 <div class="paragraph"> </div>
 
-<a name="lab657"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
+<a name="lab661"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
 
 </div>
 <div class="code">
@@ -1443,7 +1419,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     https://coq.inria.fr/refman/coq-tacindex.html 
 <div class="paragraph"> </div>
 
-<a name="lab658"></a><h1 class="section">Zadania</h1>
+<a name="lab662"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -1451,7 +1427,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami 
 <div class="paragraph"> </div>
 
-<a name="lab659"></a><h1 class="section">Jakieś podsumowanie</h1>
+<a name="lab663"></a><h1 class="section">Jakieś podsumowanie</h1>
 
 <div class="paragraph"> </div>
 

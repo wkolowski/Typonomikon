@@ -60,7 +60,7 @@ Qed.
 
     W językach naturalnych modalności często występują pod postacią
     czasowników zwanych na ich cześć modalnymi, takich jak "móc" czy
-    "musieć" - o ile nie mieszkasz na pustyni pod kamieniem, to pewnie
+    "musieć" - o ile nie mieszkasz pod kamieniem na pustyni, to pewnie
     spotkałeś się z nimi ucząc się języków obcych.
 
     Jednak nas bardziej będzie interesować inna forma, pod którą
@@ -118,117 +118,13 @@ Qed.
     "bardzo" NIE JEST modalnością.
 
     Zanim zobaczymy, jak ta definicja ma się do tego, co już wiemy
-    i potrafimy, parę ćwiczeń: *)
-
-(** **** Ćwiczenie (modalność neutralna) *)
-
-(** Jako już się rzekło w przykładzie, zdanie "Pada deszcz" również
-    jest zdaniem modalnym. Modalność występująca w tym zdaniu to
-    modalność identycznościowa (zwana też modalnością neutralną), a
-    wyrażany przez nią sposób to sposób domyślny, czyli w sumie żaden.
-
-    Modalność ta nie ma raczej większego znaczenia (oczywiście o ile
-    przemilaczymy fakt, że większość wszystkich zdań, jakie napotkamy,
-    będzie wyrażać właśnie tę modalność), ale warto ją odnotować dla
-    kompletności teorii - zwykli śmiertelnicy zazwyczaj zapominają o
-    takich banalnych rzeczach, więc trzeba im o tym przypominać.
-
-    Pokaż, że modalność neutralna jest modalnością. *)
-
-Lemma identity_law1 :
-  forall P Q : Prop, (P -> Q) -> (P -> Q).
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma identity_law2 :
-  forall P : Prop, P -> P.
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma identity_law3 :
-  forall P : Prop, P -> P.
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-(** **** Ćwiczenie (modalność trywialna) *)
-
-(** Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
-    nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
-    chcąc w trywialny sposób powiedzieć [P], wypieprzamy zdanie [P] w
-    diabły i zamiast tego mówimy [True]. Wot, modalność jak znalazł.
-
-    Pokaż, że modalność trywialna jest modalnością. *)
-
-Lemma trivial_law1 :
-  forall P Q : Prop, (P -> Q) -> (True -> True).
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma trivial_law2 :
-  forall P : Prop, P -> True.
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma trivial_law3 :
-  forall P : Prop, True -> True.
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
+    i potrafimy, ćwiczenie: *)
 
 (** **** Ćwiczenie *)
 
-(** Skoro [True] to modalność trywialna, to może [False] to modalność
-    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
-    nazwana?
+(** Zaczniemy od antyprzykładu.
 
-    Sprawdź to. *)
-
-Lemma antitrivial_law1 :
-  forall P Q : Prop, (P -> Q) -> (False -> False).
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma antitrivial_law2 :
-  ~ forall P : Prop, P -> False.
-(* begin hide *)
-Proof.
-  intro H.
-  apply (H True).
-  trivial.
-Qed.
-(* end hide *)
-
-Lemma antitrivial_law3 :
-  forall P : Prop, False -> False.
-(* begin hide *)
-Proof.
-  trivial.
-Qed.
-(* end hide *)
-
-(** **** Ćwiczenie *)
-
-(** Udowodnij, że negacja nie jest modalnością. Parafrazując:
+    Udowodnij, że negacja nie jest modalnością. Parafrazując:
     - napisz, jak wyglądałyby prawa bycia modalnością dla negacji
     - zdecyduj, które z praw negacja łamie, a których nie
     - udowodnij, że prawa te faktycznie nie zachodzą *)
@@ -252,250 +148,134 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Logika klasyczna jako logika modalna *)
+(** ** Modalność neutralna: nasza ulubiona *)
 
-Require Import W3.
+(** Jako już się rzekło w jednym z przykładów, zdanie "Pada deszcz"
+    również jest zdaniem modalnym. Modalność występująca w tym zdaniu
+    to modalność neutralna (zwana też modalnością identycznościową), a
+    wyrażany przez nią sposób to sposób zwykły, domyślny, neutralny,
+    czyli w sumie żaden.
 
-(** Kolejny przykład modalności jest jeszcze bardziej zaskakujący
-    od poprzedniego. Jest to modalność, którą można wyrazić za
-    pomocą słowa "klasycznie". Wyrażenie "klasycznie P" znaczy,
-    że [P] zachodzi pod warunkiem, że mamy do dyspozycji prawa
-    logiki klasycznej (jak np. prawo wyłączonego środka).
-
-    Formalnie modalność tę możemy zrealizować za pomocą implikacji
-    oraz dowolnego z poznanych przez nas dotychczas aksjomatów, które
-    dają nam pełną moc logiki klasyczne. Dla przykładu: "klasycznie P"
-    możemy wyrazić równoważnie jako [LEM -> P], [DNE -> P], [Contra -> P]
-    i tak dalej.
-
-    Modalność ta jest bardzo wygodnym sposobem na posługiwanie się
-    logiką klasyczną bez brudzenia sobie rączek aksjomatami, a mimo
-    to nie jest zbyt powszechnie znana czy używana. Cóż...
-
-    Oczywiście modalności można użyć nie tylko do wygodnego użytkowania
-    aksjomatów logiki klasycznej, ale również wszystkich innych
-    aksjomatów, jakie sobie zażyczymy. *)
+    Modalność ta nie ma raczej większego znaczenia (oczywiście o ile
+    przemilczymy fakt, że większość wszystkich zdań, jakie napotkamy,
+    będzie wyrażać właśnie tę modalność), ale warto ją odnotować dla
+    kompletności teorii - zwykli śmiertelnicy zazwyczaj zapominają o
+    takich banalnych rzeczach, więc trzeba im o tym przypominać. Nie
+    wspominając już o tym, że jest to idealna modalność na rozgrzewkę
+    ... *)
 
 (** **** Ćwiczenie *)
 
-(** Udowodnij, że "klasycznie" (wyrażone za pomocą [LEM]) faktycznie
-    jest modalnością. *)
+(** Pokaż, że modalność neutralna faktycznie jest modalnością. *)
 
-Lemma classically_law1 :
-  forall P Q : Prop, (P -> Q) -> ((LEM -> P) -> (LEM -> Q)).
+Lemma neutrally_law1 :
+  forall P Q : Prop, (P -> Q) -> (P -> Q).
 (* begin hide *)
 Proof.
-  intros P Q H lemp lem.
-  apply H, lemp, lem.
+  trivial.
 Qed.
 (* end hide *)
 
-Lemma classically_law2 :
-  forall P : Prop, P -> (LEM -> P).
+Lemma neutrally_law2 :
+  forall P : Prop, P -> P.
 (* begin hide *)
 Proof.
-  intros P p lem.
-  assumption.
+  trivial.
 Qed.
 (* end hide *)
 
-Lemma classically_law3 :
-  forall P : Prop, (LEM -> (LEM -> P)) -> (LEM -> P).
+Lemma neutrally_law3 :
+  forall P : Prop, P -> P.
 (* begin hide *)
 Proof.
-  intros P H lem.
-  apply H; assumption.
+  trivial.
 Qed.
 (* end hide *)
+
+(** ** Modalność trywialna *)
+
+(** Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
+    nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że
+    chcąc w trywialny sposób powiedzieć [P], wypieprzamy zdanie [P] w
+    diabły i zamiast tego mówimy [True]. Wot, modalność jak znalazł. *)
 
 (** **** Ćwiczenie *)
 
-(** Dwie z pozoru różne modalności mogą tak naprawdę wyrażać to samo.
-    Dla przykładu, modalność "klasycznie P" możemy wyrazić nie tylko
-    jako [LEM -> P], ale również jako [DNE -> P].
+(** Pokaż, że modalność trywialna faktycznie jest modalnością. *)
 
-    Pokaż, że obydwie definicje tej modalności są równoważne. *)
-
-Lemma classicallies :
-  forall P : Prop, (LEM -> P) <-> (DNE -> P).
+Lemma trivially_law1 :
+  forall P Q : Prop, (P -> Q) -> (True -> True).
 (* begin hide *)
 Proof.
-  split.
-    intros H dne. apply H, DNE_LEM. assumption.
-    intros H lem. apply H. exact (LEM_DNE lem).
+  trivial.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie (modalność aksjomatyczna) *)
-
-(** Jeżeli poprawnie i uważnie wykonałeś pierwsze ćwiczenie, to zapewne
-    zauważyłeś, że nie było w nim niczego, co by jakoś bardzo zależało
-    od [LEM].
-
-    Nie ma się co dziwić, albowiem modalność klasyczna jest jedynie
-    wcieleniem pewnej ogólniejszej modalności, którą na nasze potrzeby
-    nazwiemy modalnością aksjomatyczną.
-
-    Cóż to takiego? Ano, weźmy dowolne zdanie [A]. Zdanie [A -> P]
-    możemy odczytać jako "P, ale tylko pod warunkiem, że A". Widać,
-    że jest to pewien sposób na wyrażenie [P], a zatem jest to
-    modalność.
-
-    Udowodnij, że modalność aksjomatyczna jest modalnością. *)
-
-Lemma axiomatically_law1 :
-  forall A P Q : Prop,
-    (P -> Q) -> ((A -> P) -> (A -> Q)).
+Lemma trivially_law2 :
+  forall P : Prop, P -> True.
 (* begin hide *)
 Proof.
-  intros A P Q pq ap a.
-  apply pq, ap, a.
+  trivial.
 Qed.
 (* end hide *)
 
-Lemma axiomatically_law2 :
-  forall A P : Prop,
-    P -> (A -> P).
+Lemma trivially_law3 :
+  forall P : Prop, True -> True.
 (* begin hide *)
 Proof.
-  intros A P p a.
-  assumption.
-Qed.
-(* end hide *)
-
-Lemma axiomatically_law3 :
-  forall A P : Prop,
-    (A -> (A -> P)) -> (A -> P).
-(* begin hide *)
-Proof.
-  intros A P aap a.
-  apply aap; assumption.
+  trivial.
 Qed.
 (* end hide *)
 
 (** **** Ćwiczenie *)
 
-(** Wypadałoby jeszcze wyjaśnić, dlaczego poznaną w poprzednim zadaniu
-    modalność nazwałem modalnością aksjomatyczną, a nie np. "warunkową",
-    "założeniową" albo coś w tym stylu.
+(** Skoro [True] to modalność trywialna, to może [False] to modalność
+    antytrywialna? Albo nietrywialna... albo jakaś inna, nieważne jak
+    nazwana? Sprawdź to!
 
-    Powód tego jest prosty: dawanie jako dodatkowej przesłanki zdania,
-    które nie jest potrzebne w dowodzie, jest dość kretyńskie. Baaaaa!
-    Jeżeli [A] nie jest aksjomate, to [A -> P] jest równoważne [P]. *)
+    Jeżeli jest to modalność, udowodnij odpowiednie prawa. Jeżeli
+    nie, udowodnij zaprzeczenia odopwiednich praw. A może sytuacja
+    jest patowa i nie da się udowodnić ani w jedną, ani w drugą
+    stronę? *)
 
-Lemma nonaxiomatically :
-  forall A P : Prop,
-    A -> ((A -> P) <-> P).
 (* begin hide *)
+Lemma antitrivial_law1 :
+  forall P Q : Prop, (P -> Q) -> (False -> False).
 Proof.
-  intros A P a. split.
-    intro ap. apply ap. assumption.
-    intros p _. assumption.
+  trivial.
+Qed.
+
+Lemma antitrivial_law2 :
+  ~ forall P : Prop, P -> False.
+Proof.
+  intro H.
+  apply (H True).
+  trivial.
+Qed.
+
+Lemma antitrivial_law3 :
+  forall P : Prop, False -> False.
+Proof.
+  trivial.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
+(** ** Modalność wymówkowa: pies zjadł mi dowód... :( *)
 
-(** Gdyby powyższe ćwiczenie okazało się zbyt oczywiste, to wiedz, że
-    naprawdę pozornie różne modalności mogą ostatecznie okazać się tym
-    samym. Może się też okazać, że modalność [M] jest silniejsza niż
-    modalność [N], czyli że [forall P : Prop, M P -> N P].
+(** To już ostatnia głupia i bezużyteczna modalność, obiecuję! Wszystkie
+    następne będą już praktyczne i przydatne.
 
-    Zastanów się, jaki jest związek między modalnościmi
-    "niezaprzeczalnie" i "klasycznie". Czy są one tym samym, czy czymś
-    innym? Czy któraś z nich jest mocniejsza od drugiej? *)
-
-(* begin hide *)
-
-Lemma irrefutably_classically :
-  forall P : Prop,
-    (~ ~ P) -> (LEM -> P).
-Proof.
-  intros P nnp LEM. destruct (LEM P).
-    assumption.
-    contradiction.
-Qed.
-
-(** O ile mnie rozum nie myli, to w drugą stronę się nie da. Nie da się
-    też rzecz jasna zaprzeczyć, a zatem zdaje się, że podwójna negacja
-    jest mocniejsza od modalności klasycznej. *)
-
-(* end hide *)
-
-(** **** Ćwiczenie *)
-
-(** TODO
-
-    Zastanówmy się nad następującą konstrukcją: zdanie [P] wynika ze
-    wszystkich możliwych aksjomatów.
-
-    Czy taki twór jest modalnością? Sprawdź to! *)
-
-Lemma allaxioms_law1 :
-  forall P Q : Prop,
-    (P -> Q) -> ((forall A : Prop, A -> P) -> (forall A : Prop, A -> Q)).
-(* begin hide *)
-Proof.
-  intros P Q pq H A a.
-  apply pq, (H _ a).
-Qed.
-(* end hide *)
-
-Lemma allaxioms_law2 :
-  forall P : Prop,
-    P -> (forall A : Prop, A -> P).
-(* begin hide *)
-Proof.
-  intros P p A a.
-  assumption.
-Qed.
-(* end hide *)
-
-Lemma allaxioms_law3 :
-  forall P : Prop,
-    (forall A : Prop, A -> (forall B : Prop, B -> P)) ->
-      (forall A : Prop, A -> P).
-(* begin hide *)
-Proof.
-  intros P H A a.
-  apply (H A a A a).
-Qed.
-(* end hide *)
-
-(** **** Ćwiczenie *)
-
-(** TODO
-
-    Skoro [P] wynika ze wszystkich aksjomatów, to wynika także z mało
-    informatywnego aksjomatu [True]... czyli w sumie po prostu zachodzi,
-    ot tak bez żadnych ceregieli.
-
-    Udowodnij to formalnie. *)
-
-Lemma allaxioms_spec :
-  forall P : Prop,
-    P <-> (forall A : Prop, A -> P).
-(* begin hide *)
-Proof.
-  split.
-    intros p A a. assumption.
-    intro H. apply (H True). trivial.
-Qed.
-(* end hide *)
-
-(** ** Pies zjadł mi dowód... :( *)
-
-(** Wyobraźmy sobie następujący dialog, odbywający się na lekcji
-    języka polskiego w jakiejś zapomnianej przez Boga szkole w
+    Wyobraźmy sobie następujący dialog, odbywający się na lekcji
+    dowodzenia w Coqu w jakiejś zapomnianej przez Boga szkole w
     Pcimiu Dolnym:
-    - (N)auczycielka: Jasiu, odrobiłeś zadanie domowe?
+    - (N)auczycielka: Jasiu, zrobiłeś zadanie domowe?
     - (J)asiu: tak, psze pani.
     - N: pokaż.
     - J: Hmmm, yhm, uhm, eeee...
-    - N: czyli nie odrobiłeś.
-    - J: odrobiłem, ale pies mi zjadł.
+    - N: czyli nie zrobiłeś.
+    - J: zrobiłem, ale pies mi zjadł.
 
-    Z dialogu jasno wynika, że Jasiu nie odrobił zadania, co jednak nie
+    Z dialogu jasno wynika, że Jasiu nie zrobił zadania, co jednak nie
     przeszkadza mu w pokrętny sposób twierdzić, że zrobił. Ten pokrętny
     sposób jest powszechnie znany jako "wymówka".
 
@@ -565,65 +345,155 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Modalność klasyczna: logika klasyczna jako logika modalna *)
+
+Require Import W3.
+
+(** Poznana w poprzednim podrozdziale modalność mogła być dla ciebie
+    dość zaskakująca, wszakże w języku naturalnym nieczęsto robienie
+    wymówek jest wyrażane przez czasowniki modalne czy przysłówki. Co
+    więcej, nie zobaczymy jej już nigdy więcej, bo jest bezużyteczna.
+
+    W niniejszym podrozdziale poznamy zaś modalność nawet bardziej
+    zaskakującą, a do tego całkiem przydatną. Jest to modalność,
+    którą można wyrazić za pomocą słowa "klasycznie". Wyrażenie
+    "klasycznie P" znaczy, że [P] zachodzi w logice klasycznej,
+    czyli zachodzi pod warunkiem, że mamy do dyspozycji poznane w
+    poprzednich rozdziałach aksjomaty logiki klasycznej.
+
+    Formalnie modalność tę możemy zrealizować za pomocą implikacji
+    jako [LEM -> P]. Jest to bardzo wygodny sposób na posługiwanie
+    się logiką klasyczną bez brudzenia sobie rączek aksjomatami, a
+    mimo to nie jest zbyt powszechnie znany czy używany. Cóż... ci
+    głupcy nie wiedzą, co tracą. *)
+
 (** **** Ćwiczenie *)
+
+(** Udowodnij, że modalność klasyczna faktycznie jest modalnością. *)
+
+Lemma classically_law1 :
+  forall P Q : Prop, (P -> Q) -> ((LEM -> P) -> (LEM -> Q)).
+(* begin hide *)
+Proof.
+  intros P Q H lemp lem.
+  apply H, lemp, lem.
+Qed.
+(* end hide *)
+
+Lemma classically_law2 :
+  forall P : Prop, P -> (LEM -> P).
+(* begin hide *)
+Proof.
+  intros P p lem.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma classically_law3 :
+  forall P : Prop, (LEM -> (LEM -> P)) -> (LEM -> P).
+(* begin hide *)
+Proof.
+  intros P H lem.
+  apply H; assumption.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Dwie modalności zdefiniowane na różne (na pierwszym rzut oka)
+    sposoby mogą mogą tak naprawdę wyrażać to samo. Dla przykładu,
+    modalność "klasycznie P" możemy wyrazić nie tylko jako [LEM -> P],
+    ale również jako [DNE -> P], [Contra -> P] i tak dalej - dowolny 
+    z poznanych przez nas dotychczas aksjomatów, które dają nam pełną
+    moc logiki klasycznej, zadziała tutaj tak samo.
+
+    Pokaż, że definicja korzystająca z [LEM] jest równoważna tej, w
+    której występuje [DNE]. *)
+
+Lemma classicallyLEM_classicallyDNE :
+  forall P : Prop, (LEM -> P) <-> (DNE -> P).
+(* begin hide *)
+Proof.
+  split.
+    intros H dne. apply H, DNE_LEM. assumption.
+    intros H lem. apply H. exact (LEM_DNE lem).
+Qed.
+(* end hide *)
+
+(** ** Modalność aksjomatyczna *)
 
 (** TODO
 
-    A co, gdyby tak skwantyfikować [E : Prop] i otrzymać w wyniku
-    [forall E : Prop, E \/ P]? Zdanie to znaczy coś w stylu "P zachodzi
-    albo i nie, wymówkę wybierz wybierz sobie sam".
+    Nie ma się co dziwić, albowiem modalność klasyczna jest jedynie
+    wcieleniem pewnej ogólniejszej modalności, którą na nasze potrzeby
+    nazwiemy modalnością aksjomatyczną.
 
-    Udowodnij, że mamy tu do czynienia z modalnością. *)
-
-Lemma anyexcuse_law1 :
-  forall P Q : Prop,
-    (P -> Q) -> ((forall E : Prop, E \/ P) -> (forall E : Prop, E \/ Q)).
-Proof.
-  intros P Q pq H E.
-  destruct (H False).
-    contradiction.
-    right. apply pq. assumption.
-Qed.
-
-Lemma anyexcuse_law2 :
-  forall P : Prop,
-    P -> (forall E : Prop, E \/ P).
-Proof.
-  intros P p E.
-  right.
-  assumption.
-Qed.
-
-Lemma anyexcuse_law3 :
-  forall P : Prop,
-    (forall E1 : Prop, E1 \/ (forall E2 : Prop, E2 \/ P)) ->
-      (forall E : Prop, E \/ P).
-Proof.
-  intros P eep E.
-  destruct (eep False).
-    contradiction.
-    destruct (H False).
-      contradiction.
-      right. assumption.
-Qed.
+    Cóż to takiego? Ano, weźmy dowolne zdanie [A]. Zdanie [A -> P]
+    możemy odczytać jako "P, pod warunkiem że A". Widać, że jest to
+    pewien sposób na wyrażenie [P], a zatem pozostaje tylko sprawdzić,
+    czy zachodzą wszystkie potrzebne prawa. *)
 
 (** **** Ćwiczenie *)
 
-(** Udowodnij, że modalność z powyższego ćwiczenia jest równoważna
-    modalności netraulnej. *)
+(** Udowodnij, że modalność aksjomatyczna jest modalnością. *)
 
-Lemma anyexcuse_spec :
-  forall P : Prop,
-    P <-> (forall E : Prop, E \/ P).
+Lemma axiomatically_law1 :
+  forall A P Q : Prop,
+    (P -> Q) -> ((A -> P) -> (A -> Q)).
+(* begin hide *)
 Proof.
-  split.
-    intros p E. right. assumption.
-    intro H. destruct (H False).
-      contradiction.
-      assumption.
+  intros A P Q pq ap a.
+  apply pq, ap, a.
 Qed.
+(* end hide *)
 
-(** ** Niespodziewana modalność - niezaprzeczalność *)
+Lemma axiomatically_law2 :
+  forall A P : Prop,
+    P -> (A -> P).
+(* begin hide *)
+Proof.
+  intros A P p a.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma axiomatically_law3 :
+  forall A P : Prop,
+    (A -> (A -> P)) -> (A -> P).
+(* begin hide *)
+Proof.
+  intros A P aap a.
+  apply aap; assumption.
+Qed.
+(* end hide *)
+
+(** Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
+    nazwałem właśnie "aksjomatyczną", a nie na przykład "warunkową",
+    "założeniową" albo coś w tym stylu.
+
+    Powód tego jest prosty: dawanie jako dodatkowej przesłanki zdania,
+    które nie jest potrzebne w dowodzie, jest dość kretyńskie. Ba!
+    Jeżeli potrafimy udowodnić [A] bez aksjomatów, to [A -> P] jest
+    równoważne [P]. *)
+
+(** **** Ćwiczenie *)
+
+(** Sprawdź to! *)
+
+Lemma nonaxiomatically :
+  forall A P : Prop,
+    A -> ((A -> P) <-> P).
+(* begin hide *)
+Proof.
+  intros A P a. split.
+    intro ap. apply ap. assumption.
+    intros p _. assumption.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** ** Modalność niezaprzeczalna *)
 
 (** Wiemy już, że negacja nie jest modalnością. Świetnie, ale w takim
     razie, co nią jest? Otóż przykładem modalności jest... podwójna
@@ -699,27 +569,7 @@ Proof.
 Qed.
 (* end hide *)
 
-
 (** ** Modalność pośrednia *)
-
-(* begin hide *)
-
-(** TODO: lista monad, które (nie) nadają się na modalności:
-    - Codensity: tak, jako dziwna identyczność
-    - Cont - tak, jako modalność pośrednia
-    - Free - nie
-    - Identity - tak
-    - Lazy - nie
-    - List - nie
-    - Option - chyba raczej nie
-    - Reader - tak
-    - RoseTree - nie
-    - RWS - nie
-    - State - nie
-    - Sum - tak
-    - Writer - nie *)
-
-(* end hide *)
 
 Lemma indirect2_law1 :
   forall C P Q : Prop,
@@ -853,7 +703,7 @@ Qed.
 (** Pokaż, że jeżeli zachodzą wszystkie konsekwencje [P], to [P] też
     zachodzi. Wskazówka: każde zdanie wynika samo z siebie. *)
 
-Lemma all_consequences :
+Lemma indirect_direct :
   forall P : Prop,
     (forall R : Prop, (P -> R) -> R) -> P.
 (* begin hide *)
@@ -871,6 +721,136 @@ Qed.
     wniosek może być tylko jeden: modalność pośrednia jest dokładnie
     tym samym, co modalność neutralna. Ha! Nie tego się spodziewałeś,
     co? *)
+
+(** **** Ćwiczenie *)
+
+(** TODO
+
+    A co, gdyby tak skwantyfikować [E : Prop] i otrzymać w wyniku
+    [forall E : Prop, E \/ P]? Zdanie to znaczy coś w stylu "P zachodzi
+    albo i nie, wymówkę wybierz wybierz sobie sam".
+
+    Udowodnij, że mamy tu do czynienia z modalnością. *)
+
+Lemma anyexcuse_law1 :
+  forall P Q : Prop,
+    (P -> Q) ->
+      ((forall E : Prop, E \/ P) -> (forall E : Prop, E \/ Q)).
+(* begin hide *)
+Proof.
+  intros P Q pq H E.
+  destruct (H False).
+    contradiction.
+    right. apply pq. assumption.
+Qed.
+(* end hide *)
+
+Lemma anyexcuse_law2 :
+  forall P : Prop,
+    P -> (forall E : Prop, E \/ P).
+(* begin hide *)
+Proof.
+  intros P p E.
+  right.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma anyexcuse_law3 :
+  forall P : Prop,
+    (forall E1 : Prop, E1 \/ (forall E2 : Prop, E2 \/ P)) ->
+      (forall E : Prop, E \/ P).
+(* begin hide *)
+Proof.
+  intros P eep E.
+  destruct (eep False).
+    contradiction.
+    destruct (H False).
+      contradiction.
+      right. assumption.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że modalność z powyższego ćwiczenia jest równoważna
+    modalności neutralnej. *)
+
+Lemma anyexcuse_spec :
+  forall P : Prop,
+    P <-> (forall E : Prop, E \/ P).
+(* begin hide *)
+Proof.
+  split.
+    intros p E. right. assumption.
+    intro H. destruct (H False).
+      contradiction.
+      assumption.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** TODO
+
+    Zastanówmy się nad następującą konstrukcją: zdanie [P] wynika ze
+    wszystkich możliwych aksjomatów.
+
+    Czy taki twór jest modalnością? Sprawdź to! *)
+
+Lemma allaxioms_law1 :
+  forall P Q : Prop,
+    (P -> Q) -> ((forall A : Prop, A -> P) -> (forall A : Prop, A -> Q)).
+(* begin hide *)
+Proof.
+  intros P Q pq H A a.
+  apply pq, (H _ a).
+Qed.
+(* end hide *)
+
+Lemma allaxioms_law2 :
+  forall P : Prop,
+    P -> (forall A : Prop, A -> P).
+(* begin hide *)
+Proof.
+  intros P p A a.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma allaxioms_law3 :
+  forall P : Prop,
+    (forall A : Prop, A -> (forall B : Prop, B -> P)) ->
+      (forall A : Prop, A -> P).
+(* begin hide *)
+Proof.
+  intros P H A a.
+  apply (H A a A a).
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** TODO
+
+    Skoro [P] wynika ze wszystkich aksjomatów, to wynika także z mało
+    informatywnego aksjomatu [True]... czyli w sumie po prostu zachodzi,
+    ot tak bez żadnych ceregieli.
+
+    Udowodnij to formalnie. *)
+
+Lemma allaxioms_spec :
+  forall P : Prop,
+    P <-> (forall A : Prop, A -> P).
+(* begin hide *)
+Proof.
+  split.
+    intros p A a. assumption.
+    intro H. apply (H True). trivial.
+Qed.
+(* end hide *)
+
+
 
 (** ** Związki między modalnościami *)
 
@@ -935,6 +915,10 @@ Qed.
     [N P -> M P]. *)
 
 (* end hide *)
+
+(** ** Podsumowanie *)
+
+(** TODO *)
 
 (** * Inne logiki - podsumowanie *)
 
