@@ -352,7 +352,8 @@ Require Import W3.
 (** Poznana w poprzednim podrozdziale modalność mogła być dla ciebie
     dość zaskakująca, wszakże w języku naturalnym nieczęsto robienie
     wymówek jest wyrażane przez czasowniki modalne czy przysłówki. Co
-    więcej, nie zobaczymy jej już nigdy więcej, bo jest bezużyteczna.
+    więcej, nie zobaczymy jej już nigdy więcej, bo jest mocno
+    bezużyteczna.
 
     W niniejszym podrozdziale poznamy zaś modalność nawet bardziej
     zaskakującą, a do tego całkiem przydatną. Jest to modalność,
@@ -363,9 +364,9 @@ Require Import W3.
 
     Formalnie modalność tę możemy zrealizować za pomocą implikacji
     jako [LEM -> P]. Jest to bardzo wygodny sposób na posługiwanie
-    się logiką klasyczną bez brudzenia sobie rączek aksjomatami, a
-    mimo to nie jest zbyt powszechnie znany czy używany. Cóż... ci
-    głupcy nie wiedzą, co tracą. *)
+    się logiką klasyczną bez brudzenia sobie rączek komendami [Axiom]
+    czy [Hypothesis], a mimo to nie jest zbyt powszechnie znany czy
+    używany. Cóż... ci głupcy nie wiedzą, co tracą. *)
 
 (** **** Ćwiczenie *)
 
@@ -422,16 +423,21 @@ Qed.
 
 (** ** Modalność aksjomatyczna *)
 
-(** TODO
+(** W poprzednim podrozdziale widzieliśmy, że użycie logiki klasycznej
+    możemy wyrazić jako [LEM -> P], [DNE -> P] czy nawet [Contra -> P].
+    A co z innymi aksjomatami, które dotychczas poznaliśmy? Czy ich
+    użycie również możemy zareprezentować za pomocą jakiejś modalności?
 
-    Nie ma się co dziwić, albowiem modalność klasyczna jest jedynie
-    wcieleniem pewnej ogólniejszej modalności, którą na nasze potrzeby
-    nazwiemy modalnością aksjomatyczną.
+    Ależ oczywiście, że tak. Skoro zamiast [LEM -> P] możemy napisać
+    [DNE -> P], to możemy również napisać [UIP -> P], [PropExt -> P]
+    czy po prostu [A -> P] dla dowolnego zdania [A].
 
-    Cóż to takiego? Ano, weźmy dowolne zdanie [A]. Zdanie [A -> P]
-    możemy odczytać jako "P, pod warunkiem że A". Widać, że jest to
-    pewien sposób na wyrażenie [P], a zatem pozostaje tylko sprawdzić,
-    czy zachodzą wszystkie potrzebne prawa. *)
+    Okazuje się więc, że modalność klasyczna jest jedynie wcieleniem
+    pewnej ogólniejszej modalności, którą na nasze potrzeby nazwiemy
+    modalnością aksjomatyczną. Zdanie [A -> P] możemy odczytać jako
+    "P, pod warunkiem że A". Widać jak na dłoni, że jest to pewien
+    sposób na wyrażenie [P], a zatem pozostaje tylko sprawdzić, czy
+    zachodzą wszystkie potrzebne prawa. *)
 
 (** **** Ćwiczenie *)
 
@@ -491,13 +497,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** Ćwiczenie *)
-
 (** ** Modalność niezaprzeczalna *)
 
-(** Wiemy już, że negacja nie jest modalnością. Świetnie, ale w takim
-    razie, co nią jest? Otóż przykładem modalności jest... podwójna
-    negacja!
+(** Wiemy już, że negacja nie jest modalnością. Zaskoczy cię pewnie
+    zatem fakt, że modalnością jest... podwójna negacja!
 
     Ha, nie spodziewałeś się podwójnej negacji w tym miejscu, co?
     Nie ma się czemu dziwić - w języku polskim podwójna negacja w
@@ -514,7 +517,7 @@ Qed.
     celu przyjrzyjmy się poniższym zdaniom:
     - [P] - po prostu stwierdzamy [P], modalność neutralna
     - [~ P] - zaprzeczamy/obalamy [P]. Można zatem powiedzieć, że [P]
-      jest zaprzeczalne.
+      jest zaprzeczalne. Pamiętajmy, że negacja nie jest modalnością.
     - [~ ~ P] - zaprzeczamy/obalamy [~ P], czyli zaprzeczamy zaprzeczeniu
       [P]. Można zatem powiedzieć, że [P] jest niezaprzeczalne.
 
@@ -531,7 +534,7 @@ Qed.
     czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
     wcisnąć nam kit, że [~ (P \/ ~ P)], to możemy wziąć jego dowód i
     wyprowadzić z niego [False], czyli po prostu udowodnić, że
-    [~ ~ (P \/ ~ P)]. Na tym właśnie polega modalność niezaprzeczalności:
+    [~ ~ (P \/ ~ P)]. Na tym właśnie polega modalność niezaprzeczalna:
     nawet jeżeli nie da się zdania pokazać wprost, to można obalić jego
     zaprzeczenie. *)
 
@@ -614,23 +617,24 @@ Proof.
       intro p. apply H.
 Abort.
 
-(** ** Modalność (bez)pośrednia *)
+(** ** Modalność wszechpośrednia *)
 
 (** Poznawszy dwie najważniejsze dla nas modalności, możemy zająć się
     takimi, które będą miały co najwyżej charakter ciekawostki. Jeżeli
     nie lubisz ciekawostek i jesteś ogólnie smutnym człowiekiem, to
     resztę omawianych modalności możesz pominąć.
 
-    Modalność pośrednia to... zamiast gadać, przekonaj się sam. *)
+    Modalność wszechpośrednia to... zamiast gadać, przekonaj się sam. *)
 
 (** **** Ćwiczenie *)
 
-(** Udowodnij, że modalność pośrednia jest modalnością. *)
+(** Udowodnij, że modalność wszechpośrednia jest modalnością. *)
 
 Lemma indirect_law1 :
   forall P Q : Prop,
-    (P -> Q) -> ((forall R : Prop, (P -> R) -> R) ->
-                 (forall R : Prop, (Q -> R) -> R)).
+    (P -> Q) ->
+      ((forall R : Prop, (P -> R) -> R) ->
+       (forall R : Prop, (Q -> R) -> R)).
 (* begin hide *)
 Proof.
   intros P Q PQ mp R QR.
@@ -665,10 +669,10 @@ Qed.
 (* end hide *)
 
 (** No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
-    naprawdę chodzi z tą modalnością pośrednią? Jaki sposób wyraża?
-    Skąd nazwa?
+    naprawdę chodzi z tą modalnością wszechpośrednią? Jaki sposób
+    wyraża? Skąd nazwa?
 
-    Przyjrzyjmy się jeszcze raz definicji. Zdanie "pośrednio P"
+    Przyjrzyjmy się jeszcze raz definicji. Zdanie "wszechpośrednio P"
     formalnie wygląda tak: [forall R : Prop, (P -> R) -> R].
 
     Jak odczytać tę definicję? Zacznijmy od tego, że [R] jest dowolnym
@@ -696,7 +700,7 @@ Qed.
     tego możemy stwierdzić, że zdanie "zachodzą wszystkie konsekwencje
     P" to pewien sposób powiedzenia [P], tylko w bardzo pośredni sposób.
     Stąd też nazwa (swoją drogą, wymyślona autorsko przeze mnie) -
-    modalność pośrednia. *)
+    modalność wszechpośrednia. *)
 
 (** **** Ćwiczenie *)
 
@@ -718,19 +722,22 @@ Qed.
     pokazać zarówno [P -> (forall R : Prop, (P -> R) -> R)] (prawo
     [indirect_law2], wymagane przez definicję modalności) jak i
     [(forall R : Prop, (P -> R) -> R) -> P] (powyższe ćwiczenie),
-    wniosek może być tylko jeden: modalność pośrednia jest dokładnie
-    tym samym, co modalność neutralna. Ha! Nie tego się spodziewałeś,
-    co? *)
+    wniosek może być tylko jeden: modalność wszechpośrednia jest
+    dokładnie tym samym, co modalność neutralna. Ha! Nie tego się
+    spodziewałeś, co? *)
 
 (** **** Ćwiczenie *)
 
 (** TODO
 
     A co, gdyby tak skwantyfikować [E : Prop] i otrzymać w wyniku
-    [forall E : Prop, E \/ P]? Zdanie to znaczy coś w stylu "P zachodzi
-    albo i nie, wymówkę wybierz wybierz sobie sam".
+    [forall E : Prop, E \/ P]? Zdanie to znaczy coś w stylu "P
+    zachodzi albo i nie, wymówkę wybierz wybierz sobie sam". W
+    sumie to można by powstały tutaj twór nazwać modalnością
+    wszechwymówkową...
 
-    Udowodnij, że mamy tu do czynienia z modalnością. *)
+    Udowodnij, że modalność wszechwymówkowa faktycznie jest
+    modalnością. *)
 
 Lemma anyexcuse_law1 :
   forall P Q : Prop,
@@ -773,8 +780,8 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-(** Udowodnij, że modalność z powyższego ćwiczenia jest równoważna
-    modalności neutralnej. *)
+(** Udowodnij, że modalność wszechwymówkowa jest równoważna modalności
+    neutralnej. *)
 
 Lemma anyexcuse_spec :
   forall P : Prop,
@@ -796,7 +803,8 @@ Qed.
     Zastanówmy się nad następującą konstrukcją: zdanie [P] wynika ze
     wszystkich możliwych aksjomatów.
 
-    Czy taki twór jest modalnością? Sprawdź to! *)
+    Czy taki twór jest modalnością? Sprawdź to! (Jeżeli jest, to
+    będziemy tę modalność nazywać modalnością wszechaksjomatyczną). *)
 
 Lemma allaxioms_law1 :
   forall P Q : Prop,
@@ -837,7 +845,8 @@ Qed.
     informatywnego aksjomatu [True]... czyli w sumie po prostu zachodzi,
     ot tak bez żadnych ceregieli.
 
-    Udowodnij to formalnie. *)
+    Udowodnij, że modalność wszechaksjomatyczna to tak naprawdę to samo,
+    co modalność neutralna. *)
 
 Lemma allaxioms_spec :
   forall P : Prop,
@@ -849,8 +858,6 @@ Proof.
     intro H. apply (H True). trivial.
 Qed.
 (* end hide *)
-
-
 
 (** ** Związki między modalnościami *)
 
@@ -870,6 +877,34 @@ Qed.
     neutralna jest silniejsza niż modalność niezaprzeczalna, czyli
     równoważnie: modalność niezaprzeczalna jest słabsza niż modalność
     neutralna. *)
+
+(** **** Ćwiczenie (TODO) *)
+
+(** Gdyby powyższe ćwiczenie okazało się zbyt oczywiste, to wiedz, że
+    naprawdę pozornie różne modalności mogą ostatecznie okazać się tym
+    samym. Może się też okazać, że modalność [M] jest silniejsza niż
+    modalność [N], czyli że [forall P : Prop, M P -> N P].
+
+    Zastanów się, jaki jest związek między modalnościmi
+    "niezaprzeczalnie" i "klasycznie". Czy są one tym samym, czy czymś
+    innym? Czy któraś z nich jest mocniejsza od drugiej? *)
+
+(* begin hide *)
+
+Lemma irrefutably_classically :
+  forall P : Prop,
+    (~ ~ P) -> (LEM -> P).
+Proof.
+  intros P nnp LEM. destruct (LEM P).
+    assumption.
+    contradiction.
+Qed.
+
+(** O ile mnie rozum nie myli, to w drugą stronę się nie da. Nie da się
+    też rzecz jasna zaprzeczyć, a zatem zdaje się, że podwójna negacja
+    jest mocniejsza od modalności klasycznej. *)
+
+(* end hide *)
 
 (** **** Ćwiczenie *)
 
