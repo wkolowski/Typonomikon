@@ -74,7 +74,7 @@ Abort.
     - [a_1-b_1, ..., a_n-b_n: t] — użyj taktyki [t] na wszystkich celach
       o numerach od a_1 do b_1, ..., od a_n do b_n (zamiast a_i-b_i
       możemy też użyć pojedynczej liczby)
-    - [all: t]  �- użyj [t] na wszystkich celach
+    - [all: t] — użyj [t] na wszystkich celach
     - zamiast [t], w powyższych przypadkach możemy też użyć wyrażenia
       [> t_1 | ... | t_n], które aplikuje taktykę [t_i] do i-tego celu
       zaznaczonego danym selektorem *)

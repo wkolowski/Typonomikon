@@ -1340,7 +1340,7 @@ Qed.
     przesłanka [divG n m (div n m)], którą załatwiamy za pomocą twierdzenia
     o poprawności.
 
-    Włala (lub bardziej wykwintnie: voil� )! Mamy regułę indukcji wykresowej
+    Włala (lub bardziej wykwintnie: voilà )! Mamy regułę indukcji wykresowej
     dla [div]. Zobaczmy, co i jak można za jej pomocą udowodnić. *)
 
 Lemma div_le :

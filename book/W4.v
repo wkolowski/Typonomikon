@@ -530,8 +530,8 @@ Qed.
     aksjomacie wyłączonego środka.
 
     Weźmy dowolne zdanie [P]. Nie jesteśmy w stanie udowodnić [P \/ ~ P],
-    gdyż bez żadnej wiedzy o zdaniu [P] nie jesteśmy w stanie zdecydować,
-    czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
+    gdyż bez żadnej wiedzy o zdaniu [P] nie jesteśmy w stanie zdecydować
+    czy iść w lewo, czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
     wcisnąć nam kit, że [~ (P \/ ~ P)], to możemy wziąć jego dowód i
     wyprowadzić z niego [False], czyli po prostu udowodnić, że
     [~ ~ (P \/ ~ P)]. Na tym właśnie polega modalność niezaprzeczalna:
@@ -574,7 +574,29 @@ Qed.
 
 (** ** Modalność pośrednia *)
 
-Lemma indirect2_law1 :
+(** Obawiam się, że być może obawiasz się, że tłumaczenia z poprzedniego
+    podrozdziału niczego tak naprawdę nie tłumaczą. Przyjrzyjmy się więc
+    modalności niezaprzeczalnej jeszcze raz, tym razem pod nieco innym
+    kątem.
+
+    Zacznijmy od zapisania zdania "niezaprzeczalnie P" nie jako [~ ~ P],
+    lecz jako [(P -> False) -> False]. Jak możemy skonstruować dowód
+    takiego zdania? Cóż, jeżeli ktoś pokaże nam, że [P] prowadzi do
+    sprzeczności, to my musimy pokazać mu dowód fałszu.
+
+    Najłatwiej mamy, gdy dysponujemy dowodem [P] - wtedy sprzeczność jest
+    natychmiastowa. Jeżeli nie mamy dowodu [P], musimy kombinować - jak
+    pamiętamy, dla [~ ~ LEM] kombinacje te polegały na tym, że najpierw
+    idziemy w prawo, a potem w lewo.
+
+    
+
+    
+    
+
+*)
+
+Lemma indirectly_law1 :
   forall C P Q : Prop,
     (P -> Q) -> (((P -> C) -> C) -> ((Q -> C) -> C)).
 (* begin hide *)
@@ -585,7 +607,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma indirect2_law2 :
+Lemma indirectly_law2 :
   forall C P : Prop, P -> ((P -> C) -> C).
 (* begin hide *)
 Proof.
@@ -595,7 +617,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma indirect2_law3 :
+Lemma indirectly_law3 :
   forall C P : Prop,
     ((((P -> C) -> C) -> C) -> C) -> ((P -> C) -> C).
 (* begin hide *)

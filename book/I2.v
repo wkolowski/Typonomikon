@@ -1010,7 +1010,7 @@ Example reflexivity_1 :
   eq_ext (fun _ : nat => 42) (fun _ : nat => 21 + 21).
 Proof. reflexivity. Defined.
 
-(** Voil� ! Od teraz możemy używać taktyki [reflexivity] z relacją [eq_ext].
+(** Voilà ! Od teraz możemy używać taktyki [reflexivity] z relacją [eq_ext].
 
     Są jeszcze dwie taktyki, które czasem przydają się przy dowodzeniu
     równości (oraz równoważności). *)
@@ -1243,7 +1243,7 @@ Proof.
     assumption.
 Qed.
 
-(** Voil� ! Teraz możemy używać taktyki [f_equiv] z relacją [len_eq] oraz
+(** Voilà! Teraz możemy używać taktyki [f_equiv] z relacją [len_eq] oraz
     funkcją [app] dokładnie tak, jak taktyki [f_equal] z równością oraz
     dowolną funkcją.
 

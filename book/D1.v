@@ -616,7 +616,7 @@ end.
     rozgałęzienia możemy uzyskać, gdy jeden z konstruktorów będzie
     rekurencyjny, tzn. gdy jako argument będzie przyjmował term typu,
     który właśnie definiujemy. Naszym przykładem będą liczby naturalne
-    (choć i tutaj rozgałęzienie będzie nieco zdegenerowane  �- każdy term
+    (choć i tutaj rozgałęzienie będzie nieco zdegenerowane — każdy term
     będzie mógł mieć co najwyżej jedno). *)
 
 Module NatDef.
@@ -4842,7 +4842,7 @@ Qed.
     [f n n = diagonal n = negb (f n n)], co po analizie przypadków daje
     ostatecznie [true = false] lub [false = true].
 
-    Voil� ! Sprzeczność osiągnięta, a zatem początkowe założenie było
+    Voilà! Sprzeczność osiągnięta, a zatem początkowe założenie było
     błędne i nie istnieje żadna surjekcja z [nat] w [nat -> bool]. *)
 
 (** **** Ćwiczenie *)

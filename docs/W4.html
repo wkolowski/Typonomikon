@@ -648,8 +648,8 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 <div class="paragraph"> </div>
 
     Weźmy dowolne zdanie <span class="inlinecode"><span class="id" title="var">P</span></span>. Nie jesteśmy w stanie udowodnić <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>,
-    gdyż bez żadnej wiedzy o zdaniu <span class="inlinecode"><span class="id" title="var">P</span></span> nie jesteśmy w stanie zdecydować,
-    czy iść w lewo czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
+    gdyż bez żadnej wiedzy o zdaniu <span class="inlinecode"><span class="id" title="var">P</span></span> nie jesteśmy w stanie zdecydować
+    czy iść w lewo, czy w prawo. Jeśli jednak jakiś cwaniak będzie chciał
     wcisnąć nam kit, że <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span>, to możemy wziąć jego dowód i
     wyprowadzić z niego <span class="inlinecode"><span class="id" title="var">False</span></span>, czyli po prostu udowodnić, że
     <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span>. Na tym właśnie polega modalność niezaprzeczalna:
@@ -683,20 +683,53 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 <div class="doc">
 <a name="lab642"></a><h2 class="section">Modalność pośrednia</h2>
 
+<div class="paragraph"> </div>
+
+ Obawiam się, że być może obawiasz się, że tłumaczenia z poprzedniego
+    podrozdziału niczego tak naprawdę nie tłumaczą. Przyjrzyjmy się więc
+    modalności niezaprzeczalnej jeszcze raz, tym razem pod nieco innym
+    kątem.
+
+<div class="paragraph"> </div>
+
+    Zacznijmy od zapisania zdania "niezaprzeczalnie P" nie jako <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>,
+    lecz jako <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>. Jak możemy skonstruować dowód
+    takiego zdania? Cóż, jeżeli ktoś pokaże nam, że <span class="inlinecode"><span class="id" title="var">P</span></span> prowadzi do
+    sprzeczności, to my musimy pokazać mu dowód fałszu.
+
+<div class="paragraph"> </div>
+
+    Najłatwiej mamy, gdy dysponujemy dowodem <span class="inlinecode"><span class="id" title="var">P</span></span> - wtedy sprzeczność jest
+    natychmiastowa. Jeżeli nie mamy dowodu <span class="inlinecode"><span class="id" title="var">P</span></span>, musimy kombinować - jak
+    pamiętamy, dla <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">LEM</span></span> kombinacje te polegały na tym, że najpierw
+    idziemy w prawo, a potem w lewo.
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirect2_law1</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirectly_law1</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">C</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>) -&gt; ((<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>)).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirect2_law2</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirectly_law2</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">C</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirect2_law3</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirectly_law3</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">C</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;((((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>) -&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>).<br/>
 
