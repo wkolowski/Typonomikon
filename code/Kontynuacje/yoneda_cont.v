@@ -1,6 +1,4 @@
-(** O co chodzi z kontynuacjami?
-
-*)
+(** O co chodzi z kontynuacjami? *)
 
 Definition Cont (R A : Type) : Type := (A -> R) -> R.
 
