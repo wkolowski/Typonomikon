@@ -587,14 +587,47 @@ Qed.
     Najłatwiej mamy, gdy dysponujemy dowodem [P] - wtedy sprzeczność jest
     natychmiastowa. Jeżeli nie mamy dowodu [P], musimy kombinować - jak
     pamiętamy, dla [~ ~ LEM] kombinacje te polegały na tym, że najpierw
-    idziemy w prawo, a potem w lewo.
+    idziemy w prawo, a potem w lewo. Te kombinacje są istotą spososbu
+    wyrażanego przez modalność niezaprzeczalną.
 
-    
+    Zauważmy, że powyższe tłumaczenia nie mają tak naprawdę zbyt wiele
+    wspólnego z [False] - gdyby zastąpić je dowolnym zdaniem [C], efekt
+    byłby bardzo podobny. Tadam! I tak właśnie na scenę wkracza modalność
+    pośrednia - zastępując [False] przez jakieś wybrane [C].
 
-    
-    
+    Zdanie [(P -> C) -> C] możemy odczytywać jako "C zachodzi, o ile
+    wynika z P". Podobnie jak dla [~ ~ P], najprościej udowodnić to
+    zdanie, gdy mamy dowód [P]. Trudniej jest, gdy go nie mamy - wtedy
+    musimy kombinować. Jak dokładnie przebiega kombinowanie zależy od
+    zdań [C] i [P].
 
-*)
+    Zauważmy, że skoro każde [C] to inne kombinowanie, to każde [C]
+    oznacza inny sposób, czyli inną modalność. Sytuacja jest podobna
+    do tej z modalnością wymówkową czy modalnością aksjomatyczną -
+    dla każdego zdania [C] mamy do czynienia z osobną modalnością.
+
+    Na koniec pozostaje nam jeszcze zapytać: po cholerę nam w ogóle
+    taka modalność?
+
+    Specjalny przypadek modalności pośredniej, jakim jest modalność
+    niezaprzeczalna, pozwala nam na jeszcze delikatniejsze i bardziej
+    precyzyjne posługiwanie się logiką klasyczną: powiedzieć, że
+    aksjomat wyłączonego środka klasycznie zachodzi, to nie powiedzieć
+    nic, ale powiedzieć, że jest on niezaprzeczalny, to już nad wyraz
+    głęboka mądrość.
+
+    Niestety w ogólności (czyli dla [C] innych niż [False]) modalność
+    pośrednia sama w sobie jest w praktyce raczej bezużyteczna. Czas
+    poświęciliśmy jej zaś głównie z dwóch powodów:
+    - w bliższej perspektywie przyczyni się do lepszego zrozumienia
+      podstawowych spójników logicznych
+    - w dalszej perspektywie przyzwyczai nas do różnych dziwnych rzeczy,
+      takich jak kontynuacje, kodowanie Scotta czy lemat Yonedy (nie
+      bój się tych nazw, one nie gryzą!) *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij, że modalność pośrednia jest modalnością. *)
 
 Lemma indirectly_law1 :
   forall C P Q : Prop,
@@ -629,19 +662,10 @@ Proof.
 Qed.
 (* end hide *)
 
-Goal
-  forall C D P : Prop,
-    (((P -> C) -> C) -> ((P -> D) -> D)) -> (C <-> D).
-Proof.
-  intros C D P H. split.
-    intro c. apply H.
-      intros _. assumption.
-      intro p. apply H.
-Abort.
-
 (** ** Modalność wszechpośrednia *)
 
-(** Poznawszy dwie najważniejsze dla nas modalności, możemy zająć się
+(** Poznawszy dwie najważniejsze dla nas modalności (aksjomatyczną i
+    pośrednią), możemy zająć się
     takimi, które będą miały co najwyżej charakter ciekawostki. Jeżeli
     nie lubisz ciekawostek i jesteś ogólnie smutnym człowiekiem, to
     resztę omawianych modalności możesz pominąć.
@@ -652,7 +676,7 @@ Abort.
 
 (** Udowodnij, że modalność wszechpośrednia jest modalnością. *)
 
-Lemma indirect_law1 :
+Lemma omnindirectly_law1 :
   forall P Q : Prop,
     (P -> Q) ->
       ((forall R : Prop, (P -> R) -> R) ->
@@ -665,7 +689,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma indirect_law2 :
+Lemma omnindirectly_law2 :
   forall P : Prop,
     P -> (forall R : Prop, (P -> R) -> R).
 (* begin hide *)
@@ -676,7 +700,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma indirect_law3 :
+Lemma omnindirectly_law3 :
   forall P : Prop,
     (forall R : Prop, ((forall R' : Prop, (P -> R') -> R') -> R) -> R) ->
       (forall R : Prop, (P -> R) -> R).
@@ -977,7 +1001,7 @@ Qed.
 
 (** TODO *)
 
-(** * Inne logiki - podsumowanie *)
+(** * Inne logiki - podsumowanie (TODO) *)
 
 (** krótkie, acz realistyczne (logiki parakonsystentne to guwno) *)
 
