@@ -664,13 +664,65 @@ Qed.
 
 (** ** Modalność wszechpośrednia *)
 
-(** Poznawszy dwie najważniejsze dla nas modalności (aksjomatyczną i
-    pośrednią), możemy zająć się
-    takimi, które będą miały co najwyżej charakter ciekawostki. Jeżeli
-    nie lubisz ciekawostek i jesteś ogólnie smutnym człowiekiem, to
-    resztę omawianych modalności możesz pominąć.
+(** Poznaliśmy dotychczas całkiem sporo modalności, w tym wszystkie
+    użyteczne w praktyce oraz kilka bezużytecznych, a także prawie
+    wszystkie ważne. Zostało nam jeszcze trochę bezużytecznych, ale
+    szkoda o nich gadać, więc zostały relegowane do ćwiczeń na końcu
+    niniejszego podrozdziału.
 
-    Modalność wszechpośrednia to... zamiast gadać, przekonaj się sam. *)
+    Podrozdziału, którego tematem jest modalność zupełnie bezużyteczna,
+    ale bardzo ważna dla głębszego zrozumienia wielu rzeczy: modalności
+    pośredniej, natury spójników logicznych, a nawet pojęcia Boga tak
+    jak je rozumie pewien amerykański filozof polityczny, który, zupełnym
+    przypadkiem, jest też programistą funkcyjnym.
+
+    Zanim jednak ją zobaczymy, wróćmy do modalności pośredniej, której
+    definicja wyglądała tak: [(P -> C) -> C], co odczytać możemy jako
+    "C zachodzi, o ile wynika z P" lub "pośrednio P" (jeśli [C] umiemy
+    wywnioskować z kontekstu). W całej modalności chodzi zaś o to, żeby
+    powiedzieć [P], ale w zawoalowany sposób, wykorzystując do tego [C],
+    które wydaje nam się jakąś ważną konsekwencją [P].
+
+    Czas odpalić tryb dociekliwego matematyka i zacząć się zastanawiać.
+    Na pierwszy ogień: jaki jest związek między [(P -> C) -> C] oraz
+    [(P -> D) -> D] w zależności od związku między [C] i [D]? Pisząc
+    po ludzku: czy jeśli powiemy [P] na dwa różne, zawoalowane sposoby,
+    to mówimy to samo, czy coś innego? *)
+
+(** **** Ćwiczenie *)
+
+(** Na rozgrzewkę coś prostego: jeżeli [C] i [D] są równoważne, to
+    wyrażają tę samą modalność pośrednią. *)
+
+Lemma indirect_iff :
+  forall C D P : Prop,
+    (C <-> D) -> ((P -> C) -> C) <-> ((P -> D) -> D).
+(* begin hide *)
+Proof.
+  intros C D P cd. split.
+    intros pcc pd. apply cd, pcc. intro p. apply cd, pd. assumption.
+    intros pdd pc. apply cd, pdd. intro p. apply cd, pc. assumption.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Na drugi ogień zaś coś nieco trudniejszego: czy kontrapozycja
+    powyższego zdania zachodzi?
+
+    Wskazówka: jeżeli po dłuższym namyśle nie umiesz czegoś udowodnić,
+    to szanse na to, że się nie da, są wprost proporcjonalne do twoich
+    umiejętności w dowodzeniu. *)
+
+Lemma is_this_true :
+  forall C D P : Prop,
+    (((P -> C) -> C) <-> ((P -> D) -> D)) -> (C <-> D).
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+
 
 (** **** Ćwiczenie *)
 

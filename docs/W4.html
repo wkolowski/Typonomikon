@@ -789,18 +789,81 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 
 <div class="paragraph"> </div>
 
- Poznawszy dwie najważniejsze dla nas modalności (aksjomatyczną i
-    pośrednią), możemy zająć się
-    takimi, które będą miały co najwyżej charakter ciekawostki. Jeżeli
-    nie lubisz ciekawostek i jesteś ogólnie smutnym człowiekiem, to
-    resztę omawianych modalności możesz pominąć.
+ Poznaliśmy dotychczas całkiem sporo modalności, w tym wszystkie
+    użyteczne w praktyce oraz kilka bezużytecznych, a także prawie
+    wszystkie ważne. Zostało nam jeszcze trochę bezużytecznych, ale
+    szkoda o nich gadać, więc zostały relegowane do ćwiczeń na końcu
+    niniejszego podrozdziału.
 
 <div class="paragraph"> </div>
 
-    Modalność wszechpośrednia to... zamiast gadać, przekonaj się sam. 
+    Podrozdziału, którego tematem jest modalność zupełnie bezużyteczna,
+    ale bardzo ważna dla głębszego zrozumienia wielu rzeczy: modalności
+    pośredniej, natury spójników logicznych, a nawet pojęcia Boga tak
+    jak je rozumie pewien amerykański filozof polityczny, który, zupełnym
+    przypadkiem, jest też programistą funkcyjnym.
+
+<div class="paragraph"> </div>
+
+    Zanim jednak ją zobaczymy, wróćmy do modalności pośredniej, której
+    definicja wyglądała tak: <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span>, co odczytać możemy jako
+    "C zachodzi, o ile wynika z P" lub "pośrednio P" (jeśli <span class="inlinecode"><span class="id" title="var">C</span></span> umiemy
+    wywnioskować z kontekstu). W całej modalności chodzi zaś o to, żeby
+    powiedzieć <span class="inlinecode"><span class="id" title="var">P</span></span>, ale w zawoalowany sposób, wykorzystując do tego <span class="inlinecode"><span class="id" title="var">C</span></span>,
+    które wydaje nam się jakąś ważną konsekwencją <span class="inlinecode"><span class="id" title="var">P</span></span>.
+
+<div class="paragraph"> </div>
+
+    Czas odpalić tryb dociekliwego matematyka i zacząć się zastanawiać.
+    Na pierwszy ogień: jaki jest związek między <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span> oraz
+    <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">D</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">D</span></span> w zależności od związku między <span class="inlinecode"><span class="id" title="var">C</span></span> i <span class="inlinecode"><span class="id" title="var">D</span></span>? Pisząc
+    po ludzku: czy jeśli powiemy <span class="inlinecode"><span class="id" title="var">P</span></span> na dwa różne, zawoalowane sposoby,
+    to mówimy to samo, czy coś innego? 
 <div class="paragraph"> </div>
 
 <a name="lab645"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Na rozgrzewkę coś prostego: jeżeli <span class="inlinecode"><span class="id" title="var">C</span></span> i <span class="inlinecode"><span class="id" title="var">D</span></span> są równoważne, to
+    wyrażają tę samą modalność pośrednią. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirect_iff</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">C</span> &lt;-&gt; <span class="id" title="var">D</span>) -&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>) &lt;-&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">D</span>) -&gt; <span class="id" title="var">D</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab646"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Na drugi ogień zaś coś nieco trudniejszego: czy kontrapozycja
+    powyższego zdania zachodzi?
+
+<div class="paragraph"> </div>
+
+    Wskazówka: jeżeli po dłuższym namyśle nie umiesz czegoś udowodnić,
+    to szanse na to, że się nie da, są wprost proporcjonalne do twoich
+    umiejętności w dowodzeniu. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">is_this_true</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>) &lt;-&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">D</span>) -&gt; <span class="id" title="var">D</span>)) -&gt; (<span class="id" title="var">C</span> &lt;-&gt; <span class="id" title="var">D</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab647"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -881,7 +944,7 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
     modalność wszechpośrednia. 
 <div class="paragraph"> </div>
 
-<a name="lab646"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab648"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -908,7 +971,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     spodziewałeś, co? 
 <div class="paragraph"> </div>
 
-<a name="lab647"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab649"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -950,7 +1013,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab648"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab650"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -968,7 +1031,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab649"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab651"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1006,7 +1069,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab650"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab652"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1034,7 +1097,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab651"></a><h2 class="section">Związki między modalnościami</h2>
+<a name="lab653"></a><h2 class="section">Związki między modalnościami</h2>
 
 <div class="paragraph"> </div>
 
@@ -1060,7 +1123,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     neutralna. 
 <div class="paragraph"> </div>
 
-<a name="lab652"></a><h4 class="section">Ćwiczenie (TODO)</h4>
+<a name="lab654"></a><h4 class="section">Ćwiczenie (TODO)</h4>
 
 <div class="paragraph"> </div>
 
@@ -1083,7 +1146,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab653"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab655"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1110,7 +1173,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     nas twierdzeniom. Powinno cię to oświecić. 
 <div class="paragraph"> </div>
 
-<a name="lab654"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab656"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1142,21 +1205,21 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab655"></a><h2 class="section">Podsumowanie</h2>
+<a name="lab657"></a><h2 class="section">Podsumowanie</h2>
 
 <div class="paragraph"> </div>
 
  TODO 
 <div class="paragraph"> </div>
 
-<a name="lab656"></a><h1 class="section">Inne logiki - podsumowanie (TODO)</h1>
+<a name="lab658"></a><h1 class="section">Inne logiki - podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 
  krótkie, acz realistyczne (logiki parakonsystentne to guwno) 
 <div class="paragraph"> </div>
 
-<a name="lab657"></a><h1 class="section">Kodowanie impredykatywne</h1>
+<a name="lab659"></a><h1 class="section">Kodowanie impredykatywne</h1>
 
 </div>
 <div class="code">
@@ -1227,7 +1290,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab658"></a><h1 class="section">Kombinatory taktyk</h1>
+<a name="lab660"></a><h1 class="section">Kombinatory taktyk</h1>
 
 <div class="paragraph"> </div>
 
@@ -1271,7 +1334,7 @@ Jego dowód wygląda dość schematycznie. Taktyka <span class="inlinecode"><spa
     skomplikowane lub jedynie zmieniać niektóre aspekty ich zachowań. 
 <div class="paragraph"> </div>
 
-<a name="lab659"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
+<a name="lab661"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
 
 </div>
 <div class="code">
@@ -1377,7 +1440,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 
 <div class="paragraph"> </div>
 
-<a name="lab660"></a><h4 class="section">Ćwiczenie (średnik)</h4>
+<a name="lab662"></a><h4 class="section">Ćwiczenie (średnik)</h4>
 
 <div class="paragraph"> </div>
 
@@ -1400,7 +1463,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 </div>
 
 <div class="doc">
-<a name="lab661"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
+<a name="lab663"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
 
 </div>
 <div class="code">
@@ -1447,7 +1510,7 @@ Innym przydatnym kombinatorem jest <span class="inlinecode">||</span>, który b�
     <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> będzie miało taki sam efekt, jak <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H0</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab662"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
+<a name="lab664"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
 
 </div>
 <div class="code">
@@ -1518,7 +1581,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     działanie sukcesem. 
 <div class="paragraph"> </div>
 
-<a name="lab663"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
+<a name="lab665"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
 
 </div>
 <div class="code">
@@ -1591,7 +1654,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     https://coq.inria.fr/refman/coq-tacindex.html 
 <div class="paragraph"> </div>
 
-<a name="lab664"></a><h1 class="section">Zadania</h1>
+<a name="lab666"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -1599,7 +1662,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami 
 <div class="paragraph"> </div>
 
-<a name="lab665"></a><h1 class="section">Jakieś podsumowanie</h1>
+<a name="lab667"></a><h1 class="section">Jakieś podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
