@@ -665,15 +665,15 @@ Qed.
 (** ** Modalność wszechpośrednia *)
 
 (** Poznaliśmy dotychczas całkiem sporo modalności, w tym wszystkie
-    użyteczne w praktyce oraz kilka bezużytecznych, a także prawie
+    przydatne w praktyce oraz kilka bezużytecznych, a także prawie
     wszystkie ważne. Zostało nam jeszcze trochę bezużytecznych, ale
     szkoda o nich gadać, więc zostały relegowane do ćwiczeń na końcu
     niniejszego podrozdziału.
 
     Podrozdziału, którego tematem jest modalność zupełnie bezużyteczna,
     ale bardzo ważna dla głębszego zrozumienia wielu rzeczy: modalności
-    pośredniej, natury spójników logicznych, a nawet pojęcia Boga tak
-    jak je rozumie pewien amerykański filozof polityczny, który, zupełnym
+    pośredniej, natury spójników logicznych, a nawet wiary w Boga tak
+    jak ją rozumie pewien amerykański filozof polityczny, który, zupełnym
     przypadkiem, jest też programistą funkcyjnym.
 
     Zanim jednak ją zobaczymy, wróćmy do modalności pośredniej, której
@@ -722,43 +722,65 @@ Proof.
 Abort.
 (* end hide *)
 
+(** Wniosek płynący z powyższych ćwiczeń jest prosty (zrobiłeś je,
+    prawda? Jeśli nie - do ćwiczeń MARSZ!): równoważne konsekwencje
+    dają równoważne modalności pośrednie, ale nawet jeżeli [P]
+    zapośredniczone przez [C] i [P] zapośredniczone przez [D] są
+    równoważne, to nie ma żadnego oczywistego sposobu na udowodnienie,
+    że [C] i [D] są równoważne.
 
+    Nie jest to nic dziwnego: prawie każde znane człowiekowi zjawisko
+    ma wiele różnych współwystępujących ze sobą konsekwencji, ale nie
+    znaczy to wcale, że konsekwencje te są równoważne nawet bez zajścia
+    tego zjawiska. Przykład: jeżeli pada deszcz to jest mokro i są
+    chmury, ale nawet jeżeli [(deszcz -> mokro) -> mokro <->
+    (deszcz -> chmury) -> chmury], to przecież wcale nie oznacza, że
+    [chmury <-> mokro].
+
+    Powyższy przykład może (a nawet powinien, jeśliś dociekliwy)
+    podsunąć ci pewną myśl: a co by było, gdybyśmy zamiast o danym
+    zjawisku [P], mówili o wszystkich jego konsekwencjach? Zdanie
+    takie możemy zapisać jako [forall C : Prop, (P -> C) -> C]. Na
+    pierwszy rzut oka widać, że jest to jakiś sposób na powiedzenie
+    [P], całkiem podobny do modalności pośredniej. Czy tutaj też mamy
+    do czynienia z modalnością? Odpowiem bez owijania w bawełnę: tak,
+    a modalność tę będziemy nazywać modalnością wszechpośrednią. *)
 
 (** **** Ćwiczenie *)
 
 (** Udowodnij, że modalność wszechpośrednia jest modalnością. *)
 
-Lemma omnindirectly_law1 :
+Lemma omnidirectly_law1 :
   forall P Q : Prop,
     (P -> Q) ->
-      ((forall R : Prop, (P -> R) -> R) ->
-       (forall R : Prop, (Q -> R) -> R)).
+      ((forall C : Prop, (P -> C) -> C) ->
+       (forall C : Prop, (Q -> C) -> C)).
 (* begin hide *)
 Proof.
-  intros P Q PQ mp R QR.
-  apply QR, mp.
+  intros P Q PQ mp C QC.
+  apply QC, mp.
   assumption.
 Qed.
 (* end hide *)
 
-Lemma omnindirectly_law2 :
+Lemma omnidirectly_law2 :
   forall P : Prop,
-    P -> (forall R : Prop, (P -> R) -> R).
+    P -> (forall C : Prop, (P -> C) -> C).
 (* begin hide *)
 Proof.
-  intros P p R PR.
-  apply PR.
+  intros P p C PC.
+  apply PC.
   assumption.
 Qed.
 (* end hide *)
 
-Lemma omnindirectly_law3 :
+Lemma omnidirectly_law3 :
   forall P : Prop,
-    (forall R : Prop, ((forall R' : Prop, (P -> R') -> R') -> R) -> R) ->
-      (forall R : Prop, (P -> R) -> R).
+    (forall C : Prop, ((forall C' : Prop, (P -> C') -> C') -> C) -> C) ->
+      (forall C : Prop, (P -> C) -> C).
 (* begin hide *)
 Proof.
-  intros P H R PR.
+  intros P H C PC.
   apply H.
   intro H'.
   apply H'.
@@ -770,12 +792,18 @@ Qed.
     naprawdę chodzi z tą modalnością wszechpośrednią? Jaki sposób
     wyraża? Skąd nazwa?
 
-    Przyjrzyjmy się jeszcze raz definicji. Zdanie "wszechpośrednio P"
-    formalnie wygląda tak: [forall R : Prop, (P -> R) -> R].
+    Zacznijmy od nazwy: skoro w zapośredniczenie [P] przez jedną
+    konsekwencję [C] (czyli [(P -> C) -> C]) czytaliśmy za pomocą
+    przysłówka "pośrednio", to zapośredniczenie przez wszystkie
+    konsekwencje możemy odczytać dodając przedrostek "wszech-".
+    Do kupy daje nam to więc modalność "wszechpośrednią".
 
-    Jak odczytać tę definicję? Zacznijmy od tego, że [R] jest dowolnym
-    zdaniem. Dalsza część mówi, że jeżeli [P] implikuje [R], to [R].
-    Oczywiście [P -> R] możemy odczytać także jako "R jest konsekwencją
+    (Raczy waszmość przyznać, iż polszczyzna, mowa ojców naszych,
+    jest językiem tak giętkim i pięknym, czyż nie?)
+
+    Jak odczytać tę definicję? Zacznijmy od tego, że [C] jest dowolnym
+    zdaniem. Dalsza część mówi, że jeżeli [P] implikuje [C], to [C].
+    Oczywiście [P -> C] możemy odczytać także jako "C jest konsekwencją
     P", a zatem całą definicję możemy odczytać: zachodzi każda
     konsekwencja [P].
 
@@ -807,7 +835,7 @@ Qed.
 
 Lemma indirect_direct :
   forall P : Prop,
-    (forall R : Prop, (P -> R) -> R) -> P.
+    (forall C : Prop, (P -> C) -> C) -> P.
 (* begin hide *)
 Proof.
   intros P H.
@@ -817,9 +845,9 @@ Qed.
 (* end hide *)
 
 (** Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
-    pokazać zarówno [P -> (forall R : Prop, (P -> R) -> R)] (prawo
+    pokazać zarówno [P -> (forall C : Prop, (P -> C) -> C)] (prawo
     [indirect_law2], wymagane przez definicję modalności) jak i
-    [(forall R : Prop, (P -> R) -> R) -> P] (powyższe ćwiczenie),
+    [(forall C : Prop, (P -> C) -> C) -> P] (powyższe ćwiczenie),
     wniosek może być tylko jeden: modalność wszechpośrednia jest
     dokładnie tym samym, co modalność neutralna. Ha! Nie tego się
     spodziewałeś, co? *)
