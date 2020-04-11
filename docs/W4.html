@@ -14,26 +14,26 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab620"></a><h1 class="section">Porównanie logiki konstruktywnej i klasycznej</h1>
+<a name="lab620"></a><h1 class="section">Porównanie logiki konstruktywnej i klasycznej (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab621"></a><h1 class="section">Pluralizm logiczny</h1>
+<a name="lab621"></a><h1 class="section">Pluralizm logiczny (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab622"></a><h1 class="section">Inne logiki?</h1>
+<a name="lab622"></a><h1 class="section">Inne logiki? (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab623"></a><h1 class="section">Logika de Morgana</h1>
+<a name="lab623"></a><h1 class="section">Logika de Morgana (TODO)</h1>
 
 <div class="paragraph"> </div>
 
- jako coś pomiędzy logiką konstruktywną i klasyczną 
+ jako coś pomiędzy logiką konstruktywną i klasyczną (TODO) 
 <div class="paragraph"> </div>
 
-<a name="lab624"></a><h1 class="section">Dziwne aksjomaty i płynące z nich logiki</h1>
+<a name="lab624"></a><h1 class="section">Dziwne aksjomaty i płynące z nich logiki (TODO)</h1>
 
 </div>
 <div class="code">
@@ -831,7 +831,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirect_iff</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirectly_iff</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">C</span> &lt;-&gt; <span class="id" title="var">D</span>) -&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>) &lt;-&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">D</span>) -&gt; <span class="id" title="var">D</span>).<br/>
 
@@ -843,7 +843,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 
 <div class="paragraph"> </div>
 
- Na drugi ogień zaś coś nieco trudniejszego: czy kontrapozycja
+ Na drugi ogień zaś coś nieco trudniejszego: czy odwrotność
     powyższego zdania zachodzi?
 
 <div class="paragraph"> </div>
@@ -915,8 +915,9 @@ Wniosek płynący z powyższych ćwiczeń jest prosty (zrobiłeś je,
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">omnidirectly_law3</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Prop</span>, ((<span class="id" title="keyword">forall</span> <span class="id" title="var">C'</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C'</span>) -&gt; <span class="id" title="var">C'</span>) -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((<span class="id" title="keyword">forall</span> <span class="id" title="var">C'</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C'</span>) -&gt; <span class="id" title="var">C'</span>) -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>).<br/>
 
 <br/>
 </div>
@@ -928,7 +929,7 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
 
 <div class="paragraph"> </div>
 
-    Zacznijmy od nazwy: skoro w zapośredniczenie <span class="inlinecode"><span class="id" title="var">P</span></span> przez jedną
+    Zacznijmy od nazwy: skoro <span class="inlinecode"><span class="id" title="var">P</span></span> zapośredniczone przez jedną
     konsekwencję <span class="inlinecode"><span class="id" title="var">C</span></span> (czyli <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span>) czytaliśmy za pomocą
     przysłówka "pośrednio", to zapośredniczenie przez wszystkie
     konsekwencje możemy odczytać dodając przedrostek "wszech-".
@@ -936,21 +937,22 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
 
 <div class="paragraph"> </div>
 
-    (Raczy waszmość przyznać, iż polszczyzna, mowa ojców naszych,
-    jest językiem tak giętkim i pięknym, czyż nie?)
+    (Raczy waszmość przyznać, iż polszczyzna jest językiem tak pięknym
+    jak i giętkim, czyż nie?)
 
 <div class="paragraph"> </div>
 
-    Jak odczytać tę definicję? Zacznijmy od tego, że <span class="inlinecode"><span class="id" title="var">C</span></span> jest dowolnym
-    zdaniem. Dalsza część mówi, że jeżeli <span class="inlinecode"><span class="id" title="var">P</span></span> implikuje <span class="inlinecode"><span class="id" title="var">C</span></span>, to <span class="inlinecode"><span class="id" title="var">C</span></span>.
-    Oczywiście <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span> możemy odczytać także jako "C jest konsekwencją
-    P", a zatem całą definicję możemy odczytać: zachodzi każda
-    konsekwencja <span class="inlinecode"><span class="id" title="var">P</span></span>.
+    Wracając do definicji: "wszechpośrednio P" to formalnie
+    <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span>. Jak rozumieć tę definicję?
+    Zacznijmy od tego, że <span class="inlinecode"><span class="id" title="var">C</span></span> jest dowolnym zdaniem. Dalsza część
+    mówi, że jeżeli <span class="inlinecode"><span class="id" title="var">P</span></span> implikuje <span class="inlinecode"><span class="id" title="var">C</span></span>, to <span class="inlinecode"><span class="id" title="var">C</span></span>. Oczywiście <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span>
+    możemy odczytać także jako "C jest konsekwencją P", a zatem całą
+    definicję możemy odczytać: zachodzi każda konsekwencja <span class="inlinecode"><span class="id" title="var">P</span></span>.
 
 <div class="paragraph"> </div>
 
     Zachodzi każda konsekwencja <span class="inlinecode"><span class="id" title="var">P</span></span>... ciekawe, co? Zastanówmy się, w
-    jakich sytuacjach mogą zachodzi wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span>:
+    jakich sytuacjach mogą zachodzić wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span>:
 <ul class="doclist">
 <li> <span class="inlinecode"><span class="id" title="var">P</span></span> zachodzi - najprostszy przypadek. Skoro <span class="inlinecode"><span class="id" title="var">P</span></span> zachodzi, to
       jego konsekwencje też. Wszystkie. Bez wyjątku.
@@ -966,19 +968,16 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
 <div class="paragraph"> </div>
 
     Widzimy więc, że by zaszły wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span>, to zachodzić
-    musi <span class="inlinecode"><span class="id" title="var">P</span></span> lub coś od <span class="inlinecode"><span class="id" title="var">P</span></span> mocniejszego. Jednak rzeczy mocniejsze od
-    <span class="inlinecode"><span class="id" title="var">P</span></span> nas tutaj nie interesują - liczy się dla nas najsłabsza z tych
-    wszystkich możliwości, czyli samo <span class="inlinecode"><span class="id" title="var">P</span></span>.
+    musi <span class="inlinecode"><span class="id" title="var">P</span></span> (samo w sumie lub na mocy czegoś mocniejszego). Powinno to
+    być dla ciebie oczywiste, bo to właśnie głosi prawo
+    <span class="inlinecode"><span class="id" title="var">omnidirectly_law2</span></span>.
 
 <div class="paragraph"> </div>
 
-    Widać więc (albo i nie, być może moje tłumaczenie jest zagmatwane),
-    że z punktu widzenia konsekwencji danego zdania, zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> oraz
-    zdanie "zachodzą wszystkie konsekwencje P" są równoważne. Wobec
-    tego możemy stwierdzić, że zdanie "zachodzą wszystkie konsekwencje
-    P" to pewien sposób powiedzenia <span class="inlinecode"><span class="id" title="var">P</span></span>, tylko w bardzo pośredni sposób.
-    Stąd też nazwa (swoją drogą, wymyślona autorsko przeze mnie) -
-    modalność wszechpośrednia. 
+    A jak z implikacją w drugą stronę? Jeżeli zachodzą wszystkie
+    konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span>, to co tak naprawdę wiemy na temat <span class="inlinecode"><span class="id" title="var">P</span></span>? Okazuje
+    się, że całkiem sporo, ale z innych powodów, niż mogłoby się na
+    pierwszy rzut oka wydawać. 
 <div class="paragraph"> </div>
 
 <a name="lab648"></a><h4 class="section">Ćwiczenie</h4>
@@ -986,12 +985,16 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
 <div class="paragraph"> </div>
 
  Pokaż, że jeżeli zachodzą wszystkie konsekwencje <span class="inlinecode"><span class="id" title="var">P</span></span>, to <span class="inlinecode"><span class="id" title="var">P</span></span> też
-    zachodzi. Wskazówka: każde zdanie wynika samo z siebie. 
+    zachodzi.
+
+<div class="paragraph"> </div>
+
+    Wskazówka: każde zdanie wynika samo z siebie. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">indirect_direct</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">omnidirectly_law2_conv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">C</span>) -&gt; <span class="id" title="var">P</span>.<br/>
 
@@ -1001,22 +1004,89 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
 <div class="doc">
 Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     pokazać zarówno <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span>)</span> (prawo
-    <span class="inlinecode"><span class="id" title="var">indirect_law2</span></span>, wymagane przez definicję modalności) jak i
+    <span class="inlinecode"><span class="id" title="var">omnidirectly_law2</span></span>, wymagane przez definicję modalności) jak i
     <span class="inlinecode">(<span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> (powyższe ćwiczenie),
     wniosek może być tylko jeden: modalność wszechpośrednia jest
     dokładnie tym samym, co modalność neutralna. Ha! Nie tego się
-    spodziewałeś, co? 
+    spodziewałeś, co?
+
+<div class="paragraph"> </div>
+
+    Powoli zbliżamy się do końca tego podrozdziału, więc czas
+    na morał. Po co nam była modalność wszechpośrednia? Mimo,
+    że technicznie rzecz biorąc jest ona bezużyteczna w praktyce
+    (wszakże jest tym samym, co modalność neutralna), to daje nam
+    ona coś dużo ważniejszego: nową ideę, pozwalającą nam inaczej
+    (co czasem oznacza "lepiej") patrzeć na świat.
+
+<div class="paragraph"> </div>
+
+    Ideą tą jest... hmmm, ma ona wiele nazw w różnych kontekstach.
+    W naszym moglibyśmy nazwać ją "konsekwencjalizm", gdyż w tym
+    przypadku mówi ona po prostu, że każde zdanie jest dokładnie
+    tym samym, co wszystkie jego konsekwencje. Ta nazwa jest jednak
+    rzadko spotykana, gdyż jest zarezerwowana dla różnych teorii
+    etycznych.
+
+<div class="paragraph"> </div>
+
+    Inną nazwą na to samo jest ekstensjonalność, od łacińskiego
+    słowa "extendere", które znaczy "rozciągać (się)". Ekstensja
+    danej fizycznej rzeczy to miejsce, która zajmuje ona w przestrzeni,
+    w kontraście do intensji, czyli po prostu jakiejś nazwy lub sposobu
+    na nazwanie rzeczy. Użycie tych słów wobec pojęć czy ogólniej bytów
+    abstrakcyjnych jest analogiczne. W naszym wypadku intensją zdania
+    <span class="inlinecode"><span class="id" title="var">P</span></span> jest sposób, w jaki zostało zdefiniowane zaś jego ekstensją są
+    wszystkie zdania, które z niego wynikają. Przykład: zdania <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">B</span></span>,
+    <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">A</span></span> oraz <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">B</span></span> to różne sposoby na zdefiniowanie
+    zdania <span class="inlinecode"><span class="id" title="var">P</span></span> (różne intensje), ale mają one takie same konsekwencje,
+    czyli taką samą ekstensję.
+
+<div class="paragraph"> </div>
+
+    Jeszcze inną nazwą na to samo, z którą zapoznamy się w przyszłości,
+    jest strukturalizm: w przypadku każdego obiektu matematycznego nie
+    jest istotne, jak dokładnie został zdefiniowany, ale jaki jest jego
+    związek z innymi obiektami i ten właśnie związek obiektu z innymi
+    nazywamy jego "strukturą". W naszym przypadku obiekty to zdania, a
+    związki obiektu z innymi obiektami są określane przez zachodzące (i
+    niezachodzące) między nimi implikacje. Parafrazując: strukturą zdania
+    są jego konsekwencje.
+
+<div class="paragraph"> </div>
+
+    Na koniec spróbujmy zastosować naszą nowo zdobytą ideę do filozofii
+    religii. Amerykański filozof Mencjusz Moldbug zauważył (pewnie nie
+    jako pierwszy, ale ja dowiedziałem się tego od niego) w swoim poście
+    "Dlaczego ateiści wierzą w religię?"
+    (https://www.unqualified-reservations.org/2007/04/why-do-atheists-believe-in-religion/),
+    że wiara i ogólniej poglądy religijne mają (przynajniej z punktu
+    widzenia ateisty) znaczenie jedynie pośrednie, wyrażające się w
+    działaniach ludzi je wyznających w rzeczywistym świecie (świat
+    bytów nadprzyrodzonych, jak bogowie, anioły, demony etc. uznał
+    on za nieistotny).
+
+<div class="paragraph"> </div>
+
+    Można tego spostrzeżenia użyć na całe multum różnych sposobów. Dla
+    przykładu, niektórzy zwolennicy ekumenizmu twierdzą, jakoby
+    chrześcijanie i muzułmanie tak naprawdę wierzyli w tego samego Boga.
+    Czy tak jest w istocie? Nie, bo ich wiara objawia się w diametralnie
+    różny sposób: muzułmanie wysadzają się w powietrze w samobójczych
+    zamachach, a chrześcijanie nie. Inne działania = inna wiara, inny
+    Bóg.
+
+<div class="paragraph"> </div>
+
+    TODO: zastanowić się, czy te pierdoły o filozofii religii faktycznie
+    są tutaj potrzebne. 
 <div class="paragraph"> </div>
 
 <a name="lab649"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
- TODO
-
-<div class="paragraph"> </div>
-
-    A co, gdyby tak skwantyfikować <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i otrzymać w wyniku
+ A co, gdyby tak skwantyfikować <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i otrzymać w wyniku
     <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">E</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">P</span></span>? Zdanie to znaczy coś w stylu "P
     zachodzi albo i nie, wymówkę wybierz wybierz sobie sam". W
     sumie to można by powstały tutaj twór nazwać modalnością
@@ -1055,14 +1125,18 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 <div class="paragraph"> </div>
 
  Udowodnij, że modalność wszechwymówkowa jest równoważna modalności
-    neutralnej. 
+    neutralnej.
+
+<div class="paragraph"> </div>
+
+    Wskazówka: można wybrać wymówkę, która nijak nie może zachodzić. 
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">anyexcuse_spec</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> &lt;-&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">E</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">E</span> \/ <span class="id" title="var">P</span>) &lt;-&gt; <span class="id" title="var">P</span>.<br/>
 
 <br/>
 </div>
@@ -1072,11 +1146,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 
 <div class="paragraph"> </div>
 
- TODO
-
-<div class="paragraph"> </div>
-
-    Zastanówmy się nad następującą konstrukcją: zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> wynika ze
+ Zastanówmy się nad następującą konstrukcją: zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> wynika ze
     wszystkich możliwych aksjomatów.
 
 <div class="paragraph"> </div>
@@ -1110,11 +1180,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 
 <div class="paragraph"> </div>
 
- TODO
-
-<div class="paragraph"> </div>
-
-    Skoro <span class="inlinecode"><span class="id" title="var">P</span></span> wynika ze wszystkich aksjomatów, to wynika także z mało
+ Skoro <span class="inlinecode"><span class="id" title="var">P</span></span> wynika ze wszystkich aksjomatów, to wynika także z mało
     informatywnego aksjomatu <span class="inlinecode"><span class="id" title="var">True</span></span>... czyli w sumie po prostu zachodzi,
     ot tak bez żadnych ceregieli.
 
@@ -1134,7 +1200,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab653"></a><h2 class="section">Związki między modalnościami</h2>
+<a name="lab653"></a><h2 class="section">Związki między modalnościami (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -1242,11 +1308,8 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab657"></a><h2 class="section">Podsumowanie</h2>
+<a name="lab657"></a><h2 class="section">Podsumowanie (TODO)</h2>
 
-<div class="paragraph"> </div>
-
- TODO 
 <div class="paragraph"> </div>
 
 <a name="lab658"></a><h1 class="section">Inne logiki - podsumowanie (TODO)</h1>
@@ -1256,7 +1319,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
  krótkie, acz realistyczne (logiki parakonsystentne to guwno) 
 <div class="paragraph"> </div>
 
-<a name="lab659"></a><h1 class="section">Kodowanie impredykatywne</h1>
+<a name="lab659"></a><h1 class="section">Kodowanie impredykatywne (TODO)</h1>
 
 </div>
 <div class="code">

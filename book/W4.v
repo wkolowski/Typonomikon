@@ -1,16 +1,16 @@
 (** * W4: Inne logiki [schowane na końcu dla niepoznaki] *)
 
-(** * Porównanie logiki konstruktywnej i klasycznej *)
+(** * Porównanie logiki konstruktywnej i klasycznej (TODO) *)
 
-(** * Pluralizm logiczny *)
+(** * Pluralizm logiczny (TODO) *)
 
-(** * Inne logiki? *)
+(** * Inne logiki? (TODO) *)
 
-(** * Logika de Morgana *)
+(** * Logika de Morgana (TODO) *)
 
-(** jako coś pomiędzy logiką konstruktywną i klasyczną *)
+(** jako coś pomiędzy logiką konstruktywną i klasyczną (TODO) *)
 
-(** * Dziwne aksjomaty i płynące z nich logiki *)
+(** * Dziwne aksjomaty i płynące z nich logiki (TODO) *)
 
 Definition ProofIrrelevance : Prop :=
   forall (P : Prop) (p q : P), p = q.
@@ -694,7 +694,7 @@ Qed.
 (** Na rozgrzewkę coś prostego: jeżeli [C] i [D] są równoważne, to
     wyrażają tę samą modalność pośrednią. *)
 
-Lemma indirect_iff :
+Lemma indirectly_iff :
   forall C D P : Prop,
     (C <-> D) -> ((P -> C) -> C) <-> ((P -> D) -> D).
 (* begin hide *)
@@ -707,7 +707,7 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-(** Na drugi ogień zaś coś nieco trudniejszego: czy kontrapozycja
+(** Na drugi ogień zaś coś nieco trudniejszego: czy odwrotność
     powyższego zdania zachodzi?
 
     Wskazówka: jeżeli po dłuższym namyśle nie umiesz czegoś udowodnić,
@@ -776,8 +776,9 @@ Qed.
 
 Lemma omnidirectly_law3 :
   forall P : Prop,
-    (forall C : Prop, ((forall C' : Prop, (P -> C') -> C') -> C) -> C) ->
-      (forall C : Prop, (P -> C) -> C).
+    (forall C : Prop,
+      ((forall C' : Prop, (P -> C') -> C') -> C) -> C) ->
+        (forall C : Prop, (P -> C) -> C).
 (* begin hide *)
 Proof.
   intros P H C PC.
@@ -792,23 +793,24 @@ Qed.
     naprawdę chodzi z tą modalnością wszechpośrednią? Jaki sposób
     wyraża? Skąd nazwa?
 
-    Zacznijmy od nazwy: skoro w zapośredniczenie [P] przez jedną
+    Zacznijmy od nazwy: skoro [P] zapośredniczone przez jedną
     konsekwencję [C] (czyli [(P -> C) -> C]) czytaliśmy za pomocą
     przysłówka "pośrednio", to zapośredniczenie przez wszystkie
     konsekwencje możemy odczytać dodając przedrostek "wszech-".
     Do kupy daje nam to więc modalność "wszechpośrednią".
 
-    (Raczy waszmość przyznać, iż polszczyzna, mowa ojców naszych,
-    jest językiem tak giętkim i pięknym, czyż nie?)
+    (Raczy waszmość przyznać, iż polszczyzna jest językiem tak pięknym
+    jak i giętkim, czyż nie?)
 
-    Jak odczytać tę definicję? Zacznijmy od tego, że [C] jest dowolnym
-    zdaniem. Dalsza część mówi, że jeżeli [P] implikuje [C], to [C].
-    Oczywiście [P -> C] możemy odczytać także jako "C jest konsekwencją
-    P", a zatem całą definicję możemy odczytać: zachodzi każda
-    konsekwencja [P].
+    Wracając do definicji: "wszechpośrednio P" to formalnie
+    [forall C : Prop, (P -> C) -> C]. Jak rozumieć tę definicję?
+    Zacznijmy od tego, że [C] jest dowolnym zdaniem. Dalsza część
+    mówi, że jeżeli [P] implikuje [C], to [C]. Oczywiście [P -> C]
+    możemy odczytać także jako "C jest konsekwencją P", a zatem całą
+    definicję możemy odczytać: zachodzi każda konsekwencja [P].
 
     Zachodzi każda konsekwencja [P]... ciekawe, co? Zastanówmy się, w
-    jakich sytuacjach mogą zachodzi wszystkie konsekwencje [P]:
+    jakich sytuacjach mogą zachodzić wszystkie konsekwencje [P]:
     - [P] zachodzi - najprostszy przypadek. Skoro [P] zachodzi, to
       jego konsekwencje też. Wszystkie. Bez wyjątku.
     - zachodzi coś mocniejszego od [P], tzn. zachodzi [Q] i [Q -> P].
@@ -816,24 +818,23 @@ Qed.
       które konsekwencjami [P] nie są (bo są np. konsekwencjami [Q])
 
     Widzimy więc, że by zaszły wszystkie konsekwencje [P], to zachodzić
-    musi [P] lub coś od [P] mocniejszego. Jednak rzeczy mocniejsze od
-    [P] nas tutaj nie interesują - liczy się dla nas najsłabsza z tych
-    wszystkich możliwości, czyli samo [P].
+    musi [P] (samo w sumie lub na mocy czegoś mocniejszego). Powinno to
+    być dla ciebie oczywiste, bo to właśnie głosi prawo
+    [omnidirectly_law2].
 
-    Widać więc (albo i nie, być może moje tłumaczenie jest zagmatwane),
-    że z punktu widzenia konsekwencji danego zdania, zdanie [P] oraz
-    zdanie "zachodzą wszystkie konsekwencje P" są równoważne. Wobec
-    tego możemy stwierdzić, że zdanie "zachodzą wszystkie konsekwencje
-    P" to pewien sposób powiedzenia [P], tylko w bardzo pośredni sposób.
-    Stąd też nazwa (swoją drogą, wymyślona autorsko przeze mnie) -
-    modalność wszechpośrednia. *)
+    A jak z implikacją w drugą stronę? Jeżeli zachodzą wszystkie
+    konsekwencje [P], to co tak naprawdę wiemy na temat [P]? Okazuje
+    się, że całkiem sporo, ale z innych powodów, niż mogłoby się na
+    pierwszy rzut oka wydawać. *)
 
 (** **** Ćwiczenie *)
 
 (** Pokaż, że jeżeli zachodzą wszystkie konsekwencje [P], to [P] też
-    zachodzi. Wskazówka: każde zdanie wynika samo z siebie. *)
+    zachodzi.
 
-Lemma indirect_direct :
+    Wskazówka: każde zdanie wynika samo z siebie. *)
+
+Lemma omnidirectly_law2_conv :
   forall P : Prop,
     (forall C : Prop, (P -> C) -> C) -> P.
 (* begin hide *)
@@ -846,17 +847,72 @@ Qed.
 
 (** Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     pokazać zarówno [P -> (forall C : Prop, (P -> C) -> C)] (prawo
-    [indirect_law2], wymagane przez definicję modalności) jak i
+    [omnidirectly_law2], wymagane przez definicję modalności) jak i
     [(forall C : Prop, (P -> C) -> C) -> P] (powyższe ćwiczenie),
     wniosek może być tylko jeden: modalność wszechpośrednia jest
     dokładnie tym samym, co modalność neutralna. Ha! Nie tego się
-    spodziewałeś, co? *)
+    spodziewałeś, co?
+
+    Powoli zbliżamy się do końca tego podrozdziału, więc czas
+    na morał. Po co nam była modalność wszechpośrednia? Mimo,
+    że technicznie rzecz biorąc jest ona bezużyteczna w praktyce
+    (wszakże jest tym samym, co modalność neutralna), to daje nam
+    ona coś dużo ważniejszego: nową ideę, pozwalającą nam inaczej
+    (co czasem oznacza "lepiej") patrzeć na świat.
+
+    Ideą tą jest... hmmm, ma ona wiele nazw w różnych kontekstach.
+    W naszym moglibyśmy nazwać ją "konsekwencjalizm", gdyż w tym
+    przypadku mówi ona po prostu, że każde zdanie jest dokładnie
+    tym samym, co wszystkie jego konsekwencje. Ta nazwa jest jednak
+    rzadko spotykana, gdyż jest zarezerwowana dla różnych teorii
+    etycznych.
+
+    Inną nazwą na to samo jest ekstensjonalność, od łacińskiego
+    słowa "extendere", które znaczy "rozciągać (się)". Ekstensja
+    danej fizycznej rzeczy to miejsce, która zajmuje ona w przestrzeni,
+    w kontraście do intensji, czyli po prostu jakiejś nazwy lub sposobu
+    na nazwanie rzeczy. Użycie tych słów wobec pojęć czy ogólniej bytów
+    abstrakcyjnych jest analogiczne. W naszym wypadku intensją zdania
+    [P] jest sposób, w jaki zostało zdefiniowane zaś jego ekstensją są
+    wszystkie zdania, które z niego wynikają. Przykład: zdania [A /\ B],
+    [B /\ A] oraz [A /\ B /\ A /\ B] to różne sposoby na zdefiniowanie
+    zdania [P] (różne intensje), ale mają one takie same konsekwencje,
+    czyli taką samą ekstensję.
+
+    Jeszcze inną nazwą na to samo, z którą zapoznamy się w przyszłości,
+    jest strukturalizm: w przypadku każdego obiektu matematycznego nie
+    jest istotne, jak dokładnie został zdefiniowany, ale jaki jest jego
+    związek z innymi obiektami i ten właśnie związek obiektu z innymi
+    nazywamy jego "strukturą". W naszym przypadku obiekty to zdania, a
+    związki obiektu z innymi obiektami są określane przez zachodzące (i
+    niezachodzące) między nimi implikacje. Parafrazując: strukturą zdania
+    są jego konsekwencje.
+
+    Na koniec spróbujmy zastosować naszą nowo zdobytą ideę do filozofii
+    religii. Amerykański filozof Mencjusz Moldbug zauważył (pewnie nie
+    jako pierwszy, ale ja dowiedziałem się tego od niego) w swoim poście
+    "Dlaczego ateiści wierzą w religię?"
+    (https://www.unqualified-reservations.org/2007/04/why-do-atheists-believe-in-religion/),
+    że wiara i ogólniej poglądy religijne mają (przynajniej z punktu
+    widzenia ateisty) znaczenie jedynie pośrednie, wyrażające się w
+    działaniach ludzi je wyznających w rzeczywistym świecie (świat
+    bytów nadprzyrodzonych, jak bogowie, anioły, demony etc. uznał
+    on za nieistotny).
+
+    Można tego spostrzeżenia użyć na całe multum różnych sposobów. Dla
+    przykładu, niektórzy zwolennicy ekumenizmu twierdzą, jakoby
+    chrześcijanie i muzułmanie tak naprawdę wierzyli w tego samego Boga.
+    Czy tak jest w istocie? Nie, bo ich wiara objawia się w diametralnie
+    różny sposób: muzułmanie wysadzają się w powietrze w samobójczych
+    zamachach, a chrześcijanie nie. Inne działania = inna wiara, inny
+    Bóg.
+
+    TODO: zastanowić się, czy te pierdoły o filozofii religii faktycznie
+    są tutaj potrzebne. *)
 
 (** **** Ćwiczenie *)
 
-(** TODO
-
-    A co, gdyby tak skwantyfikować [E : Prop] i otrzymać w wyniku
+(** A co, gdyby tak skwantyfikować [E : Prop] i otrzymać w wyniku
     [forall E : Prop, E \/ P]? Zdanie to znaczy coś w stylu "P
     zachodzi albo i nie, wymówkę wybierz wybierz sobie sam". W
     sumie to można by powstały tutaj twór nazwać modalnością
@@ -907,26 +963,26 @@ Qed.
 (** **** Ćwiczenie *)
 
 (** Udowodnij, że modalność wszechwymówkowa jest równoważna modalności
-    neutralnej. *)
+    neutralnej.
+
+    Wskazówka: można wybrać wymówkę, która nijak nie może zachodzić. *)
 
 Lemma anyexcuse_spec :
   forall P : Prop,
-    P <-> (forall E : Prop, E \/ P).
+    (forall E : Prop, E \/ P) <-> P.
 (* begin hide *)
 Proof.
   split.
-    intros p E. right. assumption.
     intro H. destruct (H False).
       contradiction.
       assumption.
+    intros p E. right. assumption.
 Qed.
 (* end hide *)
 
 (** **** Ćwiczenie *)
 
-(** TODO
-
-    Zastanówmy się nad następującą konstrukcją: zdanie [P] wynika ze
+(** Zastanówmy się nad następującą konstrukcją: zdanie [P] wynika ze
     wszystkich możliwych aksjomatów.
 
     Czy taki twór jest modalnością? Sprawdź to! (Jeżeli jest, to
@@ -965,9 +1021,7 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-(** TODO
-
-    Skoro [P] wynika ze wszystkich aksjomatów, to wynika także z mało
+(** Skoro [P] wynika ze wszystkich aksjomatów, to wynika także z mało
     informatywnego aksjomatu [True]... czyli w sumie po prostu zachodzi,
     ot tak bez żadnych ceregieli.
 
@@ -985,7 +1039,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Związki między modalnościami *)
+(** ** Związki między modalnościami (TODO) *)
 
 (** W ćwiczeniach przekonaliśmy się już, że dwie intensjonalnie różne
     definicje (na przykład [LEM -> P] i [DNE -> P]) ekstensjonalnie
@@ -1077,15 +1131,13 @@ Qed.
 
 (* end hide *)
 
-(** ** Podsumowanie *)
-
-(** TODO *)
+(** ** Podsumowanie (TODO) *)
 
 (** * Inne logiki - podsumowanie (TODO) *)
 
 (** krótkie, acz realistyczne (logiki parakonsystentne to guwno) *)
 
-(** * Kodowanie impredykatywne *)
+(** * Kodowanie impredykatywne (TODO) *)
 
 Definition iand (P Q : Prop) : Prop :=
   forall C : Prop, (P -> Q -> C) -> C.
