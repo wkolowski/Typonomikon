@@ -1039,17 +1039,15 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Związki między modalnościami (TODO) *)
+(** ** Związki między modalnościami *)
 
-(** W ćwiczeniach przekonaliśmy się już, że dwie intensjonalnie różne
-    definicje (na przykład [LEM -> P] i [DNE -> P]) ekstensjonalnie
-    mogą tak naprawdę definiować to samo (w tym przypadku modalność
-    klasyczną).
-
-    Widzieliśmy też, że niektóre modalności są specjalnymi przypadkami
-    innych (niezaprzeczalność jest specjalnym przypadkiem pośredniości,
-    a modalność trywialna to modalność wymówkowa z bardzo ogólną
-    i nieprzekonującą wymówką).
+(** Przekonaliśmy się już, że dwie pozornie różne definicje mogą tak
+    naprawdę definiować tę samą modalność, np. [LEM -> P] i [DNE -> P]
+    to dwie definicje modalności klasycznej. Widzieliśmy też, że niektóre
+    modalności są specjalnymi przypadkami innych (niezaprzeczalność
+    jest specjalnym przypadkiem pośredniości, a modalność trywialna
+    to modalność wymówkowa z bardzo ogólną i niesamowicie przekonującą
+    wymówką).
 
     Czy to jednak wszystko, co potrafimy powiedzieć o modalnościach i
     ich wzajemnych związkach? Oczywiście nie. Wiemy przecież choćby, że
@@ -1058,16 +1056,14 @@ Qed.
     równoważnie: modalność niezaprzeczalna jest słabsza niż modalność
     neutralna. *)
 
-(** **** Ćwiczenie (TODO) *)
+(** **** Ćwiczenie *)
 
-(** Gdyby powyższe ćwiczenie okazało się zbyt oczywiste, to wiedz, że
-    naprawdę pozornie różne modalności mogą ostatecznie okazać się tym
-    samym. Może się też okazać, że modalność [M] jest silniejsza niż
-    modalność [N], czyli że [forall P : Prop, M P -> N P].
+(** Formalnie powiemy, że modalność [M] jest silniejsza niż modalność
+    [N], gdy [forall P : Prop, M P -> N P].
 
-    Zastanów się, jaki jest związek między modalnościmi
-    "niezaprzeczalnie" i "klasycznie". Czy są one tym samym, czy czymś
-    innym? Czy któraś z nich jest mocniejsza od drugiej? *)
+    Zastanów się, jaki jest związek między modalnością niezaprzeczalną
+    i modalnością klasyczną. Czy są one tym samym, czy czymś innym? Czy
+    któraś z nich jest mocniejsza od drugiej? *)
 
 (* begin hide *)
 
@@ -1088,9 +1084,10 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-(** Najbanalniejsze i najnaturalniejsze pytanie w kosmosie, które powinno
-    było przyjść ci do głowy po przeczytaniu powyższego akapitu, brzmi:
-    która modalność jest najsilniejsza, a która najsłabsza?
+(** Najbanalniejsze i najnaturalniejsze pytanie, które powinno było
+    przyjść ci do głowy po zapoznaniu się z faktem, że niektóre
+    modalności mogą być "silniejsze" od innych, to: która modalność
+    jest najsilniejsza (a która najsłabsza)?
 
     No, skoro już takie pytanie przyszło ci do głowy, to znajdź na nie
     odpowiedź!
@@ -1104,6 +1101,21 @@ Qed.
     oraz poszczególnym modalnościom i udowodnionym dotychczas przez
     nas twierdzeniom. Powinno cię to oświecić. *)
 
+(* begin hide *)
+
+(** [M] jest najsilniejszą modalnością, gdy pociąga za sobą wszystkie
+    inne, czyli dla każdej modalności [N] i zdania [P] mamy [M P -> N P].
+
+    Analogicznie [M] jest najsłabszą modalnością, gdy wynika ona ze
+    wszystkich innych modalności [N]: dla każdego zdania [P] mamy
+    [N P -> M P].
+
+    Najsilniejsza modalność to modalność neutralna - wynika to z prawa
+    numer 2. Najsłabszą modalnością jest modalność trywialna, co też
+    jest raczej oczywiste. *)
+
+(* end hide *)
+
 (** **** Ćwiczenie *)
 
 (** Uwaga: to ćwiczenie jest mocno opcjonalne, przeznaczone dla tych
@@ -1113,21 +1125,23 @@ Qed.
     najsilniejsza, a która najsłabsza, to najoczywistszym pytaniem,
     na które powinieneś wpaść, jest: które modalności są pomiędzy?
 
-    TODO
+    Zrób tabelkę, której wiersze i kolumny indeksowane są modalnościami.
+    Kratka w wierszu [M] i kolumnie [N] oznacza twierdzenie "modalność
+    M jest silniejsza niż modalność N".
 
-    Jeszcze bardziej łopatologiczna wskazówka: zrób sobie tabelkę,
-    w której każda kratka oznacza parę modalności. Następnie zastanów
-    się, czy pierwsza z tych modalności implikuje drugą, druga
-    pierwszą, a może żadna z tych opcji (albo obie)? *)
+    Wypełnij tabelkę. W każdą kratkę wstaw:
+    - ptaszek, jeżeli twierdzenie zachodzi
+    - krzyżyk, gdy zachodzi jego negacja
+    - znak zapytania, jeżeli nie da się udowodnić żadnego z powyższych
+
+    Następnie narysuj obrazek, który obrazuje zależności z tabelki.
+    Każdą modalność zaznacza jako kropkę z odpowiednią nazwą. Połącz
+    kropki [M] i [N], gdy modalność [M] jest silniejsza niż modalność
+    [N] i nie ma między nimi żadnej modalności o pośredniej sile. *)
 
 (* begin hide *)
 
-(** [M] jest najsilniejszą modalność, gdy pociąga za sobą wszystkie
-    inne, czyli dla każdej modalności [N] i zdania [P] mamy [M P -> N P].
-
-    Analogicznie [M] jest najsłabszą modalnością, gdy wynika ona ze
-    wszystkich innych modalności [N]: dla każdego zdania [P] mamy
-    [N P -> M P]. *)
+(* Zobacz obrazek: txt/modalności.jpg *)
 
 (* end hide *)
 

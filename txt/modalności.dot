@@ -1,0 +1,26 @@
+digraph
+{
+  node[shape=rectangle, color=green]
+  neutralna
+  trywialna
+  wymówkowa
+  klasyczna
+  aksjomatyczna
+  niezaprzeczalna
+  pośrednia
+
+  neutralna ->
+  {
+    wymówkowa
+    niezaprzeczalna
+    aksjomatyczna
+    pośrednia
+  }
+
+  niezaprzeczalna -> klasyczna
+
+  wymówkowa ->      trywialna
+  klasyczna ->      trywialna
+  aksjomatyczna ->  trywialna
+  pośrednia ->      trywialna
+}

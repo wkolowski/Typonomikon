@@ -74,3 +74,4 @@ latexmk tex/Książka.tex -pdf -outdir=tex/                 \
         -quiet
 
 dot txt/indukcja.dot -Tjpg -o txt/indukcja.jpg
+dot txt/modalności.dot -Tjpg -o txt/modalności.jpg
