@@ -1145,11 +1145,163 @@ Qed.
 
 (* end hide *)
 
+(** ** Składanie modalności *)
+
+(** Skoro modalności mamy w małym palcu, to czas na... ale czekaj! Czy
+    aby napewno wiemy o modalnościach już wszystko?
+
+    I tak i nie. Wiemy wszystko co powinniśmy o modalnościach, które
+    na nasze potrzeby nazwiemy "modalnościami prostymi" - nie będę
+    tego pojęcia definiował.
+
+    Czy znaczy to zatem, że są też jakieś inne modalności, zwane pewnie
+    "złożonymi", o których jeszcze nic nie wiemy? Tutaj również odpowiedź
+    brzmi "tak".
+
+    O cóż więc chodzi z tymi złożonymi modalnościami? Otóż czasami
+    (ale nie zawsze) możemy wziąć dwie modalności i złożyć je w
+    jedną, uzyskując takie cudaczne twory jak na przykład modalność
+    pośrednia z wymówką albo modalność wymówkowa z aksjomatem.
+
+    Coby nie przynudzać, zobaczmy jak wygląda to w praktyce. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że złożenie modalności klasycznej oraz modalności
+    niezaprzeczalnej daje modalność. *)
+
+Lemma irrclassly_law1 :
+  forall P Q : Prop,
+    (P -> Q) -> ((LEM -> ~ ~ P) -> (LEM -> ~ ~ Q)).
+(* begin hide *)
+Proof.
+  intros P Q pq p' lem nq.
+  apply p'.
+    assumption.
+    intro p. apply nq, pq, p.
+Qed.
+(* end hide *)
+
+Lemma irrclassly_law2 :
+  forall P : Prop,
+    P -> (LEM -> ~ ~ P).
+(* begin hide *)
+Proof.
+  intros P p lem np. contradiction.
+Qed.
+(* end hide *)
+
+Lemma irrclassly_law3 :
+  forall P : Prop,
+    (LEM -> ~ ~ (LEM -> ~ ~ P)) -> (LEM -> ~ ~ P).
+(* begin hide *)
+Proof.
+  intros P H lem np.
+  specialize (H lem).
+  apply H. intro H'.
+  apply H'; assumption.
+Qed.
+(* end hide *)
+
+(** A priori, wynik składania modalności zależy od kolejności, czyli
+    złożenie modalności [M] i [N] to nie to samo, co złożenie modalności
+    [N] i [M]. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że złożenie modalności niezaprzeczalnej oraz modalności
+    klasycznej daje modalność. *)
+
+Lemma classirrly_law1 :
+  forall P Q : Prop,
+    (P -> Q) -> (~ ~ (LEM -> P) -> ~ ~ (LEM -> Q)).
+(* begin hide *)
+Proof.
+  intros P Q pq nnp nq.
+  apply nnp. intro p.
+  apply nq. intro lem.
+  apply pq, p, lem.
+Qed.
+(* end hide *)
+
+Lemma classirrly_law2 :
+  forall P : Prop,
+    P -> ~ ~ (LEM -> P).
+(* begin hide *)
+Proof.
+  intros P p nnp.
+  apply nnp. intros _.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma classirrly_law3 :
+  forall P : Prop,
+    ~ ~ (LEM -> ~ ~ (LEM -> P)) -> ~ ~ (LEM -> P).
+(* begin hide *)
+Proof.
+  intros P H H'.
+  apply H. intro H''.
+  apply H'. intro lem.
+  specialize (H'' lem).
+  contradiction.
+Qed.
+(* end hide *)
+
+(** W zależności od przypadku obydwa takie złożenia mogą okazać się tą
+    samą modalnością, ale być może można jednak udowodnić, że są one
+    różne. *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że w przypadku modalności klasycznej i niezaprzeczalnej oba
+    złożenia sa sobie równoważne. *)
+
+Lemma irrclassly_classirrly :
+  forall P : Prop,
+    (LEM -> ~ ~ P) <-> (~ ~ (LEM -> P)).
+(* begin hide *)
+Proof.
+  split.
+    intros H1 H2. apply H2. intro lem. destruct (lem P).
+      assumption.
+      contradiction H1.
+    intros nnp lem np. apply nnp. intro. contradiction np.
+      apply H, lem.
+Qed.
+(* end hide *)
+
+Lemma classirrly_classically :
+  forall P : Prop,
+    (~ ~ (LEM -> P)) <-> (LEM -> P).
+(* begin hide *)
+Proof.
+  split.
+    intros nnp lem. destruct (lem (LEM -> P)).
+      apply H, lem.
+      contradiction.
+    intros p np. apply np. intro lem. apply p. assumption.
+Qed.
+(* end hide *)
+
+Lemma irrclassly_classically :
+  forall P : Prop,
+    (LEM -> ~ ~ P) <-> (LEM -> P).
+(* begin hide *)
+Proof.
+  split.
+    intros nnp lem. destruct (lem P).
+      assumption.
+      contradiction nnp.
+    intros p lem np. contradiction np. apply p, lem.
+Qed.
+(* end hide *)
+
 (** ** Podsumowanie (TODO) *)
 
 (** * Inne logiki - podsumowanie (TODO) *)
 
-(** krótkie, acz realistyczne (logiki parakonsystentne to guwno) *)
+(** Krótkie, acz realistyczne (logiki parakonsystentne to guwno) *)
 
 (** * Kodowanie impredykatywne (TODO) *)
 
