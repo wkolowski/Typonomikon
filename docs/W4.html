@@ -1332,13 +1332,9 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 <div class="paragraph"> </div>
 
  Skoro modalności mamy w małym palcu, to czas na... ale czekaj! Czy
-    aby napewno wiemy o modalnościach już wszystko?
-
-<div class="paragraph"> </div>
-
-    I tak i nie. Wiemy wszystko co powinniśmy o modalnościach, które
-    na nasze potrzeby nazwiemy "modalnościami prostymi" - nie będę
-    tego pojęcia definiował.
+    aby napewno wiemy o modalnościach już wszystko? I tak i nie. Wiemy
+    wszystko co powinniśmy o modalnościach, które na nasze potrzeby
+    nazwiemy "modalnościami prostymi" - nie będę tego pojęcia definiował.
 
 <div class="paragraph"> </div>
 
@@ -1386,11 +1382,6 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-A priori, wynik składania modalności zależy od kolejności, czyli
-    złożenie modalności <span class="inlinecode"><span class="id" title="var">M</span></span> i <span class="inlinecode"><span class="id" title="var">N</span></span> to nie to samo, co złożenie modalności
-    <span class="inlinecode"><span class="id" title="var">N</span></span> i <span class="inlinecode"><span class="id" title="var">M</span></span>. 
-<div class="paragraph"> </div>
-
 <a name="lab659"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
@@ -1419,17 +1410,39 @@ A priori, wynik składania modalności zależy od kolejności, czyli
 </div>
 
 <div class="doc">
-W zależności od przypadku obydwa takie złożenia mogą okazać się tą
-    samą modalnością, ale być może można jednak udowodnić, że są one
-    różne. 
+Twór z pierwszego ćwiczenia możemy nazwać modalnością klasycznie
+    niezaprzeczalną, bo <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> znaczy, że w logice klasycznej
+    zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> jest niezaprzeczalne. Jak więc widać, złożenie modalności
+    klasycznej i niezaprzeczalnej daje w efekcie modalność.
+
+<div class="paragraph"> </div>
+
+    Twór z drugiego ćwiczenia możemy nazwać modalnością niezaprzeczalnie
+    klasyczną, bo <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode">(<span class="id" title="var">LEM</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span> znaczy, że jest niezaprzeczalnie, że
+    <span class="inlinecode"><span class="id" title="var">P</span></span> zachodzi w logice klasycznej. Jak więc widać, złożenie modalności
+    niezaprzeczalnej i klasycznej daje w efekcie modalność.
+
+<div class="paragraph"> </div>
+
+    Twoje podejrzenia może (a nawet powinno) wzbudzić drugie z ćwiczeń.
+    Czyż nie każe ci ono zrobić drugi raz tego samego, co poprzednie
+    ćwiczenie? Otóż nie, a przynajmniej niekoniecznie: a priori wynik
+    składania modalności zależy od kolejności, czyli złożenie modalności
+    <span class="inlinecode"><span class="id" title="var">M</span></span> i <span class="inlinecode"><span class="id" title="var">N</span></span> nie musi być tym samym, co złożenie modalności <span class="inlinecode"><span class="id" title="var">N</span></span> i <span class="inlinecode"><span class="id" title="var">M</span></span>. 
 <div class="paragraph"> </div>
 
 <a name="lab660"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
- Pokaż, że w przypadku modalności klasycznej i niezaprzeczalnej oba
-    złożenia sa sobie równoważne. 
+ Skoro tak, to powinno ci teraz przyjść do głowy pytanie: a jak jest
+    w przypadku modalności niezaprzeczalnej i klasycznej? Czy złożenia
+    w obu kolejnościach dają to samo, czy coś innego?
+
+<div class="paragraph"> </div>
+
+    Żeby trochę ułatwić ci życie, odpowiem za ciebie: oba złożenia dają
+    tę samą modalność. 
 </div>
 <div class="code">
 
@@ -1437,6 +1450,26 @@ W zależności od przypadku obydwa takie złożenia mogą okazać się tą
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">irrclassly_classirrly</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">LEM</span> -&gt; ~ ~ <span class="id" title="var">P</span>) &lt;-&gt; (~ ~ (<span class="id" title="var">LEM</span> -&gt; <span class="id" title="var">P</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab661"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Skoro oba złożenia dają tę samą modalność, to natychmiast powinno
+    przyjść ci do głowy kolejne oczywiste pytanie: co to za modalność?
+    Czy jest ona dla nas nowością, czy kiedyś już się z nią zetknęliśmy?
+
+<div class="paragraph"> </div>
+
+    Odpowiedzią na to pytanie jest niniejsza ćwiczenie: pokaż, że
+    modalności niezaprzeczalnie klasyczna i klasycznie niezaprzeczalna
+    to tak naprawdę dwa wcielenia modalności klasycznej. 
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">classirrly_classically</span> :<br/>
@@ -1452,18 +1485,38 @@ W zależności od przypadku obydwa takie złożenia mogą okazać się tą
 </div>
 
 <div class="doc">
-<a name="lab661"></a><h2 class="section">Podsumowanie (TODO)</h2>
+Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
+    nie będzie dla nas zbyt istotną operacją. Dlaczego tak? Odpowiedź w
+    zasadzie już poznaliśmy.
 
 <div class="paragraph"> </div>
 
-<a name="lab662"></a><h1 class="section">Inne logiki - podsumowanie (TODO)</h1>
+    Z naszego punktu widzenia jedynymi modalnościami przydatnymi
+    w praktyce są modalność niezaprzeczalna i modalność klasyczna.
+    Z poprzedniego podrozdziału wiemy, że modalność niezaprzeczalna
+    jest silniejsza niż modalność klasyczna, co w efekcie prowadzi
+    do tego, że oba ich złożenia dają modalność klasyczną.
+
+<div class="paragraph"> </div>
+
+    Słowem: złożenia jedynych ważnych dla nas modalności dają w wyniku
+    modalność już nam znaną. Złożenia modalności mniej istotnych, jak
+    modalność pośrednia czy modalność wymówkowa, również nie będą nas
+    zbytno interesować. 
+<div class="paragraph"> </div>
+
+<a name="lab662"></a><h2 class="section">Podsumowanie (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab663"></a><h1 class="section">Inne logiki - podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 
  Krótkie, acz realistyczne (logiki parakonsystentne to guwno) 
 <div class="paragraph"> </div>
 
-<a name="lab663"></a><h1 class="section">Kodowanie impredykatywne (TODO)</h1>
+<a name="lab664"></a><h1 class="section">Kodowanie impredykatywne (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1534,7 +1587,7 @@ W zależności od przypadku obydwa takie złożenia mogą okazać się tą
 </div>
 
 <div class="doc">
-<a name="lab664"></a><h1 class="section">Kombinatory taktyk</h1>
+<a name="lab665"></a><h1 class="section">Kombinatory taktyk</h1>
 
 <div class="paragraph"> </div>
 
@@ -1578,7 +1631,7 @@ Jego dowód wygląda dość schematycznie. Taktyka <span class="inlinecode"><spa
     skomplikowane lub jedynie zmieniać niektóre aspekty ich zachowań. 
 <div class="paragraph"> </div>
 
-<a name="lab665"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
+<a name="lab666"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
 
 </div>
 <div class="code">
@@ -1684,7 +1737,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 
 <div class="paragraph"> </div>
 
-<a name="lab666"></a><h4 class="section">Ćwiczenie (średnik)</h4>
+<a name="lab667"></a><h4 class="section">Ćwiczenie (średnik)</h4>
 
 <div class="paragraph"> </div>
 
@@ -1707,7 +1760,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 </div>
 
 <div class="doc">
-<a name="lab667"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
+<a name="lab668"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
 
 </div>
 <div class="code">
@@ -1754,7 +1807,7 @@ Innym przydatnym kombinatorem jest <span class="inlinecode">||</span>, który b�
     <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> będzie miało taki sam efekt, jak <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H0</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab668"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
+<a name="lab669"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
 
 </div>
 <div class="code">
@@ -1825,7 +1878,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     działanie sukcesem. 
 <div class="paragraph"> </div>
 
-<a name="lab669"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
+<a name="lab670"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
 
 </div>
 <div class="code">
@@ -1898,7 +1951,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     https://coq.inria.fr/refman/coq-tacindex.html 
 <div class="paragraph"> </div>
 
-<a name="lab670"></a><h1 class="section">Zadania</h1>
+<a name="lab671"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -1906,7 +1959,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami 
 <div class="paragraph"> </div>
 
-<a name="lab671"></a><h1 class="section">Jakieś podsumowanie</h1>
+<a name="lab672"></a><h1 class="section">Jakieś podsumowanie</h1>
 
 <div class="paragraph"> </div>
 

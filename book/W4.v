@@ -1148,11 +1148,9 @@ Qed.
 (** ** Składanie modalności *)
 
 (** Skoro modalności mamy w małym palcu, to czas na... ale czekaj! Czy
-    aby napewno wiemy o modalnościach już wszystko?
-
-    I tak i nie. Wiemy wszystko co powinniśmy o modalnościach, które
-    na nasze potrzeby nazwiemy "modalnościami prostymi" - nie będę
-    tego pojęcia definiował.
+    aby napewno wiemy o modalnościach już wszystko? I tak i nie. Wiemy
+    wszystko co powinniśmy o modalnościach, które na nasze potrzeby
+    nazwiemy "modalnościami prostymi" - nie będę tego pojęcia definiował.
 
     Czy znaczy to zatem, że są też jakieś inne modalności, zwane pewnie
     "złożonymi", o których jeszcze nic nie wiemy? Tutaj również odpowiedź
@@ -1203,10 +1201,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** A priori, wynik składania modalności zależy od kolejności, czyli
-    złożenie modalności [M] i [N] to nie to samo, co złożenie modalności
-    [N] i [M]. *)
-
 (** **** Ćwiczenie *)
 
 (** Pokaż, że złożenie modalności niezaprzeczalnej oraz modalności
@@ -1248,14 +1242,30 @@ Proof.
 Qed.
 (* end hide *)
 
-(** W zależności od przypadku obydwa takie złożenia mogą okazać się tą
-    samą modalnością, ale być może można jednak udowodnić, że są one
-    różne. *)
+(** Twór z pierwszego ćwiczenia możemy nazwać modalnością klasycznie
+    niezaprzeczalną, bo [LEM -> ~ ~ P] znaczy, że w logice klasycznej
+    zdanie [P] jest niezaprzeczalne. Jak więc widać, złożenie modalności
+    klasycznej i niezaprzeczalnej daje w efekcie modalność.
+
+    Twór z drugiego ćwiczenia możemy nazwać modalnością niezaprzeczalnie
+    klasyczną, bo [~ ~ (LEM -> P)] znaczy, że jest niezaprzeczalnie, że
+    [P] zachodzi w logice klasycznej. Jak więc widać, złożenie modalności
+    niezaprzeczalnej i klasycznej daje w efekcie modalność.
+
+    Twoje podejrzenia może (a nawet powinno) wzbudzić drugie z ćwiczeń.
+    Czyż nie każe ci ono zrobić drugi raz tego samego, co poprzednie
+    ćwiczenie? Otóż nie, a przynajmniej niekoniecznie: a priori wynik
+    składania modalności zależy od kolejności, czyli złożenie modalności
+    [M] i [N] nie musi być tym samym, co złożenie modalności [N] i [M]. *)
 
 (** **** Ćwiczenie *)
 
-(** Pokaż, że w przypadku modalności klasycznej i niezaprzeczalnej oba
-    złożenia sa sobie równoważne. *)
+(** Skoro tak, to powinno ci teraz przyjść do głowy pytanie: a jak jest
+    w przypadku modalności niezaprzeczalnej i klasycznej? Czy złożenia
+    w obu kolejnościach dają to samo, czy coś innego?
+
+    Żeby trochę ułatwić ci życie, odpowiem za ciebie: oba złożenia dają
+    tę samą modalność. *)
 
 Lemma irrclassly_classirrly :
   forall P : Prop,
@@ -1270,6 +1280,16 @@ Proof.
       apply H, lem.
 Qed.
 (* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Skoro oba złożenia dają tę samą modalność, to natychmiast powinno
+    przyjść ci do głowy kolejne oczywiste pytanie: co to za modalność?
+    Czy jest ona dla nas nowością, czy kiedyś już się z nią zetknęliśmy?
+
+    Odpowiedzią na to pytanie jest niniejsza ćwiczenie: pokaż, że
+    modalności niezaprzeczalnie klasyczna i klasycznie niezaprzeczalna
+    to tak naprawdę dwa wcielenia modalności klasycznej. *)
 
 Lemma classirrly_classically :
   forall P : Prop,
@@ -1296,6 +1316,21 @@ Proof.
     intros p lem np. contradiction np. apply p, lem.
 Qed.
 (* end hide *)
+
+(** Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
+    nie będzie dla nas zbyt istotną operacją. Dlaczego tak? Odpowiedź w
+    zasadzie już poznaliśmy.
+
+    Z naszego punktu widzenia jedynymi modalnościami przydatnymi
+    w praktyce są modalność niezaprzeczalna i modalność klasyczna.
+    Z poprzedniego podrozdziału wiemy, że modalność niezaprzeczalna
+    jest silniejsza niż modalność klasyczna, co w efekcie prowadzi
+    do tego, że oba ich złożenia dają modalność klasyczną.
+
+    Słowem: złożenia jedynych ważnych dla nas modalności dają w wyniku
+    modalność już nam znaną. Złożenia modalności mniej istotnych, jak
+    modalność pośrednia czy modalność wymówkowa, również nie będą nas
+    zbytno interesować. *)
 
 (** ** Podsumowanie (TODO) *)
 
