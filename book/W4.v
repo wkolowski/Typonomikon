@@ -1332,7 +1332,27 @@ Qed.
     modalność pośrednia czy modalność wymówkowa, również nie będą nas
     zbytno interesować. *)
 
-(** ** Podsumowanie (TODO) *)
+(** ** Podsumowanie *)
+
+(** Celem niniejszego rozdziału było zapoznanie się z logikami
+    innymi niż nasza ulubiona i domyślna logika konstruktywna,
+    zaś celem niniejszego podrozdziału było zapoznanie się z
+    logiką modalną, objawiającą się nam pod postacią modalności
+    w logice konstruktywnej .
+
+    Obraz, który się z niego wyłania, jest niesamowicie ciekawy oraz
+    zaskakujący, gdyż mocno kontrastuje z tradycyjnym postrzeganiem
+    i zwyczajem nauczania logiki:
+    - nie ma jednej logiki, lecz wiele (i to nieskończenie wiele)
+    - każda z wielu logik opisuje nieco inny świat, choć można też
+      patrzeć na to w ten sposób, że każda logika opisuje nasz świat
+      w nieco inny sposób
+    - logiki nie są równoprawne - najlepsza jest logika konstruktywna,
+      najpopularniejsza wśród matematyków jest logika klasyczna, ale
+      jest też cała (nieskończona) masa logik niewartych nawet splunięcia
+    - różne logiki nie są sobie wrogie, nieprzyjazne czy sprzeczne ze
+      sobą, lecz harmonijnie współistnieją dzięki modalnościom, za pomocą
+      których można je wyrażać *)
 
 (** * Inne logiki - podsumowanie (TODO) *)
 
