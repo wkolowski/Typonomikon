@@ -1,25 +1,25 @@
 (** * W2: Konstruktywny rachunek kwantyfikatorów [schowany na końcu dla niepoznaki] *)
 
-(** * Typy i ich elementy *)
+(** * Typy i ich elementy (TODO) *)
 
 (** Tu zestawić ze sobą P : Prop, A : Type, p : P, x : A *)
 
-(** * Predykaty i relacje *)
+(** * Predykaty i relacje (TODO) *)
 
-(** * Równość - najważniejsza relacja *)
+(** * Równość - najważniejsza relacja (TODO) *)
 
-(** * Równość a równanie *)
+(** * Równość a równanie (TODO) *)
 
 (** Dobrze byłoby zapoznać się z równością przed pierwszym jej użyciem
     w rozdziale o typach induktywnych. *)
 
-(** * Kwantyfikatory *)
+(** * Kwantyfikatory (TODO) *)
 
-(** ** Kwantyfikator uniwersalny *)
+(** ** Kwantyfikator uniwersalny (TODO) *)
 
-(** ** Kwantyfikator egzystencjalny *)
+(** ** Kwantyfikator egzystencjalny (TODO) *)
 
-(** * Kwantyfikator unikatowy *)
+(** * Kwantyfikator unikatowy (TODO) *)
 
 Print unique.
 Search unique.
@@ -32,9 +32,9 @@ Definition unique {A : Type} (P : A -> Prop) : Prop :=
     a mianowicie kwantyfikator unikatowy, który głosi, że istnieje
     dokładnie jeden obiekt spełniający daną właściwość. *)
 
-(** * Zmienne związane *)
+(** * Zmienne związane (TODO) *)
 
-(** * Predykatywizm *)
+(** * Predykatywizm (TODO) *)
 
 (** * Paradoks golibrody *)
 
@@ -123,10 +123,10 @@ Qed.
     istnieje. Robiąc tak, wpada w sidła pułapki zastawionej przez logika i
     zostaje trafiony paradoksalną konkluzją: golibroda nie istnieje. *)
 
-(** * Zadania *)
+(** * Zadania (TODO) *)
 
 (** - modelowanie różnych sytuacji za pomocą zdań i predykatów
     - rozwiązywanie zagadek logicznych
     - więcej zadań z exists *)
 
-(** * Ściąga *)
+(** * Ściąga (TODO) *)

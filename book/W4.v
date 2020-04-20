@@ -2,8 +2,6 @@
 
 (** * Porównanie logiki konstruktywnej i klasycznej (TODO) *)
 
-(** * Pluralizm logiczny (TODO) *)
-
 (** * Inne logiki? (TODO) *)
 
 (** * Logika de Morgana (TODO) *)
@@ -1334,11 +1332,44 @@ Qed.
 
 (** ** Podsumowanie *)
 
-(** Celem niniejszego rozdziału było zapoznanie się z logikami
-    innymi niż nasza ulubiona i domyślna logika konstruktywna,
-    zaś celem niniejszego podrozdziału było zapoznanie się z
-    logiką modalną, objawiającą się nam pod postacią modalności
-    w logice konstruktywnej .
+(** W niniejszy (długaśnym, trzeba przyznać) podrozdziale zapoznaliśmy
+    się z modalnościami.
+
+    Intuicyjnie zdanie modalne to takie, które jest wyrażone w jakiś
+    niebanalny sposób, np. z użyciem podwójnej negacji, wymówki czy
+    aksjomatu. Modalność to właśnie ten "sposób" wyrażania. Każda
+    modalność spełnia parę warunków:
+    - jest kompatybilna z konsekwencjami danego zdania
+    - nie przeinacza znaczenia zdania, a jedynie je modyfikuje
+    - nie można "spamować" daną modalnością w celu uzyskania cudacznych
+      zdań
+
+    Najbardziej istotne dla nas modalności to modalność niezaprzeczalna,
+    która pozwala na bardzo subtelne poruszanie się na obrzeżach logiki
+    klasycznej, oraz modalność klasyczna, pozwalająca elegancko zanurzyć
+    logikę klasyczną w logice konstruktywnej. Poznaliśmy też modalność
+    wszechpośrednią, która wyposażyła nas w ciekawą filozoficznie ideę:
+    zdania logiczne są zdeterminowane przez to, co z nich wynika.
+
+    Dowiedzieliśmy się też, że niektóre modalności wyrażają zdania w dużo
+    bardziej dobitny (czyli silniejszy) sposób niż inne. Najsilniejszą
+    modalnością jest ta domyślna, czyli neutralna. Najsłabsza zaś jest
+    modalność trywialna, która nie wyraża w sumie niczego.
+
+    Modalności można też ze sobą składać, żeby otrzymywać (potencjalnie)
+    nowe, wyrażające jeszcze bardziej zagmatwane czy subtelne sposoby.
+    Niestety okazało się też, że złożenia najistotniejszych z naszego
+    punktu widzenia modalności nie wnoszą niczego ciekawego.
+
+    Jeśliś pogubił się w tym modalnościowym zoo, nie lękaj się! Zrobiłem
+    ściągę: https://github.com/wkolowski/CoqBookPL/blob/master/txt/modalno%%C5%%9Bci.md *)
+
+
+(** * Pluralizm logiczny *)
+
+(** Celem niniejszego rozdziału było zapoznanie się z logikami innymi
+    niż nasza ulubiona i domyślna logika konstruktywna, tak na wypadek
+    gdybyś się zastanawiał, czy są jakieś.
 
     Obraz, który się z niego wyłania, jest niesamowicie ciekawy oraz
     zaskakujący, gdyż mocno kontrastuje z tradycyjnym postrzeganiem
@@ -1354,9 +1385,30 @@ Qed.
       sobą, lecz harmonijnie współistnieją dzięki modalnościom, za pomocą
       których można je wyrażać *)
 
-(** * Inne logiki - podsumowanie (TODO) *)
+(* begin hide *)
+    (* TODO V *)
+(* end hide *)
 
-(** Krótkie, acz realistyczne (logiki parakonsystentne to guwno) *)
+(** Powyższy pogląd zwie się pluralizmem logicznym. Nie jest on zbyt
+    popularny wśród matematyków - w zasadzie wszyscy oni są fanami
+    logiki klasycznej, a o innych nie chcą słyszeć i traktują je jako
+    jakieś kurioza. Sam pogląd został nazwany i był dyskutowany przez
+    filozofów, z których część (niestety nie wiem, jak duża) jest jego
+    zwolennikami. Filozofowie są jednak mało ważni, bo nikt normalny
+    nie traktuje ich poważnie. Bardziej praktyczną przyczyną szerzenia
+    się tego poglądu są informatycy. W dziedzinie tej wymyślono tabuny
+    przeróżnych logik, które służą zazwyczaj do jakiegoś konkretnego
+    celu, czyli rozumowania o jednym rodzaju obiektów czy sytuacji, np.
+    formalnej weryfikacji sprzętu czy czegoś w tym stylu. Jednak i oni
+    nie są aż tak ważni. Prawdziwą przyczyną popularności tego poglądu
+    (przynajmniej w wąskich kręgach ezoteryków, do których należę) jest
+    dziedzina zwana teorią kategorii i płynąca z niej konstatacja: każdy
+    rodzaj obiektów ma swój własny język, w którym najlepiej się o nich
+    mówi - można je łatwo opisywać, konstruować i dowodzić ich własności.
+    Każdy rodzaj obiektów to osobny matematyczny świat, a każdy taki świat
+    ma swój język. Pponieważ światów jest wiele, to i języków jest wiele.
+    Ponieważ światy są ze sobą związane różnymi ciekawymi relacjami,
+    języki (czyli logiki) również. *)
 
 (** * Kodowanie impredykatywne (TODO) *)
 

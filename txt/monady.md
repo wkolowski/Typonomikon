@@ -1,0 +1,14 @@
+Lista monad, które (nie) nadają się na modalności:
+- Identity  - modalność neutralna
+- Sum       - modalność wymówkowa
+- Reader    - modalność aksjomatyczna
+- Cont      - modalność pośrednia
+- Codensity - modalność wszechpośrednia
+- Free      - nie
+- Lazy      - nie
+- List      - nie
+- Option    - nie
+- RoseTree  - nie
+- RWS       - nie
+- State     - nie
+- Writer    - nie

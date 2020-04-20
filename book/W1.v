@@ -1,24 +1,24 @@
 (** * W1: Konstruktywny rachunek zdań [schowany na końcu dla niepoznaki] *)
 
-(** * Zdania i spójniki logiczne *)
+(** * Zdania i spójniki logiczne (TODO) *)
 
-(** ** Implikacja *)
+(** ** Implikacja (TODO) *)
 
-(** *** Rozumowanie w przód *)
+(** *** Rozumowanie w przód (TODO) *)
 
-(** *** Rozumowanie w tył *)
+(** *** Rozumowanie w tył (TODO) *)
 
 (* rozumowanie od tyłu jest lepsze, logika jest bezmyślna *)
 
-(** ** Koniunkcja *)
+(** ** Koniunkcja (TODO) *)
 
-(** ** Dysjunkcja *)
+(** ** Dysjunkcja (TODO) *)
 
-(** ** Prawda i fałsz *)
+(** ** Prawda i fałsz (TODO) *)
 
-(** ** Równoważność *)
+(** ** Równoważność (TODO) *)
 
-(** ** Negacja *)
+(** ** Negacja (TODO)   *)
 
 (** ** Silna negacja *)
 
@@ -225,7 +225,7 @@ Proof.
     intros deMorgan P H.
 Abort.
 
-(** ** Czy Bozia dała inne spójniki logiczne? *)
+(** ** Czy Bozia dała inne spójniki logiczne? (TODO) *)
 
 (** * Paradoks pieniądza i kebaba *)
 
@@ -307,7 +307,7 @@ Qed.
 
     Szach mat, Turcjo bankrutuj! *)
 
-(** * Zadania *)
+(** * Zadania (TODO) *)
 
 (** - na koniec dać tylko te zadania, które łączą wiele spójników
     - dodać zadanie dotyczące czytania twierdzeń i dowodów

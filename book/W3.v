@@ -1,6 +1,6 @@
 (** * W3: Logika klasyczna [schowana na końcu dla niepoznaki] *)
 
-(** * Aksjomaty i prawa logiki klasycznej *)
+(** * Aksjomaty i prawa logiki klasycznej (TODO) *)
 
 Definition LEM : Prop :=
   forall P : Prop, P \/ ~ P.
@@ -30,7 +30,7 @@ Ltac u :=
 
     A o paradoksach implikacji materialnej? *)
 
-(** * Logika klasyczna jako logika Boga *)
+(** * Logika klasyczna jako logika Boga (TODO) *)
 
 Lemma LEM_hard : forall P : Prop, P \/ ~ P.
 Proof.
@@ -116,7 +116,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Logika klasyczna jako logika materialnej implikacji i równoważności *)
+(** ** Metoda zerojedynkowa *)
+
+(** Tutaj o rysowaniu tabelek. *)
+
+(** * Logika klasyczna jako logika materialnej implikacji i równoważności (TODO) *)
 
 Lemma material_implication_conv :
   forall P Q : Prop, ~ P \/ Q -> (P -> Q).
@@ -317,7 +321,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Logika klasyczna jako logika diabła *)
+(** * Logika klasyczna jako logika diabła (TODO) *)
 
 (** Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
     sobie pewien rusek. Pewnego razu do ruska przyszedł diaboł (a to,
@@ -446,7 +450,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Logika klasyczna jako logika kontrapozycji *)
+(** * Logika klasyczna jako logika kontrapozycji (TODO) *)
 
 Lemma contraposition' :
   forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
@@ -539,9 +543,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Logika klasyczna jako logika Peirce'a *)
+(** * Logika klasyczna jako logika Peirce'a (TODO) *)
 
-(** ** Logika cudownych konsekwencji *)
+(** ** Logika cudownych konsekwencji (TODO) *)
 
 Lemma consequentia_mirabilis :
   forall P : Prop, (~ P -> P) -> P.
@@ -622,7 +626,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Logika Peirce'a *)
+(** ** Logika Peirce'a (TODO) *)
 
 Lemma Peirce_hard :
   forall P Q : Prop, ((P -> Q) -> P) -> P.
@@ -843,16 +847,14 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Paradoks Curry'ego *)
+(** * Paradoks Curry'ego (TODO) *)
 
 (** "Jeżeli niniejsze zdanie jest prawdziwe, to Niemcy graniczą z Chinami." *)
 
 (** Inne paradoksy autoreferencji: paradoks Richarda, słowa heterologiczne *)
 
-
-
-(** * Zadania *)
+(** * Zadania (TODO) *)
 
 (** wyrzucić zadania mącące (mieszające typy i zdania) *)
 
-(** * Ściąga *)
+(** * Ściąga (TODO) *)
