@@ -1,16 +1,9 @@
-
-(* begin hide *)
-
-(* TODO: klasyczne rzeczy *)
-
 Definition Classically (A : Type) : Type :=
   (forall P : Prop, P \/ ~ P) -> A.
 
 Notation "f $ x" := (f x) (at level 100, only parsing).
 
 Ltac cls := progress unfold Classically; intro LEM.
-
-(* TODO: zagadka, i to w ssreflekcie *)
 
 From Coq Require Import ssreflect ssrfun ssrbool.
 Set Implicit Arguments.
@@ -62,5 +55,3 @@ Lemma not_isDemon_Naraku :
 Proof.
   by move/H2/(H3 H6).
 Qed.
-
-(* end hide *)

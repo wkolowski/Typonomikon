@@ -63,10 +63,28 @@ Definition id' : forall A : Type, A -> A :=
     - [forall A : Type, list A -> A] *)
 
 (* begin hide *)
-Theorem no_such_fun :
+Lemma no_such_fun :
   (forall A B : Type, A -> B) -> False.
 Proof.
   intros. exact (X nat False 42).
+Qed.
+
+Lemma no_such_fun_2 :
+  (forall A B C : Type, A -> B -> C) -> False.
+Proof.
+  intro H. apply (H True True); trivial.
+Qed.
+
+Lemma no_such_fun_3 :
+  (forall A : Type, option A -> A) -> False.
+Proof.
+  intro H. apply H. exact None.
+Qed.
+
+Lemma no_such_fun_4 :
+  (forall A : Type, list A -> A) -> False.
+Proof.
+  intro H. apply H. exact nil.
 Qed.
 (* end hide *)
 

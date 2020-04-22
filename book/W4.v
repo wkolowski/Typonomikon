@@ -4,6 +4,36 @@
 
 (** * Inne logiki? (TODO) *)
 
+(** Słowo "logika" zazwyczaj występuje w liczbie pojedynczej i nie bez
+    przyczyny - zazwyczaj naucza się jednej (a nawet jednyje słusznej)
+    logiki. Porównawszy logiki konstruktywną i klasyczną nie pozostaje
+    nam nic innego jak tylko skonstatować, że jesteśmy bardzo wyjątkowi,
+    bo znamy już dwie logiki. Do głowy powinno nam zatem przyjść jedyne
+    słuszne w tej sytuacji pytanie: czy są jeszcze jakieś inne logiki?
+    Odpowiedź brzmi: tak i to nawet nieskończenie wiele.
+
+    W niniejszym podrozdziale zapoznamy się z krótką klasyfikacją innych
+    logik wraz z ich opisami i oceną ideologicznej słuszności (tak żebyś
+    wiedział, za czym nie warto gonić - za dużo swojego cennego czasu
+    zmarnowałem na rozmyślanie o bezużytecznych logikach i chciałbym,
+    aby przyszłe pokolenia nie musiały tyle cierpieć), zaś w dalszej
+    części niniejszego rozdziału poznamy te z innych logik, które znać
+    warto. *)
+
+(** ** Logiki pośrednie *)
+
+(** Logiki pośrednie, jak sama nazwa wskazuje, leżą (pod względem ilości
+    zdań, które można udowodnić) gdzieś pomiędzy logiką konstruktywną i
+    logiką klasyczną. Jest ich nieskończenie wiele - wystarczy do logiki
+    konstruktywnej dodać jako aksjomat dowolne zdanie, które zachodzi w
+    logice klasycznej, ale nie jest równoważne prawu wyłączonego środka.
+
+    Generalnie nie są zbyt ciekawe i nie warto się nimi zajmować, ale
+    są wyjątki: jedną z najciekawszych (moim zdaniem) jest logika de
+    Morgana, w której mamy prawa de Morgana, ale nie mamy pełnej mocy
+    logiki klasycznej. Zapoznamy się z nią w kolejnym podrozdziale. *)
+
+
 (** * Logika de Morgana (TODO) *)
 
 (** jako coś pomiędzy logiką konstruktywną i klasyczną (TODO) *)

@@ -8,8 +8,6 @@
 
 (** * Równość - najważniejsza relacja (TODO) *)
 
-(** * Równość a równanie (TODO) *)
-
 (** Dobrze byłoby zapoznać się z równością przed pierwszym jej użyciem
     w rozdziale o typach induktywnych. *)
 
@@ -19,7 +17,7 @@
 
 (** ** Kwantyfikator egzystencjalny (TODO) *)
 
-(** * Kwantyfikator unikatowy (TODO) *)
+(** ** Kwantyfikator unikatowy (TODO) *)
 
 Print unique.
 Search unique.
