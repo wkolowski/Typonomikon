@@ -10,28 +10,86 @@
     nam nic innego jak tylko skonstatować, że jesteśmy bardzo wyjątkowi,
     bo znamy już dwie logiki. Do głowy powinno nam zatem przyjść jedyne
     słuszne w tej sytuacji pytanie: czy są jeszcze jakieś inne logiki?
-    Odpowiedź brzmi: tak i to nawet nieskończenie wiele.
+    Odpowiedź brzmi: tak, i to nawet nieskończenie wiele.
 
     W niniejszym podrozdziale zapoznamy się z krótką klasyfikacją innych
     logik wraz z ich opisami i oceną ideologicznej słuszności (tak żebyś
     wiedział, za czym nie warto gonić - za dużo swojego cennego czasu
     zmarnowałem na rozmyślanie o bezużytecznych logikach i chciałbym,
     aby przyszłe pokolenia nie musiały tyle cierpieć), zaś w dalszej
-    części niniejszego rozdziału poznamy te z innych logik, które znać
-    warto. *)
+    części niniejszego rozdziału poznamy te z owych innych logik, które
+    znać warto. *)
+(** ** Logiki (sub- i super-)intuicjonistyczne oraz logiki pośrednie *)
 
-(** ** Logiki pośrednie *)
+(** Na wstępie przypomnijmy, że "logika intuicjonistyczna" to inna
+    nazwa na logikę konstruktywną, ale ja unikam tej nazwy, bo jest
+    mało obrazowa (nie mówiąc już o tym, że jest upiornie przydługa).
 
-(** Logiki pośrednie, jak sama nazwa wskazuje, leżą (pod względem ilości
-    zdań, które można udowodnić) gdzieś pomiędzy logiką konstruktywną i
-    logiką klasyczną. Jest ich nieskończenie wiele - wystarczy do logiki
-    konstruktywnej dodać jako aksjomat dowolne zdanie, które zachodzi w
-    logice klasycznej, ale nie jest równoważne prawu wyłączonego środka.
+    Są dwa podstawowe sposoby, żeby uzyskać logikę inną od logiki
+    konstruktywnej:
+    - weź logikę konstruktywną i coś z niej zabierz
+    - weź logikę konstruktywną i coś do niej dodaj
 
-    Generalnie nie są zbyt ciekawe i nie warto się nimi zajmować, ale
-    są wyjątki: jedną z najciekawszych (moim zdaniem) jest logika de
-    Morgana, w której mamy prawa de Morgana, ale nie mamy pełnej mocy
-    logiki klasycznej. Zapoznamy się z nią w kolejnym podrozdziale. *)
+    Logiki z pierwszego przypadku to logiki subintuicjonistyczne (po
+    łacinie "sub" znaczy "poniżej"), bo można w nich udowodnić mniej
+    twierdzeń, niż w logice intuicjonistycznej. To co zabieramy to
+    zazwyczaj spójniki logiczne lub jakieś aspekty ich działania. I
+    tak możemy mieć logikę z samą implikacją albo logikę, w której
+    są wszystkie spójniki, ale nie zachodzi _ex falso quodlibet_
+    (czyli nie jest prawdą, że z fałszu wynika wszystko).
+
+    Logiki subintuicjonistyczne są głupie (bo po co się ograniczać?),
+    więc nie będziemy się nimi zajmować. Zresztą już je trochę znasz.
+    Spróbuj przypomnieć sobie jakieś twierdzenie, które udowodniłeś,
+    a w którym nie było np. koniunkcji - jest to twierdzenie w
+    subintuicjonistycznej logice bez koniunkcji. Jeżeli w jakimś
+    dowodzie nie użyłeś _ex falso_ (ani wprost, ani pośrednio, np.
+    przez użycie lematu, którego dowód używał _ex falso_) to znaczy,
+    że to twierdzenie zachodzi w subintuicjonistycznej logice bez
+    _ex falso_... widzisz do czego to zmierza, prawda?
+
+    Logiki z drugiego przypadku to logiki superintuicjonistyczne (po
+    łacinie "super" znaczy "powyżej"), bo można w nich udowodnić
+    więcej twierdzeń, niż w logice intuicjonistycznej. To co dodajemy
+    to zazwyczaj aksjomaty. Wesołym przykładem superintuicjonistycznej
+    logiki jest logika sprzeczna - jest to logika, w której aksjomatem
+    jest fałsz. Można w niej udowodnić wszystko, a więc istotnie więcej,
+    niż w zwykłej logice konstruktywnej.
+
+    Znanym ci już przykładem superintuicjonistycznej logiki jest logika
+    klasyczna, która jest niczym innym jak logiką konstruktywną, w której
+    aksjomatem jest prawo wyłączonego środka. Logika klasyczna jest
+    maksymalną logiką superintuicjonistyczną, bo można w niej udowodnić
+    najwięcej twierdzeń ze wszystkich logik superintuicjonistycznych
+    (oczywiście pomijając logikę sprzeczną). Oznacza to, że dodanie do
+    logiki klasycznej jako aksjomatu jakiegoś zdania, którego nie można
+    w niej udowodnić, daje w efekcie logikę sprzeczną.
+
+    Ponieważ logika intuicjonistyczna jest naszym punktem wyjściowym
+    (jest "najsłabsza"), a logika klasyczna docelowym (maksimum pod
+    względem liczby twierdzeń, które można udowodnić), wszystkie
+    logiki będące pomiędzy tymi dwoma nazywa się często logikami
+    pośrednimi.
+
+    Ciekawym przykładem logiki pośredniej, który poznamy, jest logika
+    de Morgana (a przynajmniej ja ją tak nazwałem - nie wiem, jak zwie
+    się ona w poważnej literaturze). Jest to logika konstruktywna, w
+    której dodatkowym aksjomatem są prawa de Morgana. Jest ona ciekawa,
+    gdyż jest silniejsza od logiki konstruktywnej, a słabsza od logiki
+    klasycznej.
+
+    Oczywiście świat jest nieco skomplikowańszy niż go przedstawiłem.
+    Jakiś zwichrowany umysł mógłby bez problemu wymyślić sobie logikę
+    subsuperintuicjonistyczną. Wystarczy z logiki konstruktywnej zabrać
+    np. koniunkcję, a dodać np. prawo wyłączonego środka. Nie muszę
+    chyba nadmieniać, że tego typu zabawy nie mają żadnego sensu, co? *)
+
+(** ** Logiki wielowartościowe *)
+
+(** ** Logiki modalne *)
+
+(** ** Logiki substrukturalne - wungiel, relewancja i kwantowość *)
+
 
 
 (** * Logika de Morgana (TODO) *)
