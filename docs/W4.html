@@ -38,7 +38,10 @@
     zmarnowałem na rozmyślanie o bezużytecznych logikach i chciałbym,
     aby przyszłe pokolenia nie musiały tyle cierpieć), zaś w dalszej
     części niniejszego rozdziału poznamy te z owych innych logik, które
-    znać warto. <a name="lab622"></a><h2 class="section">Logiki (sub- i super-)intuicjonistyczne oraz logiki pośrednie</h2>
+    znać warto. 
+<div class="paragraph"> </div>
+
+<a name="lab622"></a><h2 class="section">Logiki (sub- i super-)intuicjonistyczne oraz logiki pośrednie</h2>
 
 <div class="paragraph"> </div>
 
@@ -114,10 +117,9 @@
 
     Ciekawym przykładem logiki pośredniej, który poznamy, jest logika
     de Morgana (a przynajmniej ja ją tak nazwałem - nie wiem, jak zwie
-    się ona w poważnej literaturze). Jest to logika konstruktywna, w
-    której dodatkowym aksjomatem są prawa de Morgana. Jest ona ciekawa,
-    gdyż jest silniejsza od logiki konstruktywnej, a słabsza od logiki
-    klasycznej.
+    się ona w poważnej literaturze). Powstaje ona poprzez dorzucenie
+    do logiki konstruktywnej dodatkowego aksjomatu, którym jest prawo
+    de Morgana.
 
 <div class="paragraph"> </div>
 
@@ -125,11 +127,88 @@
     Jakiś zwichrowany umysł mógłby bez problemu wymyślić sobie logikę
     subsuperintuicjonistyczną. Wystarczy z logiki konstruktywnej zabrać
     np. koniunkcję, a dodać np. prawo wyłączonego środka. Nie muszę
-    chyba nadmieniać, że tego typu zabawy nie mają żadnego sensu, co? 
+    chyba nadmieniać, że tego typu zabawy przypominają budowę potwora
+    Frankensteina, co? 
 <div class="paragraph"> </div>
 
 <a name="lab623"></a><h2 class="section">Logiki wielowartościowe</h2>
 
+<div class="paragraph"> </div>
+
+ Innym sposobem klasyfikacji logik jest liczba wartości logicznych,
+    które w nich występują. Ponieważ wartości logiczne nie występują
+    we wszystkich logikach, a w szczególności nie ma ich w logice
+    konstruktywnej, zacznijmy od wytłumaczenia, czym są.
+
+<div class="paragraph"> </div>
+
+    W skrócie: wartości logiczne mówią, jaki może być "status" danego
+    zdania. Dwoma wartościami logicznymi, które występują praktycznie
+    zawsze, są "prawda" i "fałsz". Odpowiadają one stwierdzeniom takim
+    jak "zdanie P jest prawdziwe" oraz "zdanie P jest fałszywe".
+
+<div class="paragraph"> </div>
+
+    Najpopularniejszą logiką, którą można zaprezentować za pomocą
+    wartości logicznych (i prawie zawsze się tak robi - my oczywiście
+    jesteśmy wyjątkiem) jest logika klasyczna. Logika klasyczna to
+    logika, w której każde zdanie jest albo prawdziwe, albo fałszywe
+    i nie ma żadnych innych możliwości.
+
+<div class="paragraph"> </div>
+
+    Nie powinno cię to dziwić - jeżeli przyjrzeć się mu bliżej, to
+    właśnie mówi aksjomat wyłączonego środka: dla każdego zdania
+    albo mamy jego dowód (co odpowiada wartości logicznej "prawda"),
+    albo mamy dowód jego zaprzeczenia (co odpowiada wartości logicznej
+    "fałsz").
+
+<div class="paragraph"> </div>
+
+    Skoro już wiemy, czym są wartości logiczne, czas powiedzieć, czym
+    są logiki wielowartościowe. Otóż są to logiki, w których są więcej
+    niż dwie wartości logiczne. Zazwyczaj są to "prawda", "fałsz" i
+    jakieś dodatkowe, np. "być może", "jednocześnie prawda i fałsz",
+    "nie obchodzi mnie to nic a nic", "brak danych" etc. - każdy może
+    sobie wymyślić własną logikę z własną paletą wartości logicznych.
+
+<div class="paragraph"> </div>
+
+    Przykładem ciekawej logiki wielowartościowej jest logika sygnałów
+    w obwodach elektronicznych, ustandaryzowana przez IEEE. Jest to
+    logika czterowartościowa, w której są następujące wartości logiczne:
+<ul class="doclist">
+<li> 1, interpretowane jako "prawda"
+
+</li>
+<li> 0, interpretowane jako "fałsz"
+
+</li>
+<li> X, interpretowane jako "nieważne" - może zostać uznana za
+      1 albo 0 w zależności od tego, co jest wygodniejsze w danej
+      sytuacji (w praktyce wybiera się to, co daje szybsze obliczenia)
+
+</li>
+<li> Z, interpretowane jako "wysoka impedancja" - reprezentuje sytuację,
+      w której prąd w obwodzie nie płynie tak jak powinien, czyli pewien
+      rodzaj błędu
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Ogólnie logiki wielowartościowe nie są zbyt ciekawe ani przydatne,
+    więc nie będziemy ich zgłębiać.
+
+<div class="paragraph"> </div>
+
+    Na koniec wypadałoby jeszcze wspomnieć w ramach ciekawostki, że
+    wbrew temu, co napisałem na samym początku, logika konstruktywna
+    również może być uznana za logikę wielowartościową, jednak bardzo
+    nietypową: wartości logicznych jest nieskończenie wiele (a nawet
+    nieprzeliczalnie wiele, czyli tyle co liczb rzeczywistych). Nie
+    będziemy jednak drążyć tego tematu. 
 <div class="paragraph"> </div>
 
 <a name="lab624"></a><h2 class="section">Logiki modalne</h2>
@@ -140,14 +219,18 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab626"></a><h1 class="section">Logika de Morgana (TODO)</h1>
+<a name="lab626"></a><h2 class="section">Logika szalonego Gruzina</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab627"></a><h1 class="section">Logika de Morgana (TODO)</h1>
 
 <div class="paragraph"> </div>
 
  jako coś pomiędzy logiką konstruktywną i klasyczną (TODO) 
 <div class="paragraph"> </div>
 
-<a name="lab627"></a><h1 class="section">Dziwne aksjomaty i płynące z nich logiki (TODO)</h1>
+<a name="lab628"></a><h1 class="section">Dziwne aksjomaty i płynące z nich logiki (TODO)</h1>
 
 </div>
 <div class="code">
@@ -178,7 +261,7 @@
 </div>
 
 <div class="doc">
-<a name="lab628"></a><h1 class="section">Logika modalna</h1>
+<a name="lab629"></a><h1 class="section">Logika modalna</h1>
 
 <div class="paragraph"> </div>
 
@@ -300,7 +383,7 @@
     i potrafimy, ćwiczenie: 
 <div class="paragraph"> </div>
 
-<a name="lab629"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab630"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -329,7 +412,7 @@
 </div>
 
 <div class="doc">
-<a name="lab630"></a><h2 class="section">Modalność neutralna: nasza ulubiona</h2>
+<a name="lab631"></a><h2 class="section">Modalność neutralna: nasza ulubiona</h2>
 
 <div class="paragraph"> </div>
 
@@ -350,7 +433,7 @@
     ... 
 <div class="paragraph"> </div>
 
-<a name="lab631"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab632"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -374,7 +457,7 @@
 </div>
 
 <div class="doc">
-<a name="lab632"></a><h2 class="section">Modalność trywialna</h2>
+<a name="lab633"></a><h2 class="section">Modalność trywialna</h2>
 
 <div class="paragraph"> </div>
 
@@ -384,7 +467,7 @@
     diabły i zamiast tego mówimy <span class="inlinecode"><span class="id" title="var">True</span></span>. Wot, modalność jak znalazł. 
 <div class="paragraph"> </div>
 
-<a name="lab633"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab634"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -408,7 +491,7 @@
 </div>
 
 <div class="doc">
-<a name="lab634"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab635"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -431,7 +514,7 @@
 </div>
 
 <div class="doc">
-<a name="lab635"></a><h2 class="section">Modalność wymówkowa: pies zjadł mi dowód... :(</h2>
+<a name="lab636"></a><h2 class="section">Modalność wymówkowa: pies zjadł mi dowód... :(</h2>
 
 <div class="paragraph"> </div>
 
@@ -515,7 +598,7 @@
     zjadł mi dowód lub pada deszcz". 
 <div class="paragraph"> </div>
 
-<a name="lab636"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab637"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -542,7 +625,7 @@
 </div>
 
 <div class="doc">
-<a name="lab637"></a><h2 class="section">Modalność klasyczna: logika klasyczna jako logika modalna</h2>
+<a name="lab638"></a><h2 class="section">Modalność klasyczna: logika klasyczna jako logika modalna</h2>
 
 </div>
 <div class="code">
@@ -578,7 +661,7 @@ Poznana w poprzednim podrozdziale modalność mogła być dla ciebie
     używany. Cóż... ci głupcy nie wiedzą, co tracą. 
 <div class="paragraph"> </div>
 
-<a name="lab638"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab639"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -602,7 +685,7 @@ Poznana w poprzednim podrozdziale modalność mogła być dla ciebie
 </div>
 
 <div class="doc">
-<a name="lab639"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab640"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -628,7 +711,7 @@ Poznana w poprzednim podrozdziale modalność mogła być dla ciebie
 </div>
 
 <div class="doc">
-<a name="lab640"></a><h2 class="section">Modalność aksjomatyczna</h2>
+<a name="lab641"></a><h2 class="section">Modalność aksjomatyczna</h2>
 
 <div class="paragraph"> </div>
 
@@ -653,7 +736,7 @@ Poznana w poprzednim podrozdziale modalność mogła być dla ciebie
     zachodzą wszystkie potrzebne prawa. 
 <div class="paragraph"> </div>
 
-<a name="lab641"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab642"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -692,7 +775,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
     równoważne <span class="inlinecode"><span class="id" title="var">P</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab642"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab643"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -709,7 +792,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a name="lab643"></a><h2 class="section">Modalność niezaprzeczalna</h2>
+<a name="lab644"></a><h2 class="section">Modalność niezaprzeczalna</h2>
 
 <div class="paragraph"> </div>
 
@@ -771,7 +854,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
     zaprzeczenie. 
 <div class="paragraph"> </div>
 
-<a name="lab644"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab645"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -795,7 +878,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a name="lab645"></a><h2 class="section">Modalność pośrednia</h2>
+<a name="lab646"></a><h2 class="section">Modalność pośrednia</h2>
 
 <div class="paragraph"> </div>
 
@@ -873,7 +956,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 
 <div class="paragraph"> </div>
 
-<a name="lab646"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab647"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -899,7 +982,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a name="lab647"></a><h2 class="section">Modalność wszechpośrednia</h2>
+<a name="lab648"></a><h2 class="section">Modalność wszechpośrednia</h2>
 
 <div class="paragraph"> </div>
 
@@ -935,7 +1018,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
     to mówimy to samo, czy coś innego? 
 <div class="paragraph"> </div>
 
-<a name="lab648"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab649"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -953,7 +1036,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a name="lab649"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab650"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1006,7 +1089,7 @@ Wniosek płynący z powyższych ćwiczeń jest prosty (zrobiłeś je,
     a modalność tę będziemy nazywać modalnością wszechpośrednią. 
 <div class="paragraph"> </div>
 
-<a name="lab650"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab651"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1094,7 +1177,7 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
     pierwszy rzut oka wydawać. 
 <div class="paragraph"> </div>
 
-<a name="lab651"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab652"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1196,7 +1279,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     są tutaj potrzebne. 
 <div class="paragraph"> </div>
 
-<a name="lab652"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab653"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1234,7 +1317,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab653"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab654"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1256,7 +1339,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab654"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab655"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1290,7 +1373,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab655"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab656"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1314,7 +1397,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab656"></a><h2 class="section">Związki między modalnościami</h2>
+<a name="lab657"></a><h2 class="section">Związki między modalnościami</h2>
 
 <div class="paragraph"> </div>
 
@@ -1336,7 +1419,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     neutralna. 
 <div class="paragraph"> </div>
 
-<a name="lab657"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab658"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1357,7 +1440,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab658"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab659"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1392,7 +1475,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab659"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab660"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1441,7 +1524,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab660"></a><h2 class="section">Składanie modalności</h2>
+<a name="lab661"></a><h2 class="section">Składanie modalności</h2>
 
 <div class="paragraph"> </div>
 
@@ -1468,7 +1551,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     Coby nie przynudzać, zobaczmy jak wygląda to w praktyce. 
 <div class="paragraph"> </div>
 
-<a name="lab661"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab662"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1496,7 +1579,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a name="lab662"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab663"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1545,7 +1628,7 @@ Twór z pierwszego ćwiczenia możemy nazwać modalnością klasycznie
     <span class="inlinecode"><span class="id" title="var">M</span></span> i <span class="inlinecode"><span class="id" title="var">N</span></span> nie musi być tym samym, co złożenie modalności <span class="inlinecode"><span class="id" title="var">N</span></span> i <span class="inlinecode"><span class="id" title="var">M</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab663"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab664"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1569,7 +1652,7 @@ Twór z pierwszego ćwiczenia możemy nazwać modalnością klasycznie
 </div>
 
 <div class="doc">
-<a name="lab664"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab665"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1619,7 +1702,7 @@ Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
     zbytno interesować. 
 <div class="paragraph"> </div>
 
-<a name="lab665"></a><h2 class="section">Podsumowanie</h2>
+<a name="lab666"></a><h2 class="section">Podsumowanie</h2>
 
 <div class="paragraph"> </div>
 
@@ -1674,7 +1757,7 @@ Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
     ściągę: https://github.com/wkolowski/CoqBookPL/blob/master/txt/modalno%C5%9Bci.md 
 <div class="paragraph"> </div>
 
-<a name="lab666"></a><h1 class="section">Pluralizm logiczny</h1>
+<a name="lab667"></a><h1 class="section">Pluralizm logiczny</h1>
 
 <div class="paragraph"> </div>
 
@@ -1794,7 +1877,7 @@ Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
     się nią posługiwać. 
 <div class="paragraph"> </div>
 
-<a name="lab667"></a><h1 class="section">Kodowanie impredykatywne (TODO)</h1>
+<a name="lab668"></a><h1 class="section">Kodowanie impredykatywne (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1865,7 +1948,7 @@ Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
 </div>
 
 <div class="doc">
-<a name="lab668"></a><h1 class="section">Kombinatory taktyk</h1>
+<a name="lab669"></a><h1 class="section">Kombinatory taktyk</h1>
 
 <div class="paragraph"> </div>
 
@@ -1909,7 +1992,7 @@ Jego dowód wygląda dość schematycznie. Taktyka <span class="inlinecode"><spa
     skomplikowane lub jedynie zmieniać niektóre aspekty ich zachowań. 
 <div class="paragraph"> </div>
 
-<a name="lab669"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
+<a name="lab670"></a><h2 class="section"><span class="inlinecode">;</span> (średnik)</h2>
 
 </div>
 <div class="code">
@@ -2015,7 +2098,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 
 <div class="paragraph"> </div>
 
-<a name="lab670"></a><h4 class="section">Ćwiczenie (średnik)</h4>
+<a name="lab671"></a><h4 class="section">Ćwiczenie (średnik)</h4>
 
 <div class="paragraph"> </div>
 
@@ -2038,7 +2121,7 @@ Najbardziej podstawowym kombinatorem jest <span class="inlinecode">;</span> (śr
 </div>
 
 <div class="doc">
-<a name="lab671"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
+<a name="lab672"></a><h2 class="section"><span class="inlinecode">||</span> (alternatywa)</h2>
 
 </div>
 <div class="code">
@@ -2085,7 +2168,7 @@ Innym przydatnym kombinatorem jest <span class="inlinecode">||</span>, który b�
     <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> będzie miało taki sam efekt, jak <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H0</span></span>. 
 <div class="paragraph"> </div>
 
-<a name="lab672"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
+<a name="lab673"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">idtac</span></span>, <span class="inlinecode"><span class="id" title="tactic">do</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">repeat</span></span></h2>
 
 </div>
 <div class="code">
@@ -2156,7 +2239,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     działanie sukcesem. 
 <div class="paragraph"> </div>
 
-<a name="lab673"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
+<a name="lab674"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">try</span></span> i <span class="inlinecode"><span class="id" title="tactic">fail</span></span></h2>
 
 </div>
 <div class="code">
@@ -2229,7 +2312,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     https://coq.inria.fr/refman/coq-tacindex.html 
 <div class="paragraph"> </div>
 
-<a name="lab674"></a><h1 class="section">Zadania</h1>
+<a name="lab675"></a><h1 class="section">Zadania</h1>
 
 <div class="paragraph"> </div>
 
@@ -2237,7 +2320,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
     Module/Section/Hypothesis oraz z jak najkrótszymi dowodami 
 <div class="paragraph"> </div>
 
-<a name="lab675"></a><h1 class="section">Jakieś podsumowanie</h1>
+<a name="lab676"></a><h1 class="section">Jakieś podsumowanie</h1>
 
 <div class="paragraph"> </div>
 

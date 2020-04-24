@@ -19,6 +19,7 @@
     aby przyszłe pokolenia nie musiały tyle cierpieć), zaś w dalszej
     części niniejszego rozdziału poznamy te z owych innych logik, które
     znać warto. *)
+
 (** ** Logiki (sub- i super-)intuicjonistyczne oraz logiki pośrednie *)
 
 (** Na wstępie przypomnijmy, że "logika intuicjonistyczna" to inna
@@ -73,24 +74,75 @@
 
     Ciekawym przykładem logiki pośredniej, który poznamy, jest logika
     de Morgana (a przynajmniej ja ją tak nazwałem - nie wiem, jak zwie
-    się ona w poważnej literaturze). Jest to logika konstruktywna, w
-    której dodatkowym aksjomatem są prawa de Morgana. Jest ona ciekawa,
-    gdyż jest silniejsza od logiki konstruktywnej, a słabsza od logiki
-    klasycznej.
+    się ona w poważnej literaturze). Powstaje ona poprzez dorzucenie
+    do logiki konstruktywnej dodatkowego aksjomatu, którym jest prawo
+    de Morgana.
 
     Oczywiście świat jest nieco skomplikowańszy niż go przedstawiłem.
     Jakiś zwichrowany umysł mógłby bez problemu wymyślić sobie logikę
     subsuperintuicjonistyczną. Wystarczy z logiki konstruktywnej zabrać
     np. koniunkcję, a dodać np. prawo wyłączonego środka. Nie muszę
-    chyba nadmieniać, że tego typu zabawy nie mają żadnego sensu, co? *)
+    chyba nadmieniać, że tego typu zabawy przypominają budowę potwora
+    Frankensteina, co? *)
 
 (** ** Logiki wielowartościowe *)
+
+(** Innym sposobem klasyfikacji logik jest liczba wartości logicznych,
+    które w nich występują. Ponieważ wartości logiczne nie występują
+    we wszystkich logikach, a w szczególności nie ma ich w logice
+    konstruktywnej, zacznijmy od wytłumaczenia, czym są.
+
+    W skrócie: wartości logiczne mówią, jaki może być "status" danego
+    zdania. Dwoma wartościami logicznymi, które występują praktycznie
+    zawsze, są "prawda" i "fałsz". Odpowiadają one stwierdzeniom takim
+    jak "zdanie P jest prawdziwe" oraz "zdanie P jest fałszywe".
+
+    Najpopularniejszą logiką, którą można zaprezentować za pomocą
+    wartości logicznych (i prawie zawsze się tak robi - my oczywiście
+    jesteśmy wyjątkiem) jest logika klasyczna. Logika klasyczna to
+    logika, w której każde zdanie jest albo prawdziwe, albo fałszywe
+    i nie ma żadnych innych możliwości.
+
+    Nie powinno cię to dziwić - jeżeli przyjrzeć się mu bliżej, to
+    właśnie mówi aksjomat wyłączonego środka: dla każdego zdania
+    albo mamy jego dowód (co odpowiada wartości logicznej "prawda"),
+    albo mamy dowód jego zaprzeczenia (co odpowiada wartości logicznej
+    "fałsz").
+
+    Skoro już wiemy, czym są wartości logiczne, czas powiedzieć, czym
+    są logiki wielowartościowe. Otóż są to logiki, w których są więcej
+    niż dwie wartości logiczne. Zazwyczaj są to "prawda", "fałsz" i
+    jakieś dodatkowe, np. "być może", "jednocześnie prawda i fałsz",
+    "nie obchodzi mnie to nic a nic", "brak danych" etc. - każdy może
+    sobie wymyślić własną logikę z własną paletą wartości logicznych.
+
+    Przykładem ciekawej logiki wielowartościowej jest logika sygnałów
+    w obwodach elektronicznych, ustandaryzowana przez IEEE. Jest to
+    logika czterowartościowa, w której są następujące wartości logiczne:
+    - 1, interpretowane jako "prawda"
+    - 0, interpretowane jako "fałsz"
+    - X, interpretowane jako "nieważne" - może zostać uznana za
+      1 albo 0 w zależności od tego, co jest wygodniejsze w danej
+      sytuacji (w praktyce wybiera się to, co daje szybsze obliczenia)
+    - Z, interpretowane jako "wysoka impedancja" - reprezentuje sytuację,
+      w której prąd w obwodzie nie płynie tak jak powinien, czyli pewien
+      rodzaj błędu
+
+    Ogólnie logiki wielowartościowe nie są zbyt ciekawe ani przydatne,
+    więc nie będziemy ich zgłębiać.
+
+    Na koniec wypadałoby jeszcze wspomnieć w ramach ciekawostki, że
+    wbrew temu, co napisałem na samym początku, logika konstruktywna
+    również może być uznana za logikę wielowartościową, jednak bardzo
+    nietypową: wartości logicznych jest nieskończenie wiele (a nawet
+    nieprzeliczalnie wiele, czyli tyle co liczb rzeczywistych). Nie
+    będziemy jednak drążyć tego tematu. *)
 
 (** ** Logiki modalne *)
 
 (** ** Logiki substrukturalne - wungiel, relewancja i kwantowość *)
 
-
+(** ** Logika szalonego Gruzina *)
 
 (** * Logika de Morgana (TODO) *)
 
