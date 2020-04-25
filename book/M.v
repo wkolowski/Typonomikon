@@ -203,7 +203,7 @@ Abort.
 
 (* end hide *)
 
-(** * Nielegalna topologia *)
+(** * Nielegalna topologia (TODO) *)
 
 (** Tutaj o topologii takiej jak robi Martin Escardó głównie w tej
     książce: "Synthetic topology of data types and classical spaces",

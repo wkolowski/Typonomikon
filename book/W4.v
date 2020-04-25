@@ -2,7 +2,7 @@
 
 (** * Porównanie logiki konstruktywnej i klasycznej (TODO) *)
 
-(** * Inne logiki? (TODO) *)
+(** * Inne logiki? *)
 
 (** Słowo "logika" zazwyczaj występuje w liczbie pojedynczej i nie bez
     przyczyny - zazwyczaj naucza się jednej (a nawet jedynej słusznej)
@@ -85,6 +85,50 @@
     chyba nadmieniać, że tego typu zabawy przypominają budowę potwora
     Frankensteina, co? *)
 
+(** ** Logiki modalne *)
+
+(** Logiki modalne to logiki, w których oprócz znanych nam już spójników
+    czy kwantyfikatorów występują też modalności. Czym jest modalność?
+    Najpierw trochę etymologii.
+
+    Łacińskie słowo "modus" oznacza "sposób". Występuje ono w takich
+    wyrażeniach jak "modus operandi" ("sposób działania") czy "modus
+    vivendi" ("sposób życia"; po dzisiejszemu powiedzielibyśmy "styl
+    życia", a amerykańce - "way of life"). Od niego w średniowiecznej
+    łacinie powstał przymiotnik "modalis", który oznacza "dotyczący
+    sposobu". Przymiotnik ten przedostał się do języków narodowych,
+    dając polskie "modalny" czy angielskie "modal", od których potem
+    utworzono rzeczowniki (pol. "modalność", ang. "modality") znaczące
+    mniej więcej to samo, co oryginalne łacińskie "modus" - "sposób".
+    Historia słów bywa pokręcona...
+
+    W językach naturalnych modalności często występują pod postacią
+    czasowników zwanych na ich cześć modalnymi, takich jak "móc" czy
+    "musieć" - o ile nie mieszkasz pod kamieniem na pustyni, to pewnie
+    spotkałeś się z nimi ucząc się języków obcych. Jednak nas bardziej
+    będzie interesować inna forma, pod którą modalności występują, a są
+    nią przysłówki. Porównajmy poniższe zdania:
+    - Pada deszcz.
+    - Być może pada deszcz.
+    - Na pewno pada deszcz.
+
+    Wszystkie mówią o tym samym zjawisku, czyli deszczu, ale robią to
+    w różny sposób (i ten sposób to właśnie modalność!) - pierwszy
+    sposób jest neutralny, drugi wyraża niepewność (czyli możliwość),
+    a trzeci pewność (czyli konieczność).
+
+    Najpopularniejsze logiki modalne skupiają się na próbie formalizacji
+    właśnie tych dwóch sposobów - możliwości i konieczności. Rozważa się
+    różne reguły i/lub aksjomaty, np. "jeśli P zachodzi, to jest możliwe"
+    czy "jeżeli P jest konieczne, to zachodzi" oraz próbuje sformalizować
+    znaczenie zdań modalnych za pomocą tworu zwanego "możliwymi światami"
+    (ang. possible worlds). Idea jest taka, że światów jest bardzo wiele
+    i zwykłe zdania mówią o naszym świecie, a zdania modalne o światach
+    innych niż nasz. Coś jest możliwe, gdy zachodzi w jednym ze światów,
+    zaś konieczne, jeżeli zachodzi we wszystkich światach. *)
+
+(** ** Logiki substrukturalne - kwantowa teoria hajsu (TODO) *)
+
 (** ** Logiki wielowartościowe *)
 
 (** Innym sposobem klasyfikacji logik jest liczba wartości logicznych,
@@ -160,8 +204,6 @@
     nieprzeliczalnie wiele, czyli tyle co liczb rzeczywistych). Nie
     będziemy jednak drążyć tego tematu. *)
 
-(** ** Logiki substrukturalne - hajs, relewancja i kwanty *)
-
 (** ** Logika szalonego Gruzina *)
 
 (** Logika szalonego Gruzina, oficjalnie zwana logiką obliczeń
@@ -231,80 +273,11 @@
     Na koniec jeszcze tylko miłe napomnienie od dobrotliwej babci:
     kontynuuj czytanie niniejszej książki, zamiast gonić za Gruzinem. *)
 
-(** ** Logiki modalne *)
-
 (** * Logika de Morgana (TODO) *)
-
-(** jako coś pomiędzy logiką konstruktywną i klasyczną (TODO) *)
-
-(** * Dziwne aksjomaty i płynące z nich logiki (TODO) *)
-
-Definition ProofIrrelevance : Prop :=
-  forall (P : Prop) (p q : P), p = q.
-
-Definition UIP : Prop :=
-  forall (A : Type) (x y : A) (p q : x = y), p = q.
-
-Definition K : Prop :=
-  forall (A : Type) (x : A) (p : x = x), p = eq_refl x.
-
-Definition PropositionalExtensionality : Prop :=
-  forall P Q : Prop, (P <-> Q) -> P = Q.
-
-Lemma UIP_K : UIP -> K.
-(* begin hide *)
-Proof.
-  unfold UIP, K.
-  intros UIP A x p.
-  apply UIP.
-Qed.
-(* end hide *)
-
-Lemma K_UIP : K -> UIP.
-(* begin hide *)
-Proof.
-  unfold K, UIP.
-  intros K A x y p q.
-  destruct p.
-  symmetry. apply K.
-Qed.
-(* end hide *)
 
 (** * Logika modalna *)
 
-(** Logiki modalne to logiki, w których oprócz znanych nam już spójników
-    czy kwantyfikatorów występują też modalności. Czym jest modalność?
-    Najpierw trochę etymologii.
-
-    Łacińskie słowo "modus" oznacza "sposób". Występuje ono w takich
-    frazach jak "modus operandi" ("sposób działania") czy "modus vivendi"
-    ("sposób życia"; po dzisiejszemu powiedzielibyśmy "styl życia",
-    a amerykańce - "way of life"). Od niego pochodzi przymiotnik
-    "modalis", który oznacza "dotyczący sposobu", a od niego pochodzą
-    francuskie "modalité" czy angielskie "modality", które znaczą
-    mniej więcej to samo co oryginalne łacińskie "modus", czyli
-    "sposób", ale już w nieco innym kontekście.
-
-    W językach naturalnych modalności często występują pod postacią
-    czasowników zwanych na ich cześć modalnymi, takich jak "móc" czy
-    "musieć" - o ile nie mieszkasz pod kamieniem na pustyni, to pewnie
-    spotkałeś się z nimi ucząc się języków obcych.
-
-    Jednak nas bardziej będzie interesować inna forma, pod którą
-    modalności występują, a są to przysłówki. Porównajmy poniższe
-    zdania:
-    - Pada deszcz.
-    - Być może pada deszcz.
-    - Na pewno pada deszcz.
-
-    Wszystkie mówią o tym samym zjawisku, czyli deszczu, ale robią to
-    w różny sposób (i ten sposób to właśnie modalność!) - pierwszy
-    sposób jest neutralny, drugi wyraża możliwość, a trzeci pewność.
-
-    Najpopularniejsze logiki modalne skupiają się na próbie formalizacji
-    właśnie tych dwóch sposobów - możliwości i konieczności. Nie będziemy
-    ich jednak tutaj omawiać, gdyż, z punktu widzenia zarówno matematyki
-    jako i informatyki, tego typu logiki są zupełnie bezużyteczne.
+(** 
 
     Zamiast tego spojrzymy jeszcze raz na rzeczy, które już znamy, a
     których nawet nie podejrzewamy o bycie modalnościami. Najpierw
@@ -1593,7 +1566,6 @@ Qed.
     Jeśliś pogubił się w tym modalnościowym zoo, nie lękaj się! Zrobiłem
     ściągę: https://github.com/wkolowski/CoqBookPL/blob/master/txt/modalno%%C5%%9Bci.md *)
 
-
 (** * Pluralizm logiczny *)
 
 (** Celem niniejszego rozdziału było zapoznanie się z logikami innymi
@@ -1655,9 +1627,9 @@ Qed.
     wręcz sekta, dziwacznych ezoteryków (do których i ja należę) żyjących
     gdzieś w otchłani pomiędzy matematyką i informatyką, a takżę trochę
     fizyką i filozofią. Ludzie ci nie mają jednej nazwy, a zajmują się
-    wieloma dziedzinami - teorią kategorii, teorią typów, podstawami
-    matematyki, matematyką konstruktywną, matematyką syntetyczną, teorią
-    języków programowania etc - mniejsza o to.
+    wieloma dziedzinami - teorią typów, teorią kategorii, teorią języków
+    programowania, podstawami matematyki (ang. foundations), matematyką
+    konstruktywną, matematyką syntetyczną, etc. - mniejsza o to.
 
     Podstawowym filarem naszej
     wiary (nieopartym jednak na dogmatach, ani nawet na aksjomatach, lecz
@@ -1682,6 +1654,39 @@ Qed.
     implementuje Coq. Naszym celem w tej książce (a szczególnie poczynając
     od następnego rozdziału) będzie dogłębnie poznać tę teorię i nauczyć
     się nią posługiwać. *)
+
+(** * Dziwne aksjomaty i płynące z nich logiki (TODO) *)
+
+Definition ProofIrrelevance : Prop :=
+  forall (P : Prop) (p q : P), p = q.
+
+Definition UIP : Prop :=
+  forall (A : Type) (x y : A) (p q : x = y), p = q.
+
+Definition K : Prop :=
+  forall (A : Type) (x : A) (p : x = x), p = eq_refl x.
+
+Definition PropositionalExtensionality : Prop :=
+  forall P Q : Prop, (P <-> Q) -> P = Q.
+
+Lemma UIP_K : UIP -> K.
+(* begin hide *)
+Proof.
+  unfold UIP, K.
+  intros UIP A x p.
+  apply UIP.
+Qed.
+(* end hide *)
+
+Lemma K_UIP : K -> UIP.
+(* begin hide *)
+Proof.
+  unfold K, UIP.
+  intros K A x y p q.
+  destruct p.
+  symmetry. apply K.
+Qed.
+(* end hide *)
 
 (** * Kodowanie impredykatywne (TODO) *)
 
