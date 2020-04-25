@@ -23,7 +23,7 @@
 <div class="paragraph"> </div>
 
  Słowo "logika" zazwyczaj występuje w liczbie pojedynczej i nie bez
-    przyczyny - zazwyczaj naucza się jednej (a nawet jednyje słusznej)
+    przyczyny - zazwyczaj naucza się jednej (a nawet jedynej słusznej)
     logiki. Porównawszy logiki konstruktywną i klasyczną nie pozostaje
     nam nic innego jak tylko skonstatować, że jesteśmy bardzo wyjątkowi,
     bo znamy już dwie logiki. Do głowy powinno nam zatem przyjść jedyne
@@ -198,6 +198,34 @@
 
 <div class="paragraph"> </div>
 
+    Przykładem nieciekawej logiki wielowartościowej jest logika rozmyta.
+    Motywacją dla tej logiki są pytania w stylu "Czy koleś o wzroście
+    180 cm jest wysoki?". Żeby móc na nie odpowiadać, jako wartości
+    logiczne bierzemy liczby rzeczywiste z przedziału <span class="inlinecode">[0;</span> <span class="inlinecode">1]</span>, gdzie 0
+    reprezentuje fałsz, 1 prawdę, a wszystkie inne liczby - pewne
+    pośrednie stopnie pewności. I tak odpowiedzią na pytanie "Czy 180
+    cm to wysoki wzrost?" może być np. 0.9, czyli raczej tak, ale nie
+    do końca, zaś na pytanie "Czy 140 cm to wysoki wzrost?" odpowiedź
+    może brzmieć 0.1, czyli raczej niski, ale przecież dzieci i karły
+    są niższe.
+
+<div class="paragraph"> </div>
+
+    Powiązanym przykładem nieciekawej logiki jest logika probabilistyczna.
+    Pomysł jest taki, że większość rzeczy w prawdziwym świecie jest dość
+    niepewna, więc zamiast przypisywać zdaniom wartości logiczne w stylu
+    "prawda" czy "fałsz", należy zastąpić je ocenami prawdopodobieństwa,
+    czyli podobnie jak w logice rozmytej, liczbami z przedziału <span class="inlinecode">[0;</span> <span class="inlinecode">1]</span>.
+
+<div class="paragraph"> </div>
+
+    O ile teoria prawdopodobieństwa jest bardzo mądra i użyteczna, to
+    dwie powyższe logiki (i wszelkie ich warianty) są zupełnie do dupy
+    i bezużyteczne właśnie dlatego, że są próbami wsadzenia
+    prawdopodobieństwa do logiki na siłę, czego efekt jest marny.
+
+<div class="paragraph"> </div>
+
     Ogólnie logiki wielowartościowe nie są zbyt ciekawe ani przydatne,
     więc nie będziemy ich zgłębiać.
 
@@ -211,15 +239,99 @@
     będziemy jednak drążyć tego tematu. 
 <div class="paragraph"> </div>
 
-<a name="lab624"></a><h2 class="section">Logiki modalne</h2>
+<a name="lab624"></a><h2 class="section">Logiki substrukturalne - hajs, relewancja i kwanty</h2>
 
 <div class="paragraph"> </div>
 
-<a name="lab625"></a><h2 class="section">Logiki substrukturalne - wungiel, relewancja i kwantowość</h2>
+<a name="lab625"></a><h2 class="section">Logika szalonego Gruzina</h2>
 
 <div class="paragraph"> </div>
 
-<a name="lab626"></a><h2 class="section">Logika szalonego Gruzina</h2>
+ Logika szalonego Gruzina, oficjalnie zwana logiką obliczeń
+    (ang. Computability Logic, w skrócie CoL), jest szalenie
+    ciekawa i właśnie dlatego się tutaj znalazła. Żeby jednak
+    nie odciągać cię od jakże wartościowego zajęcia, jakim jest
+    czytanie niniejszej książki, nie podam tu żadnych linków do
+    źródeł na temat tej logiki.
+
+<div class="paragraph"> </div>
+
+    Czym jest CoL? Zdania w CoL reprezentują problemy obliczeniowe,
+    (czyli zagadnienia w stylu "czy da się napisać program, który
+    robi cośtam"), zaś dowody to rozwiązania tych problemów. Żeby
+    było ciekawiej, problemy są interaktywne i przybierają formę
+    gier, w której naprzeciw siebie staje dwóch graczy: maszyna
+    (nasz faworyt) i środowisko (diabeł wcielony). Maszyna musi
+    w tych grach posługiwać się strategiami obliczalnymi (czyli,
+    krótko mówiąc, nie może brać swoich ruchów z sufitu), jednak
+    środowisko już niekoniecznie. Skoro zdania to interaktywne gry,
+    dowody zdań reprezentują strategie wygrywające w tych grach.
+
+<div class="paragraph"> </div>
+
+    Spójników logicznych jest tu cała masa i są naprawdę fikuśne,
+    np. negacja zamienia graczy stronami. Jeżeli zdanie <span class="inlinecode"><span class="id" title="var">Chess</span></span>
+    reprezentuje partię szachów gdzie maszyna gra białymi (lub,
+    precyzyjniej pisząc, problem "czy istnieje niezawodny sposób
+    na wygranie partii szachów białymi"), to zdanie <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Chess</span></span> to
+    partia szachów, w której maszyna gra czarnymi.
+
+<div class="paragraph"> </div>
+
+    Dalej mamy takie cuda jak równoległa koniunkcja i dysjunkcja
+    gier, które polegają na tym, że toczą się na raz dwie gry i
+    żeby wygrać, trzeba wygrać w obu (koniunkcja) lub co najmniej
+    jednej z nich (dysjunkcja).
+
+<div class="paragraph"> </div>
+
+    Spójniki równoległe zachowują się tak jak spójniki w logice
+    klasycznej, w szczególności zachodzi prawo wyłączonego środka.
+    W ramach przykładu rozważmy zdanie <span class="inlinecode"><span class="id" title="var">Chess</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Chess</span></span>. Jest to
+    gra, która składa się z dwóch partii szachów rozgrywanych w tym
+    samym czasie. W pierwszej partii maszyna gra białymi, a środowisko
+    czarnymi, a w drugiej na odwrót. Wygrywa ten, kto wygra choć jedną
+    partię.
+
+<div class="paragraph"> </div>
+
+    Istnieje bardzo prosta strategia, żeby wygrać <span class="inlinecode"><span class="id" title="var">Chess</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">Chess</span></span>:
+    wystarczy w jednej z partii małpować ruchy, które przeciwnik robi
+    w drugiej partii. Wtedy jedna gra jest przegrana a druga wygrana,
+    czyli zwycięzcą całej równoległodysjunkcjowej gry jest maszyna.
+
+<div class="paragraph"> </div>
+
+    Są też spójniki wyborowe: wyborowa koniunkcja i wyborowa dusjunkcja.
+    Polegają one na tym, że na początku są dwie gry i w pierwszym ruchu
+    wybiera się, w którą grę będzie się grać (w przypadku dysjunkcji
+    wybiera maszyna, w przypadku koniunkcji - środowisko). Tutaj prawo
+    wyłączonego środka już nie zachodzi - jeżeli maszyna jest kiepska w
+    szachy, to przegra niezależnie od tego, czy będzie grać białymi czy
+    czarnymi. Spójniki wyborowe zachowują się tak, jak spójniki znane z
+    logiki konstruktywnej.
+
+<div class="paragraph"> </div>
+
+    Wesoło, prawda? A to nie wszystko, bo rodzajów spójników jest co
+    najmniej dwa razy więcej. Jakby tego było mało, spójniki uogólniają
+    się potem na kwantyfikatory i dzięki temu mamy różne wesołe zdania,
+    które reprezentują np. rozgrywanie nieskończenie wielu partii szachów
+    na raz. Brzmi dobrze? Jasne, a jak jeszcze zauważysz, że nawet słowem
+    nie zająknąłem się dotychczas o implikacji... oj, w logice szalonego
+    Gruzina zabawy jest co nie miara. Na koniec dodam jeszcze tylko, że
+    fragmentami CoL są nie tylko logika klasyczna (spójniki równoległe)
+    oraz logika konstruktywna (spójniki wyborowe), ale też logika liniowa
+    (jedna z tych opisanych w podrozdziale o logikach substrukturalnych)
+    i jeszcze kilka innych, których nie ogarniają nawet najstarsi górale.
+
+<div class="paragraph"> </div>
+
+    Na koniec jeszcze tylko miłe napomnienie od dobrotliwej babci:
+    kontynuuj czytanie niniejszej książki, zamiast gonić za Gruzinem. 
+<div class="paragraph"> </div>
+
+<a name="lab626"></a><h2 class="section">Logiki modalne</h2>
 
 <div class="paragraph"> </div>
 

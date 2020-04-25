@@ -5,7 +5,7 @@
 (** * Inne logiki? (TODO) *)
 
 (** Słowo "logika" zazwyczaj występuje w liczbie pojedynczej i nie bez
-    przyczyny - zazwyczaj naucza się jednej (a nawet jednyje słusznej)
+    przyczyny - zazwyczaj naucza się jednej (a nawet jedynej słusznej)
     logiki. Porównawszy logiki konstruktywną i klasyczną nie pozostaje
     nam nic innego jak tylko skonstatować, że jesteśmy bardzo wyjątkowi,
     bo znamy już dwie logiki. Do głowy powinno nam zatem przyjść jedyne
@@ -128,6 +128,28 @@
       w której prąd w obwodzie nie płynie tak jak powinien, czyli pewien
       rodzaj błędu
 
+    Przykładem nieciekawej logiki wielowartościowej jest logika rozmyta.
+    Motywacją dla tej logiki są pytania w stylu "Czy koleś o wzroście
+    180 cm jest wysoki?". Żeby móc na nie odpowiadać, jako wartości
+    logiczne bierzemy liczby rzeczywiste z przedziału [[0; 1]], gdzie 0
+    reprezentuje fałsz, 1 prawdę, a wszystkie inne liczby - pewne
+    pośrednie stopnie pewności. I tak odpowiedzią na pytanie "Czy 180
+    cm to wysoki wzrost?" może być np. 0.9, czyli raczej tak, ale nie
+    do końca, zaś na pytanie "Czy 140 cm to wysoki wzrost?" odpowiedź
+    może brzmieć 0.1, czyli raczej niski, ale przecież dzieci i karły
+    są niższe.
+
+    Powiązanym przykładem nieciekawej logiki jest logika probabilistyczna.
+    Pomysł jest taki, że większość rzeczy w prawdziwym świecie jest dość
+    niepewna, więc zamiast przypisywać zdaniom wartości logiczne w stylu
+    "prawda" czy "fałsz", należy zastąpić je ocenami prawdopodobieństwa,
+    czyli podobnie jak w logice rozmytej, liczbami z przedziału [[0; 1]].
+
+    O ile teoria prawdopodobieństwa jest bardzo mądra i użyteczna, to
+    dwie powyższe logiki (i wszelkie ich warianty) są zupełnie do dupy
+    i bezużyteczne właśnie dlatego, że są próbami wsadzenia
+    prawdopodobieństwa do logiki na siłę, czego efekt jest marny.
+
     Ogólnie logiki wielowartościowe nie są zbyt ciekawe ani przydatne,
     więc nie będziemy ich zgłębiać.
 
@@ -138,11 +160,78 @@
     nieprzeliczalnie wiele, czyli tyle co liczb rzeczywistych). Nie
     będziemy jednak drążyć tego tematu. *)
 
-(** ** Logiki modalne *)
-
-(** ** Logiki substrukturalne - wungiel, relewancja i kwantowość *)
+(** ** Logiki substrukturalne - hajs, relewancja i kwanty *)
 
 (** ** Logika szalonego Gruzina *)
+
+(** Logika szalonego Gruzina, oficjalnie zwana logiką obliczeń
+    (ang. Computability Logic, w skrócie CoL), jest szalenie
+    ciekawa i właśnie dlatego się tutaj znalazła. Żeby jednak
+    nie odciągać cię od jakże wartościowego zajęcia, jakim jest
+    czytanie niniejszej książki, nie podam tu żadnych linków do
+    źródeł na temat tej logiki.
+
+    Czym jest CoL? Zdania w CoL reprezentują problemy obliczeniowe,
+    (czyli zagadnienia w stylu "czy da się napisać program, który
+    robi cośtam"), zaś dowody to rozwiązania tych problemów. Żeby
+    było ciekawiej, problemy są interaktywne i przybierają formę
+    gier, w której naprzeciw siebie staje dwóch graczy: maszyna
+    (nasz faworyt) i środowisko (diabeł wcielony). Maszyna musi
+    w tych grach posługiwać się strategiami obliczalnymi (czyli,
+    krótko mówiąc, nie może brać swoich ruchów z sufitu), jednak
+    środowisko już niekoniecznie. Skoro zdania to interaktywne gry,
+    dowody zdań reprezentują strategie wygrywające w tych grach.
+
+    Spójników logicznych jest tu cała masa i są naprawdę fikuśne,
+    np. negacja zamienia graczy stronami. Jeżeli zdanie [Chess]
+    reprezentuje partię szachów gdzie maszyna gra białymi (lub,
+    precyzyjniej pisząc, problem "czy istnieje niezawodny sposób
+    na wygranie partii szachów białymi"), to zdanie [~ Chess] to
+    partia szachów, w której maszyna gra czarnymi.
+
+    Dalej mamy takie cuda jak równoległa koniunkcja i dysjunkcja
+    gier, które polegają na tym, że toczą się na raz dwie gry i
+    żeby wygrać, trzeba wygrać w obu (koniunkcja) lub co najmniej
+    jednej z nich (dysjunkcja).
+
+    Spójniki równoległe zachowują się tak jak spójniki w logice
+    klasycznej, w szczególności zachodzi prawo wyłączonego środka.
+    W ramach przykładu rozważmy zdanie [Chess \/ ~ Chess]. Jest to
+    gra, która składa się z dwóch partii szachów rozgrywanych w tym
+    samym czasie. W pierwszej partii maszyna gra białymi, a środowisko
+    czarnymi, a w drugiej na odwrót. Wygrywa ten, kto wygra choć jedną
+    partię.
+
+    Istnieje bardzo prosta strategia, żeby wygrać [Chess \/ ~ Chess]:
+    wystarczy w jednej z partii małpować ruchy, które przeciwnik robi
+    w drugiej partii. Wtedy jedna gra jest przegrana a druga wygrana,
+    czyli zwycięzcą całej równoległodysjunkcjowej gry jest maszyna.
+
+    Są też spójniki wyborowe: wyborowa koniunkcja i wyborowa dusjunkcja.
+    Polegają one na tym, że na początku są dwie gry i w pierwszym ruchu
+    wybiera się, w którą grę będzie się grać (w przypadku dysjunkcji
+    wybiera maszyna, w przypadku koniunkcji - środowisko). Tutaj prawo
+    wyłączonego środka już nie zachodzi - jeżeli maszyna jest kiepska w
+    szachy, to przegra niezależnie od tego, czy będzie grać białymi czy
+    czarnymi. Spójniki wyborowe zachowują się tak, jak spójniki znane z
+    logiki konstruktywnej.
+
+    Wesoło, prawda? A to nie wszystko, bo rodzajów spójników jest co
+    najmniej dwa razy więcej. Jakby tego było mało, spójniki uogólniają
+    się potem na kwantyfikatory i dzięki temu mamy różne wesołe zdania,
+    które reprezentują np. rozgrywanie nieskończenie wielu partii szachów
+    na raz. Brzmi dobrze? Jasne, a jak jeszcze zauważysz, że nawet słowem
+    nie zająknąłem się dotychczas o implikacji... oj, w logice szalonego
+    Gruzina zabawy jest co nie miara. Na koniec dodam jeszcze tylko, że
+    fragmentami CoL są nie tylko logika klasyczna (spójniki równoległe)
+    oraz logika konstruktywna (spójniki wyborowe), ale też logika liniowa
+    (jedna z tych opisanych w podrozdziale o logikach substrukturalnych)
+    i jeszcze kilka innych, których nie ogarniają nawet najstarsi górale.
+
+    Na koniec jeszcze tylko miłe napomnienie od dobrotliwej babci:
+    kontynuuj czytanie niniejszej książki, zamiast gonić za Gruzinem. *)
+
+(** ** Logiki modalne *)
 
 (** * Logika de Morgana (TODO) *)
 
