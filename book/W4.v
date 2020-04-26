@@ -229,7 +229,76 @@
     będzie większość reszty niniejszego rozdziału... ale najpierw
     jeszcze parę innych logik. *)
 
-(** ** Logiki substrukturalne - kwantowa teoria hajsu (TODO) *)
+(** ** Logiki substrukturalne - kwantowa teoria hajsu *)
+
+(** W jednym z poprzednich podrozdziałów dowiedzieliśmy się, że łatwym
+    sposobem na uzyskanie nowej logiki jest wziąć logikę konstruktywną
+    i coś z niej wyrzucić (spójniki lub ich aspekty, jak np. _ex falso
+    quodlibet_). Tak powstawałe logiki nazywaliśmy logikami
+    subintuicjonistycznymi.
+
+    Logiki substrukturalne opierają się na podobnym pomyśle: weź
+    logikę konstruktywną i coś z niej wyrzuć. O ile jednak większość
+    logik subintuicjonistycznych jest mało ciekawa, a wyrzucanie ma
+    na celu jedynie upozorowanie uzyskania nowej logiki, o tyle w
+    przypadku logik substrukturalnych jest inaczej. Dzieje się tak,
+    gdyż tym co wyrzucamy, są reguły strutkuralne. Stąd też nazwa:
+    logiki substrukturalne.
+
+    Czym są reguły strukturalne? Sa to reguły, które mówią, jakie
+    operacje wolno wykonywać na hipotezach, które mamy w kontekście:
+    - reguła zamiany (ang. exchange) pozwala zamieniać hipotezy
+      miejscami
+    - reguła kontrakcji (ang. contraction) pozwala na skopiowanie
+      hipotezy
+    - reguła osłabiania (ang. weakening) pozwala kasować hipotezy
+
+    W Coqu objawiają się one tak: *)
+
+Lemma structural_rules_test :
+  forall P Q R : Prop, (P -> Q -> R) -> (Q -> P -> R).
+Proof.
+  intros P Q R H q p.
+
+  (* reguła kontrakcji - kopiujemy [p] i nazywamy kopię [p'] *)
+  pose proof p as p'.
+
+  (* reguła osłabiania - kasujemy [p'] *)
+  clear p'.
+
+  (* reguła zamiany - zamieniamy [p] i [q] miejscami *)
+  move p after q.
+
+  apply H.
+    exact p.
+    exact q.
+Qed.
+
+(** Jako, że kontekst jest rzeczą absolutnie podstawową przy dowodzeniu
+    czegokolwiek, (nie)obecność tych reguł ma kluczowy wpływ na to, co
+    da się w danej logice udowodnić, a w związku z tym także na to, jak
+    możemy daną logikę interpretować.
+
+    Przyjrzyjmy się poniższym twierdzeniom: *)
+
+Lemma yes_deleting :
+  forall P : Prop, P -> True.
+(* begin hide *)
+Proof.
+  intros P _. trivial.
+Qed.
+(* end hide *)
+
+Lemma yes_cloning :
+  forall P : Prop, P -> P /\ P.
+(* begin hide *)
+Proof.
+  intros P p. split; assumption.
+Qed.
+(* end hide *)
+
+
+
 
 (** ** Logiki wielowartościowe *)
 

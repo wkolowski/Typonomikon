@@ -340,10 +340,101 @@
     jeszcze parę innych logik. 
 <div class="paragraph"> </div>
 
-<a name="lab624"></a><h2 class="section">Logiki substrukturalne - kwantowa teoria hajsu (TODO)</h2>
+<a name="lab624"></a><h2 class="section">Logiki substrukturalne - kwantowa teoria hajsu</h2>
 
 <div class="paragraph"> </div>
 
+ W jednym z poprzednich podrozdziałów dowiedzieliśmy się, że łatwym
+    sposobem na uzyskanie nowej logiki jest wziąć logikę konstruktywną
+    i coś z niej wyrzucić (spójniki lub ich aspekty, jak np. <i>ex falso
+    quodlibet</i>). Tak powstawałe logiki nazywaliśmy logikami
+    subintuicjonistycznymi.
+
+<div class="paragraph"> </div>
+
+    Logiki substrukturalne opierają się na podobnym pomyśle: weź
+    logikę konstruktywną i coś z niej wyrzuć. O ile jednak większość
+    logik subintuicjonistycznych jest mało ciekawa, a wyrzucanie ma
+    na celu jedynie upozorowanie uzyskania nowej logiki, o tyle w
+    przypadku logik substrukturalnych jest inaczej. Dzieje się tak,
+    gdyż tym co wyrzucamy, są reguły strutkuralne. Stąd też nazwa:
+    logiki substrukturalne.
+
+<div class="paragraph"> </div>
+
+    Czym są reguły strukturalne? Sa to reguły, które mówią, jakie
+    operacje wolno wykonywać na hipotezach, które mamy w kontekście:
+<ul class="doclist">
+<li> reguła zamiany (ang. exchange) pozwala zamieniać hipotezy
+      miejscami
+
+</li>
+<li> reguła kontrakcji (ang. contraction) pozwala na skopiowanie
+      hipotezy
+
+</li>
+<li> reguła osłabiania (ang. weakening) pozwala kasować hipotezy
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    W Coqu objawiają się one tak: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">structural_rules_test</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) -&gt; (<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> <span class="id" title="var">H</span> <span class="id" title="var">q</span> <span class="id" title="var">p</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;reguła&nbsp;kontrakcji&nbsp;-&nbsp;kopiujemy&nbsp;<span class="inlinecode"><span class="id" title="var">p</span></span>&nbsp;i&nbsp;nazywamy&nbsp;kopię&nbsp;<span class="inlinecode"><span class="id" title="var">p'</span></span>&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> <span class="id" title="var">proof</span> <span class="id" title="var">p</span> <span class="id" title="keyword">as</span> <span class="id" title="var">p'</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;reguła&nbsp;osłabiania&nbsp;-&nbsp;kasujemy&nbsp;<span class="inlinecode"><span class="id" title="var">p'</span></span>&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">clear</span> <span class="id" title="var">p'</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;reguła&nbsp;zamiany&nbsp;-&nbsp;zamieniamy&nbsp;<span class="inlinecode"><span class="id" title="var">p</span></span>&nbsp;i&nbsp;<span class="inlinecode"><span class="id" title="var">q</span></span>&nbsp;miejscami&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span> <span class="id" title="var">p</span> <span class="id" title="keyword">after</span> <span class="id" title="var">q</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">q</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jako, że kontekst jest rzeczą absolutnie podstawową przy dowodzeniu
+    czegokolwiek, (nie)obecność tych reguł ma kluczowy wpływ na to, co
+    da się w danej logice udowodnić, a w związku z tym także na to, jak
+    możemy daną logikę interpretować.
+
+<div class="paragraph"> </div>
+
+    Przyjrzyjmy się poniższym twierdzeniom: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">yes_deleting</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">True</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">yes_cloning</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> /\ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a name="lab625"></a><h2 class="section">Logiki wielowartościowe</h2>
 
 <div class="paragraph"> </div>
