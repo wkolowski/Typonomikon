@@ -125,7 +125,109 @@
     (ang. possible worlds). Idea jest taka, że światów jest bardzo wiele
     i zwykłe zdania mówią o naszym świecie, a zdania modalne o światach
     innych niż nasz. Coś jest możliwe, gdy zachodzi w jednym ze światów,
-    zaś konieczne, jeżeli zachodzi we wszystkich światach. *)
+    zaś konieczne, jeżeli zachodzi we wszystkich światach.
+
+    Modalności z powyższej logiki (możliwość i konieczność) nazywane
+    bywają aletycznymi (od greckiego "ἀλήθεια" / "aletheia" - "prawda"),
+    gdyż modyfikują prawdziwość zdań. Inne warianty logiki modalnej to:
+    - logika deontyczna (od gr. "δέον" / "déon" - "to co jest wiążące"),
+      w której występują takie modalności jak "trzeba", "należy", "wolno",
+      "nie wolno", "powinno się", "wypadałoby" etc.
+    - logika epistemiczna (od gr. "ἐπιστήμη" / "epistēmē" - "wiedza"),
+      w której modalności reprezentują stan wiedzy różnych osób
+    - logika doksastyczna (od gr. "δόξα" / "dόxa" - "wiara", "opinia"),
+      w której modalności reprezentują, w jakie zdania wierzą osoby
+
+    Jak nietrudno domyślić się po dużej liczbie greckich słów, które
+    się nagle pojawiły, wszystkie powyższe logiki modalne mają raczej
+    charakter filozoficzny, co sprawia, że z punktu widzenia zarówno
+    matematyki jak i informatyki są zupełnie bezużyteczne. Szczególnie
+    bolesne jest to, że każdy z powyższych wariantów logiki modalnej
+    sam ma ogrom wariantów, gdyż filozofowie za cholerę nie mogą się
+    zgodzić co do tego, czym tak naprawdę jest możliwość, konieczność,
+    wiedza, wiara, etc. To powoduje, że wszystkie te logiki są mocno
+    niejasne. Z tego powodu nie będziemy się nimi zajmować.
+
+    Na szczęście nie wszystkie logiki modalne są mętne. Dość ciekawą
+    logiką modalną jest logika dowodliwości (ang. provability logic),
+    w której występuje operator modalny oznaczający "da się udowodnić,
+    że...".
+
+    Wróćmy po raz kolejny do prawa wyłączonego środka. W Coqu nie
+    umiemy udowodnić, że [forall P : Prop, P \/ ~ P], ale czy to
+    znaczy, że zdanie to jest fałszywe? Gdyby spróbować udowodnić
+    [~ forall P : Prop, P \/ ~ P], to okaże się, że... też raczej
+    nie potrafimy, ale czy to znaczy, że prawo wyłączonego środka
+    jest prawdziwe?
+
+    Widzimy więc, że prawo wyłączonego środka jest niejako zawieszone
+    w próżni: nie umiemy go udowodnić ani obalić. Jak fakt ten wpływa
+    na jego prawdziwość? Możemy przyjąć prawo wyłączonego środka jako
+    aksjomat, ale możemy też jako aksjomat przyjąć jego zaprzeczenie.
+    Oba te aksjomaty po dodaniu do Coqowej logiki nie doprowadzą nas
+    do sprzeczności... ale czy na pewno? Skąd niby wiesz, że cię nie
+    okłamałem? Czy to, że po dodaniu aksjomatu nie natrafiliśmy na
+    żadną sprzeczność znaczy, że nie da się na nią natrafić?
+
+    Jak widzisz, pytania te są dość mocno pogmatwane, a co gorsza,
+    nie możemy użyć Coqa, żeby upewnić się, że nasze odpowiedzi na
+    nie są poprawne. Cobyś nie czuł nadmiarowego niepokoju, zapewnię
+    cię tylko, że aksjomat wyłączonego środka faktycznie może zostać
+    dodany do Coqa bez popadania w sprzeczność. Jednak żeby być tego
+    faktu pewnym, paru kolesi, znacznie mądrzejszych od nas, musiało
+    zakasać rękawy, kupić 100 kilo kredy i parę ryz papieru, i ostro
+    się napracować, nie mając tej błogiej pewności, że poprawny dowód
+    zaświeci się na zielono.
+
+    Logika dowodliwości to logika, która teoretycznie próbuje zaradzić
+    tego typu sytuacjom i dlatego jest intrygująca... ale ponieważ nas
+    bardziej interesuje praktyczne dowodzenie poprawności programów (w
+    przyszłych rozdziałach, kiedy już nauczymy się programować), a nie
+    zamartwianie się aksjomatami, to logika dowodliwości jest dla nas
+    zupełnie bezużyteczna i z tego powodu nie będziemy się nią zajmować.
+
+    Ostatnią rodziną logik modalnych wartych wspomnienia są logiki
+    temporalne (z łac. "tempus" - "czas"). Występują tam modalności
+    wyrażające czas, np. "teraz", "zawsze w przeszłości", "zawsze w
+    przyszłości", "kiedyś w przeszłości", "kiedyś w przyszłości" i
+    tak dalej.
+
+    Napisałem "logiki temporalne" w liczbie mnogiej, bo jest ich wiele,
+    a główne różnice dotyczą struktury czasu, która jest wyrażana przez
+    prawa rządzące modalnościami, jak np. te dwa:
+    - "jeżeli P zachodzi, to w przyszłości zawsze będzie prawdą, że P
+      zaszło kiedyś w przeszłości" - brzmi całkiem rozsądnie
+    - "jeżeli P zachodzi, to w przeszłości zawsze było prawdą, że P
+      zajdzie kiedyś w przyszłości" - brzmi mega deterministycznie i
+      niektórzy mogą się przeciw niemu zbuntować.
+
+    Tego typu filozoficzne dywagacje prowadzą nas do pytania o naturę
+    czasu: czy czas jest liniowy (istnieje jedna możliwa przyszłość,
+    czyli świat jest zdeterminowany), czy raczej rozgałęziony (jest
+    wiele możliwych przyszłości, czyli świat nie jest zdeterminowany),
+    co w praktyce oznacza kolejne wcielenie idei możliwych światów.
+
+    Mimo filozoficznego smrodku, który dobywa się z powyższego opisu,
+    niektóre logiki temporalne są całkiem użyteczne i to do czegoś,
+    na czym i nam zależy: weryfikacji poprawności programów (a także
+    sprzętu, ale o tym nic nie wiem). Idea jest taka, że możemy robić
+    zdania wyrażające różne pożądane właściwości programów, na przykład:
+    - bezpieczeństwo - program NIGDY nie zrobi niczego złego
+    - żywotność - na każde żądanie serwer KIEDYŚ udzieli odpowiedzi
+
+    Mimo tego powiewu przydatności, nie będzie zajmować się logikami
+    temporalnymi, ponieważ ich podejście do weryfikacji poprawności
+    programów jest diametralnie różne i niekompatybilne z naszym.
+
+    Na koniec krótka przestroga. Przeczytawszy niniejszy podrozdział
+    mógłbyś dojść do wniosku, że logiki modalne są bezużyteczne, ale
+    wcale tak nie jest. Modalności to nie tylko możliwość, czas albo
+    wiedza, których w Coqowej logice brak. Modalności stanowią także
+    bardzo ogólny i elegancki sposób patrzenia na rzeczy dobrze nam
+    znane, jak logika klasyczna czy podwójna negacja. Przekonamy się
+    o tym już niedługo, gdyż tego spojrzenia na modalności dotyczyć
+    będzie większość reszty niniejszego rozdziału... ale najpierw
+    jeszcze parę innych logik. *)
 
 (** ** Logiki substrukturalne - kwantowa teoria hajsu (TODO) *)
 
@@ -277,11 +379,13 @@
 
 (** * Logika modalna *)
 
-(** 
+(** Jako się rzekło, modalności takie jak możliwość, konieczność, czas,
+    wiedza czy dowodliwość nie będą nas w tej książce interesować, lecz
+    nie znaczy to, że nie będą interesować nas modalności w ogóle.
 
-    Zamiast tego spojrzymy jeszcze raz na rzeczy, które już znamy, a
-    których nawet nie podejrzewamy o bycie modalnościami. Najpierw
-    jednak pół-formalna definicja modalności:
+    W niniejszym podrozdziale spojrzymy jeszcze raz na rzeczy, które już
+    znamy, a których nawet nie podejrzewamy o bycie modalnościami. Zanim
+    to jednak nastąpi, zobaczmy pół-formalną definicję modalności:
 
     [M] jest modalnością, gdy:
     - [M : Prop -> Prop], czyli [M] przekształca zdania w zdania
