@@ -242,7 +242,7 @@
     logik subintuicjonistycznych jest mało ciekawa, a wyrzucanie ma
     na celu jedynie upozorowanie uzyskania nowej logiki, o tyle w
     przypadku logik substrukturalnych jest inaczej. Dzieje się tak,
-    gdyż tym co wyrzucamy, są reguły strutkuralne. Stąd też nazwa:
+    gdyż tym, co wyrzucamy, są reguły strutkuralne. Stąd też nazwa:
     logiki substrukturalne.
 
     Czym są reguły strukturalne? Sa to reguły, które mówią, jakie
@@ -275,9 +275,9 @@ Proof.
 Qed.
 
 (** Jako, że kontekst jest rzeczą absolutnie podstawową przy dowodzeniu
-    czegokolwiek, (nie)obecność tych reguł ma kluczowy wpływ na to, co
-    da się w danej logice udowodnić, a w związku z tym także na to, jak
-    możemy daną logikę interpretować.
+    czegokolwiek, (nie)obecność tych reguł ma absolutnie kluczowy wpływ
+    na to, co da się w danej logice udowodnić, a w związku z tym także
+    na to, jak możemy daną logikę interpretować.
 
     Przyjrzyjmy się poniższym twierdzeniom: *)
 
@@ -296,6 +296,41 @@ Proof.
   intros P p. split; assumption.
 Qed.
 (* end hide *)
+
+(** Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
+    z kwantowej teorii informacji: twierdzenie o nieusuwaniu (ang.
+    no-deleting theorem) oraz twierdzenie o nieklonowaniu (ang.
+    no-cloning theorem). Twierdzenia te w uproszczeniu (sorry, nie
+    jestem fizykiem) mówią, że kwantowa informacja nie może ot tak
+    sobie pojawiać się ani znikać. Bardziej poetycko można powiedzieć,
+    że zachodzi prawo zachowania kwantowej informacji.
+
+    Ponieważ w Coqu udało nam się bez problemu udowodnić przeczace im
+    twierdzenia o usuwaniu i klonowaniu, Coqowa logika nie nadaje się
+    do przeprowadzania rozumowań z zakresu kwantowej teorii informacji.
+    Nadaje się za to do tego logika zwana liniową, czyli taka, w której
+    nie ma reguły osłabiania ani reguły kontrakcji. W logice tej musimy
+    każdej hipotezy, którą mamy w kontekście, użyć dokładnie jeden raz.
+    Hipotezy w logice liniowej mogą płynąć przez nasz dowód w dowolnej
+    kolejności, ale nie mogą pojawiać się ani znikać, niczym kwantowa
+    informacja.
+
+    Ale zejdźmy na ziemię - można tutaj znaleźć wystarczająco dużo
+    rzeczy, których nie ima się zwyczajna logika. Kebaby czy wungiel
+    są dużo bardziej podobne do kwantowej informacji niż do zdań z
+    logiki konstruktywnej:
+    - kebaba można zjeść (nabawiając się przy tym niestrawności),
+      ale nie można go skopiować ani skasować
+    - wungiel można spalić (robiąc w ten sposób globalne ocieplenie...
+      albo i nie - zależy w co kto wierzy), ale nie można go skopiować
+      ani zdezintegrować
+      bez śladu
+
+    A więc logika liniowa to nie tylko logika kwantowej informacji,
+    ale także logika wungla i kebabów. Czy jest coś jeszcze, o czym
+    można w niej rozumować?
+
+*)
 
 
 
