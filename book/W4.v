@@ -229,13 +229,12 @@
     będzie większość reszty niniejszego rozdziału... ale najpierw
     jeszcze parę innych logik. *)
 
-(** ** Logiki substrukturalne - kwantowa teoria hajsu *)
+(** ** Logiki substrukturalne - kwantowa teoria relewantnego hajsu *)
 
 (** W jednym z poprzednich podrozdziałów dowiedzieliśmy się, że łatwym
     sposobem na uzyskanie nowej logiki jest wziąć logikę konstruktywną
     i coś z niej wyrzucić (spójniki lub ich aspekty, jak np. _ex falso
-    quodlibet_). Tak powstawałe logiki nazywaliśmy logikami
-    subintuicjonistycznymi.
+    quodlibet_). Tak powstałe logiki nazywaliśmy subintuicjonistycznymi.
 
     Logiki substrukturalne opierają się na podobnym pomyśle: weź
     logikę konstruktywną i coś z niej wyrzuć. O ile jednak większość
@@ -298,37 +297,93 @@ Qed.
 (* end hide *)
 
 (** Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
-    z kwantowej teorii informacji: twierdzenie o nieusuwaniu (ang.
-    no-deleting theorem) oraz twierdzenie o nieklonowaniu (ang.
-    no-cloning theorem). Twierdzenia te w uproszczeniu (sorry, nie
-    jestem fizykiem) mówią, że kwantowa informacja nie może ot tak
-    sobie pojawiać się ani znikać. Bardziej poetycko można powiedzieć,
-    że zachodzi prawo zachowania kwantowej informacji.
+    z kwantowej teorii informacji:
+    - twierdzenie o nieusuwaniu (ang. no-deleting theorem)
+    - twierdzenie o nieklonowaniu (ang. no-cloning theorem).
 
-    Ponieważ w Coqu udało nam się bez problemu udowodnić przeczace im
-    twierdzenia o usuwaniu i klonowaniu, Coqowa logika nie nadaje się
-    do przeprowadzania rozumowań z zakresu kwantowej teorii informacji.
+    Twierdzenia te w uproszczeniu (sorry, nie jestem fizykiem) mówią,
+    że kwantowa informacja nie może ot tak sobie pojawiać się ani
+    znikać. Bardziej poetycko można powiedzieć, że zachodzi prawo
+    zachowania kwantowej informacji. Ponieważ w Coqu udało nam się
+    bez problemu udowodnić przeczące im twierdzenia o usuwaniu oraz
+    klonowaniu, Coqowa logika nie nadaje się do rozumowania na temat
+    kwantowej teorii informacji.
+
     Nadaje się za to do tego logika zwana liniową, czyli taka, w której
     nie ma reguły osłabiania ani reguły kontrakcji. W logice tej musimy
-    każdej hipotezy, którą mamy w kontekście, użyć dokładnie jeden raz.
+    dokładnie jeden raz użyć każdej hipotezy, którą mamy w kontekście.
     Hipotezy w logice liniowej mogą płynąć przez nasz dowód w dowolnej
     kolejności, ale nie mogą pojawiać się ani znikać, niczym kwantowa
-    informacja.
+    informacja. To sprawia, że logika liniowa jest dobrym kandydatem
+    na logikę kwantową.
 
     Ale zejdźmy na ziemię - można tutaj znaleźć wystarczająco dużo
-    rzeczy, których nie ima się zwyczajna logika. Kebaby czy wungiel
-    są dużo bardziej podobne do kwantowej informacji niż do zdań z
-    logiki konstruktywnej:
-    - kebaba można zjeść (nabawiając się przy tym niestrawności),
-      ale nie można go skopiować ani skasować
-    - wungiel można spalić (robiąc w ten sposób globalne ocieplenie...
-      albo i nie - zależy w co kto wierzy), ale nie można go skopiować
-      ani zdezintegrować
-      bez śladu
+    rzeczy, których nie ima się zwyczajna logika, jak na przykład
+    wungiel. Wungiel jest znacznie bardziej podobny do kwantowej
+    informacji niż do zdań znanych z logiki konstruktywnej czy
+    klasycznej:
+    - Wungiel można spalić (wywołując tym sposobem globalne ocieplenie...
+      albo i nie - zależy w co kto wierzy), ale nie można go skasować.
+    - Podobnie można wungiel wykopać z ziemii, ale nijak nie idzie go
+      skopiować, żeby za darmo uzyskać więcej.
 
-    A więc logika liniowa to nie tylko logika kwantowej informacji,
-    ale także logika wungla i kebabów. Czy jest coś jeszcze, o czym
-    można w niej rozumować?
+    A więc logika liniowa to nie tylko logika kwantowej informacji, ale
+    także logika wungla i w ogólności logika zasobów: jej zdania możemy
+    interpretować jako zasoby (np. zdanie [P] może oznaczać 5 kilo
+    wungla), zaś spójniki jako operacje na zasobach. W szczególności
+    liniową implikację [P -> Q] można interpretować jako proces, który
+    przekształca zasób [P] w zasób [Q]. Dowody w takim wypadku oznaczają,
+    że możliwe jest przekształcenie zasobów reprezentowanych przez
+    hipotezy w zasoby reprezentowane przez konkluzję.
+
+    Z deczka odmienne spojrzenie na zasoby ma logika afiniczna: jest
+    to logika, w której mamy reguły zamiany i osłabiania, ale nie ma
+    reguły kontrakcji. Parafrazując: logika afiniczna wymusza użycie
+    każdej hipotezy znajdującej się w kontekście co najwyżej raz.
+
+    Rodzajem zasobów, o których można rozumować za pomocą tej logiki,
+    są na przykład pieniądze (pomijając kwestie związane z fałszowaniem):
+    jeżeli masz banknot o nominale 100 zł, nie możesz go skopiować żeby
+    uzyskać 200 zł, ale możesz go zniszczyć (np. pociąć), żeby uzyskać
+    0 zł.
+
+    Jednak rodzajem zasobów, do rozumowania o których logika afiniczna
+    nadaje się najlepiej, są zasoby abstrakcyjne, takie jak uchwyty do
+    plików czy połączenia z bazą danych. Pisząc program możemy chcieć
+    otworzyć plik lub nie (co najwyżej jedno użycie uchwytu), ale jak
+    ognia unikać chcemy sytuacji, kiedy dwa programy na raz otworzą
+    ten sam plików i zaczną coś do niego zapisywać (dwa użycia uchwytu).
+    Logika afiniczna pozwala łatwo rozumować o tego typu sytuacjach i
+    dlatego jest ona raczej domeną informatyków niż fizyków kwantowych
+    czy filozofów.
+
+    Podobną logiką substrukturalną, która tym razem najbliższa jest
+    sercu filozofów, jest logika relewantna. To logika w której mamy
+    reguły zamiany i kontrakcji, ale brak reguły osłabiania. W efekcie
+    każdej hipotezy znajdującej się w kontekście musimy użyć co najmniej
+    raz. Filozofowie (przynajmniej niektórzy) kochają tę logikę, gdyż to
+    ograniczenie sprawia, że przesłanki implikacji muszą być relewantne
+    dla konkluzji, czyli być z nią jakoś powiązane.
+
+    Typowym przykładem implikacji z irrelewantną przesłanką jest zdanie
+    w stylu "jeżeli księżyc jest zrobiony z sera, to 2 + 2 = 4". Zdanie
+    to jest prawdziwe w logice konstruktywnej i klasycznej, gdyż jego
+    konkluzja, [2 + 2 = 4], jest słuszna (jak w Coqu działają liczby
+    naturalne dowiemy się już niedługo!). Jednak tego typu implikacje
+    są mocno nieintuicyjne i często sprawiają problem niematematycznym
+    osobom, a także studentom pierwszego roku i co po niektórym filzofom
+    właśnie. Logika relewantna rozwiązuje "problem", który filozofowie
+    mają z takimi zdaniami, gdyż nie można ich w tej logice udowodnić:
+    każdej hipotezy musimy użyć co najmniej raz, ale ponieważ hipotezy
+    "księżyc jest zrobiony z sera" nie użyliśmy, implikacja nie zachodzi.
+
+    
+
+
+    
+    
+
+
 
 *)
 
