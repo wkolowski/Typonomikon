@@ -248,8 +248,7 @@
     operacje wolno wykonywać na hipotezach, które mamy w kontekście:
     - reguła zamiany (ang. exchange) pozwala zamieniać hipotezy
       miejscami
-    - reguła kontrakcji (ang. contraction) pozwala na skopiowanie
-      hipotezy
+    - reguła kontrakcji (ang. contraction) pozwala kopiować hipotezy
     - reguła osłabiania (ang. weakening) pozwala kasować hipotezy
 
     W Coqu objawiają się one tak: *)
@@ -259,15 +258,17 @@ Lemma structural_rules_test :
 Proof.
   intros P Q R H q p.
 
+  (* reguła zamiany - zamieniamy [p] i [q] miejscami *)
+  move p after q.
+
   (* reguła kontrakcji - kopiujemy [p] i nazywamy kopię [p'] *)
   pose proof p as p'.
 
   (* reguła osłabiania - kasujemy [p'] *)
   clear p'.
 
-  (* reguła zamiany - zamieniamy [p] i [q] miejscami *)
-  move p after q.
-
+  (* Zauważ, że nie trzeba tych reguł używać explicite -
+     taktyki same potrafią znajdować hipotezy w kontekście. *)
   apply H.
     exact p.
     exact q.
@@ -278,7 +279,17 @@ Qed.
     na to, co da się w danej logice udowodnić, a w związku z tym także
     na to, jak możemy daną logikę interpretować.
 
-    Przyjrzyjmy się poniższym twierdzeniom: *)
+    Jeżeli zastanawiasz się, dlaczego nie spotkaliśmy się dotychczas z
+    tymi regułami, skoro są one tak ważne, to powód tego jest prosty:
+    ręczne ich używanie byłoby upierdliwe, więc są one wbudowane w
+    działanie Coqowych kontekstów oraz taktyk i z tego powodu zazwyczaj
+    są zupełnie niewidzialne. Nie musimy zamieniać hipotez miejscami, bo
+    taktyki [exact] czy [assumption] same potrafią znaleźć odpowiednią
+    hipotezę. Dzięki temu dowodzenie jest bardzo wygodne.
+
+    Dobra, czas najwyższy poznać poszczególne logiki substrukturalne i
+    dowiedzieć się, do czego można ich użyć. Na dobry początek rzućmy
+    okiem na poniższe twierdzenia: *)
 
 Lemma yes_deleting :
   forall P : Prop, P -> True.
@@ -305,9 +316,9 @@ Qed.
     że kwantowa informacja nie może ot tak sobie pojawiać się ani
     znikać. Bardziej poetycko można powiedzieć, że zachodzi prawo
     zachowania kwantowej informacji. Ponieważ w Coqu udało nam się
-    bez problemu udowodnić przeczące im twierdzenia o usuwaniu oraz
-    klonowaniu, Coqowa logika nie nadaje się do rozumowania na temat
-    kwantowej teorii informacji.
+    bez problemu udowodnić przeczące im twierdzenia o usuwaniu
+    ([yes_deleting]) oraz klonowaniu ([yes_cloning]), Coqowa logika
+    nie nadaje się do rozumowania na temat kwantowej teorii informacji.
 
     Nadaje się za to do tego logika zwana liniową, czyli taka, w której
     nie ma reguły osłabiania ani reguły kontrakcji. W logice tej musimy
@@ -322,24 +333,27 @@ Qed.
     wungiel. Wungiel jest znacznie bardziej podobny do kwantowej
     informacji niż do zdań znanych z logiki konstruktywnej czy
     klasycznej:
-    - Wungiel można spalić (wywołując tym sposobem globalne ocieplenie...
-      albo i nie - zależy w co kto wierzy), ale nie można go skasować.
-    - Podobnie można wungiel wykopać z ziemii, ale nijak nie idzie go
-      skopiować, żeby za darmo uzyskać więcej.
+    - Elektrownia może wungiel spalić (wywołując tym sposobem globalne
+      ocieplenie... albo i nie - zależy w co kto wierzy), ale nie może
+      go skasować tak, żeby zniknął z naszego wszechświata bez śladu.
+    - Podobnie górnik może wungiel wykopać z ziemii, ale nijak nie
+      może go skopiować, tak żeby za darmo uzyskać więcej.
 
     A więc logika liniowa to nie tylko logika kwantowej informacji, ale
-    także logika wungla i w ogólności logika zasobów: jej zdania możemy
-    interpretować jako zasoby (np. zdanie [P] może oznaczać 5 kilo
-    wungla), zaś spójniki jako operacje na zasobach. W szczególności
-    liniową implikację [P -> Q] można interpretować jako proces, który
-    przekształca zasób [P] w zasób [Q]. Dowody w takim wypadku oznaczają,
-    że możliwe jest przekształcenie zasobów reprezentowanych przez
-    hipotezy w zasoby reprezentowane przez konkluzję.
+    także logika wungla i w ogólności logika zasobów. Jej zdania możemy
+    interpretować jako zasoby (np. [P] może oznaczać 5 kilo wungla, a
+    [Q] - ilość energii potrzebną do zasilania twojego komputera przez
+    godzinę), zaś spójniki możemy interpretować jako operacje na tych
+    zasobach, np. liniową implikację [P -> Q] można interpretować jako
+    "z 5 kilo wungla da się  wyprodukować tyle energii, żeby zasilić
+    twój komputer przez godzinę". Dowody w logice liniowej oznaczają
+    w takim wypadku sposoby na przekształcenie zasobów reprezentowanych
+    przez hipotezy w zasoby reprezentowane przez konkluzję.
 
     Z deczka odmienne spojrzenie na zasoby ma logika afiniczna: jest
-    to logika, w której mamy reguły zamiany i osłabiania, ale nie ma
-    reguły kontrakcji. Parafrazując: logika afiniczna wymusza użycie
-    każdej hipotezy znajdującej się w kontekście co najwyżej raz.
+    to logika substrukturalna, w której są reguły zamiany i osłabiania,
+    ale nie ma reguły kontrakcji. Parafrazując: logika afiniczna wymusza
+    użycie każdej hipotezy znajdującej się w kontekście co najwyżej raz.
 
     Rodzajem zasobów, o których można rozumować za pomocą tej logiki,
     są na przykład pieniądze (pomijając kwestie związane z fałszowaniem):
@@ -352,18 +366,19 @@ Qed.
     plików czy połączenia z bazą danych. Pisząc program możemy chcieć
     otworzyć plik lub nie (co najwyżej jedno użycie uchwytu), ale jak
     ognia unikać chcemy sytuacji, kiedy dwa programy na raz otworzą
-    ten sam plików i zaczną coś do niego zapisywać (dwa użycia uchwytu).
-    Logika afiniczna pozwala łatwo rozumować o tego typu sytuacjach i
-    dlatego jest ona raczej domeną informatyków niż fizyków kwantowych
-    czy filozofów.
+    ten sam plik i zaczną coś do niego zapisywać, niwecząc nawzajem
+    swoje starania (dwa użycia uchwytu). Logika afiniczna pozwala łatwo
+    rozumować o tego typu sytuacjach i dlatego jest ona raczej domeną
+    informatyków niż fizyków kwantowych czy filozofów.
 
     Podobną logiką substrukturalną, która tym razem najbliższa jest
-    sercu filozofów, jest logika relewantna. To logika w której mamy
-    reguły zamiany i kontrakcji, ale brak reguły osłabiania. W efekcie
+    sercu filozofów, jest logika relewantna (słowo "relewantny" znaczy
+    mniej więcej "istotny" albo "związany z czymś") . To logika, która
+    ma reguły zamiany i kontrakcji, ale brak reguły osłabiania. W efekcie
     każdej hipotezy znajdującej się w kontekście musimy użyć co najmniej
     raz. Filozofowie (przynajmniej niektórzy) kochają tę logikę, gdyż to
-    ograniczenie sprawia, że przesłanki implikacji muszą być relewantne
-    dla konkluzji, czyli być z nią jakoś powiązane.
+    ograniczenie sprawia, że przesłanki implikacji muszą być powiązane z
+    konkluzją (czyli właśnie relewantne).
 
     Typowym przykładem implikacji z irrelewantną przesłanką jest zdanie
     w stylu "jeżeli księżyc jest zrobiony z sera, to 2 + 2 = 4". Zdanie
@@ -372,23 +387,85 @@ Qed.
     naturalne dowiemy się już niedługo!). Jednak tego typu implikacje
     są mocno nieintuicyjne i często sprawiają problem niematematycznym
     osobom, a także studentom pierwszego roku i co po niektórym filzofom
-    właśnie. Logika relewantna rozwiązuje "problem", który filozofowie
-    mają z takimi zdaniami, gdyż nie można ich w tej logice udowodnić:
-    każdej hipotezy musimy użyć co najmniej raz, ale ponieważ hipotezy
-    "księżyc jest zrobiony z sera" nie użyliśmy, implikacja nie zachodzi.
+    właśnie.
 
-    
+    Powód tego jest prosty: co ma piernik do wiatraka? W języku polskim
+    (i każdym innym) mowiąc "jeżeli ..., to ..." zazwyczaj mamy na myśli
+    jakiś rodzaj związku przyczynowo-skutkowego ("jeżeli pada deszcz to
+    jest mokro"), którego w powyższym zdaniu z serowym księżycem brakuje.
+    Z tego powodu laikom wydaje się ono nienaturalne i mylą się oni w
+    ocenie jego matematycznej słuszności. Logika relewantna rozwiązuje
+    problem, który filozofowie mają z takimi zdaniami, gdyż nie można
+    ich w tej logice udowodnić: każdej hipotezy musimy użyć co najmniej
+    raz, ale ponieważ hipoteza "księżyc jest zrobiony z sera" nie została
+    użyta, dowód implikacji nie przechodzi.
 
+    Czy to już wszystkie logiki substrukturalne? Niezupełnie: unikalną
+    logikę substrukturalną daje każda kombinacja reguł strukturalnych
+    (poza sytuacją, gdy mamy wszystkie - wtedy logika jest "normalna").
+    Niektóre kombinacje reguł nie są jednak zbyt popularne - wszystkie
+    omówione wyżej logiki miały regułę zamiany. Wynika to z faktu, że
+    brak tej reguły jest naprawdę srogo upierdliwy, a pozostałe reguły
+    mają w przypadku jej nieobecności dużo mniejszą moc i znaczenie.
 
-    
-    
+    Mimo to nic nie stoi na przeszkodzie, by rozważać logiki bez żadnych
+    reguł strukturalnych. W logikach takich jesteśmy zmuszeni użyć
+    wszystkich hipotez z kontekstu dokładnie raz w kolejności, w której
+    je wprowadzono. Mogłoby się wydawać, że w tak ograniczonej logice
+    nie da się udowodnić niczego ciekawego. Dla przykładu, zastosowanie
+    reguły modus ponens może być niemożliwe, jeżeli hipotezy są ułożone
+    w kontekście w niesprzyjającej kolejności.
 
+    Tego typu rozważania prowadzą jednak do konkluzji: jeżeli nasza
+    implikacja ma przesłanki nie po kolei, to... wprowadźmy drugą
+    implikację, która bierze przesłanki w odwrotnej kolejności. To
+    rozwiązanie może się wydawać dziwne (i jest!), ale okazuje się,
+    że co najmniej jeden człowiek próbował takiej poczwarnej logiki
+    użyć do reprezentowania języka naturalnego, i z niemałym sukcesem.
 
+    Zresztą, język naturalny ze swoimi ograniczeniami na szyk zdania
+    i kolejność słów zdaje się być dobrym kandydatem do spożytkowania
+    takiej logiki: zdanie "otworzyłem drzwi i wszedłem do środka"
+    wygląda całkiem normalnie, ale "wszedłem do środka i otworzyłem
+    drzwi" jest już nieco podejrzane. Może to sugerować, że w języku
+    naturalnym koniunkcja (czyli "i") nie jest przemienna, a zatem
+    pozbycie się reguły zamiany (co uniemożliwia udowodnienie prawa
+    [P /\ Q <-> Q /\ P]) sprawia, że [/\] lepiej wyraża znaczenie "i".
 
-*)
+    Jednak dużo ważniejsza od całej tej powyższej logiki była uwaga
+    o wprowadzeniu dodatkowej implikacji. Odkrywanie dodatkowych
+    spójników, które potrafią wyrażać rzeczy niemożliwe do wyrażenia
+    w logice konstruktywnej, albo rozkładają znaczenia spójników tej
+    logiki na kawałki, jest jednym z głównych powodów zainteresowania
+    logikami substrukturalnymi.
 
+    Dla przykładu, określenie "logika liniowa", którego użyłem wcześniej
+    jako nazwy logiki bez reguł kontrakcji i osłabiania, w poważnej
+    literaturze oznacza wprawdzie logikę bez tych reguł, ale mającą też
+    parę dodatkowych spójników. Pojawia się między innymi jednoargumentowy
+    spójnik [!] (wykrzyknik), który wyraża kopiowanie: jeżeli [A] oznacza
+    "wungiel", to [!A] oznacza "dowolna ilość wungla". Dzięki niemu można
+    w logice liniowej rozumować nie tylko o zasobach (albo kwantowej
+    informacji, co kto lubi), ale także przeprowadzać rozumowania znane
+    z logiki konstruktywnej - wystarczy w odpowiednie miejsca powstawiać
+    wykrzykniki. Daje nam to nowy obraz konstruktywnych spójników jako
+    połączenia operacji na zasobach oraz operacji kopiowania zasobów w
+    nieskończoność.
 
+    Podsumowując, logiki substrukturalne są mega użyteczne w całej
+    gamie różnych zastosowań, od fizyki kwantowej, przez filozofię
+    i lingwistykę, a na informatyce teoretycznej kończąc. W tej
+    książce nie będziemy się jednak nimi zajmować, gdyż nie ma do
+    tego wystarczających możliwości technicznych: logika Coqa jest
+    z gruntu strukturalna i nic nie możemy na to poradzić (badania
+    nad połączeniem języków pokroju Coqa z logiką substrukturalną
+    trwają, ale nie przyniosły jeszcze zadowalających rezultatów).
 
+    Na samiuśki koniec koło ratunkowe: jeżeli pogubiłeś się w tych
+    wszystkich nazwach, regułach, warunkach, etc., to tutaj jest
+    ściąga:
+
+    https://github.com/wkolowski/CoqBookPL/blob/master/txt/substrukturalne.md *)
 
 (** ** Logiki wielowartościowe *)
 

@@ -368,8 +368,7 @@
       miejscami
 
 </li>
-<li> reguła kontrakcji (ang. contraction) pozwala na skopiowanie
-      hipotezy
+<li> reguła kontrakcji (ang. contraction) pozwala kopiować hipotezy
 
 </li>
 <li> reguła osłabiania (ang. weakening) pozwala kasować hipotezy
@@ -390,6 +389,10 @@
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> <span class="id" title="var">H</span> <span class="id" title="var">q</span> <span class="id" title="var">p</span>.<br/>
 
 <br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;reguła&nbsp;zamiany&nbsp;-&nbsp;zamieniamy&nbsp;<span class="inlinecode"><span class="id" title="var">p</span></span>&nbsp;i&nbsp;<span class="inlinecode"><span class="id" title="var">q</span></span>&nbsp;miejscami&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">move</span> <span class="id" title="var">p</span> <span class="id" title="keyword">after</span> <span class="id" title="var">q</span>.<br/>
+
+<br/>
 &nbsp;&nbsp;<span class="comment">(*&nbsp;reguła&nbsp;kontrakcji&nbsp;-&nbsp;kopiujemy&nbsp;<span class="inlinecode"><span class="id" title="var">p</span></span>&nbsp;i&nbsp;nazywamy&nbsp;kopię&nbsp;<span class="inlinecode"><span class="id" title="var">p'</span></span>&nbsp;*)</span><br/>
 &nbsp;&nbsp;<span class="id" title="tactic">pose</span> <span class="id" title="var">proof</span> <span class="id" title="var">p</span> <span class="id" title="keyword">as</span> <span class="id" title="var">p'</span>.<br/>
 
@@ -398,10 +401,8 @@
 &nbsp;&nbsp;<span class="id" title="tactic">clear</span> <span class="id" title="var">p'</span>.<br/>
 
 <br/>
-&nbsp;&nbsp;<span class="comment">(*&nbsp;reguła&nbsp;zamiany&nbsp;-&nbsp;zamieniamy&nbsp;<span class="inlinecode"><span class="id" title="var">p</span></span>&nbsp;i&nbsp;<span class="inlinecode"><span class="id" title="var">q</span></span>&nbsp;miejscami&nbsp;*)</span><br/>
-&nbsp;&nbsp;<span class="id" title="tactic">move</span> <span class="id" title="var">p</span> <span class="id" title="keyword">after</span> <span class="id" title="var">q</span>.<br/>
-
-<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;Zauważ,&nbsp;że&nbsp;nie&nbsp;trzeba&nbsp;tych&nbsp;reguł&nbsp;używać explicite&nbsp;-<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;taktyki&nbsp;same&nbsp;potrafią znajdować hipotezy&nbsp;w&nbsp;kontekście.&nbsp;*)</span><br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">p</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">q</span>.<br/>
@@ -418,7 +419,19 @@ Jako, że kontekst jest rzeczą absolutnie podstawową przy dowodzeniu
 
 <div class="paragraph"> </div>
 
-    Przyjrzyjmy się poniższym twierdzeniom: 
+    Jeżeli zastanawiasz się, dlaczego nie spotkaliśmy się dotychczas z
+    tymi regułami, skoro są one tak ważne, to powód tego jest prosty:
+    ręczne ich używanie byłoby upierdliwe, więc są one wbudowane w
+    działanie Coqowych kontekstów oraz taktyk i z tego powodu zazwyczaj
+    są zupełnie niewidzialne. Nie musimy zamieniać hipotez miejscami, bo
+    taktyki <span class="inlinecode"><span class="id" title="tactic">exact</span></span> czy <span class="inlinecode"><span class="id" title="tactic">assumption</span></span> same potrafią znaleźć odpowiednią
+    hipotezę. Dzięki temu dowodzenie jest bardzo wygodne.
+
+<div class="paragraph"> </div>
+
+    Dobra, czas najwyższy poznać poszczególne logiki substrukturalne i
+    dowiedzieć się, do czego można ich użyć. Na dobry początek rzućmy
+    okiem na poniższe twierdzenia: 
 </div>
 <div class="code">
 
@@ -451,9 +464,9 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     że kwantowa informacja nie może ot tak sobie pojawiać się ani
     znikać. Bardziej poetycko można powiedzieć, że zachodzi prawo
     zachowania kwantowej informacji. Ponieważ w Coqu udało nam się
-    bez problemu udowodnić przeczące im twierdzenia o usuwaniu oraz
-    klonowaniu, Coqowa logika nie nadaje się do rozumowania na temat
-    kwantowej teorii informacji.
+    bez problemu udowodnić przeczące im twierdzenia o usuwaniu
+    (<span class="inlinecode"><span class="id" title="var">yes_deleting</span></span>) oraz klonowaniu (<span class="inlinecode"><span class="id" title="var">yes_cloning</span></span>), Coqowa logika
+    nie nadaje się do rozumowania na temat kwantowej teorii informacji.
 
 <div class="paragraph"> </div>
 
@@ -473,12 +486,13 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     informacji niż do zdań znanych z logiki konstruktywnej czy
     klasycznej:
 <ul class="doclist">
-<li> Wungiel można spalić (wywołując tym sposobem globalne ocieplenie...
-      albo i nie - zależy w co kto wierzy), ale nie można go skasować.
+<li> Elektrownia może wungiel spalić (wywołując tym sposobem globalne
+      ocieplenie... albo i nie - zależy w co kto wierzy), ale nie może
+      go skasować tak, żeby zniknął z naszego wszechświata bez śladu.
 
 </li>
-<li> Podobnie można wungiel wykopać z ziemii, ale nijak nie idzie go
-      skopiować, żeby za darmo uzyskać więcej.
+<li> Podobnie górnik może wungiel wykopać z ziemii, ale nijak nie
+      może go skopiować, tak żeby za darmo uzyskać więcej.
 
 </li>
 </ul>
@@ -486,20 +500,22 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 <div class="paragraph"> </div>
 
     A więc logika liniowa to nie tylko logika kwantowej informacji, ale
-    także logika wungla i w ogólności logika zasobów: jej zdania możemy
-    interpretować jako zasoby (np. zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> może oznaczać 5 kilo
-    wungla), zaś spójniki jako operacje na zasobach. W szczególności
-    liniową implikację <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> można interpretować jako proces, który
-    przekształca zasób <span class="inlinecode"><span class="id" title="var">P</span></span> w zasób <span class="inlinecode"><span class="id" title="var">Q</span></span>. Dowody w takim wypadku oznaczają,
-    że możliwe jest przekształcenie zasobów reprezentowanych przez
-    hipotezy w zasoby reprezentowane przez konkluzję.
+    także logika wungla i w ogólności logika zasobów. Jej zdania możemy
+    interpretować jako zasoby (np. <span class="inlinecode"><span class="id" title="var">P</span></span> może oznaczać 5 kilo wungla, a
+    <span class="inlinecode"><span class="id" title="var">Q</span></span> - ilość energii potrzebną do zasilania twojego komputera przez
+    godzinę), zaś spójniki możemy interpretować jako operacje na tych
+    zasobach, np. liniową implikację <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> można interpretować jako
+    "z 5 kilo wungla da się  wyprodukować tyle energii, żeby zasilić
+    twój komputer przez godzinę". Dowody w logice liniowej oznaczają
+    w takim wypadku sposoby na przekształcenie zasobów reprezentowanych
+    przez hipotezy w zasoby reprezentowane przez konkluzję.
 
 <div class="paragraph"> </div>
 
     Z deczka odmienne spojrzenie na zasoby ma logika afiniczna: jest
-    to logika, w której mamy reguły zamiany i osłabiania, ale nie ma
-    reguły kontrakcji. Parafrazując: logika afiniczna wymusza użycie
-    każdej hipotezy znajdującej się w kontekście co najwyżej raz.
+    to logika substrukturalna, w której są reguły zamiany i osłabiania,
+    ale nie ma reguły kontrakcji. Parafrazując: logika afiniczna wymusza
+    użycie każdej hipotezy znajdującej się w kontekście co najwyżej raz.
 
 <div class="paragraph"> </div>
 
@@ -516,20 +532,21 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     plików czy połączenia z bazą danych. Pisząc program możemy chcieć
     otworzyć plik lub nie (co najwyżej jedno użycie uchwytu), ale jak
     ognia unikać chcemy sytuacji, kiedy dwa programy na raz otworzą
-    ten sam plików i zaczną coś do niego zapisywać (dwa użycia uchwytu).
-    Logika afiniczna pozwala łatwo rozumować o tego typu sytuacjach i
-    dlatego jest ona raczej domeną informatyków niż fizyków kwantowych
-    czy filozofów.
+    ten sam plik i zaczną coś do niego zapisywać, niwecząc nawzajem
+    swoje starania (dwa użycia uchwytu). Logika afiniczna pozwala łatwo
+    rozumować o tego typu sytuacjach i dlatego jest ona raczej domeną
+    informatyków niż fizyków kwantowych czy filozofów.
 
 <div class="paragraph"> </div>
 
     Podobną logiką substrukturalną, która tym razem najbliższa jest
-    sercu filozofów, jest logika relewantna. To logika w której mamy
-    reguły zamiany i kontrakcji, ale brak reguły osłabiania. W efekcie
+    sercu filozofów, jest logika relewantna (słowo "relewantny" znaczy
+    mniej więcej "istotny" albo "związany z czymś") . To logika, która
+    ma reguły zamiany i kontrakcji, ale brak reguły osłabiania. W efekcie
     każdej hipotezy znajdującej się w kontekście musimy użyć co najmniej
     raz. Filozofowie (przynajmniej niektórzy) kochają tę logikę, gdyż to
-    ograniczenie sprawia, że przesłanki implikacji muszą być relewantne
-    dla konkluzji, czyli być z nią jakoś powiązane.
+    ograniczenie sprawia, że przesłanki implikacji muszą być powiązane z
+    konkluzją (czyli właśnie relewantne).
 
 <div class="paragraph"> </div>
 
@@ -540,23 +557,105 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     naturalne dowiemy się już niedługo!). Jednak tego typu implikacje
     są mocno nieintuicyjne i często sprawiają problem niematematycznym
     osobom, a także studentom pierwszego roku i co po niektórym filzofom
-    właśnie. Logika relewantna rozwiązuje "problem", który filozofowie
-    mają z takimi zdaniami, gdyż nie można ich w tej logice udowodnić:
-    każdej hipotezy musimy użyć co najmniej raz, ale ponieważ hipotezy
-    "księżyc jest zrobiony z sera" nie użyliśmy, implikacja nie zachodzi.
+    właśnie.
 
 <div class="paragraph"> </div>
 
+    Powód tego jest prosty: co ma piernik do wiatraka? W języku polskim
+    (i każdym innym) mowiąc "jeżeli ..., to ..." zazwyczaj mamy na myśli
+    jakiś rodzaj związku przyczynowo-skutkowego ("jeżeli pada deszcz to
+    jest mokro"), którego w powyższym zdaniu z serowym księżycem brakuje.
+    Z tego powodu laikom wydaje się ono nienaturalne i mylą się oni w
+    ocenie jego matematycznej słuszności. Logika relewantna rozwiązuje
+    problem, który filozofowie mają z takimi zdaniami, gdyż nie można
+    ich w tej logice udowodnić: każdej hipotezy musimy użyć co najmniej
+    raz, ale ponieważ hipoteza "księżyc jest zrobiony z sera" nie została
+    użyta, dowód implikacji nie przechodzi.
 
 <div class="paragraph"> </div>
 
+    Czy to już wszystkie logiki substrukturalne? Niezupełnie: unikalną
+    logikę substrukturalną daje każda kombinacja reguł strukturalnych
+    (poza sytuacją, gdy mamy wszystkie - wtedy logika jest "normalna").
+    Niektóre kombinacje reguł nie są jednak zbyt popularne - wszystkie
+    omówione wyżej logiki miały regułę zamiany. Wynika to z faktu, że
+    brak tej reguły jest naprawdę srogo upierdliwy, a pozostałe reguły
+    mają w przypadku jej nieobecności dużo mniejszą moc i znaczenie.
 
 <div class="paragraph"> </div>
 
+    Mimo to nic nie stoi na przeszkodzie, by rozważać logiki bez żadnych
+    reguł strukturalnych. W logikach takich jesteśmy zmuszeni użyć
+    wszystkich hipotez z kontekstu dokładnie raz w kolejności, w której
+    je wprowadzono. Mogłoby się wydawać, że w tak ograniczonej logice
+    nie da się udowodnić niczego ciekawego. Dla przykładu, zastosowanie
+    reguły modus ponens może być niemożliwe, jeżeli hipotezy są ułożone
+    w kontekście w niesprzyjającej kolejności.
 
 <div class="paragraph"> </div>
 
+    Tego typu rozważania prowadzą jednak do konkluzji: jeżeli nasza
+    implikacja ma przesłanki nie po kolei, to... wprowadźmy drugą
+    implikację, która bierze przesłanki w odwrotnej kolejności. To
+    rozwiązanie może się wydawać dziwne (i jest!), ale okazuje się,
+    że co najmniej jeden człowiek próbował takiej poczwarnej logiki
+    użyć do reprezentowania języka naturalnego, i z niemałym sukcesem.
 
+<div class="paragraph"> </div>
+
+    Zresztą, język naturalny ze swoimi ograniczeniami na szyk zdania
+    i kolejność słów zdaje się być dobrym kandydatem do spożytkowania
+    takiej logiki: zdanie "otworzyłem drzwi i wszedłem do środka"
+    wygląda całkiem normalnie, ale "wszedłem do środka i otworzyłem
+    drzwi" jest już nieco podejrzane. Może to sugerować, że w języku
+    naturalnym koniunkcja (czyli "i") nie jest przemienna, a zatem
+    pozbycie się reguły zamiany (co uniemożliwia udowodnienie prawa
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">&lt;-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">P</span></span>) sprawia, że <span class="inlinecode">/\</span> lepiej wyraża znaczenie "i".
+
+<div class="paragraph"> </div>
+
+    Jednak dużo ważniejsza od całej tej powyższej logiki była uwaga
+    o wprowadzeniu dodatkowej implikacji. Odkrywanie dodatkowych
+    spójników, które potrafią wyrażać rzeczy niemożliwe do wyrażenia
+    w logice konstruktywnej, albo rozkładają znaczenia spójników tej
+    logiki na kawałki, jest jednym z głównych powodów zainteresowania
+    logikami substrukturalnymi.
+
+<div class="paragraph"> </div>
+
+    Dla przykładu, określenie "logika liniowa", którego użyłem wcześniej
+    jako nazwy logiki bez reguł kontrakcji i osłabiania, w poważnej
+    literaturze oznacza wprawdzie logikę bez tych reguł, ale mającą też
+    parę dodatkowych spójników. Pojawia się między innymi jednoargumentowy
+    spójnik <span class="inlinecode">!</span> (wykrzyknik), który wyraża kopiowanie: jeżeli <span class="inlinecode"><span class="id" title="var">A</span></span> oznacza
+    "wungiel", to <span class="inlinecode">!<span class="id" title="var">A</span></span> oznacza "dowolna ilość wungla". Dzięki niemu można
+    w logice liniowej rozumować nie tylko o zasobach (albo kwantowej
+    informacji, co kto lubi), ale także przeprowadzać rozumowania znane
+    z logiki konstruktywnej - wystarczy w odpowiednie miejsca powstawiać
+    wykrzykniki. Daje nam to nowy obraz konstruktywnych spójników jako
+    połączenia operacji na zasobach oraz operacji kopiowania zasobów w
+    nieskończoność.
+
+<div class="paragraph"> </div>
+
+    Podsumowując, logiki substrukturalne są mega użyteczne w całej
+    gamie różnych zastosowań, od fizyki kwantowej, przez filozofię
+    i lingwistykę, a na informatyce teoretycznej kończąc. W tej
+    książce nie będziemy się jednak nimi zajmować, gdyż nie ma do
+    tego wystarczających możliwości technicznych: logika Coqa jest
+    z gruntu strukturalna i nic nie możemy na to poradzić (badania
+    nad połączeniem języków pokroju Coqa z logiką substrukturalną
+    trwają, ale nie przyniosły jeszcze zadowalających rezultatów).
+
+<div class="paragraph"> </div>
+
+    Na samiuśki koniec koło ratunkowe: jeżeli pogubiłeś się w tych
+    wszystkich nazwach, regułach, warunkach, etc., to tutaj jest
+    ściąga:
+
+<div class="paragraph"> </div>
+
+    https://github.com/wkolowski/CoqBookPL/blob/master/txt/substrukturalne.md 
 <div class="paragraph"> </div>
 
 <a name="lab625"></a><h2 class="section">Logiki wielowartościowe</h2>

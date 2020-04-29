@@ -47,6 +47,13 @@
 27. Twierdzenie: można zanurzyć liczby naturalne w liczby konaturalne, ale nie można tego zanurzenia odwrócić.
 28. Kodowanie Churcha dla typów ilorazowych.
 29. Wprowadzić teorię zbiorów za pomocą wyższego typu induktywnego.
+30. Być może dokonać rozróżnienia różnych _ex quodlibet_:
+- _Ex falso quodlibet_ - `False -> P`
+- _Ex contradictione quodlibet_ - `A /\ ~ A -> P`
+31. HoTTowe notatki:
+- `B : A -> U` jest uniwalentne, gdy dla `x, y : A` jest `(x = y) = (B x = B y)` / https://vimeo.com/338899939
+- Homotopy pullback https://vimeo.com/337960032
+32. Podkreślić gdzieś mocniej, że reguła indukcji mówi, że nie ma nic poza tym, co można zrobić konstruktorami.
 
 ## Sugestie i problemy z koła:
 1. Opisać dokładniej definiowanie przez dowód.
