@@ -253,9 +253,46 @@ Tu o prawie zachowania informacji.
 <div class="doc">
 <a name="lab609"></a><h1 class="section">Logika klasyczna jako logika diabła (TODO)</h1>
 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
- Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
+<br/>
+<span class="comment">(*&nbsp;<span class="inlinecode"><span class="id" title="var">P</span></span>&nbsp;jest&nbsp;stabilne,&nbsp;gdy&nbsp;<span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_True</span> :<br/>
+&nbsp;&nbsp;~ ~ <span class="id" title="var">True</span> -&gt; <span class="id" title="var">True</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_False</span> :<br/>
+&nbsp;&nbsp;~ ~ <span class="id" title="var">False</span> -&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_and</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(~ ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>) -&gt; (~ ~ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ~ ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_impl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(~ ~ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ~ ~ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_forall</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ ~ <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; ~ ~ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_elim</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(~ ~ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ~ ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
     sobie pewien rusek. Pewnego razu do ruska przyszedł diaboł (a to,
     jak wiadomo, coś dużo gorszego niż diabeł) i zaoferował mu taki
     dil: "dam ci miliard dolarów albo jeżeli dasz mi miliard dolarów,

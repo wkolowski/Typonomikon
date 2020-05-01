@@ -88,3 +88,16 @@ Proof.
     firstorder.
     assumption.
 Qed.
+
+Lemma cor_spec :
+  forall P Q : Prop,
+    cor P Q <-> ~ (~ P /\ ~ Q).
+Proof.
+  split.
+    intros H [np nq]. apply H. intros [p | q].
+      apply np, p.
+      apply nq, q.
+    intros pq npq. apply pq. split.
+      intro p. apply npq. left. assumption.
+      intro q. apply npq. right. assumption.
+Qed.

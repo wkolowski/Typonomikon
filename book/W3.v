@@ -323,6 +323,75 @@ Qed.
 
 (** * Logika klasyczna jako logika diabła (TODO) *)
 
+(* [P] jest stabilne, gdy [~ ~ P -> P] *)
+
+Lemma not_not_True :
+  ~ ~ True -> True.
+(* begin hide *)
+Proof.
+  intros _. trivial.
+Qed.
+(* end hide *)
+
+Lemma not_not_False :
+  ~ ~ False -> False.
+(* begin hide *)
+Proof.
+  intro H. apply H. intro H'. assumption.
+Qed.
+(* end hide *)
+
+Lemma not_not_and :
+  forall P Q : Prop,
+    (~ ~ P -> P) -> (~ ~ Q -> Q) -> ~ ~ (P /\ Q) -> P /\ Q.
+(* begin hide *)
+Proof.
+  intros P Q Hp Hq npq.
+  split.
+    apply Hp. intro np. apply npq. intro pq. destruct pq as [p q].
+      apply np. assumption.
+    apply Hq. intro nq. apply npq. intro pq. destruct pq as [p q].
+      apply nq. assumption.
+Qed.
+(* end hide *)
+
+Lemma not_not_impl :
+  forall P Q : Prop,
+    (~ ~ Q -> Q) -> ~ ~ (P -> Q) -> P -> Q.
+(* begin hide *)
+Proof.
+  intros P Q nnq nnpq p.
+  apply nnq. intro nq.
+  apply nnpq. intro npq.
+  apply nq, npq, p.
+Qed.
+(* end hide *)
+
+Lemma not_not_forall :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, ~ ~ P x -> P x) -> ~ ~ (forall x : A, P x) ->
+      forall x : A, P x.
+(* begin hide *)
+Proof.
+  intros A P Hnn nnH x.
+  apply Hnn. intro np.
+  apply nnH. intro nap.
+  apply np, nap.
+Qed.
+(* end hide *)
+
+Lemma not_not_elim :
+  forall P Q : Prop,
+    (~ ~ Q -> Q) -> (P -> Q) -> ~ ~ P -> Q.
+(* begin hide *)
+Proof.
+  intros P Q nnqq pq nnp.
+  apply nnqq. intro nq.
+  apply nnp. intro p.
+  apply nq, pq, p.
+Qed.
+(* end hide *)
+
 (** Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
     sobie pewien rusek. Pewnego razu do ruska przyszedł diaboł (a to,
     jak wiadomo, coś dużo gorszego niż diabeł) i zaoferował mu taki
