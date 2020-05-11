@@ -10,4 +10,4 @@
 
 Objaśnienia:
 - "świat zewnętrzny" znaczy, że nie możemy tworzyć zdań (czyli elementów `Prop`), które dokonują rozróżnień na tym poziomie
-- "świat wewnętrzny" znaczy, że możemy 
+- "świat wewnętrzny" znaczy, że możemy

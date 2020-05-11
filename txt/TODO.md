@@ -7,8 +7,6 @@
   - _Ex contradictione quodlibet_ - `A /\ ~ A -> P`
 
   ```Coq
-
-
 Lemma not_not_bind :
   forall P Q : Prop,
     ~ ~ P -> (P -> ~ ~ Q) -> ~ ~ Q.
@@ -68,12 +66,16 @@ Qed.
 
 ## HoTT
 1. Kodowanie Churcha dla typów ilorazowych.
-29. Wprowadzić teorię zbiorów za pomocą wyższego typu induktywnego.
-31. `B : A -> U` jest uniwalentne, gdy dla `x, y : A` jest `(x = y) = (B x = B y)` / https://vimeo.com/338899939
-32. Homotopy pullback https://vimeo.com/337960032
-3. Napisać o bijekcjach, injekcjach i surjekcjach z bardziej HoTTowej perspektywy.
-9. Najogólniejszym nierekurencyjnym HITem jest pushout.
-4. Delikatna kwestia równoważności. Przytoczyć jak najwięcej definicji:
+2. Wprowadzić teorię zbiorów za pomocą wyższego typu induktywnego.
+3. `B : A -> U` jest uniwalentne, gdy dla `x, y : A` jest `(x = y) = (B x = B y)` / https://vimeo.com/338899939
+4. Homotopy pullback https://vimeo.com/337960032
+5. Napisać o bijekcjach, injekcjach i surjekcjach z bardziej HoTTowej perspektywy.
+6. Najogólniejszym nierekurencyjnym HITem jest pushout.
+7. Awodey twierdzi, że uniwalencja ma coś wspólnego z Fregiem i tym, że konwertowalność - ta sama nazwa, ścieżki - to samo znaczenie.
+8. Transport wzdłuż ścieżki dla rodzin typów to uogólnienie indiscernability of identicals Leibniza (patrz punkt 3).
+9. Podkreślić rozróżnienie między właścwiwością i strukturą, `Prop` i `Type`, surjekcją i postodwracalnością, etc.
+10. Ciekawe: z uniwalencją można pokazać, że `(A -> Prop) = {X : Type & {f : X -> A | isEmbedding f}}`, czyli że predykaty na `A` to podtypy `A`.
+11. Delikatna kwestia równoważności. Przytoczyć jak najwięcej definicji:
   - biinvertible
   - bijekcjową
   - relacjową
@@ -82,6 +84,7 @@ Qed.
 
 ## Monady
 1. Monady dla logiki klasycznej! Klasyczne funkcje, aksjomat wyboru i nie tylko: https://arxiv.org/pdf/1008.1213.pdf
+2. Subtelna uwaga: monada to nie to samo co nieskończoność-monada, więc homotopiowo trzeba uważać.
 
 ## Inne
 1. Znaleźć prostszy przykład dla podrozdziału o ścisłej pozytywności (ale do której konkretnie części?).
@@ -96,7 +99,12 @@ Qed.
 27. Twierdzenie: można zanurzyć liczby naturalne w liczby konaturalne, ale nie można tego zanurzenia odwrócić.
 32. Podkreślić gdzieś mocniej, że reguła indukcji mówi, że nie ma nic poza tym, co można zrobić konstruktorami.
 33. Powiązanie reguł wprowadzania/eliminacji/obliczania/unikalności z równoważnościami.
-34. Przestrzeń metryczną można zdefiniować za pomocą "Ball Relation": `Q+ -> X -> X -> Prop`
+34. A równoważności to nic innego jak właściwości (czy też konstrukcje) uniwersalne.
+35. Intuicja dla reguł unikalności: dzida składa się z przeddzidzia dzidy, śróddzidzia dzidy i zadzidzia dzidy.
+36. Przestrzeń metryczną można zdefiniować za pomocą "Ball Relation": `Q+ -> X -> X -> Prop`
+
+## Filozofia
+1. Mega ważna obserwacja: nazwy zawsze należy nadawać tak, żeby zgadzały się z definicją, czyli nazwy są intensjonalne. Ewentualne ekstensjonalne powiązanie ze sobą (w postaci równoważności) różnych apriori nazw następować musi później, na mocy pokazania równoważności tego, co one oznaczają. Przykład: różne definicje równoważności powinny się nazywać inaczej, np. invertible, biinvertible, contractible etc.
 
 ## Sugestie i problemy z koła:
 1. Opisać dokładniej definiowanie przez dowód.
@@ -107,6 +115,7 @@ Qed.
 6. Ludzie po czasie zapominają składni.
 7. Napisać coś więcej o składni i o rysowaniu termów.
 8. Dodać zadanie z dwiema dziwnymi identycznościami (co najmniej intensjonalna i ekstensjonalna, ale nie pamiętam, o co dokładnie chodzi).
+9. Osąd `x : A` możemy czytać jako "x jest typu A", zaś konkretnie `x : nat` jako "x jest liczbą naturalną". Zrobić więcej ściąg z czytania różnych rzeczy.
 
 ## Długofalowe
 1. Użyć jsCoq do zrobienia interaktywnej książki, która wyglądałaby jakoś tak: https://x80.org/rhino-coq/v8.10/
