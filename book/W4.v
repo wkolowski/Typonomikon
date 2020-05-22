@@ -732,7 +732,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Modalność trywialna *)
+(** ** Modalność trywialna: meh... *)
 
 (** Jest taka jedna modalność, o której aż wstyd wspominać, a którą na
     nasze potrzeby nazwiemy modalnością trywialną. Polega ona na tym, że

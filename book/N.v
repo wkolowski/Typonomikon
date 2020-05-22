@@ -141,7 +141,7 @@ Compute same_fringe2 beq_nat t1 t2.
     Poświęc kilka minut, żeby spróbować rozwiązać to zadanie. Ja, gdy
     zobaczyłem je w zalinkowanej powyżej pracy, natychmiast zdałem sobie
     sprawę, że nie znam żadnego prostego sposobu, żeby to zrobić i wtedy
-    właśnie doznałem oświecenia - kontynuacje jednak nie są ezoyteryczne,
+    właśnie doznałem oświecenia - kontynuacje jednak nie są ezoteryczne,
     są przydatne i nawet można je sobie wyobrazić (o tym później).
 
     Jeśli już przekonałeś się, że nie umiesz rozwiązać zadania, czas
@@ -254,7 +254,7 @@ end.
     przez wartości z wejścia.
 
     Dobra, jesteśmy już nieźle ustawieni. Jeżeli nie nadążasz, to dla
-    spoolnienia tempa odłóżmy na chwilę funkcję zamieniającą grzywki
+    spowolnienia tempa odłóżmy na chwilę funkcję zamieniającą grzywki
     i spróbujmy napisać kolejne wcielenie funkcji porównującej grzywki.
 
     Sprawa jest banalna: *)
@@ -418,7 +418,7 @@ Compute depthWalk t1'.
 (** Moim zdaniem odpowiedź jest całkiem czytelna. Spacerek wygląda tak,
     że stąpamy po kolejnych liściach, wyrzucamy ich wartości na wejście,
     zbierając przy tym wartości z wejścia, a na koniec zwracamy drzewo
-    z grzywką podmienioną wartośćiami wejściowymi. Oczywiście po węzłach
+    z grzywką podmienioną wartościami wejściowymi. Oczywiście po węzłach
     wewnętrznych też przechodzimy, co widać w implementacji, ale nie
     interesują nas one, więc się w nich nie zatrzymujemy i dlatego tych
     kroków tutaj nie widać. Ćwiczenie: narysuj ładny obrazek.
