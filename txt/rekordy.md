@@ -87,7 +87,38 @@ Definition Refl : Type :=
 }.
 ```
 
-Niefajnie, co? Szczególnie, gdy nasz rekord ma dużo pól - strata czasu na pisanie boilerplejtu jest oblrzymia. Problem ten jest rozwiązywany przez ustawianie wartości w typach rekordowych. Przy ulepszonych rekordach typ relacji zwrotnych na liczbach naturalnych możemy uzyskać pisząc `Refl with A = nat`, a `isReflexive` możemy zdefiniować tak: `isReflexive A' R' = Refl with A = A', R = R'`.
+Niefajnie, co? Szczególnie, gdy nasz rekord ma dużo pól - strata czasu na pisanie boilerplejtu jest olbrzymia. Problem ten jest rozwiązywany przez ustawianie wartości w typach rekordowych. Przy ulepszonych rekordach typ relacji zwrotnych na liczbach naturalnych możemy uzyskać pisząc `Refl with A = nat`, a `isReflexive` możemy zdefiniować tak: `isReflexive A' R' = Refl with A = A', R = R'`.
 
 Dzięki temu mamy kanoniczny sposób reprezentowania wszystkich możliwych powiązanych pojęć na raz: relacja zwrotna, bycie relacją zwrotną, etc. Można by się nawet pokusić o automatyczne generowanie wszystkich tych rzeczy.
 
+Co więcej, ulepszone rekordy nie tylko unifikują Coqowe rekordy i klasy, ale także Coqowe moduły. Są od nich nawet dużo potężniejsze, bo pozwalają na zmiany nazw i inne takie.
+
+Drugi problem Coqowych rekordów to ekstremalna teleskopizacja. Chodzi o to, że intuicyjnie np. grupa to monoid z odwrotnościami, podczas gdy formalnie w Coqu grupa to rekord, w którym jedno pole to monoid, a pozostałe pola to operacja odwracająca oraz odpowiednie prawa.
+
+Jest to problem, bo przy paru takich zagnieżdżeniach żeby zdefiniować rekord trzeba pisać `x := { y := { z := {w := { ...}}}}` i tak dalej, co jest bardzo lipne. Dzięki ulepszonym rekordom można temu zapobiec pisząc po prostu, że grupa to suma monoidu, odwrotności i praw.
+
+Trzeci problem jest taki, że ciężko się reużywa Coqowych typów rekordowych przy definiowaniu, np. definicja relacji równoważności wygląda pewnie tak:
+
+```coq
+Record Equiv : Type :=
+{
+    A : Type;
+    R : A -> A -> Prop;
+    refl : forall x : A, R x x;
+    sym : forall x y : A, R x y -> R y x;
+    trans : forall x y z : A, R x y -> R y z -> R x z;
+}.
+```
+
+Jest to oczywiście pewne marnotrawstwo, jeżeli musimy osobno zdefiniować relacje zwrotne, symetryczne i przechodnie. Z ulepszonymi rekordami moglibyśmy po prostu użyć sumy, pisząc `Equiv = Refl + Sym + Trans`.
+
+Czwarty problem to cała masa upierdliwości jeżeli chodzi o funkcje. Przede wszystkim, ciężko robi się częściową aplikację, szczególnie gdy mamy dużo argumentów. Prześledźmy kilka stadiów ewolucji funkcji:
+- `f : A * B * C -> D` - możemy postrzegać `f` jako funkcję "wielu zmiennych", reprezentacją dziedziny jest produkt. Częściowa aplikacja wychodzi marnie, bo trzeba napisać np. `fun p : A * B => f (outl p, outr p, c)`
+- `f : A -> B -> C -> D` - możemy postrzegać `f` jako funkcję "jednej zmiennej", skuryfikowaną. Częściową aplikację robi się prościej niż ostatnio: `f a`, no chyba że chcemy częściowo zaaplikować któryś z dalszych argumentów, to wtedy nie: `fun a b => f a b c`. Im dalszy argument, tym więcej pisaniny.
+- `f : {x : A, y : B, z : C} -> D` - funkcja biorąca wszystkie argumenty zapakowane w (ulepszony) rekord. Częściowa aplikacja jest łatwa dla każdego argumentu, wystarczy (czy raczej wystarczyłoby) napisać coś w stylu `f {z = c}`, żeby uzyskać funkcję typu `{x : A, y : B} -> D`.
+
+Jednocześnie taka reprezentacja funkcji upieka więcej pieczeni na jednym ogniu: mamy argumenty nazwane, opcjonalne, domyślne (w sensie _default_) oraz domyślne (w sensie _implicit_). Co więcej, jeżeli konstruktory typów induktywnych brałyby jako argumenty takie ulepszone rekordy, to dostajemy za darmo całą masę wygodnych rzeczy opisanych w notatce [o składni](składnia.md).
+
+## Tak się da?
+
+No, to da się zrobić takie rekordy, jak wyżej napisano? Nie wiem, ale myślę, że to wszystko wcale nie jest takie groźne jak wygląda, bo wszystko sprowadza się do operacji na kodach, a kody można zdefiniować w języku, który ma indukcję-rekursję, jak np. Agda. Co więcej, są prace opisujące podobne uniwersum kodów dla typów induktywnych (i to nawet takie, które ma kod samo na siebie) i nie ma z tym problemów.
