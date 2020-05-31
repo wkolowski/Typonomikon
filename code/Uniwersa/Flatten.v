@@ -20,7 +20,8 @@ Import ListNotations.
 Fixpoint flatten {s : Star} : interp s -> list (flattenType s) :=
 match s with
     | Var A => fun x : interp (Var A) => [x]
-    | List s' => fix f (x : list (interp s')) : list (flattenType s') :=
+    | List s' =>
+        fix f (x : list (interp s')) : list (flattenType s') :=
         match x with
             | [] => []
             | h :: t => @flatten s' h ++ f t
