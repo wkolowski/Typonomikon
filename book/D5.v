@@ -541,7 +541,7 @@ Qed.
 
 (** ** [join] *)
 
-(** Napisz funkcję [join], która spłaszcza listę list.
+(** Zdefiniuj funkcję [join], która spłaszcza listę list.
 
     Przykład:
     [join [[1; 2; 3]; [4; 5; 6]; [7]]] =
@@ -602,7 +602,7 @@ Qed.
 
 (** ** [bind] *)
 
-(** Napisz funkcję [bind], która spełnia specyfikację [bind_spec].
+(** Zdefiniuj funkcję [bind], która spełnia specyfikację [bind_spec].
     Użyj rekursji, ale nie używaj funkcji [join] ani [map]. *)
 
 (* begin hide *)
@@ -635,8 +635,8 @@ Qed.
 
 (** ** [replicate] *)
 
-(** Napisz funkcję [replicate], która powiela dany element [n] razy, tworząc
-    listę.
+(** Zdefiniuj funkcję [replicate], która powiela dany element [n] razy,
+    tworząc listę.
 
     Przykład:
     [replicate 5 0] = [[0; 0; 0; 0; 0]]
@@ -725,14 +725,14 @@ Qed.
 
 (** ** [iterate] i [iter] *)
 
-(** Napisz funkcję [iterate]. [iterate f n x] to lista postaci
+(** Zdefiniuj funkcję [iterate]. [iterate f n x] to lista postaci
     [[x, f x, f (f x), ..., f (... (f x) ...)]] o długości [n]. *)
 
 (** Przykład: *)
 
 (** [iterate S 5 0] = [[0; 1; 2; 3; 4]] *)
 
-(** Napisz też funkcję [iter], która przyda się do podania
+(** Zdefiniuj też funkcję [iter], która przyda się do podania
     charakteryzacji funkcji [iterate]. Zgadnij, czym ma ona być. *)
 
 (* begin hide *)
@@ -1108,7 +1108,7 @@ Qed.
 
 (** *** [uncons] *)
 
-(** Napisz funkcję [uncons], która zwraca parę złożoną z głowy i ogona
+(** Zdefiniuj funkcję [uncons], która zwraca parę złożoną z głowy i ogona
     listy lub [None], gdy lista jest pusta. Nie używaj funkcji [head]
     ani [tail]. Udowodnij poniższą specyfikację.
 
@@ -2578,7 +2578,7 @@ Qed.
 
 (** ** [cycle] *)
 
-(** Napisz funkcję [cycle : forall A : Type, nat -> list A -> list A],
+(** Zdefiniuj funkcję [cycle : forall A : Type, nat -> list A -> list A],
     która obraca listę cyklicznie. Udowodnij jej właściwości. *)
 
 (* begin hide *)
@@ -3217,7 +3217,7 @@ Qed.
 
 (** ** [insert] *)
 
-(** Napisz funkcję [insert], która wstawia do listy [l] na [n]-tą pozycję
+(** Zdefiniuj funkcję [insert], która wstawia do listy [l] na [n]-tą pozycję
     element [x].
 
     Przykład:
@@ -3564,7 +3564,7 @@ Admitted.
 
 (** ** [replace] *)
 
-(** Napisz funkcję [replace], która na liście [l] zastępuje element z
+(** Zdefiniuj funkcję [replace], która na liście [l] zastępuje element z
     pozycji [n] elementem [x].
 
     Przykład:
@@ -4132,7 +4132,7 @@ Qed.
 
 (** ** [remove] *)
 
-(** Napisz funkcję [remove], która bierze liczbę naturalną [n] oraz listę
+(** Zdefiniuj funkcję [remove], która bierze liczbę naturalną [n] oraz listę
     [l] i zwraca parę składającą się z [n]-tego elementu listy [l] oraz
     tego, co pozostanie na liście po jego usunięciu. Jeżeli lista jest za
     krótka, funkcja ma zwracać [None].
@@ -4557,7 +4557,7 @@ Qed.
 
 (** ** [zip] *)
 
-(** Napisz funkcję [zip], która bierze dwie listy i skleja je w listę par.
+(** Zdefiniuj funkcję [zip], która bierze dwie listy i skleja je w listę par.
     Wywnioskuj z poniższej specyfikacji, jak dokładnie ma się zachowywać
     ta funkcja.
 
@@ -4890,8 +4890,9 @@ Qed.
 
 (** ** [unzip] *)
 
-(** Zdefiniuj funkcję [unzip], która jest w pewnym sensie "odwrotna"
-    do [zip].
+(** Zdefiniuj funkcję [unzip], która rozdziela listę par na dwie listy:
+    lewa lista zawiera lewe komponenty par, a prawa lista - prawe
+    komponenty par.
 
     Przykład:
 *)
@@ -5219,7 +5220,7 @@ Qed.
 
 (** ** [any] *)
 
-(** Napisz funkcję [any], która sprawdza, czy lista [l] zawiera jakiś
+(** Zdefiniuj funkcję [any], która sprawdza, czy lista [l] zawiera jakiś
     element, który spełnia predykat boolowski [p].
 
     Przykład:
@@ -5561,7 +5562,7 @@ Qed.
 
 (** ** [all] *)
 
-(** Napisz funkcję [all], która sprawdza, czy wszystkie wartości na liście
+(** Zdefiniuj funkcję [all], która sprawdza, czy wszystkie wartości na liście
     [l] spełniają predykat boolowski [p].
 
     Przykład:
@@ -5943,14 +5944,14 @@ Qed.
 
 (** ** [find]  i [findLast] *)
 
-(** Napisz funkcję [find], która znajduje pierwszy element na liście,
+(** Zdefiniuj funkcję [find], która znajduje pierwszy element na liście,
     który spełnia podany predykat boolowski.
 
     Przykład:
     [find even [1; 2; 3; 4]] = [Some 2]
 *)
 
-(** Napisz też funkcję [findLast], która znajduje ostatni element na
+(** Zdefiniuj też funkcję [findLast], która znajduje ostatni element na
     liście, który spełnia podany predykat boolowski.
 
     Przykład:
@@ -6360,7 +6361,7 @@ Qed.
 
 (** ** [removeFirst] i [removeLast] *)
 
-(** Napisz funkcje [removeFirst] i [removeLast] o sygnaturach,
+(** Zdefiniuj funkcje [removeFirst] i [removeLast] o sygnaturach,
     które zwracają pierwszy/ostatni element z listy spełniający
     predykat boolowski [p] oraz resztę listy bez tego elementu.
 
@@ -6879,7 +6880,7 @@ Qed.
 
 (** ** [findIndex] *)
 
-(** Napisz funkcję [findIndex], która znajduje indeks pierwszego elementu,
+(** Zdefiniuj funkcję [findIndex], która znajduje indeks pierwszego elementu,
     który spełnia predykat boolowski [p]. Pamiętaj, że indeksy liczone są
     od 0.
 
@@ -7379,7 +7380,7 @@ Qed.
 
 (** ** [count] *)
 
-(** Napisz funkcję [count], która liczy, ile jest na liście [l] elementów
+(** Zdefiniuj funkcję [count], która liczy, ile jest na liście [l] elementów
     spełniających predykat boolowski [p].
 
     Przykład:
@@ -7755,7 +7756,7 @@ Qed.
 
 (** ** [filter] *)
 
-(** Napisz funkcję [filter], która zostawia na liście elementy, dla których
+(** Zdefiniuj funkcję [filter], która zostawia na liście elementy, dla których
     funkcja [p] zwraca [true], a usuwa te, dla których zwraca [false].
 
     Przykład: *)
@@ -8206,7 +8207,7 @@ Qed.
 
 (** ** [partition] *)
 
-(** Napisz funkcję [partition], która dzieli listę [l] na listy
+(** Zdefiniuj funkcję [partition], która dzieli listę [l] na listy
     elementów spełniających i niespełniających pewnego warunku
     boolowskiego.
 
@@ -8284,7 +8285,7 @@ Qed.
 
 (** ** [findIndices] *)
 
-(** Napisz funkcję [findIndices], która znajduje indeksy wszystkich
+(** Zdefiniuj funkcję [findIndices], która znajduje indeksy wszystkich
     elementów listy, które spełniają predykat boolowski [p].
 
     Przykład: *)
@@ -9895,7 +9896,7 @@ Qed.
 
 (** ** [intersperse] *)
 
-(** Napisz funkcję [intersperse], który wstawia element [x : A] między
+(** Zdefiniuj funkcję [intersperse], który wstawia element [x : A] między
     każde dwa elementy z listy [l : list A]. Zastanów się dobrze nad
     przypadkami bazowymi.
 
@@ -11605,7 +11606,7 @@ Qed.
 (** ** [NoDup] *)
 
 (** Zdefiniuj induktywny predykat [NoDup]. Zdanie [NoDup l] jest prawdziwe,
-    gdy w [l] nie ma powtarzających się elementów. Udowodnij, że zdefiniowall
+    gdy w [l] nie ma powtarzających się elementów. Udowodnij, że zdefiniowany
     przez ciebie predykat posiada pożądane właściwości. *)
 
 (* begin hide *)
@@ -12004,7 +12005,7 @@ Abort. (* Ten [Abort] jest umyślny. *)
     zachodzi, gdy w [l] nie ma duplikatów. Parafrazując: [NoDup l] zachodzi,
     gdy _nieprawda_, że w [l] są duplikaty.
 
-    Jak widać, w naszej definicji implicité występuje negacja. Wobec tego
+    Jak widać, w naszej definicji implicite występuje negacja. Wobec tego
     jeżeli spróbujemy za pomocą [NoDup] wyrazić zdanie "na liście [l] są
     duplikaty", to tak naprawdę dostaniemy zdanie "nieprawda, że nieprawda,
     że [l] ma duplikaty".
@@ -15254,6 +15255,16 @@ Qed.
 
 (** ** [AtMost] *)
 
+(** Zdefiniuj relację [AtMost]. Zdanie [AtMost P n l] zachodzi, gdy
+    na liście [l] występuje co najwyżej [n] elementów spełniających
+    predykat [P].
+
+    Przykład: *)
+
+(** [AtMost (fun n => n = 0) 3 [0; 1; 2; 3; 0]] zachodzi. *)
+
+(** [AtMost (fun n => n < 5) 5 [1; 2; 3; 4; 5; 6; 7]] nie zachodzi. *)
+
 (* begin hide *)
 Inductive AtMost  {A : Type} (P : A -> Prop) : nat -> list A -> Prop :=
     | AM_0 : forall n : nat, AtMost P n []
@@ -15352,6 +15363,7 @@ Qed.
 
 (** * Relacje między listami *)
 
+(* begin hide *)
 (* TODO: zrób coś z tym *)
 Inductive bool_le : bool -> bool -> Prop :=
     | ble_refl : forall b : bool, bool_le b b
@@ -15365,8 +15377,19 @@ match b1, b2 with
     | true, true => True
 end.
 *)
+(* end hide *)
 
 (** ** Listy jako termy *)
+
+(** Zdefiniuj relację [Sublist]. Zdanie [Sublist l1 l2] zachodzi, gdy
+    [l2] jest podtermem listy [l1], tzn. jej ogonem, ogonem ogona,
+    ogonem ogona ogona etc.
+
+    Przykład: *)
+
+(** [Sublist [4; 5] [1; 2; 3; 4; 5]] zachodzi. *)
+
+(** [Sublist [3; 4] [1; 2; 3; 4; 5]] nie zachodzi. *)
 
 (* begin hide *)
 Inductive Sublist {A : Type} : list A -> list A -> Prop :=
@@ -15591,9 +15614,20 @@ Qed.
 
 Lemma Sublist_iterate :
   forall (A : Type) (f : A -> A) (n m : nat) (x : A),
-    Sublist (iterate f n x) (iterate f m x) -> False.
+    Sublist (iterate f n x) (iterate f m x) ->
+      n = 0 \/ n = m \/ (n <= m /\ f x = x).
 (* begin hide *)
 Proof.
+  intros.
+  remember (iterate f n x) as l1.
+  remember (iterate f m x) as l2.
+  revert x n m Heql1 Heql2.
+  induction H; intros.
+    destruct n, m; cbn in *; inversion Heql2; subst.
+      left. reflexivity.
+      right. destruct m; cbn in *.
+        inversion H1.
+        inversion H1.
 Admitted.
 (* end hide *)
 
@@ -16000,11 +16034,23 @@ Qed.
 
 (** ** Prefiksy *)
 
+(** Zdefiniuj induktywną relację [Prefix]. Zdanie [Prefix l1 l2]
+    zachodzi, gdy lista [l1] pokrywa się z początkowym fragmentem
+    listy [l2] o dowolnej długości.
+
+    Przykład: *)
+
+(** [Prefix [1; 2] [1; 2; 3; 4; 5]] zachodzi. *)
+
+(** [Prefix [1; 2] [1; 1; 2; 3; 5]] nie zachodzi. *)
+
+(* begin hide*)
 Inductive Prefix {A : Type} : list A -> list A -> Prop :=
     | Prefix_nil : forall l : list A, Prefix [] l
     | Prefix_cons :
         forall (x : A) (l1 l2 : list A),
           Prefix l1 l2 -> Prefix (x :: l1) (x :: l2).
+(* end hide *)
 
 Lemma Prefix_spec :
   forall (A : Type) (l1 l2 : list A),
@@ -16696,12 +16742,24 @@ Qed.
 
 (** ** Sufiksy *)
 
+(** Zdefiniuj induktywną relację [Suffix]. Zdanie [Suffix l1 l2]
+    zachodzi, gdy [l1] pokrywa się z końcowym fragmentem listy [l2]
+    o dowolnej długości.
+
+    Przykłady: *)
+
+(** [Suffix [4; 5] [1; 2; 3; 4; 5]] zachodzi. *)
+
+(** [Suffix [3; 4] [1; 2; 3; 4; 5]] nie zachodzi. *)
+
+(* begin hide *)
 Inductive Suffix {A : Type} : list A -> list A -> Prop :=
     | Suffix_refl :
         forall l : list A, Suffix l l
     | Suffix_cons :
         forall (x : A) (l1 l2 : list A),
           Suffix l1 l2 -> Suffix l1 (x :: l2).
+(* end hide *)
 
 Lemma Suffix_spec :
   forall (A : Type) (l1 l2 : list A),
@@ -16812,6 +16870,18 @@ Qed.
 
 (** ** Listy jako ciągi *)
 
+(** Zdefiniuj relację [Subseq]. Zdanie [Subseq l1 l2] zachodzi, gdy
+    lista [l2] zawiera wszystkie elementy listy [l1] w takiej samej
+    kolejności, w jakiej występują one w [l1], ale może też zawierać
+    inne elementy.
+
+    Przykłady: *)
+
+(** [Subseq [1; 3; 5] [0; 1; 5; 2; 3; 4; 5]] zachodzi. *)
+
+(** [Subseq [1; 3; 5] [3; 1; 5; 3; 6]] nie zachodzi. *)
+
+(* begin hide *)
 Inductive Subseq {A : Type} : list A -> list A -> Prop :=
     | Subseq_nil :
         forall l : list A, Subseq [] l
@@ -16821,6 +16891,7 @@ Inductive Subseq {A : Type} : list A -> list A -> Prop :=
     | Subseq_skip :
         forall (x : A) (l1 l2 : list A),
           Subseq l1 l2 -> Subseq l1 (x :: l2).
+(* end hide *)
 
 Lemma Subseq_refl :
   forall (A : Type) (l : list A), Subseq l l.
@@ -17641,12 +17712,21 @@ Qed.
 
 (** ** Zawieranie *)
 
+(** Zdefiniuj (niekoniecznie induktywnie) relację [Incl]. Zdanie
+    [Incl l1 l2] zachodzi, gdy lista [l2] zawiera wszystkie te
+    elementy, które zawiera lista [l1], ale nie musi koniecznie
+    zawierać tyle samo sztuk każdego elementu.
+
+    Przykłady: *)
+
+(** [Incl [1; 1; 2; 2; 3; 3] [3; 4; 5; 1; 9; 0; 2]] zachodzi. *)
+
+(** [Incl [1; 1; 2; 2; 3; 3] [2; 3; 4; 5]] nie zachodzi. *)
+
+(* begin hide *)
 Definition Incl {A : Type} (l1 l2 : list A) : Prop :=
   forall x : A, elem x l1 -> elem x l2.
-
-(** Przyjrzyjmy się powyższej definicji. Intuicyjnie można ją rozumieć tak,
-    że [Incl l1 l2] zachodzi, gdy każdy element listy [l1] choć raz występuje
-    też na liście [l2]. Udowodnij, że relacja ta ma poniższe właściwości. *)
+(* end hide *)
 
 Lemma Incl_nil :
   forall (A : Type) (l : list A), Incl [] l.
@@ -18287,8 +18367,20 @@ Qed.
 
 (** ** Listy jako zbiory *)
 
+(** Zdefiniuj relację [SetEquiv]. Zdanie [SetEquiv l1 l2] zachodzi,
+    gdy listy [l1] i [l2] mają te same elementy, choć niekoniecznie
+    w tej samej kolejności czy ilości.
+
+    Przykłady: *)
+
+(** [SetEquiv [1; 1; 2] [2; 2; 1]] zachodzi. *)
+
+(** [SetEquiv [1; 2; 3; 3] [2; 2; 3; 3; 4]] nie zachodzi. *)
+
+(* begin hide *)
 Definition SetEquiv {A : Type} (l1 l2 : list A) : Prop :=
   forall x : A, elem x l1 <-> elem x l2.
+(* end hide *)
 
 Lemma SetEquiv_Incl :
   forall (A : Type) (l1 l2 : list A),
@@ -18691,6 +18783,22 @@ Qed.
 Require Export Coq.Classes.SetoidClass.
 Require Import Coq.Classes.RelationClasses.
 
+(** Zdefiniuj induktywną relację [Permutation]. Zdanie
+    [Permutation l1 l2] zachodzi, gdy listy [l1] i [l2] mają te same
+    elementy w tej samej ilości sztuk, ale niekoniecznie w tej samej
+    kolejności.
+
+    Przykłady: *)
+
+(** [Permutation [1; 5; 1; 4; 3] [4; 1; 1; 5; 3]] zachodzi. *)
+
+(** [Permutation [0; 0; 2; 6; 7] [7; 0; 2; 0; 6; 0]] nie zachodzi. *)
+
+(** Uwaga: to zadanie jest dużo trudniejsze od reszty zadań dotyczących
+    relacji między listami. Jeżeli masz problem z rozwiązaniem, spróbuj
+    poszukać gotowca w bibliotece standardowej Coqa. *)
+
+(* begin hide *)
 Inductive Permutation {A : Type} : list A -> list A -> Prop :=
     | perm_nil : Permutation [] []
     | perm_skip : forall (x : A) (l l' : list A),
@@ -18701,6 +18809,7 @@ Inductive Permutation {A : Type} : list A -> list A -> Prop :=
         Permutation l l' -> Permutation l' l'' -> Permutation l l''.
 
 Hint Constructors Permutation.
+(* end hide *)
 
 Lemma Permutation_refl :
   forall (A : Type) (l : list A),
@@ -20119,11 +20228,26 @@ findIndices
 
 (** ** Listy jako cykle *)
 
+(** Zdefiniuj induktywną relację [Cycle]. Zdanie [Cycle l1 l2] zachodzi,
+    gdy listy [l1] i [l2] reprezentują ten sam cykl. Intuicyjnie możesz
+    sobie wyobrazić elementy [l1] ułożone po kolei wzdłuż okręgu tak, że
+    ostatni element sąsiaduje z pierwszym. Jeżeli da się teraz przekręcić
+    ten okrąg tak, żeby uzyskać listę [l2], to znaczy, że [Cycle l1 l2]
+    zachodzi.
+
+    Przykłady: *)
+
+(** [Cycle [1; 2; 3; 4; 5] [4; 5; 1; 2; 3]] zachodzi. *)
+
+(** [Cycle [1; 2; 3] [2; 1; 3]] nie zachodzi. *)
+
+(* begin hide *)
 Inductive Cycle {A : Type} : list A -> list A -> Prop :=
     | Cycle_refl : forall l : list A, Cycle l l
     | Cycle_cyc :
         forall (x : A) (l1 l2 : list A),
           Cycle l1 (snoc x l2) -> Cycle l1 (x :: l2).
+(* end hide *)
 
 Lemma lt_plus_S :
   forall n m : nat,

@@ -98,7 +98,7 @@ Defined.
     Jeżeli nie, to znajdź jakiś warunek na [A], przy którym [Stream A]
     jest przeszukiwalny. *)
 
-(** Trochę własności, pewnie dość oczywistych. *)
+(** Trochę właściwości, pewnie dość oczywistych. *)
 
 Definition search_prod
   {A B : Type} (SA : Searchable A) (SB : Searchable B)

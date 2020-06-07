@@ -10,7 +10,7 @@ Co tu się dzieje:
 - docs/ to folder, z którego książka jest hostowana na GitHub Pages.
 - README.md to plik, który właśnie czytasz.
 - tex/ to folder, w którym możesz znaleźć wersję PDF książki (oraz okładkę), ale miej się na baczności, gdyż póki co jest ona upośledzona.
-- txt/ zawiera TODO i inne notatki.
+- txt/ zawiera różne notatki, w tym spis rzeczy TODO i plan co robić dalej.
 
 Książkę można zbudować za pomocą polecenia
 ```bash

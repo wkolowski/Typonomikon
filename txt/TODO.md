@@ -6,7 +6,7 @@
   - _Ex falso quodlibet_ - `False -> P`
   - _Ex contradictione quodlibet_ - `A /\ ~ A -> P`
 
-  ```Coq
+```Coq
 Lemma not_not_bind :
   forall P Q : Prop,
     ~ ~ P -> (P -> ~ ~ Q) -> ~ ~ Q.
@@ -106,7 +106,7 @@ Qed.
 ## Filozofia
 1. Mega ważna obserwacja: nazwy zawsze należy nadawać tak, żeby zgadzały się z definicją, czyli nazwy są intensjonalne. Ewentualne ekstensjonalne powiązanie ze sobą (w postaci równoważności) różnych apriori nazw następować musi później, na mocy pokazania równoważności tego, co one oznaczają. Przykład: różne definicje równoważności powinny się nazywać inaczej, np. invertible, biinvertible, contractible etc.
 
-## Sugestie i problemy z koła:
+## Sugestie i problemy z koła
 1. Opisać dokładniej definiowanie przez dowód.
 2. Nie trzeba specjalizować hipotezy, żeby przepisać.
 3. Być może coś więcej o równości (i jej alternatywnej definicji?).

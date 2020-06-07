@@ -12,7 +12,7 @@ Fail CoInductive wut : Type :=
 }.
 
 (** Ciężko mi jednak stwierdzić w tej chwili, czy jest jakiś odpowiednik
-    problemów z nieterminacją. *)
+    problemów z nieterminacją. NIEPRODUKTYWNOŚĆ! *)
 
 (* end hide *)
 

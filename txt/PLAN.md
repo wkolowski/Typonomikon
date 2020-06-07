@@ -131,8 +131,6 @@ D2: Definiowanie funkcji
 D4: Arytmetyka Peano
 
 D5: Listy
-  - napisać wstępy do poszczególnych funkcji
-  - Dodać przykładowe wywołania funkcji do ćwiczeń.
   - ogólnie trzeba będzie zrobić gruntowny refaktoring list według planu zawartego w List_sig.v
   - opisz niestandardowe reguły indukcyjne dla list (najlepiej przed funkcją `intersperse`)
   - przenieś `intersperse` na sam koniec funkcji i dorzuć jeszcze kilka dziwnych (z niestandardowym kształtem indukcji)

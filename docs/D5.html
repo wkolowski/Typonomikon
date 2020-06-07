@@ -373,7 +373,7 @@ W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">join</span></span>, która spłaszcza listę list.
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">join</span></span>, która spłaszcza listę list.
 
 <div class="paragraph"> </div>
 
@@ -414,7 +414,7 @@ W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">bind</span></span>, która spełnia specyfikację <span class="inlinecode"><span class="id" title="var">bind_spec</span></span>.
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">bind</span></span>, która spełnia specyfikację <span class="inlinecode"><span class="id" title="var">bind_spec</span></span>.
     Użyj rekursji, ale nie używaj funkcji <span class="inlinecode"><span class="id" title="var">join</span></span> ani <span class="inlinecode"><span class="id" title="var">map</span></span>. 
 </div>
 <div class="code">
@@ -439,8 +439,8 @@ W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">replicate</span></span>, która powiela dany element <span class="inlinecode"><span class="id" title="var">n</span></span> razy, tworząc
-    listę.
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">replicate</span></span>, która powiela dany element <span class="inlinecode"><span class="id" title="var">n</span></span> razy,
+    tworząc listę.
 
 <div class="paragraph"> </div>
 
@@ -502,7 +502,7 @@ W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">iterate</span></span>. <span class="inlinecode"><span class="id" title="var">iterate</span></span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> to lista postaci
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">iterate</span></span>. <span class="inlinecode"><span class="id" title="var">iterate</span></span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> to lista postaci
     <span class="inlinecode">[<span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span>),</span> <span class="inlinecode">...,</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(...</span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span>)</span> <span class="inlinecode">...)]</span> o długości <span class="inlinecode"><span class="id" title="var">n</span></span>. 
 <div class="paragraph"> </div>
 
@@ -512,7 +512,7 @@ W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
  <span class="inlinecode"><span class="id" title="var">iterate</span></span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">5</span> <span class="inlinecode">0</span> = <span class="inlinecode">[0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4]</span> 
 <div class="paragraph"> </div>
 
- Napisz też funkcję <span class="inlinecode"><span class="id" title="var">iter</span></span>, która przyda się do podania
+ Zdefiniuj też funkcję <span class="inlinecode"><span class="id" title="var">iter</span></span>, która przyda się do podania
     charakteryzacji funkcji <span class="inlinecode"><span class="id" title="var">iterate</span></span>. Zgadnij, czym ma ona być. 
 </div>
 <div class="code">
@@ -752,7 +752,7 @@ W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">uncons</span></span>, która zwraca parę złożoną z głowy i ogona
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">uncons</span></span>, która zwraca parę złożoną z głowy i ogona
     listy lub <span class="inlinecode"><span class="id" title="var">None</span></span>, gdy lista jest pusta. Nie używaj funkcji <span class="inlinecode"><span class="id" title="var">head</span></span>
     ani <span class="inlinecode"><span class="id" title="var">tail</span></span>. Udowodnij poniższą specyfikację.
 
@@ -1532,7 +1532,7 @@ W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">cycle</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>,
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">cycle</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>,</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>,
     która obraca listę cyklicznie. Udowodnij jej właściwości. 
 </div>
 <div class="code">
@@ -1866,7 +1866,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">insert</span></span>, która wstawia do listy <span class="inlinecode"><span class="id" title="var">l</span></span> na <span class="inlinecode"><span class="id" title="var">n</span></span>-tą pozycję
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">insert</span></span>, która wstawia do listy <span class="inlinecode"><span class="id" title="var">l</span></span> na <span class="inlinecode"><span class="id" title="var">n</span></span>-tą pozycję
     element <span class="inlinecode"><span class="id" title="var">x</span></span>.
 
 <div class="paragraph"> </div>
@@ -2027,7 +2027,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="tactic">replace</span></span>, która na liście <span class="inlinecode"><span class="id" title="var">l</span></span> zastępuje element z
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="tactic">replace</span></span>, która na liście <span class="inlinecode"><span class="id" title="var">l</span></span> zastępuje element z
     pozycji <span class="inlinecode"><span class="id" title="var">n</span></span> elementem <span class="inlinecode"><span class="id" title="var">x</span></span>.
 
 <div class="paragraph"> </div>
@@ -2293,7 +2293,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">remove</span></span>, która bierze liczbę naturalną <span class="inlinecode"><span class="id" title="var">n</span></span> oraz listę
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">remove</span></span>, która bierze liczbę naturalną <span class="inlinecode"><span class="id" title="var">n</span></span> oraz listę
     <span class="inlinecode"><span class="id" title="var">l</span></span> i zwraca parę składającą się z <span class="inlinecode"><span class="id" title="var">n</span></span>-tego elementu listy <span class="inlinecode"><span class="id" title="var">l</span></span> oraz
     tego, co pozostanie na liście po jego usunięciu. Jeżeli lista jest za
     krótka, funkcja ma zwracać <span class="inlinecode"><span class="id" title="var">None</span></span>.
@@ -2491,7 +2491,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">zip</span></span>, która bierze dwie listy i skleja je w listę par.
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">zip</span></span>, która bierze dwie listy i skleja je w listę par.
     Wywnioskuj z poniższej specyfikacji, jak dokładnie ma się zachowywać
     ta funkcja.
 
@@ -2652,8 +2652,9 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">unzip</span></span>, która jest w pewnym sensie "odwrotna"
-    do <span class="inlinecode"><span class="id" title="var">zip</span></span>.
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">unzip</span></span>, która rozdziela listę par na dwie listy:
+    lewa lista zawiera lewe komponenty par, a prawa lista - prawe
+    komponenty par.
 
 <div class="paragraph"> </div>
 
@@ -2836,7 +2837,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">any</span></span>, która sprawdza, czy lista <span class="inlinecode"><span class="id" title="var">l</span></span> zawiera jakiś
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">any</span></span>, która sprawdza, czy lista <span class="inlinecode"><span class="id" title="var">l</span></span> zawiera jakiś
     element, który spełnia predykat boolowski <span class="inlinecode"><span class="id" title="var">p</span></span>.
 
 <div class="paragraph"> </div>
@@ -2984,7 +2985,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">all</span></span>, która sprawdza, czy wszystkie wartości na liście
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">all</span></span>, która sprawdza, czy wszystkie wartości na liście
     <span class="inlinecode"><span class="id" title="var">l</span></span> spełniają predykat boolowski <span class="inlinecode"><span class="id" title="var">p</span></span>.
 
 <div class="paragraph"> </div>
@@ -3144,7 +3145,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">find</span></span>, która znajduje pierwszy element na liście,
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">find</span></span>, która znajduje pierwszy element na liście,
     który spełnia podany predykat boolowski.
 
 <div class="paragraph"> </div>
@@ -3154,7 +3155,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz też funkcję <span class="inlinecode"><span class="id" title="var">findLast</span></span>, która znajduje ostatni element na
+ Zdefiniuj też funkcję <span class="inlinecode"><span class="id" title="var">findLast</span></span>, która znajduje ostatni element na
     liście, który spełnia podany predykat boolowski.
 
 <div class="paragraph"> </div>
@@ -3352,7 +3353,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcje <span class="inlinecode"><span class="id" title="var">removeFirst</span></span> i <span class="inlinecode"><span class="id" title="var">removeLast</span></span> o sygnaturach,
+ Zdefiniuj funkcje <span class="inlinecode"><span class="id" title="var">removeFirst</span></span> i <span class="inlinecode"><span class="id" title="var">removeLast</span></span> o sygnaturach,
     które zwracają pierwszy/ostatni element z listy spełniający
     predykat boolowski <span class="inlinecode"><span class="id" title="var">p</span></span> oraz resztę listy bez tego elementu.
 
@@ -3582,7 +3583,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">findIndex</span></span>, która znajduje indeks pierwszego elementu,
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">findIndex</span></span>, która znajduje indeks pierwszego elementu,
     który spełnia predykat boolowski <span class="inlinecode"><span class="id" title="var">p</span></span>. Pamiętaj, że indeksy liczone są
     od 0.
 
@@ -3788,7 +3789,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">count</span></span>, która liczy, ile jest na liście <span class="inlinecode"><span class="id" title="var">l</span></span> elementów
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">count</span></span>, która liczy, ile jest na liście <span class="inlinecode"><span class="id" title="var">l</span></span> elementów
     spełniających predykat boolowski <span class="inlinecode"><span class="id" title="var">p</span></span>.
 
 <div class="paragraph"> </div>
@@ -3942,7 +3943,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">filter</span></span>, która zostawia na liście elementy, dla których
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">filter</span></span>, która zostawia na liście elementy, dla których
     funkcja <span class="inlinecode"><span class="id" title="var">p</span></span> zwraca <span class="inlinecode"><span class="id" title="var">true</span></span>, a usuwa te, dla których zwraca <span class="inlinecode"><span class="id" title="var">false</span></span>.
 
 <div class="paragraph"> </div>
@@ -4150,7 +4151,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">partition</span></span>, która dzieli listę <span class="inlinecode"><span class="id" title="var">l</span></span> na listy
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">partition</span></span>, która dzieli listę <span class="inlinecode"><span class="id" title="var">l</span></span> na listy
     elementów spełniających i niespełniających pewnego warunku
     boolowskiego.
 
@@ -4201,7 +4202,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">findIndices</span></span>, która znajduje indeksy wszystkich
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">findIndices</span></span>, która znajduje indeksy wszystkich
     elementów listy, które spełniają predykat boolowski <span class="inlinecode"><span class="id" title="var">p</span></span>.
 
 <div class="paragraph"> </div>
@@ -4982,7 +4983,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 
 <div class="paragraph"> </div>
 
- Napisz funkcję <span class="inlinecode"><span class="id" title="var">intersperse</span></span>, który wstawia element <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> między
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">intersperse</span></span>, który wstawia element <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> między
     każde dwa elementy z listy <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>. Zastanów się dobrze nad
     przypadkami bazowymi.
 
@@ -5656,7 +5657,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 <div class="paragraph"> </div>
 
  Zdefiniuj induktywny predykat <span class="inlinecode"><span class="id" title="var">NoDup</span></span>. Zdanie <span class="inlinecode"><span class="id" title="var">NoDup</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> jest prawdziwe,
-    gdy w <span class="inlinecode"><span class="id" title="var">l</span></span> nie ma powtarzających się elementów. Udowodnij, że zdefiniowall
+    gdy w <span class="inlinecode"><span class="id" title="var">l</span></span> nie ma powtarzających się elementów. Udowodnij, że zdefiniowany
     przez ciebie predykat posiada pożądane właściwości. 
 </div>
 <div class="code">
@@ -5789,7 +5790,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 
 <div class="paragraph"> </div>
 
-    Jak widać, w naszej definicji implicité występuje negacja. Wobec tego
+    Jak widać, w naszej definicji implicite występuje negacja. Wobec tego
     jeżeli spróbujemy za pomocą <span class="inlinecode"><span class="id" title="var">NoDup</span></span> wyrazić zdanie "na liście <span class="inlinecode"><span class="id" title="var">l</span></span> są
     duplikaty", to tak naprawdę dostaniemy zdanie "nieprawda, że nieprawda,
     że <span class="inlinecode"><span class="id" title="var">l</span></span> ma duplikaty".
@@ -6997,6 +6998,21 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 <div class="doc">
 <a name="lab357"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">AtMost</span></span></h2>
 
+<div class="paragraph"> </div>
+
+ Zdefiniuj relację <span class="inlinecode"><span class="id" title="var">AtMost</span></span>. Zdanie <span class="inlinecode"><span class="id" title="var">AtMost</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> zachodzi, gdy
+    na liście <span class="inlinecode"><span class="id" title="var">l</span></span> występuje co najwyżej <span class="inlinecode"><span class="id" title="var">n</span></span> elementów spełniających
+    predykat <span class="inlinecode"><span class="id" title="var">P</span></span>.
+
+<div class="paragraph"> </div>
+
+    Przykład: 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">AtMost</span></span> <span class="inlinecode">(<span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0)</span> <span class="inlinecode">3</span> <span class="inlinecode">[0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">0]</span> zachodzi. 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">AtMost</span></span> <span class="inlinecode">(<span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode">5)</span> <span class="inlinecode">5</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7]</span> nie zachodzi. 
 </div>
 <div class="code">
 
@@ -7048,20 +7064,6 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 <div class="code">
 
 <br/>
-<span class="comment">(*&nbsp;TODO:&nbsp;zrób&nbsp;coś&nbsp;z&nbsp;tym&nbsp;*)</span><br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">bool_le</span> : <span class="id" title="var">bool</span> -&gt; <span class="id" title="var">bool</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">ble_refl</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span>, <span class="id" title="var">bool_le</span> <span class="id" title="var">b</span> <span class="id" title="var">b</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">ble_false_true</span> : <span class="id" title="var">bool_le</span> <span class="id" title="var">false</span> <span class="id" title="var">true</span>.<br/>
-
-<br/>
-<span class="comment">(*<br/>
-Definition&nbsp;bool_le&nbsp;(b1&nbsp;b2&nbsp;:&nbsp;bool)&nbsp;:&nbsp;Prop&nbsp;:=<br/>
-match&nbsp;b1,&nbsp;b2&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;false,&nbsp;_&nbsp;=&gt;&nbsp;True<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;true,&nbsp;false&nbsp;=&gt;&nbsp;False<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;true,&nbsp;true&nbsp;=&gt;&nbsp;True<br/>
-end.<br/>
-*)</span><br/>
 
 <br/>
 </div>
@@ -7069,6 +7071,21 @@ end.<br/>
 <div class="doc">
 <a name="lab359"></a><h2 class="section">Listy jako termy</h2>
 
+<div class="paragraph"> </div>
+
+ Zdefiniuj relację <span class="inlinecode"><span class="id" title="var">Sublist</span></span>. Zdanie <span class="inlinecode"><span class="id" title="var">Sublist</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="var">l2</span></span> zachodzi, gdy
+    <span class="inlinecode"><span class="id" title="var">l2</span></span> jest podtermem listy <span class="inlinecode"><span class="id" title="var">l1</span></span>, tzn. jej ogonem, ogonem ogona,
+    ogonem ogona ogona etc.
+
+<div class="paragraph"> </div>
+
+    Przykład: 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Sublist</span></span> <span class="inlinecode">[4;</span> <span class="inlinecode">5]</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5]</span> zachodzi. 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Sublist</span></span> <span class="inlinecode">[3;</span> <span class="inlinecode">4]</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5]</span> nie zachodzi. 
 </div>
 <div class="code">
 
@@ -7155,7 +7172,8 @@ end.<br/>
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Sublist_iterate</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Sublist</span> (<span class="id" title="var">iterate</span> <span class="id" title="var">f</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span>) (<span class="id" title="var">iterate</span> <span class="id" title="var">f</span> <span class="id" title="var">m</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">False</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Sublist</span> (<span class="id" title="var">iterate</span> <span class="id" title="var">f</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span>) (<span class="id" title="var">iterate</span> <span class="id" title="var">f</span> <span class="id" title="var">m</span> <span class="id" title="var">x</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> = 0 \/ <span class="id" title="var">n</span> = <span class="id" title="var">m</span> \/ (<span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> /\ <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">x</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Sublist_iterate'</span> :<br/>
@@ -7331,15 +7349,25 @@ end.<br/>
 <div class="doc">
 <a name="lab360"></a><h2 class="section">Prefiksy</h2>
 
+<div class="paragraph"> </div>
+
+ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="var">Prefix</span></span>. Zdanie <span class="inlinecode"><span class="id" title="var">Prefix</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="var">l2</span></span>
+    zachodzi, gdy lista <span class="inlinecode"><span class="id" title="var">l1</span></span> pokrywa się z początkowym fragmentem
+    listy <span class="inlinecode"><span class="id" title="var">l2</span></span> o dowolnej długości.
+
+<div class="paragraph"> </div>
+
+    Przykład: 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Prefix</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">2]</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5]</span> zachodzi. 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Prefix</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">2]</span> <span class="inlinecode">[1;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">5]</span> nie zachodzi. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Prefix</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Prefix_nil</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">Prefix</span> [] <span class="id" title="var">l</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Prefix_cons</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Prefix</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Prefix</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l1</span>) (<span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Prefix_spec</span> :<br/>
@@ -7641,16 +7669,25 @@ end.<br/>
 <div class="doc">
 <a name="lab361"></a><h2 class="section">Sufiksy</h2>
 
+<div class="paragraph"> </div>
+
+ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="var">Suffix</span></span>. Zdanie <span class="inlinecode"><span class="id" title="var">Suffix</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="var">l2</span></span>
+    zachodzi, gdy <span class="inlinecode"><span class="id" title="var">l1</span></span> pokrywa się z końcowym fragmentem listy <span class="inlinecode"><span class="id" title="var">l2</span></span>
+    o dowolnej długości.
+
+<div class="paragraph"> </div>
+
+    Przykłady: 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Suffix</span></span> <span class="inlinecode">[4;</span> <span class="inlinecode">5]</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5]</span> zachodzi. 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Suffix</span></span> <span class="inlinecode">[3;</span> <span class="inlinecode">4]</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5]</span> nie zachodzi. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Suffix</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Suffix_refl</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">Suffix</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Suffix_cons</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Suffix</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Suffix</span> <span class="id" title="var">l1</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Suffix_spec</span> :<br/>
@@ -7697,19 +7734,26 @@ end.<br/>
 <div class="doc">
 <a name="lab362"></a><h2 class="section">Listy jako ciągi</h2>
 
+<div class="paragraph"> </div>
+
+ Zdefiniuj relację <span class="inlinecode"><span class="id" title="var">Subseq</span></span>. Zdanie <span class="inlinecode"><span class="id" title="var">Subseq</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="var">l2</span></span> zachodzi, gdy
+    lista <span class="inlinecode"><span class="id" title="var">l2</span></span> zawiera wszystkie elementy listy <span class="inlinecode"><span class="id" title="var">l1</span></span> w takiej samej
+    kolejności, w jakiej występują one w <span class="inlinecode"><span class="id" title="var">l1</span></span>, ale może też zawierać
+    inne elementy.
+
+<div class="paragraph"> </div>
+
+    Przykłady: 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Subseq</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">3;</span> <span class="inlinecode">5]</span> <span class="inlinecode">[0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">5;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5]</span> zachodzi. 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Subseq</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">3;</span> <span class="inlinecode">5]</span> <span class="inlinecode">[3;</span> <span class="inlinecode">1;</span> <span class="inlinecode">5;</span> <span class="inlinecode">3;</span> <span class="inlinecode">6]</span> nie zachodzi. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Subseq</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Subseq_nil</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">Subseq</span> [] <span class="id" title="var">l</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Subseq_cons</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Subseq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Subseq</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l1</span>) (<span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Subseq_skip</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Subseq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Subseq</span> <span class="id" title="var">l1</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Subseq_refl</span> :<br/>
@@ -8037,22 +8081,26 @@ end.<br/>
 <div class="doc">
 <a name="lab363"></a><h2 class="section">Zawieranie</h2>
 
+<div class="paragraph"> </div>
+
+ Zdefiniuj (niekoniecznie induktywnie) relację <span class="inlinecode"><span class="id" title="var">Incl</span></span>. Zdanie
+    <span class="inlinecode"><span class="id" title="var">Incl</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="var">l2</span></span> zachodzi, gdy lista <span class="inlinecode"><span class="id" title="var">l2</span></span> zawiera wszystkie te
+    elementy, które zawiera lista <span class="inlinecode"><span class="id" title="var">l1</span></span>, ale nie musi koniecznie
+    zawierać tyle samo sztuk każdego elementu.
+
+<div class="paragraph"> </div>
+
+    Przykłady: 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Incl</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">3]</span> <span class="inlinecode">[3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">1;</span> <span class="inlinecode">9;</span> <span class="inlinecode">0;</span> <span class="inlinecode">2]</span> zachodzi. 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Incl</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">3]</span> <span class="inlinecode">[2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5]</span> nie zachodzi. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">Incl</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> -&gt; <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Przyjrzyjmy się powyższej definicji. Intuicyjnie można ją rozumieć tak,
-    że <span class="inlinecode"><span class="id" title="var">Incl</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="var">l2</span></span> zachodzi, gdy każdy element listy <span class="inlinecode"><span class="id" title="var">l1</span></span> choć raz występuje
-    też na liście <span class="inlinecode"><span class="id" title="var">l2</span></span>. Udowodnij, że relacja ta ma poniższe właściwości. 
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Incl_nil</span> :<br/>
@@ -8341,12 +8389,25 @@ Przyjrzyjmy się powyższej definicji. Intuicyjnie można ją rozumieć tak,
 <div class="doc">
 <a name="lab364"></a><h2 class="section">Listy jako zbiory</h2>
 
+<div class="paragraph"> </div>
+
+ Zdefiniuj relację <span class="inlinecode"><span class="id" title="var">SetEquiv</span></span>. Zdanie <span class="inlinecode"><span class="id" title="var">SetEquiv</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="var">l2</span></span> zachodzi,
+    gdy listy <span class="inlinecode"><span class="id" title="var">l1</span></span> i <span class="inlinecode"><span class="id" title="var">l2</span></span> mają te same elementy, choć niekoniecznie
+    w tej samej kolejności czy ilości.
+
+<div class="paragraph"> </div>
+
+    Przykłady: 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">SetEquiv</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2]</span> <span class="inlinecode">[2;</span> <span class="inlinecode">2;</span> <span class="inlinecode">1]</span> zachodzi. 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">SetEquiv</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">3]</span> <span class="inlinecode">[2;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4]</span> nie zachodzi. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">SetEquiv</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> &lt;-&gt; <span class="id" title="var">elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">SetEquiv_Incl</span> :<br/>
@@ -8517,17 +8578,32 @@ Przyjrzyjmy się powyższej definicji. Intuicyjnie można ją rozumieć tak,
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Coq.Classes.RelationClasses</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Permutation</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">perm_nil</span> : <span class="id" title="var">Permutation</span> [] []<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">perm_skip</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> <span class="id" title="var">l'</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> <span class="id" title="var">l</span> <span class="id" title="var">l'</span> -&gt; <span class="id" title="var">Permutation</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l</span>) (<span class="id" title="var">x</span> :: <span class="id" title="var">l'</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">perm_swap</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> (<span class="id" title="var">y</span> :: <span class="id" title="var">x</span> :: <span class="id" title="var">l</span>) (<span class="id" title="var">x</span> :: <span class="id" title="var">y</span> :: <span class="id" title="var">l</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">perm_trans</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> <span class="id" title="var">l'</span> <span class="id" title="var">l''</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> <span class="id" title="var">l</span> <span class="id" title="var">l'</span> -&gt; <span class="id" title="var">Permutation</span> <span class="id" title="var">l'</span> <span class="id" title="var">l''</span> -&gt; <span class="id" title="var">Permutation</span> <span class="id" title="var">l</span> <span class="id" title="var">l''</span>.<br/>
+</div>
+
+<div class="doc">
+Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="var">Permutation</span></span>. Zdanie
+    <span class="inlinecode"><span class="id" title="var">Permutation</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="var">l2</span></span> zachodzi, gdy listy <span class="inlinecode"><span class="id" title="var">l1</span></span> i <span class="inlinecode"><span class="id" title="var">l2</span></span> mają te same
+    elementy w tej samej ilości sztuk, ale niekoniecznie w tej samej
+    kolejności.
+
+<div class="paragraph"> </div>
+
+    Przykłady: 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Permutation</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">5;</span> <span class="inlinecode">1;</span> <span class="inlinecode">4;</span> <span class="inlinecode">3]</span> <span class="inlinecode">[4;</span> <span class="inlinecode">1;</span> <span class="inlinecode">1;</span> <span class="inlinecode">5;</span> <span class="inlinecode">3]</span> zachodzi. 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Permutation</span></span> <span class="inlinecode">[0;</span> <span class="inlinecode">0;</span> <span class="inlinecode">2;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7]</span> <span class="inlinecode">[7;</span> <span class="inlinecode">0;</span> <span class="inlinecode">2;</span> <span class="inlinecode">0;</span> <span class="inlinecode">6;</span> <span class="inlinecode">0]</span> nie zachodzi. 
+<div class="paragraph"> </div>
+
+ Uwaga: to zadanie jest dużo trudniejsze od reszty zadań dotyczących
+    relacji między listami. Jeżeli masz problem z rozwiązaniem, spróbuj
+    poszukać gotowca w bibliotece standardowej Coqa. 
+</div>
+<div class="code">
 
 <br/>
-<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">Permutation</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_refl</span> :<br/>
@@ -9052,15 +9128,28 @@ Przyjrzyjmy się powyższej definicji. Intuicyjnie można ją rozumieć tak,
 <div class="doc">
 <a name="lab366"></a><h2 class="section">Listy jako cykle</h2>
 
+<div class="paragraph"> </div>
+
+ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="var">Cycle</span></span>. Zdanie <span class="inlinecode"><span class="id" title="var">Cycle</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="var">l2</span></span> zachodzi,
+    gdy listy <span class="inlinecode"><span class="id" title="var">l1</span></span> i <span class="inlinecode"><span class="id" title="var">l2</span></span> reprezentują ten sam cykl. Intuicyjnie możesz
+    sobie wyobrazić elementy <span class="inlinecode"><span class="id" title="var">l1</span></span> ułożone po kolei wzdłuż okręgu tak, że
+    ostatni element sąsiaduje z pierwszym. Jeżeli da się teraz przekręcić
+    ten okrąg tak, żeby uzyskać listę <span class="inlinecode"><span class="id" title="var">l2</span></span>, to znaczy, że <span class="inlinecode"><span class="id" title="var">Cycle</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="var">l2</span></span>
+    zachodzi.
+
+<div class="paragraph"> </div>
+
+    Przykłady: 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Cycle</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5]</span> <span class="inlinecode">[4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span> zachodzi. 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Cycle</span></span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3]</span> <span class="inlinecode">[2;</span> <span class="inlinecode">1;</span> <span class="inlinecode">3]</span> nie zachodzi. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Cycle</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Cycle_refl</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">Cycle</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Cycle_cyc</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Cycle</span> <span class="id" title="var">l1</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>) -&gt; <span class="id" title="var">Cycle</span> <span class="id" title="var">l1</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">lt_plus_S</span> :<br/>
