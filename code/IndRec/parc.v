@@ -28,3 +28,16 @@ Proof.
   specialize (H t). inversion H.
   rewrite H2.
 Abort.
+
+Module xd.
+
+Fail Inductive mirrorFG
+  {A : Type} (f : Tree A -> Tree A) : Tree A -> Tree A -> Prop :=
+    | mirrorFG_0 :
+        forall (x : A) (ts ts' : list (Tree A)),
+          mirrorFGs f ts ts' ->
+            mirrorFG f (Node x ts) (Node x (rev ts'))
+
+with mirrorFGs (f : Tree A -> Tree A) : list (Tree A) -> list (Tree A) -> Prop := .
+
+End xd.

@@ -44,7 +44,6 @@ Qed.
 1. Powyższe jest mądrym heurystycznym sposobem rozróżniania różnych poziomów zaawansowania typów induktywnych (rodzin induktywnych nie można definiować bez podawania indeksów w przeciwdziedzinie).
 1. W nowym ujęciu podrozdział o regułach indukcyjnych ma być ściśle powiązany z wprowadzeniem rekursji strukturalnej (tzn. nie-prymitywnej).
 2. Argumenty indukcyjne pierwszego i wyższego rzędu.
-4. Opisać zippery (czyli różniczkowanie typów).
 6. Indeksowane rodziny induktywne to wystarczająco dla początkujących. Przesunąć rozdziały o indukcji-indukcji/indukcji-rekursji (i wszystkim, czego explicite nie ma w Coqu) dalej.
 7. Kwestia non-uniform parametrs i jak je zasymulować przy użyciu indeksów.
 8. Typy induktywne z parametrami + równość = rodziny indeksowane.
@@ -62,7 +61,7 @@ Qed.
 
 ## Funkcje
 1. Dokończyć podrozdział o odwrotnościach i izomorfizmach.
-2. Napisać coś o (pre/post)skracalności.
+2. Napisać coś o (pre/post)skracalności (i o retraktach! - straszne słowo).
 
 ## HoTT
 1. Kodowanie Churcha dla typów ilorazowych.
@@ -80,7 +79,9 @@ Qed.
   - bijekcjową
   - relacjową
   - half-adjoint equivalence może być zbyt skomplikowany
-  - są jeszcze jakieś, ale nie pamiętam
+  - są jeszcze jakieś, ale nie 
+12. Typy przeszukiwalne.
+13. Separowalność za pomocą typu (np. bool-separowalność).
 
 ## Monady
 1. Monady dla logiki klasycznej! Klasyczne funkcje, aksjomat wyboru i nie tylko: https://arxiv.org/pdf/1008.1213.pdf
@@ -102,6 +103,13 @@ Qed.
 34. A równoważności to nic innego jak właściwości (czy też konstrukcje) uniwersalne.
 35. Intuicja dla reguł unikalności: dzida składa się z przeddzidzia dzidy, śróddzidzia dzidy i zadzidzia dzidy.
 36. Przestrzeń metryczną można zdefiniować za pomocą "Ball Relation": `Q+ -> X -> X -> Prop`
+
+## Inniejsze
+1. Opisać zippery (czyli różniczkowanie typów).
+2. Opisać indeksowanie poddrzew w typach induktywnych (czyli w sumie też zippery).
+3. Opisać encode-decode dla równości i nierówności na typach induktywnych.
+4. Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go częściej używać.
+5. Poszukać ogólnego pojęcia "różnicy" typów.
 
 ## Filozofia
 1. Mega ważna obserwacja: nazwy zawsze należy nadawać tak, żeby zgadzały się z definicją, czyli nazwy są intensjonalne. Ewentualne ekstensjonalne powiązanie ze sobą (w postaci równoważności) różnych apriori nazw następować musi później, na mocy pokazania równoważności tego, co one oznaczają. Przykład: różne definicje równoważności powinny się nazywać inaczej, np. invertible, biinvertible, contractible etc.

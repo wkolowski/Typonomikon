@@ -724,7 +724,6 @@ Wtedy typ [c] wygląda tak:
 
 (* end hide *)
 
-
 Definition transport
   {A : Type} {P : A -> Type} {x y : A} (p : x = y) (u : P x) : P y :=
 match p with
