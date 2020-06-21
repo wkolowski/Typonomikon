@@ -278,9 +278,298 @@ Abort.
 
 End list_neq.
 
+Module list_neq_2.
+
+(** Poprzednia wersja [list_neq] jest ułomna, bo żeby cokolwiek udowodnić
+    trzeba zdecydować, czy głowy są różne czy nie. Spróbujmy coś na to
+    zaradzić. *)
+
+Inductive list_neq
+  {A : Type} (R : A -> A -> Prop) : list A -> list A -> Prop :=
+    | nc : forall (h : A) (t : list A), list_neq R [] (h :: t)
+    | cn : forall (h : A) (t : list A), list_neq R (h :: t) []
+    | cc : forall (h1 h2 : A) (t1 t2 : list A),
+              (~ R h1 h2 -> list_neq R t1 t2) ->
+                list_neq R (h1 :: t1) (h2 :: t2).
+
+Arguments nc {A R h t}.
+Arguments cn {A R h t}.
+Arguments cc {A R h1 h2 t1 t2} _.
+
+Lemma list_neq_irrefl_aux :
+  forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
+    (forall x : A, R x x -> False) ->
+      list_neq R l1 l2 -> l1 <> l2.
+Proof.
+  induction 2.
+    inversion 1.
+    inversion 1.
+    inversion 1; subst. apply H1.
+      exact (H h2).
+      reflexivity.
+Qed.
+
+Lemma list_neq_irrefl_sym :
+  forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
+    (forall x y : A, R x y -> R y x) ->
+      list_neq R l1 l2 -> list_neq R l2 l1.
+Proof.
+  induction 2; constructor.
+  intro. apply H1.
+  intro. apply H2, H.
+  assumption.
+Qed.
+
+Lemma list_neq_cotrans :
+  forall {A : Type} {R : A -> A -> Prop} (l1 l3 : list A),
+    (forall x y z : A, R x z -> R x y \/ R y z) ->
+      list_neq R l1 l3 -> forall l2 : list A,
+        list_neq R l1 l2 \/ list_neq R l2 l3.
+Proof.
+  induction 2; intros.
+    destruct l2; [right | left]; constructor.
+    destruct l2; [left | right]; constructor.
+    destruct l2 as [| h t].
+      left. constructor.
+    
+      right. constructor. intro.
+Abort.
+
+End list_neq_2.
+
+Module list_neq_3.
+
+Inductive list_neq
+  {A : Type} (R : A -> A -> Prop) : list A -> list A -> Prop :=
+    | nc : forall (h : A) (t : list A), list_neq R [] (h :: t)
+    | cn : forall (h : A) (t : list A), list_neq R (h :: t) []
+    | cc1 : forall (h1 h2 : A) (t1 t2 : list A),
+              R h1 h2 -> list_neq R (h1 :: t1) (h2 :: t2)
+    | cc2 : forall (h1 h2 : A) (t1 t2 : list A),
+              ~ R h1 h2 -> list_neq R t1 t2 ->
+                list_neq R (h1 :: t1) (h2 :: t2).
+
+Lemma list_neq_irrefl_aux :
+  forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
+    (forall x : A, R x x -> False) ->
+      list_neq R l1 l2 -> l1 <> l2.
+Proof.
+  induction 2; inversion 1; subst.
+    apply (H _ H0).
+    apply IHlist_neq. reflexivity.
+Qed.
+
+Lemma list_neq_irrefl_sym :
+  forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
+    (forall x y : A, R x y -> R y x) ->
+      list_neq R l1 l2 -> list_neq R l2 l1.
+Proof.
+  induction 2.
+    1-3: constructor. apply H. assumption.
+    constructor 4.
+      intro. apply H0, H, H2.
+      apply IHlist_neq.
+Qed.
+
+Lemma list_neq_cotrans :
+  forall {A : Type} {R : A -> A -> Prop} (l1 l3 : list A),
+    (forall x y z : A, R x z -> R x y \/ R y z) ->
+      list_neq R l1 l3 -> forall l2 : list A,
+        list_neq R l1 l2 \/ list_neq R l2 l3.
+Proof.
+  induction 2; intros.
+    destruct l2; [right | left]; constructor.
+    destruct l2; [left | right]; constructor.
+    destruct l2 as [| h t].
+      left. constructor.
+      right. constructor.
+Abort.
+
+End list_neq_3.
+
+Module list_neq_4.
+
+Inductive list_neq
+  {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
+    | nc : forall (h : A) (t : list A), list_neq R [] (h :: t)
+    | cn : forall (h : A) (t : list A), list_neq R (h :: t) []
+    | cc1 : forall (h1 h2 : A) (t1 t2 : list A),
+              R h1 h2 -> list_neq R (h1 :: t1) (h2 :: t2)
+    | cc2 : forall (h1 h2 : A) (t1 t2 : list A),
+              list_neq R t1 t2 -> list_neq R (h1 :: t1) (h2 :: t2).
+
+Hint Constructors list_neq.
+
+Lemma list_neq_irrefl_aux :
+  forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
+    (forall x : A, R x x -> False) ->
+      list_neq R l1 l2 -> l1 <> l2.
+Proof.
+  induction 2; inversion 1; subst.
+    apply (H _ r).
+    apply IHX. reflexivity.
+Defined.
+
+Lemma list_neq_irrefl_sym :
+  forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
+    (forall x y : A, R x y -> R y x) ->
+      list_neq R l1 l2 -> list_neq R l2 l1.
+Proof.
+  induction 2.
+    1-3: constructor. apply H. assumption.
+    constructor 4. assumption.
+Defined.
+
+Lemma list_neq_cotrans :
+  forall {A : Type} {R : A -> A -> Prop} (l1 l3 : list A),
+    (forall x y z : A, R x z -> R x y + R y z) ->
+      list_neq R l1 l3 -> forall l2 : list A,
+        list_neq R l1 l2 + list_neq R l2 l3.
+Proof.
+  induction 2; intros.
+    destruct l2; [right | left]; constructor.
+    destruct l2; [left | right]; constructor.
+    destruct l2 as [| h t].
+      left. constructor.
+      destruct (X _ h _ r).
+        left. constructor. assumption.
+        right. constructor. assumption.
+    destruct l2 as [| h t].
+      left. constructor.
+      destruct (IHX0 t).
+        left. constructor 4. assumption.
+        right. constructor 4. assumption.
+Defined.
+
+End list_neq_4.
+
+Module list_neq_5.
+
+(** Zaczynam rozumieć, o co tu chodzi. *)
+
+Inductive ListDiffPoint
+  {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
+    | nc : forall (h : A) (t : list A), ListDiffPoint R [] (h :: t)
+    | cn : forall (h : A) (t : list A), ListDiffPoint R (h :: t) []
+    | cc1 : forall (h1 h2 : A) (t1 t2 : list A),
+              R h1 h2 -> ListDiffPoint R (h1 :: t1) (h2 :: t2)
+    | cc2 : forall (h1 h2 : A) (t1 t2 : list A),
+              ListDiffPoint R t1 t2 ->
+                ListDiffPoint R (h1 :: t1) (h2 :: t2).
+
+(** [ListDiffPoint] to pokazanie na odpowiadające sobie miejsca w dwóch
+    listach, które różnią się znajdującym się tam elementem. *)
+
+Inductive ListDiffProtocol
+  {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
+    | nn' : ListDiffProtocol R [] []
+    | nc' : forall (h : A) (t : list A), ListDiffProtocol R [] (h :: t)
+    | cn' : forall (h : A) (t : list A), ListDiffProtocol R (h :: t) []
+    | cc1' : forall (h1 h2 : A) (t1 t2 : list A),
+              R h1 h2 -> ListDiffProtocol R t1 t2 ->
+                ListDiffProtocol R (h1 :: t1) (h2 :: t2)
+    | cc2' : forall (h : A) (t1 t2 : list A),
+              ListDiffProtocol R t1 t2 ->
+                ListDiffProtocol R (h :: t1) (h :: t2).
+
+(** [ListDiffProtocol] to sprawozdanie mówiące, w których miejscach listy się
+    różnią, a w których są takie same (i od którego miejsca jedna jest dłuższa
+    od drugiej).
+
+    Spróbujmy udowodnić, że jeżeli elementy mogą się różnić tylko na jeden sposób,
+    to protokół jest unikalny. *)
+
+Require Import Equality.
+
+Lemma isProp_ListDiffProtocol :
+  forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
+    (forall (x y : A) (p q : R x y), p = q) ->
+    (forall x : A, ~ R x x) ->
+      forall p q : ListDiffProtocol R l1 l2, p = q.
+Proof.
+  induction p; dependent destruction q; try reflexivity; f_equal.
+    apply H.
+    apply IHp.
+    destruct (H0 _ r).
+    destruct (H0 _ r).
+    apply IHp.
+Qed.
+
+(* Głupie i bez sensu.
+Fixpoint code {A : Type} (R : A -> A -> Prop) (l1 l2 : list A) : Type :=
+match l1, l2 with
+    | [], [] => unit
+    | [], _ => unit
+    | _, [] => unit
+    | h1 :: t1, h2 :: t2 => R h1 h2 * code R t1 t2 + ((h1 = h2) * code R t1 t2)%type
+end.
+
+Fixpoint decode
+  {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
+    : code R l1 l2 -> ListDiffProtocol R l1 l2 :=
+match l1, l2 with
+    | [], [] => fun _ => nn' R
+    | [], h :: t => fun _ => nc' R h t
+    | h :: t, [] => fun _ => cn' R h t
+    | h1 :: t1, h2 :: t2 =>
+        fun c =>
+        match c with
+            | inl (p, c') => cc1' _ _ _ _ _ p (@decode A R t1 t2 c')
+            | inr (p, c') =>
+                match p with
+                    | eq_refl => cc2' _ _ _ _ (@decode A R t1 t2 c')
+                end
+        end
+end.
+*)
+
+Lemma proto_refl :
+  forall {A : Type} {R : A -> A -> Type} (l : list A),
+    ListDiffProtocol R l l.
+Proof.
+  induction l as [| h t]; cbn.
+    constructor.
+    constructor 5. assumption.
+Qed.
+
+Lemma proto_sym :
+  forall {A : Type} {R : A -> A -> Type} {l1 l2 : list A},
+    (forall x y : A, R x y -> R y x) ->
+      ListDiffProtocol R l1 l2 -> ListDiffProtocol R l2 l1.
+Proof.
+  induction 2.
+    1-4: constructor.
+      apply X. assumption.
+      assumption.
+    constructor 5. assumption.
+Qed.
+
+Lemma proto_trans :
+  forall {A : Type} {R : A -> A -> Type} {l1 l2 l3 : list A},
+    (forall x y z : A, R x y -> R y z -> R x z) ->
+      ListDiffProtocol R l1 l2 -> ListDiffProtocol R l2 l3 ->
+        ListDiffProtocol R l1 l3.
+Proof.
+  Hint Constructors ListDiffProtocol.
+  intros * H HLDP. revert l3.
+  induction HLDP; inversion 1; subst; auto.
+    admit.
+Abort.
+
+End list_neq_5.
+
 Module fun_neq.
 
-Definition fun_neq
+Definition FunDiffPoint
   {A B : Type} (R : B -> B -> Prop) (f g : A -> B) : Type :=
     {x : A | R (f x) (g x)}.
 
+Definition FunDiffProtocol
+  {A B : Type} (R : B -> B -> Prop) (f g : A -> B) : Type :=
+    forall x y : A, f x = f y \/ R (f x) (f y).
+
+(** Tutaj jest podobnie jak w przypadku list: [FunDiffPoint] to wskazanie na
+    jeden argument, dla którego funkcje się różnią, zaś [FunDiffProtocol]
+    bierze pod uwagę wszystkie miejsca.
+
+    Pytanie: jakie są właściwości protokołów? *)
