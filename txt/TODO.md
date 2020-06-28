@@ -80,8 +80,7 @@ Qed.
   - relacjową
   - half-adjoint equivalence może być zbyt skomplikowany
   - są jeszcze jakieś, ale nie 
-12. Typy przeszukiwalne.
-13. Separowalność za pomocą typu (np. bool-separowalność).
+12. Włączyć potem do książki rzeczy z HoTTowych notatek.
 
 ## Monady
 1. Monady dla logiki klasycznej! Klasyczne funkcje, aksjomat wyboru i nie tylko: https://arxiv.org/pdf/1008.1213.pdf

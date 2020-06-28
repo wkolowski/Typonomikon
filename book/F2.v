@@ -1461,24 +1461,135 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-Fixpoint ntc (n : nat) : conat :=
-match n with
-    | 0 => {| pred := None |}
-    | S n' => {| pred := Some (ntc n') |}
+Lemma Finite_from_nat :
+  forall n : nat, Finite (from_nat n).
+Proof.
+  induction n as [| n']; cbn; constructor; assumption.
+Qed.
+
+Lemma no_preinverse :
+  forall f : conat -> nat,
+    (forall c : conat, from_nat (f c) = c) -> False.
+Proof.
+  intros f H.
+  apply omega_not_Finite.
+  assert (forall n : nat, Finite (ntc n)).
+    induction n as [| n']; cbn.
+      constructor.
+      constructor. assumption.
+  rewrite <- (H omega).
+  apply H0.
+Qed.
+
+Lemma no_preinverse' :
+  forall f : conat -> nat,
+    ntc (f omega) <> omega.
+Proof.
+  intros f H.
+  apply omega_not_Finite.
+  assert (forall n : nat, Finite (ntc n)).
+    induction n as [| n']; cbn.
+      constructor.
+      constructor. assumption.
+  rewrite <- H.
+  apply H0.
+Qed.
+
+Definition isZero (c : conat) : bool :=
+match pred c with
+    | None => true
+    | _ => false
 end.
 
-Lemma no_inverse :
+Inductive ltc : conat -> nat -> Prop :=
+    | ltc_0 : forall n : nat, ltc zero (S n)
+    | ltc_S : forall (c : conat) (n : nat), ltc c n -> ltc (succ c) (S n).
+
+Inductive eqc : conat -> nat -> Prop :=
+    | eqc_0 : eqc zero 0
+    | eqc_S : forall c n, eqc c n -> eqc (succ c) (S n).
+
+Inductive gtc : conat -> nat -> Prop :=
+    | gtc_zero : forall c : conat, gtc (succ c) 0
+    | gtc_S : forall (c : conat) (n : nat), gtc c n -> gtc (succ c) (S n).
+
+Lemma ltc_spec :
+  forall (c : conat) (n : nat),
+    ltc c n -> exists m : nat, c = from_nat m.
+Proof.
+  induction 1.
+    exists 0. reflexivity.
+    destruct IHltc as [m IH]. exists (S m). subst. reflexivity.
+Qed.
+
+Lemma eqc_spec :
+  forall (n : nat) (c : conat), eqc c n <-> c = from_nat n.
+Proof.
+  split.
+    induction 1; cbn.
+      reflexivity.
+      rewrite IHeqc. reflexivity.
+    revert c. induction n as [| n']; cbn; intros c Heq.
+      rewrite Heq. constructor.
+      rewrite Heq. constructor. apply IHn'. reflexivity.
+Qed.
+
+Lemma gtc_omega :
+  forall n : nat, gtc omega n.
+Proof.
+  induction n as [| n'].
+    rewrite succ_omega. constructor.
+    rewrite succ_omega. constructor. assumption.
+Qed.
+
+Lemma gtc_from_nat :
+  forall n : nat, ~ gtc (from_nat n) n.
+Proof.
+  induction n as [| n']; cbn.
+    inversion 1.
+    intro. apply IHn'. inversion H. assumption.
+Qed.
+
+Lemma conat_nat_order :
+  forall (n : nat) (c : conat),
+    ltc c n \/ eqc c n \/ gtc c n.
+Proof.
+  induction n as [| n']; cbn; intro.
+    destruct c as [[c' |]].
+      right. right. constructor.
+      right. left. constructor.
+    destruct c as [[c' |]].
+      destruct (IHn' c') as [IH | [IH | IH]].
+        left. constructor. assumption.
+        right. left. constructor. assumption.
+        right. right. constructor. assumption.
+      left. constructor.
+Qed.
+
+Lemma conat_from_nat_Infinite :
+  forall c : conat,
+    (forall n : nat, c <> from_nat n) -> Infinite c.
+Proof.
+  cofix CH.
+  intros c H.
+  destruct c as [[c' |]].
+    constructor. exists c'. split.
+      cbn. reflexivity.
+      apply CH. intros n H'. apply (H (S n)). cbn. subst. reflexivity.
+    specialize (H 0). cbn in H. contradiction H. reflexivity.
+Qed.
+
+Lemma inverse_taboo :
   forall f : conat -> nat,
-    (forall n : nat, f (ntc n) = n) -> False.
+    (forall n : nat, f (from_nat n) = n) ->
+      forall c : conat, Infinite c \/ exists n : nat, c = ntc n.
 Proof.
   intros.
-  pose (n := f omega).
-  assert (forall n : nat, f (ntc (S n)) = S (f (ntc n))).
-    induction n0 as [| n'].
-      rewrite !H. reflexivity.
-      rewrite IHn', !H. reflexivity.
-  assert (forall c : conat, f (succ c) = S (f c)).
-    intros [[|]].
-      cbn in H0.
-Abort.
+  destruct (conat_nat_order (f c) c) as [Hlt | [Heq | Hgt]].
+    right. apply (ltc_spec c (f c)). assumption.
+    right. exists (f c). rewrite <- eqc_spec. assumption.
+    left. apply conat_from_nat_Infinite. intros n Heq.
+      apply (gtc_from_nat (f c)). subst. rewrite H in *. assumption.
+Qed.
+
 (* end hide *)
