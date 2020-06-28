@@ -1,120 +1,48 @@
-(** * Równość list *)
+Module nat_eq_ind.
 
-Require Import D5.
+Inductive nat_eq : nat -> nat -> Prop :=
+    | nat_eq_0 : nat_eq 0 0
+    | nat_eq_S : forall {n m : nat}, nat_eq n m -> nat_eq (S n) (S m).
 
-Module rec.
-
-(* Kody nie muszą być rekurencyjne - mogą być induktywne. *)
-Fixpoint code {A : Type} (l1 l2 : list A) : Prop :=
-match l1, l2 with
-    | [], [] => True
-    | h1 :: t1, h2 :: t2 => h1 = h2 /\ code t1 t2
-    | _, _ => False
+Fixpoint encode' (n : nat) : nat_eq n n :=
+match n with
+    | 0 => nat_eq_0
+    | S n' => nat_eq_S (encode' n')
 end.
 
-Fixpoint encode {A : Type} (l : list A) : code l l :=
-match l with
-    | [] => I
-    | _ :: t => conj eq_refl (encode t)
-end.
-
-Definition decode {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2.
-Proof.
-  Abort.
-(*    
-match c with
-    | I => eq_refl
-    | conj p c' => match p with eq_refl => decode c' end
-end.
-*)
-
-End rec.
-
-Module ind.
-
-Inductive code {A : Type} : list A -> list A -> Prop :=
-    | nils : code [] []
-    | conss :
-        forall {h1 h2 : A} {t1 t2 : list A},
-          h1 = h2 -> code t1 t2 -> code (h1 :: t1) (h2 :: t2).
-
-Fixpoint encode' {A : Type} (l : list A) : code l l :=
-match l with
-    | [] => nils
-    | h :: t => conss eq_refl (encode' t)
-end.
-
-Definition encode
-  {A : Type} {l1 l2 : list A} (p : l1 = l2) : code l1 l2 :=
+Definition encode {n m : nat} (p : n = m) : nat_eq n m :=
 match p with
-    | eq_refl => encode' l1
+    | eq_refl => encode' n
 end.
 
-Definition decode' {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2.
-Proof.
-  induction c.
-    reflexivity.
-    exact (f_equal2 (@cons A) H IHc).
-Qed.
-
-Fixpoint decode {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2 :=
+Fixpoint decode {n m : nat} (c : nat_eq n m) : n = m :=
 match c with
-    | nils => eq_refl
-    | conss p c' => (*f_equal2 _ p (decode c')*)
-        match p, decode c' with
-            | eq_refl, eq_refl => eq_refl
-        end
+    | nat_eq_0 => eq_refl
+    | nat_eq_S c' => f_equal S (decode c')
 end.
 
 Lemma encode_decode :
-  forall {A : Type} {l1 l2 : list A} (p : l1 = l2),
+  forall {n m : nat} (p : n = m),
     decode (encode p) = p.
 Proof.
   destruct p. cbn.
-  induction l1 as [| h t]; cbn.
+  induction n as [| n']; cbn.
     reflexivity.
-    rewrite IHt. reflexivity.
+    rewrite IHn'. cbn. reflexivity.
 Qed.
 
-Scheme code_ind' := Induction for code Sort Prop.
+Scheme nat_eq_ind' := Induction for nat_eq Sort Prop.
 
 Lemma decode_encode :
-  forall {A : Type} {l1 l2 : list A} (c : code l1 l2),
+  forall {n m : nat} (c : nat_eq n m),
     encode (decode c) = c.
 Proof.
-  induction c using code_ind'; cbn.
+  induction c using nat_eq_ind'; cbn.
     reflexivity.
-    destruct e. destruct (decode c). cbn in *. rewrite IHc. reflexivity.
+    destruct (decode c) eqn: H. cbn in *. rewrite IHc. reflexivity.
 Qed.
 
-End ind.
-
-Module all.
-
-Definition code {A : Type} (l1 l2 : list A) : Prop :=
-  forall n : nat, nth n l1 = nth n l2.
-
-Definition encode
-  {A : Type} {l1 l2 : list A} (p : l1 = l2) : code l1 l2 :=
-match p with
-    | eq_refl => fun n => eq_refl
-end.
-
-Definition decode {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2.
-Proof.
-  induction l1 as [| h1 t1]; cbn.
-    specialize (c 0). cbn in c. destruct l2.
-Abort.
-
-End all.
-
-Module coind.
-
-Require Import F3.
-
-(* Wiadomo, że kody to bipodobieństwa. *)
-
-End coind.
+End nat_eq_ind.
 
 Module nat_neq.
 
@@ -147,15 +75,6 @@ Proof.
     exact I.
     apply encode. intro q. apply p. f_equal. exact q.
 Defined.
-(*
-    cbn. in
-match n, m with
-    | 0, 0 => fun p : 0 <> 0 => p (eq_refl 0)
-    | 0, S _ => I
-    | S _, 0 => I
-    | S n', S m' => @encode n' m'
-end.
-*)
 
 Fixpoint decode {n m : nat} : code n m -> n <> m.
 Proof.
@@ -217,6 +136,127 @@ Proof.
 Qed.
 
 End nat_neq.
+
+Module nat_eq_neq.
+
+Import nat_eq_ind.
+Import nat_neq.
+
+Lemma nat_eq_dec :
+  forall n m : nat, nat_eq n m + nat_neq n m.
+Proof.
+  induction n as [| n']; destruct m as [| m'].
+    left. constructor.
+    right. constructor.
+    right. constructor.
+    destruct (IHn' m').
+      left. constructor. assumption.
+      right. constructor. assumption. Show Proof.
+Qed.
+
+End nat_eq_neq.
+
+Require Import D5.
+
+Module rec.
+
+(* Kody nie muszą być rekurencyjne - mogą być induktywne. *)
+Fixpoint code {A : Type} (l1 l2 : list A) : Prop :=
+match l1, l2 with
+    | [], [] => True
+    | h1 :: t1, h2 :: t2 => h1 = h2 /\ code t1 t2
+    | _, _ => False
+end.
+
+Fixpoint encode {A : Type} (l : list A) : code l l :=
+match l with
+    | [] => I
+    | _ :: t => conj eq_refl (encode t)
+end.
+
+Definition decode {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2.
+Proof.
+Abort.
+
+End rec.
+
+Module ind.
+
+Inductive code {A : Type} : list A -> list A -> Prop :=
+    | nils : code [] []
+    | conss :
+        forall {h1 h2 : A} {t1 t2 : list A},
+          h1 = h2 -> code t1 t2 -> code (h1 :: t1) (h2 :: t2).
+
+Fixpoint encode' {A : Type} (l : list A) : code l l :=
+match l with
+    | [] => nils
+    | h :: t => conss eq_refl (encode' t)
+end.
+
+Definition encode
+  {A : Type} {l1 l2 : list A} (p : l1 = l2) : code l1 l2 :=
+match p with
+    | eq_refl => encode' l1
+end.
+
+Definition decode' {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2.
+Proof.
+  induction c.
+    reflexivity.
+    exact (f_equal2 (@cons A) H IHc).
+Qed.
+
+Fixpoint decode {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2 :=
+match c with
+    | nils => eq_refl
+    | conss p c' =>
+        match p, decode c' with
+            | eq_refl, eq_refl => eq_refl
+        end
+end.
+
+Lemma encode_decode :
+  forall {A : Type} {l1 l2 : list A} (p : l1 = l2),
+    decode (encode p) = p.
+Proof.
+  destruct p. cbn.
+  induction l1 as [| h t]; cbn.
+    reflexivity.
+    rewrite IHt. reflexivity.
+Qed.
+
+Scheme code_ind' := Induction for code Sort Prop.
+
+Lemma decode_encode :
+  forall {A : Type} {l1 l2 : list A} (c : code l1 l2),
+    encode (decode c) = c.
+Proof.
+  induction c using code_ind'; cbn.
+    reflexivity.
+    destruct e. destruct (decode c). cbn in *. rewrite IHc. reflexivity.
+Qed.
+
+End ind.
+
+Module all.
+
+Definition code {A : Type} (l1 l2 : list A) : Prop :=
+  forall n : nat, nth n l1 = nth n l2.
+
+Definition encode
+  {A : Type} {l1 l2 : list A} (p : l1 = l2) : code l1 l2 :=
+match p with
+    | eq_refl => fun n => eq_refl
+end.
+
+Definition decode {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2.
+Proof.
+  induction l1 as [| h1 t1]; cbn.
+    specialize (c 0). cbn in c. destruct l2.
+Abort.
+
+End all.
 
 Module list_neq.
 
@@ -331,7 +371,6 @@ Proof.
     destruct l2; [left | right]; constructor.
     destruct l2 as [| h t].
       left. constructor.
-    
       right. constructor. intro.
 Abort.
 
@@ -382,7 +421,12 @@ Proof.
     destruct l2; [left | right]; constructor.
     destruct l2 as [| h t].
       left. constructor.
-      right. constructor.
+      destruct (H h1 h h2 H0).
+        left. constructor. assumption.
+        right. constructor. assumption.
+    destruct l2 as [| h t].
+      left. constructor.
+      destruct (IHlist_neq t).
 Abort.
 
 End list_neq_3.
@@ -495,34 +539,6 @@ Proof.
     apply IHp.
 Qed.
 
-(* Głupie i bez sensu.
-Fixpoint code {A : Type} (R : A -> A -> Prop) (l1 l2 : list A) : Type :=
-match l1, l2 with
-    | [], [] => unit
-    | [], _ => unit
-    | _, [] => unit
-    | h1 :: t1, h2 :: t2 => R h1 h2 * code R t1 t2 + ((h1 = h2) * code R t1 t2)%type
-end.
-
-Fixpoint decode
-  {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
-    : code R l1 l2 -> ListDiffProtocol R l1 l2 :=
-match l1, l2 with
-    | [], [] => fun _ => nn' R
-    | [], h :: t => fun _ => nc' R h t
-    | h :: t, [] => fun _ => cn' R h t
-    | h1 :: t1, h2 :: t2 =>
-        fun c =>
-        match c with
-            | inl (p, c') => cc1' _ _ _ _ _ p (@decode A R t1 t2 c')
-            | inr (p, c') =>
-                match p with
-                    | eq_refl => cc2' _ _ _ _ (@decode A R t1 t2 c')
-                end
-        end
-end.
-*)
-
 Lemma proto_refl :
   forall {A : Type} {R : A -> A -> Type} (l : list A),
     ListDiffProtocol R l l.
@@ -566,10 +582,37 @@ Definition FunDiffPoint
 
 Definition FunDiffProtocol
   {A B : Type} (R : B -> B -> Prop) (f g : A -> B) : Type :=
-    forall x y : A, f x = f y \/ R (f x) (f y).
+    forall x : A, f x = g x \/ R (f x) (g x).
 
 (** Tutaj jest podobnie jak w przypadku list: [FunDiffPoint] to wskazanie na
     jeden argument, dla którego funkcje się różnią, zaś [FunDiffProtocol]
     bierze pod uwagę wszystkie miejsca.
 
     Pytanie: jakie są właściwości protokołów? *)
+
+End fun_neq.
+
+Module stream_neq.
+
+Require Import F3.
+
+Inductive Stream_neq
+  {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Type :=
+    | sn_here :
+        forall (h1 h2 : A) (t1 t2 : Stream A),
+          R h1 h2 -> Stream_neq R (scons h1 t1) (scons h2 t2)
+    | sn_there :
+        forall (h1 h2 : A) (t1 t2 : Stream A),
+          Stream_neq R t1 t2 -> Stream_neq R (scons h1 t1) (scons h2 t2).
+
+Lemma Stream_neq_not_sim :
+  forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
+    (forall x : A, ~ R x x) ->
+      Stream_neq R s1 s2 -> ~ sim s1 s2.
+Proof.
+  induction 2.
+    inversion 1. cbn in *. subst. apply (H h2). assumption.
+    inversion 1. cbn in *. contradiction.
+Qed.
+
+End stream_neq.

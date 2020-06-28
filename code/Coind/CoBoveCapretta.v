@@ -40,12 +40,14 @@ CoInductive wut (C : Type) : Type :=
 
 Set Implicit Arguments.
 
+(*
 CoInductive cod {C : Type} (f : C -> C -> C) (s : Stream C) : Type :=
 {
     cod' :
       {h : C & {t : Stream C & (s = cons h t)%type * cod f t}}%type +
       
 }.
+*)
 
 CoInductive Call (C : Type) : Type :=
 {
@@ -72,14 +74,18 @@ Proof.
     apply (zipWith (fn c)).
       Focus 2. exact (cons (hd_arg2 c) (Call2Stream _ (tl_arg2 c))).
       exact (Call2Stream _ (arg1 c)).
+Abort.
 
+(*
 {|
     hd := hdc c;
     tl := zipWith (fn c)
                   (Call2Stream (arg1 c))
                   (cons (hd_arg2 c) (Call2Stream (tl_arg2 c)));
 |}.
+*)
 
+(*
 CoFixpoint w2s {C : Type} (w : wut C) : Stream C :=
 {|
     hd := match wuut _ w with call h _ _ _ => h end
@@ -151,4 +157,4 @@ CoFixpoint do {C : Type} (zw : ZipWith C) : Stream C :=
 (*Inductive FiniteZW {C : Type} *)
 
 CoInductive fibs : 
-
+*)

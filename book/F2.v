@@ -1473,65 +1473,33 @@ Lemma no_preinverse :
 Proof.
   intros f H.
   apply omega_not_Finite.
-  assert (forall n : nat, Finite (ntc n)).
-    induction n as [| n']; cbn.
-      constructor.
-      constructor. assumption.
-  rewrite <- (H omega).
-  apply H0.
+  rewrite <- H.
+  apply Finite_from_nat.
 Qed.
 
 Lemma no_preinverse' :
   forall f : conat -> nat,
-    ntc (f omega) <> omega.
+    from_nat (f omega) <> omega.
 Proof.
   intros f H.
   apply omega_not_Finite.
-  assert (forall n : nat, Finite (ntc n)).
-    induction n as [| n']; cbn.
-      constructor.
-      constructor. assumption.
   rewrite <- H.
-  apply H0.
+  apply Finite_from_nat.
 Qed.
 
-Definition isZero (c : conat) : bool :=
-match pred c with
-    | None => true
-    | _ => false
-end.
-
-Inductive ltc : conat -> nat -> Prop :=
-    | ltc_0 : forall n : nat, ltc zero (S n)
-    | ltc_S : forall (c : conat) (n : nat), ltc c n -> ltc (succ c) (S n).
-
-Inductive eqc : conat -> nat -> Prop :=
-    | eqc_0 : eqc zero 0
-    | eqc_S : forall c n, eqc c n -> eqc (succ c) (S n).
+Inductive lec : conat -> nat -> Prop :=
+    | lec_0 : forall n : nat, lec zero n
+    | lec_S : forall (c : conat) (n : nat), lec c n -> lec (succ c) (S n).
 
 Inductive gtc : conat -> nat -> Prop :=
     | gtc_zero : forall c : conat, gtc (succ c) 0
     | gtc_S : forall (c : conat) (n : nat), gtc c n -> gtc (succ c) (S n).
 
-Lemma ltc_spec :
-  forall (c : conat) (n : nat),
-    ltc c n -> exists m : nat, c = from_nat m.
+Lemma lec_spec :
+  forall (n : nat) (c : conat),
+    lec c n -> Finite c.
 Proof.
-  induction 1.
-    exists 0. reflexivity.
-    destruct IHltc as [m IH]. exists (S m). subst. reflexivity.
-Qed.
-
-Lemma eqc_spec :
-  forall (n : nat) (c : conat), eqc c n <-> c = from_nat n.
-Proof.
-  split.
-    induction 1; cbn.
-      reflexivity.
-      rewrite IHeqc. reflexivity.
-    revert c. induction n as [| n']; cbn; intros c Heq.
-      rewrite Heq. constructor.
-      rewrite Heq. constructor. apply IHn'. reflexivity.
+  induction 1; constructor; assumption.
 Qed.
 
 Lemma gtc_omega :
@@ -1552,21 +1520,20 @@ Qed.
 
 Lemma conat_nat_order :
   forall (n : nat) (c : conat),
-    ltc c n \/ eqc c n \/ gtc c n.
+    lec c n \/ gtc c n.
 Proof.
   induction n as [| n']; cbn; intro.
     destruct c as [[c' |]].
-      right. right. constructor.
-      right. left. constructor.
+      right. constructor.
+      left. constructor.
     destruct c as [[c' |]].
-      destruct (IHn' c') as [IH | [IH | IH]].
+      destruct (IHn' c') as [IH | IH].
         left. constructor. assumption.
-        right. left. constructor. assumption.
-        right. right. constructor. assumption.
+        right. constructor. assumption.
       left. constructor.
 Qed.
 
-Lemma conat_from_nat_Infinite :
+Lemma Infinite_not_from_nat :
   forall c : conat,
     (forall n : nat, c <> from_nat n) -> Infinite c.
 Proof.
@@ -1582,14 +1549,19 @@ Qed.
 Lemma inverse_taboo :
   forall f : conat -> nat,
     (forall n : nat, f (from_nat n) = n) ->
-      forall c : conat, Infinite c \/ exists n : nat, c = ntc n.
+      forall c : conat, Infinite c \/ Finite c.
 Proof.
   intros.
-  destruct (conat_nat_order (f c) c) as [Hlt | [Heq | Hgt]].
-    right. apply (ltc_spec c (f c)). assumption.
-    right. exists (f c). rewrite <- eqc_spec. assumption.
-    left. apply conat_from_nat_Infinite. intros n Heq.
-      apply (gtc_from_nat (f c)). subst. rewrite H in *. assumption.
+  destruct (conat_nat_order (f c) c) as [Hlec | Hgtc].
+    right. eapply lec_spec. eassumption.
+    left.
+    {
+      apply Infinite_not_from_nat.
+      intros n Heq.
+      apply (gtc_from_nat (f c)).
+      subst. rewrite H in *.
+      assumption.
+    }
 Qed.
 
 (* end hide *)

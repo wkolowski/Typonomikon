@@ -524,8 +524,13 @@ Compute cycles_aux 0 [1; 2; 3; 4; 5].
 Compute cycles_aux 5 [1; 2; 3; 4; 5].
 
 Definition cycles {A : Type} (l : list A) : list (list A) :=
-  cycles_aux (S (length l)) l.
+match l with
+    | [] => [[]]
+    | _ => cycles_aux (length l) l
+end.
 
+Compute cycles [].
+Compute cycles [1].
 Compute cycles [1; 2; 3; 4; 5].
 
 Lemma Cycle_cycles_aux :
@@ -581,3 +586,140 @@ Proof.
 Qed.
 
 End subseqs.
+
+Module sublists.
+
+Fixpoint sublists {A : Type} (l : list A) : list (list A) :=
+match l with
+    | [] => []
+    | h :: t => t :: sublists t
+end.
+
+Lemma sublists_spec :
+  forall {A : Type} (l1 l2 : list A),
+    Sublist l1 l2 -> elem l1 (sublists l2).
+Proof.
+  induction 1; cbn.
+    constructor.
+    right. assumption.
+Qed.
+
+Lemma sublists_spec' :
+  forall {A : Type} (l1 l2 : list A),
+    elem l1 (sublists l2) -> Sublist l1 l2.
+Proof.
+  induction l2 as [| h2 t2]; cbn.
+    inversion 1.
+    inversion 1; subst.
+      constructor.
+      constructor. apply IHt2. assumption.
+Qed.
+
+End sublists.
+
+Module permutations.
+
+Import cycles.
+
+Fixpoint permutations {A : Type} (l : list A) : list (list A) :=
+match l with
+    | [] => [[]]
+    | h :: t =>
+        join (map (fun t => cycles (cons h t)) (permutations t))
+end.
+
+Compute cycles [1; 2].
+Compute permutations [3].
+Compute permutations [2; 3].
+Compute cycles (map (cons 2) [[3]]).
+Compute permutations [1; 2; 3].
+Compute permutations [1; 2; 3; 4].
+
+Require Import D4.
+
+Fixpoint sum (l : list nat) : nat :=
+match l with
+    | [] => 0
+    | h :: t => h + sum t
+end.
+
+Lemma len_join :
+  forall {A : Type} (l : list (list A)),
+    length (join l) = sum (map length l).
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite length_app, IHt. reflexivity.
+Qed.
+
+Lemma len_cycles_aux :
+  forall {A : Type} (l : list A) (n : nat),
+    length (cycles_aux n l) = n.
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    rewrite IHn'. reflexivity.
+Qed.
+
+Lemma len_cycles :
+  forall {A : Type} (l : list A),
+    l <> [] -> length (cycles l) = length l.
+Proof.
+  induction l as [| h t]; cbn; intro.
+    contradiction.
+    rewrite len_cycles_aux. reflexivity.
+Qed.
+
+Lemma sum_map_S :
+  forall l : list nat,
+    sum (map S l) = length l + sum l.
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    f_equal. rewrite IHt, plus_comm, <- !plus_assoc.
+      f_equal. apply plus_comm.
+Qed.
+
+Lemma sum_replicate :
+  forall n m : nat,
+    sum (replicate n m) = n * m.
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    intro. rewrite IHn'. reflexivity.
+Qed.
+
+Lemma length_permutations :
+  forall {A : Type} (l : list A),
+    length (permutations l) = fact (length l) /\
+      map length (permutations l) =
+      replicate (length (permutations l)) (length l).
+Proof.
+  induction l as [| h t].
+    cbn. split; reflexivity.
+    destruct IHt as [IH1 IH2]. split.
+      cbn. rewrite len_join, map_map. cbn.
+        replace (fun x => S (length (cycles_aux (length x) (h :: x))))
+           with (fun x => S (@length A x)).
+          Focus 2. Require Import FunctionalExtensionality.
+            apply functional_extensionality. intro.
+            rewrite len_cycles_aux. reflexivity.
+          {
+            rewrite <- map_map, IH2.
+            rewrite sum_map_S, length_replicate, sum_replicate.
+            rewrite IH1. lia.
+          }
+      cbn. rewrite len_join, map_map. cbn.
+        replace (fun x => S (length (cycles_aux (length x) (h :: x))))
+           with (fun x => S (@length A x)).
+          Focus 2. Require Import FunctionalExtensionality.
+            apply functional_extensionality. intro.
+            rewrite len_cycles_aux. reflexivity.
+          {
+            rewrite <- (map_map _ _ _ _ S). rewrite IH2.
+            rewrite sum_map_S, length_replicate, sum_replicate.
+            
+            rewrite map_join, map_map. cbn.
+Abort.
+
+End permutations.
