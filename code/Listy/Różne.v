@@ -512,6 +512,118 @@ Qed.
 (** ** Obliczanie wszystkich podstruktur danego rodzaju (permutacji,
        podciągów, cykli etc.) *)
 
+Module sublists.
+
+Fixpoint sublists {A : Type} (l : list A) : list (list A) :=
+match l with
+    | [] => []
+    | h :: t => t :: sublists t
+end.
+
+Lemma sublists_spec :
+  forall {A : Type} (l1 l2 : list A),
+    Sublist l1 l2 -> elem l1 (sublists l2).
+Proof.
+  induction 1; cbn.
+    constructor.
+    right. assumption.
+Qed.
+
+Lemma sublists_spec' :
+  forall {A : Type} (l1 l2 : list A),
+    elem l1 (sublists l2) -> Sublist l1 l2.
+Proof.
+  induction l2 as [| h2 t2]; cbn.
+    inversion 1.
+    inversion 1; subst.
+      constructor.
+      constructor. apply IHt2. assumption.
+Qed.
+
+End sublists.
+
+Module suffixes.
+
+Fixpoint suffixes {A : Type} (l : list A) : list (list A) :=
+  l ::
+match l with
+    | [] => []
+    | h :: t => suffixes t
+end.
+
+Lemma suffixes_spec :
+  forall {A : Type} (l1 l2 : list A),
+    Suffix l1 l2 -> elem l1 (suffixes l2).
+Proof.
+  induction 1.
+    destruct l; constructor.
+    cbn. constructor. assumption.
+Qed.
+
+Lemma suffixes_spec' :
+  forall {A : Type} (l1 l2 : list A),
+    elem l1 (suffixes l2) -> Suffix l1 l2.
+Proof.
+  induction l2 as [| h2 t2]; cbn.
+    inversion 1; subst.
+      constructor.
+      inversion H2.
+    inversion 1; subst.
+      constructor.
+      constructor. apply IHt2. assumption.
+Qed.
+
+Compute suffixes [1; 2; 3; 4].
+Compute suffixes [1; 2].
+Compute suffixes [3; 4].
+
+(*Lemma suffixes_app :
+  forall {A : Type} (l1 l2 : list A),
+    suffixes (l1 ++ l2) =
+      suffixes l1 ++ suffi
+Proof.
+  induction l1 as [| h1 t1]; cbn; intros.
+    destruct l2; cbn. reflexivity.
+    f_equal. rewrite IHt1. reflexivity.
+Qed.
+*)
+
+Lemma suffixes_rev :
+  forall {A : Type} (l : list A),
+    map rev (suffixes (rev l)) = suffixes l.
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite <- IHt.
+    destruct (rev t ++ [h]) eqn: Heq.
+      cbn. apply (f_equal length) in Heq. rewrite length_app in Heq.
+        cbn in Heq. lia.
+      cbn. apply (f_equal rev) in Heq. rewrite rev_app, rev_inv in *.
+        cbn in Heq. rewrite <- Heq. f_equal. rewrite IHt.
+        Compute map rev (suffixes (rev [1; 2; 3; 4])).
+        Compute suffixes [1; 2; 3; 4].
+Abort.
+
+End suffixes.
+
+Module prefixes.
+
+Import suffixes.
+
+Definition prefixes {A : Type} (l : list A) : list (list A) :=
+  map rev (suffixes (rev l)).
+
+Lemma prefixes_spec :
+  forall {A : Type} (l1 l2 : list A),
+    Prefix l1 l2 -> elem l1 (prefixes l2).
+Proof.
+  induction 1.
+    admit.
+    cbn. unfold prefixes in IHPrefix.
+Abort.
+
+End prefixes.
+
 Module cycles.
 
 Fixpoint cycles_aux {A : Type} (n : nat) (l : list A) : list (list A) :=
@@ -586,36 +698,6 @@ Proof.
 Qed.
 
 End subseqs.
-
-Module sublists.
-
-Fixpoint sublists {A : Type} (l : list A) : list (list A) :=
-match l with
-    | [] => []
-    | h :: t => t :: sublists t
-end.
-
-Lemma sublists_spec :
-  forall {A : Type} (l1 l2 : list A),
-    Sublist l1 l2 -> elem l1 (sublists l2).
-Proof.
-  induction 1; cbn.
-    constructor.
-    right. assumption.
-Qed.
-
-Lemma sublists_spec' :
-  forall {A : Type} (l1 l2 : list A),
-    elem l1 (sublists l2) -> Sublist l1 l2.
-Proof.
-  induction l2 as [| h2 t2]; cbn.
-    inversion 1.
-    inversion 1; subst.
-      constructor.
-      constructor. apply IHt2. assumption.
-Qed.
-
-End sublists.
 
 Module permutations.
 

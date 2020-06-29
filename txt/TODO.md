@@ -42,13 +42,13 @@ Qed.
 ## Indukcja
 0. Opisać alternatywne składnie na typy induktywne (czyli te, w których nie trzeba aż tak dużo pisać).
 1. Powyższe jest mądrym heurystycznym sposobem rozróżniania różnych poziomów zaawansowania typów induktywnych (rodzin induktywnych nie można definiować bez podawania indeksów w przeciwdziedzinie).
-1. W nowym ujęciu podrozdział o regułach indukcyjnych ma być ściśle powiązany z wprowadzeniem rekursji strukturalnej (tzn. nie-prymitywnej).
-2. Argumenty indukcyjne pierwszego i wyższego rzędu.
-6. Indeksowane rodziny induktywne to wystarczająco dla początkujących. Przesunąć rozdziały o indukcji-indukcji/indukcji-rekursji (i wszystkim, czego explicite nie ma w Coqu) dalej.
-7. Kwestia non-uniform parametrs i jak je zasymulować przy użyciu indeksów.
-8. Typy induktywne z parametrami + równość = rodziny indeksowane.
-10. Alternatywna nazwa na injektywność konstruktorów to niekonfuzja (`NoConfusion`), zaś nazwa na nierówności `t <> c t` to acykliczność.
-5. Ćwiczenia:
+2. W nowym ujęciu podrozdział o regułach indukcyjnych ma być ściśle powiązany z wprowadzeniem rekursji strukturalnej (tzn. nie-prymitywnej).
+3. Argumenty indukcyjne pierwszego i wyższego rzędu.
+4. Indeksowane rodziny induktywne to wystarczająco dla początkujących. Przesunąć rozdziały o indukcji-indukcji/indukcji-rekursji (i wszystkim, czego explicite nie ma w Coqu) dalej.
+5. Kwestia non-uniform parametrs i jak je zasymulować przy użyciu indeksów.
+6. Typy induktywne z parametrami + równość = rodziny indeksowane.
+7. Alternatywna nazwa na injektywność konstruktorów to niekonfuzja (`NoConfusion`), zaś nazwa na nierówności `t <> c t` to acykliczność.
+8. Ćwiczenia:
 - Z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
 - Z definiowania typów induktywnych (i relacji też). W tym takie:
 - Z uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
@@ -56,8 +56,7 @@ Qed.
 ## Listy
 1. Opisać na przykładzie list różnice między teorią typów, a hardkorową matematyką konstruktywną opartą na relacjach separacji (apartness).
 2. Dokończyć prace nad funkcjami znajdującymi wszystkie struktury danego rodzaju (permutacje, cykle, podciągi, palindromy etc.).
-3. Dokończyć prace nad różnymi alternatywnymi definicjami permutacji.
-5. Dokończyć prace nad resztą rzeczy z folderu List/.
+3. Dokończyć prace nad resztą rzeczy z folderu List/.
 
 ## Funkcje
 1. Dokończyć podrozdział o odwrotnościach i izomorfizmach.
@@ -96,7 +95,6 @@ Qed.
 19. Opisać: silnia, współczynniki dwumianowe, sumy szeregów, charakteryzowanie wzorów rekurencyjnych.
 26. Odkłamać kwestię polimorfizmu najlepiej przy okazji rozdziału o programowaniu generycznym.
 26. Kwestia parametryczności: `lam X. lam nil. lam cons. cons X nil` - egzotyczna lista.
-27. Twierdzenie: można zanurzyć liczby naturalne w liczby konaturalne, ale nie można tego zanurzenia odwrócić.
 32. Podkreślić gdzieś mocniej, że reguła indukcji mówi, że nie ma nic poza tym, co można zrobić konstruktorami.
 33. Powiązanie reguł wprowadzania/eliminacji/obliczania/unikalności z równoważnościami.
 34. A równoważności to nic innego jak właściwości (czy też konstrukcje) uniwersalne.
