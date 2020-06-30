@@ -433,9 +433,9 @@ Proof.
       assumption.
     rewrite !bind_assoc. apply Permutation_bind.
       2: reflexivity.
-      admit.
+      apply Permutation_bind_ins.
     rewrite IHPermutation1, IHPermutation2. reflexivity.
-Admitted.
+Qed.
 
 Lemma Permutation_elem_perms :
   forall (A : Type) (l1 l2 : list A),

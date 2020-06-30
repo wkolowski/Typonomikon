@@ -1919,7 +1919,47 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a name="lab417"></a><h1 class="section">Słabe relacje homogeniczne</h1>
+<a name="lab417"></a><h1 class="section">Relacje apartheidu</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">Apartness</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Apartness_Antireflexive</span> :&gt; <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Apartness_Symmetric</span> :&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Apartness_Cotransitive</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span> \/ <span class="id" title="var">R</span> <span class="id" title="var">z</span> <span class="id" title="var">y</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartness_neq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Apartness</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">H</span>. <span class="id" title="var">contradiction</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">Hneq</span> <span class="id" title="var">Heq</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Hneq</span>. <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">H</span> <span class="id" title="var">z</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartness_Rinv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Apartness</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Apartness</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartness_Ror</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Apartness</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Apartness</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Apartness</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab418"></a><h1 class="section">Słabe relacje homogeniczne</h1>
 
 </div>
 <div class="code">
@@ -2008,7 +2048,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a name="lab418"></a><h1 class="section">Złożone relacje homogeniczne</h1>
+<a name="lab419"></a><h1 class="section">Złożone relacje homogeniczne</h1>
 
 </div>
 <div class="code">
@@ -2059,7 +2099,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a name="lab419"></a><h1 class="section">Domknięcia</h1>
+<a name="lab420"></a><h1 class="section">Domknięcia</h1>
 
 <div class="paragraph"> </div>
 
@@ -2238,7 +2278,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a name="lab420"></a><h3 class="section">Domknięcie zwrotnosymetryczne</h3>
+<a name="lab421"></a><h3 class="section">Domknięcie zwrotnosymetryczne</h3>
 
 </div>
 <div class="code">
@@ -2281,7 +2321,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a name="lab421"></a><h3 class="section">Domknięcie równoważnościowe v2</h3>
+<a name="lab422"></a><h3 class="section">Domknięcie równoważnościowe v2</h3>
 
 </div>
 <div class="code">
@@ -2312,7 +2352,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a name="lab422"></a><h1 class="section">Redukcje</h1>
+<a name="lab423"></a><h1 class="section">Redukcje</h1>
 
 </div>
 <div class="code">

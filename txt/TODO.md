@@ -5,6 +5,7 @@
 2. Być może dokonać rozróżnienia różnych _ex_ ... _quodlibet_:
   - _Ex falso quodlibet_ - `False -> P`
   - _Ex contradictione quodlibet_ - `A /\ ~ A -> P`
+3. Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go częściej używać.
 
 ```Coq
 Lemma not_not_bind :
@@ -45,17 +46,20 @@ Qed.
 2. W nowym ujęciu podrozdział o regułach indukcyjnych ma być ściśle powiązany z wprowadzeniem rekursji strukturalnej (tzn. nie-prymitywnej).
 3. Argumenty indukcyjne pierwszego i wyższego rzędu.
 4. Indeksowane rodziny induktywne to wystarczająco dla początkujących. Przesunąć rozdziały o indukcji-indukcji/indukcji-rekursji (i wszystkim, czego explicite nie ma w Coqu) dalej.
-5. Kwestia non-uniform parametrs i jak je zasymulować przy użyciu indeksów.
+5. Kwestia non-uniform parameters i jak je zasymulować przy użyciu indeksów.
 6. Typy induktywne z parametrami + równość = rodziny indeksowane.
 7. Alternatywna nazwa na injektywność konstruktorów to niekonfuzja (`NoConfusion`), zaś nazwa na nierówności `t <> c t` to acykliczność.
 8. Ćwiczenia:
 - Z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
-- Z definiowania typów induktywnych (i relacji też). W tym takie:
+- Z definiowania typów induktywnych (i relacji też).
 - Z uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
+9. Opisać zippery (czyli różniczkowanie typów).
+10. Opisać indeksowanie poddrzew w typach induktywnych (czyli w sumie też zippery).
+11. Opisać encode-decode dla równości i nierówności na typach induktywnych.
+12. Poszukać ogólnego pojęcia "różnicy" typów.
 
 ## Listy
-1. Opisać na przykładzie list różnice między teorią typów, a hardkorową matematyką konstruktywną opartą na relacjach separacji (apartness).
-2. Dokończyć prace nad funkcjami znajdującymi wszystkie struktury danego rodzaju (permutacje, cykle, podciągi, palindromy etc.).
+2. Dokończyć prace nad funkcjami znajdującymi wszystkie struktury danego rodzaju (zostały dowody dla permutacji i podzbiory).
 3. Dokończyć prace nad resztą rzeczy z folderu List/.
 
 ## Funkcje
@@ -100,13 +104,7 @@ Qed.
 34. A równoważności to nic innego jak właściwości (czy też konstrukcje) uniwersalne.
 35. Intuicja dla reguł unikalności: dzida składa się z przeddzidzia dzidy, śróddzidzia dzidy i zadzidzia dzidy.
 36. Przestrzeń metryczną można zdefiniować za pomocą "Ball Relation": `Q+ -> X -> X -> Prop`
-
-## Inniejsze
-1. Opisać zippery (czyli różniczkowanie typów).
-2. Opisać indeksowanie poddrzew w typach induktywnych (czyli w sumie też zippery).
-3. Opisać encode-decode dla równości i nierówności na typach induktywnych.
-4. Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go częściej używać.
-5. Poszukać ogólnego pojęcia "różnicy" typów.
+37. Wprowadzić pojęcie "motyw eliminacji" i częściej używać.
 
 ## Filozofia
 1. Mega ważna obserwacja: nazwy zawsze należy nadawać tak, żeby zgadzały się z definicją, czyli nazwy są intensjonalne. Ewentualne ekstensjonalne powiązanie ze sobą (w postaci równoważności) różnych apriori nazw następować musi później, na mocy pokazania równoważności tego, co one oznaczają. Przykład: różne definicje równoważności powinny się nazywać inaczej, np. invertible, biinvertible, contractible etc.

@@ -2363,6 +2363,77 @@ Proof.
 Abort.
 (* end hide *)
 
+(** * Relacje apartheidu *)
+
+Class Apartness {A : Type} (R : A -> A -> Prop) : Prop :=
+{
+    Apartness_Antireflexive :> Antireflexive R;
+    Apartness_Symmetric :> Symmetric R;
+    Apartness_Cotransitive :
+      forall x y : A, R x y -> forall z : A, R x z \/ R z y;
+}.
+
+Instance Apartness_neq :
+  forall A : Type, Apartness (fun x y : A => x <> y).
+Proof.
+  split.
+    split. intros x H. contradiction.
+    split. intros x y Hneq Heq. apply Hneq. symmetry. assumption.
+    intros x y H z.
+Abort.
+
+
+Instance Apartness_Rinv :
+  forall (A : Type) (R : rel A),
+    Apartness R -> Apartness (Rinv R).
+(* begin hide *)
+Proof.
+  destruct 1 as [[Anti] [Sym] Cotrans].
+  split; try split; intros.
+    intro. apply (Anti _ H).
+    apply Sym. assumption.
+    destruct (Cotrans _ _ H z).
+      right. assumption.
+      left. assumption.
+Qed.
+(* end hide *)
+
+Instance Apartness_Ror :
+  forall (A : Type) (R S : rel A),
+    Apartness R -> Apartness S -> Apartness (Ror R S).
+(* begin hide *)
+Proof.
+  destruct 1 as [[AntiR] [SymR] CotransR],
+           1 as [[AntiS] [SymS] CotransS].
+  split; try split; intros.
+    intros []; firstorder.
+    destruct H; red.
+      left. apply SymR. assumption.
+      right. apply SymS. assumption.
+    destruct H.
+      destruct (CotransR _ _ H z).
+        left. left. assumption.
+        right. left. assumption.
+      destruct (CotransS _ _ H z).
+        left. right. assumption.
+        right. right. assumption.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Instance Apartness_Rand :
+  forall (A : Type) (R S : rel A),
+    Apartness R -> Apartness S -> Apartness (Rand R S).
+Proof.
+  destruct 1 as [[AntiR] [SymR] CotransR],
+           1 as [[AntiS] [SymS] CotransS].
+  split; try split; intros.
+    intros []. firstorder.
+    destruct H. firstorder.
+    destruct H. destruct (CotransR _ _ H z), (CotransS _ _ H0 z).
+Abort.
+(* end hide *)
+
 (** * Słabe relacje homogeniczne *)
 
 (* begin hide *)

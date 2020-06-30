@@ -573,90 +573,61 @@ Proof.
       constructor. apply IHt2. assumption.
 Qed.
 
-Compute suffixes [1; 2; 3; 4].
-Compute suffixes [1; 2].
-Compute suffixes [3; 4].
-
-(*Lemma suffixes_app :
-  forall {A : Type} (l1 l2 : list A),
-    suffixes (l1 ++ l2) =
-      suffixes l1 ++ suffi
-Proof.
-  induction l1 as [| h1 t1]; cbn; intros.
-    destruct l2; cbn. reflexivity.
-    f_equal. rewrite IHt1. reflexivity.
-Qed.
-*)
-
-Lemma suffixes_rev :
-  forall {A : Type} (l : list A),
-    map rev (suffixes (rev l)) = suffixes l.
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-    rewrite <- IHt.
-    destruct (rev t ++ [h]) eqn: Heq.
-      cbn. apply (f_equal length) in Heq. rewrite length_app in Heq.
-        cbn in Heq. lia.
-      cbn. apply (f_equal rev) in Heq. rewrite rev_app, rev_inv in *.
-        cbn in Heq. rewrite <- Heq. f_equal. rewrite IHt.
-        Compute map rev (suffixes (rev [1; 2; 3; 4])).
-        Compute suffixes [1; 2; 3; 4].
-Abort.
-
 End suffixes.
 
 Module prefixes.
 
 Import suffixes.
 
-Definition prefixes {A : Type} (l : list A) : list (list A) :=
-  map rev (suffixes (rev l)).
+Fixpoint prefixes {A : Type} (l : list A) : list (list A) :=
+  [] ::
+match l with
+    | [] => []
+    | h :: t => map (cons h) (prefixes t)
+end.
 
 Lemma prefixes_spec :
   forall {A : Type} (l1 l2 : list A),
     Prefix l1 l2 -> elem l1 (prefixes l2).
 Proof.
   induction 1.
-    admit.
-    cbn. unfold prefixes in IHPrefix.
-Abort.
+    destruct l; constructor.
+    cbn. constructor. apply elem_map. assumption.
+Qed.
+
+Lemma elem_map_cons :
+  forall {A : Type} (h1 h2 : A) (t1 : list A) (t2 : list (list A)),
+    elem (h1 :: t1) (map (cons h2) t2) -> h1 = h2.
+Proof.
+  intros until t2. revert h1 h2 t1.
+  induction t2 as [| h t]; cbn; intros.
+    inv H.
+    inv H.
+      reflexivity.
+      apply (IHt _ _ _ H2).
+Qed.
+
+Lemma prefixes_spec' :
+  forall {A : Type} (l1 l2 : list A),
+    elem l1 (prefixes l2) -> Prefix l1 l2.
+Proof.
+  intros until l2. revert l1.
+  induction l2 as [| h2 t2]; cbn; intros.
+    inv H.
+      constructor.
+      inv H2.
+    inv H.
+      constructor.
+      destruct l1 as [| h1 t1].
+        constructor.
+        replace h1 with h2 in *.
+          constructor. apply IHt2. apply elem_map_conv' in H2.
+            assumption.
+            inversion 1; auto.
+          apply elem_map_cons in H2. symmetry. assumption.
+Qed.
 
 End prefixes.
-
-Module cycles.
-
-Fixpoint cycles_aux {A : Type} (n : nat) (l : list A) : list (list A) :=
-match n with
-    | 0 => []
-    | S n' => cycle n l :: cycles_aux n' l
-end.
-
-Compute cycles_aux 0 [1; 2; 3; 4; 5].
-Compute cycles_aux 5 [1; 2; 3; 4; 5].
-
-Definition cycles {A : Type} (l : list A) : list (list A) :=
-match l with
-    | [] => [[]]
-    | _ => cycles_aux (length l) l
-end.
-
-Compute cycles [].
-Compute cycles [1].
-Compute cycles [1; 2; 3; 4; 5].
-
-Lemma Cycle_cycles_aux :
-  forall (A : Type) (l1 l2 : list A),
-    Cycle l1 l2 -> forall n : nat,
-      elem l1 (cycles_aux (S (length l2) + n) l2).
-Proof.
-  induction 1; cbn.
-    induction l as [| h t]; cbn; intros.
-      constructor.
-      destruct (IHt n).
-Admitted.
-
-End cycles.
 
 Module subseqs.
 
@@ -698,6 +669,90 @@ Proof.
 Qed.
 
 End subseqs.
+
+Module subsets.
+
+Fixpoint subsets {A : Type} (l : list A) : list (list A) :=
+match l with
+    | [] => [[]]
+    | h :: t => subsets t ++ map (cons h) (subsets t)
+end.
+
+Import prefixes.
+
+Inductive Incl' {A : Type} : list A -> list A -> Prop :=
+    | Incl_nil : forall l : list A, Incl' [] l
+    | Incl_cons :
+        forall (h : A) (t l : list A),
+          elem h l -> Incl' t l -> Incl' (h :: t) l.
+
+Lemma subsets_spec :
+  forall {A : Type} (l1 l2 : list A),
+    Incl l1 l2 -> elem l1 (subsets l2).
+Proof.
+  intros until l2. revert l1.
+  induction l2 as [| h2 t2]; unfold Incl; cbn; intros.
+    destruct l1 as [| h1 t1].
+      constructor.
+      specialize (H h1 ltac:(constructor)). inv H.
+    destruct l1 as [| h1 t1].
+      apply elem_app_l, IHt2. red. inversion 1.
+      
+      pose (H' := H h1 ltac:(constructor)). inv H'.
+        apply elem_app_l. apply IHt2. specialize (H h2 ltac:(constructor)).
+          inv H.
+          Focus 2.
+          red. intros.
+Abort.
+
+(* nieprawda *) Lemma subsets_spec :
+  forall {A : Type} (l1 l2 : list A),
+    Incl' l1 l2 -> elem l1 (subsets l2).
+Proof.
+  induction 1.
+    induction l as [| h t]; cbn.
+      constructor.
+      apply elem_app_l. assumption.
+    induction H.
+      cbn in *. apply elem_app_or in IHIncl'. destruct IHIncl'.
+        apply elem_app_r. apply elem_map. assumption.
+Abort.
+
+End subsets. 
+
+Module cycles.
+
+Fixpoint cycles_aux {A : Type} (n : nat) (l : list A) : list (list A) :=
+match n with
+    | 0 => []
+    | S n' => cycle n l :: cycles_aux n' l
+end.
+
+Compute cycles_aux 0 [1; 2; 3; 4; 5].
+Compute cycles_aux 5 [1; 2; 3; 4; 5].
+
+Definition cycles {A : Type} (l : list A) : list (list A) :=
+match l with
+    | [] => [[]]
+    | _ => cycles_aux (length l) l
+end.
+
+Compute cycles [].
+Compute cycles [1].
+Compute cycles [1; 2; 3; 4; 5].
+
+Lemma Cycle_cycles_aux :
+  forall (A : Type) (l1 l2 : list A),
+    Cycle l1 l2 -> forall n : nat,
+      elem l1 (cycles_aux (S (length l2) + n) l2).
+Proof.
+  induction 1; cbn.
+    induction l as [| h t]; cbn; intros.
+      constructor.
+      destruct (IHt n).
+Admitted.
+
+End cycles.
 
 Module permutations.
 
@@ -802,6 +857,27 @@ Proof.
             rewrite sum_map_S, length_replicate, sum_replicate.
             
             rewrite map_join, map_map. cbn.
+Abort.
+
+Lemma permutations_spec :
+  forall {A : Type} (l1 l2 : list A),
+    elem l1 (permutations l2) -> Permutation l1 l2.
+Proof.
+
+Abort.
+
+Lemma permutations_spec :
+  forall {A : Type} (l1 l2 : list A),
+    Permutation l1 l2 -> elem l1 (permutations l2).
+Proof.
+  induction 1.
+    cbn. constructor.
+    cbn. apply elem_join. eexists. split.
+      Focus 2. apply elem_map. exact IHPermutation.
+      admit.
+    cbn. rewrite map_join, !map_map. apply elem_join. eexists. split.
+      admit.
+      admit.
 Abort.
 
 End permutations.
