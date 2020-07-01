@@ -886,7 +886,7 @@ match l with
     end
 end.*)
 
-Fixpoint tail {A : Type} {n : nat} (l : vec A (S n)) : vec A n :=
+Definition tail {A : Type} {n : nat} (l : vec A (S n)) : vec A n :=
 match l with
     | _ :: t => t
 end.

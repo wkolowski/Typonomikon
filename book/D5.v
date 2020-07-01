@@ -20976,6 +20976,113 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Partycje list *)
+
+Module Partition.
+
+Definition Partition
+  {A : Type} (ll : list (list A)) (l : list A) : Prop :=
+    Permutation (join ll) l.
+
+Lemma Partition_rev :
+  forall {A : Type} (ll : list (list A)) (l : list A),
+    Partition ll l -> Partition (rev (map rev ll)) (rev l).
+Proof.
+  unfold Partition. intros.
+  rewrite <- rev_join, !Permutation_rev.
+  assumption.
+Qed.
+
+End Partition.
+
+Module OPartition.
+
+Record OPartition
+  {A : Type} (ll : list (list A)) (l : list A) : Prop :=
+{
+    nonempty : forall l' : list A, elem l' ll -> l' <> [];
+    all : join ll = l;
+}.
+
+End OPartition.
+
+Module IPartition.
+
+Inductive IPartition {A : Type} : list (list A) -> list A -> Prop :=
+    | IP_nil : IPartition [] []
+    | IP_cons :
+        forall {ll : list (list A)} {l1 l2 : list A},
+          l1 <> [] -> IPartition ll l2 ->
+            IPartition (l1 :: ll) (l1 ++ l2).
+
+Lemma IPartition_spec :
+  forall {A : Type} {ll : list (list A)} {l : list A},
+    IPartition ll l -> join ll = l.
+Proof.
+  induction 1; cbn.
+    reflexivity.
+    rewrite IHIPartition. reflexivity.
+Qed.
+
+Lemma IPartition_spec_conv :
+  forall {A : Type} (ll : list (list A)) (l : list A),
+    (forall l' : list A, elem l' ll -> l' <> []) ->
+      join ll = l -> IPartition ll l.
+Proof.
+  induction ll as [| hh tt]; cbn; intros; subst.
+    constructor.
+    constructor.
+      apply H. constructor.
+      apply IHtt.
+        intros. apply H. constructor. assumption.
+        reflexivity.
+Qed.
+
+Lemma IPartition_app :
+  forall {A : Type} (ll1 ll2 : list (list A)) (l1 l2 : list A),
+    IPartition ll1 l1 -> IPartition ll2 l2 ->
+      IPartition (ll1 ++ ll2) (l1 ++ l2).
+Proof.
+  intros until 1. revert ll2 l2.
+  induction H; cbn; intros.
+    assumption.
+    rewrite <- app_assoc. constructor.
+      assumption.
+      apply IHIPartition. assumption.
+Qed.
+
+Lemma IPartition_rev :
+  forall {A : Type} (ll : list (list A)) (l : list A),
+    IPartition ll l -> IPartition (map rev (rev ll)) (rev l).
+Proof.
+  induction 1; cbn.
+    constructor.
+    rewrite map_app, rev_app. cbn. apply IPartition_app.
+      assumption.
+      rewrite <- app_nil_r. constructor.
+        intro. apply H. destruct l1.
+          reflexivity.
+          apply (f_equal length) in H1. rewrite length_rev in H1.
+            cbn in H1. inv H1.
+        constructor.
+Qed.
+
+Lemma IPartition_map :
+  forall {A B : Type} {ll : list (list A)} {l : list A},
+    IPartition ll l ->
+      forall f : A -> B, IPartition (map (map f) ll) (map f l).
+Proof.
+  induction 1; cbn; intros.
+    constructor.
+    rewrite map_app. constructor.
+      intro. apply H. destruct l1.
+        reflexivity.
+        inv H1.
+      apply IHIPartition.
+Qed.
+
+End IPartition.
+
 (** * Niestandardowe reguły indukcyjne *)
 
 (** Wyjaśnienia nadejdą już wkrótce. *)

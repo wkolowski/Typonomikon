@@ -9465,7 +9465,136 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 </div>
 
 <div class="doc">
-<a name="lab367"></a><h1 class="section">Niestandardowe reguły indukcyjne</h1>
+<a name="lab367"></a><h2 class="section">Partycje list</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Partition</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Partition</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">ll</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> (<span class="id" title="var">join</span> <span class="id" title="var">ll</span>) <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Partition_rev</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">ll</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Partition</span> <span class="id" title="var">ll</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">Partition</span> (<span class="id" title="var">rev</span> (<span class="id" title="var">map</span> <span class="id" title="var">rev</span> <span class="id" title="var">ll</span>)) (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Partition</span>. <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">rev_join</span>, !<span class="id" title="var">Permutation_rev</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Partition</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">OPartition</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">OPartition</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">ll</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nonempty</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">l'</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">elem</span> <span class="id" title="var">l'</span> <span class="id" title="var">ll</span> -&gt; <span class="id" title="var">l'</span> &lt;&gt; [];<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">all</span> : <span class="id" title="var">join</span> <span class="id" title="var">ll</span> = <span class="id" title="var">l</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">OPartition</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">IPartition</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">IPartition</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">IP_nil</span> : <span class="id" title="var">IPartition</span> [] []<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">IP_cons</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">ll</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l1</span> &lt;&gt; [] -&gt; <span class="id" title="var">IPartition</span> <span class="id" title="var">ll</span> <span class="id" title="var">l2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IPartition</span> (<span class="id" title="var">l1</span> :: <span class="id" title="var">ll</span>) (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">IPartition_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">ll</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)} {<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IPartition</span> <span class="id" title="var">ll</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">join</span> <span class="id" title="var">ll</span> = <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHIPartition</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">IPartition_spec_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">ll</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">l'</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">elem</span> <span class="id" title="var">l'</span> <span class="id" title="var">ll</span> -&gt; <span class="id" title="var">l'</span> &lt;&gt; []) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">join</span> <span class="id" title="var">ll</span> = <span class="id" title="var">l</span> -&gt; <span class="id" title="var">IPartition</span> <span class="id" title="var">ll</span> <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">ll</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">hh</span> <span class="id" title="var">tt</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>; <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHtt</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">IPartition_app</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">ll1</span> <span class="id" title="var">ll2</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IPartition</span> <span class="id" title="var">ll1</span> <span class="id" title="var">l1</span> -&gt; <span class="id" title="var">IPartition</span> <span class="id" title="var">ll2</span> <span class="id" title="var">l2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IPartition</span> (<span class="id" title="var">ll1</span> ++ <span class="id" title="var">ll2</span>) (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="tactic">until</span> 1. <span class="id" title="var">revert</span> <span class="id" title="var">ll2</span> <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">app_assoc</span>. <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHIPartition</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">IPartition_rev</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">ll</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IPartition</span> <span class="id" title="var">ll</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">IPartition</span> (<span class="id" title="var">map</span> <span class="id" title="var">rev</span> (<span class="id" title="var">rev</span> <span class="id" title="var">ll</span>)) (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">map_app</span>, <span class="id" title="var">rev_app</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IPartition_app</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">app_nil_r</span>. <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">l1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">length</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">length_rev</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H1</span>. <span class="id" title="var">inv</span> <span class="id" title="var">H1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">IPartition_map</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">ll</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)} {<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IPartition</span> <span class="id" title="var">ll</span> <span class="id" title="var">l</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>, <span class="id" title="var">IPartition</span> (<span class="id" title="var">map</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span>) <span class="id" title="var">ll</span>) (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">map_app</span>. <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">l1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHIPartition</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">IPartition</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab368"></a><h1 class="section">Niestandardowe reguły indukcyjne</h1>
 
 <div class="paragraph"> </div>
 
@@ -9518,7 +9647,7 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 </div>
 
 <div class="doc">
-<a name="lab368"></a><h2 class="section">Palindromy</h2>
+<a name="lab369"></a><h2 class="section">Palindromy</h2>
 
 <div class="paragraph"> </div>
 

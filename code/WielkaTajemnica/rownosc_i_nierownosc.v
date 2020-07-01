@@ -151,7 +151,7 @@ Proof.
     right. constructor.
     destruct (IHn' m').
       left. constructor. assumption.
-      right. constructor. assumption. Show Proof.
+      right. constructor. assumption.
 Qed.
 
 End nat_eq_neq.
@@ -160,7 +160,6 @@ Require Import D5.
 
 Module rec.
 
-(* Kody nie muszą być rekurencyjne - mogą być induktywne. *)
 Fixpoint code {A : Type} (l1 l2 : list A) : Prop :=
 match l1, l2 with
     | [], [] => True
@@ -181,6 +180,8 @@ Abort.
 End rec.
 
 Module ind.
+
+(* Kody nie muszą być rekurencyjne - mogą być induktywne. *)
 
 Inductive code {A : Type} : list A -> list A -> Prop :=
     | nils : code [] []

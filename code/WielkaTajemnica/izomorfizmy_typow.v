@@ -131,8 +131,6 @@ end.
 
 Require Import X3.
 
-Check map.
-
 Compute map fill_square (iterate S 50 0).
 
 Definition zigzag_order (x y : nat * nat) : Prop :=
@@ -140,6 +138,7 @@ Definition zigzag_order (x y : nat * nat) : Prop :=
     x = fill_square n /\
     y = fill_square m /\ n < m.
 
+(*
 Function unfill_square (x : nat * nat) {wf zigzag_order x} : nat :=
 match x with
     | (0, 0) => 0
@@ -150,13 +149,23 @@ Proof.
   Focus 4. red. destruct a as [n m]. constructor.
     destruct y as [n' m']. unfold zigzag_order.
 Admitted.
+*)
+
+Unset Guard Checking.
+Fixpoint unfill_square (x : nat * nat) : nat :=
+match x with
+    | (0, 0) => 0
+    | (S n, 0) => S (unfill_square (0, n))
+    | (n, S m) => S (unfill_square (S n, m))
+end.
+Set Guard Checking.
 
 Lemma iso_nat_natnat' :
   iso nat (nat * nat).
 Proof.
   exists fill_square, unfill_square. split.
     intro. functional induction (fill_square a).
-Abort.
+Admitted.
 
 (** Trochę generycznych rzeczy. *)
 
@@ -305,6 +314,40 @@ Proof.
   destruct 1, x. cbn. exists eq_refl. cbn. reflexivity.
 Defined.
 
+Definition ap
+  {A B : Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y :=
+match p with
+    | eq_refl => eq_refl
+end.
+
+(* Lemma 2.3.10 *)
+Lemma transport_ap :
+  forall {A B : Type} (P : B -> Type) (f : A -> B)
+    (x y : A) (p : x = y) (u : P (f x)),
+      transport P (ap f p) u =
+      @transport A (fun x => P (f x)) x y p u.
+Proof.
+  destruct p. cbn. reflexivity.
+Defined.
+
+Lemma eq_head_tail :
+  forall {A : Type} {n : nat} (v1 v2 : vec A (S n)),
+    head v1 = head v2 -> tail v1 = tail v2 -> v1 = v2.
+Proof.
+  Require Import Equality.
+  dependent destruction v1.
+  dependent destruction v2.
+  cbn. destruct 1, 1. reflexivity.
+Qed.
+
+Lemma transport_cons :
+  forall {A : Type} {n m : nat} (h : A) (t : vec A n) (p : n = m),
+    transport (fun n : nat => vec A (S n)) p
+     (h :: t) = h :: transport (fun n : nat => vec A n) p t.
+Proof.
+  destruct p. cbn. reflexivity.
+Qed.
+
 Lemma iso_list_vlist :
   forall A : Type, iso (list A) (vlist A).
 Proof.
@@ -316,7 +359,69 @@ Proof.
       induction v as [| h t]; cbn.
         reflexivity.
         apply sigT_eq' in IHv. cbn in IHv. destruct IHv.
-        eapply sigT_eq. Unshelve. all: cycle 1.
-          exact (f_equal S x).
-          admit. (* Więcej kubiczności. *)
-Admitted.
+          eapply sigT_eq. Unshelve. all: cycle 1.
+            exact (ap S x).
+            rewrite transport_ap, transport_cons, e. reflexivity.
+Qed.
+Search (nat * nat). 
+
+Fixpoint nat_vec {n : nat} (arg : nat) : vec nat (S n) :=
+match n with
+    | 0 => arg :: vnil
+    | S n' =>
+        let
+          (arg1, arg2) := fill_square arg
+        in
+          arg1 :: nat_vec arg2
+end.
+
+Fixpoint vec_nat {n : nat} (v : vec nat n) {struct v} : option nat :=
+match v with
+    | vnil => None
+    | vcons h t =>
+        match vec_nat t with
+            | None => Some h
+            | Some r => Some (unfill_square (h, r))
+        end
+end.
+
+(*
+Fixpoint vec_nat' {n : nat} (v : vec nat (S n)) : nat :=
+match v with
+    | vcons x vnil => x
+    | vcons x v' => unfill_square (x, vec_nat' v')
+end.
+
+    | vnil => None
+    | vcons h t =>
+        match vec_nat t with
+            | None => Some h
+            | Some r => Some (unfill_square (h, r))
+        end
+end.
+*)
+
+Require Import D5.
+
+Compute map (@nat_vec 3) [111; 1111; 11111].
+Compute map vec_nat (map (@nat_vec 3) [111; 1111]).
+
+Lemma nat_vlist :
+  forall n : nat, iso nat (vec nat (S n)).
+Proof.
+  unfold iso. intros.
+  exists nat_vec.
+  exists (fun v => match vec_nat v with | None => 0 | Some n => n end).
+  split.
+    Focus 2. dependent destruction b. cbn.
+    induction n as [| n']; cbn.
+      reflexivity.
+      {
+        intro. destruct (fill_square a) as [a1 a2].
+        change (vec_nat _) with (match vec_nat (@nat_vec n' a2) with
+                                  | None => Some a1
+                                  | Some r => Some (unfill_square (a1, r))
+                                  end).
+        rewrite <- (IHn' a2). destru
+        
+      
