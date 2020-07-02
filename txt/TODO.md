@@ -58,10 +58,6 @@ Qed.
 11. Opisać encode-decode dla równości i nierówności na typach induktywnych.
 12. Poszukać ogólnego pojęcia "różnicy" typów.
 
-## Listy
-2. Dokończyć prace nad funkcjami znajdującymi wszystkie struktury danego rodzaju (zostały dowody dla permutacji i podzbiory).
-3. Dokończyć prace nad resztą rzeczy z folderu List/.
-
 ## Funkcje
 1. Dokończyć podrozdział o odwrotnościach i izomorfizmach.
 2. Napisać coś o (pre/post)skracalności (i o retraktach! - straszne słowo).
@@ -91,7 +87,7 @@ Qed.
 
 ## Inne
 1. Znaleźć prostszy przykład dla podrozdziału o ścisłej pozytywności (ale do której konkretnie części?).
-9. Izomorfizmy dla typów induktywnych: każde drzewo jest drzewem o jakiejś wysokości (no chyba że ma nieskończone rozgałęzienie, to wtedy nie). Uogólniając: każdy element typu induktywnego jest elementem odpowiadającego my typu indeksowanego o pewnym indeksie.
+9. Izomorfizmy dla typów induktywnych: każde drzewo jest drzewem o jakiejś wysokości (no chyba że ma nieskończone rozgałęzienie, to wtedy nie). Uogólniając: każdy element typu induktywnego jest elementem odpowiadającego mu typu indeksowanego o pewnym indeksie.
 14. Opisać taktyki dla redukcji i obliczeń.
 15. Opisać podstawy teorii typów.
 17. Opisać zmienne egzystencjalne i odpowiadające im taktyki.

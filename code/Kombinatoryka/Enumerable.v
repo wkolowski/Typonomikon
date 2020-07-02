@@ -64,6 +64,4 @@ Proof.
       split.
         inversion 1; subst. destruct x as [| h t]; cbn in *.
           destruct (IHn' []). destruct (H0 eq_refl).
-            
-        
 Abort.

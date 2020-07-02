@@ -351,7 +351,7 @@ Qed.
 Lemma iso_list_vlist :
   forall A : Type, iso (list A) (vlist A).
 Proof.
-  intro. exists vectorize, listize. split.
+  intro. red. exists vectorize, listize. split.
     induction a as [| h t]; cbn in *.
       reflexivity.
       rewrite IHt. reflexivity.
@@ -413,8 +413,8 @@ Proof.
   exists nat_vec.
   exists (fun v => match vec_nat v with | None => 0 | Some n => n end).
   split.
-    Focus 2. dependent destruction b. cbn.
-    induction n as [| n']; cbn.
+    Focus 2. dependent destruction b.
+    induction n as [| n']. (*
       reflexivity.
       {
         intro. destruct (fill_square a) as [a1 a2].
@@ -422,6 +422,5 @@ Proof.
                                   | None => Some a1
                                   | Some r => Some (unfill_square (a1, r))
                                   end).
-        rewrite <- (IHn' a2). destru
-        
-      
+        rewrite <- (IHn' a2).*)
+Abort.

@@ -226,3 +226,17 @@ Proof.
 Abort.
 
 End TH.
+
+Module W.
+
+Require Import G.
+
+Print W.
+
+Inductive IW {A : Type} (B : A -> Type) : Type :=
+    | here : IW B
+    | rec : forall x : A, B x -> IW B -> IW B.
+
+Print natW.
+
+End W.

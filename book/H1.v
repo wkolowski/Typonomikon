@@ -1,222 +1,167 @@
-(** * H1: Uniwersa - pusty *)
+(** * H1: Uniwersa i programowanie generyczne [TODO] *)
 
-(** Chwilowo nic tu nie ma. *)
+(** Tutaj będzie o programowaniu generycznym za pomocą uniwersów. Być
+    może to właśnie tutaj jest odpowiednie miejsce na indukcję-rekursję. *)
 
-Set Universe Polymorphism.
+(** * Spłaszczanie wielokrotnie zagnieżdżonych list *)
 
-Require Import Arith.
-Require Import Bool.
+Module Flatten.
 
-(** **** Ćwiczenie *)
+Inductive Star : Type :=
+  | Var : Type -> Star
+  | List : Star -> Star.
 
-(** Miło by było pamiętać, że Coq to nie jest jakiś tam biedajęzyk
-    programowania, tylko pełnoprawny system podstaw matematyki (no,
-    prawie...). W związku pokaż, że [nat <> Type]. *)
-
-(* begin hide *)
-Module nat_not_Type.
-
-(** Lemat: aksjomat K dla liczb naturalnych. *)
-
-Fixpoint code (n m : nat) : Type :=
-match n, m with
-    | 0, 0 => unit
-    | S _, 0 => Empty_set
-    | 0, S _ => Empty_set
-    | S n', S m' => code n' m'
+Fixpoint interp (s : Star) : Type :=
+match s with
+    | Var A => A
+    | List s' => list (interp s')
 end.
 
-Fixpoint encode_aux (n : nat) : code n n :=
-match n with
-    | 0 => tt
-    | S n' => encode_aux n'
+Fixpoint flattenType (s : Star) : Type :=
+match s with
+    | Var A => A
+    | List s' => flattenType s'
 end.
 
-Definition encode {n m : nat} (p : n = m) : code n m :=
-match p with
-    | eq_refl => encode_aux n
+Require Import List.
+Import ListNotations.
+
+Fixpoint flatten {s : Star} : interp s -> list (flattenType s) :=
+match s with
+    | Var A => fun x : interp (Var A) => [x]
+    | List s' =>
+        fix f (x : list (interp s')) : list (flattenType s') :=
+        match x with
+            | [] => []
+            | h :: t => @flatten s' h ++ f t
+        end
 end.
 
-Fixpoint decode {n m : nat} : code n m -> n = m :=
-match n, m with
-    | 0, 0 => fun _ => eq_refl
-    | 0, S _ => fun c => match c with end
-    | S _, 0 => fun c => match c with end
-    | S n', S m' => fun c => @f_equal _ _ S _ _ (@decode n' m' c)
+Compute @flatten (List (List (Var nat))) [[1; 2; 3]; [4; 5; 6]].
+Compute @flatten (List (List (List (Var nat)))) [[[1]; [2; 2]; [3]]; [[4; 5; 6]]].
+
+Class HasStar (A : Type) : Type :=
+{
+    star : Star;
+    no_kidding : interp star = A;
+}.
+
+#[refine]
+Instance HasStar_any (A : Type) : HasStar A | 1 :=
+{
+    star := Var A;
+}.
+Proof.
+  cbn. reflexivity.
+Defined.
+
+#[refine]
+Instance HasStar_list (A : Type) (hs : HasStar A) : HasStar (list A) | 0 :=
+{
+    star := List star;
+}.
+Proof.
+  cbn. rewrite no_kidding. reflexivity.
+Defined.
+
+Definition flatten'
+  {A : Type} {_ : HasStar A} (x : A) : list (flattenType star).
+Proof.
+  apply flatten. rewrite no_kidding. exact x. Show Proof.
+Defined.
+
+Compute flatten' [[1; 2; 3]; [4; 5; 6]].
+Compute flatten' [[[1]; [2; 2]; [3]]; [[4; 5; 6]]].
+
+End Flatten.
+
+(** * [zipWith] z dowolną ilością argumentów *)
+
+Module ZipWithN.
+
+Require Import D5.
+
+Inductive Code : Type :=
+  | Singl : Type -> Code
+  | Cons : Type -> Code -> Code.
+
+Fixpoint cmap (F : Type -> Type) (c : Code) : Code :=
+match c with
+  | Singl A => Singl (F A)
+  | Cons A c' => Cons (F A) (cmap F c')
 end.
 
-Lemma decode_encode :
-  forall (n m : nat) (p : n = m),
-    decode (encode p) = p.
-Proof.
-  destruct p; cbn.
-  induction n as [| n']; cbn.
-    reflexivity.
-    rewrite IHn'. cbn. reflexivity.
-Qed.
+Fixpoint funType (c : Code) (R : Type) : Type :=
+match c with
+  | Singl A => A -> R
+  | Cons A c' => A -> funType c' R
+end.
 
-Lemma isProp_code :
-  forall (n m : nat) (c1 c2 : code n m), c1 = c2.
-Proof.
-  induction n as [| n']; destruct m as [| m']; cbn; try destruct c1, c2.
-    reflexivity.
-    intros. apply IHn'.
-Qed.
+Definition listType (c : Code) (R : Type) : Type :=
+  funType (cmap list c) R.
 
-Lemma encode_decode :
-  forall (n m : nat) (c : code n m),
-    encode (decode c) = c.
-Proof.
-  induction n as [| n']; destruct m as [| m']; cbn; try destruct c.
-    reflexivity.
-    intro. apply isProp_code.
-Qed.
+Fixpoint prod (c : Code) : Type :=
+match c with
+  | Singl A => A
+  | Cons A c' => A * prod c'
+end.
 
-Lemma K_nat :
-  forall (n : nat) (p : n = n), p = eq_refl.
-Proof.
-  intros. rewrite <- (decode_encode _ _ p).
-  replace (encode p) with (encode_aux n).
-    induction n as [| n']; cbn.
-      reflexivity.
-      rewrite IHn'.
-        cbn. reflexivity.
-        reflexivity.
-    apply isProp_code.
-Qed.
+Definition prodList (c : Code) : Type :=
+  prod (cmap list c).
 
-Definition idtoeqv {A B : Type} (p : A = B) : A -> B.
+Definition listProd (c : Code) : Type :=
+  list (prod c).
+
+Definition uncurriedFunType (c : Code) (R : Type) : Type :=
+  prod c -> R.
+
+Definition uncurriedListType (c : Code) (R : Type) : Type :=
+  prodList c -> R.
+
+Fixpoint zip2 {A B : Type} (l : list A) (r : list B) : list (A * B) :=
+match l, r with
+  | [], _ => []
+  | _, [] => []
+  | hl :: tl, hr :: tr => (hl, hr) :: zip2 tl tr
+end.
+
+Fixpoint zip {c : Code} : prodList c -> listProd c :=
+match c with
+  | Singl A => id
+  | Cons A c' =>
+    fun '(l, p) => zip2 l (zip p)
+end.
+
+Compute
+  @zip
+    (Cons bool (Singl nat))
+    ([true; false], [4; 5]).
+
+Fixpoint uncurryFun
+  {c : Code} {R : Type} {struct c} : funType c R -> uncurriedFunType c R.
 Proof.
-  destruct p. intro x. exact x.
+  destruct c; cbn in *; intro f; red; cbn.
+    exact f.
+    intros [t p]. exact (uncurryFun _ _ (f t) p).
 Defined.
 
-Lemma idtoeqv_sur :
-  forall (A B : Type) (p : A = B) (b : B),
-    exists a : A, idtoeqv p a = b.
+Fixpoint curryList
+  {c : Code} {R : Type} {struct c} : uncurriedListType c R -> listType c R.
 Proof.
-  destruct p. intro a. exists a. reflexivity.
-Qed.
-
-Definition wut
-  (f : nat -> Type) (n : nat) (h : f n -> forall m : nat, f m -> bool)
-  : forall k : nat, f k -> bool.
-Proof.
-  intros k x. destruct (Nat.eqb_spec n k).
-    destruct e. exact (negb (h x n x)).
-    exact true.
+  destruct c as [A | A c']; unfold uncurriedListType; cbn in *.
+    intros f l. exact (f l).
+    intros f l. apply curryList. red. intro. apply f. split; assumption.
 Defined.
 
-Theorem nat_not_Type : ~ @eq Type nat Type.
-Proof.
-  intro p.
-  pose (f := idtoeqv p). pose (idtoeqv_sur _ _ p).
-  change (idtoeqv p) with f in e. clearbody f e.
-  pose (A := forall n : nat, f n -> bool).
-  destruct (e A) as [n q].
-  pose (h := idtoeqv q). pose (e' := idtoeqv_sur _ _ q).
-  change (idtoeqv q) with h in e'; clearbody h e'.
-  destruct (e' (wut f n h)) as [x r]; unfold wut in r.
-  apply (@f_equal _ _ (fun f => f n x)) in r.
-  destruct (Nat.eqb_spec n n) as [s | s].
-    rewrite (K_nat _ s) in r. destruct (h x n x); inversion r.
-    contradiction.
-Qed.
 
-End nat_not_Type.
-(* end hide *)
+Definition zipWith
+  {c : Code} {R : Type} (f : funType c R) : listType c (list R) :=
+    curryList (fun p : prodList c => map (uncurryFun f) (zip p)).
 
-(** **** Ćwiczenie *)
+Compute
+  @zipWith
+    (Cons nat (Cons nat (Singl nat))) _
+    (fun a b c => a + b + c)
+    [1; 2; 3] [4; 5; 6] [7; 8; 9].
 
-(** To samo co wyżej, ale tym razem dla dowolnego typu, który ma
-    rozstrzygalną równość oraz spełnia aksjomat K. *)
-
-(* begin hide *)
-Module EqDec_not_Type.
-
-Variables
-  (A : Type)
-  (eq_dec : A -> A -> bool)
-  (eq_dec_spec : forall x y : A, reflect (x = y) (eq_dec x y))
-  (K : forall (x : A) (p : x = x), p = eq_refl).
-
-Definition idtoeqv {A B : Type} (p : A = B) : A -> B.
-Proof.
-  destruct p. intro x. exact x.
-Defined.
-
-Lemma idtoeqv_sur :
-  forall (A B : Type) (p : A = B) (b : B),
-    exists a : A, idtoeqv p a = b.
-Proof.
-  destruct p. intro a. exists a. reflexivity.
-Qed.
-
-Definition wut
-  (f : A -> Type) (x : A) (h : f x -> forall y : A, f y -> bool)
-  : forall z : A, f z -> bool.
-Proof.
-  intros y fy. destruct (eq_dec_spec x y).
-    destruct e. exact (negb (h fy x fy)).
-    exact true.
-Defined.
-
-Theorem A_not_Type : ~ @eq Type A Type.
-Proof.
-  intro p.
-  pose (f := idtoeqv p); pose (idtoeqv_sur _ _ p);
-  change (idtoeqv p) with f in e; clearbody f e.
-  pose (H := forall x : A, f x -> bool).
-  destruct (e H) as [x q].
-  pose (h := idtoeqv q); pose (e' := idtoeqv_sur _ _ q);
-  change (idtoeqv q) with h in e'; clearbody h e'.
-  destruct (e' (wut f x h)) as [fx r]; unfold wut in r.
-  apply (@f_equal _ _ (fun f => f x fx)) in r.
-  destruct (eq_dec_spec x x) as [s | s].
-    rewrite (K _ s) in r. destruct (h fx x fx); inversion r.
-    contradiction.
-Qed.
-
-End EqDec_not_Type.
-(* end hide *)
-
-(** **** Ćwiczenie *)
-
-(** Dobrze wiemy, że [Prop] to nie [Type]... a może jednak? Rozstrzygnij,
-    czy [Prop = Type] zachodzi, czy nie. *)
-
-(* begin hide *)
-Module Prop_not_Type.
-
-Require Import ProofIrrelevance.
-
-Goal forall P : Prop, @eq Type P bool -> False.
-Proof.
-  intros.
-  assert (forall b1 b2 : bool, b1 = b2).
-    rewrite <- H. apply proof_irrelevance.
-  specialize (H0 true false). inversion H0.
-Qed.
-
-Definition transport
-  {A : Type} (P : A -> Type) {x y : A} (p : x = y) : P x -> P y.
-Proof.
-  destruct p. exact (@id _).
-Defined.
-
-Goal Prop <> Type.
-Proof.
-  intro.
-  pose Unnamed_thm.
-  assert (~ forall A : Type, A = bool -> False).
-    intro. apply (H0 bool). reflexivity.
-  assert (forall P : Type -> Type, P Type -> P Prop).
-    intros. rewrite H. assumption.
-  apply H0. intros. apply eq_sym in H.
-  assert (~ exists (P : Prop) (x y : P), x <> y).
-    admit.
-  apply H2. exists (transport (@id _) H bool).
-  unfold transport.
-Abort.
-
-End Prop_not_Type.
-(* end hide *)
+End ZipWithN.

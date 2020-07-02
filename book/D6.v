@@ -2,7 +2,9 @@
 
 Require Import D5.
 
-(** Jak w tytule. *)
+(* begin hide *)
+(** Dokończyć prace nad resztą rzeczy z folderu List/. *)
+(* end hide *)
 
 (** * Predykaty i relacje na listach - znowu *)
 
@@ -29,11 +31,13 @@ end.
 Lemma all_spec :
   forall (A : Type) (P : A -> Prop) (l : list A),
     all P l <-> Forall P l.
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     rewrite Forall_nil. reflexivity.
     rewrite Forall_cons, IHt. reflexivity.
 Qed.
+(* end hide *)
 
 Fixpoint exactly
   {A : Type} (P : A -> Prop) (n : nat) (l : list A) : Prop :=
@@ -48,6 +52,7 @@ end.
 Lemma exactly_spec :
   forall (A : Type) (P : A -> Prop) (n : nat) (l : list A),
     exactly P n l <-> Exactly P n l.
+(* begin hide *)
 Proof.
   intros. revert n.
   induction l as [| h t]; cbn.
@@ -58,6 +63,7 @@ Proof.
       rewrite IHt, Exactly_0_cons. reflexivity.
       rewrite !IHt, Exactly_S_cons. reflexivity.
 Qed.
+(* end hide *)
 
 (** ** [exists] *)
 
@@ -1011,15 +1017,18 @@ end.
 Lemma sublists_spec :
   forall {A : Type} (l1 l2 : list A),
     Sublist l1 l2 -> elem l1 (sublists l2).
+(* begin hide *)
 Proof.
   induction 1; cbn.
     constructor.
     right. assumption.
 Qed.
+(* end hide *)
 
 Lemma sublists_spec' :
   forall {A : Type} (l1 l2 : list A),
     elem l1 (sublists l2) -> Sublist l1 l2.
+(* begin hide *)
 Proof.
   induction l2 as [| h2 t2]; cbn.
     inversion 1.
@@ -1027,6 +1036,7 @@ Proof.
       constructor.
       constructor. apply IHt2. assumption.
 Qed.
+(* end hide *)
 
 End sublists.
 
@@ -1044,15 +1054,18 @@ end.
 Lemma suffixes_spec :
   forall {A : Type} (l1 l2 : list A),
     Suffix l1 l2 -> elem l1 (suffixes l2).
+(* begin hide *)
 Proof.
   induction 1.
     destruct l; constructor.
     cbn. constructor. assumption.
 Qed.
+(* end hide *)
 
 Lemma suffixes_spec' :
   forall {A : Type} (l1 l2 : list A),
     elem l1 (suffixes l2) -> Suffix l1 l2.
+(* begin hide *)
 Proof.
   induction l2 as [| h2 t2]; cbn.
     inversion 1; subst.
@@ -1062,6 +1075,7 @@ Proof.
       constructor.
       constructor. apply IHt2. assumption.
 Qed.
+(* end hide *)
 
 End suffixes.
 
@@ -1081,15 +1095,18 @@ end.
 Lemma prefixes_spec :
   forall {A : Type} (l1 l2 : list A),
     Prefix l1 l2 -> elem l1 (prefixes l2).
+(* begin hide *)
 Proof.
   induction 1.
     destruct l; constructor.
     cbn. constructor. apply elem_map. assumption.
 Qed.
+(* end hide *)
 
 Lemma elem_map_cons :
   forall {A : Type} (h1 h2 : A) (t1 : list A) (t2 : list (list A)),
     elem (h1 :: t1) (map (cons h2) t2) -> h1 = h2.
+(* begin hide *)
 Proof.
   intros until t2. revert h1 h2 t1.
   induction t2 as [| h t]; cbn; intros.
@@ -1098,10 +1115,12 @@ Proof.
       reflexivity.
       apply (IHt _ _ _ H2).
 Qed.
+(* end hide *)
 
 Lemma prefixes_spec' :
   forall {A : Type} (l1 l2 : list A),
     elem l1 (prefixes l2) -> Prefix l1 l2.
+(* begin hide *)
 Proof.
   intros until l2. revert l1.
   induction l2 as [| h2 t2]; cbn; intros.
@@ -1118,6 +1137,7 @@ Proof.
             inversion 1; auto.
           apply elem_map_cons in H2. symmetry. assumption.
 Qed.
+(* end hide *)
 
 End prefixes.
 
@@ -1136,6 +1156,7 @@ Compute subseqs [1; 2; 3; 4; 5].
 Lemma Subseq_subseqs :
   forall (A : Type) (l1 l2 : list A),
     Subseq l1 l2 -> elem l1 (subseqs l2).
+(* begin hide *)
 Proof.
   induction 1; cbn.
     induction l as [| h t]; cbn.
@@ -1144,10 +1165,12 @@ Proof.
     apply elem_app_l, elem_map. assumption.
     apply elem_app_r. assumption.
 Qed.
+(* end hide *)
 
 Lemma subseqs_Subseq :
   forall (A : Type) (l1 l2 : list A),
     elem l1 (subseqs l2) -> Subseq l1 l2.
+(* begin hide *)
 Proof.
   intros A l1 l2. revert l1.
   induction l2 as [| h2 t2]; cbn; intros.
@@ -1159,6 +1182,7 @@ Proof.
         subst. constructor. apply IHt2. assumption.
       constructor. apply IHt2, H.
 Qed.
+(* end hide *)
 
 End subseqs.
 
@@ -1183,6 +1207,7 @@ Inductive Incl' {A : Type} : list A -> list A -> Prop :=
 Lemma subsets_spec :
   forall {A : Type} (l1 l2 : list A),
     Incl l1 l2 -> elem l1 (subsets l2).
+(* begin hide *)
 Proof.
   intros until l2. revert l1.
   induction l2 as [| h2 t2]; unfold Incl; cbn; intros.
@@ -1198,10 +1223,12 @@ Proof.
           Focus 2.
           red. intros.
 Abort.
+(* end hide *)
 
 (* nieprawda *) Lemma subsets_spec :
   forall {A : Type} (l1 l2 : list A),
     Incl' l1 l2 -> elem l1 (subsets l2).
+(* begin hide *)
 Proof.
   induction 1.
     induction l as [| h t]; cbn.
@@ -1211,6 +1238,7 @@ Proof.
       cbn in *. apply elem_app_or in IHIncl'. destruct IHIncl'.
         apply elem_app_r. apply elem_map. assumption.
 Abort.
+(* end hide *)
 
 End subsets.
 
@@ -1241,12 +1269,14 @@ Lemma Cycle_cycles_aux :
   forall (A : Type) (l1 l2 : list A),
     Cycle l1 l2 -> forall n : nat,
       elem l1 (cycles_aux (S (length l2) + n) l2).
+(* begin hide *)
 Proof.
   induction 1; cbn.
     induction l as [| h t]; cbn; intros.
       constructor.
       destruct (IHt n).
 Admitted.
+(* end hide *)
 
 End cycles.
 
@@ -1266,24 +1296,29 @@ Inductive Perm {A : Type} : list A -> list A -> Prop :=
 Lemma Perm_cons :
   forall {A : Type} (h : A) (t1 t2 : list A),
     Perm t1 t2 -> Perm (h :: t1) (h :: t2).
+(* begin hide *)
 Proof.
   induction 1.
     constructor.
     apply (Perm_transp x y (h :: l1)). cbn. assumption.
 Qed.
+(* end hide *)
 
 Lemma Perm_trans :
   forall {A : Type} {l1 l2 l3 : list A},
     Perm l1 l2 -> Perm l2 l3 -> Perm l1 l3.
+(* begin hide *)
 Proof.
   induction 1; intro.
     assumption.
     constructor. apply IHPerm. assumption.
 Qed.
+(* end hide *)
 
 Lemma Permutation_Perm :
   forall {A : Type} {l1 l2 : list A},
     Permutation l1 l2 -> Perm l1 l2.
+(* begin hide *)
 Proof.
   induction 1.
     constructor.
@@ -1291,10 +1326,12 @@ Proof.
     apply (Perm_transp x y [] []). cbn. constructor.
     eapply Perm_trans; eassumption.
 Qed.
+(* end hide *)
 
 Lemma Permutation_transpose :
   forall {A : Type} {x y : A} {l1 l2 l3 : list A},
     Permutation (l1 ++ x :: l2 ++ y :: l3) (l1 ++ y :: l2 ++ x :: l3).
+(* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn; intros.
     {
@@ -1309,15 +1346,18 @@ Proof.
     }
     constructor. apply IHt1.
 Qed.
+(* end hide *)
 
 Lemma Perm_Permutation :
   forall {A : Type} {l1 l2 : list A},
     Perm l1 l2 -> Permutation l1 l2.
+(* begin hide *)
 Proof.
   induction 1.
     reflexivity.
     rewrite Permutation_transpose. assumption.
 Qed.
+(* end hide *)
 
 End Transpositions.
 
@@ -1334,6 +1374,7 @@ Inductive Perm {A : Type} : list A -> list A -> Prop :=
 Lemma Perm_Permutation :
   forall (A : Type) (l1 l2 : list A),
     Perm l1 l2 -> Permutation l1 l2.
+(* begin hide *)
 Proof.
   induction 1.
     apply Permutation_refl.
@@ -1341,28 +1382,34 @@ Proof.
       reflexivity.
       constructor.
 Qed.
+(* end hide *)
 
 Lemma Perm_cons :
   forall {A : Type} (x : A) {l1 l2 : list A},
     Perm l1 l2 -> Perm (x :: l1) (x :: l2).
+(* begin hide *)
 Proof.
   induction 1.
     constructor.
     apply (Perm_steptrans x0 y (x :: l1) l2). cbn. assumption.
 Qed.
+(* end hide *)
 
 Lemma Perm_trans :
   forall {A : Type} {l1 l2 l3 : list A},
     Perm l1 l2 -> Perm l2 l3 -> Perm l1 l3.
+(* begin hide *)
 Proof.
   induction 1; intro H23.
     assumption.
     apply (Perm_steptrans x y l1 l2), IHPerm, H23.
 Qed.
+(* end hide *)
 
 Lemma Permutation_Perm :
   forall {A : Type} {l1 l2 : list A},
     Permutation l1 l2 -> Perm l1 l2.
+(* begin hide *)
 Proof.
   induction 1.
     constructor.
@@ -1370,6 +1417,7 @@ Proof.
     apply (Perm_steptrans y x [] l). cbn. constructor.
     eapply Perm_trans; eassumption.
 Qed.
+(* end hide *)
 
 End AdjacentTranspositions.
 
@@ -1391,6 +1439,7 @@ Inductive Perm {A : Type} : list A -> list A -> Prop :=
 Lemma Perm_cons :
   forall (A : Type) (x : A) (l1 l2 : list A),
     Perm l1 l2 -> Perm (x :: l1) (x :: l2).
+(* begin hide *)
 Proof.
   induction 1.
     constructor.
@@ -1399,10 +1448,12 @@ Proof.
         red. exists y, z, (x :: r1), r2. split; reflexivity.
         assumption.
 Qed.
+(* end hide *)
 
 Lemma Perm_trans :
   forall (A : Type) (l1 l2 l3 : list A),
     Perm l1 l2 -> Perm l2 l3 -> Perm l1 l3.
+(* begin hide *)
 Proof.
   intros until 1. revert l3.
   induction H; intros.
@@ -1411,10 +1462,12 @@ Proof.
       exact H.
       apply IHPerm. assumption.
 Qed.
+(* end hide *)
 
 Lemma Permutation_Perm :
   forall (A : Type) (l1 l2 : list A),
     Permutation l1 l2 -> Perm l1 l2.
+(* begin hide *)
 Proof.
   induction 1.
     constructor.
@@ -1424,10 +1477,12 @@ Proof.
       apply Perm_refl.
     apply Perm_trans with l'; assumption.
 Qed.
+(* end hide *)
 
 Lemma Perm_Permutation :
   forall (A : Type) (l1 l2 : list A),
     Perm l1 l2 -> Permutation l1 l2.
+(* begin hide *)
 Proof.
   induction 1.
     reflexivity.
@@ -1435,19 +1490,23 @@ Proof.
       destruct H as (x & y & r1 & r2 & eq1 & eq2). subst.
       apply Permutation_app_l. constructor.
 Qed.
+(* end hide *)
 
 Lemma Perm_spec :
   forall (A : Type) (l1 l2 : list A),
     Perm l1 l2 <-> Permutation l1 l2.
+(* begin hide *)
 Proof.
   split.
     apply Perm_Permutation.
     apply Permutation_Perm.
 Qed.
+(* end hide *)
 
 Lemma Perm_count :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
     Perm l1 l2 -> count p l1 = count p l2.
+(* begin hide *)
 Proof.
   induction 1.
     reflexivity.
@@ -1455,6 +1514,7 @@ Proof.
       rewrite <- IHPerm, !count_app. f_equal. cbn.
       destruct (p x), (p y); reflexivity.
 Qed.
+(* end hide *)
 
 End Exchange.
 
@@ -1474,6 +1534,7 @@ Lemma Permutation_Exactly :
     Permutation l1 l2 ->
       forall (P : A -> Prop) (n : nat),
         Exactly P n l1 -> Exactly P n l2.
+(* begin hide *)
 Proof.
   induction 1; intros.
     assumption.
@@ -1489,21 +1550,25 @@ Proof.
       inv H4; repeat constructor; assumption.
     apply IHPermutation2, IHPermutation1. assumption.
 Qed.
+(* end hide *)
 
 Lemma Permutation_Perm :
   forall {A : Type} {l1 l2 : list A},
     Permutation l1 l2 -> Perm l1 l2.
+(* begin hide *)
 Proof.
   split.
     apply Permutation_Exactly. assumption.
     apply Permutation_Exactly. symmetry. assumption.
 Qed.
+(* end hide *)
 
 Lemma Perm_front_ex :
   forall {A : Type} {h : A} {t l : list A},
     Perm (h :: t) l ->
       exists l1 l2 : list A,
         l = l1 ++ h :: l2 /\ Perm t (l1 ++ l2).
+(* begin hide *)
 Proof.
   intros until 1.
   revert h t H.
@@ -1511,10 +1576,12 @@ Proof.
     admit.
     unfold Perm in H.
 Admitted.
+(* end hide *)
 
 Lemma Perm_Permutation :
   forall {A : Type} {l1 l2 : list A},
     Perm l1 l2 -> Permutation l1 l2.
+(* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; intros.
     destruct l2 as [| h2 t2].
@@ -1535,6 +1602,7 @@ Proof.
       assumption.
     }
 Qed.
+(* end hide *)
 
 End Exactly.
 
@@ -1555,6 +1623,7 @@ Lemma Permutation_AtLeast :
     Permutation l1 l2 ->
       forall (P : A -> Prop) (n : nat),
         AtLeast P n l1 -> AtLeast P n l2.
+(* begin hide *)
 Proof.
   induction 1; intros.
     assumption.
@@ -1565,21 +1634,25 @@ Proof.
       inv H2; auto.
     apply IHPermutation2, IHPermutation1. assumption.
 Qed.
+(* end hide *)
 
 Lemma Permutation_Perm :
   forall {A : Type} {l1 l2 : list A},
     Permutation l1 l2 -> Perm l1 l2.
+(* begin hide *)
 Proof.
   split.
     apply Permutation_AtLeast. assumption.
     apply Permutation_AtLeast. symmetry. assumption.
 Qed.
+(* end hide *)
 
 Lemma AtLeast_1 :
   forall {A : Type} {P : A -> Prop} {l : list A},
     AtLeast P 1 l ->
       exists (x : A) (l1 l2 : list A),
         P x /\ l = l1 ++ x :: l2.
+(* begin hide *)
 Proof.
   induction l as [| h t]; intros.
     inv H.
@@ -1588,13 +1661,16 @@ Proof.
       destruct (IHt H2) as (x & l1 & l2 & IH1 & IH2).
         subst. exists x, (h :: l1), l2. auto.
 Qed.
+(* end hide *)
 
 Lemma AtLeast_app_comm' :
   forall {A : Type} {P : A -> Prop} {n : nat} {l1 l2 : list A},
     AtLeast P n (l1 ++ l2) <-> AtLeast P n (l2 ++ l1).
+(* begin hide *)
 Proof.
   split; intro; apply AtLeast_app_comm; assumption.
 Qed.
+(* end hide *)
 
 Lemma AtLeast_cons_app :
   forall
@@ -1602,6 +1678,7 @@ Lemma AtLeast_cons_app :
     (x : A) (l1 l2 : list A),
       AtLeast P n (l1 ++ x :: l2) <->
       AtLeast P n (x :: l1 ++ l2).
+(* begin hide *)
 Proof.
   intros.
   change (x :: l1 ++ l2) with ((x :: l1) ++ l2).
@@ -1610,12 +1687,14 @@ Proof.
   rewrite !(@AtLeast_app_comm' _ _ _ l1 l2).
   reflexivity.
 Qed.
+(* end hide *)
 
 Lemma Perm_front_ex :
   forall {A : Type} {h : A} {t l : list A},
     Perm (h :: t) l ->
       exists l1 l2 : list A,
         l = l1 ++ h :: l2 /\ Perm t (l1 ++ l2).
+(* begin hide *)
 Proof.
   intros.
   unfold Perm in H.
@@ -1655,10 +1734,12 @@ Proof.
               assumption.
     }
 Qed.
+(* end hide *)
 
 Lemma Perm_Permutation :
   forall {A : Type} {l1 l2 : list A},
     Perm l1 l2 -> Permutation l1 l2.
+(* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; intros.
     destruct l2 as [| h2 t2].
@@ -1677,6 +1758,7 @@ Proof.
       assumption.
     }
 Qed.
+(* end hide *)
 
 Hint Constructors Exactly.
 
@@ -1687,6 +1769,7 @@ Hint Constructors Exactly.
     <->
     (forall (P : A -> Prop) (n : nat),
       Exactly P n l1 <-> Exactly P n l2).
+(* begin hide *)
 Proof.
   split.
     split; intros.
@@ -1696,6 +1779,7 @@ Proof.
           destruct (H (fun x => x = a) 1).
             specialize (H1 ltac:(auto)). inv H1.
 Abort.
+(* end hide *)
 
 End AtLeast.
 
@@ -1711,6 +1795,7 @@ Lemma count_ex :
     count p l = 0 \/
     exists (x : A) (l1 l2 : list A),
       p x = true /\ l = l1 ++ x :: l2.
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     left. reflexivity.
@@ -1723,12 +1808,14 @@ Proof.
           right. exists h, [], (l1 ++ x :: l2). split; trivial.
           right. exists x, (h :: l1), l2. cbn. split; trivial.
 Qed.
+(* end hide *)
 
 Import Exchange.
 
 Lemma Perm_perm :
   forall (A : Type) (l1 l2 : list A),
     Perm l1 l2 -> perm l1 l2.
+(* begin hide *)
 Proof.
   induction 1; cbn.
     red. reflexivity.
@@ -1737,14 +1824,17 @@ Proof.
       rewrite 2!count_app. cbn.
       destruct (p x), (p y); reflexivity.
 Qed.
+(* end hide *)
 
 Lemma perm_Perm :
   forall (A : Type) (l1 l2 : list A),
     perm l1 l2 -> Perm l1 l2.
+(* begin hide *)
 Proof.
   intros. apply Permutation_Perm.
   apply Permutation_count_conv. exact H.
 Qed.
+(* end hide *)
 
 End Count.
 
@@ -1773,6 +1863,7 @@ Compute perms [1; 2; 3].
 Lemma Permutation_perms :
   forall (A : Type) (l1 l2 : list A),
     Permutation l1 l2 -> Permutation (perms l1) (perms l2).
+(* begin hide *)
 Proof.
   induction 1; cbn.
     do 2 constructor.
@@ -1781,10 +1872,12 @@ Proof.
     rewrite !bind_spec. apply Permutation_join. admit.
     rewrite IHPermutation1, IHPermutation2. reflexivity.
 Admitted.
+(* end hide *)
 
 Lemma elem_perms :
   forall (A : Type) (l : list A),
     elem l (perms l).
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     constructor.
@@ -1795,16 +1888,19 @@ Proof.
           reflexivity.
           assumption.
 Qed.
+(* end hide *)
 
 Lemma Permutation_perms' :
   forall (A : Type) (l1 l2 : list A),
     Permutation l1 l2 -> elem l1 (perms l2).
+(* begin hide *)
 Proof.
   intros. apply Permutation_perms in H.
   rewrite <- (Permutation_elem _ (perms l1) (perms l2)).
     apply elem_perms.
     assumption.
 Qed.
+(* end hide *)
 
 End perms_select.
 
@@ -1827,11 +1923,13 @@ end.
 Lemma len_ins :
   forall (A : Type) (x : A) (l : list A),
     length (ins x l) = S (length l).
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     rewrite length_map, IHt. reflexivity.
 Qed.
+(* end hide *)
 
 Fixpoint nsum (l : list nat) : nat :=
 match l with
@@ -1842,29 +1940,35 @@ end.
 Lemma len_join :
   forall (A : Type) (ll : list (list A)),
     length (join ll) = nsum (map length ll).
+(* begin hide *)
 Proof.
   induction ll as [| h t]; cbn.
     reflexivity.
     rewrite length_app, IHt. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma len_perms :
   forall (A : Type) (l : list A),
     length (perms l) = fact (length l).
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     rewrite bind_spec, len_join, map_map.
 Abort.
+(* end hide *)
 
 Lemma map_ins :
   forall (A B : Type) (f : A -> B) (x : A) (l : list A),
     map (map f) (ins x l) = ins (f x) (map f l).
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     f_equal. rewrite <- IHt, !map_map. cbn. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma ins_app :
   forall (A : Type) (x : A) (l1 l2 : list A),
@@ -1873,6 +1977,7 @@ Lemma ins_app :
       ins x (l1 ++ l2) =
       map (fun l => app l l2) (ins x l1) ++
       map (app l1) (ins x l2).
+(* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn.
     left. reflexivity.
@@ -1881,31 +1986,37 @@ Proof.
       do 2 right. decompose [or] IHt2; subst; clear IHt2.
         inversion H.
 Abort.
+(* end hide *)
 
 Lemma ins_snoc :
   forall (A : Type) (x y : A) (l : list A),
     ins x (snoc y l) =
     snoc (snoc x (snoc y l)) (map (snoc y) (ins x l)).
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     f_equal. rewrite IHt. rewrite map_snoc, !map_map.
       cbn. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma map_ext_eq :
   forall {A B : Type} {f g : A -> B} {l : list A},
     (forall x : A, f x = g x) ->
       map f l = map g l.
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intro.
     reflexivity.
     rewrite H, (IHt H). reflexivity.
 Qed.
+(* end hide *)
 
 Lemma ins_rev :
   forall (A : Type) (x : A) (l : list A),
     ins x (rev l) = rev (map rev (ins x l)).
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
@@ -1914,17 +2025,21 @@ Proof.
       rewrite map_rev, map_map. cbn. f_equal.
       apply map_ext_eq. intro. apply snoc_app_singl.
 Qed.
+(* end hide *)
 
 Lemma elem_ins :
   forall (A : Type) (x : A) (l : list A),
     elem (x :: l) (ins x l).
+(* begin hide *)
 Proof.
   destruct l; constructor.
 Qed.
+(* end hide *)
 
 Lemma elem_perms :
   forall (A : Type) (l : list A),
     elem l (perms l).
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     constructor.
@@ -1932,10 +2047,12 @@ Proof.
       apply elem_ins.
       apply elem_map. assumption.
 Qed.
+(* end hide *)
 
 Lemma Permutation_elem_ins :
   forall (A : Type) (x : A) (l1 l2 : list A),
     elem l2 (ins x l1) -> Permutation (x :: l1) l2.
+(* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn.
     inversion 1; subst.
@@ -1946,12 +2063,14 @@ Proof.
       rewrite elem_map_conv in H2. destruct H2 as (r & Heq & Hel).
         subst. rewrite perm_swap. constructor. apply IHt. assumption.
 Qed.
+(* end hide *)
 
 Lemma Permutation_bind :
   forall (A B : Type) (f g : A -> list B) (l1 l2 : list A),
     (forall x : A, Permutation (f x) (g x)) ->
       Permutation l1 l2 ->
         Permutation (bind f l1) (bind g l2).
+(* begin hide *)
 Proof.
   induction 2; cbn.
     constructor.
@@ -1971,35 +2090,42 @@ Proof.
         assumption.
       rewrite H0, IHPermutation2. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma bind_comm :
   forall (A B C : Type) (f g: A -> list A) (l : list A),
     bind f (bind g l) =
     bind g (bind f l).
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     rewrite !bind_spec, !map_app in *.
       rewrite !join_app. rewrite IHt. do 2 f_equal.
 Abort.
+(* end hide *)
 
 Lemma count_join :
   forall (A : Type) (p : A -> bool) (l : list (list A)),
     count p (join l) = nsum (map (count p) l).
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     rewrite count_app, IHt. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma nsum_app :
   forall l1 l2 : list nat,
     nsum (l1 ++ l2) = nsum l1 + nsum l2.
+(* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn; intros.
     reflexivity.
     rewrite IHt1, plus_assoc. reflexivity.
 Qed.
+(* end hide *)
 
 Fixpoint deepcount
   {A : Type} (p : A -> bool) (l : list (list A)) : nat :=
@@ -2012,18 +2138,21 @@ Lemma bind_assoc :
   forall
     (A B C : Type) (f : A -> list B) (g : B -> list C) (la : list A),
       bind g (bind f la) = bind (fun x => bind g (f x)) la.
+(* begin hide *)
 Proof.
   induction la as [| ha ta]; cbn.
     reflexivity.
     intros. rewrite !bind_spec, !map_app, join_app in *.
       rewrite IHta. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma Permutation_bind_ins :
   forall (A : Type) (x y : A) (l : list A),
     Permutation
       (bind (ins x) (ins y l))
       (bind (ins y) (ins x l)).
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     constructor.
@@ -2031,10 +2160,12 @@ Proof.
       apply Permutation_count_conv. intro.
         rewrite !count_map.
 Admitted.
+(* end hide *)
 
 Lemma Permutation_perms :
   forall (A : Type) (l1 l2 : list A),
     Permutation l1 l2 -> Permutation (perms l1) (perms l2).
+(* begin hide *)
 Proof.
   induction 1; cbn.
     do 2 constructor.
@@ -2045,19 +2176,23 @@ Proof.
       apply Permutation_bind_ins.
     rewrite IHPermutation1, IHPermutation2. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma Permutation_perms' :
   forall (A : Type) (l1 l2 : list A),
     Permutation l1 l2 -> elem l1 (perms l2).
+(* begin hide *)
 Proof.
   intros. rewrite <- (Permutation_elem _ (perms l1)).
     apply elem_perms.
     apply Permutation_perms. assumption.
 Qed.
+(* end hide *)
 
 Lemma perms_Permutation :
   forall {A : Type} {l1 l2 : list A},
     elem l1 (perms l2) -> Permutation l1 l2.
+(* begin hide *)
 Proof.
   intros until l2. revert l1.
   induction l2 as [| h2 t2]; cbn; intros.
@@ -2065,6 +2200,7 @@ Proof.
       constructor.
       inv H2.
 Abort.
+(* end hide *)
 
 End perms_ins.
 
@@ -2099,54 +2235,65 @@ end.
 Lemma len_join :
   forall {A : Type} (l : list (list A)),
     length (join l) = sum (map length l).
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     rewrite length_app, IHt. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma len_cycles_aux :
   forall {A : Type} (l : list A) (n : nat),
     length (cycles_aux n l) = n.
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn.
     reflexivity.
     rewrite IHn'. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma len_cycles :
   forall {A : Type} (l : list A),
     l <> [] -> length (cycles l) = length l.
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intro.
     contradiction.
     rewrite len_cycles_aux. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma sum_map_S :
   forall l : list nat,
     sum (map S l) = length l + sum l.
+(* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     f_equal. rewrite IHt, plus_comm, <- !plus_assoc.
       f_equal. apply plus_comm.
 Qed.
+(* end hide *)
 
 Lemma sum_replicate :
   forall n m : nat,
     sum (replicate n m) = n * m.
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn.
     reflexivity.
     intro. rewrite IHn'. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma length_perms :
   forall {A : Type} (l : list A),
     length (perms l) = fact (length l) /\
       map length (perms l) =
       replicate (length (perms l)) (length l).
+(* begin hide *)
 Proof.
   induction l as [| h t].
     cbn. split; reflexivity.
@@ -2174,17 +2321,21 @@ Proof.
             
             rewrite map_join, map_map. cbn.
 Abort.
+(* end hide *)
 
 Lemma perms_spec :
   forall {A : Type} (l1 l2 : list A),
     elem l1 (perms l2) -> Permutation l1 l2.
+(* begin hide *)
 Proof.
 
 Abort.
+(* end hide *)
 
 Lemma perms_spec :
   forall {A : Type} (l1 l2 : list A),
     Permutation l1 l2 -> elem l1 (perms l2).
+(* begin hide *)
 Proof.
   induction 1.
     cbn. constructor.
@@ -2195,6 +2346,7 @@ Proof.
       admit.
       admit.
 Abort.
+(* end hide *)
 
 End perms_cycles.
 
@@ -2209,6 +2361,7 @@ Import perms_select.
 Lemma perm_perms :
   forall {A : Type} {l1 l2 : list A},
     perm l1 l2 -> elem l1 (perms l2).
+(* begin hide *)
 Proof.
   intros until l2. revert l1.
   induction l2 as [| h2 t2]; cbn; unfold perm; intros.
@@ -2225,5 +2378,6 @@ Proof.
             Focus 3.
             inv H. reflexivity.
 Abort.
+(* end hide *)
 
 End Specs.

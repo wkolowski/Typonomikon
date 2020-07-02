@@ -416,7 +416,7 @@ Compute depthWalk t1'.
 : Iterator ?B nat (Tree ?B) *)
 
 (** Moim zdaniem odpowiedź jest całkiem czytelna. Spacerek wygląda tak,
-    że stąpamy po kolejnych liściach, wyrzucamy ich wartości na wejście,
+    że stąpamy po kolejnych liściach, wyrzucamy ich wartości na wyjście,
     zbierając przy tym wartości z wejścia, a na koniec zwracamy drzewo
     z grzywką podmienioną wartościami wejściowymi. Oczywiście po węzłach
     wewnętrznych też przechodzimy, co widać w implementacji, ale nie

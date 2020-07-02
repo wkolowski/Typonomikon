@@ -275,7 +275,7 @@ Lemma plus_n_has_postinverse_sub_n :
 Proof.
   intro. red.
   exists (fun m : nat => minus m n).
-  induction n as [| n']; cbn; intro m.
+  induction n as [| n'];  cbn; intro m.
     rewrite <- minus_n_O. reflexivity.
     apply IHn'.
 Defined.
@@ -730,9 +730,9 @@ Proof.
   unfold surjective; intros. exists (S b). cbn. trivial.
 Qed.
 
-(** TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki [cbn]
-    używać będziemy taktyki [cbn]. Różni się ona nieznacznie od [cbn], ale
-    jej główną zaletą jest nazwa — [cbn] to trzy litery, a [cbn] aż pięć,
+(** TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki [simpl]
+    używać będziemy taktyki [cbn]. Różni się ona nieznacznie od [simpl], ale
+    jej główną zaletą jest nazwa — [cbn] to trzy litery, a [simpl] aż pięć,
     więc zaoszczędzimy sobie pisania.
 
     Powyższe twierdzenie głosi, że "funkcja [pred] jest surjekcją", czyli,
