@@ -3,7 +3,11 @@
 Require Import D5.
 
 (* begin hide *)
-(** Dokończyć prace nad resztą rzeczy z folderu List/. *)
+(** TODO:
+    - Dokończyć prace nad resztą rzeczy z folderu List/.
+    - opisać encode-decode dla równości i nierówności na typach induktywnych.
+    - poszukać ogólnego pojęcia "różnicy" typów.
+*)
 (* end hide *)
 
 (** * Predykaty i relacje na listach - znowu *)

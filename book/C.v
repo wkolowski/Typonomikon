@@ -1,4 +1,4 @@
-(** * C: Podstawy teorii typów - TODO *)
+(** * C: Podstawy teorii typów [TODO] *)
 
 (** Uwaga: ten rozdział jest póki co posklejany z fragmentów innych
     rozdziałów. Czytając go, weź na to poprawkę. W szczególności zawiera on

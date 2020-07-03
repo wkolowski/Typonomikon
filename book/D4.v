@@ -1,5 +1,14 @@
 (** * D4: Arytmetyka Peano *)
 
+(* begin hide *)
+
+(*
+TODO: opisać silnię, współczynniki dwumianowe, sumy szeregów
+TODO: opisać charakteryzowanie wzorów rekurencyjnych
+*)
+
+(* end hide *)
+
 (** Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
     temat prostej rekursji i indukcji. Większość powinna być robialna po
     przeczytaniu rozdziału o konstruktorach rekurencyjnych, ale niczego nie

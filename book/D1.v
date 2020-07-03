@@ -4548,6 +4548,12 @@ end.
 
 (** ** Nieterminacja jako źródło zła na świecie *)
 
+(* begin hide *)
+(*
+TODO: znaleźć prostszy przykład dot. ścisłej pozytywności
+*)
+(* end hide *)
+
 (** Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
     induktywnego (czyli takiego, który wygląda na induktywny, ale ma
     konstruktory z negatywnymi wystąpieniami argumentu indukcyjnego): *)
@@ -4790,6 +4796,20 @@ Proof.
   apply (f_equal (fun h : nat -> bool => h n)) in Hn.
   unfold diagonal in Hn. destruct (f n n); inversion Hn.
 Qed.
+
+(* begin hide *)
+Theorem Cantor_constructive :
+  forall f : nat -> (nat -> bool),
+    exists g : nat -> bool,
+      forall n : nat, f n <> g.
+Proof.
+  intro f.
+  exists (fun n : nat => negb (f n n)).
+  intros n Heq.
+  apply (f_equal (fun f => f n)) in Heq.
+  destruct (f n n); inversion Heq.
+Qed.
+(* end hide *)
 
 (** Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
     dodatek bajecznie prosty i niesamowicie użyteczny - jeżeli będziesz
@@ -5372,9 +5392,9 @@ Inductive T0 : Type :=
     W trzech poprzednich podrozdziałach mierzyliśmy się z sytuacjami, gdy
     typ [T] występował bezpośrednio na lewo od strzałki, ale oczywiście
     może on być dowolnie zagnieżdżony. Dla każdego wystąpienia [T] w
-    argumentach możemy policzyć, na lewo od ilu strzałek (albo jako
-    jak mocno zagnieżdżona dziedzina kwantyfikacji) się ono znajduje.
-    Liczbę tę nazywać będziemy niedobrością. W zależności od niedobrości,
+    argumentach możemy policzyć, na lewo od ilu strzałek się ono znajduje
+    (albo jak mocno zagnieżdżona jest dziedzina kwantyfikacji). Liczbę tę
+    nazywać będziemy niedobrością. W zależności od niedobrości,
     wystąpienie nazywamy:
     - 0 - wystąpienie ściśle pozytywne
     - liczba nieparzysta - wystąpienie negatywne

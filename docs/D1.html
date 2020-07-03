@@ -5720,9 +5720,16 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
 
 <a name="lab162"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
- Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
     induktywnego (czyli takiego, który wygląda na induktywny, ale ma
     konstruktory z negatywnymi wystąpieniami argumentu indukcyjnego): 
 </div>
@@ -6074,6 +6081,8 @@ Pozostaje jeszcze kwestia tego, czym jest "zbiór potęgowy zbioru liczb
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">h</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">bool</span> =&gt; <span class="id" title="var">h</span> <span class="id" title="var">n</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">Hn</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">diagonal</span> <span class="id" title="tactic">in</span> <span class="id" title="var">Hn</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>); <span class="id" title="tactic">inversion</span> <span class="id" title="var">Hn</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
 
 <br/>
 </div>
@@ -6605,9 +6614,9 @@ Problem pojawia się dopiero, gdy typ <span class="inlinecode"><span class="id" 
     W trzech poprzednich podrozdziałach mierzyliśmy się z sytuacjami, gdy
     typ <span class="inlinecode"><span class="id" title="var">T</span></span> występował bezpośrednio na lewo od strzałki, ale oczywiście
     może on być dowolnie zagnieżdżony. Dla każdego wystąpienia <span class="inlinecode"><span class="id" title="var">T</span></span> w
-    argumentach możemy policzyć, na lewo od ilu strzałek (albo jako
-    jak mocno zagnieżdżona dziedzina kwantyfikacji) się ono znajduje.
-    Liczbę tę nazywać będziemy niedobrością. W zależności od niedobrości,
+    argumentach możemy policzyć, na lewo od ilu strzałek się ono znajduje
+    (albo jak mocno zagnieżdżona jest dziedzina kwantyfikacji). Liczbę tę
+    nazywać będziemy niedobrością. W zależności od niedobrości,
     wystąpienie nazywamy:
 <ul class="doclist">
 <li> 0 - wystąpienie ściśle pozytywne

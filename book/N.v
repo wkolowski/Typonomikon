@@ -1,5 +1,7 @@
 (** * N: kontynuacje [TODO] *)
 
+(** * Wstęp *)
+
 (** Chyba właśnie zrozumiałem, o co chodzi z kontynuacjami.
     Przykład wzięty z
     https://legacy-cs.sice.indiana.edu/~sabry/papers/yield.pdf
@@ -427,3 +429,166 @@ Compute depthWalk t1'.
     występują one w naszym rozwiązaniu i jak się przejawiają? Cóż,
     korzystając ze świętego prawa pisarza matematycznego, odpowiedź
     na to pytanie pozostawiam czytelnikowi jako ćwiczenie. *)
+
+(** * Reszta rzeczy *)
+
+(** ** Defunkcjonalizacja filtrowania *)
+
+(** Bardzo insajtowy filmik (i transkrypcjo-artykuł) o defunkcjonalizacji
+    (i refunkcjonalizacji też):
+
+    http://www.pathsensitive.com/2019/07/the-best-refactoring-youve-never-heard.html
+
+    Ok, o co chodzi? *)
+
+Require Import D5.
+
+Print filter.
+(* ===> filter =
+        fun (A : Type) (p : A -> bool) =>
+        fix filter (l : list A) {struct l} : list A :=
+          match l with
+          | [] => []
+          | h :: t => if p h then h :: filter t else filter t
+          end
+             : forall A : Type, (A -> bool) -> list A -> list A *)
+
+(** Przyjrzyjmy się funkcji [filter] (w nieco zmodyfikowanej wersji -
+    potrafisz powiedzieć, czym różni się ona od tej z rozdziału o
+    listach?). Jest to prosta funkcja, która wyrzuca z listy elementy,
+    które nie spełniają predykatu [p].
+
+    I cóż, że ze Szwecji? Ano, jest pewna kolosalna różnica między
+    funkcją [filter], którą znamy z Coqa, oraz filtrami, które
+    znamy z różnych programów czy stron internetowych: argumentem
+    [filter] jest predykat boolowski, ale filtrowania w rzeczywistym
+    świecie mają zazwyczaj charakter zaznaczenia jakiegoś checkboxa
+    w stylu "tylko ze zdjęciem" czy wybrania zakresu cen/ocen. Żadne
+    rzeczywistoświatowe filtrowanie raczej nie pozwali nam podać
+    predykatu boolowskiego. *)
+
+Inductive MyFilter : Type :=
+    | IsEven : MyFilter
+    | LessThan : nat -> MyFilter
+    | LifeUniverseAndAllThat : MyFilter
+    | And : MyFilter -> MyFilter -> MyFilter
+    | Or : MyFilter -> MyFilter -> MyFilter
+    | Not : MyFilter -> MyFilter.
+
+Fixpoint apply (p : MyFilter) (n : nat) : bool :=
+match p with
+    | IsEven => even n
+    | LessThan m => n <? m
+    | LifeUniverseAndAllThat => n =? 42
+    | And p1 p2 => apply p1 n && apply p2 n
+    | Or p1 p2 => apply p1 n || apply p2 n
+    | Not p' => negb (apply p' n)
+end.
+
+(** ** Defunkcjonalizacja silni *)
+
+(** Wzięte z https://ncatlab.org/nlab/show/defunctionalization *)
+
+Fixpoint fac (n : nat) : nat :=
+match n with
+    | 0 => 1
+    | S n' => n * fac n'
+end.
+
+Compute fac 5.
+
+Fixpoint facCPS (n : nat) (k : nat -> nat) : nat :=
+match n with
+    | 0 => k 1
+    | S n' => facCPS n' (fun r => k (n * r))
+end.
+
+Compute facCPS 5 (fun n => n).
+
+Inductive DefunNatNat : Type :=
+    | Id : DefunNatNat
+    | Mul : nat -> DefunNatNat -> DefunNatNat.
+
+Fixpoint eval (k : DefunNatNat) (n : nat) : nat :=
+match k with
+    | Id => n
+    | Mul r k' => eval k' (r * n)
+end.
+
+Compute eval (Mul 5 Id) 1.
+
+Fixpoint facCPSDefun (n : nat) (k : DefunNatNat) : nat :=
+match n with
+    | 0 => eval k 1
+    | S n' => facCPSDefun n' (Mul n k)
+end.
+
+Compute facCPSDefun 5 Id.
+
+Lemma facCPS_spec :
+  forall (n : nat) (k : nat -> nat),
+    facCPS n k = k (fac n).
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    intros. rewrite IHn'. reflexivity.
+Qed.
+
+Lemma facCPSDefun_spec :
+  forall (n : nat) (k : DefunNatNat),
+    facCPSDefun n k = eval k (fac n).
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    intros. rewrite IHn'. cbn. reflexivity.
+Qed.
+
+(** ** CPS *)
+
+Fixpoint plus (n m : nat) : nat :=
+match n with
+    | 0 => m
+    | S n' => S (plus n' m)
+end.
+
+Function plusCPS {A : Type} (n m : nat) (k : nat -> A) : A :=
+match n with
+    | 0 => k m
+    | S n' => plusCPS n' m (fun res => k (S res))
+end.
+
+Theorem plusCPS_spec :
+  forall (A : Type) (n m : nat) (k : nat -> A),
+    plusCPS n m k = k (plus n m).
+Proof.
+  induction n as [| n']; cbn; intros; rewrite ?IHn'; reflexivity.
+Qed.
+
+Function fib (n : nat) : nat :=
+match n with
+    | 0 => 0
+    | 1 => 1
+    | S (S n'' as n') => fib n'' + fib n'
+end.
+
+Fixpoint fibCPS (n : nat) (k : nat -> nat) : nat :=
+match n with
+    | 0 => k 0
+    | 1 => k 1
+    | S (S n'' as n') =>
+        fibCPS n'' (fun arg1 => fibCPS n' (fun arg2 => k (arg1 + arg2)))
+end.
+
+Lemma fibCPS_eq :
+  forall (n : nat) (k : nat -> nat),
+    fibCPS (S (S n)) k =
+        fibCPS n (fun arg1 => fibCPS (S n) (fun arg2 => k (arg1 + arg2))).
+Proof. reflexivity. Qed.
+
+Theorem fibCPS_spec :
+  forall (n : nat) (k : nat -> nat),
+    fibCPS n k = k (fib n).
+Proof.
+  intro. functional induction fib n; intros;
+    try rewrite fibCPS_eq, IHn0, IHn1; reflexivity.
+Qed.
