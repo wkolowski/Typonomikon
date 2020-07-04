@@ -864,11 +864,190 @@ Qed.
 
 End uniqueness_bisim_eq.
 
-Module uniqueness_bisim_eq_general.
+Module inftree.
 
-Print M.
-Print shape.
-Print position. Print uniqueness_bisim_eq.corec.
+Set Implicit Arguments.
+
+CoInductive InfTree (A : Type) : Type :=
+{
+    root : A;
+    left : InfTree A;
+    right : InfTree A;
+}.
+
+Arguments root  {A}.
+Arguments left  {A} _.
+Arguments right {A} _.
+
+CoInductive sim {A : Type} (t1 t2 : InfTree A) : Prop :=
+{
+    roots : root t1 = root t2;
+    lefts : sim (left t1) (left t2);
+    rights : sim (right t1) (right t2);
+}.
+
+CoFixpoint corec
+  {A X : Type} (rt : X -> A) (l : X -> X) (r : X -> X)
+  (x : X) : InfTree A :=
+{|
+    root := rt x;
+    left := corec rt l r (l x);
+    right := corec rt l r (r x);
+|}.
+
+Inductive Index (A : Type) : Type :=
+    | here : Index A
+    | goleft : Index A -> Index A
+    | goright : Index A -> Index A.
+
+Arguments here {A}.
+Arguments goleft {A} _.
+Arguments goright {A} _.
+
+Fixpoint subtree
+  {A : Type} (t : InfTree A) (i : Index A) : InfTree A :=
+match i with
+    | here => t
+    | goleft i' => subtree (left t) i'
+    | goright i' => subtree (right t) i'
+end.
+
+(*
+Fixpoint index
+  {A : Type} (t : InfTree A) (i : Index A) : A :=
+match i with
+    | here => root t
+    | goleft i' => index (left t) i'
+    | goright i' => index (right t) i'
+end.
+
+Lemma root_subtree :
+  forall {A : Type} (i : Index A) (t : InfTree A),
+    root (subtree t i) = index t i.
+Proof.
+  induction i; cbn; intros.
+    reflexivity.
+    apply IHi.
+    apply IHi.
+Qed.
+*)
+
+Fixpoint goleft'
+  {A : Type} (i : Index A) : Index A :=
+match i with
+    | here => goleft here
+    | goleft i' => goleft (goleft' i')
+    | goright i' => goright (goleft' i')
+end.
+
+Fixpoint goright'
+  {A : Type} (i : Index A) : Index A :=
+match i with
+    | here => goright here
+    | goleft i' => goleft (goright' i')
+    | goright i' => goright (goright' i')
+end.
+
+Lemma left_subtree :
+  forall {A : Type} (i : Index A) (t : InfTree A),
+    left (subtree t i) = subtree t (goleft' i).
+Proof.
+  induction i; cbn; intros.
+    reflexivity.
+    rewrite IHi. reflexivity.
+    rewrite IHi. reflexivity.
+Qed.
+
+Lemma right_subtree :
+  forall {A : Type} (i : Index A) (t : InfTree A),
+    right (subtree t i) = subtree t (goright' i).
+Proof.
+  induction i; cbn; intros.
+    reflexivity.
+    rewrite IHi. reflexivity.
+    rewrite IHi. reflexivity.
+Qed.
+
+Hint Resolve left_subtree right_subtree.
+
+Lemma uniqueness_sim_is_eq :
+  forall {A : Type},
+    (forall
+      (X : Type) (f g : X -> InfTree A)
+      (rt : X -> A) (l : X -> X) (r : X -> X),
+        ((forall x : X, root  (f x) = rt x    /\
+                        left  (f x) = f (l x) /\
+                        right (f x) = f (r x))
+         ->
+         (forall x : X, root  (g x) = rt x    /\
+                        left  (g x) = g (l x) /\
+                        right (g x) = g (r x))
+        ->
+          forall x : X, f x = g x))
+    ->
+      forall t1 t2 : InfTree A, sim t1 t2 -> t1 = t2.
+Proof.
+  intros A H t1 t2 Hsim.
+  eapply (H (Index A) (subtree t1) (subtree t2)
+            (fun i => root (subtree t2 i)) goleft' goright'
+            _ _
+            here).
+  Unshelve.
+  all: repeat split; auto.
+  clear H. revert t1 t2 Hsim.
+  induction x; cbn; intros t1 t2 [].
+    assumption.
+    erewrite IHx.
+      reflexivity.
+      assumption.
+    erewrite IHx.
+      reflexivity.
+      assumption.
+Qed.
+
+Record tsim (A : Type) : Type :=
+{
+    lt : InfTree A;
+    rt : InfTree A;
+    tsim' : sim lt rt;
+}.
+
+Arguments lt    {A} _.
+Arguments rt    {A} _.
+Arguments tsim' {A} _.
+
+Lemma uniqueness_sim_is_eq' :
+  forall {A : Type},
+    (forall
+      (X : Type) (f g : X -> InfTree A)
+      (rt : X -> A) (l : X -> X) (r : X -> X),
+        ((forall x : X, root  (f x) = rt x    /\
+                        left  (f x) = f (l x) /\
+                        right (f x) = f (r x))
+         ->
+         (forall x : X, root  (g x) = rt x    /\
+                        left  (g x) = g (l x) /\
+                        right (g x) = g (r x))
+        ->
+          forall x : X, f x = g x))
+    ->
+      forall t1 t2 : InfTree A, sim t1 t2 -> t1 = t2.
+Proof.
+  intros A H t1 t2 Hsim.
+  specialize (
+  H (tsim A) lt rt (fun x => root (lt x))
+    (fun x => {| lt := left (lt x); rt := left (rt x); tsim' := lefts (tsim' x) |})
+    (fun x => {| lt := right (lt x); rt := right (rt x); tsim' := rights (tsim' x) |})).
+  cbn in *.
+  eapply (H _ _ {| lt := t1; rt := t2; tsim' := Hsim |}).
+  Unshelve.
+    all: repeat split.
+    destruct x. destruct tsim'0. cbn. symmetry. assumption.
+Qed.
+
+End inftree.
+
+Module uniqueness_bisim_eq_general.
 
 CoFixpoint corec
   {S : Type} {P : S -> Type} {X : Type}
@@ -879,102 +1058,23 @@ CoFixpoint corec
     position := fun psx : P (s x) => corec s p (p x psx)
 |}.
 
-Inductive Index (S : Type) (P : S -> Type) : Type :=
-    | here : Index S P
-    | there :
-        (forall s : S, P s) -> Index S P -> Index S P.
+Record siM' (S : Type) (P : S -> Type) : Type :=
+{
+    lm : M S P;
+    rm : M S P;
+    siM_lm_rm : siM lm rm;
+}.
 
-Arguments here  {S P}.
-Arguments there {S P} _ _.
+Arguments lm        {S P} _.
+Arguments rm        {S P} _.
+Arguments siM_lm_rm {S P} _.
 
-Inductive Index' {S : Type} {P : S -> Type} (m : M S P) : Type :=
-    | here' : Index' m
-    | there' :
-        forall (p : P (shape m)),
-          Index' (position m p) -> Index' m.
-
-Arguments here'  {S P m}.
-Arguments there' {S P m} _ _.
-
-Fixpoint subtree
-  {S : Type} {P : S -> Type} (m : M S P) (i : Index S P) : M S P :=
-match i with
-    | here => m
-    | there f i' => subtree (position m (f (shape m))) i'
-end.
-
-Fixpoint index
-  {S : Type} {P : S -> Type} (m : M S P) (i : Index S P) : S :=
-match i with
-    | here => shape m
-    | there f i' => index (position m (f (shape m))) i'
-end.
-
-Fixpoint subtree'
-  {S : Type} {P : S -> Type} (m : M S P) (i : Index' m) : M S P :=
-match i with
-    | here' => m
-    | there' p i' => subtree' (position m p) i'
-end.
-
-Fixpoint index'
-  {S : Type} {P : S -> Type} (m : M S P) (i : Index' m) : S :=
-match i with
-    | here' => shape m
-    | there' p i' => index' (position m p) i'
-end.
-
-Lemma index_subtree :
-  forall {S : Type} {P : S -> Type} (i : Index S P) (m : M S P),
-    shape (subtree m i) = index m i.
+Lemma transport_eq_sym :
+  forall {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P y),
+    @transport _ P _ _ p (transport (eq_sym p) u) = u.
 Proof.
-  induction i; cbn; intros.
-    reflexivity.
-    rewrite IHi. reflexivity.
+  destruct p. cbn. reflexivity.
 Qed.
-
-Lemma index'_subtree' :
-  forall {S : Type} {P : S -> Type} (m : M S P) (i : Index' m),
-    shape (subtree' m i) = index' m i.
-Proof.
-  induction i; cbn; intros.
-    reflexivity.
-    rewrite IHi. reflexivity.
-Qed.
-
-(*
-Lemma tl_drop :
-  forall {A : Type} (n : nat) (s : Stream A),
-    tl (drop s n) = drop s (S n).
-Proof.
-  induction n as [| n']; cbn; intros.
-    reflexivity.
-    rewrite IHn'. cbn. reflexivity.
-Qed.
-*)
-
-Lemma there'' :
-  forall
-    {S : Type} {P : S -> Type}
-    (m : M S P) (i : Index S P) (p : P (index m i)),
-      Index S P.
-Proof.
-  intros until i. revert m.
-  induction i as [| ip i']; cbn; intros.
-    exact here.
-    apply there.
-      exact (fun s : S => ip s).
-      apply (IHi' (position m (ip (shape m)))). assumption.
-Defined.
-
-(*
-Lemma position_subtree :
-  forall
-    {S : Type} {P : S -> Type}
-    (m : M S P) (i : Index S P),
-      position (subtree m i) =
-      subtree m (there'' m i).
-*)
 
 Lemma uniqueness_siM_is_eq :
   forall {S : Type} {P : S -> Type},
@@ -991,21 +1091,30 @@ Lemma uniqueness_siM_is_eq :
     forall m1 m2 : M S P, siM m1 m2 -> m1 = m2.
 Proof.
   intros S P H m1 m2 Hsim.
-  specialize (H (Index S P) (subtree m1) (subtree m2) (index m1)).
-  (*specialize (H (fun x psx => there (fun s => psx) x)).*)
-  Check there'' m1.
-  specialize (H (there'' m1)).
-  eapply (H _ _ here).
+  eapply
+  (
+    H (siM' S P) lm rm (fun x => shape (lm x))
+      (fun x p =>
+        {| lm := position (lm x) p;
+           rm := position (rm x) (transport (shapes _ _ (siM_lm_rm x)) p);
+           siM_lm_rm := positions _ _ (siM_lm_rm x) p;
+        |})
+      _ _
+      {| lm := m1; rm := m2; siM_lm_rm := Hsim |}
+  ).
   Unshelve.
-    intros. exists (index_subtree x m1). cbn.
-      induction x. cbn.
-Abort.
+  all: cbn in *.
+    intro. exists eq_refl. cbn. reflexivity.
+    destruct x. cbn in *. destruct siM_lm_rm0. esplit. Unshelve.
+      Focus 2. symmetry. assumption. cbn.
+      intro. rewrite transport_eq_sym. reflexivity.
+Qed.
 
 End uniqueness_bisim_eq_general.
 
 (** * Indeksowane M-typy? *)
 
-(** Nie dla psa kiełbasa. *)
+(** Nie dla psa kiełbajsa. *)
 
 (** * Kodowanie Churcha (TODO) *)
 
