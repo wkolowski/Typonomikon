@@ -456,6 +456,35 @@ End list_neq.
 
 (** * Ścieżki w typach koinduktywnych *)
 
+(** ** Nierówność liczb konaturalnych *)
+
+Module conat_neq.
+
+Require Import F2.
+
+Inductive conat_neq : conat -> conat -> Prop :=
+    | cnzs :
+        forall c : conat, conat_neq zero (succ c)
+    | cnsz :
+        forall c : conat, conat_neq (succ c) zero
+    | cnss :
+        forall n m : conat, conat_neq n m -> conat_neq (succ n) (succ m).
+
+Lemma conat_neq_spec :
+  forall n m : conat,
+    conat_neq n m -> n <> m.
+(* begin hide *)
+Proof.
+  induction 1.
+    inversion 1.
+    inversion 1.
+    intro Heq. apply (f_equal pred) in Heq.
+      cbn in Heq. inversion Heq; subst. contradiction.
+Qed.
+(* end hide *)
+
+End conat_neq.
+
 (** ** Nierówność strumieni *)
 
 Module Stream_neq.

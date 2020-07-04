@@ -796,6 +796,213 @@ Definition coBTreeM (A : Type) : Type :=
                   | Some _ => bool
                 end).
 
+(** ** Ciekawostka: koindukcja i bipodobieństwo *)
+
+(** TODO: regułę koindukcji można rozłożyć na regułę korekursji oraz
+    regułę unikalności, a reguła unikalności sama w sobie w zasadzie
+    oznacza, że bipodobieństwo to równość. *)
+
+Module uniqueness_bisim_eq.
+
+Require Import F4.
+
+CoFixpoint corec
+  {A X : Type} (h : X -> A) (t : X -> X) (x : X) : Stream A :=
+{|
+    hd := h x;
+    tl := corec h t (t x);
+|}.
+
+Fixpoint nth {A : Type} (s : Stream A) (n : nat) : A :=
+match n with
+    | 0 => hd s
+    | S n' => nth (tl s) n'
+end.
+
+Fixpoint drop {A : Type} (s : Stream A) (n : nat) : Stream A :=
+match n with
+    | 0 => s
+    | S n' => drop (tl s) n'
+end.
+
+Lemma hd_drop :
+  forall {A : Type} (n : nat) (s : Stream A),
+    hd (drop s n) = nth s n.
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. reflexivity.
+Qed.
+
+Lemma tl_drop :
+  forall {A : Type} (n : nat) (s : Stream A),
+    tl (drop s n) = drop s (S n).
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. cbn. reflexivity.
+Qed.
+
+Lemma uniqueness_sim_is_eq :
+  forall {A : Type},
+    (forall (X : Type) (f g : X -> Stream A) (h : X -> A) (t : X -> X),
+      ((forall x : X, hd (f x) = h x /\ tl (f x) = f (t x)) ->
+       (forall x : X, hd (g x) = h x /\ tl (g x) = g (t x)) ->
+         forall x : X, f x = g x)) ->
+    forall s1 s2 : Stream A, bisim s1 s2 -> s1 = s2.
+Proof.
+  intros A H s1 s2 Hsim.
+  eapply (H nat (drop s1) (drop s2) (nth s1) S _ _ 0).
+  Unshelve.
+    split; [apply hd_drop | apply tl_drop].
+    split.
+      2: apply tl_drop.
+      revert s1 s2 Hsim. induction x as [| n']; cbn; intros.
+        destruct Hsim. rewrite hds. reflexivity.
+        destruct Hsim. rewrite (IHn' _ _ Hsim). reflexivity.
+Qed.
+
+End uniqueness_bisim_eq.
+
+Module uniqueness_bisim_eq_general.
+
+Print M.
+Print shape.
+Print position. Print uniqueness_bisim_eq.corec.
+
+CoFixpoint corec
+  {S : Type} {P : S -> Type} {X : Type}
+  (s : X -> S) (p : forall x : X, P (s x) -> X)
+  (x : X) : M S P :=
+{|
+    shape := s x;
+    position := fun psx : P (s x) => corec s p (p x psx)
+|}.
+
+Inductive Index (S : Type) (P : S -> Type) : Type :=
+    | here : Index S P
+    | there :
+        (forall s : S, P s) -> Index S P -> Index S P.
+
+Arguments here  {S P}.
+Arguments there {S P} _ _.
+
+Inductive Index' {S : Type} {P : S -> Type} (m : M S P) : Type :=
+    | here' : Index' m
+    | there' :
+        forall (p : P (shape m)),
+          Index' (position m p) -> Index' m.
+
+Arguments here'  {S P m}.
+Arguments there' {S P m} _ _.
+
+Fixpoint subtree
+  {S : Type} {P : S -> Type} (m : M S P) (i : Index S P) : M S P :=
+match i with
+    | here => m
+    | there f i' => subtree (position m (f (shape m))) i'
+end.
+
+Fixpoint index
+  {S : Type} {P : S -> Type} (m : M S P) (i : Index S P) : S :=
+match i with
+    | here => shape m
+    | there f i' => index (position m (f (shape m))) i'
+end.
+
+Fixpoint subtree'
+  {S : Type} {P : S -> Type} (m : M S P) (i : Index' m) : M S P :=
+match i with
+    | here' => m
+    | there' p i' => subtree' (position m p) i'
+end.
+
+Fixpoint index'
+  {S : Type} {P : S -> Type} (m : M S P) (i : Index' m) : S :=
+match i with
+    | here' => shape m
+    | there' p i' => index' (position m p) i'
+end.
+
+Lemma index_subtree :
+  forall {S : Type} {P : S -> Type} (i : Index S P) (m : M S P),
+    shape (subtree m i) = index m i.
+Proof.
+  induction i; cbn; intros.
+    reflexivity.
+    rewrite IHi. reflexivity.
+Qed.
+
+Lemma index'_subtree' :
+  forall {S : Type} {P : S -> Type} (m : M S P) (i : Index' m),
+    shape (subtree' m i) = index' m i.
+Proof.
+  induction i; cbn; intros.
+    reflexivity.
+    rewrite IHi. reflexivity.
+Qed.
+
+(*
+Lemma tl_drop :
+  forall {A : Type} (n : nat) (s : Stream A),
+    tl (drop s n) = drop s (S n).
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. cbn. reflexivity.
+Qed.
+*)
+
+Lemma there'' :
+  forall
+    {S : Type} {P : S -> Type}
+    (m : M S P) (i : Index S P) (p : P (index m i)),
+      Index S P.
+Proof.
+  intros until i. revert m.
+  induction i as [| ip i']; cbn; intros.
+    exact here.
+    apply there.
+      exact (fun s : S => ip s).
+      apply (IHi' (position m (ip (shape m)))). assumption.
+Defined.
+
+(*
+Lemma position_subtree :
+  forall
+    {S : Type} {P : S -> Type}
+    (m : M S P) (i : Index S P),
+      position (subtree m i) =
+      subtree m (there'' m i).
+*)
+
+Lemma uniqueness_siM_is_eq :
+  forall {S : Type} {P : S -> Type},
+    (forall
+      (X : Type) (f g : X -> M S P)
+      (s : X -> S) (p : forall x : X, P (s x) -> X),
+      ((forall x : X, {path : shape (f x) = s x |
+        forall psx : P (shape (f x)),
+          position (f x) psx = f (p x (transport path psx))}) ->
+       (forall x : X, {path : shape (g x) = s x |
+        forall psx : P (shape (g x)),
+          position (g x) psx = g (p x (transport path psx))}) ->
+          forall x : X, f x = g x)) ->
+    forall m1 m2 : M S P, siM m1 m2 -> m1 = m2.
+Proof.
+  intros S P H m1 m2 Hsim.
+  specialize (H (Index S P) (subtree m1) (subtree m2) (index m1)).
+  (*specialize (H (fun x psx => there (fun s => psx) x)).*)
+  Check there'' m1.
+  specialize (H (there'' m1)).
+  eapply (H _ _ here).
+  Unshelve.
+    intros. exists (index_subtree x m1). cbn.
+      induction x. cbn.
+Abort.
+
+End uniqueness_bisim_eq_general.
+
 (** * Indeksowane M-typy? *)
 
 (** Nie dla psa kiełbasa. *)

@@ -46,7 +46,7 @@ Proof.
     cbn. reflexivity.
 Qed.
 
-Lemma search_conat_spec :
+Lemma search_conat_false :
   forall p : conat -> bool,
     p (search_conat p) = false -> sim (search_conat p) omega.
 Proof.
@@ -61,7 +61,7 @@ Proof.
       apply CH. rewrite sc_eq, Hp in H. assumption.
 Qed.
 
-Lemma sc_true :
+Lemma search_conat_true :
   forall (p : conat -> bool) (n : conat),
     p n = true -> le (search_conat p) n.
 Proof.
@@ -76,20 +76,62 @@ Proof.
         apply CH. rewrite <- H. f_equal.
 Qed.
 
+Lemma sim_omega_le :
+  forall n m : conat,
+    sim n omega -> le n m -> sim m omega.
+Proof.
+  cofix CH.
+  intros n m Hsim Hle.
+  destruct Hle as [[]].
+    destruct Hsim as [[]].
+      destruct H0. inversion H1.
+      destruct H0 as (n' & m' & H1 & H2). congruence.
+    destruct H as (n' & m' & H1 & H2 & H3).
+      constructor. right. exists m', omega. split.
+        assumption.
+        split.
+          cbn. reflexivity.
+          apply CH with n'.
+            destruct Hsim as [[]].
+              destruct H. congruence.
+              destruct H as (n'' & m'' & H1' & H2' & H3').
+                cbn in H2'. inv H2'. rewrite H1' in H1. inv H1.
+                  assumption.
+Qed.
+
+(* begin hide *)
+(* TODO *) Fixpoint cut (n : nat) (c : conat) : conat :=
+match n with
+    | 0 => zero
+    | S n' =>
+        match pred c with
+            | None => zero
+            | Some c' => succ (cut n' c')
+        end
+end.
+(* TODO: czy da się pokazać [Searchable conat] bez aksjomatów? *)
+(* end hide *)
+
 #[refine]
 Instance Searchable_conat : Searchable conat :=
 {
     search := search_conat;
 }.
 Proof.
-  intros p H n.
-  destruct (p n) eqn: Hpn.
-    2: reflexivity.
-    pose (Hpn' := Hpn). pose (H' := H).
-      apply sc_true in Hpn'. apply search_conat_spec in H'.
-      apply sim_eq in H'. rewrite H' in *.
-      apply le_omega_l in Hpn'. apply sim_eq in Hpn'. subst.
-      congruence.
+  intros p H c.
+  destruct (p c) eqn: Hpn; try reflexivity.
+  assert (sim (search_conat p) omega).
+    apply search_conat_false. assumption.
+  assert (le (search_conat p) c).
+    apply search_conat_true. assumption.
+  assert (sim c omega).
+    apply sim_omega_le with (search_conat p); assumption.
+  assert (search_conat p <> c).
+    intro. subst. congruence.
+
+  rewrite <- H, <- Hpn.
+  f_equal. apply sim_eq.
+  rewrite H0. assumption.
 Defined.
 
 (** **** Ćwiczenie (trudne i niezbadane) *)

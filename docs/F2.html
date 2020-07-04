@@ -167,6 +167,23 @@ Zdefiniuj relację <span class="inlinecode">&lt;=</span> na liczbach konaturalny
 <br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_0_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">zero</span> <span class="id" title="var">n</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_0_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">zero</span> -&gt; <span class="id" title="var">n</span> = <span class="id" title="var">zero</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_succ</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">le</span> (<span class="id" title="var">succ</span> <span class="id" title="var">n</span>) (<span class="id" title="var">succ</span> <span class="id" title="var">m</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_succ_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">le</span> (<span class="id" title="var">succ</span> <span class="id" title="var">n</span>) (<span class="id" title="var">succ</span> <span class="id" title="var">m</span>) -&gt; <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_refl</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>.<br/>
 
@@ -175,17 +192,14 @@ Zdefiniuj relację <span class="inlinecode">&lt;=</span> na liczbach konaturalny
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> -&gt; <span class="id" title="var">le</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> -&gt; <span class="id" title="var">le</span> <span class="id" title="var">a</span> <span class="id" title="var">c</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_univalent</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">le</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> .<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_sim</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> <span class="id" title="var">m1</span> <span class="id" title="var">m2</span> : <span class="id" title="var">conat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">m1</span> <span class="id" title="var">m2</span> -&gt; <span class="id" title="var">le</span> <span class="id" title="var">n1</span> <span class="id" title="var">m1</span> -&gt; <span class="id" title="var">le</span> <span class="id" title="var">n2</span> <span class="id" title="var">m2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_0_l</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">zero</span> <span class="id" title="var">n</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_0_r</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">zero</span> -&gt; <span class="id" title="var">n</span> = <span class="id" title="var">zero</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_omega_r</span> :<br/>
@@ -198,10 +212,6 @@ Zdefiniuj relację <span class="inlinecode">&lt;=</span> na liczbach konaturalny
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_succ_r</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">le</span> <span class="id" title="var">n</span> (<span class="id" title="var">succ</span> <span class="id" title="var">m</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_succ</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">le</span> (<span class="id" title="var">succ</span> <span class="id" title="var">n</span>) (<span class="id" title="var">succ</span> <span class="id" title="var">m</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_add_l</span> :<br/>

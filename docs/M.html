@@ -19,7 +19,7 @@
     Potem topologia. 
 <div class="paragraph"> </div>
 
-<a name="lab612"></a><h1 class="section">Legalna topologia</h1>
+<a name="lab615"></a><h1 class="section">Legalna topologia</h1>
 
 <div class="paragraph"> </div>
 
@@ -82,7 +82,7 @@ Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">search_conat_spec</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">search_conat_false</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">p</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">p</span> (<span class="id" title="var">search_conat</span> <span class="id" title="var">p</span>) = <span class="id" title="var">false</span> -&gt; <span class="id" title="var">sim</span> (<span class="id" title="var">search_conat</span> <span class="id" title="var">p</span>) <span class="id" title="tactic">omega</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -98,7 +98,7 @@ Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sc_true</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">search_conat_true</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">p</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">conat</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">p</span> <span class="id" title="var">n</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">le</span> (<span class="id" title="var">search_conat</span> <span class="id" title="var">p</span>) <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -114,27 +114,60 @@ Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_omega_le</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="tactic">omega</span> -&gt; <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">m</span> <span class="id" title="tactic">omega</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">Hsim</span> <span class="id" title="var">Hle</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">Hle</span> <span class="id" title="keyword">as</span> [[]].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">Hsim</span> <span class="id" title="keyword">as</span> [[]].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H0</span> <span class="id" title="keyword">as</span> (<span class="id" title="var">n'</span> &amp; <span class="id" title="var">m'</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span>). <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> (<span class="id" title="var">n'</span> &amp; <span class="id" title="var">m'</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span> &amp; <span class="id" title="var">H3</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">m'</span>, <span class="id" title="tactic">omega</span>. <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">CH</span> <span class="id" title="keyword">with</span> <span class="id" title="var">n'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">Hsim</span> <span class="id" title="keyword">as</span> [[]].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> (<span class="id" title="var">n''</span> &amp; <span class="id" title="var">m''</span> &amp; <span class="id" title="var">H1'</span> &amp; <span class="id" title="var">H2'</span> &amp; <span class="id" title="var">H3'</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H2'</span>. <span class="id" title="var">inv</span> <span class="id" title="var">H2'</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H1'</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H1</span>. <span class="id" title="var">inv</span> <span class="id" title="var">H1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+
+<br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Searchable_conat</span> : <span class="id" title="var">Searchable</span> <span class="id" title="var">conat</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">search</span> := <span class="id" title="var">search_conat</span>;<br/>
 }.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">H</span> <span class="id" title="var">n</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">n</span>) <span class="id" title="var">eqn</span>: <span class="id" title="var">Hpn</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">Hpn'</span> := <span class="id" title="var">Hpn</span>). <span class="id" title="tactic">pose</span> (<span class="id" title="var">H'</span> := <span class="id" title="var">H</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">sc_true</span> <span class="id" title="tactic">in</span> <span class="id" title="var">Hpn'</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">search_conat_spec</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H'</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">sim_eq</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H'</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H'</span> <span class="id" title="tactic">in</span> *.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_omega_l</span> <span class="id" title="tactic">in</span> <span class="id" title="var">Hpn'</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">sim_eq</span> <span class="id" title="tactic">in</span> <span class="id" title="var">Hpn'</span>. <span class="id" title="tactic">subst</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">H</span> <span class="id" title="var">c</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">c</span>) <span class="id" title="var">eqn</span>: <span class="id" title="var">Hpn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">sim</span> (<span class="id" title="var">search_conat</span> <span class="id" title="var">p</span>) <span class="id" title="tactic">omega</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">search_conat_false</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">le</span> (<span class="id" title="var">search_conat</span> <span class="id" title="var">p</span>) <span class="id" title="var">c</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">search_conat_true</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">sim</span> <span class="id" title="var">c</span> <span class="id" title="tactic">omega</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">sim_omega_le</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">search_conat</span> <span class="id" title="var">p</span>); <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">search_conat</span> <span class="id" title="var">p</span> &lt;&gt; <span class="id" title="var">c</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">congruence</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H</span>, &lt;- <span class="id" title="var">Hpn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">f_equal</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">sim_eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab613"></a><h4 class="section">Ćwiczenie (trudne i niezbadane)</h4>
+<a name="lab616"></a><h4 class="section">Ćwiczenie (trudne i niezbadane)</h4>
 
 <div class="paragraph"> </div>
 
@@ -262,7 +295,7 @@ To samo, tylko bardziej przyjazne sygnatury typów.
 </div>
 
 <div class="doc">
-<a name="lab614"></a><h1 class="section">Nielegalna topologia (TODO)</h1>
+<a name="lab617"></a><h1 class="section">Nielegalna topologia (TODO)</h1>
 
 <div class="paragraph"> </div>
 

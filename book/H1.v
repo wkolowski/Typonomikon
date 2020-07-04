@@ -38,7 +38,10 @@ match s with
 end.
 
 Compute @flatten (List (List (Var nat))) [[1; 2; 3]; [4; 5; 6]].
-Compute @flatten (List (List (List (Var nat)))) [[[1]; [2; 2]; [3]]; [[4; 5; 6]]].
+Compute
+  @flatten
+    (List (List (List (Var nat))))
+    [[[1]; [2; 2]; [3]]; [[4; 5; 6]]].
 
 Class HasStar (A : Type) : Type :=
 {
@@ -165,3 +168,21 @@ Compute
     [1; 2; 3] [4; 5; 6] [7; 8; 9].
 
 End ZipWithN.
+
+(** * Porządna negacja (albo i nie) [TODO] *)
+
+(** Pomysł: silną negację można zdefiniować przez rekursję po uniwersum
+    kodów, w którym są kody na wszystkie potrzebne typy. *)
+
+Module Negation.
+
+(*
+Inductive U : Type :=
+    | F : U
+    | T : U
+    | And : U -> U -> U
+    | Or : U -> U -> U
+    | Impl : U -> U -> U.
+*)
+
+End Negation.

@@ -328,6 +328,43 @@ CoInductive le (n m : conat) : Prop :=
 }.
 (* end hide *)
 
+Lemma le_0_l :
+  forall n : conat, le zero n.
+(* begin hide *)
+Proof.
+  constructor. left. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma le_0_r :
+  forall n : conat, le n zero -> n = zero.
+(* begin hide *)
+Proof.
+  intros. invle H n zero.
+    destruct n. unfold zero. cbn in H. rewrite H. reflexivity.
+    cbn in *. inv H2.
+Qed.
+(* end hide *)
+
+Lemma le_succ :
+  forall n m : conat, le n m -> le (succ n) (succ m).
+(* begin hide *)
+Proof.
+  constructor. cbn. right. exists n, m. intuition.
+Qed.
+(* end hide *)
+
+Lemma le_succ_conv :
+  forall n m : conat,
+    le (succ n) (succ m) -> le n m.
+(* begin hide *)
+Proof.
+  destruct 1 as [[H | (n' & m' & H1 & H2 & H3)]].
+    inversion H.
+    cbn in *. inversion H1; inversion H2; subst. assumption.
+Qed.
+(* end hide *)
+
 Lemma le_refl :
   forall n : conat, le n n.
 (* begin hide *)
@@ -357,6 +394,46 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma le_univalent :
+  forall n m : conat,
+    le n m -> le m n -> sim n m .
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros n m Hnm Hmn.
+  destruct n as [[n'|]], m as [[m'|]]; revgoals.
+    constructor. cbn. left. split; reflexivity.
+    inversion Hmn. decompose [or ex and] le'0; clear le'0.
+      cbn in H. inversion H.
+      inversion H.
+    inversion Hnm. decompose [or ex and] le'0; clear le'0.
+      cbn in H. inversion H.
+      inversion H.
+    constructor. cbn. right. exists n', m'. split.
+      reflexivity.
+      split.
+        reflexivity.
+        apply CH.
+          apply le_succ_conv. assumption.
+          apply le_succ_conv. assumption.
+Restart.
+  cofix CH.
+  intros n m Hnm Hmn.
+  destruct Hnm as [[Hnm | (n' & m' & Hnm1 & Hnm2 & Hnm3)]].
+    replace n with zero in *.
+      apply le_0_r in Hmn. constructor.
+        subst; cbn. left. split; reflexivity.
+      apply eq_pred. cbn. rewrite Hnm. reflexivity.
+    constructor. right. exists n', m'. split.
+      assumption.
+      split.
+        assumption.
+        apply CH.
+          assumption.
+          apply le_succ_conv. rewrite <- succ_pred in *. subst. assumption.
+Qed.
+(* end hide *)
+
 Lemma le_sim :
   forall n1 n2 m1 m2 : conat,
     sim n1 n2 -> sim m1 m2 -> le n1 m1 -> le n2 m2.
@@ -367,24 +444,6 @@ Proof.
 Restart.
   intros.
   rewrite <- (sim_eq H), <- (sim_eq H0). assumption.
-Qed.
-(* end hide *)
-
-Lemma le_0_l :
-  forall n : conat, le zero n.
-(* begin hide *)
-Proof.
-  constructor. left. cbn. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma le_0_r :
-  forall n : conat, le n zero -> n = zero.
-(* begin hide *)
-Proof.
-  intros. invle H n zero.
-    destruct n. unfold zero. cbn in H. rewrite H. reflexivity.
-    cbn in *. inv H2.
 Qed.
 (* end hide *)
 
@@ -419,14 +478,6 @@ Proof.
     left. assumption.
     right. exists n', (succ m'). cbn. intuition. f_equal.
       destruct m as [[m'' |]]; inv H2.
-Qed.
-(* end hide *)
-
-Lemma le_succ :
-  forall n m : conat, le n m -> le (succ n) (succ m).
-(* begin hide *)
-Proof.
-  constructor. cbn. right. exists n, m. intuition.
 Qed.
 (* end hide *)
 
