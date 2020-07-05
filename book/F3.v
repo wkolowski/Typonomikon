@@ -882,8 +882,6 @@ Proof.
 Qed.
 (* end hide *)
 
-
-
 (* begin hide *)
 
 Lemma Stream_coiter :

@@ -763,6 +763,21 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma len_Infinite_conv :
+  forall (A : Type) (l : coList A),
+    Infinite l -> sim (len l) omega.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor.
+  destruct l as [[[h t] |]]; cbn in *.
+    right. exists (len t), omega. do 2 split.
+      reflexivity.
+      apply CH. inv H. cbn in *. inv p.
+    inv H. inv p.
+Qed.
+(* end hide *)
+
 Lemma Finite_snoc :
   forall (A : Type) (l : coList A) (x : A),
     Finite l -> Finite (snoc l x).
@@ -1006,5 +1021,20 @@ Lemma Exists_not_All :
 Proof.
   induction 1; destruct 1 as [[H' | (h' & t' & H1' & H2' & H3')]];
   congruence.
+Qed.
+(* end hide *)
+
+Lemma All_Exists :
+  forall (A : Type) (P : A -> Prop) (l : coList A),
+    All P l -> l = conil \/ Exists P l.
+(* begin hide *)
+Proof.
+  intros. destruct H as [[H | (h & t & H1 & H2 & H3)]].
+    left. destruct l as [[]].
+      inv H.
+      reflexivity.
+    right. destruct l as [[]]; inv H1. econstructor.
+      cbn. reflexivity.
+      assumption.
 Qed.
 (* end hide *)

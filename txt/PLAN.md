@@ -162,7 +162,13 @@ D5: Listy
     - popracować nad `findIndices` (i to w dwóch wersjach - być może jest to dobry pretekst dla wprowadzenia stylu programowania z akumulatorem?)
     - Najnowsze: ćwiczenia z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
 
-D6: Ogólne plany na rozdziały X:
+D6: Więcej list
+  - Alternatywne definicje predykatów i relacji
+  - Rozstrzyganie predykatów i relacji
+  - Generowanie różnych rodzajów (pod)struktur typu prefiksy, podciągi etc.
+  - Wszystko o permutacjach
+
+D7: Ogólne plany na rozdziały X:
   - boolowska logika ternarna, być może jako tour de force dla automatyzacji? albo test kreatywności
   - typ option (być może przy okazji funktory?) Stąd zadania dla `head`, `last`, `tail` i `init`
   - wcisnąć tu rozdział o produktach, sumach i funkcjach?

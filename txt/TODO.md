@@ -1,10 +1,10 @@
 # TODO
 
 ## Logika
-2. Być może dokonać rozróżnienia różnych _ex_ ... _quodlibet_:
+1. Być może dokonać rozróżnienia różnych _ex_ ... _quodlibet_:
   - _Ex falso quodlibet_ - `False -> P`
   - _Ex contradictione quodlibet_ - `A /\ ~ A -> P`
-3. Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go częściej używać.
+2. Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go częściej używać.
 
 ## Teoria typów
 0. Osąd `x : A` możemy czytać jako "x jest typu A", zaś konkretnie `x : nat` jako "x jest liczbą naturalną". Zrobić więcej ściąg/zadań z czytania różnych rzeczy.
