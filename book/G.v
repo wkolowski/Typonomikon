@@ -424,7 +424,117 @@ Defined.
 
 (* end hide *)
 
-(** * Indeksowane W-typy *)
+(** ** Indukcja w dwóch postaciach (TODO) *)
+
+Module nat_ind.
+
+(* begin hide *)
+(*
+TODO: dokończyć dowód indukcja = rekursja + unikalność
+*)
+(* end hide *)
+
+Record recursive
+  {A : Type} (f : nat -> A)
+  (z : A) (s : A -> A) : Prop :=
+{
+    f_0 : f 0 = z;
+    f_S : forall n : nat, f (S n) = s (f n);
+}.
+
+Fixpoint nat_rec'
+  {A : Type} (z : A) (s : A -> A) (n : nat) : A :=
+match n with
+    | 0 => z
+    | S n' => s (nat_rec' z s n')
+end.
+
+Theorem recursive_nat_rec' :
+  forall 
+    {A : Type} (z : A) (s : A -> A),
+      recursive (nat_rec' z s) z s.
+Proof.
+  split; cbn; reflexivity.
+Qed.
+
+Definition recursor : Type :=
+  forall
+    (A : Type) (z : A) (s : A -> A),
+      {f : nat -> A | recursive f z s}.
+
+Definition uniqueness : Prop :=
+  forall
+    (A : Type) (f g : nat -> A)
+    (z : A) (s : A -> A),
+      recursive f z s -> recursive g z s ->
+        forall n : nat, f n = g n.
+
+Definition nat_ind' : Type :=
+  forall
+    (P : nat -> Type)
+    (z : P 0) (s : forall n : nat, P n -> P (S n)),
+      {f : forall n : nat, P n |
+        (f 0 = z) /\
+        (forall n : nat, f (S n) = s n (f n))
+      }.
+
+Theorem induction_recursor :
+  nat_ind' -> recursor.
+Proof.
+  unfold nat_ind', recursor.
+  intros ind A z s.
+  destruct (ind (fun _ => A) z (fun _ => s)) as (f & f_0 & f_S).
+  exists f.
+  split; assumption.
+Qed.
+
+Theorem induction_uniqueness :
+  nat_ind' -> uniqueness.
+Proof.
+  unfold nat_ind', uniqueness.
+  intros ind A f g z s [f_0 f_S] [g_0 g_S].
+  apply
+  (
+    ind
+      (fun n => f n = g n)
+  ).
+    rewrite f_0, g_0. reflexivity.
+    intros n Heq. rewrite f_S, g_S. f_equal. assumption.
+Qed.
+
+Theorem recursor_uniqueness_induction :
+  recursor -> uniqueness -> nat_ind'.
+Proof.
+  unfold recursor, uniqueness, nat_ind'.
+  intros rec uniqueness P z s. Print sigT.
+  destruct
+  (
+    rec
+      {n : nat & P n}
+      (existT _ 0 z)
+      (fun '(existT _ n p) => existT _ (S n) (s n p))
+  )
+  as (f & f_0 & f_S).
+  assert (forall n : nat, projT1 (f n) = n).
+    eapply (uniqueness nat (fun n => projT1 (f n)) (fun n => n)). Unshelve.
+      Focus 4. exact 0.
+      Focus 4. exact S.
+      split.
+        apply (f_equal (@projT1 nat P)) in f_0. cbn in f_0. assumption.
+        intro. rewrite f_S. destruct (f n). cbn. reflexivity.
+      split.
+        reflexivity.
+        reflexivity.
+  esplit.
+  Unshelve.
+    Focus 2. intro n. rewrite <- H. exact (projT2 (f n)).
+    cbn. split.
+      Focus 2. intro.
+Admitted.
+
+End nat_ind.
+
+(** * Indeksowane W-typy (TODO) *)
 
 (** Jak głosi pewna stara książka z Palestyny, nie samymi W-typami żyje
     człowiek. W szczególności, W-typy mogą uchwycić jedynie dość proste
@@ -806,12 +916,50 @@ Module uniqueness_bisim_eq.
 
 Require Import F4.
 
+Print Stream.
+(*
+
+CoInductive Stream (A : Type) : Type :=
+{
+    hd : A;
+    tl : Stream A
+}.
+*)
+
+Record corecursive
+  {A X : Type} (f : X -> Stream A)
+  (h : X -> A) (t : X -> X)
+  : Prop :=
+{
+    hd_f : forall x : X, hd (f x) = h x;
+    tl_f : forall x : X, tl (f x) = f (t x);
+}.
+
 CoFixpoint corec
   {A X : Type} (h : X -> A) (t : X -> X) (x : X) : Stream A :=
 {|
     hd := h x;
     tl := corec h t (t x);
 |}.
+
+Lemma corecursive_corec :
+  forall {A X : Type} (h : X -> A) (t : X -> X),
+    corecursive (corec h t) h t.
+Proof.
+  split; cbn; intro.
+    reflexivity.
+    reflexivity.
+Qed.
+
+Definition uniqueness (A : Type) : Prop :=
+  forall
+    (X : Type) (f g : X -> Stream A)
+    (h : X -> A) (t : X -> X),
+      corecursive f h t -> corecursive g h t ->
+        forall x : X, f x = g x.
+
+Definition bisim_to_eq (A : Type) : Prop :=
+  forall s1 s2 : Stream A, bisim s1 s2 -> s1 = s2.
 
 Fixpoint nth {A : Type} (s : Stream A) (n : nat) : A :=
 match n with
@@ -843,23 +991,60 @@ Proof.
     rewrite IHn'. cbn. reflexivity.
 Qed.
 
-Lemma uniqueness_sim_is_eq :
-  forall {A : Type},
-    (forall (X : Type) (f g : X -> Stream A) (h : X -> A) (t : X -> X),
-      ((forall x : X, hd (f x) = h x /\ tl (f x) = f (t x)) ->
-       (forall x : X, hd (g x) = h x /\ tl (g x) = g (t x)) ->
-         forall x : X, f x = g x)) ->
-    forall s1 s2 : Stream A, bisim s1 s2 -> s1 = s2.
+Hint Resolve hd_drop tl_drop.
+
+Theorem coinduction :
+  forall (A : Type),
+    uniqueness A -> bisim_to_eq A.
 Proof.
-  intros A H s1 s2 Hsim.
-  eapply (H nat (drop s1) (drop s2) (nth s1) S _ _ 0).
+  unfold uniqueness, bisim_to_eq.
+  intros A uniqueness s1 s2 Hsim.
+  eapply (uniqueness nat (drop s1) (drop s2) (nth s2) S _ _ 0).
   Unshelve.
-    split; [apply hd_drop | apply tl_drop].
-    split.
-      2: apply tl_drop.
-      revert s1 s2 Hsim. induction x as [| n']; cbn; intros.
-        destruct Hsim. rewrite hds. reflexivity.
-        destruct Hsim. rewrite (IHn' _ _ Hsim). reflexivity.
+  all: repeat split; intro n; auto.
+  revert s1 s2 Hsim.
+  induction n as [| n']; cbn; intros.
+    destruct Hsim. assumption.
+    destruct Hsim. apply IHn'. assumption.
+Qed.
+
+Record tsim (A : Type) : Type :=
+{
+    t1 : Stream A;
+    t2 : Stream A;
+    sim : bisim t1 t2;
+}.
+
+Arguments t1  {A} _.
+Arguments t2  {A} _.
+Arguments sim {A} _.
+
+Definition hd' {A : Type} (t : tsim A) : A :=
+  hd (t2 t).
+
+Definition tl' {A : Type} (t : tsim A) : tsim A :=
+{|
+    t1 := tl (t1 t);
+    t2 := tl (t2 t);
+    sim := tls _ _ (sim t);
+|}.
+
+Theorem coinduction' :
+  forall (A : Type),
+    uniqueness A -> bisim_to_eq A.
+Proof.
+  unfold uniqueness, bisim_to_eq.
+  intros A uniqueness s1 s2 Hsim.
+  eapply
+  (
+    uniqueness
+      (tsim A) t1 t2 hd' tl'
+      _ _
+      {| t1 := s1; t2 := s2; sim := Hsim |}
+  ).
+  Unshelve.
+  all: repeat split.
+  destruct x, sim0. unfold hd'; cbn. assumption.
 Qed.
 
 End uniqueness_bisim_eq.
@@ -879,11 +1064,13 @@ Arguments root  {A}.
 Arguments left  {A} _.
 Arguments right {A} _.
 
-CoInductive sim {A : Type} (t1 t2 : InfTree A) : Prop :=
+Record corecursive
+  {A X : Type} (f : X -> InfTree A)
+  (rt : X -> A) (l : X -> X) (r : X -> X) : Prop :=
 {
-    roots : root t1 = root t2;
-    lefts : sim (left t1) (left t2);
-    rights : sim (right t1) (right t2);
+    root_f  : forall x : X, root  (f x) = rt x;
+    left_f  : forall x : X, left  (f x) = f (l x);
+    right_r : forall x : X, right (f x) = f (r x);
 }.
 
 CoFixpoint corec
@@ -894,6 +1081,30 @@ CoFixpoint corec
     left := corec rt l r (l x);
     right := corec rt l r (r x);
 |}.
+
+Theorem corecursive_corec :
+  forall {A X : Type} (rt : X -> A) (l : X -> X) (r : X -> X),
+    corecursive (corec rt l r) rt l r.
+Proof.
+  split; cbn; reflexivity.
+Qed.
+
+Definition uniqueness (A : Type) : Prop :=
+  forall
+    (X : Type) (f g : X -> InfTree A)
+    (rt : X -> A) (l : X -> X) (r : X -> X),
+      corecursive f rt l r -> corecursive g rt l r ->
+        forall x : X, f x = g x.
+
+CoInductive sim {A : Type} (t1 t2 : InfTree A) : Prop :=
+{
+    roots : root t1 = root t2;
+    lefts : sim (left t1) (left t2);
+    rights : sim (right t1) (right t2);
+}.
+
+Definition sim_to_eq (A : Type) : Prop :=
+  forall t1 t2 : InfTree A, sim t1 t2 -> t1 = t2.
 
 Inductive Index (A : Type) : Type :=
     | here : Index A
@@ -911,26 +1122,6 @@ match i with
     | goleft i' => subtree (left t) i'
     | goright i' => subtree (right t) i'
 end.
-
-(*
-Fixpoint index
-  {A : Type} (t : InfTree A) (i : Index A) : A :=
-match i with
-    | here => root t
-    | goleft i' => index (left t) i'
-    | goright i' => index (right t) i'
-end.
-
-Lemma root_subtree :
-  forall {A : Type} (i : Index A) (t : InfTree A),
-    root (subtree t i) = index t i.
-Proof.
-  induction i; cbn; intros.
-    reflexivity.
-    apply IHi.
-    apply IHi.
-Qed.
-*)
 
 Fixpoint goleft'
   {A : Type} (i : Index A) : Index A :=
@@ -970,37 +1161,30 @@ Qed.
 
 Hint Resolve left_subtree right_subtree.
 
-Lemma uniqueness_sim_is_eq :
+Theorem coinduction :
   forall {A : Type},
-    (forall
-      (X : Type) (f g : X -> InfTree A)
-      (rt : X -> A) (l : X -> X) (r : X -> X),
-        ((forall x : X, root  (f x) = rt x    /\
-                        left  (f x) = f (l x) /\
-                        right (f x) = f (r x))
-         ->
-         (forall x : X, root  (g x) = rt x    /\
-                        left  (g x) = g (l x) /\
-                        right (g x) = g (r x))
-        ->
-          forall x : X, f x = g x))
-    ->
-      forall t1 t2 : InfTree A, sim t1 t2 -> t1 = t2.
+    uniqueness A -> sim_to_eq A.
 Proof.
-  intros A H t1 t2 Hsim.
-  eapply (H (Index A) (subtree t1) (subtree t2)
-            (fun i => root (subtree t2 i)) goleft' goright'
-            _ _
-            here).
+  unfold uniqueness, sim_to_eq.
+  intros A uniqueness t1 t2 Hsim.
+  eapply
+  (
+    uniqueness
+      (Index A) (subtree t1) (subtree t2)
+      (fun i => root (subtree t2 i)) goleft' goright'
+      _ _
+      here
+  ).
   Unshelve.
   all: repeat split; auto.
-  clear H. revert t1 t2 Hsim.
-  induction x; cbn; intros t1 t2 [].
+  clear uniqueness. intro i.
+  revert t1 t2 Hsim.
+  induction i; cbn; intros t1 t2 [].
     assumption.
-    erewrite IHx.
+    erewrite IHi.
       reflexivity.
       assumption.
-    erewrite IHx.
+    erewrite IHi.
       reflexivity.
       assumption.
 Qed.
@@ -1016,38 +1200,57 @@ Arguments lt    {A} _.
 Arguments rt    {A} _.
 Arguments tsim' {A} _.
 
-Lemma uniqueness_sim_is_eq' :
+Definition root' {A : Type} (t : tsim A) : A :=
+  root (rt t).
+
+Definition left' {A : Type} (t : tsim A) : tsim A :=
+{|
+    lt := left (lt t);
+    rt := left (rt t);
+    tsim' := lefts (tsim' t);
+|}.
+
+Definition right' {A : Type} (t : tsim A) : tsim A :=
+{|
+    lt := right (lt t);
+    rt := right (rt t);
+    tsim' := rights (tsim' t);
+|}.
+
+Theorem coinduction' :
   forall {A : Type},
-    (forall
-      (X : Type) (f g : X -> InfTree A)
-      (rt : X -> A) (l : X -> X) (r : X -> X),
-        ((forall x : X, root  (f x) = rt x    /\
-                        left  (f x) = f (l x) /\
-                        right (f x) = f (r x))
-         ->
-         (forall x : X, root  (g x) = rt x    /\
-                        left  (g x) = g (l x) /\
-                        right (g x) = g (r x))
-        ->
-          forall x : X, f x = g x))
-    ->
-      forall t1 t2 : InfTree A, sim t1 t2 -> t1 = t2.
+    uniqueness A -> sim_to_eq A.
 Proof.
-  intros A H t1 t2 Hsim.
-  specialize (
-  H (tsim A) lt rt (fun x => root (lt x))
-    (fun x => {| lt := left (lt x); rt := left (rt x); tsim' := lefts (tsim' x) |})
-    (fun x => {| lt := right (lt x); rt := right (rt x); tsim' := rights (tsim' x) |})).
-  cbn in *.
-  eapply (H _ _ {| lt := t1; rt := t2; tsim' := Hsim |}).
+  unfold uniqueness, sim_to_eq.
+  intros A uniqueness t1 t2 Hsim.
+  eapply
+  (
+    uniqueness
+      (tsim A) lt rt
+      root' left' right'
+      _ _
+      {| lt := t1; rt := t2; tsim' := Hsim |}
+  ).
   Unshelve.
-    all: repeat split.
-    destruct x. destruct tsim'0. cbn. symmetry. assumption.
+  all: repeat split.
+  destruct x, tsim'0. unfold root'; cbn. assumption.
 Qed.
 
 End inftree.
 
 Module uniqueness_bisim_eq_general.
+
+Record corecursive
+  {S : Type} {P : S -> Type}
+  {X : Type} (f : X -> M S P)
+  (s : X -> S) (p : forall x : X, P (s x) -> X) : Prop :=
+{
+    shape_f :
+      forall x : X, shape (f x) = s x;
+    position_f :
+      forall (x : X) (psx : P (shape (f x))),
+        position (f x) psx = f (p x (transport (shape_f x) psx))
+}.
 
 CoFixpoint corec
   {S : Type} {P : S -> Type} {X : Type}
@@ -1058,16 +1261,51 @@ CoFixpoint corec
     position := fun psx : P (s x) => corec s p (p x psx)
 |}.
 
-Record siM' (S : Type) (P : S -> Type) : Type :=
+Theorem corecursive_corec :
+  forall
+    {S : Type} {P : S -> Type}
+    {X : Type} (s : X -> S) (p : forall x : X, P (s x) -> X),
+      corecursive (corec s p) s p.
+Proof.
+  esplit.
+  Unshelve. 
+  all: cbn.
+    2: reflexivity.
+    cbn. reflexivity.
+Qed.
+
+Definition uniqueness (S : Type) (P : S -> Type) : Prop :=
+  forall
+    (X : Type) (f g : X -> M S P)
+    (s : X -> S) (p : forall x : X, P (s x) -> X),
+      corecursive f s p -> corecursive g s p ->
+        forall x : X, f x = g x.
+
+Definition sim_to_eq (S : Type) (P : S -> Type) : Prop :=
+  forall m1 m2 : M S P, siM m1 m2 -> m1 = m2.
+
+Record I (S : Type) (P : S -> Type) : Type :=
 {
-    lm : M S P;
-    rm : M S P;
-    siM_lm_rm : siM lm rm;
+    L : M S P;
+    R : M S P;
+    path : siM L R;
 }.
 
-Arguments lm        {S P} _.
-Arguments rm        {S P} _.
-Arguments siM_lm_rm {S P} _.
+Arguments L    {S P} _.
+Arguments R    {S P} _.
+Arguments path {S P} _.
+
+Definition shape'
+  {S : Type} {P : S -> Type} (i : I S P) : S :=
+    shape (L i).
+
+Definition position'
+  {S : Type} {P : S -> Type} (i : I S P) (p : P (shape' i)) : I S P :=
+{|
+    L := position (L i) p;
+    R := position (R i) (transport (shapes _ _ (path i)) p);
+    path := positions _ _ (path i) p;
+|}.
 
 Lemma transport_eq_sym :
   forall {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P y),
@@ -1076,38 +1314,28 @@ Proof.
   destruct p. cbn. reflexivity.
 Qed.
 
-Lemma uniqueness_siM_is_eq :
+Theorem coinduction :
   forall {S : Type} {P : S -> Type},
-    (forall
-      (X : Type) (f g : X -> M S P)
-      (s : X -> S) (p : forall x : X, P (s x) -> X),
-      ((forall x : X, {path : shape (f x) = s x |
-        forall psx : P (shape (f x)),
-          position (f x) psx = f (p x (transport path psx))}) ->
-       (forall x : X, {path : shape (g x) = s x |
-        forall psx : P (shape (g x)),
-          position (g x) psx = g (p x (transport path psx))}) ->
-          forall x : X, f x = g x)) ->
-    forall m1 m2 : M S P, siM m1 m2 -> m1 = m2.
+    uniqueness S P -> sim_to_eq S P.
 Proof.
-  intros S P H m1 m2 Hsim.
+  unfold uniqueness, sim_to_eq.
+  intros S P uniqueness m1 m2 Hsim.
   eapply
   (
-    H (siM' S P) lm rm (fun x => shape (lm x))
-      (fun x p =>
-        {| lm := position (lm x) p;
-           rm := position (rm x) (transport (shapes _ _ (siM_lm_rm x)) p);
-           siM_lm_rm := positions _ _ (siM_lm_rm x) p;
-        |})
+    uniqueness
+      (I S P) L R
+      shape' position'
       _ _
-      {| lm := m1; rm := m2; siM_lm_rm := Hsim |}
+      {| L := m1; R := m2; path := Hsim |}
   ).
   Unshelve.
-  all: cbn in *.
-    intro. exists eq_refl. cbn. reflexivity.
-    destruct x. cbn in *. destruct siM_lm_rm0. esplit. Unshelve.
-      Focus 2. symmetry. assumption. cbn.
-      intro. rewrite transport_eq_sym. reflexivity.
+  all: esplit.
+  Unshelve.
+  all: unfold shape'; cbn in *; try reflexivity; intro i.
+    cbn. reflexivity.
+    Focus 2. destruct i, path0. cbn. symmetry. assumption.
+    intro. destruct i, path0. cbn. rewrite transport_eq_sym.
+      reflexivity.
 Qed.
 
 End uniqueness_bisim_eq_general.

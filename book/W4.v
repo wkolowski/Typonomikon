@@ -1454,9 +1454,8 @@ Qed.
 
 (** A co, gdyby tak skwantyfikować [E : Prop] i otrzymać w wyniku
     [forall E : Prop, E \/ P]? Zdanie to znaczy coś w stylu "P
-    zachodzi albo i nie, wymówkę wybierz wybierz sobie sam". W
-    sumie to można by powstały tutaj twór nazwać modalnością
-    wszechwymówkową...
+    zachodzi albo i nie, wymówkę wybierz sobie sam". W sumie można
+    by powstały tutaj twór nazwać modalnością wszechwymówkową...
 
     Udowodnij, że modalność wszechwymówkowa faktycznie jest
     modalnością. *)

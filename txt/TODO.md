@@ -1,38 +1,10 @@
 # TODO
 
 ## Logika
-1. bind i compM w podrozdziale o modalnościach
 2. Być może dokonać rozróżnienia różnych _ex_ ... _quodlibet_:
   - _Ex falso quodlibet_ - `False -> P`
   - _Ex contradictione quodlibet_ - `A /\ ~ A -> P`
 3. Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go częściej używać.
-
-```Coq
-Lemma not_not_bind :
-  forall P Q : Prop,
-    ~ ~ P -> (P -> ~ ~ Q) -> ~ ~ Q.
-Proof.
-  intros P Q nnp pnnq nq.
-  apply nnp. intro p.
-  apply pnnq.
-    assumption.
-    assumption.
-Qed.
-
-Lemma not_not_compM :
-  forall P Q R : Prop,
-    (P -> ~ ~ Q) -> (Q -> ~ ~ R) -> (P -> ~ ~ R).
-(* begin hide *)
-Proof.
-  intros P Q R pnnq qnnr p nr.
-  apply pnnq.
-    assumption.
-    intro q. apply qnnr.
-      assumption.
-      assumption.
-Qed.
-(* end hide *)
-```
 
 ## Teoria typów
 0. Osąd `x : A` możemy czytać jako "x jest typu A", zaś konkretnie `x : nat` jako "x jest liczbą naturalną". Zrobić więcej ściąg/zadań z czytania różnych rzeczy.
