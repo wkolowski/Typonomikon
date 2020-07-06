@@ -6464,8 +6464,7 @@ Check Type.
     ten koleś wymyślił podstawy dużej części wszystkiego, czym się tutaj
     zajmujemy). Można ją przeczytać tu (paradoks Girarda jest pod koniec
     pierwszej sekcji):
-    archive-pml.github.io/martin-lof/pdfs
-    /An-Intuitionistic-Theory-of-Types-1972.pdf
+    archive-pml.github.io/martin-lof/pdfs/An-Intuitionistic-Theory-of-Types-1972.pdf
 
     Nasze sformułowanie paradoksu będzie w sumie podobne do tego z powyższej
     pracy (co jest w sumie ciekawe, bo wymyśliłem je samodzielnie i to przez

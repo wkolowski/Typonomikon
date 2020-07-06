@@ -676,6 +676,9 @@ Typ <span class="inlinecode"><span class="id" title="var">sumbool</span></span> 
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">spec</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">Spec</span> <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">ex</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Ltac</span> <span class="id" title="var">spec_aux</span> <span class="id" title="var">H</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="keyword">type</span> <span class="id" title="keyword">of</span> <span class="id" title="var">H</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Spec</span> ?<span class="id" title="var">P</span> ?<span class="id" title="var">x</span> =&gt; <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">x</span> <span class="id" title="var">H</span>], <span class="id" title="var">x</span><br/>
@@ -724,6 +727,23 @@ Typ <span class="inlinecode"><span class="id" title="var">sumbool</span></span> 
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1. <span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">Spec</span></span> to w zasadzie prawie to samo co <span class="inlinecode"><span class="id" title="var">ex</span></span>, ale dodatkowo ma indeks.
+    Jego konkretne warianty, np. <span class="inlinecode"><span class="id" title="var">BoolSpec</span></span> to w zasadzie redefinicje
+    typu {x : A | P x} induktywnie tak jak jest zdefiniowany typ <span class="inlinecode"><span class="id" title="var">A</span></span> (a
+    precyzyjniej pisząc: nie przez indukcję, tylko po prostu i zwyczajnie
+    przez przypadki). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">NatSpec</span> (<span class="id" title="var">P</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">NS_0</span> : <span class="id" title="var">P</span> 0 -&gt; <span class="id" title="var">NatSpec</span> <span class="id" title="var">P</span> 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">NS_S</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) -&gt; <span class="id" title="var">NatSpec</span> <span class="id" title="var">P</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
 
 <br/>
 </div>

@@ -58,9 +58,9 @@ Definition nat' : Type := list unit.
     ACHTUNG: to wszystko kłamstwa, sprawa jest skomplikowańsza niż
     myślałem. *)
 
-(* 1 + A * X^2 *)
 Module BT.
 
+(* 1 + A * X^2 *)
 Inductive BT (A : Type) : Type :=
     | E : BT A
     | N : A -> BT A -> BT A -> BT A.
@@ -68,22 +68,63 @@ Inductive BT (A : Type) : Type :=
 Arguments E {A}.
 Arguments N {A} _ _ _.
 
+(** Tutaj typ indeksów jest oczywisty: możemy iść do lewego albo prawego poddrzewa,
+    co odpowiada konstruktorom [L] i [R], albo oznajmić, że już dotarliśmy do celu,
+    co odpowiada konstruktorowi [here]. *)
+
 (* 1 + 2 * X *)
 Inductive IndexBT : Type :=
     | here : IndexBT
     | L : IndexBT -> IndexBT
     | R : IndexBT -> IndexBT.
 
-Fixpoint index {A : Type} (t : BT A) (i : IndexBT) : option A :=
+(** Najważniejszą operacją, jaką możemy wykonać mając typ indeksów, jest pójście
+    do poddrzewa odpowiadającego temu indeksowi. *)
+
+Fixpoint subtree {A : Type} (i : IndexBT) (t : BT A) : option (BT A) :=
+match i, t with
+    | here, _ => Some t
+    | L _, E => None
+    | L i', N _ l _ => subtree i' l
+    | R _, E => None
+    | R i', N _ _ r => subtree i' r
+end.
+
+(** Znalezienie elementu trzymanego w korzeniu danego poddrzewa jest jedynie
+    operacją pochodną. *)
+
+Definition index {A : Type} (i : IndexBT) (t : BT A) : option A :=
+match subtree i t with
+    | Some (N v _ _) => Some v
+    | _              => None
+end.
+
+(** Choć można oczywiście posłużyć się osobną implementacją, która jest równoważna
+    powyższej. *)
+
+Fixpoint index' {A : Type} (t : BT A) (i : IndexBT) {struct i} : option A :=
 match t, i with
     | E, _          => None
     | N v _ _, here => Some v
-    | N _ l _, L i' => index l i'
-    | N _ _ r, R i' => index r i'
+    | N _ l _, L i' => index' l i'
+    | N _ _ r, R i' => index' r i'
 end.
+
+Lemma index_index' :
+  forall {A : Type} (i : IndexBT) (t : BT A),
+    index i t = index' t i.
+Proof.
+  induction i; destruct t; cbn; intros.
+    all: try reflexivity.
+    apply IHi.
+    apply IHi.
+Qed.
+
 End BT.
 
 Module T.
+
+(** Dla drzew z dowolnym rozgałęzieniem jest podobnie jak dla drzew binarnych. *)
 
 (* 1 + A * X^I *)
 Inductive T (I A : Type) : Type :=
@@ -93,6 +134,8 @@ Inductive T (I A : Type) : Type :=
 Arguments E {I A}.
 Arguments N {I A} _ _.
 
+(** Indeksy: albo już doszliśmy ([here]), albo idziemy dalej ([there]). *)
+
 (* 1 + I * X *)
 Inductive Index (I : Type) : Type :=
     | here : Index I
@@ -101,90 +144,128 @@ Inductive Index (I : Type) : Type :=
 Arguments here {I}.
 Arguments there {I} _ _.
 
+Fixpoint subtree {I A : Type} (i : Index I) (t : T I A) : option (T I A) :=
+match i, t with
+    | here      , _ => Some t
+    | there _ _ , E => None
+    | there j i', N _ f => subtree i' (f j)
+end.
+
+Definition index {I A : Type} (i : Index I) (t : T I A) : option A :=
+match subtree i t with
+    | Some (N v _) => Some v
+    | _            => None
+end.
+
+(*
 Fixpoint index {I A : Type} (t : T I A) (i : Index I) : option A :=
 match t, i with
     | E, _ => None
     | N v _, here => Some v
     | N _ f, there j i' => index (f j) i'
 end.
-
+*)
 End T.
 
 Module T2.
 
-(* 1 + A + B + A * B * X^I *)
-Inductive T (I A B : Type) : Type :=
-    | E0 : T I A B
-    | E1 : A -> T I A B
-    | E2 : B -> T I A B
-    | N  : A -> B -> (I -> T I A B) -> T I A B.
+(** A teraz coś trudniejszego: są dwa konstruktory rekurencyjne o różnej
+    liczbie argumentów. *)
 
-Arguments E0 {I A B}.
-Arguments E1 {I A B}.
-Arguments E2 {I A B}.
-Arguments N  {I A B}.
+(* 1 + A * X + B * X^2 *)
+Inductive T (A B : Type) : Type :=
+    | E : T A B
+    | NA : A -> T A B -> T A B
+    | NB : B -> T A B -> T A B -> T A B.
 
-(* Typ argumentów nieindukcyjnych: 1 + A + B + A * B *)
+Arguments E {A B}.
+Arguments NA {A B} _ _.
+Arguments NB {A B} _ _ _.
+
+(** Jedyny sensowny pomysł na typ indeksów jest taki, że odróżniamy
+    [NA] od [NB] - jeżeli chcemy wejść do złego konstruktora, to się
+    nam po prostu nie udaje. *)
+
+Inductive Index : Type :=
+    | here : Index
+    | therea : Index -> Index
+    | thereb : bool -> Index -> Index.
+
+Arguments here.
+Arguments therea _.
+Arguments thereb _ _.
+
+(** Jak widać działa, ale co to za działanie. *)
+
+Fixpoint subtree {A B : Type} (i : Index) (t : T A B) : option (T A B) :=
+match i, t with
+    | here           , _           => Some t
+    | therea       i', (NA _ t')   => subtree i' t'
+    | thereb false i', (NB _ t' _) => subtree i' t'
+    | thereb true  i', (NB _ _ t') => subtree i' t'
+    | _              , _           => None
+end.
+
+(** [index] też działa, ale typ zwracany robi się skomplikowańszy. *)
+
+Definition index
+  {A B : Type} (i : Index) (t : T A B) : option (A + B) :=
+match subtree i t with
+    | Some (NA a _)   => Some (inl a)
+    | Some (NB b _ _) => Some (inr b)
+    | _               => None
+end.
+
+End T2.
+
+Module T3.
+
+(** A teraz inny tłist: co jeżeli jest więcej [nil]i? *)
+
 Set Implicit Arguments.
 Set Maximal Implicit Insertion.
 Set Reversible Pattern Implicit.
 
-Inductive Arg (A B : Type) : Type :=
-    | E0' : Arg A B
-    | E1' : A -> Arg A B
-    | E2' : B -> Arg A B
-    | N'  : A -> B -> Arg A B.
+(* 1 + 1 + A * X * X *)
+Inductive T (A : Type) : Type :=
+    | EL | ER
+    | N (a : A) (l : T A) (r : T A).
 
-Arguments E0' {A B}.
-Arguments E1' {A B}.
-Arguments E2' {A B}.
-Arguments N'  {A B}.
+Arguments EL {A}.
+Arguments ER {A}.
 
-(* Typ indeksów: 4 + I * X *)
-Inductive Index (I : Type) : Type :=
-    | E0i : Index I
-    | E1i : Index I
-    | E2i : Index I
-    | N1i : Index I
-    | N2i : I -> Index I -> Index I.
+(** Typ indeksów jest łatwy. *)
 
-Arguments E0i {I}.
-Arguments E1i {I}.
-Arguments E2i {I}.
-Arguments N1i {I}.
-Arguments N2i {I}.
+Inductive Index : Type :=
+    | here : Index
+    | there : bool -> Index -> Index.
 
-Fixpoint index
-  {I A B : Type} (t : T I A B) (i : Index I) : option (Arg A B) :=
-match t, i with
-    | E0, E0i           => Some E0'
-    | E1 a, E1i         => Some (E1' a)
-    | E2 b, E2i         => Some (E2' b)
-    | N a b f, N1i      => Some (N' a b)
-    | N _ _ f, N2i j i' => index (f j) i'
-    | _, _              => None
+Fixpoint subtree {A : Type} (i : Index) (t : T A) : option (T A) :=
+match i, t with
+    | here      , _         => Some t
+    | there b i', (N _ l r) => if b then subtree i' l else subtree i' r
+    | _         , _         => None
 end.
 
-(* Typ indeksów: 1 + I * X *)
-Inductive Index' (I : Type) : Type :=
-    | stop : Index' I
-    | go   : I -> Index' I -> Index' I.
+Inductive Arg (A : Type) : Type :=
+    | BadIndex
+    | EmptyLeft
+    | EmptyRight
+    | Node (a : A).
 
-Arguments stop {I}.
-Arguments go   {I}.
+Arguments BadIndex   {A}.
+Arguments EmptyLeft  {A}.
+Arguments EmptyRight {A}.
 
-Fixpoint index'
-  {I A B : Type} (t : T I A B) (i : Index' I) : option (Arg A B) :=
-match t, i with
-    | E0      , stop    => Some E0'
-    | E1 a    , stop    => Some (E1' a)
-    | E2 b    , stop    => Some (E2' b)
-    | N a b _ , stop    => Some (N' a b)
-    | N _ _ f , go j i' => index' (f j) i'
-    | _       , _       => None
+Definition index {A : Type} (i : Index) (t : T A) : Arg A :=
+match subtree i t with
+    | None           => BadIndex
+    | Some EL        => EmptyLeft
+    | Some ER        => EmptyRight
+    | Some (N a _ _) => Node a
 end.
 
-End T2.
+End T3.
 
 (** Przemyślenia: indeksowanie jest dużo bardziej związane z zipperami,
     niż mi się wydawało. Zipper pozwala sfokusować się na jakimś miejscu
@@ -212,16 +293,17 @@ Inductive BTH (A : Type) : nat -> Type :=
 
 Inductive Index : nat -> Type :=
     | here : forall n : nat, Index (S n)
-(*    | L : forall n : nat, Index n -> Index (S n)
-    | R : forall n : nat, Index n -> Index (S n).*)
     | LR : forall n m : nat, Index n + Index m -> Index (1 + max n m).
 
+(** Źle w hooooyij. *)
 Fixpoint index {A : Type} {n : nat} (t : BTH A n) (i : Index n) : A.
 Proof.
   destruct t.
     inversion i.
     inversion i; subst.
       exact a.
+      destruct H0.
+        apply index with n0.
       try exact (index _ _ t1 H0).
 Abort.
 
@@ -234,9 +316,30 @@ Require Import G.
 Print W.
 
 Inductive IW {A : Type} (B : A -> Type) : Type :=
-    | here : IW B
-    | rec : forall x : A, B x -> IW B -> IW B.
+    | here  : IW B
+    | there : forall x : A, B x -> IW B -> IW B.
+
+Arguments here {A B}.
+Arguments there {A B x} _.
 
 Print natW.
+
+Print listW.listW.
+
+Definition A (X : Type) : Type := unit + X.
+
+Definition B {X : Type} (a : A X) : Type :=
+match a with
+    | inl _ => False
+    | inr _ => unit
+end.
+
+Fixpoint nat_IW {X : Type} (n : nat) : (@IW (A X) (@B X)).
+Proof.
+  destruct n as [| n'].
+    exact here.
+    eapply there. Unshelve.
+      Focus 3. unfold A.
+Abort.
 
 End W.

@@ -185,4 +185,10 @@ Inductive U : Type :=
     | Impl : U -> U -> U.
 *)
 
+Require Import D1.
+Require Import D2.
+Require Import D2ipół.
+
+Import PoorUniverse.
+
 End Negation.

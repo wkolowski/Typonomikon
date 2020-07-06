@@ -550,6 +550,8 @@ Print CompareSpec.
 Inductive Spec {A : Type} (P : A -> Prop) : A -> Prop :=
     | spec : forall x : A, P x -> Spec P x.
 
+Print ex.
+
 Ltac spec_aux H :=
 match type of H with
     | Spec ?P ?x => destruct H as [x H], x
@@ -593,6 +595,17 @@ Proof.
     intro. constructor. assumption.
     destruct 1. assumption.
 Qed.
+
+(** [Spec] to w zasadzie prawie to samo co [ex], ale dodatkowo ma indeks.
+    Jego konkretne warianty, np. [BoolSpec] to w zasadzie redefinicje
+    typu {x : A | P x} induktywnie tak jak jest zdefiniowany typ [A] (a
+    precyzyjniej pisząc: nie przez indukcję, tylko po prostu i zwyczajnie
+    przez przypadki). *)
+
+Inductive NatSpec (P : nat -> Prop) : nat -> Prop :=
+    | NS_0 : P 0 -> NatSpec P 0
+    | NS_S : forall n : nat, P (S n) -> NatSpec P (S n).
+
 
 (** * Reflekcja w małej skali, czyli jak odbijać żeby się nie zmęczyć *)
 
@@ -639,8 +652,6 @@ Definition PropExt : Prop :=
 
 Definition UIP : Prop :=
   forall (A : Type) (x : A) (p : x = x), p = eq_refl.
-
-
 
 (** * Sort [SProp], czyli zdania, ale takie jakby inne *)
 

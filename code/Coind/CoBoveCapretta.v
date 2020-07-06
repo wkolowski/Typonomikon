@@ -158,3 +158,21 @@ CoFixpoint do {C : Type} (zw : ZipWith C) : Stream C :=
 
 CoInductive fibs : 
 *)
+
+Unset Guard Checking.
+
+CoFixpoint fibs : Stream nat :=
+{|
+    hd := 0;
+    tl := zipWith plus fibs (cons 1 fibs)
+|}.
+
+Require Import D5.
+
+Fixpoint take {A : Type} (n : nat) (s : Stream A) : list A :=
+match n with
+    | 0 => []
+    | S n' => hd s :: take n' (tl s)
+end.
+
+Compute take 20 fibs.
