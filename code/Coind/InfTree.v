@@ -378,3 +378,24 @@ Lemma index_iterate :
 Proof.
   intros. apply index_iterate'.
 Qed.
+
+Inductive InfTreeNeq {A : Type} : InfTree A -> InfTree A -> Type :=
+    | ITN_root :
+        forall t1 t2 : InfTree A,
+          root t1 <> root t2 -> InfTreeNeq t1 t2
+    | ITN_left :
+        forall t1 t2 : InfTree A,
+          InfTreeNeq (left t1) (left t2) -> InfTreeNeq t1 t2
+    | ITN_right :
+        forall t1 t2 : InfTree A,
+          InfTreeNeq (right t1) (right t2) -> InfTreeNeq t1 t2.
+
+Lemma InfTreeNeq_neq :
+  forall {A : Type} {t1 t2 : InfTree A},
+    InfTreeNeq t1 t2 -> t1 <> t2.
+Proof.
+  induction 1; intros Heq.
+    apply n. f_equal. assumption.
+    apply IHX. f_equal. assumption.
+    apply IHX. f_equal. assumption.
+Qed.

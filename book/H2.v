@@ -485,7 +485,7 @@ Qed.
 
 End conat_neq.
 
-(** ** Nierówność strumieni *)
+(** ** Różność strumieni *)
 
 Module Stream_neq.
 
@@ -493,12 +493,21 @@ Require Import F3.
 
 Inductive Stream_neq
   {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Type :=
-    | sn_here :
+    | Stream_neq_hd :
         forall (h1 h2 : A) (t1 t2 : Stream A),
           R h1 h2 -> Stream_neq R (scons h1 t1) (scons h2 t2)
-    | sn_there :
+    | Stream_neq_tl :
         forall (h1 h2 : A) (t1 t2 : Stream A),
           Stream_neq R t1 t2 -> Stream_neq R (scons h1 t1) (scons h2 t2).
+
+Inductive Stream_neq'
+  {A : Type} : Stream A -> Stream A -> Type :=
+    | Stream_neq_hd' :
+        forall t1 t2 : Stream A,
+          hd t1 <> hd t2 -> Stream_neq' t1 t2
+    | Stream_neq_tl' :
+        forall t1 t2 : Stream A,
+          Stream_neq' (tl t1) (tl t2) -> Stream_neq' t1 t2.
 
 Lemma Stream_neq_not_sim :
   forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
@@ -512,7 +521,42 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Stream_neq'_not_sim :
+  forall {A : Type} {s1 s2 : Stream A},
+      Stream_neq' s1 s2 -> ~ sim s1 s2.
+(* begin hide *)
+Proof.
+  induction 1; intros []; contradiction.
+Qed.
+(* end hide *)
+
+Lemma Stream_neq'_Stream_neq :
+  forall {A : Type} {s1 s2 : Stream A},
+    Stream_neq' s1 s2 ->
+      Stream_neq (fun x y => x <> y) s1 s2.
+(* begin hide *)
+Proof.
+  induction 1.
+    destruct t1, t2. cbn in *. left. assumption.
+    destruct t1, t2. cbn in *. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma Stream_neq_Stream_neq' :
+  forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
+    (forall x : A, ~ R x x) ->
+      Stream_neq R s1 s2 -> Stream_neq' s1 s2.
+(* begin hide *)
+Proof.
+  induction 2.
+    left. cbn. intro. subst. apply (H _ r).
+    right. cbn. assumption.
+Qed.
+
+(* end hide *)
+
 End Stream_neq.
+
 
 (** * Ścieżki między funkcjami *)
 

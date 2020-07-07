@@ -145,6 +145,7 @@ Parameter unzipWith :
 
 (** Predykaty *)
 
+(** [Elem] jest głupie - po coma istnieć, skoro jest [Exists]? *)
 Inductive Elem {A : Type} (x : A) : InfTree A -> Prop :=
     | Elem_here :
         forall (B : Type) (f : B -> InfTree A),
@@ -167,12 +168,26 @@ Inductive Forall {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
         forall (x : A) (B : Type) (f : B -> InfTree A),
           (forall b : B, Forall P (f b)) -> Forall P (N x B f).
 
-(*
-Parameter Dup : forall A : Type, BTree A -> Prop.
+Inductive Dup {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
+    | Dup_here :
+        forall v : A, P v ->
+          forall (B : Type) (f : B -> InfTree A) (b : B),
+            Exists P (f b) -> Dup P (N v B f)
+    | Dup_subtrees :
+        forall (v : A) (B : Type) (f : B -> InfTree A) (b1 b2 : B),
+          Exists P (f b1) -> Exists P (f b2) ->
+            b1 <> b2 -> Dup P (N v B f)
+    | Dup_deeper :
+        forall (v : A) (B : Type) (f : B -> InfTree A) (b : B),
+          Dup P (f b) -> Dup P (N v B f).
 
-Parameter Exactly : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
-Parameter AtLeast : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
-Parameter AtMost : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
+(*
+Parameter Exactly :
+  forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
+Parameter AtLeast :
+  forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
+Parameter AtMost :
+  forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
 *)
 
 Inductive SameStructure {A B : Type} : InfTree A -> InfTree B -> Prop :=
@@ -185,17 +200,120 @@ Inductive SameStructure {A B : Type} : InfTree A -> InfTree B -> Prop :=
               SameStructure (N x C f) (N y C g).
 
 (*
-Parameter SameStructure : forall A B : Type, BTree A -> BTree B -> Prop.
 Parameter SameShape : forall A B : Type, BTree A -> BTree B -> Prop.
 *)
 
 Inductive InfTreeDirectSubterm
   {A : Type} : InfTree A -> InfTree A -> Prop :=
-    | ITDS_E :
+    | ITDS :
         forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
           InfTreeDirectSubterm (f b) (N x B f).
 
-(*
-Parameter subtree : forall A : Type, BTree A -> BTree A -> Prop.
-Parameter Subterm : forall A : Type, BTree A -> BTree A -> Prop.
-*)
+Inductive InfTreeSubterm
+  {A : Type} : InfTree A -> InfTree A -> Prop :=
+    | ITS_refl :
+        forall t : InfTree A, InfTreeSubterm t t
+    | ITS_step :
+        forall t1 t2 t3 : InfTree A,
+          InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
+            InfTreeSubterm t1 t3.
+
+(** TODO: BINGO! [Subterm] to to samo co [Index]. *)
+
+Inductive InfTreeEq {A : Type} : InfTree A -> InfTree A -> Prop :=
+    | ITE_E : InfTreeEq E E
+    | ITE_N :
+        forall {v1 v2 : A} {B : Type} {f1 f2 : B -> InfTree A},
+          v1 = v2 -> (forall b : B, InfTreeEq (f1 b) (f2 b)) ->
+            InfTreeEq (N v1 B f1) (N v2 B f2).
+
+Arguments ITE_E {A}.
+Arguments ITE_N {A v1 v2 B f1 f2} _ _.
+
+Fixpoint encode_aux {A : Type} (t : InfTree A) : InfTreeEq t t :=
+match t with
+    | E => ITE_E
+    | N v B f =>
+        ITE_N eq_refl (fun b => encode_aux (f b))
+end.
+
+Definition encode
+  {A : Type} {t1 t2 : InfTree A} (p : t1 = t2) : InfTreeEq t1 t2 :=
+match p with
+    | eq_refl => encode_aux t1
+end.
+
+Require Import FunctionalExtensionality.
+
+Fixpoint decode
+  {A : Type} {t1 t2 : InfTree A} (c : InfTreeEq t1 t2) : t1 = t2.
+Proof.
+  destruct c.
+    reflexivity.
+    f_equal.
+      assumption.
+      apply functional_extensionality. intro. apply decode.
+        apply H0.
+Defined.
+
+Lemma encode_decode :
+  forall {A : Type} {t1 t2 : InfTree A} (p : t1 = t2),
+    decode (encode p) = p.
+Proof.
+  destruct p. cbn.
+  induction t1; cbn; intros.
+    reflexivity.
+    rewrite eq_trans_refl_l.
+Admitted.
+
+Require Import Equality.
+
+Scheme InfTreeEq_ind' := Induction for InfTreeEq Sort Prop.
+
+Lemma decode_encode :
+  forall {A : Type} {t1 t2 : InfTree A} (c : InfTreeEq t1 t2),
+    encode (decode c) = c.
+Proof.
+  induction c using InfTreeEq_ind'; cbn.
+    reflexivity.
+    destruct e. rewrite eq_trans_refl_l.
+Admitted.
+
+Lemma isProp_InfTreeEq :
+  forall {A : Type} {t1 t2 : InfTree A} (c1 c2 : InfTreeEq t1 t2),
+    c1 = c2.
+Proof.
+  induction c1 using InfTreeEq_ind';
+  dependent destruction c2.
+    reflexivity.
+    f_equal. apply functional_extensionality_dep_good.
+      intro. apply H.
+Qed.
+
+Inductive InfTreeNeq {A : Type} : InfTree A -> InfTree A -> Prop :=
+    | InfTreeNeq_EN :
+        forall (v : A) {B : Type} (f : B -> InfTree A),
+          InfTreeNeq E (N v B f)
+    | InfTreeNeq_NE :
+        forall (v : A) {B : Type} (f : B -> InfTree A),
+          InfTreeNeq (N v B f) E
+    | InfTreeNeq_NN_here :
+        forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A),
+          v1 <> v2 -> InfTreeNeq (N v1 B f1) (N v2 B f2)
+    | InfTreeNeq_NN_there :
+        forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A) (b : B),
+          InfTreeNeq (f1 b) (f2 b) -> InfTreeNeq (N v1 B f1) (N v2 B f2)
+    | InfTreeNeq_branching :
+        forall (v1 v2 : A) (B1 B2 : Type)
+               (f1 : B1 -> InfTree A) (f2 : B2 -> InfTree A),
+                 B1 <> B2 -> InfTreeNeq (N v1 B1 f1) (N v2 B2 f2).
+
+(* TODO: dokończyć charakteryzację nierówności dla [InfTree]. *)
+Lemma InfTreeNeq_neq :
+  forall {A : Type} {t1 t2 : InfTree A},
+    InfTreeNeq t1 t2 -> t1 <> t2.
+Proof.
+  induction 1; inversion 1.
+    contradiction.
+    Focus 2. apply H. assumption.
+Abort.

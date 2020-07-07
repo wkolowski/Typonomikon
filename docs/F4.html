@@ -5,7 +5,7 @@
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
 </head>
-<h1 class="libtitle">F4: Kolisty</h1>
+<h1 class="libtitle">F4: Kolisty (co nie znaczy, że okrągły</h1>
 
 <div class="code">
 </div>
@@ -55,7 +55,11 @@ Przydatny będzie następujący, dość oczywisty fakt dotyczący równości
 </div>
 
 <div class="doc">
-Zdefiniuj relację bipodobieństwa dla kolist. Udowodnij, że jest ona
+<a name="lab461"></a><h2 class="section">Bipodobieństwo</h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj relację bipodobieństwa dla kolist. Udowodnij, że jest ona
     relacją równoważności. Z powodu konfliktu nazw bipodobieństwo póki
     co nazywać się będzie <span class="inlinecode"><span class="id" title="var">lsim</span></span>. 
 </div>
@@ -99,7 +103,81 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 </div>
 
 <div class="doc">
-Zdefiniuj <span class="inlinecode"><span class="id" title="var">conil</span></span>, czyli kolistę pustą, oraz <span class="inlinecode"><span class="id" title="var">cocons</span></span>, czyli funkcję,
+<a name="lab462"></a><h2 class="section">Różność</h2>
+
+<div class="paragraph"> </div>
+
+ Przyda się też induktywna wersja relacji <span class="inlinecode">&lt;&gt;</span>. Zdefiniuj ją i pokaż,
+    że induktywna wersja implikuje zwykłą. Czy implikacja w drugą stronę
+    zachodzi? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">coList_neq</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">coList</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">coList</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">coList_neq_nc</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">None</span> -&gt; <span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> &lt;&gt; <span class="id" title="var">None</span> -&gt; <span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">coList_neq_cn</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> &lt;&gt; <span class="id" title="var">None</span> -&gt; <span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">None</span> -&gt; <span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">coList_neq_cc_here</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h1</span> <span class="id" title="var">h2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h1</span>, <span class="id" title="var">t1</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h2</span>, <span class="id" title="var">t2</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">h1</span> &lt;&gt; <span class="id" title="var">h2</span> -&gt; <span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">coList_neq_cc_there</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h1</span> <span class="id" title="var">h2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h1</span>, <span class="id" title="var">t1</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h2</span>, <span class="id" title="var">t2</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coList_neq</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">coList_neq_not_lsim</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; ~ <span class="id" title="var">lsim</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nlsim_neq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">lsim</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">l1</span> &lt;&gt; <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">coList_neq_antirefl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">coList_neq</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">coList_neq</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">coList_neq_sym</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">coList_neq</span> <span class="id" title="var">l2</span> <span class="id" title="var">l1</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">coList_neq_cotrans</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l3</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> \/ <span class="id" title="var">coList_neq</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="tactic">intros</span> [[]]; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">constructor</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">constructor</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">congruence</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab463"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">conil</span></span> i <span class="inlinecode"><span class="id" title="var">cocons</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj <span class="inlinecode"><span class="id" title="var">conil</span></span>, czyli kolistę pustą, oraz <span class="inlinecode"><span class="id" title="var">cocons</span></span>, czyli funkcję,
     która dokleja do kolisty nową głowę. Udowodnij, że <span class="inlinecode"><span class="id" title="var">cocons</span></span> zachowuje
     i odbija bipodobieństwo. 
 </div>
@@ -121,7 +199,11 @@ Zdefiniuj <span class="inlinecode"><span class="id" title="var">conil</span></sp
 </div>
 
 <div class="doc">
-Przygodę z funkcjami na kolistach zaczniemy od długości. Tak jak zwykła,
+<a name="lab464"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">len</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Przygodę z funkcjami na kolistach zaczniemy od długości. Tak jak zwykła,
     induktywna lista ma długość wyrażającą się liczbą naturalną, tak też i
     długość kolisty można wyrazić za pomocą liczby konaturalnej.
 
@@ -157,7 +239,11 @@ Przygodę z funkcjami na kolistach zaczniemy od długości. Tak jak zwykła,
 </div>
 
 <div class="doc">
-Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">snoc</span></span>, która dostawia element na koniec kolisty. 
+<a name="lab465"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">snoc</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">snoc</span></span>, która dostawia element na koniec kolisty. 
 </div>
 <div class="code">
 
@@ -177,7 +263,11 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">snoc</s
 </div>
 
 <div class="doc">
-Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">app</span></span>, która skleja dwie kolisty. Czy jest to w ogóle
+<a name="lab466"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">app</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">app</span></span>, która skleja dwie kolisty. Czy jest to w ogóle
     możliwe? Czy taka funkcja ma sens? Porównaj z przypadkiem sklejania
     strumieni. 
 </div>
@@ -224,7 +314,11 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">app</sp
 </div>
 
 <div class="doc">
-Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">lmap</span></span>, która aplikuje funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> do
+<a name="lab467"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">lmap</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">lmap</span></span>, która aplikuje funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> do
     każdego elementu kolisty.
 
 <div class="paragraph"> </div>
@@ -266,7 +360,7 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">lmap</s
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lsim</span> (<span class="id" title="var">lmap</span> <span class="id" title="var">id</span> <span class="id" title="var">l</span>) <span class="id" title="var">l</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lmap_compose</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lmap_comp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lsim</span> (<span class="id" title="var">lmap</span> <span class="id" title="var">g</span> (<span class="id" title="var">lmap</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>)) (<span class="id" title="var">lmap</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="var">l</span>).<br/>
 
@@ -279,7 +373,11 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">lmap</s
 </div>
 
 <div class="doc">
-Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">iterate</span></span>, która tworzy nieskończoną kolistę przez
+<a name="lab468"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">iterate</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">iterate</span></span>, która tworzy nieskończoną kolistę przez
     iterowanie funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> poczynając od pewnego ustalonego elementu. 
 </div>
 <div class="code">
@@ -295,7 +393,11 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">iterate
 </div>
 
 <div class="doc">
-Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">piterate</span></span>, która tworzy kolistę przez iterowanie
+<a name="lab469"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">piterate</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">piterate</span></span>, która tworzy kolistę przez iterowanie
     funkcji częściowej <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">option</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> poczynając od pewnego ustalonego
     elementu. 
 </div>
@@ -307,7 +409,11 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">piterat
 </div>
 
 <div class="doc">
-Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">zipW</span></span>, która bierze funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span> oraz
+<a name="lab470"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">zipW</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">zipW</span></span>, która bierze funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span> oraz
     dwie kolisty <span class="inlinecode"><span class="id" title="var">l1</span></span> i <span class="inlinecode"><span class="id" title="var">l2</span></span> i zwraca kolistę, której elementy powstają z
     połączenia odpowiadających sobie elementów <span class="inlinecode"><span class="id" title="var">l1</span></span> i <span class="inlinecode"><span class="id" title="var">l2</span></span> za pomocą funkcji
     <span class="inlinecode"><span class="id" title="var">f</span></span>. 
@@ -335,8 +441,12 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">zipW</s
 </div>
 
 <div class="doc">
-Napisz funkcję <span class="inlinecode"><span class="id" title="var">scan</span></span>, która przekształca <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">coList</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> w kolistę sum
-    częściowych działania <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>. 
+<a name="lab471"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">scan</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Napisz funkcję <span class="inlinecode"><span class="id" title="var">scan</span></span>, która przekształca <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">coList</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> w kolistę
+    sum częściowych działania <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>. 
 </div>
 <div class="code">
 
@@ -358,10 +468,13 @@ Napisz funkcję <span class="inlinecode"><span class="id" title="var">scan</span
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">len</span> (<span class="id" title="var">scan</span> <span class="id" title="var">l</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span>)) (<span class="id" title="var">len</span> <span class="id" title="var">l</span>).<br/>
 
 <br/>
+
+<br/>
 </div>
 
 <div class="doc">
-TODO: snoc, app, map, iterate, piterate. 
+<a name="lab472"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">intersperse</span></span></h2>
+
 <div class="paragraph"> </div>
 
  Napisz funkcję <span class="inlinecode"><span class="id" title="var">intersperse</span></span>, która działa analogicznie jak dla list. 
@@ -384,6 +497,15 @@ Pułapka: czy poniższe twierdzenie jest prawdziwe?
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_succ</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">add</span> (<span class="id" title="var">succ</span> <span class="id" title="var">n</span>) <span class="id" title="var">m</span>) (<span class="id" title="var">succ</span> (<span class="id" title="var">add</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>)).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">eexists</span>. <span class="id" title="tactic">intuition</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">len_intersperse</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">len</span> (<span class="id" title="var">intersperse</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>)) (<span class="id" title="var">succ</span> (<span class="id" title="var">add</span> (<span class="id" title="var">len</span> <span class="id" title="var">l</span>) (<span class="id" title="var">len</span> <span class="id" title="var">l</span>))).<br/>
@@ -392,7 +514,11 @@ Pułapka: czy poniższe twierdzenie jest prawdziwe?
 </div>
 
 <div class="doc">
-Napisz rekurencyjną funkcję <span class="inlinecode"><span class="id" title="var">splitAt</span></span>. <span class="inlinecode"><span class="id" title="var">splitAt</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> zwraca
+<a name="lab473"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">splitAt</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Napisz rekurencyjną funkcję <span class="inlinecode"><span class="id" title="var">splitAt</span></span>. <span class="inlinecode"><span class="id" title="var">splitAt</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> zwraca
     <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode">(<span class="id" title="var">begin</span>,</span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">rest</span>)</span>, gdzie <span class="inlinecode"><span class="id" title="var">begin</span></span> jest listą reprezentującą
     początkowy fragment kolisty <span class="inlinecode"><span class="id" title="var">l</span></span> o długości <span class="inlinecode"><span class="id" title="var">n</span></span>, <span class="inlinecode"><span class="id" title="var">x</span></span> to element
     <span class="inlinecode"><span class="id" title="var">l</span></span> znajdujący się na pozycji <span class="inlinecode"><span class="id" title="var">n</span></span>, zaś <span class="inlinecode"><span class="id" title="var">rest</span></span> to kolista będącą
@@ -463,7 +589,11 @@ Funkcji <span class="inlinecode"><span class="id" title="var">splitAt</span></sp
 </div>
 
 <div class="doc">
-Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Finite</span></span> oraz <span class="inlinecode"><span class="id" title="var">Infinite</span></span>, które są spełnione,
+<a name="lab474"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Finite</span></span> i <span class="inlinecode"><span class="id" title="var">Infinite</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Finite</span></span> oraz <span class="inlinecode"><span class="id" title="var">Infinite</span></span>, które są spełnione,
     odpowiednio, przez skończone i nieskończone kolisty. Zastanów się
     dobrze, czy definicje powinny być induktywne, czy koinduktywne.
 
@@ -522,14 +652,22 @@ Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Finite
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Infinite</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Infinite</span> (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Infinite_app</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Infinite</span> <span class="id" title="var">l1</span> \/ <span class="id" title="var">Infinite</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Infinite</span> (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Finite_app</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Finite</span> <span class="id" title="var">l1</span> -&gt; <span class="id" title="var">Finite</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Finite</span> (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">Finite</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Finite_app_conv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Finite</span> (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) -&gt; <span class="id" title="var">Finite</span> <span class="id" title="var">l1</span> \/ <span class="id" title="var">Finite</span> <span class="id" title="var">l2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Finite</span> (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) -&gt; <span class="id" title="var">Finite</span> <span class="id" title="var">l1</span> /\ <span class="id" title="var">Finite</span> <span class="id" title="var">l2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Finite_lmap</span> :<br/>
@@ -582,7 +720,11 @@ Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Finite
 </div>
 
 <div class="doc">
-Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Exists</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> oraz <span class="inlinecode"><span class="id" title="var">Forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>, które są spełnione
+<a name="lab475"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Exists</span></span> i <span class="inlinecode"><span class="id" title="var">Forall</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Exists</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> oraz <span class="inlinecode"><span class="id" title="var">Forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>, które są spełnione
     przez kolisty, których odpowiednio jakiś/wszystkie elementy spełniają
     predykat <span class="inlinecode"><span class="id" title="var">P</span></span>. Zastanów się dobrze, czy definicje powinny być induktywne,
     czy koinduktywne.

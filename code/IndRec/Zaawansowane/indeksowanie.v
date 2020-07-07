@@ -284,30 +284,44 @@ End T3.
 
     Zapewne działa to bardzo dobrze... taki huj, jednak nie. *)
 
-Module TH.
+Module Vec.
 
-Inductive BTH (A : Type) : nat -> Type :=
-    | E : BTH A 0
-    | N : forall {n m : nat},
-            A -> BTH A n -> BTH A m -> BTH A (1 + max n m).
+(** A teraz to samo dla rodzin indeksowanych. *)
 
-Inductive Index : nat -> Type :=
-    | here : forall n : nat, Index (S n)
-    | LR : forall n m : nat, Index n + Index m -> Index (1 + max n m).
+Require Import vec.
+Print vec.
+(*
+Inductive vec (A : Type) : nat -> Type :=
+    vnil : vec A 0 | vcons : forall n : nat, A -> vec A n -> vec A (S n)
+*)
 
-(** Źle w hooooyij. *)
-Fixpoint index {A : Type} {n : nat} (t : BTH A n) (i : Index n) : A.
+Inductive Fin : nat -> Type :=
+    | FZ : forall n : nat, Fin (S n)
+    | FS : forall n : nat, Fin n -> Fin (S n).
+
+Arguments FZ {n}.
+Arguments FS {n} _.
+
+Fixpoint index {A : Type} {n : nat} (i : Fin n) (v : vec A n) : A.
 Proof.
-  destruct t.
-    inversion i.
-    inversion i; subst.
-      exact a.
-      destruct H0.
-        apply index with n0.
-      try exact (index _ _ t1 H0).
-Abort.
+  destruct i as [| n i'].
+    inversion v. exact X.
+    inversion v. exact (index _ _ i' X0).
+Defined.
 
-End TH.
+End Vec.
+
+Module hTree.
+
+Inductive T (A : Type) : nat -> Type :=
+    | E : T A 0
+    | N :
+        forall {n m : nat},
+          A -> T A n -> T A m -> T A (S (max n m)).
+
+(** To jednak działa inaczej niż myślałem. *)
+
+End hTree.
 
 Module W.
 

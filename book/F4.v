@@ -1,4 +1,4 @@
-(** * F4: Kolisty *)
+(** * F4: Kolisty (co nie znaczy, że okrągły) *)
 
 Require Import book.D5.
 
@@ -24,6 +24,8 @@ Proof.
   destruct l1, l2. cbn. intro. rewrite H. reflexivity.
 Qed.
 (* end hide *)
+
+(** ** Bipodobieństwo *)
 
 (** Zdefiniuj relację bipodobieństwa dla kolist. Udowodnij, że jest ona
     relacją równoważności. Z powodu konfliktu nazw bipodobieństwo póki
@@ -98,6 +100,89 @@ Proof.
     apply lsim_trans.
 Defined.
 
+(** ** Różność *)
+
+(** Przyda się też induktywna wersja relacji [<>]. Zdefiniuj ją i pokaż,
+    że induktywna wersja implikuje zwykłą. Czy implikacja w drugą stronę
+    zachodzi? *)
+
+Inductive coList_neq
+  {A : Type} : coList A -> coList A -> Prop :=
+    | coList_neq_nc :
+        forall l1 l2 : coList A,
+          uncons l1 = None -> uncons l2 <> None -> coList_neq l1 l2
+    | coList_neq_cn :
+        forall l1 l2 : coList A,
+          uncons l1 <> None -> uncons l2 = None -> coList_neq l1 l2
+    | coList_neq_cc_here :
+        forall (h1 h2 : A) (t1 t2 l1 l2 : coList A),
+          uncons l1 = Some (h1, t1) ->
+          uncons l2 = Some (h2, t2) ->
+            h1 <> h2 -> coList_neq l1 l2
+    | coList_neq_cc_there :
+        forall (h1 h2 : A) (t1 t2 l1 l2 : coList A),
+          uncons l1 = Some (h1, t1) ->
+          uncons l2 = Some (h2, t2) ->
+            coList_neq t1 t2 -> coList_neq l1 l2.
+
+Lemma coList_neq_not_lsim :
+  forall {A : Type} {l1 l2 : coList A},
+    coList_neq l1 l2 -> ~ lsim l1 l2.
+(* begin hide *)
+Proof.
+  induction 1;
+  intros []; decompose [ex or and] lsim'0; clear lsim'0;
+  congruence.
+Qed.
+(* end hide *)
+
+Lemma nlsim_neq :
+  forall {A : Type} {l1 l2 : coList A},
+    ~ lsim l1 l2 -> l1 <> l2.
+(* begin hide *)
+Proof.
+  intros A l1 l2 Hsim Heq.
+  subst.
+  apply Hsim, lsim_refl.
+Qed.
+(* end hide *)
+
+Lemma coList_neq_antirefl :
+  forall {A : Type} (l : coList A),
+    ~ coList_neq l l.
+(* begin hide *)
+Proof.
+  intros A l H.
+  apply coList_neq_not_lsim, nlsim_neq in H.
+  contradiction.
+Qed.
+(* end hide *)
+
+Hint Constructors coList_neq.
+
+Lemma coList_neq_sym :
+  forall {A : Type} {l1 l2 : coList A},
+    coList_neq l1 l2 -> coList_neq l2 l1.
+(* begin hide *)
+Proof.
+  induction 1; eauto.
+Qed.
+(* end hide *)
+
+Lemma coList_neq_cotrans :
+  forall {A : Type} {l1 l3 : coList A},
+    coList_neq l1 l3 ->
+      forall l2 : coList A,
+        coList_neq l1 l2 \/ coList_neq l2 l3.
+Proof.
+  intros A l1 l3.
+  induction 1; intros [[]]; auto.
+    left. constructor; cbn; congruence.
+    right. constructor; cbn; congruence.
+Admitted.
+
+(** ** [conil] i [cocons] *)
+
 (** Zdefiniuj [conil], czyli kolistę pustą, oraz [cocons], czyli funkcję,
     która dokleja do kolisty nową głowę. Udowodnij, że [cocons] zachowuje
     i odbija bipodobieństwo. *)
@@ -133,6 +218,8 @@ Proof.
     inv H0. inv H. auto.
 Qed.
 (* end hide *)
+
+(** ** [len] *)
 
 (** Przygodę z funkcjami na kolistach zaczniemy od długości. Tak jak zwykła,
     induktywna lista ma długość wyrażającą się liczbą naturalną, tak też i
@@ -187,6 +274,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** [snoc] *)
+
 (** Zdefiniuj funkcję [snoc], która dostawia element na koniec kolisty. *)
 
 (* begin hide *)
@@ -222,6 +311,8 @@ Proof.
     do 2 eexists. intuition. reflexivity.
 Qed.
 (* end hide *)
+
+(** ** [app] *)
 
 (** Zdefiniuj funkcję [app], która skleja dwie kolisty. Czy jest to w ogóle
     możliwe? Czy taka funkcja ma sens? Porównaj z przypadkiem sklejania
@@ -325,6 +416,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** [lmap] *)
+
 (** Zdefiniuj funkcję [lmap], która aplikuje funkcję [f : A -> B] do
     każdego elementu kolisty.
 
@@ -412,7 +505,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma lmap_compose :
+Lemma lmap_comp :
   forall (A B C : Type) (f : A -> B) (g : B -> C) (l : coList A),
     lsim (lmap g (lmap f l)) (lmap (fun x => g (f x)) l).
 (* begin hide *)
@@ -438,6 +531,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** [iterate] *)
+
 (** Zdefiniuj funkcję [iterate], która tworzy nieskończoną kolistę przez
     iterowanie funkcji [f] poczynając od pewnego ustalonego elementu. *)
 
@@ -459,6 +554,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** [piterate] *)
+
 (** Zdefiniuj funkcję [piterate], która tworzy kolistę przez iterowanie
     funkcji częściowej [f : A -> option B] poczynając od pewnego ustalonego
     elementu. *)
@@ -473,6 +570,8 @@ CoFixpoint piterate {A : Type} (f : A -> option A) (x : A) : coList A :=
       end)
 |}.
 (* end hide *)
+
+(** ** [zipW] *)
 
 (** Zdefiniuj funkcję [zipW], która bierze funkcję [f : A -> B -> C] oraz
     dwie kolisty [l1] i [l2] i zwraca kolistę, której elementy powstają z
@@ -530,8 +629,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Napisz funkcję [scan], która przekształca [l : coList A] w kolistę sum
-    częściowych działania [f : B -> A -> B]. *)
+(** ** [scan] *)
+
+(** Napisz funkcję [scan], która przekształca [l : coList A] w kolistę
+    sum częściowych działania [f : B -> A -> B]. *)
 
 (* begin hide *)
 CoFixpoint scan
@@ -576,7 +677,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(** TODO: snoc, app, map, iterate, piterate. *)
+(* begin hide *)
+(** TODO: kolistowy [scan] vs snoc, app, map, iterate, piterate. *)
+(* end hide *)
+
+(** ** [intersperse] *)
 
 (** Napisz funkcję [intersperse], która działa analogicznie jak dla list. *)
 
@@ -606,6 +711,14 @@ Qed.
 
 (** Pułapka: czy poniższe twierdzenie jest prawdziwe? *)
 
+Lemma add_succ :
+  forall n m : conat,
+    sim (add (succ n) m) (succ (add n m)).
+Proof.
+  constructor. cbn.
+  right. do 2 eexists. intuition.
+Qed.
+
 Lemma len_intersperse :
   forall (A : Type) (x : A) (l : coList A),
     sim (len (intersperse x l)) (succ (add (len l) (len l))).
@@ -613,12 +726,13 @@ Lemma len_intersperse :
 Proof.
   cofix CH.
   constructor. destruct l as [[[h1 [[[h2 t] |]]] |]]; cbn.
-    right. do 2 eexists. intuition. rewrite len_cocons. admit.
-    right. exists zero, (succ (succ zero)). intuition.
-      f_equal. apply eq_pred. cbn. reflexivity.
-      do 3 (f_equal; apply eq_pred; cbn). reflexivity.
+    right. do 2 eexists. intuition. rewrite len_cocons.
+      replace ({| uncons := Some (h1, _) |}) with (cocons h1 (cocons h2 t)).
+        rewrite !len_cocons. rewrite add_succ. apply sim_succ.
 Abort.
 (* end hide *)
+
+(** ** [splitAt] *)
 
 (** Napisz rekurencyjną funkcję [splitAt]. [splitAt l n] zwraca
     [Some (begin, x, rest)], gdzie [begin] jest listą reprezentującą
@@ -684,6 +798,8 @@ match splitAt l n with
     | None => None
     | Some (start, _, rest) => Some (app (fromList start) rest)
 end.
+
+(** ** [Finite] i [Infinite] *)
 
 (** Zdefiniuj predykaty [Finite] oraz [Infinite], które są spełnione,
     odpowiednio, przez skończone i nieskończone kolisty. Zastanów się
@@ -835,6 +951,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Infinite_app :
+  forall (A : Type) (l1 l2 : coList A),
+    Infinite l1 \/ Infinite l2 -> Infinite (app l1 l2).
+(* begin hide *)
+Proof.
+  destruct 1.
+    apply Infinite_app_l. assumption.
+    apply Infinite_app_r. assumption.
+Qed.
+(* end hide *)
+
 Lemma Finite_app :
   forall (A : Type) (l1 l2 : coList A),
     Finite l1 -> Finite l2 -> Finite (app l1 l2).
@@ -850,21 +977,26 @@ Proof.
 Qed.
 (* end hide *)
 
+Hint Constructors Finite.
+
 Lemma Finite_app_conv :
   forall (A : Type) (l1 l2 : coList A),
-    Finite (app l1 l2) -> Finite l1 \/ Finite l2.
+    Finite (app l1 l2) -> Finite l1 /\ Finite l2.
 (* begin hide *)
 Proof.
   intros. remember (app l1 l2) as l. revert l1 l2 Heql.
   induction H; intros; subst; cbn in *.
     destruct l1 as [[[h t]|]]; cbn in H.
       inversion H.
-      left. constructor. cbn. reflexivity.
+      auto.
     destruct l1 as [[[h' t']|]]; cbn in H.
       inversion H; subst. destruct (IHFinite _ _ eq_refl).
-        left. eright; eauto. cbn. reflexivity.
-        right. assumption.
-      left. constructor. cbn. reflexivity.
+        split.
+          econstructor 2; cbn; eauto.
+          assumption.
+      split.
+        auto.
+        econstructor 2; eauto.
 Qed.
 (* end hide *)
 
@@ -990,6 +1122,8 @@ Proof.
         rewrite IH. exists (h :: start), x, rest. reflexivity.
 Qed.
 (* end hide *)
+
+(** ** [Exists] i [Forall] *)
 
 (** Zdefiniuj predykaty [Exists P] oraz [Forall P], które są spełnione
     przez kolisty, których odpowiednio jakiś/wszystkie elementy spełniają
