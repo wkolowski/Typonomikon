@@ -340,12 +340,12 @@ Proof. rel. Qed.
 
 (** To nie wszystkie właściwości tych operacji, ale myślę, że widzisz już,
     dokąd to wszystko zmierza. Jako, że [Rnot], [Rand] i [Ror] pochodzą
-    bezpośrednio od spójników logicznych [not], [and] i [or], to dziedziczą
+    bezpośrednio od spójników logicznych [not], [and] i [or], dziedziczą
     one po nich wszystkie ich właściwości.
 
     Fenomen ten nie jest w żaden sposób specyficzny dla relacji i operacji
-    na nich. TODO: mam nadzieję, że w przyszłych rozdziałach jeszcze się z
-    nim spotkamy. Tymczasem przyjrzyjmy się bliżej specjalnym rodzajom
+    na nich - z pewnością spotkamy się z nim ponownie w nadchodzących
+    rozdziałach. Tymczasem przyjrzyjmy się bliżej specjalnym rodzajom
     relacji. *)
 
 (** * Rodzaje relacji heterogenicznych *)
@@ -2185,16 +2185,18 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
+Require Import Lia.
+
 Lemma Rcomp_not_Trichotomous :
   exists (A : Type) (R S : rel A),
     Trichotomous R /\ Trichotomous S /\ ~ Trichotomous (Rcomp R S).
 Proof.
   exists nat, lt, lt. split; [idtac | split].
-    1-2: admit.
+    1-2: split; lia.
     destruct 1. unfold Rcomp in *. specialize (trichotomous0 0 1).
       decompose [and or ex] trichotomous0; clear trichotomous0.
-        1-3: admit.
-Admitted.
+        all: lia.
+Qed.
 (* end hide *)
 
 Instance Trichotomous_Rinv :
@@ -2210,13 +2212,13 @@ Lemma Rand_not_Trichotomous :
     Trichotomous R /\ Trichotomous S /\ ~ Trichotomous (Rand R S).
 Proof.
   exists nat, lt, gt. split; [idtac | split].
-    1-2: admit.
+    1-2: split; lia.
     destruct 1 as [H]. unfold Rand in H. specialize (H 0 1).
       decompose [and or] H; clear H.
         inversion H2.
         inversion H1.
         inversion H0.
-Admitted.
+Qed.
 (* end hide *)
 
 (* begin hide *)
@@ -2347,12 +2349,50 @@ Instance Equivalence_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
+Inductive Threee : Type := One | Two | Three.
+
 (* begin hide *)
+Definition wut (x y : Threee) : Prop :=
+match x, y with
+    | One  , One   => True
+    | Two  , Two   => True
+    | Three, Three => True
+    | One  , Two   => True
+    | Two  , One   => True
+    | _    , _     => False
+end.
+
+Definition wut' (x y : Threee) : Prop :=
+match x, y with
+    | One  , One   => True
+    | Two  , Two   => True
+    | Three, Three => True
+    | One  , Three => True
+    | Three, One   => True
+    | _    , _     => False
+end.
+
+Search Ror not.
+
 Lemma Ror_not_Equivaence :
   exists (A : Type) (R S : rel A),
     Equivalence R /\ Equivalence S /\ ~ Equivalence (Ror R S).
 Proof.
-Abort. (* TODO *)
+  exists
+    Threee,
+    wut', wut.
+  split.
+    admit.
+    split.
+      repeat split.
+        destruct x; cbn; trivial.
+        destruct x, y; cbn; trivial.
+        destruct x, y, z; cbn; trivial.
+      destruct 1 as [[] [] []]; unfold Ror in *; cbn in *.
+        specialize (reflexive0 One). cbn in *.
+        specialize (symmetric0 Two Three). cbn in *.
+        specialize (transitive0 Three Two One); cbn in *.
+Admitted.
 (* end hide *)
 
 (* begin hide *)
@@ -2437,29 +2477,28 @@ Abort.
 (** * Słabe relacje homogeniczne *)
 
 (* begin hide *)
-(* TODO *)
-Class WeakReflexive {A : Type} {E : rel A}
+(* TODO *) Class WeakReflexive {A : Type} {E : rel A}
   (H : Equivalence E) (R : rel A) : Prop :=
 {
     wrefl : forall x y : A, R x y -> E x y
 }.
 (* end hide *)
 
-Class WeakAntisymmetric {A : Type} (R : rel A) : Prop :=
+Class Univalent {A : Type} (R : rel A) : Prop :=
 {
-    wantisymmetric : forall x y : A, R x y -> R y x -> x = y
+    univalent : forall x y : A, R x y -> R y x -> x = y
 }.
 
-Instance WeakAntisymmetric_eq :
-  forall A : Type, WeakAntisymmetric (@eq A).
+Instance Univalent_eq :
+  forall A : Type, Univalent (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Lemma Rcomp_not_WeakAntisymmetric :
+Lemma Rcomp_not_Univalent :
   exists (A : Type) (R S : rel A),
-    WeakAntisymmetric R /\ WeakAntisymmetric S /\
-      ~ WeakAntisymmetric (Rcomp R S).
+    Univalent R /\ Univalent S /\
+      ~ Univalent (Rcomp R S).
 (* begin hide *)
 Proof.
   pose (R := fun b b' : bool =>
@@ -2471,31 +2510,31 @@ Proof.
     destruct x, y; cbn; do 2 inversion 1; auto.
     unfold Rcomp; destruct 1. cut (true = false).
       inversion 1.
-      apply wantisymmetric0.
+      apply univalent0.
         exists false. cbn. auto.
         exists false. cbn. auto.
 Qed.
 (* end hide *)
 
-Instance WeakAntisymmetric_Rinv :
+Instance Univalent_Rinv :
   forall (A : Type) (R : rel A),
-    WeakAntisymmetric R -> WeakAntisymmetric (Rinv R).
+    Univalent R -> Univalent (Rinv R).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Instance WeakAntisymmetric_Rand :
+Instance Univalent_Rand :
   forall (A : Type) (R S : rel A),
-    WeakAntisymmetric R -> WeakAntisymmetric S ->
-      WeakAntisymmetric (Rand R S).
+    Univalent R -> Univalent S ->
+      Univalent (Rand R S).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Lemma Ror_not_WeakAntisymmetric :
+Lemma Ror_not_Univalent :
   exists (A : Type) (R S : rel A),
-    WeakAntisymmetric R /\ WeakAntisymmetric S /\
-      ~ WeakAntisymmetric (Ror R S).
+    Univalent R /\ Univalent S /\
+      ~ Univalent (Ror R S).
 (* begin hide *)
 Proof.
   pose (R := fun b b' : bool =>
@@ -2507,13 +2546,13 @@ Proof.
     destruct x, y; cbn; do 2 inversion 1; auto.
     unfold Ror; destruct 1. cut (true = false).
       inversion 1.
-      apply wantisymmetric0; cbn; auto.
+      apply univalent0; cbn; auto.
 Qed.
 (* end hide *)
 
-Lemma Rnot_not_WeakAntisymmetric :
+Lemma Rnot_not_Univalent :
   exists (A : Type) (R : rel A),
-    WeakAntisymmetric R /\ ~ WeakAntisymmetric (Rnot R).
+    Univalent R /\ ~ Univalent (Rnot R).
 (* begin hide *)
 Proof.
   pose (R := fun b b' : bool => if andb b b' then True else False).
@@ -2522,28 +2561,27 @@ Proof.
     unfold Rnot; destruct 1.
       cut (true = false).
         inversion 1.
-        apply wantisymmetric0; auto.
+        apply univalent0; auto.
 Qed.
 (* end hide *)
 
-
-Class WeakAntisymmetric' {A : Type} {E : rel A}
+Class Univalent' {A : Type} {E : rel A}
   (H : Equivalence E) (R : rel A) : Prop :=
 {
     wasym : forall x y : A, R x y -> R y x -> E x y
 }.
 
-Instance WeakAntisymmetric_equiv :
+Instance Univalent_equiv :
   forall (A : Type) (E : rel A) (H : Equivalence E),
-    WeakAntisymmetric' H E.
+    Univalent' H E.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Lemma Rcomp_not_WeakAntisymmetric' :
+Lemma Rcomp_not_Univalent' :
   exists (A : Type) (E R S : rel A), forall H : Equivalence E,
-    WeakAntisymmetric' H R /\ WeakAntisymmetric' H S /\
-      ~ WeakAntisymmetric' H (Rcomp R S).
+    Univalent' H R /\ Univalent' H S /\
+      ~ Univalent' H (Rcomp R S).
 (* begin hide *)
 Proof.
   pose (R := fun b b' : bool =>
@@ -2561,25 +2599,25 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeakAntisymmetric'_Rinv :
+Instance Univalent'_Rinv :
   forall (A : Type) (E : rel A) (H : Equivalence E) (R : rel A),
-    WeakAntisymmetric' H R -> WeakAntisymmetric' H (Rinv R).
+    Univalent' H R -> Univalent' H (Rinv R).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Instance WeakAntisymmetric'_Rand :
+Instance Univalent'_Rand :
   forall (A : Type) (E : rel A) (H : Equivalence E) (R S : rel A),
-    WeakAntisymmetric' H R -> WeakAntisymmetric' H S ->
-      WeakAntisymmetric' H (Rand R S).
+    Univalent' H R -> Univalent' H S ->
+      Univalent' H (Rand R S).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Lemma Ror_not_WeakAntisymmetric' :
+Lemma Ror_not_Univalent' :
   exists (A : Type) (E R S : rel A), forall H : Equivalence E,
-    WeakAntisymmetric' H R /\ WeakAntisymmetric' H S /\
-      ~ WeakAntisymmetric' H (Ror R S).
+    Univalent' H R /\ Univalent' H S /\
+      ~ Univalent' H (Ror R S).
 (* begin hide *)
 Proof.
   pose (R := fun b b' : bool =>
@@ -2595,9 +2633,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Rnot_not_WeakAntisymmetric' :
+Lemma Rnot_not_Univalent' :
   exists (A : Type) (E R : rel A), forall H : Equivalence E,
-    WeakAntisymmetric' H R /\ ~ WeakAntisymmetric' H (Rnot R).
+    Univalent' H R /\ ~ Univalent' H (Rnot R).
 (* begin hide *)
 Proof.
   pose (R := fun b b' : bool => if andb b b' then True else False).
@@ -2621,7 +2659,7 @@ Class Preorder {A : Type} (R : rel A) : Prop :=
 Class PartialOrder {A : Type} (R : rel A) : Prop :=
 {
     PartialOrder_Preorder :> Preorder R;
-    PartialOrder_WeakAntisymmetric :> WeakAntisymmetric R;
+    PartialOrder_Univalent :> Univalent R;
 }.
 
 Class TotalOrder {A : Type} (R : rel A) : Prop :=
@@ -2639,7 +2677,7 @@ Class StrictPreorder {A : Type} (R : rel A) : Prop :=
 Class StrictPartialOrder {A : Type} (R : rel A) : Prop :=
 {
     StrictPartialOrder_Preorder :> StrictPreorder R;
-    StrictPartialOrder_WeakAntisymmetric :> Antisymmetric R;
+    StrictPartialOrder_Univalent :> Antisymmetric R;
 }.
 
 Class StrictTotalOrder {A : Type} (R : rel A) : Prop :=

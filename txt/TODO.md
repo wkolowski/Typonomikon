@@ -32,6 +32,7 @@
 - Z definiowania typów induktywnych (i relacji też).
 - Z uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
 7. Opisać zippery (z dwóch perspektyw: łażenie po drzewach i różniczkowanie typów) oraz indeksowanie poddrzew dla typów induktywnych (czyli też, w jakiejś formie, zippery).
+8. Odkłamać kwestię "skończoność" typów induktywnych i "nieskończoności" typów koinduktywnych. Tak naprawdę, to chodzi o to, że typy induktywny są dobrze ufundowane, a typy koinduktywne niekoniecznie.
 
 ## Indukcja - teoria
 1. Kwestia non-uniform parameters i jak je zasymulować przy użyciu indeksów.

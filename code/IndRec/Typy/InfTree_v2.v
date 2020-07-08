@@ -129,7 +129,6 @@ match t with
     | N x g => N (f x) (fun a : A => map f (g a))
 end.
 
-
 Fixpoint zipWith
   {A B C D : Type} (f : B -> C -> D)
   (t1 : InfTree A B) (t2 : InfTree A C) : InfTree A D :=
@@ -175,23 +174,93 @@ Parameter AtLeast : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
 Parameter AtMost : forall A : Type, (A -> Prop) -> nat -> BTree A -> Prop.
 *)
 
-Inductive SameStructure
-  {A B C : Type}
-  : InfTree A B -> InfTree A C -> Prop :=
-    | SS_E : SameStructure E E
+Inductive SameShape
+  {A B C : Type} : InfTree A B -> InfTree A C -> Prop :=
+    | SS_E : SameShape E E
     | SS_N :
         forall
           (x : B) (y : C)
           (f : A -> InfTree A B) (g : A -> InfTree A C),
-            (forall a : A, SameStructure (f a) (g a)) ->
-              SameStructure (N x f) (N y g).
-
-(*
-Parameter SameShape : forall A B : Type, BTree A -> BTree B -> Prop.
-*)
+            (forall a : A, SameShape (f a) (g a)) ->
+              SameShape (N x f) (N y g).
 
 Inductive InfTreeDirectSubterm
   {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
     | ITDS_E :
         forall (x : A) (f : B -> InfTree B A) (b : B),
           InfTreeDirectSubterm (f b) (N x f).
+
+Inductive InfTreeSubterm
+  {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
+    | ITS_refl :
+        forall t : InfTree B A, InfTreeSubterm t t
+    | ITS_step :
+        forall t1 t2 t3 : InfTree B A,
+          InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
+            InfTreeSubterm t1 t3.
+
+Inductive InfTreeEq
+  {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
+    | ITE_E : InfTreeEq E E
+    | ITE_N :
+        forall (v1 v2 : A) (f1 f2 : B -> InfTree B A),
+          v1 = v2 -> (forall b : B, InfTreeEq (f1 b) (f2 b)) ->
+            InfTreeEq (N v1 f1) (N v2 f2).
+
+Require Import FunctionalExtensionality.
+
+Lemma decode :
+  forall {B A : Type} {t1 t2 : InfTree B A},
+    InfTreeEq t1 t2 -> t1 = t2.
+Proof.
+  induction 1.
+    reflexivity.
+    f_equal.
+      assumption.
+      apply functional_extensionality. intro x. apply H1.
+Restart.
+  fix IH 5.
+  destruct 1.
+    reflexivity.
+    f_equal.
+      assumption.
+      apply functional_extensionality. intro. apply IH, H0.
+Defined.
+
+Lemma encode :
+  forall {B A : Type} {t1 t2 : InfTree B A},
+    t1 = t2 -> InfTreeEq t1 t2.
+Proof.
+  destruct 1.
+  induction t1; constructor.
+    reflexivity.
+    assumption.
+Restart.
+  destruct 1.
+  revert t1.
+  fix encode 1.
+  destruct t1; constructor.
+    reflexivity.
+    intro. apply encode.
+Defined.
+
+Lemma encode_decode :
+  forall {B A : Type} {t1 t2 : InfTree B A} (p : t1 = t2),
+    decode (encode p) = p.
+Proof.
+  destruct p. cbn.
+  induction t1; cbn.
+    reflexivity.
+    rewrite eq_trans_refl_l.
+Abort.
+
+Scheme InfTreeEq_ind' := Induction for InfTreeEq Sort Prop.
+
+Lemma decode_encode :
+  forall {B A : Type} {t1 t2 : InfTree B A} (c : InfTreeEq t1 t2),
+    encode (decode c) = c.
+Proof.
+  induction c using InfTreeEq_ind'; cbn.
+    reflexivity.
+    destruct e. rewrite eq_trans_refl_l. unfold encode.
+Abort.
