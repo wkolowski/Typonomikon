@@ -1990,7 +1990,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Przechodniość *)
+(** ** Przechodniość (TODO) *)
 
 Class Transitive {A : Type} (R : rel A) : Prop :=
 {
@@ -2064,7 +2064,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Inne *)
+(** ** Inne (TODO) *)
 
 Class Total {A : Type} (R : rel A) : Prop :=
 {
@@ -2300,7 +2300,7 @@ Proof.
 Abort.
 (* end hide *)
 
-(** * Relacje równoważności *)
+(** * Relacje równoważności (TODO) *)
 
 Class Equivalence {A : Type} (R : rel A) : Prop :=
 {
@@ -2403,7 +2403,7 @@ Proof.
 Abort.
 (* end hide *)
 
-(** * Relacje apartheidu *)
+(** * Relacje apartheidu (TODO) *)
 
 Class Apartness {A : Type} (R : A -> A -> Prop) : Prop :=
 {
@@ -2474,7 +2474,7 @@ Proof.
 Abort.
 (* end hide *)
 
-(** * Słabe relacje homogeniczne *)
+(** * Słabe relacje homogeniczne (TODO) *)
 
 (* begin hide *)
 (* TODO *) Class WeakReflexive {A : Type} {E : rel A}
@@ -2648,7 +2648,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Złożone relacje homogeniczne *)
+(** * Złożone relacje homogeniczne (TODO) *)
 
 Class Preorder {A : Type} (R : rel A) : Prop :=
 {
@@ -2686,7 +2686,7 @@ Class StrictTotalOrder {A : Type} (R : rel A) : Prop :=
     StrictTotalOrder_Total : Total R;
 }.
 
-(** * Domknięcia *)
+(** * Domknięcia (TODO) *)
 
 (** Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
     niepostrzeżenie przywyczajały do monad. *)
@@ -3014,7 +3014,7 @@ Proof.
 Abort.
 (* end hide *)
 
-(** * Redukcje *)
+(** * Redukcje (TODO) *)
 
 Definition rr {A : Type} (R : rel A) : rel A :=
   fun x y : A => R x y /\ x <> y.

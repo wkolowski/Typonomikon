@@ -1,4 +1,4 @@
-(** * F1: Koindukcja i korekursja *)
+(** * F1: Koindukcja i korekursja [TODO] *)
 
 (* begin hide *)
 
@@ -69,7 +69,7 @@ Proof.
   constructor; eauto. rewrite hds1. assumption.
 Qed.
 
-(** *** Jakieś pierdoły *)
+(** *** Jakieś pierdoły (TODO) *)
 
 CoFixpoint from' (n : nat) : Stream nat :=
 {|
@@ -87,10 +87,9 @@ Definition facts : Stream nat := facts' 1 0.
 
 (*Compute stake 9 facts.*)
 
-(** *** Z manuala Agdy *)
+(** *** Przykład z manuala Agdy (TODO) *)
 
 (**
-
     hd (evens s) := hd s;
     tl (evens s) := evens (tl (tl s));
 *)
@@ -128,15 +127,17 @@ Proof.
       cbn. apply CH.
 Qed.
 
-(** *** Bijekcja między strumieniami i funkcjami *)
+(** *** Bijekcja między [Stream unit] i [unit] (TODO) *)
 
 Instance Equiv_bisim (A : Type) : Equivalence (@bisim A).
+(* begin hide *)
 Proof.
   split; red.
     apply bisim_refl.
     apply bisim_sym.
     apply bisim_trans.
 Defined.
+(* end hide *)
 
 CoFixpoint theChosenOne : Stream unit :=
 {|
@@ -146,43 +147,51 @@ CoFixpoint theChosenOne : Stream unit :=
 
 Lemma all_chosen_unit_aux :
   forall s : Stream unit, bisim s theChosenOne.
+(* begin hide *)
 Proof.
   cofix CH.
   constructor.
     destruct (hd s). cbn. reflexivity.
     cbn. apply CH.
 Qed.
+(* end hide *)
 
-Theorem all_chosen_unit :
+Lemma all_chosen_unit :
   forall x y : Stream unit, bisim x y.
+(* begin hide *)
 Proof.
   intros.
   rewrite (all_chosen_unit_aux x), (all_chosen_unit_aux y).
   reflexivity.
 Qed.
+(* end hide *)
 
 Axiom bisim_eq :
   forall (A : Type) (x y : Stream A), bisim x y -> x = y.
 
 Theorem all_eq :
   forall x y : Stream unit, x = y.
+(* begin hide *)
 Proof.
   intros. apply bisim_eq. apply all_chosen_unit.
 Qed.
+(* end hide *)
 
 Definition unit_to_stream (u : unit) : Stream unit := theChosenOne.
 Definition stream_to_unit (s : Stream unit) : unit := tt.
 
-Theorem unit_is_Stream_unit :
+Lemma unit_is_Stream_unit :
   Bijective unit_to_stream.
+(* begin hide *)
 Proof.
   red. exists stream_to_unit.
   split; intros.
     destruct x; trivial.
     apply all_eq.
 Qed.
+(* end hide *)
 
-(** *** Trochę losowości *)
+(** *** Trochę losowości (TODO) *)
 
 CoFixpoint rand (seed n1 n2 : Z) : Stream Z :=
 {|
@@ -205,7 +214,7 @@ end.
 Compute stake 10 (rand 1 123456789 987654321).
 Compute stake 10 (rand' 1235 234567890 6652).
 
-(** ** Kolisty *)
+(** ** Kolisty (TODO) *)
 
 CoInductive Conat : Type :=
 {
@@ -278,14 +287,15 @@ match uncons l1 with
     | Some (h, t) => {| uncons := Some (h, lapp t l2) |}
 end.
 
-(*
-CoFixpoint general_omega {A : Set} (l1 l2 : coList A) : coList A :=
+(* begin hide *)
+(* TODO CoFixpoint general_omega {A : Set} (l1 l2 : coList A) : coList A :=
 match l1, l2 with
     | _, LNil => l1
     | LNil, LCons h' t' => LCons h' (general_omega t' l2)
     | LCons h t, _ => LCons h (general_omega t l2)
 end.
 *)
+(* end hide *)
 
 CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=
 {|
@@ -359,17 +369,6 @@ Proof.
     apply IHFinite. inversion H0; inversion p; subst. assumption.
 Qed.
 
-(*
-Lemma Infinite_not_Finite :
-  forall (A : Type) (l : coList A),
-    Infinite l -> ~ Finite l.
-Proof.
-  induction 2.
-    inversion H. inversion p.
-    apply IHFinite. inversion H; inversion p; subst. assumption.
-Qed.
-*)
-
 CoInductive bisim2 {A : Type} (l1 l2 : coList A) : Prop :=
 {
     bisim2' :
@@ -441,7 +440,7 @@ Proof.
       rewrite p1 in p. inversion p; subst. eapply CH; eauto.
 Qed.
 
-(** ** Drzewka *)
+(** ** Drzewka (TODO) *)
 
 CoInductive coBTree (A : Type) : Type :=
 {
@@ -512,8 +511,9 @@ Proof.
     auto.
 Qed.
 
-(** ** Rekursja ogólna *)
+(** ** Rekursja ogólna (TODO) *)
 
+(* begin hide *)
 CoInductive Div (A : Type) : Type :=
 {
     call : A + Div A
@@ -572,7 +572,7 @@ end.
 Compute map (fun n : nat => take 200 (collatz' n)) [30; 31; 32; 33].
 Compute take 150 (collatz' 12344).
 
-(** insertion sort na kolistach *)
+(** TODO: insertion sort na kolistach *)
 
 CoFixpoint ins (n : nat) (s : coList nat) : coList nat :=
 {|
@@ -588,44 +588,22 @@ CoFixpoint ins (n : nat) (s : coList nat) : coList nat :=
       end
 |}.
 
-(*
 CoFixpoint ss (s : coList nat) : coList nat :=
 {|
     uncons :=
       match uncons s with
           | None => None
           | Some (h, t) =>
-              match uncons (ss t) with
+              match uncons (ins h t) with
                   | None => None
-                  | Some (h', t') => Some (h', ins h t')
+                  | Some (h', t') => Some (h', ss t')
               end
       end
 |}.
-*)
+(* end hide *)
 
-(** Relacja dobrze ufundowana nie ma nieskończonych łańcuchów malejących *)
-
-CoInductive DecChain {A : Type} (R : A -> A -> Prop) (x : A) : Prop :=
-{
-    hd' : A;
-    R_hd'_x : R hd' x;
-    tl' : DecChain R hd';
-}.
-
-Lemma wf_no_DecChain :
-  forall (A : Type) (R : A -> A -> Prop) (x : A),
-    well_founded R -> DecChain R x -> False.
-Proof.
-  unfold well_founded.
-  intros A R x H C.
-  specialize (H x).
-  revert C.
-  induction H; intro.
-  inversion C.
-  apply H0 with hd'; assumption.
-Qed.
-
-(** wut - końcówka kolistowego burdla *)
+(* begin hide *)
+(** TODO: końcówka kolistowego burdla *)
 
 Ltac inv H := inversion H; subst; clear H.
 
@@ -733,8 +711,9 @@ Proof.
     f_equal. apply IHt1. assumption.
 Defined.
 *)
+(* end hide *)
 
-(** * Ćwiczenia *)
+(** * Ćwiczenia (TODO) *)
 
 (** **** Ćwiczenie *)
 

@@ -39,10 +39,6 @@
 2. Typy induktywne z parametrami + równość = rodziny indeksowane.
 9. Izomorfizmy dla typów induktywnych: każde drzewo jest drzewem o jakiejś wysokości (no chyba że ma nieskończone rozgałęzienie, to wtedy nie). Uogólniając: każdy element typu induktywnego jest elementem odpowiadającego mu typu indeksowanego o pewnym indeksie. UWAGA: rozróżnienie na drzewa o skończonej wysokości vs drzewa o ograniczonej wysokości.
 
-## Funkcje
-1. Dokończyć podrozdział o odwrotnościach i izomorfizmach.
-2. Napisać coś o (pre/post)skracalności (i o retraktach! - straszne słowo).
-
 ## HoTT
 1. Kodowanie Churcha dla typów ilorazowych.
 2. Wprowadzić teorię zbiorów za pomocą wyższego typu induktywnego.

@@ -1,6 +1,6 @@
-(** * F3: Strumienie *)
+(** * F3: Strumienie [TODO] *)
 
-(** TODO: w tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
+(** W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
     wesołe koinduktywne zabawy, o których jeszcze nic nie napisałem. *)
 
 CoInductive Stream (A : Type) : Type :=
@@ -52,7 +52,10 @@ Qed.
 (** * [sapp] *)
 
 (** Zdefiniuj funkcję [sapp], która konkatenuje dwa strumienie. Czy taka
-    funkcja w ogóle ma sens? *)
+    funkcja w ogóle ma sens?
+
+    Zdefiniuj funkcję [lsapp], która dokleja listę na początek
+    strumienia. *)
 
 CoFixpoint sapp {A : Type} (s1 s2 : Stream A) : Stream A :=
 {|
@@ -79,7 +82,14 @@ match l with
     | nil => s
     | cons h t => {| hd := h; tl := lsapp t s; |}
 end.
+(* end hide *)
 
+(** * [map] *)
+
+(** Zdefiniuj funkcję [map], która aplikuje funkcję [f : A -> B] do
+    każdego elementu strumienia. *)
+
+(* begin hide *)
 CoFixpoint map {A B : Type} (f : A -> B) (s : Stream A) : Stream B :=
 {|
     hd := f (hd s);
@@ -104,6 +114,12 @@ Proof.
 Qed.
 (* end hide *)
 
+(** * [zipWith] *)
+
+(** Zdefiniuj funkcję [zipWith], która ze dwóch strumieni elementów
+    [A] oraz [B] robi strumień elementów [C], mając do dyspozycji
+    funkcję [f : A -> B -> C ]. *)
+
 (* begin hide *)
 CoFixpoint zipWith
   {A B C : Type} (f : A -> B -> C)
@@ -116,15 +132,20 @@ CoFixpoint zipWith
 Definition unzip
   {A B : Type} (s : Stream (A * B)) : Stream A * Stream B :=
     (map fst s, map snd s).
-(* end hide *)
-
-(*
-CoFixpoint unzipWith
-  {A B C : Type} (f : C -> A * B) (s : Stream C) : Stream A * Stream B
-*)
 
 (** TODO: join : Stream (Stream A) -> Stream A,
           unzis *)
+(* end hide *)
+
+(** * Inne funkcje (TODO) *)
+
+(** Zdefiniuj resztę przydatnych funkcji podobnych do tych, które są
+    dostępne dla list: [repeat], [iterate], [nth], [take], [drop],
+    [splitAt], [insert], [replace], [scanl], [scanr], [intersperse],
+    [merge].
+
+    Zdefiniuj też funkcje, których zapomniałem (albo nie chciało mi
+    się) wymienić. *)
 
 (* begin hide *)
 CoFixpoint repeat {A : Type} (x : A) : Stream A :=
@@ -234,16 +255,25 @@ Proof.
 Qed.
 (* end hide *)
 
-(* Dlaczego [s] nie musi tu być indeksem? *)
+(** * Predykaty i relacje na strumieniach (TODO) *)
+
+(** Zdefiniuj różne użyteczne predykaty i relacje podobne do tych
+    listowych, w tym [Elem], [Dup], [NoDup], [Exists], [Forall] i
+    wszystkie inne, o których zapomniałem. *)
+
+(* begin hide *)
 Inductive Elem {A : Type} (x : A) (s : Stream A) : Prop :=
     | Elem_hd : x = hd s -> Elem x s
     | Elem_tl : Elem x (tl s) -> Elem x s.
+(* end hide *)
 
 Hint Constructors Elem.
 
+(* begin hide *)
 Inductive Dup {A : Type} (s : Stream A) : Prop :=
     | Dup_hd : Elem (hd s) (tl s) -> Dup s
     | Dup_tl : Dup (tl s) -> Dup s.
+(* end hide *)
 
 Ltac inv H := inversion H; subst; clear H.
 
@@ -348,10 +378,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(* To samo: dlaczego [s] nie musi być indeksem? *)
+(* begin hide *)
 Inductive Exists {A : Type} (P : A -> Prop) (s : Stream A) : Prop :=
     | Exists_hd : P (hd s) -> Exists P s
     | Exists_tl : Exists P (tl s) -> Exists P s.
+(* end hide *)
 
 Lemma Exists_spec :
   forall (A : Type) (P : A -> Prop) (s : Stream A),
@@ -368,11 +399,13 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 CoInductive Forall {A : Type} (s : Stream A) (P : A -> Prop) : Prop :=
 {
     Forall_hd : P (hd s);
     Forall_tl : Forall (tl s) P;
 }.
+(* end hide *)
 
 Lemma Forall_spec :
   forall (A : Type) (s : Stream A) (P : A -> Prop),
@@ -413,12 +446,14 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 CoInductive Substream {A : Type} (s1 s2 : Stream A) : Prop :=
 {
     n : nat;
     p : hd s1 = nth n s2;
     Substream' : Substream (tl s1) (drop (S n) s2);
 }.
+(* end hide *)
 
 Lemma drop_tl :
   forall (A : Type) (n : nat) (s : Stream A),
@@ -551,12 +586,14 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 Inductive Suffix {A : Type} : Stream A -> Stream A -> Prop :=
     | Suffix_refl :
         forall s : Stream A, Suffix s s
     | Suffix_tl :
         forall s1 s2 : Stream A,
           Suffix (tl s1) s2 -> Suffix s1 s2.
+(* end hide *)
 
 Fixpoint snoc {A : Type} (x : A) (l : list A) : list A :=
 match l with
@@ -580,11 +617,13 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 Definition Incl {A : Type} (s1 s2 : Stream A) : Prop :=
   forall x : A, Elem x s1 -> Elem x s2.
 
 Definition SetEquiv {A : Type} (s1 s2 : Stream A) : Prop :=
   Incl s1 s2 /\ Incl s2 s1.
+(* end hide *)
 
 Lemma sim_Elem :
   forall (A : Type) (x : A) (s1 s2 : Stream A),
@@ -623,6 +662,13 @@ Definition scons {A : Type} (x : A) (s : Stream A) : Stream A :=
     tl := s;
 |}.
 
+(** * Permutacje strumieni *)
+
+(** Zdefiniuj relację [SPermutation], która jest analogiczna do
+    relacji [Permutation], którą znasz z list. Udowodnij jej
+    specyfikację. *)
+
+(* begin hide *)
 Inductive SPermutation {A : Type} : Stream A -> Stream A -> Prop :=
     | SPerm_refl :
         forall s : Stream A, SPermutation s s
@@ -638,9 +684,9 @@ Inductive SPermutation {A : Type} : Stream A -> Stream A -> Prop :=
           SPermutation s1 s2 -> SPermutation s2 s3 -> SPermutation s1 s3.
 
 Hint Constructors SPermutation.
+(* end hide *)
 
-(* TODO *)
-Require Import Permutation.
+(* TODO *) Require Import Permutation.
 
 Lemma lsapp_scons :
   forall (A : Type) (l : list A) (x : A) (s : Stream A),
@@ -730,7 +776,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Strumienie za pomocą przybliżeń. *)
+(** * Strumienie za pomocą przybliżeń (TODO) *)
 
 Module approx.
 
@@ -828,7 +874,7 @@ Qed.
 
 End approx.
 
-(** Pomysł dawno zapomniany: induktywne specyfikacje funkcji. *)
+(** * Pomysł dawno zapomniany: induktywne specyfikacje funkcji (TODO) *)
 
 Inductive Filter {A : Type} (f : A -> bool) : Stream A -> Stream A -> Prop :=
     | Filter_true :

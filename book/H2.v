@@ -39,7 +39,7 @@ match n, m with
 end.
 
 Lemma decode_encode :
-  forall (n m : nat) (p : n = m),
+  forall {n m : nat} (p : n = m),
     decode (encode p) = p.
 (* begin hide *)
 Proof.
@@ -71,18 +71,15 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma K_nat :
-  forall (n : nat) (p : n = n), p = eq_refl.
+Lemma isSet_nat :
+  forall {n m : nat} (p q : n = m), p = q.
 (* begin hide *)
 Proof.
-  intros. rewrite <- (decode_encode _ _ p).
-  replace (encode p) with (encode_aux n).
-    induction n as [| n']; cbn.
-      reflexivity.
-      rewrite IHn'.
-        cbn. reflexivity.
-        reflexivity.
-    apply isProp_code.
+  intros.
+  rewrite <- (decode_encode p),
+          <- (decode_encode q).
+  f_equal.
+  apply isProp_code.
 Qed.
 (* end hide *)
 
@@ -118,7 +115,7 @@ Lemma encode_decode :
     decode (encode p) = p.
 (* begin hide *)
 Proof.
-  destruct p. cbn.
+  destruct p; cbn.
   induction n as [| n']; cbn.
     reflexivity.
     rewrite IHn'. cbn. reflexivity.
@@ -127,20 +124,106 @@ Qed.
 
 Scheme nat_eq_ind' := Induction for nat_eq Sort Prop.
 
+Require Import Equality.
+
+Lemma isProp_code :
+  forall {n m : nat} (c1 c2 : nat_eq n m), c1 = c2.
+(* begin hide *)
+Proof.
+  induction c1 using nat_eq_ind';
+  dependent destruction c2.
+    reflexivity.
+    f_equal. apply IHc1.
+Qed.
+(* end hide *)
+
 Lemma decode_encode :
   forall {n m : nat} (c : nat_eq n m),
     encode (decode c) = c.
 (* begin hide *)
 Proof.
-  induction c using nat_eq_ind'; cbn.
-    reflexivity.
-    destruct (decode c) eqn: H. cbn in *. rewrite IHc. reflexivity.
+  intros. apply isProp_code.
+Qed.
+(* end hide *)
+
+Lemma isSet_nat :
+  forall {n m : nat} (p q : n = m), p = q.
+(* begin hide *)
+Proof.
+  intros.
+  rewrite <- (encode_decode p),
+          <- (encode_decode q).
+  apply f_equal.
+  apply isProp_code.
 Qed.
 (* end hide *)
 
 End nat_eq_ind.
 
-(** ** Nierówność liczb naturalnych - rekurencyjnie *)
+(** Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko
+    zwalcza problemy nieznane w żadnej innej teorii". *)
+
+(** Okazuje się, że sortu [SProp] można całkiem efektywnie użyć do pokazywania,
+    że coś jest zdaniem w sensie HoTTowym. Dzięki temu dowód jest krótszy o
+    całe 33%. Całkiem nieźle. *)
+
+Module nat_eq_rec_SProp.
+
+Require Import H1.
+
+Fixpoint code (n m : nat) : SProp :=
+match n, m with
+    | 0, 0 => sUnit
+    | S _, 0 => sEmpty
+    | 0, S _ => sEmpty
+    | S n', S m' => code n' m'
+end.
+
+Fixpoint encode_aux (n : nat) : code n n :=
+match n with
+    | 0 => stt
+    | S n' => encode_aux n'
+end.
+
+Definition encode {n m : nat} (p : n = m) : code n m :=
+match p with
+    | eq_refl => encode_aux n
+end.
+
+Fixpoint decode {n m : nat} : code n m -> n = m :=
+match n, m with
+    | 0, 0 => fun _ => eq_refl
+    | 0, S _ => fun c => match c with end
+    | S _, 0 => fun c => match c with end
+    | S n', S m' => fun c => @f_equal _ _ S _ _ (@decode n' m' c)
+end.
+
+Lemma decode_encode :
+  forall {n m : nat} (p : n = m),
+    decode (encode p) = p.
+(* begin hide *)
+Proof.
+  destruct p; cbn.
+  induction n as [| n']; cbn.
+    reflexivity.
+    rewrite IHn'. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma isSet_nat:
+  forall {n m : nat} (p q : n = m), p = q.
+(* begin hide *)
+Proof.
+  intros.
+  rewrite <- (decode_encode p),
+          <- (decode_encode q).
+  reflexivity.
+Qed.
+(* end hide *)
+
+End nat_eq_rec_SProp.
+
+(** ** Różność liczb naturalnych - rekurencyjnie *)
 
 Module nat_neq_rec.
 
@@ -212,7 +295,7 @@ End nat_neq_rec.
 
 Module nat_neq_ind.
 
-Inductive nat_neq : nat -> nat -> Type :=
+Inductive nat_neq : nat -> nat -> Prop :=
     | ZS : forall n : nat, nat_neq 0 (S n)
     | SZ : forall n : nat, nat_neq (S n) 0
     | SS : forall n m : nat, nat_neq n m -> nat_neq (S n) (S m).
@@ -221,66 +304,71 @@ Arguments ZS {n}.
 Arguments SZ {n}.
 Arguments SS {n m} _.
 
-Require Import Equality.
+Require Import Equality FunctionalExtensionality.
+
+Scheme nat_neq_ind' := Induction for nat_neq Sort Prop.
 
 Lemma isProp_nat_neq :
   forall {n m : nat} (p q : nat_neq n m), p = q.
+(* begin hide *)
 Proof.
-  induction p; dependent destruction q.
+  induction p using nat_neq_ind';
+  dependent destruction q.
     reflexivity.
     reflexivity.
     apply f_equal, IHp.
 Qed.
+(* end hide *)
 
-(* begin hide *)
-(** TODO *)
-(*Fixpoint encode {n m : nat} (p n <> m) : nat_neq n m
-match p with
-    | ZS => I
-    | SZ => I
-    | SS p' => encode p'
-end.
-
-Fixpoint encode {n m : nat} : n <> m -> nat_neq n m.
+Fixpoint encode {n m : nat} : n <> m -> nat_neq n m :=
 match n, m with
-    | 0, 0 => fun c : 0 <> 0 => match c eq_refl with end
-    | 0, S _ => fun _ => ZS
-    | S _, 0 => fun _ => SZ
-    | S n', S m' => fun c : S n' <> S m' => SS (@decode n' m' c)
+    | 0, 0       => fun p => match p eq_refl with end
+    | 0, S m'    => fun _ => @ZS m'
+    | S n', 0    => fun _ => @SZ n'
+    | S n', S m' => fun p => SS (@encode n' m' (fun p' => p (f_equal S p')))
 end.
+
+Fixpoint decode {n m : nat} (c : nat_neq n m) : n <> m.
+Proof.
+  destruct c.
+    inversion 1.
+    inversion 1.
+    inversion 1. apply (decode _ _ c). assumption.
+Defined.
 
 Lemma encode_decode :
-  forall {n m : nat} (p : nat_neq n m),
+  forall {n m : nat} (p : n <> m),
     decode (encode p) = p.
 (* begin hide *)
 Proof.
-  induction p; cbn.
-    1-2: reflexivity.
-    rewrite IHp. reflexivity.
+  induction n as [| n'];
+  destruct  m as [| m'];
+  cbn; intros.
+    contradiction.
+    apply functional_extensionality. inversion x.
+    apply functional_extensionality. inversion x.
+    apply functional_extensionality. intro. contradiction.
 Qed.
 (* end hide *)
 
 Lemma decode_encode :
-  forall {n m : nat} (c : code n m),
+  forall {n m : nat} (c : nat_neq n m),
     encode (decode c) = c.
 (* begin hide *)
 Proof.
-  induction n as [| n'], m as [| m']; cbn.
-    destruct c.
-    1-2: destruct c; reflexivity.
-    intro c. apply IHn'.
+  induction c using nat_neq_ind'; cbn.
+    1-2: reflexivity.
+    f_equal. rewrite <- IHc. f_equal.
+      apply functional_extensionality.
+      destruct x. cbn. rewrite IHc. reflexivity.
 Qed.
-(* end hide *)
-*)
 (* end hide *)
 
 End nat_neq_ind.
 
 Module nat_eq_neq.
 
-Import nat_eq_ind.
-
-Import nat_neq_ind.
+Import nat_eq_ind nat_neq_ind.
 
 Lemma nat_eq_dec :
   forall n m : nat, nat_eq n m + nat_neq n m.
@@ -297,6 +385,123 @@ Qed.
 (* end hide *)
 
 End nat_eq_neq.
+
+(** ** Porządek [<=] na liczbach naturalnych *)
+
+Module encodedecode1.
+
+Require Import H1.
+
+Fixpoint code (n m : nat) : SProp :=
+match n, m with
+    | 0, _ => sUnit
+    | _, 0 => sEmpty
+    | S n', S m' => code n' m'
+end.
+
+Inductive gutle : nat -> nat -> Prop :=
+    | gutle_0 : forall m : nat, gutle 0 m
+    | gutle_SS : forall n m : nat, gutle n m -> gutle (S n) (S m).
+
+Fixpoint encode {n m : nat} (H : gutle n m) : code n m :=
+match H with
+    | gutle_0 _ => stt
+    | gutle_SS _ _ H' => encode H'
+end.
+
+Fixpoint decode (n m : nat) : code n m -> gutle n m :=
+match n, m with
+    | 0   , _    => fun _ => gutle_0 m
+    | n'  , 0    => fun c => match c with end
+    | S n', S m' => fun c => gutle_SS _ _ (decode n' m' c)
+end.
+
+Fixpoint decode_encode
+  {n m : nat} (H : gutle n m) : decode n m (encode H) = H.
+Proof.
+  destruct H; cbn.
+    reflexivity.
+    f_equal. apply decode_encode.
+Defined.
+
+Lemma isProp_gutle :
+  forall {n m : nat} (p q : gutle n m), p = q.
+Proof.
+  intros.
+  rewrite <- (decode_encode p), <- (decode_encode q).
+  reflexivity.
+Qed.
+
+End encodedecode1.
+
+Module encodedecode2.
+
+Require Import H1.
+
+Fixpoint code (n m : nat) : SProp :=
+match n, m with
+    | 0, _ => sUnit
+    | _, 0 => sEmpty
+    | S n', S m' => code n' m'
+end.
+
+Definition encode :
+  forall {n m : nat}, n <= m -> code n m.
+Proof.
+  induction n as [| n'].
+    cbn. constructor.
+    destruct m as [| m'].
+      inversion 1.
+      cbn. intro. apply IHn'. apply le_S_n. assumption.
+Defined.
+
+Fixpoint encode' (n : nat) : code n n :=
+match n with
+    | 0 => stt
+    | S n' => encode' n'
+end.
+
+(*
+Definition encode {n m : nat} (H : n <= m) : code n m.
+Proof.
+  destruct H.
+    apply encode'.
+    destruct n; cbn.
+      exact stt.
+*)
+
+(*
+Fixpoint decode {n m : nat} : code n m -> n <= m :=
+match n, m with
+    | 0   , _    => fun _ => le_0_n m
+    | _   , 0    => fun c => match c with end
+    | S n', S m' => fun c => le_n_S n' m' (decode c)
+end.
+*)
+
+Definition decode :
+  forall {n m : nat}, code n m -> n <= m.
+Proof.
+  induction n as [| n'].
+    intros. clear H. induction m as [| m'].
+      constructor.
+      constructor. assumption.
+    destruct m as [| m']; cbn; intro.
+      destruct H.
+      apply le_n_S, IHn'. assumption.
+Defined.
+
+Scheme le_ind' := Induction for le Sort Prop.
+
+Require Import Equality.
+
+Lemma decode_encode :
+  forall {n m : nat} (H : n <= m),
+    decode (encode H) = H. (* TODO: kody dla [n <= m] *)
+Proof.
+Admitted.
+
+End encodedecode2.
 
 (** ** Ścieżki między listami *)
 
@@ -390,9 +595,9 @@ Abort.
 
 End list_eq_forall.
 
-(** ** Nierówność list *)
+(** ** Różność list - induktywnie *)
 
-Module list_neq.
+Module list_neq_ind.
 
 Inductive list_neq
   {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
@@ -452,7 +657,101 @@ Proof.
 Defined.
 (* end hide *)
 
-End list_neq.
+End list_neq_ind.
+
+(** ** Różność list - rekursywnie *)
+
+Module list_neq_rec.
+
+Fixpoint list_neq {A : Type} (l1 l2 : list A) : Prop :=
+match l1, l2 with
+    | [], [] => False
+    | [], _ => True
+    | _, [] => True
+    | h1 :: t1, h2 :: t2 => h1 <> h2 \/ list_neq t1 t2
+end.
+
+Lemma list_neq_spec :
+  forall (A : Type) (l1 l2 : list A),
+    list_neq l1 l2 -> l1 <> l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1];
+  destruct l2 as [| h2 t2];
+  cbn; intros.
+    contradiction.
+    congruence.
+    congruence.
+    inversion 1; subst. destruct H.
+      contradiction.
+      apply (IHt1 _ H). reflexivity.
+Qed.
+(* end hide *)
+
+End list_neq_rec.
+
+(** ** Apartheid list (TODO) *)
+
+(* begin hide *)
+Module weak_apart.
+
+Inductive unequal {A : Type} : list A -> list A -> Prop :=
+    | nil_cons : forall h t, unequal nil (cons h t)
+    | cons_nil : forall h t, unequal (cons h t) nil
+    | cons_cons1 :
+        forall h1 h2 t1 t2,
+          h1 <> h2 -> unequal (cons h1 t1) (cons h2 t2)
+    | cons_cons2 :
+        forall h1 h2 t1 t2,
+          unequal t1 t2 -> unequal (cons h1 t1) (cons h2 t2).
+
+(*
+Goal
+  forall {A : Type} (l1 l2 : list A),
+    unequal l1 l2 <-> neq l1 l2.
+Proof.
+  split.
+    induction 1; cbn; firstorder.
+    revert l2. induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn.
+      contradiction.
+      1-2: constructor.
+      destruct 1.
+        constructor 3. assumption.
+        constructor 4. apply IHt1. assumption.
+Qed.
+*)
+
+End weak_apart.
+
+Module param_apart.
+
+Fixpoint neq
+  {A : Type} (apart : A -> A -> Prop) (l1 l2 : list A) : Prop :=
+match l1, l2 with
+    | nil, nil => False
+    | nil, cons _ _ => True
+    | cons _ _, nil => True
+    | cons h1 t1, cons h2 t2 => apart h1 h2 \/ neq apart t1 t2
+end.
+
+(*
+Goal
+  forall {A : Type} (apart : A -> A -> Prop) (l1 l2 : list A),
+    unequal apart l1 l2 <-> neq apart l1 l2.
+Proof.
+  split.
+    induction 1; cbn; firstorder.
+    revert l2. induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn.
+      contradiction.
+      1-2: constructor.
+      destruct 1.
+        constructor 3. assumption.
+        constructor 4. apply IHt1. assumption.
+Qed.
+*)
+
+End param_apart.
+(* end hide *)
 
 (** * Ścieżki w typach koinduktywnych *)
 
@@ -612,7 +911,8 @@ Proof.
   destruct (e' (wut f n h)) as [x r]; unfold wut in r.
   apply (@f_equal _ _ (fun f => f n x)) in r.
   destruct (Nat.eqb_spec n n) as [s | s].
-    rewrite (nat_eq_rec.K_nat _ s) in r. destruct (h x n x); inversion r.
+    rewrite (nat_eq_rec.isSet_nat s eq_refl) in r.
+    destruct (h x n x); inversion r.
     contradiction.
 Qed.
 (* end hide *)
@@ -732,9 +1032,9 @@ Module DiffProtocols.
 
 Require Import Equality.
 
-Print list_neq.list_neq.
+Print list_neq_ind.list_neq.
 
-(** [list_neq.list_neq] to pokazanie na odpowiadające sobie miejsca w
+(** [list_neq_ind.list_neq] to pokazanie na odpowiadające sobie miejsca w
     dwóch listach, które różnią się znajdującym się tam elementem. *)
 
 Inductive ListDiffProtocol

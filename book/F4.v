@@ -1,6 +1,8 @@
-(** * F4: Kolisty (co nie znaczy, że okrągły) *)
+(** * F4: Kolisty [TODO] *)
 
-Require Import book.D5.
+(** * Kolisty nie znaczy okrągły *)
+
+Require Import D5.
 
 (** Ten rozdział będzie o kolistach, czyli koinduktywnych odpowiednikach
     list różniących się od nich tym, że mogą być potencjalnie

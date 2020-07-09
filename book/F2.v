@@ -1,6 +1,4 @@
-(** * F2: Liczby konaturalne *)
-
-(** TODO: coś tu napisać. *)
+(** * F2: Liczby konaturalne [TODO] *)
 
 (** Zdefiniuj liczby konaturalne oraz ich relację bipodobieństwa. Pokaż,
     że jest to relacja równoważności. *)
@@ -24,9 +22,11 @@ Axiom sim_eq :
 
 Lemma eq_pred :
   forall n m : conat, pred n = pred m -> n = m.
+(* begin hide *)
 Proof.
   destruct n, m. cbn. destruct 1. reflexivity.
 Qed.
+(* end hide *)
 
 Ltac inv H := inversion H; subst; clear H; auto.
 
@@ -81,14 +81,18 @@ Qed.
 Require Import Setoid.
 
 Instance Equivalence_sim : Equivalence sim.
+(* begin hide *)
 Proof.
   esplit; red.
     apply sim_refl.
     apply sim_sym.
     apply sim_trans.
 Defined.
+(* end hide *)
 
-(** Zdefiniuj zero, następnik oraz liczbę omega - jest to nieskończona
+(** * Zero, następnik i nieskończonośc *)
+
+(** Zdefiniuj zero, następnik oraz liczbę [omega] - jest to nieskończona
     liczba konaturalna, która jest sama swoim poprzednikiem. Udowodnij
     ich kilka podstawowych właściwości. *)
 
@@ -169,6 +173,8 @@ Proof.
     cbn in *. inv H1. inv H2.
 Qed.
 (* end hide *)
+
+(** * Dodawanie *)
 
 (** Zdefiniuj dodawanie liczb konaturalnych i udowodnij jego podstawowe
     właściwości. *)
@@ -313,6 +319,8 @@ Proof.
   intros. rewrite add_comm in H. apply sim_add_zero_l in H. assumption.
 Qed.
 (* end hide *)
+
+(** * Porządek *)
 
 (** Zdefiniuj relację [<=] na liczbach konaturalnych i udowodnij jej
     podstawowe właściwości. *)
@@ -563,6 +571,8 @@ Proof.
     assumption.
 Qed.
 (* end hide *)
+
+(** * Minimum i maksimum *)
 
 (** Zdefiniuj funkcje [min] i [max] i udowodnij ich właściwości. *)
 
@@ -889,6 +899,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** * Dzielenie przez 2 *)
+
 (** Zdefiniuj funkcję [div2], która dzieli liczbę konaturalną przez 2
     (cokolwiek to znaczy). Udowodnij jej właściwości. *)
 
@@ -991,6 +1003,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** * Skończoność i nieskończoność *)
+
 (** Zdefiniuj predykaty [Finite] i [Infinite], które wiadomo co znaczą.
     Pokaż, że omega jest liczbą nieskończoną i że nie jest skończona,
     oraz że każda liczba nieskończona jest bipodobna do omegi. Pokaż
@@ -1048,6 +1062,8 @@ Proof.
   induction 1; destruct 1 as [(n' & H1 & H2)]; inv H1.
 Qed.
 (* end hide *)
+
+(** * Parzystość i nieparzystość *)
 
 (** Zdefiniuj predykaty [Even] i [Odd]. Pokaż, że omega jest jednocześnie
     parzysta i nieparzysta. Pokaż, że jeżeli liczba jest jednocześnie
@@ -1256,6 +1272,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** * Odejmowanie (TODO) *)
+
 (** Było już o dodawaniu, przydałoby się powiedzieć też coś o odejmowaniu.
     Niestety, ale odejmowania liczb konaturalnych nie da się zdefiniować
     (a przynajmniej tak mi się wydaje). Nie jest to również coś, co można
@@ -1329,14 +1347,6 @@ match pred n, m with
     | _, 0 => n
     | Some n', S m' => subn n' m'
 end.
-
-Fixpoint from_nat (n : nat) : conat :=
-match n with
-    | 0 => zero
-    | S n' => succ (from_nat n')
-end.
-
-Compute subn (from_nat 6) 5.
 (* end hide *)
 
 (* begin hide *)
@@ -1364,6 +1374,8 @@ Definition sub' : Type :=
   {f : conat -> conat -> conat |
     forall n m r : conat, f n m = r -> Sub n m r}.
 (* end hide *)
+
+(** * Mnożenie (TODO) *)
 
 CoInductive Mul (n m r : conat) : Prop :=
 {
@@ -1467,6 +1479,8 @@ Proof.
 Admitted.
 (* end hide *)
 
+(** * Koindukcja wzajemna (TODO) *)
+
 (* begin hide *)
 CoInductive Even2 (n : conat) : Prop :=
 {
@@ -1511,24 +1525,35 @@ Proof.
 Qed.
 (* end hide *)
 
+(** * Liczby naturalne i konaturalne *)
+
+(** Zdefiniuj funkcję [from_nat], która przekształca liczbę naturalną
+    w odpowiadającą jej skończoną liczbę konaturalną. *)
+
 (* begin hide *)
+Fixpoint from_nat (n : nat) : conat :=
+match n with
+    | 0 => zero
+    | S n' => succ (from_nat n')
+end.
+(* end hide *)
+
 Lemma Finite_from_nat :
   forall n : nat, Finite (from_nat n).
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn; constructor; assumption.
 Qed.
+(* end hide *)
 
-Lemma no_preinverse :
-  forall f : conat -> nat,
-    (forall c : conat, from_nat (f c) = c) -> False.
-Proof.
-  intros f H.
-  apply omega_not_Finite.
-  rewrite <- H.
-  apply Finite_from_nat.
-Qed.
+(** Pokaż, że [from_nat] nie ma żadnej preodwrotności. *)
 
-Lemma no_preinverse' :
+(* begin hide *)
+(* TODO: wyjaśnić wcześniej pojęcie preodwrotności. *)
+(* end hide *)
+
+(* begin hide *)
+Lemma no_preinverse_aux :
   forall f : conat -> nat,
     from_nat (f omega) <> omega.
 Proof.
@@ -1537,7 +1562,27 @@ Proof.
   rewrite <- H.
   apply Finite_from_nat.
 Qed.
+(* end hide *)
 
+Lemma no_preinverse :
+  forall f : conat -> nat,
+    (forall c : conat, from_nat (f c) = c) -> False.
+(* begin hide *)
+Proof.
+  intros f H.
+  eapply no_preinverse_aux.
+  apply H.
+Qed.
+(* end hide *)
+
+(** Pokaż, że jeżeli [from_nat] ma postodwrotność, to można rozstrzygać,
+    czy liczba konaturalna jest skończona czy nie.
+
+    UWAGA: diabelsko trudne. Wymaga ruszenia wyobraźnią i wymyślenia
+    kilku induktywnych definicji relacji oraz udowodnienia paru lematów
+    na ich temat. *)
+
+(* begin hide *)
 Inductive lec : conat -> nat -> Prop :=
     | lec_0 : forall n : nat, lec zero n
     | lec_S : forall (c : conat) (n : nat), lec c n -> lec (succ c) (S n).
@@ -1596,11 +1641,13 @@ Proof.
       apply CH. intros n H'. apply (H (S n)). cbn. subst. reflexivity.
     specialize (H 0). cbn in H. contradiction H. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma inverse_taboo :
   forall f : conat -> nat,
     (forall n : nat, f (from_nat n) = n) ->
       forall c : conat, Infinite c \/ Finite c.
+(* begin hide *)
 Proof.
   intros.
   destruct (conat_nat_order (f c) c) as [Hlec | Hgtc].
@@ -1614,5 +1661,4 @@ Proof.
       assumption.
     }
 Qed.
-
 (* end hide *)

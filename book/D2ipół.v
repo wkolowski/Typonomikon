@@ -1,3 +1,4 @@
+
 (** W tym rozdziale będą różne formy indukcji/rekursji, których chwilowo nie
     chcę wstawiać do głównego tekstu rozdziałów D1 i D2, bo tam nie pasują.
     Prędzej czy później zostaną one z tymi rozdział zintegrowane (albo i nie -
@@ -361,7 +362,7 @@ Fail Fixpoint div (n m : nat) : nat :=
   else div (n - m) m.
 (* end hide *)
 
-(** * Jak działa indukcja (nie, nie kuchenka) *)
+(** * Jak działa indukcja (nie, nie kuchenka) (TODO) *)
 
 (** * Rekursja strukturalna (TODO) *)
 
@@ -1562,13 +1563,11 @@ Restart.
 Abort.
 (* end hide *)
 
-(** * Rząd rżnie głupa, czyli o pierwszym i wyższym rzędzie *)
+(** * Rząd rżnie głupa, czyli o pierwszym i wyższym rzędzie (TODO) *)
 
 (** * Rekursja wyższego rzędu (TODO) *)
 
-(** ACHTUNG: bardzo upośledzona wersja alfa.
-
-    Pozostaje kwestia rekursji wyższego rzędu. Co to takiego? Ano dotychczas
+(** Pozostaje kwestia rekursji wyższego rzędu. Co to takiego? Ano dotychczas
     wszystkie nasze wywołania rekurencyjne były konkretne, czyli zaaplikowane
     do argumentów.
 

@@ -1,4 +1,4 @@
-(** * D6: Więcej list *)
+(** * D6: Więcej list [TODO] *)
 
 Require Import D5.
 
@@ -10,7 +10,7 @@ Require Import D5.
 *)
 (* end hide *)
 
-(** * Predykaty i relacje na listach - znowu *)
+(** * Predykaty i relacje na listach - znowu (TODO) *)
 
 Module Recursives.
 
@@ -492,7 +492,7 @@ Qed.
 
 End Recursives.
 
-(** * Rozstrzyganie predykatów i relacji na listach *)
+(** * Rozstrzyganie predykatów i relacji na listach (TODO) *)
 
 Fixpoint list_eq_dec
   {A : Type} (eq_dec : A -> A -> bool) (l1 l2 : list A) : bool :=
@@ -1006,7 +1006,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Znajdowanie wszystkich podstruktur *)
+(** * Znajdowanie wszystkich podstruktur (TODO) *)
 
 (** ** Podlisty/podtermy *)
 
@@ -1284,7 +1284,7 @@ Admitted.
 
 End cycles.
 
-(** * Permutacje *)
+(** * Permutacje (TODO) *)
 
 (** ** Permutacje jako ciągi transpozycji *)
 
@@ -2354,7 +2354,7 @@ Abort.
 
 End perms_cycles.
 
-(** * Wut da fuk? *)
+(** * Wut da fuk? (TODO) *)
 
 Module Specs.
 

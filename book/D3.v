@@ -429,116 +429,15 @@ Inductive sumbool (A B : Prop) : Type :=
     funkcję [inb_nat], która sprawdza, czy liczba naturalna [n]
     jest obecna na liście [l]. *)
 
-(** ** Kiedy nie warto rozstrzygać? *)
+(** ** Kiedy nie warto rozstrzygać? (TODO) *)
 
 (** Tutaj coś w stylu [n < m \/ n = m \/ n > m] *)
 
-(** ** Rozstrzygalność jako pułapka na negacjonistów *)
+(** ** Rozstrzygalność jako pułapka na negacjonistów (TODO) *)
 
-Module weak_apart.
+(** ** Techniczne aspekty rozstrzygalności 2 (TODO) *)
 
-Inductive unequal {A : Type} : list A -> list A -> Prop :=
-    | nil_cons : forall h t, unequal nil (cons h t)
-    | cons_nil : forall h t, unequal (cons h t) nil
-    | cons_cons1 :
-        forall h1 h2 t1 t2,
-          h1 <> h2 -> unequal (cons h1 t1) (cons h2 t2)
-    | cons_cons2 :
-        forall h1 h2 t1 t2,
-          unequal t1 t2 -> unequal (cons h1 t1) (cons h2 t2).
-
-Fixpoint neq {A : Type} (l1 l2 : list A) : Prop :=
-match l1, l2 with
-    | nil, nil => False
-    | nil, cons _ _ => True
-    | cons _ _, nil => True
-    | cons h1 t1, cons h2 t2 => h1 <> h2 \/ neq t1 t2
-end.
-
-Goal
-  forall {A : Type} (l1 l2 : list A),
-    unequal l1 l2 <-> neq l1 l2.
-Proof.
-  split.
-    induction 1; cbn; firstorder.
-    revert l2. induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn.
-      contradiction.
-      1-2: constructor.
-      destruct 1.
-        constructor 3. assumption.
-        constructor 4. apply IHt1. assumption.
-Qed.
-
-End weak_apart.
-
-Module param_apart.
-
-Inductive unequal
-  {A : Type} (apart : A -> A -> Prop) : list A -> list A -> Prop :=
-    | nil_cons : forall h t, unequal apart nil (cons h t)
-    | cons_nil : forall h t, unequal apart (cons h t) nil
-    | cons_cons1 :
-        forall h1 h2 t1 t2,
-          apart h1 h2 -> unequal apart (cons h1 t1) (cons h2 t2)
-    | cons_cons2 :
-        forall h1 h2 t1 t2,
-          unequal apart t1 t2 -> unequal apart (cons h1 t1) (cons h2 t2).
-
-Fixpoint neq
-  {A : Type} (apart : A -> A -> Prop) (l1 l2 : list A) : Prop :=
-match l1, l2 with
-    | nil, nil => False
-    | nil, cons _ _ => True
-    | cons _ _, nil => True
-    | cons h1 t1, cons h2 t2 => apart h1 h2 \/ neq apart t1 t2
-end.
-
-Goal
-  forall {A : Type} (apart : A -> A -> Prop) (l1 l2 : list A),
-    unequal apart l1 l2 <-> neq apart l1 l2.
-Proof.
-  split.
-    induction 1; cbn; firstorder.
-    revert l2. induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn.
-      contradiction.
-      1-2: constructor.
-      destruct 1.
-        constructor 3. assumption.
-        constructor 4. apply IHt1. assumption.
-Qed.
-
-End param_apart.
-
-Require Import D5.
-
-Fixpoint different {A : Type} (l1 l2 : list A) : Prop :=
-match l1, l2 with
-    | [], [] => False
-    | [], _ => True
-    | _, [] => True
-    | h1 :: t1, h2 :: t2 => h1 <> h2 \/ different t1 t2
-end.
-
-Lemma different_spec :
-  forall (A : Type) (l1 l2 : list A),
-    l1 <> l2 <-> different l1 l2.
-Proof.
-  induction l1 as [| h1 t1]; cbn.
-    destruct l2 as [| h2 t2]; cbn.
-      tauto.
-      firstorder congruence.
-    destruct l2 as [| h2 t2]; cbn.
-      firstorder congruence.
-      split.
-        Focus 2. destruct 1.
-          congruence.
-          destruct (IHt1 t2). firstorder congruence.
-        intro. assert (~ (h1 = h2 /\ t1 = t2)).
-          firstorder congruence.
-Abort.
-
-(** ** Techniczne aspekty rozstrzygalności 2 *)
-
+(* begin hide *)
 Require Import Bool.
 
 Print reflect.
@@ -606,8 +505,13 @@ Inductive NatSpec (P : nat -> Prop) : nat -> Prop :=
     | NS_0 : P 0 -> NatSpec P 0
     | NS_S : forall n : nat, P (S n) -> NatSpec P (S n).
 
+(* end hide *)
 
-(** * Reflekcja w małej skali, czyli jak odbijać żeby się nie zmęczyć *)
+(** * Reflekcja w małej skali, czyli jak odbijać żeby się nie zmęczyć (TODO) *)
+
+(* begin hide *)
+
+Require Import Recdef.
 
 Inductive even : nat -> Prop :=
     | even0 : even 0
@@ -636,13 +540,14 @@ Qed.
 
 Compute wut.
 
-
 (** Wrzucić tu przykład z porządkiem leksykograficznym z bloga Mondet.
     Dać też przykład z permutacjami? *)
 
-(** * Poradnik hodowcy, czyli jak nie rozmnażać definicji *)
+(* end hide *)
 
-(** * Przerwa na reklamy: aksjomaty dotyczące sortu [Prop] *)
+(** * Poradnik hodowcy, czyli jak nie rozmnażać definicji (TODO) *)
+
+(** * Przerwa na reklamy: aksjomaty dotyczące sortu [Prop] (TODO) *)
 
 Definition PI : Prop :=
   forall (P : Prop) (x y : P), x = y.
@@ -652,189 +557,3 @@ Definition PropExt : Prop :=
 
 Definition UIP : Prop :=
   forall (A : Type) (x : A) (p : x = x), p = eq_refl.
-
-(** * Sort [SProp], czyli zdania, ale takie jakby inne *)
-
-Set Allow StrictProp.
-
-Inductive sEmpty : SProp := .
-
-Inductive sUnit : SProp :=
-    | stt : sUnit.
-
-Inductive seq {A : Type} (x : A) : A -> SProp :=
-    | srefl : seq x x.
-
-Goal forall A : Type, sEmpty -> A.
-Proof.
-  destruct 1.
-Qed.
-
-Goal
-  forall {A : Type} (P : A -> Type) (x y : A),
-    seq x y -> P x -> P y.
-Proof.
-  intros A P x y Hs Hp.
-Abort.
-
-Inductive Box (A : Type) : Prop :=
-    | box : A -> Box A.
-
-Print Box_sind.
-
-Require Import SetIsType.
-
-Lemma SetIsType : Set = Type.
-Proof.
-  reflexivity.
-Qed.
-
-(** * Metoda encode-decode, czyli o rozwiązaywaniu problemów, które sami sobie tworzymy *)
-
-(** Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko
-    zwalcza problemy nieznane w żadnej innej teorii". *)
-
-(** Okazuje się, że sortu [SProp] można całkiem efektywnie użyć do pokazywania,
-    że coś jest zdaniem w sensie HoTTowym. Dzięki temu dowód jest krótszy o
-    całe 33%. Całkiem nieźle. *)
-
-Module encodedecode0.
-
-Fixpoint code (n m : nat) : SProp :=
-match n, m with
-    | 0, 0 => sUnit
-    | S _, 0 => sEmpty
-    | 0, S _ => sEmpty
-    | S n', S m' => code n' m'
-end.
-
-Fixpoint encode_aux (n : nat) : code n n :=
-match n with
-    | 0 => stt
-    | S n' => encode_aux n'
-end.
-
-Definition encode {n m : nat} (p : n = m) : code n m :=
-match p with
-    | eq_refl => encode_aux n
-end.
-
-Fixpoint decode {n m : nat} : code n m -> n = m :=
-match n, m with
-    | 0, 0 => fun _ => eq_refl
-    | 0, S _ => fun c => match c with end
-    | S _, 0 => fun c => match c with end
-    | S n', S m' => fun c => @f_equal _ _ S _ _ (@decode n' m' c)
-end.
-
-Lemma decode_encode :
-  forall (n m : nat) (p : n = m),
-    decode (encode p) = p.
-Proof.
-  destruct p; cbn.
-  induction n as [| n']; cbn.
-    reflexivity.
-    rewrite IHn'. cbn. reflexivity.
-Qed.
-
-Lemma K_nat :
-  forall (n : nat) (p : n = n), p = eq_refl.
-Proof.
-  intros.
-  rewrite <- (decode_encode _ _ p).
-  rewrite <- (decode_encode _ _ eq_refl).
-  reflexivity.
-Qed.
-
-Lemma UIP_nat:
-  forall {n m : nat} (p q : n = m), p = q.
-Proof.
-  intros.
-  rewrite <- (decode_encode _ _ p), <- (decode_encode _ _ q).
-  reflexivity.
-Qed.
-
-End encodedecode0.
-
-Module encodedecode1.
-
-Fixpoint code (n m : nat) : SProp :=
-match n, m with
-    | 0, _ => sUnit
-    | _, 0 => sEmpty
-    | S n', S m' => code n' m'
-end.
-
-Inductive gutle : nat -> nat -> Prop :=
-    | gutle_0 : forall m : nat, gutle 0 m
-    | gutle_SS : forall n m : nat, gutle n m -> gutle (S n) (S m).
-
-Fixpoint encode {n m : nat} (H : gutle n m) : code n m :=
-match H with
-    | gutle_0 _ => stt
-    | gutle_SS _ _ H' => encode H'
-end.
-
-Fixpoint decode (n m : nat) : code n m -> gutle n m :=
-match n, m with
-    | 0, _ => fun _ => gutle_0 m
-    | n', 0 => fun c => match c with end
-    | S n', S m' => fun c => gutle_SS _ _ (decode n' m' c)
-end.
-
-Fixpoint decode_encode
-  {n m : nat} (H : gutle n m) : decode n m (encode H) = H.
-Proof.
-  destruct H; cbn.
-    reflexivity.
-    f_equal. apply decode_encode.
-Defined.
-
-Lemma isProp_gutle :
-  forall {n m : nat} (p q : gutle n m), p = q.
-Proof.
-  intros.
-  rewrite <- (decode_encode p), <- (decode_encode q).
-  reflexivity.
-Qed.
-
-End encodedecode1.
-
-Module encodedecode2.
-
-Fixpoint code (n m : nat) : SProp :=
-match n, m with
-    | 0, _ => sUnit
-    | _, 0 => sEmpty
-    | S n', S m' => code n' m'
-end.
-
-Definition encode :
-  forall {n m : nat}, n <= m -> code n m.
-Proof.
-  induction n as [| n'].
-    cbn. constructor.
-    destruct m as [| m'].
-      inversion 1.
-      cbn. intro. apply IHn'. apply le_S_n. assumption.
-Defined.
-
-Definition decode :
-  forall {n m : nat}, code n m -> n <= m.
-Proof.
-  induction n as [| n'].
-    intros. clear H. induction m as [| m'].
-      constructor.
-      constructor. assumption.
-    destruct m as [| m']; cbn; intro.
-      destruct H.
-      apply le_n_S, IHn'. assumption.
-Defined.
-
-Fixpoint decode_encode
-  {n m : nat} (H : n <= m) : decode (encode H) = H.
-Proof.
-  destruct H.
-Abort.
-
-End encodedecode2.

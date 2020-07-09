@@ -5,7 +5,7 @@
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
 </head>
-<h1 class="libtitle">F2: Liczby konaturalne</h1>
+<h1 class="libtitle">F2: Liczby konaturalne [TODO]</h1>
 
 <div class="code">
 </div>
@@ -14,15 +14,25 @@
 
 <div class="paragraph"> </div>
 
- TODO: coś tu napisać. 
-<div class="paragraph"> </div>
-
  Zdefiniuj liczby konaturalne oraz ich relację bipodobieństwa. Pokaż,
     że jest to relacja równoważności. 
 </div>
 <div class="code">
 
 <br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">inv</span> <span class="id" title="var">H</span> := <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">auto</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">invle</span> <span class="id" title="var">H</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">n'</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="var">n</span> "'" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">m'</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="var">m</span> "'" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">H1</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="var">H</span> "1" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">H2</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="var">H</span> "2" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">H3</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="var">H</span> "3" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> [[| (<span class="id" title="var">n'</span> &amp; <span class="id" title="var">m'</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span> &amp; <span class="id" title="var">H3</span>)]].<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_refl</span> :<br/>
@@ -50,18 +60,16 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 
 <br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Equivalence_sim</span> : <span class="id" title="var">Equivalence</span> <span class="id" title="var">sim</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">esplit</span>; <span class="id" title="tactic">red</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">sim_refl</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">sim_sym</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">sim_trans</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Zdefiniuj zero, następnik oraz liczbę omega - jest to nieskończona
+<a name="lab462"></a><h1 class="section">Zero, następnik i nieskończonośc</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj zero, następnik oraz liczbę <span class="inlinecode"><span class="id" title="tactic">omega</span></span> - jest to nieskończona
     liczba konaturalna, która jest sama swoim poprzednikiem. Udowodnij
     ich kilka podstawowych właściwości. 
 </div>
@@ -98,7 +106,11 @@ Zdefiniuj zero, następnik oraz liczbę omega - jest to nieskończona
 </div>
 
 <div class="doc">
-Zdefiniuj dodawanie liczb konaturalnych i udowodnij jego podstawowe
+<a name="lab463"></a><h1 class="section">Dodawanie</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj dodawanie liczb konaturalnych i udowodnij jego podstawowe
     właściwości. 
 </div>
 <div class="code">
@@ -159,7 +171,11 @@ Zdefiniuj dodawanie liczb konaturalnych i udowodnij jego podstawowe
 </div>
 
 <div class="doc">
-Zdefiniuj relację <span class="inlinecode">&lt;=</span> na liczbach konaturalnych i udowodnij jej
+<a name="lab464"></a><h1 class="section">Porządek</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj relację <span class="inlinecode">&lt;=</span> na liczbach konaturalnych i udowodnij jej
     podstawowe właściwości. 
 </div>
 <div class="code">
@@ -250,7 +266,11 @@ Zdefiniuj relację <span class="inlinecode">&lt;=</span> na liczbach konaturalny
 </div>
 
 <div class="doc">
-Zdefiniuj funkcje <span class="inlinecode"><span class="id" title="var">min</span></span> i <span class="inlinecode"><span class="id" title="var">max</span></span> i udowodnij ich właściwości. 
+<a name="lab465"></a><h1 class="section">Minimum i maksimum</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcje <span class="inlinecode"><span class="id" title="var">min</span></span> i <span class="inlinecode"><span class="id" title="var">max</span></span> i udowodnij ich właściwości. 
 </div>
 <div class="code">
 
@@ -377,7 +397,11 @@ Zdefiniuj funkcje <span class="inlinecode"><span class="id" title="var">min</spa
 </div>
 
 <div class="doc">
-Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">div2</span></span>, która dzieli liczbę konaturalną przez 2
+<a name="lab466"></a><h1 class="section">Dzielenie przez 2</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">div2</span></span>, która dzieli liczbę konaturalną przez 2
     (cokolwiek to znaczy). Udowodnij jej właściwości. 
 </div>
 <div class="code">
@@ -416,7 +440,11 @@ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">div2</s
 </div>
 
 <div class="doc">
-Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Finite</span></span> i <span class="inlinecode"><span class="id" title="var">Infinite</span></span>, które wiadomo co znaczą.
+<a name="lab467"></a><h1 class="section">Skończoność i nieskończoność</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Finite</span></span> i <span class="inlinecode"><span class="id" title="var">Infinite</span></span>, które wiadomo co znaczą.
     Pokaż, że omega jest liczbą nieskończoną i że nie jest skończona,
     oraz że każda liczba nieskończona jest bipodobna do omegi. Pokaż
     też, że żadna liczba nie może być jednocześnie skończona i
@@ -446,7 +474,11 @@ Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Finite
 </div>
 
 <div class="doc">
-Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Even</span></span> i <span class="inlinecode"><span class="id" title="var">Odd</span></span>. Pokaż, że omega jest jednocześnie
+<a name="lab468"></a><h1 class="section">Parzystość i nieparzystość</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Even</span></span> i <span class="inlinecode"><span class="id" title="var">Odd</span></span>. Pokaż, że omega jest jednocześnie
     parzysta i nieparzysta. Pokaż, że jeżeli liczba jest jednocześnie
     parzysta i nieparzysta, to jest nieskończona. Wyciągnij z tego oczywisty
     wniosek. Pokaż, że każda liczba skończona jest parzysta albo
@@ -516,7 +548,11 @@ Zdefiniuj predykaty <span class="inlinecode"><span class="id" title="var">Even</
 </div>
 
 <div class="doc">
-Było już o dodawaniu, przydałoby się powiedzieć też coś o odejmowaniu.
+<a name="lab469"></a><h1 class="section">Odejmowanie (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Było już o dodawaniu, przydałoby się powiedzieć też coś o odejmowaniu.
     Niestety, ale odejmowania liczb konaturalnych nie da się zdefiniować
     (a przynajmniej tak mi się wydaje). Nie jest to również coś, co można
     bezpośrednio udowodnić. Jest to fakt żyjący na metapoziomie, czyli
@@ -609,6 +645,15 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="tact
 <br/>
 
 <br/>
+</div>
+
+<div class="doc">
+<a name="lab470"></a><h1 class="section">Mnożenie (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Mul</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> : <span class="id" title="var">conat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Mul'</span> :<br/>
@@ -653,6 +698,72 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="tact
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Mul</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">s1</span> -&gt; <span class="id" title="var">Mul</span> <span class="id" title="var">a</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">r2</span> <span class="id" title="var">s2</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+<a name="lab471"></a><h1 class="section">Koindukcja wzajemna (TODO)</h1>
+
+</div>
+<div class="code">
 
 <br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab472"></a><h1 class="section">Liczby naturalne i konaturalne</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">from_nat</span></span>, która przekształca liczbę naturalną
+    w odpowiadającą jej skończoną liczbę konaturalną. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Finite_from_nat</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">Finite</span> (<span class="id" title="var">from_nat</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Pokaż, że <span class="inlinecode"><span class="id" title="var">from_nat</span></span> nie ma żadnej preodwrotności. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">no_preinverse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">from_nat</span> (<span class="id" title="var">f</span> <span class="id" title="var">c</span>) = <span class="id" title="var">c</span>) -&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Pokaż, że jeżeli <span class="inlinecode"><span class="id" title="var">from_nat</span></span> ma postodwrotność, to można rozstrzygać,
+    czy liczba konaturalna jest skończona czy nie.
+
+<div class="paragraph"> </div>
+
+    UWAGA: diabelsko trudne. Wymaga ruszenia wyobraźnią i wymyślenia
+    kilku induktywnych definicji relacji oraz udowodnienia paru lematów
+    na ich temat. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">inverse_taboo</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> (<span class="id" title="var">from_nat</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Infinite</span> <span class="id" title="var">c</span> \/ <span class="id" title="var">Finite</span> <span class="id" title="var">c</span>.<br/>
 </div>

@@ -1382,3 +1382,7 @@ Definition fixpoint {A : Type} (f : A -> A) (x : A)
   : Prop := f x = x.
 
 (* end hide *)
+
+(** * Skracalność (TODO) *)
+
+(** Tutaj o lewej i prawej skracalności, czyli mono- i epi- morfizmy. *)

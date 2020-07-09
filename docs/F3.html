@@ -5,7 +5,7 @@
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
 </head>
-<h1 class="libtitle">F3: Strumienie</h1>
+<h1 class="libtitle">F3: Strumienie [TODO]</h1>
 
 <div class="code">
 </div>
@@ -14,7 +14,7 @@
 
 <div class="paragraph"> </div>
 
- TODO: w tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
+ W tym rozdziale będą ćwiczenia dotyczące strumieni, czyli ogólnie
     wesołe koinduktywne zabawy, o których jeszcze nic nie napisałem. 
 </div>
 <div class="code">
@@ -34,7 +34,7 @@
 </div>
 
 <div class="doc">
-<a name="lab459"></a><h1 class="section">Bipodobieństwo</h1>
+<a name="lab473"></a><h1 class="section">Bipodobieństwo</h1>
 
 </div>
 <div class="code">
@@ -64,12 +64,17 @@
 </div>
 
 <div class="doc">
-<a name="lab460"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">sapp</span></span></h1>
+<a name="lab474"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">sapp</span></span></h1>
 
 <div class="paragraph"> </div>
 
  Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">sapp</span></span>, która konkatenuje dwa strumienie. Czy taka
-    funkcja w ogóle ma sens? 
+    funkcja w ogóle ma sens?
+
+<div class="paragraph"> </div>
+
+    Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">lsapp</span></span>, która dokleja listę na początek
+    strumienia. 
 </div>
 <div class="code">
 
@@ -90,6 +95,21 @@
 <br/>
 
 <br/>
+</div>
+
+<div class="doc">
+<a name="lab475"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">map</span></span></h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">map</span></span>, która aplikuje funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> do
+    każdego elementu strumienia. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">map_id</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>), <span class="id" title="var">sim</span> (<span class="id" title="var">map</span> (@<span class="id" title="var">id</span> <span class="id" title="var">A</span>) <span class="id" title="var">s</span>) <span class="id" title="var">s</span>.<br/>
 
@@ -99,19 +119,38 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">map</span> <span class="id" title="var">g</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">s</span>)) (<span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="var">s</span>).<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+<a name="lab476"></a><h1 class="section"><span class="inlinecode"><span class="id" title="var">zipWith</span></span></h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">zipWith</span></span>, która ze dwóch strumieni elementów
+    <span class="inlinecode"><span class="id" title="var">A</span></span> oraz <span class="inlinecode"><span class="id" title="var">B</span></span> robi strumień elementów <span class="inlinecode"><span class="id" title="var">C</span></span>, mając do dyspozycji
+    funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">C</span></span> <span class="inlinecode"></span>. 
+</div>
+<div class="code">
 
 <br/>
-<span class="comment">(*<br/>
-CoFixpoint&nbsp;unzipWith<br/>
-&nbsp;&nbsp;{A&nbsp;B&nbsp;C&nbsp;:&nbsp;Type}&nbsp;(f&nbsp;:&nbsp;C&nbsp;-&gt;&nbsp;A&nbsp;*&nbsp;B)&nbsp;(s&nbsp;:&nbsp;Stream&nbsp;C)&nbsp;:&nbsp;Stream&nbsp;A&nbsp;*&nbsp;Stream&nbsp;B<br/>
-*)</span><br/>
 
 <br/>
 </div>
 
 <div class="doc">
-TODO: join : Stream (Stream A) -&gt; Stream A,
-          unzis 
+<a name="lab477"></a><h1 class="section">Inne funkcje (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj resztę przydatnych funkcji podobnych do tych, które są
+    dostępne dla list: <span class="inlinecode"><span class="id" title="tactic">repeat</span></span>, <span class="inlinecode"><span class="id" title="var">iterate</span></span>, <span class="inlinecode"><span class="id" title="var">nth</span></span>, <span class="inlinecode"><span class="id" title="var">take</span></span>, <span class="inlinecode"><span class="id" title="var">drop</span></span>,
+    <span class="inlinecode"><span class="id" title="var">splitAt</span></span>, <span class="inlinecode"><span class="id" title="var">insert</span></span>, <span class="inlinecode"><span class="id" title="tactic">replace</span></span>, <span class="inlinecode"><span class="id" title="var">scanl</span></span>, <span class="inlinecode"><span class="id" title="var">scanr</span></span>, <span class="inlinecode"><span class="id" title="var">intersperse</span></span>,
+    <span class="inlinecode"><span class="id" title="var">merge</span></span>.
+
+<div class="paragraph"> </div>
+
+    Zdefiniuj też funkcje, których zapomniałem (albo nie chciało mi
+    się) wymienić. 
 </div>
 <div class="code">
 
@@ -123,18 +162,25 @@ TODO: join : Stream (Stream A) -&gt; Stream A,
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">intersperse</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>) (<span class="id" title="var">merge</span> <span class="id" title="var">s</span> (<span class="id" title="tactic">repeat</span> <span class="id" title="var">x</span>)).<br/>
 
 <br/>
-<span class="comment">(*&nbsp;Dlaczego&nbsp;<span class="inlinecode"><span class="id" title="var">s</span></span>&nbsp;nie&nbsp;musi&nbsp;tu&nbsp;być&nbsp;indeksem?&nbsp;*)</span><br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Elem</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Elem_hd</span> : <span class="id" title="var">x</span> = <span class="id" title="var">hd</span> <span class="id" title="var">s</span> -&gt; <span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Elem_tl</span> : <span class="id" title="var">Elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) -&gt; <span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">s</span>.<br/>
+</div>
+
+<div class="doc">
+<a name="lab478"></a><h1 class="section">Predykaty i relacje na strumieniach (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj różne użyteczne predykaty i relacje podobne do tych
+    listowych, w tym <span class="inlinecode"><span class="id" title="var">Elem</span></span>, <span class="inlinecode"><span class="id" title="var">Dup</span></span>, <span class="inlinecode"><span class="id" title="var">NoDup</span></span>, <span class="inlinecode"><span class="id" title="var">Exists</span></span>, <span class="inlinecode"><span class="id" title="var">Forall</span></span> i
+    wszystkie inne, o których zapomniałem. 
+</div>
+<div class="code">
+
+<br/>
 
 <br/>
 <span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">Elem</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Dup</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Dup_hd</span> : <span class="id" title="var">Elem</span> (<span class="id" title="var">hd</span> <span class="id" title="var">s</span>) (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) -&gt; <span class="id" title="var">Dup</span> <span class="id" title="var">s</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Dup_tl</span> : <span class="id" title="var">Dup</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) -&gt; <span class="id" title="var">Dup</span> <span class="id" title="var">s</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Ltac</span> <span class="id" title="var">inv</span> <span class="id" title="var">H</span> := <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">H</span>.<br/>
@@ -171,10 +217,6 @@ TODO: join : Stream (Stream A) -&gt; Stream A,
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, ~ <span class="id" title="var">Dup</span> (<span class="id" title="var">from</span> <span class="id" title="var">n</span>).<br/>
 
 <br/>
-<span class="comment">(*&nbsp;To&nbsp;samo:&nbsp;dlaczego&nbsp;<span class="inlinecode"><span class="id" title="var">s</span></span>&nbsp;nie&nbsp;musi&nbsp;być&nbsp;indeksem?&nbsp;*)</span><br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Exists</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Exists_hd</span> : <span class="id" title="var">P</span> (<span class="id" title="var">hd</span> <span class="id" title="var">s</span>) -&gt; <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">s</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Exists_tl</span> : <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) -&gt; <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">s</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Exists_spec</span> :<br/>
@@ -182,11 +224,6 @@ TODO: join : Stream (Stream A) -&gt; Stream A,
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">s</span> &lt;-&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> (<span class="id" title="var">nth</span> <span class="id" title="var">n</span> <span class="id" title="var">s</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Forall_hd</span> : <span class="id" title="var">P</span> (<span class="id" title="var">hd</span> <span class="id" title="var">s</span>);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Forall_tl</span> : <span class="id" title="var">Forall</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>) <span class="id" title="var">P</span>;<br/>
-}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Forall_spec</span> :<br/>
@@ -204,12 +241,6 @@ TODO: join : Stream (Stream A) -&gt; Stream A,
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Forall</span> <span class="id" title="var">s</span> <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">s</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Substream</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">p</span> : <span class="id" title="var">hd</span> <span class="id" title="var">s1</span> = <span class="id" title="var">nth</span> <span class="id" title="var">n</span> <span class="id" title="var">s2</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Substream'</span> : <span class="id" title="var">Substream</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">drop</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">s2</span>);<br/>
-}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_tl</span> :<br/>
@@ -262,12 +293,6 @@ TODO: join : Stream (Stream A) -&gt; Stream A,
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Substream</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> /\ <span class="id" title="var">Substream</span> <span class="id" title="var">s2</span> <span class="id" title="var">s1</span> /\ ~ <span class="id" title="var">sim</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Suffix</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Suffix_refl</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>, <span class="id" title="var">Suffix</span> <span class="id" title="var">s</span> <span class="id" title="var">s</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Suffix_tl</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Suffix</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s1</span>) <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">Suffix</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">snoc</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
@@ -282,12 +307,6 @@ TODO: join : Stream (Stream A) -&gt; Stream A,
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Suffix</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> &lt;-&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">s1</span> = <span class="id" title="var">lsapp</span> <span class="id" title="var">l</span> <span class="id" title="var">s2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">Incl</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">s1</span> -&gt; <span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">s2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">SetEquiv</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">Incl</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> /\ <span class="id" title="var">Incl</span> <span class="id" title="var">s2</span> <span class="id" title="var">s1</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_Elem</span> :<br/>
@@ -312,26 +331,23 @@ TODO: join : Stream (Stream A) -&gt; Stream A,
 |}.<br/>
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">SPermutation</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SPerm_refl</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>, <span class="id" title="var">SPermutation</span> <span class="id" title="var">s</span> <span class="id" title="var">s</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SPerm_skip</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SPermutation</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">SPermutation</span> (<span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s2</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SPerm_swap</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SPermutation</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SPermutation</span> (<span class="id" title="var">scons</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons</span> <span class="id" title="var">y</span> <span class="id" title="var">s1</span>)) (<span class="id" title="var">scons</span> <span class="id" title="var">y</span> (<span class="id" title="var">scons</span> <span class="id" title="var">x</span> <span class="id" title="var">s2</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SPerm_trans</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> <span class="id" title="var">s3</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SPermutation</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt; <span class="id" title="var">SPermutation</span> <span class="id" title="var">s2</span> <span class="id" title="var">s3</span> -&gt; <span class="id" title="var">SPermutation</span> <span class="id" title="var">s1</span> <span class="id" title="var">s3</span>.<br/>
+</div>
+
+<div class="doc">
+<a name="lab479"></a><h1 class="section">Permutacje strumieni</h1>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj relację <span class="inlinecode"><span class="id" title="var">SPermutation</span></span>, która jest analogiczna do
+    relacji <span class="inlinecode"><span class="id" title="var">Permutation</span></span>, którą znasz z list. Udowodnij jej
+    specyfikację. 
+</div>
+<div class="code">
 
 <br/>
-<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">SPermutation</span>.<br/>
 
 <br/>
-<span class="comment">(*&nbsp;TODO&nbsp;*)</span><br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Permutation</span>.<br/>
+<span class="comment">(*&nbsp;TODO&nbsp;*)</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Permutation</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">lsapp_scons</span> :<br/>
@@ -366,7 +382,8 @@ TODO: join : Stream (Stream A) -&gt; Stream A,
 </div>
 
 <div class="doc">
-Strumienie za pomocą przybliżeń. 
+<a name="lab480"></a><h1 class="section">Strumienie za pomocą przybliżeń (TODO)</h1>
+
 </div>
 <div class="code">
 
@@ -458,7 +475,8 @@ Strumienie za pomocą przybliżeń.
 </div>
 
 <div class="doc">
-Pomysł dawno zapomniany: induktywne specyfikacje funkcji. 
+<a name="lab481"></a><h1 class="section">Pomysł dawno zapomniany: induktywne specyfikacje funkcji (TODO)</h1>
+
 </div>
 <div class="code">
 

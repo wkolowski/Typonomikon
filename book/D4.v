@@ -1429,6 +1429,8 @@ Qed.
 
 (** ** Podzielność *)
 
+Module divides.
+
 Definition divides (k n : nat) : Prop :=
   exists m : nat, mult k m = n.
 
@@ -1532,68 +1534,91 @@ Proof.
 Abort.
 (* end hide *)
 
-End MyNat.
+End divides.
+
+(** * Silnia *)
+
+(** Zdefiniuj silnię.
+
+    Przykład:
+    [fact 5 = 1 * 2 * 3 * 4 * 5 = 120]
+
+*)
 
 (* begin hide *)
-
-(* TODO: silnia, współczynniki dwumianowe, sumy szeregów, charakteryzowanie
-         predykatów na liczbach naturalnych oraz dziwna indukcja. *)
-
-Module Factorial.
-
-Require Import Arith.
-
 Fixpoint fac (n : nat) : nat :=
 match n with
     | 0 => 1
     | S n' => mult n (fac n')
 end.
+(* end hide *)
 
-Theorem le_1_fac : forall n : nat, 1 <= fac n.
+Lemma le_1_fac :
+  forall n : nat, 1 <= fac n.
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn.
-    auto.
-    apply le_plus_trans. assumption.
+    constructor.
+    replace 1 with (plus 1 0).
+      apply le_plus.
+        assumption.
+        apply le_0_n.
+      apply plus_comm.
 Qed.
+(* end hide *)
 
-Theorem le_lin_fac : forall n : nat, n <= fac n.
+Require Import Setoid.
+
+Lemma le_lin_fac :
+  forall n : nat, n <= fac n.
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn.
-    auto.
-    replace (S n') with (1 + n'); auto.
-    apply plus_le_compat.
-      apply le_1_fac.
-      replace n' with (n' * 1) at 1.
-        apply mult_le_compat_l. apply le_1_fac.
-        rewrite mult_comm. cbn. rewrite plus_comm. cbn. trivial.
+    apply le_0_n.
+    replace (S n') with (plus 1 n') by reflexivity.
+      apply le_plus.
+        apply le_1_fac.
+        replace n' with (mult n' 1) at 1.
+          apply le_mult.
+            apply le_n.
+            apply le_1_fac.
+          apply mult_1_r.
 Qed.
+(* end hide *)
 
 Fixpoint pow2 (n : nat) : nat :=
 match n with
     | 0 => 1
-    | S n' => 2 * pow2 n'
+    | S n' => mult 2 (pow2 n')
 end.
 
-Theorem le_exp_Fac : forall n : nat,
-    4 <= n -> pow2 n <= fac n.
+Notation "4" := (S (S (S (S 0)))).
+
+Lemma le_exp_fac :
+  forall n : nat, 4 <= n -> pow2 n <= fac n.
+(* begin hide *)
 Proof.
   induction 1; cbn.
     repeat constructor.
-    rewrite plus_0_r. apply plus_le_compat.
+    rewrite plus_0_r. apply le_plus.
       assumption.
-      replace (pow2 m) with (1 * pow2 m).
-        apply mult_le_compat.
-          apply le_trans with 4; auto.
+      replace (pow2 m) with (mult 1 (pow2 m)).
+        apply le_mult.
+          apply le_trans with 4; auto. repeat constructor.
           assumption.
-        rewrite mult_1_l. trivial.
+        apply mult_1_l.
 Qed.
+(* end hide *)
 
-End Factorial.
+(** * Współczynnik dwumianowy (TODO) *)
 
-Module Binom.
+(** Zdefiniuj współczynnik dwumianowy. Jeżeli nie wiesz co to, to dobrze:
+    będziesz miał więcej zabawy. W skrócie [binom n k] to ilość podzbiorów
+    zbioru [n] elementowego, którego mają [k] elementów. *)
 
 Require Import Recdef.
 
+(* begin hide *)
 Function binom (n k : nat) : nat :=
 match n, k with
     | 0, 0 => 1
@@ -1601,6 +1626,7 @@ match n, k with
     | _, 0 => 1 
     | S n', S k' => plus (binom n' k') (binom n' k)
 end.
+(* end hide *)
 
 Fixpoint double (n : nat) : nat :=
 match n with
@@ -1610,76 +1636,110 @@ end.
 
 Lemma binom_0_r :
   forall n : nat, binom n 0 = 1.
+(* begin hide *)
 Proof.
-  destruct n; cbn; trivial.
+  destruct n; cbn; reflexivity.
 Qed.
+(* end hide *)
 
 Lemma binom_0_l :
   forall n : nat, binom 0 (S n) = 0.
+(* begin hide *)
 Proof.
-  cbn. trivial.
+  reflexivity.
 Qed.
+(* end hide *)
 
 Lemma binom_1_r :
   forall n : nat, binom n 1 = n.
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn.
-    trivial.
-    rewrite IHn', binom_0_r. cbn. trivial.
+    reflexivity.
+    rewrite IHn', binom_0_r. cbn. reflexivity.
 Qed.
-
-Require Import Lia Arith.
+(* end hide *)
 
 Lemma binom_gt :
   forall n k : nat, n < k -> binom n k = 0.
+(* begin hide *)
 Proof.
-  induction n as [| n']; destruct k as [| k']; cbn;
+  induction n as [| n'];
+  destruct k as [| k']; cbn;
   try (inversion 1; trivial; fail); intro.
-    rewrite !IHn'; lia.
+  rewrite !IHn'.
+    reflexivity.
+    apply lt_trans with (S n').
+      apply le_n.
+      assumption.
+      apply le_S_n. assumption.
 Qed.
+(* end hide *)
 
-Lemma binom_n : forall n : nat, binom n n = 1.
+Lemma binom_n :
+  forall n : nat, binom n n = 1.
+(* begin hide *)
 Proof.
   induction n as [| n']; cbn.
-    trivial.
-    rewrite IHn', binom_gt; lia.
+    reflexivity.
+    rewrite IHn', binom_gt.
+      reflexivity.
+      constructor.
 Qed.
+(* end hide *)
 
-Theorem binom_sym :
-  forall n k : nat, k < n -> binom n k = binom n (minus n k).
-Proof.
-  induction n as [| n']; destruct k as [| k']; cbn; intros.
-    trivial.
-    inversion H.
-    rewrite binom_n, binom_gt; lia.
-    case_eq (n' - k'); intros; subst.
-      lia.
-      assert (S k' = n' - n). lia. rewrite <- H0, H1, <- !IHn'; lia.
-Qed.
-
-Goal forall n k : nat,
-  k * binom (S n) (S k) = n * binom n k.
-Proof.
-  cbn.
-  induction n as [| n']; destruct k as [| k']; cbn; try lia.
-Abort.
-
-Theorem binom_spec :
+Lemma binom_sym :
   forall n k : nat,
-    k <= n -> fact k * fact (n - k) * binom n k = fact n.
+    k < n -> binom n k = binom n (minus n k).
 Proof.
-  induction n as [| n']; destruct k as [| k'].
-    trivial.
+  induction n as [| n'];
+  destruct k as [| k'];
+  cbn; intros.
+    reflexivity.
+    inversion H.
+    rewrite binom_n, binom_gt.
+      reflexivity.
+      apply le_n.
+    destruct (minus n' k') eqn: Hnk; intros; subst.
+      admit.
+      admit. (*assert (S k' = n' - n). lia. rewrite <- H0, H1, <- !IHn'; lia.*)
+Admitted.
+(* end hide *)
+
+(* begin hide *)
+Goal forall n k : nat,
+  mult k (binom (S n) (S k)) = mult n (binom n k).
+Proof.
+  induction n as [| n'];
+  destruct  k as [| k'];
+  cbn; intros.
+    reflexivity.
+    apply mult_0_r.
+    destruct n'; cbn in *.
+      specialize (IHn' 4); cbn in IHn'.
+Abort.
+(* end hide *)
+
+Lemma binom_spec :
+  forall n k : nat,
+    k <= n -> mult (fac k) (mult (fac (minus n k)) (binom n k)) = fac n.
+(* begin hide *)
+Proof. (* TODO: binom_spec *)
+  induction n as [| n'];
+  destruct  k as [| k'].
+    reflexivity.
     inversion 1.
-    intros. cbn. lia.
-    intros. cbn.
-      rewrite !mult_plus_distr_r, !mult_plus_distr_l.
-      rewrite IHn'; try lia.
-      rewrite <- !plus_assoc. f_equal.
-      rewrite <- 2!(mult_assoc k'). rewrite IHn'; try lia.
+    cbn; intros. rewrite plus_0_r, mult_1_r. reflexivity.
+    cbn; intros.
+      rewrite !mult_plus_distr_r, !mult_plus_distr_l, IHn'.
+        Focus 2. apply le_S_n. assumption.
+        rewrite <- !plus_assoc, <- 2!(mult_assoc k'), IHn'.
+          Focus 2. apply le_S_n. assumption.
+          f_equal. rewrite !plus_assoc.
 Restart.
   intros n k.
-  functional induction binom n k; intros; cbn; try lia.
+  functional induction binom n k; intros; cbn.
+(*
     destruct k. inversion y. inversion H.
     destruct n; cbn; lia.
     destruct n', k'; cbn in *; try lia.
@@ -1692,11 +1752,12 @@ Restart.
         rewrite <- !IHn0.
         rewrite !mult_plus_distr_r, !mult_plus_distr_l.
         repeat (rewrite ?mult_assoc, ?plus_assoc, ?IHn0). f_equal.
+*)
 Abort.
+(* end hide *)
 
-End Binom.
-
-Module Div2.
+(* begin hide *)
+Module Div2. (* TODO: szybkie mnożenie *)
 
 Require Import Div2.
 
@@ -1707,15 +1768,16 @@ match n with
     | S (S n') => evenb n'
 end.
 
+(*
 Require Import ZArith.
 
 Fixpoint quickMul (fuel n m : nat) : nat :=
 match fuel with
-    | 0 => 42
+    | 0 => 0
     | S fuel' => match n with
         | 0 => 0
         | _ => let res := quickMul fuel' (div2 n) m in
-            if evenb n then res + res else (m + res) + res
+            if evenb n then plus res res else plus (plus m res) res
         end
 end.
 
@@ -1733,6 +1795,42 @@ end.
 Proof.
 Abort.
 
+*)
 End Div2.
-
 (* end hide *)
+
+(** * Wzory rekurencyjne (TODO) *)
+
+(** * Sumy szeregów (TODO) *)
+
+(** Udowodnij, że [2^0 + 2^1 + 2^2 + ... + 2^n = 2^(n + 1) - 1].
+    Zaimplementuj w tym celu celu funkcję [f], która oblicza lewą
+    stronę tego równania, a następnie pokaż, że [f n = 2^(n + 1) - 1]
+    dla dowolnego [n : nat]. *)
+
+(* begin hide *)
+Fixpoint twos (n : nat) : nat :=
+match n with
+    | 0 => pow2 0
+    | S n' => plus (twos n') (pow2 n)
+end.
+(* end hide *)
+
+Lemma twos_spec :
+  forall n : nat, twos n = minus (pow2 (S n)) 1.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    rewrite IHn'. cbn. rewrite !plus_0_r.
+      generalize dependent (plus (pow2 n') (pow2 n')). destruct n.
+        reflexivity.
+        cbn. rewrite !minus_0_r. reflexivity.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+(* TODO: dziwna indukcja (ale o co tu miało chodzić?) *)
+(* end hide *)
+
+End MyNat.

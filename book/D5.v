@@ -20976,7 +20976,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Partycje list *)
+(** ** Partycje list (TODO) *)
 
 Module Partition.
 
@@ -21083,7 +21083,7 @@ Qed.
 
 End IPartition.
 
-(** * Niestandardowe reguły indukcyjne *)
+(** * Niestandardowe reguły indukcyjne (TODO) *)
 
 (** Wyjaśnienia nadejdą już wkrótce. *)
 
