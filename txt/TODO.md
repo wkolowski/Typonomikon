@@ -4,15 +4,6 @@
 1. Być może dokonać rozróżnienia różnych _ex_ ... _quodlibet_:
   - _Ex falso quodlibet_ - `False -> P`
   - _Ex contradictione quodlibet_ - `A /\ ~ A -> P`
-2. Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go częściej używać.
-
-## Teoria typów
-0. Osąd `x : A` możemy czytać jako "x jest typu A", zaś konkretnie `x : nat` jako "x jest liczbą naturalną". Zrobić więcej ściąg/zadań z czytania różnych rzeczy.
-1. Harmonia, czyli powiązanie reguł wprowadzania/eliminacji/obliczania/unikalności z równoważnościami.
-2. A równoważności to nic innego jak właściwości (czy też konstrukcje) uniwersalne.
-3. Podkreślić gdzieś mocniej, że reguła indukcji mówi, że nie ma nic poza tym, co można zrobić konstruktorami.
-4. Intuicja dla reguł unikalności: dzida składa się z przeddzidzia dzidy, śróddzidzia dzidy i zadzidzia dzidy.
-5. Wprowadzić pojęcie "motyw eliminacji" i częściej używać.
 
 ## Rekursja
 1. Prymitywna.
@@ -32,19 +23,17 @@
 - Z definiowania typów induktywnych (i relacji też).
 - Z uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
 7. Opisać zippery (z dwóch perspektyw: łażenie po drzewach i różniczkowanie typów) oraz indeksowanie poddrzew dla typów induktywnych (czyli też, w jakiejś formie, zippery).
-8. Odkłamać kwestię "skończoność" typów induktywnych i "nieskończoności" typów koinduktywnych. Tak naprawdę, to chodzi o to, że typy induktywny są dobrze ufundowane, a typy koinduktywne niekoniecznie.
+8. Odkłamać kwestię "skończoności" typów induktywnych i "nieskończoności" typów koinduktywnych. Tak naprawdę, to chodzi o to, że typy induktywny są dobrze ufundowane, a typy koinduktywne niekoniecznie.
 
 ## Indukcja - teoria
 1. Kwestia non-uniform parameters i jak je zasymulować przy użyciu indeksów.
 2. Typy induktywne z parametrami + równość = rodziny indeksowane.
-9. Izomorfizmy dla typów induktywnych: każde drzewo jest drzewem o jakiejś wysokości (no chyba że ma nieskończone rozgałęzienie, to wtedy nie). Uogólniając: każdy element typu induktywnego jest elementem odpowiadającego mu typu indeksowanego o pewnym indeksie. UWAGA: rozróżnienie na drzewa o skończonej wysokości vs drzewa o ograniczonej wysokości.
+3. Izomorfizmy dla typów induktywnych: każde drzewo jest drzewem o jakiejś wysokości (no chyba że ma nieskończone rozgałęzienie, to wtedy nie). Uogólniając: każdy element typu induktywnego jest elementem odpowiadającego mu typu indeksowanego o pewnym indeksie. UWAGA: rozróżnienie na drzewa o skończonej wysokości vs drzewa o ograniczonej wysokości.
 
-## HoTT
-1. Kodowanie Churcha dla typów ilorazowych.
+## HoTT i topologia
 2. Wprowadzić teorię zbiorów za pomocą wyższego typu induktywnego.
 3. `B : A -> U` jest uniwalentne, gdy dla `x, y : A` jest `(x = y) = (B x = B y)` / https://vimeo.com/338899939
 4. Homotopy pullback https://vimeo.com/337960032
-5. Napisać o bijekcjach, injekcjach i surjekcjach z bardziej HoTTowej perspektywy.
 6. Najogólniejszym nierekurencyjnym HITem jest pushout.
 7. Awodey twierdzi, że uniwalencja ma coś wspólnego z Fregiem i tym, że konwertowalność - ta sama nazwa, ścieżki - to samo znaczenie.
 8. Transport wzdłuż ścieżki dla rodzin typów to uogólnienie indiscernability of identicals Leibniza (patrz punkt 3).
@@ -57,16 +46,12 @@
   - half-adjoint equivalence może być zbyt skomplikowany
   - są jeszcze jakieś, ale nie 
 12. Włączyć potem do książki rzeczy z HoTTowych notatek.
+13. Przestrzeń metryczną można zdefiniować za pomocą "Ball Relation": `Q+ -> X -> X -> Prop`
+14. Napisać coś więcej o ciekawej perspektywie topologicznej z gęstymi podprzestrzeniami. Dla przykładu: `conat` to po prostu liczby konaturalne, ale już `{c : conat | Finite c \/ Infinite c}` to gęsta podprzestrzeń `conat` (czyli, że jej dopełnienie jest puste), ale z dodatkową informacją o tym, w jaki sposób podzielić `conat` na dwie (implicite rozłączne) podprzestrzenie liczb skończonych i nieskończonych. Zaiste pasjonujące.
 
 ## Monady
 1. Monady dla logiki klasycznej! Klasyczne funkcje, aksjomat wyboru i nie tylko: https://arxiv.org/pdf/1008.1213.pdf
 2. Subtelna uwaga: monada to nie to samo co nieskończoność-monada, więc homotopiowo trzeba uważać.
-
-## Inne
-26. Odkłamać kwestię polimorfizmu najlepiej przy okazji rozdziału o programowaniu generycznym.
-26. Kwestia parametryczności: `lam X. lam nil. lam cons. cons X nil` - egzotyczna lista.
-36. Przestrzeń metryczną można zdefiniować za pomocą "Ball Relation": `Q+ -> X -> X -> Prop`
-37. Napisać coś więcej o ciekawej perspektywie topologicznej z gęstymi podprzestrzeniami. Dla przykładu: `conat` to po prostu liczby konaturalne, ale już `{c : conat | Finite c \/ Infinite c}` to gęsta podprzestrzeń `conat` (czyli, że jej dopełnienie jest puste), ale z dodatkową informacją o tym, w jaki sposób podzielić `conat` na dwie (implicite rozłączne) podprzestrzenie liczb skończonych i nieskończonych. Zaiste pasjonujące.
 
 ## Filozofia
 1. Mega ważna obserwacja: nazwy zawsze należy nadawać tak, żeby zgadzały się z definicją, czyli nazwy są intensjonalne. Ewentualne ekstensjonalne powiązanie ze sobą (w postaci równoważności) różnych apriori nazw następować musi później, na mocy pokazania równoważności tego, co one oznaczają. Przykład: różne definicje równoważności powinny się nazywać inaczej, np. invertible, biinvertible, contractible etc.

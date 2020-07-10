@@ -572,6 +572,22 @@ Proof.
 Qed.
 (* end hide *)
 
+(** Insajt, że o ja pierdole: jak się ma [list_eq] do [Forall]? *)
+
+Inductive Forall2
+  {A : Type} (R : A -> A -> Prop) : list A -> list A -> Prop :=
+    | nil2 : Forall2 R [] []
+    | cons2 :
+        forall {h1 h2 : A} {t1 t2 : list A},
+          R h1 h2 -> Forall2 R t1 t2 -> Forall2 R (h1 :: t1) (h2 :: t2).
+
+Lemma list_eq_Forall :
+  forall {A : Type} {l1 l2 : list A},
+    code l1 l2 <-> Forall2 (@eq A) l1 l2.
+Proof.
+  split; induction 1; constructor; assumption.
+Qed.
+
 End list_eq_ind.
 
 Module list_eq_forall.
@@ -655,6 +671,145 @@ Proof.
         left. constructor 4. assumption.
         right. constructor 4. assumption.
 Defined.
+(* end hide *)
+
+Inductive Exists2
+  {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
+    | E2_here :
+        forall {h1 h2 : A} (t1 t2 : list A),
+          R h1 h2 -> Exists2 R (h1 :: t1) (h2 :: t2)
+    | E2_there :
+        forall {h1 h2 : A} {t1 t2 : list A},
+          Exists2 R t1 t2 -> Exists2 R (h1 :: t1) (h2 :: t2).
+
+Lemma Exists2_list_neq :
+  forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
+    Exists2 R l1 l2 -> list_neq R l1 l2.
+(* begin hide *)
+Proof.
+  induction 1.
+    constructor. assumption.
+    constructor 4. assumption.
+Qed.
+(* end hide *)
+
+Inductive DifferentStructure
+  {A : Type} : list A -> list A -> Type :=
+    | DS_nc :
+        forall (h : A) (t : list A),
+          DifferentStructure [] (h :: t)
+    | DS_cn :
+        forall (h : A) (t : list A),
+          DifferentStructure (h :: t) []
+    | DS_cc :
+        forall (h1 h2 : A) {t1 t2 : list A},
+          DifferentStructure t1 t2 ->
+            DifferentStructure (h1 :: t1) (h2 :: t2).
+
+(** Insajt, że o ja pierdole: [list_neq] to w sumie [Exists2] lub
+    [DifferentStructure], czyli listy różnią się, gdy różnią się
+    na którymś elemencie lub mają różną długość. *)
+
+Lemma lnE2 :
+  forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
+    list_neq R l1 l2 -> Exists2 R l1 l2 + DifferentStructure l1 l2.
+(* begin hide *)
+Proof.
+  induction 1.
+    right. constructor.
+    right. constructor.
+    left. constructor. assumption.
+    destruct IHX.
+      left. constructor 2. assumption.
+      right. constructor. assumption.
+Defined.
+(* end hide *)
+
+Lemma lnE2_conv :
+  forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
+    Exists2 R l1 l2 + DifferentStructure l1 l2 -> list_neq R l1 l2.
+(* begin hide *)
+Proof.
+  destruct 1.
+    induction e.
+      constructor. assumption.
+      constructor 4. assumption.
+    induction d.
+      constructor.
+      constructor.
+      constructor 4. assumption.
+Defined.
+(* end hide *)
+
+Require Import Equality.
+
+Lemma okurwa :
+  forall
+    (A : Type) (R : A -> A -> Type) (h1 h2 : A) (t1 t2 : list A)
+    (r1 : R h1 h2) (r2 : R h1 h2),
+      @inl _
+        (DifferentStructure (h1 :: t1) (h2 :: t2))
+        (E2_here R t1 t2 r1)
+      =
+      inl (E2_here R t1 t2 r2) ->
+        r1 = r2.
+(* begin hide *)
+Proof.
+  assert (forall (A B : Type) (x y : A), @inl A B x = inl y -> x = y).
+    inversion 1. reflexivity.
+  intros. apply H in H0.
+  apply (f_equal
+    (fun x : Exists2 R (h1 :: t1) (h2 :: t2) =>
+      match x with
+          | E2_here _ _ _ r => Some r
+          | _             => None
+      end))
+  in H0.
+  inversion H0. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma lnE2_lnE2_conv :
+  forall
+    {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
+    (c : list_neq R l1 l2),
+      lnE2_conv (lnE2 c) = c.
+(* begin hide *)
+Proof.
+  induction c; cbn.
+    1-3: reflexivity.
+    destruct (list_neq_rect A R _) eqn: Heq.
+      cbn. f_equal. induction e; cbn in *.
+        dependent destruction c; cbn in *.
+          f_equal. symmetry. apply okurwa in Heq. assumption.
+          cbn in *. rewrite Heq in IHc. cbn in IHc. inversion IHc.
+        dependent destruction c.
+          cbn in *. inversion Heq.
+          cbn in *. rewrite Heq in IHc. cbn in IHc. assumption.
+      cbn. f_equal. dependent destruction c; cbn in *.
+        inversion Heq; subst; cbn. reflexivity.
+        inversion Heq; subst; cbn. reflexivity.
+        inversion Heq.
+        rewrite Heq in IHc. cbn in IHc. assumption.
+Qed.
+(* end hide *)
+
+Lemma lnE2_conv_lnE2 :
+  forall
+    {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
+    (x : Exists2 R l1 l2 + DifferentStructure l1 l2),
+      lnE2 (lnE2_conv x) = x.
+(* begin hide *)
+Proof.
+  destruct x.
+    induction e; cbn in *.
+      reflexivity.
+      destruct (list_neq_rect A R _); inversion IHe. reflexivity.
+    induction d; cbn in *.
+      reflexivity.
+      reflexivity.
+      destruct (list_neq_rect A R _); inversion IHd. reflexivity.
+Qed.
 (* end hide *)
 
 End list_neq_ind.

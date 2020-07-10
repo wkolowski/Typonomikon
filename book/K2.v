@@ -1,4 +1,4 @@
-(** * K2: algorytmy i struktury danych - pusty *)
+(** * K2: Algorytmy i struktury danych [TODO] *)
 
 (** Do tego rozdziału trafią algorytmy i struktury danych, nad którymi
     właśnie (nie) pracuję w mojej pracy magisterskiej:

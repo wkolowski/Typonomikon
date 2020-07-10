@@ -959,8 +959,8 @@ Check Some nat 5.
 Check None.
 (* ===> None forall A : Type, option A *)
 
-Arguments Some [A] _.
-Arguments None [A].
+Arguments Some {A} _.
+Arguments None {A}.
 
 (** Jak widać typ [A], będący parametrem [option], jest też pierwszym
     argumentem każdego z konstruktorów.
@@ -1206,8 +1206,8 @@ Check nil.
 Check cons.
 (* ===> cons : forall A : Type, A -> list A -> list A *)
 
-Arguments nil [A].
-Arguments cons [A] _ _.
+Arguments nil  {A}.
+Arguments cons {A} _ _.
 
 (** Jak już wspomnieliśmy, jeżeli typ induktywny ma argument (w naszym
     przypadku [A : Type]), to argument ten jest też pierwszym argumentem
@@ -1504,7 +1504,7 @@ Qed.
 Inductive prod (A B : Type) : Type :=
     | pair : A -> B -> prod A B.
 
-Arguments pair [A] [B] _ _.
+Arguments pair {A B} _ _.
 
 (** Produkt typów [A] i [B] to typ, którego termami są pary. Pierwszy
     element pary to term typu [A], a drugi to term typu [B]. Tym, co
@@ -1545,8 +1545,8 @@ Inductive sum (A B : Type) : Type :=
     | inl : A -> sum A B
     | inr : B -> sum A B.
 
-Arguments inl [A] [B] _.
-Arguments inr [A] [B] _.
+Arguments inl {A B} _.
+Arguments inr {A B} _.
 
 (** Suma [A] i [B] to typ, którego termy są albo termami typu [A],
     zawiniętymi w konstruktor [inl], albo termami typu [B], zawiniętymi
@@ -2780,7 +2780,7 @@ Inductive sigT (A : Type) (P : A -> Type) : Type :=
 Inductive sig (A : Type) (P : A -> Prop) : Type :=
     | exist : forall x : A, P x -> sig A P.
 
-Arguments exist [A] [P] _ _.
+Arguments exist {A P} _ _.
 
 (** Typ [sig A P] można interpretować jako typ składający się z tych
     elementów [A], które spełniają predykat [P]. Formalnie jest to
@@ -3578,9 +3578,9 @@ Inductive sorted {A : Type} (R : A -> A -> Prop) : list A -> Prop :=
         forall (x y : A) (t : list A),
           R x y -> sorted R (y :: t) -> sorted R (x :: y :: t).
 
-Arguments sorted_nil {A R}.
+Arguments sorted_nil   {A R}.
 Arguments sorted_singl {A R} _.
-Arguments sorted_cons {A R x y t} _ _.
+Arguments sorted_cons  {A R x y t} _ _.
 
 Definition slist' {A : Type} (R : A -> A -> Prop) : Type :=
   {l : list A | sorted R l}.

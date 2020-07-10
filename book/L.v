@@ -1,4 +1,4 @@
-(** * L: algebra i efekty - pusty *)
+(** * L: Algebra i efekty [TODO] *)
 
 (** Tutaj będzie rozdział o algebrowych rzeczach. Na początek pierdoły
     typu półgrupy i monoidy, później jakiś ogólniejszy obraz algebry

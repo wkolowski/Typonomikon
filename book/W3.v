@@ -1,5 +1,9 @@
 (** * W3: Logika klasyczna [schowana na końcu dla niepoznaki] *)
 
+(* begin hide *)
+(* TODO: Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go używać. *)
+(* end hide *)
+
 (** * Aksjomaty i prawa logiki klasycznej (TODO) *)
 
 Definition LEM : Prop :=

@@ -1691,6 +1691,7 @@ Qed.
 Lemma binom_sym :
   forall n k : nat,
     k < n -> binom n k = binom n (minus n k).
+(* begin hide *)
 Proof.
   induction n as [| n'];
   destruct k as [| k'];

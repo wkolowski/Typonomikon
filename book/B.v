@@ -665,7 +665,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma noncontradiction : ~(P /\ ~P).
+Lemma noncontradiction : ~ (P /\ ~ P).
 (* begin hide *)
 Proof.
   intro. destruct H. apply H0. assumption.

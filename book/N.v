@@ -1,4 +1,4 @@
-(** * N: kontynuacje [TODO] *)
+(** * N: Kontynuacje [TODO] *)
 
 (** * Wstęp *)
 

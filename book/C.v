@@ -1,5 +1,21 @@
 (** * C: Podstawy teorii typów [TODO] *)
 
+(* begin hide *)
+(*
+TODO: Osąd `x : A` możemy czytać jako "x jest typu A", zaś konkretnie
+TODO: `x : nat` jako "x jest liczbą naturalną".
+TODO: Zrobić więcej ściąg/zadań z czytania różnych rzeczy.
+TODO: powiązanie reguł wprowadzania/eliminacji/obliczania/unikalności
+TODO: z równoważnościami, czyli w sumie Harmonia.
+TODO: A równoważności to nic innego jak konstrukcje uniwersalne.
+TODO: Podkreślić gdzieś mocniej, że reguła indukcji mówi,
+TODO: że nie ma nic poza tym, co można zrobić konstruktorami.
+TODO: Intuicja dla reguł unikalności: dzida składa się z przeddzidzia
+TODO: dzidy, śróddzidzia dzidy i zadzidzia dzidy.
+TODO: Wprowadzić pojęcie "motyw eliminacji" i częściej używać.
+*)
+(* end hide *)
+
 (** Uwaga: ten rozdział jest póki co posklejany z fragmentów innych
     rozdziałów. Czytając go, weź na to poprawkę. W szczególności zawiera on
     zadania, których nie będziesz w stanie zrobić, bo niezbędny do tego

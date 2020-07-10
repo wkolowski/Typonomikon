@@ -1160,6 +1160,8 @@ End uniqueness_bisim_eq_general.
 (** Achtung: póki co wisi tu kod roboczy *)
 
 (* begin hide *)
+(* TODO: [lam X. lam nil. lam cons. cons X nil] - egzotyczna lista. *)
+(* TODO: Kodowanie Churcha dla typów ilorazowych. *)
 Require Import X3.
 (* end hide *)
 

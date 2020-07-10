@@ -907,6 +907,10 @@ Qed.
 
 (** * Bijekcje *)
 
+(* begin hide *)
+(* TODO: o bijekcjach/injekcjach/surjekcjach z HoTTowej perspektywy. *)
+(* end hide *)
+
 Definition bijective {A B : Type} (f : A -> B) : Prop :=
   injective f /\ surjective f.
 

@@ -1,5 +1,7 @@
 (** * Parametryczność *)
 
+(* TODO: Odkłamać kwestię polimorfizmu najlepiej przy okazji rozdziału o programowaniu generycznym. *)
+
 (** UWAGA TODO: ten podrozdział zawiera do pewnego stopnia kłamstwa (tzn.
     dość uproszczony punkt widzenia). *)
 
