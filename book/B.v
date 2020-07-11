@@ -672,6 +672,26 @@ Proof.
 Qed.
 (* end hide *)
 
+(** **** Ćwiczenie ([ex_contradictione]) *)
+
+Lemma ex_contradictione : (P /\ ~ P) -> Q.
+(* begin hide *)
+Proof.
+  intros [p np].
+  apply np in p.
+  contradiction.
+Qed.
+(* end hide *)
+
+(** Ciekawostka: powyższe prawo można by nazwać "ex contradictione
+    (sequitur) quodlibet", czyli "ze sprzeczności wynika cokolwiek
+    zechcesz".
+
+    Jest ono połączeniem prawa niesprzeczności ([noncontradiction])
+    oraz ex falso quodlibet ([ex_falso]). W niektórych biedackich
+    systemach logicznych, w których nie ma odpowiednika [False],
+    może być użyte zamiast [ex_falso]. *)
+
 (** ** Równoważność zdaniowa *)
 
 (** Równoważność zdaniowa jest w Coqu oznaczana [<->]. Symbol ten,
@@ -2232,10 +2252,8 @@ Qed.
 
 (** * Ściąga *)
 
-(** https://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf
-
-    Zauważyłem palącą potrzebę istnienia krótkiej ściągi, dotyczącą podstaw
-    logiki. Oto i ona:
+(** Zauważyłem palącą potrzebę istnienia krótkiej ściągi, dotyczącą
+    podstaw logiki. Oto i ona (ściąga, nie potrzeba):
     - [True] to zdanie zawsze prawdziwe. Można je udowodnić za pomocą
       taktyki [trivial]. Można je też rozbić za pomocą [destruct], ale
       nie jest to zbyt użyteczne.
@@ -2274,6 +2292,12 @@ Qed.
       spełnia P". Dowodzimy go za pomocą taktyki [exists a], a następnie
       musimy pokazać [P a]. Jeżeli mamy taki dowód w kontekście, możemy
       rozbić go na [a] i [P a] za pomocą taktyki [destruct]. *)
+
+(** Tutaj dodatkowa ściąga, w nieco bardziej czytelnym formacie:
+    https://github.com/wkolowski/CoqBookPL/tree/master/txt/logika.md
+
+    Tutaj inna ściąga:
+    https://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf *)
 
 (** * Konkluzja *)
 

@@ -1,10 +1,5 @@
 # TODO
 
-## Logika
-1. Być może dokonać rozróżnienia różnych _ex_ ... _quodlibet_:
-  - _Ex falso quodlibet_ - `False -> P`
-  - _Ex contradictione quodlibet_ - `A /\ ~ A -> P`
-
 ## Rekursja
 1. Prymitywna.
 2. Wyższego rzędu, tzn. nie w pełni zaaplikowane wywołania rekurencyjne.
@@ -49,22 +44,15 @@
 13. Przestrzeń metryczną można zdefiniować za pomocą "Ball Relation": `Q+ -> X -> X -> Prop`
 14. Napisać coś więcej o ciekawej perspektywie topologicznej z gęstymi podprzestrzeniami. Dla przykładu: `conat` to po prostu liczby konaturalne, ale już `{c : conat | Finite c \/ Infinite c}` to gęsta podprzestrzeń `conat` (czyli, że jej dopełnienie jest puste), ale z dodatkową informacją o tym, w jaki sposób podzielić `conat` na dwie (implicite rozłączne) podprzestrzenie liczb skończonych i nieskończonych. Zaiste pasjonujące.
 
-## Monady
-1. Monady dla logiki klasycznej! Klasyczne funkcje, aksjomat wyboru i nie tylko: https://arxiv.org/pdf/1008.1213.pdf
-2. Subtelna uwaga: monada to nie to samo co nieskończoność-monada, więc homotopiowo trzeba uważać.
-
 ## Filozofia
 1. Mega ważna obserwacja: nazwy zawsze należy nadawać tak, żeby zgadzały się z definicją, czyli nazwy są intensjonalne. Ewentualne ekstensjonalne powiązanie ze sobą (w postaci równoważności) różnych apriori nazw następować musi później, na mocy pokazania równoważności tego, co one oznaczają. Przykład: różne definicje równoważności powinny się nazywać inaczej, np. invertible, biinvertible, contractible etc.
 
 ## Sugestie i problemy z koła
 1. Opisać dokładniej definiowanie przez dowód.
 2. Nie trzeba specjalizować hipotezy, żeby przepisać.
-3. Być może coś więcej o równości (i jej alternatywnej definicji?).
 4. Napisać bardziej wprost o deklarowaniu hipotez.
-5. Ulepszyć ściągę z taktykami i komendami.
 6. Ludzie po czasie zapominają składni.
 7. Napisać coś więcej o składni i o rysowaniu termów.
-8. Dodać zadanie z dwiema dziwnymi identycznościami (co najmniej intensjonalna i ekstensjonalna, ale nie pamiętam, o co dokładnie chodzi).
 
 ## Długofalowe
 1. Użyć jsCoq do zrobienia interaktywnej książki, która wyglądałaby jakoś tak: https://x80.org/rhino-coq/v8.10/

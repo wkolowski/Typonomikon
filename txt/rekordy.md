@@ -87,7 +87,7 @@ Definition Refl : Type :=
 }.
 ```
 
-Niefajnie, co? Szczególnie, gdy nasz rekord ma dużo pól - strata czasu na pisanie boilerplejtu jest olbrzymia. Problem ten jest rozwiązywany przez ustawianie wartości w typach rekordowych. Przy ulepszonych rekordach typ relacji zwrotnych na liczbach naturalnych możemy uzyskać pisząc `Refl with A = nat`, a `isReflexive` możemy zdefiniować tak: `isReflexive A' R' = Refl with A = A', R = R'`.
+Niefajnie, co? Szczególnie, gdy nasz rekord ma dużo pól - strata czasu na pisanie bojlerplejtu jest olbrzymia. Problem ten jest rozwiązywany przez ustawianie wartości w typach rekordowych. Przy ulepszonych rekordach typ relacji zwrotnych na liczbach naturalnych możemy uzyskać pisząc `Refl with A = nat`, a `isReflexive` możemy zdefiniować tak: `isReflexive A' R' = Refl with A = A', R = R'`.
 
 Dzięki temu mamy kanoniczny sposób reprezentowania wszystkich możliwych powiązanych pojęć na raz: relacja zwrotna, bycie relacją zwrotną, etc. Można by się nawet pokusić o automatyczne generowanie wszystkich tych rzeczy.
 

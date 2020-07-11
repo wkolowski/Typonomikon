@@ -797,6 +797,46 @@ Arguments position {S P} _ _.
 
 (* begin hide *)
 
+Inductive Finite {S : Type} {P : S -> Type} : M S P -> Prop :=
+(*    | FiniteBase :
+        forall m : M S P, (P (shape m) -> False) -> Finite m*)
+    | FiniteRec  :
+        forall m : M S P,
+          (forall p : P (shape m), Finite (position m p)) -> Finite m.
+
+CoInductive Infinite {S : Type} {P : S -> Type} (m : M S P) : Prop :=
+{
+(*    Infinite' :
+      forall p : P (shape m), Infinite (position m p);
+*)
+    p : P (shape m);
+    Infinite' : Infinite (position m p);
+}.
+
+(* TODO *) Lemma Finite_or_Infinite_irrefutable :
+  forall {S : Type} {P : S -> Type} (m : M S P),
+    ~ ~ (Finite m \/ Infinite m).
+Proof.
+  intros S P m H.
+  apply H. right. revert m H. cofix CH.
+  intros [s pos] H.
+  econstructor; cbn.
+  apply CH.
+  intros [H' | H']; apply H.
+    Focus 2. right. econstructor; cbn. exact H'.
+    left. constructor. cbn. intro.
+    exfalso. apply H. left. constructor. cbn. intro.
+Abort.
+
+Lemma Finite_Infinite_impossible :
+  forall {S : Type} {P : S -> Type} {m : M S P},
+    Finite m -> Infinite m -> False.
+Proof.
+  induction 1.
+  intros [s inf].
+  exact (H0 _ inf).
+Qed.
+
 (**
 
 Wtedy typ [c] wygląda tak:

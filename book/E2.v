@@ -11,6 +11,10 @@ Require Import Recdef.
     - [exists!]
     - równość [eq] *)
 
+(*
+TODO: Zadanie z dwiema dziwnymi identycznościami
+*)
+
 (* end hide *)
 
 (** W tym rozdziale zapoznamy się z najważniejszymi rodzajami funkcji.

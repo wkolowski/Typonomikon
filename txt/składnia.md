@@ -108,9 +108,32 @@ to żeby można było tych nazw jakoś potem używać
 fun x : wut =>
 match x with
     | w => tutaj można pisać x.a, x.b, x.c, x.d
+end
 ```
 
 Dobrze byłoby też, żeby te nazwy były poważniej traktowane przy domyślnym generowaniu nazw. Obecnie są używane, jeżeli nie poda się żadnej nazwy, no chyba że są już zajęte, to wtedy nie. Zamiast tego `destruct x` dla `x : wut` mógłby automatycznie nazywać rzeczy `x.a : A`, `x.b : B`, `x.c : C`, `x.d : D`.
+
+Update: w Haskellu jest ciekawe rozszerzenie GHC, mianowicie [Record Wildcards](https://kodimensional.dev/recordwildcards).
+
+Dzięki czemuś podobnego dla Coqa można by pisać jeszcze zwięźlej:
+
+```Coq
+fun x : wut =>
+match x with
+    | w{..} => tutaj można odnosić się do pól w pisząc a, b, c, d
+end
+```
+
+Można by to w sumie też połączyć z Haskellowym `@` (np. `l@(h : t)` w Haskellu oznacza wzorzec na listę z głową `h` i ogonem `t`, a całość dodatkowo można też nazywać `l`). W Coqu ten sam wzorzec jest zapisywany jako `l as h :: t`.
+
+```Coq
+fun x : wut =>
+match x with
+    | w@ => tutaj można pisać a, b, c, d
+end
+```
+
+Na koniec uwaga, dość subtelna: sugestie z tej sekcji są mało kompatybilne z sugestiami z poprzedniej...
 
 ## Kropka
 

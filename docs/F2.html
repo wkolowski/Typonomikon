@@ -65,7 +65,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a name="lab462"></a><h1 class="section">Zero, następnik i nieskończonośc</h1>
+<a name="lab463"></a><h1 class="section">Zero, następnik i nieskończonośc</h1>
 
 <div class="paragraph"> </div>
 
@@ -106,7 +106,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a name="lab463"></a><h1 class="section">Dodawanie</h1>
+<a name="lab464"></a><h1 class="section">Dodawanie</h1>
 
 <div class="paragraph"> </div>
 
@@ -171,7 +171,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a name="lab464"></a><h1 class="section">Porządek</h1>
+<a name="lab465"></a><h1 class="section">Porządek</h1>
 
 <div class="paragraph"> </div>
 
@@ -266,7 +266,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a name="lab465"></a><h1 class="section">Minimum i maksimum</h1>
+<a name="lab466"></a><h1 class="section">Minimum i maksimum</h1>
 
 <div class="paragraph"> </div>
 
@@ -397,7 +397,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a name="lab466"></a><h1 class="section">Dzielenie przez 2</h1>
+<a name="lab467"></a><h1 class="section">Dzielenie przez 2</h1>
 
 <div class="paragraph"> </div>
 
@@ -440,7 +440,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a name="lab467"></a><h1 class="section">Skończoność i nieskończoność</h1>
+<a name="lab468"></a><h1 class="section">Skończoność i nieskończoność</h1>
 
 <div class="paragraph"> </div>
 
@@ -474,7 +474,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a name="lab468"></a><h1 class="section">Parzystość i nieparzystość</h1>
+<a name="lab469"></a><h1 class="section">Parzystość i nieparzystość</h1>
 
 <div class="paragraph"> </div>
 
@@ -548,7 +548,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 </div>
 
 <div class="doc">
-<a name="lab469"></a><h1 class="section">Odejmowanie (TODO)</h1>
+<a name="lab470"></a><h1 class="section">Odejmowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -648,7 +648,7 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="tact
 </div>
 
 <div class="doc">
-<a name="lab470"></a><h1 class="section">Mnożenie (TODO)</h1>
+<a name="lab471"></a><h1 class="section">Mnożenie (TODO)</h1>
 
 </div>
 <div class="code">
@@ -701,7 +701,7 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="tact
 </div>
 
 <div class="doc">
-<a name="lab471"></a><h1 class="section">Koindukcja wzajemna (TODO)</h1>
+<a name="lab472"></a><h1 class="section">Koindukcja wzajemna (TODO)</h1>
 
 </div>
 <div class="code">
@@ -712,7 +712,7 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="tact
 </div>
 
 <div class="doc">
-<a name="lab472"></a><h1 class="section">Liczby naturalne i konaturalne</h1>
+<a name="lab473"></a><h1 class="section">Liczby naturalne i konaturalne</h1>
 
 <div class="paragraph"> </div>
 
@@ -766,4 +766,25 @@ Pokaż, że jeżeli <span class="inlinecode"><span class="id" title="var">from_n
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">f</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> (<span class="id" title="var">from_nat</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>) -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Infinite</span> <span class="id" title="var">c</span> \/ <span class="id" title="var">Finite</span> <span class="id" title="var">c</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab474"></a><h2 class="section">Losowe ćwiczenia</h2>
+
+<div class="paragraph"> </div>
+
+<a name="lab475"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Pokaż, że niezaprzeczalnie każda liczba konaturalna jest skończona
+    lub nieskończona. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Finite_or_Infinite</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> : <span class="id" title="var">conat</span>, ~ ~ (<span class="id" title="var">Finite</span> <span class="id" title="var">c</span> \/ <span class="id" title="var">Infinite</span> <span class="id" title="var">c</span>).<br/>
 </div>

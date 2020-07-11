@@ -8,6 +8,12 @@
 
 (** * Równość - najważniejsza relacja (TODO) *)
 
+(* begin hide *)
+(*
+TODO: Być może coś więcej o równości (i jej alternatywnej definicji?).
+*)
+(* end hide *)
+
 (** Dobrze byłoby zapoznać się z równością przed pierwszym jej użyciem
     w rozdziale o typach induktywnych. *)
 

@@ -1662,3 +1662,28 @@ Proof.
     }
 Qed.
 (* end hide *)
+
+(** ** Losowe ćwiczenia *)
+
+(** **** Ćwiczenie *)
+
+(** Pokaż, że niezaprzeczalnie każda liczba konaturalna jest skończona
+    lub nieskończona. *)
+
+Lemma Finite_or_Infinite :
+  forall c : conat, ~ ~ (Finite c \/ Infinite c).
+(* begin hide *)
+Proof.
+  intros c H.
+  apply H. right. revert c H. cofix CH.
+  destruct c as [[c' |]]; intro H.
+    Focus 2. exfalso. apply H. left. constructor.
+    constructor. exists c'. split.
+      cbn. reflexivity.
+      apply CH. intros [H' | H']; apply H.
+        left. constructor. assumption.
+        right. constructor. exists c'. split.
+          cbn. reflexivity.
+          assumption.
+Qed.
+(* end hide *)

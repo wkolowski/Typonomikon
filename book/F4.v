@@ -807,8 +807,12 @@ end.
     odpowiednio, przez skończone i nieskończone kolisty. Zastanów się
     dobrze, czy definicje powinny być induktywne, czy koinduktywne.
 
-    Udowodnij własności tych predykatów oraz sprawdź, które kolisty
-    i operacje je spełniają. *)
+    Udowodnij, że niezaprzeczalnie każda kolista jest skończona lub
+    nieskończona oraz że żadna kolista nie jest jednocześnia skończona
+    i nieskończona.
+
+    Następnie udowodnij własności tych predykatów oraz sprawdź, które
+    kolisty i operacje je spełniają. *)
 
 (* begin hide *)
 Inductive Finite {A : Type} : coList A -> Prop :=
@@ -825,6 +829,28 @@ CoInductive Infinite {A : Type} (l : coList A) : Prop :=
     p : uncons l = Some (h, t);
     inf' : Infinite t;
 }.
+(* end hide *)
+
+Lemma Finite_or_Infinite_irrefutable :
+  forall {A : Type} (l : coList A),
+    ~ ~ (Finite l \/ Infinite l).
+(* begin hide *)
+Proof.
+  intros A l H.
+  apply H. right. revert A l H. cofix CH.
+  intros A l H.
+  destruct l as [[[h t] |]].
+    Focus 2. contradiction H. left. constructor. cbn. reflexivity.
+    econstructor.
+      cbn. reflexivity.
+      apply CH. intros [H' | H']; apply H.
+        left. econstructor 2.
+          cbn. reflexivity.
+          assumption.
+        right. econstructor.
+          cbn. reflexivity.
+          assumption.
+Qed.
 (* end hide *)
 
 Lemma Finite_not_Infinite :
