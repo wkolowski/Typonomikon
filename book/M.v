@@ -18,7 +18,7 @@ TODO: całą przestrzeń. Zaiste pasjonujące.
     o porządkach. Potem trochę porządkologii i może jakieś dziedziny.
     Potem topologia. *)
 
-(** * Legalna topologia *)
+(** * Legalna topologia (TODO) *)
 
 (** Tutaj o topologii takiej jak robi Martin Escardó, np. w tej pracy:
     "Infinite sets that satisfy the principle of omniscience in any

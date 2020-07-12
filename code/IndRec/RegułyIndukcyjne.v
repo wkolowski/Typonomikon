@@ -61,6 +61,31 @@ match le_dec n k with
 end.
 Next Obligation. lia. Defined.
 
+Fixpoint nat_ind_8
+  {P : nat -> Type}
+  (P0 : P 0)
+  (P1 : P 1)
+  (P2 : P 2)
+  (P3 : P 3)
+  (P4 : P 4)
+  (P5 : P 5)
+  (P6 : P 6)
+  (P7 : P 7)
+  (P8plus : forall n : nat, P n -> P (8 + n))
+  (n : nat) : P n :=
+match n with
+  | 0 => P0
+  | 1 => P1
+  | 2 => P2
+  | 3 => P3
+  | 4 => P4
+  | 5 => P5
+  | 6 => P6
+  | 7 => P7
+  | S (S (S (S (S (S (S (S n'))))))) =>
+      P8plus n' (nat_ind_8 P0 P1 P2 P3 P4 P5 P6 P7 P8plus n')
+end.
+
 Theorem above_7 : forall n : nat,
     exists i j : nat, 8 + n = 3 * i + 5 * j.
 Proof.
@@ -73,6 +98,33 @@ Proof.
       destruct n. exists 2, 2. auto. repeat (inversion H; clear H; clear H0;
       rename H1 into H).
     destruct IHn' as [i [j H]]. exists (S i), (S j). lia.
+Restart.
+  assert (Hk : 8 <> 0) by inversion 1.
+  induction n as [| n'] using (nat_ind_k' 8 ltac:(inversion 1)).
+    destruct n as [| [| [| [| [| [| [| [| [| n']]]]]]]]].
+      exists 1, 1. cbn. reflexivity.
+      exists 3, 0. cbn. reflexivity.
+      exists 0, 2. cbn. reflexivity.
+      exists 2, 1. cbn. reflexivity.
+      exists 4, 0. cbn. reflexivity.
+      exists 1, 2. cbn. reflexivity.
+      exists 3, 1. cbn. reflexivity.
+      exists 0, 3. cbn. reflexivity.
+      exists 2, 2. cbn. reflexivity.
+      lia.
+    destruct IHn' as (i & j & IH).
+      exists (S i), (S j). lia.
+Restart.
+  apply nat_ind_8.
+    exists 1, 1. cbn. reflexivity.
+    exists 3, 0. cbn. reflexivity.
+    exists 0, 2. cbn. reflexivity.
+    exists 2, 1. cbn. reflexivity.
+    exists 4, 0. cbn. reflexivity.
+    exists 1, 2. cbn. reflexivity.
+    exists 3, 1. cbn. reflexivity.
+    exists 0, 3. cbn. reflexivity.
+    intros n' (i & j & IH). exists (S i), (S j). lia.
 Qed.
 
 Fixpoint fac (n : nat) : nat :=
@@ -156,16 +208,6 @@ end.
 
 Eval compute in divmod2 155.
 
-(*Program Fixpoint nat_to_bin (n : nat) {measure n} : bin :=
-match n with
-    | 0 => HZ
-    | _ => let (a, b) := divmod2 n in
-    match b with
-        | 0 => Z (nat_to_bin a)
-        | _ => J (nat_to_bin a)
-    end
-end.*)
-
 Eval compute in bin_to_nat answer.
 Eval compute in bin_to_nat (HP (Z (J (Z (J (Z HJ)))))).
 
@@ -221,13 +263,6 @@ match p with
     | Z p' => J p'
 end.
 
-(*Fixpoint pred (p : pos) : pos :=
-match p with
-    | HJ => HJ
-    | J p' => Z p'
-    | Z p' => J (pred p')
-end.*)
-
 Theorem pos_to_nat_S : forall (p : pos),
     pos_to_nat (succ p) = S (pos_to_nat p).
 Proof.
@@ -254,21 +289,6 @@ Proof.
     apply bin_to_nat_inj.
     apply bin_to_nat_sur.
 Qed.
-
-Inductive list' : Type -> Type :=
-    | nil' : forall A : Type, list' A
-    | cons' : forall (A : Type) (x : A), list' A -> list' A.
-
-Check list'_ind.
-Check list_ind.
-
-Fixpoint nat_ind (P : nat -> Prop) (H0 : P 0) (HS : forall n : nat, P n -> P (S n))
-    (n : nat) : P n.
-Proof.
-  destruct n as [| n'].
-    assumption.
-    apply HS. apply nat_ind; auto.
-Defined.
 
 Theorem div2_even_inv : forall n m : nat,
     n + n = m -> n = div2 m.
@@ -438,8 +458,7 @@ Qed.
 
 End nat_ind_dbl_pred.
 
-Check nat_ind_dbl_pred.
-SearchAbout mult. Require Import NPeano.
+Require Import NPeano.
 
 Goal forall n : nat, pow 2 (3 + n) > 2 * n.
 Proof.
@@ -453,7 +472,8 @@ Proof.
           lia.
           replace (2 ^ (3 + n')) with (8 * 2 ^ n').
             Focus 2. cbn. lia.
-            SearchAbout le.
+            destruct n'; cbn.
+              lia.
 Abort.
 
 Require Import List.

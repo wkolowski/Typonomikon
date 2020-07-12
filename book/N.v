@@ -430,9 +430,9 @@ Compute depthWalk t1'.
     korzystając ze świętego prawa pisarza matematycznego, odpowiedź
     na to pytanie pozostawiam czytelnikowi jako ćwiczenie. *)
 
-(** * Reszta rzeczy *)
+(** * Reszta rzeczy (TODO) *)
 
-(** ** Defunkcjonalizacja filtrowania *)
+(** ** Defunkcjonalizacja filtrowania (TODO) *)
 
 (** Bardzo insajtowy filmik (i transkrypcjo-artykuł) o defunkcjonalizacji
     (i refunkcjonalizacji też):
@@ -485,7 +485,7 @@ match p with
     | Not p' => negb (apply p' n)
 end.
 
-(** ** Defunkcjonalizacja silni *)
+(** ** Defunkcjonalizacja silni (TODO) *)
 
 (** Wzięte z https://ncatlab.org/nlab/show/defunctionalization *)
 
@@ -543,7 +543,7 @@ Proof.
     intros. rewrite IHn'. cbn. reflexivity.
 Qed.
 
-(** ** CPS *)
+(** ** CPS (TODO) *)
 
 Fixpoint plus (n m : nat) : nat :=
 match n with
@@ -592,3 +592,149 @@ Proof.
   intro. functional induction fib n; intros;
     try rewrite fibCPS_eq, IHn0, IHn1; reflexivity.
 Qed.
+
+(** * Kodowanie Churcha (TODO) *)
+
+(** Achtung: póki co wisi tu kod roboczy *)
+
+(* begin hide *)
+(* TODO: [lam X. lam nil. lam cons. cons X nil] - egzotyczna lista. *)
+(* TODO: Kodowanie Churcha dla typów ilorazowych. *)
+Require Import X3.
+(* end hide *)
+
+Definition clist (A : Type) : Type :=
+  forall {X : Type}, X -> (A -> X -> X) -> X.
+
+Definition cnil {A : Type} : clist A :=
+  fun X nil cons => nil.
+
+Definition ccons {A : Type} : A -> clist A -> clist A :=
+  fun h t => fun X nil cons => cons h (t X nil cons).
+
+Notation "c[]" := cnil.
+Notation "x :c: y" := (ccons x y) (at level 60, right associativity).
+Notation "c[ x ; .. ; y ]" := (ccons x .. (ccons y cnil) ..).
+
+Definition chead {A : Type} (l : clist A) : option A :=
+  l _ None (fun h _ => Some h).
+
+Unset Universe Checking.
+
+Definition ctail {A : Type} (l : clist A) : option (clist A) :=
+  l (@option (clist A)) None
+    (fun h t =>
+      match t with
+          | None => Some c[]
+          | Some t' => Some (ccons h t')
+      end).
+
+Compute ctail c[].
+Compute ctail c[1].
+Compute ctail c[1; 2].
+Compute ctail c[1; 2; 3].
+Compute ctail c[1; 2; 3; 4].
+
+Definition null {A : Type} (l : clist A) : bool :=
+  l _ true (fun _ _ => false).
+
+Definition clen {A : Type} (l : clist A) : nat :=
+  l nat 0 (fun _ => S).
+
+Definition snoc {A : Type} (l : clist A) (x : A) : clist A :=
+  fun X nil cons => l _ (c[x] _ nil cons) cons.
+
+Definition rev {A : Type} (l : clist A) : clist A.
+Proof.
+  unfold clist in *.
+  intros X nil cons.
+Abort.
+
+Definition capp {A : Type} (l1 l2 : clist A) : clist A :=
+  fun X nil cons => l1 X (l2 X nil cons) cons.
+
+Fixpoint fromList {A : Type} (l : list A) : clist A :=
+match l with
+    | [] => cnil
+    | h :: t => ccons h (fromList t)
+end.
+
+Definition toList {A : Type} (l : clist A) : list A :=
+  l (list A) [] (@cons A).
+
+Lemma toList_fromList :
+  forall (A : Type) (l : list A),
+    toList (fromList l) = l.
+Proof.
+  induction l as [| h t]; compute in *; rewrite ?IHt; reflexivity.
+Qed.
+
+Lemma fromList_toList :
+  forall (A : Type) (cl : clist A),
+    fromList (toList cl) = cl.
+Proof.
+  intros. unfold clist in *. compute.
+Abort.
+
+Set Universe Checking.
+
+Definition wut : Type :=
+  forall X : Type, (X -> X) -> X.
+
+Lemma wut_wut :
+  wut -> False.
+Proof.
+  unfold wut.
+  intro w.
+  apply w.
+  trivial.
+Qed.
+
+(** * Kodowanie Scotta (TODO) *)
+
+Module Scott.
+
+Unset Positivity Checking.
+
+Require Import List.
+Import ListNotations.
+
+Inductive Scott (A : Type) : Type :=
+{
+    scott : forall X : Type, X -> (A -> Scott A -> X) -> X;
+}.
+
+Arguments scott {A}.
+
+Definition nil {A : Type} : Scott A :=
+  {| scott := fun _ n _ => n |}.
+
+Definition cons {A : Type} (h : A) (t : Scott A) : Scott A :=
+  {| scott := fun _ _ c => c h t |}.
+
+Definition l : Scott nat :=
+  cons 1 (cons 2 (cons 3 nil)).
+
+Definition head {A : Type} (l : Scott A) : option A :=
+  scott l _ None (fun a _ => Some a).
+
+Unset Universe Checking.
+
+Definition tail {A : Type} (l : Scott A) : option (Scott A) :=
+  scott l _ None (fun _ t => Some t).
+
+Compute tail l.
+
+Unset Guard Checking.
+Fixpoint toList {A : Type} (l : Scott A) {struct l} : list A :=
+  scott l _ [] (fun h t => h :: toList t).
+
+Compute toList l.
+
+Compute toList (match tail l with None => nil | Some t => t end).
+
+Definition ohnoes (l : Scott unit) : Scott unit -> bool.
+destruct l. apply scott0.
+Abort.
+
+End Scott.

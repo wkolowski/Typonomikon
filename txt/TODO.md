@@ -17,13 +17,11 @@
 - Z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
 - Z definiowania typów induktywnych (i relacji też).
 - Z uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
-7. Opisać zippery (z dwóch perspektyw: łażenie po drzewach i różniczkowanie typów) oraz indeksowanie poddrzew dla typów induktywnych (czyli też, w jakiejś formie, zippery).
 8. Odkłamać kwestię "skończoności" typów induktywnych i "nieskończoności" typów koinduktywnych. Tak naprawdę, to chodzi o to, że typy induktywny są dobrze ufundowane, a typy koinduktywne niekoniecznie.
 
 ## Indukcja - teoria
 1. Kwestia non-uniform parameters i jak je zasymulować przy użyciu indeksów.
 2. Typy induktywne z parametrami + równość = rodziny indeksowane.
-3. Izomorfizmy dla typów induktywnych: każde drzewo jest drzewem o jakiejś wysokości (no chyba że ma nieskończone rozgałęzienie, to wtedy nie). Uogólniając: każdy element typu induktywnego jest elementem odpowiadającego mu typu indeksowanego o pewnym indeksie. UWAGA: rozróżnienie na drzewa o skończonej wysokości vs drzewa o ograniczonej wysokości.
 
 ## HoTT i topologia
 2. Wprowadzić teorię zbiorów za pomocą wyższego typu induktywnego.

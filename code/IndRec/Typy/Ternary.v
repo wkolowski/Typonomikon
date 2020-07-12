@@ -39,29 +39,29 @@ end.
 Notation "b1 & b2" := (andb3 b1 b2) (at level 40).
 Notation "b1 | b2" := (orb3 b1 b2) (at level 40).
 
-Theorem andb3_comm :
+Lemma andb3_comm :
   forall b1 b2 : bool3, b1 & b2 = b2 & b1.
 Proof. solve_bool3. Qed.
 
-Theorem orb3_comm :
+Lemma orb3_comm :
   forall b1 b2 : bool3, b1 | b2 = b2 | b1.
 Proof. solve_bool3. Qed.
 
-Theorem andb3_dist_orb3 :
+Lemma andb3_dist_orb3 :
   forall b1 b2 b3 : bool3,
     b1 & (b2 | b3) = (b1 & b2) | (b1 & b3).
 Proof. solve_bool3. Qed.
 
-Theorem orb3_dist_andb3 :
+Lemma orb3_dist_andb3 :
   forall b1 b2 b3 : bool3,
     b1 | (b2 & b3) = (b1 | b2) & (b1 | b3).
 Proof. solve_bool3. Qed.
 
-Theorem andb3_true_neutral_l :
+Lemma andb3_true_neutral_l :
   forall b : bool3, andb3 true b = b.
 Proof. solve_bool3. Qed.
 
-Theorem andb3_true_neutral_r :
+Lemma andb3_true_neutral_r :
   forall b : bool3, andb3 b true = b.
 Proof. solve_bool3. Qed.
 

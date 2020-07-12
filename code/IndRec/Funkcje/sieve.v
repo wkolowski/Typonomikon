@@ -1,31 +1,3 @@
-(*
-Require Import List.
-Import ListNotations.
-
-Inductive D' : nat -> nat -> Type :=
-    | D'0 : forall n m : nat, n < m -> D' n m
-    | D'1 :
-        forall n m : nat, m <= n ->
-          D' (n - S m) m -> D' n m.
-
-Fixpoint divides' {n m : nat} (d : D' n m) : bool :=
-match d with
-    | D'0 0 _ _ => true
-    | D'0 _ _ _ => false
-    | D'1 _ _ _ d' => divides' d'
-end.
-
-Lemma D'_all :
-  forall n m : nat, D' n m.
-Proof.
-  apply (
-    @well_founded_induction_type nat
-      lt PeanoNat.Nat.lt_wf_0
-      (fun n : nat => forall m : nat, D' n m)).
-  destruct x as [| n'].
-Abort.
-*)
-
 Require Import D5.
 
 Require Import Wellfounded Lia.

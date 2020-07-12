@@ -1,6 +1,6 @@
-Require Import X3.
-
 Require Import Lia Arith.
+
+Require Import D5.
 
 Class Enumerable (A : Type) : Type :=
 {
@@ -9,8 +9,8 @@ Class Enumerable (A : Type) : Type :=
     enum_spec : forall (n : nat) (x : A), size x = n <-> In x (enum n)
 }.
 
-Arguments size [A Enumerable] _.
-Arguments enum _ [Enumerable] _.
+Arguments size {A Enumerable}.
+Arguments enum _ {Enumerable} _.
 
 #[refine]
 Instance Enumerable_bool : Enumerable bool :=
@@ -27,11 +27,9 @@ Proof.
   destruct n as [| [| n']], x; compute; repeat split; auto; lia.
 Defined.
 
-Fixpoint bind {A B : Type} (x : list A) (f : A -> list B) : list B :=
-match x with
-    | [] => []
-    | h :: t => f h ++ bind t f
-end.
+Definition flip
+  {A B C : Type} (f : A -> B -> C) : B -> A -> C :=
+    fun b a => f a b.
 
 Fixpoint all_lists {A : Type} (E : Enumerable A) (n : nat)
   : list (list A) :=
@@ -39,8 +37,8 @@ match n with
     | 0 => [[]]
     | 1 => map (fun x => [x]) (enum A 1)
     | S n' =>
-        bind (enum A 1) (fun h =>
-        bind (all_lists E n') (fun t => [h :: t]))
+        flip bind (enum A 1) (fun h =>
+        flip bind (all_lists E n') (fun t => [h :: t]))
 end.
 
 Compute all_lists (Enumerable_bool) 3.

@@ -58,8 +58,8 @@ Inductive Z : Type :=
     | Z_isSet : forall (x y : Z) (p q : x = y), p = q.
 *)
 
-(** Liczby wymierne można zrobić naiwnie albo sprytnie, ale oba pomysły są
-    głupie. *)
+(** Liczby wymierne można zrobić naiwnie albo sprytnie, ale oba pomysły
+    są dość głupie. *)
 
 (* Bardzo naiwnie (będzie można ulepszyć, jak bozia da sort SProp). *)
 Record Rat1 : Type :=
