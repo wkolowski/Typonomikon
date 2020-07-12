@@ -1,0 +1,51 @@
+digraph
+{
+  node          [shape=rectangle, color=green]
+
+  A             [label = "Wstęp"]
+
+  KRZ           [label = "Konstruktywny rachunek zdań"]
+  KRK           [label = "Konstruktywny rachunek kwantyfikatorów"]
+
+  LK            [label = "Logika klasyczna", color = red]
+  LdM           [label = "Logika de Morgana", color = red]
+
+  LModalne      [label = "Logiki modalne"]
+  LPośrednie    [label = "Logiki pośrednie"]
+  LSub          [label = "Logiki substrukturalne"]
+  LMV           [label = "Logiki wielowartościowe"]
+  CoL           [label = "Logika szalonego Gruzina"]
+  
+  Pred          [label = "Predykatywizm", color = red]
+  Impred        [label = "Kodowania impredykatywne", color = red]
+  α             [label = "α-konwersja", color = red]
+  
+  Pijok         [label = "Paradoks pijoka"]
+  Curry         [label = "Paradoks Curry'ego", color = red]
+  Golibroda     [label = "Paradoks golibrody"]
+  Kebab         [label = "Paradoks pieniądza i kebaba"]
+
+  Tabu          [label = "Tabu = niesprzeczny aksjomat"]
+
+  Pluralizm     [label = "Pluralizm logiczny"]
+
+  A             -> KRZ
+
+  KRZ           -> KRK, "Zwykłe spójniki", "Inne spójniki"
+  "Inne spójniki" -> "Silna negacja"
+  KRK           -> LK, Tabu, Golibroda, Pred, α, Równość
+
+  LK            -> {LModalne, LPośrednie, LSub, LMV, CoL, Pijok, Curry}
+  LPośrednie    -> LdM
+  LMV           -> LdM
+
+  LdM           -> Pluralizm
+  LSub          -> Pluralizm, Kebab
+  LModalne      -> Pluralizm, Impred
+  CoL           -> Pluralizm
+
+  Pred          -> Impred
+
+  Równość       -> UIP, "Aksjomat K", "Proof Irrelevance", "Propositional Extensionality/Univalence"
+
+}

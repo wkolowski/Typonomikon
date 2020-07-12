@@ -1,4 +1,4 @@
-(** * W2: Konstruktywny rachunek kwantyfikatorów [schowany na końcu dla niepoznaki] *)
+(** * B2: Konstruktywny rachunek kwantyfikatorów [TODO] *)
 
 (** * Typy i ich elementy (TODO) *)
 

@@ -13,6 +13,6 @@ digraph
 
   A -> {m, e, i}
   m -> {m_ass, m_e_l, m_e_r, m_i_l, m_i_r}
-  e -> {m_e_l, m_e_r}
+  e -> {m_e_l, m_e_r, m_i_l, m_i_r}
   i -> {m_i_l, m_i_r}
 }

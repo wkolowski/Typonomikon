@@ -1,4 +1,4 @@
-(** * W1: Konstruktywny rachunek zdań [schowany na końcu dla niepoznaki] *)
+(** * B1: Konstruktywny rachunek zdań [TODO] *)
 
 (** * Zdania i spójniki logiczne (TODO) *)
 
@@ -21,6 +21,24 @@
 (** ** Negacja (TODO)   *)
 
 (** ** Silna negacja *)
+
+(* begin hide *)
+(** TODO: przepisać rozdział o silnej negacji
+
+    Nowy pomysł: to samo co ostatnio, czyli dwie laseczki, ale tym razem
+    podkreślić, że silna negacja znaczy "któreś zdanie nie zachodzi",
+    zaś słaba negacja znaczy "zdania są ze sobą niekompatybilne".
+
+    Nawiązać do aksjomatu [WLEM] ([P] i [~ P] są ze sobą niekompatybilne,
+    ale silna negacja [~ P \/ ~ ~ P] jest tabu).
+
+    Są też negacje pośrednie, co widać przy większej liczbie koniunktów,
+    np. dla zdania [P /\ Q /\ R]:
+    - [~ P \/ ~ Q \/ ~ R] - silna negacja, "któreś nie zachodzi"
+    - [P /\ Q /\ R -> False] - słaba negacja, "wszystkie niekompatybilne"
+    - [P /\ Q -> False] - pośrednia negacja, "niektóre niekompatybilne"
+*)
+(* end hide *)
 
 (** Poznaliśmy uprzednio pewien spójnik, zapisywany wdzięcznym wygibaskiem
     [~], a zwany górnolotnie negacją. Powinniśmy się jednak zastanowić: czy

@@ -1,4 +1,4 @@
-(** * B: Logika *)
+(** * B0: Stary rozdział o logice *)
 
 (** Naszą przygodę z Coqiem rozpoczniemy od skoku na głęboką wodę,
     czyli nauki dowodzenia twierdzeń w logice konstruktywnej przy

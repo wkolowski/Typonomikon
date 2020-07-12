@@ -42,7 +42,6 @@
   - są jeszcze jakieś, ale nie 
 12. Włączyć potem do książki rzeczy z HoTTowych notatek.
 13. Przestrzeń metryczną można zdefiniować za pomocą "Ball Relation": `Q+ -> X -> X -> Prop`
-14. Napisać coś więcej o ciekawej perspektywie topologicznej z gęstymi podprzestrzeniami. Dla przykładu: `conat` to po prostu liczby konaturalne, ale już `{c : conat | Finite c \/ Infinite c}` to gęsta podprzestrzeń `conat` (czyli, że jej dopełnienie jest puste), ale z dodatkową informacją o tym, w jaki sposób podzielić `conat` na dwie (implicite rozłączne) podprzestrzenie liczb skończonych i nieskończonych. Zaiste pasjonujące.
 
 ## Filozofia
 1. Mega ważna obserwacja: nazwy zawsze należy nadawać tak, żeby zgadzały się z definicją, czyli nazwy są intensjonalne. Ewentualne ekstensjonalne powiązanie ze sobą (w postaci równoważności) różnych apriori nazw następować musi później, na mocy pokazania równoważności tego, co one oznaczają. Przykład: różne definicje równoważności powinny się nazywać inaczej, np. invertible, biinvertible, contractible etc.

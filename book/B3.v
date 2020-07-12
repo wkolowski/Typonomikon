@@ -1,4 +1,4 @@
-(** * W3: Logika klasyczna [schowana na końcu dla niepoznaki] *)
+(** * B3: Logika klasyczna [TODO] *)
 
 (* begin hide *)
 (* TODO: Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go używać. *)
@@ -918,6 +918,18 @@ Proof.
     exists random_guy. trivial.
     apply drinkers_paradox. assumption.
 Qed.
+(* end hide *)
+
+(* begin hide *)
+(* TODO: alternatywne wersje paradoksu pijoka *)
+
+Lemma dp2 :
+  forall (Man : Type) (Drinks : Man -> Prop),
+    (exists drinker : Man, Drinks drinker) ->
+      forall m : Man, Drinks m.
+Proof.
+Abort.
+
 (* end hide *)
 
 (** * Paradoks Curry'ego (TODO) *)

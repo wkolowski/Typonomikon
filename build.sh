@@ -73,7 +73,8 @@ latexmk tex/Książka.tex -pdf -outdir=tex/                 \
         -f                                                \
         -quiet
 
-dot txt/indukcja.dot -Tjpg -o txt/indukcja.jpg
+dot txt/drzewko.dot    -Tjpg -o txt/drzewko.jpg
+dot txt/indukcja.dot   -Tjpg -o txt/indukcja.jpg
 dot txt/modalności.dot -Tjpg -o txt/modalności.jpg
-dot txt/rekordy.dot -Tjpg -o txt/rekordy.jpg
-dot txt/rekordy2.dot -Tjpg -o txt/rekordy2.jpg
+dot txt/rekordy.dot    -Tjpg -o txt/rekordy.jpg
+dot txt/rekordy2.dot   -Tjpg -o txt/rekordy2.jpg

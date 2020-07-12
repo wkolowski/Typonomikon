@@ -1,4 +1,4 @@
-(** * W5: Strzępki logicznych kodów [TODO] *)
+(** * B5: Strzępki logicznych kodów [TODO] *)
 
 (** * i/lub (TODO)  *)
 
@@ -371,7 +371,7 @@ Qed.
 Definition NI : Prop :=
   forall P Q : Prop, ~ (P -> Q) -> P /\ ~ Q.
 
-Require Import W3.
+Require Import B3.
 
 Lemma NI_LEM :
   NI -> LEM.
@@ -519,8 +519,6 @@ Qed.
 (** * Double negation shift (TODO) *)
 
 (** Wzięte z https://ncatlab.org/nlab/show/double-negation+shift *)
-
-Require Import W3.
 
 Definition DNS : Prop :=
   forall (A : Type) (P : A -> Prop),

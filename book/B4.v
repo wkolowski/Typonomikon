@@ -1,4 +1,4 @@
-(** * W4: Inne logiki [schowane na końcu dla niepoznaki] *)
+(** * B4: Inne logiki [TODO] *)
 
 (** * Porównanie logiki konstruktywnej i klasycznej (TODO) *)
 
@@ -613,6 +613,63 @@ Qed.
 
 (** * Logika de Morgana (TODO) *)
 
+(* begin hide *)
+Lemma and_true_irref :
+  forall P Q : Prop,
+    P -> ~ ~ Q -> ~ ~ (P /\ Q).
+Proof.
+  intros P Q p nnq nnpq.
+  apply nnq. intro q.
+  apply nnpq.
+  split; assumption.
+Qed.
+
+Lemma or_false_irref :
+  forall P Q : Prop,
+    ~ P -> ~ ~ Q -> ~ ~ (P \/ Q).
+Proof.
+  intros P Q np nnq npq.
+  apply nnq. intro q.
+  apply npq.
+  right. assumption.
+Qed.
+
+Lemma or_irref_irref :
+  forall P Q : Prop,
+    ~ ~ P -> ~ ~ (P \/ Q).
+Proof.
+  intros P Q nnp npq.
+  apply nnp. intro p.
+  apply npq.
+  left. assumption.
+Qed.
+
+Lemma impl_true_irref :
+  forall P Q : Prop,
+    ~ ~ Q -> ~ ~ (P -> Q).
+Proof.
+  intros P Q nnq npq.
+  apply nnq. intro q.
+  apply npq.
+  intros _. assumption.
+Qed.
+
+Lemma impl_irref_false :
+  forall P Q : Prop,
+    ~ ~ P -> ~ Q -> ~ (P -> Q).
+Proof.
+  intros P Q nnp nq pq.
+  apply nnp. intro p.
+  apply nq, pq.
+  assumption.
+Qed.
+
+(*
+TODO: Logika de Morgana jako logika trójwartościowa
+TODO: Patrz notatki papierowe
+*)
+(* end hide *)
+
 (** * Logika modalna *)
 
 (** Jako się rzekło, modalności takie jak możliwość, konieczność, czas,
@@ -887,7 +944,7 @@ Qed.
 
 (** ** Modalność klasyczna: logika klasyczna jako logika modalna *)
 
-Require Import W3.
+Require Import B3.
 
 (** Poznana w poprzednim podrozdziale modalność mogła być dla ciebie
     dość zaskakująca, wszakże w języku naturalnym nieczęsto robienie
@@ -1578,6 +1635,207 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Dodatkowe prawa modalności *)
+
+(* begin hide *)
+(* TODO: napisać coś o [bind] i [compM] dla modalności. *)
+(* end hide *)
+
+Lemma neutrally_bind :
+  forall P Q : Prop,
+    P -> (P -> Q) -> Q.
+(* begin hide *)
+Proof.
+  intros.
+  apply H0.
+  assumption.
+Qed.
+(* end hide *)
+
+Lemma neutrally_compM :
+  forall P Q R : Prop,
+    (P -> Q) -> (Q -> R) -> (P -> R).
+(* begin hide *)
+Proof.
+  intros.
+  apply H0, H, H1.
+Qed.
+(* end hide *)
+
+Lemma trivially_bind :
+  forall P Q : Prop,
+    True -> (P -> True) -> True.
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma trivially_compM :
+  forall P Q R : Prop,
+    (P -> True) -> (Q -> True) -> (P -> True).
+(* begin hide *)
+Proof.
+  trivial.
+Qed.
+(* end hide *)
+
+Lemma excuse_bind :
+  forall E P Q : Prop,
+    (E \/ P) -> (P -> E \/ Q) -> E \/ Q.
+(* begin hide *)
+Proof.
+  intros E P Q [e | p] H.
+    left. assumption.
+    destruct (H p).
+      left. assumption.
+      right. assumption.
+Qed.
+(* end hide *)
+
+Lemma excuse_compM :
+  forall E P Q R : Prop,
+    (P -> E \/ Q) -> (Q -> E \/ R) -> (P -> E \/ R).
+(* begin hide *)
+Proof.
+  intros E P Q R peq qer p.
+  destruct (peq p) as [e | q].
+    left. assumption.
+    destruct (qer q).
+      left. assumption.
+      right. assumption.
+Qed.
+
+Lemma classically_bind :
+  forall P Q : Prop,
+    (LEM -> P) -> (P -> (LEM -> Q)) -> (LEM -> Q).
+(* begin hide *)
+Proof.
+  intros P Q p pq lem.
+  apply pq.
+    apply p. assumption.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma classically_compM :
+  forall P Q R : Prop,
+    (P -> (LEM -> Q)) -> (Q -> (LEM -> R)) -> (P -> (LEM -> R)).
+(* begin hide *)
+Proof.
+  intros P Q R pq qr pr lem.
+  apply qr.
+    apply pq; assumption.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma axiomatically_bind :
+  forall A P Q : Prop,
+    (A -> P) -> (P -> (A -> Q)) -> (A -> Q).
+(* begin hide *)
+Proof.
+  intros A P Q p pq a.
+  apply pq.
+    apply p. assumption.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma axiomatically_compM :
+  forall A P Q R : Prop,
+    (P -> (A -> Q)) -> (Q -> (A -> R)) -> (P -> (A -> R)).
+(* begin hide *)
+Proof.
+  intros A P Q R pq qr p a.
+  apply qr.
+    apply pq; assumption.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma irrefutably_bind :
+  forall P Q : Prop,
+    ~ ~ P -> (P -> ~ ~ Q) -> ~ ~ Q.
+(* begin hide *)
+Proof.
+  intros P Q p pq nq.
+  apply p. intro pure_p.
+  apply pq.
+    assumption.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma irrefutably_compM :
+  forall P Q R : Prop,
+    (P -> ~ ~ Q) -> (Q -> ~ ~ R) -> (P -> ~ ~ R).
+(* begin hide *)
+Proof.
+  intros P Q R pq qr p nr.
+  apply pq.
+    assumption.
+    intro q. apply qr.
+      assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma indirectly_bind :
+  forall C P Q : Prop,
+    ((P -> C) -> C) -> (P -> ((Q -> C) -> C)) -> ((Q -> C) -> C).
+(* begin hide *)
+Proof.
+  intros C P Q p pq qc.
+  apply p. intro pure_p.
+  apply pq.
+    assumption.
+    assumption.
+Qed.
+(* end hide *)
+
+Lemma indirectly_compM :
+  forall C P Q R : Prop,
+    (P -> ((Q -> C) -> C)) -> (Q -> ((R -> C) -> C)) ->
+      (P -> ((R -> C) -> C)).
+(* begin hide *)
+Proof.
+  intros C P Q R pq qr p rc.
+  apply pq.
+    assumption.
+    intro q. apply qr.
+      assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma omnidirectly_bind :
+  forall P Q : Prop,
+    (forall C : Prop, (P -> C) -> C) ->
+    (P -> (forall C : Prop, (Q -> C) -> C)) ->
+      (forall C : Prop, (Q -> C) -> C).
+(* begin hide *)
+Proof.
+  intros P Q p pq C qc.
+  apply p. intro pure_p.
+  apply pq; assumption.
+Qed.
+(* end hide *)
+
+Lemma omnidirectly_compM :
+  forall P Q R : Prop,
+    (P -> (forall C : Prop, (Q -> C) -> C)) ->
+    (Q -> (forall C : Prop, (R -> C) -> C)) ->
+      (P -> (forall C : Prop, (R -> C) -> C)).
+(* begin hide *)
+Proof.
+  intros P Q R pq qr p C rc.
+  apply pq.
+    assumption.
+    intro q. apply qr; assumption.
+Qed.
+(* end hide *)
+
 (** ** Związki między modalnościami *)
 
 (** Przekonaliśmy się już, że dwie pozornie różne definicje mogą tak
@@ -2024,6 +2282,26 @@ Proof.
   intros K A x y p q.
   destruct p.
   symmetry. apply K.
+Qed.
+(* end hide *)
+
+Lemma ProofIrrelevance_UIP :
+  ProofIrrelevance -> UIP.
+(* begin hide *)
+Proof.
+  unfold ProofIrrelevance, UIP.
+  intros PI A x y p q.
+  apply PI.
+Qed.
+(* end hide *)
+
+Lemma ProofIrrelevance_K :
+  ProofIrrelevance -> K.
+(* begin hide *)
+Proof.
+  unfold ProofIrrelevance, K.
+  intros PI A x p.
+  apply PI.
 Qed.
 (* end hide *)
 

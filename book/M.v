@@ -1,5 +1,19 @@
 (** * M: Porządki i topologia *)
 
+(* begin hide *)
+
+(*
+TODO: Coś więcej o perspektywie topologicznej z gęstymi podprzestrzeniami.
+TODO: Dla przykładu: [conat] to po prostu liczby konaturalne, ale już
+TODO [{c : conat | Finite c \/ Infinite c}] to gęsta podprzestrzeń [conat]
+TODO: (czyli, że jej dopełnienie jest puste), ale z dodatkową informacją o
+TODO: tym, w jaki sposób podzielić [conat] na dwie (implicite rozłączne)
+TODO: podprzestrzenie liczb skończonych i nieskończonych, które pokrywają
+TODO: całą przestrzeń. Zaiste pasjonujące.
+*)
+
+(* end hide *)
+
 (** Najpierw nawiązanie do tego co było o relacjach i jakieś intuicje
     o porządkach. Potem trochę porządkologii i może jakieś dziedziny.
     Potem topologia. *)
