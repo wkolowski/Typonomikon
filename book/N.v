@@ -593,7 +593,7 @@ Proof.
     try rewrite fibCPS_eq, IHn0, IHn1; reflexivity.
 Qed.
 
-(** * Kodowanie Churcha (TODO) *)
+(** * Kodowania Churcha (TODO) *)
 
 (** Achtung: póki co wisi tu kod roboczy *)
 
@@ -690,7 +690,7 @@ Proof.
   trivial.
 Qed.
 
-(** * Kodowanie Scotta (TODO) *)
+(** * Kodowania Scotta (TODO) *)
 
 Module Scott.
 
@@ -732,9 +732,5 @@ Fixpoint toList {A : Type} (l : Scott A) {struct l} : list A :=
 Compute toList l.
 
 Compute toList (match tail l with None => nil | Some t => t end).
-
-Definition ohnoes (l : Scott unit) : Scott unit -> bool.
-destruct l. apply scott0.
-Abort.
 
 End Scott.
