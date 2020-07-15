@@ -812,6 +812,205 @@ Proof.
 Qed.
 (* end hide *)
 
+Inductive DifferentStructure'
+  {A : Type} : list A -> list A -> SProp :=
+    | DS'_nc :
+        forall (h : A) (t : list A),
+          DifferentStructure' [] (h :: t)
+    | DS'_cn :
+        forall (h : A) (t : list A),
+          DifferentStructure' (h :: t) []
+    | DS'_cc :
+        forall (h1 h2 : A) {t1 t2 : list A},
+          DifferentStructure' t1 t2 ->
+            DifferentStructure' (h1 :: t1) (h2 :: t2).
+
+Lemma DS_DS' :
+  forall {A : Type} {l1 l2 : list A},
+    DifferentStructure l1 l2 -> DifferentStructure' l1 l2.
+(* begin hide *)
+Proof.
+  induction 1; constructor; assumption.
+Qed.
+(* end hide *)
+
+Inductive sEmpty : SProp := .
+
+Lemma sEmpty_rec' :
+  forall A : Type, sEmpty -> A.
+(* begin hide *)
+Proof.
+  destruct 1.
+Qed.
+(* end hide *)
+
+Lemma DS'_spec :
+  forall {A : Type} {l1 l2 : list A},
+    DifferentStructure' l1 l2 -> l1 <> l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1];
+  destruct l2 as [| h2 t2];
+  cbn; intros H Heq; inv Heq.
+    apply sEmpty_rec'. inv H.
+    apply (IHt1 t2).
+      inv H. assumption.
+      reflexivity.
+Defined.
+(* end hide *)
+
+Lemma DS'_DS :
+  forall {A : Type} {l1 l2 : list A},
+    DifferentStructure' l1 l2 -> DifferentStructure l1 l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1];
+  destruct l2 as [| h2 t2];
+  cbn; intros; try constructor.
+    apply sEmpty_rec'. inv H.
+    apply IHt1. inv H. assumption.
+Defined.
+(* end hide *)
+
+Lemma isProp_DS :
+  forall
+    {A : Type} {l1 l2 : list A}
+    (p q : DifferentStructure l1 l2),
+      p = q.
+(* begin hide *)
+Proof.
+  induction p; dependent destruction q.
+    1-2: reflexivity.
+    f_equal. apply IHp.
+Qed.
+(* end hide *)
+
+Lemma DS_DS'_DS :
+  forall {A : Type} {l1 l2 : list A} (p : DifferentStructure l1 l2),
+    DS'_DS (DS_DS' p) = p.
+(* begin hide *)
+Proof.
+  intros. apply isProp_DS.
+Qed.
+(* end hide *)
+
+Lemma DS'_DS_DS' :
+  forall {A : Type} {l1 l2 : list A} (p : DifferentStructure' l1 l2),
+    DS_DS' (DS'_DS p) = p.
+Proof.
+  reflexivity.
+Abort.
+
+Inductive sor (A : Type) (B : SProp) : Type :=
+    | sinl : A -> sor A B
+    | sinr : B -> sor A B.
+
+Arguments sinl {A B} _.
+Arguments sinr {A B} _.
+
+Lemma lnE2' :
+  forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
+    list_neq R l1 l2 -> sor (Exists2 R l1 l2) (DifferentStructure' l1 l2).
+(* begin hide *)
+Proof.
+  induction 1.
+    right. constructor.
+    right. constructor.
+    left. constructor. assumption.
+    destruct IHX.
+      left. constructor 2. assumption.
+      right. constructor. assumption.
+Defined.
+(* end hide *)
+
+Lemma lnE2'_conv :
+  forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
+    sor (Exists2 R l1 l2) (DifferentStructure' l1 l2) -> list_neq R l1 l2.
+(* begin hide *)
+Proof.
+  destruct 1.
+    induction e.
+      constructor. assumption.
+      constructor 4. assumption.
+    revert l2 d.
+    induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn; intro.
+      apply sEmpty_rec'. inv d.
+      constructor.
+      constructor.
+      constructor 4. apply IHt1. inv d. assumption.
+Defined.
+(* end hide *)
+
+Lemma okurwa' :
+  forall
+    (A : Type) (R : A -> A -> Type) (h1 h2 : A) (t1 t2 : list A)
+    (r1 : R h1 h2) (r2 : R h1 h2),
+      @sinl _
+        (DifferentStructure' (h1 :: t1) (h2 :: t2))
+        (E2_here R t1 t2 r1)
+      =
+      sinl (E2_here R t1 t2 r2) ->
+        r1 = r2.
+(* begin hide *)
+Proof.
+  assert (forall A B (x y : A), @sinl A B x = sinl y -> x = y).
+    inversion 1. reflexivity.
+  intros. apply H in H0.
+  apply (f_equal
+    (fun x : Exists2 R (h1 :: t1) (h2 :: t2) =>
+      match x with
+          | E2_here _ _ _ r => Some r
+          | _             => None
+      end))
+  in H0.
+  inversion H0. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma lnE2'_lnE2'_conv :
+  forall
+    {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
+    (c : list_neq R l1 l2),
+      lnE2'_conv (lnE2' c) = c.
+(* begin hide *)
+Proof.
+  induction c; cbn.
+    1-3: reflexivity.
+    destruct (list_neq_rect A R _) eqn: Heq.
+      cbn. f_equal. induction e; cbn in *.
+        dependent destruction c; cbn in *.
+          f_equal. symmetry. apply okurwa' in Heq. assumption.
+          cbn in *. rewrite Heq in IHc. cbn in IHc. inversion IHc.
+        dependent destruction c.
+          cbn in *. inversion Heq.
+          cbn in *. rewrite Heq in IHc. cbn in IHc. assumption.
+      cbn. f_equal. dependent destruction c; cbn in *.
+        inversion Heq; subst; cbn. reflexivity.
+        inversion Heq; subst; cbn. reflexivity.
+        inversion Heq.
+        rewrite Heq in IHc. cbn in IHc. assumption.
+Qed.
+(* end hide *)
+
+Lemma lnE2'_conv_lnE2' :
+  forall
+    {A : Type} {R : A -> A -> Prop} {l1 l2 : list A}
+    (x : sor (Exists2 R l1 l2) (DifferentStructure' l1 l2)),
+      lnE2' (lnE2'_conv x) = x.
+Proof.
+  destruct x.
+    induction e; cbn in *.
+      reflexivity.
+      destruct (list_neq_rect A R _); inversion IHe. reflexivity.
+    revert l2 d.
+    induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn; intro.
+      apply sEmpty_rec. inv d.
+      reflexivity.
+      reflexivity.
+Abort.
+
+(** Wnioski: próba użycia tutaj [SProp] jest bardzo poroniona. *)
+
 End list_neq_ind.
 
 (** ** Różność list - rekursywnie *)

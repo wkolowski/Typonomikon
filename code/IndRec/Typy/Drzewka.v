@@ -12,6 +12,11 @@ Inductive InfWisienka (A : Type) : Type :=
     | L1 : A -> InfWisienka A
     | N1 : forall {B : Type}, (B -> InfWisienka A) -> InfWisienka A.
 
+(** TODO: pamiętać, że [Wisienka] jest monadą ([bind] to podstawianie całego drzewa
+    TODO: za pojedynczy liść).
+    TODO: https://github.com/mioalter/talks/blob/master/Haskell_Meetup_Jan_13_2016/Two_Tricks_Haskell_Meetup_1_13_2016.pdf
+*)
+
 End wisienki.
 
 Module NodeTrees.

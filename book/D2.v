@@ -1972,6 +1972,93 @@ Qed.
 End rot.
 (* end hide *)
 
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj funkcję [Eratosthenes : nat -> list nat], która dla
+    danego [n] znajduje listę wszystkich liczb pierwszych, które są
+    mniejsze lub równe [n].
+
+    Jako funkcję pomocniczą zaimplementuj sito Eratosthenesa. Sito
+    to funkcja [sieve : list nat -> list nat], która działa tak:
+    - jeżeli wejście jest puste, zwróć listę pustą
+    - jeżeli wejście ma głowę [h] i ogon [t], to wstaw [h] na początek
+      wyniku i wywołaj się rekurencyjnie na ogonie [t] z odfiltrowanymi
+      wszystkimi wielokrotnościami głowy [h]
+
+    Jeżeli jako argument [sieve] podamy listę wszystkich liczb poczynając
+    od pewnej liczby pierwszej [p] aż do [n], to otrzymamy listę liczb
+    pierwszych między [p] i [n].
+
+    Żeby sprawnie rozwiązać to zadanie, zgeneralizuj funkcję [sieve]
+    na dowolny typ [A] i funkcję porównującą [cmp : A -> A -> bool]
+    (tak będzie łatwiej) i użyj metody induktywnej dziedziny. *)
+
+(* begin hide *)
+Module sieve.
+
+Inductive D {A : Type} (f : A -> A -> bool) : list A -> Type :=
+    | D0 : D f []
+    | D1 :
+        forall (h : A) (t : list A),
+          D f (filter (f h) t) -> D f (h :: t).
+
+Arguments D0 {A f}.
+Arguments D1 {A f} _ _ _.
+
+Lemma D_all :
+  forall (A : Type) (f : A -> A -> bool) (l : list A), D f l.
+Proof.
+  intros A f.
+  apply (well_founded_rect _ _ (wf_lengthOrder A)).
+  destruct x as [| h t]; intros IH.
+    constructor.
+    constructor. apply IH. clear IH. induction t as [| h' t']; cbn.
+      constructor.
+      destruct (f h h'); cbn in *.
+        apply le_n_S. apply IHt'.
+        apply le_S. apply IHt'.
+Defined.
+
+Fixpoint sieve'
+  {A : Type} (f : A -> A -> bool)
+  {l : list A} (d : D f l) : list A :=
+match d with
+    | D0 => []
+    | D1 h t d' => h :: sieve' f d'
+end.
+
+Definition sieve
+  {A : Type} (f : A -> A -> bool) (l : list A) : list A :=
+    sieve' f (D_all A f l).
+
+(**
+TODO: zrobić porządek z [list] i [Datatypes.list], najlepiej po
+TODO: prostu usunąć definicję [list] z rozdziału D5.
+*)
+
+Fixpoint any {A : Type} (f : A -> bool) (l : list A) : bool :=
+match l with
+    | [] => false
+    | h :: t => f h || any f t
+end.
+
+Fixpoint iterate {A : Type} (f : A -> A) (x : A) (n : nat) : list A :=
+match n with
+    | 0 => []
+    | S n' => x :: iterate f (f x) n'
+end.
+
+Definition divides (n m : nat) : bool :=
+  any (fun k : nat => n * k =? m) (iterate S 0 (S m)).
+
+Definition Eratosthenes (n : nat) : list nat :=
+  sieve (fun n m => negb (divides n m)) (iterate S 2 n).
+
+Compute Eratosthenes 100.
+
+End sieve.
+(* end hide *)
+
 (** * Komenda [Function] *)
 
 (** Odkryliśmy uniwersalną metodę definiowania funkcji i dowodzenia ich

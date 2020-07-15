@@ -2045,7 +2045,50 @@ Pierwszy, trudniejszy sposób, to zgeneralizowanie <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-<a name="lab334"></a><h1 class="section">Komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span></h1>
+<a name="lab334"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">Eratosthenes</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, która dla
+    danego <span class="inlinecode"><span class="id" title="var">n</span></span> znajduje listę wszystkich liczb pierwszych, które są
+    mniejsze lub równe <span class="inlinecode"><span class="id" title="var">n</span></span>.
+
+<div class="paragraph"> </div>
+
+    Jako funkcję pomocniczą zaimplementuj sito Eratosthenesa. Sito
+    to funkcja <span class="inlinecode"><span class="id" title="var">sieve</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, która działa tak:
+<ul class="doclist">
+<li> jeżeli wejście jest puste, zwróć listę pustą
+
+</li>
+<li> jeżeli wejście ma głowę <span class="inlinecode"><span class="id" title="var">h</span></span> i ogon <span class="inlinecode"><span class="id" title="var">t</span></span>, to wstaw <span class="inlinecode"><span class="id" title="var">h</span></span> na początek
+      wyniku i wywołaj się rekurencyjnie na ogonie <span class="inlinecode"><span class="id" title="var">t</span></span> z odfiltrowanymi
+      wszystkimi wielokrotnościami głowy <span class="inlinecode"><span class="id" title="var">h</span></span>
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Jeżeli jako argument <span class="inlinecode"><span class="id" title="var">sieve</span></span> podamy listę wszystkich liczb poczynając
+    od pewnej liczby pierwszej <span class="inlinecode"><span class="id" title="var">p</span></span> aż do <span class="inlinecode"><span class="id" title="var">n</span></span>, to otrzymamy listę liczb
+    pierwszych między <span class="inlinecode"><span class="id" title="var">p</span></span> i <span class="inlinecode"><span class="id" title="var">n</span></span>.
+
+<div class="paragraph"> </div>
+
+    Żeby sprawnie rozwiązać to zadanie, zgeneralizuj funkcję <span class="inlinecode"><span class="id" title="var">sieve</span></span>
+    na dowolny typ <span class="inlinecode"><span class="id" title="var">A</span></span> i funkcję porównującą <span class="inlinecode"><span class="id" title="var">cmp</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>
+    (tak będzie łatwiej) i użyj metody induktywnej dziedziny. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab335"></a><h1 class="section">Komenda <span class="inlinecode"><span class="id" title="keyword">Function</span></span></h1>
 
 <div class="paragraph"> </div>
 
@@ -2191,7 +2234,7 @@ Dowodzenie właściwości funkcji zdefiniowanych za pomocą <span class="inlinec
     sobie z takimi ciężkimi przypadkami poświęcimy kolejne podrozdziały. 
 <div class="paragraph"> </div>
 
-<a name="lab335"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab336"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2215,7 +2258,7 @@ Dowodzenie właściwości funkcji zdefiniowanych za pomocą <span class="inlinec
 </div>
 
 <div class="doc">
-<a name="lab336"></a><h1 class="section">Rekursja zagnieżdżona</h1>
+<a name="lab337"></a><h1 class="section">Rekursja zagnieżdżona</h1>
 
 <div class="paragraph"> </div>
 
@@ -2699,7 +2742,7 @@ Na koniec również mały twist, gdyż równanie rekurencyjne najprościej jest
     zdefiniowanego wykresu. 
 <div class="paragraph"> </div>
 
-<a name="lab337"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab338"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2733,7 +2776,7 @@ Wytłumacz, dlaczego Coq nie akceptuje tej definicji. Następnie wymyśl
 </div>
 
 <div class="doc">
-<a name="lab338"></a><h1 class="section">Metoda induktywno-rekurencyjnej dziedziny</h1>
+<a name="lab339"></a><h1 class="section">Metoda induktywno-rekurencyjnej dziedziny</h1>
 
 <div class="paragraph"> </div>
 
@@ -3027,7 +3070,7 @@ Dowód samej reguły też jest dość prosty. Zaczynamy od indukcji po
     założenia. 
 <div class="paragraph"> </div>
 
-<a name="lab339"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab340"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -3053,7 +3096,7 @@ Dowód samej reguły też jest dość prosty. Zaczynamy od indukcji po
 </div>
 
 <div class="doc">
-<a name="lab340"></a><h1 class="section">Metoda induktywnej dziedziny 2</h1>
+<a name="lab341"></a><h1 class="section">Metoda induktywnej dziedziny 2</h1>
 
 <div class="paragraph"> </div>
 
@@ -3654,11 +3697,11 @@ Tak wygląda ekstrakt oryginalnego <span class="inlinecode"><span class="id" tit
     ani nie musiał niczego ekstrahować. 
 <div class="paragraph"> </div>
 
-<a name="lab341"></a><h1 class="section">Plugin <span class="inlinecode"><span class="id" title="keyword">Equations</span></span></h1>
+<a name="lab342"></a><h1 class="section">Plugin <span class="inlinecode"><span class="id" title="keyword">Equations</span></span></h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab342"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab343"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -3677,7 +3720,7 @@ Tak wygląda ekstrakt oryginalnego <span class="inlinecode"><span class="id" tit
 
 <div class="paragraph"> </div>
 
-<a name="lab343"></a><h1 class="section">Podsumowanie</h1>
+<a name="lab344"></a><h1 class="section">Podsumowanie</h1>
 
 <div class="paragraph"> </div>
 
