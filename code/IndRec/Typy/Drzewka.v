@@ -1,42 +1,15 @@
 Module wisienki.
 
-Inductive Wisienka (A : Type) : Type :=
-    | L : A -> Wisienka A
-    | N : Wisienka A -> Wisienka A -> Wisienka A.
 
-Inductive FinWisienka (A : Type) : Type :=
-    | L0 : A -> FinWisienka A
-    | N0 : list (FinWisienka A) -> FinWisienka A.
 
-Inductive InfWisienka (A : Type) : Type :=
-    | L1 : A -> InfWisienka A
-    | N1 : forall {B : Type}, (B -> InfWisienka A) -> InfWisienka A.
 
-(** TODO: pamiętać, że [Wisienka] jest monadą ([bind] to podstawianie całego drzewa
-    TODO: za pojedynczy liść).
-    TODO: https://github.com/mioalter/talks/blob/master/Haskell_Meetup_Jan_13_2016/Two_Tricks_Haskell_Meetup_1_13_2016.pdf
-*)
 
 End wisienki.
 
 Module NodeTrees.
 
-Inductive BTree (A : Type) : Type :=
-    | E : BTree A
-    | N : A -> BTree A -> BTree A -> BTree A.
-
-Inductive Tree (A : Type) : Type :=
-    | E0 : Tree A
-    | N0 : A -> list (Tree A) -> Tree A.
-
-Inductive InfTree (A : Type) : Type :=
-    | E1 : InfTree A
-    | N1 : A -> forall {B : Type}, (B -> InfTree A) -> InfTree A.
 
 End NodeTrees.
-
-(** Pamiętać, że w RCC jest jakotaka implementacja BTree, którą można tu
-    po prostu skopiować. *)
 
 Inductive BTree (A : Type) : Type :=
     | E : BTree A

@@ -1,4 +1,4 @@
-(** * D2i3czwarte: Zippery, indeksy i izomorfizmy typów (TODO) *)
+(** * D2i3czwarte: Zippery, indeksy i izomorfizmy typów [TODO] *)
 
 Require Import D5.
 

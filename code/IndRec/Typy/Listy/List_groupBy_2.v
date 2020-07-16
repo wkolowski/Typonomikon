@@ -30,6 +30,28 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma head_groupBy' :
+  forall (A : Type) (p : A -> A -> bool) (l : list A),
+    head (groupBy p l) = None
+    \/
+    exists (h : A) (t : list A),
+      head (groupBy p l) = Some (h :: t).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    left. constructor.
+    destruct (groupBy p t).
+      right. exists h, []. cbn. reflexivity.
+      destruct IHt as [IH | (h' & t' & IH)].
+        inversion IH.
+        destruct l.
+          right. exists h, []. cbn. reflexivity.
+          right. destruct (p h a); cbn.
+            exists h, (a :: l). cbn. reflexivity.
+            exists h, []. cbn. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma groupBy_is_nil :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
     groupBy p l = [] -> l = [].
@@ -95,7 +117,7 @@ Proof.
     reflexivity.
     gb.
     gb.
-    rewrite IHl0, e0, e1.
+    rewrite IHl0, e0, e1. cbn.
 Abort.
 (* end hide *)
 

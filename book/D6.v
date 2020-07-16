@@ -1522,7 +1522,6 @@ Qed.
 
 End Exchange.
 
-
 (** ** Permutacje za pomocą liczenia właściwości *)
 
 Module Exactly.
