@@ -1,6 +1,8 @@
 
+Inductive RoseTree (A : Type) : Type :=
+    | L : A -> RoseTree A
+    | N : list (RoseTree A) -> RoseTree A.
 
+Scheme RoseTree_ind' := Induction for RoseTree Sort Prop.
 
-Inductive FinWisienka (A : Type) : Type :=
-    | L0 : A -> FinWisienka A
-    | N0 : list (FinWisienka A) -> FinWisienka A.
+Check RoseTree_ind'.

@@ -10,28 +10,27 @@ Inductive RBT (A : Type) : Type :=
 Arguments L {A} _.
 Arguments N {A} _ _.
 
-(*Parameter Elem : forall A : Type, A -> BTree A -> Prop.*)
-
-Inductive Exists {A : Type} (P : A -> Prop) : RBT A -> Type :=
-    | Exists_L :
-        forall x : A, P x -> Exists P (L x)
-    | Exists_NL :
-        forall t1 t2 : RBT A, Exists P t1 -> Exists P (N t1 t2)
-    | Exists_NR :
-        forall t1 t2 : RBT A, Exists P t2 -> Exists P (N t1 t2).
-
-Inductive Forall {A : Type} (P : A -> Prop) : RBT A -> Prop :=
-    | Forall_ L :
-        forall x : A, P x -> Forall P (L x)
-    | Forall_N :
-        forall t1 t2 : RBT A, Forall P t1 -> Forall P t2 -> Forall P (N t1 t2).
-
 Inductive SameShape {A : Type} : RBT A -> RBT A -> Prop :=
     | SameShape_L :
         forall x y : A, SameShape (L x) (L y)
     | SameShape_N :
         forall t1 t1' t2 t2' : RBT A,
-          SameShape t1 t1' -> SameShape t2 t2' -> SameShape (N t1 t2) (N t1' t2').
+          SameShape t1 t1' -> SameShape t2 t2' ->
+            SameShape (N t1 t2) (N t1' t2').
+
+Inductive DifferentShape {A : Type} : RBT A -> RBT A -> Prop :=
+    | DifferentShape_LN :
+        forall (x : A) (t1 t2 : RBT A),
+          DifferentShape (L x) (N t1 t2)
+    | DifferentShape_NL :
+        forall (x : A) (t1 t2 : RBT A),
+          DifferentShape (N t1 t2) (L x)
+    | DifferentShape_N_rec_l :
+        forall t1 t1' t2 t2' : RBT A,
+          DifferentShape t1 t1' -> DifferentShape (N t1 t2) (N t1' t2')
+    | DifferentShape_N_rec_r :
+        forall t1 t1' t2 t2' : RBT A,
+          DifferentShape t2 t2' -> DifferentShape (N t1 t2) (N t1' t2').
 
 Inductive RBTEq {A : Type} : RBT A -> RBT A -> Type :=
     | RBTEq_L :
@@ -39,6 +38,40 @@ Inductive RBTEq {A : Type} : RBT A -> RBT A -> Type :=
     | RBTEq_N :
         forall t1 t1' t2 t2' : RBT A,
           RBTEq t1 t1' -> RBTEq t2 t2' -> RBTEq (N t1 t2) (N t1' t2').
+
+Inductive RBTNeq {A : Type} : RBT A -> RBT A -> Type :=
+    | RBTNeq_L :
+        forall x y : A, x <> y -> RBTNeq (L x) (L y)
+    | RBTNeq_N_l :
+        forall t1 t1' t2 t2' : RBT A,
+          RBTNeq t1 t1' -> RBTNeq (N t1 t2) (N t1' t2')
+    | RBTNeq_N_r :
+        forall t1 t1' t2 t2' : RBT A,
+          RBTNeq t2 t2' -> RBTNeq (N t1 t2) (N t1' t2').
+
+Ltac inv H := inversion H; subst; clear H.
+
+Lemma RBTNeq_neq :
+  forall {A : Type} {t1 t2 : RBT A},
+    RBTNeq t1 t2 -> t1 <> t2.
+Proof.
+  induction 1; intro Heq; inv Heq; contradiction.
+Qed.
+
+Inductive Exists {A : Type} (P : A -> Prop) : RBT A -> Type :=
+    | Exists_L :
+        forall x : A, P x -> Exists P (L x)
+    | Exists_NL :
+        forall t1 t2 : RBT A, Exists P t1 -> Exists P (N t1 t2)
+    | Exists_NR :
+        forall t1 t2 : RBT A, Exists P t2 -> Exists P (N t1 t2). 
+
+Inductive Forall {A : Type} (P : A -> Prop) : RBT A -> Prop :=
+    | Forall_ L :
+        forall x : A, P x -> Forall P (L x)
+    | Forall_N :
+        forall t1 t2 : RBT A,
+          Forall P t1 -> Forall P t2 -> Forall P (N t1 t2).
 
 Inductive DirectSubterm {A : Type} : RBT A -> RBT A -> Prop :=
     | DS_L :

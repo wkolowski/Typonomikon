@@ -1,16 +1,3 @@
-Module wisienki.
-
-
-
-
-
-End wisienki.
-
-Module NodeTrees.
-
-
-End NodeTrees.
-
 Inductive BTree (A : Type) : Type :=
     | E : BTree A
     | N : A -> BTree A -> BTree A -> BTree A.

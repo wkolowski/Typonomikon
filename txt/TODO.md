@@ -1,6 +1,7 @@
 # TODO
 
 ## Rekursja
+0. Rekursja zagnieżdżona, zarówno w sensie zagnieżdżonych wywołań rekurencyjnych, jak i dopasowania wyniku wywołania rekurencyjnego do wzorca.
 1. Prymitywna.
 2. Wyższego rzędu, tzn. nie w pełni zaaplikowane wywołania rekurencyjne.
 3. Przez iterację.

@@ -874,7 +874,7 @@ Qed.
 
 End approx.
 
-(** * Pomysł dawno zapomniany: induktywne specyfikacje funkcji (TODO) *)
+(** * Pomysł dawno zapomniany: (ko)induktywne specyfikacje funkcji (TODO) *)
 
 Inductive Filter {A : Type} (f : A -> bool) : Stream A -> Stream A -> Prop :=
     | Filter_true :

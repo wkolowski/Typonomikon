@@ -1,0 +1,40 @@
+digraph
+{
+
+  Przypadki                 [label = "Analiza przypadków"        , color = green]
+  Wzorce                    [label = "Dopasowanie do wzorca"     , color = green]
+  ZależnePrzypadki          [label = "Zależna analiza przypadków", color = red  ]
+  
+  Prymitywna                [label = "Rekursja prymitywna"       , color = red  ]
+  Strukturalna              [label = "Rekursja strukturalna"     , color = red  ]
+  Wzajemna                  [label = "Rekursja wzajemna"         , color = green]
+  
+  Monotoniczna              [label = "Rekursja monotoniczna"     , color = green]
+  WyższegoRzędu             [label = "Rekursja wyższego rzędu"   , color = red  ]
+
+  Ufundowana                [label = "Rekursja dobrze ufundowana", color = green]
+  
+  Dziedzinowa               [label = "Metoda Bove-Capretta", color = green]
+  Zagnieżdżona              [label = "Rekursja zagnieżdżona"     , color = green]
+  
+  IndukcjaRekursja          [label = "Indukcja-rekursja"         , color = green]
+
+  Ogólna                    [label = "Rekursja ogólna"           , color = red  ]
+  Paliwowa                  [label = "Rekursja paliwowa"         , color = green]
+  Koind                     [label = "Rekursja koindukcjowa"     , color = red  ]
+  Iter                      [label = "Rekursja przez iterację"   , color = red  ]
+
+
+
+  Przypadki    -> Wzorce, ZależnePrzypadki
+  Wzorce       -> Prymitywna
+  Prymitywna   -> Monotoniczna, Strukturalna, Wzajemna, Ufundowana, IndukcjaRekursja
+  Strukturalna -> WyższegoRzędu, Zagnieżdżona, Dziedzinowa
+
+  Ufundowana   -> Ogólna
+  Dziedzinowa  -> Zagnieżdżona
+
+  Ogólna       -> Paliwowa, Koind, Iter
+  
+
+}
