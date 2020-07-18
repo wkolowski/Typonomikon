@@ -76,9 +76,9 @@ latexmk tex/Książka.tex -pdf -outdir=tex/                 \
 dot txt/plany/plan.dot     -Tjpg -o txt/plany/plan.jpg
 dot txt/plany/logika.dot   -Tjpg -o txt/plany/logika.jpg
 dot txt/plany/rekursja.dot -Tjpg -o txt/plany/rekursja.jpg
+dot txt/plany/indukcja.dot -Tjpg -o txt/plany/indukcja.jpg
 
 dot txt/sugestie/rekordy.dot  -Tjpg -o txt/sugestie/rekordy.jpg
 dot txt/sugestie/rekordy2.dot -Tjpg -o txt/sugestie/rekordy2.jpg
 
-dot txt/indukcja.dot   -Tjpg -o txt/indukcja.jpg
 dot txt/modalności.dot -Tjpg -o txt/modalności.jpg

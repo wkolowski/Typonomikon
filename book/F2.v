@@ -90,7 +90,7 @@ Proof.
 Defined.
 (* end hide *)
 
-(** * Zero, następnik i nieskończonośc *)
+(** * Zero, następnik i nieskończoność *)
 
 (** Zdefiniuj zero, następnik oraz liczbę [omega] - jest to nieskończona
     liczba konaturalna, która jest sama swoim poprzednikiem. Udowodnij

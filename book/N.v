@@ -734,3 +734,36 @@ Compute toList l.
 Compute toList (match tail l with None => nil | Some t => t end).
 
 End Scott.
+
+(** * Listy różnicowe *)
+
+Definition DList (A : Type) : Type :=
+  list A -> list A.
+
+Definition rep {A : Type} (l : list A) : DList A :=
+  fun l' : list A => l ++ l'.
+
+Definition abs {A : Type} (l : DList A) : list A :=
+  l [].
+
+Lemma rep_abs :
+  forall {A : Type} (l : list A),
+    abs (rep l) = l.
+Proof.
+  unfold rep, abs.
+  apply app_nil_r.
+Qed.
+
+Require Import FunctionalExtensionality.
+
+Lemma abs_rep :
+  forall {A : Type} (l : DList A),
+    rep (abs l) = l.
+Proof.
+  unfold abs, rep.
+  intros A l.
+  apply functional_extensionality.
+  intro l'. revert l.
+  induction l' as [| h t]; cbn; intros.
+    apply app_nil_r.
+Abort.

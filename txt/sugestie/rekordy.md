@@ -89,13 +89,15 @@ Definition Refl : Type :=
 
 Niefajnie, co? Szczególnie, gdy nasz rekord ma dużo pól - strata czasu na pisanie bojlerplejtu jest olbrzymia. Problem ten jest rozwiązywany przez ustawianie wartości w typach rekordowych. Przy ulepszonych rekordach typ relacji zwrotnych na liczbach naturalnych możemy uzyskać pisząc `Refl with A = nat`, a `isReflexive` możemy zdefiniować tak: `isReflexive A' R' = Refl with A = A', R = R'`.
 
-Dzięki temu mamy kanoniczny sposób reprezentowania wszystkich możliwych powiązanych pojęć na raz: relacja zwrotna, bycie relacją zwrotną, etc. Można by się nawet pokusić o automatyczne generowanie wszystkich tych rzeczy.
+Dzięki temu mamy kanoniczny sposób reprezentowania wszystkich możliwych powiązanych pojęć na raz: relacja zwrotna, bycie relacją zwrotną, etc. Oczywiście boilerplejtu nadal jest dość dużo, więc można by się pokusić o automatyczne generowanie wszystkich tych rzeczy, np. na zasadzie, że każdemu polu odpowiada podrekord składający się tylko z tych rzeczy, na których to pole zależy.
 
 Co więcej, ulepszone rekordy nie tylko unifikują Coqowe rekordy i klasy, ale także Coqowe moduły. Są od nich nawet dużo potężniejsze, bo pozwalają na zmiany nazw i inne takie.
 
 Drugi problem Coqowych rekordów to ekstremalna teleskopizacja. Chodzi o to, że intuicyjnie np. grupa to monoid z odwrotnościami, podczas gdy formalnie w Coqu grupa to rekord, w którym jedno pole to monoid, a pozostałe pola to operacja odwracająca oraz odpowiednie prawa.
 
-Jest to problem, bo przy paru takich zagnieżdżeniach żeby zdefiniować rekord trzeba pisać `x := { y := { z := {w := { ...}}}}` i tak dalej, co jest bardzo lipne. Dzięki ulepszonym rekordom można temu zapobiec pisząc po prostu, że grupa to suma monoidu, odwrotności i praw.
+Jest to problem, bo przy paru takich zagnieżdżeniach żeby zdefiniować rekord trzeba pisać `x := { y := { z := {w := { ...}}}}` i tak dalej, co jest bardzo lipne. Dzięki ulepszonym rekordom można temu zapobiec pisząc po prostu, że grupa to suma monoidu, odwrotności i praw, jak na obrazku:
+
+![Grupa](rekordy2.jpg)
 
 Trzeci problem jest taki, że ciężko się reużywa Coqowych typów rekordowych przy definiowaniu, np. definicja relacji równoważności wygląda pewnie tak:
 
@@ -109,6 +111,8 @@ Record Equiv : Type :=
     trans : forall x y z : A, R x y -> R y z -> R x z;
 }.
 ```
+
+![Equiv](rekordy.jpg)
 
 Jest to oczywiście pewne marnotrawstwo, jeżeli musimy osobno zdefiniować relacje zwrotne, symetryczne i przechodnie. Z ulepszonymi rekordami moglibyśmy po prostu użyć sumy, pisząc `Equiv = Refl + Sym + Trans`.
 

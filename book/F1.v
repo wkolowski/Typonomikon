@@ -845,6 +845,20 @@ Proof.
   induction 1; inversion 1; subst; congruence.
 Qed.
 
+Lemma Finite_or_Infinite : (* TODO: dla coBTree *)
+  forall {A : Type} (t : coBTree A),
+    ~ ~ (Finite t \/ Infinite t).
+Proof.
+  intros A t H.
+  apply H. right.
+  revert t H. cofix CH.
+  intros t H.
+  destruct t as [[[[l x] r] |]].
+    econstructor.
+      cbn. reflexivity.
+      apply CH. destruct 1.
+        apply H. left.
+Abort.
 End Zad1.
 (* end hide *)
 
