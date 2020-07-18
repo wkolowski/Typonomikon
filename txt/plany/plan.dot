@@ -10,9 +10,9 @@ digraph
   Indukcja2         [label = "Zippery", color = red]
   Indukcja3         [label = "Zaawansowana indukcja", color = yellow]
 
-  Bool              [label = "Logika boolowska", color = yellow]
-  Nat               [label = "Arytmetyka Peano", color = yellow]
-  List              [label = "Listy", color = green]
+  //Bool              [label = "Logika boolowska", color = yellow]
+  //Nat               [label = "Arytmetyka Peano", color = yellow]
+  //List              [label = "Listy", color = green]
 
   Moduły            [label = "Rekordy, klasy i moduły", color = red]
   Funkcje           [label = "Typy i funkcje", color = yellow]
@@ -20,10 +20,10 @@ digraph
 
   Koindukcja        [label = "Koindukcja", color = red]
 
-  CoNat             [label = "Liczby konaturalne", color = yellow]
-  Stream            [label = "Strumienie", color = red]
-  CoList            [label = "Kolisty", color = red]
-  InfTree           [label = "Nieskończone drzewa binarne", color = red]
+  //CoNat             [label = "Liczby konaturalne", color = yellow]
+  //Stream            [label = "Strumienie", color = red]
+  //CoList            [label = "Kolisty", color = red]
+  //InfTree           [label = "Nieskończone drzewa binarne", color = red]
 
   WM                [label = "W/M-typy, uniwersa kodów", color = yellow]
 

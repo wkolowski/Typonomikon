@@ -5,7 +5,7 @@
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
 </head>
-<h1 class="libtitle">G: Inne spojrzenia na typy induktywne i koinduktywne</h1>
+<h1 class="libtitle">G: Sorty, uniwersa kodów i programowanie generyczne [TODO]</h1>
 
 <div class="code">
 </div>
@@ -14,7 +14,281 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab623"></a><h1 class="section">W-typy (TODO)</h1>
+ Tutaj będzie o sortach, a konkretniej o sorcie <span class="inlinecode"><span class="id" title="var">SProp</span></span>, a potem o
+    programowaniu generycznym za pomocą uniwersów. Na końcu generycznie
+    zajmiemy się typami (ko)induktywnymi, badając W- i M-typy, a potem
+    oparte na nich uniwersa kodów.
+
+<div class="paragraph"> </div>
+
+    Być może to właśnie tutaj jest odpowiednie miejsce aby wprowadzić
+    indukcję-rekursję. 
+<div class="paragraph"> </div>
+
+<a name="lab617"></a><h1 class="section">Sort <span class="inlinecode"><span class="id" title="var">SProp</span></span>, czyli zdania, ale takie jakby inne (TODO)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab618"></a><h1 class="section">Uniwersa kodów a programowanie generyczne</h1>
+
+<div class="paragraph"> </div>
+
+<a name="lab619"></a><h2 class="section">Spłaszczanie wielokrotnie zagnieżdżonych list</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Flatten</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Star</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">Var</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="var">Star</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">List</span> : <span class="id" title="var">Star</span> -&gt; <span class="id" title="var">Star</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">interp</span> (<span class="id" title="var">s</span> : <span class="id" title="var">Star</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">s</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Var</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">A</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">List</span> <span class="id" title="var">s'</span> =&gt; <span class="id" title="var">list</span> (<span class="id" title="var">interp</span> <span class="id" title="var">s'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">flattenType</span> (<span class="id" title="var">s</span> : <span class="id" title="var">Star</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">s</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Var</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">A</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">List</span> <span class="id" title="var">s'</span> =&gt; <span class="id" title="var">flattenType</span> <span class="id" title="var">s'</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">flatten</span> {<span class="id" title="var">s</span> : <span class="id" title="var">Star</span>} : <span class="id" title="var">interp</span> <span class="id" title="var">s</span> -&gt; <span class="id" title="var">list</span> (<span class="id" title="var">flattenType</span> <span class="id" title="var">s</span>) :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">s</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Var</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">interp</span> (<span class="id" title="var">Var</span> <span class="id" title="var">A</span>) =&gt; [<span class="id" title="var">x</span>]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">List</span> <span class="id" title="var">s'</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">f</span> (<span class="id" title="var">x</span> : <span class="id" title="var">list</span> (<span class="id" title="var">interp</span> <span class="id" title="var">s'</span>)) : <span class="id" title="var">list</span> (<span class="id" title="var">flattenType</span> <span class="id" title="var">s'</span>) :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; []<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; @<span class="id" title="var">flatten</span> <span class="id" title="var">s'</span> <span class="id" title="var">h</span> ++ <span class="id" title="var">f</span> <span class="id" title="var">t</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> @<span class="id" title="var">flatten</span> (<span class="id" title="var">List</span> (<span class="id" title="var">List</span> (<span class="id" title="var">Var</span> <span class="id" title="var">nat</span>))) [[1; 2; 3]; [4; 5; 6]].<br/>
+<span class="id" title="keyword">Compute</span><br/>
+&nbsp;&nbsp;@<span class="id" title="var">flatten</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">List</span> (<span class="id" title="var">List</span> (<span class="id" title="var">List</span> (<span class="id" title="var">Var</span> <span class="id" title="var">nat</span>))))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[[[1]; [2; 2]; [3]]; [[4; 5; 6]]].<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">HasStar</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">star</span> : <span class="id" title="var">Star</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">no_kidding</span> : <span class="id" title="var">interp</span> <span class="id" title="var">star</span> = <span class="id" title="var">A</span>;<br/>
+}.<br/>
+
+<br/>
+#[<span class="id" title="tactic">refine</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">HasStar_any</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">HasStar</span> <span class="id" title="var">A</span> | 1 :=<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">star</span> := <span class="id" title="var">Var</span> <span class="id" title="var">A</span>;<br/>
+}.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+#[<span class="id" title="tactic">refine</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">HasStar_list</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">hs</span> : <span class="id" title="var">HasStar</span> <span class="id" title="var">A</span>) : <span class="id" title="var">HasStar</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) | 0 :=<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">star</span> := <span class="id" title="var">List</span> <span class="id" title="var">star</span>;<br/>
+}.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">no_kidding</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">flatten'</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">_</span> : <span class="id" title="var">HasStar</span> <span class="id" title="var">A</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> (<span class="id" title="var">flattenType</span> <span class="id" title="var">star</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">flatten</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">no_kidding</span>. <span class="id" title="tactic">exact</span> <span class="id" title="var">x</span>. <span class="id" title="keyword">Show</span> <span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">flatten'</span> [[1; 2; 3]; [4; 5; 6]].<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">flatten'</span> [[[1]; [2; 2]; [3]]; [[4; 5; 6]]].<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Flatten</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab620"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">zipWith</span></span> z dowolną ilością argumentów</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">ZipWithN</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Code</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">Singl</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="var">Code</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Cons</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="var">Code</span> -&gt; <span class="id" title="var">Code</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">cmap</span> (<span class="id" title="var">F</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>) : <span class="id" title="var">Code</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Singl</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">Singl</span> (<span class="id" title="var">F</span> <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;| <span class="id" title="var">Cons</span> <span class="id" title="var">A</span> <span class="id" title="var">c'</span> =&gt; <span class="id" title="var">Cons</span> (<span class="id" title="var">F</span> <span class="id" title="var">A</span>) (<span class="id" title="var">cmap</span> <span class="id" title="var">F</span> <span class="id" title="var">c'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">funType</span> (<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>) (<span class="id" title="var">R</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Singl</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">R</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Cons</span> <span class="id" title="var">A</span> <span class="id" title="var">c'</span> =&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">funType</span> <span class="id" title="var">c'</span> <span class="id" title="var">R</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">listType</span> (<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>) (<span class="id" title="var">R</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">funType</span> (<span class="id" title="var">cmap</span> <span class="id" title="var">list</span> <span class="id" title="var">c</span>) <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">prod</span> (<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Singl</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">A</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Cons</span> <span class="id" title="var">A</span> <span class="id" title="var">c'</span> =&gt; <span class="id" title="var">A</span> * <span class="id" title="var">prod</span> <span class="id" title="var">c'</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">prodList</span> (<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">prod</span> (<span class="id" title="var">cmap</span> <span class="id" title="var">list</span> <span class="id" title="var">c</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">listProd</span> (<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">list</span> (<span class="id" title="var">prod</span> <span class="id" title="var">c</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">uncurriedFunType</span> (<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>) (<span class="id" title="var">R</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">prod</span> <span class="id" title="var">c</span> -&gt; <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">uncurriedListType</span> (<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>) (<span class="id" title="var">R</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">prodList</span> <span class="id" title="var">c</span> -&gt; <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">zip2</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">r</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>) : <span class="id" title="var">list</span> (<span class="id" title="var">A</span> * <span class="id" title="var">B</span>) :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span>, <span class="id" title="var">r</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| [], <span class="id" title="var">_</span> =&gt; []<br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span>, [] =&gt; []<br/>
+&nbsp;&nbsp;| <span class="id" title="var">hl</span> :: <span class="id" title="var">tl</span>, <span class="id" title="var">hr</span> :: <span class="id" title="var">tr</span> =&gt; (<span class="id" title="var">hl</span>, <span class="id" title="var">hr</span>) :: <span class="id" title="var">zip2</span> <span class="id" title="var">tl</span> <span class="id" title="var">tr</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">zip</span> {<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>} : <span class="id" title="var">prodList</span> <span class="id" title="var">c</span> -&gt; <span class="id" title="var">listProd</span> <span class="id" title="var">c</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Singl</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">id</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Cons</span> <span class="id" title="var">A</span> <span class="id" title="var">c'</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> '(<span class="id" title="var">l</span>, <span class="id" title="var">p</span>) =&gt; <span class="id" title="var">zip2</span> <span class="id" title="var">l</span> (<span class="id" title="var">zip</span> <span class="id" title="var">p</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span><br/>
+&nbsp;&nbsp;@<span class="id" title="var">zip</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Cons</span> <span class="id" title="var">bool</span> (<span class="id" title="var">Singl</span> <span class="id" title="var">nat</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;([<span class="id" title="var">true</span>; <span class="id" title="var">false</span>], [4; 5]).<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">uncurryFun</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>} {<span class="id" title="var">R</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="keyword">struct</span> <span class="id" title="var">c</span>} : <span class="id" title="var">funType</span> <span class="id" title="var">c</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">uncurriedFunType</span> <span class="id" title="var">c</span> <span class="id" title="var">R</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">c</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="tactic">intro</span> <span class="id" title="var">f</span>; <span class="id" title="tactic">red</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">f</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">t</span> <span class="id" title="var">p</span>]. <span class="id" title="tactic">exact</span> (<span class="id" title="var">uncurryFun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">f</span> <span class="id" title="var">t</span>) <span class="id" title="var">p</span>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">curryList</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>} {<span class="id" title="var">R</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="keyword">struct</span> <span class="id" title="var">c</span>} : <span class="id" title="var">uncurriedListType</span> <span class="id" title="var">c</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">listType</span> <span class="id" title="var">c</span> <span class="id" title="var">R</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">c</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">A</span> | <span class="id" title="var">A</span> <span class="id" title="var">c'</span>]; <span class="id" title="tactic">unfold</span> <span class="id" title="var">uncurriedListType</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>. <span class="id" title="tactic">exact</span> (<span class="id" title="var">f</span> <span class="id" title="var">l</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">curryList</span>. <span class="id" title="tactic">red</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">f</span>. <span class="id" title="tactic">split</span>; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">zipWith</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">c</span> : <span class="id" title="var">Code</span>} {<span class="id" title="var">R</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">funType</span> <span class="id" title="var">c</span> <span class="id" title="var">R</span>) : <span class="id" title="var">listType</span> <span class="id" title="var">c</span> (<span class="id" title="var">list</span> <span class="id" title="var">R</span>) :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">curryList</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">p</span> : <span class="id" title="var">prodList</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="var">map</span> (<span class="id" title="var">uncurryFun</span> <span class="id" title="var">f</span>) (<span class="id" title="var">zip</span> <span class="id" title="var">p</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span><br/>
+&nbsp;&nbsp;@<span class="id" title="var">zipWith</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Cons</span> <span class="id" title="var">nat</span> (<span class="id" title="var">Cons</span> <span class="id" title="var">nat</span> (<span class="id" title="var">Singl</span> <span class="id" title="var">nat</span>))) <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="var">a</span> + <span class="id" title="var">b</span> + <span class="id" title="var">c</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[1; 2; 3] [4; 5; 6] [7; 8; 9].<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">ZipWithN</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab621"></a><h2 class="section">Porządna negacja (albo i nie) <span class="inlinecode"><span class="id" title="var">TODO</span></span></h2>
+
+<div class="paragraph"> </div>
+
+ Pomysł: silną negację można zdefiniować przez rekursję po uniwersum
+    kodów, w którym są kody na wszystkie potrzebne typy. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Negation</span>.<br/>
+
+<br/>
+<span class="comment">(*<br/>
+Inductive&nbsp;U&nbsp;:&nbsp;Type&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;F&nbsp;:&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;T&nbsp;:&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;And&nbsp;:&nbsp;U&nbsp;-&gt;&nbsp;U&nbsp;-&gt;&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Or&nbsp;:&nbsp;U&nbsp;-&gt;&nbsp;U&nbsp;-&gt;&nbsp;U<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Impl&nbsp;:&nbsp;U&nbsp;-&gt;&nbsp;U&nbsp;-&gt;&nbsp;U.<br/>
+*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D1</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D2</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D2ipó</span>ł.<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">PoorUniverse</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Negation</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab622"></a><h1 class="section">W-typy (TODO)</h1>
 
 </div>
 <div class="code">
@@ -445,7 +719,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a name="lab624"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab623"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -494,7 +768,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a name="lab625"></a><h2 class="section">Indukcja w dwóch postaciach (TODO)</h2>
+<a name="lab624"></a><h2 class="section">Indukcja w dwóch postaciach (TODO)</h2>
 
 </div>
 <div class="code">
@@ -618,7 +892,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 </div>
 
 <div class="doc">
-<a name="lab626"></a><h1 class="section">Indeksowane W-typy (TODO)</h1>
+<a name="lab625"></a><h1 class="section">Indeksowane W-typy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -933,7 +1207,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
     do udowodnienia, że argumenty indukcyjne są równe. 
 <div class="paragraph"> </div>
 
-<a name="lab627"></a><h4 class="section">Ćwiczenie</h4>
+<a name="lab626"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -959,7 +1233,7 @@ W drugę stronę dowód jest nieco trudniejszy. Przede wszystkim, musimy
 
 <div class="paragraph"> </div>
 
-<a name="lab628"></a><h1 class="section">M-typy (TODO)</h1>
+<a name="lab627"></a><h1 class="section">M-typy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1129,7 +1403,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 </div>
 
 <div class="doc">
-<a name="lab629"></a><h2 class="section">Ciekawostka: koindukcja i bipodobieństwo</h2>
+<a name="lab628"></a><h2 class="section">Ciekawostka: koindukcja i bipodobieństwo</h2>
 
 <div class="paragraph"> </div>
 
@@ -1415,14 +1689,14 @@ CoInductive&nbsp;Stream&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=<br/>
 </div>
 
 <div class="doc">
-<a name="lab630"></a><h1 class="section">Indeksowane M-typy?</h1>
+<a name="lab629"></a><h1 class="section">Indeksowane M-typy?</h1>
 
 <div class="paragraph"> </div>
 
  Nie dla psa kiełbajsa. 
 <div class="paragraph"> </div>
 
-<a name="lab631"></a><h1 class="section">Kody (nie, nie do gier)</h1>
+<a name="lab630"></a><h1 class="section">Kody (nie, nie do gier)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1432,10 +1706,6 @@ CoInductive&nbsp;Stream&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=<br/>
     induktywne. 
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sUnit</span> : <span class="id" title="var">SProp</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">stt</span> : <span class="id" title="var">sUnit</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">I</span> : <span class="id" title="keyword">Type</span> :=<br/>
