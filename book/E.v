@@ -1,4 +1,4 @@
-(** * E1: Rekordy, klasy i moduły - TODO *)
+(** * E: Rekordy, klasy i moduły [TODO] *)
 
 (** UWAGA: ten rozdział został naprędce posklejany z fragmentów innych,
     więc może nie mieć większego sensu. *)

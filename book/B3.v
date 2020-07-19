@@ -1,7 +1,10 @@
 (** * B3: Logika klasyczna [TODO] *)
 
 (* begin hide *)
-(* TODO: Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go używać. *)
+(*
+TODO: Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go używać.
+TODO: Kodowanie logiki klasycznej jak z SSReflekta
+*)
 (* end hide *)
 
 (** * Aksjomaty i prawa logiki klasycznej (TODO) *)

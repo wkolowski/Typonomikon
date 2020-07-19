@@ -1,4 +1,4 @@
-(** * L: Algebra i efekty [TODO] *)
+(** * L1: Efekty obliczeniowe [TODO] *)
 
 (* begin hide *)
 (*

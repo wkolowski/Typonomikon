@@ -1,10 +1,10 @@
-(** * E3: Relacje *)
+(** * H3: Relacje *)
 
 (* begin hide *)
 
 (* end hide *)
 
-Require Import E2.
+Require Import H2.
 Require Import FunctionalExtensionality.
 
 Require Import Nat.

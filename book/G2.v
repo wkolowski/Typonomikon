@@ -1,8 +1,10 @@
-(** * D2i3czwarte: Zippery, indeksy i izomorfizmy typów [TODO] *)
+(** * G2: Zippery, czyli łażenie po drzewach [TODO] *)
 
 Require Import D5.
 
-(** * Indeksowanie struktur danych (TODO) *)
+(** * Predykaty na listach i drzewach - przypomnienie (TODO) *)
+
+(** * Indeksowanie drzew (TODO) *)
 
 (** Pamiętasz zapewne funkcję [nth] z rozdziału o listach, której
     celem było znalezienie [n]-tego elementu na liście [l]. Jeżeli
@@ -360,11 +362,10 @@ Abort.
 
 End W.
 
-(** * Zippery (TODO) *)
+(** * Zippery dla list - chodzenie po linie (TODO) *)
 
-(* begin hide *)
-(*
-TODO: Zippery (z dwóch perspektyw: łażenie po drzewach i różniczkowanie 
-TODO: typów) oraz indeksowanie poddrzew dla typów induktywnych.
-*)
-(* end hide *)
+(** * Szukanie dziury w typie, czyli różniczkowanie *)
+
+(** * Zippery dla typów induktywnych *)
+
+(** * Zippery dla typów koinduktywnych *)

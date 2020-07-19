@@ -44,6 +44,11 @@
 
 ## Filozofia
 1. Mega ważna obserwacja: nazwy zawsze należy nadawać tak, żeby zgadzały się z definicją, czyli nazwy są intensjonalne. Ewentualne ekstensjonalne powiązanie ze sobą (w postaci równoważności) różnych apriori nazw następować musi później, na mocy pokazania równoważności tego, co one oznaczają. Przykład: różne definicje równoważności powinny się nazywać inaczej, np. invertible, biinvertible, contractible etc.
+2. Reifikacja:
+  - Reifikacja jest wtedy, kiedy jakieś zewnętrzne idee zostają elementami pewnego typu.
+  - Wobec tego reguły teorii typów to nic innego jak reifikacja różnych pojęć.
+  - Uniwersum jako reifikacja pojęcia typu.
+  - I tak dalej.
 
 ## Sugestie i problemy z koła
 1. Opisać dokładniej definiowanie przez dowód.

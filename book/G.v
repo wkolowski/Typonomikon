@@ -232,7 +232,6 @@ Inductive U : Type :=
 
 Require Import D1.
 Require Import D2.
-Require Import D2ipół.
 
 Import PoorUniverse.
 

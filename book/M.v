@@ -1,4 +1,4 @@
-(** * M: Porządki i topologia *)
+(** * M: Topologia *)
 
 (* begin hide *)
 

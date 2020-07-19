@@ -4551,6 +4551,7 @@ end.
 (* begin hide *)
 (*
 TODO: znaleźć prostszy przykład dot. ścisłej pozytywności
+TODO: przepisać przykład [wut] z wyłączonym sprawdzaczem pozytywności
 *)
 (* end hide *)
 
@@ -7303,13 +7304,13 @@ Qed.
     Poznaliśmy pojęcie surjekcji oraz twierdzenie Cantora, które również
     zabrania negatywnym typom induktywnym istnienia.
 
-    Poznaliśmy też paradoks Russela/Girarda i jego związek z twierdzeniem
+    Poznaliśmy też paradoks Russella/Girarda i jego związek z twierdzeniem
     Cantora, autoreferencją oraz ideą uniwersum zdefiniowanego za pomocą
     indukcji-rekursji.
 
     Ostatecznie dowiedzieliśmy się, że pozytywne typy induktywne także są
-    nielegalne, choć jesteśmy wobec nich raczej bezsilni, no chyba że chodzi
-    o impredykatywny (tego słowa też się nauczyliśmy) sort [Prop].
+    nielegalne, choć jesteśmy wobec nich raczej bezsilni, no chyba że
+    chodzi o impredykatywny (tego słowa też się nauczyliśmy) sort [Prop].
 
     Całkiem sporo, prawda? Nie? No to w kolejnych rozdziałach będzie jeszcze
-    więcej. *)
+    wincyj. *)

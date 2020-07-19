@@ -5,16 +5,23 @@
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
 </head>
-<h1 class="libtitle">N: Kontynuacje [TODO]</h1>
+<h1 class="libtitle">L2: Kontynuacje i kontrola [TODO]</h1>
 
 <div class="code">
 </div>
 
 <div class="doc">
 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
-<a name="lab788"></a><h1 class="section">Wstęp</h1>
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab785"></a><h1 class="section">Wstęp</h1>
 
 <div class="paragraph"> </div>
 
@@ -691,11 +698,11 @@ Moim zdaniem odpowiedź jest całkiem czytelna. Spacerek wygląda tak,
     na to pytanie pozostawiam czytelnikowi jako ćwiczenie. 
 <div class="paragraph"> </div>
 
-<a name="lab789"></a><h1 class="section">Reszta rzeczy (TODO)</h1>
+<a name="lab786"></a><h1 class="section">Reszta rzeczy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab790"></a><h2 class="section">Defunkcjonalizacja filtrowania (TODO)</h2>
+<a name="lab787"></a><h2 class="section">Defunkcjonalizacja filtrowania (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -772,7 +779,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a name="lab791"></a><h2 class="section">Defunkcjonalizacja silni (TODO)</h2>
+<a name="lab788"></a><h2 class="section">Defunkcjonalizacja silni (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -849,7 +856,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a name="lab792"></a><h2 class="section">CPS (TODO)</h2>
+<a name="lab789"></a><h2 class="section">CPS (TODO)</h2>
 
 </div>
 <div class="code">
@@ -913,7 +920,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a name="lab793"></a><h1 class="section">Kodowania Churcha (TODO)</h1>
+<a name="lab790"></a><h1 class="section">Kodowania Churcha (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1034,7 +1041,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a name="lab794"></a><h1 class="section">Kodowania Scotta (TODO)</h1>
+<a name="lab791"></a><h1 class="section">Kodowania Scotta (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1102,7 +1109,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a name="lab795"></a><h1 class="section">Listy różnicowe</h1>
+<a name="lab792"></a><h1 class="section">Listy różnicowe (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1123,13 +1130,25 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">rep_abs</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">abs</span> (<span class="id" title="var">rep</span> <span class="id" title="var">l</span>) = <span class="id" title="var">l</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">rep</span>, <span class="id" title="var">abs</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">app_nil_r</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">abs_rep_aux</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">DList</span> <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span> = <span class="id" title="var">l</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="tactic">until</span> <span class="id" title="var">l2</span>. <span class="id" title="var">revert</span> <span class="id" title="var">l</span> <span class="id" title="var">l1</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> 2!<span class="id" title="var">app_nil_r</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>]; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">admit</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHt2</span> <span class="id" title="var">l</span> (<span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span> ++ [<span class="id" title="var">h2</span>])).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">IHt2</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">app_assoc</span> <span class="id" title="tactic">in</span> <span class="id" title="var">IHt2</span>. <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">IHt2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHt2</span>. <span class="id" title="var">cbn</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">abs_rep</span> :<br/>
@@ -1139,8 +1158,6 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">abs</span>, <span class="id" title="var">rep</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">l</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">functional_extensionality</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">l'</span>. <span class="id" title="var">revert</span> <span class="id" title="var">l</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l'</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">app_nil_r</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">l2</span>. <span class="id" title="tactic">generalize</span> (@<span class="id" title="var">nil</span> <span class="id" title="var">A</span>) <span class="id" title="keyword">as</span> <span class="id" title="var">l1</span>.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
-</div>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span></div>

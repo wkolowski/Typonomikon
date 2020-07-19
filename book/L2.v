@@ -1,4 +1,10 @@
-(** * N: Kontynuacje [TODO] *)
+(** * L2: Kontynuacje i kontrola [TODO] *)
+
+(* begin hide *)
+(*
+TODO: Kontynuacje naprawdę mają coś wspólnego z negacją.
+*)
+(* end hide *)
 
 (** * Wstęp *)
 
@@ -735,7 +741,7 @@ Compute toList (match tail l with None => nil | Some t => t end).
 
 End Scott.
 
-(** * Listy różnicowe *)
+(** * Listy różnicowe (TODO) *)
 
 Definition DList (A : Type) : Type :=
   list A -> list A.
@@ -749,12 +755,29 @@ Definition abs {A : Type} (l : DList A) : list A :=
 Lemma rep_abs :
   forall {A : Type} (l : list A),
     abs (rep l) = l.
+(* begin hide *)
 Proof.
   unfold rep, abs.
   apply app_nil_r.
 Qed.
+(* end hide *)
 
+(* end hide *)
 Require Import FunctionalExtensionality.
+
+Lemma abs_rep_aux :
+  forall {A : Type} (l : DList A) (l1 l2 : list A),
+    l l1 ++ l2 = l (l1 ++ l2).
+Proof.
+  intros until l2. revert l l1.
+  induction l2 as [| h2 t2]; cbn; intros.
+    rewrite 2!app_nil_r. reflexivity.
+    induction l1 as [| h1 t1]; cbn.
+      admit.
+      specialize (IHt2 l (h1 :: t1 ++ [h2])).
+        cbn in IHt2. rewrite <- app_assoc in IHt2. cbn in IHt2.
+        rewrite <- IHt2. cbn.
+Abort.
 
 Lemma abs_rep :
   forall {A : Type} (l : DList A),
@@ -763,7 +786,6 @@ Proof.
   unfold abs, rep.
   intros A l.
   apply functional_extensionality.
-  intro l'. revert l.
-  induction l' as [| h t]; cbn; intros.
-    apply app_nil_r.
+  intro l2. generalize (@nil A) as l1.
 Abort.
+(* end hide *)

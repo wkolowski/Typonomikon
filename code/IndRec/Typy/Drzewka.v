@@ -48,7 +48,7 @@ match t with
 end.
 
 (*
-Require Import E2.
+Require Import H2.
 
 Lemma mirror_bijective :
   forall A : Type, bijective (@mirror A).
