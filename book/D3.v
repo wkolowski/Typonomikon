@@ -546,14 +546,3 @@ Compute wut.
 (* end hide *)
 
 (** * Poradnik hodowcy, czyli jak nie rozmnażać definicji (TODO) *)
-
-(** * Przerwa na reklamy: aksjomaty dotyczące sortu [Prop] (TODO) *)
-
-Definition PI : Prop :=
-  forall (P : Prop) (x y : P), x = y.
-
-Definition PropExt : Prop :=
-  forall P Q : Prop, P <-> Q -> P = Q.
-
-Definition UIP : Prop :=
-  forall (A : Type) (x : A) (p : x = x), p = eq_refl.

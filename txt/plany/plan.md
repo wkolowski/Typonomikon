@@ -245,17 +245,26 @@ D7: Ogólne plany na rozdziały X:
 - F4: kolisty
 - F5: kodrzewa
 
-### H1: Sorty, uniwersa (kodów) i generyczność
-- Relewancja: `Prop`, `SProp`, `PropExt` i proof irrelevance
+### G: Sorty, uniwersa (kodów) i generyczność
+- Relewancja: `Prop`, `SProp`
 - Programowanie generyczne za pomocą uniwersów
 - Jedyny pierścień wyższego rzędu, czyli W-typy i M-typy
 - Jedyny pierścień pierwszego rzędu, czyli uniwersa kodów na typy induktywne i koinduktywne
 - Uwaga: wyższy rząd vs pierwszy rząd
 
-### H2: Równość
-- Opowiedzieć skąd się biorą dowody równości
+### H: Ścieżki
+- Interpretacja homotopiczna: dowody równości a ścieżki
+- Opowiedzieć skąd się biorą ścieżki
+- Ścieżki w banalnych typach
+- Ścieżki między sumami
+- Ścieżki między parami
+- Ścieżki między elementami typów induktywnych
+- Ścieżki między elementami typów koinduktywnych
+- Ścieżki między funkcjami
+- Ścieżki między zdaniami - `PropExt`
+- Ścieżki między typami - uniwalencja
+- Proof Irrelevance
 - Aksjomat K
-- Interpretacja homotopiczna
 - Aksjomat Uniwalencji
 - Wyższe typy induktywne
 

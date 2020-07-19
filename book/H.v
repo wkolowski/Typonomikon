@@ -1923,3 +1923,56 @@ Proof.
 Abort.
 
 (** ... ale [nat ~ list nat] jest dość trudne. *)
+
+(** * Dziwne aksjomaty i płynące z nich logiki (TODO) *)
+
+Definition ProofIrrelevance : Prop :=
+  forall (P : Prop) (p q : P), p = q.
+
+Definition UIP : Prop :=
+  forall (A : Type) (x y : A) (p q : x = y), p = q.
+
+Definition K : Prop :=
+  forall (A : Type) (x : A) (p : x = x), p = eq_refl x.
+
+Definition PropositionalExtensionality : Prop :=
+  forall P Q : Prop, (P <-> Q) -> P = Q.
+
+Lemma UIP_K : UIP -> K.
+(* begin hide *)
+Proof.
+  unfold UIP, K.
+  intros UIP A x p.
+  apply UIP.
+Qed.
+(* end hide *)
+
+Lemma K_UIP : K -> UIP.
+(* begin hide *)
+Proof.
+  unfold K, UIP.
+  intros K A x y p q.
+  destruct p.
+  symmetry. apply K.
+Qed.
+(* end hide *)
+
+Lemma ProofIrrelevance_UIP :
+  ProofIrrelevance -> UIP.
+(* begin hide *)
+Proof.
+  unfold ProofIrrelevance, UIP.
+  intros PI A x y p q.
+  apply PI.
+Qed.
+(* end hide *)
+
+Lemma ProofIrrelevance_K :
+  ProofIrrelevance -> K.
+(* begin hide *)
+Proof.
+  unfold ProofIrrelevance, K.
+  intros PI A x p.
+  apply PI.
+Qed.
+(* end hide *)

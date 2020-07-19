@@ -1,5 +1,7 @@
 digraph
 {
+  node[shape=rectangle]
+
   Wstęp             [label = "Wstęp", color = green]
   
   Logika            [label = "Logika", color = yellow]
@@ -7,77 +9,61 @@ digraph
   TeoriaTypów       [label = "Teoria Typów", color = yellow]
 
   Indukcja1         [label = "Indukcja", color = green]
-  Indukcja2         [label = "Zippery", color = red]
+  Zippery           [label = "Zippery", color = red]
   Indukcja3         [label = "Zaawansowana indukcja", color = yellow]
 
-  //Bool              [label = "Logika boolowska", color = yellow]
-  //Nat               [label = "Arytmetyka Peano", color = yellow]
-  //List              [label = "Listy", color = green]
-
-  Moduły            [label = "Rekordy, klasy i moduły", color = red]
+  Rekordy           [label = "Rekordy, klasy i moduły", color = red]
   Funkcje           [label = "Typy i funkcje", color = yellow]
   Relacje           [label = "Typy i relacje", color = yellow]
 
   Koindukcja        [label = "Koindukcja", color = red]
 
-  //CoNat             [label = "Liczby konaturalne", color = yellow]
-  //Stream            [label = "Strumienie", color = red]
-  //CoList            [label = "Kolisty", color = red]
-  //InfTree           [label = "Nieskończone drzewa binarne", color = red]
+  Uniwersa          [label = "Sorty, uniwersa i generyki", color = yellow]
 
-  WM                [label = "W/M-typy, uniwersa kodów", color = yellow]
-
-  Generycznie       [label = "Uniwersa i generyczność", color = red]
 
   Ścieżki           [label = "Równość i ścieżki", color = red]
 
   Kontynuacje       [label = "Kontynuacje", color = red]
-  Efekty             [label = "Efekty", color = red]
+  Efekty            [label = "Efekty", color = yellow]
 
-  Ltac              [label = "Ltac i spis taktyk", color = green]
+  Taktyki           [label = "Spis taktyk", color = green]
+  Ltac              [label = "Ltac", color = green]
+  Reflekcja         [label = "Reflekcja", color = red]
   
-  SSR               [label = "Mała reflekcja", color = red]
-  BSR               [label = "Duża reflekcja", color = red]
-
   Złożoność         [label = "Złożoność", color = green]
   Algorytmy         [label = "Algorytmy", color = red]
 
-  HoTT              [label = "Homotopiczna teoria typów", color = red]
   Algebra           [label = "Algebra", color = red]
   Porządki          [label = "Teoria porządków", color = red]
   Topologia         [label = "Topologia", color = red]
   Kategorie         [label = "Teoria Kategorii", color = red]
 
-  
+
+
   Wstęp             -> Logika
   
-  Logika            -> TeoriaTypów, Ltac
+  Logika            -> TeoriaTypów
 
-  TeoriaTypów       -> Indukcja1, Moduły
+  TeoriaTypów       -> Indukcja1, Rekordy
 
-  Indukcja1         -> Indukcja2, Bool, Nat, List, Koindukcja, WM, Generycznie, Ścieżki
-  Indukcja2         -> Indukcja3
+  Indukcja1         -> Zippery, Uniwersa, Indukcja3, Koindukcja, Ścieżki /*Bool, Nat, List,*/
 
-  Moduły            -> Koindukcja, Funkcje, Relacje
+  Rekordy           -> Koindukcja, Funkcje, Relacje
+  Koindukcja        -> Zippery, Uniwersa, Ścieżki /*CoNat, Stream, CoList, InfTree,*/
 
-  Koindukcja        -> CoNat, Stream, CoList, InfTree, WM, Ścieżki
+  Ścieżki           -> Funkcje, Relacje
+  Funkcje           -> Porządki, Algebra, Topologia
+  Relacje           -> Porządki
 
-  Ltac              -> SSR, BSR
-  Bool              -> SSR, BSR
-
-  Ścieżki           -> HoTT
-  HoTT              -> Algebra, Porządki, Topologia
   Algebra           -> Kategorie
   Porządki          -> Kategorie
+  Topologia         -> Kategorie
 
-  Funkcje           -> Kategorie, Efekty
-  Relacje           -> Kategorie
+
+  Taktyki           -> Ltac
+  Ltac              -> Reflekcja
+
   Kontynuacje       -> Efekty
 
-  Efekty            -> Algebra
-
-  List              -> Złożoność
   Złożoność         -> Algorytmy
-
-
 }
