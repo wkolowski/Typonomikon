@@ -63,3 +63,11 @@
 3. Dodać rozdział o stylu, wcięciach, komentowaniu etc. Patrz tu: https://www.cs.princeton.edu/courses/archive/fall19/cos326/style.php#1
 4. Co do stylu, to tu jest [Haskell style guide](https://kowainik.github.io/posts/2019-02-06-style-guide)
 5. W nawiązaniu do powyższego: opisać bardziej rzeczy do strukturyzowania dowodów, np. `{ }` albo bullet pointy `*`, `+` i `-`
+
+## Zagubione notatki
+1. Let `I := U × U`, and let `A : I → U` be defined by `A(X, Y) := (X → Y) × (Y → X)`. Define `B` as `B(X, Y )(f, g) := X × Y` and `r(X, Y )(f, g)(x, y) := (f(x) = y) × (x = g(y))`. Then the associated M-type is a family `M : I → U` and `M(A, B)` is equivalent to `A \equiv B`.
+2. DNE holds if and only if every proposition is logically equivalent to the negation of some type.
+3. Paradoks zwrotności. Są 2 rodzaje ludzi:
+   - Ci, którzy uważają, że są dwa rodzaje ludzi.
+   - Ci, którzy są inne86go zdania.
+4. Spróbować dodać minirozdział poświęcony logicznym aspektom racjonalności (tak jak w książe: Keith Stanovich, The Rationality Quotient).
