@@ -36,9 +36,24 @@ Definition unique {A : Type} (P : A -> Prop) : Prop :=
     a mianowicie kwantyfikator unikatowy, który głosi, że istnieje
     dokładnie jeden obiekt spełniający daną właściwość. *)
 
-(** * Zmienne związane (TODO) *)
+(** * α-konwersja i inne rodzaje równości (TODO) *)
+
+(* begin hide *)
+
+(** Tutaj link do ściągi z poziomami równości i opisać jak to się ma
+    do kwestii składniowych i semantycznych (empiryczna obserwacja:
+    studenci pierwszego roku nie są zbyt płynni w posługiwaniu się
+    składnią _in abstracto_).
+
+    TODO: pomysł na jeszcze jeden podrozdział, semantyka vs składnia *)
+
+(* end hide *)
+
+(** https://github.com/wkolowski/CoqBookPL/blob/master/txt/równość.md *)
 
 (** * Predykatywizm (TODO) *)
+
+(** * Pozytywność i negatywność (TODO) *)
 
 (** * Paradoks golibrody *)
 

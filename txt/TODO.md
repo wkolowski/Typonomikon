@@ -1,5 +1,8 @@
 # TODO
 
+## Podstawy
+1. Od początku użyć nominalizmów do wytłumaczenia na czym polega wiązanie nazw zmiennych.
+
 ## Rekursja
 0. Rekursja zagnieżdżona, zarówno w sensie zagnieżdżonych wywołań rekurencyjnych, jak i dopasowania wyniku wywołania rekurencyjnego do wzorca.
 1. Prymitywna.
@@ -19,6 +22,9 @@
 - Z definiowania typów induktywnych (i relacji też).
 - Z uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
 8. Odkłamać kwestię "skończoności" typów induktywnych i "nieskończoności" typów koinduktywnych. Tak naprawdę, to chodzi o to, że typy induktywny są dobrze ufundowane, a typy koinduktywne niekoniecznie.
+9. Paradoks sterty.
+10. Paradoks "wszystkie konie sa tego samego koloru".
+11. Paradoks najmniejszej interesującej liczby.
 
 ## Indukcja - teoria
 1. Kwestia non-uniform parameters i jak je zasymulować przy użyciu indeksów.
@@ -43,7 +49,7 @@
 13. Przestrzeń metryczną można zdefiniować za pomocą "Ball Relation": `Q+ -> X -> X -> Prop`
 
 ## Filozofia
-1. Mega ważna obserwacja: nazwy zawsze należy nadawać tak, żeby zgadzały się z definicją, czyli nazwy są intensjonalne. Ewentualne ekstensjonalne powiązanie ze sobą (w postaci równoważności) różnych apriori nazw następować musi później, na mocy pokazania równoważności tego, co one oznaczają. Przykład: różne definicje równoważności powinny się nazywać inaczej, np. invertible, biinvertible, contractible etc.
+1. Mega ważna obserwacja: nazwy zawsze należy nadawać tak, żeby zgadzały się z definicją, czyli nazwy są intensjonalne. Ewentualne ekstensjonalne powiązanie ze sobą (w postaci równoważności) różnych apriori nazw następować musi później, na mocy pokazania równoważności tego, co one oznaczają. Przykład: różne definicje równoważności powinny się nazywać inaczej, np. invertible, biinvertible, contractible etc.
 2. Reifikacja:
   - Reifikacja jest wtedy, kiedy jakieś zewnętrzne idee zostają elementami pewnego typu.
   - Wobec tego reguły teorii typów to nic innego jak reifikacja różnych pojęć.
@@ -67,7 +73,7 @@
 ## Zagubione notatki
 1. Let `I := U × U`, and let `A : I → U` be defined by `A(X, Y) := (X → Y) × (Y → X)`. Define `B` as `B(X, Y )(f, g) := X × Y` and `r(X, Y )(f, g)(x, y) := (f(x) = y) × (x = g(y))`. Then the associated M-type is a family `M : I → U` and `M(A, B)` is equivalent to `A \equiv B`.
 2. DNE holds if and only if every proposition is logically equivalent to the negation of some type.
-3. Paradoks zwrotności. Są 2 rodzaje ludzi:
-   - Ci, którzy uważają, że są dwa rodzaje ludzi.
-   - Ci, którzy są inne86go zdania.
-4. Spróbować dodać minirozdział poświęcony logicznym aspektom racjonalności (tak jak w książe: Keith Stanovich, The Rationality Quotient).
+3. Spróbować dodać minirozdział poświęcony logicznym aspektom racjonalności (tak jak w książe: Keith Stanovich, The Rationality Quotient).
+4. Paradoks zwrotności. Są 2 rodzaje ludzi:
+  - Ci, którzy uważają, że są dwa rodzaje ludzi.
+  - Ci, którzy są innego zdania.

@@ -18,7 +18,7 @@ digraph
   
   Pred          [label = "Predykatywizm", color = red]
   Impred        [label = "Kodowania impredykatywne", color = red]
-  α             [label = "α-konwersja", color = red]
+  α             [label = "α-konwersja i inne rodzaje równości", color = red]
   
   Pijok         [label = "Paradoks pijoka"]
   Curry         [label = "Paradoks Curry'ego", color = red]
@@ -29,11 +29,13 @@ digraph
 
   Pluralizm     [label = "Pluralizm logiczny"]
 
+  PosNeg        [label = "Pozytywność i negatywność"]
+
   A             -> KRZ
 
   KRZ           -> KRK, "Zwykłe spójniki", "Inne spójniki"
   "Inne spójniki" -> "Silna negacja"
-  KRK           -> LK, Tabu, Golibroda, Pred, α, Równość
+  KRK           -> LK, Tabu, Golibroda, Pred, α, Równość, PosNeg
 
   LK            -> {LModalne, LPośrednie, LSub, LMV, CoL, Pijok, Curry}
   LPośrednie    -> LdM
@@ -46,6 +48,6 @@ digraph
 
   Pred          -> Impred
 
-  Równość       -> UIP, "Aksjomat K", "Proof Irrelevance", "Propositional Extensionality/Univalence"
+  Równość       -> UIP, "Aksjomat K", "Proof Irrelevance", "Propositional Extensionality/Univalence", α
 
 }
