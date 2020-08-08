@@ -1,7 +1,15 @@
-(** * E: Rekordy, klasy i moduły [TODO] *)
+(** * D0: Enumeracje i rekordy *)
 
 (** UWAGA: ten rozdział został naprędce posklejany z fragmentów innych,
     więc może nie mieć większego sensu. *)
+
+(** * Enumeracje (TODO) *)
+
+(** * Enumeracje z argumentami (TODO) *)
+
+(** * Parametryzowane enumeracje (TODO) *)
+
+(** * Indeksowane enumeracje (TODO) *)
 
 (** * Rekordy (TODO) *)
 
@@ -68,6 +76,8 @@ End rational2.
 (* begin hide *)
 (* TODO : zrób to ćwiczenie *)
 (* end hide *)
+
+(** * Parametryzowane rekordy (TODO) *)
 
 (** * Klasy (TODO) *)
 
@@ -370,5 +380,3 @@ Proof.
 Qed.
 
 (* end hide *)
-
-(** * Moduły (TODO) *)

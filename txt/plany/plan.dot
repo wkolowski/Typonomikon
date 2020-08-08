@@ -5,50 +5,49 @@ digraph
   Wstęp             [label = "Wstęp", color = green]
   
   Logika            [label = "Logika", color = yellow]
-  
+
   TeoriaTypów       [label = "Teoria Typów", color = yellow]
 
-  Indukcja1         [label = "Indukcja", color = green]
-  Zippery           [label = "Zippery", color = red]
-  Indukcja3         [label = "Zaawansowana indukcja", color = yellow]
+  EnumRec           [label = "Enumeracje i rekordy", color = green]
+  Moduły            [label = "Moduły", color = red]
 
-  Rekordy           [label = "Rekordy, klasy i moduły", color = red]
-  Funkcje           [label = "Typy i funkcje", color = yellow]
-  Relacje           [label = "Typy i relacje", color = yellow]
+  Indukcja          [label = "Indukcja", color = green]
+  Indukcja2         [label = "Zaawansowana indukcja", color = yellow]
+  Zippery           [label = "Zippery", color = red]
+  Uniwersa          [label = "Sorty, uniwersa i generyki", color = yellow]
 
   Koindukcja        [label = "Koindukcja", color = red]
 
-  Uniwersa          [label = "Sorty, uniwersa i generyki", color = yellow]
-
-
   Ścieżki           [label = "Równość i ścieżki", color = red]
 
-  Kontynuacje       [label = "Kontynuacje", color = red]
-  Efekty            [label = "Efekty", color = yellow]
-
-  Taktyki           [label = "Spis taktyk", color = green]
-  Ltac              [label = "Ltac", color = green]
-  Reflekcja         [label = "Reflekcja", color = red]
-  
-  Złożoność         [label = "Złożoność", color = green]
-  Algorytmy         [label = "Algorytmy", color = red]
+  Funkcje           [label = "Typy i funkcje", color = yellow]
+  Relacje           [label = "Typy i relacje", color = yellow]
 
   Algebra           [label = "Algebra", color = red]
   Porządki          [label = "Teoria porządków", color = red]
   Topologia         [label = "Topologia", color = red]
   Kategorie         [label = "Teoria Kategorii", color = red]
 
+  Kontynuacje       [label = "Kontynuacje", color = red]
+  Efekty            [label = "Efekty", color = yellow]
+
+  Złożoność         [label = "Złożoność", color = green]
+  Algorytmy         [label = "Algorytmy", color = red]
+
+  Taktyki           [label = "Spis taktyk", color = green]
+  Ltac              [label = "Ltac", color = green]
+  Reflekcja         [label = "Reflekcja", color = red]
+
 
 
   Wstęp             -> Logika
-  
+
   Logika            -> TeoriaTypów
+  
+  TeoriaTypów       -> EnumRec
 
-  TeoriaTypów       -> Indukcja1, Rekordy
-
-  Indukcja1         -> Zippery, Uniwersa, Indukcja3, Koindukcja, Ścieżki /*Bool, Nat, List,*/
-
-  Rekordy           -> Koindukcja, Funkcje, Relacje
+  EnumRec           -> Indukcja, Koindukcja, Moduły
+  Indukcja          -> Zippery, Uniwersa, Indukcja2, /*Koindukcja,*/ Ścieżki, Złożoność, Reflekcja
   Koindukcja        -> Zippery, Uniwersa, Ścieżki /*CoNat, Stream, CoList, InfTree,*/
 
   Ścieżki           -> Funkcje, Relacje
@@ -58,7 +57,6 @@ digraph
   Algebra           -> Kategorie
   Porządki          -> Kategorie
   Topologia         -> Kategorie
-
 
   Taktyki           -> Ltac
   Ltac              -> Reflekcja

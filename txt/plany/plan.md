@@ -85,12 +85,18 @@ Zadania:
 
 ## Część 2: teoria typów, czyli programowanie
 
-### C: Podstawy teorii typów:
-- Przedstawić logikę za pomocą dedukcji naturalnej
+### C0: Dedukcja naturalna
+- Dedukcja naturalna (z kontekstami, bez prooftermów)
+- Obfite ćwiczenia, czyli to samo co w zeszłym rozdziale, ale na drzewkach wyprowadzeń
+- Dedukcja naturalna (z kontekstami i prooftermami)
+- Znowu to samo, czyli obfite ćwiczenia, drzewka + prooftermy
+- Potem znowu to samo, ale same prooftermy (oczywiście pisząc "prooftermy" mam na myśli takie z regułami, a nie z pattern matchingiem)
+- Jeżeli komuś nie chce się robić miljort razy tego samego, to kluczowym minimum jest opanowanie posługiwania się anonimowymi funkcjami (czyli prooftermami dla implikacji) - można je bardzo dogłębnie przećwiczyć robiąc ręczne dowody wszystkiego na zdaniach zdefiniowanych za pomocą kodowań impredykatywnych. Być może zajmujący się tym podrozdział jest tak ważny, że należałoby go przenieść do właściwego rozdziału o logice
+
+### C1: Podstawy teorii typów
 - Curry-Howard
-- Jeszcze raz logika, ale tym razem z prooftermami
-- Omówić obliczenia i postacie normalne (o ile gdzieś można znaleźć jakiś ich opis).
 - Pięć rodzajów reguł
+- Omówić obliczenia i postacie normalne (wystarczy z grubsza, nie trzeba jakoś mega dokładnie)
 - HoTT-bookowa teoria typów: pusty, unit, bool, nat, produkt, suma, funkcje, produkt zależny, suma zależna, uniwersa, równość
 - Ale nie można zaniedbać formalnej prezentacji teorii typów.
 - Wprowadzić tutaj nazwę "motyw eliminacji"
