@@ -2145,7 +2145,7 @@ Theorem drinkers_paradox :
 Proof.
   intros. destruct (classic (forall x : man, drinks x)).
     exists random_guy. intros _. assumption.
-    apply not_all_ex_not in H. destruct H. (* TODO: popraw *)
+    apply not_all_ex_not in H. destruct H.
       exists x. intro. contradiction.
 Qed.
 (* end hide *)

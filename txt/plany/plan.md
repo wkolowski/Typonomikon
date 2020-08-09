@@ -16,9 +16,9 @@
     - rozumowanie "od tyłu" - apply
     - rozumowanie "do przodu" - specialize
     - rozumowanie od tyłu jest lepsze, logika jest bezmyślna
-  - Koniunkcja
   - Dysjunkcja
-  - Prawda i fałsz
+  - Koniunkcja
+  - Fałsz i prawda, w tym jako 0-arna wersja dysjunkcji i koniunkjci
   - równoważność
   - negacja, silna i słaba
   - inne spójniki, np. xor. Ćwiczenie kreatywności?
@@ -70,7 +70,7 @@ Zadania:
   - substrukturalne
   - wielowartościowe
   - logika szalonego Gruzina
-- Logika de Morgana jako coś pomiędzy logiką konstruktywną i klasyczną
+- Logika de Morgana jako coś pomiędzy logiką konstruktywną i klasyczną
 - Logika modalna
 - Pluralizm logiczny
 - Aksjomaty w stylu ProofIrrelevance, UIP, K, PropExt
@@ -86,6 +86,7 @@ Zadania:
 ## Część 2: teoria typów, czyli programowanie
 
 ### C0: Dedukcja naturalna
+- Trzy rodzaje reguł
 - Dedukcja naturalna (z kontekstami, bez prooftermów)
 - Obfite ćwiczenia, czyli to samo co w zeszłym rozdziale, ale na drzewkach wyprowadzeń
 - Dedukcja naturalna (z kontekstami i prooftermami)
@@ -106,13 +107,29 @@ Zadania:
 ![Indukcja](indukcja.jpg)
 ![Rekursja](rekursja.jpg)
 
-### D1: Typy induktywne
+### D0: Enumeracje i rekordy
 - Enumeracje, czyli sumy nazwane.
-  - Kontent: ewaluacja (to co obecnie jest przy opisie typu `bool`). Przykładowe typy: kierunki, kolory RGB, dni tygodnia, uprawnienia dostępu (R, W, RW, etc.), pusty, unit
-  - Ćwiczenia: logika boolowska. Dokładnie wszystko opisać i powiązać z logiką klasyczną
-- Parametry.
-  - Kontent: polimorfizm. Przykładowe typy: prod, sum.
-  - Ćwiczenia: typ option.
+  - Proste enumeracje
+    - Przykładowe typy: kierunki, kolory RGB, dni tygodnia, uprawnienia dostępu (R, W, RW, etc.), pusty, unit
+    - Kontent: pattern matching i ewaluacja (to co obecnie jest przy opisie typu `bool`). 
+    - Ćwiczenia: logika boolowska. Dokładnie wszystko opisać i powiązać z logiką klasyczną
+  - Argumenty nieindukcyjne
+    - Przykładowe typy: nie wiem, coś się wymyśli
+    - Kontent: wiązanie argumentów we wzorcach
+    - Ćwiczenia: typ-driven design, czyli jakieś głupoty w stylu "wymodeluj typ reprezentujący korporancje"
+  - Parametry
+    - Przykładowe typy: prod, sum.
+    - Kontent: polimorfizm i parametryczność, a raczej jej brak
+    - Ćwiczenia: typ option.
+  - Enumeracje indeksowane
+    - Przykładowe typy: BoolSpec
+    - Kontent: jak się zachowuje pattern-matching przy indeksach (źle)
+    - Ćwiczenia: maszyny stanowe!
+- Rekordy, czyli produkty nazwane
+  - Rodzaje rekordów: induktywne, koinduktywne, primitive projections
+
+
+### D1: Typy induktywne
 - Konstruktory rekurencyjne.
   - Kontent: rekursja. Przykładowe typy: nat
   - Ćwiczenia: arytmetyka Peano.
@@ -183,7 +200,7 @@ Zadania:
 - Generowanie różnych rodzajów (pod)struktur typu prefiksy, podciągi etc.
 - Wszystko o permutacjach
 
-D7: Ogólne plany na rozdziały X:
+### D7: Ogólne plany na rozdziały X:
 - boolowska logika ternarna, być może jako tour de force dla automatyzacji? albo test kreatywności
 - typ option (być może przy okazji funktory?) Stąd zadania dla `head`, `last`, `tail` i `init`
 - wcisnąć tu rozdział o produktach, sumach i funkcjach?
@@ -204,46 +221,6 @@ D7: Ogólne plany na rozdziały X:
   - ogólne liściowe `RoseTree`
   - jakieś inne? (węzłowe niepuste)
 
-### E1: Rekordy, klasy i moduły
-- Typy skończone
-- Enumerowanie
-- Rozstrzygalność i typ `reflect`
-- Rozstrzygalna równość
-- Rodzaje rekordów: induktywne, koinduktywne, primitive projections
-- Silne specyfikacje
-
-### E2: Typy i funkcje
-- Aksjomat ekstensjonalności
-- Lewa i prawa skracalność
-- Lewa i prawa odwrotność
-- Izomorfizm
-- Injekcja, bijekcja, surjekcja
-- Zanurzenia, pokrycia, HoTTowe rzeczy
-- Inwolucja i idempotencja
-- Przemycać jak najwięcej teorii kategorii
-
-### E3: Typy i relacje
-- Odnośnie mechanizmu redukcji:
-  - Posłużyć się następującym systemem nazewniczo-klasyfikacyjnym.
-  - Dla każdej literki są trzy relacje: redukcja, ekspansja i konwersja (a może powinna być jeszcze redukcja w wielu krokach?).
-  - Bazą jest redukcja, która ma jakąś swoją definicję, pisana jest a -> b. Relacja ekspansji a <- b zdefiniowana jest jako b -> a, zaś relacja konwersji to domknięcie równoważnościowe relacji redukcji.
-  - W takim układzie redukcja w wielu krokach to domknięcie zwrotno-przechodnie relacji redukcji. Podobnie dla ekspansji w wielu krokach.
-- Podsumowując: zdefiniować na relacjach rzeczy, których można by użyć przy formalizacji teorii typów, ale tylko w celu objaśnienia.
-
-### E4: Nowy rozdział o logice boolowskiej
-- Tabelki prawdy (definicje) + twierdzenia jako powtórka logiki klasycznej.
-- Rozstrzygalność:
-  - Co to.
-  - Techniczne aspekty.
-  - Kiedy nie rozstrzygać (protip: kiedy można niskim kosztem rozstrzygnąć coś bardziej informatywnego).
-  - Reflect, BoolSpec, CompareSpec etc.
-  - Uwaga: w sumie to taki typ sumor jest dla opcji czymś analogicznym jak BoolSpec dla typu bool.
-- Reflekcja małoskalowa.
-- Napisać podrozdział poświęcony temu, czy definiować predykaty (i rodziny typów) przez rekursję czy przez indukcję. Użyć jako przykładu takich predykatów jak `elem`, `Exists`, `Forall`, `Exactly`. Jak to się ma do rozstrzygalności.
-- Aksjomaty dotyczące sortu `Prop` i jak obejść się bez nich.
-- Metoda encode-decode, początkowo jako narzędzie do rozwiązywania problemów, których normalni ludzie nie mają i nigdy mieć nie będą. Potem: izomorfizmy typów.
-- Sort `SProp`.
-
 ### F: Koindukcja
 - F1: Typy koinduktywne - rekordy, parametry i korekursja
 - F2: liczby konaturalne
@@ -258,7 +235,11 @@ D7: Ogólne plany na rozdziały X:
 - Jedyny pierścień pierwszego rzędu, czyli uniwersa kodów na typy induktywne i koinduktywne
 - Uwaga: wyższy rząd vs pierwszy rząd
 
-### H: Ścieżki
+### G2: Zippery
+
+### G3: Zaawansowana indukcja
+
+### H1: Ścieżki
 - Interpretacja homotopiczna: dowody równości a ścieżki
 - Opowiedzieć skąd się biorą ścieżki
 - Ścieżki w banalnych typach
@@ -273,6 +254,24 @@ D7: Ogólne plany na rozdziały X:
 - Aksjomat K
 - Aksjomat Uniwalencji
 - Wyższe typy induktywne
+
+### H2: Typy i funkcje
+- Aksjomat ekstensjonalności
+- Lewa i prawa skracalność
+- Lewa i prawa odwrotność
+- Izomorfizm
+- Injekcja, bijekcja, surjekcja
+- Zanurzenia, pokrycia, HoTTowe rzeczy
+- Inwolucja i idempotencja
+- Przemycać jak najwięcej teorii kategorii
+
+### H3: Typy i relacje
+- Odnośnie mechanizmu redukcji:
+  - Posłużyć się następującym systemem nazewniczo-klasyfikacyjnym.
+  - Dla każdej literki są trzy relacje: redukcja, ekspansja i konwersja (a może powinna być jeszcze redukcja w wielu krokach?).
+  - Bazą jest redukcja, która ma jakąś swoją definicję, pisana jest a -> b. Relacja ekspansji a <- b zdefiniowana jest jako b -> a, zaś relacja konwersji to domknięcie równoważnościowe relacji redukcji.
+  - W takim układzie redukcja w wielu krokach to domknięcie zwrotno-przechodnie relacji redukcji. Podobnie dla ekspansji w wielu krokach.
+- Podsumowując: zdefiniować na relacjach rzeczy, których można by użyć przy formalizacji teorii typów, ale tylko w celu objaśnienia.
 
 ## Cześć 3: Metapoziom, czyli taktyki
 
@@ -319,7 +318,7 @@ I3: Reflekcja, metapoziom, quote (którego oczywiście w Coqu nie ma, a jak) i i
 
 ## Część 4: Efekty obliczeniowe dla biedaków
 
-X1: Monady i efekty jako sposoby bycia
+L1: Monady i efekty jako sposoby bycia
 - `Id` nie reprezentuje żadnego efektu. Wartości typu `Id A` są w ten
   sposób, że po prostu są.
 - `option` reprezentuje częściowość. Wartości typu `option A` są w ten
@@ -342,7 +341,7 @@ X1: Monady i efekty jako sposoby bycia
 - `SQL` reprezentuje operacje bazodanowe. Wartości typu `SQL A` są
   w ten sposób, że albo po prostu są, albo są w bazie danych.
 
-### N: Kontynuacje
+### L2: Kontynuacje
 - Kodowanie Churcha
 - Kodowanie Scotta
 - Listy różnicowe
@@ -350,10 +349,10 @@ X1: Monady i efekty jako sposoby bycia
 
 ## Część 5: Funkcyjna algorytmika
 
-Z: Złożoność
+### K1: Złożoność
   - Napisać coś o rekursji ogonowej i opisać poświęcone jej techniki dowodzenia.
 
-Ź: Algorytmy i struktury danych:
+### K2: Algorytmy i struktury danych:
   - sortowanie
   - drzewa wyszukiwań
   - sterty
@@ -367,3 +366,26 @@ Z: Złożoność
 - Teoria porządków, krat i innych takich
 - konstruktywna topologia dla bidoków
 - Teoria Kategorii
+
+## Część 7: zawieruszone rzeczy
+
+### N: Moduły
+- Typy skończone
+- Enumerowanie
+- Rozstrzygalność i typ `reflect`
+- Rozstrzygalna równość
+- Silne specyfikacje
+
+### O: Nowy rozdział o logice boolowskiej
+- Tabelki prawdy (definicje) + twierdzenia jako powtórka logiki klasycznej.
+- Rozstrzygalność:
+  - Co to.
+  - Techniczne aspekty.
+  - Kiedy nie rozstrzygać (protip: kiedy można niskim kosztem rozstrzygnąć coś bardziej informatywnego).
+  - Reflect, BoolSpec, CompareSpec etc.
+  - Uwaga: w sumie to taki typ sumor jest dla opcji czymś analogicznym jak BoolSpec dla typu bool.
+- Reflekcja małoskalowa.
+- Napisać podrozdział poświęcony temu, czy definiować predykaty (i rodziny typów) przez rekursję czy przez indukcję. Użyć jako przykładu takich predykatów jak `elem`, `Exists`, `Forall`, `Exactly`. Jak to się ma do rozstrzygalności.
+- Aksjomaty dotyczące sortu `Prop` i jak obejść się bez nich.
+- Metoda encode-decode, początkowo jako narzędzie do rozwiązywania problemów, których normalni ludzie nie mają i nigdy mieć nie będą. Potem: izomorfizmy typów.
+- Sort `SProp`.

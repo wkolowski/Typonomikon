@@ -1,5 +1,9 @@
 # TODO
 
+Nie zapomnieć o genialnych pomysłach:
+1. Tautologie na kodowaniach impredylatywmych jako ćwiczenia z funkcji anonimowych
+2. Maszyny stanowe i type-driven design jako ćwiczenia do (indeksowanych) enumeracji.
+
 ## Podstawy
 1. Od początku użyć nominalizmów do wytłumaczenia na czym polega wiązanie nazw zmiennych.
 
