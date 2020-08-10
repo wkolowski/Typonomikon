@@ -873,3 +873,45 @@ Proof.
 Qed.
 
 (* end hide *)
+
+(** * Metateoria *)
+
+(* begin hide *)
+(** TODO: Podrozdział "Metateoria" zakłada, że omówiono wcześniej pojęcie
+    TODO: postaci normalnej i silnej normalizowalności. *)
+(* end hide *)
+
+(** Zbliżamy się powoli do końca rozdziału. Z jednej strony sporo się
+    nauczyliśmy, ale z drugiej strony fakt ten może budzić dość spory
+    niepkój. No bo niby skąd mamy wiedzieć, że cała ta logika (i teoria
+    typów też) to nie są zupełne bzdury?
+
+    Pisząc ściślej: skąd np. mamy pewność, że logika konstruktywna nie
+    jest sprzeczna, tzn. nie można w niej udowodnić [False]? A jakim
+    sposobem ustalić, czy przypadkiem nie zrobiłem cię w konia pisząc,
+    że prawa wyłączonego środka nie da się udowodnić?
+
+    W niniejszym podrozdziale spróbujemy udzielić krótkiej i zwięzłej
+    (a co za tym idzie, bardzo zgrubnej i średni precyzyjnej) odpowiedzi
+    na te pytania. Zacznijmy od paru kluczowych uwag.
+
+    Najpierw będziemy chcieli udowodnić, że logika konstruktywna jest
+    niesprzeczna. Co w tym przypadku oznacza słowo "udowodnić"? Aż do
+    teraz dowodziliśmy twierdzeń _w Coqu/ w logice konstruktywnej_, ale
+    teraz będziemy chcieli coś udowodnić _o Coqu/o logice konstruktywnej_.
+
+    Ta różnica jest bardzo istotna: jeżeli chcemy udowodnić coś o Coqu,
+    to nie możemy zrobić tego w Coqu. Wynika to z jednego z twierdzeń
+    Gödla, które w uproszczeniu mówi, że jeżeli dany system logiczny
+    potrafi wyrazić arytmetykę liczb naturalnych (no wiesz, dodawanie,
+    mnożenie i takie tam), to w tym systemie nie da się udowodnić, że
+    jest on niesprzeczny.
+
+    Jeżeli przeraża cię powyższy akapit, to... taś taś ptaszku, będzie
+    dobrze. Parafrazując: żeby udowodnić, że system logiczny nie jest
+    sprzeczny, musimy to zrobić w systemie logicznym, który jest od
+    niego silniejszy.
+
+    
+
+    
