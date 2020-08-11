@@ -1219,4 +1219,128 @@ Podsumowując, reguły unikalności występują w dwóch rodzajach:
 <div class="code">
 
 <br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab198"></a><h1 class="section">Metateoria</h1>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zbliżamy się powoli do końca rozdziału. Z jednej strony sporo się
+    nauczyliśmy, ale z drugiej strony fakt ten może budzić dość spory
+    niepkój. No bo niby skąd mamy wiedzieć, że cała ta logika (i teoria
+    typów też) to nie są zupełne bzdury?
+
+<div class="paragraph"> </div>
+
+    Pisząc ściślej: skąd np. mamy pewność, że logika konstruktywna nie
+    jest sprzeczna, tzn. nie można w niej udowodnić <span class="inlinecode"><span class="id" title="var">False</span></span>? A jakim
+    sposobem ustalić, czy przypadkiem nie zrobiłem cię w konia pisząc,
+    że prawa wyłączonego środka nie da się udowodnić?
+
+<div class="paragraph"> </div>
+
+    W niniejszym podrozdziale spróbujemy udzielić krótkiej i zwięzłej
+    (a co za tym idzie, bardzo zgrubnej i średnio precyzyjnej) odpowiedzi
+    na te pytania. Zacznijmy od paru kluczowych uwag.
+
+<div class="paragraph"> </div>
+
+    Najpierw będziemy chcieli udowodnić, że logika konstruktywna jest
+    niesprzeczna. Co w tym przypadku oznacza słowo "udowodnić"? Aż do
+    teraz dowodziliśmy twierdzeń <i>w Coqu/w logice konstruktywnej</i>, ale
+    teraz będziemy chcieli coś udowodnić <i>o Coqu/o logice konstruktywnej</i>.
+
+<div class="paragraph"> </div>
+
+    Ta różnica jest bardzo istotna: jeżeli chcemy udowodnić coś o Coqu,
+    to nie możemy zrobić tego w Coqu. Wynika to z jednego z twierdzeń
+    Gödla, które w uproszczeniu mówi, że jeżeli dany system logiczny
+    potrafi wyrazić arytmetykę liczb naturalnych (no wiesz, dodawanie,
+    mnożenie i takie tam), to system ten nie może udowodnić swojej
+    własnej niesprzeczności.
+
+<div class="paragraph"> </div>
+
+    Jeżeli przeraża cię powyższy akapit, to... taś taś ptaszku, będzie
+    dobrze. Parafrazując: żeby udowodnić, że system logiczny nie jest
+    sprzeczny, musimy to zrobić w systemie logicznym, który jest od
+    niego silniejszy.
+
+<div class="paragraph"> </div>
+
+    Oczywiście wnikliwy umysł wnet dostrzeże tutaj pewien problem.
+    Gdy już udowodnimy w silniejszym systemie, że słabszy system
+    jest niesprzeczny, to jak mamy się upewnić, czy nasze twierdzenie
+    nie jest przypadkiem gówno warte, np. dlatego, że silniejszy system
+    jest sprzeczny?
+
+<div class="paragraph"> </div>
+
+    W tym celu wypadałoby udowodnić również niesprzeczność silniejszego
+    systemu. Zgodnie z powyższym rozumowaniem trzeba w tym celu mieć
+    jeszcze silniejszy system i on również powinien być niesprzeczny, bo
+    inaczej z absolutnej matematycznej pewności nici.
+
+<div class="paragraph"> </div>
+
+    Myślę, że widzisz już, dokąd to wszystko zmierza. Tego typu problem
+    w filozofii nazywa się <i>regressus ad infinitum</i>, co po naszemu znaczy
+    po prostu "cofanie się w nieskończoność". Niestety w naszym logicznym
+    kontekście nie ma on żadnego rozwiązania.
+
+<div class="paragraph"> </div>
+
+    Trochę terminologii: słabszy system (ten, którego niesprzeczności
+    chcemy dowieść), bywa zazwyczaj nazywany "teorią" lub "językiem", a
+    silniejszy (ten, w którym dowodzimy) to "metateoria" lub "metajęzyk".
+    Dla zmylenia przeciwnika określeniem "metateoria" określa się także
+    zbiór właściwości tego słabszego systemu (a zatem np. niesprzeczność
+    logiki konstruktywnej jest jej właściwością metateoretyczną).
+
+<div class="paragraph"> </div>
+
+    Uwaga: nie bój się terminologii i żargonu, one nie gryzą.
+
+<div class="paragraph"> </div>
+
+    W praktyce kiedy poważni matematycy (a raczej informatycy i logicy,
+    bo matematycy sensu stricto to straszne miernoty w kwestii logiki)
+    chcą udowodnić niesprzeczność jakiegoś systemu formalnego, to po
+    prostu nie przejmują się niesprzecznością metateorii, w której
+    dowodzą. Zazwyczaj taki dowód i tak nie jest sformalizowany, więc
+    zwykłe błędy w rozumowaniu są większym problemem, niż sprzeczność
+    metateorii. Praktycznym uzasadnieniem na sensowność takiego
+    postępowania może być to, że w ulubionej metateorii dowodzącego od
+    dawna nie znaleziono sprzeczności (np. w teorii zbiorów ZFC, której
+    używa się w takich przypadkach najcześciej, nie znaleziono jej przez
+    100 lat, więc wydaje się być dość bezpieczna).
+
+<div class="paragraph"> </div>
+
+    Formalnie to, co z tego wychodzi, to względny dowód niesprzeczności,
+    czyli twierdzenie postaci "jeżeli metateoria jest niesprzeczna, to
+    teoria jest niesprzeczna", które w praktyce traktuje się jak absolutny
+    dowód niesprzeczności teorii.
+
+<div class="paragraph"> </div>
+
+    Dobra, wystarczy już tego ględzenia. W naszym przypadku po prostu
+    zignorujemy problemy filozoficzne i zobaczymy nieformalny argument
+    za tym, że logika konstruktywna jest niesprzeczna.
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
 </div>

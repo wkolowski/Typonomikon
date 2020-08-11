@@ -892,26 +892,72 @@ Qed.
     że prawa wyłączonego środka nie da się udowodnić?
 
     W niniejszym podrozdziale spróbujemy udzielić krótkiej i zwięzłej
-    (a co za tym idzie, bardzo zgrubnej i średni precyzyjnej) odpowiedzi
+    (a co za tym idzie, bardzo zgrubnej i średnio precyzyjnej) odpowiedzi
     na te pytania. Zacznijmy od paru kluczowych uwag.
 
     Najpierw będziemy chcieli udowodnić, że logika konstruktywna jest
     niesprzeczna. Co w tym przypadku oznacza słowo "udowodnić"? Aż do
-    teraz dowodziliśmy twierdzeń _w Coqu/ w logice konstruktywnej_, ale
+    teraz dowodziliśmy twierdzeń _w Coqu/w logice konstruktywnej_, ale
     teraz będziemy chcieli coś udowodnić _o Coqu/o logice konstruktywnej_.
 
     Ta różnica jest bardzo istotna: jeżeli chcemy udowodnić coś o Coqu,
     to nie możemy zrobić tego w Coqu. Wynika to z jednego z twierdzeń
     Gödla, które w uproszczeniu mówi, że jeżeli dany system logiczny
     potrafi wyrazić arytmetykę liczb naturalnych (no wiesz, dodawanie,
-    mnożenie i takie tam), to w tym systemie nie da się udowodnić, że
-    jest on niesprzeczny.
+    mnożenie i takie tam), to system ten nie może udowodnić swojej
+    własnej niesprzeczności.
 
     Jeżeli przeraża cię powyższy akapit, to... taś taś ptaszku, będzie
     dobrze. Parafrazując: żeby udowodnić, że system logiczny nie jest
     sprzeczny, musimy to zrobić w systemie logicznym, który jest od
     niego silniejszy.
 
+    Oczywiście wnikliwy umysł wnet dostrzeże tutaj pewien problem.
+    Gdy już udowodnimy w silniejszym systemie, że słabszy system
+    jest niesprzeczny, to jak mamy się upewnić, czy nasze twierdzenie
+    nie jest przypadkiem gówno warte, np. dlatego, że silniejszy system
+    jest sprzeczny?
+
+    W tym celu wypadałoby udowodnić również niesprzeczność silniejszego
+    systemu. Zgodnie z powyższym rozumowaniem trzeba w tym celu mieć
+    jeszcze silniejszy system i on również powinien być niesprzeczny, bo
+    inaczej z absolutnej matematycznej pewności nici.
+
+    Myślę, że widzisz już, dokąd to wszystko zmierza. Tego typu problem
+    w filozofii nazywa się _regressus ad infinitum_, co po naszemu znaczy
+    po prostu "cofanie się w nieskończoność". Niestety w naszym logicznym
+    kontekście nie ma on żadnego rozwiązania.
+
+    Trochę terminologii: słabszy system (ten, którego niesprzeczności
+    chcemy dowieść), bywa zazwyczaj nazywany "teorią" lub "językiem", a
+    silniejszy (ten, w którym dowodzimy) to "metateoria" lub "metajęzyk".
+    Dla zmylenia przeciwnika określeniem "metateoria" określa się także
+    zbiór właściwości tego słabszego systemu (a zatem np. niesprzeczność
+    logiki konstruktywnej jest jej właściwością metateoretyczną).
+
+    Uwaga: nie bój się terminologii i żargonu, one nie gryzą.
+
+    W praktyce kiedy poważni matematycy (a raczej informatycy i logicy,
+    bo matematycy sensu stricto to straszne miernoty w kwestii logiki)
+    chcą udowodnić niesprzeczność jakiegoś systemu formalnego, to po
+    prostu nie przejmują się niesprzecznością metateorii, w której
+    dowodzą. Zazwyczaj taki dowód i tak nie jest sformalizowany, więc
+    zwykłe błędy w rozumowaniu są większym problemem, niż sprzeczność
+    metateorii. Praktycznym uzasadnieniem na sensowność takiego
+    postępowania może być to, że w ulubionej metateorii dowodzącego od
+    dawna nie znaleziono sprzeczności (np. w teorii zbiorów ZFC, której
+    używa się w takich przypadkach najcześciej, nie znaleziono jej przez
+    100 lat, więc wydaje się być dość bezpieczna).
+
+    Formalnie to, co z tego wychodzi, to względny dowód niesprzeczności,
+    czyli twierdzenie postaci "jeżeli metateoria jest niesprzeczna, to
+    teoria jest niesprzeczna", które w praktyce traktuje się jak absolutny
+    dowód niesprzeczności teorii.
+
+    Dobra, wystarczy już tego ględzenia. W naszym przypadku po prostu
+    zignorujemy problemy filozoficzne i zobaczymy nieformalny argument
+    za tym, że logika konstruktywna jest niesprzeczna.
     
 
-    
+
+*)
