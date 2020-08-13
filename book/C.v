@@ -889,13 +889,15 @@ Qed.
     Pisząc ściślej: skąd np. mamy pewność, że logika konstruktywna nie
     jest sprzeczna, tzn. nie można w niej udowodnić [False]? A jakim
     sposobem ustalić, czy przypadkiem nie zrobiłem cię w konia pisząc,
-    że prawa wyłączonego środka nie da się udowodnić?
+    że nie da się udowodnić prawa wyłączonego środka?
 
     W niniejszym podrozdziale spróbujemy udzielić krótkiej i zwięzłej
     (a co za tym idzie, bardzo zgrubnej i średnio precyzyjnej) odpowiedzi
-    na te pytania. Zacznijmy od paru kluczowych uwag.
+    na te pytania. Zacznijmy od paru kluczowych uwag. *)
 
-    Najpierw będziemy chcieli udowodnić, że logika konstruktywna jest
+(** ** Preliminaria *)
+
+(** Najpierw będziemy chcieli udowodnić, że logika konstruktywna jest
     niesprzeczna. Co w tym przypadku oznacza słowo "udowodnić"? Aż do
     teraz dowodziliśmy twierdzeń _w Coqu/w logice konstruktywnej_, ale
     teraz będziemy chcieli coś udowodnić _o Coqu/o logice konstruktywnej_.
@@ -949,15 +951,92 @@ Qed.
     używa się w takich przypadkach najcześciej, nie znaleziono jej przez
     100 lat, więc wydaje się być dość bezpieczna).
 
-    Formalnie to, co z tego wychodzi, to względny dowód niesprzeczności,
+    Teoretycznie, co z tego wychodzi, to względny dowód niesprzeczności,
     czyli twierdzenie postaci "jeżeli metateoria jest niesprzeczna, to
-    teoria jest niesprzeczna", które w praktyce traktuje się jak absolutny
-    dowód niesprzeczności teorii.
+    teoria jest niesprzeczna", które w praktyce traktuje się jako
+    absolutny dowód niesprzeczności.
 
     Dobra, wystarczy już tego ględzenia. W naszym przypadku po prostu
-    zignorujemy problemy filozoficzne i zobaczymy nieformalny argument
-    za tym, że logika konstruktywna jest niesprzeczna.
-    
+    zignorujemy problemy filozoficzne i przyjrzymy się nieformalnemu
+    dowodowi na to, że logika konstruktywna jest niesprzeczna. *)
 
+(** ** Niesprzeczność *)
 
-*)
+(** Dowód jest banalnie prosty. Załóżmy, że istnieje jakiś dowód fałszu.
+
+    Przypomnijmy sobie, że Coq jest językiem silnie normalizowalnym.
+    Znaczy to, że wszystkie termy obliczają się do postaci normalnej,
+    czyli termu, który jest ostatecznym wynikiem obliczeń i nie może
+    zostać "jeszcze bardziej obliczony".
+
+    Ponieważ zdania są typami, to ich certyfikaty również podlegają
+    prawom rządzącym obliczeniami. Jak wyglądają certyfikaty na [False]?
+    Cóż, teoretycznie mogą być postaci np. [f x], gdzie [f : P -> False],
+    zaś [x : P]. Prawdziwe pytanie brzmi jednak: jak wyglądają postacie
+    normalne certyfikatów na [False]?
+
+    Przypomnijmy, że dla większości typów (a zatem także dla zdań)
+    termy w postaci normalnej to te, które pojawiają się w regułach
+    wprowadzania i nie inaczej jest dla [False], a ponieważ [False]
+    nie ma reguły wprowadzania, to nie ma żadnego certyfikatu na [False],
+    który byłby w postaci normalnej.
+
+    Ale zaraz! Zgodnie z początkowym założeniem mamy jakiś ceryfikat na
+    [False], a zatem na mocy silnej normalizowalności oblicza się on do
+    certyfikatu na [False] w postaci normalnej, a to oznacza sprzeczność.
+    Wobec tego początkowe założenie było błędne i nie może istnieć żaden
+    certyfikat na [False].
+
+    Słowem: nie da się udowodnić fałszu, a zatem logika konstruktywna
+    jest niesprzeczna. *)
+
+(** ** Niedowodliwość prawa wyłączonego środka *)
+
+(** Podobnie przebiega dowód na niedowodliwość prawa wyłączonego środka.
+    Zacznijmy od założenia _a contrario_, że mamy certyfikat na prawo
+    wyłączonego środka, czyli [LEM : forall P : Prop, P \/ ~ P].
+
+    Ponieważ Coq jest silnie normalizowalny, to nasz certyfikat oblicza
+    się do certyfikatu w postaci normalnej. Jak wygląda postać normalna
+    dla naszego certyfikatu? Postacie normalne certyfikatów na implikację
+    [P -> Q] są postaci [fun p : P => q], a certyfikatów na dysjunkcję
+    [P \/ Q] są postaci [or_introl p] lub [or_intror q].
+
+    Wobec tego nasz certyfikat może mieć jedną z dwóch postaci:
+    [fun P : Prop => or_introl p], gdzie [p : P] to certyfikat na [p],
+    lub [fun P : Prop => or_intror np], gdzie [np : ~ P] to certyfikat
+    na [~ P]. Rozważmy dwa przypadki.
+
+    Jeżeli [LEM] ma pierwszą z tych dwóch postaci, to oznacza to w
+    zasadzie, że wszystkie zdania są prawdziwe! No bo patrz: jeżeli
+    przyjrzymy się [LEM False], to widzimy, że przyjmuje on postać
+    [or_introl p], gdzie [p] jest certyfikatem na [False], ale wiemy
+    już, że [False] nie da się udowodnić.
+
+    Podobnie gdy [LEM] ma drugą z tych postaci. Wtedy [LEM True] jest
+    postaci [or_intror p], gdzie [p] to certyfikat na [True -> False],
+    a zatem [p I] to certyfikat na [False], ale znów - fałszu nie da
+    się udowodnić!
+
+    Ponieważ w obu przypadkach uzyskaliśmy sprzeczność, a [LEM] nie
+    może być żadnej innej postaci, konkluzja jest oczywista: początkowe
+    założenie było błędne i certyfikat na prawo wyłączonego środka nie
+    istnieje. *)
+
+(** ** Konkluzja *)
+
+(** Silna normalizowalność jest jedną z kluczowych metateoretycznych
+    właściwości logik i języków programowania. Wynikają z niej nie
+    tylko inne metateoretyczne właściwości tradycyjnie uznawane za
+    ważniejsze, jak niesprzeczność, ale także bardziej ciekawostkowe,
+    jak niedowodliwość prawa wyłączonego środka.
+
+    Nie przejmuj się, jeżeli nie do końca (albo wcale) rozumiesz
+    powyższe wywody (szczególnie preliminaria) lub dowody. Ich
+    rozumienie nie jest niezbędne do skutecznego dowodzenia ani
+    programowania. Ba! Wydaje mi się, że jest całkiem na odwrót:
+    żeby zrozumieć je na intuicyjnym poziomie, potrzeba sporo
+    praktycznego doświadczenia w programowaniu i dowodzeniu.
+    Jeżeli go nabędziesz, powyższe wywody i dowody nagle staną
+    się łatwe, miłe i przyjemne (i puszyste i mięciutkie!).
+    Wróć do nich za jakiś, żeby się o tym przekonać. *)

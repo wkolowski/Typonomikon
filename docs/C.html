@@ -1245,17 +1245,20 @@ Zbliżamy się powoli do końca rozdziału. Z jednej strony sporo się
     Pisząc ściślej: skąd np. mamy pewność, że logika konstruktywna nie
     jest sprzeczna, tzn. nie można w niej udowodnić <span class="inlinecode"><span class="id" title="var">False</span></span>? A jakim
     sposobem ustalić, czy przypadkiem nie zrobiłem cię w konia pisząc,
-    że prawa wyłączonego środka nie da się udowodnić?
+    że nie da się udowodnić prawa wyłączonego środka?
 
 <div class="paragraph"> </div>
 
     W niniejszym podrozdziale spróbujemy udzielić krótkiej i zwięzłej
     (a co za tym idzie, bardzo zgrubnej i średnio precyzyjnej) odpowiedzi
-    na te pytania. Zacznijmy od paru kluczowych uwag.
+    na te pytania. Zacznijmy od paru kluczowych uwag. 
+<div class="paragraph"> </div>
+
+<a name="lab199"></a><h2 class="section">Preliminaria</h2>
 
 <div class="paragraph"> </div>
 
-    Najpierw będziemy chcieli udowodnić, że logika konstruktywna jest
+ Najpierw będziemy chcieli udowodnić, że logika konstruktywna jest
     niesprzeczna. Co w tym przypadku oznacza słowo "udowodnić"? Aż do
     teraz dowodziliśmy twierdzeń <i>w Coqu/w logice konstruktywnej</i>, ale
     teraz będziemy chcieli coś udowodnić <i>o Coqu/o logice konstruktywnej</i>.
@@ -1327,20 +1330,128 @@ Zbliżamy się powoli do końca rozdziału. Z jednej strony sporo się
 
 <div class="paragraph"> </div>
 
-    Formalnie to, co z tego wychodzi, to względny dowód niesprzeczności,
+    Teoretycznie, co z tego wychodzi, to względny dowód niesprzeczności,
     czyli twierdzenie postaci "jeżeli metateoria jest niesprzeczna, to
-    teoria jest niesprzeczna", które w praktyce traktuje się jak absolutny
-    dowód niesprzeczności teorii.
+    teoria jest niesprzeczna", które w praktyce traktuje się jako
+    absolutny dowód niesprzeczności.
 
 <div class="paragraph"> </div>
 
     Dobra, wystarczy już tego ględzenia. W naszym przypadku po prostu
-    zignorujemy problemy filozoficzne i zobaczymy nieformalny argument
-    za tym, że logika konstruktywna jest niesprzeczna.
+    zignorujemy problemy filozoficzne i przyjrzymy się nieformalnemu
+    dowodowi na to, że logika konstruktywna jest niesprzeczna. 
+<div class="paragraph"> </div>
+
+<a name="lab200"></a><h2 class="section">Niesprzeczność</h2>
 
 <div class="paragraph"> </div>
 
+ Dowód jest banalnie prosty. Załóżmy, że istnieje jakiś dowód fałszu.
 
+<div class="paragraph"> </div>
+
+    Przypomnijmy sobie, że Coq jest językiem silnie normalizowalnym.
+    Znaczy to, że wszystkie termy obliczają się do postaci normalnej,
+    czyli termu, który jest ostatecznym wynikiem obliczeń i nie może
+    zostać "jeszcze bardziej obliczony".
+
+<div class="paragraph"> </div>
+
+    Ponieważ zdania są typami, to ich certyfikaty również podlegają
+    prawom rządzącym obliczeniami. Jak wyglądają certyfikaty na <span class="inlinecode"><span class="id" title="var">False</span></span>?
+    Cóż, teoretycznie mogą być postaci np. <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>,
+    zaś <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Prawdziwe pytanie brzmi jednak: jak wyglądają postacie
+    normalne certyfikatów na <span class="inlinecode"><span class="id" title="var">False</span></span>?
+
+<div class="paragraph"> </div>
+
+    Przypomnijmy, że dla większości typów (a zatem także dla zdań)
+    termy w postaci normalnej to te, które pojawiają się w regułach
+    wprowadzania i nie inaczej jest dla <span class="inlinecode"><span class="id" title="var">False</span></span>, a ponieważ <span class="inlinecode"><span class="id" title="var">False</span></span>
+    nie ma reguły wprowadzania, to nie ma żadnego certyfikatu na <span class="inlinecode"><span class="id" title="var">False</span></span>,
+    który byłby w postaci normalnej.
+
+<div class="paragraph"> </div>
+
+    Ale zaraz! Zgodnie z początkowym założeniem mamy jakiś ceryfikat na
+    <span class="inlinecode"><span class="id" title="var">False</span></span>, a zatem na mocy silnej normalizowalności oblicza się on do
+    certyfikatu na <span class="inlinecode"><span class="id" title="var">False</span></span> w postaci normalnej, a to oznacza sprzeczność.
+    Wobec tego początkowe założenie było błędne i nie może istnieć żaden
+    certyfikat na <span class="inlinecode"><span class="id" title="var">False</span></span>.
+
+<div class="paragraph"> </div>
+
+    Słowem: nie da się udowodnić fałszu, a zatem logika konstruktywna
+    jest niesprzeczna. 
+<div class="paragraph"> </div>
+
+<a name="lab201"></a><h2 class="section">Niedowodliwość prawa wyłączonego środka</h2>
+
+<div class="paragraph"> </div>
+
+ Podobnie przebiega dowód na niedowodliwość prawa wyłączonego środka.
+    Zacznijmy od założenia <i>a contrario</i>, że mamy certyfikat na prawo
+    wyłączonego środka, czyli <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
+
+<div class="paragraph"> </div>
+
+    Ponieważ Coq jest silnie normalizowalny, to nasz certyfikat oblicza
+    się do certyfikatu w postaci normalnej. Jak wygląda postać normalna
+    dla naszego certyfikatu? Postacie normalne certyfikatów na implikację
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> są postaci <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">q</span></span>, a certyfikatów na dysjunkcję
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> są postaci <span class="inlinecode"><span class="id" title="var">or_introl</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> lub <span class="inlinecode"><span class="id" title="var">or_intror</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span>.
+
+<div class="paragraph"> </div>
+
+    Wobec tego nasz certyfikat może mieć jedną z dwóch postaci:
+    <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">or_introl</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> to certyfikat na <span class="inlinecode"><span class="id" title="var">p</span></span>,
+    lub <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">or_intror</span></span> <span class="inlinecode"><span class="id" title="var">np</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">np</span></span> <span class="inlinecode">:</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> to certyfikat
+    na <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Rozważmy dwa przypadki.
+
+<div class="paragraph"> </div>
+
+    Jeżeli <span class="inlinecode"><span class="id" title="var">LEM</span></span> ma pierwszą z tych dwóch postaci, to oznacza to w
+    zasadzie, że wszystkie zdania są prawdziwe! No bo patrz: jeżeli
+    przyjrzymy się <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode"><span class="id" title="var">False</span></span>, to widzimy, że przyjmuje on postać
+    <span class="inlinecode"><span class="id" title="var">or_introl</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">p</span></span> jest certyfikatem na <span class="inlinecode"><span class="id" title="var">False</span></span>, ale wiemy
+    już, że <span class="inlinecode"><span class="id" title="var">False</span></span> nie da się udowodnić.
+
+<div class="paragraph"> </div>
+
+    Podobnie gdy <span class="inlinecode"><span class="id" title="var">LEM</span></span> ma drugą z tych postaci. Wtedy <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode"><span class="id" title="var">True</span></span> jest
+    postaci <span class="inlinecode"><span class="id" title="var">or_intror</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">p</span></span> to certyfikat na <span class="inlinecode"><span class="id" title="var">True</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>,
+    a zatem <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode"><span class="id" title="var">I</span></span> to certyfikat na <span class="inlinecode"><span class="id" title="var">False</span></span>, ale znów - fałszu nie da
+    się udowodnić!
+
+<div class="paragraph"> </div>
+
+    Ponieważ w obu przypadkach uzyskaliśmy sprzeczność, a <span class="inlinecode"><span class="id" title="var">LEM</span></span> nie
+    może być żadnej innej postaci, konkluzja jest oczywista: początkowe
+    założenie było błędne i certyfikat na prawo wyłączonego środka nie
+    istnieje. 
+<div class="paragraph"> </div>
+
+<a name="lab202"></a><h2 class="section">Konkluzja</h2>
+
+<div class="paragraph"> </div>
+
+ Silna normalizowalność jest jedną z kluczowych metateoretycznych
+    właściwości logik i języków programowania. Wynikają z niej nie
+    tylko inne metateoretyczne właściwości tradycyjnie uznawane za
+    ważniejsze, jak niesprzeczność, ale także bardziej ciekawostkowe,
+    jak niedowodliwość prawa wyłączonego środka.
+
+<div class="paragraph"> </div>
+
+    Nie przejmuj się, jeżeli nie do końca (albo wcale) rozumiesz
+    powyższe wywody (szczególnie preliminaria) lub dowody. Ich
+    rozumienie nie jest niezbędne do skutecznego dowodzenia ani
+    programowania. Ba! Wydaje mi się, że jest całkiem na odwrót:
+    żeby zrozumieć je na intuicyjnym poziomie, potrzeba sporo
+    praktycznego doświadczenia w programowaniu i dowodzeniu.
+    Jeżeli go nabędziesz, powyższe wywody i dowody nagle staną
+    się łatwe, miłe i przyjemne (i puszyste i mięciutkie!).
+    Wróć do nich za jakiś, żeby się o tym przekonać. 
 </div>
 <div class="code">
 </div>
