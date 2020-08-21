@@ -5,11 +5,27 @@
 
 (** * Enumeracje (TODO) *)
 
+(* begin hide *)
+(*
+TODO 1: przykładowe typy: dni tygodnia, miesiące, pory roku, strony świata
+TODO 2: opisać opcje za pomocą analogii do "która godzina", jak w
+TODO 2: https://www.cs.cmu.edu/~15150/previous-semesters/2012-spring/resources/lectures/09.pdf
+TODO 3: boole pozwalają patrzeć, opcje pozwalają widzieć
+*)
+(* end hide *)
+
 (** * Enumeracje z argumentami (TODO) *)
 
 (** * Parametryzowane enumeracje (TODO) *)
 
 (** * Indeksowane enumeracje (TODO) *)
+
+(* begin hide *)
+(*
+TODO: Maszyny stanowe i type-driven design jako ćwiczenia
+TODO: do (indeksowanych) enumeracji.
+*)
+(* end hide *)
 
 (** * Rekordy (TODO) *)
 

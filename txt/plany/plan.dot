@@ -9,7 +9,11 @@ digraph
   TeoriaTypów       [label = "Teoria Typów", color = yellow]
 
   EnumRec           [label = "Enumeracje i rekordy", color = green]
+  
   Moduły            [label = "Moduły", color = red]
+  Styl              [label = "Styl", color = red]
+  Bazowe            [label = "Typy bazowe", color = red]
+  Numerki           [label = "Analiza numeryczna", color = red]
 
   Indukcja          [label = "Indukcja", color = green]
   Indukcja2         [label = "Zaawansowana indukcja", color = yellow]
@@ -34,21 +38,21 @@ digraph
   Złożoność         [label = "Złożoność", color = green]
   Algorytmy         [label = "Algorytmy", color = red]
 
+  Reflekcja1        [label = "Reflekcja małoskalowa", color = red]
   Taktyki           [label = "Spis taktyk", color = green]
   Ltac              [label = "Ltac", color = green]
-  Reflekcja         [label = "Reflekcja", color = red]
+  Reflekcja2        [label = "Reflekcja dużoskalowa", color = red]
 
 
 
   Wstęp             -> Logika
 
   Logika            -> TeoriaTypów
-  
   TeoriaTypów       -> EnumRec
 
   EnumRec           -> Indukcja, Koindukcja, Moduły
-  Indukcja          -> Zippery, Uniwersa, Indukcja2, /*Koindukcja,*/ Ścieżki, Złożoność, Reflekcja
-  Koindukcja        -> Zippery, Uniwersa, Ścieżki /*CoNat, Stream, CoList, InfTree,*/
+  Indukcja          -> Zippery, Uniwersa, Indukcja2, Ścieżki, Złożoność, Reflekcja1
+  Koindukcja        -> Zippery, Uniwersa, Ścieżki
 
   Ścieżki           -> Funkcje, Relacje
   Funkcje           -> Porządki, Algebra, Topologia
@@ -58,10 +62,13 @@ digraph
   Porządki          -> Kategorie
   Topologia         -> Kategorie
 
+  Reflekcja1        -> Reflekcja2
   Taktyki           -> Ltac
-  Ltac              -> Reflekcja
+  Ltac              -> Reflekcja2
 
-  Kontynuacje       -> Efekty
+  Efekty            -> Kontynuacje
 
   Złożoność         -> Algorytmy
+
+  Bazowe            -> Numerki
 }

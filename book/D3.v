@@ -290,6 +290,14 @@ Proof. solve_bool. Qed.
 
 End boolean_functions.
 
+(** * Różnice między [bool], [Prop] i [SProp] *)
+
+(* begin hide *)
+(*
+TODO: Tutaj ślepota boolowska jak na blogu Harpera
+*)
+(* end hide *)
+
 (** * Rozstrzygalność *)
 
 Lemma excluded_middle :
@@ -507,7 +515,16 @@ Inductive NatSpec (P : nat -> Prop) : nat -> Prop :=
 
 (* end hide *)
 
-(** * Reflekcja w małej skali, czyli jak odbijać żeby się nie zmęczyć (TODO) *)
+(** * Ślepota boolowska (TODO) *)
+
+(* begin hide *)
+(*
+TODO: dobry przykład do boolean blindness:
+TODO: https://en.wikipedia.org/wiki/Mars_Climate_Orbiter#Cause_of_failure
+*)
+(* end hide *)
+
+(** * Reflekcja w małej skali (TODO) *)
 
 (* begin hide *)
 
@@ -545,4 +562,4 @@ Compute wut.
 
 (* end hide *)
 
-(** * Poradnik hodowcy, czyli jak nie rozmnażać definicji (TODO) *)
+(** ** Poradnik hodowcy, czyli jak nie rozmnażać definicji (TODO) *)

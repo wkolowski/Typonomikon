@@ -1,5 +1,15 @@
 (** * D2: Rekursja i indukcja *)
 
+(* begin hide *)
+(*
+TODO: Rekursja zagnieżdżona, zarówno w sensie zagnieżdżonych wywołań
+TODO: rekurencyjnych, jak i dopasowania wyniku wywołania rekurencyjnego
+TODO: rekursja prymitywna
+TODO: rekursja wyższego rzędu (częściowo zaaplikowane wywołania rekurencyjne)
+TODO: rekursja korekursjowa
+*)
+(* end hide *)
+
 (** W poprzednim rozdziale dość dogłębnie zapoznaliśmy się z mechanizmem
     definiowania induktywnych typów i rodzin typów. Nauczyliśmy się też
     definiować funkcje operujące na ich elementach za pomocą dopasowania

@@ -2,17 +2,19 @@
 
 (* begin hide *)
 (*
-TODO: Osąd `x : A` możemy czytać jako "x jest typu A", zaś konkretnie
-TODO: `x : nat` jako "x jest liczbą naturalną".
-TODO: Zrobić więcej ściąg/zadań z czytania różnych rzeczy.
-TODO: powiązanie reguł wprowadzania/eliminacji/obliczania/unikalności
-TODO: z równoważnościami, czyli w sumie Harmonia.
-TODO: A równoważności to nic innego jak konstrukcje uniwersalne.
-TODO: Podkreślić gdzieś mocniej, że reguła indukcji mówi,
-TODO: że nie ma nic poza tym, co można zrobić konstruktorami.
-TODO: Intuicja dla reguł unikalności: dzida składa się z przeddzidzia
-TODO: dzidy, śróddzidzia dzidy i zadzidzia dzidy.
-TODO: Wprowadzić pojęcie "motyw eliminacji" i częściej używać.
+TODO 1: Osąd `x : A` możemy czytać jako "x jest typu A", zaś konkretnie
+TODO 1: `x : nat` jako "x jest liczbą naturalną".
+TODO 2: Zrobić więcej ściąg/zadań z czytania różnych rzeczy.
+TODO 3: powiązanie reguł wprowadzania/eliminacji/obliczania/unikalności
+TODO 3: z równoważnościami, czyli w sumie Harmonia.
+TODO 3: A równoważności to nic innego jak konstrukcje uniwersalne.
+TODO 4: Podkreślić gdzieś mocniej, że reguła indukcji mówi,
+TODO 4: że nie ma nic poza tym, co można zrobić konstruktorami.
+TODO 5: Intuicja dla reguł unikalności: dzida składa się z przeddzidzia
+TODO 5: dzidy, śróddzidzia dzidy i zadzidzia dzidy.
+TODO 6: Wprowadzić pojęcie "motyw eliminacji" i częściej używać.
+TODO 7: Podkreślić związki teorii typów z rzeczywistością przez
+TODO 7: podkreślenie kwestii silnej normalizacji.
 *)
 (* end hide *)
 

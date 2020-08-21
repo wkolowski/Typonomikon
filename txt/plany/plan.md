@@ -128,7 +128,6 @@ Zadania:
 - Rekordy, czyli produkty nazwane
   - Rodzaje rekordów: induktywne, koinduktywne, primitive projections
 
-
 ### D1: Typy induktywne
 - Konstruktory rekurencyjne.
   - Kontent: rekursja. Przykładowe typy: nat
@@ -200,6 +199,22 @@ Zadania:
 - Generowanie różnych rodzajów (pod)struktur typu prefiksy, podciągi etc.
 - Wszystko o permutacjach
 
+### D7 minus epsilon: Logika boolowska, rozstrzygalność, ślepota boolowska, reflekcja małoskalowa, evidence-based programming i być może jeszcze jakieś inne tego typu czary
+- Tabelki prawdy (definicje) + twierdzenia jako powtórka logiki klasycznej.
+- Różnice między `bool`, `Prop` i `SProp`
+- Aksjomaty dotyczące sortu `Prop` i jak obejść się bez nich.
+- Rozstrzygalność:
+  - Co to.
+  - Techniczne aspekty.
+  - Kiedy nie rozstrzygać (protip: kiedy można niskim kosztem rozstrzygnąć coś bardziej informatywnego).
+  - Reflect, BoolSpec, CompareSpec etc.
+  - Uwaga: w sumie to taki typ sumor jest dla opcji czymś analogicznym jak BoolSpec dla typu bool.
+- Boolean blindness
+- Reflekcja małoskalowa
+- Napisać podrozdział poświęcony temu, czy definiować predykaty (i rodziny typów) przez rekursję czy przez indukcję. Użyć jako przykładu takich predykatów jak `elem`, `Exists`, `Forall`, `Exactly`. Jak to się ma do rozstrzygalności
+- Evidence-based programming, czyli silne specyfikacje.
+- Metoda encode-decode, początkowo jako narzędzie do rozwiązywania problemów, których normalni ludzie nie mają i nigdy mieć nie będą. Potem: izomorfizmy typów. PYTANIE: czy metoda encode-decode przypadkiem się nie zawieruszyła?
+
 ### D7: Ogólne plany na rozdziały X:
 - boolowska logika ternarna, być może jako tour de force dla automatyzacji? albo test kreatywności
 - typ option (być może przy okazji funktory?) Stąd zadania dla `head`, `last`, `tail` i `init`
@@ -229,7 +244,6 @@ Zadania:
 - F5: kodrzewa
 
 ### G: Sorty, uniwersa (kodów) i generyczność
-- Relewancja: `Prop`, `SProp`
 - Programowanie generyczne za pomocą uniwersów
 - Jedyny pierścień wyższego rzędu, czyli W-typy i M-typy
 - Jedyny pierścień pierwszego rzędu, czyli uniwersa kodów na typy induktywne i koinduktywne
@@ -375,17 +389,3 @@ L1: Monady i efekty jako sposoby bycia
 - Rozstrzygalność i typ `reflect`
 - Rozstrzygalna równość
 - Silne specyfikacje
-
-### O: Nowy rozdział o logice boolowskiej
-- Tabelki prawdy (definicje) + twierdzenia jako powtórka logiki klasycznej.
-- Rozstrzygalność:
-  - Co to.
-  - Techniczne aspekty.
-  - Kiedy nie rozstrzygać (protip: kiedy można niskim kosztem rozstrzygnąć coś bardziej informatywnego).
-  - Reflect, BoolSpec, CompareSpec etc.
-  - Uwaga: w sumie to taki typ sumor jest dla opcji czymś analogicznym jak BoolSpec dla typu bool.
-- Reflekcja małoskalowa.
-- Napisać podrozdział poświęcony temu, czy definiować predykaty (i rodziny typów) przez rekursję czy przez indukcję. Użyć jako przykładu takich predykatów jak `elem`, `Exists`, `Forall`, `Exactly`. Jak to się ma do rozstrzygalności.
-- Aksjomaty dotyczące sortu `Prop` i jak obejść się bez nich.
-- Metoda encode-decode, początkowo jako narzędzie do rozwiązywania problemów, których normalni ludzie nie mają i nigdy mieć nie będą. Potem: izomorfizmy typów.
-- Sort `SProp`.

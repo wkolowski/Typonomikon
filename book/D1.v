@@ -1,5 +1,15 @@
 (** * D1: Indukcja i rekursja *)
 
+(* begin hide *)
+(*
+TODO 1: Kwestia non-uniform parameters i jak je zasymulować
+TODO 1: przy użyciu indeksów.
+TODO 2: Typy induktywne z parametrami + równość = rodziny indeksowane.
+TODO 3: Nie trzeba specjalizować hipotezy, żeby przepisać.
+TODO 4: Opisać dokładniej definiowanie przez dowód.
+*)
+(* end hide *)
+
 (** W poprzednim rozdziale dowiedzieliśmy się już co nieco o typach, a
     także spotkaliśmy kilka z nich oraz kilka sposobów tworzenia nowych
     typów ze starych (takich jak np. koniunkcja; pamiętaj, że zdania są
@@ -7257,6 +7267,25 @@ Qed.
 (** No i bum. Jak widać, pozytywne typy induktywne prowadzą do sprzeczności,
     ale nie ma to z nimi wiele wspólnego, za to ma wiele wspólnego z sortem
     [Prop] i jego impredykatywnością. *)
+
+(** * "Paradoksy" indukcji (TODO) *)
+
+(* begin hide *)
+(*
+TODO 1: paradoks sterty.
+TODO 2: paradoks "wszystkie konie sa tego samego koloru"
+TODO 3: paradoks najmniejszej interesującej liczby
+*)
+(* end hide *)
+
+(** * Indukcja matematyczna a indukcja w nauce (TODO) *)
+
+(* begin hide *)
+(*
+TODO: Dekonfuzja: indukcja matematyczna to rozumowanie dedukcyjne,
+TODO: a nie indukcyjne.
+*)
+(* end hide *)
 
 (** * Podsumowanie *)
 

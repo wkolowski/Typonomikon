@@ -16,6 +16,9 @@ digraph
   "indukcja-indukcja-rekursja"
 		
 
+  // Parametry nie mają sensu, jeżeli nie możemy użyć
+  // ich jako argumentów jakiegoś konstruktora (ale
+  // uwaga: typy fantomowe).
   enumeracje			->
   {
     "argumenty nieindukcyjne"

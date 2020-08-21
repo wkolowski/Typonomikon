@@ -1,3 +1,5 @@
+(** * O2: Podstawy analizy numerycznej *)
+
 (** Podwaliny pod analizę numeryczną w Coqu, wzięte z
     https://www.brianheinold.net/numerical/
     An_Intuitive_Guide_to_Numerical_Methods_Heinold.pdf

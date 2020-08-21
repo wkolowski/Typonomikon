@@ -2254,6 +2254,12 @@ Qed.
 
 (** * Kodowanie impredykatywne (TODO) *)
 
+(* begin hide *)
+(*
+TODO: Tautologie na kodowaniach impredykatywnych jako ćwiczenia z funkcji anonimowych
+*)
+(* end hide *)
+
 Definition iand (P Q : Prop) : Prop :=
   forall C : Prop, (P -> Q -> C) -> C.
 

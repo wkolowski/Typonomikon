@@ -38,18 +38,17 @@ Definition unique {A : Type} (P : A -> Prop) : Prop :=
 
 (** * α-konwersja i inne rodzaje równości (TODO) *)
 
-(* begin hide *)
-
-(** Tutaj link do ściągi z poziomami równości i opisać jak to się ma
-    do kwestii składniowych i semantycznych (empiryczna obserwacja:
-    studenci pierwszego roku nie są zbyt płynni w posługiwaniu się
-    składnią _in abstracto_).
-
-    TODO: pomysł na jeszcze jeden podrozdział, semantyka vs składnia *)
-
-(* end hide *)
-
 (** https://github.com/wkolowski/CoqBookPL/blob/master/txt/równość.md *)
+
+(* begin hide *)
+(*
+TODO 1: Opisać związki rodzajów równości ze składnią i semantyką
+        (empiryczna obserwacja: studenci pierwszego roku nie są
+        zbyt płynni w posługiwaniu się składnią _in abstracto_).
+TODO 2: Pomysł na jeszcze jeden podrozdział, semantyka vs składnia
+TODO 3: Użyć nominalizmów do wytłumaczenia wiązania nazw zmiennych.
+*)
+(* end hide *)
 
 (** * Predykatywizm (TODO) *)
 

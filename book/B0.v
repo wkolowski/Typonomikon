@@ -1,5 +1,13 @@
 (** * B0: Stary rozdział o logice *)
 
+(* begin hide *)
+(*
+TODO 1: Napisać bardziej wprost o deklarowaniu hipotez.
+TODO 2: opisać rzeczy do strukturyzowania dowodów, np. `{}` albo bullet
+TODO 2: pointy `*`, `+` i `-`
+*)
+(* end hide *)
+
 (** Naszą przygodę z Coqiem rozpoczniemy od skoku na głęboką wodę,
     czyli nauki dowodzenia twierdzeń w logice konstruktywnej przy
     pomocy taktyk. Powiemy sobie także co nieco o automatyzacji i
