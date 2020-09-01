@@ -7,6 +7,11 @@ TODO 1: przy użyciu indeksów.
 TODO 2: Typy induktywne z parametrami + równość = rodziny indeksowane.
 TODO 3: Nie trzeba specjalizować hipotezy, żeby przepisać.
 TODO 4: Opisać dokładniej definiowanie przez dowód.
+TODO 5: Opisać alternatywne składnie na typy induktywne (czyli te, w
+TODO 5: których nie trzeba aż tak dużo pisać i są inne słowa kluczowe,
+TODO 5: jak np. [Variant]). Jest to mądry sposób rozróżniania poziomów
+TODO 5: zaawansowania typów induktywnych (np. rodzin induktywnych nie
+TODO 5: można definiować bez podawania indeksów w przeciwdziedzinie).
 *)
 (* end hide *)
 

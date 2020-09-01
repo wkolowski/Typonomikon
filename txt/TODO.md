@@ -1,8 +1,6 @@
 # TODO
 
 ## Indukcja - podstawy
-0. Opisać alternatywne składnie na typy induktywne (czyli te, w których nie trzeba aż tak dużo pisać).
-1. Powyższe jest mądrym heurystycznym sposobem rozróżniania różnych poziomów zaawansowania typów induktywnych (rodzin induktywnych nie można definiować bez podawania indeksów w przeciwdziedzinie).
 2. W nowym ujęciu podrozdział o regułach indukcyjnych ma być ściśle powiązany z wprowadzeniem rekursji strukturalnej (tzn. nie-prymitywnej).
 3. Argumenty indukcyjne pierwszego i wyższego rzędu.
 5. Alternatywna nazwa na injektywność konstruktorów to niekonfuzja (`NoConfusion`), zaś nazwa na nierówności `t <> c t` to acykliczność.
@@ -38,6 +36,7 @@
   - Wobec tego reguły teorii typów to nic innego jak reifikacja różnych pojęć.
   - Uniwersum jako reifikacja pojęcia typu.
   - I tak dalej.
+3. Powiązane z powyższym: iks jest first-class jeżeli można sformować typ wszystkich iksów (albo jego przybliżenie, jak w przypadku uniwersum typów `Type`).
 
 ## Długofalowe
 1. Użyć jsCoq do zrobienia interaktywnej książki, która wyglądałaby jakoś tak: https://x80.org/rhino-coq/v8.10/

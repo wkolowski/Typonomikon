@@ -436,14 +436,15 @@ Compute depthWalk t1'.
     korzystając ze świętego prawa pisarza matematycznego, odpowiedź
     na to pytanie pozostawiam czytelnikowi jako ćwiczenie. *)
 
-(** * Reszta rzeczy (TODO) *)
+(** * Defunkcjonalizacja (TODO) *)
 
 (** ** Defunkcjonalizacja filtrowania (TODO) *)
 
 (** Bardzo insajtowy filmik (i transkrypcjo-artykuł) o defunkcjonalizacji
     (i refunkcjonalizacji też):
 
-    http://www.pathsensitive.com/2019/07/the-best-refactoring-youve-never-heard.html
+http://www.pathsensitive.com/2019/07/the-best-refactoring-youve-never-heard.html
+https://blog.sigplan.org/2019/12/30/defunctionalization-everybody-does-it-nobody-talks-about-it/
 
     Ok, o co chodzi? *)
 
@@ -549,7 +550,7 @@ Proof.
     intros. rewrite IHn'. cbn. reflexivity.
 Qed.
 
-(** ** CPS (TODO) *)
+(** * CPS (TODO) *)
 
 Fixpoint plus (n m : nat) : nat :=
 match n with
@@ -598,6 +599,12 @@ Proof.
   intro. functional induction fib n; intros;
     try rewrite fibCPS_eq, IHn0, IHn1; reflexivity.
 Qed.
+
+(** * CPS i defunkcjonalizacja w służbie rekursji ogonowej (TODO) *)
+
+(** Tutaj coś w stylu "jak zaimplementować przejście po drzewie" samą
+    iteracją, bez rekursji, ale za to ze stosem (który jest niczym innym
+    jak zdefunkcjonalizowaną kontynuacją). *)
 
 (** * Kodowania Churcha (TODO) *)
 

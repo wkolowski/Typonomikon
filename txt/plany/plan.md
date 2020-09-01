@@ -13,8 +13,8 @@
 ### B1: Konstruktywny rachunek zdań.
 - Spójniki:
   - Implikacja:
-    - rozumowanie "od tyłu" - apply
-    - rozumowanie "do przodu" - specialize
+    - rozumowanie "od tyłu" - `apply`
+    - rozumowanie "do przodu" - `specialize`
     - rozumowanie od tyłu jest lepsze, logika jest bezmyślna
   - Dysjunkcja
   - Koniunkcja
@@ -30,7 +30,7 @@
 - Ściąga
   
 ### B2: Konstruktywny rachunek kwantyfikatorów.
-- Typy i ich elementy (zestawić ze sobą P : Prop, A : Type, p : P, x : A)
+- Typy i ich elementy (zestawić ze sobą `P : Prop`, `A : Type`, `p : P`, `x : A`)
 - Predykaty i relacje
 - Równość
 - Kwantyfikatory:
@@ -118,11 +118,11 @@ Zadania:
     - Kontent: wiązanie argumentów we wzorcach
     - Ćwiczenia: typ-driven design, czyli jakieś głupoty w stylu "wymodeluj typ reprezentujący korporancje"
   - Parametry
-    - Przykładowe typy: prod, sum.
+    - Przykładowe typy: `prod`, `sum`.
     - Kontent: polimorfizm i parametryczność, a raczej jej brak
-    - Ćwiczenia: typ option.
+    - Ćwiczenia: typ `option`.
   - Enumeracje indeksowane
-    - Przykładowe typy: BoolSpec
+    - Przykładowe typy: `BoolSpec`
     - Kontent: jak się zachowuje pattern-matching przy indeksach (źle)
     - Ćwiczenia: maszyny stanowe!
 - Rekordy, czyli produkty nazwane
@@ -130,7 +130,7 @@ Zadania:
 
 ### D1: Typy induktywne
 - Konstruktory rekurencyjne.
-  - Kontent: rekursja. Przykładowe typy: nat
+  - Kontent: rekursja. Przykładowe typy: `nat`
   - Ćwiczenia: arytmetyka Peano.
 - Indukcja wzajemna.
 - Indeksy, czyli predykaty i relacje
@@ -140,7 +140,7 @@ Zadania:
 - Indukcja-indukcja-rekursja.
 - Zadania z definiowania induktywnych typów i predykatów
 - W międzyczasie: omówić ścisłą pozytywność
-- Dodać podrozdział o typach induktywnych z nieskończoną ilością argumentów indukcyjnych (A -> T)
+- Dodać podrozdział o typach induktywnych z nieskończoną ilością argumentów indukcyjnych (`A -> T`)
 
 ### D2: Definiowanie funkcji
 - Rekursja:
