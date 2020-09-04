@@ -1,24 +1,29 @@
-(* [nat] to jedyne normalne liczby, reszta to lipa.
-    ~ parafraza z zapomniałem nazwiska, ale był Niemcem (albo Austryjakiem)
-*)
-(*
+(** * P: Liczby [TODO] *)
+
+(** * Liczby naturalne *)
+
+(** ** Unarne *)
+
+(** [nat] to jedyne normalne liczby, reszta to lipa.
+    ~ parafraza z zapomniałem nazwiska, ale był Niemcem
+    (albo Austryjakiem) *)
+
+Print nat.
+(* ===>
 Inductive nat : Type :=
     | O : nat
     | S : nat -> nat.
 *)
 
-(** Można je też zrobić inaczej, np. jako [list bool], ale wtedy
-    reprezentacja nie jest unikalna. *)
-
-(* Jak zrobić inne rodzaje liczb? *)
-
-(** Dodatnie liczby binarne.
-    H to 1, O k to 2k, I k to 2k + 1. *)
+(** ** Dodatnie liczby naturalne, binarnie (TODO) *)
 
 Inductive BinPos : Set :=
     | H : BinPos
     | O : BinPos -> BinPos
     | I : BinPos -> BinPos.
+
+(** [H] to binarne 1, [O k] to binarnie 2k, zaś [I k] to binarnie
+    2k + 1. *)
 
 Fixpoint to_nat (n : BinPos) : nat :=
 match n with
@@ -29,75 +34,185 @@ end.
 
 Compute to_nat (O (O (O H))).
 
-(** Mając jakieś liczby dodatnie, możemy zrobić liczby całkowite za pomocą
-    rozbicia na liczby ujemne, zero i dodatnie. *)
+(** Liczby binarne można też zrobić inaczej, np. jako [list bool], ale
+    wtedy reprezentacja nie jest unikalna. *)
+
+(** * Liczby całkowite *)
+
+(** ** Unarne *)
+
+(** Jeżeli mamy liczby naturalne, to możemy zrobić liczby całkowite. *)
+
+Module Z_unary.
+
+Inductive Z : Type :=
+    | Z0 : Z
+    | Zpos : nat -> Z
+    | Zneg : nat -> Z.
+
+End Z_unary.
+
+(** ** Binarne *)
+
+(** Mając dodatnie liczby binarne, możemy zrobić liczby całkowite za
+    pomocą rozbicia na liczby ujemne, zero i dodatnie. *)
+
+Module Z_binary.
+
 Inductive Z : Set :=
     | Z0 : Z
     | Zpos : BinPos -> Z
     | Zneg : BinPos -> Z.
 
-(** Inaczej liczby całkowite można zrobić za pomocą liczb naturalnych, o
-    ile mamy wyższe typy induktywne. *)
+End Z_binary.
 
-(*
-Inductive Z : Type :=
-    | negZ : nat -> Z
-    | posZ : nat -> Z
-    | coh : negZ 0 = posZ 0.
-*)
+(** ** Klasyczne *)
 
-(** Najbardziej ludzka HITowa definicja wygląda tak: *)
+Module Z_classic.
 
-(*
-Inductive Z : Type :=
+Record Z : Type :=
+{
+    L : nat;
+    R : nat;
+}.
+
+Definition Z_eq (k l : Z) : Prop :=
+  L k + R l = R k + L l.
+
+End Z_classic.
+
+(** ** HITowe *)
+
+(** Jeżeli mamy wyższe typy induktywne, to można też spróbować definicji
+    dość podobnej do [nat]. *)
+
+Module Z_HIT.
+
+Fail Inductive Z : Type :=
     | zero : Z
     | succ : Z -> Z
     | pred : Z -> Z
     | SP : forall z : Z, succ (pred z) = z
     | PS : forall z : Z, pred (succ z) = z
     | Z_isSet : forall (x y : Z) (p q : x = y), p = q.
-*)
 
-(** Liczby wymierne można zrobić naiwnie albo sprytnie, ale oba pomysły
-    są dość głupie. *)
+End Z_HIT.
 
-(* Bardzo naiwnie (będzie można ulepszyć, jak bozia da sort SProp). *)
-Record Rat1 : Type :=
+(** * Liczby wymierne (TODO) *)
+
+(** ** Klasycznie *)
+
+(** Liczby wymierne można zrobić naiwnie albo sprytnie (albo zastosować
+    jakiś inny wariant), ale oba pomysły są dość głupie, bo w obu
+    przypadkach potrzebne są setoidy. *)
+
+Require Import ZArith.
+
+Module Q_naive.
+
+(** Bardzo naiwnie. *)
+
+Record Q : Type :=
 {
-    numerator1 : Z;
-    denominator1 : nat;
-    cond1 : denominator1 <> 0;
+    numerator : Z;
+    denominator : nat;
+    _ : denominator <> 0;
 }.
 
-(* Sprytniej: mianownik interpretujemy jako liczbę dodatnią. *)
-Record Rat2 : Type :=
+(** Warunek niezerowości można ulepszyć za pomocą sortu [SProp]. *)
+
+Fail Definition Q_eq (q1 q2 : Q) : Prop :=
+  numerator q1 * denominator q2 =
+  numerator q2 * denominator q1.
+
+End Q_naive.
+
+Module Q_less_naive.
+
+(** Sprytniej: mianownik interpretujemy jako liczbę dodatnią. *)
+
+Record Q : Type :=
 {
-    numerator2 : Z;
-    denominator2 : nat;
+    numerator : Z;
+    denominator : nat;
 }.
 
-(** Oczywiście w obu przypadkach potrzebne są setoidy. *)
+Fail Definition Q_eq (q1 q2 : Q) : Prop :=
+  numerator q1 * S (denominator q2) =
+  numerator q2 * S (denominator q1).
 
-(** HITowe, bez setoidów, w Agdowej notacji: *)
+End Q_less_naive.
 
-(*
-Inductive Q : Type :=
-    | numden : Z -> Z -> Q
+(** * HITowo *)
+
+Module Q_HIT.
+
+Fail Inductive Q : Type :=
+    | numden : Z -> nat -> Q
     | path :
         forall (z1 z2 : Z) (n1 n2 : N),
           z1 * (S n2) = z2 * (S n1) -> numden z1 n1 = numden z2 n2.
+
+End Q_HIT.
+
+(** ** Induktywnie *)
+
+(** Coś jak ułamki łańcuchowe:
+    Yves Bertot,
+    A simple canonical representation of rational numbers,
+    https://www.researchgate.net/publication/220367791_Simple_canonical_representation_of_rational_numbers
 *)
 
-(** Najsprytniej: ułamki łańcuchowe. Kodu brak, bo trudne. *)
+Module Q_Ind.
 
-(** Na końcu jest jeszcze trochę wesołych rzeczy:
-    - liczby porządkowe (indukcja-indukcja-rekursja wita)
-    - surreals (znów indukcja-indukcja) *)
+Inductive Q : Type :=
+    | One : Q
+    | N : Q -> Q
+    | D : Q -> Q.
+
+End Q_Ind.
+
+(** * Liczby rzeczywiste *)
+
+(** Zbyt skomplikowane jak na jeden podrozdział - ludzie piszą o tym
+    całe traktaty. *)
+
+(** * Liczby porządkowe *)
+
+(** ** Jakieś takie proste *)
+
+Module Ord_simple.
 
 Inductive Ord : Type :=
     | ZZ : Ord
     | SS : Ord -> Ord
     | lim : (nat -> Ord) -> Ord.
+
+End Ord_simple.
+
+(** ** Skomplikowańsze *)
+
+(** Indukcja-indukcja-rekursja wita nas:
+    https://arxiv.org/pdf/1904.10759.pdf *)
+
+Module Ord_IIR.
+
+End Ord_IIR.
+
+(** * Liczby nadrzeczywiste *)
+
+(** Znów indukcja-indukcja wita. Patrz: HoTTBook, rozdział 11.6. *)
+
+Module Sur.
+
+End Sur.
+
+(* begin hide *)
+
+(*
+TODO: uprzątnąć śmieci w postaci modułu [BinNat], któr zawiera jakąś
+TODO kulawą implementację binarnych liczb naturalnych.
+*)
 
 Module BinNat.
 
@@ -226,3 +341,4 @@ Compute bin_to_nat [I; O; I; O].
 Compute bin_to_nat [I; O; O; O; I; I; I; I; O; I; I; O; I; I; I].
 
 End BinNat.
+(* end hide *)

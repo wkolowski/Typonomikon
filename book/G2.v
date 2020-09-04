@@ -364,8 +364,8 @@ End W.
 
 (** * Zippery dla list - chodzenie po linie (TODO) *)
 
-(** * Szukanie dziury w typie, czyli różniczkowanie *)
+(** * Szukanie dziury w typie, czyli różniczkowanie (TODO) *)
 
-(** * Zippery dla typów induktywnych *)
+(** * Zippery dla typów induktywnych (TODO) *)
 
-(** * Zippery dla typów koinduktywnych *)
+(** * Zippery dla typów koinduktywnych (TODO) *)

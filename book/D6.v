@@ -1,14 +1,49 @@
 (** * D6: Więcej list [TODO] *)
 
-Require Import D5.
-
 (* begin hide *)
-(** TODO:
-    - Dokończyć prace nad resztą rzeczy z folderu List/.
-    - opisać encode-decode dla równości i nierówności na typach induktywnych.
-    - poszukać ogólnego pojęcia "różnicy" typów.
+(*
+TODO 1: przenieś [intersperse] na sam koniec funkcji i dorzuć jeszcze
+TODO 1: kilka dziwnych (z niestandardowym kształtem indukcji)
+TODO 2: opisz niestandardowe reguły indukcyjne dla list (najlepiej przed
+TODO 2: funkcją [intersperse])
+TODO 3: opisz foldy ([fold] i [foldl]), łączac je z regułami indukcji
+TODO 4: opisz sumy prefiksowe (`scanr` i `scanl`)
+TODO 5: zrób osobno: funkcje na listach dla typów mających jakieś
+TODO 6: specjalne rzeczy (np. rozstrzygalną równość)
+TODO 7: ćwiczenia z przetwarzania danych, typu znajdź wszystkie liczby
+TODO 7: nieparzyste większe od x, których suma cyfr to dupa konia.
+TODO 8: niektóre niedokończone funkcje dla list:
+  - isZero (przenieść do rozdziału o arytmetyce)
+  - isEmpty
+  - snoc
+  - bind
+  - iterate (od removeFirst wzwyż) i iter (join, bind)
+  - insert (join, bind, iterate, init)
+  - remove
+  - take (join, bind, last_take, take_remove),
+  - drop (join, bind, remove)
+  - removeFirst (removeFirst_zip)
+  - findIndex (init, tail)
+  - filter (tail, init)
+  - findIndices (join, bind, takeWhile, dropWhile)
+  - pmap (iterate, nth, last, tail i init, take i drop, takedrop, zip,
+    unzip, zipWith, unzipWith, removeFirst i removeLast, findIndex,
+    findIndices)
+  - intersperse (init, insert, remove, drop, zip, zipWith, unzip)
+  - groupBy
+  - Rep (join, nth)
+  - AtLeast (nth, head, last, init, tail)
+  - Exactly (join, nth, head, tail, init, last, zip)
+  - AtMost
+  - popracować nad `findIndices` (i to w dwóch wersjach - być może jest to
+    dobry pretekst dla wprowadzenia stylu programowania z akumulatorem?)
+TODO 9: Dokończyć prace nad resztą rzeczy z folderu List/.
+TODO 10: opisać encode-decode dla (nie)równości na typach induktywnych.
+TODO 11: poszukać ogólnego pojęcia "różnicy" typów.
 *)
 (* end hide *)
+
+Require Import D5.
 
 (** * Predykaty i relacje na listach - znowu (TODO) *)
 
@@ -1229,10 +1264,11 @@ Proof.
 Abort.
 (* end hide *)
 
-(* nieprawda *) Lemma subsets_spec :
+(* begin hide *)
+(* TODO: subsets_spec jest fałszywe *)
+Lemma subsets_spec :
   forall {A : Type} (l1 l2 : list A),
     Incl' l1 l2 -> elem l1 (subsets l2).
-(* begin hide *)
 Proof.
   induction 1.
     induction l as [| h t]; cbn.

@@ -1,3 +1,5 @@
+(* TODO: rozszerzyć metodę Bove-Capretta na korekursję *)
+
 CoInductive Stream (A : Type) : Type :=
 {
     hd : A;
@@ -45,7 +47,6 @@ CoInductive cod {C : Type} (f : C -> C -> C) (s : Stream C) : Type :=
 {
     cod' :
       {h : C & {t : Stream C & (s = cons h t)%type * cod f t}}%type +
-      
 }.
 *)
 

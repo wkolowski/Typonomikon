@@ -25,7 +25,7 @@ coqdoc book/*v --html -d docs                             \
        --no-lib-name --lib-subtitles                      \
        --parse-comments                                   \
        --no-index                                         \
-       --toc --toc-depth 2
+       --toc --toc-depth 1
 
 # Dodaj style CSS, pliki .js potrzebne nie pamiętam do czego, oraz okładkę.
 cp assets/*css assets/*js assets/*jpg assets/index.html docs/

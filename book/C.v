@@ -15,6 +15,7 @@ TODO 5: dzidy, śróddzidzia dzidy i zadzidzia dzidy.
 TODO 6: Wprowadzić pojęcie "motyw eliminacji" i częściej używać.
 TODO 7: Podkreślić związki teorii typów z rzeczywistością przez
 TODO 7: podkreślenie kwestii silnej normalizacji.
+TODO 8: Opisać parametryczność tuż po opisaniu funkcji i [Type].
 *)
 (* end hide *)
 
@@ -1042,3 +1043,96 @@ Qed.
     Jeżeli go nabędziesz, powyższe wywody i dowody nagle staną
     się łatwe, miłe i przyjemne (i puszyste i mięciutkie!).
     Wróć do nich za jakiś, żeby się o tym przekonać. *)
+
+(** * Parametryczność *)
+
+(* begin hide *)
+
+(** TODO: Odkłamać kwestię i wyjaśnić polimorfizmu.
+    Najlepiej zrobić to za pomocą podziału na funkcje parametryczne
+    (czyli takie, które na wszystkich typach działają tak samo) oraz
+    ezoteryczną homoklasyczną magię, która wszystko to psuje. *)
+
+(** Niech [A B : Type]. Zadajmy sobie następujące pytanie: ile jest funkcji
+    typu [A -> B]? Żeby ułatwić sobie zadanie, ograniczmy się jedynie do
+    typów, które mają skończoną ilość elementów.
+
+    Nietrudno przekonać się, że ich ilość to |B|^|A|, gdzie ^ oznacza
+    potęgowanie, zaś |T| to ilość elementów typu [T] (ta notacja nie ma
+    nic wspólnego z Coqiem — zaadaptowałem ją z teorii zbiorów jedynie
+    na potrzeby tego podrozdziału).
+
+    Udowodnić ten fakt możesz (choć póki co nie w Coqu) posługując się
+    indukcją po ilości elementów typu [A]. Jeżeli [A] jest pusty, to
+    jest tylko jedna taka funkcja, o czym przekonałeś się już podczas
+    ćwiczeń w podrozdziale o typie [Empty_set]. *)
+
+(** **** Ćwiczenie *)
+
+(** Udowodnij (nieformalnie, na papierze), że w powyższym akapicie nie
+    okłamałem cię. *)
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj wszystkie możliwe funkcje typu [unit -> unit], [unit -> bool]
+    i [bool -> bool]. *)
+
+(** Postawmy sobie teraz trudniejsze pytanie: ile jest funkcji typu
+    [forall A : Type, A -> A]? W udzieleniu odpowiedzi pomoże nam
+    parametryczność — jedna z właściwości Coqowego polimorfizmu.
+
+    Stwierdzenie, że polimorfizm w Coqu jest parametryczny, oznacza, że
+    funkcja biorąca typ jako jeden z argumentów działa w taki sam sposób
+    niezależnie od tego, jaki typ przekażemy jej jako argument.
+
+    Konsekwencją tego jest, że funkcje polimorficzne nie wiedzą (i nie
+    mogą wiedzieć), na wartościach jakiego typu operują. Wobec tego
+    elementem typu [forall A : Type, A -> A] nie może być funkcja, która
+    np. dla typu [nat] stale zwraca [42], a dla innych typów po prostu
+    zwraca przekazany jej argument.
+
+    Stąd konkludujemy, że typ [forall A : Type, A -> A] ma tylko jeden
+    element, a mianowicie polimorficzną funkcję identycznościową. *)
+
+Definition id' : forall A : Type, A -> A :=
+  fun (A : Type) (x : A) => x.
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj wszystkie elementy następujących typów lub udowodnij, że
+    istnienie choć jednego elementu prowadzi do sprzeczności:
+    - [forall A : Type, A -> A -> A]
+    - [forall A : Type, A -> A -> A -> A]
+    - [forall A B : Type, A -> B]
+    - [forall A B : Type, A -> B -> A]
+    - [forall A B : Type, A -> B -> B]
+    - [forall A B : Type, A -> B -> A * B]
+    - [forall A B : Type, A -> B -> sum A B]
+    - [forall A B C : Type, A -> B -> C]
+    - [forall A : Type, option A -> A]
+    - [forall A : Type, list A -> A] *)
+
+Lemma no_such_fun :
+  (forall A B : Type, A -> B) -> False.
+Proof.
+  intros. exact (X nat False 42).
+Qed.
+
+Lemma no_such_fun_2 :
+  (forall A B C : Type, A -> B -> C) -> False.
+Proof.
+  intro H. apply (H True True); trivial.
+Qed.
+
+Lemma no_such_fun_3 :
+  (forall A : Type, option A -> A) -> False.
+Proof.
+  intro H. apply H. exact None.
+Qed.
+
+Lemma no_such_fun_4 :
+  (forall A : Type, list A -> A) -> False.
+Proof.
+  intro H. apply H. exact nil.
+Qed.
+(* end hide *)

@@ -152,54 +152,8 @@ Zadania:
   - dobrze ufundowana
 - metoda Bove-Capretta
 - metoda Bove-Capretta z indeksowaną indukcją-rekursją
-- Dziwniejsze:
-  - rekursja przez iterację
-  - rekursja wydmuszkowa (Coq'Art)
-  - teoria dziedzin (computation, CPDT)
-  - comp (CPDT)
-  - koindukcja (thunk, CPDT)
 
-### D4: Arytmetyka Peano
-
-### D5: Listy
-- ogólnie trzeba będzie zrobić gruntowny refaktoring list według planu zawartego w List_sig.v
-- opisz niestandardowe reguły indukcyjne dla list (najlepiej przed funkcją `intersperse`)
-- przenieś `intersperse` na sam koniec funkcji i dorzuć jeszcze kilka dziwnych (z niestandardowym kształtem indukcji)
-- opisz zwijanie i rozwijanie (`fold` i `foldl`)
-- opisz sumy prefiksowe (`scanr` i `scanl`)
-- zrób osobno: funkcje na listach dla typów mających jakieś specjalne rzeczy (np. rozstrzygalną równość)
-- Opisać relacje prefix/infix/suffix/interfix dla list jako jakotakie ćwiczenie
-- niedokończone funkcje (do niedawna oznaczone jako TODO):
-  - isZero (przenieść do rozdziału o arytmetyce)
-  - isEmpty
-  - snoc
-  - bind
-  - iterate (od removeFirst wzwyż) i iter (join, bind)
-  - insert (join, bind, iterate, init)
-  - remove
-  - take (join, bind, last_take, take_remove),
-  - drop (join, bind, remove)
-  - removeFirst (removeFirst_zip)
-  - findIndex (init, tail)
-  - filter (tail, init)
-  - findIndices (join, bind, takeWhile, dropWhile)
-  - pmap (iterate, nth, last, tail i init, take i drop, takedrop, zip, unzip, zipWith, unzipWith, removeFirst i removeLast, findIndex, findIndices)
-  - intersperse (init, insert, remove, drop, zip, zipWith, unzip)
-  - groupBy
-  - Rep (join, nth)
-  - AtLeast (nth, head, last, init, tail)
-  - Exactly (join, nth, head, tail, init, last, zip)
-  - AtMost
-  - popracować nad `findIndices` (i to w dwóch wersjach - być może jest to dobry pretekst dla wprowadzenia stylu programowania z akumulatorem?)
-  - Najnowsze: ćwiczenia z przetwarzania danych, typu "znajdź wszystkie liczby nieparzyste większe od x, których suma cyfr to dupa konia".
-
-### D6: Więcej list
-- Alternatywne definicje predykatów i relacji
-- Rozstrzyganie predykatów i relacji
-- Generowanie różnych rodzajów (pod)struktur typu prefiksy, podciągi etc.
-- Wszystko o permutacjach
-
-### D7 minus epsilon: Logika boolowska, rozstrzygalność, ślepota boolowska, reflekcja małoskalowa, evidence-based programming i być może jeszcze jakieś inne tego typu czary
+### D3: Logika boolowska, rozstrzygalność, ślepota boolowska, reflekcja małoskalowa, evidence-based programming i być może jeszcze jakieś inne tego typu czary
 - Tabelki prawdy (definicje) + twierdzenia jako powtórka logiki klasycznej.
 - Różnice między `bool`, `Prop` i `SProp`
 - Aksjomaty dotyczące sortu `Prop` i jak obejść się bez nich.
@@ -207,17 +161,28 @@ Zadania:
   - Co to.
   - Techniczne aspekty.
   - Kiedy nie rozstrzygać (protip: kiedy można niskim kosztem rozstrzygnąć coś bardziej informatywnego).
-  - Reflect, BoolSpec, CompareSpec etc.
-  - Uwaga: w sumie to taki typ sumor jest dla opcji czymś analogicznym jak BoolSpec dla typu bool.
+  - `reflect`, `BoolSpec`, `CompareSpec` etc.
+  - Uwaga: w sumie to taki typ sumor jest dla opcji czymś analogicznym jak `BoolSpec` dla typu `bool`.
 - Boolean blindness
 - Reflekcja małoskalowa
 - Napisać podrozdział poświęcony temu, czy definiować predykaty (i rodziny typów) przez rekursję czy przez indukcję. Użyć jako przykładu takich predykatów jak `elem`, `Exists`, `Forall`, `Exactly`. Jak to się ma do rozstrzygalności
 - Evidence-based programming, czyli silne specyfikacje.
 - Metoda encode-decode, początkowo jako narzędzie do rozwiązywania problemów, których normalni ludzie nie mają i nigdy mieć nie będą. Potem: izomorfizmy typów. PYTANIE: czy metoda encode-decode przypadkiem się nie zawieruszyła?
 
+### D4: Arytmetyka Peano
+
+### D5: Listy
+- ogólnie trzeba będzie zrobić gruntowny refaktoring list według planu zawartego w List_sig.v
+
+### D6: Więcej list
+- Alternatywne definicje predykatów i relacji
+- Rozstrzyganie predykatów i relacji
+- Generowanie różnych rodzajów (pod)struktur typu prefiksy, podciągi etc.
+- Wszystko o permutacjach
+
 ### D7: Ogólne plany na rozdziały X:
 - boolowska logika ternarna, być może jako tour de force dla automatyzacji? albo test kreatywności
-- typ option (być może przy okazji funktory?) Stąd zadania dla `head`, `last`, `tail` i `init`
+- typ `option` (być może przy okazji funktory?) Stąd zadania dla `head`, `last`, `tail` i `init`
 - wcisnąć tu rozdział o produktach, sumach i funkcjach?
 - arytmetyka i typ `nat`. Reszta arytmetyki:
   liczby dodatnie (positive)
@@ -253,39 +218,6 @@ Zadania:
 
 ### G3: Zaawansowana indukcja
 
-### H1: Ścieżki
-- Interpretacja homotopiczna: dowody równości a ścieżki
-- Opowiedzieć skąd się biorą ścieżki
-- Ścieżki w banalnych typach
-- Ścieżki między sumami
-- Ścieżki między parami
-- Ścieżki między elementami typów induktywnych
-- Ścieżki między elementami typów koinduktywnych
-- Ścieżki między funkcjami
-- Ścieżki między zdaniami - `PropExt`
-- Ścieżki między typami - uniwalencja
-- Proof Irrelevance
-- Aksjomat K
-- Aksjomat Uniwalencji
-- Wyższe typy induktywne
-
-### H2: Typy i funkcje
-- Aksjomat ekstensjonalności
-- Lewa i prawa skracalność
-- Lewa i prawa odwrotność
-- Izomorfizm
-- Injekcja, bijekcja, surjekcja
-- Zanurzenia, pokrycia, HoTTowe rzeczy
-- Inwolucja i idempotencja
-- Przemycać jak najwięcej teorii kategorii
-
-### H3: Typy i relacje
-- Odnośnie mechanizmu redukcji:
-  - Posłużyć się następującym systemem nazewniczo-klasyfikacyjnym.
-  - Dla każdej literki są trzy relacje: redukcja, ekspansja i konwersja (a może powinna być jeszcze redukcja w wielu krokach?).
-  - Bazą jest redukcja, która ma jakąś swoją definicję, pisana jest a -> b. Relacja ekspansji a <- b zdefiniowana jest jako b -> a, zaś relacja konwersji to domknięcie równoważnościowe relacji redukcji.
-  - W takim układzie redukcja w wielu krokach to domknięcie zwrotno-przechodnie relacji redukcji. Podobnie dla ekspansji w wielu krokach.
-- Podsumowując: zdefiniować na relacjach rzeczy, których można by użyć przy formalizacji teorii typów, ale tylko w celu objaśnienia.
 
 ## Cześć 3: Metapoziom, czyli taktyki
 
@@ -332,6 +264,8 @@ I3: Reflekcja, metapoziom, quote (którego oczywiście w Coqu nie ma, a jak) i i
 
 ## Część 4: Efekty obliczeniowe dla biedaków
 
+L0: Funktory, w tym aplikatywne
+
 L1: Monady i efekty jako sposoby bycia
 - `Id` nie reprezentuje żadnego efektu. Wartości typu `Id A` są w ten
   sposób, że po prostu są.
@@ -371,21 +305,50 @@ L1: Monady i efekty jako sposoby bycia
   - drzewa wyszukiwań
   - sterty
 
-## Część 6: Podstawy matematyki
+## Część 6: HoTTowa matematyka
 
-### xD_omega: Matematyka
-- O typach ilorazowych
-- Setoidy
-- Monoidy i teoria grup
-- Teoria porządków, krat i innych takich
-- konstruktywna topologia dla bidoków
-- Teoria Kategorii
+### H1: Ścieżki
+- Interpretacja homotopiczna: dowody równości a ścieżki
+- Opowiedzieć skąd się biorą ścieżki
+- Ścieżki w banalnych typach
+- Ścieżki między sumami
+- Ścieżki między parami
+- Ścieżki między elementami typów induktywnych
+- Ścieżki między elementami typów koinduktywnych
+- Ścieżki między funkcjami
+- Ścieżki między zdaniami - `PropExt`
+- Ścieżki między typami - uniwalencja
+- Proof Irrelevance
+- Aksjomat K
+- Aksjomat Uniwalencji
+- Wyższe typy induktywne
+
+### H2: Typy i funkcje
+- Aksjomat ekstensjonalności
+- Lewa i prawa skracalność
+- Lewa i prawa odwrotność
+- Izomorfizm
+- Injekcja, bijekcja, surjekcja
+- Zanurzenia, pokrycia, HoTTowe rzeczy
+- Inwolucja i idempotencja
+- Przemycać jak najwięcej teorii kategorii
+
+### H3: Typy i relacje
+- Odnośnie mechanizmu redukcji:
+  - Posłużyć się następującym systemem nazewniczo-klasyfikacyjnym.
+  - Dla każdej literki są trzy relacje: redukcja, ekspansja i konwersja (a może powinna być jeszcze redukcja w wielu krokach?).
+  - Bazą jest redukcja, która ma jakąś swoją definicję, pisana jest a -> b. Relacja ekspansji a <- b zdefiniowana jest jako b -> a, zaś relacja konwersji to domknięcie równoważnościowe relacji redukcji.
+  - W takim układzie redukcja w wielu krokach to domknięcie zwrotno-przechodnie relacji redukcji. Podobnie dla ekspansji w wielu krokach.
+- Podsumowując: zdefiniować na relacjach rzeczy, których można by użyć przy formalizacji teorii typów, ale tylko w celu objaśnienia.
+
+### H4: Liczby
+
+### H5: Topologia
+
+### H6+: Algebra, Porządki, Teoria Kategorii
 
 ## Część 7: zawieruszone rzeczy
 
 ### N: Moduły
 - Typy skończone
 - Enumerowanie
-- Rozstrzygalność i typ `reflect`
-- Rozstrzygalna równość
-- Silne specyfikacje

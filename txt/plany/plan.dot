@@ -26,6 +26,7 @@ digraph
 
   Funkcje           [label = "Typy i funkcje", color = yellow]
   Relacje           [label = "Typy i relacje", color = yellow]
+  Liczby            [label = "Liczby", color = red]
 
   Algebra           [label = "Algebra", color = red]
   Porządki          [label = "Teoria porządków", color = red]
@@ -54,7 +55,7 @@ digraph
   Indukcja          -> Zippery, Uniwersa, Indukcja2, Ścieżki, Złożoność, Reflekcja1
   Koindukcja        -> Zippery, Uniwersa, Ścieżki
 
-  Ścieżki           -> Funkcje, Relacje
+  Ścieżki           -> Funkcje, Relacje, Liczby
   Funkcje           -> Porządki, Algebra, Topologia
   Relacje           -> Porządki
 

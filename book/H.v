@@ -1976,3 +1976,53 @@ Proof.
   apply PI.
 Qed.
 (* end hide *)
+
+(** * Parametryczność, a raczej jej brak (TODO) *)
+
+(* begin hide *)
+(* Tutaj szczegóły: https://arxiv.org/pdf/1701.05617.pdf *)
+(* end hide *)
+
+Inductive path {A : Type} (x : A) : A -> Type :=
+    | idpath : path x x.
+
+Arguments idpath {A} _.
+
+Axiom LEM : forall (A : Type), A + (A -> False).
+
+Open Scope type_scope.
+
+Definition bad' (A : Type) :
+  {f : A -> A &
+    (@path Type bool A * forall x : A, f x <> x) +
+    ((@path Type bool A -> False) * forall x : A, f x = x)}.
+Proof.
+  destruct (LEM (@path Type bool A)).
+    destruct p. exists negb. left. split.
+      reflexivity.
+      destruct x; inversion 1.
+    exists (fun x : A => x). right. split.
+      assumption.
+      reflexivity.
+Defined.
+
+Definition bad (A : Type) : A -> A := projT1 (bad' A).
+
+Lemma bad_is_bad :
+  forall b : bool, bad bool b <> b.
+Proof.
+  unfold bad.
+  intros. destruct bad'; cbn. destruct s as [[p H] | [p H]].
+    apply H.
+    contradiction p. reflexivity.
+Defined.
+
+Lemma bad_ist_gut :
+  forall (A : Type) (x : A),
+    (@path Type bool A -> False) -> bad A x = x.
+Proof.
+  unfold bad. intros A x p.
+  destruct bad' as [f [[q H] | [q H]]]; cbn.
+    contradiction p.
+    apply H.
+Defined.

@@ -1962,10 +1962,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: zabij *) Lemma take_snoc_lt :
+Lemma take_snoc_lt :
   forall (A : Type) (x : A) (l : list A) (n : nat),
     n < length l -> take n (snoc x l) = take n l.
 (* begin hide *)
+(* TODO: zabij take_snoc_lt *)
 Proof.
   induction l as [| h t]; cbn; intros.
     destruct n; inversion H.
@@ -2523,7 +2524,7 @@ Lemma drop_rev_aux :
   forall (A : Type) (l : list A) (n : nat),
     drop n l = rev (take (length (rev l) - n) (rev l)).
 Proof.
-  (*TODO: drop_rev_aux using rewriting *)
+  (* TODO: drop_rev_aux za pomocą [rewrite]'a *)
   intros. rewrite take_rev_aux, ?rev_inv, length_rev.
 Restart.
   induction l as [| h t]; cbn; intros.
@@ -3169,7 +3170,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: init, unsnoc *)
+(* begin hide *)
+(* TODO: splitAt vs init, unsnoc *)
+(* end hide *)
 
 Lemma take_splitAt :
   forall (A : Type) (l l1 l2 : list A) (n m : nat) (x : A),
@@ -3521,14 +3524,13 @@ Lemma take_insert :
     take m (insert l n x) =
     if m <=? n then take m l else snoc x l.
 (* begin hide *)
-(* TODO *) 
+(* TODO take_insert *)
 Proof.
   intros. rewrite insert_spec. rewrite take_app.
   rewrite take_take. rewrite length_take. 
   induction l as [| h t]; cbn; intros.
     destruct m, n; cbn.
       Focus 4.
-    
 Abort.
 (* end hide *)
 
@@ -3864,7 +3866,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO: bind *)
+(* TODO: replace vs bind *)
 (* end hide *)
 
 Lemma replace_replicate :
@@ -3951,7 +3953,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO: uncons, unsnoc *)
+(* TODO: replace vs uncons, unsnoc *)
 (* end hide *)
 
 Lemma nth_replace :
@@ -4092,7 +4094,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO: w drugą stronę dla [take] i [drop], splitAt *)
+(* TODO: replace vs w drugą stronę dla [take] i [drop], splitAt *)
 (* end hide *)
 
 Lemma replace_insert :
@@ -5096,7 +5098,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO : insert *)
+(* TODO : zipWith vs insert *)
 (* end hide *)
 
 Lemma replace_zipWith :
@@ -5472,7 +5474,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO any i replace *)
+(* TODO: any vs replace *)
 (* end hide *)
 
 Lemma any_replace :
@@ -5788,7 +5790,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO: all splitAt *)
+(* TODO: all vs splitAt *)
 (* end hide *)
 
 Lemma all_insert :
@@ -8612,7 +8614,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO: drop, splitAt *)
+(* TODO: findIndices vs drop, splitAt *)
 (* end hide *)
 
 Lemma findIndices_insert :
@@ -9262,7 +9264,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO: bind *)
+(* TODO: span vs bind *)
 (* end hide *)
 
 Lemma span_replicate :
@@ -9282,7 +9284,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO: iterate *)
+(* TODO: span vs iterate *)
 (* end hide *)
 
 Lemma span_any :
@@ -9345,7 +9347,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO: findIndex *)
+(* TODO: span vs findIndex *)
 (* end hide *)
 
 Lemma count_span_l :
@@ -9796,7 +9798,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *) Definition aux {A B : Type} (p : B -> bool) (f : A -> option B)
+(* begin hide *)
+(* TODO: higiena dla pmap_filter i jego aux *)
+(* end hide *)
+
+Definition aux {A B : Type} (p : B -> bool) (f : A -> option B)
   (dflt : bool) (x : A) : bool :=
 match f x with
     | Some b => p b
@@ -10804,7 +10810,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: span i intersperse, groupBy *)
+(* begin hide *)
+(* TODO: span vs intersperse, groupBy *)
+(* end hide *)
 
 Lemma span_spec' :
   forall (A : Type) (p : A -> bool) (l : list A),
@@ -11550,12 +11558,12 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: jak elem *)
 Lemma In_span :
   forall (A : Type) (p : A -> bool) (x y : A) (l b e : list A),
     span p l = Some (b, x, e) ->
       In y l <-> In y b \/ y = x \/ In y e.
 (* begin hide *)
+(* TODO: In_span jak elem (nie pamiętam, o co chodzi) *)
 Proof.
   intros. rewrite ?In_elem. assert (H' := elem_span _ p l).
   rewrite H in H'. rewrite H'. reflexivity.
@@ -12335,8 +12343,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: Dup dla insert i replace *)
+(* begin hide *)
+(* TODO: Dup vs insert i replace *)
 (* TODO: findIndex, takeWhile, dropWhile dla replace *)
+(* end hide *)
 
 Lemma Dup_filter :
   forall (A : Type) (p : A -> bool) (l : list A),
@@ -12486,7 +12496,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: NoDup, Rep *)
+(* begin hide *)
+(* TODO: Dup vs NoDup, Rep *)
+(* end hide *)
 
 Lemma Dup_zip :
   forall (A B : Type) (la : list A) (lb : list B),
@@ -14505,7 +14517,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: [Exactly], [AtMost] dla [replace] *)
+(* end hide *)
 
 Lemma AtLeast_filter :
   forall (A : Type) (P : A -> Prop) (p : A -> bool) (n : nat) (l : list A),
@@ -15177,7 +15191,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: span i AtLeast, AtMost *)
+(* begin hide *)
+(* TODO: Exactly vs span i AtLeast, AtMost *)
+(* end hide *)
 
 Lemma Exactly_intersperse :
   forall (A : Type) (P : A -> Prop) (x : A) (n : nat) (l : list A),
@@ -15364,7 +15380,7 @@ Qed.
 (** * Relacje między listami *)
 
 (* begin hide *)
-(* TODO: zrób coś z tym *)
+(* TODO: zrób coś z tym (dziwna relacja [bool_le]) *)
 Inductive bool_le : bool -> bool -> Prop :=
     | ble_refl : forall b : bool, bool_le b b
     | ble_false_true : bool_le false true.
@@ -15669,7 +15685,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: insert, remove, take *)
+(* begin hide *)
+(* TODO: Sublist vs insert, remove, take *)
+(* end hide *)
 
 Lemma Sublist_spec :
   forall (A : Type) (l1 l2 : list A),
@@ -15768,7 +15786,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: zipWith, unzip, unzipWith *)
+(* begin hide *)
+(* TODO: Sublist vs zipWith, unzip, unzipWith *)
+(* end hide *)
 
 Lemma Sublist_any_false :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
@@ -15796,7 +15816,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 (* TODO: Sublist_all *)
+(* end hide *)
 
 Lemma Sublist_findLast :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
@@ -16096,8 +16118,6 @@ Proof.
     f_equal. apply IHPrefix. inv H0. assumption.
 Qed.
 (* end hide *)
-
-(* TODO: null *)
 
 Lemma Prefix_length :
   forall (A : Type) (l1 l2 : list A),
@@ -16399,7 +16419,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: unzip, zipWith, unzipWith *)
+(* begin hide *)
+(* TODO: Prefix vs unzip, zipWith, unzipWith *)
+(* end hide *)
 
 Lemma Prefix_any_false :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
@@ -16576,7 +16598,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: findLast, removeFirst i removeLast *)
+(* begin hide *)
+(* TODO: Prefix vs findLast, removeFirst i removeLast *)
+(* end hide *)
 
 Lemma Prefix_pmap :
   forall (A B : Type) (f : A -> option B) (l1 l2 : list A),
@@ -16604,7 +16628,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: groupBy *)
+(* begin hide *)
+(* TODO: Prefix vs groupBy *)
+(* end hide *)
 
 Lemma Prefix_elem :
   forall (A : Type) (l1 l2 : list A),
@@ -16634,7 +16660,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: In *)
+(* begin hide *)
+(* TODO: Prefix vs In *)
+(* end hide *)
 
 Lemma Prefix_NoDup :
   forall (A : Type) (l1 l2 : list A),
@@ -16662,7 +16690,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: Rep *)
+(* begin hide *)
+(* TODO: Prefix vs Rep *)
+(* end hide *)
 
 Lemma Prefix_Exists :
   forall (A : Type) (P : A -> Prop) (l1 l2 : list A),
@@ -16714,7 +16744,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: Exactly - raczej nic z tego *)
+(* begin hide *)
+(* TODO: Prefix vs Exactly - raczej nic z tego *)
+(* end hide *)
 
 Lemma Sublist_Prefix :
   exists (A : Type) (l1 l2 : list A),
@@ -16979,7 +17011,8 @@ Qed.
 Lemma Subseq_cons_l_app :
   forall (A : Type) (x : A) (l1 l2 : list A),
     Subseq (x :: l1) l2 ->
-      exists l21 l22 : list A, l2 = l21 ++ x :: l22 /\ Subseq l1 l22.
+      exists l21 l22 : list A,
+        l2 = l21 ++ x :: l22 /\ Subseq l1 l22.
 (* begin hide *)
 Proof.
   intros A x l1 l2. revert l1.
@@ -17514,7 +17547,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *) Fixpoint intercalate {A : Type} (l : list A) (ll : list (list A)) : list A :=
+(* begin hide *)
+
+(* TODO: intercalate, Subseq_spec i inne dla Subseq *)
+
+Fixpoint intercalate {A : Type} (l : list A) (ll : list (list A)) : list A :=
 match l, ll with
     | [], _ => join ll
     | _, [] => l
@@ -17526,7 +17563,6 @@ Lemma Subseq_spec :
     Subseq l1 l2 ->
       exists ll : list (list A),
         l2 = intercalate l1 ll.
-(* begin hide *)
 Proof.
   induction 1; cbn.
     exists (map (fun x => [x]) l). admit.
@@ -17538,7 +17574,7 @@ Proof.
         exists [[x]]. cbn. destruct l1; cbn.
 Abort.
 
-(* TODO:
+(*
 bind
 
 unzip
@@ -17549,6 +17585,7 @@ find i findLast
 removeFirst i removeLast
 findIndices
 *)
+(* end hide *)
 
 Lemma Subseq_elem :
   forall (A : Type) (l1 l2 : list A),
@@ -17809,11 +17846,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *)
 Lemma Incl_length :
   forall (A : Type) (l1 l2 : list A),
     ~ Dup l1 -> Incl l1 l2 -> length l1 <= length l2.
 (* begin hide *)
+(* TODO: Incl_length *)
 Proof.
   unfold Incl. induction l1 as [| h1 t1]; cbn; intros.
     apply le_0_n.
@@ -18154,7 +18191,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: span i Sublist, palindromy *)
+(* begin hide *)
+(* TODO: Incl vs span i Sublist, palindromy *)
+(* end hide *)
 
 Lemma Incl_pmap :
   forall (A B : Type) (f : A -> option B) (l : list A),
@@ -18575,12 +18614,13 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *) Lemma SetEquiv_nth :
+Lemma SetEquiv_nth :
   forall (A : Type) (l1 l2 : list A),
     SetEquiv l1 l2 <->
     (forall n : nat, exists m : nat, nth n l1 = nth m l2) /\
     (forall n : nat, exists m : nat, nth m l1 = nth n l2).
 (* begin hide *)
+(* TODO : SetEquiv_nth *)
 Proof.
   split; intros.
     rewrite SetEquiv_Incl in H. destruct H.
@@ -18601,7 +18641,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(*Lemma SetEquiv_remove :
+(* TODO: Lemma SetEquiv_remove :
   exists (A : Type) (l1 l1' l2 l2' : list A) (n1 n2 : nat),
     remove match remove n l with
         | None => True
@@ -19462,7 +19502,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO: iterate *)
+(* TODO: Permutation vs iterate *)
 (* end hide *)
 
 Lemma Permutation_iterate' :
@@ -20202,8 +20242,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-(* TODO: permutacje mają inny styl (można używać symmetry etc).
-   Poza tym:
+(* TODO: Permutation vs różne rzeczy
 
 nth
 
@@ -20223,6 +20262,8 @@ removeFirst i removeLast
 findIndex
 
 findIndices
+
+Poza tym permutacje mają inny styl (można używać symmetry etc).
 *)
 (* end hide *)
 
@@ -20530,7 +20571,9 @@ Proof.
 Abort.
 (* end hide *)
 
-(* TODO: head tail etc *)
+(* begin hide *)
+(* TODO: Cycle vs head, tail, etc. *)
+(* end hide *)
 
 Lemma Cycle_nth :
   forall (A : Type) (l1 l2 : list A),
@@ -20615,7 +20658,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: zipW, unzip, unzipW *)
+(* begin hide *)
+(* TODO: Cycle vs zipW, unzip, unzipW *)
+(* end hide *)
 
 Lemma Cycle_any :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
@@ -20651,7 +20696,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: findLast, removeFirst, removeLast *)
+(* begin hide *)
+(* TODO: Cycle vs findLast, removeFirst, removeLast *)
+(* end hide *)
 
 Lemma Cycle_findIndex :
   exists (A : Type) (p : A -> bool) (l1 l2 : list A) (n : nat),
@@ -20690,7 +20737,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: findIndices *)
+(* begin hide *)
+(* TODO: Cycle vs findIndices *)
+(* end hide *)
 
 Lemma Cycle_takeWhile :
   exists (A : Type) (p : A -> bool) (l1 l2 : list A),
@@ -21322,12 +21371,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: spec bez używania indukcji dobrze ufundowanej *)
-
 Lemma Palindrome_spec :
   forall (A : Type) (l : list A),
     Palindrome l <-> l = rev l.
 (* begin hide *)
+(* TODO: Palindrome_spec bez używania indukcji dobrze ufundowanej *)
 Proof.
   split.
     induction 1; cbn.
@@ -21495,7 +21543,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: unzip, zipWith, unzipWith *)
+(* begin hide *)
+(* TODO: Palindrome vs unzip, zipWith, unzipWith *)
+(* end hide *)
 
 Lemma Palindrome_find_findLast :
   forall (A : Type) (p : A -> bool) (l : list A),
@@ -21531,7 +21581,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: groupBy *)
+(* begin hide *)
+(* TODO: Palindrome vs groupBy *)
+(* end hide *)
 
 Lemma Palindrome_Dup :
   forall (A : Type) (l : list A),
@@ -21545,7 +21597,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: Incl, Sublist, subseq *)
+(* begin hide *)
+(* TODO: Palindrome vs Incl, Sublist, subseq *)
+(* end hide *)
 
 Lemma Sublist_Palindrome :
   forall (A : Type) (l1 l2 : list A),

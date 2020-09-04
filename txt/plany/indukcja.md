@@ -1,6 +1,6 @@
 # Notatki dot. indukcji
 
-![indukcja](indukcja.jpg "No elo, nie spodziewałeś się takiego opisu, prawda?")
+![indukcja](indukcja.jpg "No eluwina, nie spodziewałeś się takiego opisu, prawda?")
 
 Krótkie wyjaśnienia dot. tego, co dzieje się na powyższym obrazku. Prostokąty oznaczają różne formy ewolucji typów induktywnych. Zielone to te, które są dostępne w Coqu, a czerwone to te, które nie są dostępne.
 
