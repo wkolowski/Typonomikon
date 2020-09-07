@@ -287,16 +287,6 @@ match uncons l1 with
     | Some (h, t) => {| uncons := Some (h, lapp t l2) |}
 end.
 
-(* begin hide *)
-(* TODO CoFixpoint general_omega {A : Set} (l1 l2 : coList A) : coList A :=
-match l1, l2 with
-    | _, LNil => l1
-    | LNil, LCons h' t' => LCons h' (general_omega t' l2)
-    | LCons h t, _ => LCons h (general_omega t l2)
-end.
-*)
-(* end hide *)
-
 CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=
 {|
     uncons :=

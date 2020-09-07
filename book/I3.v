@@ -4,7 +4,8 @@
 
 (** * [Ltac]: manipulowanie termami (TODO) *)
 
-(** TODO:
+(* begin hide *)
+(** TODO 1: (tu lista taktyk)
     - match expr
     - lazymatch expr
     - multimatch expr
@@ -12,15 +13,18 @@
     - eval redexpr
     - constr/uconstr/ltac
     - type_term *)
+(* end hide *)
 
 (** * Taktyki dla unifikacji (TODO) *)
 
-(** TODO:
+(* begin hide *)
+(** TODO 2: (tu lista taktyk)
     - [has_evar], [is_evar], [is_var]
     - [unify]
     - [constr_eq]
     - [instantiate]
     - [quote] *)
+(* end hide *)
 
 (** * Programowanie funkcyjne w [Ltac]u (TODO) *)
 
@@ -30,8 +34,10 @@
 
 (** * Big scale reflection (TODO) *)
 
+(* begin hide *)
 (** Przykłady:
     - logika boolowska, czyli legitne [btauto]
     - permutacje
     - formuły logiczne
     - upraszczanie w monoidzie *)
+(* end hide *)

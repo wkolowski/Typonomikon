@@ -51,7 +51,7 @@ Qed.
 
 (** * [sapp] *)
 
-(** Zdefiniuj funkcję [sapp], która konkatenuje dwa strumienie. Czy taka
+(** Zdefiniuj funkcję [sapp], która skleja dwa strumienie. Czy taka
     funkcja w ogóle ma sens?
 
     Zdefiniuj funkcję [lsapp], która dokleja listę na początek
@@ -105,7 +105,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma map_compose :
+Lemma map_map :
   forall (A B C : Type) (f : A -> B) (g : B -> C) (s : Stream A),
     sim (map g (map f s)) (map (fun x => g (f x)) s).
 (* begin hide *)
@@ -114,11 +114,16 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * [zipWith] *)
+(** * [zipWith] i [unzip] (TODO) *)
 
 (** Zdefiniuj funkcję [zipWith], która ze dwóch strumieni elementów
     [A] oraz [B] robi strumień elementów [C], mając do dyspozycji
-    funkcję [f : A -> B -> C ]. *)
+    funkcję [f : A -> B -> C ].
+
+    Następnie zdefiniuj funkcję [unzip], która ze strumienia par
+    robi parę strumieni wiadomo w jaki sposób.
+
+    Czy [zipWithh pair] i [unzip] są swoimi odwrotnościami? *)
 
 (* begin hide *)
 CoFixpoint zipWith
@@ -133,8 +138,34 @@ Definition unzip
   {A B : Type} (s : Stream (A * B)) : Stream A * Stream B :=
     (map fst s, map snd s).
 
-(** TODO: join : Stream (Stream A) -> Stream A,
-          unzis *)
+Lemma unzip_zipWith :
+  forall {A B : Type} (s : Stream (A * B)),
+    sim
+      (zipWith pair (fst (unzip s)) (snd (unzip s)))
+      s.
+Proof.
+  cofix CH.
+  constructor; cbn.
+    destruct s as [[ha hb] s']; cbn. reflexivity.
+    apply CH.
+Qed.
+
+(* TODO *) Lemma zipWith_unzip :
+  forall {A B : Type} (sa : Stream A) (sb : Stream B),
+    let s' := unzip (zipWith pair sa sb) in
+      sim (fst s') sa /\ sim (snd s') sb.
+Proof.
+  split; cbn.
+    revert sa sb. cofix CH. intros. constructor; cbn.
+      reflexivity.
+      apply CH.
+    revert sa sb. cofix CH. intros. constructor; cbn.
+      reflexivity.
+      apply CH.
+Qed.
+
+(** TODO: unzis, cokolwiek to jest *)
+
 (* end hide *)
 
 (** * Inne funkcje (TODO) *)
@@ -198,13 +229,17 @@ match n with
     | S n' => {| hd := hd s; tl := insert n' x (tl s); |}
 end.
 
-Compute insert 5 42 (from 0).
-
 Fixpoint replace (n : nat) {A : Type} (x : A) (s : Stream A) : Stream A :=
 match n with
     | 0 => {| hd := x; tl := tl s; |}
     | S n' => {| hd := hd s; tl := replace n' x (tl s); |}
 end.
+
+CoFixpoint diagonal {A : Type} (s : Stream (Stream A)) : Stream A :=
+{|
+    hd := hd (hd s);
+    tl := diagonal (tl (map tl s));
+|}.
 
 CoFixpoint scanl
   {A B : Type} (f : A -> B -> A) (x : A) (s : Stream B) : Stream A :=
@@ -241,9 +276,9 @@ CoFixpoint merge {A : Type} (s1 s2 : Stream A) : Stream A :=
 |}.
 (* end hide *)
 
-Lemma intersperse_merge_repeat :
+Lemma merge_repeat :
   forall (A : Type) (x : A) (s : Stream A),
-    sim (intersperse x s) (merge s (repeat x)).
+    sim (merge s (repeat x)) (intersperse x s).
 (* begin hide *)
 Proof.
   cofix CH.
@@ -253,6 +288,85 @@ Proof.
       reflexivity.
       apply CH.
 Qed.
+
+(* TODO: uporządkować *)
+
+Lemma sim_map :
+  forall {A B : Type} (f : A -> B) (s1 s2 : Stream A),
+    sim s1 s2 -> sim (map f s1) (map f s2).
+Proof.
+  cofix CH.
+  constructor; destruct H; cbn.
+    f_equal. assumption.
+    apply CH. assumption.
+Qed.
+
+Require Import Setoid.
+
+Lemma sim_diagonal :
+  forall {A : Type} (s1 s2 : Stream (Stream A)),
+    sim s1 s2 -> sim (diagonal s1) (diagonal s2).
+Proof.
+  cofix CH.
+  constructor; destruct H; cbn.
+    f_equal. assumption.
+    apply CH. apply sim_map. assumption.
+Qed.
+
+Compute take 10 (diagonal (map from (from 0))).
+Compute take 10 (iterate (fun n => S (S n)) 0).
+
+(* TODO *) Lemma diagonal_from :
+  forall n : nat,
+    sim
+      (diagonal (map from (from n)))
+      (iterate (fun n => S (S n)) n).
+Proof.
+  cofix CH.
+  constructor; cbn.
+    reflexivity.
+    eapply sim_trans.
+Abort.
+
+Lemma nth_insert :
+  forall {A : Type} (n : nat) (x : A) (s : Stream A),
+    nth n (insert n x s) = x.
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    apply IHn'.
+Qed.
+
+Lemma nth_replace :
+  forall {A : Type} (n : nat) (x : A) (s : Stream A),
+    nth n (replace n x s) = x.
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    apply IHn'.
+Qed.
+
+Lemma drop_map :
+  forall {A B : Type} (f : A -> B) (n : nat) (s : Stream A),
+    drop n (map f s) = map f (drop n s).
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. reflexivity.
+Qed.
+
+(* TODO: take_map dla strumieni *)
+(*
+Lemma take_map :
+  forall {A B : Type} (f : A -> B) (n : nat) (s : Stream A),
+    take n (map f s) = D5.map f (take n s).
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. reflexivity.
+Qed.
+*)
+
 (* end hide *)
 
 (** * Predykaty i relacje na strumieniach (TODO) *)

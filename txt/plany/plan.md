@@ -218,7 +218,6 @@ Zadania:
 
 ### G3: Zaawansowana indukcja
 
-
 ## Cześć 3: Metapoziom, czyli taktyki
 
 I1: Ltac

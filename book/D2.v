@@ -2,11 +2,11 @@
 
 (* begin hide *)
 (*
-TODO: Rekursja zagnieżdżona, zarówno w sensie zagnieżdżonych wywołań
-TODO: rekurencyjnych, jak i dopasowania wyniku wywołania rekurencyjnego
-TODO: rekursja prymitywna
-TODO: rekursja wyższego rzędu (częściowo zaaplikowane wywołania rekurencyjne)
-TODO: rekursja korekursjowa
+TODO 1: Rekursja zagnieżdżona, zarówno w sensie zagnieżdżonych wywołań
+TODO 1: rekurencyjnych, jak i dopasowania wyniku wywołania rekurencyjnego
+TODO 2: rekursja prymitywna
+TODO 3: rekursja wyższego rzędu (częściowo zaaplikowane wywołania rekurencyjne)
+TODO 4: rekursja korekursjowa
 *)
 (* end hide *)
 
@@ -3048,7 +3048,7 @@ Qed.
     przesłanka [divG n m (div n m)], którą załatwiamy za pomocą twierdzenia
     o poprawności.
 
-    Włala (lub bardziej wykwintnie: voilà )! Mamy regułę indukcji wykresowej
+    Włala (lub bardziej wykwintnie: voilà)! Mamy regułę indukcji wykresowej
     dla [div]. Zobaczmy, co i jak można za jej pomocą udowodnić. *)
 
 Lemma div_le :
@@ -5145,7 +5145,7 @@ Extraction div'_aux.
     i napisz prostszy dowód za pomocą komendy [Equations] i taktyki [funelim].
 *)
 
-(** * Podsumowanie *)
+(** * Podsumowanie (TODO) *)
 
 (** Póki co nie jest źle, wszakże udało nam się odkryć indukcję wykresową,
     czyli metodę dowodzenia właściwości funkcji za pomocą specjalnie do

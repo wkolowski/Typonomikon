@@ -18,7 +18,7 @@
 
 (** ** Równoważność (TODO) *)
 
-(** ** Negacja (TODO)   *)
+(** ** Negacja (TODO) *)
 
 (** ** Silna negacja *)
 

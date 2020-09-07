@@ -1229,6 +1229,10 @@ End subseqs.
 
 Module subsets.
 
+(* begin hide *)
+(* TODO: znaleźć specyfikację dla [subsets] *)
+(* end hide *)
+
 Fixpoint subsets {A : Type} (l : list A) : list (list A) :=
 match l with
     | [] => [[]]
@@ -1236,49 +1240,6 @@ match l with
 end.
 
 Import prefixes.
-
-Inductive Incl' {A : Type} : list A -> list A -> Prop :=
-    | Incl_nil : forall l : list A, Incl' [] l
-    | Incl_cons :
-        forall (h : A) (t l : list A),
-          elem h l -> Incl' t l -> Incl' (h :: t) l.
-
-Lemma subsets_spec :
-  forall {A : Type} (l1 l2 : list A),
-    Incl l1 l2 -> elem l1 (subsets l2).
-(* begin hide *)
-Proof.
-  intros until l2. revert l1.
-  induction l2 as [| h2 t2]; unfold Incl; cbn; intros.
-    destruct l1 as [| h1 t1].
-      constructor.
-      specialize (H h1 ltac:(constructor)). inv H.
-    destruct l1 as [| h1 t1].
-      apply elem_app_l, IHt2. red. inversion 1.
-      
-      pose (H' := H h1 ltac:(constructor)). inv H'.
-        apply elem_app_l. apply IHt2. specialize (H h2 ltac:(constructor)).
-          inv H.
-          Focus 2.
-          red. intros.
-Abort.
-(* end hide *)
-
-(* begin hide *)
-(* TODO: subsets_spec jest fałszywe *)
-Lemma subsets_spec :
-  forall {A : Type} (l1 l2 : list A),
-    Incl' l1 l2 -> elem l1 (subsets l2).
-Proof.
-  induction 1.
-    induction l as [| h t]; cbn.
-      constructor.
-      apply elem_app_l. assumption.
-    induction H.
-      cbn in *. apply elem_app_or in IHIncl'. destruct IHIncl'.
-        apply elem_app_r. apply elem_map. assumption.
-Abort.
-(* end hide *)
 
 End subsets.
 
