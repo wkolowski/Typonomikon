@@ -1210,7 +1210,6 @@ Qed.
 
 End Stream_neq.
 
-
 (** * Ścieżki między funkcjami *)
 
 (** * Ścieżki w uniwersum *)
@@ -1336,197 +1335,25 @@ End EqDec_not_Type.
 
 (** **** Ćwiczenie *)
 
-(** Dobrze wiemy, że [Prop] to nie [Type]... a może jednak? Rozstrzygnij,
-    czy [Prop = Type] zachodzi, czy nie. *)
+(** Dobrze wiemy, że [SProp] to nie [Type]... a może jednak?
+    Rozstrzygnij, czy [SProp = Type] zachodzi, czy nie. *)
 
-Module Prop_not_Type.
+Module SProp_not_Type.
 
-Require Import ProofIrrelevance.
+Let S := SProp.
+Let U := Type.
 
-Goal forall P : Prop, @eq Type P bool -> False.
-(* begin hide *)
-Proof.
-  intros.
-  assert (forall b1 b2 : bool, b1 = b2).
-    rewrite <- H. apply proof_irrelevance.
-  specialize (H0 true false). inversion H0.
-Qed.
-(* end hide *)
-
-Definition transport
-  {A : Type} (P : A -> Type) {x y : A} (p : x = y) : P x -> P y.
-(* begin hide *)
-Proof.
-  destruct p. exact (@id _).
-Defined.
-(* end hide *)
-
-Definition LEM : Type :=
-  forall P : Prop, P + ~ P.
-
-Definition PropExt : Prop :=
-  forall P Q : Prop, P <-> Q -> P = Q.
-
-Definition b2P (b : bool) : Prop :=
-match b with
-    | true => True
-    | false => False
-end.
-
-Definition P2b {lem : LEM} (P : Prop) : bool :=
-match lem P with
-    | inl _ => true
-    | inr _ => false
-end.
-
-Definition equiv (A B : Type) : Type :=
-    {f : A -> B &
-    {g : B -> A |
-      (forall x : A, g (f x) = x) /\
-      (forall x : B, f (g x) = x)
-    }}.
-
-Lemma Prop_is_bool :
-  LEM -> PropExt -> equiv Prop bool.
-Proof.
-  unfold LEM, PropExt.
-  intros lem propext.
-  red. exists (@P2b lem), b2P.
-  split.
-    intro. unfold P2b. destruct (lem x); cbn.
-      apply propext. firstorder.
-      apply propext. firstorder.
-    destruct x; unfold P2b; cbn.
-      destruct (lem True).
-        reflexivity.
-        contradiction.
-      destruct (lem False).
-        contradiction.
-        reflexivity.
-Qed.
-
-Lemma Type_is_not_bool :
-  LEM -> PropExt -> equiv Type bool -> False.
-Proof.
-  unfold LEM, PropExt, equiv.
-  intros lem propext (f & g & p & q).
-  (*specialize (p (forall b : bool, g b -> bool)).
-  destruct (f (forall b : bool, g b -> bool)) eqn: H.
-    apply (fun f => f true) in p.*)
-  specialize (p (g true + g false -> bool)).
-  destruct (f (g true + g false -> bool)) eqn: H.
-    admit.
-    admit.
-Admitted.
-
-Theorem injection_is_involution_in_Prop
-  (f : Prop -> Prop)
-  (inj : forall A B, (f A <-> f B) -> (A <-> B))
-  (ext : forall A B, A <-> B -> f A <-> f B)
-  : forall A, f (f A) <-> A.
-Proof.
-  intros.
-  enough (f (f (f A)) <-> f A) by (apply inj; assumption).
-  split; intro H.
-    enough (f A <-> True) by firstorder. apply inj.
-      split; intro H'.
-        enough (f (f (f A)) <-> f True) by firstorder.
-          apply ext. firstorder.
-        enough (f (f A) <-> True) by firstorder.
-          apply inj. firstorder.
-    enough (f A <-> f (f (f A))) by firstorder. apply ext.
-      split; intro H'.
-        enough (f A <-> f (f A)) by firstorder.
-          apply ext. firstorder.
-        enough (f A <-> A) by firstorder.
-          apply inj. firstorder.
-Defined.
-
-(*
-Lemma Type_is_not_bool' :
-  (LEM -> PropExt -> equiv Type bool) -> False.
-Proof.
-  intro H.
-  intros lem propext (f & g & p & q).
-  (*specialize (p (forall b : bool, g b -> bool)).
-  destruct (f (forall b : bool, g b -> bool)) eqn: H.
-    apply (fun f => f true) in p.*)
-  specialize (p (g true + g false -> bool)).
-  destruct (f (g true + g false -> bool)) eqn: H.
-    admit.
-    admit.
-Admitted.
-*)
-
-Definition surjective
-  {A B : Type} (f : A -> B) : Prop :=
-    forall b : B, exists a : A, f a = b.
-
-Lemma no_sur :
-  forall f : Prop -> Type,
-    surjective f -> False.
-Proof.
-  unfold surjective.
-  intros f H.
-  pose (T := forall P : Prop, f P -> bool).
-  destruct (H T) as [P HP].
-Abort.
-
-Lemma Prop_is_not_Type :
-  Prop <> Type.
-(* begin hide *)
+Lemma SProp_not_Type :
+  S <> U.
 Proof.
   intro.
-  assert
-  (
-    (LEM -> PropExt -> equiv Prop bool) ->
-    (LEM -> PropExt -> equiv Type bool)
-  ).
-    intros. rewrite <- H. apply X; assumption.
-  specialize (X Prop_is_bool).
+  assert (forall (P : S) (p1 p2 : P), p1 = p2) by reflexivity.
+  assert ((forall (A : U) (x y : A), x = y) -> False).
+    intro. specialize (H1 bool true false). congruence.
+  apply H1. intros.
 Abort.
-(* end hide *)
 
-Import EqDec_not_Type.
-
-Definition wut
-  (f : Prop -> Type) (x : Prop) (h : f x -> forall y : Prop, f y -> bool)
-  : forall z : Prop, f z -> bool.
-(* begin hide *)
-Proof.
-  intros y fy.
-Admitted.
-(* end hide *)
-
-Theorem Prop_not_Type :
-  Prop <> Type.
-(* begin hide *)
-Proof.
-  intro p.
-  pose (f := idtoeqv p); pose (idtoeqv_sur _ _ p);
-  change (idtoeqv p) with f in e; clearbody f e.
-  pose (H := forall x : Prop, f x -> Type).
-  destruct (e H) as [x q].
-  pose (h := idtoeqv q); pose (e' := idtoeqv_sur _ _ q);
-  change (idtoeqv q) with h in e'; clearbody h e'.
-  
-(*  specialize (e' (fun (y : Prop) (fy : f y) => f y <> f x)).
-
-  destruct e' as [a e'].
-  apply (@f_equal _ _ (fun f => f x a)) in e'.
-  *)
-  specialize (e' (
-    fun (y : Prop) (fy : f y) =>
-      forall p : x = y,
-        match p in (_ = y) return (f y -> Type) with
-            | eq_refl => fun fy : f x => h fy x fy -> False
-         end fy
-  )).
-Abort.
-(* end hide *)
-
-
-End Prop_not_Type.
+End SProp_not_Type.
 
 (** * Protokoły różnicowe *)
 
