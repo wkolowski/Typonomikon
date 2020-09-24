@@ -1062,14 +1062,10 @@ Qed.
 
 Lemma length_take :
   forall (A : Type) (m n : nat) (l : vec A n),
-    n <= m -> len (take n l) = n.
+    len (take m l) = min m n.
 (* begin hide *)
 Proof.
-  induction m as [| m']; intros.
-    dependent destruction l; try lia. compute. trivial.
-    destruct l as [| n h t].
-      compute. trivial.
-      simpl. rewrite len_vcons, IHm'; auto; lia.
+  destruct m as [| m']; reflexivity.
 Qed.
 (* end hide *)
 

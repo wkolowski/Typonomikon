@@ -1331,9 +1331,9 @@ Qed.
     - Chcielibyśmy, żeby [n - n = 0]
     - Chcielibyśmy, żeby [(n + 1) - n = 1]
     - Jednak dla [n = omega] daje to [omega - omega = 0] oraz
-      [omega - omega = 1], co prowadzi do sprzeczności *)
+      [omega - omega = 1], co prowadzi do sprzeczności
 
-(** Dzięki temu możemy skonkludować, że typ [sub] jest pusty, a zatem
+    Dzięki temu możemy skonkludować, że typ [sub] jest pusty, a zatem
     pożądana przez nas funkcją odejmująca nie może istnieć.
 
     Najbliższą odejmowaniu operacją, jaką możemy wykonać na liczbach
@@ -1350,25 +1350,76 @@ end.
 (* end hide *)
 
 (* begin hide *)
-Goal
+Lemma sim_add_Finite :
+  forall a b c : conat,
+    Finite c -> sim (add a c) (add b c) -> sim a b.
+Proof.
+  intros until 1. revert a b.
+  induction H; cbn; intros.
+    rewrite !add_zero_r in H. assumption.
+    rewrite !add_succ_r, !add_succ_l' in H0.
+      apply sim_succ_inv in H0. apply IHFinite. assumption.
+Qed.
+
+Lemma Finite_sim :
+  forall n m : conat,
+    sim n m -> Finite n -> Finite m.
+Proof.
+  intros until 2. revert m H.
+  induction H0; intros.
+    inv H; decompose [ex or and] sim'0; clear sim'0.
+      replace m with zero.
+        apply Finite_zero.
+        apply eq_pred. cbn. congruence.
+      inv H0.
+    destruct m as [[m' |]].
+      constructor. apply IHFinite. apply sim_succ_inv. exact H.
+      constructor.
+Qed.
+
+Lemma Finite_add :
+  forall n m : conat,
+    Finite n -> Finite m -> Finite (add n m).
+Proof.
+  intros until 1. revert m.
+  induction H; intros.
+    apply Finite_sim with m.
+      rewrite add_zero_l. reflexivity.
+      assumption.
+    apply Finite_sim with (succ (add n m)).
+      rewrite add_succ_l'. reflexivity.
+      constructor. apply IHFinite. assumption.
+Qed.
+
+Lemma Finite_add_inv_l :
+  forall n m : conat,
+    Finite (add n m) -> Finite n.
+Proof.
+  intros. remember (add n m) as c.
+  revert n m Heqc.
+  induction H; intros.
+    destruct n as [[n' |]].
+      apply (f_equal pred) in Heqc. inv Heqc.
+      constructor.
+    destruct n0 as [[n' |]].
+      apply (f_equal pred) in Heqc. inv Heqc.
+        constructor. eapply IHFinite. reflexivity.
+      constructor.
+Qed.
+
+Lemma Sub_Finite_sim :
   forall n m r1 r2 : conat,
     Finite n -> Sub n m r1 -> Sub n m r2 -> sim r1 r2.
 Proof.
-  unfold Sub. intros.
-  revert m r1 r2 H0 H1.
-  induction H; intros.
-    apply sim_add_zero_l in H0. apply sim_add_zero_l in H1.
-      rewrite H0, H1. reflexivity.
-    destruct H0 as [[[H01 H02] | (r1' & m1 & H01 & H02 & H03)]],
-             H1 as [[[H11 H12] | (r2' & m2 & H11 & H12 & H13)]];
-    inv H02; inv H12.
-      constructor. inv H01. inv H11.
-      destruct r1 as [[r1'' |]], r2 as [[r2'' |]]; cbn in *.
-        inv H1. inv H2. right. exists r1'', r2''. intuition.
-          eapply IHFinite; eassumption.
-        inv H1. rewrite <- H13 in H03. admit.
-        inv H2. rewrite <- H03 in H13. admit.
-Abort.
+  unfold Sub; intros.
+  eapply sim_add_Finite.
+    Focus 2. rewrite H0, H1. reflexivity.
+    eapply Finite_add_inv_l. eapply Finite_sim.
+      apply add_comm.
+      eapply Finite_sim.
+        symmetry. exact H0.
+        assumption.
+Qed.
 
 Definition sub' : Type :=
   {f : conat -> conat -> conat |

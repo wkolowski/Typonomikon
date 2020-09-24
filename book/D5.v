@@ -19501,10 +19501,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(* begin hide *)
-(* TODO: Permutation vs iterate *)
-(* end hide *)
-
 Lemma Permutation_iterate' :
   forall (A : Type) (f : A -> A) (n : nat) (x y : A),
     Permutation (iterate f n x) (iterate f n y) ->

@@ -734,12 +734,7 @@ Proof.
   unfold surjective; intros. exists (S b). cbn. trivial.
 Qed.
 
-(** TODO Uwaga techniczna: od teraz do upraszczania zamiast taktyki [simpl]
-    używać będziemy taktyki [cbn]. Różni się ona nieznacznie od [simpl], ale
-    jej główną zaletą jest nazwa — [cbn] to trzy litery, a [simpl] aż pięć,
-    więc zaoszczędzimy sobie pisania.
-
-    Powyższe twierdzenie głosi, że "funkcja [pred] jest surjekcją", czyli,
+(** Powyższe twierdzenie głosi, że "funkcja [pred] jest surjekcją", czyli,
     parafrazując, "każda liczba naturalna jest poprzednikiem innej liczby
     naturalnej". Nie powinno nas to zaskakiwać, wszakże każda liczba naturalna
     jest poprzednikiem swojego następnika, tzn. [pred (S n) = n]. *)

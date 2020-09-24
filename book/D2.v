@@ -2125,13 +2125,49 @@ Proof.
       exists (m + (S (S (m + 0)))). reflexivity.
 Qed.
 
-(* TODO *) Lemma collatz_pow2 :
-  forall n : nat, collatz (S n) (pow 2 n) <> None.
+Lemma even_pow_2 :
+  forall n : nat,
+    even (2 ^ S n) = true.
 Proof.
-  induction n as [| n'].
-    inversion 1.
-    destruct (pow2_n_SS n') as [m eq]. rewrite eq.
-Abort.
+  induction n as [| n']; cbn.
+    reflexivity.
+    {
+      cbn in IHn'.
+      rewrite Nat.even_add,
+              IHn',
+              Nat.add_assoc, Nat.even_add, <- Nat.add_assoc,
+              IHn'.
+      cbn.
+      reflexivity.
+    }
+Qed.
+
+Arguments pow _ : simpl never.
+
+Lemma div2_pow_2 :
+  forall n : nat,
+    div2 (2 ^ S n) = 2 ^ n.
+Proof.
+  intros. apply Nat.div2_double.
+Qed.
+
+Lemma collatz_pow2 :
+  forall n : nat,
+    exists (h : nat) (t : list nat),
+      collatz (S n) (pow 2 n) = Some (h :: t).
+Proof.
+  cbn.
+  induction n as [ | | n'] using nat_ind_2.
+    compute. exists 1, []. reflexivity.
+    compute. exists 2, [1]. reflexivity.
+    destruct (pow2_n_SS (S n')) as [m eq]. rewrite eq, <- eq.
+      rewrite even_pow_2, div2_pow_2. cbn.
+        destruct (pow2_n_SS n') as [m' eq']. rewrite eq', <- eq'.
+          rewrite even_pow_2, div2_pow_2.
+            destruct IHn' as (h & t & IH).
+              exists (2 ^ S (S n')), (2 ^ S n' :: h :: t).
+                rewrite IH. reflexivity.
+Qed.
 
 (* end hide *)
 
