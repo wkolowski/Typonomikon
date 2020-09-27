@@ -4040,7 +4040,7 @@ Fail Function f (n : nat) {measure id n} : nat :=
     widać, nieprzypadkowo funkcja ta bywa też nazywana "funkcją 91
     McCarthy'ego".
 
-    Czy da się tę funkcję zaimplementować w Coqu? Pewnie! *)
+    Czy da się tę funkcję zaimplementować w Coqu? Jeszcze jak! *)
 
 Definition f_troll (n : nat) : nat :=
   if n <=? 100 then 91 else n - 10.
@@ -4155,7 +4155,7 @@ Proof.
         subst. assumption.
 Defined.
 
-(** Dowód twierdzenia o poprawności jest tylko odrobinkę trudniejsze niż
+(** Dowód twierdzenia o poprawności jest tylko odrobinkę trudniejszy niż
     ostatnio, gdyż w przypadku wystąpienia w kontekście dwóch hipotez o
     typie [fG (n + 11) _] musimy użyć twierdzenia o determinizmie wykresu. *)
 
