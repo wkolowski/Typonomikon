@@ -7,6 +7,10 @@ TODO 1: rekurencyjnych, jak i dopasowania wyniku wywołania rekurencyjnego
 TODO 2: rekursja prymitywna
 TODO 3: rekursja wyższego rzędu (częściowo zaaplikowane wywołania rekurencyjne)
 TODO 4: rekursja korekursjowa
+TODO 5: opisać indukcję wykresową stosunkowo szybko, od razu gdy pojawi
+TODO 5: się temat customowych reguł indukcyjnych
+TODO 6: zbadać temat indukcji wykresowej dla złożenia funkcji (być może
+TODO 6: może tu pomóc "fuzja" - taka optymalizacja jak w GHC czy gdzieś)
 *)
 (* end hide *)
 
@@ -1731,12 +1735,12 @@ Arguments Node {A} _ _.
     ilość poddrzew. Spróbujmy zdefiniować funkcję, która zwraca lustrzane
     odbicie drzewa. *)
 
-(*
-Fixpoint mirror {A : Type} (t : Tree A) : Tree A :=
+Unset Guard Checking.
+Fixpoint mirror {A : Type} (t : Tree A) {struct t} : Tree A :=
 match t with
-    | Node x ts => Node x (rev (map mirror ts))
+    | Node x ts => Node x (map mirror (rev ts))
 end.
-*)
+Set Guard Checking.
 
 (** Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa za
     pomocą [map mirror], a następnie odwracamy kolejność poddrzew z użyciem
@@ -1746,29 +1750,35 @@ end.
     rekurencyjne są robione przez funkcję [map]. Mamy więc do czynienia z
     rekursją wyższego rzędu. *)
 
-(*
-Require Import List.
-Import ListNotations.
-Print Forall2.
-
 Inductive mirrorG {A : Type} : Tree A -> Tree A -> Prop :=
   | mirrorG_0 :
       forall (x : A) (ts rs : list (Tree A)),
-        Forall2 mirrorG ts rs -> mirrorG (Node x ts) (Node x (rev rs)).
+        mirrorsG ts rs -> mirrorG (Node x ts) (Node x (rev rs))
 
-Definition mab {A B : Type} (f : A -> B) :=
-  fix mab (l : list A) : list B :=
-  match l with
-      | [] => []
-      | h :: t => f h :: mab t
-  end.
+with mirrorsG {A : Type} : list (Tree A) -> list (Tree A) -> Prop :=
+  | mirrorsG_nil :
+      mirrorsG [] []
+  | mirrorsG_cons :
+      forall (t t' : Tree A) (ts ts' : list (Tree A)),
+        mirrorG t t' -> mirrorsG ts ts' ->
+          mirrorsG (t :: ts) (t' :: ts').
 
-Inductive mirrorFG
-  {A : Type} (f : Tree A -> Tree A) : Tree A -> Tree A -> Prop :=
-    | mirrorFG_0 :
-        forall (x : A) (ts : list (Tree A)),
-          mirrorG (Node x ts) (Node x (rev (map f ts))).
-*)
+Require Import Equality.
+
+Lemma mirrorG_correct :
+  forall {A : Type} (t : Tree A),
+    mirrorG t (mirror t).
+Proof.
+  fix IH 2.
+  destruct t. cbn. rewrite map_rev. constructor.
+  induction l as [| t ts].
+    cbn. constructor.
+    cbn. constructor.
+      apply IH.
+      apply IHts.
+Qed.
+
+Compute mirror (Node 0 [Node 1 [Node 5 []; Node 6 []; Node 7 []]; Node 2 []; Node 3 []]).
 
 (** Inny przykład: *)
 
