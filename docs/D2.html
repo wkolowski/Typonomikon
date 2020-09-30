@@ -1765,6 +1765,54 @@ Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa za
 <span class="id" title="keyword">Compute</span> <span class="id" title="var">mirror</span> (<span class="id" title="var">Node</span> 0 [<span class="id" title="var">Node</span> 1 [<span class="id" title="var">Node</span> 5 []; <span class="id" title="var">Node</span> 6 []; <span class="id" title="var">Node</span> 7 []]; <span class="id" title="var">Node</span> 2 []; <span class="id" title="var">Node</span> 3 []]).<br/>
 
 <br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">mirror</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">mirrorD</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">mirrorD'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">ts</span> : <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mirrorsD</span> (<span class="id" title="var">rev</span> <span class="id" title="var">ts</span>) -&gt; <span class="id" title="var">mirrorD</span> (<span class="id" title="var">Node</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span>)<br/>
+<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">mirrorsD</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">mirrorsD_nil</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mirrorsD</span> []<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">mirrorsD_cons</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">t</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) (<span class="id" title="var">ts</span> : <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mirrorD</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">mirrorsD</span> <span class="id" title="var">ts</span> -&gt; <span class="id" title="var">mirrorsD</span> (<span class="id" title="var">t</span> :: <span class="id" title="var">ts</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">mapG</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">mapG_nil</span>  :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mapG</span> <span class="id" title="var">f</span> [] []<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">mapG_cons</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>) (<span class="id" title="var">la</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">lb</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> -&gt; <span class="id" title="var">mapG</span> <span class="id" title="var">f</span> <span class="id" title="var">la</span> <span class="id" title="var">lb</span> -&gt; <span class="id" title="var">mapG</span> <span class="id" title="var">f</span> (<span class="id" title="var">a</span> :: <span class="id" title="var">la</span>) (<span class="id" title="var">b</span> :: <span class="id" title="var">lb</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">mirrorG2</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Tree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">mirrorG2'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">ts</span> <span class="id" title="var">ts'</span> : <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mapG</span> <span class="id" title="var">mirrorG2</span> <span class="id" title="var">ts</span> <span class="id" title="var">ts'</span> -&gt; <span class="id" title="var">mirrorG2</span> (<span class="id" title="var">Node</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span>) (<span class="id" title="var">Node</span> <span class="id" title="var">x</span> (<span class="id" title="var">rev</span> <span class="id" title="var">ts'</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mirrorG2_correct</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mirrorG2</span> <span class="id" title="var">t</span> (<span class="id" title="var">mirror</span> <span class="id" title="var">t</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">IH</span> 2.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">t</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">map_rev</span>. <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">t</span> <span class="id" title="var">ts</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHts</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">mirror</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">

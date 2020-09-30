@@ -1780,6 +1780,48 @@ Qed.
 
 Compute mirror (Node 0 [Node 1 [Node 5 []; Node 6 []; Node 7 []]; Node 2 []; Node 3 []]).
 
+Module mirror.
+
+Inductive mirrorD {A : Type} : Tree A -> Type :=
+    | mirrorD' :
+        forall (x : A) (ts : list (Tree A)),
+          mirrorsD (rev ts) -> mirrorD (Node x ts)
+
+with mirrorsD {A : Type} : list (Tree A) -> Type :=
+    | mirrorsD_nil :
+        mirrorsD []
+    | mirrorsD_cons :
+        forall (t : Tree A) (ts : list (Tree A)),
+          mirrorD t -> mirrorsD ts -> mirrorsD (t :: ts).
+
+Inductive mapG
+  {A B : Type} (f : A -> B -> Type) : list A -> list B -> Type :=
+    | mapG_nil  :
+        mapG f [] []
+    | mapG_cons :
+        forall (a : A) (b : B) (la : list A) (lb : list B),
+          f a b -> mapG f la lb -> mapG f (a :: la) (b :: lb).
+
+Inductive mirrorG2 {A : Type} : Tree A -> Tree A -> Prop :=
+  | mirrorG2' :
+      forall (x : A) (ts ts' : list (Tree A)),
+        mapG mirrorG2 ts ts' -> mirrorG2 (Node x ts) (Node x (rev ts')).
+
+Lemma mirrorG2_correct :
+  forall {A : Type} (t : Tree A),
+    mirrorG2 t (mirror t).
+Proof.
+  fix IH 2.
+  destruct t. cbn. rewrite map_rev. constructor.
+  induction l as [| t ts].
+    cbn. constructor.
+    cbn. constructor.
+      apply IH.
+      apply IHts.
+Qed.
+
+End mirror.
+
 (** Inny przykład: *)
 
 Inductive Tree' (A : Type) : Type :=
