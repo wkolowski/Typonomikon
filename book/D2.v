@@ -4315,10 +4315,14 @@ Defined.
 
 Definition f (n : nat) : nat := f' (fD_all n).
 
-(* Compute f 101. *)
+(* Compute f 110. *)
 
 (** Teraz możemy zdefiniować oryginalne [f]. Niestety, funkcja [f] się nie
     oblicza i nie wiem nawet dlaczego. *)
+
+(* begin hide *)
+(* TODO: naprawić obliczanie f91, być może winne jest [lia] *)
+(* end hide *)
 
 Lemma f_correct :
   forall n : nat, fG n (f n).
@@ -4530,7 +4534,7 @@ Inductive fD : nat -> Type :=
     | fD_gt100 : forall n : nat, 100 < n -> fD n
     | fD_le100 :
         forall n : nat, n <= 100 ->
-          forall d : fD (n + 11), fD (f (n + 11) d) -> fD n
+          forall d : fD (n + 11), fD (f' (n + 11) d) -> fD n
 
 with Fixpoint f' (n : nat) (d : fD n) : nat :=
 match d with

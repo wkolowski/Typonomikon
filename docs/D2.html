@@ -4348,7 +4348,7 @@ Dowód jest przez indukcję dobrze ufundowaną po <span class="inlinecode"><span
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> := <span class="id" title="var">f'</span> (<span class="id" title="var">fD_all</span> <span class="id" title="var">n</span>).<br/>
 
 <br/>
-<span class="comment">(*&nbsp;Compute&nbsp;f&nbsp;101.&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;Compute&nbsp;f&nbsp;110.&nbsp;*)</span><br/>
 
 <br/>
 </div>
@@ -4358,6 +4358,8 @@ Teraz możemy zdefiniować oryginalne <span class="inlinecode"><span class="id" 
     oblicza i nie wiem nawet dlaczego. 
 </div>
 <div class="code">
+
+<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">f_correct</span> :<br/>
@@ -4520,7 +4522,7 @@ Inductive&nbsp;fD&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;Type&nbsp;:=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;fD_gt100&nbsp;:&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;100&nbsp;&lt;&nbsp;n&nbsp;-&gt;&nbsp;fD&nbsp;n<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;fD_le100&nbsp;:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;n&nbsp;&lt;=&nbsp;100&nbsp;-&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;d&nbsp;:&nbsp;fD&nbsp;(n&nbsp;+&nbsp;11),&nbsp;fD&nbsp;(f&nbsp;(n&nbsp;+&nbsp;11)&nbsp;d)&nbsp;-&gt;&nbsp;fD&nbsp;n<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;d&nbsp;:&nbsp;fD&nbsp;(n&nbsp;+&nbsp;11),&nbsp;fD&nbsp;(f'&nbsp;(n&nbsp;+&nbsp;11)&nbsp;d)&nbsp;-&gt;&nbsp;fD&nbsp;n<br/>
 <br/>
 with&nbsp;Fixpoint&nbsp;f'&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;(d&nbsp;:&nbsp;fD&nbsp;n)&nbsp;:&nbsp;nat&nbsp;:=<br/>
 match&nbsp;d&nbsp;with<br/>
