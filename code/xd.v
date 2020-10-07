@@ -78,10 +78,12 @@ Proof.
     apply wf_inverse_image. apply lt_wf.
     intros n IH. destruct (le_lt_dec n 100).
       Focus 2. exists 1. constructor. assumption.
+(*
       {
         destruct (IH (11 + n) ltac:(lia)) as [k1 h1].
         edestruct (IH (iter F k1 id (11 + n))) as [k2 h2].
           Focus 2. red. exists (S (k1 + k2)). constructor 2; assumption.
           cbn.
       }
+*)
 Abort.
