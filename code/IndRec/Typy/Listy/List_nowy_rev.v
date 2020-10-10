@@ -488,7 +488,8 @@ Lemma zipWith_not_rev :
     zipWith f (rev la) (rev lb) <> rev (zipWith f la lb).
 (* begin hide *)
 Proof.
-  exists bool, bool, _, pair, [true; false; true], [false; true].
+  exists bool, bool, (prod bool bool),
+         pair, [true; false; true], [false; true].
   cbn. inversion 1.
 Qed.
 (* end hide *)

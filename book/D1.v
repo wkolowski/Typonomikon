@@ -1422,13 +1422,6 @@ Search nat.
     W naszym przypadku pokazały się wszystkie funkcje, w których
     sygnaturze występuje typ [nat]. *)
 
-SearchAbout nat.
-
-(** [SearchAbout] wyświetla wszystkie obiekty, które mają jakiś związek
-    z daną nazwą. Zazwyczaj wskaże on nam dużo więcej obiektów, niż zwykłe
-    [Search], np. poza funkcjami, w których sygnaturze występuje [nat],
-    pokazuje też twierdzenia dotyczące ich właściwości. *)
-
 SearchPattern (_ + _ = _).
 
 (** [SearchPattern] jako argument bierze wzorzec i wyświetla wszystkie

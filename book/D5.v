@@ -29,8 +29,8 @@ Inductive list (A : Type) : Type :=
     | cons : A -> list A -> list A.
 (* end hide *)
 
-Arguments nil [A].
-Arguments cons [A] _ _.
+Arguments nil {A}.
+Arguments cons {A} _ _.
 
 (*Notation "[ ]" := nil.*)
 Notation "[ ]" := nil (format "[ ]").
@@ -19649,7 +19649,7 @@ Lemma Permutation_zipWith :
 Proof.
   destruct (Permutation_zip)
     as (A & B & la1 & la2 & lb1 & lb2 & H1 & H2 & H3).
-  exists A, B, _, pair, la1, la2, lb1, lb2. repeat split.
+  exists A, B, (prod A B), pair, la1, la2, lb1, lb2. repeat split.
     1-2: assumption.
     rewrite ?zipWith_pair. assumption.
 Qed.

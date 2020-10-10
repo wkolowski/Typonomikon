@@ -359,8 +359,8 @@ Inductive Tree (A : Type) : Type :=
     | Empty : Tree A
     | Node : A -> list (Tree A) -> Tree A.
 
-Arguments Empty [A].
-Arguments Node [A] _ _.
+Arguments Empty {A}.
+Arguments Node {A} _ _.
 
 Print Tree_ind.
 

@@ -4,8 +4,8 @@ Inductive list (A : Type) : Type :=
     | nil : list A
     | cons : A -> list A -> list A.
 
-Arguments nil [A].
-Arguments cons [A] _ _.
+Arguments nil {A}.
+Arguments cons {A} _ _.
 
 Notation "[]" := nil.
 Notation "x :: y" := (cons x y) (at level 60, right associativity).

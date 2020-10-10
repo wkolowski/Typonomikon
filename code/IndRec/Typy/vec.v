@@ -23,8 +23,8 @@ Inductive vec (A : Type) : nat -> Type :=
     | vnil : vec A 0
     | vcons : forall n : nat, A -> vec A n -> vec A (S n).
 
-Arguments vnil [A].
-Arguments vcons [A n] _ _.
+Arguments vnil {A}.
+Arguments vcons {A n} _ _.
 
 (** *** [length] *)
 
@@ -81,7 +81,7 @@ Lemma JMeq_vcons :
     n = m -> JMeq h h' -> JMeq t t' -> JMeq (vcons h t) (vcons h' t').
 (* end hide *)
 Proof.
-  intros. subst. rewrite H1. reflexivity.
+  intros. subst. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1179,8 +1179,6 @@ Proof.
     rewrite take_0, <- minus_n_O, drop_all. cbn. trivial.
     destruct l.
       rewrite ?rev_nil. rewrite take_nil, drop_nil. cbn. trivial.
-      
-      SearchAbout rev.
 Abort.
 (* end hide *)
 

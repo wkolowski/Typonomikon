@@ -79,7 +79,7 @@ Qed.
 
 (** * Klasyczna dysjunkcja (TODO) *)
 
-Require Import B B3.
+Require Import B0 B3.
 
 (** Klasyczna dysjunkcja. Panie, na co to komu? *)
 Definition cor (P Q : Prop) : Prop :=

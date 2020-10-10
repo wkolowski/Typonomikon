@@ -11,6 +11,9 @@ TODO 5: opisać indukcję wykresową stosunkowo szybko, od razu gdy pojawi
 TODO 5: się temat customowych reguł indukcyjnych
 TODO 6: zbadać temat indukcji wykresowej dla złożenia funkcji (być może
 TODO 6: może tu pomóc "fuzja" - taka optymalizacja jak w GHC czy gdzieś)
+TODO 7: induktywna dziedzina dla funkcji niedeterministycznych zawiera także
+TODO 7: informację o porządku ewaluacji
+TODO 8: uogólniona funkcja McCarthy'ego: if n > k then n else f(f(n + 1, k), k)
 *)
 (* end hide *)
 

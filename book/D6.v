@@ -219,7 +219,7 @@ Lemma ex_replicate :
 Proof.
   induction n as [| n']; cbn; intros.
     firstorder. inversion H.
-    firstorder.
+    firstorder. apply le_n_S, le_0_n.
 Qed.
 (* end hide *)
 
@@ -384,7 +384,7 @@ Proof.
   induction l as [| h t]; cbn; intros; intro.
     assumption.
     specialize (IHt H). specialize (H h). destruct (p h); cbn in *.
-      firstorder.
+      firstorder congruence.
       contradiction.
 Qed.
 (* end hide *)
@@ -422,7 +422,7 @@ Proof.
   induction l as [| h t]; cbn; intros; intro.
     assumption.
     specialize (IHt H). specialize (H h).
-      destruct (p h); cbn in *; firstorder.
+      destruct (p h); cbn in *; firstorder congruence.
 Qed.
 (* end hide *)
 

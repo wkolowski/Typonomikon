@@ -1,6 +1,8 @@
 Require Import Bool List.
 Import ListNotations.
 
+(** Przykład cbn wzięty z pracy "Another Look at Nested Recursion" *)
+
 Variable Var : Type.
 Hypothesis veq : Var -> Var -> bool.
 Hypothesis veq_spec : forall x y : Var, reflect (x = y) (veq x y).

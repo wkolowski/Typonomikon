@@ -144,3 +144,9 @@ Na koniec uwaga, dość subtelna: sugestie z tej sekcji są mało kompatybilne z
 Definiowanie przez równania w Coqu umożliwia pakiet [Equations](https://github.com/mattam82/Coq-Equations), ale bez możliwości pomijania parametrów.
 
 Pomysł na lekką składnię z pomijaniem parametrów jest wzięty z języka [Lean](https://leanprover.github.io/).
+
+##  F*
+
+Ostatnio dowiedziałęm się, że F* ma parę fajnych składniowych rzeczy:
+- Dyskryminatory sprawdzający, którym konstruktorem zrobiono term typu induktywnego, np. `Nil? : list 'a -> bool`, `Cons? : list 'a -> bool`
+- Projektory, które wyjmują argumenty z konstruktorów, ale tylko gdy term faktycznie został zrobiony takim właśnie konstruktorem. Przykłady: `Cons?.hd : l : list 'a{Cons? l} -> 'a` oraz `Cons?.tl : l : list 'a{Cons? l} -> list 'a`

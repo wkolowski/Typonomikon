@@ -244,7 +244,7 @@ repeat match goal with
     | x : Empty_set |- _ => destruct x
     | H : True |- _ => inversion H
     | x : unit |- _ => destruct x
-end.
+end; try congruence.
 (* end hide *)
 
 Lemma Rnot_double :
@@ -1046,7 +1046,6 @@ Proof.
   exists bool, (option bool),
   (fun (b : bool) (ob : option bool) => Some b = ob).
   rel.
-    inversion H0. trivial.
     destruct (left_total0 None) as [b H]. inversion H.
 Qed.
 (* end hide *)
@@ -1449,7 +1448,10 @@ Proof. rel. Qed.
 
 Instance Antireflexive_lt : Antireflexive lt.
 (* begin hide *)
-Proof. rel. Qed.
+Proof.
+  split.
+  (* TODO *) apply PeanoNat.Nat.nle_succ_diag_l.
+Qed.
 (* end hide *)
 
 (** Typowymi przykładami relacji antyzwrotnych są nierówność [<>] oraz
