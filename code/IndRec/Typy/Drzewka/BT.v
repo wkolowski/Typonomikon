@@ -62,7 +62,7 @@ Proof.
   induction 1; intro Heq; inv Heq; contradiction.
 Qed.
 
-Inductive Exists {A : Type} (P : A -> Prop) : BTree A -> Type :=
+Inductive Exists {A : Type} (P : A -> Prop) : BTree A -> Prop :=
     | Exists_N :
         forall (x : A) (l r : BTree A),
           P x -> Exists P (N x l r)

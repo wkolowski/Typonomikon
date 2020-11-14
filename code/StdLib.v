@@ -774,3 +774,24 @@ End Sequence.
 
 
 *)
+
+(** Trzeba mieć pod ręką zarówno trójstronne porównania, jak i te klasyczne (mniejszy lub równy).
+    Dzięki eleganckiej koercji można tych bardziej ogólnych, czyli trójstronnych, używać też tam
+    gdzie potrzeba nam boola. Koercja w drugą stronę jest upierdliwsza, a raczej brak jej wcale. *)
+
+Inductive Cmp : Type := Lt | Eq | Gt.
+
+Definition Cmp2bool (c : Cmp) : bool :=
+match c with
+    | Lt => true
+    | Eq => true
+    | Gt => false
+end.
+
+Coercion Cmp2bool : Cmp >-> bool.
+
+(** Uwaga: daje nam to też koercję (A -> A -> comparison) >-> (A -> A -> bool), czyli elegancko. *)
+
+(** Uwaga2: [Cmp] jest już w bibliotece standardowej i nazywa się [comparison]. *)
+
+(** Inna fajna rzecz: generyczne Exists/Forall, w tym generyczne w sensie ilości argumentów (vararg). *)

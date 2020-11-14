@@ -1831,7 +1831,7 @@ Lemma perm_Perm :
     perm l1 l2 -> Perm l1 l2.
 (* begin hide *)
 Proof.
-  intros. apply Permutation_Perm.
+  intros. apply Permutation_Perm. Print Permutation_count_conv. Print Assumptions Permutation_count_conv.
   apply Permutation_count_conv. exact H.
 Qed.
 (* end hide *)

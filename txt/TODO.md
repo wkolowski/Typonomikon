@@ -37,6 +37,8 @@
   - Uniwersum jako reifikacja pojęcia typu.
   - I tak dalej.
 3. Powiązane z powyższym: iks jest first-class jeżeli można sformować typ wszystkich iksów (albo jego przybliżenie, jak w przypadku uniwersum typów `Type`).
+4. Opisać gdzies ideę Settings types: wszystkie argumenty funkcji pakować w rekord z nazwanymi polami i dobrymi wartościami domyślnymi. W sumie ma to sporo wspólnego z moim podejściem do algorytmów.
+5. Opisać gdzieś bardziej inżynieriooprogramowaniowe rzeczy. Ważna idea: vertical vs horizontal Refactoring, czyli zmienić definicje paru funkcji to co innego niż zmienić sposób obsługi błędów w całym programie.
 
 ## Długofalowe
 1. Użyć jsCoq do zrobienia interaktywnej książki, która wyglądałaby jakoś tak: https://x80.org/rhino-coq/v8.10/
