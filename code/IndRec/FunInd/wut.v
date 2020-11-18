@@ -24,6 +24,15 @@ Proof.
     apply X1. assumption.
 Defined.
 
+Lemma take_nil_r :
+  forall {A : Type} (n : nat),
+    take n (@nil A) = [].
+Proof.
+  intros. remember [] as l. revert Heql.
+  functional induction take n l;
+  intros; congruence.
+Qed.
+
 Lemma take_take :
   forall {A : Type} (n m : nat) (l : list A),
     take m (take n l) = take (min n m) l.
@@ -31,8 +40,8 @@ Proof.
   intros. revert m.
   functional induction (take n l); cbn; intros.
     destruct m; reflexivity.
-    admit.
+    rewrite 2!take_nil_r. reflexivity.
     destruct m as [| m']; cbn.
       reflexivity.
       f_equal. apply IHl0.
-Admitted.
+Qed.
