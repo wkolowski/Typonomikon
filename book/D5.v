@@ -18709,6 +18709,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma SetEquiv_filter' :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    SetEquiv l1 l2 -> SetEquiv (filter p l1) (filter p l2).
+(* begin hide *)
+Proof.
+  unfold SetEquiv; split; intros.
+    rewrite elem_filter in *. firstorder.
+    rewrite elem_filter in *. firstorder.
+Qed.
+(* end hide *)
+
 Lemma SetEquiv_takeWhile :
   forall (A : Type) (p : A -> bool) (l : list A),
     SetEquiv (takeWhile p l) l <-> all p l = true.

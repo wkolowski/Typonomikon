@@ -1616,7 +1616,7 @@ Definition Perm {A : Type} (l1 l2 : list A) : Prop :=
   forall (P : A -> Prop) (n : nat),
     (AtLeast P n l1 <-> AtLeast P n l2).
 
-Hint Constructors AtLeast.
+Hint Constructors AtLeast : core.
 
 Lemma Permutation_AtLeast :
   forall {A : Type} {l1 l2 : list A},
@@ -1760,7 +1760,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Hint Constructors Exactly.
+Hint Constructors Exactly : core.
 
 (* TODO *) Lemma AtLeast_Exactly :
   forall {A : Type} (l1 l2 : list A),
@@ -2384,7 +2384,7 @@ End Specs.
 
 (** * Zbiory jako zdeduplikowane permutacje *)
 
-Module SetPermDedup.
+(* Module SetPermDedup. *)
 
 Inductive SameSet {A : Type} : list A -> list A -> Prop :=
     | SameSet_nil   : SameSet [] []
@@ -2409,7 +2409,60 @@ Proof.
     rewrite IHSameSet1, IHSameSet2. reflexivity.
 Qed.
 
-End SetPermDedup.
+(* Lemma SetEquiv_SameSetATD :
+  forall {A : Type} {l1 l2 : list A},
+    SetEquiv l1 l2 -> SameSet l1 l2.
+Proof.
+  unfold SetEquiv.
+  induction l1 as [| h1 t1];
+  intros l2 H.
+    admit.
+    {
+      assert (elem h1 l2).
+        apply H. left.
+      apply elem_spec in H0.
+      destruct H0 as (l1 & l3 & H0); subst.
+      replace _ with (SameSet (h1 :: t1) (h1 :: l3 ++ l1)).
+        constructor. apply IHt1.
+Admitted.
+ *)
+
+(* End SetPermDedup. *)
+
+(** * Zbiory jako zdeduplikowane permutacje po raz drugi *)
+
+Module SetPermNoDup.
+
+Definition Represents {A : Type} (l1 l2 : list A) : Prop :=
+  Permutation l1 l2 /\ NoDup l2.
+
+Inductive SameSet' {A : Type} (l1 l2 : list A) : Prop :=
+    | SameSet'' :
+        forall l : list A,
+          Represents l1 l -> Represents l2 l -> SameSet' l1 l2.
+
+Lemma SameSet_SameSet' :
+  forall {A : Type} {l1 l2 : list A},
+    SameSet l1 l2 -> SameSet' l1 l2.
+Proof.
+  induction 1.
+    exists []; repeat constructor.
+    destruct IHSameSet as [l [HP1 HN1] [HP2 HN2]].
+      exists (h :: l); repeat constructor; auto.
+Admitted.
+
+(* Lemma SameSet'_SetEquiv :
+  forall {A : Type} {l1 l2 : list A},
+    SameSet l1 l2 -> SetEquiv l1 l2.
+Proof.
+  unfold SameSet, SetEquiv.
+  intros A l1 l2 [HP HND] x.
+  apply Permutation_elem.
+  assumption.
+Qed.
+ *)
+
+End SetPermNoDup.
 
 (** * Zbiory za pomocą [Exists] *)
 
@@ -2417,8 +2470,6 @@ Module SetExists.
 
 Definition SameSetEx {A : Type} (l1 l2 : list A) : Prop :=
   forall P : A -> Prop, Exists P l1 <-> Exists P l2.
-
-Search Exists ex.
 
 Lemma SameSetEx_SetEquiv :
   forall {A : Type} {l1 l2 : list A},
@@ -2457,6 +2508,79 @@ Inductive SameSetATD {A : Type} : list A -> list A -> Prop :=
         forall l1 l2 l3 : list A,
           AdjacentDedup l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3.
 
+Inductive SameSetATD' {A : Type} (l1 : list A) : list A -> Prop :=
+    | SameSetATD'_refl   :
+        SameSetATD' l1 l1
+    | SameSetATD'_transp :
+        forall l2 l3 : list A,
+          SameSetATD' l1 l2 -> AdjacentTransposition l2 l3 -> SameSetATD' l1 l3
+    | SameSetATD'_dedup  :
+        forall l2 l3 : list A,
+          SameSetATD' l1 l2 -> AdjacentDedup l2 l3 -> SameSetATD' l1 l3.
+
+Lemma SameSetATD_trans :
+  forall {A : Type} {l1 l2 : list A},
+    SameSetATD l1 l2 ->
+      forall {l3 : list A}, SameSetATD l2 l3 -> SameSetATD l1 l3.
+Proof.
+  induction 1; intros.
+    assumption.
+    econstructor.
+      eassumption.
+      apply IHSameSetATD. assumption.
+    econstructor 3.
+      eassumption.
+      apply IHSameSetATD. assumption.
+Qed.
+
+Lemma SameSetATD'_trans :
+  forall {A : Type} {l1 l2 : list A},
+    SameSetATD' l1 l2 ->
+      forall {l3 : list A}, SameSetATD' l2 l3 -> SameSetATD' l1 l3.
+Proof.
+  induction 1; intros.
+    assumption.
+    econstructor.
+      eassumption.
+Restart.
+  intros until 2. revert l1 H.
+  induction H0; intros.
+    assumption.
+    econstructor.
+      apply IHSameSetATD'. assumption.
+      assumption.
+    econstructor 3.
+      apply IHSameSetATD'. assumption.
+      assumption.
+Qed.
+
+Lemma SameSetATD'_spec :
+  forall {A : Type} {l1 l2 : list A},
+    SameSetATD' l1 l2 <-> SameSetATD l1 l2.
+Proof.
+  split.
+    induction 1.
+      constructor.
+      apply (SameSetATD_trans IHSameSetATD'). econstructor.
+        eassumption.
+        constructor.
+      apply (SameSetATD_trans IHSameSetATD'). econstructor 3.
+        eassumption.
+        constructor.
+    induction 1.
+      constructor.
+      eapply SameSetATD'_trans.
+        2: eassumption.
+        econstructor.
+          constructor.
+          assumption.
+      eapply SameSetATD'_trans.
+        2: eassumption.
+        econstructor 3.
+          constructor.
+          assumption.
+Qed.
+
 Lemma SameSetATD_SetEquiv :
   forall {A : Type} {l1 l2 : list A},
     SameSetATD l1 l2 -> SetEquiv l1 l2.
@@ -2467,6 +2591,32 @@ Proof.
     inv H. rewrite <- IHSameSetATD, !elem_app, !elem_cons'. firstorder.
     inv H. rewrite <- IHSameSetATD, !elem_app, !elem_cons'. firstorder.
 Qed.
+
+Lemma SameSetATD_cons :
+  forall {A : Type} {t1 t2 : list A},
+    SameSetATD t1 t2 ->
+      forall h : A, SameSetATD (h :: t1) (h :: t2).
+Proof.
+  induction 1; intros h.
+    constructor.
+Admitted.
+
+Lemma SetEquiv_SameSetATD :
+  forall {A : Type} {l1 l2 : list A},
+    SetEquiv l1 l2 -> SameSetATD l1 l2.
+Proof.
+  unfold SetEquiv.
+  induction l1 as [| h1 t1];
+  intros l2 H.
+    admit.
+    {
+      assert (elem h1 l2).
+        apply H. left.
+      apply elem_spec in H0.
+      destruct H0 as (l1 & l3 & H0); subst.
+      admit.
+    }
+Admitted.
 
 End SetAdjacentTranspositionDedup.
 
