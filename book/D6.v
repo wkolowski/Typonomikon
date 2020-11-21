@@ -2381,3 +2381,128 @@ Abort.
 (* end hide *)
 
 End Specs.
+
+(** * Zbiory jako zdeduplikowane permutacje *)
+
+Module SetPermDedup.
+
+Inductive SameSet {A : Type} : list A -> list A -> Prop :=
+    | SameSet_nil   : SameSet [] []
+    | SameSet_cons  :
+        forall (h : A) (t1 t2 : list A), SameSet t1 t2 -> SameSet (h :: t1) (h :: t2)
+    | SameSet_swap  :
+        forall (x y : A) (l : list A), SameSet (y :: x :: l) (x :: y :: l)
+    | SameSet_dedup :
+        forall (h : A) (t : list A), SameSet (h :: t) (h :: h :: t)
+    | SameSet_trans :
+        forall l1 l2 l3 : list A, SameSet l1 l2 -> SameSet l2 l3 -> SameSet l1 l3.
+
+Lemma SameSet_SetEquiv :
+  forall {A : Type} {l1 l2 : list A},
+    SameSet l1 l2 -> SetEquiv l1 l2.
+Proof.
+  induction 1; unfold SetEquiv in *; intro z.
+    reflexivity.
+    rewrite !elem_cons', IHSameSet. reflexivity.
+    rewrite !elem_cons'. firstorder.
+    rewrite !elem_cons'. firstorder.
+    rewrite IHSameSet1, IHSameSet2. reflexivity.
+Qed.
+
+End SetPermDedup.
+
+(** * Zbiory za pomocą [Exists] *)
+
+Module SetExists.
+
+Definition SameSetEx {A : Type} (l1 l2 : list A) : Prop :=
+  forall P : A -> Prop, Exists P l1 <-> Exists P l2.
+
+Search Exists ex.
+
+Lemma SameSetEx_SetEquiv :
+  forall {A : Type} {l1 l2 : list A},
+    SameSetEx l1 l2 <-> SetEquiv l1 l2.
+Proof.
+  unfold SameSetEx, SetEquiv.
+  split; intros.
+    specialize (H (fun y => x = y)). rewrite !Exists_spec in H.
+      firstorder; specialize (H x); specialize (H0 x); cbn in *; firstorder congruence.
+    rewrite !Exists_spec. firstorder.
+Qed.
+
+End SetExists.
+
+(** * Zbiory za pomocą sąsiednich transpozycji *)
+
+Module SetAdjacentTranspositionDedup.
+
+Inductive AdjacentTransposition {A : Type} : list A -> list A -> Prop :=
+    | AdjacentTransposition' :
+        forall (x y : A) (l1 l2 : list A),
+          AdjacentTransposition (l1 ++ x :: y :: l2) (l1 ++ y :: x :: l2).
+
+Inductive AdjacentDedup {A : Type} : list A -> list A -> Prop :=
+    | AdjacentDedup' :
+        forall (x : A) (l1 l2 : list A),
+          AdjacentDedup (l1 ++ x :: x :: l2) (l1 ++ x :: l2).
+
+Inductive SameSetATD {A : Type} : list A -> list A -> Prop :=
+    | SameSetATD_refl   :
+        forall l : list A, SameSetATD l l
+    | SameSetATD_transp :
+        forall l1 l2 l3 : list A,
+          AdjacentTransposition l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3
+    | SameSetATD_dedup  :
+        forall l1 l2 l3 : list A,
+          AdjacentDedup l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3.
+
+Lemma SameSetATD_SetEquiv :
+  forall {A : Type} {l1 l2 : list A},
+    SameSetATD l1 l2 -> SetEquiv l1 l2.
+Proof.
+  unfold SetEquiv.
+  induction 1; intro.
+    apply SetEquiv_refl.
+    inv H. rewrite <- IHSameSetATD, !elem_app, !elem_cons'. firstorder.
+    inv H. rewrite <- IHSameSetATD, !elem_app, !elem_cons'. firstorder.
+Qed.
+
+End SetAdjacentTranspositionDedup.
+
+(** * Zbiory za pomocą transpozycji *)
+
+Module SetTranspositionDedup.
+
+Inductive Transposition {A : Type} : list A -> list A -> Prop :=
+    | Transposition' :
+        forall (x y : A) (l1 l2 l3 : list A),
+          Transposition (l1 ++ x :: l2 ++ y :: l3) (l1 ++ y :: l2 ++ x :: l3).
+
+Inductive Dedup {A : Type} : list A -> list A -> Prop :=
+    | Dedup' :
+        forall (x : A) (l1 l2 l3 : list A),
+          Dedup (l1 ++ x :: l2 ++ x :: l3) (l1 ++ x :: l2 ++ x :: l3).
+
+Inductive SameSetTD {A : Type} : list A -> list A -> Prop :=
+    | SameSetTD_refl   :
+        forall l : list A, SameSetTD l l
+    | SameSetTD_transp :
+        forall l1 l2 l3 : list A,
+          Transposition l1 l2 -> SameSetTD l2 l3 -> SameSetTD l1 l3
+    | SameSetTD_dedup  :
+        forall l1 l2 l3 : list A,
+          Dedup l1 l2 -> SameSetTD l2 l3 -> SameSetTD l1 l3.
+
+Lemma SameSetTD_SetEquiv :
+  forall {A : Type} {l1 l2 : list A},
+    SameSetTD l1 l2 -> SetEquiv l1 l2.
+Proof.
+  unfold SetEquiv.
+  induction 1; intro.
+    apply SetEquiv_refl.
+    inv H. rewrite <- IHSameSetTD, !elem_app, !elem_cons', !elem_app, !elem_cons'. firstorder.
+    inv H. rewrite <- IHSameSetTD, !elem_app, !elem_cons', !elem_app, !elem_cons'. firstorder.
+Qed.
+
+End SetTranspositionDedup.
