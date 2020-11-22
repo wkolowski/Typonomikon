@@ -2409,23 +2409,12 @@ Proof.
     rewrite IHSameSet1, IHSameSet2. reflexivity.
 Qed.
 
-(* Lemma SetEquiv_SameSetATD :
+Lemma Permutation_SameSet :
   forall {A : Type} {l1 l2 : list A},
-    SetEquiv l1 l2 -> SameSet l1 l2.
+    Permutation l1 l2 -> SameSet l1 l2.
 Proof.
-  unfold SetEquiv.
-  induction l1 as [| h1 t1];
-  intros l2 H.
-    admit.
-    {
-      assert (elem h1 l2).
-        apply H. left.
-      apply elem_spec in H0.
-      destruct H0 as (l1 & l3 & H0); subst.
-      replace _ with (SameSet (h1 :: t1) (h1 :: l3 ++ l1)).
-        constructor. apply IHt1.
-Admitted.
- *)
+  induction 1; econstructor; eassumption.
+Qed.
 
 (* End SetPermDedup. *)
 
@@ -2436,31 +2425,33 @@ Module SetPermNoDup.
 Definition Represents {A : Type} (l1 l2 : list A) : Prop :=
   Permutation l1 l2 /\ NoDup l2.
 
-Inductive SameSet' {A : Type} (l1 l2 : list A) : Prop :=
+Inductive RepresentSameSet {A : Type} (l1 l2 : list A) : Prop :=
     | SameSet'' :
         forall l : list A,
-          Represents l1 l -> Represents l2 l -> SameSet' l1 l2.
+          Represents l1 l -> Represents l2 l -> RepresentSameSet l1 l2.
 
-Lemma SameSet_SameSet' :
+Lemma RepresentSameSet_Represents :
   forall {A : Type} {l1 l2 : list A},
-    SameSet l1 l2 -> SameSet' l1 l2.
+    RepresentSameSet l1 l2 -> SameSet l1 l2.
+Proof.
+  intros A l1 l2 [l [HP1 HN1] [HP2 HN2]].
+  apply Permutation_SameSet.
+  eapply Permutation_trans.
+    eassumption.
+    symmetry. assumption.
+Qed.
+
+Lemma SameSet_RepresentSameSet :
+  forall {A : Type} {l1 l2 : list A},
+    SameSet l1 l2 -> RepresentSameSet l1 l2.
 Proof.
   induction 1.
     exists []; repeat constructor.
-    destruct IHSameSet as [l [HP1 HN1] [HP2 HN2]].
-      exists (h :: l); repeat constructor; auto.
-Admitted.
-
-(* Lemma SameSet'_SetEquiv :
-  forall {A : Type} {l1 l2 : list A},
-    SameSet l1 l2 -> SetEquiv l1 l2.
-Proof.
-  unfold SameSet, SetEquiv.
-  intros A l1 l2 [HP HND] x.
-  apply Permutation_elem.
-  assumption.
-Qed.
- *)
+    admit.
+    exists (x :: y :: l); constructor.
+      constructor.
+      constructor.
+Abort.
 
 End SetPermNoDup.
 
@@ -2592,6 +2583,28 @@ Proof.
     inv H. rewrite <- IHSameSetATD, !elem_app, !elem_cons'. firstorder.
 Qed.
 
+Lemma AdjacentTransposition_cons :
+  forall {A : Type} {t1 t2 : list A},
+    AdjacentTransposition t1 t2 ->
+      forall h : A, AdjacentTransposition (h :: t1) (h :: t2).
+Proof.
+  induction 1.
+  intro h.
+  rewrite <- !app_cons_l.
+  constructor.
+Qed.
+
+Lemma AdjacentDedup_cons :
+  forall {A : Type} {t1 t2 : list A},
+    AdjacentDedup t1 t2 ->
+      forall h : A, AdjacentDedup (h :: t1) (h :: t2).
+Proof.
+  induction 1.
+  intro h.
+  rewrite <- !app_cons_l.
+  constructor.
+Qed.
+
 Lemma SameSetATD_cons :
   forall {A : Type} {t1 t2 : list A},
     SameSetATD t1 t2 ->
@@ -2599,7 +2612,13 @@ Lemma SameSetATD_cons :
 Proof.
   induction 1; intros h.
     constructor.
-Admitted.
+    apply (@SameSetATD_transp _ _ (h :: l2)).
+      apply AdjacentTransposition_cons. assumption.
+      apply IHSameSetATD.
+    apply (@SameSetATD_dedup _ _ (h :: l2)).
+      apply AdjacentDedup_cons. assumption.
+      apply IHSameSetATD.
+Qed.
 
 Lemma SetEquiv_SameSetATD :
   forall {A : Type} {l1 l2 : list A},
@@ -2632,7 +2651,7 @@ Inductive Transposition {A : Type} : list A -> list A -> Prop :=
 Inductive Dedup {A : Type} : list A -> list A -> Prop :=
     | Dedup' :
         forall (x : A) (l1 l2 l3 : list A),
-          Dedup (l1 ++ x :: l2 ++ x :: l3) (l1 ++ x :: l2 ++ x :: l3).
+          Dedup (l1 ++ x :: l2 ++ x :: l3) (l1 ++ x :: l2 ++ l3).
 
 Inductive SameSetTD {A : Type} : list A -> list A -> Prop :=
     | SameSetTD_refl   :
@@ -2656,3 +2675,93 @@ Proof.
 Qed.
 
 End SetTranspositionDedup.
+
+(** * Permutacje, jeszcze dziwniej *)
+
+Module PermWeird.
+
+Inductive Elem {A : Type} (x : A) : list A -> Type :=
+    | Z : forall l : list A, Elem x (x :: l)
+    | S : forall {t : list A}, Elem x t -> forall h : A, Elem x (h :: t).
+
+Arguments Z {A x} _.
+Arguments S {A x t} _ _.
+
+Class iso (A B : Type) : Prop :=
+{
+    coel : A -> B;
+    coer : B -> A;
+    coel_coer :
+      forall a : A, coer (coel a) = a;
+    coer_coel :
+      forall b : B, coel (coer b) = b;
+}.
+
+Lemma iso_trans :
+  forall {A B C : Type},
+    iso A B -> iso B C -> iso A C.
+Proof.
+  intros A B C [ab ba Hab Hba] [bc cb Hbc Hcb].
+  split with (coel := fun a => bc (ab a))
+             (coer := fun c => ba (cb c));
+  intros.
+    rewrite Hbc, Hab. reflexivity.
+    rewrite Hba, Hcb. reflexivity.
+Qed.
+
+Definition Perm {A : Type} (l1 l2 : list A) : Prop :=
+  forall x : A, iso (Elem x l1) (Elem x l2).
+
+Require Import Equality.
+
+Lemma Permutation_Perm :
+  forall {A : Type} {l1 l2 : list A},
+    Permutation l1 l2 -> Perm l1 l2.
+Proof.
+  induction 1.
+    red. intro. split with (coel := id) (coer := id).
+      1-2: reflexivity.
+    red. intro y. unfold Perm in *. destruct (IHPermutation y).
+      esplit. Unshelve. all: cycle 4. 1-4: intro H'.
+        inv H'.
+          left.
+          right. apply coel. assumption.
+        inv H'.
+          left.
+          right. apply coer. assumption.
+        dependent induction H'; cbn; congruence.
+        dependent induction H'; cbn; congruence.
+    red. intro z. esplit. Unshelve. all: cycle 3. 1-4: intro H'.
+        inv H'.
+          right. left.
+          inv X.
+            left.
+            right. right. assumption.
+        inv H'.
+          right. left.
+          inv X.
+            left.
+            right. right. assumption.
+        do 2 (dependent induction H'; cbn; try congruence).
+        do 2 (dependent induction H'; cbn; try congruence).
+    intro H'. eapply iso_trans.
+      apply IHPermutation1.
+      apply IHPermutation2.
+Qed.
+
+Lemma Perm_Permutation :
+  forall {A : Type} {l1 l2 : list A},
+    Perm l1 l2 -> Permutation l1 l2.
+Proof.
+  unfold Perm.
+  induction l1 as [| h1 t1]; intros.
+    destruct l2 as [| h2 t2].
+      constructor.
+      specialize (H h2). destruct H.
+        clear -coer. specialize (coer ltac:(left)). inv coer.
+    destruct l2 as [| h2 t2].
+      specialize (H h1). destruct H.
+        clear -coel. specialize (coel ltac:(left)). inv coel.
+Admitted.
+
+End PermWeird.
