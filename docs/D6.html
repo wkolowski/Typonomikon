@@ -1791,88 +1791,67 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="var">Arguments</span> <span class="id" title="var">S</span> {<span class="id" title="var">A</span> <span class="id" title="var">x</span> <span class="id" title="var">t</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Class</span> <span class="id" title="var">iso</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coer</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel_coer</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> : <span class="id" title="var">A</span>, <span class="id" title="var">coer</span> (<span class="id" title="var">coel</span> <span class="id" title="var">a</span>) = <span class="id" title="var">a</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coer_coel</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span>, <span class="id" title="var">coel</span> (<span class="id" title="var">coer</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>;<br/>
-}.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">H</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iso_trans</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">iso</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="var">iso</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> -&gt; <span class="id" title="var">iso</span> <span class="id" title="var">A</span> <span class="id" title="var">C</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> [<span class="id" title="var">ab</span> <span class="id" title="var">ba</span> <span class="id" title="var">Hab</span> <span class="id" title="var">Hba</span>] [<span class="id" title="var">bc</span> <span class="id" title="var">cb</span> <span class="id" title="var">Hbc</span> <span class="id" title="var">Hcb</span>].<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">split</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">coel</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">bc</span> (<span class="id" title="var">ab</span> <span class="id" title="var">a</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">coer</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="var">ba</span> (<span class="id" title="var">cb</span> <span class="id" title="var">c</span>));<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">Hbc</span>, <span class="id" title="var">Hab</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">Hba</span>, <span class="id" title="var">Hcb</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">Perm</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Perm</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">iso</span> (<span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_Perm</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">red</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">split</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">coel</span> := <span class="id" title="var">id</span>) (<span class="id" title="var">coer</span> := <span class="id" title="var">id</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-2: <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">red</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">y</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">Perm</span> <span class="id" title="tactic">in</span> *. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">IHPermutation</span> <span class="id" title="var">y</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">esplit</span>. <span class="id" title="var">Unshelve</span>. <span class="id" title="var">all</span>: <span class="id" title="var">cycle</span> 4. 1-4: <span class="id" title="tactic">intro</span> <span class="id" title="var">H'</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H'</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">coel</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H'</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">coer</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">dependent</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">H'</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">congruence</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">dependent</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">H'</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">congruence</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">red</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">z</span>. <span class="id" title="var">esplit</span>. <span class="id" title="var">Unshelve</span>. <span class="id" title="var">all</span>: <span class="id" title="var">cycle</span> 3. 1-4: <span class="id" title="tactic">intro</span> <span class="id" title="var">H'</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H'</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">X</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H'</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">X</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 (<span class="id" title="tactic">dependent</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">H'</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">congruence</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 (<span class="id" title="tactic">dependent</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">H'</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">congruence</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H'</span>. <span class="id" title="tactic">eapply</span> <span class="id" title="var">iso_trans</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHPermutation1</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHPermutation2</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="comment">(*&nbsp;Lemma&nbsp;Permutation_Perm&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{l1&nbsp;l2&nbsp;:&nbsp;list&nbsp;A},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Permutation&nbsp;l1&nbsp;l2&nbsp;-&gt;&nbsp;Perm&nbsp;l1&nbsp;l2.<br/>
+Proof.<br/>
+&nbsp;&nbsp;induction&nbsp;1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;red.&nbsp;intro.&nbsp;split&nbsp;with&nbsp;(coel&nbsp;:=&nbsp;id)&nbsp;(coer&nbsp;:=&nbsp;id).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-2:&nbsp;reflexivity.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;red.&nbsp;intro&nbsp;y.&nbsp;unfold&nbsp;Perm&nbsp;in&nbsp;*.&nbsp;destruct&nbsp;(IHPermutation&nbsp;y).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;esplit.&nbsp;Unshelve.&nbsp;all:&nbsp;cycle&nbsp;4.&nbsp;1-4:&nbsp;intro&nbsp;H'.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;H'.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;apply&nbsp;coel.&nbsp;assumption.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;H'.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;apply&nbsp;coer.&nbsp;assumption.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dependent&nbsp;induction&nbsp;H';&nbsp;cbn;&nbsp;congruence.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dependent&nbsp;induction&nbsp;H';&nbsp;cbn;&nbsp;congruence.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;red.&nbsp;intro&nbsp;z.&nbsp;esplit.&nbsp;Unshelve.&nbsp;all:&nbsp;cycle&nbsp;3.&nbsp;1-4:&nbsp;intro&nbsp;H'.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;H'.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;left.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;X.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;right.&nbsp;assumption.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;H'.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;left.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;X.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;right.&nbsp;assumption.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;2&nbsp;(dependent&nbsp;induction&nbsp;H';&nbsp;cbn;&nbsp;try&nbsp;congruence).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;2&nbsp;(dependent&nbsp;induction&nbsp;H';&nbsp;cbn;&nbsp;try&nbsp;congruence).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;intro&nbsp;H'.&nbsp;eapply&nbsp;iso_trans.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;IHPermutation1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;IHPermutation2.<br/>
+Qed.<br/>
+&nbsp;*)</span><br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_Permutation</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">Perm</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>]; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">H</span> <span class="id" title="var">h2</span>). <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">clear</span> -<span class="id" title="var">coer</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">coer</span> <span class="id" title="keyword">ltac</span>:(<span class="id" title="tactic">left</span>)). <span class="id" title="var">inv</span> <span class="id" title="var">coer</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h2</span> <span class="id" title="var">t2</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">H</span> <span class="id" title="var">h1</span>). <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">clear</span> -<span class="id" title="var">coel</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">coel</span> <span class="id" title="keyword">ltac</span>:(<span class="id" title="tactic">left</span>)). <span class="id" title="var">inv</span> <span class="id" title="var">coel</span>.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
+<span class="comment">(*&nbsp;Lemma&nbsp;Perm_Permutation&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{l1&nbsp;l2&nbsp;:&nbsp;list&nbsp;A},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Perm&nbsp;l1&nbsp;l2&nbsp;-&gt;&nbsp;Permutation&nbsp;l1&nbsp;l2.<br/>
+Proof.<br/>
+&nbsp;&nbsp;unfold&nbsp;Perm.<br/>
+&nbsp;&nbsp;induction&nbsp;l1&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">h1</span></span> <span class="inlinecode"><span class="id" title="var">t1</span></span>;&nbsp;intros.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;l2&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">h2</span></span> <span class="inlinecode"><span class="id" title="var">t2</span></span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specialize&nbsp;(H&nbsp;h2).&nbsp;destruct&nbsp;H.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clear&nbsp;-coer.&nbsp;specialize&nbsp;(coer&nbsp;ltac:(left)).&nbsp;inv&nbsp;coer.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;l2&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">h2</span></span> <span class="inlinecode"><span class="id" title="var">t2</span></span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specialize&nbsp;(H&nbsp;h1).&nbsp;destruct&nbsp;H.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clear&nbsp;-coel.&nbsp;specialize&nbsp;(coel&nbsp;ltac:(left)).&nbsp;inv&nbsp;coel.<br/>
+Admitted.<br/>
+&nbsp;*)</span><br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">PermWeird</span>.<br/>
 </div>

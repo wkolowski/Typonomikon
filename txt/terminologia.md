@@ -10,11 +10,11 @@ Uwaga: są dwa spojrzenia na termy, wewnętrzne i zewnętrzne.
 
 Termy w sensie wewnętrznym zawsze mają jakiś typ w jakimś kontekście. Można je sobie wyobrażać jako osądy postaci `G |- t : A`. W takim ujęciu `|- 2 : nat` jest termem, zaś `f f` nie jest termem, bo nie da się tego otypować.
 
-Z drugiej strony mamy termy w sensie zewnętrznym, które dla rozróżnienia możemy zwać pretermami. Są to gołe wyrażenia, poprawnie zbudowane według reguł gramatyki, np. `f f` jest pretermem, ale nie muszą być dobrze otypowane.
+Z drugiej strony mamy termy w sensie zewnętrznym, które dla rozróżnienia możemy zwać pretermami. Są to gołe wyrażenia, poprawnie zbudowane według reguł gramatyki (np. `f f` jest pretermem), ale nie muszą być dobrze otypowane.
 
 ## Dane, kodane i procesy
 
-Tu sprawa jest banalnie prosta. Dane to elementy typów induktywnych, zaś kodane to elementy typów koinduktywnych. Ponieważ jednak słowo "kodane" jest niemal magiczne, lepiej elementy typów koinduktywnych nazywać procesami. Wot, strumień to taki proces generujący elementy danego typu. Trzeba tylko trohu uważać, bo "proces" w tym sensie koliduje ze "procesem" w sensie systemów operacyjnych.
+Tu sprawa jest banalnie prosta. Dane to elementy typów induktywnych, zaś kodane to elementy typów koinduktywnych. Ponieważ jednak słowo "kodane" jest niemal magiczne, lepiej elementy typów koinduktywnych nazywać procesami. Wot, strumień to taki proces generujący elementy danego typu. Trzeba tylko trohu uważać, bo "proces" w tym sensie koliduje z "procesem" w sensie systemów operacyjnych.
 
 Należy też zauważyć, że niektóre rzeczy to ani nie dane ani nie kodane, np. funkcje.
 

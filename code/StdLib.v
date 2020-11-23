@@ -173,8 +173,6 @@ Defined.
 
 End StrongInequality.
 
-(** TODO: klasy są słuszniejsze niż moduły *)
-
 Class Pointed (A : Type) : Type :=
 {
     point : A;

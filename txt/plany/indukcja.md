@@ -53,7 +53,7 @@ Jeszcze jedna kwestia, która nie zmieściła się na obrazku, a która konceptu
 
 ## Nazwy
 
-O ile niektóre formy ewolucji są niezależne od innych (np. parametry są niezależne od w sumie wszystkiego), to zazwyczaj występują razem (np. w sumie wszystko zazwyczaj ma możliwość używania parametrów). Prowadzi to do nadawania osobnych nazw poszczególnych grupom, co podsumowuje tabelka.
+O ile niektóre formy ewolucji są niezależne od innych (np. parametry są niezależne od w sumie wszystkiego), to zazwyczaj występują razem (np. w sumie wszystko zazwyczaj ma możliwość używania parametrów). Prowadzi to do nadawania osobnych nazw poszczególnym grupom, co podsumowuje tabelka.
 
 | Nazwa                     | Co tam jest                   |
 | ------------------------- | ----------------------------- |

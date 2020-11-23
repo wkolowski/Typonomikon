@@ -18,7 +18,7 @@
     - rozumowanie od tyłu jest lepsze, logika jest bezmyślna
   - Dysjunkcja
   - Koniunkcja
-  - Fałsz i prawda, w tym jako 0-arna wersja dysjunkcji i koniunkjci
+  - Fałsz i prawda, w tym jako 0-arna wersja dysjunkcji i koniunkcji
   - równoważność
   - negacja, silna i słaba
   - inne spójniki, np. xor. Ćwiczenie kreatywności?
@@ -54,10 +54,10 @@
   - materialna
   - diabła (DNE i kontrapozycja)
   - cudownych konsekwencji, Peirce'a
-Paradoks pijoka
-Paradoks Curry'ego
-(Paradoksy implikacji materialnej?)
-Zadania:
+- Paradoks pijoka
+- Paradoks Curry'ego
+- (Paradoksy implikacji materialnej?)
+- Zadania:
   - udowodnij równoważność praw każde z każdym
   - wyrzucić zadania mącące (mieszające typy i zdania)
 - Ściąga
@@ -185,11 +185,11 @@ Zadania:
 - typ `option` (być może przy okazji funktory?) Stąd zadania dla `head`, `last`, `tail` i `init`
 - wcisnąć tu rozdział o produktach, sumach i funkcjach?
 - arytmetyka i typ `nat`. Reszta arytmetyki:
-  liczby dodatnie (positive)
-  binarne liczby naturalne
-  liczby całkowite
-  liczby wymierne
-  systemy liczbowe
+  - liczby dodatnie (positive)
+  - binarne liczby naturalne
+  - liczby całkowite
+  - liczby wymierne
+  - systemy liczbowe
 - `list`y i ich różne pochodne:
   - listy niepuste `nel`
   - wektory zależne `vec`
@@ -239,13 +239,13 @@ I2: Spis taktyk
     - zeta (redukcja pojedynczego `let`a)
   - Odpowiadające taktyki:
     - alfa — brak
-    - beta — cbn/cbv beta
-    - delta — cbn/cbv delta, unfold, fold
+    - beta — `cbn beta`/`cbv beta`
+    - delta — `cbn delta`/`cbv delta`, `unfold`, `fold`
     - eta — brak
-    - iota — cbn/cbv iota
-    - zeta — cbn/cbv zeta
-    - ogólna redukcja: cbn, cbv, simpl
-    - konwersja: change
+    - iota — `cbn iota`/`cbv iota`
+    - zeta — `cbn zeta`/`cbv zeta`
+    - ogólna redukcja: `cbn`, `cbv`, `simpl`
+    - konwersja: `change`
   - Omówić następujące taktyki (w kolejności):
     - `pattern` (beta ekspansja)
     - `unfold`, `fold` (delta redukcja/ekspansja)

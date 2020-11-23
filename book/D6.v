@@ -2687,34 +2687,14 @@ Inductive Elem {A : Type} (x : A) : list A -> Type :=
 Arguments Z {A x} _.
 Arguments S {A x t} _ _.
 
-Class iso (A B : Type) : Prop :=
-{
-    coel : A -> B;
-    coer : B -> A;
-    coel_coer :
-      forall a : A, coer (coel a) = a;
-    coer_coel :
-      forall b : B, coel (coer b) = b;
-}.
+Require Import H.
 
-Lemma iso_trans :
-  forall {A B C : Type},
-    iso A B -> iso B C -> iso A C.
-Proof.
-  intros A B C [ab ba Hab Hba] [bc cb Hbc Hcb].
-  split with (coel := fun a => bc (ab a))
-             (coer := fun c => ba (cb c));
-  intros.
-    rewrite Hbc, Hab. reflexivity.
-    rewrite Hba, Hcb. reflexivity.
-Qed.
-
-Definition Perm {A : Type} (l1 l2 : list A) : Prop :=
+Definition Perm {A : Type} (l1 l2 : list A) : Type :=
   forall x : A, iso (Elem x l1) (Elem x l2).
 
 Require Import Equality.
 
-Lemma Permutation_Perm :
+(* Lemma Permutation_Perm :
   forall {A : Type} {l1 l2 : list A},
     Permutation l1 l2 -> Perm l1 l2.
 Proof.
@@ -2748,8 +2728,9 @@ Proof.
       apply IHPermutation1.
       apply IHPermutation2.
 Qed.
+ *)
 
-Lemma Perm_Permutation :
+(* Lemma Perm_Permutation :
   forall {A : Type} {l1 l2 : list A},
     Perm l1 l2 -> Permutation l1 l2.
 Proof.
@@ -2763,5 +2744,5 @@ Proof.
       specialize (H h1). destruct H.
         clear -coel. specialize (coel ltac:(left)). inv coel.
 Admitted.
-
+ *)
 End PermWeird.

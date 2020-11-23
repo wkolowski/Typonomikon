@@ -9,7 +9,7 @@ Na obrazku widać różne rodzaje rekursji i techniki jej wykorzystania. Kolor z
 | Analiza przypadków | Rozróżnianie konstruktorów. Odpowiada enumeracjom, czyli najprymitywniejszym typom induktywnym. |
 | Dopasowanie do wzorca | Wiązanie argumentów konstruktorów. |
 | Zależna analiza przypadków | Analiza przypadków dla indeksowanych enumeracji. Każdy przypadek determinuje możliwe indeksy. |
-| Rekurjsa prymitywna | Wywołania rekurencyjne na bezpośrednich podtermach. Odpowiada mniej więcej standardowej regule indukcji. |
+| Rekursja prymitywna | Wywołania rekurencyjne na bezpośrednich podtermach. Odpowiada mniej więcej standardowej regule indukcji. |
 | Rekursja strukturalna | Wywołania rekurencyjne na głębszych podtermach. Potrzeba customowych reguł indukcji, żeby udowodnić co trudniejsze twierdzenia. |
 | Rekursja zagnieżdżona | Przyjazny wariant: dopasowanie wyniku wywołania rekurencyjnego. <br> Groźniejszy wariant: wywołanie rekurencyjne na wyniku innego wywołania rekurencyjnego. |
 | Rekursja wzajemna | Rekursja prymitywna dla typów wzajemnie induktywnych. |

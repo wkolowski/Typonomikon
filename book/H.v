@@ -5,6 +5,27 @@ Set Universe Polymorphism.
 Require Import Arith.
 Require Import Bool.
 
+(** * Równość - powtórka *)
+
+(** * Ścieżki *)
+
+(** * Równość a ścieżki *)
+
+Inductive path {A : Type} (x : A) : A -> Type :=
+    | idpath : path x x.
+
+Inductive Box (A : Type) : Prop :=
+    | box : A -> Box A.
+
+Lemma Box_path_is_eq :
+  forall {A : Type} {x y : A},
+    Box (path x y) <-> x = y.
+Proof.
+  split.
+    intros [[]]. reflexivity.
+    destruct 1. do 2 constructor.
+Qed.
+
 (** * Ścieżki w typach induktywnych *)
 
 (** ** Ścieżki między liczbami naturalnymi - rekurencyjnie *)
@@ -1468,109 +1489,153 @@ End DiffProtocols.
 
 (* end hide *)
 
+Class iso (A B : Type) : Type :=
+{
+    coel : A -> B;
+    coer : B -> A;
+    coel_coer :
+      forall a : A, coer (coel a) = a;
+    coer_coel :
+      forall b : B, coel (coer b) = b;
+}.
 
-Definition isopair {A B : Type} (f : A -> B) (g : B -> A) : Prop :=
-  (forall a : A, g (f a) = a) /\
-  (forall b : B, f (g b) = b).
+Arguments coel {A B} _.
+Arguments coer {A B} _.
 
-Definition iso (A B : Type) : Prop :=
-  exists (f : A -> B) (g : B -> A), isopair f g.
+Instance iso_refl (A : Type) : iso A A :=
+{
+    coel := id;
+    coer := id;
+    coel_coer _ := eq_refl;
+    coer_coel _ := eq_refl;
+}.
+
+Instance iso_sym {A B : Type} (i : iso A B) : iso B A :=
+{
+    coel := coer i;
+    coer := coel i;
+    coel_coer := coer_coel;
+    coer_coel := coel_coer;
+}.
+
+#[refine]
+Instance iso_trans
+  {A B C : Type} (i : iso A B) (j : iso B C) : iso A C :=
+{
+    coel a := coel j (coel i a);
+    coer c := coer i (coer j c);
+}.
+Proof.
+  intros. rewrite 2!coel_coer. reflexivity.
+  intros. rewrite 2!coer_coel. reflexivity.
+Defined.
+
+#[refine]
+Instance iso_pres_prod
+  {A A' B B' : Type} (i : iso A A') (j : iso B B') : iso (A * B) (A' * B') :=
+{
+    coel '(a, b) := (coel i a, coel j b);
+    coer '(a, b) := (coer i a, coer j b);
+}.
+Proof.
+  destruct a. rewrite !coel_coer. reflexivity.
+  destruct b. rewrite !coer_coel. reflexivity.
+Qed.
 
 (** ** Produkty i sumy *)
 
-Definition swap {A B : Type} (x : A * B) : B * A :=
-match x with
-    | (a, b) => (b, a)
-end.
-
-Lemma prod_comm :
-  forall A B : Type, iso (A * B) (B * A).
+#[refine]
+Instance prod_assoc (A B C : Type) : iso (A * (B * C)) ((A * B) * C) :=
+{
+    coel '(a, (b, c)) := ((a, b), c);
+    coer '((a, b), c) := (a, (b, c));
+}.
 Proof.
-  intros. exists swap, swap. split.
-    destruct a; cbn; reflexivity.
-    destruct b; cbn; reflexivity.
-Qed.
+  intros [a [b c]]. reflexivity.
+  intros [[a b] c]. reflexivity.
+Defined.
 
-Definition reassoc {A B C : Type} (x : A * (B * C)) : (A * B) * C :=
-match x with
-    | (a, (b, c)) => ((a, b), c)
-end.
-
-Definition unreassoc {A B C : Type} (x : (A * B) * C) : A * (B * C) :=
-match x with
-    | ((a, b), c) => (a, (b, c))
-end.
-
-Lemma prod_assoc :
-  forall A B C : Type, iso (A * (B * C)) ((A * B) * C).
+#[refine]
+Instance prod_unit_l (A : Type) : iso (unit * A) A :=
+{
+    coel '(_, a) := a;
+    coer a := (tt, a);
+}.
 Proof.
-  intros. exists reassoc, unreassoc. split.
-    destruct a as [a [b c]]; cbn; reflexivity.
-    destruct b as [[a b] c]; cbn; reflexivity.
-Qed.
+  intros [[] ]. reflexivity.
+  reflexivity.
+Defined.
 
-Lemma prod_unit_l :
-  forall A : Type, iso (unit * A) A.
+#[refine]
+Instance prod_unit_r (A : Type) : iso (A * unit) A :=
+{
+    coel '(a, _) := a;
+    coer a := (a, tt);
+}.
 Proof.
-  intro. exists snd. exists (fun a : A => (tt, a)). split.
-    destruct a as [[] a]; cbn; reflexivity.
-    reflexivity.
-Qed.
+  intros [a []]. reflexivity.
+  reflexivity.
+Defined.
 
-Lemma prod_unit_r :
-  forall A : Type, iso (A * unit) A.
+#[refine]
+Instance prod_comm {A B : Type} : iso (A * B) (B * A) :=
+{
+    coel '(a, b) := (b, a);
+    coer '(b, a) := (a, b);
+}.
 Proof.
-  intro. exists fst. exists (fun a : A => (a, tt)). split.
-    destruct a as [a []]. cbn. reflexivity.
-    reflexivity.
-Qed.
+  destruct a. cbn. reflexivity.
+  destruct b. cbn. reflexivity.
+Defined.
 
 (** Trzeba przerobić rozdział o typach i funkcjach tak, żeby nie mieszać
     pojęć kategorycznych (wprowadzonych na początku) z teoriozbiorowymi
     (injekcja, surjekcja, bijekcja). Przedstawić te 3 ostatnie jako
     explicite charakteryzacje pojęć kategorycznych. *)
 
-Lemma sum_empty_l :
-  forall A : Type, iso (Empty_set + A) A.
+#[refine]
+Instance sum_empty_l (A : Type) : iso (Empty_set + A) A :=
+{
+    coel x := match x with | inl e => match e with end | inr a => a end;
+    coer := inr;
+}.
 Proof.
-  intro. eexists. eexists. Unshelve. all: cycle 1.
-    destruct 1 as [[] | a]. exact a.
-    exact inr.
-    split.
-      destruct a as [[] | a]; reflexivity.
-      reflexivity.
-Qed.
+  destruct a as [[] | a]. reflexivity.
+  reflexivity.
+Defined.
 
-Lemma sum_empty_r :
-  forall A : Type, iso (A + Empty_set) A.
+#[refine]
+Instance sum_empty_r (A : Type) : iso (A + Empty_set) A :=
+{
+    coel x := match x with | inl a => a | inr e => match e with end end;
+    coer := inl;
+}.
 Proof.
-  intro. eexists. eexists. Unshelve. all: cycle 1.
-    destruct 1 as [a | []]. exact a.
-    exact inl.
-    split.
-      destruct a as [a | []]; reflexivity.
-      reflexivity.
-Qed.
+  destruct a as [a | []]. reflexivity.
+  reflexivity.
+Defined.
 
-Lemma sum_assoc :
-  forall A B C : Type, iso (A + (B + C)) ((A + B) + C).
-Proof.
-  intros. do 2 eexists. Unshelve. all: cycle 1.
-    1-2: firstorder.
-    split.
-      destruct a as [a | [b | c]]; reflexivity.
-      destruct b as [[a | b] | c]; reflexivity.
-Qed.
+#[refine]
+Instance sum_assoc (A B C : Type) : iso (A + (B + C)) ((A + B) + C) :=
+{
 
-Lemma sum_comm :
-  forall A B : Type, iso (A + B) (B + A).
+}.
 Proof.
-  intros. do 2 eexists. Unshelve. all: cycle 1.
-    1-2: firstorder.
-    split.
-      destruct a; reflexivity.
-      destruct b; reflexivity.
-Qed.
+  1-2: firstorder.
+    intros [a | [b | c]]; cbn; reflexivity.
+    intros [[a | b] | c]; cbn; reflexivity.
+Defined.
+
+#[refine]
+Instance sum_comm (A B : Type) : iso (A + B) (B + A) :=
+{
+
+}.
+Proof.
+  1-2: firstorder.
+    destruct a as [a | b]; cbn; reflexivity.
+    destruct b as [b | a]; cbn; reflexivity.
+Defined.
 
 (** ** Liczby naturalne *)
 
@@ -1586,14 +1651,16 @@ match on with
     | Some n => S n
 end.
 
-Lemma iso_nat_option_Nat :
-  iso nat (option nat).
+#[refine]
+Instance iso_nat_option_nat : iso nat (option nat) :=
+{
+    coel n := match n with | 0 => None | S n' => Some n' end;
+    coer o := match o with | None => 0 | Some n => S n end;
+}.
 Proof.
-  red. exists pred, unpred.
-  split.
-    destruct a as [| a']; cbn; reflexivity.
-    destruct b as [b' |]; cbn; reflexivity.
-Qed.
+  destruct a; reflexivity.
+  destruct b; reflexivity.
+Defined.
 
 (** ** Listy *)
 
@@ -1609,13 +1676,24 @@ match x with
     | Some (h, t) => h :: t
 end.
 
-Lemma list_char_iso :
-  forall A : Type, iso (list A) (option (A * list A)).
+#[refine]
+Instance list_char (A : Type) : iso (list A) (option (A * list A)) :=
+{
+    coel l :=
+      match l with
+          | []     => None
+          | h :: t => Some (h, t)
+      end;
+    coer o :=
+      match o with
+          | None        => []
+          | Some (h, t) => h :: t
+      end;
+}.
 Proof.
-  intro. exists uncons, ununcons. split.
-    destruct a as [| h t]; cbn; reflexivity.
-    destruct b as [[h t] |]; cbn; reflexivity.
-Qed.
+  destruct a; reflexivity.
+  destruct b as [[h t] |]; reflexivity.
+Defined.
 
 (** ** Strumienie *)
 
@@ -1626,23 +1704,16 @@ Require Import F3.
     rodzajami definicji induktywnych oraz z definicjami koinduktywnymi?
     Sprawdźmy to! *)
 
-Definition hdtl {A : Type} (s : Stream A) : A * Stream A :=
-  (hd s, tl s).
-
-Definition unhdtl {A : Type} (x : A * Stream A) : Stream A :=
-{|
-    hd := fst x;
-    tl := snd x;
-|}.
-
-Lemma Stream_iso_char :
-  forall A : Type, iso (Stream A) (A * Stream A).
+#[refine]
+Instance Stream_char (A : Type) : iso (Stream A) (A * Stream A) :=
+{
+    coel s := (hd s, tl s);
+    coer '(a, s) := {| hd := a; tl := s |}
+}.
 Proof.
-  intro. exists hdtl, unhdtl. split.
-  all: unfold hdtl, unhdtl; cbn.
-    destruct a; reflexivity.
-    destruct b; reflexivity.
-Qed.
+  destruct a. cbn. reflexivity.
+  destruct b. cbn. reflexivity.
+Defined.
 
 (** ** Ciekawsze izomorfizmy *)
 
@@ -1667,25 +1738,28 @@ match x with
     | inr n => S (2 * n)
 end.
 
-Lemma iso_nat_natnat :
-  iso nat (nat + nat).
+#[refine]
+Instance iso_nat_sum_nat_nat : iso nat (nat + nat) :=
+{
+    coel := div2;
+    coer := undiv2;
+}.
 Proof.
-  exists div2, undiv2. split.
-    intro. functional induction (div2 a); cbn.
+  intro. functional induction (div2 a); cbn.
+    1-2: reflexivity.
+    rewrite e0 in IHs. cbn in IHs. rewrite <- plus_n_Sm, IHs. reflexivity.
+    rewrite e0 in IHs. cbn in IHs. rewrite <- plus_n_Sm, IHs. reflexivity.
+  destruct b.
+    cbn. functional induction (div2 n); cbn.
       1-2: reflexivity.
-      rewrite e0 in IHs. cbn in IHs. rewrite <- plus_n_Sm, IHs. reflexivity.
-      rewrite e0 in IHs. cbn in IHs. rewrite <- plus_n_Sm, IHs. reflexivity.
-    destruct b.
-      cbn. functional induction (div2 n); cbn.
-        1-2: reflexivity.
-        rewrite <- 2!plus_n_Sm. cbn. rewrite IHs. reflexivity.
-        rewrite <- 2!plus_n_Sm. cbn. rewrite IHs. reflexivity.
-      induction n as [| n'].
-        cbn. reflexivity.
-        cbn in *. destruct n' as [| n'']; cbn in *.
-          reflexivity.
-          rewrite <- plus_n_Sm. rewrite IHn'. reflexivity.
-Qed.
+      rewrite <- 2!plus_n_Sm. cbn. rewrite IHs. reflexivity.
+      rewrite <- 2!plus_n_Sm. cbn. rewrite IHs. reflexivity.
+    induction n as [| n'].
+      cbn. reflexivity.
+      cbn in *. destruct n' as [| n'']; cbn in *.
+        reflexivity.
+        rewrite <- plus_n_Sm. rewrite IHn'. reflexivity.
+Defined.
 
 (** Niezbyt trudno, ale łatwo też nie. *)
 
@@ -1706,19 +1780,6 @@ Definition zigzag_order (x y : nat * nat) : Prop :=
     x = fill_square n /\
     y = fill_square m /\ n < m.
 
-(*
-Function unfill_square (x : nat * nat) {wf zigzag_order x} : nat :=
-match x with
-    | (0, 0) => 0
-    | (S n, 0) => S (unfill_square (0, n))
-    | (n, S m) => S (unfill_square (S n, m))
-end.
-Proof.
-  Focus 4. red. destruct a as [n m]. constructor.
-    destruct y as [n' m']. unfold zigzag_order.
-Admitted.
-*)
-
 Unset Guard Checking.
 Fixpoint unfill_square (x : nat * nat) : nat :=
 match x with
@@ -1728,11 +1789,23 @@ match x with
 end.
 Set Guard Checking.
 
-Lemma iso_nat_natnat' :
-  iso nat (nat * nat).
+(* Functional Scheme unfill_square_ind := Induction for unfill_square Sort Prop. *)
+
+#[refine]
+Instance iso_nat_prod_nat_nat : iso nat (nat * nat) :=
+{
+    coel := fill_square;
+    coer := unfill_square;
+}.
 Proof.
-  exists fill_square, unfill_square. split.
-    intro. functional induction (fill_square a).
+  intro. functional induction (fill_square a).
+    cbn. reflexivity.
+    replace (unfill_square _) with (S (unfill_square (0, m))).
+      rewrite <- e0, IHp. reflexivity.
+      admit.
+    replace (unfill_square _) with (S (unfill_square (S m1, m2))).
+      rewrite <- e0, IHp. reflexivity.
+      admit.
 Admitted.
 
 (** Jak trudno jest z podstawowych izomorfizmów dla produktów i sum
@@ -1821,21 +1894,24 @@ Proof.
   destruct p. cbn. reflexivity.
 Qed.
 
-Lemma iso_list_vlist :
-  forall A : Type, iso (list A) (vlist A).
+#[refine]
+Instance iso_list_vlist (A : Type) : iso (list A) (vlist A) :=
+{
+    coel := vectorize;
+    coer := listize;
+}.
 Proof.
-  intro. red. exists vectorize, listize. split.
-    induction a as [| h t]; cbn in *.
+  induction a as [| h t]; cbn in *.
+    reflexivity.
+    rewrite IHt. reflexivity.
+  destruct b as [n v]. unfold vectorize. cbn.
+    induction v as [| h t]; cbn.
       reflexivity.
-      rewrite IHt. reflexivity.
-    destruct b as [n v]. unfold vectorize. cbn.
-      induction v as [| h t]; cbn.
-        reflexivity.
-        apply sigT_eq' in IHv. cbn in IHv. destruct IHv.
-          eapply sigT_eq. Unshelve. all: cycle 1.
-            exact (ap S x).
-            rewrite transport_ap, transport_cons, e. reflexivity.
-Qed.
+      apply sigT_eq' in IHv. cbn in IHv. destruct IHv.
+        eapply sigT_eq. Unshelve. all: cycle 1.
+          exact (ap S x).
+          rewrite transport_ap, transport_cons, e. reflexivity.
+Defined.
 
 (** Wnioski: da się zrobić trochę... *)
 
@@ -1859,43 +1935,104 @@ match v with
         end
 end.
 
-(*
-Fixpoint vec_nat' {n : nat} (v : vec nat (S n)) : nat :=
-match v with
-    | vcons x vnil => x
-    | vcons x v' => unfill_square (x, vec_nat' v')
-end.
-
-    | vnil => None
-    | vcons h t =>
-        match vec_nat t with
-            | None => Some h
-            | Some r => Some (unfill_square (h, r))
-        end
-end.
-*)
-
-Compute D5.map (@nat_vec 3) [111; 1111; 11111].
-Compute D5.map vec_nat (D5.map (@nat_vec 3) [111; 1111]).
-
-Lemma nat_vlist :
-  forall n : nat, iso nat (vec nat (S n)).
+#[refine]
+Instance vec_S (A : Type) (n : nat) : iso (vec A (S n)) (A * vec A n) :=
+{
+    coel v := (head v, tail v);
+    coer '(h, t) := vcons h t;
+}.
 Proof.
-  unfold iso. intros.
-  exists nat_vec.
-  exists (fun v => match vec_nat v with | None => 0 | Some n => n end).
-  split.
-    Focus 2. dependent destruction b.
-    induction n as [| n']. (*
+  dependent destruction a. cbn. reflexivity.
+  destruct b. cbn. reflexivity.
+Defined.
+
+Instance iso_nat_vlist_S :
+  forall n : nat,
+    iso nat (vec nat (S n)).
+Proof.
+  induction n as [| n'].
+    split with
+            (coel := fun n => vcons n vnil)
+            (coer := head).
+      cbn. reflexivity.
+      dependent destruction b. cbn. f_equal. dependent destruction b. reflexivity.
+    eapply iso_trans.
+      apply iso_nat_prod_nat_nat.
+      eapply iso_trans.
+        Focus 2. apply iso_sym, vec_S.
+        apply iso_pres_prod.
+          apply iso_refl.
+          assumption.
+Defined.
+
+Instance iso_vlist_option :
+  forall A : Type,
+    iso (vlist A) (option {n : nat & vec A (S n)}).
+Proof.
+  intros.
+  esplit. Unshelve. all: cycle 2.
+    intros [[]].
+      exact None.
+      apply Some. exists n. exact v.
+    intros [[n v] |].
+      exists (S n). exact v.
+      exists 0. exact vnil.
+    destruct a, v; reflexivity.
+    destruct b.
+      destruct s. reflexivity.
       reflexivity.
-      {
-        intro. destruct (fill_square a) as [a1 a2].
-        change (vec_nat _) with (match vec_nat (@nat_vec n' a2) with
-                                  | None => Some a1
-                                  | Some r => Some (unfill_square (a1, r))
-                                  end).
-        rewrite <- (IHn' a2).*)
-Abort.
+Defined.
+
+Definition fmap_option {A B : Type} (f : A -> B) (x : option A) : option B :=
+match x with
+    | None   => None
+    | Some a => Some (f a)
+end.
+
+#[refine]
+Instance iso_pres_option
+  (A B : Type) (i : iso A B) : iso (option A) (option B) :=
+{
+    coel := fmap_option (coel i);
+    coer := fmap_option (coer i);
+}.
+Proof.
+  destruct a; f_equal; cbn; f_equal. apply coel_coer.
+  destruct b; f_equal; cbn; f_equal. apply coer_coel.
+Defined.
+
+Instance iso_prod_sigT :
+  forall (A B : Type) (B' : A -> Type),
+    (forall x : A, iso B (B' x)) -> iso (A * B) {x : A & B' x}.
+Proof.
+  intros A B B' H.
+  esplit. Unshelve. all: cycle 2.
+    intros [a b]. exists a. destruct (H a) as [f g H1 H2]. apply f. exact b.
+    intros [a b']. split.
+      exact a.
+      destruct (H a) as [f g H1 H2]. apply g. exact b'.
+    destruct a, (H a); cbn. f_equal. apply coel_coer0.
+    intros [a b']. cbn. destruct (H a). f_equal. apply coer_coel0.
+Defined.
+
+Instance iso_nat_list_nat :
+  iso nat (list nat).
+Proof.
+  eapply iso_trans.
+    Focus 2. apply iso_sym. apply iso_list_vlist.
+  unfold vlist.
+  eapply iso_trans.
+    apply iso_nat_option_nat.
+  eapply iso_trans.
+    Focus 2. apply iso_sym. apply iso_vlist_option.
+  apply iso_pres_option.
+  eapply iso_trans.
+    apply iso_nat_prod_nat_nat.
+  apply iso_prod_sigT.
+  apply iso_nat_vlist_S.
+Defined.
+
+Compute coel iso_nat_list_nat 0.
 
 (** ... ale [nat ~ list nat] jest dość trudne. *)
 
@@ -1957,11 +2094,6 @@ Qed.
 (* begin hide *)
 (* Tutaj szczegóły: https://arxiv.org/pdf/1701.05617.pdf *)
 (* end hide *)
-
-Inductive path {A : Type} (x : A) : A -> Type :=
-    | idpath : path x x.
-
-Arguments idpath {A} _.
 
 Axiom LEM : forall (A : Type), A + (A -> False).
 
