@@ -1763,50 +1763,117 @@ Defined.
 
 (** Niezbyt trudno, ale łatwo też nie. *)
 
-Function fill_square (n : nat) : nat * nat :=
-match n with
-    | 0 => (0, 0)
-    | S n' =>
-        match fill_square n' with
-            | (0, m) => (S m, 0)
-            | (S m1, m2) => (m1, S m2)
-        end
+Require Import Wellfounded.
+Require Import Relations.Relation_Operators.
+Require Import Wellfounded.Lexicographic_Product.
+
+Function goto' (x y n : nat) : nat * nat :=
+match n, x with
+    | 0   , _    => (x, y)
+    | S n', 0    => goto' (S y) 0 n'
+    | S n', S x' => goto' x' (S y) n'
 end.
 
-Compute D5.map fill_square (D5.iterate S 50 0).
+Definition goto (n : nat) : nat * nat :=
+  goto' 0 0 n.
 
-Definition zigzag_order (x y : nat * nat) : Prop :=
-  exists n m : nat,
-    x = fill_square n /\
-    y = fill_square m /\ n < m.
+Definition zigzag (xy ab : nat * nat) : Prop :=
+  fst xy + snd xy < fst ab + snd ab \/
+    fst xy + snd xy = fst ab + snd ab /\ snd xy < snd ab.
 
-Unset Guard Checking.
-Fixpoint unfill_square (x : nat * nat) : nat :=
-match x with
-    | (0, 0) => 0
-    | (S n, 0) => S (unfill_square (0, n))
-    | (n, S m) => S (unfill_square (S n, m))
+Lemma wf_zigzag :
+  well_founded zigzag.
+Proof.
+  apply wf_union.
+    Focus 2. apply wf_inverse_image. apply lt_wf.
+    red. intros. exists z. auto. destruct x as [[| a] [| b]]; cbn in *.
+      lia.
+Admitted.
+
+Function comefrom (xy : nat * nat) {wf zigzag xy} : nat :=
+match xy with
+    | (0   , 0) => 0
+    | (S x', 0) => 1 + comefrom (0, x')
+    | (x, S y') => 1 + comefrom (S x, y')
 end.
-Set Guard Checking.
+Proof.
+  intros. subst. red. cbn. lia.
+  intros. subst. red. cbn. lia.
+  intros. subst. red. cbn. lia.
+  apply wf_zigzag.
+Defined.
 
-(* Functional Scheme unfill_square_ind := Induction for unfill_square Sort Prop. *)
+Lemma goto'_goto' :
+  forall x y n m x' y' : nat,
+    goto' x y n = (x', y') ->
+      goto' x' y' m = goto' x y (n + m).
+Proof.
+  intros x y n.
+  functional induction goto' x y n;
+  intros.
+    cbn. inv H. reflexivity.
+    cbn in *. erewrite <- IHp.
+      reflexivity.
+      assumption.
+    cbn. erewrite <- IHp.
+      reflexivity.
+      assumption.
+Qed.
+
+Lemma goto_add :
+  forall n m : nat,
+    goto (n + m) = goto' (fst (goto n)) (snd (goto n)) m.
+Proof.
+  intros. unfold goto.
+  erewrite <- goto'_goto'.
+    reflexivity.
+    destruct (goto' 0 0 n); reflexivity.
+Qed.
+
+Lemma comefrom_goto' :
+  forall x y n x' y' : nat,
+    goto' x y n = (x', y') ->
+      comefrom (x', y') = comefrom (x, y) + n.
+Proof.
+  intros x y n.
+  functional induction goto' x y n;
+  intros.
+    inv H. lia.
+    specialize (IHp _ _ H). rewrite IHp. rewrite comefrom_equation. lia.
+    specialize (IHp _ _ H). rewrite IHp. rewrite comefrom_equation. destruct x'; lia.
+Qed.
+
+Lemma comefrom_goto :
+  forall n : nat,
+    comefrom (goto n) = n.
+Proof.
+  intros. destruct (goto n) as [x y] eqn: Heq.
+  rewrite (comefrom_goto' 0 0 n x y).
+    rewrite comefrom_equation. reflexivity.
+    apply Heq.
+Qed.
+
+Lemma goto_comefrom :
+  forall xy : nat * nat,
+    goto (comefrom xy) = xy.
+Proof.
+  intros.
+  functional induction comefrom xy.
+    cbn. reflexivity.
+    rewrite plus_comm, goto_add, IHn. cbn. reflexivity.
+    rewrite plus_comm, goto_add, IHn. cbn. reflexivity.
+Qed.
 
 #[refine]
 Instance iso_nat_prod_nat_nat : iso nat (nat * nat) :=
 {
-    coel := fill_square;
-    coer := unfill_square;
+    coel := goto;
+    coer := comefrom;
 }.
 Proof.
-  intro. functional induction (fill_square a).
-    cbn. reflexivity.
-    replace (unfill_square _) with (S (unfill_square (0, m))).
-      rewrite <- e0, IHp. reflexivity.
-      admit.
-    replace (unfill_square _) with (S (unfill_square (S m1, m2))).
-      rewrite <- e0, IHp. reflexivity.
-      admit.
-Admitted.
+  apply comefrom_goto.
+  apply goto_comefrom.
+Defined.
 
 (** Jak trudno jest z podstawowych izomorfizmów dla produktów i sum
     uskładać coś w stylu nat ~ list nat? A może nie da się i trzeba
@@ -1920,7 +1987,7 @@ match n with
     | 0 => arg :: vnil
     | S n' =>
         let
-          (arg1, arg2) := fill_square arg
+          (arg1, arg2) := goto arg
         in
           arg1 :: nat_vec arg2
 end.
@@ -1931,7 +1998,7 @@ match v with
     | vcons h t =>
         match vec_nat t with
             | None => Some h
-            | Some r => Some (unfill_square (h, r))
+            | Some r => Some (comefrom (h, r))
         end
 end.
 
@@ -2032,7 +2099,7 @@ Proof.
   apply iso_nat_vlist_S.
 Defined.
 
-Compute coel iso_nat_list_nat 0.
+Compute coel iso_nat_list_nat 4.
 
 (** ... ale [nat ~ list nat] jest dość trudne. *)
 
