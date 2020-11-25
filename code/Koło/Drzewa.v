@@ -97,11 +97,12 @@ End Z2.
 
 (** **** Ćwiczenie *)
 
-(** Zdefiniuj typ drzew binarnych, które mogą mieć dowolną (ale skończoną) ilość poddrzew. *)
+(** Zdefiniuj typ drzew o dowolnym skończonym rozgałęzieniu (tym razem mogą być puste). *)
 
 Module Z3.
 
-(** Komentarz: tutaj też było dziwnie. *)
+(** Komentarz: sporo osób (czyli chyba wszystkie) myślało wewnątrz pudełka i próbowali to zrobić za pomocą
+    pojedynczej definicji induktywnej, czyli źle. *)
 
 (** * Oczekiwana odpowiedź *)
 
@@ -144,3 +145,77 @@ Inductive Tree (A : Type) : Type :=
 End Fail3.
 
 End Z3.
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj drzewo, które jest puste lub ma element i nieskończenie wiele poddrzew. *)
+
+(** Komentarz: niektórzy mają problem z rozróżnieniem nieskończoności od liczby skończonej, ale
+    nieograniczonej. *)
+
+Module Z4.
+
+(* * Oczekiwana odpowiedź *)
+
+Inductive Tree (A : Type) : Type :=
+    | E : Tree A
+    | N : A -> (nat -> Tree A) -> Tree A.
+
+(** * Niepoprawne odpowiedzi *)
+
+(** Brakuje przypadku bazowego. *)
+Module Fail1.
+Inductive Tree (A : Type) : Type :=
+    | T : A -> (nat -> Tree A) -> Tree A.
+End Fail1.
+
+End Z4.
+
+(** **** Ćwiczenie *)
+
+(** Zdefiniuj drzewo (potencjalnie puste), które trzyma wartości w węzłach i może mieć dowolną ilość poddrzew
+    (także nieskończoną, nieprzeliczalną etc.). *)
+
+Module Z5.
+
+(** Komentarz: pojawiły się problemy z rozróżnieniem [forall B : Type, B -> ...] od [Type -> ...] (czyli problemy
+    w rozumieniu kwantyfikatorów przemieszanych z funkcjami oraz problemy z rozumieniem określeń "dowolny" oraz
+    "dowolny, ale ustalony (przez użytkownika)". *)
+
+(** * Oczekiwana odpowiedź *)
+
+Inductive Tree (A : Type) : Type :=
+    | E : Tree A
+    | N : A -> forall B : Type, (B -> Tree A) -> Tree A.
+
+(** * Niepoprawne odpowiedz *)
+
+(** Nawias postawiony przed kwantyfikatorem, a nie za, co zupełnie zmienia znaczenie wszystkiego. *)
+Module Fail1.
+Inductive Tree (A : Type) : Type :=
+    | E : Tree A
+    | N : A -> (forall B : Type, B -> Tree A) -> Tree A.
+End Fail1.
+
+(** Drzewo, które oprócz elementów typu [A] przechowuje w węzłach typy. *)
+Module Fail2.
+Inductive Tree (A : Type) : Type :=
+    | E : Tree A
+    | N : A -> Type -> Tree A.
+End Fail2.
+
+(** Drzewo o sztywnym rozgałęzieniu, które jest uniwersum-duże. *)
+Module Fail3.
+Inductive Tree (A : Type) : Type :=
+    | E : Tree A
+    | N : A -> (Type -> Tree A) -> Tree A.
+End Fail3.
+
+(** Drzewo o dowolnym sztywnym rozgałęzieniu wybranym przez użytkownika. *)
+Module Fail4.
+Inductive Tree (A B : Type) : Type :=
+    | E : Tree A B
+    | N : A -> (B -> Tree A B) -> Tree A B.
+End Fail4.
+
+End Z5.
