@@ -21,6 +21,8 @@
 <br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Bool</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
 
 <br/>
 </div>
@@ -32,8 +34,59 @@
 
 <a id="lab656"></a><h1 class="section">Ścieżki</h1>
 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">transport</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) (<span class="id" title="var">u</span> : <span class="id" title="var">P</span> <span class="id" title="var">x</span>) : <span class="id" title="var">P</span> <span class="id" title="var">y</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">u</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sigT_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">u</span> : <span class="id" title="var">P</span> <span class="id" title="var">x</span>} {<span class="id" title="var">v</span> : <span class="id" title="var">P</span> <span class="id" title="var">y</span>} (<span class="id" title="var">q</span> : <span class="id" title="var">transport</span> <span class="id" title="var">P</span> <span class="id" title="var">p</span> <span class="id" title="var">u</span> = <span class="id" title="var">v</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">existT</span> <span class="id" title="var">P</span> <span class="id" title="var">x</span> <span class="id" title="var">u</span> = <span class="id" title="var">existT</span> <span class="id" title="var">P</span> <span class="id" title="var">y</span> <span class="id" title="var">v</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">destruct</span> 1. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sigT_eq'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">sigT</span> <span class="id" title="var">P</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">x</span> = <span class="id" title="var">y</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">p</span> : <span class="id" title="var">projT1</span> <span class="id" title="var">x</span> = <span class="id" title="var">projT1</span> <span class="id" title="var">y</span> &amp; <span class="id" title="var">transport</span> <span class="id" title="var">P</span> <span class="id" title="var">p</span> (<span class="id" title="var">projT2</span> <span class="id" title="var">x</span>) = <span class="id" title="var">projT2</span> <span class="id" title="var">y</span>}.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1, <span class="id" title="var">x</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">eq_refl</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">ap</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) : <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">f</span> <span class="id" title="var">y</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;Lemma&nbsp;2.3.10&nbsp;*)</span><br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">transport_ap</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) (<span class="id" title="var">u</span> : <span class="id" title="var">P</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">transport</span> <span class="id" title="var">P</span> (<span class="id" title="var">ap</span> <span class="id" title="var">f</span> <span class="id" title="var">p</span>) <span class="id" title="var">u</span> =<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@<span class="id" title="var">transport</span> <span class="id" title="var">A</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">P</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">p</span> <span class="id" title="var">u</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a id="lab657"></a><h1 class="section">Równość a ścieżki</h1>
 
 </div>
@@ -171,9 +224,6 @@
 <span class="id" title="keyword">Scheme</span> <span class="id" title="var">nat_eq_ind'</span> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <span class="id" title="var">nat_eq</span> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Prop</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">isProp_code</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">c1</span> <span class="id" title="var">c2</span> : <span class="id" title="var">nat_eq</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>), <span class="id" title="var">c1</span> = <span class="id" title="var">c2</span>.<br/>
 
@@ -295,9 +345,6 @@ A co to znaczy, że liczby naturalne nie są równe?
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">decode</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> &lt;&gt; <span class="id" title="var">m</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">encode_decode</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">n</span> &lt;&gt; <span class="id" title="var">m</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">decode</span> (<span class="id" title="var">encode</span> <span class="id" title="var">p</span>) = <span class="id" title="var">p</span>.<br/>
@@ -333,9 +380,6 @@ A co to znaczy, że liczby naturalne nie są równe?
 <span class="id" title="var">Arguments</span> <span class="id" title="var">ZS</span> {<span class="id" title="var">n</span>}.<br/>
 <span class="id" title="var">Arguments</span> <span class="id" title="var">SZ</span> {<span class="id" title="var">n</span>}.<br/>
 <span class="id" title="var">Arguments</span> <span class="id" title="var">SS</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span>} <span class="id" title="var">_</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Scheme</span> <span class="id" title="var">nat_neq_ind'</span> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <span class="id" title="var">nat_neq</span> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Prop</span>.<br/>
@@ -467,17 +511,6 @@ A co to znaczy, że liczby naturalne nie są równe?
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">encode</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>}, <span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt; <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> 1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IHn'</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">le_S_n</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">encode'</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">stt</span><br/>
@@ -485,24 +518,27 @@ A co to znaczy, że liczby naturalne nie są równe?
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="comment">(*<br/>
-Definition&nbsp;encode&nbsp;{n&nbsp;m&nbsp;:&nbsp;nat}&nbsp;(H&nbsp;:&nbsp;n&nbsp;&lt;=&nbsp;m)&nbsp;:&nbsp;code&nbsp;n&nbsp;m.<br/>
-Proof.<br/>
-&nbsp;&nbsp;destruct&nbsp;H.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;encode'.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;n;&nbsp;cbn.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exact&nbsp;stt.<br/>
-*)</span><br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">code_S</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">code</span> <span class="id" title="var">n</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">stt</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; @<span class="id" title="var">code_S</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> <span class="id" title="var">c</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="comment">(*<br/>
-Fixpoint&nbsp;decode&nbsp;{n&nbsp;m&nbsp;:&nbsp;nat}&nbsp;:&nbsp;code&nbsp;n&nbsp;m&nbsp;-&gt;&nbsp;n&nbsp;&lt;=&nbsp;m&nbsp;:=<br/>
-match&nbsp;n,&nbsp;m&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0&nbsp;&nbsp;&nbsp;,&nbsp;_&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;fun&nbsp;_&nbsp;=&gt;&nbsp;le_0_n&nbsp;m<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;_&nbsp;&nbsp;&nbsp;,&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;fun&nbsp;c&nbsp;=&gt;&nbsp;match&nbsp;c&nbsp;with&nbsp;end<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;S&nbsp;n',&nbsp;S&nbsp;m'&nbsp;=&gt;&nbsp;fun&nbsp;c&nbsp;=&gt;&nbsp;le_n_S&nbsp;n'&nbsp;m'&nbsp;(decode&nbsp;c)<br/>
-end.<br/>
-*)</span><br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">encode</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span>) : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">H</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">le_n</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">encode'</span> <span class="id" title="var">n</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">le_S</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H'</span> =&gt; <span class="id" title="var">code_S</span> (<span class="id" title="var">encode</span> <span class="id" title="var">H'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_n_S_transparent</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> -&gt; <span class="id" title="var">S</span> <span class="id" title="var">n</span> &lt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="tactic">constructor</span>; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">decode</span> :<br/>
@@ -514,21 +550,44 @@ end.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>]; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">intro</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_n_S</span>, <span class="id" title="var">IHn'</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">le_n_S_transparent</span>, <span class="id" title="var">IHn'</span>. <span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Scheme</span> <span class="id" title="var">le_ind'</span> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <span class="id" title="var">le</span> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Prop</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">decode_code_S</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">c</span> : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">decode</span> (<span class="id" title="var">code_S</span> <span class="id" title="var">c</span>) = <span class="id" title="var">le_S</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">decode</span> <span class="id" title="var">c</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">c</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHn'</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">decode_encode</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">decode</span> (<span class="id" title="var">encode</span> <span class="id" title="var">H</span>) = <span class="id" title="var">H</span>. <span class="comment">(*&nbsp;TODO:&nbsp;kody&nbsp;dla&nbsp;<span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">&lt;=</span> <span class="inlinecode"><span class="id" title="var">m</span></span>&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">decode</span> (<span class="id" title="var">encode</span> <span class="id" title="var">H</span>) = <span class="id" title="var">H</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">IH</span> 3.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>; <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHn'</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">decode_code_S</span>, <span class="id" title="var">IH</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">isProp_le</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} {<span class="id" title="var">H1</span> <span class="id" title="var">H2</span> : <span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">H1</span> = <span class="id" title="var">H2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- (<span class="id" title="var">decode_encode</span> <span class="id" title="var">H1</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- (<span class="id" title="var">decode_encode</span> <span class="id" title="var">H2</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">encodedecode2</span>.<br/>
@@ -742,9 +801,6 @@ Insajt, że o ja pierdole: <span class="inlinecode"><span class="id" title="var"
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">lnE2_conv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Exists2</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> + <span class="id" title="var">DifferentStructure</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">okurwa</span> :<br/>
@@ -1158,9 +1214,6 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 <span class="id" title="keyword">Module</span> <span class="id" title="var">DiffProtocols</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Print</span> <span class="id" title="var">list_neq_ind.list_neq</span>.<br/>
 
 <br/>
@@ -1346,7 +1399,7 @@ Protokół różnicowy dla funkcji mówi, dla których argumentów wyniki
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>. <span class="id" title="tactic">rewrite</span> !<span class="id" title="var">coel_coer</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>. <span class="id" title="tactic">rewrite</span> !<span class="id" title="var">coer_coel</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
 </div>
@@ -1583,17 +1636,9 @@ Jak można się domyślić po przykładach, charakterystyczne izomorfizmy
 <div class="doc">
 <a id="lab682"></a><h2 class="section">Ciekawsze izomorfizmy</h2>
 
-</div>
-<div class="code">
+<div class="paragraph"> </div>
 
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunInd</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Jak trudno jest zrobić ciekawsze izomorfizmy? 
+ Jak trudno jest zrobić ciekawsze izomorfizmy? 
 </div>
 <div class="code">
 
@@ -1649,11 +1694,6 @@ Niezbyt trudno, ale łatwo też nie.
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Wellfounded</span>.<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Relations.Relation_Operators</span>.<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Wellfounded.Lexicographic_Product</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Function</span> <span class="id" title="var">goto'</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> * <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| 0   , <span class="id" title="var">_</span>    =&gt; (<span class="id" title="var">x</span>, <span class="id" title="var">y</span>)<br/>
@@ -1666,50 +1706,46 @@ Niezbyt trudno, ale łatwo też nie.
 &nbsp;&nbsp;<span class="id" title="var">goto'</span> 0 0 <span class="id" title="var">n</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">zigzag</span> (<span class="id" title="var">xy</span> <span class="id" title="var">ab</span> : <span class="id" title="var">nat</span> * <span class="id" title="var">nat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">fst</span> <span class="id" title="var">xy</span> + <span class="id" title="var">snd</span> <span class="id" title="var">xy</span> &lt; <span class="id" title="var">fst</span> <span class="id" title="var">ab</span> + <span class="id" title="var">snd</span> <span class="id" title="var">ab</span> \/<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fst</span> <span class="id" title="var">xy</span> + <span class="id" title="var">snd</span> <span class="id" title="var">xy</span> = <span class="id" title="var">fst</span> <span class="id" title="var">ab</span> + <span class="id" title="var">snd</span> <span class="id" title="var">ab</span> /\ <span class="id" title="var">snd</span> <span class="id" title="var">xy</span> &lt; <span class="id" title="var">snd</span> <span class="id" title="var">ab</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wf_zigzag</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">well_founded</span> <span class="id" title="var">zigzag</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">wf_union</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="tactic">apply</span> <span class="id" title="var">wf_inverse_image</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">lt_wf</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">red</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">z</span>. <span class="id" title="tactic">auto</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [[| <span class="id" title="var">a</span>] [| <span class="id" title="var">b</span>]]; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Function</span> <span class="id" title="var">comefrom</span> (<span class="id" title="var">xy</span> : <span class="id" title="var">nat</span> * <span class="id" title="var">nat</span>) {<span class="id" title="keyword">wf</span> <span class="id" title="var">zigzag</span> <span class="id" title="var">xy</span>} : <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">xy</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| (0   , 0) =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| (<span class="id" title="var">S</span> <span class="id" title="var">x'</span>, 0) =&gt; 1 + <span class="id" title="var">comefrom</span> (0, <span class="id" title="var">x'</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| (<span class="id" title="var">x</span>, <span class="id" title="var">S</span> <span class="id" title="var">y'</span>) =&gt; 1 + <span class="id" title="var">comefrom</span> (<span class="id" title="var">S</span> <span class="id" title="var">x</span>, <span class="id" title="var">y'</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">red</span>. <span class="id" title="var">cbn</span>. <span class="id" title="var">lia</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">red</span>. <span class="id" title="var">cbn</span>. <span class="id" title="var">lia</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">red</span>. <span class="id" title="var">cbn</span>. <span class="id" title="var">lia</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">wf_zigzag</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">goto'_goto'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">x'</span> <span class="id" title="var">y'</span> : <span class="id" title="var">nat</span>,<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">goto'_add</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">x'</span> <span class="id" title="var">y'</span>: <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">goto'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span> = (<span class="id" title="var">x'</span>, <span class="id" title="var">y'</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">goto'</span> <span class="id" title="var">x'</span> <span class="id" title="var">y'</span> <span class="id" title="var">m</span> = <span class="id" title="var">goto'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">goto'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>) = <span class="id" title="var">goto'</span> <span class="id" title="var">x'</span> <span class="id" title="var">y'</span> <span class="id" title="var">m</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">goto'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span>; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHp</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHp</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">goto'_small</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= <span class="id" title="var">x</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">goto'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span> = (<span class="id" title="var">x</span> - <span class="id" title="var">n</span>, <span class="id" title="var">y</span> + <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="var">inv</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *. <span class="id" title="var">erewrite</span> &lt;- <span class="id" title="var">IHp</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="var">erewrite</span> &lt;- <span class="id" title="var">IHp</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">goto'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">f_equal</span>; <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">replace</span> (<span class="id" title="var">y</span> + <span class="id" title="var">S</span> <span class="id" title="var">n'</span>) <span class="id" title="keyword">with</span> (<span class="id" title="var">S</span> <span class="id" title="var">y</span> + <span class="id" title="var">n'</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHp</span>. <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">goto'_right</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">goto'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> (1 + <span class="id" title="var">x</span> + <span class="id" title="var">y</span>) = (<span class="id" title="var">S</span> <span class="id" title="var">x</span>, <span class="id" title="var">y</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">replace</span> (1 + <span class="id" title="var">x</span> + <span class="id" title="var">y</span>) <span class="id" title="keyword">with</span> (<span class="id" title="var">x</span> + (1 + <span class="id" title="var">y</span>)) <span class="id" title="tactic">by</span> <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">erewrite</span> <span class="id" title="var">goto'_add</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="tactic">apply</span> <span class="id" title="var">goto'_small</span>. <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">minus_diag</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">goto'_small</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">f_equal</span>; <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -1718,23 +1754,105 @@ Niezbyt trudno, ale łatwo też nie.
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">goto</span> (<span class="id" title="var">n</span> + <span class="id" title="var">m</span>) = <span class="id" title="var">goto'</span> (<span class="id" title="var">fst</span> (<span class="id" title="var">goto</span> <span class="id" title="var">n</span>)) (<span class="id" title="var">snd</span> (<span class="id" title="var">goto</span> <span class="id" title="var">n</span>)) <span class="id" title="var">m</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">goto</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">erewrite</span> &lt;- <span class="id" title="var">goto'_goto'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">erewrite</span> <span class="id" title="var">goto'_add</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">goto'</span> 0 0 <span class="id" title="var">n</span>); <span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">comefrom_goto'</span> :<br/>
+</div>
+
+<div class="doc">
+Chcielibyśmy zdefiniować funkcję odwrotną do <span class="inlinecode"><span class="id" title="var">goto'</span></span> w ten sposób:
+    comefrom (0  , 0) = 0
+    comefrom (S x, 0) = 1 + comefrom (0  , x)
+    comefrom (x, S y) = 1 + comefrom (S x, y)
+
+<div class="paragraph"> </div>
+
+    Niestety takie równania nie są strukturalnie rekurencyjne, więc definicja nie jest akceptowana przez Coqa. Próba
+    ratowania sytuacji za pomocą rekursji dobrze ufundowanej też by się nie powiodła (wiem bo próbowałem).
+
+<div class="paragraph"> </div>
+
+    Zamiast tego, użyjemy nieco przerobionej definicji, a potem spróbujemy pokazać, że spełnia ona powyższe
+    równania. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">comefrom'</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">nat</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">x</span>} : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fix</span> <span class="id" title="var">aux</span> (<span class="id" title="var">y</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">y</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0    =&gt; 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">y'</span> =&gt; 1 + <span class="id" title="var">y</span> + <span class="id" title="var">aux</span> <span class="id" title="var">y'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>) <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">x'</span> =&gt; <span class="id" title="var">x</span> + <span class="id" title="var">y</span> + <span class="id" title="var">comefrom'</span> <span class="id" title="var">x'</span> <span class="id" title="var">y</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">comefrom</span> (<span class="id" title="var">xy</span> : <span class="id" title="var">nat</span> * <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">comefrom'</span> (<span class="id" title="var">fst</span> <span class="id" title="var">xy</span>) (<span class="id" title="var">snd</span> <span class="id" title="var">xy</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">comefrom'_eq_1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">comefrom'</span> 0 0 = 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">comefrom'_eq_2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">comefrom'</span> (<span class="id" title="var">S</span> <span class="id" title="var">x</span>) 0 = 1 + <span class="id" title="var">comefrom'</span> 0 <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">x'</span>]; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="var">lia</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">comefrom'_eq_3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">comefrom'</span> <span class="id" title="var">x</span> (<span class="id" title="var">S</span> <span class="id" title="var">y</span>) = 1 + <span class="id" title="var">comefrom'</span> (<span class="id" title="var">S</span> <span class="id" title="var">x</span>) <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">x'</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">y</span>; <span class="id" title="var">cbn</span>; <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">y</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHx'</span> <span class="id" title="var">y</span>). <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *. <span class="id" title="var">lia</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">comefrom'_right</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">comefrom'</span> (<span class="id" title="var">S</span> <span class="id" title="var">x</span>) <span class="id" title="var">y</span> = 1 + <span class="id" title="var">x</span> + <span class="id" title="var">y</span> + <span class="id" title="var">comefrom'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">x'</span>]; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHx'</span> <span class="id" title="var">y</span>). <span class="id" title="var">cbn</span>. <span class="id" title="var">lia</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">comefrom'_up</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">comefrom'</span> <span class="id" title="var">x</span> (<span class="id" title="var">S</span> <span class="id" title="var">y</span>) = 2 + <span class="id" title="var">x</span> + <span class="id" title="var">y</span> + <span class="id" title="var">comefrom'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">x'</span>]; <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHx'</span> <span class="id" title="var">y</span>). <span class="id" title="var">cbn</span>. <span class="id" title="var">lia</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">comefrom'_goto'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span> <span class="id" title="var">x'</span> <span class="id" title="var">y'</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">goto'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span> = (<span class="id" title="var">x'</span>, <span class="id" title="var">y'</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">comefrom</span> (<span class="id" title="var">x'</span>, <span class="id" title="var">y'</span>) = <span class="id" title="var">comefrom</span> (<span class="id" title="var">x</span>, <span class="id" title="var">y</span>) + <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">comefrom'</span> <span class="id" title="var">x'</span> <span class="id" title="var">y'</span> = <span class="id" title="var">comefrom'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> + <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">goto'</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">n</span>;<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H</span>. <span class="id" title="var">lia</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHp</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span>). <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHp</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">comefrom_equation</span>. <span class="id" title="var">lia</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">IHp</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span>). <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHp</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">comefrom_equation</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">x'</span>; <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">IHp</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span>). <span class="id" title="tactic">rewrite</span> <span class="id" title="var">comefrom'_eq_2</span>. <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">IHp</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span>). <span class="id" title="tactic">rewrite</span> <span class="id" title="var">comefrom'_eq_3</span>. <span class="id" title="var">lia</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -1742,10 +1860,12 @@ Niezbyt trudno, ale łatwo też nie.
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">comefrom</span> (<span class="id" title="var">goto</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">goto</span> <span class="id" title="var">n</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">x</span> <span class="id" title="var">y</span>] <span class="id" title="var">eqn</span>: <span class="id" title="var">Heq</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">comefrom_goto'</span> 0 0 <span class="id" title="var">n</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">comefrom_equation</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Heq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">goto</span> <span class="id" title="var">n</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">x</span> <span class="id" title="var">y</span>] <span class="id" title="var">eqn</span>: <span class="id" title="var">Heq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">comefrom</span>. <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">comefrom'_goto'</span> 0 0 <span class="id" title="var">n</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">Heq</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -1753,11 +1873,17 @@ Niezbyt trudno, ale łatwo też nie.
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">xy</span> : <span class="id" title="var">nat</span> * <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">goto</span> (<span class="id" title="var">comefrom</span> <span class="id" title="var">xy</span>) = <span class="id" title="var">xy</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">functional</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">comefrom</span> <span class="id" title="var">xy</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_comm</span>, <span class="id" title="var">goto_add</span>, <span class="id" title="var">IHn</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_comm</span>, <span class="id" title="var">goto_add</span>, <span class="id" title="var">IHn</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">x</span> <span class="id" title="var">y</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">comefrom</span>, <span class="id" title="var">fst</span>, <span class="id" title="var">snd</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">x'</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">y</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">y'</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">comefrom'_up</span>, <span class="id" title="var">plus_comm</span>, <span class="id" title="var">goto_add</span>, <span class="id" title="var">IHy'</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">goto'_small</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">f_equal</span>; <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">comefrom'_right</span>, <span class="id" title="var">plus_comm</span>, <span class="id" title="var">goto_add</span>, <span class="id" title="var">IHx'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">fst</span>, <span class="id" title="var">snd</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">goto'_right</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -1812,57 +1938,11 @@ Jak trudno jest z podstawowych izomorfizmów dla produktów i sum
 &nbsp;&nbsp;<span class="id" title="var">toList</span> (<span class="id" title="var">projT2</span> <span class="id" title="var">v</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">transport</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) (<span class="id" title="var">u</span> : <span class="id" title="var">P</span> <span class="id" title="var">x</span>) : <span class="id" title="var">P</span> <span class="id" title="var">y</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">u</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sigT_eq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">u</span> : <span class="id" title="var">P</span> <span class="id" title="var">x</span>} {<span class="id" title="var">v</span> : <span class="id" title="var">P</span> <span class="id" title="var">y</span>} (<span class="id" title="var">q</span> : <span class="id" title="var">transport</span> <span class="id" title="var">P</span> <span class="id" title="var">p</span> <span class="id" title="var">u</span> = <span class="id" title="var">v</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">existT</span> <span class="id" title="var">P</span> <span class="id" title="var">x</span> <span class="id" title="var">u</span> = <span class="id" title="var">existT</span> <span class="id" title="var">P</span> <span class="id" title="var">y</span> <span class="id" title="var">v</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">destruct</span> 1. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sigT_eq'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">sigT</span> <span class="id" title="var">P</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">x</span> = <span class="id" title="var">y</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">p</span> : <span class="id" title="var">projT1</span> <span class="id" title="var">x</span> = <span class="id" title="var">projT1</span> <span class="id" title="var">y</span> &amp; <span class="id" title="var">transport</span> <span class="id" title="var">P</span> <span class="id" title="var">p</span> (<span class="id" title="var">projT2</span> <span class="id" title="var">x</span>) = <span class="id" title="var">projT2</span> <span class="id" title="var">y</span>}.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1, <span class="id" title="var">x</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">eq_refl</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">ap</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) : <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">f</span> <span class="id" title="var">y</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
-<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="comment">(*&nbsp;Lemma&nbsp;2.3.10&nbsp;*)</span><br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">transport_ap</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) (<span class="id" title="var">u</span> : <span class="id" title="var">P</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">transport</span> <span class="id" title="var">P</span> (<span class="id" title="var">ap</span> <span class="id" title="var">f</span> <span class="id" title="var">p</span>) <span class="id" title="var">u</span> =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@<span class="id" title="var">transport</span> <span class="id" title="var">A</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">P</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">p</span> <span class="id" title="var">u</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_head_tail</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">v1</span> <span class="id" title="var">v2</span> : <span class="id" title="var">vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">head</span> <span class="id" title="var">v1</span> = <span class="id" title="var">head</span> <span class="id" title="var">v2</span> -&gt; <span class="id" title="var">tail</span> <span class="id" title="var">v1</span> = <span class="id" title="var">tail</span> <span class="id" title="var">v2</span> -&gt; <span class="id" title="var">v1</span> = <span class="id" title="var">v2</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span> <span class="id" title="var">v1</span> <span class="id" title="var">v2</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">dependent</span> <span class="id" title="tactic">destruction</span> <span class="id" title="var">v1</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">dependent</span> <span class="id" title="tactic">destruction</span> <span class="id" title="var">v2</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">destruct</span> 1, 1. <span class="id" title="tactic">reflexivity</span>.<br/>
@@ -1935,7 +2015,7 @@ Wnioski: da się zrobić trochę...
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coer</span> '(<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) := <span class="id" title="var">vcons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>;<br/>
 }.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">dependent</span> <span class="id" title="tactic">destruction</span> <span class="id" title="var">a</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">refine</span> (<span class="id" title="keyword">match</span> <span class="id" title="var">a</span> <span class="id" title="keyword">with</span> <span class="id" title="var">vcons</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">_</span> <span class="id" title="keyword">end</span>). <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
@@ -1949,7 +2029,11 @@ Wnioski: da się zrobić trochę...
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">coel</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">vcons</span> <span class="id" title="var">n</span> <span class="id" title="var">vnil</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">coer</span> := <span class="id" title="var">head</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">dependent</span> <span class="id" title="tactic">destruction</span> <span class="id" title="var">b</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">f_equal</span>. <span class="id" title="tactic">dependent</span> <span class="id" title="tactic">destruction</span> <span class="id" title="var">b</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span> <span class="id" title="var">vcons</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">_</span> <span class="id" title="keyword">end</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">f_equal</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="keyword">match</span> <span class="id" title="var">v</span> <span class="id" title="keyword">with</span> <span class="id" title="var">vnil</span> =&gt; <span class="id" title="var">_</span> <span class="id" title="keyword">end</span>). <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">red</span>. <span class="id" title="tactic">trivial</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">iso_trans</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">iso_nat_prod_nat_nat</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">iso_trans</span>.<br/>
@@ -2032,7 +2116,7 @@ Wnioski: da się zrobić trochę...
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">coel</span> <span class="id" title="var">iso_nat_list_nat</span> 4.<br/>
+<span class="comment">(*&nbsp;Compute&nbsp;D5.map&nbsp;(coel&nbsp;iso_nat_list_nat)&nbsp;(D5.iterate&nbsp;S&nbsp;100&nbsp;0).&nbsp;*)</span><br/>
 
 <br/>
 </div>

@@ -4,10 +4,53 @@ Set Universe Polymorphism.
 
 Require Import Arith.
 Require Import Bool.
+Require Import Equality.
+Require Import FunctionalExtensionality.
 
 (** * Równość - powtórka *)
 
 (** * Ścieżki *)
+
+Definition transport
+  {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
+match p with
+    | eq_refl => u
+end.
+
+Lemma sigT_eq :
+  forall
+    {A : Type} (P : A -> Type)
+    {x y : A} (p : x = y)
+    {u : P x} {v : P y} (q : transport P p u = v),
+      existT P x u = existT P y v.
+Proof.
+  destruct p. cbn. destruct 1. reflexivity.
+Defined.
+
+Lemma sigT_eq' :
+  forall
+    {A : Type} (P : A -> Type) {x y : sigT P},
+      x = y ->
+        {p : projT1 x = projT1 y & transport P p (projT2 x) = projT2 y}.
+Proof.
+  destruct 1, x. cbn. exists eq_refl. cbn. reflexivity.
+Defined.
+
+Definition ap
+  {A B : Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y :=
+match p with
+    | eq_refl => eq_refl
+end.
+
+(* Lemma 2.3.10 *)
+Lemma transport_ap :
+  forall {A B : Type} (P : B -> Type) (f : A -> B)
+    (x y : A) (p : x = y) (u : P (f x)),
+      transport P (ap f p) u =
+      @transport A (fun x => P (f x)) x y p u.
+Proof.
+  destruct p. cbn. reflexivity.
+Defined.
 
 (** * Równość a ścieżki *)
 
@@ -144,8 +187,6 @@ Qed.
 (* end hide *)
 
 Scheme nat_eq_ind' := Induction for nat_eq Sort Prop.
-
-Require Import Equality.
 
 Lemma isProp_code :
   forall {n m : nat} (c1 c2 : nat_eq n m), c1 = c2.
@@ -292,8 +333,6 @@ Proof.
 Defined.
 (* end hide *)
 
-Require Import FunctionalExtensionality.
-
 Lemma encode_decode :
   forall {n m : nat} (p : n <> m),
     decode (encode p) = p.
@@ -324,8 +363,6 @@ Inductive nat_neq : nat -> nat -> Prop :=
 Arguments ZS {n}.
 Arguments SZ {n}.
 Arguments SS {n m} _.
-
-Require Import Equality FunctionalExtensionality.
 
 Scheme nat_neq_ind' := Induction for nat_neq Sort Prop.
 
@@ -466,39 +503,31 @@ match n, m with
     | S n', S m' => code n' m'
 end.
 
-Definition encode :
-  forall {n m : nat}, n <= m -> code n m.
-Proof.
-  induction n as [| n'].
-    cbn. constructor.
-    destruct m as [| m'].
-      inversion 1.
-      cbn. intro. apply IHn'. apply le_S_n. assumption.
-Defined.
-
 Fixpoint encode' (n : nat) : code n n :=
 match n with
     | 0 => stt
     | S n' => encode' n'
 end.
 
-(*
-Definition encode {n m : nat} (H : n <= m) : code n m.
-Proof.
-  destruct H.
-    apply encode'.
-    destruct n; cbn.
-      exact stt.
-*)
-
-(*
-Fixpoint decode {n m : nat} : code n m -> n <= m :=
+Fixpoint code_S {n m : nat} : code n m -> code n (S m) :=
 match n, m with
-    | 0   , _    => fun _ => le_0_n m
-    | _   , 0    => fun c => match c with end
-    | S n', S m' => fun c => le_n_S n' m' (decode c)
+    | 0, _ => fun _ => stt
+    | _, 0 => fun c => match c with end
+    | S n', S m' => fun c => @code_S n' m' c
 end.
-*)
+
+Fixpoint encode {n m : nat} (H : n <= m) : code n m :=
+match H with
+    | le_n _ => encode' n
+    | le_S _ _ H' => code_S (encode H')
+end.
+
+Lemma le_n_S_transparent :
+  forall n m : nat,
+    n <= m -> S n <= S m.
+Proof.
+  induction 1; constructor; assumption.
+Defined.
 
 Definition decode :
   forall {n m : nat}, code n m -> n <= m.
@@ -509,18 +538,41 @@ Proof.
       constructor. assumption.
     destruct m as [| m']; cbn; intro.
       destruct H.
-      apply le_n_S, IHn'. assumption.
+      apply le_n_S_transparent, IHn'. assumption.
 Defined.
 
-Scheme le_ind' := Induction for le Sort Prop.
-
-Require Import Equality.
+Lemma decode_code_S :
+  forall {n m : nat} (c : code n m),
+    decode (code_S c) = le_S _ _ (decode c).
+Proof.
+  induction n as [| n'].
+    destruct m; reflexivity.
+    destruct m as [| m'].
+      cbn. destruct c.
+      simpl. intros. rewrite IHn'. cbn. reflexivity.
+Qed.
 
 Lemma decode_encode :
   forall {n m : nat} (H : n <= m),
-    decode (encode H) = H. (* TODO: kody dla [n <= m] *)
+    decode (encode H) = H.
 Proof.
-Admitted.
+  fix IH 3.
+  destruct H; cbn.
+    induction n as [| n'].
+      cbn. reflexivity.
+      simpl. rewrite IHn'. cbn. reflexivity.
+    rewrite decode_code_S, IH. reflexivity.
+Qed.
+
+Lemma isProp_le :
+  forall {n m : nat} {H1 H2 : n <= m},
+    H1 = H2.
+Proof.
+  intros.
+  rewrite <- (decode_encode H1),
+          <- (decode_encode H2).
+  reflexivity.
+Qed.
 
 End encodedecode2.
 
@@ -625,8 +677,35 @@ end.
 Definition decode {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2.
 (* begin hide *)
 Proof.
-  induction l1 as [| h1 t1]; cbn.
-    specialize (c 0). cbn in c. destruct l2.
+  revert l2 c.
+  induction l1 as [| h1 t1];
+  destruct l2 as [| h2 t2];
+  cbn; intros.
+    reflexivity.
+    specialize (c 0). cbn in c. refine (match c with eq_refl => _ end). red. trivial.
+    specialize (c 0). cbn in c. refine (match c with eq_refl => _ end). red. trivial.
+    rewrite (IHt1 _ (fun n => c (S n))). specialize (c 0). cbn in c.
+      refine (match c with eq_refl => _ end). reflexivity.
+Defined.
+
+Lemma decode_encode :
+  forall {A : Type} {l1 l2 : list A} (p : l1 = l2),
+    decode (encode p) = p.
+Proof.
+  destruct p. cbn.
+  induction l1 as [| h t].
+    cbn. reflexivity.
+    cbn. cbn. f_equal.
+Abort.
+
+Lemma encode_decode :
+  forall {A : Type} {l1 l2 : list A} (c : code l1 l2),
+    encode (decode c) = c.
+Proof.
+  induction l1 as [| h1 t1];
+  destruct  l2 as [| h2 t2];
+  intros.
+    red in c. cbn in *.
 Abort.
 (* end hide *)
 
@@ -761,8 +840,6 @@ Proof.
       constructor 4. assumption.
 Defined.
 (* end hide *)
-
-Require Import Equality.
 
 Lemma okurwa :
   forall
@@ -900,9 +977,10 @@ Lemma isProp_DS :
       p = q.
 (* begin hide *)
 Proof.
-  induction p; dependent destruction q.
-    1-2: reflexivity.
-    f_equal. apply IHp.
+  induction p; intro q.
+    refine (match q with DS_nc _ _   => _ end). reflexivity.
+    refine (match q with DS_cn _ _   => _ end). reflexivity.
+    dependent destruction q. f_equal. apply IHp.
 Qed.
 (* end hide *)
 
@@ -1380,8 +1458,6 @@ End SProp_not_Type.
 
 Module DiffProtocols.
 
-Require Import Equality.
-
 Print list_neq_ind.list_neq.
 
 (** [list_neq_ind.list_neq] to pokazanie na odpowiadające sobie miejsca w
@@ -1540,7 +1616,7 @@ Instance iso_pres_prod
 Proof.
   destruct a. rewrite !coel_coer. reflexivity.
   destruct b. rewrite !coer_coel. reflexivity.
-Qed.
+Defined.
 
 (** ** Produkty i sumy *)
 
@@ -1717,8 +1793,6 @@ Defined.
 
 (** ** Ciekawsze izomorfizmy *)
 
-Require Import FunInd.
-
 (** Jak trudno jest zrobić ciekawsze izomorfizmy? *)
 
 Function div2 (n : nat) : nat + nat :=
@@ -1763,10 +1837,6 @@ Defined.
 
 (** Niezbyt trudno, ale łatwo też nie. *)
 
-Require Import Wellfounded.
-Require Import Relations.Relation_Operators.
-Require Import Wellfounded.Lexicographic_Product.
-
 Function goto' (x y n : nat) : nat * nat :=
 match n, x with
     | 0   , _    => (x, y)
@@ -1777,47 +1847,44 @@ end.
 Definition goto (n : nat) : nat * nat :=
   goto' 0 0 n.
 
-Definition zigzag (xy ab : nat * nat) : Prop :=
-  fst xy + snd xy < fst ab + snd ab \/
-    fst xy + snd xy = fst ab + snd ab /\ snd xy < snd ab.
-
-Lemma wf_zigzag :
-  well_founded zigzag.
-Proof.
-  apply wf_union.
-    Focus 2. apply wf_inverse_image. apply lt_wf.
-    red. intros. exists z. auto. destruct x as [[| a] [| b]]; cbn in *.
-      lia.
-Admitted.
-
-Function comefrom (xy : nat * nat) {wf zigzag xy} : nat :=
-match xy with
-    | (0   , 0) => 0
-    | (S x', 0) => 1 + comefrom (0, x')
-    | (x, S y') => 1 + comefrom (S x, y')
-end.
-Proof.
-  intros. subst. red. cbn. lia.
-  intros. subst. red. cbn. lia.
-  intros. subst. red. cbn. lia.
-  apply wf_zigzag.
-Defined.
-
-Lemma goto'_goto' :
-  forall x y n m x' y' : nat,
+Lemma goto'_add :
+  forall x y n m x' y': nat,
     goto' x y n = (x', y') ->
-      goto' x' y' m = goto' x y (n + m).
+      goto' x y (n + m) = goto' x' y' m.
 Proof.
   intros x y n.
   functional induction goto' x y n;
+  cbn; intros.
+    inv H. reflexivity.
+    apply IHp. assumption.
+    apply IHp. assumption.
+Qed.
+
+Lemma goto'_small :
+  forall x y n : nat,
+    n <= x ->
+      goto' x y n = (x - n, y + n).
+Proof.
   intros.
-    cbn. inv H. reflexivity.
-    cbn in *. erewrite <- IHp.
-      reflexivity.
-      assumption.
-    cbn. erewrite <- IHp.
-      reflexivity.
-      assumption.
+  functional induction goto' x y n.
+    f_equal; lia.
+    lia.
+    cbn. replace (y + S n') with (S y + n').
+      apply IHp. lia.
+      lia.
+Qed.
+
+Lemma goto'_right :
+  forall x y : nat,
+    goto' x y (1 + x + y) = (S x, y).
+Proof.
+  intros.
+  replace (1 + x + y) with (x + (1 + y)) by lia.
+  erewrite goto'_add.
+    Focus 2. apply goto'_small. lia.
+    rewrite minus_diag. cbn. rewrite goto'_small.
+      f_equal; lia.
+      lia.
 Qed.
 
 Lemma goto_add :
@@ -1825,43 +1892,116 @@ Lemma goto_add :
     goto (n + m) = goto' (fst (goto n)) (snd (goto n)) m.
 Proof.
   intros. unfold goto.
-  erewrite <- goto'_goto'.
+  erewrite goto'_add.
     reflexivity.
     destruct (goto' 0 0 n); reflexivity.
 Qed.
 
-Lemma comefrom_goto' :
+(** Chcielibyśmy zdefiniować funkcję odwrotną do [goto'] w ten sposób:
+    comefrom (0  , 0) = 0
+    comefrom (S x, 0) = 1 + comefrom (0  , x)
+    comefrom (x, S y) = 1 + comefrom (S x, y)
+
+    Niestety takie równania nie są strukturalnie rekurencyjne, więc definicja nie jest akceptowana przez Coqa. Próba
+    ratowania sytuacji za pomocą rekursji dobrze ufundowanej też by się nie powiodła (wiem bo próbowałem).
+
+    Zamiast tego, użyjemy nieco przerobionej definicji, a potem spróbujemy pokazać, że spełnia ona powyższe
+    równania. *)
+
+Fixpoint comefrom' (x y : nat) {struct x} : nat :=
+match x with
+    | 0 =>
+        (fix aux (y : nat) : nat :=
+          match y with
+              | 0    => 0
+              | S y' => 1 + y + aux y'
+          end) y
+    | S x' => x + y + comefrom' x' y
+end.
+
+Definition comefrom (xy : nat * nat) : nat :=
+  comefrom' (fst xy) (snd xy).
+
+Lemma comefrom'_eq_1 :
+  comefrom' 0 0 = 0.
+Proof.
+  reflexivity.
+Qed.
+
+Lemma comefrom'_eq_2 :
+  forall x : nat,
+    comefrom' (S x) 0 = 1 + comefrom' 0 x.
+Proof.
+  induction x as [| x']; cbn in *; lia.
+Qed.
+
+Lemma comefrom'_eq_3 :
+  forall x y : nat,
+    comefrom' x (S y) = 1 + comefrom' (S x) y.
+Proof.
+  induction x as [| x'].
+    destruct y; cbn; lia.
+    intros y. specialize (IHx' y). cbn in *. lia.
+Qed.
+
+Lemma comefrom'_right :
+  forall x y : nat,
+    comefrom' (S x) y = 1 + x + y + comefrom' x y.
+Proof.
+  induction x as [| x']; intros.
+    cbn. lia.
+    specialize (IHx' y). cbn. lia.
+Qed.
+
+Lemma comefrom'_up :
+  forall x y : nat,
+    comefrom' x (S y) = 2 + x + y + comefrom' x y.
+Proof.
+  induction x as [| x']; intros.
+    cbn. lia.
+    specialize (IHx' y). cbn. lia.
+Qed.
+
+Lemma comefrom'_goto' :
   forall x y n x' y' : nat,
     goto' x y n = (x', y') ->
-      comefrom (x', y') = comefrom (x, y) + n.
+      comefrom' x' y' = comefrom' x y + n.
 Proof.
   intros x y n.
   functional induction goto' x y n;
   intros.
     inv H. lia.
-    specialize (IHp _ _ H). rewrite IHp. rewrite comefrom_equation. lia.
-    specialize (IHp _ _ H). rewrite IHp. rewrite comefrom_equation. destruct x'; lia.
+    rewrite (IHp _ _ H). rewrite comefrom'_eq_2. lia.
+    rewrite (IHp _ _ H). rewrite comefrom'_eq_3. lia.
 Qed.
 
 Lemma comefrom_goto :
   forall n : nat,
     comefrom (goto n) = n.
 Proof.
-  intros. destruct (goto n) as [x y] eqn: Heq.
-  rewrite (comefrom_goto' 0 0 n x y).
-    rewrite comefrom_equation. reflexivity.
-    apply Heq.
+  intros.
+  destruct (goto n) as [x y] eqn: Heq.
+  unfold comefrom. cbn.
+  rewrite (comefrom'_goto' 0 0 n x y).
+    cbn. reflexivity.
+    exact Heq.
 Qed.
 
 Lemma goto_comefrom :
   forall xy : nat * nat,
     goto (comefrom xy) = xy.
 Proof.
-  intros.
-  functional induction comefrom xy.
-    cbn. reflexivity.
-    rewrite plus_comm, goto_add, IHn. cbn. reflexivity.
-    rewrite plus_comm, goto_add, IHn. cbn. reflexivity.
+  intros [x y].
+  unfold comefrom, fst, snd.
+  revert y.
+  induction x as [| x'].
+    induction y as [| y'].
+      cbn. reflexivity.
+      rewrite comefrom'_up, plus_comm, goto_add, IHy'. cbn. rewrite goto'_small.
+        f_equal; lia.
+        reflexivity.
+    intros. rewrite comefrom'_right, plus_comm, goto_add, IHx'.
+      unfold fst, snd. apply goto'_right.
 Qed.
 
 #[refine]
@@ -1902,52 +2042,11 @@ end.
 Definition listize {A : Type} (v : vlist A) : list A :=
   toList (projT2 v).
 
-Definition transport
-  {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
-match p with
-    | eq_refl => u
-end.
-
-Lemma sigT_eq :
-  forall
-    {A : Type} (P : A -> Type)
-    {x y : A} (p : x = y)
-    {u : P x} {v : P y} (q : transport P p u = v),
-      existT P x u = existT P y v.
-Proof.
-  destruct p. cbn. destruct 1. reflexivity.
-Defined.
-
-Lemma sigT_eq' :
-  forall
-    {A : Type} (P : A -> Type) {x y : sigT P},
-      x = y ->
-        {p : projT1 x = projT1 y & transport P p (projT2 x) = projT2 y}.
-Proof.
-  destruct 1, x. cbn. exists eq_refl. cbn. reflexivity.
-Defined.
-
-Definition ap
-  {A B : Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y :=
-match p with
-    | eq_refl => eq_refl
-end.
-
-(* Lemma 2.3.10 *)
-Lemma transport_ap :
-  forall {A B : Type} (P : B -> Type) (f : A -> B)
-    (x y : A) (p : x = y) (u : P (f x)),
-      transport P (ap f p) u =
-      @transport A (fun x => P (f x)) x y p u.
-Proof.
-  destruct p. cbn. reflexivity.
-Defined.
-
 Lemma eq_head_tail :
   forall {A : Type} {n : nat} (v1 v2 : vec A (S n)),
     head v1 = head v2 -> tail v1 = tail v2 -> v1 = v2.
 Proof.
-  Require Import Equality.
+  intros A n v1 v2.
   dependent destruction v1.
   dependent destruction v2.
   cbn. destruct 1, 1. reflexivity.
@@ -2009,7 +2108,7 @@ Instance vec_S (A : Type) (n : nat) : iso (vec A (S n)) (A * vec A n) :=
     coer '(h, t) := vcons h t;
 }.
 Proof.
-  dependent destruction a. cbn. reflexivity.
+  intro. refine (match a with vcons _ _ => _ end). cbn. reflexivity.
   destruct b. cbn. reflexivity.
 Defined.
 
@@ -2022,7 +2121,11 @@ Proof.
             (coel := fun n => vcons n vnil)
             (coer := head).
       cbn. reflexivity.
-      dependent destruction b. cbn. f_equal. dependent destruction b. reflexivity.
+      intro.
+        refine (match b with vcons _ _ => _ end).
+        destruct n; cbn; f_equal.
+          refine (match v with vnil => _ end). reflexivity.
+          red. trivial.
     eapply iso_trans.
       apply iso_nat_prod_nat_nat.
       eapply iso_trans.
@@ -2099,7 +2202,7 @@ Proof.
   apply iso_nat_vlist_S.
 Defined.
 
-Compute coel iso_nat_list_nat 4.
+(* Compute D5.map (coel iso_nat_list_nat) (D5.iterate S 100 0). *)
 
 (** ... ale [nat ~ list nat] jest dość trudne. *)
 
