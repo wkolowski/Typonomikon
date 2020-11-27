@@ -108,19 +108,6 @@ Compute groupBy
   (fun n m => negb (beq_nat n m))
   [0; 1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].
 
-Lemma groupBy_negb :
-  forall (A : Type) (p : A -> A -> bool) (l : list A),
-    groupBy (fun x y => negb (p x y)) l = groupBy p l.
-(* begin hide *)
-Proof.
-  intros. functional induction @groupBy A p l; cbn.
-    reflexivity.
-    gb.
-    gb.
-    rewrite IHl0, e0, e1. cbn.
-Abort.
-(* end hide *)
-
 Lemma groupBy_decomposition :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
     l = [] \/ exists n : nat,
@@ -270,6 +257,20 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO: czemu tego nie w ma w D5? SKANDAL! *)
+Lemma last_None :
+  forall {A : Type} {l : list A},
+    last l = None -> l = [].
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct t.
+      inversion H.
+      specialize (IHt H). inversion IHt.
+Qed.
+(* end hide *)
+
 Lemma groupBy_app' :
   forall (A : Type) (p : A -> A -> bool) (l1 l2 : list A),
     groupBy p (l1 ++ l2) =
@@ -278,14 +279,20 @@ Lemma groupBy_app' :
         | _, None => groupBy p l1
         | Some x, Some y =>
             if p x y
-            then groupBy p l1 ++ groupBy p l2
-            else groupBy p (l1 ++ l2)
+            then groupBy p (l1 ++ l2)
+            else groupBy p l1 ++ groupBy p l2
     end.
 (* begin hide *)
 Proof.
-  intros. destruct (last l1) eqn: Hlast, (head l2) eqn: Hinit.
-    destruct (p a a0).
-Admitted.
+  intros.
+  destruct (last l1) eqn: Hlast.
+    destruct (head l2) eqn: Hhead.
+      destruct (p a a0) eqn: Heq.
+        reflexivity.
+        erewrite groupBy_app; eauto.
+      destruct l2; inv Hhead. rewrite app_nil_r. reflexivity.
+    apply last_None in Hlast. subst. cbn. reflexivity.
+Qed.
 (* end hide *)
 
 Lemma groupBy_rev_aux :
@@ -294,33 +301,6 @@ Lemma groupBy_rev_aux :
       groupBy p l = rev (map rev (groupBy p (rev l))).
 (* begin hide *)
 Proof.
-  intros. functional induction @groupBy A p l; cbn.
-    reflexivity.
-    apply groupBy_is_nil in e0. rewrite e0. cbn. reflexivity.
-    apply (f_equal head) in e0. cbn in e0.
-      apply head_groupBy in e0. contradiction.
-    Focus 2.
-    pose (groupBy_decomposition A p t). destruct o.
-      rewrite H0 in *. cbn in *. inversion e0.
-      destruct H0 as (n & H'). pose (H'' := H'). rewrite e0 in H''. inv H''.
-        rewrite <- (app_take_drop _ t n) at 2.
-        rewrite rev_app. rewrite <- H1. cbn.
-        rewrite <- ?app_assoc. cbn. rewrite app_assoc.
-        rewrite (groupBy_middle A p (rev (drop n t) ++ rev t') [] h' h).
-          Focus 2. rewrite H. assumption.
-          cbn. rewrite <- app_assoc.
-            change (rev t' ++ [h']) with (rev (h' :: t')).
-            rewrite H1, <- rev_app, app_take_drop, map_app, rev_app.
-            cbn. rewrite <- IHl0.
-              rewrite H'. reflexivity.
-    pose (groupBy_decomposition A p t). destruct o.
-      rewrite H0 in *. cbn in *. inversion e0.
-      destruct H0 as (n & H'). pose (H'' := H'). rewrite e0 in H''. inv H''.
-Restart.
-  intros. pose (groupBy_decomposition A p l). destruct o.
-    rewrite H0. cbn. reflexivity.
-    destruct H0 as (n & H'). rewrite <- (app_take_drop A l n) at 2.
-      rewrite rev_app.
 Admitted.
 (* end hide *)
 
@@ -422,27 +402,15 @@ Qed.
 (* end hide *)
 
 Lemma groupBy_take :
-  forall (A : Type) (p : A -> A -> bool) (l : list A) (n : nat),
-    exists m : nat,
-      groupBy p (take n l) = take m (groupBy p l).
+  exists (A : Type) (p : A -> A -> bool) (l : list A) (n : nat),
+    forall m : nat,
+      groupBy p (take n l) <> take m (groupBy p l).
 (* begin hide *)
 Proof.
-  intros A p l. functional induction @groupBy A p l; cbn; intros.
-    exists 0. rewrite ?take_nil. cbn. reflexivity.
-    gb. destruct n as [| n']; cbn.
-      exists 0. cbn. reflexivity.
-      exists 1. reflexivity.
-    gb.
-    destruct n as [| n']; cbn.
-      exists 0. cbn. reflexivity.
-      rewrite e0 in *. destruct (IHl0 n') as [m IH]. exists (S m).
-        cbn. destruct (groupBy p (take n' t)) eqn: Heq.
-          apply (f_equal isEmpty) in Heq.
-            rewrite isEmpty_groupBy, isEmpty_take in Heq.
-              destruct n', t; cbn in Heq; inversion Heq.
-                cbn in e0. inversion e0.
-                cbn in e0.
-Admitted.
+  exists nat, (fun _ _ => true), [1; 2; 3], 2.
+  intro.
+  cbn. destruct m; inversion 1.
+Qed.
 (* end hide *)
 
 Lemma any_groupBy :
@@ -476,11 +444,6 @@ Proof.
       rewrite <- ?Bool.andb_assoc. cbn. reflexivity.
 Qed.
 (* end hide *)
-
-(*Lemma sum_count_groupBy :
-  forall (A : Type) (q : A -> bool) (p : A -> A -> bool) (l : list A),
-    foldl plus 
-*)
 
 Lemma find_groupBy :
   forall (A : Type) (q : A -> bool) (p : A -> A -> bool) (l : list A),

@@ -69,67 +69,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma groupBy_app :
-  forall (A : Type) (p : A -> A -> bool) (l1 l2 : list A) (x y : A),
-    last l1 = Some x -> head l2 = Some y -> p x y = false ->
-      groupBy p (l1 ++ l2) = groupBy p l1 ++ groupBy p l2.
-(* begin hide *)
-Proof.
-  intros A p l1. functional induction @groupBy A p l1; cbn; intros.
-    reflexivity.
-    destruct l2 as [| h2 t2]; cbn.
-      reflexivity.
-      destruct t2 as [| h2' t2']; cbn.
-        inversion H; inversion H0; subst. rewrite H1. reflexivity.
-        inversion H; inversion H0; subst. destruct t2'.
-          destruct (p y h2'); rewrite H1; reflexivity.
-          cbn. destruct t2'.
-            destruct (p h2' a), (p y h2'); rewrite ?H1; reflexivity.
-            cbn.
-Restart.
-  induction l1 as [| h t]; cbn; intros.
-    reflexivity.
-    destruct t as [| h' t']; cbn.
-      cbn in *. destruct l2 as [| h'' t'']; cbn.
-        reflexivity.
-        destruct t''; cbn.
-Restart.
-  intros. destruct (groupBy_app_decomposition _ p (l1 ++ l2)).
-    apply (f_equal isEmpty) in H2.
-      rewrite isEmpty_groupBy, isEmpty_app in H2. cbn in H2.
-        destruct l1, l2; inversion H2. cbn. reflexivity.
-      destruct H2.
-Admitted.
-(* end hide *)
-
-Lemma groupBy_rev :
-  forall (A : Type) (p : A -> A -> bool) (l : list A),
-    groupBy p (rev l) = rev (map rev (groupBy p l)).
-(* begin hide *)
-Proof.
-  intros. remember (rev l) as r.
-  functional induction @groupBy A p r;
-  apply (f_equal rev) in Heqr;
-  rewrite ?rev_inv in Heqr; rewrite <- Heqr; cbn.
-    1-2: reflexivity.
-    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      cbn in e0. congruence.
-  rewrite ?e0 in *; try clear e0; cbn in *.
-Admitted.
-(* end hide *)
-
-Lemma groupBy_rev' :
-  forall (A : Type) (p : A -> A -> bool) (l : list A),
-    groupBy p l = rev (map rev (groupBy p (rev l))).
-(* begin hide *)
-Proof.
-  intros. functional induction @groupBy A p l; cbn.
-    1-2: reflexivity.
-    apply (f_equal isEmpty) in e0. rewrite isEmpty_groupBy in e0.
-      cbn in e0. congruence.
-  rewrite ?e0 in *; try clear e0; cbn in *.
-Admitted.
-(* end hide *)
+(* TODO: app, rev *)
 
 Lemma groupBy_map :
   forall (A B : Type) (f : A -> B) (p : B -> B -> bool) (l : list A),
@@ -225,11 +165,6 @@ Proof.
     cbn in IHl0. rewrite <- IHl0. reflexivity.
 Qed.
 (* end hide *)
-
-(*Lemma sum_count_groupBy :
-  forall (A : Type) (q : A -> bool) (p : A -> A -> bool) (l : list A),
-    foldl plus 
-*)
 
 Ltac inv H := inversion H; subst; clear H.
 

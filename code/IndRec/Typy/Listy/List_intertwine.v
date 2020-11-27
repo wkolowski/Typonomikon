@@ -1,6 +1,6 @@
 Require Import D5.
 
-Fixpoint intertwine {A : Type} (l1 l2 : list A) : list A :=
+Function intertwine {A : Type} (l1 l2 : list A) : list A :=
 match l1, l2 with
     | [], _ => l2
     | _, [] => l1
@@ -199,21 +199,34 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *) Lemma Dup_intertwine :
+Lemma elem_Exists :
+  forall {A : Type} {x : A} {l : list A},
+    elem x l <-> Exists (fun y => x = y) l.
+Proof.
+  split; induction 1; subst; constructor; auto; fail.
+Qed.
+
+Lemma Dup_intertwine :
   forall {A : Type} (l1 l2 : list A),
     Dup (intertwine l1 l2) <->
     Dup l1 \/ Dup l2 \/ exists x : A, elem x l1 /\ elem x l2.
 (* begin hide *)
 Proof.
-  split; revert l2.
-    induction l1 as [| h1 t1]; cbn; intros.
-      right. left. assumption.
-      destruct l2 as [| h2 t2]; cbn.
-        left. assumption.
-        inv H.
-          inv H1.
-            right. right. exists h2. split; constructor.
-Admitted.
+  intros.
+  functional induction intertwine l1 l2.
+    firstorder; inv H.
+    firstorder; inv H; inv H0.
+    {
+      rewrite !Dup_cons, !elem_cons', !IHl,
+              !elem_Exists, !Exists_intertwine, <- !elem_Exists.
+      firstorder; subst; cbn in *.
+        do 2 right. exists h2. split; constructor.
+        do 2 right. exists h1. split; constructor; assumption.
+        do 2 right. exists h2. split; constructor; assumption.
+        do 2 right. exists x. split; constructor; assumption.
+        inv H3; inv H4; eauto. eauto 7.
+    }
+Qed.
 (* end hide *)
 
 (* TODO: AtLeast, Exactly, AtMost *)

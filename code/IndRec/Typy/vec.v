@@ -916,10 +916,17 @@ Proof.
       exact (h :: take _ _ m' t).
 Defined.
 
+Lemma minus_0_r_transparent :
+  forall n : nat,
+    minus n 0 = n.
+Proof.
+  destruct n; reflexivity.
+Qed.
+
 Fixpoint drop {A : Type} {n : nat} (m : nat) (l : vec A n) : vec A (n - m).
 Proof.
   destruct m as [| m']; cbn.
-    rewrite <- minus_n_O. exact l.
+    destruct n; assumption.
     destruct l as [| n h t]; cbn.
       exact vnil.
       apply drop; auto.
@@ -1120,8 +1127,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Print Assumptions take_elem.
-
 Lemma drop_elem :
   forall (A : Type) (m n : nat) (l : vec A n) (x : A),
     elem x (drop m l) -> elem x l.
@@ -1149,15 +1154,21 @@ Qed.
 
 Lemma drop_S :
   forall (A : Type) (m m' n : nat) (l : vec A n),
-    eq_dep (drop (S m) (drop m' l)) (drop m' (drop (S m) l)).
+    eq_dep (drop (S m) (drop m' l)) (drop m (drop (S m') l)).
 (* begin hide *)
 Proof.
-  induction m; destruct l; cbn.
-    Check drop_nil.
-    remember (drop m' (@vnil A)) as x. dependent destruction x. trivial.
-    remember (drop m' (a :: l)) as x. dependent destruction x.
-Admitted.
-(* end hide *) 
+  intros. revert m m'.
+  induction l as [| n h t]; intros.
+    rewrite !drop_nil. reflexivity.
+    destruct m' as [| m''].
+      rewrite drop_0, !drop_cons. destruct n; cbn; reflexivity.
+      {
+        change (S n - S m'' - S m) with (n - m'' - S m);
+        change (S n - S m'') with (n - m'').
+        rewrite !drop_cons. rewrite IHt. reflexivity.
+      }
+Qed.
+(* end hide *)
 
 Lemma drop_drop :
   forall (A : Type) (m m' n : nat) (l : vec A n),
@@ -1165,8 +1176,8 @@ Lemma drop_drop :
 (* begin hide *)
 Proof.
   induction m; intros.
-    rewrite ?drop_0. trivial.
-    rewrite drop_S. trivial.
+    rewrite ?drop_0. reflexivity.
+    rewrite drop_S, IHm, drop_S. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1176,9 +1187,10 @@ Lemma take_drop_rev :
     eq_dep (take m (rev l)) (rev (drop (n - m) l)).
 Proof.
   induction m as [| m']; intros.
-    rewrite take_0, <- minus_n_O, drop_all. cbn. trivial.
+    rewrite take_0, <- minus_n_O, drop_all. cbn. reflexivity.
     destruct l.
-      rewrite ?rev_nil. rewrite take_nil, drop_nil. cbn. trivial.
+      rewrite !rev_nil, take_nil. reflexivity.
+      change (S n - S m') with (n - m').
 Abort.
 (* end hide *)
 
@@ -1189,7 +1201,7 @@ Lemma take_drop :
 Proof.
   induction m; intros.
     cbn. rewrite take_length'.
-Admitted.
+Abort.
 (* end hide *)
 
 (*Section fns.
@@ -1361,25 +1373,5 @@ Proof.
     compute. trivial.
   compute in H0.
 Abort.
-
-Inductive Wydmuszka (A : Type) (n : nat) : Type :=
-    | WydNil : Wydmuszka A n
-    | WyCons : A -> Wydmuszka A n -> Wydmuszka A n.
-
-Lemma wydmuszka_inversion : forall (A B : Type) (n m : nat)
-    (w1 : Wydmuszka A n) (w2 : Wydmuszka B m), JMeq w1 w2 -> n = m.
-Proof.
-  intros. inversion H.
-
-Lemma all_len : forall (A : Type) (n : nat) (v : Vec A n),
-    len v = n.
-Proof.
-  intros. compute. trivial.
-Qed.
-
-Lemma all_len2 : forall (A : Type) (n m : nat) (v : Vec A n),
-    Vec A n = Vec A m -> len v = m.
-Proof.
-  intros. destruct H. *)
 
 (* end hide *)

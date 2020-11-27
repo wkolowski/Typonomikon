@@ -261,7 +261,16 @@ Qed.
     n < length l -> nth n (snoc x l) = nth n l.
 (* begin hide *)
 Proof.
-Admitted.
+  induction n as [| n'];
+  destruct l as [| h t];
+  cbn; intro H; inv H.
+    reflexivity.
+    reflexivity.
+    apply IHn'. red. rewrite H1. constructor.
+    apply IHn'. red. eapply le_trans.
+      2: eassumption.
+      do 2 constructor.
+Qed.
 (* end hide *)
 
 Lemma nth_snoc_eq :
@@ -919,27 +928,12 @@ Inductive Palindrome {A : Type} : list A -> Prop :=
 
 (* begin hide *)
 
-(* Palindromowa indukcja *)
-Lemma list_palindrome_ind :
-  forall (A : Type) (P : list A -> Prop),
-    P [] ->
-    (forall x : A, P [x]) ->
-    (forall (x y : A) (l : list A), P l -> P (x :: snoc y l)) ->
-      forall l : list A, P l.
-Proof.
-  fix IH 6. destruct l as [| h t].
-    assumption.
-    destruct (init_decomposition A t); subst.
-      apply H0.
-      destruct H2 as (h' & t' & H1' & H2' & H3'). rewrite H3'.
-Admitted.
-(* end hide *)
-
 Lemma Palindrome_cons_snoc :
   forall (A : Type) (x : A) (l : list A),
     Palindrome l -> Palindrome (x :: snoc x l).
 (* begin hide *)
-Proof. constructor. assumption.
+Proof.
+  constructor. assumption.
 Qed.
 (* end hide *)
 
@@ -980,6 +974,23 @@ Proof.
     inv H. destruct t; inv H2.
     inv H. f_equal. apply IHt. assumption.
 Qed.
+(* end hide *)
+
+(* Palindromowa indukcja *)
+Lemma list_palindrome_ind :
+  forall (A : Type) (P : list A -> Prop),
+    P [] ->
+    (forall x : A, P [x]) ->
+    (forall (x y : A) (l : list A), P l -> P (x :: snoc y l)) ->
+      forall l : list A, P l.
+Proof.
+  fix IH 6. destruct l as [| h t].
+    assumption.
+    destruct (init_decomposition A t); subst.
+      apply H0.
+      destruct H2 as (h' & t' & H1' & H2' & H3'). rewrite H3'.
+        rewrite <- snoc_app_singl. apply H1. apply IH; assumption.
+Admitted.
 (* end hide *)
 
 Lemma Palindrome_spec :

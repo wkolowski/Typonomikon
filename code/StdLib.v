@@ -106,7 +106,6 @@ End theory.
 End Dec.
 
 Import Dec.theory.
-Print Dec.Class.
 
 Definition Even_class (n : nat) : Dec.class (Even n).
 Proof.
@@ -122,6 +121,32 @@ Fail Definition silly (n : nat) : bool :=
   if Even n then true else false.
 
 End Canonical.
+
+Module ThisMustWork.
+
+Class Dec (P : Prop) : Type :=
+{
+    dec : bool;
+    dec_spec : reflect P dec;
+}.
+
+Arguments dec      _ {Dec}.
+Arguments dec_spec _ {Dec}.
+
+#[refine]
+Instance Dec_isEven (n : nat) : Dec (Even n) :=
+{
+    dec := isEven n;
+}.
+Proof.
+  apply isEven_spec.
+Defined.
+
+Definition not_so_silly (n : nat) : bool :=
+  if dec (Even n) then true else false.
+
+Compute not_so_silly 6.
+
 
 Module WeakEquality.
 
@@ -736,9 +761,8 @@ Instance Rational_Q : Rational Q :=
     sub := Qminus;
 
     mul := Qmult;
-(*     div := Qdiv; *)
+    div p q := if Qeq_bool q 0 then None else Some (Qdiv p q);
 }.
-Admitted.
 
 End Rational.
 

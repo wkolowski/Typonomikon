@@ -260,7 +260,7 @@ Lemma encode_decode :
   forall {A : Type} {t1 t2 : InfTree A} (p : t1 = t2),
     decode (encode p) = p.
 Proof.
-  destruct p. cbn.
+  destruct p; cbn.
   induction t1; cbn; intros.
     reflexivity.
     rewrite eq_trans_refl_l.
