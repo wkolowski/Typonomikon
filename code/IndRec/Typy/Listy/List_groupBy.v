@@ -95,13 +95,14 @@ Lemma map_groupBy_groupBy :
     map (fun x => [x]) (groupBy p l).
 (* begin hide *)
 Proof.
-  intros. functional induction @groupBy A p l; cbn.
+  intros. functional induction groupBy p l; cbn.
     1-3: reflexivity.
     Focus 2. rewrite e0 in *. cbn in *. rewrite IHl0. reflexivity.
-    rewrite ?e0 in IHl0. clear e0. cbn in IHl0.
-      inversion IHl0; subst; clear IHl0.
-      rewrite H0. f_equal. functional inversion H0; subst.
+    {
+      rewrite ?e0 in IHl0. clear e0. cbn in IHl0.
+      inv IHl0. rewrite H0.
 Abort.
+(* end hide *)
 
 Lemma join_groupBy :
   forall (A : Type) (p : A -> A -> bool) (l : list A),
@@ -221,32 +222,3 @@ Proof.
           exists g. split; repeat right; assumption.
 Qed.
 (* end hide *)
-
-Function splitBy
-  {A : Type} (p : A -> bool) (l : list A) : list (list A) :=
-match l with
-    | [] => []
-    | [h] => if p h then [] else [[h]]
-    | x :: (y :: t) as t' =>
-        if p y
-        then [x] :: splitBy p t
-        else 
-          match splitBy p t' with
-             | [] => if p x then [] else [[x]]
-             | l :: ls => if p x then l :: ls else (x :: l) :: ls
-         end
-end.
-
-Compute splitBy isZero [1; 2; 3; 0; 4; 5; 6; 0; 7; 8; 9; 0; 0].
-
-Lemma splitBy_intersperse :
-  forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    p x = true -> splitBy p (intersperse x l) = map (fun x => [x]) l.
-(* begin hide *)
-Proof.
-  intros. functional induction @intersperse A x l; cbn.
-    reflexivity.
-Abort.
-(* end hide *)
-
-(* TODO: unsplitBy *)

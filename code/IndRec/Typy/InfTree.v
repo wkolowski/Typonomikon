@@ -1,3 +1,5 @@
+Require Import Equality.
+
 Inductive InfTree (A : Type) : Type :=
     | E : InfTree A
     | N : A -> forall (B : Type), (B -> InfTree A) -> InfTree A.
@@ -266,8 +268,6 @@ Proof.
     rewrite eq_trans_refl_l.
 Admitted.
 
-Require Import Equality.
-
 Scheme InfTreeEq_ind' := Induction for InfTreeEq Sort Prop.
 
 Lemma decode_encode :
@@ -308,12 +308,12 @@ Inductive InfTreeNeq {A : Type} : InfTree A -> InfTree A -> Prop :=
                (f1 : B1 -> InfTree A) (f2 : B2 -> InfTree A),
                  B1 <> B2 -> InfTreeNeq (N v1 B1 f1) (N v2 B2 f2).
 
-(* TODO: dokończyć charakteryzację nierówności dla [InfTree]. *)
+Require Import Eqdep.
+
 Lemma InfTreeNeq_neq :
   forall {A : Type} {t1 t2 : InfTree A},
     InfTreeNeq t1 t2 -> t1 <> t2.
 Proof.
-  induction 1; inversion 1.
-    contradiction.
-    Focus 2. apply H. assumption.
-Abort.
+  induction 1; inversion 1; subst; try contradiction.
+  apply inj_pair2 in H3. subst. contradiction.
+Qed.

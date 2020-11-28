@@ -235,23 +235,30 @@ Proof.
   induction t1; constructor.
     reflexivity.
     assumption.
-Restart.
+(* Restart.
   destruct 1.
   revert t1.
   fix encode 1.
   destruct t1; constructor.
     reflexivity.
     intro. apply encode.
-Defined.
+ *)Defined.
 
 Lemma encode_decode :
   forall {B A : Type} {t1 t2 : InfTree B A} (p : t1 = t2),
     decode (encode p) = p.
 Proof.
-  destruct p. cbn.
-  induction t1; cbn.
+  destruct p.
+  induction t1.
     reflexivity.
-    rewrite eq_trans_refl_l.
+    {
+      cbn. rewrite eq_trans_refl_l.
+      generalize (functional_extensionality i i (fun x : B => decode
+        (InfTree_ind B A (fun t1 : InfTree B A => InfTreeEq t1 t1) ITE_E
+           (fun (a0 : A) (i0 : B -> InfTree B A) (H0 : forall b : B, InfTreeEq (i0 b) (i0 b)) =>
+            ITE_N a0 a0 i0 i0 eq_refl H0) (i x)))).
+      admit.
+    }
 Abort.
 
 Scheme InfTreeEq_ind' := Induction for InfTreeEq Sort Prop.
@@ -262,5 +269,11 @@ Lemma decode_encode :
 Proof.
   induction c using InfTreeEq_ind'; cbn.
     reflexivity.
-    destruct e. rewrite eq_trans_refl_l. unfold encode.
+    {
+      destruct e.
+      rewrite eq_trans_refl_l.
+      generalize (functional_extensionality f1 f2 (fun x : B => decode (i x))).
+      destruct e.
+      cbn. f_equal.
+      extensionality y.
 Abort.

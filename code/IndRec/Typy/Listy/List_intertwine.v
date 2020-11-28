@@ -42,20 +42,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *) Lemma intertwine_replicate :
-  forall {A : Type} (x : A) (n : nat) (l : list A),
-    intertwine l (replicate n x) =
-      intersperse x (take (min (length l) (S n)) l) ++
-      replicate (n - length l) x.
-(* begin hide *)
-Proof.
-  intros until l. revert n.
-  induction l as [| h t]; cbn; intro.
-    rewrite <- minus_n_O. reflexivity.
-    destruct n as [| n']; cbn.
-      rewrite Nat.min_0_r, take_0. cbn. specialize (IHt 0). cbn in IHt.
-Abort.
-(* end hide *)
+(* TODO: intertwine z replicate, filter, pmap etc. *)
 
 Lemma any_intertwine :
   forall {A : Type} (p : A -> bool) (l1 l2 : list A),
@@ -102,44 +89,6 @@ Proof.
         all: try rewrite plus_n_Sm; reflexivity.
       }
 Qed.
-(* end hide *)
-
-Lemma filter_intertwine :
-  forall {A : Type} (p : A -> bool) (l1 l2 : list A),
-    filter p (intertwine l1 l2) =
-    intertwine (filter p l1) (filter p l2).
-(* begin hide *)
-Proof.
-  induction l1 as [| h1 t1]; cbn.
-    reflexivity.
-    destruct l2 as [| h2 t2]; cbn.
-      rewrite intertwine_nil_r. reflexivity.
-      {
-        rewrite IHt1.
-        destruct (p h1) eqn: ph1, (p h2) eqn: ph2; cbn.
-          reflexivity.
-          destruct (filter p t2).
-            rewrite intertwine_nil_r. reflexivity.
-Abort.
-(* end hide *)
-
-Lemma pmap_intertwine :
-  forall {A B : Type} (f : A -> option B) (l1 l2 : list A),
-    pmap f (intertwine l1 l2) =
-    intertwine (pmap f l1) (pmap f l2).
-(* begin hide *)
-Proof.
-  induction l1 as [| h1 t1]; cbn.
-    reflexivity.
-    destruct l2 as [| h2 t2]; cbn.
-      rewrite intertwine_nil_r. reflexivity.
-      {
-        rewrite IHt1.
-        destruct (f h1) eqn: ph1, (f h2) eqn: ph2; cbn.
-          reflexivity.
-          destruct (pmap f t2).
-            rewrite intertwine_nil_r. reflexivity.
-Abort.
 (* end hide *)
 
 Lemma Exists_intertwine :

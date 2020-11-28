@@ -1182,196 +1182,38 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
+Lemma take_drop_rev_aux :
+  forall (A : Type) (m n : nat) (l : vec A n),
+    eq_dep (take m l) (rev (drop (n - m) (rev l))).
+Proof.
+  induction m as [| m']; intros.
+    rewrite take_0, <- minus_n_O, drop_all. cbn. reflexivity.
+    destruct l as [| n h t].
+      rewrite !rev_nil, take_nil. reflexivity.
+      change (S n - S m') with (n - m'). cbn. rewrite IHm'.
+Admitted.
+(* end hide *)
+
+(* begin hide *)
 Lemma take_drop_rev :
   forall (A : Type) (m n : nat) (l : vec A n),
     eq_dep (take m (rev l)) (rev (drop (n - m) l)).
 Proof.
-  induction m as [| m']; intros.
-    rewrite take_0, <- minus_n_O, drop_all. cbn. reflexivity.
-    destruct l.
-      rewrite !rev_nil, take_nil. reflexivity.
-      change (S n - S m') with (n - m').
-Abort.
+  intros.
+  rewrite take_drop_rev_aux, rev_inv. reflexivity.
+Qed.
 (* end hide *)
 
 Lemma take_drop :
-  forall (A : Type) (m m' n : nat) (l : vec A n),
-    eq_dep (take m (drop m' l)) (drop m' (take (m + m') l)).
+  forall (A : Type) (a b n : nat) (l : vec A n),
+    eq_dep (take a (drop b l)) (drop b (take (b + a) l)).
 (* begin hide *)
 Proof.
-  induction m; intros.
-    cbn. rewrite take_length'.
-Abort.
-(* end hide *)
-
-(*Section fns.
-
-Variables A B : Type.
-
-Definition len {n : nat} (_ : Vec A n) : nat := n.
-
-Fixpoint repeat (n : nat) (a : A) : Vec A n :=
-match n with
-    | 0 => Nil
-    | S n' => Cons a (repeat n' a)
-end.
-
-Fixpoint take {n : nat} (m : nat) (v : Vec A n) : Vec A (min n m) := 
-match v with
-    | Nil => Nil
-    | Cons _ x xs => match m with
-        | 0 => Nil
-        | S m' => Cons x (take m' xs)
-    end
-end.
-
-Fixpoint toList {n : nat} (v : Vec A n) : list A :=
-match v with
-    | Nil => nil
-    | Cons _ x xs => cons x (toList xs)
-end.
-
-(*Definition fold {n : nat} (f : A -> B -> B) (v : Vec A n) (b : B) : B := 
-    fold f (toList v) b.*)
-
-Fixpoint foldr {n : nat} (f : A -> B -> B) (b : B) (v : Vec A n) : B :=
-match v with
-    | Nil => b
-    | Cons _ h t => f h (foldr f b t)
-end.
-
-Fixpoint fromList (l : list A) : Vec A (length l) :=
-match l with
-    | nil => Nil
-    | cons x xs => Cons x (fromList xs)
-end.
-
-Lemma toList_length : forall (n : nat) (v : Vec A n),
-    length (toList v) = n.
-Proof.
-  induction v; cbn; try rewrite IHv; trivial.
+  intros A a b n. revert a n.
+  induction b as [| b']; intros.
+    rewrite !drop_0. cbn. reflexivity.
+    destruct l as [| n h t]; cbn.
+      rewrite take_nil. reflexivity.
+      apply IHb'.
 Qed.
-
-Fixpoint app {n m : nat} (v1 : Vec A n) (v2 : Vec A m) : Vec A (n + m) :=
-match v1 with
-    | Nil => v2
-    | Cons _ x xs => Cons x (app xs v2)
-end.
-
-(*Fixpoint filter {n : nat} (f : A -> bool) (v : Vec A n) :=
-    let l := MyList.filter f (toList v) in fromList l.*)
-
-End fns.
-
-Fixpoint map {A B : Type} {n : nat} (f : A -> B) (v : Vec A n) : Vec B n :=
-match v with
-    | Nil => Nil
-    | Cons m x xs => Cons (f x) (map f xs)
-end.
-
-Definition fives := repeat 5 5.
-Definition sixList := [6; 6; 6].
-
-Eval compute in fives.
-
-Eval compute in take 2 fives.
-Eval compute in foldr plus 0 fives.
-Eval compute in (fromList sixList).
-Eval compute in (app fives fives).
-(*Eval compute in filter (fun n => match n with | 5 => false | _ => true end)
-fives.*)
-
-(*#[refine]
-Instance Functor_Vec (n : nat) : Functor (fun A : Set => Vec A n).
-split with (@map n);
-unfold map; intros; rewrite fn_ext; induction a;
-try rewrite IHa; trivial.
-Defined.*)
-
-
-Require Import JMeq.
-
-Lemma JMeq_Cons :
-  forall (A B : Type) (n m : nat) (h1 : A) (h2 : B)
-  (t1 : Vec A n) (t2 : Vec B m),
-    A = B -> n = m -> JMeq h1 h2 -> JMeq t1 t2 ->
-      JMeq (Cons h1 t1) (Cons h2 t2).
-Proof.
-  intros; subst. rewrite H1, H2. trivial.
-Qed.
-
-Lemma toList_fromList : forall (A : Type) (n : nat) (v : Vec A n),
-    JMeq (fromList (toList v)) v.
-Proof.
-  induction v; cbn.
-    reflexivity.
-    apply JMeq_Cons; auto. apply toList_length.
-Qed.
-
-(*Fixpoint vfilter {A : Type} {n : nat} (p : A -> bool) (v : Vec A n) :=
-match v return 
-    match v with | Nil => Vec A 0 | Cons _ h t => if p h
-        then Vec A (S (length (vfilter p t)))
-        else Vec A (length (vfilter p t))
-    end
-with
-    | Nil => Nil
-    | Cons _ h t => if p h then Cons h (vfilter p t) else vfilter p t
-end.*)
-
-Require Import Eqdep.
-
-Print inj_pair2.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Print Assumptions JMeq_Cons.
-
-Print JMeq_eq.
-
-Require Import Program.
-
-Lemma wut_1 : forall (A : Type) (n m : nat),
-    n <> m -> Vec A n <> Vec A m.
-Proof.
-  induction n as [| n'].
-    destruct m as [| m'].
-      intros. contradiction H. trivial.
-      intros. intro. inversion H0.
-
-Lemma wwwut : forall (A : Type) (n m : nat),
-    Vec A n = Vec A m -> n = m.
-Proof.
-  intros. dependent destruction H.
-
-Lemma vec_wut : forall (A B : Type) (n m : nat) (h1 : A) (h2 : B)
-    (t1 : Vec A n) (t2 : Vec B m), n = m ->
-        JMeq h1 h2 -> JMeq t1 t2 -> JMeq (Cons h1 t1) (Cons h2 t2).
-Proof.
-  intros. subst. destruct H0. inversion H1.
-    apply inj_pair2 in H. subst. trivial.
-Qed.
-
-Lemma vec_wut' : forall (A B : Type) (n m : nat) (h1 : A) (h2 : B)
-    (t1 : Vec A n) (t2 : Vec B m),
-        JMeq h1 h2 -> JMeq t1 t2 -> JMeq (Cons h1 t1) (Cons h2 t2).
-Proof.
-  intros. destruct H. inversion H0.
-  assert (JMeq (len t1) (len t2)).
-    compute. trivial.
-  compute in H0.
-Abort.*)
-
 (* end hide *)

@@ -488,6 +488,25 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma head_scanr :
+  forall (A B : Type) (f : A -> B -> B) (b : B) (l : list A),
+    head (scanr f b l) =
+      match l with
+          | [] => Some b
+          | _  => Some (foldl (flip f) b (rev l))
+      end.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (scanr f b t) eqn: Heq; cbn in *.
+      destruct t; inv IHt.
+      destruct t; inv IHt.
+        inv Heq. cbn. reflexivity.
+        cbn. rewrite !foldl_app. unfold flip; cbn. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma scanl_rev :
   forall (A B : Type) (f : A -> B -> A) (l : list B) (a : A),
     scanl f a (rev l) = rev (scanr (flip f) a l).
@@ -495,8 +514,16 @@ Lemma scanl_rev :
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    rewrite scanl_snoc, IHt. 
-Abort.
+    rewrite scanl_snoc, IHt. destruct (scanr (flip f) a t) eqn: Heq.
+      destruct t; cbn in Heq.
+        inversion Heq.
+        destruct (scanr (flip f) a t); inversion Heq.
+      rewrite foldl_app. cbn. unfold flip. do 3 f_equal.
+        apply (f_equal head) in Heq. rewrite head_scanr in Heq.
+          destruct t; inv Heq.
+            cbn. reflexivity.
+            cbn. rewrite !foldl_app. unfold flip; cbn. reflexivity.
+Qed.
 (* end hide *)
 
 Lemma head_scanl :

@@ -1,9 +1,5 @@
-Require Import Coq.Program.Wf.
-
-Require Import Arith.
-Require Import Lia Arith.
-
-Require Import Div2.
+Require Import Coq.Program.Wf Arith NPeano Div2 Lia List.
+Import ListNotations.
 
 Fixpoint nat_ind_2 (P : nat -> Prop) (H0 : P 0) (H1 : P 1)
     (H : forall n : nat, P n -> P (S (S n))) (n : nat) : P n :=
@@ -13,7 +9,7 @@ match n with
     | S (S n') => H n' (nat_ind_2 P H0 H1 H n')
 end.
 
-Theorem expand :
+Lemma expand :
   forall (P : nat -> Prop) (n k : nat),
     ~ n <= k -> P (k + (n - k)) -> P n.
 Proof.
@@ -86,7 +82,7 @@ match n with
       P8plus n' (nat_ind_8 P0 P1 P2 P3 P4 P5 P6 P7 P8plus n')
 end.
 
-Theorem above_7 : forall n : nat,
+Lemma above_7 : forall n : nat,
     exists i j : nat, 8 + n = 3 * i + 5 * j.
 Proof.
   assert (Hk : 8 <> 0). lia.
@@ -152,7 +148,7 @@ Proof.
     eapply le_trans. eauto. apply le_plus_l.
 Qed.
 
-Theorem f_fac : forall n : nat, f n = pred (fac (1 + n)).
+Lemma f_fac : forall n : nat, f n = pred (fac (1 + n)).
 Proof.
   induction n as [| n'].
     cbn. trivial.
@@ -196,7 +192,7 @@ match n with
 end.
 Next Obligation. lia. Qed.
 
-Theorem two_not_0 : 2 <> 0.
+Lemma two_not_0 : 2 <> 0.
 Proof. inversion 1. Qed.
 
 Fixpoint divmod2 (n : nat) : nat * nat :=
@@ -206,10 +202,10 @@ match n with
     | S (S n') => let (a, b) := divmod2 n' in (S a, b)
 end.
 
-Eval compute in divmod2 155.
+Compute divmod2 155.
 
-Eval compute in bin_to_nat answer.
-Eval compute in bin_to_nat (HP (Z (J (Z (J (Z HJ)))))).
+Compute bin_to_nat answer.
+Compute bin_to_nat (HP (Z (J (Z (J (Z HJ)))))).
 
 Definition injective {A B : Type} (f : A -> B) : Prop :=
     forall x x' : A, f x = f x' -> x = x'.
@@ -220,7 +216,7 @@ Definition surjective {A B : Type} (f : A -> B) : Prop :=
 Definition bijective {A B : Type} (f : A -> B) : Prop :=
     injective f /\ surjective f.
 
-Theorem pos_to_nat_neq_0 : forall p : pos,
+Lemma pos_to_nat_neq_0 : forall p : pos,
     pos_to_nat p <> 0.
 Proof.
   induction p as [| p' | p']; cbn; inversion 1.
@@ -229,7 +225,7 @@ Proof.
     inversion H.
 Qed.
 
-Theorem pos_to_nat_inj : injective pos_to_nat.
+Lemma pos_to_nat_inj : injective pos_to_nat.
 Proof.
   red. induction x as [| p1 | p1]; induction x' as [| p2 | p2]; cbn in *.
     trivial.
@@ -245,9 +241,9 @@ Proof.
     inversion 1. f_equal. apply IHp1. lia.
 Qed.
 
-Hint Resolve pos_to_nat_inj.
+Hint Resolve pos_to_nat_inj : core.
 
-Theorem bin_to_nat_inj : injective bin_to_nat.
+Lemma bin_to_nat_inj : injective bin_to_nat.
 Proof.
   red. destruct x, x'; cbn; intro.
     trivial.
@@ -263,14 +259,14 @@ match p with
     | Z p' => J p'
 end.
 
-Theorem pos_to_nat_S : forall (p : pos),
+Lemma pos_to_nat_S : forall (p : pos),
     pos_to_nat (succ p) = S (pos_to_nat p).
 Proof.
   induction p as [| p' | p']; cbn; trivial.
     rewrite IHp'. cbn. rewrite <- plus_n_Sm. trivial.
 Qed.
 
-Theorem bin_to_nat_sur : surjective bin_to_nat.
+Lemma bin_to_nat_sur : surjective bin_to_nat.
 Proof.
   red. intro n. induction n as [| n'].
     exists HZ. cbn. trivial.
@@ -283,14 +279,15 @@ Proof.
           cbn. f_equal. rewrite <- plus_n_Sm. assumption.
 Qed.
 
-Theorem bin_to_nat_bij : bijective bin_to_nat.
+Lemma bin_to_nat_bij : bijective bin_to_nat.
 Proof.
   unfold bijective. split.
     apply bin_to_nat_inj.
     apply bin_to_nat_sur.
 Qed.
 
-Theorem div2_even_inv : forall n m : nat,
+Lemma div2_even_inv :
+  forall n m : nat,
     n + n = m -> n = div2 m.
 Proof.
   intros n m. generalize dependent n.
@@ -302,7 +299,8 @@ Proof.
       rewrite <- plus_n_Sm in H. inversion H. trivial.
 Qed.
 
-Theorem div2_odd_inv : forall n m : nat,
+Lemma div2_odd_inv :
+  forall n m : nat,
     S (n + n) = m -> n = div2 m.
 Proof.
   intros n m. generalize dependent n.
@@ -318,10 +316,11 @@ Proof.
         cbn in *. rewrite <- plus_n_Sm in H. inversion H. trivial. 
 Qed.
 
-Theorem nat_ind_bin (P : nat -> Prop) (H0 : P 0)
-    (Hx2 : forall n : nat, P n -> P (2 * n))
-    (Hx2p1 : forall n : nat, P n -> P (1 + 2 * n))
-    (n : nat) : P n.
+Lemma nat_ind_bin
+  (P : nat -> Prop) (H0 : P 0)
+  (Hx2 : forall n : nat, P n -> P (2 * n))
+  (Hx2p1 : forall n : nat, P n -> P (1 + 2 * n))
+  (n : nat) : P n.
 Proof.
   pose proof bin_to_nat_sur. red in H. destruct (H n) as [b H'].
   rewrite <- H'. destruct b as [| p].
@@ -334,7 +333,9 @@ Proof.
         apply div2_odd_inv. rewrite <- plus_n_O in H'. assumption.
 Qed.
 
-Theorem even_dec : forall n : nat, {k : nat & {n = 2 * k} + {n = 1 + 2 * k}}.
+Lemma even_dec :
+  forall n : nat,
+    {k : nat & {n = 2 * k} + {n = 1 + 2 * k}}.
 Proof.
   induction n as [| n'].
     exists 0. left. trivial.
@@ -342,18 +343,6 @@ Proof.
       exists k. right. rewrite H. trivial.
       exists (S k). left. rewrite H. cbn. lia.
 Defined.
-
-Fixpoint nat_ind_bin' (P : nat -> Prop) (H0 : P 0)
-    (Hx2 : forall n : nat, P n -> P (2 * n))
-    (Hx2p1 : forall n : nat, P n -> P (1 + 2 * n))
-    (n : nat) : P n.
-Proof.
-  destruct n as [| n'].
-    assumption.
-    destruct (even_dec (S n')) as [half [H | H]].
-      rewrite H. apply Hx2. apply nat_ind_bin'; auto.
-      rewrite H. apply Hx2p1. apply nat_ind_bin'; auto.
-Abort. (* Cannot guess decreasing argument of fix. *)
 
 Inductive Tree (A : Type) : Type :=
     | Empty : Tree A
@@ -389,7 +378,6 @@ match t with
             | cons t forest' => size t + size' forest'
         end) _ forest
 end.
-Require Import List.
 
 Fixpoint size_f {A : Type} (t : Tree A) : nat :=
 match t with
@@ -397,16 +385,13 @@ match t with
     | Node _ forest => S (fold_right (fun t' s => size t' + s) 0 forest)
 end.
 
-Require Import List.
-Import ListNotations.
-
 Fixpoint flatten' {A : Type} (t : Tree A) : list A :=
 match t with
     | Empty => []
     | Node v forest => v :: fold_right (fun h t => flatten' h ++ t) [] forest
 end.
 
-Theorem flatten_preserves_size :
+Lemma flatten_preserves_size :
     forall (A : Type) (t : Tree A), size t = length (flatten' t).
 Proof.
   intro.
@@ -449,7 +434,7 @@ Proof.
       rewrite (plus_comm n'). cbn. f_equal. rewrite plus_comm. trivial.
 Qed.
 
-Theorem nat_ind_dbl_pred : forall n : nat, P n.
+Lemma nat_ind_dbl_pred : forall n : nat, P n.
 Proof.
   induction n as [| n'].
     apply H0.
@@ -458,31 +443,33 @@ Qed.
 
 End nat_ind_dbl_pred.
 
-Require Import NPeano.
-
-Goal forall n : nat, pow 2 (3 + n) > 2 * n.
+Goal forall n : nat, 2 * n <= pow 2 n.
 Proof.
   induction n as [| n'].
     cbn. lia.
-    replace (2 ^ (3 + S n')) with (2 ^ (3 + n') + 2 ^ (3 + n')).
-      Focus 2. cbn. lia.
-      replace (2 * S n') with (2 * n' + 2).
-        Focus 2. lia.
-        apply plus_lt_le_compat.
-          lia.
-          replace (2 ^ (3 + n')) with (8 * 2 ^ n').
-            Focus 2. cbn. lia.
-            destruct n'; cbn.
-              lia.
-Abort.
+    cbn [pow]. destruct n'; cbn in *; lia.
+Qed.
 
-Require Import List.
-Require Import Arith.
+Lemma pow2_lin :
+  forall n : nat,
+    n < pow 2 n.
+Proof.
+  induction n as [| n']; cbn.
+    constructor.
+    lia.
+Qed.
+
+Goal forall n : nat, 2 * n < pow 2 (S n).
+Proof.
+  intros. cbn [pow].
+  apply mult_S_lt_compat_l.
+  apply pow2_lin.
+Qed.
 
 Definition maxL := fold_right max 0.
 Definition sumL := fold_right plus 0.
 
-Theorem t : forall l : list nat, sumL l <= length l * maxL l.
+Lemma t : forall l : list nat, sumL l <= length l * maxL l.
 Proof.
   induction l as [| h t]; cbn.
     trivial.
