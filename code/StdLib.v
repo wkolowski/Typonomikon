@@ -147,6 +147,7 @@ Definition not_so_silly (n : nat) : bool :=
 
 Compute not_so_silly 6.
 
+End ThisMustWork.
 
 Module WeakEquality.
 
@@ -753,7 +754,6 @@ Class Rational (A : Type) : Type :=
     div : A -> A -> option A;
 }.
 
-#[refine]
 Instance Rational_Q : Rational Q :=
 {
     zero := 0;

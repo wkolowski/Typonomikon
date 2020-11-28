@@ -308,7 +308,7 @@ match n, m with
 end.
 (* end hide *)
 
-Lemma minus_pred :
+Lemma minus_1_r :
   forall n : nat, minus n 1 = pred n.
 (* begin hide *)
 Proof.
@@ -341,7 +341,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma minus_n :
+Lemma minus_diag:
   forall n : nat, minus n n = 0.
 (* begin hide *)
 Proof.
@@ -410,6 +410,159 @@ Qed.
 Lemma minus_not_comm :
   ~ forall n m : nat,
       minus n m = minus m n.
+(* begin hide *)
+Proof.
+  intro. specialize (H 1 0). cbn in H. inversion H.
+Qed.
+(* end hide *)
+
+(** ** Odejmowanie v2 *)
+
+Fixpoint sub (n m : nat) : nat :=
+match m with
+    | 0    => n
+    | S m' => pred (sub n m')
+end.
+
+Lemma sub_1_r :
+  forall n : nat, sub n 1 = pred n.
+(* begin hide *)
+Proof.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub_pred_l :
+  forall n m : nat,
+    sub (pred n) m = pred (sub n m).
+(* begin hide *)
+Proof.
+  induction m as [| m']; cbn.
+    reflexivity.
+    rewrite IHm'. reflexivity.
+Qed.
+(* end hide *)
+
+(* Lemma sub_pred_r :
+  forall n m : nat,
+    sub n (pred m) = sub n m.
+(* begin hide *)
+Proof.
+  intros n m. revert n.
+  induction m as [| m']; cbn; intros.
+    reflexivity.
+    rewrite <- IHm' at 2.
+    inducti
+    rewrite <- sub_pred_l.
+    rewrite IHm'. reflexivity.
+Qed.
+(* end hide *)
+ *)
+
+Lemma sub_0_l :
+  forall n : nat, sub 0 n = 0.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    rewrite IHn'. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub_0_r :
+  forall n : nat, sub n 0 = n.
+(* begin hide *)
+Proof.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub_S_S :
+  forall n m : nat,
+    sub (S n) (S m) = sub n m.
+(* begin hide *)
+Proof.
+  induction m as [| m']; cbn.
+    reflexivity.
+    rewrite <- IHm'. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma pred_sub_S :
+  forall n m : nat,
+    pred (sub (S n) m ) = sub n m.
+(* begin hide *)
+Proof.
+  induction m as [| m']; cbn.
+    reflexivity.
+    rewrite IHm'. reflexivity.
+Qed.
+
+(* end hide *)
+Lemma sub_diag :
+  forall n : nat, sub n n = 0.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    rewrite pred_sub_S, IHn'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub_plus_l :
+  forall n m : nat,
+    sub (plus n m) n = m.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+    reflexivity.
+    intro. rewrite pred_sub_S. apply IHn'.
+Qed.
+(* end hide *)
+
+Lemma sub_plus_r :
+  forall n m : nat,
+    sub (plus n m) m = n.
+(* begin hide *)
+Proof.
+  intros. rewrite plus_comm. apply sub_plus_l.
+Qed.
+(* end hide *)
+
+Lemma sub_plus_distr :
+  forall a b c : nat,
+    sub a (plus b c) = sub (sub a b) c.
+(* begin hide *)
+Proof.
+  induction b as [| b']; cbn; intros.
+    reflexivity.
+    rewrite IHb', sub_pred_l. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub_exchange :
+  forall a b c : nat,
+    sub (sub a b) c = sub (sub a c) b.
+(* begin hide *)
+Proof.
+  induction b as [| b']; cbn.
+    reflexivity.
+    intro. rewrite sub_pred_l, IHb'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sub_not_assoc :
+  ~ forall a b c : nat,
+      sub a (sub b c) = sub (sub a b) c.
+(* begin hide *)
+Proof.
+  intro. specialize (H 1 1 1). cbn in H. inversion H.
+Qed.
+(* end hide *)
+
+Lemma sub_not_comm :
+  ~ forall n m : nat,
+      sub n m = sub m n.
 (* begin hide *)
 Proof.
   intro. specialize (H 1 0). cbn in H. inversion H.
@@ -992,6 +1145,69 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma sub_0 :
+  forall n m : nat,
+    sub n m = 0 -> n <= m.
+(* begin hide *)
+Proof.
+  intros n m. revert n.
+  induction m as [| m']; cbn; intros.
+    rewrite H. constructor.
+    destruct n as [| n']; cbn.
+      apply le_0_n.
+      apply le_n_S, IHm'. rewrite pred_sub_S in H. assumption.
+Qed.
+(* end hide *)
+
+Lemma sub_S_l :
+  forall n m : nat,
+    m <= n -> sub (S n) m = S (sub n m).
+(* begin hide *)
+Proof.
+  induction m as [| m']; cbn; intros.
+    reflexivity.
+    rewrite IHm'.
+      cbn. destruct (sub n m') eqn: Heq.
+        apply sub_0 in Heq. edestruct le_Sn_n. eapply le_trans.
+          exact H.
+          assumption.
+        cbn. reflexivity.
+      eapply le_trans with (S m').
+        do 2 constructor.
+        assumption.
+Qed.
+(* end hide *)
+
+Lemma le_sub_l :
+  forall n m : nat,
+    sub n m <= n.
+(* begin hide *)
+Proof.
+  induction m as [| m']; cbn.
+    constructor.
+    apply le_trans with (sub n m').
+      apply le_pred.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma sub_inv :
+  forall n m : nat,
+    m <= n -> sub n (sub n m) = m.
+(* begin hide *)
+Proof.
+  intros n m. revert n.
+  induction m as [| m']; intros.
+    rewrite sub_0_r, sub_diag. reflexivity.
+    induction n as [| n'].
+      inversion H.
+      cbn. rewrite pred_sub_S, sub_S_l, IHm'.
+        reflexivity.
+        apply le_S_n. assumption.
+        apply le_sub_l.
+Qed.
+(* end hide *)
+
 (** ** Porządek [<] *)
 
 Definition lt (n m : nat) : Prop := S n <= m.
@@ -1524,14 +1740,17 @@ Definition prime (p : nat) : Prop :=
   forall k : nat, k | p -> k = 1 \/ k = p.
 
 Lemma double_not_prime :
-  forall (A : Type) (p : nat),
-    prime p -> ~ prime (mult 2 p).
+  forall n : nat,
+    n <> 1 -> ~ prime (mult 2 n).
 Proof.
   unfold prime, not; intros.
   destruct (H0 2).
-    red. exists p. reflexivity.
+    red. exists n. reflexivity.
     inversion H1.
-Abort.
+    destruct n as [| [| n']]; inversion H1.
+      apply H. reflexivity.
+      rewrite plus_comm in H3. inversion H3.
+Qed.
 (* end hide *)
 
 End divides.
@@ -1541,7 +1760,7 @@ End divides.
 (** Zdefiniuj silnię.
 
     Przykład:
-    [fact 5 = 1 * 2 * 3 * 4 * 5 = 120]
+    [fac 5 = 1 * 2 * 3 * 4 * 5 = 120]
 
 *)
 
@@ -1676,7 +1895,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma binom_n :
+Lemma binom_diag :
   forall n : nat, binom n n = 1.
 (* begin hide *)
 Proof.
@@ -1690,71 +1909,101 @@ Qed.
 
 Lemma binom_sym :
   forall n k : nat,
-    k < n -> binom n k = binom n (minus n k).
+    k <= n -> binom n k = binom n (sub n k).
 (* begin hide *)
 Proof.
-  induction n as [| n'];
-  destruct k as [| k'];
-  cbn; intros.
-    reflexivity.
-    inversion H.
-    rewrite binom_n, binom_gt.
-      reflexivity.
-      apply le_n.
-    destruct (minus n' k') eqn: Hnk; intros; subst.
-      admit.
-      admit. (*assert (S k' = n' - n). lia. rewrite <- H0, H1, <- !IHn'; lia.*)
-Admitted.
+  intros n k. revert n.
+  induction k as [| k']; cbn; intros.
+    rewrite binom_0_r, binom_diag. reflexivity.
+    induction n as [| n']; cbn.
+      inversion H.
+      rewrite pred_sub_S. destruct (sub n' k') eqn: Heq.
+        rewrite IHk', Heq, binom_0_r, binom_gt.
+          reflexivity.
+          apply sub_0 in Heq. apply le_n_S. assumption.
+          apply le_S_n. assumption.
+        apply le_S_n in H. inversion H; subst; try rename m into n'.
+          rewrite sub_diag in Heq. inversion Heq.
+          rewrite plus_comm, IHn', IHk', Heq.
+            reflexivity.
+            assumption.
+            apply le_n_S. assumption.
+Qed.
 (* end hide *)
 
+Lemma minus_sub :
+  forall n m : nat,
+    minus n m = sub n m.
 (* begin hide *)
-Goal forall n k : nat,
-  mult k (binom (S n) (S k)) = mult n (binom n k).
 Proof.
   induction n as [| n'];
-  destruct  k as [| k'];
-  cbn; intros.
+  destruct  m as [| m'];
+  cbn.
     reflexivity.
-    apply mult_0_r.
-    destruct n'; cbn in *.
-      specialize (IHn' 4); cbn in IHn'.
-Abort.
+    rewrite sub_0_l. cbn. reflexivity.
+    reflexivity.
+    rewrite IHn', pred_sub_S. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma binom_sym' :
+  forall n k : nat,
+    k <= n -> binom n k = binom n (minus n k).
+(* begin hide *)
+Proof.
+  intros.
+  rewrite minus_sub.
+  apply binom_sym.
+  assumption.
+Qed.
+(* end hide *)
+
+Function binom' (n k : nat) : nat :=
+match k with
+    | 0    => 1
+    | S k' =>
+        match n with
+            | 0    => 0
+            | S n' => plus (binom' n' k') (binom' n' k)
+        end
+end.
+
+Lemma binom_S_S :
+  forall n k : nat,
+    mult (S k) (binom (S n) (S k)) = mult (S n) (binom n k).
+(* begin hide *)
+Proof.
+  intros.
+  functional induction binom n k;
+  cbn.
+    admit.
+Admitted.
 (* end hide *)
 
 Lemma binom_spec :
   forall n k : nat,
-    k <= n -> mult (fac k) (mult (fac (minus n k)) (binom n k)) = fac n.
+    k <= n -> mult (fac k) (mult (fac (sub n k)) (binom n k)) = fac n.
 (* begin hide *)
-Proof. (* TODO: binom_spec *)
-  induction n as [| n'];
-  destruct  k as [| k'].
-    reflexivity.
-    inversion 1.
-    cbn; intros. rewrite plus_0_r, mult_1_r. reflexivity.
-    cbn; intros.
-      rewrite !mult_plus_distr_r, !mult_plus_distr_l, IHn'.
-        Focus 2. apply le_S_n. assumption.
-        rewrite <- !plus_assoc, <- 2!(mult_assoc k'), IHn'.
-          Focus 2. apply le_S_n. assumption.
-          f_equal. rewrite !plus_assoc.
-Restart.
-  intros n k.
-  functional induction binom n k; intros; cbn.
-(*
-    destruct k. inversion y. inversion H.
-    destruct n; cbn; lia.
-    destruct n', k'; cbn in *; try lia.
-      rewrite binom_0_r, <- plus_n_O, <- minus_n_O in *.
-        assert (0 <= S n') by lia.
-        specialize (IHn0 H0). rewrite mult_comm. cbn.
-        rewrite binom_1_r. trivial.
-      assert (S k' <= S n') by lia.
-        specialize (IHn0 H0).
-        rewrite <- !IHn0.
-        rewrite !mult_plus_distr_r, !mult_plus_distr_l.
-        repeat (rewrite ?mult_assoc, ?plus_assoc, ?IHn0). f_equal.
-*)
-Abort.
+Proof.
+  induction n as [| n'].
+    inversion 1; subst. cbn. reflexivity.
+    destruct k as [| k'].
+      intro. cbn. rewrite plus_0_r, mult_1_r. reflexivity.
+      {
+        intros. cbn [sub]. rewrite pred_sub_S. cbn [fac].
+        replace (mult (mult (S k') _) _) with
+                (mult (mult (S k') (binom (S n') (S k'))) (mult (fac k') (fac (sub n' k')))).
+          rewrite binom_S_S. replace (mult (mult _ _) _) with
+                                     (mult (S n') (mult (fac k') (mult (fac (sub n' k')) (binom n' k')))).
+            rewrite IHn'.
+              reflexivity.
+              apply le_S_n. assumption.
+            rewrite <- !mult_assoc. f_equal. rewrite (mult_comm (fac _)).
+              rewrite <- !mult_assoc, mult_comm, <- !mult_assoc. reflexivity.
+          rewrite <- !mult_assoc. f_equal. rewrite (mult_comm (binom _ _)).
+              rewrite <- !mult_assoc, mult_comm, <- !mult_assoc. reflexivity.
+      }
+Qed.
 (* end hide *)
 
 (* begin hide *)

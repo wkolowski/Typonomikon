@@ -809,18 +809,20 @@ Qed.
 (** * Paradoks pijoka *)
 
 Theorem drinkers_paradox :
-  forall (man : Type) (drinks : man -> Prop) (random_guy : man),
-    exists drinker : man, drinks drinker ->
-      forall x : man, drinks x.
+  LEM ->
+    forall (man : Type) (drinks : man -> Prop) (random_guy : man),
+      exists drinker : man, drinks drinker ->
+        forall x : man, drinks x.
 (* begin hide *)
+(* TODO: poprawić paradoks pijoka! *)
 Proof.
-(*
-  intros. destruct (classic (forall x : man, drinks x)).
-    exists random_guy. intros _. assumption.
-    apply not_all_ex_not in H. destruct H. (* TODO: popraw *)
-      exists x. intro. contradiction.
-*)
-Admitted.
+  intros lem **.
+  destruct (lem (exists x : man, ~ drinks x)).
+    destruct H as [x H]. exists x. intro. contradiction.
+    exists random_guy. intros. destruct (lem (drinks x)).
+      assumption.
+      contradiction H. exists x. assumption.
+Qed.
 (* end hide *)
 
 (** Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
@@ -911,15 +913,17 @@ Admitted.
     które klasycznej? *)
 
 Lemma dp_nonempty :
-  forall (man : Type) (drinks : man -> Prop),
-    (exists drinker : man, drinks drinker ->
-      forall x : man, drinks x) <->
-    (exists x : man, True).
+  LEM ->
+    forall (man : Type) (drinks : man -> Prop),
+      (exists drinker : man, drinks drinker ->
+        forall x : man, drinks x) <->
+      (exists x : man, True).
 (* begin hide *)
 Proof.
+  intro lem.
   split; intros; destruct H as [random_guy _].
     exists random_guy. trivial.
-    apply drinkers_paradox. assumption.
+    apply drinkers_paradox; assumption.
 Qed.
 (* end hide *)
 
