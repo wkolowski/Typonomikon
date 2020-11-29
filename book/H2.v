@@ -445,13 +445,7 @@ Lemma has_preinverse_precancellable :
   forall {A B : Type} {f : A -> B},
     has_preinverse f -> precancellable f.
 (* begin hide *)
-Proof.
-  destruct 1 as [g pre].
-  red. intros X h1 h2 H.
-  apply (f_equal (fun x => g .> x)) in H.
-  (*rewrite <- !comp_assoc, !pre, !id_left in H.
-  assumption.
-Qed.*)
+Proof. (* TODO: has_preinverse_precancellable *)
 Admitted.
 (* end hide *)
 
@@ -460,14 +454,6 @@ Lemma has_postinverse_postcancellable :
     has_postinverse f -> postcancellable f.
 (* begin hide *)
 Proof.
-  destruct 1 as [g post].
-  red. intros X h1 h2 H.
-  apply (f_equal (fun x => x .> g)) in H.
-(*
-  rewrite !comp_assoc, !post, !id_right in H.
-  assumption.
-Qed.
-*)
 Admitted.
 (* end hide *)
 

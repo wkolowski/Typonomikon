@@ -2015,8 +2015,9 @@ Lemma len_perms :
     length (perms l) = fact (length l).
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
+  induction l as [| h t].
+    cbn. reflexivity.
+    cbn [perms]. Search length bind.
     rewrite bind_spec, len_join, map_map.
 Abort.
 (* end hide *)

@@ -2087,7 +2087,14 @@ Proof.
     unfold Rcomp; destruct 1.
       specialize (total0 2 1). decompose [and or ex] total0.
         compute in H. compute in H1. destruct x; cbn in H.
-Admitted.
+Restart.
+  exists nat, le, le.
+  split.
+    admit.
+    split.
+      admit.
+      destruct 1 as [T]. compute in T. cbn in T.
+Abort.
 (* end hide *)
 
 Instance Total_Rinv :
@@ -2273,7 +2280,7 @@ Proof.
   assert (Dense R). admit.
   assert (Irreflexive R). admit.
   exists R, R. split; [assumption | split; [assumption | idtac]].
-  destruct 1.
+  destruct 1. unfold Rcomp in *.
 Abort.
 (* end hide *)
 
@@ -2463,18 +2470,35 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma Apartness_not_Rand :
+  exists (A : Type) (R S : rel A),
+    Apartness R /\ Apartness S /\ ~ Apartness (Rand R S).
 (* begin hide *)
-Instance Apartness_Rand :
-  forall (A : Type) (R S : rel A),
-    Apartness R -> Apartness S -> Apartness (Rand R S).
 Proof.
-  destruct 1 as [[AntiR] [SymR] CotransR],
-           1 as [[AntiS] [SymS] CotransS].
-  split; try split; intros.
-    intros []. firstorder.
-    destruct H. firstorder.
-    destruct H. destruct (CotransR _ _ H z), (CotransS _ _ H0 z).
-Abort.
+  exists
+    (list (nat * nat)),
+    (fun l1 l2 => map fst l1 <> map fst l2),
+    (fun l1 l2 => map snd l1 <> map snd l2).
+  split.
+    repeat split; repeat intro.
+      congruence.
+      congruence.
+      destruct (list_eq_dec Nat.eq_dec (map fst x) (map fst z)); subst.
+        right. rewrite <- e. assumption.
+        left. assumption.
+  split.
+    repeat split; repeat intro.
+      congruence.
+      congruence.
+      destruct (list_eq_dec Nat.eq_dec (map snd x) (map snd z)); subst.
+        right. rewrite <- e. assumption.
+        left. assumption.
+  destruct 1 as [[A] [S] C].
+  unfold Rand in C.
+  specialize (C [(1, 2)] [(2, 1)]); cbn in C.
+  specialize (C ltac:(split; cbn in *; congruence) [(2, 2)]); cbn in C.
+  decompose [and or] C; clear C; congruence.
+Qed.
 (* end hide *)
 
 (** * Słabe relacje homogeniczne (TODO) *)
@@ -2691,6 +2715,8 @@ Class StrictTotalOrder {A : Type} (R : rel A) : Prop :=
 
 (** * Domknięcia (TODO) *)
 
+Require Import Classes.RelationClasses.
+
 (** Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
     niepostrzeżenie przywyczajały do monad. *)
 
@@ -2729,7 +2755,7 @@ Proof.
 Qed.
 
 (* begin hide *)
-Hint Constructors refl_clos.
+Hint Constructors refl_clos : core.
 
 Ltac rc := compute; repeat split; intros; rel;
 repeat match goal with
@@ -2777,7 +2803,7 @@ Inductive symm_clos {A : Type} (R : rel A) : rel A :=
         forall x y : A, symm_clos R x y -> symm_clos R y x.
 
 (* begin hide *)
-Hint Constructors symm_clos.
+Hint Constructors symm_clos : core.
 
 Ltac sc := compute; repeat split; intros; rel;
 repeat match goal with
@@ -2826,7 +2852,7 @@ Inductive trans_clos {A : Type} (R : rel A) : rel A :=
           trans_clos R x y -> trans_clos R y z -> trans_clos R x z.
 
 (* begin hide *)
-Hint Constructors trans_clos.
+Hint Constructors trans_clos : core.
 
 Ltac tc := compute; repeat split; intros; rel;
 repeat match goal with
@@ -2880,7 +2906,7 @@ Inductive equiv_clos {A : Type} (R : rel A) : rel A :=
         equiv_clos R x y -> equiv_clos R y z -> equiv_clos R x z.
 
 (* begin hide *)
-Hint Constructors equiv_clos.
+Hint Constructors equiv_clos : core.
 
 Ltac ec := compute; repeat split; intros; rel;
 repeat match goal with
@@ -2981,9 +3007,30 @@ Proof. rstc. Qed.
 Definition rstc {A : Type} (R : rel A) : rel A :=
   trans_clos (symm_clos (refl_clos R)).
 
+Instance Reflexive_rstc :
+  forall {A : Type} (R : rel A),
+    Reflexive (rstc R).
+(* begin hide *)
+Proof. rstc. Qed.
+(* end hide *)
+
+Instance Symmetric_rstc :
+  forall {A : Type} (R : rel A),
+    Symmetric (rstc R).
+(* begin hide *)
+Proof. rstc. Qed.
+(* end hide *)
+
+Instance Transitive_rstc :
+  forall {A : Type} (R : rel A),
+    Transitive (rstc R).
+(* begin hide *)
+Proof. rstc. Qed.
+(* end hide *)
+
 Instance Equivalence_rstc :
   forall (A : Type) (R : rel A),
-    Equivalence (trans_clos (symm_clos (refl_clos R))).
+    Equivalence (rstc R).
 (* begin hide *)
 Proof. rstc. Qed.
 (* end hide *)
@@ -2999,9 +3046,12 @@ Proof.
         destruct H; auto.
         auto.
       eauto.
-    induction 1; red; auto.
-      destruct IHequiv_clos; auto.
-Abort.
+    induction 1; auto.
+      do 3 constructor. assumption.
+      reflexivity.
+      symmetry. assumption.
+      rewrite IHequiv_clos1. assumption.
+Qed.
 (* end hide *)
 
 Lemma subrelation_rstc :
@@ -3025,12 +3075,12 @@ Proof.
   split; red.
     inversion 1; subst.
       assumption.
-      do 2 constructor. auto.
+      reflexivity.
     constructor. assumption.
 Qed.
 (* end hide *)
 
-Lemma symm_clos_rst :
+Lemma symm_clos_rstc :
   forall {A : Type} (R : rel A),
     symm_clos (rstc R) <--> rstc R.
 (* begin hide *)
@@ -3038,22 +3088,52 @@ Proof.
   split; red.
     induction 1.
       assumption.
-      inversion IHsymm_clos; subst.
-        inversion H0; subst.
-Admitted.
+      symmetry. assumption.
+    constructor. assumption.
+Qed.
 (* end hide *)
 
+Lemma trans_clos_rstc :
+  forall {A : Type} (R : rel A),
+    trans_clos (rstc R) <--> rstc R.
 (* begin hide *)
+Proof.
+  split; red.
+    induction 1.
+      assumption.
+      rewrite IHtrans_clos1. assumption.
+    constructor. assumption.
+Qed.
+(* end hide *)
+
+Instance Equivalence_same_hrel :
+  forall A B : Type,
+    Equivalence (@same_hrel A B).
+(* begin hide *)
+Proof.
+  split; red; intros.
+    split; repeat intro; assumption.
+    split; repeat intro; apply H; assumption.
+    split; repeat intro.
+      apply H0, H. assumption.
+      apply H, H0. assumption.
+Qed.
+(* end hide *)
+
 Lemma rstc_idempotent :
   forall (A : Type) (R : rel A),
     rstc (rstc R) <--> rstc R.
 Proof.
-  intros. unfold rstc.
-  split; red.
+  split.
     induction 1.
-      inversion H; subst.
-        constructor. constructor.
-Abort.
+      induction H.
+        induction H.
+          assumption.
+          reflexivity.
+        symmetry. assumption.
+      rewrite IHtrans_clos1. assumption.
+    repeat intro. do 3 constructor. assumption.
+Qed.
 (* end hide *)
 
 (* begin hide *)
@@ -3061,7 +3141,22 @@ Lemma rstc_Rinv :
   forall (A : Type) (R : rel A),
     Rinv (rstc (Rinv R)) <--> rstc R.
 Proof.
-Abort.
+  unfold Rinv. split; repeat intro.
+    induction H.
+      induction H.
+        induction H.
+          do 3 constructor. assumption.
+          reflexivity.
+        symmetry. assumption.
+      rewrite IHtrans_clos2. assumption.
+    induction H.
+      induction H.
+        induction H.
+          do 3 constructor. assumption.
+          reflexivity.
+        symmetry. assumption.
+      rewrite IHtrans_clos2. assumption.
+Qed.
 (* end hide *)
 
 (** * Redukcje (TODO) *)

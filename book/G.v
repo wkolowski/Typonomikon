@@ -425,8 +425,6 @@ Proof.
         extensionality u. destruct u. reflexivity.
 Defined.
 
-Check W_ind.
-
 Lemma listW_ind' :
   forall
     (X : Type) (P : listW X -> Type)

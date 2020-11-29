@@ -272,7 +272,8 @@ match goal with
 end.
 (* end hide *)
 
-Theorem satans_neighbour_not_even : ~ even 667.
+Theorem satans_neighbour_not_even :
+  ~ even 667.
 (* begin hide *)
 (* Proof. even. Qed. *)
 Abort.

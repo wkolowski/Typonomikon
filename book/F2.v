@@ -1490,22 +1490,55 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma sim_add :
+  forall n n' m m' : conat,
+    sim n n' -> sim m m' -> sim (add n m) (add n' m').
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros n n' m m' [] [].
+  decompose [ex and or] sim'0;
+  decompose [ex and or] sim'1;
+  clear sim'0 sim'1.
+    constructor. left. cbn. rewrite H0, H1. split; assumption.
+    constructor. right. exists x, x0. cbn. rewrite H0, H1. repeat (split; try assumption).
+    constructor. right. exists (add x m), (add x0 m'). cbn. rewrite H0, H. split.
+      reflexivity.
+      split.
+        reflexivity.
+        apply CH.
+          assumption.
+          constructor. left. eauto.
+    constructor. right. exists (add x m), (add x0 m'). cbn. rewrite H, H0. split.
+      reflexivity.
+      split.
+        reflexivity.
+        apply CH.
+          assumption.
+          constructor. right. do 2 eexists. eauto.
+Defined.
+(* end hide *)
+
 Lemma Mul_det :
   forall n m r1 r2 : conat, Mul n m r1 -> Mul n m r2 -> sim r1 r2.
 (* begin hide *)
 Proof.
   cofix CH.
-  intros. unmul H.
+  intros.
+  destruct H as [[[] | [[] | (n1 & m1 & r1' & H11 & H12 & H13 & H14)]]]; subst.
     apply Mul_zero_l in H0. symmetry. assumption.
     apply Mul_zero_r in H0. symmetry. assumption.
-    unmul H0.
-      inv H1.
-      inv H.
-      inv H. inv H1. rewrite add_succ_r' in H5. rewrite add_succ_r' in H6.
-        rewrite (sim_eq H5), (sim_eq H6). apply sim_succ.
-        replace _ with (sim x1 x4).
+    destruct H0 as [[[] | [[] | (n2 & m2 & r2' & H21 & H22 & H23 & H24)]]]; subst.
+      admit.
+      admit.
+      {
+        apply (f_equal pred) in H21. inv H21.
+        apply (f_equal pred) in H22. inv H22.
+        assert (sim r1' r2').
           eapply CH; eassumption.
-Admitted.
+        constructor.
+        destruct H as [[[] | H]]. Print sim.
+Abort.
 (* end hide *)
 
 Lemma Mul_comm :
