@@ -160,7 +160,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Hint Constructors coList_neq.
+Hint Constructors coList_neq : core.
 
 Lemma coList_neq_sym :
   forall {A : Type} {l1 l2 : coList A},
@@ -170,18 +170,6 @@ Proof.
   induction 1; eauto.
 Qed.
 (* end hide *)
-
-Lemma coList_neq_cotrans :
-  forall {A : Type} {l1 l3 : coList A},
-    coList_neq l1 l3 ->
-      forall l2 : coList A,
-        coList_neq l1 l2 \/ coList_neq l2 l3.
-Proof.
-  intros A l1 l3.
-  induction 1; intros [[]]; auto.
-    left. constructor; cbn; congruence.
-    right. constructor; cbn; congruence.
-Admitted.
 
 (** ** [conil] i [cocons] *)
 

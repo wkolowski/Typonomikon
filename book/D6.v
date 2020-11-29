@@ -1831,7 +1831,7 @@ Lemma perm_Perm :
     perm l1 l2 -> Perm l1 l2.
 (* begin hide *)
 Proof.
-  intros. apply Permutation_Perm. Print Permutation_count_conv. Print Assumptions Permutation_count_conv.
+  intros. apply Permutation_Perm.
   apply Permutation_count_conv. exact H.
 Qed.
 (* end hide *)
@@ -1848,7 +1848,16 @@ match l with
     | h :: t => [([], l)] ++ map (fun '(a, b) => (h :: a, b)) (select t)
 end.
 
-Compute select [1; 2; 3].
+Lemma select_app :
+  forall {A : Type} {l1 l2 : list A},
+    select (l1 ++ l2) =
+      map (fun '(l, r) => (app l l2, r)) (select l1) ++
+      map (fun '(l, r) => (app l1 l, r)) (select l2).
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; cbn.
+Abort.
+(* end hide *)
 
 Fixpoint perms {A : Type} (l : list A) : list (list A) :=
 match l with
@@ -1858,7 +1867,56 @@ match l with
           map (fun '(l, r) => l ++ h :: r) (select ll)) (perms t)
 end.
 
+Compute select [1; 2; 3].
 Compute perms [1; 2; 3].
+
+Lemma Permutation_bind :
+  forall {A B : Type} (f g : A -> list B),
+    (forall x : A, Permutation (f x) (g x)) ->
+      forall l : list A, Permutation (bind f l) (bind g l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    apply Permutation_app; auto.
+Qed.
+(* end hide *)
+
+(* TODO: bind_app *)
+
+Lemma bind_bind :
+  forall {A B C : Type} (f : A -> list B) (g : B -> list C) (l : list A),
+    bind g (bind f l) = bind (fun x : A => bind g (f x)) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite bind_spec, map_app, join_app, <- !bind_spec, IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma Permutation_select_app :
+  forall {A : Type} {l1 l2 : list A},
+    Permutation (select (l1 ++ l2)) (select (l2 ++ l1)).
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; cbn; intros.
+    rewrite app_nil_r. reflexivity.
+    replace (l2 ++ h1 :: t1) with ((l2 ++ [h1]) ++ t1).
+      rewrite <- IHt1.
+Admitted.
+(* end hide *)
+
+Lemma map_select :
+  forall {A B : Type} (f : A -> B) (l : list A),
+    select (map f l) = map (fun '(L, R) => (map f L, map f R)) (select l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite IHt, !map_map. do 2 f_equal.
+Admitted.
+(* end hide *)
 
 Lemma Permutation_perms :
   forall (A : Type) (l1 l2 : list A),
@@ -1869,8 +1927,12 @@ Proof.
     do 2 constructor.
     rewrite 2!bind_spec. apply Permutation_join, Permutation_map.
       assumption.
-    rewrite !bind_spec. apply Permutation_join. admit.
-    rewrite IHPermutation1, IHPermutation2. reflexivity.
+    rewrite !bind_bind. apply Permutation_bind. intro l'.
+      rewrite !bind_spec, !map_map, <- !bind_spec. generalize (select l').
+        induction l0 as [| h t]; cbn.
+          reflexivity.
+          apply Permutation_app.
+            destruct h. Check Permutation_map.
 Admitted.
 (* end hide *)
 

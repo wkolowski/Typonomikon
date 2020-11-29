@@ -7170,11 +7170,6 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> = 0 \/ <span class="id" title="var">n</span> = <span class="id" title="var">m</span> \/ (<span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span> /\ <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">x</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Sublist_iterate'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Sublist</span> (<span class="id" title="var">iterate</span> <span class="id" title="var">f</span> <span class="id" title="var">n</span> <span class="id" title="var">x</span>) (<span class="id" title="var">iterate</span> <span class="id" title="var">f</span> <span class="id" title="var">m</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">False</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Sublist_tail</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Sublist</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt;<br/>

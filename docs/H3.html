@@ -1937,16 +1937,6 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 }.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartness_neq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Apartness</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">H</span>. <span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">Hneq</span> <span class="id" title="var">Heq</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Hneq</span>. <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">H</span> <span class="id" title="var">z</span>.<br/>
-<span class="id" title="keyword">Abort</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartness_Rinv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Apartness</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Apartness</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
@@ -2339,6 +2329,11 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Equivalence</span> (<span class="id" title="var">trans_clos</span> (<span class="id" title="var">symm_clos</span> (<span class="id" title="var">refl_clos</span> <span class="id" title="var">R</span>))).<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">rstc_equiv_clos</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rstc</span> <span class="id" title="var">R</span> &lt;--&gt; <span class="id" title="var">equiv_clos</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">subrelation_rstc</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> (<span class="id" title="var">rstc</span> <span class="id" title="var">R</span>).<br/>
 
@@ -2346,6 +2341,16 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">rstc_smallest</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Equivalence</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">subrelation</span> (<span class="id" title="var">rstc</span> <span class="id" title="var">R</span>) <span class="id" title="var">S</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">refl_clos_rstc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">refl_clos</span> (<span class="id" title="var">rstc</span> <span class="id" title="var">R</span>) &lt;--&gt; <span class="id" title="var">rstc</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">symm_clos_rst</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">symm_clos</span> (<span class="id" title="var">rstc</span> <span class="id" title="var">R</span>) &lt;--&gt; <span class="id" title="var">rstc</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
 
@@ -2369,7 +2374,11 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="var">Antireflexive</span> (<span class="id" title="var">rr</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">B3</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">rr_rc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">refl_clos</span> (<span class="id" title="var">rr</span> <span class="id" title="var">R</span>) &lt;--&gt; <span class="id" title="var">R</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">refl_clos</span> (<span class="id" title="var">rr</span> <span class="id" title="var">R</span>) &lt;--&gt; <span class="id" title="var">R</span>.<br/>
 </div>

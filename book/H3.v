@@ -830,7 +830,6 @@ Proof.
   intro a. destruct F. destruct F_LT0.
   specialize (left_total0 a).
   Require Import IndefiniteDescription.
-  Search constructive_indefinite_description.
   apply constructive_indefinite_description in left_total0.
   destruct left_total0. exact x.
 Qed.
@@ -2273,9 +2272,8 @@ Proof.
   assert (R : rel nat). admit.
   assert (Dense R). admit.
   assert (Irreflexive R). admit.
-  exists lt, lt. split; [idtac | split].
-    Focus 3.
-    unfold Rcomp, Rinv. destruct 1.
+  exists R, R. split; [assumption | split; [assumption | idtac]].
+  destruct 1.
 Abort.
 (* end hide *)
 
@@ -2323,8 +2321,8 @@ Lemma Rcomp_Equivalence :
     Equivalence R -> Equivalence S -> Equivalence (Rcomp R S).
 Proof.
   unfold Rcomp.
-  destruct 1 as [[] [] []],
-           1 as [[] [] []].
+  destruct 1 as [[R1] [S1] [T1]],
+           1 as [[R2] [S2] [T2]].
   repeat split; intros.
     rel.
     destruct H as (b & H1 & H2).
@@ -2334,6 +2332,14 @@ Lemma Rcomp_not_Equivalence :
   exists (A : Type) (R S : rel A),
     Equivalence R /\ Equivalence S /\ ~ Equivalence (Rcomp R S).
 Proof.
+  exists
+    (list nat),
+    (fun l1 l2 => length l1 = length l2),
+    (fun l1 l2 => nth 5 l1 = nth 5 l2).
+  repeat split; intros.
+    1-4: admit.
+    destruct 1 as [[R] [S] [T]].
+      specialize (T [1] [1; 4; 5; 1; 6] [1; 3]). unfold Rcomp in T. cbn in T.
 Abort.
 (* end hide *)
 
@@ -2374,27 +2380,25 @@ match x, y with
     | _    , _     => False
 end.
 
-Search Ror not.
-
 Lemma Ror_not_Equivaence :
   exists (A : Type) (R S : rel A),
     Equivalence R /\ Equivalence S /\ ~ Equivalence (Ror R S).
 Proof.
   exists
-    Threee,
-    wut', wut.
-  split.
-    admit.
-    split.
-      repeat split.
-        destruct x; cbn; trivial.
-        destruct x, y; cbn; trivial.
-        destruct x, y, z; cbn; trivial.
-      destruct 1 as [[] [] []]; unfold Ror in *; cbn in *.
-        specialize (reflexive0 One). cbn in *.
-        specialize (symmetric0 Two Three). cbn in *.
-        specialize (transitive0 Three Two One); cbn in *.
-Admitted.
+    (list nat),
+    (fun l1 l2 => length l1 = length l2),
+    (fun l1 l2 => head l1 = head l2).
+  repeat split; intros.
+    rewrite H. reflexivity.
+    rewrite H, H0. reflexivity.
+    rewrite H. reflexivity.
+    rewrite H, H0. reflexivity.
+    {
+      destruct 1 as [R S T]. destruct T as [T].
+      specialize (T [1] [2] [2; 3]).
+      compute in T. specialize (T ltac:(auto) ltac:(auto)). destruct T; congruence.
+    }
+Qed.
 (* end hide *)
 
 (* begin hide *)
@@ -2402,7 +2406,14 @@ Lemma Rnot_not_Equivalence :
   exists (A : Type) (R : rel A),
     Equivalence R /\ ~ Equivalence (Rnot R).
 Proof.
-Abort.
+  exists
+    bool,
+    (fun b1 b2 => bool_eq b1 b2 = true).
+  split.
+    repeat constructor; destruct x; try destruct y; try destruct z; cbn; auto.
+    destruct 1 as [[R] S T]. compute in R.
+      specialize (R true). cbn in R. apply R. reflexivity.
+Qed.
 (* end hide *)
 
 (** * Relacje apartheidu (TODO) *)
@@ -2414,16 +2425,6 @@ Class Apartness {A : Type} (R : A -> A -> Prop) : Prop :=
     Apartness_Cotransitive :
       forall x y : A, R x y -> forall z : A, R x z \/ R z y;
 }.
-
-Instance Apartness_neq :
-  forall A : Type, Apartness (fun x y : A => x <> y).
-Proof.
-  split.
-    split. intros x H. contradiction.
-    split. intros x y Hneq Heq. apply Hneq. symmetry. assumption.
-    intros x y H z.
-Abort.
-
 
 Instance Apartness_Rinv :
   forall (A : Type) (R : rel A),
@@ -2987,6 +2988,22 @@ Instance Equivalence_rstc :
 Proof. rstc. Qed.
 (* end hide *)
 
+Lemma rstc_equiv_clos :
+  forall {A : Type} (R : rel A),
+    rstc R <--> equiv_clos R.
+(* begin hide *)
+Proof.
+  split.
+    induction 1.
+      induction H.
+        destruct H; auto.
+        auto.
+      eauto.
+    induction 1; red; auto.
+      destruct IHequiv_clos; auto.
+Abort.
+(* end hide *)
+
 Lemma subrelation_rstc :
   forall (A : Type) (R : rel A), subrelation R (rstc R).
 (* begin hide *)
@@ -3000,12 +3017,43 @@ Lemma rstc_smallest :
 Proof. rstc. Qed.
 (* end hide *)
 
+Lemma refl_clos_rstc :
+  forall {A : Type} (R : rel A),
+    refl_clos (rstc R) <--> rstc R.
+(* begin hide *)
+Proof.
+  split; red.
+    inversion 1; subst.
+      assumption.
+      do 2 constructor. auto.
+    constructor. assumption.
+Qed.
+(* end hide *)
+
+Lemma symm_clos_rst :
+  forall {A : Type} (R : rel A),
+    symm_clos (rstc R) <--> rstc R.
+(* begin hide *)
+Proof.
+  split; red.
+    induction 1.
+      assumption.
+      inversion IHsymm_clos; subst.
+        inversion H0; subst.
+Admitted.
+(* end hide *)
+
 (* begin hide *)
 Lemma rstc_idempotent :
   forall (A : Type) (R : rel A),
     rstc (rstc R) <--> rstc R.
 Proof.
-Abort. (* TODO *)
+  intros. unfold rstc.
+  split; red.
+    induction 1.
+      inversion H; subst.
+        constructor. constructor.
+Abort.
 (* end hide *)
 
 (* begin hide *)
@@ -3027,11 +3075,17 @@ Instance Antireflexive_rr :
 Proof. rel. Qed.
 (* end hide *)
 
+Require Import B3.
+
 Lemma rr_rc :
-  forall (A : Type) (R : rel A),
-    Reflexive R -> refl_clos (rr R) <--> R.
+  LEM ->
+    forall (A : Type) (R : rel A),
+      Reflexive R -> refl_clos (rr R) <--> R.
 (* begin hide *)
 Proof.
-  rc. cut (forall x y : A, x = y \/ x <> y).
-    intro. destruct (H a b); subst; auto.
-Admitted.
+  intro lem. rc.
+  destruct (lem (a = b)).
+    subst. constructor 2.
+    constructor. split; auto.
+Qed.
+(* end hide *)

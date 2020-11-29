@@ -2048,7 +2048,7 @@ Qed.
               exists m2 : nat,
                 take n (join ll) = join (take m1 ll) ++ take m2 l
       end.
-Proof. Print take.
+Proof.
   induction ll as [| h t]; cbn; intros.
     exists 0. reflexivity.
     induction n as [| n'].
@@ -3685,7 +3685,6 @@ Lemma replace_snoc_neq :
 Proof.
   induction l as [| h t]; destruct n as [| n']; cbn; intros.
     contradiction H. 1-3: reflexivity.
-    Search (S _ <> _).
     rewrite Nat.succ_inj_wd_neg in H. rewrite (IHt _ _ _ H).
       destruct (replace t n' y); reflexivity.
 Qed.
@@ -15647,14 +15646,6 @@ Proof.
 Admitted.
 (* end hide *)
 
-Lemma Sublist_iterate' :
-  forall (A : Type) (f : A -> A) (n m : nat) (x y : A),
-    Sublist (iterate f n x) (iterate f m y) -> False.
-(* begin hide *)
-Proof.
-Admitted.
-(* end hide *)
-
 Lemma Sublist_tail :
   forall (A : Type) (l1 l2 : list A),
     Sublist l1 l2 ->
@@ -18069,7 +18060,7 @@ Lemma Incl_replace :
       exists (m : nat) (l2' : list A),
         replace l2 m x = Some l2' /\ Incl l1' l2'.
 (* begin hide *)
-Proof. Search Incl nth.
+Proof.
   unfold Incl. induction l1 as [| h1 t1]; cbn; intros.
     inv H0.
     destruct n as [| n']; cbn in *.
@@ -21515,7 +21506,16 @@ Lemma Palindrome_take :
 Proof.
   induction l as [| h t]; cbn; intros.
     left. reflexivity.
-    right.
+    right. destruct IHt.
+      intro. specialize (H n). destruct n as [| n']; cbn in *.
+        rewrite take_0. constructor. admit.
+        exists 1, h. cbn. subst. reflexivity.
+        destruct H0 as (n & x & IH). subst. exists (S n), h. cbn. f_equal.
+          specialize (H (S n)). cbn in H. rewrite take_replicate in H.
+            rewrite Nat.min_id in H. inversion H; subst.
+              destruct n; inversion H2; cbn. reflexivity.
+              pose (H2' := H2). apply (f_equal last) in H2'. rewrite last_app, last_replicate in H2'.
+                destruct n; cbn in *; inversion H2'; subst. assumption.
 Admitted.
 (* end hide *)
 
@@ -21644,7 +21644,7 @@ Lemma Subseq_rev_r :
     Subseq l (rev l) <-> Palindrome l.
 (* begin hide *)
 Proof.
-  split. Search Subseq.
+  split.
     Focus 2. intro. apply Palindrome_spec in H. rewrite <- H.
       apply Subseq_refl.
 Abort.
