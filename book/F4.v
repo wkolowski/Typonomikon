@@ -298,7 +298,7 @@ Proof.
   constructor. right. destruct l as [[[h t] |]]; cbn.
     exists (len (snoc t x)), (succ (len t)). intuition.
       f_equal. apply eq_pred. cbn. reflexivity.
-    do 2 eexists. intuition. reflexivity.
+    do 2 eexists. intuition.
 Qed.
 (* end hide *)
 

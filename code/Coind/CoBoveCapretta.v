@@ -73,8 +73,8 @@ Proof.
   constructor.
     exact (hdc c).
     apply (zipWith (fn c)).
-      Focus 2. exact (cons (hd_arg2 c) (Call2Stream _ (tl_arg2 c))).
       exact (Call2Stream _ (arg1 c)).
+      exact (cons (hd_arg2 c) (Call2Stream _ (tl_arg2 c))).
 Abort.
 
 (*
