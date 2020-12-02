@@ -890,6 +890,41 @@ Proof.
 Qed.
 (* end hide *)
 
+(** * Permutacje strumieni v2 *)
+
+(** Poprzedni podrozdział jest trochę lipny, bo tamtejsza definicja nie uchwytuje wszystkich możliwych
+    permutacji strumieni - wymusza ona, żeby każda permutacja składa się z jedynie skończonej liczby
+    przestawień. *)
+
+CoFixpoint swap {A : Type} (s : Stream A) : Stream A :=
+{|
+    hd := hd (tl s);
+    tl :=
+    {|
+        hd := hd s;
+        tl := swap (tl (tl s));
+    |}
+|}.
+
+(** Widać, że dla strumienia pokroju [s = cocons 0 (cocons 1 (cocons 2 ...))] zdanie
+    [SPermutation s (swap s)] nie zachodzi, bo przestawienia elementów ciągna się w
+    nieskończoność.
+
+    Potrzebna jest nam zatem jakaś lepsza definicja permutacji. *)
+
+Lemma SPermutation_not_swap :
+  forall {A : Type} (s : Stream A),
+    SPermutation s (swap s) -> sim s (swap s).
+(* begin hide *)
+Proof.
+  intros A s1 H.
+  remember (swap s1) as s2.
+  revert Heqs2.
+  induction H; intros.
+    apply sim_refl.
+Admitted.
+(* end hide *)
+
 (** * Strumienie za pomocą przybliżeń (TODO) *)
 
 Module approx.
