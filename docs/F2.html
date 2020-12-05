@@ -126,6 +126,11 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">add</span> <span class="id" title="var">n</span> <span class="id" title="var">zero</span>) <span class="id" title="var">n</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_add_zero</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">add</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) <span class="id" title="var">zero</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="var">zero</span> /\ <span class="id" title="var">sim</span> <span class="id" title="var">m</span> <span class="id" title="var">zero</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_omega_l</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">add</span> <span class="id" title="tactic">omega</span> <span class="id" title="var">n</span>) <span class="id" title="tactic">omega</span>.<br/>
 
@@ -215,7 +220,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_univalent</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">le</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> .<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">le</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_sim</span> :<br/>
@@ -368,11 +373,11 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">sim</span> (<span class="id" title="var">max</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">min_refl</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">min_diag</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">min</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>) <span class="id" title="var">n</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">max_refl</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">max_diag</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">max</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span>) <span class="id" title="var">n</span>.<br/>
 
 <br/>
@@ -660,65 +665,6 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="tact
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Mul_aux</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">M</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">conat</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Mul_aux_n_zero</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">Hn</span> : <span class="id" title="var">pred</span> <span class="id" title="var">n</span> = <span class="id" title="var">None</span>) (<span class="id" title="var">Hr</span> : <span class="id" title="var">pred</span> <span class="id" title="var">r</span> = <span class="id" title="var">None</span>), <span class="id" title="var">Mul_aux</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> <span class="id" title="var">M</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Mul_aux_m_zero</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">Hm</span> : <span class="id" title="var">pred</span> <span class="id" title="var">m</span> = <span class="id" title="var">None</span>) (<span class="id" title="var">Hr</span> : <span class="id" title="var">pred</span> <span class="id" title="var">r</span> = <span class="id" title="var">None</span>), <span class="id" title="var">Mul_aux</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> <span class="id" title="var">M</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Mul_aux_succ</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">n'</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">Hn</span> : <span class="id" title="var">pred</span> <span class="id" title="var">n</span> = <span class="id" title="var">Some</span> <span class="id" title="var">n'</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">m'</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">Hm</span> : <span class="id" title="var">pred</span> <span class="id" title="var">m</span> = <span class="id" title="var">Some</span> <span class="id" title="var">m'</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">r'</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">Hr</span> : <span class="id" title="var">pred</span> <span class="id" title="var">r</span> = <span class="id" title="var">Some</span> <span class="id" title="var">r'</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">HMul</span> : <span class="id" title="var">M</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> <span class="id" title="var">r'</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Hsim</span> : <span class="id" title="var">sim</span> <span class="id" title="var">r</span> (<span class="id" title="var">succ</span> (<span class="id" title="var">add</span> <span class="id" title="var">n'</span> (<span class="id" title="var">add</span> <span class="id" title="var">m'</span> <span class="id" title="var">r'</span>)))), <span class="id" title="var">Mul_aux</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> <span class="id" title="var">M</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">Mul_aux</span> : <span class="id" title="var">coind</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Mul</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> : <span class="id" title="var">conat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Mul'</span> : <span class="id" title="var">Mul_aux</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> <span class="id" title="var">Mul</span><br/>
-}.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Mul_zero_l</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Mul</span> <span class="id" title="var">zero</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">r</span> <span class="id" title="var">zero</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Mul_zero_r</span>:<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Mul</span> <span class="id" title="var">n</span> <span class="id" title="var">zero</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">r</span> <span class="id" title="var">zero</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Mul_one_l</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Mul</span> (<span class="id" title="var">succ</span> <span class="id" title="var">zero</span>) <span class="id" title="var">n</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Mul_one_r</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Mul</span> <span class="id" title="var">n</span> (<span class="id" title="var">succ</span> <span class="id" title="var">zero</span>) <span class="id" title="var">r</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Mul_det</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> : <span class="id" title="var">conat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Mul</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r1</span> -&gt; <span class="id" title="var">Mul</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r2</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Mul_comm</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> : <span class="id" title="var">conat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Mul</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">Mul</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">sim</span> : <span class="id" title="var">coind</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Mul_assoc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">conat</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Mul</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">r1</span> -&gt; <span class="id" title="var">Mul</span> <span class="id" title="var">r1</span> <span class="id" title="var">c</span> <span class="id" title="var">r2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Mul</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">s1</span> -&gt; <span class="id" title="var">Mul</span> <span class="id" title="var">a</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">r2</span> <span class="id" title="var">s2</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">mul'</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>) : <span class="id" title="var">conat</span> :=<br/>
 {|<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">pred</span> :=<br/>
@@ -734,20 +680,89 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="tact
 &nbsp;&nbsp;<span class="id" title="var">mul'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">zero</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">from_conat</span> (<span class="id" title="var">fuel</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">c</span> : <span class="id" title="var">conat</span>) : <span class="id" title="var">nat</span> :=<br/>
-<span class="id" title="keyword">match</span> <span class="id" title="var">fuel</span>, <span class="id" title="var">pred</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">_</span>    =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">None</span> =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">fuel'</span>, <span class="id" title="var">Some</span> <span class="id" title="var">c'</span> =&gt; 1 + <span class="id" title="var">from_conat</span> <span class="id" title="var">fuel'</span> <span class="id" title="var">c'</span><br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_zero_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mul'</span> <span class="id" title="var">zero</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span> = <span class="id" title="var">acc</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_zero_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">pred</span> <span class="id" title="var">m</span> = <span class="id" title="var">None</span> -&gt; <span class="id" title="var">mul'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc</span> = <span class="id" title="var">acc</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc1</span> <span class="id" title="var">acc2</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">acc1</span> <span class="id" title="var">acc2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc1</span>) (<span class="id" title="var">mul'</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span> <span class="id" title="var">acc2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_one_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> (<span class="id" title="var">succ</span> <span class="id" title="var">zero</span>) <span class="id" title="var">c</span> <span class="id" title="var">acc</span>) (<span class="id" title="var">add</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_one_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">c</span> (<span class="id" title="var">succ</span> <span class="id" title="var">zero</span>) <span class="id" title="var">acc</span>) (<span class="id" title="var">add</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_omega_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">pred</span> <span class="id" title="var">c</span> &lt;&gt; <span class="id" title="var">None</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> <span class="id" title="tactic">omega</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span>) <span class="id" title="tactic">omega</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_omega_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">pred</span> <span class="id" title="var">c</span> &lt;&gt; <span class="id" title="var">None</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">c</span> <span class="id" title="tactic">omega</span> <span class="id" title="var">acc</span>) <span class="id" title="tactic">omega</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">pred'</span> (<span class="id" title="var">n</span> : <span class="id" title="var">conat</span>) : <span class="id" title="var">conat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">pred</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span>    =&gt; <span class="id" title="var">zero</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">from_conat</span> 10 (<span class="id" title="var">mul'</span> (<span class="id" title="var">succ</span> (<span class="id" title="var">succ</span> <span class="id" title="var">zero</span>)) (<span class="id" title="var">succ</span> (<span class="id" title="var">succ</span> <span class="id" title="var">zero</span>)) <span class="id" title="var">zero</span>).<br/>
+<span class="comment">(*&nbsp;Inductive&nbsp;Finite'&nbsp;:&nbsp;conat&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Finite'_zero&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;conat,&nbsp;pred&nbsp;n&nbsp;=&nbsp;None&nbsp;-&gt;&nbsp;Finite'&nbsp;n<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Finite'_succ&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;n'&nbsp;:&nbsp;conat,&nbsp;pred&nbsp;n&nbsp;=&nbsp;Some&nbsp;n'&nbsp;-&gt;&nbsp;Finite'&nbsp;n'&nbsp;-&gt;&nbsp;Finite'&nbsp;n.<br/>
+&nbsp;*)</span><br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Mul_mul'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Mul</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc</span>) (<span class="id" title="var">add</span> <span class="id" title="var">acc</span> <span class="id" title="var">r</span>).<br/>
+<span class="comment">(*&nbsp;Inductive&nbsp;Finite'&nbsp;:&nbsp;conat&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Finite'_zero&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;conat,&nbsp;pred&nbsp;n&nbsp;=&nbsp;None&nbsp;-&gt;&nbsp;Finite'&nbsp;n<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Finite'_succ&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;conat,&nbsp;Finite'&nbsp;(pred'&nbsp;n)&nbsp;-&gt;&nbsp;Finite'&nbsp;n.<br/>
+<br/>
+Hint&nbsp;Constructors&nbsp;Finite'&nbsp;:&nbsp;core.<br/>
+&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_acc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc1</span> <span class="id" title="var">acc2</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">add</span> <span class="id" title="var">acc1</span> <span class="id" title="var">acc2</span>)) (<span class="id" title="var">add</span> <span class="id" title="var">acc1</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc2</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_succ_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> (<span class="id" title="var">succ</span> <span class="id" title="var">n</span>) <span class="id" title="var">m</span> <span class="id" title="var">acc</span>) (<span class="id" title="var">add</span> <span class="id" title="var">m</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Finite_mul'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Finite</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">Finite</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">Finite</span> <span class="id" title="var">acc</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Finite</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">acc1</span> <span class="id" title="var">acc1'</span> <span class="id" title="var">acc2</span> <span class="id" title="var">acc2'</span> : <span class="id" title="var">conat</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">acc1</span> <span class="id" title="var">acc1'</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">acc2</span> <span class="id" title="var">acc2'</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">a</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">acc1</span>) <span class="id" title="var">acc2</span>) (<span class="id" title="var">mul'</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">acc1'</span>) <span class="id" title="var">c</span> <span class="id" title="var">acc2'</span>).<br/>
 
 <br/>
 </div>

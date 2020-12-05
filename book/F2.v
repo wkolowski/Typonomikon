@@ -161,7 +161,7 @@ Lemma sim_succ :
 (* begin hide *)
 Proof.
   constructor. cbn. right. exists n, m. auto.
-Qed.
+Defined.
 (* end hide *)
 
 Lemma sim_succ_inv :
@@ -208,6 +208,19 @@ Proof.
   constructor; cbn. destruct n as [[n' |]]; cbn.
     right. do 2 eexists. do 2 split; try reflexivity. apply CH.
     left. auto.
+Qed.
+(* end hide *)
+
+Lemma sim_add_zero :
+  forall n m : conat,
+    sim (add n m) zero -> sim n zero /\ sim m zero.
+(* begin hide *)
+Proof.
+  split; destruct H as [[[] | ]]; constructor.
+    left. cbn in H. destruct (pred n); inv H.
+    decompose [ex and] H; cbn in *; congruence.
+    left. cbn in H. destruct (pred n); inv H.
+    decompose [ex and] H; cbn in *; congruence.
 Qed.
 (* end hide *)
 
@@ -346,7 +359,7 @@ Proof.
         apply CH.
           assumption.
           constructor. right. do 2 eexists. eauto.
-Qed.
+Defined.
 (* end hide *)
 
 (** * Porządek *)
@@ -433,7 +446,7 @@ Qed.
 
 Lemma le_univalent :
   forall n m : conat,
-    le n m -> le m n -> sim n m .
+    le n m -> le m n -> sim n m.
 (* begin hide *)
 Proof.
   cofix CH.
@@ -843,7 +856,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma min_refl :
+Lemma min_diag :
   forall n : conat, sim (min n n) n.
 (* begin hide *)
 Proof.
@@ -851,7 +864,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma max_refl :
+Lemma max_diag :
   forall n : conat, sim (max n n) n.
 (* begin hide *)
 Proof.
@@ -880,7 +893,7 @@ Proof.
   constructor.
   destruct a as [[a' |]], b as [[b' |]]; cbn; auto.
     right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition. rewrite min_refl. apply sim_refl.
+    right. do 2 eexists. intuition. rewrite min_diag. apply sim_refl.
 Qed.
 (* end hide *)
 
@@ -923,7 +936,7 @@ Proof.
       rewrite min_comm, min_max. apply sim_refl.
     right. do 2 eexists. intuition.
       rewrite min_max. reflexivity.
-    right. do 2 eexists. intuition. rewrite min_refl. reflexivity.
+    right. do 2 eexists. intuition. rewrite min_diag. reflexivity.
     right. do 2 eexists. intuition.
 Qed.
 (* end hide *)
@@ -1455,305 +1468,7 @@ Definition sub' : Type :=
     forall n m r : conat, f n m = r -> Sub n m r}.
 (* end hide *)
 
-(** * Dupa konia w polewie ogórkowej *)
-
-Inductive sim2_aux (n m : conat) (S : conat -> conat -> Prop) : Prop :=
-    | sim2_aux_zero :
-        pred n = None -> pred m = None -> sim2_aux n m S
-    | sim2_aux_succ :
-        forall
-          (n' : conat) (Hn : S n (succ n'))
-          (m' : conat) (Hm : S m (succ m'))
-          (Hsim2 : S n' m'),
-            sim2_aux n m S.
-
-Hint Constructors sim2_aux : core.
-
-CoInductive sim2 (n m : conat) : Prop :=
-{
-    sim2' : sim2_aux n m sim2;
-}.
-
-Hint Constructors sim2 : core.
-
-Require Import Coq.Classes.RelationClasses.
-
-Instance sim2_refl :
-  Reflexive sim2.
-(* begin hide *)
-Proof.
-  red.
-  cofix CH.
-  constructor.
-  destruct x as [[]]; eauto.
-Qed.
-(* end hide *)
-
-Instance sim2_symm :
-  Symmetric sim2.
-(* begin hide *)
-Proof.
-  red.
-  cofix CH.
-  destruct 1 as [[]]; constructor; eauto.
-Qed.
-(* end hide *)
-
-Instance sim2_trans :
-  Transitive sim2.
-(* begin hide *)
-Proof.
-  red.
-  cofix CH.
-  destruct 1 as [[]], 1 as [[]]; constructor; eauto.
-Qed.
-(* end hide *)
-
-Hint Resolve sim_refl sim_sym : core.
-
-Lemma sim_sim2 :
-  forall n m : conat,
-    sim n m -> sim2 n m.
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct 1 as [[[H1 H2] | (n' & m' & H1 & H2 & H3)]];
-  constructor.
-    eauto.
-    eright.
-      Focus 3. apply CH. eassumption.
-      apply CH; constructor; right; cbn. exists n', n'. repeat (split; trivial).
-      apply CH; constructor; right; cbn. exists m', m'. repeat (split; trivial).
-Qed.
-(* end hide *)
-
-Lemma sim2_add_zero_l :
-  forall n m : conat,
-    pred n = None -> sim2 (add n m) m.
-(* begin hide *)
-Proof.
-  intros n **.
-  constructor. destruct (pred m) eqn: Heq.
-    Focus 2. left; cbn; rewrite ?H; assumption.
-    eright.
-Admitted.
-(* end hide *)
-
-Lemma sim2_add :
-  forall n1 n2 m1 m2 : conat,
-    sim2 n1 n2 -> sim2 m1 m2 -> sim2 (add n1 m1) (add n2 m2).
-(* begin hide *)
-Proof.
-  cofix CH.
-  intros n1 n2 m1 m2.
-  destruct 1 as [[Hn1 Hn2 | n1' Hn1 n2' Hn2]].
-    intro. rewrite !sim2_add_zero_l; assumption.
-    constructor. eright.
-Admitted.
-(* end hide *)
-
 (** * Mnożenie (TODO) *)
-
-Inductive Mul_aux (n m r : conat) (M : conat -> conat -> conat -> Prop) : Prop :=
-    | Mul_aux_n_zero :
-        forall (Hn : pred n = None) (Hr : pred r = None), Mul_aux n m r M
-    | Mul_aux_m_zero :
-        forall (Hm : pred m = None) (Hr : pred r = None), Mul_aux n m r M
-    | Mul_aux_succ :
-        forall
-          (n' : conat) (Hn : pred n = Some n')
-          (m' : conat) (Hm : pred m = Some m')
-          (r' : conat) (Hsim : sim2 r (succ (add n' (add m' r'))))
-          (HMul : M n' m' r'), Mul_aux n m r M.
-
-Hint Constructors Mul_aux : coind.
-
-CoInductive Mul (n m r : conat) : Prop :=
-{
-    Mul' : Mul_aux n m r Mul
-}.
-
-Lemma Mul_zero_l :
-  forall n r : conat, Mul zero n r -> sim r zero.
-(* begin hide *)
-Proof.
-  destruct 1 as [[]];
-  constructor; cbn in *.
-    left. split; assumption.
-    left. split; trivial.
-    congruence.
-Qed.
-(* end hide *)
-
-Lemma Mul_zero_r:
-  forall n r : conat, Mul n zero r -> sim r zero.
-(* begin hide *)
-Proof.
-  destruct 1 as [[]];
-  constructor; cbn in *.
-    left. split; trivial.
-    left. split; trivial.
-    congruence.
-Qed.
-(* end hide *)
-
-Lemma Mul_det :
-  forall n m r1 r2 : conat,
-    Mul n m r1 -> Mul n m r2 -> sim2 r1 r2.
-(* begin hide *)
-Proof.
-  cofix CH.
-  do 2 destruct 1 as [[]];
-  try congruence.
-    1-4: constructor; eauto.
-    constructor. eright.
-      eassumption.
-      eassumption.
-      {
-        rewrite Hn in Hn0. inv Hn0.
-        rewrite Hm in Hm0. inv Hm0.
-        eapply CH.
-        repeat apply sim2_add.
-Admitted.
-(* end hide *)
-
-Lemma sim2_succ :
-  forall n m : conat,
-    sim2 n m -> sim2 (succ n) (succ m).
-(* begin hide *)
-Proof.
-  constructor. eright.
-    reflexivity.
-    reflexivity.
-    assumption.
-Qed.
-(* end hide *)
-
-Lemma sim2_add_assoc :
-  forall a b c : conat,
-    sim2 (add a (add b c)) (add (add a b) c).
-(* begin hide *)
-Proof.
-
-Admitted.
-(* end hide *)
-
-Lemma sim2_add_comm :
-  forall n m : conat,
-    sim2 (add n m) (add m n).
-(* begin hide *)
-Proof.
-
-Admitted.
-(* end hide *)
-
-Lemma Mul_comm :
-  forall n m r : conat,
-    Mul n m r -> Mul m n r.
-(* begin hide *)
-Proof.
-  cofix CH.
-  destruct 1 as [[]]; constructor.
-    constructor 2; assumption.
-    constructor 1; assumption.
-    econstructor 3; try eassumption.
-      {
-        rewrite Hsim.
-        apply sim2_succ.
-        setoid_rewrite sim2_add_assoc.
-        apply sim2_add.
-          apply sim2_add_comm.
-          reflexivity.
-      }
-      apply CH. assumption.
-Qed.
-(* end hide *)
-
-Hint Constructors sim sim2 : coind.
-
-Definition osim (on om : option conat) : Prop :=
-match on, om with
-    | Some n, Some m => sim2 n m
-    | None  , None   => True
-    | _     , _      => False
-end.
-
-Lemma sim2_pred :
-  forall n m : conat,
-    sim2 n m -> osim (pred n) (pred m).
-(* begin hide *)
-Proof.
-  intros n m [[-> -> | ]].
-    cbn. trivial.
-    destruct n as [[]], m as [[]]; cbn; trivial.
-      inv Hn. inv sim2'0; cbn in *.
-        congruence.
-        inv Hm. inv sim2'0; cbn in *.
-          congruence.
-          admit.
-      admit.
-      admit.
-Admitted.
-(* end hide *)
-
-Lemma Mul_assoc :
-  forall {a b c r1 r2 s1 s2 : conat},
-    Mul a b r1 -> Mul r1 c r2 ->
-    Mul b c s1 -> Mul a s1 s2 ->
-      sim2 r2 s2.
-(* begin hide *)
-Proof.
-  cofix CH.
-  do 4 (destruct 1 as [[]]);
-  try congruence; auto with coind;
-  repeat match goal with
-      | H1 : pred ?a = Some _, H2 : pred ?a = Some _ |- _ =>
-          rewrite H1 in H2; inv H2
-  end.
-    apply sim2_pred in Hsim. rewrite Hn0 in Hsim. cbn in Hsim. contradiction.
-    apply sim2_pred in Hsim1. rewrite Hm2 in Hsim1. cbn in Hsim1. contradiction.
-    constructor. eright.
-      eassumption.
-      eassumption.
-      repeat apply sim2_add.
-Admitted.
-(* end hide *)
-
-Lemma sim_add_zero :
-  forall n m : conat,
-    sim (add n m) zero -> sim n zero /\ sim m zero.
-(* begin hide *)
-Proof.
-  split; destruct H as [[[] | ]]; constructor.
-    left. cbn in H. destruct (pred n); inv H.
-    decompose [ex and] H; cbn in *; congruence.
-    left. cbn in H. destruct (pred n); inv H.
-    decompose [ex and] H; cbn in *; congruence.
-Qed.
-(* end hide *)
-
-Lemma Mul_one_l :
-  forall n r : conat, Mul (succ zero) n r -> sim n r.
-(* begin hide *)
-Proof.
-  destruct 1 as [[]].
-    constructor. cbn in Hn. congruence.
-    constructor. left. split; assumption.
-    inv Hn. apply Mul_zero_l in HMul. assert (sim r (succ r')).
-      constructor. cbn. right. do 2 eexists. do 2 (split; eauto). reflexivity.
-      rewrite H in Hsim. apply sim_succ_inv in Hsim. rewrite HMul in Hsim at 1.
-        symmetry in Hsim. rewrite add_zero_l in Hsim. apply sim_add_zero in Hsim. destruct Hsim.
-        constructor. right. do 2 eexists. do 2 (split; eauto). rewrite H0, H1. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma Mul_one_r :
-  forall n r : conat, Mul n (succ zero) r -> sim n r.
-(* begin hide *)
-Proof.
-  intros. apply Mul_comm in H. apply Mul_one_l. assumption.
-Qed.
-(* end hide *)
 
 CoFixpoint mul' (n m acc : conat) : conat :=
 {|
@@ -1767,15 +1482,6 @@ CoFixpoint mul' (n m acc : conat) : conat :=
 
 Definition mul (n m : conat) : conat :=
   mul' n m zero.
-
-Fixpoint from_conat (fuel : nat) (c : conat) : nat :=
-match fuel, pred c with
-    | 0, _    => 0
-    | _, None => 0
-    | S fuel', Some c' => 1 + from_conat fuel' c'
-end.
-
-Compute from_conat 10 (mul' (succ (succ zero)) (succ (succ zero)) zero).
 
 Lemma mul'_zero_l :
   forall c acc : conat,
@@ -1795,68 +1501,150 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Mul_mul' :
-  forall n m r acc : conat,
-    Mul n m r -> sim (mul' n m acc) (add r acc).
+Lemma mul'_comm :
+  forall n m acc1 acc2 : conat,
+    sim acc1 acc2 ->
+      sim (mul' n m acc1) (mul' m n acc2).
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct 1 as [[]].
-    replace n with zero.
-      rewrite mul'_zero_l. replace r with zero.
-        rewrite add_zero_l. reflexivity.
-        apply eq_pred. cbn. congruence.
-      apply eq_pred. cbn. congruence.
-    rewrite mul'_zero_r.
-      replace r with zero.
-        rewrite add_zero_l. reflexivity.
-        apply eq_pred. cbn. congruence.
+  destruct n as [[n' |]],
+           m as [[m' |]];
+  constructor; cbn.
+    right. do 2 eexists. do 2 (split; try reflexivity).
+      apply CH. rewrite <- !add_assoc. apply sim_add.
+        apply add_comm.
+        assumption.
+    1-3: inv H.
+Qed.
+(* end hide *)
+
+Lemma mul'_one_l :
+  forall c acc : conat,
+    sim (mul' (succ zero) c acc) (add c acc).
+(* begin hide *)
+Proof.
+  destruct c as [[c' |]]; constructor; cbn.
+    right. do 2 eexists. do 2 (split; try reflexivity).
+      rewrite mul'_zero_l, add_zero_l. reflexivity.
+    destruct acc as [[acc' |]]; cbn; eauto.
+      right. do 2 eexists. do 2 (split; try reflexivity).
+Qed.
+(* end hide *)
+
+Lemma mul'_one_r :
+  forall c acc : conat,
+    sim (mul' c (succ zero) acc) (add c acc).
+(* begin hide *)
+Proof.
+  intros. rewrite mul'_comm.
+    apply mul'_one_l.
+    reflexivity.
+Qed.
+(* end hide *)
+
+Lemma mul'_omega_l :
+  forall c acc : conat,
+    pred c <> None ->
+      sim (mul' omega c acc) omega.
+(* begin hide *)
+Proof.
+  cofix CH.
+  destruct c as [[c' |]];
+  constructor; cbn.
+    right. do 2 eexists. do 2 (split; try reflexivity). destruct c' as [[c'' |]].
+      apply CH. cbn. inversion 1.
+      change {| pred := None |} with zero. rewrite mul'_zero_r.
+        apply add_omega_l.
+        cbn. reflexivity.
+    cbn in H. congruence.
+Qed.
+(* end hide *)
+
+Lemma mul'_omega_r :
+  forall c acc : conat,
+    pred c <> None ->
+      sim (mul' c omega acc) omega.
+(* begin hide *)
+Proof.
+  intros. rewrite mul'_comm.
+    apply mul'_omega_l. assumption.
+    reflexivity.
+Qed.
+(* end hide *)
+
+Definition pred' (n : conat) : conat :=
+match pred n with
+    | None    => zero
+    | Some n' => n'
+end.
+
+(* Inductive Finite' : conat -> Prop :=
+    | Finite'_zero :
+        forall n : conat, pred n = None -> Finite' n
+    | Finite'_succ :
+        forall n n' : conat, pred n = Some n' -> Finite' n' -> Finite' n.
+ *)
+
+(* Inductive Finite' : conat -> Prop :=
+    | Finite'_zero :
+        forall n : conat, pred n = None -> Finite' n
+    | Finite'_succ :
+        forall n : conat, Finite' (pred' n) -> Finite' n.
+
+Hint Constructors Finite' : core.
+ *)
+
+Lemma mul'_acc :
+  forall n m acc1 acc2 : conat,
+    sim (mul' n m (add acc1 acc2)) (add acc1 (mul' n m acc2)).
+(* begin hide *)
+Proof.
+Admitted.
+(* end hide *)
+
+Lemma mul'_succ_l :
+  forall n m acc : conat,
+    sim (mul' (succ n) m acc) (add m (mul' n m acc)).
+(* begin hide *)
+Proof.
+  destruct m as [[m' |]];
+  constructor; cbn.
+    right. do 2 eexists. do 2 (split; try reflexivity).
+Admitted.
+(* end hide *)
+
+Lemma Finite_mul' :
+  forall n m acc : conat,
+    Finite n -> Finite m -> Finite acc ->
+      Finite (mul' n m acc).
+(* begin hide *)
+Proof.
+  intros until 1. revert m acc.
+  induction H; intros m acc Hm Hacc.
+    eapply Finite_sim.
+      rewrite mul'_zero_l. reflexivity.
       assumption.
-    constructor. right. eexists. exists (add r' acc). split.
-      cbn. rewrite Hn, Hm. reflexivity.
-      split.
-        cbn. rewrite Hr. reflexivity.
-        {
-          specialize (CH _ _ _ (add n' (add m' acc)) HMul).
-          rewrite CH. apply sim_add. Guarded.
-            reflexivity.
-          
+    eapply Finite_sim.
+      symmetry. apply mul'_succ_l.
+      apply Finite_add.
+        assumption.
+        apply IHFinite; assumption.
+Qed.
+(* end hide *)
 
-
-
-  destruct acc as [[acc' |]];
-  cbn.
-    constructor; cbn. right. exists acc', (add acc' r). rewrite Hn. split.
-      reflexivity.
-      split.
-        reflexivity.
-        replace r with zero.
-          rewrite add_zero_r. reflexivity.
-          apply eq_pred. cbn. congruence.
-    constructor; cbn. rewrite Hn. left. split; trivial.
-    constructor; cbn. rewrite Hm. right. exists acc', (add acc' r). split.
-      destruct (pred n); reflexivity.
-      split.
-        reflexivity.
-        replace r with zero.
-          rewrite add_zero_r. reflexivity.
-          apply eq_pred. cbn. congruence.
-    constructor; cbn. rewrite Hm. left. destruct (pred n); split; trivial.
-    constructor; cbn. rewrite Hn, Hm. right. do 2 eexists. do 2 (split; try reflexivity).
-      eapply sim_trans.
-        apply CH. eassumption.
-        rewrite !add_assoc. Check add_succ_r.
-      rewrite CH.
-        2: eassumption. Guarded.
-        rewrite Hsim.
-      admit.
-    constructor; cbn. rewrite Hn, Hm. right. do 2 eexists. split.
-      reflexivity.
-      split.
-        eassumption.
-        rewrite CH.
-          2: eassumption.
-          admit.
+Lemma mul'_assoc :
+  forall a b c acc1 acc1' acc2 acc2' : conat,
+    sim acc1 acc1' -> sim acc2 acc2' ->
+      sim (mul' a (mul' b c acc1) acc2) (mul' (mul' a b acc1') c acc2').
+(* begin hide *)
+Proof.
+  cofix CH.
+  destruct a as [[a' |]],
+           b as [[b' |]],
+           c as [[c' |]];
+  constructor; cbn.
+    right. do 2 eexists. do 2 (split; try reflexivity).
 Admitted.
 (* end hide *)
 
@@ -1894,7 +1682,7 @@ Proof.
   destruct H as [[H | (n' & H1 & H2)]],
           H0 as [[H' | (m' & H1' & H2')]]; subst; cbn.
     rewrite H. left. apply sim_eq. rewrite add_comm. constructor.
-      cbn. right. do 2 eexists. intuition.
+      cbn. right. do 2 eexists. intuition. rewrite add_zero_l. constructor; eauto.
     rewrite H. right. exists m'. intuition.
     rewrite H1. right. exists (succ n'). split.
       f_equal. apply sim_eq. rewrite add_comm. constructor. cbn.

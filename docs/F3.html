@@ -391,7 +391,51 @@
 </div>
 
 <div class="doc">
-<a id="lab569"></a><h1 class="section">Strumienie za pomocą przybliżeń (TODO)</h1>
+<a id="lab569"></a><h1 class="section">Permutacje strumieni v2</h1>
+
+<div class="paragraph"> </div>
+
+ Poprzedni podrozdział jest trochę lipny, bo tamtejsza definicja nie uchwytuje wszystkich możliwych
+    permutacji strumieni - wymusza ona, żeby każda permutacja składa się z jedynie skończonej liczby
+    przestawień. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">swap</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">hd</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{|<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">hd</span> <span class="id" title="var">s</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">swap</span> (<span class="id" title="var">tl</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|}<br/>
+|}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Widać, że dla strumienia pokroju <span class="inlinecode"><span class="id" title="var">s</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">cocons</span></span> <span class="inlinecode">0</span> <span class="inlinecode">(<span class="id" title="var">cocons</span></span> <span class="inlinecode">1</span> <span class="inlinecode">(<span class="id" title="var">cocons</span></span> <span class="inlinecode">2</span> <span class="inlinecode">...))</span> zdanie
+    <span class="inlinecode"><span class="id" title="var">SPermutation</span></span> <span class="inlinecode"><span class="id" title="var">s</span></span> <span class="inlinecode">(<span class="id" title="var">swap</span></span> <span class="inlinecode"><span class="id" title="var">s</span>)</span> nie zachodzi, bo przestawienia elementów ciągna się w
+    nieskończoność.
+
+<div class="paragraph"> </div>
+
+    Potrzebna jest nam zatem jakaś lepsza definicja permutacji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SPermutation_not_swap</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SPermutation</span> <span class="id" title="var">s</span> (<span class="id" title="var">swap</span> <span class="id" title="var">s</span>) -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">s</span> (<span class="id" title="var">swap</span> <span class="id" title="var">s</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab570"></a><h1 class="section">Strumienie za pomocą przybliżeń (TODO)</h1>
 
 </div>
 <div class="code">
@@ -484,7 +528,7 @@
 </div>
 
 <div class="doc">
-<a id="lab570"></a><h1 class="section">Pomysł dawno zapomniany: (ko)induktywne specyfikacje funkcji (TODO)</h1>
+<a id="lab571"></a><h1 class="section">Pomysł dawno zapomniany: (ko)induktywne specyfikacje funkcji (TODO)</h1>
 
 </div>
 <div class="code">

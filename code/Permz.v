@@ -48,16 +48,6 @@ Proof.
         apply Perm_Insert' in X0.
         apply Perm_Insert' in X1.
         apply Perm_Insert' in X2.
-        apply Perm_Insert' in X.
-      
-  induction 1; intros.
-    assumption.
-    inv H0.
-      inv X0.
-      specialize (IHPerm H1).
-    specialize (IHPerm _ H0).
-    inv H0.
-      inv X0.
 Admitted.
 
 Lemma Permutation_Perm :
