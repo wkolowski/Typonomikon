@@ -4551,8 +4551,8 @@ end.
 (** Na szczęście typy induktywne to istoty bardzo prostolinijne, zaś te złe
     można odróżnić od tych dobrych gołym okiem, za pomocą bardzo prostego
     kryterium: złe typy induktywne to te, które nie są ściśle pozytywne.
-    Zanim jednak dowiemy się, jak rozpoznawać złe typy, poznajmy najpierw
-    dwa powody, przez które złe typy induktywne są złe. *)
+    Zanim jednak dowiemy się, jak rozpoznawać złe typy induktywne, poznajmy
+    najpierw dwa powody, przez które złe typy induktywne są złe. *)
 
 (** ** Nieterminacja jako źródło zła na świecie *)
 
@@ -4573,6 +4573,23 @@ Fail Inductive wut (A : Type) : Type :=
 (* ===> The command has indeed failed with message:
         Non strictly positive occurrence of "wut"
         in "(wut A -> A) -> wut A". *)
+
+(* begin hide *)
+Module wut.
+
+Unset Positivity Checking.
+Inductive wut (A : Type) : Type :=
+    | C : (wut A -> A) -> wut A.
+Set Positivity Checking.
+
+Definition loop (A : Type) : A :=
+  let f (w : wut A) : A :=
+    match w with
+        | C _ g => g w
+    end
+  in f (C _ f).
+End wut.
+(* end hide *)
 
 (** Uwaga: poprzedzenie komendą [Fail] innej komendy oznajmia Coqowi, że
     spodziewamy się, iż komenda zawiedzie. Coq akceptuje komendę [Fail c],
@@ -4765,7 +4782,7 @@ Qed.
 
     Do kwestii tego, który typ ma ile elementów wrócimy jeszcze w rozdziale
     o typach i funkcjach. Tam też zapoznamy się lepiej z surjekcjami i
-    innymi rodzajami funkcji. Tymczasem ćwiczenie: *)
+    innymi rodzajami funkcji. Tymczasem: *)
 
 (** **** Ćwiczenie *)
 
@@ -4774,7 +4791,7 @@ Qed.
     otrzymany wynik.
 
     Wskazówka: [minus] to funkcja z biblioteki standardowej, która
-    implementuje odejmowanie liczb naturalnych z obcięciem, tzn. np.
+    implementuje odejmowanie liczb naturalnych z obcięciem, czyli np.
     [2 - 5 = 0]. Użyj [Print]a, żeby dokładnie zbadać jej definicję. *)
 
 (* begin hide *)
@@ -4807,6 +4824,7 @@ Proof.
 Qed.
 
 (* begin hide *)
+(* TODO: konstruktywizacja twierdzenia kantora *)
 Theorem Cantor_constructive :
   forall f : nat -> (nat -> bool),
     exists g : nat -> bool,
@@ -4865,10 +4883,10 @@ Qed.
     [n], i zwracamy negację tego, co tam znajdziemy. Czujesz sprzeczność?
 
     Nasze założenie mówi, że [diagonal] znajduje się w którymś wierszu
-    tabelki - niech ma on numer [n]. Wiemy jednak, że [g] różni się od
-    [n]-tej funkcji z tabelki na argumencie [n], gdyż zdefiniowaliśmy ją
-    jako negację tej właśnie komórki w tabelce. Dostajemy stąd równość
-    [f n n = diagonal n = negb (f n n)], co po analizie przypadków daje
+    tabelki - niech ma on numer [n]. Wiemy jednak, że [diagonal] różni
+    się od [n]-tej funkcji z tabelki na argumencie [n], gdyż zdefiniowaliśmy
+    [diagonal n] jako negację tej właśnie komórki w tabelce. Dostajemy stąd
+    równość [f n n = diagonal n = negb (f n n)], co po analizie przypadków daje
     ostatecznie [true = false] lub [false = true].
 
     Voilà! Sprzeczność osiągnięta, a zatem początkowe założenie było
@@ -4880,14 +4898,18 @@ Qed.
     z [nat -> bool] w [(nat -> bool) -> bool]? A w [nat -> bool -> bool]? *)
 
 (** Poznawszy twierdzenie Cantora, możemy powrócić do ścisłej pozytywności,
-    czyż nie? Otóż nie, bo twierdzenie Cantora jest biedne. Żeby czerpać
-    garściami niebotyczne profity, musimy najpierw uogólnić je na dowolne
+    czyż nie? Otóż nie, bo twierdzenie Cantora jest biedne. Żeby móc czerpać
+    z niego niebotyczne profity, musimy najpierw uogólnić je na dowolne
     dwa typy [A] i [B] znajdując kryterium mówiące, kiedy nie istnieje
     surjekcja z [A] w [A -> B]. *)
 
 Theorem Cantor' :
-  forall {A B : Type} (f : A -> (A -> B)) (modify : B -> B),
-    (forall b : B, modify b <> b) -> ~ surjective f.
+  forall
+    {A B : Type}
+    (f : A -> (A -> B))
+    (modify : B -> B)
+    (H : forall b : B, modify b <> b),
+      ~ surjective f.
 Proof.
   unfold surjective. intros A B f modify H Hf.
   pose (g := fun x : A => modify (f x x)).
@@ -4980,7 +5002,14 @@ Module Example1.
     tej książce nazywa się [wut], to musi to być złowrogie, podejrzane
     paskudztwo. *)
 
-Axioms
+Unset Positivity Checking.
+Inductive wut (A : Type) : Type :=
+    | C : (wut A -> A) -> wut A.
+Set Positivity Checking.
+
+Arguments C {A} _.
+
+(* Axioms
   (wut : Type -> Type)
   (C : forall {A : Type}, (wut A -> A) -> wut A)
   (dcase : forall
@@ -4989,17 +5018,24 @@ Axioms
     (PC : forall f : wut A -> A, P (C f)),
       {f : forall w : wut A, P w |
         forall g : wut A -> A, f (C g) = PC g}).
+ *)
 
 (** [wut] to aksjomatyczne kodowanie tego samego typu, o którym poprzednio
     tylko udawaliśmy, że istnieje. Zauważmy, że nie jest nam potrzebna
     reguła indukcji - wystarczy jeden z prostszych eliminatorów, mianowicie
     [dcase], czyli zależna reguła analizy przypadków. *)
 
-Definition bad (A : Type) : wut A -> (wut A -> A).
+Definition bad {A : Type} (w : wut A) : wut A -> A :=
+match w with
+    | C f => f
+end.
+
+(* Definition bad (A : Type) : wut A -> (wut A -> A).
 Proof.
   apply (dcase A (fun _ => wut A -> A)).
   intro f. exact f.
 Defined.
+ *)
 
 (** Dlaczego typ [wut A] jest nielegalny, a jego definicja za pomocą komendy
     [Inductive] jest odrzucana przez Coqa? Poza wspomnianymi w poprzednim
@@ -5012,22 +5048,24 @@ Defined.
     tak, to dowolne [w : wut A] możemy odpakować i wyjąć z niego funkcję
     [f : wut A -> A]. *)
 
-Lemma bad_sur :
-  forall A : Type, surjective (bad A).
+Lemma surjective_bad :
+  forall A : Type, surjective (@bad A).
 Proof.
-  unfold surjective. intros A f.
-  unfold bad. destruct (dcase _) as [g H].
-  exists (C f). apply H.
+  unfold surjective.
+  intros A f.
+  exists (C f).
+  cbn. reflexivity.
 Qed.
 
-(** Skoro możemy włożyć dowolną funkcję, to możemy także wyjąć dowolną
-    funkcję, a zatem mamy do czynienia z surjekcją. *)
+(** Skoro możemy włożyć dowolną funkcję, to znaczy, że dla każdej funkcji
+    istnieje element, z którego możemy ją wyjąć, a zatem mamy do czynienia
+    z surjekcją. *)
 
 Lemma worst : False.
 Proof.
-  apply (Cantor' (bad bool) negb).
+  apply (Cantor' (@bad bool) negb).
     destruct b; inversion 1.
-    apply bad_sur.
+    apply surjective_bad.
 Qed.
 
 (** W połączeniu zaś z twierdzeniem Cantora surjekcja [wut A -> (wut A -> A)]
@@ -5059,43 +5097,33 @@ Fail Inductive wut : Type :=
     | C1 : (wut -> nat) -> wut.
 
 (* begin hide *)
-Axioms
-  (wut : Type)
-  (C0 : (wut -> bool) -> wut)
-  (C1 : (wut -> nat) -> wut)
-  (ind : forall
-    (P : wut -> Type)
-    (PC0 : forall f : wut -> bool, P (C0 f))
-    (PC1 : forall f : wut -> nat, P (C1 f)),
-      {f : forall w : wut, P w |
-        (forall g : wut -> bool, f (C0 g) = PC0 g) /\
-        (forall g : wut -> nat, f (C1 g) = PC1 g)
-      }
-  ).
+Unset Positivity Checking.
+Inductive wut : Type :=
+    | C0 : (wut -> bool) -> wut
+    | C1 : (wut -> nat) -> wut.
+Set Positivity Checking.
 
-Definition bad :
-  wut -> (wut -> bool).
-Proof.
-  apply (ind (fun _ => wut -> bool)).
-    intro f. exact f.
-    intros _ _. exact true.
-Defined.
+Definition bad (w : wut) : wut -> bool :=
+match w with
+    | C0 f => f
+    | C1 _ => fun _ => true
+end.
 
-Lemma bad_sur :
-  forall (f : wut -> bool), exists w : wut, bad w = f.
+Lemma surjective_bad :
+  surjective bad.
 Proof.
-  intro. unfold bad. destruct (ind _) as (g & H1 & H2).
-  exists (C0 f). apply H1.
-Defined.
+  red. intros.
+  exists (C0 b).
+  reflexivity.
+Qed.
 (* end hide *)
 
 Lemma wut_illegal : False.
 (* begin hide *)
 Proof.
-  destruct (bad_sur (fun w : wut => negb (bad w w))).
-  unfold bad in H. destruct (ind _).
-  apply (f_equal (fun f => f x)) in H.
-  destruct (x0 x x); inversion H.
+  apply (Cantor' bad negb).
+    destruct b; inversion 1.
+    apply surjective_bad.
 Qed.
 (* end hide *)
 
@@ -5115,77 +5143,46 @@ Fail Inductive wut : Type :=
     | C1 : nat -> wut.
 
 (* begin hide *)
-Axioms
-  (wut : Type)
-  (C0 : (wut -> wut) -> wut)
-  (C1 : nat -> wut)
-  (ind : forall
-    (P : wut -> Type)
-    (PC0 : forall f : wut -> wut, P (C0 f))
-    (PC1 : forall n : nat, P (C1 n)),
-      {f : forall w : wut, P w |
-        (forall g : wut -> wut, f (C0 g) = PC0 g) /\
-        (forall n : nat, f (C1 n) = PC1 n)
-      }
-  ).
+Unset Positivity Checking.
+Inductive wut : Type :=
+    | C0 : (wut -> wut) -> wut
+    | C1 : nat -> wut.
+Set Positivity Checking.
 
-Definition bad :
-  wut -> (wut -> wut).
-Proof.
-  apply (ind (fun _ => wut -> wut)).
-    intro f. exact f.
-    intros _ w. exact w.
-Defined.
+Definition bad (w : wut) : wut -> wut :=
+match w with
+    | C0 f => f
+    | C1 _ => id
+end.
 
-Lemma bad_sur :
-  forall (f : wut -> wut), exists w : wut, bad w = f.
+Lemma surjective_bad :
+  surjective bad.
 Proof.
-  intro. unfold bad. destruct (ind _) as (g & H1 & H2).
-  exists (C0 f). apply H1.
-Defined.
-
-Definition discern : wut -> bool.
-Proof.
-  apply ind; intros _.
-    exact true.
-    exact false.
-Defined.
-
-Lemma discern' :
-  forall (f : wut -> wut) (n : nat),
-    C0 f = C1 n -> False.
-Proof.
-  intros. apply (f_equal discern) in H.
-  unfold discern in H. destruct (ind _) as (g & p & q).
-  rewrite p, q in H. inversion H.
+  red. intros.
+  exists (C0 b).
+  reflexivity.
 Qed.
 
-Definition change : wut -> wut.
-Proof.
-  apply (ind (fun _ => wut)).
-    intro. exact (C1 0).
-    intro. apply (C0 (fun w => w)).
-Defined.
+Definition modify (w : wut) : wut :=
+match w with
+    | C0 _ => C1 0
+    | C1 _ => C0 id
+end.
 
-Lemma change_neq :
-  forall w : wut, change w <> w.
+Lemma modify_neq :
+  forall w : wut, modify w <> w.
 Proof.
-  apply ind.
-    intros f H. unfold change in H. destruct (ind _) as (g & H1 & H2).
-      rewrite H1 in H. eapply discern'. symmetry. exact H.
-    intros n H. unfold change in H. destruct (ind _) as (g & H1 & H2).
-      rewrite H2 in H. apply discern' in H. assumption.
+  destruct w; inversion 1.
 Qed.
 (* end hide *)
 
 Lemma wut_illegal : False.
 (* begin hide *)
 Proof.
-  destruct (bad_sur (fun w : wut => change (bad w w))).
-  unfold bad in H. destruct (ind _).
-  apply (f_equal (fun f => f x)) in H.
-  apply (change_neq (x0 x x)).
-  symmetry. assumption.
+  Check Cantor'.
+  eapply (Cantor' bad modify).
+    apply modify_neq.
+    apply surjective_bad.
 Qed.
 (* end hide *)
 
@@ -5211,56 +5208,54 @@ Fail Inductive Term (V : Type) : Type :=
     | App : Term V -> Term V -> Term V.
 
 (* begin hide *)
-Axiom
-  (Term : Type -> Type)
-  (Var : forall {V : Type}, V -> Term V)
-  (Lam : forall {V : Type}, (Term V -> Term V) -> Term V)
-  (App : forall {V : Type}, Term V -> Term V -> Term V)
-  (case : forall
-    (V : Type)
-    (P : Term V -> Type)
-    (PVar : forall v : V, P (Var v))
-    (PLam : forall g : Term V -> Term V, P (Lam g))
-    (PApp : forall t1 t2 : Term V, P (App t1 t2)),
-      {f : forall t : Term V, P t |
-        (forall v : V, f (Var v) = PVar v) /\
-        (forall g : Term V -> Term V, f (Lam g) = PLam g) /\
-        (forall t1 t2 : Term V, f (App t1 t2) = PApp t1 t2)}).
+Unset Positivity Checking.
+Inductive Term (V : Type) : Type :=
+    | Var : V -> Term V
+    | Lam : (Term V -> Term V) -> Term V
+    | App : Term V -> Term V -> Term V.
+Set Positivity Checking.
 
-Definition bad {V : Type} : Term V -> (Term V -> Term V).
-Proof.
-  apply (case _ (fun _ => Term V -> Term V)).
-    intros _. exact (fun x => x).
-    intro f. exact f.
-    intros _ _. exact (fun x => x).
-Defined.
+Arguments Var {V} _.
+Arguments Lam {V} _.
+Arguments App {V} _ _.
 
-Definition discern {V : Type}  : Term V -> nat.
+Definition bad {V : Type} (t : Term V) : Term V -> Term V :=
+match t with
+    | Var v => id
+    | Lam f => f
+    | App _ _ => id
+end.
+
+Lemma surjective_bad :
+  forall {V : Type}, surjective (@bad V).
 Proof.
-  apply (case V (fun _ => nat)); repeat intros _.
-    exact 0.
-    exact 1.
-    exact 2.
-Defined.
+  red. intros.
+  exists (Lam b).
+  cbn. reflexivity.
+Qed.
+
+Definition modify {V : Type} (t : Term V) : Term V :=
+match t with
+    | Var _ => Lam id
+    | Lam f => App (Lam f) (Lam f)
+    | App _ _ => Lam id
+end.
+
+Lemma modify_neq :
+  forall {V : Type} (t : Term V),
+    modify t <> t.
+Proof.
+  destruct t; inversion 1.
+Qed.
 (* end hide *)
 
 Lemma Term_illegal : False.
 (* begin hide *)
 Proof.
   eapply (Cantor' (@bad unit)). Unshelve. all: cycle 1.
-    red. intro f. exists (Lam f). unfold bad. destruct (case _).
-      decompose [and] a. apply H1.
-    apply case; intros.
-      exact (App (Var tt) (Var tt)).
-      exact (Var tt).
-      exact (Var tt).
-    apply case; cbn; intros;
-    destruct (case _) as [f H];
-    decompose [and] H; clear H;
-    rewrite ?H0, ?H2, ?H3;
-    intro; apply (f_equal discern) in H;
-    unfold discern in H; destruct case; decompose [and] a;
-    congruence.
+    apply surjective_bad.
+    apply modify.
+    apply modify_neq.
 Qed.
 (* end hide *)
 
@@ -5277,58 +5272,49 @@ Fail Inductive wut : Type :=
     | C : (wut -> wut) -> wut.
 
 (* begin hide *)
-Axioms
-  (wut : Type)
-  (C : (wut -> wut) -> wut)
-  (ind : forall
-    (P : wut -> Type)
-    (PC : forall f : wut -> wut, (forall w : wut, P (f w)) -> P (C f)),
-      {f : forall w : wut, P w |
-        forall g : wut -> wut,
-          f (C g) = PC g (fun w => f (g w))
-      }
-    ).
+Unset Positivity Checking.
+Inductive wut : Type :=
+    | C : (wut -> wut) -> wut.
+Set Positivity Checking.
 
 Definition bad :
   wut -> (wut -> wut).
 Proof.
-  apply (ind (fun _ => wut -> wut)).
-    intros f _. exact f.
+  destruct 1 as [f].
+  assumption.
 Defined.
 
-Lemma bad_sur :
+Lemma surjective_bad :
   surjective bad.
 Proof.
-  unfold surjective. intro f. exists (C f).
-  unfold bad. destruct (ind _). apply e.
-Defined.
+  unfold surjective.
+  intro f.
+  exists (C f).
+  cbn. reflexivity.
+Qed.
 
-Definition change : wut -> wut.
+Definition modify : wut -> wut :=
+  fun w : wut => C (fun _ => w).
+
+Lemma modify_neq :
+  forall w : wut, modify w <> w.
 Proof.
-  apply ind.
-  intros f g. exact (g (C f)).
-(*  intro w. exact (C (fun _ => w)).*)
-
-(*  apply (ind (fun _ => wut)).*)
-  
-(*  intro f. apply f. exact (C (fun _ => C f)).*)
-Defined.
-
-Lemma change_neq :
-  forall w : wut, change w <> w.
-Proof.
-  apply ind. intros f H' H.
-  pose (H'' := H' (C f)).
-  unfold change in *. destruct (ind _).
-Admitted.
+  fix IH 1.
+  unfold modify in *.
+  destruct w as [f].
+  inversion 1.
+  specialize (IH (f (C f))).
+  rewrite <- H1 in IH.
+  contradiction.
+Qed.
 (* end hide *)
 
 Lemma wut_illegal : False.
 (* begin hide *)
 Proof.
-  apply (Cantor' bad change).
-    apply change_neq.
-    unfold surjective. apply bad_sur.
+  apply (Cantor' bad modify).
+    apply modify_neq.
+    unfold surjective. apply surjective_bad.
 Qed.
 (* end hide *)
 
@@ -5390,7 +5376,19 @@ Inductive T0 : Type :=
 (** Zrefaktoryzuj powyższy upośledzony typ. *)
 
 (* begin hide *)
-(** TODO *)
+Inductive T0' : Type :=
+    | c0' : T0'
+    | c1' : nat -> T0'
+    | c2' : T0' -> T0'
+    | c3' : nat -> T0' -> T0'
+    | c4' : T0' -> T0' -> T0'
+    | c51 : T0' -> T0'
+    | c52 : T0' -> T0'
+    | c6' : List_T0' -> T0'
+
+with List_T0' : Type :=
+    | T0'_nil  : List_T0'
+    | T0'_cons : T0' -> List_T0' -> List_T0'.
 (* end hide *)
 
 (** Problem pojawia się dopiero, gdy typ [T] występuje po lewej stronie
@@ -5419,7 +5417,7 @@ Inductive T0 : Type :=
 
     Podobne nazewnictwo możemy sobie wprowadzić dla konstruktorów
     (konstruktory negatywne, pozytywne i ściśle pozytywne), ale nie
-    ma sensu, bo za tydzień i zapomnisz o tych mało istotnych detalach.
+    ma sensu, bo za tydzień i tak zapomnisz o tych mało istotnych detalach.
     Ważne, żebyś zapamiętał najważniejsze, czyli ideę. *)
 
 Fail Inductive T1 : Type :=
@@ -5439,7 +5437,7 @@ Fail Inductive T1 : Type :=
     pozytywne (na lewo od jednej strzałki, ale ta strzałka jest w
     typie, po którym kwantyfikujemy).
 
-    Konstruktor [T1_0] jest ściśle pozytywne, zaś konstruktory [T1_1],
+    Konstruktor [T1_0] jest ściśle pozytywny, zaś konstruktory [T1_1],
     [T1_2] oraz [T1_3] są negatywne. Wobec tego typ [T1] jest negatywnym
     typem induktywnym (czyli wynalazkiem szatana, którego zaakceptowanie
     prowadzi do sprzeczności). *)
@@ -5447,13 +5445,15 @@ Fail Inductive T1 : Type :=
 (** **** Ćwiczenie *)
 
 Fail Inductive T2 : Type :=
-    | T2_0 : forall f : (forall g : (forall t : T2, nat), Prop), T2
-    | T2_1 : (((((T2 -> T2) -> T2) -> T2) -> T2) -> T2) -> T2
+    | T2_0 :
+        forall f : (forall g : (forall t : T2, nat), Prop), T2
+    | T2_1 :
+        (((((T2 -> T2) -> T2) -> T2) -> T2) -> T2) -> T2
     | T2_2 :
       ((forall (n : nat) (P : T2 -> Prop),
         (forall t : T2, nat)) -> T2) -> T2 -> T2 -> T2.
 
-(** Policz niedobrość każdego wstąpienia [T2] w powyższej definicji.
+(** Policz niedobrość każdego wystąpienia [T2] w powyższej definicji.
     Sklasyfikuj konstruktory jako negatywne, pozytywne lub ściśle
     pozytywne. Następnie sklasyfikuj sam typ jako negatywny, pozytywny
     lub ściśle pozytywny. *)
@@ -5529,30 +5529,23 @@ Definition F (A : Type) : Type := A -> bool.
     że typ [wut F] prowadzi do sprzeczności. *)
 
 (* begin hide *)
-Axioms
-  (wut : (Type -> Type) -> Type)
-  (wut_0 : forall {F : Type -> Type}, F (wut F) -> wut F)
-  (wut_ind :
-    forall
-      (F : Type -> Type)
-      (P : wut F -> Type)
-      (Pwut_0 : forall x : F (wut F), P (wut_0 x)),
-        {f : forall x : wut F, P x |
-          forall x : F (wut F), f (wut_0 x) = Pwut_0 x}).
 
-Definition bad : wut F -> wut F -> bool.
-Proof.
-  apply (wut_ind F (fun _ => wut F -> bool)).
-  unfold F. intro f. exact f.
-Defined.
+Unset Positivity Checking.
+Inductive wut (F : Type -> Type) : Type :=
+    | wut_0 : F (wut F) -> wut F.
+Set Positivity Checking.
 
-Lemma bad_sur :
+Definition bad (w : wut F) : wut F -> bool :=
+match w with
+    | wut_0 _ f => f
+end.
+
+Lemma surjective_bad :
   surjective bad.
 Proof.
-  unfold surjective.
-  intro f. exists (wut_0 f).
-  unfold bad. destruct (wut_ind _).
-  rewrite e. reflexivity.
+  red. intros.
+  exists (wut_0 _ b).
+  cbn. reflexivity.
 Qed.
 
 Lemma bad_not_sur :
@@ -5561,15 +5554,14 @@ Proof.
   unfold surjective. intro H.
   destruct (H (fun w : wut F => negb (bad w w))) as [w eq].
   apply (f_equal (fun f => f w)) in eq.
-  unfold bad in eq. destruct (wut_ind _).
-  destruct (x w w); inversion eq.
+  destruct (bad w w); inversion eq.
 Qed.
 (* end hide *)
 
 Lemma wut_illegal : False.
 (* begin hide *)
 Proof.
-  apply bad_not_sur. apply bad_sur.
+  apply bad_not_sur. apply surjective_bad.
 Qed.
 (* end hide *)
 
@@ -5615,106 +5607,60 @@ Module XY.
 
 (* begin hide *)
 
-Axioms
-  (X Y : Type)
-  (X0 : X)
-  (X1 : (Y -> X) -> X)
-  (Y0 : Y)
-  (Y1 : X -> Y)
-  (dcase :
-    forall
-      (P : X -> Type) (Q : Y -> Type)
-      (PX0 : P X0)
-      (PX1 : forall f : Y -> X, P (X1 f))
-      (QY0 : Q Y0)
-      (QY1 : forall x : X, Q (Y1 x)),
-        {f : forall x : X, P x &
-        {g : forall y : Y, Q y |
-          f X0 = PX0 /\
-          (forall h : Y -> X, f (X1 h) = PX1 h) /\
-          g Y0 = QY0 /\
-          (forall x : X, g (Y1 x) = QY1 x)}})
-  (dcaseX :
-    forall
-      (P : X -> Type)
-      (PX0 : P X0)
-      (PX1 : forall f : Y -> X, P (X1 f)),
-        {f : forall x : X, P x &
-          f X0 = PX0 /\
-          forall h : Y -> X, f (X1 h) = PX1 h})
-  (dcaseY :
-    forall
-      (P : Y -> Type)
-      (PY0 : P Y0)
-      (PY1 : forall x : X, P (Y1 x)),
-        {f : forall y : Y, P y &
-          f Y0 = PY0 /\
-          forall x : X, f (Y1 x) = PY1 x}).
+Unset Positivity Checking.
+Inductive X : Type :=
+    | X0 : X
+    | X1 : (Y -> X) -> X
 
-Definition bad : X -> (X -> X).
-Proof.
-  apply (dcaseX (fun _ => X -> X)).
-    intro x. exact x.
-    intros f x. exact (f (Y1 x)).
-Defined.
+with Y : Type :=
+    | Y0 : Y
+    | Y1 : X -> Y.
+Set Positivity Checking.
+
+Definition bad (x : X) : X -> X :=
+match x with
+    | X0 => id
+    | X1 f => fun x' : X => f (Y1 x')
+end.
 
 Require Import FunctionalExtensionality.
 
-Lemma bad_sur :
+Lemma surjective_bad :
   surjective bad.
 Proof.
-  unfold surjective. intro f.
-  unfold bad. destruct (dcaseX _) as (bad & eq1 & eq2).
-  exists (X1 (projT1 (dcaseY (fun _ => X) X0 f))).
-  rewrite eq2.
-  extensionality x. cbn.
-  destruct (dcaseY _) as (aux & eq1' & eq2').
-  cbn. rewrite eq2'. reflexivity.
+  red. intro f.
+  exists (X1 (fun y => match y with | Y0 => f X0 | Y1 x => f x end)).
+  extensionality x.
+  cbn. reflexivity.
 Qed.
 
-Definition discern : X -> bool.
-Proof.
-  apply dcaseX.
-    exact true.
-    intros _. exact false.
-Defined.
+Definition modify (x : X) : X :=
+match x with
+    | X0 => X1 (fun _ => x)
+    | X1 _ => X0
+end.
 
-Definition change : X -> X.
+Lemma modify_neq :
+  forall x : X, modify x <> x.
 Proof.
-  apply dcaseX.
-    exact (X1 (fun _ => X0)).
-    intros _. exact X0.
-Defined.
-
-Lemma change_neq :
-  forall x : X, change x <> x.
-Proof.
-  intros x H. apply (f_equal discern) in H.
-  unfold change in H; destruct (dcaseX _) as (change & eq1 & eq2).
-  unfold discern in H; destruct (dcaseX _) as (discern & eq1' & eq2').
-  revert x H.
-  apply (dcaseX (fun x => discern (change x) = discern x -> False)); intros.
-    rewrite eq1, eq1', eq2' in H. inversion H.
-    rewrite eq2, eq1', eq2' in H. inversion H.
-Qed.
-(* end hide *)
-
-Lemma XY_illegal : False.
-(* begin hide *)
-Proof.
-  apply (Cantor' bad change change_neq). apply bad_sur.
+  destruct x; inversion 1.
 Qed.
 
 Definition loop (x : X) : X := bad x x.
 
 Lemma loop_nontermination :
-  X0 = loop (X1 (projT1 (dcaseY (fun _ => X) X0 loop))).
+  X0 = loop (X1 (fun y => match y with | Y0 => X0 | Y1 x' => loop x' end)).
 Proof.
-  unfold loop, bad.
-  destruct (dcaseX _) as (bad & eq1 & eq2).
-  destruct (dcaseY _) as (aux & eq1' & eq2'); cbn.
-  rewrite eq2. rewrite eq2'.
 Abort.
+(* end hide *)
+
+Lemma XY_illegal : False.
+(* begin hide *)
+Proof.
+  apply (Cantor' bad modify).
+    apply modify_neq.
+    apply surjective_bad.
+Qed.
 (* end hide *)
 
 End XY.
@@ -5743,14 +5689,16 @@ End XY.
 
 Module T3.
 
-Fail Inductive T3 : Type :=
+Unset Positivity Checking.
+Inductive T3 : Type :=
     | T3_0 : (((T3 -> bool) -> bool) -> bool) -> T3.
+Set Positivity Checking.
 
 (** Przyjrzyjmy się powyższej definicji. Występienie indukcyjne typu [T3]
     ma współczynnik niedobrości równy 3, gdyż znajduje się na lewo od 3
     strzałek. Prawe strony wszystkich z nich to [bool]. *)
 
-Axioms
+(* Axioms
   (T3 : Type)
   (T3_0 : (((T3 -> bool) -> bool) -> bool) -> T3)
   (T3_case :
@@ -5760,6 +5708,7 @@ Axioms
         {f : forall x : T3, P x |
           forall g : ((T3 -> bool) -> bool) -> bool,
             f (T3_0 g) = PT3_0 g}).
+ *)
 
 (** Po ciężkich bojach, przez które przeszedłeś, aksjomatyczne kodowanie
     tego typu nie powinno cię dziwić. Warto zauważyć jedynie, że do naszej
@@ -5800,11 +5749,10 @@ Qed.
     korzystamy w dowodzie z żadnych specjalnych właściwości [False],
     analogiczna właściwość zachodzi także dla dowolnego innego [B : Type]. *)
 
-Definition bad : T3 -> (T3 -> bool).
-Proof.
-  apply (T3_case (fun _ => T3 -> bool)).
-  intros f x. apply f. intro g. apply g. exact x.
-Defined.
+Definition bad (x : T3) : T3 -> bool :=
+match x with
+    | T3_0 f => fun y : T3 => f (fun g => g y)
+end.
 
 (** Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
     cię zaskakiwać. Szczerze pisząc, reszta dowodu również nie jest jakoś
@@ -5814,14 +5762,13 @@ Defined.
 
 (** Dokończ dowód. *)
 
-Lemma bad_sur :
+Lemma surjective_bad :
   surjective bad.
 (* begin hide *)
 Proof.
-  unfold surjective.
-  intro f. exists (T3_0 (fun g => g f)).
-  unfold bad. destruct (T3_case _).
-  rewrite e. reflexivity.
+  red. intro f.
+  exists (T3_0 (fun g => g f)).
+  cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -5830,7 +5777,7 @@ Theorem T3_illegal : False.
 Proof.
   apply (Cantor' bad negb).
     destruct b; inversion 1.
-    exact bad_sur.
+    apply surjective_bad.
 Qed.
 (* end hide *)
 
@@ -5841,7 +5788,7 @@ Qed.
     istnieje takie [x : T3], że [loop x] się zapętla. *)
 
 (* begin hide *)
-Fail Fixpoint loop (x : T3) : bool :=
+Definition loop (x : T3) : bool :=
 match x with
     | T3_0 f => f (fun g : T3 -> bool => g (T3_0 f))
 end.
@@ -5869,10 +5816,12 @@ End T3.
 
 Module T4.
 
-Fail Inductive T4 : Type :=
+Unset Positivity Checking.
+Inductive T4 : Type :=
     | c0 : (((T4 -> bool) -> nat) -> Color) -> T4.
+Set Positivity Checking.
 
-Axioms
+(* Axioms
   (T4 : Type)
   (c0 : (((T4 -> bool) -> nat) -> Color) -> T4)
   (dcase :
@@ -5882,25 +5831,37 @@ Axioms
         {f : forall x : T4, P x |
           forall g : ((T4 -> bool) -> nat) -> Color,
             f (c0 g) = Pc0 g}).
+ *)
 
 (** Powyższy przykład jest podobny do poprzedniego, ale tym razem zamiast
     trzech wystąpień [bool] mamy [bool], [nat] oraz [Color] (to typ, który
     zdefiniowaliśmy na samym początku tego rozdziału, gdy uczyliśmy się
     o enumeracjach). *)
 
-Definition bad : T4 -> (T4 -> bool).
+(* Definition bad (x : T4) : T4 -> bool :=
+  fun y : T4 =>
+match x with
+    | c0 f =>
+        match f (fun g => if g y then 1 else 0) with
+            | R => true
+            | _ => false
+        end
+end.
+ *)
+Definition bad (x : T4) : T4 -> bool.
 Proof.
-  apply (dcase (fun _ => T4 -> _)).
-  intros f x.
+  destruct x as [f].
+  intros y.
   apply (
     fun c : Color =>
     match c with
         | R => true
         | _ => false
     end).
-  apply f. intro g.
+  apply f.
+  intro g.
   apply (fun b : bool => if b then 0 else 1).
-  exact (g x).
+  exact (g y).
 Defined.
 
 (** Nasz modus operandi będzie taki jak poprzednio: spróbujemy wyjąć z
@@ -5934,20 +5895,19 @@ Require Import FunctionalExtensionality.
     uzyskujemy dostęp do taktyki [extensionality], która ułatwia dowody
     wymagające użycia ekstensjonalności. *)
 
-Lemma bad_sur :
+Lemma surjective_bad :
   surjective bad.
 Proof.
-  unfold surjective. intro f.
-  unfold bad. destruct (dcase _) as [bad eq].
+  unfold surjective, bad.
+  intro f.
   exists (c0 (
     fun g : (T4 -> bool) -> nat =>
     match g f with
        | 0 => R
        | _ => G
     end)).
-  rewrite eq.
-  extensionality t.
-  destruct (f t); reflexivity.
+  extensionality y.
+  destruct (f y); reflexivity.
 Qed.
 
 (** Dowód jest prawie taki jak zawsze: odwijamy definicję surjektywności i
@@ -5982,7 +5942,7 @@ Theorem T4_illegal : False.
 Proof.
   apply (Cantor' bad negb).
     destruct b; inversion 1.
-    apply bad_sur.
+    apply surjective_bad.
 Qed.
 
 (** Skoro mamy surjekcję z [T4] w [T4 -> bool], katastrofy nie da się
@@ -5998,6 +5958,20 @@ Definition loop (x : T4) : bool := bad x x.
 (** Ha! Tak tak, [loop] nie jest niczym innym niż lekko rozmnożoną wersją
     [bad]. *)
 
+Print bad.
+
+Lemma bad_c0 :
+  forall f : ((T4 -> bool) -> nat) -> Color,
+    bad (c0 f) =
+      fun y =>
+        match f (fun g => if g y then 0 else 1) with
+            | R => true
+            | _ => false
+        end.
+Proof.
+  reflexivity.
+Qed.
+
 Lemma loop_nontermination :
   true = loop (c0 (
     fun g : (T4 -> bool) -> nat =>
@@ -6006,13 +5980,14 @@ Lemma loop_nontermination :
        | _ => G
     end)).
 Proof.
-  unfold loop, bad. destruct (dcase _) as [bad eq].
-  rewrite 5!eq.
+  intros.
+  unfold loop.
+  rewrite 5!bad_c0.
 Abort.
 
 (** A skoro [loop] to tylko inne [bad], to nie powinno cię też wcale a
     wcale zdziwić, że najbardziej oczywisty argument, dla którego [loop]
-    się zapętla, jest żywcem wzięty z dowodu [bad_sur] (choć oczywiście
+    się zapętla, jest żywcem wzięty z dowodu [surjective_bad] (choć oczywiście
     musimy zastąpić [f] przez [loop]).
 
     Oczywiście niemożliwe jest, żeby formalnie udowodnić w Coqu, że coś
@@ -6031,25 +6006,18 @@ End T4.
 
 Module T5.
 
-Axioms
-  (T5 : Type)
-  (c0 : (((T5 -> nat) -> bool) -> Color) -> T5)
-  (dcase :
-    forall
-      (P : T5 -> Type)
-      (Pc0 : forall f : ((T5 -> nat) -> bool) -> Color, P (c0 f)),
-        {f : forall x : T5, P x |
-          forall g : ((T5 -> nat) -> bool) -> Color,
-            f (c0 g) = Pc0 g}).
+Unset Positivity Checking.
+Inductive T5 : Type :=
+    | c0 : (((T5 -> nat) -> bool) -> Color) -> T5.
+Set Positivity Checking.
 
 (** Rzućmy okiem na powyższy typ. Wygląda podobnie do poprzedniego, ale jest
     nieco inny - typy [nat] i [bool] zamieniły się miejscami. Jakie rodzi to
     konsekwencje? Sprawdźmy. *)
 
-Definition bad : T5 -> (T5 -> nat).
+Definition bad : T5 -> T5 -> nat.
 Proof.
-  apply (dcase (fun _ => T5 -> _)).
-  intros f x.
+  intros [f] y.
   apply (
     fun c : Color =>
     match c with
@@ -6058,7 +6026,7 @@ Proof.
         | B => 2
     end).
   apply f. intro g.
-  apply isZero. exact (g x).
+  apply isZero. exact (g y).
 Defined.
 
 (** Definicja [bad] jest podobna jak poprzednio, ale tym razem konwertujemy
@@ -6066,19 +6034,19 @@ Defined.
 
 Require Import FunctionalExtensionality.
 
-Lemma bad_sur :
+Lemma surjective_bad :
   surjective bad.
 Proof.
-  unfold surjective. intro f.
-  unfold bad. destruct (dcase _) as [bad eq].
+  unfold surjective, bad.
+  intro f.
   exists (c0 (
     fun g : (T5 -> nat) -> bool =>
     match g f with
         | true => R
         | false => B
     end)).
-  rewrite eq. extensionality t.
-  destruct (f t); cbn.
+  extensionality y.
+  destruct (f y); cbn.
     reflexivity.
 Abort.
 
@@ -6102,8 +6070,7 @@ Lemma loop_nontermination :
         | false => G
     end)).
 Proof.
-  unfold loop, bad. destruct (dcase _) as [bad eq].
-  rewrite 15!eq.
+
 Abort.
 
 (** Co ciekawe, mimo że nie jesteśmy w stanie pokazać surjektywności [bad],
@@ -6670,7 +6637,7 @@ Qed.
     przez dopasowanie do wzorca [p : x = y], to wystarczy [p] potraktować
     [destruct]em, a dalej wszystko już ładnie się oblicza. *)
 
-Lemma bad_sur :
+Lemma surjective_bad :
   surjective bad.
 Proof.
   unfold surjective, bad; intro f.
@@ -6791,7 +6758,7 @@ Qed.
 
 Definition U_illegal : False.
 Proof.
-  apply bad_not_sur. apply bad_sur.
+  apply bad_not_sur. apply surjective_bad.
 Qed.
 
 (** Ponieważ [bad] jednocześnie jest i nie jest surjekcją, nastepuje nagły
@@ -6925,7 +6892,7 @@ Proof.
   destruct p. cbn. reflexivity.
 Qed.
 
-Lemma bad_sur :
+Lemma surjective_bad :
   surjective bad.
 Proof.
   unfold surjective, bad; intro f.
@@ -6986,7 +6953,7 @@ Qed.
 Theorem U_illegal : False.
 (* begin hide *)
 Proof.
-  apply bad_not_sur. apply bad_sur.
+  apply bad_not_sur. apply surjective_bad.
 Qed.
 (* end hide *)
 
@@ -7154,7 +7121,7 @@ Definition X : Prop := forall P : Prop, P.
 
     Dobra, koniec gadania. Poniższy przykład pośrednio pochodzi z sekcji
     3.1 pracy "Inductively defined types", której autorami są Thierry
-    Coquand oraz Christine Pauling-Mohring, zaś bezpośrednio jest przeróbką
+    Coquand oraz Christine Paulin-Mohring, zaś bezpośrednio jest przeróbką
     kodu wziętego z
     vilhelms.github.io/posts/why-must-inductive-types-be-strictly-positive *)
 

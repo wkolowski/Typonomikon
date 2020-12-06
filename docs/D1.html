@@ -5707,8 +5707,8 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
  Na szczęście typy induktywne to istoty bardzo prostolinijne, zaś te złe
     można odróżnić od tych dobrych gołym okiem, za pomocą bardzo prostego
     kryterium: złe typy induktywne to te, które nie są ściśle pozytywne.
-    Zanim jednak dowiemy się, jak rozpoznawać złe typy, poznajmy najpierw
-    dwa powody, przez które złe typy induktywne są złe. 
+    Zanim jednak dowiemy się, jak rozpoznawać złe typy induktywne, poznajmy
+    najpierw dwa powody, przez które złe typy induktywne są złe. 
 <div class="paragraph"> </div>
 
 <a id="lab292"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
@@ -6020,7 +6020,7 @@ Funkcja <span class="inlinecode"><span class="id" title="var">isZero</span></spa
 
     Do kwestii tego, który typ ma ile elementów wrócimy jeszcze w rozdziale
     o typach i funkcjach. Tam też zapoznamy się lepiej z surjekcjami i
-    innymi rodzajami funkcji. Tymczasem ćwiczenie: 
+    innymi rodzajami funkcji. Tymczasem: 
 <div class="paragraph"> </div>
 
 <a id="lab295"></a><h4 class="section">Ćwiczenie</h4>
@@ -6034,7 +6034,7 @@ Funkcja <span class="inlinecode"><span class="id" title="var">isZero</span></spa
 <div class="paragraph"> </div>
 
     Wskazówka: <span class="inlinecode"><span class="id" title="var">minus</span></span> to funkcja z biblioteki standardowej, która
-    implementuje odejmowanie liczb naturalnych z obcięciem, tzn. np.
+    implementuje odejmowanie liczb naturalnych z obcięciem, czyli np.
     <span class="inlinecode">2</span> <span class="inlinecode">-</span> <span class="inlinecode">5</span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>. Użyj <span class="inlinecode"><span class="id" title="keyword">Print</span></span>a, żeby dokładnie zbadać jej definicję. 
 </div>
 <div class="code">
@@ -6140,10 +6140,10 @@ Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
 <div class="paragraph"> </div>
 
     Nasze założenie mówi, że <span class="inlinecode"><span class="id" title="var">diagonal</span></span> znajduje się w którymś wierszu
-    tabelki - niech ma on numer <span class="inlinecode"><span class="id" title="var">n</span></span>. Wiemy jednak, że <span class="inlinecode"><span class="id" title="var">g</span></span> różni się od
-    <span class="inlinecode"><span class="id" title="var">n</span></span>-tej funkcji z tabelki na argumencie <span class="inlinecode"><span class="id" title="var">n</span></span>, gdyż zdefiniowaliśmy ją
-    jako negację tej właśnie komórki w tabelce. Dostajemy stąd równość
-    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">diagonal</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">negb</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">n</span>)</span>, co po analizie przypadków daje
+    tabelki - niech ma on numer <span class="inlinecode"><span class="id" title="var">n</span></span>. Wiemy jednak, że <span class="inlinecode"><span class="id" title="var">diagonal</span></span> różni
+    się od <span class="inlinecode"><span class="id" title="var">n</span></span>-tej funkcji z tabelki na argumencie <span class="inlinecode"><span class="id" title="var">n</span></span>, gdyż zdefiniowaliśmy
+    <span class="inlinecode"><span class="id" title="var">diagonal</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> jako negację tej właśnie komórki w tabelce. Dostajemy stąd
+    równość <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">diagonal</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">negb</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">n</span>)</span>, co po analizie przypadków daje
     ostatecznie <span class="inlinecode"><span class="id" title="var">true</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">false</span></span> lub <span class="inlinecode"><span class="id" title="var">false</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">true</span></span>.
 
 <div class="paragraph"> </div>
@@ -6161,8 +6161,8 @@ Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
 <div class="paragraph"> </div>
 
  Poznawszy twierdzenie Cantora, możemy powrócić do ścisłej pozytywności,
-    czyż nie? Otóż nie, bo twierdzenie Cantora jest biedne. Żeby czerpać
-    garściami niebotyczne profity, musimy najpierw uogólnić je na dowolne
+    czyż nie? Otóż nie, bo twierdzenie Cantora jest biedne. Żeby móc czerpać
+    z niego niebotyczne profity, musimy najpierw uogólnić je na dowolne
     dwa typy <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> znajdując kryterium mówiące, kiedy nie istnieje
     surjekcja z <span class="inlinecode"><span class="id" title="var">A</span></span> w <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>. 
 </div>
@@ -6337,8 +6337,9 @@ Dlaczego typ <span class="inlinecode"><span class="id" title="var">wut</span></s
 </div>
 
 <div class="doc">
-Skoro możemy włożyć dowolną funkcję, to możemy także wyjąć dowolną
-    funkcję, a zatem mamy do czynienia z surjekcją. 
+Skoro możemy włożyć dowolną funkcję, to znaczy, że dla każdej funkcji
+    istnieje element, z którego możemy ją wyjąć, a zatem mamy do czynienia
+    z surjekcją. 
 </div>
 <div class="code">
 
