@@ -6062,6 +6062,21 @@ Abort.
 
 Definition loop (x : T5) : nat := bad x x.
 
+Print T5.
+Print bad.
+
+Lemma bad_eq :
+  forall (f : ((T5 -> nat) -> bool) -> Color) (y : T5),
+    bad (c0 f) y =
+      match f (fun g : T5 -> nat => isZero (g y)) with
+          | R => 0
+          | G => 1
+          | B => 2
+      end.
+Proof.
+  reflexivity.
+Qed.
+
 Lemma loop_nontermination :
   42 = loop (c0 (
     fun g : (T5 -> nat) -> bool =>
@@ -6070,7 +6085,9 @@ Lemma loop_nontermination :
         | false => G
     end)).
 Proof.
-
+  unfold loop.
+  rewrite bad_eq.
+  rewrite 2!bad_eq.
 Abort.
 
 (** Co ciekawe, mimo że nie jesteśmy w stanie pokazać surjektywności [bad],
@@ -6091,8 +6108,7 @@ Abort.
 
 Definition bad' : T5 -> (T5 -> bool).
 Proof.
-  apply (dcase (fun _ => T5 -> _)).
-  intros f x.
+  intros [f] y.
   apply (
     fun c : Color =>
     match c with
@@ -6100,7 +6116,7 @@ Proof.
         | _ => false
     end).
   apply f. intro g.
-  apply isZero. exact (g x).
+  apply isZero. exact (g y).
 Defined.
 
 (** W kluczowych momentach najpierw konwertujemy [Color] na [bool] tak jak
@@ -6109,17 +6125,15 @@ Defined.
 
 Require Import FunctionalExtensionality.
 
-Lemma bad'_sur :
+Lemma surjective_bad' :
   surjective bad'.
 Proof.
-  unfold surjective. intro f.
-  unfold bad'. destruct (dcase _) as [bad' eq].
+  unfold surjective, bad'. intro f.
   exists (c0 (
     fun g : (T5 -> nat) -> bool =>
       if g (fun t : T5 => if f t then 0 else 1) then R else G)).
-  rewrite eq.
-  extensionality t.
-  destruct (f t); cbn; reflexivity.
+  extensionality y.
+  destruct (f y); cbn; reflexivity.
 Qed.
 
 (** Ponieważ obydwie nasze funkcję konwertujące były surjekcjami, możemy je
@@ -6130,7 +6144,7 @@ Theorem T5_illegal : False.
 Proof.
   apply (Cantor' bad' negb).
     destruct b; inversion 1.
-    apply bad'_sur.
+    apply surjective_bad'.
 Qed.
 
 (** Spróbujmy podsumować, co tak naprawdę stało się w tym przykładzie.
@@ -6150,6 +6164,17 @@ Qed.
 
 Definition loop' (x : T5) : bool := bad' x x.
 
+Lemma bad'_eq :
+  forall (f : ((T5 -> nat) -> bool) -> Color) (y : T5),
+    bad' (c0 f) y =
+      match f (fun g : T5 -> nat => isZero (g y)) with
+          | R => true
+          | _ => false
+      end.
+Proof.
+  reflexivity.
+Qed.
+
 Lemma loop_nontermination :
   true = loop' (c0 (
     fun g : (T5 -> nat) -> bool =>
@@ -6158,8 +6183,8 @@ Lemma loop_nontermination :
         | false => G
     end)).
 Proof.
-  unfold loop', bad'. destruct (dcase _) as [bad' eq].
-  rewrite 15!eq.
+  unfold loop'.
+  rewrite 3!bad'_eq.
 Abort.
 
 (** Takie trikowe [bad'] wciąż pozwala nam bez większych przeszkód
@@ -6177,16 +6202,10 @@ End T5.
 
 Module T6.
 
-Axioms
-  (T6 : Type)
-  (c0 : (((T6 -> unit) -> bool) -> Color) -> T6)
-  (dcase :
-    forall
-      (P : T6 -> Type)
-      (Pc0 : forall f : ((T6 -> unit) -> bool) -> Color, P (c0 f)),
-        {f : forall x : T6, P x |
-          forall g : ((T6 -> unit) -> bool) -> Color,
-            f (c0 g) = Pc0 g}).
+Unset Positivity Checking.
+Inductive T6 : Type :=
+    | c0 : (((T6 -> unit) -> bool) -> Color) -> T6.
+Set Positivity Checking.
 
 (** Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
     trik, jest sytuacja, w której po prawej stronie strzałki wystąpi
@@ -6231,28 +6250,30 @@ Axioms
     [loop]. Zademonstruj w sposób podobny jak poprzednio, że [loop] się
     zapętla. *)
 
-(* begin hide *)
-Definition bad : T6 -> (T6 -> unit).
-Proof.
-  apply (dcase (fun _ => T6 -> _)).
-  intros f x.
-  apply (
-    fun c : Color =>
-    match c with
-        | R => tt
-        | G => tt
-        | B => tt
-    end).
-  apply f. intro g.
-  apply (
-    fun u : unit =>
-    match u with
-        | tt => true
-    end).
-  exact (g x).
-Defined.
+(* begin hide *) Print T6.
+Definition bad (x y : T6) : unit :=
+match x with
+    | c0 f =>
+        match f (fun g => match g y with | tt => true end) with
+            | R => tt
+            | G => tt
+            | B => tt
+        end
+end.
 
 Definition loop (x : T6) : unit := bad x x.
+
+Lemma bad_eq :
+  forall f y,
+    bad (c0 f) y =
+      match f (fun g => match g y with | tt => true end) with
+          | R => tt
+          | G => tt
+          | B => tt
+      end.
+Proof.
+  reflexivity.
+Qed.
 
 Lemma loop_nontermination :
   tt = loop (c0 (
@@ -6262,8 +6283,9 @@ Lemma loop_nontermination :
         | false => G
     end)).
 Proof.
-  unfold loop, bad. destruct (dcase _) as [bad eq].
-  rewrite 4!eq.
+  unfold loop.
+  rewrite bad_eq.
+  rewrite 2!bad_eq.
 Abort.
 (* end hide *)
 
@@ -6284,39 +6306,42 @@ End T6.
     induktywnych, w których po prawej stronie strzałki jest co najmniej
     jedno wystąpienie [False]. *)
 
-Module T8.
+Module T7.
 
-Axioms
-  (T8 : Type)
-  (c0 : (((T8 -> bool) -> False) -> Color) -> T8)
-  (dcase :
-    forall
-      (P : T8 -> Type)
-      (Pc0 : forall f : ((T8 -> bool) -> False) -> Color, P (c0 f)),
-        {f : forall x : T8, P x |
-          forall g : ((T8 -> bool) -> False) -> Color,
-            f (c0 g) = Pc0 g}).
+Unset Positivity Checking.
+Inductive T7 : Type :=
+    | c0 : (((T7 -> bool) -> False) -> Color) -> T7.
+Set Positivity Checking.
 
 (* begin hide *)
 
-Definition bad : T8 -> (T8 -> bool).
+Lemma wut :
+  forall
+    (f g : ((T7 -> bool) -> False) -> Color)
+    (x   :  (T7 -> bool) -> False),
+      f x = g x.
 Proof.
-  apply (dcase (fun _ => T8 -> _)).
-  intros f x.
+  intros.
+  destruct (x (fun _ => true)).
+Qed.
+
+Definition bad (x : T7) : T7 -> bool.
+Proof.
+  destruct x as [f].
+  intro y.
   apply (
     fun c : Color =>
     match c with
         | R => true
         | _ => false
     end).
-  apply f. intro g.
+  apply f.
+  intro g.
 Abort.
 
 (* end hide *)
 
-End T8.
-
-
+End T7.
 
 (** ** Promocja 2 w 1 czyli paradoksy Russella i Girarda *)
 
@@ -6979,26 +7004,18 @@ Fail Inductive Pos : Type :=
     [Pos], nie liczy się - wzór dotyczy tylko argumentów konstruktora, a nie
     całego konstruktora). *)
 
-Axioms
-  (Pos : Type)
-  (Pos0 : ((Pos -> bool) -> bool) -> Pos)
-  (dcase :
-    forall
-      (P : Pos -> Type)
-      (PPos0 : forall g : (Pos -> bool) -> bool, P (Pos0 g)),
-        {f : forall x : Pos, P x |
-          forall g : (Pos -> bool) -> bool,
-            f (Pos0 g) = PPos0 g}).
+Unset Positivity Checking.
+Inductive Pos : Type :=
+    | Pos0 : ((Pos -> bool) -> bool) -> Pos.
+Set Positivity Checking.
 
 (** Spróbujmy zawalczyć z typem [Pos] naszą metodą opartą o twierdzenie
     Cantora. Najpierw kodujemy typ [Pos] aksjomatycznie, a następnie
     spróbujemy zdefiniować [bad], czyli surjekcję z [Pos] w [Pos -> bool]. *)
 
-Definition bad : Pos -> (Pos -> bool).
+Definition bad (p : Pos) : Pos -> bool.
 Proof.
-  apply (dcase (fun _ => Pos -> bool)).
-  intros f x.
-  apply f. intro y.
+  destruct p as [f]. intro y.
   apply f. intro z.
   apply f. intro w.
   (* ad infinitum *)
@@ -7066,27 +7083,15 @@ Abort.
 (* begin hide *)
 Definition loop : Pos -> bool.
 Proof.
-  apply dcase.
-  intros f.
+  intros [f].
   apply f. intro x.
 Abort.
-
-(* f : (Pos -> bool) -> bool *)
 
 Fail Fixpoint loop (x : Pos) : bool :=
 match x with
     | Pos0 f => f loop
 end.
 
-(*
-
-    Niech x := Pos0 (fun y : Pos -> bool => 
-
-    loop (Pos0 (fun _ => true)) =
-    (fun _ => true) loop =
-    true
-
-*)
 (* end hide *)
 
 (** W tym momencie należy sobie zadać zasadnicze pytanie: dlaczego w ogóle
@@ -7125,28 +7130,18 @@ Definition X : Prop := forall P : Prop, P.
     kodu wziętego z
     vilhelms.github.io/posts/why-must-inductive-types-be-strictly-positive *)
 
-Fail Inductive Pos' : Type :=
+Unset Positivity Checking.
+Inductive Pos' : Type :=
     | Pos'0 : ((Pos' -> Prop) -> Prop) -> Pos'.
-
-Axioms
-  (Pos' : Type)
-  (Pos'0 : ((Pos' -> Prop) -> Prop) -> Pos')
-  (dcase' :
-    forall
-      (P : Pos' -> Type)
-      (PPos'0 : forall g : (Pos' -> Prop) -> Prop, P (Pos'0 g)),
-        {f : forall x : Pos', P x |
-          forall g : (Pos' -> Prop) -> Prop,
-            f (Pos'0 g) = PPos'0 g}).
+Set Positivity Checking.
 
 (** Jak widać, podejrzanym typem jest [Pos'], bliźniaczo podobne do [Pos],
     ale zamiast [bool] występuje tutaj [Prop]. *)
 
-Definition unwrap : Pos' -> ((Pos' -> Prop) -> Prop).
-Proof.
-  apply (dcase' (fun _ => (Pos' -> Prop) -> Prop)).
-  intros f. exact f.
-Defined.
+Definition unwrap (p : Pos') : (Pos' -> Prop) -> Prop :=
+match p with
+    | Pos'0 f => f
+end.
 
 (** Zaczynamy od zdefiniowania funkcji odwijającej konstruktor. *)
 
@@ -7154,11 +7149,7 @@ Lemma Pos'0_inj :
   forall x y : (Pos' -> Prop) -> Prop,
     Pos'0 x = Pos'0 y -> x = y.
 Proof.
-  intros.
-  apply (f_equal unwrap) in H. unfold unwrap in H.
-  destruct (dcase' _) as [unwrap eq].
-  rewrite 2!eq in H.
-  assumption.
+  inversion 1. reflexivity.
 Qed.
 
 (** Dzięki [unwrap] możemy łatwo pokazać, że konstruktor [Pos'0] jest
@@ -7186,11 +7177,10 @@ Definition f (P : Pos' -> Prop) : Pos' := Pos'0 (i P).
 Lemma f_inj :
   forall P Q : Pos' -> Prop, f P = f Q -> P = Q.
 Proof.
-  unfold f. intros.
-  apply (f_equal unwrap) in H. unfold unwrap in H.
-  destruct (dcase' _) as [unwrap eq].
-  rewrite 2!eq in H.
-  apply i_inj in H. assumption.
+  unfold f.
+  inversion 1.
+  apply i_inj in H1.
+  assumption.
 Qed.
 
 (** Składając ze soba [i] oraz konstruktor [Pos'0] dostajemy injekcję z
