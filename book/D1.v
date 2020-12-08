@@ -4424,7 +4424,7 @@ end.
     potrzeby używania indukcji-rekursji, jednak uszy do góry: przykład nieco
     bardziej skomplikowanego uniwersum pojawi się jeszcze w tym rozdziale. *)
 
-(** **** Ćwiczenia *)
+(** **** Ćwiczenie *)
 
 (** Nieco podchwytliwe zadanie: zdefiniuj uniwersum funkcji [nat -> nat],
     [nat -> (nat -> nat)], [(nat -> nat) -> nat],
@@ -4552,20 +4552,12 @@ end.
     można odróżnić od tych dobrych gołym okiem, za pomocą bardzo prostego
     kryterium: złe typy induktywne to te, które nie są ściśle pozytywne.
     Zanim jednak dowiemy się, jak rozpoznawać złe typy induktywne, poznajmy
-    najpierw dwa powody, przez które złe typy induktywne są złe. *)
+    najpierw dwa powody, przez które złe typy induktywne są złe.
 
-(** ** Nieterminacja jako źródło zła na świecie *)
-
-(* begin hide *)
-(*
-TODO: znaleźć prostszy przykład dot. ścisłej pozytywności
-TODO: przepisać przykład [wut] z wyłączonym sprawdzaczem pozytywności
-*)
-(* end hide *)
-
-(** Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
+    Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
     induktywnego (czyli takiego, który wygląda na induktywny, ale ma
-    konstruktory z negatywnymi wystąpieniami argumentu indukcyjnego): *)
+    konstruktor typu funkcyjnego z wystąpieniem argumentu indukcyjnego
+    po lewej stronie strzałki): *)
 
 Fail Inductive wut (A : Type) : Type :=
     | C : (wut A -> A) -> wut A.
@@ -4574,7 +4566,25 @@ Fail Inductive wut (A : Type) : Type :=
         Non strictly positive occurrence of "wut"
         in "(wut A -> A) -> wut A". *)
 
-(* begin hide *)
+(** Uwaga: poprzedzenie komendą [Fail] innej komendy oznajmia Coqowi, że
+    spodziewamy się, iż komenda zawiedzie. Coq akceptuje komendę [Fail c],
+    jeżeli komenda [c] zawodzi, i wypisuje jej komunikat o błędzie. Jeżeli
+    komenda [c] zakończy się sukcesem, komenda [Fail c] zwróci błąd.
+    Komenda [Fail] jest przydatna w sytuacjach takich jak obecna, gdy
+    chcemy zilustrować fakt, że jakaś komenda zawodzi.
+
+    W naszym przypadku komenda [Fail] kończy się sukcesem, a zatem próba
+    zdefiniowania powyższego typu induktywnego się nie powiodła. Wiadomość
+    o błędzie mówi podaje nam, jak na tacy, powód tej sytuacji: typ konstruktora
+    [C] zawiera nie-ściśle-pozytywne wystąpienie definiowanego typu [wut A].
+
+    Komenda [Fail c] ma też jednak pewne wady: poza poświadczeniem rezultatu
+    wykonania komendy [c], nie ma ona żadnych innych skutków. To sprawia, że
+    użycie [Fail] zmusiłoby nas, w dalszej części podrozdziału, do zaledwie
+    udawania, że mamy jakiś typ i coś z nim robimy. To zaś jest bardzo złe,
+    bo bez czujnego Coqowego oka bardzo łatwo jest napisać coś głupiego lub
+    popełnić jakiś inny błąd. *)
+
 Module wut.
 
 Unset Positivity Checking.
@@ -4582,61 +4592,84 @@ Inductive wut (A : Type) : Type :=
     | C : (wut A -> A) -> wut A.
 Set Positivity Checking.
 
+(** Na szczęście jest sposób na to, byśmy mogli pobawić się nie-ściśle-pozytywnymi
+    typami induktywnymi pod czujnym okiem Coqa: posługując się komendą [Unset
+    Positivity Checking] możemy wyłączyć positivity checker (czyli po polsku
+    "sprawdzacz pozytywności"), co sprawi, że Coq zaakceptuje definicję typu [wut].
+    Dzięki temu będziemy mogli posługiwać się tym typem jak gdyby nigdy nic.
+
+    Oczywiście takie rozwiązanie również niesie za sobą negatywne konsekwencje:
+    jak za chwilę zobaczymy, z istnienia typu [wut] można wywnioskować dowód
+    fałszu, a zatem od teraz możemy udowodnić w Coqu dosłownie wszystko, więc
+    teoretycznie wszystkie nasze dowody stają się bezwartościowe. W praktyce
+    rzecz jasna nie będziemy tej sprzeczności wykorzystywać w niecnych celach,
+    a istnienie typu [wut A] dopuszczamy tylko w celach ilustracyjnych. *)
+
+(** ** Nieterminacja jako źródło zła na świecie *)
+
+(* begin hide *)
+(*
+TODO: znaleźć prostszy przykład dot. ścisłej pozytywności
+*)
+(* end hide *)
+
+(** Pierwszym powodem nielegalności nie-ściśle-pozytywnych typów induktywnych
+    jest to, że unieważniają one filozoficzną interpretację teorii typów i
+    ogólnie wszystkiego, co robimy w Coqu (co jednak jedynie czasami prowadzi
+    do sprzeczności bezpośrednio). Przyjrzyjmy się poniższemu programowi: *)
+
 Definition loop (A : Type) : A :=
   let f (w : wut A) : A :=
     match w with
         | C _ g => g w
     end
   in f (C _ f).
-End wut.
-(* end hide *)
 
-(** Uwaga: poprzedzenie komendą [Fail] innej komendy oznajmia Coqowi, że
-    spodziewamy się, iż komenda zawiedzie. Coq akceptuje komendę [Fail c],
-    jeżeli komenda [c] zawodzi, i wypisuje komunikat o błędzie. Jeżeli
-    komenda [c] zakończy się sukcesem, komenda [Fail c] zwróci błąd.
-    Komenda [Fail] jest przydatna w sytuacjach takich jak obecna, gdy
-    chcemy zilustrować fakt, że jakaś komenda zawodzi.
+(** Już sam typ tego programu wygląda złowrogo: dla każdego typu [A] program
+    zwraca element typu [A]. Nie dziwota więc, że możemy uzyskać z niego dowód
+    fałszu wstawiając [False] za [A]. *)
 
-    Pierwszym powodem nielegalności nie-ściśle-pozytywnych typów induktywnych
-    jest to, że unieważniają one filozoficzną interpretację teorii typów i
-    ogólnie wszystkiego, co robimy w Coqu. W praktyce problemy filozoficzne
-    mogą też prowadzić do sprzeczności.
-
-    Załóżmy, że Coq akceptuje powyższą definicję [wut]. Możemy wtedy napisać
-    następujący program: *)
-
-Fail Definition loop (A : Type) : A :=
-  let f (w : wut A) : A :=
-    match w with
-        | C g => g w
-    end
-  in f (C f).
-
-(** Już sam typ tego programu wygląda podejrzanie: dla każdego typu [A]
-    zwraca on element typu [A]. Nie dziwota więc, że możemy uzyskać z niego
-    dowód fałszu. *)
-
-Fail Definition santa_is_a_pedophile : False := loop False.
+Definition santa_is_a_pedophile : False := loop False.
 
 (** Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
     problemem - nie z każdego złego typu induktywnego da się tak łatwo dostać
-    sprzeczność (a przynajmniej ja nie umiem; systematyczny sposób dostawania
-    sprzeczności z istnienia takich typów zobaczymy później). W rzeczywistości
-    jest nim nieterminacja.
+    sprzeczność (systematyczny sposób dostawania sprzeczności z istnienia
+    takich typów zobaczymy później). W rzeczywistości jest nim nieterminacja.
 
-    Nieterminacja (ang. nontermination, divergence) lub kolokwialniej
-    "zapętlenie" to sytuacja, w której program nigdy nie skończy się
-    wykonywać. Ta właśnie bolączka jest przypadłością [loop], czego nie
-    trudno domyślić się z nazwy.
+    Nieterminacja (ang. nontermination) lub kolokwialniej "zapętlenie" to
+    sytuacja, w której program nigdy nie skończy się wykonywać. Ta właśnie
+    bolączka jest przypadłością [loop], czego nietrudno domyślić się po nazwie.
 
-    Dlaczego tak jest? Przyjrzyjmy się definicji [loop]. Za pomocą [let]a
+    Dlaczego [loop] nie terminuje? Przyjrzyjmy się definicji: za pomocą [let]a
     definiujemy funkcję [f : wut A -> A], która odpakowuje swój argument
-    [w], wyciąga z niego funkcję [g : wut A -> A] i aplikuje [g] do [w].
-    Wynikiem programu jest [f] zaaplikowane do siebie samego zawiniętego
-    w konstruktor [C].
+    [w], wyciąga z niego funkcję [g : wut A -> A] i aplikuje [g] do [w], czyli
+    oryginalnego argumentu [f]. Wynikiem całego programu jest [f] zaaplikowane
+    do siebie samego zawiniętego w konstruktor [C] żeby typy się zgadzały.
 
-    Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
+    Ta aplikacja czegoś do samego siebie to kolejny sygnał ostrzegawczy, który
+    powinien wzbudzić naszą czujność. Ogólniej sytuacja, w której coś odnosi
+    się samo do siebie, nazywa się autoreferencją i często prowadzi do różnych
+    wesołych paradoksów.
+
+    Żeby jeszcze lepiej zrozumieć nieterminację [loop], spróbujmy interaktywnie
+    prześledzić, w jaki sposób program ten się oblicza. *)
+
+Goal loop nat = 42.
+Proof.
+  cbv delta [loop].
+  cbv beta.
+  cbv zeta.
+
+  cbv beta. cbv iota.
+  cbv beta. cbv iota.
+  cbv beta; cbv iota.
+Abort.
+
+(** 
+
+
+
+Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
     programu:
 
     [loop A =]
@@ -4649,11 +4682,12 @@ Fail Definition santa_is_a_pedophile : False := loop False.
 
     i tak dalej.
 
-    Nie powinno nas to dziwić - praktycznie rzecz biorąc aplikujemy [f] samo
-    do siebie, zaś konstruktor [C] jest tylko pośrednikiem sprawiającym, że
-    typy się zgadzają. Ogólniej sytuacja, w której coś odnosi się samo do
-    siebie, nazywa się autoreferencją i często prowadzi do różnych wesołych
-    paradoksów. *)
+    To natomiast, co powinno nas tu zdziwić, to fakt, że [loop] jest funkcją
+    rekurencyjną
+
+*)
+
+End wut.
 
 (** **** Ćwiczenie *)
 
@@ -7081,15 +7115,15 @@ Abort.
     osiągalna. *)
 
 (* begin hide *)
-Definition loop : Pos -> bool.
+Definition loop' : Pos -> bool.
 Proof.
   intros [f].
   apply f. intro x.
 Abort.
 
-Fail Fixpoint loop (x : Pos) : bool :=
+Fail Fixpoint loop' (x : Pos) : bool :=
 match x with
-    | Pos0 f => f loop
+    | Pos0 f => f loop'
 end.
 
 (* end hide *)
@@ -7162,9 +7196,11 @@ Definition i {A : Type} : A -> (A -> Prop) :=
 Lemma i_inj :
   forall (A : Type) (x y : A), i x = i y -> x = y.
 Proof.
-  unfold i. intros.
+  unfold i.
+  intros.
   apply (f_equal (fun f => f y)) in H.
-  rewrite H. reflexivity.
+  rewrite H.
+  reflexivity.
 Qed.
 
 (** Kolejnym krokiem jest zdefiniowanie funkcji [i], która jest injekcją

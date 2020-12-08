@@ -5525,7 +5525,7 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     bardziej skomplikowanego uniwersum pojawi się jeszcze w tym rozdziale. 
 <div class="paragraph"> </div>
 
-<a id="lab287"></a><h4 class="section">Ćwiczenia</h4>
+<a id="lab287"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -5708,23 +5708,14 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     można odróżnić od tych dobrych gołym okiem, za pomocą bardzo prostego
     kryterium: złe typy induktywne to te, które nie są ściśle pozytywne.
     Zanim jednak dowiemy się, jak rozpoznawać złe typy induktywne, poznajmy
-    najpierw dwa powody, przez które złe typy induktywne są złe. 
+    najpierw dwa powody, przez które złe typy induktywne są złe.
+
 <div class="paragraph"> </div>
 
-<a id="lab292"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
-
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
+    Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
     induktywnego (czyli takiego, który wygląda na induktywny, ale ma
-    konstruktory z negatywnymi wystąpieniami argumentu indukcyjnego): 
+    konstruktor typu funkcyjnego z wystąpieniem argumentu indukcyjnego
+    po lewej stronie strzałki): 
 </div>
 <div class="code">
 
@@ -5738,52 +5729,101 @@ Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;"(wut&nbsp;A&nbsp;-&gt;&nbsp;A)&nbsp;-&gt;&nbsp;wut&nbsp;A".&nbsp;*)</span><br/>
 
 <br/>
-
-<br/>
 </div>
 
 <div class="doc">
 Uwaga: poprzedzenie komendą <span class="inlinecode"><span class="id" title="var">Fail</span></span> innej komendy oznajmia Coqowi, że
     spodziewamy się, iż komenda zawiedzie. Coq akceptuje komendę <span class="inlinecode"><span class="id" title="var">Fail</span></span> <span class="inlinecode"><span class="id" title="var">c</span></span>,
-    jeżeli komenda <span class="inlinecode"><span class="id" title="var">c</span></span> zawodzi, i wypisuje komunikat o błędzie. Jeżeli
+    jeżeli komenda <span class="inlinecode"><span class="id" title="var">c</span></span> zawodzi, i wypisuje jej komunikat o błędzie. Jeżeli
     komenda <span class="inlinecode"><span class="id" title="var">c</span></span> zakończy się sukcesem, komenda <span class="inlinecode"><span class="id" title="var">Fail</span></span> <span class="inlinecode"><span class="id" title="var">c</span></span> zwróci błąd.
     Komenda <span class="inlinecode"><span class="id" title="var">Fail</span></span> jest przydatna w sytuacjach takich jak obecna, gdy
     chcemy zilustrować fakt, że jakaś komenda zawodzi.
 
 <div class="paragraph"> </div>
 
-    Pierwszym powodem nielegalności nie-ściśle-pozytywnych typów induktywnych
-    jest to, że unieważniają one filozoficzną interpretację teorii typów i
-    ogólnie wszystkiego, co robimy w Coqu. W praktyce problemy filozoficzne
-    mogą też prowadzić do sprzeczności.
+    W naszym przypadku komenda <span class="inlinecode"><span class="id" title="var">Fail</span></span> kończy się sukcesem, a zatem próba
+    zdefiniowania powyższego typu induktywnego się nie powiodła. Wiadomość
+    o błędzie mówi podaje nam, jak na tacy, powód tej sytuacji: typ konstruktora
+    <span class="inlinecode"><span class="id" title="var">C</span></span> zawiera nie-ściśle-pozytywne wystąpienie definiowanego typu <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>.
 
 <div class="paragraph"> </div>
 
-    Załóżmy, że Coq akceptuje powyższą definicję <span class="inlinecode"><span class="id" title="var">wut</span></span>. Możemy wtedy napisać
-    następujący program: 
+    Komenda <span class="inlinecode"><span class="id" title="var">Fail</span></span> <span class="inlinecode"><span class="id" title="var">c</span></span> ma też jednak pewne wady: poza poświadczeniem rezultatu
+    wykonania komendy <span class="inlinecode"><span class="id" title="var">c</span></span>, nie ma ona żadnych innych skutków. To sprawia, że
+    użycie <span class="inlinecode"><span class="id" title="var">Fail</span></span> zmusiłoby nas, w dalszej części podrozdziału, do zaledwie
+    udawania, że mamy jakiś typ i coś z nim robimy. To zaś jest bardzo złe,
+    bo bez czujnego Coqowego oka bardzo łatwo jest napisać coś głupiego lub
+    popełnić jakiś inny błąd. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <span class="id" title="var">loop</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">A</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">f</span> (<span class="id" title="var">w</span> : <span class="id" title="var">wut</span> <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">w</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C</span> <span class="id" title="var">g</span> =&gt; <span class="id" title="var">g</span> <span class="id" title="var">w</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="var">f</span> (<span class="id" title="var">C</span> <span class="id" title="var">f</span>).<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">wut</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Positivity</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">wut</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C</span> : (<span class="id" title="var">wut</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">wut</span> <span class="id" title="var">A</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Positivity</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Już sam typ tego programu wygląda podejrzanie: dla każdego typu <span class="inlinecode"><span class="id" title="var">A</span></span>
-    zwraca on element typu <span class="inlinecode"><span class="id" title="var">A</span></span>. Nie dziwota więc, że możemy uzyskać z niego
-    dowód fałszu. 
+Na szczęście jest sposób na to, byśmy mogli pobawić się nie-ściśle-pozytywnymi
+    typami induktywnymi pod czujnym okiem Coqa: posługując się komendą <span class="inlinecode"><span class="id" title="keyword">Unset</span></span>
+    <span class="inlinecode"><span class="id" title="var">Positivity</span></span> <span class="inlinecode"><span class="id" title="var">Checking</span></span> możemy wyłączyć positivity checker (czyli po polsku
+    "sprawdzacz pozytywności"), co sprawi, że Coq zaakceptuje definicję typu <span class="inlinecode"><span class="id" title="var">wut</span></span>.
+    Dzięki temu będziemy mogli posługiwać się tym typem jak gdyby nigdy nic.
+
+<div class="paragraph"> </div>
+
+    Oczywiście takie rozwiązanie również niesie za sobą negatywne konsekwencje:
+    jak za chwilę zobaczymy, z istnienia typu <span class="inlinecode"><span class="id" title="var">wut</span></span> można wywnioskować dowód
+    fałszu, a zatem od teraz możemy udowodnić w Coqu dosłownie wszystko, więc
+    teoretycznie wszystkie nasze dowody stają się bezwartościowe. W praktyce
+    rzecz jasna nie będziemy tej sprzeczności wykorzystywać w niecnych celach,
+    a istnienie typu <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> dopuszczamy tylko w celach ilustracyjnych. 
+<div class="paragraph"> </div>
+
+<a id="lab292"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
+
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <span class="id" title="var">santa_is_a_pedophile</span> : <span class="id" title="var">False</span> := <span class="id" title="var">loop</span> <span class="id" title="var">False</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Pierwszym powodem nielegalności nie-ściśle-pozytywnych typów induktywnych
+    jest to, że unieważniają one filozoficzną interpretację teorii typów i
+    ogólnie wszystkiego, co robimy w Coqu (co jednak jedynie czasami prowadzi
+    do sprzeczności bezpośrednio). Przyjrzyjmy się poniższemu programowi: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">loop</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">A</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">f</span> (<span class="id" title="var">w</span> : <span class="id" title="var">wut</span> <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">w</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C</span> <span class="id" title="var">_</span> <span class="id" title="var">g</span> =&gt; <span class="id" title="var">g</span> <span class="id" title="var">w</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="var">f</span> (<span class="id" title="var">C</span> <span class="id" title="var">_</span> <span class="id" title="var">f</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Już sam typ tego programu wygląda złowrogo: dla każdego typu <span class="inlinecode"><span class="id" title="var">A</span></span> program
+    zwraca element typu <span class="inlinecode"><span class="id" title="var">A</span></span>. Nie dziwota więc, że możemy uzyskać z niego dowód
+    fałszu wstawiając <span class="inlinecode"><span class="id" title="var">False</span></span> za <span class="inlinecode"><span class="id" title="var">A</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">santa_is_a_pedophile</span> : <span class="id" title="var">False</span> := <span class="id" title="var">loop</span> <span class="id" title="var">False</span>.<br/>
 
 <br/>
 </div>
@@ -5791,28 +5831,58 @@ Już sam typ tego programu wygląda podejrzanie: dla każdego typu <span class="
 <div class="doc">
 Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
     problemem - nie z każdego złego typu induktywnego da się tak łatwo dostać
-    sprzeczność (a przynajmniej ja nie umiem; systematyczny sposób dostawania
-    sprzeczności z istnienia takich typów zobaczymy później). W rzeczywistości
-    jest nim nieterminacja.
+    sprzeczność (systematyczny sposób dostawania sprzeczności z istnienia
+    takich typów zobaczymy później). W rzeczywistości jest nim nieterminacja.
 
 <div class="paragraph"> </div>
 
-    Nieterminacja (ang. nontermination, divergence) lub kolokwialniej
-    "zapętlenie" to sytuacja, w której program nigdy nie skończy się
-    wykonywać. Ta właśnie bolączka jest przypadłością <span class="inlinecode"><span class="id" title="var">loop</span></span>, czego nie
-    trudno domyślić się z nazwy.
+    Nieterminacja (ang. nontermination) lub kolokwialniej "zapętlenie" to
+    sytuacja, w której program nigdy nie skończy się wykonywać. Ta właśnie
+    bolączka jest przypadłością <span class="inlinecode"><span class="id" title="var">loop</span></span>, czego nietrudno domyślić się po nazwie.
 
 <div class="paragraph"> </div>
 
-    Dlaczego tak jest? Przyjrzyjmy się definicji <span class="inlinecode"><span class="id" title="var">loop</span></span>. Za pomocą <span class="inlinecode"><span class="id" title="keyword">let</span></span>a
+    Dlaczego <span class="inlinecode"><span class="id" title="var">loop</span></span> nie terminuje? Przyjrzyjmy się definicji: za pomocą <span class="inlinecode"><span class="id" title="keyword">let</span></span>a
     definiujemy funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span>, która odpakowuje swój argument
-    <span class="inlinecode"><span class="id" title="var">w</span></span>, wyciąga z niego funkcję <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> i aplikuje <span class="inlinecode"><span class="id" title="var">g</span></span> do <span class="inlinecode"><span class="id" title="var">w</span></span>.
-    Wynikiem programu jest <span class="inlinecode"><span class="id" title="var">f</span></span> zaaplikowane do siebie samego zawiniętego
-    w konstruktor <span class="inlinecode"><span class="id" title="var">C</span></span>.
+    <span class="inlinecode"><span class="id" title="var">w</span></span>, wyciąga z niego funkcję <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> i aplikuje <span class="inlinecode"><span class="id" title="var">g</span></span> do <span class="inlinecode"><span class="id" title="var">w</span></span>, czyli
+    oryginalnego argumentu <span class="inlinecode"><span class="id" title="var">f</span></span>. Wynikiem całego programu jest <span class="inlinecode"><span class="id" title="var">f</span></span> zaaplikowane
+    do siebie samego zawiniętego w konstruktor <span class="inlinecode"><span class="id" title="var">C</span></span> żeby typy się zgadzały.
 
 <div class="paragraph"> </div>
 
-    Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
+    Ta aplikacja czegoś do samego siebie to kolejny sygnał ostrzegawczy, który
+    powinien wzbudzić naszą czujność. Ogólniej sytuacja, w której coś odnosi
+    się samo do siebie, nazywa się autoreferencją i często prowadzi do różnych
+    wesołych paradoksów.
+
+<div class="paragraph"> </div>
+
+    Żeby jeszcze lepiej zrozumieć nieterminację <span class="inlinecode"><span class="id" title="var">loop</span></span>, spróbujmy interaktywnie
+    prześledzić, w jaki sposób program ten się oblicza. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Goal</span> <span class="id" title="var">loop</span> <span class="id" title="var">nat</span> = 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">cbv</span> <span class="id" title="keyword">delta</span> [<span class="id" title="var">loop</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">cbv</span> <span class="id" title="keyword">beta</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">cbv</span> <span class="id" title="keyword">zeta</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">cbv</span> <span class="id" title="keyword">beta</span>. <span class="id" title="tactic">cbv</span> <span class="id" title="keyword">iota</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">cbv</span> <span class="id" title="keyword">beta</span>. <span class="id" title="tactic">cbv</span> <span class="id" title="keyword">iota</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">cbv</span> <span class="id" title="keyword">beta</span>; <span class="id" title="tactic">cbv</span> <span class="id" title="keyword">iota</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
     programu:
 
 <div class="paragraph"> </div>
@@ -5837,13 +5907,22 @@ Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
 
 <div class="paragraph"> </div>
 
-    Nie powinno nas to dziwić - praktycznie rzecz biorąc aplikujemy <span class="inlinecode"><span class="id" title="var">f</span></span> samo
-    do siebie, zaś konstruktor <span class="inlinecode"><span class="id" title="var">C</span></span> jest tylko pośrednikiem sprawiającym, że
-    typy się zgadzają. Ogólniej sytuacja, w której coś odnosi się samo do
-    siebie, nazywa się autoreferencją i często prowadzi do różnych wesołych
-    paradoksów. 
+    To natomiast, co powinno nas tu zdziwić, to fakt, że <span class="inlinecode"><span class="id" title="var">loop</span></span> jest funkcją
+    rekurencyjną
+
 <div class="paragraph"> </div>
 
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">wut</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a id="lab293"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
@@ -8765,9 +8844,11 @@ Dzięki <span class="inlinecode"><span class="id" title="var">unwrap</span></spa
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">i_inj</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>), <span class="id" title="var">i</span> <span class="id" title="var">x</span> = <span class="id" title="var">i</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">i</span>. <span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">i</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">y</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
