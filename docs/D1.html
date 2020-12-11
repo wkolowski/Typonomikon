@@ -108,7 +108,7 @@ Definicja typu induktywnego ma następującą postać: najpierw występuje
 
 <div class="paragraph"> </div>
 
-    Definicję tę możemy udczytać następująco: "<span class="inlinecode"><span class="id" title="var">true</span></span> jest typu <span class="inlinecode"><span class="id" title="var">bool</span></span>,
+    Definicję tę możemy odczytać następująco: "<span class="inlinecode"><span class="id" title="var">true</span></span> jest typu <span class="inlinecode"><span class="id" title="var">bool</span></span>,
     <span class="inlinecode"><span class="id" title="var">false</span></span> jest typu <span class="inlinecode"><span class="id" title="var">bool</span></span> i nie ma żadnych więcej wartości typu
     <span class="inlinecode"><span class="id" title="var">bool</span></span>".
 
@@ -5701,10 +5701,11 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
     ich ulepszeń, jak indukcja-indukcja, indukcja-rekursja etc.) jest
     niepełna. Tak jak świat pełen jest złoczyńców oszukujących starszych
     ludzi metodą "na wnuczka", tak nie każdy typ podający się za induktywny
-    faktycznie jest praworządnym obywatelem krainy typów induktywnych. 
+    faktycznie jest praworządnym obywatelem krainy typów induktywnych.
+
 <div class="paragraph"> </div>
 
- Na szczęście typy induktywne to istoty bardzo prostolinijne, zaś te złe
+    Na szczęście typy induktywne to istoty bardzo prostolinijne, zaś te złe
     można odróżnić od tych dobrych gołym okiem, za pomocą bardzo prostego
     kryterium: złe typy induktywne to te, które nie są ściśle pozytywne.
     Zanim jednak dowiemy się, jak rozpoznawać złe typy induktywne, poznajmy
@@ -5713,9 +5714,8 @@ Podobnie jak poprzednio, pojawia się pytanie: do czego w praktyce
 <div class="paragraph"> </div>
 
     Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
-    induktywnego (czyli takiego, który wygląda na induktywny, ale ma
-    konstruktor typu funkcyjnego z wystąpieniem argumentu indukcyjnego
-    po lewej stronie strzałki): 
+    induktywnego (co dokładnie znaczy w tym kontekście słowo "negatywny"
+    i jak takie typy rozpoznawać zobaczymy później): 
 </div>
 <div class="code">
 
@@ -5743,7 +5743,7 @@ Uwaga: poprzedzenie komendą <span class="inlinecode"><span class="id" title="va
 
     W naszym przypadku komenda <span class="inlinecode"><span class="id" title="var">Fail</span></span> kończy się sukcesem, a zatem próba
     zdefiniowania powyższego typu induktywnego się nie powiodła. Wiadomość
-    o błędzie mówi podaje nam, jak na tacy, powód tej sytuacji: typ konstruktora
+    o błędzie podaje nam, jak na tacy, powód tej sytuacji: typ konstruktora
     <span class="inlinecode"><span class="id" title="var">C</span></span> zawiera nie-ściśle-pozytywne wystąpienie definiowanego typu <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>.
 
 <div class="paragraph"> </div>
@@ -5788,19 +5788,13 @@ Na szczęście jest sposób na to, byśmy mogli pobawić się nie-ściśle-pozyt
 
 <a id="lab292"></a><h2 class="section">Nieterminacja jako źródło zła na świecie</h2>
 
-</div>
-<div class="code">
+<div class="paragraph"> </div>
 
-<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Pierwszym powodem nielegalności nie-ściśle-pozytywnych typów induktywnych
+ Pierwszym powodem nielegalności nie-ściśle-pozytywnych typów induktywnych
     jest to, że unieważniają one filozoficzną interpretację teorii typów i
-    ogólnie wszystkiego, co robimy w Coqu (co jednak jedynie czasami prowadzi
-    do sprzeczności bezpośrednio). Przyjrzyjmy się poniższemu programowi: 
+    pozwalają łamać reguły dzięki którym to co robimy w Coqu ma jakikolwiek
+    sens (co jednak tylko czasami prowadzi do sprzeczności bezpośrednio).
+    Przyjrzyjmy się poniższemu programowi: 
 </div>
 <div class="code">
 
@@ -5843,10 +5837,10 @@ Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
 <div class="paragraph"> </div>
 
     Dlaczego <span class="inlinecode"><span class="id" title="var">loop</span></span> nie terminuje? Przyjrzyjmy się definicji: za pomocą <span class="inlinecode"><span class="id" title="keyword">let</span></span>a
-    definiujemy funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span>, która odpakowuje swój argument
-    <span class="inlinecode"><span class="id" title="var">w</span></span>, wyciąga z niego funkcję <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> i aplikuje <span class="inlinecode"><span class="id" title="var">g</span></span> do <span class="inlinecode"><span class="id" title="var">w</span></span>, czyli
+    definiujemy funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span>, która odpakowuje swój argument <span class="inlinecode"><span class="id" title="var">w</span></span>,
+    wyciąga z niego funkcję <span class="inlinecode"><span class="id" title="var">g</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span> i aplikuje <span class="inlinecode"><span class="id" title="var">g</span></span> do <span class="inlinecode"><span class="id" title="var">w</span></span>, czyli do
     oryginalnego argumentu <span class="inlinecode"><span class="id" title="var">f</span></span>. Wynikiem całego programu jest <span class="inlinecode"><span class="id" title="var">f</span></span> zaaplikowane
-    do siebie samego zawiniętego w konstruktor <span class="inlinecode"><span class="id" title="var">C</span></span> żeby typy się zgadzały.
+    do siebie samego zawiniętego w konstruktor <span class="inlinecode"><span class="id" title="var">C</span></span> (żeby typy się zgadzały).
 
 <div class="paragraph"> </div>
 
@@ -5879,11 +5873,8 @@ Paradoksalnie jednak to nie ta rażąca sprzeczność jest naszym największym
 </div>
 
 <div class="doc">
-
-<div class="paragraph"> </div>
-
-Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
-    programu:
+Jeżeli jesteś leniwy i nie masz włączonego CoqIDE, sprowadza się to do czegoś
+    w tym stylu:
 
 <div class="paragraph"> </div>
 
@@ -5908,11 +5899,17 @@ Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
 <div class="paragraph"> </div>
 
     To natomiast, co powinno nas tu zdziwić, to fakt, że <span class="inlinecode"><span class="id" title="var">loop</span></span> jest funkcją
-    rekurencyjną
+    w pewnym sensie rekurencyjną (bo funkcja <span class="inlinecode"><span class="id" title="var">f</span></span> wywołuje sama siebie), mimo
+    że przecież nie użyliśmy komendy <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>!
 
 <div class="paragraph"> </div>
 
-
+    To jest właśnie jeden z przejawów zamętu, jaki wprowadzają negatywny typy
+    induktywne - zmieniają reguły gry. Dotychczas <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> (i <span class="inlinecode"><span class="id" title="keyword">fix</span></span>) dawały
+    nam możliwość użycia rekursji (a w praktyce oznaczały, że rekursji faktycznie
+    użyliśmy), zaś <span class="inlinecode"><span class="id" title="keyword">Definition</span></span> (i <span class="inlinecode"><span class="id" title="keyword">fun</span></span>) świadczyło o tym, że funkcja nie jest
+    rekurencyjna. Od kiedy tylko Coq zaakceptował definicję typu <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span>, regułę
+    tę można bez przeszkód łamać, z opłakanymi konsekwencjami. 
 </div>
 <div class="code">
 
@@ -5923,6 +5920,11 @@ Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
 </div>
 
 <div class="doc">
+Żeby przez przypadek nie użyć sprzeczności, którą daje nam typ <span class="inlinecode"><span class="id" title="var">wut</span></span>,
+    schowaliśmy ją w osobnym module, też nazwanym <span class="inlinecode"><span class="id" title="var">wut</span></span>. Oczywiście wciąż
+    mamy do niej dostęp, ale teraz ciężej będzie się pomylić. 
+<div class="paragraph"> </div>
+
 <a id="lab293"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
@@ -5937,14 +5939,19 @@ Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
     "polski" jest słowem polskim, ale słowo "niemiecki" nie jest słowem
     niemieckim. Słowa, które nie opisują samych siebie będziemy nazywać
     słowami heterologicznymi. Pytanie: czy słowo "heterologiczny" jest
-    heterologiczne? 
-<div class="paragraph"> </div>
-
- Czujesz sprzeczność? Innym przyk... dobra, wystarczy tych głupot.
+    heterologiczne?
 
 <div class="paragraph"> </div>
 
-    Przyjrzyjmy się teraz problemom filozoficznym powodowanym przez
+    Czujesz sprzeczność? Pytanie bonusowe/pomocnicze: jaki to ma w ogóle
+    związek z negatywnymi typami induktywnymi? 
+<div class="paragraph"> </div>
+
+<a id="lab294"></a><h2 class="section">Filozoficzne konsekwencje nitereminacji</h2>
+
+<div class="paragraph"> </div>
+
+ Przyjrzyjmy się teraz problemom filozoficznym powodowanym przez
     nieterminację. W skrócie: zmienia ona fundamentalne właściwości
     obliczeń, co prowadzi do zmiany interpretacji pojęcia typu, zaś
     to pociąga za sobą kolejne przykre skutki, takie jak np. to, że
@@ -5988,12 +5995,12 @@ Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
     typy induktywne to też wynalazek szatana. 
 <div class="paragraph"> </div>
 
-<a id="lab294"></a><h2 class="section">Twierdzenie Cantora</h2>
+<a id="lab295"></a><h2 class="section">Twierdzenie Cantora</h2>
 
 <div class="paragraph"> </div>
 
- Zanim zaczniemy ten rozdział na poważnie, mam dla ciebie wesoły łamaniec
-    językowy:
+ Zanim zaczniemy ten podrozdział na poważnie, mam dla ciebie wesoły
+    łamaniec językowy:
 
 <div class="paragraph"> </div>
 
@@ -6104,7 +6111,7 @@ Funkcja <span class="inlinecode"><span class="id" title="var">isZero</span></spa
     innymi rodzajami funkcji. Tymczasem: 
 <div class="paragraph"> </div>
 
-<a id="lab295"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab296"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6233,7 +6240,7 @@ Dowód twierdzenia jest równie legendarny jak samo twierdzenie, a na
     błędne i nie istnieje żadna surjekcja z <span class="inlinecode"><span class="id" title="var">nat</span></span> w <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>. 
 <div class="paragraph"> </div>
 
-<a id="lab296"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab297"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6308,7 +6315,7 @@ Uogólnienie jest dość banalne. Najpierw zastępujemy <span class="inlinecode"
     jak poprzednio, przy czym zastępujemy użycie <span class="inlinecode"><span class="id" title="var">negb</span></span> przez <span class="inlinecode"><span class="id" title="var">modify</span></span>. 
 <div class="paragraph"> </div>
 
-<a id="lab297"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab298"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6334,14 +6341,14 @@ Uogólnienie jest dość banalne. Najpierw zastępujemy <span class="inlinecode"
 </div>
 
 <div class="doc">
-<a id="lab298"></a><h2 class="section">Twierdzenie Cantora jako młot na negatywność</h2>
+<a id="lab299"></a><h2 class="section">Twierdzenie Cantora jako młot na negatywność</h2>
 
 <div class="paragraph"> </div>
 
  Z Cantorem po naszej stronie możemy wreszcie kupić ruble... ekhem,
     możemy wreszcie zaprezentować ogólną metodę dowodzenia, że negatywne
     typy induktywne prowadzą do sprzeczności. Mimo szumnej nazwy ogólna
-    metoda nie jest aż taka ogólna i często będziemy musieli się bonusowo
+    metoda nie jest aż taka ogólna i czasem będziemy musieli się bonusowo
     napracować. 
 </div>
 <div class="code">
@@ -6371,16 +6378,6 @@ Otworzymy sobie nowy moduł, żeby nie zaśmiecać globalnej przestrzeni
 <span class="id" title="var">Arguments</span> <span class="id" title="var">C</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
-<span class="comment">(*&nbsp;Axioms<br/>
-&nbsp;&nbsp;(wut&nbsp;:&nbsp;Type&nbsp;-&gt;&nbsp;Type)<br/>
-&nbsp;&nbsp;(C&nbsp;:&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type},&nbsp;(wut&nbsp;A&nbsp;-&gt;&nbsp;A)&nbsp;-&gt;&nbsp;wut&nbsp;A)<br/>
-&nbsp;&nbsp;(dcase&nbsp;:&nbsp;forall<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(A&nbsp;:&nbsp;Type)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(P&nbsp;:&nbsp;wut&nbsp;A&nbsp;-&gt;&nbsp;Type)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(PC&nbsp;:&nbsp;forall&nbsp;f&nbsp;:&nbsp;wut&nbsp;A&nbsp;-&gt;&nbsp;A,&nbsp;P&nbsp;(C&nbsp;f)),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{f&nbsp;:&nbsp;forall&nbsp;w&nbsp;:&nbsp;wut&nbsp;A,&nbsp;P&nbsp;w&nbsp;|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;g&nbsp;:&nbsp;wut&nbsp;A&nbsp;-&gt;&nbsp;A,&nbsp;f&nbsp;(C&nbsp;g)&nbsp;=&nbsp;PC&nbsp;g}).<br/>
-&nbsp;*)</span><br/>
 
 <br/>
 </div>
@@ -6398,14 +6395,6 @@ Otworzymy sobie nowy moduł, żeby nie zaśmiecać globalnej przestrzeni
 <span class="id" title="keyword">match</span> <span class="id" title="var">w</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">C</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="comment">(*&nbsp;Definition&nbsp;bad&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;wut&nbsp;A&nbsp;-&gt;&nbsp;(wut&nbsp;A&nbsp;-&gt;&nbsp;A).<br/>
-Proof.<br/>
-&nbsp;&nbsp;apply&nbsp;(dcase&nbsp;A&nbsp;(fun&nbsp;_&nbsp;=&gt;&nbsp;wut&nbsp;A&nbsp;-&gt;&nbsp;A)).<br/>
-&nbsp;&nbsp;intro&nbsp;f.&nbsp;exact&nbsp;f.<br/>
-Defined.<br/>
-&nbsp;*)</span><br/>
 
 <br/>
 </div>
@@ -6481,7 +6470,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inline
     będziesz w stanie sam wykombinować, jak się z nimi uporać. 
 <div class="paragraph"> </div>
 
-<a id="lab299"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab300"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6516,7 +6505,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inline
 </div>
 
 <div class="doc">
-<a id="lab300"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab301"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6549,7 +6538,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inline
 </div>
 
 <div class="doc">
-<a id="lab301"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab302"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6588,7 +6577,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inline
 </div>
 
 <div class="doc">
-<a id="lab302"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab303"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6616,7 +6605,7 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inline
 </div>
 
 <div class="doc">
-<a id="lab303"></a><h2 class="section">Poradnik rozpoznawania negatywnych typów induktywnych</h2>
+<a id="lab304"></a><h2 class="section">Poradnik rozpoznawania negatywnych typów induktywnych</h2>
 
 <div class="paragraph"> </div>
 
@@ -6629,17 +6618,26 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inline
 
     Kryterium jest banalne. Mając dany typ <span class="inlinecode"><span class="id" title="var">T</span></span> musimy rzucić okiem na jego
     konstruktory, a konkretniej na ich argumenty. Argumenty nieindukcyjne
-    (czyli o typach, w których nie występuje <span class="inlinecode"><span class="id" title="var">T</span></span>) są zupełnie niegroźnie.
-    Interesować nas powinny jedynie argumenty indukcyjne, czyli takie, w
-    których występuje typ <span class="inlinecode"><span class="id" title="var">T</span></span>.
+    (czyli o typach, w których nie występuje <span class="inlinecode"><span class="id" title="var">T</span></span>) są zupełnie niegroźne i
+    wobec tego powinniśmy je zignorować. Interesować nas będą wyłącznie
+    argumenty indukcyjne, czyli takie, w których występuje typ <span class="inlinecode"><span class="id" title="var">T</span></span>.
 
 <div class="paragraph"> </div>
 
-    Niektóre typy argumentów indukcyjnych są niegroźne, np. <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">T</span></span>, <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">T</span></span>,
-    <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">T</span></span> albo <span class="inlinecode">{<span class="id" title="var">t</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">t</span>}</span>, ale powodują one, że Coq nie potrafi
-    wygenerować odpowiedniej reguły indukcji i zadowala się jedynie regułą
+    Najbardziej podstawowy typ argumentu indukcyjnego, czyli samo <span class="inlinecode"><span class="id" title="var">T</span></span>, jest
+    rzecz jasna również niegroźny. To samo dotyczy argumentu indukcyjnego o
+    typie <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">T</span></span>. Wprawdzie jest on typu funkcyjnego, co, jak się zaraz
+    przekonamy, jest groźne, ale <span class="inlinecode"><span class="id" title="var">T</span></span> występuje po prawej stronie strzałki,
+    więc wszystko jest w porządku.
+
+<div class="paragraph"> </div>
+
+    Niektóre typy argumentów indukcyjnych również są niegroźne, np. <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">T</span></span>,
+    <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">T</span></span>, <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">T</span></span> albo <span class="inlinecode">{<span class="id" title="var">t</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">t</span>}</span>, ale Coq nie potrafi wygenerować
+    dla nich odpowiedniej reguły indukcji, więc generuje jedynie regułę
     analizy przypadków. Nie prowadzą one do sprzeczności, ale powinniśmy ich
-    unikać.
+    unikać - każde takie wystąpienie argumentu indukcyjnego można łatwo
+    zrefaktoryzować.
 
 <div class="paragraph"> </div>
 
@@ -6660,7 +6658,8 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inline
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c3</span> : <span class="id" title="var">nat</span> * <span class="id" title="var">T0</span> -&gt; <span class="id" title="var">T0</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c4</span> : <span class="id" title="var">T0</span> * <span class="id" title="var">T0</span> -&gt; <span class="id" title="var">T0</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c5</span> : <span class="id" title="var">T0</span> + <span class="id" title="var">T0</span> -&gt; <span class="id" title="var">T0</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c6</span> : <span class="id" title="var">list</span> <span class="id" title="var">T0</span> -&gt; <span class="id" title="var">T0</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c6</span> : <span class="id" title="var">list</span> <span class="id" title="var">T0</span> -&gt; <span class="id" title="var">T0</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c7</span> : (<span class="id" title="var">nat</span> -&gt; <span class="id" title="var">T0</span>) -&gt; <span class="id" title="var">T0</span>.<br/>
 
 <br/>
 </div>
@@ -6683,11 +6682,11 @@ Rodzaje nieszkodliwych typów argumentów widać na powyższym przykładzie.
 
     Konstruktory <span class="inlinecode"><span class="id" title="var">c3</span></span>, <span class="inlinecode"><span class="id" title="var">c4</span></span>, <span class="inlinecode"><span class="id" title="var">c5</span></span> i <span class="inlinecode"><span class="id" title="var">c6</span></span> są induktywne i również w pełni
     legalne, ale są one powodem tego, że Coq nie generuje dla <span class="inlinecode"><span class="id" title="var">T0</span></span> reguły
-    indukcji, a jedynie regułę analizy przypadków (choć nazwa się ona
-    <span class="inlinecode"><span class="id" title="var">T0_ind</span></span>). 
+    indukcji, a jedynie regułę analizy przypadków (choć nazywa się ona
+    <span class="inlinecode"><span class="id" title="var">T0_ind</span></span>). Konstruktor <span class="inlinecode"><span class="id" title="var">c7</span></span> również jest w pełni legalny. 
 <div class="paragraph"> </div>
 
-<a id="lab304"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab305"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -6712,7 +6711,7 @@ Problem pojawia się dopiero, gdy typ <span class="inlinecode"><span class="id" 
     typ <span class="inlinecode"><span class="id" title="var">T</span></span> występował bezpośrednio na lewo od strzałki, ale oczywiście
     może on być dowolnie zagnieżdżony. Dla każdego wystąpienia <span class="inlinecode"><span class="id" title="var">T</span></span> w
     argumentach możemy policzyć, na lewo od ilu strzałek się ono znajduje
-    (albo jak mocno zagnieżdżona jest dziedzina kwantyfikacji). Liczbę tę
+    (czyli jak mocno zagnieżdżona jest dziedzina kwantyfikacji). Liczbę tę
     nazywać będziemy niedobrością. W zależności od niedobrości,
     wystąpienie nazywamy:
 <ul class="doclist">
@@ -6729,12 +6728,13 @@ Problem pojawia się dopiero, gdy typ <span class="inlinecode"><span class="id" 
 <div class="paragraph"> </div>
 
  Jeżeli w definicji mamy wystąpienie negatywne, to typ możemy nazywać
-    negatywnym typem induktywnym (choć oczywiście nie jest to typ
+    negatywnym typem induktywnym (choć oczywiście nie jest to legalny typ
     induktywny). Jeżeli nie ma wystąpień negatywnych, ale są wystąpienia
-    pozytywne, to typ nazywamy pozytywnym typem induktywnym (lub nie ściśle
-    pozytywnym typem induktywnym), choć oczywiście również nie jest to typ
-    induktywny. Jeżeli wszystkiego wystąpienia są ściśle pozytywne, to mamy
-    do czynienia po prostu z typem induktywnym.
+    pozytywne, to typ nazywamy pozytywnym typem induktywnym (lub
+    nie-ściśle-pozytywnym typem induktywnym), choć oczywiście również nie
+    jest to legalny typ induktywny. Jeżeli wszystkiego wystąpienia są
+    ściśle pozytywne, to mamy do czynienia po prostu z typem induktywnym.
+    Parafrazując: każdy typ induktywny jest ściśle pozytywny.
 
 <div class="paragraph"> </div>
 
@@ -6775,7 +6775,7 @@ W powyższym przykładzie wystąpienie <span class="inlinecode"><span class="id"
     prowadzi do sprzeczności). 
 <div class="paragraph"> </div>
 
-<a id="lab305"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab306"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6800,7 +6800,7 @@ Policz niedobrość każdego wystąpienia <span class="inlinecode"><span class="
     lub ściśle pozytywny. 
 <div class="paragraph"> </div>
 
-<a id="lab306"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab307"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6862,7 +6862,7 @@ Rozstrzygnij, czy następujące konstruktory spełniają kryterium ścisłej
 </div>
 
 <div class="doc">
-<a id="lab307"></a><h2 class="section">Kilka bonusowych pułapek</h2>
+<a id="lab308"></a><h2 class="section">Kilka bonusowych pułapek</h2>
 
 <div class="paragraph"> </div>
 
@@ -6910,7 +6910,7 @@ Jak widać, jeżeli zaaplikujemy <span class="inlinecode"><span class="id" title
     jeżeli wstawi się za nie coś niedobrego (<span class="inlinecode"><span class="id" title="var">F</span></span> <span class="inlinecode"><span class="id" title="var">T</span></span>). 
 <div class="paragraph"> </div>
 
-<a id="lab308"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab309"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -6981,7 +6981,7 @@ Jak widać, definicja <span class="inlinecode"><span class="id" title="var">X</s
     jak i w konstruktorach typu <span class="inlinecode"><span class="id" title="var">Y</span></span>. 
 <div class="paragraph"> </div>
 
-<a id="lab309"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab310"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7007,7 +7007,7 @@ Jak widać, definicja <span class="inlinecode"><span class="id" title="var">X</s
 </div>
 
 <div class="doc">
-<a id="lab310"></a><h2 class="section">Jeszcze więcej pułapek</h2>
+<a id="lab311"></a><h2 class="section">Jeszcze więcej pułapek</h2>
 
 <div class="paragraph"> </div>
 
@@ -7085,7 +7085,7 @@ Po ciężkich bojach, przez które przeszedłeś, aksjomatyczne kodowanie
     banalne uogólnienie. 
 <div class="paragraph"> </div>
 
-<a id="lab311"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab312"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -7140,7 +7140,7 @@ Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
     specjalnie wymagająca czy oświecająca. 
 <div class="paragraph"> </div>
 
-<a id="lab312"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab313"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7159,7 +7159,7 @@ Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
 </div>
 
 <div class="doc">
-<a id="lab313"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab314"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7792,7 +7792,7 @@ Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
     co możemy liczyć. 
 <div class="paragraph"> </div>
 
-<a id="lab314"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab315"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7855,7 +7855,7 @@ Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
 No, teraz to już na pewno wiemy wszystko... 
 <div class="paragraph"> </div>
 
-<a id="lab315"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab316"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7892,7 +7892,7 @@ No, teraz to już na pewno wiemy wszystko...
 </div>
 
 <div class="doc">
-<a id="lab316"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda</h2>
+<a id="lab317"></a><h2 class="section">Promocja 2 w 1 czyli paradoksy Russella i Girarda</h2>
 
 <div class="paragraph"> </div>
 
@@ -7939,7 +7939,7 @@ No, teraz to już na pewno wiemy wszystko...
     nienależenie prowadzi do sprzeczności. 
 <div class="paragraph"> </div>
 
-<a id="lab317"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab318"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7975,7 +7975,7 @@ No, teraz to już na pewno wiemy wszystko...
     ćwiczeń. 
 <div class="paragraph"> </div>
 
-<a id="lab318"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab319"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -7988,7 +7988,7 @@ No, teraz to już na pewno wiemy wszystko...
     lubią. Czy wujek Janusz lubi sam siebie? 
 <div class="paragraph"> </div>
 
-<a id="lab319"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab320"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -8125,7 +8125,7 @@ Powyższa induktywno-rekurencyjna definicja typu <span class="inlinecode"><span 
     będzie, jeżeli przemyślisz to wszystko w ramach ćwiczenia. 
 <div class="paragraph"> </div>
 
-<a id="lab320"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab321"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -8535,7 +8535,7 @@ Ponieważ <span class="inlinecode"><span class="id" title="var">bad</span></span
 </div>
 
 <div class="doc">
-<a id="lab321"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab322"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -8595,7 +8595,7 @@ end.<br/>
 </div>
 
 <div class="doc">
-<a id="lab322"></a><h2 class="section">Pozytywne typy induktywne</h2>
+<a id="lab323"></a><h2 class="section">Pozytywne typy induktywne</h2>
 
 <div class="paragraph"> </div>
 
@@ -8944,7 +8944,7 @@ No i bum. Jak widać, pozytywne typy induktywne prowadzą do sprzeczności,
     <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> i jego impredykatywnością. 
 <div class="paragraph"> </div>
 
-<a id="lab323"></a><h1 class="section">"Paradoksy" indukcji (TODO)</h1>
+<a id="lab324"></a><h1 class="section">"Paradoksy" indukcji (TODO)</h1>
 
 </div>
 <div class="code">
@@ -8955,7 +8955,7 @@ No i bum. Jak widać, pozytywne typy induktywne prowadzą do sprzeczności,
 </div>
 
 <div class="doc">
-<a id="lab324"></a><h1 class="section">Indukcja matematyczna a indukcja w nauce (TODO)</h1>
+<a id="lab325"></a><h1 class="section">Indukcja matematyczna a indukcja w nauce (TODO)</h1>
 
 </div>
 <div class="code">
@@ -8966,7 +8966,7 @@ No i bum. Jak widać, pozytywne typy induktywne prowadzą do sprzeczności,
 </div>
 
 <div class="doc">
-<a id="lab325"></a><h1 class="section">Podsumowanie</h1>
+<a id="lab326"></a><h1 class="section">Podsumowanie</h1>
 
 <div class="paragraph"> </div>
 

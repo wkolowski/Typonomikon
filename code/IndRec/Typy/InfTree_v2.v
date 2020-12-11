@@ -83,11 +83,11 @@ Parameter drop : forall A : Type, nat -> BTree A -> list (BTree A).
 Parameter takedrop :
   forall A : Type, nat -> BTree A -> BTree A * list (BTree A).
 *)
-
+Print InfTree.
 Fixpoint intersperse {B A : Type} (v : A) (t : InfTree B A) : InfTree B A :=
 match t with
     | E => E
-    | N x f => N x (fun _ => N v f)
+    | N x f => N x (fun _ => N v (fun b => intersperse v (f b)))
 end.
 
 (*
@@ -235,14 +235,7 @@ Proof.
   induction t1; constructor.
     reflexivity.
     assumption.
-(* Restart.
-  destruct 1.
-  revert t1.
-  fix encode 1.
-  destruct t1; constructor.
-    reflexivity.
-    intro. apply encode.
- *)Defined.
+Defined.
 
 Lemma encode_decode :
   forall {B A : Type} {t1 t2 : InfTree B A} (p : t1 = t2),

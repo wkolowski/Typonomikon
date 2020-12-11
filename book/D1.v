@@ -74,7 +74,7 @@ Inductive bool : Set :=
     przypadku mamy 2 konstruktory, zwane [true] oraz [false], które są
     funkcjami zeroargumentowymi.
 
-    Definicję tę możemy udczytać następująco: "[true] jest typu [bool],
+    Definicję tę możemy odczytać następująco: "[true] jest typu [bool],
     [false] jest typu [bool] i nie ma żadnych więcej wartości typu
     [bool]".
 
@@ -4546,18 +4546,17 @@ end.
     ich ulepszeń, jak indukcja-indukcja, indukcja-rekursja etc.) jest
     niepełna. Tak jak świat pełen jest złoczyńców oszukujących starszych
     ludzi metodą "na wnuczka", tak nie każdy typ podający się za induktywny
-    faktycznie jest praworządnym obywatelem krainy typów induktywnych. *)
+    faktycznie jest praworządnym obywatelem krainy typów induktywnych.
 
-(** Na szczęście typy induktywne to istoty bardzo prostolinijne, zaś te złe
+    Na szczęście typy induktywne to istoty bardzo prostolinijne, zaś te złe
     można odróżnić od tych dobrych gołym okiem, za pomocą bardzo prostego
     kryterium: złe typy induktywne to te, które nie są ściśle pozytywne.
     Zanim jednak dowiemy się, jak rozpoznawać złe typy induktywne, poznajmy
     najpierw dwa powody, przez które złe typy induktywne są złe.
 
     Przyjrzyjmy się poniższemu typowemu przypadkowi negatywnego typu
-    induktywnego (czyli takiego, który wygląda na induktywny, ale ma
-    konstruktor typu funkcyjnego z wystąpieniem argumentu indukcyjnego
-    po lewej stronie strzałki): *)
+    induktywnego (co dokładnie znaczy w tym kontekście słowo "negatywny"
+    i jak takie typy rozpoznawać zobaczymy później): *)
 
 Fail Inductive wut (A : Type) : Type :=
     | C : (wut A -> A) -> wut A.
@@ -4575,7 +4574,7 @@ Fail Inductive wut (A : Type) : Type :=
 
     W naszym przypadku komenda [Fail] kończy się sukcesem, a zatem próba
     zdefiniowania powyższego typu induktywnego się nie powiodła. Wiadomość
-    o błędzie mówi podaje nam, jak na tacy, powód tej sytuacji: typ konstruktora
+    o błędzie podaje nam, jak na tacy, powód tej sytuacji: typ konstruktora
     [C] zawiera nie-ściśle-pozytywne wystąpienie definiowanego typu [wut A].
 
     Komenda [Fail c] ma też jednak pewne wady: poza poświadczeniem rezultatu
@@ -4607,16 +4606,11 @@ Set Positivity Checking.
 
 (** ** Nieterminacja jako źródło zła na świecie *)
 
-(* begin hide *)
-(*
-TODO: znaleźć prostszy przykład dot. ścisłej pozytywności
-*)
-(* end hide *)
-
 (** Pierwszym powodem nielegalności nie-ściśle-pozytywnych typów induktywnych
     jest to, że unieważniają one filozoficzną interpretację teorii typów i
-    ogólnie wszystkiego, co robimy w Coqu (co jednak jedynie czasami prowadzi
-    do sprzeczności bezpośrednio). Przyjrzyjmy się poniższemu programowi: *)
+    pozwalają łamać reguły dzięki którym to co robimy w Coqu ma jakikolwiek
+    sens (co jednak tylko czasami prowadzi do sprzeczności bezpośrednio).
+    Przyjrzyjmy się poniższemu programowi: *)
 
 Definition loop (A : Type) : A :=
   let f (w : wut A) : A :=
@@ -4641,10 +4635,10 @@ Definition santa_is_a_pedophile : False := loop False.
     bolączka jest przypadłością [loop], czego nietrudno domyślić się po nazwie.
 
     Dlaczego [loop] nie terminuje? Przyjrzyjmy się definicji: za pomocą [let]a
-    definiujemy funkcję [f : wut A -> A], która odpakowuje swój argument
-    [w], wyciąga z niego funkcję [g : wut A -> A] i aplikuje [g] do [w], czyli
+    definiujemy funkcję [f : wut A -> A], która odpakowuje swój argument [w],
+    wyciąga z niego funkcję [g : wut A -> A] i aplikuje [g] do [w], czyli do
     oryginalnego argumentu [f]. Wynikiem całego programu jest [f] zaaplikowane
-    do siebie samego zawiniętego w konstruktor [C] żeby typy się zgadzały.
+    do siebie samego zawiniętego w konstruktor [C] (żeby typy się zgadzały).
 
     Ta aplikacja czegoś do samego siebie to kolejny sygnał ostrzegawczy, który
     powinien wzbudzić naszą czujność. Ogólniej sytuacja, w której coś odnosi
@@ -4665,12 +4659,8 @@ Proof.
   cbv beta; cbv iota.
 Abort.
 
-(** 
-
-
-
-Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
-    programu:
+(** Jeżeli jesteś leniwy i nie masz włączonego CoqIDE, sprowadza się to do czegoś
+    w tym stylu:
 
     [loop A =]
 
@@ -4683,11 +4673,21 @@ Przyjrzyjmy się, jak przebiegają próby wykonania tego nieszczęsnego
     i tak dalej.
 
     To natomiast, co powinno nas tu zdziwić, to fakt, że [loop] jest funkcją
-    rekurencyjną
+    w pewnym sensie rekurencyjną (bo funkcja [f] wywołuje sama siebie), mimo
+    że przecież nie użyliśmy komendy [Fixpoint]!
 
-*)
+    To jest właśnie jeden z przejawów zamętu, jaki wprowadzają negatywny typy
+    induktywne - zmieniają reguły gry. Dotychczas [Fixpoint] (i [fix]) dawały
+    nam możliwość użycia rekursji (a w praktyce oznaczały, że rekursji faktycznie
+    użyliśmy), zaś [Definition] (i [fun]) świadczyło o tym, że funkcja nie jest
+    rekurencyjna. Od kiedy tylko Coq zaakceptował definicję typu [wut A], regułę
+    tę można bez przeszkód łamać, z opłakanymi konsekwencjami. *)
 
 End wut.
+
+(** Żeby przez przypadek nie użyć sprzeczności, którą daje nam typ [wut],
+    schowaliśmy ją w osobnym module, też nazwanym [wut]. Oczywiście wciąż
+    mamy do niej dostęp, ale teraz ciężej będzie się pomylić. *)
 
 (** **** Ćwiczenie *)
 
@@ -4699,11 +4699,14 @@ End wut.
     "polski" jest słowem polskim, ale słowo "niemiecki" nie jest słowem
     niemieckim. Słowa, które nie opisują samych siebie będziemy nazywać
     słowami heterologicznymi. Pytanie: czy słowo "heterologiczny" jest
-    heterologiczne? *)
+    heterologiczne?
 
-(** Czujesz sprzeczność? Innym przyk... dobra, wystarczy tych głupot.
+    Czujesz sprzeczność? Pytanie bonusowe/pomocnicze: jaki to ma w ogóle
+    związek z negatywnymi typami induktywnymi? *)
 
-    Przyjrzyjmy się teraz problemom filozoficznym powodowanym przez
+(** ** Filozoficzne konsekwencje nitereminacji *)
+
+(** Przyjrzyjmy się teraz problemom filozoficznym powodowanym przez
     nieterminację. W skrócie: zmienia ona fundamentalne właściwości
     obliczeń, co prowadzi do zmiany interpretacji pojęcia typu, zaś
     to pociąga za sobą kolejne przykre skutki, takie jak np. to, że
@@ -4740,8 +4743,8 @@ End wut.
 
 (** ** Twierdzenie Cantora *)
 
-(** Zanim zaczniemy ten rozdział na poważnie, mam dla ciebie wesoły łamaniec
-    językowy:
+(** Zanim zaczniemy ten podrozdział na poważnie, mam dla ciebie wesoły
+    łamaniec językowy:
 
     Cantor - kanciarz, który skradł zza kurtyny kantoru z Kantonu kontury
     kartonu Koranicznemu kanarowi, który czasem karał karczystych kafarów
@@ -5025,7 +5028,7 @@ Qed.
 (** Z Cantorem po naszej stronie możemy wreszcie kupić ruble... ekhem,
     możemy wreszcie zaprezentować ogólną metodę dowodzenia, że negatywne
     typy induktywne prowadzą do sprzeczności. Mimo szumnej nazwy ogólna
-    metoda nie jest aż taka ogólna i często będziemy musieli się bonusowo
+    metoda nie jest aż taka ogólna i czasem będziemy musieli się bonusowo
     napracować. *)
 
 Module Example1.
@@ -5043,16 +5046,9 @@ Set Positivity Checking.
 
 Arguments C {A} _.
 
-(* Axioms
-  (wut : Type -> Type)
-  (C : forall {A : Type}, (wut A -> A) -> wut A)
-  (dcase : forall
-    (A : Type)
-    (P : wut A -> Type)
-    (PC : forall f : wut A -> A, P (C f)),
-      {f : forall w : wut A, P w |
-        forall g : wut A -> A, f (C g) = PC g}).
- *)
+(* begin hide *)
+(* TODO: TUTAJ *)
+(* end hide *)
 
 (** [wut] to aksjomatyczne kodowanie tego samego typu, o którym poprzednio
     tylko udawaliśmy, że istnieje. Zauważmy, że nie jest nam potrzebna
@@ -5063,13 +5059,6 @@ Definition bad {A : Type} (w : wut A) : wut A -> A :=
 match w with
     | C f => f
 end.
-
-(* Definition bad (A : Type) : wut A -> (wut A -> A).
-Proof.
-  apply (dcase A (fun _ => wut A -> A)).
-  intro f. exact f.
-Defined.
- *)
 
 (** Dlaczego typ [wut A] jest nielegalny, a jego definicja za pomocą komendy
     [Inductive] jest odrzucana przez Coqa? Poza wspomnianymi w poprzednim
@@ -5363,15 +5352,22 @@ End Exercise4.
 
     Kryterium jest banalne. Mając dany typ [T] musimy rzucić okiem na jego
     konstruktory, a konkretniej na ich argumenty. Argumenty nieindukcyjne
-    (czyli o typach, w których nie występuje [T]) są zupełnie niegroźnie.
-    Interesować nas powinny jedynie argumenty indukcyjne, czyli takie, w
-    których występuje typ [T].
+    (czyli o typach, w których nie występuje [T]) są zupełnie niegroźne i
+    wobec tego powinniśmy je zignorować. Interesować nas będą wyłącznie
+    argumenty indukcyjne, czyli takie, w których występuje typ [T].
 
-    Niektóre typy argumentów indukcyjnych są niegroźne, np. [T * T], [T + T],
-    [list T] albo [{t : T | P t}], ale powodują one, że Coq nie potrafi
-    wygenerować odpowiedniej reguły indukcji i zadowala się jedynie regułą
+    Najbardziej podstawowy typ argumentu indukcyjnego, czyli samo [T], jest
+    rzecz jasna również niegroźny. To samo dotyczy argumentu indukcyjnego o
+    typie [nat -> T]. Wprawdzie jest on typu funkcyjnego, co, jak się zaraz
+    przekonamy, jest groźne, ale [T] występuje po prawej stronie strzałki,
+    więc wszystko jest w porządku.
+
+    Niektóre typy argumentów indukcyjnych również są niegroźne, np. [T * T],
+    [T + T], [list T] albo [{t : T | P t}], ale Coq nie potrafi wygenerować
+    dla nich odpowiedniej reguły indukcji, więc generuje jedynie regułę
     analizy przypadków. Nie prowadzą one do sprzeczności, ale powinniśmy ich
-    unikać.
+    unikać - każde takie wystąpienie argumentu indukcyjnego można łatwo
+    zrefaktoryzować.
 
     Argument typu [T * T] można zastąpić dwoma argumentami typu [T]
     i podobnie dla [{t : T | P t}]. Konstruktor z argumentem typu [T + T]
@@ -5387,7 +5383,8 @@ Inductive T0 : Type :=
     | c3 : nat * T0 -> T0
     | c4 : T0 * T0 -> T0
     | c5 : T0 + T0 -> T0
-    | c6 : list T0 -> T0.
+    | c6 : list T0 -> T0
+    | c7 : (nat -> T0) -> T0.
 
 (** Rodzaje nieszkodliwych typów argumentów widać na powyższym przykładzie.
     Konstruktory [c0] i [c1] są nieindukcyjne, więc są ok. Konstruktor [c2]
@@ -5402,8 +5399,8 @@ Inductive T0 : Type :=
 
     Konstruktory [c3], [c4], [c5] i [c6] są induktywne i również w pełni
     legalne, ale są one powodem tego, że Coq nie generuje dla [T0] reguły
-    indukcji, a jedynie regułę analizy przypadków (choć nazwa się ona
-    [T0_ind]). *)
+    indukcji, a jedynie regułę analizy przypadków (choć nazywa się ona
+    [T0_ind]). Konstruktor [c7] również jest w pełni legalny. *)
 
 (** **** Ćwiczenie *)
 
@@ -5419,6 +5416,7 @@ Inductive T0' : Type :=
     | c51 : T0' -> T0'
     | c52 : T0' -> T0'
     | c6' : List_T0' -> T0'
+    | c7' : (nat -> T0') -> T0'
 
 with List_T0' : Type :=
     | T0'_nil  : List_T0'
@@ -5434,7 +5432,7 @@ with List_T0' : Type :=
     typ [T] występował bezpośrednio na lewo od strzałki, ale oczywiście
     może on być dowolnie zagnieżdżony. Dla każdego wystąpienia [T] w
     argumentach możemy policzyć, na lewo od ilu strzałek się ono znajduje
-    (albo jak mocno zagnieżdżona jest dziedzina kwantyfikacji). Liczbę tę
+    (czyli jak mocno zagnieżdżona jest dziedzina kwantyfikacji). Liczbę tę
     nazywać będziemy niedobrością. W zależności od niedobrości,
     wystąpienie nazywamy:
     - 0 - wystąpienie ściśle pozytywne
@@ -5442,12 +5440,13 @@ with List_T0' : Type :=
     - liczba parzysta (poza 0) - wystąpienie pozytywne *)
 
 (** Jeżeli w definicji mamy wystąpienie negatywne, to typ możemy nazywać
-    negatywnym typem induktywnym (choć oczywiście nie jest to typ
+    negatywnym typem induktywnym (choć oczywiście nie jest to legalny typ
     induktywny). Jeżeli nie ma wystąpień negatywnych, ale są wystąpienia
-    pozytywne, to typ nazywamy pozytywnym typem induktywnym (lub nie ściśle
-    pozytywnym typem induktywnym), choć oczywiście również nie jest to typ
-    induktywny. Jeżeli wszystkiego wystąpienia są ściśle pozytywne, to mamy
-    do czynienia po prostu z typem induktywnym.
+    pozytywne, to typ nazywamy pozytywnym typem induktywnym (lub
+    nie-ściśle-pozytywnym typem induktywnym), choć oczywiście również nie
+    jest to legalny typ induktywny. Jeżeli wszystkiego wystąpienia są
+    ściśle pozytywne, to mamy do czynienia po prostu z typem induktywnym.
+    Parafrazując: każdy typ induktywny jest ściśle pozytywny.
 
     Podobne nazewnictwo możemy sobie wprowadzić dla konstruktorów
     (konstruktory negatywne, pozytywne i ściśle pozytywne), ale nie
