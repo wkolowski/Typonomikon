@@ -4630,9 +4630,9 @@ Definition santa_is_a_pedophile : False := loop False.
     sprzeczność (systematyczny sposób dostawania sprzeczności z istnienia
     takich typów zobaczymy później). W rzeczywistości jest nim nieterminacja.
 
-    Nieterminacja (ang. nontermination) lub kolokwialniej "zapętlenie" to
-    sytuacja, w której program nigdy nie skończy się wykonywać. Ta właśnie
-    bolączka jest przypadłością [loop], czego nietrudno domyślić się po nazwie.
+    Nieterminacja (ang. nontermination) lub kolokwialniej zapętlenie to sytuacja,
+    w której program nigdy nie skończy się wykonywać. Ta właśnie bolączka jest
+    przypadłością [loop], czego nietrudno domyślić się po nazwie.
 
     Dlaczego [loop] nie terminuje? Przyjrzyjmy się definicji: za pomocą [let]a
     definiujemy funkcję [f : wut A -> A], która odpakowuje swój argument [w],
@@ -4648,7 +4648,7 @@ Definition santa_is_a_pedophile : False := loop False.
     Żeby jeszcze lepiej zrozumieć nieterminację [loop], spróbujmy interaktywnie
     prześledzić, w jaki sposób program ten się oblicza. *)
 
-Goal loop nat = 42.
+Goal loop unit = tt.
 Proof.
   cbv delta [loop].
   cbv beta.
@@ -4681,43 +4681,18 @@ Abort.
     nam możliwość użycia rekursji (a w praktyce oznaczały, że rekursji faktycznie
     użyliśmy), zaś [Definition] (i [fun]) świadczyło o tym, że funkcja nie jest
     rekurencyjna. Od kiedy tylko Coq zaakceptował definicję typu [wut A], regułę
-    tę można bez przeszkód łamać, z opłakanymi konsekwencjami. *)
+    tę można bez przeszkód łamać, z opłakanymi konsekwencjami.
 
-End wut.
-
-(** Żeby przez przypadek nie użyć sprzeczności, którą daje nam typ [wut],
-    schowaliśmy ją w osobnym module, też nazwanym [wut]. Oczywiście wciąż
-    mamy do niej dostęp, ale teraz ciężej będzie się pomylić. *)
-
-(** **** Ćwiczenie *)
-
-(** Poniższą zagadkę pozwolę sobie wesoło nazwać "paradoks hetero". Zagadka
-    brzmi tak:
-
-    Niektóre słowa opisują same siebie, np. słowo "krótki" jest krótkie,
-    a niektóre inne nie, np. słowo "długi" nie jest długie. Podobnie słowo
-    "polski" jest słowem polskim, ale słowo "niemiecki" nie jest słowem
-    niemieckim. Słowa, które nie opisują samych siebie będziemy nazywać
-    słowami heterologicznymi. Pytanie: czy słowo "heterologiczny" jest
-    heterologiczne?
-
-    Czujesz sprzeczność? Pytanie bonusowe/pomocnicze: jaki to ma w ogóle
-    związek z negatywnymi typami induktywnymi? *)
-
-(** ** Filozoficzne konsekwencje nitereminacji *)
-
-(** Przyjrzyjmy się teraz problemom filozoficznym powodowanym przez
+    Przyjrzyjmy się teraz problemom filozoficznym powodowanym przez
     nieterminację. W skrócie: zmienia ona fundamentalne właściwości
     obliczeń, co prowadzi do zmiany interpretacji pojęcia typu, zaś
     to pociąga za sobą kolejne przykre skutki, takie jak np. to, że
-    reguły eliminacji tracą swoje uzasadnienie.
+    reguły eliminacji tracą swoje uzasadnienie. Brzmi mega groźnie,
+    prawda?
 
-    Brzmi mega groźnie, prawda? Kiedy wspomniałem o tym Sokratesowi, to
-    sturlał się z podłogi na sufit bez pośrednictwa ściany.
-
-    Na szczęście tak naprawdę, to sprawa jest prosta. W Coqu wymagamy, aby
-    każde obliczenie się kończyło. Wartości, czyli końcowe wyniki obliczeń
-    (które są też nazywane postaciami kanonicznymi albo normalnymi), możemy
+    Na szczęście tak naprawdę, to sprawa jest prosta. W Coqu wymagamy,
+    aby każde obliczenie się kończyło. Końcowe wyniki obliczeń (zwane też
+    wartościami, postaciami kanonicznymi lub postaciami normalnymi) możemy
     utożsamiać z elementami danego typu. Dla przykładu wynikami obliczania
     termów typu [bool] są [true] i [false], więc możemy myśleć, że są to
     elementy typu [bool] i [bool] składa się tylko z nich. To z kolei daje
@@ -4740,6 +4715,104 @@ End wut.
 
     Morał jest prosty: nieterminacja to wynalazek szatana, a negatywne
     typy induktywne to też wynalazek szatana. *)
+
+(** **** Ćwiczenie *)
+
+(** Użyj typu [wut nat] żeby zdefiniować nieskończoną liczbę naturalną [omega]
+    (jeżeli szukasz inspiracji, zerknij na definicję [loop]). Następnie udowodnij,
+    że [omega] jest większa od każdej innej liczby naturalnej. *)
+
+(* begin hide *)
+Definition f (w : wut.wut nat) : nat :=
+  S match w with
+        | wut.C _ g => g w
+    end.
+
+Definition omega : nat :=
+  f (wut.C _ f).
+(* end hide *)
+
+Lemma lt_n_omega :
+  forall n : nat, n < omega.
+(* begin hide *)
+Proof.
+  induction n as [| n'].
+    apply le_n_S, le_0_n.
+    apply lt_n_S, IHn'.
+Qed.
+(* end hide *)
+
+(** **** Ćwiczenie *)
+
+(** Jakie elementy ma typ [nat]? Wypisz kilka początkowych, a potem opisz
+    ogólną zasadę ich powstawania.
+
+    Napisz jakiś term [t : nat], który nie jest wartością, ale terminuje.
+    Jaki jest wynik obliczenia tego termu?
+
+    Następnie przyjrzyj się termowi [loop nat]. Czy term ten terminuje?
+    Pobaw się nim w trybie dowodzenia, żeby się przekonać (że nie, bo
+    niby czego innego się spodziewałeś?).
+
+    Przypomnij sobie regułę indukcji dla [nat]. Gdyby udowodnić przez
+    indukcję [forall n : nat, P n], jak wygląda dowód [P t], gdzie [t]
+    to term, który napisałeś powyżej? A jak wygląda dowód [P (loop nat)]? *)
+
+(** **** Ćwiczenie *)
+
+(** Spróbujmy lepiej zrozumieć, o co chodzi z tym, że reguły eliminacji "tracą
+    swoje uzasadnienie": udowodnij, że dla każdej liczby naturalnej istnieje
+    liczba od niej większa (zdaje się, że już to przerabialiśmy). *)
+
+Lemma no_greatest :
+  forall n : nat, exists m : nat, n < m.
+(* begin hide *)
+Proof.
+  induction n as [| n' [m IH]].
+    exists 1. apply le_n.
+    exists (S m). apply lt_n_S. assumption.
+Qed.
+(* end hide *)
+
+(** Jak to możliwe, że udało nam się udowodnić to twierdzenie, skoro przecież
+    w poprzedinm ćwiczeniu udowodniliśmy, że największą liczbą naturalną jest
+    [omega]?
+
+    Ano, [omega] jest niestandardową liczbą naturalną - pomiotem szatana
+    powstałym w wyniku nieterminacji - i w związku z tym indukcja milczy
+    na jej temat. Parafrazując: żeby udowodnić coś dla wszystkich liczb
+    naturalnych przez indukcję, w ogóle nie musimy przejmować się omegą.
+    Chyba nie trzeba dodawać, że to kolejna droga prowadząca prosto do
+    sprzeczności? *)
+
+Lemma yes_and_no : False.
+Proof.
+  destruct (no_greatest omega) as [n H1].
+  assert (H2 := lt_n_omega n).
+  apply Nat.lt_asymm in H1.
+  contradiction.
+Qed.
+
+(** **** Ćwiczenie *)
+
+(** Poniższą zagadkę pozwolę sobie wesoło nazwać "paradoks hetero". Zagadka
+    brzmi tak:
+
+    Niektóre słowa opisują same siebie, np. słowo "krótki" jest krótkie,
+    a niektóre inne nie, np. słowo "długi" nie jest długie. Podobnie słowo
+    "polski" jest słowem polskim, ale słowo "niemiecki" nie jest słowem
+    niemieckim. Słowa, które nie opisują samych siebie będziemy nazywać
+    słowami heterologicznymi. Pytanie: czy słowo "heterologiczny" jest
+    heterologiczne?
+
+    Czujesz sprzeczność? Pytanie bonusowe/pomocnicze: jaki to ma w ogóle
+    związek z negatywnymi typami induktywnymi? *)
+
+End wut.
+
+(** Żeby przez przypadek nie użyć żadnej ze sprzeczności, które daje nam typ
+    [wut], schowaliśmy je w osobnym module, też nazwanym [wut]. Oczywiście
+    wciąż mamy do nich dostęp, ale teraz ciężej będzie nam się pomylić. *)
 
 (** ** Twierdzenie Cantora *)
 
