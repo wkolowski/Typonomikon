@@ -5119,33 +5119,26 @@ Set Positivity Checking.
 
 Arguments C {A} _.
 
-(* begin hide *)
-(* TODO: TUTAJ *)
-(* end hide *)
+(** Podobnie jak poprzednio, żeby Coq pozwolił nam zdefiniować [wut] musimy
+    na czas definicji wyłączyć sprawdzanie kryterium ścisłej pozytywności.
+    Dlaczego bez wykonania tego zabiegu typ [wut A] jest nielegalny, a jego
+    definicja zostałaby przez Coqao drzucona? Poza wspomnianymi w poprzednim
+    podrozdziale problemami filozoficznymi wynikającymi z nieterminacji,
+    jest też drugi, bardziej namacalny powód: istnienie typu [wut A] jest
+    sprzeczne z (uogólnionym) twierdzeniem Cantora. *)
 
-(** [wut] to aksjomatyczne kodowanie tego samego typu, o którym poprzednio
-    tylko udawaliśmy, że istnieje. Zauważmy, że nie jest nam potrzebna
-    reguła indukcji - wystarczy jeden z prostszych eliminatorów, mianowicie
-    [dcase], czyli zależna reguła analizy przypadków. *)
-
-Definition bad {A : Type} (w : wut A) : wut A -> A :=
+Definition extract {A : Type} (w : wut A) : wut A -> A :=
 match w with
     | C f => f
 end.
 
-(** Dlaczego typ [wut A] jest nielegalny, a jego definicja za pomocą komendy
-    [Inductive] jest odrzucana przez Coqa? Poza wspomnianymi w poprzednim
-    podrozdziale problemami filozoficznymi wynikającymi z nieterminacji,
-    jest też drugi, bardziej namacalny powód: istnienie typu [wut A] jest
-    sprzeczne z (uogólnionym) twierdzeniem Cantora.
-
-    Powód tej sprzeczności jest dość prozaiczny: za pomocą konstruktora [C]
+(** Powód tej sprzeczności jest dość prozaiczny: za pomocą konstruktora [C]
     możemy z dowolnej funkcji [wut A -> A] zrobić element [wut A], a skoro
-    tak, to dowolne [w : wut A] możemy odpakować i wyjąć z niego funkcję
-    [f : wut A -> A]. *)
+    tak, to dowolny element typu [wut A] możemy odpakować i wyjąć z niego
+    funkcję o typie [wut A -> A]. *)
 
-Lemma surjective_bad :
-  forall A : Type, surjective (@bad A).
+Lemma surjective_extract :
+  forall A : Type, surjective (@extract A).
 Proof.
   unfold surjective.
   intros A f.
@@ -5157,11 +5150,11 @@ Qed.
     istnieje element, z którego możemy ją wyjąć, a zatem mamy do czynienia
     z surjekcją. *)
 
-Lemma worst : False.
+Lemma wut_illegal : False.
 Proof.
-  apply (Cantor' (@bad bool) negb).
+  apply (Cantor' (@extract bool) negb).
     destruct b; inversion 1.
-    apply surjective_bad.
+    apply surjective_extract.
 Qed.
 
 (** W połączeniu zaś z twierdzeniem Cantora surjekcja [wut A -> (wut A -> A)]
@@ -5175,38 +5168,33 @@ End Example1.
 
     Początkowo miałem opisać kilka przypadków z większą liczbą konstruktorów,
     ale stwierdziłem, że jednak mi się nie chce. W ćwiczeniach zobaczymy, czy
-    będziesz w stanie sam wykombinować, jak się z nimi uporać. *)
+    będziesz w stanie sam wykombinować, jak się z nimi uporać (wskazówka: jest
+    to bardzo łatwe, wystarczy chcieć i nie być leniwym jak ja). *)
 
 (** **** Ćwiczenie *)
 
 (** Poniższe paskudztwo łamie prawo ścisłej pozytywności nie jednym, lecz
-    aż dwoma swoimi konstruktorami.
-
-    Zakoduj ten typ aksjomatycznie i udowodnij, że jego istnienie prowadzi
+    aż dwoma swoimi konstruktorami. Udowodnij, że jego istnienie prowadzi
     do sprzeczności. Metoda jest podobna jak w naszym przykładzie, ale
     trzeba ją troszkę dostosować do zastanej sytuacji. *)
 
 Module Exercise1.
 
-Fail Inductive wut : Type :=
-    | C0 : (wut -> bool) -> wut
-    | C1 : (wut -> nat) -> wut.
-
-(* begin hide *)
 Unset Positivity Checking.
 Inductive wut : Type :=
     | C0 : (wut -> bool) -> wut
     | C1 : (wut -> nat) -> wut.
 Set Positivity Checking.
 
-Definition bad (w : wut) : wut -> bool :=
+(* begin hide *)
+Definition extract (w : wut) : wut -> bool :=
 match w with
     | C0 f => f
     | C1 _ => fun _ => true
 end.
 
-Lemma surjective_bad :
-  surjective bad.
+Lemma surjective_extract :
+  surjective extract.
 Proof.
   red. intros.
   exists (C0 b).
@@ -5217,9 +5205,9 @@ Qed.
 Lemma wut_illegal : False.
 (* begin hide *)
 Proof.
-  apply (Cantor' bad negb).
+  apply (Cantor' extract negb).
     destruct b; inversion 1.
-    apply surjective_bad.
+    apply surjective_extract.
 Qed.
 (* end hide *)
 
@@ -5228,31 +5216,27 @@ End Exercise1.
 (** **** Ćwiczenie *)
 
 (** Poniższe paskudztwo ma jeden konstruktor negatywny, a drugi pozytywny,
-    niczym typowa panienka z borderlinem...
+    niczym typowa panienka z borderlajnem...
 
     Polecenie jak w poprzednim ćwiczeniu. *)
 
 Module Exercise2.
 
-Fail Inductive wut : Type :=
-    | C0 : (wut -> wut) -> wut
-    | C1 : nat -> wut.
-
-(* begin hide *)
 Unset Positivity Checking.
 Inductive wut : Type :=
     | C0 : (wut -> wut) -> wut
     | C1 : nat -> wut.
 Set Positivity Checking.
 
-Definition bad (w : wut) : wut -> wut :=
+(* begin hide *)
+Definition extract (w : wut) : wut -> wut :=
 match w with
     | C0 f => f
     | C1 _ => id
 end.
 
-Lemma surjective_bad :
-  surjective bad.
+Lemma surjective_extract :
+  surjective extract.
 Proof.
   red. intros.
   exists (C0 b).
@@ -5276,9 +5260,9 @@ Lemma wut_illegal : False.
 (* begin hide *)
 Proof.
   Check Cantor'.
-  eapply (Cantor' bad modify).
+  eapply (Cantor' extract modify).
     apply modify_neq.
-    apply surjective_bad.
+    apply surjective_extract.
 Qed.
 (* end hide *)
 
@@ -5298,12 +5282,6 @@ End Exercise2.
 
 Module Exercise3.
 
-Fail Inductive Term (V : Type) : Type :=
-    | Var : V -> Term V
-    | Lam : (Term V -> Term V) -> Term V
-    | App : Term V -> Term V -> Term V.
-
-(* begin hide *)
 Unset Positivity Checking.
 Inductive Term (V : Type) : Type :=
     | Var : V -> Term V
@@ -5315,15 +5293,16 @@ Arguments Var {V} _.
 Arguments Lam {V} _.
 Arguments App {V} _ _.
 
-Definition bad {V : Type} (t : Term V) : Term V -> Term V :=
+(* begin hide *)
+Definition extract {V : Type} (t : Term V) : Term V -> Term V :=
 match t with
     | Var v => id
     | Lam f => f
     | App _ _ => id
 end.
 
-Lemma surjective_bad :
-  forall {V : Type}, surjective (@bad V).
+Lemma surjective_extract :
+  forall {V : Type}, surjective (@extract V).
 Proof.
   red. intros.
   exists (Lam b).
@@ -5348,8 +5327,8 @@ Qed.
 Lemma Term_illegal : False.
 (* begin hide *)
 Proof.
-  eapply (Cantor' (@bad unit)). Unshelve. all: cycle 1.
-    apply surjective_bad.
+  eapply (Cantor' (@extract unit)). Unshelve. all: cycle 1.
+    apply surjective_extract.
     apply modify.
     apply modify_neq.
 Qed.
@@ -5359,29 +5338,26 @@ End Exercise3.
 
 (** **** Ćwiczenie *)
 
-(** Poniższe bydle jest najgorsze z możliwych - póki co nie wiem, jak to
-    udowodnić. Powodzenia! *)
+(** Poniższe bydle jeszcze do niedawna wydawało mi się całkiem trudne i problematyczne,
+    ale oczywiście jest bardzo proste. Uszy do góry i do dzieła! *)
 
 Module Exercise4.
 
-Fail Inductive wut : Type :=
-    | C : (wut -> wut) -> wut.
-
-(* begin hide *)
 Unset Positivity Checking.
 Inductive wut : Type :=
     | C : (wut -> wut) -> wut.
 Set Positivity Checking.
 
-Definition bad :
+(* begin hide *)
+Definition extract :
   wut -> (wut -> wut).
 Proof.
   destruct 1 as [f].
   assumption.
 Defined.
 
-Lemma surjective_bad :
-  surjective bad.
+Lemma surjective_extract :
+  surjective extract.
 Proof.
   unfold surjective.
   intro f.
@@ -5408,9 +5384,9 @@ Qed.
 Lemma wut_illegal : False.
 (* begin hide *)
 Proof.
-  apply (Cantor' bad modify).
+  apply (Cantor' extract modify).
     apply modify_neq.
-    unfold surjective. apply surjective_bad.
+    apply surjective_extract.
 Qed.
 (* end hide *)
 
@@ -5430,17 +5406,18 @@ End Exercise4.
     argumenty indukcyjne, czyli takie, w których występuje typ [T].
 
     Najbardziej podstawowy typ argumentu indukcyjnego, czyli samo [T], jest
-    rzecz jasna również niegroźny. To samo dotyczy argumentu indukcyjnego o
-    typie [nat -> T]. Wprawdzie jest on typu funkcyjnego, co, jak się zaraz
-    przekonamy, jest groźne, ale [T] występuje po prawej stronie strzałki,
-    więc wszystko jest w porządku.
+    rzecz jasna niegroźny. To samo dotyczy argumentu indukcyjnego o typie
+    [nat -> T]. Wprawdzie jest on typu funkcyjnego, co, jak się zaraz przekonamy,
+    jest groźne, ale [T] występuje po prawej stronie strzałki, więc wszystko jest
+    w porządku. W ogólności w porządku są też argumenty typu [A -> T], gdzie [A]
+    jest znanym typem niezależącym od [T].
 
     Niektóre typy argumentów indukcyjnych również są niegroźne, np. [T * T],
-    [T + T], [list T] albo [{t : T | P t}], ale Coq nie potrafi wygenerować
-    dla nich odpowiedniej reguły indukcji, więc generuje jedynie regułę
-    analizy przypadków. Nie prowadzą one do sprzeczności, ale powinniśmy ich
-    unikać - każde takie wystąpienie argumentu indukcyjnego można łatwo
-    zrefaktoryzować.
+    [T + T], [list T] albo [{t : T | P t}], ale ich użycie sprawia, że Coq nie
+    potrafi wygenerować dla definiowanego typu odpowiedniej reguły indukcji,
+    więc generuje jedynie regułę analizy przypadków. Te typy argumentów nie
+    prowadzą do sprzeczności, ale powinniśmy ich unikać, bo są upierdliwe i
+    każde takie wystąpienie argumentu indukcyjnego można łatwo zrefaktoryzować.
 
     Argument typu [T * T] można zastąpić dwoma argumentami typu [T]
     i podobnie dla [{t : T | P t}]. Konstruktor z argumentem typu [T + T]
@@ -5496,10 +5473,11 @@ with List_T0' : Type :=
     | T0'_cons : T0' -> List_T0' -> List_T0'.
 (* end hide *)
 
-(** Problem pojawia się dopiero, gdy typ [T] występuje po lewej stronie
-    strzałki, np. [T -> bool], [T -> T], [(T -> T) -> T], lub gdy jest
-    skwantyfikowany uniwersalnie, np. [forall t : T, P t],
-    [forall f : (forall t : T, P t), Q f].
+(** Problem pojawia się dopiero wtedy, gdy typ [T] występuje po lewej
+    stronie strzałki, np. [T -> bool], [T -> T], [(T -> T) -> T], lub
+    gdy jest skwantyfikowany uniwersalnie, np. [forall t : T, P t] (typ
+    [T] jest dziedziną kwantyfikacji) lub [forall f : (forall t : T, P t), Q f]
+    (tym razem [T] jest dziedziną dziedziny kwantyfikacji).
 
     W trzech poprzednich podrozdziałach mierzyliśmy się z sytuacjami, gdy
     typ [T] występował bezpośrednio na lewo od strzałki, ale oczywiście
@@ -5510,15 +5488,15 @@ with List_T0' : Type :=
     wystąpienie nazywamy:
     - 0 - wystąpienie ściśle pozytywne
     - liczba nieparzysta - wystąpienie negatywne
-    - liczba parzysta (poza 0) - wystąpienie pozytywne *)
+    - liczba parzysta (poza 0) - wystąpienie pozytywne
 
-(** Jeżeli w definicji mamy wystąpienie negatywne, to typ możemy nazywać
+    Jeżeli w definicji mamy wystąpienie negatywne, to typ możemy nazywać
     negatywnym typem induktywnym (choć oczywiście nie jest to legalny typ
     induktywny). Jeżeli nie ma wystąpień negatywnych, ale są wystąpienia
     pozytywne, to typ nazywamy pozytywnym typem induktywnym (lub
     nie-ściśle-pozytywnym typem induktywnym), choć oczywiście również nie
-    jest to legalny typ induktywny. Jeżeli wszystkiego wystąpienia są
-    ściśle pozytywne, to mamy do czynienia po prostu z typem induktywnym.
+    jest to legalny typ induktywny. Jeżeli wszystkie wystąpienia są ściśle
+    pozytywne, to mamy do czynienia po prostu z typem induktywnym.
     Parafrazując: każdy typ induktywny jest ściśle pozytywny.
 
     Podobne nazewnictwo możemy sobie wprowadzić dla konstruktorów
@@ -5526,11 +5504,13 @@ with List_T0' : Type :=
     ma sensu, bo za tydzień i tak zapomnisz o tych mało istotnych detalach.
     Ważne, żebyś zapamiętał najważniejsze, czyli ideę. *)
 
-Fail Inductive T1 : Type :=
+(*
+Inductive T1 : Type :=
     | T1_0 : T1 -> T1
     | T1_1 : (T1 -> T1) -> T1
     | T1_2 : ((T1 -> T1) -> T1) -> T1
     | T1_3 : forall (t : T1) (P : T1 -> Prop), P t -> T1.
+*)
 
 (** W powyższym przykładzie wystąpienie [T1] w pierwszym argumencie
     [T1_0] jest ściśle pozytywne (na lewo od 0 strzałek). Pierwsze
@@ -5545,12 +5525,13 @@ Fail Inductive T1 : Type :=
 
     Konstruktor [T1_0] jest ściśle pozytywny, zaś konstruktory [T1_1],
     [T1_2] oraz [T1_3] są negatywne. Wobec tego typ [T1] jest negatywnym
-    typem induktywnym (czyli wynalazkiem szatana, którego zaakceptowanie
-    prowadzi do sprzeczności). *)
+    typem induktywnym (czyli nie jest legalnym typem induktywnym i dlatego
+    właśnie Coq odrzuca jego definicję). *)
 
 (** **** Ćwiczenie *)
 
-Fail Inductive T2 : Type :=
+(*
+Inductive T2 : Type :=
     | T2_0 :
         forall f : (forall g : (forall t : T2, nat), Prop), T2
     | T2_1 :
@@ -5558,6 +5539,7 @@ Fail Inductive T2 : Type :=
     | T2_2 :
       ((forall (n : nat) (P : T2 -> Prop),
         (forall t : T2, nat)) -> T2) -> T2 -> T2 -> T2.
+*)
 
 (** Policz niedobrość każdego wystąpienia [T2] w powyższej definicji.
     Sklasyfikuj konstruktory jako negatywne, pozytywne lub ściśle
@@ -5592,13 +5574,15 @@ Fail Inductive T2 : Type :=
 
 (** ** Kilka bonusowych pułapek *)
 
-(** Wiemy już, że niektóre typy argumentów indukcyjnych są ok ([T * T],
-    [list T]), a niektóre inne nie ([T -> T], [forall t : T, ...]).
-    Uważny i żądny wiedzy czytelnik (daj boże, żeby tacy istnieli) zeche
-    zapewne postawić sobie pytanie: które dokładnie typy argumentów
-    indukcyjnych są ok, a które są wynalazkiem szatana?
+(** Wiemy już, że niektóre typy argumentów indukcyjnych są ok ([T], [A -> T]),
+    inne problematyczne ([T * T], [list T]), a jeszcze inne nielegalne ([T -> T],
+    [forall t : T, ...]). Uważny i żądny wiedzy czytelnik (daj boże, żeby tacy
+    istnieli) zeche zapewne postawić sobie pytanie: które dokładnie typy argumentów
+    indukcyjnych są ok, a które są wynalazkiem szatana? *)
 
-    Najprościej będzie sprawę zbadać empirycznie, czyli na przykładzie.
+(** *** Zabawy z parametrami *)
+
+(** Najprościej będzie sprawę zbadać empirycznie, czyli na przykładzie.
     Żeby zaś przykład był reprezentatywny, niech parametrem definicji
     będzie dowolna funkcja [F : Type -> Type]. *)
 
@@ -5626,52 +5610,51 @@ Fail Inductive wut (F : Type -> Type) : Type :=
 
 (** **** Ćwiczenie *)
 
-Module wutF.
-
-Definition F (A : Type) : Type := A -> bool.
-
-(** Zakoduj aksjomatycznie rodzinę typów [wut] z powyższego przykładu.
-    Następnie wstaw za parametr zdefiniowane powyżej [F] i udowodnij,
-    że typ [wut F] prowadzi do sprzeczności. *)
+(** Zdefiniuj rodzinę typów z powyższego przykładu (wyłączając sprawdzanie
+    kryterium ścisłej pozytywności) i udowodnij, że jej istnienie prowadzi
+    do sprzeczności. *)
 
 (* begin hide *)
+Module wutF.
 
 Unset Positivity Checking.
 Inductive wut (F : Type -> Type) : Type :=
     | wut_0 : F (wut F) -> wut F.
 Set Positivity Checking.
 
-Definition bad (w : wut F) : wut F -> bool :=
+Definition F (A : Type) : Type := A -> bool.
+
+Definition extract (w : wut F) : wut F -> bool :=
 match w with
     | wut_0 _ f => f
 end.
 
-Lemma surjective_bad :
-  surjective bad.
+Lemma surjective_extract :
+  surjective extract.
 Proof.
   red. intros.
   exists (wut_0 _ b).
   cbn. reflexivity.
 Qed.
 
-Lemma bad_not_sur :
-  ~ surjective bad.
+Lemma extract_not_sur :
+  ~ surjective extract.
 Proof.
   unfold surjective. intro H.
-  destruct (H (fun w : wut F => negb (bad w w))) as [w eq].
+  destruct (H (fun w : wut F => negb (extract w w))) as [w eq].
   apply (f_equal (fun f => f w)) in eq.
-  destruct (bad w w); inversion eq.
+  destruct (extract w w); inversion eq.
 Qed.
-(* end hide *)
 
 Lemma wut_illegal : False.
-(* begin hide *)
 Proof.
-  apply bad_not_sur. apply surjective_bad.
+  apply extract_not_sur. apply surjective_extract.
 Qed.
-(* end hide *)
 
 End wutF.
+(* end hide *)
+
+(** *** Pułapki dla indukcji wzajemnej *)
 
 (** To jeszcze nie koniec wrażeń na dziś - póki co omówiliśmy wszakże
     kryterium ścisłej pozytywności jedynie dla bardzo prostych typów
@@ -5679,7 +5662,8 @@ End wutF.
     wzajemnie induktywnych czy indeksowanych typów induktywnych. Nie
     trudno będzie nam jednak uzupełnić naszą wiedzę, gdyż w przypadku
     oby tych mechanizmów kryterium ścisłej pozytywności wygląda podobnie
-    jak w znanych nam już przypadkach. *)
+    jak w znanych nam już przypadkach (choć jest kilka kruczków, na które
+    trzeba uważać). Spójrzmy na poniższy przykład: *)
 
 Fail Inductive X : Type :=
     | X0 : X
@@ -5693,25 +5677,26 @@ with Y : Type :=
         Non strictly positive occurrence of "Y"
         in "(Y -> X) -> X". *)
 
-(** Jak widać, definicja [X] i [Y] przez wzajemną indukcję jest nielegalna,
-    gdyż jedyny argument konstruktora [X1] ma typ [Y -> X]. Mogłoby wydawać
-    się, że wszystko jest w porządku, wszakże [X] występuje tutaj na pozycji
-    ściśle pozytywnej. Jednak ponieważ jest to definicja przez indukcję
-    wzajemną, kryterium ścisłej pozytywności stosuje się nie tylko do
-    wystąpień [X], ale także do wystąpień [Y] - wszystkie wystąpienia [X]
-    oraz [Y] muszą być ściśle pozytywne zarówno w konstruktorach typu [X],
+(** Jak widać, powyższa definicja [X] i [Y] przez wzajemną indukcję jest
+    nielegalna, gdyż jedyny argument konstruktora [X1] ma typ [Y -> X].
+    Mogłoby wydawać się, że wszystko jest w porządku, wszakże [X] występuje
+    tutaj na pozycji ściśle pozytywnej. Jednak ponieważ jest to definicja
+    przez indukcję wzajemną, kryterium ścisłej pozytywności stosuje się nie
+    tylko do wystąpień [X], ale także do wystąpień [Y] - wszystkie wystąpienia
+    [X] oraz [Y] muszą być ściśle pozytywne zarówno w konstruktorach typu [X],
     jak i w konstruktorach typu [Y]. *)
 
 (** **** Ćwiczenie *)
 
-(** Zakoduj aksjomatycznie definicję typów [X] i [Y]. Spróbuj napisać
-    zapętlającą się funkcję [loop] (czy raczej dwie wzajemnie rekurencyjne
-    zapętlające się funkcje [loopx] i [loopy]), a następnie udowodnij za
-    pomocą twierdzenia Cantora, że typy [X] i [Y] są nielegalne. *)
-
-Module XY.
+(** Zdefiniuj typy [X] i [Y] wyłączając positivity checker. Udowodnij za
+    pomocą twierdzenia Cantora, że typy [X] i [Y] są nielegalne. Zdefiniuj
+    też nieterminujące elementy [loopx : X] oraz [loopy : Y] i pobaw się
+    nimi w trybie dowodzenia, żeby upewnić się, że faktyzcnie nie terminują.
+    Pytanie bonusowe: czy do zdefiniowania [loopx] i [loopy] konieczna jest
+    rekursja wzajemna? *)
 
 (* begin hide *)
+Module XY.
 
 Unset Positivity Checking.
 Inductive X : Type :=
@@ -5723,7 +5708,7 @@ with Y : Type :=
     | Y1 : X -> Y.
 Set Positivity Checking.
 
-Definition bad (x : X) : X -> X :=
+Definition extract (x : X) : X -> X :=
 match x with
     | X0 => id
     | X1 f => fun x' : X => f (Y1 x')
@@ -5731,8 +5716,8 @@ end.
 
 Require Import FunctionalExtensionality.
 
-Lemma surjective_bad :
-  surjective bad.
+Lemma surjective_extract :
+  surjective extract.
 Proof.
   red. intro f.
   exists (X1 (fun y => match y with | Y0 => f X0 | Y1 x => f x end)).
@@ -5752,24 +5737,47 @@ Proof.
   destruct x; inversion 1.
 Qed.
 
-Definition loop (x : X) : X := bad x x.
-
-Lemma loop_nontermination :
-  X0 = loop (X1 (fun y => match y with | Y0 => X0 | Y1 x' => loop x' end)).
-Proof.
-Abort.
-(* end hide *)
-
 Lemma XY_illegal : False.
-(* begin hide *)
 Proof.
-  apply (Cantor' bad modify).
+  apply (Cantor' extract modify).
     apply modify_neq.
-    apply surjective_bad.
+    apply surjective_extract.
 Qed.
-(* end hide *)
+
+Definition loopx : X :=
+  let
+    f (y : Y) : X :=
+      match y with
+          | Y1 (X1 h) => h y
+          | _         => X0
+      end
+  in
+    f (Y1 (X1 f)).
+
+Lemma loopx_nontermination :
+  loopx = X0.
+Proof.
+  cbv delta [loopx] zeta.
+  cbv beta. cbv iota.
+
+  cbv beta. cbv iota.
+  cbv beta. cbv iota.
+Abort.
+
+Definition loopy : Y := Y1 loopx.
+
+Lemma loopy_nontermination :
+  loopy = Y0.
+Proof.
+  cbv delta [loopy loopx] zeta.
+  cbv beta. cbv iota.
+
+  cbv beta. cbv iota.
+  cbv beta. cbv iota.
+Abort.
 
 End XY.
+(* end hide *)
 
 (** ** Jeszcze więcej pułapek *)
 
@@ -5802,30 +5810,9 @@ Set Positivity Checking.
 
 (** Przyjrzyjmy się powyższej definicji. Występienie indukcyjne typu [T3]
     ma współczynnik niedobrości równy 3, gdyż znajduje się na lewo od 3
-    strzałek. Prawe strony wszystkich z nich to [bool]. *)
-
-(* Axioms
-  (T3 : Type)
-  (T3_0 : (((T3 -> bool) -> bool) -> bool) -> T3)
-  (T3_case :
-    forall
-      (P : T3 -> Type)
-      (PT3_0 : forall f : ((T3 -> bool) -> bool) -> bool, P (T3_0 f)),
-        {f : forall x : T3, P x |
-          forall g : ((T3 -> bool) -> bool) -> bool,
-            f (T3_0 g) = PT3_0 g}).
- *)
-
-(** Po ciężkich bojach, przez które przeszedłeś, aksjomatyczne kodowanie
-    tego typu nie powinno cię dziwić. Warto zauważyć jedynie, że do naszej
-    dyspozycji mamy jedynie regułę zależnej analizy przypadków, gdyż nie
-    wiadomo, jak miałyby wyglądać wywołania indukcyjne.
-
-    Zanim zobaczymy, jak pokazać nielegalność tego typu metodą Cantora,
-    przypomnijmy sobie pewien kluczowy fakt dotyczący negacji i jego
-    banalne uogólnienie. *)
-
-(** **** Ćwiczenie *)
+    strzałek. Prawe strony wszystkich z nich to [bool]. Zanim zobaczymy,
+    jak pokazać nielegalność tego typu metodą Cantora, przypomnijmy sobie
+    pewien kluczowy fakt dotyczący negacji i jego banalne uogólnienie. *)
 
 Lemma triple_negation :
   forall P : Prop, ~ ~ ~ P -> ~ P.
@@ -5843,33 +5830,35 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Ćwiczenie to przypomina nam, że jeżeli chodzi o spamowanie negacją, to
+(** Fakt ten przypomina nam, że jeżeli chodzi o spamowanie negacją, to
     są w zasadzie tylko trzy sytuacje:
     - brak negacji
     - pojedyncza negacja
-    - podwójna negacja *)
+    - podwójna negacja
 
-(** Jeżeli mamy do czynienia z większą liczbą negacji, to możemy zdejmować
+    Jeżeli mamy do czynienia z większą liczbą negacji, to możemy zdejmować
     po dwie aż dojdziemy do któregoś z powyższych przypadków. Ponieważ
     negacja to tylko implikacja, której kodziedziną jest [False], a nie
     korzystamy w dowodzie z żadnych specjalnych właściwości [False],
     analogiczna właściwość zachodzi także dla dowolnego innego [B : Type]. *)
 
-Definition bad (x : T3) : T3 -> bool :=
+Definition extract (x : T3) : T3 -> bool :=
 match x with
     | T3_0 f => fun y : T3 => f (fun g => g y)
 end.
 
-(** Wobec powyższych rozważań definicja funkcji bad zupełnie nie powinna
-    cię zaskakiwać. Szczerze pisząc, reszta dowodu również nie jest jakoś
-    specjalnie wymagająca czy oświecająca. *)
+(** Wobec powyższych rozważań definicja funkcji [extract] zupełnie nie powinna
+    cię zaskakiwać (a jeżeli cię zaskakuje, to sprawdź jak wygląda term, który
+    skonstruowałeś dowodząc [triple_arrow] - jeżeli zrobiłeś to dobrze, to
+    powinien wyglądać podobnie do definicji [extract]). Szczerze pisząc, reszta
+    dowodu również nie jest jakoś specjalnie wymagająca czy oświecająca. *)
 
 (** **** Ćwiczenie *)
 
 (** Dokończ dowód. *)
 
-Lemma surjective_bad :
-  surjective bad.
+Lemma surjective_extract :
+  surjective extract.
 (* begin hide *)
 Proof.
   red. intro f.
@@ -5881,17 +5870,19 @@ Qed.
 Theorem T3_illegal : False.
 (* begin hide *)
 Proof.
-  apply (Cantor' bad negb).
+  apply (Cantor' extract negb).
     destruct b; inversion 1.
-    apply surjective_bad.
+    apply surjective_extract.
 Qed.
 (* end hide *)
 
 (** **** Ćwiczenie *)
 
-(** Napisanie zapętlającej się funkcji [loop : T3 -> bool] też nie jest
-    jakoś wybitnie trudne. Napisz ją i udowodnij (nieformlanie), że
-    istnieje takie [x : T3], że [loop x] się zapętla. *)
+(** Napisanie zapętlającej się funkcji [loop : T3 -> bool] też nie
+    jest jakoś wybitnie trudne. Napisz ją i pobaw się nią w trybie
+    dowodzenia, żeby przekonać się, że faktycznie nie terminuje
+    (dla jakiegoś [x : T3], które musisz sam wymyślić - to również
+    nie jest specjalnie trudne). *)
 
 (* begin hide *)
 Definition loop (x : T3) : bool :=
@@ -5899,15 +5890,16 @@ match x with
     | T3_0 f => f (fun g : T3 -> bool => g (T3_0 f))
 end.
 
-(**
-  Niech f := fun g => g loop
+Definition bomb : T3 :=
+  T3_0 (fun g => g loop).
 
-  loop (T3_0 f) =
-  f (fun g => g (T3_0 f))
-  loop (T3_0 f) =
-  ...
-*)
-
+Lemma loop_nontermination :
+  loop bomb = true.
+Proof.
+  cbv delta [loop bomb].
+  cbv beta. cbv iota.
+  cbv beta. cbv iota.
+Abort.
 (* end hide *)
 
 End T3.
@@ -5927,34 +5919,12 @@ Inductive T4 : Type :=
     | c0 : (((T4 -> bool) -> nat) -> Color) -> T4.
 Set Positivity Checking.
 
-(* Axioms
-  (T4 : Type)
-  (c0 : (((T4 -> bool) -> nat) -> Color) -> T4)
-  (dcase :
-    forall
-      (P : T4 -> Type)
-      (Pc0 : forall f : ((T4 -> bool) -> nat) -> Color, P (c0 f)),
-        {f : forall x : T4, P x |
-          forall g : ((T4 -> bool) -> nat) -> Color,
-            f (c0 g) = Pc0 g}).
- *)
-
 (** Powyższy przykład jest podobny do poprzedniego, ale tym razem zamiast
-    trzech wystąpień [bool] mamy [bool], [nat] oraz [Color] (to typ, który
-    zdefiniowaliśmy na samym początku tego rozdziału, gdy uczyliśmy się
-    o enumeracjach). *)
+    trzech wystąpień [bool] mamy [bool], [nat] oraz [Color] (to ostatnie
+    to typ, który zdefiniowaliśmy na samym początku tego rozdziału, gdy
+    uczyliśmy się o enumeracjach). *)
 
-(* Definition bad (x : T4) : T4 -> bool :=
-  fun y : T4 =>
-match x with
-    | c0 f =>
-        match f (fun g => if g y then 1 else 0) with
-            | R => true
-            | _ => false
-        end
-end.
- *)
-Definition bad (x : T4) : T4 -> bool.
+Definition extract (x : T4) : T4 -> bool.
 Proof.
   destruct x as [f].
   intros y.
@@ -5967,12 +5937,13 @@ Proof.
   apply f.
   intro g.
   apply (fun b : bool => if b then 0 else 1).
-  exact (g y).
+  apply g.
+  exact y.
 Defined.
 
 (** Nasz modus operandi będzie taki jak poprzednio: spróbujemy wyjąć z
-    elementu [T4] funkcję typu [T4 -> bool]. W tym celu używamy zależnej
-    reguły analizy przypadków i wprowadzamy rzeczy do kontekstu.
+    elementu [T4] funkcję typu [T4 -> bool]. W tym celu rozbijamy [x]
+    i wprowadzamy [y : T4] do kontekstu.
 
     Tym razem nie możemy jednak bezpośrednio zaaplikować [f], gdyż jej
     kodziedziną jest [Color], a my musimy skonstruować coś typu [bool].
@@ -5987,11 +5958,11 @@ Defined.
     to samo co poprzednio - aplikujemy do celu jakąś funkcję [bool -> nat].
     Tym razem nie musi ona być surjekcją (nie jest to nawet możliwe, gdyż
     nie ma surjekcji z [bool] w [nat]). Dzięki temu możemy zaaplikować [g]
-    i zakończyć, używając [g x]. *)
+    i zakończyć, używając [y]. *)
 
 Require Import FunctionalExtensionality.
 
-(** Żeby pokazać, że [bad] jest surjekcją, będziemy potrzebować aksjomatu
+(** Żeby pokazać, że [extract] jest surjekcją, będziemy potrzebować aksjomatu
     ekstensjonalności dla funkcji (ang. functional extensionality axiom,
     w skrócie funext). Głosi on, że dwie funkcje [f, g : A -> B] są równe,
     jeżeli uda nam się pokazać, że dają równe wyniki dla każdego argumentu
@@ -6001,10 +5972,10 @@ Require Import FunctionalExtensionality.
     uzyskujemy dostęp do taktyki [extensionality], która ułatwia dowody
     wymagające użycia ekstensjonalności. *)
 
-Lemma surjective_bad :
-  surjective bad.
+Lemma surjective_extract :
+  surjective extract.
 Proof.
-  unfold surjective, bad.
+  unfold surjective, extract.
   intro f.
   exists (c0 (
     fun g : (T4 -> bool) -> nat =>
@@ -6017,11 +5988,11 @@ Proof.
 Qed.
 
 (** Dowód jest prawie taki jak zawsze: odwijamy definicję surjektywności i
-    wprowadzamy hipotezy do kontekstu, a następnie odwijamy definicję [bad]
-    i rozbijamy ją dla czytelności na właściwą funkcję [bad] oraz równanie
+    wprowadzamy hipotezy do kontekstu, a następnie odwijamy definicję [extract]
+    i rozbijamy ją dla czytelności na właściwą funkcję [extract] oraz równanie
     [eq].
 
-    Następnie musimy znaleźć [a : T4], które [bad] mapuje na [f]. Zaczynamy
+    Następnie musimy znaleźć [a : T4], które [extract] mapuje na [f]. Zaczynamy
     od [c0], bo jest to jedyny konstruktor [T4]. Bierze on jako argument
     funkcję typu [((T4 -> bool) -> nat) -> Color]. Żeby ją wyprodukować,
     bierzemy na wejściu funkcję [g : (T4 -> bool) -> nat] i musimy zrobić
@@ -6030,14 +6001,14 @@ Qed.
     Nie może to być jednak byle co - musimy użyć [f], a jedynym sensownym
     sposobem, żeby to zrobić, jest zaaplikować [g] do [f]. Musimy zadbać
     też o to, żeby odwrócić funkcje konwertujące [Color -> bool] oraz
-    [bool -> nat], których użyliśmy w definicji [bad]. Pierwsza z nich
+    [bool -> nat], których użyliśmy w definicji [extract]. Pierwsza z nich
     konwertowała [R] (czyli kolor czerwony) na [true], a inne kolory na
     [false], zaś druga konwertowała [true] na [0], a [false] na [1].
     Wobec tego dopasowując [g f : nat] musimy przekonwertować [0] na [R],
     zaś [1] na coś innego niż [R], np. na [G] (czyli kolor zielony).
 
     Znalazłszy odpowiedni argument, możemy przepisać równanie definiujące
-    [bad]. To już prawie koniec, ale próba użycia taktyki [reflexivity] w
+    [extract]. To już prawie koniec, ale próba użycia taktyki [reflexivity] w
     tym momencie skończyłaby się porażką. Na ratunek przychodzi nam
     aksjomat ekstensjonalności, którego używamy pisząc [extensionality t].
     Dzięki temu pozostaje nam pokazać jedynie, że [f t] jest równe tej
@@ -6046,9 +6017,9 @@ Qed.
 
 Theorem T4_illegal : False.
 Proof.
-  apply (Cantor' bad negb).
+  apply (Cantor' extract negb).
     destruct b; inversion 1.
-    apply surjective_bad.
+    apply surjective_extract.
 Qed.
 
 (** Skoro mamy surjekcję z [T4] w [T4 -> bool], katastrofy nie da się
@@ -6059,16 +6030,16 @@ Qed.
     w niepotrzebnym problemie. Wobec tego (oczywiście o ile dotychczas
     się nie skapnąłeś) poczuj się oświecony! *)
 
-Definition loop (x : T4) : bool := bad x x.
+Definition loop (x : T4) : bool := extract x x.
 
 (** Ha! Tak tak, [loop] nie jest niczym innym niż lekko rozmnożoną wersją
-    [bad]. *)
+    [extract]. *)
 
-Print bad.
+Print extract.
 
-Lemma bad_c0 :
+Lemma extract_c0 :
   forall f : ((T4 -> bool) -> nat) -> Color,
-    bad (c0 f) =
+    extract (c0 f) =
       fun y =>
         match f (fun g => if g y then 0 else 1) with
             | R => true
@@ -6088,18 +6059,18 @@ Lemma loop_nontermination :
 Proof.
   intros.
   unfold loop.
-  rewrite 5!bad_c0.
+  rewrite 5!extract_c0.
 Abort.
 
-(** A skoro [loop] to tylko inne [bad], to nie powinno cię też wcale a
+(** A skoro [loop] to tylko inne [extract], to nie powinno cię też wcale a
     wcale zdziwić, że najbardziej oczywisty argument, dla którego [loop]
-    się zapętla, jest żywcem wzięty z dowodu [surjective_bad] (choć oczywiście
-    musimy zastąpić [f] przez [loop]).
+    się zapętla, jest żywcem wzięty z dowodu [surjective_extract] (choć
+    oczywiście musimy zastąpić [f] przez [loop]).
 
     Oczywiście niemożliwe jest, żeby formalnie udowodnić w Coqu, że coś
     się zapętla. Powyższy lemat ma być jedynie demonstracją - ręczne
     rozpisanie tego przykładu byłoby zbyt karkołomne. Jak widać z dowodu,
-    przepisywanie równania definiującego [bad] tworzy wesołą piramidkę
+    przepisywanie równania definiującego [extract] tworzy wesołą piramidkę
     zrobioną z [match]y i [if]ów. Jeżeli chcesz poczuć pełnię zapętlenia,
     wypbróuj taktykę [rewrite !eq] - zapętli się ona, gdyż równanie [eq]
     można przepisywać w nieskończoność. *)
@@ -6121,7 +6092,7 @@ Set Positivity Checking.
     nieco inny - typy [nat] i [bool] zamieniły się miejscami. Jakie rodzi to
     konsekwencje? Sprawdźmy. *)
 
-Definition bad : T5 -> T5 -> nat.
+Definition extract : T5 -> T5 -> nat.
 Proof.
   intros [f] y.
   apply (
@@ -6135,15 +6106,15 @@ Proof.
   apply isZero. exact (g y).
 Defined.
 
-(** Definicja [bad] jest podobna jak poprzednio, ale tym razem konwertujemy
+(** Definicja [extract] jest podobna jak poprzednio, ale tym razem konwertujemy
     [Color] na [nat] za pomocą funkcji, która nie jest surjekcją. *)
 
 Require Import FunctionalExtensionality.
 
-Lemma surjective_bad :
-  surjective bad.
+Lemma surjective_extract :
+  surjective extract.
 Proof.
-  unfold surjective, bad.
+  unfold surjective, extract.
   intro f.
   exists (c0 (
     fun g : (T5 -> nat) -> bool =>
@@ -6166,14 +6137,11 @@ Abort.
     jedynie [0], [1] lub [2]. Teraz widzimy jak na dłoni, skąd wziął się
     wymóg, by funkcja konwertująca była surjekcją. *)
 
-Definition loop (x : T5) : nat := bad x x.
+Definition loop (x : T5) : nat := extract x x.
 
-Print T5.
-Print bad.
-
-Lemma bad_eq :
+Lemma extract_eq :
   forall (f : ((T5 -> nat) -> bool) -> Color) (y : T5),
-    bad (c0 f) y =
+    extract (c0 f) y =
       match f (fun g : T5 -> nat => isZero (g y)) with
           | R => 0
           | G => 1
@@ -6192,11 +6160,11 @@ Lemma loop_nontermination :
     end)).
 Proof.
   unfold loop.
-  rewrite bad_eq.
-  rewrite 2!bad_eq.
+  rewrite extract_eq.
+  rewrite 2!extract_eq.
 Abort.
 
-(** Co ciekawe, mimo że nie jesteśmy w stanie pokazać surjektywności [bad],
+(** Co ciekawe, mimo że nie jesteśmy w stanie pokazać surjektywności [extract],
     to wciąż możemy użyć tej funkcji do zdefiniowania zapętlającej się
     funkcji [loop], zupełnie jak w poprzednim przykładzie.
 
@@ -6212,7 +6180,7 @@ Abort.
     stamtąd po prostu funckję [T5 -> bool] i to mimo tego, że jej tam nie ma!
 *)
 
-Definition bad' : T5 -> (T5 -> bool).
+Definition extract' : T5 -> (T5 -> bool).
 Proof.
   intros [f] y.
   apply (
@@ -6231,10 +6199,10 @@ Defined.
 
 Require Import FunctionalExtensionality.
 
-Lemma surjective_bad' :
-  surjective bad'.
+Lemma surjective_extract' :
+  surjective extract'.
 Proof.
-  unfold surjective, bad'. intro f.
+  unfold surjective, extract'. intro f.
   exists (c0 (
     fun g : (T5 -> nat) -> bool =>
       if g (fun t : T5 => if f t then 0 else 1) then R else G)).
@@ -6243,14 +6211,14 @@ Proof.
 Qed.
 
 (** Ponieważ obydwie nasze funkcję konwertujące były surjekcjami, możemy je
-    teraz odwrócić i wykazać ponad wszelką wątpliwość, że [bad'] faktycznie
+    teraz odwrócić i wykazać ponad wszelką wątpliwość, że [extract'] faktycznie
     jest surjekcją. *)
 
 Theorem T5_illegal : False.
 Proof.
-  apply (Cantor' bad' negb).
+  apply (Cantor' extract' negb).
     destruct b; inversion 1.
-    apply surjective_bad'.
+    apply surjective_extract'.
 Qed.
 
 (** Spróbujmy podsumować, co tak naprawdę stało się w tym przykładzie.
@@ -6268,11 +6236,11 @@ Qed.
     w stanie surjektywnie przekonwertować na [bool], reszta procesu
     działa podobnie jak w poprzednich przykładach. *)
 
-Definition loop' (x : T5) : bool := bad' x x.
+Definition loop' (x : T5) : bool := extract' x x.
 
-Lemma bad'_eq :
+Lemma extract'_eq :
   forall (f : ((T5 -> nat) -> bool) -> Color) (y : T5),
-    bad' (c0 f) y =
+    extract' (c0 f) y =
       match f (fun g : T5 -> nat => isZero (g y)) with
           | R => true
           | _ => false
@@ -6290,10 +6258,10 @@ Lemma loop_nontermination :
     end)).
 Proof.
   unfold loop'.
-  rewrite 3!bad'_eq.
+  rewrite 3!extract'_eq.
 Abort.
 
-(** Takie trikowe [bad'] wciąż pozwala nam bez większych przeszkód
+(** Takie trikowe [extract'] wciąż pozwala nam bez większych przeszkód
     zdefiniować zapętlającą się funkcję [loop']. Osiągnęliśmy więc
     pełen sukces.
 
@@ -6345,19 +6313,19 @@ Set Positivity Checking.
 
     Przypomnij sobie poprzedni przykład i nieudaną próbę wyłuskania z
     [T5] surjekcji [T5 -> nat]. Udało nam się zaimplementować funkcję
-    [bad], której surjektywności nie potrafiliśmy pokazać, ale pomimo
+    [extract], której surjektywności nie potrafiliśmy pokazać, ale pomimo
     tego bez problemu udało nam się użyć jej do napisania funkcji [loop].
     W obecnym przykładzie jest podobnie i nieterminacja to najlepsze, na
     co możemy liczyć. *)
 
 (** **** Ćwiczenie *)
 
-(** Zdefiniuj funkcję [bad], a następnie użyj jej do zdefiniowania funkcji
-    [loop]. Zademonstruj w sposób podobny jak poprzednio, że [loop] się
-    zapętla. *)
+(** Zdefiniuj funkcję [extract], a następnie użyj jej do zdefiniowania
+    funkcji [loop]. Zademonstruj w sposób podobny jak poprzednio, że
+    [loop] się zapętla. *)
 
 (* begin hide *) Print T6.
-Definition bad (x y : T6) : unit :=
+Definition extract (x y : T6) : unit :=
 match x with
     | c0 f =>
         match f (fun g => match g y with | tt => true end) with
@@ -6367,11 +6335,11 @@ match x with
         end
 end.
 
-Definition loop (x : T6) : unit := bad x x.
+Definition loop (x : T6) : unit := extract x x.
 
-Lemma bad_eq :
+Lemma extract_eq :
   forall f y,
-    bad (c0 f) y =
+    extract (c0 f) y =
       match f (fun g => match g y with | tt => true end) with
           | R => tt
           | G => tt
@@ -6390,8 +6358,8 @@ Lemma loop_nontermination :
     end)).
 Proof.
   unfold loop.
-  rewrite bad_eq.
-  rewrite 2!bad_eq.
+  rewrite extract_eq.
+  rewrite 2!extract_eq.
 Abort.
 (* end hide *)
 
@@ -6431,7 +6399,7 @@ Proof.
   destruct (x (fun _ => true)).
 Qed.
 
-Definition bad (x : T7) : T7 -> bool.
+Definition extract (x : T7) : T7 -> bool.
 Proof.
   destruct x as [f].
   intro y.
@@ -6702,7 +6670,7 @@ Axioms
     metody przekątniowej, że taka surjekcja nie może istnieć. *)
 
 (*
-Definition bad (u : U) : U -> U :=
+Definition extract (u : U) : U -> U :=
 match u with
     | Pi UU B => B
     | _ => fun u : U => U
@@ -6712,10 +6680,10 @@ end.
 (** Jeżeli dostajemy [Pi A B], gdzie [A] to [UU], to wtedy [B : El A -> U]
     tak naprawdę jest typu [U -> U] (bo [El UU = U]). W innych przypadkach
     wystarczy po prostu zwrócić funkcję identycznościową. Niestety Coq nie
-    wspiera indukcji-rekursji (ława oburzonych), więc funkcję [bad] musimy
+    wspiera indukcji-rekursji (ława oburzonych), więc funkcję [extract] musimy
     zdefiniować ręcznie: *)
 
-Definition bad : U -> (U -> U).
+Definition extract : U -> (U -> U).
 Proof.
   apply (ind (fun _ => U -> U)).
     Focus 2. exact (fun u : U => u).
@@ -6726,12 +6694,12 @@ Proof.
 Defined.
 
 (** Powyższa definicja za pomocą taktyk działa dokładnie tak samo jak
-    nieformalna definicja [bad] za pomocą dopasowania do wzorca. Jedyna
+    nieformalna definicja [extract] za pomocą dopasowania do wzorca. Jedyna
     różnica jest taka, że [El UU] nie jest definicyjnie równe [U], lecz
     są one jedynie zdaniowo równe na mocy aksjomatu [El_UU : El UU = U].
     Musimy więc przepisać go w [B], żeby typy się zgadzały.
 
-    Zanim będziemy mogli pokazać, że [bad] jest surjekcją, czeka nas kilka
+    Zanim będziemy mogli pokazać, że [extract] jest surjekcją, czeka nas kilka
     niemiłych detali technicznych (gdyby [El UU] i [U] były definicyjnie
     równe, wszystkie te problemy by zniknęły). *)
 
@@ -6750,8 +6718,8 @@ Check eq_rect_r.
     [eq_rect _ _ _ cel _ H], które jest już typu [P y]. [eq_rect_r] działa
     podobnie, ale tym razem równość jest postaci [y = x] (czyli obrócona).
 
-    Ponieważ w definicji [bad] używaliśmy [rewrite]'a, to przy dowodzeniu,
-    że [bad] jest surjekcją, będziemy musieli zmierzyć się właśnie z
+    Ponieważ w definicji [extract] używaliśmy [rewrite]'a, to przy dowodzeniu,
+    że [extract] jest surjekcją, będziemy musieli zmierzyć się właśnie z
     [eq_rect] i [eq_rect_r]. Stąd poniższy lemat, który mówi mniej więcej,
     że jeżeli przepiszemy z prawa na lewo, a potem z lewa na prawo, to tak,
     jakby nic się nie stało. *)
@@ -6768,38 +6736,38 @@ Qed.
     przez dopasowanie do wzorca [p : x = y], to wystarczy [p] potraktować
     [destruct]em, a dalej wszystko już ładnie się oblicza. *)
 
-Lemma surjective_bad :
-  surjective bad.
+Lemma surjective_extract :
+  surjective extract.
 Proof.
-  unfold surjective, bad; intro f.
-  destruct (ind _) as [bad [bad_Pi bad_UU]].
-  destruct (ind _) as [bad' [bad'_Pi bad'_UU]].
+  unfold surjective, extract; intro f.
+  destruct (ind _) as [extract [extract_Pi extract_UU]].
+  destruct (ind _) as [extract' [extract'_Pi extract'_UU]].
   pose (f' := eq_rect_r (fun T : Type => T -> U) f El_UU).
   exists (Pi UU f'). unfold f'.
-  rewrite bad_Pi, bad'_UU, right_to_left_to_right. reflexivity.
+  rewrite extract_Pi, extract'_UU, right_to_left_to_right. reflexivity.
 Qed.
 
-(** Dlaczego [bad] jest surjekcją? Intuicyjnie pisząc, każdą funkcję
+(** Dlaczego [extract] jest surjekcją? Intuicyjnie pisząc, każdą funkcję
     [U -> U] możemy włożyć do konstruktora [Pi] jako jego drugi argument,
     jeżeli tylko zamienimy pierwsze [U] na [El UU]. Skoro każdą możemy
     tam włożyć, to każdą możemy wyjąć. Ot i cały sekret.
 
     Technicznie dowód realizujemy tak: odwijamy definicje i wprowadzamy do
     kontekstu funkcję [f]. Następnie rozbijamy [ind _] pochodzące z definicji
-    [bad], rozkładając w ten sposób definicję [bad] na właściwe [bad] (sama
-    funkcja), [bad'] (wewnętrzna funkcja pomocnicza) oraz równania dla [bad]
-    i [bad'] dla poszczególnych przypadków.
+    [extract], rozkładając w ten sposób definicję [extract] na właściwe
+    [extract] (sama funkcja), [extract'] (wewnętrzna funkcja pomocnicza) oraz
+    równania dla [extract] i [extract'] dla poszczególnych przypadków.
 
-    Następnie musimy znaleźć takie [a : U], że [bad a = f]. Robimy to, co
+    Następnie musimy znaleźć takie [a : U], że [extract a = f]. Robimy to, co
     zasugerowałem wyżej, czyli w [f : U -> U] pierwsze [U] zamieniamy na
     [El UU], uzyskując w ten sposób [f']. Temu właśnie służy użycie
     [eq_rect_r] (nie używamy [rewrite], bo potrzeba nam większej precyzji).
 
-    Wobec tego szukanym przez nas elementem [U], któremu [bad] przyporządkuje
+    Wobec tego szukanym przez nas elementem [U], któremu [extract] przyporządkuje
     [f], jest [Pi UU f']. Możemy w tym miejscu odwinąć definicję [f']. Gdyby
     Coq wspierał indukcję-rekursję, to w tym miejscu wystarczyłoby użyć tylko
-    [reflexivity] - [bad (Pi UU f')] obliczyłoby się do [f] na mocy definicji
-    [bad] oraz dzięki temu, że [El UU] obliczyłoby się do [U]. Niestety Coq
+    [reflexivity] - [extract (Pi UU f')] obliczyłoby się do [f] na mocy definicji
+    [extract] oraz dzięki temu, że [El UU] obliczyłoby się do [U]. Niestety Coq
     nie wspiera indukcji rekursji (ława oburzonych), więc musimy wszystkie
     te trzy kroki obliczeń wykonać ręcznie za pomocą taktyki [rewrite].
 
@@ -6816,7 +6784,7 @@ Proof.
     exact (Pi UU (fun _ => UU)).
 Defined.
 
-(** Teraz czas udowodnić, że [bad] nie jest surjekcją. Zrobimy to metodą
+(** Teraz czas udowodnić, że [extract] nie jest surjekcją. Zrobimy to metodą
     przekątniową, a w tym celu potrzebować będziemy funkcji [U -> U], która
     dla każdego argumentu zwraca coś, co jest od niego różne.
 
@@ -6868,31 +6836,31 @@ Qed.
     odpowiednie równania w hipotezie [eq], dzięki czemu uzyskujemy
     [false = true], co jest sprzeczne. Drugi przypadek jest analogiczny. *)
 
-Lemma bad_not_sur :
-  ~ surjective bad.
+Lemma extract_not_sur :
+  ~ surjective extract.
 Proof.
   unfold surjective. intro.
-  destruct (H (fun u : U => change (bad u u))) as [u eq].
+  destruct (H (fun u : U => change (extract u u))) as [u eq].
   apply (f_equal (fun f => f u)) in eq.
-  apply (change_neq (bad u u)). symmetry. assumption.
+  apply (change_neq (extract u u)). symmetry. assumption.
 Qed.
 
-(** Teraz możemy już pokazać, że [bad] nie jest surjekcją. W tym celu
-    wyobraźmy sobie [bad] jako kwadratową tabelkę, której wiersze i
+(** Teraz możemy już pokazać, że [extract] nie jest surjekcją. W tym celu
+    wyobraźmy sobie [extract] jako kwadratową tabelkę, której wiersze i
     kolumny są indeksowane przez [U]. Tworzymy nową funkcję [U -> U]
     biorąc elementy z przekątnej i modyfikując je za pomocą [change].
 
-    Skoro [bad] jest surjekcją, to ta nowa funkcja musi być postaci
-    [bad u] dla jakiegoś [u : U]. Aplikując obie strony jeszcze raz
-    do [u] dostajemy równanie [bad u u = change (bad u u)], które
+    Skoro [extract] jest surjekcją, to ta nowa funkcja musi być postaci
+    [extract u] dla jakiegoś [u : U]. Aplikując obie strony jeszcze raz
+    do [u] dostajemy równanie [extract u u = change (extract u u)], które
     jest sprzeczne na mocy lematu [change_neq]. *)
 
 Definition U_illegal : False.
 Proof.
-  apply bad_not_sur. apply surjective_bad.
+  apply extract_not_sur. apply surjective_extract.
 Qed.
 
-(** Ponieważ [bad] jednocześnie jest i nie jest surjekcją, nastepuje nagły
+(** Ponieważ [extract] jednocześnie jest i nie jest surjekcją, nastepuje nagły
     atak sprzeczności. Definicja uniwersum [U] przez indukcję-rekursję jest
     nielegalna. Tak właśnie prezentują się paradoksy Russella i Girarda w
     Coqowym wydaniu. *)
@@ -7005,7 +6973,7 @@ Axioms
         (f UU = PUU)
       }).
 
-Definition bad : U -> (U -> U).
+Definition extract : U -> (U -> U).
 Proof.
   apply (ind (fun _ => U -> U)).
     1-6,8-9: intros; assumption.
@@ -7023,10 +6991,10 @@ Proof.
   destruct p. cbn. reflexivity.
 Qed.
 
-Lemma surjective_bad :
-  surjective bad.
+Lemma surjective_extract :
+  surjective extract.
 Proof.
-  unfold surjective, bad; intro f.
+  unfold surjective, extract; intro f.
   destruct (ind _) as [g H]; decompose [and] H; clear H.
   destruct (ind _) as [h H']; decompose [and] H'; clear H'.
   pose (f' := eq_rect_r (fun T : Type => T -> U) f El_UU).
@@ -7071,20 +7039,20 @@ Proof.
   intros; try help H; help H9.
 Qed.
 
-Lemma bad_not_sur :
-  ~ surjective bad.
+Lemma extract_not_sur :
+  ~ surjective extract.
 Proof.
   unfold surjective. intro.
-  destruct (H (fun u : U => change (bad u u))) as [u eq].
+  destruct (H (fun u : U => change (extract u u))) as [u eq].
   apply (f_equal (fun f => f u)) in eq.
-  apply (change_neq (bad u u)). symmetry. assumption.
+  apply (change_neq (extract u u)). symmetry. assumption.
 Qed.
 (* end hide *)
 
 Theorem U_illegal : False.
 (* begin hide *)
 Proof.
-  apply bad_not_sur. apply surjective_bad.
+  apply extract_not_sur. apply surjective_extract.
 Qed.
 (* end hide *)
 
@@ -7117,9 +7085,9 @@ Set Positivity Checking.
 
 (** Spróbujmy zawalczyć z typem [Pos] naszą metodą opartą o twierdzenie
     Cantora. Najpierw kodujemy typ [Pos] aksjomatycznie, a następnie
-    spróbujemy zdefiniować [bad], czyli surjekcję z [Pos] w [Pos -> bool]. *)
+    spróbujemy zdefiniować [extract], czyli surjekcję z [Pos] w [Pos -> bool]. *)
 
-Definition bad (p : Pos) : Pos -> bool.
+Definition extract (p : Pos) : Pos -> bool.
 Proof.
   destruct p as [f]. intro y.
   apply f. intro z.
@@ -7178,7 +7146,7 @@ Abort.
     sprzeczności choć na metapoziomie, poprzez napisanie nieterminującej
     funkcji [loop]. Szczerze pisząc, to niezbyt w to wierzę. Przypomnij
     sobie, że okazało się, że funkcja [loop] jest bardzo ściśle powiązana
-    z funkcją [bad], zaś esencja nieterminacji polegała na przekazaniu
+    z funkcją [extract], zaś esencja nieterminacji polegała na przekazaniu
     do [loop] jako argument czegoś, co zawierało [loop] jako podterm
     (jeżeli nie zauważyłeś, to wszystkie nasze nieterminujące funkcje
     udało nam się zdefiniować jedynie za pomocą reguły zależnej analizy
