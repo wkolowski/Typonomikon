@@ -5801,6 +5801,8 @@ End XY.
     to się stanie, zobaczmy, czy wypracowane przez nas techniki działają na
     negatywne typy induktywne o niedobrości innej niż 1. *)
 
+(** *** Większa niedobrość *)
+
 Module T3.
 
 Unset Positivity Checking.
@@ -5881,8 +5883,8 @@ Qed.
 (** Napisanie zapętlającej się funkcji [loop : T3 -> bool] też nie
     jest jakoś wybitnie trudne. Napisz ją i pobaw się nią w trybie
     dowodzenia, żeby przekonać się, że faktycznie nie terminuje
-    (dla jakiegoś [x : T3], które musisz sam wymyślić - to również
-    nie jest specjalnie trudne). *)
+    (dla jakiegoś argumentu [x : T3], który musisz sam wymyślić -
+    to również nie jest specjalnie trudne). *)
 
 (* begin hide *)
 Definition loop (x : T3) : bool :=
@@ -5907,9 +5909,11 @@ End T3.
 (** Morał z powyższych rozważań jest prosty: nasze techniki działają także
     na negatywne typy induktywne o niedobrości równej 3. Myślę, że jesteś
     całkiem skłonny uwierzyć też, że zadziałają na te o niedobrości równej
-    5, 7 i tak dalej.
+    5, 7 i tak dalej. *)
 
-    To wszystko jest prawdą jednak tylko wtedy, gdy wszystkie typy po prawych
+(** *** Upierdliwe kodziedziny *)
+
+(** To wszystko jest prawdą jednak tylko wtedy, gdy wszystkie typy po prawych
     stronach strzałek będą takie same. A co, gdy będą różne? *)
 
 Module T4.
@@ -5950,7 +5954,7 @@ Defined.
     Możemy temu jednak zaradzić aplikując do celu skonstruowaną naprędce
     funkcję typu [Color -> bool]. Ta funkcja powinna być surjekcją (jeśli
     nie wierzysz, sprawdź, co się stanie, jeżeli zamienimy ją na funckję
-    stałą).
+    stałą albo inną nie-surjekcję).
 
     Możemy już zaaplikować [f] i wprowadzić [g] do kontekstu. Chcielibyśmy
     teraz zaaplikować [g], ale nie możemy, bo typy się nie zgadzają - [g]
@@ -6010,9 +6014,9 @@ Qed.
     Znalazłszy odpowiedni argument, możemy przepisać równanie definiujące
     [extract]. To już prawie koniec, ale próba użycia taktyki [reflexivity] w
     tym momencie skończyłaby się porażką. Na ratunek przychodzi nam
-    aksjomat ekstensjonalności, którego używamy pisząc [extensionality t].
-    Dzięki temu pozostaje nam pokazać jedynie, że [f t] jest równe tej
-    drugie funkcji dla argumentu [t]. W tym celu rozbijamy [f t], a oba
+    aksjomat ekstensjonalności, którego używamy pisząc [extensionality y].
+    Dzięki temu pozostaje nam pokazać jedynie, że [f y] jest równe tej
+    drugie funkcji dla argumentu [y]. W tym celu rozbijamy [f y], a oba
     wyrażenia okazują się być konwertowalne. *)
 
 Theorem T4_illegal : False.
@@ -6034,8 +6038,6 @@ Definition loop (x : T4) : bool := extract x x.
 
 (** Ha! Tak tak, [loop] nie jest niczym innym niż lekko rozmnożoną wersją
     [extract]. *)
-
-Print extract.
 
 Lemma extract_c0 :
   forall f : ((T4 -> bool) -> nat) -> Color,
@@ -6071,7 +6073,7 @@ Abort.
     się zapętla. Powyższy lemat ma być jedynie demonstracją - ręczne
     rozpisanie tego przykładu byłoby zbyt karkołomne. Jak widać z dowodu,
     przepisywanie równania definiującego [extract] tworzy wesołą piramidkę
-    zrobioną z [match]y i [if]ów. Jeżeli chcesz poczuć pełnię zapętlenia,
+    zrobioną z [match]ów i [if]ów. Jeżeli chcesz poczuć pełnię zapętlenia,
     wypbróuj taktykę [rewrite !eq] - zapętli się ona, gdyż równanie [eq]
     można przepisywać w nieskończoność. *)
 
@@ -6128,11 +6130,11 @@ Proof.
 Abort.
 
 (** Dowód również przebiega podobnie jak poprzednio. Załamuje się on dopiero,
-    gdy na samym końcu rozbijamy wyrażenie [f t] i upraszczamy używając [cbn].
+    gdy na samym końcu rozbijamy wyrażenie [f y] i upraszczamy używając [cbn].
     W pierwszym podcelu [0 = 0] jeszcze jakoś udaje się nam udowodnić, ale w
     drugim naszym oczom ukazuje się cel [2 = S n].
 
-    Problem polega na tym, że [f t] może być dowolną liczbą naturalną, ale
+    Problem polega na tym, że [f y] może być dowolną liczbą naturalną, ale
     zastosowana przez nas funkcja konwertująca [Color -> nat] może zwracać
     jedynie [0], [1] lub [2]. Teraz widzimy jak na dłoni, skąd wziął się
     wymóg, by funkcja konwertująca była surjekcją. *)
@@ -6173,12 +6175,11 @@ Abort.
     nielegalności [T5]. Czy wszystko stracone? Czy umrzemy? Tu dramatyczna
     pauza.
 
-    Nie.
+    Nie (w sensie że nie stracone, chociaż oczywiście umrzemy jak każdy).
 
     Okazuje się, że jest pewien trikowy sposób na rozwiązanie tego problemu,
     a mianowicie: zamiast próbować wyjąć z [T5] funkcję [T5 -> nat], wyjmiemy
-    stamtąd po prostu funckję [T5 -> bool] i to mimo tego, że jej tam nie ma!
-*)
+    stamtąd po prostu funckję [T5 -> bool] i to mimo tego, że jej tam nie ma! *)
 
 Definition extract' : T5 -> (T5 -> bool).
 Proof.
@@ -6197,12 +6198,11 @@ Defined.
     w jednym z poprzednich przykładów, a potem konwertujemy [nat] na [bool]
     za pomocą funkcji [isZero]. *)
 
-Require Import FunctionalExtensionality.
-
 Lemma surjective_extract' :
   surjective extract'.
 Proof.
-  unfold surjective, extract'. intro f.
+  unfold surjective, extract'.
+  intro f.
   exists (c0 (
     fun g : (T5 -> nat) -> bool =>
       if g (fun t : T5 => if f t then 0 else 1) then R else G)).
@@ -6267,12 +6267,12 @@ Abort.
 
     W ogólności nasz trik możnaby sformułować tak: jeżeli mamy konstruktor
     negatywny typu [T], to możemy wyjąć z niego funkcję [T -> A], gdzie [A]
-    jest najmniejszym z typów występujących po prawych stronach strzałek.
-
-    No, teraz to już na pewno mamy obcykane wszystkie przypadki, prawda?
-    Tadeuszu Sznuku przybywaj: "Otóż nie tym razem!". *)
+    jest najmniejszym z typów występujących po prawych stronach strzałek. *)
 
 End T5.
+
+(** No, teraz to już na pewno mamy obcykane wszystkie przypadki, prawda?
+    Tadeuszu Sznuku przybywaj: "Otóż nie tym razem!". *)
 
 Module T6.
 
@@ -6286,15 +6286,15 @@ Set Positivity Checking.
     typ [unit]. Oczywiście zgodnie z trikiem możemy z [T6] wyciągnąć
     surjekcję [T6 -> unit], ale jest ona oczywiście bezużyteczna, bo
     taką samą możemy zrobić za darmo, stale zwracając po prostu [tt].
-    Surjekcja ta nie wystarcza rzecz jasna, żeby odpalić twierdzenie
-    Cantora.
+    Surjekcja z [T6] w [T6 -> unit] nie wystarczy rzecz jasna, żeby
+    odpalić twierdzenie Cantora.
 
     Tym razem jednak nie powinniśmy spodziewać się, że upierdliwość tę
     będzie dało się jakoś obejść. Typ [T6 -> unit] jest jednoelementowy
     (jedynym elementem jest [fun _ => tt]) podobnie jak [unit]. Bardziej
     poetycko możemy powiedzieć, że [T6 -> unit] i [unit] są izomorficzne,
-    czyli prawie równe - różnią się tylko nazwami elementów ("nazwa"
-    jedynego elementu [unit]a to [tt]).
+    czyli możemy bez żadnych strat konwertować elementy jednego z tych
+    typów na elementy drugiego i z powrotem.
 
     Skoro tak, to typ konstruktora [c0], czyli
     [(((T6 -> unit) -> bool) -> Color) -> T6)], możemy równie dobrze
@@ -6306,10 +6306,10 @@ Set Positivity Checking.
     owijką na funkcje typu [bool -> Color]. Twierdzenie Cantora nie
     pozwala tutaj uzyskać sprzeczności.
 
-    Czy zatem takie typy sa legalne? Syntaktycznie nie - Coq odrzuca je
-    podobnie jak wszystkie inne negatywne typy induktywne. Semantycznie
-    również nie - o ile nie możemy uzyskać jawnej sprzeczności, to nasze
-    rozważania o nieterminacji wciąż są w mocy.
+    Czy zatem typy takie jak [T6] sa legalne? Syntaktycznie nie - Coq
+    odrzuca je podobnie jak wszystkie inne negatywne typy induktywne.
+    Semantycznie również nie - o ile nie możemy tutaj uzyskać jawnej
+    sprzeczności, to nasze rozważania o nieterminacji wciąż są w mocy.
 
     Przypomnij sobie poprzedni przykład i nieudaną próbę wyłuskania z
     [T5] surjekcji [T5 -> nat]. Udało nam się zaimplementować funkcję
@@ -6322,9 +6322,10 @@ Set Positivity Checking.
 
 (** Zdefiniuj funkcję [extract], a następnie użyj jej do zdefiniowania
     funkcji [loop]. Zademonstruj w sposób podobny jak poprzednio, że
-    [loop] się zapętla. *)
+    [loop] się zapętla. Wskazówka: wszystko działa tak samo jak w
+    poprzednim przykładzie. *)
 
-(* begin hide *) Print T6.
+(* begin hide *)
 Definition extract (x y : T6) : unit :=
 match x with
     | c0 f =>
@@ -6389,6 +6390,9 @@ Set Positivity Checking.
 
 (* begin hide *)
 
+(* TODO: [False] po prawej stronie strzałki w
+   TODO: negatywnych typach induktywnych *)
+
 Lemma wut :
   forall
     (f g : ((T7 -> bool) -> False) -> Color)
@@ -6435,11 +6439,14 @@ End T7.
     ściśle powiązane z twierdzeniem Cantora, a które będą służyć nam gdy
     staniemy w szranki z negatwynymi typami induktywno-rekurencyjnymi
     (czyli tymi, które definiuje się przez indukcję-rekursję). O tak: w
-    tym podrozdziale, niczym Thanos, staniemy do walki przeciw uniwersum!
+    tym podrozdziale, niczym Thanos, staniemy do walki przeciw uniwersum! *)
 
-    Zacznijmy od paradoksu Russella. Jest to bardzo stary paradoks, odkryty
+(** *** Paradoks Russella *)
+
+(** Zacznijmy od paradoksu Russella. Jest to bardzo stary paradoks, odkryty
     w roku 1901 przez... zgadnij kogo... gdy ów człek szukał dziury w całym
-    w naiwnej teorii zbiorów (która to teoria jest już od dawna martwa).
+    w naiwnej teorii zbiorów (która to teoria, dzięki temu właśnie odkryciu,
+    jest już od bardzo dawna dość mocno martwa).
 
     Sformułowanie paradoksu brzmi następująco: niech V będzie zbiorem
     wszystkich zbiorów, które nie należą same do siebie. Pytanie: czy
@@ -6448,7 +6455,20 @@ End T7.
     Gdzie tu paradoks? Otóż jeżeli V należy do V, to na mocy definicji V,
     V nie należy do V. Jeżeli zaś V nie należy do V, to na mocy definicji V,
     V należy do V. Nie trzeba chyba dodawać, że jednoczesne należenie i
-    nienależenie prowadzi do sprzeczności. *)
+    nienależenie prowadzi do sprzeczności.
+
+    Na czym tak naprawdę polega paradoks? Jakiś mądry (czyli przemądrzały)
+    filozof mógłby rzec, że na nadużyciu pojęcia zbioru... albo czymś
+    równie absurdalnym. Otóż nie! Paradoks Russella polega na tym samym,
+    co cała masa innych paradoksów, czyli na autoreferencji.
+
+    Z autoreferencją spotkaliśmy się już co najmniej raz, w rozdziale
+    pierwszym. Przypomnij sobie, że golibroda goli tych i tylko tych,
+    którzy sami siebie nie golą. Czy golibroda goli sam siebie? Takie
+    postawienie sprawy daje paradoks. Podobnie z Russellem: V zawiera
+    te i tylko te zbiory, które nie zawierają same siebie. Czy V zawiera
+    V? Wot, paradoks. Żeby lepiej wczuć się w ten klimat, czas na więcej
+    ćwiczeń. *)
 
 (** **** Ćwiczenie *)
 
@@ -6461,20 +6481,6 @@ End T7.
     czy można stworzyć w Wikipedii listę wszystkich list? Czy na liście
     wszystkich list ona sama jest wymieniona? Czy można w Wikipedii
     stworzyć listę wszystkich list, które nie wymieniają same siebie? *)
-
-(** Na czym tak naprawdę polega paradoks? Jakiś mądry (czyli przemądrzały)
-    filozof mógłby rzec, że na nadużyciu pojęcia zbioru... albo czymś
-    równie absurdalnym. Otóż nie! Paradoks Russella polega na tym samym,
-    co cała masa innych paradoksów, czyli na autoreferencji.
-
-    Z autoreferencją spotkaliśmy się już co najmniej raz, w rozdziale
-    pierwszym. Przypomnij sobie, że golibroda goli tych i tylko tych,
-    którzy sami siebie nie golą. Czy golibroda goli sam siebie?
-
-    Takie postawienie sprawy daje paradoks. Podobnie z Russellem: V zawiera
-    te i tylko te zbiory, które nie zawierają same siebie. Czy V zawiera
-    V? Wot, paradoks. Żeby lepiej wczuć się w ten klimat, czas na więcej
-    ćwiczeń. *)
 
 (** **** Ćwiczenie *)
 
@@ -6496,6 +6502,8 @@ End T7.
 
     "Zdanie po prawej jest prawdziwe. Zdanie po lewej jest fałszywe."
 *)
+
+(** *** Paradoks Girarda *)
 
 (** Dobra, wystarczy już tych paradoksów... a nie, czekaj. Przecież został
     nam do omówienia jeszcze paradoks Girarda. Jednak poznawszy już tajniki
@@ -6541,8 +6549,8 @@ Check Type.
     pierwszej sekcji):
     archive-pml.github.io/martin-lof/pdfs/An-Intuitionistic-Theory-of-Types-1972.pdf
 
-    Nasze sformułowanie paradoksu będzie w sumie podobne do tego z powyższej
-    pracy (co jest w sumie ciekawe, bo wymyśliłem je samodzielnie i to przez
+    Nasze sformułowanie paradoksu będzie podobne do tego z powyższej pracy
+    (co jest w sumie ciekawe, bo wymyśliłem je samodzielnie i to przez
     przypadek), ale dowód sprzeczności będzie inny - na szczęście dużo
     prostszy (albo i nie...).
 
@@ -6666,8 +6674,8 @@ Axioms
     Dlaczego więc w tym przypadku jest inaczej? Skoro [UU] nie jest złe samo
     w sobie, to problem musi leżeć w [Pi], bo niby gdzie indziej? Zobaczmy
     więc, gdzie kryje się sprzeczność. W tym celu posłużymy się twierdzeniem
-    Cantora: najpierw pokażemy surjekcję [U -> (U -> U)], a potem, za pomocą
-    metody przekątniowej, że taka surjekcja nie może istnieć. *)
+    Cantora: najpierw zdefiniujemy surjekcję [U -> (U -> U)], a potem pokażemy,
+    za pomocą metody przekątniowej, że taka surjekcja nie może istnieć. *)
 
 (*
 Definition extract (u : U) : U -> U :=
@@ -6739,12 +6747,15 @@ Qed.
 Lemma surjective_extract :
   surjective extract.
 Proof.
-  unfold surjective, extract; intro f.
+  unfold surjective, extract.
+  intro f.
   destruct (ind _) as [extract [extract_Pi extract_UU]].
   destruct (ind _) as [extract' [extract'_Pi extract'_UU]].
   pose (f' := eq_rect_r (fun T : Type => T -> U) f El_UU).
-  exists (Pi UU f'). unfold f'.
-  rewrite extract_Pi, extract'_UU, right_to_left_to_right. reflexivity.
+  exists (Pi UU f').
+  unfold f'.
+  rewrite extract_Pi, extract'_UU, right_to_left_to_right.
+  reflexivity.
 Qed.
 
 (** Dlaczego [extract] jest surjekcją? Intuicyjnie pisząc, każdą funkcję
@@ -6777,7 +6788,7 @@ Qed.
     jest nieco bardziej skomplikowana do użycia w Coqu niż prymitywniejsze
     formy indukcji. *)
 
-Definition change : U -> U.
+Definition modify : U -> U.
 Proof.
   apply ind.
     intros. exact UU.
@@ -6805,19 +6816,19 @@ Defined.
 
     Nasza funkcja dla [Pi] zwraca [true], a dla [UU] daje [false]. *)
 
-Lemma change_neq :
-  forall u : U, change u <> u.
+Lemma modify_neq :
+  forall u : U, modify u <> u.
 Proof.
   apply ind.
     intros A B H1 H2 eq.
       apply (f_equal discern) in eq.
-      unfold change, discern in eq.
+      unfold modify, discern in eq.
       destruct (ind _) as [d [d_Pi d_UU]],
                (ind _) as [ch [ch_Pi ch_UU]].
       rewrite d_Pi, ch_Pi, d_UU in eq. inversion eq.
     intro eq.
       apply (f_equal discern) in eq.
-      unfold change, discern in eq.
+      unfold modify, discern in eq.
       destruct (ind _) as [d [d_Pi d_UU]],
                (ind _) as [ch [ch_Pi ch_UU]].
       rewrite ch_UU, d_Pi, d_UU in eq. inversion eq.
@@ -6828,10 +6839,10 @@ Qed.
     go zaciemnia.
 
     Zaczynamy od indukcji po [u : U]. W pierwszym przypadku mamy hipotezę
-    [eq : change (Pi A B) = Pi A B], a skoro tak, to po zaaplikowaniu
-    [discern] musi być także [discern (change (Pi A B)) = discern (Pi A B)].
+    [eq : modify (Pi A B) = Pi A B], a skoro tak, to po zaaplikowaniu
+    [discern] musi być także [discern (modify (Pi A B)) = discern (Pi A B)].
 
-    Następnie rozkładamy definicje [change] i [discern] na atomy ([change]
+    Następnie rozkładamy definicje [modify] i [discern] na atomy ([modify]
     nazywa się teraz [ch], a [discern] nazywa się [d]). Przepisujemy
     odpowiednie równania w hipotezie [eq], dzięki czemu uzyskujemy
     [false = true], co jest sprzeczne. Drugi przypadek jest analogiczny. *)
@@ -6840,20 +6851,20 @@ Lemma extract_not_sur :
   ~ surjective extract.
 Proof.
   unfold surjective. intro.
-  destruct (H (fun u : U => change (extract u u))) as [u eq].
+  destruct (H (fun u : U => modify (extract u u))) as [u eq].
   apply (f_equal (fun f => f u)) in eq.
-  apply (change_neq (extract u u)). symmetry. assumption.
+  apply (modify_neq (extract u u)). symmetry. assumption.
 Qed.
 
 (** Teraz możemy już pokazać, że [extract] nie jest surjekcją. W tym celu
     wyobraźmy sobie [extract] jako kwadratową tabelkę, której wiersze i
     kolumny są indeksowane przez [U]. Tworzymy nową funkcję [U -> U]
-    biorąc elementy z przekątnej i modyfikując je za pomocą [change].
+    biorąc elementy z przekątnej i modyfikując je za pomocą [modify].
 
     Skoro [extract] jest surjekcją, to ta nowa funkcja musi być postaci
     [extract u] dla jakiegoś [u : U]. Aplikując obie strony jeszcze raz
-    do [u] dostajemy równanie [extract u u = change (extract u u)], które
-    jest sprzeczne na mocy lematu [change_neq]. *)
+    do [u] dostajemy równanie [extract u u = modify (extract u u)], które
+    jest sprzeczne na mocy lematu [modify_neq]. *)
 
 Definition U_illegal : False.
 Proof.
@@ -6862,8 +6873,7 @@ Qed.
 
 (** Ponieważ [extract] jednocześnie jest i nie jest surjekcją, nastepuje nagły
     atak sprzeczności. Definicja uniwersum [U] przez indukcję-rekursję jest
-    nielegalna. Tak właśnie prezentują się paradoksy Russella i Girarda w
-    Coqowym wydaniu. *)
+    nielegalna. Tak właśnie prezentuje się paradoks Girarda w Coqowym wydaniu. *)
 
 End PoorUniverse.
 
@@ -7003,7 +7013,7 @@ Proof.
   unfold f'. rewrite right_to_left_to_right. reflexivity.
 Qed.
 
-Definition change : U -> U.
+Definition modify : U -> U.
 Proof.
   apply ind.
     exact Nat.
@@ -7031,10 +7041,10 @@ Ltac help H :=
   decompose [and] Hhelp; clear Hhelp;
   congruence.
 
-Lemma change_neq :
-  forall u : U, change u <> u.
+Lemma modify_neq :
+  forall u : U, modify u <> u.
 Proof.
-  apply ind; unfold change;
+  apply ind; unfold modify;
   destruct (ind _) as [f H]; decompose [and] H; clear H;
   intros; try help H; help H9.
 Qed.
@@ -7043,9 +7053,9 @@ Lemma extract_not_sur :
   ~ surjective extract.
 Proof.
   unfold surjective. intro.
-  destruct (H (fun u : U => change (extract u u))) as [u eq].
+  destruct (H (fun u : U => modify (extract u u))) as [u eq].
   apply (f_equal (fun f => f u)) in eq.
-  apply (change_neq (extract u u)). symmetry. assumption.
+  apply (modify_neq (extract u u)). symmetry. assumption.
 Qed.
 (* end hide *)
 
@@ -7084,8 +7094,7 @@ Inductive Pos : Type :=
 Set Positivity Checking.
 
 (** Spróbujmy zawalczyć z typem [Pos] naszą metodą opartą o twierdzenie
-    Cantora. Najpierw kodujemy typ [Pos] aksjomatycznie, a następnie
-    spróbujemy zdefiniować [extract], czyli surjekcję z [Pos] w [Pos -> bool]. *)
+    Cantora. *)
 
 Definition extract (p : Pos) : Pos -> bool.
 Proof.
@@ -7149,8 +7158,7 @@ Abort.
     z funkcją [extract], zaś esencja nieterminacji polegała na przekazaniu
     do [loop] jako argument czegoś, co zawierało [loop] jako podterm
     (jeżeli nie zauważyłeś, to wszystkie nasze nieterminujące funkcje
-    udało nam się zdefiniować jedynie za pomocą reguły zależnej analizy
-    przypadków - bez indukcji, bez rekursji!). To daje nam jako taką
+    udało nam się zdefiniować bez użycia rekursji!). To daje nam jako taką
     podstawę by wierzyć, że nawet nieterminacja nie jest w tym przypadku
     osiągalna. *)
 
@@ -7212,29 +7220,12 @@ Set Positivity Checking.
 (** Jak widać, podejrzanym typem jest [Pos'], bliźniaczo podobne do [Pos],
     ale zamiast [bool] występuje tutaj [Prop]. *)
 
-Definition unwrap (p : Pos') : (Pos' -> Prop) -> Prop :=
-match p with
-    | Pos'0 f => f
-end.
-
-(** Zaczynamy od zdefiniowania funkcji odwijającej konstruktor. *)
-
-Lemma Pos'0_inj :
-  forall x y : (Pos' -> Prop) -> Prop,
-    Pos'0 x = Pos'0 y -> x = y.
-Proof.
-  inversion 1. reflexivity.
-Qed.
-
-(** Dzięki [unwrap] możemy łatwo pokazać, że konstruktor [Pos'0] jest
-    injekcją (to coś, co w przypadku zwykłych typów induktywnych dostajemy
-    za darmo od taktyki [inversion], ale cóż, nie tym razem!). *)
-
 Definition i {A : Type} : A -> (A -> Prop) := 
   fun x y => x = y.
 
-Lemma i_inj :
-  forall (A : Type) (x y : A), i x = i y -> x = y.
+Lemma injective_i :
+  forall {A : Type} {x y : A},
+    i x = i y -> x = y.
 Proof.
   unfold i.
   intros.
@@ -7243,52 +7234,60 @@ Proof.
   reflexivity.
 Qed.
 
-(** Kolejnym krokiem jest zdefiniowanie funkcji [i], która jest injekcją
+(** Zaczynamy od zdefiniowania funkcji [i], która jest injekcją
     z dowolnego typu [A] w typ [A -> Prop]. Zauważmy, że krok ten w
     kluczowy sposób korzysta z równości, żyjącej w sorcie [Prop] - gdyby
     zamiast [Prop] było [bool], nie moglibyśmy zdefiniować tej injekcji. *)
 
 Definition f (P : Pos' -> Prop) : Pos' := Pos'0 (i P).
 
-Lemma f_inj :
-  forall P Q : Pos' -> Prop, f P = f Q -> P = Q.
+Lemma injective_f :
+  forall P Q : Pos' -> Prop,
+    f P = f Q -> P = Q.
 Proof.
   unfold f.
   inversion 1.
-  apply i_inj in H1.
+  apply injective_i.
   assumption.
 Qed.
 
 (** Składając ze soba [i] oraz konstruktor [Pos'0] dostajemy injekcję z
-    [Pos' -> Prop] w [Pos']. *)
+    [Pos' -> Prop] w [Pos']. Powinno nas to niepokoić, bowiem intuicyjnie
+    typ [Pos' -> Prop] jest "większy" niż typ [Pos']. *)
 
 Definition wut (x : Pos') : Prop :=
   exists P : Pos' -> Prop, f P = x /\ ~ P x.
 
-Definition x : Pos' := f wut.
+(** Tutaj następują największe czary, które używają impredykatywności.
+    Definiujemy predykat [wut : Pos' -> Prop], który głosi, że funkcja
+    [f] jest surjekcją (czyli [exists P, f P = x]), która ma dodatkowo
+    tę właściwość, że predykat [P], któremu [f] przyporządkowuje [x],
+    nie jest spełniony przez [x] (czyli [~ P x]).
 
-(** Tutaj następują największe czary, które używają impredykatywności. Nie
-    mam żadnego dobrej bajeczki, która by je wyjaśniała. *)
+    Wielka zła autoreferencja czai się tuż za rogiem -
+    ciekawe co by się stało, gdybyśmy rozważyli zdanie [wut (f wut)]... *)
 
-Lemma paradox : wut x <-> ~ wut x.
+Lemma paradox : wut (f wut) <-> ~ wut (f wut).
 Proof.
   split.
     destruct 1 as (P & H1 & H2). intro H.
-      unfold x in H1. apply f_inj in H1. subst. contradiction.
-    intro H. unfold wut. exists wut. split.
-      unfold x. reflexivity.
+      apply injective_f in H1. subst. contradiction.
+    intro H. red. exists wut. split.
+      reflexivity.
       assumption.
 Qed.
 
 (** [paradox] to twierdzenie, które chwyta esencję całej sprawy. Z lewa na
-    prawo rozbijamy dowód [wut x] i dostajemy predykat [P]. Wiemy, że
-    [f P = x], ale [x = f wut], a ponieważ [f] jest injekcją, to [P = wut].
-    To jednak kończy się sprzecznością, bo [wut x], ale [~ P x].
+    prawo rozbijamy dowód [wut (f wut)] i dostajemy predykat [P]. Wiemy, że
+    [f P = f wut], ale [f] jest injekcją, więc [P = wut]. To jednak kończy
+    się sprzecznością, bo z jednej strony [wut (f wut)], ale z drugiej strony
+    [~ P (wut f)], czyli [~ wut (f wut)].
 
-    Z prawa na lewo jest łatwiej. Mamy [~ wut x] i musimy udowodnić [wut x].
-    Wystarczy, że istnieje pewien predykat, na który wybieramy oczywiście
-    [wut], który spełnia [f wut = x], co jest prawdą na mocy definicji [x],
-    oraz [~ wut x], co zachodzi na mocy założenia. *)
+    Z prawa na lewo jest łatwiej. Mamy [~ wut (f wut)] i musimy udowodnić
+    [wut (f wut)]. Wystarczy, że istnieje pewien predykat [P], który spełnia
+    [f P = f wut] i [~ P (f wut)]. Na [P] wybieramy oczywiście [wut]. Równość
+    [f wut = f wut] zachodzi trywialnie, zaś [~ wut (f wut)] zachodzi na mocy
+    założenia. *)
 
 Theorem Pos'_illegal : False.
 Proof.
