@@ -7218,28 +7218,33 @@ Inductive Pos' : Type :=
 Set Positivity Checking.
 
 (** Jak widać, podejrzanym typem jest [Pos'], bliźniaczo podobne do [Pos],
-    ale zamiast [bool] występuje tutaj [Prop]. *)
+    ale zamiast [bool] występuje tutaj [Prop].
 
-Definition i {A : Type} : A -> (A -> Prop) := 
-  fun x y => x = y.
+    Tym razem jednak dowód sprzeczności będzie przebiegał nieco inaczej niż
+    dotychczas. Poprzednio nasze plany sprowadzały się do tego, żeby wyjąć
+    z nielegalnego typu induktywnego [T] jakąś funkcję [T -> A], co daje nam
+    surjekcję [T -> (T -> A)], a to jest sprzeczne z twierdzeniem Cantora.
 
-Lemma injective_i :
-  forall {A : Type} {x y : A},
-    i x = i y -> x = y.
-Proof.
-  unfold i.
-  intros.
-  apply (f_equal (fun f => f y)) in H.
-  rewrite H.
-  reflexivity.
-Qed.
+    Intuicja zaś stojąca za tym twierdzeniem (przynajmniej dla [A = bool])
+    była taka, że funkcje [f : T -> bool] są zbiorami elementów typu [A] i
+    jest ich przez to "więcej" niż elementów [T], czyli [T -> bool] jest
+    większa niż [T]. Surjekcją z [T] w [T -> bool] oznacza jednak, że to
+    [T] jest większe niż [T -> bool], co prowadzi do sprzeczności.
 
-(** Zaczynamy od zdefiniowania funkcji [i], która jest injekcją
-    z dowolnego typu [A] w typ [A -> Prop]. Zauważmy, że krok ten w
-    kluczowy sposób korzysta z równości, żyjącej w sorcie [Prop] - gdyby
-    zamiast [Prop] było [bool], nie moglibyśmy zdefiniować tej injekcji. *)
+    Tym razem nie jesteśmy w stanie zrobić żadnej surjekcji, ale możemy za
+    to zrobić injekcję. Intuicyjnie injekcja z [A] w [B] oznacza, że każdemu
+    elementowi [A] można przypisać unikalny element [B]. Jeszcze intuicyjniej:
+    typ [A] jest w jakimś sensie "mniejszy" niż typ [B], czyli jeszcze inaczej
+    pisząc, typ [A] można "włożyć" lub "wstrzyknąć" (i stąd nazwa) do typu [B].
 
-Definition f (P : Pos' -> Prop) : Pos' := Pos'0 (i P).
+    Nasz plan polega więc na tym, żeby zdefiniować injekcję
+    [(Pos' -> Prop) -> Pos'], co powinno jakoś prowadzić do sprzeczności:
+    istnienie takiej injekcji oznacza, że [Pos' -> Prop] jest "mniejszy"
+    niż [Pos'], ale z twierdzenia Cantora powinniśmy intuicyjnie czyć, że
+    [Pos' -> Prop] jest większe niż [Pos']. *)
+
+Definition f (P : Pos' -> Prop) : Pos' :=
+  Pos'0 (fun Q : Pos' -> Prop => P = Q).
 
 Lemma injective_f :
   forall P Q : Pos' -> Prop,
@@ -7247,25 +7252,29 @@ Lemma injective_f :
 Proof.
   unfold f.
   inversion 1.
-  apply injective_i.
-  assumption.
+  apply (f_equal (fun f => f Q)) in H1.
+  rewrite H1.
+  reflexivity.
 Qed.
 
-(** Składając ze soba [i] oraz konstruktor [Pos'0] dostajemy injekcję z
-    [Pos' -> Prop] w [Pos']. Powinno nas to niepokoić, bowiem intuicyjnie
-    typ [Pos' -> Prop] jest "większy" niż typ [Pos']. *)
+(** Definicja naszej injekcji jest dość prosta. Żeby przerobić [P : Pos' -> Prop]
+    na [Pos'], używamy konstruktora [Pos'0], a jego argumentem jest po prostu
+    funkcja, która porównuje swój argument do [P] używając relacji równości. *)
 
 Definition wut (x : Pos') : Prop :=
   exists P : Pos' -> Prop, f P = x /\ ~ P x.
 
-(** Tutaj następują największe czary, które używają impredykatywności.
-    Definiujemy predykat [wut : Pos' -> Prop], który głosi, że funkcja
-    [f] jest surjekcją (czyli [exists P, f P = x]), która ma dodatkowo
-    tę właściwość, że predykat [P], któremu [f] przyporządkowuje [x],
-    nie jest spełniony przez [x] (czyli [~ P x]).
+(** Tutaj następują czary, które używają impredykatywności.
 
-    Wielka zła autoreferencja czai się tuż za rogiem -
-    ciekawe co by się stało, gdybyśmy rozważyli zdanie [wut (f wut)]... *)
+    Definiujemy predykat [wut : Pos' -> Prop], który głosi, że funkcja [f] jest
+    surjekcją (czyli [exists P, f P = x]), która ma dodatkowo tę właściwość, że
+    predykat [P], któremu [f] przyporządkowuje [x], nie jest spełniony przez [x]
+    (czyli [~ P x]).
+
+    Parafrazując: [wut] to coś w stylu zbioru wszystkich [x : Pos'], które nie
+    należą same same do siebie. Paradoks Russella jak malowany! Wielka zła
+    autoreferencja czai się tuż za rogiem - ciekawe co by się stało, gdybyśmy
+    rozważyli zdanie [wut (f wut)]... *)
 
 Lemma paradox : wut (f wut) <-> ~ wut (f wut).
 Proof.
@@ -7277,11 +7286,10 @@ Proof.
       assumption.
 Qed.
 
-(** [paradox] to twierdzenie, które chwyta esencję całej sprawy. Z lewa na
-    prawo rozbijamy dowód [wut (f wut)] i dostajemy predykat [P]. Wiemy, że
-    [f P = f wut], ale [f] jest injekcją, więc [P = wut]. To jednak kończy
-    się sprzecznością, bo z jednej strony [wut (f wut)], ale z drugiej strony
-    [~ P (wut f)], czyli [~ wut (f wut)].
+(** Ano, wszystko wybucha. Z lewa na prawo rozbijamy dowód [wut (f wut)] i
+    dostajemy predykat [P]. Wiemy, że [f P = f wut], ale [f] jest injekcją,
+    więc [P = wut]. To jednak kończy się sprzecznością, bo z jednej strony
+    [wut (f wut)], ale z drugiej strony [~ P (wut f)], czyli [~ wut (f wut)].
 
     Z prawa na lewo jest łatwiej. Mamy [~ wut (f wut)] i musimy udowodnić
     [wut (f wut)]. Wystarczy, że istnieje pewien predykat [P], który spełnia

@@ -634,6 +634,9 @@ Qed.
 
 Scheme code_ind' := Induction for code Sort Prop.
 
+Check code_ind.
+Check code_ind'.
+
 Lemma decode_encode :
   forall {A : Type} {l1 l2 : list A} (c : code l1 l2),
     encode (decode c) = c.

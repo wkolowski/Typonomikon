@@ -8796,39 +8796,44 @@ Definicja zdania <span class="inlinecode"><span class="id" title="var">X</span><
 
 <div class="doc">
 Jak widać, podejrzanym typem jest <span class="inlinecode"><span class="id" title="var">Pos'</span></span>, bliźniaczo podobne do <span class="inlinecode"><span class="id" title="var">Pos</span></span>,
-    ale zamiast <span class="inlinecode"><span class="id" title="var">bool</span></span> występuje tutaj <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. 
+    ale zamiast <span class="inlinecode"><span class="id" title="var">bool</span></span> występuje tutaj <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>.
+
+<div class="paragraph"> </div>
+
+    Tym razem jednak dowód sprzeczności będzie przebiegał nieco inaczej niż
+    dotychczas. Poprzednio nasze plany sprowadzały się do tego, żeby wyjąć
+    z nielegalnego typu induktywnego <span class="inlinecode"><span class="id" title="var">T</span></span> jakąś funkcję <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span>, co daje nam
+    surjekcję <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span>)</span>, a to jest sprzeczne z twierdzeniem Cantora.
+
+<div class="paragraph"> </div>
+
+    Intuicja zaś stojąca za tym twierdzeniem (przynajmniej dla <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>)
+    była taka, że funkcje <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> są zbiorami elementów typu <span class="inlinecode"><span class="id" title="var">A</span></span> i
+    jest ich przez to "więcej" niż elementów <span class="inlinecode"><span class="id" title="var">T</span></span>, czyli <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> jest
+    większa niż <span class="inlinecode"><span class="id" title="var">T</span></span>. Surjekcją z <span class="inlinecode"><span class="id" title="var">T</span></span> w <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> oznacza jednak, że to
+    <span class="inlinecode"><span class="id" title="var">T</span></span> jest większe niż <span class="inlinecode"><span class="id" title="var">T</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>, co prowadzi do sprzeczności.
+
+<div class="paragraph"> </div>
+
+    Tym razem nie jesteśmy w stanie zrobić żadnej surjekcji, ale możemy za
+    to zrobić injekcję. Intuicyjnie injekcja z <span class="inlinecode"><span class="id" title="var">A</span></span> w <span class="inlinecode"><span class="id" title="var">B</span></span> oznacza, że każdemu
+    elementowi <span class="inlinecode"><span class="id" title="var">A</span></span> można przypisać unikalny element <span class="inlinecode"><span class="id" title="var">B</span></span>. Jeszcze intuicyjniej:
+    typ <span class="inlinecode"><span class="id" title="var">A</span></span> jest w jakimś sensie "mniejszy" niż typ <span class="inlinecode"><span class="id" title="var">B</span></span>, czyli jeszcze inaczej
+    pisząc, typ <span class="inlinecode"><span class="id" title="var">A</span></span> można "włożyć" lub "wstrzyknąć" (i stąd nazwa) do typu <span class="inlinecode"><span class="id" title="var">B</span></span>.
+
+<div class="paragraph"> </div>
+
+    Nasz plan polega więc na tym, żeby zdefiniować injekcję
+    <span class="inlinecode">(<span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Pos'</span></span>, co powinno jakoś prowadzić do sprzeczności:
+    istnienie takiej injekcji oznacza, że <span class="inlinecode"><span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> jest "mniejszy"
+    niż <span class="inlinecode"><span class="id" title="var">Pos'</span></span>, ale z twierdzenia Cantora powinniśmy intuicyjnie czyć, że
+    <span class="inlinecode"><span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> jest większe niż <span class="inlinecode"><span class="id" title="var">Pos'</span></span>. 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">i</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">A</span> -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) := <br/>
-&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> =&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">injective_i</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">i</span> <span class="id" title="var">x</span> = <span class="id" title="var">i</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">i</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">y</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Zaczynamy od zdefiniowania funkcji <span class="inlinecode"><span class="id" title="var">i</span></span>, która jest injekcją
-    z dowolnego typu <span class="inlinecode"><span class="id" title="var">A</span></span> w typ <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>. Zauważmy, że krok ten w
-    kluczowy sposób korzysta z równości, żyjącej w sorcie <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> - gdyby
-    zamiast <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> było <span class="inlinecode"><span class="id" title="var">bool</span></span>, nie moglibyśmy zdefiniować tej injekcji. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">f</span> (<span class="id" title="var">P</span> : <span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">Pos'</span> := <span class="id" title="var">Pos'0</span> (<span class="id" title="var">i</span> <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">f</span> (<span class="id" title="var">P</span> : <span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">Pos'</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">Pos'0</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">Q</span> : <span class="id" title="var">Pos'</span> -&gt; <span class="id" title="keyword">Prop</span> =&gt; <span class="id" title="var">P</span> = <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">injective_f</span> :<br/>
@@ -8837,17 +8842,18 @@ Zaczynamy od zdefiniowania funkcji <span class="inlinecode"><span class="id" tit
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">f</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">inversion</span> 1.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">injective_i</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">f</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">Q</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">H1</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H1</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Składając ze soba <span class="inlinecode"><span class="id" title="var">i</span></span> oraz konstruktor <span class="inlinecode"><span class="id" title="var">Pos'0</span></span> dostajemy injekcję z
-    <span class="inlinecode"><span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> w <span class="inlinecode"><span class="id" title="var">Pos'</span></span>. Powinno nas to niepokoić, bowiem intuicyjnie
-    typ <span class="inlinecode"><span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> jest "większy" niż typ <span class="inlinecode"><span class="id" title="var">Pos'</span></span>. 
+Definicja naszej injekcji jest dość prosta. Żeby przerobić <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>
+    na <span class="inlinecode"><span class="id" title="var">Pos'</span></span>, używamy konstruktora <span class="inlinecode"><span class="id" title="var">Pos'0</span></span>, a jego argumentem jest po prostu
+    funkcja, która porównuje swój argument do <span class="inlinecode"><span class="id" title="var">P</span></span> używając relacji równości. 
 </div>
 <div class="code">
 
@@ -8859,16 +8865,21 @@ Składając ze soba <span class="inlinecode"><span class="id" title="var">i</spa
 </div>
 
 <div class="doc">
-Tutaj następują największe czary, które używają impredykatywności.
-    Definiujemy predykat <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, który głosi, że funkcja
-    <span class="inlinecode"><span class="id" title="var">f</span></span> jest surjekcją (czyli <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">P</span>,</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">x</span></span>), która ma dodatkowo
-    tę właściwość, że predykat <span class="inlinecode"><span class="id" title="var">P</span></span>, któremu <span class="inlinecode"><span class="id" title="var">f</span></span> przyporządkowuje <span class="inlinecode"><span class="id" title="var">x</span></span>,
-    nie jest spełniony przez <span class="inlinecode"><span class="id" title="var">x</span></span> (czyli <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>).
+Tutaj następują czary, które używają impredykatywności.
 
 <div class="paragraph"> </div>
 
-    Wielka zła autoreferencja czai się tuż za rogiem -
-    ciekawe co by się stało, gdybyśmy rozważyli zdanie <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span>... 
+    Definiujemy predykat <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Pos'</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, który głosi, że funkcja <span class="inlinecode"><span class="id" title="var">f</span></span> jest
+    surjekcją (czyli <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">P</span>,</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">x</span></span>), która ma dodatkowo tę właściwość, że
+    predykat <span class="inlinecode"><span class="id" title="var">P</span></span>, któremu <span class="inlinecode"><span class="id" title="var">f</span></span> przyporządkowuje <span class="inlinecode"><span class="id" title="var">x</span></span>, nie jest spełniony przez <span class="inlinecode"><span class="id" title="var">x</span></span>
+    (czyli <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>).
+
+<div class="paragraph"> </div>
+
+    Parafrazując: <span class="inlinecode"><span class="id" title="var">wut</span></span> to coś w stylu zbioru wszystkich <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Pos'</span></span>, które nie
+    należą same same do siebie. Paradoks Russella jak malowany! Wielka zła
+    autoreferencja czai się tuż za rogiem - ciekawe co by się stało, gdybyśmy
+    rozważyli zdanie <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span>... 
 </div>
 <div class="code">
 
@@ -8887,11 +8898,10 @@ Tutaj następują największe czary, które używają impredykatywności.
 </div>
 
 <div class="doc">
-<span class="inlinecode"><span class="id" title="var">paradox</span></span> to twierdzenie, które chwyta esencję całej sprawy. Z lewa na
-    prawo rozbijamy dowód <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span> i dostajemy predykat <span class="inlinecode"><span class="id" title="var">P</span></span>. Wiemy, że
-    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span></span>, ale <span class="inlinecode"><span class="id" title="var">f</span></span> jest injekcją, więc <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">wut</span></span>. To jednak kończy
-    się sprzecznością, bo z jednej strony <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span>, ale z drugiej strony
-    <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">(<span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">f</span>)</span>, czyli <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span>.
+Ano, wszystko wybucha. Z lewa na prawo rozbijamy dowód <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span> i
+    dostajemy predykat <span class="inlinecode"><span class="id" title="var">P</span></span>. Wiemy, że <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span></span>, ale <span class="inlinecode"><span class="id" title="var">f</span></span> jest injekcją,
+    więc <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">wut</span></span>. To jednak kończy się sprzecznością, bo z jednej strony
+    <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span>, ale z drugiej strony <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">(<span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">f</span>)</span>, czyli <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">wut</span>)</span>.
 
 <div class="paragraph"> </div>
 

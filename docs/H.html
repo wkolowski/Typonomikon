@@ -658,6 +658,10 @@ Kody nie muszą być rekurencyjne - mogą być induktywne.
 <span class="id" title="keyword">Scheme</span> <span class="id" title="var">code_ind'</span> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <span class="id" title="var">code</span> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Prop</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">code_ind</span>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">code_ind'</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">decode_encode</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>} (<span class="id" title="var">c</span> : <span class="id" title="var">code</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">encode</span> (<span class="id" title="var">decode</span> <span class="id" title="var">c</span>) = <span class="id" title="var">c</span>.<br/>
