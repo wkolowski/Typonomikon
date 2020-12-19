@@ -1,6 +1,6 @@
 # TODO
 
-## Indukcja - podstawy
+## Indukcja
 2. W nowym ujęciu podrozdział o regułach indukcyjnych ma być ściśle powiązany z wprowadzeniem rekursji strukturalnej (tzn. nie-prymitywnej).
 3. Argumenty indukcyjne pierwszego i wyższego rzędu.
 5. Alternatywna nazwa na injektywność konstruktorów to niekonfuzja (`NoConfusion`), zaś nazwa na nierówności `t <> c t` to acykliczność.
@@ -10,6 +10,8 @@
 - Z uogólniania hipotezy indukcyjnej (+ akumulatory i rekursja ogonowa).
 - Ogólnie z myślenia induktywnego. Ciekawy typ ćwiczeniowy: listy o parzystej długości.
 8. Odkłamać kwestię "skończoności" typów induktywnych i "nieskończoności" typów koinduktywnych. Tak naprawdę, to chodzi o to, że typy induktywny są dobrze ufundowane, a typy koinduktywne niekoniecznie.
+9. Opisać zależny pattern matching (w rozdziale o zaawansowanej indukcji).
+10. Opisać jak zasymulować indukcję-indukcję za pomocą indeksów ("presyntax"). To samo dla indukcji-rekursji.
 
 ## HoTT i topologia
 2. Wprowadzić teorię zbiorów za pomocą wyższego typu induktywnego.

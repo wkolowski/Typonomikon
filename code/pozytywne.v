@@ -1,3 +1,8 @@
+(** Potencjalnie użyteczne linki:
+    - https://cstheory.stackexchange.com/questions/14415/guarded-negative-occurrences-in-definition-of-inductive-types-always-bad
+    - https://stackoverflow.com/questions/12651146/why-inductive-datatypes-forbid-types-like-data-bad-a-c-bad-a-a-where-th
+*)
+
 Unset Positivity Checking.
 Inductive Pos : Type :=
     | Pos' : ((Pos -> bool) -> bool) -> Pos.
