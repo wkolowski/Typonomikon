@@ -1,20 +1,29 @@
 (** * B1: Konstruktywny rachunek zdań [TODO] *)
 
+Require Export B0.
+
 (** * Zdania i spójniki logiczne (TODO) *)
 
 (** ** Implikacja (TODO) *)
 
-(** *** Rozumowanie w przód (TODO) *)
+(* begin hide *)
+(* TODO: rozumowania w przód i w tył, czyli
+  [apply] i [apply ... in ...] *)
+(* end hide *)
 
-(** *** Rozumowanie w tył (TODO) *)
-
+(* begin hide *)
 (* rozumowanie od tyłu jest lepsze, logika jest bezmyślna *)
-
-(** ** Koniunkcja (TODO) *)
+(* end hide *)
 
 (** ** Dysjunkcja (TODO) *)
 
+(** ** Koniunkcja (TODO) *)
+
 (** ** Prawda i fałsz (TODO) *)
+
+(* begin hide *)
+(* TODO: wspomnieć, że to 0-arne wersje dysjunkcji i koniunkcji *)
+(* end hide *)
 
 (** ** Równoważność (TODO) *)
 
@@ -245,7 +254,13 @@ Abort.
 
 (** ** Czy Bozia dała inne spójniki logiczne? (TODO) *)
 
-(** * Paradoks pieniądza i kebaba *)
+(* begin hide *)
+(* TODO: tutaj opisać słabe "lub" oraz "xor" *)
+(* end hide *)
+
+(** * O czym nie wolno mówić zdaniom logicznym *)
+
+(** ** Paradoks pieniądza i kebaba *)
 
 (** Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka
     naturalnego za pomocą zdań logiki formalnej. Gdybyś jednak wciąż
@@ -324,6 +339,34 @@ Qed.
     że mając złotówkę, możemy kupić dowolną liczbę kebabów.
 
     Szach mat, Turcjo bankrutuj! *)
+
+(** ** Paradoks Curry'ego *)
+
+Lemma Curry's_paradox :
+  forall P Q : Prop,
+    (P <-> (P -> Q)) -> Q.
+Proof.
+  destruct 1.
+  apply H.
+    apply H0. intro. apply H; assumption.
+    apply H0. intro. apply H; assumption.
+Qed.
+
+(** **** Ćwiczenie *)
+
+(** TODO: napisać polecenie *)
+
+(* begin hide *)
+Lemma mutual_reference :
+  forall P Q : Prop,
+    (P <-> (Q <-> True)) ->
+    (Q <-> (P <-> False)) ->
+      False.
+Proof.
+  firstorder.
+Qed.
+(* end hide *)
+
 
 (** * Zadania (TODO) *)
 

@@ -1,6 +1,7 @@
 (** * B3: Logika klasyczna [TODO] *)
 
 (* begin hide *)
+Require Export B2.
 (*
 TODO: Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go używać.
 TODO: Kodowanie logiki klasycznej jak z SSReflekta

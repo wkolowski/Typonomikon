@@ -1,5 +1,15 @@
 # TODO
 
+## Logika
+1. Opisy spójników podzielić ze względu na reguły (wprowadzania, eliminacji, formowania jako wstęp).
+2. Po każdej regule proste ćwiczenia.
+3. Wspomnieć o autoreferencji od razu na samym początku: paradoks Curry'ego, potem golibrody, w międzyczasie heterologiczność.
+4. Opisać rozróżnienie esencjalizm (domyślny) vs strukturalizm ("Yoneda perspective", np. zdanie to kolekcja wszystkich swoich dowodów, impredykatywne definicje spójników, etc.).
+5. Bonusowe paradoksy do pamiętania:
+- Hilbert-Bernays: https://en.wikipedia.org/wiki/Hilbert%E2%80%93Bernays_paradox
+- Barbershop: https://en.wikipedia.org/wiki/Barbershop_paradox
+- paradoks kłamcy
+
 ## Indukcja
 2. W nowym ujęciu podrozdział o regułach indukcyjnych ma być ściśle powiązany z wprowadzeniem rekursji strukturalnej (tzn. nie-prymitywnej).
 3. Argumenty indukcyjne pierwszego i wyższego rzędu.

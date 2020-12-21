@@ -12,53 +12,61 @@
 
 <div class="doc">
 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="var">B0</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a id="lab71"></a><h1 class="section">Zdania i spójniki logiczne (TODO)</h1>
 
 <div class="paragraph"> </div>
 
 <a id="lab72"></a><h2 class="section">Implikacja (TODO)</h2>
 
-<div class="paragraph"> </div>
-
-<a id="lab73"></a><h3 class="section">Rozumowanie w przód (TODO)</h3>
-
-<div class="paragraph"> </div>
-
-<a id="lab74"></a><h3 class="section">Rozumowanie w tył (TODO)</h3>
-
 </div>
 <div class="code">
 
 <br/>
-<span class="comment">(*&nbsp;rozumowanie&nbsp;od&nbsp;tyłu&nbsp;jest&nbsp;lepsze,&nbsp;logika&nbsp;jest&nbsp;bezmyślna&nbsp;*)</span><br/>
+
+<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a id="lab75"></a><h2 class="section">Koniunkcja (TODO)</h2>
+<a id="lab73"></a><h2 class="section">Dysjunkcja (TODO)</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab76"></a><h2 class="section">Dysjunkcja (TODO)</h2>
+<a id="lab74"></a><h2 class="section">Koniunkcja (TODO)</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab77"></a><h2 class="section">Prawda i fałsz (TODO)</h2>
+<a id="lab75"></a><h2 class="section">Prawda i fałsz (TODO)</h2>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab76"></a><h2 class="section">Równoważność (TODO)</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab78"></a><h2 class="section">Równoważność (TODO)</h2>
+<a id="lab77"></a><h2 class="section">Negacja (TODO)</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab79"></a><h2 class="section">Negacja (TODO)</h2>
-
-<div class="paragraph"> </div>
-
-<a id="lab80"></a><h2 class="section">Silna negacja</h2>
+<a id="lab78"></a><h2 class="section">Silna negacja</h2>
 
 </div>
 <div class="code">
@@ -356,11 +364,22 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 </div>
 
 <div class="doc">
-<a id="lab81"></a><h2 class="section">Czy Bozia dała inne spójniki logiczne? (TODO)</h2>
+<a id="lab79"></a><h2 class="section">Czy Bozia dała inne spójniki logiczne? (TODO)</h2>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab80"></a><h1 class="section">O czym nie wolno mówić zdaniom logicznym</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab82"></a><h1 class="section">Paradoks pieniądza i kebaba</h1>
+<a id="lab81"></a><h2 class="section">Paradoks pieniądza i kebaba</h2>
 
 <div class="paragraph"> </div>
 
@@ -413,7 +432,7 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 </div>
 
 <div class="doc">
-<a id="lab83"></a><h4 class="section">Ćwiczenie (formalizacja paradoksu)</h4>
+<a id="lab82"></a><h4 class="section">Ćwiczenie (formalizacja paradoksu)</h4>
 
 <div class="paragraph"> </div>
 
@@ -438,7 +457,41 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
     Szach mat, Turcjo bankrutuj! 
 <div class="paragraph"> </div>
 
-<a id="lab84"></a><h1 class="section">Zadania (TODO)</h1>
+<a id="lab83"></a><h2 class="section">Paradoks Curry'ego</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Curry's_paradox</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> &lt;-&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>)) -&gt; <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab84"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ TODO: napisać polecenie 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab85"></a><h1 class="section">Zadania (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -457,7 +510,7 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 
 <div class="paragraph"> </div>
 
-<a id="lab85"></a><h1 class="section">Ściąga</h1>
+<a id="lab86"></a><h1 class="section">Ściąga</h1>
 
 </div>
 <div class="code">
