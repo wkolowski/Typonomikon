@@ -20,10 +20,10 @@ digraph
   Impred        [label = "Kodowania impredykatywne", color = red]
   α             [label = "α-konwersja i inne rodzaje równości", color = red]
   
-  Pijok         [label = "Paradoks pijoka"]
   Curry         [label = "Paradoks Curry'ego", color = red]
   Golibroda     [label = "Paradoks golibrody"]
   Kebab         [label = "Paradoks pieniądza i kebaba"]
+  Pijok         [label = "Paradoks pijoka"]
 
   Tabu          [label = "Tabu = niesprzeczny aksjomat"]
 
@@ -48,6 +48,6 @@ digraph
 
   Pred          -> Impred
 
-  Równość       -> UIP, "Aksjomat K", "Proof Irrelevance", "Propositional Extensionality/Univalence", α
+  Równość       -> α
 
 }

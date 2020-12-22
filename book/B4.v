@@ -4,7 +4,7 @@ Require Export B3.
 
 (** * Inne spójniki *)
 
-(** * i/lub (TODO)  *)
+(** ** i/lub (TODO)  *)
 
 Inductive andor (P Q : Prop) : Prop :=
     | left  : P ->      andor P Q
@@ -1328,51 +1328,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma IOR_DNE :
-  IOR -> DNE.
-(* begin hide *)
-Proof.
-  unfold IOR, DNE.
-  intros ior P nnp.
-  destruct (ior (~~ P) True P).
-Abort.
-(* end hide *)
-
-Lemma IOR_LEM :
-  IOR -> LEM.
-(* begin hide *)
-Proof.
-  unfold IOR, LEM.
-  intros ior P.
-Abort.
-(* end hide *)
-
-Lemma IOR_WLEM :
-  IOR -> WLEM.
-(* begin hide *)
-Proof.
-  unfold IOR, WLEM.
-  intros ior P.
-  specialize (ior (~~ P) False).
-Abort.
-(* end hide *)
-
-Lemma WLEM_IOR :
-  WLEM -> IOR.
-(* begin hide *)
-Proof.
-  unfold WLEM, IOR.
-  intros WLEM P Q R H.
-  destruct (WLEM (P -> Q)).
-    right. intro p. destruct (H p).
-      contradiction H0. intros _. assumption.
-      assumption.
-    left. intro p. destruct (H p).
-      assumption.
-      
-Abort.
-(* end hide *)
-
 (** *** Godel-Dummet (TODO) *)
 
 Definition GD : Prop :=
@@ -1476,6 +1431,33 @@ Proof.
     intros H _. apply H. left. intro p. exfalso.
       apply H. right. intros. assumption.
     trivial.
+Qed.
+(* end hide *)
+
+(** *** Double negation shift (TODO) *)
+
+(** Wzięte z https://ncatlab.org/nlab/show/double-negation+shift *)
+
+Definition DNS : Prop :=
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, ~ ~ P x) -> ~ ~ forall x : A, P x.
+
+Print LEM.
+
+Lemma DNS_not_not_LEM :
+  DNS <-> ~ ~ LEM.
+(* begin hide *)
+Proof.
+  unfold DNS, LEM. split.
+    intros DNS H.
+      specialize (DNS Prop (fun P => P \/ ~ P) LEM_irrefutable).
+      apply DNS. intro H'. contradiction.
+    intros NNLEM A P H1 H2. apply NNLEM. intro LEM.
+      assert (forall x : A, P x).
+        intro x. destruct (LEM (P x)).
+          assumption.
+          specialize (H1 x). contradiction.
+        contradiction.
 Qed.
 (* end hide *)
 

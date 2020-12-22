@@ -6,7 +6,7 @@
 
 ### A: Wstęp i inne tego typu pierdoły
 
-## Część 1: Logika, czyli dowodzenia
+## Część 1: Logika
 
 ![Logika](logika.jpg)
 
@@ -21,7 +21,6 @@
   - Fałsz i prawda, w tym jako 0-arna wersja dysjunkcji i koniunkcji
   - równoważność
   - negacja, silna i słaba
-  - inne spójniki, np. xor. Ćwiczenie kreatywności?
 - Paradoks pieniądza i kebaba
 - Zadania:
   - zadania wstawić do tekstu, a na koniec dać tylko te, które łączą wiele spójników.
@@ -38,7 +37,6 @@
   - egzystencjalny
   - unikatowy
 - Zmienne związane
-- (Im)predykatywizm - krótki opis.
 - Paradoks golibrody
 - Zadania:
   - modelowanie różnych sytuacji za pomocą zdań i predykatów
@@ -46,7 +44,13 @@
   - więcej zadań z exists
 - Ściąga
 
-### B3: Logika klasyczna
+### B3: Różne inne rzeczy
+- (Im)predykatywizm - krótki opis.
+- Kodowanie impredykatywne
+- Kombinatory taktyk
+- Taktyka firstorder
+
+### B4: Logika klasyczna
 - Prawa logiki klasycznej - enumeracja, krótki opis, podział na grupy (LEM, materialna implikacja i równoważność) vs DNE vs (Peirce, consequentia mirabilis) vs kontrapozycja
 - Logika klasyczna jako logika:
   - Boga (LEM) + prawo zachowania informacji
@@ -62,24 +66,26 @@
   - wyrzucić zadania mącące (mieszające typy i zdania)
 - Ściąga
 
-### B4: Inne logiki
+### B5: Inne logiki
 - Porównanie logiki konstruktywnej i klasycznej
+- Inne spójniki, np. xor. Ćwiczenie kreatywności?
 - Inne logiki:
   - {sub, super}-intuicjonistyczne
   - modalne
   - substrukturalne
   - wielowartościowe
   - logika szalonego Gruzina
-- Logika de Morgana jako coś pomiędzy logiką konstruktywną i klasyczną
+- Logiki pośrednie:
+  - opisać pojęcie tabu
+  - logika słabego wyłączonego środka
+  - logika de Morgana jako coś pomiędzy logiką konstruktywną i klasyczną
+  - Goedel-Dummet
+  - Przesuwanie podwójnej negacji
 - Logika modalna
 - Pluralizm logiczny
-- Aksjomaty w stylu ProofIrrelevance, UIP, K, PropExt
-- Kodowanie impredykatywne
-- Kombinatory taktyk
 - Zadania:
   - rozwiąż wszystkie zadania jeszcze raz, ale tym razem bez używania Module/Section/Hypothesis oraz z jak najkrótszymi dowodami
 - Jakieś podsumowanie
-- Taktyka firstorder
 - Zrobić test tak/nie.
 - Zrobić fiszki do nauki nazw praw.
 
@@ -101,6 +107,7 @@
 - HoTT-bookowa teoria typów: pusty, unit, bool, nat, produkt, suma, funkcje, produkt zależny, suma zależna, uniwersa, równość
 - Ale nie można zaniedbać formalnej prezentacji teorii typów.
 - Wprowadzić tutaj nazwę "motyw eliminacji"
+- Pozytywność i negatywność
 
 ### D: Indukcja
 
@@ -320,6 +327,7 @@ L1: Monady i efekty jako sposoby bycia
 - Proof Irrelevance
 - Aksjomat K
 - Aksjomat Uniwalencji
+- Aksjomaty w stylu ProofIrrelevance, UIP, K, PropExt
 - Wyższe typy induktywne
 
 ### H2: Typy i funkcje
