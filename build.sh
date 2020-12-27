@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Zrób nowego makefile'a na wypadek, gdyby pojawiły się jakieś nowe pliki .v
-coq_makefile -R "." CoqBookPL -o makefile $(find . -name "*v")
+coq_makefile -R "." Typonomikon -o makefile $(find . -name "*v")
 
 # Skompiluj pliki .v - dzięki temu mamy pewność, że cały kod z książki działa poprawnie.
 make
@@ -19,6 +19,7 @@ rm makefile makefile.conf
 # --no-index pozbywa się indeksu (czyli spisu identyfikatorów, definicji, twierdzeń etc.)
 # --toc --toc-depth 2 robi spis treści o głębokości 2
 # Update 2017-02-17: opcja --utf8 została wywalona, dzięki czemu "->" wyświetla się teraz jako "->", a nie jako "→", jak poprzednio.
+# TODO: zmniejszyć --toc-depth do 1 (w swoim czasie rzecz jasna)
 coqdoc book/*v --html -d docs                             \
        --with-footer assets/footer.html                   \
        --with-header assets/header.html                   \
@@ -73,10 +74,10 @@ latexmk tex/Książka.tex -pdf -outdir=tex/                 \
         -f                                                \
         -quiet
 
-dot txt/plany/plan.dot     -Tjpg -o txt/plany/plan.jpg
-dot txt/plany/logika.dot   -Tjpg -o txt/plany/logika.jpg
-dot txt/plany/rekursja.dot -Tjpg -o txt/plany/rekursja.jpg
-dot txt/plany/indukcja.dot -Tjpg -o txt/plany/indukcja.jpg
+dot txt/plany/plan.dot        -Tjpg -o txt/plany/plan.jpg
+dot txt/plany/logika.dot      -Tjpg -o txt/plany/logika.jpg
+dot txt/plany/rekursja.dot    -Tjpg -o txt/plany/rekursja.jpg
+dot txt/plany/indukcja.dot    -Tjpg -o txt/plany/indukcja.jpg
 
 dot txt/sugestie/rekordy.dot  -Tjpg -o txt/sugestie/rekordy.jpg
 dot txt/sugestie/rekordy2.dot -Tjpg -o txt/sugestie/rekordy2.jpg

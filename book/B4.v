@@ -828,7 +828,7 @@ Qed.
     wszystkich nazwach, regułach, warunkach, etc., to tutaj jest
     ściąga:
 
-    https://github.com/wkolowski/CoqBookPL/blob/master/txt/substrukturalne.md *)
+    https://github.com/wkolowski/Typonomikon/blob/master/txt/substrukturalne.md *)
 
 (** ** Logiki wielowartościowe *)
 
@@ -2952,7 +2952,7 @@ Qed.
     punktu widzenia modalności nie wnoszą niczego ciekawego.
 
     Jeśliś pogubił się w tym modalnościowym zoo, nie lękaj się! Zrobiłem
-    ściągę: https://github.com/wkolowski/CoqBookPL/blob/master/txt/modalno%%C5%%9Bci.md *)
+    ściągę: https://github.com/wkolowski/Typonomikon/blob/master/txt/modalno%%C5%%9Bci.md *)
 
 (** * Pluralizm logiczny *)
 

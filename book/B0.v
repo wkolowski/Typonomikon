@@ -2302,7 +2302,7 @@ Qed.
       rozbić go na [a] i [P a] za pomocą taktyki [destruct]. *)
 
 (** Tutaj dodatkowa ściąga, w nieco bardziej czytelnym formacie:
-    https://github.com/wkolowski/CoqBookPL/tree/master/txt/logika.md
+    https://github.com/wkolowski/Typonomikon/tree/master/txt/logika.md
 
     Tutaj inna ściąga:
     https://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf *)

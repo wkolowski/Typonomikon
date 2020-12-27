@@ -1,6 +1,6 @@
-# CoqBook
+# Typonomikon
 
-To repozytorium zawiera moją [książkę](https://wkolowski.github.io/CoqBookPL/) o programowaniu funkcyjnym, logice konstruktywnej, formalizacji matematyki i innych takich (razem ze źródłami). Dostępna jest też [wersja PDF](https://github.com/wkolowski/CoqBookPL/raw/master/tex/Ksi%C4%85%C5%BCka.pdf), ale nie polecam, bo jest mało dopracowana i niektóre rzeczy źle się wyświetlają.
+To repozytorium zawiera moją [książkę](https://wkolowski.github.io/Typonomikon/) o programowaniu funkcyjnym, logice konstruktywnej, formalizacji matematyki i innych takich (razem ze źródłami). Dostępna jest też [wersja PDF](https://github.com/wkolowski/Typonomikon/raw/master/tex/Ksi%C4%85%C5%BCka.pdf), ale nie polecam, bo jest mało dopracowana i niektóre rzeczy źle się wyświetlają.
 
 Co tu się dzieje:
 - assets/ zawiera style css, pliki js, nagłówek i stopkę dodawane do każdej strony oraz materiały do zrobienia okładek. Większość z tego jest ukradziona ze starej wersji [Software Foundations](https://softwarefoundations.cis.upenn.edu/)
