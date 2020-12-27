@@ -940,12 +940,6 @@ Abort.
 
 (* end hide *)
 
-(** * Paradoks Curry'ego (TODO) *)
-
-(** "Jeżeli niniejsze zdanie jest prawdziwe, to Niemcy graniczą z Chinami." *)
-
-(** Inne paradoksy autoreferencji: paradoks Richarda, słowa heterologiczne *)
-
 (** * Zadania (TODO) *)
 
 (** wyrzucić zadania mącące (mieszające typy i zdania) *)
