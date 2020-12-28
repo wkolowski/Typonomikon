@@ -421,8 +421,8 @@ Qed.
     niż w zwykłej logice konstruktywnej.
 
     Znanym ci już przykładem superintuicjonistycznej logiki jest logika
-    klasyczna, która jest niczym innym jak logiką konstruktywną, w której
-    aksjomatem jest prawo wyłączonego środka. Logika klasyczna jest
+    klasyczna, która powstaje z dodania do logiki konstruktywnej prawa
+    wyłączonego środka jako aksjomatu. Logika klasyczna jest
     maksymalną logiką superintuicjonistyczną, bo można w niej udowodnić
     najwięcej twierdzeń ze wszystkich logik superintuicjonistycznych
     (oczywiście pomijając logikę sprzeczną). Oznacza to, że dodanie do
@@ -698,7 +698,7 @@ Qed.
     klasycznej:
     - Elektrownia może wungiel spalić (wywołując tym sposobem globalne
       ocieplenie... albo i nie - zależy w co kto wierzy), ale nie może
-      go skasować tak, żeby zniknął z naszego wszechświata bez śladu.
+      go skasować tak, żeby zniknął ze wszechświata bez śladu.
     - Podobnie górnik może wungiel wykopać z ziemii, ale nijak nie
       może go skopiować, tak żeby za darmo uzyskać więcej.
 
@@ -746,10 +746,10 @@ Qed.
     Typowym przykładem implikacji z irrelewantną przesłanką jest zdanie
     w stylu "jeżeli księżyc jest zrobiony z sera, to 2 + 2 = 4". Zdanie
     to jest prawdziwe w logice konstruktywnej i klasycznej, gdyż jego
-    konkluzja, [2 + 2 = 4], jest słuszna (jak w Coqu działają liczby
-    naturalne dowiemy się już niedługo!). Jednak tego typu implikacje
+    konkluzja, [2 + 2 = 4], jest słuszna (jak w Coqu działają liczby,
+    dowiemy się już niedługo!). Jednak tego typu implikacje
     są mocno nieintuicyjne i często sprawiają problem niematematycznym
-    osobom, a także studentom pierwszego roku i co po niektórym filzofom
+    osobom, a także studentom pierwszego roku i co po niektórym filozofom
     właśnie.
 
     Powód tego jest prosty: co ma piernik do wiatraka? W języku polskim
@@ -765,11 +765,12 @@ Qed.
 
     Czy to już wszystkie logiki substrukturalne? Niezupełnie: unikalną
     logikę substrukturalną daje każda kombinacja reguł strukturalnych
-    (poza sytuacją, gdy mamy wszystkie - wtedy logika jest "normalna").
-    Niektóre kombinacje reguł nie są jednak zbyt popularne - wszystkie
-    omówione wyżej logiki miały regułę zamiany. Wynika to z faktu, że
-    brak tej reguły jest naprawdę srogo upierdliwy, a pozostałe reguły
-    mają w przypadku jej nieobecności dużo mniejszą moc i znaczenie.
+    (poza sytuacją, gdy mamy wszystkie - wtedy logika jest "normalna",
+    czyli po prostu strukturalna). Niektóre kombinacje reguł nie są
+    jednak zbyt popularne - wszystkie omówione wyżej logiki miały regułę
+    zamiany. Wynika to z faktu, że brak tej reguły jest naprawdę srogo
+    upierdliwy, a pozostałe reguły mają w przypadku jej nieobecności dużo
+    mniejszą moc i znaczenie.
 
     Mimo to nic nie stoi na przeszkodzie, by rozważać logiki bez żadnych
     reguł strukturalnych. W logikach takich jesteśmy zmuszeni użyć
@@ -784,7 +785,7 @@ Qed.
     implikację, która bierze przesłanki w odwrotnej kolejności. To
     rozwiązanie może się wydawać dziwne (i jest!), ale okazuje się,
     że co najmniej jeden człowiek próbował takiej poczwarnej logiki
-    użyć do reprezentowania języka naturalnego, i z niemałym sukcesem.
+    użyć do reprezentowania języka naturalnego, i ti z niemałym sukcesem.
 
     Zresztą, język naturalny ze swoimi ograniczeniami na szyk zdania
     i kolejność słów zdaje się być dobrym kandydatem do spożytkowania
@@ -815,7 +816,7 @@ Qed.
     połączenia operacji na zasobach oraz operacji kopiowania zasobów w
     nieskończoność.
 
-    Podsumowując, logiki substrukturalne są mega użyteczne w całej
+    Podsumowując, logiki substrukturalne bywają użyteczne w całej
     gamie różnych zastosowań, od fizyki kwantowej, przez filozofię
     i lingwistykę, a na informatyce teoretycznej kończąc. W tej
     książce nie będziemy się jednak nimi zajmować, gdyż nie ma do
@@ -838,7 +839,7 @@ Qed.
     konstruktywnej, zacznijmy od wytłumaczenia, czym są.
 
     W skrócie: wartości logiczne mówią, jaki może być "status" danego
-    zdania. Dwoma wartościami logicznymi, które występują praktycznie
+    zdania. Dwiema wartościami logicznymi, które występują praktycznie
     zawsze, są "prawda" i "fałsz". Odpowiadają one stwierdzeniom takim
     jak "zdanie P jest prawdziwe" oraz "zdanie P jest fałszywe".
 
@@ -1693,8 +1694,8 @@ Qed.
     [E] jest naszą wymówką, np. "Pies zjadł mi dowód", zaś [P]
     właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
     pomocą dysjunkcji, otrzymując [P \/ E], czyli "Pada deszcz lub
-    pies zjadł mi dowód". Ze względu na pewne tradycje, modalność
-    tę będziemy jednak reprezentować jako [E \/ P], czyli "Pies
+    pies zjadł mi dowód". Jednak ze względu na pewne tradycje
+    modalność tę będziemy reprezentować jako [E \/ P], czyli "Pies
     zjadł mi dowód lub pada deszcz". *)
 
 (** **** Ćwiczenie *)
@@ -2954,7 +2955,7 @@ Qed.
     punktu widzenia modalności nie wnoszą niczego ciekawego.
 
     Jeśliś pogubił się w tym modalnościowym zoo, nie lękaj się! Zrobiłem
-    ściągę: https://github.com/wkolowski/Typonomikon/blob/master/txt/modalno%%C5%%9Bci.md *)
+    ściągę: https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/modalno%%C5%%9Bci.md *)
 
 (** * Pluralizm logiczny *)
 

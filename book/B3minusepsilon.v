@@ -269,9 +269,7 @@ Qed.
     z biblioteki standardowej znajdziesz tu:
     https://coq.inria.fr/refman/coq-tacindex.html *)
 
-(** ** [firstorder] *)
-
-(** TODO *)
+(** ** [firstorder] (TODO) *)
 
 (** * Paradoksy autoreferencji *)
 
@@ -390,6 +388,39 @@ Qed.
     zostaje trafiony paradoksalną konkluzją: golibroda nie istnieje. *)
 
 (** ** Inne paradoksy autoreferencji: paradoks Richarda, słowa heterologiczne *)
+
+(** **** Ćwiczenie *)
+
+(** Poniższą zagadkę pozwolę sobie wesoło nazwać "paradoks hetero". Zagadka
+    brzmi tak:
+
+    Niektóre słowa opisują same siebie, np. słowo "krótki" jest krótkie,
+    a niektóre inne nie, np. słowo "długi" nie jest długie. Podobnie słowo
+    "polski" jest słowem polskim, ale słowo "niemiecki" nie jest słowem
+    niemieckim. Słowa, które nie opisują samych siebie będziemy nazywać
+    słowami heterologicznymi. Pytanie: czy słowo "heterologiczny" jest
+    heterologiczne? *)
+
+(** **** Ćwiczenie *)
+
+(** A jak jest z poniższym paradoksem wujka Janusza?
+
+    Wujek Janusz lubi tych (i tylko tych) członków rodziny, którzy sami
+    siebie nie lubią oraz nie lubi tych (i tylko tych), którzy sami siebie
+    lubią. Czy wujek Janusz lubi sam siebie? *)
+
+(** **** Ćwiczenie *)
+
+(** Powyższe ćwiczenie miało być ostatnim, ale co tam, dam jeszcze trochę.
+    Co czuje serce twoje (ewentualnie: co widzisz przed oczyma duszy swojej)
+    na widok poniższych wesołych zdań?
+
+    "To zdanie jest fałszywe."
+
+    "Zdanie po prawej jest fałszywe. Zdanie po lewej jest prawdziwe."
+
+    "Zdanie po prawej jest prawdziwe. Zdanie po lewej jest fałszywe."
+*)
 
 (** * Predykatywizm (TODO) *)
 
@@ -511,3 +542,7 @@ Proof.
     intros [] P px. assumption.
 Qed.
 (* end hide *)
+
+(** * Logika intuicjonistyczna jako logika certyfikatów (TODO) *)
+
+(** * Aksjomaty i pojęcie "tabu" *)

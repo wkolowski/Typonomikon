@@ -253,6 +253,43 @@ Abort.
 
 (** * Istotne prawa logiki i inne obserwacje *)
 
+(** ** Przemienność koniunkcji a język naturalny *)
+
+Lemma and_comm :
+  forall P Q : Prop,
+    P /\ Q -> Q /\ P.
+(* begin hide *)
+Proof.
+  intros P Q H.
+  destruct H as [p q].
+  split.
+    assumption.
+    assumption.
+Qed.
+(* end hide *)
+
+(** Przemienność koniunkcji wydaje się byc własnością dość oczywistą i
+    nietrudno ją udowodnić, a jednak nie powinniśmy przejść obok niej
+    bez podejrzliwości. Przynajmniej w kwestii języka naturalnego: nie
+    zawsze Coqowe [/\] dokładnie odpowiada polskiemu "i" (ani angielskiemu
+    "and"). Dwa przykłady:
+
+    Czasem "i" jest przemienne, mimo że nie wyraża zdania logicznego.
+    Dla przykładu: "ja i ty" znaczy to samo co "ty i ja". Nie są to
+    jednak zdania logiczne, więc nie można wyrazić tego w Coqu za
+    pomocą spójnika [/\].
+
+    Czasem "i" nie jest przemienne, np. zdanie "otworzyłem drzwi
+    i wszedłem do środka" wygląda całkiem normalnie, ale zdanie
+    "wszedłem do środka i otworzyłem drzwi" jest już nieco dziwne.
+    Zdania te mogą mieć potencjalnie różne znaczenie (jeżeli nie
+    wierzysz, to zastanów się, czy oba poprawnie opisują sytuację,
+    gdy wchodzisz do kibla), więc nie można tutaj użyć Coqowego [/\].
+
+    Podsumowując: koniunkcja jest przemienna, ale polski spójnik "i"
+    czasem nie jest przemienny, a czasem nie służy do tworzenia
+    zdań logicznych, więc trzeba uważać. *)
+
 (** ** Paradoks pieniądza i kebaba *)
 
 (** Przestrzegłem cię już przed nieopatrznym interpretowaniem zdań języka

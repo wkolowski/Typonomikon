@@ -360,7 +360,50 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 
 <div class="paragraph"> </div>
 
-<a id="lab25"></a><h2 class="section">Paradoks pieniądza i kebaba</h2>
+<a id="lab25"></a><h2 class="section">Przemienność koniunkcji a język naturalny</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span> /\ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Przemienność koniunkcji wydaje się byc własnością dość oczywistą i
+    nietrudno ją udowodnić, a jednak nie powinniśmy przejść obok niej
+    bez podejrzliwości. Przynajmniej w kwestii języka naturalnego: nie
+    zawsze Coqowe <span class="inlinecode">/\</span> dokładnie odpowiada polskiemu "i" (ani angielskiemu
+    "and"). Dwa przykłady:
+
+<div class="paragraph"> </div>
+
+    Czasem "i" jest przemienne, mimo że nie wyraża zdania logicznego.
+    Dla przykładu: "ja i ty" znaczy to samo co "ty i ja". Nie są to
+    jednak zdania logiczne, więc nie można wyrazić tego w Coqu za
+    pomocą spójnika <span class="inlinecode">/\</span>.
+
+<div class="paragraph"> </div>
+
+    Czasem "i" nie jest przemienne, np. zdanie "otworzyłem drzwi
+    i wszedłem do środka" wygląda całkiem normalnie, ale zdanie
+    "wszedłem do środka i otworzyłem drzwi" jest już nieco dziwne.
+    Zdania te mogą mieć potencjalnie różne znaczenie (jeżeli nie
+    wierzysz, to zastanów się, czy oba poprawnie opisują sytuację,
+    gdy wchodzisz do kibla), więc nie można tutaj użyć Coqowego <span class="inlinecode">/\</span>.
+
+<div class="paragraph"> </div>
+
+    Podsumowując: koniunkcja jest przemienna, ale polski spójnik "i"
+    czasem nie jest przemienny, a czasem nie służy do tworzenia
+    zdań logicznych, więc trzeba uważać. 
+<div class="paragraph"> </div>
+
+<a id="lab26"></a><h2 class="section">Paradoks pieniądza i kebaba</h2>
 
 <div class="paragraph"> </div>
 
@@ -413,7 +456,7 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 </div>
 
 <div class="doc">
-<a id="lab26"></a><h4 class="section">Ćwiczenie (formalizacja paradoksu)</h4>
+<a id="lab27"></a><h4 class="section">Ćwiczenie (formalizacja paradoksu)</h4>
 
 <div class="paragraph"> </div>
 
@@ -438,7 +481,7 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
     Szach mat, Turcjo bankrutuj! 
 <div class="paragraph"> </div>
 
-<a id="lab27"></a><h1 class="section">Zadania (TODO)</h1>
+<a id="lab28"></a><h1 class="section">Zadania (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -457,7 +500,7 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 
 <div class="paragraph"> </div>
 
-<a id="lab28"></a><h1 class="section">Ściąga</h1>
+<a id="lab29"></a><h1 class="section">Ściąga</h1>
 
 </div>
 <div class="code">

@@ -40,7 +40,7 @@ Definition unique {A : Type} (P : A -> Prop) : Prop :=
 
 (** * α-konwersja i inne rodzaje równości (TODO) *)
 
-(** https://github.com/wkolowski/Typonomikon/blob/master/txt/równość.md *)
+(** https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/równość.md *)
 
 (* begin hide *)
 (*
@@ -125,3 +125,5 @@ Qed.
 (* end hide *)
 
 (** * Ściąga (TODO) *)
+
+(** https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/logika.md *)
