@@ -2,7 +2,10 @@
 
 (** * Typy i ich elementy (TODO) *)
 
-(** Tu zestawić ze sobą P : Prop, A : Type, p : P, x : A *)
+(** Tu zestawić ze sobą P : Prop, A : Type, p : P, x : A.
+
+    Wytłumaczyć relację między typami, zdaniami, specyfikacjami
+    programów, przestrzeniami, etc. *)
 
 (** * Predykaty i relacje (TODO) *)
 
@@ -54,7 +57,11 @@ TODO 3: Użyć nominalizmów do wytłumaczenia wiązania nazw zmiennych.
 
 (** * Zadania (TODO) *)
 
-(** - modelowanie różnych sytuacji za pomocą zdań i predykatów
+(** rozwiąż wszystkie zadania jeszcze raz, ale tym razem bez używania
+    Module/Section/Hypothesis oraz z jak najkrótszymi dowodami
+
+    Inne zadania:
+    - modelowanie różnych sytuacji za pomocą zdań i predykatów
     - rozwiązywanie zagadek logicznych
     - więcej zadań z exists *)
 

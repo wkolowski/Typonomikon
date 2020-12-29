@@ -363,6 +363,20 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Wymyśl to sam... (TODO) *)
+
+(** **** Ćwiczenie *)
+
+(** Jeżeli jeszcze ci mało, spróbuj sam wymyślić jakieś
+    spójniki logiczne, których nie ma w logice konstruktywnej
+    ani klasycznej.
+
+    Zastanów się, czy taki spójnik ma sens matematyczny, czy
+    nadaje się do użytku jedynie w językach naturalnych. Da
+    się go jakoś wyrazić za pomocą znanych nam spójników, czy
+    nie bardzo? Twój spójnik jest fajny czy głupi? Użyteczny
+    czy głupi? *)
+
 (** * Porównanie logiki konstruktywnej i klasycznej (TODO) *)
 
 (** * Inne logiki? *)
@@ -979,7 +993,7 @@ Qed.
 
 (** * Logiki pośrednie (TODO) *)
 
-(** ** [WLEM] (TODO) *)
+(** ** Logika słabego wyłączonego środka (TODO) *)
 
 Definition WLEM : Prop :=
   forall P : Prop, ~ P \/ ~ ~ P.
@@ -1451,7 +1465,8 @@ Lemma DNS_not_not_LEM :
   DNS <-> ~ ~ LEM.
 (* begin hide *)
 Proof.
-  unfold DNS, LEM. split.
+  unfold DNS, LEM.
+  split.
     intros DNS H.
       specialize (DNS Prop (fun P => P \/ ~ P) LEM_irrefutable).
       apply DNS. intro H'. contradiction.
@@ -3046,12 +3061,9 @@ Qed.
     od następnego rozdziału) będzie dogłębnie poznać tę teorię i nauczyć
     się nią posługiwać. *)
 
-(** * Zadania *)
+(** * Zadania (TODO) *)
 
-(** rozwiąż wszystkie zadania jeszcze raz, ale tym razem bez używania
-    Module/Section/Hypothesis oraz z jak najkrótszymi dowodami *)
-
-(** * Jakieś podsumowanie *)
+(** * Jakieś podsumowanie (TODO) *)
 
 (** Gratulacje! Udało ci się przebrnąć przez pierwszy (poważny) rozdział
     moich wypocin, czyli rozdział o logice. W nagrodę już nigdy nie
@@ -3059,8 +3071,11 @@ Qed.
     zrobi to za ciebie taktyka [firstorder]. Jak sama nazwa wskazuje,
     służy ona do radzenia sobie z czysto logicznymi dowodami w logice
     pierwszego rzędu (czyli w takiej, gdzie nie kwantyfikujemy po
-    funkcjach albo tympodobnie skomplikowanych rzeczach). *)
+    funkcjach albo tympodobnie skomplikowanych rzeczach).
 
-(** - taktyka firstorder
-    - zrobić test diagnostyczny tak/nie
-    - fiszki do nauki nazw praw *)
+    TODO: zrobić w Anki:
+    - test diagnostyczny tak/nie
+    - talię do nauki nazw praw
+    - talię do nauki tautologia/nietautologia
+    - talię do nauki pozytywny/negatywny
+    - inne przydatne talie *)

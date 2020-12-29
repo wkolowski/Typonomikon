@@ -269,7 +269,13 @@ Qed.
     z biblioteki standardowej znajdziesz tu:
     https://coq.inria.fr/refman/coq-tacindex.html *)
 
-(** ** [firstorder] (TODO) *)
+(** * Logika pierwszego rzędu a logika wyższego rzędu (TODO) *)
+
+(** ** Logika pierwszego rzędu (TODO) *)
+
+(** ** Logika wyższego rzędu (TODO) *)
+
+(** ** Taktyka [firstorder] (TODO) *)
 
 (** * Paradoksy autoreferencji *)
 
@@ -428,6 +434,14 @@ Qed.
 (* TODO: tutaj opisać impredykatywne definicje spójników *)
 (* end hide *)
 
+(** * Spójniki pozytywne i negatywne (TODO) *)
+
+(** TODO:
+  - równoważność jest negatywna
+  - słaba negacja jest negatywna
+  - silna negacja jest pozytywna
+  - fałsz jest pozytywny *)
+
 (** * Esencjalizm vs strukturalizm *)
 
 (** * Kodowania impredykatywne (TODO) *)
@@ -543,6 +557,24 @@ Proof.
 Qed.
 (* end hide *)
 
+(** * Harmonia logiki konstruktywnej (TODO) *)
+
 (** * Logika intuicjonistyczna jako logika certyfikatów (TODO) *)
 
-(** * Aksjomaty i pojęcie "tabu" *)
+(** * Aksjomaty i pojęcie "tabu" (TODO) *)
+
+(** * Klasyfikacja zdań (TODO) *)
+
+(** Tutaj drobna klasyfikacja na coś w stylu:
+    - zdania prawdziwe ([P] zachodzi)
+    - zdania fałszywe ([~ P] zachodzi)
+    - zdania niezaprzeczalne ([~ ~ P] zachodzi)
+    - zdania kontyngentne ([P] jest fałszywym zdaniem postaci
+      [forall x : A, Q x] i zachodzi [exists x : A, Q x]. Inne
+      podejście: tylko w kontekście, w którym zdanie [P] składa
+      się z nieznanych części, np. [P -> Q] jest kontyngentne,
+      bo [P -> P] zachodzi, zaś [True -> False] nie zachodzi.
+    - zdania klasycznie prawdziwe ([P] zachodzi w logice klasycznej)
+    - zdania tabu ([P] implikuje jakieś inne tabu, np. [LEM])
+
+    TODO: być może dać to do podrozdziału o [WLEM] *)

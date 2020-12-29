@@ -2,92 +2,9 @@
 
 ![Plan](plan.jpg)
 
-## Część 0
-
-### A: Wstęp i inne tego typu pierdoły
-
 ## Część 1: Logika
 
 ![Logika](logika.jpg)
-
-### B1: Konstruktywny rachunek zdań.
-- Spójniki:
-  - Implikacja:
-    - rozumowanie "od tyłu" - `apply`
-    - rozumowanie "do przodu" - `specialize`
-    - rozumowanie od tyłu jest lepsze, logika jest bezmyślna
-  - Dysjunkcja
-  - Koniunkcja
-  - Fałsz i prawda, w tym jako 0-arna wersja dysjunkcji i koniunkcji
-  - równoważność
-  - negacja, silna i słaba
-- Paradoks pieniądza i kebaba
-- Zadania:
-  - zadania wstawić do tekstu, a na koniec dać tylko te, które łączą wiele spójników.
-  - dodać zadanie dotyczące czytania twierdzeń i dowodów
-  - dodać zadania dotyczące czytania formuł (precedencja etc.)
-- Ściąga
-  
-### B2: Konstruktywny rachunek kwantyfikatorów.
-- Typy i ich elementy (zestawić ze sobą `P : Prop`, `A : Type`, `p : P`, `x : A`)
-- Predykaty i relacje
-- Równość
-- Kwantyfikatory:
-  - uniwersalny
-  - egzystencjalny
-  - unikatowy
-- Zmienne związane
-- Paradoks golibrody
-- Zadania:
-  - modelowanie różnych sytuacji za pomocą zdań i predykatów
-  - rozwiązywanie zagadek logicznych
-  - więcej zadań z exists
-- Ściąga
-
-### B3: Różne inne rzeczy
-- (Im)predykatywizm - krótki opis.
-- Kodowanie impredykatywne
-- Kombinatory taktyk
-- Taktyka firstorder
-
-### B4: Logika klasyczna
-- Prawa logiki klasycznej - enumeracja, krótki opis, podział na grupy (LEM, materialna implikacja i równoważność) vs DNE vs (Peirce, consequentia mirabilis) vs kontrapozycja
-- Logika klasyczna jako logika:
-  - Boga (LEM) + prawo zachowania informacji
-    - metoda zerojedynkowa
-  - materialna
-  - diabła (DNE i kontrapozycja)
-  - cudownych konsekwencji, Peirce'a
-- Paradoks pijoka
-- Paradoks Curry'ego
-- (Paradoksy implikacji materialnej?)
-- Zadania:
-  - udowodnij równoważność praw każde z każdym
-  - wyrzucić zadania mącące (mieszające typy i zdania)
-- Ściąga
-
-### B5: Inne logiki
-- Porównanie logiki konstruktywnej i klasycznej
-- Inne spójniki, np. xor. Ćwiczenie kreatywności?
-- Inne logiki:
-  - {sub, super}-intuicjonistyczne
-  - modalne
-  - substrukturalne
-  - wielowartościowe
-  - logika szalonego Gruzina
-- Logiki pośrednie:
-  - opisać pojęcie tabu
-  - logika słabego wyłączonego środka
-  - logika de Morgana jako coś pomiędzy logiką konstruktywną i klasyczną
-  - Goedel-Dummet
-  - Przesuwanie podwójnej negacji
-- Logika modalna
-- Pluralizm logiczny
-- Zadania:
-  - rozwiąż wszystkie zadania jeszcze raz, ale tym razem bez używania Module/Section/Hypothesis oraz z jak najkrótszymi dowodami
-- Jakieś podsumowanie
-- Zrobić test tak/nie.
-- Zrobić fiszki do nauki nazw praw.
 
 ## Część 2: teoria typów, czyli programowanie
 

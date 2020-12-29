@@ -1,5 +1,13 @@
 (** * B1: Konstruktywny rachunek zdań [TODO] *)
 
+(** * Wstęp *)
+
+(** ** Zdania logiczne *)
+
+(** ** Rozumowanie i dowodzenie *)
+
+(** ** Reguły i taktyki *)
+
 (** * Zdania i spójniki logiczne (TODO) *)
 
 (** ** Implikacja (TODO) *)

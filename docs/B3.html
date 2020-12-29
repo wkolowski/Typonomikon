@@ -21,7 +21,23 @@
 </div>
 
 <div class="doc">
-<a id="lab61"></a><h1 class="section">Aksjomaty i prawa logiki klasycznej (TODO)</h1>
+<a id="lab71"></a><h1 class="section">Prawo zachowania informacji (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab72"></a><h1 class="section">Aksjomaty i prawa logiki klasycznej (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ TODO:
+<ul class="doclist">
+<li> enumeracja, krótki opis
+
+</li>
+<li> podział na grupy (LEM, materialna implikacja i równoważność) vs
+      DNE vs (Peirce, consequentia mirabilis) vs kontrapozycja 
+</li>
+</ul>
 
 </div>
 <div class="code">
@@ -62,14 +78,10 @@
 </div>
 
 <div class="doc">
-Tu o prawie zachowania informacji.
-
+TODO: Napisać coś o paradoksach implikacji materialnej. 
 <div class="paragraph"> </div>
 
-    A o paradoksach implikacji materialnej? 
-<div class="paragraph"> </div>
-
-<a id="lab62"></a><h1 class="section">Logika klasyczna jako logika Boga (TODO)</h1>
+<a id="lab73"></a><h1 class="section">Logika klasyczna jako logika Boga (TODO)</h1>
 
 </div>
 <div class="code">
@@ -125,14 +137,14 @@ Tu o prawie zachowania informacji.
 </div>
 
 <div class="doc">
-<a id="lab63"></a><h2 class="section">Metoda zerojedynkowa</h2>
+<a id="lab74"></a><h2 class="section">Metoda zerojedynkowa</h2>
 
 <div class="paragraph"> </div>
 
  Tutaj o rysowaniu tabelek. 
 <div class="paragraph"> </div>
 
-<a id="lab64"></a><h1 class="section">Logika klasyczna jako logika materialnej implikacji i równoważności (TODO)</h1>
+<a id="lab75"></a><h1 class="section">Logika klasyczna jako logika materialnej implikacji i równoważności (TODO)</h1>
 
 </div>
 <div class="code">
@@ -194,15 +206,6 @@ Tu o prawie zachowania informacji.
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">material_equivalence_conv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) \/ (~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">pq</span> | <span class="id" title="var">npnq</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">pq</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> <span class="id" title="var">q</span>]. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p'</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">q'</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">npnq</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">np</span> <span class="id" title="var">nq</span>]. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="var">contradiction</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">q</span>. <span class="id" title="var">contradiction</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">material_equivalence</span> :<br/>
@@ -218,17 +221,6 @@ Tu o prawie zachowania informacji.
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">material_equivalence_irrefutable</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ ~ ((<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) \/ (~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>)).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">nme</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">nme</span>. <span class="id" title="tactic">intros</span> [<span class="id" title="var">pq</span> <span class="id" title="var">qp</span>].<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">nme</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">_</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">pq</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">q</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">nme</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">_</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">qp</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">ME_LEM</span> :<br/>
@@ -258,13 +250,13 @@ Tu o prawie zachowania informacji.
 </div>
 
 <div class="doc">
-<a id="lab65"></a><h1 class="section">Logika klasyczna jako logika diabła (TODO)</h1>
+<a id="lab76"></a><h1 class="section">Logika klasyczna jako logika diabła (TODO)</h1>
 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">P</span></span> jest stabilne, gdy <span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> 
 </div>
 <div class="code">
-
-<br/>
-<span class="comment">(*&nbsp;<span class="inlinecode"><span class="id" title="var">P</span></span>&nbsp;jest&nbsp;stabilne,&nbsp;gdy&nbsp;<span class="inlinecode">~</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>&nbsp;*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_True</span> :<br/>
@@ -300,18 +292,18 @@ Tu o prawie zachowania informacji.
 
 <div class="doc">
 Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
-    sobie pewien rusek. Pewnego razu do ruska przyszedł diaboł (a to,
-    jak wiadomo, coś dużo gorszego niż diabeł) i zaoferował mu taki
-    dil: "dam ci miliard dolarów albo jeżeli dasz mi miliard dolarów,
-    to spełnię dowolne twoje życzenie".
+    sobie pewien rusek. Pewnego razu do ruska przyszedł diaboł (a
+    diaboł to, jak wiadomo, coś dużo gorszego niż diabeł) i zaoferował
+    mu taki oto deal: "dam ci miliard dolarów lub jeżeli dasz mi
+    miliard dolarów, to spełnię dowolne twoje życzenie".
 
 <div class="paragraph"> </div>
 
     Rusek trochę skonsternowany, nie bardzo widzi mu się podpisywanie
     cyrografu krwią. "Nie nie, żadnych cyrografów, ani innych takich
     kruczków prawnych", zapewnia go diaboł. Rusek myśli sobie tak:
-    "pewnie hajsu nie dostanę, ale przecież nic nie tracę", a mówi:
-    "No dobra, bierę".
+    "pewnie hajsu nie dostanę, ale przecież nic nie tracę", po czym
+    mówi: "No dobra, bierę".
 
 <div class="paragraph"> </div>
 
@@ -324,8 +316,8 @@ Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
 
     Jako, że był przodownikiem pracy i to na dodatek bardzo oszczędnym,
     bo nie miał dzieci ani baby, szybko udało mu się odłożyć miliard
-    dolarów i jeszcze kilka rubli na walizkę. Wtedy znów pojawił się
-    diaboł.
+    dolarów i jeszcze kilka rubli na walizkę, coby mieć gdzie trzymać
+    dolary. Wtedy znów pojawił się diaboł.
 
 <div class="paragraph"> </div>
 
@@ -338,7 +330,7 @@ Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
 <div class="paragraph"> </div>
 
     Jaki morał płynie z tej bajki? Diaboł to bydle złe i przeokrutne,
-    gdyż w logice, którą posługuje się przy robieniu dili (względnie
+    gdyż w logice, którą posługuje się przy robieniu dealów (względnie
     podpisywaniu cyrografów) obowiązuje prawo eliminacji podwójnej
     negacji. 
 <div class="paragraph"> </div>
@@ -413,7 +405,7 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab66"></a><h1 class="section">Logika klasyczna jako logika kontrapozycji (TODO)</h1>
+<a id="lab77"></a><h1 class="section">Logika klasyczna jako logika kontrapozycji (TODO)</h1>
 
 </div>
 <div class="code">
@@ -465,11 +457,11 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab67"></a><h1 class="section">Logika klasyczna jako logika Peirce'a (TODO)</h1>
+<a id="lab78"></a><h1 class="section">Logika klasyczna jako logika Peirce'a (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab68"></a><h2 class="section">Logika cudownych konsekwencji (TODO)</h2>
+<a id="lab79"></a><h2 class="section">Logika cudownych konsekwencji (TODO)</h2>
 
 </div>
 <div class="code">
@@ -519,7 +511,7 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab69"></a><h2 class="section">Logika Peirce'a (TODO)</h2>
+<a id="lab80"></a><h2 class="section">Logika Peirce'a (TODO)</h2>
 
 </div>
 <div class="code">
@@ -572,7 +564,7 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab70"></a><h1 class="section">Paradoks pijoka</h1>
+<a id="lab81"></a><h1 class="section">Paradoks pijoka</h1>
 
 </div>
 <div class="code">
@@ -687,7 +679,7 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
     nie muszą być takie oczywiste. 
 <div class="paragraph"> </div>
 
-<a id="lab71"></a><h4 class="section">Ćwiczenie (logika klasyczna)</h4>
+<a id="lab82"></a><h4 class="section">Ćwiczenie (logika klasyczna)</h4>
 
 <div class="paragraph"> </div>
 
@@ -695,7 +687,7 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
     Zacytuj wszystkie fragmenty dowodu wykorzystujące logikę klasyczną. 
 <div class="paragraph"> </div>
 
-<a id="lab72"></a><h4 class="section">Ćwiczenie (niepusty bar)</h4>
+<a id="lab83"></a><h4 class="section">Ćwiczenie (niepusty bar)</h4>
 
 <div class="paragraph"> </div>
 
@@ -725,14 +717,14 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
 </div>
 
 <div class="doc">
-<a id="lab73"></a><h1 class="section">Zadania (TODO)</h1>
+<a id="lab84"></a><h1 class="section">Zadania (TODO)</h1>
 
 <div class="paragraph"> </div>
 
  wyrzucić zadania mącące (mieszające typy i zdania) 
 <div class="paragraph"> </div>
 
-<a id="lab74"></a><h1 class="section">Ściąga (TODO)</h1>
+<a id="lab85"></a><h1 class="section">Ściąga (TODO)</h1>
 
 </div>
 <div class="code">

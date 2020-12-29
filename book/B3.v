@@ -3,12 +3,24 @@
 (* begin hide *)
 Require Export B2.
 (*
-TODO: Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go używać.
-TODO: Kodowanie logiki klasycznej jak z SSReflekta
-*)
+TODO 1: Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go używać.
+TODO 2: Kodowanie logiki klasycznej jak z SSReflekta
+TODO 3: rozróżnienie na logikę klasyczną:
+        - w sensie subuniwersum [Prop]
+          (np. dla DNE - subuniwersum zdań spełniających [~ ~ P -> P])
+        - w sensie aksjomatu
+        - w sensie dodatkowego założenia *)
+
 (* end hide *)
 
+(** * Prawo zachowania informacji (TODO) *)
+
 (** * Aksjomaty i prawa logiki klasycznej (TODO) *)
+
+(** TODO:
+    - enumeracja, krótki opis
+    - podział na grupy (LEM, materialna implikacja i równoważność) vs
+      DNE vs (Peirce, consequentia mirabilis) vs kontrapozycja *)
 
 Definition LEM : Prop :=
   forall P : Prop, P \/ ~ P.
@@ -34,9 +46,7 @@ Definition Contra : Prop :=
 Ltac u :=
   unfold LEM, DNE, CM, MI, ME, Peirce, Contra.
 
-(** Tu o prawie zachowania informacji.
-
-    A o paradoksach implikacji materialnej? *)
+(** TODO: Napisać coś o paradoksach implikacji materialnej. *)
 
 (** * Logika klasyczna jako logika Boga (TODO) *)
 
@@ -229,6 +239,7 @@ Qed.
 
 Lemma material_equivalence_conv :
   forall P Q : Prop, (P /\ Q) \/ (~ P /\ ~ Q) -> (P <-> Q).
+(* begin hide *)
 Proof.
   intros P Q H. destruct H as [pq | npnq].
     destruct pq as [p q]. split.
@@ -238,6 +249,7 @@ Proof.
       intro p. contradiction.
       intro q. contradiction.
 Qed.
+(* end hide *)
 
 Lemma material_equivalence :
   forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q).
@@ -251,6 +263,7 @@ Abort.
 
 Lemma material_equivalence_irrefutable :
   forall P Q : Prop, ~ ~ ((P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q)).
+(* begin hide *)
 Proof.
   intros P Q nme.
   apply nme. intros [pq qp].
@@ -262,6 +275,7 @@ Proof.
       apply qp. assumption.
       assumption.
 Qed.
+(* end hide *)
 
 Lemma ME_LEM :
   ME -> LEM.
@@ -331,7 +345,7 @@ Qed.
 
 (** * Logika klasyczna jako logika diabła (TODO) *)
 
-(* [P] jest stabilne, gdy [~ ~ P -> P] *)
+(** [P] jest stabilne, gdy [~ ~ P -> P] *)
 
 Lemma not_not_True :
   ~ ~ True -> True.
@@ -401,16 +415,16 @@ Qed.
 (* end hide *)
 
 (** Dawno dawno temu w odległej galaktyce, a konkretniej w ZSRR, był
-    sobie pewien rusek. Pewnego razu do ruska przyszedł diaboł (a to,
-    jak wiadomo, coś dużo gorszego niż diabeł) i zaoferował mu taki
-    dil: "dam ci miliard dolarów albo jeżeli dasz mi miliard dolarów,
-    to spełnię dowolne twoje życzenie".
+    sobie pewien rusek. Pewnego razu do ruska przyszedł diaboł (a
+    diaboł to, jak wiadomo, coś dużo gorszego niż diabeł) i zaoferował
+    mu taki oto deal: "dam ci miliard dolarów lub jeżeli dasz mi
+    miliard dolarów, to spełnię dowolne twoje życzenie".
 
     Rusek trochę skonsternowany, nie bardzo widzi mu się podpisywanie
     cyrografu krwią. "Nie nie, żadnych cyrografów, ani innych takich
     kruczków prawnych", zapewnia go diaboł. Rusek myśli sobie tak:
-    "pewnie hajsu nie dostanę, ale przecież nic nie tracę", a mówi:
-    "No dobra, bierę".
+    "pewnie hajsu nie dostanę, ale przecież nic nie tracę", po czym
+    mówi: "No dobra, bierę".
 
     "Świetnie!" - mówi diaboł - "Jeżeli dasz mi miliard dolarów, to
     spełnie dowolne twoje życzenie". Cóż, rusek był zawiedziony, ale
@@ -419,8 +433,8 @@ Qed.
 
     Jako, że był przodownikiem pracy i to na dodatek bardzo oszczędnym,
     bo nie miał dzieci ani baby, szybko udało mu się odłożyć miliard
-    dolarów i jeszcze kilka rubli na walizkę. Wtedy znów pojawił się
-    diaboł.
+    dolarów i jeszcze kilka rubli na walizkę, coby mieć gdzie trzymać
+    dolary. Wtedy znów pojawił się diaboł.
 
     "O, cóż za spotkanie. Trzym hajs i spełnij moje życzenie, tak jak
     się umawialiśmy" - powiedział rusek i podał diabołowi walizkę.
@@ -429,7 +443,7 @@ Qed.
     oddał ruskowi walizkę.
 
     Jaki morał płynie z tej bajki? Diaboł to bydle złe i przeokrutne,
-    gdyż w logice, którą posługuje się przy robieniu dili (względnie
+    gdyż w logice, którą posługuje się przy robieniu dealów (względnie
     podpisywaniu cyrografów) obowiązuje prawo eliminacji podwójnej
     negacji. *)
 
