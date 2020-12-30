@@ -3170,7 +3170,7 @@ Instance Antireflexive_rr :
 Proof. rel. Qed.
 (* end hide *)
 
-Require Import B3.
+Require Import B4.
 
 Lemma rr_rc :
   LEM ->

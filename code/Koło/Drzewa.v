@@ -1,4 +1,4 @@
-(** Na dzisiejszym kole było całkiem wesoło - okazuje się, ża każdy zrozumiał to samo polecenie inaczej, a pote,
+(** Na dzisiejszym kole było całkiem wesoło - okazuje się, ża każdy zrozumiał to samo polecenie inaczej, a potem
     wszyscy robili te same błędy, ale w różnej kolejności. *)
 
 (** **** Ćwiczenie *)

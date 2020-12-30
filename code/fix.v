@@ -1,49 +1,50 @@
-Inductive Rec' (F : Type -> Type) (A : Type) : Type :=
-    | End  : A -> Rec' F A
-    | Step : F A -> Rec' F A.
+(** Da się zrobić kombinator punktu stałego i zamknąć go w monadę/modalnośc
+    tak, żeby sprzeczność nie wyciekła na zewnątrz i żeby wszystko ładnie się
+    liczyło, jezeli wynik nie jest bottomem? TAK! *)
 
-Arguments End  {F A} _.
-Arguments Step {F A} _.
+Module Type DIV.
 
-CoInductive Rec (A : Type) : Type :=
-{
-    rec : Rec' Rec A;
-}.
+Inductive Div (A : Type) : Type :=
+    | div : A -> Div A.
 
-Arguments rec {A}.
+Parameter efix :
+  forall {A B : Type},
+    ((A -> B) -> (A -> B)) -> (A -> Div B).
 
-Fixpoint unpackn {A : Type} (n : nat) (x : Rec A) : option A :=
-match n, rec x with
-    | 0   , _       => None
-    | _   , End a   => Some a
-    | S n', Step x' => unpackn n' x'
-end.
 
-Unset Guard Checking.
-(* Fixpoint mfix {A : Type} (f : A -> A) {struct f} : A :=
-  f (let x := mfix (fun x => f x) in x).
+(* Definition figz {A : Type} (f : A -> A) : Div A :=
+  efix (fun (g : A -> A) (x : A) => g (f x)).
  *)
 
-CoFixpoint mfix_aux {A : Type} (f : A -> A) : A :=
-  f (mfix_aux f).
+End DIV.
 
-Fixpoint unpack {A : Type} (x : Rec A) {struct x} : A :=
-match rec x with
-    | End a => a
-    | Step x' => unpack x'
-end.
-
+Unset Guard Checking.
+Fixpoint efix' {A B : Type} (f : (A -> B) -> (A -> B)) (x : A) {struct x} : B :=
+  f (efix' f) x.
 Set Guard Checking.
 
-CoFixpoint Euclid' (n m : nat) : Rec nat :=
-{|
-    rec :=
-    match n with
-        | 0 => End m
-        | _ => Step (Euclid' m (n - m))
-    end
-|}.
+Require Import Arith.
+Check Nat.compare.
+Print comparison.
 
-Compute unpackn 3 (Euclid' 4 4).
+Compute efix'
+  (fun euclid '(n, m) =>
+    match Nat.compare n m with
+        | Lt => euclid (n, m - n)
+        | Eq => n
+        | Gt => euclid (m, n - m)
+    end)
+  (360, 24).
 
-(* Compute unpack (Euclid' 0 6). *)
+Compute efix' (fun _ _ => 12) 123.
+
+Inductive Div (A : Type) : Type :=
+    | div : A -> Div A.
+
+Arguments div {A} _.
+
+Definition efix {A B : Type} (f : (A -> B) -> (A -> B)) : A -> Div B :=
+  fun x : A => div (efix' f x).
+
+
+

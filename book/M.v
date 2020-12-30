@@ -240,7 +240,7 @@ Proof.
 Qed.
 
 (* begin hide *)
-Require Import B3.
+Require Import B4.
 Check LEM.
 Print LEM.
 
