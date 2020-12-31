@@ -14,7 +14,7 @@
 
 <div class="paragraph"> </div>
 
-<a id="lab34"></a><h1 class="section">Typy i ich elementy (TODO)</h1>
+<a id="lab61"></a><h1 class="section">Typy i ich elementy (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -26,11 +26,11 @@
     programów, przestrzeniami, etc. 
 <div class="paragraph"> </div>
 
-<a id="lab35"></a><h1 class="section">Predykaty i relacje (TODO)</h1>
+<a id="lab62"></a><h1 class="section">Predykaty i relacje (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab36"></a><h1 class="section">Równość - najważniejsza relacja (TODO)</h1>
+<a id="lab63"></a><h1 class="section">Równość - najważniejsza relacja (TODO)</h1>
 
 </div>
 <div class="code">
@@ -45,19 +45,326 @@ Dobrze byłoby zapoznać się z równością przed pierwszym jej użyciem
     w rozdziale o typach induktywnych. 
 <div class="paragraph"> </div>
 
-<a id="lab37"></a><h1 class="section">Kwantyfikatory (TODO)</h1>
+<a id="lab64"></a><h1 class="section">Kwantyfikatory</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab38"></a><h2 class="section">Kwantyfikator uniwersalny (TODO)</h2>
+ Komenda <span class="inlinecode"><span class="id" title="keyword">End</span></span> zamyka sekcję, którą otworzyliśmy na samym początku
+    tego rozdziału. Zdania <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">Q</span></span> i <span class="inlinecode"><span class="id" title="var">R</span></span> znikają z
+    dostępnej dla nas przestrzeni nazw, dzięki czemu uniknęliśmy jej
+    zaśmiecenia. Nasze twierdzenia wciąż są jednak dostępne (sprawdź
+    to).
 
 <div class="paragraph"> </div>
 
-<a id="lab39"></a><h2 class="section">Kwantyfikator egzystencjalny (TODO)</h2>
+    Zajmiemy się teraz konstruktywnym rachunkiem kwantyfikatorów. Jest on
+    rozszerzeniem omówionego przed chwilą konstruktywnego rachunku zdań
+    o kwantyfikatory, które pozwolą nam wyrażać takie zależności jak "każdy"
+    oraz "istnieje", oraz o predykaty i relacje, które mózemy interpretować
+    odpowiednio jako właściwości obiektów oraz zależności między obiektami. 
+<div class="paragraph"> </div>
+
+<a id="lab65"></a><h2 class="section">Kwantyfikacja uniwersalna</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab40"></a><h2 class="section">Kwantyfikator unikatowy (TODO)</h2>
+ Zobaczmy o co chodzi na znanym nam już przykładzie zwrotności
+    implikacji: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_refl''</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="keyword">forall</span></span> oznacza kwantyfikację uniwersalną. Możemy ten symbol
+    odczytywać "dla każdego". Zasięg kwantyfikatora rozciąga się
+    od przecinka aż do kropki. Wobec tego treść naszego twierdzenia
+    możemy odczytać "dla każdego zdania logicznego P, P implikuje P".
+
+<div class="paragraph"> </div>
+
+    Kwantyfikator uniwersalny jest w swej naturze bardzo podobny do
+    implikacji — zmienne, których dotyczy, możemy wprowadzić do
+    kontekstu przy pomocy taktyki <span class="inlinecode"><span class="id" title="tactic">intro</span></span>. W dowodzie nieforamlnym
+    użyciu taktyki <span class="inlinecode"><span class="id" title="tactic">intro</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> na celu kwantyfikowanym uniwersalnie
+    odpowiadałoby stwierdzenie "niech P będzie dowolnym zdaniem logicznym".
+
+<div class="paragraph"> </div>
+
+    Zauważ, że używając taktyki <span class="inlinecode"><span class="id" title="tactic">intros</span></span>, możemy wprowadzić do kontekstu
+    jednocześnie zmienne kwantyfikowane uniwersalnie oraz przesłanki
+    występujące po lewej stronie implikacji. To wszystko powinno nasunąć
+    nam myśl, że kwantyfikacja uniwersalna i implikacja są ze sobą blisko
+    związane. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">impl_refl''</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;impl_refl''&nbsp;=&nbsp;fun&nbsp;(P&nbsp;:&nbsp;Prop)&nbsp;(H&nbsp;:&nbsp;P)&nbsp;=&gt;&nbsp;H<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;P&nbsp;:&nbsp;Prop,&nbsp;P&nbsp;-&gt;&nbsp;P&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Rzeczywiście: dowodem naszego zdania jest coś, co na pierwszy rzut
+    oka wygląda jak funkcja. Jeżeli jednak przyjrzysz się jej uważnie,
+    dostrzeżesz że nie może być to zwykła funkcja — typ zwracanej
+    wartości <span class="inlinecode"><span class="id" title="var">H</span></span> różni się w zależności od argumentu <span class="inlinecode"><span class="id" title="var">P</span></span>. Jeżeli
+    za <span class="inlinecode"><span class="id" title="var">P</span></span> wstawimy <span class="inlinecode">1</span> <span class="inlinecode">=</span> <span class="inlinecode">1</span>, to <span class="inlinecode"><span class="id" title="var">H</span></span> będzie dowodem na to, że
+    <span class="inlinecode">1</span> <span class="inlinecode">=</span> <span class="inlinecode">1</span>. Jeżeli za <span class="inlinecode"><span class="id" title="var">P</span></span> wstawimy <span class="inlinecode">2</span> <span class="inlinecode">=</span> <span class="inlinecode">2</span>, to <span class="inlinecode"><span class="id" title="var">H</span></span> będzie dowodem
+    na to, że <span class="inlinecode">2</span> <span class="inlinecode">=</span> <span class="inlinecode">2</span>. Zauważ, że <span class="inlinecode">1</span> <span class="inlinecode">=</span> <span class="inlinecode">1</span> oraz <span class="inlinecode">2</span> <span class="inlinecode">=</span> <span class="inlinecode">2</span> to dwa różne
+    zdania, a zatem są to także różne typy.
+
+<div class="paragraph"> </div>
+
+    Dowód naszego zdania nie może być zatem zwykłą funkcją — gdyby
+    nią był, zawsze zwracałby wartości tego samego typu. Jest on
+    funkcją zależną, czyli taką, której przeciwdziedzina zależy
+    od dziedziny. Funkcja zależna dla każdego argumentu może
+    zwracać wartości różnego typu.
+
+<div class="paragraph"> </div>
+
+    Ustaliliśmy więc, że kwantyfikacja uniwersalna jest pewnym
+    uogólnieniem implikacji, zaś jej interpretacją obliczeniową
+    jest funkcja zależna, czyli pewne uogólnienie zwykłej funkcji,
+    która jest interpretacją obliczeniową implikacji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">general_to_particular</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span>) -&gt; <span class="id" title="var">P</span> 42.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Restart</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">specialize</span> (<span class="id" title="var">H</span> 42). <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Podobnie jak zwykłe funkcje, funkcje zależne możemy aplikować
+    do celu za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">apply</span></span>. Możliwy jest też inny
+    sposób rozumowania, nieco bardziej przypominający rozumowania
+    "w przód": przy pomocy taktyki <span class="inlinecode"><span class="id" title="tactic">specialize</span></span> możemy zainstancjować
+    <span class="inlinecode"><span class="id" title="var">n</span></span> w naszej hipotezie <span class="inlinecode"><span class="id" title="var">H</span></span>, podając jej pewną liczbę naturalną.
+    Wtedy nasza hipoteza <span class="inlinecode"><span class="id" title="var">H</span></span> z ogólnej, z kwantyfikacją po wszystkich
+    liczbach naturalnych, zmieni się w szczególną, dotyczącą tylko
+    podanej przez nas liczby.
+
+<div class="paragraph"> </div>
+
+    Komenda <span class="inlinecode"><span class="id" title="var">Restart</span></span> pozwala nam zacząć dowód od nowa w dowolnym
+    jego momencie. Jej użycie nie jest wymagane, by ukończyć
+    powyższy dowód — spróbuj wstawić w jej miejsce <span class="inlinecode"><span class="id" title="keyword">Qed</span></span>. Użyłem jej
+    tylko po to, żeby czytelnie zestawić ze sobą sposoby rozumowania
+    w przód i w tył dla kwantyfikacji uniwersalnej. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_proj1''</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> /\ <span class="id" title="var">Q</span> <span class="id" title="var">n</span>) -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">H</span> <span class="id" title="var">k</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">H</span> <span class="id" title="var">k</span>). <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+W powyższym przykładzie próba użycia taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> na
+    hipotezie <span class="inlinecode"><span class="id" title="var">H</span></span> zawiodłaby — <span class="inlinecode"><span class="id" title="var">H</span></span> nie jest produktem. Żeby
+    rozbić tę hipotezę, musielibyśmy najpierw wyspecjalizować
+    ją dla interesującego nas <span class="inlinecode"><span class="id" title="var">k</span></span>, a dopiero potem rozbić.
+    Możemy jednak zrobić to w nieco krótszy sposób — pisząc
+    <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode">(<span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="var">k</span>)</span>. Dzięki temu "w locie" przemienimy <span class="inlinecode"><span class="id" title="var">H</span></span>
+    z hipotezy ogólnej w szczególną, dotycząca tylko <span class="inlinecode"><span class="id" title="var">k</span></span>, a
+    potem rozbijemy. Podobnie poprzednie twierdzenie moglibyśmy
+    udowodnić szybciej, jeżeli zamiast <span class="inlinecode"><span class="id" title="tactic">specialize</span></span> i <span class="inlinecode"><span class="id" title="tactic">assumption</span></span>
+    napisalibyśmy <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode">(<span class="id" title="var">H</span></span> <span class="inlinecode">42)</span> (choć i tak najszybciej jest
+    oczywiście użyć <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span>. 
+<div class="paragraph"> </div>
+
+<a id="lab66"></a><h4 class="section">Ćwiczenie (kwantyfikacja uniwersalna)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe twierdzenie. Co ono oznacza? Przeczytaj je na głos.
+    Zinterpretuj je, tzn. sparafrazuj. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">all_dist</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> /\ <span class="id" title="var">Q</span> <span class="id" title="var">x</span>) &lt;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) /\ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Q</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab67"></a><h2 class="section">Kwantyfikacja egzystencjalna</h2>
+
+<div class="paragraph"> </div>
+
+ Zdania egzystencjalne to zdania postaci "istnieje obiekt x,
+    który ma właściwość P". W Coqu prezentują się tak: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ex_example1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> = 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> 0. <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Kwantyfikacja egzystencjalna jest w Coqu zapisywana jako <span class="inlinecode"><span class="id" title="tactic">exists</span></span>
+    (exists). Aby udowodnić zdanie kwantyfikowane egzystencjalnie, musimy
+    skonstruować obiekt, którego istnienie postulujemy, oraz
+    udowodnić, że ma deklarowaną właściwość. Jest to wymóg dużo
+    bardziej restrykcyjny niż w logice klasycznej, gdzie możemy
+    zadowolić się stwierdzeniem, że nieistnienie takiego obiektu
+    jest sprzeczne.
+
+<div class="paragraph"> </div>
+
+    Powyższe twierdzenie możemy odczytać "istnieje liczba naturalna,
+    która jest równa 0". W dowodzenie nieformalnym użyciu taktyki
+    <span class="inlinecode"><span class="id" title="tactic">exists</span></span> odpowiada stwierdzenie: "liczbą posiadającą tę właściwość
+    jest 0". Następnie pozostaje nam udowodnić, iż rzeczywiście <span class="inlinecode">0</span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>,
+    co jest trywialne. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ex_example2</span> :<br/>
+&nbsp;&nbsp;~ <span class="id" title="tactic">exists</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 0 = <span class="id" title="var">S</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">n</span> <span class="id" title="var">H</span>]. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
+    założeniach, możemy je rozbić i uzyskać wspomniany w nim obiekt
+    oraz dowód wspominianej właściwości. Nie powinno nas to dziwić —
+    skoro zakładamy, że zdanie to jest prawdziwe, to musiało zostać
+    ono udowodnione w sposób opisany powyżej — właśnie poprzez wskazanie
+    obiektu i udowodnienia, że ma daną własność.
+
+<div class="paragraph"> </div>
+
+    Myślę, że dostrzegasz już pewną prawidłowość:
+<ul class="doclist">
+<li> udowodnienie koniunkcji wymaga udowodnienia obydwu członów z osobna,
+      więc dowód koniunkcji można rozbić na dowody poszczególnych członów
+      (podobna sytuacja zachodzi w przypadku równoważności)
+
+</li>
+<li> udowodnienie dysjunkcji wymaga udowodnienia któregoś z członów,
+      więc dowód dysjunkcji można rozbić, uzyskując dwa osobne podcele,
+      a w każdym z nich dowód jednego z członów tej dysjunkcji
+
+</li>
+<li> udowodnienie zdania egzystencjalnego wymaga wskazania obiektu i
+      podania dowodu żądanej własności, więc dowód takiego zdania
+      możemy rozbić, uzyskując ten obiekt i dowód jego własności 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Takie konstruowanie i dekonstruowanie dowodów (i innych termów)
+    będzie naszym chlebem powszednim w logice konstruktywnej i w Coqu.
+    Wynika ono z samej natury konstrukcji: zasady konstruowania termów
+    danego typu są ściśle określone, więc możemy dokonywać dekonstrukcji,
+    która polega po prostu na sprawdzeniu, jakimi zasadami posłużono się
+    w konstrukcji. Nie przejmuj się, jeżeli wydaje ci się to nie do końca
+    jasne — więcej dowiesz się już w kolejnym rozdziale.
+
+<div class="paragraph"> </div>
+
+    Ostatnią wartą omówienia sprawą jest interpretacja obliczeniowa
+    kwantyfikacji egzystencjalnej. Jest nią para zależna, tzn. taka,
+    w której typ drugiego elementu może zależeć od pierwszego — pierwszym
+    elementem pary jest obiekt, a drugim dowód, że ma on pewną własność.
+    Zauważ, że podstawiając <span class="inlinecode">0</span> do <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>, otrzymamy
+    zdanie <span class="inlinecode">0</span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>, które jest innym zdaniem, niż <span class="inlinecode">1</span> <span class="inlinecode">=</span> <span class="inlinecode">0</span> (choćby dlatego,
+    że pierwsze jest prawdziwe, a drugie nie). Interpretacją obliczeniową
+    taktyki <span class="inlinecode"><span class="id" title="tactic">exists</span></span> jest wobec tego podanie pierwszego elementu pary,
+    a podanie drugiego to po prostu przeprowadzenie reszty dowodu.
+
+<div class="paragraph"> </div>
+
+    "Zależność" jest tutaj tego samego rodzaju, co w przypadku produktu
+    zależnego — tam typ wyniku mógł być różny w zależność od wartości,
+    jaką funkcja bierze na wejściu, a w przypadku sumy zależnej typ
+    drugiego elementu może być różny w zależności od tego, jaki jest
+    pierwszy element.
+
+<div class="paragraph"> </div>
+
+    Nie daj się zwieść niefortunnemu nazewnictwu: produkt zależny
+    <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, którego elementami są funkcje zależne,
+    jest uogólnieniem typu funkcyjnego <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, którego elementami
+    są zwykłe funkcje, zaś suma zależna <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">B</span></span>, której
+    elementami są pary zależne, jest uogólnieniem produktu <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">B</span></span>,
+    którego elementami są zwykłe pary. 
+<div class="paragraph"> </div>
+
+<a id="lab68"></a><h4 class="section">Ćwiczenie (kwantyfikacja egzystencjalna)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe twierdzenie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ex_or_dist</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> \/ <span class="id" title="var">Q</span> <span class="id" title="var">x</span>) &lt;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) \/ (<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Q</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab69"></a><h1 class="section">Kwantyfikatory (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab70"></a><h2 class="section">Kwantyfikator uniwersalny (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab71"></a><h2 class="section">Kwantyfikator egzystencjalny (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab72"></a><h2 class="section">Kwantyfikator unikatowy (TODO)</h2>
 
 </div>
 <div class="code">
@@ -80,7 +387,7 @@ Poznawszy relację równości oraz kwantyfikatory uniwersalny i
     dokładnie jeden obiekt spełniający daną właściwość. 
 <div class="paragraph"> </div>
 
-<a id="lab41"></a><h1 class="section">α-konwersja i inne rodzaje równości (TODO)</h1>
+<a id="lab73"></a><h1 class="section">α-konwersja i inne rodzaje równości (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -94,7 +401,34 @@ Poznawszy relację równości oraz kwantyfikatory uniwersalny i
 </div>
 
 <div class="doc">
-<a id="lab42"></a><h1 class="section">Zadania (TODO)</h1>
+<a id="lab74"></a><h1 class="section">Konkluzja</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab75"></a><h2 class="section">Ściąga (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+ TODO:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> to zdanie mówiące "dla każdego x typu A zachodzi
+      P x". Postępujemy z nim tak jak z implikacją, która jest jego
+      specjalnym przypadkiem.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> to zdanie mówiące "istnieje taki x typu A, który
+      spełnia P". Dowodzimy go za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">exists</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>, a następnie
+      musimy pokazać <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>. Jeżeli mamy taki dowód w kontekście, możemy
+      rozbić go na <span class="inlinecode"><span class="id" title="var">a</span></span> i <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>. 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/logika.md 
+<div class="paragraph"> </div>
+
+<a id="lab76"></a><h1 class="section">Zadania (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -117,7 +451,104 @@ Poznawszy relację równości oraz kwantyfikatory uniwersalny i
 
 <div class="paragraph"> </div>
 
-<a id="lab43"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab77"></a><h2 class="section">Prawa</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <span class="id" title="var">QuantifiersExercises</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variable</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>.<br/>
+<span class="id" title="keyword">Hypotheses</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab78"></a><h3 class="section">Projekcje</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_and_proj1</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> /\ <span class="id" title="var">Q</span> <span class="id" title="var">x</span>) -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_and_proj2</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> /\ <span class="id" title="var">Q</span> <span class="id" title="var">x</span>) -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Q</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab79"></a><h3 class="section">Rozdzielność</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_dist_and</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> /\ <span class="id" title="var">Q</span> <span class="id" title="var">x</span>) &lt;-&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) /\ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Q</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">exists_dist_or</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> \/ <span class="id" title="var">Q</span> <span class="id" title="var">x</span>) &lt;-&gt;<br/>
+&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) \/ (<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Q</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ex_dist_and</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> /\ <span class="id" title="var">Q</span> <span class="id" title="var">x</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">y</span>) /\ (<span class="id" title="tactic">exists</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Q</span> <span class="id" title="var">z</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab80"></a><h3 class="section">Inne</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_or_imp</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) \/ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Q</span> <span class="id" title="var">x</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> \/ <span class="id" title="var">Q</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_imp_imp</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">Q</span> <span class="id" title="var">x</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Q</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_inhabited_nondep</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> -&gt; ((<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span>) &lt;-&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_or_nondep</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) \/ <span class="id" title="var">R</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> \/ <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_nondep_impl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">x</span>) &lt;-&gt; (<span class="id" title="var">R</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">QuantifiersExercises</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab81"></a><h2 class="section">Zagadki</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab82"></a><h4 class="section">Ćwiczenie</h4>
 
 </div>
 <div class="code">
@@ -149,16 +580,4 @@ Sesshomaru, Naraku i Inuyasha należą do sekty Warring Era. Każdy
 <div class="code">
 
 <br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab44"></a><h1 class="section">Ściąga (TODO)</h1>
-
-<div class="paragraph"> </div>
-
- https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/logika.md 
-</div>
-<div class="code">
 </div>

@@ -12,29 +12,260 @@
 
 <div class="doc">
 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
-<a id="lab16"></a><h1 class="section">Wstęp</h1>
+<br/>
 
-<div class="paragraph"> </div>
+<br/>
+</div>
 
-<a id="lab17"></a><h2 class="section">Zdania logiczne</h2>
-
-<div class="paragraph"> </div>
-
-<a id="lab18"></a><h2 class="section">Rozumowanie i dowodzenie</h2>
-
-<div class="paragraph"> </div>
-
-<a id="lab19"></a><h2 class="section">Reguły i taktyki</h2>
+<div class="doc">
+<a id="lab16"></a><h1 class="section">Stary wstęp</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab20"></a><h1 class="section">Zdania i spójniki logiczne (TODO)</h1>
+<a id="lab17"></a><h2 class="section">Logika klasyczna i konstruktywna</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab21"></a><h2 class="section">Implikacja (TODO)</h2>
+ Jak udowodnić twierdzenie, by komputer mógł zweryfikować nasz
+    dowód? Jedną z metod dowodzenia używanych w logice klasycznej
+    są tabelki prawdy. Są one metodą skuteczną, gdyż działają
+    zawsze i wszędzie, ale nie są wolne od problemów.
+
+<div class="paragraph"> </div>
+
+    Pierwszą, praktyczną przeszkodą jest rozmiar tabelek — rośnie on
+    wykładniczo wraz ze wzrostem ilości zmiennych zdaniowych, co czyni
+    tę metodę skrajnie niewydajną i obliczeniożerną, a więc niepraktyczną
+    dla twierdzeń większych niż zabawkowe.
+
+<div class="paragraph"> </div>
+
+    Druga przeszkoda, natury filozoficznej, i bardziej fundamentalna
+    od pierwszej to poczynione implicite założenie, że każde zdanie
+    jest prawdziwe lub fałszywe, co w logice konstruktywnej jest nie
+    do końca prawdą, choć w logice klasycznej jest słuszne. Wynika to
+    z różnych interpretacji prawdziwości w tych logikach.
+
+<div class="paragraph"> </div>
+
+    Dowód
+    konstruktywny to taki, który polega na skonstruowaniu pewnego
+    obiektu i logika konstruktywna dopuszcza jedynie takie dowody.
+    Logika klasyczna, mimo że również dopuszcza dowody konstruktywne,
+    standardy ma nieco luźniejsze i dopuszcza również dowód polegający
+    na pokazaniu, że nieistnienie jakiegoś obiektu jest sprzeczne.
+    Jest to sposób dowodzenia fundamentalnie odmienny od poprzedniego,
+    gdyż sprzeczność nieistnienia jakiegoś obiektu nie daje nam żadnej
+    wskazówki, jak go skonstruować.
+
+<div class="paragraph"> </div>
+
+    Dobrym przykładem jest poszukiwanie rozwiązań równania: jeżeli
+    udowodnimy, że nieistnienie rozwiązania jest sprzeczne, nie
+    znaczy to wcale, że znaleźliśmy rozwiązanie. Wiemy tylko, że
+    jakieś istnieje, ale nie wiemy, jak je skonstruować. 
+<div class="paragraph"> </div>
+
+<a id="lab18"></a><h2 class="section">Dedukcja naturalna i taktyki</h2>
+
+<div class="paragraph"> </div>
+
+ Ważną konkluzją płynącą z powyższych rozważań jest fakt, że
+    logika konstruktywna ma interpretację obliczeniową — każdy
+    dowód można interpretować jako pewien program.
+    Odnosząc się do poprzedniego przykładu, konstruktywny dowód
+    faktu, że jakieś równanie ma rozwiązanie, jest jednocześnie
+    programem, który to rozwiązanie oblicza.
+
+<div class="paragraph"> </div>
+
+    Wszystko to sprawia, że dużo lepszym, z naszego punktu widzenia,
+    stylem dowodzenia będzie <i>dedukcja naturalna</i> — styl oparty na
+    małej liczbie aksjomatów, zaś dużej liczbie reguł wnioskowania.
+    Reguł, z których każda ma swą własną interpretację obliczeniową,
+    dzięki czemu dowodząc przy ich pomocy będziemy jednocześnie
+    konstruować pewien program. Sprawdzenie, czy dowód jest poprawny,
+    będzie się sprowadzało do sprawdzenia, czy program ten jest
+    poprawnie typowany (co Coq może zrobić automatycznie), zaś
+    wykonanie tego programu skonstruuje obiekt, który będzie "świadkiem"
+    prawdziwości twierdzenia.
+
+<div class="paragraph"> </div>
+
+    Jako, że każdy dowód jest też programem, w Coqu dowodzić można
+    na dwa diametralnie różne sposoby. Pierwszy z nich polega na
+    "ręcznym" skonstruowaniu termu, który reprezentuje dowód —
+    ten sposób dowodzenia przypomina zwykłe programowanie.
+
+<div class="paragraph"> </div>
+
+    Drugim sposobem jest użycie taktyk. Ten sposób jest rozszerzeniem
+    opisanego powyżej systemu dedukcji naturalnej. Taktyki nie są
+    tym samym, co reguły wnioskowania — regułom odpowiadają jedynie
+    najprostsze taktyki. Język taktyk Coqa, Ltac, pozwala z prostych
+    taktyk budować bardziej skomplikowane przy użyciu konstrukcji
+    podobnych do tych, których używa się do pisania "zwykłych"
+    programów.
+
+<div class="paragraph"> </div>
+
+    Taktyki konstruują dowody, czyli programy, jednocześnie same
+    będąc programami. Innymi słowy: taktyki to programy, które piszą
+    inne programy.
+
+<div class="paragraph"> </div>
+
+    Ufff... jeżeli twój mózg jeszcze nie eksplodował, to czas
+    wziąć się do konkretów! 
+<div class="paragraph"> </div>
+
+<a id="lab19"></a><h1 class="section">Wstęp</h1>
+
+<div class="paragraph"> </div>
+
+ Naszą przygodę z Coqiem rozpoczniemy od skoku na głęboką wodę,
+    czyli nauki dowodzenia twierdzeń w logice konstruktywnej przy
+    pomocy taktyk. Powiemy sobie także co nieco o automatyzacji i
+    cechach różniących logikę konstruktywną od klasycznej oraz
+    dowiemy się, czym jest dedukcja naturalna.
+
+<div class="paragraph"> </div>
+
+    Coq składa się w zasadzie z trzech języków:
+<ul class="doclist">
+<li> język termów nazywa się Gallina. Służy do pisania
+      programów oraz podawania twierdzeń
+
+</li>
+<li> język komend nazywa się vernacular ("potoczny"). Służy do
+      interakcji z Coqiem, takich jak np. wyszukanie
+      wszystkich obiektów związanych z podaną nazwą
+
+</li>
+<li> język taktyk nazywa się Ltac. Służy do dowodzenia twierdzeń. 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+<a id="lab20"></a><h2 class="section">Zdania logiczne</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab21"></a><h2 class="section">Rozumowanie i dowodzenie</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab22"></a><h2 class="section">Reguły i taktyki</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab23"></a><h2 class="section">Przydatne komendy</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab24"></a><h3 class="section">Komendy <span class="inlinecode"><span class="id" title="keyword">Check</span></span> i <span class="inlinecode"><span class="id" title="keyword">Locate</span></span></h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Check&nbsp;P.&nbsp;*)</span> <span class="comment">(*&nbsp;TODO&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;P&nbsp;:&nbsp;Prop&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Typ każdego termu możemy sprawdzić przy pomocy komendy <span class="inlinecode"><span class="id" title="keyword">Check</span></span>.
+    Jest ona nie do przecenienia. Jeżeli nie rozumiesz, co się
+    dzieje w trakcie dowodu lub dlaczego Coq nie chce zaakceptować
+    jakiejś definicji, użyj komendy <span class="inlinecode"><span class="id" title="keyword">Check</span></span>, żeby sprawdzić,
+    z jakimi typami masz do czynienia. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Check&nbsp;~P.&nbsp;*)</span> <span class="comment">(*&nbsp;TODO&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;~&nbsp;P&nbsp;:&nbsp;Prop&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+W Coqu negację zdania <span class="inlinecode"><span class="id" title="var">P</span></span> oznaczamy przez <span class="inlinecode">~<span class="id" title="var">P</span></span>. Symbol <span class="inlinecode">~</span>
+    nie jest jednak nazwą negacji — nazwy nie mogą zawierać symboli.
+    Jest to jedynie notacja, która ma uczynić zapis krótszym i
+    bardziej podobnym do tego używanego na co dzień. Niesie to
+    jednak za sobą pewne konsekwencje — nie możemy np. użyć
+    komendy <span class="inlinecode"><span class="id" title="keyword">Print</span></span> <span class="inlinecode">~.</span>, żeby wyświetlić definicję negacji. Jak
+    więc poznać nazwę, kryjącą się za jakąś notacją? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Locate</span> "~".<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;"~&nbsp;x"&nbsp;:=&nbsp;not&nbsp;x&nbsp;...&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Możemy to zrobić przy pomocy komendy <span class="inlinecode"><span class="id" title="keyword">Locate</span></span>. Wyświetla ona,
+    do jakich nazw odwołuje się dana notacja. Jak widać, negacja
+    w Coqu nazywa się <span class="inlinecode"><span class="id" title="var">not</span></span>. 
+<div class="paragraph"> </div>
+
+<a id="lab25"></a><h1 class="section">Zdania i spójniki logiczne (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+ Nadszedł dobry moment na to, żebyś odpalił CoqIDE. Sesja
+    interaktywna w CoqIDE przebiega następująco: edytujemy plik
+    z rozszerzeniem .v wpisując komendy. Po kliknięciu przycisku
+    "Forward one command" (strzałka w dół) Coq interpretuje kolejną
+    komendę, a po kliknięciu "Backward one command" (strzałka w
+    górę) cofa się o jedną komendę do tyłu. Ta interaktywność,
+    szczególnie w trakcie przeprowadzania dowodu, jest bardzo
+    mocnym atutem Coqa — naucz się ją wykorzystywać, dokładnie
+    obserwując skutki działania każdej komendy i taktyki.
+
+<div class="paragraph"> </div>
+
+    W razie problemów z CoqIDE poszukaj pomocy w manualu:
+    https://coq.inria.fr/refman/practical-tools/coqide.html 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <span class="id" title="var">constructive_propositional_logic</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Mechanizm sekcji nie będzie nas na razie interesował. Użyjemy go,
+    żeby nie zaśmiecać głównej przestrzeni nazw. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Hypothesis</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zapis <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> oznacza, że term <span class="inlinecode"><span class="id" title="var">x</span></span> jest typu <span class="inlinecode"><span class="id" title="var">A</span></span>. <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> to typ zdań
+    logicznych, więc komendę tę można odczytać następująco: niech <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">Q</span></span>
+    i <span class="inlinecode"><span class="id" title="var">R</span></span> będą zdaniami logicznymi. Używamy tej komendy, gdyż potrzebujemy
+    jakichś zdań logicznych, na których będziemy operować. 
+<div class="paragraph"> </div>
+
+<a id="lab26"></a><h2 class="section">Implikacja (TODO)</h2>
 
 </div>
 <div class="code">
@@ -47,16 +278,637 @@
 </div>
 
 <div class="doc">
-<a id="lab22"></a><h2 class="section">Dysjunkcja (TODO)</h2>
+Zacznijmy od czegoś prostego: pokażemy, że <span class="inlinecode"><span class="id" title="var">P</span></span> implikuje <span class="inlinecode"><span class="id" title="var">P</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_refl</span> : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">dowód_na_to_</span>ż<span class="id" title="var">e_P_zachodzi</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">dowód_na_to_</span>ż<span class="id" title="var">e_P_zachodzi</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Słowo kluczowe <span class="inlinecode"><span class="id" title="keyword">Lemma</span></span> obwieszcza, że chcemy podać twierdzenie.
+    Musi mieć ono nazwę (tutaj <span class="inlinecode"><span class="id" title="var">impl_refl</span></span>). Samo twierdzenie podane jest
+    po dwukropku — twierdzenie jest typem, a jego udowodnienie sprowadza
+    się do skonstruowania termu tego typu. Zauważmy też, że każda
+    komenda musi kończyć się kropką.
 
 <div class="paragraph"> </div>
 
-<a id="lab23"></a><h2 class="section">Koniunkcja (TODO)</h2>
+    Twierdzenia powinny mieć łatwe do zapamiętania oraz sensowne nazwy,
+    które informują (z grubsza), co właściwie chcemy udowodnić.
+    Nazwa <span class="inlinecode"><span class="id" title="var">impl_refl</span></span> oznacza, że twierdzenie wyraża fakt, że
+    implikacja jest zwrotna.
 
 <div class="paragraph"> </div>
 
-<a id="lab24"></a><h2 class="section">Prawda i fałsz (TODO)</h2>
+    Dowody będziemy zaczynać komendą <span class="inlinecode"><span class="id" title="keyword">Proof</span></span>. Jest ona opcjonalna, ale
+    poprawia czytelność, więc warto ją stosować. 
 
+<div class="paragraph"> </div>
+
+    Jeżeli każesz Coqowi zinterpretować komendę zaczynającą się
+    od <span class="inlinecode"><span class="id" title="keyword">Lemma</span></span>, po prawej stronie ekranu pojawi się stan aktualnie
+    przeprowadzanego dowodu.
+
+<div class="paragraph"> </div>
+
+    Od góry mamy: ilość podcelów (rozwiązanie wszystkich kończy dowód)
+    — obecnie 1, kontekst (znajdują się w nim obiekty, które możemy
+    wykorzystać w dowodzie) — obecnie mamy w nim zdania
+    <span class="inlinecode"><span class="id" title="var">P</span></span>, <span class="inlinecode"><span class="id" title="var">Q</span></span> i <span class="inlinecode"><span class="id" title="var">R</span></span>; kreskę oddzielającą kontekst od aktualnego celu,
+    obok niej licznik, który informuje nas, nad którym podcelem pracujemy
+    — obecnie 1/1, oraz aktualny cel — dopiero zaczynamy, więc brzmi
+    tak samo jak nasze twierdzenie.
+
+<div class="paragraph"> </div>
+
+    Taktyki mogą wprowadzać zmiany w celu lub w kontekście,
+    w wyniku czego rozwiązują lub generują nowe podcele. Taktyka może
+    zakończyć się sukcesem lub zawieść. Dokładne warunki sukcesu lub
+    porażnki zależą od konkretnej taktyki.
+
+<div class="paragraph"> </div>
+
+    Taktyka <span class="inlinecode"><span class="id" title="tactic">intro</span></span> działa na cele będące implikacją <span class="inlinecode">-&gt;</span> i wprowadza
+    jedną hipotezę z celu do kontekstu jeżeli to możliwe; w przeciwnym
+    przypadku zawodzi. W dowodach słownych lub pisanych na kartce/tablicy
+    użyciu taktyki <span class="inlinecode"><span class="id" title="tactic">intro</span></span> odpowiadałoby stwierdzenie "załóżmy, że
+    P jest prawdą", "załóżmy, że P zachodzi" lub po prostu "załóżmy,
+    że P".
+
+<div class="paragraph"> </div>
+
+    Szczegółem, który odróżnia dowód w Coqu (który dalej będziemy
+    zwać "dowodem formalnym") od dowodu na kartce/tablicy/słownie
+    (zwanego dalej "dowodem nieformalnym"), jest fakt, że nie tylko
+    sama hipoteza,
+    ale też dowód ("świadek") jej prawdziwości, musi mieć jakąś
+    nazwę — w przeciwnym wypadku nie bylibyśmy w stanie się do
+    nich odnosić. Dowodząc na tablicy, możemy odnieść się
+    do jej zawartości np. poprzez wskazanie miejsca, w stylu
+    "dowód w prawym górnym rogu tablicy". W Coqu wszelkie
+    odniesienia działają identycznie jak odniesienia
+    do zmiennych w każdym innym języku programowania — przy
+    pomocy nazwy.
+
+<div class="paragraph"> </div>
+
+    Upewnij się też, że dokładnie rozumiesz, co taktyka <span class="inlinecode"><span class="id" title="tactic">intro</span></span>
+    wprowadziła do kontekstu. Nie było to zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> — ono już
+    się tam znajdowało, o czym świadczyło stwierdzenie <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>
+    — cofnij stan dowodu i sprawdź, jeżeli nie wierzysz. Hipotezą
+    wprowadzoną do kontekstu był obiekt, którego nazwę podaliśmy taktyce
+    jako argument, tzn. <span class="inlinecode"><span class="id" title="var">dowód_na_to_</span>ż<span class="id" title="var">e_P_zachodzi</span></span>, który jest właśnie
+    tym, co głosi jego nazwa — "świadkiem" prawdziwości <span class="inlinecode"><span class="id" title="var">P</span></span>. Niech
+    nie zmyli cię użyte na początku rozdziału słowo kluczowe
+    <span class="inlinecode"><span class="id" title="keyword">Hypothesis</span></span>.
+
+<div class="paragraph"> </div>
+
+    Taktyka <span class="inlinecode"><span class="id" title="tactic">exact</span></span> rozwiązuje cel, jeżeli term podany jako argument
+    ma taki sam typ, jak cel, a w przeciwnym przypadku zawodzi.
+    Jej użyciu w dowodzie nieformalnym odpowiada stwierdzenie
+    "mamy w założeniach dowód na to, że P, który nazywa się x,
+    więc x dowodzi tego, że P".
+
+<div class="paragraph"> </div>
+
+    Pamiętaj, że cel jest zdaniem logicznym, czyli typem, a hipoteza
+    jest dowodem tego zdania, czyli termem tego typu. Przyzwyczaj się
+    do tego utożsamienia typów i zdań oraz dowodów i programów/termów
+    — jest to wspomniana we wstępie korespondencja Curry'ego-Howarda,
+    której wiele wcieleń jeszcze zobaczymy.
+
+<div class="paragraph"> </div>
+
+    Dowód kończy się zazwyczaj komendą <span class="inlinecode"><span class="id" title="keyword">Qed</span></span>, która go zapisuje. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_refl'</span> : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zauważmy, że w Coqowych nazwach można używać apostrofu.
+    Zgodnie z konwencją nazwa pokroju <span class="inlinecode"><span class="id" title="var">x'</span></span> oznacza, że <span class="inlinecode"><span class="id" title="var">x'</span></span>
+    jest w jakiś sposób blisko związany z <span class="inlinecode"><span class="id" title="var">x</span></span>. W tym wypadku
+    używamy go, żeby podać inny dowód udowodnionego już
+    wcześniej twierdzenia. Nie ma też nic złego w pisaniu
+    taktyk w jednej linijce (styl pisania jak zawsze powinien
+    maksymalizować czytelność).
+
+<div class="paragraph"> </div>
+
+    Jeżeli użyjemy taktyki <span class="inlinecode"><span class="id" title="tactic">intro</span></span> bez podawania nazwy hipotezy,
+    zostanie użyta nazwa domyślna (dla wartości typu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> jest to <span class="inlinecode"><span class="id" title="var">H</span></span>;
+    jeżeli ta nazwa jest zajęta, zostanie użyte <span class="inlinecode"><span class="id" title="var">H0</span></span>, <span class="inlinecode"><span class="id" title="var">H1</span></span>...). Domyślne
+    nazwy zazwyczaj nie są dobrym pomysłem, ale w prostych dowodach
+    możemy sobie na nie pozwolić.
+
+<div class="paragraph"> </div>
+
+    Taktyka <span class="inlinecode"><span class="id" title="tactic">assumption</span></span> (pol. "założenie") sama potrafi znaleźć
+    nazwę hipotezy, która rozwiązuje cel. Jeżeli nie znajdzie
+    takiej hipotezy, to zawodzi. Jej użycie w dowodzenie nieformalnym
+    odpowiada stwierdzeniu "P zachodzi na mocy założenia". 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">impl_refl'</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;impl_refl'&nbsp;=&nbsp;fun&nbsp;H&nbsp;:&nbsp;P&nbsp;=&gt;&nbsp;H&nbsp;:&nbsp;P&nbsp;-&gt;&nbsp;P&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Uwaga: w komentarzach postaci <span class="comment">(*&nbsp;===&gt;&nbsp;*)</span> będę przedstawiać wyniki
+    wypisywane przez komendy, żeby leniwi czytacze nie musieli sami
+    sprawdzać.
+
+<div class="paragraph"> </div>
+
+    Wspomnieliśmy wcześniej, że zdania logiczne są typami,
+    a ich dowody termami. Używając komendy <span class="inlinecode"><span class="id" title="keyword">Print</span></span> możemy
+    wyświetlić definicję podanego termu (nie każdego, ale
+    na razie się tym nie przejmuj). Jak się okazuje,
+    dowód naszej trywialnej implikacji jest funkcją. Jest
+    to kolejny element korespondencji Curry'ego-Howarda.
+
+<div class="paragraph"> </div>
+
+    Po głębszym namyśle nie powinien nas on dziwić:
+    implikację można interpretować wszakże jako funkcję,
+    która bierze dowód poprzednika i zwraca dowód następnika.
+    Wykonanie funkcji odpowiada tutaj procesowi wywnioskowania
+    konkluzji z przesłanki.
+
+<div class="paragraph"> </div>
+
+    Wspomnieliśmy także, że każda taktyka ma swoją własną
+    interpretację obliczeniową. Jaki był więc udział taktyk
+    <span class="inlinecode"><span class="id" title="tactic">intro</span></span> i <span class="inlinecode"><span class="id" title="tactic">exact</span></span> w konstrukcji naszego dowodu? Dowód
+    implikacji jest funkcją, więc możemy sobie wyobrazić,
+    że na początku dowodu term wyglądał tak: <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode">?1</span> <span class="inlinecode">=&gt;</span> <span class="inlinecode">?2</span>
+    (symbole <span class="inlinecode">?1</span> i <span class="inlinecode">?2</span> reprezentują fragmenty dowodu, których
+    jeszcze nie skonstruowaliśmy). Taktyka <span class="inlinecode"><span class="id" title="tactic">intro</span></span> wprowadza
+    zmienną do kontekstu i nadaje jej nazwę, czemu odpowiada
+    zastąpienie w naszym termie <span class="inlinecode">?1</span> przez <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Możemy
+    sobie wyobrazić, że po użyciu taktyki intro term wygląda
+    tak: <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode">?2</span>. Użycie taktyki <span class="inlinecode"><span class="id" title="tactic">exact</span></span> (lub
+    <span class="inlinecode"><span class="id" title="tactic">assumption</span></span>) dało w efekcie zastępienie <span class="inlinecode">?2</span> przez <span class="inlinecode"><span class="id" title="var">H</span></span>,
+    czyli szukany dowód zdania <span class="inlinecode"><span class="id" title="var">P</span></span>. Ostatecznie term przybrał
+    postać <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">H</span></span>. Ponieważ nie ma już żadnych
+    brakujących elementów, dowód kończy się. Gdy użyliśmy
+    komendy <span class="inlinecode"><span class="id" title="keyword">Qed</span></span> Coq zweryfikował, czy aby na pewno term
+    skonstruowany przez taktyki jest poprawnie typowany,
+    a następnie zaakceptował nasz dowód. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">modus_ponens</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Implikacja jest operatorem łączącym w prawo (ang. right
+    associative), więc wyrażenie <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to coś
+    innego, niż <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> — w pierwszym przypadku
+    jedna z hipotez jest implikacją
+
+<div class="paragraph"> </div>
+
+    Wprowadzanie zmiennych do kontekstu pojedynczo może nie być
+    dobrym pomysłem, jeżeli jest ich dużo. Taktyka <span class="inlinecode"><span class="id" title="tactic">intros</span></span> pozwala
+    nam wprowadzić do kontekstu zero lub więcej zmiennych na raz,
+    a także kontrolować ich nazwy. Taktyka ta nigdy nie zawodzi.
+    Jej odpowiednik w dowodach nieformalnych oraz interpretacja
+    obliczeniowa są takie, jak wielokrotnego (lub zerokrotnego)
+    użycia taktyki <span class="inlinecode"><span class="id" title="tactic">intro</span></span>.
+
+<div class="paragraph"> </div>
+
+    Taktyka <span class="inlinecode"><span class="id" title="tactic">apply</span></span> pozwala zaaplikować hipotezę do celu, jeżeli
+    hipoteza jest implikacją, której konkluzją jest cel. W wyniku
+    działania tej taktyki zostanie wygenerowana ilość podcelów
+    równa ilości przesłanek, a stary cel zostanie rozwiązany. W
+    kolejnych krokrach będziemy musieli udowodnić, że przesłanki
+    są prawdziwe. W naszym przypadku hipotezę <span class="inlinecode"><span class="id" title="var">H</span></span> typu <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>
+    zaaplikowaliśmy do celu <span class="inlinecode"><span class="id" title="var">Q</span></span>, więc zostanie wygenerowany jeden
+    podcel <span class="inlinecode"><span class="id" title="var">P</span></span>.
+
+<div class="paragraph"> </div>
+
+    Interpretacją obliczeniową taktyki <span class="inlinecode"><span class="id" title="tactic">apply</span></span> jest, jak sama
+    nazwa wskazuje, aplikacja funkcji. Nie powinno nas to wcale
+    dziwić — wszak ustaliliśmy przed chwilą, że implikacje
+    są funkcjami. Możemy sobie wyobrazić, że po użyciu
+    taktyki <span class="inlinecode"><span class="id" title="tactic">intros</span></span> nasz proofterm (będę tego wyrażenia używał
+    zamiast rozwlekłego "term będący dowodem") wyglądał tak:
+    <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode">(<span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span> <span class="inlinecode">(<span class="id" title="var">H0</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span> <span class="inlinecode">=&gt;</span> <span class="inlinecode">?1</span>. Taktyka <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span>
+    przekształca brakujący fragment dowodu <span class="inlinecode">?1</span> we fragment,
+    w którym również czegoś brakuje: <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">?2</span> — tym czymś jest
+    argument. Pasujący argument znaleźliśmy przy pomocy taktyki
+    assumption, więc ostatecznie proofterm ma postać
+    <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode">(<span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span> <span class="inlinecode">(<span class="id" title="var">H0</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="var">H0</span></span>.
+
+<div class="paragraph"> </div>
+
+    Reguła wnioskowania modus ponens jest zdecydowanie najważniejszą
+    (a w wielu systemach logicznych jedyną) regułą wnioskowania.
+    To właśnie ona odpowiada za to, że w systemie dedukcji
+    naturalnej dowodzimy "od tyłu" — zaczynamy od celu i aplikujemy
+    hipotezy, aż dojdziemy do jakiegoś zdania prawdziwego.
+
+<div class="paragraph"> </div>
+
+    Nadszedł czas na pierwsze ćwiczenia. Zanim przejdziesz dalej,
+    postaraj się je wykonać — dzięki temu upewnisz się, że
+    zrozumiałeś w wystarczającym stopniu omawiane w tekście
+    zagadnienia. Postaraj się nie tylko udowodnić poniższe
+    twierdzenia, ale także zrozumieć (a póki zadania są
+    proste — być może także przewidzieć), jaki proofterm zostanie
+    wygenerowany. Powodzenia! 
+<div class="paragraph"> </div>
+
+<a id="lab27"></a><h4 class="section">Ćwiczenie (implikacja)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe twierdzenia. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_trans</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_permute</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) -&gt; (<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_dist</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) -&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab28"></a><h4 class="section">Ćwiczenie (bez <span class="inlinecode"><span class="id" title="tactic">apply</span></span>)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij następujące twierdzenie bez używania taktyki <span class="inlinecode"><span class="id" title="tactic">apply</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">modus_ponens'</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab29"></a><h2 class="section">Dysjunkcja (TODO)</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_left</span> : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Symbol <span class="inlinecode">\/</span> oznacza dysjunkcję dwóch zdań logicznych. W języku polskim
+    czasem używa się też określenia "alternatywa", ale będziemy się tego
+    wystrzegać, rezerwując to słowo dla czegoś innego. Żeby dowieść
+    dysjunkcji <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, musimy udowonić albo lewy, albo prawy jej człon.
+    Taktyki <span class="inlinecode"><span class="id" title="tactic">left</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">right</span></span> pozwalają nam wybrać, którego z nich chcemy
+    dowodzić. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_comm_impl</span> : <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span> \/ <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">p</span> | <span class="id" title="var">q</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zauważmy, że użycie taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> zmieniło nam ilość celów.
+    Wynika to z faktu, że nie wiemy, który człon hipotezy <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> jest
+    prawdziwy, więc dla każdego przypadku musimy przeprowadzić osobny
+    dowód. Inaczej wygląda też wzorzec służący do rozbicia tej
+    hipotezy — w przypadku dysjunkcji ma on postać <span class="inlinecode">[<span class="id" title="var">nazwa1</span></span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">nazwa2</span>]</span>.
+
+<div class="paragraph"> </div>
+
+    Interpretacja obliczeniowa dysjunkcji jest następująca: jest to
+    suma rozłączna dwóch zdań. Dowód dysjunkcji to dowód jednego z
+    jej członów z dodatkową informacją o tym, który to człon.
+
+<div class="paragraph"> </div>
+
+    To ostatnie stwierdzenie odróżnia dysjunkcję konstruktywną od
+    klasycznej: klasyczna dysjunkcja to stwierdzenie "któres z tych
+    dwóch zdań jest prawdziwe (lub oba)", zaś konstruktywna to
+    stwierdzenie "lewy człon jest prawdziwy albo prawy człon jest
+    prawdziwy (albo oba, ale i tak dowodzimy tylko jednego)". Jest
+    to znaczna różnica — w przypadku logiki klasycznej nie wiemy,
+    który człon jest prawdziwy. 
+<div class="paragraph"> </div>
+
+<a id="lab30"></a><h4 class="section">Ćwiczenie (dysjunkcja)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe twierdzenia. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_right</span> : <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_big</span> : <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> \/ <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or3_comm_impl</span> : <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> \/ <span class="id" title="var">R</span> -&gt; <span class="id" title="var">R</span> \/ <span class="id" title="var">Q</span> \/ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab31"></a><h4 class="section">Ćwiczenie (dysjunkcja i implikacja)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe twierdzenie. Następnie zastanów się, czy odwrotna
+    implikacja również zachodzi. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_impl</span> : ~<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab32"></a><h2 class="section">Koniunkcja (TODO)</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_intro</span> : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Symbol <span class="inlinecode">/\</span> oznacza koniunkcję dwóch zdań logicznych i podobnie
+    jak <span class="inlinecode">~</span> jest jedynie notacją (koniunkcja w Coqu nazywa się <span class="inlinecode"><span class="id" title="var">and</span></span>).
+
+<div class="paragraph"> </div>
+
+    W logice
+    klasycznej koniunkcja jest prawdziwa, gdy obydwa jej człony są
+    prawdziwe. W logice konstruktywnej sytuacja jest analogiczna, choć
+    subtelnie różna: aby udowodnić koniunkcję, musimy udowodnić każdy
+    z jej dwóch członów osobno.
+
+<div class="paragraph"> </div>
+
+    Koniunkcji w Coqu dowodzimy przy pomocy taktyki <span class="inlinecode"><span class="id" title="tactic">split</span></span>. Jako że
+    musimy udowodnić oddzielnie oba jej człony, zostały dla nas
+    wygenerowane dwa nowe podcele — jeden dla lewego członu, a drugi
+    dla prawego. Ponieważ stary cel został rozwiązany, to do udowodnienia
+    pozostają nam tylko te dwa nowe podcele. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_proj1</span> : <span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Aby udowodnić koniunkcję, użyliśmy taktyki <span class="inlinecode"><span class="id" title="tactic">split</span></span>, która rozbiła
+    ją na dwa osobne podcele. Jeżeli koniunkcją jest jedną z naszych
+    hipotez, możemy posłużyć się podobnie działającą taktyką
+    <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>, która dowód koniunkcji rozbija na osobne dowody obu
+    jej członów. W naszym przypadku hipoteza <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> zostaje
+    rozbita na hipotezy <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> oraz <span class="inlinecode"><span class="id" title="var">H0</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>. Zauważ, że nowe hipotezy
+    dostały nowe, domyślne nazwy. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_proj1'</span> : <span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">HPQ</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">HPQ</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">HP</span> <span class="id" title="var">HQ</span>]. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Podobnie jak w przypadku taktyki <span class="inlinecode"><span class="id" title="tactic">intro</span></span>, domyślne nazwy nadawane
+    przez taktykę <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> często nie są zbyt fortunne. Żeby nadać
+    częściom składowym rozbijanej hipotezy nowe nazwy, możemy użyć
+    tej taktyki ze składnią <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode"><span class="id" title="var">nazwa</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode"><span class="id" title="var">wzorzec</span></span>. Ponieważ
+    koniunkcja składa się z dwóch członów, <span class="inlinecode"><span class="id" title="var">wzorzec</span></span> będzie miał
+    postać <span class="inlinecode">[<span class="id" title="var">nazwa1</span></span> <span class="inlinecode"><span class="id" title="var">nazwa2</span>]</span>.
+
+<div class="paragraph"> </div>
+
+    Interpretacja obliczeniowa koniunkcji jest bardzo prosta:
+    koniunkcja to uporządkowana para zdań, zaś dowód koniunkcji
+    to uporządkowana para dowodów — pierwszy jej element dowodzi
+    pierwszego członu koniunkcji, a drugi element — drugiego
+    członu koniunkcji. 
+<div class="paragraph"> </div>
+
+<a id="lab33"></a><h4 class="section">Ćwiczenie (koniunkcja)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe twierdzenia. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_proj2</span> : <span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and3_intro</span> : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span> -&gt; <span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> /\ <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and3_proj</span> : <span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> /\ <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">noncontradiction</span> : ~ (<span class="id" title="var">P</span> /\ ~ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab34"></a><h4 class="section">Ćwiczenie (<span class="inlinecode"><span class="id" title="var">ex_contradictione</span></span>)</h4>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ex_contradictione</span> : (<span class="id" title="var">P</span> /\ ~ <span class="id" title="var">P</span>) -&gt; <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Ciekawostka: powyższe prawo można by nazwać "ex contradictione
+    (sequitur) quodlibet", czyli "ze sprzeczności wynika cokolwiek
+    zechcesz".
+
+<div class="paragraph"> </div>
+
+    Jest ono połączeniem prawa niesprzeczności (<span class="inlinecode"><span class="id" title="var">noncontradiction</span></span>)
+    oraz ex falso quodlibet (<span class="inlinecode"><span class="id" title="var">ex_falso</span></span>). W niektórych biedackich
+    systemach logicznych, w których nie ma odpowiednika <span class="inlinecode"><span class="id" title="var">False</span></span>,
+    może być użyte zamiast <span class="inlinecode"><span class="id" title="var">ex_falso</span></span>. 
+<div class="paragraph"> </div>
+
+<a id="lab35"></a><h2 class="section">Prawda i fałsz (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab36"></a><h3 class="section">Prawda</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">truth</span> : <span class="id" title="var">True</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">True</span></span> to zdanie zawsze prawdziwe. Jego udowodnienie nie jest
+    zbyt trudne — możemy to zrobić np. przy pomocy taktyki <span class="inlinecode"><span class="id" title="tactic">trivial</span></span>,
+    która, jak sama nazwa wskazuje, potrafi sama rozwiązywać proste
+    cele. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">truth</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;truth&nbsp;=&nbsp;I&nbsp;:&nbsp;True&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jeżeli przyjrzymy się skonstruowanemu prooftermowi, dostrzeżemy
+    term o nazwie <span class="inlinecode"><span class="id" title="var">I</span></span>. Jest to jedyny dowód zdania <span class="inlinecode"><span class="id" title="var">True</span></span>. Jego
+    nazwa nie niesie ze sobą żadnego głębszego znaczenia, ale jego
+    istnienie jest konieczne — pamiętajmy, że udowodnienie zdania
+    sprowadza się do skonstruowania termu odpowiedniego typu.
+    Nie inaczej jest w przypadku zdania zawsze prawdziwego — musi
+    istnieć jego dowód, a żeby móc się do niego odnosić, musi też
+    mieć jakąś nazwę.
+
+<div class="paragraph"> </div>
+
+    Zdanie <span class="inlinecode"><span class="id" title="var">True</span></span>, w przeciwieństwie do <span class="inlinecode"><span class="id" title="var">False</span></span>, nie jest zbyt
+    użyteczne ani często spotykane, ale czasem się przydaje. 
+<div class="paragraph"> </div>
+
+<a id="lab37"></a><h3 class="section">Fałsz</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">ex_falso</span> : <span class="id" title="var">False</span> -&gt; <span class="id" title="var">P</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">False</span></span> to zdanie zawsze fałszywe, którego nie można udowodnić.
+    Nie istnieje żaden term tego typu, więc jeżeli taki term znajdzie
+    się w naszym kontekście, to znaczy, że uzyskaliśmy sprzeczność.
+    Jeżeli użyjemy taktyki <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> na hipotezie, która jest typu
+    <span class="inlinecode"><span class="id" title="var">False</span></span>, obecny podcel zostanie natychmiast rozwiązany.
+
+<div class="paragraph"> </div>
+
+    Nazwa <span class="inlinecode"><span class="id" title="var">ex_falso</span></span> pochodzi od łacińskiego wyrażenia "ex falso
+    sequitur quodlibet", które znaczy "z fałszu wynika cokolwiek
+    zechcesz".
+
+<div class="paragraph"> </div>
+
+    Uzasadnienie tej reguły wnioskowania w logice klasycznej jest
+    dziecinnie proste: skoro fałsz to prawda, to w tabelce prawdy
+    dla tego zdania w kolumnie wynikowej wszystkie zera (fałsz)
+    możemy zastąpić jedynkami (prawda), otrzymując zdanie prawdziwe.
+
+<div class="paragraph"> </div>
+
+    W logice konstruktywnej takie uzasadnienie oczywiście nie
+    przejdzie, gdyż ustaliliśmy już, że nie możemy o dowolnym
+    zdaniu powiedzieć, że jest albo prawdziwe, albo fałszywe,
+    gdyż nie jesteśmy w stanie tak ogólnego faktu udowodnić. Nie
+    będziemy na razie uzasadniać tej reguły ani wnikać w szczegóły
+    działania taktyki <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> — dowiemy się tego już niedługo. 
 </div>
 <div class="code">
 
@@ -66,15 +918,286 @@
 </div>
 
 <div class="doc">
-<a id="lab25"></a><h2 class="section">Równoważność (TODO)</h2>
+<a id="lab38"></a><h2 class="section">Równoważność (TODO)</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab26"></a><h2 class="section">Negacja (TODO)</h2>
+ Równoważność zdaniowa jest w Coqu oznaczana <span class="inlinecode">&lt;-&gt;</span>. Symbol ten,
+    jak (prawie) każdy jest jedynie notacją — równoważność
+    nazywa się <span class="inlinecode"><span class="id" title="var">iff</span></span>. Jest to skrót od ang. "if and only if". Po
+    polsku zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">&lt;-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> możemy odczytać jako "P wtedy i tylko
+    wtedy, gdy Q". 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">iff</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;fun&nbsp;A&nbsp;B&nbsp;:&nbsp;Prop&nbsp;=&gt;&nbsp;(A&nbsp;-&gt;&nbsp;B)&nbsp;/\&nbsp;(B&nbsp;-&gt;&nbsp;A)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;Prop&nbsp;-&gt;&nbsp;Prop&nbsp;-&gt;&nbsp;Prop&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jak widać, równoważność <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">&lt;-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to koniunkcja dwóch implikacji
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> oraz <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. W związku z tym nie powinno nas dziwić,
+    że pracuje się z nią tak samo jak z koniunkcją. Tak jak nie
+    musieliśmy odwijać definicji negacji, żeby zaaplikować ją jak
+    rasową impikcję, tak też nie musimy odwijać definicji równoważności,
+    żeby posługiwać się nią jak prawdziwą koniunkcją. Jej interpretacja
+    obliczeniowa wywodzi się z interpretacji obliczeniowej koniunkcji
+    oraz implikacji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iff_intro</span> : (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Do rozbijania równoważności będących celem służy, tak jak w
+    przypadku koniunkcji, taktyka <span class="inlinecode"><span class="id" title="tactic">split</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iff_proj1</span> : (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">HPQ</span> <span class="id" title="var">HQP</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HPQ</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Równoważnosć znajdującą się w kontekście możemy zaś, tak jak
+    koniunkcje, rozbijać taktyką <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>. Taką samą postać ma
+    również wzorzec, służący w klauzuli <span class="inlinecode"><span class="id" title="keyword">as</span></span> do nadawania nazw
+    zmiennym. 
+<div class="paragraph"> </div>
+
+<a id="lab39"></a><h4 class="section">Ćwiczenie (równoważność zdaniowa)</h4>
 
 <div class="paragraph"> </div>
 
-<a id="lab27"></a><h2 class="section">Silna negacja</h2>
+ Udowodnij poniższe twierdzenia. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iff_refl</span> : <span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iff_symm</span> : (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iff_trans</span>: (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">R</span>) -&gt; (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iff_not</span> : (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) -&gt; (~<span class="id" title="var">P</span> &lt;-&gt; ~<span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">curry_uncurry</span> : (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) &lt;-&gt; (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab40"></a><h2 class="section">Negacja (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab41"></a><h3 class="section">Słaba negacja</h3>
+
+<div class="paragraph"> </div>
+
+ W logice klasycznej negację zdania P można zinterpretować
+    po prostu jako spójnik zdaniowy tworzący nowe zdanie, którego
+    wartość logiczna jest przeciwna do wartości zdania P.
+
+<div class="paragraph"> </div>
+
+    Jeżeli uważnie czytałeś fragmenty dotyczące logiki klasycznej
+    i konstruktywnej, dostrzegasz już zapewne, że taka definicja
+    nie przejdzie w logice konstruktywnej, której interpretacja
+    opiera się na dowodach, a nie wartościach logicznych. Jak więc
+    konstruktywnie zdefiniować negację?
+
+<div class="paragraph"> </div>
+
+    Zauważmy, że jeżeli zdanie <span class="inlinecode"><span class="id" title="var">P</span></span> ma dowód, to nie powinien istnieć
+    żaden dowód jego negacji, <span class="inlinecode">~<span class="id" title="var">P</span></span>. Uzyskanie takiego dowodu oznaczałoby
+    sprzeczność, a więc w szczególności możliwość udowodnienia <span class="inlinecode"><span class="id" title="var">False</span></span>.
+    Jak to spostrzeżenie przekłada się na Coqową praktykę? Skoro znamy
+    już nazwę negacji, <span class="inlinecode"><span class="id" title="var">not</span></span>, możemy sprawdzić jej definicję: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">not</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;not&nbsp;=&nbsp;fun&nbsp;A&nbsp;:&nbsp;Prop&nbsp;=&gt;&nbsp;A&nbsp;-&gt;&nbsp;False<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;Prop&nbsp;-&gt;&nbsp;Prop&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Definicja negacji w Coqu opiera się właśnie na powyższym spostrzeżeniu:
+    jest to funkcja, która bierze zdanie <span class="inlinecode"><span class="id" title="var">A</span></span>, a zwraca zdanie <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>,
+    które możemy odczytać jako "A prowadzi do sprzeczności". Jeżeli
+    nie przekonuje cię to rozumowanie, przyjrzyj się uważnie poniższemu
+    twierdzeniu. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">P_notP</span> : ~<span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">False</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">HnotP</span> <span class="id" title="var">HP</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span> <span class="id" title="tactic">in</span> <span class="id" title="var">HnotP</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HnotP</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Taktyka <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> służy do odwijania definicji. W wyniku jej działania
+    nazwa zostanie zastąpiona przez jej definicję, ale tylko w celu.
+    Jeżeli podana nazwa do niczego się nie odnosi, taktyka zawiedzie. Aby
+    odwinąć definicję w hipotezie, musimy użyć taktyki <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">nazwa</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span>
+    <span class="inlinecode"><span class="id" title="var">hipoteza</span></span>, a jeżeli chcemy odwinąć ją wszędzie — <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">nazwa</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> *.
+
+<div class="paragraph"> </div>
+
+    Twierdzenie to jest też pewnym uzasadnieniem definicji negacji: jest
+    ona zdefiniowana tak, aby uzyskanie fałszu z dwóch sprzecznych
+    przesłanek było jak najprostsze. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">P_notP'</span> : ~<span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> -&gt; 42 = 666.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">cut</span> <span class="id" title="var">False</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> 1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Taktyką, która czasem przydaje się w dowodzeniu negacji i radzeniu
+    sobie z <span class="inlinecode"><span class="id" title="var">False</span></span>, jest <span class="inlinecode"><span class="id" title="tactic">cut</span></span>. Jeżeli nasz cel jest postaci <span class="inlinecode"><span class="id" title="var">G</span></span>,
+    to taktyka <span class="inlinecode"><span class="id" title="tactic">cut</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> rozwiąże go i wygeneruje nam w zamian dwa
+    podcele postaci <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">G</span></span> oraz <span class="inlinecode"><span class="id" title="var">P</span></span>. Nieformalnie odpowiada takiemu
+    rozumowaniu: "cel G wynika z P; P zachodzi".
+
+<div class="paragraph"> </div>
+
+    Udowodnić <span class="inlinecode"><span class="id" title="var">False</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">42</span> <span class="inlinecode">=</span> <span class="inlinecode">666</span> moglibyśmy tak jak poprzednio:
+    wprowadzić hipotezę <span class="inlinecode"><span class="id" title="var">False</span></span> do kontekstu przy pomocy <span class="inlinecode"><span class="id" title="tactic">intro</span></span>,
+    a potem użyć na niej <span class="inlinecode"><span class="id" title="tactic">inversion</span></span>. Możemy jednak zrobić to nieco
+    szybciej. Jeżeli cel jest implikacją, to taktyka <span class="inlinecode"><span class="id" title="tactic">inversion</span></span> <span class="inlinecode">1</span>
+    działa tak samo, jak wprowadzenie do kontekstu jednej przesłanki
+    i użycie na niej zwykłego <span class="inlinecode"><span class="id" title="tactic">inversion</span></span>.
+
+<div class="paragraph"> </div>
+
+    Drugi podcel również moglibyśmy rozwiązać jak poprzednio: odwinąć
+    definicję negacji, zaaplikować odpowiednią hipotezę, a potem
+    zakończyć przy pomocy <span class="inlinecode"><span class="id" title="tactic">assumption</span></span>. Nie musimy jednak wykonywać
+    pierwszego z tych kroków — Coq jest w stanie zorientować się,
+    że <span class="inlinecode">~<span class="id" title="var">P</span></span> jest tak naprawdę implikacją, i zaaplikować hipotezę <span class="inlinecode"><span class="id" title="var">H</span></span>
+    bez odwijania definicji negacji. W ten sposób oszczędzamy sobie
+    trochę pisania, choć ktoś mógłby argumentować, że zmniejszamy
+    czytelność dowodu.
+
+<div class="paragraph"> </div>
+
+    Uwaga dotycząca stylu kodowania: postaraj się zachować 2 spacje
+    wcięcia na każdy poziom zagłębienia, gdzie poziom zagłębienia
+    zwiększa się o 1, gdy jakaś taktyka wygeneruje więcej niż 1 podcel.
+    Tutaj taktyka <span class="inlinecode"><span class="id" title="tactic">cut</span></span> wygenerowała nam 2 podcele, więc dowody
+    obydwu zaczniemy od nowej linii po dwóch dodatkowych spacjach.
+    Rozwiązanie takie znacznie zwiększa czytelność, szczególnie w
+    długich dowodach.
+
+<div class="paragraph"> </div>
+
+    Interpretacja obliczeniowa negacji wynika wprost z interpretacji
+    obliczeniowej implikacji. Konstruktywna negacja różni się od tej
+    klasycznej, o czym przekonasz się w ćwiczeniu. 
+<div class="paragraph"> </div>
+
+<a id="lab42"></a><h4 class="section">Ćwiczenie (negacja)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe twierdzenia. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_False</span> : ~<span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_True</span> : ~<span class="id" title="var">True</span> -&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab43"></a><h4 class="section">Ćwiczenie (podwójna negacja)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe twierdzenia. Zastanów się, czy można udowodnić
+    <span class="inlinecode">~~<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dbl_neg_intro</span> : <span class="id" title="var">P</span> -&gt; ~~<span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">double_neg_elim_irrefutable</span> :<br/>
+&nbsp;&nbsp;~~ (~~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab44"></a><h4 class="section">Ćwiczenie (potrójna negacja)</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij poniższe twierdzenie. Jakie są różnice między negacją, podwójną
+    negacją i potrójną negacją? 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">triple_neg_rev</span> : ~~~<span class="id" title="var">P</span> -&gt; ~<span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">constructive_propositional_logic</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab45"></a><h3 class="section">Silna negacja</h3>
 
 </div>
 <div class="code">
@@ -372,11 +1495,11 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 </div>
 
 <div class="doc">
-<a id="lab28"></a><h1 class="section">Istotne prawa logiki i inne obserwacje</h1>
+<a id="lab46"></a><h1 class="section">Istotne prawa logiki i inne obserwacje</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab29"></a><h2 class="section">Przemienność koniunkcji a język naturalny</h2>
+<a id="lab47"></a><h2 class="section">Przemienność koniunkcji a język naturalny</h2>
 
 </div>
 <div class="code">
@@ -419,7 +1542,7 @@ Przemienność koniunkcji wydaje się byc własnością dość oczywistą i
     zdań logicznych, więc trzeba uważać. 
 <div class="paragraph"> </div>
 
-<a id="lab30"></a><h2 class="section">Paradoks pieniądza i kebaba</h2>
+<a id="lab48"></a><h2 class="section">Paradoks pieniądza i kebaba</h2>
 
 <div class="paragraph"> </div>
 
@@ -472,7 +1595,7 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 </div>
 
 <div class="doc">
-<a id="lab31"></a><h4 class="section">Ćwiczenie (formalizacja paradoksu)</h4>
+<a id="lab49"></a><h4 class="section">Ćwiczenie (formalizacja paradoksu)</h4>
 
 <div class="paragraph"> </div>
 
@@ -497,7 +1620,76 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
     Szach mat, Turcjo bankrutuj! 
 <div class="paragraph"> </div>
 
-<a id="lab32"></a><h1 class="section">Zadania (TODO)</h1>
+<a id="lab50"></a><h1 class="section">Konkluzja</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab51"></a><h2 class="section">Ściąga</h2>
+
+<div class="paragraph"> </div>
+
+ Zauważyłem palącą potrzebę istnienia krótkiej ściągi, dotyczącą
+    podstaw logiki. Oto i ona (ściąga, nie potrzeba):
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">True</span></span> to zdanie zawsze prawdziwe. Można je udowodnić za pomocą
+      taktyki <span class="inlinecode"><span class="id" title="tactic">trivial</span></span>. Można je też rozbić za pomocą <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>, ale
+      nie jest to zbyt użyteczne.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">False</span></span> to zdanie zawsze fałszywe. Można je udowodnić tylko jeżeli
+      w kontekście już mamy jakiś inny (zazwyczaj zakamuflowany) dowód
+      <span class="inlinecode"><span class="id" title="var">False</span></span>. Można je rozbić za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>, co kończy
+      dowód, bo z fałszu wynika wszystko.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to koniunkcja zdań <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span>. Aby ją udowodnić, używamy
+      taktyki <span class="inlinecode"><span class="id" title="tactic">split</span></span> i dowodzimy osobno <span class="inlinecode"><span class="id" title="var">P</span></span>, a osobno <span class="inlinecode"><span class="id" title="var">Q</span></span>. Jeżeli mamy
+      w kontekście dowód na <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">/\</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, to za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>
+      możemy z niego wyciągnąć dowody na <span class="inlinecode"><span class="id" title="var">P</span></span> i na <span class="inlinecode"><span class="id" title="var">Q</span></span>.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to dysjunkcja zdań <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span>. Aby ją udowodnić, używamy
+      taktyki <span class="inlinecode"><span class="id" title="tactic">left</span></span> lub <span class="inlinecode"><span class="id" title="tactic">right</span></span>, a następnie dowodzimy odpowiednio <span class="inlinecode"><span class="id" title="var">P</span></span>
+      albo <span class="inlinecode"><span class="id" title="var">Q</span></span>. Jeżeli mamy w kontekście dowód <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>, to możemy go
+      rozbić za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span>, co odpowiada rozumowaniu przez
+      przypadki: musimy pokazać, że cel jest prawdziwy zarówno, gdy prawdziwe
+      jest tylko <span class="inlinecode"><span class="id" title="var">P</span></span>, jak i wtedy, gdy prawdziwe jest jedynie <span class="inlinecode"><span class="id" title="var">Q</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to zdanie "<span class="inlinecode"><span class="id" title="var">P</span></span> implikuje <span class="inlinecode"><span class="id" title="var">Q</span></span>". Żeby je udowodnić, używamy
+      taktyki <span class="inlinecode"><span class="id" title="tactic">intro</span></span> lub <span class="inlinecode"><span class="id" title="tactic">intros</span></span>, które wprowadzają do kontekstu dowód
+      na <span class="inlinecode"><span class="id" title="var">P</span></span> będący założeniem. Jeżeli mamy w kontekście dowód <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>,
+      to możemy dowieść <span class="inlinecode"><span class="id" title="var">Q</span></span> za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span>, a następnie będziemy
+      musieli udowodnić <span class="inlinecode"><span class="id" title="var">P</span></span>. Jeżeli mamy w kontekście <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> oraz
+      <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>, to możemy uzyskać dowód <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> za pomocą taktyki
+      <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span>. Możemy uzyskać <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> za pomocą <span class="inlinecode"><span class="id" title="tactic">specialize</span></span> <span class="inlinecode">(<span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="var">p</span>)</span>
+
+</li>
+<li> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> to negacja zdania <span class="inlinecode"><span class="id" title="var">P</span></span>. Faktycznie jest to notacja na <span class="inlinecode"><span class="id" title="var">not</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>,
+      które to samo jest skrótem oznaczającym <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>. Z negacją
+      radzimy sobie za pomocą taktyki <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">not</span></span> albo <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">not</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode">...</span>,
+      a następnie postępujemy jak z implikacją.
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">&lt;-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> to równoważność zdań <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span>. Jest to notacja na <span class="inlinecode"><span class="id" title="var">iff</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">Q</span></span>,
+      które jest skrótem od <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span>)</span> <span class="inlinecode">/\</span> <span class="inlinecode">(<span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span>)</span>. Radzimy sobie z nią za
+      pomocą taktyk <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">iff</span></span> oraz <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">iff</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode">...</span>
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Tutaj dodatkowa ściąga, w nieco bardziej czytelnym formacie:
+    https://github.com/wkolowski/Typonomikon/tree/master/txt/logika.md 
+
+<div class="paragraph"> </div>
+
+    A tutaj inna ściąga:
+    https://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf 
+<div class="paragraph"> </div>
+
+<a id="lab52"></a><h1 class="section">Zadania (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -516,8 +1708,220 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 
 <div class="paragraph"> </div>
 
-<a id="lab33"></a><h1 class="section">Ściąga</h1>
+ Poniższe zadania stanowią (chyba) kompletny zbiór praw rządzących
+    logiką konstruktywną (w szczególności, niektóre z zadań mogą
+    pokrywać się z ćwiczeniami zawartymi w tekście). Wróć do nich za
+    jakiś czas, gdy czas przetrzebi trochę twoją pamięć (np. za
+    tydzień). 
+</div>
+<div class="code">
 
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">exercises_propositional</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Hypotheses</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="keyword">Prop</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Komenda <span class="inlinecode"><span class="id" title="keyword">Hypotheses</span></span> formalnie działa jak wprowadzenie aksjomatu,
+    który w naszym przypadku brzmi "P, Q, R i S są zdaniami logicznymi".
+    Taki aksjomat jest rzecz jasna zupełnie niegroźny, ale z innymi
+    trzeba uważać — gdybyśmy wprowadzili aksjomat <span class="inlinecode">1</span> <span class="inlinecode">=</span> <span class="inlinecode">2</span>, to
+    popadlibyśmy w sprzeczność i nie moglibyśmy ufać żadnym dowodom,
+    które przeprowadzamy. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab53"></a><h3 class="section">Przemienność</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span> /\ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span> \/ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab54"></a><h3 class="section">Łączność</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> /\ (<span class="id" title="var">Q</span> /\ <span class="id" title="var">R</span>) &lt;-&gt; (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) /\ <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> \/ (<span class="id" title="var">Q</span> \/ <span class="id" title="var">R</span>) &lt;-&gt; (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>) \/ <span class="id" title="var">R</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab55"></a><h3 class="section">Rozdzielność</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_dist_or</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> /\ (<span class="id" title="var">Q</span> \/ <span class="id" title="var">R</span>) &lt;-&gt; (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) \/ (<span class="id" title="var">P</span> /\ <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_dist_and</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> \/ (<span class="id" title="var">Q</span> /\ <span class="id" title="var">R</span>) &lt;-&gt; (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>) /\ (<span class="id" title="var">P</span> \/ <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">imp_dist_imp</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) &lt;-&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab56"></a><h3 class="section">Kuryfikacja i dekuryfikacja</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">curry</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">uncurry</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) -&gt; (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab57"></a><h3 class="section">Prawa de Morgana</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">deMorgan_1</span> :<br/>
+&nbsp;&nbsp;~(<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>) &lt;-&gt; ~<span class="id" title="var">P</span> /\ ~<span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">deMorgan_2</span> :<br/>
+&nbsp;&nbsp;~<span class="id" title="var">P</span> \/ ~<span class="id" title="var">Q</span> -&gt; ~(<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab58"></a><h3 class="section">Niesprzeczność i zasada wyłączonego środka</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">noncontradiction'</span> :<br/>
+&nbsp;&nbsp;~(<span class="id" title="var">P</span> /\ ~<span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">noncontradiction_v2</span> :<br/>
+&nbsp;&nbsp;~ (<span class="id" title="var">P</span> &lt;-&gt; ~<span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">em_irrefutable</span> :<br/>
+&nbsp;&nbsp;~~ (<span class="id" title="var">P</span> \/ ~<span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab59"></a><h3 class="section">Elementy neutralne i anihilujące</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_false_annihilation</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> /\ <span class="id" title="var">False</span> &lt;-&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_false_neutral</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> \/ <span class="id" title="var">False</span> &lt;-&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_true_neutral</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> /\ <span class="id" title="var">True</span> &lt;-&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_true_annihilation</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> \/ <span class="id" title="var">True</span> &lt;-&gt; <span class="id" title="var">True</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab60"></a><h3 class="section">Inne</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_imp_and</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) &lt;-&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>) /\ (<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_not_imp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span> -&gt; ~ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_not_imp</span> :<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">contraposition</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (~ <span class="id" title="var">Q</span> -&gt; ~ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">absurd</span> :<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_and</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> /\ <span class="id" title="var">R</span>) -&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) /\ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">exercises_propositional</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">and_comm</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;forall&nbsp;P&nbsp;Q&nbsp;:&nbsp;Prop,&nbsp;P&nbsp;/\&nbsp;Q&nbsp;-&gt;&nbsp;Q&nbsp;/\&nbsp;P&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+W praktyce komenda <span class="inlinecode"><span class="id" title="keyword">Hypothesis</span></span> służy do tego, żeby za dużo nie
+    pisać — po zamknięciu sekcji komendą <span class="inlinecode"><span class="id" title="keyword">End</span></span>, Coq doda do każdego
+    twierdzenia znajdującego się w tej sekcji kwantyfikację uniwersalną
+    po hipotezach zadeklarowanych przy pomocy <span class="inlinecode"><span class="id" title="keyword">Hypothesis</span></span>. W naszym
+    przypadku Coq dodał do <span class="inlinecode"><span class="id" title="var">and_comm</span></span> kwantyfikację po <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span>,
+    mimo że nie napisaliśmy jej explicite. 
 </div>
 <div class="code">
 </div>

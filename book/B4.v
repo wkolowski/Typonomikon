@@ -954,8 +954,96 @@ Abort.
 
 (* end hide *)
 
+(** * Konkluzja (TODO) *)
+
+(** ** Ściąga (TODO) *)
+
 (** * Zadania (TODO) *)
 
 (** wyrzucić zadania mącące (mieszające typy i zdania) *)
 
-(** * Ściąga (TODO) *)
+Section ClassicalExercises.
+
+Require Import Classical.
+
+Hypotheses P Q R S : Prop.
+
+(** Komenda [Require Import] pozwala nam zaimportować żądany
+    moduł z biblioteki standardowej Coqa. Dzięki temu będziemy
+    mogli używać zawartych w nim definicji, twierdzeń etc.
+
+    Classical to moduł, który pozwala przeprowadzać rozumowania
+    w logice klasycznej. Deklaruje on jako aksjomaty niektóre
+    tautologie logiki klasycznej, np. zasadę wyłączonego środka,
+    która tutaj nazywa się [classic]. *)
+
+Check classic.
+(* ===> forall P : Prop, P \/ ~ P *)
+
+Lemma imp_and_or : (P -> Q \/ R) -> ((P -> Q) \/ (P -> R)).
+(* begin hide *)
+Proof.
+  intros. destruct (classic P) as [HP | HnotP].
+    destruct (H HP); [left | right]; intro; assumption.
+    left. intro. cut False.
+      inversion 1.
+      apply HnotP. apply H0.
+Qed.
+(* end hide *)
+
+Lemma deMorgan_2_conv : ~ (P /\ Q) -> ~ P \/ ~Q.
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma not_impl : ~ (P -> Q) -> P /\ ~ Q.
+(* begin hide *)
+Proof.
+  intro H. split.
+    cut False.
+      destruct 1.
+      apply H. intro.
+Abort.
+(* end hide *)
+
+Lemma impl_not_or : (P -> Q) -> (~ P \/ Q).
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma material_implication : (P -> Q) <-> (~P \/ Q).
+(* begin hide *)
+Proof.
+  split; intros.
+    destruct (classic P).
+      right. apply H. assumption.
+      left. intro. contradiction.
+    destruct H.
+      contradiction.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma contraposition_conv : (~ Q -> ~ P) -> (P -> Q).
+(* begin hide *)
+Proof.
+  intros H p. cut False.
+    destruct 1.
+    apply H.
+Abort.
+(* end hide *)
+
+Lemma excluded_middle : P \/ ~P.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma peirce : ((P -> Q) -> P) -> P.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+End ClassicalExercises.
