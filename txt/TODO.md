@@ -22,6 +22,8 @@
 8. Odkłamać kwestię "skończoności" typów induktywnych i "nieskończoności" typów koinduktywnych. Tak naprawdę, to chodzi o to, że typy induktywny są dobrze ufundowane, a typy koinduktywne niekoniecznie.
 9. Opisać zależny pattern matching (w rozdziale o zaawansowanej indukcji).
 10. Opisać jak zasymulować indukcję-indukcję za pomocą indeksów ("presyntax"). To samo dla indukcji-rekursji.
+11. Wymyślić jakiś fajny system rysowania rodzin induktywnych.
+12. Wymyślić standardową interpretację rodzin induktywnych.
 
 ## HoTT i topologia
 2. Wprowadzić teorię zbiorów za pomocą wyższego typu induktywnego.
@@ -40,6 +42,7 @@
   - są jeszcze jakieś, ale nie 
 12. Włączyć potem do książki rzeczy z HoTTowych notatek.
 13. Przestrzeń metryczną można zdefiniować za pomocą "Ball Relation": `Q+ -> X -> X -> Prop`
+14. Pokombinować z monadą nieterminacji.
 
 ## Filozofia
 1. Mega ważna obserwacja: nazwy zawsze należy nadawać tak, żeby zgadzały się z definicją, czyli nazwy są intensjonalne. Ewentualne ekstensjonalne powiązanie ze sobą (w postaci równoważności) różnych apriori nazw następować musi później, na mocy pokazania równoważności tego, co one oznaczają. Przykład: różne definicje równoważności powinny się nazywać inaczej, np. invertible, biinvertible, contractible etc.
@@ -55,6 +58,7 @@
 ## Długofalowe
 1. Użyć jsCoq do zrobienia interaktywnej książki, która wyglądałaby jakoś tak: https://x80.org/rhino-coq/v8.10/
 2. Zrobić zwijane/rozwijane dowody i paragrafy.
+3. Dodać ściągę do każdego rozdziału.
 
 ## Zagubione notatki
 1. Let `I := U × U`, and let `A : I → U` be defined by `A(X, Y) := (X → Y) × (Y → X)`. Define `B` as `B(X, Y )(f, g) := X × Y` and `r(X, Y )(f, g)(x, y) := (f(x) = y) × (x = g(y))`. Then the associated M-type is a family `M : I → U` and `M(A, B)` is equivalent to `A \equiv B`.

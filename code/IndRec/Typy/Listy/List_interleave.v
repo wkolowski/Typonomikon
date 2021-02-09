@@ -1,24 +1,24 @@
 Require Import D5.
 
-Function intertwine {A : Type} (l1 l2 : list A) : list A :=
+Function interleave {A : Type} (l1 l2 : list A) : list A :=
 match l1, l2 with
     | [], _ => l2
     | _, [] => l1
-    | h1 :: t1, h2 :: t2 => h1 :: h2 :: intertwine t1 t2
+    | h1 :: t1, h2 :: t2 => h1 :: h2 :: interleave t1 t2
 end.
 
-Lemma intertwine_nil_r :
+Lemma interleave_nil_r :
   forall {A : Type} (l : list A),
-    intertwine l [] = l.
+    interleave l [] = l.
 (* begin hide *)
 Proof.
   destruct l; reflexivity.
 Qed.
 (* end hide *)
 
-Lemma len_intertwine :
+Lemma len_interleave :
   forall {A : Type} (l1 l2 : list A),
-    length (intertwine l1 l2) = length l1 + length l2.
+    length (interleave l1 l2) = length l1 + length l2.
 (* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn.
@@ -29,9 +29,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma map_intertwine :
+Lemma map_interleave :
   forall {A B : Type} (f : A -> B) (l1 l2 : list A),
-    map f (intertwine l1 l2) = intertwine (map f l1) (map f l2).
+    map f (interleave l1 l2) = interleave (map f l1) (map f l2).
 (* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn.
@@ -42,11 +42,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: intertwine z replicate, filter, pmap etc. *)
+(* TODO: interleave z replicate, filter, pmap etc. *)
 
-Lemma any_intertwine :
+Lemma any_interleave :
   forall {A : Type} (p : A -> bool) (l1 l2 : list A),
-    any p (intertwine l1 l2) = any p l1 || any p l2.
+    any p (interleave l1 l2) = any p l1 || any p l2.
 (* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn.
@@ -59,9 +59,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma all_intertwine :
+Lemma all_interleave :
   forall {A : Type} (p : A -> bool) (l1 l2 : list A),
-    all p (intertwine l1 l2) = all p l1 && all p l2.
+    all p (interleave l1 l2) = all p l1 && all p l2.
 (* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn.
@@ -74,9 +74,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma count_intertwine :
+Lemma count_interleave :
   forall {A : Type} (p : A -> bool) (l1 l2 : list A),
-    count p (intertwine l1 l2) = count p l1 + count p l2.
+    count p (interleave l1 l2) = count p l1 + count p l2.
 (* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn.
@@ -91,9 +91,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Exists_intertwine :
+Lemma Exists_interleave :
   forall {A : Type} (P : A -> Prop) (l1 l2 : list A),
-    Exists P (intertwine l1 l2) <->
+    Exists P (interleave l1 l2) <->
     Exists P l1 \/ Exists P l2.
 (* begin hide *)
 Proof.
@@ -125,9 +125,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma Forall_intertwine :
+Lemma Forall_interleave :
   forall {A : Type} (P : A -> Prop) (l1 l2 : list A),
-    Forall P (intertwine l1 l2) <->
+    Forall P (interleave l1 l2) <->
     Forall P l1 /\ Forall P l2.
 (* begin hide *)
 Proof.
@@ -155,19 +155,19 @@ Proof.
   split; induction 1; subst; constructor; auto; fail.
 Qed.
 
-Lemma Dup_intertwine :
+Lemma Dup_interleave :
   forall {A : Type} (l1 l2 : list A),
-    Dup (intertwine l1 l2) <->
+    Dup (interleave l1 l2) <->
     Dup l1 \/ Dup l2 \/ exists x : A, elem x l1 /\ elem x l2.
 (* begin hide *)
 Proof.
   intros.
-  functional induction intertwine l1 l2.
+  functional induction interleave l1 l2.
     firstorder; inv H.
     firstorder; inv H; inv H0.
     {
       rewrite !Dup_cons, !elem_cons', !IHl,
-              !elem_Exists, !Exists_intertwine, <- !elem_Exists.
+              !elem_Exists, !Exists_interleave, <- !elem_Exists.
       firstorder; subst; cbn in *.
         do 2 right. exists h2. split; constructor.
         do 2 right. exists h1. split; constructor; assumption.

@@ -2067,6 +2067,8 @@ Qed.
 
 (** ** Inne (TODO) *)
 
+(** *** Relacje totalne *)
+
 Class Total {A : Type} (R : rel A) : Prop :=
 {
     total : forall x y : A, R x y \/ R y x
@@ -2155,6 +2157,8 @@ Instance Total_Reflexive :
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
+
+(** *** Relacje trychotomiczne *)
 
 Class Trichotomous {A : Type} (R : rel A) : Prop :=
 {
@@ -2251,6 +2255,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** *** Relacje gęste *)
+
 Class Dense {A : Type} (R : rel A) : Prop :=
 {
     dense : forall x y : A, R x y -> exists z : A, R x z /\ R z y
@@ -2304,6 +2310,40 @@ Lemma Rnot_not_Dense :
   exists (A : Type) (R : rel A),
     Dense R /\ ~ Dense (Rnot R).
 Proof.
+Abort.
+(* end hide *)
+
+(** *** Relacje konfluentne *)
+
+Class Confluent {A : Type} (R : A -> A -> Prop) : Prop :=
+{
+    confluent :
+      forall x y z : A,
+        R x y -> R x z ->
+          exists w : A, R y w /\ R z w
+}.
+
+Instance Confluent_Ror :
+  forall {A : Type} (R S : A -> A -> Prop),
+    Confluent R -> Confluent S -> Confluent (Ror R S).
+(* begin hide *)
+Proof.
+  destruct 1 as [CR], 1 as [CS].
+  split. intros x y z [Rxy | Sxy] [Rxz | Sxz].
+    destruct (CR _ _ _ Rxy Rxz) as (w & Ryw & Rzw). unfold Ror. eauto.
+Abort.
+(* end hide *)
+
+Instance Confluent_Rand :
+  forall {A : Type} (R S : A -> A -> Prop),
+    Confluent R -> Confluent S -> Confluent (Rand R S).
+(* begin hide *)
+Proof.
+  destruct 1 as [CR], 1 as [CS].
+  split. intros x y z [Rxy Sxy] [Rxz Sxz].
+  destruct (CR _ _ _ Rxy Rxz) as (w & Ryw & Rzw),
+           (CS _ _ _ Sxy Sxz) as (v & Syv & Szv).
+  unfold Rand. exists w. firstorder.
 Abort.
 (* end hide *)
 
