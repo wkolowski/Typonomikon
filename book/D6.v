@@ -1362,6 +1362,109 @@ Qed.
 
 End Transpositions.
 
+(** ** Permutacje jako ciągi transpozycji v2 *)
+
+Module InductiveTranspositions.
+
+Inductive Transposition {A : Type} : list A -> list A -> Prop :=
+    | Transposition' :
+        forall (l1 : list A) (x : A) (l2 : list A) (y : A) (l3 : list A),
+          Transposition (l1 ++ x :: l2 ++ y :: l3) (l1 ++ y :: l2 ++ x :: l3).
+
+Inductive Transposition2 {A : Type} : list A -> list A -> Prop :=
+    | Transposition2' :
+        forall (l1 : list A) (x : A) (l2 : list A) (y : A) (l3 r1 r2: list A),
+          r1 = l1 ++ x :: l2 ++ y :: l3 ->
+          r2 = l1 ++ y :: l2 ++ x :: l3 ->
+            Transposition2 r1 r2.
+
+Inductive Perm {A : Type} : list A -> list A -> Prop :=
+    | Perm_refl : forall l : list A, Perm l l
+    | Perm_step_trans :
+        forall l1 l2 l3 : list A,
+          Transposition l1 l2 -> Perm l2 l3 -> Perm l1 l3.
+
+Lemma Perm_cons :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    Perm l1 l2 -> Perm (x :: l1) (x :: l2).
+(* begin hide *)
+Proof.
+  induction 1.
+    constructor.
+    eapply Perm_step_trans.
+      2: eassumption.
+      destruct H as [l11 y l12 z l13].
+        apply (Transposition' (x :: l11) y l12 z l13).
+Qed.
+(* end hide *)
+
+Lemma Perm_trans :
+  forall (A : Type) (l1 l2 l3 : list A),
+    Perm l1 l2 -> Perm l2 l3 -> Perm l1 l3.
+(* begin hide *)
+Proof.
+  intros until 1. revert l3.
+  induction H; intros.
+    assumption.
+    econstructor.
+      exact H.
+      apply IHPerm. assumption.
+Qed.
+(* end hide *)
+
+Lemma Permutation_Perm :
+  forall (A : Type) (l1 l2 : list A),
+    Permutation l1 l2 -> Perm l1 l2.
+(* begin hide *)
+Proof.
+  induction 1.
+    constructor.
+    apply Perm_cons. assumption.
+    apply (Perm_step_trans _ (x :: y :: l)).
+      apply (Transposition' [] y [] x l).
+      constructor.
+    eapply Perm_trans; eassumption.
+Qed.
+(* end hide *)
+
+Lemma Perm_Permutation :
+  forall (A : Type) (l1 l2 : list A),
+    Perm l1 l2 -> Permutation l1 l2.
+(* begin hide *)
+Proof.
+  induction 1.
+    reflexivity.
+    rewrite <- IHPerm. destruct H as [l11 x l12 y l13].
+      apply Transpositions.Permutation_transpose.
+Qed.
+(* end hide *)
+
+Lemma Perm_spec :
+  forall (A : Type) (l1 l2 : list A),
+    Perm l1 l2 <-> Permutation l1 l2.
+(* begin hide *)
+Proof.
+  split.
+    apply Perm_Permutation.
+    apply Permutation_Perm.
+Qed.
+(* end hide *)
+
+Lemma Perm_count :
+  forall (A : Type) (p : A -> bool) (l1 l2 : list A),
+    Perm l1 l2 -> count p l1 = count p l2.
+(* begin hide *)
+Proof.
+  induction 1.
+    reflexivity.
+    rewrite <- IHPerm. destruct H as [l11 x l12 y l13].
+      repeat (rewrite count_app; cbn).
+      destruct (p x), (p y); rewrite ?plus_n_Sm; reflexivity.
+Qed.
+(* end hide *)
+
+End InductiveTranspositions.
+
 (** ** Permutacje jako ciągi transpozycji elementów sąsiednich *)
 
 Module AdjacentTranspositions.
@@ -1783,6 +1886,80 @@ Abort.
 
 End AtLeast.
 
+(** * Permutacje, jeszcze dziwniej *)
+
+Module PermWeird.
+
+Inductive Elem {A : Type} (x : A) : list A -> Type :=
+    | Z : forall l : list A, Elem x (x :: l)
+    | S : forall {t : list A}, Elem x t -> forall h : A, Elem x (h :: t).
+
+Arguments Z {A x} _.
+Arguments S {A x t} _ _.
+
+Require Import H.
+
+Definition Perm {A : Type} (l1 l2 : list A) : Type :=
+  forall x : A, iso (Elem x l1) (Elem x l2).
+
+Require Import Equality.
+
+(* begin hide *)
+(*Lemma Permutation_Perm :
+  forall {A : Type} {l1 l2 : list A},
+    Permutation l1 l2 -> Perm l1 l2.
+Proof.
+  induction 1.
+    red. intro. split with (coel := id) (coer := id).
+      1-2: reflexivity.
+    red. intro y. unfold Perm in *. destruct (IHPermutation y).
+      esplit. Unshelve. all: cycle 4. 1-4: intro H'.
+        inv H'.
+          left.
+          right. apply coel. assumption.
+        inv H'.
+          left.
+          right. apply coer. assumption.
+        dependent induction H'; cbn; congruence.
+        dependent induction H'; cbn; congruence.
+    red. intro z. esplit. Unshelve. all: cycle 3. 1-4: intro H'.
+        inv H'.
+          right. left.
+          inv X.
+            left.
+            right. right. assumption.
+        inv H'.
+          right. left.
+          inv X.
+            left.
+            right. right. assumption.
+        do 2 (dependent induction H'; cbn; try congruence).
+        do 2 (dependent induction H'; cbn; try congruence).
+    intro H'. eapply iso_trans.
+      apply IHPermutation1.
+      apply IHPermutation2.
+Qed.
+ *)
+
+(* Lemma Perm_Permutation :
+  forall {A : Type} {l1 l2 : list A},
+    Perm l1 l2 -> Permutation l1 l2.
+Proof.
+  unfold Perm.
+  induction l1 as [| h1 t1]; intros.
+    destruct l2 as [| h2 t2].
+      constructor.
+      specialize (H h2). destruct H.
+        clear -coer. specialize (coer ltac:(left)). inv coer.
+    destruct l2 as [| h2 t2].
+      specialize (H h1). destruct H.
+        clear -coel. specialize (coel ltac:(left)). inv coel.
+Admitted.
+ *)
+(* end hide *)
+
+End PermWeird.
+
 (** ** Permutacje za pomocą liczenia właściwości rozstrzygalnych *)
 
 Module Count.
@@ -1879,19 +2056,6 @@ Proof.
   induction l as [| h t]; cbn.
     reflexivity.
     apply Permutation_app; auto.
-Qed.
-(* end hide *)
-
-(* TODO: bind_app *)
-
-Lemma bind_bind :
-  forall {A B C : Type} (f : A -> list B) (g : B -> list C) (l : list A),
-    bind g (bind f l) = bind (fun x : A => bind g (f x)) l.
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-    rewrite bind_spec, map_app, join_app, <- !bind_spec, IHt. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2155,19 +2319,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma bind_comm :
-  forall (A B C : Type) (f g: A -> list A) (l : list A),
-    bind f (bind g l) =
-    bind g (bind f l).
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn.
-    reflexivity.
-    rewrite !bind_spec, !map_app in *.
-      rewrite !join_app. rewrite IHt. do 2 f_equal.
-Abort.
-(* end hide *)
-
 Lemma count_join :
   forall (A : Type) (p : A -> bool) (l : list (list A)),
     count p (join l) = nsum (map (count p) l).
@@ -2197,31 +2348,17 @@ match l with
     | h :: t => count p h + deepcount p t
 end.
 
-Lemma bind_assoc :
-  forall
-    (A B C : Type) (f : A -> list B) (g : B -> list C) (la : list A),
-      bind g (bind f la) = bind (fun x => bind g (f x)) la.
-(* begin hide *)
-Proof.
-  induction la as [| ha ta]; cbn.
-    reflexivity.
-    intros. rewrite !bind_spec, !map_app, join_app in *.
-      rewrite IHta. reflexivity.
-Qed.
-(* end hide *)
-
 Lemma Permutation_bind_ins :
-  forall (A : Type) (x y : A) (l : list A),
-    Permutation
-      (bind (ins x) (ins y l))
-      (bind (ins y) (ins x l)).
+  forall {A : Type} (x y : A) (l : list A),
+    Permutation (bind (ins x) (ins y l)) (bind (ins y) (ins x l)).
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn.
-    constructor.
-    rewrite perm_swap. do 2 constructor. apply Permutation_app.
-      apply Permutation_count_conv. intro.
-        rewrite !count_map.
+  induction l as [| h t].
+    cbn. constructor.
+    {
+      change (ins x (h :: t)) with ([x :: h :: t] ++ map (cons h) (ins x t)).
+      change (ins y (h :: t)) with ([y :: h :: t] ++ map (cons h) (ins y t)).
+      rewrite !bind_app.
 Admitted.
 (* end hide *)
 
@@ -2234,7 +2371,7 @@ Proof.
     do 2 constructor.
     rewrite 2!bind_spec. apply Permutation_join, Permutation_map.
       assumption.
-    rewrite !bind_assoc. apply Permutation_bind.
+    rewrite !bind_bind. apply Permutation_bind.
       2: reflexivity.
       apply Permutation_bind_ins.
     rewrite IHPermutation1, IHPermutation2. reflexivity.
@@ -2445,7 +2582,9 @@ Abort.
 
 End Specs.
 
-(** * Zbiory jako zdeduplikowane permutacje *)
+(** * Zbiory *)
+
+(** ** Zbiory jako zdeduplikowane permutacje *)
 
 (* Module SetPermDedup. *)
 
@@ -2463,6 +2602,7 @@ Inductive SameSet {A : Type} : list A -> list A -> Prop :=
 Lemma SameSet_SetEquiv :
   forall {A : Type} {l1 l2 : list A},
     SameSet l1 l2 -> SetEquiv l1 l2.
+(* begin hide *)
 Proof.
   induction 1; unfold SetEquiv in *; intro z.
     reflexivity.
@@ -2471,54 +2611,20 @@ Proof.
     rewrite !elem_cons'. firstorder.
     rewrite IHSameSet1, IHSameSet2. reflexivity.
 Qed.
+(* end hide *)
 
 Lemma Permutation_SameSet :
   forall {A : Type} {l1 l2 : list A},
     Permutation l1 l2 -> SameSet l1 l2.
+(* begin hide *)
 Proof.
   induction 1; econstructor; eassumption.
 Qed.
+(* end hide *)
 
 (* End SetPermDedup. *)
 
-(** * Zbiory jako zdeduplikowane permutacje po raz drugi *)
-
-Module SetPermNoDup.
-
-Definition Represents {A : Type} (l1 l2 : list A) : Prop :=
-  Permutation l1 l2 /\ NoDup l2.
-
-Inductive RepresentSameSet {A : Type} (l1 l2 : list A) : Prop :=
-    | SameSet'' :
-        forall l : list A,
-          Represents l1 l -> Represents l2 l -> RepresentSameSet l1 l2.
-
-Lemma RepresentSameSet_Represents :
-  forall {A : Type} {l1 l2 : list A},
-    RepresentSameSet l1 l2 -> SameSet l1 l2.
-Proof.
-  intros A l1 l2 [l [HP1 HN1] [HP2 HN2]].
-  apply Permutation_SameSet.
-  eapply Permutation_trans.
-    eassumption.
-    symmetry. assumption.
-Qed.
-
-Lemma SameSet_RepresentSameSet :
-  forall {A : Type} {l1 l2 : list A},
-    SameSet l1 l2 -> RepresentSameSet l1 l2.
-Proof.
-  induction 1.
-    exists []; repeat constructor.
-    admit.
-    exists (x :: y :: l); constructor.
-      constructor.
-      constructor.
-Abort.
-
-End SetPermNoDup.
-
-(** * Zbiory za pomocą [Exists] *)
+(** ** Zbiory za pomocą [Exists] *)
 
 Module SetExists.
 
@@ -2528,6 +2634,7 @@ Definition SameSetEx {A : Type} (l1 l2 : list A) : Prop :=
 Lemma SameSetEx_SetEquiv :
   forall {A : Type} {l1 l2 : list A},
     SameSetEx l1 l2 <-> SetEquiv l1 l2.
+(* begin hide *)
 Proof.
   unfold SameSetEx, SetEquiv.
   split; intros.
@@ -2535,174 +2642,11 @@ Proof.
       firstorder; specialize (H x); specialize (H0 x); cbn in *; firstorder congruence.
     rewrite !Exists_spec. firstorder.
 Qed.
+(* end hide *)
 
 End SetExists.
 
-(** * Zbiory za pomocą sąsiednich transpozycji *)
-
-Module SetAdjacentTranspositionDedup.
-
-Inductive AdjacentTransposition {A : Type} : list A -> list A -> Prop :=
-    | AdjacentTransposition' :
-        forall (x y : A) (l1 l2 : list A),
-          AdjacentTransposition (l1 ++ x :: y :: l2) (l1 ++ y :: x :: l2).
-
-Inductive AdjacentDedup {A : Type} : list A -> list A -> Prop :=
-    | AdjacentDedup' :
-        forall (x : A) (l1 l2 : list A),
-          AdjacentDedup (l1 ++ x :: x :: l2) (l1 ++ x :: l2).
-
-Inductive SameSetATD {A : Type} : list A -> list A -> Prop :=
-    | SameSetATD_refl   :
-        forall l : list A, SameSetATD l l
-    | SameSetATD_transp :
-        forall l1 l2 l3 : list A,
-          AdjacentTransposition l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3
-    | SameSetATD_dedup  :
-        forall l1 l2 l3 : list A,
-          AdjacentDedup l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3.
-
-Inductive SameSetATD' {A : Type} (l1 : list A) : list A -> Prop :=
-    | SameSetATD'_refl   :
-        SameSetATD' l1 l1
-    | SameSetATD'_transp :
-        forall l2 l3 : list A,
-          SameSetATD' l1 l2 -> AdjacentTransposition l2 l3 -> SameSetATD' l1 l3
-    | SameSetATD'_dedup  :
-        forall l2 l3 : list A,
-          SameSetATD' l1 l2 -> AdjacentDedup l2 l3 -> SameSetATD' l1 l3.
-
-Lemma SameSetATD_trans :
-  forall {A : Type} {l1 l2 : list A},
-    SameSetATD l1 l2 ->
-      forall {l3 : list A}, SameSetATD l2 l3 -> SameSetATD l1 l3.
-Proof.
-  induction 1; intros.
-    assumption.
-    econstructor.
-      eassumption.
-      apply IHSameSetATD. assumption.
-    econstructor 3.
-      eassumption.
-      apply IHSameSetATD. assumption.
-Qed.
-
-Lemma SameSetATD'_trans :
-  forall {A : Type} {l1 l2 : list A},
-    SameSetATD' l1 l2 ->
-      forall {l3 : list A}, SameSetATD' l2 l3 -> SameSetATD' l1 l3.
-Proof.
-  induction 1; intros.
-    assumption.
-    econstructor.
-      eassumption.
-Restart.
-  intros until 2. revert l1 H.
-  induction H0; intros.
-    assumption.
-    econstructor.
-      apply IHSameSetATD'. assumption.
-      assumption.
-    econstructor 3.
-      apply IHSameSetATD'. assumption.
-      assumption.
-Qed.
-
-Lemma SameSetATD'_spec :
-  forall {A : Type} {l1 l2 : list A},
-    SameSetATD' l1 l2 <-> SameSetATD l1 l2.
-Proof.
-  split.
-    induction 1.
-      constructor.
-      apply (SameSetATD_trans IHSameSetATD'). econstructor.
-        eassumption.
-        constructor.
-      apply (SameSetATD_trans IHSameSetATD'). econstructor 3.
-        eassumption.
-        constructor.
-    induction 1.
-      constructor.
-      eapply SameSetATD'_trans.
-        2: eassumption.
-        econstructor.
-          constructor.
-          assumption.
-      eapply SameSetATD'_trans.
-        2: eassumption.
-        econstructor 3.
-          constructor.
-          assumption.
-Qed.
-
-Lemma SameSetATD_SetEquiv :
-  forall {A : Type} {l1 l2 : list A},
-    SameSetATD l1 l2 -> SetEquiv l1 l2.
-Proof.
-  unfold SetEquiv.
-  induction 1; intro.
-    apply SetEquiv_refl.
-    inv H. rewrite <- IHSameSetATD, !elem_app, !elem_cons'. firstorder.
-    inv H. rewrite <- IHSameSetATD, !elem_app, !elem_cons'. firstorder.
-Qed.
-
-Lemma AdjacentTransposition_cons :
-  forall {A : Type} {t1 t2 : list A},
-    AdjacentTransposition t1 t2 ->
-      forall h : A, AdjacentTransposition (h :: t1) (h :: t2).
-Proof.
-  induction 1.
-  intro h.
-  rewrite <- !app_cons_l.
-  constructor.
-Qed.
-
-Lemma AdjacentDedup_cons :
-  forall {A : Type} {t1 t2 : list A},
-    AdjacentDedup t1 t2 ->
-      forall h : A, AdjacentDedup (h :: t1) (h :: t2).
-Proof.
-  induction 1.
-  intro h.
-  rewrite <- !app_cons_l.
-  constructor.
-Qed.
-
-Lemma SameSetATD_cons :
-  forall {A : Type} {t1 t2 : list A},
-    SameSetATD t1 t2 ->
-      forall h : A, SameSetATD (h :: t1) (h :: t2).
-Proof.
-  induction 1; intros h.
-    constructor.
-    apply (@SameSetATD_transp _ _ (h :: l2)).
-      apply AdjacentTransposition_cons. assumption.
-      apply IHSameSetATD.
-    apply (@SameSetATD_dedup _ _ (h :: l2)).
-      apply AdjacentDedup_cons. assumption.
-      apply IHSameSetATD.
-Qed.
-
-Lemma SetEquiv_SameSetATD :
-  forall {A : Type} {l1 l2 : list A},
-    SetEquiv l1 l2 -> SameSetATD l1 l2.
-Proof.
-  unfold SetEquiv.
-  induction l1 as [| h1 t1];
-  intros l2 H.
-    admit.
-    {
-      assert (elem h1 l2).
-        apply H. left.
-      apply elem_spec in H0.
-      destruct H0 as (l1 & l3 & H0); subst.
-      admit.
-    }
-Admitted.
-
-End SetAdjacentTranspositionDedup.
-
-(** * Zbiory za pomocą transpozycji *)
+(** ** Zbiory za pomocą transpozycji i deduplikacji *)
 
 Module SetTranspositionDedup.
 
@@ -2729,6 +2673,7 @@ Inductive SameSetTD {A : Type} : list A -> list A -> Prop :=
 Lemma SameSetTD_SetEquiv :
   forall {A : Type} {l1 l2 : list A},
     SameSetTD l1 l2 -> SetEquiv l1 l2.
+(* begin hide *)
 Proof.
   unfold SetEquiv.
   induction 1; intro.
@@ -2736,76 +2681,182 @@ Proof.
     inv H. rewrite <- IHSameSetTD, !elem_app, !elem_cons', !elem_app, !elem_cons'. firstorder.
     inv H. rewrite <- IHSameSetTD, !elem_app, !elem_cons', !elem_app, !elem_cons'. firstorder.
 Qed.
+(* end hide *)
 
 End SetTranspositionDedup.
 
-(** * Permutacje, jeszcze dziwniej *)
+(** ** Zbiory za pomocą sąsiednich transpozycji i deduplikacji *)
 
-Module PermWeird.
+Module SetAdjacentTranspositionDedup.
 
-Inductive Elem {A : Type} (x : A) : list A -> Type :=
-    | Z : forall l : list A, Elem x (x :: l)
-    | S : forall {t : list A}, Elem x t -> forall h : A, Elem x (h :: t).
+Inductive AdjacentTransposition {A : Type} : list A -> list A -> Prop :=
+    | AdjacentTransposition' :
+        forall (x y : A) (l1 l2 : list A),
+          AdjacentTransposition (l1 ++ x :: y :: l2) (l1 ++ y :: x :: l2).
 
-Arguments Z {A x} _.
-Arguments S {A x t} _ _.
+Inductive AdjacentDedup {A : Type} : list A -> list A -> Prop :=
+    | AdjacentDedup' :
+        forall (x : A) (l1 l2 : list A),
+          AdjacentDedup (l1 ++ x :: x :: l2) (l1 ++ x :: l2).
 
-Require Import H.
+Inductive SameSetATD {A : Type} : list A -> list A -> Prop :=
+    | SameSetATD_refl   :
+        forall l : list A, SameSetATD l l
+    | SameSetATD_transp :
+        forall l1 l2 l3 : list A,
+          AdjacentTransposition l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3
+    | SameSetATD_dedup  :
+        forall l1 l2 l3 : list A,
+          AdjacentDedup l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3.
 
-Definition Perm {A : Type} (l1 l2 : list A) : Type :=
-  forall x : A, iso (Elem x l1) (Elem x l2).
-
-Require Import Equality.
-
-(* Lemma Permutation_Perm :
+Lemma SameSetATD_trans :
   forall {A : Type} {l1 l2 : list A},
-    Permutation l1 l2 -> Perm l1 l2.
+    SameSetATD l1 l2 ->
+      forall {l3 : list A}, SameSetATD l2 l3 -> SameSetATD l1 l3.
+(* begin hide *)
+Proof.
+  induction 1; intros.
+    assumption.
+    econstructor.
+      eassumption.
+      apply IHSameSetATD. assumption.
+    econstructor 3.
+      eassumption.
+      apply IHSameSetATD. assumption.
+Qed.
+(* end hide *)
+
+Lemma SameSetATD_SetEquiv :
+  forall {A : Type} {l1 l2 : list A},
+    SameSetATD l1 l2 -> SetEquiv l1 l2.
+(* begin hide *)
+Proof.
+  unfold SetEquiv.
+  induction 1; intro.
+    apply SetEquiv_refl.
+    inv H. rewrite <- IHSameSetATD, !elem_app, !elem_cons'. firstorder.
+    inv H. rewrite <- IHSameSetATD, !elem_app, !elem_cons'. firstorder.
+Qed.
+
+Lemma AdjacentTransposition_cons :
+  forall {A : Type} {t1 t2 : list A},
+    AdjacentTransposition t1 t2 ->
+      forall h : A, AdjacentTransposition (h :: t1) (h :: t2).
+(* begin hide *)
 Proof.
   induction 1.
-    red. intro. split with (coel := id) (coer := id).
-      1-2: reflexivity.
-    red. intro y. unfold Perm in *. destruct (IHPermutation y).
-      esplit. Unshelve. all: cycle 4. 1-4: intro H'.
-        inv H'.
-          left.
-          right. apply coel. assumption.
-        inv H'.
-          left.
-          right. apply coer. assumption.
-        dependent induction H'; cbn; congruence.
-        dependent induction H'; cbn; congruence.
-    red. intro z. esplit. Unshelve. all: cycle 3. 1-4: intro H'.
-        inv H'.
-          right. left.
-          inv X.
-            left.
-            right. right. assumption.
-        inv H'.
-          right. left.
-          inv X.
-            left.
-            right. right. assumption.
-        do 2 (dependent induction H'; cbn; try congruence).
-        do 2 (dependent induction H'; cbn; try congruence).
-    intro H'. eapply iso_trans.
-      apply IHPermutation1.
-      apply IHPermutation2.
+  intro h.
+  rewrite <- !app_cons_l.
+  constructor.
 Qed.
- *)
+(* end hide *)
 
-(* Lemma Perm_Permutation :
-  forall {A : Type} {l1 l2 : list A},
-    Perm l1 l2 -> Permutation l1 l2.
+Lemma AdjacentDedup_cons :
+  forall {A : Type} {t1 t2 : list A},
+    AdjacentDedup t1 t2 ->
+      forall h : A, AdjacentDedup (h :: t1) (h :: t2).
+(* begin hide *)
 Proof.
-  unfold Perm.
-  induction l1 as [| h1 t1]; intros.
-    destruct l2 as [| h2 t2].
-      constructor.
-      specialize (H h2). destruct H.
-        clear -coer. specialize (coer ltac:(left)). inv coer.
-    destruct l2 as [| h2 t2].
-      specialize (H h1). destruct H.
-        clear -coel. specialize (coel ltac:(left)). inv coel.
+  destruct 1.
+  intro h.
+  rewrite <- !app_cons_l.
+  constructor.
+Qed.
+(* end hide *)
+
+Lemma SameSetATD_cons :
+  forall {A : Type} {t1 t2 : list A},
+    SameSetATD t1 t2 ->
+      forall h : A, SameSetATD (h :: t1) (h :: t2).
+(* begin hide *)
+Proof.
+  induction 1; intros h.
+    constructor.
+    apply (@SameSetATD_transp _ _ (h :: l2)).
+      apply AdjacentTransposition_cons. assumption.
+      apply IHSameSetATD.
+    apply (@SameSetATD_dedup _ _ (h :: l2)).
+      apply AdjacentDedup_cons. assumption.
+      apply IHSameSetATD.
+Qed.
+(* end hide *)
+
+Lemma SetEquiv_SameSetATD :
+  forall {A : Type} {l1 l2 : list A},
+    SetEquiv l1 l2 -> SameSetATD l1 l2.
+(* begin hide *)
+Proof.
+  unfold SetEquiv.
+  induction l1 as [| h1 t1];
+  intros l2 H.
+    admit.
+    {
+      assert (elem h1 l2).
+        apply H. left.
+      apply elem_spec in H0.
+      destruct H0 as (l1 & l3 & H0); subst.
+      admit.
+    }
+Restart.
+  intros.
 Admitted.
- *)
-End PermWeird.
+(* end hide *)
+
+Inductive SameSetATD' {A : Type} (l1 : list A) : list A -> Prop :=
+    | SameSetATD'_refl   :
+        SameSetATD' l1 l1
+    | SameSetATD'_transp :
+        forall l2 l3 : list A,
+          SameSetATD' l1 l2 -> AdjacentTransposition l2 l3 -> SameSetATD' l1 l3
+    | SameSetATD'_dedup  :
+        forall l2 l3 : list A,
+          SameSetATD' l1 l2 -> AdjacentDedup l2 l3 -> SameSetATD' l1 l3.
+
+Lemma SameSetATD'_trans :
+  forall {A : Type} {l1 l2 : list A},
+    SameSetATD' l1 l2 ->
+      forall {l3 : list A}, SameSetATD' l2 l3 -> SameSetATD' l1 l3.
+(* begin hide *)
+Proof.
+  intros until 2. revert l1 H.
+  induction H0; intros.
+    assumption.
+    econstructor.
+      apply IHSameSetATD'. assumption.
+      assumption.
+    econstructor 3.
+      apply IHSameSetATD'. assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma SameSetATD'_spec :
+  forall {A : Type} {l1 l2 : list A},
+    SameSetATD' l1 l2 <-> SameSetATD l1 l2.
+(* begin hide *)
+Proof.
+  split.
+    induction 1.
+      constructor.
+      apply (SameSetATD_trans IHSameSetATD'). econstructor.
+        eassumption.
+        constructor.
+      apply (SameSetATD_trans IHSameSetATD'). econstructor 3.
+        eassumption.
+        constructor.
+    induction 1.
+      constructor.
+      eapply SameSetATD'_trans.
+        2: eassumption.
+        econstructor.
+          constructor.
+          assumption.
+      eapply SameSetATD'_trans.
+        2: eassumption.
+        econstructor 3.
+          constructor.
+          assumption.
+Qed.
+(* end hide *)
+
+End SetAdjacentTranspositionDedup.

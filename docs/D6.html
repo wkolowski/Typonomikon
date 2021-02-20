@@ -821,7 +821,73 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab533"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich</h2>
+<a id="lab533"></a><h2 class="section">Permutacje jako ciągi transpozycji v2</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">InductiveTranspositions</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Transposition</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Transposition'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">l1</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Transposition</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span> ++ <span class="id" title="var">y</span> :: <span class="id" title="var">l3</span>) (<span class="id" title="var">l1</span> ++ <span class="id" title="var">y</span> :: <span class="id" title="var">l2</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l3</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Transposition2</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Transposition2'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">l1</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l3</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span>: <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">r1</span> = <span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span> ++ <span class="id" title="var">y</span> :: <span class="id" title="var">l3</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">r2</span> = <span class="id" title="var">l1</span> ++ <span class="id" title="var">y</span> :: <span class="id" title="var">l2</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l3</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Transposition2</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Perm</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Perm_refl</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">Perm</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Perm_step_trans</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Transposition</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_cons</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Perm</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l1</span>) (<span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_trans</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_Perm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_Permutation</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> &lt;-&gt; <span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Perm_count</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Perm</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">count</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> = <span class="id" title="var">count</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">InductiveTranspositions</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab534"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich</h2>
 
 </div>
 <div class="code">
@@ -863,7 +929,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab534"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich v2</h2>
+<a id="lab535"></a><h2 class="section">Permutacje jako ciągi transpozycji elementów sąsiednich v2</h2>
 
 </div>
 <div class="code">
@@ -921,7 +987,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab535"></a><h2 class="section">Permutacje za pomocą liczenia właściwości</h2>
+<a id="lab536"></a><h2 class="section">Permutacje za pomocą liczenia właściwości</h2>
 
 </div>
 <div class="code">
@@ -968,7 +1034,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab536"></a><h2 class="section">Permutacje za pomocą liczenia właściwości v2</h2>
+<a id="lab537"></a><h2 class="section">Permutacje za pomocą liczenia właściwości v2</h2>
 
 </div>
 <div class="code">
@@ -1050,7 +1116,43 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab537"></a><h2 class="section">Permutacje za pomocą liczenia właściwości rozstrzygalnych</h2>
+<a id="lab538"></a><h1 class="section">Permutacje, jeszcze dziwniej</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">PermWeird</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Elem</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Z</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">Elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>}, <span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>).<br/>
+
+<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">Z</span> {<span class="id" title="var">A</span> <span class="id" title="var">x</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">S</span> {<span class="id" title="var">A</span> <span class="id" title="var">x</span> <span class="id" title="var">t</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">H</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Perm</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">iso</span> (<span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">PermWeird</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab539"></a><h2 class="section">Permutacje za pomocą liczenia właściwości rozstrzygalnych</h2>
 
 </div>
 <div class="code">
@@ -1089,7 +1191,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab538"></a><h2 class="section">Znajdowanie permutacji przez selekcję</h2>
+<a id="lab540"></a><h2 class="section">Znajdowanie permutacji przez selekcję</h2>
 
 </div>
 <div class="code">
@@ -1131,14 +1233,6 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">Permutation</span> (<span class="id" title="var">bind</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>) (<span class="id" title="var">bind</span> <span class="id" title="var">g</span> <span class="id" title="var">l</span>).<br/>
 
 <br/>
-<span class="comment">(*&nbsp;TODO:&nbsp;bind_app&nbsp;*)</span><br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bind_bind</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">C</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bind</span> <span class="id" title="var">g</span> (<span class="id" title="var">bind</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>) = <span class="id" title="var">bind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">bind</span> <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="var">l</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_select_app</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> (<span class="id" title="var">select</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>)) (<span class="id" title="var">select</span> (<span class="id" title="var">l2</span> ++ <span class="id" title="var">l1</span>)).<br/>
@@ -1173,7 +1267,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab539"></a><h2 class="section">Znajdowanie permutacji przez wstawianie</h2>
+<a id="lab541"></a><h2 class="section">Znajdowanie permutacji przez wstawianie</h2>
 
 </div>
 <div class="code">
@@ -1268,12 +1362,6 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> (<span class="id" title="var">bind</span> <span class="id" title="var">f</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">bind</span> <span class="id" title="var">g</span> <span class="id" title="var">l2</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bind_comm</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> <span class="id" title="var">g</span>: <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bind</span> <span class="id" title="var">f</span> (<span class="id" title="var">bind</span> <span class="id" title="var">g</span> <span class="id" title="var">l</span>) =<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bind</span> <span class="id" title="var">g</span> (<span class="id" title="var">bind</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>).<br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">count_join</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">count</span> <span class="id" title="var">p</span> (<span class="id" title="var">join</span> <span class="id" title="var">l</span>) = <span class="id" title="var">nsum</span> (<span class="id" title="var">map</span> (<span class="id" title="var">count</span> <span class="id" title="var">p</span>) <span class="id" title="var">l</span>).<br/>
@@ -1292,17 +1380,9 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">bind_assoc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">C</span>) (<span class="id" title="var">la</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bind</span> <span class="id" title="var">g</span> (<span class="id" title="var">bind</span> <span class="id" title="var">f</span> <span class="id" title="var">la</span>) = <span class="id" title="var">bind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="var">bind</span> <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)) <span class="id" title="var">la</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_bind_ins</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">bind</span> (<span class="id" title="var">ins</span> <span class="id" title="var">x</span>) (<span class="id" title="var">ins</span> <span class="id" title="var">y</span> <span class="id" title="var">l</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">bind</span> (<span class="id" title="var">ins</span> <span class="id" title="var">y</span>) (<span class="id" title="var">ins</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> (<span class="id" title="var">bind</span> (<span class="id" title="var">ins</span> <span class="id" title="var">x</span>) (<span class="id" title="var">ins</span> <span class="id" title="var">y</span> <span class="id" title="var">l</span>)) (<span class="id" title="var">bind</span> (<span class="id" title="var">ins</span> <span class="id" title="var">y</span>) (<span class="id" title="var">ins</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>)).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_perms</span> :<br/>
@@ -1326,7 +1406,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab540"></a><h2 class="section">Znajdowanie permutacji przez cykle</h2>
+<a id="lab542"></a><h2 class="section">Znajdowanie permutacji przez cykle</h2>
 
 </div>
 <div class="code">
@@ -1412,7 +1492,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab541"></a><h1 class="section">Wut da fuk? (TODO)</h1>
+<a id="lab543"></a><h1 class="section">Wut da fuk? (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1438,7 +1518,11 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab542"></a><h1 class="section">Zbiory jako zdeduplikowane permutacje</h1>
+<a id="lab544"></a><h1 class="section">Zbiory</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab545"></a><h2 class="section">Zbiory jako zdeduplikowane permutacje</h2>
 
 </div>
 <div class="code">
@@ -1462,22 +1546,11 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSet_SetEquiv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSet</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SetEquiv</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="tactic">unfold</span> <span class="id" title="var">SetEquiv</span> <span class="id" title="tactic">in</span> *; <span class="id" title="tactic">intro</span> <span class="id" title="var">z</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> !<span class="id" title="var">elem_cons'</span>, <span class="id" title="var">IHSameSet</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> !<span class="id" title="var">elem_cons'</span>. <span class="id" title="tactic">firstorder</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> !<span class="id" title="var">elem_cons'</span>. <span class="id" title="tactic">firstorder</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHSameSet1</span>, <span class="id" title="var">IHSameSet2</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Permutation_SameSet</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SameSet</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="tactic">econstructor</span>; <span class="id" title="var">eassumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="comment">(*&nbsp;End&nbsp;SetPermDedup.&nbsp;*)</span><br/>
@@ -1486,57 +1559,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab543"></a><h1 class="section">Zbiory jako zdeduplikowane permutacje po raz drugi</h1>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">SetPermNoDup</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">Represents</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> /\ <span class="id" title="var">NoDup</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">RepresentSameSet</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSet''</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Represents</span> <span class="id" title="var">l1</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">Represents</span> <span class="id" title="var">l2</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">RepresentSameSet</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">RepresentSameSet_Represents</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">RepresentSameSet</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SameSet</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> [<span class="id" title="var">l</span> [<span class="id" title="var">HP1</span> <span class="id" title="var">HN1</span>] [<span class="id" title="var">HP2</span> <span class="id" title="var">HN2</span>]].<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Permutation_SameSet</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">Permutation_trans</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eassumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSet_RepresentSameSet</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSet</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">RepresentSameSet</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> []; <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">admit</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">y</span> :: <span class="id" title="var">l</span>); <span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-<span class="id" title="keyword">Abort</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">SetPermNoDup</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab544"></a><h1 class="section">Zbiory za pomocą <span class="inlinecode"><span class="id" title="var">Exists</span></span></h1>
+<a id="lab546"></a><h2 class="section">Zbiory za pomocą <span class="inlinecode"><span class="id" title="var">Exists</span></span></h2>
 
 </div>
 <div class="code">
@@ -1552,13 +1575,6 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetEx_SetEquiv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetEx</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> &lt;-&gt; <span class="id" title="var">SetEquiv</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">SameSetEx</span>, <span class="id" title="var">SetEquiv</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">split</span>; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">specialize</span> (<span class="id" title="var">H</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">y</span> =&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>)). <span class="id" title="tactic">rewrite</span> !<span class="id" title="var">Exists_spec</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">firstorder</span>; <span class="id" title="tactic">specialize</span> (<span class="id" title="var">H</span> <span class="id" title="var">x</span>); <span class="id" title="tactic">specialize</span> (<span class="id" title="var">H0</span> <span class="id" title="var">x</span>); <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="tactic">firstorder</span> <span class="id" title="tactic">congruence</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> !<span class="id" title="var">Exists_spec</span>. <span class="id" title="tactic">firstorder</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">SetExists</span>.<br/>
@@ -1567,192 +1583,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab545"></a><h1 class="section">Zbiory za pomocą sąsiednich transpozycji</h1>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">SetAdjacentTranspositionDedup</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">AdjacentTransposition</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">AdjacentTransposition'</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AdjacentTransposition</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">y</span> :: <span class="id" title="var">l2</span>) (<span class="id" title="var">l1</span> ++ <span class="id" title="var">y</span> :: <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">AdjacentDedup</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">AdjacentDedup'</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AdjacentDedup</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>) (<span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">SameSetATD</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD_refl</span>   :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD_transp</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AdjacentTransposition</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD_dedup</span>  :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AdjacentDedup</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">SameSetATD'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD'_refl</span>   :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l1</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD'_transp</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">AdjacentTransposition</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD'_dedup</span>  :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">AdjacentDedup</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetATD_trans</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>}, <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eassumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHSameSetATD</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span> 3.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eassumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHSameSetATD</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetATD'_trans</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>}, <span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eassumption</span>.<br/>
-<span class="id" title="keyword">Restart</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="tactic">until</span> 2. <span class="id" title="var">revert</span> <span class="id" title="var">l1</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H0</span>; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHSameSetATD'</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span> 3.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHSameSetATD'</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetATD'_spec</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> &lt;-&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">SameSetATD_trans</span> <span class="id" title="var">IHSameSetATD'</span>). <span class="id" title="tactic">econstructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eassumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">SameSetATD_trans</span> <span class="id" title="var">IHSameSetATD'</span>). <span class="id" title="tactic">econstructor</span> 3.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eassumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">SameSetATD'_trans</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="var">eassumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">SameSetATD'_trans</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="var">eassumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span> 3.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetATD_SetEquiv</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SetEquiv</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">SetEquiv</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="tactic">intro</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">SetEquiv_refl</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHSameSetATD</span>, !<span class="id" title="var">elem_app</span>, !<span class="id" title="var">elem_cons'</span>. <span class="id" title="tactic">firstorder</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHSameSetATD</span>, !<span class="id" title="var">elem_app</span>, !<span class="id" title="var">elem_cons'</span>. <span class="id" title="tactic">firstorder</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">AdjacentTransposition_cons</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AdjacentTransposition</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> : <span class="id" title="var">A</span>, <span class="id" title="var">AdjacentTransposition</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h</span> :: <span class="id" title="var">t2</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">h</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- !<span class="id" title="var">app_cons_l</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">AdjacentDedup_cons</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AdjacentDedup</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> : <span class="id" title="var">A</span>, <span class="id" title="var">AdjacentDedup</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h</span> :: <span class="id" title="var">t2</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">h</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- !<span class="id" title="var">app_cons_l</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetATD_cons</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> : <span class="id" title="var">A</span>, <span class="id" title="var">SameSetATD</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h</span> :: <span class="id" title="var">t2</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="tactic">intros</span> <span class="id" title="var">h</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (@<span class="id" title="var">SameSetATD_transp</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">l2</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">AdjacentTransposition_cons</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHSameSetATD</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (@<span class="id" title="var">SameSetATD_dedup</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">l2</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">AdjacentDedup_cons</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHSameSetATD</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SetEquiv_SameSetATD</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SetEquiv</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">SetEquiv</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h1</span> <span class="id" title="var">t1</span>];<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l2</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">admit</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">elem</span> <span class="id" title="var">h1</span> <span class="id" title="var">l2</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">elem_spec</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H0</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H0</span> <span class="id" title="keyword">as</span> (<span class="id" title="var">l1</span> &amp; <span class="id" title="var">l3</span> &amp; <span class="id" title="var">H0</span>); <span class="id" title="tactic">subst</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">admit</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-<span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">SetAdjacentTranspositionDedup</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab546"></a><h1 class="section">Zbiory za pomocą transpozycji</h1>
+<a id="lab547"></a><h2 class="section">Zbiory za pomocą transpozycji i deduplikacji</h2>
 
 </div>
 <div class="code">
@@ -1787,13 +1618,6 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetTD_SetEquiv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetTD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SetEquiv</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">SetEquiv</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="tactic">intro</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">SetEquiv_refl</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHSameSetTD</span>, !<span class="id" title="var">elem_app</span>, !<span class="id" title="var">elem_cons'</span>, !<span class="id" title="var">elem_app</span>, !<span class="id" title="var">elem_cons'</span>. <span class="id" title="tactic">firstorder</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHSameSetTD</span>, !<span class="id" title="var">elem_app</span>, !<span class="id" title="var">elem_cons'</span>, !<span class="id" title="var">elem_app</span>, !<span class="id" title="var">elem_cons'</span>. <span class="id" title="tactic">firstorder</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">SetTranspositionDedup</span>.<br/>
@@ -1802,85 +1626,87 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 </div>
 
 <div class="doc">
-<a id="lab547"></a><h1 class="section">Permutacje, jeszcze dziwniej</h1>
+<a id="lab548"></a><h2 class="section">Zbiory za pomocą sąsiednich transpozycji i deduplikacji</h2>
 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">PermWeird</span>.<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">SetAdjacentTranspositionDedup</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Elem</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Z</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">Elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>}, <span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Elem</span> <span class="id" title="var">x</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t</span>).<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">AdjacentTransposition</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">AdjacentTransposition'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AdjacentTransposition</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">y</span> :: <span class="id" title="var">l2</span>) (<span class="id" title="var">l1</span> ++ <span class="id" title="var">y</span> :: <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>).<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Z</span> {<span class="id" title="var">A</span> <span class="id" title="var">x</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">S</span> {<span class="id" title="var">A</span> <span class="id" title="var">x</span> <span class="id" title="var">t</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">AdjacentDedup</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">AdjacentDedup'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AdjacentDedup</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>) (<span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">SameSetATD</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD_refl</span>   :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD_transp</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AdjacentTransposition</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD_dedup</span>  :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AdjacentDedup</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">Perm</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">iso</span> (<span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetATD_trans</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>}, <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetATD_SetEquiv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SetEquiv</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
 
 <br/>
-<span class="comment">(*&nbsp;Lemma&nbsp;Permutation_Perm&nbsp;:<br/>
-&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{l1&nbsp;l2&nbsp;:&nbsp;list&nbsp;A},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;Permutation&nbsp;l1&nbsp;l2&nbsp;-&gt;&nbsp;Perm&nbsp;l1&nbsp;l2.<br/>
-Proof.<br/>
-&nbsp;&nbsp;induction&nbsp;1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;red.&nbsp;intro.&nbsp;split&nbsp;with&nbsp;(coel&nbsp;:=&nbsp;id)&nbsp;(coer&nbsp;:=&nbsp;id).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-2:&nbsp;reflexivity.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;red.&nbsp;intro&nbsp;y.&nbsp;unfold&nbsp;Perm&nbsp;in&nbsp;*.&nbsp;destruct&nbsp;(IHPermutation&nbsp;y).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;esplit.&nbsp;Unshelve.&nbsp;all:&nbsp;cycle&nbsp;4.&nbsp;1-4:&nbsp;intro&nbsp;H'.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;H'.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;apply&nbsp;coel.&nbsp;assumption.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;H'.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;apply&nbsp;coer.&nbsp;assumption.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dependent&nbsp;induction&nbsp;H';&nbsp;cbn;&nbsp;congruence.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dependent&nbsp;induction&nbsp;H';&nbsp;cbn;&nbsp;congruence.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;red.&nbsp;intro&nbsp;z.&nbsp;esplit.&nbsp;Unshelve.&nbsp;all:&nbsp;cycle&nbsp;3.&nbsp;1-4:&nbsp;intro&nbsp;H'.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;H'.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;left.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;X.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;right.&nbsp;assumption.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;H'.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;left.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inv&nbsp;X.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;left.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right.&nbsp;right.&nbsp;assumption.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;2&nbsp;(dependent&nbsp;induction&nbsp;H';&nbsp;cbn;&nbsp;try&nbsp;congruence).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do&nbsp;2&nbsp;(dependent&nbsp;induction&nbsp;H';&nbsp;cbn;&nbsp;try&nbsp;congruence).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;intro&nbsp;H'.&nbsp;eapply&nbsp;iso_trans.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;IHPermutation1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;IHPermutation2.<br/>
-Qed.<br/>
-&nbsp;*)</span><br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">AdjacentDedup_cons</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">AdjacentDedup</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> : <span class="id" title="var">A</span>, <span class="id" title="var">AdjacentDedup</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h</span> :: <span class="id" title="var">t2</span>).<br/>
 
 <br/>
-<span class="comment">(*&nbsp;Lemma&nbsp;Perm_Permutation&nbsp;:<br/>
-&nbsp;&nbsp;forall&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;{l1&nbsp;l2&nbsp;:&nbsp;list&nbsp;A},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;Perm&nbsp;l1&nbsp;l2&nbsp;-&gt;&nbsp;Permutation&nbsp;l1&nbsp;l2.<br/>
-Proof.<br/>
-&nbsp;&nbsp;unfold&nbsp;Perm.<br/>
-&nbsp;&nbsp;induction&nbsp;l1&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">h1</span></span> <span class="inlinecode"><span class="id" title="var">t1</span></span>;&nbsp;intros.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;l2&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">h2</span></span> <span class="inlinecode"><span class="id" title="var">t2</span></span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specialize&nbsp;(H&nbsp;h2).&nbsp;destruct&nbsp;H.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clear&nbsp;-coer.&nbsp;specialize&nbsp;(coer&nbsp;ltac:(left)).&nbsp;inv&nbsp;coer.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;l2&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">h2</span></span> <span class="inlinecode"><span class="id" title="var">t2</span></span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specialize&nbsp;(H&nbsp;h1).&nbsp;destruct&nbsp;H.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clear&nbsp;-coel.&nbsp;specialize&nbsp;(coel&nbsp;ltac:(left)).&nbsp;inv&nbsp;coel.<br/>
-Admitted.<br/>
-&nbsp;*)</span><br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">PermWeird</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetATD_cons</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">h</span> : <span class="id" title="var">A</span>, <span class="id" title="var">SameSetATD</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h</span> :: <span class="id" title="var">t2</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SetEquiv_SameSetATD</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SetEquiv</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">SameSetATD'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD'_refl</span>   :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l1</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD'_transp</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">AdjacentTransposition</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SameSetATD'_dedup</span>  :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">AdjacentDedup</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetATD'_trans</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">l3</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>}, <span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> -&gt; <span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l3</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SameSetATD'_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SameSetATD'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> &lt;-&gt; <span class="id" title="var">SameSetATD</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">SetAdjacentTranspositionDedup</span>.<br/>
 </div>

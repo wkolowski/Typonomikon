@@ -28,73 +28,11 @@ Fail CoFixpoint fibs : Stream nat :=
     tl := zipWith plus fibs (cons 1 fibs);
 |}.
 
-(*
-Inductive Call (C : Type) (F : Type -> Type) : Type :=
-    | call : C -> forall {A B : Type}, (A -> B -> C) -> F A -> F B -> Call C F.
-
-Arguments call {C F} _ {A B} _.
-
-CoInductive wut (C : Type) : Type :=
-{
-    wuut : Call C wut;
-}.
-*)
-
 Set Implicit Arguments.
-
-(*
-CoInductive cod {C : Type} (f : C -> C -> C) (s : Stream C) : Type :=
-{
-    cod' :
-      {h : C & {t : Stream C & (s = cons h t)%type * cod f t}}%type +
-}.
-*)
-
-CoInductive Call (C : Type) : Type :=
-{
-    hdc : C;
-    fn : C -> C -> C;
-    arg1 : Call C;
-    hd_arg2 : C;
-    tl_arg2 : Call C;
-}.
-
-CoFixpoint Fibs : Call nat :=
-{|
-    hdc := 0;
-    fn := plus;
-    arg1 := Fibs;
-    hd_arg2 := 1;
-    tl_arg2 := Fibs;
-|}.
-
-CoFixpoint Call2Stream {C : Type} (c : Call C) : Stream C.
-Proof.
-  constructor.
-    exact (hdc c).
-    apply (zipWith (fn c)).
-      exact (Call2Stream _ (arg1 c)).
-      exact (cons (hd_arg2 c) (Call2Stream _ (tl_arg2 c))).
-Abort.
-
-(*
-{|
-    hd := hdc c;
-    tl := zipWith (fn c)
-                  (Call2Stream (arg1 c))
-                  (cons (hd_arg2 c) (Call2Stream (tl_arg2 c)));
-|}.
-*)
-
-(*
-CoFixpoint w2s {C : Type} (w : wut C) : Stream C :=
-{|
-    hd := match wuut _ w with call h _ _ _ => h end
-|}.
 
 Inductive Call (C : Type) (F : Type -> Type) : Type :=
     | ht : C -> F C -> Call C F
-    | zw : forall {A B : Type}, (A -> B -> C) -> F A -> F B -> Call C F.
+    | zw : forall {A B : Type}, (A -> B -> C) -> F A -> F B -> Call C F. (* TODO: Call C F zamiast F A i F B *)
 
 Arguments ht {C F} _ _.
 Arguments zw {C F A B} _ _ _.
@@ -119,49 +57,15 @@ Definition ZipWith
 CoFixpoint Fibs : ZipWith' nat :=
   Cons 0 (ZipWith plus Fibs (Cons 1 Fibs)).
 
-(*
-CoFixpoint do {C : Type} (zw : ZipWith' C) : Stream C :=
-{|
-    
-|}.
-*)
-
-Inductive whnf : forall {C : Type}, ZipWith' C -> Prop :=
-    | whnf_cons :
-        forall (C : Type) (h : C) (t : ZipWith' C),
-          whnf t -> whnf (Cons h t)
-    | whnf_zip :
-        forall
-          {A B C : Type} (f : A -> B -> C)
-          (zwa : ZipWith' A) (zwb : ZipWith' B),
-            whnf zwa -> whnf zwb -> whnf (ZipWith f zwa zwb).
-
-Lemma whnf_Fibs : whnf Fibs.
-Proof.
-  unfold Fibs. unfold Cons.
-  constructor.
-
-Record Result (C : Type) : Type :=
-{
-    res : C;
-    rest : ZipWith' C;
-    w : whnf rest;
-}.
-
-Fixpoint step {C : Type} {zw : ZipWith' C} (w : whnf zw) : Result C :=
-match w with
-    | whnf_cons _ h t => {| res := h; rest := 
-
-CoFixpoint do {C : Type} (zw : ZipWith C) : Stream C :=
-{|
-    hd := 
-(*Inductive FiniteZW {C : Type} *)
-
-CoInductive fibs : 
-*)
+(* Definition hdtl {C : Type} (c : Call C ZipWith') : C * ZipWith' C :=
+match c with
+    | ht h t => (h, t)
+    | zw f s1 s2 =>
+        match call s1, call s2 with
+            | ht ha ta, ht hb tb => (f ha hb, {| call := 
+ *)
 
 Unset Guard Checking.
-
 CoFixpoint fibs : Stream nat :=
 {|
     hd := 0;

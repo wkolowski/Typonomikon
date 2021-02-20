@@ -633,6 +633,28 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma bind_app :
+  forall {A B : Type} (f : A -> list B) (l1 l2 : list A),
+    bind f (l1 ++ l2) = bind f l1 ++ bind f l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; cbn; intros.
+    reflexivity.
+    rewrite IHt1, app_assoc. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma bind_bind :
+  forall {A B C : Type} (f : A -> list B) (g : B -> list C) (l : list A),
+    bind g (bind f l) = bind (fun x : A => bind g (f x)) l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite bind_spec, map_app, join_app, <- !bind_spec, IHt. reflexivity.
+Qed.
+(* end hide *)
+
 (** ** [replicate] *)
 
 (** Zdefiniuj funkcję [replicate], która powiela dany element [n] razy,
