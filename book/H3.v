@@ -350,6 +350,10 @@ Proof. rel. Qed.
 
 (** * Rodzaje relacji heterogenicznych *)
 
+(* begin hide *)
+(* TODO: napisać, że lepszą nazwą dla RightUnique jest "relacja deterministyczna". *)
+(* end hide *)
+
 Class LeftUnique {A B : Type} (R : hrel A B) : Prop :=
 {
     left_unique :

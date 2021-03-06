@@ -1001,14 +1001,26 @@ Qed.
 
     Ponieważ Coq jest silnie normalizowalny, to nasz certyfikat oblicza
     się do certyfikatu w postaci normalnej. Jak wygląda postać normalna
-    dla naszego certyfikatu? Postacie normalne certyfikatów na implikację
-    [P -> Q] są postaci [fun p : P => q], a certyfikatów na dysjunkcję
-    [P \/ Q] są postaci [or_introl p] lub [or_intror q].
+    dla naszego certyfikatu? Postacie normalne certyfikatów na kwantyfikację
+    uniwersalną [forall x : P, Q] (a zatem także na implikację [P -> Q])
+    są postaci [fun p : P => q], a certyfikatów na dysjunkcję [P \/ Q] są
+    postaci [or_introl p] lub [or_intror q].
 
-    Wobec tego nasz certyfikat może mieć jedną z dwóch postaci:
-    [fun P : Prop => or_introl p], gdzie [p : P] to certyfikat na [p],
-    lub [fun P : Prop => or_intror np], gdzie [np : ~ P] to certyfikat
-    na [~ P]. Rozważmy dwa przypadki.
+    Czy powyższe fakty wystarczą, by określić, jak wygląda postać normalna
+    certyfikatu na prawo wyłączonego środka? Jeszcze nie. Przecież mamy
+    do dyspozycji zdanie [P], więc być może da się wycisnąć z niego trochę
+    użytecznych informacji, które pozwolą nam zadecydować, czy pójść w lewo,
+    czy w prawo, czyż nie?
+
+    Otóż nie - Coqowa teoria typów zabrania wykonywania na typach i zdaniach
+    dopasowań do wzorca i wszelkich innych operacji, które pozwalałyby podejmować
+    decyzje jedynie na podstawie samego typu. Więcej na ten temat dowiemy się
+    pod koniec tego rozdziału, gdy będziemy zajmować się parametrycznością.
+
+    Teraz możemy już wywnioskować, że nasz certyfikat na prawo wyłączonego środka
+    może mieć jedną z dwóch postaci: [fun P : Prop => or_introl p], gdzie [p : P]
+    to certyfikat na [p], lub [fun P : Prop => or_intror np], gdzie [np : ~ P] to
+    certyfikat na [~ P]. Rozważmy dwa przypadki.
 
     Jeżeli [LEM] ma pierwszą z tych dwóch postaci, to oznacza to w
     zasadzie, że wszystkie zdania są prawdziwe! No bo patrz: jeżeli
@@ -1034,15 +1046,15 @@ Qed.
     ważniejsze, jak niesprzeczność, ale także bardziej ciekawostkowe,
     jak niedowodliwość prawa wyłączonego środka.
 
-    Nie przejmuj się, jeżeli nie do końca (albo wcale) rozumiesz
-    powyższe wywody (szczególnie preliminaria) lub dowody. Ich
-    rozumienie nie jest niezbędne do skutecznego dowodzenia ani
-    programowania. Ba! Wydaje mi się, że jest całkiem na odwrót:
-    żeby zrozumieć je na intuicyjnym poziomie, potrzeba sporo
-    praktycznego doświadczenia w programowaniu i dowodzeniu.
-    Jeżeli go nabędziesz, powyższe wywody i dowody nagle staną
-    się łatwe, miłe i przyjemne (i puszyste i mięciutkie!).
-    Wróć do nich za jakiś, żeby się o tym przekonać. *)
+    Nie przejmuj się, jeżeli nie do końca rozumiesz (albo wcale nie
+    rozumiesz) powyższe wywody (szczególnie preliminaria) lub dowody.
+    Ich rozumienie nie jest niezbędne do skutecznego dowodzenia ani
+    programowania. Ba! Wydaje mi się, że jest całkiem na odwrót: żeby
+    zrozumieć je na intuicyjnym poziomie, potrzeba sporo praktycznego
+    doświadczenia w programowaniu i dowodzeniu. Jeżeli go nabędziesz,
+    powyższe wywody i dowody nagle staną się łatwe, miłe i przyjemne
+    (i puszyste i mięciutkie!). Wróć do nich za jakiś, żeby się o tym
+    przekonać. *)
 
 (** * Parametryczność *)
 

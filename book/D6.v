@@ -1886,7 +1886,7 @@ Abort.
 
 End AtLeast.
 
-(** * Permutacje, jeszcze dziwniej *)
+(** ** Permutacje, jeszcze dziwniej *)
 
 Module PermWeird.
 

@@ -1397,16 +1397,32 @@ Zbliżamy się powoli do końca rozdziału. Z jednej strony sporo się
 
     Ponieważ Coq jest silnie normalizowalny, to nasz certyfikat oblicza
     się do certyfikatu w postaci normalnej. Jak wygląda postać normalna
-    dla naszego certyfikatu? Postacie normalne certyfikatów na implikację
-    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> są postaci <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">q</span></span>, a certyfikatów na dysjunkcję
-    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> są postaci <span class="inlinecode"><span class="id" title="var">or_introl</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> lub <span class="inlinecode"><span class="id" title="var">or_intror</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span>.
+    dla naszego certyfikatu? Postacie normalne certyfikatów na kwantyfikację
+    uniwersalną <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span>,</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> (a zatem także na implikację <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>)
+    są postaci <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">q</span></span>, a certyfikatów na dysjunkcję <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> są
+    postaci <span class="inlinecode"><span class="id" title="var">or_introl</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> lub <span class="inlinecode"><span class="id" title="var">or_intror</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span>.
 
 <div class="paragraph"> </div>
 
-    Wobec tego nasz certyfikat może mieć jedną z dwóch postaci:
-    <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">or_introl</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> to certyfikat na <span class="inlinecode"><span class="id" title="var">p</span></span>,
-    lub <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">or_intror</span></span> <span class="inlinecode"><span class="id" title="var">np</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">np</span></span> <span class="inlinecode">:</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> to certyfikat
-    na <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Rozważmy dwa przypadki.
+    Czy powyższe fakty wystarczą, by określić, jak wygląda postać normalna
+    certyfikatu na prawo wyłączonego środka? Jeszcze nie. Przecież mamy
+    do dyspozycji zdanie <span class="inlinecode"><span class="id" title="var">P</span></span>, więc być może da się wycisnąć z niego trochę
+    użytecznych informacji, które pozwolą nam zadecydować, czy pójść w lewo,
+    czy w prawo, czyż nie?
+
+<div class="paragraph"> </div>
+
+    Otóż nie - Coqowa teoria typów zabrania wykonywania na typach i zdaniach
+    dopasowań do wzorca i wszelkich innych operacji, które pozwalałyby podejmować
+    decyzje jedynie na podstawie samego typu. Więcej na ten temat dowiemy się
+    pod koniec tego rozdziału, gdy będziemy zajmować się parametrycznością.
+
+<div class="paragraph"> </div>
+
+    Teraz możemy już wywnioskować, że nasz certyfikat na prawo wyłączonego środka
+    może mieć jedną z dwóch postaci: <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">or_introl</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+    to certyfikat na <span class="inlinecode"><span class="id" title="var">p</span></span>, lub <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">or_intror</span></span> <span class="inlinecode"><span class="id" title="var">np</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">np</span></span> <span class="inlinecode">:</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> to
+    certyfikat na <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Rozważmy dwa przypadki.
 
 <div class="paragraph"> </div>
 
@@ -1443,15 +1459,15 @@ Zbliżamy się powoli do końca rozdziału. Z jednej strony sporo się
 
 <div class="paragraph"> </div>
 
-    Nie przejmuj się, jeżeli nie do końca (albo wcale) rozumiesz
-    powyższe wywody (szczególnie preliminaria) lub dowody. Ich
-    rozumienie nie jest niezbędne do skutecznego dowodzenia ani
-    programowania. Ba! Wydaje mi się, że jest całkiem na odwrót:
-    żeby zrozumieć je na intuicyjnym poziomie, potrzeba sporo
-    praktycznego doświadczenia w programowaniu i dowodzeniu.
-    Jeżeli go nabędziesz, powyższe wywody i dowody nagle staną
-    się łatwe, miłe i przyjemne (i puszyste i mięciutkie!).
-    Wróć do nich za jakiś, żeby się o tym przekonać. 
+    Nie przejmuj się, jeżeli nie do końca rozumiesz (albo wcale nie
+    rozumiesz) powyższe wywody (szczególnie preliminaria) lub dowody.
+    Ich rozumienie nie jest niezbędne do skutecznego dowodzenia ani
+    programowania. Ba! Wydaje mi się, że jest całkiem na odwrót: żeby
+    zrozumieć je na intuicyjnym poziomie, potrzeba sporo praktycznego
+    doświadczenia w programowaniu i dowodzeniu. Jeżeli go nabędziesz,
+    powyższe wywody i dowody nagle staną się łatwe, miłe i przyjemne
+    (i puszyste i mięciutkie!). Wróć do nich za jakiś, żeby się o tym
+    przekonać. 
 <div class="paragraph"> </div>
 
 <a id="lab210"></a><h1 class="section">Parametryczność</h1>
