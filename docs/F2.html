@@ -22,17 +22,6 @@
 <br/>
 
 <br/>
-<span class="id" title="keyword">Ltac</span> <span class="id" title="var">inv</span> <span class="id" title="var">H</span> := <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">auto</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Ltac</span> <span class="id" title="var">invle</span> <span class="id" title="var">H</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">n'</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="var">n</span> "'" <span class="id" title="tactic">in</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">m'</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="var">m</span> "'" <span class="id" title="tactic">in</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">H1</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="var">H</span> "1" <span class="id" title="tactic">in</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">H2</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="var">H</span> "2" <span class="id" title="tactic">in</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">H3</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="var">H</span> "3" <span class="id" title="tactic">in</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> [[| (<span class="id" title="var">n'</span> &amp; <span class="id" title="var">m'</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span> &amp; <span class="id" title="var">H3</span>)]].<br/>
-<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_refl</span> :<br/>

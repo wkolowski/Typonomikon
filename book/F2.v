@@ -28,6 +28,7 @@ Proof.
 Qed.
 (* end hide *)
 
+(* begin hide *)
 Ltac inv H := inversion H; subst; clear H; auto.
 
 Ltac invle H n m :=
