@@ -8,9 +8,16 @@ Require Import D5.
     list różniących się od nich tym, że mogą być potencjalnie
     nieskończone. *)
 
+Inductive coListF (A : Type) (F : Type -> Type) : Type :=
+    | nilF : coListF A F
+    | consF : forall (h : A) (t : F A), coListF A F.
+
+Arguments nilF {A F}.
+Arguments consF {A F} _ _.
+
 CoInductive coList (A : Type) : Type :=
 {
-    uncons : option (A * coList A);
+    uncons : coListF A coList
 }.
 
 Arguments uncons {A}.
@@ -34,17 +41,22 @@ Qed.
     co nazywać się będzie [lsim]. *)
 
 (* begin hide *)
+Inductive lsimF {A : Type} (l1 l2 : coList A) (F : coList A -> coList A -> Prop) : Prop :=
+    | conils  :
+        uncons l1 = nilF -> uncons l2 = nilF -> lsimF l1 l2 F
+    | coconss :
+        forall (h1 h2 : A) (t1 t2 : coList A),
+          uncons l1 = consF h1 t1 ->
+          uncons l2 = consF h2 t2 ->
+            h1 = h2 -> F t1 t2 ->
+              lsimF l1 l2 F.
+
 CoInductive lsim {A : Type} (l1 l2 : coList A) : Prop :=
 {
-    lsim' :
-      uncons l1 = None /\ uncons l2 = None \/
-      exists (h1 : A) (t1 : coList A) (h2 : A) (t2 : coList A),
-        uncons l1 = Some (h1, t1) /\
-        uncons l2 = Some (h2, t2) /\
-          h1 = h2 /\ lsim t1 t2
+    lsim' : lsimF l1 l2 lsim
 }.
 
-Hint Constructors lsim.
+Hint Constructors lsim : core.
 
 Axiom eq_lsim :
   forall (A : Type) (l1 l2 : coList A), lsim l1 l2 -> l1 = l2.
@@ -55,9 +67,10 @@ Lemma lsim_refl :
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct l as [[[h t]|]].
-    constructor. cbn. right. exists h, t, h, t; auto.
-    constructor. left. cbn. split; reflexivity.
+  constructor.
+  destruct l as [[]].
+    left; cbn; reflexivity.
+    eright; cbn; auto.
 Qed.
 (* end hide *)
 
@@ -67,9 +80,10 @@ Lemma lsim_symm :
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct 1 as [[[] | (h1 & t1 & h2 & t2 & p1 & p2 & p3 & H)]].
-    constructor. left. split; assumption.
-    constructor. right. exists h2, t2, h1, t1. auto.
+  constructor.
+  destruct H as [[]].
+    left; assumption.
+    eright; try eassumption; auto.
 Qed.
 (* end hide *)
 
@@ -79,15 +93,17 @@ Lemma lsim_trans :
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct 1 as [[[] | (h11 & t11 & h12 & t12 & p11 & p12 & p13 & H1)]],
-           1 as [[[] | (h21 & t21 & h22 & t22 & p21 & p22 & p23 & H2)]];
-  subst.
-    auto.
-    rewrite H0 in p21. inversion p21.
-    rewrite H in p12. inversion p12.
-    rewrite p12 in p21; inversion p21; subst.
-      econstructor. right. exists h22, t11, h22, t22.
-        do 3 try split; auto. eapply CH; eauto.
+  constructor.
+  destruct H as [[]], H0 as [[]].
+    left; auto.
+    congruence.
+    congruence.
+    eright.
+      1-2: eassumption.
+      congruence.
+      eapply CH.
+        eassumption.
+        congruence.
 Qed.
 (* end hide *)
 
@@ -112,19 +128,19 @@ Inductive coList_neq
   {A : Type} : coList A -> coList A -> Prop :=
     | coList_neq_nc :
         forall l1 l2 : coList A,
-          uncons l1 = None -> uncons l2 <> None -> coList_neq l1 l2
+          uncons l1 = nilF -> uncons l2 <> nilF -> coList_neq l1 l2
     | coList_neq_cn :
         forall l1 l2 : coList A,
-          uncons l1 <> None -> uncons l2 = None -> coList_neq l1 l2
+          uncons l1 <> nilF -> uncons l2 = nilF -> coList_neq l1 l2
     | coList_neq_cc_here :
         forall (h1 h2 : A) (t1 t2 l1 l2 : coList A),
-          uncons l1 = Some (h1, t1) ->
-          uncons l2 = Some (h2, t2) ->
+          uncons l1 = consF h1 t1 ->
+          uncons l2 = consF h2 t2 ->
             h1 <> h2 -> coList_neq l1 l2
     | coList_neq_cc_there :
         forall (h1 h2 : A) (t1 t2 l1 l2 : coList A),
-          uncons l1 = Some (h1, t1) ->
-          uncons l2 = Some (h2, t2) ->
+          uncons l1 = consF h1 t1 ->
+          uncons l2 = consF h2 t2 ->
             coList_neq t1 t2 -> coList_neq l1 l2.
 
 Lemma coList_neq_not_lsim :

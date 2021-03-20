@@ -3,18 +3,6 @@ Import ListNotations.
 
 Require Import F3 F4.
 
-(*
-Inductive Mu (F : Type -> Type) : Type :=
-    | In : F (Mu F) -> Mu F.
-*)
-
-(*
-CoInductive Nu (F : Type -> Type) : Type :=
-{
-    Out : F (Nu F);
-}.
-*)
-
 Inductive ListF (F : Type -> Type) (A : Type) : Type :=
     | NilF : ListF F A
     | ConsF : A -> F A -> ListF F A.
@@ -126,4 +114,32 @@ Proof.
   constructor; cbn.
     left. split; reflexivity.
     right. do 4 eexists. do 2 (split; try reflexivity). apply CH.
+Qed.
+
+Inductive ForallF
+  {A : Type} (R : A -> A -> Prop)
+  (F : (A -> A -> Prop) -> CoList A -> CoList A -> Prop)
+  : CoList A -> CoList A -> Prop :=
+    | Nils  :
+        forall l1 l2 : CoList A,
+          Out l1 = NilF -> Out l2 = NilF -> ForallF R F l1 l2
+    | Conss :
+        forall (l1 l2 : CoList A) (h1 h2 : A) (t1 t2 : CoList A),
+          Out l1 = ConsF h1 t1 -> Out l2 = ConsF h2 t2 ->
+            R h1 h2 -> F R t1 t2 -> ForallF R F l1 l2.
+
+CoInductive CoForall {A : Type} (R : A -> A -> Prop) (l1 l2 : CoList A) : Prop :=
+{
+    Out' : ForallF eq CoForall l1 l2
+}.
+
+Lemma CoList_coList_CoList' :
+  forall {A : Type} (l : CoList A),
+    CoForall eq (coList_CoList (CoList_coList l)) l.
+Proof.
+  cofix CH.
+  constructor.
+  destruct l as [[| h t]].
+    constructor; cbn; reflexivity.
+    eright; cbn; try reflexivity. apply CH.
 Qed.
