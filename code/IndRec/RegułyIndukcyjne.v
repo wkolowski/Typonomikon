@@ -481,3 +481,32 @@ Proof.
           apply le_n.
           apply Max.le_max_r.
 Qed.
+
+Fixpoint nat_ind_4
+  (P : nat -> Type)
+  (P0 : P 0)
+  (P1 : P 1)
+  (P2 : P 2)
+  (P3 : P 3)
+  (P4 : forall n : nat, P n -> P (4 + n))
+  (n : nat) : P n :=
+match n with
+    | 0 => P0
+    | 1 => P1
+    | 2 => P2
+    | 3 => P3
+    | S (S (S (S n'))) => P4 n' (nat_ind_4 P P0 P1 P2 P3 P4 n')
+end.
+
+Lemma two_and_five :
+  forall n : nat,
+    exists i j : nat, 4 + n = 2 * i + 5 * j.
+Proof.
+  induction n using nat_ind_4.
+    exists 2, 0. cbn. reflexivity.
+    exists 0, 1. cbn. reflexivity.
+    exists 3, 0. cbn. reflexivity.
+    exists 1, 1. cbn. reflexivity.
+    destruct IHn as (i & j & IH).
+      exists (2 + i), j. rewrite IH. lia.
+Qed.

@@ -147,6 +147,120 @@ Definition not_so_silly (n : nat) : bool :=
 
 Compute not_so_silly 6.
 
+#[refine]
+Instance Dec_False : Dec False :=
+{
+    dec := false
+}.
+Proof.
+  constructor.
+  destruct 1.
+Defined.
+
+#[refine]
+Instance Dec_True : Dec True :=
+{
+    dec := true
+}.
+Proof.
+  constructor.
+  trivial.
+Defined.
+
+#[refine]
+Instance Dec_or {P Q : Prop} (DP : Dec P) (DQ : Dec Q) : Dec (P \/ Q) :=
+{
+    dec := dec P || dec Q
+}.
+Proof.
+  destruct (dec_spec P), (dec_spec Q); cbn; constructor.
+    1-3: auto.
+    intros [p | q]; contradiction.
+Defined.
+
+#[refine]
+Instance Dec_and {P Q : Prop} (DP : Dec P) (DQ : Dec Q) : Dec (P /\ Q) :=
+{
+    dec := dec P && dec Q
+}.
+Proof.
+  destruct (dec_spec P), (dec_spec Q); cbn; constructor.
+    split; assumption.
+    all: intros [p' q']; contradiction.
+Defined.
+
+#[refine]
+Instance Dec_impl {P Q : Prop} (DP : Dec P) (DQ : Dec Q) : Dec (P -> Q) :=
+{
+    dec := negb (dec P) || dec Q
+}.
+Proof.
+  destruct (dec_spec P), (dec_spec Q);
+  cbn; constructor; intros.
+    assumption.
+    intro. apply n, H. assumption.
+    assumption.
+    contradiction.
+Defined.
+
+#[refine]
+Instance Dec_not
+  {P : Prop} (DP : Dec P) : Dec (~ P) :=
+{
+    dec := negb (dec P)
+}.
+Proof.
+  destruct (dec_spec P); constructor.
+    intro. contradiction.
+    assumption.
+Defined.
+
+Require Import M.
+
+#[refine]
+Instance Dec_exists
+  {A : Type} {P : A -> Prop}
+  (SA : Searchable A) (DP : forall x : A, Dec (P x))
+  : Dec (exists x : A, P x) :=
+{
+    dec := dec (P (search (fun x : A => dec (P x))))
+}.
+Proof.
+  destruct (@dec_spec _ (DP (search (fun x : A => dec (P x)))));
+  constructor.
+    exists (search (fun x : A => dec (P x))). assumption.
+    intros [x p]. destruct (dec (P (search (fun x : A => dec (P x))))) eqn: Heq.
+      destruct (@dec_spec _ (DP (search (fun x : A => dec (P x))))).
+        contradiction.
+        congruence.
+      pose (search_spec (fun x : A => dec (P x)) Heq x). clearbody e. cbn in e.
+        destruct (dec_spec (P x)).
+          congruence.
+          contradiction.
+Defined.
+
+#[refine]
+Instance Dec_forall
+  {A : Type} {P : A -> Prop}
+  (SA : Searchable A) (DP : forall x : A, Dec (P x))
+  : Dec (forall x : A, P x) :=
+{
+    dec := negb (dec (~ P (search (fun x : A => dec (~ P x)))))
+}.
+Proof.
+  destruct (dec_spec (~ P (search (fun x : A => dec (~ P x)))));
+  constructor.
+    intro. apply n, H.
+    cut (forall x : A, dec (~ P x) = false).
+      intros. cbn in H. specialize (H x). destruct (dec_spec (P x)).
+        assumption.
+        cbn in H. congruence.
+      apply (search_spec (fun x : A => dec (~ P x))).
+        destruct (dec_spec (~ P (search (fun x : A => dec (~ P x))))).
+          contradiction.
+          reflexivity.
+Defined.
+
 End ThisMustWork.
 
 Module WeakEquality.
@@ -790,11 +904,8 @@ End Sequence.
 
 (** TODO:
     - HoTTowa baza
-    - porządne rozwiązanie rozstrzygalności
     - hierarchia algebraiczna
     - typy skończone
-
-
 *)
 
 (** Trzeba mieć pod ręką zarówno trójstronne porównania, jak i te klasyczne (mniejszy lub równy).

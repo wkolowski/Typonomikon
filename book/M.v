@@ -241,21 +241,16 @@ Qed.
 
 (* begin hide *)
 Require Import B4.
-Check LEM.
-Print LEM.
-
-Search nat conat.
-Search Infinite.
-Search Finite.
-Print Finite.
 
 Inductive Finite' : conat -> Type :=
     | Finite'_zero : Finite' zero
     | Finite'_succ : forall n : conat, Finite' n -> Finite' (succ n).
 
-Definition finite_nat {c : conat} (f : Finite c) : nat.
-Proof.
-Abort.
+Fixpoint Finite'_to_nat {c : conat} (f : Finite' c) : nat :=
+match f with
+    | Finite'_zero => 0
+    | Finite'_succ _ f' => S (Finite'_to_nat f')
+end.
 
 (* end hide *)
 

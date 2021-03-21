@@ -53,7 +53,6 @@ Proof.
   fix IH 1.
   intro.
   destruct (le_gt_dec n 100).
-    Focus 2. exists 1. constructor. assumption.
     {
       destruct (IH (11 + n)) as [k1 h1].
       destruct (IH (iter F k1 id (11 + n))) as [k2 h2].
@@ -63,13 +62,14 @@ Proof.
         apply h1.
         apply h2.
     }
+    exists 1. constructor. assumption.
 Defined.
-Unset Guard Checking.
+Set Guard Checking.
 
 Definition f (n : nat) : nat :=
   f' (fDom_all n).
 
-Compute f 50.
+Compute f 100.
 
 Lemma fDom_all' :
   forall n : nat, fDom n.
@@ -77,13 +77,10 @@ Proof.
   apply (@well_founded_induction_type _ (fun n m => 101 - n < 101 - m)).
     apply wf_inverse_image. apply lt_wf.
     intros n IH. destruct (le_lt_dec n 100).
-      Focus 2. exists 1. constructor. assumption.
-(*
       {
-        destruct (IH (11 + n) ltac:(lia)) as [k1 h1].
-        edestruct (IH (iter F k1 id (11 + n))) as [k2 h2].
-          Focus 2. red. exists (S (k1 + k2)). constructor 2; assumption.
-          cbn.
+        destruct (IH (11 + n)) as [k1 h1].
+          lia.
+        destruct (IH (iter F k1 id (11 + n))) as [k2 h2].
+          Focus 2. econstructor. constructor 2; eassumption.
       }
-*)
-Abort.
+Admitted.
