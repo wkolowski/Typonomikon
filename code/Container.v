@@ -80,3 +80,5 @@ Proof.
         cbn in *. congruence.
         cbn in Heq.
 Abort.
+
+End CList.

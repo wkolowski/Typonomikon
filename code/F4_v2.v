@@ -43,13 +43,14 @@ Qed.
 (* begin hide *)
 Inductive lsimF {A : Type} (l1 l2 : coList A) (F : coList A -> coList A -> Prop) : Prop :=
     | conils  :
-        uncons l1 = nilF -> uncons l2 = nilF -> lsimF l1 l2 F
+        forall (H1 : uncons l1 = nilF) (H2 : uncons l2 = nilF), lsimF l1 l2 F
     | coconss :
-        forall (h1 h2 : A) (t1 t2 : coList A),
-          uncons l1 = consF h1 t1 ->
-          uncons l2 = consF h2 t2 ->
-            h1 = h2 -> F t1 t2 ->
-              lsimF l1 l2 F.
+        forall
+          (h1 h2 : A) (t1 t2 : coList A)
+          (H1 : uncons l1 = consF h1 t1)
+          (H2 : uncons l2 = consF h2 t2)
+          (heads : h1 = h2) (tails : F t1 t2),
+            lsimF l1 l2 F.
 
 CoInductive lsim {A : Type} (l1 l2 : coList A) : Prop :=
 {
