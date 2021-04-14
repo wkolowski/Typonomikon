@@ -309,7 +309,12 @@ Proof.
     right. do 2 eexists. do 2 split; try reflexivity.
       apply sim_sym. apply add_zero_r.
     left. split; reflexivity.
-Qed.
+Restart.
+  cofix CH.
+  constructor. destruct n as [[n' |]], m as [[m' |]]; cbn.
+    right. specialize (CH n' (succ m')).
+      do 2 eexists. do 2 split; try reflexivity.
+Admitted.
 (* end hide *)
 
 Lemma sim_add_zero_l :
@@ -361,6 +366,202 @@ Proof.
           assumption.
           constructor. right. do 2 eexists. eauto.
 Defined.
+(* end hide *)
+
+(** * Lepsze dodawanie *)
+
+CoFixpoint add' (n m : conat) : conat :=
+{|
+    pred :=
+      match pred n with
+          | None    => pred m
+          | Some n' =>
+              match pred m with
+                  | None    => Some n'
+                  | Some m' => Some {| pred := Some (add' n' m') |}
+              end
+      end
+|}.
+
+(* To raczej nie przejdzie *)
+Lemma sim_add_add' :
+  forall n m : conat,
+    sim (add n m) (add' n m).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor.
+  destruct n as [[n' |]]; cbn.
+    right. destruct m as [[m' |]]; cbn.
+      do 2 eexists. do 2 split; try reflexivity. eapply sim_trans.
+        apply sim_sym. apply add_succ_l.
+        constructor. cbn. right. do 2 eexists. do 2 split; try reflexivity. apply CH.
+Abort.
+(* end hide *)
+
+Lemma add'_zero_l :
+  forall n : conat, sim (add' zero n) n.
+(* begin hide *)
+Proof.
+  constructor; cbn. destruct n as [[n' |]]; cbn.
+    right. exists n', n'. do 2 split; try reflexivity.
+    left. auto.
+Qed.
+(* end hide *)
+
+Lemma add'_zero_r :
+  forall n : conat, sim (add' n zero) n.
+(* begin hide *)
+Proof.
+  constructor; cbn. destruct n as [[n' |]]; cbn.
+    right. do 2 eexists. do 2 split; try reflexivity.
+    left. auto.
+Qed.
+(* end hide *)
+
+Lemma sim_add'_zero :
+  forall n m : conat,
+    sim (add' n m) zero -> sim n zero /\ sim m zero.
+(* begin hide *)
+Proof.
+  intros.
+  split; destruct H as [[[] | ]]; constructor.
+    destruct n as [[]], m as [[]]; cbn in *; try congruence. auto.
+    decompose [ex and] H. cbn in *; congruence.
+    destruct n as [[]], m as [[]]; cbn in *; try congruence. auto.
+    decompose [ex and] H. cbn in *; congruence.
+Qed.
+(* end hide *)
+
+Ltac conat := do 2 eexists; do 2 split; try reflexivity.
+
+Lemma add'_omega_l :
+  forall n : conat, sim (add' omega n) omega.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. cbn. right.
+  destruct n as [[]]; cbn.
+    do 2 eexists. do 2 split; try reflexivity.
+      constructor. cbn. right. do 2 eexists. do 2 split; try reflexivity. apply CH.
+    do 2 eexists. do 2 split; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma add'_omega_r :
+  forall n : conat, sim (add' n omega) omega.
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct n as [[n' |]]; cbn.
+    right. do 2 eexists. do 2 split; try reflexivity. constructor. cbn.
+      right. do 2 eexists. do 2 split; try reflexivity. apply CH.
+    right. exists omega, omega. intuition.
+Qed.
+(* end hide *)
+
+Lemma add'_succ_l :
+  forall n m : conat, sim (add' (succ n) m) (add' n (succ m)).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. right. destruct n as [[n' |]], m as [[m' |]]; cbn.
+    conat. constructor. right. conat. apply CH.
+    conat. constructor. right. conat. rewrite add'_zero_r. reflexivity.
+    conat. constructor. right. conat. apply add'_zero_l.
+    conat.
+Qed.
+(* end hide *)
+
+Lemma add'_succ_r :
+  forall n m : conat, sim (add' n (succ m)) (add' (succ n) m).
+(* begin hide *)
+Proof.
+  intros. apply sim_sym, add'_succ_l.
+Qed.
+(* end hide *)
+
+Lemma add'_succ_l' :
+  forall n m : conat, sim (add' (succ n) m) (succ (add' n m)).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct m as [[m' |]]; cbn.
+    right. conat. constructor. right. conat. cbn.
+Admitted.
+(* end hide *)
+
+Lemma add'_succ_r' :
+  forall n m : conat, sim (add' n (succ m)) (succ (add' n m)).
+(* begin hide *)
+Proof.
+  intros. rewrite <- add'_succ_l. apply add'_succ_l'.
+Qed.
+(* end hide *)
+
+Lemma add'_assoc :
+  forall a b c : conat, sim (add' (add' a b) c) (add' a (add' b c)).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor.
+  destruct a as [[a' |]], b as [[b' |]], c as [[c' |]]; cbn.
+Admitted.
+(* end hide *)
+
+Lemma add'_comm :
+  forall n m : conat, sim (add' n m) (add' m n).
+(* begin hide *)
+Proof.
+  cofix CH.
+  constructor. destruct n as [[n' |]], m as [[m' |]]; cbn.
+    right. conat. constructor. right. conat. apply CH.
+    right. conat.
+    right. conat.
+    left. split; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma sim_add'_zero_l :
+  forall n m : conat,
+    sim (add' n m) zero -> sim n zero.
+(* begin hide *)
+Proof.
+  destruct 1 as [[[H1 H2] | (n' & m' & H1 & H2 & H3)]].
+    destruct n as [[n' |]]; cbn in *.
+      destruct m as [[]]; inv H1.
+      constructor. left. cbn. auto.
+    inv H2.
+Qed.
+(* end hide *)
+
+Lemma sim_add'_zero_r :
+  forall n m : conat,
+    sim (add' n m) zero -> sim m zero.
+(* begin hide *)
+Proof.
+  intros. rewrite add'_comm in H. apply sim_add'_zero_l in H. assumption.
+Qed.
+(* end hide *)
+
+Lemma sim_add' :
+  forall n n' m m' : conat,
+    sim n n' -> sim m m' -> sim (add' n m) (add' n' m').
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros n n' m m' [] [].
+  decompose [ex and or] sim'0;
+  decompose [ex and or] sim'1;
+  clear sim'0 sim'1; constructor.
+    left. cbn. rewrite H0, H1. split; assumption.
+    right. exists x, x0. cbn. rewrite H0, H1, H2, H. auto.
+    right. exists x, x0. cbn. rewrite H0, H, H3, H4. auto.
+    right. exists (succ (add' x x1)), (succ (add' x0 x2)). cbn. rewrite H, H0, H1, H3. split; [idtac | split].
+      reflexivity.
+      reflexivity.
+      apply sim_succ. apply CH; assumption.
+Qed.
 (* end hide *)
 
 (** * Porządek *)
