@@ -149,9 +149,7 @@ Lemma coList_neq_not_lsim :
     coList_neq l1 l2 -> ~ lsim l1 l2.
 (* begin hide *)
 Proof.
-  induction 1;
-  intros []; decompose [ex or and] lsim'0; clear lsim'0;
-  congruence.
+  induction 1; intros [[]]; try congruence.
 Qed.
 (* end hide *)
 
@@ -195,14 +193,15 @@ Qed.
     i odbija bipodobieństwo. *)
 
 (* begin hide *)
+
 Definition conil {A : Type} : coList A :=
 {|
-    uncons := None;
+    uncons := nilF
 |}.
 
 Definition cocons {A : Type} (h : A) (t : coList A) : coList A :=
 {|
-    uncons := Some (h, t);
+    uncons := consF h t
 |}.
 (* end hide *)
 
@@ -211,7 +210,7 @@ Lemma lsim_cocons :
     x = y -> lsim l1 l2 -> lsim (cocons x l1) (cocons y l2).
 (* begin hide *)
 Proof.
-  constructor. cbn. right. do 4 eexists. eauto.
+  constructor. econstructor 2; cbn; try reflexivity; assumption.
 Qed.
 (* end hide *)
 
@@ -220,9 +219,9 @@ Lemma lsim_cocons_inv :
     lsim (cocons x l1) (cocons y l2) -> x = y /\ lsim l1 l2.
 (* begin hide *)
 Proof.
-  intros. destruct H; decompose [or ex and] lsim'0; clear lsim'0; cbn in *.
-    inv H0.
-    inv H0. inv H. auto.
+  intros. destruct H as [[]]; cbn in *.
+    congruence.
+    subst. inv H1. inv H2. split; trivial.
 Qed.
 (* end hide *)
 
@@ -243,8 +242,8 @@ CoFixpoint len {A : Type} (l : coList A) : conat :=
 {|
     pred :=
       match uncons l with
-          | None => None
-          | Some (_, t) => Some (len t)
+          | nilF      => None
+          | consF h t => Some (len t)
       end;
 |}.
 (* end hide *)
@@ -256,10 +255,9 @@ Lemma sim_len :
 Proof.
   cofix CH.
   constructor.
-  destruct H as [[[H1 H2] | (h1 & t1 & h2 & t2 & H1 & H2 & H3 & H4)]];
-  cbn in *.
-    rewrite H1, H2. left. split; reflexivity.
-    rewrite H1, H2. right. exists (len t1), (len t2). intuition.
+  destruct H as [[]]; cbn; rewrite H1, H2.
+    left. split; reflexivity.
+    right. exists (len t1), (len t2). intuition.
 Qed.
 (* end hide *)
 
@@ -290,8 +288,8 @@ CoFixpoint snoc {A : Type} (l : coList A) (x : A) : coList A :=
 {|
     uncons :=
       match uncons l with
-          | None => Some (x, conil)
-          | Some (h, t) => Some (h, snoc t x)
+          | nilF      => consF x conil
+          | consF h t => consF h (snoc t x)
       end;
 |}.
 (* end hide *)
@@ -302,7 +300,7 @@ Lemma snoc_cocons :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. cbn. right. do 4 eexists. intuition.
+  constructor. econstructor 2; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -312,10 +310,10 @@ Lemma len_snoc :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. right. destruct l as [[[h t] |]]; cbn.
-    exists (len (snoc t x)), (succ (len t)). intuition.
+  constructor. cbn. destruct l as [[| h t]]; cbn.
+    right. do 2 eexists. intuition. constructor; eauto.
+    right. exists (len (snoc t x)), (succ (len t)). intuition.
       f_equal. apply eq_pred. cbn. reflexivity.
-    do 2 eexists. intuition. constructor; eauto.
 Qed.
 (* end hide *)
 
