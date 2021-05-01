@@ -727,7 +727,7 @@ Inductive list_neq
     | cc2 : forall (h1 h2 : A) (t1 t2 : list A),
               list_neq R t1 t2 -> list_neq R (h1 :: t1) (h2 :: t2).
 
-Hint Constructors list_neq.
+Hint Constructors list_neq : core.
 
 Lemma list_neq_irrefl_aux :
   forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
@@ -1526,13 +1526,14 @@ Proof.
 Qed.
 (* end hide *)
 
+Hint Constructors ListDiffProtocol : core.
+
 Lemma proto_trans :
   forall {A : Type} {R : A -> A -> Type} {l1 l2 l3 : list A},
     (forall x y z : A, R x y -> R y z -> R x z) ->
       ListDiffProtocol R l1 l2 -> ListDiffProtocol R l2 l3 ->
         ListDiffProtocol R l1 l3.
 Proof.
-  Hint Constructors ListDiffProtocol.
   intros * H HLDP. revert l3.
   induction HLDP; inversion 1; subst; auto.
     admit.

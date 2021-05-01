@@ -97,7 +97,7 @@ Inductive le' : nat -> nat -> Prop :=
     przyda ci się kilka lematów pomocniczych. *)
 
 (* begin hide *)
-Hint Constructors le'.
+Hint Constructors le' : core.
 
 Lemma le'_refl : forall n : nat, le' n n.
 Proof.
@@ -982,7 +982,7 @@ Inductive collatz : nat -> nat -> Prop :=
     | c_trans : forall a b c : nat,
         collatz a b -> collatz b c -> collatz a c.
 
-Hint Constructors collatz.
+Hint Constructors collatz : core.
 
 Lemma collatz_42 : collatz 42 1.
 Proof.

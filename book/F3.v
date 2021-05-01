@@ -381,7 +381,7 @@ Inductive Elem {A : Type} (x : A) (s : Stream A) : Prop :=
     | Elem_tl : Elem x (tl s) -> Elem x s.
 (* end hide *)
 
-Hint Constructors Elem.
+Hint Constructors Elem : core.
 
 (* begin hide *)
 Inductive Dup {A : Type} (s : Stream A) : Prop :=
@@ -797,7 +797,7 @@ Inductive SPermutation {A : Type} : Stream A -> Stream A -> Prop :=
         forall s1 s2 s3 : Stream A,
           SPermutation s1 s2 -> SPermutation s2 s3 -> SPermutation s1 s3.
 
-Hint Constructors SPermutation.
+Hint Constructors SPermutation : core.
 (* end hide *)
 
 (* TODO *) Require Import Permutation.

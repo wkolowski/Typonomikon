@@ -317,6 +317,10 @@ Proof.
 Qed.
 (* end hide *)
 
+(** TODO *)
+
+(*
+
 (** ** [app] *)
 
 (** Zdefiniuj funkcję [app], która skleja dwie kolisty. Czy jest to w ogóle
@@ -1008,7 +1012,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Hint Constructors Finite.
+Hint Constructors Finite : core.
 
 Lemma Finite_app_conv :
   forall (A : Type) (l1 l2 : coList A),
@@ -1203,3 +1207,5 @@ Proof.
       assumption.
 Qed.
 (* end hide *)
+
+*)

@@ -339,8 +339,8 @@ end.
 
 Definition list_ind'_type : Type :=
   forall
-    {A : Type}
-    {P : list A -> Prop}
+    (A : Type)
+    (P : list A -> Prop)
     (n : P nil)
     (c : forall (h : A) (t : list A), P t -> P (cons h t))
     (l : list A), P l.
@@ -687,7 +687,7 @@ Axioms
   (S : N -> N).
 
 Definition N_rec : Type :=
-  forall {X : Type} (z : X) (s : X -> X),
+  forall (X : Type) (z : X) (s : X -> X),
     {f : N -> X |
       f Z = z /\
       (forall n : N, f (S n) = s (f n)) /\
@@ -699,7 +699,7 @@ Definition N_rec : Type :=
 
 Definition N_ind : Type :=
   forall
-    {P : N -> Type}
+    (P : N -> Type)
     (z : P Z) (s : forall n : N, P n -> P (S n)),
       {f : forall n : N, P n |
         f Z = z /\

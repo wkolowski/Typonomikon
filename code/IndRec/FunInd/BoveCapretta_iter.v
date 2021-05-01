@@ -81,6 +81,4 @@ Proof.
         destruct (IH (11 + n)) as [k1 h1].
           lia.
         destruct (IH (iter F k1 id (11 + n))) as [k2 h2].
-          Focus 2. econstructor. constructor 2; eassumption.
-      }
 Admitted.

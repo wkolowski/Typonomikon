@@ -962,9 +962,11 @@ Abort.
 
 (** wyrzucić zadania mącące (mieszające typy i zdania) *)
 
+Require Classical.
+
 Section ClassicalExercises.
 
-Require Import Classical.
+Import Classical.
 
 Hypotheses P Q R S : Prop.
 

@@ -369,7 +369,7 @@ CoInductive bisim2 {A : Type} (l1 l2 : coList A) : Prop :=
           h1 = h2 /\ bisim2 t1 t2
 }.
 
-Hint Constructors bisim2.
+Hint Constructors bisim2 : core.
 
 Lemma bisim2_refl :
   forall (A : Type) (l : coList A), bisim2 l l.

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Zrób nowego makefile'a na wypadek, gdyby pojawiły się jakieś nowe pliki .v
-coq_makefile -R "." Typonomikon -o makefile $(find . -name "*v")
+coq_makefile -R "." Typonomikon -arg "-async-proofs-cache force" -o makefile $(find . -name "*v")
 
 # Skompiluj pliki .v - dzięki temu mamy pewność, że cały kod z książki działa poprawnie.
 make

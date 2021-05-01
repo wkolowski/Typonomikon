@@ -1,6 +1,6 @@
 $(document).ready(function()
 {
-	$("body")[0].id="main"
+	$("body")[0].id = "main"
 
 	$(".code").each(function()
 	{

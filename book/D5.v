@@ -12975,13 +12975,14 @@ Proof.
 Qed.
 (* end hide *)
 
+Hint Constructors Rep : core.
+
 Lemma Rep_intersperse :
   forall (A : Type) (x y : A) (n : nat) (l : list A),
     Rep x n (intersperse y l) <->
     Rep x n l \/ x = y /\ Rep x (S n - length l) l.
 (* begin hide *)
 Proof.
-            Hint Constructors Rep.
   split; revert n.
     induction l as [| h t]; cbn; intros.
       inversion H; subst. left. constructor.

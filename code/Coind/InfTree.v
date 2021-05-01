@@ -100,7 +100,7 @@ Proof.
     rewrite IHi. reflexivity.
 Qed.
 
-Hint Resolve left_subtree right_subtree.
+Hint Resolve left_subtree right_subtree : core.
 
 Theorem coinduction :
   forall {A : Type},

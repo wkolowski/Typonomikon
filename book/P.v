@@ -236,7 +236,7 @@ Inductive bin_equiv : bin -> bin -> Prop :=
     | equiv_leading_zeros : forall b b' : bin,
         bin_equiv b b' -> bin_equiv (O :: b) b'.
 
-Hint Constructors bin_equiv.
+Hint Constructors bin_equiv : core.
 
 #[refine]
 Instance bin_setoid : Setoid bin :=

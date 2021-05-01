@@ -100,7 +100,7 @@ Arguments dec {t} : simpl never.
 Arguments Class {P} _.
 
 Module theory.
-Notation "x == y" := (42) (at level 70).
+(* Notation "x == y" := (42) (at level 70). *)
 End theory.
 
 End Dec.

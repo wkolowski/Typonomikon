@@ -667,7 +667,7 @@ match l with
     | h :: t => rev_aux t (h :: acc)
 end.
 
-Fixpoint rev' {A : Type} (l : list A) : list A := rev_aux l [].
+Definition rev' {A : Type} (l : list A) : list A := rev_aux l [].
 
 (** Funkcja [rev_aux] to serce naszej nowej implementacji. Mimo, że odwraca
     ona listę [l], ma aż dwa argumenty — poza [l] ma też argument [acc : list A],

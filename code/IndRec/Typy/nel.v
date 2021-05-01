@@ -63,7 +63,7 @@ end.
 
 Notation "l1 ++ l2" := (app l1 l2).
 
-Hint Unfold len.
+Hint Unfold len : core.
 
 Theorem app_length : forall {A} (l1 l2 : nel A),
     len (l1 ++ l2) = len l1 + len l2.

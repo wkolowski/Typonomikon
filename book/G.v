@@ -1264,7 +1264,7 @@ Proof.
     rewrite IHn'. cbn. reflexivity.
 Qed.
 
-Hint Resolve hd_drop tl_drop.
+Hint Resolve hd_drop tl_drop : core.
 
 Theorem coinduction :
   forall (A : Type),
