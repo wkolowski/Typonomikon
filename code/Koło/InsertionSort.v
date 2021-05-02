@@ -38,15 +38,15 @@ Lemma example_sorted :
   sorted leb [1; 3; 4; 6; 7; 9].
 Proof.
   apply sorted_cons.
-    Focus 2. cbn. reflexivity.
+    2: { cbn. reflexivity. }
   apply sorted_cons.
-    Focus 2. cbn. reflexivity.
+    2: { cbn. reflexivity. }
   apply sorted_cons.
-    Focus 2. cbn. reflexivity.
+    2: { cbn. reflexivity. }
   apply sorted_cons.
-    Focus 2. cbn. reflexivity.
+    2: { cbn. reflexivity. }
   apply sorted_cons.
-    Focus 2. cbn. reflexivity.
+    2: { cbn. reflexivity. }
   apply sorted_singl.
 Qed.
 
@@ -54,7 +54,6 @@ Lemma example_sorted' :
   sorted leb [6; 3; 4; 7; 1; 9].
 Proof.
   apply sorted_cons.
-    Focus 2. cbn.
 Abort.
 
 Lemma ins_sorted :

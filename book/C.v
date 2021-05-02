@@ -627,10 +627,10 @@ Check @pair.
     ma podobne skutki co wywołanie rekurencyjne na argumencie, który
     nie jest strukturalnie mniejszy. *)
 
-Module EliminationRules.
-
 Require Import List.
 Import ListNotations.
+
+Module EliminationRules.
 
 Fixpoint list_ind_2
   (A : Type) (P : list A -> Prop)

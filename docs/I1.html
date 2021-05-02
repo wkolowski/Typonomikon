@@ -4,6 +4,7 @@
 <script type="text/javascript" src="jquery-3.5.1.js"></script>
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
 </head>
 <h1 class="libtitle">I1: Ltac — język taktyk</h1>
 
@@ -75,11 +76,11 @@
 
 <div class="paragraph"> </div>
 
-    Jednak wcale nie musi tak być — możemy zaznaczyć inny cel i zacząć nad
-    nim pracować. Służy do tego komenda <span class="inlinecode"><span class="id" title="var">Focus</span></span>. Cel o numerze n możemy
-    zaznaczyć komendą <span class="inlinecode"><span class="id" title="var">Focus</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. Jeżeli to zrobimy, wszystkie pozostałe cele
-    chwilowo znikają. Do stanu domyślnego, w którym pracujemy nad celem nr 1
-    i wszystkie cele są widoczne możemy wrócić za pomocą komendy <span class="inlinecode"><span class="id" title="var">Unfocus</span></span>. 
+    Jednak wcale nie musi tak być — możemy zaznaczyć inny cel i zacząć nad nim
+    pracować. Cel o numerze n możemy zaznaczyć komendą <span class="inlinecode"><span class="id" title="var">n</span>:</span> <span class="inlinecode">{</span>. Jeżeli to
+    zrobimy, wszystkie pozostałe cele znikają do czasu, aż nie uporamy się z
+    aktualnym celem. Gdy już skończymy, możemy wrócić do pozostałych celów za
+    pomocą komendy <span class="inlinecode">}</span> (nawias klamrowy zamykający). 
 </div>
 <div class="code">
 
@@ -87,20 +88,25 @@
 <span class="id" title="keyword">Goal</span> <span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> /\ <span class="id" title="var">R</span> -&gt; <span class="id" title="var">R</span> /\ <span class="id" title="var">Q</span> /\ <span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">Focus</span> 3.<br/>
-&nbsp;&nbsp;<span class="id" title="var">Unfocus</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2.<br/>
+&nbsp;&nbsp;3: { <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> (<span class="id" title="var">p</span> &amp; <span class="id" title="var">q</span> &amp; <span class="id" title="var">r</span>). <span class="id" title="tactic">assumption</span>. }<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Komenda <span class="inlinecode"><span class="id" title="var">Focus</span></span> jest użyteczna głównie gdy któryś z dalszych celów jest
+Komenda <span class="inlinecode"><span class="id" title="var">n</span>:</span> <span class="inlinecode">{</span> jest użyteczna głównie gdy któryś z dalszych celów jest
     łatwiejszy niż obecny. Możemy wtedy przełączyć się na niego, rozwiązać
     go i wyniesione stąd doświadczenie przenieść na trudniejsze cele. Jest
     wskazane, żeby po zakończeniu dowodu zrefaktoryzować go tak, aby komenda
-    <span class="inlinecode"><span class="id" title="var">Focus</span></span> w nim nie występowała.
+    <span class="inlinecode"><span class="id" title="var">n</span>:</span> <span class="inlinecode">{</span> w nim nie występowała.
+
+<div class="paragraph"> </div>
+
+    Uwaga: w starszych wersjach Coqa do przełączania się między celami można
+    było używać komend <span class="inlinecode"><span class="id" title="var">Focus</span></span> i <span class="inlinecode"><span class="id" title="var">Unfocus</span></span>. Ich używanie nie jest obecnie
+    zalecane. Gdybyś zauważył użycie którejś z tych komend w niniejszej książce,
+    znaczy to po prostu, że zapomniałem zaktualizować tego fragmentu.
 
 <div class="paragraph"> </div>
 
@@ -1218,10 +1224,10 @@ Pozostało nam jedynie zademonstrować działanie wzorca <span class="inlinecode
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Section</span> <span class="id" title="var">negn</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
+<span class="id" title="keyword">Section</span> <span class="id" title="var">negn</span>.<br/>
 
 <br/>
 </div>

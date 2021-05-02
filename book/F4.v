@@ -828,7 +828,7 @@ Proof.
   apply H. right. revert A l H. cofix CH.
   intros A l H.
   destruct l as [[[h t] |]].
-    Focus 2. contradiction H. left. constructor. cbn. reflexivity.
+    2: { contradiction H. left. constructor. cbn. reflexivity. }
     econstructor.
       cbn. reflexivity.
       apply CH. intros [H' | H']; apply H.

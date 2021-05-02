@@ -4,6 +4,7 @@
 <script type="text/javascript" src="jquery-3.5.1.js"></script>
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
 </head>
 <h1 class="libtitle">F1: Koindukcja i korekursja [TODO]</h1>
 
@@ -235,7 +236,7 @@
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">rand'</span> (<span class="id" title="var">seed</span> <span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">Z</span>) : <span class="id" title="var">Stream</span> <span class="id" title="var">Z</span> :=<br/>
 {|<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">Zmod</span> <span class="id" title="var">seed</span> <span class="id" title="var">n2</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">rand</span> (<span class="id" title="var">Zmod</span> (<span class="id" title="var">seed</span> * <span class="id" title="var">n1</span>) <span class="id" title="var">n2</span>) <span class="id" title="var">n1</span> <span class="id" title="var">n2</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">rand'</span> (<span class="id" title="var">Zmod</span> (<span class="id" title="var">seed</span> * <span class="id" title="var">n1</span>) <span class="id" title="var">n2</span>) <span class="id" title="var">n1</span> <span class="id" title="var">n2</span>;<br/>
 |}.<br/>
 
 <br/>

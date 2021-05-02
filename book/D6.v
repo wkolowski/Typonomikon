@@ -1888,7 +1888,12 @@ End AtLeast.
 
 (** ** Permutacje, jeszcze dziwniej *)
 
+Require H.
+Require Import Equality.
+
 Module PermWeird.
+
+Import H.
 
 Inductive Elem {A : Type} (x : A) : list A -> Type :=
     | Z : forall l : list A, Elem x (x :: l)
@@ -1897,12 +1902,8 @@ Inductive Elem {A : Type} (x : A) : list A -> Type :=
 Arguments Z {A x} _.
 Arguments S {A x t} _ _.
 
-Require Import H.
-
 Definition Perm {A : Type} (l1 l2 : list A) : Type :=
   forall x : A, iso (Elem x l1) (Elem x l2).
-
-Require Import Equality.
 
 (* begin hide *)
 (*Lemma Permutation_Perm :
@@ -2406,9 +2407,13 @@ End perms_ins.
 
 (** ** Znajdowanie permutacji przez cykle *)
 
+Require Import FunctionalExtensionality.
+Require D4.
+
 Module perms_cycles.
 
 Import cycles.
+Import D4.
 
 Fixpoint perms {A : Type} (l : list A) : list (list A) :=
 match l with
@@ -2423,8 +2428,6 @@ Compute perms [2; 3].
 Compute cycles (map (cons 2) [[3]]).
 Compute perms [1; 2; 3].
 Compute perms [1; 2; 3; 4].
-
-Require Import D4.
 
 Fixpoint sum (l : list nat) : nat :=
 match l with
@@ -2501,9 +2504,10 @@ Proof.
       cbn. rewrite len_join, map_map. cbn.
         replace (fun x => S (length (cycles_aux (length x) (h :: x))))
            with (fun x => S (@length A x)).
-          Focus 2. Require Import FunctionalExtensionality.
+          2: {
             apply functional_extensionality. intro.
             rewrite len_cycles_aux. reflexivity.
+          }
           {
             rewrite <- map_map, IH2.
             rewrite sum_map_S, length_replicate, sum_replicate.
@@ -2512,13 +2516,13 @@ Proof.
       cbn. rewrite len_join, map_map. cbn.
         replace (fun x => S (length (cycles_aux (length x) (h :: x))))
            with (fun x => S (@length A x)).
-          Focus 2. Require Import FunctionalExtensionality.
+          2: {
             apply functional_extensionality. intro.
             rewrite len_cycles_aux. reflexivity.
+          }
           {
             rewrite <- (map_map _ _ _ _ S). rewrite IH2.
             rewrite sum_map_S, length_replicate, sum_replicate.
-            
             rewrite map_join, map_map. cbn.
 Abort.
 (* end hide *)
@@ -2540,7 +2544,7 @@ Proof.
   induction 1.
     cbn. constructor.
     cbn. apply elem_join. eexists. split.
-      Focus 2. apply elem_map. exact IHPermutation.
+      2: { apply elem_map. exact IHPermutation. }
       admit.
     cbn. rewrite map_join, !map_map. apply elem_join. eexists. split.
       admit.
@@ -2571,11 +2575,9 @@ Proof.
     destruct l1 as [| h1 t1].
       specialize (H (fun _ => true)). cbn in H. inv H.
       cbn in H. rewrite bind_spec, elem_join. eexists. split.
-        Focus 2.
-        {
+        2: {
           apply elem_map. apply IHt2. red. intro.
           specialize (H p). destruct (p h1) eqn: ph1, (p h2) eqn: ph2.
-            Focus 3.
             inv H. reflexivity.
 Abort.
 (* end hide *)

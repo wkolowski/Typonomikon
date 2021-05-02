@@ -119,9 +119,10 @@ TODO 8: uogólniona funkcja McCarthy'ego: if n > k then n else f(f(n + 1, k), k)
 (** Narysuj jakieś nietrywialne termy typu [nat] o takich kształtach. *)
 
 (* begin hide *)
-Module wut.
 Require Import List.
 Import ListNotations.
+
+Module wut.
 
 Definition hehe : nat :=
   length [@length nat []; length [@length nat []; @length nat []]].
@@ -1639,9 +1640,6 @@ Proof.
       repeat (cbn in *; rewrite ?eq1, ?eq2, ?eq3 in *); cbn.
         rewrite <- IHt1. cbn. rewrite eq2. reflexivity.
         rewrite IHt2. reflexivity.
-        Focus 2. rewrite IHt2. reflexivity.
-        Focus 2. rewrite <- IHt1. cbn. rewrite eq2. reflexivity.
-        Focus 4. rewrite IHt2. reflexivity.
 Restart.
   intros until p.
   apply (merge_ind (fun l1 l2 r : list A =>
@@ -1931,9 +1929,6 @@ Fail Definition the_universe_explodes : False := loop tt.
     czy [Some].
 
     Coby za dużo nie godoć, przykład. *)
-
-Require Import List.
-Import ListNotations.
 
 Require Import Nat.
 
@@ -2376,9 +2371,9 @@ Qed.
      relację. Uwaga: istnieje bardzo sprytne rozwiązanie. *)
 
 (* begin hide *)
-Module Ex.
-
 Require Import Lia.
+
+Module Ex.
 
 Inductive T : Type :=
     | from0 : nat -> T
@@ -2510,8 +2505,6 @@ Qed.
     prostej indukcji albo banalnego dopasowania do wzorca. W tego typu
     sytuacjach nieodzowne będzie skorzystanie z indukcji i rekursji
     dobrze ufundowanej, o czym przekonamy się już natychmiast zaraz. *)
-
-Require Import Lia.
 
 Definition div : nat -> nat -> nat.
 Proof.
@@ -3764,8 +3757,8 @@ Proof.
     rewrite rot_eq, H. reflexivity.
     apply split_spec in H. destruct H. subst.
       rewrite rot_eq, split_app_length.
-        rewrite rev_involutive, H0. reflexivity.
-        rewrite rev_length. assumption.
+        rewrite rev_inv, H0. reflexivity.
+        rewrite length_rev. assumption.
 Qed.
 
 End rot.
@@ -3966,11 +3959,6 @@ Defined.
 (* begin hide *)
 Module rotn_Function.
 
-Require Import Recdef.
-
-Require Import List.
-Import ListNotations.
-
 Function split
   {A : Type} (n : nat) (l : list A)
   : option (list A * list A) :=
@@ -4050,8 +4038,8 @@ Proof.
     rewrite rot_equation, e. reflexivity.
     apply split_spec in e. destruct e. subst.
       rewrite rot_equation, split_app_length.
-        rewrite rev_involutive, IHl0. reflexivity.
-        rewrite rev_length. assumption.
+        rewrite rev_inv, IHl0. reflexivity.
+        rewrite length_rev. assumption.
 Qed.
 
 End rotn_Function.
@@ -4551,7 +4539,7 @@ end.
     prostu [fD (f (n + 11) d)], wykres nie jest nam do niczego potrzebny.
     Definicja funkcji wygląda dokładnie tak samo jak ostatnio. *)
 
-Variables
+Axioms
   (fD : nat -> Type)
   (f' : forall n : nat, fD n -> nat)
   (fD_gt100 : forall n : nat, 100 < n -> fD n)

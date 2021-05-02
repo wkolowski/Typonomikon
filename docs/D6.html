@@ -4,6 +4,7 @@
 <script type="text/javascript" src="jquery-3.5.1.js"></script>
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
 </head>
 <h1 class="libtitle">D6: Więcej list [TODO]</h1>
 
@@ -1122,7 +1123,14 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">PermWeird</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">H</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Elem</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
@@ -1134,14 +1142,8 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="var">Arguments</span> <span class="id" title="var">S</span> {<span class="id" title="var">A</span> <span class="id" title="var">x</span> <span class="id" title="var">t</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">H</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">Perm</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">iso</span> (<span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span>) (<span class="id" title="var">Elem</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Equality</span>.<br/>
 
 <br/>
 
@@ -1412,10 +1414,15 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="var">D4</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">perms_cycles</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Import</span> <span class="id" title="var">cycles</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">D4</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">perms</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) :=<br/>
@@ -1432,9 +1439,6 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="keyword">Compute</span> <span class="id" title="var">cycles</span> (<span class="id" title="var">map</span> (<span class="id" title="var">cons</span> 2) [[3]]).<br/>
 <span class="id" title="keyword">Compute</span> <span class="id" title="var">perms</span> [1; 2; 3].<br/>
 <span class="id" title="keyword">Compute</span> <span class="id" title="var">perms</span> [1; 2; 3; 4].<br/>
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D4</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">sum</span> (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>

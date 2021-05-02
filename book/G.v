@@ -50,6 +50,9 @@ Qed.
 
 (** ** Spłaszczanie wielokrotnie zagnieżdżonych list *)
 
+Require Import List.
+Import ListNotations.
+
 Module Flatten.
 
 Inductive Star : Type :=
@@ -67,9 +70,6 @@ match s with
     | Var A => A
     | List s' => flattenType s'
 end.
-
-Require Import List.
-Import ListNotations.
 
 Fixpoint flatten {s : Star} : interp s -> list (flattenType s) :=
 match s with
@@ -125,9 +125,11 @@ End Flatten.
 
 (** ** [zipWith] z dowolną ilością argumentów *)
 
+Require D5.
+
 Module ZipWithN.
 
-Require Import D5.
+Import D5.
 
 Inductive Code : Type :=
   | Singl : Type -> Code
@@ -219,6 +221,8 @@ End ZipWithN.
 (** Pomysł: silną negację można zdefiniować przez rekursję po uniwersum
     kodów, w którym są kody na wszystkie potrzebne typy. *)
 
+Require D1 D2.
+
 Module Negation.
 
 (*
@@ -230,9 +234,7 @@ Inductive U : Type :=
     | Impl : U -> U -> U.
 *)
 
-Require Import D1.
-Require Import D2.
-
+Import D1 D2.
 Import PoorUniverse.
 
 End Negation.
@@ -346,6 +348,8 @@ Print list.
     możliwe kodowanie - równie dobrze zamiast [unit + X] moglibyśmy użyć
     typu [option X]). *)
 
+Require Import FunctionalExtensionality.
+
 Module listW.
 
 Definition listW (X : Type) : Type :=
@@ -388,8 +392,6 @@ Fail Check eq_refl : consW = consW'.
 (* ===> The command has indeed failed with message:
         The term "eq_refl" has type "consW = consW"
         while it is expected to have type "consW = consW'". *)
-
-Require Import FunctionalExtensionality.
 
 Lemma consW_consW' :
   forall {X : Type} (h : X) (t : listW X),
@@ -434,15 +436,17 @@ Lemma listW_ind' :
         f (nilW X) = PnilW /\
         forall (h : X) (t : listW X), f (consW h t) = PconsW h t (f t)}.
 Proof.
-  esplit. Unshelve. Focus 2.
-    induction l as [[[] | x] b IH].
-      replace (P (sup (inl tt) b)) with (P (nilW X)).
-        assumption.
-        unfold nilW. do 2 f_equal. extensionality e. destruct e.
-      replace _ with (P (consW x (b tt))).
-        apply PconsW. apply IH.
-        unfold consW. do 2 f_equal.
-          extensionality u. destruct u. reflexivity.
+  esplit. Unshelve.
+    2: {
+      induction l as [[[] | x] b IH].
+        replace (P (sup (inl tt) b)) with (P (nilW X)).
+          assumption.
+          unfold nilW. do 2 f_equal. extensionality e. destruct e.
+        replace _ with (P (consW x (b tt))).
+          apply PconsW. apply IH.
+          unfold consW. do 2 f_equal.
+            extensionality u. destruct u. reflexivity.
+    }
     cbn. split.
       compute. assert (forall (P : Prop) (p1 p2 : P), p1 = p2).
         admit.
@@ -752,19 +756,17 @@ Proof.
   as (f & f_0 & f_S).
   assert (forall n : nat, projT1 (f n) = n).
     eapply (uniqueness nat (fun n => projT1 (f n)) (fun n => n)). Unshelve.
-      Focus 4. exact 0.
-      Focus 4. exact S.
+      4: exact 0.
+      4: exact S.
       split.
         apply (f_equal (@projT1 nat P)) in f_0. cbn in f_0. assumption.
         intro. rewrite f_S. destruct (f n). cbn. reflexivity.
       split.
         reflexivity.
         reflexivity.
-  esplit.
-  Unshelve.
-    Focus 2. intro n. rewrite <- H. exact (projT2 (f n)).
+  esplit. Unshelve.
+    2: { intro n. rewrite <- H. exact (projT2 (f n)). }
     cbn. split.
-      Focus 2. intro.
 Admitted.
 
 End nat_ind.
@@ -1039,9 +1041,6 @@ Inductive Finite {S : Type} {P : S -> Type} : M S P -> Prop :=
 
 CoInductive Infinite {S : Type} {P : S -> Type} (m : M S P) : Prop :=
 {
-(*    Infinite' :
-      forall p : P (shape m), Infinite (position m p);
-*)
     p : P (shape m);
     Infinite' : Infinite (position m p);
 }.
@@ -1056,7 +1055,7 @@ Proof.
   econstructor; cbn.
   apply CH.
   intros [H' | H']; apply H.
-    Focus 2. right. econstructor; cbn. exact H'.
+    2: { right. econstructor; cbn. exact H'. }
     left. constructor. cbn. intro.
     exfalso. apply H. left. constructor. cbn. intro.
 Abort.
@@ -1070,9 +1069,7 @@ Proof.
   exact (H0 _ inf).
 Qed.
 
-(**
-
-Wtedy typ [c] wygląda tak:
+(** Wtedy typ [c] wygląda tak:
     [c : A -> T * ... * T -> T]. Zauważmy, że [T * ... * T] możemy zapisać
     równoważnie jako [B -> T], gdzie [B] to typ mający tyle elementów, ile
     razy [T] występuje w produkcie [T * ... * T]. Zatem typ [c] przedstawia
@@ -1101,9 +1098,7 @@ Wtedy typ [c] wygląda tak:
     Stosując powyższe przekształcenia możemy sprowadzić każdy typ induktywny
     do równoważnej postaci z jednym konstruktorem o typie
     [forall x : A, B x -> T]. Skoro tak, to definiujemy nowy typ, w którym
-    [A] i [B] są parametrami... i bum, tak właśnie powstało [W]!
-
-*)
+    [A] i [B] są parametrami... i bum, tak właśnie powstało [W]! *)
 
 (* end hide *)
 
@@ -1153,7 +1148,7 @@ Lemma gg_ff :
 Proof.
   cofix CH.
   econstructor. Unshelve.
-    Focus 2. cbn. reflexivity.
+    2: reflexivity.
     destruct p. cbn. apply CH.
 Qed.
 
@@ -1185,18 +1180,19 @@ Definition coBTreeM (A : Type) : Type :=
     regułę unikalności, a reguła unikalności sama w sobie w zasadzie
     oznacza, że bipodobieństwo to równość. *)
 
+Require F4.
+
 Module uniqueness_bisim_eq.
 
-Require Import F4.
+Import F4.
 
 Print Stream.
-(*
-
-CoInductive Stream (A : Type) : Type :=
-{
-    hd : A;
-    tl : Stream A
-}.
+(* ===>
+  CoInductive Stream (A : Type) : Type :=
+  {
+      hd : A;
+      tl : Stream A
+  }.
 *)
 
 Record corecursive
@@ -1417,7 +1413,7 @@ Proof.
   Unshelve.
   all: unfold shape'; cbn in *; try reflexivity; intro i.
     cbn. reflexivity.
-    Focus 2. destruct i, path0. cbn. symmetry. assumption.
+    2: { destruct i, path0. cbn. symmetry. assumption. }
     intro. destruct i, path0. cbn. rewrite transport_eq_sym.
       reflexivity.
 Qed.
@@ -1479,9 +1475,9 @@ Definition ifalse : I := ind u.
 Compute Arg ifalse unit.
 
 Unset Positivity Checking.
-
 Inductive IType (i : I) : Type :=
     | intro : Arg i (IType i) -> IType i.
+Set Positivity Checking.
 
 (*
 Fixpoint IType_ind
@@ -1563,9 +1559,9 @@ Proof.
     intros n' IH. f_equal. assumption.
 Qed.
 
+Unset Guard Checking.
 Fixpoint second_way
   (n : iinat) : nat_to_iinat (iinat_to_nat n) = n.
-Unset Guard Checking.
 Proof.
   destruct n as [[[] []]]; cbn.
     reflexivity.

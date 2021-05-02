@@ -335,8 +335,6 @@ end.
 
 Require Import Bool.
 
-Search (andb _ _ = true -> _).
-
 #[refine]
 Instance EqDec_list (A : Type) (eq_dec_A : EqDec A) : EqDec (list A) :=
 {

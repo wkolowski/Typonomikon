@@ -1657,7 +1657,7 @@ Lemma Sub_Finite_sim :
 Proof.
   unfold Sub; intros.
   eapply sim_add_Finite.
-    Focus 2. rewrite H0, H1. reflexivity.
+    2: { rewrite H0, H1. reflexivity. }
     eapply Finite_add_inv_l. eapply Finite_sim.
       apply add_comm.
       eapply Finite_sim.
@@ -2048,7 +2048,7 @@ Proof.
   intros c H.
   apply H. right. revert c H. cofix CH.
   destruct c as [[c' |]]; intro H.
-    Focus 2. exfalso. apply H. left. constructor.
+    2: { exfalso. apply H. left. constructor. }
     constructor. exists c'. split.
       cbn. reflexivity.
       apply CH. intros [H' | H']; apply H.

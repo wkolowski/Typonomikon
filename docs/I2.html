@@ -4,6 +4,7 @@
 <script type="text/javascript" src="jquery-3.5.1.js"></script>
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
 </head>
 <h1 class="libtitle">I2: Spis przydatnych taktyk</h1>
 
@@ -1993,11 +1994,11 @@ Pozostałe warianty taktyki <span class="inlinecode"><span class="id" title="tac
 <br/>
 
 <br/>
-<span class="id" title="keyword">Section</span> <span class="id" title="var">my_btauto</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Bool</span>.<br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Btauto</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <span class="id" title="var">my_btauto</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_dist_orb</span> :<br/>
@@ -2192,8 +2193,8 @@ Zanim przejdziesz dalej, udowodnij ręcznie powyższe twierdzenie. Przyznasz,
 <div class="paragraph"> </div>
 
     Uwaga: ta taktyka jest przestarzała, a jej opis znajduje się tutaj tylko
-    dlatego, że jak go pisałem, to jeszcze nie była. Nie używaj jej! Zamiast
-    <span class="inlinecode"><span class="id" title="tactic">omega</span></span> używaj <span class="inlinecode"><span class="id" title="var">lia</span></span>! 
+    dlatego, że jak go pisałem, to jeszcze nie była przestarzała. Nie używaj
+    jej! Zamiast <span class="inlinecode"><span class="id" title="tactic">omega</span></span> używaj <span class="inlinecode"><span class="id" title="var">lia</span></span>! 
 </div>
 <div class="code">
 
@@ -2576,7 +2577,7 @@ Kolejną słabością <span class="inlinecode"><span class="id" title="tactic">a
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">even</span>.<br/>
+<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">even</span> : <span class="id" title="var">core</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">auto_ex5'</span> : <span class="id" title="var">even</span> 8.<br/>
@@ -2697,7 +2698,8 @@ Kolejnym problemem taktyki <span class="inlinecode"><span class="id" title="tact
 <span class="id" title="keyword">Hint Extern</span> 0 =&gt;<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">H</span> : ?<span class="id" title="var">x</span> = ?<span class="id" title="var">y</span>, <span class="id" title="var">H'</span> : ?<span class="id" title="var">y</span> = ?<span class="id" title="var">z</span> |- ?<span class="id" title="var">x</span> = ?<span class="id" title="var">z</span> =&gt; <span class="id" title="tactic">apply</span> (@<span class="id" title="var">eq_trans</span> <span class="id" title="var">_</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>)<br/>
-<span class="id" title="keyword">end</span> : <span class="id" title="var">extern_db</span>.<br/>
+<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;: <span class="id" title="var">extern_db</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">auto_ex7</span> :<br/>
@@ -2731,7 +2733,8 @@ Jest jednak sposób, żeby uporać się i z tym problemem: jest nim komenda
 <span class="id" title="keyword">Hint Extern</span> 0 (?<span class="id" title="var">x</span> = ?<span class="id" title="var">z</span>) =&gt;<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">H</span> : ?<span class="id" title="var">x</span> = ?<span class="id" title="var">y</span>, <span class="id" title="var">H'</span> : ?<span class="id" title="var">y</span> = ?<span class="id" title="var">z</span> |- <span class="id" title="var">_</span> =&gt; <span class="id" title="tactic">apply</span> (@<span class="id" title="var">eq_trans</span> <span class="id" title="var">_</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>)<br/>
-<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;: <span class="id" title="var">core</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">auto_ex7'</span> :<br/>

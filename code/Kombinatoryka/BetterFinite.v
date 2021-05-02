@@ -3,6 +3,8 @@
 Require Import List.
 Import ListNotations.
 
+Require Import Equality.
+
 Inductive Elem {A : Type} (x : A) : list A -> Type :=
     | ElemZ : forall l : list A, Elem x (x :: l)
     | ElemS : forall (h : A) (t : list A), Elem x t -> Elem x (h :: t).
@@ -45,8 +47,6 @@ Proof.
   all: destruct x.
 Defined.
 
-Require Import Equality.
-
 #[refine]
 Instance ExactlyFinite_unit : ExactlyFinite unit :=
 {
@@ -77,7 +77,6 @@ Inductive Squash (A : Type) : Prop :=
 Inductive Truncated (A : Type) : SProp :=
     | truncated : A -> Truncated A.
 
-Arguments Truncated _.
 Arguments truncated {A} _.
 
 Module MerelyExactlyFinite.

@@ -122,6 +122,8 @@ Fail Definition silly (n : nat) : bool :=
 
 End Canonical.
 
+Require Import M.
+
 Module ThisMustWork.
 
 Class Dec (P : Prop) : Type :=
@@ -214,8 +216,6 @@ Proof.
     intro. contradiction.
     assumption.
 Defined.
-
-Require Import M.
 
 #[refine]
 Instance Dec_exists
@@ -823,6 +823,8 @@ Instance Natural_nat : Natural nat :=
 
 End Natural.
 
+Require Import ZArith.
+
 Module Integral.
 
 Class Integral (A : Type) : Type :=
@@ -836,8 +838,6 @@ Class Integral (A : Type) : Type :=
 
     mul : A -> A -> A;
 }.
-
-Require Import ZArith.
 
 Instance Integral_Z : Integral Z :=
 {
@@ -853,9 +853,9 @@ Instance Integral_Z : Integral Z :=
 
 End Integral.
 
-Module Rational.
-
 Require Import QArith.
+
+Module Rational.
 
 Class Rational (A : Type) : Type :=
 {

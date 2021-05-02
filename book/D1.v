@@ -1671,7 +1671,7 @@ Theorem list_empty :
   forall (A : Type), list A -> False.
 Proof.
   intros A l. induction l as [| h t].
-    Focus 2. exact IHt.
+    2: { exact IHt. }
 Abort.
 
 (** Pokazanie, że typ [list A] jest pusty, jest rzecz jasna niemożliwe,
@@ -1682,9 +1682,11 @@ Abort.
     Przyjrzyjmy się naszej próbie dowodu. Próbujemy posłużyć się indukcją
     w ten sam sposób co poprzednio. Taktyka [induction] generuje nam dwa
     podcele, gdyż [list] ma dwa konstruktory — pierwszy podcel dla [nil],
-    a drugi dla [cons]. Komenda [Focus] pozwala nam przełączyć się do
-    wybranego celu, w tym przypadku celu nr 2, czyli gdy [l] jest postaci
-    [cons h t].
+    a drugi dla [cons]. Komenda [n: { ... }] pozwala nam przełączyć się do
+    n-tego celu (w naszym przypadku celu nr 2, czyli gdy [l] jest postaci
+    [cons h t]). Uwaga: przestarzałym sposobem na przełączanie celów jest
+    komenda [Focus] - jeżeli zobaczysz gdzieś jej użycie, to znaczy, że po
+    prostu zapomniałem tego poprawić.
 
     Sprawa wygląda identycznie jak poprzednio — za darmo dostajemy hipotezę
     [IHt : False], której używamy do natychmiastowego rozwiązania naszego
@@ -3257,6 +3259,9 @@ Set Elimination Schemes.
 
 (** ** Indukcja-indukcja *)
 
+Require Import List.
+Import ListNotations.
+
 Module ind_ind.
 
 (** Po powtórce nadszedł czas nowości. Zacznijmy od nazwy, która jest iście
@@ -3473,9 +3478,6 @@ Defined.
     "programowanie" w taki aksjomatyczny sposób jest dość ciężkie - zamiast
     eleganckich dopasowań do wzorca musimy ręcznie wpisywać argumenty do
     reguły indukcyjnej. *)
-
-Require Import List.
-Import ListNotations.
 
 Definition toList'
   {A : Type} {R : A -> A -> Prop} :
@@ -4071,9 +4073,6 @@ Fail Definition slist_01 : slist leb :=
 (** Dużo lepiej, prawda? Na koniec zobaczmy, jak zdefiniować funkcję
     zapominającą o fakcie, że lista jest posortowana. *)
 
-Require Import List.
-Import ListNotations.
-
 Definition toList'
   {A : Type} {R : A -> A -> bool} :
   {f : slist R -> list A |
@@ -4227,9 +4226,9 @@ Proof.
   )).
     exists E. reflexivity.
     intros * [l' IHl'] [r' IHr']. eexists (N v r' l' _ _). Unshelve.
-      Focus 2. rewrite IHr'. assumption.
-      Focus 2. rewrite IHl'. assumption.
       intros. rewrite !ok_N. reflexivity.
+      rewrite IHr'. assumption.
+      rewrite IHl'. assumption.
 Defined.
 
 End BHeap'.
@@ -4341,11 +4340,11 @@ Proof.
     exists E. split; intro; rewrite !okl_E, !okr_E; reflexivity.
     intros v l r eql eqr (l' & IHl1 & IHl2) (r' & IHr1 & IHr2).
       eexists (N v r' l' _ _). Unshelve.
-        Focus 2. rewrite IHr1, eqr. reflexivity.
-        Focus 2. rewrite IHl2, eql. reflexivity.
         split; intro; rewrite okl_N, okr_N.
           reflexivity.
           destruct (R x v); reflexivity.
+        rewrite IHr1, eqr. reflexivity.
+        rewrite IHl2, eql. reflexivity.
 Defined.
 
 End BST'.
@@ -5681,6 +5680,8 @@ with Y : Type :=
     rekursja wzajemna? *)
 
 (* begin hide *)
+Require Import FunctionalExtensionality.
+
 Module XY.
 
 Unset Positivity Checking.
@@ -5698,8 +5699,6 @@ match x with
     | X0 => id
     | X1 f => fun x' : X => f (Y1 x')
 end.
-
-Require Import FunctionalExtensionality.
 
 Lemma surjective_extract :
   surjective extract.
@@ -5898,6 +5897,8 @@ End T3.
 
 (** *** Upierdliwe kodziedziny *)
 
+Require Import FunctionalExtensionality.
+
 (** To wszystko jest prawdą jednak tylko wtedy, gdy wszystkie typy po prawych
     stronach strzałek będą takie same. A co, gdy będą różne? *)
 
@@ -5947,19 +5948,17 @@ Defined.
     to samo co poprzednio - aplikujemy do celu jakąś funkcję [bool -> nat].
     Tym razem nie musi ona być surjekcją (nie jest to nawet możliwe, gdyż
     nie ma surjekcji z [bool] w [nat]). Dzięki temu możemy zaaplikować [g]
-    i zakończyć, używając [y]. *)
+    i zakończyć, używając [y].
 
-Require Import FunctionalExtensionality.
-
-(** Żeby pokazać, że [extract] jest surjekcją, będziemy potrzebować aksjomatu
+    Żeby pokazać, że [extract] jest surjekcją, będziemy potrzebować aksjomatu
     ekstensjonalności dla funkcji (ang. functional extensionality axiom,
     w skrócie funext). Głosi on, że dwie funkcje [f, g : A -> B] są równe,
     jeżeli uda nam się pokazać, że dają równe wyniki dla każdego argumentu
     (czyli [forall x : A, f x = g x]).
 
-    Importując powyższy moduł zakładamy prawdziwość tego aksjomatu oraz
-    uzyskujemy dostęp do taktyki [extensionality], która ułatwia dowody
-    wymagające użycia ekstensjonalności. *)
+    Importując moduł [FunctionalExtensionality] zakładamy prawdziwość tego
+    aksjomatu oraz uzyskujemy dostęp do taktyki [extensionality], która ułatwia
+    dowody wymagające użycia ekstensjonalności. *)
 
 Lemma surjective_extract :
   surjective extract.
@@ -6095,8 +6094,6 @@ Defined.
 
 (** Definicja [extract] jest podobna jak poprzednio, ale tym razem konwertujemy
     [Color] na [nat] za pomocą funkcji, która nie jest surjekcją. *)
-
-Require Import FunctionalExtensionality.
 
 Lemma surjective_extract :
   surjective extract.
@@ -6658,11 +6655,11 @@ end.
 Definition extract : U -> (U -> U).
 Proof.
   apply (ind (fun _ => U -> U)).
-    Focus 2. exact (fun u : U => u).
     intros A B _ _. revert A B.
       apply (ind (fun A : U => (El A -> U) -> (U -> U))).
         intros; assumption.
         intro B. rewrite El_UU in B. exact B.
+    exact (fun u : U => u).
 Defined.
 
 (** Powyższa definicja za pomocą taktyk działa dokładnie tak samo jak

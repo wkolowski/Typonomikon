@@ -1,9 +1,7 @@
 (** * L2: Kontynuacje i kontrola [TODO] *)
 
 (* begin hide *)
-(*
-TODO: Kontynuacje naprawdę mają coś wspólnego z negacją.
-*)
+(* TODO: Kontynuacje naprawdę mają coś wspólnego z negacją. *)
 (* end hide *)
 
 (** * Wstęp *)
@@ -120,12 +118,12 @@ Definition same_fringe2
 
 Require Import Arith.
 
-Let t1 :=
+Definition t1 :=
   Node
     (Node (Leaf 5) (Leaf 12))
     (Leaf 42).
 
-Let t2 :=
+Definition t2 :=
   Node
     (Leaf 5)
     (Node (Leaf 12) (Leaf 42)).
@@ -364,7 +362,7 @@ Definition swap_fringe
     za pomocą [depthWalk] i przekazuje do [swap_fringe_aux], która robi
     całą robotę. *)
 
-Let t1' :=
+Definition t1' :=
   Node
     (Leaf 1)
     (Node
@@ -373,7 +371,7 @@ Let t1' :=
         (Leaf 3)
         (Leaf 4))).
 
-Let t2' :=
+Definition t2' :=
   Node
     (Node
       (Node
@@ -443,8 +441,8 @@ Compute depthWalk t1'.
 (** Bardzo insajtowy filmik (i transkrypcjo-artykuł) o defunkcjonalizacji
     (i refunkcjonalizacji też):
 
-http://www.pathsensitive.com/2019/07/the-best-refactoring-youve-never-heard.html
-https://blog.sigplan.org/2019/12/30/defunctionalization-everybody-does-it-nobody-talks-about-it/
+    http://www.pathsensitive.com/2019/07/the-best-refactoring-youve-never-heard.html
+    https://blog.sigplan.org/2019/12/30/defunctionalization-everybody-does-it-nobody-talks-about-it/
 
     Ok, o co chodzi? *)
 
@@ -617,7 +615,7 @@ Require Import X3.
 (* end hide *)
 
 Definition clist (A : Type) : Type :=
-  forall {X : Type}, X -> (A -> X -> X) -> X.
+  forall (X : Type), X -> (A -> X -> X) -> X.
 
 Definition cnil {A : Type} : clist A :=
   fun X nil cons => nil.
@@ -633,7 +631,6 @@ Definition chead {A : Type} (l : clist A) : option A :=
   l _ None (fun h _ => Some h).
 
 Unset Universe Checking.
-
 Definition ctail {A : Type} (l : clist A) : option (clist A) :=
   l (@option (clist A)) None
     (fun h t =>
@@ -641,6 +638,7 @@ Definition ctail {A : Type} (l : clist A) : option (clist A) :=
           | None => Some c[]
           | Some t' => Some (ccons h t')
       end).
+Set Universe Checking.
 
 Compute ctail c[].
 Compute ctail c[1].
@@ -689,8 +687,6 @@ Proof.
   intros. unfold clist in *. compute.
 Abort.
 
-Set Universe Checking.
-
 Definition wut : Type :=
   forall X : Type, (X -> X) -> X.
 
@@ -708,14 +704,11 @@ Qed.
 Module Scott.
 
 Unset Positivity Checking.
-
-Require Import List.
-Import ListNotations.
-
 Inductive Scott (A : Type) : Type :=
 {
     scott : forall X : Type, X -> (A -> Scott A -> X) -> X;
 }.
+Set Positivity Checking.
 
 Arguments scott {A}.
 
@@ -732,15 +725,16 @@ Definition head {A : Type} (l : Scott A) : option A :=
   scott l _ None (fun a _ => Some a).
 
 Unset Universe Checking.
-
 Definition tail {A : Type} (l : Scott A) : option (Scott A) :=
   scott l _ None (fun _ t => Some t).
+Set Universe Checking.
 
 Compute tail l.
 
 Unset Guard Checking.
 Fixpoint toList {A : Type} (l : Scott A) {struct l} : list A :=
   scott l _ [] (fun h t => h :: toList t).
+Set Guard Checking.
 
 Compute toList l.
 
@@ -749,6 +743,8 @@ Compute toList (match tail l with None => nil | Some t => t end).
 End Scott.
 
 (** * Listy różnicowe (TODO) *)
+
+Require Import FunctionalExtensionality.
 
 Definition DList (A : Type) : Type :=
   list A -> list A.
@@ -768,9 +764,6 @@ Proof.
   apply app_nil_r.
 Qed.
 (* end hide *)
-
-(* end hide *)
-Require Import FunctionalExtensionality.
 
 Lemma abs_rep_aux :
   forall {A : Type} (l : DList A) (l1 l2 : list A),

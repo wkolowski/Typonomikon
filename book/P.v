@@ -214,12 +214,15 @@ TODO: uprzątnąć śmieci w postaci modułu [BinNat], któr zawiera jakąś
 TODO kulawą implementację binarnych liczb naturalnych.
 *)
 
-Module BinNat.
-
 Require Import List.
 Import ListNotations.
+
 Require Import Classes.SetoidClass.
+
+Require Import Recdef.
 Require Import Coq.Program.Wf.
+
+Module BinNat.
 
 Inductive D : Set :=
     | O : D
@@ -276,8 +279,6 @@ Definition bin_to_nat (b : bin) : nat :=
 
 Eval compute in bin_to_nat [I; O; I; O; I; O].
 
-Require Import Recdef.
-
 Function divmod2 (n : nat) : nat * D :=
 match n with
     | 0 => (0, O)
@@ -306,8 +307,6 @@ Proof.
       right. rewrite H0. do 2 apply le_n_S. apply le_0_n.
       right. apply le_n_S. apply le_S. assumption.
 Qed.
-
-Require Import Recdef.
 
 Function nat_to_bin' (n : nat) {measure id n} : bin :=
     let '(a, b) := divmod2 n in

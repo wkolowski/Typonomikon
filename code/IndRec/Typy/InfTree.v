@@ -87,7 +87,7 @@ Parameter takedrop :
   forall A : Type, nat -> BTree A -> BTree A * list (BTree A).
 *)
 
-Fixpoint intersperse {A : Type} (v : A) (t : InfTree A) : InfTree A :=
+Definition intersperse {A : Type} (v : A) (t : InfTree A) : InfTree A :=
 match t with
     | E => N v False (fun e => match e with end)
     | N x B f => N x B (fun _ => N v B f)

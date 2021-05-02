@@ -542,12 +542,12 @@ Lemma Forall_spec' :
 (* begin hide *)
 Proof.
   split.
-    Focus 2. revert s. cofix CH. constructor.
-      apply H. constructor. reflexivity.
-      apply CH. intros. apply H. right. assumption.
     intros H1 x H2. revert H1. induction H2; destruct 1; subst.
       assumption.
       apply IHElem. assumption.
+    revert s. cofix CH. constructor.
+      apply H. constructor. reflexivity.
+      apply CH. intros. apply H. right. assumption.
 Qed.
 (* end hide *)
 
@@ -927,9 +927,9 @@ Admitted.
 
 (** * Strumienie za pomocą przybliżeń (TODO) *)
 
-Module approx.
+Require Import Program.Equality.
 
-Print take.
+Module approx.
 
 Inductive Vec (A : Type) : nat -> Type :=
     | vnil : Vec A 0
@@ -947,8 +947,6 @@ Definition vtl {A : Type} {n : nat} (v : Vec A (S n)) : Vec A n :=
 match v with
     | vcons _ t => t
 end.
-
-Require Import Program.Equality.
 
 Lemma vhd_vtl :
   forall (A : Type) (n : nat) (v : Vec A (S n)),

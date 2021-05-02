@@ -38,7 +38,7 @@ Qed.
 
 Definition uniqueness (A : Type) : Prop :=
   forall
-    {X : Type} (f g : X -> InfTree A)
+    (X : Type) (f g : X -> InfTree A)
     (rt : X -> A) (l : X -> X) (r : X -> X),
       corecursive f rt l r -> corecursive g rt l r ->
         forall x : X, f x = g x.

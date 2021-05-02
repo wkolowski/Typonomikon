@@ -182,7 +182,7 @@ Inductive T (A B : Type) : Type :=
     | NA : A -> T A B -> T A B
     | NB : B -> T A B -> T A B -> T A B.
 
-Arguments E {A B}.
+Arguments E  {A B}.
 Arguments NA {A B} _ _.
 Arguments NB {A B} _ _ _.
 
@@ -194,10 +194,6 @@ Inductive Index : Type :=
     | here : Index
     | therea : Index -> Index
     | thereb : bool -> Index -> Index.
-
-Arguments here.
-Arguments therea _.
-Arguments thereb _ _.
 
 (** Jak widać działa, ale co to za działanie. *)
 
@@ -288,11 +284,14 @@ End T3.
 
     Zapewne działa to bardzo dobrze... taki huj, jednak nie. *)
 
+Require vec.
+
 Module Vec.
+
+Import vec.
 
 (** A teraz to samo dla rodzin indeksowanych. *)
 
-Require Import vec.
 Print vec.
 (*
 Inductive vec (A : Type) : nat -> Type :=
@@ -327,11 +326,11 @@ Inductive T (A : Type) : nat -> Type :=
 
 End hTree.
 
+Require G.
+
 Module W.
 
-Require Import G.
-
-Print W.
+Import G.
 
 Inductive IW {A : Type} (B : A -> Type) : Type :=
     | here  : IW B
@@ -339,10 +338,6 @@ Inductive IW {A : Type} (B : A -> Type) : Type :=
 
 Arguments here {A B}.
 Arguments there {A B x} _.
-
-Print natW.
-
-Print listW.listW.
 
 Definition A (X : Type) : Type := unit + X.
 
@@ -357,7 +352,6 @@ Proof.
   destruct n as [| n'].
     exact here.
     eapply there. Unshelve.
-      Focus 3. unfold A.
 Abort.
 
 End W.

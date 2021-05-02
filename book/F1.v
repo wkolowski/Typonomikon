@@ -202,7 +202,7 @@ CoFixpoint rand (seed n1 n2 : Z) : Stream Z :=
 CoFixpoint rand' (seed n1 n2 : Z) : Stream Z :=
 {|
     hd := Zmod seed n2;
-    tl := rand (Zmod (seed * n1) n2) n1 n2;
+    tl := rand' (Zmod (seed * n1) n2) n1 n2;
 |}.
 
 Fixpoint stake {A : Type} (n : nat) (s : Stream A) : list A :=
@@ -617,8 +617,8 @@ Proof.
   exists h, t, r. split.
     assumption.
     split.
-      Focus 2. apply CH; auto; econstructor; eauto.
       apply eq_lsim. apply lsim_symm. apply Infinite_snoc. econstructor; eauto.
+      apply CH; auto; econstructor; eauto.
 Qed.
 (* end hide *)
 
@@ -863,10 +863,10 @@ End Zad1.
     które na szczęście są bardzo oczywiste i same się narzucają. *)
 
 (* begin hide *)
-Module Zad2.
-
 Require Import FunctionalExtensionality.
 Require Import FinFun.
+
+Module Zad2.
 
 CoInductive Stream (A : Type) : Type :=
 {

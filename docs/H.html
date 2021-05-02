@@ -4,6 +4,7 @@
 <script type="text/javascript" src="jquery-3.5.1.js"></script>
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
 </head>
 <h1 class="libtitle">H: [Nie]równości, ścieżki i przepaście [TODO]</h1>
 
@@ -254,10 +255,13 @@ Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="var">G</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">nat_eq_rec_SProp</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">G</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">G</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">code</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">SProp</span> :=<br/>
@@ -445,7 +449,7 @@ A co to znaczy, że liczby naturalne nie są równe?
 <span class="id" title="keyword">Module</span> <span class="id" title="var">encodedecode1</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">G</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">G</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">code</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">SProp</span> :=<br/>
@@ -500,7 +504,7 @@ A co to znaczy, że liczby naturalne nie są równe?
 <span class="id" title="keyword">Module</span> <span class="id" title="var">encodedecode2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">G</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">G</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">code</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">SProp</span> :=<br/>
@@ -1009,10 +1013,13 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="var">F2</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">conat_neq</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">F2</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">F2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">conat_neq</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">conat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
@@ -1041,10 +1048,13 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="var">F3</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">Stream_neq</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">F3</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">F3</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Stream_neq</span><br/>
@@ -1161,6 +1171,13 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">a</span> : <span class="id" title="var">A</span>, <span class="id" title="var">idtoeqv</span> <span class="id" title="var">p</span> <span class="id" title="var">a</span> = <span class="id" title="var">b</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Variables</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">eq_dec</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">eq_dec_spec</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">reflect</span> (<span class="id" title="var">x</span> = <span class="id" title="var">y</span>) (<span class="id" title="var">eq_dec</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>))<br/>
+&nbsp;&nbsp;(<span class="id" title="var">K</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">x</span>), <span class="id" title="var">p</span> = <span class="id" title="var">eq_refl</span>).<br/>
+
+<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">wut</span><br/>
 &nbsp;&nbsp;(<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">f</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">f</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">bool</span>)<br/>
 &nbsp;&nbsp;: <span class="id" title="keyword">forall</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">f</span> <span class="id" title="var">z</span> -&gt; <span class="id" title="var">bool</span>.<br/>
@@ -1188,8 +1205,8 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 <span class="id" title="keyword">Module</span> <span class="id" title="var">SProp_not_Type</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Let</span> <span class="id" title="var">S</span> := <span class="id" title="var">SProp</span>.<br/>
-<span class="id" title="keyword">Let</span> <span class="id" title="var">U</span> := <span class="id" title="keyword">Type</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">S</span> := <span class="id" title="var">SProp</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">U</span> := <span class="id" title="keyword">Type</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">SProp_not_Type</span> :<br/>
@@ -1748,7 +1765,7 @@ Niezbyt trudno, ale łatwo też nie.
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">replace</span> (1 + <span class="id" title="var">x</span> + <span class="id" title="var">y</span>) <span class="id" title="keyword">with</span> (<span class="id" title="var">x</span> + (1 + <span class="id" title="var">y</span>)) <span class="id" title="tactic">by</span> <span class="id" title="var">lia</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">erewrite</span> <span class="id" title="var">goto'_add</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="tactic">apply</span> <span class="id" title="var">goto'_small</span>. <span class="id" title="var">lia</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: { <span class="id" title="tactic">apply</span> <span class="id" title="var">goto'_small</span>. <span class="id" title="var">lia</span>. }<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">minus_diag</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">goto'_small</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">f_equal</span>; <span class="id" title="var">lia</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lia</span>.<br/>
@@ -2043,7 +2060,7 @@ Wnioski: da się zrobić trochę...
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">iso_trans</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">iso_nat_prod_nat_nat</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">iso_trans</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="tactic">apply</span> <span class="id" title="var">iso_sym</span>, <span class="id" title="var">vec_S</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2: { <span class="id" title="tactic">apply</span> <span class="id" title="var">iso_sym</span>, <span class="id" title="var">vec_S</span>. }<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">iso_pres_prod</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">iso_refl</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
@@ -2108,12 +2125,12 @@ Wnioski: da się zrobić trochę...
 &nbsp;&nbsp;<span class="id" title="var">iso</span> <span class="id" title="var">nat</span> (<span class="id" title="var">list</span> <span class="id" title="var">nat</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">iso_trans</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="tactic">apply</span> <span class="id" title="var">iso_sym</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">iso_list_vlist</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: { <span class="id" title="tactic">apply</span> <span class="id" title="var">iso_sym</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">iso_list_vlist</span>. }<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">vlist</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">iso_trans</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">iso_nat_option_nat</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">iso_trans</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="tactic">apply</span> <span class="id" title="var">iso_sym</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">iso_vlist_option</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: { <span class="id" title="tactic">apply</span> <span class="id" title="var">iso_sym</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">iso_vlist_option</span>. }<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">iso_pres_option</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">iso_trans</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">iso_nat_prod_nat_nat</span>.<br/>

@@ -4,6 +4,7 @@
 <script type="text/javascript" src="jquery-3.5.1.js"></script>
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
 </head>
 <h1 class="libtitle">G2: Zippery, czyli łażenie po drzewach [TODO]</h1>
 
@@ -313,7 +314,7 @@ A teraz coś trudniejszego: są dwa konstruktory rekurencyjne o różnej
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">NB</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">T</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="var">T</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="var">T</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">E</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>}.<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">E</span>  {<span class="id" title="var">A</span> <span class="id" title="var">B</span>}.<br/>
 <span class="id" title="var">Arguments</span> <span class="id" title="var">NA</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 <span class="id" title="var">Arguments</span> <span class="id" title="var">NB</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
@@ -332,11 +333,6 @@ Jedyny sensowny pomysł na typ indeksów jest taki, że odróżniamy
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">here</span> : <span class="id" title="var">Index</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">therea</span> : <span class="id" title="var">Index</span> -&gt; <span class="id" title="var">Index</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">thereb</span> : <span class="id" title="var">bool</span> -&gt; <span class="id" title="var">Index</span> -&gt; <span class="id" title="var">Index</span>.<br/>
-
-<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">here</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">therea</span> <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">thereb</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -477,7 +473,13 @@ Przemyślenia: indeksowanie jest dużo bardziej związane z zipperami,
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="var">vec</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">Vec</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">vec</span>.<br/>
 
 <br/>
 </div>
@@ -488,7 +490,6 @@ A teraz to samo dla rodzin indeksowanych.
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">vec</span>.<br/>
 <span class="id" title="keyword">Print</span> <span class="id" title="var">vec</span>.<br/>
 <span class="comment">(*<br/>
 Inductive&nbsp;vec&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;Type&nbsp;:=<br/>
@@ -537,13 +538,13 @@ To jednak działa inaczej niż myślałem.
 <span class="id" title="keyword">End</span> <span class="id" title="var">hTree</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="var">G</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">W</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">G</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Print</span> <span class="id" title="var">W</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">G</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">IW</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">B</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
@@ -553,12 +554,6 @@ To jednak działa inaczej niż myślałem.
 <br/>
 <span class="id" title="var">Arguments</span> <span class="id" title="var">here</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>}.<br/>
 <span class="id" title="var">Arguments</span> <span class="id" title="var">there</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">x</span>} <span class="id" title="var">_</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Print</span> <span class="id" title="var">natW</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Print</span> <span class="id" title="var">listW.listW</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">A</span> (<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> := <span class="id" title="var">unit</span> + <span class="id" title="var">X</span>.<br/>
@@ -576,7 +571,6 @@ To jednak działa inaczej niż myślałem.
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>].<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">here</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> <span class="id" title="var">there</span>. <span class="id" title="var">Unshelve</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 3. <span class="id" title="tactic">unfold</span> <span class="id" title="var">A</span>.<br/>
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>

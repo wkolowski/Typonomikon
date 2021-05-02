@@ -97,7 +97,7 @@ Lemma map_groupBy_groupBy :
 Proof.
   intros. functional induction groupBy p l; cbn.
     1-3: reflexivity.
-    Focus 2. rewrite e0 in *. cbn in *. rewrite IHl0. reflexivity.
+    2: { rewrite e0 in *. cbn in *. rewrite IHl0. reflexivity. }
     {
       rewrite ?e0 in IHl0. clear e0. cbn in IHl0.
       inv IHl0. rewrite H0.

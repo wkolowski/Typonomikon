@@ -46,25 +46,28 @@
     jeden lub więcej celów. Cele są ponumerowane i domyślnie zawsze pracujemy
     nad tym, który ma numer 1.
 
-    Jednak wcale nie musi tak być — możemy zaznaczyć inny cel i zacząć nad
-    nim pracować. Służy do tego komenda [Focus]. Cel o numerze n możemy
-    zaznaczyć komendą [Focus n]. Jeżeli to zrobimy, wszystkie pozostałe cele
-    chwilowo znikają. Do stanu domyślnego, w którym pracujemy nad celem nr 1
-    i wszystkie cele są widoczne możemy wrócić za pomocą komendy [Unfocus]. *)
+    Jednak wcale nie musi tak być — możemy zaznaczyć inny cel i zacząć nad nim
+    pracować. Cel o numerze n możemy zaznaczyć komendą [n: {]. Jeżeli to
+    zrobimy, wszystkie pozostałe cele znikają do czasu, aż nie uporamy się z
+    aktualnym celem. Gdy już skończymy, możemy wrócić do pozostałych celów za
+    pomocą komendy [}] (nawias klamrowy zamykający). *)
 
 Goal forall P Q R : Prop, P /\ Q /\ R -> R /\ Q /\ P.
 Proof.
   repeat split.
-  Focus 3.
-  Unfocus.
-  Focus 2.
+  3: { destruct H as (p & q & r). assumption. }
 Abort.
 
-(** Komenda [Focus] jest użyteczna głównie gdy któryś z dalszych celów jest
+(** Komenda [n: {] jest użyteczna głównie gdy któryś z dalszych celów jest
     łatwiejszy niż obecny. Możemy wtedy przełączyć się na niego, rozwiązać
     go i wyniesione stąd doświadczenie przenieść na trudniejsze cele. Jest
     wskazane, żeby po zakończeniu dowodu zrefaktoryzować go tak, aby komenda
-    [Focus] w nim nie występowała.
+    [n: {] w nim nie występowała.
+
+    Uwaga: w starszych wersjach Coqa do przełączania się między celami można
+    było używać komend [Focus] i [Unfocus]. Ich używanie nie jest obecnie
+    zalecane. Gdybyś zauważył użycie którejś z tych komend w niniejszej książce,
+    znaczy to po prostu, że zapomniałem zaktualizować tego fragmentu.
 
     Nie jest też tak, że zawsze musimy pracować nad celem o numerze 1. Możemy
     pracować na dowolnym zbiorze celów. Do wybierania celów, na które chcemy
@@ -832,9 +835,9 @@ End solve_or_perm.
 
 (** **** Ćwiczenie (negn) *)
 
-Section negn.
-
 Require Import Arith.
+
+Section negn.
 
 (** Napisz funkcję [negn : nat -> Prop -> Prop], gdzie [negn n P] zwraca
     zdanie [P] zanegowane [n] razy. *)

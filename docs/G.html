@@ -4,6 +4,7 @@
 <script type="text/javascript" src="jquery-3.5.1.js"></script>
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
 </head>
 <h1 class="libtitle">G: Sorty, uniwersa kodów i programowanie generyczne [TODO]</h1>
 
@@ -46,6 +47,10 @@
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">Flatten</span>.<br/>
 
 <br/>
@@ -66,10 +71,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Var</span> <span class="id" title="var">A</span> =&gt; <span class="id" title="var">A</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">List</span> <span class="id" title="var">s'</span> =&gt; <span class="id" title="var">flattenType</span> <span class="id" title="var">s'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
-<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">flatten</span> {<span class="id" title="var">s</span> : <span class="id" title="var">Star</span>} : <span class="id" title="var">interp</span> <span class="id" title="var">s</span> -&gt; <span class="id" title="var">list</span> (<span class="id" title="var">flattenType</span> <span class="id" title="var">s</span>) :=<br/>
@@ -141,10 +142,13 @@
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="var">D5</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">ZipWithN</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Code</span> : <span class="id" title="keyword">Type</span> :=<br/>
@@ -261,6 +265,9 @@
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="var">D1</span> <span class="id" title="var">D2</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">Negation</span>.<br/>
 
 <br/>
@@ -274,10 +281,7 @@ Inductive&nbsp;U&nbsp;:&nbsp;Type&nbsp;:=<br/>
 *)</span><br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D1</span>.<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D2</span>.<br/>
-
-<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">D1</span> <span class="id" title="var">D2</span>.<br/>
 <span class="id" title="keyword">Import</span> <span class="id" title="var">PoorUniverse</span>.<br/>
 
 <br/>
@@ -429,6 +433,9 @@ Spróbujmy zastosować powyższe przekształcenia na typie <span class="inlineco
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">listW</span>.<br/>
 
 <br/>
@@ -498,9 +505,6 @@ Kodowania te nie są konwertowalne, ale jeżeli użyjemy aksjomatu
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;it&nbsp;is&nbsp;expected&nbsp;to&nbsp;have&nbsp;type&nbsp;"consW&nbsp;=&nbsp;consW'".&nbsp;*)</span><br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">consW_consW'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">h</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">listW</span> <span class="id" title="var">X</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">consW</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> = <span class="id" title="var">consW'</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>.<br/>
@@ -552,15 +556,17 @@ Podobnym mykiem musimy posłużyć się, żeby udowodnić regułę indukcji.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">nilW</span> <span class="id" title="var">X</span>) = <span class="id" title="var">PnilW</span> /\<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">listW</span> <span class="id" title="var">X</span>), <span class="id" title="var">f</span> (<span class="id" title="var">consW</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) = <span class="id" title="var">PconsW</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> (<span class="id" title="var">f</span> <span class="id" title="var">t</span>)}.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">esplit</span>. <span class="id" title="var">Unshelve</span>. <span class="id" title="var">Focus</span> 2.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [[[] | <span class="id" title="var">x</span>] <span class="id" title="var">b</span> <span class="id" title="var">IH</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">replace</span> (<span class="id" title="var">P</span> (<span class="id" title="var">sup</span> (<span class="id" title="var">inl</span> <span class="id" title="var">tt</span>) <span class="id" title="var">b</span>)) <span class="id" title="keyword">with</span> (<span class="id" title="var">P</span> (<span class="id" title="var">nilW</span> <span class="id" title="var">X</span>)).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">nilW</span>. <span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">f_equal</span>. <span class="id" title="tactic">extensionality</span> <span class="id" title="var">e</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">e</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">replace</span> <span class="id" title="var">_</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">P</span> (<span class="id" title="var">consW</span> <span class="id" title="var">x</span> (<span class="id" title="var">b</span> <span class="id" title="var">tt</span>))).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">PconsW</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">consW</span>. <span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">f_equal</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">extensionality</span> <span class="id" title="var">u</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">u</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">esplit</span>. <span class="id" title="var">Unshelve</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [[[] | <span class="id" title="var">x</span>] <span class="id" title="var">b</span> <span class="id" title="var">IH</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">replace</span> (<span class="id" title="var">P</span> (<span class="id" title="var">sup</span> (<span class="id" title="var">inl</span> <span class="id" title="var">tt</span>) <span class="id" title="var">b</span>)) <span class="id" title="keyword">with</span> (<span class="id" title="var">P</span> (<span class="id" title="var">nilW</span> <span class="id" title="var">X</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">nilW</span>. <span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">f_equal</span>. <span class="id" title="tactic">extensionality</span> <span class="id" title="var">e</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">e</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">replace</span> <span class="id" title="var">_</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">P</span> (<span class="id" title="var">consW</span> <span class="id" title="var">x</span> (<span class="id" title="var">b</span> <span class="id" title="var">tt</span>))).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">PconsW</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">consW</span>. <span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">f_equal</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">extensionality</span> <span class="id" title="var">u</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">u</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">split</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">compute</span>. <span class="id" title="tactic">assert</span> (<span class="id" title="keyword">forall</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">p1</span> <span class="id" title="var">p2</span> : <span class="id" title="var">P</span>), <span class="id" title="var">p1</span> = <span class="id" title="var">p2</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">admit</span>.<br/>
@@ -866,19 +872,17 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 &nbsp;&nbsp;<span class="id" title="keyword">as</span> (<span class="id" title="var">f</span> &amp; <span class="id" title="var">f_0</span> &amp; <span class="id" title="var">f_S</span>).<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">projT1</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>).<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">eapply</span> (<span class="id" title="var">uniqueness</span> <span class="id" title="var">nat</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">projT1</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>)) (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">n</span>)). <span class="id" title="var">Unshelve</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 4. <span class="id" title="tactic">exact</span> 0.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 4. <span class="id" title="tactic">exact</span> <span class="id" title="var">S</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4: <span class="id" title="tactic">exact</span> 0.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4: <span class="id" title="tactic">exact</span> <span class="id" title="var">S</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> (@<span class="id" title="var">projT1</span> <span class="id" title="var">nat</span> <span class="id" title="var">P</span>)) <span class="id" title="tactic">in</span> <span class="id" title="var">f_0</span>. <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">f_0</span>. <span class="id" title="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">f_S</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>). <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">esplit</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">Unshelve</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="tactic">intro</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H</span>. <span class="id" title="tactic">exact</span> (<span class="id" title="var">projT2</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="var">esplit</span>. <span class="id" title="var">Unshelve</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: { <span class="id" title="tactic">intro</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H</span>. <span class="id" title="tactic">exact</span> (<span class="id" title="var">projT2</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>)). }<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="tactic">intro</span>.<br/>
 <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
@@ -1365,7 +1369,7 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>. <span class="id" title="var">Unshelve</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: <span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">CH</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -1410,20 +1414,22 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="var">F4</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">uniqueness_bisim_eq</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">F4</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">F4</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Print</span> <span class="id" title="var">Stream</span>.<br/>
-<span class="comment">(*<br/>
-<br/>
-CoInductive&nbsp;Stream&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=<br/>
-{<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;hd&nbsp;:&nbsp;A;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;tl&nbsp;:&nbsp;Stream&nbsp;A<br/>
-}.<br/>
+<span class="comment">(*&nbsp;===&gt;<br/>
+&nbsp;&nbsp;CoInductive&nbsp;Stream&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hd&nbsp;:&nbsp;A;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tl&nbsp;:&nbsp;Stream&nbsp;A<br/>
+&nbsp;&nbsp;}.<br/>
 *)</span><br/>
 
 <br/>
@@ -1673,7 +1679,7 @@ CoInductive&nbsp;Stream&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=<br/>
 &nbsp;&nbsp;<span class="id" title="var">Unshelve</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">all</span>: <span class="id" title="tactic">unfold</span> <span class="id" title="var">shape'</span>; <span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="tactic">try</span> <span class="id" title="tactic">reflexivity</span>; <span class="id" title="tactic">intro</span> <span class="id" title="var">i</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="tactic">destruct</span> <span class="id" title="var">i</span>, <span class="id" title="var">path0</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;2: { <span class="id" title="tactic">destruct</span> <span class="id" title="var">i</span>, <span class="id" title="var">path0</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">assumption</span>. }<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">i</span>, <span class="id" title="var">path0</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">transport_eq_sym</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -1761,10 +1767,9 @@ CoInductive&nbsp;Stream&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=<br/>
 
 <br/>
 <span class="id" title="keyword">Unset</span> <span class="id" title="var">Positivity</span> <span class="id" title="var">Checking</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">IType</span> (<span class="id" title="var">i</span> : <span class="id" title="var">I</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">intro</span> : <span class="id" title="var">Arg</span> <span class="id" title="var">i</span> (<span class="id" title="var">IType</span> <span class="id" title="var">i</span>) -&gt; <span class="id" title="var">IType</span> <span class="id" title="var">i</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Positivity</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
 <span class="comment">(*<br/>
@@ -1859,9 +1864,9 @@ end.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">second_way</span><br/>
 &nbsp;&nbsp;(<span class="id" title="var">n</span> : <span class="id" title="var">iinat</span>) : <span class="id" title="var">nat_to_iinat</span> (<span class="id" title="var">iinat_to_nat</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>.<br/>
-<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [[[] []]]; <span class="id" title="var">cbn</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>

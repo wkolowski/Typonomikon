@@ -84,10 +84,10 @@ Proof.
   constructor. rewrite sc_eq. destruct (p zero) eqn: Hp.
     left. cbn. reflexivity.
     right. cbn. destruct n as [[n' |]].
-      Focus 2. unfold zero in Hp. congruence.
       do 2 eexists; split; [idtac | split].
         1-2: reflexivity.
         apply CH. rewrite <- H. f_equal.
+      unfold zero in Hp. congruence.
 Qed.
 
 Lemma sim_omega_le :

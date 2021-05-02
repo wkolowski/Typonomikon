@@ -3,6 +3,8 @@ Import ListNotations.
 
 (** Przykład cbn wzięty z pracy "Another Look at Nested Recursion" *)
 
+Section AnotherLook.
+
 Variable Var : Type.
 Hypothesis veq : Var -> Var -> bool.
 Hypothesis veq_spec : forall x y : Var, reflect (x = y) (veq x y).
@@ -136,3 +138,5 @@ Proof.
 Restart.
   all: destruct d; cbn; econstructor; eauto.
 Qed.
+
+End AnotherLook.

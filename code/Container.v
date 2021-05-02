@@ -10,17 +10,18 @@ Arguments ctain {S P X} _ _.
 (* Definition Container (S : Type) (P : S -> Type) : Type -> Type :=
   fun X : Type => {s : S & P s -> X}. *)
 
-Module CList.
-
-Require Import Fin List.
+Require Import List.
 Import ListNotations.
+
+Require Import Fin.
+Require Import Equality.
+
+Require Import Recdef.
+
+Module CList.
 
 Definition CList (A : Type) :=
   Container nat Fin.t A.
-
-Print Fin.
-
-Require Import Equality.
 
 Definition prev {n : nat} (f : Fin.t (S (S n))) : Fin.t (S n).
 Proof.
@@ -43,9 +44,6 @@ end).
     exact x.
     exact (p (prev s)).
 Defined.
-
-Require Import Recdef.
-
 Definition g {A : Type} (c : CList A) : list A.
 Proof.
   destruct c as [n p].

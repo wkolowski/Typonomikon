@@ -22,6 +22,11 @@ TODO: opisać charakteryzowanie wzorów rekurencyjnych
     Nazwy twierdzeń nie muszą pokrywać się z tymi z biblioteki standardowej,
     choć starałem się, żeby tak było. *)
 
+Require Import Recdef.
+Require Import Setoid.
+
+Require Div2 ZArith.
+
 Module MyNat.
 
 (** * Podstawy *)
@@ -674,7 +679,7 @@ Proof.
       cbn. rewrite (mult_comm a' (S b')). cbn.
         rewrite (mult_comm a' (S c')). cbn.
         rewrite IHb'. repeat rewrite minus_plus_distr.
-        f_equal. Focus 2. apply mult_comm.
+        f_equal. 2: apply mult_comm.
         replace (plus b' (plus a' _)) with (plus a' (plus b' (mult b' a'))).
           rewrite minus_exchange. rewrite minus_plus_l.
             rewrite mult_comm. trivial.
@@ -1786,8 +1791,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Require Import Setoid.
-
 Lemma le_lin_fac :
   forall n : nat, n <= fac n.
 (* begin hide *)
@@ -1834,8 +1837,6 @@ Qed.
 (** Zdefiniuj współczynnik dwumianowy. Jeżeli nie wiesz co to, to dobrze:
     będziesz miał więcej zabawy. W skrócie [binom n k] to ilość podzbiorów
     zbioru [n] elementowego, którego mają [k] elementów. *)
-
-Require Import Recdef.
 
 (* begin hide *)
 Function binom (n k : nat) : nat :=
@@ -2007,9 +2008,9 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-Module Div2. (* TODO: szybkie mnożenie *)
+Module MyDiv2. (* TODO: szybkie mnożenie *)
 
-Require Import Div2.
+Import Div2 ZArith.
 
 Fixpoint evenb (n : nat) : bool :=
 match n with
@@ -2019,8 +2020,6 @@ match n with
 end.
 
 (*
-Require Import ZArith.
-
 Fixpoint quickMul (fuel n m : nat) : nat :=
 match fuel with
     | 0 => 0
@@ -2034,8 +2033,6 @@ end.
 Time Eval compute in 430 * 110.
 Time Eval compute in quickMul 1000 430 110.
 
-Require Import Recdef.
-
 Function qm (n m : nat) {measure id n} : nat :=
 match n with
     | 0 => 0
@@ -2046,7 +2043,7 @@ Proof.
 Abort.
 
 *)
-End Div2.
+End MyDiv2.
 (* end hide *)
 
 (** * Wzory rekurencyjne (TODO) *)
@@ -2091,7 +2088,6 @@ End MyNat.
 
 (** TODO: dyskretny pierwiastek kwadratowy *)
 
-Require Import Arith.
 Require Import Lia Arith.
 
 Lemma root : forall n : nat, {r : nat | r * r <= n < (S r) * (S r)}.
@@ -2163,8 +2159,6 @@ Proof.
 Defined.
 
 Require Import Wf.
-
-Print well_founded_induction.
 
 Lemma div4_lemma : forall n : nat,
     S (div4 n) < S (S (S (S n))).

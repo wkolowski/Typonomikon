@@ -4,6 +4,7 @@
 <script type="text/javascript" src="jquery-3.5.1.js"></script>
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
 </head>
 <h1 class="libtitle">D2: Rekursja i indukcja</h1>
 
@@ -1995,10 +1996,6 @@ Wywołanie rekurencyjne <span class="inlinecode"><span class="id" title="var">lo
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
-<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Nat</span>.<br/>
 
 <br/>
@@ -2508,9 +2505,6 @@ Poprzednie twierdzenie, czyli <span class="inlinecode"><span class="id" title="v
     dobrze ufundowanej, o czym przekonamy się już natychmiast zaraz. 
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Lia</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">div</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span>.<br/>
@@ -4543,7 +4537,7 @@ Tak wyglądałoby induktywno-rekurencyjna definicja zmodyfikowanej funkcji
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Variables</span><br/>
+<span class="id" title="keyword">Axioms</span><br/>
 &nbsp;&nbsp;(<span class="id" title="var">fD</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span>)<br/>
 &nbsp;&nbsp;(<span class="id" title="var">f'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">fD</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">nat</span>)<br/>
 &nbsp;&nbsp;(<span class="id" title="var">fD_gt100</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">fD</span> <span class="id" title="var">n</span>)<br/>

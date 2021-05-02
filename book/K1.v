@@ -353,9 +353,11 @@ Proof.
   split; intros.
     destruct H as [[c1 [n1 H1]] [c2 [n2 H2]]].
       exists 1, c1, (max n1 n2). intros. split.
-        Focus 2. apply H1. eapply Le.le_trans with (max n1 n2).
-          apply Max.le_max_l.
-          assumption.
+        2: {
+          apply H1. eapply Le.le_trans with (max n1 n2).
+            apply Max.le_max_l.
+            assumption.
+        }
         assert (n2 <= n').
           apply Le.le_trans with (max n1 n2).
             apply Le.le_trans with (max n1 n2).

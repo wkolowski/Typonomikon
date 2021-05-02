@@ -4,6 +4,7 @@
 <script type="text/javascript" src="jquery-3.5.1.js"></script>
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
 </head>
 <h1 class="libtitle">M: Topologia</h1>
 
@@ -114,10 +115,10 @@ Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
 &nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">sc_eq</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">zero</span>) <span class="id" title="var">eqn</span>: <span class="id" title="var">Hp</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [[<span class="id" title="var">n'</span> |]].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Focus</span> 2. <span class="id" title="tactic">unfold</span> <span class="id" title="var">zero</span> <span class="id" title="tactic">in</span> <span class="id" title="var">Hp</span>. <span class="id" title="tactic">congruence</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">eexists</span>; <span class="id" title="tactic">split</span>; [<span class="id" title="tactic">idtac</span> | <span class="id" title="tactic">split</span>].<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-2: <span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">CH</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H</span>. <span class="id" title="tactic">f_equal</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">zero</span> <span class="id" title="tactic">in</span> <span class="id" title="var">Hp</span>. <span class="id" title="tactic">congruence</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>

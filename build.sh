@@ -20,10 +20,13 @@ rm makefile makefile.conf
 # --toc --toc-depth 2 robi spis treści o głębokości 2
 # Update 2017-02-17: opcja --utf8 została wywalona, dzięki czemu "->" wyświetla się teraz jako "->", a nie jako "→", jak poprzednio.
 # TODO: zmniejszyć --toc-depth do 1 (w swoim czasie rzecz jasna)
-coqdoc book/*v --html -d docs                             \
-       --with-footer assets/footer.html                   \
+coqdoc book/*v                                            \
+       -d docs                                            \
+       --html                                             \
        --with-header assets/header.html                   \
-       --no-lib-name --lib-subtitles                      \
+       --with-footer assets/footer.html                   \
+       --no-lib-name                                      \
+       --lib-subtitles                                    \
        --parse-comments                                   \
        --no-index                                         \
        --toc --toc-depth 3

@@ -6,13 +6,7 @@
     UWAGA: ten rozdział wyewoluował do stanu dość mocno odbiegającego od
     tego, co jest w bibliotece standardowej — moim zdanem na korzyść. *)
 
-(* begin hide *)
-Require Export Recdef.
-Require Export Lia Arith.
-(* end hide *)
-
-Require Export Bool.
-Require Export Nat.
+Require Export Lia Arith Recdef Bool Nat.
 
 (* begin hide *)
 Ltac inv H := inversion H; subst; clear H.
@@ -3552,7 +3546,7 @@ Proof.
   rewrite take_take. rewrite length_take. 
   induction l as [| h t]; cbn; intros.
     destruct m, n; cbn.
-      Focus 4.
+      (* TODO: take_insert *)
 Abort.
 (* end hide *)
 
@@ -4796,20 +4790,6 @@ Lemma splitAt_zip :
     end.
 (* begin hide *)
 Proof.
-  intros. assert (H := splitAt_megaspec A la n). destruct (splitAt n la).
-    Focus 2. apply splitAt_length_ge. rewrite length_zip.
-      apply Nat.min_case_strong; intros.
-        assumption.
-        apply le_trans with (length la); assumption.
-    destruct p, p. decompose [and] H; clear H; subst.
-      assert (H := splitAt_megaspec B lb n). destruct (splitAt n lb).
-        Focus 2. apply splitAt_length_ge. rewrite length_zip.
-          apply Nat.min_case_strong; intros.
-            apply le_trans with (length lb); assumption.
-            assumption.
-        destruct p, p. decompose [and] H; clear H; subst.
-          rewrite H4, H6.
-Restart.
   induction la as [| ha ta]; cbn; intros.
     reflexivity.
     destruct lb as [| hb tb]; cbn.
@@ -7555,10 +7535,10 @@ Proof.
     destruct n as [| n']; cbn.
       inversion H; subst; clear H. destruct (p x); reflexivity.
       destruct (remove n' t) eqn: Heq; cbn in H.
-        Focus 2. inversion H.
         destruct p0. inversion H; subst; clear H.
           cbn. destruct (p h), (p x) eqn: Hpx; cbn;
           rewrite (IHt _ _ _ Heq), Hpx; reflexivity.
+        inversion H.
 Qed.
 (* end hide *)
 
@@ -11696,10 +11676,10 @@ Proof.
     destruct 1. induction H; cbn.
       repeat constructor. inversion 1.
       constructor.
-        Focus 2. apply IHNoDup. intro. apply H0. right. assumption.
         intro. rewrite elem_snoc in H2. destruct H2; subst.
           contradiction.
           apply H0. left.
+        apply IHNoDup. intro. apply H0. right. assumption.
 Qed.
 (* end hide *)
 
@@ -11899,11 +11879,13 @@ Proof.
     induction l as [| h t]; cbn in *; intros.
       constructor.
       constructor.
-        Focus 2. destruct (partition p t), (p h).
-          destruct H0. inversion H; subst; inversion H0; subst; clear H H0.
-            eapply IHt; eauto.
-          destruct H0. inversion H; subst; inversion H1; subst; clear H H1.
-            eapply IHt; eauto.
+        2: {
+          destruct (partition p t), (p h).
+            destruct H0. inversion H; subst; inversion H0; subst; clear H H0.
+              eapply IHt; eauto.
+            destruct H0. inversion H; subst; inversion H1; subst; clear H H1.
+              eapply IHt; eauto.
+        }
         intro. case_eq (partition p t); case_eq (p h); intros; subst;
         rewrite H2, H3 in *; inversion H; subst; clear H.
           pose (H4 := H3). apply (elem_partition _ _ h) in H4.
@@ -12017,9 +11999,11 @@ Lemma NoDup_spec :
 (* begin hide *)
 Proof.
   split.
-    Focus 2. destruct 1 as (x & l1 & l2 & l3 & H). subst. intro.
-      rewrite <- !app_cons_l in H. rewrite !NoDup_app in H.
-      decompose [and] H; clear H. specialize (H4 x). apply H4; constructor.
+    2: {
+      destruct 1 as (x & l1 & l2 & l3 & H). subst. intro.
+        rewrite <- !app_cons_l in H. rewrite !NoDup_app in H.
+        decompose [and] H; clear H. specialize (H4 x). apply H4; constructor.
+    }
     induction l as [| h t]; cbn; intros.
       contradiction H. constructor.
       change (h :: t) with ([h] ++ t) in H. rewrite NoDup_app in H.
@@ -15763,10 +15747,12 @@ Proof.
         apply lt_S_n in H0. apply lt_S_n in H1.
           destruct (IHt _ _ H0 H1) as (k & Hk1 & Hk2).
           exists (S k). split.
-            Focus 2. replace (drop (S m' + S n') t) with
-                             (drop 1 (drop (S m' + n') t)).
-              rewrite Hk2. rewrite ?drop_drop. f_equal. lia.
-              rewrite drop_drop. f_equal. lia.
+            2: {
+              replace (drop (S m' + S n') t) with
+                      (drop 1 (drop (S m' + n') t)).
+                rewrite Hk2. rewrite ?drop_drop. f_equal. lia.
+                rewrite drop_drop. f_equal. lia.
+            }
             destruct (length t - n') eqn: Hlt.
               inv Hk1.
               destruct n as [| n''].
@@ -18088,8 +18074,6 @@ Proof.
     inv H0.
     destruct n as [| n']; cbn in *.
       inv H0. exists 0.
-      Focus 2. destruct (replace t1 n' x) eqn: Heq.
-        inv H0.
 Abort.
 (* end hide *)
 
@@ -18873,7 +18857,7 @@ Inductive Permutation {A : Type} : list A -> list A -> Prop :=
     | perm_trans : forall l l' l'' : list A,
         Permutation l l' -> Permutation l' l'' -> Permutation l l''.
 
-Hint Constructors Permutation.
+Hint Constructors Permutation : core.
 (* end hide *)
 
 Lemma Permutation_refl :
@@ -21549,11 +21533,13 @@ Lemma replace_Palindrome :
 (* begin hide *)
 Proof.
   split.
-    Focus 2. destruct 1 as [[H1 H2] | H1].
-      subst. destruct l as [| h [| h' t]]; inv H; inv H1. constructor.
-      assert (l = l').
-        rewrite replace_nth_eq; eassumption.
-        subst. assumption.
+    2: {
+      destruct 1 as [[H1 H2] | H1].
+        subst. destruct l as [| h [| h' t]]; inv H; inv H1. constructor.
+        assert (l = l').
+          rewrite replace_nth_eq; eassumption.
+          subst. assumption.
+    }
     intros. apply Palindrome_spec in H0. apply Palindrome_spec in H1.
       rewrite H0, H1 in H. rewrite replace_rev in H.
         unfold omap in H.
@@ -21668,7 +21654,5 @@ Lemma Subseq_rev_r :
 (* begin hide *)
 Proof.
   split.
-    Focus 2. intro. apply Palindrome_spec in H. rewrite <- H.
-      apply Subseq_refl.
 Abort.
 (* end hide *)

@@ -170,7 +170,7 @@ match n with
     | S (S (S (S n'))) => isGapYear n'
 end.
 
-Fixpoint dayInMonth (gap : bool) (m : Month) : Type :=
+Definition dayInMonth (gap : bool) (m : Month) : Type :=
 match m with
     | Jan | Apr | Jun | Sep | Nov => Fin 30
     | Feb => if gap then Fin 28 else Fin 29

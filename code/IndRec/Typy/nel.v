@@ -86,7 +86,7 @@ Inductive inb {A} : A -> nel A -> Prop :=
     | inb_cons : forall (a h : A) (t : nel A),
         inb a t -> inb a (h :: t).
 
-Fixpoint rev {A} (l : nel A) : nel A :=
+Definition rev {A} (l : nel A) : nel A :=
 match l with
     | [a] => [a]
     | h :: t =>

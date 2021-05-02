@@ -991,15 +991,15 @@ Proof.
   apply c_trans with 64.
     change 21 with (1 + 2 * 10). constructor.
   apply c_trans with 2.
-    Focus 2. apply (c_even 1).
+    2: apply (c_even 1).
   apply c_trans with 4.
-    Focus 2. apply (c_even 2).
+    2: apply (c_even 2).
   apply c_trans with 8.
-    Focus 2. apply (c_even 4).
+    2: apply (c_even 4).
   apply c_trans with 16.
-    Focus 2. apply (c_even 8).
+    2: apply (c_even 8).
   apply c_trans with (32).
-    Focus 2. apply (c_even 16).
+    2: apply (c_even 16).
   apply (c_even 32).
 Qed.
 (* end hide *)
@@ -1502,8 +1502,8 @@ Lemma Rcomp_not_Antireflexive :
 Proof.
   pose (R := fun b b' => b = negb b').
   exists bool, R, R. cut (Antireflexive R).
-    Focus 2. rel. destruct x; inversion 1.
     rel. apply antireflexive0 with true. exists false. auto.
+    rel. destruct x; inversion 1.
 Qed.
 (* end hide *)
 
@@ -1772,8 +1772,8 @@ Proof.
     unfold R. destruct x, y; auto.
     unfold S. destruct x, y; cbn; auto.
     unfold Rcomp. destruct 1. edestruct (symmetric0 false true).
-      Focus 2. unfold R, S in H. destruct x, H; cbn in *; congruence.
       exists true. unfold R, S. cbn. auto.
+      unfold R, S in H. destruct x, H; cbn in *; congruence.
 Qed.
 (* end hide *)
 

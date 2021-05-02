@@ -1306,6 +1306,8 @@ Qed.
 
 Module exercises_propositional.
 
+Section exercises_propositional.
+
 Hypotheses P Q R S : Prop.
 
 (** Komenda [Hypotheses] formalnie działa jak wprowadzenie aksjomatu,
@@ -1648,6 +1650,7 @@ Proof.
 Qed.
 (* end hide *)
 
+End exercises_propositional.
 End exercises_propositional.
 
 Check and_comm.

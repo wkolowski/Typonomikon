@@ -1423,10 +1423,10 @@ match goal with
 end; cbn; reflexivity.
 (* end hide *)
 
-Section my_btauto.
-
 Require Import Bool.
 Require Import Btauto.
+
+Section my_btauto.
 
 Theorem andb_dist_orb :
   forall b1 b2 b3 : bool,
@@ -1545,27 +1545,22 @@ Theorem C_eq_dec :
 (* begin hide *)
 Proof.
   induction x.
-    destruct y. left; trivial. 1-3: right; inversion 1.
     destruct y.
-      Focus 2. destruct (IHx y); subst; auto. right. congruence.
+      left; trivial.
       1-3: right; inversion 1.
     destruct y.
-      Focus 3. destruct (IHx1 y1), (IHx2 y2); subst; auto.
-        1-3: right; congruence.
-      1-3: right; congruence.
+      1, 3-4: right; inversion 1.
+      destruct (IHx y); subst; auto. right. congruence.
     destruct y.
-      Focus 4. destruct (IHx1 y1), (IHx2 y2), (IHx3 y3); subst; auto.
-        1-7: right; congruence.
+      1-2, 4: right; congruence.
+      destruct (IHx1 y1), (IHx2 y2); subst; auto. 1-3: right; congruence.
+    destruct y.
       1-3: right; congruence.
+      destruct (IHx1 y1), (IHx2 y2), (IHx3 y3); subst; auto. 1-7: right; congruence.
 Restart.
   induction x; destruct y; try (right; congruence).
     left; trivial.
     destruct (IHx y); firstorder congruence.
-(*    repeat match goal with
-        | H : forall _, {_} + {_} |- _ =>
-            let H' := fresh "H" in edestruct H as [H' | H']; clear H;
-              [rewrite H'; clear H' | idtac]
-    end; firstorder (try congruence).*)
     destruct (IHx1 y1), (IHx2 y2); firstorder congruence.
     destruct (IHx1 y1), (IHx2 y2), (IHx3 y3); firstorder congruence.
 Restart.
@@ -1605,8 +1600,8 @@ Proof. decide equality. Defined.
     zmiennych do kontekstu.
 
     Uwaga: ta taktyka jest przestarzała, a jej opis znajduje się tutaj tylko
-    dlatego, że jak go pisałem, to jeszcze nie była. Nie używaj jej! Zamiast
-    [omega] używaj [lia]! *)
+    dlatego, że jak go pisałem, to jeszcze nie była przestarzała. Nie używaj
+    jej! Zamiast [omega] używaj [lia]! *)
 
 Require Import Arith Omega.
 
@@ -1950,7 +1945,7 @@ Qed.
     naszego typu, lub dodając je jako podpowiedzi za pomocą komendy [Hint
     Resolve c_1 ... c_n : db_name]. *)
 
-Hint Constructors even.
+Hint Constructors even : core.
 
 Example auto_ex5' : even 8.
 Proof. auto. Qed.
@@ -2026,7 +2021,8 @@ Abort.
 Hint Extern 0 =>
 match goal with
     | H : ?x = ?y, H' : ?y = ?z |- ?x = ?z => apply (@eq_trans _ x y z)
-end : extern_db.
+end
+  : extern_db.
 
 Example auto_ex7 :
   forall (A : Type) (x y z : A), x = y -> y = z -> x = z.
@@ -2050,7 +2046,8 @@ Proof. auto with extern_db. Qed.
 Hint Extern 0 (?x = ?z) =>
 match goal with
     | H : ?x = ?y, H' : ?y = ?z |- _ => apply (@eq_trans _ x y z)
-end.
+end
+  : core.
 
 Example auto_ex7' :
   forall (A : Type) (x y z : A), x = y -> y = z -> x = z.

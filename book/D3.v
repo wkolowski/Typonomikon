@@ -448,16 +448,8 @@ Inductive sumbool (A B : Prop) : Type :=
 (* begin hide *)
 Require Import Bool.
 
-Print reflect.
-
-Print BoolSpec.
-
-Print CompareSpec.
-
 Inductive Spec {A : Type} (P : A -> Prop) : A -> Prop :=
     | spec : forall x : A, P x -> Spec P x.
-
-Print ex.
 
 Ltac spec_aux H :=
 match type of H with

@@ -229,9 +229,11 @@ End nat_eq_ind.
     że coś jest zdaniem w sensie HoTTowym. Dzięki temu dowód jest krótszy o
     całe 33%. Całkiem nieźle. *)
 
+Require G.
+
 Module nat_eq_rec_SProp.
 
-Require Import G.
+Import G.
 
 Fixpoint code (n m : nat) : SProp :=
 match n, m with
@@ -448,7 +450,7 @@ End nat_eq_neq.
 
 Module encodedecode1.
 
-Require Import G.
+Import G.
 
 Fixpoint code (n m : nat) : SProp :=
 match n, m with
@@ -494,7 +496,7 @@ End encodedecode1.
 
 Module encodedecode2.
 
-Require Import G.
+Import G.
 
 Fixpoint code (n m : nat) : SProp :=
 match n, m with
@@ -1213,9 +1215,11 @@ End param_apart.
 
 (** ** Nierówność liczb konaturalnych *)
 
+Require F2.
+
 Module conat_neq.
 
-Require Import F2.
+Import F2.
 
 Inductive conat_neq : conat -> conat -> Prop :=
     | cnzs :
@@ -1242,9 +1246,11 @@ End conat_neq.
 
 (** ** Różność strumieni *)
 
+Require F3.
+
 Module Stream_neq.
 
-Require Import F3.
+Import F3.
 
 Inductive Stream_neq
   {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Type :=
@@ -1380,13 +1386,7 @@ End nat_not_Type.
     rozstrzygalną równość oraz spełnia aksjomat K. *)
 
 (* begin hide *)
-Module EqDec_not_Type.
-
-Variables
-  (A : Type)
-  (eq_dec : A -> A -> bool)
-  (eq_dec_spec : forall x y : A, reflect (x = y) (eq_dec x y))
-  (K : forall (x : A) (p : x = x), p = eq_refl).
+Section EqDec_not_Type.
 
 Definition idtoeqv {A B : Type} (p : A = B) : A -> B.
 (* begin hide *)
@@ -1403,6 +1403,12 @@ Proof.
   destruct p. intro a. exists a. reflexivity.
 Qed.
 (* end hide *)
+
+Variables
+  (A : Type)
+  (eq_dec : A -> A -> bool)
+  (eq_dec_spec : forall x y : A, reflect (x = y) (eq_dec x y))
+  (K : forall (x : A) (p : x = x), p = eq_refl).
 
 Definition wut
   (f : A -> Type) (x : A) (h : f x -> forall y : A, f y -> bool)
@@ -1442,8 +1448,8 @@ End EqDec_not_Type.
 
 Module SProp_not_Type.
 
-Let S := SProp.
-Let U := Type.
+Definition S := SProp.
+Definition U := Type.
 
 Lemma SProp_not_Type :
   S <> U.
@@ -1885,7 +1891,7 @@ Proof.
   intros.
   replace (1 + x + y) with (x + (1 + y)) by lia.
   erewrite goto'_add.
-    Focus 2. apply goto'_small. lia.
+    2: { apply goto'_small. lia. }
     rewrite minus_diag. cbn. rewrite goto'_small.
       f_equal; lia.
       lia.
@@ -2133,7 +2139,7 @@ Proof.
     eapply iso_trans.
       apply iso_nat_prod_nat_nat.
       eapply iso_trans.
-        Focus 2. apply iso_sym, vec_S.
+        2: { apply iso_sym, vec_S. }
         apply iso_pres_prod.
           apply iso_refl.
           assumption.
@@ -2193,12 +2199,12 @@ Instance iso_nat_list_nat :
   iso nat (list nat).
 Proof.
   eapply iso_trans.
-    Focus 2. apply iso_sym. apply iso_list_vlist.
+    2: { apply iso_sym. apply iso_list_vlist. }
   unfold vlist.
   eapply iso_trans.
     apply iso_nat_option_nat.
   eapply iso_trans.
-    Focus 2. apply iso_sym. apply iso_vlist_option.
+    2: { apply iso_sym. apply iso_vlist_option. }
   apply iso_pres_option.
   eapply iso_trans.
     apply iso_nat_prod_nat_nat.

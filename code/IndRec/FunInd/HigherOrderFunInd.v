@@ -10,14 +10,13 @@ Arguments Node {A} _ _.
 
 Require Import Recdef.
 
-Function fmap {A B : Type} (f : A -> B) (t : Tree A) : Tree B :=
+Fixpoint fmap {A B : Type} (f : A -> B) (t : Tree A) : Tree B :=
 match t with
     | Empty => Empty
     | Node x ts => Node (f x) (map (fmap f) ts)
 end.
 
-Print fmap.
-Check Tree_ind.
+Fail Functional Scheme fmap_ind := Induction for fmap Sort Prop.
 
 Inductive R {A B : Type} (f : A -> B) : Tree A -> Tree B -> Prop :=
     | R_Empty : R f Empty Empty

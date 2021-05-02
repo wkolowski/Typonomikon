@@ -382,7 +382,7 @@ end.
 Fixpoint size_f {A : Type} (t : Tree A) : nat :=
 match t with
     | Empty => 0
-    | Node _ forest => S (fold_right (fun t' s => size t' + s) 0 forest)
+    | Node _ forest => S (fold_right (fun t' s => size_f t' + s) 0 forest)
 end.
 
 Fixpoint flatten' {A : Type} (t : Tree A) : list A :=
