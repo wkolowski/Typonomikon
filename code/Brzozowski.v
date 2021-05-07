@@ -21,48 +21,6 @@ Inductive Regex (A : Type) : Type :=
 Arguments Empty {A}.
 Arguments Epsilon {A}.
 
-Fixpoint containsEpsilon
-  {A : Type} (r : Regex A) : bool :=
-match r with
-    | Empty => false
-    | Epsilon => true
-    | Char _ => false
-    | Seq r1 r2 => containsEpsilon r1 && containsEpsilon r2
-    | Or r1 r2 => containsEpsilon r1 || containsEpsilon r2
-    | Star _ => true
-end.
-
-Fixpoint aux
-  {A : Type} (dec : A -> A -> bool)
-  (a : A) (r : Regex A)
-  : Regex A :=
-match r with
-    | Empty   => Empty
-    | Epsilon => Empty
-    | Char x  => if dec a x then Epsilon else Empty
-    | Seq r1 r2 =>
-        Or (Seq (aux dec a r1) r2)
-           (if containsEpsilon r1
-            then aux dec a r2
-            else Empty)
-    | Or r1 r2 => Or (aux dec a r1) (aux dec a r2)
-    | Star r' => Seq (aux dec a r') (Star r')
-end.
-
-Fixpoint brzozowski
-  {A : Type} (dec : A -> A -> bool)
-  (l : list A) (r : Regex A)
-  : Regex A :=
-match l with
-    | [] => r
-    | h :: t => aux dec h (brzozowski dec t r)
-end.
-
-Definition matches
-  {A : Type} (dec : A -> A -> bool)
-  (l : list A) (r : Regex A) : bool :=
-    containsEpsilon (brzozowski dec (rev l) r).
-
 Inductive Matches {A : Type} : list A -> Regex A -> Prop :=
     | MEpsilon : Matches [] Epsilon
     | MChar : forall x : A, Matches [x] (Char x)
@@ -76,15 +34,65 @@ Inductive Matches {A : Type} : list A -> Regex A -> Prop :=
     | MOrR :
         forall (l : list A) (r1 r2 : Regex A),
           Matches l r2 -> Matches l (Or r1 r2)
-    | MStar_Zero :
-        forall r : Regex A, Matches [] (Star r)
-    | MStar_More :
-        forall (l1 l2 : list A) (r : Regex A),
-          Matches l1 r -> Matches l2 (Star r) -> Matches (l1 ++ l2) (Star r).
+    | MStar :
+        forall (l : list A) (r : Regex A),
+          MatchesStar l r -> Matches l (Star r)
+
+with MatchesStar {A : Type} : list A -> Regex A -> Prop :=
+    | MS_Epsilon :
+        forall r : Regex A, MatchesStar [] r
+    | MS_Seq :
+        forall (h : A) (t l : list A) (r : Regex A),
+          Matches (h :: t) r -> MatchesStar l r -> MatchesStar ((h :: t) ++ l) r.
+
+Hint Constructors Matches MatchesStar : core.
+
+Fixpoint containsEpsilon
+  {A : Type} (r : Regex A) : bool :=
+match r with
+    | Empty => false
+    | Epsilon => true
+    | Char _ => false
+    | Seq r1 r2 => containsEpsilon r1 && containsEpsilon r2
+    | Or r1 r2 => containsEpsilon r1 || containsEpsilon r2
+    | Star _ => true
+end.
+
+Class EqType : Type :=
+{
+    carrier : Type;
+    dec : carrier -> carrier -> bool;
+    dec_spec : forall x y : carrier, reflect (x = y) (dec x y);
+}.
+
+Coercion carrier : EqType >-> Sortclass.
+
+Fixpoint diff
+  {A : EqType} (a : A) (r : Regex A)
+  : Regex A :=
+match r with
+    | Empty   => Empty
+    | Epsilon => Empty
+    | Char x  => if dec a x then Epsilon else Empty
+    | Seq r1 r2 =>
+        Or (Seq (diff a r1) r2)
+           (if containsEpsilon r1
+            then diff a r2
+            else Empty)
+    | Or r1 r2 => Or (diff a r1) (diff a r2)
+    | Star r' => Seq (diff a r') (Star r')
+end.
+
+Fixpoint brzozowski {A : EqType} (l : list A) (r : Regex A) : Regex A :=
+match l with
+    | [] => r
+    | h :: t => diff h (brzozowski t r)
+end.
+
+Definition matches {A : EqType} (l : list A) (r : Regex A) : bool :=
+  containsEpsilon (brzozowski (rev l) r).
 
 Ltac inv H := inversion H; subst; clear H; auto.
-
-Hint Constructors Matches : core.
 
 Lemma containsEpsilon_Matches_nil :
   forall
@@ -106,41 +114,41 @@ Proof.
           assumption.
 Qed.
 
-Lemma Matches_aux :
-  forall
-    {A : Type} (dec : A -> A -> bool)
-    (l : list A) (r : Regex A),
-      Matches l r ->
-        forall (h : A) (t : list A),
-          l = h :: t -> Matches t (aux dec h r).
-Proof.
-  induction 1; cbn; intros h t Heq.
-    inv Heq.
-    inv Heq. cbn. admit.
-    destruct l1 as [| h1 t1]; cbn in *.
-      subst. specialize (IHMatches2 _ _ eq_refl).
-        rewrite <- containsEpsilon_Matches_nil in H. rewrite H. auto.
-        inv Heq.
-    auto.
-    auto.
-    inv Heq.
-    destruct l1 as [| h1 t1]; inv Heq.
-      specialize (IHMatches2 _ _ H1). inv IHMatches2.
-Admitted.
+Lemma Matches_diff :
+  forall {A : EqType} (l : list A) (r : Regex A),
+    Matches l r ->
+      forall (h : A) (t : list A),
+        l = h :: t -> Matches t (diff h r)
 
-Lemma Matches_aux' :
-  forall
-    {A : Type} (dec : A -> A -> bool)
-    (h : A) (t : list A) (r : Regex A),
-      Matches t (aux dec h r) -> Matches (h :: t) r.
+with MatchesStar_diff :
+  forall {A : EqType} (l : list A) (r : Regex A),
+    MatchesStar l r ->
+      forall (h : A) (t : list A),
+        l = h :: t -> Matches t (Seq (diff h r) (Star r)).
+Proof.
+  destruct 1; cbn; intros h t Heq.
+    inv Heq.
+    inv Heq. destruct (dec_spec h h).
+      constructor.
+      contradiction.
+    destruct l1 as [| h1 t1]; cbn in *.
+      subst. rewrite <- containsEpsilon_Matches_nil in H. rewrite H. eauto.
+      inv Heq. eauto.
+    eauto.
+    eauto.
+    eauto.
+  destruct 1; cbn; intros h' t' Heq; inv Heq. eauto.
+Qed.
+
+Lemma Matches_diff' :
+  forall {A : EqType} (h : A) (t : list A) (r : Regex A),
+    Matches t (diff h r) -> Matches (h :: t) r.
 Proof.
   intros until r. revert h t.
   induction r; cbn; intros.
     inv H.
     inv H.
-    destruct (dec h a) eqn: Hdec.
-      inv H. admit.
-      inv H.
+    destruct (dec_spec h a); inv H.
     inv H.
       inv H2. change (h :: l1 ++ l2) with ((h :: l1) ++ l2). auto.
       destruct (containsEpsilon r1) eqn: H.
@@ -149,24 +157,27 @@ Proof.
           apply IHr2. assumption.
         inv H2.
     inv H.
-    inv H.
-      change (h :: l1 ++ l2) with ((h :: l1) ++ l2). constructor.
-        apply IHr. assumption.
-        assumption.
+    inv H. do 2 constructor.
+      apply IHr. assumption.
+      inv H4.
+Qed.
+
+Lemma Matches_diff'' :
+  forall {A : EqType} (h : A) (t : list A) (r : Regex A),
+    Matches t (diff h r) <-> Matches (h :: t) r.
+Proof.
 Admitted.
 
 Lemma Matches_brzozowski :
-  forall
-    {A : Type} (dec : A -> A -> bool)
-    (l : list A) (r : Regex A),
-      Matches l r ->
-        forall l1 l2 : list A, l = rev l1 ++ l2 ->
-          Matches l2 (brzozowski dec l1 r).
+  forall {A : EqType} (l : list A) (r : Regex A),
+    Matches l r ->
+      forall l1 l2 : list A, l = rev l1 ++ l2 ->
+        Matches l2 (brzozowski l1 r).
 Proof.
   intros until l1. revert l r H.
   induction l1 as [| h1 t1]; cbn; intros.
     subst. assumption.
-    eapply Matches_aux.
+    eapply Matches_diff.
       2: reflexivity.
       subst. eapply IHt1.
         2: reflexivity.
@@ -174,47 +185,30 @@ Proof.
 Qed.
 
 Lemma Matches_brzozowski' :
-  forall
-    {A : Type} (dec : A -> A -> bool)
-    (l1 l2 : list A) (r : Regex A),
-      Matches l2 (brzozowski dec l1 r) ->
-        Matches (rev l1 ++ l2) r.
+  forall {A : EqType} (l1 l2 : list A) (r : Regex A),
+    Matches l2 (brzozowski l1 r) ->
+      Matches (rev l1 ++ l2) r.
 Proof.
   induction l1 as [| h1 t1]; cbn; intros.
     assumption.
     rewrite <- app_assoc. apply IHt1. cbn.
-      eapply Matches_aux'. eassumption.
+      eapply Matches_diff'. eassumption.
 Qed.
 
 Lemma Matches_brzozowski'' :
-  forall
-    {A : Type} (dec : A -> A -> bool)
-    (l1 l2 : list A) (r : Regex A),
-      Matches l2 (brzozowski dec l1 r)
-        <->
-      Matches (rev l1 ++ l2) r.
+  forall {A : EqType} (l1 l2 : list A) (r : Regex A),
+    Matches l2 (brzozowski l1 r)
+      <->
+    Matches (rev l1 ++ l2) r.
 Proof.
   induction l1 as [| h1 t1]; cbn; intros.
     reflexivity.
-    rewrite <- app_assoc, <- IHt1. cbn. Check Matches_aux.
-Restart.
-  split; revert l2 r.
-    induction l1 as [| h1 t1]; cbn; intros.
-      assumption.
-      rewrite <- app_assoc. apply IHt1. cbn.
-        eapply Matches_aux'. eassumption.
-    induction l1 as [| h1 t1]; cbn; intros.
-      assumption.
-      eapply Matches_aux.
-        2: reflexivity.
-        apply IHt1. rewrite <- app_assoc in H. cbn in H. assumption.
+    rewrite Matches_diff'', IHt1, <- app_assoc. cbn. reflexivity.
 Qed.
 
 Lemma Matches_matches :
-  forall
-    {A : Type} (dec : A -> A -> bool)
-    (l : list A) (r : Regex A),
-      Matches l r <-> matches dec l r = true.
+  forall {A : EqType} (l : list A) (r : Regex A),
+    Matches l r <-> matches l r = true.
 Proof.
   intros. unfold matches.
   rewrite containsEpsilon_Matches_nil.
@@ -272,8 +266,6 @@ match r1, r2 with
     | _      , _       => Seq r1 r2
 end.
 
-Print Regex.
-
 Definition or {A : Type} (r1 r2 : Regex A) : Regex A :=
 match r1, r2 with
     | Empty, _ => r2
@@ -291,36 +283,29 @@ match r with
     | _ => Star r
 end.
 
-Fixpoint aux'
-  {A : Type} (dec : A -> A -> bool)
-  (a : A) (r : Regex A)
-  : Regex A :=
+Fixpoint diff' {A : EqType} (a : A) (r : Regex A) : Regex A :=
 match r with
     | Empty   => empty
     | Epsilon => empty
     | Char x  => if dec a x then epsilon else empty
     | Seq r1 r2 =>
-        or (seq (aux' dec a r1) r2)
+        or (seq (diff' a r1) r2)
            (if containsEpsilon r1
-            then aux' dec a r2
+            then diff' a r2
             else empty)
-    | Or r1 r2 => or (aux' dec a r1) (aux' dec a r2)
-    | Star r' => seq (aux' dec a r') (star r')
+    | Or r1 r2 => or (diff' a r1) (diff' a r2)
+    | Star r' => seq (diff' a r') (star r')
 end.
 
 Fixpoint brzozowski'
-  {A : Type} (dec : A -> A -> bool)
-  (l : list A) (r : Regex A)
-  : Regex A :=
+  {A : EqType} (l : list A) (r : Regex A) : Regex A :=
 match l with
     | [] => r
-    | h :: t => aux' dec h (brzozowski' dec t r)
+    | h :: t => diff' h (brzozowski' t r)
 end.
 
-Definition matches'
-  {A : Type} (dec : A -> A -> bool)
-  (l : list A) (r : Regex A) : bool :=
-    containsEpsilon (brzozowski' dec (rev l) r).
+Definition matches' {A : EqType} (l : list A) (r : Regex A) : bool :=
+  containsEpsilon (brzozowski' (rev l) r).
 
 
 (* Time Compute matches' eqb (repeat 10 true) (Star (Char true)). *)
@@ -385,10 +370,8 @@ match r with
         end
 end.
 
-Definition matches''
-  {A : Type} (dec : A -> A -> bool)
-  (l : list A) (r : Regex A) : bool :=
-    containsEpsilon (optimize (brzozowski' dec (rev l) r)).
+Definition matches'' {A : EqType} (l : list A) (r : Regex A) : bool :=
+  containsEpsilon (optimize (brzozowski' (rev l) r)).
 
 (* Time Compute matches'' eqb (repeat 5120 true) (Star (Char true)). *)
 (* ===> Finished transaction in 0.733 secs (0.594u,0.001s) (successful) *)
@@ -418,23 +401,55 @@ Proof.
     rewrite (IHr0 H1 _ H3), (IHr1 e1 _ H4). reflexivity.
     contradict H2. apply optimize_Empty. assumption.
     contradict H2. apply optimize_Empty. assumption.
-    contradict H0. apply optimize_Empty. assumption.
-    rewrite (IHr0 e0 _ H0). cbn. functional inversion e0; subst.
-      destruct l2.
-        reflexivity.
-        inv H2. destruct l0; inv H.
-Admitted.
+    inv H1. apply optimize_Empty in H.
+      contradiction.
+      assumption.
+    inv H1. apply IHr0 in H.
+      inv H.
+      assumption.
+Qed.
+
+Lemma MatchesStar_optimize :
+  forall {A : Type} (l : list A) (r : Regex A),
+    MatchesStar l r <-> MatchesStar l (optimize r).
+Proof.
+  intros. revert l.
+  functional induction optimize r; cbn; intros.
+    1-3: firstorder.
+    admit.
+    admit.
+Abort.
 
 Lemma Matches_optimize :
   forall {A : Type} (l : list A) (r : Regex A),
-    Matches l r <-> Matches l (optimize r).
+    Matches l r -> Matches l (optimize r)
+
+with MatchesStar_optimize :
+  forall {A : Type} (l : list A) (r : Regex A),
+    MatchesStar l r -> MatchesStar l (optimize r).
+Proof.
+  destruct 1; cbn.
+    constructor.
+    constructor.
+Abort.
+
+Lemma Matches_optimize :
+  forall {A : Type} (l : list A) (r : Regex A),
+    (Matches l r <-> Matches l (optimize r))
+      /\
+    (MatchesStar l r <-> MatchesStar l (optimize r)).
 Proof.
   intros. revert l.
   functional induction optimize r; intros.
+  Focus 18. split.
+    split; intro H; inv H.
+      inv H2. do 2 constructor.
+        
+      destruct (IHr0 l). rewrite <- e0, <- H. constructor. rewrite  rewrite H0, e0 in H2. constructor. assumption.
+      constructor.
     1-3: firstorder.
     split; intro H; inv H. contradict H3. apply optimize_Empty. assumption.
     split; intro H; inv H. contradict H4. apply optimize_Empty. assumption.
-
     rewrite <- IHr1. split; intro H.
       inv H. apply optimize_Epsilon in H3; subst; cbn; assumption.
       change l with ([] ++ l). constructor.
@@ -472,12 +487,9 @@ Proof.
       constructor 5. rewrite <- IHr1. assumption.
       constructor. rewrite IHr0. assumption.
       constructor 5. rewrite IHr1. assumption.
-    split; intro H; inv H. rewrite IHr0, e0 in H1. inv H1.
-    {
-      split; intro H; inv H.
-      apply optimize_Epsilon in H1; subst; cbn; auto.
-      apply optimize_Epsilon in H3; subst; cbn.
-        constructor.
-        rewrite e0. reflexivity.
-    }
+    split; intro H; inv H. inv H2. rewrite IHr0, e0 in H. inv H.
+    split; intro H; inv H. inv H2. rewrite IHr0, e0 in H. inv H.
+    admit.
+    split; intro H; inv H.
+      constructor.
 Abort.
