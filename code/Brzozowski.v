@@ -10,6 +10,8 @@ Require Import Bool.
 Require Import List.
 Import ListNotations.
 
+Require Import Equality.
+
 Inductive Regex (A : Type) : Type :=
     | Empty : Regex A
     | Epsilon : Regex A
@@ -46,6 +48,8 @@ with MatchesStar {A : Type} : list A -> Regex A -> Prop :=
           Matches (h :: t) r -> MatchesStar l r -> MatchesStar ((h :: t) ++ l) r.
 
 Hint Constructors Matches MatchesStar : core.
+
+Scheme Matches_ind' := Induction for Matches Sort Prop.
 
 Fixpoint containsEpsilon
   {A : Type} (r : Regex A) : bool :=
@@ -217,23 +221,6 @@ Proof.
   reflexivity.
 Qed.
 
-Require Import Equality.
-
-Scheme Matches_ind' := Induction for Matches Sort Prop.
-
-(* Not true. *)
-Lemma isProp_Matches :
-  forall
-    {A : Type} (l : list A) (r : Regex A)
-    (m1 m2 : Matches l r),
-      m1 ~= m2.
-Proof.
-  induction m1 using @Matches_ind'; intros.
-    dependent destruction m2. reflexivity.
-    dependent destruction m2. reflexivity.
-    dependent destruction m2. rewrite <- x.
-Abort.
-
 Fixpoint repeat {A : Type} (n : nat) (x : A) : list A :=
 match n with
     | 0    => []
@@ -390,6 +377,31 @@ Proof.
     rewrite H1 in y. contradiction.
 Qed.
 
+Lemma optimize_Empty' :
+  forall {A : Type} (r : Regex A),
+    optimize r = Empty -> forall l : list A, MatchesStar l r -> l = [].
+Proof.
+  intros A r. unfold not.
+  functional induction optimize r; intros H l HM;
+  inv H; inv HM;
+  repeat match goal with
+      | y : match optimize ?r with _ => _ end, H : optimize ?r = Empty |- _ =>
+          rewrite H in y; contradiction
+      | H : Matches _ ?r, H' : optimize ?r = Empty |- _ =>
+          apply optimize_Empty in H; try contradiction; assumption
+      | H : Matches _ ?r |- _ => tryif is_var r then idtac else inv H
+  end.
+Qed.
+
+Lemma optimize_Empty'' :
+  forall {A : Type} {r : Regex A},
+    optimize r = Empty -> forall l : list A, Matches l r <-> False.
+Proof.
+  split.
+    apply optimize_Empty. assumption.
+    destruct 1.
+Qed.
+
 Lemma optimize_Epsilon :
   forall {A : Type} (r : Regex A),
     optimize r = Epsilon -> forall l : list A, Matches l r -> l = [].
@@ -409,29 +421,107 @@ Proof.
       assumption.
 Qed.
 
-Lemma MatchesStar_optimize :
-  forall {A : Type} (l : list A) (r : Regex A),
-    MatchesStar l r <-> MatchesStar l (optimize r).
+Lemma optimize_Epsilon' :
+  forall {A : Type} (r : Regex A),
+    optimize r = Epsilon -> forall l : list A, MatchesStar l r -> l = [].
 Proof.
-  intros. revert l.
-  functional induction optimize r; cbn; intros.
-    1-3: firstorder.
-    admit.
-    admit.
-Abort.
+  intros A r.
+  functional induction optimize r; intros H l HM;
+  inv H; inv HM;
+  repeat match goal with
+      | H : Matches _ ?r |- _ =>
+          tryif is_var r
+          then
+            match goal with
+                | H' : optimize r = Empty |- _ =>
+                    apply optimize_Empty in H; [contradiction | assumption]
+                | H' : optimize r = Epsilon |- _ =>
+                    apply optimize_Epsilon in H; [subst; cbn in *; try congruence | assumption]
+            end
+          else
+            inv H
+  end.
+    apply optimize_Empty' in H3.
+      congruence.
+      assumption.
+    apply IHr0 in H3.
+      congruence.
+      assumption.
+Qed.
 
-Lemma Matches_optimize :
+Lemma MatchesStar_Empty :
   forall {A : Type} (l : list A) (r : Regex A),
-    Matches l r -> Matches l (optimize r)
-
-with MatchesStar_optimize :
-  forall {A : Type} (l : list A) (r : Regex A),
-    MatchesStar l r -> MatchesStar l (optimize r).
+    MatchesStar l Empty -> l = [].
 Proof.
-  destruct 1; cbn.
-    constructor.
-    constructor.
-Abort.
+  intros. inv H. inv H0.
+Qed.
+
+Lemma MatchesStar_app :
+  forall {A : Type} (l1 l2 : list A) (r : Regex A),
+    MatchesStar l1 r -> MatchesStar l2 r -> MatchesStar (l1 ++ l2) r.
+Proof.
+  intros until 1. revert l2.
+  induction H; cbn; intros.
+    assumption.
+    rewrite <- app_assoc, app_comm_cons. constructor.
+      assumption.
+      apply IHMatchesStar. assumption.
+Qed.
+
+Lemma MatchesStar_Star :
+  forall {A : Type} (l : list A) (r : Regex A),
+    MatchesStar l (Star r) <->  MatchesStar l r.
+Proof.
+  split.
+    intro. remember (Star r) as r'. revert r Heqr'. induction H; intros.
+      constructor.
+      subst. apply MatchesStar_app.
+        inv H.
+        apply IHMatchesStar. reflexivity.
+    induction 1; constructor.
+      constructor. replace (h :: t) with ((h :: t) ++ []).
+        constructor.
+          assumption.
+          constructor.
+        apply app_nil_r.
+      assumption.
+Qed.
+
+Lemma Matches_Star :
+  forall {A : Type} (l : list A) (r : Regex A),
+    Matches l (Star r) <-> MatchesStar l r.
+Proof.
+  split; intro.
+    inv H.
+    constructor. assumption.
+Qed.
+
+Lemma Matches_Or :
+  forall {A : Type} (l : list A) (r1 r2 : Regex A),
+    Matches l (Or r1 r2) <-> Matches l r1 \/ Matches l r2.
+Proof.
+  split; intro H; inv H.
+Qed.
+
+Lemma optimize_Epsilon'' :
+  forall {A : Type} {r : Regex A},
+    optimize r = Epsilon -> forall l : list A, Matches l r <-> l = [].
+Proof.
+  split.
+    apply optimize_Epsilon. assumption.
+    intros ->. functional induction optimize r; try inv H; auto.
+      change [] with (@nil A ++ []). auto.
+      contradiction.
+Qed.
+
+Lemma Matches_Epsilon :
+  forall {A : Type} (l : list A),
+    Matches l Epsilon <-> l = [].
+Proof.
+  split; intro H.
+    inv H.
+    subst. constructor.
+Qed.
 
 Lemma Matches_optimize :
   forall {A : Type} (l : list A) (r : Regex A),
@@ -441,55 +531,74 @@ Lemma Matches_optimize :
 Proof.
   intros. revert l.
   functional induction optimize r; intros.
-  Focus 18. split.
-    split; intro H; inv H.
-      inv H2. do 2 constructor.
-        
-      destruct (IHr0 l). rewrite <- e0, <- H. constructor. rewrite  rewrite H0, e0 in H2. constructor. assumption.
-      constructor.
     1-3: firstorder.
-    split; intro H; inv H. contradict H3. apply optimize_Empty. assumption.
-    split; intro H; inv H. contradict H4. apply optimize_Empty. assumption.
-    rewrite <- IHr1. split; intro H.
-      inv H. apply optimize_Epsilon in H3; subst; cbn; assumption.
-      change l with ([] ++ l). constructor.
-        rewrite IHr0, e0. constructor.
-        assumption.
-    rewrite <- IHr0. split; intro H.
-      inv H. apply optimize_Epsilon in H4; subst; cbn.
-        rewrite app_nil_r. assumption.
-        assumption.
-      rewrite <- (@app_nil_r A l). constructor.
-        assumption.
-        rewrite IHr1, e1. constructor.
-    split; intro H; inv H; constructor; rewrite <- ?IHr0, <- ?IHr1 in *; assumption.
-    rewrite <- IHr1. split; intro H; inv H. apply optimize_Empty in H2; firstorder.
-    rewrite <- IHr0. split; intro H; inv H. apply optimize_Empty in H2; firstorder.
-    rewrite <- IHr1. split; intro H; inv H. apply optimize_Epsilon in H2; subst.
-      rewrite IHr1, <- containsEpsilon_Matches_nil. assumption.
-      assumption.
-    split; intro H; inv H.
-      constructor. apply optimize_Epsilon in H2; subst; auto.
-      constructor 5. rewrite <- IHr1. auto.
-      constructor. rewrite IHr0, e0. assumption.
-      constructor 5. rewrite IHr1. assumption.
-    rewrite <- IHr0. split; intro H.
-      inv H. apply optimize_Epsilon in H2; subst; auto.
-        rewrite containsEpsilon_Matches_nil, <- IHr0 in e2. assumption.
-      constructor. assumption.
-    split; intro H; inv H.
-      constructor. rewrite <- IHr0. assumption.
-      constructor 5. apply optimize_Epsilon in H2; subst; auto.
-      constructor. rewrite IHr0. assumption.
-      constructor 5. rewrite IHr1, e1. assumption.
-    split; intro H; inv H.
-      constructor. rewrite <- IHr0. assumption.
-      constructor 5. rewrite <- IHr1. assumption.
-      constructor. rewrite IHr0. assumption.
-      constructor 5. rewrite IHr1. assumption.
-    split; intro H; inv H. inv H2. rewrite IHr0, e0 in H. inv H.
-    split; intro H; inv H. inv H2. rewrite IHr0, e0 in H. inv H.
+    split.
+      split; intro H; inv H. contradict H3. apply optimize_Empty. assumption.
+      split; intro H; inv H.
+        inv H0. contradict H4. apply optimize_Empty. assumption.
+        inv H0.
+    split.
+      split; intro H; inv H. contradict H4. apply optimize_Empty. assumption.
+      split; intro H; inv H.
+        inv H0. contradict H5. apply optimize_Empty. assumption.
+        inv H0.
+    destruct (IHr0 l) as [IHr00 IHr01], (IHr1 l) as [IHr10 IHr11]. split.
+      rewrite <- IHr10. split; intro H.
+        inv H. apply optimize_Epsilon in H3; subst; cbn; assumption.
+        change l with ([] ++ l). constructor.
+          destruct (IHr0 []). rewrite H0, e0. constructor.
+          assumption.
+      rewrite <- IHr11. split; intro H; inv H.
+        constructor.
+          inv H0. apply optimize_Epsilon in H4.
+            subst. cbn. assumption.
+            assumption.
+          admit.
+        constructor.
+          admit.
+          admit.
     admit.
-    split; intro H; inv H.
-      constructor.
-Abort.
+    split.
+      split; intro H; inv H; constructor.
+        destruct (IHr0 l1). rewrite <- H. assumption.
+        destruct (IHr1 l2). rewrite <- H. assumption.
+        destruct (IHr0 l1). rewrite H. assumption.
+        destruct (IHr1 l2). rewrite H. assumption.
+      admit.
+    split.
+      destruct (IHr0 l), (IHr1 l). rewrite !Matches_Or, <- H1, (optimize_Empty'' e0). firstorder.
+      admit.
+    split.
+      destruct (IHr0 l). rewrite Matches_Or, <- H, (optimize_Empty'' e1). firstorder.
+      admit.
+    split.
+      destruct (IHr1 l). rewrite Matches_Or, <- H, (optimize_Epsilon'' e0). firstorder.
+        subst. apply H2, containsEpsilon_Matches_nil. assumption.
+      admit.
+    split.
+      destruct (IHr1 l). rewrite !Matches_Or, Matches_Epsilon, <- H, (optimize_Epsilon'' e0). reflexivity.
+      admit.
+    split.
+      destruct (IHr0 l). apply containsEpsilon_Matches_nil in e2.
+        rewrite Matches_Or, (optimize_Epsilon'' e1), H. split; intro; auto.
+          destruct H1; auto. subst. assumption.
+      admit.
+    split.
+      destruct (IHr0 l). rewrite !Matches_Or, Matches_Epsilon, <- H, (optimize_Epsilon'' e1). reflexivity.
+      admit.
+    split.
+      destruct (IHr0 l), (IHr1 l). rewrite !Matches_Or, <- H, <- H1. reflexivity.
+      admit.
+    destruct (IHr0 l) as [IH1 IH2]. split.
+      rewrite Matches_Star, IH2, e0. split; intro H; inv H. inv H0.
+      rewrite MatchesStar_Star, IH2, e0. split; intro H; inv H; inv H0.
+    destruct (IHr0 l) as [IH1 IH2]. split.
+      rewrite Matches_Star, IH2, e0. split; intro H; inv H. inv H0.
+      rewrite MatchesStar_Star, IH2, e0. reflexivity.
+    destruct (IHr0 l) as [IH1 IH2]. split.
+      rewrite !Matches_Star, IH2, e0, MatchesStar_Star. reflexivity.
+      rewrite <- !e0, !MatchesStar_Star, IH2, e0. reflexivity.
+    destruct (IHr0 l) as [IH1 IH2]. split.
+      rewrite !Matches_Star. assumption.
+      rewrite !MatchesStar_Star. assumption.
+Admitted.
