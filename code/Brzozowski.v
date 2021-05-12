@@ -170,6 +170,13 @@ Lemma Matches_diff'' :
   forall {A : EqType} (h : A) (t : list A) (r : Regex A),
     Matches t (diff h r) <-> Matches (h :: t) r.
 Proof.
+  split.
+    apply Matches_diff'.
+    intro H. remember (h :: t) as l. revert h t Heql. induction H; cbn; intros; try inv Heql.
+      destruct (dec_spec h h).
+        constructor.
+        contradiction.
+      destruct (containsEpsilon r1) eqn: Hr1.
 Admitted.
 
 Lemma Matches_brzozowski :
