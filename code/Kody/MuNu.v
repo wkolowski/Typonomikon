@@ -3,18 +3,34 @@ Import ListNotations.
 
 Require Import F3 F4.
 
-Inductive ListF (F : Type -> Type) (A : Type) : Type :=
-    | NilF : ListF F A
-    | ConsF : A -> F A -> ListF F A.
+Unset Positivity Checking.
 
-Arguments NilF  {F A}.
-Arguments ConsF {F A} _ _.
+Inductive Mu (F : Type -> Type) : Type :=
+    | In : F (Mu F) -> Mu F.
 
-Inductive List (A : Type) : Type :=
-    | In : ListF List A -> List A.
+Arguments In {F} _.
 
-Arguments In {A} _.
+CoInductive Nu (F : Type -> Type) : Type :=
+{
+    Out : F (Nu F);
+}.
 
+Arguments Out {F} _.
+
+Set Positivity Checking.
+
+Inductive ListF (A X : Type) : Type :=
+    | NilF  : ListF A X
+    | ConsF : A -> X -> ListF A X.
+
+Arguments NilF  {A X}.
+Arguments ConsF {A X} _ _.
+
+Module List.
+
+Definition List   (A : Type) : Type := Mu (ListF A).
+
+Unset Guard Checking.
 Lemma List_ind' :
   forall
     {A : Type} (P : List A -> Prop)
@@ -27,30 +43,33 @@ Proof.
     exact HNil.
     apply HCons, IH; assumption.
 Qed.
+Set Guard Checking.
 
-Fixpoint list_List {A : Type} (l : list A) : List A :=
+Fixpoint f {A : Type} (l : list A) : List A :=
 match l with
     | [] => In NilF
-    | h :: t => In (ConsF h (list_List t))
+    | h :: t => In (ConsF h (f t))
 end.
 
-Fixpoint List_list {A : Type} (l : List A) : list A :=
+Unset Guard Checking.
+Fixpoint g {A : Type} (l : List A) {struct l} : list A :=
 match l with
-    | In NilF => []
-    | In (ConsF h t) => h :: List_list t
+    | In NilF        => []
+    | In (ConsF h t) => h :: g t
 end.
+Set Guard Checking.
 
-Lemma list_List_list :
+Lemma fg :
   forall {A : Type} (l : list A),
-    List_list (list_List l) = l.
+    g (f l) = l.
 Proof.
   induction l as [| h t]; cbn;
   rewrite ?IHt; reflexivity.
 Qed.
 
-Lemma List_list_List :
+Lemma gf :
   forall {A : Type} (l : List A),
-    list_List (List_list l) = l.
+    f (g l) = l.
 Proof.
   intros.
   induction l using List_ind'; cbn.
@@ -58,34 +77,35 @@ Proof.
     rewrite IHl. reflexivity.
 Qed.
 
-CoInductive CoList (A : Type) : Type :=
-{
-    Out : ListF CoList A;
-}.
+End List.
 
-Arguments Out {A} _.
+Module CoList.
 
-CoFixpoint coList_CoList {A : Type} (l : coList A) : CoList A :=
+Definition CoList (A : Type) : Type := Nu (ListF A).
+
+Unset Guard Checking.
+CoFixpoint f {A : Type} (l : coList A) : CoList A :=
 {|
     Out :=
       match uncons l with
           | None        => NilF
-          | Some (h, t) => ConsF h (coList_CoList t)
+          | Some (h, t) => ConsF h (f t)
       end
 |}.
+Set Guard Checking.
 
-CoFixpoint CoList_coList {A : Type} (l : CoList A) : coList A :=
+CoFixpoint g {A : Type} (l : CoList A) : coList A :=
 {|
     uncons :=
       match Out l with
           | NilF      => None
-          | ConsF h t => Some (h, CoList_coList t)
+          | ConsF h t => Some (h, g t)
       end
 |}.
 
-Lemma coList_CoList_coList :
+Lemma fg :
   forall {A : Type} (l : coList A),
-    lsim (CoList_coList (coList_CoList l)) l.
+    lsim (g (f l)) l.
 Proof.
   cofix CH.
   destruct l as [[[h t] |]];
@@ -105,9 +125,9 @@ CoInductive CoList_sim {A : Type} (l1 l2 : CoList A) : Prop :=
           CoList_sim t1 t2
 }.
 
-Lemma CoList_coList_CoList :
+Lemma gf :
   forall {A : Type} (l : CoList A),
-    CoList_sim (coList_CoList (CoList_coList l)) l.
+    CoList_sim (f (g l)) l.
 Proof.
   cofix CH.
   destruct l as [[| h t]];
@@ -116,30 +136,4 @@ Proof.
     right. do 4 eexists. do 2 (split; try reflexivity). apply CH.
 Qed.
 
-Inductive ForallF
-  {A : Type} (R : A -> A -> Prop)
-  (F : (A -> A -> Prop) -> CoList A -> CoList A -> Prop)
-  : CoList A -> CoList A -> Prop :=
-    | Nils  :
-        forall l1 l2 : CoList A,
-          Out l1 = NilF -> Out l2 = NilF -> ForallF R F l1 l2
-    | Conss :
-        forall (l1 l2 : CoList A) (h1 h2 : A) (t1 t2 : CoList A),
-          Out l1 = ConsF h1 t1 -> Out l2 = ConsF h2 t2 ->
-            R h1 h2 -> F R t1 t2 -> ForallF R F l1 l2.
-
-CoInductive CoForall {A : Type} (R : A -> A -> Prop) (l1 l2 : CoList A) : Prop :=
-{
-    Out' : ForallF eq CoForall l1 l2
-}.
-
-Lemma CoList_coList_CoList' :
-  forall {A : Type} (l : CoList A),
-    CoForall eq (coList_CoList (CoList_coList l)) l.
-Proof.
-  cofix CH.
-  constructor.
-  destruct l as [[| h t]].
-    constructor; cbn; reflexivity.
-    eright; cbn; try reflexivity. apply CH.
-Qed.
+End CoList.

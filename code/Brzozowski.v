@@ -345,6 +345,8 @@ match r with
             | _, Empty => Empty
             | Epsilon, r2' => r2'
             | r1', Epsilon => r1'
+            | (Seq r11 r12), r2 => Seq r11 (Seq r12 r2)
+            | (Or r11 r12), r2 => Or (Seq r11 r2) (Seq r12 r2)
             | r1', r2' => Seq r1' r2'
         end
     | Or r1 r2 =>
@@ -353,6 +355,7 @@ match r with
             | r1', Empty => r1'
             | Epsilon, r2' => if containsEpsilon r2' then r2' else Or Epsilon r2'
             | r1', Epsilon => if containsEpsilon r1' then r1' else Or r1' Epsilon
+            | (Or r11 r12), r2 => Or r11 (Or r12 r2)
             | r1', r2' => Or r1' r2'
         end
     | Star r' =>
@@ -566,6 +569,19 @@ Proof.
           admit.
     admit.
     split.
+      split; intro HM; inv HM.
+        destruct (IHr0 l1) as [[] []]. rewrite e0 in *. specialize (H H2). inv H.
+          rewrite <- app_assoc. constructor.
+            assumption.
+            constructor.
+              assumption.
+              destruct (IHr1 l2). rewrite <- H. assumption.
+        inv H3. rewrite app_assoc. constructor.
+          destruct (IHr0 (l1 ++ l0)) as [[] []]. apply H0. rewrite e0. constructor; assumption.
+          destruct (IHr1 l3) as [[] []]. apply H0. assumption.
+    admit. (* nowe *)
+    admit. (* nowe *)
+    split.
       split; intro H; inv H; constructor.
         destruct (IHr0 l1). rewrite <- H. assumption.
         destruct (IHr1 l2). rewrite <- H. assumption.
@@ -593,6 +609,7 @@ Proof.
     split.
       destruct (IHr0 l). rewrite !Matches_Or, Matches_Epsilon, <- H, (optimize_Epsilon'' e1). reflexivity.
       admit.
+    admit. (* nowe *)
     split.
       destruct (IHr0 l), (IHr1 l). rewrite !Matches_Or, <- H, <- H1. reflexivity.
       admit.
