@@ -11,6 +11,8 @@
 (** * Sort [SProp], czyli zdania, ale takie jakby inne (TODO) *)
 
 (* begin hide *)
+Set Warnings "-cannot-define-projection".
+
 Set Allow StrictProp.
 
 Inductive sEmpty : SProp := .
@@ -1260,7 +1262,7 @@ Proof.
     rewrite IHn'. cbn. reflexivity.
 Qed.
 
-Hint Resolve hd_drop tl_drop : core.
+Global Hint Resolve hd_drop tl_drop : core.
 
 Theorem coinduction :
   forall (A : Type),

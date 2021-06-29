@@ -288,7 +288,9 @@ Require vec.
 
 Module Vec.
 
+Set Warnings "-notation-overridden".
 Import vec.
+Set Warnings "notation-overridden".
 
 (** A teraz to samo dla rodzin indeksowanych. *)
 

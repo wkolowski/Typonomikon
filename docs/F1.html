@@ -436,7 +436,7 @@
 }.<br/>
 
 <br/>
-<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">bisim2</span> : <span class="id" title="var">core</span>.<br/>
+<span class="id" title="keyword">Global Hint Constructors</span> <span class="id" title="var">bisim2</span> : <span class="id" title="var">core</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">bisim2_refl</span> :<br/>
@@ -496,7 +496,7 @@
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1 <span class="id" title="keyword">as</span> [[[] | (<span class="id" title="var">h1</span> &amp; <span class="id" title="var">t1</span> &amp; <span class="id" title="var">h2</span> &amp; <span class="id" title="var">t2</span> &amp; <span class="id" title="var">p1</span> &amp; <span class="id" title="var">p2</span> &amp; <span class="id" title="var">p3</span> &amp; <span class="id" title="var">H</span>)]], 1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H0</span> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">p</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">econstructor</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <span class="id" title="var">p2</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">p1</span> <span class="id" title="tactic">in</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">p</span>; <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">eapply</span> <span class="id" title="var">CH</span>; <span class="id" title="tactic">eauto</span>.<br/>

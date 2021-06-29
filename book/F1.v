@@ -14,6 +14,8 @@ Fail CoInductive wut : Type :=
 (** Ciężko mi jednak stwierdzić w tej chwili, czy jest jakiś odpowiednik
     problemów z nieterminacją. NIEPRODUKTYWNOŚĆ! *)
 
+Set Warnings "-cannot-define-projection".
+
 (* end hide *)
 
 Require Import List.
@@ -369,7 +371,7 @@ CoInductive bisim2 {A : Type} (l1 l2 : coList A) : Prop :=
           h1 = h2 /\ bisim2 t1 t2
 }.
 
-Hint Constructors bisim2 : core.
+Global Hint Constructors bisim2 : core.
 
 Lemma bisim2_refl :
   forall (A : Type) (l : coList A), bisim2 l l.
@@ -424,7 +426,7 @@ Lemma bisim2_Infinite :
 Proof.
   cofix CH.
   destruct 1 as [[[] | (h1 & t1 & h2 & t2 & p1 & p2 & p3 & H)]], 1.
-    rewrite H in p. inversion p.
+    rewrite H0 in p. inversion p.
     econstructor.
       exact p2.
       rewrite p1 in p. inversion p; subst. eapply CH; eauto.
@@ -560,6 +562,8 @@ match n, uncons l with
 end.
 
 Compute map (fun n : nat => take 200 (collatz' n)) [30; 31; 32; 33].
+
+Set Warnings "-abstract-large-number".
 Compute take 150 (collatz' 12344).
 
 (** TODO: insertion sort na kolistach *)

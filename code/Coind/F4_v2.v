@@ -57,7 +57,7 @@ CoInductive lsim {A : Type} (l1 l2 : coList A) : Prop :=
     lsim' : lsimF l1 l2 lsim
 }.
 
-Hint Constructors lsim : core.
+Global Hint Constructors lsim : core.
 
 Axiom eq_lsim :
   forall (A : Type) (l1 l2 : coList A), lsim l1 l2 -> l1 = l2.
@@ -175,7 +175,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Hint Constructors coList_neq : core.
+Global Hint Constructors coList_neq : core.
 
 Lemma coList_neq_sym :
   forall {A : Type} {l1 l2 : coList A},
@@ -1012,7 +1012,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Hint Constructors Finite : core.
+Global Hint Constructors Finite : core.
 
 Lemma Finite_app_conv :
   forall (A : Type) (l1 l2 : coList A),

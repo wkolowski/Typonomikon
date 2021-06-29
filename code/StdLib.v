@@ -318,6 +318,8 @@ Class Pointed (A : Type) : Type :=
     point : A;
 }.
 
+Set Warnings "-cannot-define-projection".
+
 Class Inhabited (A : Type) : Prop :=
 {
     inhabitant : A;

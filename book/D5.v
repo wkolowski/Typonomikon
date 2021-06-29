@@ -12959,7 +12959,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Hint Constructors Rep : core.
+Global Hint Constructors Rep : core.
 
 Lemma Rep_intersperse :
   forall (A : Type) (x y : A) (n : nat) (l : list A),
@@ -18857,7 +18857,7 @@ Inductive Permutation {A : Type} : list A -> list A -> Prop :=
     | perm_trans : forall l l' l'' : list A,
         Permutation l l' -> Permutation l' l'' -> Permutation l l''.
 
-Hint Constructors Permutation : core.
+Global Hint Constructors Permutation : core.
 (* end hide *)
 
 Lemma Permutation_refl :

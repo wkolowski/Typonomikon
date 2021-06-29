@@ -26,6 +26,9 @@
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Floats</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-inexact-float".<br/>
+
+<br/>
 <span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">float</span>.<br/>
 
 <br/>
@@ -52,20 +55,21 @@
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">root2_aux</span> 1 1000) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">root2_aux</span> 10 1000) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>.<br/>
+<span class="comment">(*<br/>
+Compute&nbsp;map&nbsp;(root2_aux&nbsp;1&nbsp;1000)&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7</span>nat.<br/>
+&nbsp;*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">root</span> (<span class="id" title="var">x</span> : <span class="id" title="var">float</span>) : <span class="id" title="var">float</span> := <span class="id" title="var">root2_aux</span> (<span class="id" title="var">x</span> / 10) <span class="id" title="var">x</span> 50.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> <span class="id" title="var">root</span> [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 1<span class="id" title="var">e6</span>; 1<span class="id" title="var">e12</span>].<br/>
-
+<span class="comment">(*<br/>
+Compute&nbsp;map&nbsp;root&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7;</span> <span class="inlinecode">8;</span> <span class="inlinecode">9;</span> <span class="inlinecode">10;</span> <span class="inlinecode">1<span class="id" title="var">e6</span>;</span> <span class="inlinecode">1<span class="id" title="var">e12</span></span>.<br/>
 <br/>
-<span class="id" title="keyword">Compute</span> 0.1 + 0.2.<br/>
-
+Compute&nbsp;0.1&nbsp;+&nbsp;0.2.<br/>
 <br/>
-<span class="id" title="keyword">Compute</span> (1.000000000000001 - 1) * 100000000000000.<br/>
+Compute&nbsp;(1.000000000000001&nbsp;-&nbsp;1)&nbsp;*&nbsp;100000000000000.<br/>
+&nbsp;*)</span><br/>
 
 <br/>
 </div>
@@ -82,7 +86,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; (<span class="id" title="var">a</span> + <span class="id" title="var">b</span>) / 2<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">m</span> := (<span class="id" title="var">a</span> + <span class="id" title="var">b</span>) / 2 <span class="id" title="tactic">in</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> * <span class="id" title="var">f</span> <span class="id" title="var">m</span> &lt; 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> * <span class="id" title="var">f</span> <span class="id" title="var">m</span> &lt;? 0<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">bisect</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">m</span> <span class="id" title="var">n'</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">bisect</span> <span class="id" title="var">f</span> <span class="id" title="var">m</span> <span class="id" title="var">b</span> <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
@@ -97,20 +101,19 @@
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">m</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> * <span class="id" title="var">f</span> <span class="id" title="var">m</span> &lt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">bisect</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">m</span> <span class="id" title="var">n'</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">bisect</span> <span class="id" title="var">f</span> <span class="id" title="var">m</span> <span class="id" title="var">b</span> <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> * <span class="id" title="var">f</span> <span class="id" title="var">m</span> &lt;? 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">fast_bisect</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">m</span> <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">fast_bisect</span> <span class="id" title="var">f</span> <span class="id" title="var">m</span> <span class="id" title="var">b</span> <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">f0</span> 0.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">f0</span> 1.<br/>
-
+<span class="comment">(*<br/>
+Compute&nbsp;f0&nbsp;0.<br/>
+Compute&nbsp;f0&nbsp;1.<br/>
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">bisect</span> <span class="id" title="var">f0</span> 1 0) [0; 1; 2; 3; 4; 40]%<span class="id" title="var">nat</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> <span class="id" title="var">f0</span> (<span class="id" title="var">map</span> (<span class="id" title="var">bisect</span> <span class="id" title="var">f0</span> 1 0) [0; 1; 2; 3; 4; 40]%<span class="id" title="var">nat</span>).<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">fast_bisect</span> <span class="id" title="var">f0</span> 1 0) [0; 1; 2; 3; 4; 40]%<span class="id" title="var">nat</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> <span class="id" title="var">f0</span> (<span class="id" title="var">map</span> (<span class="id" title="var">fast_bisect</span> <span class="id" title="var">f0</span> 1 0) [0; 1; 2; 3; 4; 40]%<span class="id" title="var">nat</span>).<br/>
+Compute&nbsp;map&nbsp;(bisect&nbsp;f0&nbsp;1&nbsp;0)&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">40</span>nat).<br/>
+Compute&nbsp;map&nbsp;(fast_bisect&nbsp;f0&nbsp;1&nbsp;0)&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">40</span>nat).<br/>
+*)</span><br/>
 
 <br/>
 <span class="comment">(*&nbsp;**&nbsp;2.2&nbsp;Fixed&nbsp;point&nbsp;iteration&nbsp;*)</span><br/>
@@ -126,8 +129,9 @@
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">f1</span> (<span class="id" title="var">x</span> : <span class="id" title="var">float</span>) : <span class="id" title="var">float</span> := (1 - <span class="id" title="var">x</span> * <span class="id" title="var">x</span> * <span class="id" title="var">x</span> * <span class="id" title="var">x</span> * <span class="id" title="var">x</span>) / 2.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">iterf</span> <span class="id" title="var">f1</span> 0) [0; 1; 2; 3; 4; 40]%<span class="id" title="var">nat</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> <span class="id" title="var">f0</span> (<span class="id" title="var">map</span> (<span class="id" title="var">iterf</span> <span class="id" title="var">f1</span> 0) [0; 1; 2; 3; 4; 40]%<span class="id" title="var">nat</span>).<br/>
+<span class="comment">(*<br/>
+Compute&nbsp;map&nbsp;(iterf&nbsp;f1&nbsp;0)&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">40</span>nat).<br/>
+*)</span><br/>
 
 <br/>
 </div>
@@ -159,9 +163,11 @@
 &nbsp;&nbsp;&nbsp;1<span class="id" title="var">e</span>-11; 1<span class="id" title="var">e</span>-12; 1<span class="id" title="var">e</span>-13; 1<span class="id" title="var">e</span>-14; 1<span class="id" title="var">e</span>-15; 1<span class="id" title="var">e</span>-16].<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">h</span> =&gt; <span class="id" title="var">fdiff</span> <span class="id" title="var">h</span> <span class="id" title="var">f2</span> 1) <span class="id" title="var">hs</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">h</span> =&gt; <span class="id" title="var">bdiff</span> <span class="id" title="var">h</span> <span class="id" title="var">f2</span> 1) <span class="id" title="var">hs</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">h</span> =&gt; <span class="id" title="var">cdiff</span> <span class="id" title="var">h</span> <span class="id" title="var">f2</span> 1) <span class="id" title="var">hs</span>.<br/>
+<span class="comment">(*<br/>
+Compute&nbsp;map&nbsp;(fun&nbsp;h&nbsp;=&gt;&nbsp;fdiff&nbsp;h&nbsp;f2&nbsp;1)&nbsp;hs.<br/>
+Compute&nbsp;map&nbsp;(fun&nbsp;h&nbsp;=&gt;&nbsp;bdiff&nbsp;h&nbsp;f2&nbsp;1)&nbsp;hs.<br/>
+Compute&nbsp;map&nbsp;(fun&nbsp;h&nbsp;=&gt;&nbsp;cdiff&nbsp;h&nbsp;f2&nbsp;1)&nbsp;hs.<br/>
+*)</span><br/>
 
 <br/>
 </div>
@@ -189,18 +195,18 @@
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">Newton</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f2</span> 2) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>.<br/>
+<span class="comment">(*<br/>
+Compute&nbsp;map&nbsp;(Newton&nbsp;1e-5&nbsp;f2&nbsp;2)&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7</span>*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">f3</span> (<span class="id" title="var">x</span> : <span class="id" title="var">float</span>) : <span class="id" title="var">float</span> := <span class="id" title="var">x</span> * <span class="id" title="var">x</span> - 2.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">Newton</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f3</span> 2) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> <span class="id" title="var">f3</span> (<span class="id" title="var">map</span> (<span class="id" title="var">Newton</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f3</span> 2) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>).<br/>
-
+<span class="comment">(*<br/>
+Compute&nbsp;map&nbsp;(Newton&nbsp;1e-5&nbsp;f3&nbsp;2)&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7</span>nat).<br/>
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">Newton'</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f3</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> =&gt; 2 * <span class="id" title="var">x</span>) 2) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> <span class="id" title="var">f3</span> (<span class="id" title="var">map</span> (<span class="id" title="var">Newton</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f3</span> 2) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>).<br/>
+Compute&nbsp;map&nbsp;(Newton'&nbsp;1e-5&nbsp;f3&nbsp;(fun&nbsp;x&nbsp;=&gt;&nbsp;2&nbsp;*&nbsp;x)&nbsp;2)&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7</span>nat).<br/>
+*)</span><br/>
 
 <br/>
 </div>
@@ -227,12 +233,11 @@
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">f4</span> (<span class="id" title="var">x</span> : <span class="id" title="var">float</span>) : <span class="id" title="var">float</span> := <span class="id" title="var">x</span> * <span class="id" title="var">x</span> * <span class="id" title="var">x</span> * <span class="id" title="var">x</span> * <span class="id" title="var">x</span> - 7 * <span class="id" title="var">x</span> * <span class="id" title="var">x</span> - 42.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">Newton</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f4</span> 2) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> <span class="id" title="var">f4</span> (<span class="id" title="var">map</span> (<span class="id" title="var">Newton</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f4</span> 2) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>).<br/>
-
+<span class="comment">(*<br/>
+Compute&nbsp;map&nbsp;(Newton&nbsp;1e-5&nbsp;f4&nbsp;2)&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7</span>nat).<br/>
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">Halley</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f4</span> 2) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> <span class="id" title="var">f4</span> (<span class="id" title="var">map</span> (<span class="id" title="var">Halley</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f4</span> 2) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>).<br/>
+Compute&nbsp;map&nbsp;(Halley&nbsp;1e-5&nbsp;f4&nbsp;2)&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7</span>nat).<br/>
+*)</span><br/>
 
 <br/>
 </div>
@@ -252,10 +257,10 @@
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">Newton</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f3</span> 2) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> <span class="id" title="var">f3</span> (<span class="id" title="var">map</span> (<span class="id" title="var">Newton</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f3</span> 2) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>).<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> (<span class="id" title="var">secant</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f3</span> 0 1) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>.<br/>
-<span class="id" title="keyword">Compute</span> <span class="id" title="var">map</span> <span class="id" title="var">f3</span> (<span class="id" title="var">map</span> (<span class="id" title="var">secant</span> 1<span class="id" title="var">e</span>-5 <span class="id" title="var">f3</span> 0 1) [0; 1; 2; 3; 4; 5; 6; 7]%<span class="id" title="var">nat</span>).<br/>
+<span class="comment">(*<br/>
+Compute&nbsp;map&nbsp;(Newton&nbsp;1e-5&nbsp;f3&nbsp;2)&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7</span>nat).<br/>
+Compute&nbsp;map&nbsp;(secant&nbsp;1e-5&nbsp;f3&nbsp;0&nbsp;1)&nbsp;<span class="inlinecode">0;</span> <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7</span>nat).<br/>
+*)</span><br/>
 
 <br/>
 </div>
@@ -272,7 +277,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">x</span> <span class="id" title="var">n</span> - <span class="id" title="var">a</span> * <span class="id" title="var">a</span> / (<span class="id" title="var">x</span> <span class="id" title="var">n</span> - 2 * <span class="id" title="var">x</span> (1 + <span class="id" title="var">n</span>)%<span class="id" title="var">nat</span> + <span class="id" title="var">x</span> (2 + <span class="id" title="var">n</span>)%<span class="id" title="var">nat</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Search</span> <span class="id" title="var">float</span>.<br/>
+<span class="comment">(*&nbsp;Search&nbsp;float.&nbsp;*)</span><br/>
 
 <br/>
 <span class="comment">(*<br/>

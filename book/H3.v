@@ -97,7 +97,7 @@ Inductive le' : nat -> nat -> Prop :=
     przyda ci się kilka lematów pomocniczych. *)
 
 (* begin hide *)
-Hint Constructors le' : core.
+Global Hint Constructors le' : core.
 
 Lemma le'_refl : forall n : nat, le' n n.
 Proof.
@@ -982,7 +982,7 @@ Inductive collatz : nat -> nat -> Prop :=
     | c_trans : forall a b c : nat,
         collatz a b -> collatz b c -> collatz a c.
 
-Hint Constructors collatz : core.
+Global Hint Constructors collatz : core.
 
 Lemma collatz_42 : collatz 42 1.
 Proof.
@@ -2799,7 +2799,7 @@ Proof.
 Qed.
 
 (* begin hide *)
-Hint Constructors refl_clos : core.
+Global Hint Constructors refl_clos : core.
 
 Ltac rc := compute; repeat split; intros; rel;
 repeat match goal with
@@ -2847,7 +2847,7 @@ Inductive symm_clos {A : Type} (R : rel A) : rel A :=
         forall x y : A, symm_clos R x y -> symm_clos R y x.
 
 (* begin hide *)
-Hint Constructors symm_clos : core.
+Global Hint Constructors symm_clos : core.
 
 Ltac sc := compute; repeat split; intros; rel;
 repeat match goal with
@@ -2896,7 +2896,7 @@ Inductive trans_clos {A : Type} (R : rel A) : rel A :=
           trans_clos R x y -> trans_clos R y z -> trans_clos R x z.
 
 (* begin hide *)
-Hint Constructors trans_clos : core.
+Global Hint Constructors trans_clos : core.
 
 Ltac tc := compute; repeat split; intros; rel;
 repeat match goal with
@@ -2950,7 +2950,7 @@ Inductive equiv_clos {A : Type} (R : rel A) : rel A :=
         equiv_clos R x y -> equiv_clos R y z -> equiv_clos R x z.
 
 (* begin hide *)
-Hint Constructors equiv_clos : core.
+Global Hint Constructors equiv_clos : core.
 
 Ltac ec := compute; repeat split; intros; rel;
 repeat match goal with

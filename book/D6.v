@@ -1719,7 +1719,7 @@ Definition Perm {A : Type} (l1 l2 : list A) : Prop :=
   forall (P : A -> Prop) (n : nat),
     (AtLeast P n l1 <-> AtLeast P n l2).
 
-Hint Constructors AtLeast : core.
+Global Hint Constructors AtLeast : core.
 
 Lemma Permutation_AtLeast :
   forall {A : Type} {l1 l2 : list A},
@@ -1863,7 +1863,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Hint Constructors Exactly : core.
+Global Hint Constructors Exactly : core.
 
 (* TODO *) Lemma AtLeast_Exactly :
   forall {A : Type} (l1 l2 : list A),

@@ -1605,6 +1605,10 @@ Proof. decide equality. Defined.
 
 Require Import Arith Omega.
 
+(* begin hide *)
+Set Warnings "-omega-is-deprecated".
+(* end hide *)
+
 Example omega_0 :
   forall n : nat, n + n = 2 * n.
 Proof. intro. omega. Qed.
@@ -1657,6 +1661,10 @@ Print filter_length'.
     Mogłoby się zdawać, że jesteśmy w sytuacji bez wyjścia: albo dowodzimy
     ręcznie, albo prooftermy będą tak wielkie, że nie będziemy mogli ich
     odwijać. *)
+
+(* begin hide *)
+Set Warnings "+omega-is-deprecated".
+(* end hide *)
 
 (** ** Procedury decyzyjne dla logiki *)
 
@@ -1900,14 +1908,17 @@ Qed.
     szczęście możemy temu zaradzić za pomocą podpowiedzi, które bytują
     w specjalnych bazach. *)
 
-Hint Resolve p : my_hint_db.
+Hint Resolve p : core.
 
 Example auto_ex4' : P.
-Proof. auto with my_hint_db. Qed.
+Proof. auto with core. Qed.
 
 (** Komenda [Hint Resolve ident : db_name] dodaje lemat o nazwie [ident]
     do bazy podpowiedzi o nazwie [db_name]. Dzięki temu taktyka [auto with
     db_1 ... db_n] widzi wszystkie lematy dodane do baz [db_1], ..., [db_n].
+    Domyślna baza podpowiedzi nazywa się [core] i to właśnie do niej dodajemy
+    naszą podpowiedź.
+
     Jeżeli to dla ciebie wciąż zbyt wiele pisania, uszy do góry! *)
 
 Example auto_ex4'' : P.
@@ -1915,15 +1926,11 @@ Proof. auto with *. Qed.
 
 (** Taktyka [auto with *] widzi wszystkie możliwe bazy podpowiedzi. *)
 
-Hint Resolve p.
-
 Example auto_ex4''' : P.
 Proof. auto. Qed.
 
-(** Komenda [Hint Resolve ident] dodaje lemat o nazwie [ident] do bazy
-    podpowiedzi o nazwie [core]. Taktyka [auto] jest zaś równoważna
-    taktyce [auto with core]. Dzięki temu nie musimy pisać już nic ponad
-    zwykłe [auto]. *)
+(** Goła taktyka [auto] jest zaś równoważna taktyce [auto with core]. Dzięki
+    temu nie musimy pisać już nic ponad zwykłe [auto]. *)
 
 End auto_ex4.
 

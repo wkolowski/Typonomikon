@@ -472,7 +472,7 @@ end.
 Fixpoint decode (n m : nat) : code n m -> gutle n m :=
 match n, m with
     | 0   , _    => fun _ => gutle_0 m
-    | n'  , 0    => fun c => match c with end
+    | _   , 0    => fun c => match c with end
     | S n', S m' => fun c => gutle_SS _ _ (decode n' m' c)
 end.
 
@@ -729,7 +729,7 @@ Inductive list_neq
     | cc2 : forall (h1 h2 : A) (t1 t2 : list A),
               list_neq R t1 t2 -> list_neq R (h1 :: t1) (h2 :: t2).
 
-Hint Constructors list_neq : core.
+Global Hint Constructors list_neq : core.
 
 Lemma list_neq_irrefl_aux :
   forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
@@ -1532,7 +1532,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Hint Constructors ListDiffProtocol : core.
+Global Hint Constructors ListDiffProtocol : core.
 
 Lemma proto_trans :
   forall {A : Type} {R : A -> A -> Type} {l1 l2 l3 : list A},
@@ -2029,7 +2029,9 @@ Defined.
     uskładać coś w stylu nat ~ list nat? A może nie da się i trzeba
     robić ręcznie? *)
 
+Set Warnings "-notation-overridden".
 Require Import vec.
+Set Warnings "notation-overridden".
 
 Definition vlist (A : Type) : Type :=
   {n : nat & vec A n}.

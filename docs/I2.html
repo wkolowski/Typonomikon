@@ -2202,6 +2202,8 @@ Zanim przejdziesz dalej, udowodnij ręcznie powyższe twierdzenie. Przyznasz,
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span> <span class="id" title="var">Omega</span>.<br/>
 
 <br/>
+
+<br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">omega_0</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> + <span class="id" title="var">n</span> = 2 * <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">omega</span>. <span class="id" title="keyword">Qed</span>.<br/>
@@ -2276,8 +2278,15 @@ Jak widać, ręczny dowód tego faktu daje w wyniku proofterm, który jest
     Mogłoby się zdawać, że jesteśmy w sytuacji bez wyjścia: albo dowodzimy
     ręcznie, albo prooftermy będą tak wielkie, że nie będziemy mogli ich
     odwijać. 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a id="lab781"></a><h2 class="section">Procedury decyzyjne dla logiki</h2>
 
 </div>
@@ -2495,11 +2504,11 @@ Jak widać na powyższym przykładzie, <span class="inlinecode"><span class="id"
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Hint Resolve</span> <span class="id" title="var">p</span> : <span class="id" title="var">my_hint_db</span>.<br/>
+<span class="id" title="keyword">Hint Resolve</span> <span class="id" title="var">p</span> : <span class="id" title="var">core</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">auto_ex4'</span> : <span class="id" title="var">P</span>.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">auto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">my_hint_db</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">auto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">core</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
@@ -2508,6 +2517,11 @@ Jak widać na powyższym przykładzie, <span class="inlinecode"><span class="id"
 Komenda <span class="inlinecode"><span class="id" title="keyword">Hint</span></span> <span class="inlinecode"><span class="id" title="keyword">Resolve</span></span> <span class="inlinecode"><span class="id" title="var">ident</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">db_name</span></span> dodaje lemat o nazwie <span class="inlinecode"><span class="id" title="var">ident</span></span>
     do bazy podpowiedzi o nazwie <span class="inlinecode"><span class="id" title="var">db_name</span></span>. Dzięki temu taktyka <span class="inlinecode"><span class="id" title="tactic">auto</span></span> <span class="inlinecode"><span class="id" title="keyword">with</span></span>
     <span class="inlinecode"><span class="id" title="var">db_1</span></span> <span class="inlinecode">...</span> <span class="inlinecode"><span class="id" title="var">db_n</span></span> widzi wszystkie lematy dodane do baz <span class="inlinecode"><span class="id" title="var">db_1</span></span>, ..., <span class="inlinecode"><span class="id" title="var">db_n</span></span>.
+    Domyślna baza podpowiedzi nazywa się <span class="inlinecode"><span class="id" title="var">core</span></span> i to właśnie do niej dodajemy
+    naszą podpowiedź.
+
+<div class="paragraph"> </div>
+
     Jeżeli to dla ciebie wciąż zbyt wiele pisania, uszy do góry! 
 </div>
 <div class="code">
@@ -2525,9 +2539,6 @@ Taktyka <span class="inlinecode"><span class="id" title="tactic">auto</span></sp
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Hint Resolve</span> <span class="id" title="var">p</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">auto_ex4'''</span> : <span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">auto</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -2535,10 +2546,8 @@ Taktyka <span class="inlinecode"><span class="id" title="tactic">auto</span></sp
 </div>
 
 <div class="doc">
-Komenda <span class="inlinecode"><span class="id" title="keyword">Hint</span></span> <span class="inlinecode"><span class="id" title="keyword">Resolve</span></span> <span class="inlinecode"><span class="id" title="var">ident</span></span> dodaje lemat o nazwie <span class="inlinecode"><span class="id" title="var">ident</span></span> do bazy
-    podpowiedzi o nazwie <span class="inlinecode"><span class="id" title="var">core</span></span>. Taktyka <span class="inlinecode"><span class="id" title="tactic">auto</span></span> jest zaś równoważna
-    taktyce <span class="inlinecode"><span class="id" title="tactic">auto</span></span> <span class="inlinecode"><span class="id" title="keyword">with</span></span> <span class="inlinecode"><span class="id" title="var">core</span></span>. Dzięki temu nie musimy pisać już nic ponad
-    zwykłe <span class="inlinecode"><span class="id" title="tactic">auto</span></span>. 
+Goła taktyka <span class="inlinecode"><span class="id" title="tactic">auto</span></span> jest zaś równoważna taktyce <span class="inlinecode"><span class="id" title="tactic">auto</span></span> <span class="inlinecode"><span class="id" title="keyword">with</span></span> <span class="inlinecode"><span class="id" title="var">core</span></span>. Dzięki
+    temu nie musimy pisać już nic ponad zwykłe <span class="inlinecode"><span class="id" title="tactic">auto</span></span>. 
 </div>
 <div class="code">
 

@@ -1,5 +1,9 @@
 (** * F4: Kolisty [TODO] *)
 
+(* begin hide *)
+Set Warnings "-cannot-define-projection".
+(* end hide *)
+
 (** * Kolisty nie znaczy okrągły *)
 
 Require Import D5.
@@ -44,7 +48,7 @@ CoInductive lsim {A : Type} (l1 l2 : coList A) : Prop :=
           h1 = h2 /\ lsim t1 t2
 }.
 
-Hint Constructors lsim : core.
+Global Hint Constructors lsim : core.
 
 Axiom eq_lsim :
   forall (A : Type) (l1 l2 : coList A), lsim l1 l2 -> l1 = l2.
@@ -160,7 +164,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Hint Constructors coList_neq : core.
+Global Hint Constructors coList_neq : core.
 
 Lemma coList_neq_sym :
   forall {A : Type} {l1 l2 : coList A},
@@ -859,7 +863,7 @@ Lemma sim_Infinite :
 Proof.
   cofix CH.
   destruct 1 as [[[] | (h1 & t1 & h2 & t2 & p1 & p2 & p3 & H)]], 1.
-    rewrite H in p. inversion p.
+    rewrite H0 in p. inversion p.
     econstructor.
       exact p2.
       rewrite p1 in p. inversion p; subst. eapply CH; eauto.
@@ -993,7 +997,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Hint Constructors Finite : core.
+Global Hint Constructors Finite : core.
 
 Lemma Finite_app_conv :
   forall (A : Type) (l1 l2 : coList A),
