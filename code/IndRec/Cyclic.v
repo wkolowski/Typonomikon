@@ -6,6 +6,8 @@ Require Import Recdef.
 Require Import List.
 Import ListNotations.
 
+(** * Fegaras and Sheard's solution *)
+
 Module HOAS_Like.
 
 Unset Positivity Checking.
@@ -75,13 +77,15 @@ Proof.
       assumption.
 Qed.
 
-(** ** There is no guarantee on the way pointers are used (if at all). *)
+(** ** The limitations of this representation *)
+
+(** *** There is no guarantee on the way pointers are used (if at all). *)
 
 (** Explanation: [FiniteCList] is a syntactic definition of finiteness.
     [FiniteCoList] is, on the other hand, a semantic definition of
     finiteness.
 
-    It turns out that there are some (semantically) finite CLists which
+    It turns out that there are some semantically finite CLists which
     are not finite according to the syntactic definition. This is caused
     by the misuse of the [Rec] constructor to construct phony cycles. *)
 
@@ -108,7 +112,7 @@ Defined.
     by [Rec] (or possibly also by using it more that once). So maybe
     this could be fixed by a type of linear functions? *)
 
-(** ** Normal forms are not guaranteed *)
+(** *** Normal forms are not guaranteed *)
 
 Definition ex1 : CList nat :=
   Cons 4 (Rec 2 (fun l => l)).
@@ -117,7 +121,7 @@ Definition ex2 : CList nat :=
   Rec 4 (fun _ => Rec 2 (fun l => l)).
 
 (** Here we have two syntactically distinct [CList]s whose normal
-    forms are different. *)
+    forms are the same. *)
 
 Inductive simF {A : Type} (l1 l2 : CoList A) (R : CoList A -> CoList A -> Type) : Type :=
     | CoNilsF (H1 : uncons l1 = CoNilF) (H2 : uncons l2 = CoNilF)
@@ -176,6 +180,8 @@ match l1 with
     | Rec h r => Rec h (fun l => (app (r l) l2))
 end.
 
+(** *** Useful functions cannot be written without unfolding the cycle *)
+
 (** It's probably impossible to define [map]. *)
 Unset Guard Checking.
 Fixpoint mapS (l : CList nat) : CList nat :=
@@ -183,26 +189,118 @@ match l with
     | Nil => Nil
     | Cons h t => Cons (S h) (mapS t)
     | Rec h r => Rec (S h) (fun l => r (mapS l))
+(*     | Rec h r => Cons (S h) (mapS (r l)) *) (* Does not terminate *)
 end.
 Set Guard Checking.
 
-(** If we try, mapping successor over a recursive list results in computing powers of two... *)
-Compute take 10 (mapS (mapS ex1)).
+(** If we try, mapping successor over a recursive list results in computing
+    powers of two... *)
+Compute take 10 (mapS ex1).
 (* ===> [6; 4; 6; 10; 18; 34; 66; 130; 258; 514] : list nat *)
 
 End HOAS_Like.
+
+(** * Calling the type system to the rescue *)
 
 Module Phantom.
 
 Inductive Closed : SProp := closed.
 
 Unset Positivity Checking.
-Inductive CList (A : Type) : SProp -> Type :=
-    | Nil  : CList A Closed
-    | Cons : forall (B : SProp) (h : A) (t : CList A B), CList A B
-    | Rec  : forall (h : A) (r : forall {B : SProp}, CList A B -> CList A B), CList A Closed.
+Inductive CList' (A : Type) : SProp -> Type :=
+    | Nil  : CList' A Closed
+    | Cons : forall {B : SProp} (h : A) (t : CList' A B), CList' A B
+    | Rec  : forall (h : A) (r : forall {B : SProp}, CList' A B -> CList' A B),
+               CList' A Closed.
 Set Positivity Checking.
 
+Arguments Nil  {A}.
+Arguments Cons {A B} _ _.
+Arguments Rec  {A} _ _.
 
+Definition CList (A : Type) : Type := CList' A Closed.
+
+(** Our previous problems with illegal uses of the pointer are gone. *)
+
+Fail Definition finite : CList nat :=
+  Cons 1 (Rec 2 (fun _ _ => Nil)).
+(* The command has indeed failed with message:
+   In environment [P : SProp], [c : CList' nat P]
+   The term [Nil] has type
+   [CList' nat Closed]
+   while it is expected to have type
+   [CList' nat P]
+   (cannot unify [Closed] and [P]).
+*)
+
+(** As we see, we can't use [Nil] while omitting the argument, as this results
+    in a type error. *)
+
+Definition ex1 : CList nat :=
+  Cons 4 (Rec 2 (fun _ l => l)).
+
+(** The correct definition is still correct. *)
+
+Fail Definition ex2 : CList nat :=
+  Rec 4 (fun _ _ => Rec 2 (fun _ l => l)).
+(* In environment
+   [P : SProp], [c : CList' nat P]
+   The term
+   [Rec 2 (fun (B : SProp) (l : CList' nat B) => l)]
+   has type
+   [CList' nat Closed]
+   while it is expected to have type
+   [CList' nat P]
+*)
+
+(** We also can't use one pointer while ignoring another one. Thus, we see that
+    using a phantom type argument has effects similar to using a type of linear
+    functions. *)
+
+Require Import Coq.Program.Equality.
+
+Unset Guard Checking.
+Fixpoint stopRec
+  {A : Type} {R : SProp -> Type}
+  (nil  : R Closed)
+  (cons : forall (B : SProp), A -> R B -> R B)
+  (rec  : A -> (forall B : SProp, R B -> R B) -> R Closed)
+  (l    : CList' A Closed)
+  {B : SProp}
+  (ih : R B) {struct l} : R B.
+Proof.
+  destruct l as [| B' h t | h r].
+    exact ih.
+    exact (cons _ h (stopRec A R nil cons rec t B ih)).
+    exact ih. Show Proof.
+Defined.
+Set Guard Checking.
+
+Unset Guard Checking.
+Fixpoint cfold
+  {A : Type} {R : SProp -> Type}
+  (nil  : R Closed)
+  (cons : forall (B : SProp), A -> R B -> R B)
+  (rec  : A -> (forall B : SProp, R B -> R B) -> R Closed)
+  (l    : CList' A Closed) {struct l}
+        : R Closed.
+Proof.
+  destruct l as [| B h t | h r].
+    exact nil.
+    exact (cons _ h (cfold A R nil cons rec t)).
+    exact (rec h (@stopRec A R nil cons rec (r _ (Rec h r)))). Show Proof.
+Defined.
+Set Guard Checking.
+
+Definition cmap {A B : Type} (f : A -> B) (l : CList A) : CList B.
+Proof.
+  eapply cfold.
+    exact Nil.
+    intros B' h t. exact (Cons (f h) t).
+    intros h r. exact (Rec (f h) r).
+    exact l.
+Defined.
+
+Compute cmap S ex1.
 
 End Phantom.
