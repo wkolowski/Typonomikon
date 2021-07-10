@@ -2608,10 +2608,10 @@ end.
 (* end hide *)
 
 Compute cycle 3 [1; 2; 3; 4; 5].
-(* ===> [4; 5; 1; 2; 3] : list nat *)
+(* ===> [[4; 5; 1; 2; 3]] : list nat *)
 
 Compute cycle 6 [1; 2; 3; 4; 5].
-(* ===> [2; 3; 4; 5; 1] : list nat *)
+(* ===> [[2; 3; 4; 5; 1]] : list nat *)
 
 Lemma cycle_0 :
   forall (A : Type) (l : list A),

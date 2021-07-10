@@ -371,19 +371,9 @@ End Phantom.
 
 Module HOAS_Unique.
 
-(** The HOAS-like representation wasn't unique. *)
-
-Module Example.
-
-Import HOAS_Like.
-
-Definition ones1 : CList nat :=
-  Cons 1 (Rec 1 (fun l => l)).
-
-Definition ones2 : CList nat :=
-  Rec 1 (fun l => l).
-
-End Example.
+(** The HOAS-like representation wasn't unique and that was bad. We can make a
+    better representation with unique normal forms by getting rid of [Cons] and
+    leaving just [Rec]. *)
 
 Unset Positivity Checking.
 Inductive CList (A : Type) : Type :=
@@ -399,6 +389,8 @@ match l with
     | Nil       => CoNil
     | RCons h r => CoCons h (unwind (r l))
 end.
+
+(** But it's hard to prove that normal forms are unique in this representation. *)
 
 Lemma unique :
   forall {A : Type} (l1 l2 : CList A),
@@ -422,6 +414,10 @@ Abort.
 
 End HOAS_Unique.
 
+(** We can do better: we can defunctionalize the higher-order repsentation to
+    arrive at a first-order representation that is basically just de Bruijn
+    levels. *)
+
 Module Nested.
 
 Inductive CList (A V : Type) : Type :=
@@ -433,12 +429,21 @@ Arguments Var   {A V} _.
 Arguments Nil   {A V}.
 Arguments RCons {A V} _ _.
 
+(** Technically, this is realized using a nested inductive type. The type
+    family [CList] has two type parameters, [A] and [V]. [A] is the type of
+    elements held in the list, while [V] represents pointers that can be used
+    to close a cycle. Our intention is that when [V] is nonempty, [CList A V]
+    represents cyclic lists "with free variables", whereas for empty [V],
+    [CList A V] represents "closed" cyclic lists. *)
+
 Fixpoint map {A B V : Type} (f : A -> B) (l : CList A V) : CList B V :=
 match l with
     | Var v     => Var v
     | Nil       => Nil
     | RCons h t => RCons (f h) (map f t)
 end.
+
+(** [map] is easy. *)
 
 Fixpoint shift {A V : Type} (l : CList A V) : CList A (option V) :=
 match l with
@@ -447,12 +452,9 @@ match l with
     | RCons h t => RCons h (shift t)
 end.
 
-Fixpoint app {A V : Type} (l1 l2 : CList A V) : CList A V :=
-match l1 with
-    | Var v     => Var v
-    | Nil       => l2
-    | RCons h t => RCons h (app t (shift l2))
-end.
+(** [shift] is a very important auxiliary function which shifts all pointers
+    one place to the right, i.e. a pointer that referred to the list's zeroth
+    element now refers to the first one and so on. *)
 
 Lemma map_shift :
   forall {A B V : Type} (f : A -> B) (l : CList A V),
@@ -462,6 +464,36 @@ Proof.
     1-2: reflexivity.
     f_equal. exact IHl.
 Qed.
+
+Lemma map_map :
+  forall {A B C V : Type} (f : A -> B) (g : B -> C) (l : CList A V),
+    map g (map f l) = map (fun x => g (f x)) l.
+Proof.
+  induction l as [| | h t]; cbn; intros.
+    1-2: reflexivity.
+    rewrite IHl. reflexivity.
+Qed.
+
+Lemma map_id :
+  forall {A V : Type} (l : CList A V),
+    map (fun x => x) l = l.
+Proof.
+  induction l as [| | h t]; cbn; intros.
+    1-2: reflexivity.
+    rewrite IHl. reflexivity.
+Qed.
+
+Fixpoint app {A V : Type} (l1 l2 : CList A V) : CList A V :=
+match l1 with
+    | Var v     => Var v
+    | Nil       => l2
+    | RCons h t => RCons h (app t (shift l2))
+end.
+
+(** [app] is also easy, but we need to [shift] the pointers when appending [l2]
+    to the tail of [l1]. When we hit a variable we drop [l2], because it means
+    that we have arrived in a location where a pointer to an earlier location
+    in the list is used, i.e. the first list is cyclic and thus "infinite". *)
 
 Lemma map_app :
   forall {A B V : Type} (f : A -> B) (l1 l2 : CList A V),
@@ -480,5 +512,126 @@ Proof.
     1-2: reflexivity.
     rewrite IHl1. reflexivity.
 Qed.
- 
+
+Lemma app_assoc :
+  forall {A V : Type} (l1 l2 l3 : CList A V),
+    app (app l1 l2) l3 = app l1 (app l2 l3).
+Proof.
+  induction l1 as [| | h t]; cbn; intros.
+    1-2: reflexivity.
+    rewrite IHl1, app_shift. reflexivity.
+Qed.
+
+Fixpoint snoc {A V : Type} (x : A) (l : CList A V) : CList A V :=
+match l with
+    | Var v     => Var v
+    | Nil       => RCons x Nil
+    | RCons h t => RCons h (snoc x t)
+end.
+
+Lemma snoc_shift :
+  forall {A V : Type} (x : A) (l : CList A V),
+    snoc x (shift l) = shift (snoc x l).
+Proof.
+  induction l as [| | h t]; cbn.
+    1-2: reflexivity.
+    rewrite IHl. reflexivity.
+Qed.
+
+Lemma snoc_app :
+  forall {A V : Type} (x : A) (l1 l2 : CList A V),
+    snoc x (app l1 l2) = app l1 (snoc x l2).
+Proof.
+  induction l1 as [| | h t]; cbn; intros.
+    1-2: reflexivity.
+    rewrite IHl1, snoc_shift. reflexivity.
+Qed.
+
+Fixpoint replicate {A V : Type} (n : nat) (x : A) : CList A V :=
+match n with
+    | 0    => Nil
+    | S n' => RCons x (replicate n' x)
+end.
+
+Definition repeat {A V : Type} (x : A) : CList A V :=
+  RCons x (Var None).
+
+Inductive Finite {A V : Type} : CList A V -> Type :=
+    | FNil   : Finite Nil
+    | FRCons : forall (h : A) (t : CList A (option V)) (t' : CList A V),
+                 Finite t -> t = shift t' -> Finite (RCons h t).
+
+Lemma shift_replicate :
+  forall (n : nat) {A V : Type} (x : A),
+    @shift A V (replicate n x) = replicate n x.
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. reflexivity.
+Qed.
+
+Lemma Finite_replicate :
+  forall (n : nat) {A V : Type} (x : A),
+    @Finite A V (@replicate A V n x).
+Proof.
+  induction n as [| n']; cbn; intros.
+    constructor.
+    econstructor.
+      apply IHn'.
+      rewrite shift_replicate. reflexivity.
+Qed.
+
+Lemma not_Finite_repeat :
+  forall {A V : Type} (x : A),
+    @Finite A V (repeat x) -> False.
+Proof.
+  inversion 1. subst. inversion X0.
+Qed.
+
+
+
+(* Fixpoint bind {A B V : Type} (l : CList A V) (f : A -> CList B V) : CList B V :=
+match l with
+    | Var v     => Var v
+    | Nil       => Nil
+    | RCons h t => app (f h) (bind t (fun l => shift (f l)))
+end.
+
+
+
+Fixpoint rev {A V : Type} (l acc : CList A V) : CList A V :=
+match l with
+    | Var v     => app acc (Var v)
+    | Nil       => acc
+    | RCons h t => rev t (RCons h (shift acc))
+end.
+ *)
+
+Fixpoint take {A V : Type} (n : nat) (l : CList A V) : list A :=
+match n, l with
+    | 0   , _         => []
+    | _   , Var v     => []
+    | _   , Nil       => []
+    | S n', RCons h t => h :: take n' t
+end.
+
+Compute take 5 (RCons 1 (RCons 2 (Var None))).
+
 End Nested.
+
+Inductive CBin (A V : Type) : Type :=
+    | Var : V -> CBin A V
+    | E   : CBin A V
+    | N   : A -> CBin A (option V) -> CBin A (option V) -> CBin A V.
+
+Arguments Var {A V} _.
+Arguments E   {A V}.
+Arguments N   {A V} _ _ _.
+
+Fixpoint map {A B V : Type} (f : A -> B) (t : CBin A V) : CBin B V :=
+match t with
+    | Var v   => Var v
+    | E       => E
+    | N x l r => N (f x) (map f l) (map f r)
+end.
+
