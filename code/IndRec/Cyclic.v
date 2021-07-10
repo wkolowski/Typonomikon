@@ -1,25 +1,16 @@
 (** Zainspirowane przez:
-    - https://gallais.github.io/blog/cyclic-list-purely.html
-    - https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf *)
+    - Cyclic Lists, Purely: https://gallais.github.io/blog/cyclic-list-purely.html
+    - Representing Cyclic Structures as Nested Data Types:
+      https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf *)
 
 Require Import Recdef.
 Require Import List.
 Import ListNotations.
 
-(** * Fegaras and Sheard's solution *)
+(** * CoLists *)
 
-Module HOAS_Like.
-
-Unset Positivity Checking.
-Inductive CList (A : Type) : Type :=
-    | Nil
-    | Cons (h : A) (t : CList A)
-    | Rec  (h : A) (r : CList A -> CList A).
-Set Positivity Checking.
-
-Arguments Nil  {A}.
-Arguments Cons {A} _ _.
-Arguments Rec  {A} _.
+(** We need CoLists (Coinductive Lists) to express some things for which the
+    original blogpost uses ordinary Haskell lists. *)
 
 Inductive CoListF (A R : Type) : Type :=
     | CoNilF
@@ -45,6 +36,54 @@ Definition CoCons {A : Type} (h : A) (t : CoList A) : CoList A :=
     uncons := CoConsF h t;
 |}.
 
+Inductive FiniteCoList {A : Type} (l : CoList A) : Type :=
+    | FiniteCoNil :
+        uncons l = CoNilF -> FiniteCoList l
+    | FiniteCoCons :
+        forall (h : A) (t: CoList A),
+          uncons l = CoConsF h t ->
+            FiniteCoList t -> FiniteCoList l.
+
+Inductive simF {A : Type} (l1 l2 : CoList A) (R : CoList A -> CoList A -> Type) : Type :=
+    | CoNilsF (H1 : uncons l1 = CoNilF) (H2 : uncons l2 = CoNilF)
+    | CoConssF :
+        forall (h1 h2 : A) (t1 t2 : CoList A),
+          uncons l1 = CoConsF h1 t1 -> uncons l2 = CoConsF h2 t2 ->
+            h1 = h2 -> R t1 t2 -> simF l1 l2 R.
+
+CoInductive sim {A : Type} (l1 l2 : CoList A) : Type :=
+{
+    sim' : simF l1 l2 sim;
+}.
+
+Lemma sim_refl :
+  forall {A : Type} (l : CoList A),
+    sim l l.
+Proof.
+  cofix CH.
+  destruct l as [[| h t]].
+    do 2 constructor; cbn; reflexivity.
+    constructor. econstructor 2; try reflexivity. apply CH.
+Qed.
+
+(** The first part is inspired by "Cyclic Lists, Purely"
+    (https://gallais.github.io/blog/cyclic-list-purely.html) *)
+
+(** * Fegaras and Sheard's solution *)
+
+Module HOAS_Like.
+
+Unset Positivity Checking.
+Inductive CList (A : Type) : Type :=
+    | Nil
+    | Cons (h : A) (t : CList A)
+    | Rec  (h : A) (r : CList A -> CList A).
+Set Positivity Checking.
+
+Arguments Nil  {A}.
+Arguments Cons {A} _ _.
+Arguments Rec  {A} _.
+
 Function unwind {A : Type} (l : CList A) : CoList A :=
 match l with
     | Nil => CoNil
@@ -57,14 +96,6 @@ Inductive FiniteCList {A : Type} : CList A -> Type :=
     | FCons :
         forall (h : A) (t : CList A),
           FiniteCList t -> FiniteCList (Cons h t).
-
-Inductive FiniteCoList {A : Type} (l : CoList A) : Type :=
-    | FiniteCoNil :
-        uncons l = CoNilF -> FiniteCoList l
-    | FiniteCoCons :
-        forall (h : A) (t: CoList A),
-          uncons l = CoConsF h t ->
-            FiniteCoList t -> FiniteCoList l.
 
 Lemma Finite_check :
   forall {A : Type} (l : CList A),
@@ -120,30 +151,8 @@ Definition ex1 : CList nat :=
 Definition ex2 : CList nat :=
   Rec 4 (fun _ => Rec 2 (fun l => l)).
 
-(** Here we have two syntactically distinct [CList]s whose normal
-    forms are the same. *)
-
-Inductive simF {A : Type} (l1 l2 : CoList A) (R : CoList A -> CoList A -> Type) : Type :=
-    | CoNilsF (H1 : uncons l1 = CoNilF) (H2 : uncons l2 = CoNilF)
-    | CoConssF :
-        forall (h1 h2 : A) (t1 t2 : CoList A),
-          uncons l1 = CoConsF h1 t1 -> uncons l2 = CoConsF h2 t2 ->
-            h1 = h2 -> R t1 t2 -> simF l1 l2 R.
-
-CoInductive sim {A : Type} (l1 l2 : CoList A) : Type :=
-{
-    sim' : simF l1 l2 sim;
-}.
-
-Lemma sim_refl :
-  forall {A : Type} (l : CoList A),
-    sim l l.
-Proof.
-  cofix CH.
-  destruct l as [[| h t]].
-    do 2 constructor; cbn; reflexivity.
-    constructor. econstructor 2; try reflexivity. apply CH.
-Qed.
+(** Here we have two syntactically distinct [CList]s whose normal forms are the
+    same. *)
 
 Lemma syntactically_different :
   ex1 <> ex2.
@@ -186,10 +195,10 @@ end.
 Unset Guard Checking.
 Fixpoint mapS (l : CList nat) : CList nat :=
 match l with
-    | Nil => Nil
+    | Nil      => Nil
     | Cons h t => Cons (S h) (mapS t)
-    | Rec h r => Rec (S h) (fun l => r (mapS l))
-(*     | Rec h r => Cons (S h) (mapS (r l)) *) (* Does not terminate *)
+    | Rec  h r => Rec (S h) (fun l => r (mapS l))
+(*  | Rec  h r => Cons (S h) (mapS (r l)) *) (* Does not terminate *)
 end.
 Set Guard Checking.
 
@@ -303,4 +312,173 @@ Defined.
 
 Compute cmap S ex1.
 
+(** We can define a non-dependent eliminator (i.e. the recursion principle). *)
+
+Definition cfoldRec
+  {A R : Type} (nil : R) (cons : A -> R -> R) (rec : A -> (R -> R) -> R)
+  (l : CList A) : R :=
+    @cfold A (fun _ => R) nil (fun _ => cons) (fun a r => rec a (r Closed)) l.
+
+Require Import String.
+
+(** We can define a [show] function which displays a (representation of a)
+    cycli list as a finite string. *)
+Definition show {A : Type} (sh : A -> string) (l : CList A) : string :=
+  cfoldRec
+    "[]"%string
+    (fun h t => append (sh h) (append " :: " t))
+    (fun h r => append "rec X. " (append (sh h) (append " :: " (r "X"))))%string
+    l.
+
+Definition wut : CList string :=
+  (Cons "a" (Cons "b" (Rec "c" (fun _ l => Cons "d" l))))%string.
+
+Compute show (fun x => x) wut.
+
+(** Contrary to what's possible in Haskell (as described in the original
+    blogpost), in Coq we can't recover a fold-like function for [CList], as
+    that would basically require unwinding the [CList] into a [CoList] and then
+    folding the CoList, but that's impossible because [CoList]s are coinductive.
+
+    But a mere conversion to a CoList is of course still possible. *)
+
+CoFixpoint unwind {A : Type} {B : SProp} (l : CList' A B) : CoList A :=
+{|
+    uncons :=
+      match l with
+          | Nil      => CoNilF
+          | Cons h t => CoConsF h (unwind t)
+          | Rec h r  => CoConsF h (unwind (r _ l))
+      end;
+|}.
+
+Fixpoint cotake {A : Type} (n : nat) (l : CoList A) : list A :=
+match n with
+    | 0    => []
+    | S n' =>
+        match uncons l with
+            | CoNilF => []
+            | CoConsF h t => h :: cotake n' t
+        end
+end.
+
+Compute cotake 10 (unwind wut).
+
 End Phantom.
+
+(** The second part is inspired by "Representing Cyclic Structures as Nested Data Types"
+    (https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf) *)
+
+Module HOAS_Unique.
+
+(** The HOAS-like representation wasn't unique. *)
+
+Module Example.
+
+Import HOAS_Like.
+
+Definition ones1 : CList nat :=
+  Cons 1 (Rec 1 (fun l => l)).
+
+Definition ones2 : CList nat :=
+  Rec 1 (fun l => l).
+
+End Example.
+
+Unset Positivity Checking.
+Inductive CList (A : Type) : Type :=
+    | Nil
+    | RCons (h : A) (r : CList A -> CList A).
+Set Positivity Checking.
+
+Arguments Nil   {A}.
+Arguments RCons {A} _ _.
+
+Function unwind {A : Type} (l : CList A) : CoList A :=
+match l with
+    | Nil       => CoNil
+    | RCons h r => CoCons h (unwind (r l))
+end.
+
+Lemma unique :
+  forall {A : Type} (l1 l2 : CList A),
+    sim (unwind l1) (unwind l2) -> l1 = l2.
+Proof.
+  intros A l1.
+  functional induction unwind l1.
+    destruct l2.
+      reflexivity.
+      inversion 1. inversion sim'0.
+        inversion H2.
+        inversion H.
+    intro l2. functional induction unwind l2.
+      inversion 1. inversion sim'0.
+        inversion H1.
+        inversion H0.
+      inversion 1. inversion sim'0.
+        inversion H1.
+        cbn in *. inversion H; inversion H0; subst. f_equal.
+Abort.
+
+End HOAS_Unique.
+
+Module Nested.
+
+Inductive CList (A V : Type) : Type :=
+    | Var : V -> CList A V
+    | Nil : CList A V
+    | RCons : A -> CList A (option V) -> CList A V.
+
+Arguments Var   {A V} _.
+Arguments Nil   {A V}.
+Arguments RCons {A V} _ _.
+
+Fixpoint map {A B V : Type} (f : A -> B) (l : CList A V) : CList B V :=
+match l with
+    | Var v     => Var v
+    | Nil       => Nil
+    | RCons h t => RCons (f h) (map f t)
+end.
+
+Fixpoint shift {A V : Type} (l : CList A V) : CList A (option V) :=
+match l with
+    | Var v     => Var (Some v)
+    | Nil       => Nil
+    | RCons h t => RCons h (shift t)
+end.
+
+Fixpoint app {A V : Type} (l1 l2 : CList A V) : CList A V :=
+match l1 with
+    | Var v     => Var v
+    | Nil       => l2
+    | RCons h t => RCons h (app t (shift l2))
+end.
+
+Lemma map_shift :
+  forall {A B V : Type} (f : A -> B) (l : CList A V),
+    map f (shift l) = shift (map f l).
+Proof.
+  induction l as [| | h t]; cbn.
+    1-2: reflexivity.
+    f_equal. exact IHl.
+Qed.
+
+Lemma map_app :
+  forall {A B V : Type} (f : A -> B) (l1 l2 : CList A V),
+    map f (app l1 l2) = app (map f l1) (map f l2).
+Proof.
+  induction l1 as [| | h t]; cbn; intros.
+    1-2: reflexivity.
+    rewrite IHl1, map_shift. reflexivity.
+Qed.
+
+Lemma app_shift :
+  forall {A V : Type} (l1 l2 : CList A V),
+    app (shift l1) (shift l2) = shift (app l1 l2).
+Proof.
+  induction l1 as [| | h t]; cbn; intros.
+    1-2: reflexivity.
+    rewrite IHl1. reflexivity.
+Qed.
+ 
+End Nested.

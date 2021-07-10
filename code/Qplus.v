@@ -147,6 +147,19 @@ Compute fromQplus' (qmul (toQplus (2, 3)) (toQplus (3, 4))).
 
 (** TODO: prove addition commutative and associative *)
 
+Lemma qadd_comm :
+  forall q1 q2 : Qplus,
+    qadd q1 q2 = qadd q2 q1.
+Proof.
+  induction q1.
+Admitted.
+
+Lemma qadd_assoc :
+  forall q1 q2 q3 : Qplus,
+    qadd (qadd q1 q2) q3 = qadd q1 (qadd q2 q3).
+Proof.
+Admitted.
+
 (** * 5 Encoding the whole rational field *)
 
 Inductive Q : Set :=
