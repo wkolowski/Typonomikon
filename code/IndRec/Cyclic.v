@@ -588,6 +588,76 @@ Proof.
   inversion 1. subst. inversion X0.
 Qed.
 
+Definition CList' (A : Type) : Type := CList A False.
+
+Definition cons {A V : Type} (h : A) (t : CList' A) : CList' A :=
+  RCons h (shift t).
+
+Fixpoint recycle {A V : Type} (x : A) (l : CList A (option V)) : CList A V :=
+match l with
+    | Var None     => RCons x (Var None)
+    | Var (Some v) => Var v
+    | Nil          => Nil
+    | RCons h t    => RCons h (recycle x t)
+end.
+
+Definition cuncons {A : Type} (l : CList' A) : option (A * CList' A) :=
+match l with
+    | Var v     => match v with end
+    | Nil       => None
+    | RCons h t => Some (h, recycle h t)
+end.
+
+CoFixpoint unwind {A : Type} (l : CList' A) : CoList A :=
+{|
+    uncons :=
+      match cuncons l with
+          | None => CoNilF
+          | Some (h, t) => CoConsF h (unwind t)
+      end
+|}.
+
+Fixpoint ctake (n : nat) {A : Type} (l : CoList A) : list A :=
+match n with
+    | 0    => []
+    | S n' =>
+        match uncons l with
+            | CoNilF      => []
+            | CoConsF h t => h :: ctake n' t
+        end
+end.
+
+Definition example : CList' nat :=
+  RCons 1 (RCons 2 (Var None)).
+
+Definition take (n : nat) {A : Type} (l : CList' A) : list A :=
+  ctake n (unwind l).
+
+Compute take 10 example.
+
+Fixpoint drop (n : nat) {A : Type} (l : CList' A) : CList' A :=
+match n with
+    | 0    => l
+    | S n' =>
+        match cuncons l with
+            | None => Nil
+            | Some (_, t) => drop n' t
+        end
+end.
+
+Compute drop 11 example.
+
+Fixpoint take' (n : nat) {A : Type} (l : CList' A) : list A :=
+match n with
+    | 0    => []
+    | S n' =>
+        match cuncons l with
+            | None => []
+            | Some (h, t) => h :: take' n' t
+        end
+end.
+
+Compute take' 10 example.
 
 
 (* Fixpoint bind {A B V : Type} (l : CList A V) (f : A -> CList B V) : CList B V :=
@@ -595,29 +665,63 @@ match l with
     | Var v     => Var v
     | Nil       => Nil
     | RCons h t => app (f h) (bind t (fun l => shift (f l)))
-end.
+end. *)
 
-
-
-Fixpoint rev {A V : Type} (l acc : CList A V) : CList A V :=
+Fixpoint rev {A V : Type} (l : CList A V) : CList A V :=
 match l with
-    | Var v     => app acc (Var v)
-    | Nil       => acc
-    | RCons h t => rev t (RCons h (shift acc))
-end.
- *)
-
-Fixpoint take {A V : Type} (n : nat) (l : CList A V) : list A :=
-match n, l with
-    | 0   , _         => []
-    | _   , Var v     => []
-    | _   , Nil       => []
-    | S n', RCons h t => h :: take n' t
+    | Var v     => Var v
+    | Nil       => Nil
+    | RCons h t => recycle h (rev t)
 end.
 
-Compute take 5 (RCons 1 (RCons 2 (Var None))).
+Definition from1to5 : CList' nat :=
+  RCons 1 (RCons 2 (RCons 3 (RCons 4 (RCons 5 (Var None))))).
+
+Compute rev from1to5.
+
+Fixpoint nth (n : nat) {A : Type} (l : CList' A) : option A :=
+match n, cuncons l with
+    | _   , None        => None
+    | 0   , Some (h, t) => Some h
+    | S n', Some (h, t) => nth n' t
+end.
+
+Compute List.map (fun n => nth n from1to5) [0; 1; 2; 3; 4; 5; 6; 7].
+
+Fixpoint cycle (n : nat) {A : Type} (l : CList' A) : CList' A :=
+match n, cuncons l with
+    | 0   , _           => l
+    | _   , None        => l
+    | S n', Some (h, t) => cycle n' t
+end.
+
+Compute List.map (fun n => cycle n from1to5) [0; 1; 2; 3; 4; 5; 6; 7].
+
+
+
+Fixpoint any {A V : Type} (p : A -> bool) (l : CList A V) : bool :=
+match l with
+    | Var v     => false
+    | Nil       => false
+    | RCons h t => p h || any p t
+end.
+
+Unset Guard Checking.
+Fixpoint filter {A : Type} (p : A -> bool) (l : CList' A) {struct l} : CList' A :=
+match cuncons l with
+    | None => Nil
+    | Some (h, t) => if p h then @cons A False h (filter p t) else filter p t
+end.
+Set Guard Checking.
+
+Check Nat.even.
+Compute filter Nat.even from1to5.
+
+
 
 End Nested.
+
+Module CyclicBinaryTree.
 
 Inductive CBin (A V : Type) : Type :=
     | Var : V -> CBin A V
@@ -635,3 +739,11 @@ match t with
     | N x l r => N (f x) (map f l) (map f r)
 end.
 
+Fixpoint mirror {A V : Type} (t : CBin A V) : CBin A V :=
+match t with
+    | Var v   => Var v
+    | E       => E
+    | N x l r => N x (mirror r) (mirror l)
+end.
+
+End CyclicBinaryTree.
