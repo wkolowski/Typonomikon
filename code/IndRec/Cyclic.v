@@ -1,4 +1,4 @@
-(** Zainspirowane przez:
+(** Inspired by:
     - Cyclic Lists, Purely: https://gallais.github.io/blog/cyclic-list-purely.html
     - Representing Cyclic Structures as Nested Data Types:
       https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf *)
@@ -558,8 +558,8 @@ Definition repeat {A V : Type} (x : A) : CList A V :=
 
 Inductive Finite {A V : Type} : CList A V -> Type :=
     | FNil   : Finite Nil
-    | FRCons : forall (h : A) (t : CList A (option V)) (t' : CList A V),
-                 Finite t -> t = shift t' -> Finite (RCons h t).
+    | FRCons : forall (h : A) (t : CList A (option V)),
+                 Finite t -> Finite (RCons h t).
 
 Lemma shift_replicate :
   forall (n : nat) {A V : Type} (x : A),
@@ -576,9 +576,7 @@ Lemma Finite_replicate :
 Proof.
   induction n as [| n']; cbn; intros.
     constructor.
-    econstructor.
-      apply IHn'.
-      rewrite shift_replicate. reflexivity.
+    constructor. apply IHn'.
 Qed.
 
 Lemma not_Finite_repeat :
@@ -697,8 +695,6 @@ end.
 
 Compute List.map (fun n => cycle n from1to5) [0; 1; 2; 3; 4; 5; 6; 7].
 
-
-
 Fixpoint any {A V : Type} (p : A -> bool) (l : CList A V) : bool :=
 match l with
     | Var v     => false
@@ -706,18 +702,81 @@ match l with
     | RCons h t => p h || any p t
 end.
 
-Unset Guard Checking.
-Fixpoint filter {A : Type} (p : A -> bool) (l : CList' A) {struct l} : CList' A :=
-match cuncons l with
-    | None => Nil
-    | Some (h, t) => if p h then @cons A False h (filter p t) else filter p t
+Fixpoint wut {A V : Type} (l : CList A (option V)) : CList A V :=
+match l with
+    | Var None     => Nil
+    | Var (Some v) => Var v
+    | Nil          => Nil
+    | RCons h t    => RCons h (wut t)
 end.
-Set Guard Checking.
 
-Check Nat.even.
+Fixpoint filter {A V : Type} (p : A -> bool) (l : CList A V) : CList A V :=
+match l with
+    | Var v     => Var v
+    | Nil       => Nil
+    | RCons h t => if p h then RCons h (filter p t) else wut (filter p t)
+end.
+
+Compute from1to5.
 Compute filter Nat.even from1to5.
+Compute filter Nat.even (RCons 1 (RCons 2 (Var None))).
 
+Fixpoint shift' {A V : Type} (l : CList A V) : CList A (option (option V)) :=
+match l with
+    | Var v     => Var (Some (Some v))
+    | Nil          => Nil
+    | RCons h t    => RCons h (shift' t)
+end.
 
+(* Fixpoint intersperse {A V : Type} (x : A) (l : CList A V) : CList A V :=
+match l with
+    | Var v       => Var v
+    | Nil         => Nil
+    | RCons h t   => RCons h (shift' (RCons x (intersperse x t)))
+end.
+
+Compute take 20 (intersperse 0 from1to5).
+ *)
+
+(** * Relations *)
+
+Inductive Elem {A V : Type} (x : A) : CList A V -> Type :=
+    | Zero :
+        forall l : CList A (option V), Elem x (RCons x l)
+    | Succ :
+        forall (h : A) (t : CList A (option V)),
+          Elem x t -> Elem x (RCons h t).
+
+Inductive Dup {A V : Type} : CList A V -> Type :=
+    | DupVar :
+        forall v : V, Dup (Var v)
+    | DupHere :
+        forall (h : A) (t : CList A (option V)),
+          Elem h t -> Dup (RCons h t)
+    | DupThere :
+        forall (h : A) (t : CList A (option V)),
+          Dup t -> Dup (RCons h t).
+
+Lemma NoDup_Finite :
+  forall {A V : Type} (l : CList A V),
+    (Dup l -> False) -> Finite l.
+Proof.
+  induction l as [| | h t]; cbn; intros.
+    contradiction H. constructor.
+    constructor.
+    constructor. apply IHl. intro. apply H. constructor 3. assumption.
+Qed.
+
+Lemma NoFinite_Dup :
+  forall {A V : Type} (l : CList A V),
+    (Finite l -> False) -> Dup l.
+Proof.
+  induction l as [| | h t]; intros.
+    constructor.
+    contradict H. constructor.
+    constructor 3. apply IHl. intro. apply H. constructor. assumption.
+Qed.
+  
 
 End Nested.
 
