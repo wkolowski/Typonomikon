@@ -657,13 +657,12 @@ end.
 
 Compute take' 10 example.
 
-
-(* Fixpoint bind {A B V : Type} (l : CList A V) (f : A -> CList B V) : CList B V :=
+Fail Fixpoint bind {A B V : Type} (l : CList A V) (f : A -> CList B V) : CList B V :=
 match l with
     | Var v     => Var v
     | Nil       => Nil
     | RCons h t => app (f h) (bind t (fun l => shift (f l)))
-end. *)
+end.
 
 Fixpoint rev {A V : Type} (l : CList A V) : CList A V :=
 match l with
@@ -728,15 +727,14 @@ match l with
     | RCons h t    => RCons h (shift' t)
 end.
 
-(* Fixpoint intersperse {A V : Type} (x : A) (l : CList A V) : CList A V :=
+Fail Fixpoint intersperse {A V : Type} (x : A) (l : CList A V) : CList A V :=
 match l with
     | Var v       => Var v
     | Nil         => Nil
     | RCons h t   => RCons h (shift' (RCons x (intersperse x t)))
 end.
 
-Compute take 20 (intersperse 0 from1to5).
- *)
+Fail Compute take 20 (intersperse 0 from1to5).
 
 (** * Relations *)
 
@@ -776,7 +774,32 @@ Proof.
     contradict H. constructor.
     constructor 3. apply IHl. intro. apply H. constructor. assumption.
 Qed.
-  
+
+Inductive Ex {A V : Type} (P : A -> Type) : CList A V -> Type :=
+    | ExHere :
+        forall (x : A) (l : CList A (option V)),
+          P x -> Ex P (RCons x l)
+    | ExThere :
+        forall (h : A) (t : CList A (option V)),
+          Ex P t -> Ex P (RCons h t).
+
+Fixpoint takeWhile {A V : Type} (p : A -> bool) (l : CList A V) : CList A V :=
+match l with
+    | Var v     => Var v
+    | Nil       => Nil
+    | RCons h t => if p h then RCons h (takeWhile p t) else Nil
+end.
+
+Require Import Nat.
+
+Compute takeWhile (fun n => n <? 6) from1to5.
+
+Fail Fixpoint dropWhile {A V : Type} (p : A -> bool) (l : CList A V) : CList A V :=
+match l with
+    | Var v     => Var v
+    | Nil       => Nil
+    | RCons h t => if p h then dropWhile p t else Nil
+end.
 
 End Nested.
 
@@ -790,6 +813,33 @@ Inductive CBin (A V : Type) : Type :=
 Arguments Var {A V} _.
 Arguments E   {A V}.
 Arguments N   {A V} _ _ _.
+
+Definition CBin' (A : Type) : Type :=
+  CBin A False.
+
+Definition example : CBin' nat :=
+  N 1
+    (N 2
+      (N 3 (Var None) E)
+      E)
+    (N 4
+      (N 5 E E)
+      (N 6 E E)).
+
+Fixpoint recycle {A V : Type} (x : A) (t : CBin A (option V)) : CBin A V :=
+match t with
+    | Var None     => N x (Var None) (Var None)
+    | Var (Some v) => Var v
+    | E            => E
+    | N y l r      => N y (recycle x l) (recycle x r)
+end.
+
+Definition unN {A : Type} (t : CBin' A) : option (A * CBin' A * CBin' A) :=
+match t with
+    | Var v   => match v with end
+    | E       => None
+    | N x l r => Some (x, recycle x l, recycle x r)
+end.
 
 Fixpoint map {A B V : Type} (f : A -> B) (t : CBin A V) : CBin B V :=
 match t with
@@ -805,4 +855,84 @@ match t with
     | N x l r => N x (mirror r) (mirror l)
 end.
 
+Definition complete {A : Type} (x : A) : CBin' A :=
+  N x (Var None) (Var None).
+
+Fixpoint index {A : Type} (l : list bool) (t : CBin' A) : option A :=
+match l, unN t with
+    | _, None     => None
+    | []         , Some (x, _ , _ ) => Some x
+    | false :: l', Some (_, t', _ ) => index l' t'
+    | true  :: l', Some (_, _ , t') => index l' t'
+end.
+
+Compute example.
+Compute index [false; false; false; false] example.
+
+(* Parameter iterate : forall A : Type, (A -> A) -> nat -> A -> BTree A. *)
+
+Fixpoint shift {A V : Type} (t : CBin A V) : CBin A (option V) :=
+match t with
+    | Var v   => Var (Some v)
+    | E       => E
+    | N x l r => N x (shift l) (shift r)
+end.
+
+Fixpoint take (n : nat) {A : Type} (t : CBin' A) : CBin' A :=
+match n, unN t with
+    | _   , None           => E
+    | 0   , _              => E
+    | S n', Some (x, l, r) => N x (shift (take n' l)) (shift (take n' r))
+end.
+
+Compute take 5 example.
+
+Fixpoint any {A V : Type} (p : A -> bool) (t : CBin A V) : bool :=
+match t with
+    | Var v   => false
+    | E       => false
+    | N x l r => p x || any p l || any p r
+end.
+
+Fixpoint all {A V : Type} (p : A -> bool) (t : CBin A V) : bool :=
+match t with
+    | Var v   => false
+    | E       => false
+    | N x l r => p x && all p l && all p r
+end.
+
+(* Parameter count : forall A : Type, (A -> bool) -> BTree A -> nat. *)
+
+Fixpoint takeWhile {A V : Type} (p : A -> bool) (t : CBin A V) : CBin A V :=
+match t with
+    | Var v   => Var v
+    | E       => E
+    | N x l r => if p x then N x (takeWhile p l) (takeWhile p r) else E
+end.
+
+Require Import Nat.
+
+Compute takeWhile (fun x => x <? 3) example.
+
+(* Need to compute lcm somewhere.
+Fixpoint zipWith {A B C : Type} (f : A -> B -> C) (ta : CBin A V) (tb : CBin B V) : CBin C V :=
+match ta, tb with
+    | Var va, Var vn => V
+ *)
+
 End CyclicBinaryTree.
+
+Module GeneralCyclicStructures.
+
+Require Import MuNu.
+
+(** The above approach can be generalized even more, to a Fixpoint-with-Cycles
+    inductive type like. But for this to work in Coq, we need to turn off the
+    positivity checker and then the termination checker each time we want to
+    implement a recursive function, so we're not going to pursue the generalized
+    approach here.
+
+    Anyway, see https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf section 4
+    for more details. *)
+
+End GeneralCyclicStructures.

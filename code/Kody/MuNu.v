@@ -28,7 +28,7 @@ Arguments ConsF {A X} _ _.
 
 Module List.
 
-Definition List   (A : Type) : Type := Mu (ListF A).
+Definition List (A : Type) : Type := Mu (ListF A).
 
 Unset Guard Checking.
 Lemma List_ind' :
