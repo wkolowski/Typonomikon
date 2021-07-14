@@ -1,4 +1,4 @@
-(** Przemyślenia: w uniwersum [SProp] prawo wyłączonego środka jest w słumie
+(** Przemyślenia: w uniwersum [SProp] prawo wyłączonego środka jest w sumie
     słuszne, ponieważ mimo bycia aksjomatem normalnie się oblicza. *)
 
 Inductive sor (P Q : SProp) : SProp :=

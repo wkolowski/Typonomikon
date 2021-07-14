@@ -1,6 +1,5 @@
-(** [S] to skrót od "shape", czyli po naszemu "kształt", zaś [P] ma przywodzić na myśl
-    "position", czyli "pozycja". *)
-(* Definition Container (S : Type) : Type := S -> Type. *)
+(** [S] to skrót od "shape", czyli po naszemu "kształt", zaś [P] ma przywodzić
+    na myśl "position", czyli "pozycja". *)
 
 Inductive Container (S : Type) (P : S -> Type) (X : Type) : Type :=
     | ctain : forall s : S, (P s -> X) -> Container S P X.
@@ -29,7 +28,6 @@ Proof.
     exact F1.
     exact f'.
 Defined.
-Check eq_ind.
 
 Fixpoint f {A : Type} (l : list A) : CList A.
 refine (

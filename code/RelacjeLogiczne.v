@@ -24,3 +24,10 @@ Record ListAlgebraRel {A : Type} (L1 L2 : ListAlgebra A) : Type :=
     R_n : R n n;
     R_c : forall (h : A) (t1 : L1) (t2 : L2), R t1 t2 -> R (c h t1) (c h t2);
 }.
+
+Record ListAlgebraPred {A : Type} (L : ListAlgebra A) : Type :=
+{
+    P : L -> Prop;
+    P_n : P n;
+    P_c : forall (h : A) (t : L), P t -> P (c h t);
+}.
