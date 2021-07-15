@@ -124,32 +124,125 @@ match ne with
     | Cons h t => if p h then NonEmpty (Cons h (filter p t)) else filter p t
 end.
 
+Fixpoint join {A : Type} (l : List (List A)) : List A :=
+match l with
+    | Empty => Empty
+    | NonEmpty ne => nejoin ne
+end
+
+with nejoin {A : Type} (ne : NonEmptyList (List A)) : List A :=
+match ne with
+    | Cons h t => app h (join t)
+end.
+
+Fixpoint bind {A B : Type} (l : List A) (f : A -> List B) : List B :=
+match l with
+    | Empty => Empty
+    | NonEmpty ne => nebind ne f
+end
+
+with nebind {A B : Type} (ne : NonEmptyList A) (f : A -> List B) : List B :=
+match ne with
+    | Cons h t => app (f h) (bind t f)
+end.
+
+Fixpoint replicate (n : nat) {A : Type} (x : A) {struct n} : List A :=
+match n with
+    | 0 => Empty
+    | S n' => NonEmpty (Cons x (replicate n' x))
+end.
+
+Fixpoint take (n : nat) {A : Type} (l : List A) : List A :=
+match l with
+    | Empty => Empty
+    | NonEmpty ne => netake n ne
+end
+
+with netake (n : nat) {A : Type} (ne : NonEmptyList A) : List A :=
+match n, ne with
+    | 0, _ => Empty
+    | S n', Cons h t => NonEmpty (Cons h (take n' t))
+end.
+
 (*
-join
-bind
-replicate
 iterate i iter
 head, tail i uncons
-head
-tail
-uncons
 last, init i unsnoc
-last
-init
-unsnoc
+*)
 
+Fixpoint drop (n : nat) {A : Type} (l : List A) : List A :=
+match l with
+    | Empty => Empty
+    | NonEmpty ne => nedrop n ne
+end
 
-nth
-take
-drop
+with nedrop (n : nat) {A : Type} (ne : NonEmptyList A) : List A :=
+match n, ne with
+    | 0, _ => Empty
+    | S n', Cons h t => drop n' t
+end.
 
+Fixpoint nth (n : nat) {A : Type} (l : List A) : option A :=
+match l with
+    | Empty => None
+    | NonEmpty ne => nenth n ne
+end
+
+with nenth (n : nat) {A : Type} (ne : NonEmptyList A) : option A :=
+match n, ne with
+    | 0, Cons h _ => Some h
+    | S n', Cons _ t => nth n' t
+end.
+
+Fixpoint zipWith {A B C : Type} (f : A -> B -> C) (la : List A) (lb : List B) : List C :=
+match la, lb with
+    | Empty, _ => Empty
+    | _, Empty => Empty
+    | NonEmpty na, NonEmpty nb => NonEmpty (nezipWith f na nb)
+end
+
+with nezipWith {A B C : Type} (f : A -> B -> C)
+  (na : NonEmptyList A) (nb : NonEmptyList B) : NonEmptyList C :=
+match na, nb with
+    | Cons ha ta, Cons hb tb => Cons (f ha hb) (zipWith f ta tb)
+end.
+
+Lemma app_Empty_r :
+  forall {A : Type} (l : List A),
+    app l Empty = l.
+Proof.
+  fix IH 2.
+  destruct l as [| [h t]]; cbn.
+    reflexivity.
+    rewrite IH. reflexivity.
+Qed.
+
+Lemma snoc_app :
+  forall {A : Type} (l1 l2 : List A) (x : A),
+    NonEmpty (snoc x (app l1 l2)) = app l1 (NonEmpty (snoc x l2)).
+Proof.
+  fix IH 2.
+  destruct l1 as [| [h1 t1]]; cbn; intros.
+    reflexivity.
+    rewrite IH. reflexivity.
+Qed.
+
+Lemma rev_app :
+  forall {A : Type} (l1 l2 : List A),
+    rev (app l1 l2) = app (rev l2) (rev l1).
+Proof.
+  fix IH 2.
+  destruct l1 as [| [h1 t1]]; cbn; intros.
+    rewrite app_Empty_r. reflexivity.
+    rewrite IH. rewrite snoc_app. reflexivity.
+Qed. 
+
+(*
 cycle
 splitAt
 insert
 replace
 remove
-zip
 unzip
-zipWith
 unzipWith
 *)
