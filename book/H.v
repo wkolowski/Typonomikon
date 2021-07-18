@@ -2030,7 +2030,7 @@ Defined.
     robić ręcznie? *)
 
 Set Warnings "-notation-overridden".
-Require Import vec.
+Require Import Vec.
 Set Warnings "notation-overridden".
 
 Definition vlist (A : Type) : Type :=

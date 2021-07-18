@@ -284,12 +284,12 @@ End T3.
 
     Zapewne działa to bardzo dobrze... taki huj, jednak nie. *)
 
-Require vec.
+Require Vec.
 
-Module Vec.
+Module Vec'.
 
 Set Warnings "-notation-overridden".
-Import vec.
+Import Vec.
 Set Warnings "notation-overridden".
 
 (** A teraz to samo dla rodzin indeksowanych. *)
@@ -314,7 +314,7 @@ Proof.
     inversion v. exact (index _ _ i' X0).
 Defined.
 
-End Vec.
+End Vec'.
 
 Module hTree.
 

@@ -9,11 +9,13 @@ Arguments Empty    {A}.
 Arguments NonEmpty {A} _.
 Arguments Cons     {A} _ _.
 
-(** Despite being weird, these lists are normal and ordinary. *)
+(** Despite being weird, these lists are equivalent to the ordinary lists. *)
+
+Require List.
 
 Module TheSameAsOrdinary.
 
-Require Import List.
+Import List.
 Import ListNotations.
 
 Fixpoint f {A : Type} (w : List A) : list A :=
@@ -237,7 +239,7 @@ Proof.
     rewrite IH. rewrite snoc_app. reflexivity.
 Qed. 
 
-(*
+(* TODO for WeirdLists:
 cycle
 splitAt
 insert

@@ -1,5 +1,9 @@
 (* TODO: rozszerzyć metodę Bove-Capretta na korekursję *)
 
+Set Implicit Arguments.
+
+(** * Referencyjna implementacja z wyłączonym guard checkerem *)
+
 CoInductive Stream (A : Type) : Type :=
 {
     hd : A;
@@ -22,13 +26,25 @@ CoFixpoint zipWith
     tl := zipWith f (tl sa) (tl sb);
 |}.
 
-Fail CoFixpoint fibs : Stream nat :=
+Unset Guard Checking.
+CoFixpoint fibs : Stream nat :=
 {|
     hd := 0;
-    tl := zipWith plus fibs (cons 1 fibs);
+    tl := zipWith plus fibs (cons 1 fibs)
 |}.
+Set Guard Checking.
 
-Set Implicit Arguments.
+Require Import D5.
+
+Fixpoint take {A : Type} (n : nat) (s : Stream A) : list A :=
+match n with
+    | 0 => []
+    | S n' => hd s :: take n' (tl s)
+end.
+
+Compute take 20 fibs.
+
+(** * Próby zrobienia legalnej implementacji *)
 
 Inductive Call (C : Type) (F : Type -> Type) : Type :=
     | ht : C -> F C -> Call C F
@@ -56,28 +72,3 @@ Definition ZipWith
 
 CoFixpoint Fibs : ZipWith' nat :=
   Cons 0 (ZipWith plus Fibs (Cons 1 Fibs)).
-
-(* Definition hdtl {C : Type} (c : Call C ZipWith') : C * ZipWith' C :=
-match c with
-    | ht h t => (h, t)
-    | zw f s1 s2 =>
-        match call s1, call s2 with
-            | ht ha ta, ht hb tb => (f ha hb, {| call := 
- *)
-
-Unset Guard Checking.
-CoFixpoint fibs : Stream nat :=
-{|
-    hd := 0;
-    tl := zipWith plus fibs (cons 1 fibs)
-|}.
-
-Require Import D5.
-
-Fixpoint take {A : Type} (n : nat) (s : Stream A) : list A :=
-match n with
-    | 0 => []
-    | S n' => hd s :: take n' (tl s)
-end.
-
-Compute take 20 fibs.

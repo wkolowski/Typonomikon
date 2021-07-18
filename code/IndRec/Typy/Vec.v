@@ -625,7 +625,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** [repeat] (TODO: nastąpiła duplikacja) *)
+(** *** [repeat] *)
 
 (** Zdefiniuj funkcję [repeat], która zwraca listę [n] powtórzeń wartości
     [x]. *)

@@ -165,10 +165,12 @@ match m, v with
     | S m', Cons _ t => nth m' t
 end.
 
+Fixpoint last {A : Type} {n : nat} (l : BVec A (S n)) {struct l} : option A.
+Proof.
+  destruct l as [| h [| t]].
+    exact None.
+    exact (Some h).
+    exact (last _ _ l).
+Defined.
 
-Fixpoint last {A : Type} {n : nat} (l : vec A (S n)) {struct l} : A.
-
-
-
-
-
+(** TODO for BoundedVec: wszystko *)
