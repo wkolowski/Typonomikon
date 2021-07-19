@@ -1,2 +1,0 @@
-Require Export D5.
-

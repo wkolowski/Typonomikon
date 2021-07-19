@@ -611,7 +611,7 @@ Qed.
 (* begin hide *)
 (* TODO: [lam X. lam nil. lam cons. cons X nil] - egzotyczna lista. *)
 (* TODO: Kodowanie Churcha dla typów ilorazowych. *)
-Require Import X3.
+Require Import D5.
 (* end hide *)
 
 Definition clist (A : Type) : Type :=

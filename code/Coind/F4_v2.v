@@ -317,10 +317,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** TODO *)
-
-(*
-
 (** ** [app] *)
 
 (** Zdefiniuj funkcję [app], która skleja dwie kolisty. Czy jest to w ogóle
@@ -332,8 +328,8 @@ CoFixpoint app {A : Type} (l1 l2 : coList A) : coList A :=
 {|
     uncons :=
       match uncons l1 with
-          | None => uncons l2
-          | Some (h, t) => Some (h, app t l2)
+          | nilF      => uncons l2
+          | consF h t => consF  h (app t l2)
       end
 |}.
 (* end hide *)
@@ -353,9 +349,9 @@ Lemma app_conil_r :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l as [[[h t] |]]; cbn.
-    right. do 4 eexists. intuition.
-    left. split; reflexivity.
+  constructor. destruct l as [[| h t]]; cbn.
+    left; cbn; reflexivity.
+    eright; try reflexivity. apply CH.
 Qed.
 (* end hide *)
 
@@ -365,7 +361,7 @@ Lemma app_cocons_l :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. cbn. right. do 4 eexists. intuition.
+  constructor. eright; try reflexivity.
 Qed.
 (* end hide *)
 
@@ -375,11 +371,11 @@ Lemma len_app :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l1 as [[[h1 t1] |]]; cbn.
-    right. do 2 eexists. intuition.
-    destruct l2 as [[[h2 t2] |]]; cbn.
-      right. do 2 eexists. intuition.
+  constructor. destruct l1 as [[| h1 t1]]; cbn.
+    destruct l2 as [[|h2 t2]]; cbn.
       left. split; reflexivity.
+      right. do 2 eexists. intuition.
+    right. do 2 eexists. intuition.
 Qed.
 (* end hide *)
 
@@ -1207,5 +1203,3 @@ Proof.
       assumption.
 Qed.
 (* end hide *)
-
-*)

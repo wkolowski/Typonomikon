@@ -1145,7 +1145,7 @@ Fail Fixpoint div (n m : nat) : nat :=
 
 (** * Rekursja monotoniczna *)
 
-Require Import X3.
+Require Import D5.
 
 (** Czas na omówienie pewnej ciekawej, ale średnio użytecznej formy rekursji
     (z pamięci nie jestem w stanie przytoczyć więcej niż dwóch sztampowych

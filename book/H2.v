@@ -1305,7 +1305,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-Require Import X3.
+Require Import D5.
 (* end hide *)
 
 Lemma take_idem :
