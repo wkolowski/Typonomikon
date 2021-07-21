@@ -1,5 +1,14 @@
 # TODO
 
+## Kod
+0. Ciekawe ćwiczenie na rozumienie polimorfizmu, sum i produktów: typ These A B, który reprezentuje A + B + AB
+1. Kody dla indukcji-rekursji.
+2. Rozstrzygalna równość dla typów regularnych.
+3. STLC jak z agdowej książki.
+4. Teoria obliczalności.
+6. Hierarchia Booma.
+7. Zdualizować metodę induktywnej dziedziny.
+
 ## Logika
 1. Opisy spójników podzielić ze względu na reguły (wprowadzania, eliminacji, formowania jako wstęp).
 2. Po każdej regule proste ćwiczenia.

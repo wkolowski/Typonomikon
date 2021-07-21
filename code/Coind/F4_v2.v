@@ -385,13 +385,15 @@ Lemma snoc_app :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l1 as [[[h1 t1] |]]; cbn.
-    right. do 4 eexists. intuition.
-    destruct l2 as [[[h2 t2] |]]; cbn.
-      right. do 4 eexists. intuition.
-      right. do 4 eexists. intuition.
+  constructor. destruct l1 as [[| h1 t1]]; cbn.
+    destruct l2 as [[| h2 t2]]; cbn.
+      eright; cbn; eauto. apply lsim_refl.
+      eright; cbn; eauto. apply lsim_refl.
+    eright; cbn; eauto.
 Qed.
 (* end hide *)
+
+(* Global Hint Constructors lsimF : core. *)
 
 Lemma app_snoc_l :
   forall (A : Type) (l1 l2 : coList A) (x : A),
@@ -399,9 +401,9 @@ Lemma app_snoc_l :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l1 as [[[h1 t1] |]]; cbn.
-    right. do 4 eexists. intuition.
-    right. do 4 eexists. intuition. rewrite app_conil_l. apply lsim_refl.
+  constructor. destruct l1 as [[| h1 t1]]; cbn.
+    eright; cbn; eauto. rewrite app_conil_l. apply lsim_refl.
+    eright; cbn; eauto.
 Qed.
 (* end hide *)
 
@@ -411,13 +413,13 @@ Lemma app_assoc :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l1 as [[[h1 t1] |]]; cbn.
-    right. do 4 eexists. intuition.
-    destruct l2 as [[[h2 t2] |]]; cbn.
-      right. do 4 eexists. intuition.
-      destruct l3 as [[[h3 t3] |]]; cbn.
-        right. do 4 eexists. intuition.
-        left. split; reflexivity.
+  constructor. destruct l1 as [[| h1 t1]]; cbn.
+    destruct l2 as [[| h2 t2]]; cbn.
+      destruct l3 as [[| h3 t3]]; cbn.
+        left; split; reflexivity.
+        eright; cbn; eauto. apply lsim_refl.
+      eright; cbn; eauto. apply lsim_refl.
+    eright; cbn; eauto.
 Qed.
 (* end hide *)
 
@@ -433,8 +435,8 @@ CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=
 {|
     uncons :=
     match uncons l with
-        | None => None
-        | Some (h, t) => Some (f h, lmap f t)
+        | nilF => nilF
+        | consF h t => consF (f h) (lmap f t)
     end
 |}.
 (* end hide *)
@@ -454,9 +456,9 @@ Lemma lmap_cocons :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. right.
-  exists (f x), (lmap f l), (f x), (lmap f l).
-  cbn. intuition.
+  constructor.
+  eright; cbn; eauto.
+  apply lsim_refl.
 Qed.
 (* end hide *)
 
@@ -466,9 +468,10 @@ Lemma len_lmap :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l as [[[h t] |]]; cbn.
-    right. exists (len (lmap f t)), (len t). intuition.
+  constructor.
+  destruct l as [[| h t]]; cbn.
     left. split; reflexivity.
+    right. exists (len (lmap f t)), (len t). auto.
 Qed.
 (* end hide *)
 
@@ -478,9 +481,10 @@ Lemma lmap_snoc :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l as [[[h t] |]]; cbn.
-    right. do 4 eexists. eauto.
-    right. exists (f x), (lmap f conil), (f x), conil. intuition.
+  constructor.
+  destruct l as [[| h t]]; cbn.
+    eright; cbn; eauto. do 2 constructor; cbn; reflexivity.
+    eright; cbn; eauto.
 Qed.
 (* end hide *)
 
@@ -490,11 +494,12 @@ Lemma lmap_app :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l1 as [[[h1 t1] |]]; cbn.
-    right. do 4 eexists. eauto.
-    destruct l2 as [[[h2 t2] |]]; cbn.
-      right. exists (f h2), (lmap f t2), (f h2), (lmap f t2). intuition.
-      left. split; reflexivity.
+  constructor.
+  destruct l1 as [[| h1 t1]]; cbn.
+    destruct l2 as [[| h2 t2]]; cbn.
+      left; split; reflexivity.
+      eright; cbn; eauto. apply lsim_refl.
+    eright; cbn; eauto.
 Qed.
 (* end hide *)
 
@@ -504,9 +509,10 @@ Lemma lmap_id :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l as [[[h t] |]]; cbn.
-    right. do 4 eexists. intuition.
-    left. split; reflexivity.
+  constructor.
+  destruct l as [[| h t]]; cbn.
+    left; split; reflexivity.
+    eright; cbn; eauto.
 Qed.
 (* end hide *)
 
@@ -516,11 +522,9 @@ Lemma lmap_comp :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l as [[[h t]|]]; [right | left]; cbn.
-    exists (g (f h)), (lmap g (lmap f t)),
-           (g (f h)), (lmap (fun x => g (f x)) t).
-      repeat (split; [reflexivity | idtac]). apply CH.
-    do 2 split.
+  constructor. destruct l as [[| h t]].
+    left; cbn; reflexivity.
+    eright; cbn; eauto.
 Qed.
 (* end hide *)
 
@@ -530,9 +534,9 @@ Lemma lmap_ext :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l as [[[h t] |]]; cbn.
-    right. do 4 eexists. intuition.
-    left. split; reflexivity.
+  constructor. destruct l as [[| h t]]; cbn.
+    left; cbn; reflexivity.
+    eright; cbn; eauto.
 Qed.
 (* end hide *)
 
@@ -544,7 +548,7 @@ Qed.
 (* begin hide *)
 CoFixpoint iterate {A : Type} (f : A -> A) (x : A) : coList A :=
 {|
-    uncons := Some (x, iterate f (f x));
+    uncons := consF x (iterate f (f x))
 |}.
 (* end hide *)
 
@@ -555,7 +559,7 @@ Lemma len_iterate :
 Proof.
   cofix CH.
   constructor. cbn. right.
-  eexists (len (iterate f (f x))), omega. intuition.
+  eexists (len (iterate f (f x))), omega. auto.
 Qed.
 (* end hide *)
 
@@ -568,8 +572,8 @@ Qed.
 (* begin hide *)
 CoFixpoint piterate {A : Type} (f : A -> option A) (x : A) : coList A :=
 {|
-    uncons := Some (x,
-      match f x with
+    uncons := consF x
+      (match f x with
           | None => conil
           | Some y => piterate f y
       end)
@@ -589,8 +593,8 @@ CoFixpoint zipW {A B C : Type}
 {|
     uncons :=
       match uncons l1, uncons l2 with
-          | Some (h1, t1), Some (h2, t2) => Some (f h1 h2, zipW f t1 t2)
-          | _, _ => None
+          | consF h1 t1, consF h2 t2 => consF (f h1 h2) (zipW f t1 t2)
+          | _, _ => nilF
       end;
 |}.
 (* end hide *)
@@ -600,7 +604,7 @@ Lemma zipW_conil_l :
     lsim (zipW f conil l) conil.
 (* begin hide *)
 Proof.
-  constructor. cbn. left. split; reflexivity.
+  constructor. left; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -611,11 +615,11 @@ Lemma zipW_conil_r :
 Proof.
   cofix CH.
   constructor.
-  destruct l1 as [[[h1 t1] |]],
-           l2 as [[[h2 t2] |]];
+  destruct l1 as [[| h1 t1]],
+           l2 as [[| h2 t2]];
   cbn.
-    right. exists (len (zipW f t1 t2)), (min (len t1) (len t2)). eauto.
     1-3: left; split; reflexivity.
+    right. exists (len (zipW f t1 t2)), (min (len t1) (len t2)). auto.
 Qed.
 (* end hide *)
 
@@ -626,11 +630,11 @@ Lemma len_zipW :
 Proof.
   cofix CH.
   constructor.
-  destruct l1 as [[[h1 t1] |]],
-           l2 as [[[h2 t2] |]];
+  destruct l1 as [[| h1 t1]],
+           l2 as [[| h2 t2]];
   cbn.
-    right. exists (len (zipW f t1 t2)), (min (len t1) (len t2)). eauto.
     1-3: left; split; reflexivity.
+    right. exists (len (zipW f t1 t2)), (min (len t1) (len t2)). eauto.
 Qed.
 (* end hide *)
 
@@ -645,8 +649,8 @@ CoFixpoint scan
 {|
     uncons :=
       match uncons l with
-          | None => None
-          | Some (h, t) => Some (b, scan t f (f b h))
+          | nilF => nilF
+          | consF h t => consF b (scan t f (f b h))
       end;
 |}.
 (* end hide *)
@@ -656,7 +660,7 @@ Lemma scan_conil :
     lsim (scan conil f b) conil.
 (* begin hide *)
 Proof.
-  constructor. cbn. left. split; reflexivity.
+  constructor. left; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -665,8 +669,9 @@ Lemma scan_cocons :
     lsim (scan (cocons x l) f b) (cocons b (scan l f (f b x))).
 (* begin hide *)
 Proof.
-  constructor. cbn. right. do 4 eexists.
-  repeat (reflexivity || split).
+  constructor.
+  eright; cbn; eauto.
+  apply lsim_refl.
 Qed.
 (* end hide *)
 
@@ -676,9 +681,9 @@ Lemma len_scan :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l as [[[h t] |]]; cbn.
+  constructor. destruct l as [[| h t]]; cbn.
+    left; split; reflexivity.
     right. do 2 eexists. eauto.
-    left. split; reflexivity.
 Qed.
 (* end hide *)
 
@@ -695,11 +700,11 @@ CoFixpoint intersperse {A : Type} (x : A) (l : coList A) : coList A :=
 {|
     uncons :=
       match uncons l with
-          | None => None
-          | Some (h, t) =>
+          | nilF => nilF
+          | consF h t =>
               match uncons t with
-                  | None => Some (h, t)
-                  | Some (h', t') => Some (h, cocons x (intersperse x t))
+                  | nilF => consF h t
+                  | consF h' t' => consF h (cocons x (intersperse x t))
               end
       end;
 |}.
@@ -710,7 +715,7 @@ Lemma intersperse_conil :
     lsim (intersperse x conil) conil.
 (* begin hide *)
 Proof.
-  constructor. cbn. left. split; reflexivity.
+  constructor. left; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -730,10 +735,7 @@ Lemma len_intersperse :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l as [[[h1 [[[h2 t] |]]] |]]; cbn.
-    right. do 2 eexists. intuition. rewrite len_cocons.
-      replace ({| uncons := Some (h1, _) |}) with (cocons h1 (cocons h2 t)).
-        rewrite !len_cocons. rewrite add_succ. apply sim_succ.
+  constructor. destruct l as [[| h1 [[| h2 t]]]]; cbn.
 Abort.
 (* end hide *)
 
@@ -751,9 +753,9 @@ Abort.
 Fixpoint splitAt
   {A : Type} (l : coList A) (n : nat) : option (list A * A * coList A) :=
 match n, uncons l with
-    | _, None => None
-    | 0, Some (h, t) => Some ([], h, t)
-    | S n', Some (h, t) =>
+    | _, nilF => None
+    | 0, consF h t => Some ([], h, t)
+    | S n', consF h t =>
         match splitAt t n' with
             | None => None
             | Some (start, mid, rest) => Some (h :: start, mid, rest)
@@ -820,18 +822,20 @@ end.
 (* begin hide *)
 Inductive Finite {A : Type} : coList A -> Prop :=
     | Finite_None :
-        forall l : coList A, uncons l = None -> Finite l
+        forall l : coList A, uncons l = nilF -> Finite l
     | Finite_Some :
         forall (h : A) (t l : coList A),
-          uncons l = Some (h, t) -> Finite t -> Finite l.
+          uncons l = consF h t -> Finite t -> Finite l.
 
+Set Warnings "-cannot-define-projection".
 CoInductive Infinite {A : Type} (l : coList A) : Prop :=
 {
     h : A;
     t : coList A;
-    p : uncons l = Some (h, t);
+    p : uncons l = consF h t;
     inf' : Infinite t;
 }.
+Set Warnings "cannot-define-projection".
 (* end hide *)
 
 Lemma Finite_or_Infinite_irrefutable :
@@ -842,8 +846,8 @@ Proof.
   intros A l H.
   apply H. right. revert A l H. cofix CH.
   intros A l H.
-  destruct l as [[[h t] |]].
-    Focus 2. contradiction H. left. constructor. cbn. reflexivity.
+  destruct l as [[| h t]].
+    contradiction H. left. constructor. cbn. reflexivity.
     econstructor.
       cbn. reflexivity.
       apply CH. intros [H' | H']; apply H.
@@ -873,8 +877,8 @@ Lemma sim_Infinite :
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct 1 as [[[] | (h1 & t1 & h2 & t2 & p1 & p2 & p3 & H)]], 1.
-    rewrite H in p. inversion p.
+  destruct 1 as [[| h1 t1 h2 t2 p1 p2 p3 H]], 1.
+    rewrite H1 in p. congruence.
     econstructor.
       exact p2.
       rewrite p1 in p. inversion p; subst. eapply CH; eauto.
@@ -887,12 +891,8 @@ Lemma len_Finite :
 (* begin hide *)
 Proof.
   induction 1; cbn.
-    intro. destruct l as [[]]; cbn in *.
-      inv H.
-      apply (f_equal pred) in H0. cbn in H0. inv H0.
-    destruct l as [[]]; cbn in *.
-      intro. apply (f_equal pred) in H1. cbn in H1. inv H. inv H1.
-      inv H.
+    intro. apply (f_equal pred) in H0. cbn in H0. rewrite H in H0. congruence.
+    intro. apply (f_equal pred) in H1. cbn in H1. rewrite H in H1. congruence.
 Qed.
 (* end hide *)
 
@@ -902,11 +902,11 @@ Lemma len_Infinite :
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct l as [[[h t] |]]; cbn.
+  destruct l as [[| h t]]; cbn.
+    intro. apply (f_equal pred) in H. cbn in H. inv H.
     econstructor.
       cbn. reflexivity.
       apply CH. apply (f_equal pred) in H. cbn in H. inv H.
-    intro. apply (f_equal pred) in H. cbn in H. inv H.
 Qed.
 (* end hide *)
 
@@ -917,11 +917,11 @@ Lemma len_Infinite_conv :
 Proof.
   cofix CH.
   constructor.
-  destruct l as [[[h t] |]]; cbn in *.
+  destruct l as [[| h t]]; cbn in *.
+    inv H. inv p.
     right. exists (len t), omega. do 2 split.
       reflexivity.
       apply CH. inv H. cbn in *. inv p.
-    inv H. inv p.
 Qed.
 (* end hide *)
 
@@ -946,11 +946,9 @@ Lemma Infinite_snoc :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. right. destruct H.
-  exists h, (snoc t x), h, t.
-  cbn. rewrite p. do 3 split.
-    reflexivity.
-    apply CH. assumption.
+  constructor. destruct H.
+  eright; cbn; eauto.
+  rewrite p. reflexivity.
 Qed.
 (* end hide *)
 
@@ -972,13 +970,13 @@ Lemma Infinite_app_r :
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct l1 as [[[h t] |]]; intros.
-    econstructor.
-      cbn. reflexivity.
-      apply CH. assumption.
+  destruct l1 as [[| h t]]; intros.
     destruct H. econstructor.
       lazy. destruct l2; cbn in *. rewrite p. reflexivity.
       assumption.
+    econstructor.
+      cbn. reflexivity.
+      apply CH. assumption.
 Qed.
 (* end hide *)
 
@@ -1017,17 +1015,13 @@ Lemma Finite_app_conv :
 Proof.
   intros. remember (app l1 l2) as l. revert l1 l2 Heql.
   induction H; intros; subst; cbn in *.
-    destruct l1 as [[[h t]|]]; cbn in H.
-      inversion H.
-      auto.
-    destruct l1 as [[[h' t']|]]; cbn in H.
-      inversion H; subst. destruct (IHFinite _ _ eq_refl).
-        split.
-          econstructor 2; cbn; eauto.
-          assumption.
-      split.
-        auto.
-        econstructor 2; eauto.
+    destruct l1 as [[| h t]]; cbn in H.
+      split; auto.
+      inv H.
+    destruct l1 as [[| h' t']]; cbn in H.
+      split; eauto.
+      inv H. destruct (IHFinite _ _ eq_refl).
+        split; auto. eright; cbn; eauto.
 Qed.
 (* end hide *)
 
@@ -1088,11 +1082,11 @@ Proof.
   intros until 1. revert l2.
   induction H.
     constructor. cbn. rewrite H. reflexivity.
-    destruct l2 as [[[h2 t2] |]]; cbn.
+    destruct l2 as [[| h2 t2]]; cbn.
+      left. cbn. rewrite H. reflexivity.
       eright.
         cbn. rewrite H. reflexivity.
         apply IHFinite.
-      left. cbn. rewrite H. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1103,13 +1097,14 @@ Lemma Finite_zipW_r :
 Proof.
   intros until 1. revert l1.
   induction H.
-    destruct l1 as [[[h1 t1] |]]; constructor; cbn.
-      rewrite H. 1-2: reflexivity.
-    destruct l1 as [[[h1 t1] |]]; cbn.
+    destruct l1 as [[| h1 t1]]; constructor; cbn.
+      reflexivity.
+      rewrite H. reflexivity.
+    destruct l1 as [[| h1 t1]]; cbn.
+      left. cbn. reflexivity.
       eright.
         cbn. rewrite H. reflexivity.
         apply IHFinite.
-      left. cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1119,11 +1114,11 @@ Lemma Infinite_zipW_l :
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct 1. destruct l1 as [[[h1 t1] |]]; cbn in *.
+  destruct 1. destruct l1 as [[| h1 t1]]; cbn in *.
+    inv p.
     econstructor.
       cbn. reflexivity.
-      destruct (uncons l2) as [[] |]; inv p. eapply CH. eassumption.
-    inv p.
+      destruct (uncons l2) as []; inv p. eapply CH. eassumption.
 Qed.
 (* end hide *)
 
@@ -1134,7 +1129,7 @@ Lemma Infinite_zipW_r :
 Proof.
   cofix CH.
   destruct 1.
-  destruct l1 as [[[h1 t1] |]], l2 as [[[h2 t2] |]]; cbn in *; inv p.
+  destruct l1 as [[| h1 t1]], l2 as [[| h2 t2]]; cbn in *; inv p.
   econstructor; cbn; eauto.
 Qed.
 (* end hide *)
@@ -1166,17 +1161,17 @@ Qed.
 Inductive Exists {A : Type} (P : A -> Prop) : coList A -> Prop :=
     | Exists_hd :
         forall (l : coList A) (h : A) (t : coList A),
-          uncons l = Some (h, t) -> P h -> Exists P l
+          uncons l = consF h t -> P h -> Exists P l
     | Exists_tl :
         forall (l : coList A) (h : A) (t : coList A),
-          uncons l = Some (h, t) -> Exists P t -> Exists P l.
+          uncons l = consF h t -> Exists P t -> Exists P l.
 
 CoInductive All {A : Type} (P : A -> Prop) (l : coList A) : Prop :=
 {
     All' :
-      uncons l = None \/
+      uncons l = nilF \/
       exists (h : A) (t : coList A),
-        uncons l = Some (h, t) /\ P h /\ All P t;
+        uncons l = consF h t /\ P h /\ All P t;
 }.
 
 Lemma Exists_not_All :
@@ -1195,9 +1190,7 @@ Lemma All_Exists :
 (* begin hide *)
 Proof.
   intros. destruct H as [[H | (h & t & H1 & H2 & H3)]].
-    left. destruct l as [[]].
-      inv H.
-      reflexivity.
+    left. apply eq_uncons. cbn. assumption.
     right. destruct l as [[]]; inv H1. econstructor.
       cbn. reflexivity.
       assumption.
