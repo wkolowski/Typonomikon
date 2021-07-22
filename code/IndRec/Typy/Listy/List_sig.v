@@ -25,7 +25,7 @@ Parameter snoc : forall A : Type, list A -> A -> list A.
 Parameter rev : forall A : Type, list A -> list A.
 Parameter app : forall A : Type, list A -> list A -> list A.
 
-(* TODO *) Parameter revapp : forall A : Type, list A -> list A -> list A.
+Parameter revapp : forall A : Type, list A -> list A -> list A.
 
 (** Rozkład na kawałki od końca *)
 Parameter last : forall A : Type, list A -> option A.
@@ -66,11 +66,6 @@ Parameter splitAt :
 (** Modyfikacje *)
 Parameter insert : forall A : Type, list A -> nat -> A -> list A.
 Parameter replace : forall A : Type, list A -> nat -> A -> option (list A).
-
-(*
-Parameter insert : forall A : Type, list A -> nat -> A -> option (list A).
-*)
-Parameter insert_orElse : forall A : Type, list A -> nat -> A -> list A.
 
 (** Pochodne rozkładu na kawałki i jak powinno być*)
 Parameter remove : forall A : Type, nat -> list A -> option (A * list A).

@@ -42,8 +42,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: interleave z replicate, filter, pmap etc. *)
-
 Lemma any_interleave :
   forall {A : Type} (p : A -> bool) (l1 l2 : list A),
     any p (interleave l1 l2) = any p l1 || any p l2.
@@ -177,5 +175,3 @@ Proof.
     }
 Qed.
 (* end hide *)
-
-(* TODO: AtLeast, Exactly, AtMost *)

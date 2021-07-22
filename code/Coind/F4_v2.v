@@ -1,4 +1,4 @@
-(** * F4: Kolisty [TODO] *)
+(** * F4: Kolisty *)
 
 (** * Kolisty nie znaczy okrągły *)
 
@@ -687,8 +687,16 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma scan_lmap :
+  forall (A B C : Type) (f : B -> C -> B) (g : A -> C) (l : coList A) (b : B),
+    lsim (scan (lmap g l) f b) (scan l (fun b a => f b (g a)) b).
 (* begin hide *)
-(** TODO: kolistowy [scan] vs snoc, app, map, iterate, piterate. *)
+Proof.
+  cofix CH.
+  constructor. destruct l as [[| h t]]; cbn.
+    constructor; cbn; reflexivity.
+    eright; cbn; eauto.
+Qed.
 (* end hide *)
 
 (** ** [intersperse] *)

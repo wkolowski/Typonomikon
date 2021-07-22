@@ -142,21 +142,19 @@ match l with
         end
 end.
 
-
-(* TODO Fixpoint pmap {A B : Type} (f : A -> option B) (l : nel A) : list B :=
+Fixpoint pmap {A B : Type} (f : A -> option B) (l : nel A) : list B :=
 match l with
     | [h] =>
-        match p h with
-            | None => []
-            | Some b => [b]
+        match f h with
+            | None => nil
+            | Some b => cons b nil
         end
     | h :: t =>
-        match p h with
+        match f h with
             | None => pmap f t
-            | Some b => b :: pmap f t
+            | Some b => cons b (pmap f t)
         end
 end.
-*)
 
 (** Rozkład na kawałki od początku i końca *)
 Parameter tail' : forall A : Type, nel A -> list A.

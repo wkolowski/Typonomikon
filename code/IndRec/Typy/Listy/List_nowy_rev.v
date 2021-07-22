@@ -256,7 +256,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO *) Lemma nth_snoc_lt :
+Lemma nth_snoc_lt :
   forall (A : Type) (n : nat) (x : A) (l : list A),
     n < length l -> nth n (snoc x l) = nth n l.
 (* begin hide *)
@@ -366,7 +366,7 @@ Proof.
       rewrite (IHt _ (lt_S_n _ _ H)), remove_snoc_lt.
         destruct (remove (length t - S n') (rev t)).
           destruct p. rewrite rev_snoc. 1-2: reflexivity.
-        rewrite length_rev. lia. (* TODO *)
+        rewrite length_rev. lia.
 Qed.
 (* end hide *)
 

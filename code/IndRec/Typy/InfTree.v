@@ -220,8 +220,6 @@ Inductive InfTreeSubterm
           InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
             InfTreeSubterm t1 t3.
 
-(** TODO: BINGO! [Subterm] to to samo co [Index]. *)
-
 Inductive InfTreeEq {A : Type} : InfTree A -> InfTree A -> Prop :=
     | ITE_E : InfTreeEq E E
     | ITE_N :

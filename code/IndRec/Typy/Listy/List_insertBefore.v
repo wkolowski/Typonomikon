@@ -189,8 +189,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: więcej tego typu rzeczy *)
-
 Lemma rev_insert_before :
   forall (A : Type) (n : nat) (l1 l2 : list A),
     rev (insert l2 before n in l1) =
@@ -299,8 +297,6 @@ Proof.
       rewrite IHt, length_app, insert_before_plus_in_app. reflexivity.
 Qed.
 (* end hide *)
-
-(** TODO: [bind] *)
 
 Lemma insert_before_in_replicate :
   forall (A : Type) (m n : nat) (x : A) (l : list A),

@@ -192,8 +192,6 @@ Proof.
       }
 Qed.
 
-(** TODO: AtLeast, AtMost *)
-
 Fixpoint size {A : Type} (t : BTree A) : nat :=
 match t with
     | E => 0

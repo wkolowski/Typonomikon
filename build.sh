@@ -85,4 +85,4 @@ dot txt/plany/indukcja.dot    -Tjpg -o txt/plany/indukcja.jpg
 dot txt/sugestie/rekordy.dot  -Tjpg -o txt/sugestie/rekordy.jpg
 dot txt/sugestie/rekordy2.dot -Tjpg -o txt/sugestie/rekordy2.jpg
 
-dot txt/ściągi/modalności.dot -Tjpg -o txt/modalności.jpg
+dot txt/ściągi/modalności.dot -Tjpg -o txt/ściągi/modalności.jpg

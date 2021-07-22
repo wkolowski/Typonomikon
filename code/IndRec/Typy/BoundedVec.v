@@ -172,5 +172,3 @@ Proof.
     exact (Some h).
     exact (last _ _ l).
 Defined.
-
-(** TODO for BoundedVec: wszystko *)

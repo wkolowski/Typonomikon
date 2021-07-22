@@ -33,6 +33,7 @@
 10. Opisać jak zasymulować indukcję-indukcję za pomocą indeksów ("presyntax"). To samo dla indukcji-rekursji.
 11. Wymyślić jakiś fajny system rysowania rodzin induktywnych.
 12. Wymyślić standardową interpretację rodzin induktywnych.
+13. Pamiętać: typ subtermów (niekoniecznie właściwych) danego termu to to samo co typ indeksów danego termu - indeksy pokazują na subtermy, ot co.
 
 ## HoTT i topologia
 2. Wprowadzić teorię zbiorów za pomocą wyższego typu induktywnego.

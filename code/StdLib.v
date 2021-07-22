@@ -1,5 +1,8 @@
 Require Import Recdef Bool.
 
+Require Import List.
+Import ListNotations.
+
 Inductive Even : nat -> Prop :=
     | Even0 : Even 0
     | EvenSS : forall n : nat, Even n -> Even (S (S n)).
@@ -265,8 +268,6 @@ End ThisMustWork.
 
 Module WeakEquality.
 
-(** TODO: induktywne charakteryzacje równości dla typów induktywnych,
-    koinduktywne dla typów koinduktywnych. *)
 Class WeakEquality (A : Type) : Type :=
 {
     weq : A -> A -> Prop;
@@ -275,6 +276,24 @@ Class WeakEquality (A : Type) : Type :=
 }.
 
 Notation "x ~=~ y" := (weq x y) (at level 50).
+
+#[refine]
+Instance WeakEquality_Unit : WeakEquality unit :=
+{
+    weq := fun _ _ => True;
+}.
+Proof.
+  trivial.
+Defined.
+
+#[refine]
+Instance WeakEquality_Empty : WeakEquality False :=
+{
+    weq := fun _ _ => True;
+}.
+Proof.
+  trivial.
+Defined.
 
 #[refine]
 Instance WeakEquality_Fun
@@ -286,12 +305,89 @@ Proof.
   intros f g [] x. reflexivity.
 Defined.
 
+#[refine]
+Instance WeakEquality_Fun'
+  {A B : Type} (WEB : WeakEquality B): WeakEquality (A -> B) :=
+{
+    weq := fun f g => forall x : A, weq (f x) (g x);
+}.
+Proof.
+  intros f g [] x. apply weq_spec. reflexivity.
+Defined.
+
+#[refine]
+Instance WeakEquality_Sum
+  {A B : Type} (WEA : WeakEquality A) (WEB : WeakEquality B) : WeakEquality (A + B) :=
+{
+    weq := fun x y =>
+      match x, y with
+        | inl a1, inl a2 => weq a1 a2
+        | inr b1, inr b2 => weq b1 b2
+        | _     , _      => False
+      end
+}.
+Proof.
+  destruct x, y; intro H; inversion H; subst; clear H.
+    apply weq_spec. reflexivity.
+    apply weq_spec. reflexivity.
+Defined.
+
+#[refine]
+Instance WeakEquality_Prod
+  {A B : Type} (WEA : WeakEquality A) (WEB : WeakEquality B) : WeakEquality (A * B) :=
+{
+    weq := fun x y =>
+      match x, y with
+        | (a1, b1), (a2, b2) => weq a1 a2 /\ weq b1 b2
+      end
+}.
+Proof.
+  destruct x, y.
+  intro H.
+  inversion H; subst; clear H.
+  split.
+    apply weq_spec. reflexivity.
+    apply weq_spec. reflexivity.
+Defined.
+
+#[refine]
+Instance WeakEquality_List
+  {A B : Type} (WEA : WeakEquality A) : WeakEquality (list A) :=
+{
+    weq := fix f (x y : list A) : Prop :=
+      match x, y with
+          | [], [] => True
+          | h1 :: t1, h2 :: t2 => weq h1 h2 /\ f t1 t2
+          | _, _ => False
+      end
+}.
+Proof.
+  induction x as [| h1 t1]; destruct y as [| h2 t2]; cbn; intro H.
+    trivial.
+    1-2: inversion H.
+    inversion H; subst. split.
+      apply weq_spec. reflexivity.
+      apply IHt1. reflexivity.
+Defined.
+
+Set Warnings "-require-in-module".
+Require Import F3.
+Set Warnings "require-in-module".
+
+#[refine]
+Instance WeakEquality_Stream
+  {A B : Type} (WEA : WeakEquality A) : WeakEquality (Stream A) :=
+{
+    weq := sim;
+}.
+Proof.
+  destruct 1. apply sim_refl.
+Defined.
+
 End WeakEquality.
 
 Module StrongInequality.
 
-(** TODO: induktywne charakteryzacje nierówności zarówno dla typów
-    induktywnych jak i koinduktywnych. *)
 Class StrongDisequality (A : Type) : Type :=
 {
     sdeq : A -> A -> Prop;
@@ -302,6 +398,60 @@ Class StrongDisequality (A : Type) : Type :=
 Notation "x =/= y" := (sdeq x y) (at level 50).
 
 #[refine]
+Instance StrongDisequality_Unit : StrongDisequality unit :=
+{
+    sdeq := fun _ _ => False;
+}.
+Proof.
+  destruct 1.
+Defined.
+
+#[refine]
+Instance StrongDisequality_Empty : StrongDisequality False :=
+{
+    sdeq := fun _ _ => True;
+}.
+Proof.
+  destruct x.
+Defined.
+
+#[refine]
+Instance StrongDisequality_Sum
+  {A B : Type} (SDA : StrongDisequality A) (SDB : StrongDisequality B) : StrongDisequality (A + B) :=
+{
+    sdeq := fun x y =>
+      match x, y with
+          | inl a1, inl a2 => sdeq a1 a2
+          | inr b1, inr b2 => sdeq b1 b2
+          | inl _ , inr _  => True
+          | inr _ , inl _  => True
+      end
+}.
+Proof.
+  destruct x, y; intros H1 H2;
+  inversion H2; subst.
+    apply sdeq_spec in H1. contradiction.
+    apply sdeq_spec in H1. contradiction.
+Defined.
+
+#[refine]
+Instance StrongDisequality_Prod
+  {A B : Type} (SDA : StrongDisequality A) (SDB : StrongDisequality B) : StrongDisequality (A * B) :=
+{
+    sdeq := fun x y =>
+      match x, y with
+          | (a1, b1), (a2, b2) => sdeq a1 a2 \/ sdeq b1 b2
+      end
+}.
+Proof.
+  destruct x, y; intros H1 H2;
+  inversion H2; subst.
+  destruct H1.
+    apply sdeq_spec in H. contradiction.
+    apply sdeq_spec in H. contradiction.
+Defined.
+
+#[refine]
 Instance StrongDisequality_Fun
   {A B : Type} : StrongDisequality (A -> B) :=
 {
@@ -309,6 +459,60 @@ Instance StrongDisequality_Fun
 }.
 Proof.
   intros f g [x H] p. subst. contradiction.
+Defined.
+
+#[refine]
+Instance StrongDisequality_Fun'
+  {A B : Type} (SDB : StrongDisequality B) : StrongDisequality (A -> B) :=
+{
+    sdeq := fun f g => exists x : A, sdeq (f x) (g x);
+}.
+Proof.
+  intros f g [x H] p. subst. apply sdeq_spec in H. contradiction.
+Defined.
+
+#[refine]
+Instance StrongDisequality_List
+  {A B : Type} (SDA : StrongDisequality A) : StrongDisequality (list A) :=
+{
+    sdeq := fix f (x y : list A) : Prop :=
+      match x, y with
+          | [], [] => False
+          | h1 :: t1, h2 :: t2 => sdeq h1 h2 \/ f t1 t2
+          | _, _ => True
+      end
+}.
+Proof.
+  induction x as [| h1 t1];
+  destruct y as [| h2 t2];
+  cbn; intro H;
+  inversion 1; subst.
+    contradiction.
+    destruct H.
+      apply sdeq_spec in H. contradiction.
+      apply (IHt1 t2). apply H. reflexivity.
+Defined.
+
+Set Warnings "-require-in-module".
+Require Import F3.
+Set Warnings "require-in-module".
+
+Inductive Ex {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Prop :=
+    | Ex_hd :
+        forall s1 s2 : Stream A, R (hd s1) (hd s2) -> Ex R s1 s2
+    | Ex_tl :
+        forall s1 s2 : Stream A, Ex R (tl s1) (tl s2) -> Ex R s1 s2.
+
+#[refine]
+Instance StrongDisequality_Stream
+  {A B : Type} (SDA : StrongDisequality A) : StrongDisequality (Stream A) :=
+{
+    sdeq := Ex sdeq;
+}.
+Proof.
+  induction 1; inversion 1; subst.
+    apply sdeq_spec in H. contradiction.
+    contradiction.
 Defined.
 
 End StrongInequality.

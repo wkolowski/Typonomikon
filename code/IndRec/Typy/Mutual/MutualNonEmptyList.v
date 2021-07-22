@@ -237,14 +237,4 @@ Proof.
   destruct l1 as [| [h1 t1]]; cbn; intros.
     rewrite app_Empty_r. reflexivity.
     rewrite IH. rewrite snoc_app. reflexivity.
-Qed. 
-
-(* TODO for WeirdLists:
-cycle
-splitAt
-insert
-replace
-remove
-unzip
-unzipWith
-*)
+Qed.
