@@ -1,8 +1,6 @@
 Require Import D5.
 
-(** *** Dziwne *)
-
-(** TODO: Wstawić tu jakąś ideologię. *)
+(** *** [revapp] *)
 
 Fixpoint revapp {A : Type} (l1 l2 : list A) : list A :=
 match l1 with
@@ -105,9 +103,15 @@ Definition removeFirstF
     foldr (fun h t => if p h then Some t else t) None l.
 *)
 
+Definition omap {A B : Type} (f : A -> B) (x : option A) : option B :=
+match x with
+    | None   => None
+    | Some a => Some (f a)
+end.
+
 Definition findIndexF
   {A : Type} (p : A -> bool) (l : list A) : option nat :=
-    foldr (fun h t => if p h then Some 0 else t) None l.
+    foldr (fun h t => if p h then Some 0 else omap S t) None l.
 
 Definition countF {A : Type} (p : A -> bool) (l : list A) : nat :=
   foldr (fun h t => (if p h then 1 else 0) + t) 0 l.
@@ -267,19 +271,20 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: Lemma findIndexF_spec :
+Lemma findIndexF_spec :
   forall (A : Type) (p : A -> bool) (l : list A),
     findIndexF p l = findIndex p l.
 (* begin hide *)
 Proof.
-  unfold findIndexF. induction l as [| h t]; cbn.
+  unfold findIndexF.
+  induction l as [| h t]; cbn.
     reflexivity.
     destruct (p h); cbn.
       reflexivity.
-      assumption.
+      rewrite IHt.
+      destruct (findIndex p t); cbn; reflexivity.
 Qed.
 (* end hide *)
-*)
 
 Lemma countF_spec :
   forall (A : Type) (p : A -> bool) (l : list A),
@@ -549,14 +554,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** TODO: reguły indukcyjne *)
-
-Fixpoint rot2 {A : Type} (l : list A) : list A :=
-match l with
-    | [] => []
-    | [x] => [x]
-    | x :: y :: t => y :: x :: rot2 t
-end.
+(** * Reguły indukcyjne *)
 
 Fixpoint list_ind_2
   {A : Type} (P : list A -> Prop)
@@ -567,6 +565,13 @@ match l with
     | [] => Hnil
     | [x] => Hsingl x
     | x :: y :: l' => Hcons2 x y l' (list_ind_2 P Hnil Hsingl Hcons2 l')
+end.
+
+Fixpoint rot2 {A : Type} (l : list A) : list A :=
+match l with
+    | [] => []
+    | [x] => [x]
+    | x :: y :: t => y :: x :: rot2 t
 end.
 
 Lemma rot2_involution :

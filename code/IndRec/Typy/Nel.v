@@ -54,7 +54,7 @@ match l with
         end
 end.
 
-Theorem map_pres_len :
+Lemma map_pres_len :
   forall {A B : Type} (f : A -> B) (l : nel A),
     len l = len (map f l).
 Proof.
@@ -71,7 +71,7 @@ Notation "l1 ++ l2" := (app l1 l2).
 
 Global Hint Unfold len : core.
 
-Theorem app_length :
+Lemma app_length :
   forall {A : Type} (l1 l2 : nel A),
     len (l1 ++ l2) = len l1 + len l2.
 Proof.
@@ -156,130 +156,130 @@ match l with
         end
 end.
 
-(** Rozkład na kawałki od początku i końca *)
-Parameter tail' : forall A : Type, nel A -> list A.
-Parameter uncons : forall A : Type, nel A -> option (A * nel A).
-
-Parameter init' : forall A : Type, nel A -> list A.
-Parameter unsnoc : forall A : Type, nel A -> option (A * nel A).
-
-
-
-
 Fixpoint join {A : Type} (ll : nel (nel A)) : nel A :=
 match ll with
     | [l] => l
     | h :: t => h ++ join t
 end.
 
-(* TODO: reszta rzeczy dla [nel]. *)
-Parameter unzis : forall A B : Type, list (A + B) -> list A * list B.
+Fixpoint unzis {A B : Type} (l : nel (A + B)) : list A * list B :=
+match l with
+    | [inl a] => (cons a nil, nil)
+    | [inr b] => (nil, cons b nil)
+    | h :: t  =>
+        let (la, lb) := unzis t in
+          match h with
+              | inl a => (cons a la, lb)
+              | inr b => (la, cons b lb)
+          end
+end.
 
 (** Powtarzanie *)
-Parameter replicate : forall A : Type, nat -> A -> nel A.
-Parameter iterate : forall A : Type, (A -> A) -> nat -> A -> nel A.
+Fixpoint replicate (n : nat) {A : Type} (x : A) : nel A :=
+match n with
+    | 0    => [x]
+    | S n' => x :: replicate n' x
+end.
 
-(** Rozkład na kawałki *)
-Parameter take : forall A : Type, nat -> nel A -> nel A.
-Parameter take' : forall A : Type, nat -> nel A -> list A.
-Parameter drop : forall A : Type, nat -> nel A -> nel A.
-Parameter drop' : forall A : Type, nat -> nel A -> list A.
-Parameter splitAt :
-  forall A : Type, nel A -> nat -> option (list A * A * list A).
+Fixpoint iterate (n : nat) {A : Type} (f : A -> A) (x : A) : nel A :=
+match n with
+    | 0    => [x]
+    | S n' => x :: iterate n' f (f x)
+end.
 
-(** Pochodne rozkładu na kawałki i jak powinno być*)
-Parameter remove : forall A : Type, nat -> list A -> option (A * list A).
-Parameter remove' : forall A : Type, nat -> list A -> option (list A).
-Parameter remove'' : forall A : Type, nat -> list A -> list A.
+Fixpoint takeS (n : nat) {A : Type} (l : nel A) : nel A :=
+match n, l with
+    | _   , [h] => [h]
+    | 0   , h :: _ => [h]
+    | S n', h :: t => h :: takeS n' t
+end.
 
-(** Modyfikacje *)
-Parameter replace : forall A : Type, nel A -> nat -> A -> option (nel A).
-Parameter insert : forall A : Type, nel A -> nat -> A -> option (nel A).
+Fixpoint take (n : nat) {A : Type} (l : nel A) : list A :=
+match n, l with
+    | 0   , _      => nil
+    | S n', [h]    => cons h nil
+    | S n', h :: t => cons h (take n' t)
+end.
 
-(** Funkcje z predykatem boolowskim *)
-Parameter any : forall A : Type, (A -> bool) -> nel A -> bool.
-Parameter all : forall A : Type, (A -> bool) -> nel A -> bool.
-Parameter count : forall A : Type, (A -> bool) -> nel A -> nat.
-Parameter filter : forall A : Type, (A -> bool) -> nel A -> list A.
-Parameter partition :
-  forall A : Type, (A -> bool) -> nel A -> list A * list A.
+Fixpoint toList {A : Type} (l : nel A) : list A :=
+match l with
+    | [h]    => cons h nil
+    | h :: t => cons h (toList t)
+end.
 
-(** Rozkład na kawałki według predykatu *)
-Parameter find : forall A : Type, (A -> bool) -> nel A -> option A.
-Parameter takeWhile : forall A : Type, (A -> bool) -> nel A -> list A.
-Parameter dropWhile : forall A : Type, (A -> bool) -> nel A -> list A.
-Parameter span :
-  forall A : Type, (A -> bool) -> nel A -> option (list A * A * list A).
+Fixpoint drop (n : nat) {A : Type} (l : nel A) : list A :=
+match n, l with
+    | 0   , _      => toList l
+    | S n', [_]    => nil
+    | S n', h :: t => drop n' t
+end.
 
-(** Pochodne rozkładu na kawałki według predykatu *)
-Parameter removeFirst :
-  forall A : Type, (A -> bool) -> nel A -> option (A * list A).
-Parameter removeFirst' :
-  forall A : Type, (A -> bool) -> nel A -> list A.
+Fixpoint any {A : Type} (p : A -> bool) (l : nel A) : bool :=
+match l with
+    | [h] => p h
+    | h :: t => p h || any p t
+end.
 
-(** Rozkład na kawałki według predykatu od końca *)
-Parameter findLast : forall A : Type, (A -> bool) -> nel A -> option A.
-Parameter removeLast :
-  forall A : Type, (A -> bool) -> nel A -> option (A * list A).
-Parameter decomposeLast :
-  forall A : Type, (A -> bool) -> nel A -> option (list A * A * list A).
+Fixpoint all {A : Type} (p : A -> bool) (l : nel A) : bool :=
+match l with
+    | [h]    => p h
+    | h :: t => p h && all p t
+end.
 
-(** Znajdowanie indeksów *)
-Parameter findIndex :
-  forall A : Type, (A -> bool) -> nel A -> option nat.
+Fixpoint count {A : Type} (p : A -> bool) (l : nel A) : nat :=
+match l with
+    | [h]    => if p h then 1 else 0
+    | h :: t => if p h then 1 + count p t else count p t
+end.
 
-Parameter findIndices :
-  forall A : Type, (A -> bool) -> nel A -> list nat.
+Fixpoint filter {A : Type} (p : A -> bool) (l : nel A) : list A :=
+match l with
+    | [h]    => if p h then cons h nil else nil
+    | h :: t => if p h then cons h (filter p t) else filter p t
+end.
 
-(** Zwijanie i sumy częściowe *)
-Parameter foldl : forall A B : Type, (A -> B -> A) -> A -> nel B -> A.
+Fixpoint takeWhile {A : Type} (p : A -> bool) (l : nel A) : list A :=
+match l with
+    | [h]    => if p h then cons h nil else nil
+    | h :: t => if p h then cons h (takeWhile p t) else nil
+end.
 
-Parameter scanl : forall A B : Type, (A -> B -> A) -> A -> nel B -> nel A.
-Parameter scanl1 : forall A : Type, (A -> A -> A) -> nel A -> nel A.
+Fixpoint dropWhile {A : Type} (p : A -> bool) (l : nel A) : list A :=
+match l with
+    | [h]    => if p h then nil else cons h nil
+    | h :: t => if p h then dropWhile p t else toList t
+end.
 
-Parameter scanr : forall A B : Type, (A -> B -> B) -> B -> nel A -> nel B.
-Parameter scanr1 : forall A : Type, (A -> A -> A) -> nel A -> nel A.
+Fixpoint intersperse {A : Type} (x : A) (l : nel A) : nel A :=
+match l with
+    | [h]    => [h]
+    | h :: t => h :: x :: intersperse x t
+end.
 
-(** Bardziej skomplikowane funkcje *)
-Parameter intersperse : forall A : Type, A -> nel A -> nel A.
-Parameter extrasperse : forall A : Type, A -> nel A -> nel A.
-
-Parameter splitBy :
-  forall A : Type, (A -> bool) -> nel A -> list (list A).
-Parameter groupBy :
-  forall A : Type, (A -> A -> bool) -> nel A -> list (list A).
-
-(** Predykat bycia elementem i jego pochodne *)
-Parameter Dup : forall A : Type, nel A -> Prop.
-
-Parameter Rep : forall A : Type, A -> nat -> nel A -> Prop.
-
-Parameter Exists : forall A : Type, (A -> Prop) -> nel A -> Prop.
-Parameter Forall : forall A : Type, (A -> Prop) -> nel A -> Prop.
-
-Parameter AtLeast : forall A : Type, (A -> Prop) -> nat -> nel A -> Prop.
-Parameter Exactly : forall A : Type, (A -> Prop) -> nat -> nel A -> Prop.
-Parameter AtMost  : forall A : Type, (A -> Prop) -> nat -> nel A -> Prop.
+Fixpoint extrasperse {A : Type} (x : A) (l : nel A) : nel A :=
+match l with
+    | [h] => x :: h :: [x]
+    | h :: t => x :: h :: extrasperse x t
+end.
 
 (*
-(** Listy jako termy *)
-Parameter Subnel : forall A : Type, nel A -> nel A -> Prop.
-
-(** Prefiksy i sufiksy *)
-Parameter Prefix : forall A : Type, nel A -> nel A -> Prop.
-Parameter Suffix : forall A : Type, nel A -> nel A -> Prop.
-
-(** Listy jako ciągi, zbiory, multizbiory i cykle *)
-Parameter Subseq : forall A : Type, nel A -> nel A -> Prop.
-
-Parameter Incl : forall A : Type, list A -> list A -> Prop.
-Parameter SetEquiv : forall A : Type, list A -> list A -> Prop.
-
-Parameter Permutation : forall A : Type, list A -> list A -> Prop.
-Parameter perm : forall (A : Type) (p : A -> bool), list A -> list A -> Prop.
-
-Parameter Cycle: forall A : Type, list A -> list A -> Prop.
-
-(** Palindromy *)
-Parameter Palindrome : forall A : Type, list A -> Prop.
+Compute intersperse 0 (1 :: 2 :: 3 :: 4 :: [5]).
+Compute extrasperse 0 (1 :: 2 :: 3 :: 4 :: [5]).
 *)
+
+Inductive Exists {A : Type} (P : A -> Type) : nel A -> Type :=
+    | ExZ  :
+        forall h : A, P h -> Exists P [h]
+    | ExZ' :
+        forall (h : A) (t : nel A), P h -> Exists P (h :: t)
+    | ExS  :
+        forall (h : A) (t : nel A), Exists P t -> Exists P (h :: t).
+
+Inductive Forall {A : Type} (P : A -> Type) : nel A -> Type :=
+    | FZ :
+        forall h : A, P h -> Forall P [h]
+    | FS :
+        forall (h : A) (t : nel A), P h -> Forall P t -> Forall P (h :: t).
+
+Inductive DirectSubterm {A : Type} : nel A -> nel A -> Type :=
+    | DS_cons  : forall (h : A) (t : nel A), DirectSubterm t (h :: t).

@@ -1177,6 +1177,19 @@ Lemma last_nil :
 Proof. reflexivity. Qed.
 (* end hide *)
 
+Lemma last_None :
+  forall {A : Type} {l : list A},
+    last l = None -> l = [].
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    destruct t.
+      inversion H.
+      specialize (IHt H). inversion IHt.
+Qed.
+(* end hide *)
+
 Lemma last_isEmpty_true :
   forall (A : Type) (l : list A),
     isEmpty l = true -> last l = None.

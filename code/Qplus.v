@@ -1,8 +1,14 @@
 (** * A simple canonical representation of rational numbers *)
 
+(** Kluczowa idea jest taka: jeżeli mamy jakiś typ [A] i jest
+    on gówniany i trzeba go normalizować, żeby dostać kanonicznego
+    reprezentanta, to można użyć śladu (ang. trace) algorytmu
+    normalizującego, żeby uzyskać reprezentację typu [A], gdzie
+    każdy element jest kanoniczny. *)
+
 (** * 1 From fractions to [Qplus] and back *)
 
-(* W sumie [N] to następnić, jak [S] dla [nat]. *)
+(* W sumie [N] to następnik, jak [S] dla [nat]. *)
 Inductive Qplus : Type :=
     | One : Qplus
     | N   : Qplus -> Qplus
@@ -53,12 +59,15 @@ Compute fromQplus (toQplus (6, 7)).
 
 Require Import Lia Arith.
 
-(** TODO: prove that [fromQplus q] is always a reduced fraction. *)
-Lemma fromQplus_reduced_fraction :
+Definition ReducedFraction (n m : nat) : Prop :=
+  forall k n' m' : nat,
+    n = k * n' -> m = k * m' -> k = 1.
+
+(* TODO *) Lemma fromQplus_ReducedFraction :
   forall (q : Qplus) (n m : nat),
-    fromQplus q = (n, m) ->
-      forall k n' m' : nat, n = k * n' -> m = k * m' -> k = 1.
+    fromQplus q = (n, m) -> ReducedFraction n m.
 Proof.
+  unfold ReducedFraction.
   induction q as [| q' | q']; cbn.
     inversion 1; subst; intros. admit.
     destruct (fromQplus q'). inversion 1; intros; subst.
@@ -77,14 +86,18 @@ Proof.
   induction q as [| q' | q'].
     cbn. reflexivity.
     simpl. destruct (fromQplus q') as [p q] eqn: Heq.
-      unfold toQplus, fst, snd in *.
-      rewrite toQplus'_eq, Nat.compare_succ in *.
-Abort.
+      {
+        unfold toQplus, fst, snd in *.
+        rewrite toQplus'_eq, Nat.compare_succ in *.
+        destruct p as [| p'].
+          rewrite plus_0_l. replace (q ?= q) with Eq.
+Admitted.
 
 Lemma to_from :
-  forall pq : nat * nat, fromQplus (toQplus pq) = pq.
+  forall n m : nat,
+    ReducedFraction n m -> fromQplus (toQplus (n, m)) = (n, m).
 Proof.
-Abort.
+Admitted.
 
 (** * 3 Order *)
 
@@ -132,32 +145,40 @@ end.
 Definition fromQplus' (q : Qplus) : nat * nat :=
   let (n, m) := fromQplus q in (n - 1, m - 1).
 
-Definition qadd (q1 q2 : Qplus) : Qplus :=
+Definition qpadd (q1 q2 : Qplus) : Qplus :=
   let (n1, m1) := fromQplus q1 in
   let (n2, m2) := fromQplus q2 in
     toQplus (n1 * m2 + n2 * m1, m1 * m2).
 
-Definition qmul (q1 q2 : Qplus) : Qplus :=
+Definition qpmul (q1 q2 : Qplus) : Qplus :=
 match fromQplus q1, fromQplus q2 with
     | (n1, m1), (n2, m2) => toQplus (n1 * n2, m1 * m2)
 end.
 
-Compute fromQplus' (qadd (toQplus (2, 3)) (toQplus (3, 4))).
-Compute fromQplus' (qmul (toQplus (2, 3)) (toQplus (3, 4))).
+Compute fromQplus' (qpadd (toQplus (2, 3)) (toQplus (3, 4))).
+Compute fromQplus' (qpmul (toQplus (2, 3)) (toQplus (3, 4))).
 
-(** TODO: prove addition commutative and associative *)
-
-Lemma qadd_comm :
+Lemma qpadd_comm :
   forall q1 q2 : Qplus,
-    qadd q1 q2 = qadd q2 q1.
+    qpadd q1 q2 = qpadd q2 q1.
 Proof.
-  induction q1.
-Admitted.
+  unfold qpadd; intros.
+  destruct (fromQplus q1) as [n1 m1],
+           (fromQplus q2) as [n2 m2].
+  do 2 f_equal; lia.
+Qed.
 
-Lemma qadd_assoc :
+(* TODO *) Lemma qpadd_assoc :
   forall q1 q2 q3 : Qplus,
-    qadd (qadd q1 q2) q3 = qadd q1 (qadd q2 q3).
+    qpadd (qpadd q1 q2) q3 = qpadd q1 (qpadd q2 q3).
 Proof.
+  unfold qpadd; intros.
+  destruct (fromQplus q1) as [n1 m1],
+           (fromQplus q2) as [n2 m2],
+           (fromQplus q3) as [n3 m3].
+  destruct (fromQplus (toQplus (n1 * m2 + n2 * m1, m1 * m2))) eqn: H12.
+  destruct (fromQplus (toQplus (n2 * m3 + n3 * m2, m2 * m3))) eqn: H23.
+  do 2 f_equal.
 Admitted.
 
 (** * 5 Encoding the whole rational field *)
@@ -169,8 +190,16 @@ Inductive Q : Set :=
 
 (** TODO: rozszerzyć operacje na [Qplus] na całe [Q]. *)
 
-(** Kluczowa idea jest taka: jeżeli mamy jakiś typ [A] i jest
-    on gówniany i trzeba go normalizować, żeby dostać kanonicznego
-    reprezentanta, to można użyć śladu (ang. trace) algorytmu
-    normalizującego, żeby uzyskać reprezentację typu [A], gdzie
-    każdy element jest kanoniczny. *)
+Definition qneg (q : Q) : Q :=
+match q with
+    | Qneg q' => Qpos q'
+    | Qzero   => Qzero
+    | Qpos q' => Qneg q'
+end.
+
+(*
+Definition qadd (q1 q2 : Q) : Q :=
+match q1, q2 with
+    | Qzero, _ => q2
+    | Qpos q1', Qpos q2' => Qpos (qpadd q1' q2')
+*)

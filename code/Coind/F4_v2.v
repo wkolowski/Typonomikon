@@ -428,7 +428,9 @@ Qed.
 (** Zdefiniuj funkcję [lmap], która aplikuje funkcję [f : A -> B] do
     każdego elementu kolisty.
 
-    TODO: wyklarować, dlaczego niektóre rzeczy mają "l" na początku nazwy *)
+    Uwaga: nazywamy tę funkcję [lmap] zamiast po prostu [map], żeby uniknąć
+    konfliktu nazw - nazwa [map] jest już zajętą przez analogiczną funkcję
+    dla list. *)
 
 (* begin hide *)
 CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=

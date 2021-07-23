@@ -792,14 +792,13 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: być może dobry przykład do zilustrowania reguły
-         wlog (bez straty ogólności)? *)
-
 Lemma NoDup_rev :
   forall (A : Type) (l : list A),
     NoDup (rev l) <-> NoDup l.
 (* begin hide *)
 Proof.
+  (* TODO: być może dobry przykład do zilustrowania reguły
+         wlog (bez straty ogólności)? *)
   assert (forall (A : Type) (l : list A), NoDup l -> NoDup (rev l)).
     induction 1; cbn.
       constructor.

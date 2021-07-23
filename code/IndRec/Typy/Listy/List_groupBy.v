@@ -257,20 +257,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(* TODO: czemu tego nie w ma w D5? SKANDAL! *)
-Lemma last_None :
-  forall {A : Type} {l : list A},
-    last l = None -> l = [].
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    reflexivity.
-    destruct t.
-      inversion H.
-      specialize (IHt H). inversion IHt.
-Qed.
-(* end hide *)
-
 Lemma groupBy_app' :
   forall (A : Type) (p : A -> A -> bool) (l1 l2 : list A),
     groupBy p (l1 ++ l2) =
