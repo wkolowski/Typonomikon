@@ -151,6 +151,19 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma snoc_inj :
+  forall (A : Type) (x : A) (l1 l2 : list A),
+    snoc x l1 = snoc x l2 -> l1 = l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h t]; destruct l2 as [| h2 t2]; cbn; intros.
+    reflexivity.
+    apply (f_equal length) in H. cbn in H. rewrite length_snoc in H. inv H.
+    inv H. destruct t; inv H2.
+    inv H. f_equal. apply IHt. assumption.
+Qed.
+(* end hide *)
+
 (** ** [app] *)
 
 (** Zdefiniuj funkcję [app], która skleja dwie listy.
@@ -359,7 +372,7 @@ Qed.
 Fixpoint rev {A : Type} (l : list A) : list A :=
 match l with
     | [] => []
-    | h :: t => rev t ++ [h]
+    | h :: t => snoc h (rev t)
 end.
 (* end hide *)
 
@@ -370,7 +383,7 @@ Lemma isEmpty_rev :
 Proof.
   destruct l as [| h t]; cbn.
     reflexivity.
-    rewrite isEmpty_app. cbn. rewrite Bool.andb_false_r. reflexivity.
+    apply isEmpty_snoc.
 Qed.
 (* end hide *)
 
@@ -380,19 +393,19 @@ Lemma length_rev :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    trivial.
-    rewrite length_app, plus_comm. cbn. rewrite IHt. trivial.
+    reflexivity.
+    rewrite length_snoc, IHt. reflexivity.
 Qed.
 (* end hide *)
 
 Lemma snoc_rev :
-  forall (A : Type) (x : A) (l : list A),
+  forall (A : Type) (l : list A) (x : A),
     snoc x (rev l) = rev (x :: l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    rewrite ?IHt. rewrite snoc_app, <- app_assoc. cbn. reflexivity.
+    rewrite IHt. reflexivity.
 Qed.
 (* end hide *)
 
@@ -413,19 +426,19 @@ Lemma rev_app :
 (* begin hide *)
 Proof.
   induction l1 as [| h1 t1]; cbn; intro.
-    rewrite app_nil_r. trivial.
-    rewrite IHt1. rewrite app_assoc. trivial.
+    rewrite app_nil_r. reflexivity.
+    rewrite IHt1, snoc_app, snoc_rev. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma rev_inv :
+Lemma rev_rev :
   forall (A : Type) (l : list A),
     rev (rev l) = l.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    trivial.
-    rewrite rev_app. rewrite IHt. cbn. trivial.
+    reflexivity.
+    rewrite rev_snoc, IHt. reflexivity.
 Qed.
 (* end hide *)
 
@@ -517,8 +530,8 @@ Lemma map_rev :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    trivial.
-    rewrite map_app, IHt. cbn. trivial.
+    reflexivity.
+    rewrite map_snoc, IHt. reflexivity.
 Qed.
 (* end hide *)
 
@@ -579,7 +592,7 @@ Lemma rev_join :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite rev_app, join_app, IHt. cbn. rewrite app_nil_r. reflexivity.
+    rewrite rev_app, join_snoc, IHt. reflexivity.
 Qed.
 (* end hide *)
 
@@ -635,6 +648,17 @@ Proof.
   induction l1 as [| h1 t1]; cbn; intros.
     reflexivity.
     rewrite IHt1, app_assoc. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma rev_bind :
+  forall (A B : Type) (f : A -> list B) (l : list A),
+    rev (bind f l) = bind (fun x : A => rev (f x)) (rev l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    reflexivity.
+    rewrite rev_app, IHt, bind_snoc. reflexivity.
 Qed.
 (* end hide *)
 
@@ -724,9 +748,9 @@ Lemma rev_replicate :
     rev (replicate n x) = replicate n x.
 (* begin hide *)
 Proof.
-  induction n as [| n']; cbn; intros; trivial.
-  change [x] with (replicate 1 x).
-  rewrite IHn', <- replicate_plus, plus_comm. cbn. trivial.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn', snoc_replicate. cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -812,45 +836,10 @@ Qed.
 
 Lemma snoc_iterate_iter :
   forall (A : Type) (f : A -> A) (n : nat) (x : A),
-    iterate f n x ++ [iter f n x] = iterate f (S n) x.
+    snoc (iter f n x) (iterate f n x) = iterate f (S n) x.
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros; rewrite ?IHn'; reflexivity.
-Qed.
-(* end hide *)
-
-(* begin hide *)
-Lemma iter_inverse :
-  forall (A : Type) (f g : A -> A) (n : nat) (x : A),
-    (forall x : A, g (f x) = x) ->
-      g (iter f n (f x)) = iter f n x.
-Proof.
-  induction n as [| n']; cbn; intros.
-    apply H.
-    apply IHn'. assumption.
-Qed.
-
-Lemma rev_iterate_aux :
-  forall (A : Type) (f g : A -> A) (n : nat) (x : A),
-    (forall x : A, g (f x) = x) ->
-      rev (iterate f (S n) x) = (iterate g (S n) (iter f n x)).
-Proof.
-  induction n as [| n']; intros.
-    cbn. reflexivity.
-    rewrite <- snoc_iterate_iter, rev_app, IHn'.
-      2: assumption.
-      cbn. do 2 f_equal; rewrite iter_inverse; trivial.
-Qed.
-
-Lemma rev_iterate :
-  forall (A : Type) (f g : A -> A) (n : nat) (x : A),
-    (forall x : A, g (f x) = x) ->
-      rev (iterate f n x) = (iterate g n (iter f (n - 1) x)).
-Proof.
-  destruct n as [| n']; intros.
-    cbn. reflexivity.
-    rewrite (rev_iterate_aux _ _ _ _ _ H). cbn.
-      rewrite <- ?minus_n_O. reflexivity.
 Qed.
 (* end hide *)
 
@@ -860,6 +849,66 @@ Lemma map_iterate :
 (* begin hide *)
 Proof.
   induction n as [| n']; cbn; intros; rewrite ?IHn'; reflexivity.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Lemma iter_out :
+  forall (A : Type) (f : A -> A) (n : nat) (x : A),
+    iter f n (f x) = f (iter f n x).
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite IHn'. reflexivity.
+Qed.
+
+Lemma map_iterate_inv :
+  forall (A : Type) (f g : A -> A) (n : nat) (x : A),
+    (forall x : A, g (f x) = x) ->
+      map g (iterate f n (f x)) = iterate f n x.
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite H, IHn'.
+      reflexivity.
+      assumption.
+Qed.
+
+Lemma rev_iterate_aux :
+  forall (A : Type) (f g : A -> A) (n : nat) (x : A),
+    (forall x : A, g (f x) = x) ->
+      rev (iterate g n (iter f n x)) = iterate f n (f x).
+Proof.
+  induction n as [| n']; cbn; intros.
+    reflexivity.
+    rewrite <- map_iterate, <- map_rev, IHn', map_iterate_inv,
+    snoc_iterate.
+      cbn. reflexivity.
+      all: assumption.
+Qed.
+
+Lemma rev_iterate_aux' :
+  forall (A : Type) (f g : A -> A) (n : nat) (x : A),
+    (forall x : A, g (f x) = x) ->
+      iterate f (S n) x = rev (iterate g (S n) (iter f n x)).
+Proof.
+  induction n as [| n']; cbn in *; intros.
+    reflexivity.
+    rewrite IHn'. rewrite ?iter_out, ?H. rewrite <- IHn'. cbn.
+      do 2 f_equal. apply rev_iterate_aux. all: assumption.
+Qed.
+(* end hide *)
+
+Lemma rev_iterate :
+  forall (A : Type) (f g : A -> A) (n : nat) (x : A),
+    (forall x : A, g (f x) = x) ->
+      rev (iterate f n x) = iterate g n (iter f (n - 1) x).
+(* begin hide *)
+Proof.
+  destruct n; intros.
+    cbn. reflexivity.
+    rewrite (rev_iterate_aux' _ _ _ n _ H), rev_rev. 
+      cbn. rewrite <- minus_n_O. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1496,6 +1545,21 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO *) Lemma rev_unsnoc :
+  forall (A : Type) (x : A) (l l' : list A),
+    unsnoc l = Some (x, l') -> Some (rev l') = tail (rev l).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros; inv H.
+    destruct (unsnoc t) eqn: H.
+      destruct p. inv H1. rewrite tail_snoc, <- (IHt _ eq_refl).
+        cbn. reflexivity.
+      inv H1. destruct t; inv H; cbn.
+        reflexivity.
+        destruct (unsnoc t); try destruct p; inv H1.
+Qed.
+(* end hide *)
+
 (** *** Dualności [head] i [last], [tail] i [init] oraz ciekawostki *)
 
 Lemma last_rev :
@@ -1505,7 +1569,7 @@ Lemma last_rev :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite last_app. cbn. reflexivity.
+    rewrite last_snoc. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1514,7 +1578,7 @@ Lemma head_rev :
     head (rev l) = last l.
 (* begin hide *)
 Proof.
-  intros. rewrite <- last_rev, rev_inv. reflexivity.
+  intros. rewrite <- last_rev, rev_rev. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1529,13 +1593,11 @@ Lemma tail_rev :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite tail_app. destruct (rev t); cbn in *.
+    rewrite tail_snoc. destruct (rev t); cbn in *.
       destruct (init t).
         inversion IHt.
         reflexivity.
-      destruct (init t); cbn.
-        inversion IHt; subst. reflexivity.
-        inversion IHt.
+      destruct (init t); cbn; inversion IHt; subst. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1548,12 +1610,21 @@ Lemma init_rev :
     end.
 (* begin hide *)
 Proof.
-  intros. rewrite <- (rev_inv _ l) at 2. rewrite tail_rev.
-  destruct (init (rev l)); rewrite ?rev_inv; reflexivity.
+  intros. rewrite <- (rev_rev _ l) at 2. rewrite tail_rev.
+  destruct (init (rev l)); rewrite ?rev_rev; reflexivity.
 Qed.
 (* end hide *)
 
+Lemma rev_uncons :
+  forall (A : Type) (x : A) (l l' : list A),
+    uncons l = Some (x, l') -> Some (rev l') = init (rev l).
 (* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros; inv H.
+    rewrite init_snoc. reflexivity.
+Qed.
+(* end hide *)
+
 Lemma tail_decomposition :
   forall (A : Type) (l : list A),
     l = [] \/
@@ -1585,8 +1656,6 @@ Proof.
               rewrite length_app, plus_comm in Heq. cbn in Heq. inversion Heq.
             reflexivity.
 Qed.
-(* end hide *)
-
 (* end hide *)
 
 Lemma bilateral_decomposition :
@@ -1681,27 +1750,31 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma nth_snoc_length_lt :
-  forall (A : Type) (x : A) (l : list A) (n : nat),
+Lemma nth_snoc_lt :
+  forall (A : Type) (n : nat) (x : A) (l : list A),
     n < length l -> nth n (snoc x l) = nth n l.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
-    destruct n; inversion H.
-    destruct n as [| n'].
-      reflexivity.
-      apply IHt, lt_S_n. assumption.
+  induction n as [| n'];
+  destruct l as [| h t];
+  cbn; intro H; inv H.
+    reflexivity.
+    reflexivity.
+    apply IHn'. red. rewrite H1. constructor.
+    apply IHn'. red. eapply le_trans.
+      2: eassumption.
+      do 2 constructor.
 Qed.
 (* end hide *)
 
-Lemma nth_snoc_length_eq :
-  forall (A : Type) (x : A) (l : list A),
-    nth (length l) (snoc x l) = Some x.
+Lemma nth_snoc_eq :
+  forall (A : Type) (n : nat) (x : A) (l : list A),
+    n = length l -> nth n (snoc x l) = Some x.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
+  induction n as [| n']; destruct l as [| h t]; cbn; intros.
     reflexivity.
-    assumption.
+    all: inv H. apply IHn'. reflexivity.
 Qed.
 (* end hide *)
 
@@ -1759,22 +1832,29 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma nth_rev_aux :
+  forall (A : Type) (n : nat) (l : list A),
+    n < length l -> nth n l = nth (length l - S n) (rev l).
+(* begin hide *)
+Proof.
+  induction n as [| n']; destruct l as [| h t]; cbn; intros.
+    1,3: reflexivity.
+    rewrite <- minus_n_O, nth_snoc_eq.
+      2: rewrite length_rev. 1-2: reflexivity.
+      rewrite nth_snoc_lt.
+        apply IHn', lt_S_n, H.
+        rewrite length_rev. lia.
+Qed.
+(* end hide *)
+
 Lemma nth_rev :
-  forall (A : Type) (l : list A) (n : nat),
+  forall (A : Type) (n : nat) (l : list A),
     n < length l -> nth n (rev l) = nth (length l - S n) l.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
+  intros. rewrite nth_rev_aux, rev_rev; rewrite length_rev.
     reflexivity.
-    destruct (length t - n) eqn: Heq.
-      assert (n = length t) by lia. rewrite nth_app_r.
-        rewrite length_rev, <- H0, minus_diag. cbn. reflexivity.
-        rewrite length_rev, <- H0. reflexivity.
-      rewrite nth_app_l.
-        rewrite IHt.
-          f_equal. lia.
-          lia.
-        rewrite length_rev. lia.
+    assumption.
 Qed.
 (* begin hide *)
 
@@ -1991,21 +2071,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma take_snoc_lt :
-  forall (A : Type) (x : A) (l : list A) (n : nat),
-    n < length l -> take n (snoc x l) = take n l.
-(* begin hide *)
-(* TODO: zabij take_snoc_lt *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    destruct n; inversion H.
-    destruct n as [| n']; cbn.
-      reflexivity.
-      rewrite ?(IHt _ (lt_S_n _ _ H)). reflexivity.
-Qed.
-(* end hide *)
-
-Lemma take_snoc_le :
+Lemma take_snoc :
   forall (A : Type) (x : A) (l : list A) (n : nat),
     n <= length l -> take n (snoc x l) = take n l.
 (* begin hide *)
@@ -2014,7 +2080,7 @@ Proof.
     inv H. reflexivity.
     destruct n as [| n']; cbn.
       reflexivity.
-      f_equal. apply IHt, le_S_n. assumption.
+      f_equal. apply IHt. apply le_S_n. assumption.
 Qed.
 (* end hide *)
 
@@ -2301,7 +2367,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma drop_snoc_le :
+Lemma drop_snoc :
   forall (A : Type) (x : A) (l : list A) (n : nat),
     n <= length l -> drop n (snoc x l) = snoc x (drop n l).
 (* begin hide *)
@@ -2310,7 +2376,7 @@ Proof.
     inv H. reflexivity.
     destruct n as [| n']; cbn.
       reflexivity.
-      apply IHt, le_S_n. assumption.
+      apply IHt. apply le_S_n. assumption.
 Qed.
 (* end hide *)
 
@@ -2522,10 +2588,12 @@ Lemma take_rev_aux :
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    destruct n as [| n'].
-      rewrite <- minus_n_O. rewrite drop_length. cbn. reflexivity.
-      rewrite IHt, length_app, plus_comm. cbn. rewrite drop_app_l.
-        rewrite rev_app. cbn. reflexivity.
+    destruct n as [ |n'].
+      rewrite drop_length'.
+        reflexivity.
+        rewrite length_snoc, length_rev, <- minus_n_O. apply le_n.
+      rewrite IHt, length_snoc, drop_snoc; cbn.
+        rewrite rev_snoc. reflexivity.
         apply Nat.le_sub_l.
 Qed.
 (* end hide *)
@@ -2535,7 +2603,7 @@ Lemma take_rev :
     take n (rev l) = rev (drop (length l - n) l).
 (* begin hide *)
 Proof.
-  intros. rewrite take_rev_aux, !rev_inv. reflexivity.
+  intros. rewrite take_rev_aux, !rev_rev. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2544,7 +2612,7 @@ Lemma rev_take :
     rev (take n l) = drop (length l - n) (rev l).
 (* begin hide *)
 Proof.
-  intros. rewrite take_rev_aux, !rev_inv, length_rev. reflexivity.
+  intros. rewrite take_rev_aux, !rev_rev, length_rev. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2553,25 +2621,33 @@ Lemma drop_rev_aux :
   forall (A : Type) (l : list A) (n : nat),
     drop n l = rev (take (length (rev l) - n) (rev l)).
 Proof.
-  (* TODO: drop_rev_aux za pomocą [rewrite]'a *)
-  intros. rewrite take_rev_aux, ?rev_inv, length_rev.
-Restart.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    destruct n as [| n'].
-      rewrite <- minus_n_O, take_length, rev_app, rev_inv. cbn. reflexivity.
-      rewrite IHt, length_app, plus_comm. cbn. rewrite take_app_l.
+    destruct n as [ |n'].
+      rewrite take_length'.
+        rewrite rev_snoc, rev_rev. reflexivity.
+        rewrite length_snoc, length_rev, <- minus_n_O. apply le_n.
+      rewrite IHt, length_snoc, take_snoc; cbn.
         reflexivity.
         apply Nat.le_sub_l.
 Qed.
 (* end hide *)
 
 Lemma drop_rev :
-  forall (A : Type) (n : nat) (l : list A),
+  forall (A : Type) (l : list A) (n : nat),
     drop n (rev l) = rev (take (length l - n) l).
 (* begin hide *)
 Proof.
-  intros. rewrite drop_rev_aux, !rev_inv. reflexivity.
+  intros. rewrite drop_rev_aux, rev_rev. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma rev_drop :
+  forall (A : Type) (l : list A) (n : nat),
+    drop n (rev l) = rev (take (length l - n) l).
+(* begin hide *)
+Proof.
+  intros. rewrite drop_rev_aux, rev_rev. reflexivity.
 Qed.
 (* end hide *)
 
@@ -3042,20 +3118,16 @@ Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct n as [| n'].
-      rewrite splitAt_app, splitAt_length_ge.
+      rewrite splitAt_snoc, splitAt_length_ge.
         1-2: rewrite length_rev, <- minus_n_O.
-          cbn. rewrite minus_diag, rev_app, rev_inv. cbn. reflexivity.
+        rewrite Nat.ltb_irrefl, Nat.eqb_refl, rev_rev. cbn. reflexivity.
         reflexivity.
-      rewrite IHt, splitAt_app; clear IHt.
-        destruct (splitAt (length t - S n') (rev t)) eqn: Heq.
-          destruct p, p. rewrite rev_app. cbn. reflexivity.
-          destruct t; cbn in *.
-            lia.
-            destruct
-              (splitAt_length_lt A (rev t ++ [a]) (length t - n'))
-            as [x H'].
-              rewrite length_app, length_rev. cbn. lia.
-              congruence.
+      rewrite IHt, splitAt_snoc; clear IHt.
+        replace (length t - S n' <? length (rev t)) with true.
+          destruct (splitAt (length t - S n') (rev t)) eqn: Heq.
+            destruct p, p. cbn. rewrite rev_snoc. reflexivity.
+            reflexivity.
+          rewrite length_rev. destruct (Nat.ltb_spec (length t - S n') (length t)); lia.
         apply lt_S_n. assumption.
 Qed.
 (* end hide *)
@@ -3072,7 +3144,7 @@ Lemma splitAt_rev :
 Proof.
   intros. rewrite <- length_rev in H.
   rewrite (splitAt_rev_aux _ _ _ H).
-  rewrite length_rev, rev_inv. reflexivity.
+  rewrite length_rev, rev_rev. reflexivity.
 Qed.
 (* end hide *)
 
@@ -3347,11 +3419,10 @@ Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct n as [| n']; cbn.
-      replace (S (length t)) with (length (rev t ++ [h])).
-        rewrite insert_length, snoc_app, rev_app, rev_snoc, rev_inv.
-          cbn. reflexivity.
-        rewrite length_app, length_rev, plus_comm. cbn. reflexivity.
-      rewrite ?IHt, insert_app, length_rev.
+      replace (S (length t)) with (length (snoc h (rev t))).
+        rewrite insert_length, ?rev_snoc, rev_rev. reflexivity.
+        rewrite length_snoc, length_rev. reflexivity.
+      rewrite ?IHt, snoc_app_singl, insert_app, length_rev.
         assert (length t - n' <= length t).
           apply Nat.le_sub_l.
           apply leb_correct in H. rewrite H.
@@ -3364,8 +3435,7 @@ Lemma insert_rev :
     insert (rev l) n x = rev (insert l (length l - n) x).
 (* begin hide *)
 Proof.
-  intros. rewrite insert_rev_aux. rewrite rev_inv, length_rev.
-  reflexivity.
+  intros. rewrite insert_rev_aux, rev_rev, length_rev. reflexivity.
 Qed.
 (* end hide *)
 
@@ -3375,8 +3445,8 @@ Lemma rev_insert :
 (* begin hide *)
 Proof.
   intros. pose (insert_rev _ (rev l)).
-  rewrite rev_inv in e.
-  rewrite e, rev_inv, length_rev. reflexivity.
+  rewrite rev_rev in e.
+  rewrite e, rev_rev, length_rev. reflexivity.
 Qed.
 (* end hide *)
 
@@ -3813,11 +3883,13 @@ Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct n as [| n'].
-      rewrite <- snoc_app_singl, <- minus_n_O, replace_snoc,
-        length_rev, <- beq_nat_refl, rev_snoc, rev_inv. reflexivity.
-      rewrite replace_app, (IHt _ _ (lt_S_n _ _ H)).
+      rewrite <- minus_n_O, replace_snoc,
+        length_rev, <- beq_nat_refl, rev_snoc, rev_rev. reflexivity.
+      rewrite replace_snoc, (IHt _ _ (lt_S_n _ _ H)).
         destruct (replace (rev t) (length t - S n') x) eqn: Heq.
-          rewrite rev_app. cbn. reflexivity.
+          destruct (Nat.eqb_spec (length t - S n') (length (rev t))).
+            rewrite length_rev in e. lia.
+            rewrite rev_snoc. reflexivity.
           rewrite replace_spec' in Heq.
             inv Heq.
             rewrite length_rev. unfold lt. lia.
@@ -3837,7 +3909,7 @@ Lemma replace_rev :
 (* begin hide *)
 Proof.
   intros. rewrite (replace_rev_aux _ (rev l));
-  rewrite ?rev_inv, length_rev.
+  rewrite ?rev_rev, length_rev.
     reflexivity.
     assumption.
 Qed.
@@ -4447,18 +4519,13 @@ Lemma remove_rev_aux :
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    destruct n as [| n']; cbn.
-      rewrite <- minus_n_O. rewrite remove_app, remove_length_ge.
-        rewrite length_rev, minus_diag. cbn. rewrite app_nil_r, rev_inv.
-          reflexivity.
-        rewrite length_rev. reflexivity.
-      rewrite IHt. rewrite remove_app.
-        destruct (remove (length t - S n') (rev t)) eqn: Heq.
-          destruct p. rewrite rev_app. cbn. reflexivity.
-          apply remove_length_lt' in Heq.
-            contradiction.
-            rewrite length_rev. lia.
-        apply lt_S_n. assumption.
+    destruct n as [| n'].
+      rewrite <- minus_n_O, <- length_rev, remove_length_snoc, rev_rev.
+        reflexivity.
+      rewrite (IHt _ (lt_S_n _ _ H)), remove_snoc_lt.
+        destruct (remove (length t - S n') (rev t)).
+          destruct p. rewrite rev_snoc. 1-2: reflexivity.
+        rewrite length_rev. lia.
 Qed.
 (* end hide *)
 
@@ -4472,7 +4539,7 @@ Lemma remove_rev :
       end.
 (* begin hide *)
 Proof.
-  intros. rewrite remove_rev_aux, rev_inv; rewrite length_rev.
+  intros. rewrite remove_rev_aux, rev_rev; rewrite length_rev.
     reflexivity.
     assumption.
 Qed.
@@ -4967,6 +5034,18 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma rev_unzip :
+  forall (A B : Type) (l : list (A * B)) (la : list A) (lb : list B),
+    unzip l = (la, lb) -> unzip (rev l) = (rev la, rev lb).
+(* begin hide *)
+Proof.
+  induction l as [| [ha ta] t]; cbn; intros.
+    inv H. cbn. reflexivity.
+    destruct (unzip t). inv H. rewrite unzip_snoc, (IHt _ _ eq_refl).
+      cbn. reflexivity.
+Qed.
+(* end hide *)
+
 (** ** [zipWith] *)
 
 (** Zdefiniuj funkcję [zipWith], która zachowuje się jak połączenie [zip]
@@ -5160,6 +5239,17 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma zipWith_not_rev :
+  exists (A B C : Type) (f : A -> B -> C) (la : list A) (lb : list B),
+    zipWith f (rev la) (rev lb) <> rev (zipWith f la lb).
+(* begin hide *)
+Proof.
+  exists bool, bool, (prod bool bool),
+         pair, [true; false; true], [false; true].
+  cbn. inversion 1.
+Qed.
+(* end hide *)
+
 (** ** [unzipWith] *)
 
 (** Zdefiniuj funkcję [unzipWith], która ma się tak do [zipWith], jak
@@ -5229,6 +5319,20 @@ Restart.
   induction l as [| [ha ta] t]; cbn.
     reflexivity.
     rewrite IHt. destruct (unzip t). reflexivity.
+Qed.
+(* end hide *)
+
+Lemma rev_unzipWith :
+  forall (A B C : Type) (f : A -> B * C) (l : list A),
+    unzipWith f (rev l) =
+      let (la, lb) := unzipWith f l in (rev la, rev lb).
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    destruct (unzipWith f t), (f h) eqn: Heq.
+      rewrite unzipWith_spec, map_snoc, map_rev, unzip_snoc, IHt, Heq in *.
+        cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -5315,8 +5419,7 @@ Lemma any_rev :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite any_app, IHt. cbn. rewrite ?Bool.orb_assoc, Bool.orb_comm.
-      cbn. rewrite Bool.orb_comm. reflexivity.
+    rewrite any_snoc, IHt, ?Bool.orb_assoc, Bool.orb_comm. reflexivity.
 Qed.
 (* end hide *)
 
@@ -5657,8 +5760,7 @@ Lemma all_rev :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite all_app, IHt. cbn. rewrite Bool.andb_true_r, Bool.andb_comm.
-      reflexivity.
+    rewrite all_snoc, IHt, Bool.andb_comm. reflexivity.
 Qed.
 (* end hide *)
 
@@ -6092,16 +6194,16 @@ Lemma find_rev :
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    rewrite find_app, IHt. cbn. reflexivity.
+    rewrite find_snoc, IHt. reflexivity.
 Qed.
 (* end hide *)
 
-Lemma find_findLast :
+Lemma findLast_rev :
   forall (A : Type) (p : A -> bool) (l : list A),
-    find p l = findLast p (rev l).
+    findLast p (rev l) = find p l.
 (* begin hide *)
 Proof.
-  intros. rewrite <- rev_inv at 1. apply find_rev.
+  intros. rewrite <- (rev_rev _ l), find_rev, rev_rev. reflexivity.
 Qed.
 (* end hide *)
 
@@ -6557,9 +6659,9 @@ Lemma removeFirst_rev :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite removeFirst_app, IHt; cbn. destruct (removeLast p t).
-      destruct p0; cbn. reflexivity.
-      destruct (p h); rewrite ?app_nil_r; reflexivity.
+    rewrite removeFirst_snoc, IHt. destruct (removeLast p t).
+      destruct p0. cbn. reflexivity.
+      destruct (p h); reflexivity.
 Qed.
 (* end hide *)
 
@@ -6572,9 +6674,9 @@ Lemma removeLast_rev :
     end.
 (* begin hide *)
 Proof.
-  intros. rewrite <- (rev_inv _ l) at 2. rewrite removeFirst_rev.
-  destruct (removeLast p (rev l)); cbn.
-    destruct p0. rewrite rev_inv. all: reflexivity.
+  intros. rewrite <- (rev_rev _ l) at 2. rewrite removeFirst_rev.
+  destruct (removeLast p (rev l)).
+    destruct p0. rewrite rev_rev. all: reflexivity.
 Qed.
 (* end hide *)
 
@@ -7476,7 +7578,7 @@ Lemma count_rev :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite count_app, IHt. cbn. destruct (p h); cbn.
+    rewrite count_snoc, IHt. destruct (p h); cbn.
       rewrite plus_comm. cbn. reflexivity.
       apply plus_0_r.
 Qed.
@@ -7874,10 +7976,8 @@ Lemma filter_rev :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    trivial.
-    rewrite filter_app; cbn. destruct (p h); cbn.
-      rewrite IHt. trivial.
-      rewrite app_nil_r. rewrite IHt. trivial.
+    reflexivity.
+    rewrite filter_snoc. destruct (p h); cbn; rewrite IHt; reflexivity.
 Qed.
 (* end hide *)
 
@@ -8447,10 +8547,8 @@ Lemma findIndices_rev_aux :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite findIndices_app, ?rev_app, ?IHt, ?length_rev, <- ?map_rev.
-      cbn. destruct (p h); cbn.
-        rewrite <- map_map, plus_0_r, <- minus_n_O. reflexivity.
-        rewrite <- map_map. reflexivity.
+    rewrite findIndices_snoc, length_rev. destruct (p h); cbn.
+      all: rewrite ?rev_snoc, <- ?minus_n_O, map_map, IHt; reflexivity.
 Qed.
 (* end hide *)
 
@@ -8460,7 +8558,7 @@ Lemma findIndices_rev :
     rev (map (fun n : nat => length l - S n) (findIndices p l)).
 (* begin hide *)
 Proof.
-  intros. rewrite <- findIndices_rev_aux, rev_inv. reflexivity.
+  intros. rewrite <- findIndices_rev_aux, rev_rev. reflexivity.
 Qed.
 (* end hide *)
 
@@ -8470,7 +8568,7 @@ Lemma rev_findIndices :
     map (fun n : nat => length l - S n) (findIndices p (rev l)).
 (* begin hide *)
 Proof.
-  intros. rewrite <- (rev_inv _ l) at 1.
+  intros. rewrite <- (rev_rev _ l) at 1.
   rewrite findIndices_rev_aux, length_rev.
   reflexivity.
 Qed.
@@ -8572,8 +8670,8 @@ Lemma last_findIndices :
 (* begin hide *)
 Proof.
   intros.
-  rewrite <- head_rev, <- (rev_inv _ l) at 1.
-  rewrite findIndices_rev_aux. rewrite <- head_findIndices.
+  rewrite <- head_rev, <- (rev_rev _ l) at 1.
+  rewrite findIndices_rev_aux, <- head_findIndices.
   destruct (findIndices p (rev l)); cbn.
     reflexivity.
     rewrite length_rev. reflexivity.
@@ -8594,22 +8692,26 @@ Proof.
     destruct (p h) eqn: Hph; cbn.
       rewrite init_map. destruct (findIndices p t) eqn: Heq; cbn in *.
         destruct (removeLast p t).
-          destruct p0. inv IHt.
+          destruct p0. inversion IHt.
           rewrite Heq. reflexivity.
         destruct (init l), (removeLast p t); cbn.
-          destruct p0. cbn. rewrite Hph. inv IHt. reflexivity.
-          inv IHt.
-          destruct p0. cbn. rewrite Hph. inv IHt. reflexivity.
-          inv IHt.
+          destruct p0. cbn. rewrite Hph. inversion IHt; subst. cbn.
+            reflexivity.
+          inversion IHt.
+          destruct p0. cbn. rewrite Hph. inversion IHt; subst; cbn.
+            reflexivity.
+          inversion IHt.
       rewrite init_map. destruct (findIndices p t) eqn: Heq; cbn in *.
         destruct (removeLast p t).
-          destruct p0. inv IHt.
+          destruct p0. inversion IHt.
           reflexivity.
         destruct (init l), (removeLast p t); cbn.
-          destruct p0. cbn. rewrite Hph. inv IHt. reflexivity.
-          inv IHt.
-          destruct p0. cbn. rewrite Hph. inv IHt. reflexivity.
-          inv IHt.
+          destruct p0. cbn. rewrite Hph. inversion IHt; subst; cbn.
+            reflexivity.
+          inversion IHt.
+          destruct p0. cbn. rewrite Hph. inversion IHt; subst; cbn.
+            reflexivity.
+          inversion IHt.
 Qed.
 (* end hide *)
 
@@ -9475,15 +9577,15 @@ end.
 (* end hide *)
 
 (* begin hide *)
-Lemma naps_snoc' :
+Lemma naps_snoc :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
-    naps p (l ++ [x]) =
+    naps p (snoc x l) =
     if p x
     then Some (l, x, [])
     else
       match naps p l with
           | None => None
-          | Some (b, y, e) => Some (b, y, e ++ [x])
+          | Some (b, y, e) => Some (b, y, snoc x e)
       end.
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -9508,9 +9610,10 @@ Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
     destruct (p h) eqn: Hph; cbn.
-      rewrite naps_snoc', Hph, rev_inv. cbn. reflexivity.
-      rewrite naps_snoc', Hph, IHt. destruct (naps p (rev t)).
-        destruct p0, p0. rewrite rev_app. cbn. all: reflexivity.
+      rewrite naps_snoc, Hph, rev_rev. cbn. reflexivity.
+      rewrite naps_snoc, Hph, IHt. destruct (naps p (rev t)).
+        destruct p0, p0. rewrite rev_snoc. reflexivity.
+        reflexivity.
 Qed.
 (* end hide *)
 
@@ -9523,7 +9626,7 @@ Lemma span_rev :
     end.
 (* begin hide *)
 Proof.
-  intros. rewrite span_rev_aux, rev_inv. reflexivity.
+  intros. rewrite span_rev_aux, rev_rev. reflexivity.
 Qed.
 (* end hide *)
 
@@ -9589,17 +9692,17 @@ Qed.
 (* end hide *)
 
 Lemma pmap_snoc :
-  forall (A B : Type) (f : A -> option B) (a : A) (l : list A),
-    pmap f (snoc a l) =
-    match f a with
+  forall (A B : Type) (f : A -> option B) (x : A) (l : list A),
+    pmap f (snoc x l) =
+    match f x with
         | None => pmap f l
         | Some b => snoc b (pmap f l)
     end.
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
-    reflexivity.
-    destruct (f h), (f a); cbn; rewrite ?IHt; reflexivity.
+    destruct (f x); reflexivity.
+    destruct (f x), (f h); cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
 
@@ -9621,8 +9724,7 @@ Lemma pmap_rev :
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    rewrite pmap_app. cbn. destruct (f h); cbn; rewrite ?IHt, ?app_nil_r.
-      all: reflexivity.
+    rewrite pmap_snoc. destruct (f h); cbn; rewrite ?IHt; reflexivity.
 Qed.
 (* end hide *)
 
@@ -10018,12 +10120,12 @@ Lemma intersperse_rev :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite intersperse_app. destruct (rev t) eqn: Heq.
-      apply (f_equal rev) in Heq. rewrite rev_inv in Heq.
+    rewrite intersperse_snoc. destruct (rev t) eqn: Heq.
+      apply (f_equal rev) in Heq. rewrite rev_rev in Heq.
         cbn in Heq. rewrite Heq. cbn. reflexivity.
       rewrite IHt. destruct (intersperse x t); cbn.
         cbn in IHt. destruct (intersperse x l); inversion IHt.
-        rewrite <- ?app_assoc. cbn. reflexivity.
+          reflexivity.
 Qed.
 (* end hide *)
 
@@ -10057,7 +10159,7 @@ Lemma last_intersperse :
 (* begin hide *)
 Proof.
   intros. pose (H := intersperse_rev _ x (rev l)).
-  rewrite rev_inv in H.
+  rewrite rev_rev in H.
   rewrite H, last_rev, head_intersperse, head_rev.
   reflexivity.
 Qed.
@@ -10565,11 +10667,9 @@ Lemma elem_rev_aux :
     elem x l -> elem x (rev l).
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; intros.
-    assumption.
-    inversion H; subst.
-      apply elem_app_r. constructor.
-      apply elem_app_l. apply IHt. assumption.
+  induction 1; cbn; rewrite elem_snoc.
+    right. reflexivity.
+    left. assumption.
 Qed.
 (* end hide *)
 
@@ -10579,7 +10679,7 @@ Lemma elem_rev :
 (* begin hide *)
 Proof.
   split; intro.
-    apply elem_rev_aux in H. rewrite rev_inv in H. assumption.
+    apply elem_rev_aux in H. rewrite rev_rev in H. assumption.
     apply elem_rev_aux, H.
 Qed.
 (* end hide *)
@@ -11375,27 +11475,12 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma In_rev_aux :
-  forall (A : Type) (x : A) (l : list A),
-    In x l -> In x (rev l).
-(* begin hide *)
-Proof.
-  induction l as [| h t]; cbn; intros.
-    assumption.
-    inversion H; subst.
-      apply In_app_r. left. reflexivity.
-      apply In_app_l. apply IHt. assumption.
-Qed.
-(* end hide *)
-
 Lemma In_rev :
   forall (A : Type) (x : A) (l : list A),
     In x (rev l) <-> In x l.
 (* begin hide *)
 Proof.
-  split; intro.
-    apply In_rev_aux in H. rewrite rev_inv in H. assumption.
-    apply In_rev_aux, H.
+  intros. rewrite ?In_elem in *. apply elem_rev.
 Qed.
 (* end hide *)
 
@@ -11767,20 +11852,16 @@ Lemma NoDup_rev :
     NoDup (rev l) <-> NoDup l.
 (* begin hide *)
 Proof.
+  (* TODO: być może dobry przykład do zilustrowania reguły
+         wlog (bez straty ogólności)? *)
   assert (forall (A : Type) (l : list A), NoDup l -> NoDup (rev l)).
     induction 1; cbn.
       constructor.
-      apply NoDup_app; repeat split; intros.
+      apply NoDup_snoc; repeat split; intros.
         assumption.
-        apply NoDup_singl.
-        inversion 1; subst.
-          contradiction H. rewrite <- elem_rev. assumption.
-          inversion H5.
-        inversion H1; subst; clear H1.
-          intro. contradiction H. rewrite <- elem_rev. assumption.
-          inversion H4.
+        intro. rewrite elem_rev in H1. contradiction.
   split; intro.
-    rewrite <- rev_inv. apply H. assumption.
+    rewrite <- rev_rev. apply H. assumption.
     apply H. assumption.
 Qed.
 (* end hide *)
@@ -12233,13 +12314,11 @@ Lemma Dup_rev :
 (* begin hide *)
 Proof.
   assert (forall (A : Type) (l : list A), Dup l -> Dup (rev l)).
-    induction 1; cbn.
-      apply Dup_app_both with h.
-        apply elem_rev. assumption.
-        constructor.
-      apply Dup_app_l. assumption.
+    induction 1; cbn; rewrite Dup_snoc, elem_rev.
+      right. assumption.
+      left. assumption.
     split; intros.
-      rewrite <- rev_inv. apply H. assumption.
+      rewrite <- rev_rev. apply H. assumption.
       apply H. assumption.
 Qed.
 (* end hide *)
@@ -12807,13 +12886,10 @@ Proof.
             Rep x n l -> Rep x n (rev l)).
     induction 1; cbn.
       constructor.
-      rewrite Rep_app_conv. exists n, 1. repeat split.
-        assumption.
-        do 2 constructor.
-        rewrite plus_comm. cbn. reflexivity.
-      apply Rep_app_l. assumption.
+      apply Rep_S_snoc. assumption.
+      apply Rep_snoc. assumption.
     split; intros.
-      rewrite <- rev_inv. apply H, H0.
+      rewrite <- rev_rev. apply H, H0.
       apply H, H0.
 Qed.
 (* end hide *)
@@ -13100,11 +13176,11 @@ Lemma Exists_rev :
 (* begin hide *)
 Proof.
   intros A P. assert (forall l : list A, Exists P l -> Exists P (rev l)).
-    induction 1; cbn; rewrite Exists_app.
-      right. constructor. assumption.
+    induction 1; cbn; rewrite Exists_snoc.
+      right. assumption.
       left. assumption.
     split; intro.
-      rewrite <- rev_inv. apply H, H0.
+      rewrite <- rev_rev. apply H, H0.
       apply H, H0.
 Qed.
 (* end hide *)
@@ -13643,9 +13719,9 @@ Proof.
   intros A P. assert (forall l : list A, Forall P l -> Forall P (rev l)).
     induction 1; cbn.
       constructor.
-      rewrite Forall_app. split; repeat constructor; assumption.
+      rewrite Forall_snoc. split; assumption.
     split; intro.
-      rewrite <- rev_inv. apply H, H0.
+      rewrite <- rev_rev. apply H, H0.
       apply H, H0.
 Qed.
 (* end hide *)
@@ -14263,12 +14339,10 @@ Proof.
             AtLeast P n l -> AtLeast P n (rev l)).
     induction 1; cbn.
       constructor.
-      apply AtLeast_app_comm; cbn. constructor; assumption.
-      rewrite <- (plus_0_r n). apply AtLeast_plus_app.
-        assumption.
-        constructor.
+      apply AtLeast_S_snoc; assumption.
+      apply AtLeast_snoc; assumption.
     split; intro.
-      rewrite <- rev_inv. apply H, H0.
+      rewrite <- rev_rev. apply H, H0.
       apply H, H0.
 Qed.
 (* end hide *)
@@ -14957,10 +15031,10 @@ Proof.
                         Exactly P n l -> Exactly P n (rev l)).
     induction 1; cbn.
       constructor.
-      apply Exactly_app_comm. cbn. constructor; assumption.
-      apply Exactly_app_comm. cbn. constructor; assumption.
+      apply Exactly_S_snoc; assumption.
+      apply Exactly_snoc; assumption.
     split; intros.
-      rewrite <- rev_inv. apply H. assumption.
+      rewrite <- rev_rev. apply H. assumption.
       apply H. assumption.
 Qed.
 (* end hide *)
@@ -16144,6 +16218,15 @@ Qed.
 (* end hide *)
 
 Lemma Prefix_snoc :
+  forall {A : Type} (l1 l2 : list A) (x : A),
+    Prefix l1 l2 -> Prefix l1 (snoc x l2).
+(* begin hide *)
+Proof.
+  induction 1; cbn; constructor; assumption.
+Qed.
+(* end hide *)
+
+Lemma Prefix_snoc' :
   exists (A : Type) (l1 l2 : list A),
     Prefix l1 l2 /\ exists x : A, ~ Prefix (snoc x l1) (snoc x l2).
 (* begin hide *)
@@ -16908,8 +16991,8 @@ Proof.
     assert (forall l1 l2 : list A, Suffix l1 l2 -> Prefix (rev l1) (rev l2)).
       induction 1; cbn.
         apply Prefix_refl.
-        apply Prefix_app_r. assumption.
-      intro. specialize (H _ _ H0). rewrite ?rev_inv in H. assumption.
+        apply Prefix_snoc. assumption.
+      intro. specialize (H _ _ H0). rewrite ?rev_rev in H. assumption.
 Qed.
 (* end hide *)
 
@@ -20336,7 +20419,7 @@ Proof.
         reflexivity.
       destruct IHCycle as (n & IH1 & IH2). subst.
         destruct (Nat.leb_spec0 n (length l2)).
-          rewrite drop_snoc_le, take_snoc_le; try assumption.
+          rewrite drop_snoc, take_snoc; try assumption.
             exists (S n). cbn. rewrite app_snoc_l. split.
               rewrite <- (@app_take_drop _ l2 n) in l.
                 rewrite length_app in *. cbn. lia.
@@ -20359,8 +20442,8 @@ Proof.
             rewrite drop_length', take_length'.
               constructor.
               1-2: assumption.
-            specialize (IHn' (snoc h t)). rewrite drop_snoc_le in IHn'.
-              rewrite take_snoc_le in IHn'.
+            specialize (IHn' (snoc h t)). rewrite drop_snoc in IHn'.
+              rewrite take_snoc in IHn'.
                 constructor. rewrite app_snoc_l in IHn'. cbn in Hle.
                   apply IHn'. lia.
                 lia.
@@ -21175,7 +21258,7 @@ Lemma list_ind_rev :
 (* begin hide *)
 Proof.
   intros. cut (forall l : list A, P (rev l)); intro.
-    specialize (H (rev l)). rewrite <- rev_inv. assumption.
+    specialize (H (rev l)). rewrite <- rev_rev. assumption.
     induction l0 as [| h t]; cbn.
       assumption.
       apply Hsnoc. assumption.
@@ -21371,7 +21454,7 @@ Proof.
       rewrite rev_app. cbn. constructor. assumption.
     split; intro.
       apply H. assumption.
-      rewrite <- rev_inv. apply H. assumption.
+      rewrite <- rev_rev. apply H. assumption.
 Qed.
 (* end hide *)
 
@@ -21576,12 +21659,12 @@ Qed.
 (* TODO: Palindrome vs unzip, zipWith, unzipWith *)
 (* end hide *)
 
-Lemma Palindrome_find_findLast :
+Lemma Palindrome_findLast_rev :
   forall (A : Type) (p : A -> bool) (l : list A),
     Palindrome l -> find p l = findLast p l.
 (* begin hide *)
 Proof.
-  intros. rewrite find_findLast. apply Palindrome_spec in H.
+  intros. rewrite findLast_rev. apply Palindrome_spec in H.
   rewrite <- H. reflexivity.
 Qed.
 (* end hide *)
