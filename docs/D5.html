@@ -148,9 +148,19 @@ W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snoc</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> = <span class="id" title="var">snoc</span> <span class="id" title="var">y</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span> /\ <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">snoc_inj</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">snoc_inj_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snoc</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> = <span class="id" title="var">snoc</span> <span class="id" title="var">y</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">snoc_inj_r</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snoc</span> <span class="id" title="var">x</span> <span class="id" title="var">l1</span> = <span class="id" title="var">snoc</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">snoc_inj</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x1</span> <span class="id" title="var">x2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">snoc</span> <span class="id" title="var">x1</span> <span class="id" title="var">l1</span> = <span class="id" title="var">snoc</span> <span class="id" title="var">x2</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">x1</span> = <span class="id" title="var">x2</span> /\ <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span>.<br/>
 
 <br/>
 </div>
@@ -9595,7 +9605,7 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1; <span class="id" title="var">cbn</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">map_app</span>, <span class="id" title="var">rev_app</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IPartition_app</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">map_snoc</span>, <span class="id" title="var">rev_app</span>, <span class="id" title="var">snoc_app_singl</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IPartition_app</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">app_nil_r</span>. <span class="id" title="tactic">constructor</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">l1</span>.<br/>
@@ -9647,7 +9657,7 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_ind_rev</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Hnil</span> : <span class="id" title="var">P</span> [])<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Hsnoc</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">P</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">t</span> ++ [<span class="id" title="var">h</span>]))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Hsnoc</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">P</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>))<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">P</span> <span class="id" title="var">l</span>.<br/>
 
 <br/>
@@ -9697,6 +9707,9 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 <br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Palindrome_inv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Palindrome</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l</span> ++ [<span class="id" title="var">x</span>]) -&gt; <span class="id" title="var">Palindrome</span> <span class="id" title="var">l</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Palindrome_inv_2</span> :<br/>
@@ -9740,12 +9753,22 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Palindrome</span> <span class="id" title="var">l</span> &lt;-&gt; <span class="id" title="var">Palindrome</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">lengthOrder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">length</span> <span class="id" title="var">l1</span> &lt; <span class="id" title="var">length</span> <span class="id" title="var">l2</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">lengthOrder_wf</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">well_founded</span> (@<span class="id" title="var">lengthOrder</span> <span class="id" title="var">A</span>).<br/>
+<span class="comment">(*&nbsp;Palindromowa&nbsp;indukcja&nbsp;*)</span><br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_palindrome_ind</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> [] -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> [<span class="id" title="var">x</span>]) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">P</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">snoc</span> <span class="id" title="var">y</span> <span class="id" title="var">l</span>)) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">IH</span> 6. <span class="id" title="tactic">destruct</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">h</span> <span class="id" title="var">t</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">init_decomposition</span> <span class="id" title="var">A</span> <span class="id" title="var">t</span>); <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H0</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H2</span> <span class="id" title="keyword">as</span> (<span class="id" title="var">h'</span> &amp; <span class="id" title="var">t'</span> &amp; <span class="id" title="var">H1'</span> &amp; <span class="id" title="var">H2'</span> &amp; <span class="id" title="var">H3'</span>). <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H3'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">snoc_app_singl</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IH</span>; <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Palindrome_spec</span> :<br/>

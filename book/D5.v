@@ -151,7 +151,18 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma snoc_inj :
+Lemma snoc_inj_l :
+  forall {A : Type} (x y : A) (l : list A),
+    snoc x l = snoc y l -> x = y.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H. reflexivity.
+    inv H. apply IHt. assumption.
+Qed.
+(* end hide *)
+
+Lemma snoc_inj_r :
   forall (A : Type) (x : A) (l1 l2 : list A),
     snoc x l1 = snoc x l2 -> l1 = l2.
 (* begin hide *)
@@ -161,6 +172,21 @@ Proof.
     apply (f_equal length) in H. cbn in H. rewrite length_snoc in H. inv H.
     inv H. destruct t; inv H2.
     inv H. f_equal. apply IHt. assumption.
+Qed.
+(* end hide *)
+
+Lemma snoc_inj :
+  forall {A : Type} (x1 x2 : A) (l1 l2 : list A),
+    snoc x1 l1 = snoc x2 l2 -> x1 = x2 /\ l1 = l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1]; cbn; intros.
+    destruct l2; inv H.
+      split; reflexivity.
+      destruct l2; inv H2.
+    destruct l2 as [| h2 t2]; inv H.
+      destruct t1; inv H2.
+      destruct (IHt1 _ H2). subst. split; reflexivity.
 Qed.
 (* end hide *)
 
@@ -19454,7 +19480,7 @@ Lemma Permutation_rev :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    symmetry. rewrite <- Permutation_cons_snoc'. constructor.
+    symmetry. rewrite <- Permutation_cons_snoc. constructor.
       symmetry. assumption.
 Qed.
 (* end hide *)
@@ -20611,8 +20637,7 @@ Lemma Cycle_rev :
 Proof.
   induction 1; cbn.
     constructor.
-    rewrite <- snoc_app_singl. apply Cycle_cons_snoc'.
-      rewrite rev_snoc in IHCycle. assumption.
+    apply Cycle_cons_snoc'. rewrite rev_snoc in IHCycle. assumption.
 Qed.
 (* end hide *)
 
@@ -20686,11 +20711,13 @@ Proof.
     exists n. assumption.
     destruct (IHCycle _ _ H0) as (m & IH).
       destruct (Nat.leb_spec0 (S m) (length l2)).
-        rewrite nth_snoc_length_lt in IH.
+        rewrite nth_snoc_lt in IH.
           exists (S m). assumption.
           assumption.
         destruct (Nat.eqb_spec m (length l2)).
-          exists 0. rewrite e, nth_snoc_length_eq in IH. assumption.
+          exists 0. rewrite e, nth_snoc_eq in IH.
+            assumption.
+            reflexivity.
           rewrite nth_length_ge in IH.
             inv IH.
             rewrite length_snoc. lia.
@@ -21207,7 +21234,7 @@ Lemma IPartition_rev :
 Proof.
   induction 1; cbn.
     constructor.
-    rewrite map_app, rev_app. cbn. apply IPartition_app.
+    rewrite map_snoc, rev_app, snoc_app_singl. apply IPartition_app.
       assumption.
       rewrite <- app_nil_r. constructor.
         intro. apply H. destruct l1.
@@ -21253,7 +21280,7 @@ Qed.
 Lemma list_ind_rev :
   forall (A : Type) (P : list A -> Prop)
     (Hnil : P [])
-    (Hsnoc : forall (h : A) (t : list A), P t -> P (t ++ [h]))
+    (Hsnoc : forall (h : A) (t : list A), P t -> P (snoc h t))
       (l : list A), P l.
 (* begin hide *)
 Proof.
@@ -21285,7 +21312,7 @@ Lemma list_ind_app_r :
 Proof.
   induction l as [| h t] using list_ind_rev; cbn.
     assumption.
-    apply (IH t [h]). assumption.
+    rewrite snoc_app_singl. apply (IH t [h]). assumption.
 Qed.
 (* end hide *)
 
@@ -21331,20 +21358,17 @@ Inductive Palindrome {A : Type} : list A -> Prop :=
         forall x : A, Palindrome [x]
     | Palindrome_1 :
         forall (x : A) (l : list A),
-          Palindrome l -> Palindrome (x :: l ++ [x]).
+          Palindrome l -> Palindrome (x :: snoc x l).
 (* end hide *)
-
-(* begin hide *)
 
 Lemma Palindrome_inv :
   forall (A : Type) (x : A) (l : list A),
     Palindrome (x :: l ++ [x]) -> Palindrome l.
 (* begin hide *)
 Proof.
-  intros. inv H.
-    apply (f_equal length) in H2. rewrite length_app in H2.
-      cbn in H2. rewrite <- plus_n_Sm in H2. inv H2.
-    apply app_inv_r in H2. subst. assumption.
+  intros. rewrite <- snoc_app_singl in H. inv H.
+    destruct l; inv H2.
+    apply snoc_inj_r in H2. subst. assumption.
 Qed.
 (* end hide *)
 
@@ -21354,7 +21378,8 @@ Lemma Palindrome_inv_2 :
 (* begin hide *)
 Proof.
   intros. inv H. apply (f_equal last) in H2.
-  rewrite last_app in H2. inv H2. reflexivity.
+  rewrite last_snoc in H2. cbn in *. inv H2.
+  reflexivity.
 Qed.
 (* end hide *)
 
@@ -21363,11 +21388,9 @@ Lemma Palindrome_inv_3 :
     Palindrome (x :: l ++ [y]) -> x = y.
 (* begin hide *)
 Proof.
-  intros. inv H.
-    apply (f_equal isEmpty) in H2. rewrite isEmpty_app in H2.
-      destruct l; inv H2.
-    apply (f_equal last) in H2. rewrite ?last_app in H2. inv H2.
-      reflexivity.
+  intros. rewrite <- snoc_app_singl in H. inv H.
+    destruct l; inv H2.
+    apply snoc_inj in H2. destruct H2. assumption.
 Qed.
 (* end hide *)
 
@@ -21391,16 +21414,16 @@ Proof.
   induction n as [| n']; cbn.
     exists []. split; constructor.
     destruct IHn' as (l & IH1 & IH2).
-      exists (x :: l ++ [x]). split.
+      exists (x :: snoc x l). split.
         constructor. assumption.
-        cbn. rewrite length_app. cbn. lia.
+        cbn. rewrite length_snoc. apply le_n_S, le_S. assumption.
 Restart.
   induction n as [| | n'] using nat_ind_2.
     exists []. split; constructor.
     exists [x]. split; constructor.
-    destruct IHn' as (l & IH1 & IH2). exists (x :: l ++ [x]). split.
+    destruct IHn' as (l & IH1 & IH2). exists (x :: snoc x l). split.
       constructor. assumption.
-      cbn. rewrite length_app. cbn. lia.
+      cbn. rewrite length_snoc. do 2 apply le_n_S. assumption.
 Qed.
 (* end hide *)
 
@@ -21409,7 +21432,7 @@ Lemma Palindrome_cons_snoc :
     Palindrome l -> Palindrome (x :: snoc x l).
 (* begin hide *)
 Proof.
-  intros. rewrite snoc_app_singl. constructor. assumption.
+  constructor. assumption.
 Qed.
 (* end hide *)
 
@@ -21421,11 +21444,12 @@ Proof.
   intros A l1 l2 H. revert l2.
   induction H; cbn; intros.
     rewrite app_nil_r. assumption.
-    constructor. assumption.
+    rewrite <- snoc_app_singl. constructor. assumption.
     replace _ with
         (Palindrome (x :: (l ++ ([x] ++ l2 ++ [x]) ++ rev l) ++ [x])).
-      constructor. apply IHPalindrome. cbn. constructor. assumption.
-      rewrite rev_app, !app_assoc. cbn. reflexivity.
+      rewrite <- snoc_app_singl. constructor. apply IHPalindrome.
+        cbn. rewrite <- snoc_app_singl. constructor. assumption.
+      rewrite !snoc_app_singl, rev_app, !app_assoc. cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -21436,9 +21460,9 @@ Lemma Palindrome_app' :
 Proof.
   induction l1 as [| h1 t1]; cbn; intros.
     rewrite app_nil_r. assumption.
-    replace _ with (Palindrome (h1 :: (t1 ++ l2 ++ rev t1) ++ [h1])).
+    replace _ with (Palindrome (h1 :: snoc h1 (t1 ++ l2 ++ rev t1))).
       constructor. apply IHt1. assumption.
-      rewrite ?app_assoc. reflexivity.
+      rewrite !snoc_app_singl, !app_assoc. reflexivity.
 Qed.
 (* end hide *)
 
@@ -21447,57 +21471,46 @@ Lemma Palindrome_rev :
     Palindrome l <-> Palindrome (rev l).
 (* begin hide *)
 Proof.
-  assert (forall (A : Type) (l : list A),
-            Palindrome l -> Palindrome (rev l)).
+  intro. assert (forall l : list A, Palindrome l -> Palindrome (rev l)).
     induction 1; cbn.
       1-2: constructor.
-      rewrite rev_app. cbn. constructor. assumption.
+      rewrite rev_snoc. constructor. assumption.
     split; intro.
-      apply H. assumption.
-      rewrite <- rev_rev. apply H. assumption.
+      apply H, H0.
+      rewrite <- rev_rev. apply H, H0.
 Qed.
 (* end hide *)
 
-Definition lengthOrder {A : Type} (l1 l2 : list A) : Prop :=
-  length l1 < length l2.
-
-Lemma lengthOrder_wf :
-  forall A : Type, well_founded (@lengthOrder A).
-(* begin hide *)
+(* Palindromowa indukcja *)
+Lemma list_palindrome_ind :
+  forall (A : Type) (P : list A -> Prop),
+    P [] ->
+    (forall x : A, P [x]) ->
+    (forall (x y : A) (l : list A), P l -> P (x :: snoc y l)) ->
+      forall l : list A, P l.
 Proof.
-  unfold well_founded. induction a as [| h t]; cbn.
-    constructor. intros. inv H.
-    inv IHt. constructor. intros. constructor. intros. apply H.
-      cbn in *. unfold lengthOrder in *. cbn in *. lia.
-Qed.
+  fix IH 6. destruct l as [| h t].
+    assumption.
+    destruct (init_decomposition A t); subst.
+      apply H0.
+      destruct H2 as (h' & t' & H1' & H2' & H3'). rewrite H3'.
+        rewrite <- snoc_app_singl. apply H1. apply IH; assumption.
+Admitted.
 (* end hide *)
 
 Lemma Palindrome_spec :
   forall (A : Type) (l : list A),
     Palindrome l <-> l = rev l.
 (* begin hide *)
-(* TODO: Palindrome_spec bez używania indukcji dobrze ufundowanej *)
 Proof.
   split.
     induction 1; cbn.
       1-2: reflexivity.
-      rewrite rev_app, <- IHPalindrome; cbn. reflexivity.
-    revert l.
-    eapply
-    (@well_founded_ind _
-      _ (@lengthOrder_wf A)
-      (fun l : list A => l = rev l -> Palindrome l) _) .
-Unshelve.
-  unfold lengthOrder.
-  destruct x as [| h t]; cbn; intros.
-    constructor.
-    destruct (rev t) eqn: Heq.
-      inv H0. constructor.
-      rewrite H0. inv H0. constructor. apply H.
-        rewrite length_app. apply le_n_S. cbn.
-          rewrite <- plus_n_Sm, <- plus_n_O. apply le_S, le_n.
-        rewrite rev_app in Heq. cbn in Heq. inv Heq.
-          rewrite H1. symmetry. assumption.
+      rewrite rev_snoc, <- IHPalindrome; cbn. reflexivity.
+    induction l as [| x | x y l'] using list_palindrome_ind; cbn; intros.
+      1-2: constructor.
+      rewrite rev_snoc in H. cbn in H. inv H.
+        constructor. apply IHl'. apply snoc_inj_r in H2. assumption.
 Qed.
 (* end hide *)
 
@@ -21512,7 +21525,7 @@ Proof.
     exists [], [x]. cbn. split; [reflexivity | apply le_n].
     destruct IHPalindrome as (l1 & l2 & IH1 & IH2). subst.
       exists (x :: l1), l2. cbn. split.
-        rewrite ?app_assoc. reflexivity.
+        rewrite !snoc_app. reflexivity.
         assumption.
 Qed.
 (* end hide *)
@@ -21524,7 +21537,7 @@ Lemma Palindrome_map :
 Proof.
   induction 1; cbn.
     1-2: constructor.
-    rewrite map_app. cbn. constructor. assumption.
+    rewrite map_snoc. constructor. assumption.
 Qed.
 (* end hide *)
 
@@ -21568,7 +21581,7 @@ Lemma Palindrome_iterate :
 Proof.
   intros. specialize (H 2 x). cbn in H. inv H. destruct l; inv H2.
     rewrite <- ?H0. reflexivity.
-    apply (f_equal isEmpty) in H3. rewrite isEmpty_app in H3.
+    apply (f_equal isEmpty) in H3. rewrite isEmpty_snoc in H3.
       destruct l; inv H3.
 Qed.
 (* end hide *)
@@ -21617,7 +21630,7 @@ Proof.
           specialize (H (S n)). cbn in H. rewrite take_replicate in H.
             rewrite Nat.min_id in H. inversion H; subst.
               destruct n; inversion H2; cbn. reflexivity.
-              pose (H2' := H2). apply (f_equal last) in H2'. rewrite last_app, last_replicate in H2'.
+              pose (H2' := H2). apply (f_equal last) in H2'. rewrite last_snoc, last_replicate in H2'.
                 destruct n; cbn in *; inversion H2'; subst. assumption.
 Admitted.
 (* end hide *)
@@ -21664,8 +21677,10 @@ Lemma Palindrome_findLast_rev :
     Palindrome l -> find p l = findLast p l.
 (* begin hide *)
 Proof.
-  intros. rewrite findLast_rev. apply Palindrome_spec in H.
-  rewrite <- H. reflexivity.
+  intros.
+  apply Palindrome_spec in H.
+  rewrite <- findLast_rev, <- H.
+  reflexivity.
 Qed.
 (* end hide *)
 
@@ -21678,8 +21693,8 @@ Proof.
     constructor.
     destruct (f x); constructor.
     destruct (f x) eqn: Heq; cbn.
-      rewrite pmap_app. cbn. rewrite Heq. constructor. assumption.
-      rewrite pmap_app. cbn. rewrite Heq, app_nil_r. assumption.
+      rewrite pmap_snoc. rewrite Heq. constructor. assumption.
+      rewrite pmap_snoc. rewrite Heq. assumption.
 Qed.
 (* end hide *)
 
@@ -21705,7 +21720,7 @@ Proof.
   induction 1; cbn; intros.
     left. apply le_0_n.
     left. apply le_n.
-    right. constructor. rewrite elem_app. right. left.
+    right. constructor. rewrite elem_snoc. right. reflexivity.
 Qed.
 (* end hide *)
 
