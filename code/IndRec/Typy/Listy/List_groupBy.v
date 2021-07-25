@@ -309,7 +309,7 @@ Lemma rev_groupBy :
 (* begin hide *)
 Proof.
   intros. rewrite groupBy_rev_aux.
-    rewrite rev_inv. reflexivity.
+    rewrite rev_rev. reflexivity.
     assumption.
 Qed.
 (* end hide *)
@@ -321,7 +321,7 @@ Lemma groupBy_rev :
 (* begin hide *)
 Proof.
   intros. rewrite groupBy_rev_aux.
-    rewrite rev_inv. reflexivity.
+    rewrite rev_rev. reflexivity.
     assumption.
 Qed.
 (* end hide *)

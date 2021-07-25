@@ -305,7 +305,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma rev_inv :
+Lemma rev_rev :
   forall (A : Type) (n : nat) (l : vec A n), rev (rev l) = l.
 (* begin hide *)
 Proof.
@@ -1200,7 +1200,7 @@ Lemma take_drop_rev :
     eq_dep (take m (rev l)) (rev (drop (n - m) l)).
 Proof.
   intros.
-  rewrite take_drop_rev_aux, rev_inv. reflexivity.
+  rewrite take_drop_rev_aux, rev_rev. reflexivity.
 Qed.
 (* end hide *)
 

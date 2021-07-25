@@ -17,7 +17,7 @@ Lemma revapp_spec :
 (* begin hide *)
 Proof.
   induction l1 as [| h t]; cbn; intros; trivial.
-    rewrite IHt, <- app_assoc. cbn. trivial.
+    rewrite IHt, app_snoc_l. reflexivity.
 Qed.
 (* end hide *)
 
@@ -26,7 +26,7 @@ Lemma app'_spec :
     app' l1 l2 = l1 ++ l2.
 (* begin hide *)
 Proof.
-  unfold app'. intros. rewrite !revapp_spec, app_nil_r, rev_inv. trivial.
+  unfold app'. intros. rewrite !revapp_spec, app_nil_r, rev_rev. trivial.
 Qed.
 (* end hide *)
 
@@ -75,7 +75,7 @@ Definition appF {A : Type} (l1 l2 : list A) : list A :=
   foldr (@cons A) l2 l1.
 
 Definition revF {A : Type} (l : list A) : list A :=
-  foldr (fun h t => t ++ [h]) [] l.
+  foldr snoc [] l.
 
 Definition revF' {A : Type} (l : list A) : list A :=
   foldl (fun t h => h :: t) [] l.
@@ -199,9 +199,9 @@ Lemma revF'_spec :
 Proof.
   unfold revF'. intros. replace (rev l) with (rev l ++ []).
     remember [] as acc. clear Heqacc. generalize dependent acc.
-    induction l as [| h t]; cbn; intros; subst.
-      trivial.
-      rewrite IHt. rewrite <- app_cons_r. trivial.
+      induction l as [| h t]; cbn; intros; subst.
+        reflexivity.
+        rewrite IHt, app_snoc_l. reflexivity.
     apply app_nil_r.
 Qed.
 (* end hide *)
@@ -347,7 +347,7 @@ Lemma foldr_rev :
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    rewrite foldr_app. cbn. rewrite IHt. unfold flip. reflexivity.
+    rewrite snoc_app_singl, foldr_app. cbn. rewrite IHt. unfold flip. reflexivity.
 Qed.
 
 (*Lemma foldr_map :
@@ -390,8 +390,8 @@ Lemma foldl_rev :
     foldl f a (rev l) = foldr (flip f) a l.
 (* begin hide *)
 Proof.
-  intros. rewrite <- (rev_inv _ l). rewrite foldr_rev.
-  rewrite rev_inv. reflexivity.
+  intros. rewrite <- (rev_rev _ l). rewrite foldr_rev.
+  rewrite rev_rev. reflexivity.
 Qed.
 (* end hide *)
 
@@ -508,7 +508,7 @@ Proof.
       destruct t; inv IHt.
       destruct t; inv IHt.
         inv Heq. cbn. reflexivity.
-        cbn. rewrite !foldl_app. unfold flip; cbn. reflexivity.
+        cbn. rewrite !snoc_app_singl, !foldl_app. unfold flip; cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -519,15 +519,15 @@ Lemma scanl_rev :
 Proof.
   induction l as [| h t]; cbn; intros.
     reflexivity.
-    rewrite scanl_snoc, IHt. destruct (scanr (flip f) a t) eqn: Heq.
+    rewrite snoc_app_singl, scanl_snoc, IHt. destruct (scanr (flip f) a t) eqn: Heq.
       destruct t; cbn in Heq.
         inversion Heq.
         destruct (scanr (flip f) a t); inversion Heq.
       rewrite foldl_app. cbn. unfold flip. do 3 f_equal.
         apply (f_equal head) in Heq. rewrite head_scanr in Heq.
           destruct t; inv Heq.
-            cbn. reflexivity.
-            cbn. rewrite !foldl_app. unfold flip; cbn. reflexivity.
+            cbn. rewrite !snoc_app_singl. reflexivity.
+            cbn. rewrite !snoc_app_singl, !foldl_app. unfold flip; cbn. reflexivity.
 Qed.
 (* end hide *)
 

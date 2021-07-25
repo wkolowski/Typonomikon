@@ -1491,12 +1491,11 @@ Lemma merge_rev :
     merge cmp l1 l2 = rev (merge (fun x y : A => cmp y x) (rev l1) (rev l2)).
 Proof.
   induction l1 as [| h1 t1]; cbn.
-    intros. rewrite rev_inv. reflexivity.
+    intros. rewrite rev_rev. reflexivity.
     induction l2 as [| h2 t2]; cbn.
-      rewrite merge_eq. case_eq (rev t1 ++ [h1]); intros.
-        apply (f_equal length) in H. rewrite length_app, plus_comm in H.
-          inversion H.
-        rewrite <- H, rev_app, rev_inv. cbn. reflexivity.
+      rewrite merge_eq. case_eq (snoc h1 (rev t1)); intros.
+        apply (f_equal length) in H. rewrite length_snoc in H. inv H.
+        rewrite <- H, snoc_rev, rev_rev. reflexivity.
       rewrite IHt1, IHt2. case_eq (cmp h1 h2); intros.
 Abort.
 (* end hide *)
@@ -3757,7 +3756,7 @@ Proof.
     rewrite rot_eq, H. reflexivity.
     apply split_spec in H. destruct H. subst.
       rewrite rot_eq, split_app_length.
-        rewrite rev_inv, H0. reflexivity.
+        rewrite rev_rev, H0. reflexivity.
         rewrite length_rev. assumption.
 Qed.
 
@@ -4038,7 +4037,7 @@ Proof.
     rewrite rot_equation, e. reflexivity.
     apply split_spec in e. destruct e. subst.
       rewrite rot_equation, split_app_length.
-        rewrite rev_inv, IHl0. reflexivity.
+        rewrite rev_rev, IHl0. reflexivity.
         rewrite length_rev. assumption.
 Qed.
 

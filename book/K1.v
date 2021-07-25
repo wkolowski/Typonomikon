@@ -710,8 +710,8 @@ Lemma rev_aux_spec :
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn; intro.
-    trivial.
-    rewrite IHt. rewrite <- app_assoc. cbn. trivial.
+    reflexivity.
+    rewrite IHt, app_snoc_l. reflexivity.
 Qed.
 (* end hide *)
 
@@ -719,7 +719,9 @@ Theorem rev'_spec :
   forall (A : Type) (l : list A), rev' l = rev l.
 (* begin hide *)
 Proof.
-  induction l as [| h t]; cbn; rewrite ?rev_aux_spec; trivial.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    rewrite ?rev_aux_spec, snoc_app_singl. reflexivity.
 Qed.
 (* end hide *)
 

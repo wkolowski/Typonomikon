@@ -1081,11 +1081,11 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma rev_inv :
+Lemma rev_rev :
   forall A : Type, involutive (@rev A).
 (* begin hide *)
 Proof.
-  red; intros. apply rev_inv.
+  red; intros. apply rev_rev.
 Qed.
 (* end hide *)
 

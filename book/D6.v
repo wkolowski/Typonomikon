@@ -185,7 +185,7 @@ Lemma ex_rev :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite ex_app, IHt. cbn. tauto.
+    rewrite ex_snoc, IHt. cbn. tauto.
 Qed.
 (* end hide *)
 
@@ -827,7 +827,7 @@ Lemma Suffix_dec_spec :
 Proof.
   intros.
   pose (Prefix_Suffix _ (rev l1) (rev l2)).
-  rewrite 2!rev_inv in i.
+  rewrite 2!rev_rev in i.
   unfold Suffix_dec.
   destruct (Prefix_dec_spec eq_dec_spec (rev l1) (rev l2)).
     constructor. rewrite <- i. assumption.
@@ -2248,10 +2248,9 @@ Lemma ins_rev :
 Proof.
   induction l as [| h t]; cbn.
     reflexivity.
-    rewrite <- !snoc_app_singl. rewrite ins_snoc, IHt.
+    rewrite ins_snoc, IHt.
       rewrite map_rev, map_map, <- map_rev. f_equal.
       rewrite map_rev, map_map. cbn. f_equal.
-      apply map_ext_eq. intro. apply snoc_app_singl.
 Qed.
 (* end hide *)
 

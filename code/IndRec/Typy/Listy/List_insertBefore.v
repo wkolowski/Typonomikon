@@ -200,7 +200,7 @@ Proof.
       reflexivity.
     destruct l1 as [| h t]; cbn.
       rewrite app_nil_r. reflexivity.
-      rewrite IHn', insert_before_le_in_app.
+      rewrite IHn', !snoc_app_singl, insert_before_le_in_app.
         reflexivity.
         rewrite length_rev. apply Nat.le_sub_l.
 Qed.
@@ -244,7 +244,7 @@ Lemma insert_before_in_rev :
     rev (insert rev l2 before (length l1 - n) in l1).
 (* begin hide *)
 Proof.
-  intros. rewrite rev_insert_before, rev_inv.
+  intros. rewrite rev_insert_before, rev_rev.
   destruct (le_ge_dec (length l1) n).
     rewrite minus_wut'.
       rewrite <- length_rev, ?insert_before_gt.
@@ -262,8 +262,8 @@ Lemma insert_rev_before :
     rev (insert l2 before (length l1 - n) in (rev l1)).
 (* begin hide *)
 Proof.
-  intros. rewrite <- (rev_inv _ l2) at 2.
-  rewrite <- (length_rev _ l1), <- insert_before_in_rev, rev_inv.
+  intros. rewrite <- (rev_rev _ l2) at 2.
+  rewrite <- (length_rev _ l1), <- insert_before_in_rev, rev_rev.
   reflexivity.
 Qed.
 (* end hide *)
