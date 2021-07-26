@@ -1,8 +1,11 @@
 Require Import Coq.Program.Wf Arith NPeano Div2 Lia List.
 Import ListNotations.
 
-Fixpoint nat_ind_2 (P : nat -> Prop) (H0 : P 0) (H1 : P 1)
-    (H : forall n : nat, P n -> P (S (S n))) (n : nat) : P n :=
+Fixpoint nat_ind_2
+  (P : nat -> Prop)
+  (H0 : P 0) (H1 : P 1)
+  (H : forall n : nat, P n -> P (S (S n)))
+  (n : nat) : P n :=
 match n with
     | 0 => H0
     | 1 => H1
@@ -18,10 +21,11 @@ Proof.
     lia.
 Defined.
 
-Program Fixpoint nat_ind_k (k : nat) (P : nat -> Prop)
-    (H : forall k' : nat, k' <= k -> P k')
-    (H' : forall n : nat, P n -> P (S k + n))
-    (n : nat) {measure n} : P n :=
+Program Fixpoint nat_ind_k
+  (k : nat) (P : nat -> Prop)
+  (H : forall k' : nat, k' <= k -> P k')
+  (H' : forall n : nat, P n -> P (S k + n))
+  (n : nat) {measure n} : P n :=
 match le_dec n k with
     | left n_le_k => H n n_le_k
     | right n_gt_k =>
@@ -34,9 +38,11 @@ Inductive even : nat -> Prop :=
     | even0 : even 0
     | evenSS : forall n : nat, even n -> even (S (S n)).
 
-Fixpoint even_ind' (P : nat -> Prop) (H0 : P 0)
-    (HSS : forall n : nat, even n -> P n -> P (S (S n)))
-    (n : nat) (Heven : even n) : P n.
+Fixpoint even_ind'
+  (P : nat -> Prop)
+  (H0 : P 0)
+  (HSS : forall n : nat, even n -> P n -> P (S (S n)))
+  (n : nat) (Heven : even n) : P n.
 Proof.
   destruct n as [| [| n']].
     assumption.
@@ -46,10 +52,11 @@ Proof.
       apply (even_ind' P H0 HSS n' H1).
 Defined.
 
-Program Fixpoint nat_ind_k' (k : nat) (Hk : k <> 0) (P : nat -> Prop)
-    (H : forall k' : nat, k' <= k -> P k')
-    (H' : forall n : nat, P n -> P (k + n))
-    (n : nat) {measure n} : P n :=
+Program Fixpoint nat_ind_k'
+  (k : nat) (Hk : k <> 0) (P : nat -> Prop)
+  (H : forall k' : nat, k' <= k -> P k')
+  (H' : forall n : nat, P n -> P (k + n))
+  (n : nat) {measure n} : P n :=
 match le_dec n k with
     | left n_le_k => H n n_le_k
     | right n_gt_k =>
@@ -85,32 +92,6 @@ end.
 Lemma above_7 : forall n : nat,
     exists i j : nat, 8 + n = 3 * i + 5 * j.
 Proof.
-  assert (Hk : 8 <> 0). lia.
-  induction n as [| n'] using (nat_ind_k' 8 Hk).
-    destruct n. exists 1, 1. auto. destruct n. exists 3, 0. auto.
-      destruct n. exists 0, 2. auto. destruct n. exists 2, 1. auto.
-      destruct n. exists 4, 0. auto. destruct n. exists 1, 2. auto.
-      destruct n. exists 3, 1. auto. destruct n. exists 0, 3. auto.
-      destruct n. exists 2, 2. auto. repeat (inversion H; clear H; clear H0;
-      rename H1 into H).
-    destruct IHn' as [i [j H]]. exists (S i), (S j). lia.
-Restart.
-  assert (Hk : 8 <> 0) by inversion 1.
-  induction n as [| n'] using (nat_ind_k' 8 ltac:(inversion 1)).
-    destruct n as [| [| [| [| [| [| [| [| [| n']]]]]]]]].
-      exists 1, 1. cbn. reflexivity.
-      exists 3, 0. cbn. reflexivity.
-      exists 0, 2. cbn. reflexivity.
-      exists 2, 1. cbn. reflexivity.
-      exists 4, 0. cbn. reflexivity.
-      exists 1, 2. cbn. reflexivity.
-      exists 3, 1. cbn. reflexivity.
-      exists 0, 3. cbn. reflexivity.
-      exists 2, 2. cbn. reflexivity.
-      lia.
-    destruct IHn' as (i & j & IH).
-      exists (S i), (S j). lia.
-Restart.
   apply nat_ind_8.
     exists 1, 1. cbn. reflexivity.
     exists 3, 0. cbn. reflexivity.
@@ -135,20 +116,23 @@ match n with
     | S n' => f n' + n * fac n
 end.
 
-Lemma pred_lemma : forall n m : nat,
+Lemma pred_lemma :
+  forall n m : nat,
     1 <= n -> pred (n + m) = pred n + m.
 Proof.
   induction 1; cbn; trivial.
 Qed.
 
-Lemma fact_ge_1 : forall n : nat, 1 <= fac n.
+Lemma fact_ge_1 :
+  forall n : nat, 1 <= fac n.
 Proof.
   induction n as [| n']; cbn.
     trivial.
     eapply le_trans. eauto. apply le_plus_l.
 Qed.
 
-Lemma f_fac : forall n : nat, f n = pred (fac (1 + n)).
+Lemma f_fac :
+  forall n : nat, f n = pred (fac (1 + n)).
 Proof.
   induction n as [| n'].
     cbn. trivial.
@@ -183,7 +167,8 @@ match b with
     | HP p => pos_to_nat p
 end.
 
-Program Fixpoint divmod (n k : nat) (H : k <> 0) {measure n} : nat * nat :=
+Program Fixpoint divmod
+  (n k : nat) (H : k <> 0) {measure n} : nat * nat :=
 match n with
     | 0 => (0, 0)
     | _ => if leb n k
@@ -208,15 +193,16 @@ Compute bin_to_nat answer.
 Compute bin_to_nat (HP (Z (J (Z (J (Z HJ)))))).
 
 Definition injective {A B : Type} (f : A -> B) : Prop :=
-    forall x x' : A, f x = f x' -> x = x'.
+  forall x x' : A, f x = f x' -> x = x'.
 
 Definition surjective {A B : Type} (f : A -> B) : Prop :=
-    forall b : B, exists a : A, f a = b.
+  forall b : B, exists a : A, f a = b.
 
 Definition bijective {A B : Type} (f : A -> B) : Prop :=
-    injective f /\ surjective f.
+  injective f /\ surjective f.
 
-Lemma pos_to_nat_neq_0 : forall p : pos,
+Lemma pos_to_nat_neq_0 :
+  forall p : pos,
     pos_to_nat p <> 0.
 Proof.
   induction p as [| p' | p']; cbn; inversion 1.
@@ -225,10 +211,11 @@ Proof.
     inversion H.
 Qed.
 
-Lemma pos_to_nat_inj : injective pos_to_nat.
+Lemma pos_to_nat_inj :
+  injective pos_to_nat.
 Proof.
   red. induction x as [| p1 | p1]; induction x' as [| p2 | p2]; cbn in *.
-    trivial.
+    reflexivity.
     lia.
     inversion 1. assert (pos_to_nat p2 = 0). lia.
       destruct (pos_to_nat_neq_0 _ H0).
@@ -259,14 +246,16 @@ match p with
     | Z p' => J p'
 end.
 
-Lemma pos_to_nat_S : forall (p : pos),
+Lemma pos_to_nat_S :
+  forall (p : pos),
     pos_to_nat (succ p) = S (pos_to_nat p).
 Proof.
   induction p as [| p' | p']; cbn; trivial.
-    rewrite IHp'. cbn. rewrite <- plus_n_Sm. trivial.
+    rewrite IHp'. cbn. rewrite <- plus_n_Sm. reflexivity.
 Qed.
 
-Lemma bin_to_nat_sur : surjective bin_to_nat.
+Lemma bin_to_nat_sur :
+  surjective bin_to_nat.
 Proof.
   red. intro n. induction n as [| n'].
     exists HZ. cbn. trivial.
@@ -279,7 +268,8 @@ Proof.
           cbn. f_equal. rewrite <- plus_n_Sm. assumption.
 Qed.
 
-Lemma bin_to_nat_bij : bijective bin_to_nat.
+Lemma bin_to_nat_bij :
+  bijective bin_to_nat.
 Proof.
   unfold bijective. split.
     apply bin_to_nat_inj.
@@ -353,13 +343,14 @@ Arguments Node {A} _ _.
 
 Print Tree_ind.
 
-Fixpoint Tree_ind_full (A : Type)
-    (P : Tree A -> Prop) (Q : list (Tree A) -> Prop)
-    (HPQ : forall ltr : list (Tree A), Q ltr -> forall x : A, P (Node x ltr))
-    (HPEmpty : P Empty)
-    (HQNil : Q nil)
-    (HQCons : forall (h : Tree A) (t : list (Tree A)),
-        P h -> Q t -> Q (cons h t)) (t : Tree A) : P t.
+Fixpoint Tree_ind_full
+  (A : Type) (P : Tree A -> Prop) (Q : list (Tree A) -> Prop)
+  (HPQ : forall ltr : list (Tree A), Q ltr -> forall x : A, P (Node x ltr))
+  (HPEmpty : P Empty)
+  (HQNil : Q nil)
+  (HQCons : forall (h : Tree A) (t : list (Tree A)),
+      P h -> Q t -> Q (cons h t))
+  (t : Tree A) : P t.
 Proof.
   destruct t as [| v forest].
     apply HPEmpty.
@@ -399,12 +390,12 @@ Proof.
       (Q := fun (ltr : list (Tree A)) =>
           forall v : A, size (Node v ltr) =
           S (length (fold_right (fun h t => flatten' h ++ t) [] ltr))).
-    rewrite IHt. cbn. trivial.
-    cbn. trivial.
-    cbn. trivial.
+    rewrite IHt. cbn. reflexivity.
+    cbn. reflexivity.
+    cbn. reflexivity.
     cbn. intro. f_equal. rewrite app_length.
       specialize (IHt0 v). inversion IHt0. rewrite H0.
-      rewrite IHt. trivial.
+      rewrite IHt. reflexivity.
 Qed.
 
 Section nat_ind_dbl_pred.

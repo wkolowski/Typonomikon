@@ -1,4 +1,9 @@
-(** Potencjalnie użyteczne linki:
+(** Jak zrobić pozytywny typ induktywny dający sprzeczność, który nie używa
+    [Prop] (najprościej będzie użyć typu [bool])? Nie wiem, ale można próbować.
+    Na pewno z prawem wyłączonego środka jest dość łatwo, bo wtedy [bool] to to
+    samo co [Prop].
+
+    Potencjalnie użyteczne linki:
     - https://cstheory.stackexchange.com/questions/14415/guarded-negative-occurrences-in-definition-of-inductive-types-always-bad
     - https://stackoverflow.com/questions/12651146/why-inductive-datatypes-forbid-types-like-data-bad-a-c-bad-a-a-where-th
 *)
