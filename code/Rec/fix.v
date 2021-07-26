@@ -1,4 +1,4 @@
-(** Da się zrobić kombinator punktu stałego i zamknąć go w monadę/modalnośc
+(** Da się zrobić kombinator punktu stałego i zamknąć go w monadę/modalność
     tak, żeby sprzeczność nie wyciekła na zewnątrz i żeby wszystko ładnie się
     liczyło, jezeli wynik nie jest bottomem? TAK! *)
 

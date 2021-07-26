@@ -78,10 +78,10 @@
   - Ci, którzy uważają, że są dwa rodzaje ludzi.
   - Ci, którzy są innego zdania.
 
-  ## Przemyślenia nad permutacjami
-  1. Dwa drzewa `t1` i `t2` trzymające elementy typu `A` są swoimi permutacjami, gdy dla każdego elementu `x : A` typ pozycji `x` w `t1` jest izomorficzny z typem pozycji `x` w `t2`.
-  2. Taka definicja jest niewygodna do użycia, więc można spróbować ją zdefunkcjonalizować albo na różne sposoby wyspecjalizować, np.:
-  - definicja przez "zabieranie" po jednym elemencie z każdego drzewa na raz (ale trzeba być ostrożnym, bo z ogólnych drzew nie zabiera się tak łatwo jak z list). No i trzeba pamiętać o tym, że jeżeli drzewo jest nieskończone, to zabieranie po jednym elemencie nie jest najmądrzejsze...
-  - dualnie można zrobić definicję przez "dodawanie" po jednym elemencie do każdego drzewa, ale trzeba pamiętać o konstruktorach do zamiany miejscami (no i znowu jest kwestia nieskończonych drzew)
-  - definicja przez transpozycje. Dla list jest to łatwe, ale w ogólności jest trudniej. Ogólna transpozycja polega na zamianie pozycji dwóch elementów `x` i `y`... pod warunkiem, że oba drzewa mają ten sam kształt, bo jak nie, to jest jeszcze trudniej.
-  - jeżeli elementy występują w drzewie skończoną ilość razy (i mają rozstrzygalną równośc (i samo drzewo jest skończone)), to można użyć definicji opartej o liczenie wystąpień
+## Przemyślenia nad permutacjami
+1. Dwa drzewa `t1` i `t2` trzymające elementy typu `A` są swoimi permutacjami, gdy dla każdego elementu `x : A` typ pozycji `x` w `t1` jest izomorficzny z typem pozycji `x` w `t2`.
+2. Taka definicja jest niewygodna do użycia, więc można spróbować ją zdefunkcjonalizować albo na różne sposoby wyspecjalizować, np.:
+- definicja przez "zabieranie" po jednym elemencie z każdego drzewa na raz (ale trzeba być ostrożnym, bo z ogólnych drzew nie zabiera się tak łatwo jak z list). No i trzeba pamiętać o tym, że jeżeli drzewo jest nieskończone, to zabieranie po jednym elemencie nie jest najmądrzejsze...
+- dualnie można zrobić definicję przez "dodawanie" po jednym elemencie do każdego drzewa, ale trzeba pamiętać o konstruktorach do zamiany miejscami (no i znowu jest kwestia nieskończonych drzew)
+- definicja przez transpozycje. Dla list jest to łatwe, ale w ogólności jest trudniej. Ogólna transpozycja polega na zamianie pozycji dwóch elementów `x` i `y`... pod warunkiem, że oba drzewa mają ten sam kształt, bo jak nie, to jest jeszcze trudniej.
+- jeżeli elementy występują w drzewie skończoną ilość razy (i mają rozstrzygalną równośc (i samo drzewo jest skończone)), to można użyć definicji opartej o liczenie wystąpień

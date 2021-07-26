@@ -45,3 +45,4 @@ Wiemy już, że `x : A` to element typu `A`. Czym zaś są "uogólnione elementy
 Uogólnione elementy to termy... w postaci normalnej, czyli `G |- t : A`. Wewnątrz systemu można reprezentować je jako funkcje `t : G -> A`.
 
 Jako dualne jawi się tutaj pojęcie kontynuacji: dla typu `X` typem kontynuacji jest typ `X -> A` dla dowolnego `A`. Trzeba będzie pomyśleć o tej perspektywie nieco więcej...
+Hej! Wygląda na to, że kontynuacja to to samo, co uogólniony koelement (jak w teorii kategorii)!

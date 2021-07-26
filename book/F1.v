@@ -3,8 +3,8 @@
 (* begin hide *)
 
 (** Pamiętać o tym, że przy negatywnej koindukcji kryterium ścisłej
-    pozytywnośći też obowiązuje. Powody są mniej więcej takie jak dla
-    typów induktywnych. *)
+    pozytywnośći też obowiązuje. Powody są analogiczne jak dla typów
+    induktywnych. *)
 
 Fail CoInductive wut : Type :=
 {
