@@ -217,11 +217,9 @@ Lemma sim_add_zero :
     sim (add n m) zero -> sim n zero /\ sim m zero.
 (* begin hide *)
 Proof.
-  split; destruct H as [[[] | ]]; constructor.
-    left. cbn in H. destruct (pred n); inv H.
-    decompose [ex and] H; cbn in *; congruence.
-    left. cbn in H. destruct (pred n); inv H.
-    decompose [ex and] H; cbn in *; congruence.
+  destruct n as [[]], m as [[]]; cbn; intros.
+    1-3: destruct H; decompose [or and ex] sim'0; cbn in *; try congruence.
+    repeat constructor.
 Qed.
 (* end hide *)
 
@@ -309,11 +307,6 @@ Proof.
     right. do 2 eexists. do 2 split; try reflexivity.
       apply sim_sym. apply add_zero_r.
     left. split; reflexivity.
-Restart.
-  cofix CH.
-  constructor. destruct n as [[n' |]], m as [[m' |]]; cbn.
-    right. specialize (CH n' (succ m')).
-      do 2 eexists. do 2 split; try reflexivity.
 Admitted.
 (* end hide *)
 
@@ -322,11 +315,9 @@ Lemma sim_add_zero_l :
     sim (add n m) zero -> sim n zero.
 (* begin hide *)
 Proof.
-  destruct 1 as [[[H1 H2] | (n' & m' & H1 & H2 & H3)]].
-    destruct n as [[n' |]]; cbn in *.
-      inv H1.
-      constructor. left. cbn. auto.
-    inv H2.
+  intros.
+  apply sim_add_zero in H.
+  destruct H. assumption.
 Qed.
 (* end hide *)
 
@@ -335,37 +326,45 @@ Lemma sim_add_zero_r :
     sim (add n m) zero -> sim m zero.
 (* begin hide *)
 Proof.
-  intros. rewrite add_comm in H. apply sim_add_zero_l in H. assumption.
+  intros.
+  apply sim_add_zero in H.
+  destruct H. assumption.
+Qed.
+(* end hide *)
+
+Lemma add_zero_l' :
+  forall n m : conat,
+    pred n = None -> sim (add n m) m.
+(* begin hide *)
+Proof.
+  intros. replace n with zero.
+    apply add_zero_l.
+    apply eq_pred. cbn. symmetry. assumption.
+Qed.
+(* end hide *)
+
+Lemma add_zero_r' :
+  forall n m : conat,
+    pred m = None -> sim (add n m) n.
+(* begin hide *)
+Proof.
+  intros. replace m with zero.
+    apply add_zero_r.
+    apply eq_pred. cbn. symmetry. assumption.
 Qed.
 (* end hide *)
 
 Lemma sim_add :
-  forall n n' m m' : conat,
-    sim n n' -> sim m m' -> sim (add n m) (add n' m').
+  forall n1 n2 m1 m2 : conat,
+    sim n1 n2 -> sim m1 m2 -> sim (add n1 m1) (add n2 m2).
 (* begin hide *)
 Proof.
   cofix CH.
-  intros n n' m m' [] [].
-  decompose [ex and or] sim'0;
-  decompose [ex and or] sim'1;
-  clear sim'0 sim'1.
-    constructor. left. cbn. rewrite H0, H1. split; assumption.
-    constructor. right. exists x, x0. cbn. rewrite H0, H1. repeat (split; try assumption).
-    constructor. right. exists (add x m), (add x0 m'). cbn. rewrite H0, H. split.
-      reflexivity.
-      split.
-        reflexivity.
-        apply CH.
-          assumption.
-          constructor. left. eauto.
-    constructor. right. exists (add x m), (add x0 m'). cbn. rewrite H, H0. split.
-      reflexivity.
-      split.
-        reflexivity.
-        apply CH.
-          assumption.
-          constructor. right. do 2 eexists. eauto.
-Defined.
+  intros n1 n2 m1 m2 [] Hm12.
+  decompose [ex and or] sim'0; clear sim'0.
+    rewrite !add_zero_l'; assumption.
+    constructor. right. do 2 eexists. cbn. rewrite H0, H. auto.
+Qed.
 (* end hide *)
 
 (** * Lepsze dodawanie *)
@@ -389,13 +388,6 @@ Lemma sim_add_add' :
     sim (add n m) (add' n m).
 (* begin hide *)
 Proof.
-  cofix CH.
-  constructor.
-  destruct n as [[n' |]]; cbn.
-    right. destruct m as [[m' |]]; cbn.
-      do 2 eexists. do 2 split; try reflexivity. eapply sim_trans.
-        apply sim_sym. apply add_succ_l.
-        constructor. cbn. right. do 2 eexists. do 2 split; try reflexivity. apply CH.
 Abort.
 (* end hide *)
 
@@ -424,12 +416,9 @@ Lemma sim_add'_zero :
     sim (add' n m) zero -> sim n zero /\ sim m zero.
 (* begin hide *)
 Proof.
-  intros.
-  split; destruct H as [[[] | ]]; constructor.
-    destruct n as [[]], m as [[]]; cbn in *; try congruence. auto.
-    decompose [ex and] H. cbn in *; congruence.
-    destruct n as [[]], m as [[]]; cbn in *; try congruence. auto.
-    decompose [ex and] H. cbn in *; congruence.
+  intros [[]] [[]] H.
+    1-3: destruct H; decompose [and or ex] sim'0; cbn in *; congruence.
+    repeat constructor.
 Qed.
 (* end hide *)
 
@@ -440,11 +429,15 @@ Lemma add'_omega_l :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. cbn. right.
   destruct n as [[]]; cbn.
-    do 2 eexists. do 2 split; try reflexivity.
-      constructor. cbn. right. do 2 eexists. do 2 split; try reflexivity. apply CH.
-    do 2 eexists. do 2 split; reflexivity.
+    {
+      constructor. right. do 2 eexists.
+      split; [cbn; reflexivity | split; [cbn; reflexivity | idtac]].
+      constructor. right. do 2 eexists.
+      split; [cbn; reflexivity | split; [cbn; reflexivity | idtac]].
+      apply CH.
+    }
+    constructor. right. cbn. do 2 eexists. do 2 split; reflexivity.
 Qed.
 (* end hide *)
 
@@ -453,10 +446,15 @@ Lemma add'_omega_r :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct n as [[n' |]]; cbn.
-    right. do 2 eexists. do 2 split; try reflexivity. constructor. cbn.
-      right. do 2 eexists. do 2 split; try reflexivity. apply CH.
-    right. exists omega, omega. intuition.
+  destruct n as [[]]; cbn.
+    {
+      constructor. right. do 2 eexists.
+      split; [cbn; reflexivity | split; [cbn; reflexivity | idtac]].
+      constructor. right. do 2 eexists.
+      split; [cbn; reflexivity | split; [cbn; reflexivity | idtac]].
+      apply CH.
+    }
+    constructor. right. cbn. do 2 eexists. do 2 split; reflexivity.
 Qed.
 (* end hide *)
 
