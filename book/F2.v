@@ -883,7 +883,6 @@ Lemma min_succ :
     sim (min (succ n) (succ m)) (succ (min n m)).
 (* begin hide *)
 Proof.
-  cofix CH.
   constructor. cbn. right. do 2 eexists. intuition.
 Qed.
 (* end hide *)
@@ -892,7 +891,6 @@ Lemma max_zero_l :
   forall n : conat, sim (max zero n) n.
 (* begin hide *)
 Proof.
-  cofix CH.
   constructor. destruct n as [[n' |]]; cbn.
     right. do 2 eexists. intuition.
     left. auto.
@@ -903,7 +901,6 @@ Lemma max_zero_r :
   forall n : conat, sim (max n zero) n.
 (* begin hide *)
 Proof.
-  cofix CH.
   constructor. destruct n as [[n' |]]; cbn.
     right. do 2 eexists. intuition.
     left. auto.
@@ -937,7 +934,6 @@ Lemma max_succ :
     sim (max (succ n) (succ m)) (succ (max n m)).
 (* begin hide *)
 Proof.
-  cofix CH.
   constructor. cbn. right. do 2 eexists. intuition.
 Qed.
 (* end hide *)
@@ -1003,6 +999,10 @@ Lemma min_add_r :
     sim (min (add a c) (add b c)) (add (min a b) c).
 (* begin hide *)
 Proof.
+  cofix CH.
+  constructor.
+  destruct a as [[a' |]], b as [[b' |]], c as [[c' |]]; cbn; auto.
+    all: right; do 2 eexists; intuition.
   intros.
   rewrite (sim_eq (add_comm a c)), (sim_eq (add_comm b c)).
   rewrite min_add_l, add_comm. reflexivity.
