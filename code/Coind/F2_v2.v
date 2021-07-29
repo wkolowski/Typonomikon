@@ -312,6 +312,15 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma add_succ_r'' :
+  forall n m : conat,
+    add n {| out := S m |} = succ (add n m).
+(* begin hide *)
+Proof.
+  
+Admitted.
+(* end hide *)
+
 Lemma add_comm :
   forall n m : conat, sim (add n m) (add m n).
 (* begin hide *)
@@ -321,9 +330,12 @@ Proof.
     left; cbn; reflexivity.
     eright; cbn; try reflexivity. rewrite add_zero_r. apply sim_refl.
     eright; cbn; try reflexivity. rewrite add_zero_r. apply sim_refl.
-    eright; cbn; try reflexivity. change {| out := S m' |} with (succ m').
-      rewrite add_succ_r. unfold succ. apply CH.
-Admitted.
+    {
+      eright; cbn; try reflexivity.
+      rewrite !add_succ_r''. apply sim_succ.
+      apply CH.
+    }
+Qed.
 (* end hide *)
 
 Lemma sim_add_zero_l :
@@ -586,6 +598,52 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma add'_comp :
+  forall n m : conat,
+    add' (succ n) (succ m) = succ (succ (add' n m)).
+(* begin hide *)
+Proof.
+  intros.
+  apply eq_out. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma add'_comp' :
+  forall n m : conat,
+    add' {| out := S n |} {| out := S m |} = succ (succ (add' n m)).
+(* begin hide *)
+Proof.
+  intros.
+  apply eq_out. cbn. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma add'_comp_l :
+  forall n m : conat,
+    add' {| out := S n |} m = succ (add' n m).
+(* begin hide *)
+Proof.
+Admitted.
+(* end hide *)
+
+Lemma add'_comp_r :
+  forall n m : conat,
+    add' n {| out := S m |} = succ (add' n m).
+(* begin hide *)
+Proof.
+Admitted.
+(* end hide *)
+
+Lemma add'_succ_l'' :
+  forall n m : conat, add' (succ n) m = succ (add' n m).
+Proof.
+Admitted.
+
+Lemma add'_succ_r'' :
+  forall n m : conat, add' n (succ m) = succ (add' n m).
+Proof.
+Admitted.
+
 Lemma add'_assoc :
   forall a b c : conat, sim (add' (add' a b) c) (add' a (add' b c)).
 (* begin hide *)
@@ -593,39 +651,10 @@ Proof.
   cofix CH.
   destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn.
     constructor; left; cbn; try reflexivity.
-    constructor; eright; cbn; try reflexivity.
-    constructor; eright; cbn; try reflexivity.
-    constructor; eright; cbn; try reflexivity.
-    constructor; eright; cbn; try reflexivity.
-    constructor; eright; cbn; try reflexivity.
-    constructor; eright; cbn; try reflexivity.
-    {
-      do 2 (constructor; eright; cbn; try reflexivity).
-      destruct a' as [[| a'']], c' as [[| c'']]; cbn.
-        constructor; eright; cbn; try reflexivity.
-          rewrite add'_comm. apply sim_refl.
-        constructor; eright; cbn; try reflexivity.
-          change {| out := S c'' |} with (succ c'').
-          rewrite add'_succ_r'. apply sim_succ, sim_add'.
-            rewrite add'_zero_l. apply sim_refl.
-            apply sim_refl.
-        constructor; eright; cbn; try reflexivity.
-          change {| out := S a'' |} with (succ a'').
-          rewrite add'_succ_l'. apply sim_succ. apply sim_add'.
-            apply sim_refl.
-            rewrite add'_zero_r. apply sim_refl.
-        constructor; eright; cbn; try reflexivity. apply sim_succ.
-          destruct a'' as [[| a''']], b' as [[| b'']], c'' as [[| c''']].
-            constructor; eright; cbn; try reflexivity.
-            do 2 (constructor; eright; cbn; try reflexivity). apply add'_zero_l.
-            do 2 (constructor; eright; cbn; try reflexivity). apply add'_comm.
-            do 2 (constructor; eright; cbn; try reflexivity). admit.
-            do 2 (constructor; eright; cbn; try reflexivity). rewrite add'_zero_r. apply sim_refl.
-            do 2 (constructor; eright; cbn; try reflexivity). admit.
-            do 2 (constructor; eright; cbn; try reflexivity). admit.
-            do 1 (constructor; eright; cbn; try reflexivity). apply sim_succ.
-              Print add'_succ_l.
-Admitted.
+    1-6: constructor; eright; cbn; try reflexivity.
+    rewrite !add'_comp_l, !add'_comp_r, !add'_succ_l'', !add'_succ_r''.
+      repeat apply sim_succ. apply CH.
+Qed.
 (* end hide *)
 
 (** * Porządek *)
@@ -1036,6 +1065,46 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma min_le :
+  forall n m : conat, le n m -> sim (min n m) n.
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros n m [[H | n' m' Hn Hm Hnm]]; constructor.
+    left; cbn; rewrite ?H; reflexivity.
+    eright; cbn; rewrite ?Hn, ?Hm; try reflexivity. apply CH. assumption.
+Qed.
+(* end hide *)
+
+Lemma max_le :
+  forall n m : conat, le n m -> sim (max n m) m.
+(* begin hide *)
+Proof.
+  cofix CH.
+  intros n m [[H | n' m' Hn Hm Hnm]]; constructor.
+    destruct m as [[| m']].
+      left; cbn; rewrite ?H; reflexivity.
+      eright; cbn; rewrite ?H; reflexivity.
+    eright; cbn; rewrite ?Hn, ?Hm; try reflexivity. apply CH. assumption.
+Qed.
+(* end hide *)
+
+Lemma min_diag :
+  forall n : conat, sim (min n n) n.
+(* begin hide *)
+Proof.
+  intros. apply min_le. apply le_refl.
+Qed.
+(* end hide *)
+
+Lemma max_diag :
+  forall n : conat, sim (max n n) n.
+(* begin hide *)
+Proof.
+  intros. apply max_le. apply le_refl.
+Qed.
+(* end hide *)
+
 Lemma min_add_l :
   forall a b c : conat,
     sim (min (add a b) (add a c)) (add a (min b c)).
@@ -1057,18 +1126,9 @@ Proof.
   constructor.
   destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
     all: eright; cbn; intuition.
-  cofix CH.
-  destruct a as [[| a']], b as [[| b']]; intros.
-    rewrite min_zero_l. rewrite !add_zero_l.
-    left; cbn. reflexivity.
-    all: eright; cbn; intuition.
-      rewrite min_diag.
-  cofix CH.
-  constructor.
-  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn.
-    1, 3, 5: left; cbn; reflexivity.
-    all: eright; cbn; intuition.
-      rewrite min_diag.
+      rewrite min_diag. apply sim_refl.
+      apply min_le. apply le_add_r. apply le_succ_r. apply le_refl.
+        rewrite min_comm. apply min_le. apply le_add_r. apply le_succ_r. apply le_refl.
 Qed.
 (* end hide *)
 
@@ -1080,7 +1140,7 @@ Proof.
   cofix CH.
   constructor.
   destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    all: eright; try intuition. do 2 eexists; intuition.
+    all: eright; cbn; eauto. all: apply sim_refl.
 Qed.
 (* end hide *)
 
@@ -1089,49 +1149,15 @@ Lemma max_add_r :
     sim (max (add a c) (add b c)) (add (max a b) c).
 (* begin hide *)
 Proof.
-  intros.
-  rewrite (sim_eq (add_comm a c)), (sim_eq (add_comm b c)).
-  rewrite max_add_l, add_comm. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma min_le :
-  forall n m : conat, le n m -> sim (min n m) n.
-(* begin hide *)
-Proof.
   cofix CH.
-  constructor. destruct H as [[H | (n' & m' & H1 & H2 & H3)]]; cbn.
-    rewrite H. left. auto.
-    rewrite H1, H2. right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma max_le :
-  forall n m : conat, le n m -> sim (max n m) m.
-(* begin hide *)
-Proof.
-  cofix CH.
-  constructor. destruct H as [[H | (n' & m' & H1 & H2 & H3)]]; cbn.
-    rewrite H. destruct m as [[| m']]; cbn.
-      right. do 2 eexists. intuition.
-      left. auto.
-    rewrite H1, H2. right. do 2 eexists. intuition.
-Qed.
-(* end hide *)
-
-Lemma min_diag :
-  forall n : conat, sim (min n n) n.
-(* begin hide *)
-Proof.
-  intros. apply min_le. apply le_refl.
-Qed.
-(* end hide *)
-
-Lemma max_diag :
-  forall n : conat, sim (max n n) n.
-(* begin hide *)
-Proof.
-  intros. apply max_le. apply le_refl.
+  constructor.
+  destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
+    all: eright; cbn; eauto.
+      rewrite max_diag. apply sim_refl.
+      rewrite add_zero_r. apply sim_refl.
+      apply max_le, le_add_r, le_succ_r, le_refl.
+      apply sim_refl.
+      rewrite max_comm. apply max_le, le_add_r, le_succ_r, le_refl.
 Qed.
 (* end hide *)
 
@@ -1141,10 +1167,13 @@ Lemma sim_min_max :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct H as [[[H1 H2] | (n' & m' & H1 & H2 & H3)]].
-    left. cbn in *. destruct (out n), (out m); try congruence. auto.
-    right. cbn in *. destruct (out n), (out m); try congruence.
-      do 2 eexists. intuition. apply CH. inv H1. inv H2.
+  intros n m [[Hn Hm | n' m' Hn Hm Hhm]].
+    destruct n as [[| n']], m as [[| m']]; cbn in *; constructor.
+      left; cbn; reflexivity.
+      1-3: inv Hn; inv Hm.
+    destruct n as [[| n'']], m as [[| m'']]; cbn in *; constructor.
+      all: inv Hn; inv Hm.
+      eright; cbn; try reflexivity. apply CH. assumption.
 Qed.
 (* end hide *)
 
@@ -1155,8 +1184,8 @@ Proof.
   cofix CH.
   constructor.
   destruct a as [[| a']], b as [[| b']]; cbn; auto.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition. rewrite min_diag. apply sim_refl.
+    eright; cbn; try reflexivity. rewrite min_diag. apply sim_refl.
+    eright; cbn; try reflexivity. apply CH.
 Qed.
 (* end hide *)
 
@@ -1167,8 +1196,8 @@ Proof.
   cofix CH.
   constructor.
   destruct a as [[| a']], b as [[| b']]; cbn; auto.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
+    eright; cbn; try reflexivity.
+    eright; cbn; try reflexivity. apply CH.
 Qed.
 (* end hide *)
 
@@ -1180,9 +1209,7 @@ Proof.
   cofix CH.
   constructor.
   destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
+    all: eright; cbn; try reflexivity. apply CH.
 Qed.
 (* end hide *)
 
@@ -1194,13 +1221,11 @@ Proof.
   cofix CH.
   constructor.
   destruct a as [[| a']], b as [[| b']], c as [[| c']]; cbn; auto.
-    right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
-      rewrite min_comm, min_max. apply sim_refl.
-    right. do 2 eexists. intuition.
-      rewrite min_max. reflexivity.
-    right. do 2 eexists. intuition. rewrite min_diag. reflexivity.
-    right. do 2 eexists. intuition.
+    all: eright; cbn; try reflexivity.
+      rewrite min_diag. apply sim_refl.
+      rewrite min_max. apply sim_refl.
+      rewrite min_comm. rewrite min_max. apply sim_refl.
+      apply CH.
 Qed.
 (* end hide *)
 
@@ -1228,7 +1253,7 @@ Lemma div2_zero :
   sim (div2 zero) zero.
 (* begin hide *)
 Proof.
-  constructor. cbn. left. auto.
+  constructor. left; cbn; reflexivity.
 Qed.
 (* end hide *)
 
@@ -1237,7 +1262,9 @@ Lemma div2_omega :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. cbn. right. do 2 eexists. intuition.
+  constructor.
+  eright; cbn; try reflexivity.
+  apply CH.
 Qed.
 (* end hide *)
 
@@ -1245,44 +1272,34 @@ Lemma div2_succ :
   forall n : conat, sim (div2 (succ (succ n))) (succ (div2 n)).
 (* begin hide *)
 Proof.
-  cofix CH.
-  constructor. cbn. right. do 2 eexists. intuition.
+  constructor. eright; reflexivity.
 Qed.
 (* end hide *)
 
-Lemma div2_add :
-  forall n : conat, sim (div2 (add n n)) n.
+Lemma div2_add' :
+  forall n : conat, sim (div2 (add' n n)) n.
 (* begin hide *)
 Proof.
   cofix CH.
   constructor.
   destruct n as [[| n']].
-    right. exists (div2 (add n' n')).
-      replace {| out := S n' |} with (succ n').
-        exists n'. intuition. rewrite (sim_eq (add_succ_l' _ _)).
-          rewrite (sim_eq (add_succ_r' _ _)).
-          rewrite (sim_eq (div2_succ _)). cbn. reflexivity.
-      apply eq_out. cbn. reflexivity.
-    left. cbn. auto.
+    left; cbn; reflexivity.
+    eright; cbn; try reflexivity. apply CH.
 Qed.
 (* end hide *)
 
-Lemma le_div2_l_aux :
+Lemma le_div2_l' :
   forall n m : conat, le n m -> le (div2 n) m.
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct H as [[H | (n' & m' & H1 & H2 & H3)]]; cbn.
-    rewrite H. left. reflexivity.
-    rewrite H1. destruct H3 as [[H3 | (n'' & m'' & H31 & H32 & H33)]]; cbn.
-      rewrite H3. left. reflexivity.
-      rewrite H31. right. do 2 eexists. intuition.
-        eassumption.
-        apply CH. apply le_trans with m''.
-          assumption.
-          replace m' with (succ m'').
-            apply le_succ_r. apply le_refl.
-            apply eq_out. cbn. symmetry. assumption.
+  constructor. destruct H as [[Hn | n' m' Hn Hm Hnm]].
+    left. cbn. rewrite Hn. reflexivity.
+    destruct Hnm as [[Hn' | n'' m'' Hn' Hm' Hnm']].
+      left. cbn. rewrite Hn, Hn'. reflexivity.
+      eright; cbn; rewrite ?Hn, ?Hn'; eauto. apply CH. replace m' with (succ m'').
+        apply le_succ_r. assumption.
+        apply eq_out. cbn. symmetry. assumption.
 Qed.
 (* end hide *)
 
@@ -1290,7 +1307,7 @@ Lemma le_div2_l :
   forall n : conat, le (div2 n) n.
 (* begin hide *)
 Proof.
-  intros. apply le_div2_l_aux, le_refl.
+  intros. apply le_div2_l', le_refl.
 Qed.
 (* end hide *)
 
@@ -1299,12 +1316,12 @@ Lemma le_div2 :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor.
-  destruct H as [[H | (n' & m' & H1 & H2 &
-                [[H3 | (n'' & m'' & H31 & H32 & H33)]])]]; cbn.
-    rewrite H. left. reflexivity.
-    rewrite H1, H2, H3. left. reflexivity.
-    rewrite H1, H2, H31, H32. right. do 2 eexists. intuition.
+  intros n m [[Hn | n' m' Hn Hm Hnm]]; constructor.
+    left. cbn. rewrite Hn. reflexivity.
+    destruct Hnm as [[Hn' | n'' m'' Hn' Hm' Hnm']].
+      left. cbn. rewrite Hn, Hn'. reflexivity.
+      eright; cbn; rewrite ?Hn, ?Hn', ?Hm, ?Hm'; try reflexivity.
+        apply CH. assumption.
 Qed.
 (* end hide *)
 
@@ -1348,7 +1365,7 @@ Lemma Infinite_omega :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. exists omega. split.
+  constructor. exists omega.
     cbn. reflexivity.
     apply CH.
 Qed.
@@ -1359,8 +1376,8 @@ Lemma Infinite_omega' :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct H as [[n' [H1 H2]]].
-  right. exists n', omega. intuition.
+  intros n [[n' H1 H2]].
+  constructor. eright with n' omega; cbn; eauto.
 Qed.
 (* end hide *)
 
@@ -1368,7 +1385,9 @@ Lemma Finite_Infinite :
   forall n : conat, Finite n -> Infinite n -> False.
 (* begin hide *)
 Proof.
-  induction 1; destruct 1 as [(n' & H1 & H2)]; inv H1.
+  induction 1; destruct 1 as [[]].
+    inv H.
+    apply IHFinite. inv H0.
 Qed.
 (* end hide *)
 
@@ -1385,8 +1404,7 @@ Inductive EvenF (n : conat) (P : conat -> Prop) : Prop :=
     | EvenF_Z  :
         forall Hn : out n = Z, EvenF n P
     | EvenF_SS :
-        forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2),
-          P n2 -> EvenF n P.
+        forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2) (HEven : P n2), EvenF n P.
 
 CoInductive Even (n : conat) : Prop :=
 {
@@ -1398,8 +1416,7 @@ Inductive OddF (n : conat) (P : conat -> Prop) : Prop :=
         forall (n' : conat) (Hn : out n = S n') (Hn' : out n' = Z),
           OddF n P
     | OddF_SS :
-        forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2),
-          P n2 -> OddF n P.
+        forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2) (HOdd : P n2), OddF n P.
 
 CoInductive Odd (n : conat) : Prop :=
 {
@@ -1419,9 +1436,7 @@ Lemma Odd_zero :
   ~ Odd zero.
 (* begin hide *)
 Proof.
-  destruct 1 as [[H | (n & m & H1 & H2 & H3)]].
-    inv H.
-    inv H1.
+  destruct 1 as [[n Hn | n m Hn Hm Hnm]]; inv Hn.
 Qed.
 (* end hide *)
 
@@ -1430,8 +1445,8 @@ Lemma Even_Omega :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. right.
-  exists omega, omega. cbn. intuition.
+  constructor; eright; cbn; try reflexivity.
+  exact CH.
 Qed.
 (* end hide *)
 
@@ -1440,8 +1455,8 @@ Lemma Odd_Omega :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. right.
-  exists omega, omega. cbn. intuition.
+  constructor; eright; cbn; try reflexivity.
+  apply CH.
 Qed.
 (* end hide *)
 
@@ -1450,15 +1465,16 @@ Lemma Even_Odd_Infinite :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor.
-  destruct H as [[HE | (n1 & n2 & HE1 & HE2 & HE3)]],
-          H0 as [[HO | (m1 & m2 & HO1 & HO2 & HO3)]];
-  subst; cbn in *.
-    inv HE.
-    congruence.
-    inv HE1. inv HE2.
-    rewrite HO1 in HE1. inv HE1. rewrite HO2 in HE2. inv HE2.
-      exists n1. intuition. constructor. exists n2. intuition.
+  intros n [[]] [[Hn' | n1' n2' Hn1' Hn2' HOdd]].
+    1-3: congruence.
+    {
+      rewrite Hn1' in Hn1. inv Hn1. rewrite Hn2' in Hn2. inv Hn2.
+      constructor. exists n1.
+        assumption.
+        constructor. exists n2.
+          assumption.
+          apply CH; assumption.
+    }
 Qed.
 (* end hide *)
 
@@ -1467,11 +1483,9 @@ Lemma Even_succ :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct H as [[H | (n1 & n2 & H1 & H2 & H3)]]; cbn.
-    right. exists n, zero. intuition.
-      rewrite H. cbn. reflexivity.
-      constructor. left. cbn. reflexivity.
-    right. exists n, n1. intuition. replace n1 with (succ n2).
+  constructor. destruct H as [[n' H | n1 n2 Hn1 Hn2 HOdd]].
+    eright; cbn; eauto. constructor. left. assumption.
+    eright; cbn; eauto. replace n1 with (succ n2).
       apply CH. assumption.
       apply eq_out. cbn. symmetry. assumption.
 Qed.
@@ -1482,10 +1496,9 @@ Lemma Odd_succ :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct H as [[H | (n1 & n2 & H1 & H2 & H3)]].
-    left. apply sim_eq. apply sim_succ. constructor.
-      left. cbn. auto.
-    right. cbn. exists n, n1. intuition. replace n1 with (succ n2).
+  constructor. destruct H as [[H | n1 n2 Hn1 Hn2 HOdd]].
+    left with n; cbn; auto.
+    right with n n1; cbn; auto. replace n1 with (succ n2).
       apply CH. assumption.
       apply eq_out. cbn. symmetry. assumption.
 Qed.
@@ -1496,14 +1509,13 @@ Lemma Even_succ_inv :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct H as [[H | (n1 & n2 & H1 & H2 & H3)]]; cbn.
-    inv H.
-    cbn in H1. inv H1. right.
-      destruct H3 as [[H3 | (m1 & m2 & H1' & H2' & H3')]]; subst.
-        exists (succ zero), zero. intuition. apply Even_zero.
-        exists n2, m1. intuition. replace m1 with (succ m2).
-          apply Even_succ. assumption.
-          apply eq_out. cbn. symmetry. assumption.
+  constructor. destruct H as [[n1 Hn1 | n1 n2 Hn1 Hn2 HOdd]].
+    inv Hn1. left. assumption.
+    inv Hn1. destruct HOdd as [[n3 Hn3 | n3 n4 Hn3 Hn4 HEven]].
+      eright; cbn; eauto. apply CH.
+        constructor; eleft; cbn; eauto.
+      eright; cbn; eauto. apply CH.
+        constructor; eright; cbn; eauto.
 Qed.
 (* end hide *)
 
@@ -1512,16 +1524,13 @@ Lemma Odd_succ_inv :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct H as [[H | (n1 & n2 & H1 & H2 & H3)]]; cbn.
-    inv H.
-    cbn in H1. inv H1.
-      destruct H3 as [[H | (n1' & n2' & H1' & H2' & H3')]]; cbn.
-        left. apply eq_out. cbn. rewrite H2. f_equal.
-          apply eq_out. cbn. assumption.
-        right. exists n2, n1'. intuition. apply CH.
-          replace (succ n1') with n2.
-            constructor. right. do 2 eexists. eauto.
-            apply eq_out. cbn. assumption.
+  constructor. destruct H as [[]]; cbn in *.
+    inv Hn.
+    inv Hn1. destruct HEven as [[Hn2' | n3 n4 Hn3 Hn4 HEven]].
+      left with n2; assumption.
+      eright; cbn; try eassumption. apply CH. replace (succ n3) with n2.
+        constructor; eright; cbn; eassumption.
+        apply eq_out. cbn. assumption.
 Qed.
 (* end hide *)
 
@@ -1554,11 +1563,15 @@ Lemma Even_add_Odd :
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct 1 as [[H | (n1 & n2 & H1 & H2 & H3)]]; intro.
-    rewrite H, (sim_eq (add_succ_l' _ _)), (sim_eq (add_zero_l _)).
+  destruct 1 as [[n' Hn | n1 n2 Hn1 Hn2 HEven]]; intro.
+    replace (add n m) with (succ m).
       apply Even_succ. assumption.
-    constructor. right. exists (add n1 m), (add n2 m).
-      cbn. rewrite H1, H2. intuition.
+      apply eq_out. cbn. rewrite Hn. f_equal.
+        apply eq_out. cbn. rewrite Hn'. reflexivity.
+    constructor. eright.
+      cbn. rewrite Hn1. reflexivity.
+      cbn. rewrite Hn2. reflexivity.
+      apply CH; assumption.
 Qed.
 (* end hide *)
 
@@ -1567,12 +1580,14 @@ Lemma Even_add_Even :
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct 1 as [[H | (n1 & n2 & H1 & H2 & H3)]]; intro.
-    replace n with zero.
-      rewrite (sim_eq (add_zero_l _)). assumption.
-      apply eq_out. cbn. auto.
-    constructor. right. exists (add n1 m), (add n2 m).
-      cbn. rewrite H1, H2. auto.
+  destruct 1 as [[Hn | n1 n2 Hn1 Hn2 HEven]]; intro.
+    replace (add n m) with m.
+      assumption.
+      apply eq_out. cbn. rewrite Hn. reflexivity.
+    constructor; eright.
+      cbn. rewrite Hn1. reflexivity.
+      cbn. rewrite Hn2. reflexivity.
+      apply CH; assumption.
 Qed.
 (* end hide *)
 
@@ -1663,7 +1678,7 @@ Fixpoint subn (n : conat) (m : nat) : conat :=
 match out n, m with
     | Z, _ => n
     | _, 0 => n
-    | S n', S m' => subn n' m'
+    | S n', Datatypes.S m' => subn n' m'
 end.
 (* end hide *)
 
@@ -1938,7 +1953,6 @@ CoInductive Even2 (n : conat) : Prop :=
 with Odd2 (n : conat) : Prop :=
 {
     Odd2' :
-      n = succ zero \/
       exists n' : conat,
         out n = S n' /\ Even2 n';
 }.
@@ -1954,18 +1968,55 @@ Inductive Even2F (n : conat) (P : conat -> Prop) : Prop :=
 
 Inductive Odd2F (n : conat) (P : conat -> Prop) : Prop :=
     | Odd2_S :
-        forall (n' : conat) (Hn : out n = S n'),
-          P n' -> Odd2F n P.
+        forall (n' : conat) (Hn : out n = S n') (HOdd : P n'), Odd2F n P.
 
-CoInductive Even2 (n : conat) : Prop :=
+CoInductive Even2' (n : conat) : Prop :=
 {
-    Even2' : Even2F n Odd2
+    Even2'' : Even2F n Odd2'
 }
 
-with Odd2 (n : conat) : Prop :=
+with Odd2' (n : conat) : Prop :=
 {
-    Odd2' : Odd2F n Even2
+    Odd2'' : Odd2F n Even2'
 }.
+
+Lemma Even2_Even2' :
+  forall n : conat, Even2 n -> Even2' n
+
+with Odd2_Odd2' :
+  forall n : conat, Odd2 n -> Odd2' n.
+(* begin hide *)
+Proof.
+  intros n [[Hn | [n' [Hn HOdd]]]]; constructor.
+    left. assumption.
+    right with n'.
+      assumption.
+      apply Odd2_Odd2'. assumption.
+
+  intros n [[n' [Hn HEven]]]. constructor. exists n'.
+    assumption.
+    apply Even2_Even2'. assumption.
+Qed.
+(* end hide *)
+
+Lemma Even2'_Even2 :
+  forall n : conat, Even2' n -> Even2 n
+
+with Odd2'_Odd2 :
+  forall n : conat, Odd2' n -> Odd2 n.
+(* begin hide *)
+Proof.
+  intros n [[Hn | n' Hn HOdd]]; constructor.
+    left. assumption.
+    right. exists n'. split.
+      assumption.
+      apply Odd2'_Odd2. assumption.
+
+  intros n [[n' Hn HEven]]. constructor. exists n'. split.
+    assumption.
+    apply Even2'_Even2. assumption.
+Qed.
+(* end hide *)
 
 End Even2_v2.
 
@@ -1975,24 +2026,15 @@ Lemma Even2_add_Odd2 :
 with Even2_add_Odd2_Even2 :
   forall n m : conat, Even2 n -> Odd2 m -> Odd2 (add n m).
 Proof.
-  constructor. destruct H as [[H | (n' & H1 & H2)]].
-    rewrite H. cbn. right. exists m. split.
-      f_equal. apply eq_out. cbn. reflexivity.
-      assumption.
+  constructor. destruct H as [(n' & H1 & H2)].
     cbn. rewrite H1. right. eexists. intuition.
   constructor.
   destruct H as [[H | (n' & H1 & H2)]],
-          H0 as [[H' | (m' & H1' & H2')]]; subst; cbn.
-    rewrite H. left. apply sim_eq. rewrite add_comm. constructor.
-      cbn. right. do 2 eexists. intuition. rewrite add_zero_l. constructor; eauto.
-    rewrite H. right. exists m'. intuition.
-    rewrite H1. right. exists (succ n'). split.
-      f_equal. apply sim_eq. rewrite add_comm. constructor. cbn.
-        right. do 2 eexists. intuition. rewrite add_zero_l. apply sim_refl.
-      constructor. cbn. right. exists n'. auto.
-    rewrite H1. right. exists (add n' m). intuition. apply Even2_add_Odd2.
+          H0 as [(m' & H1' & H2')]; subst; cbn.
+    rewrite H. exists m'. intuition.
+    rewrite H1. exists (add n' m). intuition. apply Even2_add_Odd2.
       assumption.
-      constructor. right. exists m'. auto.
+      constructor. exists m'. auto.
 Qed.
 (* end hide *)
 
