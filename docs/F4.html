@@ -41,9 +41,18 @@ Ten rozdział będzie o kolistach, czyli koinduktywnych odpowiednikach
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">coListF</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">F</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nilF</span> : <span class="id" title="var">coListF</span> <span class="id" title="var">A</span> <span class="id" title="var">F</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">consF</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">F</span> <span class="id" title="var">A</span>), <span class="id" title="var">coListF</span> <span class="id" title="var">A</span> <span class="id" title="var">F</span>.<br/>
+
+<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">nilF</span> {<span class="id" title="var">A</span> <span class="id" title="var">F</span>}.<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">consF</span> {<span class="id" title="var">A</span> <span class="id" title="var">F</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">coList</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> : <span class="id" title="var">option</span> (<span class="id" title="var">A</span> * <span class="id" title="var">coList</span> <span class="id" title="var">A</span>);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> : <span class="id" title="var">coListF</span> <span class="id" title="var">A</span> <span class="id" title="var">coList</span><br/>
 }.<br/>
 
 <br/>
@@ -130,19 +139,19 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">coList</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">coList</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">coList_neq_nc</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">None</span> -&gt; <span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> &lt;&gt; <span class="id" title="var">None</span> -&gt; <span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">nilF</span> -&gt; <span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> &lt;&gt; <span class="id" title="var">nilF</span> -&gt; <span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">coList_neq_cn</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> &lt;&gt; <span class="id" title="var">None</span> -&gt; <span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">None</span> -&gt; <span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> &lt;&gt; <span class="id" title="var">nilF</span> -&gt; <span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">nilF</span> -&gt; <span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">coList_neq_cc_here</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h1</span> <span class="id" title="var">h2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h1</span>, <span class="id" title="var">t1</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h2</span>, <span class="id" title="var">t2</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">consF</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">consF</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span> -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">h1</span> &lt;&gt; <span class="id" title="var">h2</span> -&gt; <span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">coList_neq_cc_there</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h1</span> <span class="id" title="var">h2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h1</span>, <span class="id" title="var">t1</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h2</span>, <span class="id" title="var">t2</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">consF</span> <span class="id" title="var">h1</span> <span class="id" title="var">t1</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">consF</span> <span class="id" title="var">h2</span> <span class="id" title="var">t2</span> -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coList_neq</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">coList_neq</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>.<br/>
 
 <br/>
@@ -300,6 +309,9 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lsim</span> (<span class="id" title="var">snoc</span> (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) <span class="id" title="var">x</span>) (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">l2</span> <span class="id" title="var">x</span>)).<br/>
 
 <br/>
+<span class="comment">(*&nbsp;Global&nbsp;Hint&nbsp;Constructors&nbsp;lsimF&nbsp;:&nbsp;core.&nbsp;*)</span><br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_snoc_l</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lsim</span> (<span class="id" title="var">app</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">l1</span> <span class="id" title="var">x</span>) <span class="id" title="var">l2</span>) (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> (<span class="id" title="var">cocons</span> <span class="id" title="var">x</span> <span class="id" title="var">l2</span>)).<br/>
@@ -322,7 +334,9 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 
 <div class="paragraph"> </div>
 
-    TODO: wyklarować, dlaczego niektóre rzeczy mają "l" na początku nazwy 
+    Uwaga: nazywamy tę funkcję <span class="inlinecode"><span class="id" title="var">lmap</span></span> zamiast po prostu <span class="inlinecode"><span class="id" title="var">map</span></span>, żeby uniknąć
+    konfliktu nazw - nazwa <span class="inlinecode"><span class="id" title="var">map</span></span> jest już zajętą przez analogiczną funkcję
+    dla list. 
 </div>
 <div class="code">
 
@@ -467,6 +481,9 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">len</span> (<span class="id" title="var">scan</span> <span class="id" title="var">l</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span>)) (<span class="id" title="var">len</span> <span class="id" title="var">l</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">scan_lmap</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">C</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">g</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">C</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lsim</span> (<span class="id" title="var">scan</span> (<span class="id" title="var">lmap</span> <span class="id" title="var">g</span> <span class="id" title="var">l</span>) <span class="id" title="var">f</span> <span class="id" title="var">b</span>) (<span class="id" title="var">scan</span> <span class="id" title="var">l</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">b</span> (<span class="id" title="var">g</span> <span class="id" title="var">a</span>)) <span class="id" title="var">b</span>).<br/>
 
 <br/>
 </div>
@@ -749,18 +766,18 @@ Funkcji <span class="inlinecode"><span class="id" title="var">splitAt</span></sp
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Exists</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">coList</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Exists_hd</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) -&gt; <span class="id" title="var">P</span> <span class="id" title="var">h</span> -&gt; <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">l</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">consF</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">h</span> -&gt; <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">l</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Exists_tl</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) -&gt; <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">l</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">consF</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">Exists</span> <span class="id" title="var">P</span> <span class="id" title="var">l</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="keyword">All</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">All'</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">None</span> \/<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">nilF</span> \/<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) /\ <span class="id" title="var">P</span> <span class="id" title="var">h</span> /\ <span class="id" title="keyword">All</span> <span class="id" title="var">P</span> <span class="id" title="var">t</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">consF</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> /\ <span class="id" title="var">P</span> <span class="id" title="var">h</span> /\ <span class="id" title="keyword">All</span> <span class="id" title="var">P</span> <span class="id" title="var">t</span>;<br/>
 }.<br/>
 
 <br/>
