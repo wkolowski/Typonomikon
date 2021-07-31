@@ -88,8 +88,8 @@ CoFixpoint f {A : Type} (l : coList A) : CoList A :=
 {|
     Out :=
       match uncons l with
-          | None        => NilF
-          | Some (h, t) => ConsF h (f t)
+          | nilF        => NilF
+          | consF h t => ConsF h (f t)
       end
 |}.
 Set Guard Checking.
@@ -98,8 +98,8 @@ CoFixpoint g {A : Type} (l : CoList A) : coList A :=
 {|
     uncons :=
       match Out l with
-          | NilF      => None
-          | ConsF h t => Some (h, g t)
+          | NilF      => nilF
+          | ConsF h t => consF h (g t)
       end
 |}.
 
@@ -108,10 +108,10 @@ Lemma fg :
     lsim (g (f l)) l.
 Proof.
   cofix CH.
-  destruct l as [[[h t] |]];
+  destruct l as [[| h t]];
   constructor; cbn.
-    right. do 4 eexists. do 3 (split; try reflexivity). apply CH.
-    left. split; reflexivity.
+    left; cbn; reflexivity.
+    eright; cbn; try reflexivity. apply CH.
 Qed.
 
 CoInductive CoList_sim {A : Type} (l1 l2 : CoList A) : Prop :=

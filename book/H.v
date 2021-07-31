@@ -1237,7 +1237,7 @@ Proof.
   induction 1.
     inversion 1.
     inversion 1.
-    intro Heq. apply (f_equal pred) in Heq.
+    intro Heq. apply (f_equal out) in Heq.
       cbn in Heq. inversion Heq; subst. contradiction.
 Qed.
 (* end hide *)

@@ -244,10 +244,10 @@ Require Import F2.
 (* begin hide *)
 CoFixpoint len {A : Type} (l : coList A) : conat :=
 {|
-    pred :=
+    out :=
       match uncons l with
-          | nilF      => None
-          | consF h t => Some (len t)
+          | nilF      => Z
+          | consF h t => S (len t)
       end;
 |}.
 (* end hide *)
@@ -259,9 +259,9 @@ Lemma sim_len :
 Proof.
   cofix CH.
   constructor.
-  destruct H as [[]]; cbn; rewrite H1, H2.
-    left. split; reflexivity.
-    right. exists (len t1), (len t2). intuition.
+  destruct H as [[]].
+    left; cbn; rewrite ?H1, ?H2; reflexivity.
+    eright; cbn; rewrite ?H1, ?H2; try reflexivity. apply CH. assumption.
 Qed.
 (* end hide *)
 
@@ -270,7 +270,7 @@ Lemma len_conil :
     len (@conil A) = zero.
 (* begin hide *)
 Proof.
-  intros. apply eq_pred. cbn. reflexivity.
+  intros. apply eq_out. cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -279,7 +279,7 @@ Lemma len_cocons :
     len (cocons x l) = succ (len l).
 (* begin hide *)
 Proof.
-  intros. apply eq_pred. cbn. reflexivity.
+  intros. apply eq_out. cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -314,10 +314,12 @@ Lemma len_snoc :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. cbn. destruct l as [[| h t]]; cbn.
-    right. do 2 eexists. intuition. constructor; eauto.
-    right. exists (len (snoc t x)), (succ (len t)). intuition.
-      f_equal. apply eq_pred. cbn. reflexivity.
+  constructor. destruct l as [[| h t]].
+    eright; cbn; try reflexivity.
+    eright with (len (snoc t x)) (succ (len t)); cbn.
+      reflexivity.
+      f_equal. apply eq_out. cbn. reflexivity.
+      apply CH.
 Qed.
 (* end hide *)
 
@@ -375,11 +377,11 @@ Lemma len_app :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l1 as [[| h1 t1]]; cbn.
-    destruct l2 as [[|h2 t2]]; cbn.
-      left. split; reflexivity.
-      right. do 2 eexists. intuition.
-    right. do 2 eexists. intuition.
+  constructor. destruct l1 as [[| h1 t1]].
+    destruct l2 as [[| h2 t2]].
+      left; cbn; reflexivity.
+      eright; cbn; reflexivity.
+    eright; cbn; try reflexivity. apply CH.
 Qed.
 (* end hide *)
 
@@ -475,9 +477,9 @@ Lemma len_lmap :
 Proof.
   cofix CH.
   constructor.
-  destruct l as [[| h t]]; cbn.
-    left. split; reflexivity.
-    right. exists (len (lmap f t)), (len t). auto.
+  destruct l as [[| h t]].
+    left; cbn; reflexivity.
+    eright; cbn; try reflexivity. apply CH.
 Qed.
 (* end hide *)
 
@@ -564,8 +566,8 @@ Lemma len_iterate :
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. cbn. right.
-  eexists (len (iterate f (f x))), omega. auto.
+  constructor; eright; cbn; try reflexivity.
+  apply CH.
 Qed.
 (* end hide *)
 
@@ -625,7 +627,7 @@ Proof.
            l2 as [[| h2 t2]];
   cbn.
     1-3: left; split; reflexivity.
-    right. exists (len (zipW f t1 t2)), (min (len t1) (len t2)). auto.
+    eright; cbn; try reflexivity. apply CH.
 Qed.
 (* end hide *)
 
@@ -640,7 +642,7 @@ Proof.
            l2 as [[| h2 t2]];
   cbn.
     1-3: left; split; reflexivity.
-    right. exists (len (zipW f t1 t2)), (min (len t1) (len t2)). eauto.
+    eright; cbn; try reflexivity. apply CH.
 Qed.
 (* end hide *)
 
@@ -688,8 +690,8 @@ Lemma len_scan :
 Proof.
   cofix CH.
   constructor. destruct l as [[| h t]]; cbn.
-    left; split; reflexivity.
-    right. do 2 eexists. eauto.
+    left; cbn; reflexivity.
+    eright; cbn; try reflexivity. apply CH.
 Qed.
 (* end hide *)
 
@@ -735,21 +737,17 @@ Qed.
 
 (** Pułapka: czy poniższe twierdzenie jest prawdziwe? *)
 
-Lemma add_succ :
-  forall n m : conat,
-    sim (add (succ n) m) (succ (add n m)).
-Proof.
-  constructor. cbn.
-  right. do 2 eexists. intuition.
-Qed.
-
 Lemma len_intersperse :
   forall (A : Type) (x : A) (l : coList A),
-    sim (len (intersperse x l)) (succ (add (len l) (len l))).
+    len l <> zero -> len l <> succ zero ->
+      sim (len (intersperse x l)) ( (add (len l) (len l))).
 (* begin hide *)
 Proof.
   cofix CH.
-  constructor. destruct l as [[| h1 [[| h2 t]]]]; cbn.
+  intros A x [[| h1 [[| h2 t]]]] H0 H1; cbn.
+    contradict H0. apply eq_out. cbn. reflexivity.
+    contradict H1. apply eq_out. cbn. f_equal. apply eq_out. cbn. reflexivity.
+    do 2 (constructor; eright; cbn; try reflexivity).
 Abort.
 (* end hide *)
 
@@ -769,7 +767,7 @@ Fixpoint splitAt
 match n, uncons l with
     | _, nilF => None
     | 0, consF h t => Some ([], h, t)
-    | S n', consF h t =>
+    | Datatypes.S n', consF h t =>
         match splitAt t n' with
             | None => None
             | Some (start, mid, rest) => Some (h :: start, mid, rest)
@@ -905,8 +903,8 @@ Lemma len_Finite :
 (* begin hide *)
 Proof.
   induction 1; cbn.
-    intro. apply (f_equal pred) in H0. cbn in H0. rewrite H in H0. congruence.
-    intro. apply (f_equal pred) in H1. cbn in H1. rewrite H in H1. congruence.
+    intro. apply (f_equal out) in H0. cbn in H0. rewrite H in H0. congruence.
+    intro. apply (f_equal out) in H1. cbn in H1. rewrite H in H1. congruence.
 Qed.
 (* end hide *)
 
@@ -917,10 +915,10 @@ Lemma len_Infinite :
 Proof.
   cofix CH.
   destruct l as [[| h t]]; cbn.
-    intro. apply (f_equal pred) in H. cbn in H. inv H.
+    intro. apply (f_equal out) in H. cbn in H. inv H.
     econstructor.
       cbn. reflexivity.
-      apply CH. apply (f_equal pred) in H. cbn in H. inv H.
+      apply CH. apply (f_equal out) in H. cbn in H. inv H.
 Qed.
 (* end hide *)
 
@@ -933,9 +931,7 @@ Proof.
   constructor.
   destruct l as [[| h t]]; cbn in *.
     inv H. inv p.
-    right. exists (len t), omega. do 2 split.
-      reflexivity.
-      apply CH. inv H. cbn in *. inv p.
+    eright; cbn; try reflexivity. apply CH. inv H. cbn in p. inv p.
 Qed.
 (* end hide *)
 

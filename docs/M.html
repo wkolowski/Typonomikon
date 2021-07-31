@@ -72,9 +72,9 @@ Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">search_conat</span> (<span class="id" title="var">p</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="var">bool</span>) : <span class="id" title="var">conat</span> :=<br/>
 {|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">pred</span> := <span class="id" title="keyword">if</span> <span class="id" title="var">p</span> <span class="id" title="var">zero</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">Some</span> (<span class="id" title="var">search_conat</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">p</span> (<span class="id" title="var">succ</span> <span class="id" title="var">n</span>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">out</span> := <span class="id" title="keyword">if</span> <span class="id" title="var">p</span> <span class="id" title="var">zero</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">Z</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">S</span> (<span class="id" title="var">search_conat</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">p</span> (<span class="id" title="var">succ</span> <span class="id" title="var">n</span>)))<br/>
 |}.<br/>
 
 <br/>
@@ -83,7 +83,7 @@ Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">search_conat</span> <span class="id" title="var">p</span> =<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">p</span> <span class="id" title="var">zero</span> <span class="id" title="keyword">then</span> <span class="id" title="var">zero</span> <span class="id" title="keyword">else</span> <span class="id" title="var">succ</span> (<span class="id" title="var">search_conat</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">p</span> (<span class="id" title="var">succ</span> <span class="id" title="var">n</span>))).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">eq_pred</span>. <span class="id" title="var">cbn</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">eq_out</span>. <span class="id" title="var">cbn</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">zero</span>) <span class="id" title="var">eqn</span>: <span class="id" title="var">Hp</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
@@ -96,12 +96,11 @@ Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">zero</span>) <span class="id" title="var">eqn</span>: <span class="id" title="var">Hp</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">zero</span>) <span class="id" title="var">eqn</span>: <span class="id" title="var">Hp</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">replace</span> (<span class="id" title="var">search_conat</span> <span class="id" title="var">p</span>) <span class="id" title="keyword">with</span> <span class="id" title="var">zero</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">congruence</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">eq_pred</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">Hp</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">eexists</span>. <span class="id" title="tactic">split</span>; [<span class="id" title="tactic">idtac</span> | <span class="id" title="tactic">split</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-2: <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">eq_out</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">Hp</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eright</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">rewrite</span> ?<span class="id" title="var">Hp</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">CH</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">sc_eq</span>, <span class="id" title="var">Hp</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -114,12 +113,20 @@ Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span> <span class="id" title="var">n</span> <span class="id" title="var">H</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">sc_eq</span>. <span class="id" title="tactic">destruct</span> (<span class="id" title="var">p</span> <span class="id" title="var">zero</span>) <span class="id" title="var">eqn</span>: <span class="id" title="var">Hp</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">right</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [[<span class="id" title="var">n'</span> |]].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">do</span> 2 <span class="id" title="tactic">eexists</span>; <span class="id" title="tactic">split</span>; [<span class="id" title="tactic">idtac</span> | <span class="id" title="tactic">split</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-2: <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">CH</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H</span>. <span class="id" title="tactic">f_equal</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [[| <span class="id" title="var">n'</span>]].<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">zero</span> <span class="id" title="tactic">in</span> <span class="id" title="var">Hp</span>. <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eright</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">reflexivity</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">CH</span>. <span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">pred</span> (<span class="id" title="var">c</span> : <span class="id" title="var">conat</span>) : <span class="id" title="var">conat</span> :=<br/>
+{|<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">out</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">out</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Z</span> =&gt; <span class="id" title="var">Z</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">c'</span> =&gt; <span class="id" title="var">out</span> <span class="id" title="var">c'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+|}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_omega_le</span> :<br/>
@@ -127,22 +134,10 @@ Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="tactic">omega</span> -&gt; <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">m</span> <span class="id" title="tactic">omega</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">cofix</span> <span class="id" title="var">CH</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">Hsim</span> <span class="id" title="var">Hle</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">Hle</span> <span class="id" title="keyword">as</span> [[]].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">Hsim</span> <span class="id" title="keyword">as</span> [[]].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H1</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H0</span> <span class="id" title="keyword">as</span> (<span class="id" title="var">n'</span> &amp; <span class="id" title="var">m'</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span>). <span class="id" title="tactic">congruence</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> (<span class="id" title="var">n'</span> &amp; <span class="id" title="var">m'</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span> &amp; <span class="id" title="var">H3</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">m'</span>, <span class="id" title="tactic">omega</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">CH</span> <span class="id" title="keyword">with</span> <span class="id" title="var">n'</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">Hsim</span> <span class="id" title="keyword">as</span> [[]].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">congruence</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> (<span class="id" title="var">n''</span> &amp; <span class="id" title="var">m''</span> &amp; <span class="id" title="var">H1'</span> &amp; <span class="id" title="var">H2'</span> &amp; <span class="id" title="var">H3'</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H2'</span>. <span class="id" title="var">inv</span> <span class="id" title="var">H2'</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H1'</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H1</span>. <span class="id" title="var">inv</span> <span class="id" title="var">H1</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> [[<span class="id" title="var">Hn1</span> | <span class="id" title="var">n1</span> <span class="id" title="var">m1</span> <span class="id" title="var">Hn1</span> <span class="id" title="var">Hm1</span> <span class="id" title="var">Hsim</span>]] [[<span class="id" title="var">Hn2</span> | <span class="id" title="var">n2</span> <span class="id" title="var">m2</span> <span class="id" title="var">Hn2</span> <span class="id" title="var">Hm2</span> <span class="id" title="var">Hle</span>]];<br/>
+&nbsp;&nbsp;<span class="id" title="var">cbn</span> <span class="id" title="tactic">in</span> *; <span class="id" title="tactic">try</span> <span class="id" title="tactic">congruence</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>; <span class="id" title="var">eright</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">eauto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">inv</span> <span class="id" title="var">Hm1</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">CH</span> <span class="id" title="var">n1</span> <span class="id" title="var">m2</span>); <span class="id" title="tactic">congruence</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -167,7 +162,7 @@ Uwaga TODO: pamiętać o tym, że przeszukiwalność typu to coś jak
 
 <br/>
 &nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H</span>, &lt;- <span class="id" title="var">Hpn</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">f_equal</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">sim_eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">f_equal</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">sim_eq</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
@@ -263,7 +258,7 @@ Nie każdy <span class="inlinecode"><span class="id" title="var">conat</span></s
 </div>
 <div class="code">
 <span class="id" title="keyword">Compute</span><br/>
-&nbsp;&nbsp;<span class="id" title="var">sall</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">pred</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span> | <span class="id" title="var">None</span> =&gt; <span class="id" title="var">true</span> | <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span> <span class="id" title="keyword">end</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">sall</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">out</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span> | <span class="id" title="var">Z</span> =&gt; <span class="id" title="var">true</span> | <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span> <span class="id" title="keyword">end</span>).<br/>
 
 <br/>
 </div>
@@ -310,6 +305,55 @@ To samo, tylko bardziej przyjazne sygnatury typów.
  Tutaj o topologii takiej jak robi Martin Escardó głównie w tej
     książce: "Synthetic topology of data types and classical spaces",
     czyli wyłączamy guard checker i patrzymy jakie programy zatrzymują
-    się, a jakie nie. </div>
+    się, a jakie nie. 
+<div class="paragraph"> </div>
+
+<a id="lab851"></a><h1 class="section">Kombinatory punktu stałego i nieterminacja</h1>
+
+<div class="paragraph"> </div>
+
+ Da się zrobić kombinator punktu stałego i zamknąć go w monadę/modalność
+    tak, żeby sprzeczność nie wyciekła na zewnątrz i żeby wszystko ładnie się
+    liczyło, jezeli wynik nie jest bottomem? TAK! 
+</div>
 <div class="code">
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">efix'</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>)) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">x</span>} : <span class="id" title="var">B</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">efix'</span> <span class="id" title="var">f</span>) <span class="id" title="var">x</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Div</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">div</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Div</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">div</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">pure</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">Div</span> <span class="id" title="var">A</span> := <span class="id" title="var">div</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">bind</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">Div</span> <span class="id" title="var">A</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Div</span> <span class="id" title="var">B</span>) : <span class="id" title="var">Div</span> <span class="id" title="var">B</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">div</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">a</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">efix</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) -&gt; (<span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>)) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Div</span> <span class="id" title="var">B</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span> =&gt; <span class="id" title="var">div</span> (<span class="id" title="var">efix'</span> <span class="id" title="var">f</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">efix</span><br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">euclid</span> '(<span class="id" title="var">n</span>, <span class="id" title="var">m</span>) =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">Nat.compare</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Lt</span> =&gt; <span class="id" title="var">euclid</span> (<span class="id" title="var">n</span>, <span class="id" title="var">m</span> - <span class="id" title="var">n</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Eq</span> =&gt; <span class="id" title="var">n</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Gt</span> =&gt; <span class="id" title="var">euclid</span> (<span class="id" title="var">m</span>, <span class="id" title="var">n</span> - <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>)<br/>
+&nbsp;&nbsp;(360, 27).<br/>
 </div>

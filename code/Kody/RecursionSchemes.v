@@ -159,25 +159,25 @@ with Forest (A : Type) : Type :=
     | Nil  : Forest A
     | Cons : Tree A -> Forest A -> Forest A.
 
-Inductive TreeF (T F : Type -> Type) (A : Type) : Type :=
-    | EmptyF : TreeF T F A
-    | NodeF  : A -> T A -> TreeF T F A
+Inductive TreeF (F : Type -> Type) (A : Type) : Type :=
+    | EmptyF : TreeF F A
+    | NodeF  : A -> F A -> TreeF F A.
 
-with ForestF (T F : Type -> Type) (A : Type) : Type :=
+Inductive ForestF (T F : Type -> Type) (A : Type) : Type :=
     | NilF  : ForestF T F A
     | ConsF : T A -> F A -> ForestF T F A.
 
-Fail Inductive Tree' (A : Type) : Type :=
-    | InT : TreeF Tree' Forest' A -> Tree' A
+Inductive Tree' (A : Type) : Type :=
+    | InT : TreeF Forest' A -> Tree' A
 
 with Forest' (A : Type) : Type :=
     | InF : ForestF Tree' Forest' A -> Forest' A.
 
 Inductive TreeR (A : Type) : Type -> Type :=
     | EmptyR : forall F, TreeR A F
-    | NodeR  : forall F, A -> F -> TreeR A F
+    | NodeR  : forall F, A -> F -> TreeR A F.
 
-with ForestR (A : Type) : Type -> Type -> Type :=
+Inductive ForestR (A : Type) : Type -> Type -> Type :=
     | NilR  : forall T F, ForestR A T F
     | ConsR : forall T F, T -> F -> ForestR A T F.
 
@@ -270,8 +270,8 @@ CoFixpoint f {A : Type} (l : coList A) : CoList A :=
 {|
     Out :=
       match uncons l with
-          | None        => NilF
-          | Some (h, t) => ConsF h (f t)
+          | nilF        => NilF
+          | consF h t => ConsF h (f t)
       end
 |}.
 
@@ -279,8 +279,8 @@ CoFixpoint g {A : Type} (l : CoList A) : coList A :=
 {|
     uncons :=
       match Out l with
-          | NilF      => None
-          | ConsF h t => Some (h, g t)
+          | NilF      => nilF
+          | ConsF h t => consF h (g t)
       end
 |}.
 
@@ -289,10 +289,10 @@ Lemma fg :
     lsim (g (f l)) l.
 Proof.
   cofix CH.
-  destruct l as [[[h t] |]];
+  destruct l as [[| h t]];
   constructor; cbn.
-    right. do 4 eexists. do 3 (split; try reflexivity). apply CH.
-    left. split; reflexivity.
+    left; cbn; reflexivity.
+    eright; cbn; try reflexivity. apply CH.
 Qed.
 
 CoInductive CoList_sim {A : Type} (l1 l2 : CoList A) : Prop :=

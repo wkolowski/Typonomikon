@@ -1,1 +1,0 @@
-(** Pamiętać o cukrze syntaktycznym z https://github.com/coq/coq/issues/14020 *)

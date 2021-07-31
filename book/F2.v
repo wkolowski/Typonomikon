@@ -29,7 +29,7 @@ CoInductive sim (n m : conat) : Prop :=
 }.
 
 Axiom sim_eq :
-  forall {n m : conat}, sim n m -> n = m.
+  forall {n m : conat}, (sim n m) = (n = m).
 
 Lemma eq_out :
   forall n m : conat, out n = out m -> n = m.
@@ -703,9 +703,6 @@ Lemma le_sim :
     sim n1 n2 -> sim m1 m2 -> le n1 m1 -> le n2 m2.
 (* begin hide *)
 Proof.
-  intros.
-  rewrite <- (sim_eq H), <- (sim_eq H0). assumption.
-Restart.
   cofix CH.
   intros n1 n2 m1 m2 Hn12 Hm12 [[Hn1 | n1' m1' Hn1' Hm1' Hnm1']].
     destruct Hn12 as [[]].
@@ -1781,14 +1778,13 @@ Lemma mul'_omega_l :
 (* begin hide *)
 Proof.
   cofix CH.
-  destruct c as [[| c']];
-  constructor; cbn.
-    eright. do 2 eexists. do 2 (split; try reflexivity). destruct c' as [[c'' |]].
-      apply CH. cbn. inversion 1.
-      change {| out := Z |} with zero. rewrite mul'_zero_r.
+  destruct c as [[| c']]; constructor; cbn in *.
+    congruence.
+    eright; cbn; try reflexivity. destruct c' as [[| c'']].
+      rewrite mul'_zero_r, (add_zero_l _ acc).
         apply add_omega_l.
-        cbn. reflexivity.
-    cbn in H. congruence.
+        1-2: reflexivity.
+      apply CH. cbn. inversion 1.
 Qed.
 (* end hide *)
 
@@ -1804,24 +1800,11 @@ Proof.
 Qed.
 (* end hide *)
 
-Definition out' (n : conat) : conat :=
-match out n with
-    | Z    => zero
-    | S n' => n'
-end.
-
 (* Inductive Finite' : conat -> Prop :=
     | Finite'_zero :
         forall n : conat, out n = Z -> Finite' n
     | Finite'_succ :
         forall n n' : conat, out n = S n' -> Finite' n' -> Finite' n.
- *)
-
-(* Inductive Finite' : conat -> Prop :=
-    | Finite'_zero :
-        forall n : conat, out n = Z -> Finite' n
-    | Finite'_succ :
-        forall n : conat, Finite' (out' n) -> Finite' n.
 
 Hint Constructors Finite' : core.
  *)
@@ -1839,9 +1822,10 @@ Lemma mul'_succ_l :
     sim (mul' (succ n) m acc) (add m (mul' n m acc)).
 (* begin hide *)
 Proof.
-  destruct m as [[| m']];
-  constructor; cbn.
-    right. do 2 eexists. do 2 (split; try reflexivity).
+  intros n [[| m']] acc.
+    rewrite !mul'_zero_r, add_zero_l; reflexivity.
+    constructor; eright; cbn; try reflexivity.
+      rewrite !mul'_acc.
 Admitted.
 (* end hide *)
 
@@ -1851,16 +1835,15 @@ Lemma Finite_mul' :
       Finite (mul' n m acc).
 (* begin hide *)
 Proof.
-  intros until 1. revert m acc.
-  induction H; intros m acc Hm Hacc.
-    eapply Finite_sim.
-      rewrite mul'_zero_l. reflexivity.
-      assumption.
+  intros n m acc Hn Hm Hacc.
+  revert m acc Hm Hacc.
+  induction Hn as [| n' Hn IH]; intros.
+    rewrite mul'_zero_l. assumption.
     eapply Finite_sim.
       symmetry. apply mul'_succ_l.
       apply Finite_add.
         assumption.
-        apply IHFinite; assumption.
+        apply IH; assumption.
 Qed.
 (* end hide *)
 
@@ -1870,12 +1853,6 @@ Lemma mul'_assoc :
       sim (mul' a (mul' b c acc1) acc2) (mul' (mul' a b acc1') c acc2').
 (* begin hide *)
 Proof.
-  cofix CH.
-  destruct a as [[| a']],
-           b as [[| b']],
-           c as [[| c']];
-  constructor; cbn.
-    right. do 2 eexists. do 2 (split; try reflexivity).
 Admitted.
 (* end hide *)
 
@@ -1987,7 +1964,7 @@ Qed.
 Fixpoint from_nat (n : nat) : conat :=
 match n with
     | 0 => zero
-    | S n' => succ (from_nat n')
+    | Datatypes.S n' => succ (from_nat n')
 end.
 (* end hide *)
 
@@ -2038,11 +2015,11 @@ Qed.
 (* begin hide *)
 Inductive lec : conat -> nat -> Prop :=
     | lec_0 : forall n : nat, lec zero n
-    | lec_S : forall (c : conat) (n : nat), lec c n -> lec (succ c) (S n).
+    | lec_S : forall (c : conat) (n : nat), lec c n -> lec (succ c) (Datatypes.S n).
 
 Inductive gtc : conat -> nat -> Prop :=
     | gtc_zero : forall c : conat, gtc (succ c) 0
-    | gtc_S : forall (c : conat) (n : nat), gtc c n -> gtc (succ c) (S n).
+    | gtc_S : forall (c : conat) (n : nat), gtc c n -> gtc (succ c) (Datatypes.S n).
 
 Lemma lec_spec :
   forall (n : nat) (c : conat),
@@ -2073,13 +2050,13 @@ Lemma conat_nat_order :
 Proof.
   induction n as [| n']; cbn; intro.
     destruct c as [[| c']].
-      right. constructor.
       left. constructor.
+      right. constructor.
     destruct c as [[| c']].
+      left. constructor.
       destruct (IHn' c') as [IH | IH].
         left. constructor. assumption.
         right. constructor. assumption.
-      left. constructor.
 Qed.
 
 Lemma Infinite_not_from_nat :
@@ -2087,12 +2064,11 @@ Lemma Infinite_not_from_nat :
     (forall n : nat, c <> from_nat n) -> Infinite c.
 Proof.
   cofix CH.
-  intros c H.
-  destruct c as [[| c']].
-    constructor. exists c'. split.
-      cbn. reflexivity.
-      apply CH. intros n H'. apply (H (S n)). cbn. subst. reflexivity.
+  intros [[| c']] H.
     specialize (H 0). cbn in H. contradiction H. reflexivity.
+    constructor. exists c'.
+      cbn. reflexivity.
+      apply CH. intros n H'. apply (H (Datatypes.S n)). subst. cbn. reflexivity.
 Qed.
 (* end hide *)
 
@@ -2129,13 +2105,13 @@ Lemma Finite_or_Infinite :
 Proof.
   intros c H.
   apply H. right. revert c H. cofix CH.
-  destruct c as [[| c']]; intro H.
-    2: { exfalso. apply H. left. constructor. }
-    constructor. exists c'. split.
+  intros [[| c']] H.
+    exfalso. apply H. left. constructor.
+    constructor. exists c'.
       cbn. reflexivity.
       apply CH. intros [H' | H']; apply H.
         left. constructor. assumption.
-        right. constructor. exists c'. split.
+        right. constructor. exists c'.
           cbn. reflexivity.
           assumption.
 Qed.

@@ -44,9 +44,9 @@ Class Searchable (A : Type) : Type :=
 
 CoFixpoint search_conat (p : conat -> bool) : conat :=
 {|
-    pred := if p zero
-            then None
-            else Some (search_conat (fun n => p (succ n)))
+    out := if p zero
+            then Z
+            else S (search_conat (fun n => p (succ n)))
 |}.
 
 Lemma sc_eq :
@@ -54,7 +54,7 @@ Lemma sc_eq :
     search_conat p =
       if p zero then zero else succ (search_conat (fun n => p (succ n))).
 Proof.
-  intros. apply eq_pred. cbn.
+  intros. apply eq_out. cbn.
   destruct (p zero) eqn: Hp.
     cbn. reflexivity.
     cbn. reflexivity.
@@ -66,12 +66,11 @@ Lemma search_conat_false :
 Proof.
   cofix CH.
   intros p H.
-  constructor. cbn. destruct (p zero) eqn: Hp.
+  constructor. destruct (p zero) eqn: Hp.
     replace (search_conat p) with zero in H.
       congruence.
-      apply eq_pred. cbn. rewrite Hp. reflexivity.
-    right. do 2 eexists. split; [idtac | split].
-      1-2: reflexivity.
+      apply eq_out. cbn. rewrite Hp. reflexivity.
+    eright; cbn; rewrite ?Hp; try reflexivity.
       apply CH. rewrite sc_eq, Hp in H. assumption.
 Qed.
 
@@ -83,44 +82,39 @@ Proof.
   intros p n H.
   constructor. rewrite sc_eq. destruct (p zero) eqn: Hp.
     left. cbn. reflexivity.
-    right. cbn. destruct n as [[n' |]].
-      do 2 eexists; split; [idtac | split].
-        1-2: reflexivity.
-        apply CH. rewrite <- H. f_equal.
+    destruct n as [[| n']].
       unfold zero in Hp. congruence.
+      eright; cbn; try reflexivity. apply CH. assumption.
 Qed.
+
+Definition pred (c : conat) : conat :=
+{|
+    out :=
+      match out c with
+          | Z => Z
+          | S c' => out c'
+      end
+|}.
 
 Lemma sim_omega_le :
   forall n m : conat,
     sim n omega -> le n m -> sim m omega.
 Proof.
   cofix CH.
-  intros n m Hsim Hle.
-  destruct Hle as [[]].
-    destruct Hsim as [[]].
-      destruct H0. inversion H1.
-      destruct H0 as (n' & m' & H1 & H2). congruence.
-    destruct H as (n' & m' & H1 & H2 & H3).
-      constructor. right. exists m', omega. split.
-        assumption.
-        split.
-          cbn. reflexivity.
-          apply CH with n'.
-            destruct Hsim as [[]].
-              destruct H. congruence.
-              destruct H as (n'' & m'' & H1' & H2' & H3').
-                cbn in H2'. inv H2'. rewrite H1' in H1. inv H1.
-                  assumption.
+  intros n m [[Hn1 | n1 m1 Hn1 Hm1 Hsim]] [[Hn2 | n2 m2 Hn2 Hm2 Hle]];
+  cbn in *; try congruence.
+  constructor; eright; cbn; eauto.
+  inv Hm1. apply (CH n1 m2); congruence.
 Qed.
 
 (* begin hide *)
 (* TODO *) Fixpoint cut (n : nat) (c : conat) : conat :=
 match n with
     | 0 => zero
-    | S n' =>
-        match pred c with
-            | None => zero
-            | Some c' => succ (cut n' c')
+    | Datatypes.S n' =>
+        match out c with
+            | Z => zero
+            | S c' => succ (cut n' c')
         end
 end.
 (* TODO: czy da się pokazać [Searchable conat] bez aksjomatów? *)
@@ -144,7 +138,7 @@ Proof.
     intro. subst. congruence.
 
   rewrite <- H, <- Hpn.
-  f_equal. apply sim_eq.
+  f_equal. rewrite <- sim_eq.
   rewrite H0. assumption.
 Defined.
 
@@ -214,7 +208,7 @@ Definition sall
 
 (** Nie każdy [conat] jest zerem, brawo! *)
 Compute
-  sall (fun n => match pred n with | None => true | _ => false end).
+  sall (fun n => match out n with | Z => true | _ => false end).
 
 (** To samo, tylko bardziej przyjazne sygnatury typów. *)
 
@@ -249,7 +243,7 @@ Inductive Finite' : conat -> Type :=
 Fixpoint Finite'_to_nat {c : conat} (f : Finite' c) : nat :=
 match f with
     | Finite'_zero => 0
-    | Finite'_succ _ f' => S (Finite'_to_nat f')
+    | Finite'_succ _ f' => Datatypes.S (Finite'_to_nat f')
 end.
 
 (* end hide *)
@@ -260,3 +254,40 @@ end.
     książce: "Synthetic topology of data types and classical spaces",
     czyli wyłączamy guard checker i patrzymy jakie programy zatrzymują
     się, a jakie nie. *)
+
+(** * Kombinatory punktu stałego i nieterminacja *)
+
+(** Da się zrobić kombinator punktu stałego i zamknąć go w monadę/modalność
+    tak, żeby sprzeczność nie wyciekła na zewnątrz i żeby wszystko ładnie się
+    liczyło, jezeli wynik nie jest bottomem? TAK! *)
+
+Unset Guard Checking.
+Fixpoint efix' {A B : Type} (f : (A -> B) -> (A -> B)) (x : A) {struct x} : B :=
+  f (efix' f) x.
+Set Guard Checking.
+
+Require Import Arith.
+
+Inductive Div (A : Type) : Type :=
+    | div : A -> Div A.
+
+Arguments div {A} _.
+
+Definition pure {A : Type} (x : A) : Div A := div x.
+
+Definition bind {A B : Type} (x : Div A) (f : A -> Div B) : Div B :=
+match x with
+    | div a => f a
+end.
+
+Definition efix {A B : Type} (f : (A -> B) -> (A -> B)) : A -> Div B :=
+  fun x : A => div (efix' f x).
+
+Compute efix
+  (fun euclid '(n, m) =>
+    match Nat.compare n m with
+        | Lt => euclid (n, m - n)
+        | Eq => n
+        | Gt => euclid (m, n - m)
+    end)
+  (360, 27).
