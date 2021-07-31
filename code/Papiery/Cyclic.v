@@ -3,7 +3,7 @@
     - Representing Cyclic Structures as Nested Data Types:
       https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf *)
 
-Require Import Recdef.
+Require Import Recdef Nat String Coq.Program.Equality.
 Require Import List.
 Import ListNotations.
 
@@ -266,8 +266,6 @@ Fail Definition ex2 : CList nat :=
     using a phantom type argument has effects similar to using a type of linear
     functions. *)
 
-Require Import Coq.Program.Equality.
-
 Unset Guard Checking.
 Fixpoint stopRec
   {A : Type} {R : SProp -> Type}
@@ -318,8 +316,6 @@ Definition cfoldRec
   {A R : Type} (nil : R) (cons : A -> R -> R) (rec : A -> (R -> R) -> R)
   (l : CList A) : R :=
     @cfold A (fun _ => R) nil (fun _ => cons) (fun a r => rec a (r Closed)) l.
-
-Require Import String.
 
 (** We can define a [show] function which displays a (representation of a)
     cycli list as a finite string. *)
@@ -790,8 +786,6 @@ match l with
     | RCons h t => if p h then RCons h (takeWhile p t) else Nil
 end.
 
-Require Import Nat.
-
 Compute takeWhile (fun n => n <? 6) from1to5.
 
 Fail Fixpoint dropWhile {A V : Type} (p : A -> bool) (l : CList A V) : CList A V :=
@@ -910,8 +904,6 @@ match t with
     | N x l r => if p x then N x (takeWhile p l) (takeWhile p r) else E
 end.
 
-Require Import Nat.
-
 Compute takeWhile (fun x => x <? 3) example.
 
 (* Need to compute lcm somewhere.
@@ -922,9 +914,11 @@ match ta, tb with
 
 End CyclicBinaryTree.
 
+Require RecursionSchemes.
+
 Module GeneralCyclicStructures.
 
-Require Import MuNu.
+Import RecursionSchemes.
 
 (** The above approach can be generalized even more, to a Fixpoint-with-Cycles
     inductive type like. But for this to work in Coq, we need to turn off the

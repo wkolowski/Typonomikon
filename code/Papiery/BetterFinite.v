@@ -1,7 +1,6 @@
 (** Wzięte z [FinCuTT] https://doisinkidney.com/pdfs/masters-thesis.pdf *)
 
-Require Import List.
-Import ListNotations.
+Require Import D5.
 
 Require Import Equality.
 

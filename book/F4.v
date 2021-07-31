@@ -12,16 +12,16 @@ Require Import D5.
     list różniących się od nich tym, że mogą być potencjalnie
     nieskończone. *)
 
-Inductive coListF (A : Type) (F : Type -> Type) : Type :=
-    | nilF : coListF A F
-    | consF : forall (h : A) (t : F A), coListF A F.
+Inductive CoListF (A : Type) (F : Type -> Type) : Type :=
+    | NilF : CoListF A F
+    | ConsF : forall (h : A) (t : F A), CoListF A F.
 
-Arguments nilF {A F}.
-Arguments consF {A F} _ _.
+Arguments NilF {A F}.
+Arguments ConsF {A F} _ _.
 
-CoInductive coList (A : Type) : Type :=
+CoInductive CoList (A : Type) : Type :=
 {
-    uncons : coListF A coList
+    uncons : CoListF A CoList
 }.
 
 Arguments uncons {A}.
@@ -30,7 +30,7 @@ Arguments uncons {A}.
     kolist. *)
 
 Lemma eq_uncons :
-  forall (A : Type) (l1 l2 : coList A),
+  forall (A : Type) (l1 l2 : CoList A),
     uncons l1 = uncons l2 -> l1 = l2.
 (* begin hide *)
 Proof.
@@ -45,18 +45,18 @@ Qed.
     co nazywać się będzie [lsim]. *)
 
 (* begin hide *)
-Inductive lsimF {A : Type} (l1 l2 : coList A) (F : coList A -> coList A -> Prop) : Prop :=
+Inductive lsimF {A : Type} (l1 l2 : CoList A) (F : CoList A -> CoList A -> Prop) : Prop :=
     | conils  :
-        forall (H1 : uncons l1 = nilF) (H2 : uncons l2 = nilF), lsimF l1 l2 F
+        forall (H1 : uncons l1 = NilF) (H2 : uncons l2 = NilF), lsimF l1 l2 F
     | coconss :
         forall
-          (h1 h2 : A) (t1 t2 : coList A)
-          (H1 : uncons l1 = consF h1 t1)
-          (H2 : uncons l2 = consF h2 t2)
+          (h1 h2 : A) (t1 t2 : CoList A)
+          (H1 : uncons l1 = ConsF h1 t1)
+          (H2 : uncons l2 = ConsF h2 t2)
           (heads : h1 = h2) (tails : F t1 t2),
             lsimF l1 l2 F.
 
-CoInductive lsim {A : Type} (l1 l2 : coList A) : Prop :=
+CoInductive lsim {A : Type} (l1 l2 : CoList A) : Prop :=
 {
     lsim' : lsimF l1 l2 lsim
 }.
@@ -64,11 +64,11 @@ CoInductive lsim {A : Type} (l1 l2 : coList A) : Prop :=
 Global Hint Constructors lsim : core.
 
 Axiom eq_lsim :
-  forall (A : Type) (l1 l2 : coList A), lsim l1 l2 -> l1 = l2.
+  forall (A : Type) (l1 l2 : CoList A), lsim l1 l2 -> l1 = l2.
 (* end hide *)
 
 Lemma lsim_refl :
-  forall (A : Type) (l : coList A), lsim l l.
+  forall (A : Type) (l : CoList A), lsim l l.
 (* begin hide *)
 Proof.
   cofix CH.
@@ -80,7 +80,7 @@ Qed.
 (* end hide *)
 
 Lemma lsim_symm :
-  forall (A : Type) (l1 l2 : coList A),
+  forall (A : Type) (l1 l2 : CoList A),
     lsim l1 l2 -> lsim l2 l1.
 (* begin hide *)
 Proof.
@@ -93,7 +93,7 @@ Qed.
 (* end hide *)
 
 Lemma lsim_trans :
-  forall (A : Type) (l1 l2 l3 : coList A),
+  forall (A : Type) (l1 l2 l3 : CoList A),
     lsim l1 l2 -> lsim l2 l3 -> lsim l1 l3.
 (* begin hide *)
 Proof.
@@ -129,28 +129,28 @@ Defined.
     że induktywna wersja implikuje zwykłą. Czy implikacja w drugą stronę
     zachodzi? *)
 
-Inductive coList_neq
-  {A : Type} : coList A -> coList A -> Prop :=
-    | coList_neq_nc :
-        forall l1 l2 : coList A,
-          uncons l1 = nilF -> uncons l2 <> nilF -> coList_neq l1 l2
-    | coList_neq_cn :
-        forall l1 l2 : coList A,
-          uncons l1 <> nilF -> uncons l2 = nilF -> coList_neq l1 l2
-    | coList_neq_cc_here :
-        forall (h1 h2 : A) (t1 t2 l1 l2 : coList A),
-          uncons l1 = consF h1 t1 ->
-          uncons l2 = consF h2 t2 ->
-            h1 <> h2 -> coList_neq l1 l2
-    | coList_neq_cc_there :
-        forall (h1 h2 : A) (t1 t2 l1 l2 : coList A),
-          uncons l1 = consF h1 t1 ->
-          uncons l2 = consF h2 t2 ->
-            coList_neq t1 t2 -> coList_neq l1 l2.
+Inductive CoList_neq
+  {A : Type} : CoList A -> CoList A -> Prop :=
+    | CoList_neq_nc :
+        forall l1 l2 : CoList A,
+          uncons l1 = NilF -> uncons l2 <> NilF -> CoList_neq l1 l2
+    | CoList_neq_cn :
+        forall l1 l2 : CoList A,
+          uncons l1 <> NilF -> uncons l2 = NilF -> CoList_neq l1 l2
+    | CoList_neq_cc_here :
+        forall (h1 h2 : A) (t1 t2 l1 l2 : CoList A),
+          uncons l1 = ConsF h1 t1 ->
+          uncons l2 = ConsF h2 t2 ->
+            h1 <> h2 -> CoList_neq l1 l2
+    | CoList_neq_cc_there :
+        forall (h1 h2 : A) (t1 t2 l1 l2 : CoList A),
+          uncons l1 = ConsF h1 t1 ->
+          uncons l2 = ConsF h2 t2 ->
+            CoList_neq t1 t2 -> CoList_neq l1 l2.
 
-Lemma coList_neq_not_lsim :
-  forall {A : Type} {l1 l2 : coList A},
-    coList_neq l1 l2 -> ~ lsim l1 l2.
+Lemma CoList_neq_not_lsim :
+  forall {A : Type} {l1 l2 : CoList A},
+    CoList_neq l1 l2 -> ~ lsim l1 l2.
 (* begin hide *)
 Proof.
   induction 1; intros [[]]; try congruence.
@@ -158,7 +158,7 @@ Qed.
 (* end hide *)
 
 Lemma nlsim_neq :
-  forall {A : Type} {l1 l2 : coList A},
+  forall {A : Type} {l1 l2 : CoList A},
     ~ lsim l1 l2 -> l1 <> l2.
 (* begin hide *)
 Proof.
@@ -168,22 +168,22 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma coList_neq_antirefl :
-  forall {A : Type} (l : coList A),
-    ~ coList_neq l l.
+Lemma CoList_neq_antirefl :
+  forall {A : Type} (l : CoList A),
+    ~ CoList_neq l l.
 (* begin hide *)
 Proof.
   intros A l H.
-  apply coList_neq_not_lsim, nlsim_neq in H.
+  apply CoList_neq_not_lsim, nlsim_neq in H.
   contradiction.
 Qed.
 (* end hide *)
 
-Global Hint Constructors coList_neq : core.
+Global Hint Constructors CoList_neq : core.
 
-Lemma coList_neq_sym :
-  forall {A : Type} {l1 l2 : coList A},
-    coList_neq l1 l2 -> coList_neq l2 l1.
+Lemma CoList_neq_sym :
+  forall {A : Type} {l1 l2 : CoList A},
+    CoList_neq l1 l2 -> CoList_neq l2 l1.
 (* begin hide *)
 Proof.
   induction 1; eauto.
@@ -198,19 +198,19 @@ Qed.
 
 (* begin hide *)
 
-Definition conil {A : Type} : coList A :=
+Definition conil {A : Type} : CoList A :=
 {|
-    uncons := nilF
+    uncons := NilF
 |}.
 
-Definition cocons {A : Type} (h : A) (t : coList A) : coList A :=
+Definition cocons {A : Type} (h : A) (t : CoList A) : CoList A :=
 {|
-    uncons := consF h t
+    uncons := ConsF h t
 |}.
 (* end hide *)
 
 Lemma lsim_cocons :
-  forall (A : Type) (x y : A) (l1 l2 : coList A),
+  forall (A : Type) (x y : A) (l1 l2 : CoList A),
     x = y -> lsim l1 l2 -> lsim (cocons x l1) (cocons y l2).
 (* begin hide *)
 Proof.
@@ -219,7 +219,7 @@ Qed.
 (* end hide *)
 
 Lemma lsim_cocons_inv :
-  forall (A : Type) (x y : A) (l1 l2 : coList A),
+  forall (A : Type) (x y : A) (l1 l2 : CoList A),
     lsim (cocons x l1) (cocons y l2) -> x = y /\ lsim l1 l2.
 (* begin hide *)
 Proof.
@@ -242,18 +242,18 @@ Qed.
 Require Import F2.
 
 (* begin hide *)
-CoFixpoint len {A : Type} (l : coList A) : conat :=
+CoFixpoint len {A : Type} (l : CoList A) : conat :=
 {|
     out :=
       match uncons l with
-          | nilF      => Z
-          | consF h t => S (len t)
+          | NilF      => Z
+          | ConsF h t => S (len t)
       end;
 |}.
 (* end hide *)
 
 Lemma sim_len :
-  forall (A : Type) (l1 l2 : coList A),
+  forall (A : Type) (l1 l2 : CoList A),
     lsim l1 l2 -> sim (len l1) (len l2).
 (* begin hide *)
 Proof.
@@ -275,7 +275,7 @@ Qed.
 (* end hide *)
 
 Lemma len_cocons :
-  forall (A : Type) (x : A) (l : coList A),
+  forall (A : Type) (x : A) (l : CoList A),
     len (cocons x l) = succ (len l).
 (* begin hide *)
 Proof.
@@ -288,18 +288,18 @@ Qed.
 (** Zdefiniuj funkcję [snoc], która dostawia element na koniec kolisty. *)
 
 (* begin hide *)
-CoFixpoint snoc {A : Type} (l : coList A) (x : A) : coList A :=
+CoFixpoint snoc {A : Type} (l : CoList A) (x : A) : CoList A :=
 {|
     uncons :=
       match uncons l with
-          | nilF      => consF x conil
-          | consF h t => consF h (snoc t x)
+          | NilF      => ConsF x conil
+          | ConsF h t => ConsF h (snoc t x)
       end;
 |}.
 (* end hide *)
 
 Lemma snoc_cocons :
-  forall (A : Type) (l : coList A) (x y : A),
+  forall (A : Type) (l : CoList A) (x y : A),
     lsim (snoc (cocons x l) y) (cocons x (snoc l y)).
 (* begin hide *)
 Proof.
@@ -309,7 +309,7 @@ Qed.
 (* end hide *)
 
 Lemma len_snoc :
-  forall (A : Type) (l : coList A) (x : A),
+  forall (A : Type) (l : CoList A) (x : A),
     sim (len (snoc l x)) (succ (len l)).
 (* begin hide *)
 Proof.
@@ -330,18 +330,18 @@ Qed.
     strumieni. *)
 
 (* begin hide *)
-CoFixpoint app {A : Type} (l1 l2 : coList A) : coList A :=
+CoFixpoint app {A : Type} (l1 l2 : CoList A) : CoList A :=
 {|
     uncons :=
       match uncons l1 with
-          | nilF      => uncons l2
-          | consF h t => consF  h (app t l2)
+          | NilF      => uncons l2
+          | ConsF h t => ConsF  h (app t l2)
       end
 |}.
 (* end hide *)
 
 Lemma app_conil_l :
-  forall (A : Type) (l : coList A),
+  forall (A : Type) (l : CoList A),
     app conil l = l.
 (* begin hide *)
 Proof.
@@ -350,7 +350,7 @@ Qed.
 (* end hide *)
 
 Lemma app_conil_r :
-  forall (A : Type) (l : coList A),
+  forall (A : Type) (l : CoList A),
     lsim (app l conil) l.
 (* begin hide *)
 Proof.
@@ -362,7 +362,7 @@ Qed.
 (* end hide *)
 
 Lemma app_cocons_l :
-  forall (A : Type) (x : A) (l1 l2 : coList A),
+  forall (A : Type) (x : A) (l1 l2 : CoList A),
     lsim (app (cocons x l1) l2) (cocons x (app l1 l2)).
 (* begin hide *)
 Proof.
@@ -372,7 +372,7 @@ Qed.
 (* end hide *)
 
 Lemma len_app :
-  forall (A : Type) (l1 l2 : coList A),
+  forall (A : Type) (l1 l2 : CoList A),
     sim (len (app l1 l2)) (add (len l1) (len l2)).
 (* begin hide *)
 Proof.
@@ -386,7 +386,7 @@ Qed.
 (* end hide *)
 
 Lemma snoc_app :
-  forall (A : Type) (l1 l2 : coList A) (x : A),
+  forall (A : Type) (l1 l2 : CoList A) (x : A),
     lsim (snoc (app l1 l2) x) (app l1 (snoc l2 x)).
 (* begin hide *)
 Proof.
@@ -402,7 +402,7 @@ Qed.
 (* Global Hint Constructors lsimF : core. *)
 
 Lemma app_snoc_l :
-  forall (A : Type) (l1 l2 : coList A) (x : A),
+  forall (A : Type) (l1 l2 : CoList A) (x : A),
     lsim (app (snoc l1 x) l2) (app l1 (cocons x l2)).
 (* begin hide *)
 Proof.
@@ -414,7 +414,7 @@ Qed.
 (* end hide *)
 
 Lemma app_assoc :
-  forall (A : Type) (l1 l2 l3 : coList A),
+  forall (A : Type) (l1 l2 l3 : CoList A),
     lsim (app (app l1 l2) l3) (app l1 (app l2 l3)).
 (* begin hide *)
 Proof.
@@ -439,12 +439,12 @@ Qed.
     dla list. *)
 
 (* begin hide *)
-CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=
+CoFixpoint lmap {A B : Type} (f : A -> B) (l : CoList A) : CoList B :=
 {|
     uncons :=
     match uncons l with
-        | nilF => nilF
-        | consF h t => consF (f h) (lmap f t)
+        | NilF => NilF
+        | ConsF h t => ConsF (f h) (lmap f t)
     end
 |}.
 (* end hide *)
@@ -459,7 +459,7 @@ Qed.
 (* end hide *)
 
 Lemma lmap_cocons :
-  forall (A B : Type) (f : A -> B) (x : A) (l : coList A),
+  forall (A B : Type) (f : A -> B) (x : A) (l : CoList A),
     lsim (lmap f (cocons x l)) (cocons (f x) (lmap f l)).
 (* begin hide *)
 Proof.
@@ -471,7 +471,7 @@ Qed.
 (* end hide *)
 
 Lemma len_lmap :
-  forall (A B : Type) (f : A -> B) (l : coList A),
+  forall (A B : Type) (f : A -> B) (l : CoList A),
     sim (len (lmap f l)) (len l).
 (* begin hide *)
 Proof.
@@ -484,7 +484,7 @@ Qed.
 (* end hide *)
 
 Lemma lmap_snoc :
-  forall (A B : Type) (f : A -> B) (l : coList A) (x : A),
+  forall (A B : Type) (f : A -> B) (l : CoList A) (x : A),
     lsim (lmap f (snoc l x)) (snoc (lmap f l) (f x)).
 (* begin hide *)
 Proof.
@@ -497,7 +497,7 @@ Qed.
 (* end hide *)
 
 Lemma lmap_app :
-  forall (A B : Type) (f : A -> B) (l1 l2 : coList A),
+  forall (A B : Type) (f : A -> B) (l1 l2 : CoList A),
     lsim (lmap f (app l1 l2)) (app (lmap f l1) (lmap f l2)).
 (* begin hide *)
 Proof.
@@ -512,7 +512,7 @@ Qed.
 (* end hide *)
 
 Lemma lmap_id :
-  forall (A : Type) (l : coList A),
+  forall (A : Type) (l : CoList A),
     lsim (lmap id l) l.
 (* begin hide *)
 Proof.
@@ -525,7 +525,7 @@ Qed.
 (* end hide *)
 
 Lemma lmap_comp :
-  forall (A B C : Type) (f : A -> B) (g : B -> C) (l : coList A),
+  forall (A B C : Type) (f : A -> B) (g : B -> C) (l : CoList A),
     lsim (lmap g (lmap f l)) (lmap (fun x => g (f x)) l).
 (* begin hide *)
 Proof.
@@ -537,7 +537,7 @@ Qed.
 (* end hide *)
 
 Lemma lmap_ext :
-  forall (A B : Type) (f g : A -> B) (l : coList A),
+  forall (A B : Type) (f g : A -> B) (l : CoList A),
     (forall x : A, f x = g x) -> lsim (lmap f l) (lmap g l).
 (* begin hide *)
 Proof.
@@ -554,9 +554,9 @@ Qed.
     iterowanie funkcji [f] poczynając od pewnego ustalonego elementu. *)
 
 (* begin hide *)
-CoFixpoint iterate {A : Type} (f : A -> A) (x : A) : coList A :=
+CoFixpoint iterate {A : Type} (f : A -> A) (x : A) : CoList A :=
 {|
-    uncons := consF x (iterate f (f x))
+    uncons := ConsF x (iterate f (f x))
 |}.
 (* end hide *)
 
@@ -578,9 +578,9 @@ Qed.
     elementu. *)
 
 (* begin hide *)
-CoFixpoint piterate {A : Type} (f : A -> option A) (x : A) : coList A :=
+CoFixpoint piterate {A : Type} (f : A -> option A) (x : A) : CoList A :=
 {|
-    uncons := consF x
+    uncons := ConsF x
       (match f x with
           | None => conil
           | Some y => piterate f y
@@ -597,18 +597,18 @@ CoFixpoint piterate {A : Type} (f : A -> option A) (x : A) : coList A :=
 
 (* begin hide *)
 CoFixpoint zipW {A B C : Type}
-  (f : A -> B -> C) (l1 : coList A) (l2 : coList B) : coList C :=
+  (f : A -> B -> C) (l1 : CoList A) (l2 : CoList B) : CoList C :=
 {|
     uncons :=
       match uncons l1, uncons l2 with
-          | consF h1 t1, consF h2 t2 => consF (f h1 h2) (zipW f t1 t2)
-          | _, _ => nilF
+          | ConsF h1 t1, ConsF h2 t2 => ConsF (f h1 h2) (zipW f t1 t2)
+          | _, _ => NilF
       end;
 |}.
 (* end hide *)
 
 Lemma zipW_conil_l :
-  forall (A B C : Type) (f : A -> B -> C) (l : coList B),
+  forall (A B C : Type) (f : A -> B -> C) (l : CoList B),
     lsim (zipW f conil l) conil.
 (* begin hide *)
 Proof.
@@ -617,7 +617,7 @@ Qed.
 (* end hide *)
 
 Lemma zipW_conil_r :
-  forall (A B C : Type) (f : A -> B -> C) (l1 : coList A) (l2 : coList B),
+  forall (A B C : Type) (f : A -> B -> C) (l1 : CoList A) (l2 : CoList B),
     sim (len (zipW f l1 l2)) (min (len l1) (len l2)).
 (* begin hide *)
 Proof.
@@ -632,7 +632,7 @@ Qed.
 (* end hide *)
 
 Lemma len_zipW :
-  forall (A B C : Type) (f : A -> B -> C) (l1 : coList A) (l2 : coList B),
+  forall (A B C : Type) (f : A -> B -> C) (l1 : CoList A) (l2 : CoList B),
     sim (len (zipW f l1 l2)) (min (len l1) (len l2)).
 (* begin hide *)
 Proof.
@@ -648,17 +648,17 @@ Qed.
 
 (** ** [scan] *)
 
-(** Napisz funkcję [scan], która przekształca [l : coList A] w kolistę
+(** Napisz funkcję [scan], która przekształca [l : CoList A] w kolistę
     sum częściowych działania [f : B -> A -> B]. *)
 
 (* begin hide *)
 CoFixpoint scan
-  {A B : Type} (l : coList A) (f : B -> A -> B) (b : B) : coList B :=
+  {A B : Type} (l : CoList A) (f : B -> A -> B) (b : B) : CoList B :=
 {|
     uncons :=
       match uncons l with
-          | nilF => nilF
-          | consF h t => consF b (scan t f (f b h))
+          | NilF => NilF
+          | ConsF h t => ConsF b (scan t f (f b h))
       end;
 |}.
 (* end hide *)
@@ -673,7 +673,7 @@ Qed.
 (* end hide *)
 
 Lemma scan_cocons :
-  forall (A B : Type) (x : A) (l : coList A) (f : B -> A -> B) (b : B),
+  forall (A B : Type) (x : A) (l : CoList A) (f : B -> A -> B) (b : B),
     lsim (scan (cocons x l) f b) (cocons b (scan l f (f b x))).
 (* begin hide *)
 Proof.
@@ -684,7 +684,7 @@ Qed.
 (* end hide *)
 
 Lemma len_scan :
-  forall (A B : Type) (l : coList A) (f : B -> A -> B) (b : B),
+  forall (A B : Type) (l : CoList A) (f : B -> A -> B) (b : B),
     sim (len (scan l f b)) (len l).
 (* begin hide *)
 Proof.
@@ -696,7 +696,7 @@ Qed.
 (* end hide *)
 
 Lemma scan_lmap :
-  forall (A B C : Type) (f : B -> C -> B) (g : A -> C) (l : coList A) (b : B),
+  forall (A B C : Type) (f : B -> C -> B) (g : A -> C) (l : CoList A) (b : B),
     lsim (scan (lmap g l) f b) (scan l (fun b a => f b (g a)) b).
 (* begin hide *)
 Proof.
@@ -712,15 +712,15 @@ Qed.
 (** Napisz funkcję [intersperse], która działa analogicznie jak dla list. *)
 
 (* begin hide *)
-CoFixpoint intersperse {A : Type} (x : A) (l : coList A) : coList A :=
+CoFixpoint intersperse {A : Type} (x : A) (l : CoList A) : CoList A :=
 {|
     uncons :=
       match uncons l with
-          | nilF => nilF
-          | consF h t =>
+          | NilF => NilF
+          | ConsF h t =>
               match uncons t with
-                  | nilF => consF h t
-                  | consF h' t' => consF h (cocons x (intersperse x t))
+                  | NilF => ConsF h t
+                  | ConsF h' t' => ConsF h (cocons x (intersperse x t))
               end
       end;
 |}.
@@ -738,7 +738,7 @@ Qed.
 (** Pułapka: czy poniższe twierdzenie jest prawdziwe? *)
 
 Lemma len_intersperse :
-  forall (A : Type) (x : A) (l : coList A),
+  forall (A : Type) (x : A) (l : CoList A),
     len l <> zero -> len l <> succ zero ->
       sim (len (intersperse x l)) ( (add (len l) (len l))).
 (* begin hide *)
@@ -763,11 +763,11 @@ Abort.
 
 (* begin hide *)
 Fixpoint splitAt
-  {A : Type} (l : coList A) (n : nat) : option (list A * A * coList A) :=
+  {A : Type} (l : CoList A) (n : nat) : option (list A * A * CoList A) :=
 match n, uncons l with
-    | _, nilF => None
-    | 0, consF h t => Some ([], h, t)
-    | Datatypes.S n', consF h t =>
+    | _, NilF => None
+    | 0, ConsF h t => Some ([], h, t)
+    | Datatypes.S n', ConsF h t =>
         match splitAt t n' with
             | None => None
             | Some (start, mid, rest) => Some (h :: start, mid, rest)
@@ -779,40 +779,40 @@ end.
     działających na kolistach - rozbierających ją na kawałki, wstawiających,
     zamieniających i usuwających elementy, etc. *)
 
-Definition nth {A : Type} (l : coList A) (n : nat) : option A :=
+Definition nth {A : Type} (l : CoList A) (n : nat) : option A :=
 match splitAt l n with
     | None => None
     | Some (_, x, _) => Some x
 end.
 
-Definition take {A : Type} (l : coList A) (n : nat) : option (list A) :=
+Definition take {A : Type} (l : CoList A) (n : nat) : option (list A) :=
 match splitAt l n with
     | None => None
     | Some (l, _, _) => Some l
 end.
 
-Definition drop {A : Type} (l : coList A) (n : nat) : option (coList A) :=
+Definition drop {A : Type} (l : CoList A) (n : nat) : option (CoList A) :=
 match splitAt l n with
     | None => None
     | Some (_, _, l) => Some l
 end.
 
-Fixpoint fromList {A : Type} (l : list A) : coList A :=
+Fixpoint fromList {A : Type} (l : list A) : CoList A :=
 match l with
     | [] => conil
     | h :: t => cocons h (fromList t)
 end.
 
-Definition insert {A : Type} (l : coList A) (n : nat) (x : A)
-  : option (coList A) :=
+Definition insert {A : Type} (l : CoList A) (n : nat) (x : A)
+  : option (CoList A) :=
 match splitAt l n with
     | None => None
     | Some (start, mid, rest) =>
         Some (app (fromList start) (cocons x (cocons mid rest)))
 end.
 
-Definition remove {A : Type} (l : coList A) (n : nat)
-  : option (coList A) :=
+Definition remove {A : Type} (l : CoList A) (n : nat)
+  : option (CoList A) :=
 match splitAt l n with
     | None => None
     | Some (start, _, rest) => Some (app (fromList start) rest)
@@ -832,26 +832,26 @@ end.
     kolisty i operacje je spełniają. *)
 
 (* begin hide *)
-Inductive Finite {A : Type} : coList A -> Prop :=
+Inductive Finite {A : Type} : CoList A -> Prop :=
     | Finite_None :
-        forall l : coList A, uncons l = nilF -> Finite l
+        forall l : CoList A, uncons l = NilF -> Finite l
     | Finite_Some :
-        forall (h : A) (t l : coList A),
-          uncons l = consF h t -> Finite t -> Finite l.
+        forall (h : A) (t l : CoList A),
+          uncons l = ConsF h t -> Finite t -> Finite l.
 
 Set Warnings "-cannot-define-projection".
-CoInductive Infinite {A : Type} (l : coList A) : Prop :=
+CoInductive Infinite {A : Type} (l : CoList A) : Prop :=
 {
     h : A;
-    t : coList A;
-    p : uncons l = consF h t;
+    t : CoList A;
+    p : uncons l = ConsF h t;
     inf' : Infinite t;
 }.
 Set Warnings "cannot-define-projection".
 (* end hide *)
 
 Lemma Finite_or_Infinite_irrefutable :
-  forall {A : Type} (l : coList A),
+  forall {A : Type} (l : CoList A),
     ~ ~ (Finite l \/ Infinite l).
 (* begin hide *)
 Proof.
@@ -873,7 +873,7 @@ Qed.
 (* end hide *)
 
 Lemma Finite_not_Infinite :
-  forall (A : Type) (l : coList A),
+  forall (A : Type) (l : CoList A),
     Finite l -> Infinite l -> False.
 (* begin hide *)
 Proof.
@@ -884,7 +884,7 @@ Qed.
 (* end hide *)
 
 Lemma sim_Infinite :
-  forall (A : Type) (l1 l2 : coList A),
+  forall (A : Type) (l1 l2 : CoList A),
     lsim l1 l2 -> Infinite l1 -> Infinite l2.
 (* begin hide *)
 Proof.
@@ -898,7 +898,7 @@ Qed.
 (* end hide *)
 
 Lemma len_Finite :
-  forall (A : Type) (l : coList A),
+  forall (A : Type) (l : CoList A),
     Finite l -> len l <> omega.
 (* begin hide *)
 Proof.
@@ -909,7 +909,7 @@ Qed.
 (* end hide *)
 
 Lemma len_Infinite :
-  forall (A : Type) (l : coList A),
+  forall (A : Type) (l : CoList A),
     len l = omega -> Infinite l.
 (* begin hide *)
 Proof.
@@ -923,7 +923,7 @@ Qed.
 (* end hide *)
 
 Lemma len_Infinite_conv :
-  forall (A : Type) (l : coList A),
+  forall (A : Type) (l : CoList A),
     Infinite l -> sim (len l) omega.
 (* begin hide *)
 Proof.
@@ -936,7 +936,7 @@ Qed.
 (* end hide *)
 
 Lemma Finite_snoc :
-  forall (A : Type) (l : coList A) (x : A),
+  forall (A : Type) (l : CoList A) (x : A),
     Finite l -> Finite (snoc l x).
 (* begin hide *)
 Proof.
@@ -951,7 +951,7 @@ Qed.
 (* end hide *)
 
 Lemma Infinite_snoc :
-  forall (A : Type) (l : coList A) (x : A),
+  forall (A : Type) (l : CoList A) (x : A),
     Infinite l -> lsim (snoc l x) l.
 (* begin hide *)
 Proof.
@@ -963,7 +963,7 @@ Qed.
 (* end hide *)
 
 Lemma Infinite_app_l :
-  forall (A : Type) (l1 l2 : coList A),
+  forall (A : Type) (l1 l2 : CoList A),
     Infinite l1 -> Infinite (app l1 l2).
 (* begin hide *)
 Proof.
@@ -975,7 +975,7 @@ Qed.
 (* end hide *)
 
 Lemma Infinite_app_r :
-  forall (A : Type) (l1 l2 : coList A),
+  forall (A : Type) (l1 l2 : CoList A),
     Infinite l2 -> Infinite (app l1 l2).
 (* begin hide *)
 Proof.
@@ -991,7 +991,7 @@ Qed.
 (* end hide *)
 
 Lemma Infinite_app :
-  forall (A : Type) (l1 l2 : coList A),
+  forall (A : Type) (l1 l2 : CoList A),
     Infinite l1 \/ Infinite l2 -> Infinite (app l1 l2).
 (* begin hide *)
 Proof.
@@ -1002,7 +1002,7 @@ Qed.
 (* end hide *)
 
 Lemma Finite_app :
-  forall (A : Type) (l1 l2 : coList A),
+  forall (A : Type) (l1 l2 : CoList A),
     Finite l1 -> Finite l2 -> Finite (app l1 l2).
 (* begin hide *)
 Proof.
@@ -1019,7 +1019,7 @@ Qed.
 Global Hint Constructors Finite : core.
 
 Lemma Finite_app_conv :
-  forall (A : Type) (l1 l2 : coList A),
+  forall (A : Type) (l1 l2 : CoList A),
     Finite (app l1 l2) -> Finite l1 /\ Finite l2.
 (* begin hide *)
 Proof.
@@ -1036,7 +1036,7 @@ Qed.
 (* end hide *)
 
 Lemma Finite_lmap :
-  forall (A B : Type) (f : A -> B) (l : coList A),
+  forall (A B : Type) (f : A -> B) (l : CoList A),
     Finite l -> Finite (lmap f l).
 (* begin hide *)
 Proof.
@@ -1047,7 +1047,7 @@ Qed.
 (* end hide *)
 
 Lemma Infinite_lmap :
-  forall (A B : Type) (f : A -> B) (l : coList A),
+  forall (A B : Type) (f : A -> B) (l : CoList A),
     Infinite l -> Infinite (lmap f l).
 (* begin hide *)
 Proof.
@@ -1085,7 +1085,7 @@ Qed.
 (* end hide *)
 
 Lemma Finite_zipW_l :
-  forall (A B C : Type) (f : A -> B -> C) (l1 : coList A) (l2 : coList B),
+  forall (A B C : Type) (f : A -> B -> C) (l1 : CoList A) (l2 : CoList B),
     Finite l1 -> Finite (zipW f l1 l2).
 (* begin hide *)
 Proof.
@@ -1101,7 +1101,7 @@ Qed.
 (* end hide *)
 
 Lemma Finite_zipW_r :
-  forall (A B C : Type) (f : A -> B -> C) (l1 : coList A) (l2 : coList B),
+  forall (A B C : Type) (f : A -> B -> C) (l1 : CoList A) (l2 : CoList B),
     Finite l2 -> Finite (zipW f l1 l2).
 (* begin hide *)
 Proof.
@@ -1119,7 +1119,7 @@ Qed.
 (* end hide *)
 
 Lemma Infinite_zipW_l :
-  forall (A B C : Type) (f : A -> B -> C) (l1 : coList A) (l2 : coList B),
+  forall (A B C : Type) (f : A -> B -> C) (l1 : CoList A) (l2 : CoList B),
     Infinite (zipW f l1 l2) -> Infinite l1.
 (* begin hide *)
 Proof.
@@ -1133,7 +1133,7 @@ Qed.
 (* end hide *)
 
 Lemma Infinite_zipW_r :
-  forall (A B C : Type) (f : A -> B -> C) (l1 : coList A) (l2 : coList B),
+  forall (A B C : Type) (f : A -> B -> C) (l1 : CoList A) (l2 : CoList B),
     Infinite (zipW f l1 l2) -> Infinite l1.
 (* begin hide *)
 Proof.
@@ -1145,9 +1145,9 @@ Qed.
 (* end hide *)
 
 Lemma Infinite_splitAt :
-  forall (A : Type) (n : nat) (l : coList A),
+  forall (A : Type) (n : nat) (l : CoList A),
     Infinite l ->
-      exists (start : list A) (x : A) (rest : coList A),
+      exists (start : list A) (x : A) (rest : CoList A),
         splitAt l n = Some (start, x, rest).
 (* begin hide *)
 Proof.
@@ -1168,24 +1168,24 @@ Qed.
 
     Sprawdź, które z praw de Morgana zachodzą. *)
 
-Inductive Exists {A : Type} (P : A -> Prop) : coList A -> Prop :=
+Inductive Exists {A : Type} (P : A -> Prop) : CoList A -> Prop :=
     | Exists_hd :
-        forall (l : coList A) (h : A) (t : coList A),
-          uncons l = consF h t -> P h -> Exists P l
+        forall (l : CoList A) (h : A) (t : CoList A),
+          uncons l = ConsF h t -> P h -> Exists P l
     | Exists_tl :
-        forall (l : coList A) (h : A) (t : coList A),
-          uncons l = consF h t -> Exists P t -> Exists P l.
+        forall (l : CoList A) (h : A) (t : CoList A),
+          uncons l = ConsF h t -> Exists P t -> Exists P l.
 
-CoInductive All {A : Type} (P : A -> Prop) (l : coList A) : Prop :=
+CoInductive All {A : Type} (P : A -> Prop) (l : CoList A) : Prop :=
 {
     All' :
-      uncons l = nilF \/
-      exists (h : A) (t : coList A),
-        uncons l = consF h t /\ P h /\ All P t;
+      uncons l = NilF \/
+      exists (h : A) (t : CoList A),
+        uncons l = ConsF h t /\ P h /\ All P t;
 }.
 
 Lemma Exists_not_All :
-  forall (A : Type) (P : A -> Prop) (l : coList A),
+  forall (A : Type) (P : A -> Prop) (l : CoList A),
     Exists P l -> ~ All (fun x : A => ~ P x) l.
 (* begin hide *)
 Proof.
@@ -1195,7 +1195,7 @@ Qed.
 (* end hide *)
 
 Lemma All_Exists :
-  forall (A : Type) (P : A -> Prop) (l : coList A),
+  forall (A : Type) (P : A -> Prop) (l : CoList A),
     All P l -> l = conil \/ Exists P l.
 (* begin hide *)
 Proof.

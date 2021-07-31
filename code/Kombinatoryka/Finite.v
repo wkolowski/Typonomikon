@@ -1,51 +1,76 @@
-Require Import D5.
+Require Import D5 BetterFinite.
 
-Class Finite (A : Type) : Type :=
-{
-    elems : list A;
-    elems_all : forall x : A, elem x elems;
-    elems_NoDup : ~ Dup elems;
-}.
+Import ExactlyFinite.
+
+Require Import Equality.
 
 #[refine]
-Instance Finite_unit : Finite unit :=
-{|
-    elems := [tt];
-|}.
-Proof.
-  destruct x. constructor.
-  intro H. inv H; inv H1.
-Defined.
-
-#[refine]
-Instance Finite_bool : Finite bool :=
+Instance ExactlyFinite_bool : ExactlyFinite bool :=
 {|
     elems := [false; true];
 |}.
 Proof.
   destruct x; repeat constructor.
-  intro H. inv H.
-    inv H1. inv H2.
-    inv H1; inv H0.
+  intros. dependent destruction e1; dependent destruction e2.
+    reflexivity.
+    exfalso. inv e2. inv H0.
+    exfalso. inv e1. inv H0.
+    f_equal. dependent destruction e1; dependent destruction e2.
+      reflexivity.
+      exfalso. inv e2.
+      exfalso. inv e1.
+      f_equal. inv e1.
 Defined.
+
+Lemma Elem_map :
+  forall {A B : Type} (f : A -> B) (x : A) (l : list A),
+    Elem x l -> Elem (f x) (map f l).
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv X.
+    inv X; constructor. apply IHt. assumption.
+Qed.
+
+Lemma Elem_map_inv :
+  forall {A B : Type} (f : A -> B) (b : B) (l : list A),
+    Elem b (map f l) -> {a : A | f a = b}.
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv X.
+    inv X.
+      exists h. reflexivity.
+      apply IHt. assumption.
+Qed.
 
 #[refine]
 Instance Finite_option
-  {A : Type} (FA : Finite A) : Finite (option A) :=
+  {A : Type} (FA : ExactlyFinite A) : ExactlyFinite (option A) :=
 {|
     elems := None :: map Some (@elems _ FA);
 |}.
 Proof.
-  all: destruct FA as [els H1 H2].
+  all: destruct FA as [els H1 H2]; cbn.
     destruct x as [a |].
-      constructor. apply elem_map. apply H1.
+      constructor. apply Elem_map. apply H1.
       constructor.
-    intro. inv H.
-      apply elem_map_conv in H3. inv H3. inv H. inv H0.
-      apply Dup_map_conv in H3.
-        contradiction.
-        intros. inv H. reflexivity.
-Defined.
+    destruct x as [a |]; intros.
+      2: {
+        dependent destruction e1; dependent destruction e2.
+          reflexivity.
+          exfalso. apply Elem_map_inv in e2. destruct e2. congruence.
+          exfalso. apply Elem_map_inv in e1. destruct e1. congruence.
+          exfalso. apply Elem_map_inv in e2. destruct e2. congruence.
+      }
+      {
+        dependent destruction e1; dependent destruction e2. f_equal.
+        specialize (H1 a). induction els as [| e es]; cbn in *.
+          inv H1.
+          dependent destruction e1; dependent destruction e2.
+            reflexivity.
+            exfalso. admit.
+            exfalso. admit.
+            f_equal.
+Admitted.
 
 Fixpoint sum (l : list nat) : nat :=
 match l with
@@ -55,13 +80,13 @@ end.
 
 Lemma elem_sum :
   forall {n : nat} {l : list nat},
-    elem n l -> n <= sum l.
+    Elem n l -> n <= sum l.
 Proof.
   induction 1; cbn; lia.
 Qed.
 
 Lemma nat_not_Finite :
-  Finite nat -> False.
+  ExactlyFinite nat -> False.
 Proof.
   intros [els H1 H2].
   specialize (H1 (S (sum els))).
@@ -71,7 +96,7 @@ Qed.
 
 Lemma join_elem_length :
   forall {A : Type} {l : list A} {ll : list (list A)},
-    elem l ll -> length l <= length (join ll).
+    Elem l ll -> length l <= length (join ll).
 Proof.
   induction 1; cbn;
   rewrite length_app;
@@ -80,25 +105,10 @@ Qed.
 
 Lemma list_not_Finite :
   forall A : Type,
-    Finite (list A) -> A -> False.
+    ExactlyFinite (list A) -> A -> False.
 Proof.
-  destruct 1 as [els H1 H2].
-  intro x.
+  intros A [els H1 H2] x.
   specialize (H1 (x :: join els)).
   apply join_elem_length in H1; cbn in H1.
   lia.
-Qed.
-
-Lemma bool_not_isProp :
-  ~ forall b1 b2 : bool, b1 = b2.
-Proof.
-  intro. specialize (H true false). congruence.
-Qed.
-
-Lemma unit_not_bool : unit <> bool.
-Proof.
-  intro.
-  apply bool_not_isProp.
-  destruct H, b1, b2.
-  reflexivity.
 Qed.

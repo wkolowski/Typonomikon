@@ -83,7 +83,7 @@ Obecnie jeżeli konstruktor ma dużo argumentów
 
 ```Coq
 Inductive wut : Type :=
-    | w : A -> B -> C -> D.
+    | w : A -> B -> C -> D -> wut.
 ```
 
 to przy dopasowaniu do wzorca trzeba je wiązać (albo pomijać za pomocą `_`)
@@ -150,3 +150,28 @@ Pomysł na lekką składnię z pomijaniem parametrów jest wzięty z języka [L
 Ostatnio dowiedziałęm się, że F* ma parę fajnych składniowych rzeczy:
 - Dyskryminatory sprawdzający, którym konstruktorem zrobiono term typu induktywnego, np. `Nil? : list 'a -> bool`, `Cons? : list 'a -> bool`
 - Projektory, które wyjmują argumenty z konstruktorów, ale tylko gdy term faktycznie został zrobiony takim właśnie konstruktorem. Przykłady: `Cons?.hd : l : list 'a{Cons? l} -> 'a` oraz `Cons?.tl : l : list 'a{Cons? l} -> list 'a`
+
+## "Pozytywna" koindukcja
+
+Pełna propozycja: [tutaj](https://github.com/coq/coq/issues/14020)
+
+W skrócie: chcielibyśmy, żeby
+
+```Coq
+CoInductive CoList (A : Type) : Type :=
+    | CoNil  : CoList A
+    | CoCons : A -> CoList A -> CoList A.
+```
+
+było jedynie cukrem syntaktycznym na prawdziwy typ koinduktywny z jednym polem, którego typ ma taki kształt, jak sugerują konstruktory w powyższej definicji. Mówiąc wprost, chcemy, że powyższe tłumaczyło się na
+
+```Coq
+Inductive CoListF (F : Type -> Type) (A : Type) : Type :=
+    | CoNilF  : CoListF F A
+    | CoConsF : A -> F A -> CoList F A.
+
+CoInductive CoList (A : Type) : Type :=
+{
+    out : CoListF CoList A;
+}
+```
