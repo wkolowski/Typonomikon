@@ -27,9 +27,9 @@ Lemma Elem_map :
     Elem x l -> Elem (f x) (map f l).
 Proof.
   induction l as [| h t]; cbn; intros.
-    inv X.
-    inv X; constructor. apply IHt. assumption.
-Qed.
+    dependent destruction X.
+    dependent destruction X; constructor. apply IHt. assumption.
+Defined.
 
 Lemma Elem_map_inv :
   forall {A B : Type} (f : A -> B) (b : B) (l : list A),
@@ -41,6 +41,31 @@ Proof.
       exists h. reflexivity.
       apply IHt. assumption.
 Qed.
+
+Lemma Elem_map_Some :
+  forall {A : Type} (a : A) (l : list A),
+    Elem (Some a) (map Some l) -> Elem a l.
+Proof.
+  induction l as [| h t]; cbn; intros.
+    dependent destruction X.
+    dependent destruction X; constructor. apply IHt. assumption.
+Defined.
+
+Lemma Elem_map__Elem_map_Some :
+  forall {A : Type} (a : A) (l : list A) (H : Elem a l),
+    Elem_map_Some a l (Elem_map Some a l H) = H.
+Proof.
+  dependent induction H.
+Admitted.
+
+Lemma Elem_map_Some__Elem_map :
+  forall {A : Type} (a : A) (l : list A) (H : Elem (Some a) (map Some l)),
+    Elem_map Some a l (Elem_map_Some a l H) = H.
+Proof.
+  induction l as [| h t]; cbn; intros.
+    inv H.
+    dependent destruction H.
+Admitted.
 
 #[refine]
 Instance Finite_option
@@ -63,14 +88,10 @@ Proof.
       }
       {
         dependent destruction e1; dependent destruction e2. f_equal.
-        specialize (H1 a). induction els as [| e es]; cbn in *.
-          inv H1.
-          dependent destruction e1; dependent destruction e2.
-            reflexivity.
-            exfalso. admit.
-            exfalso. admit.
-            f_equal.
-Admitted.
+        rewrite <- (Elem_map_Some__Elem_map _ _ e1), <- (Elem_map_Some__Elem_map _ _ e2).
+        f_equal. apply H2.
+      }
+Defined.
 
 Fixpoint sum (l : list nat) : nat :=
 match l with
