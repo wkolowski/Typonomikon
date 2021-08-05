@@ -49,8 +49,6 @@ Qed.
 
 End TheSameAsOrdinary.
 
-Print List.
-
 Definition isEmpty {A : Type} (l : List A) : bool :=
 match l with
     | Empty => true

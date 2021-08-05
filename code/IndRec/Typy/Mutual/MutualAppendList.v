@@ -34,14 +34,22 @@ end.
 Require Import List.
 Import ListNotations.
 
-Fixpoint toList {A : Type} (l : AList A) : list A :=
+Fixpoint toListA {A : Type} (l : AList A) : list A :=
 match l with
     | Single x     => [x]
-    | Append l1 l2 => toList l1 ++ toList l2
+    | Append l1 l2 => toListA l1 ++ toListA l2
 end.
 
-Definition toList' {A : Type} (l : CList A) : list A :=
+Definition toListC {A : Type} (l : CList A) : list A :=
 match l with
     | Nil       => []
-    | NotNil l' => toList l'
+    | NotNil l' => toListA l'
 end.
+
+Lemma append_spec :
+  forall {A : Type} (l1 l2 : CList A),
+    toListC (append l1 l2) = toListC l1 ++ toListC l2.
+Proof.
+  destruct l1 as [| [|]], l2 as []; cbn; try reflexivity.
+  symmetry. apply app_nil_r.
+Qed.

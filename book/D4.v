@@ -1843,9 +1843,10 @@ Function binom (n k : nat) : nat :=
 match n, k with
     | 0, 0 => 1
     | 0, _ => 0
-    | _, 0 => 1 
+    | _, 0 => 1
     | S n', S k' => plus (binom n' k') (binom n' k)
 end.
+(* TODO: być może przedefiniować współczynnik dwumianowy na bardziej ludzki *)
 (* end hide *)
 
 Fixpoint double (n : nat) : nat :=
