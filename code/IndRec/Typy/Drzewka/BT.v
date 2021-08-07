@@ -123,6 +123,9 @@ Inductive Dup {A : Type} : BTree A -> Type :=
     | Dup_N_xr :
         forall (x : A) (l r : BTree A),
           Exists (fun y => x = y) r -> Dup (N x l r)
+    | Dup_N_lr :
+        forall (x' x : A) (l r : BTree A),
+          Exists (fun y => x' = y) l -> Exists (fun y => x' = y) r -> Dup (N x l r)
     | Dup_N_rec_l :
         forall (x : A) (l r : BTree A),
           Dup l -> Dup (N x l r)

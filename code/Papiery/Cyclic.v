@@ -914,11 +914,7 @@ match ta, tb with
 
 End CyclicBinaryTree.
 
-Require RecursionSchemes.
-
 Module GeneralCyclicStructures.
-
-Import RecursionSchemes.
 
 (** The above approach can be generalized even more, to a Fixpoint-with-Cycles
     inductive type like. But for this to work in Coq, we need to turn off the
