@@ -810,7 +810,7 @@ match n with
     | S n' => HS n' (nat_ind_Fixpoint_term P H0 HS n')
 end.
 
-(** Rozwiązaniem powyższej robnej niedogodności jest komenda [Fixpoint],
+(** Rozwiązaniem powyższej drobnej niedogodności jest komenda [Fixpoint],
     która jest skrótem dla [fix]. Oszczędza nam ona pisania dwa razy tego
     samego, dzięki czemu definicja jest o linijkę krótsza. *)
 
