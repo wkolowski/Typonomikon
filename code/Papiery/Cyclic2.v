@@ -205,8 +205,6 @@ end.
 
 Compute cdropWhile (fun n => n <? 3) example.
 
-End Nested.
-
 Module CyclicBinaryTree.
 
 (** Sadly, this wonderful technique doesn't work with binary trees. This is

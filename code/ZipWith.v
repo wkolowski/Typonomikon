@@ -1,7 +1,7 @@
 Require Import F3.
 
 Unset Guard Checking.
-CoFixpoint fib : Stream nat := scons 0 (scons 1 (zipWith plus fib (tl fib))).
+CoFixpoint fib : Stream nat := scons 0 (zipWith plus fib (scons 1 fib)).
 Set Guard Checking.
 
 Inductive TXY (X Y A : Type) : Type :=
@@ -71,7 +71,7 @@ Proof.
   apply (Cons 0).
   refine {| Out := ZipWithXY plus _ _ |}.
     exact (StreamZipWith_to_ZipWith fibSZW).
-    exact (SConsX 1 fibSZW).
-Defined.
+    exact (SConsX 1 fibSZW). Show Proof.
+Abort.
 
-Compute take 5 (toStream fibSZW).
+(* Compute take 5 (toStream fibSZW). *)

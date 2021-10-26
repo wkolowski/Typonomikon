@@ -1,22 +1,27 @@
 (* Wzięte stąd: https://personal.cis.strath.ac.uk/neil.ghani/papers/ghani-hosc09.pdf *)
 
-(*
+
 Inductive BushF (F : Type -> Type) (A : Type) : Type :=
     | LeafF : BushF F A
     | NodeF : A -> F (F A) -> BushF F A.
 
-(* Inductive Bush (A : Type) : Type :=
+Fail Inductive Bush (A : Type) : Type :=
     | In : BushF Bush A -> Bush A.
- *)
 
 Definition BushC (A : Type) : Type :=
-  forall (F : Type -> Type) (leaf : F A) (node : A -> F (F A) -> F A), F A.
+  forall (F : Type -> Type) (R : Type) (leaf : F R) (node : A -> F (F R) -> F R), F R.
 
 Definition mapC {A B : Type} (f : A -> B) (b : BushC A) : BushC B.
-unfold BushC in *.
-intros F leaf node.
-specialize (b F).
-*)
+Proof.
+  unfold BushC in *.
+  intros F R leaf node.
+  specialize (b F R).
+  apply b.
+    exact leaf.
+    intros a ffr. apply node.
+      apply f. exact a.
+      exact ffr. Show Proof.
+Defined.
 
 Unset Positivity Checking.
 Inductive Bush (A : Type) : Type :=
