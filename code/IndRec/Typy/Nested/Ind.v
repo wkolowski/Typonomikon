@@ -1,5 +1,5 @@
 (** Generowanie reguł indukcji dla zagnieżdżonych typów induktywnych (w stylu
-    [RoseTree], a nie w stylu [Bush]:
+    [RoseTree], a nie w stylu [Bush]):
     https://www.ps.uni-saarland.de/~ullrich/bachelor/thesis.pdf
 
     W skrócie: wszystko opiera się na translacji parametrycznej, tzn. zamieniany

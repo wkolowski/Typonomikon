@@ -1,6 +1,8 @@
 (* Pomysł na Complete wzięty stąd: http://comonad.com/reader/wp-content/uploads/2010/04/Finger-Trees.pdf *)
 
-Require Import Recdef.
+Require Import Bool Recdef Equality FunctionalExtensionality.
+Require Import List.
+Import ListNotations.
 
 Inductive Complete (A : Type) : Type :=
     | Empty : Complete A
@@ -58,11 +60,15 @@ Definition test : Complete nat :=
   Layer (0, 1, (2, 3)) (
   Empty))).
 
-Compute nums 5.
-Compute mirror (nums 5).
-Compute mirror test.
-
-Require Import FunctionalExtensionality.
+Lemma map_id :
+  forall {A : Type} (t : Complete A),
+    map id t = t.
+Proof.
+  induction t; cbn; unfold id.
+    reflexivity.
+    rewrite <- IHt at 2. repeat f_equal.
+      extensionality p. destruct p. reflexivity.
+Qed.
 
 Lemma map_map :
   forall {A B C : Type} (f : A -> B) (g : B -> C) (t : Complete A),
@@ -100,3 +106,147 @@ Proof.
     rewrite leftmost_map, IHt.
       destruct (rightmost t) as [[] |]; cbn; reflexivity.
 Qed.
+
+Lemma map_mirror :
+  forall {A B : Type} (f : A -> B) (t : Complete A),
+    map f (mirror t) = mirror (map f t).
+Proof.
+  intros until t. revert B f.
+  induction t; cbn; intros.
+    reflexivity.
+    rewrite <- IHt, !map_map. repeat f_equal.
+      extensionality p. destruct p. cbn. reflexivity.
+Qed.
+
+Lemma mirror_mirror :
+  forall {A : Type} (t : Complete A),
+    mirror (mirror t) = t.
+Proof.
+  induction t; cbn.
+    reflexivity.
+    rewrite !map_mirror, map_map. rewrite <- IHt at 2.
+      repeat f_equal. rewrite <- map_id. f_equal.
+      extensionality p. destruct p. cbn. reflexivity.
+Qed.
+
+Fixpoint size {A : Type} (t : Complete A) : nat :=
+match t with
+    | Empty => 0
+    | Layer v ts => 1 + size ts
+end.
+
+Fixpoint height {A : Type} (t : Complete A) : nat :=
+match t with
+    | Empty => 0
+    | Layer _ ts => 1 + height ts
+end.
+
+Fixpoint flatten {A : Type} (l : list (A * A)) : list A :=
+match l with
+    | [] => []
+    | (hl, hr) :: t => hl :: hr :: flatten t
+end.
+
+Fixpoint bfs {A : Type} (t : Complete A) : list A :=
+match t with
+    | Empty => []
+    | Layer v ts => v :: flatten (bfs ts)
+end.
+
+Fixpoint complete {A : Type} (n : nat) (x : A) : Complete A :=
+match n with
+    | 0 => Empty
+    | S n' => Layer x (complete n' (x, x))
+end.
+
+Fixpoint any {A : Type} (p : A -> bool) (t : Complete A) : bool :=
+match t with
+    | Empty => false
+    | Layer v ts => p v || any (fun '(x, y) => p x || p y) ts
+end.
+
+Fixpoint all {A : Type} (p : A -> bool) (t : Complete A) : bool :=
+match t with
+    | Empty => true
+    | Layer v ts => p v && all (fun '(x, y) => p x && p y) ts
+end.
+
+Fixpoint find {A : Type} (p : A -> bool) (t : Complete A) : option A :=
+match t with
+    | Empty => None
+    | Layer v ts =>
+        if p v
+        then Some v
+        else
+          match find (fun '(x, y) => p x || p y) ts with
+              | None => None
+              | Some (x, y) => if p x then Some x else Some y
+          end
+end.
+
+Fixpoint zipWith {A B C : Type} (f : A -> B -> C) (ta : Complete A) (tb : Complete B) : Complete C :=
+match ta, tb with
+    | Empty, _ => Empty
+    | _, Empty => Empty
+    | Layer a ta', Layer b tb' => Layer (f a b) (zipWith (fun '(al, ar) '(bl, br) => (f al bl, f ar br)) ta' tb')
+end.
+
+Fixpoint left {A : Type} (t : Complete (A * A)) : Complete A :=
+match t with
+    | Empty => Empty
+    | Layer (a, _) ts => Layer a (left ts)
+end.
+
+Fixpoint right {A : Type} (t : Complete (A * A)) : Complete A :=
+match t with
+    | Empty => Empty
+    | Layer (_, a) ts => Layer a (right ts)
+end.
+
+
+(*Fixpoint count {A : Type} (p : A -> bool) (t : Complete A) : nat :=
+match t with
+    | Empty => 0
+    | Layer v ts => (if p v then 1 else 0) + count (fun (x, y) => ts
+end.*)
+
+(* TODO
+
+Parameter leaf : forall A : Type, A -> BTree A.
+
+Parameter isEmpty : forall A : Type, BTree A -> bool.
+
+Parameter root : forall A : Type, BTree A -> option A.
+
+Parameter unN : forall A : Type, BTree A -> option (A * BTree A * BTree A).
+
+Parameter inorder : forall A : Type, BTree A -> list A.
+Parameter preorder : forall A : Type, BTree A -> list A.
+Parameter postorder : forall A : Type, BTree A -> list A.
+
+Parameter iterate : forall A : Type, (A -> A) -> nat -> A -> BTree A.
+
+Parameter index : forall A : Type, list bool -> BTree A -> option A.
+Parameter nth : forall A : Type, nat -> BTree A -> option A.
+
+Parameter take : forall A : Type, nat -> BTree A -> BTree A.
+Parameter drop : forall A : Type, nat -> BTree A -> list (BTree A).
+Parameter takedrop :
+  forall A : Type, nat -> BTree A -> BTree A * list (BTree A).
+
+Parameter intersperse : forall A : Type, A -> BTree A -> BTree A.
+
+Parameter insertAtLeaf :
+  forall A : Type, list bool -> BTree A -> BTree A.
+
+Parameter findIndex :
+  forall A : Type, (A -> bool) -> BTree A -> option (list bool).
+
+Parameter takeWhile : forall A : Type, (A -> bool) -> BTree A -> BTree A.
+
+Parameter findIndices :
+  forall A : Type, (A -> bool) -> BTree A -> list (list bool).
+
+Parameter unzipWith :
+ forall A B C : Type, (A -> B * C) -> BTree A -> BTree B * BTree C.
+*)

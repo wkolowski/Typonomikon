@@ -201,6 +201,9 @@ Proof.
 Qed.
 (* end hide *)
 
+(* TODO: RVec *)
+
+(*
 Lemma no_infinite_app :
   forall (A : Type) (n m : nat) (l : RVec A n) (l' : RVec A m),
     ~ eq_dep l' vnil -> eq_dep l (l' +++ l) -> False.
@@ -1244,3 +1247,4 @@ Proof.
       apply IHb'.
 Qed.
 (* end hide *)
+*)
