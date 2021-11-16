@@ -250,3 +250,24 @@ Parameter findIndices :
 Parameter unzipWith :
  forall A B C : Type, (A -> B * C) -> BTree A -> BTree B * BTree C.
 *)
+
+Inductive Complete' {A : Type} (P : A -> Type) : Complete A -> Type :=
+    | Empty' : Complete' P Empty
+    | Layer' : forall (x : A) (t : Complete (prod A A)),
+                 P x -> Complete' (fun '(x, y) => prod (P x) (P y)) t -> Complete' P (Layer x t).
+
+Fixpoint Complete_ind_deep
+  (P : forall (A : Type) (Q : A -> Type), Complete A -> Type)
+  (empty : forall (A : Type) (Q : A -> Type),
+             P A Q Empty)
+  (layer : forall (A : Type) (Q : A -> Type) (x : A) (t : Complete (A * A)),
+             Q x -> P (prod A A) (fun '(x, y) => prod (Q x) (Q y)) t -> P A Q (Layer x t))
+  {A : Type} (Q : A -> Type)
+  {t : Complete A} (t' : Complete' Q t) {struct t'} : P A Q t.
+Proof.
+  destruct t' as [| x t Qx Ct].
+    apply empty.
+    apply layer.
+      exact Qx.
+      apply Complete_ind_deep; assumption.
+Defined.
