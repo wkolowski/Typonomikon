@@ -1,5 +1,6 @@
 (* Wzięte stąd: https://personal.cis.strath.ac.uk/neil.ghani/papers/ghani-hosc09.pdf *)
 
+Set Universe Polymorphism.
 
 Inductive BushF (F : Type -> Type) (A : Type) : Type :=
     | LeafF : BushF F A
@@ -12,31 +13,29 @@ Definition ListC (A : Type) : Type :=
   forall (R : Type) (nil : R) (cons : A -> R -> R), R.
 
 Definition BushC (A : Type) : Type :=
-  forall (F : Type -> Type) (R : Type) (leaf : R) (node : A -> F R -> R), R.
+  forall
+    (F : Type -> Type)
+    (leaf : forall R : Type, F R)
+    (node : forall R : Type, R -> F (F R) -> F R)
+    (* (R : Type) *), F A.
 
 Definition leaf {A : Type} : BushC A :=
-  fun F R leaf node => leaf.
+  fun F leaf node (* R *) => leaf A.
 
 Definition node {A : Type} (x : A) (b : BushC (BushC A)) : BushC A.
 Proof.
-  unfold BushC.
-  intros F R leaf node.
-  apply (node x).
+  intros F leaf node (* R *).
   unfold BushC in b.
+  
+  (* fun F leaf node R =>
+    node R x (b F leaf (fun R' x' t' => x' F leaf node R') (F R)).
+ *)
 Abort.
 
-Definition mapC {A B : Type} (f : A -> B) (b : BushC A) : BushC B.
-Proof.
-  unfold BushC in *.
-  intros F R leaf node.
-  specialize (b F R).
-  apply b.
-    exact leaf.
-    intros a ffr. apply node.
-      apply f. exact a.
-      exact ffr.
-Defined.
-
+(* Definition mapC {A B : Type} (f : A -> B) (b : BushC A) : BushC B :=
+  fun F leaf node R =>
+    b F leaf (fun R a t => node R (f a) t) R.
+ *)
 Unset Positivity Checking.
 Inductive Bush (A : Type) : Type :=
     | Leaf : Bush A
@@ -55,6 +54,17 @@ match b with
     | Node v bs => Node (f v) (map (map f) bs)
 end.
 
+(* Fixpoint B2BC {A : Type} (b : Bush A) {struct b} : BushC A :=
+match b with
+    | Leaf => leaf
+    | Node x b' => node x (B2BC (map B2BC b'))
+end.
+
+Definition BC2B {A : Type} (b : BushC A) : Bush A.
+Proof.
+  unfold BushC in b.
+  specialize (b Bush (@Leaf) (@Node)).
+ *)
 Fixpoint sum (b : Bush nat) : nat :=
 match b with
     | Leaf => 0
@@ -79,8 +89,11 @@ match h with
     | S h' => Node x (replicate h' (replicate h' x))
 end.
 
-
-
+(* Fixpoint app {A : Type} (b1 b2 : Bush A) : Bush A :=
+match b1 with
+    | Leaf     => b2
+    | Node h t => Node h (
+ *)
 
 (* Fixpoint join {A : Type} (b : Bush (Bush A)) {struct b} : Bush A :=
 match b with
@@ -187,11 +200,5 @@ Proof.
   refine (Bush_ind P _ _).
     unfold P; cbn; intros. reflexivity.
     unfold P; cbn; intros. f_equal. rewrite !H. f_equal.
-      extensionality bb. rewrite H.
-  
-  fix IH 6.
-  destruct b as [| v bs]; cbn.
-    reflexivity.
-    f_equal. rewrite IH. f_equal.
-      extensionality x. rewrite IH. reflexivity.
-Qed.
+      extensionality bb.
+Abort.

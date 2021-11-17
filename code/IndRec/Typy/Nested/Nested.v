@@ -8,8 +8,43 @@ Inductive Complete (A : Type) : Type :=
     | Empty : Complete A
     | Layer : A -> Complete (A * A) -> Complete A.
 
+Check Complete.
+Print Complete.
+Check Empty.
 Arguments Empty {A}.
 Arguments Layer {A} _ _.
+
+Definition CompleteC (A : Type) :=
+  forall
+    (F : Type -> Type)
+    (empty : forall A : Type, F A)
+    (layer : forall A : Type, A -> F (prod A A) -> F A),
+      F A.
+
+Definition empty {A : Type} : CompleteC A :=
+  fun F e l => e A.
+
+Definition layer {A : Type} (x : A) (t : CompleteC (A * A)) : CompleteC A :=
+  fun F e l => l A x (t F e l).
+
+Fixpoint C2CC {A : Type} (t : Complete A) : CompleteC A :=
+match t with
+    | Empty => empty
+    | Layer x t => layer x (C2CC t)
+end.
+
+Definition CC2C {A : Type} (t : CompleteC A) : Complete A :=
+  t Complete (@Empty) (@Layer).
+
+Lemma C2CC2C :
+  forall {A : Type} (t : Complete A),
+    CC2C (C2CC t) = t.
+Proof.
+  induction t as [| A x t'].
+    compute. reflexivity.
+    rewrite <- IHt' at 2.
+      unfold CC2C. cbn. unfold layer. reflexivity.
+Qed.
 
 Function leftmost {A : Type} (t : Complete A) : option A :=
 match t with
