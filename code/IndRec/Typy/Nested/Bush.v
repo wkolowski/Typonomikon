@@ -2,6 +2,16 @@
 
 Set Universe Polymorphism.
 
+Unset Positivity Checking.
+Inductive Bush (A : Type) : Type :=
+    | Leaf : Bush A
+    | Node : A -> Bush (Bush A) -> Bush A.
+
+Arguments Leaf {A}.
+Arguments Node {A} _ _.
+
+Set Positivity Checking.
+
 Inductive BushF (F : Type -> Type) (A : Type) : Type :=
     | LeafF : BushF F A
     | NodeF : A -> F (F A) -> BushF F A.
@@ -36,14 +46,6 @@ Abort.
   fun F leaf node R =>
     b F leaf (fun R a t => node R (f a) t) R.
  *)
-Unset Positivity Checking.
-Inductive Bush (A : Type) : Type :=
-    | Leaf : Bush A
-    | Node : A -> Bush (Bush A) -> Bush A.
-Set Positivity Checking.
-
-Arguments Leaf {A}.
-Arguments Node {A} _ _.
 
 Require Import D5.
 
@@ -89,6 +91,12 @@ match h with
     | S h' => Node x (replicate h' (replicate h' x))
 end.
 
+Fixpoint count {A : Type} (p : A -> nat) (b : Bush A) {struct b} : nat :=
+match b with
+    | Leaf => 0
+    | Node x b' => p x + count (count p) b'
+end.
+
 (* Fixpoint app {A : Type} (b1 b2 : Bush A) : Bush A :=
 match b1 with
     | Leaf     => b2
@@ -102,7 +110,16 @@ match b with
 end.
  *)
 
-Compute  (replicate 3 (Node 5 Leaf)).
+Compute (replicate 3 (Node 5 Leaf)).
+
+Fixpoint nums (n : nat) : Bush nat :=
+match n with
+    | 0 => Node 0 Leaf
+    | S n' => Node n (map nums (nums n'))
+end.
+
+Compute size (nums 4).
+Compute count (fun n => if even n then 1 else 0) (nums 10).
 
 Set Guard Checking.
 

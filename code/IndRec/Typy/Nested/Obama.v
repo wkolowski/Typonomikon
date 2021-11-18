@@ -1,46 +1,191 @@
+Require Import F2.
+
+Set Universe Polymorphism.
+
 Unset Positivity Checking.
 CoInductive Obama (A : Type) : Type :=
 {
     hd : A;
     tl : Obama (Obama A);
 }.
-Set Positivity Checking.
 
 Arguments hd {A} _.
 Arguments tl {A} _.
 
-CoInductive sim {A : Type} (b1 b2 : Obama A) : Type :=
+CoInductive sim' {A : Type} (b1 b2 : Obama A) : Type :=
 {
     hds : hd b1 = hd b2;
-    tls : sim (tl b1) (tl b2);
+    tls : sim' (tl b1) (tl b2);
 }.
+
+CoInductive Forall {A : Type} (P : A -> Type) (b : Obama A) : Type :=
+{
+    Forall_hd : P (hd b);
+    Forall_tl : Forall (Forall P) (tl b);
+}.
+
+CoInductive Forall2 {A B : Type} (P : A -> B -> Type) (b1 : Obama A) (b2 : Obama B) : Type :=
+{
+    Forall2_hd : P (hd b1) (hd b2);
+    Forall2_tl : Forall2 (Forall2 P) (tl b1) (tl b2);
+}.
+
+Definition sim {A : Type} (b1 b2 : Obama A) : Type :=
+  Forall2 eq b1 b2.
+
+Inductive Exists {A : Type} (P : A -> Type) (b : Obama A) : Type :=
+    | Ex_hd : P (hd b) -> Exists P b
+    | Ex_tl : Exists (Exists P) (tl b) -> Exists P b.
+
+Inductive Exists2 {A B : Type} (R : A -> B -> Type) (b1 : Obama A) (b2 : Obama B) : Type :=
+    | Ex2_hd : R (hd b1) (hd b2) -> Exists2 R b1 b2
+    | Ex2_tl : Exists2 (Exists2 R) (tl b1) (tl b2) -> Exists2 R b1 b2.
+
+Global Hint Constructors Exists Exists2 : core.
+
+Definition Elem {A : Type} (x : A) (b : Obama A) : Type :=
+  Exists (fun y => x = y) b.
+
+Definition ObamaNeq {A : Type} (b1 b2 : Obama A) : Type :=
+  Exists2 (fun x y => x <> y) b1 b2.
+
+Inductive Dup {A : Type} (b : Obama A) : Prop :=
+    | Dup_hd : Exists (Exists (fun y => y = hd b)) (tl b) -> Dup b
+    | Dup_tl : Exists Dup (tl b) -> Dup b.
+Set Positivity Checking.
+
+(* TODO: to raczej nie powinno być induktywne... *)
+
+Inductive SubObama : forall {A B : Type}, Obama A -> Obama B -> Type :=
+    | SubObama_hds :
+        forall {A : Type} (b1 b2 : Obama A),
+          hd b1 = hd b2 -> SubObama (tl b1) (tl b2) -> SubObama b1 b2
+    | SubObama_hd :
+        forall {A : Type} (b1 : Obama A) (b2 : Obama (Obama A)),
+          SubObama b1 (hd b2) -> SubObama b1 b2
+    | SubObama_tl :
+        forall {A : Type} (b1 b2 : Obama A),
+          SubObama b1 (tl b2) -> SubObama b1 b2.
+
+Inductive DirectSubterm : forall {A B : Type}, A -> B -> Type :=
+    | DS_hd :
+        forall {A : Type} (b : Obama A),
+          DirectSubterm (hd b) b
+    | DS_tl :
+        forall {A : Type} (b : Obama A),
+          DirectSubterm (tl b) b.
+
+Inductive Subterm : forall {A B : Type}, Obama A -> Obama B -> Type :=
+    | Subterm_step :
+        forall {A B : Type} (b1 : Obama A) (b2 : Obama B),
+          DirectSubterm b1 b2 -> Subterm b1 b2
+    | Subterm_trans :
+        forall {A B C : Type} (b1 : Obama A) (b2 : Obama B) (b3 : Obama C),
+          DirectSubterm b1 b2 -> Subterm b2 b3 -> Subterm b1 b3.
+
+Inductive Swap : forall {A B : Type}, B -> Obama A -> B -> Obama A -> Type :=
+    | Swap_hdtl :
+        forall {A : Type} (x : A) (b : Obama A),
+          Swap x b (hd b) {| hd := x; tl := tl b; |}
+    | Swap_hd :
+        forall {A : Type} (x y : A) (b : Obama (Obama A)) (r : Obama A),
+          Swap x (hd b) y r -> Swap x b y {| hd := r; tl := tl b; |}
+    | Swap_tl :
+        forall {A : Type} (x y : A) (b : Obama A) (r : Obama (Obama A)),
+          Swap x (tl b) y r -> Swap x b y {| hd := hd b; tl := r; |}.
+
+(* CoFixpoint count {A : Type} (p : A -> conat) (b : Obama A) : conat :=
+{|
+    pred :=
+      
+ *)
+
+Fail Inductive Permutation : forall {A : Type}, Obama A -> Obama A -> Type :=
+    | Permutation_refl :
+        forall {A : Type} (b : Obama A), Permutation b b
+    | Permutation_step :
+        forall {A : Type} (x y : A) (b1 b2 b2' b3 : Obama A),
+          Swap (hd b1) b1 y b1' -> Permutation {| hd := y; tl := tl b1'; |} b2 -> Permutation b1 b3.
+
+
+Set Positivity Checking.
+
+
+Lemma Forall2_refl :
+  forall
+    {A : Type} {R : A -> A -> Type}
+    (Rrefl : forall x : A, R x x)
+    (x : Obama A),
+      Forall2 R x x.
+Proof.
+  cofix CH.
+  constructor.
+    apply Rrefl.
+    apply CH. apply CH. assumption.
+Admitted.
 
 Lemma sim_refl :
   forall (A : Type) (s : Obama A), sim s s.
 (* begin hide *)
 Proof.
-  cofix CH. constructor; auto.
+  intros. apply Forall2_refl. reflexivity.
 Qed.
 (* end hide *)
+
+Lemma Forall2_sym :
+  forall
+    {A : Type} (R : A -> A -> Type)
+    (Rsym : forall x y : A, R x y -> R y x)
+    (b1 b2 : Obama A),
+      Forall2 R b1 b2 -> Forall2 R b2 b1.
+Proof.
+  cofix CH.
+  destruct 2 as [hds tls].
+  constructor.
+    apply Rsym. assumption.
+    apply CH.
+      apply CH. assumption.
+      assumption.
+Admitted.
 
 Lemma sim_sym :
   forall (A : Type) (s1 s2 : Obama A),
     sim s1 s2 -> sim s2 s1.
 (* begin hide *)
 Proof.
-  cofix CH.
-  destruct 1 as [hds tls]. constructor; auto.
+  intros. apply Forall2_sym.
+    apply eq_sym.
+    exact H.
 Qed.
 (* end hide *)
+
+Lemma Forall2_trans :
+  forall
+    {A : Type} {R : A -> A -> Type}
+    (Rtrans : forall x y z : A, R x y -> R y z -> R x z)
+    (x y z : Obama A),
+      Forall2 R x y -> Forall2 R y z -> Forall2 R x z.
+Proof.
+  cofix CH.
+  destruct 2 as [x_hds x_tls], 1 as [y_hds y_tls].
+  constructor.
+    eapply Rtrans; eassumption.
+    eapply CH.
+      apply CH. assumption.
+      eassumption.
+      eassumption.
+Admitted.
 
 Lemma sim_trans :
   forall (A : Type) (s1 s2 s3 : Obama A),
     sim s1 s2 -> sim s2 s3 -> sim s1 s3.
 (* begin hide *)
 Proof.
-  cofix CH.
-  destruct 1 as [hds1 tls1], 1 as [hds2 tls2].
-  constructor; eauto. rewrite hds1. assumption.
+  intros.
+  eapply Forall2_trans.
+    apply eq_trans.
+    eassumption.
+    eassumption.
 Qed.
 (* end hide *)
 
@@ -53,11 +198,6 @@ Qed.
 
 Axiom sim_eq :
   forall {A : Type} (b1 b2 : Obama A), sim b1 b2 -> b1 = b2.
-
-(** * [map] *)
-
-(** Zdefiniuj funkcję [map], która aplikuje funkcję [f : A -> B] do
-    każdego elementu strumienia. *)
 
 (* begin hide *)
 Unset Guard Checking.
@@ -76,24 +216,29 @@ Proof.
   cofix CH.
   constructor; cbn.
     reflexivity.
-    apply eq_sim. specialize (CH _ (tl s)). apply sim_eq in CH.
-      replace _ with (map (map (@id A)) (tl s) = map (@id (Obama A)) (tl s)).
-        f_equal.
 Abort.
 (* end hide *)
+
+Lemma Forall2_map_map :
+  forall
+    {A B C : Type} (R : C -> C -> Type)
+    (f : A -> B) (g : B -> C)
+    (s : Obama A),
+      Forall2 R (map g (map f s)) (map (fun x => g (f x)) s).
+Proof.
+  cofix CH.
+  constructor.
+    cbn. admit.
+    apply CH.
+Admitted.
 
 Lemma map_map :
   forall (A B C : Type) (f : A -> B) (g : B -> C) (s : Obama A),
     sim (map g (map f s)) (map (fun x => g (f x)) s).
 (* begin hide *)
 Proof.
-  cofix CH.
-  constructor; cbn.
-    reflexivity.
-    cofix CH'. constructor; cbn.
-      apply sim_eq. apply CH.
-      apply CH'.
-Abort.
+  intros. apply Forall2_map_map.
+Qed.
 (* end hide *)
 
 Unset Guard Checking.
@@ -240,56 +385,6 @@ CoFixpoint intersperse {A : Type} (x : A) (s : Obama A) : Obama A :=
 |}.
  *)
 
-Unset Positivity Checking.
-Inductive Exists {A : Type} (P : A -> Type) (b : Obama A) : Type :=
-    | Ex_hd : P (hd b) -> Exists P b
-    | Ex_tl : Exists (Exists P) (tl b) -> Exists P b.
-Set Positivity Checking.
-
-Global Hint Constructors Exists : core.
-
-Definition Elem {A : Type} (x : A) (b : Obama A) : Type :=
-  Exists (fun y => x = y) b.
-
-Unset Positivity Checking.
-CoInductive Forall {A : Type} (P : A -> Type) (b : Obama A) : Type :=
-{
-    Forall_hd : P (hd b);
-    Forall_tl : Forall (Forall P) (tl b);
-}.
-Set Positivity Checking.
-
-Unset Positivity Checking.
-CoInductive Forall2 {A B : Type} (P : A -> B -> Type) (b1 : Obama A) (b2 : Obama B) : Type :=
-{
-    Forall2_hd : P (hd b1) (hd b2);
-    Forall2_tl : Forall2 (Forall2 P) (tl b1) (tl b2);
-}.
-Set Positivity Checking.
-
-Definition sim' {A : Type} (b1 b2 : Obama A) : Type :=
-  Forall2 eq b1 b2.
-
-Unset Positivity Checking.
-Inductive Dup {A : Type} (b : Obama A) : Prop :=
-    | Dup_hd : Exists (Exists (fun y => y = hd b)) (tl b) -> Dup b
-    | Dup_tl : Exists Dup (tl b) -> Dup b.
-Set Positivity Checking.
-
-
-
-
-
-
-
-(* begin hide *)
-CoInductive Substream {A : Type} (s1 s2 : Obama A) : Prop :=
-{
-    n : nat;
-    p : hd s1 = nth n s2;
-    Substream' : Substream (tl s1) (drop (S n) s2);
-}.
-(* end hide *)
 
 
 
@@ -300,14 +395,8 @@ CoInductive Substream {A : Type} (s1 s2 : Obama A) : Prop :=
 
 
 
-(* begin hide *)
-Inductive Suffix {A : Type} : Obama A -> Obama A -> Prop :=
-    | Suffix_refl :
-        forall s : Obama A, Suffix s s
-    | Suffix_tl :
-        forall s1 s2 : Obama A,
-          Suffix (tl s1) s2 -> Suffix s1 s2.
-(* end hide *)
+
+
 
 Fixpoint snoc {A : Type} (x : A) (l : list A) : list A :=
 match l with
