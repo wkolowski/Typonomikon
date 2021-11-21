@@ -19,9 +19,6 @@ Inductive BushF (F : Type -> Type) (A : Type) : Type :=
 Fail Inductive Bush (A : Type) : Type :=
     | In : BushF Bush A -> Bush A.
 
-Definition ListC (A : Type) : Type :=
-  forall (R : Type) (nil : R) (cons : A -> R -> R), R.
-
 Definition BushC (A : Type) : Type :=
   forall
     (F : Type -> Type)

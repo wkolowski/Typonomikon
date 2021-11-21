@@ -1,4 +1,4 @@
-(* Pomysł na Complete wzięty stąd: http://comonad.com/reader/wp-content/uploads/2010/04/Finger-Trees.pdf *)
+(* Pomysł na [Complete] wzięty stąd: http://comonad.com/reader/wp-content/uploads/2010/04/Finger-Trees.pdf *)
 
 Require Import Bool Recdef Equality FunctionalExtensionality.
 Require Import List.
@@ -8,9 +8,6 @@ Inductive Complete (A : Type) : Type :=
     | Empty : Complete A
     | Layer : A -> Complete (A * A) -> Complete A.
 
-Check Complete.
-Print Complete.
-Check Empty.
 Arguments Empty {A}.
 Arguments Layer {A} _ _.
 
