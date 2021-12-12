@@ -3950,7 +3950,7 @@ end.
     [Fail]. Podobnie jak poprzednio, pomożemy sobie za pomocą aksjomatów,
     jednak najpierw prześledźmy definicję.
 
-    Typ slist działa następująco:
+    Typ [slist R] działa następująco:
     - [R] to jakiś porządek. Zauważ, że tym razem [R : A -> A -> bool], a
       więc porządek jest reprezentowany przez funkcję, która go rozstrzyga
     - [snil] to lista pusta

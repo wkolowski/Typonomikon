@@ -216,3 +216,14 @@ Proof.
     unfold P; cbn; intros. f_equal. rewrite !H. f_equal.
       extensionality bb.
 Abort.
+
+Unset Guard Checking.
+Lemma map_map :
+  forall {A B C : Type} (f : A -> B) (g : B -> C) (b : Bush A),
+    map g (map f b) = map (fun x => g (f x)) b.
+Proof.
+  fix IH 6.
+  destruct b as [| h t]; cbn.
+    reflexivity. rewrite IH.
+Abort.
+Set Guard Checking.
