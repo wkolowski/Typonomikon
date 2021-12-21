@@ -1,4 +1,4 @@
-(** * H: [Nie]równości, ścieżki i przepaście [TODO] *)
+(** * H: Nierówności, ścieżki i przepaście [TODO] *)
 
 Set Universe Polymorphism.
 

@@ -1,3 +1,5 @@
+Require Import Setoid.
+
 Inductive Order : Type :=
     | Lt
     | Eq
@@ -91,8 +93,6 @@ Class Poset (A : Type) : Type :=
       forall x y : A, {rel x y} + {~ rel x y};
 }.
 
-Require Import Setoid.
-
 Lemma DecidablePoset_to_Poset :
   forall {A : Type}, DecidablePoset A -> Poset A.
 Proof.
@@ -155,3 +155,5 @@ Proof.
       *  assert (R z x) by (eapply trans; eauto). contradiction.
   - destruct (dec x y), (dec y x); intuition congruence.
 Defined.
+
+End SecondTry.
