@@ -18,7 +18,8 @@ end.
 Fail Inductive BHeap {A : Type} (R : A -> A -> Prop) : Type :=
     | In : BHeapF R (BHeap R) (OKR R (BHeap R) (fun _ _ => True)) -> BHeap R.
 
-(*
+Module SecondTry.
+
 Inductive BHeapF {A : Type} (R : A -> A -> Prop) (X Y Z : Type) : Type :=
     | E
     | N (v : A) (l r : X) (okl : Y) (okr : Z).
@@ -34,7 +35,7 @@ match h with
     | N hv l _ _ _ => R v hv
 end.
 
-Inductive BHeap {A : Type} (R : A -> A -> Prop) : Type :=
+Fail Inductive BHeap {A : Type} (R : A -> A -> Prop) : Type :=
     | In : BHeapF R (BHeap R) (OKR R (BHeap R) (forall _ _, True) (forall _ _, True)) (OKR R (BHeap R) (fun _ _ => True)) -> BHeap R.
 
-*)
+End SecondTry.
