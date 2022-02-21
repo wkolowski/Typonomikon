@@ -10040,6 +10040,159 @@ Proof.
 Qed.
 (* end hide *)
 
+(** **** [mask] *)
+
+(** Zdefiniuj funkcję [mask], który bierze funkcję [f : A -> A], listę wartości
+    boolowskich [bs : list bool] oraz listę [l : list A] i aplikuje funkcję [f]
+    do tych elementów listy [l], dla których odpowiadający bit w masce [bs] jest
+    równy [true]. Jeżeli maska jest krótsza niż lista, to reszta listy "wystająca"
+    za maskę powinna zostać niezmieniona.
+
+    Przykład: [mask S [true; false; true; false] [1; 2; 3; 4; 5; 6] = [2; 2; 4; 4; 5; 6] *)
+
+(* begin hide *)
+Fixpoint mask {A : Type} (f : A -> A) (bs : list bool) (l : list A) : list A :=
+match bs, l with
+    | [], _ => l
+    | _, [] => []
+    | b :: bs', h :: t => (if b then f h else h) :: mask f bs' t
+end.
+(* end hide *)
+
+Lemma isEmpty_mask :
+  forall {A : Type} (f : A -> A) (bs : list bool) (l : list A),
+    isEmpty (mask f bs l) = isEmpty l.
+(* begin hide *)
+Proof.
+  destruct l, bs; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma length_mask :
+  forall {A : Type} (f : A -> A) (bs : list bool) (l : list A),
+    length (mask f bs l) = length l.
+(* begin hide *)
+Proof.
+  induction bs as [| b bs']; cbn.
+  - reflexivity.
+  - destruct l as [| h t]; cbn; rewrite ?IHbs'; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma take_mask :
+  forall {A : Type} (n : nat) (f : A -> A) (bs : list bool) (l : list A),
+    take n (mask f bs l) = mask f bs (take n l).
+(* begin hide *)
+Proof.
+  intros A n f bs. revert n.
+  induction bs as [| b bs']; cbn.
+  - reflexivity.
+  - destruct l as [| h t]; cbn.
+    + reflexivity.
+    + destruct n as [| n']; cbn.
+      * reflexivity.
+      * rewrite IHbs'. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma take_mask' :
+  forall {A : Type} (n : nat) (f : A -> A) (bs : list bool) (l : list A),
+    take n (mask f bs l) = mask f (take n bs) (take n l).
+(* begin hide *)
+Proof.
+  intros A n f bs. revert n.
+  induction bs as [| b bs']; cbn.
+  - reflexivity.
+  - destruct l as [| h t], n as [| n']; cbn; rewrite ?IHbs'; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma drop_mask :
+  forall {A : Type} (n : nat) (f : A -> A) (bs : list bool) (l : list A),
+    drop n (mask f bs l) = mask f bs (drop n l).
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Lemma mask_zipWith :
+  forall {A : Type} (f : A -> A) (bs : list bool) (l : list A),
+    mask f bs l = zipWith (fun (b : bool) (x : A) => if b then f x else x) bs l.
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+(* begin hide *)
+(*
+snoc
+app
+rev
+map
+join
+bind
+replicate
+iterate i iter
+head
+tail
+uncons
+last
+init
+unsnoc
+
+nth
+drop
+
+cycle
+splitAt
+insert
+replace
+remove
+zip
+unzip
+zipWith
+unzipWith
+*)
+(* end hide *)
+
+(** **** Też [mask], ale inaczej *)
+
+(** Zaimplementuj funkcję [mask'], która działa podobnie do [mask], ale tym razem
+    jeżeli lista wystaje za maskę, to jest przycinana do długości maski.
+
+    Znajdź i udowodnij porządną specyfikację dla swojej funkcji. *)
+
+(* begin hide *)
+Fixpoint mask' {A : Type} (f : A -> A) (l : list A) (bs : list bool) : list A :=
+match l, bs with
+    | [], _ => []
+    | _, [] => []
+    | h :: t, b :: bs' => (if b then f h else h) :: mask' f t bs'
+end.
+(* end hdie *)
+
+Lemma mask'_zipWith :
+  forall {A : Type} (f : A -> A) (l : list A) (bs : list bool),
+    mask' f l bs = zipWith (fun (b : bool) (x : A) => if b then f x else x) bs l.
+(* begin hide *)
+Proof.
+  induction l as [| h t]; cbn; intro.
+  - destruct bs; reflexivity. (* TODO: zipWith_nil_r *)
+  - destruct bs as [| b bs']; cbn.
+    + reflexivity.
+    + rewrite IHt. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma length_mask' :
+  forall {A : Type} (f : A -> A) (l : list A) (bs : list bool),
+    length (mask' f l bs) = min (length bs) (length l).
+(* begin hide *)
+Proof.
+  intros. rewrite mask'_zipWith, zipWith_spec, length_map, length_zip. reflexivity.
+Qed.
+(* end hide *)
+
 (** * Bardziej skomplikowane funkcje *)
 
 (** ** [intersperse] *)

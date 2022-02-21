@@ -43,6 +43,16 @@ match Out t with
         end
 end.
 
+Definition leftmost' {A : Type} (t : Tree A) : option A :=
+  leftmostF (Out t).
+
+Lemma leftmost_leftmost' :
+  forall {A : Type} (t : Tree A),
+    leftmost t = leftmost' t.
+Proof.
+  destruct t as [[]]; cbn; reflexivity.
+Qed.
+
 Fixpoint mapF {A B X Y : Type} (f : A -> B) (g : X -> Y) (t : TreeF A X) {struct t} : TreeF B Y :=
 match t with
     | E       => E
@@ -77,9 +87,6 @@ Fail CoFixpoint complete' {A : Type} (n : nat) (x : A) : Tree A :=
 |}.
 
 Require Import F2.
-Print conat.
-Search (conat -> conat).
-Search nat conat.
 
 Definition max (n : nat) (m : conat) : conat := max (from_nat n) m.
 

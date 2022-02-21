@@ -27,3 +27,4 @@ End xd.
 Import xd.
 
 Goal forall u1 u2 : unit, MkR u1 = MkR u2.
+Abort.

@@ -5048,11 +5048,89 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 </div>
 
 <div class="doc">
-<a id="lab496"></a><h1 class="section">Bardziej skomplikowane funkcje</h1>
+<a id="lab496"></a><h4 class="section"><span class="inlinecode"><span class="id" title="var">mask</span></span></h4>
 
 <div class="paragraph"> </div>
 
-<a id="lab497"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">intersperse</span></span></h2>
+ Zdefiniuj funkcję <span class="inlinecode"><span class="id" title="var">mask</span></span>, który bierze funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">A</span></span>, listę wartości
+    boolowskich <span class="inlinecode"><span class="id" title="var">bs</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span> oraz listę <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> i aplikuje funkcję <span class="inlinecode"><span class="id" title="var">f</span></span>
+    do tych elementów listy <span class="inlinecode"><span class="id" title="var">l</span></span>, dla których odpowiadający bit w masce <span class="inlinecode"><span class="id" title="var">bs</span></span> jest
+    równy <span class="inlinecode"><span class="id" title="var">true</span></span>. Jeżeli maska jest krótsza niż lista, to reszta listy "wystająca"
+    za maskę powinna zostać niezmieniona.
+
+<div class="paragraph"> </div>
+
+    Przykład: <span class="inlinecode"><span class="id" title="var">mask</span></span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">[<span class="id" title="var">true</span>;</span> <span class="inlinecode"><span class="id" title="var">false</span>;</span> <span class="inlinecode"><span class="id" title="var">true</span>;</span> <span class="inlinecode"><span class="id" title="var">false</span>]</span> <span class="inlinecode">[1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6]</span> <span class="inlinecode">=</span> <span class="inlinecode">[2;</span> <span class="inlinecode">2;</span> <span class="inlinecode">4;</span> <span class="inlinecode">4;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6]</span> <span class="inlinecode"></span>
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">isEmpty_mask</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">bs</span> : <span class="id" title="var">list</span> <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">isEmpty</span> (<span class="id" title="var">mask</span> <span class="id" title="var">f</span> <span class="id" title="var">bs</span> <span class="id" title="var">l</span>) = <span class="id" title="var">isEmpty</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_mask</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">bs</span> : <span class="id" title="var">list</span> <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">mask</span> <span class="id" title="var">f</span> <span class="id" title="var">bs</span> <span class="id" title="var">l</span>) = <span class="id" title="var">length</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_mask</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">bs</span> : <span class="id" title="var">list</span> <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">take</span> <span class="id" title="var">n</span> (<span class="id" title="var">mask</span> <span class="id" title="var">f</span> <span class="id" title="var">bs</span> <span class="id" title="var">l</span>) = <span class="id" title="var">mask</span> <span class="id" title="var">f</span> <span class="id" title="var">bs</span> (<span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">take_mask'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">bs</span> : <span class="id" title="var">list</span> <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">take</span> <span class="id" title="var">n</span> (<span class="id" title="var">mask</span> <span class="id" title="var">f</span> <span class="id" title="var">bs</span> <span class="id" title="var">l</span>) = <span class="id" title="var">mask</span> <span class="id" title="var">f</span> (<span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">bs</span>) (<span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">drop_mask</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">bs</span> : <span class="id" title="var">list</span> <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">drop</span> <span class="id" title="var">n</span> (<span class="id" title="var">mask</span> <span class="id" title="var">f</span> <span class="id" title="var">bs</span> <span class="id" title="var">l</span>) = <span class="id" title="var">mask</span> <span class="id" title="var">f</span> <span class="id" title="var">bs</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mask_zipWith</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">bs</span> : <span class="id" title="var">list</span> <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mask</span> <span class="id" title="var">f</span> <span class="id" title="var">bs</span> <span class="id" title="var">l</span> = <span class="id" title="var">zipWith</span> (<span class="id" title="keyword">fun</span> (<span class="id" title="var">b</span> : <span class="id" title="var">bool</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) =&gt; <span class="id" title="keyword">if</span> <span class="id" title="var">b</span> <span class="id" title="keyword">then</span> <span class="id" title="var">f</span> <span class="id" title="var">x</span> <span class="id" title="keyword">else</span> <span class="id" title="var">x</span>) <span class="id" title="var">bs</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab497"></a><h4 class="section">Też <span class="inlinecode"><span class="id" title="var">mask</span></span>, ale inaczej</h4>
+
+<div class="paragraph"> </div>
+
+ Zaimplementuj funkcję <span class="inlinecode"><span class="id" title="var">mask'</span></span>, która działa podobnie do <span class="inlinecode"><span class="id" title="var">mask</span></span>, ale tym razem
+    jeżeli lista wystaje za maskę, to jest przycinana do długości maski.
+
+<div class="paragraph"> </div>
+
+    Znajdź i udowodnij porządną specyfikację dla swojej funkcji. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">length_mask'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">bs</span> : <span class="id" title="var">list</span> <span class="id" title="var">bool</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">mask'</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span> <span class="id" title="var">bs</span>) = <span class="id" title="var">min</span> (<span class="id" title="var">length</span> <span class="id" title="var">bs</span>) (<span class="id" title="var">length</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab498"></a><h1 class="section">Bardziej skomplikowane funkcje</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab499"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">intersperse</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -5202,11 +5280,11 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 </div>
 
 <div class="doc">
-<a id="lab498"></a><h1 class="section">Proste predykaty</h1>
+<a id="lab500"></a><h1 class="section">Proste predykaty</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab499"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">elem</span></span></h2>
+<a id="lab501"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">elem</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -5478,7 +5556,7 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 </div>
 
 <div class="doc">
-<a id="lab500"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">In</span></span></h2>
+<a id="lab502"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">In</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -5718,7 +5796,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab501"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">NoDup</span></span></h2>
+<a id="lab503"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">NoDup</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -5845,7 +5923,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab502"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Dup</span></span></h2>
+<a id="lab504"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Dup</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -6055,7 +6133,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab503"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Rep</span></span></h2>
+<a id="lab505"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Rep</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -6232,7 +6310,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab504"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Exists</span></span></h2>
+<a id="lab506"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Exists</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -6426,7 +6504,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab505"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Forall</span></span></h2>
+<a id="lab507"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Forall</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -6620,7 +6698,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab506"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">AtLeast</span></span></h2>
+<a id="lab508"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">AtLeast</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -6890,7 +6968,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab507"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Exactly</span></span></h2>
+<a id="lab509"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">Exactly</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -7060,7 +7138,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab508"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">AtMost</span></span></h2>
+<a id="lab510"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">AtMost</span></span></h2>
 
 <div class="paragraph"> </div>
 
@@ -7122,7 +7200,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab509"></a><h1 class="section">Relacje między listami</h1>
+<a id="lab511"></a><h1 class="section">Relacje między listami</h1>
 
 </div>
 <div class="code">
@@ -7133,7 +7211,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab510"></a><h2 class="section">Listy jako termy</h2>
+<a id="lab512"></a><h2 class="section">Listy jako termy</h2>
 
 <div class="paragraph"> </div>
 
@@ -7403,7 +7481,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab511"></a><h2 class="section">Prefiksy</h2>
+<a id="lab513"></a><h2 class="section">Prefiksy</h2>
 
 <div class="paragraph"> </div>
 
@@ -7719,7 +7797,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab512"></a><h2 class="section">Sufiksy</h2>
+<a id="lab514"></a><h2 class="section">Sufiksy</h2>
 
 <div class="paragraph"> </div>
 
@@ -7784,7 +7862,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab513"></a><h2 class="section">Listy jako ciągi</h2>
+<a id="lab515"></a><h2 class="section">Listy jako ciągi</h2>
 
 <div class="paragraph"> </div>
 
@@ -8125,7 +8203,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab514"></a><h2 class="section">Zawieranie</h2>
+<a id="lab516"></a><h2 class="section">Zawieranie</h2>
 
 <div class="paragraph"> </div>
 
@@ -8431,7 +8509,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab515"></a><h2 class="section">Listy jako zbiory</h2>
+<a id="lab517"></a><h2 class="section">Listy jako zbiory</h2>
 
 <div class="paragraph"> </div>
 
@@ -8617,7 +8695,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 </div>
 
 <div class="doc">
-<a id="lab516"></a><h2 class="section">Listy jako multizbiory</h2>
+<a id="lab518"></a><h2 class="section">Listy jako multizbiory</h2>
 
 </div>
 <div class="code">
@@ -9173,7 +9251,7 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 </div>
 
 <div class="doc">
-<a id="lab517"></a><h2 class="section">Listy jako cykle</h2>
+<a id="lab519"></a><h2 class="section">Listy jako cykle</h2>
 
 <div class="paragraph"> </div>
 
@@ -9508,7 +9586,7 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 </div>
 
 <div class="doc">
-<a id="lab518"></a><h2 class="section">Partycje list (TODO)</h2>
+<a id="lab520"></a><h2 class="section">Partycje list (TODO)</h2>
 
 </div>
 <div class="code">
@@ -9637,7 +9715,7 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 </div>
 
 <div class="doc">
-<a id="lab519"></a><h1 class="section">Niestandardowe reguły indukcyjne (TODO)</h1>
+<a id="lab521"></a><h1 class="section">Niestandardowe reguły indukcyjne (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -9690,7 +9768,7 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 </div>
 
 <div class="doc">
-<a id="lab520"></a><h2 class="section">Palindromy</h2>
+<a id="lab522"></a><h2 class="section">Palindromy</h2>
 
 <div class="paragraph"> </div>
 

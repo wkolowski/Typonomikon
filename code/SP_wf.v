@@ -34,14 +34,12 @@ Proof.
   - destruct f as [f wff], g as [g wfg].
     revert f g wff wfg. cofix compSP. intros.
     inversion wfg as [g' h t H1 H2 | g' get H1 H2 H3].
-    + refine {| Out := PutX h _ |}. exact (compSP f t wff).
-
-
-destruct f as [[[h t | get]] wff].
-
+    + refine {| Out := PutX h _ |}. (* exact (compSP f t wff). *)
+Abort.
 
 (** The first, naive way of doing it. *)
 
+(*
 Fixpoint head {A B : Type} (g : GetSP A B) (s : Stream A) : B :=
 match g with
     | In (PutX h t) => h
@@ -212,13 +210,4 @@ Proof.
         admit.
       apply GetX. intro a.
 Abort.
-(*
-{|
-    Out :=
-    match Out f, Out g with
-        | _       , PutX hc tc => PutX hc (compSP f tc)
-        | PutX h t, GetX g'    => compSP t (Out (g' h))
-        | GetX f' , _          => GetX (fun a => compSP f' g)
-    end
-|}.
 *)
