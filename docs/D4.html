@@ -323,23 +323,6 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sub</span> (<span class="id" title="var">pred</span> <span class="id" title="var">n</span>) <span class="id" title="var">m</span> = <span class="id" title="var">pred</span> (<span class="id" title="var">sub</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
 
 <br/>
-<span class="comment">(*&nbsp;Lemma&nbsp;sub_pred_r&nbsp;:<br/>
-&nbsp;&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;sub&nbsp;n&nbsp;(pred&nbsp;m)&nbsp;=&nbsp;sub&nbsp;n&nbsp;m.<br/>
-<span class="comment">(*&nbsp;begin&nbsp;hide&nbsp;*)</span><br/>
-Proof.<br/>
-&nbsp;&nbsp;intros&nbsp;n&nbsp;m.&nbsp;revert&nbsp;n.<br/>
-&nbsp;&nbsp;induction&nbsp;m&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>;&nbsp;cbn;&nbsp;intros.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;reflexivity.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;rewrite&nbsp;&lt;-&nbsp;IHm'&nbsp;at&nbsp;2.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;inducti<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;rewrite&nbsp;&lt;-&nbsp;sub_pred_l.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;rewrite&nbsp;IHm'.&nbsp;reflexivity.<br/>
-Qed.<br/>
-<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
-&nbsp;*)</span><br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sub_0_l</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">sub</span> 0 <span class="id" title="var">n</span> = 0.<br/>
 

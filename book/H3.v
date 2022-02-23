@@ -1106,6 +1106,7 @@ Qed.
 Lemma injective_Injective :
   forall (A B : Type) (f : A -> B),
     injective f <-> Injective (fun (a : A) (b : B) => f a = b).
+(* begin hide *)
 Proof.
   split.
     compute; intros. repeat split; intros.
@@ -1117,7 +1118,6 @@ Proof.
         assumption.
         reflexivity.
 Qed.
-
 (* end hide *)
 
 Class Surjective {A B : Type} (R : hrel A B) : Prop :=
@@ -2992,7 +2992,7 @@ Lemma ec_Rinv :
 Proof. ec. Qed.
 (* end hide *)
 
-(** *** Domknięcie zwrotnosymetryczne *)
+(** ** Domknięcie zwrotnosymetryczne *)
 
 Definition rsc {A : Type} (R : rel A) : rel A :=
   refl_clos (symm_clos R).
@@ -3046,7 +3046,7 @@ Lemma rsc_Rinv :
 Proof. rstc. Qed.
 (* end hide *)
 
-(** *** Domknięcie równoważnościowe v2 *)
+(** ** Domknięcie równoważnościowe v2 *)
 
 Definition rstc {A : Type} (R : rel A) : rel A :=
   trans_clos (symm_clos (refl_clos R)).
@@ -3167,6 +3167,7 @@ Qed.
 Lemma rstc_idempotent :
   forall (A : Type) (R : rel A),
     rstc (rstc R) <--> rstc R.
+(* begin hide *)
 Proof.
   split.
     induction 1.

@@ -10040,7 +10040,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** **** [mask] *)
+(** ** [mask] *)
 
 (** Zdefiniuj funkcję [mask], który bierze funkcję [f : A -> A], listę wartości
     boolowskich [bs : list bool] oraz listę [l : list A] i aplikuje funkcję [f]
@@ -10057,6 +10057,15 @@ match bs, l with
     | _, [] => []
     | b :: bs', h :: t => (if b then f h else h) :: mask f bs' t
 end.
+(* end hide *)
+
+Lemma mask_nil :
+  forall {A : Type} (f : A -> A) (bs : list bool),
+    mask f bs [] = [].
+(* begin hide *)
+Proof.
+  destruct bs; reflexivity.
+Qed.
 (* end hide *)
 
 Lemma isEmpty_mask :
@@ -10076,6 +10085,65 @@ Proof.
   induction bs as [| b bs']; cbn.
   - reflexivity.
   - destruct l as [| h t]; cbn; rewrite ?IHbs'; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma mask_app_r :
+  forall {A : Type} (f : A -> A) (bs : list bool) (l1 l2 : list A),
+    mask f bs (l1 ++ l2) = mask f bs l1 ++ mask f (drop (length l1) bs) l2.
+(* begin hide *)
+Proof.
+  induction bs as [| b bs']; cbn.
+  - reflexivity.
+  - destruct l1 as [| h1 t1]; cbn; intro l2; rewrite ?IHbs'; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma mask_app_l :
+  forall {A : Type} (f : A -> A) (bs1 bs2 : list bool) (l : list A),
+    mask f (bs1 ++ bs2) l = mask f (replicate (length bs1) false ++ bs2) (mask f bs1 l).
+(* begin hide *)
+Proof.
+  induction bs1 as [| b1 bs1']; cbn.
+  - reflexivity.
+  - destruct l as [| h t]; cbn; rewrite ?IHbs1'; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma mask_app_l' :
+  forall {A : Type} (f : A -> A) (bs1 bs2 : list bool) (l : list A),
+    mask f (bs1 ++ bs2) l
+      =
+    mask f bs1 (take (length bs1) l) ++ mask f bs2 (drop (length bs1) l).
+(* begin hide *)
+Proof.
+  induction bs1 as [| b1 bs1']; cbn.
+  - intros. rewrite take_0, drop_0; cbn. reflexivity.
+  - destruct l as [| h t]; cbn.
+    + rewrite mask_nil; reflexivity.
+    + rewrite IHbs1'; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma mask_replicate_true :
+  forall {A : Type} (f : A -> A) (n : nat) (l : list A),
+    mask f (replicate n true) l = map f (take n l) ++ drop n l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+  - intro l2. rewrite take_0, drop_0; cbn. reflexivity.
+  - destruct l as [| h t]; cbn; rewrite ?IHn'; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma mask_replicate_false :
+  forall {A : Type} (f : A -> A) (n : nat) (l : list A),
+    mask f (replicate n false) l = l.
+(* begin hide *)
+Proof.
+  induction n as [| n']; cbn.
+  - reflexivity.
+  - destruct l as [| h t]; cbn; rewrite ?IHn'; reflexivity.
 Qed.
 (* end hide *)
 
@@ -10100,7 +10168,7 @@ Lemma take_mask' :
     take n (mask f bs l) = mask f (take n bs) (take n l).
 (* begin hide *)
 Proof.
-  intros A n f bs. revert n.
+  intros A n f bs; revert n.
   induction bs as [| b bs']; cbn.
   - reflexivity.
   - destruct l as [| h t], n as [| n']; cbn; rewrite ?IHbs'; reflexivity.
@@ -10109,10 +10177,37 @@ Qed.
 
 Lemma drop_mask :
   forall {A : Type} (n : nat) (f : A -> A) (bs : list bool) (l : list A),
-    drop n (mask f bs l) = mask f bs (drop n l).
+    drop n (mask f bs l) = mask f (drop n bs) (drop n l).
 (* begin hide *)
 Proof.
-Abort.
+  intros A n f bs; revert n.
+  induction bs as [| b bs']; cbn.
+  - reflexivity.
+  - destruct l as [| h t], n as [| n']; cbn; rewrite ?mask_nil, ?IHbs'; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma nth_mask :
+  forall {A : Type} (n : nat) (f : A -> A) (bs : list bool) (l : list A),
+    nth n (mask f bs l)
+      =
+    match nth n bs with
+        | None => nth n l
+        | Some false => nth n l
+        | Some true =>
+            match nth n l with
+                | None => None
+                | Some x => Some (f x)
+            end
+    end.
+(* begin hide *)
+Proof.
+  intros A n f bs; revert n.
+  induction bs as [| b bs']; cbn.
+  - reflexivity.
+  - destruct l as [| h t], n as [| n'], b; cbn; rewrite ?IHbs'; try reflexivity.
+    1-2: destruct (nth n' bs') as [[] |]; try reflexivity.
+Qed.
 (* end hide *)
 
 Lemma mask_zipWith :
@@ -10126,12 +10221,10 @@ Abort.
 (* begin hide *)
 (*
 snoc
-app
 rev
 map
 join
 bind
-replicate
 iterate i iter
 head
 tail
@@ -10139,9 +10232,6 @@ uncons
 last
 init
 unsnoc
-
-nth
-drop
 
 cycle
 splitAt
@@ -10155,7 +10245,7 @@ unzipWith
 *)
 (* end hide *)
 
-(** **** Też [mask], ale inaczej *)
+(** ** Też [mask], ale inaczej *)
 
 (** Zaimplementuj funkcję [mask'], która działa podobnie do [mask], ale tym razem
     jeżeli lista wystaje za maskę, to jest przycinana do długości maski.
@@ -21641,6 +21731,7 @@ Lemma list_palindrome_ind :
     (forall x : A, P [x]) ->
     (forall (x y : A) (l : list A), P l -> P (x :: snoc y l)) ->
       forall l : list A, P l.
+(* begin hide *)
 Proof.
   fix IH 6. destruct l as [| h t].
     assumption.

@@ -3886,8 +3886,8 @@ match l with
           map (fun '(l, r) => l ++ h :: r) (select ll)) (perms t)
 end.
 
-Compute select [1; 2; 3].
-Compute perms [1; 2; 3].
+(* Compute select [1; 2; 3]. *)
+(* Compute perms [1; 2; 3]. *)
 
 Lemma Permutation_bind :
   forall {A B : Type} (f g : A -> list B),
@@ -3915,7 +3915,9 @@ Admitted.
 
 Lemma map_select :
   forall {A B : Type} (f : A -> B) (l : list A),
-    select (map f l) = map (fun '(L, R) => (map f L, map f R)) (select l).
+    select (map f l)
+      =
+    map (fun '(L, R) => (map f L, map f R)) (select l).
 (* begin hide *)
 Proof.
   induction l as [| h t]; cbn.
@@ -3938,7 +3940,7 @@ Proof.
         induction l0 as [| h t]; cbn.
           reflexivity.
           apply Permutation_app.
-            destruct h. Check Permutation_map.
+            destruct h.
 Admitted.
 (* end hide *)
 

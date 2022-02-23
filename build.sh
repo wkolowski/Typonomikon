@@ -60,11 +60,13 @@ coqdoc book/*v --latex -o tex/Książka.tex                 \
        --parse-comments                                   \
        --no-index                                         \
        --toc --toc-depth 2                                \
-       -p "\usepackage[polish]{babel}"                    \
+       -p "\usepackage[greek, polish]{babel}"             \
+       -p "\usepackage{textgreek}"                        \
        -p "\usepackage{pdfpages}"                         \
        -p "\DeclareUnicodeCharacter{221A}{\sqrt{}}"       \
        -p "\DeclareUnicodeCharacter{2208}{\in}"           \
        -p "\DeclareUnicodeCharacter{2261}{\equiv}"        \
+       -p "\DeclareUnicodeCharacter{03BF}{\omicron}"      \
        -p "\begin{document}"                              \
        -p "\includepdf{tex/cover.pdf}"
 

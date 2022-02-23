@@ -768,6 +768,7 @@ Qed.
 Lemma abs_rep_aux :
   forall {A : Type} (l : DList A) (l1 l2 : list A),
     l l1 ++ l2 = l (l1 ++ l2).
+(* begin hide *)
 Proof.
   intros until l2. revert l l1.
   induction l2 as [| h2 t2]; cbn; intros.
@@ -778,10 +779,12 @@ Proof.
         cbn in IHt2. rewrite <- app_assoc in IHt2. cbn in IHt2.
         rewrite <- IHt2. cbn.
 Abort.
+(* end hide *)
 
 Lemma abs_rep :
   forall {A : Type} (l : DList A),
     rep (abs l) = l.
+(* begin hide *)
 Proof.
   unfold abs, rep.
   intros A l.

@@ -899,18 +899,6 @@ Hint&nbsp;Constructors&nbsp;Finite'&nbsp;:&nbsp;core.<br/>
 <br/>
 <span class="id" title="keyword">with</span> <span class="id" title="var">Even2_add_Odd2_Even2</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Even2</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">Odd2</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">Odd2</span> (<span class="id" title="var">add</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> [(<span class="id" title="var">n'</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span>)].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cbn</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">eexists</span>. <span class="id" title="tactic">intuition</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> [[<span class="id" title="var">H</span> | (<span class="id" title="var">n'</span> &amp; <span class="id" title="var">H1</span> &amp; <span class="id" title="var">H2</span>)]],<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">H0</span> <span class="id" title="keyword">as</span> [(<span class="id" title="var">m'</span> &amp; <span class="id" title="var">H1'</span> &amp; <span class="id" title="var">H2'</span>)]; <span class="id" title="tactic">subst</span>; <span class="id" title="var">cbn</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">m'</span>. <span class="id" title="tactic">intuition</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">exists</span> (<span class="id" title="var">add</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>). <span class="id" title="tactic">intuition</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Even2_add_Odd2</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">m'</span>. <span class="id" title="tactic">auto</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 
 <br/>
 </div>

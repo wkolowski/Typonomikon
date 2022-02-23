@@ -978,20 +978,6 @@ Właściwości relacji injektywnych są takie, jak funkcji injektywnych,
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">injective_Injective</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">injective</span> <span class="id" title="var">f</span> &lt;-&gt; <span class="id" title="var">Injective</span> (<span class="id" title="keyword">fun</span> (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>) =&gt; <span class="id" title="var">f</span> <span class="id" title="var">a</span> = <span class="id" title="var">b</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">compute</span>; <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>; <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>). <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H0</span>, &lt;- <span class="id" title="var">H1</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H0</span>, <span class="id" title="var">H1</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> 1 <span class="id" title="keyword">as</span> [[[] []] []]. <span class="id" title="tactic">red</span>. <span class="id" title="tactic">intros</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">left_unique0</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">f</span> <span class="id" title="var">x'</span>).<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Surjective</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
@@ -2335,7 +2321,7 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 </div>
 
 <div class="doc">
-<a id="lab691"></a><h3 class="section">Domknięcie zwrotnosymetryczne</h3>
+<a id="lab691"></a><h2 class="section">Domknięcie zwrotnosymetryczne</h2>
 
 </div>
 <div class="code">
@@ -2378,7 +2364,7 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 </div>
 
 <div class="doc">
-<a id="lab692"></a><h3 class="section">Domknięcie równoważnościowe v2</h3>
+<a id="lab692"></a><h2 class="section">Domknięcie równoważnościowe v2</h2>
 
 </div>
 <div class="code">
@@ -2445,18 +2431,6 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">rstc_idempotent</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rstc</span> (<span class="id" title="var">rstc</span> <span class="id" title="var">R</span>) &lt;--&gt; <span class="id" title="var">rstc</span> <span class="id" title="var">R</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 1.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHtrans_clos1</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">do</span> 3 <span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
 
 <br/>
 

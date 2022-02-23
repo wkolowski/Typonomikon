@@ -1942,6 +1942,7 @@ Lemma Even2_add_Odd2 :
 
 with Even2_add_Odd2_Even2 :
   forall n m : conat, Even2 n -> Odd2 m -> Odd2 (add n m).
+(* begin hide *)
 Proof.
   constructor. destruct H as [(n' & H1 & H2)].
     cbn. rewrite H1. right. eexists. intuition.

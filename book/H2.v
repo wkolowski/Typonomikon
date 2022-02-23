@@ -385,18 +385,6 @@ Proof.
   unfold uncycle, cycle.
 Abort.
 
-(*
-Lemma cycle'_has_preinverse :
-  forall (A : Type) (n : nat),
-    has_preinverse (@cycle' A n).
-Proof.
-  intros. red.
-  exists (fun l : list A => cycle' (length l - n) l).
-  induction n as [| n']; cbn.
-Abort.
-*)
-(* end hide *)
-
 Definition isomorphism {A B : Type} (f : A -> B) : Type :=
   {g : B -> A | (forall a : A, g (f a) = a) /\
                 (forall b : B, f (g b) = b)}.

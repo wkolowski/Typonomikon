@@ -448,22 +448,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(* Lemma sub_pred_r :
-  forall n m : nat,
-    sub n (pred m) = sub n m.
-(* begin hide *)
-Proof.
-  intros n m. revert n.
-  induction m as [| m']; cbn; intros.
-    reflexivity.
-    rewrite <- IHm' at 2.
-    inducti
-    rewrite <- sub_pred_l.
-    rewrite IHm'. reflexivity.
-Qed.
-(* end hide *)
- *)
-
 Lemma sub_0_l :
   forall n : nat, sub 0 n = 0.
 (* begin hide *)

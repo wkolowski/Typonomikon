@@ -501,19 +501,6 @@ Zauważ, że sortem <span class="inlinecode"><span class="id" title="var">has_pr
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
-<span class="comment">(*<br/>
-Lemma&nbsp;cycle'_has_preinverse&nbsp;:<br/>
-&nbsp;&nbsp;forall&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(n&nbsp;:&nbsp;nat),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;has_preinverse&nbsp;(@cycle'&nbsp;A&nbsp;n).<br/>
-Proof.<br/>
-&nbsp;&nbsp;intros.&nbsp;red.<br/>
-&nbsp;&nbsp;exists&nbsp;(fun&nbsp;l&nbsp;:&nbsp;list&nbsp;A&nbsp;=&gt;&nbsp;cycle'&nbsp;(length&nbsp;l&nbsp;-&nbsp;n)&nbsp;l).<br/>
-&nbsp;&nbsp;induction&nbsp;n&nbsp;as&nbsp;<span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>;&nbsp;cbn.<br/>
-Abort.<br/>
-*)</span><br/>
-<span class="comment">(*&nbsp;end&nbsp;hide&nbsp;*)</span><br/>
-
-<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">isomorphism</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 &nbsp;&nbsp;{<span class="id" title="var">g</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">A</span> | (<span class="id" title="keyword">forall</span> <span class="id" title="var">a</span> : <span class="id" title="var">A</span>, <span class="id" title="var">g</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>) = <span class="id" title="var">a</span>) /\<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span>, <span class="id" title="var">f</span> (<span class="id" title="var">g</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>)}.<br/>
