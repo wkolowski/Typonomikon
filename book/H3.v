@@ -1,9 +1,5 @@
 (** * H3: Relacje *)
 
-(* begin hide *)
-
-(* end hide *)
-
 Require Import H2.
 Require Import FunctionalExtensionality.
 
@@ -1322,7 +1318,7 @@ Definition rel (A : Type) : Type := hrel A A.
     tworzenia nazw różnych rodzajów relacji:
     - "podstawowa" własność nie ma przedrostka, np. "zwrotna", "reflexive"
     - zanegowana własność ma przedrostek "nie" (lub podobny w nazwach
-      angielskich), np. "niezwrotny", "irreflexive"
+      angielskich), np. "niezwrotna", "irreflexive"
     - przeciwieństwo tej właściwości ma przedrostek "anty-" (po angielsku
       "anti-"), np. "antyzwrotna", "antireflexive" *)
 
@@ -1356,11 +1352,11 @@ Proof.
 Qed.
 (* end hide *)
 
-(** Okazuje się, że wszystkie relacje na [Empty_set] (a więc także na
-    wszystkich innych typach pustych) są zwrotne. Nie powinno cię to w
-    żaden sposób zaskakiwać — jest to tzw. pusta prawda (ang. vacuous
-    truth), zgodnie z którą wszystkie zdania kwantyfikowane uniwersalnie
-    po typie pustym są prawdziwe. Wszyscy w pustym pokoju są debilami. *)
+(** Okazuje się, że wszystkie relacje na typie pustym ([Empty_set]) są zwrotne.
+    Nie powinno cię to w żaden sposób zaskakiwać — jest to tzw. pusta prawda
+    (ang. vacuous truth), zgodnie z którą wszystkie zdania kwantyfikowane
+    uniwersalnie po typie pustym są prawdziwe. Wszyscy w pustym pokoju są
+    debilami. *)
 
 Instance Reflexive_eq {A : Type} : Reflexive (@eq A).
 (* begin hide *)
