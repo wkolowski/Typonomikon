@@ -1797,7 +1797,7 @@ Proof. rel. Qed.
 (* end hide *)
 
 Instance Symmetric_Rnot :
-  forall (A : Type) (R : rel A ),
+  forall (A : Type) (R : rel A),
     Symmetric R -> Symmetric (Rnot R).
 (* begin hide *)
 Proof. rel. Qed.
@@ -2404,9 +2404,9 @@ Instance Equivalence_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
+(* begin hide *)
 Inductive Threee : Type := One | Two | Three.
 
-(* begin hide *)
 Definition wut (x y : Threee) : Prop :=
 match x, y with
     | One  , One   => True
@@ -2426,40 +2426,40 @@ match x, y with
     | Three, One   => True
     | _    , _     => False
 end.
+(* end hide *)
 
 Lemma Ror_not_Equivaence :
   exists (A : Type) (R S : rel A),
     Equivalence R /\ Equivalence S /\ ~ Equivalence (Ror R S).
+(* begin hide *)
 Proof.
   exists
     (list nat),
     (fun l1 l2 => length l1 = length l2),
     (fun l1 l2 => head l1 = head l2).
   repeat split; intros.
-    rewrite H. reflexivity.
-    rewrite H, H0. reflexivity.
-    rewrite H. reflexivity.
-    rewrite H, H0. reflexivity.
-    {
-      destruct 1 as [R S T]. destruct T as [T].
-      specialize (T [1] [2] [2; 3]).
-      compute in T. specialize (T ltac:(auto) ltac:(auto)). destruct T; congruence.
-    }
+  - rewrite H. reflexivity.
+  - rewrite H, H0. reflexivity.
+  - rewrite H. reflexivity.
+  - rewrite H, H0. reflexivity.
+  - destruct 1 as [R S [T]].
+    specialize (T [1] [2] [2; 3]).
+    compute in T. intuition congruence.
 Qed.
 (* end hide *)
 
-(* begin hide *)
 Lemma Rnot_not_Equivalence :
   exists (A : Type) (R : rel A),
     Equivalence R /\ ~ Equivalence (Rnot R).
+(* begin hide *)
 Proof.
-  exists
-    bool,
-    (fun b1 b2 => bool_eq b1 b2 = true).
+  exists bool, (@eq bool).
   split.
-    repeat constructor; destruct x; try destruct y; try destruct z; cbn; auto.
-    destruct 1 as [[R] S T]. compute in R.
-      specialize (R true). cbn in R. apply R. reflexivity.
+  - apply Equivalence_eq.
+  - intros [R _ _]. apply (Reflexive_Antireflexive_nonempty bool (Rnot eq))                       .
+    + exact true.
+    + assumption.
+    + apply Antireflexive_Rnot. typeclasses eauto.
 Qed.
 (* end hide *)
 
@@ -2472,6 +2472,29 @@ Class Apartness {A : Type} (R : A -> A -> Prop) : Prop :=
     Apartness_Cotransitive :
       forall x y : A, R x y -> forall z : A, R x z \/ R z y;
 }.
+
+Instance Apartness_RFalse :
+  forall {A : Type}, Apartness (@RFalse A A).
+(* begin hide *)
+Proof.
+  split.
+  - apply Antireflexive_RFalse.
+  - apply Symmetric_RFalse.
+  - intros _ _ [].
+Qed.
+(* end hide *)
+
+Instance Apartnes_neq :
+  forall {A : Type}, Apartness (Rnot (@eq A)).
+(* begin hide *)
+Proof.
+  split.
+  - typeclasses eauto.
+  - apply Symmetric_Rnot, Symmetric_eq.
+  - unfold Rnot. intros x y p z.
+    left; intro q. subst.
+Abort.
+(* end hide *)
 
 Instance Apartness_Rinv :
   forall (A : Type) (R : rel A),
@@ -2542,14 +2565,6 @@ Qed.
 (* end hide *)
 
 (** * Słabe relacje homogeniczne (TODO) *)
-
-(* begin hide *)
-(* TODO *) Class WeakReflexive {A : Type} {E : rel A}
-  (H : Equivalence E) (R : rel A) : Prop :=
-{
-    wrefl : forall x y : A, R x y -> E x y
-}.
-(* end hide *)
 
 Class Univalent {A : Type} (R : rel A) : Prop :=
 {

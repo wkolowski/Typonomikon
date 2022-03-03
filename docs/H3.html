@@ -1617,7 +1617,7 @@ Złożenie relacji symetrycznych nie musi być symetryczne.
 
 <br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Symmetric_Rnot</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> ),<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Symmetric</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
@@ -1949,11 +1949,16 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Equivalence</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Equivalence</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Equivalence</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Threee</span> : <span class="id" title="keyword">Type</span> := <span class="id" title="var">One</span> | <span class="id" title="var">Two</span> | <span class="id" title="var">Three</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Equivaence</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Equivalence</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Equivalence</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Equivalence</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Equivalence</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Equivalence</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Equivalence</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
 </div>
@@ -1972,6 +1977,14 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Apartness_Cotransitive</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span> \/ <span class="id" title="var">R</span> <span class="id" title="var">z</span> <span class="id" title="var">y</span>;<br/>
 }.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartness_RFalse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, <span class="id" title="var">Apartness</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartnes_neq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, <span class="id" title="var">Apartness</span> (<span class="id" title="var">Rnot</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>)).<br/>
 
 <br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartness_Rinv</span> :<br/>
@@ -1996,8 +2009,6 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 
 </div>
 <div class="code">
-
-<br/>
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Univalent</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
