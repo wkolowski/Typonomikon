@@ -154,10 +154,10 @@ Qed.
 (* end hide *)
 
 Instance Circular_RTrue :
-  forall A : Type, Circular (@RFalse A A).
+  forall A : Type, Circular (@RTrue A A).
 (* begin hide *)
 Proof.
-  split; intros _ _ _ [].
+  split; compute. trivial.
 Qed.
 (* end hide *)
 
@@ -295,3 +295,113 @@ Proof.
     + assumption.
 Qed.
 (* end hide *)
+
+(** ** Relacje lewostronnie kwazi-zwrotne *)
+
+Class LeftQuasiReflexive {A : Type} (R : rel A) : Prop :=
+  lqr : forall x y : A, R x y -> R x x.
+
+Instance LeftQuasiReflexive_empty :
+  forall R : rel Empty_set, LeftQuasiReflexive R.
+(* begin hide *)
+Proof.
+  intros R [].
+Qed.
+(* end hide *)
+
+Instance LeftQuasiReflexive_eq {A : Type} : LeftQuasiReflexive (@eq A).
+(* begin hide *)
+Proof.
+  compute. trivial.
+Qed.
+(* end hide *)
+
+Instance LeftQuasiReflexive_RFalse :
+  forall A : Type, LeftQuasiReflexive (@RFalse A A).
+(* begin hide *)
+Proof.
+  compute. trivial.
+Qed.
+(* end hide *)
+
+Instance LeftQuasiReflexive_RTrue :
+  forall A : Type, LeftQuasiReflexive (@RTrue A A).
+(* begin hide *)
+Proof.
+  compute. trivial.
+Qed.
+(* end hide *)
+
+Lemma LeftQuasiReflexive_Rcomp :
+  exists (A : Type) (R S : rel A),
+    LeftQuasiReflexive R /\ LeftQuasiReflexive S /\ ~ LeftQuasiReflexive (Rcomp R S).
+(* begin hide *)
+Proof.
+Abort.
+(* end hide *)
+
+Instance LeftQuasiReflexive_Rcomp :
+  forall (A : Type) (R S : rel A),
+    LeftQuasiReflexive R -> LeftQuasiReflexive S -> LeftQuasiReflexive (Rcomp R S).
+(* begin hide *)
+Proof.
+  unfold LeftQuasiReflexive.
+  intros A R S HR HS x y (z & r & s); red.
+  exists x. split.
+  - eapply HR; eassumption.
+  - 
+Abort.
+(* end hide *)
+
+Instance LeftQuasiReflexive_Rinv :
+  forall (A : Type) (R : rel A),
+    LeftQuasiReflexive R -> LeftQuasiReflexive (Rinv R).
+(* begin hide *)
+Proof.
+  unfold LeftQuasiReflexive, Rinv.
+  intros A R HR x y r.
+Abort.
+(* end hide *)
+
+Instance LeftQuasiReflexive_Rand :
+  forall (A : Type) (R S : rel A),
+    LeftQuasiReflexive R -> LeftQuasiReflexive S -> LeftQuasiReflexive (Rand R S).
+(* begin hide *)
+Proof.
+  unfold LeftQuasiReflexive.
+  intros A R S HR HS x y [r s]; red.
+  split.
+  - eapply HR; eassumption.
+  - eapply HS; eassumption.
+Qed.
+(* end hide *)
+
+Instance LeftQuasiReflexive_Ror :
+  forall (A : Type) (R S : rel A),
+    LeftQuasiReflexive R -> LeftQuasiReflexive S -> LeftQuasiReflexive (Ror R S).
+(* begin hide *)
+Proof.
+  unfold LeftQuasiReflexive.
+  intros A R S HR HS x y [r | s]; red.
+  - left. eapply HR; eassumption.
+  - right. eapply HS; eassumption.
+Qed.
+(* end hide *)
+
+Inductive LeftQuasiReflexiveClosure {A : Type} (R : A -> A -> Prop) : A -> A -> Prop :=
+    | step :
+        forall x y : A, R x y -> LeftQuasiReflexiveClosure R x y
+    | clos :
+        forall x y : A, R x y -> LeftQuasiReflexiveClosure R x x.
+
+Instance LeftQuasiReflexive_LeftQuasiReflexiveClosure
+  {A : Type} (R : A -> A -> Prop) : LeftQuasiReflexive (LeftQuasiReflexiveClosure R).
+(* begin hide *)
+Proof.
+  unfold LeftQuasiReflexive.
+  intros x y [r | r].
+  - right with y0. assumption.
+  - right with y0. assumption.
+Qed.
+(* end hide *)
+

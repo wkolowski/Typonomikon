@@ -427,7 +427,7 @@ To nie wszystkie właściwości tych operacji, ale myślę, że widzisz już,
 Dwoma podstawowymi rodzajami relacji są relacje unikalne z lewej i prawej
     strony. Relacja lewostronnie unikalna to taka, dla której każde <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span>
     jest w relacji z co najwyżej jednym <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>. Analogicznie definiujemy
-    relacje prawostronnie unikalne. 
+    relację prawostronnie unikalną. 
 </div>
 <div class="code">
 
@@ -505,12 +505,12 @@ Już na pierwszy rzut oka widać, że pojęcia te są w pewien sposób
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">RightUnique</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">RightUnique</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_LeftUnique</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_LeftUnique_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LeftUnique</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">LeftUnique</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">LeftUnique</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_RightUnique</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_RightUnique_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">RightUnique</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">RightUnique</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">RightUnique</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
@@ -551,12 +551,12 @@ Koniunkcja relacji unikalnej z inną daje relację unikalną, ale dysjunkcja
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_LeftUnique</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_LeftUnique_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LeftUnique</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">LeftUnique</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_RightUnique</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_RightUnique_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LeftUnique</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">LeftUnique</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
@@ -670,12 +670,12 @@ Między lewo- i prawostronną totalnością występuje podobna symetria jak
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rand_not_LeftTotal</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_LeftTotal_Rand</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LeftTotal</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">LeftTotal</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">LeftTotal</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rand_not_RightTotal</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_RightTotal_Rand</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">RightTotal</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">RightTotal</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">RightTotal</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
@@ -703,12 +703,12 @@ Związki totalności z koniunkcją i dysjunkcją relacji są podobne jak
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_LeftTotal</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_LeftTotal_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">RightTotal</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">RightTotal</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_RightTotal</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_RightTotal_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">RightTotal</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">RightTotal</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
@@ -829,7 +829,7 @@ Złożenie relacji funkcyjnych również jest relacją funkcyjną. Nie powinno
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rinv_not_Functional</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Functional_Rinv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Functional</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Functional</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
 
@@ -851,17 +851,17 @@ Odwrotność relacji funkcyjnej nie musi być funkcyjna. Dobrą wizualicją
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rand_not_Functional</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Functional_Rand</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Functional</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Functional</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Functional</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Functional</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Functional_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Functional</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Functional</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Functional</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Functional</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Functional_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Functional</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Functional</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
@@ -937,22 +937,22 @@ Relacje funkcyjne, które są lewostronnie unikalne, odpowiadają funkcjom
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Injective</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Injective</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Injective</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rinv_not_Injective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Injective_Rinv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Injective</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Injective</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rand_not_Injective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Injective_Rand</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Injective</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Injective</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Injective</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Injective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Injective_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Injective</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Injective</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Injective</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Injective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Injective_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Injective</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Injective</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
@@ -1008,22 +1008,22 @@ Relacje funkcyjne, które są prawostronnie totalne, odpowiadają funkcjom
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Surjective</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Surjective</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Surjective</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rinv_not_Surjective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Surjective_Rinv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Surjective</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Surjective</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rand_not_Surjective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Surjective_Rand</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Surjective</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Surjective</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Surjective</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Surjective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Surjective_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Surjective</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Surjective</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Surjective</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Surjective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Surjective_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Surjective</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Surjective</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
@@ -1073,17 +1073,17 @@ Relacje funkcyjne, które są lewostronnie totalne (czyli injektywne) oraz
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Bijective</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Bijective</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rand_not_Bijective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Bijective_Rand</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Bijective</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Bijective</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Bijective</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Bijective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Bijective_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Bijective</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Bijective</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Bijective</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Bijective</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Bijective_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Bijective</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Bijective</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
@@ -1190,7 +1190,7 @@ Okazuje się, że wszystkie relacje na typie pustym (<span class="inlinecode"><s
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Reflexive</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">RFalse_nonempty_not_Reflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Reflexive_RFalse_nonempty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">Reflexive</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
@@ -1286,11 +1286,11 @@ Typowymi przykładami relacji antyzwrotnych są nierówność <span class="inlin
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_nonempty_not_Antireflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antireflexive_eq_nonempty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">Antireflexive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">RTrue_nonempty_not_Antireflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antireflexive_RTrue_nonempty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">Antireflexive</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
@@ -1310,7 +1310,7 @@ Równość na typie niepustym nie jest antyzwrotna, gdyż jest zwrotna
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rcomp_not_Antireflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antireflexive_Rcomp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Antireflexive</span> <span class="id" title="var">S</span> /\<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">Antireflexive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
@@ -1373,15 +1373,15 @@ Typowym przykładem relacji niezwrotnej jest nierówność <span class="inlineco
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">empty_not_Irreflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Irreflexive_empty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, ~ <span class="id" title="var">Irreflexive</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_empty_not_Irreflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Irreflexive_eq_empty</span> :<br/>
 &nbsp;&nbsp;~ <span class="id" title="var">Irreflexive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">Empty_set</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_nonempty_not_Irreflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Irreflexive_eq_nonempty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">Irreflexive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
@@ -1397,15 +1397,15 @@ Równość jest zwrotna, a więc nie może być niezwrotna. Zauważ jednak,
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">RTrue_empty_not_Irreflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Irreflexive_RTrue_empty</span> :<br/>
 &nbsp;&nbsp;~ <span class="id" title="var">Irreflexive</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">Empty_set</span> <span class="id" title="var">Empty_set</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">RTrue_nonempty_not_Irreflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Irreflexive_RTrue_nonempty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">Irreflexive</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">RFalse_empty_not_Irreflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Irreflexive_RFalse_empty</span> :<br/>
 &nbsp;&nbsp;~ <span class="id" title="var">Irreflexive</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">Empty_set</span> <span class="id" title="var">Empty_set</span>).<br/>
 
 <br/>
@@ -1424,7 +1424,7 @@ Podobnej techniki możemy użyć, aby pokazać, że relacja pełna (<span class=
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rcomp_not_Irreflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Irreflexive_Rcomp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Irreflexive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Irreflexive</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Irreflexive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
@@ -1449,7 +1449,7 @@ Złożenie relacji niezwrotnych nie musi być niezwrotne. Przyjrzyj się
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Irreflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Irreflexive</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Irreflexive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Irreflexive_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Irreflexive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Irreflexive</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Irreflexive</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
@@ -1568,6 +1568,10 @@ Alterntywną charakteryzacją symetrii może być stwierdzenie, że relacja
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Symmetric_empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Symmetric_eq</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Symmetric</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
@@ -1588,7 +1592,7 @@ Równość, relacja pełna i pusta są symetryczne.
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rcomp_not_Symmetric</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Symmetric_Rcomp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Symmetric</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Symmetric</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
@@ -1642,11 +1646,11 @@ Pozostałe operacje (odwracanie, koniunkcja, dysjunkcja, negacja)
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_nonempty_not_Antisymmetric</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antisymmetric_eq_nonempty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">Antisymmetric</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">RTrue_nonempty_not_Antisymmetric</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antisymmetric_RTrue_nonempty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">Antisymmetric</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
@@ -1667,7 +1671,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rcomp_not_Antisymmetric</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antisymmetric_Rcomp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">S</span> /\<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">Antisymmetric</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
@@ -1683,22 +1687,22 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Antisymmetric</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Antisymmetric</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antisymmetric_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">S</span> /\<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">Antisymmetric</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Antisymmetric</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antisymmetric_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Antisymmetric</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">empty_not_Asymmetric</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Asymmetric_empty</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, ~ <span class="id" title="var">Asymmetric</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rcomp_not_Asymmetric</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Asymmetric_Rcomp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Asymmetric</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Asymmetric</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Asymmetric</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
@@ -1708,12 +1712,12 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Asymmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Asymmetric</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rand_not_Asymmetric</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Asymmetric_Rand</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Asymmetric</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Asymmetric</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Asymmetric</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Asymmetric</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Asymmetric_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Asymmetric</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Asymmetric</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Asymmetric</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
@@ -1737,7 +1741,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Transitive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rcomp_not_Transitive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Transitive_Rcomp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Transitive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Transitive</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Transitive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
@@ -1752,12 +1756,12 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Transitive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Transitive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Transitive</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Transitive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Transitive_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Transitive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Transitive</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Transitive</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Transitive</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Transitive_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Transitive</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Transitive</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
@@ -1795,7 +1799,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Total</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Total</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Total</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Total</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Total_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Total</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Total</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
@@ -1833,7 +1837,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Total</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Trichotomous</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_not_Trichotomous</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Trichotomous_eq</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, ~ <span class="id" title="var">Trichotomous</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
@@ -1848,7 +1852,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Trichotomous</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Trichotomous_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Trichotomous</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Trichotomous</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
@@ -1951,12 +1955,12 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Equivaence</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Equivaence_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Equivalence</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Equivalence</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Equivalence</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Equivalence</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Equivalence_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Equivalence</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Equivalence</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
@@ -1979,12 +1983,37 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 }.<br/>
 
 <br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartness_empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">Apartness</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartness_RFalse</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, <span class="id" title="var">Apartness</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartnes_neq</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Apartness_RTrue</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">Apartness</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Apartness_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">Apartness</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">B4</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Apartness_neq</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, <span class="id" title="var">Apartness</span> (<span class="id" title="var">Rnot</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Apartnes_neq</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}, <span class="id" title="var">Apartness</span> (<span class="id" title="var">Rnot</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>))) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>), <span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span> \/ ~ <span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Apartness_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Apartness</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Apartness</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Apartness</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Apartness_Rinv</span> :<br/>
@@ -1997,7 +2026,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Apartness</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Apartness</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Apartness</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Apartness_not_Rand</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Rand_Apartness</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Apartness</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Apartness</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Apartness</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
@@ -2011,82 +2040,82 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Class</span> <span class="id" title="var">Univalent</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">WeaklyAntisymmetric</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">univalent</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span><br/>
 }.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Univalent_eq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Univalent</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyAntisymmetric_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">WeaklyAntisymmetric</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rcomp_not_Univalent</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyAntisymmetric_Rcomp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Univalent</span> <span class="id" title="var">S</span> /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">Univalent</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">S</span> /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">WeaklyAntisymmetric</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Univalent_Rinv</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyAntisymmetric_Rinv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Univalent</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyAntisymmetric</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Univalent_Rand</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyAntisymmetric_Rand</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Univalent</span> <span class="id" title="var">S</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">S</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Univalent</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyAntisymmetric_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Univalent</span> <span class="id" title="var">S</span> /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">Univalent</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">S</span> /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">WeaklyAntisymmetric</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Univalent</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyAntisymmetric_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Univalent</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">WeaklyAntisymmetric</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Class</span> <span class="id" title="var">Univalent'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">E</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>}<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">WeaklyAntisymmetric'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">E</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>}<br/>
 &nbsp;&nbsp;(<span class="id" title="var">H</span> : <span class="id" title="var">Equivalence</span> <span class="id" title="var">E</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wasym</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">E</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
 }.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Univalent_equiv</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyAntisymmetric_equiv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">E</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) (<span class="id" title="var">H</span> : <span class="id" title="var">Equivalence</span> <span class="id" title="var">E</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> <span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> <span class="id" title="var">E</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rcomp_not_Univalent'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyAntisymmetric'_Rcomp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">E</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="keyword">forall</span> <span class="id" title="var">H</span> : <span class="id" title="var">Equivalence</span> <span class="id" title="var">E</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> <span class="id" title="var">S</span> /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> <span class="id" title="var">S</span> /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Univalent'_Rinv</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyAntisymmetric'_Rinv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">E</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) (<span class="id" title="var">H</span> : <span class="id" title="var">Equivalence</span> <span class="id" title="var">E</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Univalent'_Rand</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyAntisymmetric'_Rand</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">E</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) (<span class="id" title="var">H</span> : <span class="id" title="var">Equivalence</span> <span class="id" title="var">E</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> <span class="id" title="var">S</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> <span class="id" title="var">S</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Ror_not_Univalent'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyAntisymmetric'_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">E</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="keyword">forall</span> <span class="id" title="var">H</span> : <span class="id" title="var">Equivalence</span> <span class="id" title="var">E</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> <span class="id" title="var">S</span> /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> <span class="id" title="var">S</span> /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rnot_not_Univalent'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyAntisymmetric'_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">E</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>), <span class="id" title="keyword">forall</span> <span class="id" title="var">H</span> : <span class="id" title="var">Equivalence</span> <span class="id" title="var">E</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Univalent'</span> <span class="id" title="var">H</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">WeaklyAntisymmetric'</span> <span class="id" title="var">H</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
 </div>
@@ -2108,7 +2137,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <span class="id" title="keyword">Class</span> <span class="id" title="var">PartialOrder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">PartialOrder_Preorder</span> :&gt; <span class="id" title="var">Preorder</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">PartialOrder_Univalent</span> :&gt; <span class="id" title="var">Univalent</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">PartialOrder_WeaklyAntisymmetric</span> :&gt; <span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
@@ -2129,7 +2158,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <span class="id" title="keyword">Class</span> <span class="id" title="var">StrictPartialOrder</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">StrictPartialOrder_Preorder</span> :&gt; <span class="id" title="var">StrictPreorder</span> <span class="id" title="var">R</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">StrictPartialOrder_Univalent</span> :&gt; <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">StrictPartialOrder_WeaklyAntisymmetric</span> :&gt; <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>
