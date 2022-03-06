@@ -23,7 +23,8 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_eq {A : Type} : WeaklyReflexive (@eq A).
+Instance WeaklyReflexive_eq :
+  forall A : Type, WeaklyReflexive (@eq A).
 (* begin hide *)
 Proof.
   split; trivial.
@@ -39,7 +40,7 @@ Qed.
 (* end hide *)
 
 Lemma WeaklyReflexive_subrelation_eq :
-  forall (A : Type) (R : rel A),
+  forall {A : Type} {R : rel A},
     WeaklyReflexive R -> subrelation R (@eq A).
 (* begin hide *)
 Proof.
@@ -163,6 +164,16 @@ Qed.
 
 Require Import Lia.
 
+Instance Circular_Rcomp :
+  forall (A : Type) (R S : rel A),
+    Circular R -> Circular S -> Circular (Rcomp R S).
+(* begin hide *)
+Proof.
+  intros A R S [HR] [HS]; split; red.
+  intros x y z (w1 & r1 & s1) (w2 & r2 & s2).
+Abort.
+(* end hide *)
+
 Lemma Circular_Rcomp :
   exists (A : Type) (R S : rel A),
     Circular R /\ Circular S /\ ~ Circular (Rcomp R S).
@@ -176,29 +187,20 @@ Proof.
         \/
       n = 2 /\ m = 0),
     (fun n m =>
-      n = 0 /\ m = 2
-        \/
       n = 2 /\ m = 3
         \/
-      n = 3 /\ m = 0).
+      n = 3 /\ m = 4
+        \/
+      n = 4 /\ m = 2).
+  unfold Rcomp.
   split; [| split].
   - split; lia.
   - split; lia.
-  - unfold Rcomp; destruct 1 as [H].
+  - destruct 1 as [H].
 (*     Axiom x y z : nat. *)
-    specialize (H 1 2 3). destruct H.
+    specialize (H 0 2 0). destruct H.
     + exists 2. intuition.
 Admitted.
-(* end hide *)
-
-Instance Circular_Rcomp :
-  forall (A : Type) (R S : rel A),
-    Circular R -> Circular S -> Circular (Rcomp R S).
-(* begin hide *)
-Proof.
-  intros A R S [HR] [HS]; split; red.
-  intros x y z (w1 & r1 & s1) (w2 & r2 & s2).
-Abort.
 (* end hide *)
 
 Instance Circular_Rinv :
@@ -332,35 +334,42 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma LeftQuasiReflexive_Rcomp :
+Lemma not_LeftQuasiReflexive_Rcomp :
   exists (A : Type) (R S : rel A),
     LeftQuasiReflexive R /\ LeftQuasiReflexive S /\ ~ LeftQuasiReflexive (Rcomp R S).
 (* begin hide *)
 Proof.
-Abort.
+  exists
+    nat,
+    (fun n m =>
+      n = 0 /\ m = 1
+        \/
+      n = 0 /\ m = 0),
+    (fun n m =>
+      n = 1 /\ m = 2
+        \/
+      n = 1 /\ m = 1).
+  unfold LeftQuasiReflexive, Rcomp.
+  split; [| split].
+  - intuition.
+  - intuition.
+  - intro H. destruct (H 0 1) as (b & H1 & H2).
+    + exists 1. intuition.
+    + intuition congruence.
+Qed.
 (* end hide *)
 
-Instance LeftQuasiReflexive_Rcomp :
-  forall (A : Type) (R S : rel A),
-    LeftQuasiReflexive R -> LeftQuasiReflexive S -> LeftQuasiReflexive (Rcomp R S).
-(* begin hide *)
-Proof.
-  unfold LeftQuasiReflexive.
-  intros A R S HR HS x y (z & r & s); red.
-  exists x. split.
-  - eapply HR; eassumption.
-  - 
-Abort.
-(* end hide *)
-
-Instance LeftQuasiReflexive_Rinv :
-  forall (A : Type) (R : rel A),
-    LeftQuasiReflexive R -> LeftQuasiReflexive (Rinv R).
+Lemma not_LeftQuasiReflexive_Rinv :
+  exists (A : Type) (R : rel A),
+    LeftQuasiReflexive R /\ ~ LeftQuasiReflexive (Rinv R).
 (* begin hide *)
 Proof.
   unfold LeftQuasiReflexive, Rinv.
-  intros A R HR x y r.
-Abort.
+  exists nat, (fun n m => Nat.even n = true).
+  split.
+  - firstorder.
+  - intro H. specialize (H 1 0 eq_refl). cbn in H. congruence.
+Qed.
 (* end hide *)
 
 Instance LeftQuasiReflexive_Rand :
@@ -405,3 +414,222 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Relacje prawostronnie kwazi-zwrotne *)
+
+Class RightQuasiReflexive {A : Type} (R : rel A) : Prop :=
+  rqr : forall x y : A, R x y -> R y y.
+
+Lemma RightQuasiReflexive_spec :
+  forall {A : Type} (R : rel A),
+    RightQuasiReflexive R <-> LeftQuasiReflexive (Rinv R).
+(* begin hide *)
+Proof.
+  unfold LeftQuasiReflexive, RightQuasiReflexive, Rinv.
+  split.
+  - intros H x y r. eapply H; eassumption.
+  - intros H x y r. eapply H; eassumption.
+Qed.
+(* end hide *)
+
+(** ** Relacje kwazi-zwrotne *)
+
+Class QuasiReflexive {A : Type} (R : rel A) : Prop :=
+{
+    QR_LeftQuasiReflexive :> LeftQuasiReflexive R;
+    QR_RightQuasiReflexive :> RightQuasiReflexive R;
+}.
+
+Instance LeftQuasiReflexive_Rinv :
+  forall {A : Type} (R : rel A),
+    RightQuasiReflexive R -> LeftQuasiReflexive (Rinv R).
+(* begin hide *)
+Proof.
+  compute. eauto.
+Qed.
+(* end hide *)
+
+Instance QuasiReflexive_empty :
+  forall R : rel Empty_set, QuasiReflexive R.
+(* begin hide *)
+Proof.
+  split.
+  - typeclasses eauto.
+  - rewrite RightQuasiReflexive_spec. typeclasses eauto.
+Qed.
+(* end hide *)
+
+Instance QuasiReflexive_eq {A : Type} : QuasiReflexive (@eq A).
+(* begin hide *)
+Proof.
+  split.
+  - typeclasses eauto.
+  - red. trivial.
+Qed.
+(* end hide *)
+
+Instance QuasiReflexive_RFalse :
+  forall A : Type, QuasiReflexive (@RFalse A A).
+(* begin hide *)
+Proof.
+  split; compute; trivial.
+Qed.
+(* end hide *)
+
+Instance QuasiReflexive_RTrue :
+  forall A : Type, QuasiReflexive (@RTrue A A).
+(* begin hide *)
+Proof.
+  split; compute; trivial.
+Qed.
+(* end hide *)
+
+Instance QuasiReflexive_Rcomp :
+  forall (A : Type) (R S : rel A),
+    QuasiReflexive R -> QuasiReflexive S -> QuasiReflexive (Rcomp R S).
+(* begin hide *)
+Proof.
+  intros A R S [RL RR] [SL SR].
+  split; unfold LeftQuasiReflexive, RightQuasiReflexive, Rcomp in *.
+Abort.
+(* end hide *)
+
+Instance QuasiReflexive_Rinv :
+  forall (A : Type) (R : rel A),
+    QuasiReflexive R -> QuasiReflexive (Rinv R).
+(* begin hide *)
+Proof.
+  intros A R [HL HR].
+  split; firstorder.
+Qed.
+(* end hide *)
+
+Instance QuasiReflexive_Rand :
+  forall (A : Type) (R S : rel A),
+    QuasiReflexive R -> QuasiReflexive S -> QuasiReflexive (Rand R S).
+(* begin hide *)
+Proof.
+  intros A R S [HRL HRR] [HSL HSR].
+  split; firstorder.
+Qed.
+(* end hide *)
+
+Instance QuasiReflexive_Ror :
+  forall (A : Type) (R S : rel A),
+    QuasiReflexive R -> QuasiReflexive S -> QuasiReflexive (Ror R S).
+(* begin hide *)
+Proof.
+  intros A R S [HRL HRR] [HSL HSR].
+  split; firstorder.
+Qed.
+(* end hide *)
+
+(** ** Relacje prawostronnie Euklidesowe *)
+
+Class RightEuclidean {A : Type} (R : rel A) : Prop :=
+  re : forall x y z : A, R x y -> R x z -> R y z.
+
+Instance RightEuclidean_empty :
+  forall R : rel Empty_set, RightEuclidean R.
+(* begin hide *)
+Proof.
+  intros R [].
+Qed.
+(* end hide *)
+
+Instance RightEuclidean_eq {A : Type} : RightEuclidean (@eq A).
+(* begin hide *)
+Proof.
+  compute. congruence.
+Qed.
+(* end hide *)
+
+Instance RightEuclidean_RFalse :
+  forall A : Type, RightEuclidean (@RFalse A A).
+(* begin hide *)
+Proof.
+  compute; trivial.
+Qed.
+(* end hide *)
+
+Instance RightEuclidean_RTrue :
+  forall A : Type, RightEuclidean (@RTrue A A).
+(* begin hide *)
+Proof.
+  compute; trivial.
+Qed.
+(* end hide *)
+
+Lemma RightEuclidean_Rcomp :
+  exists (A : Type) (R S : rel A),
+    RightEuclidean R /\ RightEuclidean S /\ ~ RightEuclidean (Rcomp R S).
+(* begin hide *)
+Proof.
+  exists
+    nat,
+    (fun n m =>
+      n = 0 /\ m = 1
+        \/
+      n = 1 /\ m = 1),
+    (fun n m =>
+      n = 1 /\ m = 2
+        \/
+      n = 2 /\ m = 2).
+  split; [| split].
+  - red. intuition.
+  - red. intuition.
+  - unfold RightEuclidean, Rcomp. intro H.
+    specialize (H 0 2 2).
+    destruct H as (b & H1 & H2).
+    + exists 1. intuition.
+    + exists 1. intuition.
+    + intuition; try congruence.
+Qed.
+(* end hide *)
+
+Lemma not_RightEuclidean_Rinv :
+  exists (A : Type) (R : rel A),
+    RightEuclidean R /\ ~ RightEuclidean (Rinv R).
+(* begin hide *)
+Proof.
+  exists
+    nat,
+    (fun n m =>
+      n = 0 /\ m = 1
+        \/
+      n = 1 /\ m = 1).
+  split; compute.
+  - firstorder.
+  - intro H. specialize (H 1 0 0 ltac:(lia)). intuition congruence.
+Qed.
+(* end hide *)
+
+Instance RightEuclidean_Rand :
+  forall (A : Type) (R S : rel A),
+    RightEuclidean R -> RightEuclidean S -> RightEuclidean (Rand R S).
+(* begin hide *)
+Proof.
+  unfold RightEuclidean, Rand.
+  intros A R S HR HS x y z [r1 s1] [r2 s2].
+  split; firstorder.
+Qed.
+(* end hide *)
+
+Lemma not_RightEuclidean_Ror :
+  exists (A : Type) (R S : rel A),
+    RightEuclidean R /\ RightEuclidean S /\ ~ RightEuclidean (Ror R S).
+(* begin hide *)
+Proof.
+  exists
+    nat,
+    (fun n m =>
+      n = 0 /\ m = 1
+        \/
+      n = 1 /\ m = 1),
+    (fun n m =>
+      n = 0 /\ m = 2
+        \/
+      n = 2 /\ m = 2).
+  firstorder. compute. intro H.
+  specialize (H 0 1 2 ltac:(lia) ltac:(lia)). intuition congruence.
+Qed.
+(* end hide *)
