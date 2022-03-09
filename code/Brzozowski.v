@@ -6,7 +6,7 @@
 Set Implicit Arguments.
 Set Maximal Implicit Insertion.
 
-Require Import Bool.
+Require Import Recdef Bool.
 Require Import List.
 Import ListNotations.
 
@@ -171,13 +171,9 @@ Lemma Matches_diff'' :
     Matches t (diff h r) <-> Matches (h :: t) r.
 Proof.
   split.
-    apply Matches_diff'.
-    intro H. remember (h :: t) as l. revert h t Heql. induction H; cbn; intros; try inv Heql.
-      destruct (dec_spec h h).
-        constructor.
-        contradiction.
-      destruct (containsEpsilon r1) eqn: Hr1.
-Admitted.
+  - apply Matches_diff'.
+  - intro H. eapply Matches_diff; eauto.
+Qed.
 
 Lemma Matches_brzozowski :
   forall {A : EqType} (l : list A) (r : Regex A),
@@ -251,25 +247,28 @@ Definition epsilon {A : Type} : Regex A := Epsilon.
 
 Definition char {A : Type} (x : A) : Regex A := Char x.
 
-Definition seq {A : Type} (r1 r2 : Regex A) : Regex A :=
+Function seq {A : Type} (r1 r2 : Regex A) : Regex A :=
 match r1, r2 with
     | Empty  , _       => Empty
     | _      , Empty   => Empty
     | Epsilon, _       => r2
     | _      , Epsilon => r1
+    | Seq r11 r12, r2  => Seq r11 (Seq r12 r2)
+    | Or r11 r12, r2   => Or (Seq r11 r2) (Seq r12 r2)
     | _      , _       => Seq r1 r2
 end.
 
-Definition or {A : Type} (r1 r2 : Regex A) : Regex A :=
+Function or {A : Type} (r1 r2 : Regex A) : Regex A :=
 match r1, r2 with
     | Empty, _ => r2
     | _, Empty => r1
     | Epsilon, _ => if containsEpsilon r2 then r2 else Or r1 r2
     | _, Epsilon => if containsEpsilon r1 then r1 else Or r1 r2
+    | Or r11 r12, r2 => Or r11 (Or r12 r2)
     | _, _ => Or r1 r2
 end.
 
-Definition star {A : Type} (r : Regex A) : Regex A :=
+Function star {A : Type} (r : Regex A) : Regex A :=
 match r with
     | Empty => Epsilon
     | Epsilon => Epsilon
@@ -300,7 +299,6 @@ end.
 
 Definition matches' {A : EqType} (l : list A) (r : Regex A) : bool :=
   containsEpsilon (brzozowski' (rev l) r).
-
 
 (* Time Compute matches' eqb (repeat 10 true) (Star (Char true)). *)
 (* ===> Finished transaction in 0. secs (0.u,0.s) (successful) *)
@@ -345,8 +343,8 @@ match r with
             | _, Empty => Empty
             | Epsilon, r2' => r2'
             | r1', Epsilon => r1'
-            | (Seq r11 r12), r2 => Seq r11 (Seq r12 r2)
-            | (Or r11 r12), r2 => Or (Seq r11 r2) (Seq r12 r2)
+            | Seq r11 r12, r2 => Seq r11 (Seq r12 r2)
+            | Or r11 r12, r2 => Or (Seq r11 r2) (Seq r12 r2)
             | r1', r2' => Seq r1' r2'
         end
     | Or r1 r2 =>
@@ -355,7 +353,7 @@ match r with
             | r1', Empty => r1'
             | Epsilon, r2' => if containsEpsilon r2' then r2' else Or Epsilon r2'
             | r1', Epsilon => if containsEpsilon r1' then r1' else Or r1' Epsilon
-            | (Or r11 r12), r2 => Or r11 (Or r12 r2)
+            | Or r11 r12, r2 => Or r11 (Or r12 r2)
             | r1', r2' => Or r1' r2'
         end
     | Star r' =>
@@ -541,88 +539,152 @@ Lemma Matches_optimize :
 Proof.
   intros. revert l.
   functional induction optimize r; intros.
-    1-3: firstorder.
-    split.
-      split; intro H; inv H. contradict H3. apply optimize_Empty. assumption.
-      split; intro H; inv H.
-        inv H0. contradict H4. apply optimize_Empty. assumption.
-        inv H0.
-    split.
-      split; intro H; inv H. contradict H4. apply optimize_Empty. assumption.
-      split; intro H; inv H.
-        inv H0. contradict H5. apply optimize_Empty. assumption.
-        inv H0.
-    destruct (IHr0 l) as [IHr00 IHr01], (IHr1 l) as [IHr10 IHr11]. split.
-      rewrite <- IHr10. split; intro H.
-        inv H. apply optimize_Epsilon in H3; subst; cbn; assumption.
-        change l with ([] ++ l). constructor.
-          destruct (IHr0 []). rewrite H0, e0. constructor.
-          assumption.
-      rewrite <- IHr11. split; intro H; inv H.
-        constructor.
-          inv H0. apply optimize_Epsilon in H4.
-            subst. cbn. assumption.
-            assumption.
-          admit.
-        constructor.
-          admit.
-          admit.
-    admit.
-    split.
-      split; intro HM; inv HM.
-        destruct (IHr0 l1) as [[] []]. rewrite e0 in *. specialize (H H2). inv H.
-          rewrite <- app_assoc. constructor.
-            assumption.
-            constructor.
-              assumption.
-              destruct (IHr1 l2). rewrite <- H. assumption.
-        inv H3. rewrite app_assoc. constructor.
-          destruct (IHr0 (l1 ++ l0)) as [[] []]. apply H0. rewrite e0. constructor; assumption.
-          destruct (IHr1 l3) as [[] []]. apply H0. assumption.
-    admit. (* nowe *)
-    admit. (* nowe *)
-    split.
-      split; intro H; inv H; constructor.
-        destruct (IHr0 l1). rewrite <- H. assumption.
-        destruct (IHr1 l2). rewrite <- H. assumption.
-        destruct (IHr0 l1). rewrite H. assumption.
-        destruct (IHr1 l2). rewrite H. assumption.
-      admit.
-    split.
-      destruct (IHr0 l), (IHr1 l). rewrite !Matches_Or, <- H1, (optimize_Empty'' e0). firstorder.
-      admit.
-    split.
-      destruct (IHr0 l). rewrite Matches_Or, <- H, (optimize_Empty'' e1). firstorder.
-      admit.
-    split.
-      destruct (IHr1 l). rewrite Matches_Or, <- H, (optimize_Epsilon'' e0). firstorder.
-        subst. apply H2, containsEpsilon_Matches_nil. assumption.
-      admit.
-    split.
-      destruct (IHr1 l). rewrite !Matches_Or, Matches_Epsilon, <- H, (optimize_Epsilon'' e0). reflexivity.
-      admit.
-    split.
-      destruct (IHr0 l). apply containsEpsilon_Matches_nil in e2.
-        rewrite Matches_Or, (optimize_Epsilon'' e1), H. split; intro; auto.
-          destruct H1; auto. subst. assumption.
-      admit.
-    split.
-      destruct (IHr0 l). rewrite !Matches_Or, Matches_Epsilon, <- H, (optimize_Epsilon'' e1). reflexivity.
-      admit.
-    admit. (* nowe *)
-    split.
-      destruct (IHr0 l), (IHr1 l). rewrite !Matches_Or, <- H, <- H1. reflexivity.
-      admit.
-    destruct (IHr0 l) as [IH1 IH2]. split.
-      rewrite Matches_Star, IH2, e0. split; intro H; inv H. inv H0.
-      rewrite MatchesStar_Star, IH2, e0. split; intro H; inv H; inv H0.
-    destruct (IHr0 l) as [IH1 IH2]. split.
-      rewrite Matches_Star, IH2, e0. split; intro H; inv H. inv H0.
-      rewrite MatchesStar_Star, IH2, e0. reflexivity.
-    destruct (IHr0 l) as [IH1 IH2]. split.
-      rewrite !Matches_Star, IH2, e0, MatchesStar_Star. reflexivity.
-      rewrite <- !e0, !MatchesStar_Star, IH2, e0. reflexivity.
-    destruct (IHr0 l) as [IH1 IH2]. split.
-      rewrite !Matches_Star. assumption.
-      rewrite !MatchesStar_Star. assumption.
+  1-3: firstorder.
+  - split.
+    + split; intro H; inv H. contradict H3. apply optimize_Empty. assumption.
+    + split; intro H; inv H.
+      * inv H0. contradict H4. apply optimize_Empty. assumption.
+      * inv H0.
+  - split.
+    + split; intro H; inv H. contradict H4. apply optimize_Empty. assumption.
+    + split; intro H; inv H.
+      * inv H0. contradict H5. apply optimize_Empty. assumption.
+      * inv H0.
+  - destruct (IHr0 l) as [IHr00 IHr01], (IHr1 l) as [IHr10 IHr11]. split.
+    + rewrite <- IHr10. split; intro H.
+      * inv H. apply optimize_Epsilon in H3; subst; cbn; assumption.
+      * change l with ([] ++ l). constructor.
+        -- destruct (IHr0 []). rewrite H0, e0. constructor.
+        -- assumption.
+    + rewrite <- IHr11. split; intro H; inv H.
+      * constructor.
+        -- inv H0. apply optimize_Epsilon in H4.
+            ++ subst. cbn. assumption.
+            ++ assumption.
+        -- admit.
+      * constructor.
+        -- admit.
+        -- admit.
+  - admit.
+  - split.
+    + split; intro HM; inv HM.
+      * destruct (IHr0 l1) as [[] []]. rewrite e0 in *. specialize (H H2). inv H.
+        -- rewrite <- app_assoc. constructor.
+           ++ assumption.
+           ++ constructor.
+              ** assumption.
+              ** destruct (IHr1 l2). rewrite <- H. assumption.
+      * inv H3. rewrite app_assoc. constructor.
+        -- destruct (IHr0 (l1 ++ l0)) as [[] []]. apply H0. rewrite e0. constructor; assumption.
+        -- destruct (IHr1 l3) as [[] []]. apply H0. assumption.
+    + admit. (* nowe *)
+  - admit. (* nowe *)
+  - split.
+    + split; intro H; inv H; constructor.
+      * destruct (IHr0 l1). rewrite <- H. assumption.
+      * destruct (IHr1 l2). rewrite <- H. assumption.
+      * destruct (IHr0 l1). rewrite H. assumption.
+      * destruct (IHr1 l2). rewrite H. assumption.
+    + admit.
+  - split.
+    + destruct (IHr0 l), (IHr1 l). rewrite !Matches_Or, <- H1, (optimize_Empty'' e0). firstorder.
+    + admit.
+  - split.
+    + destruct (IHr0 l). rewrite Matches_Or, <- H, (optimize_Empty'' e1). firstorder.
+    + admit.
+  - split.
+    + destruct (IHr1 l). rewrite Matches_Or, <- H, (optimize_Epsilon'' e0). firstorder.
+      * subst. apply H2, containsEpsilon_Matches_nil. assumption.
+    + admit.
+  - split.
+    + destruct (IHr1 l). rewrite !Matches_Or, Matches_Epsilon, <- H, (optimize_Epsilon'' e0). reflexivity.
+    + admit.
+  - split.
+		+ destruct (IHr0 l). apply containsEpsilon_Matches_nil in e2.
+			* rewrite Matches_Or, (optimize_Epsilon'' e1), H. split; intro; auto.
+			  destruct H1; auto. subst. assumption.
+		+ admit.
+  - split.
+		+ destruct (IHr0 l). rewrite !Matches_Or, Matches_Epsilon, <- H, (optimize_Epsilon'' e1). reflexivity.
+		+ admit.
+  - admit. (* nowe *)
+  - split.
+		+ destruct (IHr0 l), (IHr1 l). rewrite !Matches_Or, <- H, <- H1. reflexivity.
+		+ admit.
+  - destruct (IHr0 l) as [IH1 IH2]. split.
+		+ rewrite Matches_Star, IH2, e0. split; intro H; inv H. inv H0.
+		+ rewrite MatchesStar_Star, IH2, e0. split; intro H; inv H; inv H0.
+  - destruct (IHr0 l) as [IH1 IH2]. split.
+		+ rewrite Matches_Star, IH2, e0. split; intro H; inv H. inv H0.
+		+ rewrite MatchesStar_Star, IH2, e0. reflexivity.
+  - destruct (IHr0 l) as [IH1 IH2]. split.
+		+ rewrite !Matches_Star, IH2, e0, MatchesStar_Star. reflexivity.
+		+ rewrite <- !e0, !MatchesStar_Star, IH2, e0. reflexivity.
+  - destruct (IHr0 l) as [IH1 IH2]. split.
+		+ rewrite !Matches_Star. assumption.
+		+ rewrite !MatchesStar_Star. assumption.
 Admitted.
+
+(** Wut? Bardzo podobne do [diff]. *)
+Function startsWith {A : Type} (r : Regex A) (a : A) : Prop :=
+match r with
+    | Empty => False
+    | Epsilon => False
+    | Char x => a = x
+    | Seq r1 r2 => startsWith r1 a \/ (containsEpsilon r1 = true /\ startsWith r2 a)
+    | Or r1 r2 => startsWith r1 a /\ startsWith r2 a
+    | Star r' => False
+end.
+
+Function endsWith {A : Type} (r : Regex A) (b : A) : Prop :=
+match r with
+    | Empty => False
+    | Epsilon => False
+    | Char x => x = b
+    | Seq r1 r2 => endsWith r2 b \/ (containsEpsilon r2 = true /\ endsWith r1 b)
+    | Or r1 r2 => endsWith r1 b /\ endsWith r2 b
+    | Star r' => False
+end.
+
+Goal
+  forall {A : Type} (a b : A) (r : Regex A),
+    startsWith r a -> endsWith r b -> a <> b ->
+      exists r' : Regex A, forall l : list A,
+        Matches l r <-> Matches l (Seq (Char a) (Seq r' (Char b))).
+Proof.
+  intros A a b r H1 H2 Hneq; revert H2.
+  functional induction (startsWith r a); intros.
+  - inv H1.
+  - inv H1.
+  - cbn in H2. congruence.
+  - cbn in *. destruct H1, H2.
+    + 
+Abort.
+
+Goal
+  forall {A : Type} (a b : A) (r : Regex A) (l : list A),
+    a <> b -> Matches l (Seq (Char a) r) -> Matches l (Seq r (Char b)) -> False.
+Proof.
+  intros A a b.
+  induction r; cbn; intros.
+  - inv H0. inv H6.
+  - inv H0. inv H6. inv H5. inv H1. inv H4. inv H5. inv H0.
+  - inv H0. inv H5. inv H6. inv H1. inv H4. inv H5. inv H0.
+  - inv H0; inv H5; inv H6. inv H1; inv H7; inv H6.
+    destruct l3; inv H0.
+    + destruct l4; inv H2; admit.
+    + admit.
+  - inv H0; inv H1. inv H5; inv H7. inv H6; inv H4.
+    + apply (IHr1 (l0 ++ [b])); [assumption | |].
+      * rewrite H0. auto.
+      * auto.
+    + apply (IHr1 ([a] ++ l2)); [assumption | |].
+      * constructor; auto.
+      * admit.
+    + admit.
+    + admit.
+  - inv H0. inv H5. inv H6. inv H3.
+    + inv H1. inv H5. destruct l1; inv H0. destruct l1; inv H3.
+    + inv H1. apply (IHr ([a] ++ (h :: t) ++ l)); [assumption | |].
+      * constructor; auto.
+Abort.
