@@ -625,6 +625,252 @@ Proof.
 		+ rewrite !MatchesStar_Star. assumption.
 Admitted.
 
+(** Alternatywna implementacja [optimize], tym razem z użyciem smart konstruktorów. *)
+
+Function optimize' {A : Type} (r : Regex A) : Regex A :=
+match r with
+    | Empty => empty
+    | Epsilon => epsilon
+    | Char x => char x
+    | Seq r1 r2 => seq (optimize' r1) (optimize' r2)
+    | Or r1 r2 => or (optimize' r1) (optimize' r2)
+    | Star r' => star (optimize' r')
+end.
+
+Definition matches''' {A : EqType} (l : list A) (r : Regex A) : bool :=
+  containsEpsilon (optimize' (brzozowski' (rev l) r)).
+
+Lemma optimize'_optimize :
+  forall {A : EqType} (l : list A) (r : Regex A),
+    optimize' r = optimize r.
+Proof.
+  intros A l r.
+  functional induction optimize' r; cbn.
+  - reflexivity.
+  - reflexivity.
+  - reflexivity.
+  - rewrite IHr0, IHr1. destruct (optimize r1), (optimize r2); cbn; reflexivity.
+  - rewrite IHr0, IHr1. destruct (optimize r1), (optimize r2); cbn; reflexivity.
+  - rewrite IHr0. destruct (optimize r'); cbn; try reflexivity.
+Qed.
+
+Lemma Matches_empty :
+  forall {A : Type} (l : list A),
+    Matches l empty <-> Matches l Empty.
+Proof.
+  intuition.
+Qed.
+
+Lemma Matches_epsilon :
+  forall {A : Type} (l : list A),
+    Matches l epsilon <-> Matches l Epsilon.
+Proof.
+  intuition.
+Qed.
+
+Lemma Matches_char :
+  forall {A : Type} (l : list A) (x : A),
+    Matches l (char x) <-> Matches l (Char x).
+Proof.
+  intuition.
+Qed.
+
+Lemma Matches_seq :
+  forall {A : Type} (l : list A) (r1 r2 : Regex A),
+    Matches l (seq r1 r2) <-> Matches l (Seq r1 r2).
+Proof.
+  intros.
+  functional induction seq r1 r2.
+  - split; intro H; inv H. inv H3.
+  - split; intro H; inv H. inv H4.
+  - split; intro H.
+    + change l with ([] ++ l). auto.
+    + inv H. inv H3.
+  - split; intro H.
+    + rewrite <- (app_nil_r l). auto.
+    + inv H. inv H4. rewrite app_nil_r. assumption.
+  - split; intro H; inv H.
+    + inv H4. rewrite app_assoc. auto.
+    + inv H3. rewrite <- app_assoc. auto.
+  - split; intro H.
+    + inv H; inv H2.
+    + inv H. inv H3.
+  - reflexivity.
+Qed.
+
+Lemma Matches_or :
+  forall {A : Type} (l : list A) (r1 r2 : Regex A),
+    Matches l (or r1 r2) <-> Matches l (Or r1 r2).
+Proof.
+  intros.
+  functional induction or r1 r2.
+  - split; intro H; inv H. inv H2.
+  - split; intro H; inv H. inv H2.
+  - split; intro H.
+    + auto.
+    + inv H. inv H2. rewrite <- containsEpsilon_Matches_nil. assumption.
+  - reflexivity.
+  - split; intro H.
+    + auto.
+    + inv H. inv H2. rewrite <- containsEpsilon_Matches_nil. assumption.
+  - reflexivity.
+  - split; intro H; inv H; inv H2.
+  - reflexivity.
+Qed.
+
+Lemma MatchesStar_Star' :
+  forall {A : Type} (l : list A) (r : Regex A),
+    MatchesStar l (Star r) <-> MatchesStar l r.
+Proof.
+  split; cycle 1.
+  - apply MatchesStar_Star.
+Admitted.
+
+Lemma Matches_Star_Star :
+  forall {A : Type} (l : list A) (r : Regex A),
+    Matches l (Star (Star r)) <-> Matches l (Star r).
+Proof.
+Admitted.
+
+Lemma Matches_star :
+  forall {A : Type} (l : list A) (r : Regex A),
+    Matches l (star r) <-> Matches l (Star r).
+Proof.
+  intros.
+  functional induction star r.
+  - split; intro H; inv H. inv H2. inv H.
+  - split; intro H; inv H. inv H2. inv H.
+  - rewrite Matches_Star_Star. reflexivity.
+  - reflexivity.
+Qed.
+
+Lemma MatchesStar_empty :
+  forall {A : Type} (l : list A),
+    MatchesStar l empty <-> MatchesStar l Empty.
+Proof.
+  intuition.
+Qed.
+
+Lemma MatchesStar_epsilon :
+  forall {A : Type} (l : list A),
+    MatchesStar l epsilon <-> MatchesStar l Epsilon.
+Proof.
+  intuition.
+Qed.
+
+Lemma MatchesStar_char :
+  forall {A : Type} (l : list A) (x : A),
+    MatchesStar l (char x) <-> MatchesStar l (Char x).
+Proof.
+  intuition.
+Qed.
+
+Lemma MatchesStar_seq :
+  forall {A : Type} (l : list A) (r1 r2 : Regex A),
+    MatchesStar l (seq r1 r2) <-> MatchesStar l (Seq r1 r2).
+Proof.
+  intros.
+  functional induction seq r1 r2.
+  - split; intro H; inv H; inv H0. inv H4.
+  - split; intro H; inv H; inv H0. inv H5.
+  - split; intro H.
+    + induction H.
+      * auto.
+      * constructor.
+        -- change (h :: t) with ([] ++ h :: t). auto.
+        -- apply IHMatchesStar. destruct r; intuition.
+    + admit
+    + inv H.
+  - admit.
+  - split; intro H; inv H.
+    + constructor.
+Admitted.
+
+Lemma MatchesStar_or :
+  forall {A : Type} (l : list A) (r1 r2 : Regex A),
+    MatchesStar l (or r1 r2) <-> MatchesStar l (Or r1 r2).
+Proof.
+  intros.
+  functional induction or r1 r2.
+  - split; intro H; inv H.
+    + constructor. auto.
+Admitted.
+
+Lemma MatchesStar_star :
+  forall {A : Type} (l : list A) (r : Regex A),
+    MatchesStar l (star r) <-> MatchesStar l (Star r).
+Proof.
+  intros.
+  functional induction star r.
+  - split; intro H; inv H.
+    + inv H0.
+    + inv H0. inv H3. inv H2.
+  - rewrite MatchesStar_Star. reflexivity.
+  - rewrite !MatchesStar_Star. reflexivity.
+  - reflexivity.
+Qed.
+
+Lemma Matches_optimize' :
+  forall {A : Type} (l : list A) (r : Regex A),
+    Matches l (optimize' r) <-> Matches l r
+
+with MatchesStar_optimize' :
+  forall {A : Type} (l : list A) (r : Regex A),
+    MatchesStar l (optimize' r) <-> MatchesStar l r.
+Proof.
+  intros A l r; revert l.
+  functional induction optimize' r; intros l.
+  - intuition.
+  - intuition.
+  - intuition.
+  - rewrite Matches_seq. split; intro H.
+    + inv H. rewrite IHr0 in H3. rewrite IHr1 in H4. auto.
+    + inv H. constructor.
+      * rewrite IHr0. assumption.
+      * rewrite IHr1. assumption.
+  - rewrite Matches_or. split; intro H.
+    + inv H.
+      * rewrite IHr0 in H2. auto.
+      * rewrite IHr1 in H2. auto.
+    + inv H.
+      * apply MOrL. rewrite IHr0. assumption.
+      * apply MOrR. rewrite IHr1. assumption.
+  - rewrite Matches_star, !Matches_Star. apply MatchesStar_optimize'.
+Abort.
+
+Lemma Matches_optimize' :
+  forall {A : Type} (l : list A) (r : Regex A),
+    (Matches l (optimize' r) <-> Matches l r)
+      /\
+    (MatchesStar l (optimize' r) <-> MatchesStar l r).
+Proof.
+  intros A l r; revert l.
+  functional induction optimize' r; intros l.
+  - intuition.
+  - intuition.
+  - intuition.
+  - rewrite Matches_seq, MatchesStar_seq. split; split; intro H.
+    + inv H. firstorder.
+    + inv H. firstorder.
+    + admit.
+    + inv H. inv H0.
+      destruct (IHr0 l1) as [[IH00 IH01] [IH02 IH03]].
+      destruct (IHr1 l2) as [[IH10 IH11] [IH12 IH13]].
+      firstorder. rewrite H. constructor.
+      * rewrite <- H. auto.
+      * admit.
+  - rewrite Matches_or, MatchesStar_or. split; split; intro H.
+    + inv H; firstorder.
+    + inv H; firstorder.
+    + inv H. constructor.
+      * inv H0; firstorder.
+      * admit.
+    + inv H. constructor.
+      * inv H0; firstorder.
+      * admit.
+  - rewrite Matches_star, MatchesStar_star, !Matches_Star, !MatchesStar_Star; firstorder.
+Admitted.
+
 (** Wut? Bardzo podobne do [diff]. *)
 Function startsWith {A : Type} (r : Regex A) (a : A) : Prop :=
 match r with
