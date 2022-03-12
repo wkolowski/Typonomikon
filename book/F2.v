@@ -366,6 +366,7 @@ Qed.
 
 (** * Lepsze dodawanie *)
 
+(* begin hide *)
 CoFixpoint add' (n m : conat) : conat :=
 {|
     out :=
@@ -378,13 +379,14 @@ CoFixpoint add' (n m : conat) : conat :=
               end
       end
 |}.
+(* end hide *)
 
-(* To raczej nie przejdzie *)
 Lemma sim_add_add' :
   forall n m : conat,
     sim (add n m) (add' n m).
 (* begin hide *)
 Proof.
+  (* To raczej nie przejdzie *)
   cofix CH.
   constructor.
   destruct n as [[| n']]; cbn.
@@ -1702,6 +1704,7 @@ Definition sub' : Type :=
 
 (** * Mnożenie (TODO) *)
 
+(* begin hide *)
 CoFixpoint mul' (n m acc : conat) : conat :=
 {|
     out :=
@@ -1714,6 +1717,7 @@ CoFixpoint mul' (n m acc : conat) : conat :=
 
 Definition mul (n m : conat) : conat :=
   mul' n m zero.
+(* end hide *)
 
 Lemma mul'_zero_l :
   forall c acc : conat,
@@ -1873,6 +1877,7 @@ with Odd2 (n : conat) : Prop :=
       exists n' : conat,
         out n = S n' /\ Even2 n';
 }.
+(* end hide *)
 
 Module Even2_v2.
 

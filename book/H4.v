@@ -633,3 +633,34 @@ Proof.
   specialize (H 0 1 2 ltac:(lia) ltac:(lia)). intuition congruence.
 Qed.
 (* end hide *)
+
+(** * Relacje antyprzechodnie *)
+
+Class Antitransitive {A : Type} (R : A -> A -> Prop) : Prop :=
+  antitransitive : forall x y z : A, R x y -> R y z -> ~ R x z.
+
+Definition TransitiveReduction {A : Type} (R : A -> A -> Prop) (x y : A) : Prop :=
+  R x y /\ forall z : A, R x z -> R z y -> False.
+
+Instance Antitransitive_TransitiveReduction
+  {A : Type} (R : A -> A -> Prop)
+  : Antitransitive (TransitiveReduction R).
+(* begin hide *)
+Proof.
+  compute. intros x y z [H11 H12] [H21 H22] [H31 H32].
+  firstorder.
+Qed.
+(* end hide *)
+
+Definition TransitiveReduction' {A : Type} (R : A -> A -> Prop) (x y : A) : Prop :=
+  R x y /\ forall z : A, rr R x z -> rr R z y -> False.
+
+Instance Antitransitive_TransitiveReduction'
+  {A : Type} (R : A -> A -> Prop)
+  : Antitransitive (TransitiveReduction' R).
+(* begin hide *)
+Proof.
+  compute. intros x y z [H11 H12] [H21 H22] [H31 H32].
+  firstorder.
+Abort.
+(* end hide *)

@@ -183,21 +183,8 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">add'</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>) : <span class="id" title="var">conat</span> :=<br/>
-{|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">out</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">out</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Z</span>    =&gt; <span class="id" title="var">out</span> <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">out</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Z</span>    =&gt; <span class="id" title="var">S</span> <span class="id" title="var">n'</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">S</span> {| <span class="id" title="var">out</span> := <span class="id" title="var">S</span> (<span class="id" title="var">add'</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span>) |}<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-|}.<br/>
 
 <br/>
-<span class="comment">(*&nbsp;To&nbsp;raczej&nbsp;nie&nbsp;przejdzie&nbsp;*)</span><br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_add_add'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">add</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) (<span class="id" title="var">add'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>).<br/>
@@ -788,19 +775,6 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="tact
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">mul'</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>) : <span class="id" title="var">conat</span> :=<br/>
-{|<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">out</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">out</span> <span class="id" title="var">n</span>, <span class="id" title="var">out</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Z</span>   , <span class="id" title="var">_</span>       =&gt; <span class="id" title="var">out</span> <span class="id" title="var">acc</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>      , <span class="id" title="var">Z</span>    =&gt; <span class="id" title="var">out</span> <span class="id" title="var">acc</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> (<span class="id" title="var">add</span> <span class="id" title="var">n'</span> (<span class="id" title="var">add</span> <span class="id" title="var">m'</span> <span class="id" title="var">acc</span>)))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-|}.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">mul</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">conat</span>) : <span class="id" title="var">conat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">mul'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">zero</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_zero_l</span> :<br/>
@@ -882,6 +856,40 @@ Hint&nbsp;Constructors&nbsp;Finite'&nbsp;:&nbsp;core.<br/>
 <div class="code">
 
 <br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Even2_v2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Even2F</span> (<span class="id" title="var">n</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Even2_Z</span>  :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">Hn</span> : <span class="id" title="var">out</span> <span class="id" title="var">n</span> = <span class="id" title="var">Z</span>, <span class="id" title="var">Even2F</span> <span class="id" title="var">n</span> <span class="id" title="var">P</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Even2_SS</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n'</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">Hn</span> : <span class="id" title="var">out</span> <span class="id" title="var">n</span> = <span class="id" title="var">S</span> <span class="id" title="var">n'</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">n'</span> -&gt; <span class="id" title="var">Even2F</span> <span class="id" title="var">n</span> <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Odd2F</span> (<span class="id" title="var">n</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Odd2_S</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n'</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">Hn</span> : <span class="id" title="var">out</span> <span class="id" title="var">n</span> = <span class="id" title="var">S</span> <span class="id" title="var">n'</span>) (<span class="id" title="var">HOdd</span> : <span class="id" title="var">P</span> <span class="id" title="var">n'</span>), <span class="id" title="var">Odd2F</span> <span class="id" title="var">n</span> <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Even2'</span> (<span class="id" title="var">n</span> : <span class="id" title="var">conat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Even2''</span> : <span class="id" title="var">Even2F</span> <span class="id" title="var">n</span> <span class="id" title="var">Odd2'</span><br/>
+}<br/>
+<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">Odd2'</span> (<span class="id" title="var">n</span> : <span class="id" title="var">conat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Odd2''</span> : <span class="id" title="var">Odd2F</span> <span class="id" title="var">n</span> <span class="id" title="var">Even2'</span><br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Even2_Even2'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Even2</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">Even2'</span> <span class="id" title="var">n</span><br/>
+<br/>
+<span class="id" title="keyword">with</span> <span class="id" title="var">Odd2_Odd2'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Odd2</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">Odd2'</span> <span class="id" title="var">n</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Even2'_Even2</span> :<br/>

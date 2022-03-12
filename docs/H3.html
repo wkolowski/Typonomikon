@@ -401,6 +401,10 @@ To nie wszystkie właściwości tych operacji, ale myślę, że widzisz już,
 
 <a id="lab671"></a><h1 class="section">Rodzaje relacji heterogenicznych</h1>
 
+<div class="paragraph"> </div>
+
+<a id="lab672"></a><h2 class="section">Relacje lewo- i prawostronnie unikalne</h2>
+
 </div>
 <div class="code">
 
@@ -568,7 +572,7 @@ Negacja relacji unikalnej również nie musi być unikalna. Spróbuj podać
     interpretację tego wyniku z punktu widzenia operacji na kolekcjach par. 
 <div class="paragraph"> </div>
 
-<a id="lab672"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab673"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -591,6 +595,15 @@ Negacja relacji unikalnej również nie musi być unikalna. Spróbuj podać
 <div class="code">
 
 <br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab674"></a><h2 class="section">Relacje lewo- i prawostronnie totalne</h2>
+
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">LeftTotal</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
@@ -721,7 +734,7 @@ Negacja relacji totalnej nie może być totalna. Nie ma się co dziwić —
     więc pozbywa się czynnika odpowiedzialnego za totalność. 
 <div class="paragraph"> </div>
 
-<a id="lab673"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab675"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -753,12 +766,16 @@ Negacja relacji totalnej nie może być totalna. Nie ma się co dziwić —
 </div>
 
 <div class="doc">
-<a id="lab674"></a><h1 class="section">Rodzaje relacji heterogenicznych v2</h1>
+<a id="lab676"></a><h1 class="section">Rodzaje relacji heterogenicznych v2</h1>
 
 <div class="paragraph"> </div>
 
  Poznawszy cztery właściwości, jakie relacje mogą posiadać, rozważymy
     teraz relacje, które posiadają dwie lub więcej z tych właściwości. 
+<div class="paragraph"> </div>
+
+<a id="lab677"></a><h2 class="section">Relacje funkcyjne</h2>
+
 </div>
 <div class="code">
 
@@ -875,7 +892,7 @@ Ani koniunkcje, ani dysjunkcje, ani negacje relacji funkcyjnych nie
     pierwsze mają problem z <span class="inlinecode"><span class="id" title="var">Rand</span></span>, a drugie z <span class="inlinecode"><span class="id" title="var">Ror</span></span>, oba zaś z <span class="inlinecode"><span class="id" title="var">Rnot</span>.</span> <span class="inlinecode"></span>
 <div class="paragraph"> </div>
 
-<a id="lab675"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab678"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -905,6 +922,15 @@ Ani koniunkcje, ani dysjunkcje, ani negacje relacji funkcyjnych nie
 <div class="code">
 
 <br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab679"></a><h2 class="section">Relacje injektywne</h2>
+
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Injective</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
@@ -964,7 +990,7 @@ Właściwości relacji injektywnych są takie, jak funkcji injektywnych,
     gdyż te pojęcia ściśle sobie odpowiadają. 
 <div class="paragraph"> </div>
 
-<a id="lab676"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab680"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -976,6 +1002,15 @@ Właściwości relacji injektywnych są takie, jak funkcji injektywnych,
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">injective_Injective</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">injective</span> <span class="id" title="var">f</span> &lt;-&gt; <span class="id" title="var">Injective</span> (<span class="id" title="keyword">fun</span> (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>) =&gt; <span class="id" title="var">f</span> <span class="id" title="var">a</span> = <span class="id" title="var">b</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab681"></a><h2 class="section">Relacje surjektywne</h2>
+
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Surjective</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">hrel</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
@@ -1033,6 +1068,10 @@ Relacje funkcyjne, które są prawostronnie totalne, odpowiadają funkcjom
 <div class="doc">
 Właściwości relacji surjektywnych także są podobne do tych, jakie są
     udziałem relacji funkcyjnych. 
+<div class="paragraph"> </div>
+
+<a id="lab682"></a><h2 class="section">Relacje bijektywne</h2>
+
 </div>
 <div class="code">
 
@@ -1096,7 +1135,7 @@ Właściwości relacji bijektywnych różnią się jednym szalenie istotnym
     odwrotność relacji bijektywnej jest relacją bijektywną. 
 <div class="paragraph"> </div>
 
-<a id="lab677"></a><h1 class="section">Rodzaje relacji homogenicznych</h1>
+<a id="lab683"></a><h1 class="section">Rodzaje relacji homogenicznych</h1>
 
 </div>
 <div class="code">
@@ -1132,7 +1171,7 @@ Relacje homogeniczne to takie, których wszystkie argumenty są tego
 
 <div class="paragraph"> </div>
 
-<a id="lab678"></a><h2 class="section">Zwrotność</h2>
+<a id="lab684"></a><h2 class="section">Zwrotność</h2>
 
 </div>
 <div class="code">
@@ -1520,7 +1559,7 @@ Związek między niezwrotnością i antyzwrotnością jest nadzwyczaj prosty:
     każda relacja antyzwrotna na typie niepustym jest też niezwrotna. 
 <div class="paragraph"> </div>
 
-<a id="lab679"></a><h2 class="section">Symetria</h2>
+<a id="lab685"></a><h2 class="section">Symetria</h2>
 
 </div>
 <div class="code">
@@ -1725,7 +1764,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a id="lab680"></a><h2 class="section">Przechodniość (TODO)</h2>
+<a id="lab686"></a><h2 class="section">Przechodniość (TODO)</h2>
 
 </div>
 <div class="code">
@@ -1769,11 +1808,11 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a id="lab681"></a><h2 class="section">Inne (TODO)</h2>
+<a id="lab687"></a><h2 class="section">Inne (TODO)</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab682"></a><h3 class="section">Relacje totalne</h3>
+<a id="lab688"></a><h3 class="section">Relacje totalne</h3>
 
 </div>
 <div class="code">
@@ -1812,7 +1851,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a id="lab683"></a><h3 class="section">Relacje trychotomiczne</h3>
+<a id="lab689"></a><h3 class="section">Relacje trychotomiczne</h3>
 
 </div>
 <div class="code">
@@ -1860,7 +1899,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a id="lab684"></a><h3 class="section">Relacje gęste</h3>
+<a id="lab690"></a><h3 class="section">Relacje gęste</h3>
 
 </div>
 <div class="code">
@@ -1895,7 +1934,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a id="lab685"></a><h3 class="section">Relacje konfluentne</h3>
+<a id="lab691"></a><h3 class="section">Relacje konfluentne</h3>
 
 </div>
 <div class="code">
@@ -1923,7 +1962,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a id="lab686"></a><h1 class="section">Relacje równoważności (TODO)</h1>
+<a id="lab692"></a><h1 class="section">Relacje równoważności (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1968,7 +2007,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a id="lab687"></a><h1 class="section">Relacje apartheidu (TODO)</h1>
+<a id="lab693"></a><h1 class="section">Relacje apartheidu (TODO)</h1>
 
 </div>
 <div class="code">
@@ -2034,7 +2073,11 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a id="lab688"></a><h1 class="section">Słabe relacje homogeniczne (TODO)</h1>
+<a id="lab694"></a><h1 class="section">Słabe relacje homogeniczne (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab695"></a><h2 class="section">Relacje słaboantysymetryczne</h2>
 
 </div>
 <div class="code">
@@ -2042,7 +2085,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">WeaklyAntisymmetric</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">univalent</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">weaklyantisymmetric</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span><br/>
 }.<br/>
 
 <br/>
@@ -2076,6 +2119,15 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyAntisymmetric_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">WeaklyAntisymmetric</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab696"></a><h2 class="section">Relacje słaboantysymetryczne względem pewnej relacji równoważności</h2>
+
+</div>
+<div class="code">
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">WeaklyAntisymmetric'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">E</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>}<br/>
@@ -2121,7 +2173,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a id="lab689"></a><h1 class="section">Złożone relacje homogeniczne (TODO)</h1>
+<a id="lab697"></a><h1 class="section">Złożone relacje homogeniczne (TODO)</h1>
 
 </div>
 <div class="code">
@@ -2172,7 +2224,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a id="lab690"></a><h1 class="section">Domknięcia (TODO)</h1>
+<a id="lab698"></a><h1 class="section">Domknięcia (TODO)</h1>
 
 </div>
 <div class="code">
@@ -2359,7 +2411,7 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 </div>
 
 <div class="doc">
-<a id="lab691"></a><h2 class="section">Domknięcie zwrotnosymetryczne</h2>
+<a id="lab699"></a><h2 class="section">Domknięcie zwrotnosymetryczne</h2>
 
 </div>
 <div class="code">
@@ -2402,7 +2454,7 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 </div>
 
 <div class="doc">
-<a id="lab692"></a><h2 class="section">Domknięcie równoważnościowe v2</h2>
+<a id="lab700"></a><h2 class="section">Domknięcie równoważnościowe v2</h2>
 
 </div>
 <div class="code">
@@ -2476,7 +2528,57 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 </div>
 
 <div class="doc">
-<a id="lab693"></a><h1 class="section">Redukcje (TODO)</h1>
+<a id="lab701"></a><h1 class="section">Redukcje (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab702"></a><h2 class="section">Domknięcie symetryczne v2</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">SymmetricClosure'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SC_step</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">SymmetricClosure'</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SC_symm</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">SymmetricClosure'</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Global Hint Constructors</span> <span class="id" title="var">SymmetricClosure'</span> : <span class="id" title="var">core</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">SymmetricClosure'_sc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">SymmetricClosure'</span> <span class="id" title="var">R</span> &lt;--&gt; <span class="id" title="var">symm_clos</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab703"></a><h2 class="section">Domknięcie równoważnościowe v3</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">EquivalenceClosure</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">EC_step</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">EquivalenceClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">EC_refl</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">EquivalenceClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">EC_symm</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">EquivalenceClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">EC_trans</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">EquivalenceClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> -&gt; <span class="id" title="var">EquivalenceClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Global Hint Constructors</span> <span class="id" title="var">EquivalenceClosure</span> : <span class="id" title="var">core</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">EquivalenceClosure_equiv_clos</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">EquivalenceClosure</span> <span class="id" title="var">R</span> &lt;--&gt; <span class="id" title="var">equiv_clos</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab704"></a><h2 class="section">Redukacja zwrotna</h2>
 
 </div>
 <div class="code">
@@ -2497,4 +2599,6 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 &nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">refl_clos</span> (<span class="id" title="var">rr</span> <span class="id" title="var">R</span>) &lt;--&gt; <span class="id" title="var">R</span>.<br/>
+
+<br/>
 </div>

@@ -346,8 +346,10 @@ Proof. rel. Qed.
 
 (** * Rodzaje relacji heterogenicznych *)
 
+(** ** Relacje lewo- i prawostronnie unikalne *)
+
 (* begin hide *)
-(* TODO: napisać, że lepszą nazwą dla RightUnique jest "relacja deterministyczna". *)
+(* TODO: napisać, że lepszą nazwą dla [RightUnique] jest "relacja deterministyczna". *)
 (* end hide *)
 
 Class LeftUnique {A B : Type} (R : hrel A B) : Prop :=
@@ -594,6 +596,8 @@ Instance RightUnique_RFalse :
 Proof. rel. Qed.
 (* end hide *)
 
+(** ** Relacje lewo- i prawostronnie totalne *)
+
 Class LeftTotal {A B : Type} (R : hrel A B) : Prop :=
 {
     left_total : forall a : A, exists b : B, R a b
@@ -802,6 +806,8 @@ Proof. rel. Qed.
 (** Poznawszy cztery właściwości, jakie relacje mogą posiadać, rozważymy
     teraz relacje, które posiadają dwie lub więcej z tych właściwości. *)
 
+(** ** Relacje funkcyjne *)
+
 Class Functional {A B : Type} (R : hrel A B) : Prop :=
 {
     F_LT :> LeftTotal R;
@@ -1000,6 +1006,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Relacje injektywne *)
+
 Class Injective {A B : Type} (R : hrel A B) : Prop :=
 {
     I_Fun :> Functional R;
@@ -1116,6 +1124,8 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Relacje surjektywne *)
+
 Class Surjective {A B : Type} (R : hrel A B) : Prop :=
 {
     S_Fun :> Functional R;
@@ -1215,6 +1225,8 @@ Qed.
 
 (** Właściwości relacji surjektywnych także są podobne do tych, jakie są
     udziałem relacji funkcyjnych. *)
+
+(** ** Relacje bijektywne *)
 
 Class Bijective {A B : Type} (R : hrel A B) : Prop :=
 {
@@ -2646,9 +2658,11 @@ Qed.
 
 (** * Słabe relacje homogeniczne (TODO) *)
 
+(** ** Relacje słaboantysymetryczne *)
+
 Class WeaklyAntisymmetric {A : Type} (R : rel A) : Prop :=
 {
-    univalent : forall x y : A, R x y -> R y x -> x = y
+    weaklyantisymmetric : forall x y : A, R x y -> R y x -> x = y
 }.
 
 Instance WeaklyAntisymmetric_eq :
@@ -2672,7 +2686,7 @@ Proof.
     destruct x, y; cbn; do 2 inversion 1; auto.
     unfold Rcomp; destruct 1. cut (true = false).
       inversion 1.
-      apply univalent0.
+      apply weaklyantisymmetric0.
         exists false. cbn. auto.
         exists false. cbn. auto.
 Qed.
@@ -2708,7 +2722,7 @@ Proof.
     destruct x, y; cbn; do 2 inversion 1; auto.
     unfold Ror; destruct 1. cut (true = false).
       inversion 1.
-      apply univalent0; cbn; auto.
+      apply weaklyantisymmetric0; cbn; auto.
 Qed.
 (* end hide *)
 
@@ -2723,9 +2737,11 @@ Proof.
     unfold Rnot; destruct 1.
       cut (true = false).
         inversion 1.
-        apply univalent0; auto.
+        apply weaklyantisymmetric0; auto.
 Qed.
 (* end hide *)
+
+(** ** Relacje słaboantysymetryczne względem pewnej relacji równoważności *)
 
 Class WeaklyAntisymmetric' {A : Type} {E : rel A}
   (H : Equivalence E) (R : rel A) : Prop :=
@@ -3297,6 +3313,52 @@ Qed.
 
 (** * Redukcje (TODO) *)
 
+(** ** Domknięcie symetryczne v2 *)
+
+Inductive SymmetricClosure' {A : Type} (R : rel A) : A -> A -> Prop :=
+    | SC_step : forall x y : A, R x y -> SymmetricClosure' R x y
+    | SC_symm : forall x y : A, R x y -> SymmetricClosure' R y x.
+
+Global Hint Constructors SymmetricClosure' : core.
+
+Lemma SymmetricClosure'_sc :
+  forall {A : Type} (R : rel A),
+    SymmetricClosure' R <--> symm_clos R.
+(* begin hide *)
+Proof.
+  split.
+  - intros x y H. destruct H; auto.
+  - intros x y H. induction H.
+    + auto.
+    + destruct IHsymm_clos; auto.
+Qed.
+(* end hide *)
+
+(** ** Domknięcie równoważnościowe v3 *)
+
+Inductive EquivalenceClosure {A : Type} (R : rel A) : A -> A -> Prop :=
+    | EC_step : forall x y : A, R x y -> EquivalenceClosure R x y
+    | EC_refl : forall x : A, EquivalenceClosure R x x
+    | EC_symm : forall x y : A, R x y -> EquivalenceClosure R y x
+    | EC_trans : forall x y z : A, R x y -> EquivalenceClosure R y z -> EquivalenceClosure R x z.
+
+Global Hint Constructors EquivalenceClosure : core.
+
+Lemma EquivalenceClosure_equiv_clos :
+  forall {A : Type} (R : rel A),
+    EquivalenceClosure R <--> equiv_clos R.
+(* begin hide *)
+Proof.
+  split.
+  - intros x y H. induction H; eauto.
+  - intros x y H. induction H.
+    1-2: auto.
+    + Print equiv_clos.
+Abort.
+(* end hide *)
+
+(** ** Redukacja zwrotna *)
+
 Definition rr {A : Type} (R : rel A) : rel A :=
   fun x y : A => R x y /\ x <> y.
 
@@ -3320,3 +3382,4 @@ Proof.
     constructor. split; auto.
 Qed.
 (* end hide *)
+
