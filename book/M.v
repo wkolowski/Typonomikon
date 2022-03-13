@@ -259,35 +259,107 @@ end.
 
 (** Da się zrobić kombinator punktu stałego i zamknąć go w monadę/modalność
     tak, żeby sprzeczność nie wyciekła na zewnątrz i żeby wszystko ładnie się
-    liczyło, jezeli wynik nie jest bottomem? TAK! *)
+    liczyło, jeżeli wynik nie jest bottomem? TAK! *)
 
+Module SafeFix.
+
+(*
 Unset Guard Checking.
 Fixpoint efix' {A B : Type} (f : (A -> B) -> (A -> B)) (x : A) {struct x} : B :=
   f (efix' f) x.
 Set Guard Checking.
+*)
 
-Require Import Arith.
+Private Inductive Div (A : Type) : Type :=
+    | pure : A -> Div A.
 
-Inductive Div (A : Type) : Type :=
-    | div : A -> Div A.
-
-Arguments div {A} _.
-
-Definition pure {A : Type} (x : A) : Div A := div x.
+Arguments pure {A} _.
 
 Definition bind {A B : Type} (x : Div A) (f : A -> Div B) : Div B :=
 match x with
-    | div a => f a
+    | pure a => f a
 end.
 
-Definition efix {A B : Type} (f : (A -> B) -> (A -> B)) : A -> Div B :=
-  fun x : A => div (efix' f x).
+Inductive Terminates {A : Type} : Div A -> Prop :=
+    | terminates : forall x : A, Terminates (pure x).
 
-Compute efix
-  (fun euclid '(n, m) =>
-    match Nat.compare n m with
-        | Lt => euclid (n, m - n)
-        | Eq => n
-        | Gt => euclid (m, n - m)
-    end)
-  (360, 27).
+Unset Guard Checking.
+Fixpoint efix {A B : Type} (f : (A -> Div B) -> (A -> Div B)) (x : A) {struct x} : Div B :=
+  f (efix f) x.
+Set Guard Checking.
+
+Arguments efix {A B} f x / : simpl nomatch.
+
+Lemma unfix :
+  forall {A B : Type} (f : (A -> Div B) -> (A -> Div B)) (x : A),
+    efix f x = f (efix f) x.
+Proof.
+Admitted.
+
+End SafeFix.
+
+Import SafeFix.
+
+Definition euclid (n m : nat) : Div nat :=
+  efix (fun euclid '(n, m) =>
+    match n with
+        | 0 => pure m
+        | _ => euclid (PeanoNat.Nat.modulo m n, n)
+    end) (n, m).
+
+Time Compute euclid (2 * 3 * 5 * 7) (2 * 7 * 11).
+
+Lemma euclid_eq :
+  forall n m : nat,
+    euclid n m
+      =
+    match n with
+        | 0 => pure m
+        | _ => euclid (PeanoNat.Nat.modulo m n) n
+    end.
+Proof.
+  intros. unfold euclid. rewrite unfix. reflexivity.
+Qed.
+
+Lemma Terminates_euclid :
+  forall n m : nat, Terminates (euclid n m).
+Proof.
+  apply (well_founded_induction Wf_nat.lt_wf (fun n => forall m, Terminates (euclid n m))).
+  intros n IH m.
+  rewrite euclid_eq.
+  destruct n as [| n'].
+  - constructor.
+  - apply IH. apply PeanoNat.Nat.mod_upper_bound. inversion 1.
+Qed.
+
+Definition stupid (n : nat) : Div nat :=
+  efix (fun stupid n => bind (stupid (1 + n)) (fun r => pure (1 + r))) n.
+
+Lemma stupid_eq :
+  forall n : nat,
+    stupid n
+      =
+    bind (stupid (1 + n)) (fun r => pure (1 + r)).
+Proof.
+  intros. unfold stupid. rewrite unfix. reflexivity.
+Qed.
+
+Lemma Terminates_stupid :
+  forall n : nat, Terminates (stupid n).
+Proof.
+  induction n as [| n'].
+Abort.
+
+Lemma stupid_lemma :
+  forall n m : nat, stupid n = pure m -> 1 + m < m.
+Proof.
+  induction n as [| n']; simpl; intros.
+  - rewrite stupid_eq in H.
+Abort.
+
+Lemma Terminates_stupid :
+  forall n : nat, ~ Terminates (stupid n).
+Proof.
+  intros n H.
+  inversion H.
+Abort.

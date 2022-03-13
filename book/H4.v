@@ -559,7 +559,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma RightEuclidean_Rcomp :
+Lemma not_RightEuclidean_Rcomp :
   exists (A : Type) (R S : rel A),
     RightEuclidean R /\ RightEuclidean S /\ ~ RightEuclidean (Rcomp R S).
 (* begin hide *)
@@ -634,7 +634,145 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Relacje antyprzechodnie *)
+(** ** Relacje lewostronnie Euklidesowe *)
+
+Class LeftEuclidean {A : Type} (R : rel A) : Prop :=
+  left_euclidean : forall x y z : A, R y x -> R z x -> R y z.
+
+Lemma RightEuclidean_Rinv :
+  forall {A : Type} (R : rel A),
+    RightEuclidean (Rinv R) <-> LeftEuclidean R.
+(* begin hide *)
+Proof.
+  intros A R. split; compute; firstorder.
+Qed.
+(* end hide *)
+
+(** ** Relacje Euklidesowe *)
+
+Class Euclidean {A : Type} (R : rel A) : Prop :=
+{
+    Euclidean_RightEuclidean :> RightEuclidean R;
+    Euclidean_LeftEuclidean :> LeftEuclidean R;
+}.
+
+Instance Euclidean_empty :
+  forall R : rel Empty_set, Euclidean R.
+(* begin hide *)
+Proof.
+  intros R. split; intros [].
+Qed.
+(* end hide *)
+
+Instance Euclidean_eq {A : Type} : Euclidean (@eq A).
+(* begin hide *)
+Proof.
+  split; compute; congruence.
+Qed.
+(* end hide *)
+
+Instance Euclidean_RFalse :
+  forall A : Type, Euclidean (@RFalse A A).
+(* begin hide *)
+Proof.
+  split; compute; trivial.
+Qed.
+(* end hide *)
+
+Instance Euclidean_RTrue :
+  forall A : Type, Euclidean (@RTrue A A).
+(* begin hide *)
+Proof.
+  split; compute; trivial.
+Qed.
+(* end hide *)
+
+Instance Euclidean_Rcomp :
+  forall (A : Type) (R S : rel A),
+    Euclidean R -> Euclidean S -> Euclidean (Rcomp R S).
+(* begin hide *)
+Proof.
+  intros A R S [RR RL] [SR SL]; split; compute in *.
+  - intros x y z (w1 & r1 & s1) (w2 & r2 & s2).
+    assert (R w1 w2) by firstorder.
+    assert (R w1 x) by firstorder.
+Abort.
+(* end hide *)
+
+Lemma not_Euclidean_Rcomp :
+  exists (A : Type) (R S : rel A),
+    Euclidean R /\ Euclidean S /\ ~ Euclidean (Rcomp R S).
+(* begin hide *)
+Proof.
+  exists
+    nat,
+    (fun n m => n <= 1 /\ m <= 1),
+    (fun n m => 0 < n <= 2 /\ 0 < m <= 2).
+  split; [| split].
+  - split; compute; intuition.
+  - split; compute; intuition.
+  - intros [HR HL]; compute in *.
+    specialize (HR 0 2 2).
+    destruct HR as (b & H1 & H2).
+    + exists 1. intuition.
+    + exists 1. intuition.
+    + intuition; lia.
+Qed.
+(* end hide *)
+
+Instance Euclidean_Rinv :
+  forall (A : Type) (R : rel A),
+    Euclidean R -> Euclidean (Rinv R).
+(* begin hide *)
+Proof.
+  intros A R [HR HL].
+  split; compute in *; firstorder.
+Qed.
+(* end hide *)
+
+Instance Euclidean_Rand :
+  forall (A : Type) (R S : rel A),
+    Euclidean R -> Euclidean S -> Euclidean (Rand R S).
+(* begin hide *)
+Proof.
+  intros A R S [RR RL] [SR SL].
+  split; compute in *; firstorder.
+Restart.
+  intros A R S [RR RL] [SR SL].
+  split.
+  - apply RightEuclidean_Rand; assumption.
+  - rewrite <- RightEuclidean_Rinv.
+Abort.
+(* end hide *)
+
+Instance Euclidean_Ror :
+  forall (A : Type) (R S : rel A),
+    Euclidean R -> Euclidean S -> Euclidean (Ror R S).
+(* begin hide *)
+Proof.
+  intros A R S [RR RL] [SR SL].
+  split; compute in *. firstorder.
+Abort.
+(* end hide *)
+
+Lemma not_Euclidean_Ror :
+  exists (A : Type) (R S : rel A),
+    Euclidean R /\ Euclidean S /\ ~ Euclidean (Ror R S).
+(* begin hide *)
+Proof.
+  exists
+    nat,
+    (fun n m => n <= 1 /\ m <= 1),
+    (fun n m => 22 < n <= 32 /\ 22 < m <= 32).
+  split; [| split].
+  - split; compute; firstorder.
+  - split; compute; firstorder.
+  - intros [HR HL]; compute in *.
+    specialize (HL 0 1 1 ltac:(lia) ltac:(lia)).
+Admitted.
+(* end hide *)
+
+(** ** Relacje antyprzechodnie *)
 
 Class Antitransitive {A : Type} (R : A -> A -> Prop) : Prop :=
   antitransitive : forall x y z : A, R x y -> R y z -> ~ R x z.
