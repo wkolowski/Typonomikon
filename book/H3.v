@@ -2094,29 +2094,43 @@ Class Total {A : Type} (R : rel A) : Prop :=
     total : forall x y : A, R x y \/ R y x
 }.
 
+Instance Total_RTrue :
+  forall A : Type,
+    Total (@RTrue A A).
 (* begin hide *)
-Lemma not_Total_Rcomp :
-  exists (A : Type) (R S : rel A),
-    Total R /\ Total S /\ ~ Total (Rcomp R S).
-Proof.
-  pose (R := fun n m : nat => orb (leb 1 n)
-    (orb (leb 1 m) (lookup (n, m) [(0, n); (n, 0)])) = true).
-  pose (S := fun n m : nat =>
-    lookup (n, m) [(1, 2); (3, 4)] = true).
-  exists nat, R, R. repeat split.
-    destruct x as [| [| [|]]], y as [| [| [|]]]; compute; auto.
-    destruct x as [| [| [|]]], y as [| [| [|]]]; compute; auto.
-    unfold Rcomp; destruct 1.
-      specialize (total0 2 1). decompose [and or ex] total0.
-        compute in H. compute in H1. destruct x; cbn in H.
-Restart.
-  exists nat, le, le.
-  split.
-    admit.
-    split.
-      admit.
-      destruct 1 as [T]. compute in T. cbn in T.
-Abort.
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma Total_RFalse_Empty :
+  Total (@RFalse Empty_set Empty_set).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_Total_RFalse_nonempty :
+  forall A : Type,
+    A -> ~ Total (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma Total_eq_Empty :
+  Total (@eq Empty_set).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma Total_eq_unit :
+  Total (@eq unit).
+(* begin hide *)
+Proof. rel. auto. Qed.
+(* end hide *)
+
+Lemma not_Total_eq_two_elems :
+  forall {A : Type} {x y : A},
+    x <> y -> ~ Total (@eq A).
+(* begin hide *)
+Proof. rel. Qed.
 (* end hide *)
 
 Instance Total_Rinv :
@@ -2126,10 +2140,23 @@ Instance Total_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
+Lemma not_Total_Rnot :
+  exists (A : Type) (R : rel A),
+    Total R /\ ~ Total (Rnot R).
 (* begin hide *)
+Proof.
+  pose (R := fun b b' : bool => b = negb b' \/ b = b).
+  exists bool, R. repeat split; intros.
+    destruct x, y; compute; auto.
+    unfold Rnot; destruct 1.
+      destruct (total0 true false); compute in *; intuition.
+Qed.
+(* end hide *)
+
 Lemma not_Total_Rand :
   exists (A : Type) (R S : rel A),
     Total R /\ Total S /\ ~ Total (Rand R S).
+(* begin hide *)
 Proof.
   pose (R := fun b b' =>
   match b, b' with
@@ -2158,24 +2185,139 @@ Instance Total_Ror :
 Proof. rel. Qed.
 (* end hide *)
 
-Lemma not_Total_Rnot :
-  exists (A : Type) (R : rel A),
-    Total R /\ ~ Total (Rnot R).
+Instance Total_Rcomp :
+  forall (A : Type) (R S : rel A),
+    Total R -> Total S -> Total (Rcomp R S).
 (* begin hide *)
 Proof.
-  pose (R := fun b b' : bool => b = negb b' \/ b = b).
-  exists bool, R. repeat split; intros.
-    destruct x, y; compute; auto.
-    unfold Rnot; destruct 1.
-      destruct (total0 true false); compute in *; intuition.
+  intros A R S [HR] [HS].
+  unfold Rcomp; split; intros x y.
+  destruct (HR x y).
+  - destruct (HS x y).
+    + left. exists x. firstorder.
+    + left. exists y. firstorder.
+  - destruct (HS x y).
+    + right. exists x. firstorder.
+    + right. exists y. firstorder.
 Qed.
 (* end hide *)
 
-Instance Total_Reflexive :
+Instance Reflexive_Total :
   forall (A : Type) (R : rel A),
     Total R -> Reflexive R.
 (* begin hide *)
 Proof. rel. Qed.
+(* end hide *)
+
+Lemma Total_Symmetric_char :
+  forall {A : Type} (R : rel A),
+    Total R -> Symmetric R -> R <--> RTrue.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+(** *** Relacje słabo totalne *)
+
+Class WeaklyTotal {A : Type} (R : rel A) : Prop :=
+{
+    weakly_total : forall x y : A, ~ R x y -> R y x
+}.
+
+Instance WeaklyTotal_RTrue :
+  forall A : Type,
+    WeaklyTotal (@RTrue A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma WeaklyTotal_RFalse_Empty :
+  WeaklyTotal (@RFalse Empty_set Empty_set).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_WeaklyTotal_RFalse_inhabited :
+  forall A : Type,
+    A -> ~ WeaklyTotal (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma WeaklyTotal_eq_Empty :
+  WeaklyTotal (@eq Empty_set).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma WeaklyTotal_eq_unit :
+  WeaklyTotal (@eq unit).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_WeaklyTotal_eq_two_elems :
+  forall {A : Type} {x y : A},
+    x <> y -> ~ WeaklyTotal (@eq A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance WeaklyTotal_Rinv :
+  forall (A : Type) (R : rel A),
+    WeaklyTotal R -> WeaklyTotal (Rinv R).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance WeaklyTotal_Rcomp :
+  forall (A : Type) (R S : rel A),
+    WeaklyTotal R -> WeaklyTotal S -> WeaklyTotal (Rcomp R S).
+(* begin hide *)
+Proof.
+  intros A R S [HR] [HS].
+  unfold Rcomp; split; intros x y H.
+Abort.
+(* end hide *)
+
+Lemma not_WeaklyTotal_Rnot :
+  exists (A : Type) (R : rel A),
+    WeaklyTotal R /\ ~ WeaklyTotal (Rnot R).
+(* begin hide *)
+Proof.
+  exists unit, RTrue.
+  split; rel.
+Qed.
+(* end hide *)
+
+Lemma not_WeaklyTotal_Rand :
+  exists (A : Type) (R S : rel A),
+    WeaklyTotal R /\ WeaklyTotal S /\ ~ WeaklyTotal (Rand R S).
+(* begin hide *)
+Proof.
+  exists bool, (fun x y => x = true \/ y = false), (fun x y => x = false \/ y = true).
+  split; [| split].
+  - rel. destruct y; rel.
+  - rel. destruct y; rel.
+  - intros [H]; unfold Rand in H.
+    specialize (H true false).
+    intuition.
+Qed.
+(* end hide *)
+
+Instance WeaklyTotal_Ror :
+  forall (A : Type) (R S : rel A),
+    WeaklyTotal R -> WeaklyTotal S -> WeaklyTotal (Ror R S).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_Antireflexive_WeaklyTotal_inhabited :
+  forall (A : Type) (R : rel A) (x : A),
+    WeaklyTotal R -> ~ Antireflexive R.
+(* begin hide *)
+Proof.
+  intros A R x [HWT] [HA]. rel.
+Qed.
 (* end hide *)
 
 (** *** Relacje trychotomiczne *)
@@ -2185,19 +2327,7 @@ Class Trichotomous {A : Type} (R : rel A) : Prop :=
     trichotomous : forall x y : A, R x y \/ x = y \/ R y x
 }.
 
-Instance Trichotomous_empty :
-  forall R : rel Empty_set, Trichotomous R.
-(* begin hide *)
-Proof. rel. Qed.
-(* end hide *)
-
-Instance Trichotomous_eq_singleton :
-  forall A : Type, (forall x y : A, x = y) -> Trichotomous (@eq A).
-(* begin hide *)
-Proof. rel. Qed.
-(* end hide *)
-
-Instance Total_Trichotomous :
+Instance Trichotomous_Total :
   forall (A : Type) (R : rel A),
     Total R -> Trichotomous R.
 (* begin hide *)
@@ -2208,6 +2338,18 @@ Proof.
 Qed.
 (* end hide *)
 
+Instance Trichotomous_empty :
+  forall R : rel Empty_set, Trichotomous R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Trichotomous_eq_subsingleton :
+  forall A : Type, (forall x y : A, x = y) -> Trichotomous (@eq A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
 Lemma not_Trichotomous_eq :
   exists A : Type, ~ Trichotomous (@eq A).
 (* begin hide *)
@@ -2216,20 +2358,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(* begin hide *)
 Require Import Lia.
-
-Lemma not_Trichotomous_Rcomp :
-  exists (A : Type) (R S : rel A),
-    Trichotomous R /\ Trichotomous S /\ ~ Trichotomous (Rcomp R S).
-Proof.
-  exists nat, lt, lt. split; [idtac | split].
-    1-2: split; lia.
-    destruct 1. unfold Rcomp in *. specialize (trichotomous0 0 1).
-      decompose [and or ex] trichotomous0; clear trichotomous0.
-        all: lia.
-Qed.
-(* end hide *)
 
 Instance Trichotomous_Rinv :
   forall (A : Type) (R : rel A),
@@ -2238,26 +2367,17 @@ Instance Trichotomous_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
-(* begin hide *)
-Lemma not_Trichotomous_Rand :
+Lemma not_Trichotomous_Rcomp :
   exists (A : Type) (R S : rel A),
-    Trichotomous R /\ Trichotomous S /\ ~ Trichotomous (Rand R S).
-Proof.
-  exists nat, lt, gt. split; [idtac | split].
-    1-2: split; lia.
-    destruct 1 as [H]. unfold Rand in H. specialize (H 0 1).
-      decompose [and or] H; clear H.
-        inversion H2.
-        inversion H1.
-        inversion H0.
-Qed.
-(* end hide *)
-
+    Trichotomous R /\ Trichotomous S /\ ~ Trichotomous (Rcomp R S).
 (* begin hide *)
-Instance Trichotomous_Ror :
-  forall (A : Type) (R S : rel A),
-    Trichotomous R -> Trichotomous S -> Trichotomous (Ror R S).
-Proof. rel. Qed.
+Proof.
+  exists nat, lt, lt. split; [idtac | split].
+    1-2: split; lia.
+    destruct 1. unfold Rcomp in *. specialize (trichotomous0 0 1).
+      decompose [and or ex] trichotomous0; clear trichotomous0.
+        all: lia.
+Qed.
 (* end hide *)
 
 Lemma not_Trichotomous_Rnot :
@@ -2272,6 +2392,228 @@ Proof.
       destruct (trichotomous0 true false); compute in *.
       apply H. trivial.
       destruct H; intuition.
+Qed.
+(* end hide *)
+
+Lemma not_Trichotomous_Rand :
+  exists (A : Type) (R S : rel A),
+    Trichotomous R /\ Trichotomous S /\ ~ Trichotomous (Rand R S).
+(* begin hide *)
+Proof.
+  exists nat, lt, gt. split; [idtac | split].
+    1-2: split; lia.
+    destruct 1 as [H]. unfold Rand in H. specialize (H 0 1).
+      decompose [and or] H; clear H.
+        inversion H2.
+        inversion H1.
+        inversion H0.
+Qed.
+(* end hide *)
+
+Instance Trichotomous_Ror :
+  forall (A : Type) (R S : rel A),
+    Trichotomous R -> Trichotomous S -> Trichotomous (Ror R S).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+(** *** Relacje słabo trychotomiczne *)
+
+Class WeaklyTrichotomous {A : Type} (R : rel A) : Prop :=
+{
+    weakly_trichotomous : forall x y : A, x <> y -> R x y \/ R y x
+}.
+
+Instance WeaklyTrichotomous_Total :
+  forall (A : Type) (R : rel A),
+    Total R -> WeaklyTrichotomous R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance WeaklyTrichotomous_empty :
+  forall R : rel Empty_set, WeaklyTrichotomous R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance WeaklyTrichotomous_unit :
+  forall R : rel unit, WeaklyTrichotomous R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance WeaklyTrichotomous_RTrue :
+  forall A : Type,
+    WeaklyTrichotomous (@RTrue A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_WeaklyTrichotomous_RFalse_two_elems :
+  forall {A : Type} {x y : A},
+    x <> y -> ~ WeaklyTrichotomous (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance WeaklyTrichotomous_Rinv :
+  forall (A : Type) (R : rel A),
+    WeaklyTrichotomous R -> WeaklyTrichotomous (Rinv R).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_WeaklyTrichotomous_Rcomp :
+  exists (A : Type) (R S : rel A),
+    WeaklyTrichotomous R /\ WeaklyTrichotomous S /\ ~ WeaklyTrichotomous (Rcomp R S).
+(* begin hide *)
+Proof.
+  exists nat, lt, lt. split; [| split].
+  1-2: split; lia.
+  destruct 1 as [H]; unfold Rcomp in H.
+  destruct (H 0 1 ltac:(lia)) as [[b Hb] | [b Hb]]; lia.
+Qed.
+(* end hide *)
+
+Lemma not_WeaklyTrichotomous_Rnot :
+  exists (A : Type) (R : rel A),
+    WeaklyTrichotomous R /\ ~ WeaklyTrichotomous (Rnot R).
+(* begin hide *)
+Proof.
+  exists bool, RTrue.
+  split.
+  - rel.
+  - intros [H]. specialize (H true false ltac:(congruence)). rel.
+Qed.
+(* end hide *)
+
+Instance WeaklyTrichotomous_Ror :
+  forall (A : Type) (R S : rel A),
+    WeaklyTrichotomous R -> WeaklyTrichotomous S -> WeaklyTrichotomous (Ror R S).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_WeaklyTrichotomous_Rand :
+  exists (A : Type) (R S : rel A),
+    WeaklyTrichotomous R /\ WeaklyTrichotomous S /\ ~ WeaklyTrichotomous (Rand R S).
+(* begin hide *)
+Proof.
+  exists bool, (fun x _ => x = true), (fun x _ => x = false).
+  split; [| split].
+  - rel. destruct x, y; intuition.
+  - rel. destruct x, y; intuition.
+  - intros [H].
+    specialize (H true false ltac:(congruence)).
+    rel.
+Qed.
+(* end hide *)
+
+(** *** Relacje ... eh, coraz dziwniejsze te nazwy (TODO) *)
+
+Class ConverseWeaklyTrichotomous {A : Type} (R : rel A) : Prop :=
+{
+    cwt : forall x y : A, ~ R x y /\ ~ R y x -> x = y;
+}.
+
+Instance ConverseWeaklyTrichotomous_Total :
+  forall (A : Type) (R : rel A),
+    Total R -> ConverseWeaklyTrichotomous R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance ConverseWeaklyTrichotomous_empty :
+  forall R : rel Empty_set, ConverseWeaklyTrichotomous R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance ConverseWeaklyTrichotomous_unit :
+  forall R : rel unit, ConverseWeaklyTrichotomous R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance ConverseWeaklyTrichotomous_RTrue :
+  forall A : Type,
+    ConverseWeaklyTrichotomous (@RTrue A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_ConverseWeaklyTrichotomous_RFalse_two_elems :
+  forall {A : Type} {x y : A},
+    x <> y -> ~ ConverseWeaklyTrichotomous (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance ConverseWeaklyTrichotomous_Rinv :
+  forall (A : Type) (R : rel A),
+    ConverseWeaklyTrichotomous R -> ConverseWeaklyTrichotomous (Rinv R).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_ConverseWeaklyTrichotomous_Rcomp :
+  exists (A : Type) (R S : rel A),
+    ConverseWeaklyTrichotomous R /\ ConverseWeaklyTrichotomous S /\ ~ ConverseWeaklyTrichotomous (Rcomp R S).
+(* begin hide *)
+Proof.
+  exists nat, lt, lt. split; [| split].
+  1-2: split; lia.
+  destruct 1 as [H]; unfold Rcomp in H.
+  specialize (H 0 1).
+  assert (~ (exists b : nat, 0 < b < 1) /\ ~ (exists b : nat, 1 < b < 0)).
+  {
+    split.
+    - intros [b Hb]. lia.
+    - intros [b Hb]. lia.
+  }
+  specialize (H H0). congruence.
+Qed.
+(* end hide *)
+
+Lemma not_ConverseWeaklyTrichotomous_Rnot :
+  exists (A : Type) (R : rel A),
+    ConverseWeaklyTrichotomous R /\ ~ ConverseWeaklyTrichotomous (Rnot R).
+(* begin hide *)
+Proof.
+  exists bool, RTrue.
+  split.
+  - rel.
+  - intros [H]; compute in H.
+    specialize (H true false ltac:(intuition)).
+    congruence.
+Qed.
+(* end hide *)
+
+Instance ConverseWeaklyTrichotomous_Ror :
+  forall (A : Type) (R S : rel A),
+    ConverseWeaklyTrichotomous R -> ConverseWeaklyTrichotomous S ->
+      ConverseWeaklyTrichotomous (Ror R S).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_ConverseWeaklyTrichotomous_Rand :
+  exists (A : Type) (R S : rel A),
+    ConverseWeaklyTrichotomous R
+      /\
+    ConverseWeaklyTrichotomous S
+      /\
+    ~ ConverseWeaklyTrichotomous (Rand R S).
+(* begin hide *)
+Proof.
+  exists bool, (fun x _ => x = true), (fun x _ => x = false).
+  split; [| split].
+  - rel. destruct x, y; intuition.
+  - rel. destruct x, y; intuition.
+  - intros [H]; compute in H.
+    specialize (H true false ltac:(intuition)).
+    congruence.
 Qed.
 (* end hide *)
 
