@@ -8,3 +8,11 @@ Proof.
     intros. assumption.
     trivial.
 Qed.
+
+Goal forall P : Prop,
+  (P \/ ~ P) <-> (~ ~ (P \/ ~ P) -> P \/ ~ P).
+Proof.
+  split; intros H.
+  - intros _. assumption.
+  - apply H. intro H'. apply H'. right. intro p. apply H'. left. assumption.
+Qed.

@@ -463,4 +463,89 @@ W tym rozdziale dalej będziemy zajmować się relacjami (a konkretnie relacjami
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Antitransitive_TransitiveReduction'</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>)<br/>
 &nbsp;&nbsp;: <span class="id" title="var">Antitransitive</span> (<span class="id" title="var">TransitiveReduction'</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab719"></a><h1 class="section">To może być nawet ważne</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab720"></a><h2 class="section">Relacje słabo ekstrensjonalne</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">WeaklyExtensional</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">weakly_extensional</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">t</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">t</span> <span class="id" title="var">x</span> &lt;-&gt; <span class="id" title="var">R</span> <span class="id" title="var">t</span> <span class="id" title="var">y</span>)-&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>; <br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">RTrue</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_RTrue</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_RFalse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_Rid</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WeaklyExtensional</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_Rinv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyExtensional</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_Rnot</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyExtensional</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_Rnot_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>) -&gt; <span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_or</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WeaklyExtensional</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyExtensional_Rand</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyExtensional</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WeaklyExtensional</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab721"></a><h2 class="section">Relacje dobrze ufundowane</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab722"></a><h1 class="section">Wut</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Reflexive_from_Symmetric_Transitive_RightTotal</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">RightTotal</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span>.<br/>
 </div>

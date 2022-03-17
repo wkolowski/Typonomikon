@@ -802,3 +802,136 @@ Proof.
   firstorder.
 Abort.
 (* end hide *)
+
+(** * To może być nawet ważne *)
+
+(** ** Relacje słabo ekstrensjonalne *)
+
+Class WeaklyExtensional {A : Type} (R : rel A) : Prop :=
+{
+    weakly_extensional : forall x y : A, (forall t : A, R t x <-> R t y)-> x = y; 
+}.
+
+Print RTrue.
+
+Lemma WeaklyExtensional_RTrue :
+  forall (A : Type),
+    WeaklyExtensional (@RTrue A A).
+(* begin hide *)
+Proof.
+  split. compute.
+Abort.
+(* end hide *)
+
+Lemma WeaklyExtensional_RFalse :
+  forall (A : Type),
+    WeaklyExtensional (@RFalse A A).
+(* begin hide *)
+Proof.
+  split; compute.
+  intros x y H.
+Abort.
+(* end hide *)
+
+Lemma WeaklyExtensional_Rid :
+  forall A : Type,
+    WeaklyExtensional (@eq A).
+(* begin hide *)
+Proof.
+  split; compute.
+  intros x y H.
+  destruct (H x) as [Heq _].
+  apply Heq. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma WeaklyExtensional_Rcomp :
+  forall {A : Type} (R S : rel A),
+    WeaklyExtensional R -> WeaklyExtensional S -> WeaklyExtensional (Rcomp R S).
+(* begin hide *)
+Proof.
+  intros A R S [RWE] [SWE].
+  split; compute.
+  intros x y H.
+  apply RWE; split.
+  - intro rtx.
+Abort.
+(* end hide *)
+
+Lemma WeaklyExtensional_Rinv :
+  forall {A : Type} (R : rel A),
+    WeaklyExtensional R -> WeaklyExtensional (Rinv R).
+(* begin hide *)
+Proof.
+  intros A R [WE].
+  split; compute.
+  intros x y H.
+  apply WE.
+Abort.
+(* end hide *)
+
+Lemma WeaklyExtensional_Rnot :
+  forall {A : Type} (R : rel A),
+    WeaklyExtensional R -> WeaklyExtensional (Rnot R).
+(* begin hide *)
+Proof.
+  intros A R [WE].
+  split; compute.
+  intros x y H.
+  
+Abort.
+(* end hide *)
+
+Lemma WeaklyExtensional_Rnot_conv :
+  forall {A : Type} (R : rel A),
+    WeaklyExtensional (Rnot R) -> WeaklyExtensional R.
+(* begin hide *)
+Proof.
+  intros A R [WE].
+  split; compute in *.
+  intros x y H.
+  apply WE; split; intros r1 r2.
+  - destruct (H t) as [_ Hyx]. apply r1, Hyx. assumption.
+  - destruct (H t) as [Hxy _]. apply r1, Hxy. assumption.
+Qed.
+(* end hide *)
+
+Lemma WeaklyExtensional_or :
+  forall {A : Type} (R S : rel A),
+    WeaklyExtensional R -> WeaklyExtensional S -> WeaklyExtensional (Ror R S).
+(* begin hide *)
+Proof.
+  intros A R S [RWE] [SWE].
+  split; compute.
+  intros x y H.
+Abort.
+(* end hide *)
+
+Lemma WeaklyExtensional_Rand :
+  forall {A : Type} (R S : rel A),
+    WeaklyExtensional R -> WeaklyExtensional S -> WeaklyExtensional (Rand R S).
+(* begin hide *)
+Proof.
+  intros A R S [RWE] [SWE].
+  split; compute.
+  intros x y H.
+Abort.
+(* end hide *)
+
+(** ** Relacje dobrze ufundowane *)
+
+(** * Wut *)
+
+Lemma Reflexive_from_Symmetric_Transitive_RightTotal :
+  forall {A : Type} (R : rel A),
+    Symmetric R -> Transitive R -> RightTotal R -> Reflexive R.
+(* begin hide *)
+Proof.
+  intros A R [HS] [HT] [HRT].
+  split; intros x.
+  destruct (HRT x) as [y r].
+  apply HT with y.
+  - apply HS. assumption.
+  - assumption.
+Qed.
+(* end hide *)
