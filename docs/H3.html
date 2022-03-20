@@ -1853,14 +1853,14 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Transitive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Transitive_Rcomp</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Transitive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Transitive</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Transitive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
-
-<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Transitive_Rinv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Transitive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Transitive</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Transitive_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Transitive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Transitive</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Transitive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Transitive_Rnot</span> :<br/>
@@ -2854,11 +2854,7 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 </div>
 
 <div class="doc">
-<a id="lab704"></a><h1 class="section">Redukcje (TODO)</h1>
-
-<div class="paragraph"> </div>
-
-<a id="lab705"></a><h2 class="section">Domknięcie symetryczne v2</h2>
+<a id="lab704"></a><h2 class="section">Domknięcie symetryczne v2</h2>
 
 </div>
 <div class="code">
@@ -2880,7 +2876,7 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 </div>
 
 <div class="doc">
-<a id="lab706"></a><h2 class="section">Domknięcie równoważnościowe v3</h2>
+<a id="lab705"></a><h2 class="section">Domknięcie równoważnościowe v3</h2>
 
 </div>
 <div class="code">
@@ -2904,6 +2900,10 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 </div>
 
 <div class="doc">
+<a id="lab706"></a><h1 class="section">Redukcje (TODO)</h1>
+
+<div class="paragraph"> </div>
+
 <a id="lab707"></a><h2 class="section">Redukacja zwrotna</h2>
 
 </div>

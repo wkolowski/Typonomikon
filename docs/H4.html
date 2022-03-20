@@ -48,12 +48,12 @@ W tym rozdziale dalej będziemy zajmować się relacjami (a konkretnie relacjami
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_eq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">WeaklyReflexive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
-
-<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_RFalse</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">WeaklyReflexive</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">WeaklyReflexive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyReflexive_subrelation_eq</span> :<br/>
@@ -61,14 +61,24 @@ W tym rozdziale dalej będziemy zajmować się relacjami (a konkretnie relacjami
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Rinv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Rcomp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Rinv</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyReflexive_Rnot</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Ror</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Rand_l</span> :<br/>
@@ -81,12 +91,7 @@ W tym rozdziale dalej będziemy zajmować się relacjami (a konkretnie relacjami
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Ror</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">ProofWiki</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_LeftUnique</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LeftUnique</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>)).<br/>
 
@@ -117,15 +122,15 @@ W tym rozdziale dalej będziemy zajmować się relacjami (a konkretnie relacjami
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">Circular</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_eq</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Circular</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_RTrue</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Circular</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_RFalse</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Circular</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_RTrue</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Circular</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_eq</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Circular</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Lia</span>.<br/>
@@ -136,19 +141,14 @@ W tym rozdziale dalej będziemy zajmować się relacjami (a konkretnie relacjami
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Circular</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Circular</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Circular</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Circular_Rcomp</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Circular</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Circular</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Circular</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
-
-<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_Rinv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Circular</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Circular</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_Rand</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Circular</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Circular</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Circular</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Circular_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Circular</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Circular</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Circular</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Circular_Ror</span> :<br/>
@@ -156,22 +156,14 @@ W tym rozdziale dalej będziemy zajmować się relacjami (a konkretnie relacjami
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Circular</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Circular</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Circular</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">RandomWebsite</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_Rand</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Circular</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Circular</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">Circular</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Equivalence_Reflexive_Circular</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Circular</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Equivalence</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">CircularClosure</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">inj</span>  :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">circ</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">z</span> <span class="id" title="var">x</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_CircularClosure</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">Circular</span> (<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
 </div>
@@ -468,11 +460,70 @@ W tym rozdziale dalej będziemy zajmować się relacjami (a konkretnie relacjami
 </div>
 
 <div class="doc">
-<a id="lab719"></a><h1 class="section">To może być nawet ważne</h1>
+<a id="lab719"></a><h2 class="section">Relacje koprzechodnie</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">CoTransitive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">cotransitive</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">x</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>}, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> \/ <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoTransitive_Empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoTransitive_RTrue</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">CoTransitive</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoTransitive_RFalse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">CoTransitive</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CoTransitive_eq_unit</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">CoTransitive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">unit</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_CoTransitive_eq_two_elems</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span> -&gt; ~ <span class="id" title="var">CoTransitive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoTransitive_Rinv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">CoTransitive</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_CoTransitive_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">CoTransitive</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">CoTransitive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_CoTransitive_Rnot</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">CoTransitive</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">not_CoTransitive_Ror</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">CoTransitive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">CoTransitive</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_CoTransitive_Rand</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">CoTransitive</span> <span class="id" title="var">S</span> /\ <span class="id" title="var">CoTransitive</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab720"></a><h1 class="section">To może być nawet ważne</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab720"></a><h2 class="section">Relacje słabo ekstrensjonalne</h2>
+<a id="lab721"></a><h2 class="section">Relacje słabo ekstrensjonalne</h2>
 
 </div>
 <div class="code">
@@ -535,11 +586,11 @@ W tym rozdziale dalej będziemy zajmować się relacjami (a konkretnie relacjami
 </div>
 
 <div class="doc">
-<a id="lab721"></a><h2 class="section">Relacje dobrze ufundowane</h2>
+<a id="lab722"></a><h2 class="section">Relacje dobrze ufundowane</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab722"></a><h1 class="section">Wut</h1>
+<a id="lab723"></a><h1 class="section">Wut</h1>
 
 </div>
 <div class="code">
@@ -548,4 +599,62 @@ W tym rozdziale dalej będziemy zajmować się relacjami (a konkretnie relacjami
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Reflexive_from_Symmetric_Transitive_RightTotal</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">RightTotal</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab724"></a><h1 class="section">Wincyj domknięć</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab725"></a><h2 class="section">Domknięcie cyrkularne</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">CircularClosure</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">inj</span>  :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">circ</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span> <span class="id" title="var">z</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Circular_CircularClosure</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">Circular</span> (<span class="id" title="var">CircularClosure</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab726"></a><h2 class="section">Domknięcie słabozwrotne (TODO)</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">WeaklyReflexiveClosure</span>.<br/>
+
+<br/>
+<span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">WeaklyReflexiveClosureCarrier</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">embed</span>  : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">WeaklyReflexiveClosureCarrier</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">embed</span> {<span class="id" title="var">A</span> <span class="id" title="var">R</span>} <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">WRCC_equal</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; @<span class="id" title="var">embed</span> <span class="id" title="var">_</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> = @<span class="id" title="var">embed</span> <span class="id" title="var">_</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">WeaklyReflexiveClosure</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;: <span class="id" title="var">rel</span> (<span class="id" title="var">WeaklyReflexiveClosureCarrier</span> <span class="id" title="var">R</span>) :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">step</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">WeaklyReflexiveClosure</span> <span class="id" title="var">R</span> (<span class="id" title="var">embed</span> <span class="id" title="var">x</span>) (<span class="id" title="var">embed</span> <span class="id" title="var">y</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">WeaklyReflexiveClosure</span>.<br/>
 </div>

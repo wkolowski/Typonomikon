@@ -2103,6 +2103,13 @@ Instance Transitive_eq :
 Proof. rel. Qed.
 (* end hide *)
 
+Instance Transitive_Rinv :
+  forall (A : Type) (R : rel A),
+    Transitive R -> Transitive (Rinv R).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
 Lemma not_Transitive_Rcomp :
   exists (A : Type) (R S : rel A),
     Transitive R /\ Transitive S /\ ~ Transitive (Rcomp R S).
@@ -2123,13 +2130,6 @@ Proof.
         exists 3. compute. auto.
         destruct x as [| [|]]; compute in H; rel; congruence.
 Qed.
-(* end hide *)
-
-Instance Transitive_Rinv :
-  forall (A : Type) (R : rel A),
-    Transitive R -> Transitive (Rinv R).
-(* begin hide *)
-Proof. rel. Qed.
 (* end hide *)
 
 Lemma not_Transitive_Rnot :
@@ -3247,7 +3247,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Złożone relacje homogeniczne (TODO) *)
+(** * Porządki (TODO) *)
 
 Class Preorder {A : Type} (R : rel A) : Prop :=
 {
@@ -3266,6 +3266,8 @@ Class TotalOrder {A : Type} (R : rel A) : Prop :=
     TotalOrder_PartialOrder :> PartialOrder R;
     TotalOrder_Total : Total R;
 }.
+
+(** * Ostre porządki (TODO) *)
 
 Class StrictPreorder {A : Type} (R : rel A) : Prop :=
 {
@@ -3732,8 +3734,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Redukcje (TODO) *)
-
 (** ** Domknięcie symetryczne v2 *)
 
 Inductive SymmetricClosure' {A : Type} (R : rel A) : A -> A -> Prop :=
@@ -3777,6 +3777,8 @@ Proof.
     + Print equiv_clos.
 Abort.
 (* end hide *)
+
+(** * Redukcje (TODO) *)
 
 (** ** Redukacja zwrotna *)
 

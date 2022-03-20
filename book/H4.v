@@ -23,19 +23,19 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_eq :
-  forall A : Type, WeaklyReflexive (@eq A).
-(* begin hide *)
-Proof.
-  split; trivial.
-Qed.
-(* end hide *)
-
 Instance WeaklyReflexive_RFalse :
   forall A : Type, WeaklyReflexive (@RFalse A A).
 (* begin hide *)
 Proof.
   split; intros _ _ [].
+Qed.
+(* end hide *)
+
+Instance WeaklyReflexive_eq :
+  forall A : Type, WeaklyReflexive (@eq A).
+(* begin hide *)
+Proof.
+  split; trivial.
 Qed.
 (* end hide *)
 
@@ -45,6 +45,20 @@ Lemma WeaklyReflexive_subrelation_eq :
 (* begin hide *)
 Proof.
   intros A R [H] x y. apply H.
+Qed.
+(* end hide *)
+
+Instance WeaklyReflexive_Rinv :
+  forall (A : Type) (R : rel A),
+    WeaklyReflexive R -> WeaklyReflexive (Rinv R).
+(* begin hide *)
+Proof.
+  intros A R [HR].
+  split; unfold Rinv.
+  intros x y r.
+  symmetry.
+  apply HR.
+  assumption.
 Qed.
 (* end hide *)
 
@@ -60,17 +74,27 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_Rinv :
-  forall (A : Type) (R : rel A),
-    WeaklyReflexive R -> WeaklyReflexive (Rinv R).
+Lemma not_WeaklyReflexive_Rnot :
+  exists (A : Type) (R : rel A),
+    WeaklyReflexive R /\ ~ WeaklyReflexive (Rnot R).
 (* begin hide *)
 Proof.
-  intros A R [HR].
-  split; unfold Rinv.
-  intros x y r.
-  symmetry.
-  apply HR.
-  assumption.
+  exists bool, (fun b1 b2 => b1 = true /\ b2 = true).
+  split; [rel |].
+  unfold Rnot; intros [WR].
+  specialize (WR true false); intuition.
+Qed.
+(* end hide *)
+
+Instance WeaklyReflexive_Ror :
+  forall (A : Type) (R S : rel A),
+    WeaklyReflexive R -> WeaklyReflexive S -> WeaklyReflexive (Ror R S).
+(* begin hide *)
+Proof.
+  intros A R S [HR] [HS]; split.
+  intros x y [r | s].
+  - apply HR; assumption.
+  - apply HS; assumption.
 Qed.
 (* end hide *)
 
@@ -96,19 +120,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_Ror :
-  forall (A : Type) (R S : rel A),
-    WeaklyReflexive R -> WeaklyReflexive S -> WeaklyReflexive (Ror R S).
-(* begin hide *)
-Proof.
-  intros A R S [HR] [HS]; split.
-  intros x y [r | s].
-  - apply HR; assumption.
-  - apply HS; assumption.
-Qed.
-(* end hide *)
-
-Instance ProofWiki :
+Instance WeaklyReflexive_LeftUnique :
   forall {A : Type} (R : rel A),
     LeftUnique R -> WeaklyReflexive (Rcomp R (Rinv R)).
 (* begin hide *)
@@ -139,10 +151,11 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance Circular_eq {A : Type} : Circular (@eq A).
+Instance Circular_RTrue :
+  forall A : Type, Circular (@RTrue A A).
 (* begin hide *)
 Proof.
-  split; congruence.
+  split; compute. trivial.
 Qed.
 (* end hide *)
 
@@ -154,11 +167,10 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance Circular_RTrue :
-  forall A : Type, Circular (@RTrue A A).
+Instance Circular_eq {A : Type} : Circular (@eq A).
 (* begin hide *)
 Proof.
-  split; compute. trivial.
+  split; congruence.
 Qed.
 (* end hide *)
 
@@ -172,6 +184,19 @@ Proof.
   intros A R S [HR] [HS]; split; red.
   intros x y z (w1 & r1 & s1) (w2 & r2 & s2).
 Abort.
+(* end hide *)
+
+Instance Circular_Rinv :
+  forall (A : Type) (R : rel A),
+    Circular R -> Circular (Rinv R).
+(* begin hide *)
+Proof.
+  intros A R [HR].
+  split; unfold Rinv.
+  intros x y z r1 r2.
+  specialize (HR _ _ _ r2 r1).
+  assumption.
+Qed.
 (* end hide *)
 
 Lemma Circular_Rcomp :
@@ -203,32 +228,6 @@ Proof.
 Admitted.
 (* end hide *)
 
-Instance Circular_Rinv :
-  forall (A : Type) (R : rel A),
-    Circular R -> Circular (Rinv R).
-(* begin hide *)
-Proof.
-  intros A R [HR].
-  split; unfold Rinv.
-  intros x y z r1 r2.
-  specialize (HR _ _ _ r2 r1).
-  assumption.
-Qed.
-(* end hide *)
-
-Instance Circular_Rand :
-  forall (A : Type) (R S : rel A),
-    Circular R -> Circular S -> Circular (Rand R S).
-(* begin hide *)
-Proof.
-  intros A R S [HR] [HS]; split.
-  intros x y z [r1 s1] [r2 s2].
-  split.
-  - eapply HR; eassumption.
-  - eapply HS; eassumption.
-Qed.
-(* end hide *)
-
 Lemma Circular_Ror :
   exists (A : Type) (R S : rel A),
     Circular R /\ Circular S /\ ~ Circular (Ror R S).
@@ -256,7 +255,20 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance RandomWebsite :
+Instance Circular_Rand :
+  forall (A : Type) (R S : rel A),
+    Circular R -> Circular S -> Circular (Rand R S).
+(* begin hide *)
+Proof.
+  intros A R S [HR] [HS]; split.
+  intros x y z [r1 s1] [r2 s2].
+  split.
+  - eapply HR; eassumption.
+  - eapply HS; eassumption.
+Qed.
+(* end hide *)
+
+Instance Equivalence_Reflexive_Circular :
   forall {A : Type} (R : rel A),
     Reflexive R -> Circular R -> Equivalence R.
 (* begin hide *)
@@ -270,31 +282,6 @@ Proof.
   - intros x y z rxy ryx. eapply HC.
     + apply HR.
     + eapply HC; eassumption.
-Qed.
-(* end hide *)
-
-Inductive CircularClosure {A : Type} (R : A -> A -> Prop) : A -> A -> Prop :=
-    | inj  :
-        forall x y : A, R x y -> CircularClosure R x y
-    | circ :
-        forall x y z : A,
-          CircularClosure R x y -> CircularClosure R y z ->
-            CircularClosure R z x.
-
-Instance Circular_CircularClosure
-  {A : Type} (R : A -> A -> Prop) : Circular (CircularClosure R).
-(* begin hide *)
-Proof.
-  split; intros x y z H1 H2; revert z H2.
-  induction H1.
-  - destruct 1.
-    + eright; constructor; eassumption.
-    + eright with z.
-      * constructor; assumption.
-      * eright; eassumption.
-  - intros. eright with x.
-    + eright with y; eassumption.
-    + assumption.
 Qed.
 (* end hide *)
 
@@ -803,6 +790,105 @@ Proof.
 Abort.
 (* end hide *)
 
+(** ** Relacje koprzechodnie *)
+
+Class CoTransitive {A : Type} (R : rel A) : Prop :=
+  cotransitive : forall {x z : A}, R x z -> forall y : A, R x y \/ R y z.
+
+Instance CoTransitive_Empty :
+  forall R : rel Empty_set, CoTransitive R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance CoTransitive_RTrue :
+  forall A : Type, CoTransitive (@RTrue A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance CoTransitive_RFalse :
+  forall A : Type, CoTransitive (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma CoTransitive_eq_unit :
+  CoTransitive (@eq unit).
+(* begin hide *)
+Proof. rel. intuition. Qed.
+(* end hide *)
+
+Lemma not_CoTransitive_eq_two_elems :
+  forall {A : Type} {x y : A},
+    x <> y -> ~ CoTransitive (@eq A).
+(* begin hide *)
+Proof.
+  unfold CoTransitive.
+  intros A x y Hneq CT.
+  destruct (CT x x eq_refl y); congruence.
+Qed.
+(* end hide *)
+
+Instance CoTransitive_Rinv :
+  forall (A : Type) (R : rel A),
+    CoTransitive R -> CoTransitive (Rinv R).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_CoTransitive_Rcomp :
+  exists (A : Type) (R S : rel A),
+    CoTransitive R /\ CoTransitive S /\ ~ CoTransitive (Rcomp R S).
+(* begin hide *)
+Proof.
+  unfold CoTransitive, Rcomp.
+  exists nat, lt, lt.
+  repeat split; [lia | lia |].
+  intros H.
+  assert (H012 : exists b : nat, 0 < b < 2) by (exists 1; lia).
+  destruct (H 0 2 H012 1) as [[b Hb] | [b Hb]]; lia.
+Qed.
+(* end hide *)
+
+Lemma not_CoTransitive_Rnot :
+  exists (A : Type) (R : rel A),
+    CoTransitive R /\ ~ CoTransitive (Rnot R).
+(* begin hide *)
+Proof.
+  unfold CoTransitive, Rnot.
+  exists nat, (fun x y => x <> y).
+  split; [lia |].
+  intros H.
+  specialize (H 0 0 ltac:(lia) 1).
+  lia.
+Qed.
+(* end hide *)
+
+Instance not_CoTransitive_Ror :
+  forall (A : Type) (R S : rel A),
+    CoTransitive R -> CoTransitive S -> CoTransitive (Ror R S).
+(* begin hide *)
+Proof.
+  unfold CoTransitive, Ror.
+  intros A R S CTR CTS x y [r | s] z.
+  - destruct (CTR _ _ r z); auto.
+  - destruct (CTS _ _ s z); auto.
+Qed.
+(* end hide *)
+
+Lemma not_CoTransitive_Rand :
+  exists (A : Type) (R S : rel A),
+    CoTransitive R /\ CoTransitive S /\ CoTransitive (Rand R S).
+(* begin hide *)
+Proof.
+  unfold CoTransitive, Rand.
+  exists nat, lt, gt.
+  repeat split; [lia | lia |].
+  intros x y [H1 H2]; lia.
+Qed.
+(* end hide *)
+
 (** * To może być nawet ważne *)
 
 (** ** Relacje słabo ekstrensjonalne *)
@@ -935,3 +1021,51 @@ Proof.
   - assumption.
 Qed.
 (* end hide *)
+
+(** * Wincyj domknięć *)
+
+(** ** Domknięcie cyrkularne *)
+
+Inductive CircularClosure {A : Type} (R : A -> A -> Prop) : A -> A -> Prop :=
+    | inj  :
+        forall x y : A, R x y -> CircularClosure R x y
+    | circ :
+        forall x y z : A,
+          CircularClosure R x y -> CircularClosure R y z ->
+            CircularClosure R z x.
+
+Instance Circular_CircularClosure
+  {A : Type} (R : A -> A -> Prop) : Circular (CircularClosure R).
+(* begin hide *)
+Proof.
+  split; intros x y z H1 H2; revert z H2.
+  induction H1.
+  - destruct 1.
+    + eright; constructor; eassumption.
+    + eright with z.
+      * constructor; assumption.
+      * eright; eassumption.
+  - intros. eright with x.
+    + eright with y; eassumption.
+    + assumption.
+Qed.
+(* end hide *)
+
+(** ** Domknięcie słabozwrotne (TODO) *)
+
+Module WeaklyReflexiveClosure.
+
+Private Inductive WeaklyReflexiveClosureCarrier {A : Type} (R : rel A) : Type :=
+    | embed  : A -> WeaklyReflexiveClosureCarrier R.
+
+Arguments embed {A R} _.
+
+Axiom WRCC_equal :
+  forall {A : Type} {x y : A} {R : rel A},
+    R x y -> @embed _ R x = @embed _ R y.
+
+Inductive WeaklyReflexiveClosure {A : Type} (R : rel A)
+  : rel (WeaklyReflexiveClosureCarrier R) :=
+  | step : forall x y : A, R x y -> WeaklyReflexiveClosure R (embed x) (embed y).
+
+End WeaklyReflexiveClosure.
