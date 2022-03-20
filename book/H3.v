@@ -7,6 +7,8 @@ Require Import Nat.
 Require Import List.
 Import ListNotations.
 
+Require Import Lia.
+
 (** Prerekwizyty:
     - definicje induktywne
     - klasy (?) *)
@@ -2164,9 +2166,7 @@ Instance Transitive_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
-(** ** Inne (TODO) *)
-
-(** *** Relacje totalne *)
+(** ** Relacje totalne *)
 
 Class Total {A : Type} (R : rel A) : Prop :=
 {
@@ -2295,7 +2295,7 @@ Lemma Total_Symmetric_char :
 Proof. rel. Qed.
 (* end hide *)
 
-(** *** Relacje słabo totalne *)
+(** ** Relacje słabo totalne *)
 
 Class WeaklyTotal {A : Type} (R : rel A) : Prop :=
 {
@@ -2399,7 +2399,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Relacje trychotomiczne *)
+(** ** Relacje trychotomiczne *)
 
 Class Trichotomous {A : Type} (R : rel A) : Prop :=
 {
@@ -2423,6 +2423,25 @@ Instance Trichotomous_empty :
 Proof. rel. Qed.
 (* end hide *)
 
+Instance Trichotomous_RTrue :
+  forall A : Type, Trichotomous (@RTrue A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Trichotomous_RFalse_subsingleton :
+  forall A : Type, (forall x y : A, x = y) -> Trichotomous (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_Trichotomous_RFalse_two_elems :
+  forall {A : Type} {x y : A},
+    x <> y -> ~ Trichotomous (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
 Instance Trichotomous_eq_subsingleton :
   forall A : Type, (forall x y : A, x = y) -> Trichotomous (@eq A).
 (* begin hide *)
@@ -2437,8 +2456,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Require Import Lia.
-
 Instance Trichotomous_Rinv :
   forall (A : Type) (R : rel A),
     Trichotomous R -> Trichotomous (Rinv R).
@@ -2452,7 +2469,7 @@ Lemma not_Trichotomous_Rcomp :
 (* begin hide *)
 Proof.
   exists nat, lt, lt. split; [idtac | split].
-    1-2: split; lia.
+  1-2: split; lia.
     destruct 1. unfold Rcomp in *. specialize (trichotomous0 0 1).
       decompose [and or ex] trichotomous0; clear trichotomous0.
         all: lia.
@@ -2496,7 +2513,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Relacje słabo trychotomiczne *)
+(** ** Relacje słabo trychotomiczne *)
 
 Class WeaklyTrichotomous {A : Type} (R : rel A) : Prop :=
 {
@@ -2589,56 +2606,56 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Relacje ... eh, coraz dziwniejsze te nazwy (TODO) *)
+(** ** Relacje spójne *)
 
-Class ConverseWeaklyTrichotomous {A : Type} (R : rel A) : Prop :=
+Class Connected {A : Type} (R : rel A) : Prop :=
 {
     cwt : forall x y : A, ~ R x y /\ ~ R y x -> x = y;
 }.
 
-Instance ConverseWeaklyTrichotomous_Total :
+Instance Connected_Total :
   forall (A : Type) (R : rel A),
-    Total R -> ConverseWeaklyTrichotomous R.
+    Total R -> Connected R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Instance ConverseWeaklyTrichotomous_empty :
-  forall R : rel Empty_set, ConverseWeaklyTrichotomous R.
+Instance Connected_empty :
+  forall R : rel Empty_set, Connected R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Instance ConverseWeaklyTrichotomous_unit :
-  forall R : rel unit, ConverseWeaklyTrichotomous R.
+Instance Connected_unit :
+  forall R : rel unit, Connected R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Instance ConverseWeaklyTrichotomous_RTrue :
+Instance Connected_RTrue :
   forall A : Type,
-    ConverseWeaklyTrichotomous (@RTrue A A).
+    Connected (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Lemma not_ConverseWeaklyTrichotomous_RFalse_two_elems :
+Lemma not_Connected_RFalse_two_elems :
   forall {A : Type} {x y : A},
-    x <> y -> ~ ConverseWeaklyTrichotomous (@RFalse A A).
+    x <> y -> ~ Connected (@RFalse A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Instance ConverseWeaklyTrichotomous_Rinv :
+Instance Connected_Rinv :
   forall (A : Type) (R : rel A),
-    ConverseWeaklyTrichotomous R -> ConverseWeaklyTrichotomous (Rinv R).
+    Connected R -> Connected (Rinv R).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Lemma not_ConverseWeaklyTrichotomous_Rcomp :
+Lemma not_Connected_Rcomp :
   exists (A : Type) (R S : rel A),
-    ConverseWeaklyTrichotomous R /\ ConverseWeaklyTrichotomous S /\ ~ ConverseWeaklyTrichotomous (Rcomp R S).
+    Connected R /\ Connected S /\ ~ Connected (Rcomp R S).
 (* begin hide *)
 Proof.
   exists nat, lt, lt. split; [| split].
@@ -2655,9 +2672,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma not_ConverseWeaklyTrichotomous_Rnot :
+Lemma not_Connected_Rnot :
   exists (A : Type) (R : rel A),
-    ConverseWeaklyTrichotomous R /\ ~ ConverseWeaklyTrichotomous (Rnot R).
+    Connected R /\ ~ Connected (Rnot R).
 (* begin hide *)
 Proof.
   exists bool, RTrue.
@@ -2669,21 +2686,21 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance ConverseWeaklyTrichotomous_Ror :
+Instance Connected_Ror :
   forall (A : Type) (R S : rel A),
-    ConverseWeaklyTrichotomous R -> ConverseWeaklyTrichotomous S ->
-      ConverseWeaklyTrichotomous (Ror R S).
+    Connected R -> Connected S ->
+      Connected (Ror R S).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Lemma not_ConverseWeaklyTrichotomous_Rand :
+Lemma not_Connected_Rand :
   exists (A : Type) (R S : rel A),
-    ConverseWeaklyTrichotomous R
+    Connected R
       /\
-    ConverseWeaklyTrichotomous S
+    Connected S
       /\
-    ~ ConverseWeaklyTrichotomous (Rand R S).
+    ~ Connected (Rand R S).
 (* begin hide *)
 Proof.
   exists bool, (fun x _ => x = true), (fun x _ => x = false).
@@ -2696,15 +2713,34 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Relacje gęste *)
+(** ** Relacje gęste *)
 
 Class Dense {A : Type} (R : rel A) : Prop :=
 {
     dense : forall x y : A, R x y -> exists z : A, R x z /\ R z y
 }.
 
+Instance Dense_RTrue :
+  forall A : Type, Dense (@RTrue A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Dense_RFalse :
+  forall A : Type, Dense (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
 Instance Dense_eq :
   forall A : Type, Dense (@eq A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Dense_Reflexive :
+  forall {A : Type} (R : rel A),
+    Reflexive R -> Dense R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
@@ -2725,18 +2761,26 @@ Proof.
   exists nat.
   assert (R : rel nat). admit.
   assert (Dense R). admit.
-  assert (Irreflexive R). admit.
-  exists R, R. split; [assumption | split; [assumption | idtac]].
+  assert (Antireflexive R). admit.
+  exists R, R. split; [assumption | split; [assumption |]].
   destruct 1. unfold Rcomp in *.
+  
+Restart.
 Abort.
 (* end hide *)
 
 (* begin hide *)
-Lemma not_Dense_Rand :
-  exists (A : Type) (R S : rel A),
-    Dense R /\ Dense S /\ ~ Dense (Rand R S).
+Lemma not_Dense_Rnot :
+  exists (A : Type) (R : rel A),
+    Dense R /\ ~ Dense (Rnot R).
 Proof.
-Abort.
+  exists bool, eq.
+  split.
+  - typeclasses eauto.
+  - intros [D]; unfold Rnot in D.
+    destruct (D true false ltac:(congruence)) as (b & H1 & H2).
+    destruct b; congruence.
+Qed.
 (* end hide *)
 
 Instance Dense_Ror :
@@ -2747,14 +2791,14 @@ Proof. rel. Qed.
 (* end hide *)
 
 (* begin hide *)
-Lemma not_Dense_Rnot :
-  exists (A : Type) (R : rel A),
-    Dense R /\ ~ Dense (Rnot R).
+Lemma not_Dense_Rand :
+  exists (A : Type) (R S : rel A),
+    Dense R /\ Dense S /\ ~ Dense (Rand R S).
 Proof.
 Abort.
 (* end hide *)
 
-(** *** Relacje konfluentne *)
+(** ** Relacje konfluentne *)
 
 Class Confluent {A : Type} (R : A -> A -> Prop) : Prop :=
 {
@@ -2764,27 +2808,113 @@ Class Confluent {A : Type} (R : A -> A -> Prop) : Prop :=
           exists w : A, R y w /\ R z w
 }.
 
-Instance Confluent_Ror :
-  forall {A : Type} (R S : A -> A -> Prop),
-    Confluent R -> Confluent S -> Confluent (Ror R S).
+Instance Confluent_RTrue :
+  forall A : Type, Confluent (@RTrue A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Confluent_RFalse :
+  forall A : Type, Confluent (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Confluent_eq :
+  forall A : Type, Confluent (@eq A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Confluent_lt :
+  Confluent lt.
 (* begin hide *)
 Proof.
-  destruct 1 as [CR], 1 as [CS].
-  split. intros x y z [Rxy | Sxy] [Rxz | Sxz].
-    destruct (CR _ _ _ Rxy Rxz) as (w & Ryw & Rzw). unfold Ror. eauto.
+  split; intros. exists (1 + y + z). lia.
+Qed.
+(* end hide *)
+
+Instance Confluent_le :
+  Confluent le.
+(* begin hide *)
+Proof.
+  split; intros. exists (1 + y + z). lia.
+Qed.
+(* end hide *)
+
+Lemma not_Confluent_gt :
+  ~ Confluent gt.
+(* begin hide *)
+Proof.
+  intros [HC].
+  destruct (HC 1 0 0 ltac:(lia) ltac:(lia)).
+  lia.
+Qed.
+(* end hide *)
+
+Instance Confluent_ge :
+  Confluent ge.
+(* begin hide *)
+Proof.
+  split; intros. exists 0. lia.
+Qed.
+(* end hide *)
+
+Lemma not_Confluent_Rinv :
+  exists (A : Type) (R : rel A),
+    Confluent R /\ ~ Confluent (Rinv R).
+(* begin hide *)
+Proof.
+  exists nat, lt.
+  split; [split |].
+  - intros x y z Hxy Hxz. exists (1 + y + z). lia.
+  - unfold Rinv; intros [HC].
+    destruct (HC 2 0 0 ltac:(lia) ltac:(lia)) as (w & H1 & _).
+    lia.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Lemma not_Confluent_Rcomp :
+  exists (A : Type) (R S : rel A),
+    Confluent R /\ Confluent S /\ ~ Confluent (Rcomp R S).
+Proof.
 Abort.
 (* end hide *)
 
-Instance Confluent_Rand :
-  forall {A : Type} (R S : A -> A -> Prop),
-    Confluent R -> Confluent S -> Confluent (Rand R S).
+(* begin hide *)
+Lemma not_Confluent_Rnot :
+  exists (A : Type) (R : rel A),
+    Confluent R /\ ~ Confluent (Rnot R).
+Proof.
+  exists nat, le.
+  split; [split |].
+  - apply Confluent_le.
+  - unfold Rnot; intros [HC].
+    destruct (HC 1 0 0 ltac:(lia) ltac:(lia)) as (w & H1 & H2).
+    lia.
+Qed.
+(* end hide *)
+
+Lemma not_Confluent_Ror :
+  exists (A : Type) (R S : A -> A -> Prop),
+    Confluent R /\ Confluent S /\ ~ Confluent (Ror R S).
 (* begin hide *)
 Proof.
-  destruct 1 as [CR], 1 as [CS].
-  split. intros x y z [Rxy Sxy] [Rxz Sxz].
-  destruct (CR _ _ _ Rxy Rxz) as (w & Ryw & Rzw),
-           (CS _ _ _ Sxy Sxz) as (v & Syv & Szv).
-  unfold Rand. exists w. firstorder.
+Abort.
+(* end hide *)
+
+Lemma not_Confluent_Rand :
+  exists (A : Type) (R S : A -> A -> Prop),
+    Confluent R /\ Confluent S /\ ~ Confluent (Rand R S).
+(* begin hide *)
+Proof.
+  exists nat, le, ge.
+  split; [| split].
+  - apply Confluent_le.
+  - apply Confluent_ge.
+  - unfold Rand; intros [HC].
+    specialize (HC 0 0 0).
 Abort.
 (* end hide *)
 
@@ -3310,6 +3440,8 @@ Class Closure
         forall x y : A, Cl (Cl R) x y -> Cl R x y;
 }.
 
+(** ** Domknięcie zwrotne *)
+
 Inductive refl_clos {A : Type} (R : rel A) : rel A :=
     | rc_step : forall x y : A, R x y -> refl_clos R x y
     | rc_refl : forall x : A, refl_clos R x x.
@@ -3370,6 +3502,8 @@ Lemma rc_Rinv :
 Proof. rc. Qed.
 (* end hide *)
 
+(** ** Domknięcie symetryczne *)
+
 Inductive symm_clos {A : Type} (R : rel A) : rel A :=
     | sc_step :
         forall x y : A, R x y -> symm_clos R x y
@@ -3417,6 +3551,29 @@ Lemma sc_Rinv :
 (* begin hide *)
 Proof. sc. Qed.
 (* end hide *)
+
+(** ** Domknięcie symetryczne v2 *)
+
+Inductive SymmetricClosure' {A : Type} (R : rel A) : A -> A -> Prop :=
+    | SC_step : forall x y : A, R x y -> SymmetricClosure' R x y
+    | SC_symm : forall x y : A, R x y -> SymmetricClosure' R y x.
+
+Global Hint Constructors SymmetricClosure' : core.
+
+Lemma SymmetricClosure'_sc :
+  forall {A : Type} (R : rel A),
+    SymmetricClosure' R <--> symm_clos R.
+(* begin hide *)
+Proof.
+  split.
+  - intros x y H. destruct H; auto.
+  - intros x y H. induction H.
+    + auto.
+    + destruct IHsymm_clos; auto.
+Qed.
+(* end hide *)
+
+(** ** Domknięcie przechodnie *)
 
 Inductive trans_clos {A : Type} (R : rel A) : rel A :=
     | tc_step :
@@ -3467,6 +3624,46 @@ Lemma tc_Rinv :
 (* begin hide *)
 Proof. tc. Qed.
 (* end hide *)
+
+(** ** Domknięcie przechodnie v2 *)
+
+Inductive TransitiveClosure {A : Type} (R : rel A) : rel A :=
+    | TC_step : forall x y : A, R x y -> TransitiveClosure R x y
+    | TC_trans : forall x y z : A, R x y -> TransitiveClosure R y z -> TransitiveClosure R x z.
+
+(* begin hide *)
+Global Hint Constructors TransitiveClosure : core.
+(* end hide *)
+
+Lemma Transitive_TransitiveClosure :
+  forall (A : Type) (R : rel A),
+    Transitive (TransitiveClosure R).
+(* begin hide *)
+Proof.
+  unfold Transitive.
+  intros A R x y z Hxy; revert z.
+  induction Hxy.
+  - intros z Hyz. constructor 2 with y; assumption.
+  - intros w Hzw. constructor 2 with y.
+    + assumption.
+    + apply IHHxy. assumption.
+Qed.
+(* end hide *)
+
+Lemma TransitiveClosure_tc :
+  forall (A : Type) (R : rel A),
+    TransitiveClosure R <--> trans_clos R.
+(* begin hide *)
+Proof.
+  split.
+  - induction 1; eauto.
+  - induction 1.
+    + constructor. assumption.
+    + eapply Transitive_TransitiveClosure; eassumption.
+Qed.
+(* end hide *)
+
+(** ** Domknięcie równoważnościowe *)
 
 Inductive equiv_clos {A : Type} (R : rel A) : rel A :=
   | ec_step :
@@ -3734,36 +3931,50 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Domknięcie symetryczne v2 *)
-
-Inductive SymmetricClosure' {A : Type} (R : rel A) : A -> A -> Prop :=
-    | SC_step : forall x y : A, R x y -> SymmetricClosure' R x y
-    | SC_symm : forall x y : A, R x y -> SymmetricClosure' R y x.
-
-Global Hint Constructors SymmetricClosure' : core.
-
-Lemma SymmetricClosure'_sc :
-  forall {A : Type} (R : rel A),
-    SymmetricClosure' R <--> symm_clos R.
-(* begin hide *)
-Proof.
-  split.
-  - intros x y H. destruct H; auto.
-  - intros x y H. induction H.
-    + auto.
-    + destruct IHsymm_clos; auto.
-Qed.
-(* end hide *)
-
 (** ** Domknięcie równoważnościowe v3 *)
 
 Inductive EquivalenceClosure {A : Type} (R : rel A) : A -> A -> Prop :=
-    | EC_step : forall x y : A, R x y -> EquivalenceClosure R x y
-    | EC_refl : forall x : A, EquivalenceClosure R x x
-    | EC_symm : forall x y : A, R x y -> EquivalenceClosure R y x
+    | EC_step  : forall x y   : A, R x y -> EquivalenceClosure R x y
+    | EC_refl  : forall x     : A,          EquivalenceClosure R x x
+    | EC_symm  : forall x y   : A, R x y -> EquivalenceClosure R y x
     | EC_trans : forall x y z : A, R x y -> EquivalenceClosure R y z -> EquivalenceClosure R x z.
 
 Global Hint Constructors EquivalenceClosure : core.
+
+Instance Reflexive_EquivalenceClosure :
+  forall {A : Type} (R : rel A),
+    Reflexive (EquivalenceClosure R).
+(* begin hide *)
+Proof.
+  intros A R x. auto.
+Qed.
+(* end hide *)
+
+Instance Symmetric_EquivalenceClosure :
+  forall {A : Type} (R : rel A),
+    Symmetric (EquivalenceClosure R).
+(* begin hide *)
+Proof.
+  intros A R x y H.
+  induction H.
+  - constructor 3. assumption.
+  - constructor 2.
+  - constructor 1. assumption.
+Abort.
+(* end hide *)
+
+Instance Transitive_EquivalenceClosure :
+  forall {A : Type} (R : rel A),
+    Transitive (EquivalenceClosure R).
+(* begin hide *)
+Proof.
+  intros A R x y z Hxy Hyz; revert z Hyz.
+  induction Hxy; intros.
+  - eauto.
+  - auto.
+  - constructor 1.
+Abort.
+(* end hide *)
 
 Lemma EquivalenceClosure_equiv_clos :
   forall {A : Type} (R : rel A),
@@ -3774,7 +3985,7 @@ Proof.
   - intros x y H. induction H; eauto.
   - intros x y H. induction H.
     1-2: auto.
-    + Print equiv_clos.
+    Focus 2. 
 Abort.
 (* end hide *)
 
@@ -3805,4 +4016,3 @@ Proof.
     constructor. split; auto.
 Qed.
 (* end hide *)
-

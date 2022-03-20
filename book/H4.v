@@ -786,7 +786,6 @@ Instance Antitransitive_TransitiveReduction'
 (* begin hide *)
 Proof.
   compute. intros x y z [H11 H12] [H21 H22] [H31 H32].
-  firstorder.
 Abort.
 (* end hide *)
 
@@ -891,32 +890,81 @@ Qed.
 
 (** * To może być nawet ważne *)
 
-(** ** Relacje słabo ekstrensjonalne *)
+(** ** Relacje słabo ekstensjonalne *)
 
 Class WeaklyExtensional {A : Type} (R : rel A) : Prop :=
 {
     weakly_extensional : forall x y : A, (forall t : A, R t x <-> R t y)-> x = y; 
 }.
 
-Print RTrue.
-
-Lemma WeaklyExtensional_RTrue :
-  forall (A : Type),
-    WeaklyExtensional (@RTrue A A).
+Lemma WeaklyExtensional_lt :
+  WeaklyExtensional lt.
 (* begin hide *)
 Proof.
-  split. compute.
-Abort.
+  split; intros x y H.
+  cut (~ x < y /\ ~ y < x); [lia |].
+  rewrite <- (H x), (H y).
+  lia.
+Qed.
 (* end hide *)
 
-Lemma WeaklyExtensional_RFalse :
-  forall (A : Type),
-    WeaklyExtensional (@RFalse A A).
+Lemma WeaklyExtensional_le :
+  WeaklyExtensional le.
 (* begin hide *)
 Proof.
-  split; compute.
-  intros x y H.
-Abort.
+  split; intros x y H.
+  cut (x <= y /\ y <= x); [lia |].
+  rewrite <- (H x), (H y).
+  lia.
+Qed.
+(* end hide *)
+
+Lemma WeaklyExtensional_gt :
+  WeaklyExtensional gt.
+(* begin hide *)
+Proof.
+  split; intros x y H.
+  cut (~ x < y /\ ~ y < x); [lia |].
+  rewrite <- (H x), (H y).
+  lia.
+Qed.
+(* end hide *)
+
+Lemma WeaklyExtensional_ge :
+  WeaklyExtensional ge.
+(* begin hide *)
+Proof.
+  split; intros x y H.
+  cut (x <= y /\ y <= x); [lia |].
+  rewrite <- (H x), (H y).
+  lia.
+Qed.
+(* end hide *)
+
+Lemma not_WeaklyExtensional_RTrue :
+  exists A : Type,
+    ~ WeaklyExtensional (@RTrue A A).
+(* begin hide *)
+Proof.
+  exists bool.
+  intros [WE]; unfold RTrue in *.
+  assert (bool -> True <-> True) by intuition.
+  specialize (WE true false H).
+  congruence.
+Qed.
+(* end hide *)
+
+Lemma not_WeaklyExtensional_RFalse :
+  exists A : Type,
+    ~ WeaklyExtensional (@RFalse A A).
+(* begin hide *)
+Proof.
+  exists bool.
+  intros [WE]; unfold RFalse in *.
+  assert (bool -> False <-> False) by intuition.
+  specialize (WE true false H).
+  congruence.
+Qed.
 (* end hide *)
 
 Lemma WeaklyExtensional_Rid :
@@ -931,77 +979,87 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma WeaklyExtensional_Rcomp :
-  forall {A : Type} (R S : rel A),
-    WeaklyExtensional R -> WeaklyExtensional S -> WeaklyExtensional (Rcomp R S).
+Lemma not_WeaklyExtensional_Rinv :
+  exists (A : Type) (R : rel A),
+    WeaklyExtensional R /\ ~ WeaklyExtensional (Rinv R).
 (* begin hide *)
 Proof.
-  intros A R S [RWE] [SWE].
-  split; compute.
-  intros x y H.
-  apply RWE; split.
-  - intro rtx.
+  exists
+    comparison,
+    (fun x y =>
+      x = Eq /\ y = Lt
+        \/
+      x = Eq /\ y = Gt).
+  split; [split |].
+(*   - intros x y H. destruct x, y; try reflexivity.
+    + specialize (H true). intuition.
+    + specialize (H true). intuition. *)
+  - intros x y H. specialize (H Eq).
 Abort.
 (* end hide *)
 
-Lemma WeaklyExtensional_Rinv :
-  forall {A : Type} (R : rel A),
-    WeaklyExtensional R -> WeaklyExtensional (Rinv R).
+Lemma not_WeaklyExtensional_Rcomp :
+  exists (A : Type) (R S : rel A),
+    WeaklyExtensional R /\ WeaklyExtensional S /\ ~ WeaklyExtensional (Rcomp R S).
 (* begin hide *)
 Proof.
-  intros A R [WE].
-  split; compute.
-  intros x y H.
-  apply WE.
-Abort.
-(* end hide *)
-
-Lemma WeaklyExtensional_Rnot :
-  forall {A : Type} (R : rel A),
-    WeaklyExtensional R -> WeaklyExtensional (Rnot R).
-(* begin hide *)
-Proof.
-  intros A R [WE].
-  split; compute.
-  intros x y H.
-  
-Abort.
-(* end hide *)
-
-Lemma WeaklyExtensional_Rnot_conv :
-  forall {A : Type} (R : rel A),
-    WeaklyExtensional (Rnot R) -> WeaklyExtensional R.
-(* begin hide *)
-Proof.
-  intros A R [WE].
-  split; compute in *.
-  intros x y H.
-  apply WE; split; intros r1 r2.
-  - destruct (H t) as [_ Hyx]. apply r1, Hyx. assumption.
-  - destruct (H t) as [Hxy _]. apply r1, Hxy. assumption.
+  exists nat, lt, lt.
+  repeat split.
+  1-2: apply WeaklyExtensional_lt.
+  intros [WE]; unfold Rcomp in WE.
+  cut (0 = 1); [congruence |]. (* TODO: opisać taktykę [enough] *)
+  apply WE. split.
+  - intros (b & H1 & H2). lia.
+  - intros (b & H1 & H2). lia.
 Qed.
 (* end hide *)
 
-Lemma WeaklyExtensional_or :
-  forall {A : Type} (R S : rel A),
-    WeaklyExtensional R -> WeaklyExtensional S -> WeaklyExtensional (Ror R S).
+Lemma not_WeaklyExtensional_Rnot :
+  exists (A : Type) (R : rel A),
+    WeaklyExtensional R /\ ~ WeaklyExtensional (Rnot R).
 (* begin hide *)
 Proof.
-  intros A R S [RWE] [SWE].
-  split; compute.
-  intros x y H.
+  exists
+    bool,
+    (fun x y => x = false \/ y = true).
+  repeat split.
+  - intros x y H.
+    specialize (H true) as Ht.
+    specialize (H false) as Hf.
+    destruct x, y; intuition.
+  - intros [WE]; unfold Rnot in WE.
+    specialize (WE true false).
 Abort.
 (* end hide *)
 
-Lemma WeaklyExtensional_Rand :
-  forall {A : Type} (R S : rel A),
-    WeaklyExtensional R -> WeaklyExtensional S -> WeaklyExtensional (Rand R S).
+Lemma not_WeaklyExtensional_Ror :
+  exists (A : Type) (R S : rel A),
+    WeaklyExtensional R /\ WeaklyExtensional S /\ ~ WeaklyExtensional (Ror R S).
 (* begin hide *)
 Proof.
-  intros A R S [RWE] [SWE].
-  split; compute.
-  intros x y H.
-Abort.
+  exists nat, lt, ge.
+  repeat split.
+  - apply WeaklyExtensional_lt.
+  - apply WeaklyExtensional_ge.
+  - intros [WE]; unfold Ror in WE.
+    cut (1 = 2); [lia |].
+    apply WE. lia.
+Qed.
+(* end hide *)
+
+Lemma not_WeaklyExtensional_Rand :
+  exists (A : Type) (R S : rel A),
+    WeaklyExtensional R /\ WeaklyExtensional S /\ ~ WeaklyExtensional (Rand R S).
+(* begin hide *)
+Proof.
+  exists nat, lt, ge.
+  repeat split.
+  - apply WeaklyExtensional_lt.
+  - apply WeaklyExtensional_ge.
+  - intros [WE]; unfold Rand in WE.
+    cut (1 = 2); [lia |].
+    apply WE. lia.
+Qed.
 (* end hide *)
 
 (** ** Relacje dobrze ufundowane *)
