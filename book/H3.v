@@ -2752,10 +2752,10 @@ Instance Dense_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
-(* begin hide *)
 Lemma not_Dense_Rcomp :
   exists (A : Type) (R S : rel A),
     Dense R /\ Dense S /\ ~ Dense (Rcomp R S).
+(* begin hide *)
 Proof.
   (* TODO: Potrzebna jest dowolna relacja gęsta i antyzwrotna. *)
   exists nat.
@@ -2764,15 +2764,14 @@ Proof.
   assert (Antireflexive R). admit.
   exists R, R. split; [assumption | split; [assumption |]].
   destruct 1. unfold Rcomp in *.
-  
 Restart.
 Abort.
 (* end hide *)
 
-(* begin hide *)
 Lemma not_Dense_Rnot :
   exists (A : Type) (R : rel A),
     Dense R /\ ~ Dense (Rnot R).
+(* begin hide *)
 Proof.
   exists bool, eq.
   split.
@@ -2790,17 +2789,17 @@ Instance Dense_Ror :
 Proof. rel. Qed.
 (* end hide *)
 
-(* begin hide *)
 Lemma not_Dense_Rand :
   exists (A : Type) (R S : rel A),
     Dense R /\ Dense S /\ ~ Dense (Rand R S).
+(* begin hide *)
 Proof.
 Abort.
 (* end hide *)
 
 (** ** Relacje konfluentne *)
 
-Class Confluent {A : Type} (R : A -> A -> Prop) : Prop :=
+Class Confluent {A : Type} (R : rel A) : Prop :=
 {
     confluent :
       forall x y z : A,
@@ -2874,18 +2873,18 @@ Proof.
 Qed.
 (* end hide *)
 
-(* begin hide *)
 Lemma not_Confluent_Rcomp :
   exists (A : Type) (R S : rel A),
     Confluent R /\ Confluent S /\ ~ Confluent (Rcomp R S).
+(* begin hide *)
 Proof.
 Abort.
 (* end hide *)
 
-(* begin hide *)
 Lemma not_Confluent_Rnot :
   exists (A : Type) (R : rel A),
     Confluent R /\ ~ Confluent (Rnot R).
+(* begin hide *)
 Proof.
   exists nat, le.
   split; [split |].
@@ -2897,25 +2896,37 @@ Qed.
 (* end hide *)
 
 Lemma not_Confluent_Ror :
-  exists (A : Type) (R S : A -> A -> Prop),
+  exists (A : Type) (R S : rel A),
     Confluent R /\ Confluent S /\ ~ Confluent (Ror R S).
 (* begin hide *)
 Proof.
-Abort.
+  exists
+    nat,
+    (fun x y => y = 2 + x),
+    (fun x y => y = 2 * x).
+  split; [| split].
+  - split. intros x y z -> ->. eauto.
+  - split. intros x y z -> ->. eauto.
+  - unfold Ror. intros [HC].
+    destruct (HC 0 2 0) as (w & [Hw1 | Hw1] & [Hw2 | Hw2]); lia.
+Qed.
 (* end hide *)
 
 Lemma not_Confluent_Rand :
-  exists (A : Type) (R S : A -> A -> Prop),
+  exists (A : Type) (R S : rel A),
     Confluent R /\ Confluent S /\ ~ Confluent (Rand R S).
 (* begin hide *)
 Proof.
-  exists nat, le, ge.
+  exists
+    nat,
+    (fun x y => y = 1 - x),
+    (fun x y => y = 2 - x).
   split; [| split].
-  - apply Confluent_le.
-  - apply Confluent_ge.
-  - unfold Rand; intros [HC].
-    specialize (HC 0 0 0).
-Abort.
+  - split. intros x y z -> ->. eauto.
+  - split. intros x y z -> ->. eauto.
+  - unfold Rand. intros [HC].
+    destruct (HC 2 0 0) as [w [[Hw1 Hw2] [Hw3 Hw4]]]; lia.
+Qed.
 (* end hide *)
 
 (** * Relacje równoważności (TODO) *)
@@ -2927,38 +2938,30 @@ Class Equivalence {A : Type} (R : rel A) : Prop :=
     Equivalence_Transitive :> Transitive R;
 }.
 
-Instance Equivalence_eq :
-  forall A : Type, Equivalence (@eq A).
+Instance Equivalence_RTrue :
+  forall A : Type, Equivalence (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+Instance Equivalence_Empty :
+  forall R : rel Empty_set, Equivalence R.
 (* begin hide *)
-Lemma Rcomp_Equivalence :
-  forall (A : Type) (R S : rel A),
-    Equivalence R -> Equivalence S -> Equivalence (Rcomp R S).
-Proof.
-  unfold Rcomp.
-  destruct 1 as [[R1] [S1] [T1]],
-           1 as [[R2] [S2] [T2]].
-  repeat split; intros.
-    rel.
-    destruct H as (b & H1 & H2).
-Abort.
+Proof. rel. Qed.
+(* end hide *)
 
-Lemma not_Equivalence_Rcomp :
-  exists (A : Type) (R S : rel A),
-    Equivalence R /\ Equivalence S /\ ~ Equivalence (Rcomp R S).
-Proof.
-  exists
-    (list nat),
-    (fun l1 l2 => length l1 = length l2),
-    (fun l1 l2 => nth 5 l1 = nth 5 l2).
-  repeat split; intros.
-    1-4: admit.
-    destruct 1 as [[R] [S] [T]].
-      specialize (T [1] [1; 4; 5; 1; 6] [1; 3]). unfold Rcomp in T. cbn in T.
-Abort.
+Lemma not_Equivalence_RFalse_inhabited :
+  forall A : Type,
+    A -> ~ Equivalence (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Equivalence_eq :
+  forall A : Type,
+    Equivalence (@eq A).
+(* begin hide *)
+Proof. rel. Qed.
 (* end hide *)
 
 Instance Equivalence_Rinv :
@@ -2968,11 +2971,49 @@ Instance Equivalence_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
-Instance Equivalence_Rand :
-  forall (A : Type) (R S : rel A),
-    Equivalence R -> Equivalence S -> Equivalence (Rand R S).
+Lemma not_Equivalence_Rcomp :
+  exists (A : Type) (R S : rel A),
+    Equivalence R /\ Equivalence S /\ ~ Equivalence (Rcomp R S).
 (* begin hide *)
-Proof. rel. Qed.
+Proof.
+  Axiom f g : nat -> nat.
+  Axiom f_0 : f 0 = 0.
+  Axiom g_1 : g 1 = 1.
+  Axiom f_2 : f 2 = 0.
+  Axiom g_2 : g 2 = 1.
+  exists
+    nat,
+    (fun x y => f x = f y),
+    (fun x y => g x = g y).
+  split; [| split].
+  - rel.
+  - rel.
+  - unfold Rcomp; intros [[HR] [HS] [HT]].
+    specialize (HS 0 1).
+    assert (exists b : nat, f 0 = f b /\ g b = g 1).
+    {
+      exists 2. split.
+      - rewrite f_0, f_2. reflexivity.
+      - rewrite g_1, g_2. reflexivity.
+    }
+    specialize (HS H).
+    destruct HS as (b & H1 & H2).
+Abort.
+(* end hide *)
+
+Lemma not_Equivalence_Rnot :
+  exists (A : Type) (R : rel A),
+    Equivalence R /\ ~ Equivalence (Rnot R).
+(* begin hide *)
+Proof.
+  exists bool, (@eq bool).
+  split.
+  - apply Equivalence_eq.
+  - intros [R _ _]. apply (Reflexive_Antireflexive_inhabited bool (Rnot eq))                       .
+    + exact true.
+    + assumption.
+    + apply Antireflexive_Rnot. typeclasses eauto.
+Qed.
 (* end hide *)
 
 (* begin hide *)
@@ -3019,24 +3060,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma not_Equivalence_Rnot :
-  exists (A : Type) (R : rel A),
-    Equivalence R /\ ~ Equivalence (Rnot R).
+Instance Equivalence_Rand :
+  forall (A : Type) (R S : rel A),
+    Equivalence R -> Equivalence S -> Equivalence (Rand R S).
 (* begin hide *)
-Proof.
-  exists bool, (@eq bool).
-  split.
-  - apply Equivalence_eq.
-  - intros [R _ _]. apply (Reflexive_Antireflexive_inhabited bool (Rnot eq))                       .
-    + exact true.
-    + assumption.
-    + apply Antireflexive_Rnot. typeclasses eauto.
-Qed.
+Proof. rel. Qed.
 (* end hide *)
 
 (** * Relacje apartheidu (TODO) *)
 
-Class Apartness {A : Type} (R : A -> A -> Prop) : Prop :=
+Class Apartness {A : Type} (R : rel A) : Prop :=
 {
     Apartness_Antireflexive :> Antireflexive R;
     Apartness_Symmetric :> Symmetric R;
@@ -3055,17 +3088,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance Apartness_RFalse :
-  forall {A : Type}, Apartness (@RFalse A A).
-(* begin hide *)
-Proof.
-  split.
-  - apply Antireflexive_RFalse.
-  - apply Symmetric_RFalse.
-  - intros _ _ [].
-Qed.
-(* end hide *)
-
 Lemma not_Apartness_RTrue :
   forall {A : Type}, A -> ~ Apartness (@RTrue A A).
 (* begin hide *)
@@ -3074,6 +3096,17 @@ Proof.
   eapply not_Antireflexive_RTrue_inhabited.
   - exact a.
   - assumption.
+Qed.
+(* end hide *)
+
+Instance Apartness_RFalse :
+  forall {A : Type}, Apartness (@RFalse A A).
+(* begin hide *)
+Proof.
+  split.
+  - apply Antireflexive_RFalse.
+  - apply Symmetric_RFalse.
+  - intros _ _ [].
 Qed.
 (* end hide *)
 
@@ -3096,10 +3129,11 @@ Proof.
   split.
   - typeclasses eauto.
   - apply Symmetric_Rnot, Symmetric_eq.
-  - unfold Rnot. intros x y p z. cut (~ ~ (x <> z \/ z <>y )).
-    Focus 2. intro H. apply H. left; intro q. subst.
-    apply H. right. assumption.
-    left; intro q. subst.
+  - unfold Rnot. intros x y p z.
+    cut (~ ~ (x <> z \/ z <> y)); cycle 1.
+    + intro H. apply H. left; intro q. subst.
+      apply H. right. assumption.
+    +  left; intro q. subst.
 Abort.
 (* end hide *)
 
@@ -3114,6 +3148,21 @@ Proof.
   right; intro p.
   specialize (C _ _ p).
 Abort.
+(* end hide *)
+
+Instance Apartness_Rinv :
+  forall (A : Type) (R : rel A),
+    Apartness R -> Apartness (Rinv R).
+(* begin hide *)
+Proof.
+  destruct 1 as [[Anti] [Sym] Cotrans].
+  split; try split; intros.
+    intro. apply (Anti _ H).
+    apply Sym. assumption.
+    destruct (Cotrans _ _ H z).
+      right. assumption.
+      left. assumption.
+Qed.
 (* end hide *)
 
 Lemma not_Apartness_Rcomp :
@@ -3139,18 +3188,16 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance Apartness_Rinv :
-  forall (A : Type) (R : rel A),
-    Apartness R -> Apartness (Rinv R).
+Lemma not_Apartness_Rnot :
+  exists (A : Type) (R : rel A),
+    Apartness R /\ ~ Apartness (Rnot R).
 (* begin hide *)
 Proof.
-  destruct 1 as [[Anti] [Sym] Cotrans].
-  split; try split; intros.
-    intro. apply (Anti _ H).
-    apply Sym. assumption.
-    destruct (Cotrans _ _ H z).
-      right. assumption.
-      left. assumption.
+  exists nat, (Rnot eq).
+  split.
+  - unfold Rnot; split; try split; lia.
+  - intros [[HA] [HS] HC]; unfold Rnot in *.
+    apply (HA 0). lia.
 Qed.
 (* end hide *)
 
@@ -3159,20 +3206,15 @@ Instance Apartness_Ror :
     Apartness R -> Apartness S -> Apartness (Ror R S).
 (* begin hide *)
 Proof.
-  destruct 1 as [[AntiR] [SymR] CotransR],
-           1 as [[AntiS] [SymS] CotransS].
-  split; try split; intros.
-    intros []; firstorder.
-    destruct H; red.
-      left. apply SymR. assumption.
-      right. apply SymS. assumption.
-    destruct H.
-      destruct (CotransR _ _ H z).
-        left. left. assumption.
-        right. left. assumption.
-      destruct (CotransS _ _ H z).
-        left. right. assumption.
-        right. right. assumption.
+  intros A R S [[RA] [RS] RC] [[SA] [SS] SC].
+  unfold Ror; split.
+  - split; intros x [r | s].
+    + eapply RA. eassumption.
+    + eapply SA. eassumption.
+  - split. intuition.
+  - intros x y [r | s] z.
+    + destruct (RC _ _ r z); auto.
+    + destruct (SC _ _ s z); auto.
 Qed.
 (* end hide *)
 
@@ -3222,6 +3264,13 @@ Instance WeaklyAntisymmetric_eq :
 Proof. rel. Qed.
 (* end hide *)
 
+Instance WeaklyAntisymmetric_Rinv :
+  forall (A : Type) (R : rel A),
+    WeaklyAntisymmetric R -> WeaklyAntisymmetric (Rinv R).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
 Lemma not_WeaklyAntisymmetric_Rcomp :
   exists (A : Type) (R S : rel A),
     WeaklyAntisymmetric R /\ WeaklyAntisymmetric S /\
@@ -3243,19 +3292,19 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeaklyAntisymmetric_Rinv :
-  forall (A : Type) (R : rel A),
-    WeaklyAntisymmetric R -> WeaklyAntisymmetric (Rinv R).
+Lemma not_WeaklyAntisymmetric_Rnot :
+  exists (A : Type) (R : rel A),
+    WeaklyAntisymmetric R /\ ~ WeaklyAntisymmetric (Rnot R).
 (* begin hide *)
-Proof. rel. Qed.
-(* end hide *)
-
-Instance WeaklyAntisymmetric_Rand :
-  forall (A : Type) (R S : rel A),
-    WeaklyAntisymmetric R -> WeaklyAntisymmetric S ->
-      WeaklyAntisymmetric (Rand R S).
-(* begin hide *)
-Proof. rel. Qed.
+Proof.
+  pose (R := fun b b' : bool => if andb b b' then True else False).
+  exists bool, R. repeat split; intros.
+    destruct x, y; compute in *; intuition.
+    unfold Rnot; destruct 1.
+      cut (true = false).
+        inversion 1.
+        apply weaklyantisymmetric0; auto.
+Qed.
 (* end hide *)
 
 Lemma not_WeaklyAntisymmetric_Ror :
@@ -3277,19 +3326,12 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma not_WeaklyAntisymmetric_Rnot :
-  exists (A : Type) (R : rel A),
-    WeaklyAntisymmetric R /\ ~ WeaklyAntisymmetric (Rnot R).
+Instance WeaklyAntisymmetric_Rand :
+  forall (A : Type) (R S : rel A),
+    WeaklyAntisymmetric R -> WeaklyAntisymmetric S ->
+      WeaklyAntisymmetric (Rand R S).
 (* begin hide *)
-Proof.
-  pose (R := fun b b' : bool => if andb b b' then True else False).
-  exists bool, R. repeat split; intros.
-    destruct x, y; compute in *; intuition.
-    unfold Rnot; destruct 1.
-      cut (true = false).
-        inversion 1.
-        apply weaklyantisymmetric0; auto.
-Qed.
+Proof. rel. Qed.
 (* end hide *)
 
 (** ** Relacje słaboantysymetryczne względem pewnej relacji równoważności *)
@@ -3300,9 +3342,16 @@ Class WeaklyAntisymmetric' {A : Type} {E : rel A}
     wasym : forall x y : A, R x y -> R y x -> E x y
 }.
 
-Instance WeaklyAntisymmetric_equiv :
+Instance WeaklyAntisymmetric'_Equivalence :
   forall (A : Type) (E : rel A) (H : Equivalence E),
     WeaklyAntisymmetric' H E.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance WeaklyAntisymmetric'_Rinv :
+  forall (A : Type) (E : rel A) (H : Equivalence E) (R : rel A),
+    WeaklyAntisymmetric' H R -> WeaklyAntisymmetric' H (Rinv R).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
@@ -3328,19 +3377,19 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeaklyAntisymmetric'_Rinv :
-  forall (A : Type) (E : rel A) (H : Equivalence E) (R : rel A),
-    WeaklyAntisymmetric' H R -> WeaklyAntisymmetric' H (Rinv R).
+Lemma not_WeaklyAntisymmetric'_Rnot :
+  exists (A : Type) (E R : rel A), forall H : Equivalence E,
+    WeaklyAntisymmetric' H R /\ ~ WeaklyAntisymmetric' H (Rnot R).
 (* begin hide *)
-Proof. rel. Qed.
-(* end hide *)
-
-Instance WeaklyAntisymmetric'_Rand :
-  forall (A : Type) (E : rel A) (H : Equivalence E) (R S : rel A),
-    WeaklyAntisymmetric' H R -> WeaklyAntisymmetric' H S ->
-      WeaklyAntisymmetric' H (Rand R S).
-(* begin hide *)
-Proof. rel. Qed.
+Proof.
+  pose (R := fun b b' : bool => if andb b b' then True else False).
+  exists bool, (@eq bool), R. intros. repeat split; intros.
+    destruct x, y; compute in *; intuition.
+    unfold Rnot; destruct 1.
+      cut (true = false).
+        inversion 1.
+        apply wasym0; auto.
+Qed.
 (* end hide *)
 
 Lemma not_WeaklyAntisymmetric'_Ror :
@@ -3362,19 +3411,12 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma not_WeaklyAntisymmetric'_Rnot :
-  exists (A : Type) (E R : rel A), forall H : Equivalence E,
-    WeaklyAntisymmetric' H R /\ ~ WeaklyAntisymmetric' H (Rnot R).
+Instance WeaklyAntisymmetric'_Rand :
+  forall (A : Type) (E : rel A) (H : Equivalence E) (R S : rel A),
+    WeaklyAntisymmetric' H R -> WeaklyAntisymmetric' H S ->
+      WeaklyAntisymmetric' H (Rand R S).
 (* begin hide *)
-Proof.
-  pose (R := fun b b' : bool => if andb b b' then True else False).
-  exists bool, (@eq bool), R. intros. repeat split; intros.
-    destruct x, y; compute in *; intuition.
-    unfold Rnot; destruct 1.
-      cut (true = false).
-        inversion 1.
-        apply wasym0; auto.
-Qed.
+Proof. rel. Qed.
 (* end hide *)
 
 (** * Porządki (TODO) *)
@@ -3426,17 +3468,17 @@ Require Import Classes.RelationClasses.
 
 Class Closure
   {A : Type}
-  (Cl : (A -> A -> Prop) -> (A -> A -> Prop)) : Prop :=
+  (Cl : rel A -> rel A) : Prop :=
 {
     pres :
-      forall R S : A -> A -> Prop,
+      forall R S : rel A,
         (forall x y : A, R x y -> S x y) ->
           forall x y : A, Cl R x y -> Cl S x y;
     step :
-      forall R : A -> A -> Prop,
+      forall R : rel A,
         forall x y : A, R x y -> Cl R x y;
     join :
-      forall R : A -> A -> Prop,
+      forall R : rel A,
         forall x y : A, Cl (Cl R) x y -> Cl R x y;
 }.
 
@@ -3554,7 +3596,7 @@ Proof. sc. Qed.
 
 (** ** Domknięcie symetryczne v2 *)
 
-Inductive SymmetricClosure' {A : Type} (R : rel A) : A -> A -> Prop :=
+Inductive SymmetricClosure' {A : Type} (R : rel A) : rel A :=
     | SC_step : forall x y : A, R x y -> SymmetricClosure' R x y
     | SC_symm : forall x y : A, R x y -> SymmetricClosure' R y x.
 
@@ -3933,7 +3975,7 @@ Qed.
 
 (** ** Domknięcie równoważnościowe v3 *)
 
-Inductive EquivalenceClosure {A : Type} (R : rel A) : A -> A -> Prop :=
+Inductive EquivalenceClosure {A : Type} (R : rel A) : rel A :=
     | EC_step  : forall x y   : A, R x y -> EquivalenceClosure R x y
     | EC_refl  : forall x     : A,          EquivalenceClosure R x x
     | EC_symm  : forall x y   : A, R x y -> EquivalenceClosure R y x
