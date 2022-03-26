@@ -1180,7 +1180,7 @@ Właściwości relacji bijektywnych różnią się jednym szalenie istotnym
     odwrotność relacji bijektywnej jest relacją bijektywną. 
 <div class="paragraph"> </div>
 
-<a id="lab683"></a><h1 class="section">Rodzaje relacji homogenicznych</h1>
+<a id="lab683"></a><h1 class="section">Rodzaje relacji homogenicznych (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1884,7 +1884,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-<a id="lab687"></a><h2 class="section">Relacje równoważności (TODO)</h2>
+<a id="lab687"></a><h2 class="section">Relacje równoważności</h2>
 
 </div>
 <div class="code">
@@ -3214,32 +3214,6 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 </div>
 
 <div class="doc">
-Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
-    niepostrzeżenie przywyczajały do monad. 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Class</span> <span class="id" title="var">Closure</span><br/>
-&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}<br/>
-&nbsp;&nbsp;(<span class="id" title="var">Cl</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-{<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">pres</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">S</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Cl</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">Cl</span> <span class="id" title="var">S</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">step</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">Cl</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">join</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Cl</span> (<span class="id" title="var">Cl</span> <span class="id" title="var">R</span>) <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">Cl</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>;<br/>
-}.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
 <a id="lab716"></a><h2 class="section">Domknięcie zwrotne</h2>
 
 </div>
@@ -3249,21 +3223,6 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">refl_clos</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">rc_step</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">refl_clos</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">rc_refl</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">refl_clos</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
-
-<br/>
-#[<span class="id" title="tactic">refine</span>]<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Closure_refl_clos</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Closure</span> (@<span class="id" title="var">refl_clos</span> <span class="id" title="var">A</span>) :=<br/>
-{<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">step</span> := <span class="id" title="var">rc_step</span>;<br/>
-}.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> 2.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span> 2.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> 1; <span class="id" title="tactic">subst</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">constructor</span> 2.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 
@@ -3716,11 +3675,48 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 </div>
 
 <div class="doc">
-<a id="lab728"></a><h1 class="section">Redukcje (TODO)</h1>
+<a id="lab728"></a><h2 class="section">Ogólne pojęcie domknięcia</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab729"></a><h2 class="section">Redukacja zwrotna</h2>
+ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
+    niepostrzeżenie przywyczajały do monad. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">Closure</span><br/>
+&nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;(<span class="id" title="var">Cl</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">pres</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">S</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Cl</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">Cl</span> <span class="id" title="var">S</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">step</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">Cl</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">join</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Cl</span> (<span class="id" title="var">Cl</span> <span class="id" title="var">R</span>) <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">Cl</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>;<br/>
+}.<br/>
+
+<br/>
+#[<span class="id" title="tactic">refine</span>]<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Closure_refl_clos</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Closure</span> (@<span class="id" title="var">refl_clos</span> <span class="id" title="var">A</span>) :=<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">step</span> := <span class="id" title="var">rc_step</span>;<br/>
+}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab729"></a><h1 class="section">Redukcje (TODO)</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab730"></a><h2 class="section">Redukacja zwrotna</h2>
 
 </div>
 <div class="code">
@@ -3746,7 +3742,7 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 </div>
 
 <div class="doc">
-<a id="lab730"></a><h2 class="section">Domknięcie lewostronnie kwazizwrotne</h2>
+<a id="lab731"></a><h2 class="section">Domknięcie lewostronnie kwazizwrotne</h2>
 
 </div>
 <div class="code">
@@ -3766,7 +3762,7 @@ Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
 </div>
 
 <div class="doc">
-<a id="lab731"></a><h2 class="section">Redukcja przechodnia</h2>
+<a id="lab732"></a><h2 class="section">Redukcja przechodnia</h2>
 
 </div>
 <div class="code">

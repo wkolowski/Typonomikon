@@ -1359,7 +1359,7 @@ Qed.
     detalem od właściwości relacji funkcyjnych, injektywnych i surjektywnych:
     odwrotność relacji bijektywnej jest relacją bijektywną. *)
 
-(** * Rodzaje relacji homogenicznych *)
+(** * Rodzaje relacji homogenicznych (TODO) *)
 
 Definition rel (A : Type) : Type := hrel A A.
 
@@ -2166,7 +2166,7 @@ Instance Transitive_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
-(** ** Relacje równoważności (TODO) *)
+(** ** Relacje równoważności *)
 
 Class Equivalence {A : Type} (R : rel A) : Prop :=
 {
@@ -2277,7 +2277,7 @@ match x, y with
 end.
 (* end hide *)
 
-Lemma not_Equivaence_Ror :
+Lemma not_Equivalence_Ror :
   exists (A : Type) (R S : rel A),
     Equivalence R /\ Equivalence S /\ ~ Equivalence (Ror R S).
 (* begin hide *)
@@ -3802,6 +3802,101 @@ Admitted.
 Class Antitransitive {A : Type} (R : rel A) : Prop :=
   antitransitive : forall x y z : A, R x y -> R y z -> ~ R x z.
 
+Instance Antitransitive_Empty :
+  forall R : rel Empty_set, Antitransitive R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_Antitransitive_RTrue_inhabited :
+  forall A : Type, A -> ~ Antitransitive (@RTrue A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Antitransitive_RFalse :
+  forall A : Type, Antitransitive (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_Antitransitive_eq_inhabited :
+  forall A : Type, A -> ~ Antitransitive (@eq A).
+(* begin hide *)
+Proof.
+  unfold Antitransitive.
+  intros A a H.
+  specialize (H a a a eq_refl eq_refl).
+  contradiction.
+Qed.
+(* end hide *)
+
+Instance Antitransitive_successor :
+  Antitransitive (fun x y => y = S x).
+(* begin hide *)
+Proof.
+  unfold Antitransitive. lia.
+Qed.
+(* end hide *)
+
+Instance Antitransitive_Rinv :
+  forall (A : Type) (R : rel A),
+    Antitransitive R -> Antitransitive (Rinv R).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_Antitransitive_Rcomp :
+  exists (A : Type) (R S : rel A),
+    Antitransitive R /\ Antitransitive S /\ ~ Antitransitive (Rcomp R S).
+(* begin hide *)
+Proof.
+  unfold Antitransitive, Rcomp.
+  exists nat, (fun x y => y = S x), (fun x y => y = S x).
+  repeat split; [lia | lia |].
+  intros H.
+  apply (H 1 3 5).
+  - exists 2. lia.
+  - exists 4. lia.
+  - exists 2.
+Abort.
+(* end hide *)
+
+Lemma not_Antitransitive_Rnot :
+  exists (A : Type) (R : rel A),
+    Antitransitive R /\ ~ Antitransitive (Rnot R).
+(* begin hide *)
+Proof.
+  unfold Antitransitive, Rnot.
+  exists nat, (fun x y => y = S x).
+  split; [lia |].
+  intros H.
+  apply (H 0 0 0); lia.
+Qed.
+(* end hide *)
+
+Lemma not_Antitransitive_Ror :
+  exists (A : Type) (R S : rel A),
+    Antitransitive R /\ Antitransitive S /\ ~ Antitransitive (Ror R S).
+(* begin hide *)
+Proof.
+  exists nat, (fun x y => y = S (S x)), (fun x y => x = S y).
+  unfold Antitransitive, Ror.
+  repeat split; [lia | lia |].
+  intros AT.
+Abort.
+(* end hide *)
+
+Lemma not_Antitransitive_Rand :
+  exists (A : Type) (R S : rel A),
+    Antitransitive R /\ Antitransitive S /\ ~ Antitransitive (Rand R S).
+(* begin hide *)
+Proof.
+  unfold Antitransitive, Rand.
+  exists nat, lt, lt.
+Abort.
+(* end hide *)
+
 (** ** Relacje koprzechodnie *)
 
 Class CoTransitive {A : Type} (R : rel A) : Prop :=
@@ -3877,7 +3972,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance not_CoTransitive_Ror :
+Instance CoTransitive_Ror :
   forall (A : Type) (R S : rel A),
     CoTransitive R -> CoTransitive S -> CoTransitive (Ror R S).
 (* begin hide *)
@@ -3891,14 +3986,14 @@ Qed.
 
 Lemma not_CoTransitive_Rand :
   exists (A : Type) (R S : rel A),
-    CoTransitive R /\ CoTransitive S /\ CoTransitive (Rand R S).
+    CoTransitive R /\ CoTransitive S /\ ~ CoTransitive (Rand R S).
 (* begin hide *)
 Proof.
   unfold CoTransitive, Rand.
-  exists nat, lt, gt.
+  exists nat, ge, lt.
   repeat split; [lia | lia |].
-  intros x y [H1 H2]; lia.
-Qed.
+  intros H.
+Abort.
 (* end hide *)
 
 (** * To może być nawet ważne *)
@@ -4077,7 +4172,136 @@ Qed.
 
 (** ** Relacje dobrze ufundowane *)
 
+Fail Existing Instance Nat.lt_wf.
+
 (** TODO *)
+
+Class WellFounded {A : Type} (R : rel A) : Prop :=
+  WF : forall x : A, Acc R x.
+
+Instance WellFounded_Empty :
+  forall R : rel Empty_set, WellFounded R.
+(* begin hide *)
+Proof.
+  intros R [].
+Qed.
+(* end hide *)
+
+Lemma not_WellFounded_RTrue_inhabited :
+  forall A : Type, A -> ~ WellFounded (@RTrue A A).
+(* begin hide *)
+Proof.
+  unfold WellFounded, RTrue.
+  intros A a H.
+  specialize (H a).
+  induction H as [a IH H].
+  apply H; trivial.
+Qed.
+(* end hide *)
+
+Instance WellFounded_RFalse :
+  forall A : Type, WellFounded (@RFalse A A).
+(* begin hide *)
+Proof.
+  unfold WellFounded, RFalse.
+  intros A x.
+  constructor.
+  intros y [].
+Qed.
+(* end hide *)
+
+Lemma not_WellFounded_eq_inhabited :
+  forall A : Type, A -> ~ WellFounded (@eq A).
+(* begin hide *)
+Proof.
+  unfold WellFounded.
+  intros A x H.
+  specialize (H x).
+  induction H.
+  apply H0 with x.
+  reflexivity.
+Qed.
+(* end hide *)
+
+Lemma not_WellFounded_Rinv :
+  exists (A : Type) (R : rel A),
+    WellFounded R /\ ~ WellFounded (Rinv R).
+(* begin hide *)
+Proof.
+  exists nat, lt.
+  split; unfold WellFounded, Rinv.
+  - apply lt_wf.
+  - intros WF.
+    assert (forall n : nat, ~ Acc gt n).
+    {
+      induction n as [| n'].
+      - admit.
+      - inversion 1; subst.
+    }
+Abort.
+(* end hide *)
+
+Lemma not_WellFounded_Rcomp :
+  exists (A : Type) (R S : rel A),
+    WellFounded R /\ WellFounded S /\ ~ WellFounded (Rcomp R S).
+(* begin hide *)
+Proof.
+  exists nat, (fun x y => y = 1 + x), (fun x y => y = 1 + x).
+  split; [| split]; unfold WellFounded.
+  - induction x as [| n']; constructor; intros m [=->]. assumption.
+  - induction x as [| n']; constructor; intros m [=->]. assumption.
+  - unfold Rcomp; intros WF.
+    specialize (WF 4); remember 4 as n.
+    induction WF; subst.
+Abort.
+(* end hide *)
+
+Lemma not_WellFounded_Rnot :
+  exists (A : Type) (R : rel A),
+    WellFounded R /\ ~ WellFounded (Rnot R).
+(* begin hide *)
+Proof.
+  exists nat, lt.
+  split.
+  - apply lt_wf.
+  - unfold WellFounded, Rnot. intros WF.
+    specialize (WF 0). remember 0 as n.
+    induction WF.
+    apply (H0 0); lia.
+Qed.
+(* end hide *)
+
+Lemma not_WellFounded_Ror :
+  exists (A : Type) (R S : rel A),
+    WellFounded R /\ WellFounded S /\ ~ WellFounded (Ror R S).
+(* begin hide *)
+Proof.
+  exists
+    (nat * nat)%type,
+    (fun x y => fst x < fst y),
+    (fun x y => snd x < snd y).
+  split; [| split]; unfold WellFounded, Ror.
+  - admit.
+  - admit.
+  - intros WF. specialize (WF (1, 1)). inversion WF. cbn in *.
+    induction WF; subst; cbn in *.
+    specialize (H (0, 0) ltac:(cbn; lia)). inversion H.
+Abort.
+(* end hide *)
+
+Instance WellFounded_Rand :
+  forall (A : Type) (R S : rel A),
+    WellFounded R -> WellFounded S -> WellFounded (Rand R S).
+(* begin hide *)
+Proof.
+  unfold WellFounded, Rand.
+  intros A R S WFR WFS x.
+  specialize (WFR x).
+  induction WFR as [x Hlt IH].
+  constructor; intros y [r s].
+  apply IH; assumption.
+Qed.
+(* end hide *)
 
 (** ** Ciekawostki *)
 
@@ -4491,44 +4715,11 @@ Class StrictTotalOrder {A : Type} (R : rel A) : Prop :=
 
 Require Import Classes.RelationClasses.
 
-(** Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
-    niepostrzeżenie przywyczajały do monad. *)
-
-Class Closure
-  {A : Type}
-  (Cl : rel A -> rel A) : Prop :=
-{
-    pres :
-      forall R S : rel A,
-        (forall x y : A, R x y -> S x y) ->
-          forall x y : A, Cl R x y -> Cl S x y;
-    step :
-      forall R : rel A,
-        forall x y : A, R x y -> Cl R x y;
-    join :
-      forall R : rel A,
-        forall x y : A, Cl (Cl R) x y -> Cl R x y;
-}.
-
 (** ** Domknięcie zwrotne *)
 
 Inductive refl_clos {A : Type} (R : rel A) : rel A :=
     | rc_step : forall x y : A, R x y -> refl_clos R x y
     | rc_refl : forall x : A, refl_clos R x x.
-
-#[refine]
-Instance Closure_refl_clos {A : Type} : Closure (@refl_clos A) :=
-{
-    step := rc_step;
-}.
-Proof.
-  induction 2.
-    constructor. apply H. assumption.
-    constructor 2.
-  inversion 1; subst.
-    assumption.
-    constructor 2.
-Qed.
 
 (* begin hide *)
 Global Hint Constructors refl_clos : core.
@@ -5161,6 +5352,43 @@ Inductive WeaklyReflexiveClosure {A : Type} (R : rel A)
   | step : forall x y : A, R x y -> WeaklyReflexiveClosure R (embed x) (embed y).
 
 End WeaklyReflexiveClosure.
+
+(** ** Ogólne pojęcie domknięcia *)
+
+(** Uwaga, najnowszy pomysł: przedstawić domknięcia w taki sposób, żeby
+    niepostrzeżenie przywyczajały do monad. *)
+
+Class Closure
+  {A : Type}
+  (Cl : rel A -> rel A) : Prop :=
+{
+    pres :
+      forall R S : rel A,
+        (forall x y : A, R x y -> S x y) ->
+          forall x y : A, Cl R x y -> Cl S x y;
+    step :
+      forall R : rel A,
+        forall x y : A, R x y -> Cl R x y;
+    join :
+      forall R : rel A,
+        forall x y : A, Cl (Cl R) x y -> Cl R x y;
+}.
+
+#[refine]
+Instance Closure_refl_clos {A : Type} : Closure (@refl_clos A) :=
+{
+    step := rc_step;
+}.
+(* begin hide *)
+Proof.
+  induction 2.
+    constructor. apply H. assumption.
+    constructor 2.
+  inversion 1; subst.
+    assumption.
+    constructor 2.
+Qed.
+(* end hide *)
 
 (** * Redukcje (TODO) *)
 
