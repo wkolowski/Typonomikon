@@ -1933,7 +1933,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Equivaence_Ror</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Equivalence_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Equivalence</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Equivalence</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Equivalence</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
@@ -2813,6 +2813,51 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;<span class="id" title="var">antitransitive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> -&gt; ~ <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antitransitive_Empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">Antitransitive</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antitransitive_RTrue_inhabited</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">Antitransitive</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antitransitive_RFalse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Antitransitive</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antitransitive_eq_inhabited</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">Antitransitive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antitransitive_successor</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">Antitransitive</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> =&gt; <span class="id" title="var">y</span> = <span class="id" title="var">S</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antitransitive_Rinv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antitransitive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Antitransitive</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antitransitive_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antitransitive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Antitransitive</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Antitransitive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antitransitive_Rnot</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antitransitive</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">Antitransitive</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antitransitive_Ror</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antitransitive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Antitransitive</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Antitransitive</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_Antitransitive_Rand</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antitransitive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">Antitransitive</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">Antitransitive</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
 </div>
 
 <div class="doc">
@@ -2862,14 +2907,14 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">CoTransitive</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">not_CoTransitive_Ror</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoTransitive_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">CoTransitive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">CoTransitive</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_CoTransitive_Rand</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">CoTransitive</span> <span class="id" title="var">S</span> /\ <span class="id" title="var">CoTransitive</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoTransitive</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">CoTransitive</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">CoTransitive</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
 </div>
@@ -2952,11 +2997,146 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <div class="doc">
 <a id="lab707"></a><h2 class="section">Relacje dobrze ufundowane</h2>
 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
- TODO 
-<div class="paragraph"> </div>
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="var">Existing</span> <span class="id" title="keyword">Instance</span> <span class="id" title="var">Nat.lt_wf</span>.<br/>
 
+<br/>
+</div>
+
+<div class="doc">
+TODO 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">WellFounded</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">WF</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Acc</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Inaccessible</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inaccessible</span> : <span class="id" title="tactic">exists</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> /\ <span class="id" title="var">Inaccessible</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span><br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">IllFounded</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">IllFounded'</span> : <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Inaccessible</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_WellFounded</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WellFounded_Empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_Empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, ~ <span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">IllFounded_RTrue_inhabited</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">IllFounded</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_RTrue_inhabited</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">WellFounded</span> (@<span class="id" title="var">RTrue</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WellFounded_RFalse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">WellFounded</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_RFalse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, ~ <span class="id" title="var">IllFounded</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">IllFounded_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">IllFounded</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; ~ <span class="id" title="var">WellFounded</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WellFounded_lt</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">lt</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">IllFounded_le</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">le</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">IllFounded_ge</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">ge</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">IllFounded_gt</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">gt</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_Rinv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">WellFounded</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_Rinv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WellFounded_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WellFounded</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WellFounded</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WellFounded</span> <span class="id" title="var">S</span> /\ <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_Rcomp</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">IllFounded</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_Rnot</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">WellFounded</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_Rnot</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WellFounded_Ror</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WellFounded</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">WellFounded</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WellFounded_Rand</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellFounded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WellFounded</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WellFounded</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_Ror</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">IllFounded</span> <span class="id" title="var">S</span> /\ ~ <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">IllFounded_Rand</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">IllFounded</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">IllFounded</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">IllFounded</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
 <a id="lab708"></a><h2 class="section">Ciekawostki</h2>
 
 </div>

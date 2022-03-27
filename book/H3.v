@@ -4179,6 +4179,28 @@ Fail Existing Instance Nat.lt_wf.
 Class WellFounded {A : Type} (R : rel A) : Prop :=
   WF : forall x : A, Acc R x.
 
+CoInductive Inaccessible {A : Type} (R : rel A) (x : A) : Prop :=
+{
+    inaccessible : exists y : A, R y x /\ Inaccessible R y
+}.
+
+Class IllFounded {A : Type} (R : rel A) : Prop :=
+  IllFounded' : exists x : A, Inaccessible R x.
+
+Lemma not_IllFounded_WellFounded :
+  forall {A : Type} (R : rel A),
+    WellFounded R -> IllFounded R -> False.
+(* begin hide *)
+Proof.
+  unfold WellFounded, IllFounded.
+  intros A R WF [x IA]; revert IA.
+  specialize (WF x).
+  induction WF as [x H IH].
+  intros [(y & r & IA')].
+  apply (IH y); assumption.
+Qed.
+(* end hide *)
+
 Instance WellFounded_Empty :
   forall R : rel Empty_set, WellFounded R.
 (* begin hide *)
@@ -4187,15 +4209,33 @@ Proof.
 Qed.
 (* end hide *)
 
+Lemma not_IllFounded_Empty :
+  forall R : rel Empty_set, ~ IllFounded R.
+(* begin hide *)
+Proof.
+  intros R [[]].
+Qed.
+(* end hide *)
+
+Lemma IllFounded_RTrue_inhabited :
+  forall A : Type, A -> IllFounded (@RTrue A A).
+(* begin hide *)
+Proof.
+  unfold IllFounded, RTrue.
+  intros A x. exists x.
+  cofix CH.
+  constructor. exists x.
+  split; [trivial | assumption].
+Qed.
+(* end hide *)
+
 Lemma not_WellFounded_RTrue_inhabited :
   forall A : Type, A -> ~ WellFounded (@RTrue A A).
 (* begin hide *)
 Proof.
-  unfold WellFounded, RTrue.
-  intros A a H.
-  specialize (H a).
-  induction H as [a IH H].
-  apply H; trivial.
+  intros A x WF.
+  eapply not_IllFounded_WellFounded; [eassumption |].
+  apply IllFounded_RTrue_inhabited; assumption.
 Qed.
 (* end hide *)
 
@@ -4210,16 +4250,87 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma not_WellFounded_eq_inhabited :
+Lemma not_IllFounded_RFalse :
+  forall A : Type, ~ IllFounded (@RFalse A A).
+(* begin hide *)
+Proof.
+  unfold IllFounded, RFalse.
+  intros A [x [(y & [] & IA)]].
+Qed.
+(* end hide *)
+
+Instance IllFounded_eq :
+  forall A : Type, A -> IllFounded (@eq A).
+(* begin hide *)
+Proof.
+  unfold IllFounded.
+  intros A x; exists x.
+  unfold WellFounded.
+  cofix CH.
+  constructor; exists x.
+  split; [reflexivity | assumption].
+Qed.
+(* end hide *)
+
+Lemma not_WellFounded_eq :
   forall A : Type, A -> ~ WellFounded (@eq A).
 (* begin hide *)
 Proof.
+  intros A x WF.
+  eapply not_IllFounded_WellFounded; [eassumption |].
+  apply IllFounded_eq; assumption.
+Qed.
+(* end hide *)
+
+Instance WellFounded_lt :
+  WellFounded lt.
+(* begin hide *)
+Proof.
   unfold WellFounded.
-  intros A x H.
-  specialize (H x).
-  induction H.
-  apply H0 with x.
-  reflexivity.
+  induction x as [| n'].
+  + constructor. inversion 1.
+  + constructor. inversion 1; subst.
+    * assumption.
+    * apply IHn'. lia.
+Qed.
+(* end hide *)
+
+Instance IllFounded_le :
+  IllFounded le.
+(* begin hide *)
+Proof.
+  unfold IllFounded.
+  cut (forall n : nat, Inaccessible le n).
+  - intros. exists 0. apply H.
+  - intros n.
+    cofix CH.
+    constructor. exists n. split; [lia | assumption].
+Qed.
+(* end hide *)
+
+Instance IllFounded_ge :
+  IllFounded ge.
+(* begin hide *)
+Proof.
+  unfold IllFounded.
+  cut (forall n : nat, Inaccessible ge n).
+  - intros. exists 0. apply H.
+  - intros n.
+    cofix CH.
+    constructor. exists n. split; [lia | assumption].
+Qed.
+(* end hide *)
+
+Instance IllFounded_gt :
+  IllFounded gt.
+(* begin hide *)
+Proof.
+  unfold IllFounded.
+  cut (forall n : nat, Inaccessible gt n).
+  - intros. exists 0. apply H.
+  - cofix CH.
+    constructor; exists (S n).
+    split; [lia | apply CH].
 Qed.
 (* end hide *)
 
@@ -4229,30 +4340,60 @@ Lemma not_WellFounded_Rinv :
 (* begin hide *)
 Proof.
   exists nat, lt.
-  split; unfold WellFounded, Rinv.
-  - apply lt_wf.
-  - intros WF.
-    assert (forall n : nat, ~ Acc gt n).
-    {
-      induction n as [| n'].
-      - admit.
-      - inversion 1; subst.
-    }
+  split; [apply lt_wf |].
+  intros WF.
+  eapply not_IllFounded_WellFounded; [eassumption |].
+  unfold Rinv. fold gt.
+  apply IllFounded_gt.
+Qed.
+(* end hide *)
+
+Lemma not_IllFounded_Rinv :
+  exists (A : Type) (R : rel A),
+    IllFounded R /\ ~ IllFounded (Rinv R).
+(* begin hide *)
+Proof.
+  exists nat, gt.
+  split; [apply IllFounded_gt | intros IlF].
+  eapply not_IllFounded_WellFounded; [| eassumption].
+  unfold Rinv, gt.
+  apply WellFounded_lt.
+Qed.
+(* end hide *)
+
+Instance WellFounded_Rcomp :
+  forall (A : Type) (R S : rel A),
+    WellFounded R -> WellFounded S -> WellFounded (Rcomp R S).
+(* begin hide *)
+Proof.
+  unfold WellFounded, Rcomp.
+  intros A R S WFR WFS x.
+  specialize (WFR x); revert WFS.
+  induction WFR as [x H IH]; intros.
+  constructor; intros y (b & r & s).
+  apply IH.
 Abort.
 (* end hide *)
 
 Lemma not_WellFounded_Rcomp :
   exists (A : Type) (R S : rel A),
-    WellFounded R /\ WellFounded S /\ ~ WellFounded (Rcomp R S).
+    WellFounded R /\ WellFounded S /\ IllFounded (Rcomp R S).
 (* begin hide *)
 Proof.
-  exists nat, (fun x y => y = 1 + x), (fun x y => y = 1 + x).
-  split; [| split]; unfold WellFounded.
-  - induction x as [| n']; constructor; intros m [=->]. assumption.
-  - induction x as [| n']; constructor; intros m [=->]. assumption.
-  - unfold Rcomp; intros WF.
-    specialize (WF 4); remember 4 as n.
-    induction WF; subst.
+  exists nat, lt, lt.
+  unfold WellFounded.
+  split; [| split]; [apply WellFounded_lt | apply WellFounded_lt |].
+  - cut (forall n : nat, Inaccessible (Rcomp lt lt) (1 + n)); unfold Rcomp.
+Abort.
+(* end hide *)
+
+Lemma not_IllFounded_Rcomp :
+  exists (A : Type) (R S : rel A),
+    IllFounded R /\ IllFounded S /\ ~ IllFounded (Rcomp R S).
+(* begin hide *)
+Proof.
+  exists nat, le, ge.
+  split; [| split]; unfold IllFounded.
 Abort.
 (* end hide *)
 
@@ -4262,12 +4403,32 @@ Lemma not_WellFounded_Rnot :
 (* begin hide *)
 Proof.
   exists nat, lt.
-  split.
-  - apply lt_wf.
-  - unfold WellFounded, Rnot. intros WF.
-    specialize (WF 0). remember 0 as n.
-    induction WF.
-    apply (H0 0); lia.
+  split; [apply WellFounded_lt | intros WF].
+  eapply not_IllFounded_WellFounded; [eassumption |].
+  unfold IllFounded, Rnot.
+  cut (forall n : nat, Inaccessible (fun a b => ~ a < b) n).
+  - intros IlF. exists 0. apply IlF.
+  - cofix CH.
+    constructor. exists (S n). split; [lia |]. apply CH.
+Qed.
+(* end hide *)
+
+Lemma not_IllFounded_Rnot :
+  exists (A : Type) (R : rel A),
+    IllFounded R /\ ~ IllFounded (Rnot R).
+(* begin hide *)
+Proof.
+  exists nat, ge.
+  split; [apply IllFounded_ge |].
+  intros IlF.
+  eapply not_IllFounded_WellFounded; [| eassumption].
+  unfold WellFounded, Rnot, ge.
+  induction x as [| n'].
+  + constructor. lia.
+  + constructor. intros y H.
+    assert (Hlt : y < S n') by lia; clear H. inversion Hlt; subst.
+    * assumption.
+    * apply IHn'. lia.
 Qed.
 (* end hide *)
 
@@ -4301,6 +4462,31 @@ Proof.
   constructor; intros y [r s].
   apply IH; assumption.
 Qed.
+(* end hide *)
+
+Lemma not_IllFounded_Ror :
+  exists (A : Type) (R S : rel A),
+    IllFounded R /\ IllFounded S /\ ~ IllFounded (Ror R S).
+(* begin hide *)
+Proof.
+  exists
+    (nat * nat)%type,
+    (fun x y => fst x < fst y),
+    (fun x y => snd x < snd y).
+  split; [| split]; unfold IllFounded, Ror.
+  - admit.
+  - admit.
+  - intros WF.
+Abort.
+(* end hide *)
+
+Instance IllFounded_Rand :
+  forall (A : Type) (R S : rel A),
+    IllFounded R -> IllFounded S -> IllFounded (Rand R S).
+(* begin hide *)
+Proof.
+  unfold IllFounded, Rand.
+Abort.
 (* end hide *)
 
 (** ** Ciekawostki *)
