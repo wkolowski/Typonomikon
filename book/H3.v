@@ -2554,7 +2554,13 @@ Class PartialOrder {A : Type} (R : rel A) : Prop :=
 Class TotalOrder {A : Type} (R : rel A) : Prop :=
 {
     TotalOrder_PartialOrder :> PartialOrder R;
-    TotalOrder_Total : Total R;
+    TotalOrder_Total :> Total R;
+}.
+
+Class TotalPreorder {A : Type} (R : rel A) : Prop :=
+{
+    TotalPreorder_PartialOrder :> Preorder R;
+    TotalPreorder_Total :> Total R;
 }.
 
 (** ** Relacje słabo totalne *)
@@ -4817,6 +4823,84 @@ Instance IllFounded_Rand :
 (* begin hide *)
 Proof.
   unfold IllFounded, Rand.
+Abort.
+(* end hide *)
+
+(** ** Dobre porządki *)
+
+(* begin hide *)
+Class WellPreorder {A : Type} (R : rel A) : Prop :=
+{
+    WellPreorder_StrictPreorder :> StrictPreorder R;
+    WellPreorder_WellFounded :> WellFounded R;
+    WellPreorder_WeaklyExtensional :> WeaklyExtensional R;
+}.
+
+Class WellPartialOrder {A : Type} (R : rel A) : Prop :=
+{
+    WellPartialOrder_StrictPartialOrder :> StrictPartialOrder R;
+    WellPartialOrder_WellFounded :> WellFounded R;
+    WellPartialOrder_WeaklyExtensional :> WeaklyExtensional R;
+}.
+
+Class WellQuasiorder {A : Type} (R : rel A) : Prop :=
+{
+    WellQuasiorder_Quasiorder :> Quasiorder R;
+    WellQuasiorder_WellFounded :> WellFounded R;
+    WellQuasiorder_WeaklyExtensional :> WeaklyExtensional R;
+}.
+(* Class WellOrder {A : Type} (R : rel A) : Prop :=
+{
+    WellOrder_PartialOrder :> StrictTotalOrder R;
+    WellOrder_WellFounded :> WellFounded R;
+    WellOrder_WeaklyExtensional :> WeaklyExtensional R;
+}. *)
+(* end hide *)
+
+Class WellOrder {A : Type} (R : rel A) : Prop :=
+{
+    WellOrder_Transitive :> Transitive R;
+    WellOrder_WellFounded :> WellFounded R;
+    WellOrder_WeaklyExtensional :> WeaklyExtensional R;
+}.
+
+Instance Antireflexive_Antisymmetric :
+  forall {A : Type} (R : rel A),
+    Antisymmetric R -> Antireflexive R.
+(* begin hide *)
+Proof.
+  intros A R [HAS]; split; intros x nr.
+  eapply HAS; eassumption.
+Qed.
+(* end hide *)
+
+Instance Antisymmetric_WellOrder :
+  forall {A : Type} (R : rel A),
+    WellOrder R -> Antisymmetric R.
+(* begin hide *)
+Proof.
+  intros A R [[HT] HWF [HWE]]; split; intros x y rxy ryx.
+  assert (rxx : R x x) by (eapply HT; eassumption).
+  assert (HIlF : IllFounded R). (* TODO: zrobić z tego lemat *)
+  {
+    red. exists x. cofix CH. constructor. exists x. split; assumption.
+  }
+  apply not_IllFounded_WellFounded with R; assumption.
+Qed.
+(* end hide *)
+
+Instance Total_WellOrder :
+  (forall P : Prop, P \/ ~ P) ->
+    forall {A : Type} (R : rel A),
+      WellOrder R -> Total R.
+(* begin hide *)
+Proof.
+  intros LEM A R [[HT] HWF [HWE]]; split; intros x y.
+  destruct (LEM (R x y)) as [| nrxy]; [left; assumption |].
+  destruct (LEM (R y x)) as [| nryx]; [right; assumption |].
+  assert (x <> y) by admit.
+  assert (exists t : A, ~ (R t x <-> R t y)) as [t Ht] by admit.
+  Print Connected.
 Abort.
 (* end hide *)
 
