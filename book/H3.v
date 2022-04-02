@@ -22,6 +22,11 @@ Require Import Lia.
     - Weak ordering  = poset, w którym nieporównywalność jest przechodnia,
                        czyli totalny preporządek,
                        czyli liniowy porządek na partycjach
+    - Prewellordering = jakieś gówno bez sensu
+    - Well-quasi-ordering = dobrze ufundowany preporządek bez nieskończonych antyłańcuchów.
+                            Motywacja: robienie lepszych konstrukcji na preporządkach, bo
+                            czasem nie zachowują one dobrego ufundowania.
+    - W HoTTBooku [WellOrder] nazywa się po prostu [Ord]inal, co ma sens.
      *)
 
 (* end hide *)
@@ -2152,11 +2157,10 @@ Lemma not_Transitive_Rnot :
     Transitive R /\ ~ Transitive (Rnot R).
 (* begin hide *)
 Proof.
-  pose (R := fun b b' : bool => if andb b b' then True else False).
-  exists bool, R. repeat split; intros.
-    destruct x, y, z; compute in *; auto.
-    unfold Rnot; destruct 1.
-      eapply (transitive0 true false true); cbn; auto.
+  exists bool, (@eq bool); split.
+  - split. intros x y z -> ->. reflexivity.
+  - intros [HT]; unfold Rnot in *.
+    destruct (HT true false true); congruence.
 Qed.
 (* end hide *)
 
@@ -2165,10 +2169,10 @@ Lemma not_Transitive_Ror :
     Transitive R /\ Transitive S /\ ~ Transitive (Ror R S).
 (* begin hide *)
 Proof.
-  pose (R := fun b b' : bool => if b then True else False).
-  pose (S := fun b b' : bool => if b' then True else False).
-  exists bool, R, S. rel.
-  specialize (transitive0 false true false). rel.
+  exists bool, (fun x _ => x = true), (fun _ y => y = true).
+  split; [| split]; [rel | rel |].
+  intros [HT]; unfold Ror in HT.
+  destruct (HT false true false); intuition congruence.
 Qed.
 (* end hide *)
 
@@ -4136,6 +4140,164 @@ Proof.
   exists nat, ge, lt.
   repeat split; [lia | lia |].
   intros H.
+Abort.
+(* end hide *)
+
+(** ** Relacje kwaziprzechodnie *)
+
+Definition SymmetricPart {A : Type} (R : rel A) : rel A :=
+  fun x y : A => R x y /\ R y x.
+
+Definition AsymmetricPart {A : Type} (R : rel A) : rel A :=
+  fun x y : A => R x y /\ ~ R y x.
+
+Class Quasitransitive {A : Type} (R : rel A) : Prop :=
+  quasitransitive :> Transitive (AsymmetricPart R).
+
+Instance Symmetric_SymmetricPart :
+  forall {A : Type} (R : rel A),
+    Symmetric (SymmetricPart R).
+(* begin hide *)
+Proof.
+  intros A R. split; unfold SymmetricPart.
+  intros x y [rxy ryx]. split; assumption.
+Qed.
+(* end hide *)
+
+Instance Quasitransitive_Symmetric :
+  forall {A : Type} (R : rel A),
+    Symmetric R -> Quasitransitive R.
+(* begin hide *)
+Proof.
+  intros A R [HS]; split; unfold AsymmetricPart.
+  intros x y z [rxy nryx] [ryz nrzy].
+  contradict nryx. apply HS. assumption.
+Qed.
+(* end hide *)
+
+Instance Quasitransitive_Transitive :
+  forall {A : Type} (R : rel A),
+    Transitive R -> Quasitransitive R.
+(* begin hide *)
+Proof.
+  intros A R [HT]; split; unfold AsymmetricPart.
+  intros x y z [rxy nryx] [ryz nrzy]. split.
+  - apply HT with y; assumption.
+  - intro rzx. contradict nrzy. apply HT with x; assumption.
+Qed.
+(* end hide *)
+
+Lemma Quasitransitive_char :
+  forall {A : Type} (R : rel A),
+    Quasitransitive R <-> (R <--> Ror (SymmetricPart R) (AsymmetricPart R)).
+(* begin hide *)
+Proof.
+  assert (LEM : forall P : Prop, P \/ ~ P) by admit.
+  split.
+  - intros [QT]; unfold Ror, SymmetricPart, AsymmetricPart in *; split.
+    + intros x y r. destruct (LEM (R y x)); auto.
+    + intros x y [[rxy ryx] | [rxy nryx]]; assumption.
+  - intros [HRL _].
+    split; unfold same_hrel, subrelation, Ror, SymmetricPart, AsymmetricPart in *.
+    intros x y z [rxy nryx] [ryz nrzy].
+    destruct (LEM (R x z)).
+    + split; [assumption |].
+Abort.
+(* end hide *)
+
+Instance Quasitransitive_Empty :
+  forall R : rel Empty_set, Quasitransitive R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Quasitransitive_RTrue :
+  forall A : Type, Quasitransitive (@RTrue A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Quasitransitive_RFalse :
+  forall A : Type, Quasitransitive (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma Quasitransitive_eq :
+  forall A : Type, Quasitransitive (@eq A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Quasitransitive_Rinv :
+  forall (A : Type) (R : rel A),
+    Quasitransitive R -> Quasitransitive (Rinv R).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_Quasitransitive_Rcomp :
+  exists (A : Type) (R S : rel A),
+    Quasitransitive R /\ Quasitransitive S /\ ~ Quasitransitive (Rcomp R S).
+(* begin hide *)
+Proof.
+  unfold Quasitransitive, Rcomp.
+  exists nat, eq, (fun x y => x <> y).
+  split; [| split]; [rel | rel |].
+  intros [HT]; unfold AsymmetricPart in HT.
+  specialize (HT 0 1 1).
+Abort.
+(* end hide *)
+
+Instance Quasitransitive_Rnot :
+  forall {A : Type} (R : rel A),
+    Quasitransitive R -> Quasitransitive (Rnot R).
+(* begin hide *)
+Proof.
+  assert (DNE : forall P : Prop, ~ ~ P -> P) by admit.
+  unfold Quasitransitive, Rnot, AsymmetricPart.
+  intros A R [HT]; split; intros x y z [nrxy nnryx] [nryz nnrzy].
+  apply DNE in nnryx, nnrzy. firstorder.
+Admitted.
+(* end hide *)
+
+Instance Quasitransitive_Rnot_conv :
+  forall {A : Type} (R : rel A),
+    Quasitransitive (Rnot R) -> Quasitransitive R.
+(* begin hide *)
+Proof.
+  assert (DNE : forall P : Prop, ~ ~ P -> P) by admit.
+  unfold Quasitransitive, Rnot, AsymmetricPart.
+  intros A R [HT]; split; intros x y z [nrxy nnryx] [nryz nnrzy].
+  destruct (HT z y x).
+  - auto.
+  - auto.
+  - apply DNE in H0; auto.
+Admitted.
+(* end hide *)
+
+Instance Quasitransitive_Ror :
+  forall (A : Type) (R S : rel A),
+    Quasitransitive R -> Quasitransitive S -> Quasitransitive (Ror R S).
+(* begin hide *)
+Proof.
+
+Abort.
+(* end hide *)
+
+Instance Quasitransitive_Rand :
+  forall {A : Type} (R S : rel A),
+    Quasitransitive R -> Quasitransitive S -> Quasitransitive (Rand R S).
+(* begin hide *)
+Proof.
+  unfold Quasitransitive, Rand.
+  intros A R S [HR] [HS]; unfold AsymmetricPart in *.
+  split; intros x y z [[rxy sxy] n1] [[ryz syz] n2]; split.
+  - split.
+    + apply HR with y. split; auto. intro ryx.
+      assert (H : S x z /\ ~ S z x).
+      {
+        apply HS with y; auto. split; [assumption |].
 Abort.
 (* end hide *)
 
