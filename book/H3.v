@@ -9,9 +9,22 @@ Import ListNotations.
 
 Require Import Lia.
 
+(* begin hide *)
 (** Prerekwizyty:
     - definicje induktywne
     - klasy (?) *)
+
+(** Do zapamiętania:
+    - Semiorder      = poset z zakazanymi dwoma łańcuchami długości 2 i zakazanymi
+                       dwoma łańcuchami o długościach 3 i 1
+    - Interval order = poset wygenerowany z relacji porządku na odcinkach rzeczywistych,
+                       czyli poset z zakazanymi dwoma łańcuchami o długości 2
+    - Weak ordering  = poset, w którym nieporównywalność jest przechodnia,
+                       czyli totalny preporządek,
+                       czyli liniowy porządek na partycjach
+     *)
+
+(* end hide *)
 
 (** W tym rozdziale zajmiemy się badaniem relacji. Poznamy podstawowe rodzaje
     relacji, ich właściwości, a także zależności i przekształcenia między
@@ -2246,7 +2259,7 @@ Proof.
   exists bool, (@eq bool).
   split.
   - apply Equivalence_eq.
-  - intros [R _ _]. apply (Reflexive_Antireflexive_inhabited bool (Rnot eq))                       .
+  - intros [R _ _]. apply (Reflexive_Antireflexive_inhabited bool (Rnot eq)).
     + exact true.
     + assumption.
     + apply Antireflexive_Rnot. typeclasses eauto.
@@ -2300,6 +2313,109 @@ Qed.
 Instance Equivalence_Rand :
   forall (A : Type) (R S : rel A),
     Equivalence R -> Equivalence S -> Equivalence (Rand R S).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+(** ** Częściowe relacje równoważności *)
+
+Class PER {A : Type} (R : rel A) : Prop :=
+{
+    PER_Symmetric :> Symmetric R;
+    PER_Transitive :> Transitive R;
+}.
+
+Instance PER_Empty :
+  forall R : rel Empty_set, PER R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance PER_RTrue :
+  forall A : Type, PER (@RTrue A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance PER_RFalse :
+  forall A : Type, PER (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance PER_eq :
+  forall A : Type, PER (@eq A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance PER_Rinv :
+  forall (A : Type) (R : rel A),
+    PER R -> PER (Rinv R).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_PER_Rcomp :
+  exists (A : Type) (R S : rel A),
+    PER R /\ PER S /\ ~ PER (Rcomp R S).
+(* begin hide *)
+Proof.
+  exists
+    nat,
+    (fun x y => f x = f y),
+    (fun x y => g x = g y).
+  split; [| split].
+  - rel.
+  - rel.
+  - unfold Rcomp; intros [[HS] [HT]].
+    specialize (HS 0 1).
+    assert (exists b : nat, f 0 = f b /\ g b = g 1).
+    {
+      exists 2. split.
+      - rewrite f_0, f_2. reflexivity.
+      - rewrite g_1, g_2. reflexivity.
+    }
+    specialize (HS H).
+    destruct HS as (b & H1 & H2).
+Abort.
+(* end hide *)
+
+Lemma not_PER_Rnot :
+  exists (A : Type) (R : rel A),
+    PER R /\ ~ PER (Rnot R).
+(* begin hide *)
+Proof.
+  exists bool, (@eq bool).
+  split.
+  - apply PER_eq.
+  - unfold Rnot; intros [[HS] [HT]].
+    specialize (HT true false true).
+    destruct HT; congruence.
+Qed.
+(* end hide *)
+
+Lemma not_PER_Ror :
+  exists (A : Type) (R S : rel A),
+    PER R /\ PER S /\ ~ PER (Ror R S).
+(* begin hide *)
+Proof.
+  exists
+    (list nat),
+    (fun l1 l2 => length l1 = length l2),
+    (fun l1 l2 => head l1 = head l2).
+  split; [| split].
+  - rel.
+  - rel.
+  - intros [S [T]].
+    specialize (T [1] [2] [2; 3]).
+    compute in T. intuition congruence.
+Qed.
+(* end hide *)
+
+Instance PER_Rand :
+  forall (A : Type) (R S : rel A),
+    PER R -> PER S -> PER (Rand R S).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
@@ -4508,10 +4624,6 @@ Qed.
 (* end hide *)
 
 (** ** Relacje dobrze ufundowane *)
-
-Fail Existing Instance Nat.lt_wf.
-
-(** TODO *)
 
 Class WellFounded {A : Type} (R : rel A) : Prop :=
   WF : forall x : A, Acc R x.
