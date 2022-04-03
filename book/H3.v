@@ -2424,6 +2424,108 @@ Instance PER_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
+(** ** Relacje tolerancji *)
+
+Class Tolerance {A : Type} (R : rel A) : Prop :=
+{
+    Tolerance_Reflexive :> Reflexive R;
+    Tolerance_Symmetric :> Symmetric R;
+}.
+
+Instance Tolerance_Empty :
+  forall R : rel Empty_set, Tolerance R.
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Tolerance_RTrue :
+  forall A : Type, Tolerance (@RTrue A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_Tolerance_RFalse_inhabited :
+  forall A : Type, A -> ~ Tolerance (@RFalse A A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Tolerance_eq :
+  forall A : Type, Tolerance (@eq A).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Instance Tolerance_Rinv :
+  forall (A : Type) (R : rel A),
+    Tolerance R -> Tolerance (Rinv R).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
+Lemma not_Tolerance_Rcomp :
+  exists (A : Type) (R S : rel A),
+    Tolerance R /\ Tolerance S /\ ~ Tolerance (Rcomp R S).
+(* begin hide *)
+Proof.
+  exists
+    nat,
+    (fun x y =>
+      x = y
+        \/
+      x = 0 /\ y = 1
+        \/
+      x = 1 /\ y = 0),
+    (fun x y =>
+      x = y
+        \/
+      x = 2 /\ y = 3
+        \/
+      x = 3 /\ y = 2).
+  split; [| split].
+  - rel.
+  - rel.
+  - unfold Rcomp. intros [[HR] [HS]].
+    destruct (HS 2 3).
+    + exists 2. lia.
+    + decompose [and or] H; subst; try lia.
+Abort.
+(* end hide *)
+
+Lemma not_Tolerance_Rnot :
+  exists (A : Type) (R : rel A),
+    Tolerance R /\ ~ Tolerance (Rnot R).
+(* begin hide *)
+Proof.
+  exists bool, (@eq bool).
+  split.
+  - apply Tolerance_eq.
+  - unfold Rnot; intros [[HS] [HT]].
+    destruct (HS true). reflexivity.
+Qed.
+(* end hide *)
+
+Instance Tolerance_Ror :
+  forall {A : Type} (R S : rel A),
+    Tolerance R -> Tolerance S -> Tolerance (Ror R S).
+(* begin hide *)
+Proof.
+  intros A R S [[RR] [RS]] [[SR] [SS]].
+  split; split; unfold Ror.
+  - intros x. left; apply RR; assumption.
+  - intros x y [rxy | sxy].
+    + left; apply RS; assumption.
+    + right; apply SS; assumption.
+Qed.
+(* end hide *)
+
+Instance Tolerance_Rand :
+  forall (A : Type) (R S : rel A),
+    Tolerance R -> Tolerance S -> Tolerance (Rand R S).
+(* begin hide *)
+Proof. rel. Qed.
+(* end hide *)
+
 (** ** Relacje słaboantysymetryczne *)
 
 Class WeaklyAntisymmetric {A : Type} (R : rel A) : Prop :=
@@ -5178,7 +5280,7 @@ Proof.
 Abort.
 (* end hide *)
 
-(** ** Ciekawostki *)
+(** * Zależności między róznymi rodzajami relacji *)
 
 Lemma Reflexive_from_Symmetric_Transitive_RightTotal :
   forall {A : Type} (R : rel A),
@@ -5191,6 +5293,156 @@ Proof.
   apply HT with y.
   - apply HS. assumption.
   - assumption.
+Qed.
+(* end hide *)
+
+Instance Transitive_WeaklyReflexive :
+  forall {A : Type} (R : rel A),
+    WeaklyReflexive R -> Transitive R.
+(* begin hide *)
+Proof.
+  intros A R [HC].
+  split; intros x y z rxy ryz.
+  apply HC in rxy; subst. assumption.
+Qed.
+(* end hide *)
+
+Instance Symmetric_WeaklyReflexive :
+  forall {A : Type} (R : rel A),
+    WeaklyReflexive R -> Symmetric R.
+(* begin hide *)
+Proof.
+  intros A R [HC].
+  split; intros x y r.
+  rewrite (HC _ _ r) in r |- *. assumption.
+Qed.
+(* end hide *)
+
+Instance LeftEuclidean_WeaklyReflexive :
+  forall {A : Type} (R : rel A),
+    WeaklyReflexive R -> LeftEuclidean R.
+(* begin hide *)
+Proof.
+  intros A R [HC] x y z ryx rzx.
+  rewrite (HC _ _ rzx) in rzx |- *. assumption.
+Qed.
+(* end hide *)
+
+Instance RightEuclidean_WeaklyReflexive :
+  forall {A : Type} (R : rel A),
+    WeaklyReflexive R -> RightEuclidean R.
+(* begin hide *)
+Proof.
+  intros A R [HC] x y z rxy rxz.
+  rewrite <- (HC _ _ rxy) in rxy |- *. assumption.
+Qed.
+(* end hide *)
+
+Instance Quasitransitive_LeftEuclidean :
+  forall {A : Type} (R : rel A),
+    LeftEuclidean R -> Quasitransitive R.
+(* begin hide *)
+Proof.
+  intros A R HLE.
+  split; unfold LeftEuclidean, AsymmetricPart in *.
+  intros x y z [rxy nryx] [ryz nrzy].
+Restart.
+  intros A R HLE.
+  split; unfold LeftEuclidean, AsymmetricPart in *.
+  intros x y z [rxy nryx] [ryz nrzy]. split.
+  - 
+Abort.
+(* end hide *)
+
+Instance Quasitransitive_RightEuclidean :
+  forall {A : Type} (R : rel A),
+    RightEuclidean R -> Quasitransitive R.
+(* begin hide *)
+Proof.
+  intros A R HRE.
+  split; unfold RightEuclidean, AsymmetricPart in *.
+  intros x y z [rxy nryx] [ryz nrzy].
+  rel.
+Abort.
+(* end hide *)
+
+Instance LeftQuasiReflexive_Reflexive :
+  forall {A : Type} (R : rel A),
+    Reflexive R -> LeftQuasiReflexive R.
+(* begin hide *)
+Proof.
+  intros A R [HR] x y r. apply HR.
+Qed.
+(* end hide *)
+
+Instance LeftQuasiReflexive_WeaklyReflexive :
+  forall {A : Type} (R : rel A),
+    WeaklyReflexive R -> LeftQuasiReflexive R.
+(* begin hide *)
+Proof.
+  intros A R [WR] x y r.
+  rewrite <- (WR _ _ r) in r. assumption.
+Qed.
+(* end hide *)
+
+Instance RightQuasiReflexive_WeaklyReflexive :
+  forall {A : Type} (R : rel A),
+    WeaklyReflexive R -> RightQuasiReflexive R.
+(* begin hide *)
+Proof.
+  intros A R [WR] x y r.
+  rewrite (WR _ _ r) in r. assumption.
+Qed.
+(* end hide *)
+
+Instance QuasiReflexive_WeaklyReflexive :
+  forall {A : Type} (R : rel A),
+    WeaklyReflexive R -> QuasiReflexive R.
+(* begin hide *)
+Proof.
+  intros A R WR; split; typeclasses eauto.
+Qed.
+(* end hide *)
+
+Instance Dense_LeftQuasiReflexive :
+  forall {A : Type} (R : rel A),
+    LeftQuasiReflexive R -> Dense R.
+(* begin hide *)
+Proof.
+  unfold LeftQuasiReflexive.
+  intros A R HLQR; split; intros x y r.
+  exists x. split; [| assumption].
+  apply HLQR with y; assumption.
+Qed.
+(* end hide *)
+
+Instance Dense_RightQuasiReflexive :
+  forall {A : Type} (R : rel A),
+    RightQuasiReflexive R -> Dense R.
+(* begin hide *)
+Proof.
+  unfold RightQuasiReflexive.
+  intros A R HRQR; split; intros x y r.
+  exists y. split; [assumption |].
+  apply HRQR with x; assumption.
+Qed.
+(* end hide *)
+
+Instance RightQuasiReflexive_Reflexive :
+  forall {A : Type} (R : rel A),
+    Reflexive R -> RightQuasiReflexive R.
+(* begin hide *)
+Proof.
+  intros A R [HR] x y r. apply HR.
+Qed.
+(* end hide *)
+
+Instance QuasiReflexive_Reflexive :
+  forall {A : Type} (R : rel A),
+    Reflexive R -> QuasiReflexive R.
+(* begin hide *)
+Proof.
+  intros A R HR; split; typeclasses eauto.
 Qed.
 (* end hide *)
 
