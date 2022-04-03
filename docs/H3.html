@@ -2059,7 +2059,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">WeaklyAntisymmetric</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">weaklyantisymmetric</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">weakly_antisymmetric</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span><br/>
 }.<br/>
 
 <br/>
@@ -2566,62 +2566,62 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Class</span> <span class="id" title="var">WeaklyReflexive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+<span class="id" title="keyword">Class</span> <span class="id" title="var">CoReflexive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">weaklyReflexive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coreflexive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>;<br/>
 }.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Empty</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span>.<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoReflexive_Empty</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">Empty_set</span>, <span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_RFalse</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">WeaklyReflexive</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoReflexive_RFalse</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">CoReflexive</span> (@<span class="id" title="var">RFalse</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_eq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">WeaklyReflexive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoReflexive_eq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">CoReflexive</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">WeaklyReflexive_subrelation_eq</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CoReflexive_subrelation_eq</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">subrelation</span> <span class="id" title="var">R</span> (@<span class="id" title="var">eq</span> <span class="id" title="var">A</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Rinv</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoReflexive_Rinv</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">CoReflexive</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Rcomp</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoReflexive_Rcomp</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">CoReflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">CoReflexive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_WeaklyReflexive_Rnot</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_CoReflexive_Rnot</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">CoReflexive</span> (<span class="id" title="var">Rnot</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Ror</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoReflexive_Ror</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">CoReflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">CoReflexive</span> (<span class="id" title="var">Ror</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Rand_l</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoReflexive_Rand_l</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">CoReflexive</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_Rand_r</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoReflexive_Rand_r</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">S</span> -&gt; <span class="id" title="var">CoReflexive</span> (<span class="id" title="var">Rand</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyReflexive_LeftUnique</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoReflexive_LeftUnique</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LeftUnique</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyReflexive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LeftUnique</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">CoReflexive</span> (<span class="id" title="var">Rcomp</span> <span class="id" title="var">R</span> (<span class="id" title="var">Rinv</span> <span class="id" title="var">R</span>)).<br/>
 
 <br/>
 </div>
@@ -2701,7 +2701,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">LeftQuasiReflexive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">lqr</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">left_quasireflexive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">LeftQuasiReflexive_Empty</span> :<br/>
@@ -2749,7 +2749,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">RightQuasiReflexive</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">rqr</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">right_quasireflexive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">y</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">RightQuasiReflexive_spec</span> :<br/>
@@ -2827,7 +2827,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">RightEuclidean</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">re</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">right_euclidean</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">RightEuclidean_Empty</span> :<br/>
@@ -3229,7 +3229,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">Connected</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cwt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> /\ ~ <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">connected</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> /\ ~ <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>;<br/>
 }.<br/>
 
 <br/>
@@ -3334,7 +3334,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">WeaklyExtensional</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">weakly_extensional</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">t</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">t</span> <span class="id" title="var">x</span> &lt;-&gt; <span class="id" title="var">R</span> <span class="id" title="var">t</span> <span class="id" title="var">y</span>)-&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>; <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">weakly_extensional</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">t</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">t</span> <span class="id" title="var">x</span> &lt;-&gt; <span class="id" title="var">R</span> <span class="id" title="var">t</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">x</span> = <span class="id" title="var">y</span>;<br/>
 }.<br/>
 
 <br/>
@@ -3404,7 +3404,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">WellFounded</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">WF</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Acc</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">well_founded</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Acc</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Inaccessible</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
@@ -3414,7 +3414,7 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 
 <br/>
 <span class="id" title="keyword">Class</span> <span class="id" title="var">IllFounded</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">IllFounded'</span> : <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Inaccessible</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">ill_founded</span> : <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Inaccessible</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_IllFounded_WellFounded</span> :<br/>
@@ -3544,11 +3544,6 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 }.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antireflexive_Antisymmetric</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Antisymmetric_WellOrder</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WellOrder</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span>.<br/>
@@ -3574,24 +3569,24 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">RightTotal</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Transitive_WeaklyReflexive</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Transitive_CoReflexive</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Transitive</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">Symmetric_WeaklyReflexive</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Symmetric_CoReflexive</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">LeftEuclidean_WeaklyReflexive</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">LeftEuclidean_CoReflexive</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">LeftEuclidean</span> <span class="id" title="var">R</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">LeftEuclidean</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">RightEuclidean_WeaklyReflexive</span> :<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">RightEuclidean_CoReflexive</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">RightEuclidean</span> <span class="id" title="var">R</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">RightEuclidean</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Quasitransitive_LeftEuclidean</span> :<br/>
@@ -3604,24 +3599,24 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">RightEuclidean</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Quasitransitive</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">LeftQuasiReflexive_CoReflexive</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">LeftQuasiReflexive</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">RightQuasiReflexive_CoReflexive</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">RightQuasiReflexive</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">QuasiReflexive_CoReflexive</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">QuasiReflexive</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">LeftQuasiReflexive_Reflexive</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">LeftQuasiReflexive</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">LeftQuasiReflexive_WeaklyReflexive</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">LeftQuasiReflexive</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">RightQuasiReflexive_WeaklyReflexive</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">RightQuasiReflexive</span> <span class="id" title="var">R</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Instance</span> <span class="id" title="var">QuasiReflexive_WeaklyReflexive</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">WeaklyReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">QuasiReflexive</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Dense_LeftQuasiReflexive</span> :<br/>
@@ -3642,6 +3637,84 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">QuasiReflexive_Reflexive</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">QuasiReflexive</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">LeftTotal_Reflexive</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">LeftTotal</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">RightTotal_Reflexive</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">RightTotal</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyAntisymmetric_CoReflexive</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">WeaklyAntisymmetric_Antisymmetric</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antireflexive_Antisymmetric</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antireflexive_Antitransitive</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Antitransitive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Antireflexive</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">Antisymmetric_CoReflexive</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">LeftUnique_CoReflexive</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">LeftUnique</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">RightUnique_CoReflexive</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">RightUnique</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <span class="id" title="var">CoReflexive_Symmetric_WeaklyAntisymmetric</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">CoReflexive_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">CoReflexive</span> <span class="id" title="var">R</span> &lt;-&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span> /\ <span class="id" title="var">WeaklyAntisymmetric</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_greatest_Symmetric_WeaklyAntisymmetric</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">R</span> --&gt; <span class="id" title="var">eq</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Reflexive_Symmetric_WeaklyAntisymmetric_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Reflexive</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Antisymmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">R</span> &lt;--&gt; <span class="id" title="var">eq</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Symmetric_Total_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Symmetric</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">Total</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="var">R</span> &lt;--&gt; <span class="id" title="var">RTrue</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">LeftEuclidean_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LeftEuclidean</span> <span class="id" title="var">R</span> &lt;-&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">z</span> -&gt; <span class="id" title="var">R</span> <span class="id" title="var">z</span> <span class="id" title="var">y</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Search</span> <span class="id" title="var">Symmetric</span> <span class="id" title="var">WeaklyAntisymmetric</span>.<br/>
 
 <br/>
 </div>
@@ -4143,11 +4216,11 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">WeaklyReflexiveClosure</span>.<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">CoReflexiveClosure</span>.<br/>
 
 <br/>
-<span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">WeaklyReflexiveClosureCarrier</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">embed</span>  : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">WeaklyReflexiveClosureCarrier</span> <span class="id" title="var">R</span>.<br/>
+<span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">CoReflexiveClosureCarrier</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">embed</span>  : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">CoReflexiveClosureCarrier</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
 <span class="id" title="var">Arguments</span> <span class="id" title="var">embed</span> {<span class="id" title="var">A</span> <span class="id" title="var">R</span>} <span class="id" title="var">_</span>.<br/>
@@ -4158,12 +4231,12 @@ Każda relacja na typie pustym jest antysymetryczna. Równość nie jest
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; @<span class="id" title="var">embed</span> <span class="id" title="var">_</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span> = @<span class="id" title="var">embed</span> <span class="id" title="var">_</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">WeaklyReflexiveClosure</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>)<br/>
-&nbsp;&nbsp;: <span class="id" title="var">rel</span> (<span class="id" title="var">WeaklyReflexiveClosureCarrier</span> <span class="id" title="var">R</span>) :=<br/>
-&nbsp;&nbsp;| <span class="id" title="var">step</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">WeaklyReflexiveClosure</span> <span class="id" title="var">R</span> (<span class="id" title="var">embed</span> <span class="id" title="var">x</span>) (<span class="id" title="var">embed</span> <span class="id" title="var">y</span>).<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">CoReflexiveClosure</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">rel</span> <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;: <span class="id" title="var">rel</span> (<span class="id" title="var">CoReflexiveClosureCarrier</span> <span class="id" title="var">R</span>) :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">step</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> -&gt; <span class="id" title="var">CoReflexiveClosure</span> <span class="id" title="var">R</span> (<span class="id" title="var">embed</span> <span class="id" title="var">x</span>) (<span class="id" title="var">embed</span> <span class="id" title="var">y</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">WeaklyReflexiveClosure</span>.<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">CoReflexiveClosure</span>.<br/>
 
 <br/>
 </div>

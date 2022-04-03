@@ -25,6 +25,56 @@
 <div class="doc">
 W tym rozdziale dalej będziemy zajmować się relacjami (a konkretnie relacjami
     binarnymi i homogenicznymi), ale nudniejszymi i mniej ważnymi niż w poprzednim
-    rozdziale. </div>
-<div class="code">
+    rozdziale. 
 </div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;&nbsp;left_unique&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;(a&nbsp;a'&nbsp;:&nbsp;A)&nbsp;(b&nbsp;:&nbsp;B),&nbsp;R&nbsp;a&nbsp;b&nbsp;-&gt;&nbsp;R&nbsp;a'&nbsp;b&nbsp;-&gt;&nbsp;a&nbsp;=&nbsp;a'<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;right_unique&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;(a&nbsp;:&nbsp;A)&nbsp;(b&nbsp;b'&nbsp;:&nbsp;B),&nbsp;R&nbsp;a&nbsp;b&nbsp;-&gt;&nbsp;R&nbsp;a&nbsp;b'&nbsp;-&gt;&nbsp;b&nbsp;=&nbsp;b'<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;left_total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;a&nbsp;:&nbsp;A,&nbsp;exists&nbsp;b&nbsp;:&nbsp;B,&nbsp;R&nbsp;a&nbsp;b<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;right_total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;b&nbsp;:&nbsp;B,&nbsp;exists&nbsp;a&nbsp;:&nbsp;A,&nbsp;R&nbsp;a&nbsp;b<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;reflexive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;antireflexive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;:&nbsp;A,&nbsp;~&nbsp;R&nbsp;x&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;irreflexive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;exists&nbsp;x&nbsp;:&nbsp;A,&nbsp;~&nbsp;R&nbsp;x&nbsp;x<br/>
+<span class="comment">(*&nbsp;&nbsp;not_antireflexive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;exists&nbsp;x&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;x&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;coreflexive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;x&nbsp;=&nbsp;y<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;left_quasireflexive&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;x&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;right_quasireflexive&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;y&nbsp;y<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;quasireflexive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;x&nbsp;x&nbsp;/\&nbsp;R&nbsp;y&nbsp;y<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;symmetric&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;y&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;antisymmetric&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;y&nbsp;x&nbsp;-&gt;&nbsp;False<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;weakly_antisymmetric&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;y&nbsp;x&nbsp;-&gt;&nbsp;x&nbsp;=&nbsp;y<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;asymmetric&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;exists&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;/\&nbsp;~&nbsp;R&nbsp;y&nbsp;x<br/>
+<span class="comment">(*&nbsp;&nbsp;not_antisymmetric&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;exists&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;/\&nbsp;R&nbsp;y&nbsp;x&nbsp;*)</span><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;transitive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;z&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;y&nbsp;z&nbsp;-&gt;&nbsp;R&nbsp;x&nbsp;z<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;antitransitive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;z&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;y&nbsp;z&nbsp;-&gt;&nbsp;R&nbsp;x&nbsp;z&nbsp;-&gt;&nbsp;False<br/>
+<span class="comment">(*&nbsp;&nbsp;weakly_antitransitive&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;z&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;y&nbsp;z&nbsp;-&gt;&nbsp;R&nbsp;x&nbsp;z&nbsp;-&gt;&nbsp;x&nbsp;=&nbsp;y&nbsp;/\&nbsp;y&nbsp;=&nbsp;z&nbsp;*)</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;cotransitive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;{x&nbsp;z&nbsp;:&nbsp;A},&nbsp;R&nbsp;x&nbsp;z&nbsp;-&gt;&nbsp;forall&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;\/&nbsp;R&nbsp;y&nbsp;z<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;quasitransitive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;Transitive&nbsp;(AsymmetricPart&nbsp;R)<br/>
+<span class="comment">(*&nbsp;&nbsp;trans.&nbsp;of&nbsp;incomp.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;TOOD&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;&nbsp;intransitive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;exists&nbsp;x&nbsp;y&nbsp;z&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;/\&nbsp;R&nbsp;y&nbsp;z&nbsp;/\&nbsp;~&nbsp;R&nbsp;x&nbsp;z&nbsp;*)</span><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;circular&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;z&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;y&nbsp;z&nbsp;-&gt;&nbsp;R&nbsp;z&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;right_euclidean&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;z&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;x&nbsp;z&nbsp;-&gt;&nbsp;R&nbsp;y&nbsp;z<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;left_euclidean&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;z&nbsp;:&nbsp;A,&nbsp;R&nbsp;y&nbsp;x&nbsp;-&gt;&nbsp;R&nbsp;z&nbsp;x&nbsp;-&gt;&nbsp;R&nbsp;y&nbsp;z<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;confluent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;z&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;x&nbsp;z&nbsp;-&gt;&nbsp;exists&nbsp;w&nbsp;:&nbsp;A,&nbsp;R&nbsp;y&nbsp;w&nbsp;/\&nbsp;R&nbsp;z&nbsp;w<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;dense&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;exists&nbsp;z&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;z&nbsp;/\&nbsp;R&nbsp;z&nbsp;y<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;\/&nbsp;R&nbsp;y&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;weakly_total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;~&nbsp;R&nbsp;x&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;y&nbsp;x<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;trichotomous&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;R&nbsp;x&nbsp;y&nbsp;\/&nbsp;x&nbsp;=&nbsp;y&nbsp;\/&nbsp;R&nbsp;y&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;weakly_trichotomous&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;x&nbsp;&lt;&gt;&nbsp;y&nbsp;-&gt;&nbsp;R&nbsp;x&nbsp;y&nbsp;\/&nbsp;R&nbsp;y&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;connected&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;~&nbsp;R&nbsp;x&nbsp;y&nbsp;/\&nbsp;~&nbsp;R&nbsp;y&nbsp;x&nbsp;-&gt;&nbsp;x&nbsp;=&nbsp;y<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;weakly_extensional&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;y&nbsp;:&nbsp;A,&nbsp;(forall&nbsp;t&nbsp;:&nbsp;A,&nbsp;R&nbsp;t&nbsp;x&nbsp;&lt;-&gt;&nbsp;R&nbsp;t&nbsp;y)&nbsp;-&gt;&nbsp;x&nbsp;=&nbsp;y<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;well_founded&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;x&nbsp;:&nbsp;A,&nbsp;Acc&nbsp;R&nbsp;x<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;ill_founded&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;exists&nbsp;x&nbsp;:&nbsp;A,&nbsp;Inaccessible&nbsp;R&nbsp;x&nbsp;*)</span></div>

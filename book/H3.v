@@ -2530,7 +2530,7 @@ Proof. rel. Qed.
 
 Class WeaklyAntisymmetric {A : Type} (R : rel A) : Prop :=
 {
-    weaklyantisymmetric : forall x y : A, R x y -> R y x -> x = y
+    weakly_antisymmetric : forall x y : A, R x y -> R y x -> x = y
 }.
 
 Instance WeaklyAntisymmetric_Empty :
@@ -2582,7 +2582,7 @@ Proof.
     destruct x, y; cbn; do 2 inversion 1; auto.
     unfold Rcomp; destruct 1. cut (true = false).
       inversion 1.
-      apply weaklyantisymmetric0.
+      apply weakly_antisymmetric0.
         exists false. cbn. auto.
         exists false. cbn. auto.
 Qed.
@@ -2599,7 +2599,7 @@ Proof.
     unfold Rnot; destruct 1.
       cut (true = false).
         inversion 1.
-        apply weaklyantisymmetric0; auto.
+        apply weakly_antisymmetric0; auto.
 Qed.
 (* end hide *)
 
@@ -2618,7 +2618,7 @@ Proof.
     destruct x, y; cbn; do 2 inversion 1; auto.
     unfold Ror; destruct 1. cut (true = false).
       inversion 1.
-      apply weaklyantisymmetric0; cbn; auto.
+      apply weakly_antisymmetric0; cbn; auto.
 Qed.
 (* end hide *)
 
@@ -3314,47 +3314,47 @@ Qed.
 
 (** ** Relacje słabozwrotne *)
 
-Class WeaklyReflexive {A : Type} (R : rel A) : Prop :=
+Class CoReflexive {A : Type} (R : rel A) : Prop :=
 {
-    weaklyReflexive : forall x y : A, R x y -> x = y;
+    coreflexive : forall x y : A, R x y -> x = y;
 }.
 
-Instance WeaklyReflexive_Empty :
-  forall R : rel Empty_set, WeaklyReflexive R.
+Instance CoReflexive_Empty :
+  forall R : rel Empty_set, CoReflexive R.
 (* begin hide *)
 Proof.
   split; intros [].
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_RFalse :
-  forall A : Type, WeaklyReflexive (@RFalse A A).
+Instance CoReflexive_RFalse :
+  forall A : Type, CoReflexive (@RFalse A A).
 (* begin hide *)
 Proof.
   split; intros _ _ [].
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_eq :
-  forall A : Type, WeaklyReflexive (@eq A).
+Instance CoReflexive_eq :
+  forall A : Type, CoReflexive (@eq A).
 (* begin hide *)
 Proof.
   split; trivial.
 Qed.
 (* end hide *)
 
-Lemma WeaklyReflexive_subrelation_eq :
+Lemma CoReflexive_subrelation_eq :
   forall {A : Type} {R : rel A},
-    WeaklyReflexive R -> subrelation R (@eq A).
+    CoReflexive R -> subrelation R (@eq A).
 (* begin hide *)
 Proof.
   intros A R [H] x y. apply H.
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_Rinv :
+Instance CoReflexive_Rinv :
   forall (A : Type) (R : rel A),
-    WeaklyReflexive R -> WeaklyReflexive (Rinv R).
+    CoReflexive R -> CoReflexive (Rinv R).
 (* begin hide *)
 Proof.
   intros A R [HR].
@@ -3366,9 +3366,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_Rcomp :
+Instance CoReflexive_Rcomp :
   forall (A : Type) (R S : rel A),
-    WeaklyReflexive R -> WeaklyReflexive S -> WeaklyReflexive (Rcomp R S).
+    CoReflexive R -> CoReflexive S -> CoReflexive (Rcomp R S).
 (* begin hide *)
 Proof.
   intros A R S [HR] [HS]; split.
@@ -3378,9 +3378,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma not_WeaklyReflexive_Rnot :
+Lemma not_CoReflexive_Rnot :
   exists (A : Type) (R : rel A),
-    WeaklyReflexive R /\ ~ WeaklyReflexive (Rnot R).
+    CoReflexive R /\ ~ CoReflexive (Rnot R).
 (* begin hide *)
 Proof.
   exists bool, (fun b1 b2 => b1 = true /\ b2 = true).
@@ -3390,9 +3390,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_Ror :
+Instance CoReflexive_Ror :
   forall (A : Type) (R S : rel A),
-    WeaklyReflexive R -> WeaklyReflexive S -> WeaklyReflexive (Ror R S).
+    CoReflexive R -> CoReflexive S -> CoReflexive (Ror R S).
 (* begin hide *)
 Proof.
   intros A R S [HR] [HS]; split.
@@ -3402,9 +3402,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_Rand_l :
+Instance CoReflexive_Rand_l :
   forall (A : Type) (R S : rel A),
-    WeaklyReflexive R -> WeaklyReflexive (Rand R S).
+    CoReflexive R -> CoReflexive (Rand R S).
 (* begin hide *)
 Proof.
   intros A R S [HR]; split.
@@ -3413,9 +3413,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_Rand_r :
+Instance CoReflexive_Rand_r :
   forall (A : Type) (R S : rel A),
-    WeaklyReflexive S -> WeaklyReflexive (Rand R S).
+    CoReflexive S -> CoReflexive (Rand R S).
 (* begin hide *)
 Proof.
   intros A R S [HS]; split.
@@ -3424,9 +3424,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance WeaklyReflexive_LeftUnique :
+Instance CoReflexive_LeftUnique :
   forall {A : Type} (R : rel A),
-    LeftUnique R -> WeaklyReflexive (Rcomp R (Rinv R)).
+    LeftUnique R -> CoReflexive (Rcomp R (Rinv R)).
 (* begin hide *)
 Proof.
   intros A R [H].
@@ -3590,7 +3590,7 @@ Qed.
 (** *** Relacje lewostronnie kwazizwrotne *)
 
 Class LeftQuasiReflexive {A : Type} (R : rel A) : Prop :=
-  lqr : forall x y : A, R x y -> R x x.
+  left_quasireflexive : forall x y : A, R x y -> R x x.
 
 Instance LeftQuasiReflexive_Empty :
   forall R : rel Empty_set, LeftQuasiReflexive R.
@@ -3689,7 +3689,7 @@ Qed.
 (** *** Relacje prawostronnie kwazizwrotne *)
 
 Class RightQuasiReflexive {A : Type} (R : rel A) : Prop :=
-  rqr : forall x y : A, R x y -> R y y.
+  right_quasireflexive : forall x y : A, R x y -> R y y.
 
 Lemma RightQuasiReflexive_spec :
   forall {A : Type} (R : rel A),
@@ -3800,7 +3800,7 @@ Qed.
 (** *** Relacje prawostronnie euklidesowe *)
 
 Class RightEuclidean {A : Type} (R : rel A) : Prop :=
-  re : forall x y z : A, R x y -> R x z -> R y z.
+  right_euclidean : forall x y z : A, R x y -> R x z -> R y z.
 
 Instance RightEuclidean_Empty :
   forall R : rel Empty_set, RightEuclidean R.
@@ -4586,7 +4586,7 @@ Qed.
 
 Class Connected {A : Type} (R : rel A) : Prop :=
 {
-    cwt : forall x y : A, ~ R x y /\ ~ R y x -> x = y;
+    connected : forall x y : A, ~ R x y /\ ~ R y x -> x = y;
 }.
 
 Instance Connected_Total :
@@ -4719,7 +4719,7 @@ Class Quasiorder {A : Type} (R : rel A) : Prop :=
 
 Class WeaklyExtensional {A : Type} (R : rel A) : Prop :=
 {
-    weakly_extensional : forall x y : A, (forall t : A, R t x <-> R t y)-> x = y; 
+    weakly_extensional : forall x y : A, (forall t : A, R t x <-> R t y) -> x = y;
 }.
 
 Lemma WeaklyExtensional_lt :
@@ -4890,7 +4890,7 @@ Qed.
 (** ** Relacje dobrze ufundowane *)
 
 Class WellFounded {A : Type} (R : rel A) : Prop :=
-  WF : forall x : A, Acc R x.
+  well_founded : forall x : A, Acc R x.
 
 CoInductive Inaccessible {A : Type} (R : rel A) (x : A) : Prop :=
 {
@@ -4898,7 +4898,7 @@ CoInductive Inaccessible {A : Type} (R : rel A) (x : A) : Prop :=
 }.
 
 Class IllFounded {A : Type} (R : rel A) : Prop :=
-  IllFounded' : exists x : A, Inaccessible R x.
+  ill_founded : exists x : A, Inaccessible R x.
 
 Lemma not_IllFounded_WellFounded :
   forall {A : Type} (R : rel A),
@@ -5240,16 +5240,6 @@ Class WellOrder {A : Type} (R : rel A) : Prop :=
     WellOrder_WeaklyExtensional :> WeaklyExtensional R;
 }.
 
-Instance Antireflexive_Antisymmetric :
-  forall {A : Type} (R : rel A),
-    Antisymmetric R -> Antireflexive R.
-(* begin hide *)
-Proof.
-  intros A R [HAS]; split; intros x nr.
-  eapply HAS; eassumption.
-Qed.
-(* end hide *)
-
 Instance Antisymmetric_WellOrder :
   forall {A : Type} (R : rel A),
     WellOrder R -> Antisymmetric R.
@@ -5296,9 +5286,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance Transitive_WeaklyReflexive :
+Instance Transitive_CoReflexive :
   forall {A : Type} (R : rel A),
-    WeaklyReflexive R -> Transitive R.
+    CoReflexive R -> Transitive R.
 (* begin hide *)
 Proof.
   intros A R [HC].
@@ -5307,9 +5297,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance Symmetric_WeaklyReflexive :
+Instance Symmetric_CoReflexive :
   forall {A : Type} (R : rel A),
-    WeaklyReflexive R -> Symmetric R.
+    CoReflexive R -> Symmetric R.
 (* begin hide *)
 Proof.
   intros A R [HC].
@@ -5318,9 +5308,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance LeftEuclidean_WeaklyReflexive :
+Instance LeftEuclidean_CoReflexive :
   forall {A : Type} (R : rel A),
-    WeaklyReflexive R -> LeftEuclidean R.
+    CoReflexive R -> LeftEuclidean R.
 (* begin hide *)
 Proof.
   intros A R [HC] x y z ryx rzx.
@@ -5328,9 +5318,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Instance RightEuclidean_WeaklyReflexive :
+Instance RightEuclidean_CoReflexive :
   forall {A : Type} (R : rel A),
-    WeaklyReflexive R -> RightEuclidean R.
+    CoReflexive R -> RightEuclidean R.
 (* begin hide *)
 Proof.
   intros A R [HC] x y z rxy rxz.
@@ -5366,41 +5356,41 @@ Proof.
 Abort.
 (* end hide *)
 
+Instance LeftQuasiReflexive_CoReflexive :
+  forall {A : Type} (R : rel A),
+    CoReflexive R -> LeftQuasiReflexive R.
+(* begin hide *)
+Proof.
+  intros A R [HWR] x y r.
+  rewrite <- (HWR _ _ r) in r. assumption.
+Qed.
+(* end hide *)
+
+Instance RightQuasiReflexive_CoReflexive :
+  forall {A : Type} (R : rel A),
+    CoReflexive R -> RightQuasiReflexive R.
+(* begin hide *)
+Proof.
+  intros A R [HWR] x y r.
+  rewrite (HWR _ _ r) in r. assumption.
+Qed.
+(* end hide *)
+
+Instance QuasiReflexive_CoReflexive :
+  forall {A : Type} (R : rel A),
+    CoReflexive R -> QuasiReflexive R.
+(* begin hide *)
+Proof.
+  split; typeclasses eauto.
+Qed.
+(* end hide *)
+
 Instance LeftQuasiReflexive_Reflexive :
   forall {A : Type} (R : rel A),
     Reflexive R -> LeftQuasiReflexive R.
 (* begin hide *)
 Proof.
   intros A R [HR] x y r. apply HR.
-Qed.
-(* end hide *)
-
-Instance LeftQuasiReflexive_WeaklyReflexive :
-  forall {A : Type} (R : rel A),
-    WeaklyReflexive R -> LeftQuasiReflexive R.
-(* begin hide *)
-Proof.
-  intros A R [WR] x y r.
-  rewrite <- (WR _ _ r) in r. assumption.
-Qed.
-(* end hide *)
-
-Instance RightQuasiReflexive_WeaklyReflexive :
-  forall {A : Type} (R : rel A),
-    WeaklyReflexive R -> RightQuasiReflexive R.
-(* begin hide *)
-Proof.
-  intros A R [WR] x y r.
-  rewrite (WR _ _ r) in r. assumption.
-Qed.
-(* end hide *)
-
-Instance QuasiReflexive_WeaklyReflexive :
-  forall {A : Type} (R : rel A),
-    WeaklyReflexive R -> QuasiReflexive R.
-(* begin hide *)
-Proof.
-  intros A R WR; split; typeclasses eauto.
 Qed.
 (* end hide *)
 
@@ -5445,6 +5435,164 @@ Proof.
   intros A R HR; split; typeclasses eauto.
 Qed.
 (* end hide *)
+
+Instance LeftTotal_Reflexive :
+  forall {A : Type} (R : rel A),
+    Reflexive R -> LeftTotal R.
+(* begin hide *)
+Proof.
+  intros A R [HR]; split; intros x.
+  exists x. apply HR.
+Qed.
+(* end hide *)
+
+Instance RightTotal_Reflexive :
+  forall {A : Type} (R : rel A),
+    Reflexive R -> RightTotal R.
+(* begin hide *)
+Proof.
+  intros A R [HR]; split; intros x.
+  exists x. apply HR.
+Qed.
+(* end hide *)
+
+Instance WeaklyAntisymmetric_CoReflexive :
+  forall {A : Type} (R : rel A),
+    CoReflexive R -> WeaklyAntisymmetric R.
+(* begin hide *)
+Proof.
+  intros A R [WR]; split; intros x y rxy ryx.
+  apply WR. assumption.
+Qed.
+(* end hide *)
+
+Instance WeaklyAntisymmetric_Antisymmetric :
+  forall {A : Type} (R : rel A),
+    Antisymmetric R -> WeaklyAntisymmetric R.
+(* begin hide *)
+Proof.
+  intros A R [HA]; split; intros x y rxy ryx.
+  apply HA in rxy. contradiction.
+Qed.
+(* end hide *)
+
+Instance Antireflexive_Antisymmetric :
+  forall {A : Type} (R : rel A),
+    Antisymmetric R -> Antireflexive R.
+(* begin hide *)
+Proof.
+  intros A R [HAS]; split; intros x nr.
+  eapply HAS; eassumption.
+Qed.
+(* end hide *)
+
+Instance Antireflexive_Antitransitive :
+  forall {A : Type} (R : rel A),
+    Antitransitive R -> Antireflexive R.
+(* begin hide *)
+Proof.
+  unfold Antitransitive.
+  intros A R HAT; split; intros x r.
+  apply (HAT x x x); assumption.
+Qed.
+(* end hide *)
+
+Instance Antisymmetric_CoReflexive :
+  forall {A : Type} (R : rel A),
+    CoReflexive R -> Antisymmetric R.
+(* begin hide *)
+Proof.
+  intros A R [WR]; split; intros x y rxy ryx.
+Abort.
+(* end hide *)
+
+Instance LeftUnique_CoReflexive :
+  forall {A : Type} (R : rel A),
+    CoReflexive R -> LeftUnique R.
+(* begin hide *)
+Proof.
+  intros A R [CR]; split; intros x1 x2 y rx1y rx2y.
+  rewrite (CR _ _ rx1y), (CR _ _ rx2y). reflexivity.
+Qed.
+(* end hide *)
+
+Instance RightUnique_CoReflexive :
+  forall {A : Type} (R : rel A),
+    CoReflexive R -> RightUnique R.
+(* begin hide *)
+Proof.
+  intros A R [CR]; split; intros x y1 y2 rxy1 rxy2.
+  rewrite <- (CR _ _ rxy1), <- (CR _ _ rxy2). reflexivity.
+Qed.
+(* end hide *)
+
+
+
+
+
+
+Instance CoReflexive_Symmetric_WeaklyAntisymmetric :
+  forall {A : Type} (R : rel A),
+    Symmetric R -> WeaklyAntisymmetric R -> CoReflexive R.
+(* begin hide *)
+Proof.
+  intros A R [HS] [HWR]; split; intros x y r.
+  apply HWR; [assumption |]. apply HS. assumption.
+Qed.
+(* end hide *)
+
+Lemma CoReflexive_spec :
+  forall {A : Type} (R : rel A),
+    CoReflexive R <-> Symmetric R /\ WeaklyAntisymmetric R.
+(* begin hide *)
+Proof.
+  split; [split | destruct 1]; typeclasses eauto.
+Qed.
+(* end hide *)
+
+Lemma eq_greatest_Symmetric_WeaklyAntisymmetric :
+  forall {A : Type} (R : rel A),
+    Symmetric R -> Antisymmetric R -> R --> eq.
+(* begin hide *)
+Proof.
+  intros A R [HS] [HAS] x y rxy.
+  assert (ryx : R y x) by (apply HS; assumption).
+  apply HAS in rxy. contradiction.
+Qed.
+(* end hide *)
+
+Lemma Reflexive_Symmetric_WeaklyAntisymmetric_spec :
+  forall {A : Type} (R : rel A),
+    Reflexive R -> Symmetric R -> Antisymmetric R -> R <--> eq.
+(* begin hide *)
+Proof.
+  intros A R HR HS HAS; split.
+  - apply eq_greatest_Symmetric_WeaklyAntisymmetric; assumption.
+  - apply eq_subrelation_Reflexive; assumption.
+Qed.
+(* end hide *)
+
+Lemma Symmetric_Total_spec :
+  forall {A : Type} (R : rel A),
+    Symmetric R -> Total R -> R <--> RTrue.
+(* begin hide *)
+Proof.
+  intros A R [HS] [HT]; split.
+  - intros x y r. red. trivial.
+  - intros x y _. destruct (HT x y); [| apply HS]; assumption.
+Qed.
+(* end hide *)
+
+Lemma LeftEuclidean_spec :
+  forall {A : Type} (R : rel A),
+    LeftEuclidean R <-> forall x y z : A, R x y -> R x z -> R z y.
+(* begin hide *)
+Proof.
+  unfold LeftEuclidean. firstorder.
+Abort.
+(* end hide *)
+
+Search Symmetric WeaklyAntisymmetric.
 
 (** ** Relacje słaboantysymetryczne względem pewnej relacji równoważności *)
 
@@ -6156,10 +6304,10 @@ Qed.
 
 (** ** Domknięcie słabozwrotne (TODO) *)
 
-Module WeaklyReflexiveClosure.
+Module CoReflexiveClosure.
 
-Private Inductive WeaklyReflexiveClosureCarrier {A : Type} (R : rel A) : Type :=
-    | embed  : A -> WeaklyReflexiveClosureCarrier R.
+Private Inductive CoReflexiveClosureCarrier {A : Type} (R : rel A) : Type :=
+    | embed  : A -> CoReflexiveClosureCarrier R.
 
 Arguments embed {A R} _.
 
@@ -6167,11 +6315,11 @@ Axiom WRCC_equal :
   forall {A : Type} {x y : A} {R : rel A},
     R x y -> @embed _ R x = @embed _ R y.
 
-Inductive WeaklyReflexiveClosure {A : Type} (R : rel A)
-  : rel (WeaklyReflexiveClosureCarrier R) :=
-  | step : forall x y : A, R x y -> WeaklyReflexiveClosure R (embed x) (embed y).
+Inductive CoReflexiveClosure {A : Type} (R : rel A)
+  : rel (CoReflexiveClosureCarrier R) :=
+  | step : forall x y : A, R x y -> CoReflexiveClosure R (embed x) (embed y).
 
-End WeaklyReflexiveClosure.
+End CoReflexiveClosure.
 
 (** ** Ogólne pojęcie domknięcia *)
 
