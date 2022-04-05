@@ -1306,9 +1306,7 @@ Qed.
 
 Module exercises_propositional.
 
-Section exercises_propositional.
-
-Hypotheses P Q R S : Prop.
+Parameters P Q R S : Prop.
 
 (** Komenda [Hypotheses] formalnie działa jak wprowadzenie aksjomatu,
     który w naszym przypadku brzmi "P, Q, R i S są zdaniami logicznymi".
@@ -1330,7 +1328,7 @@ end.
 Ltac leftright t := ((left; t) || (right; t)).
 (* end hide *)
 
-(** *** Przemienność *)
+(** ** Przemienność *)
 
 Lemma and_comm :
   P /\ Q -> Q /\ P.
@@ -1350,7 +1348,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Łączność *)
+(** ** Łączność *)
 
 Lemma and_assoc :
   P /\ (Q /\ R) <-> (P /\ Q) /\ R.
@@ -1387,7 +1385,7 @@ Restart.
 Qed.
 (* end hide *)
 
-(** *** Rozdzielność *)
+(** ** Rozdzielność *)
 
 Lemma and_dist_or :
   P /\ (Q \/ R) <-> (P /\ Q) \/ (P /\ R).
@@ -1453,7 +1451,7 @@ Restart.
 Qed.
 (* end hide *)
 
-(** *** Kuryfikacja i dekuryfikacja *)
+(** ** Kuryfikacja i dekuryfikacja *)
 
 Lemma curry :
   (P /\ Q -> R) -> (P -> Q -> R).
@@ -1477,7 +1475,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Prawa de Morgana *)
+(** ** Prawa de Morgana *)
 
 Lemma deMorgan_1 :
   ~(P \/ Q) <-> ~P /\ ~Q.
@@ -1505,7 +1503,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Niesprzeczność i zasada wyłączonego środka *)
+(** ** Niesprzeczność i zasada wyłączonego środka *)
 
 Lemma noncontradiction' :
   ~(P /\ ~P).
@@ -1545,7 +1543,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Elementy neutralne i anihilujące *)
+(** ** Elementy neutralne i anihilujące *)
 
 Lemma and_false_annihilation :
   P /\ False <-> False.
@@ -1591,7 +1589,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Inne *)
+(** ** Inne *)
 
 Lemma or_imp_and :
   (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
@@ -1650,7 +1648,6 @@ Proof.
 Qed.
 (* end hide *)
 
-End exercises_propositional.
 End exercises_propositional.
 
 Check and_comm.

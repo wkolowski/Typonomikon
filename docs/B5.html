@@ -71,11 +71,11 @@
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ <span class="id" title="var">xor</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">xor_sym</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">xor_comm</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">xor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">xor</span> <span class="id" title="var">Q</span> <span class="id" title="var">P</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">xor_sym'</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">xor_comm'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">xor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">xor</span> <span class="id" title="var">Q</span> <span class="id" title="var">P</span>.<br/>
 
 <br/>
@@ -210,11 +210,145 @@
 </div>
 
 <div class="doc">
-<a id="lab130"></a><h2 class="section">Wymyśl to sam... (TODO)</h2>
+<a id="lab130"></a><h2 class="section">Słaba dysjunkcja</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">wor</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor_or</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">cor_wor</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">cor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor_introl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; <span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor_intror</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor_False_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor</span> <span class="id" title="var">False</span> <span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor_False_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">False</span> &lt;-&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor_True_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor</span> <span class="id" title="var">True</span> <span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">True</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor_True_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">True</span> &lt;-&gt; <span class="id" title="var">True</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor</span> (<span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>) <span class="id" title="var">R</span> &lt;-&gt; <span class="id" title="var">wor</span> <span class="id" title="var">P</span> (<span class="id" title="var">wor</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">wor</span> <span class="id" title="var">Q</span> <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab131"></a><h2 class="section">Słaba dysjunkcja v2</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">wor2</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := (~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) \/ (~ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor2_or</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">cor_wor2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">cor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor_wor2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor2_wor</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor2_introl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; <span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor2_intror</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor2_False_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor2</span> <span class="id" title="var">False</span> <span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor2_False_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">False</span> &lt;-&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor2_True_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor2</span> <span class="id" title="var">True</span> <span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">True</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor2_True_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">True</span> &lt;-&gt; <span class="id" title="var">True</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor2_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">wor2</span> <span class="id" title="var">Q</span> <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wor2_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor2</span> (<span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>) <span class="id" title="var">R</span> &lt;-&gt; <span class="id" title="var">wor2</span> <span class="id" title="var">P</span> (<span class="id" title="var">wor2</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab132"></a><h2 class="section">Wymyśl to sam... (TODO)</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab131"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab133"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -224,18 +358,17 @@
 
 <div class="paragraph"> </div>
 
-    Zastanów się, czy taki spójnik ma sens matematyczny, czy
-    nadaje się do użytku jedynie w językach naturalnych. Da
-    się go jakoś wyrazić za pomocą znanych nam spójników, czy
-    nie bardzo? Twój spójnik jest fajny czy głupi? Użyteczny
-    czy głupi? 
+    Zastanów się, czy taki spójnik ma sens matematyczny, czy nadaje się do
+    użytku jedynie w językach naturalnych. Da się go jakoś wyrazić za pomocą
+    znanych nam spójników, czy nie bardzo? Twój spójnik jest fajny czy głupi?
+    Użyteczny czy bezużyteczny? 
 <div class="paragraph"> </div>
 
-<a id="lab132"></a><h1 class="section">Porównanie logiki konstruktywnej i klasycznej (TODO)</h1>
+<a id="lab134"></a><h1 class="section">Porównanie logiki konstruktywnej i klasycznej (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab133"></a><h1 class="section">Inne logiki?</h1>
+<a id="lab135"></a><h1 class="section">Inne logiki?</h1>
 
 <div class="paragraph"> </div>
 
@@ -258,7 +391,7 @@
     znać warto. 
 <div class="paragraph"> </div>
 
-<a id="lab134"></a><h2 class="section">Logiki (sub- i super-)intuicjonistyczne oraz logiki pośrednie</h2>
+<a id="lab136"></a><h2 class="section">Logiki (sub- i super-)intuicjonistyczne oraz logiki pośrednie</h2>
 
 <div class="paragraph"> </div>
 
@@ -348,7 +481,7 @@
     Frankensteina, co? 
 <div class="paragraph"> </div>
 
-<a id="lab135"></a><h2 class="section">Logiki modalne</h2>
+<a id="lab137"></a><h2 class="section">Logiki modalne</h2>
 
 <div class="paragraph"> </div>
 
@@ -557,7 +690,7 @@
     jeszcze parę innych logik. 
 <div class="paragraph"> </div>
 
-<a id="lab136"></a><h2 class="section">Logiki substrukturalne - kwantowa teoria relewantnego hajsu</h2>
+<a id="lab138"></a><h2 class="section">Logiki substrukturalne - kwantowa teoria relewantnego hajsu</h2>
 
 <div class="paragraph"> </div>
 
@@ -876,7 +1009,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     https://github.com/wkolowski/Typonomikon/blob/master/txt/substrukturalne.md 
 <div class="paragraph"> </div>
 
-<a id="lab137"></a><h2 class="section">Logiki wielowartościowe</h2>
+<a id="lab139"></a><h2 class="section">Logiki wielowartościowe</h2>
 
 <div class="paragraph"> </div>
 
@@ -984,7 +1117,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     będziemy jednak drążyć tego tematu. 
 <div class="paragraph"> </div>
 
-<a id="lab138"></a><h2 class="section">Logika szalonego Gruzina</h2>
+<a id="lab140"></a><h2 class="section">Logika szalonego Gruzina</h2>
 
 <div class="paragraph"> </div>
 
@@ -1074,11 +1207,11 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     kontynuuj czytanie niniejszej książki, zamiast gonić za Gruzinem. 
 <div class="paragraph"> </div>
 
-<a id="lab139"></a><h1 class="section">Logiki pośrednie (TODO)</h1>
+<a id="lab141"></a><h1 class="section">Logiki pośrednie (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab140"></a><h2 class="section">Logika słabego wyłączonego środka (TODO)</h2>
+<a id="lab142"></a><h2 class="section">Logika słabego wyłączonego środka (TODO)</h2>
 
 </div>
 <div class="code">
@@ -1143,7 +1276,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab141"></a><h2 class="section">Logika de Morgana (TODO)</h2>
+<a id="lab143"></a><h2 class="section">Logika de Morgana (TODO)</h2>
 
 </div>
 <div class="code">
@@ -1190,11 +1323,11 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab142"></a><h2 class="section">Inne mało ważne logiki pośrednie</h2>
+<a id="lab144"></a><h2 class="section">Inne mało ważne logiki pośrednie</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab143"></a><h3 class="section">Negacja implikacji (TODO)</h3>
+<a id="lab145"></a><h3 class="section">Negacja implikacji (TODO)</h3>
 
 </div>
 <div class="code">
@@ -1211,7 +1344,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab144"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">IOR</span></span></h3>
+<a id="lab146"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">IOR</span></span></h3>
 
 </div>
 <div class="code">
@@ -1229,7 +1362,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab145"></a><h3 class="section">Godel-Dummet (TODO)</h3>
+<a id="lab147"></a><h3 class="section">Godel-Dummet (TODO)</h3>
 
 </div>
 <div class="code">
@@ -1274,7 +1407,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab146"></a><h3 class="section">Double negation shift (TODO)</h3>
+<a id="lab148"></a><h3 class="section">Double negation shift (TODO)</h3>
 
 <div class="paragraph"> </div>
 
@@ -1298,7 +1431,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab147"></a><h1 class="section">Logika modalna</h1>
+<a id="lab149"></a><h1 class="section">Logika modalna</h1>
 
 <div class="paragraph"> </div>
 
@@ -1372,7 +1505,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     i potrafimy, ćwiczenie: 
 <div class="paragraph"> </div>
 
-<a id="lab148"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab150"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1401,7 +1534,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab149"></a><h2 class="section">Modalność neutralna: nasza ulubiona</h2>
+<a id="lab151"></a><h2 class="section">Modalność neutralna: nasza ulubiona</h2>
 
 <div class="paragraph"> </div>
 
@@ -1422,7 +1555,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     ... 
 <div class="paragraph"> </div>
 
-<a id="lab150"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab152"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1446,7 +1579,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab151"></a><h2 class="section">Modalność trywialna: meh...</h2>
+<a id="lab153"></a><h2 class="section">Modalność trywialna: meh...</h2>
 
 <div class="paragraph"> </div>
 
@@ -1456,7 +1589,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     diabły i zamiast tego mówimy <span class="inlinecode"><span class="id" title="var">True</span></span>. Wot, modalność jak znalazł. 
 <div class="paragraph"> </div>
 
-<a id="lab152"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab154"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1480,7 +1613,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab153"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab155"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1503,7 +1636,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab154"></a><h2 class="section">Modalność wymówkowa: pies zjadł mi dowód... :(</h2>
+<a id="lab156"></a><h2 class="section">Modalność wymówkowa: pies zjadł mi dowód... :(</h2>
 
 <div class="paragraph"> </div>
 
@@ -1587,7 +1720,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     zjadł mi dowód lub pada deszcz". 
 <div class="paragraph"> </div>
 
-<a id="lab155"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab157"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1614,7 +1747,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab156"></a><h2 class="section">Modalność klasyczna: logika klasyczna jako logika modalna</h2>
+<a id="lab158"></a><h2 class="section">Modalność klasyczna: logika klasyczna jako logika modalna</h2>
 
 <div class="paragraph"> </div>
 
@@ -1642,7 +1775,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     używany. Cóż... ci głupcy nie wiedzą, co tracą. 
 <div class="paragraph"> </div>
 
-<a id="lab157"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab159"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1666,7 +1799,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab158"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab160"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1692,7 +1825,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 </div>
 
 <div class="doc">
-<a id="lab159"></a><h2 class="section">Modalność aksjomatyczna</h2>
+<a id="lab161"></a><h2 class="section">Modalność aksjomatyczna</h2>
 
 <div class="paragraph"> </div>
 
@@ -1717,7 +1850,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     zachodzą wszystkie potrzebne prawa. 
 <div class="paragraph"> </div>
 
-<a id="lab160"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab162"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1756,7 +1889,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
     równoważne <span class="inlinecode"><span class="id" title="var">P</span></span>. 
 <div class="paragraph"> </div>
 
-<a id="lab161"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab163"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1773,7 +1906,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a id="lab162"></a><h2 class="section">Modalność niezaprzeczalna</h2>
+<a id="lab164"></a><h2 class="section">Modalność niezaprzeczalna</h2>
 
 <div class="paragraph"> </div>
 
@@ -1835,7 +1968,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
     zaprzeczenie. 
 <div class="paragraph"> </div>
 
-<a id="lab163"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab165"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1859,7 +1992,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a id="lab164"></a><h2 class="section">Modalność pośrednia</h2>
+<a id="lab166"></a><h2 class="section">Modalność pośrednia</h2>
 
 <div class="paragraph"> </div>
 
@@ -1937,7 +2070,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 
 <div class="paragraph"> </div>
 
-<a id="lab165"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab167"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -1963,7 +2096,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a id="lab166"></a><h2 class="section">Modalność wszechpośrednia</h2>
+<a id="lab168"></a><h2 class="section">Modalność wszechpośrednia</h2>
 
 <div class="paragraph"> </div>
 
@@ -1999,7 +2132,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
     to mówimy to samo, czy coś innego? 
 <div class="paragraph"> </div>
 
-<a id="lab167"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab169"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2017,7 +2150,7 @@ Wypadałoby jeszcze wyjaśnić, dlaczego modalność aksjomatyczną
 </div>
 
 <div class="doc">
-<a id="lab168"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab170"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2070,7 +2203,7 @@ Wniosek płynący z powyższych ćwiczeń jest prosty (zrobiłeś je,
     a modalność tę będziemy nazywać modalnością wszechpośrednią. 
 <div class="paragraph"> </div>
 
-<a id="lab169"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab171"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2158,7 +2291,7 @@ No dobra, dowody dowodami, ćwiczenia ćwiczeniami, ale o co tak
     pierwszy rzut oka wydawać. 
 <div class="paragraph"> </div>
 
-<a id="lab170"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab172"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2260,7 +2393,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     są tutaj potrzebne. 
 <div class="paragraph"> </div>
 
-<a id="lab171"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab173"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2297,7 +2430,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab172"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab174"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2319,7 +2452,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab173"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab175"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2353,7 +2486,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab174"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab176"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2377,7 +2510,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab175"></a><h2 class="section">Dodatkowe prawa modalności</h2>
+<a id="lab177"></a><h2 class="section">Dodatkowe prawa modalności</h2>
 
 </div>
 <div class="code">
@@ -2468,7 +2601,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab176"></a><h2 class="section">Związki między modalnościami</h2>
+<a id="lab178"></a><h2 class="section">Związki między modalnościami</h2>
 
 <div class="paragraph"> </div>
 
@@ -2490,7 +2623,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     neutralna. 
 <div class="paragraph"> </div>
 
-<a id="lab177"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab179"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2511,7 +2644,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab178"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab180"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2546,7 +2679,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab179"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab181"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2595,7 +2728,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab180"></a><h2 class="section">Składanie modalności</h2>
+<a id="lab182"></a><h2 class="section">Składanie modalności</h2>
 
 <div class="paragraph"> </div>
 
@@ -2622,7 +2755,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
     Coby nie przynudzać, zobaczmy jak wygląda to w praktyce. 
 <div class="paragraph"> </div>
 
-<a id="lab181"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab183"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2650,7 +2783,7 @@ Jakiż wniosek płynie z ćwiczenia? Ano, ponieważ udało nam się
 </div>
 
 <div class="doc">
-<a id="lab182"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab184"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2699,7 +2832,7 @@ Twór z pierwszego ćwiczenia możemy nazwać modalnością klasycznie
     <span class="inlinecode"><span class="id" title="var">M</span></span> i <span class="inlinecode"><span class="id" title="var">N</span></span> nie musi być tym samym, co złożenie modalności <span class="inlinecode"><span class="id" title="var">N</span></span> i <span class="inlinecode"><span class="id" title="var">M</span></span>. 
 <div class="paragraph"> </div>
 
-<a id="lab183"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab185"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2723,7 +2856,7 @@ Twór z pierwszego ćwiczenia możemy nazwać modalnością klasycznie
 </div>
 
 <div class="doc">
-<a id="lab184"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab186"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -2773,7 +2906,7 @@ Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
     zbytno interesować. 
 <div class="paragraph"> </div>
 
-<a id="lab185"></a><h2 class="section">Podsumowanie</h2>
+<a id="lab187"></a><h2 class="section">Podsumowanie</h2>
 
 <div class="paragraph"> </div>
 
@@ -2828,7 +2961,7 @@ Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
     ściągę: https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/modalno%C5%9Bci.md 
 <div class="paragraph"> </div>
 
-<a id="lab186"></a><h1 class="section">Pluralizm logiczny</h1>
+<a id="lab188"></a><h1 class="section">Pluralizm logiczny</h1>
 
 <div class="paragraph"> </div>
 
@@ -2948,11 +3081,11 @@ Czas zakończyć niniejszy podrozdział, albowiem składanie modalności
     się nią posługiwać. 
 <div class="paragraph"> </div>
 
-<a id="lab187"></a><h1 class="section">Zadania (TODO)</h1>
+<a id="lab189"></a><h1 class="section">Zadania (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab188"></a><h1 class="section">Jakieś podsumowanie (TODO)</h1>
+<a id="lab190"></a><h1 class="section">Jakieś podsumowanie (TODO)</h1>
 
 <div class="paragraph"> </div>
 

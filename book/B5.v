@@ -60,7 +60,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma xor_sym :
+Lemma xor_comm :
   forall P Q : Prop, xor P Q -> xor Q P.
 (* begin hide *)
 Proof.
@@ -71,11 +71,11 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma xor_sym' :
+Lemma xor_comm' :
   forall P Q : Prop, xor P Q <-> xor Q P.
 (* begin hide *)
 Proof.
-  split; apply xor_sym.
+  split; apply xor_comm.
 Qed.
 (* end hide *)
 
@@ -100,7 +100,7 @@ Lemma xor_assoc :
     xor P (xor Q R) <-> xor (xor P Q) R.
 (* begin hide *)
 Proof.
-  unfold xor. split.
+  unfold xor. split. firstorder.
     firstorder.
 Abort.
 (* end hide *)
@@ -171,7 +171,7 @@ Lemma xor_False_l :
 (* begin hide *)
 Proof.
   split.
-    intro x. apply xor_sym in x. apply xor_False_r. assumption.
+    intro x. apply xor_comm in x. apply xor_False_r. assumption.
     intro p. unfold xor. right. split.
       intro f. contradiction.
       assumption.
@@ -363,6 +363,257 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Słaba dysjunkcja *)
+
+Definition wor (P Q : Prop) : Prop := ~ P -> Q.
+
+Lemma wor_or :
+  forall P Q : Prop,
+    P \/ Q -> wor P Q.
+(* begin hide *)
+Proof.
+  unfold wor. intros P Q [p | q] np.
+  - contradiction.
+  - assumption.
+Qed.
+(* end hide *)
+
+Lemma cor_wor :
+  forall P Q : Prop,
+    wor P Q -> cor P Q.
+(* begin hide *)
+Proof.
+  unfold wor, cor.
+  intros P Q f npq. apply npq. right. apply f.
+  intros p. apply npq. left. assumption.
+Qed.
+(* end hide *)
+
+Lemma wor_introl :
+  forall P Q : Prop,
+    P -> wor P Q.
+(* begin hide *)
+Proof.
+  unfold wor. intros P Q p np. contradiction.
+Qed.
+(* end hide *)
+
+Lemma wor_intror :
+  forall P Q : Prop,
+    Q -> wor P Q.
+(* begin hide *)
+Proof.
+  unfold wor. intros P Q q _. assumption.
+Qed.
+(* end hide *)
+
+Lemma wor_False_l :
+  forall P : Prop,
+    wor False P <-> P.
+(* begin hide *)
+Proof.
+  unfold wor. intros P; split.
+  - intros p. apply p. intros f. contradiction.
+  - intros p _. assumption.
+Qed.
+(* end hide *)
+
+Lemma wor_False_r :
+  forall P : Prop,
+    wor P False <-> P.
+(* begin hide *)
+Proof.
+  unfold wor. intros P; split.
+  - admit.
+  - intros p np. contradiction.
+Admitted.
+(* end hide *)
+
+Lemma wor_True_l :
+  forall P : Prop,
+    wor True P <-> True.
+(* begin hide *)
+Proof.
+  unfold wor. intros P; split.
+  - intros _. trivial.
+  - intros _ nt. contradiction.
+Qed.
+(* end hide *)
+
+Lemma wor_True_r :
+  forall P : Prop,
+    wor P True <-> True.
+(* begin hide *)
+Proof.
+  unfold wor. intros P; split; intros _; trivial.
+Qed.
+(* end hide *)
+
+Lemma wor_assoc :
+  forall P Q R : Prop,
+    wor (wor P Q) R <-> wor P (wor Q R).
+(* begin hide *)
+Proof.
+  unfold wor. intros P Q R; split.
+  - intros f np nq. apply f. intros g. apply nq, g. assumption.
+  - intros f ng. apply f.
+    + intros p. apply ng. intros np. contradiction.
+    + intros q. apply ng. intros _. assumption.
+Qed.
+(* end hide *)
+
+Lemma wor_comm :
+  forall P Q : Prop,
+    wor P Q <-> wor Q P.
+(* begin hide *)
+Proof.
+  unfold wor. intros P Q. split.
+  - intros f nq. contradict nq. apply f. intros p. admit. (* tabu. *)
+  - admit.
+Admitted.
+(* end hide *)
+
+(** ** Słaba dysjunkcja v2 *)
+
+Definition wor2 (P Q : Prop) : Prop := (~ P -> Q) \/ (~ Q -> P).
+
+Lemma wor2_or :
+  forall P Q : Prop,
+    P \/ Q -> wor2 P Q.
+(* begin hide *)
+Proof.
+  unfold wor2. intros P Q [p | q].
+  - right. intros _. assumption.
+  - left. intros _. assumption.
+Qed.
+(* end hide *)
+
+Lemma cor_wor2 :
+  forall P Q : Prop,
+    wor2 P Q -> cor P Q.
+(* begin hide *)
+Proof.
+  unfold wor2, cor.
+  intros P Q [f | f] npq.
+  - apply npq. right. apply f. intros p. apply npq. left. assumption.
+  - apply npq. left. apply f. intros p. apply npq. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma wor_wor2 :
+  forall P Q : Prop,
+    wor2 P Q -> wor P Q.
+(* begin hide *)
+Proof.
+  unfold wor2, wor.
+  intros P Q [f | f] npq.
+  - apply f. assumption.
+  - contradict npq. apply f. intros q. admit.
+Admitted.
+(* end hide *)
+
+Lemma wor2_wor :
+  forall P Q : Prop,
+    wor P Q -> wor2 P Q.
+(* begin hide *)
+Proof.
+  unfold wor2, wor.
+  intros P Q f. left. assumption.
+Qed.
+(* end hide *)
+
+Lemma wor2_introl :
+  forall P Q : Prop,
+    P -> wor2 P Q.
+(* begin hide *)
+Proof.
+  unfold wor2. intros P Q p. right. intros _. assumption.
+Qed.
+(* end hide *)
+
+Lemma wor2_intror :
+  forall P Q : Prop,
+    Q -> wor2 P Q.
+(* begin hide *)
+Proof.
+  unfold wor2. intros P Q q. left. intros _. assumption.
+Qed.
+(* end hide *)
+
+Lemma wor2_False_l :
+  forall P : Prop,
+    wor2 False P <-> P.
+(* begin hide *)
+Proof.
+  unfold wor2. intros P; split.
+  - intros [p | f].
+    + apply p. intros f. contradiction.
+    + admit.
+  - intros p. left. intros _. assumption.
+Admitted.
+(* end hide *)
+
+Lemma wor2_False_r :
+  forall P : Prop,
+    wor2 P False <-> P.
+(* begin hide *)
+Proof.
+  unfold wor2. intros P; split.
+  - intros [nnp | p].
+    + admit.
+    + apply p. intros f. assumption.
+  - intros p. right. intros _. assumption.
+Admitted.
+(* end hide *)
+
+Lemma wor2_True_l :
+  forall P : Prop,
+    wor2 True P <-> True.
+(* begin hide *)
+Proof.
+  unfold wor2. intros P; split.
+  - intros _. trivial.
+  - intros _. right. intros _. trivial.
+Qed.
+(* end hide *)
+
+Lemma wor2_True_r :
+  forall P : Prop,
+    wor2 P True <-> True.
+(* begin hide *)
+Proof.
+  unfold wor2. intros P; split; intros _.
+  - trivial.
+  - left. intros _. trivial.
+Qed.
+(* end hide *)
+
+Lemma wor2_comm :
+  forall P Q : Prop,
+    wor2 P Q <-> wor2 Q P.
+(* begin hide *)
+Proof.
+  unfold wor2. intros P Q. split.
+  - intros [q | p]; [right | left]; assumption.
+  - intros [p | q]; [right | left]; assumption.
+Qed.
+(* end hide *)
+
+Lemma wor2_assoc :
+  forall P Q R : Prop,
+    wor2 (wor2 P Q) R <-> wor2 P (wor2 Q R).
+(* begin hide *)
+Proof.
+  intros P Q R. split.
+  - intros [nr | npq].
+    + admit.
+    + red. left. intros np. red. right. intros nr.
+      destruct (npq nr) as [q | p].
+      * apply q. assumption.
+      * contradict np. apply p. intros q.
+Abort.
+(* end hide *)
+
 (** ** Wymyśl to sam... (TODO) *)
 
 (** **** Ćwiczenie *)
@@ -371,11 +622,10 @@ Qed.
     spójniki logiczne, których nie ma w logice konstruktywnej
     ani klasycznej.
 
-    Zastanów się, czy taki spójnik ma sens matematyczny, czy
-    nadaje się do użytku jedynie w językach naturalnych. Da
-    się go jakoś wyrazić za pomocą znanych nam spójników, czy
-    nie bardzo? Twój spójnik jest fajny czy głupi? Użyteczny
-    czy głupi? *)
+    Zastanów się, czy taki spójnik ma sens matematyczny, czy nadaje się do
+    użytku jedynie w językach naturalnych. Da się go jakoś wyrazić za pomocą
+    znanych nam spójników, czy nie bardzo? Twój spójnik jest fajny czy głupi?
+    Użyteczny czy bezużyteczny? *)
 
 (** * Porównanie logiki konstruktywnej i klasycznej (TODO) *)
 
