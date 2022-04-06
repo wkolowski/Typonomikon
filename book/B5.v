@@ -363,6 +363,37 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Silna implikacja *)
+
+Definition simpl (P Q : Prop) : Prop := ~ P \/ Q.
+
+Lemma simpl_impl_impl :
+  forall P Q : Prop,
+    simpl P Q -> (P -> Q).
+(* begin hide *)
+Proof.
+  unfold simpl. intros P Q [np | q] p.
+  - contradiction.
+  - assumption.
+Qed.
+(* end hide *)
+
+Lemma simpl_simpl_impl :
+  LEM ->
+    forall P Q : Prop,
+      simpl (simpl P Q) (P -> Q).
+(* begin hide *)
+Proof.
+  unfold LEM, simpl.
+  intros lem P Q.
+  destruct (lem P) as [p | np], (lem Q) as [q | nq].
+  - right. intros _. assumption.
+  - left. intros [np | q]; contradiction.
+  - right. intros _. assumption.
+  - right. intros p. contradiction.
+Qed.
+(* end hide *)
+
 (** ** Słaba dysjunkcja *)
 
 Definition wor (P Q : Prop) : Prop := ~ P -> Q.
@@ -612,6 +643,121 @@ Proof.
       * apply q. assumption.
       * contradict np. apply p. intros q.
 Abort.
+(* end hide *)
+
+(** ** Silna równoważność *)
+
+Definition siff (P Q : Prop) : Prop := P /\ Q \/ ~ P /\ ~ Q.
+
+Lemma iff_siff :
+  forall P Q : Prop,
+    siff P Q -> P <-> Q.
+(* begin hide *)
+Proof.
+  unfold siff. intros P Q [[p q] | [np nq]].
+  - split; intros _; assumption.
+  - split; intros; contradiction.
+Qed.
+(* end hide *)
+
+Lemma siff_iff :
+  LEM ->
+    forall P Q : Prop,
+      P <-> Q -> siff P Q.
+(* begin hide *)
+Proof.
+  unfold LEM, siff.
+  intros lem P Q [pq qp].
+  destruct (lem P) as [p | np], (lem Q) as [q | nq].
+  - left. split; assumption.
+  - contradiction nq. apply pq. assumption.
+  - contradiction np. apply qp. assumption.
+  - right. split; assumption.
+Qed.
+(* end hide *)
+
+Lemma siff_iff_iff :
+  LEM ->
+    forall P Q : Prop,
+      P <-> Q <-> siff P Q.
+(* begin hide *)
+Proof.
+  unfold LEM, siff.
+  intros lem P Q. split.
+  - apply siff_iff. assumption.
+  - apply iff_siff.
+Qed.
+(* end hide *)
+
+Lemma siff_siff_iff :
+  LEM ->
+    forall P Q : Prop,
+      siff (siff P Q) (P <-> Q).
+(* begin hide *)
+Proof.
+  unfold LEM, siff.
+  intros lem P Q.
+  destruct (lem P) as [p | np], (lem Q) as [q | nq].
+  - left. split.
+    + left. split; assumption.
+    + split; intros _; assumption.
+  - right. split.
+    + intros [[] | []]; contradiction.
+    + intros [pq qp]. contradict nq. apply pq. assumption.
+  - right. split.
+    + intros [[] | []]; contradiction.
+    + intros [pq qp]. contradict np. apply qp. assumption.
+  - left. split.
+    + right. split; assumption.
+    + split; intros; contradiction.
+Qed.
+(* end hide *)
+
+Lemma siff_xor :
+  forall P Q : Prop,
+    siff P Q -> xor P Q -> False.
+(* begin hide *)
+Proof.
+  unfold siff, xor.
+  intros P Q [[p q] | [np nq]] [[p' nq'] | [np' q']]; contradiction.
+Qed.
+(* end hide *)
+
+Lemma siff_id :
+  LEM ->
+    forall P : Prop,
+      siff P P.
+(* begin hide *)
+Proof.
+  unfold LEM, siff.
+  intros lem P.
+  destruct (lem P) as [p | np].
+  - left. split; assumption.
+  - right. split; assumption.
+Qed.
+(* end hide *)
+
+Lemma siff_comm :
+  LEM ->
+    forall P Q : Prop,
+      siff (siff P Q) (siff Q P).
+(* begin hide *)
+Proof.
+  unfold LEM, siff.
+  intros lem P Q.
+  destruct (lem P) as [p | np], (lem Q) as [q | nq]; firstorder.
+Qed.
+(* end hide *)
+
+Lemma siff_assoc :
+  LEM ->
+    forall P Q R : Prop,
+      siff (siff (siff P Q) R) (siff P (siff Q R)).
+(* begin hide *)
+Proof.
+  unfold LEM, siff.
+  intros lem P Q R. tauto.
+Qed.
 (* end hide *)
 
 (** ** Wymyśl to sam... (TODO) *)
