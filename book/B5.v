@@ -206,6 +206,205 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Negacja dysjunkcji *)
+
+Definition nor (P Q : Prop) : Prop := ~ (P \/ Q).
+
+Lemma nor_comm :
+  forall P Q : Prop,
+    nor P Q <-> nor Q P.
+(* begin hide *)
+Proof.
+  unfold nor.
+  intros P. split.
+  - intros f [q | p]; apply f; [right | left]; assumption.
+  - intros f [p | q]; apply f; [right | left]; assumption.
+Qed.
+(* end hide *)
+
+Lemma nor_assoc :
+  forall P Q R : Prop,
+    nor (nor P Q) R <-> nor P (nor Q R).
+(* begin hide *)
+Proof.
+  unfold nor.
+  intros P Q R; split.
+  - intros f [p | ngr].
+    + apply f. left. intros [_ | q].
+      *
+Admitted.
+(* end hide *)
+
+Lemma nor_True_l :
+  forall P : Prop,
+    nor True P <-> False.
+(* begin hide *)
+Proof.
+  unfold nor.
+  intros P. split.
+  - intros f. apply f. left. trivial.
+  - contradiction.
+Qed.
+(* end hide *)
+
+Lemma nor_True_r :
+  forall P : Prop,
+    nor P True <-> False.
+(* begin hide *)
+Proof.
+  intros. rewrite nor_comm. apply nor_True_l.
+Qed.
+(* end hide *)
+
+Lemma nor_False_l :
+  forall P : Prop,
+    nor False P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nor.
+  split.
+  - intros f p. apply f. right. assumption.
+  - intros np [f | p]; contradiction.
+Qed.
+(* end hide *)
+
+Lemma nor_False_r :
+  forall P : Prop,
+    nor P False <-> ~ P.
+(* begin hide *)
+Proof.
+  intros. rewrite nor_comm. apply nor_False_l.
+Qed.
+(* end hide *)
+
+Lemma nor_antiidempotent :
+  forall P : Prop,
+    nor P P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nor. split.
+  - intros f p. apply f. left. assumption.
+  - intros f [p | p]; contradiction.
+Qed.
+(* end hide *)
+
+(** ** Negacja koniunkcji *)
+
+Definition nand (P Q : Prop) : Prop := ~ (P /\ Q).
+
+Lemma nand_comm :
+  forall P Q : Prop,
+    nand P Q <-> nand Q P.
+(* begin hide *)
+Proof.
+  unfold nand.
+  intros P. split.
+  - intros f [q p]. apply f; split; assumption.
+  - intros f [p q]. apply f; split; assumption.
+Qed.
+(* end hide *)
+
+Lemma nand_assoc :
+  forall P Q R : Prop,
+    nand (nand P Q) R <-> nand P (nand Q R).
+(* begin hide *)
+Proof.
+  unfold nand.
+  intros P Q R; split.
+  - intros f [p g]. apply f. split.
+    + intros [_ q]. admit.
+    + admit.
+  - intros f [g r]. apply f. split.
+    + admit.
+    + intros [q _]. apply f. admit.
+Admitted.
+(* end hide *)
+
+Lemma nand_True_l :
+  forall P : Prop,
+    nand True P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nand.
+  intros P. split.
+  - intros f p. apply f. split; trivial.
+  - intros np [_ p]. contradiction.
+Qed.
+(* end hide *)
+
+Lemma nand_True_r :
+  forall P : Prop,
+    nand P True <-> ~ P.
+(* begin hide *)
+Proof.
+  intros. rewrite nand_comm. apply nand_True_l.
+Qed.
+(* end hide *)
+
+Lemma nand_False_l' :
+  forall P : Prop,
+    nand False P.
+(* begin hide *)
+Proof.
+  unfold nand. intros P [[] _].
+Qed.
+(* end hide *)
+
+Lemma nand_False_l :
+  forall P : Prop,
+    nand False P <-> True.
+(* begin hide *)
+Proof.
+  split; intros.
+  - trivial.
+  - apply nand_False_l'.
+Qed.
+(* end hide *)
+
+Lemma nand_False_r :
+  forall P : Prop,
+    nand P False <-> True.
+(* begin hide *)
+Proof.
+  intros. rewrite nand_comm. apply nand_False_l.
+Qed.
+(* end hide *)
+
+Lemma nand_antiidempotent :
+  forall P : Prop,
+    nand P P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nand. split.
+  - intros f p. apply f. split; assumption.
+  - intros np [p _]. contradiction.
+Qed.
+(* end hide *)
+
+(** ** Słaba koniunkcja *)
+
+Definition aand (P Q : Prop) : Prop := ~ (~ P \/ ~ Q).
+
+Lemma aand_and :
+  forall P Q : Prop,
+    aand P Q -> P /\ Q.
+Proof.
+  unfold aand.
+  intros P Q f. split.
+Abort.
+
+Lemma and_aand :
+  forall P Q : Prop,
+    P /\ Q -> aand P Q.
+(* begin hide *)
+Proof.
+  unfold aand.
+  intros P Q [p q] [np | nq].
+  - apply np. assumption.
+  - apply nq. assumption.
+Qed.
+(* end hide *)
+
 (** ** Klasyczna dysjunkcja (TODO) *)
 
 Definition cor (P Q : Prop) : Prop :=
@@ -2071,11 +2270,11 @@ Qed.
     dowodzenia w Coqu w jakiejś zapomnianej przez Boga szkole w
     Pcimiu Dolnym:
     - (N)auczycielka: Jasiu, zrobiłeś zadanie domowe?
-    - (J)asiu: tak, psze pani.
-    - N: pokaż.
+    - (J)asiu: Tak, psze pani.
+    - N: Pokaż.
     - J: Hmmm, yhm, uhm, eeee...
-    - N: czyli nie zrobiłeś.
-    - J: zrobiłem, ale pies mi zjadł.
+    - N: Czyli nie zrobiłeś.
+    - J: Zrobiłem, ale pies mi zjadł.
 
     Z dialogu jasno wynika, że Jasiu nie zrobił zadania, co jednak nie
     przeszkadza mu w pokrętny sposób twierdzić, że zrobił. Ten pokrętny
@@ -2085,9 +2284,9 @@ Qed.
     rzut oka pachnie modalnością. Coś jest na rzeczy, wszakże podanie
     wymówki jest całkiem sprytnym sposobem na uzasadnienie każdego
     zdania:
-    - Mam dowód fałszu!
-    - Pokaż.
-    - Sorry, pies mi zjadł.
+    - Prawdziwy wyznawca: Mam dowód fałszu!
+    - Sceptyk: Pokaż.
+    - Prawdziwy wyznawca: Sorry, pies mi zjadł.
 
     Musimy pamiętać tylko o dwóch ważnych szczegółach całego procederu.
     Po pierwsze, nasza wymówka musi być uniwersalna, czyli musimy się
@@ -2101,13 +2300,12 @@ Qed.
     dowodzić, bo państwo Izrael bezprawnie okupuje Palestynę"... i
     wiele innych.
 
-    Jak można tę modalność zareprezentować formalnie w Coqu? Jeżeli
-    [E] jest naszą wymówką, np. "Pies zjadł mi dowód", zaś [P]
-    właściwym zdaniem, np. "Pada deszcz", to możemy połączyć je za
-    pomocą dysjunkcji, otrzymując [P \/ E], czyli "Pada deszcz lub
-    pies zjadł mi dowód". Jednak ze względu na pewne tradycje
-    modalność tę będziemy reprezentować jako [E \/ P], czyli "Pies
-    zjadł mi dowód lub pada deszcz". *)
+    Jak można tę modalność zareprezentować formalnie w Coqu? Jeżeli [E] jest
+    naszą wymówką, np. "Pies zjadł mi dowód", zaś [P] właściwym zdaniem, np.
+    "Pada deszcz", to możemy połączyć je za pomocą dysjunkcji, otrzymując
+    [P \/ E], czyli "Pada deszcz lub pies zjadł mi dowód". Jednak ze względu
+    na pewne głęboko zakorzenione tradycje kulturowe modalność tę będziemy
+    reprezentować jako [E \/ P], czyli "Pies zjadł mi dowód lub pada deszcz". *)
 
 (** **** Ćwiczenie *)
 
@@ -2317,7 +2515,7 @@ Qed.
     celu przyjrzyjmy się poniższym zdaniom:
     - [P] - po prostu stwierdzamy [P], modalność neutralna
     - [~ P] - zaprzeczamy/obalamy [P]. Można zatem powiedzieć, że [P]
-      jest zaprzeczalne. Pamiętajmy, że negacja nie jest modalnością.
+      jest zaprzeczalne. Pamiętajmy jednak, że negacja nie jest modalnością.
     - [~ ~ P] - zaprzeczamy/obalamy [~ P], czyli zaprzeczamy zaprzeczeniu
       [P]. Można zatem powiedzieć, że [P] jest niezaprzeczalne.
 
@@ -2618,7 +2816,7 @@ Qed.
       które konsekwencjami [P] nie są (bo są np. konsekwencjami [Q])
 
     Widzimy więc, że by zaszły wszystkie konsekwencje [P], to zachodzić
-    musi [P] (samo w sumie lub na mocy czegoś mocniejszego). Powinno to
+    musi [P] (samo w sobie lub na mocy czegoś mocniejszego). Powinno to
     być dla ciebie oczywiste, bo to właśnie głosi prawo
     [omnidirectly_law2].
 
