@@ -42,18 +42,36 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** i/lub po raz drugi (TODO)  *)
+
+Definition andor' (P Q : Prop) : Prop := P \/ Q \/ (P /\ Q).
+
+Lemma andor'_or :
+  forall P Q : Prop, andor' P Q <-> P \/ Q.
+(* begin hide *)
+Proof.
+  unfold andor'.
+  intros P Q; split.
+  - intros [p | [q | [p q]]].
+    + left. assumption.
+    + right. assumption.
+    + left. assumption.
+  - intros [p | q].
+    + left. assumption.
+    + right. left. assumption.
+Qed.
+(* end hide *)
+
 (** ** Różnica między "lub" i "albo" (TODO) *)
 
 Definition xor (A B : Prop) : Prop :=
   (A /\ ~ B) \/ (~ A /\ B).
 
-Ltac xor := unfold xor.
-
 Lemma xor_irrefl :
   forall P : Prop, ~ xor P P.
 (* begin hide *)
 Proof.
-  xor. intros A H.
+  unfold xor. intros A H.
   destruct H as [[p np] | [np p]].
     apply np. assumption.
     apply np. assumption.
@@ -64,7 +82,7 @@ Lemma xor_comm :
   forall P Q : Prop, xor P Q -> xor Q P.
 (* begin hide *)
 Proof.
-  xor. intros P Q H.
+  unfold xor. intros P Q H.
   destruct H as [[p nq] | [q np]].
     right. split; assumption.
     left. split; assumption.
@@ -206,9 +224,22 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Negacja dysjunkcji *)
+(** ** Ani [P] ani [Q], czyli negacja dysjunkcji *)
 
 Definition nor (P Q : Prop) : Prop := ~ (P \/ Q).
+Definition nor' (P Q : Prop) : Prop := ~ P /\ ~ Q.
+
+Lemma nor_nor' :
+  forall P Q : Prop, nor P Q <-> nor' P Q.
+(* begin hide *)
+Proof.
+  unfold nor, nor'; split.
+  - intros f. split.
+    + intros p. apply f. left. assumption.
+    + intros q. apply f. right. assumption.
+  - intros [np nq] [p | q]; contradiction.
+Qed.
+(* end hide *)
 
 Lemma nor_comm :
   forall P Q : Prop,
@@ -222,17 +253,13 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma nor_assoc :
-  forall P Q R : Prop,
-    nor (nor P Q) R <-> nor P (nor Q R).
+Lemma not_nor_assoc :
+  exists P Q R : Prop,
+    nor' (nor' P Q) R /\ ~ nor' P (nor' Q R).
 (* begin hide *)
 Proof.
-  unfold nor.
-  intros P Q R; split.
-  - intros f [p | ngr].
-    + apply f. left. intros [_ | q].
-      *
-Admitted.
+  unfold nor'. exists True, True, False. tauto.
+Qed.
 (* end hide *)
 
 Lemma nor_True_l :
@@ -304,20 +331,13 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma nand_assoc :
-  forall P Q R : Prop,
-    nand (nand P Q) R <-> nand P (nand Q R).
+Lemma not_nand_assoc :
+  exists P Q R : Prop,
+    nand (nand P Q) R /\ ~ nand P (nand Q R).
 (* begin hide *)
 Proof.
-  unfold nand.
-  intros P Q R; split.
-  - intros f [p g]. apply f. split.
-    + intros [_ q]. admit.
-    + admit.
-  - intros f [g r]. apply f. split.
-    + admit.
-    + intros [q _]. apply f. admit.
-Admitted.
+  unfold nand. exists True, True, False. tauto.
+Qed.
 (* end hide *)
 
 Lemma nand_True_l :
@@ -386,12 +406,21 @@ Qed.
 Definition aand (P Q : Prop) : Prop := ~ (~ P \/ ~ Q).
 
 Lemma aand_and :
-  forall P Q : Prop,
-    aand P Q -> P /\ Q.
+  LEM ->
+    forall P Q : Prop,
+      aand P Q -> P /\ Q.
+(* begin hide *)
 Proof.
-  unfold aand.
-  intros P Q f. split.
-Abort.
+  unfold LEM, aand.
+  intros lem P Q f; split.
+  - destruct (lem P) as [p | np].
+    + assumption.
+    + contradict f. left. assumption.
+  - destruct (lem Q) as [q | nq].
+    + assumption.
+    + contradict f. right. assumption.
+Qed.
+(* end hide *)
 
 Lemma and_aand :
   forall P Q : Prop,
@@ -414,7 +443,8 @@ Lemma cor_in_l :
   forall P Q : Prop, P -> cor P Q.
 (* begin hide *)
 Proof.
-  firstorder.
+  unfold cor. intros P Q p f.
+  apply f. left. assumption.
 Qed.
 (* end hide *)
 
@@ -422,7 +452,8 @@ Lemma cor_in_r :
   forall P Q : Prop, Q -> cor P Q.
 (* begin hide *)
 Proof.
-  firstorder.
+  unfold cor. intros P Q p f.
+  apply f. right. assumption.
 Qed.
 (* end hide *)
 
@@ -430,7 +461,17 @@ Lemma cor_assoc :
   forall P Q R : Prop, cor (cor P Q) R <-> cor P (cor Q R).
 (* begin hide *)
 Proof.
-  firstorder.
+  unfold cor. intros P Q; split; intros f g.
+  - apply f. intros h. apply g. right. intros i. destruct h as [nnpq | r].
+    + apply nnpq. intros [p | q].
+      * apply g. left. assumption.
+      * apply i. left. assumption.
+    + apply i. right. assumption.
+  - apply g. left. intros npq. apply f. intros [p | nnqr].
+    + apply npq. left. assumption.
+    + apply nnqr. intros [q | r].
+      * apply npq. right. assumption.
+      * apply g. right. assumption.
 Qed.
 (* end hide *)
 
@@ -438,7 +479,10 @@ Lemma cor_comm :
   forall P Q : Prop, cor P Q -> cor Q P.
 (* begin hide *)
 Proof.
-  firstorder.
+  unfold cor. intros P Q f g.
+  apply f. intros [p | q]; apply g.
+  - right. assumption.
+  - left. assumption.
 Qed.
 (* end hide *)
 
@@ -446,7 +490,9 @@ Lemma cor_True_l :
   forall P : Prop, cor True P <-> True.
 (* begin hide *)
 Proof.
-  firstorder.
+  unfold cor. intros P; split.
+  - intros _. trivial.
+  - intros _ f. apply f. left. trivial.
 Qed.
 (* end hide *)
 
@@ -454,7 +500,9 @@ Lemma cor_True_r :
   forall P : Prop, cor P True <-> True.
 (* begin hide *)
 Proof.
-  firstorder.
+  unfold cor. intros P; split.
+  - intros _. trivial.
+  - intros _ f. apply f. right. trivial.
 Qed.
 (* end hide *)
 
@@ -462,7 +510,9 @@ Lemma cor_False_l :
   forall P : Prop, cor False P <-> ~ ~ P.
 (* begin hide *)
 Proof.
-  firstorder.
+  unfold cor. intros P; split.
+  - intros f np. apply f. intros [? | p]; contradiction.
+  - intros nnp f. apply nnp. intros p. apply f. right. assumption.
 Qed.
 (* end hide *)
 
@@ -470,15 +520,19 @@ Lemma cor_False_r :
   forall P : Prop, cor P False <-> ~ ~ P.
 (* begin hide *)
 Proof.
-  firstorder.
+  unfold cor. intros P; split.
+  - intros f np. apply f. intros [? | p]; contradiction.
+  - intros nnp f. apply nnp. intros p. apply f. left. assumption.
 Qed.
 (* end hide *)
 
-Lemma or_cor :
+Lemma cor_or :
   forall P Q : Prop, P \/ Q -> cor P Q.
 (* begin hide *)
 Proof.
-  firstorder.
+  unfold cor. intros P Q [p | q] npq.
+  - apply npq. left. assumption.
+  - apply npq. right. assumption.
 Qed.
 (* end hide *)
 
@@ -487,9 +541,9 @@ Lemma cor_LEM :
 (* begin hide *)
 Proof.
   unfold cor.
-  intros P H.
-  apply H. right. intro p.
-  apply H. left. assumption.
+  intros P f.
+  apply f. right. intros p.
+  apply f. left. assumption.
 Qed.
 (* end hide *)
 
@@ -500,10 +554,10 @@ Lemma cor_or_LEM :
 (* begin hide *)
 Proof.
   unfold cor, LEM; split.
-    intros H P. apply H, cor_LEM.
-    intros LEM P Q H. destruct (LEM (P \/ Q)).
-      assumption.
-      contradiction.
+  - intros H P. apply H, cor_LEM.
+  - intros LEM P Q H. destruct (LEM (P \/ Q)).
+    + assumption.
+    + contradiction.
 Qed.
 (* end hide *)
 
@@ -514,8 +568,12 @@ Lemma cand_and_LEM :
 Proof.
   unfold LEM. intros H P.
   destruct (H (P \/ ~ P) True).
-    firstorder.
-    assumption.
+  - intros f. apply f. split.
+    + right. intros p. apply f. split.
+      * left. assumption.
+      * trivial.
+    + trivial.
+  - assumption.
 Qed.
 (* end hide *)
 
@@ -525,12 +583,12 @@ Lemma cor_spec :
 (* begin hide *)
 Proof.
   split.
-    intros H [np nq]. apply H. intros [p | q].
-      apply np, p.
-      apply nq, q.
-    intros pq npq. apply pq. split.
-      intro p. apply npq. left. assumption.
-      intro q. apply npq. right. assumption.
+  - intros H [np nq]. apply H. intros [p | q].
+    + apply np, p.
+    + apply nq, q.
+  - intros pq npq. apply pq. split.
+    + intro p. apply npq. left. assumption.
+    + intro q. apply npq. right. assumption.
 Qed.
 (* end hide *)
 
@@ -544,8 +602,8 @@ Proof.
   intros P Q R pr qr nnrr pq.
   apply nnrr. intro nr.
   apply pq. split.
-    intro p. apply nr, pr, p.
-    intro q. apply nr, qr, q.
+  - intro p. apply nr, pr, p.
+  - intro q. apply nr, qr, q.
 Qed.
 (* end hide *)
 
@@ -649,14 +707,18 @@ Qed.
 (* end hide *)
 
 Lemma wor_False_r :
-  forall P : Prop,
-    wor P False <-> P.
+  LEM ->
+    forall P : Prop,
+      wor P False <-> P.
 (* begin hide *)
 Proof.
-  unfold wor. intros P; split.
-  - admit.
+  unfold LEM, wor.
+  intros lem P; split.
+  - intros nnp. destruct (lem P) as [p | np].
+    + assumption.
+    + contradiction.
   - intros p np. contradiction.
-Admitted.
+Qed.
 (* end hide *)
 
 Lemma wor_True_l :
@@ -693,14 +755,20 @@ Qed.
 (* end hide *)
 
 Lemma wor_comm :
-  forall P Q : Prop,
-    wor P Q <-> wor Q P.
+  LEM ->
+    forall P Q : Prop,
+      wor P Q <-> wor Q P.
 (* begin hide *)
 Proof.
-  unfold wor. intros P Q. split.
-  - intros f nq. contradict nq. apply f. intros p. admit. (* tabu. *)
-  - admit.
-Admitted.
+  unfold LEM, wor.
+  intros lem P Q; split.
+  - intros f nq. destruct (lem P) as [p | np].
+    + assumption.
+    + contradict nq. apply f. assumption.
+  - intros f np. destruct (lem Q) as [q | nq].
+    + assumption.
+    + contradict np. apply f. assumption.
+Qed.
 (* end hide *)
 
 (** ** Słaba dysjunkcja v2 *)
@@ -731,15 +799,18 @@ Qed.
 (* end hide *)
 
 Lemma wor_wor2 :
-  forall P Q : Prop,
-    wor2 P Q -> wor P Q.
+  LEM ->
+    forall P Q : Prop,
+      wor2 P Q -> wor P Q.
 (* begin hide *)
 Proof.
-  unfold wor2, wor.
-  intros P Q [f | f] npq.
+  unfold LEM, wor2, wor.
+  intros lem P Q [f | f] np.
   - apply f. assumption.
-  - contradict npq. apply f. intros q. admit.
-Admitted.
+  - destruct (lem Q) as [q | nq].
+    + assumption.
+    + contradict np. apply f. assumption.
+Qed.
 (* end hide *)
 
 Lemma wor2_wor :
@@ -771,29 +842,37 @@ Qed.
 (* end hide *)
 
 Lemma wor2_False_l :
-  forall P : Prop,
-    wor2 False P <-> P.
+  LEM ->
+    forall P : Prop,
+      wor2 False P <-> P.
 (* begin hide *)
 Proof.
-  unfold wor2. intros P; split.
+  unfold LEM, wor2.
+  intros lem P; split.
   - intros [p | f].
     + apply p. intros f. contradiction.
-    + admit.
+    + destruct (lem P) as [p | np].
+      * assumption.
+      * contradiction.
   - intros p. left. intros _. assumption.
-Admitted.
+Qed.
 (* end hide *)
 
 Lemma wor2_False_r :
-  forall P : Prop,
-    wor2 P False <-> P.
+  LEM ->
+    forall P : Prop,
+      wor2 P False <-> P.
 (* begin hide *)
 Proof.
-  unfold wor2. intros P; split.
+  unfold LEM, wor2.
+  intros lem P; split.
   - intros [nnp | p].
-    + admit.
+    + destruct (lem P) as [p | np].
+      * assumption.
+      * contradiction.
     + apply p. intros f. assumption.
   - intros p. right. intros _. assumption.
-Admitted.
+Qed.
 (* end hide *)
 
 Lemma wor2_True_l :
@@ -830,13 +909,15 @@ Qed.
 (* end hide *)
 
 Lemma wor2_assoc :
-  forall P Q R : Prop,
-    wor2 (wor2 P Q) R <-> wor2 P (wor2 Q R).
+  LEM ->
+    forall P Q R : Prop,
+      wor2 (wor2 P Q) R <-> wor2 P (wor2 Q R).
 (* begin hide *)
 Proof.
-  intros P Q R. split.
-  - intros [nr | npq].
-    + admit.
+  unfold LEM.
+  intros lem P Q R; split.
+  - intros [r | npq].
+    + unfold wor2. left. intros _. left. intros _. apply r. unfold wor2. admit.
     + red. left. intros np. red. right. intros nr.
       destruct (npq nr) as [q | p].
       * apply q. assumption.
