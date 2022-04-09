@@ -647,8 +647,8 @@ Qed.
 
     Przykład: *)
 
-(** [interleave [0; 2; 4; 6; 8] [1; 3; 5] = [0; 1; 2; 3; 4; 5; 6; 8] *)
-(** [interleave [0; 2;] [1; 3; 5; 7; 9] = [0; 1; 2; 3; 5; 7; 9] *)
+(** [interleave [0; 2; 4; 6; 8] [1; 3; 5]] = [0; 1; 2; 3; 4; 5; 6; 8] *)
+(** [interleave [0; 2;] [1; 3; 5; 7; 9]] = [0; 1; 2; 3; 5; 7; 9] *)
 
 (* begin hide *)
 Function interleave {A : Type} (l1 l2 : list A) : list A :=

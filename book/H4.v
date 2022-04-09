@@ -1,5 +1,32 @@
 (** * H4: Wincyj relacji *)
 
+(* Module wut.
+
+From stdpp Require Import prelude.
+
+Print strict.
+Print diamond.
+Print locally_confluent.
+Print confluent.
+Print Trichotomy.
+Print PartialOrder.
+Print Total.
+Print TotalOrder.
+Print relation_equivalence.
+Print Setoid_Theory.
+Print TrichotomyT.
+Print DefaultRelation.
+Print order.
+Print antisymmetric.
+Print RewriteRelation.
+Print StrictOrder.
+Print all_loop.
+Print strict.
+Print nf.
+Print red.
+
+End wut. *)
+
 Require Import H3.
 
 Require Import Lia.

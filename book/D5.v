@@ -10048,7 +10048,9 @@ Qed.
     równy [true]. Jeżeli maska jest krótsza niż lista, to reszta listy "wystająca"
     za maskę powinna zostać niezmieniona.
 
-    Przykład: [mask S [true; false; true; false] [1; 2; 3; 4; 5; 6] = [2; 2; 4; 4; 5; 6] *)
+    Przykład: *)
+
+(** [mask S [true; false; true; false] [1; 2; 3; 4; 5; 6]] = [[2; 2; 4; 4; 5; 6]] *)
 
 (* begin hide *)
 Fixpoint mask {A : Type} (f : A -> A) (bs : list bool) (l : list A) : list A :=

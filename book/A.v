@@ -135,6 +135,19 @@
 
 (** ** Konstruktywizm *)
 
+(* begin hide *)
+
+(** Wersja poniższego dowodu z sqrt zamiast symbolu pierwiastka kwadratowego, bo Latex marudzi.
+    Może kiedyś się do czegoś przyda. 
+
+    Dowód: niech sqrt(n) oznacza pierwiastek kwadratowy z n. Jeżeli
+    sqrt(2) ^ sqrt(2) jest niewymierny, to niech a = sqrt(2) ^ sqrt(2), b = sqrt(2).
+    Wtedy a ^ b = (sqrt(2) ^ sqrt(2)) ^ sqrt(2) = sqrt(2) ^ (sqrt(2) * sqrt(2)) = sqrt(2) ^ 2 = 2.
+    W przeciwnym wypadku (czyli gdy sqrt(2) ^ sqrt(2) jest wymierny) niech
+    a = b = sqrt(2). Wtedy a ^ b = sqrt(2) ^ sqrt(2) jest wymierny na mocy założenia. *)
+
+(* end hide *)
+
 (** Po co to wszystko, zapytasz? Czy te rzeczy istnieją tylko dlatego, że
     kilku dziwnym ludziom się nudziło? Nie do końca. Przyjrzyjmy się pewnemu
     wesołemu twierdzeniu i jego smutnemu dowodowi.
