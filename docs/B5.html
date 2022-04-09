@@ -247,15 +247,20 @@
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">aand</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := ~ (~ <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">Q</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">aand_and</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_aand</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">aand</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">aand_and_classically</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">aand</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_aand</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">aand</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">aand_and_tabu</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">aand</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LEM</span>.<br/>
 
 <br/>
 </div>
@@ -359,7 +364,7 @@
 <span class="id" title="keyword">Definition</span> <span class="id" title="tactic">simpl</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := ~ <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">simpl_impl_impl</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_simpl</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
 
@@ -368,6 +373,17 @@
 &nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span> (<span class="id" title="tactic">simpl</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>) (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">simpl_impl_classically</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="tactic">simpl</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">simpl_impl_tabu</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="tactic">simpl</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LEM</span>.<br/>
 
 <br/>
 </div>
@@ -432,6 +448,17 @@
 &nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">wor</span> <span class="id" title="var">Q</span> <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_wor_classically</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_wor_tabu</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">wor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LEM</span>.<br/>
 
 <br/>
 </div>
@@ -508,6 +535,17 @@
 &nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor2</span> (<span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>) <span class="id" title="var">R</span> &lt;-&gt; <span class="id" title="var">wor2</span> <span class="id" title="var">P</span> (<span class="id" title="var">wor2</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_wor2_classically</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_wor2_tabu</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">wor2</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LEM</span>.<br/>
 
 <br/>
 </div>
@@ -602,10 +640,10 @@
  Słowo "logika" zazwyczaj występuje w liczbie pojedynczej i nie bez
     przyczyny - zazwyczaj naucza się jednej (a nawet jedynej słusznej)
     logiki. Porównawszy logiki konstruktywną i klasyczną nie pozostaje
-    nam nic innego jak tylko skonstatować, że jesteśmy bardzo wyjątkowi,
-    bo znamy już dwie logiki. Do głowy powinno nam zatem przyjść jedyne
-    słuszne w tej sytuacji pytanie: czy są jeszcze jakieś inne logiki?
-    Odpowiedź brzmi: tak, i to nawet nieskończenie wiele.
+    nam nic innego jak tylko skonstatować, że jesteśmy bardzo wyjątkowymi
+    płatkami sniegu, bo znamy już dwie logiki. Do głowy powinno nam zatem
+    przyjść jedyne słuszne w tej sytuacji pytanie: czy są jeszcze jakieś
+    inne logiki? Odpowiedź brzmi: tak, i to nawet nieskończenie wiele.
 
 <div class="paragraph"> </div>
 
@@ -674,8 +712,9 @@
 <div class="paragraph"> </div>
 
     Znanym ci już przykładem superintuicjonistycznej logiki jest logika
-    klasyczna, która powstaje z dodania do logiki konstruktywnej prawa
-    wyłączonego środka jako aksjomatu. Logika klasyczna jest
+    klasyczna, która powstaje z dodania do logiki konstruktywnej jako
+    aksjomatu prawa wyłączonego środka (albo jakiegoś jego zamiennika).
+    Logika klasyczna jest
     maksymalną logiką superintuicjonistyczną, bo można w niej udowodnić
     najwięcej twierdzeń ze wszystkich logik superintuicjonistycznych
     (oczywiście pomijając logikę sprzeczną). Oznacza to, że dodanie do
@@ -721,7 +760,8 @@
     Łacińskie słowo "modus" oznacza "sposób". Występuje ono w takich
     wyrażeniach jak "modus operandi" ("sposób działania") czy "modus
     vivendi" ("sposób życia"; po dzisiejszemu powiedzielibyśmy "styl
-    życia", a amerykańce - "way of life"). Od niego w średniowiecznej
+    życia", a amerykańce - "way of life" albo "lifestyle"). Od niego
+    w średniowiecznej
     łacinie powstał przymiotnik "modalis", który oznacza "dotyczący
     sposobu". Przymiotnik ten przedostał się do języków narodowych,
     dając polskie "modalny" czy angielskie "modal", od których potem
@@ -887,7 +927,7 @@
     Mimo filozoficznego smrodku, który dobywa się z powyższego opisu,
     niektóre logiki temporalne są całkiem użyteczne i to do czegoś,
     na czym i nam zależy: weryfikacji poprawności programów (a także
-    sprzętu, ale o tym nic nie wiem). Idea jest taka, że możemy robić
+    sprzętu, ale o tym ja sam nic nie wiem). Idea jest taka, że możemy robić
     zdania wyrażające różne pożądane właściwości programów, na przykład:
 <ul class="doclist">
 <li> bezpieczeństwo - program NIGDY nie zrobi niczego złego
@@ -933,7 +973,7 @@
     logik subintuicjonistycznych jest mało ciekawa, a wyrzucanie ma
     na celu jedynie upozorowanie uzyskania nowej logiki, o tyle w
     przypadku logik substrukturalnych jest inaczej. Dzieje się tak,
-    gdyż tym, co wyrzucamy, są reguły strutkuralne. Stąd też nazwa:
+    gdyż tym, co wyrzucamy, są reguły strukturalne. Stąd też nazwa:
     logiki substrukturalne.
 
 <div class="paragraph"> </div>
@@ -1038,8 +1078,9 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 <div class="paragraph"> </div>
 
     Twierdzenia te w uproszczeniu (sorry, nie jestem fizykiem) mówią,
-    że kwantowa informacja nie może ot tak sobie pojawiać się ani
-    znikać. Bardziej poetycko można powiedzieć, że zachodzi prawo
+    że kwantowa informacja nie może ot tak sobie pojawiać się i znikać
+    (w przeciwieństwie do pewnego polskiego rapera).
+    Bardziej poetycko można powiedzieć, że zachodzi prawo
     zachowania kwantowej informacji. Ponieważ w Coqu udało nam się
     bez problemu udowodnić przeczące im twierdzenia o usuwaniu
     (<span class="inlinecode"><span class="id" title="var">yes_deleting</span></span>) oraz klonowaniu (<span class="inlinecode"><span class="id" title="var">yes_cloning</span></span>), Coqowa logika
@@ -1177,7 +1218,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
     implikację, która bierze przesłanki w odwrotnej kolejności. To
     rozwiązanie może się wydawać dziwne (i jest!), ale okazuje się,
     że co najmniej jeden człowiek próbował takiej poczwarnej logiki
-    użyć do reprezentowania języka naturalnego, i ti z niemałym sukcesem.
+    użyć do reprezentowania języka naturalnego, i to z niemałym sukcesem.
 
 <div class="paragraph"> </div>
 
@@ -1233,7 +1274,7 @@ Ich nazwy mają z założenia przywodzić na myśl twierdzenia znane
 
 <div class="paragraph"> </div>
 
-    https://github.com/wkolowski/Typonomikon/blob/master/txt/substrukturalne.md 
+    https://github.com/wkolowski/Typonomikon/blob/master/txt/9Bci85gi/substrukturalne.md 
 <div class="paragraph"> </div>
 
 <a id="lab145"></a><h2 class="section">Logiki wielowartościowe</h2>

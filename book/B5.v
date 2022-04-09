@@ -405,7 +405,19 @@ Qed.
 
 Definition aand (P Q : Prop) : Prop := ~ (~ P \/ ~ Q).
 
-Lemma aand_and :
+Lemma and_aand :
+  forall P Q : Prop,
+    P /\ Q -> aand P Q.
+(* begin hide *)
+Proof.
+  unfold aand.
+  intros P Q [p q] [np | nq].
+  - apply np. assumption.
+  - apply nq. assumption.
+Qed.
+(* end hide *)
+
+Lemma aand_and_classically :
   LEM ->
     forall P Q : Prop,
       aand P Q -> P /\ Q.
@@ -422,15 +434,18 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma and_aand :
-  forall P Q : Prop,
-    P /\ Q -> aand P Q.
+Lemma aand_and_tabu :
+  (forall P Q : Prop, aand P Q -> P /\ Q) ->
+    LEM.
 (* begin hide *)
 Proof.
-  unfold aand.
-  intros P Q [p q] [np | nq].
-  - apply np. assumption.
-  - apply nq. assumption.
+  unfold LEM, aand.
+  intros aand_and P.
+  destruct (aand_and (P \/ ~ P) True).
+  - intros [f | f].
+    + eapply LEM_irrefutable. eassumption.
+    + contradiction.
+  - assumption.
 Qed.
 (* end hide *)
 
@@ -624,7 +639,7 @@ Qed.
 
 Definition simpl (P Q : Prop) : Prop := ~ P \/ Q.
 
-Lemma simpl_impl_impl :
+Lemma impl_simpl :
   forall P Q : Prop,
     simpl P Q -> (P -> Q).
 (* begin hide *)
@@ -648,6 +663,31 @@ Proof.
   - left. intros [np | q]; contradiction.
   - right. intros _. assumption.
   - right. intros p. contradiction.
+Qed.
+(* end hide *)
+
+Lemma simpl_impl_classically :
+  LEM ->
+    forall P Q : Prop,
+      (P -> Q) -> simpl P Q.
+(* begin hide *)
+Proof.
+  unfold LEM, simpl.
+  intros lem P Q f.
+  destruct (lem P) as [p | np].
+  - right. apply f. assumption.
+  - left. assumption.
+Qed.
+(* end hide *)
+
+Lemma simpl_impl_tabu :
+  (forall P Q : Prop, (P -> Q) -> simpl P Q) ->
+    LEM.
+(* begin hide *)
+Proof.
+  unfold LEM, simpl.
+  intros simpl_impl P.
+  apply or_comm. apply simpl_impl. intros p. trivial.
 Qed.
 (* end hide *)
 
@@ -768,6 +808,33 @@ Proof.
   - intros f np. destruct (lem Q) as [q | nq].
     + assumption.
     + contradict np. apply f. assumption.
+Qed.
+(* end hide *)
+
+Lemma or_wor_classically :
+  LEM ->
+    forall P Q : Prop,
+      wor P Q -> P \/ Q.
+(* begin hide *)
+Proof.
+  unfold LEM, wor.
+  intros lem P Q f.
+  destruct (lem P) as [p | np].
+  - left. assumption.
+  - destruct (lem Q) as [q | nq].
+    + right. assumption.
+    + right. apply f. intros p. contradiction.
+Qed.
+(* end hide *)
+
+Lemma or_wor_tabu :
+  (forall P Q : Prop, wor P Q -> P \/ Q) ->
+    LEM.
+(* begin hide *)
+Proof.
+  unfold LEM, wor.
+  intros or_wor P.
+  apply or_wor. intros np. assumption.
 Qed.
 (* end hide *)
 
@@ -925,6 +992,35 @@ Proof.
 Abort.
 (* end hide *)
 
+Lemma or_wor2_classically :
+  LEM ->
+    forall P Q : Prop,
+      wor2 P Q -> P \/ Q.
+(* begin hide *)
+Proof.
+  unfold LEM, wor2.
+  intros lem P Q f.
+  destruct (lem P) as [p | np].
+  - left. assumption.
+  - destruct (lem Q) as [q | nq].
+    + right. assumption.
+    + destruct f as [f | f].
+      * right. apply f. intros p. contradiction.
+      * left. apply f. intros q. contradiction.
+Qed.
+(* end hide *)
+
+Lemma or_wor2_tabu :
+  (forall P Q : Prop, wor2 P Q -> P \/ Q) ->
+    LEM.
+(* begin hide *)
+Proof.
+  unfold LEM, wor2.
+  intros or_wor2 P.
+  apply or_wor2. left. intros np. assumption.
+Qed.
+(* end hide *)
+
 (** ** Silna równoważność *)
 
 Definition siff (P Q : Prop) : Prop := P /\ Q \/ ~ P /\ ~ Q.
@@ -1060,10 +1156,10 @@ Qed.
 (** Słowo "logika" zazwyczaj występuje w liczbie pojedynczej i nie bez
     przyczyny - zazwyczaj naucza się jednej (a nawet jedynej słusznej)
     logiki. Porównawszy logiki konstruktywną i klasyczną nie pozostaje
-    nam nic innego jak tylko skonstatować, że jesteśmy bardzo wyjątkowi,
-    bo znamy już dwie logiki. Do głowy powinno nam zatem przyjść jedyne
-    słuszne w tej sytuacji pytanie: czy są jeszcze jakieś inne logiki?
-    Odpowiedź brzmi: tak, i to nawet nieskończenie wiele.
+    nam nic innego jak tylko skonstatować, że jesteśmy bardzo wyjątkowymi
+    płatkami sniegu, bo znamy już dwie logiki. Do głowy powinno nam zatem
+    przyjść jedyne słuszne w tej sytuacji pytanie: czy są jeszcze jakieś
+    inne logiki? Odpowiedź brzmi: tak, i to nawet nieskończenie wiele.
 
     W niniejszym podrozdziale zapoznamy się z krótką klasyfikacją innych
     logik wraz z ich opisami i oceną ideologicznej słuszności (tak żebyś
@@ -1111,8 +1207,9 @@ Qed.
     niż w zwykłej logice konstruktywnej.
 
     Znanym ci już przykładem superintuicjonistycznej logiki jest logika
-    klasyczna, która powstaje z dodania do logiki konstruktywnej prawa
-    wyłączonego środka jako aksjomatu. Logika klasyczna jest
+    klasyczna, która powstaje z dodania do logiki konstruktywnej jako
+    aksjomatu prawa wyłączonego środka (albo jakiegoś jego zamiennika).
+    Logika klasyczna jest
     maksymalną logiką superintuicjonistyczną, bo można w niej udowodnić
     najwięcej twierdzeń ze wszystkich logik superintuicjonistycznych
     (oczywiście pomijając logikę sprzeczną). Oznacza to, że dodanie do
@@ -1147,7 +1244,8 @@ Qed.
     Łacińskie słowo "modus" oznacza "sposób". Występuje ono w takich
     wyrażeniach jak "modus operandi" ("sposób działania") czy "modus
     vivendi" ("sposób życia"; po dzisiejszemu powiedzielibyśmy "styl
-    życia", a amerykańce - "way of life"). Od niego w średniowiecznej
+    życia", a amerykańce - "way of life" albo "lifestyle"). Od niego
+    w średniowiecznej
     łacinie powstał przymiotnik "modalis", który oznacza "dotyczący
     sposobu". Przymiotnik ten przedostał się do języków narodowych,
     dając polskie "modalny" czy angielskie "modal", od których potem
@@ -1263,7 +1361,7 @@ Qed.
     Mimo filozoficznego smrodku, który dobywa się z powyższego opisu,
     niektóre logiki temporalne są całkiem użyteczne i to do czegoś,
     na czym i nam zależy: weryfikacji poprawności programów (a także
-    sprzętu, ale o tym nic nie wiem). Idea jest taka, że możemy robić
+    sprzętu, ale o tym ja sam nic nie wiem). Idea jest taka, że możemy robić
     zdania wyrażające różne pożądane właściwości programów, na przykład:
     - bezpieczeństwo - program NIGDY nie zrobi niczego złego
     - żywotność - na każde żądanie serwer KIEDYŚ udzieli odpowiedzi
@@ -1294,7 +1392,7 @@ Qed.
     logik subintuicjonistycznych jest mało ciekawa, a wyrzucanie ma
     na celu jedynie upozorowanie uzyskania nowej logiki, o tyle w
     przypadku logik substrukturalnych jest inaczej. Dzieje się tak,
-    gdyż tym, co wyrzucamy, są reguły strutkuralne. Stąd też nazwa:
+    gdyż tym, co wyrzucamy, są reguły strukturalne. Stąd też nazwa:
     logiki substrukturalne.
 
     Czym są reguły strukturalne? Sa to reguły, które mówią, jakie
@@ -1366,8 +1464,9 @@ Qed.
     - twierdzenie o nieklonowaniu (ang. no-cloning theorem).
 
     Twierdzenia te w uproszczeniu (sorry, nie jestem fizykiem) mówią,
-    że kwantowa informacja nie może ot tak sobie pojawiać się ani
-    znikać. Bardziej poetycko można powiedzieć, że zachodzi prawo
+    że kwantowa informacja nie może ot tak sobie pojawiać się i znikać
+    (w przeciwieństwie do pewnego polskiego rapera).
+    Bardziej poetycko można powiedzieć, że zachodzi prawo
     zachowania kwantowej informacji. Ponieważ w Coqu udało nam się
     bez problemu udowodnić przeczące im twierdzenia o usuwaniu
     ([yes_deleting]) oraz klonowaniu ([yes_cloning]), Coqowa logika
@@ -1475,7 +1574,7 @@ Qed.
     implikację, która bierze przesłanki w odwrotnej kolejności. To
     rozwiązanie może się wydawać dziwne (i jest!), ale okazuje się,
     że co najmniej jeden człowiek próbował takiej poczwarnej logiki
-    użyć do reprezentowania języka naturalnego, i ti z niemałym sukcesem.
+    użyć do reprezentowania języka naturalnego, i to z niemałym sukcesem.
 
     Zresztą, język naturalny ze swoimi ograniczeniami na szyk zdania
     i kolejność słów zdaje się być dobrym kandydatem do spożytkowania
@@ -1519,7 +1618,7 @@ Qed.
     wszystkich nazwach, regułach, warunkach, etc., to tutaj jest
     ściąga:
 
-    https://github.com/wkolowski/Typonomikon/blob/master/txt/substrukturalne.md *)
+    https://github.com/wkolowski/Typonomikon/blob/master/txt/%C5%9Bci%C4%85gi/substrukturalne.md *)
 
 (** ** Logiki wielowartościowe *)
 
