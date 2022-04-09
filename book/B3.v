@@ -269,13 +269,533 @@ Qed.
     z biblioteki standardowej znajdziesz tu:
     https://coq.inria.fr/refman/coq-tacindex.html *)
 
+(** * Inne spójniki *)
+
+(** ** i/lub (TODO)  *)
+
+Inductive andor (P Q : Prop) : Prop :=
+    | left  : P ->      andor P Q
+    | right :      Q -> andor P Q
+    | both  : P -> Q -> andor P Q.
+
+Lemma and_or_l :
+  forall P Q : Prop, P /\ Q -> P \/ Q.
+(* begin hide *)
+Proof.
+  destruct 1 as [p q]. left. assumption.
+Qed.
+(* end hide *)
+
+Lemma and_or_r :
+  forall P Q : Prop, P /\ Q -> P \/ Q.
+(* begin hide *)
+Proof.
+  destruct 1 as [p q]. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma andor_or :
+  forall P Q : Prop, andor P Q <-> P \/ Q.
+(* begin hide *)
+Proof.
+  split.
+    destruct 1 as [p | q | p q].
+      left. assumption.
+      right. assumption.
+      left. assumption.
+    destruct 1 as [p | q].
+      apply left. assumption.
+      apply right. assumption.
+Qed.
+(* end hide *)
+
+(** ** i/lub po raz drugi (TODO)  *)
+
+Definition andor' (P Q : Prop) : Prop := P \/ Q \/ (P /\ Q).
+
+Lemma andor'_or :
+  forall P Q : Prop, andor' P Q <-> P \/ Q.
+(* begin hide *)
+Proof.
+  unfold andor'.
+  intros P Q; split.
+  - intros [p | [q | [p q]]].
+    + left. assumption.
+    + right. assumption.
+    + left. assumption.
+  - intros [p | q].
+    + left. assumption.
+    + right. left. assumption.
+Qed.
+(* end hide *)
+
+(** ** Różnica między "lub" i "albo" (TODO) *)
+
+Definition xor (A B : Prop) : Prop :=
+  (A /\ ~ B) \/ (~ A /\ B).
+
+Lemma xor_irrefl :
+  forall P : Prop, ~ xor P P.
+(* begin hide *)
+Proof.
+  unfold xor. intros A H.
+  destruct H as [[p np] | [np p]].
+    apply np. assumption.
+    apply np. assumption.
+Qed.
+(* end hide *)
+
+Lemma xor_comm :
+  forall P Q : Prop, xor P Q -> xor Q P.
+(* begin hide *)
+Proof.
+  unfold xor. intros P Q H.
+  destruct H as [[p nq] | [q np]].
+    right. split; assumption.
+    left. split; assumption.
+Qed.
+(* end hide *)
+
+Lemma xor_comm' :
+  forall P Q : Prop, xor P Q <-> xor Q P.
+(* begin hide *)
+Proof.
+  split; apply xor_comm.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Lemma xor_cotrans :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P Q R : Prop, xor P Q -> xor P R \/ xor Q R).
+Proof.
+  unfold xor. intros LEM P Q R H.
+  destruct H as [[p nq] | [q np]].
+    destruct (LEM R) as [r | nr].
+      right. right. split; assumption.
+      left. left. split; assumption.
+    destruct (LEM R) as [r | nr].
+      left. right. split; assumption.
+      right. left. split; assumption.
+Qed.
+(* end hide *)
+
+Lemma xor_assoc :
+  forall P Q R : Prop,
+    xor P (xor Q R) <-> xor (xor P Q) R.
+(* begin hide *)
+Proof.
+  unfold xor. split. firstorder.
+    firstorder.
+Abort.
+(* end hide *)
+
+Lemma xor_not_iff :
+  forall P Q : Prop, xor P Q -> ~ (P <-> Q).
+(* begin hide *)
+Proof.
+  unfold xor, iff.
+  intros P Q H1 H2.
+  destruct H2 as [pq qp], H1 as [[p nq] | [np q]].
+    apply nq, pq. assumption.
+    apply np, qp. assumption.
+Qed.
+(* end hide *)
+
+(* begin hide *)
+Lemma not_iff_xor :
+  (forall P : Prop, P \/ ~ P) ->
+    forall P Q : Prop, ~ (P <-> Q) -> xor P Q.
+Proof.
+  unfold xor.
+  intros LEM P Q H.
+  destruct (LEM P) as [p | np], (LEM Q) as [q | nq].
+    contradiction H. split; trivial.
+    left. split; assumption.
+    right. split; assumption.
+    contradiction H. split; intro; contradiction.
+Qed.
+(* end hide *)
+
+Lemma xor_spec :
+  forall P Q : Prop, xor P Q <-> (P \/ Q) /\ (~ P \/ ~ Q).
+(* begin hide *)
+Proof.
+  unfold xor, iff. split.
+    intros [[p nq] | [np q]].
+      split.
+        left. assumption.
+        right. assumption.
+      split.
+        right. assumption.
+        left. assumption.
+    intros [[p | q] [np | nq]].
+      contradiction.
+      left. split; assumption.
+      right. split; assumption.
+      contradiction.
+Qed.
+(* end hide *)
+
+Lemma xor_False_r :
+  forall P : Prop, xor P False <-> P.
+(* begin hide *)
+Proof.
+  unfold xor, iff. split.
+    intro H. destruct H as [[p _] | [_ f]].
+      assumption.
+      contradiction.
+    intro p. left. split.
+      assumption.
+      intro f. contradiction.
+Qed.
+(* end hide *)
+
+Lemma xor_False_l :
+  forall P : Prop, xor False P <-> P.
+(* begin hide *)
+Proof.
+  split.
+    intro x. apply xor_comm in x. apply xor_False_r. assumption.
+    intro p. unfold xor. right. split.
+      intro f. contradiction.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma xor_True_l :
+  forall P : Prop, xor True P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold xor, iff. split.
+    intros [[_ np] | [f _]].
+      assumption.
+      contradiction.
+    intro np. left. split.
+      trivial.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma xor_True_r :
+  forall P : Prop, xor P True <-> ~ P.
+(* begin hide *)
+Proof.
+  split.
+    destruct 1 as [[p nt] | [np t]].
+      contradiction.
+      assumption.
+    intro. right. split.
+      assumption.
+      trivial.
+Qed.
+(* end hide *)
+
+(** ** Ani [P] ani [Q], czyli negacja dysjunkcji *)
+
+Definition nor (P Q : Prop) : Prop := ~ (P \/ Q).
+Definition nor' (P Q : Prop) : Prop := ~ P /\ ~ Q.
+
+Lemma nor_nor' :
+  forall P Q : Prop, nor P Q <-> nor' P Q.
+(* begin hide *)
+Proof.
+  unfold nor, nor'; split.
+  - intros f. split.
+    + intros p. apply f. left. assumption.
+    + intros q. apply f. right. assumption.
+  - intros [np nq] [p | q]; contradiction.
+Qed.
+(* end hide *)
+
+Lemma nor_comm :
+  forall P Q : Prop,
+    nor P Q <-> nor Q P.
+(* begin hide *)
+Proof.
+  unfold nor.
+  intros P. split.
+  - intros f [q | p]; apply f; [right | left]; assumption.
+  - intros f [p | q]; apply f; [right | left]; assumption.
+Qed.
+(* end hide *)
+
+Lemma not_nor_assoc :
+  exists P Q R : Prop,
+    nor' (nor' P Q) R /\ ~ nor' P (nor' Q R).
+(* begin hide *)
+Proof.
+  unfold nor'. exists True, True, False. tauto.
+Qed.
+(* end hide *)
+
+Lemma nor_True_l :
+  forall P : Prop,
+    nor True P <-> False.
+(* begin hide *)
+Proof.
+  unfold nor.
+  intros P. split.
+  - intros f. apply f. left. trivial.
+  - contradiction.
+Qed.
+(* end hide *)
+
+Lemma nor_True_r :
+  forall P : Prop,
+    nor P True <-> False.
+(* begin hide *)
+Proof.
+  unfold nor. intros P; split.
+  - intros f. apply f. right. trivial.
+  - contradiction.
+Qed.
+(* end hide *)
+
+Lemma nor_False_l :
+  forall P : Prop,
+    nor False P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nor.
+  split.
+  - intros f p. apply f. right. assumption.
+  - intros np [f | p]; contradiction.
+Qed.
+(* end hide *)
+
+Lemma nor_False_r :
+  forall P : Prop,
+    nor P False <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nor. intros P; split.
+  - intros f p. apply f. left. assumption.
+  - intros np [p | f]; contradiction.
+Qed.
+(* end hide *)
+
+Lemma nor_antiidempotent :
+  forall P : Prop,
+    nor P P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nor. split.
+  - intros f p. apply f. left. assumption.
+  - intros f [p | p]; contradiction.
+Qed.
+(* end hide *)
+
+(** ** Negacja koniunkcji *)
+
+Definition nand (P Q : Prop) : Prop := ~ (P /\ Q).
+
+Lemma nand_comm :
+  forall P Q : Prop,
+    nand P Q <-> nand Q P.
+(* begin hide *)
+Proof.
+  unfold nand.
+  intros P. split.
+  - intros f [q p]. apply f; split; assumption.
+  - intros f [p q]. apply f; split; assumption.
+Qed.
+(* end hide *)
+
+Lemma not_nand_assoc :
+  exists P Q R : Prop,
+    nand (nand P Q) R /\ ~ nand P (nand Q R).
+(* begin hide *)
+Proof.
+  unfold nand. exists True, True, False. tauto.
+Qed.
+(* end hide *)
+
+Lemma nand_True_l :
+  forall P : Prop,
+    nand True P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nand.
+  intros P. split.
+  - intros f p. apply f. split; trivial.
+  - intros np [_ p]. contradiction.
+Qed.
+(* end hide *)
+
+Lemma nand_True_r :
+  forall P : Prop,
+    nand P True <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nand; intros P; split.
+  - intros f p. apply f. split; trivial.
+  - intros np [p _]. contradiction.
+Qed.
+(* end hide *)
+
+Lemma nand_False_l' :
+  forall P : Prop,
+    nand False P.
+(* begin hide *)
+Proof.
+  unfold nand. intros P [[] _].
+Qed.
+(* end hide *)
+
+Lemma nand_False_l :
+  forall P : Prop,
+    nand False P <-> True.
+(* begin hide *)
+Proof.
+  split; intros.
+  - trivial.
+  - apply nand_False_l'.
+Qed.
+(* end hide *)
+
+Lemma nand_False_r :
+  forall P : Prop,
+    nand P False <-> True.
+(* begin hide *)
+Proof.
+  unfold nand; intros P; split.
+  - intros _. trivial.
+  - intros _ [p f]. contradiction.
+Qed.
+(* end hide *)
+
+Lemma nand_antiidempotent :
+  forall P : Prop,
+    nand P P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nand. split.
+  - intros f p. apply f. split; assumption.
+  - intros np [p _]. contradiction.
+Qed.
+(* end hide *)
+
 (** * Logika pierwszego rzędu a logika wyższego rzędu (TODO) *)
 
 (** ** Logika pierwszego rzędu (TODO) *)
 
-(** ** Logika wyższego rzędu (TODO) *)
-
 (** ** Taktyka [firstorder] (TODO) *)
+
+(** ** Logika drugiego rzędu i kodowania impredykatywne (TODO) *)
+
+(* begin hide *)
+(*
+TODO: Tautologie na kodowaniach impredykatywnych jako ćwiczenia z funkcji anonimowych
+*)
+(* end hide *)
+
+Definition iand (P Q : Prop) : Prop :=
+  forall C : Prop, (P -> Q -> C) -> C.
+
+Definition ior (P Q : Prop) : Prop :=
+  forall C : Prop, (P -> C) -> (Q -> C) -> C.
+
+Definition iTrue : Prop :=
+  forall C : Prop, C -> C.
+
+Definition iFalse : Prop :=
+  forall C : Prop, C.
+
+Lemma iand_spec :
+  forall P Q : Prop,
+    iand P Q <-> P /\ Q.
+(* begin hide *)
+Proof.
+  unfold iand. split.
+    intro H. apply H. intros p q. split.
+      assumption.
+      assumption.
+    intros [p q] C H. apply H.
+      assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma ior_spec :
+  forall P Q : Prop,
+    ior P Q <-> P \/ Q.
+(* begin hide *)
+Proof.
+  unfold ior. split.
+    intro H. apply H.
+      intro p. left. assumption.
+      intro q. right. assumption.
+    intros [p | q] C pc qc.
+      apply pc. assumption.
+      apply qc. assumption.
+Qed.
+(* end hide *)
+
+Lemma iTrue_spec :
+  iTrue <-> True.
+(* begin hide *)
+Proof.
+  unfold iTrue. split.
+    intros _. trivial.
+    intros _ C c. assumption.
+Qed.
+(* end hide *)
+
+Lemma iFalse_False :
+  iFalse <-> False.
+(* begin hide *)
+Proof.
+  unfold iFalse. split.
+    intro H. apply H.
+    contradiction.
+Qed.
+(* end hide *)
+
+Definition iexists (A : Type) (P : A -> Prop) : Prop :=
+  forall C : Prop, (forall x : A, P x -> C) -> C.
+
+Lemma iexists_spec :
+  forall (A : Type) (P : A -> Prop),
+    iexists A P <-> exists x : A, P x.
+(* begin hide *)
+Proof.
+  unfold iexists. split.
+    intro H. apply H. intros x p. exists x. assumption.
+    intros [x p] C H. apply (H x). assumption.
+Qed.
+(* end hide *)
+
+Definition ieq {A : Type} (x y : A) : Prop :=
+  forall C : Prop, ((x = y) -> C) -> C.
+
+Definition ieq' {A : Type} (x : A) : A -> Prop :=
+  fun y : A =>
+    forall P : A -> Prop, P x -> P y.
+
+Lemma ieq_spec :
+  forall (A : Type) (x y : A),
+    ieq x y <-> x = y.
+(* begin hide *)
+Proof.
+  unfold ieq. split.
+    intro H. apply H. trivial.
+    intros [] C H. apply H. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma ieq'_spec :
+  forall (A : Type) (x y : A),
+    ieq' x y <-> x = y.
+(* begin hide *)
+Proof.
+  unfold ieq'. split.
+    intro H. apply H. reflexivity.
+    intros [] P px. assumption.
+Qed.
+(* end hide *)
+
+(** ** Logika wyższego rzędu (TODO) *)
 
 (** * Paradoksy autoreferencji *)
 
@@ -393,7 +913,7 @@ Qed.
     istnieje. Robiąc tak, wpada w sidła pułapki zastawionej przez logika i
     zostaje trafiony paradoksalną konkluzją: golibroda nie istnieje. *)
 
-(** ** Inne paradoksy autoreferencji: paradoks Richarda, słowa heterologiczne *)
+(** ** Inne paradoksy autoreferencji *)
 
 (** **** Ćwiczenie *)
 
@@ -406,6 +926,14 @@ Qed.
     niemieckim. Słowa, które nie opisują samych siebie będziemy nazywać
     słowami heterologicznymi. Pytanie: czy słowo "heterologiczny" jest
     heterologiczne? *)
+
+(** **** Ćwiczenie *)
+
+(** TODO:
+    - paradoks Richarda
+    - Hilbert-Bernays: https://en.wikipedia.org/wiki/Hilbert%E2%80%93Bernays_paradox
+    - Barbershop: https://en.wikipedia.org/wiki/Barbershop_paradox
+    - paradoks kłamcy *)
 
 (** **** Ćwiczenie *)
 
@@ -443,119 +971,6 @@ Qed.
   - fałsz jest pozytywny *)
 
 (** * Esencjalizm vs strukturalizm *)
-
-(** * Kodowania impredykatywne (TODO) *)
-
-(* begin hide *)
-(*
-TODO: Tautologie na kodowaniach impredykatywnych jako ćwiczenia z funkcji anonimowych
-*)
-(* end hide *)
-
-Definition iand (P Q : Prop) : Prop :=
-  forall C : Prop, (P -> Q -> C) -> C.
-
-Definition ior (P Q : Prop) : Prop :=
-  forall C : Prop, (P -> C) -> (Q -> C) -> C.
-
-Definition iTrue : Prop :=
-  forall C : Prop, C -> C.
-
-Definition iFalse : Prop :=
-  forall C : Prop, C.
-
-Lemma iand_spec :
-  forall P Q : Prop,
-    iand P Q <-> P /\ Q.
-(* begin hide *)
-Proof.
-  unfold iand. split.
-    intro H. apply H. intros p q. split.
-      assumption.
-      assumption.
-    intros [p q] C H. apply H.
-      assumption.
-      assumption.
-Qed.
-(* end hide *)
-
-Lemma ior_spec :
-  forall P Q : Prop,
-    ior P Q <-> P \/ Q.
-(* begin hide *)
-Proof.
-  unfold ior. split.
-    intro H. apply H.
-      intro p. left. assumption.
-      intro q. right. assumption.
-    intros [p | q] C pc qc.
-      apply pc. assumption.
-      apply qc. assumption.
-Qed.
-(* end hide *)
-
-Lemma iTrue_spec :
-  iTrue <-> True.
-(* begin hide *)
-Proof.
-  unfold iTrue. split.
-    intros _. trivial.
-    intros _ C c. assumption.
-Qed.
-(* end hide *)
-
-Lemma iFalse_False :
-  iFalse <-> False.
-(* begin hide *)
-Proof.
-  unfold iFalse. split.
-    intro H. apply H.
-    contradiction.
-Qed.
-(* end hide *)
-
-Definition iexists (A : Type) (P : A -> Prop) : Prop :=
-  forall C : Prop, (forall x : A, P x -> C) -> C.
-
-Lemma iexists_spec :
-  forall (A : Type) (P : A -> Prop),
-    iexists A P <-> exists x : A, P x.
-(* begin hide *)
-Proof.
-  unfold iexists. split.
-    intro H. apply H. intros x p. exists x. assumption.
-    intros [x p] C H. apply (H x). assumption.
-Qed.
-(* end hide *)
-
-Definition ieq {A : Type} (x y : A) : Prop :=
-  forall C : Prop, ((x = y) -> C) -> C.
-
-Definition ieq' {A : Type} (x : A) : A -> Prop :=
-  fun y : A =>
-    forall P : A -> Prop, P x -> P y.
-
-Lemma ieq_spec :
-  forall (A : Type) (x y : A),
-    ieq x y <-> x = y.
-(* begin hide *)
-Proof.
-  unfold ieq. split.
-    intro H. apply H. trivial.
-    intros [] C H. apply H. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma ieq'_spec :
-  forall (A : Type) (x y : A),
-    ieq' x y <-> x = y.
-(* begin hide *)
-Proof.
-  unfold ieq'. split.
-    intro H. apply H. reflexivity.
-    intros [] P px. assumption.
-Qed.
-(* end hide *)
 
 (** * Harmonia logiki konstruktywnej (TODO) *)
 
