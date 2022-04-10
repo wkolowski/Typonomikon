@@ -355,6 +355,8 @@ Qed.
 
 End nat_neq_rec.
 
+(** ** Różność liczb naturalnych - induktywnie *)
+
 Module nat_neq_ind.
 
 Inductive nat_neq : nat -> nat -> Prop :=
@@ -493,6 +495,8 @@ Proof.
 Qed.
 
 End encodedecode1.
+
+(** ** Jeszcze raz [<=], lecz tym razem używając [SProp] *)
 
 Module encodedecode2.
 
@@ -1652,7 +1656,7 @@ Instance prod_unit_l (A : Type) : iso (unit * A) A :=
     coer a := (tt, a);
 }.
 Proof.
-  intros [[] ]. reflexivity.
+  intros [[]]. reflexivity.
   reflexivity.
 Defined.
 

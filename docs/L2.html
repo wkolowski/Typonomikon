@@ -22,7 +22,7 @@
 </div>
 
 <div class="doc">
-<a id="lab907"></a><h1 class="section">Wstęp</h1>
+<a id="lab909"></a><h1 class="section">Wstęp</h1>
 
 <div class="paragraph"> </div>
 
@@ -260,7 +260,7 @@ Jak widać, pierwsze podejście było złe, a drugie jest dobre.
 
 <div class="paragraph"> </div>
 
-    Poświęc kilka minut, żeby spróbować rozwiązać to zadanie. Ja, gdy
+    Poświęć kilka minut, żeby spróbować rozwiązać to zadanie. Ja, gdy
     zobaczyłem je w zalinkowanej powyżej pracy, natychmiast zdałem sobie
     sprawę, że nie znam żadnego prostego sposobu, żeby to zrobić i wtedy
     właśnie doznałem oświecenia - kontynuacje jednak nie są ezoteryczne,
@@ -394,15 +394,15 @@ A rozwiązanie jest takie. Jeżeli próbujemy łazić po drzewie zwykłą
 </div>
 
 <div class="doc">
-Szczo wyrablajesja tut? Ano, już tłumaczę.
+Szczo wyrabljajetsja tut? Ano, już tłumaczę.
 
 <div class="paragraph"> </div>
 
     Po pierwsze, spróbujmy przeczytać typ. Funkcja <span class="inlinecode"><span class="id" title="var">depthWalk</span></span> bierze
     jako argument drzewo <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Tree</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> i zamienia je w spacerek po 
     grzywce <span class="inlinecode"><span class="id" title="var">t</span></span>, którego wynikiem jest drzewo o typie <span class="inlinecode"><span class="id" title="var">Tree</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span>, czyli
-    potencjalnie innym, niż. Wynika to z tego, że podczas spacerku
-    będziemy dostawać na wejściu wartości typu <span class="inlinecode"><span class="id" title="var">B</span></span>, podczas gdy na
+    potencjalnie innym, niż wyjściowe drzewko. Wynika to z tego, że podczas
+    spacerku będziemy dostawać na wejściu wartości typu <span class="inlinecode"><span class="id" title="var">B</span></span>, podczas gdy na
     wyjściu dajemy wartościu typu <span class="inlinecode"><span class="id" title="var">A</span></span>.
 
 <div class="paragraph"> </div>
@@ -418,7 +418,7 @@ Szczo wyrablajesja tut? Ano, już tłumaczę.
 
 <div class="paragraph"> </div>
 
-    Gdy napotkamy liść z wartością <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>, oddajemy je na wyjście i
+    Gdy napotkamy liść z wartością <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>, oddajemy go na wyjście i
     w zamian dostajemy wartość <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span>. Wynikiem spacerku jest <span class="inlinecode"><span class="id" title="var">b</span></span>
     zapakowane w liść (pamiętaj, że próbujemy przekształcić drzewo na
     spacerek po grzywce).
@@ -429,7 +429,7 @@ Szczo wyrablajesja tut? Ano, już tłumaczę.
     zwane <span class="inlinecode"><span class="id" title="var">l</span></span>, w spacerek po lewym poddrzewie, zwany <span class="inlinecode"><span class="id" title="var">l'</span></span>. Podobnie
     prawe poddrzewo <span class="inlinecode"><span class="id" title="var">r</span></span> zamieniamy na spacerek po prawym poddrzewie <span class="inlinecode"><span class="id" title="var">r'</span></span>.
     Następnie sklejamy spacerki, a ostatecznym wynikiem tak sklejonego
-    spacerku to samo drzewo co na początku, tylko z grzywką zastąpioną
+    spacerku jest to samo drzewo co na początku, tylko z grzywką zastąpioną
     przez wartości z wejścia.
 
 <div class="paragraph"> </div>
@@ -540,7 +540,7 @@ Działa jak marzenie! Ćwiczenie: udowodnij.
 </div>
 
 <div class="doc">
-<span class="inlinecode"><span class="id" title="var">swap_fringe_aux</span></span> to funkcje, która bierze jako argumenty dwa
+<span class="inlinecode"><span class="id" title="var">swap_fringe_aux</span></span> to funkcja, która bierze jako argumenty dwa
     spacerki, których wynikami są drzewa, i zwraca parę drzew, gdzie
     pierwsze to wynik pierwszego spacerku, ale z grzywką wziętą z
     drugiego spacerku i vice versa. Jeżeli grzywki mają różną długość,
@@ -568,11 +568,11 @@ Działa jak marzenie! Ćwiczenie: udowodnij.
 <ul class="doclist">
 <li> w pierwszym spacerku wyjściem są wartości z pierwszej grzywki,
       wejściem są wartości z drugiej grzywki, a wynikiem pierwsze
-      drzewo z drugą grzywką
+      drzewko z drugą grzywką
 
 </li>
 <li> w drugim spacerku wyjściem są wartości z drugiej grzywki, wejściem
-      są wartości z pierwszej grzywki, a wynikiem jest drugie drzewo z
+      są wartości z pierwszej grzywki, a wynikiem jest drugie drzewko z
       pierwszą grzywką
 
 </li>
@@ -697,13 +697,20 @@ Moim zdaniem odpowiedź jest całkiem czytelna. Spacerek wygląda tak,
     występują one w naszym rozwiązaniu i jak się przejawiają? Cóż,
     korzystając ze świętego prawa pisarza matematycznego, odpowiedź
     na to pytanie pozostawiam czytelnikowi jako ćwiczenie. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab910"></a><h1 class="section">Defunkcjonalizacja (TODO)</h1>
+
 <div class="paragraph"> </div>
 
-<a id="lab908"></a><h1 class="section">Defunkcjonalizacja (TODO)</h1>
-
-<div class="paragraph"> </div>
-
-<a id="lab909"></a><h2 class="section">Defunkcjonalizacja filtrowania (TODO)</h2>
+<a id="lab911"></a><h2 class="section">Defunkcjonalizacja filtrowania (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -781,7 +788,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a id="lab910"></a><h2 class="section">Defunkcjonalizacja silni (TODO)</h2>
+<a id="lab912"></a><h2 class="section">Defunkcjonalizacja silni (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -858,7 +865,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a id="lab911"></a><h1 class="section">CPS (TODO)</h1>
+<a id="lab913"></a><h1 class="section">CPS (TODO)</h1>
 
 </div>
 <div class="code">
@@ -922,7 +929,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a id="lab912"></a><h1 class="section">CPS i defunkcjonalizacja w służbie rekursji ogonowej (TODO)</h1>
+<a id="lab914"></a><h1 class="section">CPS i defunkcjonalizacja w służbie rekursji ogonowej (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -931,7 +938,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
     jak zdefunkcjonalizowaną kontynuacją). 
 <div class="paragraph"> </div>
 
-<a id="lab913"></a><h1 class="section">Kodowania Churcha (TODO)</h1>
+<a id="lab915"></a><h1 class="section">Kodowania Churcha (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1048,7 +1055,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a id="lab914"></a><h1 class="section">Kodowania Scotta (TODO)</h1>
+<a id="lab916"></a><h1 class="section">Kodowania Scotta (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1111,7 +1118,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a id="lab915"></a><h1 class="section">Listy różnicowe (TODO)</h1>
+<a id="lab917"></a><h1 class="section">Listy różnicowe (TODO)</h1>
 
 </div>
 <div class="code">

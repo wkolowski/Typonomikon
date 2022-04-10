@@ -423,6 +423,8 @@ Qed.
 
 (** * Skracalność (TODO) *)
 
+(** Tutaj o lewej i prawej skracalności, czyli mono- i epi- morfizmy. *)
+
 Definition precancellable {A B : Type} (f : A -> B) : Prop :=
   forall (X : Type) (g h : B -> X), f .> g = f .> h -> g = h.
 
@@ -1359,7 +1361,3 @@ Definition fixpoint {A : Type} (f : A -> A) (x : A)
   : Prop := f x = x.
 
 (* end hide *)
-
-(** * Skracalność (TODO) *)
-
-(** Tutaj o lewej i prawej skracalności, czyli mono- i epi- morfizmy. *)

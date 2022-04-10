@@ -144,7 +144,7 @@ Compute same_fringe2 beq_nat t1 t2.
     Zadanie: napisz funkcję, która bierze drzewa [t1] i [t2] i zamienia
     ich grzywki, zachowując rzecz jasna kształty drzew.
 
-    Poświęc kilka minut, żeby spróbować rozwiązać to zadanie. Ja, gdy
+    Poświęć kilka minut, żeby spróbować rozwiązać to zadanie. Ja, gdy
     zobaczyłem je w zalinkowanej powyżej pracy, natychmiast zdałem sobie
     sprawę, że nie znam żadnego prostego sposobu, żeby to zrobić i wtedy
     właśnie doznałem oświecenia - kontynuacje jednak nie są ezoteryczne,
@@ -231,13 +231,13 @@ match t with
           Result (Node l' r')))
 end.
 
-(** Szczo wyrablajesja tut? Ano, już tłumaczę.
+(** Szczo wyrabljajetsja tut? Ano, już tłumaczę.
 
     Po pierwsze, spróbujmy przeczytać typ. Funkcja [depthWalk] bierze
     jako argument drzewo [t : Tree A] i zamienia je w spacerek po 
     grzywce [t], którego wynikiem jest drzewo o typie [Tree B], czyli
-    potencjalnie innym, niż. Wynika to z tego, że podczas spacerku
-    będziemy dostawać na wejściu wartości typu [B], podczas gdy na
+    potencjalnie innym, niż wyjściowe drzewko. Wynika to z tego, że podczas
+    spacerku będziemy dostawać na wejściu wartości typu [B], podczas gdy na
     wyjściu dajemy wartościu typu [A].
 
     Nieco inne spojrzenie może być takie, że wynikiem [depthWalk] jest
@@ -247,7 +247,7 @@ end.
 
     Sama funkcja działa natomiast następująco.
 
-    Gdy napotkamy liść z wartością [a : A], oddajemy je na wyjście i
+    Gdy napotkamy liść z wartością [a : A], oddajemy go na wyjście i
     w zamian dostajemy wartość [b : B]. Wynikiem spacerku jest [b]
     zapakowane w liść (pamiętaj, że próbujemy przekształcić drzewo na
     spacerek po grzywce).
@@ -256,7 +256,7 @@ end.
     zwane [l], w spacerek po lewym poddrzewie, zwany [l']. Podobnie
     prawe poddrzewo [r] zamieniamy na spacerek po prawym poddrzewie [r'].
     Następnie sklejamy spacerki, a ostatecznym wynikiem tak sklejonego
-    spacerku to samo drzewo co na początku, tylko z grzywką zastąpioną
+    spacerku jest to samo drzewo co na początku, tylko z grzywką zastąpioną
     przez wartości z wejścia.
 
     Dobra, jesteśmy już nieźle ustawieni. Jeżeli nie nadążasz, to dla
@@ -325,7 +325,7 @@ match i1, i2 with
     | _, _ => None
 end.
 
-(** [swap_fringe_aux] to funkcje, która bierze jako argumenty dwa
+(** [swap_fringe_aux] to funkcja, która bierze jako argumenty dwa
     spacerki, których wynikami są drzewa, i zwraca parę drzew, gdzie
     pierwsze to wynik pierwszego spacerku, ale z grzywką wziętą z
     drugiego spacerku i vice versa. Jeżeli grzywki mają różną długość,
@@ -346,9 +346,9 @@ end.
     Gdybyś się zagubił, przeżyjmy to jeszcze raz:
     - w pierwszym spacerku wyjściem są wartości z pierwszej grzywki,
       wejściem są wartości z drugiej grzywki, a wynikiem pierwsze
-      drzewo z drugą grzywką
+      drzewko z drugą grzywką
     - w drugim spacerku wyjściem są wartości z drugiej grzywki, wejściem
-      są wartości z pierwszej grzywki, a wynikiem jest drugie drzewo z
+      są wartości z pierwszej grzywki, a wynikiem jest drugie drzewko z
       pierwszą grzywką
 
     Geniuszalne, prawda? *)
@@ -433,6 +433,62 @@ Compute depthWalk t1'.
     występują one w naszym rozwiązaniu i jak się przejawiają? Cóż,
     korzystając ze świętego prawa pisarza matematycznego, odpowiedź
     na to pytanie pozostawiam czytelnikowi jako ćwiczenie. *)
+
+(* begin hide *)
+
+Require Import Recdef.
+
+Function transplant_aux
+  {A : Type} (t : Tree A) (xs : list A)
+  : option (Tree A * list A) :=
+match t with
+| Leaf _   =>
+    match xs with
+    | []      => None
+    | x :: xs' => Some (Leaf x, xs')
+    end
+| Node l r =>
+    match transplant_aux l xs with
+    | None => None
+    | Some (l', xs') =>
+        match transplant_aux r xs' with
+        | None => None
+        | Some (r', xs'') => Some (Node l' r', xs'')
+        end
+    end
+end.
+
+Definition transplant
+  {A : Type} (t : Tree A) (xs : list A)
+  : option (Tree A) :=
+match transplant_aux t xs with
+| Some (t', []) => Some t'
+| _             => None
+end.
+
+Definition swap_fringe'
+  {A : Type} (t1 t2 : Tree A) : option (Tree A * Tree A) :=
+match transplant t1 (fringe t2), transplant t2 (fringe t1) with
+| Some t1', Some t2' => Some (t1', t2')
+| _       , _        => None
+end.
+
+Lemma swap_fringe'_spec :
+  forall {A : Type} (t1 t2 : Tree A),
+    swap_fringe' t1 t2 = swap_fringe t1 t2.
+Proof.
+  induction t3; induction t3; cbn.
+  - reflexivity.
+  - cbn in *. destruct (depthWalk t3_1); cbn.
+    + destruct (depthWalk t3_2); cbn.
+      * unfold swap_fringe'. cbn. destruct t3_1; cbn.
+        -- destruct t3_2; cbn in *.
+           ++ reflexivity.
+Abort.
+
+(* TODO: pokazać równoważność obu definicji zamieniania grzywek *)
+
+(* end hide *)
 
 (** * Defunkcjonalizacja (TODO) *)
 
