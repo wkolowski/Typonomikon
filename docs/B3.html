@@ -588,15 +588,53 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 </div>
 
 <div class="doc">
-<a id="lab93"></a><h1 class="section">Logika pierwszego rzędu a logika wyższego rzędu (TODO)</h1>
+<a id="lab93"></a><h2 class="section">Negacja implikacji, czyli antyimplikacja</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">nimpl</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := ~ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nimpl_False_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">nimpl</span> <span class="id" title="var">False</span> <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nimpl_False_r</span>:<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nimpl</span> <span class="id" title="var">P</span> <span class="id" title="var">False</span> &lt;-&gt; ~ ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nimpl_True_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nimpl</span> <span class="id" title="var">True</span> <span class="id" title="var">P</span> &lt;-&gt; ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nimpl_True_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">nimpl</span> <span class="id" title="var">P</span> <span class="id" title="var">True</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nimpl_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nimpl</span> (~ <span class="id" title="var">P</span>) (~ <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">nimpl</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nimpl_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nimpl</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">nimpl</span> (~ <span class="id" title="var">Q</span>) (~ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab94"></a><h1 class="section">Logika pierwszego rzędu a logika wyższego rzędu (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab94"></a><h2 class="section">Logika pierwszego rzędu (TODO)</h2>
-
-<div class="paragraph"> </div>
-
-<a id="lab95"></a><h2 class="section">Taktyka <span class="inlinecode"><span class="id" title="tactic">firstorder</span></span> (TODO)</h2>
+<a id="lab95"></a><h2 class="section">Logika pierwszego rzędu (TODO)</h2>
 
 <div class="paragraph"> </div>
 

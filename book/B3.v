@@ -676,11 +676,77 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Negacja implikacji, czyli antyimplikacja *)
+
+Definition nimpl (P Q : Prop) : Prop := ~ (P -> Q).
+
+Lemma nimpl_False_l :
+  forall P : Prop,
+    ~ nimpl False P.
+(* begin hide *)
+Proof.
+  unfold nimpl.
+  intros P f. apply f. intros c. contradiction.
+Qed.
+(* end hide *)
+
+Lemma nimpl_False_r:
+  forall P : Prop,
+    nimpl P False <-> ~ ~ P.
+(* begin hide *)
+Proof.
+  unfold nimpl.
+  intros P; split; intros; assumption.
+Qed.
+(* end hide *)
+
+Lemma nimpl_True_l :
+  forall P : Prop,
+    nimpl True P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nimpl.
+  intros P; split.
+  - intros f p. apply f. intros _. assumption.
+  - intros f p. apply f, p. trivial.
+Qed.
+(* end hide *)
+
+Lemma nimpl_True_r :
+  forall P : Prop,
+    ~ nimpl P True.
+(* begin hide *)
+Proof.
+  unfold nimpl.
+  intros P f. apply f. intros _. trivial.
+Qed.
+(* end hide *)
+
+Lemma nimpl_conv :
+  forall P Q : Prop,
+    nimpl (~ P) (~ Q) -> nimpl P Q.
+(* begin hide *)
+Proof.
+  unfold nimpl.
+  intros P Q f g.
+  apply f. intros np q.
+Abort.
+(* end hide *)
+
+Lemma nimpl_conv :
+  forall P Q : Prop,
+    nimpl P Q -> nimpl (~ Q) (~ P).
+(* begin hide *)
+Proof.
+  unfold nimpl.
+  intros P Q f g.
+  apply f. intros p.
+Abort.
+(* end hide *)
+
 (** * Logika pierwszego rzędu a logika wyższego rzędu (TODO) *)
 
 (** ** Logika pierwszego rzędu (TODO) *)
-
-(** ** Taktyka [firstorder] (TODO) *)
 
 (** ** Logika drugiego rzędu i kodowania impredykatywne (TODO) *)
 

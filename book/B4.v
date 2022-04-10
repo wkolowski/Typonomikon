@@ -1,6 +1,7 @@
 (** * B4: Logika klasyczna [TODO] *)
 
 (* begin hide *)
+Require Export B1.
 Require Export B2.
 Require Export B3.
 (*
@@ -252,146 +253,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Logika klasyczna jako logika Boga (TODO) *)
-
-Lemma LEM_hard : forall P : Prop, P \/ ~ P.
-Proof.
-  intro P. left.
-Restart.
-  intro P. right. intro p.
-Abort.
-
-Lemma Irrefutable_LEM :
-  forall P : Prop, ~ ~ (P \/ ~ P).
-Proof.
-  intros P H.
-  apply H. right. intro p.
-  apply H. left. assumption.
-Qed.
-
-Lemma LEM_DNE :
-  (forall P : Prop, P \/ ~ P) ->
-    (forall P : Prop, ~ ~ P -> P).
-(* begin hide *)
-Proof.
-  intros LEM P nnp. destruct (LEM P).
-    assumption.
-    contradiction.
-Qed.
-(* end hide *)
-
-Lemma LEM_MI :
-  (forall P : Prop, P \/ ~ P) ->
-    (forall P Q : Prop, (P -> Q) -> ~ P \/ Q).
-(* begin hide *)
-Proof.
-  intros LEM P Q H. destruct (LEM P) as [p | p].
-    right. apply H. assumption.
-    left. assumption.
-Qed.
-(* end hide *)
-
-Lemma LEM_ME :
-  (forall P : Prop, P \/ ~ P) ->
-    (forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q)).
-(* begin hide *)
-Proof.
-  intros LEM P Q HPQ. destruct HPQ as [PQ QP].
-    destruct (LEM P) as [p | np], (LEM Q) as [q | nq].
-      left. split; assumption.
-      specialize (PQ p). contradiction.
-      specialize (QP q). contradiction.
-      right. split; assumption.
-Qed.
-(* end hide *)
-
-Lemma LEM_Peirce :
-  (forall P : Prop, P \/ ~ P) ->
-    (forall P Q : Prop, ((P -> Q) -> P) -> P).
-(* begin hide *)
-Proof.
-  intros LEM P Q H. destruct (LEM P) as [p | np].
-    assumption.
-    apply H. intro. contradiction.
-Qed.
-(* end hide *)
-
-Lemma LEM_CM :
-  (forall P : Prop, P \/ ~ P) ->
-    (forall P : Prop, (~ P -> P) -> P).
-(* begin hide *)
-Proof.
-  intros LEM P H. destruct (LEM P) as [p | np].
-    assumption.
-    apply H. assumption.
-Qed.
-(* end hide *)
-
-Lemma LEM_Contra :
-  (forall P : Prop, P \/ ~ P) ->
-    (forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q)).
-(* begin hide *)
-Proof.
-  intros LEM P Q H p. destruct (LEM Q) as [q | nq].
-    assumption.
-    specialize (H nq). contradiction.
-Qed.
-(* end hide *)
-
-(** ** Metoda zerojedynkowa *)
-
-(** Tutaj o rysowaniu tabelek. *)
-
-(** * Silne i słabe spójniki w służbie logiki klasycznej (TODO) *)
-
-(** ** Słaba koniunkcja *)
-
-Definition aand (P Q : Prop) : Prop := ~ (~ P \/ ~ Q).
-
-Lemma and_aand :
-  forall P Q : Prop,
-    P /\ Q -> aand P Q.
-(* begin hide *)
-Proof.
-  unfold aand.
-  intros P Q [p q] [np | nq].
-  - apply np. assumption.
-  - apply nq. assumption.
-Qed.
-(* end hide *)
-
-Lemma aand_and_classically :
-  LEM ->
-    forall P Q : Prop,
-      aand P Q -> P /\ Q.
-(* begin hide *)
-Proof.
-  unfold LEM, aand.
-  intros lem P Q f; split.
-  - destruct (lem P) as [p | np].
-    + assumption.
-    + contradict f. left. assumption.
-  - destruct (lem Q) as [q | nq].
-    + assumption.
-    + contradict f. right. assumption.
-Qed.
-(* end hide *)
-
-Lemma aand_and_tabu :
-  (forall P Q : Prop, aand P Q -> P /\ Q) ->
-    LEM.
-(* begin hide *)
-Proof.
-  unfold LEM, aand.
-  intros aand_and P.
-  destruct (aand_and (P \/ ~ P) True).
-  - intros [f | f].
-    + eapply Irrefutable_LEM. eassumption.
-    + contradiction.
-  - assumption.
-Qed.
-(* end hide *)
-
 (** ** Klasyczna dysjunkcja (TODO) *)
 
 Definition cor (P Q : Prop) : Prop :=
@@ -505,33 +366,25 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma cor_or_LEM :
-  (forall P Q : Prop, cor P Q -> P \/ Q)
-    <->
-  LEM.
+Lemma or_cor_classically :
+  LEM ->
+    forall P Q : Prop, cor P Q -> P \/ Q.
 (* begin hide *)
 Proof.
-  unfold cor, LEM; split.
-  - intros H P. apply H, cor_LEM.
-  - intros LEM P Q H. destruct (LEM (P \/ Q)).
-    + assumption.
-    + contradiction.
+  unfold LEM, cor.
+  intros lem P Q f. destruct (lem (P \/ Q)).
+  - assumption.
+  - contradiction.
 Qed.
 (* end hide *)
 
-Lemma cand_and_LEM :
-  (forall P Q : Prop, ~ ~ (P /\ Q) -> P /\ Q) ->
+Lemma or_cor_tabu :
+  (forall P Q : Prop, cor P Q -> P \/ Q) ->
     LEM.
 (* begin hide *)
 Proof.
-  unfold LEM. intros H P.
-  destruct (H (P \/ ~ P) True).
-  - intros f. apply f. split.
-    + right. intros p. apply f. split.
-      * left. assumption.
-      * trivial.
-    + trivial.
-  - assumption.
+  unfold cor, LEM.
+  intros or_cor P. apply or_cor. tauto.
 Qed.
 (* end hide *)
 
@@ -550,18 +403,25 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma weak_and_elim :
-  forall P Q R : Prop,
-    (P -> R) -> (Q -> R) -> (~ ~ R -> R) -> ~ (~ P /\ ~ Q) -> R.
+(** ** Bonus: klasyczna koń-junkcja *)
+
+Lemma cand_and_LEM :
+  (forall P Q : Prop, ~ ~ (P /\ Q) -> P /\ Q) ->
+    LEM.
 (* begin hide *)
 Proof.
-  intros P Q R pr qr nnrr pq.
-  apply nnrr. intro nr.
-  apply pq. split.
-  - intro p. apply nr, pr, p.
-  - intro q. apply nr, qr, q.
+  unfold LEM. intros H P.
+  destruct (H (P \/ ~ P) True).
+  - intros f. apply f. split.
+    + right. intros p. apply f. split.
+      * left. assumption.
+      * trivial.
+    + trivial.
+  - assumption.
 Qed.
 (* end hide *)
+
+(** ** Bonus 2: klasyczny kwantyfikator egzystencjalny *)
 
 Lemma weak_ex_elim :
   forall (A : Type) (P : A -> Prop) (R : Prop),
@@ -575,6 +435,98 @@ Proof.
   apply nr, (Hpr x), np.
 Qed.
 (* end hide *)
+
+(** * Logika klasyczna jako logika Boga (TODO) *)
+
+Lemma LEM_hard : forall P : Prop, P \/ ~ P.
+Proof.
+  intro P. left.
+Restart.
+  intro P. right. intro p.
+Abort.
+
+Lemma Irrefutable_LEM :
+  forall P : Prop, ~ ~ (P \/ ~ P).
+Proof.
+  intros P H.
+  apply H. right. intro p.
+  apply H. left. assumption.
+Qed.
+
+Lemma LEM_DNE :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P : Prop, ~ ~ P -> P).
+(* begin hide *)
+Proof.
+  intros LEM P nnp. destruct (LEM P).
+    assumption.
+    contradiction.
+Qed.
+(* end hide *)
+
+Lemma LEM_MI :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P Q : Prop, (P -> Q) -> ~ P \/ Q).
+(* begin hide *)
+Proof.
+  intros LEM P Q H. destruct (LEM P) as [p | p].
+    right. apply H. assumption.
+    left. assumption.
+Qed.
+(* end hide *)
+
+Lemma LEM_ME :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q)).
+(* begin hide *)
+Proof.
+  intros LEM P Q HPQ. destruct HPQ as [PQ QP].
+    destruct (LEM P) as [p | np], (LEM Q) as [q | nq].
+      left. split; assumption.
+      specialize (PQ p). contradiction.
+      specialize (QP q). contradiction.
+      right. split; assumption.
+Qed.
+(* end hide *)
+
+Lemma LEM_Peirce :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P Q : Prop, ((P -> Q) -> P) -> P).
+(* begin hide *)
+Proof.
+  intros LEM P Q H. destruct (LEM P) as [p | np].
+    assumption.
+    apply H. intro. contradiction.
+Qed.
+(* end hide *)
+
+Lemma LEM_CM :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P : Prop, (~ P -> P) -> P).
+(* begin hide *)
+Proof.
+  intros LEM P H. destruct (LEM P) as [p | np].
+    assumption.
+    apply H. assumption.
+Qed.
+(* end hide *)
+
+Lemma LEM_Contra :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q)).
+(* begin hide *)
+Proof.
+  intros LEM P Q H p. destruct (LEM Q) as [q | nq].
+    assumption.
+    specialize (H nq). contradiction.
+Qed.
+(* end hide *)
+
+(** ** Metoda zerojedynkowa *)
+
+(** Tutaj o rysowaniu tabelek. *)
+
+(** * Silne i słabe spójniki w służbie logiki klasycznej (TODO) *)
 
 (** ** Silna implikacja *)
 
@@ -962,6 +914,67 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Słaba koniunkcja *)
+
+Definition aand (P Q : Prop) : Prop := ~ (~ P \/ ~ Q).
+
+Lemma and_aand :
+  forall P Q : Prop,
+    P /\ Q -> aand P Q.
+(* begin hide *)
+Proof.
+  unfold aand.
+  intros P Q [p q] [np | nq].
+  - apply np. assumption.
+  - apply nq. assumption.
+Qed.
+(* end hide *)
+
+Lemma aand_and_classically :
+  LEM ->
+    forall P Q : Prop,
+      aand P Q -> P /\ Q.
+(* begin hide *)
+Proof.
+  unfold LEM, aand.
+  intros lem P Q f; split.
+  - destruct (lem P) as [p | np].
+    + assumption.
+    + contradict f. left. assumption.
+  - destruct (lem Q) as [q | nq].
+    + assumption.
+    + contradict f. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma aand_and_tabu :
+  (forall P Q : Prop, aand P Q -> P /\ Q) ->
+    LEM.
+(* begin hide *)
+Proof.
+  unfold LEM, aand.
+  intros aand_and P.
+  destruct (aand_and (P \/ ~ P) True).
+  - intros [f | f].
+    + eapply Irrefutable_LEM. eassumption.
+    + contradiction.
+  - assumption.
+Qed.
+(* end hide *)
+
+Lemma aand_elim :
+  forall P Q R : Prop,
+    (P -> R) -> (Q -> R) -> (~ ~ R -> R) -> ~ (~ P /\ ~ Q) -> R.
+(* begin hide *)
+Proof.
+  intros P Q R pr qr nnrr pq.
+  apply nnrr. intro nr.
+  apply pq. split.
+  - intro p. apply nr, pr, p.
+  - intro q. apply nr, qr, q.
+Qed.
+(* end hide *)
+
 (** ** Silna równoważność *)
 
 Definition siff (P Q : Prop) : Prop := P /\ Q \/ ~ P /\ ~ Q.
@@ -1080,6 +1093,29 @@ Proof.
   clear lem. unfold siff. tauto.
 Qed.
 (* end hide *)
+
+(** ** Silna antyimplikacja (TODO) *)
+
+Definition snimpl (P Q : Prop) : Prop := P /\ ~ Q.
+
+(* TODO: jakieś lematy *)
+
+Definition NI : Prop :=
+  forall P Q : Prop, ~ (P -> Q) -> P /\ ~ Q.
+
+Lemma NI_LEM :
+  NI -> LEM.
+(* begin hide *)
+Proof.
+  unfold NI, LEM.
+  intros NI P.
+  destruct (NI (P \/ ~ P) False) as [lem _].
+  - apply Irrefutable_LEM.
+  - assumption.
+Qed.
+(* end hide *)
+
+(** TODO: słabe kwantyfikatory *)
 
 (** ** Wymyśl to sam... (TODO) *)
 

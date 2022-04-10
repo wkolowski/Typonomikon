@@ -934,23 +934,6 @@ Qed.
 
 (** ** Inne mało ważne logiki pośrednie *)
 
-(** *** Negacja implikacji (TODO) *)
-
-Definition NI : Prop :=
-  forall P Q : Prop, ~ (P -> Q) -> P /\ ~ Q.
-
-Lemma NI_LEM :
-  NI -> LEM.
-(* begin hide *)
-Proof.
-  unfold NI, LEM.
-  intros NI P.
-  destruct (NI (P \/ ~ P) False).
-    firstorder.
-    assumption.
-Qed.
-(* end hide *)
-
 (** *** [IOR] *)
 
 Definition IOR : Prop :=
@@ -974,7 +957,21 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Godel-Dummet (TODO) *)
+Lemma IOR_LEM :
+  LEM -> IOR.
+(* begin hide *)
+Proof.
+  unfold IOR, LEM.
+  intros lem P Q R f.
+  destruct (lem Q) as [q | nq].
+  - left. intros _. assumption.
+  - right. intros p. destruct (f p) as [q | r].
+    + contradiction.
+    + assumption.
+Qed.
+(* end hide *)
+
+(** *** Gödel-Dummet (TODO) *)
 
 Definition GD : Prop :=
   forall P Q : Prop, (P -> Q) \/ (Q -> P).
@@ -2688,6 +2685,8 @@ Qed.
     się nią posługiwać. *)
 
 (** * Zadania (TODO) *)
+
+(** * Taktyka [firstorder] (TODO) *)
 
 (** * Jakieś podsumowanie (TODO) *)
 
