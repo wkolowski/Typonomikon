@@ -1,4 +1,4 @@
-(** * H: Nierówności, ścieżki i przepaście [TODO] *)
+(** * H: Równość i ścieżki [TODO] *)
 
 Set Universe Polymorphism.
 
@@ -287,167 +287,6 @@ Qed.
 
 End nat_eq_rec_SProp.
 
-(** ** Różność liczb naturalnych - rekurencyjnie *)
-
-Module nat_neq_rec.
-
-(** A co to znaczy, że liczby naturalne nie są równe? *)
-
-(** Powinien być tylko jeden dowód na nierówność. *)
-
-Fixpoint code (n m : nat) : Type :=
-match n, m with
-    | 0, 0 => False
-    | 0, S _ => True
-    | S _, 0 => True
-    | S n', S m' => code n' m'
-end.
-
-Lemma isProp_code :
-  forall {n m : nat} (c1 c2 : code n m), c1 = c2.
-(* begin hide *)
-Proof.
-  induction n as [| n'], m as [| m']; cbn.
-    1-3: destruct c1, c2; reflexivity.
-    apply IHn'.
-Qed.
-(* end hide *)
-
-Fixpoint encode {n m : nat} {struct n} : n <> m -> code n m.
-(* begin hide *)
-Proof.
-  destruct n as [| n'], m as [| m']; cbn; intro p.
-    apply p. reflexivity.
-    exact I.
-    exact I.
-    apply encode. intro q. apply p. f_equal. exact q.
-Defined.
-(* end hide *)
-
-Fixpoint decode {n m : nat} : code n m -> n <> m.
-(* begin hide *)
-Proof.
-  destruct n as [| n'], m as [| m']; cbn; intro p.
-    contradiction.
-    inversion 1.
-    inversion 1.
-    intro q. apply (decode _ _ p). inversion q. reflexivity.
-Defined.
-(* end hide *)
-
-Lemma encode_decode :
-  forall {n m : nat} (p : n <> m),
-    decode (encode p) = p.
-Proof.
-  intros.
-  apply functional_extensionality.
-  destruct x.
-  contradiction.
-Qed.
-
-Lemma decode_encode :
-  forall {n m : nat} (c : code n m),
-    encode (decode c) = c.
-Proof.
-  intros.
-  apply isProp_code.
-Qed.
-
-End nat_neq_rec.
-
-(** ** Różność liczb naturalnych - induktywnie *)
-
-Module nat_neq_ind.
-
-Inductive nat_neq : nat -> nat -> Prop :=
-    | ZS : forall n : nat, nat_neq 0 (S n)
-    | SZ : forall n : nat, nat_neq (S n) 0
-    | SS : forall n m : nat, nat_neq n m -> nat_neq (S n) (S m).
-
-Arguments ZS {n}.
-Arguments SZ {n}.
-Arguments SS {n m} _.
-
-Scheme nat_neq_ind' := Induction for nat_neq Sort Prop.
-
-Lemma isProp_nat_neq :
-  forall {n m : nat} (p q : nat_neq n m), p = q.
-(* begin hide *)
-Proof.
-  induction p using nat_neq_ind';
-  dependent destruction q.
-    reflexivity.
-    reflexivity.
-    apply f_equal, IHp.
-Qed.
-(* end hide *)
-
-Fixpoint encode {n m : nat} : n <> m -> nat_neq n m :=
-match n, m with
-    | 0, 0       => fun p => match p eq_refl with end
-    | 0, S m'    => fun _ => @ZS m'
-    | S n', 0    => fun _ => @SZ n'
-    | S n', S m' => fun p => SS (@encode n' m' (fun p' => p (f_equal S p')))
-end.
-
-Fixpoint decode {n m : nat} (c : nat_neq n m) : n <> m.
-Proof.
-  destruct c.
-    inversion 1.
-    inversion 1.
-    inversion 1. apply (decode _ _ c). assumption.
-Defined.
-
-Lemma encode_decode :
-  forall {n m : nat} (p : n <> m),
-    decode (encode p) = p.
-(* begin hide *)
-Proof.
-  induction n as [| n'];
-  destruct  m as [| m'];
-  cbn; intros.
-    contradiction.
-    apply functional_extensionality. inversion x.
-    apply functional_extensionality. inversion x.
-    apply functional_extensionality. intro. contradiction.
-Qed.
-(* end hide *)
-
-Lemma decode_encode :
-  forall {n m : nat} (c : nat_neq n m),
-    encode (decode c) = c.
-(* begin hide *)
-Proof.
-  induction c using nat_neq_ind'; cbn.
-    1-2: reflexivity.
-    f_equal. rewrite <- IHc. f_equal.
-      apply functional_extensionality.
-      destruct x. cbn. rewrite IHc. reflexivity.
-Qed.
-(* end hide *)
-
-End nat_neq_ind.
-
-Module nat_eq_neq.
-
-Import nat_eq_ind nat_neq_ind.
-
-Lemma nat_eq_dec :
-  forall n m : nat, nat_eq n m + nat_neq n m.
-(* begin hide *)
-Proof.
-  induction n as [| n']; destruct m as [| m'].
-    left. constructor.
-    right. constructor.
-    right. constructor.
-    destruct (IHn' m').
-      left. constructor. assumption.
-      right. constructor. assumption.
-Qed.
-(* end hide *)
-
-End nat_eq_neq.
-
 (** ** Porządek [<=] na liczbach naturalnych *)
 
 Module encodedecode1.
@@ -723,6 +562,408 @@ Abort.
 (* end hide *)
 
 End list_eq_forall.
+
+(** * Ścieżki w typach koinduktywnych (TODO) *)
+
+(** * Ścieżki między funkcjami (TODO) *)
+
+(** * Ścieżki w uniwersum (TODO) *)
+
+(** ** Ćwiczenia *)
+
+(** **** Ćwiczenie *)
+
+(** Miło by było pamiętać, że Coq to nie jest jakiś tam biedajęzyk
+    programowania, tylko pełnoprawny system podstaw matematyki (no,
+    prawie...). W związku z tym pokaż, że [nat <> Type]. *)
+
+Module nat_not_Type.
+
+Definition idtoeqv {A B : Type} (p : A = B) : A -> B.
+(* begin hide *)
+Proof.
+  destruct p. intro x. exact x.
+Defined.
+(* end hide *)
+
+Lemma idtoeqv_sur :
+  forall (A B : Type) (p : A = B) (b : B),
+    exists a : A, idtoeqv p a = b.
+(* begin hide *)
+Proof.
+  destruct p. intro a. exists a. reflexivity.
+Qed.
+(* end hide *)
+
+Definition wut
+  (f : nat -> Type) (n : nat) (h : f n -> forall m : nat, f m -> bool)
+  : forall k : nat, f k -> bool.
+(* begin hide *)
+Proof.
+  intros k x. destruct (Nat.eqb_spec n k).
+    destruct e. exact (negb (h x n x)).
+    exact true.
+Defined.
+(* end hide *)
+
+Theorem nat_not_Type : ~ @eq Type nat Type.
+(* begin hide *)
+Proof.
+  intro p.
+  pose (f := idtoeqv p). pose (idtoeqv_sur _ _ p).
+  change (idtoeqv p) with f in e. clearbody f e.
+  pose (A := forall n : nat, f n -> bool).
+  destruct (e A) as [n q].
+  pose (h := idtoeqv q). pose (e' := idtoeqv_sur _ _ q).
+  change (idtoeqv q) with h in e'; clearbody h e'.
+  destruct (e' (wut f n h)) as [x r]; unfold wut in r.
+  apply (@f_equal _ _ (fun f => f n x)) in r.
+  destruct (Nat.eqb_spec n n) as [s | s].
+    rewrite (nat_eq_rec.isSet_nat s eq_refl) in r.
+    destruct (h x n x); inversion r.
+    contradiction.
+Qed.
+(* end hide *)
+
+End nat_not_Type.
+
+(** **** Ćwiczenie *)
+
+(** To samo co wyżej, ale tym razem dla dowolnego typu, który ma
+    rozstrzygalną równość oraz spełnia aksjomat K. *)
+
+(* begin hide *)
+Section EqDec_not_Type.
+
+Definition idtoeqv {A B : Type} (p : A = B) : A -> B.
+(* begin hide *)
+Proof.
+  destruct p. intro x. exact x.
+Defined.
+(* end hide *)
+
+Lemma idtoeqv_sur :
+  forall (A B : Type) (p : A = B) (b : B),
+    exists a : A, idtoeqv p a = b.
+(* begin hide *)
+Proof.
+  destruct p. intro a. exists a. reflexivity.
+Qed.
+(* end hide *)
+
+Variables
+  (A : Type)
+  (eq_dec : A -> A -> bool)
+  (eq_dec_spec : forall x y : A, reflect (x = y) (eq_dec x y))
+  (K : forall (x : A) (p : x = x), p = eq_refl).
+
+Definition wut
+  (f : A -> Type) (x : A) (h : f x -> forall y : A, f y -> bool)
+  : forall z : A, f z -> bool.
+(* begin hide *)
+Proof.
+  intros y fy. destruct (eq_dec_spec x y).
+    destruct e. exact (negb (h fy x fy)).
+    exact true.
+Defined.
+(* end hide *)
+
+Theorem A_not_Type : ~ @eq Type A Type.
+(* begin hide *)
+Proof.
+  intro p.
+  pose (f := idtoeqv p); pose (idtoeqv_sur _ _ p);
+  change (idtoeqv p) with f in e; clearbody f e.
+  pose (H := forall x : A, f x -> bool).
+  destruct (e H) as [x q].
+  pose (h := idtoeqv q); pose (e' := idtoeqv_sur _ _ q);
+  change (idtoeqv q) with h in e'; clearbody h e'.
+  destruct (e' (wut f x h)) as [fx r]; unfold wut in r.
+  apply (@f_equal _ _ (fun f => f x fx)) in r.
+  destruct (eq_dec_spec x x) as [s | s].
+    rewrite (K _ s) in r. destruct (h fx x fx); inversion r.
+    contradiction.
+Qed.
+(* end hide *)
+
+End EqDec_not_Type.
+
+(** **** Ćwiczenie *)
+
+(** Dobrze wiemy, że [SProp] to nie [Type]... a może jednak?
+    Rozstrzygnij, czy [SProp = Type] zachodzi, czy nie. *)
+
+Module SProp_not_Type.
+
+Definition S := SProp.
+Definition U := Type.
+
+Lemma SProp_not_Type :
+  S <> U.
+Proof.
+  intro.
+  assert (forall (P : S) (p1 p2 : P), p1 = p2) by reflexivity.
+  assert ((forall (A : U) (x y : A), x = y) -> False).
+    intro. specialize (H1 bool true false). congruence.
+  apply H1. intros.
+Abort.
+
+End SProp_not_Type.
+
+(** * Różność *)
+
+(** ** Nierówność liczb naturalnych - rekurencyjnie *)
+
+Module nat_neq_rec.
+
+(** A co to znaczy, że liczby naturalne nie są równe? *)
+
+(** Powinien być tylko jeden dowód na nierówność. *)
+
+Fixpoint code (n m : nat) : Type :=
+match n, m with
+    | 0, 0 => False
+    | 0, S _ => True
+    | S _, 0 => True
+    | S n', S m' => code n' m'
+end.
+
+Lemma isProp_code :
+  forall {n m : nat} (c1 c2 : code n m), c1 = c2.
+(* begin hide *)
+Proof.
+  induction n as [| n'], m as [| m']; cbn.
+    1-3: destruct c1, c2; reflexivity.
+    apply IHn'.
+Qed.
+(* end hide *)
+
+Fixpoint encode {n m : nat} {struct n} : n <> m -> code n m.
+(* begin hide *)
+Proof.
+  destruct n as [| n'], m as [| m']; cbn; intro p.
+    apply p. reflexivity.
+    exact I.
+    exact I.
+    apply encode. intro q. apply p. f_equal. exact q.
+Defined.
+(* end hide *)
+
+Fixpoint decode {n m : nat} : code n m -> n <> m.
+(* begin hide *)
+Proof.
+  destruct n as [| n'], m as [| m']; cbn; intro p.
+    contradiction.
+    inversion 1.
+    inversion 1.
+    intro q. apply (decode _ _ p). inversion q. reflexivity.
+Defined.
+(* end hide *)
+
+Lemma encode_decode :
+  forall {n m : nat} (p : n <> m),
+    decode (encode p) = p.
+Proof.
+  intros.
+  apply functional_extensionality.
+  destruct x.
+  contradiction.
+Qed.
+
+Lemma decode_encode :
+  forall {n m : nat} (c : code n m),
+    encode (decode c) = c.
+Proof.
+  intros.
+  apply isProp_code.
+Qed.
+
+End nat_neq_rec.
+
+(** ** Nierówność liczb naturalnych - induktywnie *)
+
+Module nat_neq_ind.
+
+Inductive nat_neq : nat -> nat -> Prop :=
+    | ZS : forall n : nat, nat_neq 0 (S n)
+    | SZ : forall n : nat, nat_neq (S n) 0
+    | SS : forall n m : nat, nat_neq n m -> nat_neq (S n) (S m).
+
+Arguments ZS {n}.
+Arguments SZ {n}.
+Arguments SS {n m} _.
+
+Scheme nat_neq_ind' := Induction for nat_neq Sort Prop.
+
+Lemma isProp_nat_neq :
+  forall {n m : nat} (p q : nat_neq n m), p = q.
+(* begin hide *)
+Proof.
+  induction p using nat_neq_ind';
+  dependent destruction q.
+    reflexivity.
+    reflexivity.
+    apply f_equal, IHp.
+Qed.
+(* end hide *)
+
+Fixpoint encode {n m : nat} : n <> m -> nat_neq n m :=
+match n, m with
+    | 0, 0       => fun p => match p eq_refl with end
+    | 0, S m'    => fun _ => @ZS m'
+    | S n', 0    => fun _ => @SZ n'
+    | S n', S m' => fun p => SS (@encode n' m' (fun p' => p (f_equal S p')))
+end.
+
+Fixpoint decode {n m : nat} (c : nat_neq n m) : n <> m.
+Proof.
+  destruct c.
+    inversion 1.
+    inversion 1.
+    inversion 1. apply (decode _ _ c). assumption.
+Defined.
+
+Lemma encode_decode :
+  forall {n m : nat} (p : n <> m),
+    decode (encode p) = p.
+(* begin hide *)
+Proof.
+  induction n as [| n'];
+  destruct  m as [| m'];
+  cbn; intros.
+    contradiction.
+    apply functional_extensionality. inversion x.
+    apply functional_extensionality. inversion x.
+    apply functional_extensionality. intro. contradiction.
+Qed.
+(* end hide *)
+
+Lemma decode_encode :
+  forall {n m : nat} (c : nat_neq n m),
+    encode (decode c) = c.
+(* begin hide *)
+Proof.
+  induction c using nat_neq_ind'; cbn.
+    1-2: reflexivity.
+    f_equal. rewrite <- IHc. f_equal.
+      apply functional_extensionality.
+      destruct x. cbn. rewrite IHc. reflexivity.
+Qed.
+(* end hide *)
+
+End nat_neq_ind.
+
+Module nat_eq_neq.
+
+Import nat_eq_ind nat_neq_ind.
+
+Lemma nat_eq_dec :
+  forall n m : nat, nat_eq n m + nat_neq n m.
+(* begin hide *)
+Proof.
+  induction n as [| n']; destruct m as [| m'].
+  - left. constructor.
+  - right. constructor.
+  - right. constructor.
+  - destruct (IHn' m').
+    + left. constructor. assumption.
+    + right. constructor. assumption.
+Qed.
+(* end hide *)
+
+End nat_eq_neq.
+
+(** ** Nierówność list - rekursywnie *)
+
+Fixpoint list_neq_rec {A : Type} (l1 l2 : list A) : Prop :=
+match l1, l2 with
+    | [], [] => False
+    | [], _ => True
+    | _, [] => True
+    | h1 :: t1, h2 :: t2 => h1 <> h2 \/ list_neq_rec t1 t2
+end.
+
+Lemma list_neq_rec_spec :
+  forall (A : Type) (l1 l2 : list A),
+    list_neq_rec l1 l2 -> l1 <> l2.
+(* begin hide *)
+Proof.
+  induction l1 as [| h1 t1];
+  destruct l2 as [| h2 t2];
+  cbn; intros.
+    contradiction.
+    congruence.
+    congruence.
+    inversion 1; subst. destruct H.
+      contradiction.
+      apply (IHt1 _ H). reflexivity.
+Qed.
+(* end hide *)
+
+(** ** Nierówność list - induktywnie *)
+
+Inductive list_neq_ind {A : Type} : list A -> list A -> Prop :=
+    | nil_cons : forall h t, list_neq_ind nil (cons h t)
+    | cons_nil : forall h t, list_neq_ind (cons h t) nil
+    | cons_cons1 :
+        forall h1 h2 t1 t2,
+          h1 <> h2 -> list_neq_ind (cons h1 t1) (cons h2 t2)
+    | cons_cons2 :
+        forall h1 h2 t1 t2,
+          list_neq_ind t1 t2 -> list_neq_ind (cons h1 t1) (cons h2 t2).
+
+Lemma list_neq_ind_spec :
+  forall {A : Type} (l1 l2 : list A),
+    list_neq_ind l1 l2 -> l1 <> l2.
+Proof.
+  induction 1; cbn; congruence.
+Qed.
+
+Lemma list_neq_ind_list_neq_rec :
+  forall {A : Type} (l1 l2 : list A),
+    list_neq_ind l1 l2 -> list_neq_rec l1 l2.
+Proof.
+  induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn; inversion_clear 1.
+  1-2: trivial.
+  - left. assumption.
+  - right. apply IHt1. assumption.
+Qed.
+
+(** ** Różność (słaby apartheid) list - rekursywnie *)
+
+Fixpoint list_apart_rec
+  {A : Type} (R : A -> A -> Prop) (l1 l2 : list A) : Prop :=
+match l1, l2 with
+    | [], [] => False
+    | h1 :: t1, h2 :: t2 => R h1 h2 \/ list_apart_rec R t1 t2
+    | _, _ => True
+end.
+
+Lemma list_apart_list_neq_rec :
+  forall {A : Type} (R : A -> A -> Prop) (l1 l2 : list A),
+    (forall x y : A, R x y -> x <> y) ->
+      list_apart_rec R l1 l2 -> list_neq_rec l1 l2.
+Proof.
+  induction l1 as [| h1 t1 IH]; destruct l2 as [| h2 t2]; cbn; firstorder.
+Qed.
+
+(** ** Różność (silny apartheid) list - rekursywnie *)
+
+Fixpoint list_strong_apart_rec
+  {A : Type} (R : A -> A -> Type) (l1 l2 : list A) : Type :=
+match l1, l2 with
+    | [], [] => False
+    | h1 :: t1, h2 :: t2 => R h1 h2 + list_strong_apart_rec R t1 t2
+    | _, _ => True
+end.
+
+Lemma list_strong_apart_rec_list_apart :
+  forall {A : Type} (R : A -> A -> Prop) (l1 l2 : list A),
+    (forall x y : A, R x y -> x <> y) ->
+      list_strong_apart_rec R l1 l2 -> list_apart_rec R l1 l2.
+Proof.
+  induction l1 as [| h1 t1 IH]; destruct l2 as [| h2 t2]; cbn; firstorder.
+Qed.
 
 (** ** Różność list - induktywnie *)
 
@@ -1125,103 +1366,7 @@ Abort.
 
 End list_neq_ind.
 
-(** ** Różność list - rekursywnie *)
-
-Module list_neq_rec.
-
-Fixpoint list_neq {A : Type} (l1 l2 : list A) : Prop :=
-match l1, l2 with
-    | [], [] => False
-    | [], _ => True
-    | _, [] => True
-    | h1 :: t1, h2 :: t2 => h1 <> h2 \/ list_neq t1 t2
-end.
-
-Lemma list_neq_spec :
-  forall (A : Type) (l1 l2 : list A),
-    list_neq l1 l2 -> l1 <> l2.
-(* begin hide *)
-Proof.
-  induction l1 as [| h1 t1];
-  destruct l2 as [| h2 t2];
-  cbn; intros.
-    contradiction.
-    congruence.
-    congruence.
-    inversion 1; subst. destruct H.
-      contradiction.
-      apply (IHt1 _ H). reflexivity.
-Qed.
-(* end hide *)
-
-End list_neq_rec.
-
-(** ** Apartheid list (TODO) *)
-
-(* begin hide *)
-Module weak_apart.
-
-Inductive unequal {A : Type} : list A -> list A -> Prop :=
-    | nil_cons : forall h t, unequal nil (cons h t)
-    | cons_nil : forall h t, unequal (cons h t) nil
-    | cons_cons1 :
-        forall h1 h2 t1 t2,
-          h1 <> h2 -> unequal (cons h1 t1) (cons h2 t2)
-    | cons_cons2 :
-        forall h1 h2 t1 t2,
-          unequal t1 t2 -> unequal (cons h1 t1) (cons h2 t2).
-
-(*
-Goal
-  forall {A : Type} (l1 l2 : list A),
-    unequal l1 l2 <-> neq l1 l2.
-Proof.
-  split.
-    induction 1; cbn; firstorder.
-    revert l2. induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn.
-      contradiction.
-      1-2: constructor.
-      destruct 1.
-        constructor 3. assumption.
-        constructor 4. apply IHt1. assumption.
-Qed.
-*)
-
-End weak_apart.
-
-Module param_apart.
-
-Fixpoint neq
-  {A : Type} (apart : A -> A -> Prop) (l1 l2 : list A) : Prop :=
-match l1, l2 with
-    | nil, nil => False
-    | nil, cons _ _ => True
-    | cons _ _, nil => True
-    | cons h1 t1, cons h2 t2 => apart h1 h2 \/ neq apart t1 t2
-end.
-
-(*
-Goal
-  forall {A : Type} (apart : A -> A -> Prop) (l1 l2 : list A),
-    unequal apart l1 l2 <-> neq apart l1 l2.
-Proof.
-  split.
-    induction 1; cbn; firstorder.
-    revert l2. induction l1 as [| h1 t1]; destruct l2 as [| h2 t2]; cbn.
-      contradiction.
-      1-2: constructor.
-      destruct 1.
-        constructor 3. assumption.
-        constructor 4. apply IHt1. assumption.
-Qed.
-*)
-
-End param_apart.
-(* end hide *)
-
-(** * Ścieżki w typach koinduktywnych *)
-
-(** ** Nierówność liczb konaturalnych *)
+(** ** Nierówność liczb konaturalnych - induktywnie *)
 
 Require F2.
 
@@ -1242,17 +1387,21 @@ Lemma conat_neq_spec :
     conat_neq n m -> n <> m.
 (* begin hide *)
 Proof.
-  induction 1.
-    inversion 1.
-    inversion 1.
-    intro Heq. apply (f_equal out) in Heq.
-      cbn in Heq. inversion Heq; subst. contradiction.
+  induction 1; intro Heq; inversion Heq; congruence.
+Qed.
+(* end hide *)
+
+Lemma conat_neq_irrefl :
+  forall n : conat, ~ conat_neq n n.
+(* begin hide *)
+Proof.
+  intros n Hneq. eapply conat_neq_spec; eauto.
 Qed.
 (* end hide *)
 
 End conat_neq.
 
-(** ** Różność strumieni *)
+(** ** Nierówność strumieni *)
 
 Require F3.
 
@@ -1261,215 +1410,226 @@ Module Stream_neq.
 Import F3.
 
 Inductive Stream_neq
-  {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Type :=
-    | Stream_neq_hd :
-        forall (h1 h2 : A) (t1 t2 : Stream A),
-          R h1 h2 -> Stream_neq R (scons h1 t1) (scons h2 t2)
-    | Stream_neq_tl :
-        forall (h1 h2 : A) (t1 t2 : Stream A),
-          Stream_neq R t1 t2 -> Stream_neq R (scons h1 t1) (scons h2 t2).
-
-Inductive Stream_neq'
   {A : Type} : Stream A -> Stream A -> Type :=
-    | Stream_neq_hd' :
+    | Stream_apart_hd' :
         forall t1 t2 : Stream A,
-          hd t1 <> hd t2 -> Stream_neq' t1 t2
-    | Stream_neq_tl' :
+          hd t1 <> hd t2 -> Stream_neq t1 t2
+    | Stream_apart_tl' :
         forall t1 t2 : Stream A,
-          Stream_neq' (tl t1) (tl t2) -> Stream_neq' t1 t2.
+          Stream_neq (tl t1) (tl t2) -> Stream_neq t1 t2.
 
 Lemma Stream_neq_not_sim :
-  forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
-    (forall x : A, ~ R x x) ->
-      Stream_neq R s1 s2 -> ~ sim s1 s2.
-(* begin hide *)
-Proof.
-  induction 2.
-    inversion 1. cbn in *. subst. apply (H h2). assumption.
-    inversion 1. cbn in *. contradiction.
-Qed.
-(* end hide *)
-
-Lemma Stream_neq'_not_sim :
   forall {A : Type} {s1 s2 : Stream A},
-      Stream_neq' s1 s2 -> ~ sim s1 s2.
+    Stream_neq s1 s2 -> ~ sim s1 s2.
 (* begin hide *)
 Proof.
   induction 1; intros []; contradiction.
 Qed.
 (* end hide *)
 
-Lemma Stream_neq'_Stream_neq :
+Lemma Stream_neq_neq :
   forall {A : Type} {s1 s2 : Stream A},
-    Stream_neq' s1 s2 ->
-      Stream_neq (fun x y => x <> y) s1 s2.
+    Stream_neq s1 s2 -> s1 <> s2.
 (* begin hide *)
 Proof.
-  induction 1.
-    destruct t1, t2. cbn in *. left. assumption.
-    destruct t1, t2. cbn in *. right. assumption.
+  induction 1; intros ->; contradiction.
 Qed.
-(* end hide *)
-
-Lemma Stream_neq_Stream_neq' :
-  forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
-    (forall x : A, ~ R x x) ->
-      Stream_neq R s1 s2 -> Stream_neq' s1 s2.
-(* begin hide *)
-Proof.
-  induction 2.
-    left. cbn. intro. subst. apply (H _ r).
-    right. cbn. assumption.
-Qed.
-
 (* end hide *)
 
 End Stream_neq.
 
-(** * Ścieżki między funkcjami *)
+(** ** Różność (słaby apartheid) strumieni - induktywnie *)
 
-(** * Ścieżki w uniwersum *)
+Require F3.
 
-(** ** Ćwiczenia *)
+Module Stream_apart.
 
-(** **** Ćwiczenie *)
+Import F3 Stream_neq.
 
-(** Miło by było pamiętać, że Coq to nie jest jakiś tam biedajęzyk
-    programowania, tylko pełnoprawny system podstaw matematyki (no,
-    prawie...). W związku z tym pokaż, że [nat <> Type]. *)
+Inductive Stream_apart
+  {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Type :=
+    | Stream_apart_hd :
+        forall (h1 h2 : A) (t1 t2 : Stream A),
+          R h1 h2 -> Stream_apart R (scons h1 t1) (scons h2 t2)
+    | Stream_apart_tl :
+        forall (h1 h2 : A) (t1 t2 : Stream A),
+          Stream_apart R t1 t2 -> Stream_apart R (scons h1 t1) (scons h2 t2).
 
-Module nat_not_Type.
-
-Definition idtoeqv {A B : Type} (p : A = B) : A -> B.
+Lemma Stream_apart_not_sim :
+  forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
+    (forall x : A, ~ R x x) ->
+      Stream_apart R s1 s2 -> ~ sim s1 s2.
 (* begin hide *)
 Proof.
-  destruct p. intro x. exact x.
-Defined.
-(* end hide *)
-
-Lemma idtoeqv_sur :
-  forall (A B : Type) (p : A = B) (b : B),
-    exists a : A, idtoeqv p a = b.
-(* begin hide *)
-Proof.
-  destruct p. intro a. exists a. reflexivity.
+  induction 2; intros Hsim; inversion Hsim; cbn in *; subst; clear Hsim.
+  - apply (H h2). assumption.
+  - contradiction.
 Qed.
 (* end hide *)
 
-Definition wut
-  (f : nat -> Type) (n : nat) (h : f n -> forall m : nat, f m -> bool)
-  : forall k : nat, f k -> bool.
+Lemma Stream_neq_Stream_apart :
+  forall {A : Type} {s1 s2 : Stream A},
+    Stream_neq s1 s2 ->
+      Stream_apart (fun x y => x <> y) s1 s2.
 (* begin hide *)
 Proof.
-  intros k x. destruct (Nat.eqb_spec n k).
-    destruct e. exact (negb (h x n x)).
-    exact true.
-Defined.
-(* end hide *)
-
-Theorem nat_not_Type : ~ @eq Type nat Type.
-(* begin hide *)
-Proof.
-  intro p.
-  pose (f := idtoeqv p). pose (idtoeqv_sur _ _ p).
-  change (idtoeqv p) with f in e. clearbody f e.
-  pose (A := forall n : nat, f n -> bool).
-  destruct (e A) as [n q].
-  pose (h := idtoeqv q). pose (e' := idtoeqv_sur _ _ q).
-  change (idtoeqv q) with h in e'; clearbody h e'.
-  destruct (e' (wut f n h)) as [x r]; unfold wut in r.
-  apply (@f_equal _ _ (fun f => f n x)) in r.
-  destruct (Nat.eqb_spec n n) as [s | s].
-    rewrite (nat_eq_rec.isSet_nat s eq_refl) in r.
-    destruct (h x n x); inversion r.
-    contradiction.
+  induction 1.
+  - destruct t1, t2. cbn in *. left. assumption.
+  - destruct t1, t2. cbn in *. right. assumption.
 Qed.
 (* end hide *)
 
-End nat_not_Type.
-
-(** **** Ćwiczenie *)
-
-(** To samo co wyżej, ale tym razem dla dowolnego typu, który ma
-    rozstrzygalną równość oraz spełnia aksjomat K. *)
-
-(* begin hide *)
-Section EqDec_not_Type.
-
-Definition idtoeqv {A B : Type} (p : A = B) : A -> B.
+Lemma Stream_apart_Stream_neq :
+  forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
+    (forall x : A, ~ R x x) ->
+      Stream_apart R s1 s2 -> Stream_neq s1 s2.
 (* begin hide *)
 Proof.
-  destruct p. intro x. exact x.
-Defined.
-(* end hide *)
-
-Lemma idtoeqv_sur :
-  forall (A B : Type) (p : A = B) (b : B),
-    exists a : A, idtoeqv p a = b.
-(* begin hide *)
-Proof.
-  destruct p. intro a. exists a. reflexivity.
+  induction 2.
+  - left. cbn. intro. subst. apply (H _ r).
+  - right. cbn. assumption.
 Qed.
 (* end hide *)
 
-Variables
-  (A : Type)
-  (eq_dec : A -> A -> bool)
-  (eq_dec_spec : forall x y : A, reflect (x = y) (eq_dec x y))
-  (K : forall (x : A) (p : x = x), p = eq_refl).
+End Stream_apart.
 
-Definition wut
-  (f : A -> Type) (x : A) (h : f x -> forall y : A, f y -> bool)
-  : forall z : A, f z -> bool.
+(** ** Różność (silny apartheid) strumieni - induktywnie *)
+
+Require F3.
+
+Module Stream_strong_apart.
+
+Import F3 Stream_apart.
+
+Inductive Stream_strong_apart
+  {A : Type} (R : A -> A -> Type) : Stream A -> Stream A -> Type :=
+    | Stream_strong_apart_hd :
+        forall s1 s2 : Stream A,
+          R (hd s1) (hd s2) -> Stream_strong_apart R s1 s2
+    | Stream_strong_apart_tl :
+        forall s1 s2 : Stream A,
+          Stream_strong_apart R (tl s1) (tl s2) -> Stream_strong_apart R s1 s2.
+
+Lemma Stream_strong_apart_spec :
+  forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
+    (forall x : A, ~ R x x) ->
+      Stream_strong_apart R s1 s2 -> Stream_apart R s1 s2.
 (* begin hide *)
 Proof.
-  intros y fy. destruct (eq_dec_spec x y).
-    destruct e. exact (negb (h fy x fy)).
-    exact true.
-Defined.
-(* end hide *)
-
-Theorem A_not_Type : ~ @eq Type A Type.
-(* begin hide *)
-Proof.
-  intro p.
-  pose (f := idtoeqv p); pose (idtoeqv_sur _ _ p);
-  change (idtoeqv p) with f in e; clearbody f e.
-  pose (H := forall x : A, f x -> bool).
-  destruct (e H) as [x q].
-  pose (h := idtoeqv q); pose (e' := idtoeqv_sur _ _ q);
-  change (idtoeqv q) with h in e'; clearbody h e'.
-  destruct (e' (wut f x h)) as [fx r]; unfold wut in r.
-  apply (@f_equal _ _ (fun f => f x fx)) in r.
-  destruct (eq_dec_spec x x) as [s | s].
-    rewrite (K _ s) in r. destruct (h fx x fx); inversion r.
-    contradiction.
+  intros A R s1 s2 HR HSsa; induction HSsa.
+  - destruct s1, s2; cbn in *; left. assumption.
+  - destruct s1, s2; cbn in *; right. assumption.
 Qed.
 (* end hide *)
 
-End EqDec_not_Type.
+End Stream_strong_apart.
 
-(** **** Ćwiczenie *)
+(** ** Różność kolist *)
 
-(** Dobrze wiemy, że [SProp] to nie [Type]... a może jednak?
-    Rozstrzygnij, czy [SProp = Type] zachodzi, czy nie. *)
+Require F4.
 
-Module SProp_not_Type.
+Module CoList_apart.
 
-Definition S := SProp.
-Definition U := Type.
+Import F4.
 
-Lemma SProp_not_Type :
-  S <> U.
+Inductive CoList_apart {A : Type} (R : A -> A -> Type) (l1 l2 : CoList A) : Type :=
+    | CLa_nil_cons :
+        uncons l1 = NilF -> uncons l2 <> NilF -> CoList_apart R l1 l2
+    | CLa_cons_nil :
+        uncons l1 <> NilF -> uncons l2 = NilF -> CoList_apart R l1 l2
+    | CLa_head :
+        forall
+          {h1 : A} {t1 : CoList A} (Hu1 : uncons l1 = ConsF h1 t1)
+          {h2 : A} {t2 : CoList A} (Hu2 : uncons l2 = ConsF h2 t2),
+            R h1 h2 -> CoList_apart R l1 l2
+    | CLa_tail :
+        forall
+          {h1 : A} {t1 : CoList A} (Hu1 : uncons l1 = ConsF h1 t1)
+          {h2 : A} {t2 : CoList A} (Hu2 : uncons l2 = ConsF h2 t2),
+            CoList_apart R t1 t2 -> CoList_apart R l1 l2.
+
+Lemma CoList_apart_spec :
+  forall {A : Type} {R : A -> A -> Type} {l1 l2 : CoList A},
+    (forall x : A, R x x -> False) ->
+      CoList_apart R l1 l2 -> ~ lsim l1 l2.
+(* begin hide *)
 Proof.
-  intro.
-  assert (forall (P : S) (p1 p2 : P), p1 = p2) by reflexivity.
-  assert ((forall (A : U) (x y : A), x = y) -> False).
-    intro. specialize (H1 bool true false). congruence.
-  apply H1. intros.
-Abort.
+  intros A R l1 l2 HR; induction 1; intros [Hlsim].
+  - inversion Hlsim; subst; clear Hlsim; congruence.
+  - inversion Hlsim; subst; clear Hlsim; congruence.
+  - inversion Hlsim; subst; clear Hlsim.
+    + congruence.
+    + apply (HR h3). congruence.
+  - inversion Hlsim; subst; clear Hlsim; congruence.
+Qed.
+(* end hide *)
 
-End SProp_not_Type.
+End CoList_apart.
+
+(** ** Różność funkcji *)
+
+(** Funkcje są różne (w silnym sensie), gdy różnią się dla jakiegoś
+    argumentu. *)
+
+Inductive fun_apart
+  {A B : Type} (R : B -> B -> Type) (f g : A -> B) : Type :=
+    | fun_apart' : forall {x : A}, R (f x) (g x) -> fun_apart R f g.
+
+Lemma fun_apart_spec :
+  forall {A B : Type} (R : B -> B -> Type) (f g : A -> B),
+    (forall x : B, R x x -> False) ->
+      fun_apart R f g -> f <> g.
+(* begin hide *)
+Proof.
+  intros A B R f g HR [x r] ->.
+  apply (HR (g x)). apply r.
+Qed.
+(* end hide *)
+
+Lemma fun_apart_spec' :
+  forall {A B : Type} (R : B -> B -> Type) (f g : A -> B),
+    (forall x : B, R x x -> False) ->
+      fun_apart R f g -> ~ (forall x : A, f x = g x).
+(* begin hide *)
+Proof.
+  intros A B R f g HR [x r] Hext.
+  apply (HR (g x)). rewrite <- Hext at 1. assumption.
+Qed.
+(* end hide *)
+
+Inductive dep_fun_apart
+  {A : Type} {B : A -> Type}
+  (R : forall x : A, B x -> B x -> Type)
+  (f g : forall x : A, B x) : Type :=
+    | dep_fun_apart' : forall {x : A}, R x (f x) (g x) -> dep_fun_apart R f g.
+
+Lemma dep_fun_apart_spec :
+  forall
+    {A : Type} {B : A -> Type}
+    (R : forall x : A, B x -> B x -> Type)
+    (f g : forall x : A, B x)
+    (HR : forall {x : A} (y : B x), R x y y -> False),
+      dep_fun_apart R f g -> f <> g.
+(* begin hide *)
+Proof.
+  intros A B R f g HR [x r] ->.
+  apply (HR _ (g x)). apply r.
+Qed.
+(* end hide *)
+
+Lemma dep_fun_apart_spec' :
+  forall
+    {A : Type} {B : A -> Type}
+    (R : forall x : A, B x -> B x -> Type)
+    (f g : forall x : A, B x)
+    (HR : forall {x : A} (y : B x), R x y y -> False),
+      dep_fun_apart R f g -> ~ (forall x : A, f x = g x).
+(* begin hide *)
+Proof.
+  intros A B R f g HR [x r] Hext.
+  apply (HR _ (g x)). rewrite <- Hext at 1. assumption.
+Qed.
+(* end hide *)
 
 (** * Protokoły różnicowe *)
 
@@ -1552,13 +1712,6 @@ Proof.
   induction HLDP; inversion 1; subst; auto.
     admit.
 Abort.
-
-(** Funkcje są różne (w silnym sensie), gdy różnią się dla jakiegoś
-    argumentu. *)
-
-Definition FunDiffPoint
-  {A B : Type} (R : B -> B -> Prop) (f g : A -> B) : Type :=
-    {x : A | R (f x) (g x)}.
 
 (** Protokół różnicowy dla funkcji mówi, dla których argumentów wyniki
     są takie same, a dla których są różne. *)

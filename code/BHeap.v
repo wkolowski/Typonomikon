@@ -1,5 +1,3 @@
-From stdpp Require Import prelude.
-
 Inductive BHeapF {A : Type} (R : A -> A -> Prop) (X : Type) (Y : A -> X -> Prop) : Type :=
     | E
     | N (v : A) (l r : X) (okl : Y v l) (okr : Y v r).

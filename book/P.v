@@ -143,7 +143,7 @@ Fail Definition Q_eq (q1 q2 : Q) : Prop :=
 
 End Q_less_naive.
 
-(** * HITowo *)
+(** ** HITowo *)
 
 Module Q_HIT.
 
