@@ -5138,7 +5138,7 @@ Proof.
 Abort.
 (* end hide *)
 
-(** * Zależności między róznymi rodzajami relacji *)
+(** * Zależności między różnymi rodzajami relacji *)
 
 Lemma Reflexive_from_Symmetric_Transitive_RightTotal :
   forall {A : Type} (R : rel A),
@@ -5553,188 +5553,183 @@ Require Import Classes.RelationClasses.
 
 (** ** Domknięcie zwrotne *)
 
-Inductive refl_clos {A : Type} (R : rel A) : rel A :=
-    | rc_step : forall x y : A, R x y -> refl_clos R x y
-    | rc_refl : forall x : A, refl_clos R x x.
+Inductive rc {A : Type} (R : rel A) : rel A :=
+    | rc_step : forall x y : A, R x y -> rc R x y
+    | rc_refl : forall x : A, rc R x x.
 
 (* begin hide *)
-Global Hint Constructors refl_clos : core.
+Global Hint Constructors rc : core.
 
 Ltac rc := compute; repeat split; intros; rel;
 repeat match goal with
-    | H : refl_clos _ _ _ |- _ => induction H; eauto
+    | H : rc _ _ _ |- _ => induction H; eauto
 end; rel.
 (* end hide *)
 
 Instance Reflexive_rc :
-  forall (A : Type) (R : rel A), Reflexive (refl_clos R).
+  forall (A : Type) (R : rel A), Reflexive (rc R).
 (* begin hide *)
 Proof. rc. Qed.
 (* end hide *)
 
 Lemma subrelation_rc :
-  forall (A : Type) (R : rel A), subrelation R (refl_clos R).
+  forall (A : Type) (R : rel A), subrelation R (rc R).
 (* begin hide *)
 Proof. rc. Qed.
 (* end hide *)
 
 Lemma rc_smallest :
   forall (A : Type) (R S : rel A),
-    subrelation R S -> Reflexive S -> subrelation (refl_clos R) S.
+    subrelation R S -> Reflexive S -> subrelation (rc R) S.
 (* begin hide *)
 Proof. rc. Qed.
 (* end hide *)
 
 Lemma rc_idempotent :
   forall (A : Type) (R : rel A),
-    refl_clos (refl_clos R) <--> refl_clos R.
+    rc (rc R) <--> rc R.
 (* begin hide *)
 Proof. rc. Qed.
 (* end hide *)
 
 Lemma rc_Rinv :
   forall (A : Type) (R : rel A),
-    Rinv (refl_clos (Rinv R)) <--> refl_clos R.
+    Rinv (rc (Rinv R)) <--> rc R.
 (* begin hide *)
 Proof. rc. Qed.
 (* end hide *)
 
 (** ** Domknięcie symetryczne *)
 
-Inductive symm_clos {A : Type} (R : rel A) : rel A :=
-    | sc_step :
-        forall x y : A, R x y -> symm_clos R x y
-    | sc_symm :
-        forall x y : A, symm_clos R x y -> symm_clos R y x.
+Inductive sc {A : Type} (R : rel A) : rel A :=
+    | sc_step : forall x y : A, R x y -> sc R x y
+    | sc_symm : forall x y : A, R x y -> sc R y x.
 
 (* begin hide *)
-Global Hint Constructors symm_clos : core.
+Global Hint Constructors sc : core.
 
 Ltac sc := compute; repeat split; intros; rel;
 repeat match goal with
-    | H : symm_clos _ _ _ |- _ => induction H; eauto
+    | H : sc _ _ _ |- _ => inversion H; eauto
 end.
 (* end hide *)
 
 Instance Symmetric_sc :
-  forall (A : Type) (R : rel A), Symmetric (symm_clos R).
+  forall (A : Type) (R : rel A), Symmetric (sc R).
 (* begin hide *)
 Proof. sc. Qed.
 (* end hide *)
 
 Lemma subrelation_sc :
-  forall (A : Type) (R : rel A), subrelation R (symm_clos R).
+  forall (A : Type) (R : rel A), subrelation R (sc R).
 (* begin hide *)
 Proof. sc. Qed.
 (* end hide *)
 
 Lemma sc_smallest :
   forall (A : Type) (R S : rel A),
-    subrelation R S -> Symmetric S -> subrelation (symm_clos R) S.
+    subrelation R S -> Symmetric S -> subrelation (sc R) S.
 (* begin hide *)
 Proof. sc. Qed.
 (* end hide *)
 
 Lemma sc_idempotent :
   forall (A : Type) (R : rel A),
-    symm_clos (symm_clos R) <--> symm_clos R.
+    sc (sc R) <--> sc R.
 (* begin hide *)
 Proof. sc. Qed.
 (* end hide *)
 
 Lemma sc_Rinv :
   forall (A : Type) (R : rel A),
-    Rinv (symm_clos (Rinv R)) <--> symm_clos R.
+    Rinv (sc (Rinv R)) <--> sc R.
 (* begin hide *)
 Proof. sc. Qed.
 (* end hide *)
 
-(** ** Domknięcie symetryczne v2 *)
+(** **** Ćwiczenie (gorsze domknięcie symetryczne) *)
 
-Inductive SymmetricClosure' {A : Type} (R : rel A) : rel A :=
-    | SC_step : forall x y : A, R x y -> SymmetricClosure' R x y
-    | SC_symm : forall x y : A, R x y -> SymmetricClosure' R y x.
+(** Przyjrzyj się poniższej alternatywnej definicji domknięcia symetrycznego.
+    Udowodnij, że jest ona równoważna [sc]. Dlaczego jest ona gorsza niż [sc]? *)
 
-Global Hint Constructors SymmetricClosure' : core.
+Inductive sc' {A : Type} (R : rel A) : rel A :=
+    | sc'_step :
+        forall x y : A, R x y -> sc' R x y
+    | sc'_symm :
+        forall x y : A, sc' R x y -> sc' R y x.
 
-Lemma SymmetricClosure'_sc :
+(* begin hide *)
+Global Hint Constructors sc' : core.
+
+Ltac sc' := compute; repeat split; intros; rel;
+repeat match goal with
+    | H : sc' _ _ _ |- _ => induction H; eauto
+end.
+(* end hide *)
+
+Instance Symmetric_sc' :
+  forall (A : Type) (R : rel A), Symmetric (sc' R).
+(* begin hide *)
+Proof. sc'. Qed.
+(* end hide *)
+
+Lemma subrelation_sc' :
+  forall (A : Type) (R : rel A), subrelation R (sc' R).
+(* begin hide *)
+Proof. sc'. Qed.
+(* end hide *)
+
+Lemma sc'_smallest :
+  forall (A : Type) (R S : rel A),
+    subrelation R S -> Symmetric S -> subrelation (sc' R) S.
+(* begin hide *)
+Proof. sc'. Qed.
+(* end hide *)
+
+Lemma sc'_idempotent :
+  forall (A : Type) (R : rel A),
+    sc' (sc' R) <--> sc' R.
+(* begin hide *)
+Proof. sc'. Qed.
+(* end hide *)
+
+Lemma sc'_Rinv :
+  forall (A : Type) (R : rel A),
+    Rinv (sc' (Rinv R)) <--> sc' R.
+(* begin hide *)
+Proof. sc'. Qed.
+(* end hide *)
+
+Lemma sc_sc' :
   forall {A : Type} (R : rel A),
-    SymmetricClosure' R <--> symm_clos R.
+    sc R <--> sc' R.
 (* begin hide *)
 Proof.
-  split.
-  - intros x y H. destruct H; auto.
-  - intros x y H. induction H.
-    + auto.
-    + destruct IHsymm_clos; auto.
+  split; [sc |].
+  intros x y H. induction H.
+  - auto.
+  - destruct IHsc'; auto.
 Qed.
 (* end hide *)
 
 (** ** Domknięcie przechodnie *)
 
-Inductive trans_clos {A : Type} (R : rel A) : rel A :=
-    | tc_step :
-        forall x y : A, R x y -> trans_clos R x y
-    | tc_trans :
-        forall x y z : A,
-          trans_clos R x y -> trans_clos R y z -> trans_clos R x z.
+Inductive tc {A : Type} (R : rel A) : rel A :=
+    | tc_step : forall x y : A, R x y -> tc R x y
+    | tc_trans : forall x y z : A, R x y -> tc R y z -> tc R x z.
 
 (* begin hide *)
-Global Hint Constructors trans_clos : core.
+Global Hint Constructors tc : core.
 
 Ltac tc := compute; repeat split; intros; rel;
-repeat match goal with
-    | H : trans_clos _ _ _ |- _ => induction H; eauto
+match goal with
+    | H : tc _ _ _ |- _ => inversion H; eauto
 end.
 (* end hide *)
 
 Instance Transitive_tc :
-  forall (A : Type) (R : rel A), Transitive (trans_clos R).
-(* begin hide *)
-Proof. tc. Qed.
-(* end hide *)
-
-Lemma subrelation_tc :
-  forall (A : Type) (R : rel A), subrelation R (trans_clos R).
-(* begin hide *)
-Proof. tc. Qed.
-(* end hide *)
-
-Lemma tc_smallest :
-  forall (A : Type) (R S : rel A),
-    subrelation R S -> Transitive S ->
-      subrelation (trans_clos R) S.
-(* begin hide *)
-Proof. tc. Qed.
-(* end hide *)
-
-Lemma tc_idempotent :
   forall (A : Type) (R : rel A),
-    trans_clos (trans_clos R) <--> trans_clos R.
-(* begin hide *)
-Proof. tc. Qed.
-(* end hide *)
-
-Lemma tc_Rinv :
-  forall (A : Type) (R : rel A),
-    Rinv (trans_clos (Rinv R)) <--> trans_clos R.
-(* begin hide *)
-Proof. tc. Qed.
-(* end hide *)
-
-(** ** Domknięcie przechodnie v2 *)
-
-Inductive TransitiveClosure {A : Type} (R : rel A) : rel A :=
-    | TC_step : forall x y : A, R x y -> TransitiveClosure R x y
-    | TC_trans : forall x y z : A, R x y -> TransitiveClosure R y z -> TransitiveClosure R x z.
-
-(* begin hide *)
-Global Hint Constructors TransitiveClosure : core.
-(* end hide *)
-
-Lemma Transitive_TransitiveClosure :
-  forall (A : Type) (R : rel A),
-    Transitive (TransitiveClosure R).
+    Transitive (tc R).
 (* begin hide *)
 Proof.
   unfold Transitive.
@@ -5744,88 +5739,132 @@ Proof.
   - intros w Hzw. constructor 2 with y.
     + assumption.
     + apply IHHxy. assumption.
+Defined.
+(* end hide *)
+
+Lemma subrelation_tc :
+  forall (A : Type) (R : rel A), subrelation R (tc R).
+(* begin hide *)
+Proof. tc. Qed.
+(* end hide *)
+
+Lemma tc_smallest :
+  forall (A : Type) (R S : rel A),
+    subrelation R S -> Transitive S ->
+      subrelation (tc R) S.
+(* begin hide *)
+Proof.
+  unfold subrelation, Transitive.
+  intros A R S HRS HT x y.
+  induction 1; eauto.
 Qed.
 (* end hide *)
 
-Lemma TransitiveClosure_tc :
+Lemma tc_idempotent :
   forall (A : Type) (R : rel A),
-    TransitiveClosure R <--> trans_clos R.
+    tc (tc R) <--> tc R.
+(* begin hide *)
+Proof.
+  split.
+  - induction 1.
+    + assumption.
+    + eapply Transitive_tc; eassumption.
+  - induction 1.
+    + auto.
+    + eapply Transitive_tc; eauto.
+Qed.
+(* end hide *)
+
+Lemma tc_Rinv :
+  forall (A : Type) (R : rel A),
+    Rinv (tc (Rinv R)) <--> tc R.
+(* begin hide *)
+Proof.
+  unfold Rinv; intros A R; split.
+  - intros x y H. induction H.
+    + auto.
+    + eapply Transitive_tc; eauto.
+  - induction 1.
+    + auto.
+    + eapply Transitive_tc; eauto.
+Qed.
+(* end hide *)
+
+(** ** Domknięcie przechodnie v2 *)
+
+Inductive trans_clos {A : Type} (R : rel A) : rel A :=
+    | trans_clos_step :
+        forall x y : A, R x y -> trans_clos R x y
+    | trans_clos_trans :
+        forall x y z : A,
+          trans_clos R x y -> trans_clos R y z -> trans_clos R x z.
+
+(* begin hide *)
+Global Hint Constructors trans_clos : core.
+
+Ltac trans_clos := compute; repeat split; intros; rel;
+repeat match goal with
+    | H : trans_clos _ _ _ |- _ => induction H; eauto
+end.
+(* end hide *)
+
+Instance Transitive_trans_clos :
+  forall (A : Type) (R : rel A), Transitive (trans_clos R).
+(* begin hide *)
+Proof. trans_clos. Qed.
+(* end hide *)
+
+Lemma subrelation_trans_clos :
+  forall (A : Type) (R : rel A), subrelation R (trans_clos R).
+(* begin hide *)
+Proof. trans_clos. Qed.
+(* end hide *)
+
+Lemma trans_clos_smallest :
+  forall (A : Type) (R S : rel A),
+    subrelation R S -> Transitive S ->
+      subrelation (trans_clos R) S.
+(* begin hide *)
+Proof. trans_clos. Qed.
+(* end hide *)
+
+Lemma trans_clos_idempotent :
+  forall (A : Type) (R : rel A),
+    trans_clos (trans_clos R) <--> trans_clos R.
+(* begin hide *)
+Proof. trans_clos. Qed.
+(* end hide *)
+
+Lemma trans_clos_Rinv :
+  forall (A : Type) (R : rel A),
+    Rinv (trans_clos (Rinv R)) <--> trans_clos R.
+(* begin hide *)
+Proof. trans_clos. Qed.
+(* end hide *)
+
+Lemma tc_trans_clos :
+  forall (A : Type) (R : rel A),
+    tc R <--> trans_clos R.
 (* begin hide *)
 Proof.
   split.
   - induction 1; eauto.
   - induction 1.
-    + constructor. assumption.
-    + eapply Transitive_TransitiveClosure; eassumption.
+    + auto.
+    + eapply Transitive_tc; eassumption.
 Qed.
-(* end hide *)
-
-(** ** Domknięcie równoważnościowe *)
-
-Inductive equiv_clos {A : Type} (R : rel A) : rel A :=
-  | ec_step :
-      forall x y : A, R x y -> equiv_clos R x y
-  | ec_refl :
-      forall x : A, equiv_clos R x x
-  | ec_symm :
-      forall x y : A, equiv_clos R x y -> equiv_clos R y x
-  | ec_trans :
-      forall x y z : A,
-        equiv_clos R x y -> equiv_clos R y z -> equiv_clos R x z.
-
-(* begin hide *)
-Global Hint Constructors equiv_clos : core.
-
-Ltac ec := compute; repeat split; intros; rel;
-repeat match goal with
-    | H : equiv_clos _ _ _ |- _ => induction H; eauto
-end.
-(* end hide *)
-
-Instance Equivalence_ec :
-  forall (A : Type) (R : rel A), Equivalence (equiv_clos R).
-(* begin hide *)
-Proof. ec. Qed.
-(* end hide *)
-
-Lemma subrelation_ec :
-  forall (A : Type) (R : rel A), subrelation R (equiv_clos R).
-(* begin hide *)
-Proof. ec. Qed.
-(* end hide *)
-
-Lemma ec_smallest :
-  forall (A : Type) (R S : rel A),
-    subrelation R S -> Equivalence S ->
-      subrelation (equiv_clos R) S.
-(* begin hide *)
-Proof. ec. Qed.
-(* end hide *)
-
-Lemma ec_idempotent :
-  forall (A : Type) (R : rel A),
-    equiv_clos (equiv_clos R) <--> equiv_clos R.
-(* begin hide *)
-Proof. ec. Qed.
-(* end hide *)
-
-Lemma ec_Rinv :
-  forall (A : Type) (R : rel A),
-    Rinv (equiv_clos (Rinv R)) <--> equiv_clos R.
-(* begin hide *)
-Proof. ec. Qed.
 (* end hide *)
 
 (** ** Domknięcie zwrotnosymetryczne *)
 
 Definition rsc {A : Type} (R : rel A) : rel A :=
-  refl_clos (symm_clos R).
+  rc (sc' R).
 
 (* begin hide *)
 Ltac rstc := compute; repeat split; intros; rel;
 repeat match goal with
-    | H : refl_clos _ _ _ |- _ => induction H; eauto
-    | H : symm_clos _ _ _ |- _ => induction H; eauto
+    | H : rc _ _ _ |- _ => induction H; eauto
+    | H : sc' _ _ _ |- _ => induction H; eauto
     | H : trans_clos _ _ _ |- _ => induction H; eauto
 end; rel.
 (* end hide *)
@@ -5921,10 +5960,178 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Domknięcie równoważnościowe *)
+
+Definition ec {A : Type} (R : rel A) : rel A :=
+  rtc (sc R).
+
+(* begin hide *)
+Ltac ec := compute; repeat split; intros; rel;
+repeat match goal with
+    | H : ec _ _ _ |- _ => induction H; eauto
+end.
+(* end hide *)
+
+Instance Reflexive_ec :
+  forall {A : Type} (R : rel A),
+    Reflexive (ec R).
+(* begin hide *)
+Proof.
+  typeclasses eauto.
+Qed.
+(* end hide *)
+
+Instance Symmetric_ec :
+  forall {A : Type} (R : rel A),
+    Symmetric (ec R).
+(* begin hide *)
+Proof.
+  unfold ec, Symmetric.
+  intros A R x y. induction 1.
+  - constructor.
+  - transitivity y.
+    + auto.
+    + eapply rtc_trans.
+      * symmetry. eassumption.
+      * reflexivity.
+Qed.
+(* end hide *)
+
+Instance Transitive_ec :
+  forall {A : Type} (R : rel A),
+    Transitive (ec R).
+(* begin hide *)
+Proof.
+  typeclasses eauto.
+Qed.
+(* end hide *)
+
+Instance Equivalence_ec :
+  forall (A : Type) (R : rel A), Equivalence (ec R).
+(* begin hide *)
+Proof.
+  split; typeclasses eauto.
+Qed.
+(* end hide *)
+
+Lemma subrelation_ec :
+  forall (A : Type) (R : rel A), subrelation R (ec R).
+(* begin hide *)
+Proof.
+  intros A R x y r. apply rtc_step. auto.
+Qed.
+(* end hide *)
+
+Lemma ec_smallest :
+  forall (A : Type) (R S : rel A),
+    subrelation R S -> Equivalence S ->
+      subrelation (ec R) S.
+(* begin hide *)
+Proof.
+  unfold subrelation.
+  intros A R S HRS [HR HS HT] x y e.
+  induction e.
+  - apply HR.
+  - inversion H; subst; eauto.
+Qed.
+(* end hide *)
+
+Lemma ec_idempotent :
+  forall (A : Type) (R : rel A),
+    ec (ec R) <--> ec R.
+(* begin hide *)
+Proof.
+
+Admitted.
+(* end hide *)
+
+Lemma ec_Rinv :
+  forall (A : Type) (R : rel A),
+    Rinv (ec (Rinv R)) <--> ec R.
+(* begin hide *)
+Proof.
+
+Admitted.
+(* end hide *)
+
+(** ** Domknięcie równoważnościowe v1 *)
+
+Inductive equiv_clos {A : Type} (R : rel A) : rel A :=
+  | equiv_clos_step :
+      forall x y : A, R x y -> equiv_clos R x y
+  | equiv_clos_refl :
+      forall x : A, equiv_clos R x x
+  | equiv_clos_symm :
+      forall x y : A, equiv_clos R x y -> equiv_clos R y x
+  | equiv_clos_trans :
+      forall x y z : A,
+        equiv_clos R x y -> equiv_clos R y z -> equiv_clos R x z.
+
+(* begin hide *)
+Global Hint Constructors equiv_clos : core.
+
+Ltac ec' := compute; repeat split; intros; rel;
+repeat match goal with
+    | H : equiv_clos _ _ _ |- _ => induction H; eauto
+end.
+(* end hide *)
+
+Instance Equivalence_equiv_clos :
+  forall (A : Type) (R : rel A), Equivalence (equiv_clos R).
+(* begin hide *)
+Proof. ec'. Qed.
+(* end hide *)
+
+Lemma subrelation_equiv_clos :
+  forall (A : Type) (R : rel A), subrelation R (equiv_clos R).
+(* begin hide *)
+Proof. ec'. Qed.
+(* end hide *)
+
+Lemma equiv_clos_smallest :
+  forall (A : Type) (R S : rel A),
+    subrelation R S -> Equivalence S ->
+      subrelation (equiv_clos R) S.
+(* begin hide *)
+Proof. ec'. Qed.
+(* end hide *)
+
+Lemma equiv_clos_idempotent :
+  forall (A : Type) (R : rel A),
+    equiv_clos (equiv_clos R) <--> equiv_clos R.
+(* begin hide *)
+Proof. ec'. Qed.
+(* end hide *)
+
+Lemma equiv_clos_Rinv :
+  forall (A : Type) (R : rel A),
+    Rinv (equiv_clos (Rinv R)) <--> equiv_clos R.
+(* begin hide *)
+Proof. ec'. Qed.
+(* end hide *)
+
+Lemma ec_equiv_clos :
+  forall {A : Type} (R : rel A),
+    ec R <--> equiv_clos R.
+(* begin hide *)
+Proof.
+  unfold ec.
+  split.
+  - induction 1; [auto |].
+    transitivity y; [| auto].
+    inversion H; auto.
+  - induction 1.
+    + eapply rtc_trans; [eauto |]. apply rtc_refl.
+    + apply rtc_refl.
+    + symmetry. assumption.
+    + transitivity y; assumption.
+Qed.
+(* end hide *)
+
 (** ** Domknięcie równoważnościowe v2 *)
 
 Definition rstc {A : Type} (R : rel A) : rel A :=
-  trans_clos (symm_clos (refl_clos R)).
+  trans_clos (sc' (rc R)).
 
 Instance Reflexive_rstc :
   forall {A : Type} (R : rel A),
@@ -5986,9 +6193,9 @@ Lemma rstc_smallest :
 Proof. rstc. Qed.
 (* end hide *)
 
-Lemma refl_clos_rstc :
+Lemma rc_rstc :
   forall {A : Type} (R : rel A),
-    refl_clos (rstc R) <--> rstc R.
+    rc (rstc R) <--> rstc R.
 (* begin hide *)
 Proof.
   split; red.
@@ -5999,9 +6206,9 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma symm_clos_rstc :
+Lemma sc'_rstc :
   forall {A : Type} (R : rel A),
-    symm_clos (rstc R) <--> rstc R.
+    sc' (rstc R) <--> rstc R.
 (* begin hide *)
 Proof.
   split; red.
@@ -6139,7 +6346,7 @@ Abort.
 (** ** Domknięcie równoważnościowe v4 *)
 
 Definition EquivalenceClosure' {A : Type} (R : rel A) : rel A :=
-  refl_clos (trans_clos (symm_clos R)).
+  rc (trans_clos (sc' R)).
 
 Instance Reflexive_EquivalenceClosure' :
   forall {A : Type} (R : rel A),
@@ -6197,9 +6404,9 @@ Qed.
 (** ** Domknięcie cyrkularne *)
 
 Inductive CircularClosure {A : Type} (R : rel A) : rel A :=
-    | inj  :
+    | CC_step  :
         forall x y : A, R x y -> CircularClosure R x y
-    | circ :
+    | CC_circ :
         forall x y z : A,
           CircularClosure R x y -> CircularClosure R y z ->
             CircularClosure R z x.
@@ -6218,6 +6425,25 @@ Proof.
   - intros. eright with x.
     + eright with y; eassumption.
     + assumption.
+Qed.
+(* end hide *)
+
+(** ** Domknięcie lewostronnie kwazizwrotne *)
+
+Inductive LeftQuasiReflexiveClosure {A : Type} (R : rel A) : rel A :=
+    | LQRC_step :
+        forall x y : A, R x y -> LeftQuasiReflexiveClosure R x y
+    | LQRC_clos :
+        forall x y : A, R x y -> LeftQuasiReflexiveClosure R x x.
+
+Instance LeftQuasiReflexive_LeftQuasiReflexiveClosure
+  {A : Type} (R : rel A) : LeftQuasiReflexive (LeftQuasiReflexiveClosure R).
+(* begin hide *)
+Proof.
+  unfold LeftQuasiReflexive.
+  intros x y [r | r].
+  - right with y0. assumption.
+  - right with y0. assumption.
 Qed.
 (* end hide *)
 
@@ -6262,7 +6488,7 @@ Class Closure
 }.
 
 #[refine]
-Instance Closure_refl_clos {A : Type} : Closure (@refl_clos A) :=
+Instance Closure_rc {A : Type} : Closure (@rc A) :=
 {
     step := rc_step;
 }.
@@ -6295,32 +6521,13 @@ Require Import B4.
 Lemma rr_rc :
   LEM ->
     forall (A : Type) (R : rel A),
-      Reflexive R -> refl_clos (rr R) <--> R.
+      Reflexive R -> rc (rr R) <--> R.
 (* begin hide *)
 Proof.
   intro lem. rc.
   destruct (lem (a = b)).
     subst. constructor 2.
     constructor. split; auto.
-Qed.
-(* end hide *)
-
-(** ** Domknięcie lewostronnie kwazizwrotne *)
-
-Inductive LeftQuasiReflexiveClosure {A : Type} (R : rel A) : rel A :=
-    | LQRC_step :
-        forall x y : A, R x y -> LeftQuasiReflexiveClosure R x y
-    | LQRC_clos :
-        forall x y : A, R x y -> LeftQuasiReflexiveClosure R x x.
-
-Instance LeftQuasiReflexive_LeftQuasiReflexiveClosure
-  {A : Type} (R : rel A) : LeftQuasiReflexive (LeftQuasiReflexiveClosure R).
-(* begin hide *)
-Proof.
-  unfold LeftQuasiReflexive.
-  intros x y [r | r].
-  - right with y0. assumption.
-  - right with y0. assumption.
 Qed.
 (* end hide *)
 
