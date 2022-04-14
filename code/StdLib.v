@@ -1116,7 +1116,7 @@ End Sequence.
 
 (** Trzeba mieć pod ręką zarówno trójstronne porównania, jak i te klasyczne (mniejszy lub równy).
     Dzięki eleganckiej koercji można tych bardziej ogólnych, czyli trójstronnych, używać też tam
-    gdzie potrzeba nam boola. Koercja w drugą stronę jest upierdliwsza, a raczej brak jej wcale. *)
+    gdzie potrzeba nam [bool]a. Koercja w drugą stronę jest upierdliwsza, a raczej brak jej wcale. *)
 
 Inductive Cmp : Type := Lt | Eq | Gt.
 
@@ -1129,7 +1129,7 @@ end.
 
 Coercion Cmp2bool : Cmp >-> bool.
 
-(** Uwaga: daje nam to też koercję (A -> A -> comparison) >-> (A -> A -> bool), czyli elegancko. *)
+(** Uwaga: daje nam to też koercję [(A -> A -> comparison) >-> (A -> A -> bool)], czyli elegancko. *)
 
 (** Uwaga2: [Cmp] jest już w bibliotece standardowej i nazywa się [comparison]. *)
 

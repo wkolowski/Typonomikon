@@ -2741,8 +2741,8 @@ End MutualIndution_vs_InductiveFamilies.
 (** Na koniec wypada jeszcze powiedzieć, że indeksowane typy induktywne są
     potężniejsze od typów wzajemnie induktywnych. Wynika to z tego prostego
     faktu, że przez wzajemną indukcję możemy zdefiniować na raz jedynie
-    skończenie wiele typów, zaś indeksowane typy induktywne indeksowane
-    mogą być typami nieskończonymi. *)
+    skończenie wiele typów, zaś indeksowane typy induktywne mogą być
+    indeksowane także typami nieskończonymi. *)
 
 (** ** Sumy zależne i podtypy *)
 
