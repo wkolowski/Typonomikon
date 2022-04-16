@@ -5790,61 +5790,35 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Domknięcie przechodnie v2 *)
+(** **** Ćwiczenie (alternatywne domknięcie przechodnie) *)
 
-Inductive trans_clos {A : Type} (R : rel A) : rel A :=
-    | trans_clos_step :
-        forall x y : A, R x y -> trans_clos R x y
-    | trans_clos_trans :
+(** Przyjrzyj się poniższej definicji domknięcia przechodniego. Udowodnij,
+    że jest ona równoważna oryginalnej definicji. Czy poniższa definicja
+    jest lepsza czy gorsza od oryginalnej? *)
+
+Inductive tc' {A : Type} (R : rel A) : rel A :=
+    | tc'_step :
+        forall x y : A, R x y -> tc' R x y
+    | tc'_trans :
         forall x y z : A,
-          trans_clos R x y -> trans_clos R y z -> trans_clos R x z.
+          tc' R x y -> tc' R y z -> tc' R x z.
 
 (* begin hide *)
-Global Hint Constructors trans_clos : core.
+Global Hint Constructors tc' : core.
 
-Ltac trans_clos := compute; repeat split; intros; rel;
+Ltac tc' := compute; repeat split; intros; rel;
 repeat match goal with
-    | H : trans_clos _ _ _ |- _ => induction H; eauto
+    | H : tc' _ _ _ |- _ => induction H; eauto
 end.
+
+Instance Transitive_tc' :
+  forall (A : Type) (R : rel A), Transitive (tc' R).
+Proof. tc'. Qed.
 (* end hide *)
 
-Instance Transitive_trans_clos :
-  forall (A : Type) (R : rel A), Transitive (trans_clos R).
-(* begin hide *)
-Proof. trans_clos. Qed.
-(* end hide *)
-
-Lemma subrelation_trans_clos :
-  forall (A : Type) (R : rel A), subrelation R (trans_clos R).
-(* begin hide *)
-Proof. trans_clos. Qed.
-(* end hide *)
-
-Lemma trans_clos_smallest :
-  forall (A : Type) (R S : rel A),
-    subrelation R S -> Transitive S ->
-      subrelation (trans_clos R) S.
-(* begin hide *)
-Proof. trans_clos. Qed.
-(* end hide *)
-
-Lemma trans_clos_idempotent :
+Lemma tc_tc' :
   forall (A : Type) (R : rel A),
-    trans_clos (trans_clos R) <--> trans_clos R.
-(* begin hide *)
-Proof. trans_clos. Qed.
-(* end hide *)
-
-Lemma trans_clos_Rinv :
-  forall (A : Type) (R : rel A),
-    Rinv (trans_clos (Rinv R)) <--> trans_clos R.
-(* begin hide *)
-Proof. trans_clos. Qed.
-(* end hide *)
-
-Lemma tc_trans_clos :
-  forall (A : Type) (R : rel A),
-    tc R <--> trans_clos R.
+    tc R <--> tc' R.
 (* begin hide *)
 Proof.
   split.
@@ -5865,7 +5839,7 @@ Ltac rstc := compute; repeat split; intros; rel;
 repeat match goal with
     | H : rc _ _ _ |- _ => induction H; eauto
     | H : sc' _ _ _ |- _ => induction H; eauto
-    | H : trans_clos _ _ _ |- _ => induction H; eauto
+    | H : tc' _ _ _ |- _ => induction H; eauto
 end; rel.
 (* end hide *)
 
@@ -5958,6 +5932,26 @@ Proof.
   - trivial.
   - intros x y _. apply rtc_step. trivial.
 Qed.
+(* end hide *)
+
+(** Ćwiczneie (alternatywna definicja) *)
+
+(** Pokaż, że poniższa alternatywna definicja domknięcia zwrotno-przechodniego
+    jest równoważna oryginalnej. Która jest lepsza? *)
+
+Definition rtc' {A : Type} (R : rel A) : rel A :=
+  rc (tc R).
+
+Lemma rtc_rtc' :
+  forall {A : Type} (R : rel A),
+    rtc R <--> rtc' R.
+(* begin hide *)
+Proof.
+  split.
+  - induction 1.
+    + reflexivity.
+    +
+Admitted.
 (* end hide *)
 
 (** ** Domknięcie równoważnościowe *)
@@ -6054,7 +6048,10 @@ Proof.
 Admitted.
 (* end hide *)
 
-(** ** Domknięcie równoważnościowe v1 *)
+(** **** Ćwiczenie (alternatywne definicje) *)
+
+(** Pokaż, że poniższe alternatywne definicje domknięcia równoważnościowego
+    są równoważne oryginalnej. Która definicja jest najlepsza? *)
 
 Inductive equiv_clos {A : Type} (R : rel A) : rel A :=
   | equiv_clos_step :
@@ -6082,34 +6079,6 @@ Instance Equivalence_equiv_clos :
 Proof. ec'. Qed.
 (* end hide *)
 
-Lemma subrelation_equiv_clos :
-  forall (A : Type) (R : rel A), subrelation R (equiv_clos R).
-(* begin hide *)
-Proof. ec'. Qed.
-(* end hide *)
-
-Lemma equiv_clos_smallest :
-  forall (A : Type) (R S : rel A),
-    subrelation R S -> Equivalence S ->
-      subrelation (equiv_clos R) S.
-(* begin hide *)
-Proof. ec'. Qed.
-(* end hide *)
-
-Lemma equiv_clos_idempotent :
-  forall (A : Type) (R : rel A),
-    equiv_clos (equiv_clos R) <--> equiv_clos R.
-(* begin hide *)
-Proof. ec'. Qed.
-(* end hide *)
-
-Lemma equiv_clos_Rinv :
-  forall (A : Type) (R : rel A),
-    Rinv (equiv_clos (Rinv R)) <--> equiv_clos R.
-(* begin hide *)
-Proof. ec'. Qed.
-(* end hide *)
-
 Lemma ec_equiv_clos :
   forall {A : Type} (R : rel A),
     ec R <--> equiv_clos R.
@@ -6131,7 +6100,7 @@ Qed.
 (** ** Domknięcie równoważnościowe v2 *)
 
 Definition rstc {A : Type} (R : rel A) : rel A :=
-  trans_clos (sc' (rc R)).
+  tc' (sc' (rc R)).
 
 Instance Reflexive_rstc :
   forall {A : Type} (R : rel A),
@@ -6219,15 +6188,15 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma trans_clos_rstc :
+Lemma tc'_rstc :
   forall {A : Type} (R : rel A),
-    trans_clos (rstc R) <--> rstc R.
+    tc' (rstc R) <--> rstc R.
 (* begin hide *)
 Proof.
   split; red.
     induction 1.
       assumption.
-      rewrite IHtrans_clos1. assumption.
+      rewrite IHtc'1. assumption.
     constructor. assumption.
 Qed.
 (* end hide *)
@@ -6258,7 +6227,7 @@ Proof.
           assumption.
           reflexivity.
         symmetry. assumption.
-      rewrite IHtrans_clos1. assumption.
+      rewrite IHtc'1. assumption.
     repeat intro. do 3 constructor. assumption.
 Qed.
 (* end hide *)
@@ -6275,14 +6244,14 @@ Proof.
           do 3 constructor. assumption.
           reflexivity.
         symmetry. assumption.
-      rewrite IHtrans_clos2. assumption.
+      rewrite IHtc'2. assumption.
     induction H.
       induction H.
         induction H.
           do 3 constructor. assumption.
           reflexivity.
         symmetry. assumption.
-      rewrite IHtrans_clos2. assumption.
+      rewrite IHtc'2. assumption.
 Qed.
 (* end hide *)
 
@@ -6346,7 +6315,7 @@ Abort.
 (** ** Domknięcie równoważnościowe v4 *)
 
 Definition EquivalenceClosure' {A : Type} (R : rel A) : rel A :=
-  rc (trans_clos (sc' R)).
+  rc (tc' (sc' R)).
 
 Instance Reflexive_EquivalenceClosure' :
   forall {A : Type} (R : rel A),

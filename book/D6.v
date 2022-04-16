@@ -3729,12 +3729,12 @@ End AtLeast.
 
 (** ** Permutacje, jeszcze dziwniej *)
 
-Require H.
+Require H2.
 Require Import Equality.
 
 Module PermWeird.
 
-Import H.
+Import H2.
 
 Inductive Elem {A : Type} (x : A) : list A -> Type :=
     | Z : forall l : list A, Elem x (x :: l)
