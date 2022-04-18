@@ -6097,8 +6097,6 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Domknięcie równoważnościowe v2 *)
-
 Definition rstc {A : Type} (R : rel A) : rel A :=
   tc' (sc' (rc R)).
 
@@ -6148,114 +6146,6 @@ Proof.
       rewrite IHequiv_clos1. assumption.
 Qed.
 (* end hide *)
-
-Lemma subrelation_rstc :
-  forall (A : Type) (R : rel A), subrelation R (rstc R).
-(* begin hide *)
-Proof. rstc. Qed.
-(* end hide *)
-
-Lemma rstc_smallest :
-  forall (A : Type) (R S : rel A),
-    subrelation R S -> Equivalence S -> subrelation (rstc R) S.
-(* begin hide *)
-Proof. rstc. Qed.
-(* end hide *)
-
-Lemma rc_rstc :
-  forall {A : Type} (R : rel A),
-    rc (rstc R) <--> rstc R.
-(* begin hide *)
-Proof.
-  split; red.
-    inversion 1; subst.
-      assumption.
-      reflexivity.
-    constructor. assumption.
-Qed.
-(* end hide *)
-
-Lemma sc'_rstc :
-  forall {A : Type} (R : rel A),
-    sc' (rstc R) <--> rstc R.
-(* begin hide *)
-Proof.
-  split; red.
-    induction 1.
-      assumption.
-      symmetry. assumption.
-    constructor. assumption.
-Qed.
-(* end hide *)
-
-Lemma tc'_rstc :
-  forall {A : Type} (R : rel A),
-    tc' (rstc R) <--> rstc R.
-(* begin hide *)
-Proof.
-  split; red.
-    induction 1.
-      assumption.
-      rewrite IHtc'1. assumption.
-    constructor. assumption.
-Qed.
-(* end hide *)
-
-Instance Equivalence_same_hrel :
-  forall A B : Type,
-    Equivalence (@same_hrel A B).
-(* begin hide *)
-Proof.
-  split; red; intros.
-    split; repeat intro; assumption.
-    split; repeat intro; apply H; assumption.
-    split; repeat intro.
-      apply H0, H. assumption.
-      apply H, H0. assumption.
-Qed.
-(* end hide *)
-
-Lemma rstc_idempotent :
-  forall (A : Type) (R : rel A),
-    rstc (rstc R) <--> rstc R.
-(* begin hide *)
-Proof.
-  split.
-    induction 1.
-      induction H.
-        induction H.
-          assumption.
-          reflexivity.
-        symmetry. assumption.
-      rewrite IHtc'1. assumption.
-    repeat intro. do 3 constructor. assumption.
-Qed.
-(* end hide *)
-
-(* begin hide *)
-Lemma rstc_Rinv :
-  forall (A : Type) (R : rel A),
-    Rinv (rstc (Rinv R)) <--> rstc R.
-Proof.
-  unfold Rinv. split; repeat intro.
-    induction H.
-      induction H.
-        induction H.
-          do 3 constructor. assumption.
-          reflexivity.
-        symmetry. assumption.
-      rewrite IHtc'2. assumption.
-    induction H.
-      induction H.
-        induction H.
-          do 3 constructor. assumption.
-          reflexivity.
-        symmetry. assumption.
-      rewrite IHtc'2. assumption.
-Qed.
-(* end hide *)
-
-(** ** Domknięcie równoważnościowe v3 *)
 
 Inductive EquivalenceClosure {A : Type} (R : rel A) : rel A :=
     | EC_step  : forall x y   : A, R x y -> EquivalenceClosure R x y
@@ -6311,8 +6201,6 @@ Proof.
     1-2: auto.
 Abort.
 (* end hide *)
-
-(** ** Domknięcie równoważnościowe v4 *)
 
 Definition EquivalenceClosure' {A : Type} (R : rel A) : rel A :=
   rc (tc' (sc' R)).
@@ -6870,57 +6758,6 @@ Abort.
 (* end hide *)
 
 (** * Podsumowanie *)
-
-(*  left_unique           : forall (a a' : A) (b : B), R a b -> R a' b -> a = a'
-    right_unique          : forall (a : A) (b b' : B), R a b -> R a b' -> b = b'
-
-    left_total            : forall a : A, exists b : B, R a b
-    right_total           : forall b : B, exists a : A, R a b
-
-    reflexive             : forall x : A, R x x
-    antireflexive         : forall x : A, ~ R x x
-    irreflexive           : exists x : A, ~ R x x
-(*  not_antireflexive     : exists x : A, R x x *)
-    coreflexive           : forall x y : A, R x y -> x = y
-
-    left_quasireflexive   : forall x y : A, R x y -> R x x
-    right_quasireflexive  : forall x y : A, R x y -> R y y
-    quasireflexive        : forall x y : A, R x y -> R x x /\ R y y
-
-    symmetric             : forall x y : A, R x y -> R y x
-    antisymmetric         : forall x y : A, R x y -> R y x -> False
-    weakly_antisymmetric  : forall x y : A, R x y -> R y x -> x = y
-    asymmetric            : exists x y : A, R x y /\ ~ R y x
-(*  not_antisymmetric     : exists x y : A, R x y /\ R y x *)
-
-    transitive            : forall x y z : A, R x y -> R y z -> R x z
-    antitransitive        : forall x y z : A, R x y -> R y z -> R x z -> False
-(*  weakly_antitransitive : forall x y z : A, R x y -> R y z -> R x z -> x = y /\ y = z *)
-    cotransitive          : forall {x z : A}, R x z -> forall y : A, R x y \/ R y z
-    quasitransitive       : Transitive (AsymmetricPart R)
-(*  trans. of incomp.     : TOOD *)
-(*  intransitive          : exists x y z : A, R x y /\ R y z /\ ~ R x z *)
-
-    circular              : forall x y z : A, R x y -> R y z -> R z x
-    right_euclidean       : forall x y z : A, R x y -> R x z -> R y z
-    left_euclidean        : forall x y z : A, R y x -> R z x -> R y z
-    diamond               : forall x y z : A, R x y -> R x z -> ∃ w : A, R y w /\ R z w
-    locally_confluent     : forall x y z : A, R x y -> R x z -> ∃ w : A, R* y w /\ R* z w
-    confluent             : forall x y z : A, R* x y -> R* x z -> ∃ w : A, R* y w /\ R* z w
-
-    dense                 : forall x y : A, R x y -> exists z : A, R x z /\ R z y
-
-    total                 : forall x y : A, R x y \/ R y x
-    weakly_total          : forall x y : A, ~ R x y -> R y x
-
-    trichotomous          : forall x y : A, R x y \/ x = y \/ R y x
-    weakly_trichotomous   : forall x y : A, x <> y -> R x y \/ R y x
-    connected             : forall x y : A, ~ R x y /\ ~ R y x -> x = y
-
-    weakly_extensional    : forall x y : A, (forall t : A, R t x <-> R t y) -> x = y
-
-    well_founded          : forall x : A, Acc R x
-    ill_founded           : exists x : A, Inaccessible R x *)
 
 (** Do obczajenia z biblioteki stdpp: *)
 
