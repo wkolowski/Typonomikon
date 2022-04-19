@@ -440,7 +440,45 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab124"></a><h2 class="section">Słaba dysjunkcja</h2>
+<a id="lab124"></a><h2 class="section">Słaba implikacja</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">wimpl</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := ~ <span class="id" title="var">Q</span> -&gt; ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wimpl_impl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">wimpl</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_wimpl_irrefutable</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ ~ (<span class="id" title="var">wimpl</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wimpl_impl_classically</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wimpl</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_wimpl_wimpl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wimpl</span> (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) (<span class="id" title="var">wimpl</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_wimpl_tabu</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">wimpl</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>)) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">LEM</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab125"></a><h2 class="section">Słaba dysjunkcja</h2>
 
 </div>
 <div class="code">
@@ -515,7 +553,7 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab125"></a><h2 class="section">Słaba dysjunkcja v2</h2>
+<a id="lab126"></a><h2 class="section">Słaba dysjunkcja v2</h2>
 
 </div>
 <div class="code">
@@ -602,7 +640,7 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab126"></a><h2 class="section">Słaba koniunkcja</h2>
+<a id="lab127"></a><h2 class="section">Słaba koniunkcja</h2>
 
 </div>
 <div class="code">
@@ -635,7 +673,7 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab127"></a><h2 class="section">Silna równoważność</h2>
+<a id="lab128"></a><h2 class="section">Silna równoważność</h2>
 
 </div>
 <div class="code">
@@ -693,7 +731,7 @@ Po drugie, jest ono niezaprzeczalne.
 </div>
 
 <div class="doc">
-<a id="lab128"></a><h2 class="section">Silna antyimplikacja (TODO)</h2>
+<a id="lab129"></a><h2 class="section">Silna antyimplikacja (TODO)</h2>
 
 </div>
 <div class="code">
@@ -713,17 +751,66 @@ Po drugie, jest ono niezaprzeczalne.
 &nbsp;&nbsp;<span class="id" title="var">NI</span> -&gt; <span class="id" title="var">LEM</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">wxor</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := ~ (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wxor_irrefl</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, ~ <span class="id" title="var">wxor</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wxor_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">wxor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">wxor</span> <span class="id" title="var">Q</span> <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wxor_cotrans</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">wxor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">wxor</span> <span class="id" title="var">P</span> <span class="id" title="var">R</span> \/ <span class="id" title="var">wxor</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wxor_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wxor</span> <span class="id" title="var">P</span> (<span class="id" title="var">wxor</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span>) &lt;-&gt; <span class="id" title="var">wxor</span> (<span class="id" title="var">wxor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>) <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wxor_xor</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">xor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">wxor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">xor_wxor_classically</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">wxor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">xor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wxor_False_r_classically</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">wxor</span> <span class="id" title="var">P</span> <span class="id" title="var">False</span> &lt;-&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wxor_False_l_classically</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">LEM</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">wxor</span> <span class="id" title="var">False</span> <span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wxor_True_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">wxor</span> <span class="id" title="var">True</span> <span class="id" title="var">P</span> &lt;-&gt; ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">wxor_True_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">wxor</span> <span class="id" title="var">P</span> <span class="id" title="var">True</span> &lt;-&gt; ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-TODO: słabe kwantyfikatory 
-<div class="paragraph"> </div>
-
-<a id="lab129"></a><h2 class="section">Wymyśl to sam... (TODO)</h2>
+<a id="lab130"></a><h2 class="section">TODO: słabe kwantyfikatory</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab130"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab131"></a><h2 class="section">Wymyśl to sam... (TODO)</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab132"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -739,7 +826,7 @@ TODO: słabe kwantyfikatory
     Użyteczny czy bezużyteczny? 
 <div class="paragraph"> </div>
 
-<a id="lab131"></a><h1 class="section">Logika klasyczna jako logika silnych i słabych spójników (TODO)</h1>
+<a id="lab133"></a><h1 class="section">Logika klasyczna jako logika silnych i słabych spójników (TODO)</h1>
 
 </div>
 <div class="code">
@@ -845,7 +932,7 @@ TODO: słabe kwantyfikatory
 </div>
 
 <div class="doc">
-<a id="lab132"></a><h1 class="section">Logika klasyczna jako logika kontrapozycji (TODO)</h1>
+<a id="lab134"></a><h1 class="section">Logika klasyczna jako logika kontrapozycji (TODO)</h1>
 
 </div>
 <div class="code">
@@ -897,11 +984,11 @@ TODO: słabe kwantyfikatory
 </div>
 
 <div class="doc">
-<a id="lab133"></a><h1 class="section">Logika klasyczna jako logika Peirce'a (TODO)</h1>
+<a id="lab135"></a><h1 class="section">Logika klasyczna jako logika Peirce'a (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab134"></a><h2 class="section">Logika cudownych konsekwencji (TODO)</h2>
+<a id="lab136"></a><h2 class="section">Logika cudownych konsekwencji (TODO)</h2>
 
 </div>
 <div class="code">
@@ -951,7 +1038,7 @@ TODO: słabe kwantyfikatory
 </div>
 
 <div class="doc">
-<a id="lab135"></a><h2 class="section">Logika Peirce'a (TODO)</h2>
+<a id="lab137"></a><h2 class="section">Logika Peirce'a (TODO)</h2>
 
 </div>
 <div class="code">
@@ -1004,7 +1091,7 @@ TODO: słabe kwantyfikatory
 </div>
 
 <div class="doc">
-<a id="lab136"></a><h1 class="section">Silna negacja</h1>
+<a id="lab138"></a><h1 class="section">Silna negacja</h1>
 
 </div>
 <div class="code">
@@ -1302,7 +1389,7 @@ Wynika to z faktu, że <span class="inlinecode">~</span> <span class="inlinecode
 </div>
 
 <div class="doc">
-<a id="lab137"></a><h1 class="section">Paradoks pijoka</h1>
+<a id="lab139"></a><h1 class="section">Paradoks pijoka</h1>
 
 </div>
 <div class="code">
@@ -1417,7 +1504,7 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
     nie muszą być takie oczywiste. 
 <div class="paragraph"> </div>
 
-<a id="lab138"></a><h4 class="section">Ćwiczenie (logika klasyczna)</h4>
+<a id="lab140"></a><h4 class="section">Ćwiczenie (logika klasyczna)</h4>
 
 <div class="paragraph"> </div>
 
@@ -1425,7 +1512,7 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
     Zacytuj wszystkie fragmenty dowodu wykorzystujące logikę klasyczną. 
 <div class="paragraph"> </div>
 
-<a id="lab139"></a><h4 class="section">Ćwiczenie (niepusty bar)</h4>
+<a id="lab141"></a><h4 class="section">Ćwiczenie (niepusty bar)</h4>
 
 <div class="paragraph"> </div>
 
@@ -1455,15 +1542,15 @@ Na zakończenie zwróćmy swą uwagę ku kolejnemu paradoksowi, tym razem
 </div>
 
 <div class="doc">
-<a id="lab140"></a><h1 class="section">Konkluzja (TODO)</h1>
+<a id="lab142"></a><h1 class="section">Konkluzja (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab141"></a><h2 class="section">Ściąga (TODO)</h2>
+<a id="lab143"></a><h2 class="section">Ściąga (TODO)</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab142"></a><h1 class="section">Zadania (TODO)</h1>
+<a id="lab144"></a><h1 class="section">Zadania (TODO)</h1>
 
 <div class="paragraph"> </div>
 

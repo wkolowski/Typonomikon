@@ -584,6 +584,71 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Słaba implikacja *)
+
+Definition wimpl (P Q : Prop) : Prop := ~ Q -> ~ P.
+
+Lemma wimpl_impl :
+  forall P Q : Prop,
+    (P -> Q) -> wimpl P Q.
+(* begin hide *)
+Proof.
+  unfold wimpl. intros P Q f nq p.
+  apply nq, f, p.
+Qed.
+(* end hide *)
+
+Lemma impl_wimpl_irrefutable :
+  forall P Q : Prop,
+    ~ ~ (wimpl P Q -> (P -> Q)).
+(* begin hide *)
+Proof.
+  unfold wimpl.
+  intros P Q H. apply H.
+  intros f p. exfalso. apply f; [| assumption].
+  intros q. apply H. intros _ _. assumption.
+Qed.
+(* end hide *)
+
+Lemma wimpl_impl_classically :
+  LEM ->
+    forall P Q : Prop,
+      wimpl P Q -> (P -> Q).
+(* begin hide *)
+Proof.
+  unfold LEM, wimpl.
+  intros lem P Q f p.
+  destruct (lem Q) as [q | nq].
+  - assumption.
+  - contradict p. apply f. assumption.
+Qed.
+(* end hide *)
+
+Lemma impl_wimpl_wimpl :
+  forall P Q : Prop,
+    wimpl (P -> Q) (wimpl P Q).
+(* begin hide *)
+Proof.
+  unfold LEM, wimpl.
+  intros P Q f g. apply f.
+  intros nq p. apply nq, g. assumption.
+Qed.
+(* end hide *)
+
+Lemma impl_wimpl_tabu :
+  (forall P Q : Prop, wimpl P Q -> (P -> Q)) ->
+    LEM.
+(* begin hide *)
+Proof.
+  unfold LEM, wimpl.
+  intros impl_wimpl P.
+  specialize (impl_wimpl (~ ~ (P \/ ~ P)) (P \/ ~ P)).
+  apply impl_wimpl.
+  - tauto.
+  - apply Irrefutable_LEM.
+Qed.
+(* end hide *)
+
 (** ** Słaba dysjunkcja *)
 
 Definition wor (P Q : Prop) : Prop := ~ P -> Q.
@@ -1115,7 +1180,122 @@ Proof.
 Qed.
 (* end hide *)
 
-(** TODO: słabe kwantyfikatory *)
+Definition wxor (P Q : Prop) : Prop := ~ (P <-> Q).
+
+Lemma wxor_irrefl :
+  forall P : Prop, ~ wxor P P.
+(* begin hide *)
+Proof.
+  unfold wxor. intros A f.
+  apply f. split; trivial.
+Qed.
+(* end hide *)
+
+Lemma wxor_comm :
+  forall P Q : Prop, wxor P Q -> wxor Q P.
+(* begin hide *)
+Proof.
+  unfold wxor. intros P Q f g.
+  apply f. apply iff_symm. assumption.
+Qed.
+(* end hide *)
+
+Lemma wxor_cotrans :
+  LEM ->
+    (forall P Q R : Prop, wxor P Q -> wxor P R \/ wxor Q R).
+(* begin hide *)
+Proof.
+  unfold LEM, wxor. intros lem P Q R f.
+  destruct (lem (P <-> R)) as [HR | HR]; cycle 1.
+  - left. assumption.
+  - destruct (lem (Q <-> R)) as [HQ | HQ]; cycle 1.
+    + right. assumption.
+    + contradiction f. apply iff_trans with R.
+      * assumption.
+      * apply iff_symm. assumption.
+Qed.
+(* end hide *)
+
+Lemma wxor_assoc :
+  forall P Q R : Prop,
+    wxor P (wxor Q R) <-> wxor (wxor P Q) R.
+(* begin hide *)
+Proof.
+  unfold wxor. split; firstorder.
+Qed.
+(* end hide *)
+
+Lemma wxor_xor :
+  forall P Q : Prop, xor P Q -> wxor P Q.
+(* begin hide *)
+Proof.
+  unfold xor, wxor.
+  intros P Q [[p nq] | [np q]].
+  - intros f. apply nq, f. assumption.
+  - intros f. apply np, f. assumption.
+Qed.
+(* end hide *)
+
+Lemma xor_wxor_classically :
+  LEM ->
+    forall P Q : Prop, wxor P Q -> xor P Q.
+(* begin hide *)
+Proof.
+  unfold LEM, xor, wxor.
+  intros lem P Q npq.
+  destruct (lem P) as [p | np].
+  - left. split; [assumption |]. intros q. apply npq. split; trivial.
+  - right. split; [assumption |]. destruct (lem Q) as [q | nq].
+    + assumption.
+    + exfalso. apply npq. split; intros; contradiction.
+Qed.
+(* end hide *)
+
+Lemma wxor_False_r_classically :
+  LEM ->
+    forall P : Prop, wxor P False <-> P.
+(* begin hide *)
+Proof.
+  unfold LEM, wxor, iff.
+  intros lem P. split.
+  - intros f. destruct (lem P) as [p | np].
+    + assumption.
+    + contradict f. split; intros; contradiction.
+  - intros p [np _]. contradiction.
+Qed.
+(* end hide *)
+
+Lemma wxor_False_l_classically :
+  LEM ->
+    forall P : Prop, wxor False P <-> P.
+(* begin hide *)
+Proof.
+  unfold LEM, wxor.
+  intros lem P; split.
+  - intros H. destruct (lem P) as [p | np].
+    + assumption.
+    + exfalso. apply H. split; [intros [] | contradiction].
+  - intros p f. apply f. assumption.
+Qed.
+(* end hide *)
+
+Lemma wxor_True_l :
+  forall P : Prop, wxor True P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold wxor. tauto.
+Qed.
+(* end hide *)
+
+Lemma wxor_True_r :
+  forall P : Prop, wxor P True <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold wxor. tauto.
+Qed.
+(* end hide *)
+
+(** ** TODO: słabe kwantyfikatory *)
 
 (** ** Wymyśl to sam... (TODO) *)
 
