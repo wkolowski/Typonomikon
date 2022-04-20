@@ -15,8 +15,6 @@ TODO 3: rozróżnienie na logikę klasyczną:
 
 (* end hide *)
 
-(** * Prawo zachowania informacji (TODO) *)
-
 (** * Aksjomaty i prawa logiki klasycznej (TODO) *)
 
 (** TODO:
@@ -29,17 +27,11 @@ TODO 3: rozróżnienie na logikę klasyczną:
       vs consequentia mirabilis i [Peirce] (jako rzeczy wyglądające podobnie do [DNE], a
          w praktyce wyłazące, jak człowiek próbuje użyć [LEM]) *)
 
-Definition LEM : Prop :=
-  forall P : Prop, P \/ ~ P.
-
-Definition MI : Prop :=
-  forall P Q : Prop, (P -> Q) -> ~ P \/ Q.
-
-Definition ME : Prop :=
-  forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q).
-
 Definition DNE : Prop :=
   forall P : Prop, ~ ~ P -> P.
+
+Definition LEM : Prop :=
+  forall P : Prop, P \/ ~ P.
 
 Definition CM : Prop :=
   forall P : Prop, (~ P -> P) -> P.
@@ -50,8 +42,26 @@ Definition Peirce : Prop :=
 Definition Contra : Prop :=
   forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
 
+Definition MI : Prop :=
+  forall P Q : Prop, (P -> Q) -> ~ P \/ Q.
+
+Definition ME : Prop :=
+  forall P Q : Prop, (P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q).
+
+Definition or_wor : Prop :=
+  forall P Q : Prop, (~ P -> Q) -> P \/ Q.
+
+Definition and_wand : Prop :=
+  forall P Q : Prop, ~ (~ P \/ ~ Q) -> P /\ Q.
+
+Definition snimpl_nimpl : Prop :=
+  forall P Q : Prop, ~ (P -> Q) -> (P /\ ~ Q).
+
+Definition xor_wxor : Prop :=
+  forall P Q : Prop, ~ (P <-> Q) -> xor P Q.
+
 Ltac u :=
-  unfold LEM, DNE, CM, MI, ME, Peirce, Contra.
+  unfold DNE, LEM, CM, Peirce, Contra, MI, ME, or_wor, and_wand, snimpl_nimpl, xor_wxor.
 
 (** TODO: Napisać coś o paradoksach implikacji materialnej. *)
 
@@ -1295,7 +1305,98 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** TODO: słabe kwantyfikatory *)
+(** ** Słaby kwantyfikator egzystencjalny (TODO) *)
+
+Definition wexists {A : Type} (P : A -> Prop) : Prop :=
+  ~ forall x : A, ~ P x.
+
+Lemma wexists_exists :
+  forall {A : Type} (P : A -> Prop),
+    ex P -> wexists P.
+(* begin hide *)
+Proof.
+  unfold wexists.
+  intros A P [x p] H.
+  apply (H x). assumption.
+Qed.
+(* end hide *)
+
+Lemma exists_wexists_classically :
+  LEM ->
+    forall {A : Type} (P : A -> Prop),
+      wexists P -> ex P.
+(* begin hide *)
+Proof.
+  unfold LEM, wexists.
+  intros lem A P H.
+  destruct (lem (exists y, P y)) as [e | ne].
+  - assumption.
+  - exfalso. apply H. intros x p. apply ne. exists x. assumption.
+Qed.
+(* end hide *)
+
+Lemma exists_wexists_tabu :
+  (forall {A : Type} (P : A -> Prop), wexists P -> ex P)
+    ->
+  LEM.
+(* begin hide *)
+Proof.
+  unfold LEM, wexists.
+  intros exists_wexists P.
+  specialize (exists_wexists bool (fun b => if b then P else ~ P)); cbn in *.
+  destruct exists_wexists as [[] H].
+  - intros H.
+    specialize (H true) as np; cbn in np.
+    specialize (H false) as nnp; cbn in nnp.
+    contradiction.
+  - left. assumption.
+  - right. assumption.
+Qed.
+(* end hide *)
+
+(** ** Słaby kwantyfikator uniwersalny (TODO) *)
+
+Definition wforall {A : Type} (P : A -> Prop) : Prop :=
+  ~ exists x : A, ~ P x.
+
+Lemma wforall_forall :
+  forall {A : Type} (P : A -> Prop),
+    (forall x : A, P x) -> wforall P.
+(* begin hide *)
+Proof.
+  unfold wforall.
+  intros A P H [x np].
+  apply np, H.
+Qed.
+(* end hide *)
+
+Lemma forall_wforall_classically :
+  LEM ->
+    forall {A : Type} (P : A -> Prop),
+      wforall P -> forall x : A, P x.
+(* begin hide *)
+Proof.
+  unfold LEM, wforall.
+  intros lem A P H x.
+  destruct (lem (P x)) as [p | np].
+  - assumption.
+  - contradict H. exists x. assumption.
+Qed.
+(* end hide *)
+
+Lemma forall_wforall_tabu :
+  (forall {A : Type} (P : A -> Prop), wforall P -> forall x : A, P x)
+    ->
+  LEM.
+(* begin hide *)
+Proof.
+  unfold LEM, wforall.
+  intros forall_wforall P.
+  apply (forall_wforall unit (fun _ => P \/ ~ P)).
+  - intros [_ H]. apply Irrefutable_LEM in H. assumption.
+  - exact tt.
+Qed.
+(* end hide *)
 
 (** ** Wymyśl to sam... (TODO) *)
 

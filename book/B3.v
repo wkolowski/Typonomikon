@@ -1038,7 +1038,7 @@ Qed.
 
 (** * Esencjalizm vs strukturalizm *)
 
-(** * Harmonia logiki konstruktywnej (TODO) *)
+(** * Harmonia logiki konstruktywnej i prawo zachowania informacji (TODO) *)
 
 (** * Logika intuicjonistyczna jako logika certyfikatów (TODO) *)
 

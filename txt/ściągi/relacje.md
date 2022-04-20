@@ -12,9 +12,9 @@
 | `irreflexive`           | `∃ x, ~ R x x`                                     |                                       |                        |
 | `not_antireflexive`     | `∃ x, R x x`                                       |                                       |                        |
 | `coreflexive`           | `∀ x y, R x y → x = y`                             | `∀ x y, x ≠ y → N x y`                | ???                    |
-| `left_quasireflexive`   | `∀ x y, R x y → R x x`                             | `∀ x y, N x x → N x y`                | ???                    |
-| `right_quasireflexive`  | `∀ x y, R x y → R y y`                             | `∀ x y, N y y → N x y`                | ???                    |
-| `quasireflexive`        | `∀ x y, R x y → R x x ∧ R y y`                     | `∀ x y, N x x ∨ N y y → N x y`        | ???                    |
+| `left_quasireflexive`   | `∀ x y, R x y → R x x`                             | `∀ x y, N x x → N x y`                | L. kwaziantyzwrotna??? |
+| `right_quasireflexive`  | `∀ x y, R x y → R y y`                             | `∀ x y, N y y → N x y`                | R. kwaziantyzwrotna??? |
+| `quasireflexive`        | `∀ x y, R x y → R x x ∧ R y y`                     | `∀ x y, N x x ∨ N y y → N x y`        | Kwaziantyzwrotna???    |
 | **Symetria**                                                                 |                                       |                        |
 | `symmetric`             | `∀ x y, R x y → R y x`                             | `∀ x y, N y x → N x y`                | `symmetric`            |
 | `antisymmetric`         | `∀ x y, R x y → R y x → ⊥`                         | `∀ x y, N x y ∨ N y x`                | `total`                |
@@ -41,7 +41,7 @@
 | **Totalność**                                                                |                                       |                        |
 | `total`                 | `∀ x y, R x y ∨ R y x`                             | `∀ x y, N x y ∧ N y x → ⊥`            | `antisymmetric`        |
 | `weakly_total`          | `∀ x y, ~ R x y → R y x`                           | `∀ x y, N y x → ~ N x y`              | `antisymmetric`        |
-| `trichotomous`          | `∀ x y, R x y ∨ x = y ∨ R y x`                     | `∀ x y, N x y ∧ x ≠ y ∧ N y x → ⊥`    | bardzo słaba antysymetria? |
+| `trichotomous`          | `∀ x y, R x y ∨ x = y ∨ R y x`                     | `∀ x y, N x y ∧ x ≠ y ∧ N y x → ⊥`    | b. słaba antysymetria? |
 | `weakly_trichotomous`   | `∀ x y, x ≠ y → R x y ∨ R y x`                     | `∀ x y, N x y ∧ N y x → x = y`        | `weakly_antisymmetric` |
 | `connected`             | `∀ x y, ~ R x y ∧ ~ R y x → x = y`                 | `∀ x y, x ≠ y → ~ N x y ∨ ~ N y x`    | słaba `R`-trychotomia  |
 | **Ekstensjonalność**                                                         |                                       |                        |

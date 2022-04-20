@@ -880,28 +880,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma deMorgan_big :
-  forall (A : Type) (P : A -> Prop),
-    A -> (~ forall x : A, P x) -> exists x : A, ~ P x.
-(* begin hide *)
-Proof.
-  intros A P a H.
-  exists a. intro pa.
-  apply H. intro x.
-Abort.
-(* end hide *)
-
-Lemma Irrefutable_deMorgan_big :
-  forall (A : Type) (P : A -> Prop),
-    ~ ~ (A -> (~ forall x : A, P x) -> exists x : A, ~ P x).
-(* begin hide *)
-Proof.
-  intros A P H1.
-  apply H1. intros a H2.
-  exists a. intro pa.
-Abort.
-(* end hide *)
-
 Lemma LEM_deMorgan_big :
   (forall P : Prop, P \/ ~ P) ->
     (forall (A : Type) (P : A -> Prop),
@@ -923,12 +901,12 @@ Lemma deMorgan_big_WLEM :
 (* begin hide *)
 Proof.
   intros DM P.
-    specialize (DM bool (fun b => if b then P else ~ P)).
-    cbn in DM. destruct DM as [b H].
-      intro H. apply (H false). apply (H true).
-      destruct b.
-        left. assumption.
-        right. assumption.
+  specialize (DM bool (fun b => if b then P else ~ P)).
+  cbn in DM. destruct DM as [b H].
+    intro H. apply (H false). apply (H true).
+    destruct b.
+      left. assumption.
+      right. assumption.
 Qed.
 (* end hide *)
 
@@ -1084,8 +1062,6 @@ Qed.
 Definition DNS : Prop :=
   forall (A : Type) (P : A -> Prop),
     (forall x : A, ~ ~ P x) -> ~ ~ forall x : A, P x.
-
-Print LEM.
 
 Lemma DNS_not_not_LEM :
   DNS <-> ~ ~ LEM.
