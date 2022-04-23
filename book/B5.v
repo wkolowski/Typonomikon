@@ -11,7 +11,7 @@ Require Export B4.
     przyczyny - zazwyczaj naucza się jednej (a nawet jedynej słusznej)
     logiki. Porównawszy logiki konstruktywną i klasyczną nie pozostaje
     nam nic innego jak tylko skonstatować, że jesteśmy bardzo wyjątkowymi
-    płatkami sniegu, bo znamy już dwie logiki. Do głowy powinno nam zatem
+    płatkami śniegu, bo znamy już dwie logiki. Do głowy powinno nam zatem
     przyjść jedyne słuszne w tej sytuacji pytanie: czy są jeszcze jakieś
     inne logiki? Odpowiedź brzmi: tak, i to nawet nieskończenie wiele.
 
@@ -779,7 +779,44 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Logika de Morgana (TODO) *)
+(** ** Silna negacja koniunkcji i logika de Morgana (TODO) *)
+
+Definition nand' (P Q : Prop) : Prop := ~ P \/ ~ Q.
+
+Lemma nand_nand' :
+  forall P Q : Prop,
+    nand' P Q -> nand P Q.
+(* begin hide *)
+Proof.
+  unfold nand, nand'.
+  intros P Q [np | nq] [p q]; contradiction.
+Qed.
+(* end hide *)
+
+Lemma nand'_nand_classically :
+  (forall P : Prop, P \/ ~ P) ->
+    forall P Q : Prop,
+      nand P Q -> nand' P Q.
+(* begin hide *)
+Proof.
+  unfold nand, nand'.
+  intros lem P Q npq.
+  destruct (lem P) as [p | np].
+  - right. intros q. apply npq. split; assumption.
+  - left. assumption.
+Qed.
+(* end hide *)
+
+Lemma nand'_nand_tabu :
+  (forall P Q : Prop, nand P Q -> nand' P Q)
+    ->
+  (forall P : Prop, P \/ ~ P).
+(* begin hide *)
+Proof.
+  unfold nand, nand'.
+  intros nand'_nand P.
+Abort.
+(* end hide *)
 
 (* begin hide *)
 Lemma and_true_irref :
@@ -834,19 +871,7 @@ Qed.
 
 (*
 TODO: Logika de Morgana jako logika trójwartościowa
-TODO: Patrz notatki papierowe
 *)
-(* end hide *)
-
-Lemma deMorgan :
-  forall P Q : Prop, ~ (P /\ Q) -> ~ P \/ ~ Q.
-(* begin hide *)
-Proof.
-  intros P Q H. left. intro p. apply H. split.
-    assumption.
-Restart.
-  intros P Q H. right. intro q. apply H. split.
-Abort.
 (* end hide *)
 
 Lemma Irrefutable_deMorgan :

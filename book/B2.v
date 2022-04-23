@@ -1,5 +1,7 @@
 (** * B2: Konstruktywny rachunek kwantyfikatorów [TODO] *)
 
+Require Export B1.
+
 (** * Typy i ich elementy (TODO) *)
 
 (** Tu zestawić ze sobą P : Prop, A : Type, p : P, x : A.
@@ -8,19 +10,6 @@
     programów, przestrzeniami, etc. *)
 
 (** * Predykaty i relacje (TODO) *)
-
-(** * Równość - najważniejsza relacja (TODO) *)
-
-(* begin hide *)
-Require Export B1.
-(*
-TODO: Być może coś więcej o równości (i jej alternatywnej definicji?).
-TODO: Arystoteles i Leibniz
-*)
-(* end hide *)
-
-(** Dobrze byłoby zapoznać się z równością przed pierwszym jej użyciem
-    w rozdziale o typach induktywnych. *)
 
 (** * Kwantyfikatory *)
 
@@ -255,38 +244,30 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Kwantyfikatory (TODO) *)
+(** * Równość - najważniejsza relacja (TODO) *)
 
-(** ** Kwantyfikator uniwersalny (TODO) *)
+(** Dobrze byłoby zapoznać się z równością przed pierwszym jej użyciem
+    w rozdziale o typach induktywnych. Być może coś więcej o równości
+    (i jej alternatywnej definicji?).*)
 
-(** ** Kwantyfikator egzystencjalny (TODO) *)
+(** ** Równość według Arystotelesa *)
 
-(** ** Kwantyfikator unikatowy (TODO) *)
+(** ** Równość według Leibniza *)
 
-Print unique.
-Search unique.
-
-Definition unique {A : Type} (P : A -> Prop) : Prop :=
-  exists x : A, P x /\ forall y : A, P y -> x = y.
-
-(** Poznawszy relację równości oraz kwantyfikatory uniwersalny i
-    egzystencjalny, możemy zdefiniować inny bardzo ważny "kwantyfikator",
-    a mianowicie kwantyfikator unikatowy, który głosi, że istnieje
-    dokładnie jeden obiekt spełniający daną właściwość. *)
-
-(** * α-konwersja i inne rodzaje równości (TODO) *)
-
-(** https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/równość.md *)
+(** ** α-konwersja i inne rodzaje równości (TODO) *)
 
 (* begin hide *)
 (*
 TODO 1: Opisać związki rodzajów równości ze składnią i semantyką
         (empiryczna obserwacja: studenci pierwszego roku nie są
-        zbyt płynni w posługiwaniu się składnią _in abstracto_).
+        zbyt płynni w posługiwaniu się składnią abstrakcyjną).
 TODO 2: Pomysł na jeszcze jeden podrozdział, semantyka vs składnia
 TODO 3: Użyć nominalizmów do wytłumaczenia wiązania nazw zmiennych.
 *)
 (* end hide *)
+
+
+(** https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/równość.md *)
 
 (** * Konkluzja *)
 
@@ -305,13 +286,13 @@ TODO 3: Użyć nominalizmów do wytłumaczenia wiązania nazw zmiennych.
 
 (** * Zadania (TODO) *)
 
-(** rozwiąż wszystkie zadania jeszcze raz, ale tym razem bez używania
-    Module/Section/Hypothesis oraz z jak najkrótszymi dowodami
+(** Rozwiąż wszystkie zadania jeszcze raz, ale tym razem bez używania komend
+    [Module]/[Section]/[Hypothesis] oraz z jak najkrótszymi dowodami
 
     Inne zadania:
     - modelowanie różnych sytuacji za pomocą zdań i predykatów
     - rozwiązywanie zagadek logicznych
-    - więcej zadań z exists *)
+    - więcej zadań z [exists] *)
 
 (** ** Prawa *)
 
