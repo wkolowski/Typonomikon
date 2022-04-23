@@ -389,10 +389,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">andor</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">left</span>  : <span class="id" title="var">P</span> -&gt;      <span class="id" title="var">andor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">right</span> :      <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">andor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">both</span>  : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">andor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">andor</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> \/ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_or_l</span> :<br/>
@@ -410,23 +407,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 </div>
 
 <div class="doc">
-<a id="lab89"></a><h2 class="section">i/lub po raz drugi (TODO)</h2>
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">andor'</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> \/ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">andor'_or</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">andor'</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a id="lab90"></a><h2 class="section">Różnica między "lub" i "albo" (TODO)</h2>
+<a id="lab89"></a><h2 class="section">Różnica między "lub" i "albo" (TODO)</h2>
 
 </div>
 <div class="code">
@@ -455,7 +436,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">xor</span> <span class="id" title="var">P</span> (<span class="id" title="var">xor</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span>) &lt;-&gt; <span class="id" title="var">xor</span> (<span class="id" title="var">xor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>) <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">xor_not_iff</span> :<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_iff_xor</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">xor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; ~ (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
 
 <br/>
@@ -484,18 +465,13 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 </div>
 
 <div class="doc">
-<a id="lab91"></a><h2 class="section">Ani <span class="inlinecode"><span class="id" title="var">P</span></span> ani <span class="inlinecode"><span class="id" title="var">Q</span></span>, czyli negacja dysjunkcji</h2>
+<a id="lab90"></a><h2 class="section">Ani <span class="inlinecode"><span class="id" title="var">P</span></span> ani <span class="inlinecode"><span class="id" title="var">Q</span></span>, czyli negacja dysjunkcji</h2>
 
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">nor</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := ~ (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">nor'</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := ~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nor_nor'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">nor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">nor'</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">nor_comm</span> :<br/>
@@ -505,7 +481,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_nor_assoc</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nor'</span> (<span class="id" title="var">nor'</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>) <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">nor'</span> <span class="id" title="var">P</span> (<span class="id" title="var">nor'</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nor</span> (<span class="id" title="var">nor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>) <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">nor</span> <span class="id" title="var">P</span> (<span class="id" title="var">nor</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">nor_True_l</span> :<br/>
@@ -536,7 +512,65 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 </div>
 
 <div class="doc">
-<a id="lab92"></a><h2 class="section">Negacja koniunkcji</h2>
+W nieco innej wersji. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">nor'</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> := ~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nor'_comm</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nor'</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">nor'</span> <span class="id" title="var">Q</span> <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_nor'_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nor'</span> (<span class="id" title="var">nor'</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>) <span class="id" title="var">R</span> /\ ~ <span class="id" title="var">nor'</span> <span class="id" title="var">P</span> (<span class="id" title="var">nor'</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nor'_True_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nor'</span> <span class="id" title="var">True</span> <span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nor'_True_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nor'</span> <span class="id" title="var">P</span> <span class="id" title="var">True</span> &lt;-&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nor'_False_l</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nor'</span> <span class="id" title="var">False</span> <span class="id" title="var">P</span> &lt;-&gt; ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nor'_False_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nor'</span> <span class="id" title="var">P</span> <span class="id" title="var">False</span> &lt;-&gt; ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nor'_antiidempotent</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nor'</span> <span class="id" title="var">P</span> <span class="id" title="var">P</span> &lt;-&gt; ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Równoważność 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nor_nor'</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">nor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">nor'</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab91"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">nand</span></span>, czyli negacja koniunkcji</h2>
 
 </div>
 <div class="code">
@@ -588,7 +622,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 </div>
 
 <div class="doc">
-<a id="lab93"></a><h2 class="section">Negacja implikacji, czyli antyimplikacja</h2>
+<a id="lab92"></a><h2 class="section">Antyimplikacja, czyli negacja implikacji</h2>
 
 </div>
 <div class="code">
@@ -630,15 +664,15 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 </div>
 
 <div class="doc">
-<a id="lab94"></a><h1 class="section">Logika pierwszego rzędu a logika wyższego rzędu (TODO)</h1>
+<a id="lab93"></a><h1 class="section">Logika pierwszego rzędu a logika wyższego rzędu (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab95"></a><h2 class="section">Logika pierwszego rzędu (TODO)</h2>
+<a id="lab94"></a><h2 class="section">Logika pierwszego rzędu (TODO)</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab96"></a><h2 class="section">Logika drugiego rzędu i kodowania impredykatywne (TODO)</h2>
+<a id="lab95"></a><h2 class="section">Logika drugiego rzędu i kodowania impredykatywne (TODO)</h2>
 
 </div>
 <div class="code">
@@ -711,15 +745,15 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 </div>
 
 <div class="doc">
-<a id="lab97"></a><h2 class="section">Logika wyższego rzędu (TODO)</h2>
+<a id="lab96"></a><h2 class="section">Logika wyższego rzędu (TODO)</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab98"></a><h1 class="section">Paradoksy autoreferencji</h1>
+<a id="lab97"></a><h1 class="section">Paradoksy autoreferencji</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab99"></a><h2 class="section">Paradoks Curry'ego</h2>
+<a id="lab98"></a><h2 class="section">Paradoks Curry'ego</h2>
 
 </div>
 <div class="code">
@@ -739,7 +773,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 </div>
 
 <div class="doc">
-<a id="lab100"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab99"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -753,7 +787,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 </div>
 
 <div class="doc">
-<a id="lab101"></a><h2 class="section">Paradoks golibrody</h2>
+<a id="lab100"></a><h2 class="section">Paradoks golibrody</h2>
 
 <div class="paragraph"> </div>
 
@@ -861,11 +895,11 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
     zostaje trafiony paradoksalną konkluzją: golibroda nie istnieje. 
 <div class="paragraph"> </div>
 
-<a id="lab102"></a><h2 class="section">Inne paradoksy autoreferencji</h2>
+<a id="lab101"></a><h2 class="section">Inne paradoksy autoreferencji</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab103"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab102"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -882,7 +916,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
     heterologiczne? 
 <div class="paragraph"> </div>
 
-<a id="lab104"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab103"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -897,7 +931,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 
 <div class="paragraph"> </div>
 
-<a id="lab105"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab104"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -910,7 +944,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
     lubią. Czy wujek Janusz lubi sam siebie? 
 <div class="paragraph"> </div>
 
-<a id="lab106"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab105"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
@@ -932,7 +966,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 
 <div class="paragraph"> </div>
 
-<a id="lab107"></a><h1 class="section">Predykatywizm (TODO)</h1>
+<a id="lab106"></a><h1 class="section">Predykatywizm (TODO)</h1>
 
 </div>
 <div class="code">
@@ -943,7 +977,7 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 </div>
 
 <div class="doc">
-<a id="lab108"></a><h1 class="section">Spójniki pozytywne i negatywne (TODO)</h1>
+<a id="lab107"></a><h1 class="section">Spójniki pozytywne i negatywne (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -964,23 +998,23 @@ Nieistnienie "golibrody" i pokrewny mu paradoks pytania "czy golibroda
 
 <div class="paragraph"> </div>
 
-<a id="lab109"></a><h1 class="section">Esencjalizm vs strukturalizm</h1>
+<a id="lab108"></a><h1 class="section">Esencjalizm vs strukturalizm</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab110"></a><h1 class="section">Harmonia logiki konstruktywnej i prawo zachowania informacji (TODO)</h1>
+<a id="lab109"></a><h1 class="section">Harmonia logiki konstruktywnej i prawo zachowania informacji (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab111"></a><h1 class="section">Logika intuicjonistyczna jako logika certyfikatów (TODO)</h1>
+<a id="lab110"></a><h1 class="section">Logika intuicjonistyczna jako logika certyfikatów (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab112"></a><h1 class="section">Aksjomaty i pojęcie "tabu" (TODO)</h1>
+<a id="lab111"></a><h1 class="section">Aksjomaty i pojęcie "tabu" (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab113"></a><h1 class="section">Klasyfikacja zdań (TODO)</h1>
+<a id="lab112"></a><h1 class="section">Klasyfikacja zdań (TODO)</h1>
 
 <div class="paragraph"> </div>
 

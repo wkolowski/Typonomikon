@@ -273,10 +273,7 @@ Qed.
 
 (** ** i/lub (TODO)  *)
 
-Inductive andor (P Q : Prop) : Prop :=
-    | left  : P ->      andor P Q
-    | right :      Q -> andor P Q
-    | both  : P -> Q -> andor P Q.
+Definition andor (P Q : Prop) : Prop := P \/ Q \/ (P /\ Q).
 
 Lemma and_or_l :
   forall P Q : Prop, P /\ Q -> P \/ Q.
@@ -298,27 +295,7 @@ Lemma andor_or :
   forall P Q : Prop, andor P Q <-> P \/ Q.
 (* begin hide *)
 Proof.
-  split.
-    destruct 1 as [p | q | p q].
-      left. assumption.
-      right. assumption.
-      left. assumption.
-    destruct 1 as [p | q].
-      apply left. assumption.
-      apply right. assumption.
-Qed.
-(* end hide *)
-
-(** ** i/lub po raz drugi (TODO)  *)
-
-Definition andor' (P Q : Prop) : Prop := P \/ Q \/ (P /\ Q).
-
-Lemma andor'_or :
-  forall P Q : Prop, andor' P Q <-> P \/ Q.
-(* begin hide *)
-Proof.
-  unfold andor'.
-  intros P Q; split.
+  unfold andor. intros P Q. split.
   - intros [p | [q | [p q]]].
     + left. assumption.
     + right. assumption.
@@ -390,7 +367,7 @@ Proof.
 Abort.
 (* end hide *)
 
-Lemma xor_not_iff :
+Lemma not_iff_xor :
   forall P Q : Prop, xor P Q -> ~ (P <-> Q).
 (* begin hide *)
 Proof.
@@ -403,7 +380,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-Lemma not_iff_xor :
+Lemma xor_not_iff :
   (forall P : Prop, P \/ ~ P) ->
     forall P Q : Prop, ~ (P <-> Q) -> xor P Q.
 Proof.
@@ -494,27 +471,13 @@ Qed.
 (** ** Ani [P] ani [Q], czyli negacja dysjunkcji *)
 
 Definition nor (P Q : Prop) : Prop := ~ (P \/ Q).
-Definition nor' (P Q : Prop) : Prop := ~ P /\ ~ Q.
-
-Lemma nor_nor' :
-  forall P Q : Prop, nor P Q <-> nor' P Q.
-(* begin hide *)
-Proof.
-  unfold nor, nor'; split.
-  - intros f. split.
-    + intros p. apply f. left. assumption.
-    + intros q. apply f. right. assumption.
-  - intros [np nq] [p | q]; contradiction.
-Qed.
-(* end hide *)
 
 Lemma nor_comm :
   forall P Q : Prop,
     nor P Q <-> nor Q P.
 (* begin hide *)
 Proof.
-  unfold nor.
-  intros P. split.
+  unfold nor. intros P Q. split.
   - intros f [q | p]; apply f; [right | left]; assumption.
   - intros f [p | q]; apply f; [right | left]; assumption.
 Qed.
@@ -522,10 +485,10 @@ Qed.
 
 Lemma not_nor_assoc :
   exists P Q R : Prop,
-    nor' (nor' P Q) R /\ ~ nor' P (nor' Q R).
+    nor (nor P Q) R /\ ~ nor P (nor Q R).
 (* begin hide *)
 Proof.
-  unfold nor'. exists True, True, False. tauto.
+  unfold nor. exists True, True, False. tauto.
 Qed.
 (* end hide *)
 
@@ -586,7 +549,106 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Negacja koniunkcji *)
+(** W nieco innej wersji. *)
+
+Definition nor' (P Q : Prop) : Prop := ~ P /\ ~ Q.
+
+Lemma nor'_comm :
+  forall P Q : Prop,
+    nor' P Q <-> nor' Q P.
+(* begin hide *)
+Proof.
+  unfold nor'.
+  intros P Q. split.
+  - intros [np nq]. split; assumption.
+  - intros [nq np]. split; assumption.
+Qed.
+(* end hide *)
+
+Lemma not_nor'_assoc :
+  exists P Q R : Prop,
+    nor' (nor' P Q) R /\ ~ nor' P (nor' Q R).
+(* begin hide *)
+Proof.
+  unfold nor'. exists True, True, False. tauto.
+Qed.
+(* end hide *)
+
+Lemma nor'_True_l :
+  forall P : Prop,
+    nor' True P <-> False.
+(* begin hide *)
+Proof.
+  unfold nor'.
+  intros P. split.
+  - intros [? _]. contradiction.
+  - contradiction.
+Qed.
+(* end hide *)
+
+Lemma nor'_True_r :
+  forall P : Prop,
+    nor' P True <-> False.
+(* begin hide *)
+Proof.
+  unfold nor'. intros P; split.
+  - intros [_ ?]. contradiction.
+  - contradiction.
+Qed.
+(* end hide *)
+
+Lemma nor'_False_l :
+  forall P : Prop,
+    nor' False P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nor'. intros P. split.
+  - intros [_ np]. assumption.
+  - intros np. split.
+    + intros e. contradiction.
+    + assumption.
+Qed.
+(* end hide *)
+
+Lemma nor'_False_r :
+  forall P : Prop,
+    nor' P False <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nor'. intros P; split.
+  - intros [np _]. assumption.
+  - intros np. split.
+    + assumption.
+    + intros e. contradiction.
+Qed.
+(* end hide *)
+
+Lemma nor'_antiidempotent :
+  forall P : Prop,
+    nor' P P <-> ~ P.
+(* begin hide *)
+Proof.
+  unfold nor'. split.
+  - intros [np _]. assumption.
+  - intros np. split; assumption.
+Qed.
+(* end hide *)
+
+(** Równoważność *)
+
+Lemma nor_nor' :
+  forall P Q : Prop, nor P Q <-> nor' P Q.
+(* begin hide *)
+Proof.
+  unfold nor, nor'; split.
+  - intros f. split.
+    + intros p. apply f. left. assumption.
+    + intros q. apply f. right. assumption.
+  - intros [np nq] [p | q]; contradiction.
+Qed.
+(* end hide *)
+
+(** ** [nand], czyli negacja koniunkcji *)
 
 Definition nand (P Q : Prop) : Prop := ~ (P /\ Q).
 
@@ -676,7 +738,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Negacja implikacji, czyli antyimplikacja *)
+(** ** Antyimplikacja, czyli negacja implikacji *)
 
 Definition nimpl (P Q : Prop) : Prop := ~ (P -> Q).
 
