@@ -21,7 +21,7 @@ TODO 3: rozróżnienie na logikę klasyczną:
     - enumeracja, krótki opis
     - podział na grupy:
       [DNE]
-      vs [LEM]
+      vs [LEM] (TODO': logika klasyczna jako logika zdań rozstrzygalnych)
       vs materialna implikacja i równoważność (i potencjalnie pozostałe "słabe" spójniki)
       vs kontrapozycja
       vs consequentia mirabilis i [Peirce] (jako rzeczy wyglądające podobnie do [DNE], a
@@ -62,8 +62,6 @@ Definition xor_wxor : Prop :=
 
 Ltac u :=
   unfold DNE, LEM, CM, Peirce, Contra, MI, ME, or_wor, and_wand, snimpl_nimpl, xor_wxor.
-
-(** TODO: Napisać coś o paradoksach implikacji materialnej. *)
 
 (** * Logika klasyczna jako logika diabła (TODO) *)
 
@@ -263,7 +261,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Klasyczna dysjunkcja (TODO) *)
+(** ** Klasyczna dysjunkcja *)
 
 Definition cor (P Q : Prop) : Prop :=
   ~ ~ (P \/ Q).
@@ -536,7 +534,7 @@ Qed.
 
 (** Tutaj o rysowaniu tabelek. *)
 
-(** * Silne i słabe spójniki w służbie logiki klasycznej (TODO) *)
+(** * Logika klasyczna jako logika silnych i słabych spójników *)
 
 (** ** Silna implikacja *)
 
@@ -1169,7 +1167,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Silna antyimplikacja (TODO) *)
+(** ** Silna antyimplikacja *)
 
 Definition snimpl (P Q : Prop) : Prop := P /\ ~ Q.
 
@@ -1305,7 +1303,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Słaby kwantyfikator egzystencjalny (TODO) *)
+(** ** Słaby kwantyfikator egzystencjalny *)
 
 Definition wexists {A : Type} (P : A -> Prop) : Prop :=
   ~ forall x : A, ~ P x.
@@ -1354,7 +1352,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Słaby kwantyfikator uniwersalny (TODO) *)
+(** ** Słaby kwantyfikator uniwersalny *)
 
 Definition wforall {A : Type} (P : A -> Prop) : Prop :=
   ~ exists x : A, ~ P x.
@@ -1398,7 +1396,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Wymyśl to sam... (TODO) *)
+(** ** Wymyśl to sam... *)
 
 (** **** Ćwiczenie *)
 
@@ -1411,7 +1409,7 @@ Qed.
     znanych nam spójników, czy nie bardzo? Twój spójnik jest fajny czy głupi?
     Użyteczny czy bezużyteczny? *)
 
-(** * Logika klasyczna jako logika silnych i słabych spójników (TODO) *)
+(** ** Stary podrozdział, do naprawy *)
 
 Lemma material_implication_conv :
   forall P Q : Prop, ~ P \/ Q -> (P -> Q).
@@ -1616,7 +1614,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Logika klasyczna jako logika kontrapozycji (TODO) *)
+(** ** Logika klasyczna jako logika kontrapozycji *)
 
 Lemma contraposition' :
   forall P Q : Prop, (~ Q -> ~ P) -> (P -> Q).
@@ -1709,9 +1707,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** * Logika klasyczna jako logika Peirce'a (TODO) *)
+(** * Logika klasyczna jako logika cudownych konsekwencji (TODO) *)
 
-(** ** Logika cudownych konsekwencji (TODO) *)
+(** ** Logika cudownych konsekwencji *)
 
 Lemma consequentia_mirabilis :
   forall P : Prop, (~ P -> P) -> P.
@@ -1792,7 +1790,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Logika Peirce'a (TODO) *)
+(** ** Logika Peirce'a *)
 
 Lemma Peirce_hard :
   forall P Q : Prop, ((P -> Q) -> P) -> P.
@@ -2253,7 +2251,7 @@ Abort.
 
 (** * Konkluzja (TODO) *)
 
-(** ** Ściąga (TODO) *)
+(** ** Ściąga *)
 
 (** * Zadania (TODO) *)
 

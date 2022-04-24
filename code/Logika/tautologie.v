@@ -191,9 +191,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Elementy neutralne i anihilujące *)
+(** *** Elementy neutralne i absorbujące *)
 
-Lemma and_false_annihilation :
+Lemma and_False_r :
   forall P : Prop, P /\ False <-> False.
 (* begin hide *)
 Proof.
@@ -203,7 +203,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma or_false_neutral :
+Lemma or_False_r :
   forall P : Prop, P \/ False <-> P.
 (* begin hide *)
 Proof.
@@ -215,7 +215,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma and_true_neutral :
+Lemma and_True_r :
   forall P : Prop, P /\ True <-> P.
 (* begin hide *)
 Proof.
@@ -227,7 +227,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma or_true_annihilation :
+Lemma or_True_r :
   forall P : Prop, P \/ True <-> True.
 (* begin hide *)
 Proof.

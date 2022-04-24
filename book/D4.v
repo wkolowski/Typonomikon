@@ -185,7 +185,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma plus_no_annihilation_l :
+Lemma plus_no_absorbing_l :
   ~ exists a : nat, forall n : nat, plus a n = a.
 (* begin hide *)
 Proof.
@@ -196,7 +196,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma plus_no_annihilation_r :
+Lemma plus_no_absorbing_r :
   ~ exists a : nat, forall n : nat, plus n a = a.
 (* begin hide *)
 Proof.
@@ -794,7 +794,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma pow_no_annihilator_r :
+Lemma pow_no_absorbing_r :
   ~ exists a : nat, forall n : nat, pow n a = a.
 (* begin hide *)
 Proof.
@@ -1383,7 +1383,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma max_no_annihilator_l :
+Lemma max_no_absorbing_l :
   ~ exists a : nat, forall n : nat, max a n = a.
 (* begin hide *)
 Proof.
@@ -1392,11 +1392,11 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma max_no_annihilator_r :
+Lemma max_no_absorbing_r :
   ~ exists a : nat, forall n : nat, max n a = a.
 (* begin hide *)
 Proof.
-  intro. destruct H as [a H]. apply max_no_annihilator_l.
+  intro. destruct H as [a H]. apply max_no_absorbing_l.
   exists a. intro. rewrite max_comm. apply H.
 Qed.
 (* end hide *)

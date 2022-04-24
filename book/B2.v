@@ -254,7 +254,7 @@ Qed.
 
 (** ** Równość według Leibniza *)
 
-(** ** α-konwersja i inne rodzaje równości (TODO) *)
+(** ** α-konwersja i inne rodzaje równości *)
 
 (* begin hide *)
 (*
@@ -269,9 +269,9 @@ TODO 3: Użyć nominalizmów do wytłumaczenia wiązania nazw zmiennych.
 
 (** https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/równość.md *)
 
-(** * Konkluzja *)
+(** * Konkluzja (TODO) *)
 
-(** ** Ściąga (TODO) *)
+(** ** Ściąga *)
 
 (** TODO:
     - [forall x : A, P x] to zdanie mówiące "dla każdego x typu A zachodzi

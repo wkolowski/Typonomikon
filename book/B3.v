@@ -269,44 +269,9 @@ Qed.
     z biblioteki standardowej znajdziesz tu:
     https://coq.inria.fr/refman/coq-tacindex.html *)
 
-(** * Inne spójniki *)
+(** * Inne spójniki? (TODO) *)
 
-(** ** i/lub (TODO)  *)
-
-Definition andor (P Q : Prop) : Prop := P \/ Q \/ (P /\ Q).
-
-Lemma and_or_l :
-  forall P Q : Prop, P /\ Q -> P \/ Q.
-(* begin hide *)
-Proof.
-  destruct 1 as [p q]. left. assumption.
-Qed.
-(* end hide *)
-
-Lemma and_or_r :
-  forall P Q : Prop, P /\ Q -> P \/ Q.
-(* begin hide *)
-Proof.
-  destruct 1 as [p q]. right. assumption.
-Qed.
-(* end hide *)
-
-Lemma andor_or :
-  forall P Q : Prop, andor P Q <-> P \/ Q.
-(* begin hide *)
-Proof.
-  unfold andor. intros P Q. split.
-  - intros [p | [q | [p q]]].
-    + left. assumption.
-    + right. assumption.
-    + left. assumption.
-  - intros [p | q].
-    + left. assumption.
-    + right. left. assumption.
-Qed.
-(* end hide *)
-
-(** ** Różnica między "lub" i "albo" (TODO) *)
+(** ** Różnica między "lub" i "albo" *)
 
 Definition xor (A B : Prop) : Prop :=
   (A /\ ~ B) \/ (~ A /\ B).
@@ -465,6 +430,67 @@ Proof.
     intro. right. split.
       assumption.
       trivial.
+Qed.
+(* end hide *)
+
+(** ** i/lub  *)
+
+Definition andor (P Q : Prop) : Prop := P \/ Q \/ (P /\ Q).
+
+Lemma and_or_l :
+  forall P Q : Prop, P /\ Q -> P \/ Q.
+(* begin hide *)
+Proof.
+  destruct 1 as [p q]. left. assumption.
+Qed.
+(* end hide *)
+
+Lemma and_or_r :
+  forall P Q : Prop, P /\ Q -> P \/ Q.
+(* begin hide *)
+Proof.
+  destruct 1 as [p q]. right. assumption.
+Qed.
+(* end hide *)
+
+Lemma andor_or :
+  forall P Q : Prop, andor P Q <-> P \/ Q.
+(* begin hide *)
+Proof.
+  unfold andor. intros P Q. split.
+  - intros [p | [q | [p q]]].
+    + left. assumption.
+    + right. assumption.
+    + left. assumption.
+  - intros [p | q].
+    + left. assumption.
+    + right. left. assumption.
+Qed.
+(* end hide *)
+
+(** *** i/lub po raz drugi *)
+
+Definition andxor (P Q : Prop) : Prop := xor P (xor Q (P /\ Q)).
+
+Lemma andxor_or :
+  (forall P : Prop, P \/ ~ P) ->
+    forall P Q : Prop, andxor P Q <-> P \/ Q.
+(* begin hide *)
+Proof.
+  unfold andxor. intros lem P Q. split.
+  - intros [[p _] | [_ [[q _] | H]]].
+    + left. assumption.
+    + right. assumption.
+    + destruct H as (nq & _ & q). contradiction.
+  - intros [p | q].
+    + left. split.
+      * assumption.
+      * unfold xor. intros [[q npq] | (nq & _ & q)].
+        -- apply npq. split; assumption.
+        -- contradiction.
+    + destruct (lem P) as [p | np].
+      * left. split; [assumption |]. unfold xor. tauto.
+      * right. split; [assumption |]. unfold xor. tauto.
 Qed.
 (* end hide *)
 
@@ -806,7 +832,25 @@ Proof.
 Abort.
 (* end hide *)
 
-(** * Inne kwantyfikatory? *)
+(** **** Ćwiczenie (conditioned disjunction) *)
+
+(** Wikipedia (https://en.wikipedia.org/wiki/Conditioned_disjunction) podaje
+    poniższą definicję pewnego dziwnego spójnika: *)
+
+Definition conditioned_disjunction (P Q R : Prop) : Prop :=
+  (Q -> P) /\ (~ Q -> R).
+
+(** Wyraź za jego pomocą wszystkie podstawowe spójniki, tj. implikację, dysjunkcję,
+    koniunkcje i negację.
+
+    Udowodnij też garść twierdzeń mówiących, co się stanie, gdy za [P], [Q] lub [R]
+    wstawić [True] lub [False]. *)
+
+(* begin hide *)
+(* TODO: tu rozwiązania zadań o [conditioned_disjunction] *)
+(* end hide *)
+
+(** * Inne kwantyfikatory? (TODO) *)
 
 (** Poznaliśmy jak dotąd trzy kwantyfikatory: uniwersalny ([forall]), egzystencjalny
     ([exists]) oraz unikalny, który był zdefiniowany za pomocą dwóch poprzednich
@@ -820,7 +864,7 @@ Abort.
     zaś: większość z nich nie jest zbyt ciekawa. Nie na tyle, żeby o nich tutaj
     wspominać. *)
 
-(** ** Kwantyfikator unikatowy (TODO) *)
+(** ** Kwantyfikator unikatowy *)
 
 Print unique.
 
@@ -832,7 +876,7 @@ Definition unique {A : Type} (P : A -> Prop) : Prop :=
     a mianowicie kwantyfikator unikatowy, który głosi, że istnieje
     dokładnie jeden obiekt spełniający daną właściwość. *)
 
-(** **** Ćwiczenie (kwantyfikator [xor]owy) *)
+(** ** Kwantyfikator [xor]owy *)
 
 (** Zauważmy, że kwantyfikator egzystencjalny jest podobny do "nieskończonej"
     dysjunkcji: [exists x : A, P x] znaczyłoby to samo, co [P x_0 \/ P x_1 \/ ...],
@@ -888,122 +932,11 @@ Qed.
 
 (** * Logika pierwszego rzędu a logika wyższego rzędu (TODO) *)
 
-(** ** Logika pierwszego rzędu (TODO) *)
+(** ** Logika pierwszego rzędu *)
 
-(** ** Logika drugiego rzędu i kodowania impredykatywne (TODO) *)
+(** ** Logika drugiego rzędu *)
 
-(* begin hide *)
-(*
-TODO: Tautologie na kodowaniach impredykatywnych jako ćwiczenia z funkcji anonimowych
-*)
-(* end hide *)
-
-Definition iand (P Q : Prop) : Prop :=
-  forall C : Prop, (P -> Q -> C) -> C.
-
-Definition ior (P Q : Prop) : Prop :=
-  forall C : Prop, (P -> C) -> (Q -> C) -> C.
-
-Definition iTrue : Prop :=
-  forall C : Prop, C -> C.
-
-Definition iFalse : Prop :=
-  forall C : Prop, C.
-
-Lemma iand_spec :
-  forall P Q : Prop,
-    iand P Q <-> P /\ Q.
-(* begin hide *)
-Proof.
-  unfold iand. split.
-    intro H. apply H. intros p q. split.
-      assumption.
-      assumption.
-    intros [p q] C H. apply H.
-      assumption.
-      assumption.
-Qed.
-(* end hide *)
-
-Lemma ior_spec :
-  forall P Q : Prop,
-    ior P Q <-> P \/ Q.
-(* begin hide *)
-Proof.
-  unfold ior. split.
-    intro H. apply H.
-      intro p. left. assumption.
-      intro q. right. assumption.
-    intros [p | q] C pc qc.
-      apply pc. assumption.
-      apply qc. assumption.
-Qed.
-(* end hide *)
-
-Lemma iTrue_spec :
-  iTrue <-> True.
-(* begin hide *)
-Proof.
-  unfold iTrue. split.
-    intros _. trivial.
-    intros _ C c. assumption.
-Qed.
-(* end hide *)
-
-Lemma iFalse_False :
-  iFalse <-> False.
-(* begin hide *)
-Proof.
-  unfold iFalse. split.
-    intro H. apply H.
-    contradiction.
-Qed.
-(* end hide *)
-
-Definition iexists (A : Type) (P : A -> Prop) : Prop :=
-  forall C : Prop, (forall x : A, P x -> C) -> C.
-
-Lemma iexists_spec :
-  forall (A : Type) (P : A -> Prop),
-    iexists A P <-> exists x : A, P x.
-(* begin hide *)
-Proof.
-  unfold iexists. split.
-    intro H. apply H. intros x p. exists x. assumption.
-    intros [x p] C H. apply (H x). assumption.
-Qed.
-(* end hide *)
-
-Definition ieq {A : Type} (x y : A) : Prop :=
-  forall C : Prop, ((x = y) -> C) -> C.
-
-Definition ieq' {A : Type} (x : A) : A -> Prop :=
-  fun y : A =>
-    forall P : A -> Prop, P x -> P y.
-
-Lemma ieq_spec :
-  forall (A : Type) (x y : A),
-    ieq x y <-> x = y.
-(* begin hide *)
-Proof.
-  unfold ieq. split.
-    intro H. apply H. trivial.
-    intros [] C H. apply H. reflexivity.
-Qed.
-(* end hide *)
-
-Lemma ieq'_spec :
-  forall (A : Type) (x y : A),
-    ieq' x y <-> x = y.
-(* begin hide *)
-Proof.
-  unfold ieq'. split.
-    intro H. apply H. reflexivity.
-    intros [] P px. assumption.
-Qed.
-(* end hide *)
-
-(** ** Logika wyższego rzędu (TODO) *)
+(** ** Logika wyższego rzędu *)
 
 (** * Paradoksy autoreferencji *)
 
@@ -1164,21 +1097,131 @@ Qed.
     "Zdanie po prawej jest prawdziwe. Zdanie po lewej jest fałszywe."
 *)
 
-(** * Predykatywizm (TODO) *)
+(** * Predykatywizm i kodowania impredykatywne (TODO) *)
 
 (* begin hide *)
-(* TODO: tutaj opisać impredykatywne definicje spójników *)
+(* TODO: Tautologie na kodowaniach impredykatywnych jako ćwiczenia z funkcji anonimowych*)
+(* end hide *)
+
+Definition iand (P Q : Prop) : Prop :=
+  forall C : Prop, (P -> Q -> C) -> C.
+
+Definition ior (P Q : Prop) : Prop :=
+  forall C : Prop, (P -> C) -> (Q -> C) -> C.
+
+Definition iTrue : Prop :=
+  forall C : Prop, C -> C.
+
+Definition iFalse : Prop :=
+  forall C : Prop, C.
+
+Lemma iand_spec :
+  forall P Q : Prop,
+    iand P Q <-> P /\ Q.
+(* begin hide *)
+Proof.
+  unfold iand. split.
+    intro H. apply H. intros p q. split.
+      assumption.
+      assumption.
+    intros [p q] C H. apply H.
+      assumption.
+      assumption.
+Qed.
+(* end hide *)
+
+Lemma ior_spec :
+  forall P Q : Prop,
+    ior P Q <-> P \/ Q.
+(* begin hide *)
+Proof.
+  unfold ior. split.
+    intro H. apply H.
+      intro p. left. assumption.
+      intro q. right. assumption.
+    intros [p | q] C pc qc.
+      apply pc. assumption.
+      apply qc. assumption.
+Qed.
+(* end hide *)
+
+Lemma iTrue_spec :
+  iTrue <-> True.
+(* begin hide *)
+Proof.
+  unfold iTrue. split.
+    intros _. trivial.
+    intros _ C c. assumption.
+Qed.
+(* end hide *)
+
+Lemma iFalse_False :
+  iFalse <-> False.
+(* begin hide *)
+Proof.
+  unfold iFalse. split.
+    intro H. apply H.
+    contradiction.
+Qed.
+(* end hide *)
+
+Definition iexists (A : Type) (P : A -> Prop) : Prop :=
+  forall C : Prop, (forall x : A, P x -> C) -> C.
+
+Lemma iexists_spec :
+  forall (A : Type) (P : A -> Prop),
+    iexists A P <-> exists x : A, P x.
+(* begin hide *)
+Proof.
+  unfold iexists. split.
+    intro H. apply H. intros x p. exists x. assumption.
+    intros [x p] C H. apply (H x). assumption.
+Qed.
+(* end hide *)
+
+Definition ieq {A : Type} (x y : A) : Prop :=
+  forall C : Prop, ((x = y) -> C) -> C.
+
+Definition ieq' {A : Type} (x : A) : A -> Prop :=
+  fun y : A =>
+    forall P : A -> Prop, P x -> P y.
+
+Lemma ieq_spec :
+  forall (A : Type) (x y : A),
+    ieq x y <-> x = y.
+(* begin hide *)
+Proof.
+  unfold ieq. split.
+    intro H. apply H. trivial.
+    intros [] C H. apply H. reflexivity.
+Qed.
+(* end hide *)
+
+Lemma ieq'_spec :
+  forall (A : Type) (x y : A),
+    ieq' x y <-> x = y.
+(* begin hide *)
+Proof.
+  unfold ieq'. split.
+    intro H. apply H. reflexivity.
+    intros [] P px. assumption.
+Qed.
 (* end hide *)
 
 (** * Spójniki pozytywne i negatywne (TODO) *)
 
 (** TODO:
-  - równoważność jest negatywna
+  - implikacja jest negatywna
+  - koniunkcja jest negatywna
+  - dysjunkcja jest pozytywna
+  - fałsz jest pozytywny
+  - prawda jest negatywna
   - słaba negacja jest negatywna
   - silna negacja jest pozytywna
-  - fałsz jest pozytywny *)
+  - równoważność jest negatywna
+*)
 
-(** * Esencjalizm vs strukturalizm *)
+(** * Esencjalizm vs strukturalizm (TODO) *)
 
 (** * Harmonia logiki konstruktywnej i prawo zachowania informacji (TODO) *)
 

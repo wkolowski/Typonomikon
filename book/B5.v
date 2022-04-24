@@ -622,7 +622,7 @@ Qed.
 
 (** * Logiki pośrednie (TODO) *)
 
-(** ** Logika słabego wyłączonego środka (TODO) *)
+(** ** Logika słabego wyłączonego środka *)
 
 Definition WLEM : Prop :=
   forall P : Prop, ~ P \/ ~ ~ P.
@@ -779,7 +779,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Silna negacja koniunkcji i logika de Morgana (TODO) *)
+(** ** Silna negacja koniunkcji i logika de Morgana *)
 
 Definition nand' (P Q : Prop) : Prop := ~ P \/ ~ Q.
 
@@ -868,10 +868,6 @@ Proof.
   apply nq, pq.
   assumption.
 Qed.
-
-(*
-TODO: Logika de Morgana jako logika trójwartościowa
-*)
 (* end hide *)
 
 Lemma Irrefutable_deMorgan :
@@ -974,7 +970,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Gödel-Dummet (TODO) *)
+(** *** Gödel-Dummet *)
 
 Definition GD : Prop :=
   forall P Q : Prop, (P -> Q) \/ (Q -> P).
@@ -1080,7 +1076,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(** *** Double negation shift (TODO) *)
+(** *** Double negation shift *)
 
 (** Wzięte z https://ncatlab.org/nlab/show/double-negation+shift *)
 
@@ -2595,6 +2591,11 @@ Qed.
 
     Jeśliś pogubił się w tym modalnościowym zoo, nie lękaj się! Zrobiłem ściągę:
     https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/modalności.md *)
+
+(** * Uniwersum [SProp] i gruzińska logika klasyczno-konstruktywna (TODO) *)
+
+(* TODO: Tutaj można opisać świat, w którym [SProp] ma logikę klasyczną, a
+   TODO: [Prop] konstruktywną. *)
 
 (** * Pluralizm logiczny *)
 

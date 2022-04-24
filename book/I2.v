@@ -1816,16 +1816,16 @@ Proof. my_tauto. Qed.
 Theorem em_irrefutable : ~~(P \/ ~P).
 Proof. my_tauto. Qed.
 
-Theorem and_false_annihilation : P /\ False <-> False.
+Theorem and_False_r : P /\ False <-> False.
 Proof. my_tauto. Qed.
 
-Theorem or_false_neutral : P \/ False <-> P.
+Theorem or_False_r : P \/ False <-> P.
 Proof. my_tauto. Qed.
 
-Theorem and_true_neutral : P /\ True <-> P.
+Theorem and_True_r : P /\ True <-> P.
 Proof. my_tauto. Qed.
 
-Theorem or_true_annihilation : P \/ True <-> True.
+Theorem or_True_r : P \/ True <-> True.
 Proof. my_tauto. Qed.
 
 Theorem or_imp_and : (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).

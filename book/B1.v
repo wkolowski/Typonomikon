@@ -905,7 +905,39 @@ Qed.
 
 End constructive_propositional_logic.
 
-(** * Istotne prawa logiki i inne obserwacje *)
+(** * O implikacji nieco więcej *)
+
+(* begin hide *)
+(* TODO: czy to się do czegoś przyda? *)
+(* TODO: https://en.wikipedia.org/wiki/Converse_(semantics) *)
+(* TODO: https://en.wikipedia.org/wiki/Opposite_(semantics) *)
+(* end hide *)
+
+(** ** Implikacja odwrotna *)
+
+(* begin hide *)
+(* https://en.wikipedia.org/wiki/Converse_(logic) *)
+(* end hide *)
+
+(** ** Implikacja przeciwna *)
+
+(* begin hide *)
+(* https://en.wikipedia.org/wiki/Inverse_(logic) *)
+(* end hide *)
+
+(** ** Kontrapozycja *)
+
+(* begin hide *)
+(* https://en.wikipedia.org/wiki/Contraposition *)
+(* end hide *)
+
+(** * Logika a język naturalny *)
+
+(** ** Paradoksy implikacji *)
+
+(* begin hide *)
+(** https://en.wikipedia.org/wiki/Paradoxes_of_material_implication *)
+(* end hide *)
 
 (** ** Przemienność koniunkcji a język naturalny *)
 
@@ -1319,9 +1351,9 @@ Proof.
 Qed.
 (* end hide *)
 
-(** ** Elementy neutralne i anihilujące *)
+(** ** Elementy neutralne i absorbujące *)
 
-Lemma and_false_annihilation :
+Lemma and_False_r :
   P /\ False <-> False.
 (* begin hide *)
 Proof.
@@ -1331,7 +1363,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma or_false_neutral :
+Lemma or_False_r :
   P \/ False <-> P.
 (* begin hide *)
 Proof.
@@ -1343,7 +1375,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma and_true_neutral :
+Lemma and_True_r :
   P /\ True <-> P.
 (* begin hide *)
 Proof.
@@ -1355,7 +1387,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma or_true_annihilation :
+Lemma or_True_r :
   P \/ True <-> True.
 (* begin hide *)
 Proof.

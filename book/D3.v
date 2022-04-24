@@ -144,22 +144,22 @@ Proof. solve_bool. Qed.
 
 (** *** Anihilacja *)
 
-Lemma andb_false_annihilation_l : false && b = false.
+Lemma andb_false_l : false && b = false.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Lemma andb_false_annihilation_r : b && false = false.
+Lemma andb_false_r : b && false = false.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Lemma orb_true_annihilation_l :  true || b = true.
+Lemma orb_true_l :  true || b = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
 
-Lemma orb_true_annihilation_r :  b || true = true.
+Lemma orb_true_r :  b || true = true.
 (* begin hide *)
 Proof. solve_bool. Qed.
 (* end hide *)
