@@ -1733,7 +1733,7 @@ End List'.
 
 (** * Funktory bazowe często używanych typów *)
 
-(** * Zwykłe typy induktywne *)
+(** ** Zwykłe typy induktywne *)
 
 (** Z wiedzą, którą dotychczas zdobyliśmy, nie trudno wyobrazić sobie, jak wygląda
     funktor bazowy typu [nat]. *)
@@ -1783,7 +1783,7 @@ Qed.
 
 End NatF.
 
-(** * Typy sparametryzowane *)
+(** ** Typy sparametryzowane *)
 
 (** Widzieliśmy już funktor bazowy dla list, rzućmy więc jeszcze szybko okiem
     na funkctor bazowy typu drzew binarnych. *)
@@ -1896,7 +1896,7 @@ End BTreeF.
 
 End BTree.
 
-(** * Mutual inductive types *)
+(** ** Mutual inductive types *)
 
 Module FinitaryTreeF.
 
@@ -2088,7 +2088,7 @@ End TreeF.
 
 End FinitaryTreeF.
 
-(** * Indexed families *)
+(** ** Indexed families *)
 
 Require Import List.
 Import ListNotations.
@@ -2126,7 +2126,7 @@ End CoList.
 
 End ListCoList.
 
-(** * Indexed families, but reduced to parameterized types through equality constraints *)
+(** ** Indexed families, but reduced to parameterized types through equality constraints *)
 
 Module ListCoList2.
 
@@ -2219,13 +2219,6 @@ CoFixpoint ana {A R : Type} (f : R -> ListR A R) (r : R) : CoList A :=
 |}.
 
 End ListCoList2.
-
-(** * Codes for inductive-recursive types *)
-
-Inductive IR (D : Type) : Type :=
-    | iota  : D -> IR D
-    | sigma : forall A : Type, (A -> IR D) -> IR D
-    | delta : forall A : Type, ((A -> D) -> IR D) -> IR D.
 
 (** * Kody (nie, nie do gier) *)
 
@@ -2376,3 +2369,93 @@ Set Guard Checking.
 
 Compute second_way (iS Z).
 Compute second_way (iS (iS Z)).
+
+(** ** Kody dla typów induktywno-rekursywnych *)
+
+Inductive IR (D : Type) : Type :=
+    | iota  : D -> IR D
+    | sigma : forall A : Type, (A -> IR D) -> IR D
+    | delta : forall A : Type, ((A -> D) -> IR D) -> IR D.
+
+(** * Reprezentacja typów induktywnych za pomocą kontenerów *)
+
+(** [S] to skrót od "shape", czyli po naszemu "kształt", zaś [P] ma przywodzić
+    na myśl "position", czyli "pozycja". *)
+
+Inductive Container (S : Type) (P : S -> Type) (X : Type) : Type :=
+    | ctain : forall s : S, (P s -> X) -> Container S P X.
+
+Arguments ctain {S P X} _ _.
+
+(* Definition Container (S : Type) (P : S -> Type) : Type -> Type :=
+  fun X : Type => {s : S & P s -> X}. *)
+
+Require Import List.
+Import ListNotations.
+
+Require Import Fin.
+Require Import Equality.
+
+Require Import Recdef.
+
+Module CList.
+
+Definition CList (A : Type) :=
+  Container nat Fin.t A.
+
+Definition prev {n : nat} (f : Fin.t (S (S n))) : Fin.t (S n).
+Proof.
+  inversion f as [| n' f'].
+    exact F1.
+    exact f'.
+Defined.
+
+Fixpoint f {A : Type} (l : list A) : CList A.
+refine (
+match l with
+    | []     => ctain 0 (fun s : Fin.t 0 => match s with end)
+    | x :: xs =>
+        match f _ xs with
+            | ctain n p => ctain (S n) _
+        end
+end).
+  destruct n as [| n']; intro s.
+    exact x.
+    exact (p (prev s)).
+Defined.
+Definition g {A : Type} (c : CList A) : list A.
+Proof.
+  destruct c as [n p].
+  revert n p.
+  fix IH 1; intros [| n'] p.
+    exact [].
+    exact (p F1 :: IH _ (fun s => p (FS s))).
+Defined.
+
+Lemma fg :
+  forall {A : Type} (l : list A),
+    g (f l) = l.
+Proof.
+  induction l as [| h t]; cbn.
+    reflexivity.
+    revert h IHt.
+    induction t as [| h' t']; cbn; intros.
+      reflexivity.
+      destruct (f t'). cbn in *. destruct s.
+Abort.
+
+Lemma gf :
+  forall {A : Type} (c : CList A),
+    f (g c) = c.
+Proof.
+  intros A [n p].
+  induction n as [| n'].
+    cbn. f_equal. admit.
+    cbn. destruct (f _) eqn: Heq. destruct s.
+      admit.
+      destruct n' as [| n''].
+        cbn in *. congruence.
+        cbn in Heq.
+Abort.
+
+End CList.

@@ -1,5 +1,7 @@
 (** * B3: Reszta logiki konstruktywnej [TODO] *)
 
+Require Export B2.
+
 (** * Kombinatory taktyk *)
 
 (** Przyjrzyjmy się jeszcze raz twierdzeniu [iff_intro] (lekko
@@ -1100,7 +1102,7 @@ Qed.
 (** * Predykatywizm i kodowania impredykatywne (TODO) *)
 
 (* begin hide *)
-(* TODO: Tautologie na kodowaniach impredykatywnych jako ćwiczenia z funkcji anonimowych*)
+(* TODO: Tautologie na kodowaniach impredykatywnych jako ćwiczenia z funkcji anonimowych *)
 (* end hide *)
 
 Definition iand (P Q : Prop) : Prop :=

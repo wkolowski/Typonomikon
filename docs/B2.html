@@ -514,6 +514,15 @@ https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/równość.md
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> -&gt; <span class="id" title="var">P</span> <span class="id" title="var">x</span>) &lt;-&gt; (<span class="id" title="var">R</span> -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_nondep_impl_conv</span> :<br/>
+&nbsp;&nbsp;~<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> (<span class="id" title="var">H</span> <span class="id" title="var">False</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">False</span>)); <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">QuantifiersExercises</span>.<br/>
 
 <br/>
@@ -526,22 +535,9 @@ https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/równość.md
 
 <a id="lab83"></a><h4 class="section">Ćwiczenie</h4>
 
-</div>
-<div class="code">
+<div class="paragraph"> </div>
 
-<br/>
-
-<br/>
-<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">ssreflect</span> <span class="id" title="var">ssrfun</span> <span class="id" title="var">ssrbool</span>.<br/>
-<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
-<span class="id" title="keyword">Unset</span> <span class="id" title="keyword">Strict</span> <span class="id" title="keyword">Implicit</span>.<br/>
-<span class="id" title="keyword">Unset</span> <span class="id" title="keyword">Printing</span> <span class="id" title="keyword">Implicit</span> <span class="id" title="var">Defensive</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Sesshomaru, Naraku i Inuyasha należą do sekty Warring Era. Każdy
+ Sesshomaru, Naraku i Inuyasha należą do sekty Warring Era. Każdy
     członek tej sekty jest albo demonem, albo człowiekiem, albo i jednym
     i drugim. Żaden człowiek nie lubi deszczu, a wszystkie demony lubią
     śnieg. Naraku nie cierpi wszystkiego, co lubi Sesshomaru, a lubi

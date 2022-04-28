@@ -155,10 +155,22 @@
     Twierdzenie: istnieją takie dwie liczby niewymierne a i b, że a ^ b
     (a podniesione do potęgi b) jest liczbą wymierną.
 
-    Dowód: jeżeli √2 ^ √2 jest niewymierny, to niech a = √2 ^ √2, b = √2.
-    Wtedy a ^ b = (√2 ^ √2) ^ √2 = √2 ^ (√2 * √2) = √2 ^ 2 = 2.
+    Dowód: rozważmy, czy √2 ^ √2 jest liczba niewymierną.
+
+    Jeśli tak, to niech a = √2 ^ √2, b = √2. Wtedy a jest niewymierne na mocy
+    założenia, b jest niewymierne bo √2 jest niewymierny, zaś
+    a ^ b = (√2 ^ √2) ^ √2 = √2 ^ (√2 * √2) = √2 ^ 2 = 2,
+    czyli a ^ b jest liczbą wymierną.
+
     W przeciwnym wypadku (czyli gdy √2 ^ √2 jest wymierny) niech
-    a = b = √2. Wtedy a ^ b = √2 ^ √2 jest wymierny na mocy założenia.
+    a = b = √2. Wtedy a i b są niewymierne, bo √2 jest niewymierny, zaś
+    a ^ b = √2 ^ √2
+    jest wymierne na mocy założenia.
+
+    Jako, że rozważane przez nas przypadki wyczerpują wszystkie możliwości
+    (bo √2 ^ √2 może być albo liczbą wymierną, albo niewymierną), to możemy
+    ostatecznie skonkludować, że faktycznie istnieją takie niewymierne liczby
+    a i b, że a ^ b jest liczbą wymierną.
 
     Fajny dowód, co? To teraz dam ci zagadkę: podaj mi dwie niewymierne
     liczby a i b takie, że a ^ b jest wymierne. Pewnie zerkasz teraz do
@@ -204,7 +216,7 @@
     poprawności wszystkich tych pomocniczych programów.
 
     Po upływie kolejnych 30 lat dowód udało się sformalizować w Coqu,
-    co ostatecznio zamknęło sprawę. Morał płynący z tej historii jest dość
+    co ostatecznie zamknęło sprawę. Morał płynący z tej historii jest dość
     prosty:
     - niektóre twierdzenia można udowodnić jedynie sprawdzając dużą ilość
       przypadków, co jest trudne dla ludzi

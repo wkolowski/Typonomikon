@@ -80,7 +80,8 @@ Notation "b1 || b2" := (orb b1 b2).
     właściwości. *)
 
 (* begin hide *)
-Ltac solve_bool := intros; match goal with
+Ltac solve_bool := intros;
+match goal with
     | b : bool |- _ => destruct b; clear b; solve_bool
     | _ => cbn; auto
 end.
@@ -289,6 +290,89 @@ Proof. solve_bool. Qed.
 (* end hide *)
 
 End boolean_functions.
+
+(** * Zadania *)
+
+(** Zdefiniuj funkcję [majority], która bierze 3 wartości boolowskie i zwraca
+    wartość boolowską. Jeśli co najmniej dwa z trzech argumentów to [true], to
+    wynikiem funkcji jest [true]. W przeciwnym wypadku wynikiem jest [false].
+
+    Użyj wyłącznie dopasowania do wzorca - nie używaj żadnych zdefiniowanych
+    wcześniej funkcji.
+
+    Następnie udowodnij kilka właściwości funkcji [majority]. *)
+
+Definition majority (a b c : bool) : bool :=
+match a, b, c with
+    | true , true , true  => true
+    | x    , false, true  => x
+    | true , y    , false => y
+    | false, true , z     => z
+    | false, false, false => false
+end.
+
+Lemma majority_spec :
+  forall a b c : bool,
+    majority a b c = andb (orb a b) (andb (orb b c) (orb c a)).
+(* begin hide *)
+Proof.
+  destruct a, b, c; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma majority_spec' :
+  forall a b c : bool,
+    majority a b c = orb (andb a b) (orb (andb b c) (andb c a)).
+(* begin hide *)
+Proof.
+  destruct a, b, c; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma negb_majority :
+  forall a b c : bool,
+    negb (majority a b c) = majority (negb a) (negb b) (negb c).
+(* begin hide *)
+Proof.
+  destruct a, b, c; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma majority_orb :
+  forall a1 a2 b c : bool,
+    majority (orb a1 a2) b c = orb (majority a1 b c) (majority a2 b c).
+(* begin hide *)
+Proof.
+  destruct a1, a2, b, c; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma majority_andb :
+  forall a1 a2 b c : bool,
+    majority (andb a1 a2) b c = andb (majority a1 b c) (majority a2 b c).
+(* begin hide *)
+Proof.
+  destruct a1, a2, b, c; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma majority_permute :
+  forall a b c : bool,
+    majority a b c = majority b c a.
+(* begin hide *)
+Proof.
+  destruct a, b, c; cbn; reflexivity.
+Qed.
+(* end hide *)
+
+Lemma majority_swap :
+  forall a b c : bool,
+    majority a b c = majority b a c.
+(* begin hide *)
+Proof.
+  destruct a, b, c; cbn; reflexivity.
+Qed.
+(* end hide *)
 
 (** * Różnice między [bool], [Prop] i [SProp] *)
 

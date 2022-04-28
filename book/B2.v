@@ -431,28 +431,19 @@ Restart.
 Qed.
 (* end hide *)
 
-End QuantifiersExercises.
+Lemma forall_nondep_impl_conv :
+  ~
+  (forall (A : Type) (P : A -> Prop) (Q : Prop),
+    (forall x : A, P x -> Q) -> (forall x : A, P x) -> Q).
+Proof.
+  intro H. apply (H False (fun _ => False)); trivial.
+Qed.
 
+End QuantifiersExercises.
 
 (** ** Zagadki *)
 
 (** **** Ćwiczenie *)
-
-(* begin hide *)
-(*
-Definition Classically (A : Type) : Type :=
-  (forall P : Prop, P \/ ~ P) -> A.
-
-Notation "f $ x" := (f x) (at level 100, only parsing).
-
-Ltac cls := progress unfold Classically; intro LEM.
-*)
-(* end hide *)
-
-From Coq Require Import ssreflect ssrfun ssrbool.
-Set Implicit Arguments.
-Unset Strict Implicit.
-Unset Printing Implicit Defensive.
 
 (** Sesshomaru, Naraku i Inuyasha należą do sekty Warring Era. Każdy
     członek tej sekty jest albo demonem, albo człowiekiem, albo i jednym
@@ -484,20 +475,24 @@ Axioms
 Lemma isDemon_Sesshomaru :
   isDemon Sesshomaru.
 Proof.
-  elim: (H0 Sesshomaru) => [| [| []]];
-  by try move/(@H1 _)/(_ H5) => [].
+  destruct (H0 Sesshomaru) as [H | [D | [H D]]].
+  - apply H1 in H. contradict H. exact H5.
+  - assumption.
+  - assumption.
 Qed.
 
 Lemma isHuman_Naraku :
   isHuman Naraku.
 Proof.
-  elim: (H0 Naraku) => [| [| []]]; try done.
-    by move/(@H2 _)/(H3 H6).
+  destruct (H0 Naraku) as [H | [D | [H D]]].
+  - assumption.
+  - apply H2 in D. contradict D. apply H3. exact H6.
+  - assumption.
 Qed.
 
 Lemma not_isDemon_Naraku :
   ~ isDemon Naraku.
 Proof.
-  by move/H2/(H3 H6).
+  intros D. apply H2 in D. contradict D. apply H3. exact H6.
 Qed.
 (* end hide *)
