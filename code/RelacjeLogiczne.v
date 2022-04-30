@@ -74,7 +74,7 @@ Record MonoidRel (M1 M2 : Monoid) : Type :=
 Record MonoidPred (M : Monoid) : Type :=
 {
     P    : M -> Prop;
-    P_op : forall x y, P x -> P y -> P (op x y);
+    P_op : forall {x y}, P x -> P y -> P (op x y);
     P_id : P id;
 }.
 

@@ -11,7 +11,8 @@ Arguments right {A} _.
 
 Inductive WFL {A : Type} : NETree A -> Prop :=
     | WFL_None : forall {t : NETree A}, left t = None -> WFL t
-    | WFL_Some : forall {t t' : NETree A}, left t = Some t' -> WFL t' -> WFL t.
+    | WFL_Some : forall {t t' : NETree A}, left t = Some t' -> WFL t' ->
+ WFL t.
 
 Arguments WFL_None {A t} _.
 
