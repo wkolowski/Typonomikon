@@ -1,4 +1,4 @@
-(** * H4: Nierówność i różność *)
+(** * H4: Nierówność i różność [TODO] *)
 
 Set Universe Polymorphism.
 
@@ -10,7 +10,7 @@ Require Import FunctionalExtensionality.
 Require Import List.
 Import ListNotations.
 
-Require Import H.
+Require Import H1.
 Require Import D5.
 
 (** * Różność *)

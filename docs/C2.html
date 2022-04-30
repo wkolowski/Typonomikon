@@ -1,0 +1,1480 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="coqdoc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.5.1.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="MyStyles.js"></script>
+<title>Typonomikon</title>
+</head>
+<h1 class="libtitle">C2: Teoretyczne podstawy teorii typów [TODO]</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Uwaga: ten rozdział jest póki co posklejany z fragmentów innych
+    rozdziałów. Czytając go, weź na to poprawkę. W szczególności zawiera on
+    zadania, których nie będziesz w stanie zrobić, bo niezbędny do tego
+    materiał jest póki co w kolejnym rozdziale. Możesz więc przeczytać
+    część teoretyczną, a zadania pominąć (albo w ogóle pominąć cały ten
+    rozdział). 
+<div class="paragraph"> </div>
+
+<a id="lab222"></a><h1 class="section">Typy i termy</h1>
+
+<div class="paragraph"> </div>
+
+ Czym są termy? Są to twory o naturze syntaktycznej (składniowej),
+    reprezentujące funkcje, typy, zdania logiczne, predykaty, relacje
+    etc. Polskim słowem o najbliższym znaczeniu jest słowo "wyrażenie".
+    Zamiast prób definiowania termów, co byłoby problematyczne,
+    zobaczmy przykłady:
+<ul class="doclist">
+<li> <span class="inlinecode">2</span> — stałe są termami
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">P</span></span> — zmienne są termami
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> — typy są termami
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> — λ-abstrakcje (funkcje) są termami
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> — aplikacje funkcji do argumentu są termami
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="keyword">if</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span> <span class="inlinecode"><span class="id" title="keyword">then</span></span> <span class="inlinecode">5</span> <span class="inlinecode"><span class="id" title="keyword">else</span></span> <span class="inlinecode">2</span> — konstrukcja if-then-else jest termem 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Nie są to wszystkie występujące w Coqu rodzaje termów — jest
+    ich nieco więcej.
+
+<div class="paragraph"> </div>
+
+    Kolejnym fundamentalnym pojęciem jest pojęcie typu. W Coqu
+    każdy term ma dokładnie jeden, niezmienny typ. Czym są typy?
+    Intuicyjnie można powiedzieć, że typ to rodzaj metki, która
+    dostarcza nam informacji dotyczących danego termu.
+
+<div class="paragraph"> </div>
+
+    Dla przykładu,
+    stwierdzenie <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> informuje nas, że <span class="inlinecode"><span class="id" title="var">x</span></span> jest liczbą
+    naturalną, dzięki czemu wiemy, że możemy użyć go jako argumentu
+    dodawania: term <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> jest poprawnie typowany (ang. well-typed),
+    tzn. <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, a więc możemy skonkludować, że <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> również
+    jest liczbą naturalną.
+
+<div class="paragraph"> </div>
+
+    Innym przykładem niech będzie stwierdzenie <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>,
+    które mówi nam, że <span class="inlinecode"><span class="id" title="var">f</span></span> jest funkcją, która bierze liczbę
+    naturalną i zwraca liczbę naturalną. Dzięki temu wiemy, że term
+    <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">2</span> jest poprawnie typowany i jest liczbą naturalną,
+    tzn. <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">2</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>, zaś term <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">f</span></span> nie jest poprawnie typowany,
+    a więc próba jego użycia, a nawet napisania byłaby błędem.
+
+<div class="paragraph"> </div>
+
+    Typy są tworami absolutnie kluczowymi. Informują nas, z jakimi
+    obiektami mamy do czynienia i co możemy z nimi zrobić, a Coq
+    pilnuje ścisłego przestrzegania tych reguł. Dzięki temu
+    wykluczona zostaje możliwość popełnienia całej gamy różnych
+    błędów, które występują w językach nietypowanych, takich jak
+    dodanie liczby do ciągu znaków.
+
+<div class="paragraph"> </div>
+
+    Co więcej, system typów Coqa jest jednym z najsilniejszych,
+    jakie dotychczas wymyślono, dzięki czemu umożliwia nam wiele
+    rzeczy, których prawie żaden inny język programowania nie potrafi,
+    jak np. reprezentowanie skomplikowanych obiektów matematycznych
+    i dowodzenie twierdzeń. 
+<div class="paragraph"> </div>
+
+<a id="lab223"></a><h1 class="section">Typy i termy, kanoniczność i uzasadnienie reguł eliminacji</h1>
+
+<div class="paragraph"> </div>
+
+ Co to są termy? Po polsku: wyrażenia. Są to napisy zbudowane według
+    pewnych reguł (które będziemy chcieli poznać), które mogą oznaczać
+    przeróżne rzeczy: zdania logiczne i ich dowody, programy i ich
+    specyfikacje, obiekty matematyczne takie jak liczby czy funkcje,
+    struktury danych takie jak napisy czy listy.
+
+<div class="paragraph"> </div>
+
+    Najważniejszym, co wiemy o każdym termie, jest jego typ. Co to jest typ?
+    To taki klasyfikator, który mówi, czego możemy się po termie spodziewać -
+    można liczyć za pomocą liczb, ale nie za pomocą wartości logicznych.
+    Można dowodzić zdań, ale nie napisów. Można skleić ze sobą dwa napisy,
+    ale nie napis i funkcję etc.
+
+<div class="paragraph"> </div>
+
+    Każdy term ma tylko jeden typ, więc każdy typ możemy sobie wyobrazić jako
+    wielki worek z termami. Dla przykładu, typ <span class="inlinecode"><span class="id" title="var">nat</span></span>, czyli typ liczb
+    naturalnych, to worek, w którym są takie wyrażenia, jak:
+<ul class="doclist">
+<li> <span class="inlinecode">42</span>
+
+</li>
+<li> <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode">2</span>
+
+</li>
+<li> <span class="inlinecode">10</span> <span class="inlinecode">*</span> <span class="inlinecode">10</span>
+
+</li>
+<li> jeżeli słowo "dupa" zawiera "i", to <span class="inlinecode">123</span>, a w przeciwnym wypadku <span class="inlinecode">765</span>
+
+</li>
+<li> długość listy <span class="inlinecode">[<span class="id" title="var">a</span>,</span> <span class="inlinecode"><span class="id" title="var">b</span>,</span> <span class="inlinecode"><span class="id" title="var">c</span>,</span> <span class="inlinecode"><span class="id" title="var">d</span>,</span> <span class="inlinecode"><span class="id" title="var">e</span>]</span>
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Najważniejsze termy są nazywane elementami. Dla <span class="inlinecode"><span class="id" title="var">nat</span></span> są to <span class="inlinecode">0</span>, <span class="inlinecode">1</span>,
+    <span class="inlinecode">2</span>, <span class="inlinecode">3</span>, <span class="inlinecode">4</span>, <span class="inlinecode">5</span> i tak dalej. Elementy wyróżnia to, że są w postaci
+    normalnej (zwanej też postacią kanoniczną). Znaczy to intuicyjnie, że
+    są one ostatecznymi wynikami obliczeń, np.:
+<ul class="doclist">
+<li> obliczenie <span class="inlinecode">42</span> daje <span class="inlinecode">42</span>
+
+</li>
+<li> obliczenie <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> daje <span class="inlinecode">4</span>
+
+</li>
+<li> obliczenie <span class="inlinecode">10</span> <span class="inlinecode">*</span> <span class="inlinecode">10</span> daje <span class="inlinecode">100</span>
+
+</li>
+<li> obliczenie ... daje <span class="inlinecode">765</span>
+
+</li>
+<li> obliczenie długości listy daje <span class="inlinecode">5</span>
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    Czym dokładnie są obliczenia, dowiemy się później. Na razie wystarczy
+    nam wiedzieć, że każdy term zamknięty, czyli taki, o którym wiadomo
+    wystarczająco dużo, oblicza się do postaci normalnej, np. 5 + 1 oblicza
+    się do 6. Jeżeli jednak czegoś nie wiadomo, to term się nie oblicza, np.
+    n + 1 nie wiadomo ile wynosi, jeżeli nie wiadomo, co oznacza n.
+
+<div class="paragraph"> </div>
+
+    Podsumowując, każdy element jest termem, a każdy term oblicza się do
+    postaci normalnej, czyli do elementu. 
+<div class="paragraph"> </div>
+
+<a id="lab224"></a><h1 class="section">Typy a zbiory</h1>
+
+<div class="paragraph"> </div>
+
+ Z filozoficznego punktu widzenia należy stanowczo odróżnić
+    typy od zbiorów, znanych chociażby z teorii zbiorów ZF,
+    która jest najpowszechniej używaną podstawą współczesnej
+    matematyki:
+<ul class="doclist">
+<li> zbiory są materialne, podczas gdy typy są strukturalne.
+      Dla przykładu, zbiory {1, 2} oraz {2, 3} mają przecięcie
+      równe {2}, które to przecięcie jest podzbiorem każdego
+      z nich. W przypadku typów jest inaczej — dwa różne typy
+      są zawsze rozłączne i żaden typ nie jest podtypem innego
+
+</li>
+<li> relacja "x ∈ A" jest semantyczna, tzn. jest zdaniem
+      logicznym i wymaga dowodu. Relacja "x : A" jest syntaktyczna,
+      a więc nie jest zdaniem logicznym i nie wymaga dowodu —
+      Coq jest w stanie sprawdzić automatycznie (bez pomocy
+      użytkownika), czy dany term jest danego typu, a często
+      także wywnioskować z kontekstu, jakiego typu jest dany
+      term
+
+</li>
+<li> zbiór to kolekcja obiektów, do której można włożyć cokolwiek.
+      Nowe zbiory mogą być formowane ze starych w sposób niemal
+      dowolny (aksjomaty są dość liberalne). Typ to kolekcja obiektów
+      o takiej samej wewnętrznej naturze. Zasady formowania nowych
+      typów ze starych są bardzo ścisłe
+
+</li>
+<li> teoria zbiorów mówi, jakie obiekty istnieją (np. aksjomat
+      zbioru potęgowego mówi, że dla każdego zbioru istnieje zbiór
+      wszystkich jego podzbiorów). Teoria typów mówi, w jaki sposób
+      obiekty mogą być konstruowane — różnica być może ciężko
+      dostrzegalna dla niewprawionego oka, ale znaczna 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+<a id="lab225"></a><h1 class="section">Uniwersa</h1>
+
+<div class="paragraph"> </div>
+
+ Jeżeli przeczytałeś uważnie sekcję "Typy i termy" z rozdziału o logice,
+    zauważyłeś zapewne stwierdzenie, że typy są termami. W połączeniu ze
+    stwierdzeniem, że każdy term ma swój typ, zrodzić musi się pytanie:
+    jakiego typu są typy? Zacznijmy od tego, że żeby uniknąć używania mało
+    poetyckiego określenia "typy typów", typy typów nazywamy uniwersami.
+    Czasami używa się też nazwy "sort", bo określenie "jest sortu" jest
+    znacznie krótsze, niż "należy do uniwersum" albo "żyje w uniwersum". 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, jak już wiesz, jest uniwersum zdań logicznych. Jeżeli
+    <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> oraz <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> (tzn. <span class="inlinecode"><span class="id" title="var">A</span></span> jest sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>), to typ
+    <span class="inlinecode"><span class="id" title="var">A</span></span> możemy interpretować jako zdanie logiczne, a term <span class="inlinecode"><span class="id" title="var">x</span></span>
+    jako jego dowód. Na przykład <span class="inlinecode"><span class="id" title="var">I</span></span> jest dowodem zdania <span class="inlinecode"><span class="id" title="var">True</span></span>,
+    tzn. <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">True</span></span>, zaś term <span class="inlinecode">42</span> nie jest dowodem <span class="inlinecode"><span class="id" title="var">True</span></span>, gdyż
+    <span class="inlinecode">42</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">True</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;True&nbsp;:&nbsp;Prop&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">I</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;I&nbsp;:&nbsp;True&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> 42.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;42&nbsp;:&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+O ile jednak każde zdanie logiczne jest typem, nie każdy typ jest
+    zdaniem — przykładem niech będą liczby naturalne <span class="inlinecode"><span class="id" title="var">nat</span></span>. Sortem <span class="inlinecode"><span class="id" title="var">nat</span></span>
+    jest <span class="inlinecode"><span class="id" title="keyword">Set</span></span>. Niech nie zmyli cię ta nazwa: <span class="inlinecode"><span class="id" title="keyword">Set</span></span> nie ma nic wspólnego
+    ze zbiorami znanymi choćby z teorii zbiorów ZF.
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="keyword">Set</span></span> jest uniwersum, w którym żyją specyfikacje. Jeżeli <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> oraz
+    <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Set</span></span> (tzn. sortem <span class="inlinecode"><span class="id" title="var">A</span></span> jest <span class="inlinecode"><span class="id" title="keyword">Set</span></span>), to <span class="inlinecode"><span class="id" title="var">A</span></span> możemy interpretować
+    jako specyfikację pewnej klasy programów, a term <span class="inlinecode"><span class="id" title="var">x</span></span> jako program,
+    który tę specyfikację spełnia (implementuje). Na przykład <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode">2</span>
+    jest programem, ktory spełnia specyfikację <span class="inlinecode"><span class="id" title="var">nat</span></span>, tzn. <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>,
+    zaś <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span> nie spełnia specyfikacji <span class="inlinecode"><span class="id" title="var">nat</span></span>, gdyż
+    <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">nat</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;nat&nbsp;:&nbsp;Set&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> 2 + 2.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;2&nbsp;+&nbsp;2&nbsp;:&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">n</span>.<br/>
+<span class="comment">(*&nbsp;fun&nbsp;n&nbsp;:&nbsp;nat&nbsp;=&gt;&nbsp;n&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Oczywiście w przypadku typu <span class="inlinecode"><span class="id" title="var">nat</span></span> mówiene o specyfikacji jest trochę
+    na wyrost, gdyż określenie "specyfikacja" kojarzy nam się z czymś,
+    co określa właściwości, jakie powinien mieć spełniający ją program.
+    O takich specyfikacjach dowiemy się więcej w kolejnych rozdziałach.
+    Choć każda specyfikacja jest typem, to rzecz jasna nie każdy typ jest
+    specyfikacją — niektóre typy są przecież zdaniami.
+
+<div class="paragraph"> </div>
+
+    Jeżeli czytasz uważnie, to pewnie wciąż czujesz niedosyt — wszakże
+    uniwersa, jako typy, także są termami. Jakiego zatem typu są uniwersa?
+    Przekonajmy się. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="keyword">Prop</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Prop&nbsp;:&nbsp;Type&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="keyword">Set</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Set&nbsp;:&nbsp;Type&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="keyword">Prop</span></span> oraz <span class="inlinecode"><span class="id" title="keyword">Set</span></span> są sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. To stwierdzenie wciąż jednak pewnie
+    nie zaspakaja twojej ciekawości. Pójdźmy więc po nitce do kłębka. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="keyword">Type</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Type&nbsp;:&nbsp;Type&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zdaje się, że osiągnęliśmy kłębek i że <span class="inlinecode"><span class="id" title="keyword">Type</span></span> jest typu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>.
+    Rzeczywistość jest jednak o wiele ciekawsza. Gdyby rzeczywiście
+    zachodziło <span class="inlinecode"><span class="id" title="keyword">Type</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, doszłoby do paradoksu znanego jako
+    paradoks Girarda (którego omówienie jednak pominiemy). Prawda
+    jest inna. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*&nbsp;Set&nbsp;Printing&nbsp;Universes.&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Uwaga: powyższa komenda zadziała jedynie w konsoli (program coqtop).
+    Aby osiągnąć ten sam efekt w CoqIDE, zaznacz opcję
+    <span class="inlinecode"><span class="id" title="var">View</span></span> <span class="inlinecode">&gt;</span> <span class="inlinecode"><span class="id" title="var">Display</span></span> <span class="inlinecode"><span class="id" title="var">universe</span></span> <span class="inlinecode"><span class="id" title="var">levels</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="keyword">Type</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Type&nbsp;<span class="comment">(*&nbsp;Top.7&nbsp;*)</span>&nbsp;:&nbsp;Type&nbsp;<span class="comment">(*&nbsp;(Top.7)+1&nbsp;*)</span>&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Co oznacza ten dziwny napis? Otóż w Coqu mamy do czynienia nie z
+    jednym, ale z wieloma (a nawet nieskończenie wieloma) uniwersami.
+    Uniwersa te są numerowane liczbami naturalnymi: najniższe uniwersum
+    ma numer 0, a każde kolejne o jeden większy. Wobec tego hierarchia
+    uniwersów wygląda tak (użyta notacja nie jest tą, której używa Coq;
+    została wymyślona ad hoc):
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="keyword">Set</span></span> żyje w uniwersum <span class="inlinecode"><span class="id" title="keyword">Type</span>(0)</span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="keyword">Type</span>(0)</span> żyje w uniwersum <span class="inlinecode"><span class="id" title="keyword">Type</span>(1)</span>
+
+</li>
+<li> w ogólności, <span class="inlinecode"><span class="id" title="keyword">Type</span>(<span class="id" title="var">i</span>)</span> żyje w uniwersum <span class="inlinecode"><span class="id" title="keyword">Type</span>(<span class="id" title="var">i</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1)</span> 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Aby uniknąć paradoksu, definicje odnoszące się do typów żyjących
+    na różnych poziomach hierarchii muszą same bytować w uniwersum
+    na poziomie wyższym niż każdy z tych, do których się odwołują.
+    Aby to zapewnić, Coq musi pamiętać, na którym poziomie znajduje
+    każde użycie <span class="inlinecode"><span class="id" title="keyword">Type</span></span> i odpowiednio dopasowywać poziom hierarchii,
+    do którego wrzucone zostaną nowe definicje.
+
+<div class="paragraph"> </div>
+
+    Co więcej, w poprzednim rozdziale dopuściłem się drobnego kłamstewka
+    twierdząc, że każdy term ma dokładnie jeden typ. W pewnym sensie nie
+    jest tak, gdyż powyższa hierarcha jest <i>kumulatywna</i> — znaczy to, że
+    jeśli <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>(<span class="id" title="var">i</span>)</span>, to także <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>(<span class="id" title="var">j</span>)</span> dla i &lt; j. Tak więc każdy
+    typ, którego sortem jest <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, nie tylko nie ma unikalnego typu/sortu,
+    ale ma ich nieskończenie wiele.
+
+<div class="paragraph"> </div>
+
+    Brawo! Czytając tę sekcję, dotarłeś do króliczej nory i posiadłeś
+    wiedzę tajemną, której prawie na pewno nigdy ani nigdzie nie użyjesz.
+    Możemy zatem przejść do meritum. 
+<div class="paragraph"> </div>
+
+<a id="lab226"></a><h1 class="section">Pięć rodzajów reguł</h1>
+
+<div class="paragraph"> </div>
+
+ Być może jeszcze tego nie zauważyłeś, ale większość logiki konstruktywnej,
+    programowania funkcyjnego, a przede wszystkim teorii typów kręci się wokół
+    pięciu rodzajów reguł.
+    Są to reguły:
+<ul class="doclist">
+<li> formacji (ang. formation rules)
+
+</li>
+<li> wprowadzania (ang. introduction rules)
+
+</li>
+<li> eliminacji (ang. elimination rules)
+
+</li>
+<li> obliczania (ang. computation rules)
+
+</li>
+<li> unikalności (ang. uniqueness principles) 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ W tym podrozdziale przyjrzymy się wszystkim pięciu typom reguł. Zobaczymy
+    jak wyglądają, skąd się biorą i do czego służą. Podrozdział będzie miał
+    charakter mocno teoretyczny. 
+<div class="paragraph"> </div>
+
+<a id="lab227"></a><h2 class="section">Reguły formacji</h2>
+
+<div class="paragraph"> </div>
+
+ Reguły formacji mówią nam, jak tworzyć typy (termy sortów <span class="inlinecode"><span class="id" title="keyword">Set</span></span> i <span class="inlinecode"><span class="id" title="keyword">Type</span></span>)
+    oraz zdania (termy sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>). Większość z nich pochodzi z nagłówków
+    definicji induktywnych. Reguła dla typu <span class="inlinecode"><span class="id" title="var">bool</span></span> wygląda tak: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;----------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;bool&nbsp;:&nbsp;Set<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Ten mistyczny zapis pochodzi z publikacji dotyczących teorii typów.
+    Nad kreską znajdują się przesłanki reguły, a pod kreską znajduje się
+    konkluzja reguły.
+
+<div class="paragraph"> </div>
+
+    Regułę tę możemy odczytać: <span class="inlinecode"><span class="id" title="var">bool</span></span> jest typem sortu <span class="inlinecode"><span class="id" title="keyword">Set</span></span>. Postać tej
+    reguły wynika wprost z definicji typu <span class="inlinecode"><span class="id" title="var">bool</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">bool</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Inductive&nbsp;bool&nbsp;:&nbsp;Set&nbsp;:=&nbsp;&nbsp;true&nbsp;:&nbsp;bool&nbsp;|&nbsp;false&nbsp;:&nbsp;bool&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Powyższej regule formacji odpowiada tutaj fragment <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Set</span></span>,
+    który stwierdza po prostu, że <span class="inlinecode"><span class="id" title="var">bool</span></span> jest typem sortu <span class="inlinecode"><span class="id" title="keyword">Set</span></span>.
+
+<div class="paragraph"> </div>
+
+    Nie zawsze jednak reguły formacji są aż tak proste. Reguła dla produktu
+    wygląda tak: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;:&nbsp;Type,&nbsp;B&nbsp;:&nbsp;Type<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;prod&nbsp;A&nbsp;B&nbsp;:&nbsp;Type<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Reguła formacji dla <span class="inlinecode"><span class="id" title="var">prod</span></span> głosi: jeżeli <span class="inlinecode"><span class="id" title="var">A</span></span> jest typem sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>
+    oraz <span class="inlinecode"><span class="id" title="var">B</span></span> jest typem sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>, to <span class="inlinecode"><span class="id" title="var">prod</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> jest typem sortu
+    <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. Jest ona rzecz jasna konsekwencją definicji produktu. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">prod</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;Inductive&nbsp;prod&nbsp;(A&nbsp;B&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pair&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;B&nbsp;-&gt;&nbsp;A&nbsp;*&nbsp;B&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Regule odpowiada fragment <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> <span class="inlinecode"><span class="id" title="var">prod</span></span> <span class="inlinecode">(<span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>)</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>. To,
+    co w regule jest nad kreską (<span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>), tutaj występuje
+    przed dwukropkiem, po prostu jako argumentu typu <span class="inlinecode"><span class="id" title="var">prod</span></span>. Jak widać,
+    nagłówek typu induktywnego jest po prostu skompresowaną formą reguły
+    formacji.
+
+<div class="paragraph"> </div>
+
+    Należy zauważyć, że nie wszystkie reguły formacji pochodzą z definicji
+    induktywnych. Tak wygląda reguła formacji dla funkcji (między typami
+    sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>): 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;:&nbsp;Type,&nbsp;B&nbsp;:&nbsp;Type<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;-&gt;&nbsp;B&nbsp;:&nbsp;Type<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Reguła nie pochodzi z definicji induktywnej, gdyż typ funkcji <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span>
+    jest typem wbudowanym i nie jest zdefiniowany indukcyjnie. 
+<div class="paragraph"> </div>
+
+<a id="lab228"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Napisz, bez podglądania, jak wyglądają reguły formacji dla <span class="inlinecode"><span class="id" title="var">option</span></span>,
+    <span class="inlinecode"><span class="id" title="var">nat</span></span> oraz <span class="inlinecode"><span class="id" title="var">list</span></span>. Następnie zweryfikuj swoje odpowiedzi za pomocą
+    komendy <span class="inlinecode"><span class="id" title="keyword">Print</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab229"></a><h2 class="section">Reguły wprowadzania</h2>
+
+<div class="paragraph"> </div>
+
+ Reguły wprowadzania mówią nam, w jaki sposób formować termy danego
+    typu. Większość z nich pochodzi od konstruktorów typów induktywnych.
+    Dla typu bool reguły wprowadzania wyglądają tak: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-----------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;true&nbsp;:&nbsp;bool<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;false&nbsp;:&nbsp;bool<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Reguły te stwierdzają po prostu, że <span class="inlinecode"><span class="id" title="var">true</span></span> jest termem typu <span class="inlinecode"><span class="id" title="var">bool</span></span>
+    oraz że <span class="inlinecode"><span class="id" title="var">false</span></span> jest termem typu <span class="inlinecode"><span class="id" title="var">bool</span></span>. Wynikają one wprost z
+    definicji typu <span class="inlinecode"><span class="id" title="var">bool</span></span> — każda z nich odpowiada jednemu konstruktorowi.
+
+<div class="paragraph"> </div>
+
+    Wobec powyższego nie powinna zaskoczyć cię reguła wprowadzania dla
+    produktu: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;:&nbsp;Type,&nbsp;B&nbsp;:&nbsp;Type,&nbsp;a&nbsp;:&nbsp;A,&nbsp;b&nbsp;:&nbsp;B<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;--------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;pair&nbsp;A&nbsp;B&nbsp;a&nbsp;b&nbsp;:&nbsp;prod&nbsp;A&nbsp;B<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Jeżeli jednak zaskoczyła cię obecność w regule <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>,
+    przyjrzyj się dokładnie typowi konstruktora <span class="inlinecode"><span class="id" title="var">pair</span></span>: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> @<span class="id" title="var">pair</span>.<br/>
+<span class="comment">(*&nbsp;===&gt;&nbsp;pair&nbsp;:&nbsp;forall&nbsp;A&nbsp;B&nbsp;:&nbsp;Type,&nbsp;A&nbsp;-&gt;&nbsp;B&nbsp;-&gt;&nbsp;A&nbsp;*&nbsp;B&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Widać tutaj jak na dłoni, że <span class="inlinecode"><span class="id" title="var">pair</span></span> jest funkcją zależną biorącą
+    cztery argumenty i zwracają wynik, którego typ jest produktem jej
+    dwóch pierwszych argumentów.
+
+<div class="paragraph"> </div>
+
+    Podobnie jak w przypadku reguł formacji, nie wszystkie reguły
+    wprowadzania pochodzą od konstruktorów typów induktywnych. W
+    przypadku funkcji reguła wygląda mniej więcej tak: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Γ&nbsp;|-&nbsp;A&nbsp;-&gt;&nbsp;B&nbsp;:&nbsp;Type,&nbsp;Γ;&nbsp;x&nbsp;:&nbsp;A&nbsp;|-&nbsp;y&nbsp;:&nbsp;B<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-------------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Γ&nbsp;|-&nbsp;fun&nbsp;x&nbsp;=&gt;&nbsp;y&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;B<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Pojawiło się tu kilka nowych rzeczy: litera Γ oznacza kontekst,
+    zaś zapis Γ |- j, że osąd j zachodzi w kontekście Γ. Zapis Γ; j
+    oznacza rozszerzenie kontekstu Γ poprzez dodanie do niego osądu j.
+
+<div class="paragraph"> </div>
+
+    Regułę możemy odczytać tak: jeżeli <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> jest typem sortu <span class="inlinecode"><span class="id" title="keyword">Type</span></span>
+    w kontekście Γ i <span class="inlinecode"><span class="id" title="var">y</span></span> jest termem typu <span class="inlinecode"><span class="id" title="var">B</span></span> w kontekście Γ rozszerzonym
+    o osąd <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span>, to <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">y</span></span> jest termem typu <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> w kontekście
+    Γ.
+
+<div class="paragraph"> </div>
+
+    Powyższa reguła nazywana jest "lambda abstrakcją" (gdyż zazwyczaj jest
+    zapisywana przy użyciu symbolu λ zamiast słowa kluczowego <span class="inlinecode"><span class="id" title="keyword">fun</span></span>, jak
+    w Coqu). Nie przejmuj się, jeżeli jej. Znajomość reguł wprowadzania nie
+    jest nam potrzebna, by skutecznie posługiwać się Coqiem.
+
+<div class="paragraph"> </div>
+
+    Należy też dodać, że reguła ta jest nieco uproszczona. Pełniejszy
+    opis teoretyczny induktywnego rachunku konstrukcji można znaleźć
+    w manualu: https://coq.inria.fr/refman/language/cic.html 
+<div class="paragraph"> </div>
+
+<a id="lab230"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Napisz (bez podglądania) jak wyglądają reguły wprowadzania dla
+    <span class="inlinecode"><span class="id" title="var">option</span></span>, <span class="inlinecode"><span class="id" title="var">nat</span></span> oraz <span class="inlinecode"><span class="id" title="var">list</span></span>. Następnie zweryfikuj swoje odpowiedzi
+    za pomocą komendy <span class="inlinecode"><span class="id" title="keyword">Print</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab231"></a><h2 class="section">Reguły eliminacji</h2>
+
+<div class="paragraph"> </div>
+
+ Reguły eliminacji są w pewien sposób dualne do reguł wprowadzania.
+    Tak jak reguły wprowadzania dla typu <span class="inlinecode"><span class="id" title="var">T</span></span> służą do konstruowania
+    termów typu <span class="inlinecode"><span class="id" title="var">T</span></span> z innych termów, tak reguły eliminacji dla typu <span class="inlinecode"><span class="id" title="var">T</span></span>
+    mówią nam, jak z termów typu <span class="inlinecode"><span class="id" title="var">T</span></span> skonstruować termy innych typów.
+
+<div class="paragraph"> </div>
+
+    Zobaczmy, jak wygląda jedna z reguł eliminacji dla typu <span class="inlinecode"><span class="id" title="var">bool</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;:&nbsp;Type,&nbsp;x&nbsp;:&nbsp;A,&nbsp;y&nbsp;:&nbsp;A,&nbsp;b&nbsp;:&nbsp;bool<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;--------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;b&nbsp;then&nbsp;x&nbsp;else&nbsp;y&nbsp;:&nbsp;A<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Reguła ta mówi nam, że jeżeli mamy typ <span class="inlinecode"><span class="id" title="var">A</span></span> oraz dwie wartości
+    <span class="inlinecode"><span class="id" title="var">x</span></span> i <span class="inlinecode"><span class="id" title="var">y</span></span> typu <span class="inlinecode"><span class="id" title="var">A</span></span>, a także term <span class="inlinecode"><span class="id" title="var">b</span></span> typu <span class="inlinecode"><span class="id" title="var">bool</span></span>, to możemy
+    skonstruować inną wartość typu <span class="inlinecode"><span class="id" title="var">A</span></span>, mianowicie <span class="inlinecode"><span class="id" title="keyword">if</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode"><span class="id" title="keyword">then</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>
+    <span class="inlinecode"><span class="id" title="keyword">else</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span>.
+
+<div class="paragraph"> </div>
+
+    Reguła ta jest dość prosta. W szczególności nie jest ona zależna,
+    tzn. obie gałęzie <span class="inlinecode"><span class="id" title="keyword">if</span></span>a muszą być tego samego typu. Przyjrzyjmy
+    się nieco bardziej ogólnej regule. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;:&nbsp;bool&nbsp;-&gt;&nbsp;Type,&nbsp;x&nbsp;:&nbsp;P&nbsp;true,&nbsp;y&nbsp;:&nbsp;P&nbsp;false,&nbsp;b&nbsp;:&nbsp;bool<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;----------------------------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;bool_rect&nbsp;P&nbsp;x&nbsp;y&nbsp;b&nbsp;:&nbsp;P&nbsp;b<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Reguła ta mówi nam, że jeżeli mamy rodzinę typów <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span>
+    oraz termy <span class="inlinecode"><span class="id" title="var">x</span></span> typu <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span> i <span class="inlinecode"><span class="id" title="var">y</span></span> typu <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span>, a także term <span class="inlinecode"><span class="id" title="var">b</span></span>
+    typu <span class="inlinecode"><span class="id" title="var">bool</span></span>, to możemy skonstruować term <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span> typu
+    <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span>.
+
+<div class="paragraph"> </div>
+
+    Spójrzmy na tę regułę z nieco innej strony: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;:&nbsp;bool&nbsp;-&gt;&nbsp;Type,&nbsp;x&nbsp;:&nbsp;P&nbsp;true,&nbsp;y&nbsp;:&nbsp;P&nbsp;false<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;----------------------------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;bool_rect&nbsp;P&nbsp;x&nbsp;y&nbsp;:&nbsp;forall&nbsp;b&nbsp;:&nbsp;bool,&nbsp;P&nbsp;b<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Widzimy, że reguły eliminacji dla typu induktywnego <span class="inlinecode"><span class="id" title="var">T</span></span> służą do
+    konstruowania funkcji, których dziedziną jest <span class="inlinecode"><span class="id" title="var">T</span></span>, a więc mówią
+    nam, jak "wyeliminować" term typu <span class="inlinecode"><span class="id" title="var">T</span></span>, aby uzyskać term innego typu. 
+
+<div class="paragraph"> </div>
+
+    Reguły eliminacji występują w wielu wariantach:
+<ul class="doclist">
+<li> zależnym i niezależnym — w zależności od tego, czy służą do definiowania
+      funkcji zależnych, czy nie.
+
+</li>
+<li> rekurencyjnym i nierekurencyjnym — te druge służą jedynie do
+      przeprowadzania rozumowań przez przypadki oraz definiowania funkcji
+      przez dopasowanie do wzorca, ale bez rekurencji. Niektóre typy nie
+      mają rekurencyjnych reguł eliminacji.
+
+</li>
+<li> pierwotne i wtórne — dla typu induktywnego <span class="inlinecode"><span class="id" title="var">T</span></span> Coq generuje regułę
+      <span class="inlinecode"><span class="id" title="var">T_rect</span></span>, którą będziemy zwać regułą pierwotną. Jej postać wynika
+      wprost z definicji typu <span class="inlinecode"><span class="id" title="var">T</span></span>. Reguły dla typów nieinduktywnych (np.
+      funkcji) również będziemy uważać za pierwotne. Jednak nie wszystkie
+      reguły są pierwotne — przekonamy się o tym w przyszłości, tworząc
+      własne reguły indukcyjne.
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Zgodnie z zaprezentowaną klasyfikacją, pierwsza z naszych reguł jest:
+<ul class="doclist">
+<li> niezależna, gdyż obie gałęzie <span class="inlinecode"><span class="id" title="keyword">if</span></span>a są tego samego typu. Innymi słowy,
+      definiujemy term typu <span class="inlinecode"><span class="id" title="var">A</span></span>, który nie jest zależny
+
+</li>
+<li> nierekurencyjna, gdyż typ <span class="inlinecode"><span class="id" title="var">bool</span></span> nie jest rekurencyjny i wobec tego
+      może posiadać jedynie reguły nierekurencyjne
+
+</li>
+<li> wtórna — regułą pierwotną dla <span class="inlinecode"><span class="id" title="var">bool</span></span> jest <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Druga z naszych reguł jest:
+<ul class="doclist">
+<li> zależna, gdyż definiujemy term typu zależnego <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span>
+
+</li>
+<li> nierekurencyjna z tych samych powodów, co reguła pierwsza
+
+</li>
+<li> pierwotna — Coq wygenerował ją dla nas automatycznie 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ W zależności od kombinacji powyższych cech reguły eliminacji mogą
+    występować pod różnymi nazwami:
+<ul class="doclist">
+<li> reguły indukcyjne są zależne i rekurencyjne. Służą do definiowania
+      funkcji, których przeciwdziedzina jest sortu <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>, a więc do
+      dowodzenia zdań przez indukcję
+
+</li>
+<li> rekursory to rekurencyjne reguły eliminacji, które służą do definiowania
+      funkcji, których przeciwdziedzina jest sortu <span class="inlinecode"><span class="id" title="keyword">Set</span></span> lub <span class="inlinecode"><span class="id" title="keyword">Type</span></span> 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ Nie przejmuj się natłokiem nazw ani rozróżnień. Powyższą klasyfikację
+    wymyśliłem na poczekaniu i nie ma ona w praktyce żadnego znaczenia.
+
+<div class="paragraph"> </div>
+
+    Zauważmy, że podobnie jak nie wszystkie reguły formacji i wprowadzania
+    pochodzą od typów induktywnych, tak i nie wszystkie reguły eliminacji
+    od nich pochodzą. Kontrprzykładem niech będzie reguła eliminacji dla
+    funkcji (niezależnych): 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;:&nbsp;Type,&nbsp;B&nbsp;:&nbsp;Type,&nbsp;f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;B,&nbsp;x&nbsp;:&nbsp;A<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-------------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;x&nbsp;:&nbsp;B<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Reguła ta mówi nam, że jeżeli mamy funkcję <span class="inlinecode"><span class="id" title="var">f</span></span> typu <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">B</span></span> oraz
+    argument <span class="inlinecode"><span class="id" title="var">x</span></span> typu <span class="inlinecode"><span class="id" title="var">A</span></span>, to aplikacja funkcji <span class="inlinecode"><span class="id" title="var">f</span></span> do argumentu <span class="inlinecode"><span class="id" title="var">x</span></span>
+    jest typu <span class="inlinecode"><span class="id" title="var">B</span></span>.
+
+<div class="paragraph"> </div>
+
+    Zauważmy też, że mimo iż reguły wprowadzania i eliminacji są w pewien
+    sposób dualne, to istnieją między nimi różnice.
+
+<div class="paragraph"> </div>
+
+    Przede wszystkim, poza regułami wbudowanymi, obowiązuje prosta zasada:
+    jeden konstruktor typu induktywnego — jedna reguła wprowadzania. Innymi
+    słowy, reguły wprowadzania dla typów induktywnych pochodzą bezpośrednio
+    od konstruktorów i nie możemy w żaden sposób dodać nowych. Są one w
+    pewien sposób pierwotne i nie mamy nad nimi (bezpośredniej) kontroli.
+
+<div class="paragraph"> </div>
+
+    Jeżeli chodzi o reguły eliminacji, to są one, poza niewielką ilością
+    reguł pierwotnych, w pewnym sensie wtórne —
+    możemy budować je z dopasowania do wzorca i rekursji strukturalnej i
+    to właśnie te dwie ostatnie idee są w Coqu ideami pierwotnymi. Jeżeli
+    chodzi o kontrolę, to możemy swobodnie dodawać nowe reguły eliminacji
+    za pomocą twierdzeń lub definiując je bezpośrednio.
+
+<div class="paragraph"> </div>
+
+    Działanie takie jest, w przypadku nieco bardziej zaawansowanych
+    twierdzeń niż dotychczas widzieliśmy, bardzo częste. Ba! Częste
+    jest także tworzenie reguł eliminacji dla każdej funkcji z osobna,
+    perfekcyjnie dopasowanych do kształtu jej rekursji. Jest to nawet
+    bardzo wygodne, gdyż Coq potrafi automatycznie wygenerować dla nas
+    takie reguły.
+
+<div class="paragraph"> </div>
+
+    Przykładem niestandardowej reguły może być reguła eliminacji dla
+    list działająca "od tyłu": 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;:&nbsp;Type,&nbsp;P&nbsp;:&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;Prop,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;H&nbsp;:&nbsp;P&nbsp;<span class="inlinecode">[]</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;H'&nbsp;:&nbsp;forall&nbsp;(h&nbsp;:&nbsp;A)&nbsp;(t&nbsp;:&nbsp;list&nbsp;A),&nbsp;P&nbsp;t&nbsp;-&gt;&nbsp;P&nbsp;(t&nbsp;++&nbsp;<span class="inlinecode">[<span class="id" title="var">h</span>]</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-------------------------------------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;l&nbsp;:&nbsp;list&nbsp;A,&nbsp;P&nbsp;l<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Póki co wydaje mi się, że udowodnienie słuszności tej reguły będzie dla
+    nas za trudne. W przyszłości na pewno napiszę coś więcej na temat reguł
+    eliminacji, gdyż ze względu na swój "otwarty" charakter są one z punktu
+    widzenia praktyki najważniejsze.
+
+<div class="paragraph"> </div>
+
+    Tymczasem na otarcie łez zajmijmy się inną, niestandardową regułą dla
+    list. 
+<div class="paragraph"> </div>
+
+<a id="lab232"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Udowodnij, że reguła dla list "co dwa" jest słuszna. Zauważ, że komenda
+    <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> może służyć do podawania definicji rekurencyjnych nie tylko
+    "ręcznie", ale także za pomocą taktyk.
+
+<div class="paragraph"> </div>
+
+    Wskazówka: użycie hipotezy indukcyjnej <span class="inlinecode"><span class="id" title="var">list_ind_2</span></span> zbyt wcześnie
+    ma podobne skutki co wywołanie rekurencyjne na argumencie, który
+    nie jest strukturalnie mniejszy. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">EliminationRules</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">list_ind_2</span><br/>
+&nbsp;&nbsp;(<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>)<br/>
+&nbsp;&nbsp;(<span class="id" title="var">H0</span> : <span class="id" title="var">P</span> []) (<span class="id" title="var">H1</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> [<span class="id" title="var">x</span>])<br/>
+&nbsp;&nbsp;(<span class="id" title="var">H2</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">P</span> <span class="id" title="var">l</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">y</span> :: <span class="id" title="var">l</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">P</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab233"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Napisz funkcję <span class="inlinecode"><span class="id" title="tactic">apply</span></span>, odpowiadającą regule eliminacji dla funkcji
+    (niezależnych). Udowodnij jej specyfikację.
+
+<div class="paragraph"> </div>
+
+    Uwaga: notacja "$" na oznaczenie aplikacji funkcji pochodzi z języka
+    Haskell i jest tam bardzo często stosowana, gdyż pozwala zaoszczędzić
+    stawiania zbędnych nawiasów. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;f $ x" := (<span class="id" title="tactic">apply</span> <span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 5).<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">apply_spec</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>), <span class="id" title="var">f</span> $ <span class="id" title="var">x</span> = <span class="id" title="var">f</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">EliminationRules</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab234"></a><h2 class="section">Reguły obliczania</h2>
+
+<div class="paragraph"> </div>
+
+ Poznawszy reguły wprowadzania i eliminacji możemy zadać sobie pytanie:
+    jakie są między nimi związki? Jedną z odpowiedzi na to pytanie dają
+    reguły obliczania, które określają, w jaki sposób reguły eliminacji
+    działają na obiekty stworzone za pomocą reguł wprowadzania. Zobaczmy
+    o co chodzi na przykładzie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;:&nbsp;Type,&nbsp;B&nbsp;:&nbsp;Type,&nbsp;x&nbsp;:&nbsp;A&nbsp;|-&nbsp;e&nbsp;:&nbsp;B,&nbsp;t&nbsp;:&nbsp;A<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-----------------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(fun&nbsp;x&nbsp;:&nbsp;A&nbsp;=&gt;&nbsp;e)&nbsp;t&nbsp;≡&nbsp;e{x/t}<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Powyższa reguła nazywa się "redukcja beta". Mówi ona, jaki efekt ma
+    aplikacja funkcji zrobionej za pomocą lambda abstrakcji do argumentu,
+    przy czym aplikacja jest regułą eliminacji dla funkcji, a lambda
+    abstrakcja — regułą wprowadzania.
+
+<div class="paragraph"> </div>
+
+    Możemy odczytać ją tak: jeżeli <span class="inlinecode"><span class="id" title="var">A</span></span> i <span class="inlinecode"><span class="id" title="var">B</span></span> są typami, zaś <span class="inlinecode"><span class="id" title="var">e</span></span> termem
+    typu <span class="inlinecode"><span class="id" title="var">B</span></span>, w którym występuje zmienna wolna <span class="inlinecode"><span class="id" title="var">x</span></span> typu <span class="inlinecode"><span class="id" title="var">A</span></span>, to wyrażenie
+    <span class="inlinecode">(<span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">e</span>)</span> <span class="inlinecode"><span class="id" title="var">t</span></span> redukuje się (symbol ≡) do <span class="inlinecode"><span class="id" title="var">e</span></span>, w którym w miejsce
+    zmiennej <span class="inlinecode"><span class="id" title="var">x</span></span> podstawiono term <span class="inlinecode"><span class="id" title="var">t</span></span>.
+
+<div class="paragraph"> </div>
+
+    Zauważ, że zarówno symbol ≡ jak i notacja <span class="inlinecode"><span class="id" title="var">e</span>{<span class="id" title="var">x</span>/<span class="id" title="var">t</span>}</span> są tylko nieformalnymi
+    zapisami i nie mają żadnego znaczenia w Coqu.
+
+<div class="paragraph"> </div>
+
+    Nie jest tak, że dla każdego typu jest tylko jedna reguła obliczania.
+    Jako, że reguły obliczania pokazują związek między regułami eliminacji
+    i wprowadzania, ich ilość można przybliżyć prostym wzorem:
+
+<div class="paragraph"> </div>
+
+    # reguł obliczania = # reguł eliminacji * # reguł wprowadzania,
+
+<div class="paragraph"> </div>
+
+    gdzie # to nieformalny symbol oznaczający "ilość". W Coqowej praktyce
+    zazwyczaj oznacza to, że reguł obliczania jest nieskończenie wiele,
+    gdyż możemy wymyślić sobie nieskończenie wiele reguł eliminacji.
+    Przykładem typu, który ma więcej niż jedną regułę obliczania dla danej
+    reguły eliminacji, jest <span class="inlinecode"><span class="id" title="var">bool</span></span>: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;:&nbsp;bool&nbsp;-&gt;&nbsp;Type,&nbsp;x&nbsp;:&nbsp;P&nbsp;true,&nbsp;y&nbsp;:&nbsp;P&nbsp;false<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-----------------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;bool_rect&nbsp;P&nbsp;x&nbsp;y&nbsp;true&nbsp;≡&nbsp;x<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;:&nbsp;bool&nbsp;-&gt;&nbsp;Type,&nbsp;x&nbsp;:&nbsp;P&nbsp;true,&nbsp;y&nbsp;:&nbsp;P&nbsp;false<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-----------------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;bool_rect&nbsp;P&nbsp;x&nbsp;y&nbsp;false&nbsp;≡&nbsp;y<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Typ <span class="inlinecode"><span class="id" title="var">bool</span></span> ma dwie reguły wprowadzania pochodzące od dwóch konstruktorów,
+    a zatem ich związki z regułą eliminacji <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> będą opisywać dwie
+    reguły obliczania. Pierwsza z nich mówi, że <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span>
+    redukuje się do <span class="inlinecode"><span class="id" title="var">x</span></span>, a druga, że <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span> redukuje się do
+    <span class="inlinecode"><span class="id" title="var">y</span></span>.
+
+<div class="paragraph"> </div>
+
+    Gdyby zastąpić w nich regułe <span class="inlinecode"><span class="id" title="var">bool_rect</span></span> przez nieco prostszą regułę, w
+    której nie występują typy zależne, to można by powyższe reguły zapisać
+    tak: 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;:&nbsp;Type,&nbsp;x&nbsp;:&nbsp;A,&nbsp;y&nbsp;:&nbsp;A<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-----------------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;true&nbsp;then&nbsp;x&nbsp;else&nbsp;y&nbsp;≡&nbsp;x<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;:&nbsp;Type,&nbsp;x&nbsp;:&nbsp;A,&nbsp;y&nbsp;:&nbsp;A<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-----------------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;false&nbsp;then&nbsp;x&nbsp;else&nbsp;y&nbsp;≡&nbsp;y<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Wygląda dużo bardziej znajomo, prawda?
+
+<div class="paragraph"> </div>
+
+    Na zakończenie wypadałoby napisać, skąd biorą się reguły obliczania. W
+    nieco mniej formalnych pracach teoretycznych na temat teorii typów są
+    one zazwyczaj uznawane za byty podstawowe, z których następnie wywodzi
+    się reguły obliczania takich konstrukcji, jak np. <span class="inlinecode"><span class="id" title="keyword">match</span></span>.
+
+<div class="paragraph"> </div>
+
+    W Coqu jest na odwrót. Tak jak reguły eliminacji pochodzą od dopasowania
+    do wzorca i rekursji, tak reguły obliczania pochdzą od opisanych już
+    wcześniej reguł redukcji (beta, delta, jota i zeta), a także konwersji
+    alfa. 
+<div class="paragraph"> </div>
+
+<a id="lab235"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Napisz reguły obliczania dla liczb naturalnych oraz list (dla reguł
+    eliminacji <span class="inlinecode"><span class="id" title="var">nat_ind</span></span> oraz <span class="inlinecode"><span class="id" title="var">list_ind</span></span>). 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab236"></a><h2 class="section">Reguły unikalności</h2>
+
+<div class="paragraph"> </div>
+
+ Kolejną odpowiedzią na pytanie o związki między regułami wprowadzania
+    i eliminacji są reguły unikalności. Są one dualne do reguł obliczania
+    i określają, w jaki sposób reguły wprowadzania działają na obiekty
+    pochodzące od reguł eliminacji. Przyjrzyjmy się przykładowi. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;:&nbsp;Type,&nbsp;B&nbsp;:&nbsp;Type,&nbsp;f&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;B<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(fun&nbsp;x&nbsp;:&nbsp;A&nbsp;=&gt;&nbsp;f&nbsp;x)&nbsp;≡&nbsp;f<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Powyższa reguła unikalności dla funkcji jest nazywana "redukcją eta".
+    Stwierdza ona, że funkcja stworzona za pomocą abstrakcji <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>,
+    której ciałem jest aplikacja <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> jest definicyjnie równa funkcji <span class="inlinecode"><span class="id" title="var">f</span></span>.
+    Regułą wprowadzania dla funkcji jest oczywiście abstrakcja, a regułą
+    eliminacji — aplikacja.
+
+<div class="paragraph"> </div>
+
+    Reguły unikalności różnią się jednak dość mocno od reguł obliczania,
+    gdyż zamiast równości definicyjnej ≡ mogą czasem używać standardowej,
+    zdaniowej równości Coqa, czyli <span class="inlinecode">=</span>. Nie do końca pasuje też do nich
+    stwierdzenie, że określają działanie reguł wprowadzania na reguły
+    eliminacji, gdyż zamiast reguł eliminacji mogą w nich występować
+    inne byty, zdefiniowane jednak za pomocą reguł eliminacji. Zobaczmy
+    o co chodzi na przykładzie. 
+</div>
+<div class="code">
+
+<br/>
+<span class="comment">(*<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;:&nbsp;Type,&nbsp;B&nbsp;:&nbsp;Type,&nbsp;p&nbsp;:&nbsp;A&nbsp;*&nbsp;B<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;--------------------------------<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(fst&nbsp;p,&nbsp;snd&nbsp;p)&nbsp;=&nbsp;p<br/>
+*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Powyższa reguła głosi, że para, której pierwszym elementem jest pierwszy
+    element pary <span class="inlinecode"><span class="id" title="var">p</span></span>, a drugim elementem — drugi element pary <span class="inlinecode"><span class="id" title="var">p</span></span>, jest w
+    istocie równa parze <span class="inlinecode"><span class="id" title="var">p</span></span>. W Coqu możemy ją wyrazić (i udowodnić) tak: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">prod_uniq</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">A</span> * <span class="id" title="var">B</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">fst</span> <span class="id" title="var">p</span>, <span class="id" title="var">snd</span> <span class="id" title="var">p</span>) = <span class="id" title="var">p</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">p</span>. <span class="id" title="var">cbn</span>. <span class="id" title="tactic">trivial</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Podsumowując, reguły unikalności występują w dwóch rodzajach:
+<ul class="doclist">
+<li> dane nam z góry, niemożliwe do wyrażenia bezpośrednio w Coqu i
+      używające równości definicyjnej, jak w przypadku redukcji eta
+      dla funkcji
+
+</li>
+<li> możliwe do wyrażenia i udowodnienia w Coqu, używające zwykłej
+      równości, jak dla produktów i w ogólności dla typów induktywnych 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+<a id="lab237"></a><h4 class="section">Ćwiczenie</h4>
+
+<div class="paragraph"> </div>
+
+ Sformułuj reguły unikalności dla funkcji zależnych (<span class="inlinecode"><span class="id" title="keyword">forall</span></span>), sum
+    zależnych (<span class="inlinecode"><span class="id" title="var">sigT</span></span>) i <span class="inlinecode"><span class="id" title="var">unit</span></span> (zapisz je w notacji z poziomą kreską).
+    Zdecyduj, gdzie w powyższej klasyfikacji mieszczą się te reguły.
+    Jeżeli to możliwe, wyraź je i udowodnij w Coqu. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab238"></a><h1 class="section">Metateoria</h1>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Zbliżamy się powoli do końca rozdziału. Z jednej strony sporo się
+    nauczyliśmy, ale z drugiej strony fakt ten może budzić dość spory
+    niepkój. No bo niby skąd mamy wiedzieć, że cała ta logika (i teoria
+    typów też) to nie są zupełne bzdury?
+
+<div class="paragraph"> </div>
+
+    Pisząc ściślej: skąd np. mamy pewność, że logika konstruktywna nie
+    jest sprzeczna, tzn. nie można w niej udowodnić <span class="inlinecode"><span class="id" title="var">False</span></span>? A jakim
+    sposobem ustalić, czy przypadkiem nie zrobiłem cię w konia pisząc,
+    że nie da się udowodnić prawa wyłączonego środka?
+
+<div class="paragraph"> </div>
+
+    W niniejszym podrozdziale spróbujemy udzielić krótkiej i zwięzłej
+    (a co za tym idzie, bardzo zgrubnej i średnio precyzyjnej) odpowiedzi
+    na te pytania. Zacznijmy od paru kluczowych uwag. 
+<div class="paragraph"> </div>
+
+<a id="lab239"></a><h2 class="section">Preliminaria</h2>
+
+<div class="paragraph"> </div>
+
+ Najpierw będziemy chcieli udowodnić, że logika konstruktywna jest
+    niesprzeczna. Co w tym przypadku oznacza słowo "udowodnić"? Aż do
+    teraz dowodziliśmy twierdzeń <i>w Coqu/w logice konstruktywnej</i>, ale
+    teraz będziemy chcieli coś udowodnić <i>o Coqu/o logice konstruktywnej</i>.
+
+<div class="paragraph"> </div>
+
+    Ta różnica jest bardzo istotna: jeżeli chcemy udowodnić coś o Coqu,
+    to nie możemy zrobić tego w Coqu. Wynika to z jednego z twierdzeń
+    Gödla, które w uproszczeniu mówi, że jeżeli dany system logiczny
+    potrafi wyrazić arytmetykę liczb naturalnych (no wiesz, dodawanie,
+    mnożenie i takie tam), to system ten nie może udowodnić swojej
+    własnej niesprzeczności.
+
+<div class="paragraph"> </div>
+
+    Jeżeli przeraża cię powyższy akapit, to... taś taś ptaszku, będzie
+    dobrze. Parafrazując: żeby udowodnić, że system logiczny nie jest
+    sprzeczny, musimy to zrobić w systemie logicznym, który jest od
+    niego silniejszy.
+
+<div class="paragraph"> </div>
+
+    Oczywiście wnikliwy umysł wnet dostrzeże tutaj pewien problem.
+    Gdy już udowodnimy w silniejszym systemie, że słabszy system
+    jest niesprzeczny, to jak mamy się upewnić, czy nasze twierdzenie
+    nie jest przypadkiem gówno warte, np. dlatego, że silniejszy system
+    jest sprzeczny?
+
+<div class="paragraph"> </div>
+
+    W tym celu wypadałoby udowodnić również niesprzeczność silniejszego
+    systemu. Zgodnie z powyższym rozumowaniem trzeba w tym celu mieć
+    jeszcze silniejszy system i on również powinien być niesprzeczny, bo
+    inaczej z absolutnej matematycznej pewności nici.
+
+<div class="paragraph"> </div>
+
+    Myślę, że widzisz już, dokąd to wszystko zmierza. Tego typu problem
+    w filozofii nazywa się <i>regressus ad infinitum</i>, co po naszemu znaczy
+    po prostu "cofanie się w nieskończoność". Niestety w naszym logicznym
+    kontekście nie ma on żadnego rozwiązania.
+
+<div class="paragraph"> </div>
+
+    Trochę terminologii: słabszy system (ten, którego niesprzeczności
+    chcemy dowieść), bywa zazwyczaj nazywany "teorią" lub "językiem", a
+    silniejszy (ten, w którym dowodzimy) to "metateoria" lub "metajęzyk".
+    Dla zmylenia przeciwnika określeniem "metateoria" określa się także
+    zbiór właściwości tego słabszego systemu (a zatem np. niesprzeczność
+    logiki konstruktywnej jest jej właściwością metateoretyczną).
+
+<div class="paragraph"> </div>
+
+    Uwaga: nie bój się terminologii i żargonu, one nie gryzą.
+
+<div class="paragraph"> </div>
+
+    W praktyce kiedy poważni matematycy (a raczej informatycy i logicy,
+    bo matematycy sensu stricto to straszne miernoty w kwestii logiki)
+    chcą udowodnić niesprzeczność jakiegoś systemu formalnego, to po
+    prostu nie przejmują się niesprzecznością metateorii, w której
+    dowodzą. Zazwyczaj taki dowód i tak nie jest sformalizowany, więc
+    zwykłe błędy w rozumowaniu są większym problemem, niż sprzeczność
+    metateorii. Praktycznym uzasadnieniem na sensowność takiego
+    postępowania może być to, że w ulubionej metateorii dowodzącego od
+    dawna nie znaleziono sprzeczności (np. w teorii zbiorów ZFC, której
+    używa się w takich przypadkach najcześciej, nie znaleziono jej przez
+    100 lat, więc wydaje się być dość bezpieczna).
+
+<div class="paragraph"> </div>
+
+    Teoretycznie, co z tego wychodzi, to względny dowód niesprzeczności,
+    czyli twierdzenie postaci "jeżeli metateoria jest niesprzeczna, to
+    teoria jest niesprzeczna", które w praktyce traktuje się jako
+    absolutny dowód niesprzeczności.
+
+<div class="paragraph"> </div>
+
+    Dobra, wystarczy już tego ględzenia. W naszym przypadku po prostu
+    zignorujemy problemy filozoficzne i przyjrzymy się nieformalnemu
+    dowodowi na to, że logika konstruktywna jest niesprzeczna. 
+<div class="paragraph"> </div>
+
+<a id="lab240"></a><h2 class="section">Niesprzeczność</h2>
+
+<div class="paragraph"> </div>
+
+ Dowód jest banalnie prosty. Załóżmy, że istnieje jakiś dowód fałszu.
+
+<div class="paragraph"> </div>
+
+    Przypomnijmy sobie, że Coq jest językiem silnie normalizowalnym.
+    Znaczy to, że wszystkie termy obliczają się do postaci normalnej,
+    czyli termu, który jest ostatecznym wynikiem obliczeń i nie może
+    zostać "jeszcze bardziej obliczony".
+
+<div class="paragraph"> </div>
+
+    Ponieważ zdania są typami, to ich certyfikaty również podlegają
+    prawom rządzącym obliczeniami. Jak wyglądają certyfikaty na <span class="inlinecode"><span class="id" title="var">False</span></span>?
+    Cóż, teoretycznie mogą być postaci np. <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>,
+    zaś <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Prawdziwe pytanie brzmi jednak: jak wyglądają postacie
+    normalne certyfikatów na <span class="inlinecode"><span class="id" title="var">False</span></span>?
+
+<div class="paragraph"> </div>
+
+    Przypomnijmy, że dla większości typów (a zatem także dla zdań)
+    termy w postaci normalnej to te, które pojawiają się w regułach
+    wprowadzania i nie inaczej jest dla <span class="inlinecode"><span class="id" title="var">False</span></span>, a ponieważ <span class="inlinecode"><span class="id" title="var">False</span></span>
+    nie ma reguły wprowadzania, to nie ma żadnego certyfikatu na <span class="inlinecode"><span class="id" title="var">False</span></span>,
+    który byłby w postaci normalnej.
+
+<div class="paragraph"> </div>
+
+    Ale zaraz! Zgodnie z początkowym założeniem mamy jakiś ceryfikat na
+    <span class="inlinecode"><span class="id" title="var">False</span></span>, a zatem na mocy silnej normalizowalności oblicza się on do
+    certyfikatu na <span class="inlinecode"><span class="id" title="var">False</span></span> w postaci normalnej, a to oznacza sprzeczność.
+    Wobec tego początkowe założenie było błędne i nie może istnieć żaden
+    certyfikat na <span class="inlinecode"><span class="id" title="var">False</span></span>.
+
+<div class="paragraph"> </div>
+
+    Słowem: nie da się udowodnić fałszu, a zatem logika konstruktywna
+    jest niesprzeczna. 
+<div class="paragraph"> </div>
+
+<a id="lab241"></a><h2 class="section">Niedowodliwość prawa wyłączonego środka</h2>
+
+<div class="paragraph"> </div>
+
+ Podobnie przebiega dowód na niedowodliwość prawa wyłączonego środka.
+    Zacznijmy od założenia <i>a contrario</i>, że mamy certyfikat na prawo
+    wyłączonego środka, czyli <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>.
+
+<div class="paragraph"> </div>
+
+    Ponieważ Coq jest silnie normalizowalny, to nasz certyfikat oblicza
+    się do certyfikatu w postaci normalnej. Jak wygląda postać normalna
+    dla naszego certyfikatu? Postacie normalne certyfikatów na kwantyfikację
+    uniwersalną <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span>,</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> (a zatem także na implikację <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>)
+    są postaci <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">q</span></span>, a certyfikatów na dysjunkcję <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">\/</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> są
+    postaci <span class="inlinecode"><span class="id" title="var">or_introl</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> lub <span class="inlinecode"><span class="id" title="var">or_intror</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span>.
+
+<div class="paragraph"> </div>
+
+    Czy powyższe fakty wystarczą, by określić, jak wygląda postać normalna
+    certyfikatu na prawo wyłączonego środka? Jeszcze nie. Przecież mamy
+    do dyspozycji zdanie <span class="inlinecode"><span class="id" title="var">P</span></span>, więc być może da się wycisnąć z niego trochę
+    użytecznych informacji, które pozwolą nam zadecydować, czy pójść w lewo,
+    czy w prawo, czyż nie?
+
+<div class="paragraph"> </div>
+
+    Otóż nie - Coqowa teoria typów zabrania wykonywania na typach i zdaniach
+    dopasowań do wzorca i wszelkich innych operacji, które pozwalałyby podejmować
+    decyzje jedynie na podstawie samego typu. Więcej na ten temat dowiemy się
+    pod koniec tego rozdziału, gdy będziemy zajmować się parametrycznością.
+
+<div class="paragraph"> </div>
+
+    Teraz możemy już wywnioskować, że nasz certyfikat na prawo wyłączonego środka
+    może mieć jedną z dwóch postaci: <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">or_introl</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>
+    to certyfikat na <span class="inlinecode"><span class="id" title="var">p</span></span>, lub <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">=&gt;</span> <span class="inlinecode"><span class="id" title="var">or_intror</span></span> <span class="inlinecode"><span class="id" title="var">np</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">np</span></span> <span class="inlinecode">:</span> <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span> to
+    certyfikat na <span class="inlinecode">~</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. Rozważmy dwa przypadki.
+
+<div class="paragraph"> </div>
+
+    Jeżeli <span class="inlinecode"><span class="id" title="var">LEM</span></span> ma pierwszą z tych dwóch postaci, to oznacza to w
+    zasadzie, że wszystkie zdania są prawdziwe! No bo patrz: jeżeli
+    przyjrzymy się <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode"><span class="id" title="var">False</span></span>, to widzimy, że przyjmuje on postać
+    <span class="inlinecode"><span class="id" title="var">or_introl</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">p</span></span> jest certyfikatem na <span class="inlinecode"><span class="id" title="var">False</span></span>, ale wiemy
+    już, że <span class="inlinecode"><span class="id" title="var">False</span></span> nie da się udowodnić.
+
+<div class="paragraph"> </div>
+
+    Podobnie gdy <span class="inlinecode"><span class="id" title="var">LEM</span></span> ma drugą z tych postaci. Wtedy <span class="inlinecode"><span class="id" title="var">LEM</span></span> <span class="inlinecode"><span class="id" title="var">True</span></span> jest
+    postaci <span class="inlinecode"><span class="id" title="var">or_intror</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span>, gdzie <span class="inlinecode"><span class="id" title="var">p</span></span> to certyfikat na <span class="inlinecode"><span class="id" title="var">True</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">False</span></span>,
+    a zatem <span class="inlinecode"><span class="id" title="var">p</span></span> <span class="inlinecode"><span class="id" title="var">I</span></span> to certyfikat na <span class="inlinecode"><span class="id" title="var">False</span></span>, ale znów - fałszu nie da
+    się udowodnić!
+
+<div class="paragraph"> </div>
+
+    Ponieważ w obu przypadkach uzyskaliśmy sprzeczność, a <span class="inlinecode"><span class="id" title="var">LEM</span></span> nie
+    może być żadnej innej postaci, konkluzja jest oczywista: początkowe
+    założenie było błędne i certyfikat na prawo wyłączonego środka nie
+    istnieje. 
+<div class="paragraph"> </div>
+
+<a id="lab242"></a><h2 class="section">Konkluzja</h2>
+
+<div class="paragraph"> </div>
+
+ Silna normalizowalność jest jedną z kluczowych metateoretycznych
+    właściwości logik i języków programowania. Wynikają z niej nie
+    tylko inne metateoretyczne właściwości tradycyjnie uznawane za
+    ważniejsze, jak niesprzeczność, ale także bardziej ciekawostkowe,
+    jak niedowodliwość prawa wyłączonego środka.
+
+<div class="paragraph"> </div>
+
+    Nie przejmuj się, jeżeli nie do końca rozumiesz (albo wcale nie
+    rozumiesz) powyższe wywody (szczególnie preliminaria) lub dowody.
+    Ich rozumienie nie jest niezbędne do skutecznego dowodzenia ani
+    programowania. Ba! Wydaje mi się, że jest całkiem na odwrót: żeby
+    zrozumieć je na intuicyjnym poziomie, potrzeba sporo praktycznego
+    doświadczenia w programowaniu i dowodzeniu. Jeżeli go nabędziesz,
+    powyższe wywody i dowody nagle staną się łatwe, miłe i przyjemne
+    (i puszyste i mięciutkie!). Wróć do nich za jakiś, żeby się o tym
+    przekonać. 
+<div class="paragraph"> </div>
+
+<a id="lab243"></a><h1 class="section">Parametryczność</h1>
+
+</div>
+<div class="code">
+
+<br/>
+</div>

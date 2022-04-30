@@ -1,52 +1,11 @@
-(** * G: Sorty, uniwersa kodów i programowanie generyczne [TODO] *)
+(** * G1: Uniwersa kodów i programowanie generyczne [TODO] *)
 
-(** Tutaj będzie o sortach, a konkretniej o sorcie [SProp], a potem o
-    programowaniu generycznym za pomocą uniwersów. Na końcu generycznie
-    zajmiemy się typami (ko)induktywnymi, badając W- i M-typy, a potem
-    oparte na nich uniwersa kodów.
+(** Tutaj o programowaniu generycznym za pomocą uniwersów kodów. Na końcu
+    generycznie zajmiemy się typami (ko)induktywnymi, badając W- i M-typy,
+    a potem oparte na nich uniwersa kodów.
 
     Być może to właśnie tutaj jest odpowiednie miejsce aby wprowadzić
     indukcję-rekursję. *)
-
-(** * Sort [SProp], czyli zdania, ale takie jakby inne (TODO) *)
-
-(* begin hide *)
-Set Warnings "-cannot-define-projection".
-
-Set Allow StrictProp.
-
-Inductive sEmpty : SProp := .
-
-Inductive sUnit : SProp :=
-    | stt : sUnit.
-
-Inductive seq {A : Type} (x : A) : A -> SProp :=
-    | srefl : seq x x.
-
-Goal forall A : Type, sEmpty -> A.
-Proof.
-  destruct 1.
-Qed.
-
-Goal
-  forall {A : Type} (P : A -> Type) (x y : A),
-    seq x y -> P x -> P y.
-Proof.
-  intros A P x y Hs Hp.
-Abort.
-
-Inductive Box (A : Type) : Prop :=
-    | box : A -> Box A.
-
-Print Box_sind.
-
-Require Import SetIsType.
-
-Lemma SetIsType : Set = Type.
-Proof.
-  reflexivity.
-Qed.
-(* end hide *)
 
 (** * Uniwersa kodów a programowanie generyczne *)
 
@@ -204,7 +163,6 @@ Proof.
     intros f l. exact (f l).
     intros f l. apply curryList. red. intro. apply f. split; assumption.
 Defined.
-
 
 Definition zipWith
   {c : Code} {R : Type} (f : funType c R) : listType c (list R) :=

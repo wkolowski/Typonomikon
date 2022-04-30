@@ -660,6 +660,8 @@ Qed.
     iteracją, bez rekursji, ale za to ze stosem (który jest niczym innym
     jak zdefunkcjonalizowaną kontynuacją). *)
 
+(* TODO: https://www.joachim-breitner.de/blog/778-Don%E2%80%99t_think%2C_just_defunctionalize *)
+
 (** * Kodowania Churcha (TODO) *)
 
 (** Achtung: póki co wisi tu kod roboczy *)
@@ -802,8 +804,15 @@ End Scott.
 
 Require Import FunctionalExtensionality.
 
-Definition DList (A : Type) : Type :=
-  list A -> list A.
+Definition DList (A : Type) : Type := list A -> list A.
+
+Definition dnil {A : Type} : DList A := fun _ => [].
+
+Definition dcons {A : Type} (h : A) (t : DList A) : DList A :=
+  fun l => h :: t l.
+
+Definition dapp {A : Type} (l1 l2 : DList A) : DList A :=
+  fun l => l1 l ++ l2 l.
 
 Definition rep {A : Type} (l : list A) : DList A :=
   fun l' : list A => l ++ l'.
@@ -821,7 +830,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma abs_rep_aux :
+(* TODO *) Lemma abs_rep_aux :
   forall {A : Type} (l : DList A) (l1 l2 : list A),
     l l1 ++ l2 = l (l1 ++ l2).
 (* begin hide *)
@@ -837,7 +846,7 @@ Proof.
 Abort.
 (* end hide *)
 
-Lemma abs_rep :
+(* TODO *) Lemma abs_rep :
   forall {A : Type} (l : DList A),
     rep (abs l) = l.
 (* begin hide *)

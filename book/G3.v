@@ -12,6 +12,8 @@
 
 (* TODO: Tutaj rzeczy z code/Cyclic.v oraz code/Cyclic2.v *)
 
+(** * Prawdziwie zagnieżdżone typy induktywne (TODO) *)
+
 (** * Indukcja-indukcja (TODO) *)
 
 (** * Indukcja-rekursja (TODO) *)

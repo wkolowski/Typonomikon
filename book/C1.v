@@ -1,4 +1,4 @@
-(** * D0: Enumeracje i rekordy *)
+(** * C1: Podstawy programowania funkcyjnego [TODO] *)
 
 (** UWAGA: ten rozdział został naprędce posklejany z fragmentów innych,
     więc może nie mieć większego sensu. *)
@@ -362,35 +362,3 @@ Qed.
 
 (** Niech [A] i [B] będą dowolnymi typami. Zastanów się, kiedy możliwe
     jest zdefiniowanie instancji klasy [EqDec] dla [A -> B]. *)
-
-(* begin hide *)
-
-(* TODO: *)
-
-(*
-Set Primitive Projections.
-*)
-
-CoInductive wut : Type :=
-{
-    a : nat;
-    b : bool;
-}.
-
-Print a.
-
-Lemma wut' :
-  forall x y : wut,
-    a x = a y -> b x = b y -> x = y.
-Proof.
-  intros. destruct x, y. cbn in *. rewrite H, H0. reflexivity.
-Qed.
-
-Goal
-  forall w : wut,
-    w = {| a := a w; b := b w |}.
-Proof.
-  intro. destruct w. cbn. reflexivity. 
-Qed.
-
-(* end hide *)

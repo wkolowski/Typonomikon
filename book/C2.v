@@ -1,7 +1,9 @@
-(** * C: Podstawy teorii typów [TODO] *)
+(** * C2: Teoretyczne podstawy teorii typów [TODO] *)
 
 (* begin hide *)
 (*
+TODO-1: Wkleić tutaj opis podstaw teorii typów z mojej pracy magisterskiej.
+TODO 0: Zdeduplikować dwie pierwsze sekcje, bo obie są o termach.
 TODO 1: Osąd `x : A` możemy czytać jako "x jest typu A", zaś konkretnie
 TODO 1: `x : nat` jako "x jest liczbą naturalną".
 TODO 2: Zrobić więcej ściąg/zadań z czytania różnych rzeczy.
@@ -410,7 +412,7 @@ Check @pair.
     przypadku funkcji reguła wygląda mniej więcej tak: *)
 
 (*
-    Γ |- A -> B : Type, Γ; x : T |- y : B
+    Γ |- A -> B : Type, Γ; x : A |- y : B
     -------------------------------------
     Γ |- fun x => y : A -> B
 *)

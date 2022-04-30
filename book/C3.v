@@ -1,4 +1,4 @@
-(** * D3: Logika boolowska, rozstrzygalność i reflekcja [TODO] *)
+(** * C3: Logika boolowska, rozstrzygalność i reflekcja [TODO] *)
 
 (** UWAGA: ten rozdział właśnie ulega konceptualnemu przeobrażeinu i
     może być nie na miejscu, tzn. zawierać rzeczy, o których jeszcze

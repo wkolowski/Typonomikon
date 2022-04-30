@@ -1,4 +1,4 @@
-(** * H: Równość i ścieżki [TODO] *)
+(** * H1: Równość i ścieżki [TODO] *)
 
 Set Universe Polymorphism.
 
@@ -6,10 +6,11 @@ Require Import Arith.
 Require Import Bool.
 Require Import Equality.
 Require Import FunctionalExtensionality.
+Require Import StrictProp.
 
-(** * Równość - powtórka *)
+(** * Równość - powtórka (TODO) *)
 
-(** * Ścieżki *)
+(** * Ścieżki (TODO) *)
 
 Definition transport
   {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
@@ -54,22 +55,109 @@ Defined.
 
 (** * Równość a ścieżki *)
 
-Inductive path {A : Type} (x : A) : A -> Type :=
-    | idpath : path x x.
+(** https://homotopytypetheory.org/2012/01/22/univalence-versus-extraction/ *)
 
-Inductive Box (A : Type) : Prop :=
-    | box : A -> Box A.
+Module Path_is_eq.
 
-Lemma Box_path_is_eq :
-  forall {A : Type} {x y : A},
-    Box (path x y) <-> x = y.
+Unset Universe Polymorphism.
+
+Inductive Path {A : Type} (x : A) : A -> Type :=
+    | idp : Path x x.
+
+Arguments idp {A x}.
+
+Definition eq_to_Path {A : Type} {x y : A} (e : x = y) : Path x y :=
+match e with
+    | eq_refl => idp
+end.
+
+Definition Path_to_eq {A : Type} {x y : A} (p : Path x y) : x = y :=
+match p with
+    | idp => eq_refl
+end.
+
+Lemma eq_to_Path_to_eq :
+  forall {A : Type} {x y : A} (e : x = y),
+    Path_to_eq (eq_to_Path e) = e.
 Proof.
-  split.
-    intros [[]]. reflexivity.
-    destruct 1. do 2 constructor.
+  destruct e. cbn. reflexivity.
 Qed.
 
-(** * Ścieżki w typach induktywnych *)
+Lemma Path_to_eq_to_Path :
+  forall {A : Type} {x y : A} (p : Path x y),
+    eq_to_Path (Path_to_eq p) = p.
+Proof.
+  destruct p. cbn. reflexivity.
+Qed.
+
+Lemma eq_to_Path_to_eq' :
+  forall {A : Type} {x y : A} (e : x = y),
+    Path (Path_to_eq (eq_to_Path e)) e.
+Proof.
+  destruct e. cbn. reflexivity.
+Defined.
+
+Lemma Path_to_eq_to_Path' :
+  forall {A : Type} {x y : A} (p : Path x y),
+    Path (eq_to_Path (Path_to_eq p)) p.
+Proof.
+  destruct p. cbn. reflexivity.
+Defined.
+
+Class iso (A B : Type) : Type :=
+{
+    f : A -> B;
+    linv : {g : B -> A | forall a : A, g (f a) = a};
+    rinv : {h : B -> A | forall b : B, f (h b) = b};
+}.
+
+Definition ProofIrrelevance : Prop :=
+  forall (P : Prop) (p1 p2 : P), p1 = p2.
+
+Definition UA : Type :=
+  forall A B : Type, iso (iso A B) (Path A B).
+
+#[refine]
+Instance iso_id : iso bool bool :=
+{
+    f := fun b => b;
+}.
+Proof.
+  exists (fun b => b). reflexivity.
+  exists (fun b => b). reflexivity.
+Defined.
+
+#[refine]
+Instance iso_negb : iso bool bool :=
+{
+    f := negb;
+}.
+Proof.
+  exists negb. destruct a; reflexivity.
+  exists negb. destruct b; reflexivity.
+Defined.
+
+Lemma ProofIrrelevance_UA_inconsistent :
+  ProofIrrelevance -> UA -> False.
+Proof.
+  unfold ProofIrrelevance, UA.
+  intros pi ua.
+  destruct (ua bool bool) as [F [G FG] [H HF]].
+  assert (forall x y : iso bool bool, x = y).
+    intros. rewrite <- FG, <- (Path_to_eq_to_Path (F y)), (pi _ (eq_to_Path (Path_to_eq (F y))) (F x)), FG.
+    reflexivity.
+  specialize (H0 iso_id iso_negb).
+  assert (forall b : bool, @f _ _ iso_negb b = b).
+    intro. rewrite <- H0. reflexivity.
+  specialize (H1 true).
+  cbn in H1. congruence.
+Qed.
+
+End Path_is_eq.
+
+(** * Ścieżki w typach induktywnych (TODO) *)
+
+(* TODO: napisać wstęp *)
 
 (** ** Ścieżki między liczbami naturalnymi - rekurencyjnie *)
 
@@ -775,11 +863,11 @@ Open Scope type_scope.
 
 Definition bad' (A : Type) :
   {f : A -> A &
-    (@path Type bool A * forall x : A, f x <> x) +
-    ((@path Type bool A -> False) * forall x : A, f x = x)}.
+    (@eq Type bool A * forall x : A, f x <> x) +
+    ((@eq Type bool A -> False) * forall x : A, f x = x)}.
 Proof.
-  destruct (LEM (@path Type bool A)).
-    destruct p. exists negb. left. split.
+  destruct (LEM (@eq Type bool A)).
+    destruct e. exists negb. left. split.
       reflexivity.
       destruct x; inversion 1.
     exists (fun x : A => x). right. split.
@@ -800,7 +888,7 @@ Defined.
 
 Lemma bad_ist_gut :
   forall (A : Type) (x : A),
-    (@path Type bool A -> False) -> bad A x = x.
+    (@eq Type bool A -> False) -> bad A x = x.
 Proof.
   unfold bad. intros A x p.
   destruct bad' as [f [[q H] | [q H]]]; cbn.

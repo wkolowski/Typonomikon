@@ -1,4 +1,4 @@
-(** * H2: Funkcje *)
+(** * H2: Funkcje [TODO] *)
 
 Require Import Arith.
 Require Import Bool.
@@ -1367,8 +1367,6 @@ Definition fixpoint {A : Type} (f : A -> A) (x : A)
 
 (** * Izomorfizmy typów (TODO) *)
 
-(* Require Import H. *)
-
 (* begin hide *)
 
 (** TODO: Izomorfizmy dla typów induktywnych (patrz notatka poniżej).
@@ -1870,7 +1868,7 @@ Proof.
   cbn. destruct 1, 1. reflexivity.
 Qed.
 
-Require Import H.
+Require Import H1.
 
 Lemma transport_cons :
   forall {A : Type} {n m : nat} (h : A) (t : vec A n) (p : n = m),

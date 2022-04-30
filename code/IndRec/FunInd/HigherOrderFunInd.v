@@ -34,7 +34,6 @@ with
           (tsa : list (Tree A)) (tsb : list (Tree B)),
             R f ta tb -> Rs f tsa tsb -> Rs f (ta :: tsa) (tb :: tsb).
 
-
 Fixpoint mirror {A : Type} (t : Tree A) : Tree A :=
 match t with
     | Empty => Empty

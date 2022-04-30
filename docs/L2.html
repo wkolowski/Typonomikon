@@ -22,7 +22,7 @@
 </div>
 
 <div class="doc">
-<a id="lab928"></a><h1 class="section">Wstęp</h1>
+<a id="lab933"></a><h1 class="section">Wstęp</h1>
 
 <div class="paragraph"> </div>
 
@@ -706,11 +706,11 @@ Moim zdaniem odpowiedź jest całkiem czytelna. Spacerek wygląda tak,
 </div>
 
 <div class="doc">
-<a id="lab929"></a><h1 class="section">Defunkcjonalizacja (TODO)</h1>
+<a id="lab934"></a><h1 class="section">Defunkcjonalizacja (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab930"></a><h2 class="section">Defunkcjonalizacja filtrowania (TODO)</h2>
+<a id="lab935"></a><h2 class="section">Defunkcjonalizacja filtrowania (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -788,7 +788,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a id="lab931"></a><h2 class="section">Defunkcjonalizacja silni (TODO)</h2>
+<a id="lab936"></a><h2 class="section">Defunkcjonalizacja silni (TODO)</h2>
 
 <div class="paragraph"> </div>
 
@@ -865,7 +865,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a id="lab932"></a><h1 class="section">CPS (TODO)</h1>
+<a id="lab937"></a><h1 class="section">CPS (TODO)</h1>
 
 </div>
 <div class="code">
@@ -929,16 +929,24 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a id="lab933"></a><h1 class="section">CPS i defunkcjonalizacja w służbie rekursji ogonowej (TODO)</h1>
+<a id="lab938"></a><h1 class="section">CPS i defunkcjonalizacja w służbie rekursji ogonowej (TODO)</h1>
 
 <div class="paragraph"> </div>
 
  Tutaj coś w stylu "jak zaimplementować przejście po drzewie" samą
     iteracją, bez rekursji, ale za to ze stosem (który jest niczym innym
     jak zdefunkcjonalizowaną kontynuacją). 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
-<a id="lab934"></a><h1 class="section">Kodowania Churcha (TODO)</h1>
+<br/>
+<span class="comment">(*&nbsp;TODO:&nbsp;https://www.joachim-breitner.de/blog/778-Don802C_just_defunctionalize&nbsp;*)</span><br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab939"></a><h1 class="section">Kodowania Churcha (TODO)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1055,7 +1063,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a id="lab935"></a><h1 class="section">Kodowania Scotta (TODO)</h1>
+<a id="lab940"></a><h1 class="section">Kodowania Scotta (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1118,7 +1126,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 </div>
 
 <div class="doc">
-<a id="lab936"></a><h1 class="section">Listy różnicowe (TODO)</h1>
+<a id="lab941"></a><h1 class="section">Listy różnicowe (TODO)</h1>
 
 </div>
 <div class="code">
@@ -1127,8 +1135,18 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">FunctionalExtensionality</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">DList</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">DList</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> := <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">dnil</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">DList</span> <span class="id" title="var">A</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; [].<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">dcons</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">DList</span> <span class="id" title="var">A</span>) : <span class="id" title="var">DList</span> <span class="id" title="var">A</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">l</span> =&gt; <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">dapp</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">DList</span> <span class="id" title="var">A</span>) : <span class="id" title="var">DList</span> <span class="id" title="var">A</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">l</span> =&gt; <span class="id" title="var">l1</span> <span class="id" title="var">l</span> ++ <span class="id" title="var">l2</span> <span class="id" title="var">l</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">rep</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">DList</span> <span class="id" title="var">A</span> :=<br/>
@@ -1144,12 +1162,12 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">abs</span> (<span class="id" title="var">rep</span> <span class="id" title="var">l</span>) = <span class="id" title="var">l</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">abs_rep_aux</span> :<br/>
+<span class="comment">(*&nbsp;TODO&nbsp;*)</span> <span class="id" title="keyword">Lemma</span> <span class="id" title="var">abs_rep_aux</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">DList</span> <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span> = <span class="id" title="var">l</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">abs_rep</span> :<br/>
+<span class="comment">(*&nbsp;TODO&nbsp;*)</span> <span class="id" title="keyword">Lemma</span> <span class="id" title="var">abs_rep</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">DList</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rep</span> (<span class="id" title="var">abs</span> <span class="id" title="var">l</span>) = <span class="id" title="var">l</span>.<br/>
 </div>
