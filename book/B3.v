@@ -435,6 +435,86 @@ Proof.
 Qed.
 (* end hide *)
 
+Module xor_new.
+
+Infix "`xor`" := xor (at level 70).
+
+Hypothesis P Q R : Prop.
+
+(** ** [xor] *)
+
+Lemma xor_True_l :
+  True `xor` P <-> ~ P.
+(* begin hide *)
+Proof. unfold xor; search. Qed.
+(* end hide *)
+
+Lemma xor_True_r :
+  P `xor` True <-> ~ P.
+(* begin hide *)
+Proof. unfold xor; search. Qed.
+(* end hide *)
+
+Lemma xor_False_l :
+  False `xor` P <-> P.
+(* begin hide *)
+Proof. unfold xor; search. Qed.
+(* end hide *)
+
+Lemma xor_False_r :
+  P `xor` False <-> P.
+(* begin hide *)
+Proof. unfold xor; search. Qed.
+(* end hide *)
+
+Lemma xor_True_l' :
+  P -> P `xor` Q <-> ~ Q.
+(* begin hide *)
+Proof. unfold xor; search. Qed.
+(* end hide *)
+
+Lemma xor_True_r' :
+  Q -> P `xor` Q <-> ~ P.
+(* begin hide *)
+Proof. unfold xor; search. Qed.
+(* end hide *)
+
+Lemma xor_False_l' :
+  ~ P -> P `xor` Q <-> Q.
+(* begin hide *)
+Proof. unfold xor; search. Qed.
+(* end hide *)
+
+Lemma xor_False_r' :
+  ~ Q -> P `xor` Q <-> P.
+(* begin hide *)
+Proof. unfold xor; search. Qed.
+(* end hide *)
+
+Lemma xor_irrefl :
+  P `xor` P <-> False.
+(* begin hide *)
+Proof. unfold xor; search. Qed.
+(* end hide *)
+
+Lemma xor_comm :
+  P `xor` Q <-> Q `xor` P.
+(* begin hide *)
+Proof. unfold xor; search. Qed.
+(* end hide *)
+
+Lemma xor_assoc_classically :
+  (forall P : Prop, P \/ ~ P) ->
+    P `xor` (Q `xor` R) <-> (P `xor` Q) `xor` R.
+(* begin hide *)
+Proof.
+  intros lem.
+  destruct (lem P), (lem R); unfold xor; search.
+Qed.
+(* end hide *)
+
+End xor_new.
+
 (** ** i/lub  *)
 
 Definition andor (P Q : Prop) : Prop := P \/ Q \/ (P /\ Q).
