@@ -1112,6 +1112,29 @@ Qed.
     jakiś czas, gdy czas przetrzebi trochę twoją pamięć (np. za
     tydzień). *)
 
+(* begin hide *)
+Ltac search := repeat
+match goal with
+    | |- _ -> _  => intro; search
+    | |- _ \/ _  => (left; search; fail) + (right; search; fail)
+    | |- _ /\ _  => split; search
+    | |- ~ _     => intro; search
+    | |- _ <-> _ => split; search
+    | |- True    => trivial
+    | pq : ?P -> _, p : ?P |- _ => specialize (pq p); search
+    | H : _ \/ _  |- _ => destruct H; search
+    | H : _ /\ _  |- _ => destruct H; search
+    | H : _ <-> _ |- _ => destruct H; search
+    | H : True    |- _ => clear H
+    | H : False   |- _ => contradiction
+    | H : ?P      |- ?P => assumption
+    | p : ?P, np : ~ ?P |- _ => contradiction
+    | _ => eauto; fail
+end.
+
+Ltac leftright t := ((left; t) || (right; t)).
+(* end hide *)
+
 Module exercises_propositional.
 
 Parameters P Q R S : Prop.
@@ -1122,19 +1145,6 @@ Parameters P Q R S : Prop.
     trzeba uważać — gdybyśmy wprowadzili aksjomat [1 = 2], to
     popadlibyśmy w sprzeczność i nie moglibyśmy ufać żadnym dowodom,
     które przeprowadzamy. *)
-
-(* begin hide *)
-Ltac search := unfold not; intros; match goal with
-    | H : _ /\ _ |- _ => destruct H; search
-    | H : _ \/ _ |- _ => destruct H; search
-    | |- _ /\ _ => split; search
-    | |- _ <-> _ => split; search
-    | |- _ \/ _ => left; search || right; search
-    | _ => eauto; fail
-end.
-
-Ltac leftright t := ((left; t) || (right; t)).
-(* end hide *)
 
 (** ** Przemienność *)
 
@@ -1195,7 +1205,7 @@ Qed.
 
 (** ** Rozdzielność *)
 
-Lemma and_dist_or :
+Lemma and_or_r :
   P /\ (Q \/ R) <-> (P /\ Q) \/ (P /\ R).
 (* begin hide *)
 Proof.
@@ -1211,7 +1221,23 @@ Restart.
 Qed.
 (* end hide *)
 
-Lemma or_dist_and :
+Lemma and_or_l :
+  (P \/ Q) /\ R <-> (P /\ R) \/ (Q /\ R).
+(* begin hide *)
+Proof.
+  split.
+  - intros [[p | q] r].
+    + left; split; assumption.
+    + right; split; assumption.
+  - intros [[p r] | [q r]].
+    + split; [left |]; assumption.
+    + split; [right |]; assumption.
+Restart.
+  search.
+Qed.
+(* end hide *)
+
+Lemma or_and_r :
   P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
 (* begin hide *)
 Proof.
@@ -1237,6 +1263,24 @@ Restart.
     destruct H as [[p1 | q] [p2 | r]];
       leftright ltac:(try split; assumption).
 Restart.
+  split.
+  - intros [p | [q r]].
+    + split; left; assumption.
+    + split; right; assumption.
+  - intros [[p1 | q] [p2 | r]].
+    + left; assumption.
+    + left; assumption.
+    + left; assumption.
+    + right; split; assumption.
+Restart.
+  search.
+Qed.
+(* end hide *)
+
+Lemma or_and_l :
+  (P /\ Q) \/ R <-> (P \/ R) /\ (Q \/ R).
+(* begin hide *)
+Proof.
   search.
 Qed.
 (* end hide *)
@@ -1399,7 +1443,7 @@ Qed.
 
 (** ** Inne *)
 
-Lemma or_imp_and :
+Lemma imp_or_l :
   (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
 (* begin hide *)
 Proof.
@@ -1448,7 +1492,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma impl_and :
+Lemma imp_and_r :
   (P -> Q /\ R) -> ((P -> Q) /\ (P -> R)).
 (* begin hide *)
 Proof.
@@ -1467,3 +1511,405 @@ Check and_comm.
     po hipotezach zadeklarowanych przy pomocy [Hypothesis]. W naszym
     przypadku Coq dodał do [and_comm] kwantyfikację po [P] i [Q],
     mimo że nie napisaliśmy jej explicite. *)
+
+(** * Zadania po raz drugi *)
+
+(** Tym razem ułożymy zadania w innej kolejności, i będzie ich wincyj! *)
+
+Module NewExercises.
+
+Hypothesis P Q R S : Prop.
+
+(** ** Dysjunkcja *)
+
+Lemma or_True_l :
+  True \/ P <-> True.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_True_r :
+  P \/ True <-> True.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_False_l :
+  False \/ P <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_False_r :
+  P \/ False <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_True_l' :
+  P -> P \/ Q <-> True.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_True_r' :
+  Q -> P \/ Q <-> True.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_False_l' :
+  ~ P -> P \/ Q <-> Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_False_r' :
+  ~ Q -> P \/ Q <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_idem :
+  P \/ P <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_comm :
+  P \/ Q <-> Q \/ P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_assoc :
+  P \/ (Q \/ R) <-> (P \/ Q) \/ R.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_mon_l :
+  (P -> Q) -> (R \/ P -> R \/ Q).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_mon_r :
+  (P -> Q) -> (P \/ R -> Q \/ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_or_l :
+  (P \/ Q) \/ R <-> (P \/ R) \/ (Q \/ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_or_r :
+  P \/ (Q \/ R) <-> (P \/ Q) \/ (P \/ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_and_l :
+  (P /\ Q) \/ R <-> (P \/ R) /\ (Q \/ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_and_r :
+  P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_iff_l :
+  ((P <-> Q) \/ R) -> ((P \/ R) <-> (Q \/ R)).
+(* begin hide *)
+Proof.
+  search; tauto.
+Qed.
+(* end hide *)
+
+Lemma or_iff_r :
+  (P \/ (Q <-> R)) -> ((P \/ Q) <-> (P \/ R)).
+(* begin hide *)
+Proof.
+  search; tauto.
+Qed.
+(* end hide *)
+
+(** ** Koniunkcja *)
+
+Lemma and_True_l :
+  True /\ P <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_True_r :
+  P /\ True <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_False_l :
+  False /\ P <-> False.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_False_r :
+  P /\ False <-> False.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_True_l' :
+  P -> P /\ Q <-> Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_True_r' :
+  Q -> P /\ Q <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_False_l' :
+  ~ P -> P /\ Q <-> False.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_False_r' :
+  ~ Q -> P /\ Q <-> False.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_idem :
+  P /\ P <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_comm :
+  P /\ Q <-> Q /\ P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_assoc :
+  P /\ (Q /\ R) <-> (P /\ Q) /\ R.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_mon_l :
+  (P -> Q) -> (R /\ P -> R /\ Q).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_mon_r :
+  (P -> Q) -> (P /\ R -> Q /\ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_and_l :
+  (P /\ Q) /\ R <-> (P /\ R) /\ (Q /\ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_and_r :
+  P /\ (Q /\ R) <-> (P /\ Q) /\ (P /\ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_or_l :
+  (P \/ Q) /\ R <-> (P /\ R) \/ (Q /\ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_or_r :
+  P /\ (Q \/ R) <-> (P /\ Q) \/ (P /\ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_iff_l :
+  ((P <-> Q) /\ R) -> ((P /\ R) <-> (Q /\ R)).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma and_iff_r :
+  (P /\ (Q <-> R)) -> ((P /\ Q) <-> (P /\ R)).
+(* begin hide *)
+Proof.
+  search; tauto.
+Qed.
+(* end hide *)
+
+(** ** Równoważność *)
+
+Lemma iff_True_l :
+  (True <-> P) <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_True_r :
+  P <-> True <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_False_l :
+  False <-> P <-> ~ P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_False_r :
+  P <-> False <-> ~ P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_True_l' :
+  P -> (P <-> Q) <-> Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_True_r' :
+  Q -> (P <-> Q) <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_False_l' :
+  ~ P -> (P <-> Q) <-> ~ Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_False_r' :
+  ~ Q -> (P <-> Q) <-> ~ P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_refl :
+  (P <-> P) <-> True.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_comm :
+  (P <-> Q) <-> (Q <-> P).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma Irrefutable_iff_assoc :
+  ~ ~ ((P <-> (Q <-> R)) -> ((P <-> Q) <-> R)).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+(** ** Implikacja *)
+
+Lemma impl_True_l :
+  (True -> P) <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_True_r :
+  (P -> True) <-> True.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_False_l :
+  (False -> P) <-> True.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_False_r :
+  (P -> False) <-> ~ P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_True_l' :
+  P -> (P -> Q) <-> Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_True_r' :
+  Q -> (P -> Q) <-> True.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_False_l' :
+  ~ P -> (P -> Q) <-> True.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_False_r' :
+  ~ Q -> (P -> Q) <-> ~ P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_refl :
+  (P -> P) <-> True.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_mon_l :
+  (P -> Q) -> ((R -> P) -> (R -> Q)).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_impl_r :
+  (P -> (Q -> R)) <-> (P -> Q) -> (P -> R).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma impl_and_l_conv :
+  (P -> R) /\ (Q -> R) -> ((P /\ Q) -> R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_and_r :
+  (P -> (Q /\ R)) <-> (P -> Q) /\ (P -> R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_iff_r :
+  (P -> (Q <-> R)) -> ((P -> Q) <-> (P -> R)).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+End NewExercises.
