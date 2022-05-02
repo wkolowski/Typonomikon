@@ -268,7 +268,7 @@ Check Type.
     programowania funkcyjnego, a przede wszystkim teorii typów kręci się wokół
     pięciu rodzajów reguł.
     Są to reguły:
-    - formacji (ang. formation rules)
+    - formowania (ang. formation rules)
     - wprowadzania (ang. introduction rules)
     - eliminacji (ang. elimination rules)
     - obliczania (ang. computation rules)
@@ -278,9 +278,9 @@ Check Type.
     jak wyglądają, skąd się biorą i do czego służą. Podrozdział będzie miał
     charakter mocno teoretyczny. *)
 
-(** ** Reguły formacji *)
+(** ** Reguły formowania *)
 
-(** Reguły formacji mówią nam, jak tworzyć typy (termy sortów [Set] i [Type])
+(** Reguły formowania mówią nam, jak tworzyć typy (termy sortów [Set] i [Type])
     oraz zdania (termy sortu [Prop]). Większość z nich pochodzi z nagłówków
     definicji induktywnych. Reguła dla typu [bool] wygląda tak: *)
 
@@ -300,10 +300,10 @@ Print bool.
 
 (* ===> Inductive bool : Set :=  true : bool | false : bool *)
 
-(** Powyższej regule formacji odpowiada tutaj fragment [Inductive bool : Set],
+(** Powyższej regule formowania odpowiada tutaj fragment [Inductive bool : Set],
     który stwierdza po prostu, że [bool] jest typem sortu [Set].
 
-    Nie zawsze jednak reguły formacji są aż tak proste. Reguła dla produktu
+    Nie zawsze jednak reguły formowania są aż tak proste. Reguła dla produktu
     wygląda tak: *)
 
 (*
@@ -312,7 +312,7 @@ Print bool.
     prod A B : Type
 *)
 
-(** Reguła formacji dla [prod] głosi: jeżeli [A] jest typem sortu [Type]
+(** Reguła formowania dla [prod] głosi: jeżeli [A] jest typem sortu [Type]
     oraz [B] jest typem sortu [Type], to [prod A B] jest typem sortu
     [Type]. Jest ona rzecz jasna konsekwencją definicji produktu. *)
 
@@ -325,10 +325,10 @@ Print prod.
     co w regule jest nad kreską ([A : Type] i [B : Type]), tutaj występuje
     przed dwukropkiem, po prostu jako argumentu typu [prod]. Jak widać,
     nagłówek typu induktywnego jest po prostu skompresowaną formą reguły
-    formacji.
+    formowania.
 
-    Należy zauważyć, że nie wszystkie reguły formacji pochodzą z definicji
-    induktywnych. Tak wygląda reguła formacji dla funkcji (między typami
+    Należy zauważyć, że nie wszystkie reguły formowania pochodzą z definicji
+    induktywnych. Tak wygląda reguła formowania dla funkcji (między typami
     sortu [Type]): *)
 
 (*
@@ -342,7 +342,7 @@ Print prod.
 
 (** **** Ćwiczenie *)
 
-(** Napisz, bez podglądania, jak wyglądają reguły formacji dla [option],
+(** Napisz, bez podglądania, jak wyglądają reguły formowania dla [option],
     [nat] oraz [list]. Następnie zweryfikuj swoje odpowiedzi za pomocą
     komendy [Print]. *)
 
@@ -407,7 +407,7 @@ Check @pair.
     cztery argumenty i zwracają wynik, którego typ jest produktem jej
     dwóch pierwszych argumentów.
 
-    Podobnie jak w przypadku reguł formacji, nie wszystkie reguły
+    Podobnie jak w przypadku reguł formowania, nie wszystkie reguły
     wprowadzania pochodzą od konstruktorów typów induktywnych. W
     przypadku funkcji reguła wygląda mniej więcej tak: *)
 
@@ -562,7 +562,7 @@ Check @pair.
 (** Nie przejmuj się natłokiem nazw ani rozróżnień. Powyższą klasyfikację
     wymyśliłem na poczekaniu i nie ma ona w praktyce żadnego znaczenia.
 
-    Zauważmy, że podobnie jak nie wszystkie reguły formacji i wprowadzania
+    Zauważmy, że podobnie jak nie wszystkie reguły formowania i wprowadzania
     pochodzą od typów induktywnych, tak i nie wszystkie reguły eliminacji
     od nich pochodzą. Kontrprzykładem niech będzie reguła eliminacji dla
     funkcji (niezależnych): *)

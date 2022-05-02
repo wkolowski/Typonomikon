@@ -944,7 +944,7 @@ Jak widać, równoważność <span class="inlinecode"><span class="id" title="va
     <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">Q</span></span> oraz <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">P</span></span>. W związku z tym nie powinno nas dziwić,
     że pracuje się z nią tak samo jak z koniunkcją. Tak jak nie
     musieliśmy odwijać definicji negacji, żeby zaaplikować ją jak
-    rasową impikcję, tak też nie musimy odwijać definicji równoważności,
+    rasową implikację, tak też nie musimy odwijać definicji równoważności,
     żeby posługiwać się nią jak prawdziwą koniunkcją. Jej interpretacja
     obliczeniowa wywodzi się z interpretacji obliczeniowej koniunkcji
     oraz implikacji. 
@@ -1699,7 +1699,36 @@ W praktyce komenda <span class="inlinecode"><span class="id" title="keyword">Hyp
 </div>
 
 <div class="doc">
-<a id="lab65"></a><h2 class="section">Dysjunkcja</h2>
+<a id="lab65"></a><h2 class="section">Ogólne prawa</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">noncontradiction</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> /\ ~ <span class="id" title="var">P</span>) &lt;-&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">noncontradiction_curried</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">noncontradiction_iff</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> &lt;-&gt; ~ <span class="id" title="var">P</span>) &lt;-&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_LEM</span> :<br/>
+&nbsp;&nbsp;~ ~ (<span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab66"></a><h2 class="section">Dysjunkcja</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab67"></a><h3 class="section">Właściwości działaniowe</h3>
 
 </div>
 <div class="code">
@@ -1784,7 +1813,32 @@ W praktyce komenda <span class="inlinecode"><span class="id" title="keyword">Hyp
 </div>
 
 <div class="doc">
-<a id="lab66"></a><h2 class="section">Koniunkcja</h2>
+<a id="lab68"></a><h3 class="section">Właściwości relacjowe</h3>
+
+<div class="paragraph"> </div>
+
+<a id="lab69"></a><h3 class="section">Pozostałe właściwości</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_not_l</span> :<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_or_not_l_conv</span> :<br/>
+&nbsp;&nbsp;~ ~ ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab70"></a><h2 class="section">Koniunkcja</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab71"></a><h3 class="section">Właściwości działaniowe</h3>
 
 </div>
 <div class="code">
@@ -1869,7 +1923,32 @@ W praktyce komenda <span class="inlinecode"><span class="id" title="keyword">Hyp
 </div>
 
 <div class="doc">
-<a id="lab67"></a><h2 class="section">Równoważność</h2>
+<a id="lab72"></a><h3 class="section">Właściwości relacjowe</h3>
+
+<div class="paragraph"> </div>
+
+<a id="lab73"></a><h3 class="section">Pozostałe właściwości</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_not_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span> -&gt; ~ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_and_not_r_conv</span> :<br/>
+&nbsp;&nbsp;~ ~ (~ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab74"></a><h2 class="section">Równoważność</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab75"></a><h3 class="section">Właściwości działaniowe</h3>
 
 </div>
 <div class="code">
@@ -1916,13 +1995,39 @@ W praktyce komenda <span class="inlinecode"><span class="id" title="keyword">Hyp
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_iff_assoc</span> :<br/>
-&nbsp;&nbsp;~ ~ ((<span class="id" title="var">P</span> &lt;-&gt; (<span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">R</span>)) -&gt; ((<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) &lt;-&gt; <span class="id" title="var">R</span>)).<br/>
+&nbsp;&nbsp;~ ~ ((<span class="id" title="var">P</span> &lt;-&gt; (<span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">R</span>)) &lt;-&gt; ((<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) &lt;-&gt; <span class="id" title="var">R</span>)).<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a id="lab68"></a><h2 class="section">Implikacja</h2>
+<a id="lab76"></a><h3 class="section">Właściwości relacjowe</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iff_refl'</span> : <span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iff_symm</span> : (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) &lt;-&gt; (<span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">iff_trans</span>: (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">R</span>) -&gt; (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab77"></a><h3 class="section">Pozostałe właściwości</h3>
+
+<div class="paragraph"> </div>
+
+<a id="lab78"></a><h2 class="section">Implikacja</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab79"></a><h3 class="section">Właściwości działaniowe</h3>
 
 </div>
 <div class="code">
@@ -1982,6 +2087,106 @@ W praktyce komenda <span class="inlinecode"><span class="id" title="keyword">Hyp
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_iff_r</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; (<span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">R</span>)) -&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) &lt;-&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab80"></a><h3 class="section">Właściwości relacjowe</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_refl'</span> : <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_trans</span> : (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_antisym</span> : (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab81"></a><h3 class="section">Pozostałe właściwości</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_and_l</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) &lt;-&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_and_r'</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span> /\ <span class="id" title="var">R</span>) &lt;-&gt; ((<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) /\ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">impl_or_l</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>) &lt;-&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">R</span>) /\ (<span class="id" title="var">Q</span> -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">contraposition</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; (~ <span class="id" title="var">Q</span> -&gt; ~ <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_contraposition_conv</span> :<br/>
+&nbsp;&nbsp;~ ~ ((~ <span class="id" title="var">Q</span> -&gt; ~ <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab82"></a><h2 class="section">Negacja</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_True</span> :<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">True</span> &lt;-&gt; <span class="id" title="var">False</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_False</span> :<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">False</span> &lt;-&gt; <span class="id" title="var">True</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_or</span> :<br/>
+&nbsp;&nbsp;~ (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>) &lt;-&gt; ~ <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_and_conv</span> :<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">Q</span> -&gt; ~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_not_and</span> :<br/>
+&nbsp;&nbsp;~ ~ (~ (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>) -&gt; ~ <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_impl_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span> -&gt; ~ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_not_impl</span> :<br/>
+&nbsp;&nbsp;~ ~ (~ (<span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; ~ ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_not_not</span> :<br/>
+&nbsp;&nbsp;~ ~ (~ ~ <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_not_not</span> :<br/>
+&nbsp;&nbsp;~ ~ ~ <span class="id" title="var">P</span> &lt;-&gt; ~ <span class="id" title="var">P</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_iff_not</span> :<br/>
+&nbsp;&nbsp;~ ~ ((~ <span class="id" title="var">P</span> &lt;-&gt; ~ <span class="id" title="var">Q</span>) &lt;-&gt; (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>)).<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">NewExercises</span>.<br/>
