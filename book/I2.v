@@ -896,8 +896,11 @@ Defined.
 (** ** [functional induction] i [functional inversion] *)
 
 (** Taktyki [functional induction] i [functional inversion] są związane z
-    pojęciem indukcji funkcyjnej. Dość szczegółowy opis tej pierwszej jest
-    w notatkach na seminarium: https://zeimer.github.io/Seminar.html##lab247
+    pojęciem indukcji funkcyjnej. Dość szczegółowy opis tej pierwszej jest w
+    #<a class='link'
+        href='https://wkolowski.github.io/Seminar-Program-certification-in-Coq/##lab15'>
+    moich notatkach na seminarium.
+    </a>#
 
     Drugą z nich póki co pominiemy. Kiedyś z pewnością napiszę coś więcej
     o indukcji funkcyjnej lub chociaż przetłumaczę zalinkowane notatki na
@@ -1135,7 +1138,8 @@ Qed.
 (** Przyjrzyj się definicjom [f_equal], [id], [compose], [eq_sym], [eq_trans],
     a następnie udowodnij poniższe lematy. Ich sens na razie niech pozostanie
     ukryty — kiedyś być może napiszę coś na ten temat. Jeżeli intrygują cię
-    one, przyjrzyj się książce https://homotopytypetheory.org/book/ *)
+    one, więcej dowiesz się z
+    #<a class='link' href='https://homotopytypetheory.org/book/'>HoTTBooka.</a># *)
 
 Require Import Coq.Program.Basics.
 
@@ -2107,7 +2111,9 @@ Proof. trivial. Abort.
 (** **** Ćwiczenie (auto i trivial) *)
 
 (** Przeczytaj w manualu dokładny opis działania taktyk [auto] oraz [trivial]:
-    https://coq.inria.fr/refman/proof-engine/tactics.html#coq:tacn.auto *)
+    #<a class='link' href='https://coq.inria.fr/refman/proof-engine/tactics.html##coq:tacn.auto'>
+    https://coq.inria.fr/refman/proof-engine/tactics.html##coq:tacn.auto
+    </a># *)
 
 (** ** [autorewrite] i [autounfold] *)
 
@@ -2269,7 +2275,9 @@ End autounfold_ex.
 (** **** Ćwiczenie (pierścienie i ciała) *)
 
 (** Przyczytaj w manualu opis 5 wymienionych wyżej taktyk:
-    https://coq.inria.fr/refman/addendum/ring.html *)
+    #<a class='link' href='https://coq.inria.fr/refman/addendum/ring.html'>
+    https://coq.inria.fr/refman/addendum/ring.html
+    </a># *)
 
 (** * Zmienne egzystencjalne i ich taktyki (TODO) *)
 
@@ -2339,7 +2347,9 @@ End autounfold_ex.
     - a — arithmetic *)
 
 (** Spróbuj ogarnąć, co one robią:
-    https://coq.inria.fr/refman/addendum/micromega.html *)
+    #<a class='link' href='https://coq.inria.fr/refman/addendum/micromega.html'>
+    https://coq.inria.fr/refman/addendum/micromega.html
+    </a># *)
 
 (** **** Ćwiczenie (wyższa magia) *)
 
@@ -2349,11 +2359,19 @@ End autounfold_ex.
 
 (** Ltac w pewnym sensie nie jest jedynym językiem taktyk, jakiego możemy
     użyć do dowodzenia w Coqu — są inne. Głównymi konkurentami Ltaca są:
-    - Rtac: gmalecha.github.io/reflections/2016/rtac-technical-overview
-    - Mtac: plv.mpi-sws.org/mtac/
+    - Rtac:
+      #<a class='link' href='https://gmalecha.github.io/reflections/2016/rtac-technical-overview'>
+      gmalecha.github.io/reflections/2016/rtac-technical-overview
+      </a>#
+    - Mtac: #<a class='link' href='https://plv.mpi-sws.org/mtac/'>plv.mpi-sws.org/mtac/</a>#
     - ssreflect:
+      #<a class='link' href='https://coq.inria.fr/refman/proof-engine/ssreflect-proof-language.html'>
       https://coq.inria.fr/refman/proof-engine/ssreflect-proof-language.html
-      oraz https://math-comp.github.io/math-comp/ *)
+      </a>#
+      oraz
+      #<a class='link' href='https://math-comp.github.io/math-comp/'>
+      https://math-comp.github.io/math-comp/
+      </a># *)
 
 (** Pierwsze dwa, [Rtac] i [Mtac], faktycznie są osobnymi językami taktyk,
     znacznie różniącymi się od Ltaca. Nie będziemy się nimi zajmować,
@@ -2388,9 +2406,16 @@ End autounfold_ex.
     z manuala, ale nadrabia (mam nadzieję) wplecionymi w tekst przykładami i
     zadaniami. Jeżeli jednak uważasz je za upośledzone, nie jesteś jeszcze
     stracony! Alternatywne opisy niektórych taktyk dostępne są też tu:
-    - pjreddie.com/coq-tactics/
-    - cs.cornell.edu/courses/cs3110/2017fa/a5/coq-tactics-cheatsheet.html
-    - typesofnote.com/posts/coq-cheat-sheet.html *)
+    - #<a class='link' href='https://pjreddie.com/coq-tactics/'>
+      pjreddie.com/coq-tactics/
+      </a>#
+    - #<a class='link'
+          href='https://cs.cornell.edu/courses/cs3110/2017fa/a5/coq-tactics-cheatsheet.html'>
+      cs.cornell.edu/courses/cs3110/2017fa/a5/coq-tactics-cheatsheet.html
+      </a>#
+    - #<a class='link' href='https://typesofnote.com/posts/coq-cheat-sheet.html'>
+      typesofnote.com/posts/coq-cheat-sheet.html
+      </a># *)
 
 (** Poznawszy podstawy Ltaca oraz całe zoo przeróżnych taktyk, do zostania
     pełnoprawnym inżynierem dowodu (ang. proof engineer, ukute przez analogię

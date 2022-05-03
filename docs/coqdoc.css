@@ -405,6 +405,9 @@ A:visited {text-decoration: none; color:black}
 A:active {text-decoration: none; color:black}
 A:hover {text-decoration: none; color: #555555 }
 
+/* Linki w komentarzach muszą mieć klasę .link, żeby były niebieskie. */
+a.link {text-decoration: none; color:blue}
+
 #index #entrance {
     text-align: center;
 }

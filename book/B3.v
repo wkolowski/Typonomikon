@@ -269,7 +269,9 @@ Qed.
     najpowszechniej używane. Nie są to jednak wszystkie kombinatory
     — jest ich znacznie więcej. Opisy taktyk i kombinatorów
     z biblioteki standardowej znajdziesz tu:
-    https://coq.inria.fr/refman/coq-tacindex.html *)
+    #<a class='link' href='https://coq.inria.fr/refman/coq-tacindex.html'>
+    https://coq.inria.fr/refman/coq-tacindex.html
+    </a># *)
 
 (** * Inne spójniki? (TODO) *)
 
@@ -916,8 +918,10 @@ Abort.
 
 (** **** Ćwiczenie (conditioned disjunction) *)
 
-(** Wikipedia (https://en.wikipedia.org/wiki/Conditioned_disjunction) podaje
-    poniższą definicję pewnego dziwnego spójnika: *)
+(** #<a class='link' href='https://en.wikipedia.org/wiki/Conditioned_disjunction'>
+    Wikipedia
+    </a>#
+    podaje poniższą definicję pewnego dziwnego spójnika: *)
 
 Definition conditioned_disjunction (P Q R : Prop) : Prop :=
   (Q -> P) /\ (~ Q -> R).
