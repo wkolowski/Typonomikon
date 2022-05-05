@@ -255,8 +255,8 @@ Qed.
     trwają prace nad jego ucywilizowaniem, czego pierwsze efekty
     widać już od wersji 8.5. W chwilach desperacji uratować może
     cię jedynie dokumentacja:
-    - https://coq.inria.fr/refman/coq-tacindex.html
-    - https://coq.inria.fr/refman/proof-engine/ltac.html *)
+    - #<a class='link' href='https://coq.inria.fr/refman/coq-tacindex.html'>Indeks taktyk</a>#
+    - #<a class='link' href='https://coq.inria.fr/refman/proof-engine/ltac.html'>Ltac</a># *)
 
 Theorem negb_involutive' :
   forall b : bool, negb (negb b) = b.
@@ -1429,8 +1429,8 @@ SearchPattern (_ + _ = _).
     przypadku pokazały się twierdzenia, w których występuje podterm
     mający po lewej dodawanie, a po prawej cokolwiek.
 
-    Dokładny opis wszystkich komend znajdziesz tutaj:
-    https://coq.inria.fr/refman/coq-cmdindex.html *)
+    Dokładny opis wszystkich komend znajdziesz
+    #<a class='link' href='https://coq.inria.fr/refman/coq-cmdindex.html'>tutaj</a># *)
 
 (** ** Ważne typy induktywne *)
 
@@ -3706,14 +3706,14 @@ with
     jest ona wręcz teleskopowa, gdyż [Ctx] jest indeksem [Ty], [Ctx] i [Ty]
     są indeksami [Term], a [Ctx], [Ty] i [Term] są indeksami [TermConv].
 
-    Cóż, to by było na tyle w tym temacie. Ława oburzonych wyraża w tym
-    momencie swoje najwyższe oburzenie na brak indukcji-indukcji w Coqu:
-    https://www.sadistic.pl/lawa-oburzonych-vt22270.htm
+    Cóż, to by było na tyle w tym temacie.
+    #<a class='link' href='https://www.sadistic.pl/lawa-oburzonych-vt22270.htm'>
+    Ława oburzonych</a># wyraża w tym momencie swoje najwyższe oburzenie na brak
+    indukcji-indukcji w Coqu.
 
     Jednak uszy do góry - istnieją już języki, które jakoś sobie radzą z
-    indukcją-indukcją. Jednym z nich jest wspomniana we wstępie Agda,
-    którą można znaleźć tu:
-    https://agda.readthedocs.io/en/latest/ *)
+    indukcją-indukcją. Jednym z nich jest wspomniana we wstępie
+    #<a class='link' href='https://agda.readthedocs.io/en/latest/'>Agda</a>#. *)
 
 (** **** Ćwiczenie *)
 

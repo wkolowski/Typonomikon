@@ -1,8 +1,8 @@
 (** * O2: Podstawy analizy numerycznej *)
 
-(** Podwaliny pod analizę numeryczną w Coqu, wzięte z
-    https://www.brianheinold.net/numerical/
-    An_Intuitive_Guide_to_Numerical_Methods_Heinold.pdf
+(** Podwaliny pod analizę numeryczną w Coqu, wzięte z książki
+    #<a class='link' href='https://www.brianheinold.net/numerical/numerical_book.html'>
+    An Intuitive Guide to Numerical Methods</a>#.
 *)
 
 Require Import Floats.

@@ -1085,9 +1085,10 @@ match n with
     | S (S n') => fib n' + fib (S n')
 end.
 
-(** Funkcja ta próbuje policzyć n-tą liczbę Fibonacciego:
-    https://en.wikipedia.org/wiki/Fibonacci_number, ale
-    słabo jej to wychodzi, gdyż dostajemy następujący błąd: *)
+(** Funkcja ta próbuje policzyć n-tą
+    #<a class='link' href='https://en.wikipedia.org/wiki/Fibonacci_number'>
+    liczbę Fibonacciego</a>#, ale słabo jej to wychodzi, gdyż dostajemy
+    następujący błąd: *)
 
 (* Recursive definition of fib is ill-formed.
    In environment

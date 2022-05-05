@@ -8,10 +8,12 @@
 
 (** Chyba właśnie zrozumiałem, o co chodzi z kontynuacjami.
     Przykład wzięty z
-    https://legacy-cs.sice.indiana.edu/~sabry/papers/yield.pdf
-    sekcja 3.
+    #<a class='link' href='https://legacy.cs.indiana.edu/~sabry/papers/yield.pdf'>
+    legacy.cs.indiana.edu/~sabry/papers/yield.pdf</a>#, sekcja 3.
 
-    Oświecająca muzyka: https://www.youtube.com/watch?v=-N4jf6rtyuw *)
+    Bonus:
+    #<a class='link' href='https://www.youtube.com/watch?v=-N4jf6rtyuw'>oświecająca muzyka</a>#,
+    pomagająca w zrozumieniu przykładu. *)
 
 (** Przyjrzyjmy się paru przykładowym funkcjom na niepustych drzewach
     binarnych, które wartości trzymają w liściach. Gry słowne: ciekawe,

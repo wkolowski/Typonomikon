@@ -640,7 +640,8 @@ Print rev.
     listy [l]. Stąd T(n + 1) = T(n) + n.
 
     Pozostaje nam rozwiązać równanie. Jeżeli nie potrafisz tego zrobić,
-    dla prostych równań pomocna może być strona https://www.wolframalpha.com/.
+    dla prostych równań pomocny może być
+    #<a class='link' href='https://www.wolframalpha.com/'>WolframAlpha</a>#.
     Rozwijając to równanie mamy T(n) = n + (n - 1) + (n - 2) + ... + 1, więc
     T jest rzędu O(n^2).
 

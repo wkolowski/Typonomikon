@@ -627,7 +627,15 @@ Definition example : CList' nat :=
 Definition take (n : nat) {A : Type} (l : CList' A) : list A :=
   ctake n (unwind l).
 
-Compute take 10 example.
+Definition example' : CList' nat :=
+  RCons 1 (RCons 2 Nil).
+
+Compute take 10 example'.
+
+Definition example'' : CList' nat :=
+  RCons 1 (RCons 2 (RCons 3 (RCons 4 (Var (Some (Some None)))))).
+
+Compute take 10 example''.
 
 Fixpoint drop (n : nat) {A : Type} (l : CList' A) : CList' A :=
 match n with

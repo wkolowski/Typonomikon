@@ -159,8 +159,9 @@ End Q_HIT.
 
 (** Coś jak ułamki łańcuchowe:
     Yves Bertot,
-    A simple canonical representation of rational numbers,
-    https://www.researchgate.net/publication/220367791_Simple_canonical_representation_of_rational_numbers
+    #<a class='link' href='https://www.researchgate.net/publication/220367791_Simple_canonical_representation_of_rational_numbers'>
+    A simple canonical representation of rational numbers
+    </a>#
 *)
 
 Module Q_Ind.
@@ -192,8 +193,7 @@ End Ord_simple.
 
 (** ** Skomplikowańsze *)
 
-(** Indukcja-indukcja-rekursja wita nas:
-    https://arxiv.org/pdf/1904.10759.pdf *)
+(** Indukcja-indukcja-rekursja wita nas: https://arxiv.org/pdf/1904.10759.pdf *)
 
 Module Ord_IIR.
 

@@ -279,42 +279,59 @@
 (** Mimo, iż Coq liczy sobie dobre 27 lat, książek na jego temat zaczęło
     przybywać dopiero od kilku. Z dostępnych pozycji polecenia
     godne są:
-    - Software Foundations — trzytomowa seria dostępna za darmo
-      tutaj: https://softwarefoundations.cis.upenn.edu/
-      W jej skład wchodzą:
-      - Logical Foundations, której głównym autorem jest Benjamin
-        Pierce — bardzo przystępne acz niekompletne wprowadzenie do
+    - #<a class='link' href='https://softwarefoundations.cis.upenn.edu/'>
+      Software Foundations
+      </a># — sześciotomowa seria, w której skład wchodzą:
+      - #<a class='link' href='https://softwarefoundations.cis.upenn.edu/lf-current/index.html'>
+        Logical Foundations
+        </a># — bardzo przystępne acz niekompletne wprowadzenie do
         Coqa. Omawia podstawy programowania funkcyjnego, rekursję i
         indukcję strukturalną, polimorfizm, podstawy logiki i prostą
         automatyzację.
-      - Programming Language Foundations, której głównym autorem jest
-        Benjamin Pierce — wprowadzenie do teorii języków programowania.
+      - #<a class='link' href='https://softwarefoundations.cis.upenn.edu/plf-current/index.html'>
+        Programming Language Foundations
+        </a># — wprowadzenie do teorii języków programowania.
         Omawia definiowanie ich składni i semantyki, dowodzenie ich
         własności oraz podstawy systemów typów i proste optymalizacje.
         Zawiera też kilka rozdziałów na temat bardziej zaawansowanej
         automatyzacji.
-      - Verified Functional Algorithms, której autorem jest Andrew
-        Appel — jak sama nazwa wskazuje skupia się ona na algorytmach,
+      - #<a class='link' href='https://softwarefoundations.cis.upenn.edu/vfa-current/index.html'>
+        Verified Functional Algorithms
+        </a># — jak sama nazwa wskazuje, skupia się ona na algorytmach,
         adaptowaniu ich do realiów języków funkcyjnych oraz weryfikacją
         poprawności ich działania. Nie jest ona jeszcze dopracowana, ale
         pewnie zmieni się to w przyszłości.
-    - Coq'Art, której autorami są Yves Bertot oraz Pierre Castéran —
+      - #<a class='link' href='https://softwarefoundations.cis.upenn.edu/qc-current/index.html'>
+        QuickChick: Property-Based Testing in Coq
+        </a># — ten tom traktuje o bibliotece QuickChick, służącej do testowania
+        poprawności programów. Mogłoby się wydawać, że skoro w Coqu można dowodzić
+        poprawności, to testowanie nie jest potrzebne, ale nic bardziej mylnego -
+        narzędzia takie jak QuickChick często potrafią znaleźć kontrprzykład dla
+        nieprawdziwego "twierdzenia" szybciej, niż człowiek jest w stanie zastanowić
+        się, czy jest ono poprawne, czy nie, a co dopiero jest udowodnić.
+      - Pozostałe dwa tomy z tej serii nie są moim zdaniem warte uwagi.
+    - #<a class='link' href='https://www.labri.fr/perso/casteran/CoqArt/'>Coq'Art</a># —
       książka nieco szerzej opisująca język Coq, poświęca sporo
       miejsca rachunkowi konstrukcji i aspektom teoretycznym. Zawiera
       także rozdziały dotyczące automatyzacji, silnej specyfikacji,
-      koindukcji, zaawansowanej rekurencji i reflekcji. Wersja
-      francuska jest dostępna za darmo pod adresem
-      https://www.labri.fr/perso/casteran/CoqArt/
-      Wersję angielską można za darmo pobrać z rosyjskich stron z
-      książkami, ale broń Boże tego nie rób! Piractwo to grzech.
-    - Certified Programming with Dependent Types autorstwa Adama
-      Chlipali — książka dla zaawansowanych, traktująca o praktycznym
-      użyciu typów zależnych oraz kładąca bardzo mocny nacisk na
-      automatyzację, dostępna za darmo tu: adam.chlipala.net/cpdt
-    - Mathematical Components Book, dostępna za darmo tutaj:
-      https://math-comp.github.io/mcb/book.pdf, to książka dotycząca
-      biblioteki o nazwie Mathematical Components. Zawiera ona
-      wprowadzenia do Coqa, ale poza tym opisuje też dwie inne rzeczy:
+      koindukcji, zaawansowanej rekurencji i reflekcji. Zalinkowałem
+      wersję francuską, która jest dostępna za darmo. Wersję angielską
+      można za darmo pobrać z ruskich stronek z pirackimi książkami, ale
+      broń Boże tego nie rób! Piractwo to grzech.
+    - #<a class='link' href='https://adam.chlipala.net/cpdt'>
+      Certified Programming with Dependent Types
+      </a># (w skrócie CPDT) — książka dla zaawansowanych, traktująca o
+      praktycznym użyciu typów zależnych oraz kładąca bardzo mocny nacisk
+      na automatyzację.
+    - #<a class='link' href='http://ilyasergey.net/pnp/'>Programs and Proofs</a># —
+      notatki do wykładów z załączonymi ćwiczeniami. Omawiają podstawy Coqa podstawy
+      Coqa, po czym poruszają takie tematy, jak reflekcja boolowska, język taktyk
+      Ssreflect oraz reprezentowanie struktur matematycznych. Uwaga: czytelnik
+      powinien już umieć programować i znać podstawy matematyki.
+    - #<a class='link' href='https://math-comp.github.io/mcb/book.pdf'>
+      Mathematical Components Book
+      </a># to książka dotycząca biblioteki o nazwie Mathematical Components.
+      Zawiera ona wprowadzenia do Coqa, ale poza tym opisuje też dwie inne rzeczy:
       - Metodologię dowodzenia zwaną _small scale reflection_
         (pol. reflekcja na małą skalę), która pozwala wykorzystać
         w dowodach maksimum możliwości obliczeniowych Coqa, a dzięki
@@ -324,21 +341,18 @@
         wprowadza w stosunku do niego wiele ulepszeń i udogodnień,
         umożliwiając między innymi sprawne zastosowanie metodologii
         _small scale reflection_ w praktyce
-    - Manual, dostępny pod adresem https://coq.inria.fr/refman/,
+    - #<a class='link' href='https://coq.inria.fr/refman/'>Manual</a>#
       nie jest wprawdzie zbyt przyjazny do czytania ciurkiem, ale
-      można tu znaleźć wiele wartościowych informacji. Gdyby ktoś
-      jednak pokusił się o przeczytanie go od deski do deski,
-      polecam następującą kolejności rozdziałów: 4 -> (5) -> 1 -> 2 ->
-      17 -> 29 -> 13 -> 12 -> (3) -> (6) -> 7 -> 8 -> 9 -> 10 -> 21 ->
-      22 -> 25 -> 26 -> 27 -> 18 -> 19 -> 20 -> 24 -> 23 -> (11) ->
-      (14) -> (15) -> (16) -> (28) -> (30), gdzie nawiasy okrągłe
-      oznaczają rozdziały opcjonalne (niezbyt ciekawe lub nieprzydatne)
-    - Formal Reasoning About Programs — powstająca książka Adama
-      Chlipali. Nie wiem o czym jest i nie polecam czytać dopóki jest
-      oznaczona jako draft. Dostępna tu: http://adam.chlipala.net/frap/ *)
+      to chyba jedyny dokument, który opisuje najgłębsze zakamarki Coqa.
+      Można tu znaleźć wiele wartościowych informacji, których brakuje
+      gdzie indziej.
+    - #<a class='link' href='http://adam.chlipala.net/frap/'>
+      Formal Reasoning About Programs
+      </a># — ta książka jest jeszcze w trakcie pisania. Nie wiem o czym jest i
+      nie polecam czytać dopóki jest oznaczona jako draft.  *)
 
 (** Zalecana kolejność czytania:
-    SF, część 1 -> (Coq'Art) -> (MCB) -> SF, część 2 i 3 -> CPDT ->
+    SF, część 1 -> (Coq'Art) -> (MCB) -> SF, część 2 i 3 -> CPDT -> (FRAP) ->
     Manual *)
 
 (** ** Blogi *)
@@ -346,29 +360,45 @@
 (** W Internecie można też dokopać się do blogów, na których przynajmniej
     część postów dotyczy Coqa. Póki co nie miałem czasu wszystkich przeczytać
     i wobec tego większość linków wrzucam w ciemno:
-    - http://www.cis.upenn.edu/~aarthur/poleiro/ (znajdziesz tu posty na
-      temat parsowania, kombinatorycznej teorii gier, czytelnego
-      strukturyzowania dowodu, unikania automatycznego generowania nazw,
-      przeszukiwania, algorytmów sortowania oraz dowodzenia przez reflekcję).
-    - http://coq-blog.clarus.me/
-    - https://gmalecha.github.io/
-    - http://seb.mondet.org/blog/index.html (znajdziesz tu 3 posty na temat
-      silnych specyfikacji)
-    - http://gallium.inria.fr/blog/ (znajdziesz tu posty na temat mechanizmu
-      ewaluacji, inwersji, weryfikacji parserów oraz pisania pluginów do Coqa;
-      większość materiału jest już dość leciwa)
-    - http://ilyasergey.net/pnp/
-    - https://homes.cs.washington.edu/~jrw12/##blog
-    - http://osa1.net/tags/coq
-    - http://coqhott.gforge.inria.fr/blog/ *)
+    - #<a class='link' href='http://poleiro.info/'>
+      poleiro.info/
+      </a>#
+      (znajdziesz tu posty na temat parsowania, kombinatorycznej teorii gier,
+      czytelnego strukturyzowania dowodu, unikania automatycznego generowania
+      nazw, przeszukiwania, algorytmów sortowania oraz dowodzenia przez reflekcję).
+    - #<a class='link' href='http://coq-blog.clarus.me/'>coq-blog.clarus.me/</a>#
+    - #<a class='link' href='https://gmalecha.github.io/'>gmalecha.github.io/</a>#
+    - #<a class='link' href='http://seb.mondet.org/blog/'>seb.mondet.org/blog/</a>#
+      (znajdziesz tu 3 posty na temat silnych specyfikacji)
+    - #<a class='link' href='http://gallium.inria.fr/blog/'>gallium.inria.fr/blog/</a>#
+      (znajdziesz tu posty na temat mechanizmu ewaluacji, inwersji, weryfikacji parserów
+      oraz pisania pluginów do Coqa; większość materiału jest już dość leciwa)
+    - #<a class='link' href='https://homes.cs.washington.edu/~jrw12/##blog'>
+      homes.cs.washington.edu/~jrw12/##blog
+      </a>#
+    - #<a class='link' href='http://osa1.net/tags/coq'>osa1.net/tags/coq</a>#
+    - #<a class='link' href='http://coqhott.gforge.inria.fr/blog/'>
+      coqhott.gforge.inria.fr/blog/
+      </a># *)
 
 (** ** Inne *)
 
 (** Coq ma też swój subreddit na Reddicie (można tu znaleźć różne rzeczy, w
     tym linki do prac naukowych) oraz tag na StackOverflow, gdzie można
     zadawać i odpowiadać na pytania:
-    - https://www.reddit.com/r/Coq/
-    - https://stackoverflow.com/questions/tagged/coq *)
+    - #<a class='link' href='https://github.com/coq-community/awesome-coq'>
+      Gigantyczna lista wszystkich Coqowych zasobów (książek, blogów, forów, etc.)
+      </a>#
+    - #<a class='link' href='https://coq.inria.fr'>Strona domowa</a>#
+    - #<a class='link' href='https://github.com/coq/coq'>GitHub</a>#
+    - #<a class='link' href='https://coq.discourse.group'>Forum</a>#
+    - #<a class='link' href='https://coq.zulipchat.com'>Czat</a>#
+    - #<a class='link' href='https://stackoverflow.com/questions/tagged/coq'>Stack Overflow</a>#
+    - #<a class='link' href='https://www.reddit.com/r/Coq/'>Reddit</a>#
+    - #<a class='link' href='https://proofassistants.stackexchange.com/'>
+      Proof Assistants Stack Exchange
+      </a># - kolejne miejsce, gdzie można zadawać pytania nie tylko dotyczące
+      Coqa, ale także innych podobnych języków oraz teorii typów *)
 
 (** * Sprawy techniczne *)
 
@@ -382,7 +412,8 @@
     będą polegać na formalizacji jakiejś drobnej teorii lub zastosowaniu
     nabytej wiedzy do rozwiązania jakiegoś typowego problemu.
 
-    Język Coq można pobrać z jego strony domowej: https://coq.inria.fr
+    Język Coq można pobrać z
+    #<a class='link' href='https://coq.inria.fr'>jego strony domowej</a>#.
 
     Z tej samej strony można pobrać CoqIDE, darmowe IDE stworzone
     specjalnie dla języka Coq. Wprawdzie z Coqa można korzystać
@@ -390,8 +421,9 @@
     z Emacsem, ale w dalszej części tekstu będę zakładał, że użytkownik
     korzysta właśnie z CoqIDE.
 
-    Gdyby ktoś miał problemy z CoqIDE, lekką alternatywą jest ProofWeb:
-    http://proofweb.cs.ru.nl/index.html
+    Gdyby ktoś miał problemy z CoqIDE, lekką alternatywą jest
+    #<a class='link' href='https://jscoq.github.io/scratchpad.html'>jsCoq</a>#,
+    działający bezpośrednio w przeglądarce.
 
     Uwaga: kurs powstaje w czasie rzeczywistym, więc w niektórych miejscach
     możesz natknąć się na znacznik TODO, który informuje, że dany fragment

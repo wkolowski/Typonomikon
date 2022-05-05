@@ -30,7 +30,9 @@
 
     W tym rozdziale poznamy podstawy języka [Ltac], który służy do tworzenia
     własnych taktyk. Jego składnię przedstawiono i skrupulatnie opisano tu:
-    https://coq.inria.fr/refman/proof-engine/ltac.html#syntax
+    #<a class='link' href='https://coq.inria.fr/refman/proof-engine/ltac.html##syntax'>
+    https://coq.inria.fr/refman/proof-engine/ltac.html##syntax
+    </a>#
 
     Choć przykład znaczy więcej niż 0x3E8 stron manuala i postaram się
     dokładnie zilustrować każdy istotny moim zdaniem konstrukt języka
