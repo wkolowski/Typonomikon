@@ -148,8 +148,8 @@ Locate "~".
     mocnym atutem Coqa — naucz się ją wykorzystywać, dokładnie
     obserwując skutki działania każdej komendy i taktyki.
 
-    W razie problemów z CoqIDE poszukaj pomocy w manualu:
-    https://coq.inria.fr/refman/practical-tools/coqide.html *)
+    W razie problemów z CoqIDE poszukaj pomocy w
+    #<a class='link' href='https://coq.inria.fr/refman/practical-tools/coqide.html'>manualu</a>#. *)
 
 Section constructive_propositional_logic.
 
@@ -1094,11 +1094,12 @@ Qed.
       które jest skrótem od [(P -> Q) /\ (Q -> P)]. Radzimy sobie z nią za
       pomocą taktyk [unfold iff] oraz [unfold iff in ...]
 
-    Tutaj dodatkowa ściąga, w nieco bardziej czytelnym formacie:
-    https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/logika.md
-
-    A tutaj inna ściąga:
-    https://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf *)
+    Tutaj dodatkowa
+    #<a class='link'
+        href='https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/logika.md'>
+    ściąga</a>#, w nieco bardziej czytelnym formacie. A tutaj inna
+    #<a class='link' href='https://www.inf.ed.ac.uk/teaching/courses/tspl/cheatsheet.pdf'>
+    ściąga</a>#. *)
 
 (** * Zadania (TODO) *)
 

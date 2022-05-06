@@ -498,9 +498,12 @@ Abort.
 
 (** Bardzo insajtowy filmik (i transkrypcjo-artykuł) o defunkcjonalizacji
     (i refunkcjonalizacji też):
-
-    http://www.pathsensitive.com/2019/07/the-best-refactoring-youve-never-heard.html
-    https://blog.sigplan.org/2019/12/30/defunctionalization-everybody-does-it-nobody-talks-about-it/
+    - #<a class='link'
+          href='http://www.pathsensitive.com/2019/07/the-best-refactoring-youve-never-heard.html'>
+      Najlepszy refaktoring, o którym nigdy nie słyszałeś</a>#
+    - #<a class='link'
+          href='https://blog.sigplan.org/2019/12/30/defunctionalization-everybody-does-it-nobody-talks-about-it/'>
+      Defunkcjonalizacja - każdy to robi, ale nikt o tym nie mówi</a>#
 
     Ok, o co chodzi? *)
 
@@ -550,7 +553,9 @@ end.
 
 (** ** Defunkcjonalizacja silni (TODO) *)
 
-(** Wzięte z https://ncatlab.org/nlab/show/defunctionalization *)
+(** Wzięte
+    #<a class='link' href='https://ncatlab.org/nlab/show/defunctionalization'>
+    stąd</a>#. *)
 
 Fixpoint fac (n : nat) : nat :=
 match n with
@@ -662,7 +667,7 @@ Qed.
     iteracją, bez rekursji, ale za to ze stosem (który jest niczym innym
     jak zdefunkcjonalizowaną kontynuacją). *)
 
-(* TODO: https://www.joachim-breitner.de/blog/778-Don%E2%80%99t_think%2C_just_defunctionalize *)
+(* TODO: https://www.joachim-breitner.de/blog/778-Don't_think,_just_defunctionalize *)
 
 (** * Kodowania Churcha (TODO) *)
 

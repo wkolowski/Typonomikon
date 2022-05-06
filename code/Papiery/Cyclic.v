@@ -1,7 +1,8 @@
 (** Inspired by:
-    - Cyclic Lists, Purely: https://gallais.github.io/blog/cyclic-list-purely.html
-    - Representing Cyclic Structures as Nested Data Types:
-      https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf *)
+    - #<a class='link' href='https://gallais.github.io/blog/cyclic-list-purely.html'>
+      Cyclic Lists, Purely</a>#
+    - #<a class='link' href='https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf'>
+      Representing Cyclic Structures as Nested Data Types</a># *)
 
 Require Import Recdef Nat String Coq.Program.Equality.
 Require Import List.
@@ -66,8 +67,9 @@ Proof.
     constructor. econstructor 2; try reflexivity. apply CH.
 Qed.
 
-(** The first part is inspired by "Cyclic Lists, Purely"
-    (https://gallais.github.io/blog/cyclic-list-purely.html) *)
+(** The first part is inspired by
+    #<a class='link' href='https://gallais.github.io/blog/cyclic-list-purely.html'>
+    Cyclic Lists, Purely</a>#. *)
 
 (** * Fegaras and Sheard's solution *)
 
@@ -362,8 +364,9 @@ Compute cotake 10 (unwind wut).
 
 End Phantom.
 
-(** The second part is inspired by "Representing Cyclic Structures as Nested Data Types"
-    (https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf) *)
+(** The second part is inspired by
+    #<a class='link' href='https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf'>
+    Representing Cyclic Structures as Nested Data Types</a>#. *)
 
 Module HOAS_Unique.
 
@@ -930,7 +933,8 @@ Module GeneralCyclicStructures.
     implement a recursive function, so we're not going to pursue the generalized
     approach here.
 
-    Anyway, see https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf section 4
-    for more details. *)
+    Anyway, for more details see
+    #<a class='link' href='https://www.cs.gunma-u.ac.jp/~hamana/Papers/tfp06.pdf'>
+    Representing Cyclic Structures as Nested Data Types</a>#, section 4. *)
 
 End GeneralCyclicStructures.

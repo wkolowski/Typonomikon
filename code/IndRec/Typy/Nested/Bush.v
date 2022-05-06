@@ -1,4 +1,6 @@
-(* Wzięte stąd: https://personal.cis.strath.ac.uk/neil.ghani/papers/ghani-hosc09.pdf *)
+(** Wzięte
+    #<a class='link' href='https://personal.cis.strath.ac.uk/neil.ghani/papers/ghani-hosc09.pdf'
+    stąd.</a>#. *)
 
 Set Universe Polymorphism.
 

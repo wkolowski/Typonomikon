@@ -55,7 +55,8 @@ Defined.
 
 (** * Równość a ścieżki *)
 
-(** https://homotopytypetheory.org/2012/01/22/univalence-versus-extraction/ *)
+(** #<a class='link' href='https://homotopytypetheory.org/2012/01/22/univalence-versus-extraction/'>
+    Uniwalencja versus ekstrakcja</a># *)
 
 Module Path_is_eq.
 
@@ -317,11 +318,11 @@ End nat_eq_ind.
     że coś jest zdaniem w sensie HoTTowym. Dzięki temu dowód jest krótszy o
     całe 33%. Całkiem nieźle. *)
 
-Require G.
+Require G1.
 
 Module nat_eq_rec_SProp.
 
-Import G.
+Import G1.
 
 Fixpoint code (n m : nat) : SProp :=
 match n, m with
@@ -379,7 +380,7 @@ End nat_eq_rec_SProp.
 
 Module encodedecode1.
 
-Import G.
+Import G1.
 
 Fixpoint code (n m : nat) : SProp :=
 match n, m with
@@ -427,7 +428,7 @@ End encodedecode1.
 
 Module encodedecode2.
 
-Import G.
+Import G1.
 
 Fixpoint code (n m : nat) : SProp :=
 match n, m with

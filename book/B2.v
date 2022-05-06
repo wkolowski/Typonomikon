@@ -267,7 +267,9 @@ TODO 3: Użyć nominalizmów do wytłumaczenia wiązania nazw zmiennych.
 (* end hide *)
 
 
-(** https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/równość.md *)
+(** #<a class='link'
+        href='https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/równość.md'>
+    Ściąga z równości</a>#. *)
 
 (** * Konkluzja (TODO) *)
 
@@ -282,7 +284,9 @@ TODO 3: Użyć nominalizmów do wytłumaczenia wiązania nazw zmiennych.
       musimy pokazać [P a]. Jeżeli mamy taki dowód w kontekście, możemy
       rozbić go na [a] i [P a] za pomocą taktyki [destruct]. *)
 
-(** https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/logika.md *)
+(** #<a class='link'
+        href='https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/logika.md'>
+    Ściąga z rachunku kwantyfikatorów</a># *)
 
 (** * Zadania (TODO) *)
 

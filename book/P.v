@@ -159,9 +159,9 @@ End Q_HIT.
 
 (** Coś jak ułamki łańcuchowe:
     Yves Bertot,
-    #<a class='link' href='https://www.researchgate.net/publication/220367791_Simple_canonical_representation_of_rational_numbers'>
-    A simple canonical representation of rational numbers
-    </a>#
+    #<a class='link'
+        href='https://www.researchgate.net/publication/220367791_Simple_canonical_representation_of_rational_numbers'>
+    A simple canonical representation of rational numbers</a>#
 *)
 
 Module Q_Ind.

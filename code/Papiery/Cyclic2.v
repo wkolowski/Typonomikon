@@ -8,8 +8,9 @@ Arguments C {A} _ _.
 
 (** * CoLists *)
 
-(** The first part is inspired by "Cyclic Lists, Purely"
-    (https://gallais.github.io/blog/cyclic-list-purely.html) *)
+(** The first part is inspired by
+    #<a class='link' href='https://gallais.github.io/blog/cyclic-list-purely.html'>
+    Cyclic Lists, Purely</a>#. *)
 
 Definition cmap {A B : Type} (f : A -> B) (l : Cyclic A) : Cyclic B :=
 match l with

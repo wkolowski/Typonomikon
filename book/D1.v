@@ -1430,7 +1430,7 @@ SearchPattern (_ + _ = _).
     mający po lewej dodawanie, a po prawej cokolwiek.
 
     Dokładny opis wszystkich komend znajdziesz
-    #<a class='link' href='https://coq.inria.fr/refman/coq-cmdindex.html'>tutaj</a># *)
+    #<a class='link' href='https://coq.inria.fr/refman/coq-cmdindex.html'>tutaj</a>#. *)
 
 (** ** Ważne typy induktywne *)
 

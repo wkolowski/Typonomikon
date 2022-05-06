@@ -1139,7 +1139,7 @@ Qed.
     a następnie udowodnij poniższe lematy. Ich sens na razie niech pozostanie
     ukryty — kiedyś być może napiszę coś na ten temat. Jeżeli intrygują cię
     one, więcej dowiesz się z
-    #<a class='link' href='https://homotopytypetheory.org/book/'>HoTTBooka.</a># *)
+    #<a class='link' href='https://homotopytypetheory.org/book/'>HoTTBooka</a>#. *)
 
 Require Import Coq.Program.Basics.
 
@@ -2110,10 +2110,9 @@ Proof. trivial. Abort.
 
 (** **** Ćwiczenie (auto i trivial) *)
 
-(** Przeczytaj w manualu dokładny opis działania taktyk [auto] oraz [trivial]:
+(** Przeczytaj w
     #<a class='link' href='https://coq.inria.fr/refman/proof-engine/tactics.html##coq:tacn.auto'>
-    https://coq.inria.fr/refman/proof-engine/tactics.html##coq:tacn.auto
-    </a># *)
+    manualu</a># dokładny opis działania taktyk [auto] oraz [trivial]. *)
 
 (** ** [autorewrite] i [autounfold] *)
 
@@ -2274,10 +2273,9 @@ End autounfold_ex.
 
 (** **** Ćwiczenie (pierścienie i ciała) *)
 
-(** Przyczytaj w manualu opis 5 wymienionych wyżej taktyk:
+(** Przyczytaj w
     #<a class='link' href='https://coq.inria.fr/refman/addendum/ring.html'>
-    https://coq.inria.fr/refman/addendum/ring.html
-    </a># *)
+    manualu</a># opis 5 wymienionych wyżej taktyk. *)
 
 (** * Zmienne egzystencjalne i ich taktyki (TODO) *)
 
@@ -2346,10 +2344,9 @@ End autounfold_ex.
     - r — real/rational
     - a — arithmetic *)
 
-(** Spróbuj ogarnąć, co one robią:
+(** Przeczytaj w
     #<a class='link' href='https://coq.inria.fr/refman/addendum/micromega.html'>
-    https://coq.inria.fr/refman/addendum/micromega.html
-    </a># *)
+    manualu</a>#, co one robią. *)
 
 (** **** Ćwiczenie (wyższa magia) *)
 
@@ -2359,19 +2356,13 @@ End autounfold_ex.
 
 (** Ltac w pewnym sensie nie jest jedynym językiem taktyk, jakiego możemy
     użyć do dowodzenia w Coqu — są inne. Głównymi konkurentami Ltaca są:
-    - Rtac:
-      #<a class='link' href='https://gmalecha.github.io/reflections/2016/rtac-technical-overview'>
-      gmalecha.github.io/reflections/2016/rtac-technical-overview
-      </a>#
-    - Mtac: #<a class='link' href='https://plv.mpi-sws.org/mtac/'>plv.mpi-sws.org/mtac/</a>#
-    - ssreflect:
-      #<a class='link' href='https://coq.inria.fr/refman/proof-engine/ssreflect-proof-language.html'>
-      https://coq.inria.fr/refman/proof-engine/ssreflect-proof-language.html
-      </a>#
-      oraz
+    - #<a class='link' href='https://gmalecha.github.io/reflections/2016/rtac-technical-overview'>
+      Rtac</a>#
+    - #<a class='link' href='https://plv.mpi-sws.org/mtac/'>Mtac</a>#
+    - #<a class='link' href='https://coq.inria.fr/refman/proof-engine/ssreflect-proof-language.html'>
+      ssreflect</a># (patrz też:
       #<a class='link' href='https://math-comp.github.io/math-comp/'>
-      https://math-comp.github.io/math-comp/
-      </a># *)
+      Mathematical Components Books</a>#) *)
 
 (** Pierwsze dwa, [Rtac] i [Mtac], faktycznie są osobnymi językami taktyk,
     znacznie różniącymi się od Ltaca. Nie będziemy się nimi zajmować,

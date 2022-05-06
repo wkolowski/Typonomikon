@@ -328,11 +328,11 @@ Inductive T (A : Type) : nat -> Type :=
 
 End hTree.
 
-Require G.
+Require G1.
 
 Module W.
 
-Import G.
+Import G1.
 
 Inductive IW {A : Type} (B : A -> Type) : Type :=
     | here  : IW B

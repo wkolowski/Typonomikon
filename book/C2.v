@@ -433,7 +433,7 @@ Check @pair.
 
     Należy też dodać, że reguła ta jest nieco uproszczona. Pełniejszy
     opis teoretyczny induktywnego rachunku konstrukcji można znaleźć
-    w manualu: https://coq.inria.fr/refman/language/cic.html *)
+    w #<a class='link' href='https://coq.inria.fr/refman/language/cic.html'>manualu</a>#. *)
 
 (** **** Ćwiczenie *)
 

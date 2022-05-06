@@ -1,4 +1,6 @@
-(* Pomysł na [Complete] wzięty stąd: http://comonad.com/reader/wp-content/uploads/2010/04/Finger-Trees.pdf *)
+(* Pomysł na [Complete] wzięty
+    #<a class='link' href='http://comonad.com/reader/wp-content/uploads/2010/04/Finger-Trees.pdf'>
+    stąd</a>#. *)
 
 Require Import Bool Recdef Equality FunctionalExtensionality.
 Require Import List.

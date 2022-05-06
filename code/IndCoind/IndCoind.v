@@ -90,7 +90,8 @@ Require Import F2.
 
 Definition max (n : nat) (m : conat) : conat := max (from_nat n) m.
 
-(* Sprawdź to: https://www.cse.chalmers.se/~nad/publications/danielsson-docent.pdf *)
+(* #<a class='link' href='https://www.cse.chalmers.se/~nad/publications/danielsson-docent.pdf'>
+   Sprawdź to</a>#. *)
 
 (* Fixpoint max (n : nat) (m : conat) : conat :=
 match n, out m with

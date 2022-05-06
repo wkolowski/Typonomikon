@@ -5218,11 +5218,11 @@ Extraction div'_aux.
 
 (** **** Ćwiczenie *)
 
-(** Zainstaluj plugin Equations:
-    https://github.com/mattam82/Coq-Equations
-
-    Przeczytaj tutorial:
-    https://raw.githubusercontent.com/mattam82/Coq-Equations/master/doc/equations_intro.v
+(** Zainstaluj plugin
+    #<a class='link' href='https://github.com/mattam82/Coq-Equations'>Equations</a>#.
+    Przeczytaj
+    #<a class='link' href='https://raw.githubusercontent.com/mattam82/Coq-Equations/master/doc/equations_intro.v'>
+    tutorial</a>#.
 
     Następnie znajdź jakiś swój dowód przez indukcję, który był skomplikowany
     i napisz prostszy dowód za pomocą komendy [Equations] i taktyki [funelim].

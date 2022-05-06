@@ -460,9 +460,9 @@ Definition injective {A B : Type} (f : A -> B) : Prop :=
     oznacza zaś zastrzyk. Bliższym matematycznemu znaczeniu byłoby jednak
     tłumaczenie "wstrzyknięcie". Jeżeli funkcja jest injekcją, to możemy
     też powiedzieć, że jest "injektywna". Inną nazwą jest "funkcja
-    różnowartościowa". Na wiki można zapoznać się z obrazkami poglądowymi:
-
-    https://en.wikipedia.org/wiki/Bijection,%%20injection%%20and%%20surjection
+    różnowartościowa". Na wiki można zapoznać się z
+    #<a class='link' href='https://en.wikipedia.org/wiki/Bijection,_injection_and_surjection'>
+    obrazkami poglądowymi</a>#.
 
     Podstawowa idea jest prosta: jeżeli funkcja jest injekcją, to identyczne
     jej wartości pochodzą od równych argumentów.

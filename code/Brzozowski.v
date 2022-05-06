@@ -1,7 +1,12 @@
-(** Zainspirowane przez http://www.weaselhat.com/2020/05/07/smart-constructors-are-smarter-than-you-think/
-    Definicje wzięte z https://en.wikipedia.org/wiki/Brzozowski_derivative
-
-    Zobacz też: https://semantic-domain.blogspot.com/2013/11/antimirov-derivatives-for-regular.html *)
+(** Wzięte
+    #<a class='link'
+        href='http://www.weaselhat.com/2020/05/07/smart-constructors-are-smarter-than-you-think/'>
+    stąd</a>#. Definicje wzięte z
+    #<a class='link' href='https://en.wikipedia.org/wiki/Brzozowski_derivative'>
+    Wikipedii</a>#. Zobacz też
+    #<a class='link'
+        href='https://semantic-domain.blogspot.com/2013/11/antimirov-derivatives-for-regular.html'>
+    to</a>#. *)
 
 Set Implicit Arguments.
 Set Maximal Implicit Insertion.

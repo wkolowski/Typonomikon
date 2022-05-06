@@ -470,9 +470,9 @@ Qed.
 
     Na samiuśki koniec koło ratunkowe: jeżeli pogubiłeś się w tych
     wszystkich nazwach, regułach, warunkach, etc., to tutaj jest
-    ściąga:
-
-    https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/substrukturalne.md *)
+    #<a class='link'
+        href='https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/substrukturalne.md'>
+    ściąga</a>#. *)
 
 (** ** Logiki wielowartościowe *)
 
@@ -1915,11 +1915,12 @@ Qed.
     są jego konsekwencje.
 
     Na koniec spróbujmy zastosować naszą nowo zdobytą ideę do filozofii
-    religii. Amerykański filozof Mencjusz Moldbug zauważył (pewnie nie
+    religii. Amerykański myśliciel Mencjusz Moldbug zauważył (pewnie nie
     jako pierwszy, ale ja dowiedziałem się tego od niego) w swoim poście
-    "Dlaczego ateiści wierzą w religię?"
-    (https://www.unqualified-reservations.org/2007/04/why-do-atheists-believe-in-religion/),
-    że wiara i ogólniej poglądy religijne mają (przynajniej z punktu
+    #<a class='link'
+        href='https://www.unqualified-reservations.org/2007/04/why-do-atheists-believe-in-religion/'>
+    Dlaczego ateiści wierzą w religię?</a>#,
+    że wiara i ogólniej poglądy religijne mają (przynajmniej z punktu
     widzenia ateisty) znaczenie jedynie pośrednie, wyrażające się w
     działaniach ludzi je wyznających w rzeczywistym świecie (świat
     bytów nadprzyrodzonych, jak bogowie, anioły, demony etc. uznał
@@ -1930,8 +1931,8 @@ Qed.
     chrześcijanie i muzułmanie tak naprawdę wierzyli w tego samego Boga.
     Czy tak jest w istocie? Nie, bo ich wiara objawia się w diametralnie
     różny sposób: muzułmanie wysadzają się w powietrze w samobójczych
-    zamachach, a chrześcijanie nie. Inne działania = inna wiara, inny
-    Bóg.
+    zamachach, a chrześcijanie nie. Inne działania = inna wiara, a zatem
+    inny Bóg.
 
     TODO: zastanowić się, czy te pierdoły o filozofii religii faktycznie
     są tutaj potrzebne. *)
@@ -2560,7 +2561,7 @@ Qed.
 
 (** ** Podsumowanie *)
 
-(** W niniejszy (długaśnym, trzeba przyznać) podrozdziale zapoznaliśmy
+(** W niniejszym (długaśnym, trzeba przyznać) podrozdziale zapoznaliśmy
     się z modalnościami.
 
     Intuicyjnie zdanie modalne to takie, które jest wyrażone w jakiś
@@ -2589,8 +2590,10 @@ Qed.
     Niestety okazało się też, że złożenia najistotniejszych z naszego
     punktu widzenia modalności nie wnoszą niczego ciekawego.
 
-    Jeśliś pogubił się w tym modalnościowym zoo, nie lękaj się! Zrobiłem ściągę:
-    https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/modalności.md *)
+    Jeśliś pogubił się w tym modalnościowym zoo, nie lękaj się! Zrobiłem
+    #<a class='link'
+        href='https://github.com/wkolowski/Typonomikon/blob/master/txt/ściągi/modalności.md'>
+    ściągę</a>#. *)
 
 (** * Uniwersum [SProp] i gruzińska logika klasyczno-konstruktywna (TODO) *)
 

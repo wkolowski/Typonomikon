@@ -1,7 +1,8 @@
 Require Import Recdef Wellfounded Arith Lia.
 
 (** Zainspirowane przez pracę
-    https://www-sop.inria.fr/lemme/Venanzio.Capretta/publications/imp.pdf
+    #<a class='link' href='https://www-sop.inria.fr/lemme/Venanzio.Capretta/publications/imp.pdf'>
+    Type-theoretic functional semantics</a>#
 
     Niestety chyba jednak w pizdu nie działa, a szkoda. *)
 

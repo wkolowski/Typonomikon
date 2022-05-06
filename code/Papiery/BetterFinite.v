@@ -1,4 +1,6 @@
-(** Wzięte z [FinCuTT] https://doisinkidney.com/pdfs/masters-thesis.pdf *)
+(** Wzięte z pracy
+    #<a class='link' href='https://doisinkidney.com/pdfs/masters-thesis.pdf'>
+    Finiteness in Cubical Type Theory</a>#. *)
 
 Require Import D5.
 

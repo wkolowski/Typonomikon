@@ -14,6 +14,6 @@ TODO: Monada to nie to samo co omega-monada, więc homotopiowo uważać.
     do specyfikacji struktur danych jako algebr.
 
     Na koniec coś o efektach obliczeniowych i Haskellowych rzeczach
-    typu funktory, monady, transformatory, wzięte z mojej pracy
-    inżynierskiej:
-    https://github.com/wkolowski/coq-mtl *)
+    typu funktory, monady, transformatory, wzięte z
+    #<a class='link' href='https://github.com/wkolowski/coq-mtl'>
+    mojej pracy inżynierskiej</a>#. *)

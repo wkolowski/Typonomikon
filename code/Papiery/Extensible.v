@@ -2,8 +2,10 @@ Require Import String.
 
 Set Implicit Arguments.
 
-(** Zainspirowane przez "Trees that Grow":
-    https://www.microsoft.com/en-us/research/uploads/prod/2016/11/trees-that-grow.pdf
+(** Zainspirowane przez
+    #<a class='link'
+        href='https://www.microsoft.com/en-us/research/uploads/prod/2016/11/trees-that-grow.pdf'>
+    Trees that Grow</a>#.
 
     TODO: dokończyć *)
 
