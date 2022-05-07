@@ -733,7 +733,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma iff_trans: (P <-> Q) -> (Q <-> R) -> (P <-> R).
+Lemma iff_trans : (P <-> Q) -> (Q <-> R) -> (P <-> R).
 (* begin hide *)
 Proof.
   intros. destruct H, H0. split.
@@ -1547,7 +1547,39 @@ Lemma Irrefutable_LEM :
 Proof. tauto. Qed.
 (* end hide *)
 
+Lemma Irrefutable_reductio_ad_absurdum :
+  ~ ~ (~ (P /\ ~ Q) -> (P -> Q)).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma reductio_ad_absurdum_conv :
+  (P -> Q) -> ~ (P /\ ~ Q).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
 (** ** Dysjunkcja *)
+
+(** *** Reguły *)
+
+Lemma or_intro_l :
+  P -> P \/ Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_intro_r :
+  Q -> P \/ Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_elim :
+  (P -> R) -> (Q -> R) -> (P \/ Q -> R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
 
 (** *** Właściwości działaniowe *)
 
@@ -1653,6 +1685,18 @@ Lemma or_and_r :
 Proof. search. Qed.
 (* end hide *)
 
+Lemma or_and_l_abs :
+  (P /\ Q) \/ Q <-> Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma or_and_r_abs :
+  P \/ (P /\ Q) <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
 Lemma or_iff_l :
   ((P <-> Q) \/ R) -> ((P \/ R) <-> (Q \/ R)).
 (* begin hide *)
@@ -1661,6 +1705,30 @@ Proof. tauto. Qed.
 
 Lemma or_iff_r :
   (P \/ (Q <-> R)) -> ((P \/ Q) <-> (P \/ R)).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma or_impl_r :
+  P \/ (Q -> R) -> (P \/ Q -> P \/ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma Irrefutable_or_impl_r_conv :
+  ~ ~ ((P \/ Q -> P \/ R) -> P \/ (Q -> R)).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma or_impl_l :
+  (P -> Q) \/ R -> (P \/ R) -> (Q \/ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma Irrefutable_or_impl_l :
+  ~ ~ ((P \/ R -> Q \/ R) -> (P -> Q) \/ R).
 (* begin hide *)
 Proof. tauto. Qed.
 (* end hide *)
@@ -1682,6 +1750,32 @@ Proof. tauto. Qed.
 (* end hide *)
 
 (** ** Koniunkcja *)
+
+(** *** Reguły *)
+
+Lemma and_intro :
+  P -> Q -> P /\ Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_elim_l :
+  P /\ Q -> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_elim_r :
+  P /\ Q -> Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_elim :
+  (P -> Q -> R) -> (P /\ Q -> R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
 
 (** *** Właściwości działaniowe *)
 
@@ -1787,6 +1881,18 @@ Lemma and_or_r :
 Proof. search. Qed.
 (* end hide *)
 
+Lemma and_or_l_abs :
+  (P \/ Q) /\ Q <-> Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma and_or_r_abs :
+  P /\ (P \/ Q) <-> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
 Lemma and_iff_l :
   ((P <-> Q) /\ R) -> ((P /\ R) <-> (Q /\ R)).
 (* begin hide *)
@@ -1816,6 +1922,32 @@ Proof. tauto. Qed.
 (* end hide *)
 
 (** ** Równoważność *)
+
+(** *** Reguły *)
+
+Lemma iff_intro :
+  (P -> Q) -> (Q -> P) -> P <-> Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_elim_l :
+  (P <-> Q) -> (P -> Q).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_elim_r :
+  (P <-> Q) -> (Q -> P).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma iff_elim :
+  ((P -> Q) -> (Q -> P) -> R) -> ((P <-> Q) -> R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
 
 (** *** Właściwości działaniowe *)
 
@@ -1897,14 +2029,51 @@ Lemma iff_symm : (P <-> Q) <-> (Q <-> P).
 Proof. search. Qed.
 (* end hide *)
 
-Lemma iff_trans: (P <-> Q) -> (Q <-> R) -> (P <-> R).
+Lemma iff_trans : (P <-> Q) -> (Q <-> R) -> (P <-> R).
 (* begin hide *)
 Proof. search. Qed.
 (* end hide *)
 
 (** *** Pozostałe właściwości *)
 
+Lemma Irrefutable_iff_not :
+  ~ ~ ((~ P <-> ~ Q) -> (P <-> Q)).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma iff_not_conv :
+  (P <-> Q) -> (~ P <-> ~ Q).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma Irrefutable_iff_spec :
+  ~ ~ ((P <-> Q) -> (P /\ Q) \/ (~ P /\ ~ Q)).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma iff_spec_conv :
+  (P /\ Q) \/ (~ P /\ ~ Q) -> (P <-> Q).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
 (** ** Implikacja *)
+
+(** *** Reguły *)
+
+Lemma impl_intro :
+  (P -> Q) -> P -> Q.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_elim :
+  P -> (P -> Q) -> Q.
+(* begin hide *)
+Proof. search. Qed.
 
 (** *** Właściwości działaniowe *)
 
@@ -1974,14 +2143,26 @@ Lemma impl_impl_r :
 Proof. tauto. Qed.
 (* end hide *)
 
-Lemma impl_and_l_conv :
+Lemma Irrefutable_impl_or_r :
+  ~ ~ ((P -> Q \/ R) -> (P -> Q) \/ (P -> R)).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma impl_or_r_conv :
+  (P -> Q) \/ (P -> R) -> (P -> Q \/ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_and_l'_conv :
   (P -> R) /\ (Q -> R) -> ((P /\ Q) -> R).
 (* begin hide *)
 Proof. search. Qed.
 (* end hide *)
 
 Lemma impl_and_r :
-  (P -> (Q /\ R)) <-> (P -> Q) /\ (P -> R).
+  (P -> Q /\ R) <-> (P -> Q) /\ (P -> R).
 (* begin hide *)
 Proof. search. Qed.
 (* end hide *)
@@ -2011,20 +2192,26 @@ Proof. search. Qed.
 
 (** *** Pozostałe właściwości *)
 
+Lemma weakening :
+  P -> Q -> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
 Lemma impl_and_l :
   (P /\ Q -> R) <-> (P -> Q -> R).
 (* begin hide *)
 Proof. search. Qed.
 (* end hide *)
 
-Lemma impl_and_r' :
-  (P -> Q /\ R) <-> ((P -> Q) /\ (P -> R)).
+Lemma impl_or_l :
+  (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
 (* begin hide *)
 Proof. search. Qed.
 (* end hide *)
 
-Lemma impl_or_l :
-  (P \/ Q -> R) <-> (P -> R) /\ (Q -> R).
+Lemma impl_not_r :
+  (P -> ~ Q) -> (Q -> ~ P).
 (* begin hide *)
 Proof. search. Qed.
 (* end hide *)
@@ -2041,7 +2228,50 @@ Lemma Irrefutable_contraposition_conv :
 Proof. tauto. Qed.
 (* end hide *)
 
+Lemma impl_permute :
+  (P -> Q -> R) -> (Q -> P -> R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_and :
+  (P -> Q) -> (R -> S) -> P /\ R -> Q /\ S.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma impl_or :
+  (P -> Q) -> (R -> S) -> P \/ R -> Q \/ S.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
 (** ** Negacja *)
+
+(** *** Reguły *)
+
+Lemma not_intro :
+  (P -> False) -> ~ P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma not_intro_wiki :
+  (P -> Q) -> (P -> ~ Q) -> ~ P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+(** Z jakiegoś powodu Wikipedia (i parę innych źródeł) nazywa powyższe prawem
+    wprowadzania implikacji... nie wiem dlaczego.  *)
+
+Lemma not_elim :
+  ~ P -> P -> False.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+(** *** Negacja stałych i spójników *)
 
 Lemma not_True :
   ~ True <-> False.
@@ -2061,20 +2291,14 @@ Lemma not_or :
 Proof. search. Qed.
 (* end hide *)
 
-Lemma not_and_conv :
-  ~ P \/ ~ Q -> ~ (P /\ Q).
-(* begin hide *)
-Proof. search. Qed.
-(* end hide *)
-
 Lemma Irrefutable_not_and :
   ~ ~ (~ (P /\ Q) -> ~ P \/ ~ Q).
 (* begin hide *)
 Proof. tauto. Qed.
 (* end hide *)
 
-Lemma not_impl_conv :
-  P /\ ~ Q -> ~ (P -> Q).
+Lemma not_and_conv :
+  ~ P \/ ~ Q -> ~ (P /\ Q).
 (* begin hide *)
 Proof. search. Qed.
 (* end hide *)
@@ -2085,8 +2309,8 @@ Lemma Irrefutable_not_impl :
 Proof. tauto. Qed.
 (* end hide *)
 
-Lemma not_not_conv :
-  P -> ~ ~ P.
+Lemma not_impl_conv :
+  P /\ ~ Q -> ~ (P -> Q).
 (* begin hide *)
 Proof. search. Qed.
 (* end hide *)
@@ -2097,14 +2321,42 @@ Lemma Irrefutable_not_not :
 Proof. tauto. Qed.
 (* end hide *)
 
+Lemma not_not_conv :
+  P -> ~ ~ P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+(** *** Pozostałe właściwości *)
+
 Lemma not_not_not :
   ~ ~ ~ P <-> ~ P.
 (* begin hide *)
 Proof. search. Qed.
 (* end hide *)
 
-Lemma Irrefutable_iff_not :
-  ~ ~ ((~ P <-> ~ Q) <-> (P <-> Q)).
+(** ** Pozostałe mało istotne prawa *)
+
+Lemma Irrefutable_exchange :
+  ~ ~ ((~ P \/ Q) /\ (P \/ R) -> (P /\ Q) \/ (~ P /\ R)).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma exchange_conv :
+  (P /\ Q) \/ (~ P /\ R) -> (~ P \/ Q) /\ (P \/ R).
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma isolation :
+ (P /\ ~ Q) \/ (P /\ Q) -> P.
+(* begin hide *)
+Proof. search. Qed.
+(* end hide *)
+
+Lemma Irrefutable_isolation_conv :
+ ~ ~ (P -> (P /\ ~ Q) \/ (P /\ Q)).
 (* begin hide *)
 Proof. tauto. Qed.
 (* end hide *)

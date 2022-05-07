@@ -309,10 +309,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(* begin hide *)
 Lemma xor_cotrans :
   (forall P : Prop, P \/ ~ P) ->
     (forall P Q R : Prop, xor P Q -> xor P R \/ xor Q R).
+(* begin hide *)
 Proof.
   unfold xor. intros LEM P Q R H.
   destruct H as [[p nq] | [q np]].
@@ -325,14 +325,10 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma xor_assoc :
-  forall P Q R : Prop,
-    xor P (xor Q R) <-> xor (xor P Q) R.
+Lemma Irrefutable_xor_cotrans :
+  forall P Q R : Prop, ~ ~ (xor P Q -> xor P R \/ xor Q R).
 (* begin hide *)
-Proof.
-  unfold xor. split. firstorder.
-    firstorder.
-Abort.
+Proof. unfold xor; firstorder. Qed.
 (* end hide *)
 
 Lemma not_iff_xor :
@@ -347,10 +343,10 @@ Proof.
 Qed.
 (* end hide *)
 
-(* begin hide *)
 Lemma xor_not_iff :
   (forall P : Prop, P \/ ~ P) ->
     forall P Q : Prop, ~ (P <-> Q) -> xor P Q.
+(* begin hide *)
 Proof.
   unfold xor.
   intros LEM P Q H.
@@ -360,6 +356,12 @@ Proof.
     right. split; assumption.
     contradiction H. split; intro; contradiction.
 Qed.
+(* end hide *)
+
+Lemma Irrefutable_xor_not_iff :
+  forall P Q : Prop, ~ ~ (~ (P <-> Q) -> xor P Q).
+(* begin hide *)
+Proof. unfold xor; firstorder. Qed.
 (* end hide *)
 
 Lemma xor_spec :
@@ -504,14 +506,58 @@ Lemma xor_comm :
 Proof. unfold xor; search. Qed.
 (* end hide *)
 
-Lemma xor_assoc_classically :
-  (forall P : Prop, P \/ ~ P) ->
-    P `xor` (Q `xor` R) <-> (P `xor` Q) `xor` R.
+Lemma Irrefutable_xor_assoc :
+  ~ ~ (P `xor` (Q `xor` R) <-> (P `xor` Q) `xor` R).
 (* begin hide *)
-Proof.
-  intros lem.
-  destruct (lem P), (lem R); unfold xor; search.
-Qed.
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma and_xor_l :
+  (P `xor` Q) /\ R <-> (P /\ R) `xor` (Q /\ R).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma and_xor_r :
+  P /\ (Q `xor` R) <-> (P /\ Q) `xor` (P /\ R).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma Irrefutable_not_xor_l :
+  ~ ~ (~ (P `xor` Q) <-> (~ P) `xor` Q).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma Irrefutable_not_xor_r :
+  ~ ~ (~ (P `xor` Q) <-> P `xor` (~ Q)).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma Irrefutable_xor_not :
+  ~ ~ ((~ P) `xor` (~ Q) -> P `xor` Q).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma xor_not_conv :
+  P `xor` Q -> (~ P) `xor` (~ Q).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma xor_isolation :
+  (P /\ ~ Q) `xor` (P /\ Q) -> P.
+(* begin hide *)
+Proof. unfold xor; search. Qed.
+(* end hide *)
+
+Lemma Irrefutable_xor_isolation_conv :
+  ~ ~ (P -> (P /\ ~ Q) `xor` (P /\ Q)).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 End xor_new.
@@ -575,6 +621,12 @@ Proof.
       * left. split; [assumption |]. unfold xor. tauto.
       * right. split; [assumption |]. unfold xor. tauto.
 Qed.
+(* end hide *)
+
+Lemma Irrefutable_andxor_or :
+  forall P Q : Prop, ~ ~ (andxor P Q <-> P \/ Q).
+(* begin hide *)
+Proof. unfold andxor; firstorder. Qed.
 (* end hide *)
 
 (** ** Ani [P] ani [Q], czyli negacja dysjunkcji *)
