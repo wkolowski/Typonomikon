@@ -343,21 +343,6 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma xor_not_iff :
-  (forall P : Prop, P \/ ~ P) ->
-    forall P Q : Prop, ~ (P <-> Q) -> xor P Q.
-(* begin hide *)
-Proof.
-  unfold xor.
-  intros LEM P Q H.
-  destruct (LEM P) as [p | np], (LEM Q) as [q | nq].
-    contradiction H. split; trivial.
-    left. split; assumption.
-    right. split; assumption.
-    contradiction H. split; intro; contradiction.
-Qed.
-(* end hide *)
-
 Lemma Irrefutable_xor_not_iff :
   forall P Q : Prop, ~ ~ (~ (P <-> Q) -> xor P Q).
 (* begin hide *)
@@ -440,7 +425,7 @@ Qed.
 
 Module xor_new.
 
-Infix "`xor`" := xor (at level 70).
+Infix "`xor`" := xor (at level 85, right associativity).
 
 Hypothesis P Q R : Prop.
 
@@ -449,65 +434,71 @@ Hypothesis P Q R : Prop.
 Lemma xor_True_l :
   True `xor` P <-> ~ P.
 (* begin hide *)
-Proof. unfold xor; search. Qed.
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma xor_True_r :
   P `xor` True <-> ~ P.
 (* begin hide *)
-Proof. unfold xor; search. Qed.
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma xor_False_l :
   False `xor` P <-> P.
 (* begin hide *)
-Proof. unfold xor; search. Qed.
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma xor_False_r :
   P `xor` False <-> P.
 (* begin hide *)
-Proof. unfold xor; search. Qed.
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma xor_True_l' :
   P -> P `xor` Q <-> ~ Q.
 (* begin hide *)
-Proof. unfold xor; search. Qed.
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma xor_True_r' :
   Q -> P `xor` Q <-> ~ P.
 (* begin hide *)
-Proof. unfold xor; search. Qed.
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma xor_False_l' :
   ~ P -> P `xor` Q <-> Q.
 (* begin hide *)
-Proof. unfold xor; search. Qed.
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma xor_False_r' :
   ~ Q -> P `xor` Q <-> P.
 (* begin hide *)
-Proof. unfold xor; search. Qed.
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma xor_irrefl :
   P `xor` P <-> False.
 (* begin hide *)
-Proof. unfold xor; search. Qed.
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma xor_comm :
   P `xor` Q <-> Q `xor` P.
 (* begin hide *)
-Proof. unfold xor; search. Qed.
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma Irrefutable_xor_assoc :
   ~ ~ (P `xor` (Q `xor` R) <-> (P `xor` Q) `xor` R).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma or_xor :
+  P `xor` Q -> P \/ Q.
 (* begin hide *)
 Proof. unfold xor; tauto. Qed.
 (* end hide *)
@@ -525,25 +516,25 @@ Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma Irrefutable_not_xor_l :
-  ~ ~ (~ (P `xor` Q) <-> (~ P) `xor` Q).
+  ~ ~ (~ (P `xor` Q) <-> ~ P `xor` Q).
 (* begin hide *)
 Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma Irrefutable_not_xor_r :
-  ~ ~ (~ (P `xor` Q) <-> P `xor` (~ Q)).
+  ~ ~ (~ (P `xor` Q) <-> P `xor` ~ Q).
 (* begin hide *)
 Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma Irrefutable_xor_not :
-  ~ ~ ((~ P) `xor` (~ Q) -> P `xor` Q).
+  ~ ~ ((~ P) `xor` ~ Q -> P `xor` Q).
 (* begin hide *)
 Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma xor_not_conv :
-  P `xor` Q -> (~ P) `xor` (~ Q).
+  P `xor` Q -> ~ P `xor` ~ Q.
 (* begin hide *)
 Proof. unfold xor; tauto. Qed.
 (* end hide *)
@@ -551,11 +542,47 @@ Proof. unfold xor; tauto. Qed.
 Lemma xor_isolation :
   (P /\ ~ Q) `xor` (P /\ Q) -> P.
 (* begin hide *)
-Proof. unfold xor; search. Qed.
+Proof. unfold xor; tauto. Qed.
 (* end hide *)
 
 Lemma Irrefutable_xor_isolation_conv :
   ~ ~ (P -> (P /\ ~ Q) `xor` (P /\ Q)).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma Irrefutable_dd_and_xor :
+  ~ ~ (P /\ (~ P `xor` Q) -> P /\ Q).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma dd_and_xor_conv :
+  P /\ Q -> P /\ (~ P `xor` Q).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma dd_or_xor_r :
+  P \/ (P `xor` Q) -> P \/ Q.
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma Irrefutable_dd_or_xor_r_conv :
+  ~ ~ (P \/ Q -> P \/ (P `xor` Q)).
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma dd_impl_xor_r :
+  P -> (~ P `xor` Q) <-> P -> Q.
+(* begin hide *)
+Proof. unfold xor; tauto. Qed.
+(* end hide *)
+
+Lemma dd_impl_xor_l :
+  (P `xor` Q) -> Q <-> P -> Q.
 (* begin hide *)
 Proof. unfold xor; tauto. Qed.
 (* end hide *)

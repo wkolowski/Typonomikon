@@ -427,11 +427,6 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">xor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> -&gt; ~ (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">xor_not_iff</span> :<br/>
-&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">xor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_xor_not_iff</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>, ~ ~ (~ (<span class="id" title="var">P</span> &lt;-&gt; <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">xor</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>).<br/>
 
@@ -459,7 +454,7 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 <span class="id" title="keyword">Module</span> <span class="id" title="var">xor_new</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Infix</span> &quot;`xor`" := <span class="id" title="var">xor</span> (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 70).<br/>
+<span class="id" title="keyword">Infix</span> &quot;`xor`" := <span class="id" title="var">xor</span> (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 85, <span class="id" title="tactic">right</span> <span class="id" title="keyword">associativity</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Hypothesis</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>.<br/>
@@ -518,6 +513,10 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 &nbsp;&nbsp;~ ~ (<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` (<span class="id" title="var">Q</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">R</span>) &lt;-&gt; (<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>) `<span class="id" title="var">xor</span>` <span class="id" title="var">R</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_xor</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_xor_l</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>) /\ <span class="id" title="var">R</span> &lt;-&gt; (<span class="id" title="var">P</span> /\ <span class="id" title="var">R</span>) `<span class="id" title="var">xor</span>` (<span class="id" title="var">Q</span> /\ <span class="id" title="var">R</span>).<br/>
 
@@ -527,19 +526,19 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_not_xor_l</span> :<br/>
-&nbsp;&nbsp;~ ~ (~ (<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>) &lt;-&gt; (~ <span class="id" title="var">P</span>) `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;~ ~ (~ (<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>) &lt;-&gt; ~ <span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_not_xor_r</span> :<br/>
-&nbsp;&nbsp;~ ~ (~ (<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>) &lt;-&gt; <span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` (~ <span class="id" title="var">Q</span>)).<br/>
+&nbsp;&nbsp;~ ~ (~ (<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>) &lt;-&gt; <span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` ~ <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_xor_not</span> :<br/>
-&nbsp;&nbsp;~ ~ ((~ <span class="id" title="var">P</span>) `<span class="id" title="var">xor</span>` (~ <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;~ ~ ((~ <span class="id" title="var">P</span>) `<span class="id" title="var">xor</span>` ~ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">xor_not_conv</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span> -&gt; (~ <span class="id" title="var">P</span>) `<span class="id" title="var">xor</span>` (~ <span class="id" title="var">Q</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span> -&gt; ~ <span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` ~ <span class="id" title="var">Q</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">xor_isolation</span> :<br/>
@@ -548,6 +547,30 @@ Kombinator <span class="inlinecode"><span class="id" title="tactic">repeat</span
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_xor_isolation_conv</span> :<br/>
 &nbsp;&nbsp;~ ~ (<span class="id" title="var">P</span> -&gt; (<span class="id" title="var">P</span> /\ ~ <span class="id" title="var">Q</span>) `<span class="id" title="var">xor</span>` (<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_dd_and_xor</span> :<br/>
+&nbsp;&nbsp;~ ~ (<span class="id" title="var">P</span> /\ (~ <span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dd_and_xor_conv</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> /\ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> /\ (~ <span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dd_or_xor_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> \/ (<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_dd_or_xor_r_conv</span> :<br/>
+&nbsp;&nbsp;~ ~ (<span class="id" title="var">P</span> \/ <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">P</span> \/ (<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dd_impl_xor_r</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">P</span> -&gt; (~ <span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>) &lt;-&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">dd_impl_xor_l</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> `<span class="id" title="var">xor</span>` <span class="id" title="var">Q</span>) -&gt; <span class="id" title="var">Q</span> &lt;-&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">Q</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">xor_new</span>.<br/>
