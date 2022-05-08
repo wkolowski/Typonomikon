@@ -12,8 +12,8 @@ Lemma iff_intro' :
     (P -> Q) -> (Q -> P) -> (P <-> Q).
 Proof.
   intros. split.
-    intro. apply H. assumption.
-    intro. apply H0. assumption.
+  - intro. apply H. assumption.
+  - intro. apply H0. assumption.
 Qed.
 
 (** Jego dowód wygląda dość schematycznie. Taktyka [split] generuje

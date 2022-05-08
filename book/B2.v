@@ -298,8 +298,6 @@ TODO 3: Użyć nominalizmów do wytłumaczenia wiązania nazw zmiennych.
     - rozwiązywanie zagadek logicznych
     - więcej zadań z [exists] *)
 
-(** ** Prawa *)
-
 Section QuantifiersExercises.
 
 Hypotheses
@@ -307,7 +305,23 @@ Hypotheses
   (P Q : A -> Prop)
   (R : Prop).
 
-(** *** Kwantyfikator uniwersalny *)
+(** ** Kwantyfikator uniwersalny *)
+
+(** *** Reguły *)
+
+Lemma forall_intro :
+  (forall x : A, P x) -> (forall x : A, P x).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma forall_elim :
+  forall x : A, (forall y : A, P y) -> P x.
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+(** *** Prawa *)
 
 Lemma forall_nondep :
   (forall x : A, R) <-> (A -> R).
@@ -369,11 +383,40 @@ Lemma forall_or_nondep_l :
 Proof. firstorder. Qed.
 (* end hide *)
 
+Lemma forall_or_nondep_l_conv_classically :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall x : A, R \/ P x) ->
+      R \/ (forall x : A, P x).
+(* begin hide *)
+Proof.
+  intros lem H.
+  destruct (lem R) as [r | nr].
+  - left; assumption.
+  - right. intros x. destruct (H x) as [r | p].
+    + contradiction.
+    + assumption.
+Qed.
+(* end hide *)
+
 Lemma forall_or_nondep_r :
   (forall x : A, P x) \/ R ->
     (forall x : A, P x \/ R).
 (* begin hide *)
 Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma forall_or_nondep_r_conv_classically :
+  (forall P : Prop, P \/ ~ P) ->
+    (forall x : A, P x \/ R) ->
+      (forall x : A, P x) \/ R.
+(* begin hide *)
+Proof.
+  intros lem H.
+  apply or_comm.
+  apply forall_or_nondep_l_conv_classically.
+  - assumption.
+  - intros x. apply or_comm, H.
+Qed.
 (* end hide *)
 
 Lemma forall_impl :
@@ -414,7 +457,34 @@ Lemma forall_impl_nondep_r :
 Proof. firstorder. Qed.
 (* end hide *)
 
+Lemma forall_impl_nondep_r_conv_classically :
+  (forall P : Prop, P \/ ~ P) ->
+    ((forall x : A, P x) -> A -> R) ->
+      (forall x : A, P x -> R).
+(* begin hide *)
+Proof.
+  intros lem H x p.
+  
+Abort.
+(* end hide *)
+
 (** *** Kwantyfikator egzystencjalny *)
+
+(** *** Reguły *)
+
+Lemma exists_intro :
+  forall x : A, P x -> exists y : A, P y.
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma exists_elim :
+  (forall x : A, P x -> R) -> (exists y : A, P y) -> R.
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+(** *** Prawa *)
 
 Lemma exists_nondep :
   (exists x : A, R) <-> inhabited A /\ R.
@@ -489,6 +559,46 @@ Lemma ex_and_nondep_r :
   (exists x : A, P x) /\ R.
 (* begin hide *)
 Proof. firstorder. Qed.
+(* end hide *)
+
+(** ** Związki [forall] i [exists] *)
+
+Lemma exists_forall_inhabited :
+  A -> (forall x : A, P x) -> exists x : A, P x.
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma not_exists :
+  ~ (exists x : A, P x) -> forall x : A, ~ P x.
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma exists_not :
+  (exists x : A, ~ P x) -> ~ forall x : A, P x.
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma forall_not :
+  (forall x : A, ~ P x) -> ~ exists x : A, P x.
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma Irrefutable_not_forall :
+  (forall P : Prop, P \/ ~ P) ->
+    ~ (forall x : A, P x) -> exists x : A, ~ P x.
+(* begin hide *)
+Proof.
+  intros lem nall.
+  destruct (lem (exists x : A, ~ P x)).
+  - assumption.
+  - exfalso. apply nall. intros x. destruct (lem (P x)) as [p | np].
+    + assumption.
+    + contradict H. exists x. assumption.
+Qed.
 (* end hide *)
 
 End QuantifiersExercises.

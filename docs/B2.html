@@ -426,13 +426,9 @@ Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
 
 </li>
 <li> więcej zadań z <span class="inlinecode"><span class="id" title="tactic">exists</span></span> 
+
 </li>
 </ul>
-
-<div class="paragraph"> </div>
-
-<a id="lab104"></a><h2 class="section">Prawa</h2>
-
 </div>
 <div class="code">
 
@@ -449,7 +445,28 @@ Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
 </div>
 
 <div class="doc">
-<a id="lab105"></a><h3 class="section">Kwantyfikator uniwersalny</h3>
+<a id="lab104"></a><h2 class="section">Kwantyfikator uniwersalny</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab105"></a><h3 class="section">Reguły</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_intro</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_elim</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab106"></a><h3 class="section">Prawa</h3>
 
 </div>
 <div class="code">
@@ -495,9 +512,21 @@ Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> \/ <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_or_nondep_l_conv_classically</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> \/ <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> \/ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_or_nondep_r</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) \/ <span class="id" title="var">R</span> -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> \/ <span class="id" title="var">R</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_or_nondep_r_conv_classically</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> \/ <span class="id" title="var">R</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) \/ <span class="id" title="var">R</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_impl</span> :<br/>
@@ -525,10 +554,37 @@ Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
 &nbsp;&nbsp;((<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">R</span>).<br/>
 
 <br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_impl_nondep_r_conv_classically</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;((<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">R</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">R</span>).<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-<a id="lab106"></a><h3 class="section">Kwantyfikator egzystencjalny</h3>
+<a id="lab107"></a><h3 class="section">Kwantyfikator egzystencjalny</h3>
+
+<div class="paragraph"> </div>
+
+<a id="lab108"></a><h3 class="section">Reguły</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">exists_intro</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">y</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">exists_elim</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">R</span>) -&gt; (<span class="id" title="tactic">exists</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">R</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab109"></a><h3 class="section">Prawa</h3>
 
 </div>
 <div class="code">
@@ -579,17 +635,47 @@ Gdy zdanie kwantyfikowane egzystencjalnie znajdzie się w naszych
 &nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) /\ <span class="id" title="var">R</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+<a id="lab110"></a><h2 class="section">Związki <span class="inlinecode"><span class="id" title="keyword">forall</span></span> i <span class="inlinecode"><span class="id" title="tactic">exists</span></span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">exists_forall_inhabited</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">A</span> -&gt; (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_exists</span> :<br/>
+&nbsp;&nbsp;~ (<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">exists_not</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; ~ <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">forall_not</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; ~ <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">Irrefutable_not_forall</span> :<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> \/ ~ <span class="id" title="var">P</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;~ (<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, ~ <span class="id" title="var">P</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">QuantifiersExercises</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a id="lab107"></a><h2 class="section">Zagadki</h2>
+<a id="lab111"></a><h2 class="section">Zagadki</h2>
 
 <div class="paragraph"> </div>
 
-<a id="lab108"></a><h4 class="section">Ćwiczenie</h4>
+<a id="lab112"></a><h4 class="section">Ćwiczenie</h4>
 
 <div class="paragraph"> </div>
 
