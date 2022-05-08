@@ -302,146 +302,194 @@ TODO 3: Użyć nominalizmów do wytłumaczenia wiązania nazw zmiennych.
 
 Section QuantifiersExercises.
 
-Variable A : Type.
-Hypotheses P Q : A -> Prop.
+Hypotheses
+  (A : Type)
+  (P Q : A -> Prop)
+  (R : Prop).
 
-(** *** Projekcje *)
+(** *** Kwantyfikator uniwersalny *)
 
-Lemma forall_and_proj1 :
-  (forall x : A, P x /\ Q x) -> (forall x : A, P x).
+Lemma forall_nondep :
+  (forall x : A, R) <-> (A -> R).
 (* begin hide *)
-Proof.
-  intros. destruct (H x). assumption.
-Qed.
+Proof. firstorder. Qed.
 (* end hide *)
 
-Lemma forall_and_proj2 :
-  (forall x : A, P x /\ Q x) -> (forall x : A, Q x).
-(* begin hide *)
-Proof.
-  intros. destruct (H x). assumption.
-Qed.
-(* end hide *)
-
-(** *** Rozdzielność *)
-
-Lemma forall_dist_and :
-  (forall x : A, P x /\ Q x) <->
+Lemma forall_and :
+  (forall x : A, P x /\ Q x)
+    <->
   (forall x : A, P x) /\ (forall x : A, Q x).
 (* begin hide *)
-Proof.
-  split.
-    intros. split.
-      intros. destruct (H x). assumption.
-      intros. destruct (H x). assumption.
-    intros. split.
-      destruct H. apply H.
-      destruct H. apply H0.
-Restart.
-  split; intros; split; intros; try destruct H; try (destruct (H x));
-  try assumption; try apply H; try apply H0.
-Qed.
+Proof. firstorder. Qed.
 (* end hide *)
 
-Lemma exists_dist_or :
-  (exists x : A, P x \/ Q x) <->
-  (exists x : A, P x) \/ (exists x : A, Q x).
+Lemma forall_and_nondep_l :
+  forall (A : Type) (P : A -> Prop) (R : Prop),
+  (forall x : A, R /\ P x)
+    <->
+  (A -> R) /\ (forall x : A, P x).
 (* begin hide *)
-Proof.
-  split; intros.
-    destruct H as [x [HP | HQ]].
-      left. exists x. assumption.
-      right. exists x. assumption.
-    destruct H as [[x HP] | [x HQ]].
-      exists x. left. assumption.
-      exists x. right. assumption.
-Restart.
-  split; intros.
-    destruct H as [x [HP | HQ]];
-      [left | right]; exists x; assumption.
-    destruct H as [[x HP] | [x HQ]];
-      exists x; [left | right]; assumption.
-Qed.
+Proof. firstorder. Qed.
 (* end hide *)
 
-Lemma ex_dist_and :
-  (exists x : A, P x /\ Q x) ->
-    (exists y : A, P y) /\ (exists z : A, Q z).
+Lemma forall_and_nondep_r :
+  (forall x : A, P x /\ R)
+    <->
+  (forall x : A, P x) /\ (A -> R).
 (* begin hide *)
-Proof.
-  intros. destruct H as [x H]. destruct H.
-  split; exists x; assumption.
-Qed.
+Proof. firstorder. Qed.
 (* end hide *)
 
-(** *** Inne *)
-
-Lemma forall_or_imp :
+Lemma forall_or :
   (forall x : A, P x) \/ (forall x : A, Q x) ->
-    forall x : A, P x \/ Q x.
+    (forall x : A, P x \/ Q x).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma not_forall_or_conv :
+  ~
+  (forall A P Q,
+    (forall x : A, P x \/ Q x) ->
+      (forall x : A, P x) \/ (forall x : A, Q x)).
 (* begin hide *)
 Proof.
-  destruct 1; intros.
-    left. apply H.
-    right. apply H.
-Restart.
-  destruct 1; intros; [left | right]; apply H.
+  intros H.
+  destruct (H bool (fun b => b = true) (fun b => b = false)) as [H' | H'].
+  - destruct x; auto.
+  - specialize (H' false). congruence.
+  - specialize (H' true). congruence.
 Qed.
 (* end hide *)
 
-Lemma forall_imp_imp :
+Lemma forall_or_nondep_l :
+  R \/ (forall x : A, P x) ->
+    (forall x : A, R \/ P x).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma forall_or_nondep_r :
+  (forall x : A, P x) \/ R ->
+    (forall x : A, P x \/ R).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma forall_impl :
   (forall x : A, P x -> Q x) ->
     (forall x : A, P x) -> (forall x : A, Q x).
 (* begin hide *)
-Proof.
-  intros. apply H. apply H0.
-Qed.
+Proof. firstorder. Qed.
 (* end hide *)
 
-Lemma forall_inhabited_nondep :
-  forall R : Prop, A -> ((forall x : A, R) <-> R).
-(* begin hide *)
-(* TODO: wyrzucić *)
-Proof.
-  split; intros.
-    apply H. assumption.
-    assumption.
-Restart.
-  split; intros; try apply H; assumption.
-Qed.
-(* end hide *)
-
-Lemma forall_or_nondep :
-  forall R : Prop,
-    (forall x : A, P x) \/ R -> (forall x : A, P x \/ R).
-(* begin hide *)
-Proof.
-  destruct 1; intros.
-    left. apply H.
-    right. assumption.
-Qed.
-(* end hide *)
-
-Lemma forall_nondep_impl :
-  forall R : Prop,
-    (forall x : A, R -> P x) <-> (R -> forall x : A, P x).
-(* begin hide *)
-Proof.
-  split; intros.
-    apply H. assumption.
-    apply H. assumption.
-Restart.
-  split; intros; apply H; assumption.
-Qed.
-(* end hide *)
-
-Lemma forall_nondep_impl_conv :
+Lemma not_forall_impl_conv :
   ~
-  (forall (A : Type) (P : A -> Prop) (Q : Prop),
-    (forall x : A, P x -> Q) -> (forall x : A, P x) -> Q).
+    (forall (A : Type) (P Q : A -> Prop),
+      ((forall x : A, P x) -> (forall x : A, Q x))
+        ->
+      (forall x : A, P x -> Q x)).
+(* begin hide *)
 Proof.
-  intro H. apply (H False (fun _ => False)); trivial.
+  intro H.
+  cut (true = false); [inversion 1 |].
+  apply (H bool (fun b => b = true) (fun b => b = false)); [| reflexivity].
+  intros Heq b; specialize (Heq false); congruence.
 Qed.
+(* end hide *)
+
+Lemma forall_impl_nondep_l :
+  (forall x : A, R -> P x)
+    <->
+  (R -> forall x : A, P x).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma forall_impl_nondep_r :
+  (forall x : A, P x -> R)
+    ->
+  ((forall x : A, P x) -> A -> R).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+(** *** Kwantyfikator egzystencjalny *)
+
+Lemma exists_nondep :
+  (exists x : A, R) <-> inhabited A /\ R.
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma exists_or :
+  (exists x : A, P x \/ Q x)
+    <->
+  (exists x : A, P x) \/ (exists x : A, Q x).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma exists_or_nondep_l :
+  (exists x : A, R \/ Q x)
+    <->
+  (inhabited A /\ R) \/ (exists x : A, Q x).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma exists_or_nondep_r :
+  (exists x : A, P x \/ R)
+    <->
+  (exists x : A, P x) \/ (inhabited A /\ R).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma ex_and :
+  (exists x : A, P x /\ Q x) ->
+    (exists y : A, P y) /\ (exists z : A, Q z).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma not_ex_and_conv :
+  ~ (forall (A : Type) (P Q : A -> Prop),
+      (exists y : A, P y) /\ (exists z : A, Q z) ->
+        (exists x : A, P x /\ Q x)).
+(* begin hide *)
+Proof.
+  intros H.
+  destruct (H bool (fun b => b = true) (fun b => b = false)) as (b & Ht & Hf).
+  - split.
+    + exists true. reflexivity.
+    + exists false. reflexivity.
+  - congruence.
+Restart.
+  intros H.
+  destruct (H Prop (fun P => P) (fun P => ~ P)) as (S & s & ns).
+  - split.
+    + exists True. trivial.
+    + exists False. intro f. contradiction.
+  - contradiction.
+Qed.
+(* end hide *)
+
+Lemma ex_and_nondep_l :
+  (exists x : A, R /\ Q x)
+    <->
+  R /\ (exists z : A, Q z).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
+Lemma ex_and_nondep_r :
+  (exists x : A, P x /\ R)
+    <->
+  (exists x : A, P x) /\ R.
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
 
 End QuantifiersExercises.
 
