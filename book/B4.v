@@ -67,41 +67,46 @@ Ltac u :=
 
 (** [P] jest stabilne, gdy [~ ~ P -> P] *)
 
-Lemma not_not_True :
-  ~ ~ True -> True.
+Definition Stable (P : Prop) : Prop :=
+  ~ ~ P -> P.
+
+Lemma Stable_True :
+  Stable True.
 (* begin hide *)
 Proof.
   intros _. trivial.
 Qed.
 (* end hide *)
 
-Lemma not_not_False :
-  ~ ~ False -> False.
+Lemma Stable_False :
+  Stable False.
 (* begin hide *)
 Proof.
   intro H. apply H. intro H'. assumption.
 Qed.
 (* end hide *)
 
-Lemma not_not_and :
+Lemma Stable_and :
   forall P Q : Prop,
-    (~ ~ P -> P) -> (~ ~ Q -> Q) -> ~ ~ (P /\ Q) -> P /\ Q.
+    Stable P -> Stable Q -> Stable (P /\ Q).
 (* begin hide *)
 Proof.
+  unfold Stable.
   intros P Q Hp Hq npq.
   split.
-    apply Hp. intro np. apply npq. intro pq. destruct pq as [p q].
-      apply np. assumption.
-    apply Hq. intro nq. apply npq. intro pq. destruct pq as [p q].
-      apply nq. assumption.
+  - apply Hp. intro np. apply npq. intros [p q]. apply np. assumption.
+  - apply Hq. intro nq. apply npq. intros [p q]. apply nq. assumption.
+Restart.
+  unfold Stable; tauto.
 Qed.
 (* end hide *)
 
-Lemma not_not_impl :
+Lemma Stable_impl :
   forall P Q : Prop,
-    (~ ~ Q -> Q) -> ~ ~ (P -> Q) -> P -> Q.
+    Stable Q -> Stable (P -> Q).
 (* begin hide *)
 Proof.
+  unfold Stable.
   intros P Q nnq nnpq p.
   apply nnq. intro nq.
   apply nnpq. intro npq.
@@ -109,18 +114,26 @@ Proof.
 Qed.
 (* end hide *)
 
-Lemma not_not_forall :
+Lemma Stable_forall :
   forall (A : Type) (P : A -> Prop),
-    (forall x : A, ~ ~ P x -> P x) -> ~ ~ (forall x : A, P x) ->
-      forall x : A, P x.
+    (forall x : A, Stable (P x)) -> Stable (forall x : A, P x).
 (* begin hide *)
 Proof.
+  unfold Stable.
   intros A P Hnn nnH x.
   apply Hnn. intro np.
   apply nnH. intro nap.
   apply np, nap.
 Qed.
 (* end hide *)
+
+Lemma Stable_exists :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Stable (P x)) -> Stable (exists x : A, P x).
+Proof.
+  unfold Stable.
+  intros A P Hnnp nnex.
+Abort.
 
 Lemma not_not_elim :
   forall P Q : Prop,
@@ -530,6 +543,63 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** Zdania określone *)
+
+Lemma Definite_True :
+  True \/ ~ True.
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma Definite_False :
+  False \/ ~ False.
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma Definite_impl :
+  forall P Q : Prop, (P \/ ~ P) -> (Q \/ ~ Q) -> (P -> Q) \/ ~ (P -> Q).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma Definite_or :
+  forall P Q : Prop, (P \/ ~ P) -> (Q \/ ~ Q) -> (P \/ Q) \/ ~ (P \/ Q).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma Definite_and :
+  forall P Q : Prop, (P \/ ~ P) -> (Q \/ ~ Q) -> (P /\ Q) \/ ~ (P /\ Q).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma Definite_iff :
+  forall P Q : Prop, (P \/ ~ P) -> (Q \/ ~ Q) -> (P <-> Q) \/ ~ (P <-> Q).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma Definite_not :
+  forall P Q : Prop, (P \/ ~ P) -> (~ P \/ ~ ~ P).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma Definite_forall_failed :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, P x \/ ~ P x) -> (forall x : A, P x) \/ ~ (forall x : A, P x).
+Proof.
+Abort.
+
+Lemma Definite_exists_failed :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, P x \/ ~ P x) -> (exists x : A, P x) \/ ~ (exists x : A, P x).
+Proof.
+  intros A P H.
+Abort.
+
 (** ** Metoda zerojedynkowa *)
 
 (** Tutaj o rysowaniu tabelek. *)
@@ -595,6 +665,12 @@ Qed.
 (** ** Słaba implikacja *)
 
 Definition wimpl (P Q : Prop) : Prop := ~ Q -> ~ P.
+
+Lemma wimpl_alternative :
+  forall P Q : Prop, wimpl P Q <-> ~ (P /\ ~ Q).
+(* begin hide *)
+Proof. unfold wimpl; tauto. Qed.
+(* end hide *)
 
 Lemma wimpl_impl :
   forall P Q : Prop,
@@ -1707,6 +1783,79 @@ Proof.
 Qed.
 (* end hide *)
 
+(** *** Zdania kontrapozowalne *)
+
+Definition Contraposable (P : Prop) : Prop :=
+  forall R : Prop, (~ R -> ~ P) -> (P -> R).
+
+Lemma Contraposable_impl :
+  forall P Q : Prop, Contraposable P -> Contraposable Q -> Contraposable (P -> Q).
+(* begin hide *)
+Proof. Abort.
+(* end hide *)
+
+Lemma Contraposable_or :
+  forall P Q : Prop, Contraposable P -> Contraposable Q -> Contraposable (P \/ Q).
+(* begin hide *)
+Proof.
+  unfold Contraposable.
+  intros P Q pr qr R H [p | q].
+  - apply pr; [| assumption]. intros nr _. apply H; [| left]; assumption.
+  - apply qr; [| assumption]. intros nq _. apply H; [| right]; assumption.
+Qed.
+(* end hide *)
+
+Lemma Contraposable_and :
+  forall P Q : Prop, Contraposable P -> Contraposable Q -> Contraposable (P /\ Q).
+(* begin hide *)
+Proof.
+  unfold Contraposable.
+  intros P Q pr qr R H [p q].
+  apply pr; [| assumption]. intros nr _.
+  apply H; [| split]; assumption.
+Qed.
+(* end hide *)
+
+Lemma Contraposable_iff :
+  forall P Q : Prop, Contraposable P -> Contraposable Q -> Contraposable (P <-> Q).
+(* begin hide *)
+Proof.
+  unfold Contraposable.
+  intros P Q pr qr R H [pq qp]. apply pr.
+  - intros nr _. apply H; [| split]; assumption.
+  -
+Abort.
+(* end hide *)
+
+Lemma Contraposable_not :
+  forall P : Prop, Contraposable P -> Contraposable (~ P).
+Proof.
+  unfold Contraposable.
+  intros P pr R H np. apply pr.
+  - intros _. assumption.
+  - admit.
+Abort.
+
+Lemma Contraposable_forall :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Contraposable (P x)) -> Contraposable (forall x : A, P x).
+Proof.
+  unfold Contraposable. firstorder.
+Abort.
+
+Lemma Contraposable_forall :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Contraposable (P x)) -> Contraposable (exists x : A, P x).
+(* begin hide *)
+Proof.
+  unfold Contraposable.
+  intros A P r R H [x p].
+  apply (r x); [| assumption].
+  intros nr _. apply H; [assumption |].
+  exists x. assumption.
+Qed.
+(* end hide *)
+
 (** * Logika klasyczna jako logika cudownych konsekwencji (TODO) *)
 
 (** ** Logika cudownych konsekwencji *)
@@ -1789,6 +1938,70 @@ Proof.
   intro nq. contradiction npnq.
 Qed.
 (* end hide *)
+
+(** *** Zdania cudowne *)
+
+Definition Wonderful (P : Prop) : Prop :=
+  (~ P -> P) -> P.
+
+Lemma Wonderful_True :
+  Wonderful True.
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_False :
+  Wonderful False.
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_impl :
+  forall P Q : Prop, Wonderful P -> Wonderful Q -> Wonderful (P -> Q).
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_or :
+  forall P Q : Prop, Wonderful P -> Wonderful Q -> Wonderful (P \/ Q).
+Proof.
+  unfold Wonderful.
+Abort.
+(* end hide *)
+
+Lemma Wonderful_and :
+  forall P Q : Prop, Wonderful P -> Wonderful Q -> Wonderful (P /\ Q).
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_iff :
+  forall P Q : Prop, Wonderful P -> Wonderful Q -> Wonderful (P <-> Q).
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_not :
+  forall P : Prop, Wonderful P -> Wonderful (~ P).
+(* begin hide *)
+Proof. unfold Wonderful; tauto. Qed.
+(* end hide *)
+
+Lemma Wonderful_forall :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Wonderful (P x)) -> Wonderful (forall x : A, P x).
+(* begin hide *)
+Proof. unfold Wonderful; firstorder. Qed.
+(* end hide *)
+
+Lemma Wonderful_exists :
+  forall (A : Type) (P : A -> Prop),
+    (forall x : A, Wonderful (P x)) -> Wonderful (exists x : A, P x).
+Proof.
+  unfold Wonderful.
+  intros A P W Hn.
+  apply Hn. intros [x p].
+Abort.
 
 (** ** Logika Peirce'a *)
 

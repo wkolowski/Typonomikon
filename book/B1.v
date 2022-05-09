@@ -1124,22 +1124,6 @@ Parameters P Q R S : Prop.
     popadlibyśmy w sprzeczność i nie moglibyśmy ufać żadnym dowodom,
     które przeprowadzamy. *)
 
-(** ** Przemienność *)
-
-(** ** Łączność *)
-
-(** ** Rozdzielność *)
-
-(** ** Kuryfikacja i dekuryfikacja *)
-
-(** ** Prawa de Morgana *)
-
-(** ** Niesprzeczność i zasada wyłączonego środka *)
-
-(** ** Elementy neutralne i absorbujące *)
-
-(** ** Inne *)
-
 End exercises_propositional.
 
 Check and_comm.
@@ -1158,9 +1142,11 @@ Check and_comm.
 
 Module NewExercises.
 
-Hypothesis P Q R S : Prop.
+Hypothesis
+  (P Q R S : Prop)
+  (P' Q' R' S' : Prop).
 
-(** ** Ogólne prawa *)
+(** ** Kluczowe prawa *)
 
 Lemma noncontradiction :
   (P /\ ~ P) <-> False.
@@ -1717,6 +1703,38 @@ Lemma iff_spec_conv :
 Proof. tauto. Qed.
 (* end hide *)
 
+(** *** Bardzo nudne właściwości *)
+
+Lemma impl_pres_iff :
+  (P <-> P') -> (Q <-> Q') -> (P -> Q) <-> (P' -> Q').
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma or_pres_iff :
+  (P <-> P') -> (Q <-> Q') -> P \/ Q <-> P' \/ Q'.
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma and_pres_iff :
+  (P <-> P') -> (Q <-> Q') -> P /\ Q <-> P' /\ Q'.
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma iff_pres_iff :
+  (P <-> P') -> (Q <-> Q') -> (P <-> Q) <-> (P' <-> Q').
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma not_pres_iff :
+  (P <-> P') -> ~ P <-> ~ P'.
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
 (** ** Implikacja *)
 
 (** *** Reguły *)
@@ -2080,6 +2098,20 @@ Proof. tauto. Qed.
 
 Lemma dd_impl_or_l :
   (P \/ Q) -> Q <-> P -> Q.
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+(** *** Wesołe podwójnie zanegowane prawa *)
+
+Lemma Irrefutable_Godel_Dummet :
+  ~ ~ ((P -> Q) \/ (Q -> P)).
+(* begin hide *)
+Proof. tauto. Qed.
+(* end hide *)
+
+Lemma Irrefutable_fully_disjunctive_reasoning :
+  ~ ~ ((P -> Q) \/ (Q -> R)).
 (* begin hide *)
 Proof. tauto. Qed.
 (* end hide *)
