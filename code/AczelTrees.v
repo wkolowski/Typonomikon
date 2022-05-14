@@ -91,7 +91,7 @@ Lemma no_Prop_embedding :
   forall (A : Prop) (f : Prop -> A) (g : A -> Prop),
     ~ (forall P : Prop, g (f P) <-> P).
 Proof.
-  intros P f g Hiff.
+  intros A f g Hiff.
   pose (R t1 t2 := g
     match t2 with
     | Acz h => f (exists x, h x = t1)
@@ -152,3 +152,117 @@ Proof.
     + congruence.
     + contradiction.
 Qed.
+
+Module HierarchyTheoremUniverses.
+
+Record Embedding@{u} (X Y : Type@{u}) : Type@{u} :=
+{
+    coe : X -> Y;
+    uncoe : Y -> X;
+    law : forall x : X, uncoe (coe x) = x;
+}.
+
+Arguments coe {X Y} _ _.
+Arguments uncoe {X Y} _ _.
+Arguments law {X Y} _ _.
+
+Lemma Reflexive_Embedding :
+  forall X : Type, Embedding X X.
+Proof.
+  refine (fun _ => {| coe x := x; uncoe x := x; law _ := eq_refl; |}).
+Defined.
+
+Lemma Embedding_inv :
+  forall X Y : Type, (Embedding X Y -> False) -> X <> Y.
+Proof.
+  intros X Y Hne ->.
+  apply Hne, Reflexive_Embedding.
+Defined.
+
+Lemma Prop_does_not_embed_into_a_proposition :
+  forall P : Prop, Embedding Prop P -> False.
+Proof.
+  intros P [f g Hfg].
+  eapply no_Prop_embedding', Hfg.
+Qed.
+
+Section HierarchyTheoremUniverses.
+
+Universe u.
+
+Context
+  {A : Type@{u}}
+  (E : Embedding Type@{u} A).
+
+Inductive AczelT' : Type@{u} :=
+| AczT' : forall (a : A) (f : uncoe E a -> AczelT'), AczelT'.
+
+Definition SubtreeT' (t1 t2 : AczelT') : Prop :=
+match t2 with
+| AczT' _ f => exists x, f x = t1
+end.
+
+Lemma Irreflexive_SubtreeT' :
+  forall t : AczelT', ~ SubtreeT' t t.
+Proof.
+  induction t as [a f IH].
+  cbn. intros [x Heq].
+  apply (IH x).
+  rewrite Heq at 2. cbn.
+  exists x. reflexivity.
+Qed.
+
+Lemma Embedding_AczelT' : Embedding AczelT' (uncoe E (coe E AczelT')).
+Proof.
+  replace (uncoe E (coe E AczelT')) with AczelT'.
+  - apply Reflexive_Embedding.
+  - rewrite law. reflexivity.
+Defined.
+
+Definition Universal : AczelT' :=
+  AczT' (coe E AczelT') (uncoe Embedding_AczelT').
+
+Lemma SubbtreeT'_Universal :
+  SubtreeT' Universal Universal.
+Proof.
+  cbn. exists (coe Embedding_AczelT' Universal).
+  rewrite law. reflexivity.
+Qed.
+
+Lemma Hierarchy_Embedding : False.
+Proof.
+  eapply Irreflexive_SubtreeT'.
+  apply SubbtreeT'_Universal.
+Qed.
+
+End HierarchyTheoremUniverses.
+
+Section HierarchyTheorem'.
+
+Universe u.
+
+Lemma Hierarchy_eq :
+  forall A : Type@{u}, Type@{u} = A -> False.
+Proof.
+  intros A.
+  apply Embedding_inv.
+  apply Hierarchy_Embedding.
+Qed.
+
+End HierarchyTheorem'.
+
+Section HierarchyTheorem''.
+
+Universe u1 u2 u3.
+
+Constraint u1 < u2.
+Constraint u2 < u3.
+
+Lemma Hierarchy_neq : Type@{u2} = Type@{u1} -> False.
+Proof.
+  apply (@Hierarchy_eq@{u2 u3} Type@{u1}).
+Qed.
+
+End HierarchyTheorem''.
+
+End HierarchyTheoremUniverses.
