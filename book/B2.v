@@ -468,6 +468,12 @@ Proof.
 Abort.
 (* end hide *)
 
+Lemma forall_not_not :
+  ~ ~ (forall x : A, P x) -> (forall x : A, ~ ~ P x).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
 (** *** Kwantyfikator egzystencjalny *)
 
 (** *** Reguły *)
@@ -561,6 +567,12 @@ Lemma ex_and_nondep_r :
 Proof. firstorder. Qed.
 (* end hide *)
 
+Lemma not_not_exists :
+  (exists x : A, ~ ~ P x) -> ~ ~ (exists x : A, P x).
+(* begin hide *)
+Proof. firstorder. Qed.
+(* end hide *)
+
 (** ** Związki [forall] i [exists] *)
 
 Lemma exists_forall_inhabited :
@@ -570,19 +582,13 @@ Proof. firstorder. Qed.
 (* end hide *)
 
 Lemma not_exists :
-  ~ (exists x : A, P x) -> forall x : A, ~ P x.
+  ~ (exists x : A, P x) <-> (forall x : A, ~ P x).
 (* begin hide *)
 Proof. firstorder. Qed.
 (* end hide *)
 
 Lemma exists_not :
   (exists x : A, ~ P x) -> ~ forall x : A, P x.
-(* begin hide *)
-Proof. firstorder. Qed.
-(* end hide *)
-
-Lemma forall_not :
-  (forall x : A, ~ P x) -> ~ exists x : A, P x.
 (* begin hide *)
 Proof. firstorder. Qed.
 (* end hide *)
@@ -602,6 +608,26 @@ Qed.
 (* end hide *)
 
 End QuantifiersExercises.
+
+(** ** Różne dziwne rzeczy *)
+
+Lemma not_not_forall :
+  (forall (A : Type) (P : A -> Prop),
+    (forall x : A, ~ ~ P x) -> (~ ~ forall x : A, P x))
+    <->
+  (~ ~ forall P : Prop, P \/ ~ P).
+(* begin hide *)
+Proof.
+  split.
+  - intros dns nlem. apply dns in nlem.
+    + assumption.
+    + tauto.
+  - intros nnlem A P nnp np. apply nnlem. intros lem.
+    apply np. intros x. destruct (lem (P x)).
+    + assumption.
+    + contradiction nnp with x.
+Qed.
+(* end hide *)
 
 (** ** Zagadki *)
 
