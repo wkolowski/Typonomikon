@@ -35,83 +35,70 @@ Proof.
   apply C. assumption.
 Qed.
 
-Definition PMP : Prop :=
+Axiom PMP :
   forall P Q : Prop, Provable (P -> Q) -> Provable P -> Provable Q.
 
-Definition PI : Prop :=
+Axiom PI :
   forall P : Prop, Provable (P -> P).
 
-Definition PK : Prop :=
+Axiom PK :
   forall P Q : Prop, Provable Q -> Provable (P -> Q).
 
-Definition PC : Prop :=
+Axiom PC :
   forall P Q Z : Prop, Provable (P -> Q) -> Provable ((Q -> Z) -> P -> Z).
 
-Definition UF : Prop :=
-  Unprovable False.
-
 Lemma Provable_contraposition :
-  PMP ->
   forall P Q : Prop,
     Provable (P -> Q) -> ~ Provable Q -> ~ Provable P.
 (* begin hide *)
 Proof.
-  intros pmp P Q pq nq p.
-  apply nq. eapply pmp; eassumption.
+  intros P Q pq nq p.
+  apply nq. eapply PMP; eassumption.
 Qed.
 (* end hide *)
 
 Lemma Provable_contraposition' :
-  PMP ->
   forall P Q : Prop,
     Provable (P -> Q) -> Unprovable Q -> Unprovable P.
 (* begin hide *)
 Proof.
-  compute.
-  intros pmp P Q pq nq p.
-  apply nq. eapply pmp; eassumption.
+  intros P Q pq nq p.
+  apply nq. eapply PMP; eassumption.
 Qed.
 (* end hide *)
 
 Lemma Provable_Consistent :
-  PMP -> PC ->
   forall P Q : Prop,
     Provable (P -> Q) -> Consistent P -> Consistent Q.
 (* begin hide *)
 Proof.
-  unfold PMP, PC.
-  intros pmp pc P Q ppq cp dq.
+  intros P Q ppq cp dq.
   apply cp.
-  specialize (pc _ _ False ppq).
-  specialize (pmp _ _ pc).
-  apply pmp.
-  assumption.
+  eapply PMP; cycle 1.
+  - exact dq.
+  - apply PC. assumption.
 Qed.
 (* end hide *)
 
 Lemma sandwich :
-  PMP -> PK -> PC ->
   forall P Q Z : Prop,
     Consistent P -> Unprovable Q -> Provable (P -> Z) -> Provable (Z -> Q) -> Independent Z.
 (* begin hide *)
 Proof.
-  unfold PMP, PK, PC (* Consistent, Unprovable, Independent *).
-  intros pmp pk pc P Q Z cp uq p2z z2q.
+  intros P Q Z cp uq p2z z2q.
   split.
-  - intros pz. apply uq. eapply pmp; eauto.
+  - intros pz. apply uq. eapply PMP; eauto.
   - eapply Provable_Consistent; eauto.
 Qed.
 (* end hide *)
 
 Lemma PropExt_PI_Provable : 
   (forall P Q : Prop, (P <-> Q) -> P = Q) ->
-  PI ->
   forall P : Prop,
     P -> Provable P.
 (* begin hide *)
 Proof.
-  compute.
-  intros PropExt PI P p.
+  intros PropExt P p.
   assert (H : P <-> (P <-> P)) by tauto.
   assert (H' : P = (P -> P)) by firstorder.
   rewrite H'.
