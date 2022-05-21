@@ -53,8 +53,8 @@
 }.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">hd</span> {<span class="id" title="var">A</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">tl</span> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">hd</span> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">tl</span> {<span class="id" title="var">A</span>}.<br/>
 
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">bisim</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
@@ -272,7 +272,7 @@
 }.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">uncons</span> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">uncons</span> {<span class="id" title="var">A</span>}.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">tocoList</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">coList</span> <span class="id" title="var">A</span> :=<br/>
@@ -518,7 +518,7 @@
 }.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">root</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">root</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">fmap</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">coBTree</span> <span class="id" title="var">B</span> :=<br/>
@@ -542,8 +542,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Empty</span> {<span class="id" title="var">A</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Node</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Empty</span> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Node</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">ttake</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">BTree</span> <span class="id" title="var">A</span> :=<br/>

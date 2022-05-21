@@ -2181,24 +2181,24 @@ Zanim przejdziesz dalej, udowodnij ręcznie powyższe twierdzenie. Przyznasz,
     w manualu, co robi i jak działa. 
 <div class="paragraph"> </div>
 
-<a id="lab914"></a><h2 class="section"><span class="inlinecode"><span class="id" title="tactic">omega</span></span></h2>
+<a id="lab914"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">omega</span></span></h2>
 
 <div class="paragraph"> </div>
 
- <span class="inlinecode"><span class="id" title="tactic">omega</span></span> to taktyka, która potrafi rozwiązywać cele dotyczące arytmetyki
+ <span class="inlinecode"><span class="id" title="var">omega</span></span> to taktyka, która potrafi rozwiązywać cele dotyczące arytmetyki
     Presburgera. Jej szerszy opis można znaleźć w manualu. Na nasze potrzeby
     przez arytmetykę Presburgera możemy rozumieć równania (<span class="inlinecode">=</span>), nie-równania
     (<span class="inlinecode">&lt;&gt;</span>) oraz nierówności (<span class="inlinecode">&lt;</span>, <span class="inlinecode">&lt;=</span>, <span class="inlinecode">&gt;</span>, <span class="inlinecode">&gt;=</span>) na typie <span class="inlinecode"><span class="id" title="var">nat</span></span>, które mogą
     zawierać zmienne, <span class="inlinecode">0</span>, <span class="inlinecode"><span class="id" title="var">S</span></span>, dodawanie i mnożenie przez stałą. Dodatkowo
     zdania tej postaci mogą być połączone spójnikami <span class="inlinecode">/\</span>, <span class="inlinecode">\/</span>, <span class="inlinecode">-&gt;</span> oraz
-    <span class="inlinecode">~</span>, ale nie mogą być kwantyfikowane — <span class="inlinecode"><span class="id" title="tactic">omega</span></span> nie umie wprowadzać
+    <span class="inlinecode">~</span>, ale nie mogą być kwantyfikowane — <span class="inlinecode"><span class="id" title="var">omega</span></span> nie umie wprowadzać
     zmiennych do kontekstu.
 
 <div class="paragraph"> </div>
 
     Uwaga: ta taktyka jest przestarzała, a jej opis znajduje się tutaj tylko
     dlatego, że jak go pisałem, to jeszcze nie była przestarzała. Nie używaj
-    jej! Zamiast <span class="inlinecode"><span class="id" title="tactic">omega</span></span> używaj <span class="inlinecode"><span class="id" title="var">lia</span></span>! 
+    jej! Zamiast <span class="inlinecode"><span class="id" title="var">omega</span></span> używaj <span class="inlinecode"><span class="id" title="var">lia</span></span>! 
 </div>
 <div class="code">
 
@@ -2210,23 +2210,23 @@ Zanim przejdziesz dalej, udowodnij ręcznie powyższe twierdzenie. Przyznasz,
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">omega_0</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> + <span class="id" title="var">n</span> = 2 * <span class="id" title="var">n</span>.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">omega</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="var">omega</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">omega_1</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, 2 * <span class="id" title="var">n</span> + 1 &lt;&gt; 2 * <span class="id" title="var">m</span>.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">omega</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="var">omega</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">omega_2</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> * <span class="id" title="var">m</span> = <span class="id" title="var">m</span> * <span class="id" title="var">n</span>.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">try</span> <span class="id" title="tactic">omega</span>. <span class="id" title="keyword">Abort</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">try</span> <span class="id" title="var">omega</span>. <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Jedną z wad taktyki <span class="inlinecode"><span class="id" title="tactic">omega</span></span> jest rozmiar generowanych przez nią termów.
+Jedną z wad taktyki <span class="inlinecode"><span class="id" title="var">omega</span></span> jest rozmiar generowanych przez nią termów.
     Są tak wielkie, że wszelkie próby rozwinięcia definicji czy dowodów,
     które zostały przy jej pomocy skonstruowane, muszą z konieczności źle
     się skończyć. Zobaczmy to na przykładzie. 
@@ -2238,7 +2238,7 @@ Jedną z wad taktyki <span class="inlinecode"><span class="id" title="tactic">om
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">filter</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>) &lt;= <span class="id" title="var">length</span> <span class="id" title="var">l</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">destruct</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>); <span class="id" title="var">cbn</span>; <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">destruct</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>); <span class="id" title="var">cbn</span>; <span class="id" title="var">omega</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -2278,7 +2278,7 @@ Oto jedna ze standardowych właściwości list: filtrowanie nie zwiększa
 
 <div class="doc">
 Jak widać, ręczny dowód tego faktu daje w wyniku proofterm, który jest
-    o ponad 300 linijek krótszy niż ten wyprodukowany przez taktykę <span class="inlinecode"><span class="id" title="tactic">omega</span></span>.
+    o ponad 300 linijek krótszy niż ten wyprodukowany przez taktykę <span class="inlinecode"><span class="id" title="var">omega</span></span>.
     Mogłoby się zdawać, że jesteśmy w sytuacji bez wyjścia: albo dowodzimy
     ręcznie, albo prooftermy będą tak wielkie, że nie będziemy mogli ich
     odwijać. 
@@ -3155,7 +3155,7 @@ Na koniec omówimy taktykę <span class="inlinecode"><span class="id" title="var
 <div class="paragraph"> </div>
 
  Poza taktykami radzącymi sobie z pierścieniami i ciałami jest też wiele
-    taktyk do walki z arytmetyką. Poza omówioną już taktyką <span class="inlinecode"><span class="id" title="tactic">omega</span></span> są to
+    taktyk do walki z arytmetyką. Poza omówioną już taktyką <span class="inlinecode"><span class="id" title="var">omega</span></span> są to
     <span class="inlinecode"><span class="id" title="var">lia</span></span>, <span class="inlinecode"><span class="id" title="var">nia</span></span>, <span class="inlinecode"><span class="id" title="var">lra</span></span>, <span class="inlinecode"><span class="id" title="var">nra</span></span>. Nazwy taktyk można zdekodować w następujący
     sposób:
 <ul class="doclist">

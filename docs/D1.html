@@ -997,8 +997,8 @@ Jeżeli ćwiczenie było za proste i czytałeś podrozdział o kombinatorach
 <span class="comment">(*&nbsp;===&gt;&nbsp;None&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;option&nbsp;A&nbsp;*)</span><br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Some</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">None</span> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Some</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">None</span> {<span class="id" title="var">A</span>}.<br/>
 
 <br/>
 </div>
@@ -1322,8 +1322,8 @@ Lista przechowuje wartości pewnego ustalonego typu <span class="inlinecode"><sp
 <span class="comment">(*&nbsp;===&gt;&nbsp;cons&nbsp;:&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;A&nbsp;-&gt;&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;list&nbsp;A&nbsp;*)</span><br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">nil</span>  {<span class="id" title="var">A</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">cons</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">nil</span>  {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">cons</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -1740,7 +1740,7 @@ Funkcja <span class="inlinecode"><span class="id" title="var">delete</span></spa
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">pair</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">prod</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">pair</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">pair</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -1791,8 +1791,8 @@ Produkt typów <span class="inlinecode"><span class="id" title="var">A</span></s
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">inr</span> : <span class="id" title="var">B</span> -&gt; <span class="id" title="var">sum</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">inl</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">inr</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">inl</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">inr</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -3573,7 +3573,7 @@ Typ <span class="inlinecode"><span class="id" title="var">sigT</span></span> rep
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">exist</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">sig</span> <span class="id" title="var">A</span> <span class="id" title="var">P</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">exist</span> {<span class="id" title="var">A</span> <span class="id" title="var">P</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">exist</span> {<span class="id" title="var">A</span> <span class="id" title="var">P</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -3989,9 +3989,9 @@ Podobnie jak poprzednio, implementacja reguły indukcji jest identyczna
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c2</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="var">I</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">c0</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">c1</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">c2</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">c0</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">c1</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">c2</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -5956,9 +5956,9 @@ Jeżeli jesteś leniwy i nie masz włączonego CoqIDE, sprowadza się to do cze
 
 <div class="paragraph"> </div>
 
- Użyj typu <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span> żeby zdefiniować nieskończoną liczbę naturalną <span class="inlinecode"><span class="id" title="tactic">omega</span></span>
+ Użyj typu <span class="inlinecode"><span class="id" title="var">wut</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span> żeby zdefiniować nieskończoną liczbę naturalną <span class="inlinecode"><span class="id" title="var">omega</span></span>
     (jeżeli szukasz inspiracji, zerknij na definicję <span class="inlinecode"><span class="id" title="var">loop</span></span>). Następnie udowodnij,
-    że <span class="inlinecode"><span class="id" title="tactic">omega</span></span> jest większa od każdej innej liczby naturalnej. 
+    że <span class="inlinecode"><span class="id" title="var">omega</span></span> jest większa od każdej innej liczby naturalnej. 
 </div>
 <div class="code">
 
@@ -5966,7 +5966,7 @@ Jeżeli jesteś leniwy i nie masz włączonego CoqIDE, sprowadza się to do cze
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">lt_n_omega</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt; <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt; <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 </div>
@@ -6017,11 +6017,11 @@ Jeżeli jesteś leniwy i nie masz włączonego CoqIDE, sprowadza się to do cze
 <div class="doc">
 Jak to możliwe, że udało nam się udowodnić to twierdzenie, skoro przecież
     w poprzedinm ćwiczeniu udowodniliśmy, że największą liczbą naturalną jest
-    <span class="inlinecode"><span class="id" title="tactic">omega</span></span>?
+    <span class="inlinecode"><span class="id" title="var">omega</span></span>?
 
 <div class="paragraph"> </div>
 
-    Ano, <span class="inlinecode"><span class="id" title="tactic">omega</span></span> jest niestandardową liczbą naturalną - pomiotem szatana
+    Ano, <span class="inlinecode"><span class="id" title="var">omega</span></span> jest niestandardową liczbą naturalną - pomiotem szatana
     powstałym w wyniku nieterminacji - i w związku z tym indukcja milczy
     na jej temat. Parafrazując: żeby udowodnić coś dla wszystkich liczb
     naturalnych przez indukcję, w ogóle nie musimy przejmować się omegą.
@@ -6033,7 +6033,7 @@ Jak to możliwe, że udało nam się udowodnić to twierdzenie, skoro przecież
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">yes_and_no</span> : <span class="id" title="var">False</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">no_greatest</span> <span class="id" title="tactic">omega</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">n</span> <span class="id" title="var">H1</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">no_greatest</span> <span class="id" title="var">omega</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">n</span> <span class="id" title="var">H1</span>].<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">H2</span> := <span class="id" title="var">lt_n_omega</span> <span class="id" title="var">n</span>).<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Nat.lt_asymm</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H1</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">contradiction</span>.<br/>
@@ -6431,7 +6431,7 @@ Otworzymy sobie nowy moduł, żeby nie zaśmiecać globalnej przestrzeni
 <span class="id" title="keyword">Set</span> <span class="id" title="var">Positivity</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">C</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">C</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -6618,9 +6618,9 @@ Przykład może ci się jednak wydać niezadowalający - typ <span class="inline
 <span class="id" title="keyword">Set</span> <span class="id" title="var">Positivity</span> <span class="id" title="var">Checking</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Var</span> {<span class="id" title="var">V</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Lam</span> {<span class="id" title="var">V</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">App</span> {<span class="id" title="var">V</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Var</span> {<span class="id" title="var">V</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Lam</span> {<span class="id" title="var">V</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">App</span> {<span class="id" title="var">V</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 

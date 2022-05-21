@@ -59,7 +59,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 
 <div class="paragraph"> </div>
 
- Zdefiniuj zero, następnik oraz liczbę <span class="inlinecode"><span class="id" title="tactic">omega</span></span> - jest to nieskończona
+ Zdefiniuj zero, następnik oraz liczbę <span class="inlinecode"><span class="id" title="var">omega</span></span> - jest to nieskończona
     liczba konaturalna, która jest sama swoim poprzednikiem. Udowodnij
     ich kilka podstawowych właściwości. 
 </div>
@@ -74,15 +74,15 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">zero_not_omega</span> :<br/>
-&nbsp;&nbsp;~ <span class="id" title="var">sim</span> <span class="id" title="var">zero</span> <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">sim</span> <span class="id" title="var">zero</span> <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_succ_omega</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> <span class="id" title="var">n</span> (<span class="id" title="var">succ</span> <span class="id" title="var">n</span>) -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> <span class="id" title="var">n</span> (<span class="id" title="var">succ</span> <span class="id" title="var">n</span>) -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">succ_omega</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">omega</span> = <span class="id" title="var">succ</span> <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">omega</span> = <span class="id" title="var">succ</span> <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_succ</span> :<br/>
@@ -122,11 +122,11 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_omega_l</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">add</span> <span class="id" title="tactic">omega</span> <span class="id" title="var">n</span>) <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">add</span> <span class="id" title="var">omega</span> <span class="id" title="var">n</span>) <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_omega_r</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">add</span> <span class="id" title="var">n</span> <span class="id" title="tactic">omega</span>) <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">add</span> <span class="id" title="var">n</span> <span class="id" title="var">omega</span>) <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">add_succ_l</span> :<br/>
@@ -207,11 +207,11 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">add'_omega_l</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">add'</span> <span class="id" title="tactic">omega</span> <span class="id" title="var">n</span>) <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">add'</span> <span class="id" title="var">omega</span> <span class="id" title="var">n</span>) <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">add'_omega_r</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">add'</span> <span class="id" title="var">n</span> <span class="id" title="tactic">omega</span>) <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">add'</span> <span class="id" title="var">n</span> <span class="id" title="var">omega</span>) <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">add'_succ_l</span> :<br/>
@@ -339,11 +339,11 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_omega_r</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">n</span> <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_omega_l</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="tactic">omega</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">le</span> <span class="id" title="var">omega</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">le_succ_r</span> :<br/>
@@ -406,11 +406,11 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">min_omega_l</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">min</span> <span class="id" title="tactic">omega</span> <span class="id" title="var">n</span>) <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">min</span> <span class="id" title="var">omega</span> <span class="id" title="var">n</span>) <span class="id" title="var">n</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">min_omega_r</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">min</span> <span class="id" title="var">n</span> <span class="id" title="tactic">omega</span>) <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">min</span> <span class="id" title="var">n</span> <span class="id" title="var">omega</span>) <span class="id" title="var">n</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">min_succ</span> :<br/>
@@ -427,11 +427,11 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">max_omega_l</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">max</span> <span class="id" title="tactic">omega</span> <span class="id" title="var">n</span>) <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">max</span> <span class="id" title="var">omega</span> <span class="id" title="var">n</span>) <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">max_omega_r</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">max</span> <span class="id" title="var">n</span> <span class="id" title="tactic">omega</span>) <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">sim</span> (<span class="id" title="var">max</span> <span class="id" title="var">n</span> <span class="id" title="var">omega</span>) <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">max_succ</span> :<br/>
@@ -534,7 +534,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_omega</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">div2</span> <span class="id" title="tactic">omega</span>) <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">div2</span> <span class="id" title="var">omega</span>) <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">div2_succ</span> :<br/>
@@ -576,15 +576,15 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">omega_not_Finite</span> :<br/>
-&nbsp;&nbsp;~ <span class="id" title="var">Finite</span> <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;~ <span class="id" title="var">Finite</span> <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Infinite_omega</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">Infinite</span> <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">Infinite</span> <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Infinite_omega'</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Infinite</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Infinite</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">sim</span> <span class="id" title="var">n</span> <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Finite_Infinite</span> :<br/>
@@ -618,11 +618,11 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Even_Omega</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">Even</span> <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">Even</span> <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Odd_Omega</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">Odd</span> <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">Odd</span> <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Even_Odd_Infinite</span> :<br/>
@@ -713,7 +713,7 @@ Dzięki temu możemy napisać precyzyjny typ, który powinna mieć nasza
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Sub_nondet</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">r</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Sub</span> <span class="id" title="tactic">omega</span> <span class="id" title="tactic">omega</span> <span class="id" title="var">r</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">r</span> : <span class="id" title="var">conat</span>, <span class="id" title="var">Sub</span> <span class="id" title="var">omega</span> <span class="id" title="var">omega</span> <span class="id" title="var">r</span>.<br/>
 
 <br/>
 </div>
@@ -733,7 +733,7 @@ Niestety mimo, że definicja relacji <span class="inlinecode"><span class="id" t
 </div>
 
 <div class="doc">
-Problem polega na tym, że <span class="inlinecode"><span class="id" title="tactic">omega</span></span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="tactic">omega</span></span> może być dowolną liczbą
+Problem polega na tym, że <span class="inlinecode"><span class="id" title="var">omega</span></span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">omega</span></span> może być dowolną liczbą
     konaturalną. Bardziej obrazowo:
 <ul class="doclist">
 <li> Chcielibyśmy, żeby <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>
@@ -742,8 +742,8 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="tact
 <li> Chcielibyśmy, żeby <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1)</span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">1</span>
 
 </li>
-<li> Jednak dla <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="tactic">omega</span></span> daje to <span class="inlinecode"><span class="id" title="tactic">omega</span></span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="tactic">omega</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span> oraz
-      <span class="inlinecode"><span class="id" title="tactic">omega</span></span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="tactic">omega</span></span> <span class="inlinecode">=</span> <span class="inlinecode">(<span class="id" title="tactic">omega</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1)</span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="tactic">omega</span></span> <span class="inlinecode">=</span> <span class="inlinecode">1</span>, co prowadzi do sprzeczności
+<li> Jednak dla <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">omega</span></span> daje to <span class="inlinecode"><span class="id" title="var">omega</span></span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">omega</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span> oraz
+      <span class="inlinecode"><span class="id" title="var">omega</span></span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">omega</span></span> <span class="inlinecode">=</span> <span class="inlinecode">(<span class="id" title="var">omega</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1)</span> <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">omega</span></span> <span class="inlinecode">=</span> <span class="inlinecode">1</span>, co prowadzi do sprzeczności
 
 </li>
 </ul>
@@ -806,13 +806,13 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="tact
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_omega_l</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">out</span> <span class="id" title="var">c</span> &lt;&gt; <span class="id" title="var">Z</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> <span class="id" title="tactic">omega</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span>) <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">omega</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span>) <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_omega_r</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">c</span> <span class="id" title="var">acc</span> : <span class="id" title="var">conat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">out</span> <span class="id" title="var">c</span> &lt;&gt; <span class="id" title="var">Z</span> -&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">c</span> <span class="id" title="tactic">omega</span> <span class="id" title="var">acc</span>) <span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">mul'</span> <span class="id" title="var">c</span> <span class="id" title="var">omega</span> <span class="id" title="var">acc</span>) <span class="id" title="var">omega</span>.<br/>
 
 <br/>
 <span class="comment">(*&nbsp;Inductive&nbsp;Finite'&nbsp;:&nbsp;conat&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>

@@ -289,7 +289,7 @@ Inductive&nbsp;U&nbsp;:&nbsp;Type&nbsp;:=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">sup</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, (<span class="id" title="var">B</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">W</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) -&gt; <span class="id" title="var">W</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">sup</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">sup</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 
@@ -918,7 +918,7 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">p</span> : <span class="id" title="var">P</span> <span class="id" title="var">i</span> <span class="id" title="var">s</span>, <span class="id" title="var">IW</span> <span class="id" title="var">I</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span> <span class="id" title="var">r</span> (<span class="id" title="var">r</span> <span class="id" title="var">i</span> <span class="id" title="var">s</span> <span class="id" title="var">p</span>)) -&gt; <span class="id" title="var">IW</span> <span class="id" title="var">I</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span> <span class="id" title="var">r</span> <span class="id" title="var">i</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">isup</span> {<span class="id" title="var">I</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span> <span class="id" title="var">r</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">isup</span> {<span class="id" title="var">I</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span> <span class="id" title="var">r</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -966,7 +966,7 @@ Prawdopodobnie odczuwasz w tej chwili wielką grozę, co najmniej jakbyś
 &nbsp;&nbsp;| <span class="id" title="var">vcons</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">vcons</span> {<span class="id" title="var">A</span> <span class="id" title="var">n</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">vcons</span> {<span class="id" title="var">A</span> <span class="id" title="var">n</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -1260,8 +1260,8 @@ Naszą motywacją do badania W-typów było to, że są one jedynym
 }.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">shape</span> {<span class="id" title="var">S</span> <span class="id" title="var">P</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">position</span> {<span class="id" title="var">S</span> <span class="id" title="var">P</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">shape</span> {<span class="id" title="var">S</span> <span class="id" title="var">P</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">position</span> {<span class="id" title="var">S</span> <span class="id" title="var">P</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -1522,9 +1522,9 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 }.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">t1</span>  {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">t2</span>  {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">sim</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">t1</span>  {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">t2</span>  {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">sim</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">hd'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">tsim</span> <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> :=<br/>
@@ -1621,9 +1621,9 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 }.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">L</span>    {<span class="id" title="var">S</span> <span class="id" title="var">P</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">R</span>    {<span class="id" title="var">S</span> <span class="id" title="var">P</span>} <span class="id" title="var">_</span>.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">path</span> {<span class="id" title="var">S</span> <span class="id" title="var">P</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">L</span>    {<span class="id" title="var">S</span> <span class="id" title="var">P</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">R</span>    {<span class="id" title="var">S</span> <span class="id" title="var">P</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">path</span> {<span class="id" title="var">S</span> <span class="id" title="var">P</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">shape'</span><br/>
@@ -1718,7 +1718,7 @@ Jeżeli wyłączymy sprawdzanie ścisłej pozytywności możemy zdefiniować rod
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">In</span> : <span class="id" title="var">F</span> (<span class="id" title="var">Mu</span> <span class="id" title="var">F</span>) -&gt; <span class="id" title="var">Mu</span> <span class="id" title="var">F</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">In</span> {<span class="id" title="var">F</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">In</span> {<span class="id" title="var">F</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -1738,7 +1738,7 @@ Spójrzmy na <span class="inlinecode"><span class="id" title="var">Mu</span></sp
 }.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Out</span> {<span class="id" title="var">F</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Out</span> {<span class="id" title="var">F</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -1771,8 +1771,8 @@ Jak możemy użyć <span class="inlinecode"><span class="id" title="var">Mu</spa
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">ConsR</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">X</span> -&gt; <span class="id" title="var">ListR</span> <span class="id" title="var">A</span> <span class="id" title="var">X</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">NilR</span>  {<span class="id" title="var">A</span> <span class="id" title="var">X</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">ConsR</span> {<span class="id" title="var">A</span> <span class="id" title="var">X</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">NilR</span>  {<span class="id" title="var">A</span> <span class="id" title="var">X</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">ConsR</span> {<span class="id" title="var">A</span> <span class="id" title="var">X</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -1922,7 +1922,7 @@ Niestety, to nie drobne oszustwa są naszym największym problemem (kto nigdy
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">wutR</span> : (<span class="id" title="var">X</span> -&gt; <span class="id" title="var">bool</span>) -&gt; <span class="id" title="var">WutR</span> <span class="id" title="var">X</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">wutR</span> {<span class="id" title="var">X</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">wutR</span> {<span class="id" title="var">X</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">Wut</span> : <span class="id" title="keyword">Type</span> := <span class="id" title="var">Mu</span> <span class="id" title="var">WutR</span>.<br/>
@@ -2073,7 +2073,7 @@ Sprawa z <span class="inlinecode"><span class="id" title="var">Nu</span></span> 
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">In</span> : <span class="id" title="var">ListR</span> <span class="id" title="var">A</span> (<span class="id" title="var">List</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">List</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">In</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">In</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -2198,8 +2198,8 @@ Dowody pozostają równie proste jak poprzednio.
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Succ</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">NatF</span> <span class="id" title="var">X</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Zero</span> {<span class="id" title="var">X</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Succ</span> {<span class="id" title="var">X</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Zero</span> {<span class="id" title="var">X</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Succ</span> {<span class="id" title="var">X</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Nat</span> : <span class="id" title="keyword">Type</span> :=<br/>
@@ -2265,8 +2265,8 @@ Dowody pozostają równie proste jak poprzednio.
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">N</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">E</span> {<span class="id" title="var">A</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">N</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">E</span> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">N</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">BTreeR</span>.<br/>
@@ -2277,15 +2277,15 @@ Dowody pozostają równie proste jak poprzednio.
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">NR</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">R</span> -&gt; <span class="id" title="var">R</span> -&gt; <span class="id" title="var">BTreeR</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">ER</span> {<span class="id" title="var">A</span> <span class="id" title="var">R</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">NR</span> {<span class="id" title="var">A</span> <span class="id" title="var">R</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">ER</span> {<span class="id" title="var">A</span> <span class="id" title="var">R</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">NR</span> {<span class="id" title="var">A</span> <span class="id" title="var">R</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">BTree'</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">In</span> : <span class="id" title="var">BTreeR</span> <span class="id" title="var">A</span> (<span class="id" title="var">BTree'</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">BTree'</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">In</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">In</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">f</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">BTree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">BTree'</span> <span class="id" title="var">A</span> :=<br/>
@@ -2341,8 +2341,8 @@ W środowiskach Haskellowych powyższy sposób definiowania funktorów bazowych
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">NF</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">F</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">F</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTreeF</span> <span class="id" title="var">F</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">EF</span> {<span class="id" title="var">F</span> <span class="id" title="var">A</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">NF</span> {<span class="id" title="var">F</span> <span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">EF</span> {<span class="id" title="var">F</span> <span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">NF</span> {<span class="id" title="var">F</span> <span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -2360,7 +2360,7 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">In</span> : <span class="id" title="var">BTreeF</span> <span class="id" title="var">BTree'</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree'</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">In</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">In</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">f</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">BTree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">BTree'</span> <span class="id" title="var">A</span> :=<br/>
@@ -2422,12 +2422,12 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Cons</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Forest</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Forest</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Empty</span> {<span class="id" title="var">A</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Node</span>  {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Empty</span> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Node</span>  {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Nil</span>   {<span class="id" title="var">A</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Cons</span>  {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Nil</span>   {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Cons</span>  {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">TreeR</span> (<span class="id" title="var">A</span> <span class="id" title="var">F</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
@@ -2440,12 +2440,12 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">ConsR</span> : <span class="id" title="var">T</span> -&gt; <span class="id" title="var">F</span> -&gt; <span class="id" title="var">ForestR</span> <span class="id" title="var">A</span> <span class="id" title="var">F</span> <span class="id" title="var">T</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">EmptyR</span> {<span class="id" title="var">A</span> <span class="id" title="var">F</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">NodeR</span>  {<span class="id" title="var">A</span> <span class="id" title="var">F</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">EmptyR</span> {<span class="id" title="var">A</span> <span class="id" title="var">F</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">NodeR</span>  {<span class="id" title="var">A</span> <span class="id" title="var">F</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">NilR</span>   {<span class="id" title="var">A</span> <span class="id" title="var">F</span> <span class="id" title="var">T</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">ConsR</span>  {<span class="id" title="var">A</span> <span class="id" title="var">F</span> <span class="id" title="var">T</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">NilR</span>   {<span class="id" title="var">A</span> <span class="id" title="var">F</span> <span class="id" title="var">T</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">ConsR</span>  {<span class="id" title="var">A</span> <span class="id" title="var">F</span> <span class="id" title="var">T</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">TreeR</span>.<br/>
@@ -2458,10 +2458,10 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">InF</span> : <span class="id" title="var">ForestR</span> <span class="id" title="var">A</span> (<span class="id" title="var">Forest'</span> <span class="id" title="var">A</span>) (<span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Forest'</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">InT</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">InT</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">InF</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">InF</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">f</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span> :=<br/>
@@ -2544,12 +2544,12 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">ConsF</span> : <span class="id" title="var">T</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">F</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">ForestF</span> <span class="id" title="var">T</span> <span class="id" title="var">F</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">EmptyF</span> {<span class="id" title="var">F</span> <span class="id" title="var">A</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">NodeF</span>  {<span class="id" title="var">F</span> <span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">EmptyF</span> {<span class="id" title="var">F</span> <span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">NodeF</span>  {<span class="id" title="var">F</span> <span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">NilF</span>   {<span class="id" title="var">T</span> <span class="id" title="var">F</span> <span class="id" title="var">A</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">ConsF</span>  {<span class="id" title="var">T</span> <span class="id" title="var">F</span> <span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">NilF</span>   {<span class="id" title="var">T</span> <span class="id" title="var">F</span> <span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">ConsF</span>  {<span class="id" title="var">T</span> <span class="id" title="var">F</span> <span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Tree'</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
@@ -2559,10 +2559,10 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">InF</span> : <span class="id" title="var">ForestF</span> <span class="id" title="var">Tree'</span> <span class="id" title="var">Forest'</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Forest'</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">InT</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">InT</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">InF</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">InF</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">f</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span> :=<br/>
@@ -2708,15 +2708,15 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">ConsR</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">R</span> -&gt; <span class="id" title="var">ListR</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">NilR</span>  {<span class="id" title="var">A</span> <span class="id" title="var">R</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">ConsR</span> {<span class="id" title="var">A</span> <span class="id" title="var">R</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">NilR</span>  {<span class="id" title="var">A</span> <span class="id" title="var">R</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">ConsR</span> {<span class="id" title="var">A</span> <span class="id" title="var">R</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">List</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">In</span> : <span class="id" title="var">ListR</span> <span class="id" title="var">A</span> (<span class="id" title="var">List</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">List</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">In</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">In</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">CoList</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
@@ -2725,7 +2725,7 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 }.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">uncons</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">uncons</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -3039,7 +3039,7 @@ end.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">ctain</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">s</span> : <span class="id" title="var">S</span>, (<span class="id" title="var">P</span> <span class="id" title="var">s</span> -&gt; <span class="id" title="var">X</span>) -&gt; <span class="id" title="var">Container</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span> <span class="id" title="var">X</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">ctain</span> {<span class="id" title="var">S</span> <span class="id" title="var">P</span> <span class="id" title="var">X</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">ctain</span> {<span class="id" title="var">S</span> <span class="id" title="var">P</span> <span class="id" title="var">X</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="comment">(*&nbsp;Definition&nbsp;Container&nbsp;(S&nbsp;:&nbsp;Type)&nbsp;(P&nbsp;:&nbsp;S&nbsp;-&gt;&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;-&gt;&nbsp;Type&nbsp;:=<br/>

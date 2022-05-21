@@ -1599,8 +1599,8 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 &nbsp;&nbsp;<span class="id" title="var">Epsilon</span> | <span class="id" title="var">Cons</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">Nested</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>)).<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Epsilon</span> {<span class="id" title="var">A</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Cons</span>    {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Epsilon</span> {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Cons</span>    {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Nested'</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
@@ -1630,8 +1630,8 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SCons</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Seq</span> (<span class="id" title="var">A</span> * <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Seq</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">SNil</span>  {<span class="id" title="var">A</span>}.<br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">SCons</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">SNil</span>  {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">SCons</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">size</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Seq</span> <span class="id" title="var">A</span>) : <span class="id" title="var">nat</span> :=<br/>
@@ -1698,7 +1698,7 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Node</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Node</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
@@ -1827,7 +1827,7 @@ Inny przykład:
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">forall</span> {<span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>}, (<span class="id" title="var">B</span> -&gt; <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
-<span class="id" title="var">Arguments</span> <span class="id" title="var">Node'</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <span class="id" title="var">Node'</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
 
 <br/>
 </div>
