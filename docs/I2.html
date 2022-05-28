@@ -2181,80 +2181,42 @@ Zanim przejdziesz dalej, udowodnij ręcznie powyższe twierdzenie. Przyznasz,
     w manualu, co robi i jak działa. 
 <div class="paragraph"> </div>
 
-<a id="lab914"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">omega</span></span></h2>
+<a id="lab914"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">lia</span></span></h2>
 
 <div class="paragraph"> </div>
 
- <span class="inlinecode"><span class="id" title="var">omega</span></span> to taktyka, która potrafi rozwiązywać cele dotyczące arytmetyki
-    Presburgera. Jej szerszy opis można znaleźć w manualu. Na nasze potrzeby
-    przez arytmetykę Presburgera możemy rozumieć równania (<span class="inlinecode">=</span>), nie-równania
-    (<span class="inlinecode">&lt;&gt;</span>) oraz nierówności (<span class="inlinecode">&lt;</span>, <span class="inlinecode">&lt;=</span>, <span class="inlinecode">&gt;</span>, <span class="inlinecode">&gt;=</span>) na typie <span class="inlinecode"><span class="id" title="var">nat</span></span>, które mogą
-    zawierać zmienne, <span class="inlinecode">0</span>, <span class="inlinecode"><span class="id" title="var">S</span></span>, dodawanie i mnożenie przez stałą. Dodatkowo
-    zdania tej postaci mogą być połączone spójnikami <span class="inlinecode">/\</span>, <span class="inlinecode">\/</span>, <span class="inlinecode">-&gt;</span> oraz
-    <span class="inlinecode">~</span>, ale nie mogą być kwantyfikowane — <span class="inlinecode"><span class="id" title="var">omega</span></span> nie umie wprowadzać
-    zmiennych do kontekstu.
-
-<div class="paragraph"> </div>
-
-    Uwaga: ta taktyka jest przestarzała, a jej opis znajduje się tutaj tylko
-    dlatego, że jak go pisałem, to jeszcze nie była przestarzała. Nie używaj
-    jej! Zamiast <span class="inlinecode"><span class="id" title="var">omega</span></span> używaj <span class="inlinecode"><span class="id" title="var">lia</span></span>! 
+ TODO: opisć taktykę <span class="inlinecode"><span class="id" title="var">lia</span></span> 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span> <span class="id" title="var">Omega</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Arith</span> <span class="id" title="var">Lia</span>.<br/>
 
 <br/>
-
-<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">omega_0</span> :<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">lia_0</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> + <span class="id" title="var">n</span> = 2 * <span class="id" title="var">n</span>.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="var">omega</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="var">lia</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">omega_1</span> :<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">lia_1</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, 2 * <span class="id" title="var">n</span> + 1 &lt;&gt; 2 * <span class="id" title="var">m</span>.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="var">omega</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="var">lia</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">omega_2</span> :<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">lia_2</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> * <span class="id" title="var">m</span> = <span class="id" title="var">m</span> * <span class="id" title="var">n</span>.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">try</span> <span class="id" title="var">omega</span>. <span class="id" title="keyword">Abort</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Jedną z wad taktyki <span class="inlinecode"><span class="id" title="var">omega</span></span> jest rozmiar generowanych przez nią termów.
-    Są tak wielkie, że wszelkie próby rozwinięcia definicji czy dowodów,
-    które zostały przy jej pomocy skonstruowane, muszą z konieczności źle
-    się skończyć. Zobaczmy to na przykładzie. 
-</div>
-<div class="code">
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intros</span>. <span class="id" title="var">lia</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">filter_length</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">filter</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>) &lt;= <span class="id" title="var">length</span> <span class="id" title="var">l</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">destruct</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>); <span class="id" title="var">cbn</span>; <span class="id" title="var">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">destruct</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>); <span class="id" title="var">cbn</span>; <span class="id" title="var">lia</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Print</span> <span class="id" title="var">filter_length</span>.<br/>
-<span class="comment">(*&nbsp;===&gt;&nbsp;Proofterm&nbsp;o&nbsp;długości&nbsp;317&nbsp;linijek.&nbsp;*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Oto jedna ze standardowych właściwości list: filtrowanie nie zwiększa
-    jej rozmiaru. Term skonstruowany powyższym dowodem, będący świadkiem
-    tego faktu, liczy sobie 317 linijek długości (po wypisaniu, wklejeniu
-    do CoqIDE i usunięciu tego, co do termu nie należy). 
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">filter_length'</span> :<br/>
@@ -2272,20 +2234,6 @@ Oto jedna ze standardowych właściwości list: filtrowanie nie zwiększa
 <br/>
 <span class="id" title="keyword">Print</span> <span class="id" title="var">filter_length'</span>.<br/>
 <span class="comment">(*&nbsp;===&gt;&nbsp;Proofterm&nbsp;o&nbsp;długości&nbsp;14&nbsp;linijek.&nbsp;*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Jak widać, ręczny dowód tego faktu daje w wyniku proofterm, który jest
-    o ponad 300 linijek krótszy niż ten wyprodukowany przez taktykę <span class="inlinecode"><span class="id" title="var">omega</span></span>.
-    Mogłoby się zdawać, że jesteśmy w sytuacji bez wyjścia: albo dowodzimy
-    ręcznie, albo prooftermy będą tak wielkie, że nie będziemy mogli ich
-    odwijać. 
-</div>
-<div class="code">
-
-<br/>
 
 <br/>
 </div>

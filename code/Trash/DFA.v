@@ -29,6 +29,7 @@ Definition accepts {Σ : Type} (A : DFA Σ) (w : list Σ) : bool :=
 
 Require Import Bool.
 
+#[export]
 Instance product {Σ : Type} (A B : DFA Σ) : DFA Σ :=
 {|
     State := State A * State B;

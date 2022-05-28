@@ -1592,58 +1592,32 @@ Proof. decide equality. Defined.
 (** Pokrewną taktyce [decide equality] jest taktyka [compare]. Przeczytaj
     w manualu, co robi i jak działa. *)
 
-(** ** [omega] *)
+(** ** [lia] *)
 
-(** [omega] to taktyka, która potrafi rozwiązywać cele dotyczące arytmetyki
-    Presburgera. Jej szerszy opis można znaleźć w manualu. Na nasze potrzeby
-    przez arytmetykę Presburgera możemy rozumieć równania ([=]), nie-równania
-    ([<>]) oraz nierówności ([<], [<=], [>], [>=]) na typie [nat], które mogą
-    zawierać zmienne, [0], [S], dodawanie i mnożenie przez stałą. Dodatkowo
-    zdania tej postaci mogą być połączone spójnikami [/\], [\/], [->] oraz
-    [~], ale nie mogą być kwantyfikowane — [omega] nie umie wprowadzać
-    zmiennych do kontekstu.
+(** TODO: opisć taktykę [lia] *)
 
-    Uwaga: ta taktyka jest przestarzała, a jej opis znajduje się tutaj tylko
-    dlatego, że jak go pisałem, to jeszcze nie była przestarzała. Nie używaj
-    jej! Zamiast [omega] używaj [lia]! *)
+Require Import Arith Lia.
 
-Require Import Arith Omega.
-
-(* begin hide *)
-Set Warnings "-omega-is-deprecated".
-(* end hide *)
-
-Example omega_0 :
+Example lia_0 :
   forall n : nat, n + n = 2 * n.
-Proof. intro. omega. Qed.
+Proof. intro. lia. Qed.
 
-Example omega_1 :
+Example lia_1 :
   forall n m : nat, 2 * n + 1 <> 2 * m.
-Proof. intros. omega. Qed.
+Proof. intros. lia. Qed.
 
-Example omega_2 :
+Example lia_2 :
   forall n m : nat, n * m = m * n.
-Proof. intros. try omega. Abort.
-
-(** Jedną z wad taktyki [omega] jest rozmiar generowanych przez nią termów.
-    Są tak wielkie, że wszelkie próby rozwinięcia definicji czy dowodów,
-    które zostały przy jej pomocy skonstruowane, muszą z konieczności źle
-    się skończyć. Zobaczmy to na przykładzie. *)
+Proof. intros. lia. Qed.
 
 Lemma filter_length :
   forall (A : Type) (f : A -> bool) (l : list A),
     length (filter f l) <= length l.
 Proof.
-  induction l; cbn; try destruct (f a); cbn; omega.
+  induction l; cbn; try destruct (f a); cbn; lia.
 Qed.
 
 Print filter_length.
-(* ===> Proofterm o długości 317 linijek. *)
-
-(** Oto jedna ze standardowych właściwości list: filtrowanie nie zwiększa
-    jej rozmiaru. Term skonstruowany powyższym dowodem, będący świadkiem
-    tego faktu, liczy sobie 317 linijek długości (po wypisaniu, wklejeniu
-    do CoqIDE i usunięciu tego, co do termu nie należy). *)
 
 Lemma filter_length' :
   forall (A : Type) (f : A -> bool) (l : list A),
@@ -1659,16 +1633,6 @@ Qed.
 
 Print filter_length'.
 (* ===> Proofterm o długości 14 linijek. *)
-
-(** Jak widać, ręczny dowód tego faktu daje w wyniku proofterm, który jest
-    o ponad 300 linijek krótszy niż ten wyprodukowany przez taktykę [omega].
-    Mogłoby się zdawać, że jesteśmy w sytuacji bez wyjścia: albo dowodzimy
-    ręcznie, albo prooftermy będą tak wielkie, że nie będziemy mogli ich
-    odwijać. *)
-
-(* begin hide *)
-Set Warnings "+omega-is-deprecated".
-(* end hide *)
 
 (** ** Procedury decyzyjne dla logiki *)
 

@@ -42,6 +42,7 @@ end.
 Definition nvalue {sys : PNNS} (n : num sys) : nat :=
   nvalue_aux (proj1_sig n) 0.
 
+#[export]
 Instance unary : PNNS :=
 {
     digit := unit;

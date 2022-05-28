@@ -2,12 +2,10 @@ Require Export CoqAlgs.Base.
 
 Require Export CoqMTL.Control.Applicative.
 Require Export CoqMTL.Control.Monad.Lazy.
-*)
 
 Notation "'delay' x" := (fun _ : unit => x) (at level 50, only parsing).
 Notation "'delay' $ x" := (fun _ : unit => x) (at level 50, only parsing).
 
-(*
 Inductive llist (A : Type) : Type :=
     | lnil : llist A
     | lcons : A -> Lazy (llist A) -> llist A.
@@ -103,7 +101,7 @@ match n with
     | S n' => lcons n $ delay $ lazy_to0 n'
 end.
 
-Require Import Sorting.InsertionSort.
+From CoqAlgs Require Import Sorting.InsertionSort.
 
 Fixpoint take (n : nat) {A : Type} (l : list A) : list A :=
 match n, l with
@@ -111,7 +109,6 @@ match n, l with
     | _, [] => []
     | S n', h :: t => h :: take n' t
 end.
-*)
 
 Fixpoint to0 (n : nat) : list nat :=
 match n with
@@ -119,37 +116,36 @@ match n with
     | S n' => n :: to0 n'
 end.
 
-(*
-Definition sl := to0 30000.
-Definition ll := lazy_to0 30000.
+Definition sl := to0 6000.
+Definition ll := lazy_to0 6000.
 
-Fail
 Time Eval cbv in head
   ((((((sl ++ sl) ++ sl) ++ sl) ++ sl) ++ sl) ++ sl).
-Compute sl.
+
 Time Eval cbv in head
   (sl ++ sl ++ sl ++ sl ++ sl ++ sl ++ sl).
+
 Time Eval cbv in lhead
   ((((((ll +++ ll) +++ ll) +++ ll) +++ ll) +++ ll) +++ ll).
 
 Time Eval cbn in head
   ((((((sl ++ sl) ++ sl) ++ sl) ++ sl) ++ sl) ++ sl).
+
 Time Eval cbn in head
   (sl ++ sl ++ sl ++ sl ++ sl ++ sl ++ sl).
+
 Time Eval cbn in lhead
   ((((((ll +++ ll) +++ ll) +++ ll) +++ ll) +++ ll) +++ ll).
 
-Time Eval cbv in take 10 (insertionSort natlt (to0 300)).
-Time Eval cbv in ltake 10 (lazyInsertionSort (lazy_to0 300)).
+Time Eval cbv in take 10 (insertionSort natlt (to0 100)).
+Time Eval cbv in ltake 10 (lazyInsertionSort (lazy_to0 100)).
 
-(*Time Eval cbn in take 10 (insertionSort natlt (to0 300)).*)
-(*Time Eval cbn in ltake 10 (lazyInsertionSort (lazy_to0 300)).*)
+Time Eval cbn in take 10 (insertionSort natlt (to0 100)).
+Time Eval cbn in ltake 10 (lazyInsertionSort (lazy_to0 100)).
 
-Time Eval lazy in take 10 (insertionSort natlt (to0 300)).
-Time Eval lazy in ltake 10 (lazyInsertionSort (lazy_to0 300)).
-*)
+Time Eval lazy in take 10 (insertionSort natlt (to0 100)).
+Time Eval lazy in ltake 10 (lazyInsertionSort (lazy_to0 100)).
 
-(*
 Fixpoint lfilter {A : Type} (p : A -> bool) (l : llist A) : llist A :=
 match l with
     | lnil => lnil
@@ -158,4 +154,3 @@ match l with
         then lcons h $ delay $ lfilter p (force t)
         else lfilter p (force t)
 end.
-*)

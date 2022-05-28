@@ -31,39 +31,13 @@ Proof.
   apply HIn.
 Qed.
 
-
 Lemma dec' :
   forall {A : Type} (l : list A),
     NoDup l -> forall x y : A, In x l -> In y l -> {x = y} + {x <> y}.
 Proof.
   induction l as [| h t].
   - inversion 2.
-  - intros ND x y [-> | Hx] [-> | Hy].
-    + left. reflexivity.
-    + right. intros ->. contradiction.
-    + right. intros ->. contradiction.
-    + apply IHIH; assumption.
-Qed.
-
-Lemma dec :
-  forall {A : Type} (F : Finite A),
-    forall x y : A, In x (enum _ F) -> In y (enum _ F) -> x = y \/ x <> y.
-Proof.
-  intros A [enum HND HIn] x y; cbn; intros HInx HIny.
-  revert x y HInx HIny.
-  induction HND as [| h t HIn' HNDt IH]; intros.
-  - inversion HInx.
-  - specialize (HIn x) as ix.
-    specialize (HIn y) as iy.
-    cbn in ix, iy.
-    destruct ix as [-> | ix], iy as [-> | iy].
-    + left. reflexivity.
-    + right. intros ->. contradiction.
-    + right. intros ->. contradiction.
-    + assert (Hneqx : x <> h) by congruence.
-      assert (Hneqy : y <> h) by congruence.
-      apply IH; [| assumption | assumption].
-      intros z. specialize (H z) as [<- | ?].
-      * admit.
-      * assumption.
-Qed.
+  - Fail intros ND x y [-> | Hx] [-> | Hy].
+    (* ===> The command has indeed failed with message:
+            Case analysis on sort Set is not allowed for inductive definition or. *)
+Abort.

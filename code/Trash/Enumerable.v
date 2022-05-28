@@ -1,6 +1,6 @@
-(* Require Import CoqMTL.Control.Applicative.
+Require Import CoqMTL.Control.Applicative.
 Require Import CoqMTL.Control.Monad.ListInst.
-Require Import CoqMTL.Control.Monad. *)
+Require Import CoqMTL.Control.Monad.
 
 Require Import List.
 Import ListNotations.
@@ -13,11 +13,13 @@ Class Enumerable (A : Type) : Type :=
 
 Arguments enum _ {Enumerable} _.
 
+#[export]
 Instance Enumerable_Empty_set : Enumerable Empty_set :=
 {
     enum n := []
 }.
 
+#[export]
 Instance Enumerable_unit : Enumerable unit :=
 {
     enum n :=
@@ -27,6 +29,7 @@ Instance Enumerable_unit : Enumerable unit :=
     end
 }.
 
+#[export]
 Instance Enumerable_bool : Enumerable bool :=
 {
     enum n :=
@@ -36,6 +39,7 @@ Instance Enumerable_bool : Enumerable bool :=
     end
 }.
 
+#[export]
 Instance Enumerable_prod
   (A B : Type) (instA : Enumerable A) (instB : Enumerable B)
   : Enumerable (A * B)%type :=
@@ -43,11 +47,13 @@ Instance Enumerable_prod
     enum n := liftA2 pair (enum A n) (enum B n)
 }.
 
+#[export]
 Instance Enumerable_nat : Enumerable nat :=
 {
     enum n := [n]
 }.
 
+#[export]
 Instance Enumerable_list
   (A : Type) (inst : Enumerable A) : Enumerable (list A) :=
 {
@@ -59,6 +65,7 @@ Instance Enumerable_list
       end
 }.
 
+#[export]
 Instance Enumerable_sigma
   (A : Type) (P : A -> Type)
   (instA : Enumerable A) (instP : forall x : A, Enumerable (P x)) :

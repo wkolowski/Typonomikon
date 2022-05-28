@@ -1,9 +1,10 @@
-(*Inductive BinomialTree (A : Type) : nat -> Type :=
+Inductive BinomialTree (A : Type) : nat -> Type :=
     | leaf : A -> BinomialTree A 0
     | link :
         forall (rank : nat) (l r : BinomialTree A rank),
           BinomialTree A (S rank).
 
+(*
 Module wut.
 
 Inductive BinomialTree (A : Type) : nat -> Type :=
@@ -44,11 +45,11 @@ with elemForest {A : Type} (x : A)
 Global Hint Constructors elem elemForest : core.
 
 Fixpoint elem_dec
-  {A : Ord} (x : A) {r : nat} (t : BinomialTree A r) :
+  {A : Type} (x : A) {r : nat} (t : BinomialTree A r) :
     {elem x t} + {~ elem x t}
 
 with elemForest_dec
-  {A : Ord} (x : A) {r : nat} (f : BinomialForest A r) :
+  {A : Type} (x : A) {r : nat} (f : BinomialForest A r) :
     {elemForest x f} + {~ elemForest x f}.
 Proof.
   destruct t as [y | y r f].

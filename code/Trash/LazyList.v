@@ -1,6 +1,8 @@
 Require Import List.
 Import ListNotations.
 
+(* TODO: is there any point in it? *)
+
 Inductive llist (A : Type) : Type :=
     | lnil : llist A
     | lcons : A -> (unit -> llist A) -> llist A.
@@ -23,5 +25,3 @@ match l with
     | [] => [[]]
     | h :: t => h ::: fun _ => fromList t
 end.
-
-(* TODO: is there any point in it? *)

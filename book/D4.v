@@ -2143,7 +2143,7 @@ Proof.
         apply H3. apply nat_ind_3; assumption.
 Defined.
 
-Require Import Wf.
+Require Import Init.Wf.
 
 Lemma div4_lemma : forall n : nat,
     S (div4 n) < S (S (S (S n))).

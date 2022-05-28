@@ -1,5 +1,3 @@
-Require Export Base.
-
 Require Export CoqMTL.Control.Applicative.
 Require Export CoqMTL.Control.Monad.Lazy.
 
@@ -99,11 +97,12 @@ Qed.
 
 Infix "+++" := lapp (at level 50).
 
+(*
 Fixpoint ltake {A : Type} (n : nat) (l : Stream A) : Stream A :=
 match n, l with
-    | 0, _ => lnil
-    | _, lnil => lnil
-    | S n', lcons h t => lcons h $ delay $ ltake n' (force t)
+    | 0, _ => mkStream (fun _ => lnil)
+    | _, mkStream lnil => mkStream lnil
+    | S n', mkStream (lcons h t) => lcons h $ delay $ ltake n' (force t)
 end.
 
 Fixpoint ldrop {A : Type} (n : nat) (l : Stream A) : Stream A :=
