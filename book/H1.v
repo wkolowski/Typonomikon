@@ -119,6 +119,7 @@ Definition UA : Type :=
   forall A B : Type, iso (iso A B) (Path A B).
 
 #[refine]
+#[export]
 Instance iso_id : iso bool bool :=
 {
     f := fun b => b;
@@ -129,6 +130,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance iso_negb : iso bool bool :=
 {
     f := negb;
@@ -318,7 +320,7 @@ End nat_eq_ind.
     że coś jest zdaniem w sensie HoTTowym. Dzięki temu dowód jest krótszy o
     całe 33%. Całkiem nieźle. *)
 
-Require G1.
+From Typonomikon Require G1.
 
 Module nat_eq_rec_SProp.
 
@@ -512,7 +514,7 @@ End encodedecode2.
 
 (** ** Ścieżki między listami *)
 
-Require Import D5.
+From Typonomikon Require Import D5.
 
 Module list_eq_ind.
 

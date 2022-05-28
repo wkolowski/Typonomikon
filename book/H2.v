@@ -315,7 +315,7 @@ Qed.
     musisz formalnie dowodzić, że są różne - wystarczy nieformalny argument).
     Czy funkcja ta ma preodwrotność? *)
 
-Require Import D5.
+From Typonomikon Require Import D5.
 
 (* begin hide *)
 Goal has_postinverse (app [1; 2; 3]).
@@ -949,7 +949,7 @@ Qed.
 
 (** **** Ćwiczenie *)
 
-Require Import D5.
+From Typonomikon Require Import D5.
 
 Fixpoint unary (n : nat) : list unit :=
 match n with
@@ -1298,7 +1298,7 @@ Qed.
 (* end hide *)
 
 (* begin hide *)
-Require Import D5.
+From Typonomikon Require Import D5.
 (* end hide *)
 
 Lemma take_idem :
@@ -1392,6 +1392,7 @@ Class iso (A B : Type) : Type :=
 Arguments coel {A B} _.
 Arguments coer {A B} _.
 
+#[export]
 Instance iso_refl (A : Type) : iso A A :=
 {
     coel := id;
@@ -1400,6 +1401,7 @@ Instance iso_refl (A : Type) : iso A A :=
     coer_coel _ := eq_refl;
 }.
 
+#[export]
 Instance iso_sym {A B : Type} (i : iso A B) : iso B A :=
 {
     coel := coer i;
@@ -1409,6 +1411,7 @@ Instance iso_sym {A B : Type} (i : iso A B) : iso B A :=
 }.
 
 #[refine]
+#[export]
 Instance iso_trans
   {A B C : Type} (i : iso A B) (j : iso B C) : iso A C :=
 {
@@ -1421,6 +1424,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance iso_pres_prod
   {A A' B B' : Type} (i : iso A A') (j : iso B B') : iso (A * B) (A' * B') :=
 {
@@ -1435,6 +1439,7 @@ Defined.
 (** ** Produkty i sumy *)
 
 #[refine]
+#[export]
 Instance prod_assoc (A B C : Type) : iso (A * (B * C)) ((A * B) * C) :=
 {
     coel '(a, (b, c)) := ((a, b), c);
@@ -1446,6 +1451,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance prod_unit_l (A : Type) : iso (unit * A) A :=
 {
     coel '(_, a) := a;
@@ -1457,6 +1463,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance prod_unit_r (A : Type) : iso (A * unit) A :=
 {
     coel '(a, _) := a;
@@ -1468,6 +1475,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance prod_comm {A B : Type} : iso (A * B) (B * A) :=
 {
     coel '(a, b) := (b, a);
@@ -1484,6 +1492,7 @@ Defined.
     explicite charakteryzacje pojęć kategorycznych. *)
 
 #[refine]
+#[export]
 Instance sum_empty_l (A : Type) : iso (Empty_set + A) A :=
 {
     coel x := match x with | inl e => match e with end | inr a => a end;
@@ -1495,6 +1504,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance sum_empty_r (A : Type) : iso (A + Empty_set) A :=
 {
     coel x := match x with | inl a => a | inr e => match e with end end;
@@ -1506,6 +1516,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance sum_assoc (A B C : Type) : iso (A + (B + C)) ((A + B) + C) :=
 {
 
@@ -1517,6 +1528,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance sum_comm (A B : Type) : iso (A + B) (B + A) :=
 {
 
@@ -1542,6 +1554,7 @@ match on with
 end.
 
 #[refine]
+#[export]
 Instance iso_nat_option_nat : iso nat (option nat) :=
 {
     coel n := match n with | 0 => None | S n' => Some n' end;
@@ -1567,6 +1580,7 @@ match x with
 end.
 
 #[refine]
+#[export]
 Instance list_char (A : Type) : iso (list A) (option (A * list A)) :=
 {
     coel l :=
@@ -1587,7 +1601,7 @@ Defined.
 
 (** ** Strumienie *)
 
-Require Import F3.
+From Typonomikon Require Import F3.
 
 (** Jak można się domyślić po przykładach, charakterystyczne izomorfizmy
     dla prostych typów induktywnych są łatwe. A co z innowacyjniejszymi
@@ -1595,6 +1609,7 @@ Require Import F3.
     Sprawdźmy to! *)
 
 #[refine]
+#[export]
 Instance Stream_char (A : Type) : iso (Stream A) (A * Stream A) :=
 {
     coel s := (hd s, tl s);
@@ -1627,6 +1642,7 @@ match x with
 end.
 
 #[refine]
+#[export]
 Instance iso_nat_sum_nat_nat : iso nat (nat + nat) :=
 {
     coel := div2;
@@ -1819,6 +1835,7 @@ Proof.
 Qed.
 
 #[refine]
+#[export]
 Instance iso_nat_prod_nat_nat : iso nat (nat * nat) :=
 {
     coel := goto;
@@ -1834,7 +1851,7 @@ Defined.
     robić ręcznie? *)
 
 Set Warnings "-notation-overridden".
-Require Import Vec.
+From Typonomikon Require Import Vec.
 Set Warnings "notation-overridden".
 
 Definition vlist (A : Type) : Type :=
@@ -1868,7 +1885,7 @@ Proof.
   cbn. destruct 1, 1. reflexivity.
 Qed.
 
-Require Import H1.
+From Typonomikon Require Import H1.
 
 Lemma transport_cons :
   forall {A : Type} {n m : nat} (h : A) (t : vec A n) (p : n = m),
@@ -1879,6 +1896,7 @@ Proof.
 Qed.
 
 #[refine]
+#[export]
 Instance iso_list_vlist (A : Type) : iso (list A) (vlist A) :=
 {
     coel := vectorize;
@@ -1920,6 +1938,7 @@ match v with
 end.
 
 #[refine]
+#[export]
 Instance vec_S (A : Type) (n : nat) : iso (vec A (S n)) (A * vec A n) :=
 {
     coel v := (head v, tail v);
@@ -1930,6 +1949,7 @@ Proof.
   destruct b. cbn. reflexivity.
 Defined.
 
+#[export]
 Instance iso_nat_vlist_S :
   forall n : nat,
     iso nat (vec nat (S n)).
@@ -1953,6 +1973,7 @@ Proof.
           assumption.
 Defined.
 
+#[export]
 Instance iso_vlist_option :
   forall A : Type,
     iso (vlist A) (option {n : nat & vec A (S n)}).
@@ -1978,6 +1999,7 @@ match x with
 end.
 
 #[refine]
+#[export]
 Instance iso_pres_option
   (A B : Type) (i : iso A B) : iso (option A) (option B) :=
 {
@@ -1989,6 +2011,7 @@ Proof.
   destruct b; f_equal; cbn; f_equal. apply coer_coel.
 Defined.
 
+#[export]
 Instance iso_prod_sigT :
   forall (A B : Type) (B' : A -> Type),
     (forall x : A, iso B (B' x)) -> iso (A * B) {x : A & B' x}.
@@ -2003,6 +2026,7 @@ Proof.
     intros [a b']. cbn. destruct (H a). f_equal. apply coer_coel0.
 Defined.
 
+#[export]
 Instance iso_nat_list_nat :
   iso nat (list nat).
 Proof.

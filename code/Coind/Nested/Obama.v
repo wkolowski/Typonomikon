@@ -41,7 +41,7 @@ Inductive Exists2 {A B : Type} (R : A -> B -> Type) (b1 : Obama A) (b2 : Obama B
     | Ex2_hd : R (hd b1) (hd b2) -> Exists2 R b1 b2
     | Ex2_tl : Exists2 (Exists2 R) (tl b1) (tl b2) -> Exists2 R b1 b2.
 
-Global Hint Constructors Exists Exists2 : core.
+#[global] Hint Constructors Exists Exists2 : core.
 
 Definition Elem {A : Type} (x : A) (b : Obama A) : Type :=
   Exists (fun y => x = y) b.

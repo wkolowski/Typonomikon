@@ -86,7 +86,7 @@ Fail CoFixpoint complete' {A : Type} (n : nat) (x : A) : Tree A :=
         (complete' n x);
 |}.
 
-Require Import F2.
+From Typonomikon Require Import F2.
 
 Definition max (n : nat) (m : conat) : conat := max (from_nat n) m.
 
@@ -149,7 +149,7 @@ match t with
 end.
 
 (*
-Require Import H2.
+From Typonomikon Require Import H2.
 
 Lemma mirror_bijective :
   forall A : Type, bijective (@mirror A).

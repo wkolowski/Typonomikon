@@ -43,7 +43,7 @@ TODO 11: poszukać ogólnego pojęcia "różnicy" typów.
 *)
 (* end hide *)
 
-Require Import D5.
+From Typonomikon Require Import D5.
 
 (** * [revapp] *)
 
@@ -3560,7 +3560,7 @@ Definition Perm {A : Type} (l1 l2 : list A) : Prop :=
   forall (P : A -> Prop) (n : nat),
     (AtLeast P n l1 <-> AtLeast P n l2).
 
-Global Hint Constructors AtLeast : core.
+#[global] Hint Constructors AtLeast : core.
 
 Lemma Permutation_AtLeast :
   forall {A : Type} {l1 l2 : list A},
@@ -3704,7 +3704,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Global Hint Constructors Exactly : core.
+#[global] Hint Constructors Exactly : core.
 
 (* TODO *) Lemma AtLeast_Exactly :
   forall {A : Type} (l1 l2 : list A),
@@ -3729,7 +3729,7 @@ End AtLeast.
 
 (** ** Permutacje, jeszcze dziwniej *)
 
-Require H2.
+From Typonomikon Require H2.
 Require Import Equality.
 
 Module PermWeird.
@@ -4250,7 +4250,7 @@ End perms_ins.
 (** ** Znajdowanie permutacji przez cykle *)
 
 Require Import FunctionalExtensionality.
-Require D4.
+From Typonomikon Require D4.
 
 Module perms_cycles.
 

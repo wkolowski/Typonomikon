@@ -56,6 +56,7 @@ Class HasStar (A : Type) : Type :=
 }.
 
 #[refine]
+#[export]
 Instance HasStar_any (A : Type) : HasStar A | 1 :=
 {
     star := Var A;
@@ -65,6 +66,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance HasStar_list (A : Type) (hs : HasStar A) : HasStar (list A) | 0 :=
 {
     star := List star;
@@ -86,7 +88,7 @@ End Flatten.
 
 (** ** [zipWith] z dowolną ilością argumentów *)
 
-Require D5.
+From Typonomikon Require D5.
 
 Module ZipWithN.
 
@@ -181,7 +183,7 @@ End ZipWithN.
 (** Pomysł: silną negację można zdefiniować przez rekursję po uniwersum
     kodów, w którym są kody na wszystkie potrzebne typy. *)
 
-Require D1 D2.
+From Typonomikon Require D1 D2.
 
 Module Negation.
 
@@ -945,7 +947,7 @@ Qed.
 
 (** M-typy to to samo co W-typy, tylko że dualne. Pozdro dla kumatych. *)
 
-Require Import F1.
+From Typonomikon Require Import F1.
 
 (** Naszą motywacją do badania W-typów było to, że są one jedynym
     pierścieniem (w sensie Władcy Pierścieni, a nie algebry abstrakcyjnej),
@@ -999,11 +1001,13 @@ Inductive Finite {S : Type} {P : S -> Type} : M S P -> Prop :=
         forall m : M S P,
           (forall p : P (shape m), Finite (position m p)) -> Finite m.
 
+Set Warnings "-cannot-define-projection".
 CoInductive Infinite {S : Type} {P : S -> Type} (m : M S P) : Prop :=
 {
     p : P (shape m);
     Infinite' : Infinite (position m p);
 }.
+Set Warnings "cannot-define-projection".
 
 (* TODO *) Lemma Finite_or_Infinite_irrefutable :
   forall {S : Type} {P : S -> Type} (m : M S P),
@@ -1140,7 +1144,7 @@ Definition coBTreeM (A : Type) : Type :=
     regułę unikalności, a reguła unikalności sama w sobie w zasadzie
     oznacza, że bipodobieństwo to równość. *)
 
-Require F4.
+From Typonomikon Require F4.
 
 Module uniqueness_bisim_eq.
 
@@ -1220,7 +1224,7 @@ Proof.
     rewrite IHn'. cbn. reflexivity.
 Qed.
 
-Global Hint Resolve hd_drop tl_drop : core.
+#[global] Hint Resolve hd_drop tl_drop : core.
 
 Theorem coinduction :
   forall (A : Type),
@@ -1389,7 +1393,7 @@ End uniqueness_bisim_eq_general.
 (** TODO: To tylko wstępna notatka, trzeba porządnie wytłumaczyć co to punkt
     TODO: stały i tak dalej. Zamknąć też [Mu] i [Nu] w osobny moduł. *)
 
-Require Import D1 D5 F3 F4.
+From Typonomikon Require Import D1 D5 F3 F4.
 
 Unset Positivity Checking.
 
@@ -2051,7 +2055,7 @@ End FinitaryTreeF.
 Require Import List.
 Import ListNotations.
 
-Require Import F3 F4.
+From Typonomikon Require Import F3 F4.
 
 Module ListCoList.
 

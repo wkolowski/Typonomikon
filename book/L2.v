@@ -507,7 +507,7 @@ Abort.
 
     Ok, o co chodzi? *)
 
-Require Import D5.
+From Typonomikon Require Import D5.
 
 Print filter.
 (* ===> filter =
@@ -676,7 +676,7 @@ Qed.
 (* begin hide *)
 (* TODO: [lam X. lam nil. lam cons. cons X nil] - egzotyczna lista. *)
 (* TODO: Kodowanie Churcha dla typów ilorazowych. *)
-Require Import D5.
+(* From Typonomikon Require Import D5. *)
 (* end hide *)
 
 Definition clist (A : Type) : Type :=

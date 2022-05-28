@@ -6,7 +6,7 @@ Set Warnings "-cannot-define-projection".
 
 (** * Kolisty nie znaczy okrągły *)
 
-Require Import D5.
+From Typonomikon Require Import D5.
 
 (** Ten rozdział będzie o kolistach, czyli koinduktywnych odpowiednikach
     list różniących się od nich tym, że mogą być potencjalnie
@@ -61,7 +61,7 @@ CoInductive lsim {A : Type} (l1 l2 : CoList A) : Prop :=
     lsim' : lsimF l1 l2 lsim
 }.
 
-Global Hint Constructors lsim : core.
+#[global] Hint Constructors lsim : core.
 
 Axiom eq_lsim :
   forall (A : Type) (l1 l2 : CoList A), lsim l1 l2 -> l1 = l2.
@@ -115,6 +115,7 @@ Qed.
 (** Przyda się też instancja klasy [Equivalence], żebyśmy przy dowodzeniu
     o [lsim] mogli używać taktyk [reflexivity], [symmetry] oraz [rewrite]. *)
 
+#[export]
 Instance Equivalence_lsim (A : Type) : Equivalence (@lsim A).
 Proof.
   esplit; red.
@@ -179,7 +180,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Global Hint Constructors CoList_neq : core.
+#[global] Hint Constructors CoList_neq : core.
 
 Lemma CoList_neq_sym :
   forall {A : Type} {l1 l2 : CoList A},
@@ -239,7 +240,7 @@ Qed.
     bipodobne kolisty mają tę samą długość. Długość kolisty pustej
     oraz [cocons]a powinny być oczywiste. *)
 
-Require Import F2.
+From Typonomikon Require Import F2.
 
 (* begin hide *)
 CoFixpoint len {A : Type} (l : CoList A) : conat :=
@@ -399,7 +400,7 @@ Proof.
 Qed.
 (* end hide *)
 
-(* Global Hint Constructors lsimF : core. *)
+(* #[global] Hint Constructors lsimF : core. *)
 
 Lemma app_snoc_l :
   forall (A : Type) (l1 l2 : CoList A) (x : A),
@@ -1016,7 +1017,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Global Hint Constructors Finite : core.
+#[global] Hint Constructors Finite : core.
 
 Lemma Finite_app_conv :
   forall (A : Type) (l1 l2 : CoList A),

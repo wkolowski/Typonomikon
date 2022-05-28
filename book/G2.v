@@ -1,6 +1,6 @@
 (** * G2: Zippery, czyli łażenie po drzewach [TODO] *)
 
-Require Import D5.
+From Typonomikon Require Import D5.
 
 (** * Predykaty na listach i drzewach - przypomnienie (TODO) *)
 
@@ -284,7 +284,7 @@ End T3.
 
     Zapewne działa to bardzo dobrze... taki huj, jednak nie. *)
 
-Require Vec.
+From Typonomikon Require Vec.
 
 Module Vec'.
 
@@ -328,7 +328,7 @@ Inductive T (A : Type) : nat -> Type :=
 
 End hTree.
 
-Require G1.
+From Typonomikon Require G1.
 
 Module W.
 

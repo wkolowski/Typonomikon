@@ -27,7 +27,7 @@ TODO: całą przestrzeń. Zaiste pasjonujące.
     przeszukiwalne, zaś [nat] nie. Wszystko dzieje się w legalnym Coqu,
     z włączonym guard checkerem i bez żadnych homotopii. *)
 
-Require Import F2.
+From Typonomikon Require Import F2.
 
 Class Searchable (A : Type) : Type :=
 {
@@ -121,6 +121,7 @@ end.
 (* end hide *)
 
 #[refine]
+#[export]
 Instance Searchable_conat : Searchable conat :=
 {
     search := search_conat;
@@ -158,6 +159,7 @@ Definition search_prod
       (a, b).
 
 #[refine]
+#[export]
 Instance Searchable_prod
   {A B : Type}
   (SA : Searchable A) (SB : Searchable B) : Searchable (A * B) :=
@@ -176,6 +178,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance Searchable_sum
   {A B : Type}
   (SA : Searchable A) (SB : Searchable B) : Searchable (A + B) :=
@@ -234,7 +237,7 @@ Proof.
 Qed.
 
 (* begin hide *)
-Require Import B4.
+From Typonomikon Require Import B4.
 
 Inductive Finite' : conat -> Type :=
     | Finite'_zero : Finite' zero

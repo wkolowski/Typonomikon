@@ -1,6 +1,6 @@
 (** * B2: Konstruktywny rachunek kwantyfikatorów [TODO] *)
 
-Require Export B1.
+From Typonomikon Require Export B1.
 
 (** * Typy i ich elementy (TODO) *)
 

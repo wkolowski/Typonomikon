@@ -116,9 +116,12 @@ match n with
     | S n' => n :: to0 n'
 end.
 
+Set Warnings "-abstract-large-number".
 Definition sl := to0 6000.
 Definition ll := lazy_to0 6000.
+Set Warnings "abstract-large-number".
 
+(*
 Time Eval cbv in head
   ((((((sl ++ sl) ++ sl) ++ sl) ++ sl) ++ sl) ++ sl).
 
@@ -145,6 +148,7 @@ Time Eval cbn in ltake 10 (lazyInsertionSort (lazy_to0 100)).
 
 Time Eval lazy in take 10 (insertionSort natlt (to0 100)).
 Time Eval lazy in ltake 10 (lazyInsertionSort (lazy_to0 100)).
+*)
 
 Fixpoint lfilter {A : Type} (p : A -> bool) (l : llist A) : llist A :=
 match l with

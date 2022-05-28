@@ -39,6 +39,7 @@ Coercion cast (P : Prop) {d : Dec P} : bool := b.
 Print Graph.
 
 #[refine]
+#[export]
 Instance Dec_Even (n : nat) : Dec (Even n) :=
 {
     b := isEven n
@@ -65,6 +66,7 @@ Class Dec : Type :=
 Coercion cast (d : Dec) : bool := b.
 
 #[refine]
+#[export]
 Instance Dec_Even (n : nat) : Dec :=
 {
     P := Even n;
@@ -125,7 +127,7 @@ Fail Definition silly (n : nat) : bool :=
 
 End Canonical.
 
-Require Import M.
+From Typonomikon Require Import M.
 
 Module ThisMustWork.
 
@@ -139,6 +141,7 @@ Arguments dec      _ {Dec}.
 Arguments dec_spec _ {Dec}.
 
 #[refine]
+#[export]
 Instance Dec_isEven (n : nat) : Dec (Even n) :=
 {
     dec := isEven n;
@@ -153,6 +156,7 @@ Definition not_so_silly (n : nat) : bool :=
 Compute not_so_silly 6.
 
 #[refine]
+#[export]
 Instance Dec_False : Dec False :=
 {
     dec := false
@@ -163,6 +167,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance Dec_True : Dec True :=
 {
     dec := true
@@ -173,6 +178,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance Dec_or {P Q : Prop} (DP : Dec P) (DQ : Dec Q) : Dec (P \/ Q) :=
 {
     dec := dec P || dec Q
@@ -184,6 +190,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance Dec_and {P Q : Prop} (DP : Dec P) (DQ : Dec Q) : Dec (P /\ Q) :=
 {
     dec := dec P && dec Q
@@ -195,6 +202,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance Dec_impl {P Q : Prop} (DP : Dec P) (DQ : Dec Q) : Dec (P -> Q) :=
 {
     dec := negb (dec P) || dec Q
@@ -209,6 +217,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance Dec_not
   {P : Prop} (DP : Dec P) : Dec (~ P) :=
 {
@@ -221,6 +230,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance Dec_exists
   {A : Type} {P : A -> Prop}
   (SA : Searchable A) (DP : forall x : A, Dec (P x))
@@ -243,6 +253,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance Dec_forall
   {A : Type} {P : A -> Prop}
   (SA : Searchable A) (DP : forall x : A, Dec (P x))
@@ -278,6 +289,7 @@ Class WeakEquality (A : Type) : Type :=
 Notation "x ~=~ y" := (weq x y) (at level 50).
 
 #[refine]
+#[export]
 Instance WeakEquality_Unit : WeakEquality unit :=
 {
     weq := fun _ _ => True;
@@ -287,6 +299,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance WeakEquality_Empty : WeakEquality False :=
 {
     weq := fun _ _ => True;
@@ -296,6 +309,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance WeakEquality_Fun
   {A B : Type} : WeakEquality (A -> B) :=
 {
@@ -306,6 +320,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance WeakEquality_Fun'
   {A B : Type} (WEB : WeakEquality B): WeakEquality (A -> B) :=
 {
@@ -316,6 +331,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance WeakEquality_Sum
   {A B : Type} (WEA : WeakEquality A) (WEB : WeakEquality B) : WeakEquality (A + B) :=
 {
@@ -333,6 +349,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance WeakEquality_Prod
   {A B : Type} (WEA : WeakEquality A) (WEB : WeakEquality B) : WeakEquality (A * B) :=
 {
@@ -351,6 +368,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance WeakEquality_List
   {A B : Type} (WEA : WeakEquality A) : WeakEquality (list A) :=
 {
@@ -371,10 +389,11 @@ Proof.
 Defined.
 
 Set Warnings "-require-in-module".
-Require Import F3.
+From Typonomikon Require Import F3.
 Set Warnings "require-in-module".
 
 #[refine]
+#[export]
 Instance WeakEquality_Stream
   {A B : Type} (WEA : WeakEquality A) : WeakEquality (Stream A) :=
 {
@@ -398,6 +417,7 @@ Class StrongDisequality (A : Type) : Type :=
 Notation "x =/= y" := (sdeq x y) (at level 50).
 
 #[refine]
+#[export]
 Instance StrongDisequality_Unit : StrongDisequality unit :=
 {
     sdeq := fun _ _ => False;
@@ -407,6 +427,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongDisequality_Empty : StrongDisequality False :=
 {
     sdeq := fun _ _ => True;
@@ -416,6 +437,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongDisequality_Sum
   {A B : Type} (SDA : StrongDisequality A) (SDB : StrongDisequality B) : StrongDisequality (A + B) :=
 {
@@ -435,6 +457,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongDisequality_Prod
   {A B : Type} (SDA : StrongDisequality A) (SDB : StrongDisequality B) : StrongDisequality (A * B) :=
 {
@@ -452,6 +475,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongDisequality_Fun
   {A B : Type} : StrongDisequality (A -> B) :=
 {
@@ -462,6 +486,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongDisequality_Fun'
   {A B : Type} (SDB : StrongDisequality B) : StrongDisequality (A -> B) :=
 {
@@ -472,6 +497,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongDisequality_List
   {A B : Type} (SDA : StrongDisequality A) : StrongDisequality (list A) :=
 {
@@ -494,7 +520,7 @@ Proof.
 Defined.
 
 Set Warnings "-require-in-module".
-Require Import F3.
+From Typonomikon Require Import F3.
 Set Warnings "require-in-module".
 
 Inductive Ex {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Prop :=
@@ -504,6 +530,7 @@ Inductive Ex {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Prop :=
         forall s1 s2 : Stream A, Ex R (tl s1) (tl s2) -> Ex R s1 s2.
 
 #[refine]
+#[export]
 Instance StrongDisequality_Stream
   {A B : Type} (SDA : StrongDisequality A) : StrongDisequality (Stream A) :=
 {
@@ -529,6 +556,7 @@ Class Inhabited (A : Type) : Prop :=
     inhabitant : A;
 }.
 
+#[export]
 Instance Inhabited_Pointed
   (A : Type) (inst : Pointed A)
   : Inhabited A :=
@@ -536,6 +564,7 @@ Instance Inhabited_Pointed
     inhabitant := point;
 }.
 
+#[export]
 Instance Pointed_nat : Pointed nat :=
 {
     point := 0
@@ -552,6 +581,7 @@ Class StrongNegation (A : Type) : Type :=
 Arguments NOT A {StrongNegation}.
 
 #[refine]
+#[export]
 Instance StrongNegation_Default
   (A : Type) : StrongNegation A | 999 :=
 {
@@ -562,6 +592,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_Pointed
   (A : Type) (inst : Pointed A)
   : StrongNegation A :=
@@ -573,6 +604,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_Inhabited
   (A : Type) (inst : Inhabited A)
   : StrongNegation A :=
@@ -584,6 +616,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_True :
   StrongNegation True :=
 {
@@ -594,6 +627,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_False :
   StrongNegation False :=
 {
@@ -604,6 +638,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_or
   (P Q : Prop) (PSN : StrongNegation P) (QSN : StrongNegation Q)
   : StrongNegation (P \/ Q) :=
@@ -617,6 +652,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_and
   (P Q : Prop) (PSN : StrongNegation P) (QSN : StrongNegation Q)
   : StrongNegation (P /\ Q) :=
@@ -630,6 +666,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_impl
   (P Q : Prop) (QSN : StrongNegation Q)
   : StrongNegation (P -> Q) :=
@@ -643,6 +680,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_forall
   (A : Type) (P : A -> Prop)
   (PSN : forall x : A, StrongNegation (P x))
@@ -658,6 +696,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_exists
   (A : Type) (P : A -> Prop)
   (PSN : forall x : A, StrongNegation (P x))
@@ -672,6 +711,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_subset
   (A : Type) (P : A -> Prop)
   (PSN : forall x : A, StrongNegation (P x))
@@ -686,6 +726,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_sigma
   (A : Type) (P : A -> Type)
   (PSN : forall x : A, StrongNegation (P x))
@@ -716,6 +757,7 @@ Class StrongNegation (A : Prop) : Type :=
 Arguments NOT A {StrongNegation}.
 
 #[refine]
+#[export]
 Instance StrongNegation_Default
   (A : Prop) : StrongNegation A | 999 :=
 {
@@ -726,6 +768,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_Pointed
   (A : Prop) (inst : Pointed A)
   : StrongNegation A :=
@@ -737,6 +780,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_Inhabited
   (A : Prop) (inst : Inhabited A)
   : StrongNegation A :=
@@ -748,6 +792,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_True :
   StrongNegation True :=
 {
@@ -758,6 +803,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_False :
   StrongNegation False :=
 {
@@ -768,6 +814,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_or
   (P Q : Prop) (PSN : StrongNegation P) (QSN : StrongNegation Q)
   : StrongNegation (P \/ Q) :=
@@ -781,6 +828,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_and
   (P Q : Prop) (PSN : StrongNegation P) (QSN : StrongNegation Q)
   : StrongNegation (P /\ Q) :=
@@ -794,6 +842,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_impl
   (P Q : Prop) (QSN : StrongNegation Q)
   : StrongNegation (P -> Q) :=
@@ -807,6 +856,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_forall
   (A : Type) (P : A -> Prop)
   (PSN : forall x : A, StrongNegation (P x))
@@ -822,6 +872,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_exists
   (A : Type) (P : A -> Prop)
   (PSN : forall x : A, StrongNegation (P x))
@@ -851,6 +902,7 @@ Class StrongNegation (A : Type) : Type :=
 Arguments TNOT A {StrongNegation}.
 
 #[refine]
+#[export]
 Instance StrongNegation_Default
   (A : Type) : StrongNegation A | 999 :=
 {
@@ -861,6 +913,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_Pointed
   (A : Type) (inst : Pointed A)
   : StrongNegation A :=
@@ -872,6 +925,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_Inhabited
   (A : Type) (inst : Inhabited A)
   : StrongNegation A :=
@@ -883,6 +937,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_True :
   StrongNegation unit :=
 {
@@ -893,6 +948,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_False :
   StrongNegation False :=
 {
@@ -903,6 +959,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_or
   (A B : Type) (PSN : StrongNegation A) (QSN : StrongNegation B)
   : StrongNegation (A + B) :=
@@ -916,6 +973,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_and
   (A B : Type) (PSN : StrongNegation A) (QSN : StrongNegation B)
   : StrongNegation (A * B) :=
@@ -929,6 +987,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_fun
   (A B : Type) (QSN : StrongNegation B)
   : StrongNegation (A -> B) :=
@@ -942,6 +1001,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_pi
   (A : Type) (P : A -> Type)
   (PSN : forall x : A, StrongNegation (P x))
@@ -957,6 +1017,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_subset
   (A : Type) (P : A -> Prop)
   (PSN : forall x : A, StrongNegation (P x))
@@ -971,6 +1032,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance StrongNegation_sigma
   (A : Type) (P : A -> Type)
   (PSN : forall x : A, StrongNegation (P x))
@@ -1013,6 +1075,7 @@ Class Natural (A : Type) : Type :=
     pred : A -> option A;
 }.
 
+#[export]
 Instance Natural_nat : Natural nat :=
 {
     zero := 0;
@@ -1045,6 +1108,7 @@ Class Integral (A : Type) : Type :=
     mul : A -> A -> A;
 }.
 
+#[export]
 Instance Integral_Z : Integral Z :=
 {
     zero := 0;
@@ -1074,6 +1138,7 @@ Class Rational (A : Type) : Type :=
     div : A -> A -> option A;
 }.
 
+#[export]
 Instance Rational_Q : Rational Q :=
 {
     zero := 0;

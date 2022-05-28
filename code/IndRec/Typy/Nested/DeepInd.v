@@ -1,10 +1,6 @@
 Require Import List.
 Import ListNotations.
 
-Print Forall.
-
-Search (forall (A : Type) (P : A -> Type), list A -> Type).
-
 Inductive ForallT {A : Type} (P : A -> Type) : list A -> Type :=
     | ForallT_nil  : ForallT P []
     | ForallT_cons :

@@ -1,4 +1,4 @@
-Require Import F3.
+From Typonomikon Require Import F3.
 
 Unset Guard Checking.
 CoFixpoint fib : Stream nat := scons 0 (zipWith plus fib (scons 1 fib)).

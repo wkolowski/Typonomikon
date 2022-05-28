@@ -88,6 +88,7 @@ Qed.
 
 Require Import Setoid.
 
+#[export]
 Instance Equivalence_sim : Equivalence sim.
 (* begin hide *)
 Proof.
@@ -527,7 +528,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Global Hint Constructors simF sim : core.
+#[global] Hint Constructors simF sim : core.
 
 Lemma sim_add' :
   forall n1 n2 m1 m2 : conat,
@@ -1810,8 +1811,7 @@ Qed.
     | Finite'_succ :
         forall n n' : conat, out n = S n' -> Finite' n' -> Finite' n.
 
-Hint Constructors Finite' : core.
- *)
+#[global] Hint Constructors Finite' : core. *)
 
 Lemma mul'_acc :
   forall n m acc1 acc2 : conat,

@@ -996,6 +996,7 @@ Require Import RelationClasses.
     korzysta taktyka [reflexivity]. Jeżeli udowodnimy odpowiednie twierdzenie,
     będziemy mogli używać taktyki [reflexivity] z relacją [eq_ext]. *)
 
+#[export]
 Instance Reflexive_eq_ext :
   forall A B : Type, Reflexive (@eq_ext A B).
 Proof.
@@ -1033,12 +1034,14 @@ Qed.
     jest jednak bardziej hojna: podobnie jak w przypadku [reflexivity],
     taktyki te działają z dowolnymi relacjami symetrycznymi i przechodnimi. *)
 
+#[export]
 Instance Symmetric_eq_ext :
   forall A B : Type, Symmetric (@eq_ext A B).
 Proof.
   unfold Symmetric, eq_ext. intros A B f g H x. symmetry. apply H.
 Defined.
 
+#[export]
 Instance Transitive_eq_ext :
   forall A B : Type, Transitive (@eq_ext A B).
 Proof.
@@ -1204,6 +1207,7 @@ Definition len_eq {A : Type} (l1 l2 : list A) : Prop :=
 (** W naszym przykładzie posłużymy się relacją [len_eq], która głosi, że
     dwie listy są w relacji gdy mają taką samą długość. *)
 
+#[export]
 Instance Proper_len_eq_map {A : Type} :
   Proper (@len_eq A ==> @len_eq A ==> @len_eq A) (@app A).
 Proof.
@@ -1272,6 +1276,7 @@ Definition stupid_id {A : Type} (l : list A) : list A :=
     tak aby poniższy dowód zadziałał bez wpowadzania zmian. *)
 
 (* begin hide *)
+#[export]
 Instance Proper_len_eq_stupid_id {A : Type} :
   Proper (@len_eq A ==> @len_eq A) (@stupid_id A).
 Proof.
@@ -1920,7 +1925,7 @@ Qed.
     naszego typu, lub dodając je jako podpowiedzi za pomocą komendy [Hint
     Resolve c_1 ... c_n : db_name]. *)
 
-Hint Constructors even : core.
+#[global] Hint Constructors even : core.
 
 Example auto_ex5' : even 8.
 Proof. auto. Qed.
@@ -1993,7 +1998,7 @@ Abort.
     gdyż w ogólności możliwości może być wiele (nawet nieskończenie wiele).
     Taktyka [auto] działa w ten sposób, że nawet nie próbuje tego zgadywać. *)
 
-Hint Extern 0 =>
+#[global] Hint Extern 0 =>
 match goal with
     | H : ?x = ?y, H' : ?y = ?z |- ?x = ?z => apply (@eq_trans _ x y z)
 end
@@ -2018,7 +2023,7 @@ Proof. auto with extern_db. Qed.
     czego wygenerowane zostaną dwa podcele, [x = y] oraz [y = z], które
     [auto] będzie potrafiło rozwiązać już bez naszej pomocy. *)
 
-Hint Extern 0 (?x = ?z) =>
+#[global] Hint Extern 0 (?x = ?z) =>
 match goal with
     | H : ?x = ?y, H' : ?y = ?z |- _ => apply (@eq_trans _ x y z)
 end

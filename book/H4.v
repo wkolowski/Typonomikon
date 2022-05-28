@@ -10,8 +10,8 @@ Require Import FunctionalExtensionality.
 Require Import List.
 Import ListNotations.
 
-Require Import H1.
-Require Import D5.
+From Typonomikon Require Import H1.
+From Typonomikon Require Import D5.
 
 (** * Różność *)
 
@@ -281,7 +281,7 @@ Inductive list_neq
     | cc2 : forall (h1 h2 : A) (t1 t2 : list A),
               list_neq R t1 t2 -> list_neq R (h1 :: t1) (h2 :: t2).
 
-Global Hint Constructors list_neq : core.
+#[global] Hint Constructors list_neq : core.
 
 Lemma list_neq_irrefl_aux :
   forall {A : Type} {R : A -> A -> Prop} (l1 l2 : list A),
@@ -671,7 +671,7 @@ End list_neq_ind.
 
 (** ** Nierówność liczb konaturalnych - induktywnie *)
 
-Require F2.
+From Typonomikon Require F2.
 
 Module conat_neq.
 
@@ -706,7 +706,7 @@ End conat_neq.
 
 (** ** Nierówność strumieni *)
 
-Require F3.
+From Typonomikon Require F3.
 
 Module Stream_neq.
 
@@ -743,7 +743,7 @@ End Stream_neq.
 
 (** ** Różność (słaby apartheid) strumieni - induktywnie *)
 
-Require F3.
+From Typonomikon Require F3.
 
 Module Stream_apart.
 
@@ -798,7 +798,7 @@ End Stream_apart.
 
 (** ** Różność (silny apartheid) strumieni - induktywnie *)
 
-Require F3.
+From Typonomikon Require F3.
 
 Module Stream_strong_apart.
 
@@ -829,7 +829,7 @@ End Stream_strong_apart.
 
 (** ** Różność kolist *)
 
-Require F4.
+From Typonomikon Require F4.
 
 Module CoList_apart.
 
@@ -1003,7 +1003,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Global Hint Constructors ListDiffProtocol : core.
+#[global] Hint Constructors ListDiffProtocol : core.
 
 Lemma proto_trans :
   forall {A : Type} {R : A -> A -> Type} {l1 l2 l3 : list A},

@@ -1117,7 +1117,7 @@ Module exercises_propositional.
 
 Parameters P Q R S : Prop.
 
-(** Komenda [Hypotheses] formalnie działa jak wprowadzenie aksjomatu,
+(** Komenda [Parameters] formalnie działa jak wprowadzenie aksjomatu,
     który w naszym przypadku brzmi "P, Q, R i S są zdaniami logicznymi".
     Taki aksjomat jest rzecz jasna zupełnie niegroźny, ale z innymi
     trzeba uważać — gdybyśmy wprowadzili aksjomat [1 = 2], to
@@ -1129,10 +1129,10 @@ End exercises_propositional.
 Check and_comm.
 (* ===> forall P Q : Prop, P /\ Q -> Q /\ P *)
 
-(** W praktyce komenda [Hypothesis] służy do tego, żeby za dużo nie
+(** W praktyce komenda [Parameters] służy do tego, żeby za dużo nie
     pisać — po zamknięciu sekcji komendą [End], Coq doda do każdego
     twierdzenia znajdującego się w tej sekcji kwantyfikację uniwersalną
-    po hipotezach zadeklarowanych przy pomocy [Hypothesis]. W naszym
+    po hipotezach zadeklarowanych przy pomocy [Parameters]. W naszym
     przypadku Coq dodał do [and_comm] kwantyfikację po [P] i [Q],
     mimo że nie napisaliśmy jej explicite. *)
 
@@ -1142,7 +1142,7 @@ Check and_comm.
 
 Module NewExercises.
 
-Hypothesis
+Parameters
   (P Q R S : Prop)
   (P' Q' R' S' : Prop).
 

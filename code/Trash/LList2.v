@@ -166,7 +166,7 @@ match n with
     | S n' => lcons n (fun _ => lazy_to0 n')
 end.*)
 
-Require Import Sorting.InsertionSort.
+From CoqAlgs Require Import Sorting.InsertionSort.
 
 Fixpoint take (n : nat) {A : Type} (l : list A) : list A :=
 match n, l with

@@ -1,7 +1,7 @@
 (** * B5: Inne logiki [TODO] *)
 
-(* Require Export B3. *)
-Require Export B4.
+(* From Typonomikon Require Export B3. *)
+From Typonomikon Require Export B4.
 
 (** * Porównanie logiki konstruktywnej i klasycznej (TODO) *)
 

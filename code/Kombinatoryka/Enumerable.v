@@ -1,6 +1,5 @@
 Require Import Lia Arith.
-
-Require Import D5.
+From Typonomikon Require Import D5.
 
 Class Enumerable (A : Type) : Type :=
 {
@@ -13,6 +12,7 @@ Arguments size {A Enumerable}.
 Arguments enum _ {Enumerable} _.
 
 #[refine]
+#[export]
 Instance Enumerable_bool : Enumerable bool :=
 {
     size b := 1;
@@ -44,6 +44,7 @@ end.
 Compute all_lists (Enumerable_bool) 3.
 
 #[refine]
+#[export]
 Instance Enumerable_list {A : Type} (FA : Enumerable A)
   : Enumerable (list A) :=
 {

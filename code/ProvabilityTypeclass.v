@@ -186,6 +186,7 @@ Qed.
 End AbstractProvability.
 
 #[refine]
+#[export]
 Instance Provability_id : Provability :=
 {|
   Provable P := P;
@@ -197,6 +198,7 @@ Defined.
 (* end hide *)
 
 #[refine]
+#[export]
 Instance Provability_True : Provability :=
 {|
   Provable _ := True;

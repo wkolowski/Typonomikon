@@ -1,6 +1,6 @@
 (** * B3: Reszta logiki konstruktywnej [TODO] *)
 
-Require Export B2.
+From Typonomikon Require Export B2.
 
 (** * Kombinatory taktyk *)
 
@@ -427,7 +427,7 @@ Module xor_new.
 
 Infix "`xor`" := xor (at level 85, right associativity).
 
-Hypothesis P Q R : Prop.
+Parameters P Q R : Prop.
 
 (** ** [xor] *)
 

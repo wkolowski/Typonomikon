@@ -46,7 +46,7 @@ Abort.
     b F leaf (fun R a t => node R (f a) t) R.
  *)
 
-Require Import D5.
+From Typonomikon Require Import D5.
 
 Unset Guard Checking.
 Fixpoint map {A B : Type} (f : A -> B) (b : Bush A) {struct b} : Bush B :=
@@ -124,7 +124,6 @@ Set Guard Checking.
 
 Require Import FunctionalExtensionality.
 
-Print Bush.
 Unset Positivity Checking.
 Inductive Bush' {A : Type} (P : A -> Type) : Bush A -> Type :=
     | Leaf' : Bush' P Leaf

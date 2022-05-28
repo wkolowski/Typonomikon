@@ -6348,7 +6348,7 @@ Powyższa definicja jest bardzo podobna do tej induktywnej. <span class="inlinec
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Rep</span> (<span class="id" title="var">a</span>, <span class="id" title="var">b</span>) <span class="id" title="var">n</span> (<span class="id" title="var">zip</span> <span class="id" title="var">la</span> <span class="id" title="var">lb</span>) -&gt; <span class="id" title="var">Rep</span> <span class="id" title="var">a</span> <span class="id" title="var">n</span> <span class="id" title="var">la</span> /\ <span class="id" title="var">Rep</span> <span class="id" title="var">b</span> <span class="id" title="var">n</span> <span class="id" title="var">lb</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Global Hint Constructors</span> <span class="id" title="var">Rep</span> : <span class="id" title="var">core</span>.<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Constructors</span> <span class="id" title="var">Rep</span> : <span class="id" title="var">core</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Rep_intersperse</span> :<br/>
@@ -8798,6 +8798,7 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Permutation</span> <span class="id" title="var">l2</span> <span class="id" title="var">l1</span>.<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Permutation_Equivalence</span>:<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">RelationClasses.Equivalence</span> (<span class="id" title="var">Permutation</span> (<span class="id" title="var">A</span> := <span class="id" title="var">A</span>)).<br/>
 
@@ -8832,6 +8833,7 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 &nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">Permutation</span> [] (<span class="id" title="var">l</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l'</span>).<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Permutation_cons</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Proper</span> (<span class="id" title="var">eq</span> ==&gt; @<span class="id" title="var">Permutation</span> <span class="id" title="var">A</span> ==&gt; @<span class="id" title="var">Permutation</span> <span class="id" title="var">A</span>) (@<span class="id" title="var">cons</span> <span class="id" title="var">A</span>).<br/>
@@ -8943,6 +8945,7 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) (<span class="id" title="var">l1'</span> ++ <span class="id" title="var">l2'</span>).<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Permutation_app'</span>:<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Proper</span> (@<span class="id" title="var">Permutation</span> <span class="id" title="var">A</span> ==&gt; @<span class="id" title="var">Permutation</span> <span class="id" title="var">A</span> ==&gt; @<span class="id" title="var">Permutation</span> <span class="id" title="var">A</span>) (@<span class="id" title="var">app</span> <span class="id" title="var">A</span>).<br/>
@@ -8986,6 +8989,7 @@ Zdefiniuj induktywną relację <span class="inlinecode"><span class="id" title="
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Permutation</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) <span class="id" title="var">l</span>.<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Permutation_rev'</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Proper</span> (@<span class="id" title="var">Permutation</span> <span class="id" title="var">A</span> ==&gt; @<span class="id" title="var">Permutation</span> <span class="id" title="var">A</span>) (@<span class="id" title="var">rev</span> <span class="id" title="var">A</span>).<br/>

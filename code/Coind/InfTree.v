@@ -100,7 +100,7 @@ Proof.
     rewrite IHi. reflexivity.
 Qed.
 
-Global Hint Resolve left_subtree right_subtree : core.
+#[global] Hint Resolve left_subtree right_subtree : core.
 
 Theorem coinduction :
   forall {A : Type},
@@ -179,7 +179,7 @@ Qed.
 
 (** ** Funkcje na drzewach nieskończonych *)
 
-Require Import D5.
+From Typonomikon Require Import D5.
 
 CoFixpoint mirror {A : Type} (t : InfTree A) : InfTree A :=
 {|

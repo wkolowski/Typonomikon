@@ -228,7 +228,7 @@ Proof.
     inversion 1. f_equal. apply IHp1. lia.
 Qed.
 
-Global Hint Resolve pos_to_nat_inj : core.
+#[global] Hint Resolve pos_to_nat_inj : core.
 
 Lemma bin_to_nat_inj : injective bin_to_nat.
 Proof.

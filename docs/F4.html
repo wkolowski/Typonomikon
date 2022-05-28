@@ -28,7 +28,7 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
 
 <br/>
 </div>
@@ -112,6 +112,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 <div class="code">
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Equivalence_lsim</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">Equivalence</span> (@<span class="id" title="var">lsim</span> <span class="id" title="var">A</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="var">esplit</span>; <span class="id" title="tactic">red</span>.<br/>
@@ -170,7 +171,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 &nbsp;&nbsp;&nbsp;&nbsp;~ <span class="id" title="var">CoList_neq</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Global Hint Constructors</span> <span class="id" title="var">CoList_neq</span> : <span class="id" title="var">core</span>.<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Constructors</span> <span class="id" title="var">CoList_neq</span> : <span class="id" title="var">core</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">CoList_neq_sym</span> :<br/>
@@ -224,7 +225,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">F2</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">F2</span>.<br/>
 
 <br/>
 
@@ -309,7 +310,7 @@ Przyda się też instancja klasy <span class="inlinecode"><span class="id" title
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">lsim</span> (<span class="id" title="var">snoc</span> (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) <span class="id" title="var">x</span>) (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> (<span class="id" title="var">snoc</span> <span class="id" title="var">l2</span> <span class="id" title="var">x</span>)).<br/>
 
 <br/>
-<span class="comment">(*&nbsp;Global&nbsp;Hint&nbsp;Constructors&nbsp;lsimF&nbsp;:&nbsp;core.&nbsp;*)</span><br/>
+<span class="comment">(*&nbsp;[global] Hint Constructors lsimF : core. *)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_snoc_l</span> :<br/>
@@ -681,7 +682,7 @@ Funkcji <span class="inlinecode"><span class="id" title="var">splitAt</span></sp
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Finite</span> <span class="id" title="var">l1</span> -&gt; <span class="id" title="var">Finite</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">Finite</span> (<span class="id" title="var">app</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Global Hint Constructors</span> <span class="id" title="var">Finite</span> : <span class="id" title="var">core</span>.<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Constructors</span> <span class="id" title="var">Finite</span> : <span class="id" title="var">core</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">Finite_app_conv</span> :<br/>

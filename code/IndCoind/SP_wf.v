@@ -1,4 +1,4 @@
-Require Import F3. (* Streams. *)
+From Typonomikon Require Import F3. (* Streams. *)
 
 Inductive SPXY (X Y A B : Type) : Type :=
     | PutX : B -> X -> SPXY X Y A B

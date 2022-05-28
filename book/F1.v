@@ -131,6 +131,7 @@ Qed.
 
 (** *** Bijekcja między [Stream unit] i [unit] (TODO) *)
 
+#[export]
 Instance Equiv_bisim (A : Type) : Equivalence (@bisim A).
 (* begin hide *)
 Proof.
@@ -371,7 +372,7 @@ CoInductive bisim2 {A : Type} (l1 l2 : coList A) : Prop :=
           h1 = h2 /\ bisim2 t1 t2
 }.
 
-Global Hint Constructors bisim2 : core.
+#[global] Hint Constructors bisim2 : core.
 
 Lemma bisim2_refl :
   forall (A : Type) (l : coList A), bisim2 l l.

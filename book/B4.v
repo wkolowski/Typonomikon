@@ -1,9 +1,9 @@
 (** * B4: Logika klasyczna [TODO] *)
 
 (* begin hide *)
-(* Require Export B1.
-Require Export B2. *)
-Require Export B3.
+(* From Typonomikon Require Export B1.
+From Typonomikon Require Export B2. *)
+From Typonomikon Require Export B3.
 (*
 TODO 1: Wprowadzić pojęcie tabu (na aksjomaty etc.) i zacząć go używać.
 TODO 2: Kodowanie logiki klasycznej jak z SSReflekta

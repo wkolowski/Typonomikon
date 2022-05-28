@@ -28,8 +28,6 @@ Abort.
 Inductive Box (A : Type) : Prop :=
     | box : A -> Box A.
 
-Print Box_sind.
-
 Require Import SetIsType.
 
 Lemma SetIsType : Set = Type.

@@ -1,6 +1,3 @@
-(* Require Import F3.
- *)
-
 CoInductive Tree (A : Type) : Type :=
 {
     root  : A;

@@ -28,11 +28,13 @@ Fail Definition UniversalT : CoAczelT :=
 Definition SubtreeT (t1 t2 : CoAczelT) : Prop :=
   exists x, subtreesT t2 x = t1.
 
+Set Warnings "-cannot-define-projection".
 CoInductive CoAczel : Prop :=
 {
     branching : Prop;
     subtrees : branching -> CoAczel;
 }.
+Set Warnings "cannot-define-projection".
 
 Fail Definition Subtree (t1 t2 : CoAczel) : Prop :=
   exists x, subtrees t2 x = t1.

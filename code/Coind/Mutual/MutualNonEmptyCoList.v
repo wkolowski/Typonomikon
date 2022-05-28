@@ -22,7 +22,7 @@ with NonEmptyCoList (A : Type) : Type :=
 Arguments CLOut  {A} _.
 Arguments NECLOut {A} _.
 
-Require Import F4.
+From Typonomikon Require Import F4.
 
 Module DoesntWork.
 

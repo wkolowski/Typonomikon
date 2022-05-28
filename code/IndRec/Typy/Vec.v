@@ -325,7 +325,7 @@ Inductive elem {A : Type} : A -> forall n : nat, vec A n -> Prop :=
     | elem_cons : forall (n : nat) (x h : A) (t : vec A n),
         elem x t -> elem x (vcons h t).
 
-Global Hint Constructors elem : core.
+#[global] Hint Constructors elem : core.
 (* end hide *)
 
 Lemma elem_nil :

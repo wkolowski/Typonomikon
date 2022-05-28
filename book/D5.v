@@ -13319,7 +13319,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Global Hint Constructors Rep : core.
+#[global] Hint Constructors Rep : core.
 
 Lemma Rep_intersperse :
   forall (A : Type) (x y : A) (n : nat) (l : list A),
@@ -19224,7 +19224,7 @@ Inductive Permutation {A : Type} : list A -> list A -> Prop :=
     | perm_trans : forall l l' l'' : list A,
         Permutation l l' -> Permutation l' l'' -> Permutation l l''.
 
-Global Hint Constructors Permutation : core.
+#[global] Hint Constructors Permutation : core.
 (* end hide *)
 
 Lemma Permutation_refl :
@@ -19254,6 +19254,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Permutation_Equivalence:
   forall A : Type, RelationClasses.Equivalence (Permutation (A := A)).
 (* begin hide *)
@@ -19322,6 +19323,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Permutation_cons :
   forall A : Type,
     Proper (eq ==> @Permutation A ==> @Permutation A) (@cons A).
@@ -19626,6 +19628,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Permutation_app':
   forall A : Type,
     Proper (@Permutation A ==> @Permutation A ==> @Permutation A) (@app A).
@@ -19730,6 +19733,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Permutation_rev' :
   forall A : Type,
     Proper (@Permutation A ==> @Permutation A) (@rev A).

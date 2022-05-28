@@ -49,6 +49,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Setoid</span>.<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Equivalence_sim</span> : <span class="id" title="var">Equivalence</span> <span class="id" title="var">sim</span>.<br/>
 
 <br/>
@@ -244,7 +245,7 @@ Dzięki poniższemu będziemy mogli używac taktyki <span class="inlinecode"><sp
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> (<span class="id" title="var">add'</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) <span class="id" title="var">zero</span> -&gt; <span class="id" title="var">m</span> = <span class="id" title="var">zero</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Global Hint Constructors</span> <span class="id" title="var">simF</span> <span class="id" title="var">sim</span> : <span class="id" title="var">core</span>.<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Constructors</span> <span class="id" title="var">simF</span> <span class="id" title="var">sim</span> : <span class="id" title="var">core</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sim_add'</span> :<br/>
@@ -821,8 +822,7 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="var"
 &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Finite'_succ&nbsp;:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;n'&nbsp;:&nbsp;conat,&nbsp;out&nbsp;n&nbsp;=&nbsp;S&nbsp;n'&nbsp;-&gt;&nbsp;Finite'&nbsp;n'&nbsp;-&gt;&nbsp;Finite'&nbsp;n.<br/>
 <br/>
-Hint&nbsp;Constructors&nbsp;Finite'&nbsp;:&nbsp;core.<br/>
-&nbsp;*)</span><br/>
+[global] Hint Constructors Finite' : core. *)</span><br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">mul'_acc</span> :<br/>

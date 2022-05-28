@@ -233,6 +233,7 @@ Nie będziemy po raz trzeci powtarzać (kulawej) definicji liczb
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">EqDec_bool</span> : <span class="id" title="var">EqDec</span> <span class="id" title="var">bool</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dec</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> <span class="id" title="var">b'</span> : <span class="id" title="var">bool</span> =&gt;<br/>
@@ -389,6 +390,7 @@ Instancje klas definiujemy przy pomocy słowa kluczowego <span class="inlinecode
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">EqDec_option</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">_</span> : <span class="id" title="var">EqDec</span> <span class="id" title="var">A</span>) : <span class="id" title="var">EqDec</span> (<span class="id" title="var">option</span> <span class="id" title="var">A</span>) :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dec</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">opt1</span> <span class="id" title="var">opt2</span> : <span class="id" title="var">option</span> <span class="id" title="var">A</span> =&gt;<br/>

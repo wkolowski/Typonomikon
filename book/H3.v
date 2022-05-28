@@ -1,6 +1,6 @@
 (** * H3: Relacje [TODO] *)
 
-Require Import H2.
+From Typonomikon Require Import H2.
 Require Import FunctionalExtensionality.
 
 Require Import Nat.
@@ -113,7 +113,7 @@ Inductive le' : nat -> nat -> Prop :=
     przyda ci się kilka lematów pomocniczych. *)
 
 (* begin hide *)
-Global Hint Constructors le' : core.
+#[global] Hint Constructors le' : core.
 
 Lemma le'_refl : forall n : nat, le' n n.
 Proof.
@@ -389,11 +389,13 @@ Class RightUnique {A B : Type} (R : hrel A B) : Prop :=
     jest w relacji z co najwyżej jednym [a : A]. Analogicznie definiujemy
     relację prawostronnie unikalną. *)
 
+#[export]
 Instance LeftUnique_eq (A : Type) : LeftUnique (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance RightUnique_eq (A : Type) : RightUnique (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
@@ -408,6 +410,7 @@ Proof. rel. Qed.
     nie są homogeniczne. W szczególności jest ono różne od pojęcia relacji
     przechodniej, które pojawi się już niedługo. *)
 
+#[export]
 Instance LeftUnique_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
     LeftUnique R -> LeftUnique S -> LeftUnique (Rcomp R S).
@@ -418,6 +421,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightUnique_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
     RightUnique R -> RightUnique S -> RightUnique (Rcomp R S).
@@ -431,6 +435,7 @@ Qed.
 (** Składanie zachowuje oba rodzaje relacji unikalnych. Nie ma tu co
     za dużo filozofować — żeby się przekonać, narysuj obrazek. TODO. *)
 
+#[export]
 Instance LeftUnique_Rinv :
   forall (A B : Type) (R : hrel A B),
     RightUnique R -> LeftUnique (Rinv R).
@@ -438,6 +443,7 @@ Instance LeftUnique_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance RightUnique_Rinv :
   forall (A B : Type) (R : hrel A B),
     LeftUnique R -> RightUnique (Rinv R).
@@ -450,6 +456,7 @@ Proof. rel. Qed.
     [Rinv]. Okazuje się, że zamiana miejscami argumentów relacji lewostronnie
     unikalnej daje relację prawostronnie unikalną i vice versa. *)
 
+#[export]
 Instance LeftUnique_Rand :
   forall (A B : Type) (R S : hrel A B),
     LeftUnique R -> LeftUnique (Rand R S).
@@ -457,6 +464,7 @@ Instance LeftUnique_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance RightUnique_Rand :
   forall (A B : Type) (R S : hrel A B),
     RightUnique R -> RightUnique (Rand R S).
@@ -577,6 +585,7 @@ match n with
     | _ => b = false
 end.
 
+#[export]
 Instance LeftUnique_is_zero : LeftUnique is_zero.
 Proof.
   split. intros. destruct b; cbn in *; subst; trivial.
@@ -598,15 +607,18 @@ Proof.
     apply left_unique0 with false; cbn; trivial.
 Qed.
 
+#[export]
 Instance RightUnique_is_zero' : RightUnique is_zero'.
 Proof.
   split. destruct a; cbn; intros; subst; trivial.
 Qed.
 
+#[export]
 Instance LeftUnique_RFalse :
   forall A B : Type, LeftUnique (@RFalse A B).
 Proof. rel. Qed.
 
+#[export]
 Instance RightUnique_RFalse :
   forall A B : Type, RightUnique (@RFalse A B).
 Proof. rel. Qed.
@@ -633,12 +645,14 @@ Class RightTotal {A B : Type} (R : hrel A B) : Prop :=
     totalna to po prostu taka, w której żaden element [a : A] nie jest
     "osamotniony". *)
 
+#[export]
 Instance LeftTotal_RTrue :
   forall A : Type, LeftTotal (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance RightTotal_RTrue :
   forall A : Type, RightTotal (@RTrue A A).
 (* begin hide *)
@@ -647,12 +661,14 @@ Proof. rel. Qed.
 
 (** TODO *)
 
+#[export]
 Instance LeftTotal_RFalse_Empty :
   LeftTotal (@RFalse Empty_set Empty_set).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance RightTotal_RFalse_Empty :
   RightTotal (@RFalse Empty_set Empty_set).
 (* begin hide *)
@@ -675,12 +691,14 @@ Proof. rel. Qed.
 
 (** TODO *)
 
+#[export]
 Instance LeftTotal_eq :
   forall A : Type, LeftTotal (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance RightTotal_eq :
   forall A : Type, RightTotal (@eq A).
 (* begin hide *)
@@ -690,6 +708,7 @@ Proof. rel. Qed.
 (** Równość jest relacją totalną, gdyż każdy term [x : A] jest równy samemu
     sobie. *)
 
+#[export]
 Instance LeftTotal_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
     LeftTotal R -> LeftTotal S -> LeftTotal (Rcomp R S).
@@ -703,6 +722,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightTotal_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
     RightTotal R -> RightTotal S -> RightTotal (Rcomp R S).
@@ -715,6 +735,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightTotal_Rinv :
   forall (A B : Type) (R : hrel A B),
     LeftTotal R -> RightTotal (Rinv R).
@@ -725,6 +746,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance LeftTotal_Rinv :
   forall (A B : Type) (R : hrel A B),
     RightTotal R -> LeftTotal (Rinv R).
@@ -831,6 +853,7 @@ Lemma not_RightTotal_RFalse_inhabited' :
   forall A B : Type, B -> ~ RightTotal (@RFalse A B).
 Proof. rel. Qed.
 
+#[export]
 Instance LeftTotal_lt : LeftTotal lt.
 Proof.
   split. intro. exists (S a). unfold lt. apply le_n.
@@ -846,15 +869,18 @@ Proof.
   destruct 1. destruct (left_total0 0). inversion H.
 Qed.
 
+#[export]
 Instance RightTotal_gt : RightTotal gt.
 Proof.
   split. intro. exists (S b). unfold gt, lt. trivial.
 Qed.
 
+#[export]
 Instance LeftTotal_RTrue_inhabited :
   forall A B : Type, B -> LeftTotal (@RTrue A B).
 Proof. rel. Qed.
 
+#[export]
 Instance RightTotal_RTrue_inhabited :
   forall A B : Type, A -> RightTotal (@RTrue A B).
 Proof. rel. Qed.
@@ -878,6 +904,7 @@ Class Functional {A B : Type} (R : hrel A B) : Prop :=
     która ma właściwości takie, jak funkcje — każdy lewostronny argument
     [a : A] jest w relacji z dokładnie jednym [b : B] po prawej stronie. *)
 
+#[export]
 Instance fun_to_Functional {A B : Type} (f : A -> B)
   : Functional (fun (a : A) (b : B) => f a = b).
 (* begin hide *)
@@ -905,6 +932,7 @@ Qed.
     zrobić funkcji. Przemilczając kwestie aksjomatów możemy powiedzieć
     więc, że relacje funkcyjne odpowiadają funkcjom. *)
 
+#[export]
 Instance Functional_eq :
   forall A : Type, Functional (@eq A).
 (* begin hide *)
@@ -914,6 +942,7 @@ Proof. rel. Qed.
 (** Równość jest rzecz jasna relacją funkcyjną. Funkcją odpowiadającą
     relacji [@eq A] jest funkcja identycznościowa [@id A]. *)
 
+#[export]
 Instance Functional_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
     Functional R -> Functional S -> Functional (Rcomp R S).
@@ -1044,7 +1073,7 @@ Inductive collatz : nat -> nat -> Prop :=
     | c_trans : forall a b c : nat,
         collatz a b -> collatz b c -> collatz a c.
 
-Global Hint Constructors collatz : core.
+#[global] Hint Constructors collatz : core.
 
 Lemma collatz_42 : collatz 42 1.
 Proof.
@@ -1074,6 +1103,7 @@ Class Injective {A B : Type} (R : hrel A B) : Prop :=
     I_LU :> LeftUnique R;
 }.
 
+#[export]
 Instance inj_to_Injective :
   forall (A B : Type) (f : A -> B),
     injective f -> Injective (fun (a : A) (b : B) => f a = b).
@@ -1088,12 +1118,14 @@ Qed.
 (** Relacje funkcyjne, które są lewostronnie unikalne, odpowiadają funkcjom
     injektywnym. *)
 
+#[export]
 Instance Injective_eq :
   forall A : Type, Injective (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Injective_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
     Injective R -> Injective S -> Injective (Rcomp R S).
@@ -1192,6 +1224,7 @@ Class Surjective {A B : Type} (R : hrel A B) : Prop :=
     S_RT :> RightTotal R;
 }.
 
+#[export]
 Instance sur_to_Surjective :
   forall (A B : Type) (f : A -> B),
     surjective f -> Surjective (fun (a : A) (b : B) => f a = b).
@@ -1202,12 +1235,14 @@ Proof. rel. Qed.
 (** Relacje funkcyjne, które są prawostronnie totalne, odpowiadają funkcjom
     surjektywnym. *)
 
+#[export]
 Instance Surjective_eq :
   forall A : Type, Surjective (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Surjective_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
     Surjective R -> Surjective S -> Surjective (Rcomp R S).
@@ -1295,6 +1330,7 @@ Class Bijective {A B : Type} (R : hrel A B) : Prop :=
     B_RT :> RightTotal R;
 }.
 
+#[export]
 Instance bij_to_Bijective :
   forall (A B : Type) (f : A -> B),
     bijective f -> Bijective (fun (a : A) (b : B) => f a = b).
@@ -1305,12 +1341,14 @@ Proof. rel. Qed.
 (** Relacje funkcyjne, które są lewostronnie totalne (czyli injektywne) oraz
     prawostronnie totalne (czyli surjektywne), odpowiadają bijekcjom. *)
 
+#[export]
 Instance Bijective_eq :
   forall A : Type, Bijective (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Bijective_Rcomp :
   forall (A B C : Type) (R : hrel A B) (S : hrel B C),
     Bijective R -> Bijective S -> Bijective (Rcomp R S).
@@ -1323,6 +1361,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Bijective_Rinv :
   forall (A B : Type) (R : hrel A B),
     Bijective R -> Bijective (Rinv R).
@@ -1416,6 +1455,7 @@ Class Antireflexive {A : Type} (R : rel A) : Prop :=
     relacja "x jest blisko y". Jest oczywiste, że każdy jest blisko samego
     siebie. *)
 
+#[export]
 Instance Reflexive_Empty :
   forall R : rel Empty_set, Reflexive R.
 (* begin hide *)
@@ -1430,6 +1470,7 @@ Qed.
     uniwersalnie po typie pustym są prawdziwe. Wszyscy w pustym pokoju są
     debilami. *)
 
+#[export]
 Instance Reflexive_eq {A : Type} : Reflexive (@eq A).
 (* begin hide *)
 Proof.
@@ -1437,6 +1478,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Reflexive_RTrue :
   forall A : Type, Reflexive (@RTrue A A).
 (* begin hide *)
@@ -1478,6 +1520,7 @@ Proof. rel. Qed.
 
 (** TODO: Zachodzi też twierdzenie odwrotne. *)
 
+#[export]
 Instance Reflexive_Rcomp :
   forall (A : Type) (R S : rel A),
     Reflexive R -> Reflexive S -> Reflexive (Rcomp R S).
@@ -1485,6 +1528,7 @@ Instance Reflexive_Rcomp :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Reflexive_Rinv :
   forall (A : Type) (R : rel A),
     Reflexive R -> Reflexive (Rinv R).
@@ -1492,6 +1536,7 @@ Instance Reflexive_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Reflexive_Rand :
   forall (A : Type) (R S : rel A),
     Reflexive R -> Reflexive S -> Reflexive (Rand R S).
@@ -1501,6 +1546,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Reflexive_Ror_l :
   forall (A : Type) (R S : rel A),
     Reflexive R -> Reflexive (Ror R S).
@@ -1510,6 +1556,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Reflexive_Ror_r :
   forall (A : Type) (R S : rel A),
     Reflexive S -> Reflexive (Ror R S).
@@ -1531,12 +1578,14 @@ Qed.
     Właściwością odwrotną do zwrotności jest antyzwrotność. Relacja
     antyzwrotna to taka, że żaden [x : A] nie jest w relacji sam ze sobą. *)
 
+#[export]
 Instance Antireflexive_neq :
   forall (A : Type), Antireflexive (fun x y : A => x <> y).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Antireflexive_lt : Antireflexive lt.
 (* begin hide *)
 Proof.
@@ -1570,6 +1619,7 @@ Lemma not_Antireflexive_RTrue_inhabited :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Antireflexive_RFalse :
   forall A : Type, Antireflexive (@RFalse A A).
 (* begin hide *)
@@ -1596,6 +1646,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Antireflexive_Rinv :
   forall (A : Type) (R : rel A),
     Antireflexive R -> Antireflexive (Rinv R).
@@ -1603,6 +1654,7 @@ Instance Antireflexive_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Antireflexive_Rand :
   forall (A : Type) (R S : rel A),
     Antireflexive R -> Antireflexive (Rand R S).
@@ -1610,6 +1662,7 @@ Instance Antireflexive_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Antireflexive_Ror :
   forall (A : Type) (R S : rel A),
     Antireflexive R -> Antireflexive S -> Antireflexive (Ror R S).
@@ -1627,12 +1680,14 @@ Proof. rel. Qed.
     od pojęcia relacji antyzwrotnej: tutaj mamy kwantyfikator [exists],
     tam zaś [forall]. *)
 
+#[export]
 Instance Irreflexive_neq_inhabited :
   forall A : Type, A -> Irreflexive (Rnot (@eq A)).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Irreflexive_gt : Irreflexive gt.
 (* begin hide *)
 Proof.
@@ -1691,6 +1746,7 @@ Lemma not_Irreflexive_RFalse_Empty :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Irreflexive_RFalse_inhabited :
   forall A : Type, A -> Irreflexive (@RFalse A A).
 (* begin hide *)
@@ -1718,6 +1774,7 @@ Qed.
     uważnie definicji [Rcomp], a z pewnością uda ci się znaleźć jakiś
     kontrprzykład. *)
 
+#[export]
 Instance Irreflexive_Rinv :
   forall (A : Type) (R : rel A),
     Irreflexive R -> Irreflexive (Rinv R).
@@ -1725,6 +1782,7 @@ Instance Irreflexive_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Irreflexive_Rand_l :
   forall (A : Type) (R S : rel A),
     Irreflexive R -> Irreflexive (Rand R S).
@@ -1732,6 +1790,7 @@ Instance Irreflexive_Rand_l :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Irreflexive_Rand_r :
   forall (A : Type) (R S : rel A),
     Irreflexive S -> Irreflexive (Rand R S).
@@ -1764,6 +1823,7 @@ Qed.
     Na zakończenie zbadajmy jeszcze, jakie związki zachodzą pomiędzy
     zwrotnością, antyzwrotnością i niezwrotnością. *)
 
+#[export]
 Instance Reflexive_Rnot :
   forall (A : Type) (R : rel A),
     Antireflexive R -> Reflexive (Rnot R).
@@ -1771,6 +1831,7 @@ Instance Reflexive_Rnot :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Antireflexive_Rnot :
   forall (A : Type) (R : rel A),
     Reflexive R -> Antireflexive (Rnot R).
@@ -1797,6 +1858,7 @@ Proof. rel. Qed.
 (** Każda relacja na typie pustym jest jednocześnie zwrotna i antyzwrotna,
     ale nie może taka być żadna relacja na typie niepustym. *)
 
+#[export]
 Instance Irreflexive_inhabited_Antireflexive :
   forall (A : Type) (R : rel A),
     A -> Antireflexive R -> Irreflexive R.
@@ -1838,24 +1900,28 @@ Proof. rel. Qed.
 (** Alterntywną charakteryzacją symetrii może być stwierdzenie, że relacja
     symetryczna to taka, która jest swoją własną odwrotnością. *)
 
+#[export]
 Instance Symmetric_Empty :
   forall R : rel Empty_set, Symmetric R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_eq :
   forall A : Type, Symmetric (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_RTrue :
   forall A : Type, Symmetric (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_RFalse :
   forall A : Type, Symmetric (@RFalse A A).
 (* begin hide *)
@@ -1882,6 +1948,7 @@ Qed.
 
 (** Złożenie relacji symetrycznych nie musi być symetryczne. *)
 
+#[export]
 Instance Symmetric_Rinv :
   forall (A : Type) (R : rel A),
     Symmetric R -> Symmetric (Rinv R).
@@ -1889,6 +1956,7 @@ Instance Symmetric_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_Rand :
   forall (A : Type) (R S : rel A ),
     Symmetric R -> Symmetric S -> Symmetric (Rand R S).
@@ -1896,6 +1964,7 @@ Instance Symmetric_Rand :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_Ror :
   forall (A : Type) (R S : rel A ),
     Symmetric R -> Symmetric S -> Symmetric (Ror R S).
@@ -1903,6 +1972,7 @@ Instance Symmetric_Ror :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_Rnot :
   forall (A : Type) (R : rel A),
     Symmetric R -> Symmetric (Rnot R).
@@ -1939,6 +2009,7 @@ Lemma not_Antisymmetric_RTrue_inhabited :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance RFalse_Antiymmetric :
   forall A : Type, Antisymmetric (@RFalse A A).
 (* begin hide *)
@@ -1986,6 +2057,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Antisymmetric_Rinv :
   forall (A : Type) (R : rel A),
     Antisymmetric R -> Antisymmetric (Rinv R).
@@ -1993,6 +2065,7 @@ Instance Antisymmetric_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Antisymmetric_Rand :
   forall (A : Type) (R S : rel A),
     Antisymmetric R -> Antisymmetric (Rand R S).
@@ -2057,6 +2130,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Asymmetric_Rinv :
   forall (A : Type) (R : rel A),
     Asymmetric R -> Asymmetric (Rinv R).
@@ -2105,24 +2179,28 @@ Class Transitive {A : Type} (R : rel A) : Prop :=
     transitive : forall x y z : A, R x y -> R y z -> R x z
 }.
 
+#[export]
 Instance Transitive_RTrue :
   forall A : Type, Transitive (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Transitive_RFalse :
   forall A : Type, Transitive (@RFalse A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Transitive_eq :
   forall A : Type, Transitive (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Transitive_Rinv :
   forall (A : Type) (R : rel A),
     Transitive R -> Transitive (Rinv R).
@@ -2176,6 +2254,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Transitive_Rand :
   forall (A : Type) (R S : rel A),
     Transitive R -> Transitive S -> Transitive (Rand R S).
@@ -2192,12 +2271,14 @@ Class Equivalence {A : Type} (R : rel A) : Prop :=
     Equivalence_Transitive :> Transitive R;
 }.
 
+#[export]
 Instance Equivalence_RTrue :
   forall A : Type, Equivalence (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Equivalence_Empty :
   forall R : rel Empty_set, Equivalence R.
 (* begin hide *)
@@ -2211,6 +2292,7 @@ Lemma not_Equivalence_RFalse_inhabited :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Equivalence_eq :
   forall A : Type,
     Equivalence (@eq A).
@@ -2218,6 +2300,7 @@ Instance Equivalence_eq :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Equivalence_Rinv :
   forall (A : Type) (R : rel A),
     Equivalence R -> Equivalence (Rinv R).
@@ -2314,6 +2397,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Equivalence_Rand :
   forall (A : Type) (R S : rel A),
     Equivalence R -> Equivalence S -> Equivalence (Rand R S).
@@ -2329,30 +2413,35 @@ Class PER {A : Type} (R : rel A) : Prop :=
     PER_Transitive :> Transitive R;
 }.
 
+#[export]
 Instance PER_Empty :
   forall R : rel Empty_set, PER R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance PER_RTrue :
   forall A : Type, PER (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance PER_RFalse :
   forall A : Type, PER (@RFalse A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance PER_eq :
   forall A : Type, PER (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance PER_Rinv :
   forall (A : Type) (R : rel A),
     PER R -> PER (Rinv R).
@@ -2417,6 +2506,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance PER_Rand :
   forall (A : Type) (R S : rel A),
     PER R -> PER S -> PER (Rand R S).
@@ -2432,12 +2522,14 @@ Class Tolerance {A : Type} (R : rel A) : Prop :=
     Tolerance_Symmetric :> Symmetric R;
 }.
 
+#[export]
 Instance Tolerance_Empty :
   forall R : rel Empty_set, Tolerance R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Tolerance_RTrue :
   forall A : Type, Tolerance (@RTrue A A).
 (* begin hide *)
@@ -2450,12 +2542,14 @@ Lemma not_Tolerance_RFalse_inhabited :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Tolerance_eq :
   forall A : Type, Tolerance (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Tolerance_Rinv :
   forall (A : Type) (R : rel A),
     Tolerance R -> Tolerance (Rinv R).
@@ -2505,6 +2599,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Tolerance_Ror :
   forall {A : Type} (R S : rel A),
     Tolerance R -> Tolerance S -> Tolerance (Ror R S).
@@ -2519,6 +2614,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Tolerance_Rand :
   forall (A : Type) (R S : rel A),
     Tolerance R -> Tolerance S -> Tolerance (Rand R S).
@@ -2533,12 +2629,14 @@ Class WeaklyAntisymmetric {A : Type} (R : rel A) : Prop :=
     weakly_antisymmetric : forall x y : A, R x y -> R y x -> x = y
 }.
 
+#[export]
 Instance WeaklyAntisymmetric_Empty :
   forall R : rel Empty_set, WeaklyAntisymmetric R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyAntisymmetric_hProp :
   forall {A : Type} (R : rel A),
     (forall x y : A, x = y) ->
@@ -2554,12 +2652,14 @@ Lemma not_WeaklyAntisymmetric_RTrue_doubleton :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyAntisymmetric_RFalse :
   forall A : Type, WeaklyAntisymmetric (@RFalse A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyAntisymmetric_Rinv :
   forall (A : Type) (R : rel A),
     WeaklyAntisymmetric R -> WeaklyAntisymmetric (Rinv R).
@@ -2622,6 +2722,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyAntisymmetric_Rand :
   forall (A : Type) (R S : rel A),
     WeaklyAntisymmetric R -> WeaklyAntisymmetric S ->
@@ -2637,6 +2738,7 @@ Class Total {A : Type} (R : rel A) : Prop :=
     total : forall x y : A, R x y \/ R y x
 }.
 
+#[export]
 Instance Total_RTrue :
   forall A : Type,
     Total (@RTrue A A).
@@ -2676,6 +2778,7 @@ Lemma not_Total_eq_two_elems :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Total_Rcomp :
   forall (A : Type) (R S : rel A),
     Total R -> Total S -> Total (Rcomp R S).
@@ -2693,6 +2796,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Total_Rinv :
   forall (A : Type) (R : rel A),
     Total R -> Total (Rinv R).
@@ -2713,6 +2817,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Total_Ror :
   forall (A : Type) (R S : rel A),
     Total R -> Total S -> Total (Ror R S).
@@ -2745,6 +2850,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Reflexive_Total :
   forall (A : Type) (R : rel A),
     Total R -> Reflexive R.
@@ -2792,6 +2898,7 @@ Class WeaklyTotal {A : Type} (R : rel A) : Prop :=
     weakly_total : forall x y : A, ~ R x y -> R y x
 }.
 
+#[export]
 Instance WeaklyTotal_RTrue :
   forall A : Type,
     WeaklyTotal (@RTrue A A).
@@ -2831,6 +2938,7 @@ Lemma not_WeaklyTotal_eq_two_elems :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyTotal_Rinv :
   forall (A : Type) (R : rel A),
     WeaklyTotal R -> WeaklyTotal (Rinv R).
@@ -2838,6 +2946,7 @@ Instance WeaklyTotal_Rinv :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyTotal_Rcomp :
   forall (A : Type) (R S : rel A),
     WeaklyTotal R -> WeaklyTotal S -> WeaklyTotal (Rcomp R S).
@@ -2858,6 +2967,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyTotal_Ror :
   forall (A : Type) (R S : rel A),
     WeaklyTotal R -> WeaklyTotal S -> WeaklyTotal (Ror R S).
@@ -2896,6 +3006,7 @@ Class Trichotomous {A : Type} (R : rel A) : Prop :=
     trichotomous : forall x y : A, R x y \/ x = y \/ R y x
 }.
 
+#[export]
 Instance Trichotomous_Total :
   forall (A : Type) (R : rel A),
     Total R -> Trichotomous R.
@@ -2907,18 +3018,21 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Trichotomous_Empty :
   forall R : rel Empty_set, Trichotomous R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Trichotomous_RTrue :
   forall A : Type, Trichotomous (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Trichotomous_RFalse_subsingleton :
   forall A : Type, (forall x y : A, x = y) -> Trichotomous (@RFalse A A).
 (* begin hide *)
@@ -2932,6 +3046,7 @@ Lemma not_Trichotomous_RFalse_two_elems :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Trichotomous_eq_subsingleton :
   forall A : Type, (forall x y : A, x = y) -> Trichotomous (@eq A).
 (* begin hide *)
@@ -2946,6 +3061,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Trichotomous_Rinv :
   forall (A : Type) (R : rel A),
     Trichotomous R -> Trichotomous (Rinv R).
@@ -2981,6 +3097,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Trichotomous_Ror :
   forall (A : Type) (R S : rel A),
     Trichotomous R -> Trichotomous S -> Trichotomous (Ror R S).
@@ -3010,6 +3127,7 @@ Class WeaklyTrichotomous {A : Type} (R : rel A) : Prop :=
     weakly_trichotomous : forall x y : A, x <> y -> R x y \/ R y x
 }.
 
+#[export]
 Instance WeaklyTrichotomous_Total :
   forall (A : Type) (R : rel A),
     Total R -> WeaklyTrichotomous R.
@@ -3017,18 +3135,21 @@ Instance WeaklyTrichotomous_Total :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyTrichotomous_Empty :
   forall R : rel Empty_set, WeaklyTrichotomous R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyTrichotomous_unit :
   forall R : rel unit, WeaklyTrichotomous R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyTrichotomous_RTrue :
   forall A : Type,
     WeaklyTrichotomous (@RTrue A A).
@@ -3043,6 +3164,7 @@ Lemma not_WeaklyTrichotomous_RFalse_two_elems :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyTrichotomous_Rinv :
   forall (A : Type) (R : rel A),
     WeaklyTrichotomous R -> WeaklyTrichotomous (Rinv R).
@@ -3074,6 +3196,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyTrichotomous_Ror :
   forall (A : Type) (R S : rel A),
     WeaklyTrichotomous R -> WeaklyTrichotomous S -> WeaklyTrichotomous (Ror R S).
@@ -3103,24 +3226,28 @@ Class Dense {A : Type} (R : rel A) : Prop :=
     dense : forall x y : A, R x y -> exists z : A, R x z /\ R z y
 }.
 
+#[export]
 Instance Dense_RTrue :
   forall A : Type, Dense (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Dense_RFalse :
   forall A : Type, Dense (@RFalse A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Dense_eq :
   forall A : Type, Dense (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Dense_Reflexive :
   forall {A : Type} (R : rel A),
     Reflexive R -> Dense R.
@@ -3128,6 +3255,7 @@ Instance Dense_Reflexive :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Dense_Rinv :
   forall (A : Type) (R : rel A),
     Dense R -> Dense (Rinv R).
@@ -3165,6 +3293,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Dense_Ror :
   forall (A : Type) (R S : rel A),
     Dense R -> Dense S -> Dense (Ror R S).
@@ -3187,6 +3316,7 @@ Class CoReflexive {A : Type} (R : rel A) : Prop :=
     coreflexive : forall x y : A, R x y -> x = y;
 }.
 
+#[export]
 Instance CoReflexive_Empty :
   forall R : rel Empty_set, CoReflexive R.
 (* begin hide *)
@@ -3195,6 +3325,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance CoReflexive_RFalse :
   forall A : Type, CoReflexive (@RFalse A A).
 (* begin hide *)
@@ -3203,6 +3334,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance CoReflexive_eq :
   forall A : Type, CoReflexive (@eq A).
 (* begin hide *)
@@ -3220,6 +3352,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance CoReflexive_Rinv :
   forall (A : Type) (R : rel A),
     CoReflexive R -> CoReflexive (Rinv R).
@@ -3234,6 +3367,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance CoReflexive_Rcomp :
   forall (A : Type) (R S : rel A),
     CoReflexive R -> CoReflexive S -> CoReflexive (Rcomp R S).
@@ -3258,6 +3392,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance CoReflexive_Ror :
   forall (A : Type) (R S : rel A),
     CoReflexive R -> CoReflexive S -> CoReflexive (Ror R S).
@@ -3270,6 +3405,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance CoReflexive_Rand_l :
   forall (A : Type) (R S : rel A),
     CoReflexive R -> CoReflexive (Rand R S).
@@ -3281,6 +3417,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance CoReflexive_Rand_r :
   forall (A : Type) (R S : rel A),
     CoReflexive S -> CoReflexive (Rand R S).
@@ -3292,6 +3429,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance CoReflexive_LeftUnique :
   forall {A : Type} (R : rel A),
     LeftUnique R -> CoReflexive (Rcomp R (Rinv R)).
@@ -3311,6 +3449,7 @@ Class Circular {A : Type} (R : rel A) : Prop :=
     circular : forall x y z : A, R x y -> R y z -> R z x;
 }.
 
+#[export]
 Instance Circular_Empty :
   forall R : rel Empty_set, Circular R.
 (* begin hide *)
@@ -3319,6 +3458,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Circular_RTrue :
   forall A : Type, Circular (@RTrue A A).
 (* begin hide *)
@@ -3327,6 +3467,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Circular_RFalse :
   forall A : Type, Circular (@RFalse A A).
 (* begin hide *)
@@ -3335,6 +3476,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Circular_eq {A : Type} : Circular (@eq A).
 (* begin hide *)
 Proof.
@@ -3344,6 +3486,7 @@ Qed.
 
 Require Import Lia.
 
+#[export]
 Instance Circular_Rcomp :
   forall (A : Type) (R S : rel A),
     Circular R -> Circular S -> Circular (Rcomp R S).
@@ -3354,6 +3497,7 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance Circular_Rinv :
   forall (A : Type) (R : rel A),
     Circular R -> Circular (Rinv R).
@@ -3423,6 +3567,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Circular_Rand :
   forall (A : Type) (R S : rel A),
     Circular R -> Circular S -> Circular (Rand R S).
@@ -3436,6 +3581,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Equivalence_Reflexive_Circular :
   forall {A : Type} (R : rel A),
     Reflexive R -> Circular R -> Equivalence R.
@@ -3460,6 +3606,7 @@ Qed.
 Class LeftQuasiReflexive {A : Type} (R : rel A) : Prop :=
   left_quasireflexive : forall x y : A, R x y -> R x x.
 
+#[export]
 Instance LeftQuasiReflexive_Empty :
   forall R : rel Empty_set, LeftQuasiReflexive R.
 (* begin hide *)
@@ -3468,6 +3615,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance LeftQuasiReflexive_eq {A : Type} : LeftQuasiReflexive (@eq A).
 (* begin hide *)
 Proof.
@@ -3475,6 +3623,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance LeftQuasiReflexive_RFalse :
   forall A : Type, LeftQuasiReflexive (@RFalse A A).
 (* begin hide *)
@@ -3483,6 +3632,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance LeftQuasiReflexive_RTrue :
   forall A : Type, LeftQuasiReflexive (@RTrue A A).
 (* begin hide *)
@@ -3529,6 +3679,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance LeftQuasiReflexive_Rand :
   forall (A : Type) (R S : rel A),
     LeftQuasiReflexive R -> LeftQuasiReflexive S -> LeftQuasiReflexive (Rand R S).
@@ -3542,6 +3693,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance LeftQuasiReflexive_Ror :
   forall (A : Type) (R S : rel A),
     LeftQuasiReflexive R -> LeftQuasiReflexive S -> LeftQuasiReflexive (Ror R S).
@@ -3579,6 +3731,7 @@ Class QuasiReflexive {A : Type} (R : rel A) : Prop :=
     QR_RightQuasiReflexive :> RightQuasiReflexive R;
 }.
 
+#[export]
 Instance LeftQuasiReflexive_Rinv :
   forall {A : Type} (R : rel A),
     RightQuasiReflexive R -> LeftQuasiReflexive (Rinv R).
@@ -3588,6 +3741,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance QuasiReflexive_Empty :
   forall R : rel Empty_set, QuasiReflexive R.
 (* begin hide *)
@@ -3598,6 +3752,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance QuasiReflexive_eq {A : Type} : QuasiReflexive (@eq A).
 (* begin hide *)
 Proof.
@@ -3607,6 +3762,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance QuasiReflexive_RFalse :
   forall A : Type, QuasiReflexive (@RFalse A A).
 (* begin hide *)
@@ -3615,6 +3771,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance QuasiReflexive_RTrue :
   forall A : Type, QuasiReflexive (@RTrue A A).
 (* begin hide *)
@@ -3623,6 +3780,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance QuasiReflexive_Rcomp :
   forall (A : Type) (R S : rel A),
     QuasiReflexive R -> QuasiReflexive S -> QuasiReflexive (Rcomp R S).
@@ -3633,6 +3791,7 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance QuasiReflexive_Rinv :
   forall (A : Type) (R : rel A),
     QuasiReflexive R -> QuasiReflexive (Rinv R).
@@ -3643,6 +3802,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance QuasiReflexive_Rand :
   forall (A : Type) (R S : rel A),
     QuasiReflexive R -> QuasiReflexive S -> QuasiReflexive (Rand R S).
@@ -3653,6 +3813,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance QuasiReflexive_Ror :
   forall (A : Type) (R S : rel A),
     QuasiReflexive R -> QuasiReflexive S -> QuasiReflexive (Ror R S).
@@ -3670,6 +3831,7 @@ Qed.
 Class RightEuclidean {A : Type} (R : rel A) : Prop :=
   right_euclidean : forall x y z : A, R x y -> R x z -> R y z.
 
+#[export]
 Instance RightEuclidean_Empty :
   forall R : rel Empty_set, RightEuclidean R.
 (* begin hide *)
@@ -3678,6 +3840,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightEuclidean_eq {A : Type} : RightEuclidean (@eq A).
 (* begin hide *)
 Proof.
@@ -3685,6 +3848,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightEuclidean_RFalse :
   forall A : Type, RightEuclidean (@RFalse A A).
 (* begin hide *)
@@ -3693,6 +3857,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightEuclidean_RTrue :
   forall A : Type, RightEuclidean (@RTrue A A).
 (* begin hide *)
@@ -3745,6 +3910,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightEuclidean_Rand :
   forall (A : Type) (R S : rel A),
     RightEuclidean R -> RightEuclidean S -> RightEuclidean (Rand R S).
@@ -3798,6 +3964,7 @@ Class Euclidean {A : Type} (R : rel A) : Prop :=
     Euclidean_LeftEuclidean :> LeftEuclidean R;
 }.
 
+#[export]
 Instance Euclidean_Empty :
   forall R : rel Empty_set, Euclidean R.
 (* begin hide *)
@@ -3806,6 +3973,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Euclidean_eq {A : Type} : Euclidean (@eq A).
 (* begin hide *)
 Proof.
@@ -3813,6 +3981,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Euclidean_RFalse :
   forall A : Type, Euclidean (@RFalse A A).
 (* begin hide *)
@@ -3821,6 +3990,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Euclidean_RTrue :
   forall A : Type, Euclidean (@RTrue A A).
 (* begin hide *)
@@ -3829,6 +3999,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Euclidean_Rcomp :
   forall (A : Type) (R S : rel A),
     Euclidean R -> Euclidean S -> Euclidean (Rcomp R S).
@@ -3862,6 +4033,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Euclidean_Rinv :
   forall (A : Type) (R : rel A),
     Euclidean R -> Euclidean (Rinv R).
@@ -3872,6 +4044,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Euclidean_Rand :
   forall (A : Type) (R S : rel A),
     Euclidean R -> Euclidean S -> Euclidean (Rand R S).
@@ -3887,6 +4060,7 @@ Restart.
 Abort.
 (* end hide *)
 
+#[export]
 Instance Euclidean_Ror :
   forall (A : Type) (R S : rel A),
     Euclidean R -> Euclidean S -> Euclidean (Ror R S).
@@ -3919,6 +4093,7 @@ Admitted.
 Class Antitransitive {A : Type} (R : rel A) : Prop :=
   antitransitive : forall x y z : A, R x y -> R y z -> ~ R x z.
 
+#[export]
 Instance Antitransitive_Empty :
   forall R : rel Empty_set, Antitransitive R.
 (* begin hide *)
@@ -3931,6 +4106,7 @@ Lemma not_Antitransitive_RTrue_inhabited :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Antitransitive_RFalse :
   forall A : Type, Antitransitive (@RFalse A A).
 (* begin hide *)
@@ -3948,6 +4124,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Antitransitive_successor :
   Antitransitive (fun x y => y = S x).
 (* begin hide *)
@@ -3956,6 +4133,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Antitransitive_Rinv :
   forall (A : Type) (R : rel A),
     Antitransitive R -> Antitransitive (Rinv R).
@@ -4019,18 +4197,21 @@ Abort.
 Class CoTransitive {A : Type} (R : rel A) : Prop :=
   cotransitive : forall {x z : A}, R x z -> forall y : A, R x y \/ R y z.
 
+#[export]
 Instance CoTransitive_Empty :
   forall R : rel Empty_set, CoTransitive R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance CoTransitive_RTrue :
   forall A : Type, CoTransitive (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance CoTransitive_RFalse :
   forall A : Type, CoTransitive (@RFalse A A).
 (* begin hide *)
@@ -4054,6 +4235,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance CoTransitive_Rinv :
   forall (A : Type) (R : rel A),
     CoTransitive R -> CoTransitive (Rinv R).
@@ -4089,6 +4271,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance CoTransitive_Ror :
   forall (A : Type) (R S : rel A),
     CoTransitive R -> CoTransitive S -> CoTransitive (Ror R S).
@@ -4124,6 +4307,7 @@ Definition AsymmetricPart {A : Type} (R : rel A) : rel A :=
 Class Quasitransitive {A : Type} (R : rel A) : Prop :=
   quasitransitive :> Transitive (AsymmetricPart R).
 
+#[export]
 Instance Symmetric_SymmetricPart :
   forall {A : Type} (R : rel A),
     Symmetric (SymmetricPart R).
@@ -4134,6 +4318,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_Symmetric :
   forall {A : Type} (R : rel A),
     Symmetric R -> Quasitransitive R.
@@ -4145,6 +4330,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_Transitive :
   forall {A : Type} (R : rel A),
     Transitive R -> Quasitransitive R.
@@ -4175,18 +4361,21 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_Empty :
   forall R : rel Empty_set, Quasitransitive R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_RTrue :
   forall A : Type, Quasitransitive (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_RFalse :
   forall A : Type, Quasitransitive (@RFalse A A).
 (* begin hide *)
@@ -4199,6 +4388,7 @@ Lemma Quasitransitive_eq :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_Rinv :
   forall (A : Type) (R : rel A),
     Quasitransitive R -> Quasitransitive (Rinv R).
@@ -4219,6 +4409,7 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_Rnot :
   forall {A : Type} (R : rel A),
     Quasitransitive R -> Quasitransitive (Rnot R).
@@ -4231,6 +4422,7 @@ Proof.
 Admitted.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_Rnot_conv :
   forall {A : Type} (R : rel A),
     Quasitransitive (Rnot R) -> Quasitransitive R.
@@ -4246,6 +4438,7 @@ Proof.
 Admitted.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_Ror :
   forall (A : Type) (R S : rel A),
     Quasitransitive R -> Quasitransitive S -> Quasitransitive (Ror R S).
@@ -4255,6 +4448,7 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_Rand :
   forall {A : Type} (R S : rel A),
     Quasitransitive R -> Quasitransitive S -> Quasitransitive (Rand R S).
@@ -4280,6 +4474,7 @@ Class Apartness {A : Type} (R : rel A) : Prop :=
     Apartness_Cotransitive :> CoTransitive R;
 }.
 
+#[export]
 Instance Apartness_Empty :
   forall R : rel Empty_set, Apartness R.
 (* begin hide *)
@@ -4302,6 +4497,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Apartness_RFalse :
   forall {A : Type}, Apartness (@RFalse A A).
 (* begin hide *)
@@ -4323,7 +4519,7 @@ Proof.
 Qed.
 (* end hide *)
 
-Require Import B4.
+From Typonomikon Require Import B4.
 
 Lemma Apartness_neq :
   forall {A : Type}, Apartness (Rnot (@eq A)).
@@ -4355,6 +4551,7 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance Apartness_Rinv :
   forall (A : Type) (R : rel A),
     Apartness R -> Apartness (Rinv R).
@@ -4404,6 +4601,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Apartness_Ror :
   forall (A : Type) (R S : rel A),
     Apartness R -> Apartness S -> Apartness (Ror R S).
@@ -4457,6 +4655,7 @@ Class Connected {A : Type} (R : rel A) : Prop :=
     connected : forall x y : A, ~ R x y /\ ~ R y x -> x = y;
 }.
 
+#[export]
 Instance Connected_Total :
   forall (A : Type) (R : rel A),
     Total R -> Connected R.
@@ -4464,18 +4663,21 @@ Instance Connected_Total :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Connected_Empty :
   forall R : rel Empty_set, Connected R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Connected_unit :
   forall R : rel unit, Connected R.
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Connected_RTrue :
   forall A : Type,
     Connected (@RTrue A A).
@@ -4490,6 +4692,7 @@ Lemma not_Connected_RFalse_two_elems :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Connected_Rinv :
   forall (A : Type) (R : rel A),
     Connected R -> Connected (Rinv R).
@@ -4530,6 +4733,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Connected_Ror :
   forall (A : Type) (R S : rel A),
     Connected R -> Connected S ->
@@ -4782,6 +4986,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance WellFounded_Empty :
   forall R : rel Empty_set, WellFounded R.
 (* begin hide *)
@@ -4820,6 +5025,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance WellFounded_RFalse :
   forall A : Type, WellFounded (@RFalse A A).
 (* begin hide *)
@@ -4840,6 +5046,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance IllFounded_eq :
   forall A : Type, A -> IllFounded (@eq A).
 (* begin hide *)
@@ -4863,6 +5070,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance WellFounded_lt :
   WellFounded lt.
 (* begin hide *)
@@ -4876,6 +5084,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance IllFounded_le :
   IllFounded le.
 (* begin hide *)
@@ -4889,6 +5098,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance IllFounded_ge :
   IllFounded ge.
 (* begin hide *)
@@ -4902,6 +5112,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance IllFounded_gt :
   IllFounded gt.
 (* begin hide *)
@@ -4942,6 +5153,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance WellFounded_Rcomp :
   forall (A : Type) (R S : rel A),
     WellFounded R -> WellFounded S -> WellFounded (Rcomp R S).
@@ -5031,6 +5243,7 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance WellFounded_Rand :
   forall (A : Type) (R S : rel A),
     WellFounded R -> WellFounded S -> WellFounded (Rand R S).
@@ -5061,6 +5274,7 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance IllFounded_Rand :
   forall (A : Type) (R S : rel A),
     IllFounded R -> IllFounded S -> IllFounded (Rand R S).
@@ -5108,6 +5322,7 @@ Class WellOrder {A : Type} (R : rel A) : Prop :=
     WellOrder_WeaklyExtensional :> WeaklyExtensional R;
 }.
 
+#[export]
 Instance Antisymmetric_WellOrder :
   forall {A : Type} (R : rel A),
     WellOrder R -> Antisymmetric R.
@@ -5123,6 +5338,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Total_WellOrder :
   (forall P : Prop, P \/ ~ P) ->
     forall {A : Type} (R : rel A),
@@ -5154,6 +5370,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Transitive_CoReflexive :
   forall {A : Type} (R : rel A),
     CoReflexive R -> Transitive R.
@@ -5165,6 +5382,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_CoReflexive :
   forall {A : Type} (R : rel A),
     CoReflexive R -> Symmetric R.
@@ -5176,6 +5394,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance LeftEuclidean_CoReflexive :
   forall {A : Type} (R : rel A),
     CoReflexive R -> LeftEuclidean R.
@@ -5186,6 +5405,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightEuclidean_CoReflexive :
   forall {A : Type} (R : rel A),
     CoReflexive R -> RightEuclidean R.
@@ -5196,6 +5416,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_LeftEuclidean :
   forall {A : Type} (R : rel A),
     LeftEuclidean R -> Quasitransitive R.
@@ -5212,6 +5433,7 @@ Restart.
 Abort.
 (* end hide *)
 
+#[export]
 Instance Quasitransitive_RightEuclidean :
   forall {A : Type} (R : rel A),
     RightEuclidean R -> Quasitransitive R.
@@ -5224,6 +5446,7 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance LeftQuasiReflexive_CoReflexive :
   forall {A : Type} (R : rel A),
     CoReflexive R -> LeftQuasiReflexive R.
@@ -5234,6 +5457,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightQuasiReflexive_CoReflexive :
   forall {A : Type} (R : rel A),
     CoReflexive R -> RightQuasiReflexive R.
@@ -5244,6 +5468,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance QuasiReflexive_CoReflexive :
   forall {A : Type} (R : rel A),
     CoReflexive R -> QuasiReflexive R.
@@ -5253,6 +5478,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance LeftQuasiReflexive_Reflexive :
   forall {A : Type} (R : rel A),
     Reflexive R -> LeftQuasiReflexive R.
@@ -5262,6 +5488,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Dense_LeftQuasiReflexive :
   forall {A : Type} (R : rel A),
     LeftQuasiReflexive R -> Dense R.
@@ -5274,6 +5501,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Dense_RightQuasiReflexive :
   forall {A : Type} (R : rel A),
     RightQuasiReflexive R -> Dense R.
@@ -5286,6 +5514,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightQuasiReflexive_Reflexive :
   forall {A : Type} (R : rel A),
     Reflexive R -> RightQuasiReflexive R.
@@ -5295,6 +5524,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance QuasiReflexive_Reflexive :
   forall {A : Type} (R : rel A),
     Reflexive R -> QuasiReflexive R.
@@ -5304,6 +5534,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance LeftTotal_Reflexive :
   forall {A : Type} (R : rel A),
     Reflexive R -> LeftTotal R.
@@ -5314,6 +5545,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightTotal_Reflexive :
   forall {A : Type} (R : rel A),
     Reflexive R -> RightTotal R.
@@ -5324,6 +5556,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyAntisymmetric_CoReflexive :
   forall {A : Type} (R : rel A),
     CoReflexive R -> WeaklyAntisymmetric R.
@@ -5334,6 +5567,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyAntisymmetric_Antisymmetric :
   forall {A : Type} (R : rel A),
     Antisymmetric R -> WeaklyAntisymmetric R.
@@ -5344,6 +5578,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Antireflexive_Antisymmetric :
   forall {A : Type} (R : rel A),
     Antisymmetric R -> Antireflexive R.
@@ -5354,6 +5589,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Antireflexive_Antitransitive :
   forall {A : Type} (R : rel A),
     Antitransitive R -> Antireflexive R.
@@ -5365,6 +5601,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Antisymmetric_CoReflexive :
   forall {A : Type} (R : rel A),
     CoReflexive R -> Antisymmetric R.
@@ -5374,6 +5611,7 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance LeftUnique_CoReflexive :
   forall {A : Type} (R : rel A),
     CoReflexive R -> LeftUnique R.
@@ -5384,6 +5622,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance RightUnique_CoReflexive :
   forall {A : Type} (R : rel A),
     CoReflexive R -> RightUnique R.
@@ -5399,6 +5638,7 @@ Qed.
 
 
 
+#[export]
 Instance CoReflexive_Symmetric_WeaklyAntisymmetric :
   forall {A : Type} (R : rel A),
     Symmetric R -> WeaklyAntisymmetric R -> CoReflexive R.
@@ -5470,6 +5710,7 @@ Class WeaklyAntisymmetric' {A : Type} {E : rel A}
     wasym : forall x y : A, R x y -> R y x -> E x y
 }.
 
+#[export]
 Instance WeaklyAntisymmetric'_Equivalence :
   forall (A : Type) (E : rel A) (H : Equivalence E),
     WeaklyAntisymmetric' H E.
@@ -5477,6 +5718,7 @@ Instance WeaklyAntisymmetric'_Equivalence :
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyAntisymmetric'_Rinv :
   forall (A : Type) (E : rel A) (H : Equivalence E) (R : rel A),
     WeaklyAntisymmetric' H R -> WeaklyAntisymmetric' H (Rinv R).
@@ -5539,6 +5781,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance WeaklyAntisymmetric'_Rand :
   forall (A : Type) (E : rel A) (H : Equivalence E) (R S : rel A),
     WeaklyAntisymmetric' H R -> WeaklyAntisymmetric' H S ->
@@ -5558,7 +5801,7 @@ Inductive rc {A : Type} (R : rel A) : rel A :=
     | rc_refl : forall x : A, rc R x x.
 
 (* begin hide *)
-Global Hint Constructors rc : core.
+#[global] Hint Constructors rc : core.
 
 Ltac rc := compute; repeat split; intros; rel;
 repeat match goal with
@@ -5566,6 +5809,7 @@ repeat match goal with
 end; rel.
 (* end hide *)
 
+#[export]
 Instance Reflexive_rc :
   forall (A : Type) (R : rel A), Reflexive (rc R).
 (* begin hide *)
@@ -5606,7 +5850,7 @@ Inductive sc {A : Type} (R : rel A) : rel A :=
     | sc_symm : forall x y : A, R x y -> sc R y x.
 
 (* begin hide *)
-Global Hint Constructors sc : core.
+#[global] Hint Constructors sc : core.
 
 Ltac sc := compute; repeat split; intros; rel;
 repeat match goal with
@@ -5614,6 +5858,7 @@ repeat match goal with
 end.
 (* end hide *)
 
+#[export]
 Instance Symmetric_sc :
   forall (A : Type) (R : rel A), Symmetric (sc R).
 (* begin hide *)
@@ -5659,7 +5904,7 @@ Inductive sc' {A : Type} (R : rel A) : rel A :=
         forall x y : A, sc' R x y -> sc' R y x.
 
 (* begin hide *)
-Global Hint Constructors sc' : core.
+#[global] Hint Constructors sc' : core.
 
 Ltac sc' := compute; repeat split; intros; rel;
 repeat match goal with
@@ -5667,6 +5912,7 @@ repeat match goal with
 end.
 (* end hide *)
 
+#[export]
 Instance Symmetric_sc' :
   forall (A : Type) (R : rel A), Symmetric (sc' R).
 (* begin hide *)
@@ -5719,7 +5965,7 @@ Inductive tc {A : Type} (R : rel A) : rel A :=
     | tc_trans : forall x y z : A, R x y -> tc R y z -> tc R x z.
 
 (* begin hide *)
-Global Hint Constructors tc : core.
+#[global] Hint Constructors tc : core.
 
 Ltac tc := compute; repeat split; intros; rel;
 match goal with
@@ -5727,6 +5973,7 @@ match goal with
 end.
 (* end hide *)
 
+#[export]
 Instance Transitive_tc :
   forall (A : Type) (R : rel A),
     Transitive (tc R).
@@ -5804,13 +6051,14 @@ Inductive tc' {A : Type} (R : rel A) : rel A :=
           tc' R x y -> tc' R y z -> tc' R x z.
 
 (* begin hide *)
-Global Hint Constructors tc' : core.
+#[global] Hint Constructors tc' : core.
 
 Ltac tc' := compute; repeat split; intros; rel;
 repeat match goal with
     | H : tc' _ _ _ |- _ => induction H; eauto
 end.
 
+#[export]
 Instance Transitive_tc' :
   forall (A : Type) (R : rel A), Transitive (tc' R).
 Proof. tc'. Qed.
@@ -5843,12 +6091,14 @@ repeat match goal with
 end; rel.
 (* end hide *)
 
+#[export]
 Instance Reflexive_rsc :
   forall (A : Type) (R : rel A), Reflexive (rsc R).
 (* begin hide *)
 Proof. rstc. Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_rsc :
   forall (A : Type) (R : rel A), Symmetric (rsc R).
 (* begin hide *)
@@ -5901,6 +6151,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Reflexive_rtc :
   forall {A : Type} (R : rel A),
     Reflexive (rtc R).
@@ -5910,6 +6161,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Transitive_rtc :
   forall {A : Type} (R : rel A),
     Transitive (rtc R).
@@ -5966,6 +6218,7 @@ repeat match goal with
 end.
 (* end hide *)
 
+#[export]
 Instance Reflexive_ec :
   forall {A : Type} (R : rel A),
     Reflexive (ec R).
@@ -5975,6 +6228,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_ec :
   forall {A : Type} (R : rel A),
     Symmetric (ec R).
@@ -5991,6 +6245,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Transitive_ec :
   forall {A : Type} (R : rel A),
     Transitive (ec R).
@@ -6000,6 +6255,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Equivalence_ec :
   forall (A : Type) (R : rel A), Equivalence (ec R).
 (* begin hide *)
@@ -6065,7 +6321,7 @@ Inductive equiv_clos {A : Type} (R : rel A) : rel A :=
         equiv_clos R x y -> equiv_clos R y z -> equiv_clos R x z.
 
 (* begin hide *)
-Global Hint Constructors equiv_clos : core.
+#[global] Hint Constructors equiv_clos : core.
 
 Ltac ec' := compute; repeat split; intros; rel;
 repeat match goal with
@@ -6073,6 +6329,7 @@ repeat match goal with
 end.
 (* end hide *)
 
+#[export]
 Instance Equivalence_equiv_clos :
   forall (A : Type) (R : rel A), Equivalence (equiv_clos R).
 (* begin hide *)
@@ -6100,6 +6357,7 @@ Qed.
 Definition rstc {A : Type} (R : rel A) : rel A :=
   tc' (sc' (rc R)).
 
+#[export]
 Instance Reflexive_rstc :
   forall {A : Type} (R : rel A),
     Reflexive (rstc R).
@@ -6107,6 +6365,7 @@ Instance Reflexive_rstc :
 Proof. rstc. Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_rstc :
   forall {A : Type} (R : rel A),
     Symmetric (rstc R).
@@ -6114,6 +6373,7 @@ Instance Symmetric_rstc :
 Proof. rstc. Qed.
 (* end hide *)
 
+#[export]
 Instance Transitive_rstc :
   forall {A : Type} (R : rel A),
     Transitive (rstc R).
@@ -6121,6 +6381,7 @@ Instance Transitive_rstc :
 Proof. rstc. Qed.
 (* end hide *)
 
+#[export]
 Instance Equivalence_rstc :
   forall (A : Type) (R : rel A),
     Equivalence (rstc R).
@@ -6153,8 +6414,9 @@ Inductive EquivalenceClosure {A : Type} (R : rel A) : rel A :=
     | EC_symm  : forall x y   : A, R x y -> EquivalenceClosure R y x
     | EC_trans : forall x y z : A, R x y -> EquivalenceClosure R y z -> EquivalenceClosure R x z.
 
-Global Hint Constructors EquivalenceClosure : core.
+#[global] Hint Constructors EquivalenceClosure : core.
 
+#[export]
 Instance Reflexive_EquivalenceClosure :
   forall {A : Type} (R : rel A),
     Reflexive (EquivalenceClosure R).
@@ -6164,6 +6426,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_EquivalenceClosure :
   forall {A : Type} (R : rel A),
     Symmetric (EquivalenceClosure R).
@@ -6177,6 +6440,7 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance Transitive_EquivalenceClosure :
   forall {A : Type} (R : rel A),
     Transitive (EquivalenceClosure R).
@@ -6205,6 +6469,7 @@ Abort.
 Definition EquivalenceClosure' {A : Type} (R : rel A) : rel A :=
   rc (tc' (sc' R)).
 
+#[export]
 Instance Reflexive_EquivalenceClosure' :
   forall {A : Type} (R : rel A),
     Reflexive (EquivalenceClosure' R).
@@ -6214,6 +6479,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Symmetric_EquivalenceClosure' :
   forall {A : Type} (R : rel A),
     Symmetric (EquivalenceClosure' R).
@@ -6228,6 +6494,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Transitive_EquivalenceClosure' :
   forall {A : Type} (R : rel A),
     Transitive (EquivalenceClosure' R).
@@ -6268,6 +6535,7 @@ Inductive CircularClosure {A : Type} (R : rel A) : rel A :=
           CircularClosure R x y -> CircularClosure R y z ->
             CircularClosure R z x.
 
+#[export]
 Instance Circular_CircularClosure
   {A : Type} (R : rel A) : Circular (CircularClosure R).
 (* begin hide *)
@@ -6293,6 +6561,7 @@ Inductive LeftQuasiReflexiveClosure {A : Type} (R : rel A) : rel A :=
     | LQRC_clos :
         forall x y : A, R x y -> LeftQuasiReflexiveClosure R x x.
 
+#[export]
 Instance LeftQuasiReflexive_LeftQuasiReflexiveClosure
   {A : Type} (R : rel A) : LeftQuasiReflexive (LeftQuasiReflexiveClosure R).
 (* begin hide *)
@@ -6345,6 +6614,7 @@ Class Closure
 }.
 
 #[refine]
+#[export]
 Instance Closure_rc {A : Type} : Closure (@rc A) :=
 {
     step := rc_step;
@@ -6367,13 +6637,14 @@ Qed.
 Definition rr {A : Type} (R : rel A) : rel A :=
   fun x y : A => R x y /\ x <> y.
 
+#[export]
 Instance Antireflexive_rr :
   forall (A : Type) (R : rel A), Antireflexive (rr R).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
-Require Import B4.
+From Typonomikon Require Import B4.
 
 Lemma rr_rc :
   LEM ->
@@ -6393,6 +6664,7 @@ Qed.
 Definition TransitiveReduction {A : Type} (R : rel A) (x y : A) : Prop :=
   R x y /\ forall z : A, R x z -> R z y -> False.
 
+#[export]
 Instance Antitransitive_TransitiveReduction
   {A : Type} (R : rel A)
   : Antitransitive (TransitiveReduction R).
@@ -6406,6 +6678,7 @@ Qed.
 Definition TransitiveReduction' {A : Type} (R : rel A) (x y : A) : Prop :=
   R x y /\ forall z : A, rr R x z -> rr R z y -> False.
 
+#[export]
 Instance Antitransitive_TransitiveReduction'
   {A : Type} (R : rel A)
   : Antitransitive (TransitiveReduction' R).
@@ -6427,24 +6700,28 @@ Class Diamond {A : Type} (R : rel A) : Prop :=
           exists w : A, R y w /\ R z w
 }.
 
+#[export]
 Instance Diamond_RTrue :
   forall A : Type, Diamond (@RTrue A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Diamond_RFalse :
   forall A : Type, Diamond (@RFalse A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Diamond_eq :
   forall A : Type, Diamond (@eq A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance Diamond_lt :
   Diamond lt.
 (* begin hide *)
@@ -6453,6 +6730,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Diamond_le :
   Diamond le.
 (* begin hide *)
@@ -6471,6 +6749,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Diamond_ge :
   Diamond ge.
 (* begin hide *)
@@ -6555,6 +6834,7 @@ Class LocallyConfluent {A : Type} (R : rel A) : Prop :=
   locally_confluent :
     forall x y z : A, R x y -> R x z -> exists w : A, rtc R y w /\ rtc R z w.
 
+#[export]
 Instance LocallyConfluent_RTrue :
   forall A : Type, LocallyConfluent (@RTrue A A).
 (* begin hide *)
@@ -6565,12 +6845,14 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance LocallyConfluent_RFalse :
   forall A : Type, LocallyConfluent (@RFalse A A).
 (* begin hide *)
 Proof. rel. Qed.
 (* end hide *)
 
+#[export]
 Instance LocallyConfluent_eq :
   forall A : Type, LocallyConfluent (@eq A).
 (* begin hide *)
@@ -6581,6 +6863,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance LocallyConfluent_Diamond :
   forall {A : Type} (R : rel A),
     Diamond R -> LocallyConfluent R.
@@ -6664,6 +6947,7 @@ Class Confluent {A : Type} (R : rel A) : Prop :=
   confluent :
     forall x y z : A, rtc R x y -> rtc R x z -> exists w : A, rtc R y w /\ rtc R z w.
 
+#[export]
 Instance Confluent_RTrue :
   forall A : Type, Confluent (@RTrue A A).
 (* begin hide *)
@@ -6674,6 +6958,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Confluent_RFalse :
   forall A : Type, Confluent (@RFalse A A).
 (* begin hide *)
@@ -6686,6 +6971,7 @@ Proof.
 Qed.
 (* end hide *)
 
+#[export]
 Instance Confluent_eq :
   forall A : Type, Confluent (@eq A).
 (* begin hide *)
@@ -6732,6 +7018,7 @@ Proof.
 Abort.
 (* end hide *)
 
+#[export]
 Instance Confluent_Rand :
   forall {A : Type} (R S : rel A),
     Confluent R -> Confluent S -> Confluent (Rand R S).

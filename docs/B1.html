@@ -1479,7 +1479,7 @@ Powyższe niewinnie wyglądające twierdzenie mówi nam, że <span class="inline
 </div>
 
 <div class="doc">
-Komenda <span class="inlinecode"><span class="id" title="keyword">Hypotheses</span></span> formalnie działa jak wprowadzenie aksjomatu,
+Komenda <span class="inlinecode"><span class="id" title="keyword">Parameters</span></span> formalnie działa jak wprowadzenie aksjomatu,
     który w naszym przypadku brzmi "P, Q, R i S są zdaniami logicznymi".
     Taki aksjomat jest rzecz jasna zupełnie niegroźny, ale z innymi
     trzeba uważać — gdybyśmy wprowadzili aksjomat <span class="inlinecode">1</span> <span class="inlinecode">=</span> <span class="inlinecode">2</span>, to
@@ -1499,10 +1499,10 @@ Komenda <span class="inlinecode"><span class="id" title="keyword">Hypotheses</sp
 </div>
 
 <div class="doc">
-W praktyce komenda <span class="inlinecode"><span class="id" title="keyword">Hypothesis</span></span> służy do tego, żeby za dużo nie
+W praktyce komenda <span class="inlinecode"><span class="id" title="keyword">Parameters</span></span> służy do tego, żeby za dużo nie
     pisać — po zamknięciu sekcji komendą <span class="inlinecode"><span class="id" title="keyword">End</span></span>, Coq doda do każdego
     twierdzenia znajdującego się w tej sekcji kwantyfikację uniwersalną
-    po hipotezach zadeklarowanych przy pomocy <span class="inlinecode"><span class="id" title="keyword">Hypothesis</span></span>. W naszym
+    po hipotezach zadeklarowanych przy pomocy <span class="inlinecode"><span class="id" title="keyword">Parameters</span></span>. W naszym
     przypadku Coq dodał do <span class="inlinecode"><span class="id" title="var">and_comm</span></span> kwantyfikację po <span class="inlinecode"><span class="id" title="var">P</span></span> i <span class="inlinecode"><span class="id" title="var">Q</span></span>,
     mimo że nie napisaliśmy jej explicite. 
 <div class="paragraph"> </div>
@@ -1519,7 +1519,7 @@ W praktyce komenda <span class="inlinecode"><span class="id" title="keyword">Hyp
 <span class="id" title="keyword">Module</span> <span class="id" title="var">NewExercises</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Hypothesis</span><br/>
+<span class="id" title="keyword">Parameters</span><br/>
 &nbsp;&nbsp;(<span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> <span class="id" title="var">S</span> : <span class="id" title="keyword">Prop</span>)<br/>
 &nbsp;&nbsp;(<span class="id" title="var">P'</span> <span class="id" title="var">Q'</span> <span class="id" title="var">R'</span> <span class="id" title="var">S'</span> : <span class="id" title="keyword">Prop</span>).<br/>
 

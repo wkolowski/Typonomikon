@@ -1,4 +1,4 @@
-Require Import D5 D6.
+From Typonomikon Require Import D5 D6.
 
 (** * Permutacje przez wstawianie *)
 
@@ -16,7 +16,7 @@ Inductive Perm {A : Type} : list A -> list A -> Prop :=
         forall (x : A) (l1 l1' l2 l2' : list A),
           Insert x l1 l1' -> Insert x l2 l2' -> Perm l1 l2 -> Perm l1' l2'.
 
-Global Hint Constructors Insert Perm : core.
+#[global] Hint Constructors Insert Perm : core.
 
 Lemma Perm_refl :
   forall {A : Type} (l : list A),
@@ -104,7 +104,7 @@ Inductive Perm {A : Type} : list A -> list A -> Prop :=
         forall (x : A) (l1 l2 r1 r2 : list A),
           Perm (l1 ++ l2) (r1 ++ r2) -> Perm (l1 ++ x :: l2) (r1 ++ x :: r2).
 
-Global Hint Constructors Perm : core.
+#[global] Hint Constructors Perm : core.
 
 Lemma Perm_refl :
   forall {A : Type} (l : list A),

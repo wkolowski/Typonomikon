@@ -5,6 +5,7 @@ Class Test : Type := MkTest
 
 Check MkTest.
 
+#[export]
 Instance Test_1 : Test.
 Proof.
   split.

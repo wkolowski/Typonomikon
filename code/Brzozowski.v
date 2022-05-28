@@ -52,7 +52,7 @@ with MatchesStar {A : Type} : list A -> Regex A -> Prop :=
         forall (h : A) (t l : list A) (r : Regex A),
           Matches (h :: t) r -> MatchesStar l r -> MatchesStar ((h :: t) ++ l) r.
 
-Global Hint Constructors Matches MatchesStar : core.
+#[global] Hint Constructors Matches MatchesStar : core.
 
 Scheme Matches_ind' := Induction for Matches Sort Prop.
 

@@ -140,6 +140,7 @@ Class EqDec (A : Type) : Type :=
     są szczególnie te, których elementy są w jakiś sposób "nieskończone". *)
 
 #[refine]
+#[export]
 Instance EqDec_bool : EqDec bool :=
 {
     eq_dec := fun b b' : bool =>
@@ -233,6 +234,7 @@ Instance].
 
 (* begin hide *)
 #[refine]
+#[export]
 Instance EqDec_unit : EqDec unit :=
 {
     eq_dec := fun _ _ => true
@@ -242,6 +244,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance EqDec_nat : EqDec nat :=
 {
     eq_dec := fix f (n m : nat) :=
@@ -284,6 +287,7 @@ Defined.
 (* end hide *)
 
 #[refine]
+#[export]
 Instance EqDec_option (A : Type) (_ : EqDec A) : EqDec (option A) :=
 {
     eq_dec := fun opt1 opt2 : option A =>
@@ -336,6 +340,7 @@ end.
 Require Import Bool.
 
 #[refine]
+#[export]
 Instance EqDec_list (A : Type) (eq_dec_A : EqDec A) : EqDec (list A) :=
 {
     eq_dec := eq_dec_list

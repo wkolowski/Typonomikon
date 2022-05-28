@@ -1,4 +1,4 @@
-Require Import F2.
+From Typonomikon Require Import F2.
 
 CoInductive Odd (c : conat) : Type :=
 {

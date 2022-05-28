@@ -6,7 +6,7 @@
     - listy
     - teoria relacji *)
 
-Require Import D5.
+From Typonomikon Require Import D5.
 Require Import Lia.
 Require Import Nat.
 

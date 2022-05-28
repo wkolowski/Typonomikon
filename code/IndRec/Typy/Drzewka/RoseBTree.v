@@ -137,7 +137,7 @@ Inductive Exactly {A : Type} (P : A -> Prop) : nat -> RBT A -> Type :=
           Exactly P n1 t1 -> Exactly P n2 t2 ->
             Exactly P (n1 + n2) (N t1 t2).
 
-Require Import Equality.
+Require Import Equality ProofIrrelevance.
 
 Lemma Exactly_det :
   forall {A : Type} {P : A -> Prop} {n m : nat} {t : RBT A},
@@ -154,8 +154,6 @@ Proof.
       assumption.
       assumption.
 Qed.
-
-Require Import ProofIrrelevance.
 
 Lemma isProp_Exactly :
   forall

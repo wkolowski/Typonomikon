@@ -2,7 +2,7 @@
     #<a class='link' href='https://doisinkidney.com/pdfs/masters-thesis.pdf'>
     Finiteness in Cubical Type Theory</a>#. *)
 
-Require Import D5.
+From Typonomikon Require Import D5.
 
 Require Import Equality.
 
@@ -40,6 +40,7 @@ Class ExactlyFinite (A : Type) : Type :=
 }.
 
 #[refine]
+#[export]
 Instance ExactlyFinite_False : ExactlyFinite False :=
 {
     elems := [];
@@ -49,6 +50,7 @@ Proof.
 Defined.
 
 #[refine]
+#[export]
 Instance ExactlyFinite_unit : ExactlyFinite unit :=
 {
     elems := [tt];
@@ -100,11 +102,13 @@ Proof.
   reflexivity.
 Qed.
 
+#[export]
 Instance MerelyExactlyFinite_False : MerelyExactlyFinite False :=
 {
     mef := truncated ExactlyFinite_False
 }.
 
+#[export]
 Instance MerelyExactlyFinite_unit : MerelyExactlyFinite unit :=
 {
     mef := truncated ExactlyFinite_unit

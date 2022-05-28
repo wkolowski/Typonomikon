@@ -450,7 +450,7 @@ Zauważ, że sortem <span class="inlinecode"><span class="id" title="var">has_pr
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
 
 <br/>
 
@@ -1052,7 +1052,7 @@ Pozostawię przykłady bez komentarza — są one po prostu konsekwencją tego,
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">unary</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">list</span> <span class="id" title="var">unit</span> :=<br/>
@@ -1513,6 +1513,7 @@ Jeżeli chodzi o składanie funkcji idempotentnych, sytuacja jest podobna
 <span class="id" title="keyword">Arguments</span> <span class="id" title="var">coer</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_refl</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">iso</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> := <span class="id" title="var">id</span>;<br/>
@@ -1522,6 +1523,7 @@ Jeżeli chodzi o składanie funkcji idempotentnych, sytuacja jest podobna
 }.<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_sym</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">i</span> : <span class="id" title="var">iso</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="var">iso</span> <span class="id" title="var">B</span> <span class="id" title="var">A</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> := <span class="id" title="var">coer</span> <span class="id" title="var">i</span>;<br/>
@@ -1532,6 +1534,7 @@ Jeżeli chodzi o składanie funkcji idempotentnych, sytuacja jest podobna
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_trans</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">i</span> : <span class="id" title="var">iso</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) (<span class="id" title="var">j</span> : <span class="id" title="var">iso</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>) : <span class="id" title="var">iso</span> <span class="id" title="var">A</span> <span class="id" title="var">C</span> :=<br/>
 {<br/>
@@ -1545,6 +1548,7 @@ Jeżeli chodzi o składanie funkcji idempotentnych, sytuacja jest podobna
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_pres_prod</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">A'</span> <span class="id" title="var">B</span> <span class="id" title="var">B'</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">i</span> : <span class="id" title="var">iso</span> <span class="id" title="var">A</span> <span class="id" title="var">A'</span>) (<span class="id" title="var">j</span> : <span class="id" title="var">iso</span> <span class="id" title="var">B</span> <span class="id" title="var">B'</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">A</span> * <span class="id" title="var">B</span>) (<span class="id" title="var">A'</span> * <span class="id" title="var">B'</span>) :=<br/>
 {<br/>
@@ -1567,6 +1571,7 @@ Jeżeli chodzi o składanie funkcji idempotentnych, sytuacja jest podobna
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">prod_assoc</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">A</span> * (<span class="id" title="var">B</span> * <span class="id" title="var">C</span>)) ((<span class="id" title="var">A</span> * <span class="id" title="var">B</span>) * <span class="id" title="var">C</span>) :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> '(<span class="id" title="var">a</span>, (<span class="id" title="var">b</span>, <span class="id" title="var">c</span>)) := ((<span class="id" title="var">a</span>, <span class="id" title="var">b</span>), <span class="id" title="var">c</span>);<br/>
@@ -1579,6 +1584,7 @@ Jeżeli chodzi o składanie funkcji idempotentnych, sytuacja jest podobna
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">prod_unit_l</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">unit</span> * <span class="id" title="var">A</span>) <span class="id" title="var">A</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> '(<span class="id" title="var">_</span>, <span class="id" title="var">a</span>) := <span class="id" title="var">a</span>;<br/>
@@ -1591,6 +1597,7 @@ Jeżeli chodzi o składanie funkcji idempotentnych, sytuacja jest podobna
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">prod_unit_r</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">A</span> * <span class="id" title="var">unit</span>) <span class="id" title="var">A</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> '(<span class="id" title="var">a</span>, <span class="id" title="var">_</span>) := <span class="id" title="var">a</span>;<br/>
@@ -1603,6 +1610,7 @@ Jeżeli chodzi o składanie funkcji idempotentnych, sytuacja jest podobna
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">prod_comm</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">iso</span> (<span class="id" title="var">A</span> * <span class="id" title="var">B</span>) (<span class="id" title="var">B</span> * <span class="id" title="var">A</span>) :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> '(<span class="id" title="var">a</span>, <span class="id" title="var">b</span>) := (<span class="id" title="var">b</span>, <span class="id" title="var">a</span>);<br/>
@@ -1626,6 +1634,7 @@ Trzeba przerobić rozdział o typach i funkcjach tak, żeby nie mieszać
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">sum_empty_l</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">Empty_set</span> + <span class="id" title="var">A</span>) <span class="id" title="var">A</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> <span class="id" title="var">x</span> := <span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span> | <span class="id" title="var">inl</span> <span class="id" title="var">e</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">e</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span> | <span class="id" title="var">inr</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">a</span> <span class="id" title="keyword">end</span>;<br/>
@@ -1638,6 +1647,7 @@ Trzeba przerobić rozdział o typach i funkcjach tak, żeby nie mieszać
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">sum_empty_r</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">A</span> + <span class="id" title="var">Empty_set</span>) <span class="id" title="var">A</span> :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> <span class="id" title="var">x</span> := <span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span> | <span class="id" title="var">inl</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">a</span> | <span class="id" title="var">inr</span> <span class="id" title="var">e</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">e</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span> <span class="id" title="keyword">end</span>;<br/>
@@ -1650,6 +1660,7 @@ Trzeba przerobić rozdział o typach i funkcjach tak, żeby nie mieszać
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">sum_assoc</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">A</span> + (<span class="id" title="var">B</span> + <span class="id" title="var">C</span>)) ((<span class="id" title="var">A</span> + <span class="id" title="var">B</span>) + <span class="id" title="var">C</span>) :=<br/>
 {<br/>
 <br/>
@@ -1662,6 +1673,7 @@ Trzeba przerobić rozdział o typach i funkcjach tak, żeby nie mieszać
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">sum_comm</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">A</span> + <span class="id" title="var">B</span>) (<span class="id" title="var">B</span> + <span class="id" title="var">A</span>) :=<br/>
 {<br/>
 <br/>
@@ -1697,6 +1709,7 @@ Trzeba przerobić rozdział o typach i funkcjach tak, żeby nie mieszać
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_nat_option_nat</span> : <span class="id" title="var">iso</span> <span class="id" title="var">nat</span> (<span class="id" title="var">option</span> <span class="id" title="var">nat</span>) :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> <span class="id" title="var">n</span> := <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span> | 0 =&gt; <span class="id" title="var">None</span> | <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">n'</span> <span class="id" title="keyword">end</span>;<br/>
@@ -1732,6 +1745,7 @@ Trzeba przerobić rozdział o typach i funkcjach tak, żeby nie mieszać
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">list_char</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">option</span> (<span class="id" title="var">A</span> * <span class="id" title="var">list</span> <span class="id" title="var">A</span>)) :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> <span class="id" title="var">l</span> :=<br/>
@@ -1760,7 +1774,7 @@ Trzeba przerobić rozdział o typach i funkcjach tak, żeby nie mieszać
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">F3</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">F3</span>.<br/>
 
 <br/>
 </div>
@@ -1775,6 +1789,7 @@ Jak można się domyślić po przykładach, charakterystyczne izomorfizmy
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">Stream_char</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) (<span class="id" title="var">A</span> * <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> <span class="id" title="var">s</span> := (<span class="id" title="var">hd</span> <span class="id" title="var">s</span>, <span class="id" title="var">tl</span> <span class="id" title="var">s</span>);<br/>
@@ -1818,6 +1833,7 @@ Jak można się domyślić po przykładach, charakterystyczne izomorfizmy
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_nat_sum_nat_nat</span> : <span class="id" title="var">iso</span> <span class="id" title="var">nat</span> (<span class="id" title="var">nat</span> + <span class="id" title="var">nat</span>) :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> := <span class="id" title="var">div2</span>;<br/>
@@ -2043,6 +2059,7 @@ Chcielibyśmy zdefiniować funkcję odwrotną do <span class="inlinecode"><span
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_nat_prod_nat_nat</span> : <span class="id" title="var">iso</span> <span class="id" title="var">nat</span> (<span class="id" title="var">nat</span> * <span class="id" title="var">nat</span>) :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> := <span class="id" title="var">goto</span>;<br/>
@@ -2065,7 +2082,7 @@ Jak trudno jest z podstawowych izomorfizmów dla produktów i sum
 
 <br/>
 <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden".<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Vec</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Vec</span>.<br/>
 <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "notation-overridden".<br/>
 
 <br/>
@@ -2106,7 +2123,7 @@ Jak trudno jest z podstawowych izomorfizmów dla produktów i sum
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">H1</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">H1</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">transport_cons</span> :<br/>
@@ -2119,6 +2136,7 @@ Jak trudno jest z podstawowych izomorfizmów dla produktów i sum
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_list_vlist</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">vlist</span> <span class="id" title="var">A</span>) :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> := <span class="id" title="var">vectorize</span>;<br/>
@@ -2169,6 +2187,7 @@ Wnioski: da się zrobić trochę...
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">vec_S</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)) (<span class="id" title="var">A</span> * <span class="id" title="var">vec</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span>) :=<br/>
 {<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">coel</span> <span class="id" title="var">v</span> := (<span class="id" title="var">head</span> <span class="id" title="var">v</span>, <span class="id" title="var">tail</span> <span class="id" title="var">v</span>);<br/>
@@ -2180,6 +2199,7 @@ Wnioski: da się zrobić trochę...
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_nat_vlist_S</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">iso</span> <span class="id" title="var">nat</span> (<span class="id" title="var">vec</span> <span class="id" title="var">nat</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)).<br/>
@@ -2204,6 +2224,7 @@ Wnioski: da się zrobić trochę...
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_vlist_option</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">iso</span> (<span class="id" title="var">vlist</span> <span class="id" title="var">A</span>) (<span class="id" title="var">option</span> {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span> &amp; <span class="id" title="var">vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)}).<br/>
@@ -2231,6 +2252,7 @@ Wnioski: da się zrobić trochę...
 
 <br/>
 #[<span class="id" title="tactic">refine</span>]<br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_pres_option</span><br/>
 &nbsp;&nbsp;(<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">i</span> : <span class="id" title="var">iso</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) : <span class="id" title="var">iso</span> (<span class="id" title="var">option</span> <span class="id" title="var">A</span>) (<span class="id" title="var">option</span> <span class="id" title="var">B</span>) :=<br/>
 {<br/>
@@ -2243,6 +2265,7 @@ Wnioski: da się zrobić trochę...
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_prod_sigT</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">B'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">iso</span> <span class="id" title="var">B</span> (<span class="id" title="var">B'</span> <span class="id" title="var">x</span>)) -&gt; <span class="id" title="var">iso</span> (<span class="id" title="var">A</span> * <span class="id" title="var">B</span>) {<span class="id" title="var">x</span> : <span class="id" title="var">A</span> &amp; <span class="id" title="var">B'</span> <span class="id" title="var">x</span>}.<br/>
@@ -2258,6 +2281,7 @@ Wnioski: da się zrobić trochę...
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
+#[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_nat_list_nat</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">iso</span> <span class="id" title="var">nat</span> (<span class="id" title="var">list</span> <span class="id" title="var">nat</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>

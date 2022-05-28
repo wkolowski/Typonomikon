@@ -1,4 +1,4 @@
-Require Import F4.
+From Typonomikon Require Import F4.
 
 Inductive CoRoseTreeF (X A : Type) : Type :=
     | E

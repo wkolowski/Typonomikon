@@ -69,7 +69,7 @@ end.
 
 Notation "l1 ++ l2" := (app l1 l2).
 
-Global Hint Unfold len : core.
+#[global] Hint Unfold len : core.
 
 Lemma app_length :
   forall {A : Type} (l1 l2 : nel A),

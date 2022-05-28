@@ -1,10 +1,11 @@
-Require Import D5 BetterFinite.
+From Typonomikon Require Import D5 BetterFinite.
 
 Import ExactlyFinite.
 
 Require Import Equality.
 
 #[refine]
+#[export]
 Instance ExactlyFinite_bool : ExactlyFinite bool :=
 {|
     elems := [false; true];
@@ -68,6 +69,7 @@ Proof.
 Admitted.
 
 #[refine]
+#[export]
 Instance Finite_option
   {A : Type} (FA : ExactlyFinite A) : ExactlyFinite (option A) :=
 {|

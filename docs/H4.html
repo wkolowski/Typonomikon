@@ -30,8 +30,8 @@
 <span class="id" title="keyword">Import</span> <span class="id" title="var">ListNotations</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">H1</span>.<br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">H1</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">D5</span>.<br/>
 
 <br/>
 </div>
@@ -315,7 +315,7 @@ A co to znaczy, że liczby naturalne nie są równe?
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">list_neq</span> <span class="id" title="var">R</span> (<span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span>).<br/>
 
 <br/>
-<span class="id" title="keyword">Global Hint Constructors</span> <span class="id" title="var">list_neq</span> : <span class="id" title="var">core</span>.<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Constructors</span> <span class="id" title="var">list_neq</span> : <span class="id" title="var">core</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">list_neq_irrefl_aux</span> :<br/>
@@ -544,7 +544,7 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="var">F2</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="var">F2</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">conat_neq</span>.<br/>
@@ -583,7 +583,7 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="var">F3</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="var">F3</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">Stream_neq</span>.<br/>
@@ -624,7 +624,7 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="var">F3</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="var">F3</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">Stream_apart</span>.<br/>
@@ -673,7 +673,7 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="var">F3</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="var">F3</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">Stream_strong_apart</span>.<br/>
@@ -710,7 +710,7 @@ Wnioski: próba użycia tutaj <span class="inlinecode"><span class="id" title="v
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Require</span> <span class="id" title="var">F4</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Typonomikon</span> <span class="id" title="keyword">Require</span> <span class="id" title="var">F4</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">CoList_apart</span>.<br/>
@@ -886,7 +886,7 @@ Protokoły są zwrotne i symetryczne, ale niekoniecznie przechodnie.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ListDiffProtocol</span> <span class="id" title="var">R</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> -&gt; <span class="id" title="var">ListDiffProtocol</span> <span class="id" title="var">R</span> <span class="id" title="var">l2</span> <span class="id" title="var">l1</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Global Hint Constructors</span> <span class="id" title="var">ListDiffProtocol</span> : <span class="id" title="var">core</span>.<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Constructors</span> <span class="id" title="var">ListDiffProtocol</span> : <span class="id" title="var">core</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">proto_trans</span> :<br/>

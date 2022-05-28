@@ -48,7 +48,7 @@ match t with
 end.
 
 (*
-Require Import H2.
+From Typonomikon Require Import H2.
 
 Lemma mirror_bijective :
   forall A : Type, bijective (@mirror A).

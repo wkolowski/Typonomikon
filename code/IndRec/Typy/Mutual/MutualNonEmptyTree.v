@@ -11,7 +11,7 @@ Arguments Nnode    {A} _ _ _.
 
 (** Niczym się to nie różni od zwykłych drzew. *)
 
-Require Import BT.
+From Typonomikon Require Import BT.
 
 Fixpoint f {A : Type} (t : BT A) : BTree A :=
 match t with
