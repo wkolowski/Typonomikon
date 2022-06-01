@@ -12,13 +12,13 @@ Lemma dec :
   forall {A : Type} (l : list A),
     NoDup l -> forall x y : A, In x l -> In y l -> x = y \/ x <> y.
 Proof.
-  induction 1 as [| h Hnot HND IH].
+  induction 1 as [| h l' Hnot HND IH].
   - inversion 1.
   - intros x y [-> | Hx] [-> | Hy].
     + left. reflexivity.
     + right. intros ->. contradiction.
     + right. intros ->. contradiction.
-    + apply IHIH; assumption.
+    + apply IH; assumption.
 Qed.
 
 Lemma dec_from_Finite :
