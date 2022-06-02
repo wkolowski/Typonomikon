@@ -8,7 +8,8 @@
 
 (** * 1 From fractions to [Qplus] and back *)
 
-(* W sumie [N] to następnik, jak [S] dla [nat]. *)
+(* W sumie [N] to następnik, jak [S] dla [nat], a [D] to odwrotność
+   następnika, tzn. [D q] to 1/(q + 1). *)
 Inductive Qplus : Type :=
     | One : Qplus
     | N   : Qplus -> Qplus
@@ -47,6 +48,9 @@ Definition toQplus (pq : nat * nat) : Qplus :=
 
 Compute toQplus (0, 1).
 Compute toQplus (9, 10).
+Compute toQplus (1, 2).
+Compute toQplus (2, 3).
+Compute toQplus (0, 3).
 
 Fixpoint fromQplus (q : Qplus) : nat * nat :=
 match q with
@@ -56,6 +60,17 @@ match q with
 end.
 
 Compute fromQplus (toQplus (6, 7)).
+
+Fixpoint frac (n : nat) : Qplus :=
+match n with
+| 0 => One
+| S n' => D (frac n')
+end.
+
+Require Import List.
+Import ListNotations.
+
+Compute map (fun n => fromQplus (frac n)) [0; 1; 2; 3; 4; 5; 6; 7; 8; 9].
 
 Require Import Lia Arith.
 
