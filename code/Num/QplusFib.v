@@ -18,12 +18,6 @@ match Nat.compare p q with
     | Gt => euclid_sub (p - q) q
 end.
 
-Fixpoint euclid_mod (p q : nat) {struct p} : nat :=
-match p with
-| 0 => q
-| _ => euclid_mod (modulo q p) p
-end.
-
 Fixpoint toQ (p q : nat) {struct p} : Q :=
 match Nat.compare p q with
     | Lt => D (toQ p (q - p))
