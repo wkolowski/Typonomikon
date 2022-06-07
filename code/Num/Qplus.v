@@ -8,8 +8,7 @@
 
 (** * 1 From fractions to [Qplus] and back *)
 
-(* W sumie [N] to następnik, jak [S] dla [nat], a [D] to odwrotność
-   następnika, tzn. [D q] to 1/(q + 1). *)
+(* W sumie [N] to następnik, jak [S] dla [nat], a [D q] to  q/(q + 1). *)
 Inductive Qplus : Type :=
     | One : Qplus
     | N   : Qplus -> Qplus

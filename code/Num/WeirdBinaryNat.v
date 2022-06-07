@@ -53,7 +53,7 @@ match n, m with
 | _   , Z    => n
 | L n', L m' => mul2 (sub n' m')
 | L n', R m' => pred (mul2 (sub n' m'))
-| R n', L m' => succ (mul2 (sub n' m'))(* L (sub n' m') *)
+| R n', L m' => succ (mul2 (sub n' m'))
 | R n', R m' => mul2 (sub n' m')
 end.
 

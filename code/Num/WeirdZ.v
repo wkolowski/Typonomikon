@@ -5,13 +5,6 @@ Inductive Z : Type :=
 | MinusOne : Z
 | Next : Z -> Z.
 
-Function neg' (k : Z) : Z :=
-match k with
-| Zero => MinusOne
-| MinusOne => Zero
-| Next k' => Next (neg' k')
-end.
-
 Function abs (k : Z) : Z :=
 match k with
 | Zero => Zero
@@ -37,15 +30,22 @@ match k with
 | Next k' => Next (pred k')
 end.
 
+Function neg' (k : Z) : Z :=
+match k with
+| Zero => MinusOne
+| MinusOne => Zero
+| Next k' => Next (neg' k')
+end.
+
 Definition neg (k : Z) : Z :=
   succ (neg' k).
 
-Lemma neg'_neg' :
-  forall k : Z, neg' (neg' k) = k.
-Proof.
-  intros k; functional induction (neg' k)
-  ; cbn; rewrite ?IHz; reflexivity.
-Qed.
+Function isNegative (k : Z) : bool :=
+match k with
+| Zero     => false
+| MinusOne => true
+| Next k'  => isNegative k'
+end.
 
 Lemma abs_abs :
   forall k : Z, abs (abs k) = abs k.
@@ -89,6 +89,21 @@ Proof.
   reflexivity.
 Qed.
 
+Lemma neg_succ :
+  forall k : Z, neg (succ k) = pred (neg k).
+Proof.
+  intros k; unfold neg.
+  rewrite neg'_succ, succ_pred, pred_succ.
+  reflexivity.
+Qed.
+
+Lemma neg'_neg' :
+  forall k : Z, neg' (neg' k) = k.
+Proof.
+  intros k; functional induction (neg' k)
+  ; cbn; rewrite ?IHz; reflexivity.
+Qed.
+
 Lemma neg_neg :
   forall k : Z, neg (neg k) = k.
 Proof.
@@ -96,3 +111,51 @@ Proof.
   rewrite neg'_succ, succ_pred, neg'_neg'.
   reflexivity.
 Qed.
+
+(*
+neg'
+abs
+succ
+pred
+neg
+*)
+
+Lemma abs_neg :
+  forall k : Z,
+    abs (neg k) = abs k.
+Proof.
+  unfold neg; intros k.
+  functional induction (neg' k); cbn.
+  1-2: reflexivity.
+  destruct (neg' k'); cbn in *; rewrite IHz; reflexivity.
+Qed.
+
+Lemma isNegative_abs :
+  forall k : Z,
+    isNegative (abs k) = false.
+Proof.
+  intros k; functional induction (abs k)
+  ; cbn; rewrite ?IHz; reflexivity.
+Qed.
+
+Lemma abs_spec :
+  forall k : Z,
+    abs k = if isNegative k then neg k else k.
+Proof.
+  intros k; functional induction (isNegative k); cbn.
+  1-2: reflexivity.
+  rewrite IHb.
+  destruct (isNegative k') eqn: Heq.
+  unfold neg.
+  destruct (neg' k') eqn: Hneg.
+  all: try reflexivity.
+  functional inversion Hneg; subst.
+  inversion Heq.
+Qed.
+
+(* Function min (k1 k2 : Z) : Z :=
+match k1, k2 with
+| Next k1', Next k2' => Next (min k1' k2')
+| MinusOne, Zero => MinusOne
+| Zero    , MinusOne => MinusOne *)
+
