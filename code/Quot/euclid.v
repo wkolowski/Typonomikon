@@ -21,8 +21,4 @@ Inductive euclid_mod_graph : nat -> nat -> nat -> Prop :=
 
 Inductive euclid_mod_graph' : Type :=
 | emg_0' : forall q : nat, euclid_mod_graph'
-| emg_S' : forall p q r : nat, euclid_mod_graph (modulo q p) p r -> euclid_mod_graph p q r.
-
-Inductive Qmod : Type :=
-| 
-
+| emg_S' : forall p q r : nat, euclid_mod_graph' -> euclid_mod_graph'.

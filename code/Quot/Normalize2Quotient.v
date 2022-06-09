@@ -85,11 +85,11 @@ Compute extendedEu 6 9.
 Compute Nat.div 10 15.
 Compute Nat.modulo 15 10.
 
-Inductive euclid_sub_graph : nat -> nat -> (p q : nat) {struct p} : nat :=
+(* Inductive euclid_sub_graph : nat -> nat -> (p q : nat) {struct p} : nat :=
 match Nat.compare p q with
     | Lt => euclid_sub p (q - p)
     | Eq => 1
     | Gt => euclid_sub (p - q) q
-end.
+end. *)
 
 End Qplus.
