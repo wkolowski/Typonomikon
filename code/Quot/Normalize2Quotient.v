@@ -1,4 +1,4 @@
-Require Import Recdef Arith.
+Require Import Recdef Arith Lia.
 
 Module WeirdZ.
 
@@ -24,7 +24,7 @@ Inductive NG : Type :=
 | ng_S_S' : forall (n m : nat) (r : nat * nat), NG -> NG.
 *)
 
-(* Usuwamy argumenty konstrktorów, które występowały w indeksach. *)
+(* Usuwamy argumenty konstruktorów, które występowały w indeksach. *)
 Inductive NG : Type :=
 | ng_0_l' : NG
 | ng_0_r' : NG
@@ -53,9 +53,9 @@ Definition norm_sub (p q : nat) : nat * nat :=
 
 Fixpoint euclid_mod (p q : nat) {struct p} : nat :=
 match Nat.compare p q with
-    | Lt => euclid_mod q (q mod p)
-    | Eq => 1
-    | Gt => euclid_mod (p mod q) p
+    | Lt => euclid_mod (q mod p) q
+    | Eq => p
+    | Gt => euclid_mod p (p mod q)
 end.
 
 Fixpoint norm (p q : nat) {struct p} : nat * nat :=
@@ -77,6 +77,7 @@ end.
 Set Guard Checking.
 
 Compute euclid_sub 5 10.
+Compute euclid_mod 2 4.
 
 Compute norm_sub 2 8.
 
@@ -93,3 +94,57 @@ match Nat.compare p q with
 end. *)
 
 End Qplus.
+
+Module FM.
+
+Inductive FM (A : Type) : Type :=
+| inj : A -> FM A
+| id  : FM A
+| op  : FM A -> FM A -> FM A.
+
+Arguments inj {A} _.
+Arguments id  {A}.
+Arguments op  {A} _ _.
+
+Function size {A : Type} (x : FM A) : nat :=
+match x with
+| inj _  => 1
+| id     => 1
+| op l r => 1 + size l + size r
+end.
+
+(* Function norm {A : Type} (x : FM A) {measure size x} : FM A :=
+match x with
+| inj a  => op (inj a) id
+| id     => id
+| op l r =>
+  match norm l with
+  | inj a    => op (inj a) (norm r)
+  | id       => norm r
+  | op ll lr => op ll (norm (op lr r))
+  end
+end.
+Proof.
+  - intros; subst; cbn; lia.
+  - intros; subst; cbn; lia.
+  - intros; subst; cbn. admit.
+  - intros; subst; cbn; lia.
+Abort. *)
+
+From Equations Require Import Equations.
+
+Equations norm {A : Type} (x : FM A) : FM A by wf (size x) lt :=
+| inj a  => op (inj a) id
+| id     => id
+| op l r with (norm l) =>
+  | inj a    => op (inj a) (norm r)
+  | id       => norm r
+  | op ll lr => op ll (norm (op lr r)).
+Next Obligation. lia. Qed.
+Next Obligation. lia. Qed.
+Next Obligation. lia. Qed.
+Next Obligation.
+Admitted.
+
+Compute norm (op ((op (op (op (inj 5) (inj 2)) (inj 1)) (inj 12))) id).
+

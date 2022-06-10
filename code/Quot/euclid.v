@@ -1,4 +1,4 @@
-Require Import Recdef Nat.
+Require Import Recdef Nat Lia.
 
 Require Import List.
 Import ListNotations.
@@ -22,3 +22,52 @@ Inductive euclid_mod_graph : nat -> nat -> nat -> Prop :=
 Inductive euclid_mod_graph' : Type :=
 | emg_0' : forall q : nat, euclid_mod_graph'
 | emg_S' : forall p q r : nat, euclid_mod_graph' -> euclid_mod_graph'.
+
+From Equations Require Import Equations.
+
+Search Nat.compare.
+Check PeanoNat.Nat.compare_spec.
+Print CompareSpec.
+
+(* Equations? euclid_sub (p q : nat) {_ : p <> 0} {_ : q <> 0} : nat by wf (p + q) lt :=
+| p, q with (PeanoNat.Nat.compare_spec p q) => {
+  | CompLt H => euclid_sub p (q - p)
+  | @CompEq H => p
+  | CompGt H => euclid_sub (p - q) q }.
+Next Obligation. *)
+
+Print CompareSpec.
+
+Search ({_} + {_}) lt.
+
+Print Compare_dec.lt_eq_lt_dec.
+
+Print sumbool.
+Print sumor.
+
+Fixpoint euclid_sub (pq : nat * nat) {Hp : fst pq <> 0} {Hq : snd pq <> 0} {struct pq} : nat.
+Proof.
+refine (
+match Compare_dec.lt_eq_lt_dec (fst pq) (snd pq) with
+| inleft (left H) => @euclid_sub (fst pq, snd pq - fst pq) Hp ltac:(cbn; lia)
+| inleft (right _) => fst pq
+| inright H => @euclid_sub (fst pq - snd pq, snd pq) ltac:(cbn; lia) Hq
+end).
+Abort.
+
+(* Let n := @euclid_sub 2 2 ltac:(lia) ltac:(lia).
+Check n.
+
+Compute @euclid_sub 4 8 ltac:(lia) ltac:(lia). *)
+
+Function euclid_sub (pq : nat * nat) {Hp : fst pq <> 0} {Hq : snd pq <> 0}
+  {measure (fun '(p, q) => p + q) pq} : nat :=
+match Compare_dec.lt_eq_lt_dec (fst pq) (snd pq) with
+| inleft (left H) => @euclid_sub (fst pq, snd pq - fst pq) Hp ltac:(cbn; lia)
+| inleft (right _) => fst pq
+| inright H => @euclid_sub (fst pq - snd pq, snd pq) ltac:(cbn; lia) Hq
+end.
+Proof.
+  - intros [p q] **; simpl in *; lia.
+  - intros [p q] **; simpl in *; lia.
+Defined.

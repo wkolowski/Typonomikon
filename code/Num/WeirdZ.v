@@ -60,6 +60,16 @@ match k1 with
 | Next k1' => if isNegative k1' then pred (add k1' k2) else succ (add k1' k2)
 end.
 
+Function abs' (k : Z) : nat :=
+match k with
+| Zero     => 0
+| MinusOne => 1
+| Next k'  => S (abs' k')
+end.
+
+Function add' (k1 k2 : Z) : Z :=
+  if isNegative k1 then iter _ (abs' k1) pred k2 else iter _ (abs' k1) succ k2.
+
 Lemma abs_abs :
   forall k : Z, abs (abs k) = abs k.
 Proof.
@@ -233,12 +243,6 @@ Proof.
   inversion Heq.
 Qed.
 
-(* Function min (k1 k2 : Z) : Z :=
-match k1, k2 with
-| Next k1', Next k2' => Next (min k1' k2')
-| MinusOne, Zero => MinusOne
-| Zero    , MinusOne => MinusOne *)
-
 Lemma Next_spec :
   forall k : Z,
     Next k = if isNegative k then pred k else succ k.
@@ -278,6 +282,10 @@ Lemma add_Next_r :
   forall k1 k2 : Z,
     add k1 (Next k2) = if isNegative k2 then pred (add k1 k2) else succ (add k1 k2).
 Proof.
+  intros k1 k2.
+  rewrite Next_spec.
+  destruct (isNegative k2).
+  -
 Admitted.
 
 Lemma add_comm :
@@ -298,9 +306,8 @@ Proof.
   intros k1 k2; functional induction (pred k1); cbn.
   1-2, 4: reflexivity.
   - rewrite pred_succ; reflexivity.
-  - rewrite isNegative_pred.
+  - rewrite isNegative_pred, IHz, succ_pred.
     destruct k'; try contradiction; cbn [isZero]; rewrite Bool.orb_false_r.
-    rewrite IHz, succ_pred.
     destruct (isNegative (Next k')).
     + reflexivity.
     + rewrite pred_succ. reflexivity.
@@ -368,4 +375,15 @@ Proof.
   intros k1 k2. unfold neg.
   rewrite add_succ_l, add_succ_r, neg'_add.
   reflexivity.
+Qed.
+
+Lemma add'_Zero_r :
+  forall k : Z,
+    add' k Zero = k.
+Proof.
+  unfold add'; intros k.
+  functional induction (isNegative k); cbn.
+  1-2: reflexivity.
+  rewrite Next_spec.
+  destruct (isNegative k'); rewrite IHb; reflexivity.
 Qed.

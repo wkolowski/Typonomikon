@@ -194,4 +194,3 @@ Proof.
   rewrite <- inv_inv, <- min_inv, !inv_inv.
   reflexivity.
 Qed.
-

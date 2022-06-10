@@ -13,23 +13,23 @@ Inductive Q : Type :=
 Unset Guard Checking.
 Fixpoint euclid_sub (p q : nat) {struct p} : nat :=
 match Nat.compare p q with
-    | Lt => euclid_sub p (q - p)
-    | Eq => 1
-    | Gt => euclid_sub (p - q) q
+| Lt => euclid_sub p (q - p)
+| Eq => p
+| Gt => euclid_sub (p - q) q
 end.
 
 Fixpoint toQ (p q : nat) {struct p} : Q :=
 match Nat.compare p q with
-    | Lt => D (toQ p (q - p))
-    | Eq => One
-    | Gt => N (toQ (p - q) q)
+| Lt => D (toQ p (q - p))
+| Eq => One
+| Gt => N (toQ (p - q) q)
 end.
 
 Fixpoint toQFib (p q : nat) {struct p} : Q :=
 match Nat.compare p q with
-    | Lt => D (toQFib (q - p) p)
-    | Eq => One
-    | Gt => N (toQFib (p - q) q)
+| Lt => D (toQFib (q - p) p)
+| Eq => One
+| Gt => N (toQFib (p - q) q)
 end.
 Set Guard Checking.
 
@@ -49,36 +49,43 @@ end.
 
 Function fromQ (q : Q) : nat * nat :=
 match q with
-    | One  => (1, 1)
-    | N q' => let (p, q) := fromQ q' in (p + q, q)
-    | D q' => let (p, q) := fromQ q' in (p, q + p)
+| One  => (1, 1)
+| N q' => let (p, q) := fromQ q' in (p + q, q)
+| D q' => let (p, q) := fromQ q' in (p, q + p)
 end.
 
 Function fromQFib (q : Q) : nat * nat :=
 match q with
-    | One  => (1, 1)
-    | N q' => let (p, q) := fromQFib q' in (p + q, q)
-    | D q' => let (p, q) := fromQFib q' in (q, q + p)
+| One  => (1, 1)
+| N q' => let (p, q) := fromQFib q' in (p + q, q)
+| D q' => let (p, q) := fromQFib q' in (q, q + p)
 end.
 
 Function inv (q : Q) : Q :=
 match q with
-    | One  => One
-    | D q' => N (inv q')
-    | N q' => D (inv q')
+| One  => One
+| D q' => N (inv q')
+| N q' => D (inv q')
+end.
+
+Function invFib (q : Q) : Q :=
+match q with
+| One => One
+| N q' => D q'
+| D q' => N q'
 end.
 
 Function cmp (q1 q2 : Q) : comparison :=
 match q1, q2 with
-    | One  , One   => Eq
-    | One  , D _   => Gt
-    | One  , N _   => Lt
-    | D _  , One   => Lt
-    | D q1', D q2' => cmp q1' q2'
-    | D _  , N _   => Lt
-    | N _  , One   => Gt
-    | N _  , D _   => Gt
-    | N q1', N q2' => cmp q1' q2'
+| One  , One   => Eq
+| One  , D _   => Gt
+| One  , N _   => Lt
+| D _  , One   => Lt
+| D q1', D q2' => cmp q1' q2'
+| D _  , N _   => Lt
+| N _  , One   => Gt
+| N _  , D _   => Gt
+| N q1', N q2' => cmp q1' q2'
 end.
 
 (* Definition fromQFib (q : Q) : nat * nat :=
@@ -214,7 +221,7 @@ Inductive Q' : Set :=
 
 Definition qneg (q : Q') : Q' :=
 match q with
-    | Qneg q' => Qpos q'
-    | Qzero   => Qzero
-    | Qpos q' => Qneg q'
+| Qneg q' => Qpos q'
+| Qzero   => Qzero
+| Qpos q' => Qneg q'
 end.
