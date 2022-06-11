@@ -1,5 +1,7 @@
 Require Import Recdef Arith Lia.
 
+From Equations Require Import Equations.
+
 Module WeirdZ.
 
 (* Funkcja normalizująca. *)
@@ -131,8 +133,6 @@ Proof.
   - intros; subst; cbn; lia.
 Abort. *)
 
-From Equations Require Import Equations.
-
 Equations norm {A : Type} (x : FM A) : FM A by wf (size x) lt :=
 | inj a  => op (inj a) id
 | id     => id
@@ -148,3 +148,4 @@ Admitted.
 
 Compute norm (op ((op (op (op (inj 5) (inj 2)) (inj 1)) (inj 12))) id).
 
+End FM.

@@ -1,5 +1,6 @@
 Require Import Recdef PeanoNat Lia.
 
+(* [Z] to 0, [L n] to 2n + 1, a [R n] to 2n + 2. *)
 Inductive Nat : Type :=
 | Z : Nat
 | L : Nat -> Nat
@@ -20,16 +21,6 @@ match n with
 | R n' => L n'
 end.
 
-Function div2 (n : Nat) : Nat :=
-match n with
-| Z => Z
-| L n' => n'
-| R n' => succ n'
-end.
-
-Function mul2 (n : Nat) : Nat :=
-  pred (L n).
-
 Function add (n m : Nat) : Nat :=
 match n, m with
 | Z   , _    => m
@@ -39,6 +30,16 @@ match n, m with
 | R n', L m' => succ (R (add n' m'))
 | R n', R m' => R (succ (add n' m'))
 end.
+
+Function div2 (n : Nat) : Nat :=
+match n with
+| Z => Z
+| L n' => n'
+| R n' => succ n'
+end.
+
+Function mul2 (n : Nat) : Nat :=
+  pred (L n).
 
 Function mul (n m : Nat) : Nat :=
 match n with
@@ -299,7 +300,7 @@ Lemma mul_L_r :
 Proof.
   induction n as [| n' IH | n' IH]; simpl; intros m.
   - rewrite mul_Z_r; cbn; reflexivity.
-Abort.
+Admitted.
 
 Lemma mul_R_r :
   forall n m : Nat,
@@ -307,7 +308,7 @@ Lemma mul_R_r :
 Proof.
   induction n as [| n' IH | n' IH]; simpl; intros m.
   - rewrite mul_Z_r; cbn; reflexivity.
-Abort.
+Admitted.
 
 Lemma mul_comm :
   forall n m : Nat,
@@ -336,4 +337,4 @@ Proof.
   ; rewrite ?fromNat_L, ?fromNat_R, ?fromNat_succ, ?fromNat_pred, ?fromNat_mul2, ?IHn0
   ; unfold L', R'.
   1-4, 6: cbn; lia.
-Abort.
+Admitted.

@@ -2,6 +2,8 @@ Require Import Lia ZArith Recdef.
 
 Import Pos.
 
+(** [Plus] to 1, [Minus] to -1, [ShiftPlus k] to 3k + 1, [ShiftMinus k] to 3k - 1,
+    a [ShiftZero k] to 3k. *)
 Inductive Z3' : Type :=
 | Plus       : Z3'
 | Minus      : Z3'
