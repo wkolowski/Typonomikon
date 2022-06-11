@@ -159,7 +159,45 @@ Liczby binarne można też zrobić inaczej, np. jako <span class="inlinecode"><s
 </div>
 
 <div class="doc">
-<a id="lab991"></a><h2 class="section">HITowe</h2>
+<a id="lab991"></a><h2 class="section">Klasyczne znormalizowane</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Z_norm</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span> := <span class="id" title="var">mkZ</span><br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">L</span> : <span class="id" title="var">nat</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> : <span class="id" title="var">nat</span>;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">norm'</span> (<span class="id" title="var">l</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> * <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span>, <span class="id" title="var">r</span> <span class="id" title="keyword">with</span><br/>
+| 0   , <span class="id" title="var">_</span>    =&gt; (<span class="id" title="var">l</span>, <span class="id" title="var">r</span>)<br/>
+| <span class="id" title="var">_</span>   , 0    =&gt; (<span class="id" title="var">l</span>, <span class="id" title="var">r</span>)<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">l'</span>, <span class="id" title="var">S</span> <span class="id" title="var">r'</span> =&gt; <span class="id" title="var">norm'</span> <span class="id" title="var">l'</span> <span class="id" title="var">r'</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">norm</span> (<span class="id" title="var">k</span> : <span class="id" title="var">Z</span>) : <span class="id" title="var">Z</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> (<span class="id" title="var">l</span>, <span class="id" title="var">r</span>) := <span class="id" title="var">norm'</span> (<span class="id" title="var">L</span> <span class="id" title="var">k</span>) (<span class="id" title="var">R</span> <span class="id" title="var">k</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">mkZ</span> <span class="id" title="var">l</span> <span class="id" title="var">r</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Z_eq</span> (<span class="id" title="var">k</span> <span class="id" title="var">l</span> : <span class="id" title="var">Z</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">L</span> <span class="id" title="var">k</span> + <span class="id" title="var">R</span> <span class="id" title="var">l</span> = <span class="id" title="var">R</span> <span class="id" title="var">k</span> + <span class="id" title="var">L</span> <span class="id" title="var">l</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Z_norm</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab992"></a><h2 class="section">HITowe</h2>
 
 <div class="paragraph"> </div>
 
@@ -173,12 +211,12 @@ Liczby binarne można też zrobić inaczej, np. jako <span class="inlinecode"><s
 
 <br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">zero</span> : <span class="id" title="var">Z</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">succ</span> : <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">Z</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">pred</span> : <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">Z</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SP</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">z</span> : <span class="id" title="var">Z</span>, <span class="id" title="var">succ</span> (<span class="id" title="var">pred</span> <span class="id" title="var">z</span>) = <span class="id" title="var">z</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">PS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">z</span> : <span class="id" title="var">Z</span>, <span class="id" title="var">pred</span> (<span class="id" title="var">succ</span> <span class="id" title="var">z</span>) = <span class="id" title="var">z</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Z_isSet</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Z</span>) (<span class="id" title="var">p</span> <span class="id" title="var">q</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>), <span class="id" title="var">p</span> = <span class="id" title="var">q</span>.<br/>
+| <span class="id" title="var">zero</span> : <span class="id" title="var">Z</span><br/>
+| <span class="id" title="var">succ</span> : <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">Z</span><br/>
+| <span class="id" title="var">pred</span> : <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">Z</span><br/>
+| <span class="id" title="var">SP</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">z</span> : <span class="id" title="var">Z</span>, <span class="id" title="var">succ</span> (<span class="id" title="var">pred</span> <span class="id" title="var">z</span>) = <span class="id" title="var">z</span><br/>
+| <span class="id" title="var">PS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">z</span> : <span class="id" title="var">Z</span>, <span class="id" title="var">pred</span> (<span class="id" title="var">succ</span> <span class="id" title="var">z</span>) = <span class="id" title="var">z</span><br/>
+| <span class="id" title="var">Z_isSet</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">Z</span>) (<span class="id" title="var">p</span> <span class="id" title="var">q</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>), <span class="id" title="var">p</span> = <span class="id" title="var">q</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">Z_HIT</span>.<br/>
@@ -187,11 +225,51 @@ Liczby binarne można też zrobić inaczej, np. jako <span class="inlinecode"><s
 </div>
 
 <div class="doc">
-<a id="lab992"></a><h1 class="section">Liczby wymierne (TODO)</h1>
+<a id="lab993"></a><h2 class="section">HITowe zasymulowane</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Z_HIT_norm</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">zero</span> : <span class="id" title="var">Z</span><br/>
+| <span class="id" title="var">succ</span> : <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">Z</span><br/>
+| <span class="id" title="var">pred</span> : <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">Z</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">norm</span> (<span class="id" title="var">k</span> : <span class="id" title="var">Z</span>) : <span class="id" title="var">Z</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">k</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">zero</span>    =&gt; <span class="id" title="var">zero</span><br/>
+| <span class="id" title="var">succ</span> <span class="id" title="var">k'</span> =&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">norm</span> <span class="id" title="var">k'</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">pred</span> <span class="id" title="var">k''</span> =&gt; <span class="id" title="var">k''</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">k''</span>      =&gt; <span class="id" title="var">succ</span> <span class="id" title="var">k''</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+| <span class="id" title="var">pred</span> <span class="id" title="var">k'</span> =&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">norm</span> <span class="id" title="var">k'</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">succ</span> <span class="id" title="var">k''</span> =&gt; <span class="id" title="var">k''</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">k''</span>      =&gt; <span class="id" title="var">pred</span> <span class="id" title="var">k''</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <span class="id" title="var">norm</span> (<span class="id" title="var">succ</span> (<span class="id" title="var">pred</span> (<span class="id" title="var">succ</span> <span class="id" title="var">zero</span>))).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Z_HIT_norm</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab994"></a><h1 class="section">Liczby wymierne (TODO)</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab993"></a><h2 class="section">Klasycznie</h2>
+<a id="lab995"></a><h2 class="section">Klasycznie</h2>
 
 <div class="paragraph"> </div>
 
@@ -269,7 +347,7 @@ Sprytniej: mianownik interpretujemy jako liczbę dodatnią.
 </div>
 
 <div class="doc">
-<a id="lab994"></a><h2 class="section">HITowo</h2>
+<a id="lab996"></a><h2 class="section">HITowo</h2>
 
 </div>
 <div class="code">
@@ -291,7 +369,7 @@ Sprytniej: mianownik interpretujemy jako liczbę dodatnią.
 </div>
 
 <div class="doc">
-<a id="lab995"></a><h2 class="section">Induktywnie</h2>
+<a id="lab997"></a><h2 class="section">Induktywnie</h2>
 
 <div class="paragraph"> </div>
 
@@ -320,7 +398,7 @@ Sprytniej: mianownik interpretujemy jako liczbę dodatnią.
 </div>
 
 <div class="doc">
-<a id="lab996"></a><h1 class="section">Liczby rzeczywiste</h1>
+<a id="lab998"></a><h1 class="section">Liczby rzeczywiste</h1>
 
 <div class="paragraph"> </div>
 
@@ -328,11 +406,11 @@ Sprytniej: mianownik interpretujemy jako liczbę dodatnią.
     całe traktaty. 
 <div class="paragraph"> </div>
 
-<a id="lab997"></a><h1 class="section">Liczby porządkowe</h1>
+<a id="lab999"></a><h1 class="section">Liczby porządkowe</h1>
 
 <div class="paragraph"> </div>
 
-<a id="lab998"></a><h2 class="section">Jakieś takie proste</h2>
+<a id="lab1000"></a><h2 class="section">Jakieś takie proste</h2>
 
 </div>
 <div class="code">
@@ -353,7 +431,7 @@ Sprytniej: mianownik interpretujemy jako liczbę dodatnią.
 </div>
 
 <div class="doc">
-<a id="lab999"></a><h2 class="section">Skomplikowańsze</h2>
+<a id="lab1001"></a><h2 class="section">Skomplikowańsze</h2>
 
 <div class="paragraph"> </div>
 
@@ -371,7 +449,7 @@ Sprytniej: mianownik interpretujemy jako liczbę dodatnią.
 </div>
 
 <div class="doc">
-<a id="lab1000"></a><h1 class="section">Liczby nadrzeczywiste</h1>
+<a id="lab1002"></a><h1 class="section">Liczby nadrzeczywiste</h1>
 
 <div class="paragraph"> </div>
 
@@ -384,6 +462,4 @@ Sprytniej: mianownik interpretujemy jako liczbę dodatnią.
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">Sur</span>.<br/>
-
-<br/>
 </div>
