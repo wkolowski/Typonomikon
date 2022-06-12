@@ -31,7 +31,8 @@ Compute toNat (succ (I (I (I I')))).
 Function pred (p : Pos) : Pos :=
 match p with
 | I'   => I'
-| O p' => O (pred p')
+| O I' => I'
+| O p' => I (pred p')
 | I p' => O p'
 end.
 
@@ -39,9 +40,14 @@ Compute pred (I (I (I I'))).
 Compute toNat (I (I (I I'))).
 Compute toNat (pred (I (I (I I')))).
 
+Compute pred (I (O I')).
+Compute toNat (I (O I')).
+Compute toNat (pred (I (O I'))).
+
 Function pred' (p : Pos) : option Pos :=
 match p with
-| I'    => None
+| I'   => None
+| O I' => Some I'
 | O p' => option_map O (pred' p')
 | I p' => Some (O p')
 end.
@@ -71,7 +77,7 @@ end. *)
 
 Function double' (p : Pos) : Pos :=
 match p with
-| I'    => O I'
+| I'   => O I'
 | O p' => O (double' p')
 | I p' => O (succ (double' p'))
 end.
@@ -82,11 +88,23 @@ Compute double (I (I (I I'))).
 Compute toNat (I (I (O I'))).
 Compute toNat (double (I (I (O I')))).
 
+Function mul_tail (p1 p2 : Pos) : Pos :=
+match p1 with
+| I'    => p2
+| O p1' => mul_tail p1' (O p2)
+| I p1' => add p2 (mul_tail p1' (O p2))
+end.
+
+Compute mul_tail (I (I (I I'))) (I (O (I I'))).
+Compute toNat (I (I (I I'))).
+Compute toNat (I (O (I I'))).
+Compute toNat (mul_tail (I (I (I I'))) (I (O (I I')))).
+
 Function mul (p1 p2 : Pos) : Pos :=
 match p1 with
-| I'     => p2
-| O p1' => mul p1' (O p2)
-| I p1' => add p2 (mul p1' (O p2))
+| I'    => p2
+| O p1' => O (mul p1' p2)
+| I p1' => add p2 (O (mul p1' p2))
 end.
 
 Compute mul (I (I (I I'))) (I (O (I I'))).
@@ -163,6 +181,15 @@ end.
 
 Definition even (p : Pos) : bool := negb (odd p).
 
+Lemma pred_succ :
+  forall p : Pos,
+    pred (succ p) = p.
+Proof.
+  induction p; cbn.
+  1-2: reflexivity.
+  rewrite IHp. destruct p; cbn; reflexivity.
+Qed.
+
 Lemma add_I'_r :
   forall p : Pos,
     add p I' = succ p.
@@ -212,11 +239,203 @@ Proof.
   - destruct p3; cbn; rewrite ?add_succ_l, ?add_succ_r, ?IHp; reflexivity.
   - destruct p3; cbn; rewrite ?add_succ_l, ?add_succ_r, ?IHp; reflexivity.
   - destruct p3; cbn; rewrite ?add_succ_l, ?add_succ_r, ?IHp; reflexivity.
-Admitted.
+Qed.
+
+Lemma mul_I'_r :
+  forall p : Pos,
+    mul p I' = p.
+Proof.
+  induction p; cbn; rewrite ?IHp; reflexivity.
+Qed.
+
+Lemma mul_O_r :
+  forall p1 p2 : Pos,
+    mul p1 (O p2) = O (mul p1 p2).
+Proof.
+  intros p1 p2.
+  functional induction mul p1 p2; cbn; rewrite ?IHp; reflexivity.
+Qed.
+
+Lemma mul_I_r :
+  forall p1 p2 : Pos,
+    mul p1 (I p2) = add p1 (O (mul p1 p2)).
+Proof.
+  intros p1 p2.
+  functional induction mul p1 p2; cbn; rewrite ?IHp.
+  1-2: reflexivity.
+  rewrite <- add_assoc, (add_comm p2 p1'), add_assoc; reflexivity.
+Qed.
 
 Lemma mul_comm :
   forall p1 p2 : Pos,
     mul p1 p2 = mul p2 p1.
+Proof.
+  intros p1 p2.
+  functional induction mul p1 p2; cbn in *.
+  - rewrite mul_I'_r; reflexivity.
+  - rewrite mul_O_r, IHp; reflexivity.
+  - rewrite mul_I_r, IHp; reflexivity.
+Qed.
+
+Lemma add_diag :
+  forall p : Pos,
+    add p p = O p.
+Proof.
+  induction p as [| p' | p']; cbn; rewrite ?IHp'; cbn; reflexivity.
+Qed.
+
+Lemma O_add :
+  forall p1 p2 : Pos,
+    O (add p1 p2) = add (O p1) (O p2).
+Proof.
+  reflexivity.
+Qed.
+
+Lemma mul_succ_l :
+  forall p1 p2 : Pos,
+    mul (succ p1) p2 = add p2 (mul p1 p2).
+Proof.
+  intros p1 p2.
+  functional induction (succ p1); cbn.
+  - rewrite add_diag; reflexivity.
+  - reflexivity.
+  - rewrite IHp, O_add, <- add_diag, add_assoc; reflexivity.
+Qed.
+
+Lemma mul_add_l :
+  forall p1 p2 p3 : Pos,
+    mul (add p1 p2) p3 = add (mul p1 p3) (mul p2 p3).
+Proof.
+  intros p1 p2; functional induction add p1 p2; intros p3.
+  - rewrite mul_succ_l; reflexivity.
+  - rewrite mul_succ_l, add_comm; cbn; reflexivity.
+  - cbn; rewrite IHp; reflexivity.
+  - rewrite mul_equation, (mul_equation (O p1')), (mul_equation (I p2')).
+    rewrite (add_comm p3 (O (mul p2' p3))), <- add_assoc, <- O_add, add_comm, IHp.
+    reflexivity.
+  - cbn; rewrite IHp, O_add, add_assoc; reflexivity.
+  - cbn.
+    rewrite add_assoc, (add_comm (O _)), !add_assoc, <- O_add,
+            mul_succ_l, O_add, <- add_diag, add_assoc, IHp, (add_comm (mul _ _))
+    ; reflexivity.
+Qed.
+
+Lemma mul_add_r :
+  forall p1 p2 p3 : Pos,
+    mul p1 (add p2 p3) = add (mul p1 p2) (mul p1 p3).
+Proof.
+  intros p1 p2 p3.
+  rewrite mul_comm, mul_add_l, <- (mul_comm p1 _), <- (mul_comm p3 _).
+  reflexivity.
+Qed.
+
+Lemma mul_assoc :
+  forall p1 p2 p3 : Pos,
+    mul (mul p1 p2) p3 = mul p1 (mul p2 p3).
+Proof.
+  intros p1 p2; functional induction mul p1 p2; intros p3; cbn.
+  - reflexivity.
+  - rewrite IHp; reflexivity.
+  - rewrite mul_add_l; cbn; rewrite IHp; reflexivity.
+Qed.
+
+Lemma compare_refl :
+  forall p : Pos,
+    compare p p = Eq.
+Proof.
+  induction p; cbn; rewrite ?IHp; reflexivity.
+Qed.
+
+Require Import Bool.
+
+Lemma compare_refl_conv :
+  forall p1 p2 : Pos,
+    compare p1 p2 = Eq -> p1 = p2.
+Proof.
+  intros p1 p2.
+  functional induction compare p1 p2
+  ; intros [=]; rewrite ?IHc; auto.
+Qed.
+
+Lemma reflect_compare :
+  forall p1 p2 : Pos,
+    reflect (p1 = p2) (BinaryPos.eqb p1 p2).
+Proof.
+  intros p1 p2.
+  unfold BinaryPos.eqb.
+Abort.
+
+Lemma compare_succ_l :
+  forall p : Pos,
+    compare (succ p) p = Gt.
+Proof.
+  intros p; functional induction succ p; cbn.
+  - reflexivity.
+  - rewrite compare_refl; reflexivity.
+  - rewrite IHp0; reflexivity.
+Qed.
+
+Lemma compare_succ :
+  forall p1 p2 : Pos,
+    compare (succ p1) (succ p2) = compare p1 p2.
+Proof.
+  intros p1 p2.
+  functional induction compare p1 p2. 5: cbn. cbn; rewrite ?IHc; try reflexivity.
+  - destruct p2; cbn; intuition.
+    destruct p2; cbn; intuition.
+    destruct p2; cbn; reflexivity.
+  - destruct p1; cbn; intuition.
+    + destruct p1; cbn; intuition.
+    + destruct p1; cbn; reflexivity.
+  - cbn; reflexivity.
+  - destruct p1', p2'; cbn in *; intuition (try congruence).
+    + rewrite e1; reflexivity.
+    + admit.
+  - cbn.
+Restart.
+  induction p1 as [| p1' IH | p1' IH]; intros [| p2' | p2']. 5: rewrite !succ_equation; cbn.
+Admitted.
+
+Lemma CompOpp_compare :
+  forall p1 p2 : Pos,
+    CompOpp (compare p1 p2) = compare p2 p1.
+Proof.
+  intros p1 p2.
+  functional induction compare p1 p2
+  ; cbn; rewrite <- ?IHc, ?e1; cbn; try reflexivity.
+  - destruct p2; cbn; intuition.
+  - destruct p1; cbn; intuition.
+Qed.
+
+Lemma compare_succ_r :
+  forall p : Pos,
+    compare p (succ p) = Lt.
+Proof.
+  intros p.
+  rewrite <- CompOpp_compare, compare_succ_l; cbn.
+  reflexivity.
+Qed.
+
+Lemma min_comm :
+  forall p1 p2 : Pos,
+    min p1 p2 = min p2 p1.
+Proof.
+  intros p1 p2.
+  unfold min.
+  rewrite <- CompOpp_compare.
+  destruct (compare p2 p1) eqn: Hcmp; cbn.
+  2-3: reflexivity.
+  apply compare_refl_conv; assumption.
+Qed.
+
+Lemma max_comm :
+  forall p1 p2 : Pos,
+    max p1 p2 = max p2 p1.
+Proof.
+  intros p1 p2.
+  unfold max.
+  rewrite <- CompOpp_compare.
+Abort.
 
 (* TODO
      Definition tail_add : nat -> nat -> nat.
