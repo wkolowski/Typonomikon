@@ -10,29 +10,30 @@
 
 (* W sumie [N] to następnik, jak [S] dla [nat], a [D q] to  q/(q + 1). *)
 Inductive Qplus : Type :=
-    | One : Qplus
-    | N   : Qplus -> Qplus
-    | D   : Qplus -> Qplus.
+| One : Qplus
+| N   : Qplus -> Qplus
+| D   : Qplus -> Qplus.
 
 Print comparison.
 
 Unset Guard Checking.
 Fixpoint toQplus' (p q : nat) {struct p} : Qplus :=
 match Nat.compare p q with
-    | Lt => D (toQplus' p (q - p))
-    | Eq => One
-    | Gt => N (toQplus' (p - q) q)
+| Lt => D (toQplus' p (q - p))
+| Eq => One
+| Gt => N (toQplus' (p - q) q)
 end.
 Set Guard Checking.
 
 Lemma toQplus'_eq :
   forall p q : nat,
-    toQplus' p q =
-      match Nat.compare p q with
-          | Lt => D (toQplus' p (q - p))
-          | Eq => One
-          | Gt => N (toQplus' (p - q) q)
-      end.
+    toQplus' p q
+      =
+    match Nat.compare p q with
+    | Lt => D (toQplus' p (q - p))
+    | Eq => One
+    | Gt => N (toQplus' (p - q) q)
+    end.
 Proof.
 Admitted.
 
@@ -53,9 +54,9 @@ Compute toQplus (0, 3).
 
 Fixpoint fromQplus (q : Qplus) : nat * nat :=
 match q with
-    | One  => (1, 1)
-    | N q' => let (p, q) := fromQplus q' in (p + q, q)
-    | D q' => let (p, q) := fromQplus q' in (p, q + p)
+| One  => (1, 1)
+| N q' => let (p, q) := fromQplus q' in (p + q, q)
+| D q' => let (p, q) := fromQplus q' in (p, q + p)
 end.
 
 Compute fromQplus (toQplus (6, 7)).
@@ -117,25 +118,26 @@ Admitted.
 
 Fixpoint cmp_Qplus (q1 q2 : Qplus) : comparison :=
 match q1, q2 with
-    | One  , One   => Eq
-    | One  , D _   => Gt
-    | One  , N _   => Lt
-    | D _  , One   => Lt
-    | D q1', D q2' => cmp_Qplus q1' q2'
-    | D _  , N _   => Lt
-    | N _  , One   => Gt
-    | N _  , D _   => Gt
-    | N q1', N q2' => cmp_Qplus q1' q2'
+| One  , One   => Eq
+| One  , D _   => Gt
+| One  , N _   => Lt
+| D _  , One   => Lt
+| D q1', D q2' => cmp_Qplus q1' q2'
+| D _  , N _   => Lt
+| N _  , One   => Gt
+| N _  , D _   => Gt
+| N q1', N q2' => cmp_Qplus q1' q2'
 end.
 
 Lemma cmp_Qplus_wut :
   forall q1 q2 : Qplus,
-    cmp_Qplus q1 q2 =
-      match cmp_Qplus q2 q1 with
-          | Lt => Gt
-          | Eq => Eq
-          | Gt => Lt
-      end.
+    cmp_Qplus q1 q2
+      =
+    match cmp_Qplus q2 q1 with
+    | Lt => Gt
+    | Eq => Eq
+    | Gt => Lt
+    end.
 Proof.
   induction q1; destruct q2; cbn; auto.
 Qed.
@@ -151,9 +153,9 @@ Qed.
 
 Fixpoint inv (q : Qplus) : Qplus :=
 match q with
-    | One  => One
-    | D q' => N (inv q')
-    | N q' => D (inv q')
+| One  => One
+| D q' => N (inv q')
+| N q' => D (inv q')
 end.
 
 Definition fromQplus' (q : Qplus) : nat * nat :=
@@ -166,7 +168,7 @@ Definition qpadd (q1 q2 : Qplus) : Qplus :=
 
 Definition qpmul (q1 q2 : Qplus) : Qplus :=
 match fromQplus q1, fromQplus q2 with
-    | (n1, m1), (n2, m2) => toQplus (n1 * n2, m1 * m2)
+| (n1, m1), (n2, m2) => toQplus (n1 * n2, m1 * m2)
 end.
 
 Compute fromQplus' (qpadd (toQplus (2, 3)) (toQplus (3, 4))).
@@ -198,22 +200,22 @@ Admitted.
 (** * 5 Encoding the whole rational field *)
 
 Inductive Q : Set :=
-    | Qneg  : Qplus -> Q
-    | Qzero : Q
-    | Qpos  : Qplus -> Q.
+| Qneg  : Qplus -> Q
+| Qzero : Q
+| Qpos  : Qplus -> Q.
 
 (** TODO: rozszerzyć operacje na [Qplus] na całe [Q]. *)
 
 Definition qneg (q : Q) : Q :=
 match q with
-    | Qneg q' => Qpos q'
-    | Qzero   => Qzero
-    | Qpos q' => Qneg q'
+| Qneg q' => Qpos q'
+| Qzero   => Qzero
+| Qpos q' => Qneg q'
 end.
 
 (*
 Definition qadd (q1 q2 : Q) : Q :=
 match q1, q2 with
-    | Qzero, _ => q2
-    | Qpos q1', Qpos q2' => Qpos (qpadd q1' q2')
+| Qzero, _ => q2
+| Qpos q1', Qpos q2' => Qpos (qpadd q1' q2')
 *)

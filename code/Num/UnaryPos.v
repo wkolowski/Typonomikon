@@ -4,16 +4,18 @@ Inductive Pos : Type :=
 | One : Pos
 | S   : Pos -> Pos.
 
-Function add (p1 p2 : Pos) : Pos :=
-match p1 with
-| One   => S p2
-| S p1' => S (add p1' p2)
-end.
+Definition succ (p : Pos) : Pos := S p.
 
 Function pred (p : Pos) : option Pos :=
 match p with
 | One => None
 | S p1' => Some p1'
+end.
+
+Function add (p1 p2 : Pos) : Pos :=
+match p1 with
+| One   => S p2
+| S p1' => S (add p1' p2)
 end.
 
 Function sub (p1 p2 : Pos) : option Pos :=

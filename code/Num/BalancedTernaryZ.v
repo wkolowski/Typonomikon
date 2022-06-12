@@ -1,4 +1,4 @@
-Require Import Lia ZArith Recdef.
+Require Import Recdef Lia ZArith.
 
 Import Pos.
 
@@ -16,90 +16,6 @@ Inductive Z3 : Type :=
 | Nonzero : Z3' -> Z3.
 
 Coercion Nonzero : Z3' >-> Z3.
-
-Fixpoint toZ' (n : Z3') : Z :=
-match n with
-| Plus => 1
-| Minus => -1
-| ShiftPlus n' => 1 + 3 * toZ' n'
-| ShiftMinus n' => -1 + 3 * toZ' n'
-| ShiftZero n' => 3 * toZ' n'
-end.
-
-Definition toZ (n : Z3) : Z :=
-match n with
-| Zero => 0
-| Nonzero n' => toZ' n'
-end.
-
-Fixpoint neg' (n : Z3') : Z3' :=
-match n with
-| Plus => Minus
-| Minus => Plus
-| ShiftPlus n' => ShiftMinus (neg' n')
-| ShiftMinus n' => ShiftPlus (neg' n')
-| ShiftZero n' => ShiftZero (neg' n')
-end.
-
-Lemma neg'_neg' :
-  forall n : Z3', neg' (neg' n) = n.
-Proof.
-  induction n as [| | n' | n' | n']; cbn; congruence.
-Qed.
-
-Definition neg (n : Z3) : Z3 :=
-match n with
-| Zero => Zero
-| Nonzero n' => neg' n'
-end.
-
-Lemma neg_neg :
-  forall n : Z3, neg (neg n) = n.
-Proof.
-  destruct n; cbn.
-    reflexivity.
-    f_equal. apply neg'_neg'.
-Qed.
-
-Fixpoint increment' (n : Z3') : Z3 :=
-match n with
-| Plus => ShiftMinus Plus
-| Minus => Zero
-| ShiftPlus n' =>
-  match increment' n' with
-  | Zero => Minus
-  | Nonzero n'' => ShiftMinus n''
-  end
-| ShiftMinus n' => ShiftZero n'
-| ShiftZero n' => ShiftPlus n'
-end.
-
-Definition increment (n : Z3) : Z3 :=
-match n with
-| Zero => Plus
-| Nonzero n' => increment' n'
-end.
-
-Lemma toZ_increment' :
-  forall n : Z3', toZ (increment' n) = (1 + toZ' n)%Z.
-Proof.
-  induction n as [| | n' | n' | n']; cbn [increment' toZ toZ']; try lia.
-  destruct (increment' n'); cbn [toZ toZ'] in *; lia.
-Qed.
-
-Lemma toZ_increment :
-  forall n : Z3, toZ (increment n) = (1 + toZ n)%Z.
-Proof.
-  destruct n as [| n'].
-  - reflexivity.
-  - apply toZ_increment'.
-Qed.
-
-Definition decrement' (n : Z3') : Z3 :=
-  neg (increment' (neg' n)).
-
-Definition decrement (n : Z3) : Z3 :=
-  neg (increment (neg n)).
 
 Definition shiftMinus (n : Z3) : Z3 :=
 match n with
@@ -119,24 +35,64 @@ match n with
 | Nonzero n' => ShiftZero n'
 end.
 
+Function neg' (n : Z3') : Z3' :=
+match n with
+| Plus => Minus
+| Minus => Plus
+| ShiftPlus n' => ShiftMinus (neg' n')
+| ShiftMinus n' => ShiftPlus (neg' n')
+| ShiftZero n' => ShiftZero (neg' n')
+end.
+
+Definition neg (n : Z3) : Z3 :=
+match n with
+| Zero => Zero
+| Nonzero n' => neg' n'
+end.
+
+Function succ' (n : Z3') : Z3 :=
+match n with
+| Plus => ShiftMinus Plus
+| Minus => Zero
+| ShiftPlus n' =>
+  match succ' n' with
+  | Zero => Minus
+  | Nonzero n'' => ShiftMinus n''
+  end
+| ShiftMinus n' => ShiftZero n'
+| ShiftZero n' => ShiftPlus n'
+end.
+
+Definition succ (n : Z3) : Z3 :=
+match n with
+| Zero => Plus
+| Nonzero n' => succ' n'
+end.
+
+Definition pred' (n : Z3') : Z3 :=
+  neg (succ' (neg' n)).
+
+Definition pred (n : Z3) : Z3 :=
+  neg (succ (neg n)).
+
 Function add (n m : Z3') : Z3 :=
 match n with
-| Plus => increment m
-| Minus => decrement m
+| Plus => succ m
+| Minus => pred m
 | ShiftPlus n' =>
   match m with
-  | Plus => increment n
-  | Minus => decrement n
-  | ShiftPlus m' => shiftMinus (increment (add n' m'))
+  | Plus => succ n
+  | Minus => pred n
+  | ShiftPlus m' => shiftMinus (succ (add n' m'))
   | ShiftMinus m' => shiftZero (add n' m')
   | ShiftZero m' => shiftPlus (add n' m')
   end
 | ShiftMinus n' =>
   match m with
-  | Plus => increment n
-  | Minus => decrement n
+  | Plus => succ n
+  | Minus => pred n
   | ShiftPlus m' => shiftZero (add n' m')
-  | ShiftMinus m' => shiftPlus (decrement (add n' m'))
+  | ShiftMinus m' => shiftPlus (pred (add n' m'))
   | ShiftZero m' => shiftMinus (add n' m')
   end
 | ShiftZero n' =>
@@ -149,6 +105,83 @@ match n with
   end
 end.
 
+Function add' (n m : Z3) : Z3 :=
+match n, m with
+| Zero, _ => m
+| _, Zero => n
+| Nonzero n', Nonzero m' => add n' m'
+end.
+
+Definition mul2 (n : Z3) : Z3 :=
+  add' n n.
+
+Function fromPositive (p : positive) : Z3 :=
+match p with
+| xH => Plus
+| xI p' => succ (mul2 (fromPositive p'))
+| xO p' => mul2 (fromPositive p')
+end.
+
+Function fromZ (n : Z) : Z3 :=
+match n with
+| Z0 => Zero
+| Zpos p => fromPositive p
+| Zneg p => neg (fromPositive p)
+end.
+
+Fixpoint toZ' (n : Z3') : Z :=
+match n with
+| Plus => 1
+| Minus => -1
+| ShiftPlus n' => 1 + 3 * toZ' n'
+| ShiftMinus n' => -1 + 3 * toZ' n'
+| ShiftZero n' => 3 * toZ' n'
+end.
+
+Definition toZ (n : Z3) : Z :=
+match n with
+| Zero => 0
+| Nonzero n' => toZ' n'
+end.
+
+Function mul (n m : Z3') : Z3 :=
+match n with
+| Plus          => m
+| Minus         => neg' m
+| ShiftPlus n'  => add' m (shiftZero (mul n' m))
+| ShiftMinus n' => add' (neg' m) (shiftZero (mul n' m))
+| ShiftZero n'  => shiftZero (mul n' m)
+end.
+
+Lemma neg'_neg' :
+  forall n : Z3', neg' (neg' n) = n.
+Proof.
+  induction n as [| | n' | n' | n']; cbn; congruence.
+Qed.
+
+Lemma neg_neg :
+  forall n : Z3, neg (neg n) = n.
+Proof.
+  destruct n; cbn.
+  - reflexivity.
+  - f_equal. apply neg'_neg'.
+Qed.
+
+Lemma toZ_succ' :
+  forall n : Z3', toZ (succ' n) = (1 + toZ' n)%Z.
+Proof.
+  induction n as [| | n' | n' | n']; cbn [succ' toZ toZ']; try lia.
+  destruct (succ' n'); cbn [toZ toZ'] in *; lia.
+Qed.
+
+Lemma toZ_succ :
+  forall n : Z3, toZ (succ n) = (1 + toZ n)%Z.
+Proof.
+  destruct n as [| n'].
+  - reflexivity.
+  - apply toZ_succ'.
+Qed.
+
 Lemma toZ_neg :
   forall n : Z3, toZ (neg n) = (- toZ n)%Z.
 Proof.
@@ -157,12 +190,12 @@ Proof.
   - induction n as [| | n' | n' | n']; cbn [neg' toZ']; lia.
 Qed.
 
-Lemma decrement_correct :
-  forall n : Z3, toZ (decrement n) = (-1 + toZ n)%Z.
+Lemma toZ_pred :
+  forall n : Z3, toZ (pred n) = (-1 + toZ n)%Z.
 Proof.
-  unfold decrement.
+  unfold pred.
   intro n.
-  rewrite toZ_neg, toZ_increment, toZ_neg. lia.
+  rewrite toZ_neg, toZ_succ, toZ_neg. lia.
 Qed.
 
 Lemma toZ_shiftMinus :
@@ -183,39 +216,14 @@ Proof.
   destruct n as [| n']; reflexivity.
 Qed.
 
-Lemma add_correct :
+Lemma toZ_add :
   forall n m : Z3', toZ (add n m) = (toZ' n + toZ' m)%Z.
 Proof.
   intros.
   functional induction add n m;
-  rewrite ?toZ_shiftMinus, ?toZ_shiftPlus, ?toZ_shiftZero,
-            ?toZ_increment, ?decrement_correct;
-  cbn [toZ' toZ]; lia.
+  rewrite ?toZ_shiftMinus, ?toZ_shiftPlus, ?toZ_shiftZero, ?toZ_succ, ?toZ_pred
+  ; cbn [toZ' toZ]; lia.
 Qed.
-
-Definition add' (n m : Z3) : Z3 :=
-match n, m with
-| Zero, _ => m
-| _, Zero => n
-| Nonzero n', Nonzero m' => add n' m'
-end.
-
-Definition mul2 (n : Z3) : Z3 :=
-  add' n n.
-
-Fixpoint fromPositive (p : positive) : Z3 :=
-match p with
-| xH => Plus
-| xI p' => increment (mul2 (fromPositive p'))
-| xO p' => mul2 (fromPositive p')
-end.
-
-Definition fromZ (n : Z) : Z3 :=
-match n with
-| Z0 => Zero
-| Zpos p => fromPositive p
-| Zneg p => neg (fromPositive p)
-end.
 
 Lemma toZ_add' :
   forall n m : Z3, toZ (add' n m) = (toZ n + toZ m)%Z.
@@ -224,7 +232,7 @@ Proof.
   - reflexivity.
   - reflexivity.
   - lia.
-  - rewrite add_correct. reflexivity.
+  - rewrite toZ_add. reflexivity.
 Qed.
 
 Lemma toZ_mul2 :
@@ -232,14 +240,15 @@ Lemma toZ_mul2 :
 Proof.
   unfold mul2.
   intros.
-  rewrite toZ_add'. lia.
+  rewrite toZ_add'.
+  lia.
 Qed.
 
 Lemma toZ_fromPositive :
   forall p : positive, toZ (fromPositive p) = Zpos p.
 Proof.
   induction p as [p' | p' |]; cbn.
-  - rewrite toZ_increment, toZ_mul2, IHp'. reflexivity.
+  - rewrite toZ_succ, toZ_mul2, IHp'. reflexivity.
   - rewrite toZ_mul2, IHp'. reflexivity.
   - reflexivity.
 Qed.
@@ -314,4 +323,49 @@ Lemma fromZ_toZ :
 Proof.
   intros.
   apply toZ_inj, toZ_fromZ.
+Qed.
+
+Lemma add_Plus_r :
+  forall k : Z3', add k Plus = succ k.
+Proof.
+  destruct k; cbn; reflexivity.
+Qed.
+
+Lemma add_Minus_r :
+  forall k : Z3', add k Minus = pred k.
+Proof.
+  destruct k; cbn; rewrite ?neg'_neg'; reflexivity.
+Qed.
+
+Lemma add_comm :
+  forall k1 k2 : Z3',
+    add k1 k2 = add k2 k1.
+Proof.
+  intros k1 k2; functional induction add k1 k2
+  ; cbn; rewrite ?IHz; try reflexivity.
+  - rewrite add_Plus_r; reflexivity.
+  - rewrite add_Minus_r; reflexivity.
+  - rewrite neg'_neg'; reflexivity.
+Restart.
+  intros k1 k2.
+  rewrite <- fromZ_toZ, toZ_add, <- Z.add_comm, <- toZ_add, fromZ_toZ.
+  reflexivity.
+Qed.
+
+Lemma add'_comm :
+  forall k1 k2 : Z3,
+    add' k1 k2 = add' k2 k1.
+Proof.
+  intros k1 k2.
+  rewrite <- fromZ_toZ, toZ_add', <- Z.add_comm, <- toZ_add', fromZ_toZ.
+  reflexivity.
+Qed.
+
+Lemma add_assoc :
+  forall k1 k2 k3 : Z3',
+    add' (add' k1 k2) k3 = add' k1 (add' k2 k3).
+Proof.
+  intros k1 k2 k3.
+  rewrite <- fromZ_toZ, !toZ_add', <- Z.add_assoc, <- !toZ_add', fromZ_toZ at 1.
+  reflexivity.
 Qed.

@@ -1,56 +1,69 @@
 Require Import Recdef.
 
-(** [H] to 1, [O k] to 2k, zaś [I k] to 2k + 1. *)
+(** [I'] to 1, [O k] to 2k, zaś [I k] to 2k + 1. *)
 Inductive Pos : Set :=
-| H : Pos
+| I' : Pos
 | O : Pos -> Pos
 | I : Pos -> Pos.
 
+Definition One : Pos := I'.
+
 Fixpoint toNat (n : Pos) : nat :=
 match n with
-    | H => 1
-    | O n' => 2 * toNat n'
-    | I n' => 1 + 2 * toNat n'
+| I' => 1
+| O n' => 2 * toNat n'
+| I n' => 1 + 2 * toNat n'
 end.
 
-Compute toNat (O (O (O H))).
+Compute toNat (O (O (O I'))).
 
 Function succ (p : Pos) : Pos :=
 match p with
-| H    => O H
+| I'    => O I'
 | O p' => I p'
 | I p' => O (succ p')
 end.
 
-Compute succ (I (I (I H))).
-Compute toNat (I (I (I H))).
-Compute toNat (succ (I (I (I H)))).
+Compute succ (I (I (I I'))).
+Compute toNat (I (I (I I'))).
+Compute toNat (succ (I (I (I I')))).
+
+Function pred (p : Pos) : Pos :=
+match p with
+| I'   => I'
+| O p' => O (pred p')
+| I p' => O p'
+end.
+
+Compute pred (I (I (I I'))).
+Compute toNat (I (I (I I'))).
+Compute toNat (pred (I (I (I I')))).
+
+Function pred' (p : Pos) : option Pos :=
+match p with
+| I'    => None
+| O p' => option_map O (pred' p')
+| I p' => Some (O p')
+end.
+
+Compute pred' (I (I (I I'))).
+Compute toNat (I (I (I I'))).
+Compute option_map toNat (pred' (I (I (I I')))).
 
 Function add (p1 p2 : Pos) : Pos :=
 match p1, p2 with
-| H    , _     => succ p2
-| _    , H     => succ p1
+| I'    , _     => succ p2
+| _    , I'     => succ p1
 | O p1', O p2' => O (add p1' p2')
 | O p1', I p2' => I (add p1' p2')
 | I p1', O p2' => I (add p1' p2')
 | I p1', I p2' => O (succ (add p1' p2'))
 end.
 
-Compute add (I (I (I H))) (I (O (I H))).
-Compute toNat (I (I (I H))).
-Compute toNat (I (O (I H))).
-Compute toNat (add (I (I (I H))) (I (O (I H)))).
-
-Function pred (p : Pos) : option Pos :=
-match p with
-| H    => None
-| O p' => option_map O (pred p')
-| I p' => Some (O p')
-end.
-
-Compute pred (I (I (I H))).
-Compute toNat (I (I (I H))).
-Compute option_map toNat (pred (I (I (I H)))).
+Compute add (I (I (I I'))) (I (O (I I'))).
+Compute toNat (I (I (I I'))).
+Compute toNat (I (O (I I'))).
+Compute toNat (add (I (I (I I'))) (I (O (I I')))).
 
 (* Function sub (p1 p2 : Pos) : option Pos :=
 match p1, p2 with
@@ -58,28 +71,28 @@ end. *)
 
 Function double' (p : Pos) : Pos :=
 match p with
-| H    => O H
+| I'    => O I'
 | O p' => O (double' p')
 | I p' => O (succ (double' p'))
 end.
 
 Definition double (p : Pos) := O p.
 
-Compute double (I (I (I H))).
-Compute toNat (I (I (O H))).
-Compute toNat (double (I (I (O H)))).
+Compute double (I (I (I I'))).
+Compute toNat (I (I (O I'))).
+Compute toNat (double (I (I (O I')))).
 
 Function mul (p1 p2 : Pos) : Pos :=
 match p1 with
-| H     => p2
+| I'     => p2
 | O p1' => mul p1' (O p2)
 | I p1' => add p2 (mul p1' (O p2))
 end.
 
-Compute mul (I (I (I H))) (I (O (I H))).
-Compute toNat (I (I (I H))).
-Compute toNat (I (O (I H))).
-Compute toNat (mul (I (I (I H))) (I (O (I H)))).
+Compute mul (I (I (I I'))) (I (O (I I'))).
+Compute toNat (I (I (I I'))).
+Compute toNat (I (O (I I'))).
+Compute toNat (mul (I (I (I I'))) (I (O (I I')))).
 
 (* Function pow (p1 p2 : Pos) : Pos :=
 match p2 with
@@ -87,9 +100,9 @@ end. *)
 
 Function compare (p1 p2 : Pos) : comparison :=
 match p1, p2 with
-| H    , H     => Eq
-| H    , _     => Lt
-| _    , H     => Gt
+| I'    , I'     => Eq
+| I'    , _     => Lt
+| _    , I'     => Gt
 | O p1', O p2' => compare p1' p2'
 | O p1', I p2' =>
   match compare p1' p2' with
@@ -106,10 +119,10 @@ match p1, p2 with
 | I p1', I p2' => compare p1' p2'
 end.
 
-Compute compare (I (I (I H))) (I (O (I H))).
-Compute toNat (I (I (I H))).
-Compute toNat (I (O (I H))).
-Compute Nat.compare (toNat (I (I (I H)))) (toNat (I (O (I H)))).
+Compute compare (I (I (I I'))) (I (O (I I'))).
+Compute toNat (I (I (I I'))).
+Compute toNat (I (O (I I'))).
+Compute Nat.compare (toNat (I (I (I I')))) (toNat (I (O (I I')))).
 
 Definition eqb (p1 p2 : Pos) : bool :=
 match compare p1 p2 with
@@ -143,12 +156,67 @@ end.
 
 Function odd (p : Pos) : bool :=
 match p with
-| H   => true
+| I'   => true
 | O _ => false
 | I _ => true
 end.
 
 Definition even (p : Pos) : bool := negb (odd p).
+
+Lemma add_I'_r :
+  forall p : Pos,
+    add p I' = succ p.
+Proof.
+  destruct p; cbn; reflexivity.
+Qed.
+
+Lemma add_succ_l :
+  forall p1 p2 : Pos,
+    add (succ p1) p2 = succ (add p1 p2).
+Proof.
+  intros p1.
+  functional induction succ p1; cbn; intros.
+  - destruct p2; cbn; reflexivity.
+  - destruct p2; cbn; reflexivity.
+  - destruct p2; cbn; rewrite ?IHp; reflexivity.
+Qed.
+
+Lemma add_comm :
+  forall p1 p2 : Pos,
+    add p1 p2 = add p2 p1.
+Proof.
+  intros p1 p2.
+  functional induction add p1 p2
+  ; cbn; rewrite ?IHp; try reflexivity.
+  rewrite add_I'_r; reflexivity.
+Qed.
+
+Lemma add_succ_r :
+  forall p1 p2 : Pos,
+    add p1 (succ p2) = succ (add p1 p2).
+Proof.
+  intros p1 p2.
+  rewrite add_comm, add_succ_l, <- add_comm.
+  reflexivity.
+Qed.
+
+Lemma add_assoc :
+  forall p1 p2 p3 : Pos,
+    add (add p1 p2) p3 = add p1 (add p2 p3).
+Proof.
+  intros p1 p2.
+  functional induction add p1 p2; cbn; intros p3.
+  - rewrite add_succ_l; reflexivity.
+  - rewrite add_succ_l, add_succ_r. reflexivity.
+  - destruct p3; cbn; rewrite ?IHp; reflexivity.
+  - destruct p3; cbn; rewrite ?add_succ_l, ?add_succ_r, ?IHp; reflexivity.
+  - destruct p3; cbn; rewrite ?add_succ_l, ?add_succ_r, ?IHp; reflexivity.
+  - destruct p3; cbn; rewrite ?add_succ_l, ?add_succ_r, ?IHp; reflexivity.
+Admitted.
+
+Lemma mul_comm :
+  forall p1 p2 : Pos,
+    mul p1 p2 = mul p2 p1.
 
 (* TODO
      Definition tail_add : nat -> nat -> nat.

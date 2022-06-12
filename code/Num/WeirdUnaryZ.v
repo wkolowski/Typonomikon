@@ -172,14 +172,6 @@ Proof.
   reflexivity.
 Qed.
 
-(*
-neg'
-abs
-succ
-pred
-neg
-*)
-
 Lemma abs_neg :
   forall k : Z,
     abs (neg k) = abs k.
