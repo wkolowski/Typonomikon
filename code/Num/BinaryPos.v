@@ -172,6 +172,16 @@ match compare p1 p2 with
 | _  => p2
 end.
 
+(* Function min' (p1 p2 : Pos) : Pos :=
+match p1, p2 with
+| I'   , _     => p2
+| _    , I'    => p1
+| O p1', O p2' => O (min' p1' p2')
+| O p1', I p2' => 
+| I p1', O p2' => 
+| I p1', I p2' => I (min' p1' p2')
+end. *)
+
 Function odd (p : Pos) : bool :=
 match p with
 | I'   => true
@@ -302,6 +312,15 @@ Proof.
   - rewrite IHp, O_add, <- add_diag, add_assoc; reflexivity.
 Qed.
 
+Lemma mul_succ_r :
+  forall p1 p2 : Pos,
+    mul p1 (succ p2) = add p1 (mul p1 p2).
+Proof.
+  intros p1 p2.
+  rewrite mul_comm, mul_succ_l, <- mul_comm.
+  reflexivity.
+Qed.
+
 Lemma mul_add_l :
   forall p1 p2 p3 : Pos,
     mul (add p1 p2) p3 = add (mul p1 p3) (mul p2 p3).
@@ -363,7 +382,19 @@ Lemma reflect_compare :
 Proof.
   intros p1 p2.
   unfold BinaryPos.eqb.
-Abort.
+  functional induction compare p1 p2; cbn.
+  - constructor; reflexivity.
+  - constructor. intros Heq. rewrite <- Heq in y. contradiction.
+  - constructor. intros Heq. rewrite Heq in y. contradiction.
+  - destruct IHc; subst; constructor; intuition congruence.
+  - destruct IHc; subst; constructor; intuition congruence.
+  - destruct IHc; subst; constructor; intuition congruence.
+  - destruct IHc; subst; constructor; intuition congruence.
+  - destruct IHc; subst; constructor; intuition congruence.
+  - destruct IHc; subst; constructor; intuition congruence.
+  - destruct IHc; subst; constructor; intuition congruence.
+  - destruct IHc; subst; constructor; intuition congruence.
+Qed.
 
 Lemma compare_succ_l :
   forall p : Pos,
@@ -407,6 +438,21 @@ Proof.
   - destruct p1; cbn; intuition.
 Qed.
 
+Lemma compare_trans :
+  forall (p1 p2 p3 : Pos) (c : comparison),
+    compare p1 p2 = c -> compare p2 p3 = c -> compare p1 p3 = c.
+Proof.
+  intros p1 p2; functional induction compare p1 p2
+  ; cbn; intros p3 c Heq12 Heq23; subst; auto.
+  - destruct p2, p3; cbn in *; intuition congruence.
+  - destruct p1, p3; cbn in *; intuition congruence.
+Restart.
+  intros p1 p2 p3 [] Heq12 Heq23.
+  - apply compare_refl_conv in Heq12, Heq23; subst. apply compare_refl.
+  - admit.
+  - admit.
+Admitted.
+
 Lemma compare_succ_r :
   forall p : Pos,
     compare p (succ p) = Lt.
@@ -428,6 +474,17 @@ Proof.
   apply compare_refl_conv; assumption.
 Qed.
 
+Lemma min_assoc :
+  forall p1 p2 p3 : Pos,
+    min (min p1 p2) p3 = min p1 (min p2 p3).
+Proof.
+  intros p1 p2 p3.
+  unfold min.
+  destruct (compare p1 p2) eqn: H12,
+           (compare p2 p3) eqn: H23.
+  intros p1 p2; functional induction min p1 p2; intros p3; cbn.
+Admitted.
+
 Lemma max_comm :
   forall p1 p2 : Pos,
     max p1 p2 = max p2 p1.
@@ -435,7 +492,7 @@ Proof.
   intros p1 p2.
   unfold max.
   rewrite <- CompOpp_compare.
-Abort.
+Admitted.
 
 (* TODO
      Definition tail_add : nat -> nat -> nat.
