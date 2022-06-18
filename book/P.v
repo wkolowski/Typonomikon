@@ -11,25 +11,25 @@
 Print nat.
 (* ===>
 Inductive nat : Type :=
-    | O : nat
-    | S : nat -> nat.
+| O : nat
+| S : nat -> nat.
 *)
 
 (** ** Dodatnie liczby naturalne, binarnie (TODO) *)
 
 Inductive BinPos : Set :=
-    | H : BinPos
-    | O : BinPos -> BinPos
-    | I : BinPos -> BinPos.
+| H : BinPos
+| O : BinPos -> BinPos
+| I : BinPos -> BinPos.
 
 (** [H] to binarne 1, [O k] to binarnie 2k, zaś [I k] to binarnie
     2k + 1. *)
 
 Fixpoint to_nat (n : BinPos) : nat :=
 match n with
-    | H => 1
-    | O n' => 2 * to_nat n'
-    | I n' => S (2 * to_nat n')
+| H => 1
+| O n' => 2 * to_nat n'
+| I n' => S (2 * to_nat n')
 end.
 
 Compute to_nat (O (O (O H))).
@@ -46,9 +46,9 @@ Compute to_nat (O (O (O H))).
 Module Z_unary.
 
 Inductive Z : Type :=
-    | Z0 : Z
-    | Zpos : nat -> Z
-    | Zneg : nat -> Z.
+| Z0 : Z
+| Zpos : nat -> Z
+| Zneg : nat -> Z.
 
 End Z_unary.
 
@@ -60,9 +60,9 @@ End Z_unary.
 Module Z_binary.
 
 Inductive Z : Set :=
-    | Z0 : Z
-    | Zpos : BinPos -> Z
-    | Zneg : BinPos -> Z.
+| Z0 : Z
+| Zpos : BinPos -> Z
+| Zneg : BinPos -> Z.
 
 End Z_binary.
 
@@ -201,8 +201,8 @@ End Q_less_naive.
 Module Q_HIT.
 
 Fail Inductive Q : Type :=
-    | numden : Z -> nat -> Q
-    | path :
+| numden : Z -> nat -> Q
+| path :
         forall (z1 z2 : Z) (n1 n2 : N),
           z1 * (S n2) = z2 * (S n1) -> numden z1 n1 = numden z2 n2.
 
@@ -220,9 +220,9 @@ End Q_HIT.
 Module Q_Ind.
 
 Inductive Q : Type :=
-    | One : Q
-    | N : Q -> Q
-    | D : Q -> Q.
+| One : Q
+| N : Q -> Q
+| D : Q -> Q.
 
 End Q_Ind.
 
@@ -238,9 +238,9 @@ End Q_Ind.
 Module Ord_simple.
 
 Inductive Ord : Type :=
-    | ZZ : Ord
-    | SS : Ord -> Ord
-    | lim : (nat -> Ord) -> Ord.
+| ZZ : Ord
+| SS : Ord -> Ord
+| lim : (nat -> Ord) -> Ord.
 
 End Ord_simple.
 

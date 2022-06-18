@@ -1,5 +1,9 @@
 Require Import Recdef.
 
+Declare Scope Pos.
+
+Delimit Scope Pos with Pos.
+
 Inductive Pos : Type :=
 | One : Pos
 | S   : Pos -> Pos.
@@ -23,6 +27,13 @@ match p1, p2 with
 | One  , _    => None
 | S p1', One  => Some p1'
 | S p1', S p2' => sub p1' p2'
+end.
+
+Function sub' (p1 p2 : Pos) : Pos :=
+match p1, p2 with
+| One  , _    => One
+| S p1', One  => p1'
+| S p1', S p2' => sub' p1' p2'
 end.
 
 Function double (p : Pos) : Pos :=
@@ -93,6 +104,25 @@ match p with
 end.
 
 Definition even (p : Pos) : bool := negb (odd p).
+
+Function fromNat (n : nat) : Pos :=
+match n with
+| 0    => One
+| 1    => One
+| Datatypes.S n' => S (fromNat n')
+end.
+
+Function toNat (p : Pos) : nat :=
+match p with
+| One  => 1
+| S p' => 1 + toNat p'
+end.
+
+Lemma compare_succ :
+  forall p1 p2 : Pos,
+    compare (succ p1) (succ p2) = compare p1 p2.
+Proof.
+Admitted.
 
 (* TODO
      Definition tail_add : nat -> nat -> nat.

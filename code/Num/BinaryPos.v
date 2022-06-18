@@ -58,7 +58,7 @@ Compute option_map toNat (pred' (I (I (I I')))).
 
 Function add (p1 p2 : Pos) : Pos :=
 match p1, p2 with
-| I'    , _     => succ p2
+| I'   , _     => succ p2
 | _    , I'     => succ p1
 | O p1', O p2' => O (add p1' p2')
 | O p1', I p2' => I (add p1' p2')
@@ -71,9 +71,45 @@ Compute toNat (I (I (I I'))).
 Compute toNat (I (O (I I'))).
 Compute toNat (add (I (I (I I'))) (I (O (I I')))).
 
-(* Function sub (p1 p2 : Pos) : option Pos :=
+Function add' (p1 p2 : Pos) : Pos :=
+match p1 with
+| I'    => succ p2
+| O p1' => add' p1' (add' p1' p2)
+| I p1' => succ (add' p1' (add' p1' p2))
+end.
+
+Compute add' (I (I (I I'))) (I (O (I I'))).
+Compute toNat (I (I (I I'))).
+Compute toNat (I (O (I I'))).
+Compute toNat (add' (I (I (I I'))) (I (O (I I')))).
+
+Function sub (p1 p2 : Pos) : option Pos :=
 match p1, p2 with
-end. *)
+| I'   , _     => None
+| O p1', I'    => pred' p1
+| O p1', O p2' => option_map O (sub p1' p2')
+| O p1', I p2' => option_map (fun p => pred (O p)) (sub p1' p2')
+| I p1', I'    => Some (O p1')
+| I p1', O p2' => option_map I (sub p1' p2')
+| I p1', I p2' => option_map O (sub p1' p2')
+end.
+
+Compute sub (I (I (I I'))) (I (O (I I'))).
+Compute toNat (I (I (I I'))).
+Compute toNat (I (O (I I'))).
+Compute option_map toNat (sub (I (I (I I'))) (I (O (I I')))).
+
+Function sub' (p1 p2 : Pos) : Pos :=
+match p2 with
+| I'    => pred p1
+| O p2' => sub' (sub' p1 p2') p2'
+| I p2' => pred (sub' (sub' p1 p2') p2')
+end.
+
+Compute sub' (I (I (I I'))) (I (O (I I'))).
+Compute toNat (I (I (I I'))).
+Compute toNat (I (O (I I'))).
+Compute toNat (sub' (I (I (I I'))) (I (O (I I')))).
 
 Function double' (p : Pos) : Pos :=
 match p with
@@ -200,6 +236,13 @@ Proof.
   rewrite IHp. destruct p; cbn; reflexivity.
 Qed.
 
+Lemma add_I'_l :
+  forall p : Pos,
+    add I' p = succ p.
+Proof.
+  reflexivity.
+Qed.
+
 Lemma add_I'_r :
   forall p : Pos,
     add p I' = succ p.
@@ -251,6 +294,59 @@ Proof.
   - destruct p3; cbn; rewrite ?add_succ_l, ?add_succ_r, ?IHp; reflexivity.
 Qed.
 
+Lemma add_diag :
+  forall p : Pos,
+    add p p = O p.
+Proof.
+  induction p as [| p' | p']
+  ; cbn; rewrite ?IHp'; reflexivity.
+Qed.
+
+Lemma add_O_l :
+  forall p1 p2 : Pos,
+    add (O p1) p2 = add p1 (add p1 p2).
+Proof.
+  intros p1 p2.
+  rewrite <- add_diag, add_assoc.
+  reflexivity.
+Qed.
+
+Lemma add_O_r :
+  forall p1 p2 : Pos,
+    add p1 (O p2) = add p2 (add p2 p1).
+Proof.
+  intros p1 p2.
+  rewrite <- add_diag, add_comm, <- add_assoc.
+  reflexivity.
+Qed.
+
+Lemma add'_add :
+  forall p1 p2 : Pos,
+    add' p1 p2 = add p1 p2.
+Proof.
+  intros p1 p2.
+  functional induction add' p1 p2; cbn.
+  - reflexivity.
+  - rewrite IHp0, IHp. destruct p2.
+    + rewrite add_I'_r, add_succ_r, add_diag; cbn; reflexivity.
+    + rewrite <- !add_diag, add_assoc. f_equal.
+      rewrite <- add_assoc, add_comm. reflexivity.
+    + change (I p2) with (succ (O p2)).
+      change (I (add p1' p2)) with (succ (O (add p1' p2))).
+      rewrite !add_succ_r; f_equal.
+      rewrite <- !add_diag, add_assoc; f_equal.
+      rewrite (add_comm _ (add p1' _)), add_assoc. reflexivity.
+  - rewrite IHp0, IHp. destruct p2.
+    + rewrite add_I'_r, add_succ_r, add_diag; cbn; reflexivity.
+    + change (I _) with (succ (O (add p1' p2))).
+      rewrite <- !add_diag, add_assoc. do 2 f_equal.
+      rewrite <- add_assoc, add_comm. reflexivity.
+    + change (I p2) with (succ (O p2)).
+      rewrite <- !add_diag, !add_succ_r, !add_succ_l. do 2 f_equal.
+      rewrite (add_comm _ (add p1' _)), !add_assoc, (add_comm p2 _), !add_assoc.
+      reflexivity.
+Qed.
+
 Lemma mul_I'_r :
   forall p : Pos,
     mul p I' = p.
@@ -285,13 +381,6 @@ Proof.
   - rewrite mul_I'_r; reflexivity.
   - rewrite mul_O_r, IHp; reflexivity.
   - rewrite mul_I_r, IHp; reflexivity.
-Qed.
-
-Lemma add_diag :
-  forall p : Pos,
-    add p p = O p.
-Proof.
-  induction p as [| p' | p']; cbn; rewrite ?IHp'; cbn; reflexivity.
 Qed.
 
 Lemma O_add :
@@ -577,17 +666,6 @@ Proof.
   all: destruct (compare_spec' p1 p3) as [-> | [H13 H13'] | [H13 H13']]
   ; subst; rewrite ?H13, ?H13'.
   all: try reflexivity.
-  Focus 15.
-  destruct (compare p1 p2) eqn: H12, (compare p2 p3) eqn: H23, (compare p1 p3) eqn: H13
-  ; subst; rewrite ?H12, ?H23, ?H13.
-  all: try congruence. Focus 6.
-  all: destruct (compare_spec p1 p2), (compare_spec p2 p3), (compare_spec p1 p3); try congruence.
-  - destruct (compare p2 p3) eqn: H23; rewrite ?H23, ?compare_refl; reflexivity.
-  - destruct (compare p2 p3) eqn: H23, (compare p1 p3) eqn: H13; rewrite ?H23, ?H13, ?compare_refl.
-  - destruct (compare p2 p3) eqn: H; rewrite ?H, ?compare_refl; reflexivity.
-  ; subst; rewrite ?compare_refl.
-  1-2: reflexivity. Check compare_spec.
-  - 
 Admitted.
 
 Lemma max_comm :

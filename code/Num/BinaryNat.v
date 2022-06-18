@@ -380,5 +380,5 @@ Lemma eqb_spec :
 Proof.
   intros [| p1] [| p2]; cbn.
   1-3: constructor; congruence.
-  apply BinaryPos.eqb_spec.
+  destruct (BinaryPos.eqb_spec p1 p2); constructor; congruence.
 Qed.

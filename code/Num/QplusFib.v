@@ -213,9 +213,9 @@ Proof.
 Admitted.
 
 Inductive Q' : Set :=
-    | Qneg  : Q' -> Q'
-    | Qzero : Q'
-    | Qpos  : Q' -> Q'.
+| Qneg  : Q' -> Q'
+| Qzero : Q'
+| Qpos  : Q' -> Q'.
 
 (** TODO: rozszerzyć operacje na [Q] na całe [Q]. *)
 

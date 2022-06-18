@@ -30,6 +30,7 @@ match k with
 | Neg p     => Neg (BinaryPos.succ p)
 end.
 
+(* TODO
 Function add (k1 k2 : Z) : Z :=
 match k1, k2 with
 | Zero   , _       => k2
@@ -540,3 +541,4 @@ Proof.
   rewrite <- inv_inv, <- min_inv, !inv_inv.
   reflexivity.
 Qed.
+*)

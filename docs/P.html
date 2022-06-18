@@ -33,8 +33,8 @@
 <span class="id" title="keyword">Print</span> <span class="id" title="var">nat</span>.<br/>
 <span class="comment">(*&nbsp;===&gt;<br/>
 Inductive&nbsp;nat&nbsp;:&nbsp;Type&nbsp;:=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;O&nbsp;:&nbsp;nat<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;S&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat.<br/>
+|&nbsp;O&nbsp;:&nbsp;nat<br/>
+|&nbsp;S&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat.<br/>
 *)</span><br/>
 
 <br/>
@@ -48,9 +48,9 @@ Inductive&nbsp;nat&nbsp;:&nbsp;Type&nbsp;:=<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">BinPos</span> : <span class="id" title="keyword">Set</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">H</span> : <span class="id" title="var">BinPos</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> : <span class="id" title="var">BinPos</span> -&gt; <span class="id" title="var">BinPos</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">I</span> : <span class="id" title="var">BinPos</span> -&gt; <span class="id" title="var">BinPos</span>.<br/>
+| <span class="id" title="var">H</span> : <span class="id" title="var">BinPos</span><br/>
+| <span class="id" title="var">O</span> : <span class="id" title="var">BinPos</span> -&gt; <span class="id" title="var">BinPos</span><br/>
+| <span class="id" title="var">I</span> : <span class="id" title="var">BinPos</span> -&gt; <span class="id" title="var">BinPos</span>.<br/>
 
 <br/>
 </div>
@@ -64,9 +64,9 @@ Inductive&nbsp;nat&nbsp;:&nbsp;Type&nbsp;:=<br/>
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">to_nat</span> (<span class="id" title="var">n</span> : <span class="id" title="var">BinPos</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">H</span> =&gt; 1<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> <span class="id" title="var">n'</span> =&gt; 2 * <span class="id" title="var">to_nat</span> <span class="id" title="var">n'</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">I</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">S</span> (2 * <span class="id" title="var">to_nat</span> <span class="id" title="var">n'</span>)<br/>
+| <span class="id" title="var">H</span> =&gt; 1<br/>
+| <span class="id" title="var">O</span> <span class="id" title="var">n'</span> =&gt; 2 * <span class="id" title="var">to_nat</span> <span class="id" title="var">n'</span><br/>
+| <span class="id" title="var">I</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">S</span> (2 * <span class="id" title="var">to_nat</span> <span class="id" title="var">n'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -97,9 +97,9 @@ Liczby binarne można też zrobić inaczej, np. jako <span class="inlinecode"><s
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Z0</span> : <span class="id" title="var">Z</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Zpos</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">Z</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Zneg</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">Z</span>.<br/>
+| <span class="id" title="var">Z0</span> : <span class="id" title="var">Z</span><br/>
+| <span class="id" title="var">Zpos</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">Z</span><br/>
+| <span class="id" title="var">Zneg</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">Z</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">Z_unary</span>.<br/>
@@ -122,9 +122,9 @@ Liczby binarne można też zrobić inaczej, np. jako <span class="inlinecode"><s
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Set</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Z0</span> : <span class="id" title="var">Z</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Zpos</span> : <span class="id" title="var">BinPos</span> -&gt; <span class="id" title="var">Z</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Zneg</span> : <span class="id" title="var">BinPos</span> -&gt; <span class="id" title="var">Z</span>.<br/>
+| <span class="id" title="var">Z0</span> : <span class="id" title="var">Z</span><br/>
+| <span class="id" title="var">Zpos</span> : <span class="id" title="var">BinPos</span> -&gt; <span class="id" title="var">Z</span><br/>
+| <span class="id" title="var">Zneg</span> : <span class="id" title="var">BinPos</span> -&gt; <span class="id" title="var">Z</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">Z_binary</span>.<br/>
@@ -357,8 +357,8 @@ Sprytniej: mianownik interpretujemy jako liczbę dodatnią.
 
 <br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">numden</span> : <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">Q</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">path</span> :<br/>
+| <span class="id" title="var">numden</span> : <span class="id" title="var">Z</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">Q</span><br/>
+| <span class="id" title="var">path</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">z1</span> <span class="id" title="var">z2</span> : <span class="id" title="var">Z</span>) (<span class="id" title="var">n1</span> <span class="id" title="var">n2</span> : <span class="id" title="var">N</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">z1</span> * (<span class="id" title="var">S</span> <span class="id" title="var">n2</span>) = <span class="id" title="var">z2</span> * (<span class="id" title="var">S</span> <span class="id" title="var">n1</span>) -&gt; <span class="id" title="var">numden</span> <span class="id" title="var">z1</span> <span class="id" title="var">n1</span> = <span class="id" title="var">numden</span> <span class="id" title="var">z2</span> <span class="id" title="var">n2</span>.<br/>
 
@@ -387,9 +387,9 @@ Sprytniej: mianownik interpretujemy jako liczbę dodatnią.
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">One</span> : <span class="id" title="var">Q</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">N</span> : <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">D</span> : <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span>.<br/>
+| <span class="id" title="var">One</span> : <span class="id" title="var">Q</span><br/>
+| <span class="id" title="var">N</span> : <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span><br/>
+| <span class="id" title="var">D</span> : <span class="id" title="var">Q</span> -&gt; <span class="id" title="var">Q</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">Q_Ind</span>.<br/>
@@ -420,9 +420,9 @@ Sprytniej: mianownik interpretujemy jako liczbę dodatnią.
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Ord</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">ZZ</span> : <span class="id" title="var">Ord</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SS</span> : <span class="id" title="var">Ord</span> -&gt; <span class="id" title="var">Ord</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">lim</span> : (<span class="id" title="var">nat</span> -&gt; <span class="id" title="var">Ord</span>) -&gt; <span class="id" title="var">Ord</span>.<br/>
+| <span class="id" title="var">ZZ</span> : <span class="id" title="var">Ord</span><br/>
+| <span class="id" title="var">SS</span> : <span class="id" title="var">Ord</span> -&gt; <span class="id" title="var">Ord</span><br/>
+| <span class="id" title="var">lim</span> : (<span class="id" title="var">nat</span> -&gt; <span class="id" title="var">Ord</span>) -&gt; <span class="id" title="var">Ord</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">Ord_simple</span>.<br/>
