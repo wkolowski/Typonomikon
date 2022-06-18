@@ -1,4 +1,4 @@
-Require Import Recdef.
+Require Import Recdef Bool.
 
 (** [I'] to 1, [O k] to 2k, zaś [I k] to 2k + 1. *)
 Inductive Pos : Set :=
@@ -365,8 +365,6 @@ Proof.
   induction p; cbn; rewrite ?IHp; reflexivity.
 Qed.
 
-Require Import Bool.
-
 Lemma compare_refl_conv :
   forall p1 p2 : Pos,
     compare p1 p2 = Eq -> p1 = p2.
@@ -376,24 +374,87 @@ Proof.
   ; intros [=]; rewrite ?IHc; auto.
 Qed.
 
-Lemma reflect_compare :
+Lemma compare_spec :
+  forall p1 p2 : Pos,
+    CompareSpecT (p1 = p2) (compare p2 p1 = Gt) (compare p2 p1 = Lt) (compare p1 p2).
+Proof.
+  intros p1 p2.
+  functional induction compare p1 p2; cbn.
+  4-11: destruct IHc as [-> | -> | ->]; constructor; rewrite ?compare_refl; intuition congruence.
+  - constructor; reflexivity.
+  - constructor. destruct p2; cbn; intuition.
+  - constructor. destruct p1; cbn; intuition.
+Qed.
+
+Lemma compare_spec' :
+  forall p1 p2 : Pos,
+    CompareSpecT
+      (p1 = p2)
+      (compare p1 p2 = Lt /\ compare p2 p1 = Gt)
+      (compare p1 p2 = Gt /\ compare p2 p1 = Lt)
+      (compare p1 p2).
+Proof.
+  intros p1 p2.
+  functional induction compare p1 p2; cbn.
+  4-11: destruct IHc as [-> | [? ->] | [? ->]]; constructor
+  ; rewrite ?compare_refl in *; intuition congruence.
+  - constructor; reflexivity.
+  - constructor. destruct p2; cbn; intuition.
+  - constructor. destruct p1; cbn; intuition.
+Qed.
+
+Inductive le : Pos -> Pos -> Prop :=
+| le_I' : forall p : Pos, le I' p
+| le_O  : forall p1 p2 : Pos, le p1 p2 -> le (O p1) (O p2)
+| le_I  : forall p1 p2 : Pos, le p1 p2 -> le (I p1) (I p2)
+| le_OI : forall p : Pos, le (O p) (I p).
+
+#[global] Hint Constructors le : core.
+
+Lemma le_trans :
+  forall p1 p2 p3 : Pos,
+    le p1 p2 -> le p2 p3 -> le p1 p3.
+Proof.
+  intros p1 p2 p3 H12 H23; revert p3 H23.
+  induction H12; intros.
+  - constructor.
+  - inversion H23; subst; clear H23.
+    + constructor; apply IHle; assumption.
+Restart.
+  intros p1 p2; revert p1.
+  induction p2 as [| p2' | p2']; intros p1 p2 H13 H23.
+  - inversion H13; subst; constructor.
+  - inversion H13; inversion H23; subst; clear H13 H23.
+    + constructor.
+    + constructor.
+    + constructor. apply IHp2'; assumption.
+    +
+Abort.
+
+Lemma compare_le :
+  forall p1 p2 : Pos,
+    CompareSpecT (p1 = p2) (le p1 p2 /\ p1 <> p2) (le p2 p1 /\ p1 <> p2) (compare p1 p2).
+Proof.
+  intros p1 p2.
+  functional induction compare p1 p2.
+  - constructor; reflexivity.
+  - constructor. destruct p2; intuition; congruence.
+  - constructor. destruct p1; intuition; congruence.
+  - destruct IHc as [-> | [IHle IHneq] | [IHle IHneq]]; constructor; intuition; congruence.
+  - destruct IHc as [-> | [IHle IHneq] | [IHle IHneq]]; constructor; intuition; try congruence.
+    admit.
+Abort.
+
+Lemma eqb_spec :
   forall p1 p2 : Pos,
     reflect (p1 = p2) (BinaryPos.eqb p1 p2).
 Proof.
   intros p1 p2.
   unfold BinaryPos.eqb.
-  functional induction compare p1 p2; cbn.
-  - constructor; reflexivity.
-  - constructor. intros Heq. rewrite <- Heq in y. contradiction.
-  - constructor. intros Heq. rewrite Heq in y. contradiction.
-  - destruct IHc; subst; constructor; intuition congruence.
-  - destruct IHc; subst; constructor; intuition congruence.
-  - destruct IHc; subst; constructor; intuition congruence.
-  - destruct IHc; subst; constructor; intuition congruence.
-  - destruct IHc; subst; constructor; intuition congruence.
-  - destruct IHc; subst; constructor; intuition congruence.
-  - destruct IHc; subst; constructor; intuition congruence.
-  - destruct IHc; subst; constructor; intuition congruence.
+  destruct (compare_spec p1 p2); constructor.
+  - assumption.
+  - intros ->. rewrite compare_refl in e. congruence.
+  - intros ->. rewrite compare_refl in e. congruence.
 Qed.
 
 Lemma compare_succ_l :
@@ -411,10 +472,11 @@ Lemma compare_succ :
     compare (succ p1) (succ p2) = compare p1 p2.
 Proof.
   intros p1 p2.
-  functional induction compare p1 p2. 5: cbn. cbn; rewrite ?IHc; try reflexivity.
+  functional induction compare p1 p2.
+  - cbn; rewrite ?IHc; try reflexivity.
   - destruct p2; cbn; intuition.
-    destruct p2; cbn; intuition.
-    destruct p2; cbn; reflexivity.
+    + destruct p2; cbn; intuition.
+    + destruct p2; cbn; reflexivity.
   - destruct p1; cbn; intuition.
     + destruct p1; cbn; intuition.
     + destruct p1; cbn; reflexivity.
@@ -436,6 +498,11 @@ Proof.
   ; cbn; rewrite <- ?IHc, ?e1; cbn; try reflexivity.
   - destruct p2; cbn; intuition.
   - destruct p1; cbn; intuition.
+Restart.
+  intros p1 p2.
+  destruct (compare_spec p1 p2) as [-> | -> | ->]; cbn.
+  2-3: reflexivity.
+  rewrite compare_refl; reflexivity.
 Qed.
 
 Lemma compare_trans :
@@ -451,6 +518,11 @@ Restart.
   - apply compare_refl_conv in Heq12, Heq23; subst. apply compare_refl.
   - admit.
   - admit.
+Restart.
+  intros p1 p2 p3 c H12 H23.
+  destruct (compare_spec p1 p2); subst.
+  + assumption.
+  + 
 Admitted.
 
 Lemma compare_succ_r :
@@ -460,6 +532,24 @@ Proof.
   intros p.
   rewrite <- CompOpp_compare, compare_succ_l; cbn.
   reflexivity.
+Qed.
+
+Lemma min_O :
+  forall p1 p2 : Pos,
+    min (O p1) (O p2) = O (min p1 p2).
+Proof.
+  intros p1 p2.
+  unfold min; cbn.
+  destruct (compare p1 p2); reflexivity.
+Qed.
+
+Lemma min_I :
+  forall p1 p2 : Pos,
+    min (I p1) (I p2) = I (min p1 p2).
+Proof.
+  intros p1 p2.
+  unfold min; cbn.
+  destruct (compare p1 p2); reflexivity.
 Qed.
 
 Lemma min_comm :
@@ -480,9 +570,24 @@ Lemma min_assoc :
 Proof.
   intros p1 p2 p3.
   unfold min.
-  destruct (compare p1 p2) eqn: H12,
-           (compare p2 p3) eqn: H23.
-  intros p1 p2; functional induction min p1 p2; intros p3; cbn.
+  destruct (compare_spec' p1 p2) as [-> | [H12 H12'] | [H12 H12']],
+           (compare_spec' p2 p3) as [-> | [H23 H23'] | [H23 H23']]
+  ; subst; rewrite ?compare_refl, ?H12, ?H12', ?H23, ?H23'.
+  1-4: reflexivity.
+  all: destruct (compare_spec' p1 p3) as [-> | [H13 H13'] | [H13 H13']]
+  ; subst; rewrite ?H13, ?H13'.
+  all: try reflexivity.
+  Focus 15.
+  destruct (compare p1 p2) eqn: H12, (compare p2 p3) eqn: H23, (compare p1 p3) eqn: H13
+  ; subst; rewrite ?H12, ?H23, ?H13.
+  all: try congruence. Focus 6.
+  all: destruct (compare_spec p1 p2), (compare_spec p2 p3), (compare_spec p1 p3); try congruence.
+  - destruct (compare p2 p3) eqn: H23; rewrite ?H23, ?compare_refl; reflexivity.
+  - destruct (compare p2 p3) eqn: H23, (compare p1 p3) eqn: H13; rewrite ?H23, ?H13, ?compare_refl.
+  - destruct (compare p2 p3) eqn: H; rewrite ?H, ?compare_refl; reflexivity.
+  ; subst; rewrite ?compare_refl.
+  1-2: reflexivity. Check compare_spec.
+  - 
 Admitted.
 
 Lemma max_comm :
@@ -493,6 +598,17 @@ Proof.
   unfold max.
   rewrite <- CompOpp_compare.
 Admitted.
+
+Lemma max_assoc :
+  forall p1 p2 p3 : Pos,
+    max (max p1 p2) p3 = max p1 (max p2 p3).
+Proof.
+  intros p1 p2 p3.
+  unfold min.
+  destruct (compare p1 p2) eqn: H12,
+           (compare p2 p3) eqn: H23.
+Admitted.
+
 
 (* TODO
      Definition tail_add : nat -> nat -> nat.

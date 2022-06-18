@@ -1,4 +1,4 @@
-Require Import Recdef Lia.
+Require Import Recdef Bool Lia.
 
 From Typonomikon Require Import BinaryPos.
 
@@ -68,10 +68,17 @@ match n1, n2 with
 end.
 
 Definition eqb (n1 n2 : Nat) : bool :=
-match compare n1 n2 with
+match n1, n2 with
+| Z    , Z     => true
+| Z    , _     => false
+| _    , Z     => false
+| NZ p1, NZ p2 => BinaryPos.eqb p1 p2
+end.
+
+(* match compare n1 n2 with
 | Eq => true
 | _  => false
-end.
+end. *)
 
 Definition leb (n1 n2 : Nat) : bool :=
 match compare n1 n2 with
@@ -89,18 +96,14 @@ Definition max (n1 n2 : Nat) : Nat :=
 match n1, n2 with
 | Z    , _     => n2
 | _    , Z     => n1
-| NZ p1, NZ p2 => NZ (max p1 p2)
+| NZ p1, NZ p2 => NZ (BinaryPos.max p1 p2)
 end.
 
-(* match compare n1 n2 with
-| Lt => n2
-| _  => n1
-end. *)
-
 Definition min (n1 n2 : Nat) : Nat :=
-match compare n1 n2 with
-| Lt => n1
-| _  => n2
+match n1, n2 with
+| Z    , _     => Z
+| _    , Z     => Z
+| NZ p1, NZ p2 => NZ (BinaryPos.min p1 p2)
 end.
 
 Function odd (n : Nat) : bool :=
@@ -273,22 +276,78 @@ Proof.
   reflexivity.
 Qed.
 
+Lemma min_0_l :
+  forall n : Nat,
+    min Z n = Z.
+Proof.
+  reflexivity.
+Qed.
+
+Lemma min_0_r :
+  forall n : Nat,
+    min n Z = Z.
+Proof.
+  intros []; reflexivity.
+Qed.
+
+Lemma min_assoc :
+  forall n1 n2 n3 : Nat,
+    min (min n1 n2) n3 = min n1 (min n2 n3).
+Proof.
+  intros [| p1] [| p2] [| p3]; cbn.
+  1-7: reflexivity.
+  rewrite BinaryPos.min_assoc.
+  reflexivity.
+Qed.
+
 Lemma min_comm :
   forall n1 n2 : Nat,
     min n1 n2 = min n2 n1.
 Proof.
   intros [| p1] [| p2]; cbn.
   1-3: reflexivity.
-  unfold min; cbn.
-  rewrite <- BinaryPos.CompOpp_compare.
-  destruct (BinaryPos.compare p2 p1); cbn.
-Abort.
+  rewrite BinaryPos.min_comm.
+  reflexivity.
+Qed.
 
-Lemma min_assoc :
-  forall n1 n2 n3 : Nat,
-    min (min n1 n2) n3 = min n1 (min n2 n3).
+Lemma min_compare :
+  forall n1 n2 : Nat,
+    min n1 n2
+      =
+    match compare n1 n2 with
+    | Lt => n1
+    | _  => n2
+    end.
 Proof.
-Admitted.
+  intros [| p1] [| p2]; cbn.
+  1-3: reflexivity.
+  unfold BinaryPos.min.
+  destruct (BinaryPos.compare p1 p2); reflexivity.
+Qed.
+
+Lemma max_0_l :
+  forall n : Nat,
+    max Z n = n.
+Proof.
+  reflexivity.
+Qed.
+
+Lemma max_0_r :
+  forall n : Nat,
+    max n Z = n.
+Proof.
+  intros []; reflexivity.
+Qed.
+
+Lemma max_assoc :
+  forall n1 n2 n3 : Nat,
+    max (max n1 n2) n3 = max n1 (max n2 n3).
+Proof.
+  intros [| p1] [| p2] [| p3]; cbn.
+  1-7: reflexivity.
+  rewrite BinaryPos.max_assoc.
+  reflexivity.
+Qed.
 
 Lemma max_comm :
   forall n1 n2 : Nat,
@@ -300,11 +359,26 @@ Proof.
   reflexivity.
 Qed.
 
-Lemma max_assoc :
-  forall n1 n2 n3 : Nat,
-    max (max n1 n2) n3 = max n1 (max n2 n3).
+Lemma max_compare :
+  forall n1 n2 : Nat,
+    max n1 n2
+      =
+    match compare n1 n2 with
+    | Lt => n2
+    | _  => n1
+    end.
 Proof.
-  intros [| p1] [| p2] [| p3]; cbn.
-  1-7: reflexivity.
-(*   rewrite BinaryPos.max_assoc. *)
-Admitted.
+  intros [| p1] [| p2]; cbn.
+  1-3: reflexivity.
+  unfold BinaryPos.max.
+  destruct (BinaryPos.compare p1 p2); reflexivity.
+Qed.
+
+Lemma eqb_spec :
+  forall n1 n2 : Nat,
+    reflect (n1 = n2) (eqb n1 n2).
+Proof.
+  intros [| p1] [| p2]; cbn.
+  1-3: constructor; congruence.
+  apply BinaryPos.eqb_spec.
+Qed.
