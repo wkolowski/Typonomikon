@@ -1,4 +1,4 @@
-Require Import Recdef StrictProp Lia.
+Require Import Recdef StrictProp Bool Lia.
 
 Inductive Z : Type :=
 | pair : nat -> nat -> Z.

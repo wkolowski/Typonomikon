@@ -10,14 +10,14 @@ Arguments i  {A} _.
 Arguments op {A} _ _.
 
 Inductive NF {A : Type} : FM A -> Prop :=
-| Ce   : NF e
-| Ci   : forall a : A, NF (i a)
-| Cop1 : forall (a : A) (y : FM A), NF y -> y <> e -> NF (op (i a) y).
+| NF_e  : NF e
+| NF_i  : forall a : A, NF (i a)
+| NF_op : forall (a : A) (y : FM A), NF y -> y <> e -> NF (op (i a) y).
 
 Record FM' (A : Type) : Type :=
 {
     cf : FM A;
-    NF_cf : NF cf;
+    NF_cf : Squash (NF cf);
 }.
 
 Inductive Graph {A : Type} : FM A -> FM A -> Type :=
@@ -58,8 +58,7 @@ Definition norm' :
   forall {A : Type} {x : FM A} (d : Dom x),
     {r : FM A & Graph x r}.
 Proof.
-  intros A x d.
-  induction d.
+  intros A x d; induction d.
   - exists e. constructor.
   - exists (i a). constructor.
   - destruct IHd as [r IH]. exists r. constructor; assumption.
@@ -121,9 +120,8 @@ Lemma norm'_correct :
   forall {A : Type} (x : FM A),
     Graph x (norm x).
 Proof.
-  intros.
-  unfold norm.
-  destruct (norm' _).
+  intros A x.
+  unfold norm; destruct (norm' _) as [r G].
   assumption.
 Qed.
 
@@ -169,8 +167,6 @@ Admitted.
 
 Compute norm (op (op (i 5) (op (i 3) (i 10))) (i 123)).
 
-(* Functional Scheme norm_ind' := Induction for norm Sort SProp. *)
-
 Lemma NF_norm :
   forall {A : Type} (x : FM A),
     NF (norm x).
@@ -185,3 +181,29 @@ Proof.
     + congruence.
     + inv X1; inv H1.
 Qed.
+
+Function isNormal {A : Type} (x : FM A) : bool :=
+match x with
+| e   => true
+| i _ => true
+| op l r =>
+  match l, r with
+  | _  , e => false
+  | i _, _ => isNormal r
+  | _  , _ => false
+  end
+end.
+
+Lemma isNormal_NF :
+  forall {A : Type} (x : FM A),
+    reflect (NF x) (isNormal x).
+Proof.
+  intros A x; functional induction isNormal x
+  ; do 2 try constructor.
+  - inversion 1. congruence.
+  - inversion IHb; repeat constructor.
+    + assumption.
+    + intro. rewrite H1 in y. contradiction.
+    + inversion 1. subst. contradiction.
+  - inversion 1. subst. destruct r; contradiction.
+Defined.

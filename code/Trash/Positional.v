@@ -1,22 +1,22 @@
 From CoqAlgs Require Import Base.
 
 Inductive nel (A : Type) : Type :=
-    | singl : A -> nel A
-    | ncons : A -> nel A -> nel A.
+| singl : A -> nel A
+| ncons : A -> nel A -> nel A.
 
 Arguments singl [A] _.
 Arguments ncons [A] _ _.
 
 Fixpoint last {A : Type} (l : nel A) : A :=
 match l with
-    | singl x => x
-    | ncons _ t => last t
+| singl x => x
+| ncons _ t => last t
 end.
 
 Fixpoint len {A : Type} (l : nel A) : nat :=
 match l with
-    | singl _ => 1
-    | ncons _ l' => S (len l')
+| singl _ => 1
+| ncons _ l' => S (len l')
 end.
 
 (* PNNS stands for PositionalNaturalNumberSystem. *)
@@ -35,8 +35,8 @@ Definition num (sys : PNNS) : Type :=
 
 Fixpoint nvalue_aux {sys : PNNS} (ds : nel digit) (i : nat) : nat :=
 match ds with
-    | singl d => dvalue d * weight i
-    | ncons d ds' => dvalue d * weight i + nvalue_aux ds' (S i)
+| singl d => dvalue d * weight i
+| ncons d ds' => dvalue d * weight i + nvalue_aux ds' (S i)
 end.
 
 Definition nvalue {sys : PNNS} (n : num sys) : nat :=
@@ -57,7 +57,7 @@ Proof.
   induction ds as [d | d ds']; cbn; intros; rewrite ?IHds'; reflexivity.
 Qed.
 
-Theorem nvalue_len :
+Lemma nvalue_len :
   forall n : num unary,
     nvalue n = len (proj1_sig n).
 Proof.
@@ -74,7 +74,7 @@ Defined.
 Definition complete (sys : PNNS) : Prop :=
   forall n : nat, exists rep : num sys, nvalue rep = n.
 
-Theorem unary_not_complete :
+Lemma unary_not_complete :
   ~ complete unary.
 Proof.
   unfold complete. intro. destruct (H 0) as [[ds wut] H'].
@@ -97,7 +97,7 @@ Proof.
     f_equal. inv H. exact (IHds1' _ _ H1).
 Qed.
 
-Theorem unary_not_redundant :
+Lemma unary_not_redundant :
   ~ redundant unary.
 Proof.
   unfold redundant. intro.

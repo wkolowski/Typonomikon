@@ -38,16 +38,8 @@ Definition euclid_sub' p q := euclid_sub (p, q).
 
 Compute euclid_sub' 6 8.
 
-
 Unset Guard Checking.
-Fixpoint euclid_sub (p q : Pos) {struct p} : Pos :=
-match UnaryPos.compare p q with
-| Lt => euclid_sub p (sub' q p)
-| Eq => p
-| Gt => euclid_sub (sub' p q) q
-end.
-
-Function toQ (p q : Pos) {struct p} : Q :=
+Fixpoint toQ (p q : Pos) {struct p} : Q :=
 match UnaryPos.compare p q with
 | Lt => D (toQ p (sub' q p))
 | Eq => One
@@ -191,9 +183,6 @@ Lemma toQ_eq :
     end.
 Proof.
   intros p q.
-  
-  Check toQ.
-  rewrite toQ_equation.
 Admitted.
 
 Inductive Q' : Set :=

@@ -61,7 +61,7 @@ match r with
     end
 end.
 
-Lemma norm_idempotent :
+Lemma norm_norm :
   forall {A : Type} (r : Regex A),
     norm (norm r) = norm r.
 Proof.
