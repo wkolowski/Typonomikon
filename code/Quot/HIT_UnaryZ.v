@@ -1,4 +1,4 @@
-Require Import Recdef Lia.
+Require Import Recdef StrictProp Lia.
 
 Inductive Z : Type :=
 | z : Z
@@ -104,6 +104,8 @@ Inductive NF : Z -> Prop :=
 | NF_s  : forall k : Z, NF (s k) -> NF (s (s k))
 | NF_p  : forall k : Z, NF (p k) -> NF (p (p k)).
 
+#[global] Hint Constructors NF : core.
+
 Lemma NF_norm :
   forall k : Z,
     NF (norm k).
@@ -111,20 +113,10 @@ Proof.
   intros k.
   functional induction norm k.
   - constructor.
-  - rewrite e0 in IHz0. inversion IHz0; subst.
-    + constructor.
-    + assumption.
-  - destruct (norm k').
-    + constructor.
-    + constructor; assumption.
-    + contradiction.
-  - rewrite e0 in IHz0. inversion IHz0; subst.
-    + constructor.
-    + assumption.
-  - destruct (norm k').
-    + constructor.
-    + contradiction.
-    + constructor; assumption.
+  - rewrite e0 in IHz0. inversion IHz0; subst; intuition.
+  - destruct (norm k'); intuition.
+  - rewrite e0 in IHz0. inversion IHz0; subst; intuition.
+  - destruct (norm k'); intuition.
 Qed.
 
 Lemma norm_NF :

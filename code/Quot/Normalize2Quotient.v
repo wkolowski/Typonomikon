@@ -45,9 +45,9 @@ Module Qplus.
 Unset Guard Checking.
 Fixpoint euclid_sub (p q : nat) {struct p} : nat :=
 match Nat.compare p q with
-    | Lt => euclid_sub p (q - p)
-    | Eq => p
-    | Gt => euclid_sub (p - q) q
+| Lt => euclid_sub p (q - p)
+| Eq => p
+| Gt => euclid_sub (p - q) q
 end.
 
 Definition norm_sub (p q : nat) : nat * nat :=
@@ -55,16 +55,16 @@ Definition norm_sub (p q : nat) : nat * nat :=
 
 Fixpoint euclid_mod (p q : nat) {struct p} : nat :=
 match Nat.compare p q with
-    | Lt => euclid_mod (q mod p) q
-    | Eq => p
-    | Gt => euclid_mod p (p mod q)
+| Lt => euclid_mod (q mod p) q
+| Eq => p
+| Gt => euclid_mod p (p mod q)
 end.
 
 Fixpoint norm (p q : nat) {struct p} : nat * nat :=
 match Nat.compare p q with
-    | Lt => let (p', q') := norm p (q - p) in (p', q' + p)
-    | Eq => (1, 1)
-    | Gt => let (p', q') := norm (p - q) q in (p' + q, q')
+| Lt => let (p', q') := norm p (q - p) in (p', q' + p)
+| Eq => (1, 1)
+| Gt => let (p', q') := norm (p - q) q in (p' + q, q')
 end.
 
 Fixpoint extendedEu (p q : nat) {struct q} : nat * nat :=
@@ -90,9 +90,9 @@ Compute Nat.modulo 15 10.
 
 (* Inductive euclid_sub_graph : nat -> nat -> (p q : nat) {struct p} : nat :=
 match Nat.compare p q with
-    | Lt => euclid_sub p (q - p)
-    | Eq => 1
-    | Gt => euclid_sub (p - q) q
+| Lt => euclid_sub p (q - p)
+| Eq => 1
+| Gt => euclid_sub (p - q) q
 end. *)
 
 End Qplus.
