@@ -5,9 +5,9 @@ Lemma SProp_is_not_a_strict_proposition :
 Proof.
   intros P H.
   pose (prop T := forall t1 t2 : T, t1 = t2).
-  assert (prop (Box P)). red. intros [] []. reflexivity.
-  assert (prop SProp). rewrite <- H. assumption.
-  red in H1. specialize (H1 sUnit sEmpty).
+  assert (prop (Box P)) by (intros [] []; reflexivity).
+  assert (prop SProp) by (rewrite <- H; assumption).
+  red in H1; specialize (H1 sUnit sEmpty).
   enough sEmpty.
   - destruct H2.
   - rewrite <- H1. constructor.

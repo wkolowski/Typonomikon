@@ -15,8 +15,8 @@ end.
 (* Wykres funkcji. *)
 Inductive norm_graph : nat -> nat -> nat * nat -> Prop :=
 | ng_0_l : forall   m : nat, norm_graph 0 m (0, m)
-| ng_0_r : forall n   : nat, norm_graph n 0 (n, 0)
-| ng_S_S : forall (n m : nat) (r : nat * nat), norm_graph (S n) (S m) r -> norm_graph n m r.
+| ng_0_r : forall n   : nat, norm_graph n 0 (S n, 0)
+| ng_S_S : forall (n m : nat) (r : nat * nat), norm_graph n m r -> norm_graph (S n) (S m) r.
 
 (* Wykres po usunięciu indeksów i zamianie [Prop] na [Type]. *)
 (*
@@ -32,7 +32,15 @@ Inductive NG : Type :=
 | ng_0_r' : NG
 | ng_S_S' : NG -> NG.
 
-(* Dlaczego powstały typ mamy interpretować tak a nie inaczej? *)
+(* Dlaczego powstały typ mamy interpretować tak a nie inaczej? Może tak:
+   - przypadek (0, m) pokrywa (0, 0), a zatem po usunięciu indeksów
+     pierwszy konstruktor powinniśmy interpretować jako zero
+   - przypadek (S n, 0) nie pokrywa zera, ale za to pokrywa 1, a zatem
+     po usunięciu indeksów powinniśmy go interpretować jako 1
+   - ostatni przypadek jest rekurencyjny. Powinniśmy go interpretować jako
+     następnik lub poprzednik, ale nie wiemy który przypadek zachodzi, więc
+     interpretujemy jako następniko-poprzednik (śmieszna nazwa: cesor). *)
+
 Inductive Z : Type :=
 | Zero : Z
 | One : Z
@@ -143,8 +151,7 @@ Equations norm {A : Type} (x : FM A) : FM A by wf (size x) lt :=
 Next Obligation. lia. Qed.
 Next Obligation. lia. Qed.
 Next Obligation. lia. Qed.
-Next Obligation.
-Admitted.
+Next Obligation. Admitted.
 
 Compute norm (op ((op (op (op (inj 5) (inj 2)) (inj 1)) (inj 12))) id).
 

@@ -223,13 +223,7 @@ Lemma norm'_norm :
   forall k : Z,
     norm' k = norm k.
 Proof.
-  intros k.
-  functional induction norm k; cbn; rewrite ?IHz0.
-  - reflexivity.
-  - rewrite e0; cbn; reflexivity.
-  - destruct (norm k'); intuition.
-  - rewrite e0; cbn; reflexivity.
-  - destruct (norm k'); intuition.
+  reflexivity.
 Qed.
 
 Lemma abs_abs :
