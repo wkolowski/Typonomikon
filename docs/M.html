@@ -342,19 +342,19 @@ To samo, tylko bardziej przyjazne sygnatury typów.
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">divmap</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">Div</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Div</span> <span class="id" title="var">B</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">pure</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">pure</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>)<br/>
+| <span class="id" title="var">pure</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">pure</span> (<span class="id" title="var">f</span> <span class="id" title="var">a</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">divbind</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">Div</span> <span class="id" title="var">A</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Div</span> <span class="id" title="var">B</span>) : <span class="id" title="var">Div</span> <span class="id" title="var">B</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">pure</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">a</span><br/>
+| <span class="id" title="var">pure</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">a</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">divjoin</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">Div</span> (<span class="id" title="var">Div</span> <span class="id" title="var">A</span>)) : <span class="id" title="var">Div</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">pure</span> (<span class="id" title="var">pure</span> <span class="id" title="var">a</span>) =&gt; <span class="id" title="var">pure</span> <span class="id" title="var">a</span><br/>
+| <span class="id" title="var">pure</span> (<span class="id" title="var">pure</span> <span class="id" title="var">a</span>) =&gt; <span class="id" title="var">pure</span> <span class="id" title="var">a</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -376,12 +376,12 @@ To samo, tylko bardziej przyjazne sygnatury typów.
 
 <br/>
 <span class="id" title="var">Private</span> <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Terminates</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Div</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">terminates</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Terminates</span> (<span class="id" title="var">pure</span> <span class="id" title="var">x</span>).<br/>
+| <span class="id" title="var">terminates</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">Terminates</span> (<span class="id" title="var">pure</span> <span class="id" title="var">x</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">extract</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">x</span> : <span class="id" title="var">Div</span> <span class="id" title="var">A</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">Terminates</span> <span class="id" title="var">x</span>) : <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">x</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">pure</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">a</span><br/>
+| <span class="id" title="var">pure</span> <span class="id" title="var">a</span> =&gt; <span class="id" title="var">a</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>

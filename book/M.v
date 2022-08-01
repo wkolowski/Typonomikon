@@ -275,17 +275,17 @@ Arguments pure {A} _.
 
 Definition divmap {A B : Type} (f : A -> B) (x : Div A) : Div B :=
 match x with
-    | pure a => pure (f a)
+| pure a => pure (f a)
 end.
 
 Definition divbind {A B : Type} (x : Div A) (f : A -> Div B) : Div B :=
 match x with
-    | pure a => f a
+| pure a => f a
 end.
 
 Definition divjoin {A : Type} (x : Div (Div A)) : Div A :=
 match x with
-    | pure (pure a) => pure a
+| pure (pure a) => pure a
 end.
 
 Unset Guard Checking.
@@ -303,11 +303,11 @@ Proof.
 Admitted.
 
 Private Inductive Terminates {A : Type} : Div A -> Prop :=
-    | terminates : forall x : A, Terminates (pure x).
+| terminates : forall x : A, Terminates (pure x).
 
 Definition extract {A : Type} {x : Div A} (t : Terminates x) : A :=
 match x with
-    | pure a => a
+| pure a => a
 end.
 
 Lemma Terminates_pure :
