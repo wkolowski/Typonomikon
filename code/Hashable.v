@@ -42,7 +42,10 @@ Class Hashable (A : Type) : Type :=
 #[export] Instance Hashable_prod
   {A B : Type} `{Hashable A} `{Hashable B} : Hashable (A * B) :=
 {
-  hash '(a, b) := add (mul 123456789 (hash a)) (mul 987654321 (hash b));
+  hash '(a, b) :=
+    let x := hash a in
+    let y := hash b in
+      div (add (mul x x) (add (mul 3 x) (add (mul 2 (mul x y)) (add y (mul y y))))) 2
 }.
 
 Fixpoint hash_list {A : Type} `{Hashable A} (l : list A) : int :=
