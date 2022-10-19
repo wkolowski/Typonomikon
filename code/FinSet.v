@@ -368,6 +368,7 @@ Proof.
   - now intros x s; destruct (p x); cbn.
 Defined.
 
+(*
 Definition elem_of {A : Type} `{EqDecision A} (s : FinSet A) (x : A) : bool.
 Proof.
   refine
@@ -380,3 +381,4 @@ Proof.
   - by intros y1 y2 b; destruct (decide (x = y1)), (decide (x = y2)).
   - by intros y b; destruct (decide (x = y)).
 Defined.
+*)

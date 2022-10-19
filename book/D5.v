@@ -10285,6 +10285,16 @@ Proof.
 Qed.
 (* end hide *)
 
+(** ** [imap], czyli mapowanie z indeksem *)
+
+(* begin hide *)
+Fixpoint imap {A B : Type} (f : nat -> A -> B) (l : list A) : list B :=
+match l with
+| [] => []
+| h :: t => f 0 h :: imap (fun n a => f (S n) a) t
+end.
+(* end hide *)
+
 (** * Bardziej skomplikowane funkcje *)
 
 (** ** [intersperse] *)
