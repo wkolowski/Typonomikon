@@ -10295,6 +10295,179 @@ match l with
 end.
 (* end hide *)
 
+Lemma imap_id :
+  forall {A : Type} (l : list A),
+    imap (fun _ x => x) l = l.
+(* begin hide *)
+Proof.
+  now induction l as [| h t]; cbn; rewrite ?IHt.
+Qed.
+(* end hide *)
+
+Lemma imap_imp :
+  forall {A B C : Type} (f : nat -> A -> B) (g : nat -> B -> C) (l : list A),
+    imap g (imap f l) = imap (fun n a => g n (f n a)) l.
+(* begin hide *)
+Proof.
+  intros A B C f g l; revert f g.
+  induction l as [| h t]; cbn; intros.
+  - easy.
+  - now rewrite (IHt (fun n a => f (S n) a) (fun n b => g (S n) b)).
+Qed.
+(* end hide *)
+
+Lemma isEmpty_imap :
+  forall (A B : Type) (f : nat -> A -> B) (l : list A),
+    isEmpty (imap f l) = isEmpty l.
+(* begin hide *)
+Proof.
+  now destruct l as [| h t]; cbn; intros.
+Qed.
+(* end hide *)
+
+Lemma length_imap :
+  forall (A B : Type) (f : nat -> A -> B) (l : list A),
+    length (imap f l) = length l.
+(* begin hide *)
+Proof.
+  intros A B f l; revert f.
+  now induction l as [| h t]; cbn; intros; rewrite ?IHt.
+Qed.
+(* end hide *)
+
+Lemma imap_snoc :
+  forall (A B : Type) (f : nat -> A -> B) (x : A) (l : list A),
+    imap f (snoc x l) = snoc (f (length l) x) (imap f l).
+(* begin hide *)
+Proof.
+  intros A B f x l; revert f.
+  now induction l as [| h t]; cbn; intros; rewrite ?IHt.
+Qed.
+(* end hide *)
+
+(*
+Lemma imap_app :
+  forall (A B : Type) (f : nat -> A -> B) (l1 l2 : list A),
+    imap f (l1 ++ l2) = imap f l1 ++ imap f l2.
+
+Lemma imap_rev :
+  forall (A B : Type) (f : nat -> A -> B) (l : list A),
+    imap f (rev l) = rev (imap f l).
+
+*)
+
+Lemma imap_ext :
+  forall (A B : Type) (f g : nat -> A -> B) (l : list A),
+    (forall (n : nat) (a : A), f n a = g n a) ->
+      imap f l = imap g l.
+(* begin hide *)
+Proof.
+  intros A B f g l; revert f g.
+  induction l as [| h t]; cbn; intros; [easy |].
+  now erewrite H, IHt; firstorder.
+Qed.
+(* end hide *)
+
+Lemma head_imap :
+  forall (A B : Type) (f : nat -> A -> B) (l : list A),
+    head (imap f l) =
+    match l with
+        | [] => None
+        | h :: _ => Some (f 0 h)
+    end.
+(* begin hide *)
+Proof.
+  now destruct l as [| h t]; cbn.
+Qed.
+(* end hide *)
+
+Lemma tail_imap :
+  forall (A B : Type) (f : nat -> A -> B) (l : list A),
+    tail (imap f l) =
+    match l with
+        | [] => None
+        | _ :: t => Some (imap (fun n a => f (S n) a) t)
+    end.
+(* begin hide *)
+Proof.
+  now destruct l as [| h t]; cbn.
+Qed.
+(* end hide *)
+
+Lemma init_imap :
+  forall (A B : Type) (f : nat -> A -> B) (l : list A),
+    init (imap f l) =
+    match l with
+    | [] => None
+    | h :: t =>
+        match init t with
+        | None => Some []
+        | Some i => Some (imap f (h :: i))
+        end
+    end.
+(* begin hide *)
+Proof.
+  intros A B f l; revert f.
+  induction l as [| h t]; cbn; intros; [easy |].
+  rewrite IHt.
+  destruct t as [| h' t']; cbn; [easy |].
+  now destruct (init t').
+Qed.
+(* end hide *)
+
+Lemma nth_imap_Some :
+  forall (A B : Type) (f : nat -> A -> B) (l : list A) (n : nat) (x : A),
+    nth n l = Some x -> nth n (imap f l) = Some (f n x).
+(* begin hide *)
+Proof.
+  intros A B f l; revert f.
+  induction l as [| h t]; cbn; intros f n x Heq; [now inversion Heq |].
+  destruct n as [| n']; [now inversion Heq |].
+  now apply (IHt (fun n a => f (S n) a)).
+Qed.
+(* end hide *)
+
+Lemma nth_imap :
+  forall (A B : Type) (f : nat -> A -> B) (l : list A) (n : nat),
+    nth n (imap f l) =
+    match nth n l with
+        | None => None
+        | Some x => Some (f n x)
+    end.
+(* begin hide *)
+Proof.
+  intros A B f l; revert f.
+  induction l as [| h t]; cbn; intros f n; [easy |].
+  destruct n as [| n']; [easy |].
+  now apply (IHt (fun n a => f (S n) a)).
+Qed.
+(* end hide *)
+
+Lemma take_imap :
+  forall (A B : Type) (f : nat -> A -> B) (l : list A) (n : nat),
+    take n (imap f l) = imap f (take n l).
+(* begin hide *)
+Proof.
+  intros A B f l; revert f.
+  induction l as [| h t]; cbn; intros; [easy |].
+  now destruct n as [| n']; cbn; rewrite ?IHt.
+Qed.
+(* end hide *)
+
+Lemma zip_imap :
+  forall (A B A' B' : Type) (f : nat -> A -> A') (g : nat -> B -> B')
+  (la : list A) (lb : list B),
+    zip (imap f la) (imap g lb) =
+    imap (fun n x => (f n (fst x), g n (snd x))) (zip la lb).
+(* begin hide *)
+Proof.
+  intros A B A' B' f g la; revert f g.
+  induction la as [| ha ta]; cbn; intros; [easy |].
+  destruct lb as [| hb tb]; cbn; intros; [easy |].
+  now rewrite (IHta (fun n a => f (S n) a) (fun n b => g (S n) b)).
+Qed.
+(* end hide *)
+
 (** * Bardziej skomplikowane funkcje *)
 
 (** ** [intersperse] *)
