@@ -30,9 +30,9 @@ Lemma toQplus'_eq :
     toQplus' p q
       =
     match Nat.compare p q with
-    | Lt => D (toQplus' p (q - p))
-    | Eq => One
-    | Gt => N (toQplus' (p - q) q)
+| Lt => D (toQplus' p (q - p))
+| Eq => One
+| Gt => N (toQplus' (p - q) q)
     end.
 Proof.
 Admitted.
@@ -134,9 +134,9 @@ Lemma cmp_Qplus_wut :
     cmp_Qplus q1 q2
       =
     match cmp_Qplus q2 q1 with
-    | Lt => Gt
-    | Eq => Eq
-    | Gt => Lt
+| Lt => Gt
+| Eq => Eq
+| Gt => Lt
     end.
 Proof.
   induction q1; destruct q2; cbn; auto.

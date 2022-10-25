@@ -4,48 +4,48 @@ TODO: github.com/mioalter/talks/blob/master/Haskell_Meetup_Jan_13_2016/
 *)
 
 Inductive RBT (A : Type) : Type :=
-    | L : A -> RBT A
-    | N : RBT A -> RBT A -> RBT A.
+| L : A -> RBT A
+| N : RBT A -> RBT A -> RBT A.
 
 Arguments L {A} _.
 Arguments N {A} _ _.
 
 Inductive SameShape {A : Type} : RBT A -> RBT A -> Prop :=
-    | SameShape_L :
+| SameShape_L :
         forall x y : A, SameShape (L x) (L y)
-    | SameShape_N :
+| SameShape_N :
         forall t1 t1' t2 t2' : RBT A,
           SameShape t1 t1' -> SameShape t2 t2' ->
             SameShape (N t1 t2) (N t1' t2').
 
 Inductive DifferentShape {A : Type} : RBT A -> RBT A -> Prop :=
-    | DifferentShape_LN :
+| DifferentShape_LN :
         forall (x : A) (t1 t2 : RBT A),
           DifferentShape (L x) (N t1 t2)
-    | DifferentShape_NL :
+| DifferentShape_NL :
         forall (x : A) (t1 t2 : RBT A),
           DifferentShape (N t1 t2) (L x)
-    | DifferentShape_N_rec_l :
+| DifferentShape_N_rec_l :
         forall t1 t1' t2 t2' : RBT A,
           DifferentShape t1 t1' -> DifferentShape (N t1 t2) (N t1' t2')
-    | DifferentShape_N_rec_r :
+| DifferentShape_N_rec_r :
         forall t1 t1' t2 t2' : RBT A,
           DifferentShape t2 t2' -> DifferentShape (N t1 t2) (N t1' t2').
 
 Inductive RBTEq {A : Type} : RBT A -> RBT A -> Type :=
-    | RBTEq_L :
+| RBTEq_L :
         forall x y : A, x = y -> RBTEq (L x) (L y)
-    | RBTEq_N :
+| RBTEq_N :
         forall t1 t1' t2 t2' : RBT A,
           RBTEq t1 t1' -> RBTEq t2 t2' -> RBTEq (N t1 t2) (N t1' t2').
 
 Inductive RBTNeq {A : Type} : RBT A -> RBT A -> Type :=
-    | RBTNeq_L :
+| RBTNeq_L :
         forall x y : A, x <> y -> RBTNeq (L x) (L y)
-    | RBTNeq_N_l :
+| RBTNeq_N_l :
         forall t1 t1' t2 t2' : RBT A,
           RBTNeq t1 t1' -> RBTNeq (N t1 t2) (N t1' t2')
-    | RBTNeq_N_r :
+| RBTNeq_N_r :
         forall t1 t1' t2 t2' : RBT A,
           RBTNeq t2 t2' -> RBTNeq (N t1 t2) (N t1' t2').
 
@@ -59,30 +59,30 @@ Proof.
 Qed.
 
 Inductive Exists {A : Type} (P : A -> Prop) : RBT A -> Type :=
-    | Exists_L :
+| Exists_L :
         forall x : A, P x -> Exists P (L x)
-    | Exists_NL :
+| Exists_NL :
         forall t1 t2 : RBT A, Exists P t1 -> Exists P (N t1 t2)
-    | Exists_NR :
+| Exists_NR :
         forall t1 t2 : RBT A, Exists P t2 -> Exists P (N t1 t2). 
 
 Inductive Forall {A : Type} (P : A -> Prop) : RBT A -> Prop :=
-    | Forall_ L :
+| Forall_ L :
         forall x : A, P x -> Forall P (L x)
-    | Forall_N :
+| Forall_N :
         forall t1 t2 : RBT A,
           Forall P t1 -> Forall P t2 -> Forall P (N t1 t2).
 
 Inductive DirectSubterm {A : Type} : RBT A -> RBT A -> Prop :=
-    | DS_L :
+| DS_L :
         forall t1 t2 : RBT A, DirectSubterm t1 (N t1 t2)
-    | DS_R :
+| DS_R :
         forall t1 t2 : RBT A, DirectSubterm t2 (N t1 t2).
 
 Inductive Subterm {A : Type} : RBT A -> RBT A -> Prop :=
-    | Subterm_DirectSubterm :
+| Subterm_DirectSubterm :
         forall t1 t2 : RBT A, DirectSubterm t1 t2 -> Subterm t1 t2
-    | Subterm_step :
+| Subterm_step :
         forall t1 t2 t3 : RBT A,
           Subterm t1 t2 -> DirectSubterm t2 t3 -> Subterm t1 t3.
 
@@ -115,24 +115,24 @@ Proof.
 Defined.
 
 Inductive Dup {A : Type} : RBT A -> Type :=
-    | Dup_both :
+| Dup_both :
         forall (x : A) (t1 t2 : RBT A),
           Exists (fun y => x = y) t1 ->
           Exists (fun y => x = y) t2 ->
             Dup (N t1 t2)
-    | Dup_l :
+| Dup_l :
         forall t1 t2 : RBT A,
           Dup t1 -> Dup (N t1 t2)
-    | Dup_r :
+| Dup_r :
         forall t1 t2 : RBT A,
           Dup t2 -> Dup (N t1 t2).
 
 Inductive Exactly {A : Type} (P : A -> Prop) : nat -> RBT A -> Type :=
-    | Exactly_L_yes :
+| Exactly_L_yes :
         forall x : A, P x -> Exactly P 1 (L x)
-    | Exactly_L_no :
+| Exactly_L_no :
         forall x : A, ~ P x -> Exactly P 0 (L x)
-    | Exactly_N :
+| Exactly_N :
         forall (t1 t2 : RBT A) (n1 n2 : nat),
           Exactly P n1 t1 -> Exactly P n2 t2 ->
             Exactly P (n1 + n2) (N t1 t2).
@@ -177,11 +177,11 @@ Proof.
 Qed.
 
 Inductive AtLeast {A : Type} (P : A -> Prop) : nat -> RBT A -> Type :=
-    | AtLeast_0 :
+| AtLeast_0 :
         forall t : RBT A, AtLeast P 0 t
-    | AtLeast_L :
+| AtLeast_L :
         forall x : A, P x -> AtLeast P 1 (L x)
-    | AtLeast_N :
+| AtLeast_N :
         forall (t1 t2 : RBT A) (n1 n2 : nat),
           AtLeast P n1 t1 -> AtLeast P n2 t2 ->
             AtLeast P (n1 + n2) (N t1 t2).
@@ -197,25 +197,25 @@ Proof.
 Qed.
 
 Inductive AtMost {A : Type} (P : A -> Prop) : nat -> RBT A -> Type :=
-    | AtMost_L :
+| AtMost_L :
         forall x : A, AtMost P 1 (L x)
-    | AtMost_L_not :
+| AtMost_L_not :
         forall x : A, ~ P x -> AtMost P 0 (L x)
-    | AtMost_N :
+| AtMost_N :
         forall (t1 t2 : RBT A) (n1 n2 : nat),
           AtMost P n1 t1 -> AtMost P n2 t2 ->
             AtMost P (n1 + n2) (N t1 t2).
 
 Fixpoint bind {A B : Type} (t : RBT A) (f : A -> RBT B) : RBT B :=
 match t with
-    | L x => f x
-    | N t1 t2 => N (bind t1 f) (bind t2 f)
+| L x => f x
+| N t1 t2 => N (bind t1 f) (bind t2 f)
 end.
 
 Fixpoint size {A : Type} (t : RBT A) : nat :=
 match t with
-    | L _ => 1
-    | N t1 t2 => size t1 + size t2
+| L _ => 1
+| N t1 t2 => size t1 + size t2
 end.
 
 (*
@@ -237,16 +237,16 @@ Definition Elem {A : Type} (x : A) (t : RBT A) : Type :=
   Exists (fun y => x = y) t.
 
 Inductive Index : Type :=
-    | here : Index
-    | left : Index -> Index
-    | right : Index -> Index.
+| here : Index
+| left : Index -> Index
+| right : Index -> Index.
 
 Fixpoint index {A : Type} (i : Index) (t : RBT A) : option A :=
 match i, t with
-    | here    , L x    => Some x
-    | left i' , N t' _ => index i' t'
-    | right i', N _ t' => index i' t'
-    | _       , _      => None
+| here    , L x    => Some x
+| left i' , N t' _ => index i' t'
+| right i', N _ t' => index i' t'
+| _       , _      => None
 end.
 
 Lemma Elem_index :
@@ -261,8 +261,8 @@ Qed.
 
 Fixpoint count {A : Type} (p : A -> bool) (t : RBT A) : nat :=
 match t with
-    | L x => if p x then 1 else 0
-    | N t1 t2 => count p t1 + count p t2
+| L x => if p x then 1 else 0
+| N t1 t2 => count p t1 + count p t2
 end.
 
 Definition Perm {A : Type} (t1 t2 : RBT A) : Prop :=

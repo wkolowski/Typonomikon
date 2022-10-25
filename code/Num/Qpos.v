@@ -106,7 +106,7 @@ Definition qpadd (q1 q2 : Q) : Q :=
 
 Definition qpmul (q1 q2 : Q) : Q :=
 match fromQ q1, fromQ q2 with
-    | (n1, m1), (n2, m2) => toQ (UnaryPos.mul n1 n2) (UnaryPos.mul m1 m2)
+| (n1, m1), (n2, m2) => toQ (UnaryPos.mul n1 n2) (UnaryPos.mul m1 m2)
 end.
 
 Fixpoint iter (n : nat) {A : Type} (f : A -> A) (x : A) : A :=
@@ -177,9 +177,9 @@ Lemma toQ_eq :
     toQ p q
       =
     match Nat.compare p q with
-        | Lt => D (toQ p (q - p))
-        | Eq => One
-        | Gt => N (toQ (p - q) q)
+    | Lt => D (toQ p (q - p))
+    | Eq => One
+    | Gt => N (toQ (p - q) q)
     end.
 Proof.
   intros p q.

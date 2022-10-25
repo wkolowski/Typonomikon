@@ -1014,8 +1014,8 @@ Qed.
 (* begin hide *)
 Fixpoint andn (n : nat) (P : Prop) : Prop :=
 match n with
-    | 0 => True
-    | S n' => P /\ andn n' P
+| 0 => True
+| S n' => P /\ andn n' P
 end.
 
 Lemma one_to_many :

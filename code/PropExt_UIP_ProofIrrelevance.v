@@ -38,18 +38,18 @@ Proof.
 Qed.
 
 Inductive Path {A : Type} (x : A) : A -> Type :=
-    | idp : Path x x.
+| idp : Path x x.
 
 Arguments idp {A x}.
 
 Definition eq_to_Path {A : Type} {x y : A} (e : x = y) : Path x y :=
 match e with
-    | eq_refl => idp
+| eq_refl => idp
 end.
 
 Definition Path_to_eq {A : Type} {x y : A} (p : Path x y) : x = y :=
 match p with
-    | idp => eq_refl
+| idp => eq_refl
 end.
 
 Lemma eq_to_Path_to_eq :

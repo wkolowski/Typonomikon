@@ -1,9 +1,9 @@
 Inductive BT (A : Type) : Type :=
-    | Empty    : BT A
-    | NonEmpty : NonEmptyBT A -> BT A
+| Empty    : BT A
+| NonEmpty : NonEmptyBT A -> BT A
 
 with NonEmptyBT (A : Type) : Type :=
-    | Nnode    : A -> BT A -> BT A -> NonEmptyBT A.
+| Nnode    : A -> BT A -> BT A -> NonEmptyBT A.
 
 Arguments Empty    {A}.
 Arguments NonEmpty {A} _.
@@ -15,19 +15,19 @@ From Typonomikon Require Import BT.
 
 Fixpoint f {A : Type} (t : BT A) : BTree A :=
 match t with
-    | Empty       => E
-    | NonEmpty t' => f' t'
+| Empty       => E
+| NonEmpty t' => f' t'
 end
 
 with f' {A : Type} (t : NonEmptyBT A) : BTree A :=
 match t with
-    | Nnode x l r => N x (f l) (f r)
+| Nnode x l r => N x (f l) (f r)
 end.
 
 Fixpoint g {A : Type} (t : BTree A) : BT A :=
 match t with
-    | E       => Empty
-    | N x l r => NonEmpty (Nnode x (g l) (g r))
+| E       => Empty
+| N x l r => NonEmpty (Nnode x (g l) (g r))
 end.
 
 Lemma fg :

@@ -9,9 +9,9 @@ Set Guard Checking.
 Inductive CI : Type := Ind | Coind.
 
 Inductive Base (C A : Type) : CI -> Type :=
-    | BCons    : forall {ci : CI}, A -> C -> Base C A ci
-    | BZipWith : forall {ci : CI}, (A -> A -> A) -> Base C A Ind -> Base C A Ind -> Base C A ci
-    | BInj     : C -> Base C A Ind.
+| BCons    : forall {ci : CI}, A -> C -> Base C A ci
+| BZipWith : forall {ci : CI}, (A -> A -> A) -> Base C A Ind -> Base C A Ind -> Base C A ci
+| BInj     : C -> Base C A Ind.
 
 Arguments BCons    {C A ci} _ _.
 Arguments BZipWith {C A ci} _ _ _.
@@ -45,22 +45,22 @@ Defined.
 (*
 Fixpoint whnf {A : Type} (z : ZipWith A) : A * ZipWith A :=
 match z with
-    | SConsX h t      => (h, t)
-    | SZipWithX f l r =>
+| SConsX h t      => (h, t)
+| SZipWithX f l r =>
         let '(h1, t1) := whnf l in
         let '(h2, t2) := whnf r in
           (f h1 h2, ZipWith' f t1 t2)
-    | Inj s           => whnf s
+| Inj s           => whnf s
 end.
 
 CoFixpoint toStream {A : Type} (z : ZipWith A) : Stream A :=
 match Out z with
-    | ConsXY h t      => scons h (toStream t)
-    | ZipWithXY f l r =>
+| ConsXY h t      => scons h (toStream t)
+| ZipWithXY f l r =>
         let (h1, t1) := whnf l in
         let (h2, t2) := whnf r in
           scons (f h1 h2) (toStream (ZipWith' f t1 t2))
-(*     | YXY s' => *)
+(* | YXY s' => *)
 (*         let (h, t) := whnf s' in scons h (toStream t) *)
 end.
 

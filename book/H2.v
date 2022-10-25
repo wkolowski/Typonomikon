@@ -124,8 +124,8 @@ Definition flip
 
 Fixpoint iter {A : Type} (n : nat) (f : A -> A) : A -> A :=
 match n with
-    | 0 => id
-    | S n' => f .> iter n' f
+| 0 => id
+| S n' => f .> iter n' f
 end.
 
 (** Ostatnim przydatnim kombinatorem jest [iter]. Służy on do składania
@@ -143,7 +143,7 @@ end.
 Print eq.
 (* ===>
     Inductive eq (A : Type) (x : A) : A -> Prop :=
-        | eq_refl : x = x
+    | eq_refl : x = x
 *)
 
 (** Podstawowym i domyślnym rodzajem równości w Coqu jest równość
@@ -329,10 +329,10 @@ Proof.
   exists (
     fun l : list nat =>
     match l with
-        | [] => []
-        | [_] => []
-        | [x; y] => [y; x]
-        | _ :: _ :: _ :: t => t
+    | [] => []
+    | [_] => []
+    | [x; y] => [y; x]
+    | _ :: _ :: _ :: t => t
     end).
   cbn. reflexivity.
 Qed.
@@ -356,8 +356,8 @@ Qed.
 (* begin hide *)
 Definition anticons {A : Type} (n : nat) (x : A) (l : list A) : list A :=
 match l with
-    | [] => replicate n x
-    | _ :: t => t
+| [] => replicate n x
+| _ :: t => t
 end.
 
 Lemma cons_has_lots_of_postinverses :
@@ -953,8 +953,8 @@ From Typonomikon Require Import D5.
 
 Fixpoint unary (n : nat) : list unit :=
 match n with
-    | 0 => []
-    | S n' => tt :: unary n'
+| 0 => []
+| S n' => tt :: unary n'
 end.
 
 (** Funkcja [unary] reprezentuje liczbę naturalną [n] za pomocą listy
@@ -1093,9 +1093,9 @@ Qed.
 
 Fixpoint weird {A : Type} (l : list A) : list A :=
 match l with
-    | [] => []
-    | [x] => [x]
-    | x :: y :: t => y :: x :: weird t
+| [] => []
+| [x] => [x]
+| x :: y :: t => y :: x :: weird t
 end.
 
 Lemma weird_inv :
@@ -1170,9 +1170,9 @@ Qed.
 (* begin hide *)
 Fixpoint count_inv (n : nat) : nat :=
 match n with
-    | 0 => 1
-    | 1 => 1
-    | S ((S n'') as n') => count_inv n' + (n - 1) * count_inv n''
+| 0 => 1
+| 1 => 1
+| S ((S n'') as n') => count_inv n' + (n - 1) * count_inv n''
 end.
 
 Compute count_inv 6.
@@ -1240,10 +1240,10 @@ Definition gen_involutive
 
 Fixpoint weirder {A : Type} (l : list A) : list A :=
 match l with
-    | [] => []
-    | [x] => [x]
-    | [x; y] => [x; y]
-    | x :: y :: z :: t => y :: z :: x :: weirder t
+| [] => []
+| [x] => [x]
+| [x; y] => [x; y]
+| x :: y :: z :: t => y :: z :: x :: weirder t
 end.
 
 Compute weirder [1; 2; 3; 4; 5].
@@ -1543,14 +1543,14 @@ Defined.
 
 Definition pred (n : nat) : option nat :=
 match n with
-    | 0 => None
-    | S n' => Some n'
+| 0 => None
+| S n' => Some n'
 end.
 
 Definition unpred (on : option nat) : nat :=
 match on with
-    | None => 0
-    | Some n => S n
+| None => 0
+| Some n => S n
 end.
 
 #[refine]
@@ -1569,14 +1569,14 @@ Defined.
 
 Definition uncons {A : Type} (l : list A) : option (A * list A) :=
 match l with
-    | [] => None
-    | h :: t => Some (h, t)
+| [] => None
+| h :: t => Some (h, t)
 end.
 
 Definition ununcons {A : Type} (x : option (A * list A)) : list A :=
 match x with
-    | None => []
-    | Some (h, t) => h :: t
+| None => []
+| Some (h, t) => h :: t
 end.
 
 #[refine]
@@ -1585,13 +1585,13 @@ Instance list_char (A : Type) : iso (list A) (option (A * list A)) :=
 {
     coel l :=
       match l with
-          | []     => None
-          | h :: t => Some (h, t)
+      | []     => None
+      | h :: t => Some (h, t)
       end;
     coer o :=
       match o with
-          | None        => []
-          | Some (h, t) => h :: t
+      | None        => []
+      | Some (h, t) => h :: t
       end;
 }.
 Proof.
@@ -1626,19 +1626,19 @@ Defined.
 
 Function div2 (n : nat) : nat + nat :=
 match n with
-    | 0 => inl 0
-    | 1 => inr 0
-    | S (S n') =>
+| 0 => inl 0
+| 1 => inr 0
+| S (S n') =>
         match div2 n' with
-            | inl m => inl (S m)
-            | inr m => inr (S m)
+        | inl m => inl (S m)
+        | inr m => inr (S m)
         end
 end.
 
 Definition undiv2 (x : nat + nat) : nat :=
 match x with
-    | inl n => 2 * n
-    | inr n => S (2 * n)
+| inl n => 2 * n
+| inr n => S (2 * n)
 end.
 
 #[refine]
@@ -1669,9 +1669,9 @@ Defined.
 
 Function goto' (x y n : nat) : nat * nat :=
 match n, x with
-    | 0   , _    => (x, y)
-    | S n', 0    => goto' (S y) 0 n'
-    | S n', S x' => goto' x' (S y) n'
+| 0   , _    => (x, y)
+| S n', 0    => goto' (S y) 0 n'
+| S n', S x' => goto' x' (S y) n'
 end.
 
 Definition goto (n : nat) : nat * nat :=
@@ -1740,13 +1740,13 @@ Qed.
 
 Fixpoint comefrom' (x y : nat) {struct x} : nat :=
 match x with
-    | 0 =>
+| 0 =>
         (fix aux (y : nat) : nat :=
           match y with
-              | 0    => 0
-              | S y' => 1 + y + aux y'
+          | 0    => 0
+          | S y' => 1 + y + aux y'
           end) y
-    | S x' => x + y + comefrom' x' y
+| S x' => x + y + comefrom' x' y
 end.
 
 Definition comefrom (xy : nat * nat) : nat :=
@@ -1859,8 +1859,8 @@ Definition vlist (A : Type) : Type :=
 
 Fixpoint vectorize' {A : Type} (l : list A) : vec A (length l) :=
 match l with
-    | nil => vnil
-    | cons h t => vcons h (vectorize' t)
+| nil => vnil
+| cons h t => vcons h (vectorize' t)
 end.
 
 Definition vectorize {A : Type} (l : list A) : vlist A :=
@@ -1868,8 +1868,8 @@ Definition vectorize {A : Type} (l : list A) : vlist A :=
 
 Fixpoint toList {A : Type} {n : nat} (v : vec A n) : list A :=
 match v with
-    | vnil => nil
-    | vcons h t => cons h (toList t)
+| vnil => nil
+| vcons h t => cons h (toList t)
 end.
 
 Definition listize {A : Type} (v : vlist A) : list A :=
@@ -1919,8 +1919,8 @@ Defined.
 
 Fixpoint nat_vec {n : nat} (arg : nat) : vec nat (S n) :=
 match n with
-    | 0 => arg :: vnil
-    | S n' =>
+| 0 => arg :: vnil
+| S n' =>
         let
           (arg1, arg2) := goto arg
         in
@@ -1929,11 +1929,11 @@ end.
 
 Fixpoint vec_nat {n : nat} (v : vec nat n) {struct v} : option nat :=
 match v with
-    | vnil => None
-    | vcons h t =>
+| vnil => None
+| vcons h t =>
         match vec_nat t with
-            | None => Some h
-            | Some r => Some (comefrom (h, r))
+        | None => Some h
+        | Some r => Some (comefrom (h, r))
         end
 end.
 
@@ -1994,8 +1994,8 @@ Defined.
 
 Definition fmap_option {A B : Type} (f : A -> B) (x : option A) : option B :=
 match x with
-    | None   => None
-    | Some a => Some (f a)
+| None   => None
+| Some a => Some (f a)
 end.
 
 #[refine]

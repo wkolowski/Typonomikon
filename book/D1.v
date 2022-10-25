@@ -63,8 +63,8 @@ TODO 5: można definiować bez podawania indeksów w przeciwdziedzinie).
     których wszystkie konstruktory są stałymi. *)
 
 Inductive bool : Set :=
-    | true : bool
-    | false : bool.
+| true : bool
+| false : bool.
 
 (** Definicja typu induktywnego ma następującą postać: najpierw występuje
     słowo kluczowe [Inductive], następnie nazwa typu, a po dwukropku sort
@@ -94,8 +94,8 @@ Inductive bool : Set :=
 
 Definition negb (b : bool) : bool :=
 match b with
-    | true => false
-    | false => true
+| true => false
+| false => true
 end.
 
 (** Definicja funkcji wygląda tak: najpierw mamy słowo kluczowe [Definition]
@@ -121,14 +121,14 @@ end.
 (* begin hide *)
 Definition andb (b1 b2 : bool) : bool :=
 match b1 with
-    | true => b2
-    | false => false
+| true => b2
+| false => false
 end.
 
 Definition orb (b1 b2 : bool) : bool :=
 match b1 with
-    | true => true
-    | false => b2
+| true => true
+| false => b2
 end.
 (* end hide *)
 
@@ -155,8 +155,8 @@ end.
 
 Eval cbv delta in negb true.
 (* ===> = (fun b : bool => match b with
-                   | true => false
-                   | false => true
+               | true => false
+               | false => true
                    end) true
         : bool *)
 
@@ -165,8 +165,8 @@ Eval cbv delta in negb true.
 
 Eval cbv delta beta in negb true.
 (* ===> = match true with
-          | true => false
-          | false => true
+      | true => false
+      | false => true
           end
         : bool *)
 
@@ -329,10 +329,10 @@ Module Directions.
 
 (* begin hide *)
 Inductive D : Type :=
-    | N : D
-    | S : D
-    | W : D
-    | E : D.
+| N : D
+| S : D
+| W : D
+| E : D.
 (* end hide *)
 
 (** Zdefiniuj funkcje [turnL] i [turnR], które reprezentują obrót o 90
@@ -351,18 +351,18 @@ Inductive D : Type :=
 (* begin hide *)
 Definition turnL (d : D) : D :=
 match d with
-    | N => W
-    | W => S
-    | S => E
-    | E => N
+| N => W
+| W => S
+| S => E
+| E => N
 end.
 
 Definition turnR (d : D) : D :=
 match d with
-    | N => E
-    | E => S
-    | S => W
-    | W => N
+| N => E
+| E => S
+| S => W
+| W => N
 end.
 
 Lemma turnL4 :
@@ -416,10 +416,10 @@ Qed.
 (* begin hide *)
 Definition opposite (d : D) : D :=
 match d with
-    | N => S
-    | S => N
-    | W => E
-    | E => W
+| N => S
+| S => N
+| W => E
+| E => W
 end.
 
 Lemma opposite_involutive :
@@ -461,11 +461,11 @@ Qed.
 (* begin hide *)
 Definition is_opposite (d1 d2 : D) : bool :=
 match d1, d2 with
-    | N, S => true
-    | S, N => true
-    | W, E => true
-    | E, W => true
-    | _, _ => false
+| N, S => true
+| S, N => true
+| W, E => true
+| E, W => true
+| _, _ => false
 end.
 
 Lemma is_opposite_turnL :
@@ -566,32 +566,32 @@ End Directions.
 
 (* begin hide *)
 Inductive Day : Type :=
-    | Mon : Day
-    | Tue : Day
-    | Wed : Day
-    | Thu : Day
-    | Fri : Day
-    | Sat : Day
-    | Sun : Day.
+| Mon : Day
+| Tue : Day
+| Wed : Day
+| Thu : Day
+| Fri : Day
+| Sat : Day
+| Sun : Day.
 
 Inductive Month : Type :=
-    | Jan : Month
-    | Feb : Month
-    | Mar : Month
-    | Apr : Month
-    | May : Month
-    | Jun : Month
-    | Jul : Month
-    | Aug : Month
-    | Sep : Month
-    | Oct : Month
-    | Nov : Month
-    | Dec : Month.
+| Jan : Month
+| Feb : Month
+| Mar : Month
+| Apr : Month
+| May : Month
+| Jun : Month
+| Jul : Month
+| Aug : Month
+| Sep : Month
+| Oct : Month
+| Nov : Month
+| Dec : Month.
 
 Inductive Color : Type :=
-    | R : Color
-    | G : Color
-    | B : Color.
+| R : Color
+| G : Color
+| B : Color.
 (* end hide *)
 
 (** Wymyśl do nich jakieś ciekawe funkcje i twierdzenia. *)
@@ -602,24 +602,24 @@ Inductive Color : Type :=
 
 Definition nextDay (d : Day) : Day :=
 match d with
-    | Mon => Tue
-    | Tue => Wed
-    | Wed => Thu
-    | Thu => Fri
-    | Fri => Sat
-    | Sat => Sun
-    | Sun => Mon
+| Mon => Tue
+| Tue => Wed
+| Wed => Thu
+| Thu => Fri
+| Fri => Sat
+| Sat => Sun
+| Sun => Mon
 end.
 
 Definition prevDay (d : Day) : Day :=
 match d with
-    | Mon => Sun
-    | Tue => Mon
-    | Wed => Tue
-    | Thu => Wed
-    | Fri => Thu
-    | Sat => Fri
-    | Sun => Sat
+| Mon => Sun
+| Tue => Mon
+| Wed => Tue
+| Thu => Wed
+| Fri => Thu
+| Sat => Fri
+| Sun => Sat
 end.
 (* end hide *)
 
@@ -641,8 +641,8 @@ Module NatDef.
     przestrzeni nazw (mechanizm sekcji w tym przypadku by nie pomógł). *)
 
 Inductive nat : Set :=
-    | O : nat
-    | S : nat -> nat.
+| O : nat
+| S : nat -> nat.
 
 Notation "0" := O.
 
@@ -677,8 +677,8 @@ Module NatOps.
 
 Fixpoint plus (n m : nat) : nat :=
 match n with
-    | 0 => m
-    | S n' => S (plus n' m)
+| 0 => m
+| S n' => S (plus n' m)
 end.
 
 (* begin hide *)
@@ -833,8 +833,8 @@ Qed.
 (* begin hide *)
 Fixpoint mult (n m : nat) : nat :=
 match n with
-    | 0 => 0
-    | S n' => plus m (mult n' m)
+| 0 => 0
+| S n' => plus m (mult n' m)
 end.
 (* end hide *)
 
@@ -897,8 +897,8 @@ Qed.
 
 Fixpoint plus' (n m : nat) : nat :=
 match m with
-    | 0 => n
-    | S m' => plus' (S n) m'
+| 0 => n
+| S m' => plus' (S n) m'
 end.
 
 Theorem plus'_n_0 :
@@ -958,8 +958,8 @@ End NatOps.
     polimorfizmem. *)
 
 Inductive option (A : Type) : Type :=
-    | Some : A -> option A
-    | None : option A.
+| Some : A -> option A
+| None : option A.
 
 (** [option] jest rodziną typów, zaś samo [option A] dla ustalonego [A]
     jest typem, który reprezentuje możliwość istnienia wartości typu [A]
@@ -993,8 +993,8 @@ Arguments None {A}.
 
 Definition isSome {A : Type} (a : option A) : Prop :=
 match a with
-    | Some _ => True
-    | None => False
+| Some _ => True
+| None => False
 end.
 
 (** Pomocnicza funkcja [isSome] ma za zadanie sprawdzić, którym
@@ -1110,8 +1110,8 @@ Proof.
   intro. change False with
   ((fun n : nat =>
   match n with
-      | 0 => False
-      | _ => True
+  | 0 => False
+  | _ => True
   end) 0).
   rewrite H. trivial.
 Qed.
@@ -1126,7 +1126,7 @@ Qed.
 Module rational.
 
 Inductive rational : Set :=
-    | mk_rational :
+| mk_rational :
       forall (sign : bool) (numerator denominator : nat),
         denominator <> 0 -> rational.
 
@@ -1186,8 +1186,8 @@ Proof.
   change False with
   ((fun q : rational =>
   match q with
-      | mk_rational true 1 2 _ => False
-      | _ => True
+  | mk_rational true 1 2 _ => False
+  | _ => True
   end) q_1_2).
   rewrite q_1_2_eq_q_2_4. cbn. trivial.
 Qed.
@@ -1205,8 +1205,8 @@ End rational.
 Module MyList.
 
 Inductive list (A : Type) : Type :=
-    | nil : list A
-    | cons : A -> list A -> list A.
+| nil : list A
+| cons : A -> list A -> list A.
 
 (** Lista przechowuje wartości pewnego ustalonego typu [A] (a więc nie
     można np. trzymać w jednej liście jednocześnie wartości typu [bool] i
@@ -1281,8 +1281,8 @@ Check [0; 1; 2; 3].
 
 Fixpoint app {A : Type} (l1 l2 : list A) : list A :=
 match l1 with
-    | [] => l2
-    | h :: t => h :: app t l2
+| [] => l2
+| h :: t => h :: app t l2
 end.
 
 Notation "l1 ++ l2" := (app l1 l2).
@@ -1369,8 +1369,8 @@ Qed.
 (* begin hide *)
 Fixpoint length {A : Type} (l : list A) : nat :=
 match l with
-    | [] => 0
-    | h :: t => S (length t)
+| [] => 0
+| h :: t => S (length t)
 end.
 (* end hide *)
 
@@ -1479,7 +1479,7 @@ Qed.
 (** *** Singleton *)
 
 Inductive unit : Set :=
-    | tt : unit.
+| tt : unit.
 
 (** [unit] jest typem, który ma tylko jeden term, zwany [tt] (nazwa ta
     jest wzięta z sufitu). *)
@@ -1510,7 +1510,7 @@ Qed.
 (** *** Produkt *)
 
 Inductive prod (A B : Type) : Type :=
-    | pair : A -> B -> prod A B.
+| pair : A -> B -> prod A B.
 
 Arguments pair {A B} _ _.
 
@@ -1529,12 +1529,12 @@ Arguments pair {A B} _ _.
 (* begin hide *)
 Definition fst {A B : Type} (p : prod A B) : A :=
 match p with
-    | pair a b => a
+| pair a b => a
 end.
 
 Definition snd {A B : Type} (p : prod A B) : B :=
 match p with
-    | pair a b => b
+| pair a b => b
 end.
 (* end hide *)
 
@@ -1550,8 +1550,8 @@ Qed.
 (** *** Suma *)
 
 Inductive sum (A B : Type) : Type :=
-    | inl : A -> sum A B
-    | inr : B -> sum A B.
+| inl : A -> sum A B
+| inr : B -> sum A B.
 
 Arguments inl {A B} _.
 Arguments inr {A B} _.
@@ -1591,7 +1591,7 @@ End ImportantTypes.
     nie mają konstruktorów? *)
 
 Inductive Empty : Type :=
-    | c : Empty_set -> Empty.
+| c : Empty_set -> Empty.
 
 Theorem Empty_is_empty :
   forall empty : Empty, False.
@@ -1613,7 +1613,7 @@ Qed.
     wątpliwości. *)
 
 Inductive InfiniteList (A : Type) : Type :=
-    | InfiniteCons : A -> InfiniteList A -> InfiniteList A.
+| InfiniteCons : A -> InfiniteList A -> InfiniteList A.
 
 (** Czy typ [InfiniteList A] jest niepusty? Skorzystajmy z naszego kryterium:
     ma on jeden konstruktor biorący dwa argumenty, jeden typu [A] oraz drugi
@@ -1709,10 +1709,10 @@ Abort.
 Inductive false_prop : Prop := .
 
 Inductive true_prop : Prop :=
-    | obvious_proof : true_prop
-    | tricky_proof : true_prop
-    | weird_proof : true_prop
-    | magical_proof : true_prop.
+| obvious_proof : true_prop
+| tricky_proof : true_prop
+| weird_proof : true_prop
+| magical_proof : true_prop.
 
 (** Induktywne definicje zdań nie są zbyt ciekawe, gdyż pozwalają definiować
     jedynie zdania fałszywe (zero konstruktorów) lub prawdziwe (jeden lub
@@ -1749,8 +1749,8 @@ Qed.
     użyteczne, gdyż dla jednych termów mogą być prawdziwe, a dla innych nie. *)
 
 Inductive even : nat -> Prop :=
-    | even0 : even 0
-    | evenSS : forall n : nat, even n -> even (S (S n)).
+| even0 : even 0
+| evenSS : forall n : nat, even n -> even (S (S n)).
 
 (** Predykat [even] ma oznaczać właściwość "bycia liczbą parzystą". Jego
     definicję można zinterpretować tak:
@@ -1873,8 +1873,8 @@ Qed.
 
 (* begin hide *)
 Inductive odd : nat -> Prop :=
-    | odd1 : odd 1
-    | oddSS : forall n : nat, odd n -> odd (S (S n)).
+| odd1 : odd 1
+| oddSS : forall n : nat, odd n -> odd (S (S n)).
 (* end hide *)
 
 Theorem one_odd : odd 1.
@@ -2068,7 +2068,7 @@ Inductive False : Prop := .
     temu mając dowód [False] możemy udowodnić cokolwiek. *)
 
 Inductive True : Prop :=
-    | I : True.
+| I : True.
 
 (** [True] jest odpowiednikiem [unit], od którego różni się tym, że żyje
     w [Prop], a nie w [Set]. Ma dokładnie jeden dowód, który w Coqu
@@ -2077,7 +2077,7 @@ Inductive True : Prop :=
 (** *** Koniunkcja i dysjunkcja *)
 
 Inductive and (P Q : Prop) : Prop :=
-    | conj : P -> Q -> and P Q.
+| conj : P -> Q -> and P Q.
 
 (** Dowód koniunkcji zdań [P] i [Q] to para dowodów: pierwszy element
     pary jest dowodem [P], zaś drugi dowodem [Q]. Koniunkcja jest
@@ -2085,8 +2085,8 @@ Inductive and (P Q : Prop) : Prop :=
     a nie w [Type]. *)
 
 Inductive or (P Q : Prop) : Prop :=
-    | or_introl : P -> or P Q
-    | or_intror : Q -> or P Q.
+| or_introl : P -> or P Q
+| or_intror : Q -> or P Q.
 
 (** Dowód dysjunkcji zdań [P] i [Q] to dowód [P] albo dowód [Q] wraz ze
     wskazaniem, którego zdania jest to dowód. Dysjunkcja jest odpowiednikiem
@@ -2106,7 +2106,7 @@ Module MyEq.
     które możemy zdefiniować w Coqu. *)
 
 Inductive eq {A : Type} (x : A) : A -> Prop :=
-    | eq_refl : eq x x.
+| eq_refl : eq x x.
 
 (** Spróbujmy przeczytać tę definicję: dla danego typu [A] oraz termu
     [x] tego typu, [eq x] jest predykatem, który ma jeden konstruktor
@@ -2254,11 +2254,11 @@ End MyEq.
 Module MutInd.
 
 Inductive even : nat -> Prop :=
-    | even0 : even 0
-    | evenS : forall n : nat, odd n -> even (S n)
+| even0 : even 0
+| evenS : forall n : nat, odd n -> even (S n)
 
 with odd : nat -> Prop :=
-    | oddS : forall n : nat, even n -> odd (S n).
+| oddS : forall n : nat, even n -> odd (S n).
 
 (** Aby zrozumieć tę definicję, zestawmy ją z naszą definicją parzystości
     z sekcji _Induktywne predykaty_.
@@ -2514,8 +2514,8 @@ End MutInd.
 
 Print option.
 (* ===> Inductive option (A : Type) : Type :=
-            | Some : A -> option A
-            | None : option A *)
+        | Some : A -> option A
+        | None : option A *)
 
 Check Some.
 (* ===> Some : forall A : Type, A -> option A *)
@@ -2542,8 +2542,8 @@ Check @None.
       jest błędem *)
 
 Fail Inductive option' (A : Type) : Type :=
-    | Some' : A -> option' A
-    | None' : forall B : Type, option' B.
+| Some' : A -> option' A
+| None' : forall B : Type, option' B.
 
 (** Próba zdefiniowania typu [option'] kończy się następującym komunikatem
     o błędzie: *)
@@ -2557,8 +2557,8 @@ Fail Inductive option' (A : Type) : Type :=
     [Type -> Type]. *)
 
 Inductive option' : Type -> Type :=
-    | Some' : forall A : Type, A -> option' A
-    | None' : forall B : Type, option' B.
+| Some' : forall A : Type, A -> option' A
+| None' : forall B : Type, option' B.
 
 (** Taki zabieg daje nam większą swobodę: w każdym konstruktorze
     z osobna musimy explicité umieścić kwantyfikację po argumencie
@@ -2606,8 +2606,8 @@ Check option'_ind.
     Klasycznym przykładem jest rodzina typów [vec]. *)
 
 Inductive vec (A : Type) : nat -> Type :=
-    | vnil : vec A 0
-    | vcons : forall n : nat, A -> vec A n -> vec A (S n).
+| vnil : vec A 0
+| vcons : forall n : nat, A -> vec A n -> vec A (S n).
 
 (** Konstruktor [vnil] reprezentuje listę pustą, której długość wynosi
     rzecz jasna [0], zaś [vcons] reprezentuje listę składająca się z
@@ -2642,23 +2642,23 @@ Inductive vec (A : Type) : nat -> Type :=
 
 (* begin hide *)
 Inductive BTree (A : Type) : Type :=
-    | BT_Empty : BTree A
-    | BT_Node : A -> BTree A -> BTree A -> BTree A.
+| BT_Empty : BTree A
+| BT_Node : A -> BTree A -> BTree A -> BTree A.
 
 Inductive EBTree (A : Type) : nat -> Type :=
-    | EBT_Empty : EBTree A 0
-    | EBT_Node : forall n m : nat,
+| EBT_Empty : EBTree A 0
+| EBT_Node : forall n m : nat,
         A -> EBTree A n -> EBTree A m -> EBTree A (max n m).
 
 Inductive HBTree : Type :=
-    | HBT_Empty : HBTree
-    | HBT_Node : forall A : Type, A -> HBTree -> HBTree -> HBTree.
+| HBT_Empty : HBTree
+| HBT_Node : forall A : Type, A -> HBTree -> HBTree -> HBTree.
 
 Check HBT_Node _ 42 (HBT_Node _ true HBT_Empty HBT_Empty) HBT_Empty.
 
 Inductive EHBTree : nat -> Type :=
-    | EHBT_Empty : EHBTree 0
-    | EHBT_Node : forall (A : Type) (n m : nat),
+| EHBT_Empty : EHBTree 0
+| EHBT_Node : forall (A : Type) (n m : nat),
         A -> EHBTree n -> EHBTree m -> EHBTree (max n m).
 (* end hide *)
 
@@ -2673,11 +2673,11 @@ Module MutualIndution_vs_InductiveFamilies.
     zasymulować za pomocą indeksowanych rodzin typów. *)
 
 Inductive even : nat -> Prop :=
-    | even0 : even 0
-    | evenS : forall n : nat, odd n -> even (S n)
+| even0 : even 0
+| evenS : forall n : nat, odd n -> even (S n)
 
 with odd : nat -> Prop :=
-    | oddS : forall n : nat, even n -> odd (S n).
+| oddS : forall n : nat, even n -> odd (S n).
 
 (** Rzućmy jeszcze raz okiem na znaną nam już definicję predykatów [even]
     i [odd] przez indukcję wzajemną. Nie dzieje się tu nic niezwykłego, a
@@ -2685,10 +2685,10 @@ with odd : nat -> Prop :=
     [even] i [odd] to dwa byty - nie trzy, nie pięć, ale dwa. *)
 
 Inductive even_odd : bool -> nat -> Prop :=
-    | even0' : even_odd true 0
-    | evenS' :
+| even0' : even_odd true 0
+| evenS' :
         forall n : nat, even_odd false n -> even_odd true (S n)
-    | oddS' :
+| oddS' :
         forall n : nat, even_odd true n -> even_odd false (S n).
 
 Definition even' := even_odd true.
@@ -2754,7 +2754,7 @@ End MutualIndution_vs_InductiveFamilies.
 Module sigma.
 
 Inductive sigT (A : Type) (P : A -> Type) : Type :=
-    | existT : forall x : A, P x -> sigT A P.
+| existT : forall x : A, P x -> sigT A P.
 
 (** Typ [sigT] reprezentuje sumę zależną, której elementami są pary zależne.
     Pierwszym elementem pary jest [x], który jest typu [A], zaś drugim
@@ -2788,7 +2788,7 @@ Inductive sigT (A : Type) (P : A -> Type) : Type :=
     gdyż najbardziej przydatną postacią sumy zależnej jest typ [sig]: *)
 
 Inductive sig (A : Type) (P : A -> Prop) : Type :=
-    | exist : forall x : A, P x -> sig A P.
+| exist : forall x : A, P x -> sig A P.
 
 Arguments exist {A P} _ _.
 
@@ -2860,7 +2860,7 @@ End sigma.
 Module ex.
 
 Inductive ex (A : Type) (P : A -> Prop) : Prop :=
-    | ex_intro : forall x : A, P x -> ex A P.
+| ex_intro : forall x : A, P x -> ex A P.
 
 (** [ex] to kolejne wcielenie sumy zależnej. Porównaj dokładnie tę
     definicję z definicją [sigT] oraz [sig]. [ex] jest niemal identyczne
@@ -2913,9 +2913,9 @@ Unset Elimination Schemes.
 Module enum.
 
 Inductive I : Type :=
-    | c0 : I
-    | c1 : I
-    | c2 : I.
+| c0 : I
+| c1 : I
+| c2 : I.
 
 (** Najprymitywniejszymi z typów induktywnych są enumeracje. Definiując je,
     wymieniamy po prostu wszystkie ich elementy. *)
@@ -2930,9 +2930,9 @@ Definition I_case_nondep_type : Type :=
 Definition I_case_nondep : I_case_nondep_type :=
   fun (P : Type) (c0' c1' c2' : P) (i : I) =>
   match i with
-      | c0 => c0'
-      | c1 => c1'
-      | c2 => c2'
+  | c0 => c0'
+  | c1 => c1'
+  | c2 => c2'
   end.
 
 (** Regułę zdefiniować możemy za pomocą dopasowania do wzorca. *)
@@ -2947,9 +2947,9 @@ Definition I_case_dep_type : Type :=
 Definition I_case_dep : I_case_dep_type :=
   fun (P : I -> Type) (c0' : P c0) (c1' : P c1) (c2' : P c2) (i : I) =>
   match i with
-      | c0 => c0'
-      | c1 => c1'
-      | c2 => c2'
+  | c0 => c0'
+  | c1 => c1'
+  | c2 => c2'
   end.
 
 (** Definicja, jak widać, jest taka sama jak poprzednio, więc obliczeniowo
@@ -2963,8 +2963,8 @@ End enum.
 Module rec.
 
 Inductive I : Type :=
-    | x : I -> I
-    | D : I -> I.
+| x : I -> I
+| D : I -> I.
 
 (** Typy induktywne stają się naprawdę induktywne, gdy konstruktory mogą
     brać argumenty typu, który właśnie definiujemy. Dzięki temu możemy
@@ -2982,8 +2982,8 @@ Definition I_rec_type : Type :=
 
 Fixpoint I_rec (P : Type) (x' : P -> P) (D' : P -> P) (i : I) : P :=
 match i with
-    | x i' => x' (I_rec P x' D' i')
-    | D i' => D' (I_rec P x' D' i')
+| x i' => x' (I_rec P x' D' i')
+| D i' => D' (I_rec P x' D' i')
 end.
 
 (** Definicja rekursora jest prosta. Jeżeli wyobrazimy sobie [i : I] jako
@@ -3004,8 +3004,8 @@ Fixpoint I_ind (P : I -> Type)
   (x' : forall i : I, P i -> P (x i)) (D' : forall i : I, P i -> P (D i))
   (i : I) : P i :=
 match i with
-    | x i' => x' i' (I_ind P x' D' i')
-    | D i' => D' i' (I_ind P x' D' i')
+| x i' => x' i' (I_ind P x' D' i')
+| D i' => D' i' (I_ind P x' D' i')
 end.
 
 (** Podobnie jak poprzednio, implementacja reguły indukcji jest identyczna
@@ -3030,9 +3030,9 @@ End rec.
 Module param.
 
 Inductive I (A B : Type) : Type :=
-    | c0 : A -> I A B
-    | c1 : B -> I A B
-    | c2 : A -> B -> I A B.
+| c0 : A -> I A B
+| c1 : B -> I A B
+| c2 : A -> B -> I A B.
 
 Arguments c0 {A B} _.
 Arguments c1 {A B} _.
@@ -3056,9 +3056,9 @@ Definition I_case_nondep
   (A B P : Type) (c0' : A -> P) (c1' : B -> P) (c2' : A -> B -> P)
   (i : I A B) : P :=
 match i with
-    | c0 a => c0' a
-    | c1 b => c1' b
-    | c2 a b => c2' a b
+| c0 a => c0' a
+| c1 b => c1' b
+| c2 a b => c2' a b
 end.
 
 (** Implementacja jest banalna. *)
@@ -3079,9 +3079,9 @@ Definition I_case_dep
   (c2' : forall (a : A) (b : B), P (c2 a b))
   (i : I A B) : P i :=
 match i with
-    | c0 a => c0' a
-    | c1 b => c1' b
-    | c2 a b => c2' a b
+| c0 a => c0' a
+| c1 b => c1' b
+| c2 a b => c2' a b
 end.
 
 End param.
@@ -3091,10 +3091,10 @@ End param.
 Module mutual.
 
 Inductive Smok : Type :=
-    | Wysuszony : Zmok -> Smok
+| Wysuszony : Zmok -> Smok
 
 with Zmok : Type :=
-    | Zmoczony : Smok -> Zmok.
+| Zmoczony : Smok -> Zmok.
 
 (** Indukcja wzajemna pozwala definiować na raz wiele typów, które mogą
     odwoływać się do siebie nawzajem. Cytując klasyków: smok to wysuszony
@@ -3113,13 +3113,13 @@ Definition Zmok_case_nondep_type : Type :=
 Definition Smok_case_nondep
   (S : Type) (Wy : Zmok -> S) (smok : Smok) : S :=
 match smok with
-    | Wysuszony zmok => Wy zmok
+| Wysuszony zmok => Wy zmok
 end.
 
 Definition Zmok_case_nondep
   (Z : Type) (Zm : Smok -> Z) (zmok : Zmok) : Z :=
 match zmok with
-    | Zmoczony smok => Zm smok
+| Zmoczony smok => Zm smok
 end.
 
 (** Implementacja jest banalna. *)
@@ -3139,13 +3139,13 @@ Definition Zmok_rec_type : Type :=
 Fixpoint Smok_rec
   (S Z : Type) (Wy : Z -> S) (Zm : S -> Z) (smok : Smok) : S :=
 match smok with
-    | Wysuszony zmok => Wy (Zmok_rec S Z Wy Zm zmok)
+| Wysuszony zmok => Wy (Zmok_rec S Z Wy Zm zmok)
 end
 
 with Zmok_rec
   (S Z : Type) (Wy : Z -> S) (Zm : S -> Z) (zmok : Zmok) : Z :=
 match zmok with
-    | Zmoczony smok => Zm (Smok_rec S Z Wy Zm smok)
+| Zmoczony smok => Zm (Smok_rec S Z Wy Zm smok)
 end.
 
 (** Implementacja wymaga rekursji wzajemnej, ale poza nie jest jakoś
@@ -3169,7 +3169,7 @@ Fixpoint Smok_ind
   (Zm : forall smok : Smok, S smok -> Z (Zmoczony smok))
   (smok : Smok) : S smok :=
 match smok with
-    | Wysuszony zmok => Wy zmok (Zmok_ind S Z Wy Zm zmok)
+| Wysuszony zmok => Wy zmok (Zmok_ind S Z Wy Zm zmok)
 end
 
 with Zmok_ind
@@ -3178,7 +3178,7 @@ with Zmok_ind
   (Zm : forall smok : Smok, S smok -> Z (Zmoczony smok))
   (zmok : Zmok) : Z zmok :=
 match zmok with
-    | Zmoczony smok => Zm smok (Smok_ind S Z Wy Zm smok)
+| Zmoczony smok => Zm smok (Smok_ind S Z Wy Zm smok)
 end.
 
 (** Mając rekursor, napisanie typu reguły indukcji jest banalne, podobnie
@@ -3191,8 +3191,8 @@ End mutual.
 Module index.
 
 Inductive I : nat -> Type :=
-    | c0 : bool -> I 0
-    | c42 : nat -> I 42.
+| c0 : bool -> I 0
+| c42 : nat -> I 42.
 
 (** Ostatnią poznaną przez nas innowacją są typy indeksowane. Tutaj również
     definiujemy za jednym zamachem (ekhem...) dużo typów, ale nie są one
@@ -3208,8 +3208,8 @@ Definition I_case_very_nondep
   (P : Type) (c0' : bool -> P) (c42' : nat -> P)
   {n : nat} (i : I n) : P :=
 match i with
-    | c0 b => c0' b
-    | c42 n => c42' n
+| c0 b => c0' b
+| c42 n => c42' n
 end.
 
 (** Możliwych reguł analizy przypadków mamy tutaj trochę więcej niż w
@@ -3224,8 +3224,8 @@ Definition I_case_nondep
   (P : nat -> Type) (c0' : bool -> P 0) (c42' : nat -> P 42)
   {n : nat} (i : I n) : P n :=
 match i with
-    | c0 b => c0' b
-    | c42 n => c42' n
+| c0 b => c0' b
+| c42 n => c42' n
 end.
 
 (** ... a w powyższej tak. Jako, że indeksy zmieniają się pomiędzy
@@ -3244,8 +3244,8 @@ Definition I_case_dep
   (c42' : forall n : nat, P 42 (c42 n))
   (n : nat) (i : I n) : P n i :=
 match i with
-    | c0 b => c0' b
-    | c42 n => c42' n
+| c0 b => c0' b
+| c42 n => c42' n
 end.
 
 (** Ogólnie reguła jest taka: reguła niezależna (pierwsza) nie zależy od
@@ -3292,12 +3292,12 @@ Module ind_ind.
 Fail
 
 Inductive slist {A : Type} (R : A -> A -> Prop) : Type :=
-    | snil : slist R
-    | scons : forall (h : A) (t : slist A), ok h t -> slist A
+| snil : slist R
+| scons : forall (h : A) (t : slist A), ok h t -> slist A
 
 with ok {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
-    | ok_snil : forall x : A, ok x snil
-    | ok_scons :
+| ok_snil : forall x : A, ok x snil
+| ok_scons :
         forall (h : A) (t : slist A) (p : ok h t) (x : A),
           R x h -> ok x (scons h t p).
 
@@ -3582,9 +3582,9 @@ Qed.
 (* begin hide *)
 
 Inductive sorted {A : Type} (R : A -> A -> Prop) : list A -> Prop :=
-    | sorted_nil : sorted R []
-    | sorted_singl : forall x : A, sorted R [x]
-    | sorted_cons :
+| sorted_nil : sorted R []
+| sorted_singl : forall x : A, sorted R [x]
+| sorted_cons :
         forall (x y : A) (t : list A),
           R x y -> sorted R (y :: t) -> sorted R (x :: y :: t).
 
@@ -3741,12 +3741,12 @@ Module BHeap.
 Fail
 
 Inductive BHeap {A : Type} (R : A -> A -> Prop) : Type :=
-    | E : BHeap R
-    | N : forall (v : A) (l r : BHeap R), ok v l -> ok v r -> BHeap R
+| E : BHeap R
+| N : forall (v : A) (l r : BHeap R), ok v l -> ok v r -> BHeap R
 
 with ok {A : Type} {R : A -> A -> Prop} : A -> BHeap R -> Prop :=
-    | ok_E : forall v : A, ok v E
-    | ok_N :
+| ok_E : forall v : A, ok v E
+| ok_N :
         forall (v x : A) (l r : BHeap A) (pl : ok x l) (pr : ok x r),
           R x v -> ok v (N x l r pl pr).
 
@@ -3853,36 +3853,36 @@ Module BST.
 Fail
 
 Inductive BST {A : Type} (R : A -> A -> Prop) : Type :=
-    | E : BST R
-    | N : forall (v : A) (l r : BST R), ok v l r -> BST R
+| E : BST R
+| N : forall (v : A) (l r : BST R), ok v l r -> BST R
 
 with ok {A : Type} {R : A -> A -> Prop} : A -> BST R -> BST R -> Prop :=
-    | ok_EE : forall v : A, ok v E E
-    | ok_EN :
+| ok_EE : forall v : A, ok v E E
+| ok_EN :
         forall (v vl : A) (ll lr : BST R),
           R vl v -> ok v (N vl ll lr) E
-    | ok_NE :
+| ok_NE :
         forall (v vr : A) (rl rr : BST R),
           R v vr -> ok v E (N vr rl rr)
-    | ok_NN :
+| ok_NN :
         forall (v vl vr : A) (ll lr rl rr : BST R),
           R vl v -> R v vr -> ok v (N vl ll lr) (N vr rl rr).
 
 Fail
 
 Inductive BST {A : Type} (R : A -> A -> Prop) : Type :=
-    | E : BST R
-    | N : forall (v : A) (l r : BST R), okl v l -> okr v r -> BST R
+| E : BST R
+| N : forall (v : A) (l r : BST R), okl v l -> okr v r -> BST R
 
 with okl {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
-    | okl_E : forall v : A, okl v E
-    | okl_N :
+| okl_E : forall v : A, okl v E
+| okl_N :
         forall (v vl : A) (ll lr : BST R),
           R vl v -> okl v (N vl ll lr)
 
 with okr {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
-    | okr_E : forall v : V, okr v E
-    | okr_N :
+| okr_E : forall v : V, okr v E
+| okr_N :
         forall (v vr : A) (rl rr : BST R),
           R v vr -> okr v (N vr rl rr).
 
@@ -3892,13 +3892,13 @@ Definition inv {A : Type} (R : A -> A -> Prop) : A -> A -> Prop :=
 Fail
 
 Inductive BST {A : Type} (R : A -> A -> Prop) : Type :=
-    | E : BST R
-    | N : forall (v : A) (l r : BST R),
+| E : BST R
+| N : forall (v : A) (l r : BST R),
             @ok A R v l -> @ok A (inv R) v r -> BST R
 
 with ok {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
-    | ok_E : forall v : A, ok v E
-    | ok_N :
+| ok_E : forall v : A, ok v E
+| ok_N :
         forall (v x : A) (l r : BST R),
           R x v -> ok v (N x l r).
 
@@ -3931,8 +3931,8 @@ Module ind_rec.
 
 (*
 Inductive slist {A : Type} (R : A -> A -> bool) : Type :=
-    | snil : slist R
-    | scons :
+| snil : slist R
+| scons :
         forall (h : A) (t : slist R), ok h t = true -> slist R
 
 with
@@ -3940,8 +3940,8 @@ with
 Definition ok
   {A : Type} {R : A -> A -> bool} (x : A) (t : slist R) : bool :=
 match t with
-    | snil => true
-    | scons h _ _ => R x h
+| snil => true
+| scons h _ _ => R x h
 end.
 *)
 
@@ -4046,9 +4046,9 @@ Axiom
 
 Fixpoint leb (n m : nat) : bool :=
 match n, m with
-    | 0, _ => true
-    | _, 0 => false
-    | S n', S m' => leb n' m'
+| 0, _ => true
+| _, 0 => false
+| S n', S m' => leb n' m'
 end.
 
 Definition slist_01 : slist leb :=
@@ -4171,15 +4171,15 @@ Module BHeap'.
 
 (*
 Inductive BHeap {A : Type} (R : A -> A -> bool) : Type :=
-    | E : BHeap R
-    | N :
+| E : BHeap R
+| N :
       forall (v : A) (l r : BHeap R),
         ok R v l = true -> ok R v r = true -> BHeap R
 
 with ok {A : Type} (R : A -> A -> bool) (x : A) (h : BHeap R) : bool :=
 match h with
-    | E => true
-    | N v l r _ _ => R x v
+| E => true
+| N v l r _ _ => R x v
 end.
 *)
 
@@ -4380,8 +4380,8 @@ End BST'.
     opisać za pomocą następującego typu: *)
 
 Inductive FlattenType : Type :=
-    | Nat : FlattenType
-    | List : FlattenType -> FlattenType.
+| Nat : FlattenType
+| List : FlattenType -> FlattenType.
 
 (** Żeby było śmieszniej, [FlattenType] to dokładnie to samo co [nat], ale
     przemilczmy to. Co dalej? Możemy myśleć o elementach [FlattenType] jak
@@ -4390,8 +4390,8 @@ Inductive FlattenType : Type :=
 
 Fixpoint decode (t : FlattenType) : Type :=
 match t with
-    | Nat => nat
-    | List t' => list (decode t')
+| Nat => nat
+| List t' => list (decode t')
 end.
 
 (** [decode] każdemu kodowi przyporządkowuje odpowiadający mu typ. O
@@ -4558,7 +4558,7 @@ end.
     i jak takie typy rozpoznawać zobaczymy później): *)
 
 Fail Inductive wut (A : Type) : Type :=
-    | C : (wut A -> A) -> wut A.
+| C : (wut A -> A) -> wut A.
 
 (* ===> The command has indeed failed with message:
         Non strictly positive occurrence of "wut"
@@ -4587,7 +4587,7 @@ Module wut.
 
 Unset Positivity Checking.
 Inductive wut (A : Type) : Type :=
-    | C : (wut A -> A) -> wut A.
+| C : (wut A -> A) -> wut A.
 Set Positivity Checking.
 
 (** Na szczęście jest sposób na to, byśmy mogli pobawić się nie-ściśle-pozytywnymi
@@ -4614,7 +4614,7 @@ Set Positivity Checking.
 Definition loop (A : Type) : A :=
   let f (w : wut A) : A :=
     match w with
-        | C _ g => g w
+    | C _ g => g w
     end
   in f (C _ f).
 
@@ -4724,7 +4724,7 @@ Abort.
 (* begin hide *)
 Definition f (w : wut.wut nat) : nat :=
   S match w with
-        | wut.C _ g => g w
+    | wut.C _ g => g w
     end.
 
 Definition omega : nat :=
@@ -4856,8 +4856,8 @@ Definition surjective {A B : Type} (f : A -> B) : Prop :=
 
 Definition isZero (n : nat) : bool :=
 match n with
-    | 0 => true
-    | _ => false
+| 0 => true
+| _ => false
 end.
 
 Lemma surjective_isZero : surjective isZero.
@@ -5069,8 +5069,8 @@ Proof.
   intro y.
   pose (f := fun a : A =>
     match K A a x with
-        | left _ => y
-        | _ => x
+    | left _ => y
+    | _ => x
     end).
   specialize (H f).
   destruct H as [z H].
@@ -5098,7 +5098,7 @@ Module Example1.
 
 Unset Positivity Checking.
 Inductive wut (A : Type) : Type :=
-    | C : (wut A -> A) -> wut A.
+| C : (wut A -> A) -> wut A.
 Set Positivity Checking.
 
 Arguments C {A} _.
@@ -5113,7 +5113,7 @@ Arguments C {A} _.
 
 Definition extract {A : Type} (w : wut A) : wut A -> A :=
 match w with
-    | C f => f
+| C f => f
 end.
 
 (** Powód tej sprzeczności jest dość prozaiczny: za pomocą konstruktora [C]
@@ -5166,15 +5166,15 @@ Module Exercise1.
 
 Unset Positivity Checking.
 Inductive wut : Type :=
-    | C0 : (wut -> bool) -> wut
-    | C1 : (wut -> nat) -> wut.
+| C0 : (wut -> bool) -> wut
+| C1 : (wut -> nat) -> wut.
 Set Positivity Checking.
 
 (* begin hide *)
 Definition extract (w : wut) : wut -> bool :=
 match w with
-    | C0 f => f
-    | C1 _ => fun _ => true
+| C0 f => f
+| C1 _ => fun _ => true
 end.
 
 Lemma surjective_extract :
@@ -5208,15 +5208,15 @@ Module Exercise2.
 
 Unset Positivity Checking.
 Inductive wut : Type :=
-    | C0 : (wut -> wut) -> wut
-    | C1 : nat -> wut.
+| C0 : (wut -> wut) -> wut
+| C1 : nat -> wut.
 Set Positivity Checking.
 
 (* begin hide *)
 Definition extract (w : wut) : wut -> wut :=
 match w with
-    | C0 f => f
-    | C1 _ => id
+| C0 f => f
+| C1 _ => id
 end.
 
 Lemma surjective_extract :
@@ -5229,8 +5229,8 @@ Qed.
 
 Definition modify (w : wut) : wut :=
 match w with
-    | C0 _ => C1 0
-    | C1 _ => C0 id
+| C0 _ => C1 0
+| C1 _ => C0 id
 end.
 
 Lemma modify_neq :
@@ -5268,9 +5268,9 @@ Module Exercise3.
 
 Unset Positivity Checking.
 Inductive Term (V : Type) : Type :=
-    | Var : V -> Term V
-    | Lam : (Term V -> Term V) -> Term V
-    | App : Term V -> Term V -> Term V.
+| Var : V -> Term V
+| Lam : (Term V -> Term V) -> Term V
+| App : Term V -> Term V -> Term V.
 Set Positivity Checking.
 
 Arguments Var {V} _.
@@ -5280,9 +5280,9 @@ Arguments App {V} _ _.
 (* begin hide *)
 Definition extract {V : Type} (t : Term V) : Term V -> Term V :=
 match t with
-    | Var v => id
-    | Lam f => f
-    | App _ _ => id
+| Var v => id
+| Lam f => f
+| App _ _ => id
 end.
 
 Lemma surjective_extract :
@@ -5295,9 +5295,9 @@ Qed.
 
 Definition modify {V : Type} (t : Term V) : Term V :=
 match t with
-    | Var _ => Lam id
-    | Lam f => App (Lam f) (Lam f)
-    | App _ _ => Lam id
+| Var _ => Lam id
+| Lam f => App (Lam f) (Lam f)
+| App _ _ => Lam id
 end.
 
 Lemma modify_neq :
@@ -5329,7 +5329,7 @@ Module Exercise4.
 
 Unset Positivity Checking.
 Inductive wut : Type :=
-    | C : (wut -> wut) -> wut.
+| C : (wut -> wut) -> wut.
 Set Positivity Checking.
 
 (* begin hide *)
@@ -5411,14 +5411,14 @@ End Exercise4.
     chyba po prostu zaimplementować regułę indukcji ręcznie. *)
 
 Inductive T0 : Type :=
-    | c0 : T0
-    | c1 : nat -> T0
-    | c2 : T0 -> T0
-    | c3 : nat * T0 -> T0
-    | c4 : T0 * T0 -> T0
-    | c5 : T0 + T0 -> T0
-    | c6 : list T0 -> T0
-    | c7 : (nat -> T0) -> T0.
+| c0 : T0
+| c1 : nat -> T0
+| c2 : T0 -> T0
+| c3 : nat * T0 -> T0
+| c4 : T0 * T0 -> T0
+| c5 : T0 + T0 -> T0
+| c6 : list T0 -> T0
+| c7 : (nat -> T0) -> T0.
 
 (** Rodzaje nieszkodliwych typów argumentów widać na powyższym przykładzie.
     Konstruktory [c0] i [c1] są nieindukcyjne, więc są ok. Konstruktor [c2]
@@ -5442,19 +5442,19 @@ Inductive T0 : Type :=
 
 (* begin hide *)
 Inductive T0' : Type :=
-    | c0' : T0'
-    | c1' : nat -> T0'
-    | c2' : T0' -> T0'
-    | c3' : nat -> T0' -> T0'
-    | c4' : T0' -> T0' -> T0'
-    | c51 : T0' -> T0'
-    | c52 : T0' -> T0'
-    | c6' : List_T0' -> T0'
-    | c7' : (nat -> T0') -> T0'
+| c0' : T0'
+| c1' : nat -> T0'
+| c2' : T0' -> T0'
+| c3' : nat -> T0' -> T0'
+| c4' : T0' -> T0' -> T0'
+| c51 : T0' -> T0'
+| c52 : T0' -> T0'
+| c6' : List_T0' -> T0'
+| c7' : (nat -> T0') -> T0'
 
 with List_T0' : Type :=
-    | T0'_nil  : List_T0'
-    | T0'_cons : T0' -> List_T0' -> List_T0'.
+| T0'_nil  : List_T0'
+| T0'_cons : T0' -> List_T0' -> List_T0'.
 (* end hide *)
 
 (** Problem pojawia się dopiero wtedy, gdy typ [T] występuje po lewej
@@ -5490,10 +5490,10 @@ with List_T0' : Type :=
 
 (*
 Inductive T1 : Type :=
-    | T1_0 : T1 -> T1
-    | T1_1 : (T1 -> T1) -> T1
-    | T1_2 : ((T1 -> T1) -> T1) -> T1
-    | T1_3 : forall (t : T1) (P : T1 -> Prop), P t -> T1.
+| T1_0 : T1 -> T1
+| T1_1 : (T1 -> T1) -> T1
+| T1_2 : ((T1 -> T1) -> T1) -> T1
+| T1_3 : forall (t : T1) (P : T1 -> Prop), P t -> T1.
 *)
 
 (** W powyższym przykładzie wystąpienie [T1] w pierwszym argumencie
@@ -5516,11 +5516,11 @@ Inductive T1 : Type :=
 
 (*
 Inductive T2 : Type :=
-    | T2_0 :
+| T2_0 :
         forall f : (forall g : (forall t : T2, nat), Prop), T2
-    | T2_1 :
+| T2_1 :
         (((((T2 -> T2) -> T2) -> T2) -> T2) -> T2) -> T2
-    | T2_2 :
+| T2_2 :
       ((forall (n : nat) (P : T2 -> Prop),
         (forall t : T2, nat)) -> T2) -> T2 -> T2 -> T2.
 *)
@@ -5571,7 +5571,7 @@ Inductive T2 : Type :=
     będzie dowolna funkcja [F : Type -> Type]. *)
 
 Fail Inductive wut (F : Type -> Type) : Type :=
-    | wut_0 : F (wut F) -> wut F.
+| wut_0 : F (wut F) -> wut F.
 (* ===> The command has indeed failed with message:
         Non strictly positive occurrence of "wut" in
         "F (wut F) -> wut F". *)
@@ -5603,14 +5603,14 @@ Module wutF.
 
 Unset Positivity Checking.
 Inductive wut (F : Type -> Type) : Type :=
-    | wut_0 : F (wut F) -> wut F.
+| wut_0 : F (wut F) -> wut F.
 Set Positivity Checking.
 
 Definition F (A : Type) : Type := A -> bool.
 
 Definition extract (w : wut F) : wut F -> bool :=
 match w with
-    | wut_0 _ f => f
+| wut_0 _ f => f
 end.
 
 Lemma surjective_extract :
@@ -5650,12 +5650,12 @@ End wutF.
     trzeba uważać). Spójrzmy na poniższy przykład: *)
 
 Fail Inductive X : Type :=
-    | X0 : X
-    | X1 : (Y -> X) -> X
+| X0 : X
+| X1 : (Y -> X) -> X
 
 with Y : Type :=
-    | Y0 : Y
-    | Y1 : X -> Y.
+| Y0 : Y
+| Y1 : X -> Y.
 
 (* ===> The command has indeed failed with message:
         Non strictly positive occurrence of "Y"
@@ -5686,18 +5686,18 @@ Module XY.
 
 Unset Positivity Checking.
 Inductive X : Type :=
-    | X0 : X
-    | X1 : (Y -> X) -> X
+| X0 : X
+| X1 : (Y -> X) -> X
 
 with Y : Type :=
-    | Y0 : Y
-    | Y1 : X -> Y.
+| Y0 : Y
+| Y1 : X -> Y.
 Set Positivity Checking.
 
 Definition extract (x : X) : X -> X :=
 match x with
-    | X0 => id
-    | X1 f => fun x' : X => f (Y1 x')
+| X0 => id
+| X1 f => fun x' : X => f (Y1 x')
 end.
 
 Lemma surjective_extract :
@@ -5711,8 +5711,8 @@ Qed.
 
 Definition modify (x : X) : X :=
 match x with
-    | X0 => X1 (fun _ => x)
-    | X1 _ => X0
+| X0 => X1 (fun _ => x)
+| X1 _ => X0
 end.
 
 Lemma modify_neq :
@@ -5732,8 +5732,8 @@ Definition loopx : X :=
   let
     f (y : Y) : X :=
       match y with
-          | Y1 (X1 h) => h y
-          | _         => X0
+      | Y1 (X1 h) => h y
+      | _         => X0
       end
   in
     f (Y1 (X1 f)).
@@ -5791,7 +5791,7 @@ Module T3.
 
 Unset Positivity Checking.
 Inductive T3 : Type :=
-    | T3_0 : (((T3 -> bool) -> bool) -> bool) -> T3.
+| T3_0 : (((T3 -> bool) -> bool) -> bool) -> T3.
 Set Positivity Checking.
 
 (** Przyjrzyjmy się powyższej definicji. Występienie indukcyjne typu [T3]
@@ -5830,7 +5830,7 @@ Qed.
 
 Definition extract (x : T3) : T3 -> bool :=
 match x with
-    | T3_0 f => fun y : T3 => f (fun g => g y)
+| T3_0 f => fun y : T3 => f (fun g => g y)
 end.
 
 (** Wobec powyższych rozważań definicja funkcji [extract] zupełnie nie powinna
@@ -5873,7 +5873,7 @@ Qed.
 (* begin hide *)
 Definition loop (x : T3) : bool :=
 match x with
-    | T3_0 f => f (fun g : T3 -> bool => g (T3_0 f))
+| T3_0 f => f (fun g : T3 -> bool => g (T3_0 f))
 end.
 
 Definition bomb : T3 :=
@@ -5906,7 +5906,7 @@ Module T4.
 
 Unset Positivity Checking.
 Inductive T4 : Type :=
-    | c0 : (((T4 -> bool) -> nat) -> Color) -> T4.
+| c0 : (((T4 -> bool) -> nat) -> Color) -> T4.
 Set Positivity Checking.
 
 (** Powyższy przykład jest podobny do poprzedniego, ale tym razem zamiast
@@ -5921,8 +5921,8 @@ Proof.
   apply (
     fun c : Color =>
     match c with
-        | R => true
-        | _ => false
+    | R => true
+    | _ => false
     end).
   apply f.
   intro g.
@@ -5968,8 +5968,8 @@ Proof.
   exists (c0 (
     fun g : (T4 -> bool) -> nat =>
     match g f with
-       | 0 => R
-       | _ => G
+   | 0 => R
+   | _ => G
     end)).
   extensionality y.
   destruct (f y); reflexivity.
@@ -6028,8 +6028,8 @@ Lemma extract_c0 :
     extract (c0 f) =
       fun y =>
         match f (fun g => if g y then 0 else 1) with
-            | R => true
-            | _ => false
+        | R => true
+        | _ => false
         end.
 Proof.
   reflexivity.
@@ -6039,8 +6039,8 @@ Lemma loop_nontermination :
   true = loop (c0 (
     fun g : (T4 -> bool) -> nat =>
     match g loop with
-       | 0 => R
-       | _ => G
+   | 0 => R
+   | _ => G
     end)).
 Proof.
   intros.
@@ -6071,7 +6071,7 @@ Module T5.
 
 Unset Positivity Checking.
 Inductive T5 : Type :=
-    | c0 : (((T5 -> nat) -> bool) -> Color) -> T5.
+| c0 : (((T5 -> nat) -> bool) -> Color) -> T5.
 Set Positivity Checking.
 
 (** Rzućmy okiem na powyższy typ. Wygląda podobnie do poprzedniego, ale jest
@@ -6084,9 +6084,9 @@ Proof.
   apply (
     fun c : Color =>
     match c with
-        | R => 0
-        | G => 1
-        | B => 2
+    | R => 0
+    | G => 1
+    | B => 2
     end).
   apply f. intro g.
   apply isZero. exact (g y).
@@ -6103,8 +6103,8 @@ Proof.
   exists (c0 (
     fun g : (T5 -> nat) -> bool =>
     match g f with
-        | true => R
-        | false => B
+    | true => R
+    | false => B
     end)).
   extensionality y.
   destruct (f y); cbn.
@@ -6127,9 +6127,9 @@ Lemma extract_eq :
   forall (f : ((T5 -> nat) -> bool) -> Color) (y : T5),
     extract (c0 f) y =
       match f (fun g : T5 -> nat => isZero (g y)) with
-          | R => 0
-          | G => 1
-          | B => 2
+      | R => 0
+      | G => 1
+      | B => 2
       end.
 Proof.
   reflexivity.
@@ -6139,8 +6139,8 @@ Lemma loop_nontermination :
   42 = loop (c0 (
     fun g : (T5 -> nat) -> bool =>
     match g loop with
-        | true => R
-        | false => G
+    | true => R
+    | false => G
     end)).
 Proof.
   unfold loop.
@@ -6169,8 +6169,8 @@ Proof.
   apply (
     fun c : Color =>
     match c with
-        | R => true
-        | _ => false
+    | R => true
+    | _ => false
     end).
   apply f. intro g.
   apply isZero. exact (g y).
@@ -6224,8 +6224,8 @@ Lemma extract'_eq :
   forall (f : ((T5 -> nat) -> bool) -> Color) (y : T5),
     extract' (c0 f) y =
       match f (fun g : T5 -> nat => isZero (g y)) with
-          | R => true
-          | _ => false
+      | R => true
+      | _ => false
       end.
 Proof.
   reflexivity.
@@ -6235,8 +6235,8 @@ Lemma loop_nontermination :
   true = loop' (c0 (
     fun g : (T5 -> nat) -> bool =>
     match g (fun t : T5 => if loop' t then 0 else 1) with
-        | true => R
-        | false => G
+    | true => R
+    | false => G
     end)).
 Proof.
   unfold loop'.
@@ -6260,7 +6260,7 @@ Module T6.
 
 Unset Positivity Checking.
 Inductive T6 : Type :=
-    | c0 : (((T6 -> unit) -> bool) -> Color) -> T6.
+| c0 : (((T6 -> unit) -> bool) -> Color) -> T6.
 Set Positivity Checking.
 
 (** Kolejnym upierdliwym przypadkiem, burzącym nawet nasz ostateczny
@@ -6310,11 +6310,11 @@ Set Positivity Checking.
 (* begin hide *)
 Definition extract (x y : T6) : unit :=
 match x with
-    | c0 f =>
+| c0 f =>
         match f (fun g => match g y with | tt => true end) with
-            | R => tt
-            | G => tt
-            | B => tt
+        | R => tt
+        | G => tt
+        | B => tt
         end
 end.
 
@@ -6324,9 +6324,9 @@ Lemma extract_eq :
   forall f y,
     extract (c0 f) y =
       match f (fun g => match g y with | tt => true end) with
-          | R => tt
-          | G => tt
-          | B => tt
+      | R => tt
+      | G => tt
+      | B => tt
       end.
 Proof.
   reflexivity.
@@ -6336,8 +6336,8 @@ Lemma loop_nontermination :
   tt = loop (c0 (
     fun g : (T6 -> unit) -> bool =>
     match g loop with
-        | true => R
-        | false => G
+    | true => R
+    | false => G
     end)).
 Proof.
   unfold loop.
@@ -6367,7 +6367,7 @@ Module T7.
 
 Unset Positivity Checking.
 Inductive T7 : Type :=
-    | c0 : (((T7 -> bool) -> False) -> Color) -> T7.
+| c0 : (((T7 -> bool) -> False) -> Color) -> T7.
 Set Positivity Checking.
 
 (* begin hide *)
@@ -6392,8 +6392,8 @@ Proof.
   apply (
     fun c : Color =>
     match c with
-        | R => true
-        | _ => false
+    | R => true
+    | _ => false
     end).
   apply f.
   intro g.
@@ -6519,13 +6519,13 @@ Check Type.
 
 (*
 Fail Inductive U : Type :=
-    | Pi : forall (A : U) (B : El A -> U), U
-    | UU : U
+| Pi : forall (A : U) (B : El A -> U), U
+| UU : U
 
 with El (u : U) : Type :=
 match u with
-    | Pi A B => forall x : El A, B x
-    | UU => U
+| Pi A B => forall x : El A, B x
+| UU => U
 end.
 *)
 
@@ -6641,8 +6641,8 @@ Axioms
 (*
 Definition extract (u : U) : U -> U :=
 match u with
-    | Pi UU B => B
-    | _ => fun u : U => U
+| Pi UU B => B
+| _ => fun u : U => U
 end.
 *)
 
@@ -6854,27 +6854,27 @@ Module NonPoorUniverse.
 
 (*
 Fail Inductive U : Type :=
-    | Empty : U
-    | Unit : U
-    | Nat : U
-    | Prod : U -> U -> U
-    | Sum : U -> U -> U
-    | Arr : U -> U -> U
-    | Pi : forall (A : U) (B : El A -> U), U
-    | Sigma: forall (A : U) (B : El A -> U), U
-    | UU : U
+| Empty : U
+| Unit : U
+| Nat : U
+| Prod : U -> U -> U
+| Sum : U -> U -> U
+| Arr : U -> U -> U
+| Pi : forall (A : U) (B : El A -> U), U
+| Sigma: forall (A : U) (B : El A -> U), U
+| UU : U
 
 with El (u : U) : Type :=
 match u with
-    | Empty => Empty_set
-    | Unit => unit
-    | Nat => nat
-    | Prod A B => El A * El B
-    | Sum A B => El A + El B
-    | Arr A B => El A -> El B
-    | Pi A B => forall x : El A, B x
-    | Sigma A B => {x : El A & El (B x)}
-    | UU => U
+| Empty => Empty_set
+| Unit => unit
+| Nat => nat
+| Prod A B => El A * El B
+| Sum A B => El A + El B
+| Arr A B => El A -> El B
+| Pi A B => forall x : El A, B x
+| Sigma A B => {x : El A & El (B x)}
+| UU => U
 end.
 *)
 
@@ -7036,7 +7036,7 @@ End NonPoorUniverse.
     nami). *)
 
 Fail Inductive Pos : Type :=
-    | Pos0 : ((Pos -> bool) -> bool) -> Pos.
+| Pos0 : ((Pos -> bool) -> bool) -> Pos.
 (* ===> The command has indeed failed with message:
         Non strictly positive occurrence of "Pos" in
         "((Pos -> bool) -> bool) -> Pos". *)
@@ -7051,7 +7051,7 @@ Fail Inductive Pos : Type :=
 
 Unset Positivity Checking.
 Inductive Pos : Type :=
-    | Pos0 : ((Pos -> bool) -> bool) -> Pos.
+| Pos0 : ((Pos -> bool) -> bool) -> Pos.
 Set Positivity Checking.
 
 (** Spróbujmy zawalczyć z typem [Pos] naszą metodą opartą o twierdzenie
@@ -7132,7 +7132,7 @@ Abort.
 
 Fail Fixpoint loop' (x : Pos) : bool :=
 match x with
-    | Pos0 f => f loop'
+| Pos0 f => f loop'
 end.
 
 (* end hide *)
@@ -7175,7 +7175,7 @@ Definition X : Prop := forall P : Prop, P.
 
 Unset Positivity Checking.
 Inductive Pos' : Type :=
-    | Pos'0 : ((Pos' -> Prop) -> Prop) -> Pos'.
+| Pos'0 : ((Pos' -> Prop) -> Prop) -> Pos'.
 Set Positivity Checking.
 
 (** Jak widać, podejrzanym typem jest [Pos'], bliźniaczo podobne do [Pos],

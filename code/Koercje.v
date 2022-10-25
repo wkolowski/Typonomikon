@@ -25,8 +25,8 @@ Check forall (M : Monoid) (x : M), x = x.
 (* ===> forall (M : Monoid) (x : carrier M), x = x : Prop *)
 
 Inductive Expr : Type :=
-    | Lit : nat -> Expr
-    | Plus : Expr -> Expr -> Expr.
+| Lit : nat -> Expr
+| Plus : Expr -> Expr -> Expr.
 
 Check Lit.
 (* ===> Lit : nat -> Expr *)

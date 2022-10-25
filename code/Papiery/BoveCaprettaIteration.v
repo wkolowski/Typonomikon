@@ -8,14 +8,14 @@ Require Import Recdef Wellfounded Arith Lia.
 
 Fixpoint iter {A : Type} (f : A -> A) (n : nat) (a : A) : A :=
 match n with
-    | 0 => a
-    | S n' => iter f n' (f a)
+| 0 => a
+| S n' => iter f n' (f a)
 end.
 
 Inductive fG : nat -> nat -> Prop :=
-    | fG_gt100 :
+| fG_gt100 :
         forall n : nat, 100 < n -> fG n (n - 10)
-    | fG_le100 :
+| fG_le100 :
         forall n r1 r2 : nat,
           n <= 100 -> fG (n + 11) r1 -> fG r1 r2 -> fG n r2.
 
@@ -25,11 +25,11 @@ Definition F (f : nat -> nat) (n : nat) : nat :=
 Definition Steps := nat.
 
 Inductive fAcc : nat -> Steps -> (nat -> nat) -> Type :=
-    | fAcc_gt100 :
+| fAcc_gt100 :
         forall (n : nat) (k : Steps) (f : nat -> nat),
           100 < n ->
             fAcc n (S k) f
-    | fAcc_le100 :
+| fAcc_le100 :
         forall (n : nat) (k1 k2 : Steps) (f : nat -> nat),
           n <= 100 ->
           fAcc (11 + n) k1 f ->
@@ -41,7 +41,7 @@ Definition fDom (n : nat) : Type :=
 
 Definition f' {n : nat} (d : fDom n) : nat :=
 match d with
-    | existT _ k _ => iter F k id n
+| existT _ k _ => iter F k id n
 end.
 
 Compute iter F 12 id 87.

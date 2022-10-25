@@ -4,8 +4,8 @@ Import ListNotations.
 (* TODO: is there any point in it? *)
 
 Inductive llist (A : Type) : Type :=
-    | lnil : llist A
-    | lcons : A -> (unit -> llist A) -> llist A.
+| lnil : llist A
+| lcons : A -> (unit -> llist A) -> llist A.
 
 Arguments lnil  {A}.
 Arguments lcons {A} _ _.
@@ -16,12 +16,12 @@ Notation "[[ x ; .. ; y ]]" := (lcons x .. (lcons y lnil) ..).
 
 Fixpoint length {A : Type} (l : llist A) : nat :=
 match l with
-    | [[]] => 0
-    | h ::: t => S (length (t tt))
+| [[]] => 0
+| h ::: t => S (length (t tt))
 end.
 
 Fixpoint fromList {A : Type} (l : list A) : llist A :=
 match l with
-    | [] => [[]]
-    | h :: t => h ::: fun _ => fromList t
+| [] => [[]]
+| h :: t => h ::: fun _ => fromList t
 end.

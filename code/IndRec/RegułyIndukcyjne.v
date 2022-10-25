@@ -7,9 +7,9 @@ Fixpoint nat_ind_2
   (H : forall n : nat, P n -> P (S (S n)))
   (n : nat) : P n :=
 match n with
-    | 0 => H0
-    | 1 => H1
-    | S (S n') => H n' (nat_ind_2 P H0 H1 H n')
+| 0 => H0
+| 1 => H1
+| S (S n') => H n' (nat_ind_2 P H0 H1 H n')
 end.
 
 Lemma expand :
@@ -27,16 +27,16 @@ Program Fixpoint nat_ind_k
   (H' : forall n : nat, P n -> P (S k + n))
   (n : nat) {measure n} : P n :=
 match le_dec n k with
-    | left n_le_k => H n n_le_k
-    | right n_gt_k =>
+| left n_le_k => H n n_le_k
+| right n_gt_k =>
         expand P n k n_gt_k (H' (n - S k) (nat_ind_k k P H H' (n - S k)))
 end.
 Next Obligation. lia. Defined.
 Next Obligation. lia. Defined.
 
 Inductive even : nat -> Prop :=
-    | even0 : even 0
-    | evenSS : forall n : nat, even n -> even (S (S n)).
+| even0 : even 0
+| evenSS : forall n : nat, even n -> even (S (S n)).
 
 Fixpoint even_ind'
   (P : nat -> Prop)
@@ -58,8 +58,8 @@ Program Fixpoint nat_ind_k'
   (H' : forall n : nat, P n -> P (k + n))
   (n : nat) {measure n} : P n :=
 match le_dec n k with
-    | left n_le_k => H n n_le_k
-    | right n_gt_k =>
+| left n_le_k => H n n_le_k
+| right n_gt_k =>
         expand P n k n_gt_k (H' (n - k) (nat_ind_k' k Hk P H H' (n - k)))
 end.
 Next Obligation. lia. Defined.
@@ -106,14 +106,14 @@ Qed.
 
 Fixpoint fac (n : nat) : nat :=
 match n with
-    | 0 => 1
-    | S n' => n * fac n'
+| 0 => 1
+| S n' => n * fac n'
 end.
 
 Fixpoint f (n : nat) : nat :=
 match n with
-    | 0 => 0 * fac 0
-    | S n' => f n' + n * fac n
+| 0 => 0 * fac 0
+| S n' => f n' + n * fac n
 end.
 
 Lemma pred_lemma :
@@ -143,35 +143,35 @@ Proof.
 Qed.
 
 Inductive pos : Set :=
-    | HJ : pos
-    | Z : pos -> pos
-    | J : pos -> pos.
+| HJ : pos
+| Z : pos -> pos
+| J : pos -> pos.
 
 Inductive bin : Set :=
-    | HZ : bin
-    | HP : pos -> bin.
+| HZ : bin
+| HP : pos -> bin.
 
 Definition five : bin := HP (J (Z HJ)).
 Definition answer : bin := HP (Z (J (Z (J (Z HJ))))).
 
 Fixpoint pos_to_nat (p : pos) : nat :=
 match p with
-    | HJ => 1
-    | Z p' => 2 * pos_to_nat p'
-    | J p' => 1 + 2 * pos_to_nat p'
+| HJ => 1
+| Z p' => 2 * pos_to_nat p'
+| J p' => 1 + 2 * pos_to_nat p'
 end.
 
 Definition bin_to_nat (b : bin) : nat :=
 match b with
-    | HZ => 0
-    | HP p => pos_to_nat p
+| HZ => 0
+| HP p => pos_to_nat p
 end.
 
 Program Fixpoint divmod
   (n k : nat) (H : k <> 0) {measure n} : nat * nat :=
 match n with
-    | 0 => (0, 0)
-    | _ => if leb n k
+| 0 => (0, 0)
+| _ => if leb n k
         then (0, n)
         else let (d, m) := divmod (n - k) k H in (S d, m)
 end.
@@ -182,9 +182,9 @@ Proof. inversion 1. Qed.
 
 Fixpoint divmod2 (n : nat) : nat * nat :=
 match n with
-    | 0 => (0, 0)
-    | 1 => (0, 1)
-    | S (S n') => let (a, b) := divmod2 n' in (S a, b)
+| 0 => (0, 0)
+| 1 => (0, 1)
+| S (S n') => let (a, b) := divmod2 n' in (S a, b)
 end.
 
 Compute divmod2 155.
@@ -241,9 +241,9 @@ Qed.
 
 Fixpoint succ (p : pos) : pos :=
 match p with
-    | HJ => Z HJ
-    | J p' => Z (succ p')
-    | Z p' => J p'
+| HJ => Z HJ
+| J p' => Z (succ p')
+| Z p' => J p'
 end.
 
 Lemma pos_to_nat_S :
@@ -335,8 +335,8 @@ Proof.
 Defined.
 
 Inductive Tree (A : Type) : Type :=
-    | Empty : Tree A
-    | Node : A -> list (Tree A) -> Tree A.
+| Empty : Tree A
+| Node : A -> list (Tree A) -> Tree A.
 
 Arguments Empty {A}.
 Arguments Node {A} _ _.
@@ -361,25 +361,25 @@ Defined.
 
 Fixpoint size {A : Type} (t : Tree A) : nat :=
 match t with
-    | Empty => 0
-    | Node v forest => 1 +
+| Empty => 0
+| Node v forest => 1 +
         (fix size' {A : Type} (forest : list (Tree A)) : nat :=
         match forest with
-            | nil => 0
-            | cons t forest' => size t + size' forest'
+        | nil => 0
+        | cons t forest' => size t + size' forest'
         end) _ forest
 end.
 
 Fixpoint size_f {A : Type} (t : Tree A) : nat :=
 match t with
-    | Empty => 0
-    | Node _ forest => S (fold_right (fun t' s => size_f t' + s) 0 forest)
+| Empty => 0
+| Node _ forest => S (fold_right (fun t' s => size_f t' + s) 0 forest)
 end.
 
 Fixpoint flatten' {A : Type} (t : Tree A) : list A :=
 match t with
-    | Empty => []
-    | Node v forest => v :: fold_right (fun h t => flatten' h ++ t) [] forest
+| Empty => []
+| Node v forest => v :: fold_right (fun h t => flatten' h ++ t) [] forest
 end.
 
 Lemma flatten_preserves_size :
@@ -482,11 +482,11 @@ Fixpoint nat_ind_4
   (P4 : forall n : nat, P n -> P (4 + n))
   (n : nat) : P n :=
 match n with
-    | 0 => P0
-    | 1 => P1
-    | 2 => P2
-    | 3 => P3
-    | S (S (S (S n'))) => P4 n' (nat_ind_4 P P0 P1 P2 P3 P4 n')
+| 0 => P0
+| 1 => P1
+| 2 => P2
+| 3 => P3
+| S (S (S (S n'))) => P4 n' (nat_ind_4 P P0 P1 P2 P3 P4 n')
 end.
 
 Lemma two_and_five :

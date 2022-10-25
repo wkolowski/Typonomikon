@@ -16,10 +16,10 @@ Print nth.
         fix nth (A : Type) (n : nat) (l : list A) {struct l} :
         option A :=
           match l with
-          | [] => None
-          | h :: t => match n with
-                      | 0 => Some h
-                      | S n' => nth A n' t
+      | [] => None
+      | h :: t => match n with
+                  | 0 => Some h
+                  | S n' => nth A n' t
                       end
           end
              : forall A : Type, nat -> list A -> option A *)
@@ -66,8 +66,8 @@ Module BT.
 
 (* 1 + A * X^2 *)
 Inductive BT (A : Type) : Type :=
-    | E : BT A
-    | N : A -> BT A -> BT A -> BT A.
+| E : BT A
+| N : A -> BT A -> BT A -> BT A.
 
 Arguments E {A}.
 Arguments N {A} _ _ _.
@@ -78,20 +78,20 @@ Arguments N {A} _ _ _.
 
 (* 1 + 2 * X *)
 Inductive IndexBT : Type :=
-    | here : IndexBT
-    | L : IndexBT -> IndexBT
-    | R : IndexBT -> IndexBT.
+| here : IndexBT
+| L : IndexBT -> IndexBT
+| R : IndexBT -> IndexBT.
 
 (** Najważniejszą operacją, jaką możemy wykonać mając typ indeksów, jest pójście
     do poddrzewa odpowiadającego temu indeksowi. *)
 
 Fixpoint subtree {A : Type} (i : IndexBT) (t : BT A) : option (BT A) :=
 match i, t with
-    | here, _ => Some t
-    | L _, E => None
-    | L i', N _ l _ => subtree i' l
-    | R _, E => None
-    | R i', N _ _ r => subtree i' r
+| here, _ => Some t
+| L _, E => None
+| L i', N _ l _ => subtree i' l
+| R _, E => None
+| R i', N _ _ r => subtree i' r
 end.
 
 (** Znalezienie elementu trzymanego w korzeniu danego poddrzewa jest jedynie
@@ -99,8 +99,8 @@ end.
 
 Definition index {A : Type} (i : IndexBT) (t : BT A) : option A :=
 match subtree i t with
-    | Some (N v _ _) => Some v
-    | _              => None
+| Some (N v _ _) => Some v
+| _              => None
 end.
 
 (** Choć można oczywiście posłużyć się osobną implementacją, która jest równoważna
@@ -108,10 +108,10 @@ end.
 
 Fixpoint index' {A : Type} (t : BT A) (i : IndexBT) {struct i} : option A :=
 match t, i with
-    | E, _          => None
-    | N v _ _, here => Some v
-    | N _ l _, L i' => index' l i'
-    | N _ _ r, R i' => index' r i'
+| E, _          => None
+| N v _ _, here => Some v
+| N _ l _, L i' => index' l i'
+| N _ _ r, R i' => index' r i'
 end.
 
 Lemma index_index' :
@@ -132,8 +132,8 @@ Module T.
 
 (* 1 + A * X^I *)
 Inductive T (I A : Type) : Type :=
-    | E : T I A
-    | N : A -> (I -> T I A) -> T I A.
+| E : T I A
+| N : A -> (I -> T I A) -> T I A.
 
 Arguments E {I A}.
 Arguments N {I A} _ _.
@@ -142,31 +142,31 @@ Arguments N {I A} _ _.
 
 (* 1 + I * X *)
 Inductive Index (I : Type) : Type :=
-    | here : Index I
-    | there : I -> Index I -> Index I.
+| here : Index I
+| there : I -> Index I -> Index I.
 
 Arguments here {I}.
 Arguments there {I} _ _.
 
 Fixpoint subtree {I A : Type} (i : Index I) (t : T I A) : option (T I A) :=
 match i, t with
-    | here      , _ => Some t
-    | there _ _ , E => None
-    | there j i', N _ f => subtree i' (f j)
+| here      , _ => Some t
+| there _ _ , E => None
+| there j i', N _ f => subtree i' (f j)
 end.
 
 Definition index {I A : Type} (i : Index I) (t : T I A) : option A :=
 match subtree i t with
-    | Some (N v _) => Some v
-    | _            => None
+| Some (N v _) => Some v
+| _            => None
 end.
 
 (*
 Fixpoint index {I A : Type} (t : T I A) (i : Index I) : option A :=
 match t, i with
-    | E, _ => None
-    | N v _, here => Some v
-    | N _ f, there j i' => index (f j) i'
+| E, _ => None
+| N v _, here => Some v
+| N _ f, there j i' => index (f j) i'
 end.
 *)
 End T.
@@ -178,9 +178,9 @@ Module T2.
 
 (* 1 + A * X + B * X^2 *)
 Inductive T (A B : Type) : Type :=
-    | E : T A B
-    | NA : A -> T A B -> T A B
-    | NB : B -> T A B -> T A B -> T A B.
+| E : T A B
+| NA : A -> T A B -> T A B
+| NB : B -> T A B -> T A B -> T A B.
 
 Arguments E  {A B}.
 Arguments NA {A B} _ _.
@@ -191,19 +191,19 @@ Arguments NB {A B} _ _ _.
     nam po prostu nie udaje. *)
 
 Inductive Index : Type :=
-    | here : Index
-    | therea : Index -> Index
-    | thereb : bool -> Index -> Index.
+| here : Index
+| therea : Index -> Index
+| thereb : bool -> Index -> Index.
 
 (** Jak widać działa, ale co to za działanie. *)
 
 Fixpoint subtree {A B : Type} (i : Index) (t : T A B) : option (T A B) :=
 match i, t with
-    | here           , _           => Some t
-    | therea       i', (NA _ t')   => subtree i' t'
-    | thereb false i', (NB _ t' _) => subtree i' t'
-    | thereb true  i', (NB _ _ t') => subtree i' t'
-    | _              , _           => None
+| here           , _           => Some t
+| therea       i', (NA _ t')   => subtree i' t'
+| thereb false i', (NB _ t' _) => subtree i' t'
+| thereb true  i', (NB _ _ t') => subtree i' t'
+| _              , _           => None
 end.
 
 (** [index] też działa, ale typ zwracany robi się skomplikowańszy. *)
@@ -211,9 +211,9 @@ end.
 Definition index
   {A B : Type} (i : Index) (t : T A B) : option (A + B) :=
 match subtree i t with
-    | Some (NA a _)   => Some (inl a)
-    | Some (NB b _ _) => Some (inr b)
-    | _               => None
+| Some (NA a _)   => Some (inl a)
+| Some (NB b _ _) => Some (inr b)
+| _               => None
 end.
 
 End T2.
@@ -228,8 +228,8 @@ Set Reversible Pattern Implicit.
 
 (* 1 + 1 + A * X * X *)
 Inductive T (A : Type) : Type :=
-    | EL | ER
-    | N (a : A) (l : T A) (r : T A).
+| EL | ER
+| N (a : A) (l : T A) (r : T A).
 
 Arguments EL {A}.
 Arguments ER {A}.
@@ -237,21 +237,21 @@ Arguments ER {A}.
 (** Typ indeksów jest łatwy. *)
 
 Inductive Index : Type :=
-    | here : Index
-    | there : bool -> Index -> Index.
+| here : Index
+| there : bool -> Index -> Index.
 
 Fixpoint subtree {A : Type} (i : Index) (t : T A) : option (T A) :=
 match i, t with
-    | here      , _         => Some t
-    | there b i', (N _ l r) => if b then subtree i' l else subtree i' r
-    | _         , _         => None
+| here      , _         => Some t
+| there b i', (N _ l r) => if b then subtree i' l else subtree i' r
+| _         , _         => None
 end.
 
 Inductive Arg (A : Type) : Type :=
-    | BadIndex
-    | EmptyLeft
-    | EmptyRight
-    | Node (a : A).
+| BadIndex
+| EmptyLeft
+| EmptyRight
+| Node (a : A).
 
 Arguments BadIndex   {A}.
 Arguments EmptyLeft  {A}.
@@ -259,10 +259,10 @@ Arguments EmptyRight {A}.
 
 Definition index {A : Type} (i : Index) (t : T A) : Arg A :=
 match subtree i t with
-    | None           => BadIndex
-    | Some EL        => EmptyLeft
-    | Some ER        => EmptyRight
-    | Some (N a _ _) => Node a
+| None           => BadIndex
+| Some EL        => EmptyLeft
+| Some ER        => EmptyRight
+| Some (N a _ _) => Node a
 end.
 
 End T3.
@@ -301,8 +301,8 @@ Inductive vec (A : Type) : nat -> Type :=
 *)
 
 Inductive Fin : nat -> Type :=
-    | FZ : forall n : nat, Fin (S n)
-    | FS : forall n : nat, Fin n -> Fin (S n).
+| FZ : forall n : nat, Fin (S n)
+| FS : forall n : nat, Fin n -> Fin (S n).
 
 Arguments FZ {n}.
 Arguments FS {n} _.
@@ -319,8 +319,8 @@ End Vec'.
 Module hTree.
 
 Inductive T (A : Type) : nat -> Type :=
-    | E : T A 0
-    | N :
+| E : T A 0
+| N :
         forall {n m : nat},
           A -> T A n -> T A m -> T A (S (max n m)).
 
@@ -335,8 +335,8 @@ Module W.
 Import G1.
 
 Inductive IW {A : Type} (B : A -> Type) : Type :=
-    | here  : IW B
-    | there : forall x : A, B x -> IW B -> IW B.
+| here  : IW B
+| there : forall x : A, B x -> IW B -> IW B.
 
 Arguments here {A B}.
 Arguments there {A B x} _.
@@ -345,8 +345,8 @@ Definition A (X : Type) : Type := unit + X.
 
 Definition B {X : Type} (a : A X) : Type :=
 match a with
-    | inl _ => False
-    | inr _ => unit
+| inl _ => False
+| inr _ => unit
 end.
 
 Fixpoint nat_IW {X : Type} (n : nat) : (@IW (A X) (@B X)).

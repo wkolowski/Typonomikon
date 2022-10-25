@@ -25,10 +25,10 @@ Module nat_neq_rec.
 
 Fixpoint code (n m : nat) : Type :=
 match n, m with
-    | 0, 0 => False
-    | 0, S _ => True
-    | S _, 0 => True
-    | S n', S m' => code n' m'
+| 0, 0 => False
+| 0, S _ => True
+| S _, 0 => True
+| S n', S m' => code n' m'
 end.
 
 Lemma isProp_code :
@@ -88,9 +88,9 @@ End nat_neq_rec.
 Module nat_neq_ind.
 
 Inductive nat_neq : nat -> nat -> Prop :=
-    | ZS : forall n : nat, nat_neq 0 (S n)
-    | SZ : forall n : nat, nat_neq (S n) 0
-    | SS : forall n m : nat, nat_neq n m -> nat_neq (S n) (S m).
+| ZS : forall n : nat, nat_neq 0 (S n)
+| SZ : forall n : nat, nat_neq (S n) 0
+| SS : forall n m : nat, nat_neq n m -> nat_neq (S n) (S m).
 
 Arguments ZS {n}.
 Arguments SZ {n}.
@@ -112,10 +112,10 @@ Qed.
 
 Fixpoint encode {n m : nat} : n <> m -> nat_neq n m :=
 match n, m with
-    | 0, 0       => fun p => match p eq_refl with end
-    | 0, S m'    => fun _ => @ZS m'
-    | S n', 0    => fun _ => @SZ n'
-    | S n', S m' => fun p => SS (@encode n' m' (fun p' => p (f_equal S p')))
+| 0, 0       => fun p => match p eq_refl with end
+| 0, S m'    => fun _ => @ZS m'
+| S n', 0    => fun _ => @SZ n'
+| S n', S m' => fun p => SS (@encode n' m' (fun p' => p (f_equal S p')))
 end.
 
 Fixpoint decode {n m : nat} (c : nat_neq n m) : n <> m.
@@ -180,10 +180,10 @@ End nat_eq_neq.
 
 Fixpoint list_neq_rec {A : Type} (l1 l2 : list A) : Prop :=
 match l1, l2 with
-    | [], [] => False
-    | [], _ => True
-    | _, [] => True
-    | h1 :: t1, h2 :: t2 => h1 <> h2 \/ list_neq_rec t1 t2
+| [], [] => False
+| [], _ => True
+| _, [] => True
+| h1 :: t1, h2 :: t2 => h1 <> h2 \/ list_neq_rec t1 t2
 end.
 
 Lemma list_neq_rec_spec :
@@ -206,12 +206,12 @@ Qed.
 (** ** Nierówność list - induktywnie *)
 
 Inductive list_neq_ind {A : Type} : list A -> list A -> Prop :=
-    | nil_cons : forall h t, list_neq_ind nil (cons h t)
-    | cons_nil : forall h t, list_neq_ind (cons h t) nil
-    | cons_cons1 :
+| nil_cons : forall h t, list_neq_ind nil (cons h t)
+| cons_nil : forall h t, list_neq_ind (cons h t) nil
+| cons_cons1 :
         forall h1 h2 t1 t2,
           h1 <> h2 -> list_neq_ind (cons h1 t1) (cons h2 t2)
-    | cons_cons2 :
+| cons_cons2 :
         forall h1 h2 t1 t2,
           list_neq_ind t1 t2 -> list_neq_ind (cons h1 t1) (cons h2 t2).
 
@@ -237,9 +237,9 @@ Qed.
 Fixpoint list_apart_rec
   {A : Type} (R : A -> A -> Prop) (l1 l2 : list A) : Prop :=
 match l1, l2 with
-    | [], [] => False
-    | h1 :: t1, h2 :: t2 => R h1 h2 \/ list_apart_rec R t1 t2
-    | _, _ => True
+| [], [] => False
+| h1 :: t1, h2 :: t2 => R h1 h2 \/ list_apart_rec R t1 t2
+| _, _ => True
 end.
 
 Lemma list_apart_list_neq_rec :
@@ -255,9 +255,9 @@ Qed.
 Fixpoint list_strong_apart_rec
   {A : Type} (R : A -> A -> Type) (l1 l2 : list A) : Type :=
 match l1, l2 with
-    | [], [] => False
-    | h1 :: t1, h2 :: t2 => R h1 h2 + list_strong_apart_rec R t1 t2
-    | _, _ => True
+| [], [] => False
+| h1 :: t1, h2 :: t2 => R h1 h2 + list_strong_apart_rec R t1 t2
+| _, _ => True
 end.
 
 Lemma list_strong_apart_rec_list_apart :
@@ -274,11 +274,11 @@ Module list_neq_ind.
 
 Inductive list_neq
   {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
-    | nc : forall (h : A) (t : list A), list_neq R [] (h :: t)
-    | cn : forall (h : A) (t : list A), list_neq R (h :: t) []
-    | cc1 : forall (h1 h2 : A) (t1 t2 : list A),
+| nc : forall (h : A) (t : list A), list_neq R [] (h :: t)
+| cn : forall (h : A) (t : list A), list_neq R (h :: t) []
+| cc1 : forall (h1 h2 : A) (t1 t2 : list A),
               R h1 h2 -> list_neq R (h1 :: t1) (h2 :: t2)
-    | cc2 : forall (h1 h2 : A) (t1 t2 : list A),
+| cc2 : forall (h1 h2 : A) (t1 t2 : list A),
               list_neq R t1 t2 -> list_neq R (h1 :: t1) (h2 :: t2).
 
 #[global] Hint Constructors list_neq : core.
@@ -332,10 +332,10 @@ Defined.
 
 Inductive Exists2
   {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
-    | E2_here :
+| E2_here :
         forall {h1 h2 : A} (t1 t2 : list A),
           R h1 h2 -> Exists2 R (h1 :: t1) (h2 :: t2)
-    | E2_there :
+| E2_there :
         forall {h1 h2 : A} {t1 t2 : list A},
           Exists2 R t1 t2 -> Exists2 R (h1 :: t1) (h2 :: t2).
 
@@ -352,13 +352,13 @@ Qed.
 
 Inductive DifferentStructure
   {A : Type} : list A -> list A -> Type :=
-    | DS_nc :
+| DS_nc :
         forall (h : A) (t : list A),
           DifferentStructure [] (h :: t)
-    | DS_cn :
+| DS_cn :
         forall (h : A) (t : list A),
           DifferentStructure (h :: t) []
-    | DS_cc :
+| DS_cc :
         forall (h1 h2 : A) {t1 t2 : list A},
           DifferentStructure t1 t2 ->
             DifferentStructure (h1 :: t1) (h2 :: t2).
@@ -416,8 +416,8 @@ Proof.
   apply (f_equal
     (fun x : Exists2 R (h1 :: t1) (h2 :: t2) =>
       match x with
-          | E2_here _ _ _ r => Some r
-          | _             => None
+      | E2_here _ _ _ r => Some r
+      | _             => None
       end))
   in H0.
   inversion H0. reflexivity.
@@ -469,13 +469,13 @@ Qed.
 
 Inductive DifferentStructure'
   {A : Type} : list A -> list A -> SProp :=
-    | DS'_nc :
+| DS'_nc :
         forall (h : A) (t : list A),
           DifferentStructure' [] (h :: t)
-    | DS'_cn :
+| DS'_cn :
         forall (h : A) (t : list A),
           DifferentStructure' (h :: t) []
-    | DS'_cc :
+| DS'_cc :
         forall (h1 h2 : A) {t1 t2 : list A},
           DifferentStructure' t1 t2 ->
             DifferentStructure' (h1 :: t1) (h2 :: t2).
@@ -558,8 +558,8 @@ Proof.
 Abort.
 
 Inductive sor (A : Type) (B : SProp) : Type :=
-    | sinl : A -> sor A B
-    | sinr : B -> sor A B.
+| sinl : A -> sor A B
+| sinr : B -> sor A B.
 
 Arguments sinl {A B} _.
 Arguments sinr {A B} _.
@@ -615,8 +615,8 @@ Proof.
   apply (f_equal
     (fun x : Exists2 R (h1 :: t1) (h2 :: t2) =>
       match x with
-          | E2_here _ _ _ r => Some r
-          | _             => None
+      | E2_here _ _ _ r => Some r
+      | _             => None
       end))
   in H0.
   inversion H0. reflexivity.
@@ -678,11 +678,11 @@ Module conat_neq.
 Import F2.
 
 Inductive conat_neq : conat -> conat -> Prop :=
-    | cnzs :
+| cnzs :
         forall c : conat, conat_neq zero (succ c)
-    | cnsz :
+| cnsz :
         forall c : conat, conat_neq (succ c) zero
-    | cnss :
+| cnss :
         forall n m : conat, conat_neq n m -> conat_neq (succ n) (succ m).
 
 Lemma conat_neq_spec :
@@ -714,10 +714,10 @@ Import F3.
 
 Inductive Stream_neq
   {A : Type} : Stream A -> Stream A -> Type :=
-    | Stream_apart_hd' :
+| Stream_apart_hd' :
         forall t1 t2 : Stream A,
           hd t1 <> hd t2 -> Stream_neq t1 t2
-    | Stream_apart_tl' :
+| Stream_apart_tl' :
         forall t1 t2 : Stream A,
           Stream_neq (tl t1) (tl t2) -> Stream_neq t1 t2.
 
@@ -751,10 +751,10 @@ Import F3 Stream_neq.
 
 Inductive Stream_apart
   {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Type :=
-    | Stream_apart_hd :
+| Stream_apart_hd :
         forall (h1 h2 : A) (t1 t2 : Stream A),
           R h1 h2 -> Stream_apart R (scons h1 t1) (scons h2 t2)
-    | Stream_apart_tl :
+| Stream_apart_tl :
         forall (h1 h2 : A) (t1 t2 : Stream A),
           Stream_apart R t1 t2 -> Stream_apart R (scons h1 t1) (scons h2 t2).
 
@@ -806,10 +806,10 @@ Import F3 Stream_apart.
 
 Inductive Stream_strong_apart
   {A : Type} (R : A -> A -> Type) : Stream A -> Stream A -> Type :=
-    | Stream_strong_apart_hd :
+| Stream_strong_apart_hd :
         forall s1 s2 : Stream A,
           R (hd s1) (hd s2) -> Stream_strong_apart R s1 s2
-    | Stream_strong_apart_tl :
+| Stream_strong_apart_tl :
         forall s1 s2 : Stream A,
           Stream_strong_apart R (tl s1) (tl s2) -> Stream_strong_apart R s1 s2.
 
@@ -836,16 +836,16 @@ Module CoList_apart.
 Import F4.
 
 Inductive CoList_apart {A : Type} (R : A -> A -> Type) (l1 l2 : CoList A) : Type :=
-    | CLa_nil_cons :
+| CLa_nil_cons :
         uncons l1 = NilF -> uncons l2 <> NilF -> CoList_apart R l1 l2
-    | CLa_cons_nil :
+| CLa_cons_nil :
         uncons l1 <> NilF -> uncons l2 = NilF -> CoList_apart R l1 l2
-    | CLa_head :
+| CLa_head :
         forall
           {h1 : A} {t1 : CoList A} (Hu1 : uncons l1 = ConsF h1 t1)
           {h2 : A} {t2 : CoList A} (Hu2 : uncons l2 = ConsF h2 t2),
             R h1 h2 -> CoList_apart R l1 l2
-    | CLa_tail :
+| CLa_tail :
         forall
           {h1 : A} {t1 : CoList A} (Hu1 : uncons l1 = ConsF h1 t1)
           {h2 : A} {t2 : CoList A} (Hu2 : uncons l2 = ConsF h2 t2),
@@ -876,7 +876,7 @@ End CoList_apart.
 
 Inductive fun_apart
   {A B : Type} (R : B -> B -> Type) (f g : A -> B) : Type :=
-    | fun_apart' : forall {x : A}, R (f x) (g x) -> fun_apart R f g.
+| fun_apart' : forall {x : A}, R (f x) (g x) -> fun_apart R f g.
 
 Lemma fun_apart_spec :
   forall {A B : Type} (R : B -> B -> Type) (f g : A -> B),
@@ -904,7 +904,7 @@ Inductive dep_fun_apart
   {A : Type} {B : A -> Type}
   (R : forall x : A, B x -> B x -> Type)
   (f g : forall x : A, B x) : Type :=
-    | dep_fun_apart' : forall {x : A}, R x (f x) (g x) -> dep_fun_apart R f g.
+| dep_fun_apart' : forall {x : A}, R x (f x) (g x) -> dep_fun_apart R f g.
 
 Lemma dep_fun_apart_spec :
   forall
@@ -945,13 +945,13 @@ Print list_neq_ind.list_neq.
 
 Inductive ListDiffProtocol
   {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
-    | nn' : ListDiffProtocol R [] []
-    | nc' : forall (h : A) (t : list A), ListDiffProtocol R [] (h :: t)
-    | cn' : forall (h : A) (t : list A), ListDiffProtocol R (h :: t) []
-    | cc1' : forall (h1 h2 : A) (t1 t2 : list A),
+| nn' : ListDiffProtocol R [] []
+| nc' : forall (h : A) (t : list A), ListDiffProtocol R [] (h :: t)
+| cn' : forall (h : A) (t : list A), ListDiffProtocol R (h :: t) []
+| cc1' : forall (h1 h2 : A) (t1 t2 : list A),
               R h1 h2 -> ListDiffProtocol R t1 t2 ->
                 ListDiffProtocol R (h1 :: t1) (h2 :: t2)
-    | cc2' : forall (h : A) (t1 t2 : list A),
+| cc2' : forall (h : A) (t1 t2 : list A),
               ListDiffProtocol R t1 t2 ->
                 ListDiffProtocol R (h :: t1) (h :: t2).
 

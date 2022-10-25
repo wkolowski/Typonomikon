@@ -315,8 +315,8 @@ Lemma min_compare :
     min n1 n2
       =
     match compare n1 n2 with
-    | Lt => n1
-    | _  => n2
+| Lt => n1
+| _  => n2
     end.
 Proof.
   intros [| p1] [| p2]; cbn.
@@ -364,8 +364,8 @@ Lemma max_compare :
     max n1 n2
       =
     match compare n1 n2 with
-    | Lt => n2
-    | _  => n1
+| Lt => n2
+| _  => n1
     end.
 Proof.
   intros [| p1] [| p2]; cbn.

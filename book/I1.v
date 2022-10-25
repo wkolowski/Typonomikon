@@ -509,7 +509,7 @@ Goal
 Proof.
   intros.
   match goal with
-      | x : Prop |- _ => idtac x
+  | x : Prop |- _ => idtac x
   end.
 Abort.
 
@@ -535,7 +535,7 @@ Goal
 Proof.
   intros.
   Fail match goal with
-      | x : Prop |- _ => idtac x; fail
+  | x : Prop |- _ => idtac x; fail
   end.
 Abort.
 
@@ -558,7 +558,7 @@ Goal
 Proof.
   intros.
   Fail match reverse goal with
-      | x : Prop |- _ => idtac x; fail
+  | x : Prop |- _ => idtac x; fail
   end.
 Abort.
 
@@ -581,7 +581,7 @@ Proof.
   intros.
   Fail
   match goal with
-      | x : Prop |- _ => idtac x
+  | x : Prop |- _ => idtac x
   end; fail.
 Abort.
 
@@ -597,7 +597,7 @@ Proof.
   intros.
   Fail
   lazymatch goal with
-      | x : Prop |- _ => idtac x; fail
+  | x : Prop |- _ => idtac x; fail
   end.
 Abort.
 
@@ -613,7 +613,7 @@ Proof.
   intros.
   Fail
   multimatch goal with
-      | x : Prop |- _ => idtac x
+  | x : Prop |- _ => idtac x
   end; fail.
 Abort.
 
@@ -636,16 +636,16 @@ Goal
 Proof.
   intros.
   match goal with
-      | x : Prop |- _ => idtac x
+  | x : Prop |- _ => idtac x
   end.
   multimatch goal with
-      | x : Prop |- _ => idtac x
+  | x : Prop |- _ => idtac x
   end.
   repeat match goal with
-      | x : Prop |- _ => idtac x
+  | x : Prop |- _ => idtac x
   end.
   repeat multimatch goal with
-      | x : Prop |- _ => idtac x
+  | x : Prop |- _ => idtac x
   end.
 Abort.
 
@@ -669,8 +669,8 @@ Goal
 Proof.
   intros. split;
   match goal with
-      | X : Prop |- P -> Q => idtac X
-      | n : nat |- 42 = 43 => idtac n
+  | X : Prop |- P -> Q => idtac X
+  | n : nat |- 42 = 43 => idtac n
   end.
 Abort.
 
@@ -701,11 +701,11 @@ Goal
 Proof.
   intros.
   match goal with
-      | _ => idtac "-_-"
+  | _ => idtac "-_-"
   end.
   match goal with
-      | _ => fail
-      | X : Prop |- _ => idtac X
+  | _ => fail
+  | X : Prop |- _ => idtac X
   end.
 Abort.
 
@@ -734,8 +734,8 @@ Abort.
 (* begin hide *)
 Ltac destr_and := intros; repeat
 match goal with
-    | H : _ /\ _ |- _ => destruct H
-    | _ => try assumption
+| H : _ /\ _ |- _ => destruct H
+| _ => try assumption
 end.
 (* end hide *)
 
@@ -767,7 +767,7 @@ End destr_and.
 (* begin hide *)
 Ltac solve_and_perm := intros; repeat
 match goal with
-    | H : _ /\ _ |- _ => destruct H
+| H : _ /\ _ |- _ => destruct H
 end; repeat split; try assumption.
 (* end hide *)
 
@@ -805,7 +805,7 @@ End solve_and_perm.
 (* begin hide *)
 Ltac solve_or_perm := intros; repeat
 match goal with
-    | H : _ \/ _ |- _ => destruct H
+| H : _ \/ _ |- _ => destruct H
 end; search.
 (* end hide *)
 
@@ -847,8 +847,8 @@ Section negn.
 (* begin hide *)
 Fixpoint negn (n : nat) (P : Prop) : Prop :=
 match n with
-    | 0 => P
-    | S n' => ~ negn n' P
+| 0 => P
+| S n' => ~ negn n' P
 end.
 (* end hide *)
 
@@ -911,8 +911,8 @@ Qed.
 (* begin hide *)
 Ltac negtac := cbn; unfold not; intros;
 match reverse goal with
-    | H : _ -> False |- False => apply H; clear H; negtac
-    | _ => try assumption
+| H : _ -> False |- False => apply H; clear H; negtac
+| _ => try assumption
 end.
 (* end hide *)
 
@@ -946,7 +946,7 @@ Goal
 Proof.
   intros.
   match goal with
-      | p : P |- P \/ Q => left; assumption
+  | p : P |- P \/ Q => left; assumption
   end.
 Qed.
 
@@ -970,10 +970,10 @@ Goal
 Proof.
   intros.
   Fail match goal with
-      | p : P |- P \/ Q => left; assumption
+  | p : P |- P \/ Q => left; assumption
   end.
   match goal with
-      | p : A |- A \/ B => left; assumption
+  | p : A |- A \/ B => left; assumption
   end.
 Qed.
 
@@ -992,7 +992,7 @@ Goal
 Proof.
   intros.
   match goal with
-      | p : ?P |- ?P \/ ?Q => idtac P; idtac Q; left; assumption
+  | p : ?P |- ?P \/ ?Q => idtac P; idtac Q; left; assumption
   end.
 Qed.
 
@@ -1050,16 +1050,16 @@ Goal
   [2] = [].
 Proof.
   match goal with
-      | |- ?x = _ => idtac x
+  | |- ?x = _ => idtac x
   end.
   match goal with
-      | |- cons ?h _ = nil => idtac h
+  | |- cons ?h _ = nil => idtac h
   end.
   match goal with
-      | |- 2 :: _ = ?l => idtac l
+  | |- 2 :: _ = ?l => idtac l
   end.
   match goal with
-      | |- [?x] = [] => idtac x
+  | |- [?x] = [] => idtac x
   end.
 Abort.
 
@@ -1093,7 +1093,7 @@ Abort.
 (* begin hide *)
 Ltac my_assumption :=
 match goal with
-    | x : ?P |- ?P => exact x
+| x : ?P |- ?P => exact x
 end.
 (* end hide *)
 
@@ -1118,8 +1118,8 @@ Qed.
 (* begin hide *)
 Ltac forward := intros; repeat
 match goal with
-    | H : ?P -> ?Q, H' : ?P |- _ => specialize (H H')
-    | H : ?P |- ?P => assumption
+| H : ?P -> ?Q, H' : ?P |- _ => specialize (H H')
+| H : ?P |- ?P => assumption
 end.
 (* end hide *)
 
@@ -1149,10 +1149,10 @@ Goal
 Proof.
   intros a b c.
   match goal with
-      | |- context G [?x = ?y] => idtac G x y
+  | |- context G [?x = ?y] => idtac G x y
   end.
   repeat multimatch goal with
-      | |- context G [?x = ?y] => idtac G x y
+  | |- context G [?x = ?y] => idtac G x y
   end.
 Abort.
 
@@ -1186,7 +1186,7 @@ Abort.
 
 Ltac nat_subterm :=
   repeat multimatch goal with
-      | |- context [S ?x] => idtac x
+  | |- context [S ?x] => idtac x
   end.
 
 Goal @length nat [] = 42.
@@ -1280,20 +1280,20 @@ Abort.
 Goal False.
 Proof.
   match goal with
-      | _ => idtac "first branch"; fail
-      | _ => idtac "second branch"
+  | _ => idtac "first branch"; fail
+  | _ => idtac "second branch"
   end.
   Fail match goal with
-      | _ => idtac "first branch"; fail 1
-      | _ => idtac "second branch"
+  | _ => idtac "first branch"; fail 1
+  | _ => idtac "second branch"
   end.
   try match goal with
-      | _ => idtac "first branch"; fail 1
-      | _ => idtac "second branch"
+  | _ => idtac "first branch"; fail 1
+  | _ => idtac "second branch"
   end.
   Fail try match goal with
-      | _ => idtac "first branch"; fail 2
-      | _ => idtac "second branch"
+  | _ => idtac "first branch"; fail 2
+  | _ => idtac "second branch"
   end.
 Abort.
 
@@ -1350,8 +1350,8 @@ Abort.
     3 cele, a nie jest prawdą, że 3 < 2. *)
 
 Inductive even : nat -> Prop :=
-    | even0 : even 0
-    | evenSS : forall n : nat, even n -> even (S (S n)).
+| even0 : even 0
+| evenSS : forall n : nat, even n -> even (S (S n)).
 
 Goal even 42.
 Proof.

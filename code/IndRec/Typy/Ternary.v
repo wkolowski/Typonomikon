@@ -3,37 +3,37 @@
 Module ternary_unknown.
 
 Inductive bool3 : Set :=
-    | true : bool3
-    | false : bool3
-    | unknown : bool3.
+| true : bool3
+| false : bool3
+| unknown : bool3.
 
 Definition andb3 (b1 b2 : bool3) : bool3 :=
 match b1, b2 with
-    | true, true => true
-    | false, _ => false
-    | _, false => false
-    | _, _ => unknown
+| true, true => true
+| false, _ => false
+| _, false => false
+| _, _ => unknown
 end.
 
 Definition orb3 (b1 b2 : bool3) : bool3 :=
 match b1, b2 with
-    | false, false => false
-    | true, _ => true
-    | _, true => true
-    | _, _ => unknown
+| false, false => false
+| true, _ => true
+| _, true => true
+| _, _ => unknown
 end.
 
 Definition negb3 (b : bool3) : bool3 :=
 match b with
-    | true => false
-    | false => true
-    | unknown => unknown
+| true => false
+| false => true
+| unknown => unknown
 end.
 
 Ltac solve_bool3 := intros;
 match reverse goal with
-    | b : bool3 |- _ => destruct b; solve_bool3
-    | _ => cbn; reflexivity
+| b : bool3 |- _ => destruct b; solve_bool3
+| _ => cbn; reflexivity
 end.
 
 Notation "b1 & b2" := (andb3 b1 b2) (at level 40).

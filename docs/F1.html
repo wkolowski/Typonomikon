@@ -243,8 +243,8 @@
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">stake</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; []<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">hd</span> <span class="id" title="var">s</span> :: <span class="id" title="var">stake</span> <span class="id" title="var">n'</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>)<br/>
+| 0 =&gt; []<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">hd</span> <span class="id" title="var">s</span> :: <span class="id" title="var">stake</span> <span class="id" title="var">n'</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -280,8 +280,8 @@
 {|<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">tocoList</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">tocoList</span> <span class="id" title="var">t</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 |}.<br/>
 
@@ -304,23 +304,23 @@
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">lhead</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) : <span class="id" title="var">option</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">uncons</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">a</span>, <span class="id" title="var">_</span>) =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">a</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">None</span><br/>
+| <span class="id" title="var">Some</span> (<span class="id" title="var">a</span>, <span class="id" title="var">_</span>) =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">a</span><br/>
+| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">None</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">ltail</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) : <span class="id" title="var">option</span> (<span class="id" title="var">coList</span> <span class="id" title="var">A</span>) :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">uncons</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">_</span>, <span class="id" title="var">t</span>) =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">t</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">None</span><br/>
+| <span class="id" title="var">Some</span> (<span class="id" title="var">_</span>, <span class="id" title="var">t</span>) =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">t</span><br/>
+| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">None</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">lnth</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) : <span class="id" title="var">option</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">uncons</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">Some</span> (<span class="id" title="var">x</span>, <span class="id" title="var">_</span>) =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">x</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">Some</span> (<span class="id" title="var">_</span>, <span class="id" title="var">l'</span>) =&gt; <span class="id" title="var">lnth</span> <span class="id" title="var">n'</span> <span class="id" title="var">l'</span><br/>
+| <span class="id" title="var">_</span>, <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
+| 0, <span class="id" title="var">Some</span> (<span class="id" title="var">x</span>, <span class="id" title="var">_</span>) =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">x</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">Some</span> (<span class="id" title="var">_</span>, <span class="id" title="var">l'</span>) =&gt; <span class="id" title="var">lnth</span> <span class="id" title="var">n'</span> <span class="id" title="var">l'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -341,8 +341,8 @@
 <br/>
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">lapp</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) : <span class="id" title="var">coList</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">l2</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) =&gt; {| <span class="id" title="var">uncons</span> := <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">lapp</span> <span class="id" title="var">t</span> <span class="id" title="var">l2</span>) |}<br/>
+| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">l2</span><br/>
+| <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) =&gt; {| <span class="id" title="var">uncons</span> := <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">lapp</span> <span class="id" title="var">t</span> <span class="id" title="var">l2</span>) |}<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -350,15 +350,15 @@
 {|<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">uncons</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">f</span> <span class="id" title="var">h</span>, <span class="id" title="var">lmap</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">f</span> <span class="id" title="var">h</span>, <span class="id" title="var">lmap</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 |}.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Finite</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">coList</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Finite_nil</span> : <span class="id" title="var">Finite</span> {| <span class="id" title="var">uncons</span> := <span class="id" title="var">None</span> |}<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Finite_cons</span> :<br/>
+| <span class="id" title="var">Finite_nil</span> : <span class="id" title="var">Finite</span> {| <span class="id" title="var">uncons</span> := <span class="id" title="var">None</span> |}<br/>
+| <span class="id" title="var">Finite_cons</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Finite</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">Finite</span> {| <span class="id" title="var">uncons</span> := <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>) |}.<br/>
 
@@ -526,8 +526,8 @@
 {|<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">root</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l</span>, <span class="id" title="var">v</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">fmap</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>, <span class="id" title="var">f</span> <span class="id" title="var">v</span>, <span class="id" title="var">fmap</span> <span class="id" title="var">f</span> <span class="id" title="var">r</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l</span>, <span class="id" title="var">v</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">fmap</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>, <span class="id" title="var">f</span> <span class="id" title="var">v</span>, <span class="id" title="var">fmap</span> <span class="id" title="var">f</span> <span class="id" title="var">r</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 |}.<br/>
 
@@ -539,8 +539,8 @@
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">BTree</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Empty</span> : <span class="id" title="var">BTree</span> <span class="id" title="var">A</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span>.<br/>
+| <span class="id" title="var">Empty</span> : <span class="id" title="var">BTree</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">Node</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">BTree</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Arguments</span> <span class="id" title="var">Empty</span> {<span class="id" title="var">A</span>}.<br/>
@@ -549,11 +549,11 @@
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">ttake</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">BTree</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">Empty</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
+| 0 =&gt; <span class="id" title="var">Empty</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">root</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">Empty</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l</span>, <span class="id" title="var">v</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">v</span> (<span class="id" title="var">ttake</span> <span class="id" title="var">n'</span> <span class="id" title="var">l</span>) (<span class="id" title="var">ttake</span> <span class="id" title="var">n'</span> <span class="id" title="var">r</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">Empty</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l</span>, <span class="id" title="var">v</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">v</span> (<span class="id" title="var">ttake</span> <span class="id" title="var">n'</span> <span class="id" title="var">l</span>) (<span class="id" title="var">ttake</span> <span class="id" title="var">n'</span> <span class="id" title="var">r</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
@@ -576,8 +576,8 @@
 {|<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">root</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l</span>, <span class="id" title="var">v</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">mirror</span> <span class="id" title="var">r</span>, <span class="id" title="var">v</span>, <span class="id" title="var">mirror</span> <span class="id" title="var">l</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l</span>, <span class="id" title="var">v</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">mirror</span> <span class="id" title="var">r</span>, <span class="id" title="var">v</span>, <span class="id" title="var">mirror</span> <span class="id" title="var">l</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 |}.<br/>
 
@@ -630,8 +630,8 @@
 {|<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">fromList</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">fromList</span> <span class="id" title="var">t</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 |}.<br/>
 

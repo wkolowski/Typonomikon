@@ -54,30 +54,30 @@ Definition sim_to_eq (A : Type) : Prop :=
   forall t1 t2 : InfTree A, sim t1 t2 -> t1 = t2.
 
 Inductive Index : Type :=
-    | here : Index
-    | goleft : Index -> Index
-    | goright : Index -> Index.
+| here : Index
+| goleft : Index -> Index
+| goright : Index -> Index.
 
 Fixpoint subtree
   {A : Type} (t : InfTree A) (i : Index) : InfTree A :=
 match i with
-    | here => t
-    | goleft i' => subtree (left t) i'
-    | goright i' => subtree (right t) i'
+| here => t
+| goleft i' => subtree (left t) i'
+| goright i' => subtree (right t) i'
 end.
 
 Fixpoint goleft' (i : Index) : Index :=
 match i with
-    | here => goleft here
-    | goleft i' => goleft (goleft' i')
-    | goright i' => goright (goleft' i')
+| here => goleft here
+| goleft i' => goleft (goleft' i')
+| goright i' => goright (goleft' i')
 end.
 
 Fixpoint goright' (i : Index) : Index :=
 match i with
-    | here => goright here
-    | goleft i' => goleft (goright' i')
-    | goright i' => goright (goright' i')
+| here => goright here
+| goleft i' => goleft (goright' i')
+| goright i' => goright (goright' i')
 end.
 
 Lemma left_subtree :
@@ -237,16 +237,16 @@ CoFixpoint replicate {A : Type} (x : A) : InfTree A :=
 
 Fixpoint index {A : Type} (i : Index) (t : InfTree A) : A :=
 match i with
-    | here => root t
-    | goleft i' => index i' (left t)
-    | goright i' => index i' (right t)
+| here => root t
+| goleft i' => index i' (left t)
+| goright i' => index i' (right t)
 end.
 
 Fixpoint revi (i : Index) : Index :=
 match i with
-    | here => here
-    | goleft i' => goright (revi i')
-    | goright i' => goleft (revi i')
+| here => here
+| goleft i' => goright (revi i')
+| goright i' => goleft (revi i')
 end.
 
 Lemma index_mirror :
@@ -269,9 +269,9 @@ Definition node {A : Type} (v : A) (l r : InfTree A) : InfTree A :=
 Fixpoint replace
   {A : Type} (i : Index) (x : A) (t : InfTree A) : InfTree A :=
 match i with
-    | here => node x (left t) (right t)
-    | goleft i' => node (root t) (replace i' x (left t)) (right t)
-    | goright i' => node (root t) (left t) (replace i' x (right t))
+| here => node x (left t) (right t)
+| goleft i' => node (root t) (replace i' x (left t)) (right t)
+| goright i' => node (root t) (left t) (replace i' x (right t))
 end.
 
 Lemma index_replicate :
@@ -325,9 +325,9 @@ Definition unzipW
 Fixpoint replace'
   {A : Type} (i : Index) (t1 t2 : InfTree A) : InfTree A :=
 match i with
-    | here => t2
-    | goleft i' => node (root t1) (replace' i' (left t1) t2) (right t1)
-    | goright i' => node (root t1) (left t1) (replace' i' (right t1) t2)
+| here => t2
+| goleft i' => node (root t1) (replace' i' (left t1) t2) (right t1)
+| goright i' => node (root t1) (left t1) (replace' i' (right t1) t2)
 end.
 
 Lemma subtree_replace' :
@@ -350,9 +350,9 @@ CoFixpoint iterate'
 
 Fixpoint index_to_nat' (i : Index) (n : nat) : nat :=
 match i with
-    | here => n
-    | goleft i' => index_to_nat' i' (1 + 2 * n)
-    | goright i' => index_to_nat' i' (2 + 2 * n)
+| here => n
+| goleft i' => index_to_nat' i' (1 + 2 * n)
+| goright i' => index_to_nat' i' (2 + 2 * n)
 end.
 
 Lemma index_iterate' :
@@ -380,13 +380,13 @@ Proof.
 Qed.
 
 Inductive InfTreeNeq {A : Type} : InfTree A -> InfTree A -> Type :=
-    | ITN_root :
+| ITN_root :
         forall t1 t2 : InfTree A,
           root t1 <> root t2 -> InfTreeNeq t1 t2
-    | ITN_left :
+| ITN_left :
         forall t1 t2 : InfTree A,
           InfTreeNeq (left t1) (left t2) -> InfTreeNeq t1 t2
-    | ITN_right :
+| ITN_right :
         forall t1 t2 : InfTree A,
           InfTreeNeq (right t1) (right t2) -> InfTreeNeq t1 t2.
 

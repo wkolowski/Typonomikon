@@ -10,7 +10,7 @@
 
 Unset Positivity Checking.
 Inductive Pos : Type :=
-    | Pos' : ((Pos -> bool) -> bool) -> Pos.
+| Pos' : ((Pos -> bool) -> bool) -> Pos.
 Set Positivity Checking.
 
 Definition id {A : Type} : A -> A :=

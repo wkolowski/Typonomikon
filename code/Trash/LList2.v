@@ -2,11 +2,11 @@ Require Export CoqMTL.Control.Applicative.
 Require Export CoqMTL.Control.Monad.Lazy.
 
 Inductive Stream (A : Type) : Type :=
-    | mkStream : Lazy (StreamCell A) -> Stream A
+| mkStream : Lazy (StreamCell A) -> Stream A
 
 with StreamCell (A : Type) : Type :=
-    | lnil : StreamCell A
-    | lcons : A -> Stream A -> StreamCell A.
+| lnil : StreamCell A
+| lcons : A -> Stream A -> StreamCell A.
 
 Arguments mkStream {A} _.
 Arguments lnil {A}.
@@ -20,7 +20,7 @@ with StreamCell_ind_full :=
 
 Definition force' {A : Type} (s : Stream A) : StreamCell A :=
 match s with
-    | mkStream c => force c
+| mkStream c => force c
 end.
 
 Lemma Stream_ind_full' :
@@ -60,14 +60,14 @@ Qed.
 
 Definition lhead {A : Type} (l : Stream A) : option A :=
 match force' l with
-    | lnil => None
-    | lcons h _ => Some h
+| lnil => None
+| lcons h _ => Some h
 end.
 
 Definition ltail {A : Type} (l : Stream A) : option (Stream A) :=
 match force' l with
-    | lnil => None
-    | lcons _ t => Some t
+| lnil => None
+| lcons _ t => Some t
 end.
 
 Notation "'delay' x" := (fun _ : unit => x) (at level 50, only parsing).
@@ -75,15 +75,15 @@ Notation "'delay' $ x" := (fun _ : unit => x) (at level 50, only parsing).
 
 Fixpoint lapp {A : Type} (l1 l2 : Stream A) : Stream A :=
 match force' l1 with
-    | lnil => l2
-    | lcons h t => mkStream $ delay $ lcons h (lapp t l2)
+| lnil => l2
+| lcons h t => mkStream $ delay $ lcons h (lapp t l2)
 end.
 
 Fixpoint lapp' {A : Type} (l1 l2 : Stream A) : Stream A :=
   mkStream $ delay $
 match force' l1 with
-    | lnil => force' l2
-    | lcons h t => lcons h (lapp' t l2)
+| lnil => force' l2
+| lcons h t => lcons h (lapp' t l2)
 end.
 
 Lemma lapp_lapp' :
@@ -100,25 +100,25 @@ Infix "+++" := lapp (at level 50).
 (*
 Fixpoint ltake {A : Type} (n : nat) (l : Stream A) : Stream A :=
 match n, l with
-    | 0, _ => mkStream (fun _ => lnil)
-    | _, mkStream lnil => mkStream lnil
-    | S n', mkStream (lcons h t) => lcons h $ delay $ ltake n' (force t)
+| 0, _ => mkStream (fun _ => lnil)
+| _, mkStream lnil => mkStream lnil
+| S n', mkStream (lcons h t) => lcons h $ delay $ ltake n' (force t)
 end.
 
 Fixpoint ldrop {A : Type} (n : nat) (l : Stream A) : Stream A :=
 match n, l with
-    | 0, _ => l
-    | _, lnil => l
-    | S n', lcons h t => ldrop n' (force t)
+| 0, _ => l
+| _, lnil => l
+| S n', lcons h t => ldrop n' (force t)
 end.
 
 Definition ldrop' {A : Type} (n : nat) (l : Stream A) : Stream A :=
   let f :=
     fix f (n : nat) (l : Stream A) : Stream A :=
     match n, l with
-        | 0, _ => l
-        | _, lnil => l
-        | S n', lcons h t => f n' (force t)
+    | 0, _ => l
+    | _, lnil => l
+    | S n', lcons h t => f n' (force t)
     end
   in f n l.
 
@@ -141,8 +141,8 @@ Import ListNotations.
 
 Fixpoint lins (n : nat) (l : Stream nat) : Stream nat :=
 match l with
-    | lnil => lcons n (fun _ => lnil)
-    | lcons h t =>
+| lnil => lcons n (fun _ => lnil)
+| lcons h t =>
         if leb n h
         then lcons n (fun _ => l)
         else lcons h (fun _ => lins n (t tt))
@@ -150,35 +150,35 @@ end.
 
 Fixpoint lazyInsertionSort (l : Stream nat) : Stream nat :=
 match l with
-    | lnil => lnil
-    | lcons h t => lins h (lazyInsertionSort (t tt))
+| lnil => lnil
+| lcons h t => lins h (lazyInsertionSort (t tt))
 end.
 
 Fixpoint lazy_to0 (n : nat) : Stream nat :=
 match n with
-    | 0 => lcons 0 $ delay lnil
-    | S n' => lcons n $ delay $ lazy_to0 n'
+| 0 => lcons 0 $ delay lnil
+| S n' => lcons n $ delay $ lazy_to0 n'
 end.
 
 (*Fixpoint lazy_to0 (n : nat) : Stream nat :=
 match n with
-    | 0 => lcons 0 (fun _ => lnil)
-    | S n' => lcons n (fun _ => lazy_to0 n')
+| 0 => lcons 0 (fun _ => lnil)
+| S n' => lcons n (fun _ => lazy_to0 n')
 end.*)
 
 From CoqAlgs Require Import Sorting.InsertionSort.
 
 Fixpoint take (n : nat) {A : Type} (l : list A) : list A :=
 match n, l with
-    | 0, _ => []
-    | _, [] => []
-    | S n', h :: t => h :: take n' t
+| 0, _ => []
+| _, [] => []
+| S n', h :: t => h :: take n' t
 end.
 
 Fixpoint to0 (n : nat) : list nat :=
 match n with
-    | 0 => [0]
-    | S n' => n :: to0 n'
+| 0 => [0]
+| S n' => n :: to0 n'
 end.
 
 Definition sl := to0 30000.
@@ -201,8 +201,8 @@ Time Eval cbn in lhead
 
 Fixpoint lfilter {A : Type} (p : A -> bool) (l : Stream A) : Stream A :=
 match l with
-    | lnil => lnil
-    | lcons h t =>
+| lnil => lnil
+| lcons h t =>
         if p h
         then lcons h $ delay $ lfilter p (force t)
         else lfilter p (force t)

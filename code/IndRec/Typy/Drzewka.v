@@ -1,6 +1,6 @@
 Inductive BTree (A : Type) : Type :=
-    | E : BTree A
-    | N : A -> BTree A -> BTree A -> BTree A.
+| E : BTree A
+| N : A -> BTree A -> BTree A -> BTree A.
 
 Arguments E {A}.
 Arguments N {A} _ _ _.
@@ -43,8 +43,8 @@ Parameter mirror' : forall A : Type, BTree A -> BTree A.
 
 Fixpoint mirror {A : Type} (t : BTree A) : BTree A :=
 match t with
-    | E => E
-    | N v l r => N v (mirror r) (mirror l)
+| E => E
+| N v l r => N v (mirror r) (mirror l)
 end.
 
 (*

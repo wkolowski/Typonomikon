@@ -68,8 +68,8 @@ Print head.
 (* ===> head = 
         fix head (A : Type) (l : list A) {struct l} : option A :=
         match l with
-            | [[]] => None
-            | h :: _ => Some h
+        | [[]] => None
+        | h :: _ => Some h
         end
         : forall A : Type, list A -> option A *)
 
@@ -413,8 +413,8 @@ Print length.
 (* ===> length = 
         fix length (A : Type) (l : list A) {struct l} : nat :=
         match l with
-            | [[]] => 0
-            | _ :: t => S (length A t)
+        | [[]] => 0
+        | _ :: t => S (length A t)
         end
         : forall A : Type, list A -> nat *)
 
@@ -446,8 +446,8 @@ Print length.
 (* begin hide *)
 Fixpoint T (n : nat) : nat :=
 match n with
-    | 0 => 1
-    | S n' => S (T n')
+| 0 => 1
+| S n' => S (T n')
 end.
 (* end hide *)
 
@@ -505,12 +505,12 @@ Qed.
 
 Fixpoint length' {A : Type} (fuel : nat) (l : list A) : option nat :=
 match fuel, l with
-    | 0, _ => None
-    | _, [] => Some 0
-    | S fuel', _ :: t =>
+| 0, _ => None
+| _, [] => Some 0
+| S fuel', _ :: t =>
         match length' fuel' t with
-            | None => None
-            | Some n => Some (S n)
+        | None => None
+        | Some n => Some (S n)
         end
 end.
 
@@ -627,8 +627,8 @@ Print rev.
 (* ===> rev = 
         fix rev (A : Type) (l : list A) {struct l} : list A :=
         match l with
-            | [] => []
-            | h :: t => rev A t ++ [h]
+        | [] => []
+        | h :: t => rev A t ++ [h]
         end
         : forall A : Type, list A -> list A *)
 
@@ -666,8 +666,8 @@ Print rev.
 
 Fixpoint rev_aux {A : Type} (l acc : list A) : list A :=
 match l with
-    | [] => acc
-    | h :: t => rev_aux t (h :: acc)
+| [] => acc
+| h :: t => rev_aux t (h :: acc)
 end.
 
 Definition rev' {A : Type} (l : list A) : list A := rev_aux l [].
@@ -741,8 +741,8 @@ Qed.
 (* begin hide *)
 Fixpoint to0 (n : nat) : list nat :=
 match n with
-    | 0 => [0]
-    | S n' => n :: to0 n'
+| 0 => [0]
+| S n' => n :: to0 n'
 end.
 (* end hide *)
 

@@ -91,8 +91,8 @@ Definition pred (c : conat) : conat :=
 {|
     out :=
       match out c with
-          | Z => Z
-          | S c' => out c'
+      | Z => Z
+      | S c' => out c'
       end
 |}.
 
@@ -110,11 +110,11 @@ Qed.
 (* begin hide *)
 (* TODO *) Fixpoint cut (n : nat) (c : conat) : conat :=
 match n with
-    | 0 => zero
-    | Datatypes.S n' =>
+| 0 => zero
+| Datatypes.S n' =>
         match out c with
-            | Z => zero
-            | S c' => succ (cut n' c')
+        | Z => zero
+        | S c' => succ (cut n' c')
         end
 end.
 (* TODO: czy da się pokazać [Searchable conat] bez aksjomatów? *)
@@ -217,8 +217,8 @@ Compute
 
 Inductive ospec
   {A : Type} (N : Prop) (S : A -> Prop) : option A -> Prop :=
-    | ospec_None : N -> ospec N S None
-    | ospec_Some : forall a : A, S a -> ospec N S (Some a).
+| ospec_None : N -> ospec N S None
+| ospec_Some : forall a : A, S a -> ospec N S (Some a).
 
 Definition search'
   {A : Type} {SA : Searchable A} (p : A -> bool) : option A :=
@@ -240,13 +240,13 @@ Qed.
 From Typonomikon Require Import B4.
 
 Inductive Finite' : conat -> Type :=
-    | Finite'_zero : Finite' zero
-    | Finite'_succ : forall n : conat, Finite' n -> Finite' (succ n).
+| Finite'_zero : Finite' zero
+| Finite'_succ : forall n : conat, Finite' n -> Finite' (succ n).
 
 Fixpoint Finite'_to_nat {c : conat} (f : Finite' c) : nat :=
 match f with
-    | Finite'_zero => 0
-    | Finite'_succ _ f' => Datatypes.S (Finite'_to_nat f')
+| Finite'_zero => 0
+| Finite'_succ _ f' => Datatypes.S (Finite'_to_nat f')
 end.
 
 (* end hide *)
@@ -269,7 +269,7 @@ Require Import Lia.
 Module SafeFix.
 
 Private Inductive Div (A : Type) : Type :=
-    | pure : A -> Div A.
+| pure : A -> Div A.
 
 Arguments pure {A} _.
 
@@ -356,8 +356,8 @@ Import SafeFix.
 Definition euclid (n m : nat) : Div nat :=
   efix (fun euclid '(n, m) =>
     match n with
-        | 0 => pure m
-        | _ => euclid (PeanoNat.Nat.modulo m n, n)
+    | 0 => pure m
+    | _ => euclid (PeanoNat.Nat.modulo m n, n)
     end) (n, m).
 
 Time Compute euclid (2 * 3 * 5 * 7) (2 * 7 * 11).
@@ -367,8 +367,8 @@ Lemma euclid_eq :
     euclid n m
       =
     match n with
-        | 0 => pure m
-        | _ => euclid (PeanoNat.Nat.modulo m n) n
+    | 0 => pure m
+    | _ => euclid (PeanoNat.Nat.modulo m n) n
     end.
 Proof.
   intros. unfold euclid. rewrite unfix. reflexivity.
@@ -475,9 +475,9 @@ Admitted.
 Definition ack' (n m : nat) : Div nat :=
   efix (fun ack' '(n, m) =>
     match n, m with
-        | 0, _ => pure (1 + m)
-        | Datatypes.S n', 0 => ack' (n', 1)
-        | Datatypes.S n', Datatypes.S m' => divbind (ack' (n, m')) (fun r => ack' (n', r))
+    | 0, _ => pure (1 + m)
+    | Datatypes.S n', 0 => ack' (n', 1)
+    | Datatypes.S n', Datatypes.S m' => divbind (ack' (n, m')) (fun r => ack' (n', r))
     end) (n, m).
 
 Lemma ack'_eq :
@@ -485,9 +485,9 @@ Lemma ack'_eq :
     ack' n m
       =
     match n, m with
-        | 0, _ => pure (1 + m)
-        | Datatypes.S n', 0 => ack' n' 1
-        | Datatypes.S n', Datatypes.S m' => divbind (ack' n m') (fun r => ack' n' r)
+    | 0, _ => pure (1 + m)
+    | Datatypes.S n', 0 => ack' n' 1
+    | Datatypes.S n', Datatypes.S m' => divbind (ack' n m') (fun r => ack' n' r)
     end.
 (* begin hide *)
 Proof.

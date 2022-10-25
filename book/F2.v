@@ -5,8 +5,8 @@
 
 (* begin hide *)
 Inductive NatF (X : Type) : Type :=
-    | Z : NatF X
-    | S : X -> NatF X.
+| Z : NatF X
+| S : X -> NatF X.
 
 Arguments Z {X}.
 Arguments S {X} _.
@@ -17,9 +17,9 @@ CoInductive conat : Type :=
 }.
 
 Inductive simF (n m : conat) (R : conat -> conat -> Prop) : Prop :=
-    | simF_Z :
+| simF_Z :
         forall (Hn : out n = Z) (Hm : out m = Z), simF n m R
-    | simf_S :
+| simf_S :
         forall (n' m' : conat) (Hn : out n = S n') (Hm : out m = S m'),
           R n' m' -> simF n m R.
 
@@ -194,8 +194,8 @@ CoFixpoint add (n m : conat) : conat :=
 {|
     out :=
       match out n with
-          | Z => out m
-          | S n' => S (add n' m)
+      | Z => out m
+      | S n' => S (add n' m)
       end
 |}.
 (* end hide *)
@@ -372,11 +372,11 @@ CoFixpoint add' (n m : conat) : conat :=
 {|
     out :=
       match out n with
-          | Z    => out m
-          | S n' =>
+      | Z    => out m
+      | S n' =>
               match out m with
-                  | Z    => S n'
-                  | S m' => S {| out := S (add' n' m') |}
+              | Z    => S n'
+              | S m' => S {| out := S (add' n' m') |}
               end
       end
 |}.
@@ -611,9 +611,9 @@ Qed.
 
 (* begin hide *)
 Inductive leF (n m : conat) (R : conat -> conat -> Prop) : Prop :=
-    | leF_Z :
+| leF_Z :
         out n = Z -> leF n m R
-    | leF_S :
+| leF_S :
         forall n' m' : conat, out n = S n' -> out m = S m' -> R n' m' -> leF n m R.
 
 CoInductive le (n m : conat) : Prop :=
@@ -848,9 +848,9 @@ CoFixpoint min (n m : conat) : conat :=
 {|
     out :=
       match out n, out m with
-          | Z, _ => Z
-          | _, Z => Z
-          | S n', S m' => S (min n' m')
+      | Z, _ => Z
+      | _, Z => Z
+      | S n', S m' => S (min n' m')
       end;
 |}.
 
@@ -858,9 +858,9 @@ CoFixpoint max (n m : conat) : conat :=
 {|
     out :=
       match out n, out m with
-          | Z, _ => out m
-          | _, Z => out n
-          | S n', S m' => S (max n' m')
+      | Z, _ => out m
+      | _, Z => out n
+      | S n', S m' => S (max n' m')
       end;
 |}.
 (* end hide *)
@@ -1183,11 +1183,11 @@ CoFixpoint div2 (n : conat) : conat :=
 {|
     out :=
       match out n with
-          | Z => Z
-          | S n' =>
+      | Z => Z
+      | S n' =>
               match out n' with
-                  | Z => Z
-                  | S n'' => S (div2 n'')
+              | Z => Z
+              | S n'' => S (div2 n'')
               end
       end;
 |}.
@@ -1279,11 +1279,11 @@ Qed.
 
 (* begin hide *)
 Inductive Finite : conat -> Prop :=
-    | Finite_zero : Finite zero
-    | Finite_succ : forall n : conat, Finite n -> Finite (succ n).
+| Finite_zero : Finite zero
+| Finite_succ : forall n : conat, Finite n -> Finite (succ n).
 
 Inductive InfiniteF (n : conat) (P : conat -> Prop) : Prop :=
-    | InfiniteF' :
+| InfiniteF' :
         forall (n' : conat) (H : out n = S n'),
           P n' -> InfiniteF n P.
 
@@ -1345,9 +1345,9 @@ Qed.
 
 (* begin hide *)
 Inductive EvenF (n : conat) (P : conat -> Prop) : Prop :=
-    | EvenF_Z  :
+| EvenF_Z  :
         forall Hn : out n = Z, EvenF n P
-    | EvenF_SS :
+| EvenF_SS :
         forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2) (HEven : P n2), EvenF n P.
 
 CoInductive Even (n : conat) : Prop :=
@@ -1356,10 +1356,10 @@ CoInductive Even (n : conat) : Prop :=
 }.
 
 Inductive OddF (n : conat) (P : conat -> Prop) : Prop :=
-    | OddF_SZ :
+| OddF_SZ :
         forall (n' : conat) (Hn : out n = S n') (Hn' : out n' = Z),
           OddF n P
-    | OddF_SS :
+| OddF_SS :
         forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2) (HOdd : P n2), OddF n P.
 
 CoInductive Odd (n : conat) : Prop :=
@@ -1620,9 +1620,9 @@ Qed.
 (* begin hide *)
 Fixpoint subn (n : conat) (m : nat) : conat :=
 match out n, m with
-    | Z, _ => n
-    | _, 0 => n
-    | S n', Datatypes.S m' => subn n' m'
+| Z, _ => n
+| _, 0 => n
+| S n', Datatypes.S m' => subn n' m'
 end.
 (* end hide *)
 
@@ -1710,9 +1710,9 @@ CoFixpoint mul' (n m acc : conat) : conat :=
 {|
     out :=
       match out n, out m with
-          | Z   , _       => out acc
-          | _      , Z    => out acc
-          | S n', S m' => S (mul' n' m' (add n' (add m' acc)))
+      | Z   , _       => out acc
+      | _      , Z    => out acc
+      | S n', S m' => S (mul' n' m' (add n' (add m' acc)))
       end
 |}.
 
@@ -1806,9 +1806,9 @@ Qed.
 (* end hide *)
 
 (* Inductive Finite' : conat -> Prop :=
-    | Finite'_zero :
+| Finite'_zero :
         forall n : conat, out n = Z -> Finite' n
-    | Finite'_succ :
+| Finite'_succ :
         forall n n' : conat, out n = S n' -> Finite' n' -> Finite' n.
 
 #[global] Hint Constructors Finite' : core. *)
@@ -1882,14 +1882,14 @@ with Odd2 (n : conat) : Prop :=
 Module Even2_v2.
 
 Inductive Even2F (n : conat) (P : conat -> Prop) : Prop :=
-    | Even2_Z  :
+| Even2_Z  :
         forall Hn : out n = Z, Even2F n P
-    | Even2_SS :
+| Even2_SS :
         forall (n' : conat) (Hn : out n = S n'),
           P n' -> Even2F n P.
 
 Inductive Odd2F (n : conat) (P : conat -> Prop) : Prop :=
-    | Odd2_S :
+| Odd2_S :
         forall (n' : conat) (Hn : out n = S n') (HOdd : P n'), Odd2F n P.
 
 CoInductive Even2' (n : conat) : Prop :=
@@ -1969,8 +1969,8 @@ Qed.
 (* begin hide *)
 Fixpoint from_nat (n : nat) : conat :=
 match n with
-    | 0 => zero
-    | Datatypes.S n' => succ (from_nat n')
+| 0 => zero
+| Datatypes.S n' => succ (from_nat n')
 end.
 (* end hide *)
 
@@ -2020,12 +2020,12 @@ Qed.
 
 (* begin hide *)
 Inductive lec : conat -> nat -> Prop :=
-    | lec_0 : forall n : nat, lec zero n
-    | lec_S : forall (c : conat) (n : nat), lec c n -> lec (succ c) (Datatypes.S n).
+| lec_0 : forall n : nat, lec zero n
+| lec_S : forall (c : conat) (n : nat), lec c n -> lec (succ c) (Datatypes.S n).
 
 Inductive gtc : conat -> nat -> Prop :=
-    | gtc_zero : forall c : conat, gtc (succ c) 0
-    | gtc_S : forall (c : conat) (n : nat), gtc c n -> gtc (succ c) (Datatypes.S n).
+| gtc_zero : forall c : conat, gtc (succ c) 0
+| gtc_S : forall (c : conat) (n : nat), gtc c n -> gtc (succ c) (Datatypes.S n).
 
 Lemma lec_spec :
   forall (n : nat) (c : conat),

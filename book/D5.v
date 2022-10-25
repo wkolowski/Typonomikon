@@ -19,8 +19,8 @@ Ltac inv H := inversion H; subst; clear H.
 
 (* begin hide *)
 Inductive list (A : Type) : Type :=
-    | nil : list A
-    | cons : A -> list A -> list A.
+| nil : list A
+| cons : A -> list A -> list A.
 (* end hide *)
 
 Arguments nil {A}.
@@ -40,8 +40,8 @@ Notation "[ x ; .. ; y ]" := (cons x .. (cons y nil) ..).
 (* begin hide *)
 Definition isEmpty {A : Type} (l : list A) : bool :=
 match l with
-    | [] => true
-    | _ => false
+| [] => true
+| _ => false
 end.
 (* end hide *)
 
@@ -56,8 +56,8 @@ end.
 (* begin hide *)
 Fixpoint length {A : Type} (l : list A) : nat :=
 match l with
-    | [] => 0
-    | _ :: t => S (length t)
+| [] => 0
+| _ :: t => S (length t)
 end.
 (* end hide *)
 
@@ -99,8 +99,8 @@ Qed.
 (* begin hide *)
 Fixpoint snoc {A : Type} (x : A) (l : list A) : list A :=
 match l with
-    | [] => [x]
-    | h :: t => h :: snoc x t
+| [] => [x]
+| h :: t => h :: snoc x t
 end.
 (* end hide *)
 
@@ -201,8 +201,8 @@ Qed.
 (* begin hide *)
 Fixpoint app {A : Type} (l1 l2 : list A) : list A :=
 match l1 with
-    | [] => l2
-    | h :: t => h :: app t l2
+| [] => l2
+| h :: t => h :: app t l2
 end.
 (* end hide *)
 
@@ -397,8 +397,8 @@ Qed.
 (* begin hide *)
 Fixpoint rev {A : Type} (l : list A) : list A :=
 match l with
-    | [] => []
-    | h :: t => snoc h (rev t)
+| [] => []
+| h :: t => snoc h (rev t)
 end.
 (* end hide *)
 
@@ -481,8 +481,8 @@ Qed.
 (* begin hide *)
 Fixpoint map {A B : Type} (f : A -> B) (la : list A) : list B :=
 match la with
-    | [] => []
-    | h :: t => f h :: map f t
+| [] => []
+| h :: t => f h :: map f t
 end.
 (* end hide *)
 
@@ -584,8 +584,8 @@ Qed.
 (* begin hide *)
 Fixpoint join {A : Type} (lla : list (list A)) : list A :=
 match lla with
-    | [] => []
-    | h :: t => h ++ join t
+| [] => []
+| h :: t => h ++ join t
 end.
 (* end hide *)
 
@@ -641,8 +641,8 @@ Qed.
 (* begin hide *)
 Fixpoint bind {A B : Type} (f : A -> list B) (l : list A) : list B :=
 match l with
-    | [] => []
-    | h :: t => f h ++ bind f t
+| [] => []
+| h :: t => f h ++ bind f t
 end.
 (* end hide *)
 
@@ -711,15 +711,15 @@ Qed.
 (* begin hide *)
 Fixpoint replicate {A : Type} (n : nat) (x : A) : list A :=
 match n with
-    | 0 => []
-    | S n' => x :: replicate n' x
+| 0 => []
+| S n' => x :: replicate n' x
 end.
 (* end hide *)
 
 Definition isZero (n : nat) : bool :=
 match n with
-    | 0 => true
-    | _ => false
+| 0 => true
+| _ => false
 end.
 
 Lemma isEmpty_replicate :
@@ -805,14 +805,14 @@ Qed.
 Fixpoint iterate
   {A : Type} (f : A -> A) (n : nat) (x : A) : list A :=
 match n with
-    | 0 => []
-    | S n' => x :: iterate f n' (f x)
+| 0 => []
+| S n' => x :: iterate f n' (f x)
 end.
 
 Fixpoint iter {A : Type} (f : A -> A) (n : nat) (x : A) : A :=
 match n with
-    | 0 => x
-    | S n' => iter f n' (f x)
+| 0 => x
+| S n' => iter f n' (f x)
 end.
 (* end hide *)
 
@@ -820,8 +820,8 @@ Lemma isEmpty_iterate :
   forall (A : Type) (f : A -> A) (n : nat) (x : A),
     isEmpty (iterate f n x) =
     match n with
-        | 0 => true
-        | _ => false
+    | 0 => true
+    | _ => false
     end.
 (* begin hide *)
 Proof.
@@ -975,8 +975,8 @@ Qed.
 (* begin hide *)
 Definition head {A : Type} (l : list A) : option A :=
 match l with
-    | [] => None
-    | h :: _ => Some h
+| [] => None
+| h :: _ => Some h
 end.
 (* end hide *)
 
@@ -1031,8 +1031,8 @@ Lemma head_app :
   forall (A : Type) (l1 l2 : list A),
     head (l1 ++ l2) =
     match l1 with
-        | [] => head l2
-        | h :: _ => Some h
+    | [] => head l2
+    | h :: _ => Some h
     end.
 (* begin hide *)
 Proof. destruct l1; reflexivity. Qed.
@@ -1042,8 +1042,8 @@ Lemma head_map :
   forall (A B : Type) (f : A -> B) (l : list A),
     head (map f l) =
     match l with
-        | [] => None
-        | h :: _ => Some (f h)
+    | [] => None
+    | h :: _ => Some (f h)
     end.
 (* begin hide *)
 Proof.
@@ -1062,8 +1062,8 @@ Lemma head_replicate :
   forall (A : Type) (n : nat) (x : A),
     head (replicate n x) =
     match n with
-        | 0 => None
-        | _ => Some x
+    | 0 => None
+    | _ => Some x
     end.
 (* begin hide *)
 Proof. destruct n; reflexivity. Qed.
@@ -1073,8 +1073,8 @@ Lemma head_iterate :
   forall (A : Type) (f : A -> A) (n : nat) (x : A),
     head (iterate f n x) =
     match n with
-        | 0 => None
-        | S n' => Some x
+    | 0 => None
+    | S n' => Some x
     end.
 (* begin hide *)
 Proof.
@@ -1094,8 +1094,8 @@ Qed.
 (* begin hide *)
 Definition tail {A : Type} (l : list A) : option (list A) :=
 match l with
-    | [] => None
-    | _ :: t => Some t
+| [] => None
+| _ :: t => Some t
 end.
 (* end hide *)
 
@@ -1138,8 +1138,8 @@ Lemma tail_snoc :
   forall (A : Type) (x : A) (l : list A),
     tail (snoc x l) =
     match tail l with
-        | None => Some []
-        | Some t => Some (snoc x t)
+    | None => Some []
+    | Some t => Some (snoc x t)
     end.
 (* begin hide *)
 Proof.
@@ -1151,8 +1151,8 @@ Lemma tail_app :
   forall (A : Type) (l1 l2 : list A),
     tail (l1 ++ l2) =
     match l1 with
-        | [] => tail l2
-        | h :: t => Some (t ++ l2)
+    | [] => tail l2
+    | h :: t => Some (t ++ l2)
     end.
 (* begin hide *)
 Proof.
@@ -1164,8 +1164,8 @@ Lemma tail_map :
   forall (A B : Type) (f : A -> B) (l : list A),
     tail (map f l) =
     match l with
-        | [] => None
-        | _ :: t => Some (map f t)
+    | [] => None
+    | _ :: t => Some (map f t)
     end.
 (* begin hide *)
 Proof.
@@ -1177,8 +1177,8 @@ Lemma tail_replicate :
   forall (A : Type) (n : nat) (x : A),
     tail (replicate n x) =
     match n with
-        | 0 => None
-        | S n' => Some (replicate n' x)
+    | 0 => None
+    | S n' => Some (replicate n' x)
     end.
 (* begin hide *)
 Proof. destruct n; reflexivity. Qed.
@@ -1188,8 +1188,8 @@ Lemma tail_iterate :
   forall (A : Type) (f : A -> A) (n : nat) (x : A),
     tail (iterate f n x) =
     match n with
-        | 0 => None
-        | S n' => Some (iterate f n' (f x))
+    | 0 => None
+    | S n' => Some (iterate f n' (f x))
     end.
 (* begin hide *)
 Proof.
@@ -1210,8 +1210,8 @@ Qed.
 (* begin hide *)
 Definition uncons {A : Type} (l : list A) : option (A * list A) :=
 match l with
-    | [] => None
-    | h :: t => Some (h, t)
+| [] => None
+| h :: t => Some (h, t)
 end.
 (* end hide *)
 
@@ -1219,8 +1219,8 @@ Lemma uncons_spec :
   forall (A : Type) (l : list A),
     uncons l =
     match head l, tail l with
-        | Some h, Some t => Some (h, t)
-        | _, _ => None
+    | Some h, Some t => Some (h, t)
+    | _, _ => None
     end.
 (* begin hide *)
 Proof. destruct l; reflexivity. Qed.
@@ -1240,9 +1240,9 @@ Proof. destruct l; reflexivity. Qed.
 (* begin hide *)
 Function last {A : Type} (l : list A) : option A :=
 match l with
-    | [] => None
-    | [x] => Some x
-    | h :: t => last t
+| [] => None
+| [x] => Some x
+| h :: t => last t
 end.
 (* end hide *)
 
@@ -1317,8 +1317,8 @@ Lemma last_app :
   forall (A : Type) (l1 l2 : list A),
     last (l1 ++ l2) =
     match l2 with
-        | [] => last l1
-        | _ => last l2
+    | [] => last l1
+    | _ => last l2
     end.
 (* begin hide *)
 Proof.
@@ -1345,8 +1345,8 @@ Lemma last_replicate :
   forall (A : Type) (n : nat) (x : A),
     last (replicate n x) =
     match n with
-        | 0 => None
-        | _ => Some x
+    | 0 => None
+    | _ => Some x
     end.
 (* begin hide *)
 Proof.
@@ -1360,8 +1360,8 @@ Lemma last_iterate :
   forall (A : Type) (f : A -> A) (n : nat) (x : A),
     last (iterate f n x) =
     match n with
-        | 0 => None
-        | S n' => Some (iter f n' x)
+    | 0 => None
+    | S n' => Some (iter f n' x)
     end.
 (* begin hide *)
 Proof.
@@ -1385,10 +1385,10 @@ Qed.
 (* begin hide *)
 Fixpoint init {A : Type} (l : list A) : option (list A) :=
 match l with
-    | [] => None
-    | h :: t => match init t with
-        | None => Some []
-        | Some t' => Some (h :: t')
+| [] => None
+| h :: t => match init t with
+    | None => Some []
+    | Some t' => Some (h :: t')
     end
 end.
 (* end hide *)
@@ -1419,8 +1419,8 @@ Lemma init_app :
   forall (A : Type) (l1 l2 : list A),
     init (l1 ++ l2) =
     match init l2 with
-        | None => init l1
-        | Some i => Some (l1 ++ i)
+    | None => init l1
+    | Some i => Some (l1 ++ i)
     end.
 (* begin hide *)
 Proof.
@@ -1443,11 +1443,11 @@ Lemma init_map :
   forall (A B : Type) (f : A -> B) (l : list A),
     init (map f l) =
     match l with
-        | [] => None
-        | h :: t =>
+    | [] => None
+    | h :: t =>
             match init t with
-                | None => Some []
-                | Some i => Some (map f (h :: i))
+            | None => Some []
+            | Some i => Some (map f (h :: i))
             end
     end.
 (* begin hide *)
@@ -1462,8 +1462,8 @@ Lemma init_replicate :
   forall (A : Type) (n : nat) (x : A),
     init (replicate n x) =
     match n with
-        | 0 => None
-        | S n' => Some (replicate n' x)
+    | 0 => None
+    | S n' => Some (replicate n' x)
     end.
 (* begin hide *)
 Proof.
@@ -1477,8 +1477,8 @@ Lemma init_iterate :
   forall (A : Type) (f : A -> A) (n : nat) (x : A),
     init (iterate f n x) =
     match n with
-        | 0 => None
-        | S n' => Some (iterate f n' x)
+    | 0 => None
+    | S n' => Some (iterate f n' x)
     end.
 (* begin hide *)
 Proof.
@@ -1523,11 +1523,11 @@ Qed.
 (* begin hide *)
 Fixpoint unsnoc {A : Type} (l : list A) : option (A * list A) :=
 match l with
-    | [] => None
-    | h :: t =>
+| [] => None
+| h :: t =>
         match unsnoc t with
-            | None => Some (h, [])
-            | Some (last, init) => Some (last, h :: init)
+        | None => Some (h, [])
+        | Some (last, init) => Some (last, h :: init)
         end
 end.
 (* end hide *)
@@ -1547,8 +1547,8 @@ Lemma unsnoc_spec :
   forall (A : Type) (l : list A),
     unsnoc l =
     match last l, init l with
-        | Some x, Some l' => Some (x, l')
-        | _, _ => None
+    | Some x, Some l' => Some (x, l')
+    | _, _ => None
     end.
 (* begin hide *)
 Proof.
@@ -1612,8 +1612,8 @@ Lemma tail_rev :
   forall (A : Type) (l : list A),
     tail (rev l) =
     match init l with
-        | None => None
-        | Some t => Some (rev t)
+    | None => None
+    | Some t => Some (rev t)
     end.
 (* begin hide *)
 Proof.
@@ -1631,8 +1631,8 @@ Lemma init_rev :
   forall (A : Type) (l : list A),
     init (rev l) =
     match tail l with
-        | None => None
-        | Some t => Some (rev t)
+    | None => None
+    | Some t => Some (rev t)
     end.
 (* begin hide *)
 Proof.
@@ -1715,9 +1715,9 @@ Qed.
 (* begin hide *)
 Fixpoint nth {A : Type} (n : nat) (l : list A) {struct l} : option A :=
 match l, n with
-    | [], _ => None
-    | h :: t, 0 => Some h
-    | h :: t, S n' => nth n' t
+| [], _ => None
+| h :: t, 0 => Some h
+| h :: t, S n' => nth n' t
 end.
 (* end hide *)
 
@@ -1824,8 +1824,8 @@ Lemma nth_app :
   forall (A : Type) (l1 l2 : list A) (n : nat),
     nth n (l1 ++ l2) =
     match nth n l1 with
-        | None => nth (n - length l1) l2
-        | Some x => Some x
+    | None => nth (n - length l1) l2
+    | Some x => Some x
     end.
 (* begin hide *)
 Proof.
@@ -1928,8 +1928,8 @@ Qed.
 Lemma nth_spec' :
   forall (A : Type) (l : list A) (n : nat),
     match nth n l with
-        | None => length l <= n
-        | Some x => exists l1 l2 : list A,
+    | None => length l <= n
+    | Some x => exists l1 l2 : list A,
                       l = l1 ++ x :: l2 /\ length l1 = n
     end.
 (* begin hide *)
@@ -1957,8 +1957,8 @@ Lemma nth_map :
   forall (A B : Type) (f : A -> B) (l : list A) (n : nat),
     nth n (map f l) =
     match nth n l with
-        | None => None
-        | Some x => Some (f x)
+    | None => None
+    | Some x => Some (f x)
     end.
 (* begin hide *)
 Proof.
@@ -2028,9 +2028,9 @@ Qed.
 (* begin hide *)
 Fixpoint take {A : Type} (n : nat) (l : list A) {struct l} : list A :=
 match l, n with
-    | [], _ => []
-    | _, 0 => []
-    | h :: t, S n' => h :: take n' t
+| [], _ => []
+| _, 0 => []
+| h :: t, S n' => h :: take n' t
 end.
 (* end hide *)
 
@@ -2164,8 +2164,8 @@ Qed.
   forall (A : Type) (ll : list (list A)) (n : nat),
     exists m1 : nat,
       match nth (S m1) ll with
-          | None => m1 = 0
-          | Some l =>
+      | None => m1 = 0
+      | Some l =>
               exists m2 : nat,
                 take n (join ll) = join (take m1 ll) ++ take m2 l
       end.
@@ -2240,9 +2240,9 @@ Lemma tail_take :
   forall (A : Type) (l : list A) (n : nat),
     tail (take n l) =
     match n, l with
-        | 0, _ => None
-        | _, [] => None
-        | S n', h :: t => Some (take n' t)
+    | 0, _ => None
+    | _, [] => None
+    | S n', h :: t => Some (take n' t)
     end.
 (* begin hide *)
 Proof.
@@ -2254,9 +2254,9 @@ Lemma init_take :
   forall (A : Type) (l : list A) (n : nat),
     init (take n l) =
     match n, l with
-        | 0, _ => None
-        | _, [] => None
-        | S n', h :: t => Some (take (min n' (length l - 1)) l)
+    | 0, _ => None
+    | _, [] => None
+    | S n', h :: t => Some (take (min n' (length l - 1)) l)
     end.
 (* begin hide *)
 Proof.
@@ -2325,9 +2325,9 @@ Qed.
 (* begin hide *)
 Fixpoint drop {A : Type} (n : nat) (l : list A) {struct l} : list A :=
 match l, n with
-    | [], _ => []
-    | _, 0 => l
-    | h :: t, S n' => drop n' t
+| [], _ => []
+| _, 0 => l
+| h :: t, S n' => drop n' t
 end.
 (* end hide *)
 
@@ -2519,8 +2519,8 @@ Lemma init_drop :
     if n <? length l
     then
       match init l with
-          | None => None
-          | Some l' => Some (drop n l')
+      | None => None
+      | Some l' => Some (drop n l')
       end
     else None.
 (* begin hide *)
@@ -2566,8 +2566,8 @@ Qed.
 Lemma nth_spec :
   forall (A : Type) (l : list A) (n : nat),
     match nth n l with
-        | None => length l <= n
-        | Some x => l = take n l ++ x :: drop (S n) l
+    | None => length l <= n
+    | Some x => l = take n l ++ x :: drop (S n) l
     end.
 (* begin hide *)
 Proof.
@@ -2716,9 +2716,9 @@ Qed.
 (* begin hide *)
 Fixpoint cycle {A : Type} (n : nat) (l : list A) : list A :=
 match n, l with
-    | 0, _ => l
-    | S n', [] => []
-    | S n', h :: t => cycle n' (snoc h t)
+| 0, _ => l
+| S n', [] => []
+| S n', h :: t => cycle n' (snoc h t)
 end.
 (* end hide *)
 
@@ -2868,12 +2868,12 @@ Fixpoint splitAt
   {A : Type} (n : nat) (l : list A) {struct l}
   : option (list A * A * list A) :=
 match l, n with
-    | [], _ => None
-    | h :: t, 0 => Some ([], h, t)
-    | h :: t, S n' =>
+| [], _ => None
+| h :: t, 0 => Some ([], h, t)
+| h :: t, S n' =>
         match splitAt n' t with
-            | None => None
-            | Some (l1, x, l2) => Some (h :: l1, x, l2)
+        | None => None
+        | Some (l1, x, l2) => Some (h :: l1, x, l2)
         end
 end.
 (* end hide *)
@@ -2881,8 +2881,8 @@ end.
 Lemma splitAt_spec :
   forall (A : Type) (l : list A) (n : nat),
     match splitAt n l with
-        | None => length l <= n
-        | Some (l1, x, l2) => l = l1 ++ x :: l2
+    | None => length l <= n
+    | Some (l1, x, l2) => l = l1 ++ x :: l2
     end.
 (* begin hide *)
 Proof.
@@ -2917,8 +2917,8 @@ Qed.
 Lemma splitAt_megaspec :
   forall (A : Type) (l : list A) (n : nat),
     match splitAt n l with
-        | None => length l <= n
-        | Some (l1, x, l2) =>
+    | None => length l <= n
+    | Some (l1, x, l2) =>
             nth n l = Some x /\
             l1 = take n l /\
             l2 = drop (S n) l /\
@@ -3002,8 +3002,8 @@ Qed.
 (* TODO *) (*Lemma splitAt_length_inv :
   forall (A : Type) (l : list A) (n : nat),
     match splitAt n l with
-        | None => length l <= n
-        | Some _ => n < length l
+    | None => length l <= n
+    | Some _ => n < length l
     end.
 Proof.*)
 (* end hide *)
@@ -3051,8 +3051,8 @@ Lemma splitAt_snoc :
     if n <? length l
     then
       match splitAt n l with
-          | None => None
-          | Some (b, y, e) => Some (b, y, snoc x e)
+      | None => None
+      | Some (b, y, e) => Some (b, y, snoc x e)
       end
     else
       if beq_nat n (length l)
@@ -3077,11 +3077,11 @@ Lemma splitAt_app :
   forall (A : Type) (l1 l2 : list A) (n : nat),
     splitAt n (l1 ++ l2) =
     match splitAt n l1 with
-        | Some (l11, x, l12) => Some (l11, x, l12 ++ l2)
-        | None =>
+    | Some (l11, x, l12) => Some (l11, x, l12 ++ l2)
+    | None =>
             match splitAt (n - length l1) l2 with
-                | Some (l21, x, l22) => Some (l1 ++ l21, x, l22)
-                | None => None
+            | Some (l21, x, l22) => Some (l1 ++ l21, x, l22)
+            | None => None
             end
     end.
 (* begin hide *)
@@ -3103,8 +3103,8 @@ Lemma splitAt_app_lt :
     n < length l1 ->
       splitAt n (l1 ++ l2) =
       match splitAt n l1 with
-          | None => None
-          | Some (x, l11, l12) => Some (x, l11, l12 ++ l2)
+      | None => None
+      | Some (x, l11, l12) => Some (x, l11, l12 ++ l2)
       end.
 (* begin hide *)
 Proof.
@@ -3119,8 +3119,8 @@ Lemma splitAt_app_ge :
     length l1 <= n ->
       splitAt n (l1 ++ l2) =
       match splitAt (n - length l1) l2 with
-          | None => None
-          | Some (l21, x, l22) => Some (l1 ++ l21, x, l22)
+      | None => None
+      | Some (l21, x, l22) => Some (l1 ++ l21, x, l22)
       end.
 (* begin hide *)
 Proof.
@@ -3136,8 +3136,8 @@ Lemma splitAt_rev_aux :
     n < length l ->
       splitAt n l =
       match splitAt (length l - S n) (rev l) with
-          | None => None
-          | Some (l1, x, l2) => Some (rev l2, x, rev l1)
+      | None => None
+      | Some (l1, x, l2) => Some (rev l2, x, rev l1)
       end.
 (* begin hide *)
 Proof.
@@ -3163,8 +3163,8 @@ Lemma splitAt_rev :
     n < length l ->
       splitAt n (rev l) =
       match splitAt (length l - S n) l with
-          | None => None
-          | Some (l1, x, l2) => Some (rev l2, x, rev l1)
+      | None => None
+      | Some (l1, x, l2) => Some (rev l2, x, rev l1)
       end.
 (* begin hide *)
 Proof.
@@ -3178,8 +3178,8 @@ Lemma splitAt_map :
   forall (A B : Type) (f : A -> B) (l : list A) (n : nat),
     splitAt n (map f l) =
     match splitAt n l with
-        | None => None
-        | Some (l1, x, l2) => Some (map f l1, f x, map f l2)
+    | None => None
+    | Some (l1, x, l2) => Some (map f l1, f x, map f l2)
     end.
 (* begin hide *)
 Proof.
@@ -3233,8 +3233,8 @@ Lemma splitAt_head_l :
     splitAt n l = Some (l1, x, l2) ->
       head l1 =
       match n with
-          | 0 => None
-          | _ => head l
+      | 0 => None
+      | _ => head l
       end.
 (* begin hide *)
 Proof.
@@ -3263,8 +3263,8 @@ Lemma splitAt_last_l :
     splitAt n l = Some (l1, x, l2) ->
       last l1 =
       match n with
-          | 0 => None
-          | S n' => nth n' l
+      | 0 => None
+      | S n' => nth n' l
       end.
 (* begin hide *)
 Proof.
@@ -3359,9 +3359,9 @@ Qed.
 Fixpoint insert
   {A : Type} (l : list A) (n : nat) (x : A) : list A :=
 match l, n with
-    | [], _ => [x]
-    | _, 0 => x :: l
-    | h :: t, S n' => h :: insert t n' x
+| [], _ => [x]
+| _, 0 => x :: l
+| h :: t, S n' => h :: insert t n' x
 end.
 (* end hide *)
 
@@ -3531,9 +3531,9 @@ Lemma head_insert :
   forall (A : Type) (l : list A) (n : nat) (x : A),
     head (insert l n x) =
     match l, n with
-        | [], _ => Some x
-        | _, 0 => Some x
-        | _, _ => head l
+    | [], _ => Some x
+    | _, 0 => Some x
+    | _, _ => head l
     end.
 (* begin hide *)
 Proof.
@@ -3545,9 +3545,9 @@ Lemma tail_insert :
   forall (A : Type) (l : list A) (n : nat) (x : A),
     tail (insert l n x) =
     match l, n with
-        | [], _ => Some []
-        | _, 0 => Some l
-        | h :: t, S n' => Some (insert t n' x)
+    | [], _ => Some []
+    | _, 0 => Some l
+    | h :: t, S n' => Some (insert t n' x)
     end.
 (* begin hide *)
 Proof.
@@ -3703,12 +3703,12 @@ Admitted.
 Fixpoint replace
   {A : Type} (l : list A) (n : nat) (x : A) : option (list A) :=
 match l, n with
-    | [], _ => None
-    | h :: t, 0 => Some (x :: t)
-    | h :: t, S n' =>
+| [], _ => None
+| h :: t, 0 => Some (x :: t)
+| h :: t, S n' =>
         match replace t n' x with
-            | None => None
-            | Some l => Some (h :: l)
+        | None => None
+        | Some l => Some (h :: l)
         end
 end.
 (* end hide *)
@@ -3803,8 +3803,8 @@ Lemma replace_snoc_neq :
     n <> length l ->
       replace (snoc x l) n y =
       match replace l n y with
-          | None => None
-          | Some l' => Some (snoc x l')
+      | None => None
+      | Some l' => Some (snoc x l')
       end.
 (* begin hide *)
 Proof.
@@ -3822,8 +3822,8 @@ Lemma replace_snoc :
     then Some (snoc y l)
     else
       match replace l n y with
-          | None => None
-          | Some l' => Some (snoc x l')
+      | None => None
+      | Some l' => Some (snoc x l')
       end.
 (* begin hide *)
 Proof.
@@ -3839,9 +3839,9 @@ Lemma replace_app :
   forall (A : Type) (l1 l2 : list A) (n : nat) (x : A),
     replace (l1 ++ l2) n x =
     match replace l1 n x, replace l2 (n - length l1) x with
-        | None, None => None
-        | Some l', _ => Some (l' ++ l2)
-        | _, Some l' => Some (l1 ++ l')
+    | None, None => None
+    | Some l', _ => Some (l' ++ l2)
+    | _, Some l' => Some (l1 ++ l')
     end.
 (* begin hide *)
 Proof.
@@ -3901,8 +3901,8 @@ Lemma replace_rev_aux :
     n < length l ->
       replace l n x =
       match replace (rev l) (length l - S n) x with
-          | None => None
-          | Some l' => Some (rev l')
+      | None => None
+      | Some l' => Some (rev l')
       end.
 (* begin hide *)
 Proof.
@@ -3924,8 +3924,8 @@ Qed.
 
 Definition omap {A B: Type} (f : A -> B) (oa : option A) : option B :=
 match oa with
-    | None => None
-    | Some a => Some (f a)
+| None => None
+| Some a => Some (f a)
 end.
 
 Lemma replace_rev :
@@ -3962,14 +3962,14 @@ Lemma replace_join :
     replace (join ll) n x = Some l ->
       exists n m : nat,
         match nth n ll with
-            | None => False
-            | Some l' =>
+        | None => False
+        | Some l' =>
                 match replace l' m x with
-                    | None => False
-                    | Some l'' =>
+                | None => False
+                | Some l'' =>
                         match replace ll n l'' with
-                            | None => False
-                            | Some ll' => join ll' = l
+                        | None => False
+                        | Some ll' => join ll' = l
                         end
                 end
         end.
@@ -4033,8 +4033,8 @@ Lemma head_replace :
     replace l n x = Some l' ->
       head l' =
       match n with
-          | 0 => Some x
-          | _ => head l
+      | 0 => Some x
+      | _ => head l
       end.
 (* begin hide *)
 Proof.
@@ -4049,11 +4049,11 @@ Lemma tail_replace :
     replace l n x = Some l' ->
       tail l' =
       match n with
-          | 0 => tail l
-          | S n' =>
+      | 0 => tail l
+      | S n' =>
               match tail l with
-                  | None => None
-                  | Some t => replace t n' x
+              | None => None
+              | Some t => replace t n' x
               end
       end.
 (* begin hide *)
@@ -4144,8 +4144,8 @@ Lemma init_replace :
     replace l n x = Some l' ->
       init l' =
       match init l with
-          | None => None
-          | Some i => if length i <=? n then Some i else replace i n x
+      | None => None
+      | Some i => if length i <=? n then Some i else replace i n x
       end.
 (* begin hide *)
 Proof.
@@ -4243,8 +4243,8 @@ Lemma replace_plus :
   forall (A : Type) (l : list A) (n m : nat) (x : A),
     replace l (n + m) x =
     match replace (drop n l) m x with
-        | None => None
-        | Some l' => Some (take n l ++ l')
+    | None => None
+    | Some l' => Some (take n l ++ l')
     end.
 (* begin hide *)
 Proof.
@@ -4278,27 +4278,27 @@ Qed.
 Fixpoint remove
   {A : Type} (n : nat) (l : list A) {struct l} : option (A * list A) :=
 match l, n with
-    | [], _ => None
-    | h :: t, 0 => Some (h, t)
-    | h :: t, S n' =>
+| [], _ => None
+| h :: t, 0 => Some (h, t)
+| h :: t, S n' =>
         match remove n' t with
-            | None => None
-            | Some (x, l') => Some (x, h :: l')
+        | None => None
+        | Some (x, l') => Some (x, h :: l')
         end
 end.
 
 Definition remove'
   {A : Type} (n : nat) (l : list A) : list A :=
 match remove n l with
-    | None => l
-    | Some (_, l') => l'
+| None => l
+| Some (_, l') => l'
 end.
 
 Definition remove''
   {A : Type} (n : nat) (l : list A) : option (list A) :=
 match remove n l with
-    | None => None
-    | Some (_, l') => Some l'
+| None => None
+| Some (_, l') => Some l'
 end.
 (* end hide *)
 
@@ -4371,8 +4371,8 @@ Lemma remove_length_lt :
     n < length l ->
       nth n l =
       match remove n l with
-          | None => None
-          | Some (h, _) => Some h
+      | None => None
+      | Some (h, _) => Some h
       end.
 (* begin hide *)
 Proof.
@@ -4427,8 +4427,8 @@ Lemma remove_snoc_lt :
     n < length l ->
       remove n (snoc x l) =
       match remove n l with
-          | None => None
-          | Some (h, t) => Some (h, snoc x t)
+      | None => None
+      | Some (h, t) => Some (h, snoc x t)
       end.
 (* begin hide *)
 Proof.
@@ -4445,11 +4445,11 @@ Lemma remove_app :
   forall (A : Type) (l1 l2 : list A) (n : nat),
     remove n (l1 ++ l2) =
     match remove n l1 with
-        | Some (h, t) => Some (h, t ++ l2)
-        | None =>
+    | Some (h, t) => Some (h, t ++ l2)
+    | None =>
             match remove (n - length l1) l2 with
-                | Some (h, t) => Some (h, l1 ++ t)
-                | None => None
+            | Some (h, t) => Some (h, l1 ++ t)
+            | None => None
             end
     end.
 (* begin hide *)
@@ -4471,8 +4471,8 @@ Lemma remove_app_lt :
     n < length l1 ->
       remove n (l1 ++ l2) =
       match remove n l1 with
-          | None => None
-          | Some (h, t) => Some (h, t ++ l2)
+      | None => None
+      | Some (h, t) => Some (h, t ++ l2)
       end.
 (* begin hide *)
 Proof.
@@ -4491,8 +4491,8 @@ Lemma remove_app_ge :
     length l1 <= n ->
       remove n (l1 ++ l2) =
       match remove (n - length l1) l2 with
-          | None => None
-          | Some (h, t) => Some (h, l1 ++ t)
+      | None => None
+      | Some (h, t) => Some (h, l1 ++ t)
       end.
 (* begin hide *)
 Proof.
@@ -4538,8 +4538,8 @@ Lemma remove_rev_aux :
     n < length l ->
       remove n l =
       match remove (length l - S n) (rev l) with
-          | None => None
-          | Some (h, t) => Some (h, rev t)
+      | None => None
+      | Some (h, t) => Some (h, rev t)
       end.
 (* begin hide *)
 Proof.
@@ -4560,8 +4560,8 @@ Lemma remove_rev :
     n < length l ->
       remove n (rev l) =
       match remove (length l - S n) l with
-          | None => None
-          | Some (h, t) => Some (h, rev t)
+      | None => None
+      | Some (h, t) => Some (h, rev t)
       end.
 (* begin hide *)
 Proof.
@@ -4575,8 +4575,8 @@ Lemma remove_map :
   forall (A B : Type) (f : A -> B) (l : list A) (n : nat),
     remove n (map f l) =
     match remove n l with
-        | None => None
-        | Some (x, l') => Some (f x, map f l')
+    | None => None
+    | Some (x, l') => Some (f x, map f l')
     end.
 (* begin hide *)
 Proof.
@@ -4692,9 +4692,9 @@ Qed.
 (* begin hide *)
 Fixpoint zip {A B : Type} (la : list A) (lb : list B) : list (A * B) :=
 match la, lb with
-    | [], _ => []
-    | _, [] => []
-    | ha :: ta, hb :: tb => (ha, hb) :: zip ta tb
+| [], _ => []
+| _, [] => []
+| ha :: ta, hb :: tb => (ha, hb) :: zip ta tb
 end.
 (* end hide *)
 
@@ -4821,8 +4821,8 @@ Lemma nth_zip :
     if n <=? min (length la) (length lb)
     then
       match nth n la, nth n lb with
-          | Some a, Some b => Some (a, b)
-          | _, _ => None
+      | Some a, Some b => Some (a, b)
+      | _, _ => None
       end
     else None.
 (* begin hide *)
@@ -4841,8 +4841,8 @@ Lemma nth_zip' :
   forall (A B : Type) (la : list A) (lb : list B) (n : nat),
     nth n (zip la lb) =
     match nth n la, nth n lb with
-        | Some a, Some b => Some (a, b)
-        | _, _ => None
+    | Some a, Some b => Some (a, b)
+    | _, _ => None
     end.
 (* begin hide *)
 Proof.
@@ -4890,9 +4890,9 @@ Lemma splitAt_zip :
   forall (A B : Type) (la : list A) (lb : list B) (n : nat),
     splitAt n (zip la lb) =
     match splitAt n la, splitAt n lb with
-        | Some (la1, a, la2), Some (lb1, b, lb2) =>
+    | Some (la1, a, la2), Some (lb1, b, lb2) =>
             Some (zip la1 lb1, (a, b), zip la2 lb2)
-        | _, _ => None
+    | _, _ => None
     end.
 (* begin hide *)
 Proof.
@@ -4958,8 +4958,8 @@ Lemma replace_zip' :
     (A B : Type) (la  : list A) (lb : list B) (n : nat) (a : A) (b : B),
       replace (zip la lb) n (a, b) =
       match replace la n a, replace lb n b with
-          | Some la', Some lb' => Some (zip la' lb')
-          | _, _ => None
+      | Some la', Some lb' => Some (zip la' lb')
+      | _, _ => None
       end.
 (* begin hide *)
 Proof.
@@ -4979,8 +4979,8 @@ Lemma remove_zip :
   forall (A B : Type) (la : list A) (lb : list B) (n : nat),
     remove n (zip la lb) =
     match remove n la, remove n lb with
-        | Some (a, la'), Some (b, lb') => Some ((a, b), zip la' lb')
-        | _, _ => None
+    | Some (a, la'), Some (b, lb') => Some ((a, b), zip la' lb')
+    | _, _ => None
     end.
 (* begin hide *)
 Proof.
@@ -5011,8 +5011,8 @@ Qed.
 (* begin hide *)
 Fixpoint unzip {A B : Type} (l : list (A * B)) : list A * list B :=
 match l with
-    | [] => ([], [])
-    | (ha, hb) :: t =>
+| [] => ([], [])
+| (ha, hb) :: t =>
         let (ta, tb) := unzip t in (ha :: ta, hb :: tb)
 end.
 (* end hide *)
@@ -5086,9 +5086,9 @@ Qed.
 Fixpoint zipWith {A B C : Type} (f : A -> B -> C)
   (la : list A) (lb : list B) : list C :=
 match la, lb with
-    | [], _ => []
-    | _, [] => []
-    | ha :: ta, hb :: tb => f ha hb :: zipWith f ta tb
+| [], _ => []
+| _, [] => []
+| ha :: ta, hb :: tb => f ha hb :: zipWith f ta tb
 end.
 (* end hide *)
 
@@ -5195,9 +5195,9 @@ Lemma splitAt_zipWith :
     (la : list A) (lb : list B) (n : nat),
       splitAt n (zipWith f la lb) =
       match splitAt n la, splitAt n lb with
-          | Some (la1, a, la2), Some (lb1, b, lb2) =>
+      | Some (la1, a, la2), Some (lb1, b, lb2) =>
               Some (zipWith f la1 lb1, f a b, zipWith f la2 lb2)
-          | _, _ => None
+      | _, _ => None
       end.
 (* begin hide *)
 Proof.
@@ -5246,9 +5246,9 @@ Lemma remove_zipWith :
     (la : list A) (lb : list B) (n : nat),
       remove n (zipWith f la lb) =
       match remove n la, remove n lb with
-          | Some (a, la'), Some (b, lb') =>
+      | Some (a, la'), Some (b, lb') =>
               Some (f a b, zipWith f la' lb')
-          | _, _ => None
+      | _, _ => None
       end.
 (* begin hide *)
 Proof.
@@ -5286,8 +5286,8 @@ Qed.
 Fixpoint unzipWith
   {A B C : Type} (f : A -> B * C) (l : list A) : list B * list C :=
 match l with
-    | [] => ([], [])
-    | h :: t =>
+| [] => ([], [])
+| h :: t =>
         let
           '(l1, l2) := unzipWith f t
         in let
@@ -5376,8 +5376,8 @@ Qed.
 (* begin hide *)
 Fixpoint any {A : Type} (p : A -> bool) (l : list A) : bool :=
 match l with
-    | [] => false
-    | h :: t => orb (p h) (any p t)
+| [] => false
+| h :: t => orb (p h) (any p t)
 end.
 (* end hide *)
 
@@ -5493,8 +5493,8 @@ Lemma any_iterate :
     (forall x : A, p (f x) = p x) ->
       any p (iterate f n x) =
       match n with
-          | 0 => false
-          | _ => p x
+      | 0 => false
+      | _ => p x
       end.
 (* begin hide *)
 Proof.
@@ -5717,8 +5717,8 @@ Qed.
 (* begin hide *)
 Fixpoint all {A : Type} (p : A -> bool) (l : list A) : bool :=
 match l with
-    | [] => true
-    | h :: t => andb (p h) (all p t)
+| [] => true
+| h :: t => andb (p h) (all p t)
 end.
 (* end hide *)
 
@@ -6105,17 +6105,17 @@ Qed.
 (* begin hide *)
 Function find {A : Type} (p : A -> bool) (l : list A) : option A :=
 match l with
-    | [] => None
-    | h :: t => if p h then Some h else find p t
+| [] => None
+| h :: t => if p h then Some h else find p t
 end.
 
 Fixpoint findLast {A : Type} (p : A -> bool) (l : list A) : option A :=
 match l with
-    | [] => None
-    | h :: t =>
+| [] => None
+| h :: t =>
         match findLast p t with
-            | None => if p h then Some h else None
-            | Some x => Some x
+        | None => if p h then Some h else None
+        | Some x => Some x
         end
 end.
 (* end hide *)
@@ -6175,8 +6175,8 @@ Lemma find_snoc :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
     find p (snoc x l) =
     match find p l with
-        | None => if p x then Some x else None
-        | Some y => Some y
+    | None => if p x then Some x else None
+    | Some y => Some y
     end.
 (* begin hide *)
 Proof.
@@ -6202,8 +6202,8 @@ Lemma find_app :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
     find p (l1 ++ l2) =
     match find p l1 with
-        | Some x => Some x
-        | None => find p l2
+    | Some x => Some x
+    | None => find p l2
     end.
 (* begin hide *)
 Proof.
@@ -6237,8 +6237,8 @@ Lemma find_map :
   forall (A B : Type) (f : A -> B) (p : B -> bool) (l : list A),
     find p (map f l) =
     match find (fun x : A => p (f x)) l with
-        | None => None
-        | Some a => Some (f a)
+    | None => None
+    | Some a => Some (f a)
     end.
 (* begin hide *)
 Proof.
@@ -6253,11 +6253,11 @@ Lemma find_join :
     find p (join l) =
     (fix aux (l : list (list A)) : option A :=
     match l with
-        | [] => None
-        | h :: t =>
+    | [] => None
+    | h :: t =>
             match find p h with
-                | None => aux t
-                | Some x => Some x
+            | None => aux t
+            | Some x => Some x
             end
     end) l.
 (* begin hide *)
@@ -6272,9 +6272,9 @@ Lemma find_replicate :
   forall (A : Type) (p : A -> bool) (n : nat) (x : A),
     find p (replicate n x) =
     match n, p x with
-        | 0, _ => None
-        | _, false => None
-        | _, true => Some x
+    | 0, _ => None
+    | _, false => None
+    | _, true => Some x
     end.
 (* begin hide *)
 Proof.
@@ -6308,8 +6308,8 @@ Lemma findLast_iterate :
     (forall x : A, p (f x) = p x) ->
       findLast p (iterate f n x) =
       match n with
-          | 0 => None
-          | S n' => if p x then Some (iter f n' x) else None
+      | 0 => None
+      | S n' => if p x then Some (iter f n' x) else None
       end.
 (* begin hide *)
 Proof.
@@ -6471,9 +6471,9 @@ Lemma find_replace :
     replace l n x = Some l' ->
       find p l' =
       match find p (take n l), p x with
-          | Some y, _ => Some y
-          | _, true => Some x
-          | _, _ => find p (drop (S n) l)
+      | Some y, _ => Some y
+      | _, true => Some x
+      | _, _ => find p (drop (S n) l)
       end.
 (* begin hide *)
 Proof.
@@ -6488,9 +6488,9 @@ Lemma replace_findLast :
     replace l n x = Some l' ->
     findLast p l' =
     match findLast p (drop (S n) l), p x with
-        | Some y, _ => Some y
-        | _, true => Some x
-        | _, _ => findLast p (take n l)
+    | Some y, _ => Some y
+    | _, true => Some x
+    | _, _ => findLast p (take n l)
     end.
 (* begin hide *)
 Proof.
@@ -6520,25 +6520,25 @@ Qed.
 Function removeFirst
   {A : Type} (p : A -> bool) (l : list A) : option (A * list A) :=
 match l with
-    | [] => None
-    | h :: t =>
+| [] => None
+| h :: t =>
         if p h
         then Some (h, t)
         else
           match removeFirst p t with
-              | None => None
-              | Some (x, l) => Some (x, h :: l)
+          | None => None
+          | Some (x, l) => Some (x, h :: l)
           end
 end.
 
 Function removeLast
   {A : Type} (p : A -> bool) (l : list A) : option (A * list A) :=
 match l with
-    | [] => None
-    | h :: t =>
+| [] => None
+| h :: t =>
         match removeLast p t with
-            | Some (x, l) => Some (x, h :: l)
-            | None => if p h then Some (h, t) else None
+        | Some (x, l) => Some (x, h :: l)
+        | None => if p h then Some (h, t) else None
         end
 end.
 (* end hide *)
@@ -6595,8 +6595,8 @@ Lemma removeFirst_snoc :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
     removeFirst p (snoc x l) =
     match removeFirst p l with
-        | None => if p x then Some (x, l) else None
-        | Some (h, t) => Some (h, snoc x t)
+    | None => if p x then Some (x, l) else None
+    | Some (h, t) => Some (h, snoc x t)
     end.
 (* begin hide *)
 Proof.
@@ -6617,8 +6617,8 @@ Lemma removeLast_snoc :
     then Some (x, l)
     else
       match removeLast p l with
-          | None => None
-          | Some (h, t) => Some (h, snoc x t)
+      | None => None
+      | Some (h, t) => Some (h, snoc x t)
       end.
 (* begin hide *)
 Proof.
@@ -6636,9 +6636,9 @@ Lemma removeFirst_app :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
     removeFirst p (l1 ++ l2) =
     match removeFirst p l1, removeFirst p l2 with
-        | Some (h, t), _ => Some (h, t ++ l2)
-        | _, Some (h, t) => Some (h, l1 ++ t)
-        | _, _ => None
+    | Some (h, t), _ => Some (h, t ++ l2)
+    | _, Some (h, t) => Some (h, l1 ++ t)
+    | _, _ => None
     end.
 (* begin hide *)
 Proof.
@@ -6657,9 +6657,9 @@ Lemma removeLast_app :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
     removeLast p (l1 ++ l2) =
     match removeLast p l2, removeLast p l1 with
-        | Some (y, l'), _ => Some (y, l1 ++ l')
-        | _, Some (y, l') => Some (y, l' ++ l2)
-        | _, _ => None
+    | Some (y, l'), _ => Some (y, l1 ++ l')
+    | _, Some (y, l') => Some (y, l' ++ l2)
+    | _, _ => None
     end.
 (* begin hide *)
 Proof.
@@ -6678,8 +6678,8 @@ Lemma removeFirst_rev :
   forall (A : Type) (p : A -> bool) (l : list A),
     removeFirst p (rev l) =
     match removeLast p l with
-        | Some (x, l) => Some (x, rev l)
-        | None => None
+    | Some (x, l) => Some (x, rev l)
+    | None => None
     end.
 (* begin hide *)
 Proof.
@@ -6695,8 +6695,8 @@ Lemma removeLast_rev :
   forall (A : Type) (p : A -> bool) (l : list A),
     removeLast p (rev l) =
     match removeFirst p l with
-        | None => None
-        | Some (x, l) => Some (x, rev l)
+    | None => None
+    | Some (x, l) => Some (x, rev l)
     end.
 (* begin hide *)
 Proof.
@@ -6710,8 +6710,8 @@ Lemma removeFirst_map :
   forall (A B : Type) (p : B -> bool) (f : A -> B) (l : list A),
     removeFirst p (map f l) =
     match removeFirst (fun x => p (f x)) l with
-        | Some (x, l) => Some (f x, map f l)
-        | None => None
+    | Some (x, l) => Some (f x, map f l)
+    | None => None
     end.
 (* begin hide *)
 Proof.
@@ -6729,14 +6729,14 @@ Lemma removeFirst_join :
     removeFirst p (join l) =
     (fix f (l : list (list A)) : option (A * list A) :=
     match l with
-        | [] => None
-        | hl :: tl =>
+    | [] => None
+    | hl :: tl =>
             match removeFirst p hl with
-                | Some (x, l') => Some (x, join (l' :: tl))
-                | None =>
+            | Some (x, l') => Some (x, join (l' :: tl))
+            | None =>
                     match f tl with
-                        | Some (x, l) => Some (x, hl ++ l)
-                        | None => None
+                    | Some (x, l) => Some (x, hl ++ l)
+                    | None => None
                     end
             end
     end) l.
@@ -6754,8 +6754,8 @@ Lemma removeFirst_replicate :
     if p x
     then
         match n with
-            | 0 => None
-            | S n' => Some (x, replicate n' x)
+        | 0 => None
+        | S n' => Some (x, replicate n' x)
         end
     else None.
 (* begin hide *)
@@ -6828,8 +6828,8 @@ Lemma head_removeFirst :
     removeFirst p l = Some (x, l') ->
     head l' =
     match l with
-        | [] => None
-        | h :: t => if p h then head t else Some h
+    | [] => None
+    | h :: t => if p h then head t else Some h
    end.
 (* begin hide *)
 Proof.
@@ -6913,10 +6913,10 @@ Lemma removeFirst_replace :
     replace l n x = Some l' ->
       removeFirst p l' =
       match removeFirst p (take n l), p x, removeFirst p (drop (S n) l) with
-          | Some (y, l''), _, _ => Some (y, l'' ++ x :: drop (S n) l)
-          | _, true, _ => Some (x, take n l ++ drop (S n) l)
-          | _, _, Some (y, l'') => Some (y, take n l ++ x :: l'')
-          | _, _, _ => None
+      | Some (y, l''), _, _ => Some (y, l'' ++ x :: drop (S n) l)
+      | _, true, _ => Some (x, take n l ++ drop (S n) l)
+      | _, _, Some (y, l'') => Some (y, take n l ++ x :: l'')
+      | _, _, _ => None
       end.
 (* begin hide *)
 Proof.
@@ -6939,10 +6939,10 @@ Lemma removeLast_replace :
     replace l n x = Some l' ->
     removeLast p l' =
     match removeLast p (drop (S n) l), p x, removeLast p (take n l) with
-        | Some (y, l''), _ , _ => Some (y, take n l ++ x :: l'')
-        | _, true, _ => Some (x, take n l ++ drop (S n) l)
-        | _, _, Some (y, l'') => Some (y, l'' ++ x :: drop (S n) l)
-        | _, _, _ => None
+    | Some (y, l''), _ , _ => Some (y, take n l ++ x :: l'')
+    | _, true, _ => Some (x, take n l ++ drop (S n) l)
+    | _, _, Some (y, l'') => Some (y, l'' ++ x :: drop (S n) l)
+    | _, _, _ => None
     end.
 (* begin hide *)
 Proof.
@@ -7036,13 +7036,13 @@ Qed.
 (* begin hide *)
 Function findIndex {A : Type} (p : A -> bool) (l : list A) : option nat :=
 match l with
-    | [] => None
-    | h :: t =>
+| [] => None
+| h :: t =>
         if p h
         then Some 0
         else match findIndex p t with
-            | None => None
-            | Some n => Some (S n)
+        | None => None
+        | Some n => Some (S n)
         end
 end.
 (* end hide *)
@@ -7060,8 +7060,8 @@ Lemma findIndex_true :
   forall (A : Type) (l : list A),
     findIndex (fun _ => true) l =
     match l with
-        | [] => None
-        | _ => Some 0
+    | [] => None
+    | _ => Some 0
     end.
 (* begin hide *)
 Proof.
@@ -7073,10 +7073,10 @@ Lemma findIndex_orb :
   forall (A : Type) (p q : A -> bool) (l : list A),
     findIndex (fun x : A => orb (p x) (q x)) l =
     match findIndex p l, findIndex q l with
-        | Some n, Some m => Some (min n m)
-        | Some n, None => Some n
-        | None, Some m => Some m
-        | _, _ => None
+    | Some n, Some m => Some (min n m)
+    | Some n, None => Some n
+    | None, Some m => Some m
+    | _, _ => None
     end.
 (* begin hide *)
 Proof.
@@ -7129,8 +7129,8 @@ Lemma findIndex_snoc :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
     findIndex p (snoc x l) =
     match findIndex p l with
-        | None => if p x then Some (length l) else None
-        | Some n => Some n
+    | None => if p x then Some (length l) else None
+    | Some n => Some n
     end.
 (* begin hide *)
 Proof.
@@ -7195,9 +7195,9 @@ Lemma findIndex_app :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
     findIndex p (l1 ++ l2) =
     match findIndex p l1, findIndex p l2 with
-        | Some n, _ => Some n
-        | _, Some n => Some (length l1 + n)
-        | _, _ => None
+    | Some n, _ => Some n
+    | _, Some n => Some (length l1 + n)
+    | _, _ => None
     end.
 (* begin hide *)
 Proof.
@@ -7246,12 +7246,12 @@ Lemma findIndex_join :
   forall (A : Type) (p : A -> bool) (ll : list (list A)),
     findIndex p (join ll) =
     match ll with
-        | [] => None
-        | h :: t =>
+    | [] => None
+    | h :: t =>
             match findIndex p h, findIndex p (join t) with
-                | Some n, _ => Some n
-                | _, Some n => Some (length h + n)
-                | _, _ => None
+            | Some n, _ => Some n
+            | _, Some n => Some (length h + n)
+            | _, _ => None
             end
     end.
 (* begin hide *)
@@ -7264,8 +7264,8 @@ Lemma findIndex_replicate :
   forall (A : Type) (p : A -> bool) (n : nat) (x : A),
     findIndex p (replicate n x) =
     match n with
-        | 0 => None
-        | _ => if p x then Some 0 else None
+    | 0 => None
+    | _ => if p x then Some 0 else None
     end.
 (* begin hide *)
 Proof.
@@ -7476,15 +7476,15 @@ Proof.
 Restart.
   induction la as [| ha ta]; cbn; intros;
   repeat (cbn in *; match goal with
-      | H : None = Some _ |- _ => inversion H; subst; clear H
-      | H : Some _ = Some _ |- _ => inversion H; subst; clear H
-      | |- context [match ?x with _ => _ end] =>
+  | H : None = Some _ |- _ => inversion H; subst; clear H
+  | H : Some _ = Some _ |- _ => inversion H; subst; clear H
+  | |- context [match ?x with _ => _ end] =>
           is_var x; let H := fresh "H" in destruct x eqn: H
-      | H : context [match ?x with _ => _ end] |- _ =>
+  | H : context [match ?x with _ => _ end] |- _ =>
           let H := fresh "H" in
             destruct x eqn: H
-      | H : _ = true |- _ => rewrite ?H in *
-      | H : _ = false |- _ => rewrite ?H in *
+  | H : _ = true |- _ => rewrite ?H in *
+  | H : _ = false |- _ => rewrite ?H in *
   end).
     reflexivity.
     rewrite (IHta _ _ eq_refl H3). reflexivity.
@@ -7535,8 +7535,8 @@ Qed.
 (* begin hide *)
 Fixpoint count {A : Type} (p : A -> bool) (l : list A) : nat :=
 match l with
-    | [] => 0
-    | h :: t => if p h then S (count p t) else count p t
+| [] => 0
+| h :: t => if p h then S (count p t) else count p t
 end.
 (* end hide *)
 
@@ -7910,8 +7910,8 @@ Qed.
 (* begin hide *)
 Fixpoint filter {A : Type} (f : A -> bool) (l : list A) : list A :=
 match l with
-    | [] => []
-    | h :: t => if f h then h :: filter f t else filter f t
+| [] => []
+| h :: t => if f h then h :: filter f t else filter f t
 end.
 (* end hide *)
 
@@ -8106,8 +8106,8 @@ Lemma splitAt_filter :
     splitAt n (filter p l) = Some (l1, x, l2) ->
       exists m : nat,
       match splitAt m l with
-          | None => False
-          | Some (l1', y, l2') =>
+      | None => False
+      | Some (l1', y, l2') =>
               x = y /\ l1 = filter p l1' /\ l2 = filter p l2'
       end.
 (* begin hide *)
@@ -8172,8 +8172,8 @@ Lemma remove_filter :
     remove n (filter p l) = Some (x, l') ->
       exists m : nat,
       match remove m l with
-          | None => False
-          | Some (y, l'') => x = y /\ l' = filter p l''
+      | None => False
+      | Some (y, l'') => x = y /\ l' = filter p l''
       end.
 (* begin hide *)
 Proof.
@@ -8281,8 +8281,8 @@ Lemma removeFirst_filter :
   forall (A : Type) (p : A -> bool) (l : list A),
     removeFirst p (filter p l) =
     match filter p l with
-        | [] => None
-        | h :: t => Some (h, t)
+    | [] => None
+    | h :: t => Some (h, t)
     end.
 (* begin hide *)
 Proof.
@@ -8362,8 +8362,8 @@ Qed.
 Fixpoint partition {A : Type} (p : A -> bool) (l : list A)
     : list A * list A :=
 match l with
-    | [] => ([], [])
-    | h :: t => let (l1, l2) := partition p t in
+| [] => ([], [])
+| h :: t => let (l1, l2) := partition p t in
         if p h then (h :: l1, l2) else (l1, h :: l2)
 end.
 (* end hide *)
@@ -8437,8 +8437,8 @@ Qed.
 (* begin hide *)
 Fixpoint findIndices {A : Type} (p : A -> bool) (l : list A) : list nat :=  
 match l with
-    | [] => []
-    | h :: t =>
+| [] => []
+| h :: t =>
         if p h
         then 0 :: map S (findIndices p t)
         else map S (findIndices p t)
@@ -8447,8 +8447,8 @@ end.
 Fixpoint findIndices'_aux
   {A : Type} (p : A -> bool) (l : list A) (n : nat) : list nat :=
 match l with
-    | [] => []
-    | h :: t =>
+| [] => []
+| h :: t =>
         let x := findIndices'_aux p t (S n) in
           if p h then n :: x else x
 end.
@@ -8614,8 +8614,8 @@ Lemma findIndices_replicate :
   forall (A : Type) (p : A -> bool) (n : nat) (x : A),
     findIndices p (replicate n x) =
     match n with
-        | 0 => []
-        | S n' => if p x then iterate S n 0 else []
+    | 0 => []
+    | S n' => if p x then iterate S n 0 else []
     end.
 (* begin hide *)
 Proof.
@@ -8659,8 +8659,8 @@ Lemma tail_findIndices :
   forall (A : Type) (p : A -> bool) (l : list A),
     tail (findIndices p l) =
     match removeFirst p l with
-        | None => None
-        | Some (_, l') => Some (map S (findIndices p l'))
+    | None => None
+    | Some (_, l') => Some (map S (findIndices p l'))
     end.
 (* begin hide *)
 Proof.
@@ -8690,8 +8690,8 @@ Lemma last_findIndices :
   forall (A : Type) (p : A -> bool) (l : list A),
     last (findIndices p l) =
     match findIndex p (rev l) with
-        | None => None
-        | Some n => Some (length l - S n)
+    | None => None
+    | Some n => Some (length l - S n)
     end.
 (* begin hide *)
 Proof.
@@ -8708,8 +8708,8 @@ Lemma init_findIndices :
   forall (A : Type) (p : A -> bool) (l : list A),
     init (findIndices p l) =
     match removeLast p l with
-        | None => None
-        | Some (_, l') => Some (findIndices p l')
+    | None => None
+    | Some (_, l') => Some (findIndices p l')
     end.
 (* begin hide *)
 Proof.
@@ -8816,14 +8816,14 @@ Qed.
 (* begin hide *)
 Fixpoint takeWhile {A : Type} (p : A -> bool) (l : list A) : list A :=
 match l with
-    | [] => []
-    | h :: t => if p h then h :: takeWhile p t else []
+| [] => []
+| h :: t => if p h then h :: takeWhile p t else []
 end.
 
 Fixpoint dropWhile {A : Type} (p : A -> bool) (l : list A) : list A :=
 match l with
-    | [] => []
-    | h :: t => if p h then dropWhile p t else l
+| [] => []
+| h :: t => if p h then dropWhile p t else l
 end.
 (* end hide *)
 
@@ -8875,8 +8875,8 @@ Lemma isEmpty_takeWhile :
   forall (A : Type) (p : A -> bool) (l : list A),
     isEmpty (takeWhile p l) =
     match l with
-        | [] => true
-        | h :: t => negb (p h)
+    | [] => true
+    | h :: t => negb (p h)
     end.
 (* begin hide *)
 Proof.
@@ -9089,8 +9089,8 @@ Lemma removeFirst_takeWhile :
   forall (A : Type) (p : A -> bool) (l : list A),
     removeFirst p (takeWhile p l) =
     match takeWhile p l with
-        | [] => None
-        | h :: t => Some (h, t)
+    | [] => None
+    | h :: t => Some (h, t)
     end.
 (* begin hide *)
 Proof.
@@ -9104,8 +9104,8 @@ Lemma removeLast_dropWhile :
   forall (A : Type) (p : A -> bool) (l : list A),
     removeFirst p (dropWhile (fun x : A => negb (p x)) l) =
     match dropWhile (fun x : A => negb (p x)) l with
-        | [] => None
-        | h :: t => Some (h, t)
+    | [] => None
+    | h :: t => Some (h, t)
     end.
 (* begin hide *)
 Proof.
@@ -9220,14 +9220,14 @@ Qed.
 Fixpoint span
   {A : Type} (p : A -> bool) (l : list A) : option (list A * A * list A) :=
 match l with
-    | [] => None
-    | h :: t =>
+| [] => None
+| h :: t =>
         if p h
         then Some ([], h, t)
         else
           match span p t with
-              | None => None
-              | Some (b, x, e) => Some (h :: b, x, e)
+          | None => None
+          | Some (b, x, e) => Some (h :: b, x, e)
           end
 end.
 
@@ -9283,8 +9283,8 @@ Lemma span_snoc :
   forall (A : Type) (p : A -> bool) (x : A) (l : list A),
     span p (snoc x l) =
     match span p l with
-        | None => if p x then Some (l, x, []) else None
-        | Some (b, y, e) => Some (b, y, snoc x e)
+    | None => if p x then Some (l, x, []) else None
+    | Some (b, y, e) => Some (b, y, snoc x e)
     end.
 (* begin hide *)
 Proof.
@@ -9302,9 +9302,9 @@ Lemma span_app :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
     span p (l1 ++ l2) =
     match span p l1, span p l2 with
-        | Some (b, x, e), _ => Some (b, x, e ++ l2)
-        | _, Some (b, x, e) => Some (l1 ++ b, x, e)
-        | _, _ => None
+    | Some (b, x, e), _ => Some (b, x, e ++ l2)
+    | _, Some (b, x, e) => Some (l1 ++ b, x, e)
+    | _, _ => None
     end.
 (* begin hide *)
 Proof.
@@ -9324,8 +9324,8 @@ Lemma span_map :
   forall (A B : Type) (f : A -> B) (p : B -> bool) (l : list A),
     span p (map f l) =
     match span (fun x : A => p (f x)) l with
-        | None => None
-        | Some (b, x, e) => Some (map f b, f x, map f e)
+    | None => None
+    | Some (b, x, e) => Some (map f b, f x, map f e)
     end.
 (* begin hide *)
 Proof.
@@ -9342,11 +9342,11 @@ Lemma span_join :
   forall (A : Type) (p : A -> bool) (lla : list (list A)),
     span p (join lla) =
     match span (any p) lla with
-        | None => None
-        | Some (bl, l, el) =>
+    | None => None
+    | Some (bl, l, el) =>
             match span p l with
-                | None => None
-                | Some (b, x, e) => Some (join bl ++ b, x, e ++ join el)
+            | None => None
+            | Some (b, x, e) => Some (join bl ++ b, x, e ++ join el)
             end
     end.
 (* begin hide *)
@@ -9392,15 +9392,15 @@ Proof.
 Restart.
   Ltac rec_destr x :=
   match x with
-      | context [match ?y with _ => _ end] => rec_destr y
-      | _ => let H := fresh "H" in destruct x eqn: H
+  | context [match ?y with _ => _ end] => rec_destr y
+  | _ => let H := fresh "H" in destruct x eqn: H
   end.
   induction lla as [| hl tl]; cbn.
     reflexivity.
     rewrite span_app, IHtl. induction hl as [| h t]; cbn.
       all: repeat (match goal with
-          | H : context [match ?x with _ => _ end] |- _ => rec_destr x
-          | |- context [match ?x with _ => _ end] => rec_destr x
+      | H : context [match ?x with _ => _ end] |- _ => rec_destr x
+      | |- context [match ?x with _ => _ end] => rec_destr x
       end; cbn in *); try congruence.
 Qed.
 (* end hide *)
@@ -9526,8 +9526,8 @@ Lemma span_filter :
   forall (A : Type) (p : A -> bool) (l : list A),
     span p (filter p l) =
     match filter p l with
-        | [] => None
-        | h :: t => Some ([], h, t)
+    | [] => None
+    | h :: t => Some ([], h, t)
     end.
 (* begin hide *)
 Proof.
@@ -9593,11 +9593,11 @@ Qed.
 Fixpoint naps
   {A : Type} (p : A -> bool) (l : list A) : option (list A * A * list A) :=
 match l with
-    | [] => None
-    | h :: t =>
+| [] => None
+| h :: t =>
         match naps p t with
-            | None => if p h then Some ([], h, t) else None
-            | Some (b, x, e) => Some (h :: b, x, e)
+        | None => if p h then Some ([], h, t) else None
+        | Some (b, x, e) => Some (h :: b, x, e)
         end
 end.
 (* end hide *)
@@ -9610,8 +9610,8 @@ Lemma naps_snoc :
     then Some (l, x, [])
     else
       match naps p l with
-          | None => None
-          | Some (b, y, e) => Some (b, y, snoc x e)
+      | None => None
+      | Some (b, y, e) => Some (b, y, snoc x e)
       end.
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -9628,8 +9628,8 @@ Lemma span_rev_aux :
   forall (A : Type) (p : A -> bool) (l : list A),
     span p l =
     match naps p (rev l) with
-        | None => None
-        | Some (b, x, e) => Some (rev e, x, rev b)
+    | None => None
+    | Some (b, x, e) => Some (rev e, x, rev b)
     end.
 (* begin hide *)
 Proof.
@@ -9647,8 +9647,8 @@ Lemma span_rev :
   forall (A : Type) (p : A -> bool) (l : list A),
     span p (rev l) =
     match naps p l with
-        | None => None
-        | Some (b, x, e) => Some (rev e, x, rev b)
+    | None => None
+    | Some (b, x, e) => Some (rev e, x, rev b)
     end.
 (* begin hide *)
 Proof.
@@ -9673,11 +9673,11 @@ Qed.
 (* begin hide *)
 Fixpoint pmap {A B : Type} (f : A -> option B) (l : list A) : list B :=
 match l with
-    | [] => []
-    | h :: t =>
+| [] => []
+| h :: t =>
         match f h with
-            | None => pmap f t
-            | Some x => x :: pmap f t
+        | None => pmap f t
+        | Some x => x :: pmap f t
         end
 end.
 (* end hide *)
@@ -9721,8 +9721,8 @@ Lemma pmap_snoc :
   forall (A B : Type) (f : A -> option B) (x : A) (l : list A),
     pmap f (snoc x l) =
     match f x with
-        | None => pmap f l
-        | Some b => snoc b (pmap f l)
+    | None => pmap f l
+    | Some b => snoc b (pmap f l)
     end.
 (* begin hide *)
 Proof.
@@ -9791,8 +9791,8 @@ Lemma pmap_replicate :
   forall (A B : Type) (f : A -> option B) (n : nat) (x : A),
     pmap f (replicate n x) =
     match f x with
-        | None => []
-        | Some y => replicate n y
+    | None => []
+    | Some y => replicate n y
     end.
 (* begin hide *)
 Proof.
@@ -9804,16 +9804,16 @@ Qed.
 
 Definition isSome {A : Type} (x : option A) : bool :=
 match x with
-    | None => false
-    | _ => true
+| None => false
+| _ => true
 end.
 
 Lemma head_pmap :
   forall (A B : Type) (f : A -> option B) (l : list A),
     head (pmap f l) =
     match find isSome (map f l) with
-        | None => None
-        | Some x => x
+    | None => None
+    | Some x => x
     end.
 (* begin hide *)
 Proof.
@@ -9831,8 +9831,8 @@ Lemma pmap_zip :
       pmap
         (fun '(a, b) =>
         match fa a, fb b with
-            | Some a', Some b' => Some (a', b')
-            | _, _ => None
+        | Some a', Some b' => Some (a', b')
+        | _, _ => None
         end)
         (zip la lb) <>
       zip (pmap fa la) (pmap fb lb).
@@ -9853,8 +9853,8 @@ Lemma any_pmap :
     any
       (fun x : A =>
       match f x with
-          | Some b => p b
-          | None => false
+      | Some b => p b
+      | None => false
       end)
       l.
 (* begin hide *)
@@ -9871,8 +9871,8 @@ Lemma all_pmap :
     all
       (fun x : A =>
       match f x with
-          | Some b => p b
-          | None => true
+      | Some b => p b
+      | None => true
       end)
       l.
 (* begin hide *)
@@ -9890,8 +9890,8 @@ Lemma find_pmap :
       find (fun x : A => match f x with Some b => p b | _ => false end) l
     in
     match oa with
-        | Some a => f a
-        | None => None
+    | Some a => f a
+    | None => None
     end.
 (* begin hide *)
 Proof.
@@ -9913,8 +9913,8 @@ Lemma findLast_pmap :
         (fun x : A => match f x with Some b => p b | _ => false end) l
     in
     match oa with
-        | Some a => f a
-        | None => None
+    | Some a => f a
+    | None => None
     end.
 (* begin hide *)
 Proof.
@@ -9928,8 +9928,8 @@ Lemma count_pmap :
     count
       (fun x : A =>
       match f x with
-          | Some b => p b
-          | None => false
+      | Some b => p b
+      | None => false
       end)
       l.
 (* begin hide *)
@@ -9947,8 +9947,8 @@ Qed.
 Definition aux {A B : Type} (p : B -> bool) (f : A -> option B)
   (dflt : bool) (x : A) : bool :=
 match f x with
-    | Some b => p b
-    | None => dflt
+| Some b => p b
+| None => dflt
 end.
 
 Lemma pmap_filter :
@@ -10006,8 +10006,8 @@ Lemma pmap_span :
         (fun x : A => match f x with None => false | Some b => p b end)
         l
     with
-        | None => True
-        | Some (b, x, e) =>
+    | None => True
+    | Some (b, x, e) =>
             exists y : B, f x = Some y /\
               span p (pmap f l) = Some (pmap f b, y, pmap f e)
     end.
@@ -10055,9 +10055,9 @@ Qed.
 (* begin hide *)
 Fixpoint mask {A : Type} (f : A -> A) (bs : list bool) (l : list A) : list A :=
 match bs, l with
-    | [], _ => l
-    | _, [] => []
-    | b :: bs', h :: t => (if b then f h else h) :: mask f bs' t
+| [], _ => l
+| _, [] => []
+| b :: bs', h :: t => (if b then f h else h) :: mask f bs' t
 end.
 (* end hide *)
 
@@ -10194,12 +10194,12 @@ Lemma nth_mask :
     nth n (mask f bs l)
       =
     match nth n bs with
-        | None => nth n l
-        | Some false => nth n l
-        | Some true =>
+    | None => nth n l
+    | Some false => nth n l
+    | Some true =>
             match nth n l with
-                | None => None
-                | Some x => Some (f x)
+            | None => None
+            | Some x => Some (f x)
             end
     end.
 (* begin hide *)
@@ -10257,9 +10257,9 @@ unzipWith
 (* begin hide *)
 Fixpoint mask' {A : Type} (f : A -> A) (l : list A) (bs : list bool) : list A :=
 match l, bs with
-    | [], _ => []
-    | _, [] => []
-    | h :: t, b :: bs' => (if b then f h else h) :: mask' f t bs'
+| [], _ => []
+| _, [] => []
+| h :: t, b :: bs' => (if b then f h else h) :: mask' f t bs'
 end.
 (* end hdie *)
 
@@ -10372,8 +10372,8 @@ Lemma head_imap :
   forall (A B : Type) (f : nat -> A -> B) (l : list A),
     head (imap f l) =
     match l with
-        | [] => None
-        | h :: _ => Some (f 0 h)
+    | [] => None
+    | h :: _ => Some (f 0 h)
     end.
 (* begin hide *)
 Proof.
@@ -10385,8 +10385,8 @@ Lemma tail_imap :
   forall (A B : Type) (f : nat -> A -> B) (l : list A),
     tail (imap f l) =
     match l with
-        | [] => None
-        | _ :: t => Some (imap (fun n a => f (S n) a) t)
+    | [] => None
+    | _ :: t => Some (imap (fun n a => f (S n) a) t)
     end.
 (* begin hide *)
 Proof.
@@ -10398,11 +10398,11 @@ Lemma init_imap :
   forall (A B : Type) (f : nat -> A -> B) (l : list A),
     init (imap f l) =
     match l with
-    | [] => None
-    | h :: t =>
+| [] => None
+| h :: t =>
         match init t with
-        | None => Some []
-        | Some i => Some (imap f (h :: i))
+    | None => Some []
+    | Some i => Some (imap f (h :: i))
         end
     end.
 (* begin hide *)
@@ -10431,8 +10431,8 @@ Lemma nth_imap :
   forall (A B : Type) (f : nat -> A -> B) (l : list A) (n : nat),
     nth n (imap f l) =
     match nth n l with
-        | None => None
-        | Some x => Some (f n x)
+    | None => None
+    | Some x => Some (f n x)
     end.
 (* begin hide *)
 Proof.
@@ -10484,11 +10484,11 @@ Qed.
 (* begin hide *)
 Function intersperse {A : Type} (x : A) (l : list A) : list A :=
 match l with
-    | [] => []
-    | h :: t =>
+| [] => []
+| h :: t =>
         match intersperse x t with
-            | [] => [h]
-            | h' :: t' => h :: x :: h' :: t'
+        | [] => [h]
+        | h' :: t' => h :: x :: h' :: t'
         end
 end.
 (* end hide *)
@@ -10537,9 +10537,9 @@ Lemma intersperse_app :
   forall (A : Type) (x : A) (l1 l2 : list A),
     intersperse x (l1 ++ l2) =
     match l1, l2 with
-        | [], _ => intersperse x l2
-        | _, [] => intersperse x l1
-        | h1 :: t1, h2 :: t2 =>
+    | [], _ => intersperse x l2
+    | _, [] => intersperse x l1
+    | h1 :: t1, h2 :: t2 =>
             intersperse x l1 ++ x :: intersperse x l2
     end.
 (* begin hide *)
@@ -10623,9 +10623,9 @@ Lemma tail_intersperse :
   forall (A : Type) (x : A) (l : list A),
     tail (intersperse x l) =
     match tail l with
-        | None => None
-        | Some [] => Some []
-        | Some (h :: t) => tail (intersperse x l)
+    | None => None
+    | Some [] => Some []
+    | Some (h :: t) => tail (intersperse x l)
     end.
 (* begin hide *)
 Proof.
@@ -10787,14 +10787,14 @@ Lemma findIndex_intersperse :
     if p x
     then
       match l with
-          | [] => None
-          | [h] => if p h then Some 0 else None
-          | h :: t => if p h then Some 0 else Some 1
+      | [] => None
+      | [h] => if p h then Some 0 else None
+      | h :: t => if p h then Some 0 else Some 1
       end
     else
       match findIndex p l with
-          | None => None
-          | Some n => Some (2 * n)
+      | None => None
+      | Some n => Some (2 * n)
       end.
 (* begin hide *)
 Proof.
@@ -10876,9 +10876,9 @@ Qed.
 
 (* begin hide *)
 Inductive elem {A : Type} : A -> list A -> Prop :=
-    | elem_head : forall (x : A) (l : list A),
+| elem_head : forall (x : A) (l : list A),
         elem x (x :: l)
-    | elem_cons : forall (x h : A) (t : list A),
+| elem_cons : forall (x h : A) (t : list A),
         elem x t -> elem x (h :: t).
 (* end hide *)
 
@@ -11142,8 +11142,8 @@ Lemma elem_remove_nth :
   forall (A : Type) (x : A) (l : list A) (n : nat),
     elem x l -> nth n l <> Some x ->
     match remove n l with
-        | None => True
-        | Some (_, l') => elem x l'
+    | None => True
+    | Some (_, l') => elem x l'
     end.
 (* begin hide *)
 Proof.
@@ -11385,8 +11385,8 @@ Qed.
 Lemma span_spec' :
   forall (A : Type) (p : A -> bool) (l : list A),
     match span p l with
-        | None => forall x : A, elem x l -> p x = false
-        | Some (b, x, e) =>
+    | None => forall x : A, elem x l -> p x = false
+    | Some (b, x, e) =>
             b = takeWhile (fun x : A => negb (p x)) l /\
             Some x = find p l /\
             x :: e = dropWhile (fun x : A => negb (p x)) l /\
@@ -11438,8 +11438,8 @@ Qed.
 Lemma elem_span :
   forall (A : Type) (p : A -> bool) (l : list A),
     match span p l with
-        | None => forall x : A, elem x l -> p x = false
-        | Some (b, x, e) =>
+    | None => forall x : A, elem x l -> p x = false
+    | Some (b, x, e) =>
             forall y : A, elem y l <-> elem y b \/ y = x \/ elem y e
     end.
 (* begin hide *)
@@ -11639,8 +11639,8 @@ Qed.
 
 Fixpoint In {A : Type} (x : A) (l : list A) : Prop :=
 match l with
-    | [] => False
-    | h :: t => x = h \/ In x t
+| [] => False
+| h :: t => x = h \/ In x t
 end.
 
 (** Powyższa definicja jest bardzo podobna do tej induktywnej. [In x]
@@ -12172,8 +12172,8 @@ Qed.
 
 (* begin hide *)
 Inductive NoDup {A : Type} : list A -> Prop :=
-    | NoDup_nil : NoDup []
-    | NoDup_cons :
+| NoDup_nil : NoDup []
+| NoDup_cons :
         forall (h : A) (t : list A),
           ~ elem h t -> NoDup t -> NoDup (h :: t).
 (* end hide *)
@@ -12581,10 +12581,10 @@ Abort. (* Ten [Abort] jest umyślny. *)
 
 (* begin hide *)
 Inductive Dup {A : Type} : list A -> Prop :=
-    | Dup_elem :
+| Dup_elem :
         forall (h : A) (t : list A),
           elem h t -> Dup (h :: t)
-    | Dup_tail :
+| Dup_tail :
         forall (h : A) (t : list A),
           Dup t -> Dup (h :: t).
 (* end hide *)
@@ -13121,12 +13121,12 @@ Qed.
 
 (* begin hide *)
 Inductive Rep {A : Type} (x : A) : nat -> list A -> Prop :=
-    | Rep_zero :
+| Rep_zero :
         forall l : list A, Rep x 0 l
-    | Rep_cons_1 :
+| Rep_cons_1 :
         forall (n : nat) (l : list A),
           Rep x n l -> Rep x (S n) (x :: l)
-    | Rep_cons_2 :
+| Rep_cons_2 :
         forall (n : nat) (l : list A) (y : A),
           Rep x n l -> Rep x n (y :: l).
 (* end hide *)
@@ -13531,9 +13531,9 @@ Admitted.
 
 (* begin hide *)
 Inductive Exists {A : Type} (P : A -> Prop) : list A -> Prop :=
-    | Exists_head :
+| Exists_head :
         forall (h : A) (t : list A), P h -> Exists P (h :: t)
-    | Exists_tail :
+| Exists_tail :
         forall (h : A) (t : list A), Exists P t -> Exists P (h :: t).
 (* end hide *)
 
@@ -13713,8 +13713,8 @@ Lemma Exists_remove :
   forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
     Exists P l ->
     match remove n l with
-        | None => True
-        | Some (x, l') => ~ P x -> Exists P l'
+    | None => True
+    | Some (x, l') => ~ P x -> Exists P l'
     end.
 (* begin hide *)
 Proof.
@@ -14095,8 +14095,8 @@ Qed.
 
 (* begin hide *)
 Inductive Forall {A : Type} (P : A -> Prop) : list A -> Prop :=
-    | Forall_nil' : Forall P []
-    | Forall_cons' :
+| Forall_nil' : Forall P []
+| Forall_cons' :
         forall (h : A) (t : list A), P h -> Forall P t -> Forall P (h :: t).
 (* end hide *)
 
@@ -14252,8 +14252,8 @@ Lemma Forall_remove :
   forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
     Forall P l ->
     match remove n l with
-        | None => True
-        | Some (x, l') => Forall P l'
+    | None => True
+    | Some (x, l') => Forall P l'
     end.
 (* begin hide *)
 Proof.
@@ -14568,12 +14568,12 @@ Qed.
 
 (* begin hide *)
 Inductive AtLeast {A : Type} (P : A -> Prop) : nat -> list A -> Prop :=
-    | AL_0 :
+| AL_0 :
         forall l : list A, AtLeast P 0 l
-    | AL_S :
+| AL_S :
         forall (n : nat) (h : A) (t : list A),
           P h -> AtLeast P n t -> AtLeast P (S n) (h :: t)
-    | AL_skip :
+| AL_skip :
         forall (n : nat) (h : A) (t : list A),
           AtLeast P n t -> AtLeast P n (h :: t).
 (* begin hide *)
@@ -14859,8 +14859,8 @@ Lemma AtLeast_remove :
   forall (A : Type) (P : A -> Prop) (l : list A) (m : nat),
     AtLeast P m l -> forall n : nat,
       match remove n l with
-          | None => True
-          | Some (_, l') => AtLeast P (m - 1) l'
+      | None => True
+      | Some (_, l') => AtLeast P (m - 1) l'
       end.
 (* begin hide *)
 Proof.
@@ -15341,11 +15341,11 @@ Qed.
 
 (* begin hide *)
 Inductive Exactly {A : Type} (P : A -> Prop) : nat -> list A -> Prop :=
-    | Ex_0 : Exactly P 0 []
-    | Ex_S :
+| Ex_0 : Exactly P 0 []
+| Ex_S :
         forall (n : nat) (h : A) (t : list A),
           P h -> Exactly P n t -> Exactly P (S n) (h :: t)
-    | Ex_skip :
+| Ex_skip :
         forall (n : nat) (h : A) (t : list A),
           ~ P h -> Exactly P n t -> Exactly P n (h :: t).
 (* end hide *)
@@ -15830,11 +15830,11 @@ Qed.
 
 (* begin hide *)
 Inductive AtMost  {A : Type} (P : A -> Prop) : nat -> list A -> Prop :=
-    | AM_0 : forall n : nat, AtMost P n []
-    | AM_S :
+| AM_0 : forall n : nat, AtMost P n []
+| AM_S :
         forall (n : nat) (h : A) (t : list A),
           ~ P h -> AtMost P n t -> AtMost P n (h :: t)
-    | AM_skip :
+| AM_skip :
         forall (n : nat) (h : A) (t : list A),
           AtMost P n t -> AtMost P (S n) (h :: t).
 (* end hide *)
@@ -15929,15 +15929,15 @@ Qed.
 (* begin hide *)
 (* TODO: zrób coś z tym (dziwna relacja [bool_le]) *)
 Inductive bool_le : bool -> bool -> Prop :=
-    | ble_refl : forall b : bool, bool_le b b
-    | ble_false_true : bool_le false true.
+| ble_refl : forall b : bool, bool_le b b
+| ble_false_true : bool_le false true.
 
 (*
 Definition bool_le (b1 b2 : bool) : Prop :=
 match b1, b2 with
-    | false, _ => True
-    | true, false => False
-    | true, true => True
+| false, _ => True
+| true, false => False
+| true, true => True
 end.
 *)
 (* end hide *)
@@ -15956,9 +15956,9 @@ end.
 
 (* begin hide *)
 Inductive Sublist {A : Type} : list A -> list A -> Prop :=
-    | Sublist_direct :
+| Sublist_direct :
         forall (h : A) (t : list A), Sublist t (h :: t)
-    | Sublist_cons :
+| Sublist_cons :
         forall (x : A) (l1 l2 : list A),
           Sublist l1 l2 -> Sublist l1 (x :: l2).
 (* end hide *)
@@ -16377,10 +16377,10 @@ Lemma Sublist_removeLast :
   forall (A : Type) (p : A -> bool) (l1 l2 : list A),
     Sublist l1 l2 ->
       match removeLast p l1, removeLast p l2 with
-          | None, None => True
-          | None, Some (x, l2') => l1 = l2' \/ Sublist l1 l2'
-          | x, None => False
-          | Some (x, l1'), Some (y, l2') => x = y /\ Sublist l1' l2'
+      | None, None => True
+      | None, Some (x, l2') => l1 = l2' \/ Sublist l1 l2'
+      | x, None => False
+      | Some (x, l1'), Some (y, l2') => x = y /\ Sublist l1' l2'
       end.
 (* begin hide *)
 Proof.
@@ -16609,8 +16609,8 @@ Qed.
 
 (* begin hide*)
 Inductive Prefix {A : Type} : list A -> list A -> Prop :=
-    | Prefix_nil : forall l : list A, Prefix [] l
-    | Prefix_cons :
+| Prefix_nil : forall l : list A, Prefix [] l
+| Prefix_cons :
         forall (x : A) (l1 l2 : list A),
           Prefix l1 l2 -> Prefix (x :: l1) (x :: l2).
 (* end hide *)
@@ -16879,8 +16879,8 @@ Lemma Prefix_replace :
   forall (A : Type) (l1 l2 : list A),
     Prefix l1 l2 -> forall (n : nat) (x : A),
       match replace l1 n x, replace l2 n x with
-          | Some l1', Some l2' => Prefix l1' l2'
-          | _, _ => True
+      | Some l1', Some l2' => Prefix l1' l2'
+      | _, _ => True
       end.
 (* begin hide *)
 Proof.
@@ -17336,9 +17336,9 @@ Qed.
 
 (* begin hide *)
 Inductive Suffix {A : Type} : list A -> list A -> Prop :=
-    | Suffix_refl :
+| Suffix_refl :
         forall l : list A, Suffix l l
-    | Suffix_cons :
+| Suffix_cons :
         forall (x : A) (l1 l2 : list A),
           Suffix l1 l2 -> Suffix l1 (x :: l2).
 (* end hide *)
@@ -17465,12 +17465,12 @@ Qed.
 
 (* begin hide *)
 Inductive Subseq {A : Type} : list A -> list A -> Prop :=
-    | Subseq_nil :
+| Subseq_nil :
         forall l : list A, Subseq [] l
-    | Subseq_cons :
+| Subseq_cons :
         forall (x : A) (l1 l2 : list A),
           Subseq l1 l2 -> Subseq (x :: l1) (x :: l2)
-    | Subseq_skip :
+| Subseq_skip :
         forall (x : A) (l1 l2 : list A),
           Subseq l1 l2 -> Subseq l1 (x :: l2).
 (* end hide *)
@@ -18103,9 +18103,9 @@ Qed.
 
 Fixpoint intercalate {A : Type} (l : list A) (ll : list (list A)) : list A :=
 match l, ll with
-    | [], _ => join ll
-    | _, [] => l
-    | h :: t, l :: ls => h :: l ++ intercalate t ls
+| [], _ => join ll
+| _, [] => l
+| h :: t, l :: ls => h :: l ++ intercalate t ls
 end.
 
 Lemma Subseq_spec :
@@ -18571,8 +18571,8 @@ Qed.
 Lemma Incl_remove :
   forall (A : Type) (l : list A) (n : nat),
     match remove n l with
-        | None => True
-        | Some (_, l') => Incl l' l
+    | None => True
+    | Some (_, l') => Incl l' l
     end.
 (* begin hide *)
 Proof.
@@ -18630,8 +18630,8 @@ Abort.
 Lemma Incl_splitAt :
   forall (A : Type) (l : list A) (n : nat),
     match splitAt n l with
-        | None => True
-        | Some (l1, _, l2) => Incl l1 l /\ Incl l2 l
+    | None => True
+    | Some (l1, _, l2) => Incl l1 l /\ Incl l2 l
     end.
 (* begin hide *)
 Proof.
@@ -19192,8 +19192,8 @@ Qed.
 (* TODO: Lemma SetEquiv_remove :
   exists (A : Type) (l1 l1' l2 l2' : list A) (n1 n2 : nat),
     remove match remove n l with
-        | None => True
-        | Some (_, l') => SetEquiv l' l
+    | None => True
+    | Some (_, l') => SetEquiv l' l
     end.
 Proof.
   induction l as [| h t]; cbn; intros.
@@ -19341,10 +19341,10 @@ Qed.
 (* begin hide *)
 Ltac se := repeat (cbn in *;
 match goal with
-    | H : SetEquiv [] _ |- _ => apply SetEquiv_nil_l in H; inv H
-    | H : SetEquiv _ [] |- _ => apply SetEquiv_nil_r in H; inv H
-    | H : ?P |- ?P => assumption
-    | |- SetEquiv [] [] => apply SetEquiv_refl
+| H : SetEquiv [] _ |- _ => apply SetEquiv_nil_l in H; inv H
+| H : SetEquiv _ [] |- _ => apply SetEquiv_nil_r in H; inv H
+| H : ?P |- ?P => assumption
+| |- SetEquiv [] [] => apply SetEquiv_refl
 end).
 (* end hide *)
 
@@ -19399,12 +19399,12 @@ Require Import Coq.Classes.RelationClasses.
 
 (* begin hide *)
 Inductive Permutation {A : Type} : list A -> list A -> Prop :=
-    | perm_nil : Permutation [] []
-    | perm_skip : forall (x : A) (l l' : list A),
+| perm_nil : Permutation [] []
+| perm_skip : forall (x : A) (l l' : list A),
         Permutation l l' -> Permutation (x :: l) (x :: l')
-    | perm_swap : forall (x y : A) (l : list A),
+| perm_swap : forall (x y : A) (l : list A),
         Permutation (y :: x :: l) (x :: y :: l)
-    | perm_trans : forall l l' l'' : list A,
+| perm_trans : forall l l' l'' : list A,
         Permutation l l' -> Permutation l' l'' -> Permutation l l''.
 
 #[global] Hint Constructors Permutation : core.
@@ -19543,9 +19543,9 @@ Qed.
 (* end hide *)
 
 Inductive Elem {A : Type} (x : A) : list A -> list A -> Prop :=
-    | es_here :
+| es_here :
         forall l : list A, Elem x l (x :: l)
-    | es_there :
+| es_there :
         forall (y : A) (l1 l2 : list A),
           Elem x l1 l2 -> Elem x (y :: l1) (y :: l2).
 
@@ -19611,10 +19611,10 @@ Proof.
       rewrite <- H. symmetry. apply Permutation_Elem. assumption.
       constructor. eapply IHPermutation; eassumption.
     repeat match goal with
-        | H : Elem _ _ (_ :: _) |- _ => inv H
-        | |- Permutation (?x :: _) (?x :: _) => constructor
-        | H : ?G |- ?G => assumption
-        | |- Permutation ?x ?x => reflexivity
+    | H : Elem _ _ (_ :: _) |- _ => inv H
+    | |- Permutation (?x :: _) (?x :: _) => constructor
+    | H : ?G |- ?G => assumption
+    | |- Permutation ?x ?x => reflexivity
     end.
       symmetry. apply Permutation_Elem. assumption.
       rewrite perm_swap. constructor. symmetry.
@@ -19639,9 +19639,9 @@ Restart.
       rewrite <- H. symmetry. apply Permutation_Elem. assumption.
       constructor. eapply H0; eassumption.
     repeat match goal with
-        | H : Elem _ _ (_ :: _) |- _ => inv H
-        | |- Permutation (?x :: _) (?x :: _) => constructor
-        | H : ?G |- ?G => assumption
+    | H : Elem _ _ (_ :: _) |- _ => inv H
+    | |- Permutation (?x :: _) (?x :: _) => constructor
+    | H : ?G |- ?G => assumption
     end.
       rewrite <- H. symmetry. apply Permutation_Elem. assumption.
       rewrite perm_swap, <- H. constructor. symmetry.
@@ -20843,8 +20843,8 @@ Poza tym permutacje mają inny styl (można używać symmetry etc).
 
 (* begin hide *)
 Inductive Cycle {A : Type} : list A -> list A -> Prop :=
-    | Cycle_refl : forall l : list A, Cycle l l
-    | Cycle_cyc :
+| Cycle_refl : forall l : list A, Cycle l l
+| Cycle_cyc :
         forall (x : A) (l1 l2 : list A),
           Cycle l1 (snoc x l2) -> Cycle l1 (x :: l2).
 (* end hide *)
@@ -21618,8 +21618,8 @@ End OPartition.
 Module IPartition.
 
 Inductive IPartition {A : Type} : list (list A) -> list A -> Prop :=
-    | IP_nil : IPartition [] []
-    | IP_cons :
+| IP_nil : IPartition [] []
+| IP_cons :
         forall {ll : list (list A)} {l1 l2 : list A},
           l1 <> [] -> IPartition ll l2 ->
             IPartition (l1 :: ll) (l1 ++ l2).
@@ -21785,10 +21785,10 @@ Qed.
 
 (* begin hide *)
 Inductive Palindrome {A : Type} : list A -> Prop :=
-    | Palindrome_nil : Palindrome []
-    | Palindrome_singl :
+| Palindrome_nil : Palindrome []
+| Palindrome_singl :
         forall x : A, Palindrome [x]
-    | Palindrome_1 :
+| Palindrome_1 :
         forall (x : A) (l : list A),
           Palindrome l -> Palindrome (x :: snoc x l).
 (* end hide *)

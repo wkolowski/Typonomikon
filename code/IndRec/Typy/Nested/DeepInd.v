@@ -2,15 +2,15 @@ Require Import List.
 Import ListNotations.
 
 Inductive ForallT {A : Type} (P : A -> Type) : list A -> Type :=
-    | ForallT_nil  : ForallT P []
-    | ForallT_cons :
+| ForallT_nil  : ForallT P []
+| ForallT_cons :
         forall (h : A) (t : list A),
           P h -> ForallT P t -> ForallT P (h :: t).
 
 Fixpoint ForallT' {A : Type} (P : A -> Type) (l : list A) : Type :=
 match l with
-    | [] => unit
-    | h :: t => P h * ForallT' P t
+| [] => unit
+| h :: t => P h * ForallT' P t
 end.
 
 Fixpoint list_ind_deep
@@ -42,8 +42,8 @@ Proof.
 Defined.
 
 Inductive RoseTree (A : Type) : Type :=
-    | E : RoseTree A
-    | N : A -> list (RoseTree A) -> RoseTree A.
+| E : RoseTree A
+| N : A -> list (RoseTree A) -> RoseTree A.
 
 Arguments E {A}.
 Arguments N {A} _ _.
@@ -53,8 +53,8 @@ Scheme RoseTree_ind' := Induction for RoseTree Sort Prop.
 Check RoseTree_ind'.
 
 Inductive RoseTree' {A : Type} (P : A -> Type) : RoseTree A -> Type :=
-    | E' : RoseTree' P E
-    | N' : forall (x : A) (ts : list (RoseTree A)),
+| E' : RoseTree' P E
+| N' : forall (x : A) (ts : list (RoseTree A)),
              P x -> ForallT (RoseTree' P) ts -> RoseTree' P (N x ts).
 
 Arguments E' {A P}.

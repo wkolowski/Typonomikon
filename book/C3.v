@@ -31,40 +31,40 @@ Variables b b1 b2 b3 : bool.
 (* begin hide *)
 Definition negb (b : bool) : bool :=
 match b with
-    | true => false
-    | false => true
+| true => false
+| false => true
 end.
 
 Definition andb (b1 b2 : bool) : bool :=
 match b1 with
-    | true => b2
-    | false => false
+| true => b2
+| false => false
 end.
 
 Definition orb (b1 b2 : bool) : bool :=
 match b1 with
-    | true => true
-    | false => b2
+| true => true
+| false => b2
 end.
 
 Definition implb (b1 b2 : bool) : bool :=
 match b1 with
-    | true => b2
-    | false => true
+| true => b2
+| false => true
 end.
 
 Definition eqb (b1 b2 : bool) : bool :=
 match b1, b2 with
-    | true, true => true
-    | false, false => true
-    | _, _ => false
+| true, true => true
+| false, false => true
+| _, _ => false
 end.
 
 Definition xorb (b1 b2 : bool) : bool :=
 match b1, b2 with
-    | true, false => true
-    | false, true => true
-    | _, _ => false
+| true, false => true
+| false, true => true
+| _, _ => false
 end.
 
 Definition nandb (b1 b2 : bool) : bool := negb (andb b1 b2).
@@ -82,8 +82,8 @@ Notation "b1 || b2" := (orb b1 b2).
 (* begin hide *)
 Ltac solve_bool := intros;
 match goal with
-    | b : bool |- _ => destruct b; clear b; solve_bool
-    | _ => cbn; auto
+| b : bool |- _ => destruct b; clear b; solve_bool
+| _ => cbn; auto
 end.
 (* end hide *)
 
@@ -304,11 +304,11 @@ End boolean_functions.
 
 Definition majority (a b c : bool) : bool :=
 match a, b, c with
-    | true , true , true  => true
-    | x    , false, true  => x
-    | true , y    , false => y
-    | false, true , z     => z
-    | false, false, false => false
+| true , true , true  => true
+| x    , false, true  => x
+| true , y    , false => y
+| false, true , z     => z
+| false, false, false => false
 end.
 
 Lemma majority_spec :
@@ -468,11 +468,11 @@ Qed.
 
 Fail Fixpoint inb_nat (n : nat) (l : list nat) : bool :=
 match l with
-    | nil => false
-    | cons h t =>
+| nil => false
+| cons h t =>
         match eq_nat_dec n h with
-            | or_introl _ => true
-            | _ => inb_nat n t
+        | or_introl _ => true
+        | _ => inb_nat n t
         end
 end.
 
@@ -505,8 +505,8 @@ end.
     którą bardzo łatwo ominąć: *)
 
 Inductive sumbool (A B : Prop) : Type :=
-    | left : A -> sumbool A B
-    | right : B -> sumbool A B.
+| left : A -> sumbool A B
+| right : B -> sumbool A B.
 
 (** Typ [sumbool] jest niemal dokładną kopią [or], jednak nie żyje on
     w [Prop], lecz w [Type]. Ta drobna sztuczka, że termy typu
@@ -533,11 +533,11 @@ Inductive sumbool (A B : Prop) : Type :=
 Require Import Bool.
 
 Inductive Spec {A : Type} (P : A -> Prop) : A -> Prop :=
-    | spec : forall x : A, P x -> Spec P x.
+| spec : forall x : A, P x -> Spec P x.
 
 Ltac spec_aux H :=
 match type of H with
-    | Spec ?P ?x => destruct H as [x H], x
+| Spec ?P ?x => destruct H as [x H], x
 end.
 
 Tactic Notation "spec" hyp(H) := spec_aux H.
@@ -545,7 +545,7 @@ Tactic Notation "spec" hyp(H) := spec_aux H.
 Tactic Notation "spec" integer(n) :=
   intros until n;
 match goal with
-    | H : Spec _ _ |- _ => spec_aux H
+| H : Spec _ _ |- _ => spec_aux H
 end.
 
 Goal
@@ -586,8 +586,8 @@ Qed.
     przez przypadki). *)
 
 Inductive NatSpec (P : nat -> Prop) : nat -> Prop :=
-    | NS_0 : P 0 -> NatSpec P 0
-    | NS_S : forall n : nat, P (S n) -> NatSpec P (S n).
+| NS_0 : P 0 -> NatSpec P 0
+| NS_S : forall n : nat, P (S n) -> NatSpec P (S n).
 
 (* end hide *)
 
@@ -607,14 +607,14 @@ TODO: https://en.wikipedia.org/wiki/Mars_Climate_Orbiter#Cause_of_failure
 Require Import Recdef.
 
 Inductive even : nat -> Prop :=
-    | even0 : even 0
-    | evenSS : forall n : nat, even n -> even (S (S n)).
+| even0 : even 0
+| evenSS : forall n : nat, even n -> even (S (S n)).
 
 Function evenb (n : nat) : bool :=
 match n with
-    | 0 => true
-    | 1 => false
-    | S (S n') => evenb n'
+| 0 => true
+| 1 => false
+| S (S n') => evenb n'
 end.
 
 Lemma evenb_spec :

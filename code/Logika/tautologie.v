@@ -28,7 +28,7 @@ Proof.
 Restart.
   split; intros; repeat
   match goal with
-      | H : _ /\ _ |- _ => destruct H
+  | H : _ /\ _ |- _ => destruct H
   end; repeat split; assumption.
 Qed.
 (* end hide *)

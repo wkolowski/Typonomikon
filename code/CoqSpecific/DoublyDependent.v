@@ -4,7 +4,7 @@ Record t : Type :=
     b : if a then bool else unit;
     c :
       match a, b with
-          | true, true => nat
-          | _   , _    => unit
+      | true, true => nat
+      | _   , _    => unit
       end;
 }.

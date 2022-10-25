@@ -237,8 +237,8 @@ End wut.
 
 Fixpoint nat_rec' {X : Type} (z : X) (s : X -> X) (n : nat) : X :=
 match n with
-    | 0 => z
-    | S n' => s (nat_rec' z s n')
+| 0 => z
+| S n' => s (nat_rec' z s n')
 end.
 
 (** Tak wygląda rekursor dla liczb naturalnych. Widzimy, że "zmiana
@@ -264,8 +264,8 @@ end.
 
 Fixpoint even (n : nat) : bool :=
 match n with
-    | 0 => true
-    | S n' => negb (even n')
+| 0 => true
+| S n' => negb (even n')
 end.
 
 Lemma solution :
@@ -330,8 +330,8 @@ Definition list_rec'_type' : Type :=
 Fixpoint list_rec'
   {A P : Type} (n : P) (c : A -> P -> P) (l : list A) : P :=
 match l with
-    | nil => n (* podmieniamy [nil] na [n]... *)
-    | cons h t => c h (list_rec' n c t) (* ... a [cons] na [c] *)
+| nil => n (* podmieniamy [nil] na [n]... *)
+| cons h t => c h (list_rec' n c t) (* ... a [cons] na [c] *)
 end.
 
 (** Krok czwarty: żeby uzyskać regułę indukcji, bierzemy rekursor i
@@ -366,8 +366,8 @@ Fixpoint list_ind'
   (l : list A)
     : P l :=
 match l with
-    | nil => n
-    | cons h t => c h t (list_ind' n c t)
+| nil => n
+| cons h t => c h t (list_ind' n c t)
 end.
 
 (** Włala, mamy regułę indukcji.
@@ -382,8 +382,8 @@ end.
     Rozważmy poniższy typ: *)
 
 Inductive nat' : Type :=
-    | Z' : nat'
-    | S' : nat' -> nat'.
+| Z' : nat'
+| S' : nat' -> nat'.
 
 (** Jako, że [nat'] jest typem induktywnym, to jest najlepszym sposobem
     robienia termów w kształcie [F := fun X => unit + X]. Ale jak to?
@@ -413,14 +413,14 @@ Module ex.
 
 Fixpoint f (n : nat) : nat' :=
 match n with
-    | 0 => Z'
-    | S n' => S' (f n')
+| 0 => Z'
+| S n' => S' (f n')
 end.
 
 Fixpoint g (n : nat') : nat :=
 match n with
-    | Z' => 0
-    | S' n' => S (g n')
+| Z' => 0
+| S' n' => S (g n')
 end.
 
 Lemma fg :
@@ -533,7 +533,7 @@ Definition unit_ind_type : Type :=
 Definition unit_ind'
   {P : unit -> Prop} (p : P tt) (u : unit) : P u :=
 match u with
-    | tt => p
+| tt => p
 end.
 
 Definition bool_shape : Type -> Type :=
@@ -545,8 +545,8 @@ Definition bool_rec_type : Type :=
 Definition bool_rec'
   {P : Type} (t f : P) (b : bool) : P :=
 match b with
-    | true => t
-    | false => f
+| true => t
+| false => f
 end.
 
 Definition rnegb : bool -> bool := bool_rec' false true.
@@ -558,8 +558,8 @@ Definition bool_ind_type : Type :=
 Definition bool_ind'
   {P : bool -> Prop} (t : P true) (f : P false) (b : bool) : P b :=
 match b with
-    | true => t
-    | false => f
+| true => t
+| false => f
 end.
 
 Definition rnegb_rnegb :
@@ -575,8 +575,8 @@ Definition option_rec_type : Type :=
 Definition option_rec'
   {A P : Type} (n : P) (s : A -> P) (o : option A) : P :=
 match o with
-    | None => n
-    | Some a => s a
+| None => n
+| Some a => s a
 end.
 
 Definition option_ind_type : Type :=
@@ -589,8 +589,8 @@ Definition option_ind'
   (n : P None) (s : forall a : A, P (Some a))
   (o : option A) : P o :=
 match o with
-    | None => n
-    | Some a => s a
+| None => n
+| Some a => s a
 end.
 
 Definition prod_shape (A B : Type) : Type -> Type :=
@@ -602,7 +602,7 @@ Definition prod_rec_type : Type :=
 Definition prod_rec'
   {A B P : Type} (f : A -> B -> P) (x : A * B) : P :=
 match x with
-    | (a, b) => f a b
+| (a, b) => f a b
 end.
 
 Definition rswap {A B : Type} : A * B -> B * A :=
@@ -618,7 +618,7 @@ Definition prod_ind'
   (f : forall (a : A) (b : B), P (a, b))
   (x : A * B) : P x :=
 match x with
-    | (a, b) => f a b
+| (a, b) => f a b
 end.
 
 Definition rswap_rswap :
@@ -636,8 +636,8 @@ Definition sum_rec_type : Type :=
 Definition sum_rec'
   {A B P : Type} (f : A -> P) (g : B -> P) (x : A + B) : P :=
 match x with
-    | inl a => f a
-    | inr b => g b
+| inl a => f a
+| inr b => g b
 end.
 
 Definition sswap {A B : Type} : A + B -> B + A :=
@@ -656,8 +656,8 @@ Definition sum_ind'
   (x : A + B)
     : P x :=
 match x with
-    | inl a => l a
-    | inr b => r b
+| inl a => l a
+| inr b => r b
 end.
 
 Definition sswap_sswap :
@@ -808,8 +808,8 @@ Print plus.
 (* plus =
    fix plus (n m : nat) {struct n} : nat :=
      match n with
-     | 0 => m
-     | S p => S (plus p m)
+ | 0 => m
+ | S p => S (plus p m)
      end
         : nat -> nat -> nat *)
 
@@ -859,29 +859,29 @@ Print plus.
 
 (* begin hide *)
 Inductive subterm_nat : nat -> nat -> Prop :=
-    | subterm_nat_S : forall n : nat, subterm_nat n (S n)
-    | subterm_nat_trans' : forall x y z : nat,
+| subterm_nat_S : forall n : nat, subterm_nat n (S n)
+| subterm_nat_trans' : forall x y z : nat,
         subterm_nat x y -> subterm_nat y z -> subterm_nat x z.
 
 Inductive subterm_list {A : Type} : list A -> list A -> Prop :=
-    | subterm_list_cons : forall (h : A) (t : list A),
+| subterm_list_cons : forall (h : A) (t : list A),
         subterm_list t (h :: t)
-    | subterm_list_trans' : forall x y z : list A,
+| subterm_list_trans' : forall x y z : list A,
         subterm_list x y -> subterm_list y z -> subterm_list x z.
 
 Inductive trans_clos {A : Type} (R : A -> A -> Prop) : A -> A -> Prop :=
-    | trans_clos_step : forall x y : A, R x y -> trans_clos R x y
-    | trans_clos_trans : forall x y z : A,
+| trans_clos_step : forall x y : A, R x y -> trans_clos R x y
+| trans_clos_trans : forall x y z : A,
         R x y -> trans_clos R y z -> trans_clos R x z.
 
 Inductive subterm_nat_base : nat -> nat -> Prop :=
-    | subterm_nat_base_c : forall n : nat, subterm_nat_base n (S n).
+| subterm_nat_base_c : forall n : nat, subterm_nat_base n (S n).
 
 Definition subterm_nat' : nat -> nat -> Prop :=
     trans_clos subterm_nat_base.
 
 Inductive subterm_list_base {A : Type} : list A -> list A -> Prop :=
-    | subterm_list_base_c : forall (h : A) (t : list A),
+| subterm_list_base_c : forall (h : A) (t : list A),
         subterm_list_base t (h :: t).
 
 Definition subterm_list' {A : Type} : list A -> list A -> Prop :=
@@ -1054,8 +1054,8 @@ Qed.
 
 Fail Fixpoint weird (n : nat) : unit :=
 match n with
-    | 0 => tt
-    | S n' => weird 0
+| 0 => tt
+| S n' => weird 0
 end.
 
 (** Definicja zdaje się być poprawna: [0] to przypadek bazowy, a gdy [n]
@@ -1080,9 +1080,9 @@ end.
 
 Fail Fixpoint fib (n : nat) : nat :=
 match n with
-    | 0 => 0
-    | 1 => 1
-    | S (S n') => fib n' + fib (S n')
+| 0 => 0
+| 1 => 1
+| S (S n') => fib n' + fib (S n')
 end.
 
 (** Funkcja ta próbuje policzyć n-tą
@@ -1108,9 +1108,9 @@ end.
 
 Fixpoint fib (n : nat) : nat :=
 match n with
-    | 0 => 0
-    | 1 => 1
-    | S (S n' as n'') => fib n' + fib n''
+| 0 => 0
+| 1 => 1
+| S (S n' as n'') => fib n' + fib n''
 end.
 
 (** Tym razem Coq widzi, że [S n'] jest podtermem [S (S n')], gdyż explicite
@@ -1161,8 +1161,8 @@ From Typonomikon Require Import D5.
 
 Fixpoint plus (n : nat) : nat -> nat :=
 match n with
-    | 0 => fun m : nat => m
-    | S n' => fun m : nat => S (plus n' m)
+| 0 => fun m : nat => m
+| S n' => fun m : nat => S (plus n' m)
 end.
 
 (** Tak oto definicja funkcji plus, lecz zapisana nieco inaczej, niż gdy
@@ -1173,8 +1173,8 @@ end.
 Definition plus' : nat -> nat -> nat :=
   fix f (n : nat) : nat -> nat :=
   match n with
-      | 0 => fun m : nat => m
-      | S n' => fun m : nat => S (f n' m)
+  | 0 => fun m : nat => m
+  | S n' => fun m : nat => S (f n' m)
   end.
 
 (** Ale komenda [Fixpoint] jest jedynie cukrem syntaktycznym - funkcję [plus]
@@ -1206,9 +1206,9 @@ Definition plus' : nat -> nat -> nat :=
 
 Fail Fixpoint ack (n m : nat) : nat :=
 match n, m with
-    | 0, m => S m
-    | S n', 0 => ack n' 1
-    | S n', S m' => ack n' (ack (S n') m')
+| 0, m => S m
+| S n', 0 => ack n' 1
+| S n', S m' => ack n' (ack (S n') m')
 end.
 
 (* ===> The command has indeed failed with message:
@@ -1256,12 +1256,12 @@ end.
 
 Fixpoint ack (n : nat) : nat -> nat :=
 match n with
-    | 0 => S
-    | S n' =>
+| 0 => S
+| S n' =>
         fix ack' (m : nat) : nat :=
         match m with
-            | 0 => ack n' 1
-            | S m' => ack n' (ack' m')
+        | 0 => ack n' 1
+        | S m' => ack n' (ack' m')
         end
 end.
 
@@ -1300,9 +1300,9 @@ Lemma ack_eq :
   forall n m : nat,
     ack n m =
     match n, m with
-        | 0, _ => S m
-        | S n', 0 => ack n' 1
-        | S n', S m' => ack n' (ack (S n') m')
+    | 0, _ => S m
+    | S n', 0 => ack n' 1
+    | S n', S m' => ack n' (ack (S n') m')
     end.
 Proof.
   destruct n, m; reflexivity.
@@ -1374,8 +1374,8 @@ match l1 with
   | h1 :: t1 =>
       fix merge' (l2 : list A) : list A :=
         match l2 with
-          | [] => l1
-          | h2 :: t2 =>
+      | [] => l1
+      | h2 :: t2 =>
               if cmp h1 h2
               then h1 :: merge cmp t1 l2
               else h2 :: merge' t2
@@ -1405,9 +1405,9 @@ Lemma merge_eq :
   forall {A : Type} {cmp : A -> A -> bool} {l1 l2 : list A},
     merge cmp l1 l2 =
     match l1, l2 with
-        | [], _ => l2
-        | _, [] => l1
-        | h1 :: t1, h2 :: t2 =>
+    | [], _ => l2
+    | _, [] => l1
+    | h1 :: t1, h2 :: t2 =>
             if cmp h1 h2
             then h1 :: merge cmp t1 l2
             else h2 :: merge cmp l1 t2
@@ -1528,8 +1528,8 @@ Qed.
 Fixpoint ins
   {A : Type} (cmp : A -> A -> bool) (x : A) (l : list A) : list A :=
 match l with
-    | [] => [x]
-    | h :: t => if cmp x h then x :: h :: t else h :: ins cmp x t
+| [] => [x]
+| h :: t => if cmp x h then x :: h :: t else h :: ins cmp x t
 end.
 
 Lemma merge_ins_l :
@@ -1665,16 +1665,16 @@ Arguments Epsilon {A}.
 Arguments Cons    {A} _ _.
 
 Inductive Nested' : Type -> Type :=
-    | Epsilon' : forall A : Type, Nested' A
-    | Cons' : forall A : Type, A -> Nested' (list A) -> Nested' A.
+| Epsilon' : forall A : Type, Nested' A
+| Cons' : forall A : Type, A -> Nested' (list A) -> Nested' A.
 
 Check Nested_ind.
 Check Nested'_ind.
 
 Fixpoint len {A : Type} (l : Nested A) : nat :=
 match l with
-    | Epsilon => 0
-    | Cons _ t => 1 + len t
+| Epsilon => 0
+| Cons _ t => 1 + len t
 end.
 
 End Nested.
@@ -1682,16 +1682,16 @@ End Nested.
 Module Seq.
 
 Inductive Seq (A : Type) : Type :=
-    | SNil : Seq A
-    | SCons : A -> Seq (A * A) -> Seq A.
+| SNil : Seq A
+| SCons : A -> Seq (A * A) -> Seq A.
 
 Arguments SNil  {A}.
 Arguments SCons {A} _ _.
 
 Fixpoint size {A : Type} (s : Seq A) : nat :=
 match s with
-    | SNil => 0
-    | SCons _ t => 1 + 2 * size t
+| SNil => 0
+| SCons _ t => 1 + 2 * size t
 end.
 
 End Seq.
@@ -1699,8 +1699,8 @@ End Seq.
 Module Nested2.
 
 Inductive Nested (A : Type) : Type :=
-    | Singl : A -> Nested A
-    | Nestd : Nested (list A) -> Nested A.
+| Singl : A -> Nested A
+| Nestd : Nested (list A) -> Nested A.
 
 End Nested2.
 
@@ -1728,7 +1728,7 @@ End Nested2.
     Sztoby za dużo nie godoć, bajszpil: *)
 
 Inductive Tree (A : Type) : Type :=
-    | Node : A -> list (Tree A) -> Tree A.
+| Node : A -> list (Tree A) -> Tree A.
 
 Arguments Node {A} _ _.
 
@@ -1739,7 +1739,7 @@ Arguments Node {A} _ _.
 Unset Guard Checking.
 Fixpoint mirror {A : Type} (t : Tree A) {struct t} : Tree A :=
 match t with
-    | Node x ts => Node x (map mirror (rev ts))
+| Node x ts => Node x (map mirror (rev ts))
 end.
 Set Guard Checking.
 
@@ -1784,22 +1784,22 @@ Compute mirror (Node 0 [Node 1 [Node 5 []; Node 6 []; Node 7 []]; Node 2 []; Nod
 Module mirror.
 
 Inductive mirrorD {A : Type} : Tree A -> Type :=
-    | mirrorD' :
+| mirrorD' :
         forall (x : A) (ts : list (Tree A)),
           mirrorsD (rev ts) -> mirrorD (Node x ts)
 
 with mirrorsD {A : Type} : list (Tree A) -> Type :=
-    | mirrorsD_nil :
+| mirrorsD_nil :
         mirrorsD []
-    | mirrorsD_cons :
+| mirrorsD_cons :
         forall (t : Tree A) (ts : list (Tree A)),
           mirrorD t -> mirrorsD ts -> mirrorsD (t :: ts).
 
 Inductive mapG
   {A B : Type} (f : A -> B -> Type) : list A -> list B -> Type :=
-    | mapG_nil  :
+| mapG_nil  :
         mapG f [] []
-    | mapG_cons :
+| mapG_cons :
         forall (a : A) (b : B) (la : list A) (lb : list B),
           f a b -> mapG f la lb -> mapG f (a :: la) (b :: lb).
 
@@ -1826,7 +1826,7 @@ End mirror.
 (** Inny przykład: *)
 
 Inductive Tree' (A : Type) : Type :=
-    | Node' : A -> forall {B : Type}, (B -> Tree' A) -> Tree' A.
+| Node' : A -> forall {B : Type}, (B -> Tree' A) -> Tree' A.
 
 Arguments Node' {A} _ _ _.
 
@@ -1835,7 +1835,7 @@ Arguments Node' {A} _ _ _.
 
 Fixpoint mirror' {A : Type} (t : Tree' A) : Tree' A :=
 match t with
-    | Node' x B ts => Node' x B (fun b : B => mirror' (ts b))
+| Node' x B ts => Node' x B (fun b : B => mirror' (ts b))
 end.
 
 (** * Rekursja strukturalna (TODO) *)
@@ -1939,8 +1939,8 @@ Require Import Nat.
 
 Fail Fixpoint collatz (n : nat) : list nat :=
 match n with
-    | 0 | 1 => [n]
-    | _ => n :: if even n then collatz (div2 n) else collatz (1 + 3 * n)
+| 0 | 1 => [n]
+| _ => n :: if even n then collatz (div2 n) else collatz (1 + 3 * n)
 end.
 
 (** Jest to bardzo wesoła funkcja. Przypadki bazowe to [0] i [1] - zwracamy
@@ -1961,21 +1961,21 @@ end.
 
 Fixpoint collatz (fuel n : nat) : option (list nat) :=
 match fuel with
-    | 0 => None
-    | S fuel' =>
+| 0 => None
+| S fuel' =>
         match n with
-            | 0 | 1 => Some [n]
-            | _ =>
+        | 0 | 1 => Some [n]
+        | _ =>
                 if even n
                 then
                   match collatz fuel' (div2 n) with
-                      | Some l => Some (n :: l)
-                      | None => None
+                  | Some l => Some (n :: l)
+                  | None => None
                   end
                 else
                   match collatz fuel' (1 + 3 * n) with
-                      | Some l => Some (n :: l)
-                      | None => None
+                  | Some l => Some (n :: l)
+                  | None => None
                   end
         end
 end.
@@ -2040,14 +2040,14 @@ Compute collatz 2 5.
 (* begin hide *)
 Fixpoint divFuel (fuel n m : nat) : option nat :=
 match fuel with
-    | 0 => None
-    | S fuel' =>
+| 0 => None
+| S fuel' =>
         if ltb n m
         then Some 0
         else
           match divFuel fuel' (n - m) m with
-              | Some r => Some (S r)
-              | None => None
+          | Some r => Some (S r)
+          | None => None
           end
 end.
 (* end hide *)
@@ -2268,7 +2268,7 @@ Qed.
     dostępnego oraz relacji dobrze ufundowanej. *)
 
 Inductive Acc {A : Type} (R : A -> A -> Prop) (x : A) : Prop :=
-    | Acc_intro : (forall y : A, R y x -> Acc R y) -> Acc R x.
+| Acc_intro : (forall y : A, R y x -> Acc R y) -> Acc R x.
 
 (** Kostki domina reprezentuje typ [A], zaś relacja [R] to sposób ułożenia
     kostek, a [x] to pewna konkretna kostka domina. Konstruktor [Acc_intro]
@@ -2376,18 +2376,18 @@ Require Import Lia.
 Module Ex.
 
 Inductive T : Type :=
-    | from0 : nat -> T
-    | fromω : nat -> T
-    | ωω : T.
+| from0 : nat -> T
+| fromω : nat -> T
+| ωω : T.
 
 Definition R (x y : T) : Prop :=
 match x, y with
-    | from0 n, from0 m => n < m
-    | from0 _, _ => True
-    | fromω _, from0 _ => False
-    | fromω n, fromω m => n < m
-    | fromω _, _ => True
-    | ωω, _ => False
+| from0 n, from0 m => n < m
+| from0 _, _ => True
+| fromω _, from0 _ => False
+| fromω n, fromω m => n < m
+| fromω _, _ => True
+| ωω, _ => False
 end.
 
 Lemma R_trans :
@@ -2560,8 +2560,8 @@ Print div.
          (m : nat) =>
     let s := le_lt_dec (S m) n in
       match s with
-          | left l => 1 + IH (n - S m) (div_subproof n m l) m
-          | right _ => 0
+      | left l => 1 + IH (n - S m) (div_subproof n m l) m
+      | right _ => 0
       end)
     : nat -> nat -> nat *)
 
@@ -2948,8 +2948,8 @@ Check div_eq.
     między innymi równanie rekurencyjne. *)
 
 Inductive divG : nat -> nat -> nat -> Prop :=
-    | divG_lt : forall {n m : nat}, n < S m -> divG n m 0
-    | divG_ge :
+| divG_lt : forall {n m : nat}, n < S m -> divG n m 0
+| divG_ge :
         forall n m r : nat,
           n >= S m -> divG (n - S m) m r -> divG n m (S r).
 
@@ -3215,25 +3215,25 @@ Qed.
 Fixpoint split
   {A : Type} (n : nat) (l : list A) : option (list A * list A) :=
 match n, l with
-    | 0, _ => Some ([], l)
-    | S _, [] => None
-    | S n', h :: t =>
+| 0, _ => Some ([], l)
+| S _, [] => None
+| S n', h :: t =>
         match split n' t with
-            | None => None
-            | Some (l1, l2) => Some (h :: l1, l2)
+        | None => None
+        | Some (l1, l2) => Some (h :: l1, l2)
         end
 end.
 
 Inductive splitG {A : Type} :
   nat -> list A -> option (list A * list A) -> Prop :=
-    | splitG_0 :
+| splitG_0 :
         forall l : list A, splitG 0 l (Some ([], l))
-    | splitG_1 :
+| splitG_1 :
         forall n : nat, splitG (S n) [] None
-    | splitG_2 :
+| splitG_2 :
         forall (n' : nat) (h : A) (t : list A),
           splitG n' t None -> splitG (S n') (h :: t) None
-    | splitG_3 :
+| splitG_3 :
         forall (n' : nat) (h : A) (t l1 l2 : list A),
           splitG n' t (Some (l1, l2)) ->
             splitG (S n') (h :: t) (Some (h :: l1, l2)).
@@ -3410,8 +3410,8 @@ Qed.
     wynalazek radzi sobie z dzieleniem. *)
 
 Inductive divD : nat -> nat -> Type :=
-    | divD_lt : forall n m : nat, n < S m -> divD n m
-    | divD_ge :
+| divD_lt : forall n m : nat, n < S m -> divD n m
+| divD_ge :
         forall n m : nat,
           n >= S m -> divD (n - S m) m -> divD n m.
 
@@ -3433,8 +3433,8 @@ Inductive divD : nat -> nat -> Type :=
 
 Fixpoint div'_aux {n m : nat} (H : divD n m) : nat :=
 match H with
-    | divD_lt _ _ _ => 0
-    | divD_ge _ _ _ H' => S (div'_aux H')
+| divD_lt _ _ _ => 0
+| divD_ge _ _ _ H' => S (div'_aux H')
 end.
 
 (** Dzięki [divD] możemy zdefiniować funkcję [div'_aux], której typem jest
@@ -3612,18 +3612,18 @@ Qed.
 Module rot.
 
 Inductive rotD {A : Type} (n : nat) : list A -> Type :=
-    | rotD_None :
+| rotD_None :
         forall l : list A,
           split (S n) l = None -> rotD n l
-    | rotD_Some :
+| rotD_Some :
         forall l l1 l2 : list A,
           split (S n) l = Some (l1, l2) ->
             rotD n l2 -> rotD n l.
 
 Fixpoint rot_aux {A : Type} {n : nat} {l : list A} (d : rotD n l) : list A :=
 match d with
-    | rotD_None _ _ _ => l
-    | rotD_Some _ _ l1 _ _ d' => rev l1 ++ rot_aux d'
+| rotD_None _ _ _ => l
+| rotD_Some _ _ l1 _ _ d' => rev l1 ++ rot_aux d'
 end.
 
 Lemma rotD_all :
@@ -3645,10 +3645,10 @@ Definition rot {A : Type} (n : nat) (l : list A) : list A :=
 Compute rot 1 [1; 2; 3; 4; 5; 6; 7].
 
 Inductive rotG {A : Type} (n : nat) : list A -> list A -> Prop :=
-    | rotG_None :
+| rotG_None :
         forall l : list A,
           split (S n) l = None -> rotG n l l
-    | rotG_Some :
+| rotG_Some :
         forall l l1 l2 r : list A,
           split (S n) l = Some (l1, l2) ->
             rotG n l2 r -> rotG n l (rev l1 ++ r).
@@ -3705,8 +3705,8 @@ Lemma rot_eq :
   forall {A : Type} (n : nat) (l : list A),
     rot n l =
     match split (S n) l with
-        | None => l
-        | Some (l1, l2) => rev l1 ++ rot n l2
+    | None => l
+    | Some (l1, l2) => rev l1 ++ rot n l2
     end.
 Proof.
   intros A n.
@@ -3789,8 +3789,8 @@ End rot.
 Module sieve.
 
 Inductive D {A : Type} (f : A -> A -> bool) : list A -> Type :=
-    | D0 : D f []
-    | D1 :
+| D0 : D f []
+| D1 :
         forall (h : A) (t : list A),
           D f (filter (f h) t) -> D f (h :: t).
 
@@ -3815,8 +3815,8 @@ Fixpoint sieve'
   {A : Type} (f : A -> A -> bool)
   {l : list A} (d : D f l) : list A :=
 match d with
-    | D0 => []
-    | D1 h t d' => h :: sieve' f d'
+| D0 => []
+| D1 h t d' => h :: sieve' f d'
 end.
 
 Definition sieve
@@ -3830,14 +3830,14 @@ TODO: prostu usunąć definicję [list] z rozdziału D5.
 
 Fixpoint any {A : Type} (f : A -> bool) (l : list A) : bool :=
 match l with
-    | [] => false
-    | h :: t => f h || any f t
+| [] => false
+| h :: t => f h || any f t
 end.
 
 Fixpoint iterate {A : Type} (f : A -> A) (x : A) (n : nat) : list A :=
 match n with
-    | 0 => []
-    | S n' => x :: iterate f (f x) n'
+| 0 => []
+| S n' => x :: iterate f (f x) n'
 end.
 
 Definition divides (n m : nat) : bool :=
@@ -3963,12 +3963,12 @@ Function split
   {A : Type} (n : nat) (l : list A)
   : option (list A * list A) :=
 match n, l with
-    | 0, _ => Some ([], l)
-    | S n', [] => None
-    | S n', h :: t =>
+| 0, _ => Some ([], l)
+| S n', [] => None
+| S n', h :: t =>
         match split n' t with
-            | None => None
-            | Some (l1, l2) => Some (h :: l1, l2)
+        | None => None
+        | Some (l1, l2) => Some (h :: l1, l2)
         end
 end.
 
@@ -4018,8 +4018,8 @@ Qed.
 Function rot
   {A : Type} (n : nat) (l : list A) {measure length l} : list A :=
 match split (S n) l with
-    | None => l
-    | Some (l1, l2) => rev l1 ++ rot n l2
+| None => l
+| Some (l1, l2) => rev l1 ++ rot n l2
 end.
 Proof.
   intros A n l _ l1 l2 _ H.
@@ -4128,9 +4128,9 @@ Fail Inductive fD : nat -> Type :=
     Hej ho, po przykład by się szło. *)
 
 Inductive fG : nat -> nat -> Prop :=
-    | fG_gt100 :
+| fG_gt100 :
         forall n : nat, 100 < n -> fG n (n - 10)
-    | fG_le100 :
+| fG_le100 :
         forall n r1 r2 : nat,
           n <= 100 -> fG (n + 11) r1 -> fG r1 r2 -> fG n r2.
 
@@ -4158,9 +4158,9 @@ Defined.
     jest on relacją deterministyczną.*)
 
 Inductive fD : nat -> Type :=
-    | fD_gt100 :
+| fD_gt100 :
         forall n : nat, 100 < n -> fD n
-    | fD_le100 :
+| fD_le100 :
         forall n r : nat, n <= 100 ->
           fG (n + 11) r -> fD (n + 11) -> fD r -> fD n.
 
@@ -4170,8 +4170,8 @@ Inductive fD : nat -> Type :=
 
 Fixpoint f' {n : nat} (d : fD n) : nat :=
 match d with
-    | fD_gt100 _ _ => n - 10
-    | fD_le100 _ _ _ _ _ d2 => f' d2
+| fD_gt100 _ _ => n - 10
+| fD_le100 _ _ _ _ _ d2 => f' d2
 end.
 
 (** Definicja funkcji pomocniczej [f'] może być nieco zaskakująca: gdzie
@@ -4390,8 +4390,8 @@ Qed.
 
 Fail Fixpoint g (n : nat) : nat :=
 match n with
-    | 0 => 0
-    | S n => g (g n)
+| 0 => 0
+| S n => g (g n)
 end.
 
 (** Wytłumacz, dlaczego Coq nie akceptuje tej definicji. Następnie wymyśl
@@ -4405,8 +4405,8 @@ end.
     Charakteryzacja jest prosta: [forall n : nat, g n = 0]. *)
 
 Inductive gG : nat -> nat -> Prop :=
-    | gG_0 : gG 0 0
-    | gG_1 : forall n r1 r2 : nat, gG n r1 -> gG r1 r2 -> gG (S n) r2.
+| gG_0 : gG 0 0
+| gG_1 : forall n r1 r2 : nat, gG n r1 -> gG r1 r2 -> gG (S n) r2.
 
 Lemma gG_det :
   forall n r1 r2 : nat, gG n r1 -> gG n r2 -> r1 = r2.
@@ -4418,13 +4418,13 @@ Proof.
 Defined.
 
 Inductive gD : nat -> Type :=
-    | gD_0 : gD 0
-    | gD_1 : forall {n r : nat}, gD n -> gG n r -> gD r -> gD (S n).
+| gD_0 : gD 0
+| gD_1 : forall {n r : nat}, gD n -> gG n r -> gD r -> gD (S n).
 
 Fixpoint g' {n : nat} (d : gD n) : nat :=
 match d with
-    | gD_0 => 0
-    | gD_1 d1 _ d2 => g' d2
+| gD_0 => 0
+| gD_1 d1 _ d2 => g' d2
 end.
 
 Lemma gG_correct' :
@@ -4522,15 +4522,15 @@ Module McCarthy'.
 
 (*
 Inductive fD : nat -> Type :=
-    | fD_gt100 : forall n : nat, 100 < n -> fD n
-    | fD_le100 :
+| fD_gt100 : forall n : nat, 100 < n -> fD n
+| fD_le100 :
         forall n : nat, n <= 100 ->
           forall d : fD (n + 11), fD (f' (n + 11) d) -> fD n
 
 with Fixpoint f' (n : nat) (d : fD n) : nat :=
 match d with
-    | fD_gt100 n H => n - 10
-    | fD_le100 n H d1 d2 => f' (f' (n + 11) d1) d2
+| fD_gt100 n H => n - 10
+| fD_le100 n H d1 d2 => f' (f' (n + 11) d1) d2
 end.
 *)
 
@@ -4730,21 +4730,21 @@ Qed.
 
 Fail Fixpoint g (n : nat) : nat :=
 match n with
-    | 0 => 0
-    | S n => g (g n)
+| 0 => 0
+| S n => g (g n)
 end.
 
 (* begin hide *)
 
 (*
 Inductive gD : nat -> Type :=
-    | gD_0 : gD 0
-    | gD_S : forall n : nat, gD n -> gD (g n) -> gD (S n)
+| gD_0 : gD 0
+| gD_S : forall n : nat, gD n -> gD (g n) -> gD (S n)
 
 with Fixpoint g' (n : nat) (d : gD n) : nat :=
 match d with
-    | gD_0 => 0
-    | gD_S _ d1 d2 => g' (g' n d1) d2
+| gD_0 => 0
+| gD_S _ d1 d2 => g' (g' n d1) d2
 end.
 *)
 
@@ -4834,8 +4834,8 @@ End McCarthy'.
 Module again.
 
 Inductive divD : nat -> nat -> Prop :=
-    | divD_lt : forall n m : nat, n < S m -> divD n m
-    | divD_ge :
+| divD_lt : forall n m : nat, n < S m -> divD n m
+| divD_ge :
         forall n m : nat,
           n >= S m -> divD (n - S m) m -> divD n m.
 
@@ -4847,8 +4847,8 @@ Inductive divD : nat -> nat -> Prop :=
 
 Fail Fixpoint div_aux {n m : nat} (d : divD n m) : nat :=
 match d with
-    | divD_lt _ _ _ => 0
-    | divD_ge _ _ _ d' => S (div_aux d')
+| divD_lt _ _ _ => 0
+| divD_ge _ _ _ d' => S (div_aux d')
 end.
 
 (* ===> The command has indeed failed with message:
@@ -4877,8 +4877,8 @@ end.
 Module proof_irrelevance_example.
 
 Inductive bool' : Prop :=
-    | true' : bool'
-    | false' : bool'.
+| true' : bool'
+| false' : bool'.
 
 (** Najpierw definiujemy typ [bool'], który wygląda jak [bool], ale
     żyje w sorcie [Prop]. *)
@@ -4954,8 +4954,8 @@ Defined.
 
 Fixpoint div'_aux {n m : nat} (d : divD n m) : nat :=
 match le_lt_dec (S m) n with
-    | right _ => 0
-    | left H => S (div'_aux (divD_ge_inv n m H d))
+| right _ => 0
+| left H => S (div'_aux (divD_ge_inv n m H d))
 end.
 
 (** Żeby zdefiniować [div'_aux] (czyli, przypomnijmy, zmodyfikowaną wersję
@@ -5166,9 +5166,9 @@ Print again.div'_aux.
     again.div'_aux = 
     fix div'_aux (n m : nat) (d : again.divD n m) {struct d} : nat :=
     match le_lt_dec (S m) n with
-        | left H =>
+    | left H =>
             S (div'_aux (n - S m) m (again.divD_ge_inv n m H d))
-        | right _ => 0
+    | right _ => 0
     end
       : forall n m : nat, again.divD n m -> nat *)
 

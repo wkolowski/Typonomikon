@@ -1,6 +1,6 @@
 Fail Inductive Tree (A : Type) : Type :=
-    | E
-    | N (v : A) (ts : StreamTree A)
+| E
+| N (v : A) (ts : StreamTree A)
 
 with CoInductive StreamTree (A : Type) : Type :=
 {

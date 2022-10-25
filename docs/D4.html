@@ -207,8 +207,8 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">plus'</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">plus'</span> <span class="id" title="var">n</span> <span class="id" title="var">m'</span>)<br/>
+| 0 =&gt; <span class="id" title="var">n</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">plus'</span> <span class="id" title="var">n</span> <span class="id" title="var">m'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -218,8 +218,8 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">plus''</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">plus''</span> <span class="id" title="var">n'</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>)<br/>
+| 0 =&gt; <span class="id" title="var">m</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">plus''</span> <span class="id" title="var">n'</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -229,8 +229,8 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">plus'''</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">plus'''</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">m'</span><br/>
+| 0 =&gt; <span class="id" title="var">n</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">plus'''</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">m'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -309,8 +309,8 @@ Poniższe zadania mają służyć utrwaleniu zdobytej dotychczas wiedzy na
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">sub</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0    =&gt; <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">pred</span> (<span class="id" title="var">sub</span> <span class="id" title="var">n</span> <span class="id" title="var">m'</span>)<br/>
+| 0    =&gt; <span class="id" title="var">n</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">pred</span> (<span class="id" title="var">sub</span> <span class="id" title="var">n</span> <span class="id" title="var">m'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -999,8 +999,8 @@ Zdefiniuj dzielenie całkowitoliczbowe przez <span class="inlinecode">2</span> o
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">pow2</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; 1<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">mult</span> 2 (<span class="id" title="var">pow2</span> <span class="id" title="var">n'</span>)<br/>
+| 0 =&gt; 1<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">mult</span> 2 (<span class="id" title="var">pow2</span> <span class="id" title="var">n'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1029,8 +1029,8 @@ Zdefiniuj dzielenie całkowitoliczbowe przez <span class="inlinecode">2</span> o
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">double</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">S</span> (<span class="id" title="var">double</span> <span class="id" title="var">n'</span>))<br/>
+| 0 =&gt; 0<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">S</span> (<span class="id" title="var">double</span> <span class="id" title="var">n'</span>))<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1071,11 +1071,11 @@ Zdefiniuj dzielenie całkowitoliczbowe przez <span class="inlinecode">2</span> o
 <br/>
 <span class="id" title="keyword">Function</span> <span class="id" title="var">binom'</span> (<span class="id" title="var">n</span> <span class="id" title="var">k</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">k</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0    =&gt; 1<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">k'</span> =&gt;<br/>
+| 0    =&gt; 1<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">k'</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0    =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">plus</span> (<span class="id" title="var">binom'</span> <span class="id" title="var">n'</span> <span class="id" title="var">k'</span>) (<span class="id" title="var">binom'</span> <span class="id" title="var">n'</span> <span class="id" title="var">k</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0    =&gt; 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">plus</span> (<span class="id" title="var">binom'</span> <span class="id" title="var">n'</span> <span class="id" title="var">k'</span>) (<span class="id" title="var">binom'</span> <span class="id" title="var">n'</span> <span class="id" title="var">k</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 

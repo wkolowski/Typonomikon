@@ -8,8 +8,8 @@ Definition omniscient (X : Type) : Prop :=
 
 (*
 Inductive leb_bool : bool -> bool -> Prop :=
-    | leb_bool_refl : forall b : bool, leb_bool b b
-    | leb_bool_ft : leb_bool false true.
+| leb_bool_refl : forall b : bool, leb_bool b b
+| leb_bool_ft : leb_bool false true.
 *)
 
 Definition leb_bool (x y : bool) : Prop :=
@@ -65,8 +65,8 @@ Qed.
 
 Fixpoint r (a : nat -> bool) (n : nat) : bool :=
 match n with
-    | 0 => a 0
-    | S n' => andb (r a n') (a n)
+| 0 => a 0
+| S n' => andb (r a n') (a n)
 end.
 
 (** Conatural numbers using decreasing boolean sequences. *)

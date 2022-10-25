@@ -4,9 +4,9 @@
     górne na długość? *)
 
 Inductive BVec (A : Type) : nat -> Type :=
-    | Nil  :
+| Nil  :
         forall n : nat, BVec A n
-    | Cons :
+| Cons :
         forall (h : A) {n : nat} (t : BVec A n), BVec A (S n).
 
 Arguments Nil {A n}.
@@ -16,8 +16,8 @@ Arguments Cons {A} _ {n} _.
 
 Fixpoint len {A : Type} {n : nat} (v : BVec A n) : nat :=
 match v with
-    | Nil => 0
-    | Cons _ t => 1 + len t
+| Nil => 0
+| Cons _ t => 1 + len t
 end.
 
 Lemma bounded :
@@ -34,8 +34,8 @@ Qed.
 
 Definition head {A : Type} {n : nat} (v : BVec A n) : option A :=
 match v with
-    | Nil => None
-    | Cons h _ => Some h
+| Nil => None
+| Cons h _ => Some h
 end.
 
 Require Import Equality.
@@ -98,16 +98,16 @@ Defined.
 
 Fixpoint weaken {A : Type} {n : nat} (v : BVec A n) (m : nat) : BVec A (n + m) :=
 match v with
-    | Nil => Nil
-    | Cons h t => Cons h (weaken t m)
+| Nil => Nil
+| Cons h t => Cons h (weaken t m)
 end.
 
 Fixpoint weaken' {A : Type} {n : nat} (v : BVec A n) (m : nat) : BVec A (m + n).
 Proof.
 refine (
 match v with
-    | Nil => Nil
-    | Cons h t => _
+| Nil => Nil
+| Cons h t => _
 end).
   rewrite <- plus_n_Sm. exact (Cons h (weaken' _ _ t m)).
 Defined.
@@ -118,8 +118,8 @@ Fixpoint app {A : Type} {n m : nat} (v1 : BVec A n) (v2 : BVec A m) : BVec A (n 
 Proof.
   refine (
     match v1 with
-        | Nil => _
-        | Cons h t => _
+    | Nil => _
+    | Cons h t => _
     end).
     exact (weaken' v2 n0).
     exact (Cons h (app _ _ _ t v2)).
@@ -129,40 +129,40 @@ Defined.
 
 Fixpoint snoc {A : Type} {n : nat} (v : BVec A n) (x : A) : BVec A (S n) :=
 match v with
-    | Nil => Cons x Nil
-    | Cons h t => Cons h (snoc t x)
+| Nil => Cons x Nil
+| Cons h t => Cons h (snoc t x)
 end.
 
 Fixpoint rev {A : Type} {n : nat} (v : BVec A n) : BVec A n :=
 match v with
-    | Nil => Nil
-    | Cons h t => snoc (rev t) h
+| Nil => Nil
+| Cons h t => snoc (rev t) h
 end.
 
 Fixpoint map {A B : Type} (f : A -> B) {n : nat} (v : BVec A n) : BVec B n :=
 match v with
-    | Nil => Nil
-    | Cons h t => Cons (f h) (map f t)
+| Nil => Nil
+| Cons h t => Cons (f h) (map f t)
 end.
 
 Fixpoint join {A : Type} {n m : nat} (v : BVec (BVec A n) m)
   : BVec A (m * n) :=
 match v with
-    | Nil => Nil
-    | Cons h t => app h (join t)
+| Nil => Nil
+| Cons h t => app h (join t)
 end.
 
 Fixpoint repeat {A : Type} (n : nat) (x : A) : BVec A n :=
 match n with
-    | 0 => Nil
-    | S n' => Cons x (repeat n' x)
+| 0 => Nil
+| S n' => Cons x (repeat n' x)
 end.
 
 Fixpoint nth {A : Type} {n : nat} (m : nat) (v : BVec A n) : option A :=
 match m, v with
-    | _   , Nil => None
-    | 0   , Cons h _ => Some h
-    | S m', Cons _ t => nth m' t
+| _   , Nil => None
+| 0   , Cons h _ => Some h
+| S m', Cons _ t => nth m' t
 end.
 
 Fixpoint last {A : Type} {n : nat} (l : BVec A (S n)) {struct l} : option A.

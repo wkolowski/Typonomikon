@@ -24,8 +24,8 @@ Instance Enumerable_unit : Enumerable unit :=
 {
     enum n :=
     match n with
-        | 1 => [tt]
-        | _ => []
+    | 1 => [tt]
+    | _ => []
     end
 }.
 
@@ -34,8 +34,8 @@ Instance Enumerable_bool : Enumerable bool :=
 {
     enum n :=
     match n with
-        | 1 => [false; true]
-        | _ => []
+    | 1 => [false; true]
+    | _ => []
     end
 }.
 
@@ -60,8 +60,8 @@ Instance Enumerable_list
     enum :=
       fix f (n : nat) : list (list A) :=
       match n with
-          | 0 => [[]]
-          | S n' => liftA2 cons (enum A n) (f n')
+      | 0 => [[]]
+      | S n' => liftA2 cons (enum A n) (f n')
       end
 }.
 
@@ -79,8 +79,8 @@ Instance Enumerable_sigma
 
 Fixpoint cumulative (A : Type) {inst : Enumerable A} (n : nat) : list A :=
 match n with
-    | 0 => enum A 0
-    | S n' => cumulative A n' ++ enum A n
+| 0 => enum A 0
+| S n' => cumulative A n' ++ enum A n
 end.
 
 (*

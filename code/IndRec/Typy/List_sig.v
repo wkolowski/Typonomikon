@@ -1,8 +1,8 @@
 Require Import Arith.
 
 Inductive list (A : Type) : Type :=
-    | nil : list A
-    | cons : A -> list A -> list A.
+| nil : list A
+| cons : A -> list A -> list A.
 
 Arguments nil {A}.
 Arguments cons {A} _ _.

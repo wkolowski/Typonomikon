@@ -1,8 +1,8 @@
 Require Import List.
 
 Inductive RoseTree (A : Type) : Type :=
-    | E : RoseTree A
-    | N : A -> list (RoseTree A) -> RoseTree A.
+| E : RoseTree A
+| N : A -> list (RoseTree A) -> RoseTree A.
 
 (** Okazuje się, że [decide_equality] potrafi udowodnić, że [RoseTree A] ma rozstrzygalną równość. *)
 Lemma RoseTree_eq_dec :

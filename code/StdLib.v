@@ -4,14 +4,14 @@ Require Import List.
 Import ListNotations.
 
 Inductive Even : nat -> Prop :=
-    | Even0 : Even 0
-    | EvenSS : forall n : nat, Even n -> Even (S (S n)).
+| Even0 : Even 0
+| EvenSS : forall n : nat, Even n -> Even (S (S n)).
 
 Function isEven (n : nat) : bool :=
 match n with
-    | 0 => true
-    | 1 => false
-    | S (S n') => isEven n'
+| 0 => true
+| 1 => false
+| S (S n') => isEven n'
 end.
 
 Lemma isEven_spec :
@@ -337,9 +337,9 @@ Instance WeakEquality_Sum
 {
     weq := fun x y =>
       match x, y with
-        | inl a1, inl a2 => weq a1 a2
-        | inr b1, inr b2 => weq b1 b2
-        | _     , _      => False
+    | inl a1, inl a2 => weq a1 a2
+    | inr b1, inr b2 => weq b1 b2
+    | _     , _      => False
       end
 }.
 Proof.
@@ -355,7 +355,7 @@ Instance WeakEquality_Prod
 {
     weq := fun x y =>
       match x, y with
-        | (a1, b1), (a2, b2) => weq a1 a2 /\ weq b1 b2
+    | (a1, b1), (a2, b2) => weq a1 a2 /\ weq b1 b2
       end
 }.
 Proof.
@@ -374,9 +374,9 @@ Instance WeakEquality_List
 {
     weq := fix f (x y : list A) : Prop :=
       match x, y with
-          | [], [] => True
-          | h1 :: t1, h2 :: t2 => weq h1 h2 /\ f t1 t2
-          | _, _ => False
+      | [], [] => True
+      | h1 :: t1, h2 :: t2 => weq h1 h2 /\ f t1 t2
+      | _, _ => False
       end
 }.
 Proof.
@@ -443,10 +443,10 @@ Instance StrongDisequality_Sum
 {
     sdeq := fun x y =>
       match x, y with
-          | inl a1, inl a2 => sdeq a1 a2
-          | inr b1, inr b2 => sdeq b1 b2
-          | inl _ , inr _  => True
-          | inr _ , inl _  => True
+      | inl a1, inl a2 => sdeq a1 a2
+      | inr b1, inr b2 => sdeq b1 b2
+      | inl _ , inr _  => True
+      | inr _ , inl _  => True
       end
 }.
 Proof.
@@ -463,7 +463,7 @@ Instance StrongDisequality_Prod
 {
     sdeq := fun x y =>
       match x, y with
-          | (a1, b1), (a2, b2) => sdeq a1 a2 \/ sdeq b1 b2
+      | (a1, b1), (a2, b2) => sdeq a1 a2 \/ sdeq b1 b2
       end
 }.
 Proof.
@@ -503,9 +503,9 @@ Instance StrongDisequality_List
 {
     sdeq := fix f (x y : list A) : Prop :=
       match x, y with
-          | [], [] => False
-          | h1 :: t1, h2 :: t2 => sdeq h1 h2 \/ f t1 t2
-          | _, _ => True
+      | [], [] => False
+      | h1 :: t1, h2 :: t2 => sdeq h1 h2 \/ f t1 t2
+      | _, _ => True
       end
 }.
 Proof.
@@ -524,9 +524,9 @@ From Typonomikon Require Import F3.
 Set Warnings "require-in-module".
 
 Inductive Ex {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Prop :=
-    | Ex_hd :
+| Ex_hd :
         forall s1 s2 : Stream A, R (hd s1) (hd s2) -> Ex R s1 s2
-    | Ex_tl :
+| Ex_tl :
         forall s1 s2 : Stream A, Ex R (tl s1) (tl s2) -> Ex R s1 s2.
 
 #[refine]
@@ -1187,9 +1187,9 @@ Inductive Cmp : Type := Lt | Eq | Gt.
 
 Definition Cmp2bool (c : Cmp) : bool :=
 match c with
-    | Lt => true
-    | Eq => true
-    | Gt => false
+| Lt => true
+| Eq => true
+| Gt => false
 end.
 
 Coercion Cmp2bool : Cmp >-> bool.

@@ -20,8 +20,8 @@ Arguments eq_dep [U P p] _ [q] _.
 Set Implicit Arguments.
 
 Inductive vec (A : Type) : nat -> Type :=
-    | vnil : vec A 0
-    | vcons : forall n : nat, A -> vec A n -> vec A (S n).
+| vnil : vec A 0
+| vcons : forall n : nat, A -> vec A n -> vec A (S n).
 
 Arguments vnil {A}.
 Arguments vcons {A n} _ _.
@@ -63,8 +63,8 @@ Proof. trivial. Qed.
 Fixpoint app {A : Type} {n m : nat} (l1 : vec A n) (l2 : vec A m)
   : vec A (n + m) :=
 match l1 with
-    | vnil => l2
-    | vcons h t => vcons h (app t l2)
+| vnil => l2
+| vcons h t => vcons h (app t l2)
 end.
 (* end hide *)
 
@@ -246,14 +246,14 @@ Qed.
 (* begin hide *)
 Fixpoint snoc {A : Type} {n : nat} (x : A) (l : vec A n) : vec A (S n) :=
 match l with
-    | vnil => vcons x vnil
-    | vcons h t => vcons h (snoc x t)
+| vnil => vcons x vnil
+| vcons h t => vcons h (snoc x t)
 end.
 
 Fixpoint rev {A : Type} {n : nat} (l : vec A n) : vec A n :=
 match l with
-    | vnil => vnil
-    | vcons h t => snoc h (rev t)
+| vnil => vnil
+| vcons h t => snoc h (rev t)
 end.
 (* end hide *)
 
@@ -320,9 +320,9 @@ Qed.
 
 (* begin hide *)
 Inductive elem {A : Type} : A -> forall n : nat, vec A n -> Prop :=
-    | elem_head : forall (n : nat) (x : A) (l : vec A n),
+| elem_head : forall (n : nat) (x : A) (l : vec A n),
         elem x (vcons x l)
-    | elem_cons : forall (n : nat) (x h : A) (t : vec A n),
+| elem_cons : forall (n : nat) (x h : A) (t : vec A n),
         elem x t -> elem x (vcons h t).
 
 #[global] Hint Constructors elem : core.
@@ -478,8 +478,8 @@ Qed.
 (* begin hide *)
 Fixpoint map {A B : Type} {n : nat} (f : A -> B) (la : vec A n) : vec B n :=
 match la with
-    | [] => []
-    | h :: t => f h :: map f t
+| [] => []
+| h :: t => f h :: map f t
 end.
 (* end hide *)
 
@@ -597,8 +597,8 @@ Qed.
 Fixpoint join {A : Type} (n m : nat) (lla : vec (vec A n) m)
   : vec A (m * n) :=
 match lla with
-    | [] => []
-    | h :: t => h ++ join t
+| [] => []
+| h :: t => h ++ join t
 end.
 (* end hide *)
 
@@ -633,8 +633,8 @@ Qed.
 (* begin hide *)
 Fixpoint repeat {A : Type} (n : nat) (x : A) : vec A n :=
 match n with
-    | 0 => []
-    | S n' => x :: repeat n' x
+| 0 => []
+| S n' => x :: repeat n' x
 end.
 (* end hide *)
 
@@ -666,9 +666,9 @@ Qed.
 (* begin hide *)
 Fixpoint nth {A : Type} {n : nat} (m : nat) (l : vec A n) : option A :=
 match m, l with
-    | _, [] => None
-    | 0, h :: t => Some h
-    | S n', h :: t => nth n' t
+| _, [] => None
+| 0, h :: t => Some h
+| S n', h :: t => nth n' t
 end.
 (* end hide *)
 
@@ -805,7 +805,7 @@ Qed.
 (* begin hide *)
 Definition head {A : Type} {n : nat} (l : vec A (S n)) : A :=
 match l with
-    | h :: _ => h
+| h :: _ => h
 end.
 
 Fixpoint last {A : Type} {n : nat} (l : vec A (S n)) {struct l} : A.
@@ -817,15 +817,15 @@ Defined.
 
 (*Fixpoint head {A : Type} {n : nat} (l : vec A n) : option A :=
 match l with
-    | [] => None
-    | h :: _ => Some h
+| [] => None
+| h :: _ => Some h
 end.*)
 
 (*Fixpoint last {A : Type} {n : nat} (l : vec A n) : option A :=
 match l with
-    | [] => None
-    | vcons _ x vnil => Some x
-    | h :: t => last t
+| [] => None
+| vcons _ x vnil => Some x
+| h :: t => last t
 end.*)
 (* end hide *)
 
@@ -873,22 +873,22 @@ Qed.
 (* begin hide *)
 (*Fixpoint tail {A : Type} (l : list A) : option (list A) :=
 match l with
-    | [] => None
-    | _ :: t => Some t
+| [] => None
+| _ :: t => Some t
 end.
 
 Fixpoint init {A : Type} (l : list A) : option (list A) :=
 match l with
-    | [] => None
-    | h :: t => match init t with
-        | None => Some [h]
-        | Some t' => Some (h :: t')
+| [] => None
+| h :: t => match init t with
+    | None => Some [h]
+    | Some t' => Some (h :: t')
     end
 end.*)
 
 Definition tail {A : Type} {n : nat} (l : vec A (S n)) : vec A n :=
 match l with
-    | _ :: t => t
+| _ :: t => t
 end.
 
 Fixpoint init {A : Type} {n : nat} (l : vec A (S n)) {struct l} : vec A n.
@@ -934,26 +934,26 @@ Defined.
 
 Ltac takedrop := intros; repeat
 match goal with
-    | |- context [take _ ?l] => destruct l; compute
-    | |- context [drop _ ?l] => destruct l; compute
-    | |- context [minus_n_O ?n] =>
+| |- context [take _ ?l] => destruct l; compute
+| |- context [drop _ ?l] => destruct l; compute
+| |- context [minus_n_O ?n] =>
         remember (minus_n_O n) as x; dependent destruction x
-    | |- eq_dep ?x ?x => trivial
+| |- eq_dep ?x ?x => trivial
 end; auto.
 
 Ltac takedrop' := intros; repeat
 match goal with
-    | |- context [take ?n ?l] => induction n; cbn
-    | |- context [drop ?n ?l] => induction n; compute
-    | |- context [minus_n_O ?n] =>
+| |- context [take ?n ?l] => induction n; cbn
+| |- context [drop ?n ?l] => induction n; compute
+| |- context [minus_n_O ?n] =>
         remember (minus_n_O n) as x; dependent destruction x
 end; auto.
 
 Ltac td := intros; compute; repeat
 match goal with
-    | |- context [minus_n_O ?n] =>
+| |- context [minus_n_O ?n] =>
         remember (minus_n_O n) as x; dependent destruction x
-    | H : context [minus_n_O ?n] |- _ =>
+| H : context [minus_n_O ?n] |- _ =>
         remember (minus_n_O n) as x; dependent destruction x
 end; auto.
 (* end hide *)

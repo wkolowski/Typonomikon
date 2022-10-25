@@ -35,8 +35,8 @@ Qed.
 
 Definition capp {A : Type} (l1 l2 : Cyclic A) : Cyclic A :=
 match l1, l2 with
-    | C s1 [], C s2 c2 => C (s1 ++ s2) c2
-    | C s1 c1, C s2 c2 => l1
+| C s1 [], C s2 c2 => C (s1 ++ s2) c2
+| C s1 c1, C s2 c2 => l1
 end.
 
 Lemma map_app :
@@ -59,8 +59,8 @@ Qed.
 
 Definition csnoc {A : Type} (x : A) (l : Cyclic A) : Cyclic A :=
 match l with
-    | C s [] => C (snoc x s) []
-    | C s c => C s c
+| C s [] => C (snoc x s) []
+| C s c => C s c
 end.
 
 Lemma csnoc_capp :
@@ -79,7 +79,7 @@ Definition crepeat {A : Type} (x : A) : Cyclic A :=
   C [] [x].
 
 Inductive Finite {A : Type} : Cyclic A -> Type :=
-    | Finite' : forall l : list A, Finite (C l []).
+| Finite' : forall l : list A, Finite (C l []).
 
 Lemma Finite_creplicate :
   forall (n : nat) {A : Type} (x : A),
@@ -97,14 +97,14 @@ Qed.
 
 Definition ccons {A : Type} (h : A) (t : Cyclic A) : Cyclic A :=
 match t with
-    | C s c => C (h :: s) c
+| C s c => C (h :: s) c
 end.
 
 Definition cuncons {A : Type} (l : Cyclic A) : option (A * Cyclic A) :=
 match l with
-    | C [] []       => None
-    | C [] (h :: t) => Some (h, C [] (snoc h t))
-    | C (h :: t) c  => Some (h, C t c)
+| C [] []       => None
+| C [] (h :: t) => Some (h, C [] (snoc h t))
+| C (h :: t) c  => Some (h, C t c)
 end.
 
 Definition example : Cyclic nat :=
@@ -112,39 +112,39 @@ Definition example : Cyclic nat :=
 
 Fixpoint ctake (n : nat) {A : Type} (l : Cyclic A) : list A :=
 match n, l with
-    | 0   , _             => []
-    | S n', C [] []       => []
-    | S n', C (h :: t) c  => h :: ctake n' (C t c)
-    | S n', C [] (h :: t) => h :: ctake n' (C [] (snoc h t))
+| 0   , _             => []
+| S n', C [] []       => []
+| S n', C (h :: t) c  => h :: ctake n' (C t c)
+| S n', C [] (h :: t) => h :: ctake n' (C [] (snoc h t))
 end.
 
 Compute ctake 10 example.
 
 Fixpoint cdrop (n : nat) {A : Type} (l : Cyclic A) : Cyclic A :=
 match n, l with
-    | 0   , _             => l
-    | S n', C [] []       => C [] []
-    | S n', C (h :: t) c  => cdrop n' (C t c)
-    | S n', C [] (h :: t) => cdrop n' (C [] (snoc h t))
+| 0   , _             => l
+| S n', C [] []       => C [] []
+| S n', C (h :: t) c  => cdrop n' (C t c)
+| S n', C [] (h :: t) => cdrop n' (C [] (snoc h t))
 end.
 
 Compute cdrop 23 example.
 
 Fixpoint cbind_aux {A B : Type} (l : list A) (f : A -> Cyclic B) : Cyclic B :=
 match l with
-    | []     => C [] []
-    | h :: t => capp (f h) (cbind_aux t f)
+| []     => C [] []
+| h :: t => capp (f h) (cbind_aux t f)
 end.
 
 Definition cbind {A B : Type} (l : Cyclic A) (f : A -> Cyclic B) : Cyclic B :=
 match l with
-    | C s c => capp (cbind_aux s f) (cbind_aux c f)
+| C s c => capp (cbind_aux s f) (cbind_aux c f)
 end.
 
 Definition crev {A : Type} (l : Cyclic A) : Cyclic A :=
 match l with
-    | C s [] => C (rev s) []
-    | C _ c => C [] (rev c)
+| C s [] => C (rev s) []
+| C _ c => C [] (rev c)
 end.
 
 Compute ctake 10 (crev (C [1; 2] [3; 4; 5])).
@@ -152,23 +152,23 @@ Compute crev example.
 
 Fixpoint nth (n : nat) {A : Type} (l : Cyclic A) : option A :=
 match n, l with
-    | _   , C [] []       => None
-    | 0   , C (h :: _) _  => Some h
-    | 0   , C [] (h :: _) => Some h
-    | S n', C (_ :: t) c  => nth n' (C t c)
-    | S n', C [] (h :: t) => nth n' (C [] (snoc h t))
+| _   , C [] []       => None
+| 0   , C (h :: _) _  => Some h
+| 0   , C [] (h :: _) => Some h
+| S n', C (_ :: t) c  => nth n' (C t c)
+| S n', C [] (h :: t) => nth n' (C [] (snoc h t))
 end.
 
 Compute map (fun n => nth n example) [0; 1; 2; 3; 4; 5; 6; 7].
 
 Definition cany {A : Type} (p : A -> bool) (l : Cyclic A) : bool :=
 match l with
-    | C s c => any p s || any p c
+| C s c => any p s || any p c
 end.
 
 Definition cfilter {A : Type} (p : A -> bool) (l : Cyclic A) : Cyclic A :=
 match l with
-    | C s c => C (filter p s) (filter p c)
+| C s c => C (filter p s) (filter p c)
 end.
 
 Compute example.
@@ -177,8 +177,8 @@ Compute ctake 10 (cfilter Nat.even example).
 
 Definition cintersperse {A : Type} (x : A) (l : Cyclic A) : Cyclic A :=
 match l with
-    | C s [] => C (intersperse x s) []
-    | C s c  => C (intersperse x s) (x :: intersperse x c)
+| C s [] => C (intersperse x s) []
+| C s c  => C (intersperse x s) (x :: intersperse x c)
 end.
 
 Compute example.
@@ -187,7 +187,7 @@ Compute ctake 20 (cintersperse 0 example).
 
 Definition ctakeWhile {A : Type} (p : A -> bool) (l : Cyclic A) : Cyclic A :=
 match l with
-    | C s c =>
+| C s c =>
         if length s =? length (takeWhile p s)
         then C (takeWhile p s) (takeWhile p c)
         else C (takeWhile p s) []
@@ -197,10 +197,10 @@ Compute ctakeWhile (fun n => n <? 3) example.
 
 Definition cdropWhile {A : Type} (p : A -> bool) (l : Cyclic A) : Cyclic A :=
 match l with
-    | C s c =>
+| C s c =>
         match dropWhile p s with
-            | [] => C [] (dropWhile p c)
-            | s' => C s' c
+        | [] => C [] (dropWhile p c)
+        | s' => C s' c
         end
 end.
 

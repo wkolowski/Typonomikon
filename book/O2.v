@@ -20,8 +20,8 @@ Unset Guard Checking.
 
 Fixpoint root2_aux (r x : float) (n : nat) : float :=
 match n with
-    | 0 => r
-    | S n' => root2_aux ((r + x / r) / 2) x n'
+| 0 => r
+| S n' => root2_aux ((r + x / r) / 2) x n'
 end.
 
 (*
@@ -43,8 +43,8 @@ Compute (1.000000000000001 - 1) * 100000000000000.
 
 Fixpoint bisect (f : float -> float) (a b : float) (n : nat) : float :=
 match n with
-    | 0 => (a + b) / 2
-    | S n' =>
+| 0 => (a + b) / 2
+| S n' =>
         let m := (a + b) / 2 in
         if f a * f m <? 0
         then bisect f a m n'
@@ -57,8 +57,8 @@ Fixpoint fast_bisect
   (f : float -> float) (a b : float) (n : nat) : float :=
     let m := (a * f b - b * f a) / (f b - f a) in
 match n with
-    | 0 => m
-    | S n' =>
+| 0 => m
+| S n' =>
         if f a * f m <? 0
         then fast_bisect f a m n'
         else fast_bisect f m b n'
@@ -78,8 +78,8 @@ Compute map f0 (map (fast_bisect f0 1 0) [0; 1; 2; 3; 4; 40]%nat).
 
 Fixpoint iterf (f : float -> float) (x : float) (n : nat) : float :=
 match n with
-    | 0 => x
-    | S n' => iterf f (f x) n'
+| 0 => x
+| S n' => iterf f (f x) n'
 end.
 
 Definition f1 (x : float) : float := (1 - x * x * x * x * x) / 2.
@@ -117,15 +117,15 @@ Compute map (fun h => cdiff h f2 1) hs.
 Fixpoint Newton
   (h : float) (f : float -> float) (x0 : float) (n : nat) : float :=
 match n with
-    | 0 => x0
-    | S n' => Newton h f (x0 - f x0 / cdiff h f x0) n'
+| 0 => x0
+| S n' => Newton h f (x0 - f x0 / cdiff h f x0) n'
 end.
 
 Fixpoint Newton'
   (h : float) (f f' : float -> float) (x : float) (n : nat) : float :=
 match n with
-    | 0 => x
-    | S n' => Newton' h f f' (x - f x / f' x) n'
+| 0 => x
+| S n' => Newton' h f f' (x - f x / f' x) n'
 end.
 
 (*
@@ -147,8 +147,8 @@ Compute map f3 (map (Newton 1e-5 f3 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat).
 Fixpoint Halley
   (h : float) (f : float -> float) (x : float) (n : nat) : float :=
 match n with
-    | 0 => x
-    | S n' =>
+| 0 => x
+| S n' =>
         let f' := cdiff h f in
         let f'' := cdiff h f' in
         let x' := x - 2 * f x * f' x / (2 * f' x * f' x - f x * f'' x) in
@@ -170,8 +170,8 @@ Compute map f4 (map (Halley 1e-5 f4 2) [0; 1; 2; 3; 4; 5; 6; 7]%nat).
 Fixpoint secant
   (h : float) (f : float -> float) (a b : float) (n : nat) : float :=
 match n with
-    | 0 => a
-    | S n' => secant h f b (b - f b * (b - a) / (f b - f a)) n'
+| 0 => a
+| S n' => secant h f b (b - f b * (b - a) / (f b - f a)) n'
 end.
 
 (*
@@ -192,7 +192,7 @@ Definition aitken (x : nat -> float) (n : nat) : float :=
 (*
 Fixpoint es (x : float) (n : nat) : list float :=
 match n with
-    | 0 => []
-    | S n' => x : es (exp x) n'
+| 0 => []
+| S n' => x : es (exp x) n'
 end.
 *)

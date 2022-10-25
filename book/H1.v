@@ -15,7 +15,7 @@ Require Import StrictProp.
 Definition transport
   {A : Type} (P : A -> Type) {x y : A} (p : x = y) (u : P x) : P y :=
 match p with
-    | eq_refl => u
+| eq_refl => u
 end.
 
 Lemma sigT_eq :
@@ -40,7 +40,7 @@ Defined.
 Definition ap
   {A B : Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y :=
 match p with
-    | eq_refl => eq_refl
+| eq_refl => eq_refl
 end.
 
 (* Lemma 2.3.10 *)
@@ -63,18 +63,18 @@ Module Path_is_eq.
 Unset Universe Polymorphism.
 
 Inductive Path {A : Type} (x : A) : A -> Type :=
-    | idp : Path x x.
+| idp : Path x x.
 
 Arguments idp {A x}.
 
 Definition eq_to_Path {A : Type} {x y : A} (e : x = y) : Path x y :=
 match e with
-    | eq_refl => idp
+| eq_refl => idp
 end.
 
 Definition Path_to_eq {A : Type} {x y : A} (p : Path x y) : x = y :=
 match p with
-    | idp => eq_refl
+| idp => eq_refl
 end.
 
 Lemma eq_to_Path_to_eq :
@@ -168,29 +168,29 @@ Module nat_eq_rec.
 
 Fixpoint code (n m : nat) : Type :=
 match n, m with
-    | 0, 0 => unit
-    | S _, 0 => Empty_set
-    | 0, S _ => Empty_set
-    | S n', S m' => code n' m'
+| 0, 0 => unit
+| S _, 0 => Empty_set
+| 0, S _ => Empty_set
+| S n', S m' => code n' m'
 end.
 
 Fixpoint encode_aux (n : nat) : code n n :=
 match n with
-    | 0 => tt
-    | S n' => encode_aux n'
+| 0 => tt
+| S n' => encode_aux n'
 end.
 
 Definition encode {n m : nat} (p : n = m) : code n m :=
 match p with
-    | eq_refl => encode_aux n
+| eq_refl => encode_aux n
 end.
 
 Fixpoint decode {n m : nat} : code n m -> n = m :=
 match n, m with
-    | 0, 0 => fun _ => eq_refl
-    | 0, S _ => fun c => match c with end
-    | S _, 0 => fun c => match c with end
-    | S n', S m' => fun c => @f_equal _ _ S _ _ (@decode n' m' c)
+| 0, 0 => fun _ => eq_refl
+| 0, S _ => fun c => match c with end
+| S _, 0 => fun c => match c with end
+| S n', S m' => fun c => @f_equal _ _ S _ _ (@decode n' m' c)
 end.
 
 Lemma decode_encode :
@@ -245,24 +245,24 @@ End nat_eq_rec.
 Module nat_eq_ind.
 
 Inductive nat_eq : nat -> nat -> Prop :=
-    | nat_eq_0 : nat_eq 0 0
-    | nat_eq_S : forall {n m : nat}, nat_eq n m -> nat_eq (S n) (S m).
+| nat_eq_0 : nat_eq 0 0
+| nat_eq_S : forall {n m : nat}, nat_eq n m -> nat_eq (S n) (S m).
 
 Fixpoint encode' (n : nat) : nat_eq n n :=
 match n with
-    | 0 => nat_eq_0
-    | S n' => nat_eq_S (encode' n')
+| 0 => nat_eq_0
+| S n' => nat_eq_S (encode' n')
 end.
 
 Definition encode {n m : nat} (p : n = m) : nat_eq n m :=
 match p with
-    | eq_refl => encode' n
+| eq_refl => encode' n
 end.
 
 Fixpoint decode {n m : nat} (c : nat_eq n m) : n = m :=
 match c with
-    | nat_eq_0 => eq_refl
-    | nat_eq_S c' => f_equal S (decode c')
+| nat_eq_0 => eq_refl
+| nat_eq_S c' => f_equal S (decode c')
 end.
 
 Lemma encode_decode :
@@ -328,29 +328,29 @@ Import G1.
 
 Fixpoint code (n m : nat) : SProp :=
 match n, m with
-    | 0, 0 => sUnit
-    | S _, 0 => sEmpty
-    | 0, S _ => sEmpty
-    | S n', S m' => code n' m'
+| 0, 0 => sUnit
+| S _, 0 => sEmpty
+| 0, S _ => sEmpty
+| S n', S m' => code n' m'
 end.
 
 Fixpoint encode_aux (n : nat) : code n n :=
 match n with
-    | 0 => stt
-    | S n' => encode_aux n'
+| 0 => stt
+| S n' => encode_aux n'
 end.
 
 Definition encode {n m : nat} (p : n = m) : code n m :=
 match p with
-    | eq_refl => encode_aux n
+| eq_refl => encode_aux n
 end.
 
 Fixpoint decode {n m : nat} : code n m -> n = m :=
 match n, m with
-    | 0, 0 => fun _ => eq_refl
-    | 0, S _ => fun c => match c with end
-    | S _, 0 => fun c => match c with end
-    | S n', S m' => fun c => @f_equal _ _ S _ _ (@decode n' m' c)
+| 0, 0 => fun _ => eq_refl
+| 0, S _ => fun c => match c with end
+| S _, 0 => fun c => match c with end
+| S n', S m' => fun c => @f_equal _ _ S _ _ (@decode n' m' c)
 end.
 
 Lemma decode_encode :
@@ -386,26 +386,26 @@ Import G1.
 
 Fixpoint code (n m : nat) : SProp :=
 match n, m with
-    | 0, _ => sUnit
-    | _, 0 => sEmpty
-    | S n', S m' => code n' m'
+| 0, _ => sUnit
+| _, 0 => sEmpty
+| S n', S m' => code n' m'
 end.
 
 Inductive gutle : nat -> nat -> Prop :=
-    | gutle_0 : forall m : nat, gutle 0 m
-    | gutle_SS : forall n m : nat, gutle n m -> gutle (S n) (S m).
+| gutle_0 : forall m : nat, gutle 0 m
+| gutle_SS : forall n m : nat, gutle n m -> gutle (S n) (S m).
 
 Fixpoint encode {n m : nat} (H : gutle n m) : code n m :=
 match H with
-    | gutle_0 _ => stt
-    | gutle_SS _ _ H' => encode H'
+| gutle_0 _ => stt
+| gutle_SS _ _ H' => encode H'
 end.
 
 Fixpoint decode (n m : nat) : code n m -> gutle n m :=
 match n, m with
-    | 0   , _    => fun _ => gutle_0 m
-    | _   , 0    => fun c => match c with end
-    | S n', S m' => fun c => gutle_SS _ _ (decode n' m' c)
+| 0   , _    => fun _ => gutle_0 m
+| _   , 0    => fun c => match c with end
+| S n', S m' => fun c => gutle_SS _ _ (decode n' m' c)
 end.
 
 Fixpoint decode_encode
@@ -434,28 +434,28 @@ Import G1.
 
 Fixpoint code (n m : nat) : SProp :=
 match n, m with
-    | 0, _ => sUnit
-    | _, 0 => sEmpty
-    | S n', S m' => code n' m'
+| 0, _ => sUnit
+| _, 0 => sEmpty
+| S n', S m' => code n' m'
 end.
 
 Fixpoint encode' (n : nat) : code n n :=
 match n with
-    | 0 => stt
-    | S n' => encode' n'
+| 0 => stt
+| S n' => encode' n'
 end.
 
 Fixpoint code_S {n m : nat} : code n m -> code n (S m) :=
 match n, m with
-    | 0, _ => fun _ => stt
-    | _, 0 => fun c => match c with end
-    | S n', S m' => fun c => @code_S n' m' c
+| 0, _ => fun _ => stt
+| _, 0 => fun c => match c with end
+| S n', S m' => fun c => @code_S n' m' c
 end.
 
 Fixpoint encode {n m : nat} (H : n <= m) : code n m :=
 match H with
-    | le_n _ => encode' n
-    | le_S _ _ H' => code_S (encode H')
+| le_n _ => encode' n
+| le_S _ _ H' => code_S (encode H')
 end.
 
 Lemma le_n_S_transparent :
@@ -521,21 +521,21 @@ Module list_eq_ind.
 (** Kody nie muszą być rekurencyjne - mogą być induktywne. *)
 
 Inductive code {A : Type} : list A -> list A -> Prop :=
-    | nils : code [] []
-    | conss :
+| nils : code [] []
+| conss :
         forall {h1 h2 : A} {t1 t2 : list A},
           h1 = h2 -> code t1 t2 -> code (h1 :: t1) (h2 :: t2).
 
 Fixpoint encode' {A : Type} (l : list A) : code l l :=
 match l with
-    | [] => nils
-    | h :: t => conss eq_refl (encode' t)
+| [] => nils
+| h :: t => conss eq_refl (encode' t)
 end.
 
 Definition encode
   {A : Type} {l1 l2 : list A} (p : l1 = l2) : code l1 l2 :=
 match p with
-    | eq_refl => encode' l1
+| eq_refl => encode' l1
 end.
 
 Definition decode' {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2.
@@ -549,10 +549,10 @@ Qed.
 
 Fixpoint decode {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2 :=
 match c with
-    | nils => eq_refl
-    | conss p c' =>
+| nils => eq_refl
+| conss p c' =>
         match p, decode c' with
-            | eq_refl, eq_refl => eq_refl
+        | eq_refl, eq_refl => eq_refl
         end
 end.
 
@@ -592,8 +592,8 @@ Qed.
 
 Inductive Forall2
   {A : Type} (R : A -> A -> Prop) : list A -> list A -> Prop :=
-    | nil2 : Forall2 R [] []
-    | cons2 :
+| nil2 : Forall2 R [] []
+| cons2 :
         forall {h1 h2 : A} {t1 t2 : list A},
           R h1 h2 -> Forall2 R t1 t2 -> Forall2 R (h1 :: t1) (h2 :: t2).
 
@@ -614,7 +614,7 @@ Definition code {A : Type} (l1 l2 : list A) : Prop :=
 Definition encode
   {A : Type} {l1 l2 : list A} (p : l1 = l2) : code l1 l2 :=
 match p with
-    | eq_refl => fun n => eq_refl
+| eq_refl => fun n => eq_refl
 end.
 
 Definition decode {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2.

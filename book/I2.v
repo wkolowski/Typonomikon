@@ -240,7 +240,7 @@ Abort.
 (* begin hide *)
 Ltac tru := intros; repeat
 match goal with
-    | H : True |- _ => clear H
+| H : True |- _ => clear H
 end; trivial.
 (* end hide *)
 
@@ -260,15 +260,15 @@ End tru.
 (** **** Ćwiczenie (satans_neighbour_not_even) *)
 
 Inductive even : nat -> Prop :=
-    | even0 : even 0
-    | evenSS : forall n : nat, even n -> even (S (S n)).
+| even0 : even 0
+| evenSS : forall n : nat, even n -> even (S (S n)).
 
 (** Napisz taktykę [even], która potrafi udowodnić poniższy cel. *)
 
 (* begin hide *)
 Ltac even := unfold not; intros; repeat
 match goal with
-    | H : even _ |- _ => inversion H; subst; clear H
+| H : even _ |- _ => inversion H; subst; clear H
 end.
 (* end hide *)
 
@@ -293,7 +293,7 @@ Abort.
 (* begin hide *)
 Ltac my_destruct_and_named H p q := refine (
 match H with
-    | conj p q => _
+| conj p q => _
 end); clear H.
 
 Ltac my_destruct_and_unnamed H :=
@@ -333,7 +333,7 @@ Qed.
 Ltac my_fold x :=
   let body := eval unfold x in x in
 match goal with
-    | |- context [body] => change body with x
+| |- context [body] => change body with x
 end.
 (* end hide *)
 
@@ -486,7 +486,7 @@ Abort.
 Ltac my_case_eq t Heq :=
   let x := fresh "x" in remember t as x;
   match goal with
-      | H : x = t |- _ => symmetry in H; rename H into Heq
+  | H : x = t |- _ => symmetry in H; rename H into Heq
   end;
   destruct x.
 (* end hide *)
@@ -520,12 +520,12 @@ Abort.
 (* begin hide *)
 Ltac my_contradiction := intros;
 match goal with
-    | H : False |- _ => destruct H
-    | H : ~ True |- _ => destruct (H I)
-    | H : ?x <> ?x |- _ => destruct (H eq_refl)
-    | H : ~ ?P, H' : ?P |- _ => destruct (H H')
-    | H : true = false |- _ => inversion H
-    | H : false = true |- _ => inversion H
+| H : False |- _ => destruct H
+| H : ~ True |- _ => destruct (H I)
+| H : ?x <> ?x |- _ => destruct (H eq_refl)
+| H : ~ ?P, H' : ?P |- _ => destruct (H H')
+| H : true = false |- _ => inversion H
+| H : false = true |- _ => inversion H
 end.
 (* end hide *)
 
@@ -791,8 +791,8 @@ Definition nat_ind_fix_term
     : forall n : nat, P n :=
       fix f (n : nat) : P n :=
       match n with
-          | 0 => H0
-          | S n' => HS n' (f n')
+      | 0 => H0
+      | S n' => HS n' (f n')
       end.
 
 (** Pierwszy, najbardziej prymitywny sposób to użycie konstruktu [fix]. [fix]
@@ -806,8 +806,8 @@ Fixpoint nat_ind_Fixpoint_term
   (HS : forall n : nat, P n -> P (S n))
   (n : nat) : P n :=
 match n with
-    | 0 => H0
-    | S n' => HS n' (nat_ind_Fixpoint_term P H0 HS n')
+| 0 => H0
+| S n' => HS n' (nat_ind_Fixpoint_term P H0 HS n')
 end.
 
 (** Rozwiązaniem powyższej drobnej niedogodności jest komenda [Fixpoint],
@@ -1099,7 +1099,7 @@ Check f_equal.
 (* Odp: łatwiejsza jest iteracja. *)
 Ltac my_f_equal := intros; repeat (try
 match goal with
-    | |- ?f ?x = ?g ?y =>
+| |- ?f ?x = ?g ?y =>
         let H1 := fresh "H" in
         let H2 := fresh "H" in
           assert (H1 : f = g); assert (H2 : x = y);
@@ -1415,20 +1415,20 @@ Abort.
 (* begin hide *)
 Ltac my_btauto := intros; repeat
 match goal with
-    | b : bool |- _ => destruct b
+| b : bool |- _ => destruct b
 end; cbn; reflexivity.
 
 Ltac my_btauto_rec := intros;
 match goal with
-    | b : bool |- _ => destruct b; my_btauto_rec
-    | _ => cbn; reflexivity
+| b : bool |- _ => destruct b; my_btauto_rec
+| _ => cbn; reflexivity
 end.
 
 Ltac my_btauto_iter := my_btauto.
 
 Ltac my_btauto_no_intros := repeat
 match goal with
-    | |- forall b : bool, _ => destruct b
+| |- forall b : bool, _ => destruct b
 end; cbn; reflexivity.
 (* end hide *)
 
@@ -1539,10 +1539,10 @@ Qed.
 (** ** [decide equality] *)
 
 Inductive C : Type :=
-    | c0 : C
-    | c1 : C -> C
-    | c2 : C -> C -> C
-    | c3 : C -> C -> C -> C.
+| c0 : C
+| c1 : C -> C
+| c2 : C -> C -> C
+| c3 : C -> C -> C -> C.
 
 (** Przyjrzyjmy się powyższemu, dosć enigmatycznemu typowi. Czy posiada on
     rozstrzygalną równość? Odpowiedź jest twierdząca: rozstrzygalną równość
@@ -1575,8 +1575,8 @@ Restart.
 Restart.
   induction x; destruct y;
   repeat match goal with
-      | H : forall _, {_} + {_} |- _ => edestruct H; clear H
-      | H : _ = _ |- _ => rewrite H in *; clear H
+  | H : forall _, {_} + {_} |- _ => edestruct H; clear H
+  | H : _ = _ |- _ => rewrite H in *; clear H
   end; firstorder congruence.
   Unshelve. all: auto.
 Defined.
@@ -1728,19 +1728,19 @@ Qed.
 Ltac my_tauto :=
   unfold not in *; repeat
 multimatch goal with
-    | H : ?P |- ?P => exact H
-    | H : False |- _ => destruct H
-    | H : True |- _ => clear H
-    | |- True => exact I
-    | H : _ /\ _ |- _ => destruct H
-    | |- _ /\ _ => split
-    | H : _ <-> _ |- _ => destruct H
-    | |- _ <-> _ => split
-    | H : _ \/ _ |- _ => destruct H
-    | |- _ \/ _ => (left + right); my_tauto; fail
-    | |- _ -> _ => intro
-    | H : ?P -> ?Q, H' : ?P |- _ => specialize (H H')
-    | H : _ -> _ |- _ => apply H
+| H : ?P |- ?P => exact H
+| H : False |- _ => destruct H
+| H : True |- _ => clear H
+| |- True => exact I
+| H : _ /\ _ |- _ => destruct H
+| |- _ /\ _ => split
+| H : _ <-> _ |- _ => destruct H
+| |- _ <-> _ => split
+| H : _ \/ _ |- _ => destruct H
+| |- _ \/ _ => (left + right); my_tauto; fail
+| |- _ -> _ => intro
+| H : ?P -> ?Q, H' : ?P |- _ => specialize (H H')
+| H : _ -> _ |- _ => apply H
 end.
 
 Section my_tauto.
@@ -2000,7 +2000,7 @@ Abort.
 
 #[global] Hint Extern 0 =>
 match goal with
-    | H : ?x = ?y, H' : ?y = ?z |- ?x = ?z => apply (@eq_trans _ x y z)
+| H : ?x = ?y, H' : ?y = ?z |- ?x = ?z => apply (@eq_trans _ x y z)
 end
   : extern_db.
 
@@ -2025,7 +2025,7 @@ Proof. auto with extern_db. Qed.
 
 #[global] Hint Extern 0 (?x = ?z) =>
 match goal with
-    | H : ?x = ?y, H' : ?y = ?z |- _ => apply (@eq_trans _ x y z)
+| H : ?x = ?y, H' : ?y = ?z |- _ => apply (@eq_trans _ x y z)
 end
   : core.
 

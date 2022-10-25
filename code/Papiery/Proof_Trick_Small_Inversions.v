@@ -3,13 +3,13 @@
 (** ** 1 Introduction *)
 
 Inductive mul3 : nat -> Prop :=
-    | T0 : mul3 0
-    | T3 : forall n : nat, mul3 n -> mul3 (3 + n).
+| T0 : mul3 0
+| T3 : forall n : nat, mul3 n -> mul3 (3 + n).
 
 Fixpoint mod3 (n : nat) : nat :=
 match n with
-    | S (S (S n')) => mod3 n'
-    | n' => n'
+| S (S (S n')) => mod3 n'
+| n' => n'
 end.
 
 (** ** 2 Two Facets of Inversion *)
@@ -23,19 +23,19 @@ Definition absurd2_prog :
     let
       diag (x : nat) :=
       match x with
-          | 2 => P
-          | _ => mul3 2
+      | 2 => P
+      | _ => mul3 2
       end
     in
       match H in (mul3 n) return (diag n) with
-          | T0     => H
-          | T3 _ _ => H
+      | T0     => H
+      | T3 _ _ => H
       end.
 
 Inductive nd (f g : nat -> nat) (c : nat) : nat -> Prop :=
-    | Nc : nd f g c c
-    | Nf : forall n : nat, nd f g c n -> nd f g c (f n)
-    | Ng : forall n : nat, nd f g c n -> nd f g c (g n).
+| Nc : nd f g c c
+| Nf : forall n : nat, nd f g c n -> nd f g c (f n)
+| Ng : forall n : nat, nd f g c n -> nd f g c (g n).
 
 Definition pl3 := plus 3.
 Definition pl5 := plus 5.
@@ -67,13 +67,13 @@ Definition absurd_nd4_prog :
       diag x := match x with | 4 => C | _ => nd pl3 pl5 7 4 end
     in
       match H in (nd _ _ _ n) return (diag n) with
-          | Nf _ _ _ _ N =>
+      | Nf _ _ _ _ N =>
               match N in (nd _ _ _ n0) return (diag (pl3 n0)) with
-                  | Nc _ _ _     => H
-                  | Nf _ _ _ _ _ => H
-                  | Ng _ _ _ _ _ => H
+              | Nc _ _ _     => H
+              | Nf _ _ _ _ _ => H
+              | Ng _ _ _ _ _ => H
               end
-          | _ => H
+      | _ => H
       end.
 
 (** ** 4 Eliminating Strong Elimination *)
@@ -122,7 +122,7 @@ Lemma tr15_inv :
 Proof.
   unfold tr15. intros t40.
   repeat match goal with
-      | H : nd _ _ _ _ |- _ => inversion_clear H
+  | H : nd _ _ _ _ |- _ => inversion_clear H
   end.
   Show Proof. (* 8985 lines *)
 Qed.
@@ -136,15 +136,15 @@ Section wut2.
 Variable A : nat -> Prop.
 
 Inductive l10 : nat -> Prop :=
-    | l10ini : l10 10
-    | l10rec : forall n : nat, A n -> l10 (pred n).
+| l10ini : l10 10
+| l10rec : forall n : nat, A n -> l10 (pred n).
 
 Lemma inv_lA0 :
   l10 0 -> A 0 \/ A 1.
 Proof.
   intro l.
   match goal with
-      | l : ?P |- ?Q =>
+  | l : ?P |- ?Q =>
           pose (diag n := match n with 0 => Q | _ => P end)
   end.
   change (diag 0).

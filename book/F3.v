@@ -83,8 +83,8 @@ Qed.
 (* begin hide *)
 Fixpoint lsapp {A : Type} (l : list A) (s : Stream A) : Stream A :=
 match l with
-    | nil => s
-    | cons h t => {| hd := h; tl := lsapp t s; |}
+| nil => s
+| cons h t => {| hd := h; tl := lsapp t s; |}
 end.
 (* end hide *)
 
@@ -197,27 +197,27 @@ CoFixpoint iterate {A : Type} (f : A -> A) (x : A) : Stream A :=
 
 Fixpoint nth (n : nat) {A : Type} (s : Stream A) : A :=
 match n with
-    | 0 => hd s
-    | S n' => nth n' (tl s)
+| 0 => hd s
+| S n' => nth n' (tl s)
 end.
 
 Fixpoint take (n : nat) {A : Type} (s : Stream A) : list A :=
 match n with
-    | 0 => nil
-    | S n' => cons (hd s) (take n' (tl s))
+| 0 => nil
+| S n' => cons (hd s) (take n' (tl s))
 end.
 
 Fixpoint drop (n : nat) {A : Type} (s : Stream A) : Stream A :=
 match n with
-    | 0 => s
-    | S n' => drop n' (tl s)
+| 0 => s
+| S n' => drop n' (tl s)
 end.
 
 Fixpoint splitAt
   (n : nat) {A : Type} (s : Stream A) : list A * A * Stream A :=
 match n with
-    | 0 => (nil, hd s, tl s)
-    | S n' =>
+| 0 => (nil, hd s, tl s)
+| S n' =>
         let '(l, x, s') := splitAt n' (tl s) in (cons (hd s) l, x, s')
 end.
 
@@ -229,14 +229,14 @@ CoFixpoint from (n : nat) : Stream nat :=
 
 Fixpoint insert (n : nat) {A : Type} (x : A) (s : Stream A) : Stream A :=
 match n with
-    | 0 => {| hd := x; tl := s; |}
-    | S n' => {| hd := hd s; tl := insert n' x (tl s); |}
+| 0 => {| hd := x; tl := s; |}
+| S n' => {| hd := hd s; tl := insert n' x (tl s); |}
 end.
 
 Fixpoint replace (n : nat) {A : Type} (x : A) (s : Stream A) : Stream A :=
 match n with
-    | 0 => {| hd := x; tl := tl s; |}
-    | S n' => {| hd := hd s; tl := replace n' x (tl s); |}
+| 0 => {| hd := x; tl := tl s; |}
+| S n' => {| hd := hd s; tl := replace n' x (tl s); |}
 end.
 
 CoFixpoint diagonal {A : Type} (s : Stream (Stream A)) : Stream A :=
@@ -266,7 +266,7 @@ CoFixpoint intersperse {A : Type} (x : A) (s : Stream A) : Stream A :=
     {|
         hd := x;
         tl := intersperse x (tl s);
-    |};
+|};
 |}.
 
 CoFixpoint merge {A : Type} (s1 s2 : Stream A) : Stream A :=
@@ -276,7 +276,7 @@ CoFixpoint merge {A : Type} (s1 s2 : Stream A) : Stream A :=
     {|
         hd := hd s2;
         tl := merge (tl s1) (tl s2);
-    |};
+|};
 |}.
 (* end hide *)
 
@@ -381,16 +381,16 @@ Qed.
 
 (* begin hide *)
 Inductive Elem {A : Type} (x : A) (s : Stream A) : Prop :=
-    | Elem_hd : x = hd s -> Elem x s
-    | Elem_tl : Elem x (tl s) -> Elem x s.
+| Elem_hd : x = hd s -> Elem x s
+| Elem_tl : Elem x (tl s) -> Elem x s.
 (* end hide *)
 
 #[global] Hint Constructors Elem : core.
 
 (* begin hide *)
 Inductive Dup {A : Type} (s : Stream A) : Prop :=
-    | Dup_hd : Elem (hd s) (tl s) -> Dup s
-    | Dup_tl : Dup (tl s) -> Dup s.
+| Dup_hd : Elem (hd s) (tl s) -> Dup s
+| Dup_tl : Dup (tl s) -> Dup s.
 (* end hide *)
 
 Ltac inv H := inversion H; subst; clear H.
@@ -498,8 +498,8 @@ Qed.
 
 (* begin hide *)
 Inductive Exists {A : Type} (P : A -> Prop) (s : Stream A) : Prop :=
-    | Exists_hd : P (hd s) -> Exists P s
-    | Exists_tl : Exists P (tl s) -> Exists P s.
+| Exists_hd : P (hd s) -> Exists P s
+| Exists_tl : Exists P (tl s) -> Exists P s.
 (* end hide *)
 
 Lemma Exists_spec :
@@ -706,17 +706,17 @@ Qed.
 
 (* begin hide *)
 Inductive Suffix {A : Type} : Stream A -> Stream A -> Prop :=
-    | Suffix_refl :
+| Suffix_refl :
         forall s : Stream A, Suffix s s
-    | Suffix_tl :
+| Suffix_tl :
         forall s1 s2 : Stream A,
           Suffix (tl s1) s2 -> Suffix s1 s2.
 (* end hide *)
 
 Fixpoint snoc {A : Type} (x : A) (l : list A) : list A :=
 match l with
-    | nil => cons x nil
-    | cons h t => cons h (snoc x t)
+| nil => cons x nil
+| cons h t => cons h (snoc x t)
 end.
 
 Lemma Suffix_spec :
@@ -788,16 +788,16 @@ Definition scons {A : Type} (x : A) (s : Stream A) : Stream A :=
 
 (* begin hide *)
 Inductive SPermutation {A : Type} : Stream A -> Stream A -> Prop :=
-    | SPerm_refl :
+| SPerm_refl :
         forall s : Stream A, SPermutation s s
-    | SPerm_skip :
+| SPerm_skip :
         forall (x : A) (s1 s2 : Stream A),
           SPermutation s1 s2 -> SPermutation (scons x s1) (scons x s2)
-    | SPerm_swap :
+| SPerm_swap :
         forall (x y : A) (s1 s2 : Stream A),
           SPermutation s1 s2 ->
             SPermutation (scons x (scons y s1)) (scons y (scons x s2))
-    | SPerm_trans :
+| SPerm_trans :
         forall s1 s2 s3 : Stream A,
           SPermutation s1 s2 -> SPermutation s2 s3 -> SPermutation s1 s3.
 
@@ -864,9 +864,9 @@ Proof.
   split.
     induction 1 as
     [
-    | x s1 s2 H (n & IH1 & IH2)
-    | x y s1 s2 H (n & IH1 & IH2)
-    | s1 s2 s3 H1 (n1 & IH11 & IH12) H2 (n2 & IH21 & IH22)
+| x s1 s2 H (n & IH1 & IH2)
+| x y s1 s2 H (n & IH1 & IH2)
+| s1 s2 s3 H1 (n1 & IH11 & IH12) H2 (n2 & IH21 & IH22)
     ]; cbn.
       exists 0. cbn. split; auto.
       exists (S n). cbn. auto.
@@ -907,7 +907,7 @@ CoFixpoint swap {A : Type} (s : Stream A) : Stream A :=
     {|
         hd := hd s;
         tl := swap (tl (tl s));
-    |}
+|}
 |}.
 
 (** Widać, że dla strumienia pokroju [s = cocons 0 (cocons 1 (cocons 2 ...))] zdanie
@@ -936,20 +936,20 @@ Require Import Program.Equality.
 Module approx.
 
 Inductive Vec (A : Type) : nat -> Type :=
-    | vnil : Vec A 0
-    | vcons : forall n : nat, A -> Vec A n -> Vec A (S n).
+| vnil : Vec A 0
+| vcons : forall n : nat, A -> Vec A n -> Vec A (S n).
 
 Arguments vnil {A}.
 Arguments vcons {A} {n}.
 
 Definition vhd {A : Type} {n : nat} (v : Vec A (S n)) : A :=
 match v with
-    | vcons h _ => h
+| vcons h _ => h
 end.
 
 Definition vtl {A : Type} {n : nat} (v : Vec A (S n)) : Vec A n :=
 match v with
-    | vcons _ t => t
+| vcons _ t => t
 end.
 
 Lemma vhd_vtl :
@@ -963,14 +963,14 @@ Qed.
 
 Fixpoint vtake {A : Type} (s : Stream A) (n : nat) : Vec A n :=
 match n with
-    | 0 => vnil
-    | S n' => vcons (hd s) (vtake (tl s) n')
+| 0 => vnil
+| S n' => vcons (hd s) (vtake (tl s) n')
 end.
 
 Fixpoint vtake' {A : Type} (s : Stream A) (n : nat) : Vec A (S n) :=
 match n with
-    | 0 => vcons (hd s) vnil
-    | S n' => vcons (hd s) (vtake' (tl s) n')
+| 0 => vcons (hd s) vnil
+| S n' => vcons (hd s) (vtake' (tl s) n')
 end.
 
 CoFixpoint unvtake {A : Type} (f : forall n : nat, Vec A (S n)) : Stream A :=
@@ -982,9 +982,9 @@ CoFixpoint unvtake {A : Type} (f : forall n : nat, Vec A (S n)) : Stream A :=
 
 Fixpoint vnth {A : Type} {n : nat} (v : Vec A n) (k : nat) : option A :=
 match v, k with
-    | vnil, _ => None
-    | vcons h t, 0 => Some h
-    | vcons h t, S k' => vnth t k'
+| vnil, _ => None
+| vcons h t, 0 => Some h
+| vcons h t, S k' => vnth t k'
 end.
 
 Ltac depdestr x :=
@@ -1028,11 +1028,11 @@ End approx.
 (** * Pomysł dawno zapomniany: (ko)induktywne specyfikacje funkcji (TODO) *)
 
 Inductive Filter {A : Type} (f : A -> bool) : Stream A -> Stream A -> Prop :=
-    | Filter_true :
+| Filter_true :
         forall s r r' : Stream A,
           f (hd s) = true -> Filter f (tl s) r ->
             hd r' = hd s -> tl r' = r -> Filter f s r'
-    | Filter_false :
+| Filter_false :
         forall s r : Stream A,
           f (hd s) = false -> Filter f (tl s) r -> Filter f s r.
 

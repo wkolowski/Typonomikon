@@ -6,8 +6,8 @@ Set Universe Polymorphism.
 
 Unset Positivity Checking.
 Inductive Bush (A : Type) : Type :=
-    | Leaf : Bush A
-    | Node : A -> Bush (Bush A) -> Bush A.
+| Leaf : Bush A
+| Node : A -> Bush (Bush A) -> Bush A.
 
 Arguments Leaf {A}.
 Arguments Node {A} _ _.
@@ -15,11 +15,11 @@ Arguments Node {A} _ _.
 Set Positivity Checking.
 
 Inductive BushF (F : Type -> Type) (A : Type) : Type :=
-    | LeafF : BushF F A
-    | NodeF : A -> F (F A) -> BushF F A.
+| LeafF : BushF F A
+| NodeF : A -> F (F A) -> BushF F A.
 
 Fail Inductive Bush (A : Type) : Type :=
-    | In : BushF Bush A -> Bush A.
+| In : BushF Bush A -> Bush A.
 
 Definition BushC (A : Type) : Type :=
   forall
@@ -51,14 +51,14 @@ From Typonomikon Require Import D5.
 Unset Guard Checking.
 Fixpoint map {A B : Type} (f : A -> B) (b : Bush A) {struct b} : Bush B :=
 match b with
-    | Leaf      => Leaf
-    | Node v bs => Node (f v) (map (map f) bs)
+| Leaf      => Leaf
+| Node v bs => Node (f v) (map (map f) bs)
 end.
 
 (* Fixpoint B2BC {A : Type} (b : Bush A) {struct b} : BushC A :=
 match b with
-    | Leaf => leaf
-    | Node x b' => node x (B2BC (map B2BC b'))
+| Leaf => leaf
+| Node x b' => node x (B2BC (map B2BC b'))
 end.
 
 Definition BC2B {A : Type} (b : BushC A) : Bush A.
@@ -68,44 +68,44 @@ Proof.
  *)
 Fixpoint sum (b : Bush nat) : nat :=
 match b with
-    | Leaf => 0
-    | Node n bs => n + sum (map sum bs)
+| Leaf => 0
+| Node n bs => n + sum (map sum bs)
 end.
 
 Fixpoint size {A : Type} (b : Bush A) {struct b} : nat :=
 match b with
-    | Leaf => 0
-    | Node v bs => 1 + sum (map size bs)
+| Leaf => 0
+| Node v bs => 1 + sum (map size bs)
 end.
 
 Fixpoint toList {A : Type} (b : Bush A) {struct b} : list A :=
 match b with
-    | Leaf      => []
-    | Node v bs => v :: join (toList (map toList bs))
+| Leaf      => []
+| Node v bs => v :: join (toList (map toList bs))
 end.
 
 Fixpoint replicate (h : nat) {A : Type} (x : A) : Bush A :=
 match h with
-    | 0    => Leaf
-    | S h' => Node x (replicate h' (replicate h' x))
+| 0    => Leaf
+| S h' => Node x (replicate h' (replicate h' x))
 end.
 
 Fixpoint count {A : Type} (p : A -> nat) (b : Bush A) {struct b} : nat :=
 match b with
-    | Leaf => 0
-    | Node x b' => p x + count (count p) b'
+| Leaf => 0
+| Node x b' => p x + count (count p) b'
 end.
 
 (* Fixpoint app {A : Type} (b1 b2 : Bush A) : Bush A :=
 match b1 with
-    | Leaf     => b2
-    | Node h t => Node h (
+| Leaf     => b2
+| Node h t => Node h (
  *)
 
 (* Fixpoint join {A : Type} (b : Bush (Bush A)) {struct b} : Bush A :=
 match b with
-    | Leaf => Leaf
-    | Node v bs => Node (join v) (join (map join bs))
+| Leaf => Leaf
+| Node v bs => Node (join v) (join (map join bs))
 end.
  *)
 
@@ -113,8 +113,8 @@ Compute (replicate 3 (Node 5 Leaf)).
 
 Fixpoint nums (n : nat) : Bush nat :=
 match n with
-    | 0 => Node 0 Leaf
-    | S n' => Node n (map nums (nums n'))
+| 0 => Node 0 Leaf
+| S n' => Node n (map nums (nums n'))
 end.
 
 Compute size (nums 4).
@@ -126,8 +126,8 @@ Require Import FunctionalExtensionality.
 
 Unset Positivity Checking.
 Inductive Bush' {A : Type} (P : A -> Type) : Bush A -> Type :=
-    | Leaf' : Bush' P Leaf
-    | Node' : forall (x : A) (b : Bush (Bush A)),
+| Leaf' : Bush' P Leaf
+| Node' : forall (x : A) (b : Bush (Bush A)),
                 P x -> Bush' (Bush' P) b -> Bush' P (Node x b).
 Set Positivity Checking.
 

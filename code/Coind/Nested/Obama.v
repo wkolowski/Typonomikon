@@ -34,12 +34,12 @@ Definition sim {A : Type} (b1 b2 : Obama A) : Type :=
   Forall2 eq b1 b2.
 
 Inductive Exists {A : Type} (P : A -> Type) (b : Obama A) : Type :=
-    | Ex_hd : P (hd b) -> Exists P b
-    | Ex_tl : Exists (Exists P) (tl b) -> Exists P b.
+| Ex_hd : P (hd b) -> Exists P b
+| Ex_tl : Exists (Exists P) (tl b) -> Exists P b.
 
 Inductive Exists2 {A B : Type} (R : A -> B -> Type) (b1 : Obama A) (b2 : Obama B) : Type :=
-    | Ex2_hd : R (hd b1) (hd b2) -> Exists2 R b1 b2
-    | Ex2_tl : Exists2 (Exists2 R) (tl b1) (tl b2) -> Exists2 R b1 b2.
+| Ex2_hd : R (hd b1) (hd b2) -> Exists2 R b1 b2
+| Ex2_tl : Exists2 (Exists2 R) (tl b1) (tl b2) -> Exists2 R b1 b2.
 
 #[global] Hint Constructors Exists Exists2 : core.
 
@@ -50,54 +50,54 @@ Definition ObamaNeq {A : Type} (b1 b2 : Obama A) : Type :=
   Exists2 (fun x y => x <> y) b1 b2.
 
 Inductive Dup {A : Type} (b : Obama A) : Prop :=
-    | Dup_hd : Exists (Exists (fun y => y = hd b)) (tl b) -> Dup b
-    | Dup_tl : Exists Dup (tl b) -> Dup b.
+| Dup_hd : Exists (Exists (fun y => y = hd b)) (tl b) -> Dup b
+| Dup_tl : Exists Dup (tl b) -> Dup b.
 Set Positivity Checking.
 
 (* TODO: to raczej nie powinno być induktywne... *)
 
 Inductive SubObama : forall {A B : Type}, Obama A -> Obama B -> Type :=
-    | SubObama_hds :
+| SubObama_hds :
         forall {A : Type} (b1 b2 : Obama A),
           hd b1 = hd b2 -> SubObama (tl b1) (tl b2) -> SubObama b1 b2
-    | SubObama_hd :
+| SubObama_hd :
         forall {A : Type} (b1 : Obama A) (b2 : Obama (Obama A)),
           SubObama b1 (hd b2) -> SubObama b1 b2
-    | SubObama_tl :
+| SubObama_tl :
         forall {A : Type} (b1 b2 : Obama A),
           SubObama b1 (tl b2) -> SubObama b1 b2.
 
 Inductive DirectSubterm : forall {A B : Type}, A -> B -> Type :=
-    | DS_hd :
+| DS_hd :
         forall {A : Type} (b : Obama A),
           DirectSubterm (hd b) b
-    | DS_tl :
+| DS_tl :
         forall {A : Type} (b : Obama A),
           DirectSubterm (tl b) b.
 
 Inductive Subterm : forall {A B : Type}, Obama A -> Obama B -> Type :=
-    | Subterm_step :
+| Subterm_step :
         forall {A B : Type} (b1 : Obama A) (b2 : Obama B),
           DirectSubterm b1 b2 -> Subterm b1 b2
-    | Subterm_trans :
+| Subterm_trans :
         forall {A B C : Type} (b1 : Obama A) (b2 : Obama B) (b3 : Obama C),
           DirectSubterm b1 b2 -> Subterm b2 b3 -> Subterm b1 b3.
 
 Inductive Swap : forall {A B : Type}, B -> Obama A -> B -> Obama A -> Type :=
-    | Swap_hdtl :
+| Swap_hdtl :
         forall {A : Type} (x : A) (b : Obama A),
           Swap x b (hd b) {| hd := x; tl := tl b; |}
-    | Swap_hd :
+| Swap_hd :
         forall {A : Type} (x y : A) (b : Obama (Obama A)) (r : Obama A),
           Swap x (hd b) y r -> Swap x b y {| hd := r; tl := tl b; |}
-    | Swap_tl :
+| Swap_tl :
         forall {A : Type} (x y : A) (b : Obama A) (r : Obama (Obama A)),
           Swap x (tl b) y r -> Swap x b y {| hd := hd b; tl := r; |}.
 
 Fail Inductive Permutation : forall {A : Type}, Obama A -> Obama A -> Type :=
-    | Permutation_refl :
+| Permutation_refl :
         forall {A : Type} (b : Obama A), Permutation b b
-    | Permutation_step :
+| Permutation_step :
         forall {A : Type} (x y : A) (b1 b2 b2' b3 : Obama A),
           Swap (hd b1) b1 y b1' -> Permutation {| hd := y; tl := tl b1'; |} b2 -> Permutation b1 b3.
 Set Positivity Checking.
@@ -166,8 +166,8 @@ CoFixpoint iterate {A : Type} (f : A -> A) (x : A) : Obama A :=
 
 Fixpoint nth' {A B : Type} (n : Bush A) (b : Obama B) : B :=
 match n with
-    | Leaf => hd b
-    | Node _ b' => hd (nth' b' (tl b))
+| Leaf => hd b
+| Node _ b' => hd (nth' b' (tl b))
 end.
 
 Definition nth (n : Bush unit) {A : Type} (b : Obama A) : A :=
@@ -175,14 +175,14 @@ Definition nth (n : Bush unit) {A : Type} (b : Obama A) : A :=
 
 Fixpoint Obama_to_the (n : nat) (A : Type) : Type :=
 match n with
-    | 0 => A
-    | S n' => Obama_to_the n' (Obama A)
+| 0 => A
+| S n' => Obama_to_the n' (Obama A)
 end.
 
 Fixpoint nth2 {A : Type} (n : nat) (b : Obama A) {struct n} : Obama_to_the n A :=
 match n with
-    | 0 => hd b
-    | S n' => nth2 n' (tl b)
+| 0 => hd b
+| S n' => nth2 n' (tl b)
 end.
 
 CoFixpoint from (n : nat) : Obama nat :=

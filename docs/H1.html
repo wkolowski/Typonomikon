@@ -43,7 +43,7 @@
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">transport</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span>) {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) (<span class="id" title="var">u</span> : <span class="id" title="var">P</span> <span class="id" title="var">x</span>) : <span class="id" title="var">P</span> <span class="id" title="var">y</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">u</span><br/>
+| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">u</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -71,7 +71,7 @@
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">ap</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span>) {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) : <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">f</span> <span class="id" title="var">y</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
+| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -106,7 +106,7 @@
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Path</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">idp</span> : <span class="id" title="var">Path</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
+| <span class="id" title="var">idp</span> : <span class="id" title="var">Path</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Arguments</span> <span class="id" title="var">idp</span> {<span class="id" title="var">A</span> <span class="id" title="var">x</span>}.<br/>
@@ -114,13 +114,13 @@
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">eq_to_Path</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">e</span> : <span class="id" title="var">x</span> = <span class="id" title="var">y</span>) : <span class="id" title="var">Path</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">e</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">idp</span><br/>
+| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">idp</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">Path_to_eq</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">Path</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) : <span class="id" title="var">x</span> = <span class="id" title="var">y</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">idp</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
+| <span class="id" title="var">idp</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -242,32 +242,32 @@
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">code</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, 0 =&gt; <span class="id" title="var">unit</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="var">Empty_set</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">S</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Empty_set</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">code</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
+| 0, 0 =&gt; <span class="id" title="var">unit</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="var">Empty_set</span><br/>
+| 0, <span class="id" title="var">S</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Empty_set</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">code</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">encode_aux</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">tt</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">encode_aux</span> <span class="id" title="var">n'</span><br/>
+| 0 =&gt; <span class="id" title="var">tt</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">encode_aux</span> <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">encode</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">n</span> = <span class="id" title="var">m</span>) : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">encode_aux</span> <span class="id" title="var">n</span><br/>
+| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">encode_aux</span> <span class="id" title="var">n</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">decode</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> = <span class="id" title="var">m</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">S</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; @<span class="id" title="tactic">f_equal</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">S</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (@<span class="id" title="var">decode</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> <span class="id" title="var">c</span>)<br/>
+| 0, 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
+| 0, <span class="id" title="var">S</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; @<span class="id" title="tactic">f_equal</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">S</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (@<span class="id" title="var">decode</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> <span class="id" title="var">c</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -305,27 +305,27 @@
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">nat_eq</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nat_eq_0</span> : <span class="id" title="var">nat_eq</span> 0 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nat_eq_S</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>}, <span class="id" title="var">nat_eq</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">nat_eq</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) (<span class="id" title="var">S</span> <span class="id" title="var">m</span>).<br/>
+| <span class="id" title="var">nat_eq_0</span> : <span class="id" title="var">nat_eq</span> 0 0<br/>
+| <span class="id" title="var">nat_eq_S</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>}, <span class="id" title="var">nat_eq</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">nat_eq</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) (<span class="id" title="var">S</span> <span class="id" title="var">m</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">encode'</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat_eq</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">nat_eq_0</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">nat_eq_S</span> (<span class="id" title="var">encode'</span> <span class="id" title="var">n'</span>)<br/>
+| 0 =&gt; <span class="id" title="var">nat_eq_0</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">nat_eq_S</span> (<span class="id" title="var">encode'</span> <span class="id" title="var">n'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">encode</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">n</span> = <span class="id" title="var">m</span>) : <span class="id" title="var">nat_eq</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">encode'</span> <span class="id" title="var">n</span><br/>
+| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">encode'</span> <span class="id" title="var">n</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">decode</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">c</span> : <span class="id" title="var">nat_eq</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) : <span class="id" title="var">n</span> = <span class="id" title="var">m</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nat_eq_0</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nat_eq_S</span> <span class="id" title="var">c'</span> =&gt; <span class="id" title="tactic">f_equal</span> <span class="id" title="var">S</span> (<span class="id" title="var">decode</span> <span class="id" title="var">c'</span>)<br/>
+| <span class="id" title="var">nat_eq_0</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
+| <span class="id" title="var">nat_eq_S</span> <span class="id" title="var">c'</span> =&gt; <span class="id" title="tactic">f_equal</span> <span class="id" title="var">S</span> (<span class="id" title="var">decode</span> <span class="id" title="var">c'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -378,32 +378,32 @@ Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">code</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">SProp</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, 0 =&gt; <span class="id" title="var">sUnit</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="var">sEmpty</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">S</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">sEmpty</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">code</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
+| 0, 0 =&gt; <span class="id" title="var">sUnit</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="var">sEmpty</span><br/>
+| 0, <span class="id" title="var">S</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">sEmpty</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">code</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">encode_aux</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">stt</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">encode_aux</span> <span class="id" title="var">n'</span><br/>
+| 0 =&gt; <span class="id" title="var">stt</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">encode_aux</span> <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">encode</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">n</span> = <span class="id" title="var">m</span>) : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">encode_aux</span> <span class="id" title="var">n</span><br/>
+| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">encode_aux</span> <span class="id" title="var">n</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">decode</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">n</span> = <span class="id" title="var">m</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">S</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; @<span class="id" title="tactic">f_equal</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">S</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (@<span class="id" title="var">decode</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> <span class="id" title="var">c</span>)<br/>
+| 0, 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
+| 0, <span class="id" title="var">S</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; @<span class="id" title="tactic">f_equal</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">S</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (@<span class="id" title="var">decode</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> <span class="id" title="var">c</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -436,29 +436,29 @@ Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">code</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">SProp</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">sUnit</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="var">sEmpty</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">code</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
+| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">sUnit</span><br/>
+| <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="var">sEmpty</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">code</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">gutle</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">gutle_0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">gutle</span> 0 <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">gutle_SS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">gutle</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">gutle</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) (<span class="id" title="var">S</span> <span class="id" title="var">m</span>).<br/>
+| <span class="id" title="var">gutle_0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">gutle</span> 0 <span class="id" title="var">m</span><br/>
+| <span class="id" title="var">gutle_SS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">gutle</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">gutle</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) (<span class="id" title="var">S</span> <span class="id" title="var">m</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">encode</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">H</span> : <span class="id" title="var">gutle</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">H</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">gutle_0</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">stt</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">gutle_SS</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H'</span> =&gt; <span class="id" title="var">encode</span> <span class="id" title="var">H'</span><br/>
+| <span class="id" title="var">gutle_0</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">stt</span><br/>
+| <span class="id" title="var">gutle_SS</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H'</span> =&gt; <span class="id" title="var">encode</span> <span class="id" title="var">H'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">decode</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">gutle</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0   , <span class="id" title="var">_</span>    =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">gutle_0</span> <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>   , 0    =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="var">gutle_SS</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">decode</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> <span class="id" title="var">c</span>)<br/>
+| 0   , <span class="id" title="var">_</span>    =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">gutle_0</span> <span class="id" title="var">m</span><br/>
+| <span class="id" title="var">_</span>   , 0    =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="var">gutle_SS</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">decode</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> <span class="id" title="var">c</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -500,31 +500,31 @@ Jak powiedział śp. Stefan Kisielewski: "teoria typów bohatersko
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">code</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">SProp</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">sUnit</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="var">sEmpty</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">code</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
+| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">sUnit</span><br/>
+| <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="var">sEmpty</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">code</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">encode'</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">n</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">stt</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">encode'</span> <span class="id" title="var">n'</span><br/>
+| 0 =&gt; <span class="id" title="var">stt</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">encode'</span> <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">code_S</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">code</span> <span class="id" title="var">n</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">stt</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; @<span class="id" title="var">code_S</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> <span class="id" title="var">c</span><br/>
+| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">stt</span><br/>
+| <span class="id" title="var">_</span>, 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">c</span> =&gt; @<span class="id" title="var">code_S</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span> <span class="id" title="var">c</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">encode</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">H</span> : <span class="id" title="var">n</span> &lt;= <span class="id" title="var">m</span>) : <span class="id" title="var">code</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">H</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">le_n</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">encode'</span> <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">le_S</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H'</span> =&gt; <span class="id" title="var">code_S</span> (<span class="id" title="var">encode</span> <span class="id" title="var">H'</span>)<br/>
+| <span class="id" title="var">le_n</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">encode'</span> <span class="id" title="var">n</span><br/>
+| <span class="id" title="var">le_S</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H'</span> =&gt; <span class="id" title="var">code_S</span> (<span class="id" title="var">encode</span> <span class="id" title="var">H'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -612,23 +612,23 @@ Kody nie muszą być rekurencyjne - mogą być induktywne.
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">code</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nils</span> : <span class="id" title="var">code</span> [] []<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">conss</span> :<br/>
+| <span class="id" title="var">nils</span> : <span class="id" title="var">code</span> [] []<br/>
+| <span class="id" title="var">conss</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">h1</span> <span class="id" title="var">h2</span> : <span class="id" title="var">A</span>} {<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">h1</span> = <span class="id" title="var">h2</span> -&gt; <span class="id" title="var">code</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">code</span> (<span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">encode'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">code</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">nils</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">conss</span> <span class="id" title="var">eq_refl</span> (<span class="id" title="var">encode'</span> <span class="id" title="var">t</span>)<br/>
+| [] =&gt; <span class="id" title="var">nils</span><br/>
+| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">conss</span> <span class="id" title="var">eq_refl</span> (<span class="id" title="var">encode'</span> <span class="id" title="var">t</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">encode</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span>) : <span class="id" title="var">code</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">encode'</span> <span class="id" title="var">l1</span><br/>
+| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">encode'</span> <span class="id" title="var">l1</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -637,10 +637,10 @@ Kody nie muszą być rekurencyjne - mogą być induktywne.
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">decode</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>} (<span class="id" title="var">c</span> : <span class="id" title="var">code</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>) : <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nils</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">conss</span> <span class="id" title="var">p</span> <span class="id" title="var">c'</span> =&gt;<br/>
+| <span class="id" title="var">nils</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
+| <span class="id" title="var">conss</span> <span class="id" title="var">p</span> <span class="id" title="var">c'</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">p</span>, <span class="id" title="var">decode</span> <span class="id" title="var">c'</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span>, <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span>, <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
@@ -670,8 +670,8 @@ Insajt, że o ja pierdole: jak się ma <span class="inlinecode"><span class="id
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Forall2</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nil2</span> : <span class="id" title="var">Forall2</span> <span class="id" title="var">R</span> [] []<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons2</span> :<br/>
+| <span class="id" title="var">nil2</span> : <span class="id" title="var">Forall2</span> <span class="id" title="var">R</span> [] []<br/>
+| <span class="id" title="var">cons2</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">h1</span> <span class="id" title="var">h2</span> : <span class="id" title="var">A</span>} {<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> -&gt; <span class="id" title="var">Forall2</span> <span class="id" title="var">R</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> -&gt; <span class="id" title="var">Forall2</span> <span class="id" title="var">R</span> (<span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>) (<span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span>).<br/>
 
@@ -697,7 +697,7 @@ Insajt, że o ja pierdole: jak się ma <span class="inlinecode"><span class="id
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">encode</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span>) : <span class="id" title="var">code</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
+| <span class="id" title="var">eq_refl</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">eq_refl</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>

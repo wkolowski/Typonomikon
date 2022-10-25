@@ -1,8 +1,8 @@
 Require Import Equality.
 
 Inductive InfTree (A : Type) : Type :=
-    | E : InfTree A
-    | N : A -> forall (B : Type), (B -> InfTree A) -> InfTree A.
+| E : InfTree A
+| N : A -> forall (B : Type), (B -> InfTree A) -> InfTree A.
 
 Arguments E {A}.
 Arguments N {A} _ _ _.
@@ -13,21 +13,21 @@ Definition leaf {A : Type} (x : A) : InfTree A :=
 (** Basic observers *)
 Definition isEmpty {A : Type} (t : InfTree A) : bool :=
 match t with
-    | E => true
-    | _ => false
+| E => true
+| _ => false
 end.
 
 Definition root {A : Type} (t : InfTree A) : option A :=
 match t with
-    | E => None
-    | N x _ _ => Some x
+| E => None
+| N x _ _ => Some x
 end.
 
 Definition unN {A : Type} (t : InfTree A)
   : option (A * {B : Type & B -> InfTree A}) :=
 match t with
-    | E => None
-    | N x B f => Some (x, @existT Type _ B f)
+| E => None
+| N x B f => Some (x, @existT Type _ B f)
 end.
 
 (** Zagadka, że o ja jebie: udowodnij, że funkcji [size] i [height] nie da
@@ -58,22 +58,22 @@ Parameter mirror' : forall A : Type, BTree A -> BTree A.
 
 Fixpoint complete {A : Type} (B : Type) (n : nat) (x : A) : InfTree A :=
 match n with
-    | 0 => E
-    | S n' => N x B (fun _ => complete B n' x)
+| 0 => E
+| S n' => N x B (fun _ => complete B n' x)
 end.
 
 Fixpoint iterate
   {A : Type} (B : Type) (f : A -> A) (n : nat) (x : A) : InfTree A :=
 match n with
-    | 0 => E
-    | S n' => N x B (fun _ => iterate B f n' (f x))
+| 0 => E
+| S n' => N x B (fun _ => iterate B f n' (f x))
 end.
 
 Fixpoint take {A : Type} (n : nat) (t : InfTree A) : InfTree A :=
 match n, t with
-    | 0, _ => E
-    | _, E => E
-    | S n', N x B f => N x B (fun b : B => take n' (f b))
+| 0, _ => E
+| _, E => E
+| S n', N x B f => N x B (fun b : B => take n' (f b))
 end.
 
 (*
@@ -89,8 +89,8 @@ Parameter takedrop :
 
 Definition intersperse {A : Type} (v : A) (t : InfTree A) : InfTree A :=
 match t with
-    | E => N v False (fun e => match e with end)
-    | N x B f => N x B (fun _ => N v B f)
+| E => N v False (fun e => match e with end)
+| N x B f => N x B (fun _ => N v B f)
 end.
 
 (*
@@ -115,8 +115,8 @@ Parameter count : forall A : Type, (A -> bool) -> BTree A -> nat.
 
 Fixpoint takeWhile {A : Type} (p : A -> bool) (t : InfTree A) : InfTree A :=
 match t with
-    | E => E
-    | N x B f => if p x then N x B (fun b : B => takeWhile p (f b)) else E
+| E => E
+| N x B f => if p x then N x B (fun b : B => takeWhile p (f b)) else E
 end.
 
 (*
@@ -126,8 +126,8 @@ Parameter findIndices :
 
 Fixpoint map {A B : Type} (f : A -> B) (t : InfTree A) : InfTree B :=
 match t with
-    | E => E
-    | N x C g => N (f x) C (fun c : C => map f (g c))
+| E => E
+| N x C g => N (f x) C (fun c : C => map f (g c))
 end.
 
 (*
@@ -135,9 +135,9 @@ Fixpoint zipWith
   {A B C : Type} (f : A -> B -> C)
   (t1 : InfTree A) (t2 : InfTree B) : InfTree C :=
 match t1, t2 with
-    | E, _ => E
-    | _, E => E
-    | N a D f, N b E g => N (f a b) (fun 
+| E, _ => E
+| _, E => E
+| N a D f, N b E g => N (f a b) (fun 
 *)
 
 (*
@@ -149,37 +149,37 @@ Parameter unzipWith :
 
 (** [Elem] jest głupie - po coma istnieć, skoro jest [Exists]? *)
 Inductive Elem {A : Type} (x : A) : InfTree A -> Prop :=
-    | Elem_here :
+| Elem_here :
         forall (B : Type) (f : B -> InfTree A),
           Elem x (N x B f)
-    | Elem_there :
+| Elem_there :
         forall (B : Type) (f : B -> InfTree A) (b : B),
           Elem x (f b) -> Elem x (N x B f).
 
 Inductive Exists {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
-    | Exists_here :
+| Exists_here :
         forall (x : A) (B : Type) (f : B -> InfTree A),
           P x -> Exists P (N x B f)
-    | Exists_there :
+| Exists_there :
         forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
           Exists P (f b) -> Exists P (N x B f).
 
 Inductive Forall {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
-    | Forall_E : Forall P E
-    | Forall_N :
+| Forall_E : Forall P E
+| Forall_N :
         forall (x : A) (B : Type) (f : B -> InfTree A),
           (forall b : B, Forall P (f b)) -> Forall P (N x B f).
 
 Inductive Dup {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
-    | Dup_here :
+| Dup_here :
         forall v : A, P v ->
           forall (B : Type) (f : B -> InfTree A) (b : B),
             Exists P (f b) -> Dup P (N v B f)
-    | Dup_subtrees :
+| Dup_subtrees :
         forall (v : A) (B : Type) (f : B -> InfTree A) (b1 b2 : B),
           Exists P (f b1) -> Exists P (f b2) ->
             b1 <> b2 -> Dup P (N v B f)
-    | Dup_deeper :
+| Dup_deeper :
         forall (v : A) (B : Type) (f : B -> InfTree A) (b : B),
           Dup P (f b) -> Dup P (N v B f).
 
@@ -193,8 +193,8 @@ Parameter AtMost :
 *)
 
 Inductive SameStructure {A B : Type} : InfTree A -> InfTree B -> Prop :=
-    | SS_E : SameStructure E E
-    | SS_N :
+| SS_E : SameStructure E E
+| SS_N :
         forall
           (x : A) (y : B) (C : Type)
           (f : C -> InfTree A) (g : C -> InfTree B),
@@ -207,22 +207,22 @@ Parameter SameShape : forall A B : Type, BTree A -> BTree B -> Prop.
 
 Inductive InfTreeDirectSubterm
   {A : Type} : InfTree A -> InfTree A -> Prop :=
-    | ITDS :
+| ITDS :
         forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
           InfTreeDirectSubterm (f b) (N x B f).
 
 Inductive InfTreeSubterm
   {A : Type} : InfTree A -> InfTree A -> Prop :=
-    | ITS_refl :
+| ITS_refl :
         forall t : InfTree A, InfTreeSubterm t t
-    | ITS_step :
+| ITS_step :
         forall t1 t2 t3 : InfTree A,
           InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
             InfTreeSubterm t1 t3.
 
 Inductive InfTreeEq {A : Type} : InfTree A -> InfTree A -> Prop :=
-    | ITE_E : InfTreeEq E E
-    | ITE_N :
+| ITE_E : InfTreeEq E E
+| ITE_N :
         forall {v1 v2 : A} {B : Type} {f1 f2 : B -> InfTree A},
           v1 = v2 -> (forall b : B, InfTreeEq (f1 b) (f2 b)) ->
             InfTreeEq (N v1 B f1) (N v2 B f2).
@@ -232,15 +232,15 @@ Arguments ITE_N {A v1 v2 B f1 f2} _ _.
 
 Fixpoint encode_aux {A : Type} (t : InfTree A) : InfTreeEq t t :=
 match t with
-    | E => ITE_E
-    | N v B f =>
+| E => ITE_E
+| N v B f =>
         ITE_N eq_refl (fun b => encode_aux (f b))
 end.
 
 Definition encode
   {A : Type} {t1 t2 : InfTree A} (p : t1 = t2) : InfTreeEq t1 t2 :=
 match p with
-    | eq_refl => encode_aux t1
+| eq_refl => encode_aux t1
 end.
 
 Require Import FunctionalExtensionality.
@@ -289,19 +289,19 @@ Proof.
 Qed.
 
 Inductive InfTreeNeq {A : Type} : InfTree A -> InfTree A -> Prop :=
-    | InfTreeNeq_EN :
+| InfTreeNeq_EN :
         forall (v : A) {B : Type} (f : B -> InfTree A),
           InfTreeNeq E (N v B f)
-    | InfTreeNeq_NE :
+| InfTreeNeq_NE :
         forall (v : A) {B : Type} (f : B -> InfTree A),
           InfTreeNeq (N v B f) E
-    | InfTreeNeq_NN_here :
+| InfTreeNeq_NN_here :
         forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A),
           v1 <> v2 -> InfTreeNeq (N v1 B f1) (N v2 B f2)
-    | InfTreeNeq_NN_there :
+| InfTreeNeq_NN_there :
         forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A) (b : B),
           InfTreeNeq (f1 b) (f2 b) -> InfTreeNeq (N v1 B f1) (N v2 B f2)
-    | InfTreeNeq_branching :
+| InfTreeNeq_branching :
         forall (v1 v2 : A) (B1 B2 : Type)
                (f1 : B1 -> InfTree A) (f2 : B2 -> InfTree A),
                  B1 <> B2 -> InfTreeNeq (N v1 B1 f1) (N v2 B2 f2).

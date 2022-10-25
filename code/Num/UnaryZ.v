@@ -248,8 +248,8 @@ Lemma add'_Pos_r :
     add' k (Pos n)
       =
     match n with
-    | 0    => succ k
-    | S n' => succ (add' k (Pos n'))
+| 0    => succ k
+| S n' => succ (add' k (Pos n'))
     end.
 Proof.
   intros [m | | m] n; cbn; cycle 1.
@@ -271,8 +271,8 @@ Lemma add'_Neg_r :
     add' k (Neg n)
       =
     match n with
-    | 0    => pred k
-    | S n' => pred (add' k (Neg n'))
+| 0    => pred k
+| S n' => pred (add' k (Neg n'))
     end.
 Proof.
   intros k n.
@@ -402,8 +402,8 @@ Lemma mul'_Pos_r :
     mul' k (Pos n)
       =
     match n with
-    | 0    => k
-    | S n' => add' k (mul' k (Pos n'))
+| 0    => k
+| S n' => add' k (mul' k (Pos n'))
     end.
 Proof.
   intros [m | | m] n; cycle 1.
@@ -431,8 +431,8 @@ Lemma mul'_Neg_r :
     mul' k (Neg n)
       =
     match n with
-    | 0    => inv k
-    | S n' => add' (inv k) (mul' k (Neg n'))
+| 0    => inv k
+| S n' => add' (inv k) (mul' k (Neg n'))
     end.
 Proof.
   intros k n.

@@ -50,8 +50,8 @@
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">root2_aux</span> (<span class="id" title="var">r</span> <span class="id" title="var">x</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">float</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">r</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">root2_aux</span> ((<span class="id" title="var">r</span> + <span class="id" title="var">x</span> / <span class="id" title="var">r</span>) / 2) <span class="id" title="var">x</span> <span class="id" title="var">n'</span><br/>
+| 0 =&gt; <span class="id" title="var">r</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">root2_aux</span> ((<span class="id" title="var">r</span> + <span class="id" title="var">x</span> / <span class="id" title="var">r</span>) / 2) <span class="id" title="var">x</span> <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -83,8 +83,8 @@ Compute&nbsp;(1.000000000000001&nbsp;-&nbsp;1)&nbsp;*&nbsp;100000000000000.<br/>
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">bisect</span> (<span class="id" title="var">f</span> : <span class="id" title="var">float</span> -&gt; <span class="id" title="var">float</span>) (<span class="id" title="var">a</span> <span class="id" title="var">b</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">float</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; (<span class="id" title="var">a</span> + <span class="id" title="var">b</span>) / 2<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
+| 0 =&gt; (<span class="id" title="var">a</span> + <span class="id" title="var">b</span>) / 2<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">m</span> := (<span class="id" title="var">a</span> + <span class="id" title="var">b</span>) / 2 <span class="id" title="tactic">in</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> * <span class="id" title="var">f</span> <span class="id" title="var">m</span> &lt;? 0<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">bisect</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">m</span> <span class="id" title="var">n'</span><br/>
@@ -99,8 +99,8 @@ Compute&nbsp;(1.000000000000001&nbsp;-&nbsp;1)&nbsp;*&nbsp;100000000000000.<br/>
 &nbsp;&nbsp;(<span class="id" title="var">f</span> : <span class="id" title="var">float</span> -&gt; <span class="id" title="var">float</span>) (<span class="id" title="var">a</span> <span class="id" title="var">b</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">float</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">m</span> := (<span class="id" title="var">a</span> * <span class="id" title="var">f</span> <span class="id" title="var">b</span> - <span class="id" title="var">b</span> * <span class="id" title="var">f</span> <span class="id" title="var">a</span>) / (<span class="id" title="var">f</span> <span class="id" title="var">b</span> - <span class="id" title="var">f</span> <span class="id" title="var">a</span>) <span class="id" title="tactic">in</span><br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
+| 0 =&gt; <span class="id" title="var">m</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> * <span class="id" title="var">f</span> <span class="id" title="var">m</span> &lt;? 0<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">fast_bisect</span> <span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">m</span> <span class="id" title="var">n'</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">fast_bisect</span> <span class="id" title="var">f</span> <span class="id" title="var">m</span> <span class="id" title="var">b</span> <span class="id" title="var">n'</span><br/>
@@ -121,8 +121,8 @@ Compute&nbsp;map&nbsp;(fast_bisect&nbsp;f0&nbsp;1&nbsp;0)&nbsp;<span class="inli
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">iterf</span> (<span class="id" title="var">f</span> : <span class="id" title="var">float</span> -&gt; <span class="id" title="var">float</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">float</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">x</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">iterf</span> <span class="id" title="var">f</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) <span class="id" title="var">n'</span><br/>
+| 0 =&gt; <span class="id" title="var">x</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">iterf</span> <span class="id" title="var">f</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -182,16 +182,16 @@ Compute&nbsp;map&nbsp;(fun&nbsp;h&nbsp;=&gt;&nbsp;cdiff&nbsp;h&nbsp;f2&nbsp;1)&n
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">Newton</span><br/>
 &nbsp;&nbsp;(<span class="id" title="var">h</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">float</span> -&gt; <span class="id" title="var">float</span>) (<span class="id" title="var">x0</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">float</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">x0</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">Newton</span> <span class="id" title="var">h</span> <span class="id" title="var">f</span> (<span class="id" title="var">x0</span> - <span class="id" title="var">f</span> <span class="id" title="var">x0</span> / <span class="id" title="var">cdiff</span> <span class="id" title="var">h</span> <span class="id" title="var">f</span> <span class="id" title="var">x0</span>) <span class="id" title="var">n'</span><br/>
+| 0 =&gt; <span class="id" title="var">x0</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">Newton</span> <span class="id" title="var">h</span> <span class="id" title="var">f</span> (<span class="id" title="var">x0</span> - <span class="id" title="var">f</span> <span class="id" title="var">x0</span> / <span class="id" title="var">cdiff</span> <span class="id" title="var">h</span> <span class="id" title="var">f</span> <span class="id" title="var">x0</span>) <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">Newton'</span><br/>
 &nbsp;&nbsp;(<span class="id" title="var">h</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">f</span> <span class="id" title="var">f'</span> : <span class="id" title="var">float</span> -&gt; <span class="id" title="var">float</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">float</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">x</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">Newton'</span> <span class="id" title="var">h</span> <span class="id" title="var">f</span> <span class="id" title="var">f'</span> (<span class="id" title="var">x</span> - <span class="id" title="var">f</span> <span class="id" title="var">x</span> / <span class="id" title="var">f'</span> <span class="id" title="var">x</span>) <span class="id" title="var">n'</span><br/>
+| 0 =&gt; <span class="id" title="var">x</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">Newton'</span> <span class="id" title="var">h</span> <span class="id" title="var">f</span> <span class="id" title="var">f'</span> (<span class="id" title="var">x</span> - <span class="id" title="var">f</span> <span class="id" title="var">x</span> / <span class="id" title="var">f'</span> <span class="id" title="var">x</span>) <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -221,8 +221,8 @@ Compute&nbsp;map&nbsp;(Newton'&nbsp;1e-5&nbsp;f3&nbsp;(fun&nbsp;x&nbsp;=&gt;&nbs
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">Halley</span><br/>
 &nbsp;&nbsp;(<span class="id" title="var">h</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">float</span> -&gt; <span class="id" title="var">float</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">float</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">x</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
+| 0 =&gt; <span class="id" title="var">x</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">f'</span> := <span class="id" title="var">cdiff</span> <span class="id" title="var">h</span> <span class="id" title="var">f</span> <span class="id" title="tactic">in</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">f''</span> := <span class="id" title="var">cdiff</span> <span class="id" title="var">h</span> <span class="id" title="var">f'</span> <span class="id" title="tactic">in</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">x'</span> := <span class="id" title="var">x</span> - 2 * <span class="id" title="var">f</span> <span class="id" title="var">x</span> * <span class="id" title="var">f'</span> <span class="id" title="var">x</span> / (2 * <span class="id" title="var">f'</span> <span class="id" title="var">x</span> * <span class="id" title="var">f'</span> <span class="id" title="var">x</span> - <span class="id" title="var">f</span> <span class="id" title="var">x</span> * <span class="id" title="var">f''</span> <span class="id" title="var">x</span>) <span class="id" title="tactic">in</span><br/>
@@ -252,8 +252,8 @@ Compute&nbsp;map&nbsp;(Halley&nbsp;1e-5&nbsp;f4&nbsp;2)&nbsp;<span class="inline
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">secant</span><br/>
 &nbsp;&nbsp;(<span class="id" title="var">h</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">float</span> -&gt; <span class="id" title="var">float</span>) (<span class="id" title="var">a</span> <span class="id" title="var">b</span> : <span class="id" title="var">float</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">float</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">a</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">secant</span> <span class="id" title="var">h</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span> (<span class="id" title="var">b</span> - <span class="id" title="var">f</span> <span class="id" title="var">b</span> * (<span class="id" title="var">b</span> - <span class="id" title="var">a</span>) / (<span class="id" title="var">f</span> <span class="id" title="var">b</span> - <span class="id" title="var">f</span> <span class="id" title="var">a</span>)) <span class="id" title="var">n'</span><br/>
+| 0 =&gt; <span class="id" title="var">a</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">secant</span> <span class="id" title="var">h</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span> (<span class="id" title="var">b</span> - <span class="id" title="var">f</span> <span class="id" title="var">b</span> * (<span class="id" title="var">b</span> - <span class="id" title="var">a</span>) / (<span class="id" title="var">f</span> <span class="id" title="var">b</span> - <span class="id" title="var">f</span> <span class="id" title="var">a</span>)) <span class="id" title="var">n'</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -283,7 +283,7 @@ Compute&nbsp;map&nbsp;(secant&nbsp;1e-5&nbsp;f3&nbsp;0&nbsp;1)&nbsp;<span class=
 <span class="comment">(*<br/>
 Fixpoint&nbsp;es&nbsp;(x&nbsp;:&nbsp;float)&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;:&nbsp;list&nbsp;float&nbsp;:=<br/>
 match&nbsp;n&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0&nbsp;=&gt;&nbsp;<span class="inlinecode"></span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;S&nbsp;n'&nbsp;=&gt;&nbsp;x&nbsp;:&nbsp;es&nbsp;(exp&nbsp;x)&nbsp;n'<br/>
+|&nbsp;0&nbsp;=&gt;&nbsp;<span class="inlinecode"></span><br/>
+|&nbsp;S&nbsp;n'&nbsp;=&gt;&nbsp;x&nbsp;:&nbsp;es&nbsp;(exp&nbsp;x)&nbsp;n'<br/>
 end.<br/>
 *)</span></div>

@@ -13,8 +13,8 @@ From Typonomikon Require Import D5.
     nieskończone. *)
 
 Inductive CoListF (A : Type) (F : Type -> Type) : Type :=
-    | NilF : CoListF A F
-    | ConsF : forall (h : A) (t : F A), CoListF A F.
+| NilF : CoListF A F
+| ConsF : forall (h : A) (t : F A), CoListF A F.
 
 Arguments NilF {A F}.
 Arguments ConsF {A F} _ _.
@@ -46,9 +46,9 @@ Qed.
 
 (* begin hide *)
 Inductive lsimF {A : Type} (l1 l2 : CoList A) (F : CoList A -> CoList A -> Prop) : Prop :=
-    | conils  :
+| conils  :
         forall (H1 : uncons l1 = NilF) (H2 : uncons l2 = NilF), lsimF l1 l2 F
-    | coconss :
+| coconss :
         forall
           (h1 h2 : A) (t1 t2 : CoList A)
           (H1 : uncons l1 = ConsF h1 t1)
@@ -132,18 +132,18 @@ Defined.
 
 Inductive CoList_neq
   {A : Type} : CoList A -> CoList A -> Prop :=
-    | CoList_neq_nc :
+| CoList_neq_nc :
         forall l1 l2 : CoList A,
           uncons l1 = NilF -> uncons l2 <> NilF -> CoList_neq l1 l2
-    | CoList_neq_cn :
+| CoList_neq_cn :
         forall l1 l2 : CoList A,
           uncons l1 <> NilF -> uncons l2 = NilF -> CoList_neq l1 l2
-    | CoList_neq_cc_here :
+| CoList_neq_cc_here :
         forall (h1 h2 : A) (t1 t2 l1 l2 : CoList A),
           uncons l1 = ConsF h1 t1 ->
           uncons l2 = ConsF h2 t2 ->
             h1 <> h2 -> CoList_neq l1 l2
-    | CoList_neq_cc_there :
+| CoList_neq_cc_there :
         forall (h1 h2 : A) (t1 t2 l1 l2 : CoList A),
           uncons l1 = ConsF h1 t1 ->
           uncons l2 = ConsF h2 t2 ->
@@ -247,8 +247,8 @@ CoFixpoint len {A : Type} (l : CoList A) : conat :=
 {|
     out :=
       match uncons l with
-          | NilF      => Z
-          | ConsF h t => S (len t)
+      | NilF      => Z
+      | ConsF h t => S (len t)
       end;
 |}.
 (* end hide *)
@@ -293,8 +293,8 @@ CoFixpoint snoc {A : Type} (l : CoList A) (x : A) : CoList A :=
 {|
     uncons :=
       match uncons l with
-          | NilF      => ConsF x conil
-          | ConsF h t => ConsF h (snoc t x)
+      | NilF      => ConsF x conil
+      | ConsF h t => ConsF h (snoc t x)
       end;
 |}.
 (* end hide *)
@@ -335,8 +335,8 @@ CoFixpoint app {A : Type} (l1 l2 : CoList A) : CoList A :=
 {|
     uncons :=
       match uncons l1 with
-          | NilF      => uncons l2
-          | ConsF h t => ConsF  h (app t l2)
+      | NilF      => uncons l2
+      | ConsF h t => ConsF  h (app t l2)
       end
 |}.
 (* end hide *)
@@ -444,8 +444,8 @@ CoFixpoint lmap {A B : Type} (f : A -> B) (l : CoList A) : CoList B :=
 {|
     uncons :=
     match uncons l with
-        | NilF => NilF
-        | ConsF h t => ConsF (f h) (lmap f t)
+    | NilF => NilF
+    | ConsF h t => ConsF (f h) (lmap f t)
     end
 |}.
 (* end hide *)
@@ -583,8 +583,8 @@ CoFixpoint piterate {A : Type} (f : A -> option A) (x : A) : CoList A :=
 {|
     uncons := ConsF x
       (match f x with
-          | None => conil
-          | Some y => piterate f y
+      | None => conil
+      | Some y => piterate f y
       end)
 |}.
 (* end hide *)
@@ -602,8 +602,8 @@ CoFixpoint zipW {A B C : Type}
 {|
     uncons :=
       match uncons l1, uncons l2 with
-          | ConsF h1 t1, ConsF h2 t2 => ConsF (f h1 h2) (zipW f t1 t2)
-          | _, _ => NilF
+      | ConsF h1 t1, ConsF h2 t2 => ConsF (f h1 h2) (zipW f t1 t2)
+      | _, _ => NilF
       end;
 |}.
 (* end hide *)
@@ -658,8 +658,8 @@ CoFixpoint scan
 {|
     uncons :=
       match uncons l with
-          | NilF => NilF
-          | ConsF h t => ConsF b (scan t f (f b h))
+      | NilF => NilF
+      | ConsF h t => ConsF b (scan t f (f b h))
       end;
 |}.
 (* end hide *)
@@ -717,11 +717,11 @@ CoFixpoint intersperse {A : Type} (x : A) (l : CoList A) : CoList A :=
 {|
     uncons :=
       match uncons l with
-          | NilF => NilF
-          | ConsF h t =>
+      | NilF => NilF
+      | ConsF h t =>
               match uncons t with
-                  | NilF => ConsF h t
-                  | ConsF h' t' => ConsF h (cocons x (intersperse x t))
+              | NilF => ConsF h t
+              | ConsF h' t' => ConsF h (cocons x (intersperse x t))
               end
       end;
 |}.
@@ -766,12 +766,12 @@ Abort.
 Fixpoint splitAt
   {A : Type} (l : CoList A) (n : nat) : option (list A * A * CoList A) :=
 match n, uncons l with
-    | _, NilF => None
-    | 0, ConsF h t => Some ([], h, t)
-    | Datatypes.S n', ConsF h t =>
+| _, NilF => None
+| 0, ConsF h t => Some ([], h, t)
+| Datatypes.S n', ConsF h t =>
         match splitAt t n' with
-            | None => None
-            | Some (start, mid, rest) => Some (h :: start, mid, rest)
+        | None => None
+        | Some (start, mid, rest) => Some (h :: start, mid, rest)
         end
 end.
 (* end hide *)
@@ -782,41 +782,41 @@ end.
 
 Definition nth {A : Type} (l : CoList A) (n : nat) : option A :=
 match splitAt l n with
-    | None => None
-    | Some (_, x, _) => Some x
+| None => None
+| Some (_, x, _) => Some x
 end.
 
 Definition take {A : Type} (l : CoList A) (n : nat) : option (list A) :=
 match splitAt l n with
-    | None => None
-    | Some (l, _, _) => Some l
+| None => None
+| Some (l, _, _) => Some l
 end.
 
 Definition drop {A : Type} (l : CoList A) (n : nat) : option (CoList A) :=
 match splitAt l n with
-    | None => None
-    | Some (_, _, l) => Some l
+| None => None
+| Some (_, _, l) => Some l
 end.
 
 Fixpoint fromList {A : Type} (l : list A) : CoList A :=
 match l with
-    | [] => conil
-    | h :: t => cocons h (fromList t)
+| [] => conil
+| h :: t => cocons h (fromList t)
 end.
 
 Definition insert {A : Type} (l : CoList A) (n : nat) (x : A)
   : option (CoList A) :=
 match splitAt l n with
-    | None => None
-    | Some (start, mid, rest) =>
+| None => None
+| Some (start, mid, rest) =>
         Some (app (fromList start) (cocons x (cocons mid rest)))
 end.
 
 Definition remove {A : Type} (l : CoList A) (n : nat)
   : option (CoList A) :=
 match splitAt l n with
-    | None => None
-    | Some (start, _, rest) => Some (app (fromList start) rest)
+| None => None
+| Some (start, _, rest) => Some (app (fromList start) rest)
 end.
 
 (** ** [Finite] i [Infinite] *)
@@ -834,9 +834,9 @@ end.
 
 (* begin hide *)
 Inductive Finite {A : Type} : CoList A -> Prop :=
-    | Finite_None :
+| Finite_None :
         forall l : CoList A, uncons l = NilF -> Finite l
-    | Finite_Some :
+| Finite_Some :
         forall (h : A) (t l : CoList A),
           uncons l = ConsF h t -> Finite t -> Finite l.
 
@@ -1170,10 +1170,10 @@ Qed.
     Sprawdź, które z praw de Morgana zachodzą. *)
 
 Inductive Exists {A : Type} (P : A -> Prop) : CoList A -> Prop :=
-    | Exists_hd :
+| Exists_hd :
         forall (l : CoList A) (h : A) (t : CoList A),
           uncons l = ConsF h t -> P h -> Exists P l
-    | Exists_tl :
+| Exists_tl :
         forall (l : CoList A) (h : A) (t : CoList A),
           uncons l = ConsF h t -> Exists P t -> Exists P l.
 

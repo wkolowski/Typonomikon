@@ -370,8 +370,8 @@ W poprzednim rozdziale dość dogłębnie zapoznaliśmy się z mechanizmem
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nat_rec'</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">z</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">X</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">X</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">z</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">s</span> (<span class="id" title="var">nat_rec'</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span> <span class="id" title="var">n'</span>)<br/>
+| 0 =&gt; <span class="id" title="var">z</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">s</span> (<span class="id" title="var">nat_rec'</span> <span class="id" title="var">z</span> <span class="id" title="var">s</span> <span class="id" title="var">n'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -493,8 +493,8 @@ Implementacja jest banalna:
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">list_rec'</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">n</span> : <span class="id" title="var">P</span>) (<span class="id" title="var">c</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">P</span> -&gt; <span class="id" title="var">P</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">P</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">n</span> <span class="comment">(*&nbsp;podmieniamy&nbsp;<span class="inlinecode"><span class="id" title="var">nil</span></span>&nbsp;na&nbsp;<span class="inlinecode"><span class="id" title="var">n</span></span>...&nbsp;*)</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">c</span> <span class="id" title="var">h</span> (<span class="id" title="var">list_rec'</span> <span class="id" title="var">n</span> <span class="id" title="var">c</span> <span class="id" title="var">t</span>) <span class="comment">(*&nbsp;...&nbsp;a&nbsp;<span class="inlinecode"><span class="id" title="var">cons</span></span>&nbsp;na&nbsp;<span class="inlinecode"><span class="id" title="var">c</span></span>&nbsp;*)</span><br/>
+| <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">n</span> <span class="comment">(*&nbsp;podmieniamy&nbsp;<span class="inlinecode"><span class="id" title="var">nil</span></span>&nbsp;na&nbsp;<span class="inlinecode"><span class="id" title="var">n</span></span>...&nbsp;*)</span><br/>
+| <span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">c</span> <span class="id" title="var">h</span> (<span class="id" title="var">list_rec'</span> <span class="id" title="var">n</span> <span class="id" title="var">c</span> <span class="id" title="var">t</span>) <span class="comment">(*&nbsp;...&nbsp;a&nbsp;<span class="inlinecode"><span class="id" title="var">cons</span></span>&nbsp;na&nbsp;<span class="inlinecode"><span class="id" title="var">c</span></span>&nbsp;*)</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -544,8 +544,8 @@ Oczywiście musimy też dostosować typy argumentów. Może to prowadzić
 &nbsp;&nbsp;(<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">P</span> <span class="id" title="var">l</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">c</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> (<span class="id" title="var">list_ind'</span> <span class="id" title="var">n</span> <span class="id" title="var">c</span> <span class="id" title="var">t</span>)<br/>
+| <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">n</span><br/>
+| <span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">c</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> (<span class="id" title="var">list_ind'</span> <span class="id" title="var">n</span> <span class="id" title="var">c</span> <span class="id" title="var">t</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -571,8 +571,8 @@ Włala, mamy regułę indukcji.
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">nat'</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Z'</span> : <span class="id" title="var">nat'</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S'</span> : <span class="id" title="var">nat'</span> -&gt; <span class="id" title="var">nat'</span>.<br/>
+| <span class="id" title="var">Z'</span> : <span class="id" title="var">nat'</span><br/>
+| <span class="id" title="var">S'</span> : <span class="id" title="var">nat'</span> -&gt; <span class="id" title="var">nat'</span>.<br/>
 
 <br/>
 </div>
@@ -862,8 +862,8 @@ Wiemy już, że rekursja ogólna prowadzi do sprzeczności, a jedyną legalną
 <span class="comment">(*&nbsp;plus&nbsp;=<br/>
 &nbsp;&nbsp;&nbsp;fix&nbsp;plus&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;{struct&nbsp;n}&nbsp;:&nbsp;nat&nbsp;:=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;n&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0&nbsp;=&gt;&nbsp;m<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;S&nbsp;p&nbsp;=&gt;&nbsp;S&nbsp;(plus&nbsp;p&nbsp;m)<br/>
+&nbsp;|&nbsp;0&nbsp;=&gt;&nbsp;m<br/>
+&nbsp;|&nbsp;S&nbsp;p&nbsp;=&gt;&nbsp;S&nbsp;(plus&nbsp;p&nbsp;m)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;*)</span><br/>
 
@@ -1033,8 +1033,8 @@ Jak widać, podtermy liczby naturalnej to liczby naturalne, które są od
 <br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">weird</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">unit</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">tt</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">weird</span> 0<br/>
+| 0 =&gt; <span class="id" title="var">tt</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">weird</span> 0<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1073,9 +1073,9 @@ Komunikat ten głosi, że argumentem głównym wywołania rekurencyjnego jest
 <br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">fib</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 1 =&gt; 1<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">fib</span> <span class="id" title="var">n'</span> + <span class="id" title="var">fib</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>)<br/>
+| 0 =&gt; 0<br/>
+| 1 =&gt; 1<br/>
+| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">fib</span> <span class="id" title="var">n'</span> + <span class="id" title="var">fib</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1115,9 +1115,9 @@ Mimo, że <span class="inlinecode"><span class="id" title="var">S</span></span> 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">fib</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 1 =&gt; 1<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span> <span class="id" title="keyword">as</span> <span class="id" title="var">n''</span>) =&gt; <span class="id" title="var">fib</span> <span class="id" title="var">n'</span> + <span class="id" title="var">fib</span> <span class="id" title="var">n''</span><br/>
+| 0 =&gt; 0<br/>
+| 1 =&gt; 1<br/>
+| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span> <span class="id" title="keyword">as</span> <span class="id" title="var">n''</span>) =&gt; <span class="id" title="var">fib</span> <span class="id" title="var">n'</span> + <span class="id" title="var">fib</span> <span class="id" title="var">n''</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1193,8 +1193,8 @@ Czas na omówienie pewnej ciekawej, ale średnio użytecznej formy rekursji
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">plus</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">plus</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
+| 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">m</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">plus</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1212,8 +1212,8 @@ Tak oto definicja funkcji plus, lecz zapisana nieco inaczej, niż gdy
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">plus'</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">f</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;| 0 =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">m</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">f</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1260,9 +1260,9 @@ Ale komenda <span class="inlinecode"><span class="id" title="keyword">Fixpoint</
 <br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">ack</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">m</span> =&gt; <span class="id" title="var">S</span> <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, 0 =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> 1<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) <span class="id" title="var">m'</span>)<br/>
+| 0, <span class="id" title="var">m</span> =&gt; <span class="id" title="var">S</span> <span class="id" title="var">m</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, 0 =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> 1<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) <span class="id" title="var">m'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1332,12 +1332,12 @@ Powyższa funkcja zwana jest funkcją Ackermanna, gdyż wymyślił ją...
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">ack</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">S</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
+| 0 =&gt; <span class="id" title="var">S</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">ack'</span> (<span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> 1<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> (<span class="id" title="var">ack'</span> <span class="id" title="var">m'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> (<span class="id" title="var">ack'</span> <span class="id" title="var">m'</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
@@ -1363,9 +1363,9 @@ Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">ack</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> =<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">S</span> <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, 0 =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> 1<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) <span class="id" title="var">m'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">S</span> <span class="id" title="var">m</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, 0 =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">ack</span> <span class="id" title="var">n'</span> (<span class="id" title="var">ack</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) <span class="id" title="var">m'</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
@@ -1482,9 +1482,9 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>} {<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>},<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> =<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span>, <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [], <span class="id" title="var">_</span> =&gt; <span class="id" title="var">l2</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, [] =&gt; <span class="id" title="var">l1</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>, <span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [], <span class="id" title="var">_</span> =&gt; <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, [] =&gt; <span class="id" title="var">l1</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>, <span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">cmp</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">h1</span> :: <span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">t1</span> <span class="id" title="var">l2</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">h2</span> :: <span class="id" title="var">merge</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">t2</span><br/>
@@ -1536,8 +1536,8 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">ins</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">cmp</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="var">bool</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; [<span class="id" title="var">x</span>]<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="keyword">if</span> <span class="id" title="var">cmp</span> <span class="id" title="var">x</span> <span class="id" title="var">h</span> <span class="id" title="keyword">then</span> <span class="id" title="var">x</span> :: <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> <span class="id" title="keyword">else</span> <span class="id" title="var">h</span> :: <span class="id" title="var">ins</span> <span class="id" title="var">cmp</span> <span class="id" title="var">x</span> <span class="id" title="var">t</span><br/>
+| [] =&gt; [<span class="id" title="var">x</span>]<br/>
+| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="keyword">if</span> <span class="id" title="var">cmp</span> <span class="id" title="var">x</span> <span class="id" title="var">h</span> <span class="id" title="keyword">then</span> <span class="id" title="var">x</span> :: <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> <span class="id" title="keyword">else</span> <span class="id" title="var">h</span> :: <span class="id" title="var">ins</span> <span class="id" title="var">cmp</span> <span class="id" title="var">x</span> <span class="id" title="var">t</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1604,8 +1604,8 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Nested'</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Epsilon'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Nested'</span> <span class="id" title="var">A</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Cons'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Nested'</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Nested'</span> <span class="id" title="var">A</span>.<br/>
+| <span class="id" title="var">Epsilon'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">Nested'</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">Cons'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Nested'</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Nested'</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Check</span> <span class="id" title="var">Nested_ind</span>.<br/>
@@ -1614,8 +1614,8 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">len</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">Nested</span> <span class="id" title="var">A</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Epsilon</span> =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Cons</span> <span class="id" title="var">_</span> <span class="id" title="var">t</span> =&gt; 1 + <span class="id" title="var">len</span> <span class="id" title="var">t</span><br/>
+| <span class="id" title="var">Epsilon</span> =&gt; 0<br/>
+| <span class="id" title="var">Cons</span> <span class="id" title="var">_</span> <span class="id" title="var">t</span> =&gt; 1 + <span class="id" title="var">len</span> <span class="id" title="var">t</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1626,8 +1626,8 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Seq</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SNil</span> : <span class="id" title="var">Seq</span> <span class="id" title="var">A</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SCons</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Seq</span> (<span class="id" title="var">A</span> * <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Seq</span> <span class="id" title="var">A</span>.<br/>
+| <span class="id" title="var">SNil</span> : <span class="id" title="var">Seq</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">SCons</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Seq</span> (<span class="id" title="var">A</span> * <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Seq</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Arguments</span> <span class="id" title="var">SNil</span>  {<span class="id" title="var">A</span>}.<br/>
@@ -1636,8 +1636,8 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">size</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s</span> : <span class="id" title="var">Seq</span> <span class="id" title="var">A</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">s</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SNil</span> =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">SCons</span> <span class="id" title="var">_</span> <span class="id" title="var">t</span> =&gt; 1 + 2 * <span class="id" title="var">size</span> <span class="id" title="var">t</span><br/>
+| <span class="id" title="var">SNil</span> =&gt; 0<br/>
+| <span class="id" title="var">SCons</span> <span class="id" title="var">_</span> <span class="id" title="var">t</span> =&gt; 1 + 2 * <span class="id" title="var">size</span> <span class="id" title="var">t</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1648,8 +1648,8 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Nested</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Singl</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Nested</span> <span class="id" title="var">A</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Nestd</span> : <span class="id" title="var">Nested</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Nested</span> <span class="id" title="var">A</span>.<br/>
+| <span class="id" title="var">Singl</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">Nested</span> <span class="id" title="var">A</span><br/>
+| <span class="id" title="var">Nestd</span> : <span class="id" title="var">Nested</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Nested</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">Nested2</span>.<br/>
@@ -1695,7 +1695,7 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Tree</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>.<br/>
+| <span class="id" title="var">Node</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Arguments</span> <span class="id" title="var">Node</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
@@ -1714,7 +1714,7 @@ Pierwsza lista nie jest posortowana według <span class="inlinecode"><span class
 <span class="id" title="keyword">Unset</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">mirror</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">t</span>} : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span> =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">x</span> (<span class="id" title="var">map</span> <span class="id" title="var">mirror</span> (<span class="id" title="var">rev</span> <span class="id" title="var">ts</span>))<br/>
+| <span class="id" title="var">Node</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span> =&gt; <span class="id" title="var">Node</span> <span class="id" title="var">x</span> (<span class="id" title="var">map</span> <span class="id" title="var">mirror</span> (<span class="id" title="var">rev</span> <span class="id" title="var">ts</span>))<br/>
 <span class="id" title="keyword">end</span>.<br/>
 <span class="id" title="keyword">Set</span> <span class="id" title="var">Guard</span> <span class="id" title="var">Checking</span>.<br/>
 
@@ -1771,23 +1771,23 @@ Nie jest to zbyt trudne. Rekurencyjnie odbijamy wszystkie poddrzewa za
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">mirrorD</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">mirrorD'</span> :<br/>
+| <span class="id" title="var">mirrorD'</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">ts</span> : <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>)),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mirrorsD</span> (<span class="id" title="var">rev</span> <span class="id" title="var">ts</span>) -&gt; <span class="id" title="var">mirrorD</span> (<span class="id" title="var">Node</span> <span class="id" title="var">x</span> <span class="id" title="var">ts</span>)<br/>
 <br/>
 <span class="id" title="keyword">with</span> <span class="id" title="var">mirrorsD</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} : <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">mirrorsD_nil</span> :<br/>
+| <span class="id" title="var">mirrorsD_nil</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mirrorsD</span> []<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">mirrorsD_cons</span> :<br/>
+| <span class="id" title="var">mirrorsD_cons</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">t</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) (<span class="id" title="var">ts</span> : <span class="id" title="var">list</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">A</span>)),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mirrorD</span> <span class="id" title="var">t</span> -&gt; <span class="id" title="var">mirrorsD</span> <span class="id" title="var">ts</span> -&gt; <span class="id" title="var">mirrorsD</span> (<span class="id" title="var">t</span> :: <span class="id" title="var">ts</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">mapG</span><br/>
 &nbsp;&nbsp;{<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">list</span> <span class="id" title="var">B</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">mapG_nil</span>  :<br/>
+| <span class="id" title="var">mapG_nil</span>  :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">mapG</span> <span class="id" title="var">f</span> [] []<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">mapG_cons</span> :<br/>
+| <span class="id" title="var">mapG_cons</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">a</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">B</span>) (<span class="id" title="var">la</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">lb</span> : <span class="id" title="var">list</span> <span class="id" title="var">B</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> -&gt; <span class="id" title="var">mapG</span> <span class="id" title="var">f</span> <span class="id" title="var">la</span> <span class="id" title="var">lb</span> -&gt; <span class="id" title="var">mapG</span> <span class="id" title="var">f</span> (<span class="id" title="var">a</span> :: <span class="id" title="var">la</span>) (<span class="id" title="var">b</span> :: <span class="id" title="var">lb</span>).<br/>
 
@@ -1824,7 +1824,7 @@ Inny przykład:
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Tree'</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">forall</span> {<span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>}, (<span class="id" title="var">B</span> -&gt; <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>.<br/>
+| <span class="id" title="var">Node'</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">forall</span> {<span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>}, (<span class="id" title="var">B</span> -&gt; <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Arguments</span> <span class="id" title="var">Node'</span> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
@@ -1841,7 +1841,7 @@ Tym razem mamy drzewo, które może mieć naprawdę dowolną ilość poddrzew,
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">mirror'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Tree'</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Node'</span> <span class="id" title="var">x</span> <span class="id" title="var">B</span> <span class="id" title="var">ts</span> =&gt; <span class="id" title="var">Node'</span> <span class="id" title="var">x</span> <span class="id" title="var">B</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span> =&gt; <span class="id" title="var">mirror'</span> (<span class="id" title="var">ts</span> <span class="id" title="var">b</span>))<br/>
+| <span class="id" title="var">Node'</span> <span class="id" title="var">x</span> <span class="id" title="var">B</span> <span class="id" title="var">ts</span> =&gt; <span class="id" title="var">Node'</span> <span class="id" title="var">x</span> <span class="id" title="var">B</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> : <span class="id" title="var">B</span> =&gt; <span class="id" title="var">mirror'</span> (<span class="id" title="var">ts</span> <span class="id" title="var">b</span>))<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -2013,8 +2013,8 @@ Będą nam potrzebne notacje dla list oraz funkcja <span class="inlinecode"><spa
 <br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">collatz</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">list</span> <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 | 1 =&gt; [<span class="id" title="var">n</span>]<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">n</span> :: <span class="id" title="keyword">if</span> <span class="id" title="var">even</span> <span class="id" title="var">n</span> <span class="id" title="keyword">then</span> <span class="id" title="var">collatz</span> (<span class="id" title="var">div2</span> <span class="id" title="var">n</span>) <span class="id" title="keyword">else</span> <span class="id" title="var">collatz</span> (1 + 3 * <span class="id" title="var">n</span>)<br/>
+| 0 | 1 =&gt; [<span class="id" title="var">n</span>]<br/>
+| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">n</span> :: <span class="id" title="keyword">if</span> <span class="id" title="var">even</span> <span class="id" title="var">n</span> <span class="id" title="keyword">then</span> <span class="id" title="var">collatz</span> (<span class="id" title="var">div2</span> <span class="id" title="var">n</span>) <span class="id" title="keyword">else</span> <span class="id" title="var">collatz</span> (1 + 3 * <span class="id" title="var">n</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -2046,21 +2046,21 @@ Jest to bardzo wesoła funkcja. Przypadki bazowe to <span class="inlinecode">0</
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">collatz</span> (<span class="id" title="var">fuel</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">option</span> (<span class="id" title="var">list</span> <span class="id" title="var">nat</span>) :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">fuel</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">fuel'</span> =&gt;<br/>
+| 0 =&gt; <span class="id" title="var">None</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">fuel'</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 | 1 =&gt; <span class="id" title="var">Some</span> [<span class="id" title="var">n</span>]<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 | 1 =&gt; <span class="id" title="var">Some</span> [<span class="id" title="var">n</span>]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">even</span> <span class="id" title="var">n</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">collatz</span> <span class="id" title="var">fuel'</span> (<span class="id" title="var">div2</span> <span class="id" title="var">n</span>) <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">l</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">n</span> :: <span class="id" title="var">l</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">l</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">n</span> :: <span class="id" title="var">l</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">collatz</span> <span class="id" title="var">fuel'</span> (1 + 3 * <span class="id" title="var">n</span>) <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">l</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">n</span> :: <span class="id" title="var">l</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">l</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">n</span> :: <span class="id" title="var">l</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
@@ -2293,7 +2293,7 @@ Zaimplementowana za pomocą rekursji po paliwie funkcja oblicza się bez
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Acc</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Acc_intro</span> : (<span class="id" title="keyword">forall</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">Acc</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">Acc</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
+| <span class="id" title="var">Acc_intro</span> : (<span class="id" title="keyword">forall</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">R</span> <span class="id" title="var">y</span> <span class="id" title="var">x</span> -&gt; <span class="id" title="var">Acc</span> <span class="id" title="var">R</span> <span class="id" title="var">y</span>) -&gt; <span class="id" title="var">Acc</span> <span class="id" title="var">R</span> <span class="id" title="var">x</span>.<br/>
 
 <br/>
 </div>
@@ -2575,8 +2575,8 @@ Następnie musimy sprawdzić, czy dzielna (czyli <span class="inlinecode"><span 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(m&nbsp;:&nbsp;nat)&nbsp;=&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;s&nbsp;:=&nbsp;le_lt_dec&nbsp;(S&nbsp;m)&nbsp;n&nbsp;in<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;s&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;left&nbsp;l&nbsp;=&gt;&nbsp;1&nbsp;+&nbsp;IH&nbsp;(n&nbsp;-&nbsp;S&nbsp;m)&nbsp;(div_subproof&nbsp;n&nbsp;m&nbsp;l)&nbsp;m<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;right&nbsp;_&nbsp;=&gt;&nbsp;0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;left&nbsp;l&nbsp;=&gt;&nbsp;1&nbsp;+&nbsp;IH&nbsp;(n&nbsp;-&nbsp;S&nbsp;m)&nbsp;(div_subproof&nbsp;n&nbsp;m&nbsp;l)&nbsp;m<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;right&nbsp;_&nbsp;=&gt;&nbsp;0<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;-&gt;&nbsp;nat&nbsp;*)</span><br/>
 
@@ -3009,8 +3009,8 @@ Zwróćmy tylko uwagę na fakt, że mówiąc o kształcie rekursji (lub po
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">divG</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divG_lt</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>}, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divG</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divG_ge</span> :<br/>
+| <span class="id" title="var">divG_lt</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>}, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divG</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> 0<br/>
+| <span class="id" title="var">divG_ge</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &gt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divG</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">divG</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> (<span class="id" title="var">S</span> <span class="id" title="var">r</span>).<br/>
 
@@ -3464,8 +3464,8 @@ Przydałaby się jednak także i filozoficzna interpretacja reguły. Pozwoli
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">divD</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divD_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divD_ge</span> :<br/>
+| <span class="id" title="var">divD_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span><br/>
+| <span class="id" title="var">divD_ge</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &gt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
 
@@ -3496,8 +3496,8 @@ Tak wygląda predykat dziedziny dla dzielenia. Zauważmy, że tak naprawdę
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">div'_aux</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">H</span> : <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">H</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divD_lt</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divD_ge</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">div'_aux</span> <span class="id" title="var">H'</span>)<br/>
+| <span class="id" title="var">divD_lt</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; 0<br/>
+| <span class="id" title="var">divD_ge</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">div'_aux</span> <span class="id" title="var">H'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -4096,9 +4096,9 @@ A oto i źródło całego problemu. Jeżeli <span class="inlinecode"><span class
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">fG</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">fG_gt100</span> :<br/>
+| <span class="id" title="var">fG_gt100</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">fG</span> <span class="id" title="var">n</span> (<span class="id" title="var">n</span> - 10)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">fG_le100</span> :<br/>
+| <span class="id" title="var">fG_le100</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;= 100 -&gt; <span class="id" title="var">fG</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">r1</span> -&gt; <span class="id" title="var">fG</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> -&gt; <span class="id" title="var">fG</span> <span class="id" title="var">n</span> <span class="id" title="var">r2</span>.<br/>
 
@@ -4140,9 +4140,9 @@ Po zdefiniowaniu wykresu dowodzimy, podobnie łatwo jak poprzednio, że
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">fD</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">fD_gt100</span> :<br/>
+| <span class="id" title="var">fD_gt100</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 100 &lt; <span class="id" title="var">n</span> -&gt; <span class="id" title="var">fD</span> <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">fD_le100</span> :<br/>
+| <span class="id" title="var">fD_le100</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">r</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt;= 100 -&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fG</span> (<span class="id" title="var">n</span> + 11) <span class="id" title="var">r</span> -&gt; <span class="id" title="var">fD</span> (<span class="id" title="var">n</span> + 11) -&gt; <span class="id" title="var">fD</span> <span class="id" title="var">r</span> -&gt; <span class="id" title="var">fD</span> <span class="id" title="var">n</span>.<br/>
 
@@ -4159,8 +4159,8 @@ A tak wygląda definicja predykatu dziedziny. Zamiast <span class="inlinecode"><
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">f'</span> {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">d</span> : <span class="id" title="var">fD</span> <span class="id" title="var">n</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">d</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">fD_gt100</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">n</span> - 10<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">fD_le100</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">d2</span> =&gt; <span class="id" title="var">f'</span> <span class="id" title="var">d2</span><br/>
+| <span class="id" title="var">fD_gt100</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">n</span> - 10<br/>
+| <span class="id" title="var">fD_le100</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">d2</span> =&gt; <span class="id" title="var">f'</span> <span class="id" title="var">d2</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -4460,8 +4460,8 @@ Na koniec również mały twist, gdyż równanie rekurencyjne najprościej jest
 <br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">g</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">g</span> <span class="id" title="var">n</span>)<br/>
+| 0 =&gt; 0<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">g</span> <span class="id" title="var">n</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -4514,15 +4514,15 @@ Wytłumacz, dlaczego Coq nie akceptuje tej definicji. Następnie wymyśl
 <br/>
 <span class="comment">(*<br/>
 Inductive&nbsp;fD&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;Type&nbsp;:=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;fD_gt100&nbsp;:&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;100&nbsp;&lt;&nbsp;n&nbsp;-&gt;&nbsp;fD&nbsp;n<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;fD_le100&nbsp;:<br/>
+|&nbsp;fD_gt100&nbsp;:&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;100&nbsp;&lt;&nbsp;n&nbsp;-&gt;&nbsp;fD&nbsp;n<br/>
+|&nbsp;fD_le100&nbsp;:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;nat,&nbsp;n&nbsp;&lt;=&nbsp;100&nbsp;-&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;d&nbsp;:&nbsp;fD&nbsp;(n&nbsp;+&nbsp;11),&nbsp;fD&nbsp;(f'&nbsp;(n&nbsp;+&nbsp;11)&nbsp;d)&nbsp;-&gt;&nbsp;fD&nbsp;n<br/>
 <br/>
 with&nbsp;Fixpoint&nbsp;f'&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;(d&nbsp;:&nbsp;fD&nbsp;n)&nbsp;:&nbsp;nat&nbsp;:=<br/>
 match&nbsp;d&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;fD_gt100&nbsp;n&nbsp;H&nbsp;=&gt;&nbsp;n&nbsp;-&nbsp;10<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;fD_le100&nbsp;n&nbsp;H&nbsp;d1&nbsp;d2&nbsp;=&gt;&nbsp;f'&nbsp;(f'&nbsp;(n&nbsp;+&nbsp;11)&nbsp;d1)&nbsp;d2<br/>
+|&nbsp;fD_gt100&nbsp;n&nbsp;H&nbsp;=&gt;&nbsp;n&nbsp;-&nbsp;10<br/>
+|&nbsp;fD_le100&nbsp;n&nbsp;H&nbsp;d1&nbsp;d2&nbsp;=&gt;&nbsp;f'&nbsp;(f'&nbsp;(n&nbsp;+&nbsp;11)&nbsp;d1)&nbsp;d2<br/>
 end.<br/>
 *)</span><br/>
 
@@ -4790,8 +4790,8 @@ Dowód samej reguły też jest dość prosty. Zaczynamy od indukcji po
 <br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">g</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">g</span> <span class="id" title="var">n</span>)<br/>
+| 0 =&gt; 0<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">g</span> (<span class="id" title="var">g</span> <span class="id" title="var">n</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -4826,8 +4826,8 @@ Dowód samej reguły też jest dość prosty. Zaczynamy od indukcji po
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">divD</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divD_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divD_ge</span> :<br/>
+| <span class="id" title="var">divD_lt</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> &lt; <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span><br/>
+| <span class="id" title="var">divD_ge</span> :<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> &gt;= <span class="id" title="var">S</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> (<span class="id" title="var">n</span> - <span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">m</span> -&gt; <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
 
@@ -4848,8 +4848,8 @@ Definicja dziedziny jest taka sama jak ostatnio, ale z tą drobną
 <br/>
 <span class="id" title="var">Fail</span> <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">div_aux</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">d</span> : <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">d</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divD_lt</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">divD_ge</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">d'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">div_aux</span> <span class="id" title="var">d'</span>)<br/>
+| <span class="id" title="var">divD_lt</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> =&gt; 0<br/>
+| <span class="id" title="var">divD_ge</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">d'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">div_aux</span> <span class="id" title="var">d'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -4891,8 +4891,8 @@ Cóż, nie da się i nie dziwota - gdyby się dało, to zrobiliśmy tak
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">bool'</span> : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">true'</span> : <span class="id" title="var">bool'</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">false'</span> : <span class="id" title="var">bool'</span>.<br/>
+| <span class="id" title="var">true'</span> : <span class="id" title="var">bool'</span><br/>
+| <span class="id" title="var">false'</span> : <span class="id" title="var">bool'</span>.<br/>
 
 <br/>
 </div>
@@ -5024,8 +5024,8 @@ Jeżeli mamy <span class="inlinecode"><span class="id" title="var">d</span></spa
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">div'_aux</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>} (<span class="id" title="var">d</span> : <span class="id" title="var">divD</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>) : <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">le_lt_dec</span> (<span class="id" title="var">S</span> <span class="id" title="var">m</span>) <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">right</span> <span class="id" title="var">_</span> =&gt; 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="tactic">left</span> <span class="id" title="var">H</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">div'_aux</span> (<span class="id" title="var">divD_ge_inv</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span> <span class="id" title="var">d</span>))<br/>
+| <span class="id" title="tactic">right</span> <span class="id" title="var">_</span> =&gt; 0<br/>
+| <span class="id" title="tactic">left</span> <span class="id" title="var">H</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">div'_aux</span> (<span class="id" title="var">divD_ge_inv</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span> <span class="id" title="var">d</span>))<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -5339,9 +5339,9 @@ Gdzież w wyekstrahowanym programie podział się dowód <span class="inlinecode
 &nbsp;&nbsp;&nbsp;&nbsp;again.div'_aux&nbsp;=&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;fix&nbsp;div'_aux&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;(d&nbsp;:&nbsp;again.divD&nbsp;n&nbsp;m)&nbsp;{struct&nbsp;d}&nbsp;:&nbsp;nat&nbsp;:=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;le_lt_dec&nbsp;(S&nbsp;m)&nbsp;n&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;left&nbsp;H&nbsp;=&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;left&nbsp;H&nbsp;=&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S&nbsp;(div'_aux&nbsp;(n&nbsp;-&nbsp;S&nbsp;m)&nbsp;m&nbsp;(again.divD_ge_inv&nbsp;n&nbsp;m&nbsp;H&nbsp;d))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;right&nbsp;_&nbsp;=&gt;&nbsp;0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;right&nbsp;_&nbsp;=&gt;&nbsp;0<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;end<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,&nbsp;again.divD&nbsp;n&nbsp;m&nbsp;-&gt;&nbsp;nat&nbsp;*)</span><br/>
 

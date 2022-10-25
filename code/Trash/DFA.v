@@ -20,8 +20,8 @@ Arguments transition {Σ} _ _ _.
 
 Fixpoint accepts' {Σ : Type} (A : DFA Σ) (q : State A) (w : list Σ) : bool :=
 match w with
-    | [] => accepting A q
-    | x :: w' => accepts' A (transition A x q) w'
+| [] => accepting A q
+| x :: w' => accepts' A (transition A x q) w'
 end.
 
 Definition accepts {Σ : Type} (A : DFA Σ) (w : list Σ) : bool :=

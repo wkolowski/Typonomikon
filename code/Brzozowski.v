@@ -18,37 +18,37 @@ Import ListNotations.
 Require Import Equality.
 
 Inductive Regex (A : Type) : Type :=
-    | Empty : Regex A
-    | Epsilon : Regex A
-    | Char : A -> Regex A
-    | Seq : Regex A -> Regex A -> Regex A
-    | Or : Regex A -> Regex A -> Regex A
-    | Star : Regex A -> Regex A.
+| Empty : Regex A
+| Epsilon : Regex A
+| Char : A -> Regex A
+| Seq : Regex A -> Regex A -> Regex A
+| Or : Regex A -> Regex A -> Regex A
+| Star : Regex A -> Regex A.
 
 Arguments Empty {A}.
 Arguments Epsilon {A}.
 
 Inductive Matches {A : Type} : list A -> Regex A -> Prop :=
-    | MEpsilon : Matches [] Epsilon
-    | MChar : forall x : A, Matches [x] (Char x)
-    | MSeq :
+| MEpsilon : Matches [] Epsilon
+| MChar : forall x : A, Matches [x] (Char x)
+| MSeq :
         forall (l1 l2 : list A) (r1 r2 : Regex A),
           Matches l1 r1 -> Matches l2 r2 ->
             Matches (l1 ++ l2) (Seq r1 r2)
-    | MOrL :
+| MOrL :
         forall (l : list A) (r1 r2 : Regex A),
           Matches l r1 -> Matches l (Or r1 r2)
-    | MOrR :
+| MOrR :
         forall (l : list A) (r1 r2 : Regex A),
           Matches l r2 -> Matches l (Or r1 r2)
-    | MStar :
+| MStar :
         forall (l : list A) (r : Regex A),
           MatchesStar l r -> Matches l (Star r)
 
 with MatchesStar {A : Type} : list A -> Regex A -> Prop :=
-    | MS_Epsilon :
+| MS_Epsilon :
         forall r : Regex A, MatchesStar [] r
-    | MS_Seq :
+| MS_Seq :
         forall (h : A) (t l : list A) (r : Regex A),
           Matches (h :: t) r -> MatchesStar l r -> MatchesStar ((h :: t) ++ l) r.
 
@@ -59,12 +59,12 @@ Scheme Matches_ind' := Induction for Matches Sort Prop.
 Fixpoint containsEpsilon
   {A : Type} (r : Regex A) : bool :=
 match r with
-    | Empty => false
-    | Epsilon => true
-    | Char _ => false
-    | Seq r1 r2 => containsEpsilon r1 && containsEpsilon r2
-    | Or r1 r2 => containsEpsilon r1 || containsEpsilon r2
-    | Star _ => true
+| Empty => false
+| Epsilon => true
+| Char _ => false
+| Seq r1 r2 => containsEpsilon r1 && containsEpsilon r2
+| Or r1 r2 => containsEpsilon r1 || containsEpsilon r2
+| Star _ => true
 end.
 
 Class EqType : Type :=
@@ -80,22 +80,22 @@ Fixpoint diff
   {A : EqType} (a : A) (r : Regex A)
   : Regex A :=
 match r with
-    | Empty   => Empty
-    | Epsilon => Empty
-    | Char x  => if dec a x then Epsilon else Empty
-    | Seq r1 r2 =>
+| Empty   => Empty
+| Epsilon => Empty
+| Char x  => if dec a x then Epsilon else Empty
+| Seq r1 r2 =>
         Or (Seq (diff a r1) r2)
            (if containsEpsilon r1
             then diff a r2
             else Empty)
-    | Or r1 r2 => Or (diff a r1) (diff a r2)
-    | Star r' => Seq (diff a r') (Star r')
+| Or r1 r2 => Or (diff a r1) (diff a r2)
+| Star r' => Seq (diff a r') (Star r')
 end.
 
 Fixpoint brzozowski {A : EqType} (l : list A) (r : Regex A) : Regex A :=
 match l with
-    | [] => r
-    | h :: t => diff h (brzozowski t r)
+| [] => r
+| h :: t => diff h (brzozowski t r)
 end.
 
 Definition matches {A : EqType} (l : list A) (r : Regex A) : bool :=
@@ -231,8 +231,8 @@ Qed.
 
 Fixpoint repeat {A : Type} (n : nat) (x : A) : list A :=
 match n with
-    | 0    => []
-    | S n' => x :: repeat n' x
+| 0    => []
+| S n' => x :: repeat n' x
 end.
 
 (* 0.001 sec *)
@@ -254,52 +254,52 @@ Definition char {A : Type} (x : A) : Regex A := Char x.
 
 Function seq {A : Type} (r1 r2 : Regex A) : Regex A :=
 match r1, r2 with
-    | Empty  , _       => Empty
-    | _      , Empty   => Empty
-    | Epsilon, _       => r2
-    | _      , Epsilon => r1
-    | Seq r11 r12, r2  => Seq r11 (Seq r12 r2)
-    | Or r11 r12, r2   => Or (Seq r11 r2) (Seq r12 r2)
-    | _      , _       => Seq r1 r2
+| Empty  , _       => Empty
+| _      , Empty   => Empty
+| Epsilon, _       => r2
+| _      , Epsilon => r1
+| Seq r11 r12, r2  => Seq r11 (Seq r12 r2)
+| Or r11 r12, r2   => Or (Seq r11 r2) (Seq r12 r2)
+| _      , _       => Seq r1 r2
 end.
 
 Function or {A : Type} (r1 r2 : Regex A) : Regex A :=
 match r1, r2 with
-    | Empty, _ => r2
-    | _, Empty => r1
-    | Epsilon, _ => if containsEpsilon r2 then r2 else Or r1 r2
-    | _, Epsilon => if containsEpsilon r1 then r1 else Or r1 r2
-    | Or r11 r12, r2 => Or r11 (Or r12 r2)
-    | _, _ => Or r1 r2
+| Empty, _ => r2
+| _, Empty => r1
+| Epsilon, _ => if containsEpsilon r2 then r2 else Or r1 r2
+| _, Epsilon => if containsEpsilon r1 then r1 else Or r1 r2
+| Or r11 r12, r2 => Or r11 (Or r12 r2)
+| _, _ => Or r1 r2
 end.
 
 Function star {A : Type} (r : Regex A) : Regex A :=
 match r with
-    | Empty => Epsilon
-    | Epsilon => Epsilon
-    | Star r' => Star r'
-    | _ => Star r
+| Empty => Epsilon
+| Epsilon => Epsilon
+| Star r' => Star r'
+| _ => Star r
 end.
 
 Fixpoint diff' {A : EqType} (a : A) (r : Regex A) : Regex A :=
 match r with
-    | Empty   => empty
-    | Epsilon => empty
-    | Char x  => if dec a x then epsilon else empty
-    | Seq r1 r2 =>
+| Empty   => empty
+| Epsilon => empty
+| Char x  => if dec a x then epsilon else empty
+| Seq r1 r2 =>
         or (seq (diff' a r1) r2)
            (if containsEpsilon r1
             then diff' a r2
             else empty)
-    | Or r1 r2 => or (diff' a r1) (diff' a r2)
-    | Star r' => seq (diff' a r') (star r')
+| Or r1 r2 => or (diff' a r1) (diff' a r2)
+| Star r' => seq (diff' a r') (star r')
 end.
 
 Fixpoint brzozowski'
   {A : EqType} (l : list A) (r : Regex A) : Regex A :=
 match l with
-    | [] => r
-    | h :: t => diff' h (brzozowski' t r)
+| [] => r
+| h :: t => diff' h (brzozowski' t r)
 end.
 
 Definition matches' {A : EqType} (l : list A) (r : Regex A) : bool :=
@@ -339,34 +339,34 @@ Require Import FunInd.
 
 Function optimize {A : Type} (r : Regex A) : Regex A :=
 match r with
-    | Empty => Empty
-    | Epsilon => Epsilon
-    | Char x => Char x
-    | Seq r1 r2 =>
+| Empty => Empty
+| Epsilon => Epsilon
+| Char x => Char x
+| Seq r1 r2 =>
         match optimize r1, optimize r2 with
-            | Empty, _ => Empty
-            | _, Empty => Empty
-            | Epsilon, r2' => r2'
-            | r1', Epsilon => r1'
-            | Seq r11 r12, r2 => Seq r11 (Seq r12 r2)
-            | Or r11 r12, r2 => Or (Seq r11 r2) (Seq r12 r2)
-            | r1', r2' => Seq r1' r2'
+        | Empty, _ => Empty
+        | _, Empty => Empty
+        | Epsilon, r2' => r2'
+        | r1', Epsilon => r1'
+        | Seq r11 r12, r2 => Seq r11 (Seq r12 r2)
+        | Or r11 r12, r2 => Or (Seq r11 r2) (Seq r12 r2)
+        | r1', r2' => Seq r1' r2'
         end
-    | Or r1 r2 =>
+| Or r1 r2 =>
         match optimize r1, optimize r2 with
-            | Empty, r2' => r2'
-            | r1', Empty => r1'
-            | Epsilon, r2' => if containsEpsilon r2' then r2' else Or Epsilon r2'
-            | r1', Epsilon => if containsEpsilon r1' then r1' else Or r1' Epsilon
-            | Or r11 r12, r2 => Or r11 (Or r12 r2)
-            | r1', r2' => Or r1' r2'
+        | Empty, r2' => r2'
+        | r1', Empty => r1'
+        | Epsilon, r2' => if containsEpsilon r2' then r2' else Or Epsilon r2'
+        | r1', Epsilon => if containsEpsilon r1' then r1' else Or r1' Epsilon
+        | Or r11 r12, r2 => Or r11 (Or r12 r2)
+        | r1', r2' => Or r1' r2'
         end
-    | Star r' =>
+| Star r' =>
         match optimize r' with
-            | Empty => Epsilon
-            | Epsilon => Epsilon
-            | Star r'' => Star r''
-            | r'' => Star r''
+        | Empty => Epsilon
+        | Epsilon => Epsilon
+        | Star r'' => Star r''
+        | r'' => Star r''
         end
 end.
 
@@ -398,11 +398,11 @@ Proof.
   functional induction optimize r; intros H l HM;
   inv H; inv HM;
   repeat match goal with
-      | y : match optimize ?r with _ => _ end, H : optimize ?r = Empty |- _ =>
+  | y : match optimize ?r with _ => _ end, H : optimize ?r = Empty |- _ =>
           rewrite H in y; contradiction
-      | H : Matches _ ?r, H' : optimize ?r = Empty |- _ =>
+  | H : Matches _ ?r, H' : optimize ?r = Empty |- _ =>
           apply optimize_Empty in H; try contradiction; assumption
-      | H : Matches _ ?r |- _ => tryif is_var r then idtac else inv H
+  | H : Matches _ ?r |- _ => tryif is_var r then idtac else inv H
   end.
 Qed.
 
@@ -442,13 +442,13 @@ Proof.
   functional induction optimize r; intros H l HM;
   inv H; inv HM;
   repeat match goal with
-      | H : Matches _ ?r |- _ =>
+  | H : Matches _ ?r |- _ =>
           tryif is_var r
           then
             match goal with
-                | H' : optimize r = Empty |- _ =>
+            | H' : optimize r = Empty |- _ =>
                     apply optimize_Empty in H; [contradiction | assumption]
-                | H' : optimize r = Epsilon |- _ =>
+            | H' : optimize r = Epsilon |- _ =>
                     apply optimize_Epsilon in H; [subst; cbn in *; try congruence | assumption]
             end
           else
@@ -634,12 +634,12 @@ Admitted.
 
 Function optimize' {A : Type} (r : Regex A) : Regex A :=
 match r with
-    | Empty => empty
-    | Epsilon => epsilon
-    | Char x => char x
-    | Seq r1 r2 => seq (optimize' r1) (optimize' r2)
-    | Or r1 r2 => or (optimize' r1) (optimize' r2)
-    | Star r' => star (optimize' r')
+| Empty => empty
+| Epsilon => epsilon
+| Char x => char x
+| Seq r1 r2 => seq (optimize' r1) (optimize' r2)
+| Or r1 r2 => or (optimize' r1) (optimize' r2)
+| Star r' => star (optimize' r')
 end.
 
 Definition matches''' {A : EqType} (l : list A) (r : Regex A) : bool :=
@@ -879,22 +879,22 @@ Admitted.
 (** Wut? Bardzo podobne do [diff]. *)
 Function startsWith {A : Type} (r : Regex A) (a : A) : Prop :=
 match r with
-    | Empty => False
-    | Epsilon => False
-    | Char x => a = x
-    | Seq r1 r2 => startsWith r1 a \/ (containsEpsilon r1 = true /\ startsWith r2 a)
-    | Or r1 r2 => startsWith r1 a /\ startsWith r2 a
-    | Star r' => False
+| Empty => False
+| Epsilon => False
+| Char x => a = x
+| Seq r1 r2 => startsWith r1 a \/ (containsEpsilon r1 = true /\ startsWith r2 a)
+| Or r1 r2 => startsWith r1 a /\ startsWith r2 a
+| Star r' => False
 end.
 
 Function endsWith {A : Type} (r : Regex A) (b : A) : Prop :=
 match r with
-    | Empty => False
-    | Epsilon => False
-    | Char x => x = b
-    | Seq r1 r2 => endsWith r2 b \/ (containsEpsilon r2 = true /\ endsWith r1 b)
-    | Or r1 r2 => endsWith r1 b /\ endsWith r2 b
-    | Star r' => False
+| Empty => False
+| Epsilon => False
+| Char x => x = b
+| Seq r1 r2 => endsWith r2 b \/ (containsEpsilon r2 = true /\ endsWith r1 b)
+| Or r1 r2 => endsWith r1 b /\ endsWith r2 b
+| Star r' => False
 end.
 
 Goal

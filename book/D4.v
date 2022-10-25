@@ -37,8 +37,8 @@ Module MyNat.
 
 (* begin hide *)
 Inductive nat : Set :=
-    | O : nat
-    | S : nat -> nat.
+| O : nat
+| S : nat -> nat.
 (* end hide *)
 
 Notation "0" := O.
@@ -90,8 +90,8 @@ Qed.
 (* begin hide *)
 Definition pred (n : nat) : nat :=
 match n with
-    | 0 => 0
-    | S n' => n'
+| 0 => 0
+| S n' => n'
 end.
 (* end hide *)
 
@@ -120,8 +120,8 @@ Qed.
 (* begin hide *)
 Fixpoint plus (n m : nat) : nat :=
 match n with
-    | 0 => m
-    | S n' => S (plus n' m)
+| 0 => m
+| S n' => S (plus n' m)
 end.
 (* end hide *)
 
@@ -250,8 +250,8 @@ Qed.
 
 Fixpoint plus' (n m : nat) : nat :=
 match m with
-    | 0 => n
-    | S m' => S (plus' n m')
+| 0 => n
+| S m' => S (plus' n m')
 end.
 
 Lemma plus'_is_plus :
@@ -268,8 +268,8 @@ Qed.
 
 Fixpoint plus'' (n m : nat) : nat :=
 match n with
-    | 0 => m
-    | S n' => plus'' n' (S m)
+| 0 => m
+| S n' => plus'' n' (S m)
 end.
 
 Lemma plus''_is_plus :
@@ -284,8 +284,8 @@ Qed.
 
 Fixpoint plus''' (n m : nat) : nat :=
 match m with
-    | 0 => n
-    | S m' => plus''' (S n) m'
+| 0 => n
+| S m' => plus''' (S n) m'
 end.
 
 Lemma plus'''_is_plus :
@@ -307,9 +307,9 @@ Qed.
 (* begin hide *)
 Fixpoint minus (n m : nat) : nat :=
 match n, m with
-    | 0, _ => 0
-    | _, 0 => n
-    | S n', S m' => minus n' m'
+| 0, _ => 0
+| _, 0 => n
+| S n', S m' => minus n' m'
 end.
 (* end hide *)
 
@@ -425,8 +425,8 @@ Qed.
 
 Fixpoint sub (n m : nat) : nat :=
 match m with
-    | 0    => n
-    | S m' => pred (sub n m')
+| 0    => n
+| S m' => pred (sub n m')
 end.
 
 Lemma sub_1_r :
@@ -565,8 +565,8 @@ Qed.
 (* begin hide *)
 Fixpoint mult (n m : nat) : nat :=
 match n with
-    | 0 => 0
-    | S n' => plus m (mult n' m)
+| 0 => 0
+| S n' => plus m (mult n' m)
 end.
 (* end hide *)
 
@@ -751,8 +751,8 @@ Qed.
 (* begin hide *)
 Fixpoint pow (n m : nat) : nat :=
 match m with
-    | 0 => 1
-    | S m' => mult n (pow n m')
+| 0 => 1
+| S m' => mult n (pow n m')
 end.
 (* end hide *)
 
@@ -848,8 +848,8 @@ Qed.
 
 (* begin hide *)
 Inductive le (n : nat) : nat -> Prop :=
-    | le_n : le n n
-    | le_S : forall m : nat, le n m -> le n (S m).
+| le_n : le n n
+| le_S : forall m : nat, le n m -> le n (S m).
 (* end hide *)
 
 Notation "n <= m" := (le n m).
@@ -1244,16 +1244,16 @@ Qed.
 (* begin hide *)
 Fixpoint min (n m : nat) : nat :=
 match n, m with
-    | 0, _ => 0
-    | _, 0 => 0
-    | S n', S m' => S (min n' m')
+| 0, _ => 0
+| _, 0 => 0
+| S n', S m' => S (min n' m')
 end.
 
 Fixpoint max (n m : nat) : nat :=
 match n, m with
-    | 0, _ => m
-    | _, 0 => n
-    | S n', S m' => S (max n' m')
+| 0, _ => m
+| _, 0 => n
+| S n', S m' => S (max n' m')
 end.
 (* end hide *)
 
@@ -1419,9 +1419,9 @@ Qed.
 (* begin hide *)
 Fixpoint leb (n m : nat) : bool :=
 match n, m with
-    | 0, _ => true
-    | _, 0 => false
-    | S n', S m' => leb n' m'
+| 0, _ => true
+| _, 0 => false
+| S n', S m' => leb n' m'
 end.
 (* end hide *)
 
@@ -1467,9 +1467,9 @@ Qed.
 (* begin hide *)
 Fixpoint eqb (n m : nat) : bool :=
 match n, m with
-    | 0, 0 => true
-    | S n', S m' => eqb n' m'
-    | _, _ => false
+| 0, 0 => true
+| S n', S m' => eqb n' m'
+| _, _ => false
 end.
 (* end hide *)
 
@@ -1517,16 +1517,16 @@ Qed.
 (* begin hide *)
 Fixpoint div2 (n : nat) : nat :=
 match n with
-    | 0 => 0
-    | 1 => 0
-    | S (S n') => S (div2 n')
+| 0 => 0
+| 1 => 0
+| S (S n') => S (div2 n')
 end.
 
 Fixpoint mod2 (n : nat) : nat :=
 match n with
-    | 0 => 0
-    | 1 => 1
-    | S (S n') => mod2 n'
+| 0 => 0
+| 1 => 1
+| S (S n') => mod2 n'
 end.
 (* end hide *)
 
@@ -1756,8 +1756,8 @@ End divides.
 (* begin hide *)
 Fixpoint fac (n : nat) : nat :=
 match n with
-    | 0 => 1
-    | S n' => mult n (fac n')
+| 0 => 1
+| S n' => mult n (fac n')
 end.
 (* end hide *)
 
@@ -1794,8 +1794,8 @@ Qed.
 
 Fixpoint pow2 (n : nat) : nat :=
 match n with
-    | 0 => 1
-    | S n' => mult 2 (pow2 n')
+| 0 => 1
+| S n' => mult 2 (pow2 n')
 end.
 
 Notation "4" := (S (S (S (S 0)))).
@@ -1825,18 +1825,18 @@ Qed.
 (* begin hide *)
 Function binom (n k : nat) : nat :=
 match n, k with
-    | 0, 0 => 1
-    | 0, _ => 0
-    | _, 0 => 1
-    | S n', S k' => plus (binom n' k') (binom n' k)
+| 0, 0 => 1
+| 0, _ => 0
+| _, 0 => 1
+| S n', S k' => plus (binom n' k') (binom n' k)
 end.
 (* TODO: być może przedefiniować współczynnik dwumianowy na bardziej ludzki *)
 (* end hide *)
 
 Fixpoint double (n : nat) : nat :=
 match n with
-    | 0 => 0
-    | S n' => S (S (double n'))
+| 0 => 0
+| S n' => S (S (double n'))
 end.
 
 Lemma binom_0_r :
@@ -1946,11 +1946,11 @@ Qed.
 
 Function binom' (n k : nat) : nat :=
 match k with
-    | 0    => 1
-    | S k' =>
+| 0    => 1
+| S k' =>
         match n with
-            | 0    => 0
-            | S n' => plus (binom' n' k') (binom' n' k)
+        | 0    => 0
+        | S n' => plus (binom' n' k') (binom' n' k)
         end
 end.
 
@@ -1999,18 +1999,18 @@ Import Div2 ZArith.
 
 Fixpoint evenb (n : nat) : bool :=
 match n with
-    | 0 => true
-    | 1 => false
-    | S (S n') => evenb n'
+| 0 => true
+| 1 => false
+| S (S n') => evenb n'
 end.
 
 (*
 Fixpoint quickMul (fuel n m : nat) : nat :=
 match fuel with
+| 0 => 0
+| S fuel' => match n with
     | 0 => 0
-    | S fuel' => match n with
-        | 0 => 0
-        | _ => let res := quickMul fuel' (div2 n) m in
+    | _ => let res := quickMul fuel' (div2 n) m in
             if evenb n then plus res res else plus (plus m res) res
         end
 end.
@@ -2020,8 +2020,8 @@ Time Eval compute in quickMul 1000 430 110.
 
 Function qm (n m : nat) {measure id n} : nat :=
 match n with
-    | 0 => 0
-    | _ => let r := qm (div2 n) m in
+| 0 => 0
+| _ => let r := qm (div2 n) m in
         if evenb n then 2 * r else m + 2 * r
 end.
 Proof.
@@ -2043,8 +2043,8 @@ End MyDiv2.
 (* begin hide *)
 Fixpoint twos (n : nat) : nat :=
 match n with
-    | 0 => pow2 0
-    | S n' => plus (twos n') (pow2 n)
+| 0 => pow2 0
+| S n' => plus (twos n') (pow2 n)
 end.
 (* end hide *)
 
@@ -2087,12 +2087,12 @@ Proof.
         cbn in l. assumption.
         cbn in *. apply lt_n_S.
         repeat match goal with
-            | H : context [?x + S ?y] |- _ =>
+        | H : context [?x + S ?y] |- _ =>
                 rewrite (plus_comm x (S y)) in H; cbn in H
-            | H : context [?x * S ?y] |- _ =>
+        | H : context [?x * S ?y] |- _ =>
                 rewrite (mult_comm x (S y)) in H; cbn in H
-            | |- context [?x + S ?y] => rewrite (plus_comm x (S y)); cbn
-            | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); cbn
+        | |- context [?x + S ?y] => rewrite (plus_comm x (S y)); cbn
+        | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); cbn
         end. lia.
       exists r. cbn; split.
         apply le_trans with n'.
@@ -2110,11 +2110,11 @@ Eval compute in root' 24.
 
 Fixpoint div4 (n : nat) : nat :=
 match n with
-    | 0 => 0
-    | 1 => 0
-    | 2 => 0
-    | 3 => 0
-    | S (S (S (S n'))) => S (div4 n')
+| 0 => 0
+| 1 => 0
+| 2 => 0
+| 3 => 0
+| S (S (S (S n'))) => S (div4 n')
 end.
 
 Fixpoint nat_ind_4 (P : nat -> Prop) (H0 : P 0) (H1 : P 1) (H2 : P 2) (H3 : P 3)
@@ -2168,12 +2168,12 @@ Defined.
 
 Ltac nat_cbn := repeat
 match goal with
-    | H : context [?x + S ?y] |- _ =>
+| H : context [?x + S ?y] |- _ =>
         rewrite (plus_comm x (S y)) in H; cbn in H
-    | H : context [?x * S ?y] |- _ =>
+| H : context [?x * S ?y] |- _ =>
         rewrite (mult_comm x (S y)) in H; cbn in H
-    | |- context [?x + S ?y] => rewrite (plus_comm x (S y)); cbn
-    | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); cbn
+| |- context [?x + S ?y] => rewrite (plus_comm x (S y)); cbn
+| |- context [?x * S ?y] => rewrite (mult_comm x (S y)); cbn
 end;
 repeat rewrite plus_0_r.
 
@@ -2205,8 +2205,8 @@ Context
 
 Fixpoint g (y : nat) : nat :=
 match y with
-    | 0 => 0
-    | S y' =>
+| 0 => 0
+| S y' =>
         let x := g y' in 
           if Nat.ltb y (f (S x))
           then x

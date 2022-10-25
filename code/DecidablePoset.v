@@ -1,10 +1,10 @@
 Require Import Setoid.
 
 Inductive Order : Type :=
-    | Lt
-    | Eq
-    | Gt
-    | Nc.
+| Lt
+| Eq
+| Gt
+| Nc.
 
 Module FirstTry.
 
@@ -51,10 +51,10 @@ Proof.
   split with (
     fun x y =>
     match dec x y, dec y x with
-        | left _ , left _  => Nc
-        | left _ , right _ => Lt
-        | right _, left _  => Gt
-        | right _, right _ => Eq
+    | left _ , left _  => Nc
+    | left _ , right _ => Lt
+    | right _, left _  => Gt
+    | right _, right _ => Eq
     end);
   intros.
   - destruct (dec x y), (dec y x).
@@ -123,10 +123,10 @@ Proof.
   split with (
     fun x y =>
     match dec x y, dec y x with
-        | left _ , left _  => Eq
-        | left _ , right _ => Lt
-        | right _, left _  => Gt
-        | right _, right _ => Nc
+    | left _ , left _  => Eq
+    | left _ , right _ => Lt
+    | right _, left _  => Gt
+    | right _, right _ => Nc
     end);
   intros.
   - destruct (dec x y), (dec y x).
@@ -138,18 +138,18 @@ Proof.
     + specialize (antisym _ _ r r0); subst. destruct (dec z y), (dec y z); intuition congruence.
     + destruct (dec x y), (dec y x), (dec y z), (dec z y); intuition; subst;
       repeat match goal with
-          | H : R ?x ?y, H' : R ?y ?x |- _ => pose (antisym _ _ H H'); clearbody e; subst; clear H H'
+      | H : R ?x ?y, H' : R ?y ?x |- _ => pose (antisym _ _ H H'); clearbody e; subst; clear H H'
       end; intuition; try congruence.
       clear H H1. assert (R x y) by (eapply trans; eauto). contradiction.
     + destruct (dec x y), (dec y x), (dec y z), (dec z y); intuition; subst;
       repeat match goal with
-          | H : R ?x ?y, H' : R ?y ?x |- _ => pose (antisym _ _ H H'); clearbody e; subst; clear H H'
+      | H : R ?x ?y, H' : R ?y ?x |- _ => pose (antisym _ _ H H'); clearbody e; subst; clear H H'
       end; intuition; try congruence.
       clear H H1. assert (R x z) by (eapply trans; eauto). contradiction.
     + destruct (dec x y), (dec y x), (dec y z), (dec z y); intuition; subst;
       repeat match goal with
-          | H : R ?x ?y, H' : R ?y ?x |- _ => pose (antisym _ _ H H'); clearbody e; subst; clear H H'
-          | H : R ?x ?x -> False |- _ => specialize (refl x); contradiction
+      | H : R ?x ?y, H' : R ?y ?x |- _ => pose (antisym _ _ H H'); clearbody e; subst; clear H H'
+      | H : R ?x ?x -> False |- _ => specialize (refl x); contradiction
       end; intuition; try congruence.
       * assert (R x z) by (eapply trans; eauto). contradiction.
       *  assert (R z x) by (eapply trans; eauto). contradiction.

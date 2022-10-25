@@ -3,126 +3,126 @@ Require Import List.
 Import ListNotations.
 
 Inductive PTree (A : Type) : Type :=
-    | L : A -> PTree A
-    | N : PTree (A * A) -> PTree A.
+| L : A -> PTree A
+| N : PTree (A * A) -> PTree A.
 
 Arguments L {A} _.
 Arguments N {A} _.
 
 Fixpoint map {A B : Type} (f : A -> B) (t : PTree A) : PTree B :=
 match t with
-    | L x  => L (f x)
-    | N t' => N (map (fun '(x, y) => (f x, f y)) t')
+| L x  => L (f x)
+| N t' => N (map (fun '(x, y) => (f x, f y)) t')
 end.
 
 Definition swap {A B : Type} (p : A * B) : B * A :=
 match p with
-    | (x, y) => (y, x)
+| (x, y) => (y, x)
 end.
 
 Fixpoint mirror {A : Type} (t : PTree A) : PTree A :=
 match t with
-    | L x  => L x
-    | N t' => N (map swap (mirror t'))
+| L x  => L x
+| N t' => N (map swap (mirror t'))
 end.
 
 Function leftmost {A : Type} (t : PTree A) : option A :=
 match t with
-    | L x  => Some x
-    | N t' =>
+| L x  => Some x
+| N t' =>
         match leftmost t' with
-            | None        => None
-            | Some (x, _) => Some x
+        | None        => None
+        | Some (x, _) => Some x
         end
 end.
 
 Function rightmost {A : Type} (t : PTree A) : option A :=
 match t with
-    | L x  => Some x
-    | N t' =>
+| L x  => Some x
+| N t' =>
         match rightmost t' with
-            | None        => None
-            | Some (_, x) => Some x
+        | None        => None
+        | Some (_, x) => Some x
         end
 end.
 
 Fixpoint size {A : Type} (t : PTree A) : nat :=
 match t with
-    | L x  => 0
-    | N t' => 1 + size t'
+| L x  => 0
+| N t' => 1 + size t'
 end.
 
 Fixpoint height {A : Type} (t : PTree A) : nat :=
 match t with
-    | L x => 0
-    | N t' => 1 + height t'
+| L x => 0
+| N t' => 1 + height t'
 end.
 
 Fixpoint flatten {A : Type} (l : list (A * A)) : list A :=
 match l with
-    | [] => []
-    | (hl, hr) :: t => hl :: hr :: flatten t
+| [] => []
+| (hl, hr) :: t => hl :: hr :: flatten t
 end.
 
 Fixpoint bfs {A : Type} (t : PTree A) : list A :=
 match t with
-    | L x => [x]
-    | N t' => flatten (bfs t')
+| L x => [x]
+| N t' => flatten (bfs t')
 end.
 
 Fixpoint complete {A : Type} (n : nat) (x : A) : PTree A :=
 match n with
-    | 0 => L x
-    | S n' => N (complete n' (x, x))
+| 0 => L x
+| S n' => N (complete n' (x, x))
 end.
 
 Fixpoint any {A : Type} (p : A -> bool) (t : PTree A) : bool :=
 match t with
-    | L x  => p x
-    | N t' => any (fun '(x, y) => p x || p y) t'
+| L x  => p x
+| N t' => any (fun '(x, y) => p x || p y) t'
 end.
 
 Fixpoint all {A : Type} (p : A -> bool) (t : PTree A) : bool :=
 match t with
-    | L x  => p x
-    | N t' => all (fun '(x, y) => p x && p y) t'
+| L x  => p x
+| N t' => all (fun '(x, y) => p x && p y) t'
 end.
 
 Fixpoint find {A : Type} (p : A -> bool) (t : PTree A) : option A :=
 match t with
-    | L x  => if p x then Some x else None
-    | N t' =>
+| L x  => if p x then Some x else None
+| N t' =>
         match find (fun '(x, y) => p x || p y) t' with
-            | None        => None
-            | Some (x, y) => if p x then Some x else Some y
+        | None        => None
+        | Some (x, y) => if p x then Some x else Some y
         end
 end.
 
 (*
 Fixpoint zipWith {A B C : Type} (f : A -> B -> C) (ta : PTree A) (tb : PTree B) : PTree C :=
 match ta, tb with
-    | L x, L y => L (f x y)
-    | _, L x => L x
-    | Layer a ta', Layer b tb' => Layer (f a b) (zipWith (fun '(al, ar) '(bl, br) => (f al bl, f ar br)) ta' tb')
+| L x, L y => L (f x y)
+| _, L x => L x
+| Layer a ta', Layer b tb' => Layer (f a b) (zipWith (fun '(al, ar) '(bl, br) => (f al bl, f ar br)) ta' tb')
 end.
 *)
 
 Fixpoint left {A : Type} (t : PTree (A * A)) : PTree A :=
 match t with
-    | L (x, _) => L x
-    | N t'     => N (left t')
+| L (x, _) => L x
+| N t'     => N (left t')
 end.
 
 Fixpoint right {A : Type} (t : PTree (A * A)) : PTree A :=
 match t with
-    | L (x, _) => L x
-    | N t'     => N (right t')
+| L (x, _) => L x
+| N t'     => N (right t')
 end.
 
 Fixpoint count {A : Type} (p : A -> nat) (t : PTree A) : nat :=
 match t with
-    | L x  => p x
-    | N t' => count (fun '(x, y) => p x + p y) t'
+| L x  => p x
+| N t' => count (fun '(x, y) => p x + p y) t'
 end.
 
 (* TODO
@@ -191,8 +191,8 @@ Lemma leftmost_map :
   forall {A B : Type} (f : A -> B) (t : PTree A),
     leftmost (map f t) =
       match leftmost t with
-          | None   => None
-          | Some a => Some (f a)
+      | None   => None
+      | Some a => Some (f a)
       end.
 Proof.
   intros. revert B f.
@@ -238,8 +238,8 @@ Qed.
 
 (*
 Inductive PTree' {A : Type} (P : A -> Type) : PTree A -> Type :=
-    | L x' : PTree' P L x
-    | Layer' : forall (x : A) (t : PTree (prod A A)),
+| L x' : PTree' P L x
+| Layer' : forall (x : A) (t : PTree (prod A A)),
                  P x -> PTree' (fun '(x, y) => prod (P x) (P y)) t -> PTree' P (Layer x t).
 
 Fixpoint PTree_ind_deep

@@ -4,19 +4,19 @@ CoInductive Conat : Type :=
 
 CoFixpoint add (n m : Conat) : Conat :=
 match n, m with
-    | z, _ => m
-    | _, z => n
-    | s n', s m' => s (s (add n' m'))
+| z, _ => m
+| _, z => n
+| s n', s m' => s (s (add n' m'))
 end.
 
 CoInductive sim : Conat -> Conat -> Prop :=
-    | simz : sim z z
-    | sims : forall n m : Conat, sim n m -> sim (s n) (s m).
+| simz : sim z z
+| sims : forall n m : Conat, sim n m -> sim (s n) (s m).
 
 Definition out (n : Conat) : Conat :=
 match n with
-    | z    => z
-    | s n' => s n'
+| z    => z
+| s n' => s n'
 end.
 
 Lemma out' :

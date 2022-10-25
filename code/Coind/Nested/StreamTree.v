@@ -24,7 +24,7 @@ Fail CoFixpoint stmap {A B : Type} (f : A -> B) (t : StreamTree A) : StreamTree 
     {|
         hd := stmap f (hd (trees t));
         tl := trees (stmap f {| root := root t; trees := tl (trees t); |})
-    |};
+|};
 |}.
 
 Fail CoFixpoint stmap {A B : Type} (f : A -> B) (t : StreamTree A) : StreamTree B :=

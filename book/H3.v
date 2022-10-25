@@ -105,8 +105,8 @@ Notation "R <--> S" := (same_hrel R S) (at level 40).
 (** **** Ćwiczenie *)
 
 Inductive le' : nat -> nat -> Prop :=
-    | le'_0 : forall n : nat, le' 0 n
-    | le'_SS : forall n m : nat, le' n m -> le' (S n) (S m).
+| le'_0 : forall n : nat, le' 0 n
+| le'_SS : forall n m : nat, le' n m -> le' (S n) (S m).
 
 (** Udowodnij, że powyższa definicja [le'] porządku "mniejszy lub równy"
     na liczbach naturalnych jest tą samą relacją, co [le]. Być może
@@ -256,10 +256,10 @@ Ltac rel :=
     subrelation, same_hrel, Rcomp, Rid, Rinv, Rnot, Rand, Ror, RTrue, RFalse;
   compute; repeat split; intros; firstorder; subst; eauto;
 repeat match goal with
-    | H : False     |- _ => destruct H
-    | x : Empty_set |- _ => destruct x
-    | H : True      |- _ => destruct H
-    | x : unit      |- _ => destruct x
+| H : False |- _ => destruct H
+| x : Empty_set |- _ => destruct x
+| H : True  |- _ => destruct H
+| x : unit  |- _ => destruct x
 end; try congruence.
 (* end hide *)
 
@@ -581,8 +581,8 @@ Qed.
 
 Definition is_zero (b : bool) (n : nat) : Prop :=
 match n with
-    | 0 => b = true
-    | _ => b = false
+| 0 => b = true
+| _ => b = false
 end.
 
 #[export]
@@ -1055,8 +1055,8 @@ Qed.
 (* begin hide *)
 Fixpoint collatz' (fuel n : nat) : list nat :=
 match fuel with
-    | 0 => []
-    | S fuel' =>
+| 0 => []
+| S fuel' =>
         if leb n 1 then [n] else
             let h := if even n then div2 n else 1 + 3 * n
             in n :: collatz' fuel' h
@@ -1068,9 +1068,9 @@ Compute collatz' 1000 2487.
 *)
 
 Inductive collatz : nat -> nat -> Prop :=
-    | c_even : forall n : nat, collatz (2 * n) n
-    | c_odd : forall n : nat, collatz (1 + 2 * n) (4 + 6 * n)
-    | c_trans : forall a b c : nat,
+| c_even : forall n : nat, collatz (2 * n) n
+| c_odd : forall n : nat, collatz (1 + 2 * n) (4 + 6 * n)
+| c_trans : forall a b c : nat,
         collatz a b -> collatz b c -> collatz a c.
 
 #[global] Hint Constructors collatz : core.
@@ -1262,8 +1262,8 @@ Proof.
   exists (option bool), bool,
   (fun (ob : option bool) (b : bool) =>
   match ob with
-      | None => b = true
-      | Some _ => ob = Some b
+  | None => b = true
+  | Some _ => ob = Some b
   end).
   rel.
     destruct a; eauto.
@@ -2026,8 +2026,8 @@ Require Import Arith.
 
 Fixpoint lookup (p : nat * nat) (l : list (nat * nat)) : bool :=
 match l with
-    | [] => false
-    | (h1, h2) :: t =>
+| [] => false
+| (h1, h2) :: t =>
         if andb (beq_nat (fst p) h1) (beq_nat (snd p) h2)
         then true
         else lookup p t
@@ -2358,22 +2358,22 @@ Inductive Threee : Type := One | Two | Three.
 
 Definition wut (x y : Threee) : Prop :=
 match x, y with
-    | One  , One   => True
-    | Two  , Two   => True
-    | Three, Three => True
-    | One  , Two   => True
-    | Two  , One   => True
-    | _    , _     => False
+| One  , One   => True
+| Two  , Two   => True
+| Three, Three => True
+| One  , Two   => True
+| Two  , One   => True
+| _    , _     => False
 end.
 
 Definition wut' (x y : Threee) : Prop :=
 match x, y with
-    | One  , One   => True
-    | Two  , Two   => True
-    | Three, Three => True
-    | One  , Three => True
-    | Three, One   => True
-    | _    , _     => False
+| One  , One   => True
+| Two  , Two   => True
+| Three, Three => True
+| One  , Three => True
+| Three, One   => True
+| _    , _     => False
 end.
 (* end hide *)
 
@@ -2832,15 +2832,15 @@ Lemma not_Total_Rand :
 Proof.
   pose (R := fun b b' =>
   match b, b' with
-      | true, _ => True
-      | false, false => True
-      | _, _ => False
+  | true, _ => True
+  | false, false => True
+  | _, _ => False
   end).
   pose (S := fun b b' =>
   match b, b' with
-      | false, _ => True
-      | true, true => True
-      | _, _ => False
+  | false, _ => True
+  | true, true => True
+  | _, _ => False
   end).
   exists bool, R, S. repeat split; intros.
     destruct x, y; cbn; auto.
@@ -5797,15 +5797,15 @@ Require Import Classes.RelationClasses.
 (** ** Domknięcie zwrotne *)
 
 Inductive rc {A : Type} (R : rel A) : rel A :=
-    | rc_step : forall x y : A, R x y -> rc R x y
-    | rc_refl : forall x : A, rc R x x.
+| rc_step : forall x y : A, R x y -> rc R x y
+| rc_refl : forall x : A, rc R x x.
 
 (* begin hide *)
 #[global] Hint Constructors rc : core.
 
 Ltac rc := compute; repeat split; intros; rel;
 repeat match goal with
-    | H : rc _ _ _ |- _ => induction H; eauto
+| H : rc _ _ _ |- _ => induction H; eauto
 end; rel.
 (* end hide *)
 
@@ -5846,15 +5846,15 @@ Proof. rc. Qed.
 (** ** Domknięcie symetryczne *)
 
 Inductive sc {A : Type} (R : rel A) : rel A :=
-    | sc_step : forall x y : A, R x y -> sc R x y
-    | sc_symm : forall x y : A, R x y -> sc R y x.
+| sc_step : forall x y : A, R x y -> sc R x y
+| sc_symm : forall x y : A, R x y -> sc R y x.
 
 (* begin hide *)
 #[global] Hint Constructors sc : core.
 
 Ltac sc := compute; repeat split; intros; rel;
 repeat match goal with
-    | H : sc _ _ _ |- _ => inversion H; eauto
+| H : sc _ _ _ |- _ => inversion H; eauto
 end.
 (* end hide *)
 
@@ -5898,9 +5898,9 @@ Proof. sc. Qed.
     Udowodnij, że jest ona równoważna [sc]. Dlaczego jest ona gorsza niż [sc]? *)
 
 Inductive sc' {A : Type} (R : rel A) : rel A :=
-    | sc'_step :
+| sc'_step :
         forall x y : A, R x y -> sc' R x y
-    | sc'_symm :
+| sc'_symm :
         forall x y : A, sc' R x y -> sc' R y x.
 
 (* begin hide *)
@@ -5908,7 +5908,7 @@ Inductive sc' {A : Type} (R : rel A) : rel A :=
 
 Ltac sc' := compute; repeat split; intros; rel;
 repeat match goal with
-    | H : sc' _ _ _ |- _ => induction H; eauto
+| H : sc' _ _ _ |- _ => induction H; eauto
 end.
 (* end hide *)
 
@@ -5961,15 +5961,15 @@ Qed.
 (** ** Domknięcie przechodnie *)
 
 Inductive tc {A : Type} (R : rel A) : rel A :=
-    | tc_step : forall x y : A, R x y -> tc R x y
-    | tc_trans : forall x y z : A, R x y -> tc R y z -> tc R x z.
+| tc_step : forall x y : A, R x y -> tc R x y
+| tc_trans : forall x y z : A, R x y -> tc R y z -> tc R x z.
 
 (* begin hide *)
 #[global] Hint Constructors tc : core.
 
 Ltac tc := compute; repeat split; intros; rel;
 match goal with
-    | H : tc _ _ _ |- _ => inversion H; eauto
+| H : tc _ _ _ |- _ => inversion H; eauto
 end.
 (* end hide *)
 
@@ -6044,9 +6044,9 @@ Qed.
     jest lepsza czy gorsza od oryginalnej? *)
 
 Inductive tc' {A : Type} (R : rel A) : rel A :=
-    | tc'_step :
+| tc'_step :
         forall x y : A, R x y -> tc' R x y
-    | tc'_trans :
+| tc'_trans :
         forall x y z : A,
           tc' R x y -> tc' R y z -> tc' R x z.
 
@@ -6055,7 +6055,7 @@ Inductive tc' {A : Type} (R : rel A) : rel A :=
 
 Ltac tc' := compute; repeat split; intros; rel;
 repeat match goal with
-    | H : tc' _ _ _ |- _ => induction H; eauto
+| H : tc' _ _ _ |- _ => induction H; eauto
 end.
 
 #[export]
@@ -6085,9 +6085,9 @@ Definition rsc {A : Type} (R : rel A) : rel A :=
 (* begin hide *)
 Ltac rstc := compute; repeat split; intros; rel;
 repeat match goal with
-    | H : rc _ _ _ |- _ => induction H; eauto
-    | H : sc' _ _ _ |- _ => induction H; eauto
-    | H : tc' _ _ _ |- _ => induction H; eauto
+| H : rc _ _ _ |- _ => induction H; eauto
+| H : sc' _ _ _ |- _ => induction H; eauto
+| H : tc' _ _ _ |- _ => induction H; eauto
 end; rel.
 (* end hide *)
 
@@ -6136,9 +6136,9 @@ Proof. rstc. Qed.
 (** ** Domknięcie zwrotnoprzechodnie *)
 
 Inductive rtc {A : Type} (R : rel A) : rel A :=
-(*     | rtc_step  : forall x y : A, R x y ->  *)
-    | rtc_refl  : forall x : A, rtc R x x
-    | rtc_trans : forall x y z : A, R x y -> rtc R y z -> rtc R x z.
+(* | rtc_step  : forall x y : A, R x y ->  *)
+| rtc_refl  : forall x : A, rtc R x x
+| rtc_trans : forall x y z : A, R x y -> rtc R y z -> rtc R x z.
 
 Lemma rtc_step :
   forall {A : Type} (R : rel A) (x y : A),
@@ -6214,7 +6214,7 @@ Definition ec {A : Type} (R : rel A) : rel A :=
 (* begin hide *)
 Ltac ec := compute; repeat split; intros; rel;
 repeat match goal with
-    | H : ec _ _ _ |- _ => induction H; eauto
+| H : ec _ _ _ |- _ => induction H; eauto
 end.
 (* end hide *)
 
@@ -6325,7 +6325,7 @@ Inductive equiv_clos {A : Type} (R : rel A) : rel A :=
 
 Ltac ec' := compute; repeat split; intros; rel;
 repeat match goal with
-    | H : equiv_clos _ _ _ |- _ => induction H; eauto
+| H : equiv_clos _ _ _ |- _ => induction H; eauto
 end.
 (* end hide *)
 
@@ -6409,10 +6409,10 @@ Qed.
 (* end hide *)
 
 Inductive EquivalenceClosure {A : Type} (R : rel A) : rel A :=
-    | EC_step  : forall x y   : A, R x y -> EquivalenceClosure R x y
-    | EC_refl  : forall x     : A,          EquivalenceClosure R x x
-    | EC_symm  : forall x y   : A, R x y -> EquivalenceClosure R y x
-    | EC_trans : forall x y z : A, R x y -> EquivalenceClosure R y z -> EquivalenceClosure R x z.
+| EC_step  : forall x y   : A, R x y -> EquivalenceClosure R x y
+| EC_refl  : forall x     : A,          EquivalenceClosure R x x
+| EC_symm  : forall x y   : A, R x y -> EquivalenceClosure R y x
+| EC_trans : forall x y z : A, R x y -> EquivalenceClosure R y z -> EquivalenceClosure R x z.
 
 #[global] Hint Constructors EquivalenceClosure : core.
 
@@ -6528,9 +6528,9 @@ Qed.
 (** ** Domknięcie cyrkularne *)
 
 Inductive CircularClosure {A : Type} (R : rel A) : rel A :=
-    | CC_step  :
+| CC_step  :
         forall x y : A, R x y -> CircularClosure R x y
-    | CC_circ :
+| CC_circ :
         forall x y z : A,
           CircularClosure R x y -> CircularClosure R y z ->
             CircularClosure R z x.
@@ -6556,9 +6556,9 @@ Qed.
 (** ** Domknięcie lewostronnie kwazizwrotne *)
 
 Inductive LeftQuasiReflexiveClosure {A : Type} (R : rel A) : rel A :=
-    | LQRC_step :
+| LQRC_step :
         forall x y : A, R x y -> LeftQuasiReflexiveClosure R x y
-    | LQRC_clos :
+| LQRC_clos :
         forall x y : A, R x y -> LeftQuasiReflexiveClosure R x x.
 
 #[export]
@@ -6578,7 +6578,7 @@ Qed.
 Module CoReflexiveClosure.
 
 Private Inductive CoReflexiveClosureCarrier {A : Type} (R : rel A) : Type :=
-    | embed  : A -> CoReflexiveClosureCarrier R.
+| embed  : A -> CoReflexiveClosureCarrier R.
 
 Arguments embed {A R} _.
 

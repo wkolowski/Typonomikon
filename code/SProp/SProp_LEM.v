@@ -2,8 +2,8 @@
     słuszne, ponieważ mimo bycia aksjomatem normalnie się oblicza. *)
 
 Inductive sor (P Q : SProp) : SProp :=
-    | sinl : P -> sor P Q
-    | sinr : Q -> sor P Q.
+| sinl : P -> sor P Q
+| sinr : Q -> sor P Q.
 
 Inductive Empty : SProp := .
 
@@ -17,7 +17,7 @@ Proof.
 Qed.
 
 Inductive seqs {A : SProp} (x : A) : A -> SProp :=
-    | refl : seqs x x.
+| refl : seqs x x.
 
 Lemma lem_sie_oblicza :
   seqs (LEM Empty) jedziemy_na_sor.
@@ -26,10 +26,10 @@ Proof.
 Qed.
 
 Inductive Unit : SProp :=
-    | stt : Unit.
+| stt : Unit.
 
 Definition b2sp (b : bool) : SProp :=
 match b with
-    | true  => Unit
-    | false => Empty
+| true  => Unit
+| false => Empty
 end.

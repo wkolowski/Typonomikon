@@ -22,24 +22,24 @@ Inductive Star : Type :=
 
 Fixpoint interp (s : Star) : Type :=
 match s with
-    | Var A => A
-    | List s' => list (interp s')
+| Var A => A
+| List s' => list (interp s')
 end.
 
 Fixpoint flattenType (s : Star) : Type :=
 match s with
-    | Var A => A
-    | List s' => flattenType s'
+| Var A => A
+| List s' => flattenType s'
 end.
 
 Fixpoint flatten {s : Star} : interp s -> list (flattenType s) :=
 match s with
-    | Var A => fun x : interp (Var A) => [x]
-    | List s' =>
+| Var A => fun x : interp (Var A) => [x]
+| List s' =>
         fix f (x : list (interp s')) : list (flattenType s') :=
         match x with
-            | [] => []
-            | h :: t => @flatten s' h ++ f t
+        | [] => []
+        | h :: t => @flatten s' h ++ f t
         end
 end.
 
@@ -189,11 +189,11 @@ Module Negation.
 
 (*
 Inductive U : Type :=
-    | F : U
-    | T : U
-    | And : U -> U -> U
-    | Or : U -> U -> U
-    | Impl : U -> U -> U.
+| F : U
+| T : U
+| And : U -> U -> U
+| Or : U -> U -> U
+| Impl : U -> U -> U.
 *)
 
 Import D1 D2.
@@ -204,7 +204,7 @@ End Negation.
 (** * W-typy (TODO) *)
 
 Inductive W (A : Type) (B : A -> Type) : Type :=
-    | sup : forall x : A, (B x -> W A B) -> W A B.
+| sup : forall x : A, (B x -> W A B) -> W A B.
 
 Arguments sup {A B} _ _.
 
@@ -286,8 +286,8 @@ Arguments sup {A B} _ _.
 
 Print list.
 (* ===> Inductive list (X : Type) : Type :=
-            | nil : list X
-            | cons : X -> list X -> list X *)
+        | nil : list X
+        | cons : X -> list X -> list X *)
 
 (** Spróbujmy zastosować powyższe przekształcenia na typie [list X], żeby
     otrzymać reprezentację [list] za pomocą [W].
@@ -318,8 +318,8 @@ Definition listW (X : Type) : Type :=
   W (unit + X) (
     fun ux : unit + X =>
     match ux with
-        | inl _ => False
-        | inr _ => unit
+    | inl _ => False
+    | inr _ => unit
     end).
 
 (** Wartą zauważenia różnicą konceptualną jest to, że jeżeli myślimy
@@ -421,8 +421,8 @@ Admitted.
 
 Fixpoint f {X : Type} (l : list X) : listW X :=
 match l with
-    | nil => nilW X
-    | cons h t => consW h (f t)
+| nil => nilW X
+| cons h t => consW h (f t)
 end.
 
 Definition g {X : Type} : listW X -> list X.
@@ -515,22 +515,22 @@ Definition doubleW : natW -> natW :=
   W_rect _ (fun b : bool => if b then Empty_set else unit) (fun _ => natW)
     (fun a =>
       match a with
-          | true => fun _ _ => zeroW
-          | false => fun _ g => succW (succW (g tt))
+      | true => fun _ _ => zeroW
+      | false => fun _ g => succW (succW (g tt))
       end).
 
 Definition natW_nat :=
   W_rect _ (fun b : bool => if b then Empty_set else unit) (fun _ => nat)
     (fun a =>
       match a with
-          | true => fun _ _ => 0
-          | false => fun _ g => S (g tt)
+      | true => fun _ _ => 0
+      | false => fun _ g => S (g tt)
       end).
 
 Fixpoint nat_natW (n : nat) : natW :=
 match n with
-    | 0 => zeroW
-    | S n' => succW (nat_natW n')
+| 0 => zeroW
+| S n' => succW (nat_natW n')
 end.
 
 Lemma natW_nat_doubleW :
@@ -646,8 +646,8 @@ Record recursive
 Fixpoint nat_rec'
   {A : Type} (z : A) (s : A -> A) (n : nat) : A :=
 match n with
-    | 0 => z
-    | S n' => s (nat_rec' z s n')
+| 0 => z
+| S n' => s (nat_rec' z s n')
 end.
 
 Theorem recursive_nat_rec' :
@@ -797,8 +797,8 @@ Definition I_Vec (A : Type) : Type := nat.
 
 Definition S_Vec {A : Type} (i : I_Vec A) : Type :=
 match i with
-    | 0 => unit
-    | S _ => A
+| 0 => unit
+| S _ => A
 end.
 
 (** Typ kształtów definiujemy przez dopasowanie indeksu do wzorca, bo dla
@@ -811,8 +811,8 @@ end.
 
 Definition P_Vec {A : Type} {i : I_Vec A} (s : S_Vec i) : Type :=
 match i with
-    | 0 => False
-    | S _ => unit
+| 0 => False
+| S _ => unit
 end.
 
 (** Typ pozycji różwnież definiujemy przez dopasowanie indeksu do wzorca,
@@ -997,7 +997,7 @@ Arguments position {S P} _ _.
 (* begin hide *)
 
 Inductive Finite {S : Type} {P : S -> Type} : M S P -> Prop :=
-    | FiniteRec  :
+| FiniteRec  :
         forall m : M S P,
           (forall p : P (shape m), Finite (position m p)) -> Finite m.
 
@@ -1069,7 +1069,7 @@ Qed.
 Definition transport
   {A : Type} {P : A -> Type} {x y : A} (p : x = y) (u : P x) : P y :=
 match p with
-    | eq_refl => u
+| eq_refl => u
 end.
 
 CoInductive siM {S : Type} {P : S -> Type} (m1 m2 : M S P) : Prop :=
@@ -1119,14 +1119,14 @@ Qed.
 Definition coListM (A : Type) : Type :=
   M (option A) (fun x : option A =>
                 match x with
-                  | None => False
-                  | Some _ => unit
+              | None => False
+              | Some _ => unit
                 end).
 
 CoFixpoint fff {A : Type} (l : coList A) : coListM A :=
 match uncons l with
-    | None => {| shape := None; position := fun e : False => match e with end |}
-    | Some (h, t) => {| shape := Some h; position := fun _ => @fff _ t |}
+| None => {| shape := None; position := fun e : False => match e with end |}
+| Some (h, t) => {| shape := Some h; position := fun _ => @fff _ t |}
 end.
 
 Print coBTree.
@@ -1134,8 +1134,8 @@ Print coBTree.
 Definition coBTreeM (A : Type) : Type :=
   M (option A) (fun x : option A =>
                 match x with
-                  | None => False
-                  | Some _ => bool
+              | None => False
+              | Some _ => bool
                 end).
 
 (** ** Ciekawostka: koindukcja i bipodobieństwo *)
@@ -1196,14 +1196,14 @@ Definition bisim_to_eq (A : Type) : Prop :=
 
 Fixpoint nth {A : Type} (s : Stream A) (n : nat) : A :=
 match n with
-    | 0 => hd s
-    | S n' => nth (tl s) n'
+| 0 => hd s
+| S n' => nth (tl s) n'
 end.
 
 Fixpoint drop {A : Type} (s : Stream A) (n : nat) : Stream A :=
 match n with
-    | 0 => s
-    | S n' => drop (tl s) n'
+| 0 => s
+| S n' => drop (tl s) n'
 end.
 
 Lemma hd_drop :
@@ -1404,7 +1404,7 @@ Unset Positivity Checking.
     [F X = X]. *)
 
 Inductive Mu (F : Type -> Type) : Type :=
-    | In : F (Mu F) -> Mu F.
+| In : F (Mu F) -> Mu F.
 
 Arguments In {F} _.
 
@@ -1433,8 +1433,8 @@ Set Positivity Checking.
     mechanizmu definiowania typów induktywnych. *)
 
 Inductive ListR (A X : Type) : Type :=
-    | NilR  : ListR A X
-    | ConsR : A -> X -> ListR A X.
+| NilR  : ListR A X
+| ConsR : A -> X -> ListR A X.
 
 Arguments NilR  {A X}.
 Arguments ConsR {A X} _ _.
@@ -1472,8 +1472,8 @@ Set Guard Checking.
 
 Fixpoint f {A : Type} (l : list A) : List A :=
 match l with
-    | [] => In NilR
-    | h :: t => In (ConsR h (f t))
+| [] => In NilR
+| h :: t => In (ConsR h (f t))
 end.
 
 (** Możemy łatwo przekształcić starą dobrą listę typu [list A] (który jest
@@ -1483,8 +1483,8 @@ end.
 Unset Guard Checking.
 Fixpoint g {A : Type} (l : List A) {struct l} : list A :=
 match l with
-    | In NilR        => []
-    | In (ConsR h t) => h :: g t
+| In NilR        => []
+| In (ConsR h t) => h :: g t
 end.
 Set Guard Checking.
 
@@ -1527,7 +1527,7 @@ End List.
     Zobaczmy, jak to wygląda w praktyce. *)
 
 Inductive WutR (X : Type) : Type :=
-    | wutR : (X -> bool) -> WutR X.
+| wutR : (X -> bool) -> WutR X.
 
 Arguments wutR {X} _.
 
@@ -1547,7 +1547,7 @@ Definition wut (f : Wut -> bool) : Wut :=
 
 Definition tuw (w : Wut) : Wut -> bool :=
 match w with
-    | In (wutR f) => f
+| In (wutR f) => f
 end.
 
 (** Będziemy chcieli skorzystać z twierdzenia Cantora, więc potrzebna nam
@@ -1589,7 +1589,7 @@ Definition CoWut : Type := Nu WutR.
 
 Definition tuw' (x y : CoWut) : bool :=
 match Out x with
-    | wutR f => f y
+| wutR f => f y
 end.
 
 Lemma surjective_tuw' :
@@ -1624,7 +1624,7 @@ Qed.
 Module List'.
 
 Inductive List (A : Type) : Type :=
-    | In : ListR A (List A) -> List A.
+| In : ListR A (List A) -> List A.
 
 Arguments In {A} _.
 
@@ -1657,14 +1657,14 @@ Defined.
 
 Fixpoint f {A : Type} (l : list A) : List A :=
 match l with
-    | [] => In NilR
-    | h :: t => In (ConsR h (f t))
+| [] => In NilR
+| h :: t => In (ConsR h (f t))
 end.
 
 Fixpoint g {A : Type} (l : List A) : list A :=
 match l with
-    | In NilR => []
-    | In (ConsR h t) => h :: g t
+| In NilR => []
+| In (ConsR h t) => h :: g t
 end.
 
 (** Także funkcja zamieniająca nową listę w starę nie wymaga żadnych oszustw -
@@ -1703,25 +1703,25 @@ End List'.
 Module NatF.
 
 Inductive NatF (X : Type) : Type :=
-    | Zero : NatF X
-    | Succ : X -> NatF X.
+| Zero : NatF X
+| Succ : X -> NatF X.
 
 Arguments Zero {X}.
 Arguments Succ {X} _.
 
 Inductive Nat : Type :=
-    | In : NatF Nat -> Nat.
+| In : NatF Nat -> Nat.
 
 Fixpoint f (n : nat) : Nat :=
 match n with
-    | 0 => In Zero
-    | S n' => In (Succ (f n'))
+| 0 => In Zero
+| S n' => In (Succ (f n'))
 end.
 
 Fixpoint g (n : Nat) : nat :=
 match n with
-    | In Zero => 0
-    | In (Succ n') => S (g n')
+| In Zero => 0
+| In (Succ n') => S (g n')
 end.
 
 Lemma fg :
@@ -1753,8 +1753,8 @@ End NatF.
 Module BTree.
 
 Inductive BTree (A : Type) : Type :=
-    | E : BTree A
-    | N : A -> BTree A -> BTree A -> BTree A.
+| E : BTree A
+| N : A -> BTree A -> BTree A -> BTree A.
 
 Arguments E {A}.
 Arguments N {A} _ _ _.
@@ -1762,27 +1762,27 @@ Arguments N {A} _ _ _.
 Module BTreeR.
 
 Inductive BTreeR (A R : Type) : Type :=
-    | ER : BTreeR A R
-    | NR : A -> R -> R -> BTreeR A R.
+| ER : BTreeR A R
+| NR : A -> R -> R -> BTreeR A R.
 
 Arguments ER {A R}.
 Arguments NR {A R} _ _ _.
 
 Inductive BTree' (A : Type) : Type :=
-    | In : BTreeR A (BTree' A) -> BTree' A.
+| In : BTreeR A (BTree' A) -> BTree' A.
 
 Arguments In {A} _.
 
 Fixpoint f {A : Type} (t : BTree A) : BTree' A :=
 match t with
-    | E       => In ER
-    | N v l r => In (NR v (f l) (f r))
+| E       => In ER
+| N v l r => In (NR v (f l) (f r))
 end.
 
 Fixpoint g {A : Type} (t : BTree' A) : BTree A :=
 match t with
-    | In ER         => E
-    | In (NR v l r) => N v (g l) (g r)
+| In ER         => E
+| In (NR v l r) => N v (g l) (g r)
 end.
 
 Lemma fg :
@@ -1810,8 +1810,8 @@ End BTreeR.
 Module BTreeF.
 
 Inductive BTreeF (F : Type -> Type) (A : Type) : Type :=
-    | EF : BTreeF F A
-    | NF : A -> F A -> F A -> BTreeF F A.
+| EF : BTreeF F A
+| NF : A -> F A -> F A -> BTreeF F A.
 
 Arguments EF {F A}.
 Arguments NF {F A} _ _ _.
@@ -1822,20 +1822,20 @@ Arguments NF {F A} _ _ _.
     niezmienione. *)
 
 Inductive BTree' (A : Type) : Type :=
-    | In : BTreeF BTree' A -> BTree' A.
+| In : BTreeF BTree' A -> BTree' A.
 
 Arguments In {A} _.
 
 Fixpoint f {A : Type} (t : BTree A) : BTree' A :=
 match t with
-    | E       => In EF
-    | N v l r => In (NF v (f l) (f r))
+| E       => In EF
+| N v l r => In (NF v (f l) (f r))
 end.
 
 Fixpoint g {A : Type} (t : BTree' A) : BTree A :=
 match t with
-    | In EF => E
-    | In (NF v l r) => N v (g l) (g r)
+| In EF => E
+| In (NF v l r) => N v (g l) (g r)
 end.
 
 Lemma fg :
@@ -1863,12 +1863,12 @@ End BTree.
 Module FinitaryTreeF.
 
 Inductive Tree (A : Type) : Type :=
-    | Empty : Tree A
-    | Node  : A -> Forest A -> Tree A
+| Empty : Tree A
+| Node  : A -> Forest A -> Tree A
 
 with Forest (A : Type) : Type :=
-    | Nil  : Forest A
-    | Cons : Tree A -> Forest A -> Forest A.
+| Nil  : Forest A
+| Cons : Tree A -> Forest A -> Forest A.
 
 Arguments Empty {A}.
 Arguments Node  {A} _ _.
@@ -1877,12 +1877,12 @@ Arguments Nil   {A}.
 Arguments Cons  {A} _ _.
 
 Inductive TreeR (A F : Type) : Type :=
-    | EmptyR : TreeR A F
-    | NodeR  : A -> F -> TreeR A F.
+| EmptyR : TreeR A F
+| NodeR  : A -> F -> TreeR A F.
 
 Inductive ForestR (A F T : Type) : Type :=
-    | NilR  : ForestR A F T
-    | ConsR : T -> F -> ForestR A F T.
+| NilR  : ForestR A F T
+| ConsR : T -> F -> ForestR A F T.
 
 Arguments EmptyR {A F}.
 Arguments NodeR  {A F} _ _.
@@ -1893,10 +1893,10 @@ Arguments ConsR  {A F T} _ _.
 Module TreeR.
 
 Inductive Tree' (A : Type) : Type :=
-    | InT : TreeR A (Forest' A) -> Tree' A
+| InT : TreeR A (Forest' A) -> Tree' A
 
 with Forest' (A : Type) : Type :=
-    | InF : ForestR A (Forest' A) (Tree' A) -> Forest' A.
+| InF : ForestR A (Forest' A) (Tree' A) -> Forest' A.
 
 Arguments InT {A} _.
 
@@ -1904,26 +1904,26 @@ Arguments InF {A} _.
 
 Fixpoint f {A : Type} (t : Tree A) : Tree' A :=
 match t with
-    | Empty     => InT EmptyR
-    | Node x ts => InT (NodeR x (fs ts))
+| Empty     => InT EmptyR
+| Node x ts => InT (NodeR x (fs ts))
 end
 
 with fs {A : Type} (ts : Forest A) : Forest' A :=
 match ts with
-    | Nil        => InF NilR
-    | Cons t ts' => InF (ConsR (f t) (fs ts'))
+| Nil        => InF NilR
+| Cons t ts' => InF (ConsR (f t) (fs ts'))
 end.
 
 Fixpoint g {A : Type} (t : Tree' A) : Tree A :=
 match t with
-    | InT EmptyR       => Empty
-    | InT (NodeR x ts) => Node x (gs ts)
+| InT EmptyR       => Empty
+| InT (NodeR x ts) => Node x (gs ts)
 end
 
 with gs {A : Type} (ts : Forest' A) : Forest A :=
 match ts with
-    | InF NilR  => Nil
-    | InF (ConsR t ts') => Cons (g t) (gs ts')
+| InF NilR  => Nil
+| InF (ConsR t ts') => Cons (g t) (gs ts')
 end.
 
 Lemma fg :
@@ -1965,12 +1965,12 @@ End TreeR.
 Module TreeF.
 
 Inductive TreeF (F : Type -> Type) (A : Type) : Type :=
-    | EmptyF : TreeF F A
-    | NodeF  : A -> F A -> TreeF F A.
+| EmptyF : TreeF F A
+| NodeF  : A -> F A -> TreeF F A.
 
 Inductive ForestF (T F : Type -> Type) (A : Type) : Type :=
-    | NilF  : ForestF T F A
-    | ConsF : T A -> F A -> ForestF T F A.
+| NilF  : ForestF T F A
+| ConsF : T A -> F A -> ForestF T F A.
 
 Arguments EmptyF {F A}.
 Arguments NodeF  {F A} _ _.
@@ -1979,10 +1979,10 @@ Arguments NilF   {T F A}.
 Arguments ConsF  {T F A} _ _.
 
 Inductive Tree' (A : Type) : Type :=
-    | InT : TreeF Forest' A -> Tree' A
+| InT : TreeF Forest' A -> Tree' A
 
 with Forest' (A : Type) : Type :=
-    | InF : ForestF Tree' Forest' A -> Forest' A.
+| InF : ForestF Tree' Forest' A -> Forest' A.
 
 Arguments InT {A} _.
 
@@ -1990,26 +1990,26 @@ Arguments InF {A} _.
 
 Fixpoint f {A : Type} (t : Tree A) : Tree' A :=
 match t with
-    | Empty     => InT EmptyF
-    | Node x ts => InT (NodeF x (fs ts))
+| Empty     => InT EmptyF
+| Node x ts => InT (NodeF x (fs ts))
 end
 
 with fs {A : Type} (ts : Forest A) : Forest' A :=
 match ts with
-    | Nil        => InF NilF
-    | Cons t ts' => InF (ConsF (f t) (fs ts'))
+| Nil        => InF NilF
+| Cons t ts' => InF (ConsF (f t) (fs ts'))
 end.
 
 Fixpoint g {A : Type} (t : Tree' A) : Tree A :=
 match t with
-    | InT EmptyF       => Empty
-    | InT (NodeF x ts) => Node x (gs ts)
+| InT EmptyF       => Empty
+| InT (NodeF x ts) => Node x (gs ts)
 end
 
 with gs {A : Type} (ts : Forest' A) : Forest A :=
 match ts with
-    | InF NilF  => Nil 
-    | InF (ConsF t ts') => Cons (g t) (gs ts')
+| InF NilF  => Nil 
+| InF (ConsF t ts') => Cons (g t) (gs ts')
 end.
 
 Lemma fg :
@@ -2069,10 +2069,10 @@ Inductive ForallF
   {A : Type} (R : A -> A -> Prop)
   (F : (A -> A -> Prop) -> CoList A -> CoList A -> Prop)
   : CoList A -> CoList A -> Prop :=
-    | Nils  :
+| Nils  :
         forall l1 l2 : CoList A,
           uncons l1 = NilF -> uncons l2 = NilF -> ForallF R F l1 l2
-    | Conss :
+| Conss :
         forall (l1 l2 : CoList A) (h1 h2 : A) (t1 t2 : CoList A),
           uncons l1 = ConsF h1 t1 -> uncons l2 = ConsF h2 t2 ->
             R h1 h2 -> F R t1 t2 -> ForallF R F l1 l2.
@@ -2093,14 +2093,14 @@ End ListCoList.
 Module ListCoList2.
 
 Inductive ListR (A R : Type) : Type :=
-    | NilR  : ListR A R
-    | ConsR : A -> R -> ListR A R.
+| NilR  : ListR A R
+| ConsR : A -> R -> ListR A R.
 
 Arguments NilR  {A R}.
 Arguments ConsR {A R} _ _.
 
 Inductive List (A : Type) : Type :=
-    | In : ListR A (List A) -> List A.
+| In : ListR A (List A) -> List A.
 
 Arguments In {A} _.
 
@@ -2121,20 +2121,20 @@ Inductive ForallR
   (RR : R -> R -> Prop)
   (l1 l2 : R)
   : Prop :=
-    | Nils  :
+| Nils  :
         Unwrap l1 = NilR -> Unwrap l2 = NilR -> ForallR Unwrap RA RR l1 l2
-    | Conss :
+| Conss :
         forall (h1 h2 : A) (t1 t2 : R),
           Unwrap l1 = ConsR h1 t1 -> Unwrap l2 = ConsR h2 t2 ->
             RA h1 h2 -> RR t1 t2 -> ForallR Unwrap RA RR l1 l2.
 
 Definition uncons' {A : Type} (l : List A) : ListR A (List A) :=
 match l with
-    | In x => x
+| In x => x
 end.
 
 Inductive Forall {A : Type} (R : A -> A -> Prop) (l1 l2 : List A) : Prop :=
-    | InForall : ForallR uncons' R (Forall R) l1 l2 -> Forall R l1 l2.
+| InForall : ForallR uncons' R (Forall R) l1 l2 -> Forall R l1 l2.
 
 CoInductive CoForall {A : Type} (R : A -> A -> Prop) (l1 l2 : CoList A) : Prop :=
 {
@@ -2148,35 +2148,35 @@ Inductive ExistsR
   (RL : L -> L -> Prop)
   (l1 l2 : L)
   : Prop :=
-    | Here  :
+| Here  :
         forall (h1 h2 : A) (t1 t2 : L),
           Uncons l1 = ConsR h1 t1 -> Uncons l2 = ConsR h2 t2 ->
             RA h1 h2 -> ExistsR Uncons RA RL l1 l2
-    | There :
+| There :
         forall (h1 h2 : A) (t1 t2 : L),
           Uncons l1 = ConsR h1 t1 -> Uncons l2 = ConsR h2 t2 ->
             RL t1 t2 -> ExistsR Uncons RA RL l1 l2.
 
 Inductive Exists {A : Type} (R : A -> A -> Prop) (l1 l2 : List A) : Prop :=
-    | InExists : ExistsR uncons' R (Exists R) l1 l2 -> Exists R l1 l2.
+| InExists : ExistsR uncons' R (Exists R) l1 l2 -> Exists R l1 l2.
 
 Inductive CoExists {A : Type} (R : A -> A -> Prop) (l1 l2 : CoList A) : Prop :=
-    | InCoExists : ExistsR uncons R (CoExists R) l1 l2 -> CoExists R l1 l2.
+| InCoExists : ExistsR uncons R (CoExists R) l1 l2 -> CoExists R l1 l2.
 
 (** Maybe we can define generic functions? *)
 
 Fixpoint cata {A R : Type} (f : ListR A R -> R) (l : List A) : R :=
 match l with
-    | In NilR        => f NilR
-    | In (ConsR h t) => f (ConsR h (cata f t))
+| In NilR        => f NilR
+| In (ConsR h t) => f (ConsR h (cata f t))
 end.
 
 CoFixpoint ana {A R : Type} (f : R -> ListR A R) (r : R) : CoList A :=
 {|
     uncons :=
       match f r with
-          | NilR      => NilR
-          | ConsR h t => ConsR h (ana f t)
+      | NilR      => NilR
+      | ConsR h t => ConsR h (ana f t)
       end
 |}.
 
@@ -2190,15 +2190,15 @@ End ListCoList2.
     induktywne. *)
 
 Inductive I : Type :=
-    | u : I
-    | nonind : forall A : Type, (A -> I) -> I
-    | ind : I -> I.
+| u : I
+| nonind : forall A : Type, (A -> I) -> I
+| ind : I -> I.
 
 Fixpoint Arg (i : I) (X : Type) : Type :=
 match i with
-    | u => unit
-    | nonind A f => {a : A & Arg (f a) X}
-    | ind i => X * Arg i X
+| u => unit
+| nonind A f => {a : A & Arg (f a) X}
+| ind i => X * Arg i X
 end.
 
 Definition iprod (A B : Type) : I :=
@@ -2234,7 +2234,7 @@ Compute Arg ifalse unit.
 
 Unset Positivity Checking.
 Inductive IType (i : I) : Type :=
-    | intro : Arg i (IType i) -> IType i.
+| intro : Arg i (IType i) -> IType i.
 Set Positivity Checking.
 
 (*
@@ -2273,29 +2273,29 @@ Set Guard Checking.
 
 Fixpoint nat_to_iinat (n : nat) : iinat :=
 match n with
-    | 0 => Z
-    | S n' => iS (nat_to_iinat n')
+| 0 => Z
+| S n' => iS (nat_to_iinat n')
 end.
 
 Definition pred (n : iinat) : option iinat :=
 match n with
-    | intro _ (existT _ true _) => None
-    | intro _ (existT _ false (n', _)) => Some n'
+| intro _ (existT _ true _) => None
+| intro _ (existT _ false (n', _)) => Some n'
 end.
 
 (*
 Fixpoint iinat_to_nat (n : iinat) : nat :=
 match pred n with
-    | None => 0
-    | Some n' => S (iinat_to_nat n')
+| None => 0
+| Some n' => S (iinat_to_nat n')
 end.
 *)
 
 Unset Guard Checking.
 Fixpoint iinat_to_nat (n : iinat) : nat :=
 match n with
-    | intro _ (existT _ true _) => 0
-    | intro _ (existT _ false (n', _)) => S (iinat_to_nat n')
+| intro _ (existT _ true _) => 0
+| intro _ (existT _ false (n', _)) => S (iinat_to_nat n')
 end.
 Set Guard Checking.
 
@@ -2335,9 +2335,9 @@ Compute second_way (iS (iS Z)).
 (** ** Kody dla typów induktywno-rekursywnych *)
 
 Inductive IR (D : Type) : Type :=
-    | iota  : D -> IR D
-    | sigma : forall A : Type, (A -> IR D) -> IR D
-    | delta : forall A : Type, ((A -> D) -> IR D) -> IR D.
+| iota  : D -> IR D
+| sigma : forall A : Type, (A -> IR D) -> IR D
+| delta : forall A : Type, ((A -> D) -> IR D) -> IR D.
 
 (** * Reprezentacja typów induktywnych za pomocą kontenerów *)
 
@@ -2345,7 +2345,7 @@ Inductive IR (D : Type) : Type :=
     na myśl "position", czyli "pozycja". *)
 
 Inductive Container (S : Type) (P : S -> Type) (X : Type) : Type :=
-    | ctain : forall s : S, (P s -> X) -> Container S P X.
+| ctain : forall s : S, (P s -> X) -> Container S P X.
 
 Arguments ctain {S P X} _ _.
 
@@ -2375,10 +2375,10 @@ Defined.
 Fixpoint f {A : Type} (l : list A) : CList A.
 refine (
 match l with
-    | []     => ctain 0 (fun s : Fin.t 0 => match s with end)
-    | x :: xs =>
+| []     => ctain 0 (fun s : Fin.t 0 => match s with end)
+| x :: xs =>
         match f _ xs with
-            | ctain n p => ctain (S n) _
+        | ctain n p => ctain (S n) _
         end
 end).
   destruct n as [| n']; intro s.

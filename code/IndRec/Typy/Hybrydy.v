@@ -7,8 +7,8 @@
 Module sumor.
 
 Inductive sumor (A : Type) (B : Prop) : Type :=
-    | inleft : A -> sumor A B
-    | inright : B -> sumor A B.
+| inleft : A -> sumor A B
+| inright : B -> sumor A B.
 
 (** Jak sama nazwa wskazuje, [sumor] jest hybrydą sumy rozłącznej [sum]
     oraz dysjunkcji [or]. Możemy go interpretować jako typ, którego
@@ -28,8 +28,8 @@ Inductive sumor (A : Type) (B : Prop) : Type :=
 (* begin hide *)
 Definition pred' (n : nat) : sumor nat (n = 0) :=
 match n with
-    | 0 => inright _ _ eq_refl
-    | S n' => inleft _ _ n'
+| 0 => inright _ _ eq_refl
+| S n' => inleft _ _ n'
 end.
 (* end hide *)
 

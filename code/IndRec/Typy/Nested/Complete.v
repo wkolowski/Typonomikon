@@ -7,8 +7,8 @@ Require Import List.
 Import ListNotations.
 
 Inductive Complete (A : Type) : Type :=
-    | Empty : Complete A
-    | Layer : A -> Complete (A * A) -> Complete A.
+| Empty : Complete A
+| Layer : A -> Complete (A * A) -> Complete A.
 
 Arguments Empty {A}.
 Arguments Layer {A} _ _.
@@ -28,8 +28,8 @@ Definition layer {A : Type} (x : A) (t : CompleteC (A * A)) : CompleteC A :=
 
 Fixpoint C2CC {A : Type} (t : Complete A) : CompleteC A :=
 match t with
-    | Empty => empty
-    | Layer x t => layer x (C2CC t)
+| Empty => empty
+| Layer x t => layer x (C2CC t)
 end.
 
 Definition CC2C {A : Type} (t : CompleteC A) : Complete A :=
@@ -47,45 +47,45 @@ Qed.
 
 Function leftmost {A : Type} (t : Complete A) : option A :=
 match t with
-    | Empty      => None
-    | Layer v t' =>
+| Empty      => None
+| Layer v t' =>
         match leftmost t' with
-            | None   => Some v
-            | Some (l, _) => Some l
+        | None   => Some v
+        | Some (l, _) => Some l
         end
 end.
 
 Fixpoint rightmost {A : Type} (t : Complete A) : option A :=
 match t with
-    | Empty      => None
-    | Layer v t' =>
+| Empty      => None
+| Layer v t' =>
         match rightmost t' with
-            | None   => Some v
-            | Some (_, r) => Some r
+        | None   => Some v
+        | Some (_, r) => Some r
         end
 end.
 
 Fixpoint map {A B : Type} (f : A -> B) (t : Complete A) : Complete B :=
 match t with
-    | Empty      => Empty
-    | Layer v t' => Layer (f v) (map (fun '(x, y) => (f x, f y)) t')
+| Empty      => Empty
+| Layer v t' => Layer (f v) (map (fun '(x, y) => (f x, f y)) t')
 end.
 
 Definition swap {A B : Type} (p : A * B) : B * A :=
 match p with
-    | (x, y) => (y, x)
+| (x, y) => (y, x)
 end.
 
 Fixpoint mirror {A : Type} (t : Complete A) : Complete A :=
 match t with
-    | Empty      => Empty
-    | Layer v t' => Layer v (map swap (mirror t'))
+| Empty      => Empty
+| Layer v t' => Layer v (map swap (mirror t'))
 end.
 
 Fixpoint nums (n : nat) : Complete nat :=
 match n with
-    | 0    => Empty
-    | S n' => Layer n (map (fun x => (x, x)) (nums n'))
+| 0    => Empty
+| S n' => Layer n (map (fun x => (x, x)) (nums n'))
 end.
 
 Definition test : Complete nat :=
@@ -119,8 +119,8 @@ Lemma leftmost_map :
   forall {A B : Type} (f : A -> B) (t : Complete A),
     leftmost (map f t) =
       match leftmost t with
-          | None   => None
-          | Some a => Some (f a)
+      | None   => None
+      | Some a => Some (f a)
       end.
 Proof.
   intros. revert B f.
@@ -165,83 +165,83 @@ Qed.
 
 Fixpoint size {A : Type} (t : Complete A) : nat :=
 match t with
-    | Empty => 0
-    | Layer v ts => 1 + size ts
+| Empty => 0
+| Layer v ts => 1 + size ts
 end.
 
 Fixpoint height {A : Type} (t : Complete A) : nat :=
 match t with
-    | Empty => 0
-    | Layer _ ts => 1 + height ts
+| Empty => 0
+| Layer _ ts => 1 + height ts
 end.
 
 Fixpoint flatten {A : Type} (l : list (A * A)) : list A :=
 match l with
-    | [] => []
-    | (hl, hr) :: t => hl :: hr :: flatten t
+| [] => []
+| (hl, hr) :: t => hl :: hr :: flatten t
 end.
 
 Fixpoint bfs {A : Type} (t : Complete A) : list A :=
 match t with
-    | Empty => []
-    | Layer v ts => v :: flatten (bfs ts)
+| Empty => []
+| Layer v ts => v :: flatten (bfs ts)
 end.
 
 Fixpoint complete {A : Type} (n : nat) (x : A) : Complete A :=
 match n with
-    | 0 => Empty
-    | S n' => Layer x (complete n' (x, x))
+| 0 => Empty
+| S n' => Layer x (complete n' (x, x))
 end.
 
 Fixpoint any {A : Type} (p : A -> bool) (t : Complete A) : bool :=
 match t with
-    | Empty => false
-    | Layer v ts => p v || any (fun '(x, y) => p x || p y) ts
+| Empty => false
+| Layer v ts => p v || any (fun '(x, y) => p x || p y) ts
 end.
 
 Fixpoint all {A : Type} (p : A -> bool) (t : Complete A) : bool :=
 match t with
-    | Empty => true
-    | Layer v ts => p v && all (fun '(x, y) => p x && p y) ts
+| Empty => true
+| Layer v ts => p v && all (fun '(x, y) => p x && p y) ts
 end.
 
 Fixpoint find {A : Type} (p : A -> bool) (t : Complete A) : option A :=
 match t with
-    | Empty => None
-    | Layer v ts =>
+| Empty => None
+| Layer v ts =>
         if p v
         then Some v
         else
           match find (fun '(x, y) => p x || p y) ts with
-              | None => None
-              | Some (x, y) => if p x then Some x else Some y
+          | None => None
+          | Some (x, y) => if p x then Some x else Some y
           end
 end.
 
 Fixpoint zipWith {A B C : Type} (f : A -> B -> C) (ta : Complete A) (tb : Complete B) : Complete C :=
 match ta, tb with
-    | Empty, _ => Empty
-    | _, Empty => Empty
-    | Layer a ta', Layer b tb' => Layer (f a b) (zipWith (fun '(al, ar) '(bl, br) => (f al bl, f ar br)) ta' tb')
+| Empty, _ => Empty
+| _, Empty => Empty
+| Layer a ta', Layer b tb' => Layer (f a b) (zipWith (fun '(al, ar) '(bl, br) => (f al bl, f ar br)) ta' tb')
 end.
 
 Fixpoint left {A : Type} (t : Complete (A * A)) : Complete A :=
 match t with
-    | Empty => Empty
-    | Layer (a, _) ts => Layer a (left ts)
+| Empty => Empty
+| Layer (a, _) ts => Layer a (left ts)
 end.
 
 Fixpoint right {A : Type} (t : Complete (A * A)) : Complete A :=
 match t with
-    | Empty => Empty
-    | Layer (_, a) ts => Layer a (right ts)
+| Empty => Empty
+| Layer (_, a) ts => Layer a (right ts)
 end.
 
 
 (*Fixpoint count {A : Type} (p : A -> bool) (t : Complete A) : nat :=
 match t with
-    | Empty => 0
-    | Layer v ts => (if p v then 1 else 0) + count (fun (x, y) => ts
+| Empty => 0
+| Layer v ts => (if p v then 1 else 0) + count (fun (x, y) => ts
 end.*)
 
 (* TODO
@@ -286,8 +286,8 @@ Parameter unzipWith :
 *)
 
 Inductive Complete' {A : Type} (P : A -> Type) : Complete A -> Type :=
-    | Empty' : Complete' P Empty
-    | Layer' : forall (x : A) (t : Complete (prod A A)),
+| Empty' : Complete' P Empty
+| Layer' : forall (x : A) (t : Complete (prod A A)),
                  P x -> Complete' (fun '(x, y) => prod (P x) (P y)) t -> Complete' P (Layer x t).
 
 Fixpoint Complete_ind_deep

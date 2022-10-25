@@ -5,14 +5,14 @@ From Typonomikon Require Import D5 D6.
 Module Insert.
 
 Inductive Insert {A : Type} (x : A) : list A -> list A -> Type :=
-    | Insert_here :
+| Insert_here :
         forall l : list A, Insert x l (x :: l)
-    | Insert_there :
+| Insert_there :
         forall (h : A) (t t' : list A), Insert x t t' -> Insert x (h :: t) (h :: t').
 
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
-    | Perm_nil    : Perm [] []
-    | Perm_Insert :
+| Perm_nil    : Perm [] []
+| Perm_Insert :
         forall (x : A) (l1 l1' l2 l2' : list A),
           Insert x l1 l1' -> Insert x l2 l2' -> Perm l1 l2 -> Perm l1' l2'.
 
@@ -92,15 +92,15 @@ End Insert.
 Module Insert2.
 
 (* Inductive Insert {A : Type} (x : A) : list A -> list A -> Type :=
-    | Insert_here :
+| Insert_here :
         forall l : list A, Insert x l (x :: l)
-    | Insert_there :
+| Insert_there :
         forall (h : A) (t t' : list A), Insert x t t' -> Insert x (h :: t) (h :: t').
  *)
 
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
-    | Perm_nil    : Perm [] []
-    | Perm_insert :
+| Perm_nil    : Perm [] []
+| Perm_insert :
         forall (x : A) (l1 l2 r1 r2 : list A),
           Perm (l1 ++ l2) (r1 ++ r2) -> Perm (l1 ++ x :: l2) (r1 ++ x :: r2).
 
@@ -171,32 +171,32 @@ End Insert2.
 Set Implicit Arguments.
 
 Inductive BTree (A : Type) : Type :=
-    | E : BTree A
-    | N : A -> BTree A -> BTree A -> BTree A.
+| E : BTree A
+| N : A -> BTree A -> BTree A -> BTree A.
 
 Inductive Position {A : Type} : BTree A -> Type :=
-    | here :
+| here :
         forall (v : A) (l r : BTree A),
           Position (N v l r)
-    | left :
+| left :
         forall (v : A) (l r : BTree A),
           Position l -> Position (N v l r)
-    | right :
+| right :
         forall (v : A) (l r : BTree A),
           Position r -> Position (N v l r).
 
 Fixpoint get {A : Type} {t : BTree A} (p : Position t) : A :=
 match p with
-    | here  v _ _    => v
-    | left  _ _ p' => get p'
-    | right _ _ p' => get p'
+| here  v _ _    => v
+| left  _ _ p' => get p'
+| right _ _ p' => get p'
 end.
 
 Fixpoint modify {A : Type} (f : A -> A) {t : BTree A} (p : Position t) : BTree A :=
 match p with
-    | here  v l r  => N (f v) l r
-    | left  v r p' => N v (modify f p') r
-    | right v l p' => N v l (modify f p')
+| here  v l r  => N (f v) l r
+| left  v r p' => N v (modify f p') r
+| right v l p' => N v l (modify f p')
 end.
 
 Record transposition {A : Type} (t1 t2 : BTree A) : Type :=

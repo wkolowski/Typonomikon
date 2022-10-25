@@ -1,9 +1,9 @@
 Inductive ListX (X A : Type) : Type :=
-    | Empty    : ListX X A
-    | NonEmpty : X -> ListX X A.
+| Empty    : ListX X A
+| NonEmpty : X -> ListX X A.
 
 Inductive NonEmptyListY (Y A : Type) : Type :=
-    | Cons  : A -> Y -> NonEmptyListY Y A.
+| Cons  : A -> Y -> NonEmptyListY Y A.
 
 Arguments Empty    {X A}.
 Arguments NonEmpty {X A} _.
@@ -31,16 +31,16 @@ Inductive CoListSimF
   (F : CoList' A -> CoList' A -> Prop)
   (G : NonEmptyCoList A -> NonEmptyCoList A -> Prop)
   (l1 l2 : CoList' A) : Prop :=
-    | Empty'    :
+| Empty'    :
         CLOut l1 = Empty -> CLOut l2 = Empty -> CoListSimF F G l1 l2
-    | NonEmpty' :
+| NonEmpty' :
         forall l1' l2' : NonEmptyCoList A,
           G l1' l2' -> CoListSimF F G l1 l2.
 
 Inductive NonEmptyCoListSimF
   {A : Type} (F : CoList' A -> CoList' A -> Prop)
   (l1 l2 : NonEmptyCoList A) : Prop :=
-    | Cons' :
+| Cons' :
         forall (h1 h2 : A) (t1 t2 : CoList' A),
           h1 = h2 -> F t1 t2 -> NonEmptyCoListSimF F l1 l2.
 
@@ -61,11 +61,11 @@ End DoesntWork.
 Inductive CoListSimF
   {A : Type} (F : CoList' A -> CoList' A -> Prop)
   (l1 l2 : CoList' A) : Prop :=
-    | Empty'    :
+| Empty'    :
         CLOut l1 = Empty ->
         CLOut l2 = Empty ->
           CoListSimF F l1 l2
-    | NonEmpty' :
+| NonEmpty' :
         forall (h1 h2 : A) (t1 t2 : CoList' A),
           CLOut l1 = NonEmpty {| NECLOut := Cons h1 t1 |} ->
           CLOut l2 = NonEmpty {| NECLOut := Cons h2 t2 |} ->
@@ -82,10 +82,10 @@ CoFixpoint f {A : Type} (l : CoList' A) : CoList A :=
 {|
     uncons :=
       match CLOut l with
-          | Empty => NilF
-          | NonEmpty l' =>
+      | Empty => NilF
+      | NonEmpty l' =>
               match  NECLOut l' with
-                  | Cons h t => ConsF h (f t)
+              | Cons h t => ConsF h (f t)
               end
       end
 |}.
@@ -94,8 +94,8 @@ CoFixpoint g {A : Type} (l : CoList A) : CoList' A :=
 {|
     CLOut :=
       match uncons l with
-          | NilF      => Empty
-          | ConsF h t => NonEmpty {| NECLOut := Cons h (g t) |}
+      | NilF      => Empty
+      | ConsF h t => NonEmpty {| NECLOut := Cons h (g t) |}
       end
 |}.
 

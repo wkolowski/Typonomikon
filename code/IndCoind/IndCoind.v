@@ -1,6 +1,6 @@
 Inductive TreeF (A X : Type) : Type :=
-    | E : TreeF A X
-    | N : A -> TreeF A X -> X -> TreeF A X.
+| E : TreeF A X
+| N : A -> TreeF A X -> X -> TreeF A X.
 
 Arguments E {A X}.
 Arguments N {A X} _ _ _.
@@ -14,8 +14,8 @@ Arguments Out {A} _.
 
 Fixpoint inums (n : nat) : TreeF nat (Tree nat) :=
 match n with
-    | 0 => E
-    | S n' => N n' (inums n') {| Out := E |}
+| 0 => E
+| S n' => N n' (inums n') {| Out := E |}
 end.
 
 CoFixpoint nums (n : nat) : Tree nat :=
@@ -25,21 +25,21 @@ CoFixpoint nums (n : nat) : Tree nat :=
 
 Fixpoint leftmostF {A X : Type} (t : TreeF A X) : option A :=
 match t with
-    | E => None
-    | N v l _ =>
+| E => None
+| N v l _ =>
         match leftmostF l with
-            | None   => Some v
-            | Some x => Some x
+        | None   => Some v
+        | Some x => Some x
         end
 end.
 
 Definition leftmost {A : Type} (t : Tree A) : option A :=
 match Out t with
-    | E => None
-    | N v l _ =>
+| E => None
+| N v l _ =>
         match leftmostF l with
-            | None   => Some v
-            | Some x => Some x
+        | None   => Some v
+        | Some x => Some x
         end
 end.
 
@@ -55,23 +55,23 @@ Qed.
 
 Fixpoint mapF {A B X Y : Type} (f : A -> B) (g : X -> Y) (t : TreeF A X) {struct t} : TreeF B Y :=
 match t with
-    | E       => E
-    | N x l r => N (f x) (mapF f g l) (g r)
+| E       => E
+| N x l r => N (f x) (mapF f g l) (g r)
 end.
 
 (* CoFixpoint map {A B : Type} (f : A -> B) (t : Tree A) : Tree B :=
 {|
     Out :=
       match Out t with
-          | E => E
-          | N x l r => N (f x) (mapF f (map f) l) (map f r)
+      | E => E
+      | N x l r => N (f x) (mapF f (map f) l) (map f r)
       end;
 |}. *)
 
 Fixpoint complete {A : Type} (n : nat) (x : A) (t : Tree A) : TreeF A (Tree A) :=
 match n with
-    | 0    => E
-    | S n' => N x (complete n' x t) t
+| 0    => E
+| S n' => N x (complete n' x t) t
 end.
 
 Fail CoFixpoint complete' {A : Type} (n : nat) (x : A) : Tree A :=
@@ -80,8 +80,8 @@ Fail CoFixpoint complete' {A : Type} (n : nat) (x : A) : Tree A :=
       N x
         ((fix aux (n : nat) : TreeF A (Tree A) :=
           match n with
-              | 0 => E
-              | S n' => N x (aux n') (complete' n x)
+          | 0 => E
+          | S n' => N x (aux n') (complete' n x)
           end) n)
         (complete' n x);
 |}.
@@ -95,8 +95,8 @@ Definition max (n : nat) (m : conat) : conat := max (from_nat n) m.
 
 (* Fixpoint max (n : nat) (m : conat) : conat :=
 match n, out m with
-    | 0   , _ => m
-    | S n', S m' => S (max n' m')
+| 0   , _ => m
+| S n', S m' => S (max n' m')
  *)
 
 (*Parameter elem : forall A : Type, A -> BTree A -> Prop.*)
@@ -118,8 +118,8 @@ CoFixpoint size {A : Type} (t : Tree A) : conat :=
 {|
     out :=
       match Out t with
-          | E => Z
-          | N _ l r => S (size l) (size r)
+      | E => Z
+      | N _ l r => S (size l) (size r)
       end;
 |}.
 *)
@@ -144,8 +144,8 @@ Parameter mirror' : forall A : Type, BTree A -> BTree A.
 
 Fixpoint mirror {A : Type} (t : BTree A) : BTree A :=
 match t with
-    | E => E
-    | N v l r => N v (mirror r) (mirror l)
+| E => E
+| N v l r => N v (mirror r) (mirror l)
 end.
 
 (*

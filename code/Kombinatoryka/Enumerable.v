@@ -18,9 +18,9 @@ Instance Enumerable_bool : Enumerable bool :=
     size b := 1;
     enum n :=
     match n with
-        | 0 => []
-        | 1 => [false; true]
-        | _ => []
+    | 0 => []
+    | 1 => [false; true]
+    | _ => []
     end
 }.
 Proof.
@@ -34,9 +34,9 @@ Definition flip
 Fixpoint all_lists {A : Type} (E : Enumerable A) (n : nat)
   : list (list A) :=
 match n with
-    | 0 => [[]]
-    | 1 => map (fun x => [x]) (enum A 1)
-    | S n' =>
+| 0 => [[]]
+| 1 => map (fun x => [x]) (enum A 1)
+| S n' =>
         flip bind (enum A 1) (fun h =>
         flip bind (all_lists E n') (fun t => [h :: t]))
 end.

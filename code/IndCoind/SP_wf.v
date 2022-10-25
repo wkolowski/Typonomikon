@@ -1,8 +1,8 @@
 From Typonomikon Require Import F3. (* Streams. *)
 
 Inductive SPXY (X Y A B : Type) : Type :=
-    | PutX : B -> X -> SPXY X Y A B
-    | GetX : (A -> Y) -> SPXY X Y A B.
+| PutX : B -> X -> SPXY X Y A B
+| GetX : (A -> Y) -> SPXY X Y A B.
 
 Arguments PutX {X Y A B} _ _.
 Arguments GetX {X Y A B} _.
@@ -15,10 +15,10 @@ CoInductive SP' (A B : Type) : Type :=
 Arguments Out {A B} _.
 
 Inductive WF {A B : Type} : SP' A B -> Type :=
-    | WF_Put :
+| WF_Put :
         forall (sp : SP' A B) (h : B) (t : SP' A B),
           Out sp = PutX h t -> WF sp
-    | wF_Get :
+| wF_Get :
         forall (sp : SP' A B) (get : A -> SP' A B),
           Out sp = GetX get -> (forall a : A, WF (get a)) -> WF sp.
 
@@ -42,27 +42,27 @@ Abort.
 (*
 Fixpoint head {A B : Type} (g : GetSP A B) (s : Stream A) : B :=
 match g with
-    | In (PutX h t) => h
-    | In (GetX g')  => head (g' (hd s)) (tl s)
+| In (PutX h t) => h
+| In (GetX g')  => head (g' (hd s)) (tl s)
 end.
 
 Fixpoint tail {A B : Type} (g : GetSP A B) (s : Stream A) : SP A B * Stream A :=
 match g with
-    | In (PutX h t) => (t, s)
-    | In (GetX g')  => tail (g' (hd s)) (tl s)
+| In (PutX h t) => (t, s)
+| In (GetX g')  => tail (g' (hd s)) (tl s)
 end.
 
 CoFixpoint toStream {A B : Type} (f : SP A B) (s : Stream A) : Stream B :=
 {|
     hd :=
       match Out f with
-          | PutX h _ => h
-          | GetX g   => head (g (hd s)) (tl s)
+      | PutX h _ => h
+      | GetX g   => head (g (hd s)) (tl s)
       end;
     tl :=
       match Out f with
-          | PutX _ t => toStream t s
-          | GetX g   => let (f', s') := tail (g (hd s)) (tl s) in toStream f' s'
+      | PutX _ t => toStream t s
+      | GetX g   => let (f', s') := tail (g (hd s)) (tl s) in toStream f' s'
       end;
 |}.
 
@@ -70,30 +70,30 @@ CoFixpoint toStream {A B : Type} (f : SP A B) (s : Stream A) : Stream B :=
 
 Fixpoint aux {A B : Type} (g : GetSP A B) (s : Stream A) : B * (SP A B * Stream A) :=
 match g with
-    | In (PutX h t) => (h, (t, s))
-    | In (GetX g')  => aux (g' (hd s)) (tl s)
+| In (PutX h t) => (h, (t, s))
+| In (GetX g')  => aux (g' (hd s)) (tl s)
 end.
 
 CoFixpoint toStream' {A B : Type} (f : SP A B) (s : Stream A) : Stream B :=
 match Out f with
-    | PutX h t =>
+| PutX h t =>
         {|
             hd := h;
             tl := toStream' t s;
-        |}
-    | GetX g   => let '(h, (f', s')) := aux (g (hd s)) (tl s) in
+    |}
+| GetX g   => let '(h, (f', s')) := aux (g (hd s)) (tl s) in
         {|
             hd := h;
             tl := toStream' f' s';
-        |}
+    |}
 end.
 
 (** Lighter syntax. *)
 
 CoFixpoint toStream'' {A B : Type} (f : SP A B) (s : Stream A) : Stream B :=
 match Out f with
-    | PutX h t => scons h (toStream'' t s)
-    | GetX g   =>
+| PutX h t => scons h (toStream'' t s)
+| GetX g   =>
         let '(h, (f', s')) := aux (g (hd s)) (tl s) in
           scons h (toStream'' f' s')
 end.
@@ -138,16 +138,16 @@ Lemma toStream'_eq :
   forall {A B : Type} (f : SP A B) (s : Stream A),
     toStream' f s =
     match Out f with
-        | PutX h t =>
+    | PutX h t =>
             {|
                 hd := h;
                 tl := toStream' t s;
-            |}
-        | GetX g   => let '(h, (f', s')) := aux (g (hd s)) (tl s) in
+        |}
+    | GetX g   => let '(h, (f', s')) := aux (g (hd s)) (tl s) in
             {|
                 hd := h;
                 tl := toStream' f' s';
-            |}
+        |}
     end.
 Proof.
   intros. apply eq_Stream. destruct f as [[]]; cbn.
@@ -174,8 +174,8 @@ Print SPXY.
 
 (* Fixpoint whnf {A B : Type} (g : GetSP B C) (i : SP A B) : C * (SP B C * SP A B) :=
 match g with
-    | In (PutX h t) => (h, (t, i))
-    | In (GetX g')  => whnf (g' (hd s)) (tl s)
+| In (PutX h t) => (h, (t, i))
+| In (GetX g')  => whnf (g' (hd s)) (tl s)
 end.
  *)
 

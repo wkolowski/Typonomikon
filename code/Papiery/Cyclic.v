@@ -14,8 +14,8 @@ Import ListNotations.
     original blogpost uses ordinary Haskell lists. *)
 
 Inductive CoListF (A R : Type) : Type :=
-    | CoNilF
-    | CoConsF (h : A) (t : R).
+| CoNilF
+| CoConsF (h : A) (t : R).
 
 Arguments CoNilF  {A R}.
 Arguments CoConsF {A R} _ _.
@@ -38,16 +38,16 @@ Definition CoCons {A : Type} (h : A) (t : CoList A) : CoList A :=
 |}.
 
 Inductive FiniteCoList {A : Type} (l : CoList A) : Type :=
-    | FiniteCoNil :
+| FiniteCoNil :
         uncons l = CoNilF -> FiniteCoList l
-    | FiniteCoCons :
+| FiniteCoCons :
         forall (h : A) (t: CoList A),
           uncons l = CoConsF h t ->
             FiniteCoList t -> FiniteCoList l.
 
 Inductive simF {A : Type} (l1 l2 : CoList A) (R : CoList A -> CoList A -> Type) : Type :=
-    | CoNilsF (H1 : uncons l1 = CoNilF) (H2 : uncons l2 = CoNilF)
-    | CoConssF :
+| CoNilsF (H1 : uncons l1 = CoNilF) (H2 : uncons l2 = CoNilF)
+| CoConssF :
         forall (h1 h2 : A) (t1 t2 : CoList A),
           uncons l1 = CoConsF h1 t1 -> uncons l2 = CoConsF h2 t2 ->
             h1 = h2 -> R t1 t2 -> simF l1 l2 R.
@@ -77,9 +77,9 @@ Module HOAS_Like.
 
 Unset Positivity Checking.
 Inductive CList (A : Type) : Type :=
-    | Nil
-    | Cons (h : A) (t : CList A)
-    | Rec  (h : A) (r : CList A -> CList A).
+| Nil
+| Cons (h : A) (t : CList A)
+| Rec  (h : A) (r : CList A -> CList A).
 Set Positivity Checking.
 
 Arguments Nil  {A}.
@@ -88,14 +88,14 @@ Arguments Rec  {A} _.
 
 Function unwind {A : Type} (l : CList A) : CoList A :=
 match l with
-    | Nil => CoNil
-    | Cons h t => CoCons h (unwind t)
-    | Rec h r => CoCons h (unwind (r l))
+| Nil => CoNil
+| Cons h t => CoCons h (unwind t)
+| Rec h r => CoCons h (unwind (r l))
 end.
 
 Inductive FiniteCList {A : Type} : CList A -> Type :=
-    | FNil  : FiniteCList Nil
-    | FCons :
+| FNil  : FiniteCList Nil
+| FCons :
         forall (h : A) (t : CList A),
           FiniteCList t -> FiniteCList (Cons h t).
 
@@ -175,20 +175,20 @@ Qed.
 
 Fixpoint take (n : nat) {A : Type} (l : CList A) : list A :=
 match n with
-    | 0    => []
-    | S n' =>
+| 0    => []
+| S n' =>
         match l with
-            | Nil => []
-            | Cons h t => h :: take n' t
-            | Rec h r => h :: take n' (r l)
+        | Nil => []
+        | Cons h t => h :: take n' t
+        | Rec h r => h :: take n' (r l)
         end
 end.
 
 Fixpoint app {A : Type} (l1 l2 : CList A) : CList A :=
 match l1 with
-    | Nil => l2
-    | Cons h t => Cons h (app t l2)
-    | Rec h r => Rec h (fun l => (app (r l) l2))
+| Nil => l2
+| Cons h t => Cons h (app t l2)
+| Rec h r => Rec h (fun l => (app (r l) l2))
 end.
 
 (** *** Useful functions cannot be written without unfolding the cycle *)
@@ -197,9 +197,9 @@ end.
 Unset Guard Checking.
 Fixpoint mapS (l : CList nat) : CList nat :=
 match l with
-    | Nil      => Nil
-    | Cons h t => Cons (S h) (mapS t)
-    | Rec  h r => Rec (S h) (fun l => r (mapS l))
+| Nil      => Nil
+| Cons h t => Cons (S h) (mapS t)
+| Rec  h r => Rec (S h) (fun l => r (mapS l))
 (*  | Rec  h r => Cons (S h) (mapS (r l)) *) (* Does not terminate *)
 end.
 Set Guard Checking.
@@ -219,9 +219,9 @@ Inductive Closed : SProp := closed.
 
 Unset Positivity Checking.
 Inductive CList' (A : Type) : SProp -> Type :=
-    | Nil  : CList' A Closed
-    | Cons : forall {B : SProp} (h : A) (t : CList' A B), CList' A B
-    | Rec  : forall (h : A) (r : forall {B : SProp}, CList' A B -> CList' A B),
+| Nil  : CList' A Closed
+| Cons : forall {B : SProp} (h : A) (t : CList' A B), CList' A B
+| Rec  : forall (h : A) (r : forall {B : SProp}, CList' A B -> CList' A B),
                CList' A Closed.
 Set Positivity Checking.
 
@@ -344,19 +344,19 @@ CoFixpoint unwind {A : Type} {B : SProp} (l : CList' A B) : CoList A :=
 {|
     uncons :=
       match l with
-          | Nil      => CoNilF
-          | Cons h t => CoConsF h (unwind t)
-          | Rec h r  => CoConsF h (unwind (r _ l))
+      | Nil      => CoNilF
+      | Cons h t => CoConsF h (unwind t)
+      | Rec h r  => CoConsF h (unwind (r _ l))
       end;
 |}.
 
 Fixpoint cotake {A : Type} (n : nat) (l : CoList A) : list A :=
 match n with
-    | 0    => []
-    | S n' =>
+| 0    => []
+| S n' =>
         match uncons l with
-            | CoNilF => []
-            | CoConsF h t => h :: cotake n' t
+        | CoNilF => []
+        | CoConsF h t => h :: cotake n' t
         end
 end.
 
@@ -376,8 +376,8 @@ Module HOAS_Unique.
 
 Unset Positivity Checking.
 Inductive CList (A : Type) : Type :=
-    | Nil
-    | RCons (h : A) (r : CList A -> CList A).
+| Nil
+| RCons (h : A) (r : CList A -> CList A).
 Set Positivity Checking.
 
 Arguments Nil   {A}.
@@ -385,8 +385,8 @@ Arguments RCons {A} _ _.
 
 Function unwind {A : Type} (l : CList A) : CoList A :=
 match l with
-    | Nil       => CoNil
-    | RCons h r => CoCons h (unwind (r l))
+| Nil       => CoNil
+| RCons h r => CoCons h (unwind (r l))
 end.
 
 (** But it's hard to prove that normal forms are unique in this representation. *)
@@ -420,9 +420,9 @@ End HOAS_Unique.
 Module Nested.
 
 Inductive CList (A V : Type) : Type :=
-    | Var : V -> CList A V
-    | Nil : CList A V
-    | RCons : A -> CList A (option V) -> CList A V.
+| Var : V -> CList A V
+| Nil : CList A V
+| RCons : A -> CList A (option V) -> CList A V.
 
 Arguments Var   {A V} _.
 Arguments Nil   {A V}.
@@ -437,18 +437,18 @@ Arguments RCons {A V} _ _.
 
 Fixpoint map {A B V : Type} (f : A -> B) (l : CList A V) : CList B V :=
 match l with
-    | Var v     => Var v
-    | Nil       => Nil
-    | RCons h t => RCons (f h) (map f t)
+| Var v     => Var v
+| Nil       => Nil
+| RCons h t => RCons (f h) (map f t)
 end.
 
 (** [map] is easy. *)
 
 Fixpoint shift {A V : Type} (l : CList A V) : CList A (option V) :=
 match l with
-    | Var v     => Var (Some v)
-    | Nil       => Nil
-    | RCons h t => RCons h (shift t)
+| Var v     => Var (Some v)
+| Nil       => Nil
+| RCons h t => RCons h (shift t)
 end.
 
 (** [shift] is a very important auxiliary function which shifts all pointers
@@ -484,9 +484,9 @@ Qed.
 
 Fixpoint app {A V : Type} (l1 l2 : CList A V) : CList A V :=
 match l1 with
-    | Var v     => Var v
-    | Nil       => l2
-    | RCons h t => RCons h (app t (shift l2))
+| Var v     => Var v
+| Nil       => l2
+| RCons h t => RCons h (app t (shift l2))
 end.
 
 (** [app] is also easy, but we need to [shift] the pointers when appending [l2]
@@ -523,9 +523,9 @@ Qed.
 
 Fixpoint snoc {A V : Type} (x : A) (l : CList A V) : CList A V :=
 match l with
-    | Var v     => Var v
-    | Nil       => RCons x Nil
-    | RCons h t => RCons h (snoc x t)
+| Var v     => Var v
+| Nil       => RCons x Nil
+| RCons h t => RCons h (snoc x t)
 end.
 
 Lemma snoc_shift :
@@ -548,16 +548,16 @@ Qed.
 
 Fixpoint replicate {A V : Type} (n : nat) (x : A) : CList A V :=
 match n with
-    | 0    => Nil
-    | S n' => RCons x (replicate n' x)
+| 0    => Nil
+| S n' => RCons x (replicate n' x)
 end.
 
 Definition repeat {A V : Type} (x : A) : CList A V :=
   RCons x (Var None).
 
 Inductive Finite {A V : Type} : CList A V -> Type :=
-    | FNil   : Finite Nil
-    | FRCons : forall (h : A) (t : CList A (option V)),
+| FNil   : Finite Nil
+| FRCons : forall (h : A) (t : CList A (option V)),
                  Finite t -> Finite (RCons h t).
 
 Lemma shift_replicate :
@@ -592,35 +592,35 @@ Definition cons {A V : Type} (h : A) (t : CList' A) : CList' A :=
 
 Fixpoint recycle {A V : Type} (x : A) (l : CList A (option V)) : CList A V :=
 match l with
-    | Var None     => RCons x (Var None)
-    | Var (Some v) => Var v
-    | Nil          => Nil
-    | RCons h t    => RCons h (recycle x t)
+| Var None     => RCons x (Var None)
+| Var (Some v) => Var v
+| Nil          => Nil
+| RCons h t    => RCons h (recycle x t)
 end.
 
 Definition cuncons {A : Type} (l : CList' A) : option (A * CList' A) :=
 match l with
-    | Var v     => match v with end
-    | Nil       => None
-    | RCons h t => Some (h, recycle h t)
+| Var v     => match v with end
+| Nil       => None
+| RCons h t => Some (h, recycle h t)
 end.
 
 CoFixpoint unwind {A : Type} (l : CList' A) : CoList A :=
 {|
     uncons :=
       match cuncons l with
-          | None => CoNilF
-          | Some (h, t) => CoConsF h (unwind t)
+      | None => CoNilF
+      | Some (h, t) => CoConsF h (unwind t)
       end
 |}.
 
 Fixpoint ctake (n : nat) {A : Type} (l : CoList A) : list A :=
 match n with
-    | 0    => []
-    | S n' =>
+| 0    => []
+| S n' =>
         match uncons l with
-            | CoNilF      => []
-            | CoConsF h t => h :: ctake n' t
+        | CoNilF      => []
+        | CoConsF h t => h :: ctake n' t
         end
 end.
 
@@ -642,11 +642,11 @@ Compute take 10 example''.
 
 Fixpoint drop (n : nat) {A : Type} (l : CList' A) : CList' A :=
 match n with
-    | 0    => l
-    | S n' =>
+| 0    => l
+| S n' =>
         match cuncons l with
-            | None => Nil
-            | Some (_, t) => drop n' t
+        | None => Nil
+        | Some (_, t) => drop n' t
         end
 end.
 
@@ -654,11 +654,11 @@ Compute drop 11 example.
 
 Fixpoint take' (n : nat) {A : Type} (l : CList' A) : list A :=
 match n with
-    | 0    => []
-    | S n' =>
+| 0    => []
+| S n' =>
         match cuncons l with
-            | None => []
-            | Some (h, t) => h :: take' n' t
+        | None => []
+        | Some (h, t) => h :: take' n' t
         end
 end.
 
@@ -666,16 +666,16 @@ Compute take' 10 example.
 
 Fail Fixpoint bind {A B V : Type} (l : CList A V) (f : A -> CList B V) : CList B V :=
 match l with
-    | Var v     => Var v
-    | Nil       => Nil
-    | RCons h t => app (f h) (bind t (fun l => shift (f l)))
+| Var v     => Var v
+| Nil       => Nil
+| RCons h t => app (f h) (bind t (fun l => shift (f l)))
 end.
 
 Fixpoint rev {A V : Type} (l : CList A V) : CList A V :=
 match l with
-    | Var v     => Var v
-    | Nil       => Nil
-    | RCons h t => recycle h (rev t)
+| Var v     => Var v
+| Nil       => Nil
+| RCons h t => recycle h (rev t)
 end.
 
 Definition from1to5 : CList' nat :=
@@ -685,42 +685,42 @@ Compute rev from1to5.
 
 Fixpoint nth (n : nat) {A : Type} (l : CList' A) : option A :=
 match n, cuncons l with
-    | _   , None        => None
-    | 0   , Some (h, t) => Some h
-    | S n', Some (h, t) => nth n' t
+| _   , None        => None
+| 0   , Some (h, t) => Some h
+| S n', Some (h, t) => nth n' t
 end.
 
 Compute List.map (fun n => nth n from1to5) [0; 1; 2; 3; 4; 5; 6; 7].
 
 Fixpoint cycle (n : nat) {A : Type} (l : CList' A) : CList' A :=
 match n, cuncons l with
-    | 0   , _           => l
-    | _   , None        => l
-    | S n', Some (h, t) => cycle n' t
+| 0   , _           => l
+| _   , None        => l
+| S n', Some (h, t) => cycle n' t
 end.
 
 Compute List.map (fun n => cycle n from1to5) [0; 1; 2; 3; 4; 5; 6; 7].
 
 Fixpoint any {A V : Type} (p : A -> bool) (l : CList A V) : bool :=
 match l with
-    | Var v     => false
-    | Nil       => false
-    | RCons h t => p h || any p t
+| Var v     => false
+| Nil       => false
+| RCons h t => p h || any p t
 end.
 
 Fixpoint wut {A V : Type} (l : CList A (option V)) : CList A V :=
 match l with
-    | Var None     => Nil
-    | Var (Some v) => Var v
-    | Nil          => Nil
-    | RCons h t    => RCons h (wut t)
+| Var None     => Nil
+| Var (Some v) => Var v
+| Nil          => Nil
+| RCons h t    => RCons h (wut t)
 end.
 
 Fixpoint filter {A V : Type} (p : A -> bool) (l : CList A V) : CList A V :=
 match l with
-    | Var v     => Var v
-    | Nil       => Nil
-    | RCons h t => if p h then RCons h (filter p t) else wut (filter p t)
+| Var v     => Var v
+| Nil       => Nil
+| RCons h t => if p h then RCons h (filter p t) else wut (filter p t)
 end.
 
 Compute from1to5.
@@ -729,16 +729,16 @@ Compute filter Nat.even (RCons 1 (RCons 2 (Var None))).
 
 Fixpoint shift' {A V : Type} (l : CList A V) : CList A (option (option V)) :=
 match l with
-    | Var v     => Var (Some (Some v))
-    | Nil          => Nil
-    | RCons h t    => RCons h (shift' t)
+| Var v     => Var (Some (Some v))
+| Nil          => Nil
+| RCons h t    => RCons h (shift' t)
 end.
 
 Fail Fixpoint intersperse {A V : Type} (x : A) (l : CList A V) : CList A V :=
 match l with
-    | Var v       => Var v
-    | Nil         => Nil
-    | RCons h t   => RCons h (shift' (RCons x (intersperse x t)))
+| Var v       => Var v
+| Nil         => Nil
+| RCons h t   => RCons h (shift' (RCons x (intersperse x t)))
 end.
 
 Fail Compute take 20 (intersperse 0 from1to5).
@@ -746,19 +746,19 @@ Fail Compute take 20 (intersperse 0 from1to5).
 (** * Relations *)
 
 Inductive Elem {A V : Type} (x : A) : CList A V -> Type :=
-    | Zero :
+| Zero :
         forall l : CList A (option V), Elem x (RCons x l)
-    | Succ :
+| Succ :
         forall (h : A) (t : CList A (option V)),
           Elem x t -> Elem x (RCons h t).
 
 Inductive Dup {A V : Type} : CList A V -> Type :=
-    | DupVar :
+| DupVar :
         forall v : V, Dup (Var v)
-    | DupHere :
+| DupHere :
         forall (h : A) (t : CList A (option V)),
           Elem h t -> Dup (RCons h t)
-    | DupThere :
+| DupThere :
         forall (h : A) (t : CList A (option V)),
           Dup t -> Dup (RCons h t).
 
@@ -783,27 +783,27 @@ Proof.
 Qed.
 
 Inductive Ex {A V : Type} (P : A -> Type) : CList A V -> Type :=
-    | ExHere :
+| ExHere :
         forall (x : A) (l : CList A (option V)),
           P x -> Ex P (RCons x l)
-    | ExThere :
+| ExThere :
         forall (h : A) (t : CList A (option V)),
           Ex P t -> Ex P (RCons h t).
 
 Fixpoint takeWhile {A V : Type} (p : A -> bool) (l : CList A V) : CList A V :=
 match l with
-    | Var v     => Var v
-    | Nil       => Nil
-    | RCons h t => if p h then RCons h (takeWhile p t) else Nil
+| Var v     => Var v
+| Nil       => Nil
+| RCons h t => if p h then RCons h (takeWhile p t) else Nil
 end.
 
 Compute takeWhile (fun n => n <? 6) from1to5.
 
 Fail Fixpoint dropWhile {A V : Type} (p : A -> bool) (l : CList A V) : CList A V :=
 match l with
-    | Var v     => Var v
-    | Nil       => Nil
-    | RCons h t => if p h then dropWhile p t else Nil
+| Var v     => Var v
+| Nil       => Nil
+| RCons h t => if p h then dropWhile p t else Nil
 end.
 
 End Nested.
@@ -811,9 +811,9 @@ End Nested.
 Module CyclicBinaryTree.
 
 Inductive CBin (A V : Type) : Type :=
-    | Var : V -> CBin A V
-    | E   : CBin A V
-    | N   : A -> CBin A (option V) -> CBin A (option V) -> CBin A V.
+| Var : V -> CBin A V
+| E   : CBin A V
+| N   : A -> CBin A (option V) -> CBin A (option V) -> CBin A V.
 
 Arguments Var {A V} _.
 Arguments E   {A V}.
@@ -833,31 +833,31 @@ Definition example : CBin' nat :=
 
 Fixpoint recycle {A V : Type} (x : A) (t : CBin A (option V)) : CBin A V :=
 match t with
-    | Var None     => N x (Var None) (Var None)
-    | Var (Some v) => Var v
-    | E            => E
-    | N y l r      => N y (recycle x l) (recycle x r)
+| Var None     => N x (Var None) (Var None)
+| Var (Some v) => Var v
+| E            => E
+| N y l r      => N y (recycle x l) (recycle x r)
 end.
 
 Definition unN {A : Type} (t : CBin' A) : option (A * CBin' A * CBin' A) :=
 match t with
-    | Var v   => match v with end
-    | E       => None
-    | N x l r => Some (x, recycle x l, recycle x r)
+| Var v   => match v with end
+| E       => None
+| N x l r => Some (x, recycle x l, recycle x r)
 end.
 
 Fixpoint map {A B V : Type} (f : A -> B) (t : CBin A V) : CBin B V :=
 match t with
-    | Var v   => Var v
-    | E       => E
-    | N x l r => N (f x) (map f l) (map f r)
+| Var v   => Var v
+| E       => E
+| N x l r => N (f x) (map f l) (map f r)
 end.
 
 Fixpoint mirror {A V : Type} (t : CBin A V) : CBin A V :=
 match t with
-    | Var v   => Var v
-    | E       => E
-    | N x l r => N x (mirror r) (mirror l)
+| Var v   => Var v
+| E       => E
+| N x l r => N x (mirror r) (mirror l)
 end.
 
 Definition complete {A : Type} (x : A) : CBin' A :=
@@ -865,10 +865,10 @@ Definition complete {A : Type} (x : A) : CBin' A :=
 
 Fixpoint index {A : Type} (l : list bool) (t : CBin' A) : option A :=
 match l, unN t with
-    | _, None     => None
-    | []         , Some (x, _ , _ ) => Some x
-    | false :: l', Some (_, t', _ ) => index l' t'
-    | true  :: l', Some (_, _ , t') => index l' t'
+| _, None     => None
+| []         , Some (x, _ , _ ) => Some x
+| false :: l', Some (_, t', _ ) => index l' t'
+| true  :: l', Some (_, _ , t') => index l' t'
 end.
 
 Compute example.
@@ -878,41 +878,41 @@ Compute index [false; false; false; false] example.
 
 Fixpoint shift {A V : Type} (t : CBin A V) : CBin A (option V) :=
 match t with
-    | Var v   => Var (Some v)
-    | E       => E
-    | N x l r => N x (shift l) (shift r)
+| Var v   => Var (Some v)
+| E       => E
+| N x l r => N x (shift l) (shift r)
 end.
 
 Fixpoint take (n : nat) {A : Type} (t : CBin' A) : CBin' A :=
 match n, unN t with
-    | _   , None           => E
-    | 0   , _              => E
-    | S n', Some (x, l, r) => N x (shift (take n' l)) (shift (take n' r))
+| _   , None           => E
+| 0   , _              => E
+| S n', Some (x, l, r) => N x (shift (take n' l)) (shift (take n' r))
 end.
 
 Compute take 5 example.
 
 Fixpoint any {A V : Type} (p : A -> bool) (t : CBin A V) : bool :=
 match t with
-    | Var v   => false
-    | E       => false
-    | N x l r => p x || any p l || any p r
+| Var v   => false
+| E       => false
+| N x l r => p x || any p l || any p r
 end.
 
 Fixpoint all {A V : Type} (p : A -> bool) (t : CBin A V) : bool :=
 match t with
-    | Var v   => false
-    | E       => false
-    | N x l r => p x && all p l && all p r
+| Var v   => false
+| E       => false
+| N x l r => p x && all p l && all p r
 end.
 
 (* Parameter count : forall A : Type, (A -> bool) -> BTree A -> nat. *)
 
 Fixpoint takeWhile {A V : Type} (p : A -> bool) (t : CBin A V) : CBin A V :=
 match t with
-    | Var v   => Var v
-    | E       => E
-    | N x l r => if p x then N x (takeWhile p l) (takeWhile p r) else E
+| Var v   => Var v
+| E       => E
+| N x l r => if p x then N x (takeWhile p l) (takeWhile p r) else E
 end.
 
 Compute takeWhile (fun x => x <? 3) example.
@@ -920,7 +920,7 @@ Compute takeWhile (fun x => x <? 3) example.
 (* Need to compute lcm somewhere.
 Fixpoint zipWith {A B C : Type} (f : A -> B -> C) (ta : CBin A V) (tb : CBin B V) : CBin C V :=
 match ta, tb with
-    | Var va, Var vn => V
+| Var va, Var vn => V
  *)
 
 End CyclicBinaryTree.

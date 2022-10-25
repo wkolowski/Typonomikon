@@ -33,16 +33,16 @@ Arguments Node {A} _ _.
 
 Fixpoint renum (t : Tree nat) : Tree nat :=
 match t with
-    | Leaf n => Leaf (S n)
-    | Node l r => Node (renum l) (renum r)
+| Leaf n => Leaf (S n)
+| Node l r => Node (renum l) (renum r)
 end.
 
 (** Cóż, łatwo. *)
 
 Fixpoint map {A B : Type} (f : A -> B) (t : Tree A) : Tree B :=
 match t with
-    | Leaf a => Leaf (f a)
-    | Node l r => Node (map f l) (map f r)
+| Leaf a => Leaf (f a)
+| Node l r => Node (map f l) (map f r)
 end.
 
 (** Łatwo będzie też pokazać, że [renum] działa tak samo jak mapowanie
@@ -70,10 +70,10 @@ Qed.
 Fixpoint same_fringe
   {A : Type} (cmp : A -> A -> bool) (t1 t2 : Tree A) : bool :=
 match t1, t2 with
-    | Leaf x    , Leaf y     => cmp x y
-    | Node l1 r1, Node l2 r2 =>
+| Leaf x    , Leaf y     => cmp x y
+| Node l1 r1, Node l2 r2 =>
         same_fringe cmp l1 l2 && same_fringe cmp r1 r2
-    | _, _ => false
+| _, _ => false
 end.
 
 (** Oczywiście jest źle, bo powyższe zwraca [false] dla drzew o różnych
@@ -88,8 +88,8 @@ Import ListNotations.
 
 Fixpoint fringe {A : Type} (t : Tree A) : list A :=
 match t with
-    | Leaf x => [x]
-    | Node l r => fringe l ++ fringe r
+| Leaf x => [x]
+| Node l r => fringe l ++ fringe r
 end.
 
 (** Cytując definicję: grzywka drzewa to lista jego liści, po kolei. *)
@@ -97,15 +97,15 @@ end.
 Fixpoint zipWith
   {A B C : Type} (f : A -> B -> C) (la : list A) (lb : list B) : list C :=
 match la, lb with
-    | [], [] => []
-    | a :: la', b :: lb' => f a b :: zipWith f la' lb'
-    | _, _ => []
+| [], [] => []
+| a :: la', b :: lb' => f a b :: zipWith f la' lb'
+| _, _ => []
 end.
 
 Fixpoint all (l : list bool) : bool :=
 match l with
-    | [] => true
-    | h :: t => h && all t
+| [] => true
+| h :: t => h && all t
 end.
 
 (** Przydadzą się podstawowe funkcje na listach, których biedacka
@@ -156,8 +156,8 @@ Compute same_fringe2 beq_nat t1 t2.
     zobaczyć rozwiązanie! *)
 
 Inductive Iterator (I O R : Type) : Type :=
-    | Result : R -> Iterator I O R
-    | Susp   : O -> (I -> Iterator I O R) -> Iterator I O R.
+| Result : R -> Iterator I O R
+| Susp   : O -> (I -> Iterator I O R) -> Iterator I O R.
 
 Arguments Result {I O R} _.
 Arguments Susp   {I O R} _ _.
@@ -209,8 +209,8 @@ Definition yield {I O : Type} (x : O) : Iterator I O I :=
 Fixpoint bindI {I O R1 R2 : Type}
   (i : Iterator I O R1) (f : R1 -> Iterator I O R2) : Iterator I O R2 :=
 match i with
-    | Result r => f r
-    | Susp o k => Susp o (fun i => bindI (k i) f)
+| Result r => f r
+| Susp o k => Susp o (fun i => bindI (k i) f)
 end.
 
 (** [bindI i f] to składanie spacerków - najpierw spacerujemy spacerkiem
@@ -225,9 +225,9 @@ end.
 
 Fixpoint depthWalk {A B : Type} (t : Tree A) : Iterator B A (Tree B) :=
 match t with
-    | Leaf a =>
+| Leaf a =>
         bindI (yield a) (fun b => Result (Leaf b))
-    | Node l r =>
+| Node l r =>
         bindI (depthWalk l) (fun l' =>
         bindI (depthWalk r) (fun r' =>
           Result (Node l' r')))
@@ -271,10 +271,10 @@ Fixpoint same_fringe_aux
   {A R : Type} (cmp : A -> A -> bool)
   (t1 t2 : Iterator A A R) : bool :=
 match t1, t2 with
-    | Susp x k, Susp y h =>
+| Susp x k, Susp y h =>
         cmp x y && same_fringe_aux cmp (k x) (h y)
-    | Result _, Result _ => true
-    | _, _ => false
+| Result _, Result _ => true
+| _, _ => false
 end.
 
 (** Nasza funkcja odbywa jednocześnie dwa spacerki: pierwszy po [t1],
@@ -322,9 +322,9 @@ Fixpoint swap_fringe_aux
   {A : Type} (i1 i2 : Iterator A A (Tree A))
   : option (Tree A * Tree A) :=
 match i1, i2 with
-    | Susp x k, Susp y h => swap_fringe_aux (k y) (h x)
-    | Result t1, Result t2 => Some (t1, t2)
-    | _, _ => None
+| Susp x k, Susp y h => swap_fringe_aux (k y) (h x)
+| Result t1, Result t2 => Some (t1, t2)
+| _, _ => None
 end.
 
 (** [swap_fringe_aux] to funkcja, która bierze jako argumenty dwa
@@ -446,16 +446,16 @@ Function transplant_aux
 match t with
 | Leaf _   =>
     match xs with
-    | []      => None
-    | x :: xs' => Some (Leaf x, xs')
+| []      => None
+| x :: xs' => Some (Leaf x, xs')
     end
 | Node l r =>
     match transplant_aux l xs with
-    | None => None
-    | Some (l', xs') =>
+| None => None
+| Some (l', xs') =>
         match transplant_aux r xs' with
-        | None => None
-        | Some (r', xs'') => Some (Node l' r', xs'')
+    | None => None
+    | Some (r', xs'') => Some (Node l' r', xs'')
         end
     end
 end.
@@ -514,8 +514,8 @@ Print filter.
         fun (A : Type) (p : A -> bool) =>
         fix filter (l : list A) {struct l} : list A :=
           match l with
-          | [] => []
-          | h :: t => if p h then h :: filter t else filter t
+      | [] => []
+      | h :: t => if p h then h :: filter t else filter t
           end
              : forall A : Type, (A -> bool) -> list A -> list A *)
 
@@ -534,21 +534,21 @@ Print filter.
     predykatu boolowskiego. *)
 
 Inductive MyFilter : Type :=
-    | IsEven : MyFilter
-    | LessThan : nat -> MyFilter
-    | LifeUniverseAndAllThat : MyFilter
-    | And : MyFilter -> MyFilter -> MyFilter
-    | Or : MyFilter -> MyFilter -> MyFilter
-    | Not : MyFilter -> MyFilter.
+| IsEven : MyFilter
+| LessThan : nat -> MyFilter
+| LifeUniverseAndAllThat : MyFilter
+| And : MyFilter -> MyFilter -> MyFilter
+| Or : MyFilter -> MyFilter -> MyFilter
+| Not : MyFilter -> MyFilter.
 
 Fixpoint apply (p : MyFilter) (n : nat) : bool :=
 match p with
-    | IsEven => even n
-    | LessThan m => n <? m
-    | LifeUniverseAndAllThat => n =? 42
-    | And p1 p2 => apply p1 n && apply p2 n
-    | Or p1 p2 => apply p1 n || apply p2 n
-    | Not p' => negb (apply p' n)
+| IsEven => even n
+| LessThan m => n <? m
+| LifeUniverseAndAllThat => n =? 42
+| And p1 p2 => apply p1 n && apply p2 n
+| Or p1 p2 => apply p1 n || apply p2 n
+| Not p' => negb (apply p' n)
 end.
 
 (** ** Defunkcjonalizacja silni (TODO) *)
@@ -559,36 +559,36 @@ end.
 
 Fixpoint fac (n : nat) : nat :=
 match n with
-    | 0 => 1
-    | S n' => n * fac n'
+| 0 => 1
+| S n' => n * fac n'
 end.
 
 Compute fac 5.
 
 Fixpoint facCPS (n : nat) (k : nat -> nat) : nat :=
 match n with
-    | 0 => k 1
-    | S n' => facCPS n' (fun r => k (n * r))
+| 0 => k 1
+| S n' => facCPS n' (fun r => k (n * r))
 end.
 
 Compute facCPS 5 (fun n => n).
 
 Inductive DefunNatNat : Type :=
-    | Id : DefunNatNat
-    | Mul : nat -> DefunNatNat -> DefunNatNat.
+| Id : DefunNatNat
+| Mul : nat -> DefunNatNat -> DefunNatNat.
 
 Fixpoint eval (k : DefunNatNat) (n : nat) : nat :=
 match k with
-    | Id => n
-    | Mul r k' => eval k' (r * n)
+| Id => n
+| Mul r k' => eval k' (r * n)
 end.
 
 Compute eval (Mul 5 Id) 1.
 
 Fixpoint facCPSDefun (n : nat) (k : DefunNatNat) : nat :=
 match n with
-    | 0 => eval k 1
-    | S n' => facCPSDefun n' (Mul n k)
+| 0 => eval k 1
+| S n' => facCPSDefun n' (Mul n k)
 end.
 
 Compute facCPSDefun 5 Id.
@@ -615,14 +615,14 @@ Qed.
 
 Fixpoint plus (n m : nat) : nat :=
 match n with
-    | 0 => m
-    | S n' => S (plus n' m)
+| 0 => m
+| S n' => S (plus n' m)
 end.
 
 Function plusCPS {A : Type} (n m : nat) (k : nat -> A) : A :=
 match n with
-    | 0 => k m
-    | S n' => plusCPS n' m (fun res => k (S res))
+| 0 => k m
+| S n' => plusCPS n' m (fun res => k (S res))
 end.
 
 Theorem plusCPS_spec :
@@ -634,16 +634,16 @@ Qed.
 
 Function fib (n : nat) : nat :=
 match n with
-    | 0 => 0
-    | 1 => 1
-    | S (S n'' as n') => fib n'' + fib n'
+| 0 => 0
+| 1 => 1
+| S (S n'' as n') => fib n'' + fib n'
 end.
 
 Fixpoint fibCPS (n : nat) (k : nat -> nat) : nat :=
 match n with
-    | 0 => k 0
-    | 1 => k 1
-    | S (S n'' as n') =>
+| 0 => k 0
+| 1 => k 1
+| S (S n'' as n') =>
         fibCPS n'' (fun arg1 => fibCPS n' (fun arg2 => k (arg1 + arg2)))
 end.
 
@@ -700,8 +700,8 @@ Definition ctail {A : Type} (l : clist A) : option (clist A) :=
   l (@option (clist A)) None
     (fun h t =>
       match t with
-          | None => Some c[]
-          | Some t' => Some (ccons h t')
+      | None => Some c[]
+      | Some t' => Some (ccons h t')
       end).
 Set Universe Checking.
 
@@ -731,8 +731,8 @@ Definition capp {A : Type} (l1 l2 : clist A) : clist A :=
 
 Fixpoint fromList {A : Type} (l : list A) : clist A :=
 match l with
-    | [] => cnil
-    | h :: t => ccons h (fromList t)
+| [] => cnil
+| h :: t => ccons h (fromList t)
 end.
 
 Definition toList {A : Type} (l : clist A) : list A :=

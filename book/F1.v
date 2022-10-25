@@ -210,8 +210,8 @@ CoFixpoint rand' (seed n1 n2 : Z) : Stream Z :=
 
 Fixpoint stake {A : Type} (n : nat) (s : Stream A) : list A :=
 match n with
-    | 0 => []
-    | S n' => hd s :: stake n' (tl s)
+| 0 => []
+| S n' => hd s :: stake n' (tl s)
 end.
 
 Compute stake 10 (rand 1 123456789 987654321).
@@ -235,8 +235,8 @@ Fixpoint tocoList {A : Type} (l : list A) : coList A :=
 {|
     uncons :=
     match l with
-        | [] => None
-        | h :: t => Some (h, tocoList t)
+    | [] => None
+    | h :: t => Some (h, tocoList t)
     end
 |}.
 
@@ -256,21 +256,21 @@ CoFixpoint from (n : nat) : coList nat :=
 
 Definition lhead {A : Type} (l : coList A) : option A :=
 match uncons l with
-    | Some (a, _) => Some a
-    | _ => None
+| Some (a, _) => Some a
+| _ => None
 end.
 
 Definition ltail {A : Type} (l : coList A) : option (coList A) :=
 match uncons l with
-    | Some (_, t) => Some t
-    | _ => None
+| Some (_, t) => Some t
+| _ => None
 end.
 
 Fixpoint lnth {A : Type} (n : nat) (l : coList A) : option A :=
 match n, uncons l with
-    | _, None => None
-    | 0, Some (x, _) => Some x
-    | S n', Some (_, l') => lnth n' l'
+| _, None => None
+| 0, Some (x, _) => Some x
+| S n', Some (_, l') => lnth n' l'
 end.
 
 Eval compute in lnth 511 (from 0).
@@ -286,22 +286,22 @@ Eval cbn in lnth 123 (repeat 5).
 
 CoFixpoint lapp {A : Type} (l1 l2 : coList A) : coList A :=
 match uncons l1 with
-    | None => l2
-    | Some (h, t) => {| uncons := Some (h, lapp t l2) |}
+| None => l2
+| Some (h, t) => {| uncons := Some (h, lapp t l2) |}
 end.
 
 CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=
 {|
     uncons :=
     match uncons l with
-        | None => None
-        | Some (h, t) => Some (f h, lmap f t)
+    | None => None
+    | Some (h, t) => Some (f h, lmap f t)
     end
 |}.
 
 Inductive Finite {A : Type} : coList A -> Prop :=
-    | Finite_nil : Finite {| uncons := None |}
-    | Finite_cons :
+| Finite_nil : Finite {| uncons := None |}
+| Finite_cons :
         forall (h : A) (t : coList A),
           Finite t -> Finite {| uncons := Some (h, t) |}.
 
@@ -446,8 +446,8 @@ CoFixpoint fmap {A B : Type} (f : A -> B) (t : coBTree A) : coBTree B :=
 {|
     root :=
     match root t with
-        | None => None
-        | Some (l, v, r) => Some (fmap f l, f v, fmap f r)
+    | None => None
+    | Some (l, v, r) => Some (fmap f l, f v, fmap f r)
     end
 |}.
 
@@ -457,19 +457,19 @@ CoFixpoint ns (n : nat) : coBTree nat :=
 |}.
 
 Inductive BTree (A : Type) : Type :=
-    | Empty : BTree A
-    | Node : A -> BTree A -> BTree A -> BTree A.
+| Empty : BTree A
+| Node : A -> BTree A -> BTree A -> BTree A.
 
 Arguments Empty {A}.
 Arguments Node {A} _ _ _.
 
 Fixpoint ttake (n : nat) {A : Type} (t : coBTree A) : BTree A :=
 match n with
-    | 0 => Empty
-    | S n' =>
+| 0 => Empty
+| S n' =>
         match root t with
-            | None => Empty
-            | Some (l, v, r) => Node v (ttake n' l) (ttake n' r)
+        | None => Empty
+        | Some (l, v, r) => Node v (ttake n' l) (ttake n' r)
         end
 end.
 
@@ -489,8 +489,8 @@ CoFixpoint mirror {A : Type} (t : coBTree A) : coBTree A :=
 {|
     root :=
       match root t with
-          | None => None
-          | Some (l, v, r) => Some (mirror r, v, mirror l)
+      | None => None
+      | Some (l, v, r) => Some (mirror r, v, mirror l)
       end
 |}.
 
@@ -514,9 +514,9 @@ CoInductive Div (A : Type) : Type :=
 
 Fixpoint even (n : nat) : bool :=
 match n with
-    | 0 => true
-    | 1 => false
-    | S (S n') => even n'
+| 0 => true
+| 1 => false
+| S (S n') => even n'
 end.
 
 (* The name is very unfortunate. *)
@@ -524,8 +524,8 @@ CoFixpoint collatz (n : nat) : Div unit :=
 {|
     call :=
     match n with
-        | 0 | 1 => inl tt
-        | n' =>
+    | 0 | 1 => inl tt
+    | n' =>
             if even n'
             then inr (collatz (div2 n'))
             else inr (collatz (1 + 3 * n'))
@@ -536,9 +536,9 @@ Print Div.
 
 Fixpoint fuel (n : nat) {A : Type} (d : Div A) : option A :=
 match n, d with
-    | 0, _ => None
-    | _, Build_Div _ (inl a) => Some a
-    | S n', Build_Div _ (inr d') => fuel n' d'
+| 0, _ => None
+| _, Build_Div _ (inl a) => Some a
+| S n', Build_Div _ (inr d') => fuel n' d'
 end.
 
 Compute fuel 5 (collatz 4).
@@ -547,9 +547,9 @@ Arguments uncons {A} _.
 
 CoFixpoint collatz' (n : nat) : coList nat :=
 match n with
-    | 0 => {| uncons := None |}
-    | 1 => {| uncons := Some (1, {| uncons := None |}) |}
-    | n' =>
+| 0 => {| uncons := None |}
+| 1 => {| uncons := Some (1, {| uncons := None |}) |}
+| n' =>
         if even n'
         then {| uncons := Some (n', collatz' (div2 n')) |}
         else {| uncons := Some (n', collatz' (1 + 3 * n')) |}
@@ -557,9 +557,9 @@ end.
 
 Fixpoint take (n : nat) {A : Type} (l : coList A) : list A :=
 match n, uncons l with
-    | 0, _ => []
-    | _, None => []
-    | S n', Some (h, t) => h :: take n' t
+| 0, _ => []
+| _, None => []
+| S n', Some (h, t) => h :: take n' t
 end.
 
 Compute map (fun n : nat => take 200 (collatz' n)) [30; 31; 32; 33].
@@ -573,8 +573,8 @@ CoFixpoint ins (n : nat) (s : coList nat) : coList nat :=
 {|
     uncons :=
       match uncons s with
-          | None => None
-          | Some (h, t) =>
+      | None => None
+      | Some (h, t) =>
               if n <=? h
               then
                 Some (n, {| uncons := Some (h, t) |})
@@ -587,11 +587,11 @@ CoFixpoint ss (s : coList nat) : coList nat :=
 {|
     uncons :=
       match uncons s with
-          | None => None
-          | Some (h, t) =>
+      | None => None
+      | Some (h, t) =>
               match uncons (ins h t) with
-                  | None => None
-                  | Some (h', t') => Some (h', ss t')
+              | None => None
+              | Some (h', t') => Some (h', ss t')
               end
       end
 |}.
@@ -691,8 +691,8 @@ Fixpoint fromList {A : Type} (l : list A) : coList A :=
 {|
     uncons :=
     match l with
-        | [] => None
-        | h :: t => Some (h, fromList t)
+    | [] => None
+    | h :: t => Some (h, fromList t)
     end
 |}.
 
@@ -777,8 +777,8 @@ CoFixpoint mirror {A : Type} (t : coBTree A) : coBTree A :=
 {|
     tree :=
       match tree t with
-          | None => None
-          | Some (l, v, r) => Some (mirror r, v, mirror l)
+      | None => None
+      | Some (l, v, r) => Some (mirror r, v, mirror l)
       end
 |}.
 
@@ -794,8 +794,8 @@ Proof.
 Qed.
 
 Inductive Finite {A : Type} : coBTree A -> Prop :=
-    | Finite_None : forall t : coBTree A, tree t = None -> Finite t
-    | Finite_Some :
+| Finite_None : forall t : coBTree A, tree t = None -> Finite t
+| Finite_Some :
         forall (v : A) (l r t : coBTree A),
           Finite l -> Finite r ->
           tree t = Some (l, v, r) -> Finite t.
@@ -902,14 +902,14 @@ Definition memo {A : Type} (f : nat -> A) : Stream A :=
 
 Fixpoint index {A : Type} (s : Stream A) (n : nat) : A :=
 match n with
-    | 0 => hd s
-    | S n' => index (tl s) n'
+| 0 => hd s
+| S n' => index (tl s) n'
 end.
 
 Fixpoint drop {A : Type} (n : nat) (s : Stream A) : Stream A :=
 match n with
-    | 0 => s
-    | S n' => drop n' (tl s)
+| 0 => s
+| S n' => drop n' (tl s)
 end.
 
 Lemma tl_drop :

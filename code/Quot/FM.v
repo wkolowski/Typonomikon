@@ -152,14 +152,14 @@ Lemma norm_eq :
     norm x
       =
     match x with
-    | e      => e
-    | i a    => i a
-    | op x y =>
+| e      => e
+| i a    => i a
+| op x y =>
       match norm x, norm y with
-      | e, y'        => y'
-      | op x1 x2, y' => op x1 (norm (op x2 y'))
-      | x', e        => x'
-      | x', y'       => op x' y'
+  | e, y'        => y'
+  | op x1 x2, y' => op x1 (norm (op x2 y'))
+  | x', e        => x'
+  | x', y'       => op x' y'
       end
     end.
 Proof.

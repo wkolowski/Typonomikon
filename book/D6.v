@@ -49,8 +49,8 @@ From Typonomikon Require Import D5.
 
 Fixpoint revapp {A : Type} (l1 l2 : list A) : list A :=
 match l1 with
-    | [] => l2
-    | h :: t => revapp t (h :: l2)
+| [] => l2
+| h :: t => revapp t (h :: l2)
 end.
 
 Definition app' {A : Type} (l1 l2 : list A) : list A :=
@@ -94,15 +94,15 @@ Qed.
 Fixpoint foldr
   {A B : Type} (f : A -> B -> B) (b : B) (l : list A) : B :=
 match l with
-    | [] => b
-    | h :: t => f h (foldr f b t)
+| [] => b
+| h :: t => f h (foldr f b t)
 end.
 
 Fixpoint foldl
   {A B : Type} (f : A -> B -> A) (a : A) (l : list B) : A :=
 match l with
-    | [] => a
-    | h :: t => foldl f (f a h) t
+| [] => a
+| h :: t => foldl f (f a h) t
 end.
 
 (** Nie będę na razie tłumaczył, jaka ideologia stoi za [foldr] i [foldl].
@@ -155,8 +155,8 @@ Definition findF {A : Type} (p : A -> bool) (l : list A) : option A :=
 
 Definition omap {A B : Type} (f : A -> B) (x : option A) : option B :=
 match x with
-    | None   => None
-    | Some a => Some (f a)
+| None   => None
+| Some a => Some (f a)
 end.
 
 Definition findIndexF
@@ -174,15 +174,15 @@ Definition takeWhileF {A : Type} (p : A -> bool) (l : list A) : list A :=
 
 Ltac solve_fold := intros;
 match goal with
-    | |- context [@foldr ?A ?B ?f ?a ?l] =>
+| |- context [@foldr ?A ?B ?f ?a ?l] =>
         functional induction @foldr A B f a l; cbn; trivial;
         match goal with
-            | H : ?x = _ |- context [?x] => rewrite ?H; auto
+        | H : ?x = _ |- context [?x] => rewrite ?H; auto
         end
-    | |- context [@foldl ?A ?B ?f ?a ?l] =>
+| |- context [@foldl ?A ?B ?f ?a ?l] =>
         functional induction @foldl A B f a l; cbn; trivial;
         match goal with
-            | H : ?x = _ |- context [?x] => rewrite ?H; auto
+        | H : ?x = _ |- context [?x] => rewrite ?H; auto
         end
 end.
 
@@ -434,8 +434,8 @@ Fixpoint scanl
   {A B : Type} (f : A -> B -> A) (a : A) (l : list B) : list A :=
     a ::
 match l with
-    | [] => []
-    | h :: t => scanl f (f a h) t
+| [] => []
+| h :: t => scanl f (f a h) t
 end.
 
 Compute scanl plus 0 [1; 2; 3; 4; 5].
@@ -443,8 +443,8 @@ Compute scanl plus 0 [1; 2; 3; 4; 5].
 Definition scanl1
   {A : Type} (f : A -> A -> A) (l : list A) : list A :=
 match l with
-    | [] => []
-    | h :: t => scanl f h t
+| [] => []
+| h :: t => scanl f h t
 end.
 
 Compute scanl1 plus [1; 2; 3; 4; 5].
@@ -452,14 +452,14 @@ Compute scanl1 plus [1; 2; 3; 4; 5].
 Fixpoint scanr
   {A B : Type} (f : A -> B -> B) (b : B) (l : list A) : list B :=
 match l with
-    | [] => [b]
-    | h :: t =>
+| [] => [b]
+| h :: t =>
         let
           qs := scanr f b t
         in
         match qs with
-            | [] => [f h b]
-            | q :: _ => f h q :: qs
+        | [] => [f h b]
+        | q :: _ => f h q :: qs
         end
 end.
 
@@ -468,15 +468,15 @@ Compute scanr plus 0 [1; 2; 3; 4; 5].
 Fixpoint scanr1
   {A : Type} (f : A -> A -> A) (l : list A) : list A :=
 match l with
-    | [] => []
-    | [h] => [h]
-    | h :: t =>
+| [] => []
+| [h] => [h]
+| h :: t =>
         let
           qs := scanr1 f t
         in
         match qs with
-            | [] => []
-            | q :: _ => f h q :: qs
+        | [] => []
+        | q :: _ => f h q :: qs
         end
 end.
 
@@ -529,8 +529,8 @@ Lemma head_scanr :
   forall (A B : Type) (f : A -> B -> B) (b : B) (l : list A),
     head (scanr f b l) =
       match l with
-          | [] => Some b
-          | _  => Some (foldl (flip f) b (rev l))
+      | [] => Some b
+      | _  => Some (foldl (flip f) b (rev l))
       end.
 (* begin hide *)
 Proof.
@@ -594,16 +594,16 @@ Fixpoint list_ind_2
   (Hcons2 : forall (x y : A) (l : list A), P l -> P (x :: y :: l))
   (l : list A) : P l :=
 match l with
-    | [] => Hnil
-    | [x] => Hsingl x
-    | x :: y :: l' => Hcons2 x y l' (list_ind_2 P Hnil Hsingl Hcons2 l')
+| [] => Hnil
+| [x] => Hsingl x
+| x :: y :: l' => Hcons2 x y l' (list_ind_2 P Hnil Hsingl Hcons2 l')
 end.
 
 Fixpoint rot2 {A : Type} (l : list A) : list A :=
 match l with
-    | [] => []
-    | [x] => [x]
-    | x :: y :: t => y :: x :: rot2 t
+| [] => []
+| [x] => [x]
+| x :: y :: t => y :: x :: rot2 t
 end.
 
 Lemma rot2_involution :
@@ -616,9 +616,9 @@ Proof.
 Qed.
 
 Inductive Rot2 {A : Type} : list A -> list A -> Prop :=
-    | Rot2_nil : Rot2 [] []
-    | Rot2_singl : forall x : A, Rot2 [x] [x]
-    | Rot2_cons2 :
+| Rot2_nil : Rot2 [] []
+| Rot2_singl : forall x : A, Rot2 [x] [x]
+| Rot2_cons2 :
         forall (x y : A) (l l' : list A),
           Rot2 l l' -> Rot2 (x :: y :: l) (y :: x :: l').
 
@@ -653,9 +653,9 @@ Qed.
 (* begin hide *)
 Function interleave {A : Type} (l1 l2 : list A) : list A :=
 match l1, l2 with
-    | [], _ => l2
-    | _, [] => l1
-    | h1 :: t1, h2 :: t2 => h1 :: h2 :: interleave t1 t2
+| [], _ => l2
+| _, [] => l1
+| h1 :: t1, h2 :: t2 => h1 :: h2 :: interleave t1 t2
 end.
 (* end hide *)
 
@@ -854,12 +854,12 @@ Qed.
 Function groupBy
   {A : Type} (p : A -> A -> bool) (l : list A) : list (list A) :=
 match l with
-    | [] => []
-    | h :: t =>
+| [] => []
+| h :: t =>
         match groupBy p t with
-            | [] => [[h]]
-            | [] :: gs => [h] :: gs
-            | (h' :: t') :: gs =>
+        | [] => [[h]]
+        | [] :: gs => [h] :: gs
+        | (h' :: t') :: gs =>
                 if p h h'
                 then (h :: h' :: t') :: gs
                 else [h] :: (h' :: t') :: gs
@@ -945,11 +945,11 @@ Qed.
 
 Ltac gb :=
 match goal with
-    | H : groupBy _ ?l = [] |- _ =>
+| H : groupBy _ ?l = [] |- _ =>
         apply (f_equal isEmpty) in H;
         rewrite isEmpty_groupBy in H;
         destruct l; inversion H; subst
-    | H : groupBy _ _ = [] :: _ |- _ =>
+| H : groupBy _ _ = [] :: _ |- _ =>
         apply (f_equal head), head_groupBy in H; contradiction
 end; cbn; try congruence.
 
@@ -1074,12 +1074,12 @@ Proof.
 Restart.
   Ltac wut H :=
   match H with
-      | context [match ?x with _ => _ end] => wut x
-      | _ => destruct H
+  | context [match ?x with _ => _ end] => wut x
+  | _ => destruct H
   end.
   Ltac dst :=
   repeat (cbn in *; match goal with
-      | |- ?goal => wut goal
+  | |- ?goal => wut goal
   end); cbn in *; try congruence; gb.
 
   intros A p l1. functional induction @groupBy A p l1; cbn; intros.
@@ -1113,9 +1113,9 @@ Lemma groupBy_app' :
   forall (A : Type) (p : A -> A -> bool) (l1 l2 : list A),
     groupBy p (l1 ++ l2) =
     match last l1, head l2 with
-        | None, _ => groupBy p l2
-        | _, None => groupBy p l1
-        | Some x, Some y =>
+    | None, _ => groupBy p l2
+    | _, None => groupBy p l1
+    | Some x, Some y =>
             if p x y
             then groupBy p (l1 ++ l2)
             else groupBy p l1 ++ groupBy p l2
@@ -1299,8 +1299,8 @@ Lemma find_groupBy :
   forall (A : Type) (q : A -> bool) (p : A -> A -> bool) (l : list A),
     find q l =
     match find (any q) (groupBy p l) with
-        | None => None
-        | Some g => find q g
+    | None => None
+    | Some g => find q g
     end.
 (* begin hide *)
 Proof.
@@ -1402,11 +1402,11 @@ Module insertBefore.
 
 Fixpoint insertBefore {A : Type} (n : nat) (l1 l2 : list A) : list A :=
 match n with
-    | 0 => l2 ++ l1
-    | S n' =>
+| 0 => l2 ++ l1
+| S n' =>
         match l1 with
-            | [] => l2
-            | h :: t => h :: insertBefore n' t l2
+        | [] => l2
+        | h :: t => h :: insertBefore n' t l2
         end
 end.
 
@@ -1725,15 +1725,15 @@ Lemma head_insert_before_in :
   forall (A : Type) (n : nat) (l1 l2 : list A),
     head (insert l2 before n in l1) =
     match l1 with
-        | [] => head l2
-        | h1 :: _ =>
+    | [] => head l2
+    | h1 :: _ =>
             match n with
-                | 0 =>
+            | 0 =>
                     match l2 with
-                        | [] => Some h1
-                        | h2 :: _ => Some h2
+                    | [] => Some h1
+                    | h2 :: _ => Some h2
                     end
-                | _ => Some h1
+            | _ => Some h1
             end
     end.
 (* begin hide *)
@@ -1898,14 +1898,14 @@ Module Recursives.
 
 Fixpoint elem {A : Type} (x : A) (l : list A) : Prop :=
 match l with
-    | [] => False
-    | h :: t => x = h \/ elem x t
+| [] => False
+| h :: t => x = h \/ elem x t
 end.
 
 Fixpoint all {A : Type} (P : A -> Prop) (l : list A) : Prop :=
 match l with
-    | [] => True
-    | h :: t => P h /\ all P t
+| [] => True
+| h :: t => P h /\ all P t
 end.
 
 Lemma all_spec :
@@ -1922,10 +1922,10 @@ Qed.
 Fixpoint exactly
   {A : Type} (P : A -> Prop) (n : nat) (l : list A) : Prop :=
 match l, n with
-    | [], 0 => True
-    | [], _ => False
-    | h :: t, 0 => ~ P h /\ exactly P 0 t
-    | h :: t, S n' =>
+| [], 0 => True
+| [], _ => False
+| h :: t, 0 => ~ P h /\ exactly P 0 t
+| h :: t, S n' =>
         (P h /\ exactly P n' t) \/ (~ P h /\ exactly P n t)
 end.
 
@@ -1950,8 +1950,8 @@ Qed.
 (* begin hide *)
 Fixpoint ex {A : Type} (P : A -> Prop) (l : list A) : Prop :=
 match l with
-    | [] => False
-    | h :: t => P h \/ ex P t
+| [] => False
+| h :: t => P h \/ ex P t
 end.
 (* end hide *)
 
@@ -2087,8 +2087,8 @@ Lemma ex_remove :
   forall (A : Type) (P : A -> Prop) (l : list A) (n : nat),
     ex P l ->
     match remove n l with
-        | None => True
-        | Some (x, l') => ~ P x -> ex P l'
+    | None => True
+    | Some (x, l') => ~ P x -> ex P l'
     end.
 (* begin hide *)
 Proof.
@@ -2373,10 +2373,10 @@ End Recursives.
 Fixpoint list_eq_dec
   {A : Type} (eq_dec : A -> A -> bool) (l1 l2 : list A) : bool :=
 match l1, l2 with
-    | [], [] => true
-    | [], _ => false
-    | _, [] => false
-    | h1 :: t1, h2 :: t2 => eq_dec h1 h2 && list_eq_dec eq_dec t1 t2
+| [], [] => true
+| [], _ => false
+| _, [] => false
+| h1 :: t1, h2 :: t2 => eq_dec h1 h2 && list_eq_dec eq_dec t1 t2
 end.
 
 Lemma list_eq_dec_spec :
@@ -2444,8 +2444,8 @@ Qed.
 Fixpoint Dup_dec
   {A : Type} (eq_dec : A -> A -> bool) (l : list A) : bool :=
 match l with
-    | [] => false
-    | h :: t => elem_dec eq_dec h t || Dup_dec eq_dec t
+| [] => false
+| h :: t => elem_dec eq_dec h t || Dup_dec eq_dec t
 end.
 
 Lemma Dup_dec_spec :
@@ -2602,8 +2602,8 @@ Qed.
 Fixpoint Sublist_dec
   {A : Type} (eq_dec : A -> A -> bool) (l1 l2 : list A) : bool :=
 match l2 with
-    | [] => false
-    | h2 :: t2 =>
+| [] => false
+| h2 :: t2 =>
         list_eq_dec eq_dec l1 t2 || Sublist_dec eq_dec l1 t2
 end.
 
@@ -2629,9 +2629,9 @@ Qed.
 Fixpoint Prefix_dec
   {A : Type} (eq_dec : A -> A -> bool) (l1 l2 : list A) : bool :=
 match l1, l2 with
-    | [], _ => true
-    | _, [] => false
-    | h1 :: t1, h2 :: t2 => eq_dec h1 h2 && Prefix_dec eq_dec t1 t2
+| [], _ => true
+| _, [] => false
+| h1 :: t1, h2 :: t2 => eq_dec h1 h2 && Prefix_dec eq_dec t1 t2
 end.
 
 Lemma Prefix_dec_spec :
@@ -2679,9 +2679,9 @@ Qed.
 Fixpoint Subseq_dec
   {A : Type} (eq_dec : A -> A -> bool) (l1 l2 : list A) : bool :=
 match l1, l2 with
-    | [], _ => true
-    | _, [] => false
-    | h1 :: t1, h2 :: t2 =>
+| [], _ => true
+| _, [] => false
+| h1 :: t1, h2 :: t2 =>
         (eq_dec h1 h2 && Subseq_dec eq_dec t1 t2) ||
         Subseq_dec eq_dec l1 t2
 end.
@@ -2714,8 +2714,8 @@ Qed.
 Fixpoint Incl_dec
   {A : Type} (eq_dec : A -> A -> bool) (l1 l2 : list A) : bool :=
 match l1 with
-    | [] => true
-    | h :: t => elem_dec eq_dec h l2 && Incl_dec eq_dec t l2
+| [] => true
+| h :: t => elem_dec eq_dec h l2 && Incl_dec eq_dec t l2
 end.
 
 Lemma Incl_dec_spec :
@@ -2762,11 +2762,11 @@ Qed.
 Fixpoint Permutation_dec
   {A : Type} (eq_dec : A -> A -> bool) (l1 l2 : list A) : bool :=
 match l1 with
-    | [] => isEmpty l2
-    | h :: t =>
+| [] => isEmpty l2
+| h :: t =>
         match removeFirst (eq_dec h) l2 with
-            | None => false
-            | Some (_, l2') => Permutation_dec eq_dec t l2'
+        | None => false
+        | Some (_, l2') => Permutation_dec eq_dec t l2'
         end
 end.
 
@@ -2806,8 +2806,8 @@ Qed.
 Fixpoint Cycle_dec_aux
   {A : Type} (eq_dec : A -> A -> bool) (n : nat) (l1 l2 : list A) : bool :=
 match n with
-    | 0 => list_eq_dec eq_dec l1 l2
-    | S n' =>
+| 0 => list_eq_dec eq_dec l1 l2
+| S n' =>
         list_eq_dec eq_dec l1 (drop n l2 ++ take n l2) ||
         Cycle_dec_aux eq_dec n' l1 l2
 end.
@@ -2890,8 +2890,8 @@ Module sublists.
 
 Fixpoint sublists {A : Type} (l : list A) : list (list A) :=
 match l with
-    | [] => []
-    | h :: t => t :: sublists t
+| [] => []
+| h :: t => t :: sublists t
 end.
 
 Lemma sublists_spec :
@@ -2927,8 +2927,8 @@ Module suffixes.
 Fixpoint suffixes {A : Type} (l : list A) : list (list A) :=
   l ::
 match l with
-    | [] => []
-    | h :: t => suffixes t
+| [] => []
+| h :: t => suffixes t
 end.
 
 Lemma suffixes_spec :
@@ -2968,8 +2968,8 @@ Import suffixes.
 Fixpoint prefixes {A : Type} (l : list A) : list (list A) :=
   [] ::
 match l with
-    | [] => []
-    | h :: t => map (cons h) (prefixes t)
+| [] => []
+| h :: t => map (cons h) (prefixes t)
 end.
 
 Lemma prefixes_spec :
@@ -3027,8 +3027,8 @@ Module subseqs.
 
 Fixpoint subseqs {A : Type} (l : list A) : list (list A) :=
 match l with
-    | [] => [[]]
-    | h :: t => map (cons h) (subseqs t) ++ subseqs t
+| [] => [[]]
+| h :: t => map (cons h) (subseqs t) ++ subseqs t
 end.
 
 Compute subseqs [1; 2; 3; 4; 5].
@@ -3076,8 +3076,8 @@ Module subsets.
 
 Fixpoint subsets {A : Type} (l : list A) : list (list A) :=
 match l with
-    | [] => [[]]
-    | h :: t => subsets t ++ map (cons h) (subsets t)
+| [] => [[]]
+| h :: t => subsets t ++ map (cons h) (subsets t)
 end.
 
 Import prefixes.
@@ -3090,8 +3090,8 @@ Module cycles.
 
 Fixpoint cycles_aux {A : Type} (n : nat) (l : list A) : list (list A) :=
 match n with
-    | 0 => []
-    | S n' => cycle n l :: cycles_aux n' l
+| 0 => []
+| S n' => cycle n l :: cycles_aux n' l
 end.
 
 Compute cycles_aux 0 [1; 2; 3; 4; 5].
@@ -3099,8 +3099,8 @@ Compute cycles_aux 5 [1; 2; 3; 4; 5].
 
 Definition cycles {A : Type} (l : list A) : list (list A) :=
 match l with
-    | [] => [[]]
-    | _ => cycles_aux (length l) l
+| [] => [[]]
+| _ => cycles_aux (length l) l
 end.
 
 Compute cycles [].
@@ -3129,8 +3129,8 @@ End cycles.
 Module Transpositions.
 
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
-    | Perm_refl : forall l : list A, Perm l l
-    | Perm_transp :
+| Perm_refl : forall l : list A, Perm l l
+| Perm_transp :
         forall (x y : A) (l1 l2 l3 l4 : list A),
           Perm (l1 ++ x :: l2 ++ y :: l3) l4 ->
             Perm (l1 ++ y :: l2 ++ x :: l3) l4.
@@ -3208,20 +3208,20 @@ End Transpositions.
 Module InductiveTranspositions.
 
 Inductive Transposition {A : Type} : list A -> list A -> Prop :=
-    | Transposition' :
+| Transposition' :
         forall (l1 : list A) (x : A) (l2 : list A) (y : A) (l3 : list A),
           Transposition (l1 ++ x :: l2 ++ y :: l3) (l1 ++ y :: l2 ++ x :: l3).
 
 Inductive Transposition2 {A : Type} : list A -> list A -> Prop :=
-    | Transposition2' :
+| Transposition2' :
         forall (l1 : list A) (x : A) (l2 : list A) (y : A) (l3 r1 r2: list A),
           r1 = l1 ++ x :: l2 ++ y :: l3 ->
           r2 = l1 ++ y :: l2 ++ x :: l3 ->
             Transposition2 r1 r2.
 
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
-    | Perm_refl : forall l : list A, Perm l l
-    | Perm_step_trans :
+| Perm_refl : forall l : list A, Perm l l
+| Perm_step_trans :
         forall l1 l2 l3 : list A,
           Transposition l1 l2 -> Perm l2 l3 -> Perm l1 l3.
 
@@ -3311,8 +3311,8 @@ End InductiveTranspositions.
 Module AdjacentTranspositions.
 
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
-    | Perm_refl : forall l : list A, Perm l l
-    | Perm_steptrans :
+| Perm_refl : forall l : list A, Perm l l
+| Perm_steptrans :
       forall (x y : A) (l1 l2 l3 : list A),
         Perm (l1 ++ y :: x :: l2) l3 -> Perm (l1 ++ x :: y :: l2) l3.
 
@@ -3376,8 +3376,8 @@ Definition exchange {A : Type} (l1 l2 : list A) : Prop :=
     l2 = r1 ++ y :: x :: r2.
 
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
-    | Perm_refl : forall l : list A, Perm l l
-    | Perm_step_trans :
+| Perm_refl : forall l : list A, Perm l l
+| Perm_step_trans :
         forall l1 l2 l3 : list A,
           exchange l1 l2 -> Perm l2 l3 -> Perm l1 l3.
 
@@ -3737,8 +3737,8 @@ Module PermWeird.
 Import H2.
 
 Inductive Elem {A : Type} (x : A) : list A -> Type :=
-    | Z : forall l : list A, Elem x (x :: l)
-    | S : forall {t : list A}, Elem x t -> forall h : A, Elem x (h :: t).
+| Z : forall l : list A, Elem x (x :: l)
+| S : forall {t : list A}, Elem x t -> forall h : A, Elem x (h :: t).
 
 Arguments Z {A x} _.
 Arguments S {A x t} _ _.
@@ -3863,8 +3863,8 @@ Module perms_select.
 
 Fixpoint select {A : Type} (l : list A) : list (list A * list A) :=
 match l with
-    | [] => [([], [])]
-    | h :: t => [([], l)] ++ map (fun '(a, b) => (h :: a, b)) (select t)
+| [] => [([], [])]
+| h :: t => [([], l)] ++ map (fun '(a, b) => (h :: a, b)) (select t)
 end.
 
 Lemma select_app :
@@ -3880,8 +3880,8 @@ Abort.
 
 Fixpoint perms {A : Type} (l : list A) : list (list A) :=
 match l with
-    | [] => [[]]
-    | h :: t =>
+| [] => [[]]
+| h :: t =>
         bind (fun ll =>
           map (fun '(l, r) => l ++ h :: r) (select ll)) (perms t)
 end.
@@ -3980,14 +3980,14 @@ Module perms_ins.
 
 Fixpoint ins {A : Type} (x : A) (l : list A) : list (list A) :=
 match l with
-    | [] => [[x]]
-    | h :: t => [x :: h :: t] ++ map (cons h) (ins x t)
+| [] => [[x]]
+| h :: t => [x :: h :: t] ++ map (cons h) (ins x t)
 end.
 
 Fixpoint perms {A : Type} (l : list A) : list (list A) :=
 match l with
-    | [] => [[]]
-    | h :: t => bind (ins h) (perms t)
+| [] => [[]]
+| h :: t => bind (ins h) (perms t)
 end.
 
 Lemma len_ins :
@@ -4003,8 +4003,8 @@ Qed.
 
 Fixpoint nsum (l : list nat) : nat :=
 match l with
-    | [] => 0
-    | h :: t => h + nsum t
+| [] => 0
+| h :: t => h + nsum t
 end.
 
 Lemma len_join :
@@ -4187,8 +4187,8 @@ Qed.
 Fixpoint deepcount
   {A : Type} (p : A -> bool) (l : list (list A)) : nat :=
 match l with
-    | [] => 0
-    | h :: t => count p h + deepcount p t
+| [] => 0
+| h :: t => count p h + deepcount p t
 end.
 
 Lemma Permutation_bind_ins :
@@ -4259,8 +4259,8 @@ Import D4.
 
 Fixpoint perms {A : Type} (l : list A) : list (list A) :=
 match l with
-    | [] => [[]]
-    | h :: t =>
+| [] => [[]]
+| h :: t =>
         join (map (fun t => cycles (cons h t)) (perms t))
 end.
 
@@ -4273,8 +4273,8 @@ Compute perms [1; 2; 3; 4].
 
 Fixpoint sum (l : list nat) : nat :=
 match l with
-    | [] => 0
-    | h :: t => h + sum t
+| [] => 0
+| h :: t => h + sum t
 end.
 
 Lemma len_join :
@@ -4433,14 +4433,14 @@ End Specs.
 (* Module SetPermDedup. *)
 
 Inductive SameSet {A : Type} : list A -> list A -> Prop :=
-    | SameSet_nil   : SameSet [] []
-    | SameSet_cons  :
+| SameSet_nil   : SameSet [] []
+| SameSet_cons  :
         forall (h : A) (t1 t2 : list A), SameSet t1 t2 -> SameSet (h :: t1) (h :: t2)
-    | SameSet_swap  :
+| SameSet_swap  :
         forall (x y : A) (l : list A), SameSet (y :: x :: l) (x :: y :: l)
-    | SameSet_dedup :
+| SameSet_dedup :
         forall (h : A) (t : list A), SameSet (h :: t) (h :: h :: t)
-    | SameSet_trans :
+| SameSet_trans :
         forall l1 l2 l3 : list A, SameSet l1 l2 -> SameSet l2 l3 -> SameSet l1 l3.
 
 Lemma SameSet_SetEquiv :
@@ -4495,22 +4495,22 @@ End SetExists.
 Module SetTranspositionDedup.
 
 Inductive Transposition {A : Type} : list A -> list A -> Prop :=
-    | Transposition' :
+| Transposition' :
         forall (x y : A) (l1 l2 l3 : list A),
           Transposition (l1 ++ x :: l2 ++ y :: l3) (l1 ++ y :: l2 ++ x :: l3).
 
 Inductive Dedup {A : Type} : list A -> list A -> Prop :=
-    | Dedup' :
+| Dedup' :
         forall (x : A) (l1 l2 l3 : list A),
           Dedup (l1 ++ x :: l2 ++ x :: l3) (l1 ++ x :: l2 ++ l3).
 
 Inductive SameSetTD {A : Type} : list A -> list A -> Prop :=
-    | SameSetTD_refl   :
+| SameSetTD_refl   :
         forall l : list A, SameSetTD l l
-    | SameSetTD_transp :
+| SameSetTD_transp :
         forall l1 l2 l3 : list A,
           Transposition l1 l2 -> SameSetTD l2 l3 -> SameSetTD l1 l3
-    | SameSetTD_dedup  :
+| SameSetTD_dedup  :
         forall l1 l2 l3 : list A,
           Dedup l1 l2 -> SameSetTD l2 l3 -> SameSetTD l1 l3.
 
@@ -4534,22 +4534,22 @@ End SetTranspositionDedup.
 Module SetAdjacentTranspositionDedup.
 
 Inductive AdjacentTransposition {A : Type} : list A -> list A -> Prop :=
-    | AdjacentTransposition' :
+| AdjacentTransposition' :
         forall (x y : A) (l1 l2 : list A),
           AdjacentTransposition (l1 ++ x :: y :: l2) (l1 ++ y :: x :: l2).
 
 Inductive AdjacentDedup {A : Type} : list A -> list A -> Prop :=
-    | AdjacentDedup' :
+| AdjacentDedup' :
         forall (x : A) (l1 l2 : list A),
           AdjacentDedup (l1 ++ x :: x :: l2) (l1 ++ x :: l2).
 
 Inductive SameSetATD {A : Type} : list A -> list A -> Prop :=
-    | SameSetATD_refl   :
+| SameSetATD_refl   :
         forall l : list A, SameSetATD l l
-    | SameSetATD_transp :
+| SameSetATD_transp :
         forall l1 l2 l3 : list A,
           AdjacentTransposition l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3
-    | SameSetATD_dedup  :
+| SameSetATD_dedup  :
         forall l1 l2 l3 : list A,
           AdjacentDedup l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3.
 
@@ -4647,12 +4647,12 @@ Admitted.
 (* end hide *)
 
 Inductive SameSetATD' {A : Type} (l1 : list A) : list A -> Prop :=
-    | SameSetATD'_refl   :
+| SameSetATD'_refl   :
         SameSetATD' l1 l1
-    | SameSetATD'_transp :
+| SameSetATD'_transp :
         forall l2 l3 : list A,
           SameSetATD' l1 l2 -> AdjacentTransposition l2 l3 -> SameSetATD' l1 l3
-    | SameSetATD'_dedup  :
+| SameSetATD'_dedup  :
         forall l2 l3 : list A,
           SameSetATD' l1 l2 -> AdjacentDedup l2 l3 -> SameSetATD' l1 l3.
 

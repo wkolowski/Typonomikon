@@ -394,8 +394,8 @@ W tym przykładzie chcemy pokazać przemienność konunkcji. Ponieważ nasz
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">even</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">even0</span> : <span class="id" title="var">even</span> 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">evenSS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)).<br/>
+| <span class="id" title="var">even0</span> : <span class="id" title="var">even</span> 0<br/>
+| <span class="id" title="var">evenSS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)).<br/>
 
 <br/>
 </div>
@@ -1108,8 +1108,8 @@ Taktyka <span class="inlinecode"><span class="id" title="tactic">intros</span></
 &nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fix</span> <span class="id" title="var">f</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">P</span> <span class="id" title="var">n</span> :=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">H0</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">HS</span> <span class="id" title="var">n'</span> (<span class="id" title="var">f</span> <span class="id" title="var">n'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">H0</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">HS</span> <span class="id" title="var">n'</span> (<span class="id" title="var">f</span> <span class="id" title="var">n'</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1130,8 +1130,8 @@ Pierwszy, najbardziej prymitywny sposób to użycie konstruktu <span class="inli
 &nbsp;&nbsp;(<span class="id" title="var">HS</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">P</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">P</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>))<br/>
 &nbsp;&nbsp;(<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">P</span> <span class="id" title="var">n</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt; <span class="id" title="var">H0</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">HS</span> <span class="id" title="var">n'</span> (<span class="id" title="var">nat_ind_Fixpoint_term</span> <span class="id" title="var">P</span> <span class="id" title="var">H0</span> <span class="id" title="var">HS</span> <span class="id" title="var">n'</span>)<br/>
+| 0 =&gt; <span class="id" title="var">H0</span><br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">HS</span> <span class="id" title="var">n'</span> (<span class="id" title="var">nat_ind_Fixpoint_term</span> <span class="id" title="var">P</span> <span class="id" title="var">H0</span> <span class="id" title="var">HS</span> <span class="id" title="var">n'</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -2136,10 +2136,10 @@ Przetestuj działanie swoich taktyk na reszcie twierdzeń z rozdziału
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">C</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c0</span> : <span class="id" title="var">C</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c1</span> : <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c2</span> : <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">c3</span> : <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span>.<br/>
+| <span class="id" title="var">c0</span> : <span class="id" title="var">C</span><br/>
+| <span class="id" title="var">c1</span> : <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span><br/>
+| <span class="id" title="var">c2</span> : <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span><br/>
+| <span class="id" title="var">c3</span> : <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span> -&gt; <span class="id" title="var">C</span>.<br/>
 
 <br/>
 </div>
@@ -2662,7 +2662,7 @@ Kolejnym problemem taktyki <span class="inlinecode"><span class="id" title="tact
 <br/>
 #[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Extern</span> 0 =&gt;<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">H</span> : ?<span class="id" title="var">x</span> = ?<span class="id" title="var">y</span>, <span class="id" title="var">H'</span> : ?<span class="id" title="var">y</span> = ?<span class="id" title="var">z</span> |- ?<span class="id" title="var">x</span> = ?<span class="id" title="var">z</span> =&gt; <span class="id" title="tactic">apply</span> (@<span class="id" title="var">eq_trans</span> <span class="id" title="var">_</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>)<br/>
+| <span class="id" title="var">H</span> : ?<span class="id" title="var">x</span> = ?<span class="id" title="var">y</span>, <span class="id" title="var">H'</span> : ?<span class="id" title="var">y</span> = ?<span class="id" title="var">z</span> |- ?<span class="id" title="var">x</span> = ?<span class="id" title="var">z</span> =&gt; <span class="id" title="tactic">apply</span> (@<span class="id" title="var">eq_trans</span> <span class="id" title="var">_</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>)<br/>
 <span class="id" title="keyword">end</span><br/>
 &nbsp;&nbsp;: <span class="id" title="var">extern_db</span>.<br/>
 
@@ -2697,7 +2697,7 @@ Jest jednak sposób, żeby uporać się i z tym problemem: jest nim komenda
 <br/>
 #[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Extern</span> 0 (?<span class="id" title="var">x</span> = ?<span class="id" title="var">z</span>) =&gt;<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">H</span> : ?<span class="id" title="var">x</span> = ?<span class="id" title="var">y</span>, <span class="id" title="var">H'</span> : ?<span class="id" title="var">y</span> = ?<span class="id" title="var">z</span> |- <span class="id" title="var">_</span> =&gt; <span class="id" title="tactic">apply</span> (@<span class="id" title="var">eq_trans</span> <span class="id" title="var">_</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>)<br/>
+| <span class="id" title="var">H</span> : ?<span class="id" title="var">x</span> = ?<span class="id" title="var">y</span>, <span class="id" title="var">H'</span> : ?<span class="id" title="var">y</span> = ?<span class="id" title="var">z</span> |- <span class="id" title="var">_</span> =&gt; <span class="id" title="tactic">apply</span> (@<span class="id" title="var">eq_trans</span> <span class="id" title="var">_</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>)<br/>
 <span class="id" title="keyword">end</span><br/>
 &nbsp;&nbsp;: <span class="id" title="var">core</span>.<br/>
 

@@ -97,8 +97,8 @@ Defined.
 
 Fixpoint sum (l : list nat) : nat :=
 match l with
-    | [] => 0
-    | h :: t => h + sum t
+| [] => 0
+| h :: t => h + sum t
 end.
 
 Lemma elem_sum :

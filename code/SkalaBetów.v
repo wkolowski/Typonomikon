@@ -19,9 +19,9 @@ End BiedaBeth.
 Module BethNaBogato.
 
 Inductive Ord : Type :=
-    | Z   : Ord
-    | S   : Ord -> Ord
-    | Lim : (nat -> Ord) -> Ord.
+| Z   : Ord
+| S   : Ord -> Ord
+| Lim : (nat -> Ord) -> Ord.
 
 Fixpoint Beth (o : Ord) : Type :=
 match o with

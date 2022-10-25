@@ -1,7 +1,7 @@
 Fail Inductive OfExample : Type :=
-    | xd of nat.
+| xd of nat.
 
 Require Import ssreflect.
 
 Inductive OfExample : Type :=
-    | xd of nat.
+| xd of nat.

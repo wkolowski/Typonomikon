@@ -8,10 +8,10 @@ Set Allow StrictProp.
 Inductive sEmpty : SProp := .
 
 Inductive sUnit : SProp :=
-    | stt : sUnit.
+| stt : sUnit.
 
 Inductive seq {A : Type} (x : A) : A -> SProp :=
-    | srefl : seq x x.
+| srefl : seq x x.
 
 Goal forall A : Type, sEmpty -> A.
 Proof.
@@ -26,7 +26,7 @@ Proof.
 Abort.
 
 Inductive Box (A : Type) : Prop :=
-    | box : A -> Box A.
+| box : A -> Box A.
 
 Require Import SetIsType.
 

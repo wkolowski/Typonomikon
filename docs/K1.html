@@ -133,8 +133,8 @@ Zapoznaliśmy się już z rekursją strukturalną, dzięki której możemy defin
 <span class="comment">(*&nbsp;===&gt;&nbsp;head&nbsp;=&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fix&nbsp;head&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(l&nbsp;:&nbsp;list&nbsp;A)&nbsp;{struct&nbsp;l}&nbsp;:&nbsp;option&nbsp;A&nbsp;:=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;l&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;<span class="inlinecode">[]</span>&nbsp;=&gt;&nbsp;None<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;h&nbsp;::&nbsp;_&nbsp;=&gt;&nbsp;Some&nbsp;h<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;<span class="inlinecode">[]</span>&nbsp;=&gt;&nbsp;None<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;h&nbsp;::&nbsp;_&nbsp;=&gt;&nbsp;Some&nbsp;h<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;option&nbsp;A&nbsp;*)</span><br/>
 
@@ -527,8 +527,8 @@ Definicja <span class="inlinecode"><span class="id" title="var">Theta</span></sp
 <span class="comment">(*&nbsp;===&gt;&nbsp;length&nbsp;=&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fix&nbsp;length&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(l&nbsp;:&nbsp;list&nbsp;A)&nbsp;{struct&nbsp;l}&nbsp;:&nbsp;nat&nbsp;:=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;l&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;<span class="inlinecode">[]</span>&nbsp;=&gt;&nbsp;0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;_&nbsp;::&nbsp;t&nbsp;=&gt;&nbsp;S&nbsp;(length&nbsp;A&nbsp;t)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;<span class="inlinecode">[]</span>&nbsp;=&gt;&nbsp;0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;_&nbsp;::&nbsp;t&nbsp;=&gt;&nbsp;S&nbsp;(length&nbsp;A&nbsp;t)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;nat&nbsp;*)</span><br/>
 
@@ -644,12 +644,12 @@ Prześledźmy jeszcze raz całą analizę, krok po kroku:
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">length'</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">fuel</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">option</span> <span class="id" title="var">nat</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">fuel</span>, <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, [] =&gt; <span class="id" title="var">Some</span> 0<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">fuel'</span>, <span class="id" title="var">_</span> :: <span class="id" title="var">t</span> =&gt;<br/>
+| 0, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">None</span><br/>
+| <span class="id" title="var">_</span>, [] =&gt; <span class="id" title="var">Some</span> 0<br/>
+| <span class="id" title="var">S</span> <span class="id" title="var">fuel'</span>, <span class="id" title="var">_</span> :: <span class="id" title="var">t</span> =&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">length'</span> <span class="id" title="var">fuel'</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">n</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
@@ -801,8 +801,8 @@ Twierdzenie to wygląda dość kryptycznie głównie ze względu na fakt, że
 <span class="comment">(*&nbsp;===&gt;&nbsp;rev&nbsp;=&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fix&nbsp;rev&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(l&nbsp;:&nbsp;list&nbsp;A)&nbsp;{struct&nbsp;l}&nbsp;:&nbsp;list&nbsp;A&nbsp;:=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;l&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;<span class="inlinecode"></span>&nbsp;=&gt;&nbsp;<span class="inlinecode"></span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;h&nbsp;::&nbsp;t&nbsp;=&gt;&nbsp;rev&nbsp;A&nbsp;t&nbsp;++&nbsp;<span class="inlinecode"><span class="id" title="var">h</span></span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;<span class="inlinecode"></span>&nbsp;=&gt;&nbsp;<span class="inlinecode"></span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;h&nbsp;::&nbsp;t&nbsp;=&gt;&nbsp;rev&nbsp;A&nbsp;t&nbsp;++&nbsp;<span class="inlinecode"><span class="id" title="var">h</span></span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;list&nbsp;A&nbsp;*)</span><br/>
 
@@ -858,8 +858,8 @@ Oznaczmy szukaną złożoność przez T(n). Z przypadku gdy <span class="inlinec
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">rev_aux</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> <span class="id" title="var">acc</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> <span class="id" title="var">A</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">acc</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">rev_aux</span> <span class="id" title="var">t</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">acc</span>)<br/>
+| [] =&gt; <span class="id" title="var">acc</span><br/>
+| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">rev_aux</span> <span class="id" title="var">t</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">acc</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
