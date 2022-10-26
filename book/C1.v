@@ -145,9 +145,9 @@ Instance EqDec_bool : EqDec bool :=
 {
     eq_dec := fun b b' : bool =>
       match b, b' with
-    | true, true => true
-    | false, false => true
-    | _, _ => false
+      | true, true => true
+      | false, false => true
+      | _, _ => false
       end
 }.
 Proof.
@@ -249,9 +249,9 @@ Instance EqDec_nat : EqDec nat :=
 {
     eq_dec := fix f (n m : nat) :=
       match n, m with
-    | 0, 0 => true
-    | S n', S m' => f n' m'
-    | _, _ => false
+      | 0, 0 => true
+      | S n', S m' => f n' m'
+      | _, _ => false
       end
 }.
 Proof.
@@ -292,9 +292,9 @@ Instance EqDec_option (A : Type) (_ : EqDec A) : EqDec (option A) :=
 {
     eq_dec := fun opt1 opt2 : option A =>
       match opt1, opt2 with
-    | Some a, Some a' => eq_dec a a'
-    | None, None => true
-    | _, _ => false
+      | Some a, Some a' => eq_dec a a'
+      | None, None => true
+      | _, _ => false
       end
 }.
 Proof.
