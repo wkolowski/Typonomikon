@@ -155,9 +155,9 @@ end.
 
 Eval cbv delta in negb true.
 (* ===> = (fun b : bool => match b with
-               | true => false
-               | false => true
-                   end) true
+                           | true => false
+                           | false => true
+                           end) true
         : bool *)
 
 (** Redukcja delta odwija definicje. Żeby użyć jakiejś redukcji, używamy
@@ -165,8 +165,8 @@ Eval cbv delta in negb true.
 
 Eval cbv delta beta in negb true.
 (* ===> = match true with
-      | true => false
-      | false => true
+          | true => false
+          | false => true
           end
         : bool *)
 

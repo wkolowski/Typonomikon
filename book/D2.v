@@ -808,8 +808,8 @@ Print plus.
 (* plus =
    fix plus (n m : nat) {struct n} : nat :=
      match n with
- | 0 => m
- | S p => S (plus p m)
+     | 0 => m
+     | S p => S (plus p m)
      end
         : nat -> nat -> nat *)
 
@@ -1258,11 +1258,11 @@ Fixpoint ack (n : nat) : nat -> nat :=
 match n with
 | 0 => S
 | S n' =>
-        fix ack' (m : nat) : nat :=
-        match m with
-        | 0 => ack n' 1
-        | S m' => ack n' (ack' m')
-        end
+  fix ack' (m : nat) : nat :=
+  match m with
+  | 0 => ack n' 1
+  | S m' => ack n' (ack' m')
+  end
 end.
 
 (** Zauważmy przede wszystkim, że nieco zmienia się wygląd typu naszej
@@ -1372,14 +1372,14 @@ Fixpoint merge
 match l1 with
   | [] => fun l2 : list A => l2
   | h1 :: t1 =>
-      fix merge' (l2 : list A) : list A :=
-        match l2 with
+    fix merge' (l2 : list A) : list A :=
+      match l2 with
       | [] => l1
       | h2 :: t2 =>
-              if cmp h1 h2
-              then h1 :: merge cmp t1 l2
-              else h2 :: merge' t2
-        end
+        if cmp h1 h2
+        then h1 :: merge cmp t1 l2
+        else h2 :: merge' t2
+      end
 end.
 (* end hide *)
 
@@ -1408,9 +1408,9 @@ Lemma merge_eq :
     | [], _ => l2
     | _, [] => l1
     | h1 :: t1, h2 :: t2 =>
-            if cmp h1 h2
-            then h1 :: merge cmp t1 l2
-            else h2 :: merge cmp l1 t2
+      if cmp h1 h2
+      then h1 :: merge cmp t1 l2
+      else h2 :: merge cmp l1 t2
     end.
 (* begin hide *)
 Proof.
@@ -1963,21 +1963,21 @@ Fixpoint collatz (fuel n : nat) : option (list nat) :=
 match fuel with
 | 0 => None
 | S fuel' =>
-        match n with
-        | 0 | 1 => Some [n]
-        | _ =>
-                if even n
-                then
-                  match collatz fuel' (div2 n) with
-                  | Some l => Some (n :: l)
-                  | None => None
-                  end
-                else
-                  match collatz fuel' (1 + 3 * n) with
-                  | Some l => Some (n :: l)
-                  | None => None
-                  end
-        end
+  match n with
+  | 0 | 1 => Some [n]
+  | _ =>
+    if even n
+    then
+      match collatz fuel' (div2 n) with
+      | Some l => Some (n :: l)
+      | None => None
+      end
+    else
+      match collatz fuel' (1 + 3 * n) with
+      | Some l => Some (n :: l)
+      | None => None
+      end
+  end
 end.
 
 (** Definicja funkcji [collatz] za pomocą rekursji po paliwie wygląda dość
@@ -2042,13 +2042,13 @@ Fixpoint divFuel (fuel n m : nat) : option nat :=
 match fuel with
 | 0 => None
 | S fuel' =>
-        if ltb n m
-        then Some 0
-        else
-          match divFuel fuel' (n - m) m with
-          | Some r => Some (S r)
-          | None => None
-          end
+  if ltb n m
+  then Some 0
+  else
+    match divFuel fuel' (n - m) m with
+    | Some r => Some (S r)
+    | None => None
+    end
 end.
 (* end hide *)
 
@@ -3218,10 +3218,10 @@ match n, l with
 | 0, _ => Some ([], l)
 | S _, [] => None
 | S n', h :: t =>
-        match split n' t with
-        | None => None
-        | Some (l1, l2) => Some (h :: l1, l2)
-        end
+  match split n' t with
+  | None => None
+  | Some (l1, l2) => Some (h :: l1, l2)
+  end
 end.
 
 Inductive splitG {A : Type} :
@@ -3966,10 +3966,10 @@ match n, l with
 | 0, _ => Some ([], l)
 | S n', [] => None
 | S n', h :: t =>
-        match split n' t with
-        | None => None
-        | Some (l1, l2) => Some (h :: l1, l2)
-        end
+  match split n' t with
+  | None => None
+  | Some (l1, l2) => Some (h :: l1, l2)
+  end
 end.
 
 Lemma split_spec :
