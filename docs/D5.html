@@ -947,10 +947,10 @@ W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">None</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">init</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">Some</span> []<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">i</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">i</span>))<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">init</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">Some</span> []<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">i</span> =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">h</span> :: <span class="id" title="var">i</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1194,8 +1194,9 @@ W części dowodów przydadzą nam się fakty dotyczące arytmetyki liczb
 &nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">nth</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">length</span> <span class="id" title="var">l</span> &lt;= <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">x</span> =&gt; <span class="id" title="tactic">exists</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l</span> = <span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span> /\ <span class="id" title="var">length</span> <span class="id" title="var">l1</span> = <span class="id" title="var">n</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">x</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l</span> = <span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span> /\ <span class="id" title="var">length</span> <span class="id" title="var">l1</span> = <span class="id" title="var">n</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1716,10 +1717,10 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">splitAt</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">length</span> <span class="id" title="var">l</span> &lt;= <span class="id" title="var">n</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l1</span>, <span class="id" title="var">x</span>, <span class="id" title="var">l2</span>) =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nth</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> <span class="id" title="var">x</span> /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l1</span> = <span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span> /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l2</span> = <span class="id" title="var">drop</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">l</span> /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l</span> = <span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">nth</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> <span class="id" title="var">x</span> /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l1</span> = <span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">l</span> /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l2</span> = <span class="id" title="var">drop</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">l</span> /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">l</span> = <span class="id" title="var">l1</span> ++ <span class="id" title="var">x</span> :: <span class="id" title="var">l2</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1779,10 +1780,10 @@ A z <span class="inlinecode"><span class="id" title="var">join</span></span> i <
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">splitAt</span> <span class="id" title="var">n</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l11</span>, <span class="id" title="var">x</span>, <span class="id" title="var">l12</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">l11</span>, <span class="id" title="var">x</span>, <span class="id" title="var">l12</span> ++ <span class="id" title="var">l2</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">splitAt</span> (<span class="id" title="var">n</span> - <span class="id" title="var">length</span> <span class="id" title="var">l1</span>) <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l21</span>, <span class="id" title="var">x</span>, <span class="id" title="var">l22</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l21</span>, <span class="id" title="var">x</span>, <span class="id" title="var">l22</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">splitAt</span> (<span class="id" title="var">n</span> - <span class="id" title="var">length</span> <span class="id" title="var">l1</span>) <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">l21</span>, <span class="id" title="var">x</span>, <span class="id" title="var">l22</span>) =&gt; <span class="id" title="var">Some</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l21</span>, <span class="id" title="var">x</span>, <span class="id" title="var">l22</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>

@@ -1373,13 +1373,13 @@ match l1 with
   | [] => fun l2 : list A => l2
   | h1 :: t1 =>
     fix merge' (l2 : list A) : list A :=
-      match l2 with
-      | [] => l1
-      | h2 :: t2 =>
-        if cmp h1 h2
-        then h1 :: merge cmp t1 l2
-        else h2 :: merge' t2
-      end
+    match l2 with
+    | [] => l1
+    | h2 :: t2 =>
+      if cmp h1 h2
+      then h1 :: merge cmp t1 l2
+      else h2 :: merge' t2
+    end
 end.
 (* end hide *)
 
@@ -5167,7 +5167,7 @@ Print again.div'_aux.
     fix div'_aux (n m : nat) (d : again.divD n m) {struct d} : nat :=
     match le_lt_dec (S m) n with
     | left H =>
-            S (div'_aux (n - S m) m (again.divD_ge_inv n m H d))
+        S (div'_aux (n - S m) m (again.divD_ge_inv n m H d))
     | right _ => 0
     end
       : forall n m : nat, again.divD n m -> nat *)

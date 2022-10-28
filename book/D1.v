@@ -1109,10 +1109,10 @@ Theorem zero_not_one : 0 <> 1.
 Proof.
   intro. change False with
   ((fun n : nat =>
-  match n with
-  | 0 => False
-  | _ => True
-  end) 0).
+    match n with
+    | 0 => False
+    | _ => True
+    end) 0).
   rewrite H. trivial.
 Qed.
 (* end hide *)
@@ -1185,10 +1185,10 @@ Theorem rational_eq_inconsistent : False.
 Proof.
   change False with
   ((fun q : rational =>
-  match q with
-  | mk_rational true 1 2 _ => False
-  | _ => True
-  end) q_1_2).
+    match q with
+    | mk_rational true 1 2 _ => False
+    | _ => True
+    end) q_1_2).
   rewrite q_1_2_eq_q_2_4. cbn. trivial.
 Qed.
 (* end hide *)
@@ -4260,20 +4260,20 @@ Module BST'.
 
 (*
 Inductive BST {A : Type} (R : A -> A -> bool) : Type :=
-  | E : BST R
-  | N : forall (v : A) (l r : BST R),
-          okl R v l = true -> okr R v l = true -> BST R
+| E : BST R
+| N : forall (v : A) (l r : BST R),
+        okl R v l = true -> okr R v l = true -> BST R
 
 with okl {A : Type} (R : A -> A -> bool) (x : A) (t : BST R) : bool :=
 match t with
-  | E => true
-  | N v _ _ _ _ => R x v
+| E => true
+| N v _ _ _ _ => R x v
 end
 
 with okr {A : Type} (R : A -> A -> bool) (x : A) (t : BST R) : bool :=
 match t with
-  | E => true
-  | N v _ _ _ _ => negb (R x v)
+| E => true
+| N v _ _ _ _ => negb (R x v)
 *)
 
 Axioms
@@ -6311,11 +6311,11 @@ Set Positivity Checking.
 Definition extract (x y : T6) : unit :=
 match x with
 | c0 f =>
-        match f (fun g => match g y with | tt => true end) with
-        | R => tt
-        | G => tt
-        | B => tt
-        end
+  match f (fun g => match g y with | tt => true end) with
+  | R => tt
+  | G => tt
+  | B => tt
+  end
 end.
 
 Definition loop (x : T6) : unit := extract x x.

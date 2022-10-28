@@ -5340,7 +5340,7 @@ Gdzież w wyekstrahowanym programie podział się dowód <span class="inlinecode
 &nbsp;&nbsp;&nbsp;&nbsp;fix&nbsp;div'_aux&nbsp;(n&nbsp;m&nbsp;:&nbsp;nat)&nbsp;(d&nbsp;:&nbsp;again.divD&nbsp;n&nbsp;m)&nbsp;{struct&nbsp;d}&nbsp;:&nbsp;nat&nbsp;:=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;le_lt_dec&nbsp;(S&nbsp;m)&nbsp;n&nbsp;with<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;left&nbsp;H&nbsp;=&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S&nbsp;(div'_aux&nbsp;(n&nbsp;-&nbsp;S&nbsp;m)&nbsp;m&nbsp;(again.divD_ge_inv&nbsp;n&nbsp;m&nbsp;H&nbsp;d))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S&nbsp;(div'_aux&nbsp;(n&nbsp;-&nbsp;S&nbsp;m)&nbsp;m&nbsp;(again.divD_ge_inv&nbsp;n&nbsp;m&nbsp;H&nbsp;d))<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;right&nbsp;_&nbsp;=&gt;&nbsp;0<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;end<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;n&nbsp;m&nbsp;:&nbsp;nat,&nbsp;again.divD&nbsp;n&nbsp;m&nbsp;-&gt;&nbsp;nat&nbsp;*)</span><br/>

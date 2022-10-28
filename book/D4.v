@@ -1948,10 +1948,10 @@ Function binom' (n k : nat) : nat :=
 match k with
 | 0    => 1
 | S k' =>
-        match n with
-        | 0    => 0
-        | S n' => plus (binom' n' k') (binom' n' k)
-        end
+  match n with
+  | 0    => 0
+  | S n' => plus (binom' n' k') (binom' n' k)
+  end
 end.
 
 Lemma binom_S_S :
@@ -2008,11 +2008,13 @@ end.
 Fixpoint quickMul (fuel n m : nat) : nat :=
 match fuel with
 | 0 => 0
-| S fuel' => match n with
-    | 0 => 0
-    | _ => let res := quickMul fuel' (div2 n) m in
-            if evenb n then plus res res else plus (plus m res) res
-        end
+| S fuel' =>
+  match n with
+  | 0 => 0
+  | _ =>
+    let res := quickMul fuel' (div2 n) m in
+      if evenb n then plus res res else plus (plus m res) res
+  end
 end.
 
 Time Eval compute in 430 * 110.
@@ -2021,8 +2023,9 @@ Time Eval compute in quickMul 1000 430 110.
 Function qm (n m : nat) {measure id n} : nat :=
 match n with
 | 0 => 0
-| _ => let r := qm (div2 n) m in
-        if evenb n then 2 * r else m + 2 * r
+| _ =>
+  let r := qm (div2 n) m in
+    if evenb n then 2 * r else m + 2 * r
 end.
 Proof.
 Abort.
@@ -2088,9 +2091,9 @@ Proof.
         cbn in *. apply lt_n_S.
         repeat match goal with
         | H : context [?x + S ?y] |- _ =>
-                rewrite (plus_comm x (S y)) in H; cbn in H
+          rewrite (plus_comm x (S y)) in H; cbn in H
         | H : context [?x * S ?y] |- _ =>
-                rewrite (mult_comm x (S y)) in H; cbn in H
+          rewrite (mult_comm x (S y)) in H; cbn in H
         | |- context [?x + S ?y] => rewrite (plus_comm x (S y)); cbn
         | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); cbn
         end. lia.
@@ -2169,9 +2172,9 @@ Defined.
 Ltac nat_cbn := repeat
 match goal with
 | H : context [?x + S ?y] |- _ =>
-        rewrite (plus_comm x (S y)) in H; cbn in H
+    rewrite (plus_comm x (S y)) in H; cbn in H
 | H : context [?x * S ?y] |- _ =>
-        rewrite (mult_comm x (S y)) in H; cbn in H
+  rewrite (mult_comm x (S y)) in H; cbn in H
 | |- context [?x + S ?y] => rewrite (plus_comm x (S y)); cbn
 | |- context [?x * S ?y] => rewrite (mult_comm x (S y)); cbn
 end;
@@ -2207,10 +2210,10 @@ Fixpoint g (y : nat) : nat :=
 match y with
 | 0 => 0
 | S y' =>
-        let x := g y' in 
-          if Nat.ltb y (f (S x))
-          then x
-          else S x
+  let x := g y' in
+    if Nat.ltb y (f (S x))
+    then x
+    else S x
 end.
 
 (** Dowód też jest prosty i ma taki sam kształt jak definicja funkcji [g]. *)

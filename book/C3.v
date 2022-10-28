@@ -470,10 +470,10 @@ Fail Fixpoint inb_nat (n : nat) (l : list nat) : bool :=
 match l with
 | nil => false
 | cons h t =>
-        match eq_nat_dec n h with
-        | or_introl _ => true
-        | _ => inb_nat n t
-        end
+  match eq_nat_dec n h with
+  | or_introl _ => true
+  | _ => inb_nat n t
+  end
 end.
 
 (** Coq nie akceptuje powyższego kodu, racząc nas informacją o błędzie: *)
