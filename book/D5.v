@@ -1386,10 +1386,11 @@ Qed.
 Fixpoint init {A : Type} (l : list A) : option (list A) :=
 match l with
 | [] => None
-| h :: t => match init t with
-    | None => Some []
-    | Some t' => Some (h :: t')
-    end
+| h :: t =>
+  match init t with
+  | None => Some []
+  | Some t' => Some (h :: t')
+  end
 end.
 (* end hide *)
 
@@ -1445,10 +1446,10 @@ Lemma init_map :
     match l with
     | [] => None
     | h :: t =>
-            match init t with
-            | None => Some []
-            | Some i => Some (map f (h :: i))
-            end
+      match init t with
+      | None => Some []
+      | Some i => Some (map f (h :: i))
+      end
     end.
 (* begin hide *)
 Proof.
@@ -1525,10 +1526,10 @@ Fixpoint unsnoc {A : Type} (l : list A) : option (A * list A) :=
 match l with
 | [] => None
 | h :: t =>
-        match unsnoc t with
-        | None => Some (h, [])
-        | Some (last, init) => Some (last, h :: init)
-        end
+  match unsnoc t with
+  | None => Some (h, [])
+  | Some (last, init) => Some (last, h :: init)
+  end
 end.
 (* end hide *)
 
@@ -1929,8 +1930,9 @@ Lemma nth_spec' :
   forall (A : Type) (l : list A) (n : nat),
     match nth n l with
     | None => length l <= n
-    | Some x => exists l1 l2 : list A,
-                      l = l1 ++ x :: l2 /\ length l1 = n
+    | Some x =>
+        exists l1 l2 : list A,
+          l = l1 ++ x :: l2 /\ length l1 = n
     end.
 (* begin hide *)
 Proof.
@@ -2166,8 +2168,8 @@ Qed.
       match nth (S m1) ll with
       | None => m1 = 0
       | Some l =>
-              exists m2 : nat,
-                take n (join ll) = join (take m1 ll) ++ take m2 l
+          exists m2 : nat,
+            take n (join ll) = join (take m1 ll) ++ take m2 l
       end.
 Proof.
   induction ll as [| h t]; cbn; intros.
@@ -2871,10 +2873,10 @@ match l, n with
 | [], _ => None
 | h :: t, 0 => Some ([], h, t)
 | h :: t, S n' =>
-        match splitAt n' t with
-        | None => None
-        | Some (l1, x, l2) => Some (h :: l1, x, l2)
-        end
+  match splitAt n' t with
+  | None => None
+  | Some (l1, x, l2) => Some (h :: l1, x, l2)
+  end
 end.
 (* end hide *)
 
@@ -2919,10 +2921,10 @@ Lemma splitAt_megaspec :
     match splitAt n l with
     | None => length l <= n
     | Some (l1, x, l2) =>
-            nth n l = Some x /\
-            l1 = take n l /\
-            l2 = drop (S n) l /\
-            l = l1 ++ x :: l2
+      nth n l = Some x /\
+      l1 = take n l /\
+      l2 = drop (S n) l /\
+      l = l1 ++ x :: l2
     end.
 (* begin hide *)
 Proof.
@@ -3079,10 +3081,10 @@ Lemma splitAt_app :
     match splitAt n l1 with
     | Some (l11, x, l12) => Some (l11, x, l12 ++ l2)
     | None =>
-            match splitAt (n - length l1) l2 with
-            | Some (l21, x, l22) => Some (l1 ++ l21, x, l22)
-            | None => None
-            end
+      match splitAt (n - length l1) l2 with
+      | Some (l21, x, l22) => Some (l1 ++ l21, x, l22)
+      | None => None
+      end
     end.
 (* begin hide *)
 Proof.
@@ -3706,10 +3708,10 @@ match l, n with
 | [], _ => None
 | h :: t, 0 => Some (x :: t)
 | h :: t, S n' =>
-        match replace t n' x with
-        | None => None
-        | Some l => Some (h :: l)
-        end
+  match replace t n' x with
+  | None => None
+  | Some l => Some (h :: l)
+  end
 end.
 (* end hide *)
 
@@ -3964,14 +3966,14 @@ Lemma replace_join :
         match nth n ll with
         | None => False
         | Some l' =>
-                match replace l' m x with
-                | None => False
-                | Some l'' =>
-                        match replace ll n l'' with
-                        | None => False
-                        | Some ll' => join ll' = l
-                        end
-                end
+          match replace l' m x with
+          | None => False
+          | Some l'' =>
+            match replace ll n l'' with
+            | None => False
+            | Some ll' => join ll' = l
+            end
+          end
         end.
 (* begin hide *)
 Proof.
@@ -4051,10 +4053,10 @@ Lemma tail_replace :
       match n with
       | 0 => tail l
       | S n' =>
-              match tail l with
-              | None => None
-              | Some t => replace t n' x
-              end
+        match tail l with
+        | None => None
+        | Some t => replace t n' x
+        end
       end.
 (* begin hide *)
 Proof.
@@ -4281,10 +4283,10 @@ match l, n with
 | [], _ => None
 | h :: t, 0 => Some (h, t)
 | h :: t, S n' =>
-        match remove n' t with
-        | None => None
-        | Some (x, l') => Some (x, h :: l')
-        end
+  match remove n' t with
+  | None => None
+  | Some (x, l') => Some (x, h :: l')
+  end
 end.
 
 Definition remove'
@@ -4447,10 +4449,10 @@ Lemma remove_app :
     match remove n l1 with
     | Some (h, t) => Some (h, t ++ l2)
     | None =>
-            match remove (n - length l1) l2 with
-            | Some (h, t) => Some (h, l1 ++ t)
-            | None => None
-            end
+      match remove (n - length l1) l2 with
+      | Some (h, t) => Some (h, l1 ++ t)
+      | None => None
+      end
     end.
 (* begin hide *)
 Proof.
@@ -4891,7 +4893,7 @@ Lemma splitAt_zip :
     splitAt n (zip la lb) =
     match splitAt n la, splitAt n lb with
     | Some (la1, a, la2), Some (lb1, b, lb2) =>
-            Some (zip la1 lb1, (a, b), zip la2 lb2)
+        Some (zip la1 lb1, (a, b), zip la2 lb2)
     | _, _ => None
     end.
 (* begin hide *)
@@ -5013,7 +5015,7 @@ Fixpoint unzip {A B : Type} (l : list (A * B)) : list A * list B :=
 match l with
 | [] => ([], [])
 | (ha, hb) :: t =>
-        let (ta, tb) := unzip t in (ha :: ta, hb :: tb)
+  let (ta, tb) := unzip t in (ha :: ta, hb :: tb)
 end.
 (* end hide *)
 
@@ -5196,7 +5198,7 @@ Lemma splitAt_zipWith :
       splitAt n (zipWith f la lb) =
       match splitAt n la, splitAt n lb with
       | Some (la1, a, la2), Some (lb1, b, lb2) =>
-              Some (zipWith f la1 lb1, f a b, zipWith f la2 lb2)
+          Some (zipWith f la1 lb1, f a b, zipWith f la2 lb2)
       | _, _ => None
       end.
 (* begin hide *)
@@ -5247,7 +5249,7 @@ Lemma remove_zipWith :
       remove n (zipWith f la lb) =
       match remove n la, remove n lb with
       | Some (a, la'), Some (b, lb') =>
-              Some (f a b, zipWith f la' lb')
+          Some (f a b, zipWith f la' lb')
       | _, _ => None
       end.
 (* begin hide *)
@@ -5288,12 +5290,12 @@ Fixpoint unzipWith
 match l with
 | [] => ([], [])
 | h :: t =>
-        let
-          '(l1, l2) := unzipWith f t
-        in let
-          '(b, c) := f h
-        in
-          (b :: l1, c :: l2)
+  let
+    '(l1, l2) := unzipWith f t
+  in let
+    '(b, c) := f h
+  in
+    (b :: l1, c :: l2)
 end.
 (* ende hide *)
 
@@ -6113,10 +6115,10 @@ Fixpoint findLast {A : Type} (p : A -> bool) (l : list A) : option A :=
 match l with
 | [] => None
 | h :: t =>
-        match findLast p t with
-        | None => if p h then Some h else None
-        | Some x => Some x
-        end
+  match findLast p t with
+  | None => if p h then Some h else None
+  | Some x => Some x
+  end
 end.
 (* end hide *)
 
@@ -6255,10 +6257,10 @@ Lemma find_join :
     match l with
     | [] => None
     | h :: t =>
-            match find p h with
-            | None => aux t
-            | Some x => Some x
-            end
+      match find p h with
+      | None => aux t
+      | Some x => Some x
+      end
     end) l.
 (* begin hide *)
 Proof.
@@ -6522,13 +6524,13 @@ Function removeFirst
 match l with
 | [] => None
 | h :: t =>
-        if p h
-        then Some (h, t)
-        else
-          match removeFirst p t with
-          | None => None
-          | Some (x, l) => Some (x, h :: l)
-          end
+  if p h
+  then Some (h, t)
+  else
+    match removeFirst p t with
+    | None => None
+    | Some (x, l) => Some (x, h :: l)
+    end
 end.
 
 Function removeLast
@@ -6536,10 +6538,10 @@ Function removeLast
 match l with
 | [] => None
 | h :: t =>
-        match removeLast p t with
-        | Some (x, l) => Some (x, h :: l)
-        | None => if p h then Some (h, t) else None
-        end
+  match removeLast p t with
+  | Some (x, l) => Some (x, h :: l)
+  | None => if p h then Some (h, t) else None
+  end
 end.
 (* end hide *)
 
@@ -6731,14 +6733,14 @@ Lemma removeFirst_join :
     match l with
     | [] => None
     | hl :: tl =>
-            match removeFirst p hl with
-            | Some (x, l') => Some (x, join (l' :: tl))
-            | None =>
-                    match f tl with
-                    | Some (x, l) => Some (x, hl ++ l)
-                    | None => None
-                    end
-            end
+      match removeFirst p hl with
+      | Some (x, l') => Some (x, join (l' :: tl))
+      | None =>
+        match f tl with
+        | Some (x, l) => Some (x, hl ++ l)
+        | None => None
+        end
+      end
     end) l.
 (* begin hide *)
 Proof.
@@ -6753,10 +6755,10 @@ Lemma removeFirst_replicate :
     removeFirst p (replicate n x) =
     if p x
     then
-        match n with
-        | 0 => None
-        | S n' => Some (x, replicate n' x)
-        end
+      match n with
+      | 0 => None
+      | S n' => Some (x, replicate n' x)
+      end
     else None.
 (* begin hide *)
 Proof.
@@ -7038,12 +7040,12 @@ Function findIndex {A : Type} (p : A -> bool) (l : list A) : option nat :=
 match l with
 | [] => None
 | h :: t =>
-        if p h
-        then Some 0
-        else match findIndex p t with
-        | None => None
-        | Some n => Some (S n)
-        end
+  if p h
+  then Some 0
+  else match findIndex p t with
+  | None => None
+  | Some n => Some (S n)
+  end
 end.
 (* end hide *)
 
@@ -7248,11 +7250,11 @@ Lemma findIndex_join :
     match ll with
     | [] => None
     | h :: t =>
-            match findIndex p h, findIndex p (join t) with
-            | Some n, _ => Some n
-            | _, Some n => Some (length h + n)
-            | _, _ => None
-            end
+      match findIndex p h, findIndex p (join t) with
+      | Some n, _ => Some n
+      | _, Some n => Some (length h + n)
+      | _, _ => None
+      end
     end.
 (* begin hide *)
 Proof.
@@ -7479,10 +7481,9 @@ Restart.
   | H : None = Some _ |- _ => inversion H; subst; clear H
   | H : Some _ = Some _ |- _ => inversion H; subst; clear H
   | |- context [match ?x with _ => _ end] =>
-          is_var x; let H := fresh "H" in destruct x eqn: H
+    is_var x; let H := fresh "H" in destruct x eqn: H
   | H : context [match ?x with _ => _ end] |- _ =>
-          let H := fresh "H" in
-            destruct x eqn: H
+    let H := fresh "H" in destruct x eqn: H
   | H : _ = true |- _ => rewrite ?H in *
   | H : _ = false |- _ => rewrite ?H in *
   end).
@@ -8108,7 +8109,7 @@ Lemma splitAt_filter :
       match splitAt m l with
       | None => False
       | Some (l1', y, l2') =>
-              x = y /\ l1 = filter p l1' /\ l2 = filter p l2'
+          x = y /\ l1 = filter p l1' /\ l2 = filter p l2'
       end.
 (* begin hide *)
 Proof.
@@ -8363,8 +8364,9 @@ Fixpoint partition {A : Type} (p : A -> bool) (l : list A)
     : list A * list A :=
 match l with
 | [] => ([], [])
-| h :: t => let (l1, l2) := partition p t in
-        if p h then (h :: l1, l2) else (l1, h :: l2)
+| h :: t =>
+  let (l1, l2) := partition p t in
+    if p h then (h :: l1, l2) else (l1, h :: l2)
 end.
 (* end hide *)
 
@@ -8439,9 +8441,9 @@ Fixpoint findIndices {A : Type} (p : A -> bool) (l : list A) : list nat :=
 match l with
 | [] => []
 | h :: t =>
-        if p h
-        then 0 :: map S (findIndices p t)
-        else map S (findIndices p t)
+  if p h
+  then 0 :: map S (findIndices p t)
+  else map S (findIndices p t)
 end.
 
 Fixpoint findIndices'_aux
@@ -8449,8 +8451,8 @@ Fixpoint findIndices'_aux
 match l with
 | [] => []
 | h :: t =>
-        let x := findIndices'_aux p t (S n) in
-          if p h then n :: x else x
+  let x := findIndices'_aux p t (S n) in
+    if p h then n :: x else x
 end.
 
 Definition findIndices'
@@ -9222,13 +9224,13 @@ Fixpoint span
 match l with
 | [] => None
 | h :: t =>
-        if p h
-        then Some ([], h, t)
-        else
-          match span p t with
-          | None => None
-          | Some (b, x, e) => Some (h :: b, x, e)
-          end
+  if p h
+  then Some ([], h, t)
+  else
+    match span p t with
+    | None => None
+    | Some (b, x, e) => Some (h :: b, x, e)
+    end
 end.
 
 Lemma span_spec :
@@ -9344,10 +9346,10 @@ Lemma span_join :
     match span (any p) lla with
     | None => None
     | Some (bl, l, el) =>
-            match span p l with
-            | None => None
-            | Some (b, x, e) => Some (join bl ++ b, x, e ++ join el)
-            end
+      match span p l with
+      | None => None
+      | Some (b, x, e) => Some (join bl ++ b, x, e ++ join el)
+      end
     end.
 (* begin hide *)
 Proof.
@@ -9595,10 +9597,10 @@ Fixpoint naps
 match l with
 | [] => None
 | h :: t =>
-        match naps p t with
-        | None => if p h then Some ([], h, t) else None
-        | Some (b, x, e) => Some (h :: b, x, e)
-        end
+  match naps p t with
+  | None => if p h then Some ([], h, t) else None
+  | Some (b, x, e) => Some (h :: b, x, e)
+  end
 end.
 (* end hide *)
 
@@ -9675,10 +9677,10 @@ Fixpoint pmap {A B : Type} (f : A -> option B) (l : list A) : list B :=
 match l with
 | [] => []
 | h :: t =>
-        match f h with
-        | None => pmap f t
-        | Some x => x :: pmap f t
-        end
+  match f h with
+  | None => pmap f t
+  | Some x => x :: pmap f t
+  end
 end.
 (* end hide *)
 
@@ -10008,8 +10010,8 @@ Lemma pmap_span :
     with
     | None => True
     | Some (b, x, e) =>
-            exists y : B, f x = Some y /\
-              span p (pmap f l) = Some (pmap f b, y, pmap f e)
+        exists y : B, f x = Some y /\
+          span p (pmap f l) = Some (pmap f b, y, pmap f e)
     end.
 (* begin hide *)
 Proof.
@@ -10197,10 +10199,10 @@ Lemma nth_mask :
     | None => nth n l
     | Some false => nth n l
     | Some true =>
-            match nth n l with
-            | None => None
-            | Some x => Some (f x)
-            end
+      match nth n l with
+      | None => None
+      | Some x => Some (f x)
+      end
     end.
 (* begin hide *)
 Proof.
@@ -10398,12 +10400,12 @@ Lemma init_imap :
   forall (A B : Type) (f : nat -> A -> B) (l : list A),
     init (imap f l) =
     match l with
-| [] => None
-| h :: t =>
-        match init t with
-    | None => Some []
-    | Some i => Some (imap f (h :: i))
-        end
+    | [] => None
+    | h :: t =>
+      match init t with
+      | None => Some []
+      | Some i => Some (imap f (h :: i))
+      end
     end.
 (* begin hide *)
 Proof.
@@ -10486,10 +10488,10 @@ Function intersperse {A : Type} (x : A) (l : list A) : list A :=
 match l with
 | [] => []
 | h :: t =>
-        match intersperse x t with
-        | [] => [h]
-        | h' :: t' => h :: x :: h' :: t'
-        end
+  match intersperse x t with
+  | [] => [h]
+  | h' :: t' => h :: x :: h' :: t'
+  end
 end.
 (* end hide *)
 
@@ -10540,7 +10542,7 @@ Lemma intersperse_app :
     | [], _ => intersperse x l2
     | _, [] => intersperse x l1
     | h1 :: t1, h2 :: t2 =>
-            intersperse x l1 ++ x :: intersperse x l2
+        intersperse x l1 ++ x :: intersperse x l2
     end.
 (* begin hide *)
 Proof.
@@ -11387,10 +11389,10 @@ Lemma span_spec' :
     match span p l with
     | None => forall x : A, elem x l -> p x = false
     | Some (b, x, e) =>
-            b = takeWhile (fun x : A => negb (p x)) l /\
-            Some x = find p l /\
-            x :: e = dropWhile (fun x : A => negb (p x)) l /\
-            Some (x, b ++ e) = removeFirst p l
+        b = takeWhile (fun x : A => negb (p x)) l /\
+        Some x = find p l /\
+        x :: e = dropWhile (fun x : A => negb (p x)) l /\
+        Some (x, b ++ e) = removeFirst p l
     end.
 (* begin hide *)
 Proof.
@@ -11440,7 +11442,7 @@ Lemma elem_span :
     match span p l with
     | None => forall x : A, elem x l -> p x = false
     | Some (b, x, e) =>
-            forall y : A, elem y l <-> elem y b \/ y = x \/ elem y e
+        forall y : A, elem y l <-> elem y b \/ y = x \/ elem y e
     end.
 (* begin hide *)
 Proof.
