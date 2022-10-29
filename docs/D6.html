@@ -250,13 +250,13 @@ Nie będę na razie tłumaczył, jaka ideologia stoi za <span class="inlinecode"
 <span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
 | [] =&gt; [<span class="id" title="var">b</span>]<br/>
 | <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">qs</span> := <span class="id" title="var">scanr</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span> <span class="id" title="var">t</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">qs</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; [<span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">b</span>]<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">q</span> :: <span class="id" title="var">_</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">q</span> :: <span class="id" title="var">qs</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">qs</span> := <span class="id" title="var">scanr</span> <span class="id" title="var">f</span> <span class="id" title="var">b</span> <span class="id" title="var">t</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">qs</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| [] =&gt; [<span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">b</span>]<br/>
+&nbsp;&nbsp;| <span class="id" title="var">q</span> :: <span class="id" title="var">_</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">q</span> :: <span class="id" title="var">qs</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -269,13 +269,13 @@ Nie będę na razie tłumaczył, jaka ideologia stoi za <span class="inlinecode"
 | [] =&gt; []<br/>
 | [<span class="id" title="var">h</span>] =&gt; [<span class="id" title="var">h</span>]<br/>
 | <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">qs</span> := <span class="id" title="var">scanr1</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">qs</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; []<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">q</span> :: <span class="id" title="var">_</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">q</span> :: <span class="id" title="var">qs</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">qs</span> := <span class="id" title="var">scanr1</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">qs</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| [] =&gt; []<br/>
+&nbsp;&nbsp;| <span class="id" title="var">q</span> :: <span class="id" title="var">_</span> =&gt; <span class="id" title="var">f</span> <span class="id" title="var">h</span> <span class="id" title="var">q</span> :: <span class="id" title="var">qs</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -537,11 +537,11 @@ Nie będę na razie tłumaczył, jaka ideologia stoi za <span class="inlinecode"
 <span class="id" title="keyword">Ltac</span> <span class="id" title="var">gb</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
 | <span class="id" title="var">H</span> : <span class="id" title="var">groupBy</span> <span class="id" title="var">_</span> ?<span class="id" title="var">l</span> = [] |- <span class="id" title="var">_</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">isEmpty</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">isEmpty_groupBy</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l</span>; <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">isEmpty</span>) <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">isEmpty_groupBy</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">l</span>; <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>; <span class="id" title="tactic">subst</span><br/>
 | <span class="id" title="var">H</span> : <span class="id" title="var">groupBy</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> = [] :: <span class="id" title="var">_</span> |- <span class="id" title="var">_</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">head</span>), <span class="id" title="var">head_groupBy</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>; <span class="id" title="var">contradiction</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="tactic">f_equal</span> <span class="id" title="var">head</span>), <span class="id" title="var">head_groupBy</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>; <span class="id" title="var">contradiction</span><br/>
 <span class="id" title="keyword">end</span>; <span class="id" title="var">cbn</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">congruence</span>.<br/>
 
 <br/>
@@ -594,9 +594,9 @@ Nie będę na razie tłumaczył, jaka ideologia stoi za <span class="inlinecode"
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">None</span> =&gt; <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">x</span>, <span class="id" title="var">Some</span> <span class="id" title="var">y</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">p</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l1</span> ++ <span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l2</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -640,8 +640,11 @@ Nie będę na razie tłumaczył, jaka ideologia stoi za <span class="inlinecode"
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">join</span> (<span class="id" title="var">groupBy</span> <span class="id" title="var">p</span> <span class="id" title="var">l</span>) = <span class="id" title="var">l</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">isZero</span> <span class="id" title="var">n</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span> | 0 =&gt; <span class="id" title="var">true</span> | <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span> <span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">isZero</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+| 0 =&gt; <span class="id" title="var">true</span><br/>
+| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">groupBy_replicate</span> :<br/>
@@ -711,10 +714,10 @@ Nie będę na razie tłumaczył, jaka ideologia stoi za <span class="inlinecode"
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 | 0 =&gt; <span class="id" title="var">l2</span> ++ <span class="id" title="var">l1</span><br/>
 | <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">l2</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">h</span> :: <span class="id" title="var">insertBefore</span> <span class="id" title="var">n'</span> <span class="id" title="var">t</span> <span class="id" title="var">l2</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">h</span> :: <span class="id" title="var">insertBefore</span> <span class="id" title="var">n'</span> <span class="id" title="var">t</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -874,14 +877,14 @@ Nie będę na razie tłumaczył, jaka ideologia stoi za <span class="inlinecode"
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">head</span> <span class="id" title="var">l2</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h1</span> :: <span class="id" title="var">_</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h1</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h2</span> :: <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h2</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h1</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| [] =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h1</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">h2</span> :: <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> =&gt; <span class="id" title="var">Some</span> <span class="id" title="var">h1</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -989,7 +992,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 | [], <span class="id" title="var">_</span> =&gt; <span class="id" title="var">False</span><br/>
 | <span class="id" title="var">h</span> :: <span class="id" title="var">t</span>, 0 =&gt; ~ <span class="id" title="var">P</span> <span class="id" title="var">h</span> /\ <span class="id" title="var">exactly</span> <span class="id" title="var">P</span> 0 <span class="id" title="var">t</span><br/>
 | <span class="id" title="var">h</span> :: <span class="id" title="var">t</span>, <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> <span class="id" title="var">h</span> /\ <span class="id" title="var">exactly</span> <span class="id" title="var">P</span> <span class="id" title="var">n'</span> <span class="id" title="var">t</span>) \/ (~ <span class="id" title="var">P</span> <span class="id" title="var">h</span> /\ <span class="id" title="var">exactly</span> <span class="id" title="var">P</span> <span class="id" title="var">n</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">P</span> <span class="id" title="var">h</span> /\ <span class="id" title="var">exactly</span> <span class="id" title="var">P</span> <span class="id" title="var">n'</span> <span class="id" title="var">t</span>) \/ (~ <span class="id" title="var">P</span> <span class="id" title="var">h</span> /\ <span class="id" title="var">exactly</span> <span class="id" title="var">P</span> <span class="id" title="var">n</span> <span class="id" title="var">t</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1310,7 +1313,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="keyword">match</span> <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
 | [] =&gt; <span class="id" title="var">false</span><br/>
 | <span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_eq_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">l1</span> <span class="id" title="var">t2</span> || <span class="id" title="var">Sublist_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">l1</span> <span class="id" title="var">t2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_eq_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">l1</span> <span class="id" title="var">t2</span> || <span class="id" title="var">Sublist_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">l1</span> <span class="id" title="var">t2</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1358,8 +1361,8 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 | [], <span class="id" title="var">_</span> =&gt; <span class="id" title="var">true</span><br/>
 | <span class="id" title="var">_</span>, [] =&gt; <span class="id" title="var">false</span><br/>
 | <span class="id" title="var">h1</span> :: <span class="id" title="var">t1</span>, <span class="id" title="var">h2</span> :: <span class="id" title="var">t2</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">eq_dec</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> &amp;&amp; <span class="id" title="var">Subseq_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>) ||<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Subseq_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">l1</span> <span class="id" title="var">t2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">eq_dec</span> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> &amp;&amp; <span class="id" title="var">Subseq_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>) ||<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Subseq_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">l1</span> <span class="id" title="var">t2</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1405,10 +1408,10 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="keyword">match</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
 | [] =&gt; <span class="id" title="var">isEmpty</span> <span class="id" title="var">l2</span><br/>
 | <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">removeFirst</span> (<span class="id" title="var">eq_dec</span> <span class="id" title="var">h</span>) <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">false</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">_</span>, <span class="id" title="var">l2'</span>) =&gt; <span class="id" title="var">Permutation_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">t</span> <span class="id" title="var">l2'</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">removeFirst</span> (<span class="id" title="var">eq_dec</span> <span class="id" title="var">h</span>) <span class="id" title="var">l2</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">None</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">_</span>, <span class="id" title="var">l2'</span>) =&gt; <span class="id" title="var">Permutation_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">t</span> <span class="id" title="var">l2'</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1425,8 +1428,8 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 | 0 =&gt; <span class="id" title="var">list_eq_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
 | <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_eq_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">l1</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">l2</span> ++ <span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">l2</span>) ||<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Cycle_dec_aux</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">n'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">list_eq_dec</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">l1</span> (<span class="id" title="var">drop</span> <span class="id" title="var">n</span> <span class="id" title="var">l2</span> ++ <span class="id" title="var">take</span> <span class="id" title="var">n</span> <span class="id" title="var">l2</span>) ||<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Cycle_dec_aux</span> <span class="id" title="var">eq_dec</span> <span class="id" title="var">n'</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -2135,8 +2138,8 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
 | [] =&gt; [[]]<br/>
 | <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">ll</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> '(<span class="id" title="var">l</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">l</span> ++ <span class="id" title="var">h</span> :: <span class="id" title="var">r</span>) (<span class="id" title="var">select</span> <span class="id" title="var">ll</span>)) (<span class="id" title="var">perms</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bind</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">ll</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> '(<span class="id" title="var">l</span>, <span class="id" title="var">r</span>) =&gt; <span class="id" title="var">l</span> ++ <span class="id" title="var">h</span> :: <span class="id" title="var">r</span>) (<span class="id" title="var">select</span> <span class="id" title="var">ll</span>)) (<span class="id" title="var">perms</span> <span class="id" title="var">t</span>)<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -2345,8 +2348,7 @@ Można zadać sobie pytanie: skoro predykaty takie jak <span class="inlinecode">
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">perms</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">A</span>) :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
 | [] =&gt; [[]]<br/>
-| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">join</span> (<span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">cycles</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>)) (<span class="id" title="var">perms</span> <span class="id" title="var">t</span>))<br/>
+| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">join</span> (<span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">t</span> =&gt; <span class="id" title="var">cycles</span> (<span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>)) (<span class="id" title="var">perms</span> <span class="id" title="var">t</span>))<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>

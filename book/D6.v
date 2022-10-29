@@ -175,15 +175,15 @@ Definition takeWhileF {A : Type} (p : A -> bool) (l : list A) : list A :=
 Ltac solve_fold := intros;
 match goal with
 | |- context [@foldr ?A ?B ?f ?a ?l] =>
-        functional induction @foldr A B f a l; cbn; trivial;
-        match goal with
-        | H : ?x = _ |- context [?x] => rewrite ?H; auto
-        end
+  functional induction @foldr A B f a l; cbn; trivial;
+  match goal with
+  | H : ?x = _ |- context [?x] => rewrite ?H; auto
+  end
 | |- context [@foldl ?A ?B ?f ?a ?l] =>
-        functional induction @foldl A B f a l; cbn; trivial;
-        match goal with
-        | H : ?x = _ |- context [?x] => rewrite ?H; auto
-        end
+  functional induction @foldl A B f a l; cbn; trivial;
+  match goal with
+  | H : ?x = _ |- context [?x] => rewrite ?H; auto
+  end
 end.
 
 (* end hide *)
@@ -454,13 +454,13 @@ Fixpoint scanr
 match l with
 | [] => [b]
 | h :: t =>
-        let
-          qs := scanr f b t
-        in
-        match qs with
-        | [] => [f h b]
-        | q :: _ => f h q :: qs
-        end
+  let
+    qs := scanr f b t
+  in
+  match qs with
+  | [] => [f h b]
+  | q :: _ => f h q :: qs
+  end
 end.
 
 Compute scanr plus 0 [1; 2; 3; 4; 5].
@@ -471,13 +471,13 @@ match l with
 | [] => []
 | [h] => [h]
 | h :: t =>
-        let
-          qs := scanr1 f t
-        in
-        match qs with
-        | [] => []
-        | q :: _ => f h q :: qs
-        end
+  let
+    qs := scanr1 f t
+  in
+  match qs with
+  | [] => []
+  | q :: _ => f h q :: qs
+  end
 end.
 
 Compute scanr1 plus [1; 2; 3; 4; 5].
@@ -856,14 +856,14 @@ Function groupBy
 match l with
 | [] => []
 | h :: t =>
-        match groupBy p t with
-        | [] => [[h]]
-        | [] :: gs => [h] :: gs
-        | (h' :: t') :: gs =>
-                if p h h'
-                then (h :: h' :: t') :: gs
-                else [h] :: (h' :: t') :: gs
-        end
+  match groupBy p t with
+  | [] => [[h]]
+  | [] :: gs => [h] :: gs
+  | (h' :: t') :: gs =>
+    if p h h'
+    then (h :: h' :: t') :: gs
+    else [h] :: (h' :: t') :: gs
+  end
 end.
 (* end hide *)
 
@@ -946,11 +946,11 @@ Qed.
 Ltac gb :=
 match goal with
 | H : groupBy _ ?l = [] |- _ =>
-        apply (f_equal isEmpty) in H;
-        rewrite isEmpty_groupBy in H;
-        destruct l; inversion H; subst
+  apply (f_equal isEmpty) in H;
+  rewrite isEmpty_groupBy in H;
+  destruct l; inversion H; subst
 | H : groupBy _ _ = [] :: _ |- _ =>
-        apply (f_equal head), head_groupBy in H; contradiction
+  apply (f_equal head), head_groupBy in H; contradiction
 end; cbn; try congruence.
 
 Require Import Arith.
@@ -1116,9 +1116,9 @@ Lemma groupBy_app' :
     | None, _ => groupBy p l2
     | _, None => groupBy p l1
     | Some x, Some y =>
-            if p x y
-            then groupBy p (l1 ++ l2)
-            else groupBy p l1 ++ groupBy p l2
+      if p x y
+      then groupBy p (l1 ++ l2)
+      else groupBy p l1 ++ groupBy p l2
     end.
 (* begin hide *)
 Proof.
@@ -1232,8 +1232,11 @@ Proof.
 Qed.
 (* end hide *)
 
-Definition isZero n :=
-  match n with | 0 => true | _ => false end.
+Definition isZero (n : nat) : bool :=
+match n with
+| 0 => true
+| _ => false
+end.
 
 Lemma groupBy_replicate :
   forall (A : Type) (p : A -> A -> bool) (n : nat) (x : A),
@@ -1404,10 +1407,10 @@ Fixpoint insertBefore {A : Type} (n : nat) (l1 l2 : list A) : list A :=
 match n with
 | 0 => l2 ++ l1
 | S n' =>
-        match l1 with
-        | [] => l2
-        | h :: t => h :: insertBefore n' t l2
-        end
+  match l1 with
+  | [] => l2
+  | h :: t => h :: insertBefore n' t l2
+  end
 end.
 
 Notation "'insert' l2 'before' n 'in' l1" :=
@@ -1727,14 +1730,14 @@ Lemma head_insert_before_in :
     match l1 with
     | [] => head l2
     | h1 :: _ =>
-            match n with
-            | 0 =>
-                    match l2 with
-                    | [] => Some h1
-                    | h2 :: _ => Some h2
-                    end
-            | _ => Some h1
-            end
+      match n with
+      | 0 =>
+        match l2 with
+        | [] => Some h1
+        | h2 :: _ => Some h2
+        end
+      | _ => Some h1
+      end
     end.
 (* begin hide *)
 Proof.
@@ -1926,7 +1929,7 @@ match l, n with
 | [], _ => False
 | h :: t, 0 => ~ P h /\ exactly P 0 t
 | h :: t, S n' =>
-        (P h /\ exactly P n' t) \/ (~ P h /\ exactly P n t)
+    (P h /\ exactly P n' t) \/ (~ P h /\ exactly P n t)
 end.
 
 Lemma exactly_spec :
@@ -2604,7 +2607,7 @@ Fixpoint Sublist_dec
 match l2 with
 | [] => false
 | h2 :: t2 =>
-        list_eq_dec eq_dec l1 t2 || Sublist_dec eq_dec l1 t2
+    list_eq_dec eq_dec l1 t2 || Sublist_dec eq_dec l1 t2
 end.
 
 Lemma Sublist_dec_spec :
@@ -2682,8 +2685,8 @@ match l1, l2 with
 | [], _ => true
 | _, [] => false
 | h1 :: t1, h2 :: t2 =>
-        (eq_dec h1 h2 && Subseq_dec eq_dec t1 t2) ||
-        Subseq_dec eq_dec l1 t2
+    (eq_dec h1 h2 && Subseq_dec eq_dec t1 t2) ||
+    Subseq_dec eq_dec l1 t2
 end.
 
 Lemma Subseq_dec_spec :
@@ -2764,10 +2767,10 @@ Fixpoint Permutation_dec
 match l1 with
 | [] => isEmpty l2
 | h :: t =>
-        match removeFirst (eq_dec h) l2 with
-        | None => false
-        | Some (_, l2') => Permutation_dec eq_dec t l2'
-        end
+  match removeFirst (eq_dec h) l2 with
+  | None => false
+  | Some (_, l2') => Permutation_dec eq_dec t l2'
+  end
 end.
 
 Lemma Permutation_dec_spec :
@@ -2808,8 +2811,8 @@ Fixpoint Cycle_dec_aux
 match n with
 | 0 => list_eq_dec eq_dec l1 l2
 | S n' =>
-        list_eq_dec eq_dec l1 (drop n l2 ++ take n l2) ||
-        Cycle_dec_aux eq_dec n' l1 l2
+    list_eq_dec eq_dec l1 (drop n l2 ++ take n l2) ||
+    Cycle_dec_aux eq_dec n' l1 l2
 end.
 
 Definition Cycle_dec
@@ -3882,8 +3885,8 @@ Fixpoint perms {A : Type} (l : list A) : list (list A) :=
 match l with
 | [] => [[]]
 | h :: t =>
-        bind (fun ll =>
-          map (fun '(l, r) => l ++ h :: r) (select ll)) (perms t)
+    bind (fun ll =>
+      map (fun '(l, r) => l ++ h :: r) (select ll)) (perms t)
 end.
 
 (* Compute select [1; 2; 3]. *)
@@ -4260,8 +4263,7 @@ Import D4.
 Fixpoint perms {A : Type} (l : list A) : list (list A) :=
 match l with
 | [] => [[]]
-| h :: t =>
-        join (map (fun t => cycles (cons h t)) (perms t))
+| h :: t => join (map (fun t => cycles (cons h t)) (perms t))
 end.
 
 Compute cycles [1; 2].
