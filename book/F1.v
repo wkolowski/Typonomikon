@@ -467,10 +467,10 @@ Fixpoint ttake (n : nat) {A : Type} (t : coBTree A) : BTree A :=
 match n with
 | 0 => Empty
 | S n' =>
-        match root t with
-        | None => Empty
-        | Some (l, v, r) => Node v (ttake n' l) (ttake n' r)
-        end
+  match root t with
+  | None => Empty
+  | Some (l, v, r) => Node v (ttake n' l) (ttake n' r)
+  end
 end.
 
 Compute ttake 5 (ns 0).
@@ -526,9 +526,9 @@ CoFixpoint collatz (n : nat) : Div unit :=
     match n with
     | 0 | 1 => inl tt
     | n' =>
-            if even n'
-            then inr (collatz (div2 n'))
-            else inr (collatz (1 + 3 * n'))
+      if even n'
+      then inr (collatz (div2 n'))
+      else inr (collatz (1 + 3 * n'))
     end
 |}.
 
@@ -550,9 +550,9 @@ match n with
 | 0 => {| uncons := None |}
 | 1 => {| uncons := Some (1, {| uncons := None |}) |}
 | n' =>
-        if even n'
-        then {| uncons := Some (n', collatz' (div2 n')) |}
-        else {| uncons := Some (n', collatz' (1 + 3 * n')) |}
+  if even n'
+  then {| uncons := Some (n', collatz' (div2 n')) |}
+  else {| uncons := Some (n', collatz' (1 + 3 * n')) |}
 end.
 
 Fixpoint take (n : nat) {A : Type} (l : coList A) : list A :=
@@ -575,11 +575,11 @@ CoFixpoint ins (n : nat) (s : coList nat) : coList nat :=
       match uncons s with
       | None => None
       | Some (h, t) =>
-              if n <=? h
-              then
-                Some (n, {| uncons := Some (h, t) |})
-              else
-                Some (h, ins n t)
+        if n <=? h
+        then
+          Some (n, {| uncons := Some (h, t) |})
+        else
+          Some (h, ins n t)
       end
 |}.
 
@@ -589,10 +589,10 @@ CoFixpoint ss (s : coList nat) : coList nat :=
       match uncons s with
       | None => None
       | Some (h, t) =>
-              match uncons (ins h t) with
-              | None => None
-              | Some (h', t') => Some (h', ss t')
-              end
+        match uncons (ins h t) with
+        | None => None
+        | Some (h', t') => Some (h', ss t')
+        end
       end
 |}.
 (* end hide *)

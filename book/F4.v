@@ -719,10 +719,10 @@ CoFixpoint intersperse {A : Type} (x : A) (l : CoList A) : CoList A :=
       match uncons l with
       | NilF => NilF
       | ConsF h t =>
-              match uncons t with
-              | NilF => ConsF h t
-              | ConsF h' t' => ConsF h (cocons x (intersperse x t))
-              end
+        match uncons t with
+        | NilF => ConsF h t
+        | ConsF h' t' => ConsF h (cocons x (intersperse x t))
+        end
       end;
 |}.
 (* end hide *)
@@ -769,10 +769,10 @@ match n, uncons l with
 | _, NilF => None
 | 0, ConsF h t => Some ([], h, t)
 | Datatypes.S n', ConsF h t =>
-        match splitAt t n' with
-        | None => None
-        | Some (start, mid, rest) => Some (h :: start, mid, rest)
-        end
+  match splitAt t n' with
+  | None => None
+  | Some (start, mid, rest) => Some (h :: start, mid, rest)
+  end
 end.
 (* end hide *)
 
@@ -809,7 +809,7 @@ Definition insert {A : Type} (l : CoList A) (n : nat) (x : A)
 match splitAt l n with
 | None => None
 | Some (start, mid, rest) =>
-        Some (app (fromList start) (cocons x (cocons mid rest)))
+    Some (app (fromList start) (cocons x (cocons mid rest)))
 end.
 
 Definition remove {A : Type} (l : CoList A) (n : nat)

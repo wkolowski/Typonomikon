@@ -374,10 +374,10 @@ CoFixpoint add' (n m : conat) : conat :=
       match out n with
       | Z    => out m
       | S n' =>
-              match out m with
-              | Z    => S n'
-              | S m' => S {| out := S (add' n' m') |}
-              end
+        match out m with
+        | Z    => S n'
+        | S m' => S {| out := S (add' n' m') |}
+        end
       end
 |}.
 (* end hide *)
@@ -1185,10 +1185,10 @@ CoFixpoint div2 (n : conat) : conat :=
       match out n with
       | Z => Z
       | S n' =>
-              match out n' with
-              | Z => Z
-              | S n'' => S (div2 n'')
-              end
+        match out n' with
+        | Z => Z
+        | S n'' => S (div2 n'')
+        end
       end;
 |}.
 (* end hide *)

@@ -498,8 +498,7 @@ Widać, że dla strumienia pokroju <span class="inlinecode"><span class="id" tit
 <span class="id" title="keyword">CoFixpoint</span> <span class="id" title="var">unvtake</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">Vec</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)) : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span> :=<br/>
 {|<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> := <span class="id" title="var">vhd</span> (<span class="id" title="var">f</span> 0);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> :=<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">unvtake</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">vtl</span> (<span class="id" title="var">f</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> := <span class="id" title="var">unvtake</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span> =&gt; <span class="id" title="var">vtl</span> (<span class="id" title="var">f</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)))<br/>
 |}.<br/>
 
 <br/>

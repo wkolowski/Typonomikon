@@ -218,7 +218,7 @@ Fixpoint splitAt
 match n with
 | 0 => (nil, hd s, tl s)
 | S n' =>
-        let '(l, x, s') := splitAt n' (tl s) in (cons (hd s) l, x, s')
+  let '(l, x, s') := splitAt n' (tl s) in (cons (hd s) l, x, s')
 end.
 
 CoFixpoint from (n : nat) : Stream nat :=
@@ -976,8 +976,7 @@ end.
 CoFixpoint unvtake {A : Type} (f : forall n : nat, Vec A (S n)) : Stream A :=
 {|
     hd := vhd (f 0);
-    tl :=
-      unvtake (fun n : nat => vtl (f (S n)))
+    tl := unvtake (fun n : nat => vtl (f (S n)))
 |}.
 
 Fixpoint vnth {A : Type} {n : nat} (v : Vec A n) (k : nat) : option A :=
