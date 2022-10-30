@@ -16,11 +16,12 @@ Print nth.
         fix nth (A : Type) (n : nat) (l : list A) {struct l} :
         option A :=
           match l with
-      | [] => None
-      | h :: t => match n with
-                  | 0 => Some h
-                  | S n' => nth A n' t
-                      end
+          | [] => None
+          | h :: t =>
+            match n with
+            | 0 => Some h
+            | S n' => nth A n' t
+            end
           end
              : forall A : Type, nat -> list A -> option A *)
 

@@ -551,9 +551,9 @@ Fixpoint decode {A : Type} {l1 l2 : list A} (c : code l1 l2) : l1 = l2 :=
 match c with
 | nils => eq_refl
 | conss p c' =>
-        match p, decode c' with
-        | eq_refl, eq_refl => eq_refl
-        end
+  match p, decode c' with
+  | eq_refl, eq_refl => eq_refl
+  end
 end.
 
 Lemma encode_decode :

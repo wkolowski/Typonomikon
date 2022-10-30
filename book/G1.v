@@ -36,11 +36,11 @@ Fixpoint flatten {s : Star} : interp s -> list (flattenType s) :=
 match s with
 | Var A => fun x : interp (Var A) => [x]
 | List s' =>
-        fix f (x : list (interp s')) : list (flattenType s') :=
-        match x with
-        | [] => []
-        | h :: t => @flatten s' h ++ f t
-        end
+  fix f (x : list (interp s')) : list (flattenType s') :=
+  match x with
+  | [] => []
+  | h :: t => @flatten s' h ++ f t
+  end
 end.
 
 Compute @flatten (List (List (Var nat))) [[1; 2; 3]; [4; 5; 6]].
@@ -100,14 +100,14 @@ Inductive Code : Type :=
 
 Fixpoint cmap (F : Type -> Type) (c : Code) : Code :=
 match c with
-  | Singl A => Singl (F A)
-  | Cons A c' => Cons (F A) (cmap F c')
+| Singl A => Singl (F A)
+| Cons A c' => Cons (F A) (cmap F c')
 end.
 
 Fixpoint funType (c : Code) (R : Type) : Type :=
 match c with
-  | Singl A => A -> R
-  | Cons A c' => A -> funType c' R
+| Singl A => A -> R
+| Cons A c' => A -> funType c' R
 end.
 
 Definition listType (c : Code) (R : Type) : Type :=
@@ -115,8 +115,8 @@ Definition listType (c : Code) (R : Type) : Type :=
 
 Fixpoint prod (c : Code) : Type :=
 match c with
-  | Singl A => A
-  | Cons A c' => A * prod c'
+| Singl A => A
+| Cons A c' => A * prod c'
 end.
 
 Definition prodList (c : Code) : Type :=
@@ -133,16 +133,16 @@ Definition uncurriedListType (c : Code) (R : Type) : Type :=
 
 Fixpoint zip2 {A B : Type} (l : list A) (r : list B) : list (A * B) :=
 match l, r with
-  | [], _ => []
-  | _, [] => []
-  | hl :: tl, hr :: tr => (hl, hr) :: zip2 tl tr
+| [], _ => []
+| _, [] => []
+| hl :: tl, hr :: tr => (hl, hr) :: zip2 tl tr
 end.
 
 Fixpoint zip {c : Code} : prodList c -> listProd c :=
 match c with
-  | Singl A => id
-  | Cons A c' =>
-    fun '(l, p) => zip2 l (zip p)
+| Singl A => id
+| Cons A c' =>
+  fun '(l, p) => zip2 l (zip p)
 end.
 
 Compute
@@ -1119,8 +1119,8 @@ Qed.
 Definition coListM (A : Type) : Type :=
   M (option A) (fun x : option A =>
                 match x with
-              | None => False
-              | Some _ => unit
+                | None => False
+                | Some _ => unit
                 end).
 
 CoFixpoint fff {A : Type} (l : coList A) : coListM A :=
@@ -1134,8 +1134,8 @@ Print coBTree.
 Definition coBTreeM (A : Type) : Type :=
   M (option A) (fun x : option A =>
                 match x with
-              | None => False
-              | Some _ => bool
+                | None => False
+                | Some _ => bool
                 end).
 
 (** ** Ciekawostka: koindukcja i bipodobieństwo *)
@@ -2375,11 +2375,11 @@ Defined.
 Fixpoint f {A : Type} (l : list A) : CList A.
 refine (
 match l with
-| []     => ctain 0 (fun s : Fin.t 0 => match s with end)
+| [] => ctain 0 (fun s : Fin.t 0 => match s with end)
 | x :: xs =>
-        match f _ xs with
-        | ctain n p => ctain (S n) _
-        end
+  match f _ xs with
+  | ctain n p => ctain (S n) _
+  end
 end).
   destruct n as [| n']; intro s.
     exact x.

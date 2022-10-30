@@ -1629,10 +1629,10 @@ match n with
 | 0 => inl 0
 | 1 => inr 0
 | S (S n') =>
-        match div2 n' with
-        | inl m => inl (S m)
-        | inr m => inr (S m)
-        end
+  match div2 n' with
+  | inl m => inl (S m)
+  | inr m => inr (S m)
+  end
 end.
 
 Definition undiv2 (x : nat + nat) : nat :=
@@ -1741,11 +1741,11 @@ Qed.
 Fixpoint comefrom' (x y : nat) {struct x} : nat :=
 match x with
 | 0 =>
-        (fix aux (y : nat) : nat :=
-          match y with
-          | 0    => 0
-          | S y' => 1 + y + aux y'
-          end) y
+  (fix aux (y : nat) : nat :=
+    match y with
+    | 0    => 0
+    | S y' => 1 + y + aux y'
+    end) y
 | S x' => x + y + comefrom' x' y
 end.
 
@@ -1921,20 +1921,20 @@ Fixpoint nat_vec {n : nat} (arg : nat) : vec nat (S n) :=
 match n with
 | 0 => arg :: vnil
 | S n' =>
-        let
-          (arg1, arg2) := goto arg
-        in
-          arg1 :: nat_vec arg2
+  let
+    (arg1, arg2) := goto arg
+  in
+    arg1 :: nat_vec arg2
 end.
 
 Fixpoint vec_nat {n : nat} (v : vec nat n) {struct v} : option nat :=
 match v with
 | vnil => None
 | vcons h t =>
-        match vec_nat t with
-        | None => Some h
-        | Some r => Some (comefrom (h, r))
-        end
+  match vec_nat t with
+  | None => Some h
+  | Some r => Some (comefrom (h, r))
+  end
 end.
 
 #[refine]

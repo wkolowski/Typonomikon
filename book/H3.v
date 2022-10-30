@@ -1057,9 +1057,9 @@ Fixpoint collatz' (fuel n : nat) : list nat :=
 match fuel with
 | 0 => []
 | S fuel' =>
-        if leb n 1 then [n] else
-            let h := if even n then div2 n else 1 + 3 * n
-            in n :: collatz' fuel' h
+  if leb n 1 then [n] else
+      let h := if even n then div2 n else 1 + 3 * n
+      in n :: collatz' fuel' h
 end.
 
 (*
@@ -2028,9 +2028,9 @@ Fixpoint lookup (p : nat * nat) (l : list (nat * nat)) : bool :=
 match l with
 | [] => false
 | (h1, h2) :: t =>
-        if andb (beq_nat (fst p) h1) (beq_nat (snd p) h2)
-        then true
-        else lookup p t
+  if andb (beq_nat (fst p) h1) (beq_nat (snd p) h2)
+  then true
+  else lookup p t
 end.
 (* end hide *)
 
