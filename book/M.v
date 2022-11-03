@@ -112,10 +112,10 @@ Qed.
 match n with
 | 0 => zero
 | Datatypes.S n' =>
-        match out c with
-        | Z => zero
-        | S c' => succ (cut n' c')
-        end
+  match out c with
+  | Z => zero
+  | S c' => succ (cut n' c')
+  end
 end.
 (* TODO: czy da się pokazać [Searchable conat] bez aksjomatów? *)
 (* end hide *)

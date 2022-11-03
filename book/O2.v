@@ -45,10 +45,10 @@ Fixpoint bisect (f : float -> float) (a b : float) (n : nat) : float :=
 match n with
 | 0 => (a + b) / 2
 | S n' =>
-        let m := (a + b) / 2 in
-        if f a * f m <? 0
-        then bisect f a m n'
-        else bisect f m b n'
+  let m := (a + b) / 2 in
+  if f a * f m <? 0
+  then bisect f a m n'
+  else bisect f m b n'
 end.
 
 Definition f0 (x : float) : float := 1 - 2 * x - x * x * x * x * x.
@@ -59,9 +59,9 @@ Fixpoint fast_bisect
 match n with
 | 0 => m
 | S n' =>
-        if f a * f m <? 0
-        then fast_bisect f a m n'
-        else fast_bisect f m b n'
+  if f a * f m <? 0
+  then fast_bisect f a m n'
+  else fast_bisect f m b n'
 end.
 
 (*
@@ -149,10 +149,10 @@ Fixpoint Halley
 match n with
 | 0 => x
 | S n' =>
-        let f' := cdiff h f in
-        let f'' := cdiff h f' in
-        let x' := x - 2 * f x * f' x / (2 * f' x * f' x - f x * f'' x) in
-          Halley h f x' n'
+  let f' := cdiff h f in
+  let f'' := cdiff h f' in
+  let x' := x - 2 * f x * f' x / (2 * f' x * f' x - f x * f'' x) in
+    Halley h f x' n'
 end.
 
 Definition f4 (x : float) : float := x * x * x * x * x - 7 * x * x - 42.

@@ -1100,10 +1100,10 @@ Check f_equal.
 Ltac my_f_equal := intros; repeat (try
 match goal with
 | |- ?f ?x = ?g ?y =>
-        let H1 := fresh "H" in
-        let H2 := fresh "H" in
-          assert (H1 : f = g); assert (H2 : x = y);
-          rewrite ?H1, ?H2
+  let H1 := fresh "H" in
+  let H2 := fresh "H" in
+    assert (H1 : f = g); assert (H2 : x = y);
+    rewrite ?H1, ?H2
 end; first [reflexivity | assumption | idtac]).
 (* end hide *)
 

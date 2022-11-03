@@ -508,10 +508,10 @@ match fuel, l with
 | 0, _ => None
 | _, [] => Some 0
 | S fuel', _ :: t =>
-        match length' fuel' t with
-        | None => None
-        | Some n => Some (S n)
-        end
+  match length' fuel' t with
+  | None => None
+  | Some n => Some (S n)
+  end
 end.
 
 (** Pomysł jest prosty: zdefiniujemy wariację funkcji [length] za pomocą

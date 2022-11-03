@@ -72,7 +72,7 @@ Fixpoint same_fringe
 match t1, t2 with
 | Leaf x    , Leaf y     => cmp x y
 | Node l1 r1, Node l2 r2 =>
-        same_fringe cmp l1 l2 && same_fringe cmp r1 r2
+    same_fringe cmp l1 l2 && same_fringe cmp r1 r2
 | _, _ => false
 end.
 
@@ -226,11 +226,11 @@ end.
 Fixpoint depthWalk {A B : Type} (t : Tree A) : Iterator B A (Tree B) :=
 match t with
 | Leaf a =>
-        bindI (yield a) (fun b => Result (Leaf b))
+    bindI (yield a) (fun b => Result (Leaf b))
 | Node l r =>
-        bindI (depthWalk l) (fun l' =>
-        bindI (depthWalk r) (fun r' =>
-          Result (Node l' r')))
+    bindI (depthWalk l) (fun l' =>
+    bindI (depthWalk r) (fun r' =>
+      Result (Node l' r')))
 end.
 
 (** Szczo wyrabljajetsja tut? Ano, już tłumaczę.
@@ -272,7 +272,7 @@ Fixpoint same_fringe_aux
   (t1 t2 : Iterator A A R) : bool :=
 match t1, t2 with
 | Susp x k, Susp y h =>
-        cmp x y && same_fringe_aux cmp (k x) (h y)
+    cmp x y && same_fringe_aux cmp (k x) (h y)
 | Result _, Result _ => true
 | _, _ => false
 end.
@@ -445,19 +445,19 @@ Function transplant_aux
   : option (Tree A * list A) :=
 match t with
 | Leaf _   =>
-    match xs with
-| []      => None
-| x :: xs' => Some (Leaf x, xs')
-    end
+  match xs with
+  | []      => None
+  | x :: xs' => Some (Leaf x, xs')
+  end
 | Node l r =>
-    match transplant_aux l xs with
-| None => None
-| Some (l', xs') =>
-        match transplant_aux r xs' with
+  match transplant_aux l xs with
+  | None => None
+  | Some (l', xs') =>
+    match transplant_aux r xs' with
     | None => None
     | Some (r', xs'') => Some (Node l' r', xs'')
-        end
     end
+  end
 end.
 
 Definition transplant
@@ -514,8 +514,8 @@ Print filter.
         fun (A : Type) (p : A -> bool) =>
         fix filter (l : list A) {struct l} : list A :=
           match l with
-      | [] => []
-      | h :: t => if p h then h :: filter t else filter t
+          | [] => []
+          | h :: t => if p h then h :: filter t else filter t
           end
              : forall A : Type, (A -> bool) -> list A -> list A *)
 
@@ -644,7 +644,7 @@ match n with
 | 0 => k 0
 | 1 => k 1
 | S (S n'' as n') =>
-        fibCPS n'' (fun arg1 => fibCPS n' (fun arg2 => k (arg1 + arg2)))
+    fibCPS n'' (fun arg1 => fibCPS n' (fun arg2 => k (arg1 + arg2)))
 end.
 
 Lemma fibCPS_eq :

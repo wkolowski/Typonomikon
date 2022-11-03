@@ -137,7 +137,7 @@ Celem powyższego było pokazanie, że nie należy kontynuacji wpychać
 <span class="id" title="keyword">match</span> <span class="id" title="var">t1</span>, <span class="id" title="var">t2</span> <span class="id" title="keyword">with</span><br/>
 | <span class="id" title="var">Leaf</span> <span class="id" title="var">x</span>    , <span class="id" title="var">Leaf</span> <span class="id" title="var">y</span>     =&gt; <span class="id" title="var">cmp</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
 | <span class="id" title="var">Node</span> <span class="id" title="var">l1</span> <span class="id" title="var">r1</span>, <span class="id" title="var">Node</span> <span class="id" title="var">l2</span> <span class="id" title="var">r2</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">same_fringe</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> &amp;&amp; <span class="id" title="var">same_fringe</span> <span class="id" title="var">cmp</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">same_fringe</span> <span class="id" title="var">cmp</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> &amp;&amp; <span class="id" title="var">same_fringe</span> <span class="id" title="var">cmp</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span><br/>
 | <span class="id" title="var">_</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
 
@@ -385,11 +385,11 @@ A rozwiązanie jest takie. Jeżeli próbujemy łazić po drzewie zwykłą
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">depthWalk</span> {<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t</span> : <span class="id" title="var">Tree</span> <span class="id" title="var">A</span>) : <span class="id" title="var">Iterator</span> <span class="id" title="var">B</span> <span class="id" title="var">A</span> (<span class="id" title="var">Tree</span> <span class="id" title="var">B</span>) :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">t</span> <span class="id" title="keyword">with</span><br/>
 | <span class="id" title="var">Leaf</span> <span class="id" title="var">a</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bindI</span> (<span class="id" title="var">yield</span> <span class="id" title="var">a</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> =&gt; <span class="id" title="var">Result</span> (<span class="id" title="var">Leaf</span> <span class="id" title="var">b</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bindI</span> (<span class="id" title="var">yield</span> <span class="id" title="var">a</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> =&gt; <span class="id" title="var">Result</span> (<span class="id" title="var">Leaf</span> <span class="id" title="var">b</span>))<br/>
 | <span class="id" title="var">Node</span> <span class="id" title="var">l</span> <span class="id" title="var">r</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bindI</span> (<span class="id" title="var">depthWalk</span> <span class="id" title="var">l</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">l'</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bindI</span> (<span class="id" title="var">depthWalk</span> <span class="id" title="var">r</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">r'</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Result</span> (<span class="id" title="var">Node</span> <span class="id" title="var">l'</span> <span class="id" title="var">r'</span>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bindI</span> (<span class="id" title="var">depthWalk</span> <span class="id" title="var">l</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">l'</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bindI</span> (<span class="id" title="var">depthWalk</span> <span class="id" title="var">r</span>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">r'</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Result</span> (<span class="id" title="var">Node</span> <span class="id" title="var">l'</span> <span class="id" title="var">r'</span>)))<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -452,7 +452,7 @@ Szczo wyrabljajetsja tut? Ano, już tłumaczę.
 &nbsp;&nbsp;(<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">Iterator</span> <span class="id" title="var">A</span> <span class="id" title="var">A</span> <span class="id" title="var">R</span>) : <span class="id" title="var">bool</span> :=<br/>
 <span class="id" title="keyword">match</span> <span class="id" title="var">t1</span>, <span class="id" title="var">t2</span> <span class="id" title="keyword">with</span><br/>
 | <span class="id" title="var">Susp</span> <span class="id" title="var">x</span> <span class="id" title="var">k</span>, <span class="id" title="var">Susp</span> <span class="id" title="var">y</span> <span class="id" title="var">h</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cmp</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> &amp;&amp; <span class="id" title="var">same_fringe_aux</span> <span class="id" title="var">cmp</span> (<span class="id" title="var">k</span> <span class="id" title="var">x</span>) (<span class="id" title="var">h</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">cmp</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> &amp;&amp; <span class="id" title="var">same_fringe_aux</span> <span class="id" title="var">cmp</span> (<span class="id" title="var">k</span> <span class="id" title="var">x</span>) (<span class="id" title="var">h</span> <span class="id" title="var">y</span>)<br/>
 | <span class="id" title="var">Result</span> <span class="id" title="var">_</span>, <span class="id" title="var">Result</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">true</span><br/>
 | <span class="id" title="var">_</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
 <span class="id" title="keyword">end</span>.<br/>
@@ -746,8 +746,8 @@ Moim zdaniem odpowiedź jest całkiem czytelna. Spacerek wygląda tak,
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fun&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;(p&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;bool)&nbsp;=&gt;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fix&nbsp;filter&nbsp;(l&nbsp;:&nbsp;list&nbsp;A)&nbsp;{struct&nbsp;l}&nbsp;:&nbsp;list&nbsp;A&nbsp;:=<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;match&nbsp;l&nbsp;with<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;<span class="inlinecode"></span>&nbsp;=&gt;&nbsp;<span class="inlinecode"></span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;h&nbsp;::&nbsp;t&nbsp;=&gt;&nbsp;if&nbsp;p&nbsp;h&nbsp;then&nbsp;h&nbsp;::&nbsp;filter&nbsp;t&nbsp;else&nbsp;filter&nbsp;t<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;<span class="inlinecode"></span>&nbsp;=&gt;&nbsp;<span class="inlinecode"></span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;h&nbsp;::&nbsp;t&nbsp;=&gt;&nbsp;if&nbsp;p&nbsp;h&nbsp;then&nbsp;h&nbsp;::&nbsp;filter&nbsp;t&nbsp;else&nbsp;filter&nbsp;t<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;forall&nbsp;A&nbsp;:&nbsp;Type,&nbsp;(A&nbsp;-&gt;&nbsp;bool)&nbsp;-&gt;&nbsp;list&nbsp;A&nbsp;-&gt;&nbsp;list&nbsp;A&nbsp;*)</span><br/>
 
@@ -917,7 +917,7 @@ Przyjrzyjmy się funkcji <span class="inlinecode"><span class="id" title="var">f
 | 0 =&gt; <span class="id" title="var">k</span> 0<br/>
 | 1 =&gt; <span class="id" title="var">k</span> 1<br/>
 | <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n''</span> <span class="id" title="keyword">as</span> <span class="id" title="var">n'</span>) =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fibCPS</span> <span class="id" title="var">n''</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">arg1</span> =&gt; <span class="id" title="var">fibCPS</span> <span class="id" title="var">n'</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">arg2</span> =&gt; <span class="id" title="var">k</span> (<span class="id" title="var">arg1</span> + <span class="id" title="var">arg2</span>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">fibCPS</span> <span class="id" title="var">n''</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">arg1</span> =&gt; <span class="id" title="var">fibCPS</span> <span class="id" title="var">n'</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">arg2</span> =&gt; <span class="id" title="var">k</span> (<span class="id" title="var">arg1</span> + <span class="id" title="var">arg2</span>)))<br/>
 <span class="id" title="keyword">end</span>.<br/>
 
 <br/>
