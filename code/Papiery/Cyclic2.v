@@ -14,7 +14,7 @@ Arguments C {A} _ _.
 
 Definition cmap {A B : Type} (f : A -> B) (l : Cyclic A) : Cyclic B :=
 match l with
-  | C start cycle => C (map f start) (map f cycle)
+| C start cycle => C (map f start) (map f cycle)
 end.
 
 Lemma cmap_cmap :
@@ -188,9 +188,9 @@ Compute ctake 20 (cintersperse 0 example).
 Definition ctakeWhile {A : Type} (p : A -> bool) (l : Cyclic A) : Cyclic A :=
 match l with
 | C s c =>
-        if length s =? length (takeWhile p s)
-        then C (takeWhile p s) (takeWhile p c)
-        else C (takeWhile p s) []
+  if length s =? length (takeWhile p s)
+  then C (takeWhile p s) (takeWhile p c)
+  else C (takeWhile p s) []
 end.
 
 Compute ctakeWhile (fun n => n <? 3) example.
@@ -198,10 +198,10 @@ Compute ctakeWhile (fun n => n <? 3) example.
 Definition cdropWhile {A : Type} (p : A -> bool) (l : Cyclic A) : Cyclic A :=
 match l with
 | C s c =>
-        match dropWhile p s with
-        | [] => C [] (dropWhile p c)
-        | s' => C s' c
-        end
+  match dropWhile p s with
+  | [] => C [] (dropWhile p c)
+  | s' => C s' c
+  end
 end.
 
 Compute cdropWhile (fun n => n <? 3) example.

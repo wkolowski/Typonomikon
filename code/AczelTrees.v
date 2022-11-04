@@ -94,7 +94,7 @@ Proof.
   intros A f g Hiff.
   pose (R t1 t2 := g
     match t2 with
-| Acz h => f (exists x, h x = t1)
+    | Acz h => f (exists x, h x = t1)
     end).
   apply no_Subtree_relation_exists with R.
   intros t X h. unfold R; cbn.
@@ -108,7 +108,7 @@ Proof.
   intros P f g Hiff.
   pose (R t1 t2 := g
     match t2 with
-| Acz h => f (exists x, h x = t1)
+    | Acz h => f (exists x, h x = t1)
     end).
   apply no_Subtree_relation_exists with R.
   intros t X h. unfold R; cbn.

@@ -84,9 +84,9 @@ CoFixpoint f {A : Type} (l : CoList' A) : CoList A :=
       match CLOut l with
       | Empty => NilF
       | NonEmpty l' =>
-              match  NECLOut l' with
-              | Cons h t => ConsF h (f t)
-              end
+        match  NECLOut l' with
+        | Cons h t => ConsF h (f t)
+        end
       end
 |}.
 

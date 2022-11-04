@@ -37,10 +37,10 @@ Definition leftmost {A : Type} (t : Tree A) : option A :=
 match Out t with
 | E => None
 | N v l _ =>
-        match leftmostF l with
-        | None   => Some v
-        | Some x => Some x
-        end
+  match leftmostF l with
+  | None   => Some v
+  | Some x => Some x
+  end
 end.
 
 Definition leftmost' {A : Type} (t : Tree A) : option A :=

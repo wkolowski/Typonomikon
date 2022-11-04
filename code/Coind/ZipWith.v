@@ -50,18 +50,18 @@ Fixpoint whnf {A : Type} (z : ZipWith A) : A * StreamZipWith A :=
 match z with
 | SConsX h t      => (h, t)
 | SZipWithX f l r =>
-        let '(h1, t1) := whnf l in
-        let '(h2, t2) := whnf r in
-          (f h1 h2, ZipWith' f t1 t2)
+  let '(h1, t1) := whnf l in
+  let '(h2, t2) := whnf r in
+    (f h1 h2, ZipWith' f t1 t2)
 end.
 
 CoFixpoint toStream {A : Type} (z : StreamZipWith A) : Stream A :=
 match Out z with
 | ConsXY h t      => scons h (toStream t)
 | ZipWithXY f l r =>
-        let (h1, t1) := whnf l in
-        let (h2, t2) := whnf r in
-          scons (f h1 h2) (toStream (ZipWith' f t1 t2))
+  let (h1, t1) := whnf l in
+  let (h2, t2) := whnf r in
+    scons (f h1 h2) (toStream (ZipWith' f t1 t2))
 (* | YXY s' => *)
 (*         let (h, t) := whnf s' in scons h (toStream t) *)
 end.

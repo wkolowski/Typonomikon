@@ -143,9 +143,9 @@ Fixpoint lins (n : nat) (l : Stream nat) : Stream nat :=
 match l with
 | lnil => lcons n (fun _ => lnil)
 | lcons h t =>
-        if leb n h
-        then lcons n (fun _ => l)
-        else lcons h (fun _ => lins n (t tt))
+  if leb n h
+  then lcons n (fun _ => l)
+  else lcons h (fun _ => lins n (t tt))
 end.
 
 Fixpoint lazyInsertionSort (l : Stream nat) : Stream nat :=

@@ -177,11 +177,11 @@ Fixpoint take (n : nat) {A : Type} (l : CList A) : list A :=
 match n with
 | 0    => []
 | S n' =>
-        match l with
-        | Nil => []
-        | Cons h t => h :: take n' t
-        | Rec h r => h :: take n' (r l)
-        end
+  match l with
+  | Nil => []
+  | Cons h t => h :: take n' t
+  | Rec h r => h :: take n' (r l)
+  end
 end.
 
 Fixpoint app {A : Type} (l1 l2 : CList A) : CList A :=
@@ -354,10 +354,10 @@ Fixpoint cotake {A : Type} (n : nat) (l : CoList A) : list A :=
 match n with
 | 0    => []
 | S n' =>
-        match uncons l with
-        | CoNilF => []
-        | CoConsF h t => h :: cotake n' t
-        end
+  match uncons l with
+  | CoNilF => []
+  | CoConsF h t => h :: cotake n' t
+  end
 end.
 
 Compute cotake 10 (unwind wut).
@@ -618,10 +618,10 @@ Fixpoint ctake (n : nat) {A : Type} (l : CoList A) : list A :=
 match n with
 | 0    => []
 | S n' =>
-        match uncons l with
-        | CoNilF      => []
-        | CoConsF h t => h :: ctake n' t
-        end
+  match uncons l with
+  | CoNilF      => []
+  | CoConsF h t => h :: ctake n' t
+  end
 end.
 
 Definition example : CList' nat :=
@@ -644,10 +644,10 @@ Fixpoint drop (n : nat) {A : Type} (l : CList' A) : CList' A :=
 match n with
 | 0    => l
 | S n' =>
-        match cuncons l with
-        | None => Nil
-        | Some (_, t) => drop n' t
-        end
+  match cuncons l with
+  | None => Nil
+  | Some (_, t) => drop n' t
+  end
 end.
 
 Compute drop 11 example.
@@ -656,10 +656,10 @@ Fixpoint take' (n : nat) {A : Type} (l : CList' A) : list A :=
 match n with
 | 0    => []
 | S n' =>
-        match cuncons l with
-        | None => []
-        | Some (h, t) => h :: take' n' t
-        end
+  match cuncons l with
+  | None => []
+  | Some (h, t) => h :: take' n' t
+  end
 end.
 
 Compute take' 10 example.

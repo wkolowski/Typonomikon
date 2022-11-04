@@ -283,8 +283,8 @@ Definition head {A : Type} (s : FinSet A) : option A.
 Proof.
   (*
     match s with
-| empty => None
-| scons x _ => Some x
+    | empty => None
+    | scons x _ => Some x
     end
   *)
   refine

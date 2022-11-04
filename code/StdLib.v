@@ -337,9 +337,9 @@ Instance WeakEquality_Sum
 {
     weq := fun x y =>
       match x, y with
-    | inl a1, inl a2 => weq a1 a2
-    | inr b1, inr b2 => weq b1 b2
-    | _     , _      => False
+      | inl a1, inl a2 => weq a1 a2
+      | inr b1, inr b2 => weq b1 b2
+      | _     , _      => False
       end
 }.
 Proof.
@@ -355,7 +355,7 @@ Instance WeakEquality_Prod
 {
     weq := fun x y =>
       match x, y with
-    | (a1, b1), (a2, b2) => weq a1 a2 /\ weq b1 b2
+      | (a1, b1), (a2, b2) => weq a1 a2 /\ weq b1 b2
       end
 }.
 Proof.

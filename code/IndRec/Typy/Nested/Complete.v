@@ -49,20 +49,20 @@ Function leftmost {A : Type} (t : Complete A) : option A :=
 match t with
 | Empty      => None
 | Layer v t' =>
-        match leftmost t' with
-        | None   => Some v
-        | Some (l, _) => Some l
-        end
+  match leftmost t' with
+  | None   => Some v
+  | Some (l, _) => Some l
+  end
 end.
 
 Fixpoint rightmost {A : Type} (t : Complete A) : option A :=
 match t with
 | Empty      => None
 | Layer v t' =>
-        match rightmost t' with
-        | None   => Some v
-        | Some (_, r) => Some r
-        end
+  match rightmost t' with
+  | None   => Some v
+  | Some (_, r) => Some r
+  end
 end.
 
 Fixpoint map {A B : Type} (f : A -> B) (t : Complete A) : Complete B :=
@@ -209,13 +209,13 @@ Fixpoint find {A : Type} (p : A -> bool) (t : Complete A) : option A :=
 match t with
 | Empty => None
 | Layer v ts =>
-        if p v
-        then Some v
-        else
-          match find (fun '(x, y) => p x || p y) ts with
-          | None => None
-          | Some (x, y) => if p x then Some x else Some y
-          end
+  if p v
+  then Some v
+  else
+    match find (fun '(x, y) => p x || p y) ts with
+    | None => None
+    | Some (x, y) => if p x then Some x else Some y
+    end
 end.
 
 Fixpoint zipWith {A B C : Type} (f : A -> B -> C) (ta : Complete A) (tb : Complete B) : Complete C :=
@@ -236,7 +236,6 @@ match t with
 | Empty => Empty
 | Layer (_, a) ts => Layer a (right ts)
 end.
-
 
 (*Fixpoint count {A : Type} (p : A -> bool) (t : Complete A) : nat :=
 match t with

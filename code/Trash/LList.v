@@ -84,9 +84,9 @@ Fixpoint lins (n : nat) (l : llist nat) : llist nat :=
 match l with
 | lnil => lcons n (fun _ => lnil)
 | lcons h t =>
-        if leb n h
-        then lcons n (fun _ => l)
-        else lcons h (fun _ => lins n (t tt))
+  if leb n h
+  then lcons n (fun _ => l)
+  else lcons h (fun _ => lins n (t tt))
 end.
 
 Fixpoint lazyInsertionSort (l : llist nat) : llist nat :=
@@ -154,7 +154,7 @@ Fixpoint lfilter {A : Type} (p : A -> bool) (l : llist A) : llist A :=
 match l with
 | lnil => lnil
 | lcons h t =>
-        if p h
-        then lcons h $ delay $ lfilter p (force t)
-        else lfilter p (force t)
+  if p h
+  then lcons h $ delay $ lfilter p (force t)
+  else lfilter p (force t)
 end.

@@ -96,8 +96,8 @@ Function nat_to_bin' (n : nat) {measure id n} : bin :=
     '(a, b) := divmod2 n
   in
     match a with
-| 0 => [b]
-| _ => b :: nat_to_bin' a
+    | 0 => [b]
+    | _ => b :: nat_to_bin' a
     end.
 Proof.
   intros.

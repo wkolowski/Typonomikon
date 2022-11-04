@@ -48,10 +48,10 @@ Fixpoint init {A : Type} (l : nel A) : option (nel A) :=
 match l with
 | [_] => None
 | h :: t =>
-        match init t with
-        | None => Some [h]
-        | Some t' => Some (h :: t')
-        end
+  match init t with
+  | None => Some [h]
+  | Some t' => Some (h :: t')
+  end
 end.
 
 Lemma map_pres_len :
@@ -82,10 +82,11 @@ Qed.
 Fixpoint nth {A : Type} (n : nat) (l : nel A) : option A :=
 match n with
 | 0 => Some (hd l)
-| S n' => match l with
-    | [_] => None
-    | _ :: t => nth n' t
-    end
+| S n' =>
+  match l with
+  | [_] => None
+  | _ :: t => nth n' t
+  end
 end.
 
 Inductive Elem {A} : A -> nel A -> Prop :=
@@ -119,9 +120,9 @@ Fixpoint unzip {A B : Type} (l : nel (A * B)) : nel A * nel B :=
 match l with
 | [(a, b)] => ([a], [b])
 | (a, b) :: t =>
-        match unzip t with
-        | (ta, tb) => (a :: ta, b :: tb)
-        end
+  match unzip t with
+  | (ta, tb) => (a :: ta, b :: tb)
+  end
 end.
 
 Fixpoint zipWith {A B C : Type} (f : A -> B -> C) (la : nel A) (lb : nel B) : nel C :=
@@ -132,28 +133,27 @@ match la, lb with
 | a :: ta, b :: tb => f a b :: zipWith f ta tb
 end.
 
-
 Fixpoint unzipWith {A B C : Type} (f : A -> B * C) (l : nel A) : nel B * nel C :=
 match l with
 | [a] => let (b, c) := f a in ([b], [c])
 | h :: t =>
-        match f h, unzipWith f t with
-        | (a, b), (ta, tb) => (a :: ta, b :: tb)
-        end
+  match f h, unzipWith f t with
+  | (a, b), (ta, tb) => (a :: ta, b :: tb)
+  end
 end.
 
 Fixpoint pmap {A B : Type} (f : A -> option B) (l : nel A) : list B :=
 match l with
 | [h] =>
-        match f h with
-        | None => nil
-        | Some b => cons b nil
-        end
+  match f h with
+  | None => nil
+  | Some b => cons b nil
+  end
 | h :: t =>
-        match f h with
-        | None => pmap f t
-        | Some b => cons b (pmap f t)
-        end
+  match f h with
+  | None => pmap f t
+  | Some b => cons b (pmap f t)
+  end
 end.
 
 Fixpoint join {A : Type} (ll : nel (nel A)) : nel A :=
@@ -167,11 +167,11 @@ match l with
 | [inl a] => (cons a nil, nil)
 | [inr b] => (nil, cons b nil)
 | h :: t  =>
-        let (la, lb) := unzis t in
-          match h with
-          | inl a => (cons a la, lb)
-          | inr b => (la, cons b lb)
-          end
+  let (la, lb) := unzis t in
+  match h with
+  | inl a => (cons a la, lb)
+  | inr b => (la, cons b lb)
+  end
 end.
 
 (** Powtarzanie *)
@@ -258,7 +258,7 @@ end.
 
 Fixpoint extrasperse {A : Type} (x : A) (l : nel A) : nel A :=
 match l with
-| [h] => x :: h :: [x]
+| [h]    => x :: h :: [x]
 | h :: t => x :: h :: extrasperse x t
 end.
 

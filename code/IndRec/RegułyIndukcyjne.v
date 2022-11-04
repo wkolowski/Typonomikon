@@ -29,7 +29,7 @@ Program Fixpoint nat_ind_k
 match le_dec n k with
 | left n_le_k => H n n_le_k
 | right n_gt_k =>
-        expand P n k n_gt_k (H' (n - S k) (nat_ind_k k P H H' (n - S k)))
+    expand P n k n_gt_k (H' (n - S k) (nat_ind_k k P H H' (n - S k)))
 end.
 Next Obligation. lia. Defined.
 Next Obligation. lia. Defined.
@@ -60,7 +60,7 @@ Program Fixpoint nat_ind_k'
 match le_dec n k with
 | left n_le_k => H n n_le_k
 | right n_gt_k =>
-        expand P n k n_gt_k (H' (n - k) (nat_ind_k' k Hk P H H' (n - k)))
+    expand P n k n_gt_k (H' (n - k) (nat_ind_k' k Hk P H H' (n - k)))
 end.
 Next Obligation. lia. Defined.
 
@@ -77,16 +77,16 @@ Fixpoint nat_ind_8
   (P8plus : forall n : nat, P n -> P (8 + n))
   (n : nat) : P n :=
 match n with
-  | 0 => P0
-  | 1 => P1
-  | 2 => P2
-  | 3 => P3
-  | 4 => P4
-  | 5 => P5
-  | 6 => P6
-  | 7 => P7
-  | S (S (S (S (S (S (S (S n'))))))) =>
-      P8plus n' (nat_ind_8 P0 P1 P2 P3 P4 P5 P6 P7 P8plus n')
+| 0 => P0
+| 1 => P1
+| 2 => P2
+| 3 => P3
+| 4 => P4
+| 5 => P5
+| 6 => P6
+| 7 => P7
+| S (S (S (S (S (S (S (S n'))))))) =>
+    P8plus n' (nat_ind_8 P0 P1 P2 P3 P4 P5 P6 P7 P8plus n')
 end.
 
 Lemma above_7 : forall n : nat,
@@ -171,9 +171,10 @@ Program Fixpoint divmod
   (n k : nat) (H : k <> 0) {measure n} : nat * nat :=
 match n with
 | 0 => (0, 0)
-| _ => if leb n k
-        then (0, n)
-        else let (d, m) := divmod (n - k) k H in (S d, m)
+| _ =>
+  if leb n k
+  then (0, n)
+  else let (d, m) := divmod (n - k) k H in (S d, m)
 end.
 Next Obligation. lia. Qed.
 
@@ -363,11 +364,11 @@ Fixpoint size {A : Type} (t : Tree A) : nat :=
 match t with
 | Empty => 0
 | Node v forest => 1 +
-        (fix size' {A : Type} (forest : list (Tree A)) : nat :=
-        match forest with
-        | nil => 0
-        | cons t forest' => size t + size' forest'
-        end) _ forest
+  (fix size' {A : Type} (forest : list (Tree A)) : nat :=
+  match forest with
+  | nil => 0
+  | cons t forest' => size t + size' forest'
+  end) _ forest
 end.
 
 Fixpoint size_f {A : Type} (t : Tree A) : nat :=

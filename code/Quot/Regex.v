@@ -47,8 +47,8 @@ match r with
   match norm r1, norm r2 with
   | Empty, r2' => r2'
   | r1', Empty => r1'
-(*     | Epsilon, r2' => if containsEpsilon r2' then r2' else Or Epsilon r2' *)
-(*     | r1', Epsilon => if containsEpsilon r1' then r1' else Or r1' Epsilon *)
+(*| Epsilon, r2' => if containsEpsilon r2' then r2' else Or Epsilon r2' *)
+(*| r1', Epsilon => if containsEpsilon r1' then r1' else Or r1' Epsilon *)
   | (Or r11 r12), r2 => Or r11 (Or r12 r2)
   | r1', r2' => Or r1' r2'
     end

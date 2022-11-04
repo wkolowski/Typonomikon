@@ -211,8 +211,8 @@ Lemma isNegative_succ :
   forall k : Z,
     isNegative (succ k) =
     match k with
-| MinusOne => false
-| _ => isNegative k
+    | MinusOne => false
+    | _ => isNegative k
     end.
 Proof.
   intros k; functional induction (pred k); cbn.

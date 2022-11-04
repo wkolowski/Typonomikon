@@ -68,11 +68,11 @@ Definition absurd_nd4_prog :
     in
       match H in (nd _ _ _ n) return (diag n) with
       | Nf _ _ _ _ N =>
-              match N in (nd _ _ _ n0) return (diag (pl3 n0)) with
-              | Nc _ _ _     => H
-              | Nf _ _ _ _ _ => H
-              | Ng _ _ _ _ _ => H
-              end
+        match N in (nd _ _ _ n0) return (diag (pl3 n0)) with
+        | Nc _ _ _     => H
+        | Nf _ _ _ _ _ => H
+        | Ng _ _ _ _ _ => H
+        end
       | _ => H
       end.
 
@@ -145,7 +145,7 @@ Proof.
   intro l.
   match goal with
   | l : ?P |- ?Q =>
-          pose (diag n := match n with 0 => Q | _ => P end)
+    pose (diag n := match n with 0 => Q | _ => P end)
   end.
   change (diag 0).
   case l; cbn; auto.

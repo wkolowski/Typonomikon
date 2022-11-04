@@ -30,20 +30,20 @@ Function leftmost {A : Type} (t : PTree A) : option A :=
 match t with
 | L x  => Some x
 | N t' =>
-        match leftmost t' with
-        | None        => None
-        | Some (x, _) => Some x
-        end
+  match leftmost t' with
+  | None        => None
+  | Some (x, _) => Some x
+  end
 end.
 
 Function rightmost {A : Type} (t : PTree A) : option A :=
 match t with
 | L x  => Some x
 | N t' =>
-        match rightmost t' with
-        | None        => None
-        | Some (_, x) => Some x
-        end
+  match rightmost t' with
+  | None        => None
+  | Some (_, x) => Some x
+  end
 end.
 
 Fixpoint size {A : Type} (t : PTree A) : nat :=
@@ -92,10 +92,10 @@ Fixpoint find {A : Type} (p : A -> bool) (t : PTree A) : option A :=
 match t with
 | L x  => if p x then Some x else None
 | N t' =>
-        match find (fun '(x, y) => p x || p y) t' with
-        | None        => None
-        | Some (x, y) => if p x then Some x else Some y
-        end
+  match find (fun '(x, y) => p x || p y) t' with
+  | None        => None
+  | Some (x, y) => if p x then Some x else Some y
+  end
 end.
 
 (*

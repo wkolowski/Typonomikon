@@ -77,15 +77,15 @@ end.
 CoFixpoint toStream' {A B : Type} (f : SP A B) (s : Stream A) : Stream B :=
 match Out f with
 | PutX h t =>
-        {|
-            hd := h;
-            tl := toStream' t s;
-    |}
+  {|
+      hd := h;
+      tl := toStream' t s;
+  |}
 | GetX g   => let '(h, (f', s')) := aux (g (hd s)) (tl s) in
-        {|
-            hd := h;
-            tl := toStream' f' s';
-    |}
+  {|
+      hd := h;
+      tl := toStream' f' s';
+  |}
 end.
 
 (** Lighter syntax. *)
@@ -94,8 +94,8 @@ CoFixpoint toStream'' {A B : Type} (f : SP A B) (s : Stream A) : Stream B :=
 match Out f with
 | PutX h t => scons h (toStream'' t s)
 | GetX g   =>
-        let '(h, (f', s')) := aux (g (hd s)) (tl s) in
-          scons h (toStream'' f' s')
+  let '(h, (f', s')) := aux (g (hd s)) (tl s) in
+    scons h (toStream'' f' s')
 end.
 
 (** Some proofs. *)
@@ -139,16 +139,16 @@ Lemma toStream'_eq :
     toStream' f s =
     match Out f with
     | PutX h t =>
-            {|
-                hd := h;
-                tl := toStream' t s;
-        |}
+      {|
+          hd := h;
+          tl := toStream' t s;
+      |}
     | GetX g   => let '(h, (f', s')) := aux (g (hd s)) (tl s) in
-            {|
-                hd := h;
-                tl := toStream' f' s';
-        |}
-    end.
+      {|
+          hd := h;
+          tl := toStream' f' s';
+      |}
+  end.
 Proof.
   intros. apply eq_Stream. destruct f as [[]]; cbn.
 Admitted.

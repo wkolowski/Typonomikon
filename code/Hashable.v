@@ -34,8 +34,8 @@ Class Hashable (A : Type) : Type :=
 {
   hash x :=
     match x with
-| inl a => add (mul 123456789 (hash a)) 987654321
-| inr b => add (mul 987654321 (hash b)) 123456789
+    | inl a => add (mul 123456789 (hash a)) 987654321
+    | inr b => add (mul 987654321 (hash b)) 123456789
     end;
 }.
 

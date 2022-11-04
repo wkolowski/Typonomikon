@@ -37,8 +37,8 @@ match n with
 | 0 => [[]]
 | 1 => map (fun x => [x]) (enum A 1)
 | S n' =>
-        flip bind (enum A 1) (fun h =>
-        flip bind (all_lists E n') (fun t => [h :: t]))
+    flip bind (enum A 1) (fun h =>
+    flip bind (all_lists E n') (fun t => [h :: t]))
 end.
 
 Compute all_lists (Enumerable_bool) 3.

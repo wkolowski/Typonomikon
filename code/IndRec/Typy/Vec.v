@@ -880,10 +880,11 @@ end.
 Fixpoint init {A : Type} (l : list A) : option (list A) :=
 match l with
 | [] => None
-| h :: t => match init t with
-    | None => Some [h]
-    | Some t' => Some (h :: t')
-    end
+| h :: t =>
+  match init t with
+  | None => Some [h]
+  | Some t' => Some (h :: t')
+  end
 end.*)
 
 Definition tail {A : Type} {n : nat} (l : vec A (S n)) : vec A n :=
@@ -937,7 +938,7 @@ match goal with
 | |- context [take _ ?l] => destruct l; compute
 | |- context [drop _ ?l] => destruct l; compute
 | |- context [minus_n_O ?n] =>
-        remember (minus_n_O n) as x; dependent destruction x
+  remember (minus_n_O n) as x; dependent destruction x
 | |- eq_dep ?x ?x => trivial
 end; auto.
 
@@ -946,15 +947,15 @@ match goal with
 | |- context [take ?n ?l] => induction n; cbn
 | |- context [drop ?n ?l] => induction n; compute
 | |- context [minus_n_O ?n] =>
-        remember (minus_n_O n) as x; dependent destruction x
+  remember (minus_n_O n) as x; dependent destruction x
 end; auto.
 
 Ltac td := intros; compute; repeat
 match goal with
 | |- context [minus_n_O ?n] =>
-        remember (minus_n_O n) as x; dependent destruction x
+  remember (minus_n_O n) as x; dependent destruction x
 | H : context [minus_n_O ?n] |- _ =>
-        remember (minus_n_O n) as x; dependent destruction x
+  remember (minus_n_O n) as x; dependent destruction x
 end; auto.
 (* end hide *)
 

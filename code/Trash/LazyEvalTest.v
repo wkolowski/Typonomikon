@@ -59,9 +59,9 @@ Fixpoint ins (n : nat) (l : list nat) : list nat :=
 match l with
 | [] => [n]
 | h :: t =>
-        if leb n h
-        then n :: l
-        else h :: ins n t
+  if leb n h
+  then n :: l
+  else h :: ins n t
 end.
 
 Fixpoint insertionSort (l : list nat) : list nat :=
@@ -81,9 +81,9 @@ Fixpoint lins (n : nat) (l : llist nat) : llist nat :=
 match l with
 | lnil => lcons n (fun _ => lnil)
 | lcons h t =>
-        if leb n h
-        then lcons n (fun _ => l)
-        else lcons h (fun _ => lins n (t tt))
+  if leb n h
+  then lcons n (fun _ => l)
+  else lcons h (fun _ => lins n (t tt))
 end.
 
 Fixpoint lazyInsertionSort (l : llist nat) : llist nat :=

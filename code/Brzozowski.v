@@ -84,10 +84,10 @@ match r with
 | Epsilon => Empty
 | Char x  => if dec a x then Epsilon else Empty
 | Seq r1 r2 =>
-        Or (Seq (diff a r1) r2)
-           (if containsEpsilon r1
-            then diff a r2
-            else Empty)
+    Or (Seq (diff a r1) r2)
+       (if containsEpsilon r1
+        then diff a r2
+        else Empty)
 | Or r1 r2 => Or (diff a r1) (diff a r2)
 | Star r' => Seq (diff a r') (Star r')
 end.
@@ -287,10 +287,10 @@ match r with
 | Epsilon => empty
 | Char x  => if dec a x then epsilon else empty
 | Seq r1 r2 =>
-        or (seq (diff' a r1) r2)
-           (if containsEpsilon r1
-            then diff' a r2
-            else empty)
+    or (seq (diff' a r1) r2)
+       (if containsEpsilon r1
+        then diff' a r2
+        else empty)
 | Or r1 r2 => or (diff' a r1) (diff' a r2)
 | Star r' => seq (diff' a r') (star r')
 end.
@@ -343,31 +343,31 @@ match r with
 | Epsilon => Epsilon
 | Char x => Char x
 | Seq r1 r2 =>
-        match optimize r1, optimize r2 with
-        | Empty, _ => Empty
-        | _, Empty => Empty
-        | Epsilon, r2' => r2'
-        | r1', Epsilon => r1'
-        | Seq r11 r12, r2 => Seq r11 (Seq r12 r2)
-        | Or r11 r12, r2 => Or (Seq r11 r2) (Seq r12 r2)
-        | r1', r2' => Seq r1' r2'
-        end
+  match optimize r1, optimize r2 with
+  | Empty, _ => Empty
+  | _, Empty => Empty
+  | Epsilon, r2' => r2'
+  | r1', Epsilon => r1'
+  | Seq r11 r12, r2 => Seq r11 (Seq r12 r2)
+  | Or r11 r12, r2 => Or (Seq r11 r2) (Seq r12 r2)
+  | r1', r2' => Seq r1' r2'
+  end
 | Or r1 r2 =>
-        match optimize r1, optimize r2 with
-        | Empty, r2' => r2'
-        | r1', Empty => r1'
-        | Epsilon, r2' => if containsEpsilon r2' then r2' else Or Epsilon r2'
-        | r1', Epsilon => if containsEpsilon r1' then r1' else Or r1' Epsilon
-        | Or r11 r12, r2 => Or r11 (Or r12 r2)
-        | r1', r2' => Or r1' r2'
-        end
+  match optimize r1, optimize r2 with
+  | Empty, r2' => r2'
+  | r1', Empty => r1'
+  | Epsilon, r2' => if containsEpsilon r2' then r2' else Or Epsilon r2'
+  | r1', Epsilon => if containsEpsilon r1' then r1' else Or r1' Epsilon
+  | Or r11 r12, r2 => Or r11 (Or r12 r2)
+  | r1', r2' => Or r1' r2'
+  end
 | Star r' =>
-        match optimize r' with
-        | Empty => Epsilon
-        | Epsilon => Epsilon
-        | Star r'' => Star r''
-        | r'' => Star r''
-        end
+  match optimize r' with
+  | Empty => Epsilon
+  | Epsilon => Epsilon
+  | Star r'' => Star r''
+  | r'' => Star r''
+  end
 end.
 
 Definition matches'' {A : EqType} (l : list A) (r : Regex A) : bool :=
@@ -399,9 +399,9 @@ Proof.
   inv H; inv HM;
   repeat match goal with
   | y : match optimize ?r with _ => _ end, H : optimize ?r = Empty |- _ =>
-          rewrite H in y; contradiction
+    rewrite H in y; contradiction
   | H : Matches _ ?r, H' : optimize ?r = Empty |- _ =>
-          apply optimize_Empty in H; try contradiction; assumption
+    apply optimize_Empty in H; try contradiction; assumption
   | H : Matches _ ?r |- _ => tryif is_var r then idtac else inv H
   end.
 Qed.
@@ -443,16 +443,16 @@ Proof.
   inv H; inv HM;
   repeat match goal with
   | H : Matches _ ?r |- _ =>
-          tryif is_var r
-          then
-            match goal with
-            | H' : optimize r = Empty |- _ =>
-                    apply optimize_Empty in H; [contradiction | assumption]
-            | H' : optimize r = Epsilon |- _ =>
-                    apply optimize_Epsilon in H; [subst; cbn in *; try congruence | assumption]
-            end
-          else
-            inv H
+    tryif is_var r
+    then
+      match goal with
+      | H' : optimize r = Empty |- _ =>
+          apply optimize_Empty in H; [contradiction | assumption]
+      | H' : optimize r = Epsilon |- _ =>
+          apply optimize_Epsilon in H; [subst; cbn in *; try congruence | assumption]
+      end
+    else
+      inv H
   end.
     apply optimize_Empty' in H3.
       congruence.

@@ -197,13 +197,13 @@ Lemma toQ'_eq :
     toQ' p q
       =
     match p, q with
-| 0, _ => None
-| _, 0 => None
-| _, _ =>
+    | 0, _ => None
+    | _, 0 => None
+    | _, _ =>
       match Nat.compare p q with
-  | Lt => option_map D (toQ' p (q - p))
-  | Eq => Some One
-  | Gt => option_map N (toQ' (p - q) q)
+      | Lt => option_map D (toQ' p (q - p))
+      | Eq => Some One
+      | Gt => option_map N (toQ' (p - q) q)
       end
     end.
 Proof.

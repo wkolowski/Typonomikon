@@ -32,10 +32,4 @@ match wf with
 | WFL_None _ => root t
 | WFL_Some _ wf' => leftmost wf'
 end.
-
-      match right t with
-      | None => True
-      | Some t' => WF t'
-      end;
-}.
 *)
