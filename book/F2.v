@@ -18,10 +18,10 @@ CoInductive conat : Type :=
 
 Inductive simF (n m : conat) (R : conat -> conat -> Prop) : Prop :=
 | simF_Z :
-        forall (Hn : out n = Z) (Hm : out m = Z), simF n m R
+    forall (Hn : out n = Z) (Hm : out m = Z), simF n m R
 | simf_S :
-        forall (n' m' : conat) (Hn : out n = S n') (Hm : out m = S m'),
-          R n' m' -> simF n m R.
+    forall (n' m' : conat) (Hn : out n = S n') (Hm : out m = S m'),
+      R n' m' -> simF n m R.
 
 CoInductive sim (n m : conat) : Prop :=
 {
@@ -612,9 +612,9 @@ Qed.
 (* begin hide *)
 Inductive leF (n m : conat) (R : conat -> conat -> Prop) : Prop :=
 | leF_Z :
-        out n = Z -> leF n m R
+    out n = Z -> leF n m R
 | leF_S :
-        forall n' m' : conat, out n = S n' -> out m = S m' -> R n' m' -> leF n m R.
+    forall n' m' : conat, out n = S n' -> out m = S m' -> R n' m' -> leF n m R.
 
 CoInductive le (n m : conat) : Prop :=
 {
@@ -1284,8 +1284,8 @@ Inductive Finite : conat -> Prop :=
 
 Inductive InfiniteF (n : conat) (P : conat -> Prop) : Prop :=
 | InfiniteF' :
-        forall (n' : conat) (H : out n = S n'),
-          P n' -> InfiniteF n P.
+    forall (n' : conat) (H : out n = S n'),
+      P n' -> InfiniteF n P.
 
 CoInductive Infinite (n : conat) : Prop :=
 {
@@ -1346,9 +1346,9 @@ Qed.
 (* begin hide *)
 Inductive EvenF (n : conat) (P : conat -> Prop) : Prop :=
 | EvenF_Z  :
-        forall Hn : out n = Z, EvenF n P
+    forall Hn : out n = Z, EvenF n P
 | EvenF_SS :
-        forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2) (HEven : P n2), EvenF n P.
+    forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2) (HEven : P n2), EvenF n P.
 
 CoInductive Even (n : conat) : Prop :=
 {
@@ -1357,10 +1357,10 @@ CoInductive Even (n : conat) : Prop :=
 
 Inductive OddF (n : conat) (P : conat -> Prop) : Prop :=
 | OddF_SZ :
-        forall (n' : conat) (Hn : out n = S n') (Hn' : out n' = Z),
-          OddF n P
+    forall (n' : conat) (Hn : out n = S n') (Hn' : out n' = Z),
+      OddF n P
 | OddF_SS :
-        forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2) (HOdd : P n2), OddF n P.
+    forall (n1 n2 : conat) (Hn1 : out n = S n1) (Hn2 : out n1 = S n2) (HOdd : P n2), OddF n P.
 
 CoInductive Odd (n : conat) : Prop :=
 {
@@ -1807,9 +1807,9 @@ Qed.
 
 (* Inductive Finite' : conat -> Prop :=
 | Finite'_zero :
-        forall n : conat, out n = Z -> Finite' n
+    forall n : conat, out n = Z -> Finite' n
 | Finite'_succ :
-        forall n n' : conat, out n = S n' -> Finite' n' -> Finite' n.
+    forall n n' : conat, out n = S n' -> Finite' n' -> Finite' n.
 
 #[global] Hint Constructors Finite' : core. *)
 
@@ -1883,14 +1883,14 @@ Module Even2_v2.
 
 Inductive Even2F (n : conat) (P : conat -> Prop) : Prop :=
 | Even2_Z  :
-        forall Hn : out n = Z, Even2F n P
+    forall Hn : out n = Z, Even2F n P
 | Even2_SS :
-        forall (n' : conat) (Hn : out n = S n'),
-          P n' -> Even2F n P.
+    forall (n' : conat) (Hn : out n = S n'),
+      P n' -> Even2F n P.
 
 Inductive Odd2F (n : conat) (P : conat -> Prop) : Prop :=
 | Odd2_S :
-        forall (n' : conat) (Hn : out n = S n') (HOdd : P n'), Odd2F n P.
+    forall (n' : conat) (Hn : out n = S n') (HOdd : P n'), Odd2F n P.
 
 CoInductive Even2' (n : conat) : Prop :=
 {

@@ -203,8 +203,8 @@ Module Q_HIT.
 Fail Inductive Q : Type :=
 | numden : Z -> nat -> Q
 | path :
-        forall (z1 z2 : Z) (n1 n2 : N),
-          z1 * (S n2) = z2 * (S n1) -> numden z1 n1 = numden z2 n2.
+    forall (z1 z2 : Z) (n1 n2 : N),
+      z1 * (S n2) = z2 * (S n1) -> numden z1 n1 = numden z2 n2.
 
 End Q_HIT.
 

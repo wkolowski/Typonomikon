@@ -1213,8 +1213,8 @@ Dwie opisane właściwości, choć pozornie niewinne, a nawet przydatne,
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">rational</span> : <span class="id" title="keyword">Set</span> :=<br/>
 | <span class="id" title="var">mk_rational</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">sign</span> : <span class="id" title="var">bool</span>) (<span class="id" title="var">numerator</span> <span class="id" title="var">denominator</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">denominator</span> &lt;&gt; 0 -&gt; <span class="id" title="var">rational</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">sign</span> : <span class="id" title="var">bool</span>) (<span class="id" title="var">numerator</span> <span class="id" title="var">denominator</span> : <span class="id" title="var">nat</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">denominator</span> &lt;&gt; 0 -&gt; <span class="id" title="var">rational</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Axiom</span> <span class="id" title="var">rational_eq</span> :<br/>
@@ -3439,10 +3439,8 @@ Rzućmy jeszcze raz okiem na znaną nam już definicję predykatów <span class=
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">even_odd</span> : <span class="id" title="var">bool</span> -&gt; <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
 | <span class="id" title="var">even0'</span> : <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> 0<br/>
-| <span class="id" title="var">evenS'</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)<br/>
-| <span class="id" title="var">oddS'</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
+| <span class="id" title="var">evenS'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>)<br/>
+| <span class="id" title="var">oddS'</span>  : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">even_odd</span> <span class="id" title="var">false</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">even'</span> := <span class="id" title="var">even_odd</span> <span class="id" title="var">true</span>.<br/>
@@ -4410,8 +4408,8 @@ Po powtórce nadszedł czas nowości. Zacznijmy od nazwy, która jest iście
 <span class="id" title="keyword">with</span> <span class="id" title="var">ok</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>} : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">slist</span> <span class="id" title="var">R</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
 | <span class="id" title="var">ok_snil</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">A</span>, <span class="id" title="var">ok</span> <span class="id" title="var">x</span> <span class="id" title="var">snil</span><br/>
 | <span class="id" title="var">ok_scons</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">slist</span> <span class="id" title="var">A</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">ok</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">h</span> -&gt; <span class="id" title="var">ok</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> <span class="id" title="var">p</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">slist</span> <span class="id" title="var">A</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">ok</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> <span class="id" title="var">x</span> <span class="id" title="var">h</span> -&gt; <span class="id" title="var">ok</span> <span class="id" title="var">x</span> (<span class="id" title="var">scons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> <span class="id" title="var">p</span>).<br/>
 
 <br/>
 <span class="comment">(*&nbsp;===&gt;&nbsp;The&nbsp;reference&nbsp;slist&nbsp;was&nbsp;not&nbsp;found&nbsp;in&nbsp;the&nbsp;current&nbsp;environment.&nbsp;*)</span><br/>
@@ -5058,8 +5056,7 @@ A oto kolejny potfur do naszej kolekcji: indukcja-rekursja. Nazwa, choć
 <span class="comment">(*<br/>
 Inductive&nbsp;slist&nbsp;{A&nbsp;:&nbsp;Type}&nbsp;(R&nbsp;:&nbsp;A&nbsp;-&gt;&nbsp;A&nbsp;-&gt;&nbsp;bool)&nbsp;:&nbsp;Type&nbsp;:=<br/>
 |&nbsp;snil&nbsp;:&nbsp;slist&nbsp;R<br/>
-|&nbsp;scons&nbsp;:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;(h&nbsp;:&nbsp;A)&nbsp;(t&nbsp;:&nbsp;slist&nbsp;R),&nbsp;ok&nbsp;h&nbsp;t&nbsp;=&nbsp;true&nbsp;-&gt;&nbsp;slist&nbsp;R<br/>
+|&nbsp;scons&nbsp;:&nbsp;forall&nbsp;(h&nbsp;:&nbsp;A)&nbsp;(t&nbsp;:&nbsp;slist&nbsp;R),&nbsp;ok&nbsp;h&nbsp;t&nbsp;=&nbsp;true&nbsp;-&gt;&nbsp;slist&nbsp;R<br/>
 <br/>
 with<br/>
 <br/>
@@ -6848,12 +6845,12 @@ W powyższym przykładzie wystąpienie <span class="inlinecode"><span class="id"
 <span class="comment">(*<br/>
 Inductive&nbsp;T2&nbsp;:&nbsp;Type&nbsp;:=<br/>
 |&nbsp;T2_0&nbsp;:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;f&nbsp;:&nbsp;(forall&nbsp;g&nbsp;:&nbsp;(forall&nbsp;t&nbsp;:&nbsp;T2,&nbsp;nat),&nbsp;Prop),&nbsp;T2<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;f&nbsp;:&nbsp;(forall&nbsp;g&nbsp;:&nbsp;(forall&nbsp;t&nbsp;:&nbsp;T2,&nbsp;nat),&nbsp;Prop),&nbsp;T2<br/>
 |&nbsp;T2_1&nbsp;:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(((((T2&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(((((T2&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2<br/>
 |&nbsp;T2_2&nbsp;:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((forall&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;(P&nbsp;:&nbsp;T2&nbsp;-&gt;&nbsp;Prop),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;t&nbsp;:&nbsp;T2,&nbsp;nat))&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2&nbsp;-&gt;&nbsp;T2&nbsp;-&gt;&nbsp;T2.<br/>
+&nbsp;&nbsp;((forall&nbsp;(n&nbsp;:&nbsp;nat)&nbsp;(P&nbsp;:&nbsp;T2&nbsp;-&gt;&nbsp;Prop),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;t&nbsp;:&nbsp;T2,&nbsp;nat))&nbsp;-&gt;&nbsp;T2)&nbsp;-&gt;&nbsp;T2&nbsp;-&gt;&nbsp;T2&nbsp;-&gt;&nbsp;T2.<br/>
 *)</span><br/>
 
 <br/>

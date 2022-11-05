@@ -321,9 +321,8 @@ Module hTree.
 
 Inductive T (A : Type) : nat -> Type :=
 | E : T A 0
-| N :
-        forall {n m : nat},
-          A -> T A n -> T A m -> T A (S (max n m)).
+| N : forall {n m : nat},
+        A -> T A n -> T A m -> T A (S (max n m)).
 
 (** To jednak działa inaczej niż myślałem. *)
 

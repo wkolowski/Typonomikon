@@ -523,8 +523,8 @@ Module list_eq_ind.
 Inductive code {A : Type} : list A -> list A -> Prop :=
 | nils : code [] []
 | conss :
-        forall {h1 h2 : A} {t1 t2 : list A},
-          h1 = h2 -> code t1 t2 -> code (h1 :: t1) (h2 :: t2).
+    forall {h1 h2 : A} {t1 t2 : list A},
+      h1 = h2 -> code t1 t2 -> code (h1 :: t1) (h2 :: t2).
 
 Fixpoint encode' {A : Type} (l : list A) : code l l :=
 match l with
@@ -594,8 +594,8 @@ Inductive Forall2
   {A : Type} (R : A -> A -> Prop) : list A -> list A -> Prop :=
 | nil2 : Forall2 R [] []
 | cons2 :
-        forall {h1 h2 : A} {t1 t2 : list A},
-          R h1 h2 -> Forall2 R t1 t2 -> Forall2 R (h1 :: t1) (h2 :: t2).
+    forall {h1 h2 : A} {t1 t2 : list A},
+      R h1 h2 -> Forall2 R t1 t2 -> Forall2 R (h1 :: t1) (h2 :: t2).
 
 Lemma list_eq_Forall :
   forall {A : Type} {l1 l2 : list A},

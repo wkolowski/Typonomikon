@@ -302,8 +302,8 @@ CoFixpoint lmap {A B : Type} (f : A -> B) (l : coList A) : coList B :=
 Inductive Finite {A : Type} : coList A -> Prop :=
 | Finite_nil : Finite {| uncons := None |}
 | Finite_cons :
-        forall (h : A) (t : coList A),
-          Finite t -> Finite {| uncons := Some (h, t) |}.
+    forall (h : A) (t : coList A),
+      Finite t -> Finite {| uncons := Some (h, t) |}.
 
 CoInductive Infinite {A : Type} (l : coList A) : Prop :=
 {
@@ -796,9 +796,9 @@ Qed.
 Inductive Finite {A : Type} : coBTree A -> Prop :=
 | Finite_None : forall t : coBTree A, tree t = None -> Finite t
 | Finite_Some :
-        forall (v : A) (l r t : coBTree A),
-          Finite l -> Finite r ->
-          tree t = Some (l, v, r) -> Finite t.
+    forall (v : A) (l r t : coBTree A),
+      Finite l -> Finite r ->
+      tree t = Some (l, v, r) -> Finite t.
 
 CoInductive Infinite {A : Type} (t : coBTree A) : Prop :=
 {

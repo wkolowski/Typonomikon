@@ -860,29 +860,34 @@ Print plus.
 (* begin hide *)
 Inductive subterm_nat : nat -> nat -> Prop :=
 | subterm_nat_S : forall n : nat, subterm_nat n (S n)
-| subterm_nat_trans' : forall x y z : nat,
-        subterm_nat x y -> subterm_nat y z -> subterm_nat x z.
+| subterm_nat_trans' :
+    forall x y z : nat,
+      subterm_nat x y -> subterm_nat y z -> subterm_nat x z.
 
 Inductive subterm_list {A : Type} : list A -> list A -> Prop :=
-| subterm_list_cons : forall (h : A) (t : list A),
-        subterm_list t (h :: t)
-| subterm_list_trans' : forall x y z : list A,
-        subterm_list x y -> subterm_list y z -> subterm_list x z.
+| subterm_list_cons :
+    forall (h : A) (t : list A),
+      subterm_list t (h :: t)
+| subterm_list_trans' :
+    forall x y z : list A,
+      subterm_list x y -> subterm_list y z -> subterm_list x z.
 
 Inductive trans_clos {A : Type} (R : A -> A -> Prop) : A -> A -> Prop :=
 | trans_clos_step : forall x y : A, R x y -> trans_clos R x y
-| trans_clos_trans : forall x y z : A,
-        R x y -> trans_clos R y z -> trans_clos R x z.
+| trans_clos_trans :
+    forall x y z : A,
+      R x y -> trans_clos R y z -> trans_clos R x z.
 
 Inductive subterm_nat_base : nat -> nat -> Prop :=
 | subterm_nat_base_c : forall n : nat, subterm_nat_base n (S n).
 
 Definition subterm_nat' : nat -> nat -> Prop :=
-    trans_clos subterm_nat_base.
+  trans_clos subterm_nat_base.
 
 Inductive subterm_list_base {A : Type} : list A -> list A -> Prop :=
-| subterm_list_base_c : forall (h : A) (t : list A),
-        subterm_list_base t (h :: t).
+| subterm_list_base_c :
+    forall (h : A) (t : list A),
+      subterm_list_base t (h :: t).
 
 Definition subterm_list' {A : Type} : list A -> list A -> Prop :=
     trans_clos subterm_list_base.
@@ -1752,17 +1757,17 @@ Set Guard Checking.
     rekursją wyższego rzędu. *)
 
 Inductive mirrorG {A : Type} : Tree A -> Tree A -> Prop :=
-  | mirrorG_0 :
-      forall (x : A) (ts rs : list (Tree A)),
-        mirrorsG ts rs -> mirrorG (Node x ts) (Node x (rev rs))
+| mirrorG_0 :
+    forall (x : A) (ts rs : list (Tree A)),
+      mirrorsG ts rs -> mirrorG (Node x ts) (Node x (rev rs))
 
 with mirrorsG {A : Type} : list (Tree A) -> list (Tree A) -> Prop :=
-  | mirrorsG_nil :
-      mirrorsG [] []
-  | mirrorsG_cons :
-      forall (t t' : Tree A) (ts ts' : list (Tree A)),
-        mirrorG t t' -> mirrorsG ts ts' ->
-          mirrorsG (t :: ts) (t' :: ts').
+| mirrorsG_nil :
+    mirrorsG [] []
+| mirrorsG_cons :
+    forall (t t' : Tree A) (ts ts' : list (Tree A)),
+      mirrorG t t' -> mirrorsG ts ts' ->
+        mirrorsG (t :: ts) (t' :: ts').
 
 Require Import Equality.
 
@@ -1785,28 +1790,26 @@ Module mirror.
 
 Inductive mirrorD {A : Type} : Tree A -> Type :=
 | mirrorD' :
-        forall (x : A) (ts : list (Tree A)),
-          mirrorsD (rev ts) -> mirrorD (Node x ts)
+    forall (x : A) (ts : list (Tree A)),
+      mirrorsD (rev ts) -> mirrorD (Node x ts)
 
 with mirrorsD {A : Type} : list (Tree A) -> Type :=
-| mirrorsD_nil :
-        mirrorsD []
+| mirrorsD_nil : mirrorsD []
 | mirrorsD_cons :
-        forall (t : Tree A) (ts : list (Tree A)),
-          mirrorD t -> mirrorsD ts -> mirrorsD (t :: ts).
+    forall (t : Tree A) (ts : list (Tree A)),
+      mirrorD t -> mirrorsD ts -> mirrorsD (t :: ts).
 
 Inductive mapG
   {A B : Type} (f : A -> B -> Type) : list A -> list B -> Type :=
-| mapG_nil  :
-        mapG f [] []
+| mapG_nil  : mapG f [] []
 | mapG_cons :
-        forall (a : A) (b : B) (la : list A) (lb : list B),
-          f a b -> mapG f la lb -> mapG f (a :: la) (b :: lb).
+    forall (a : A) (b : B) (la : list A) (lb : list B),
+      f a b -> mapG f la lb -> mapG f (a :: la) (b :: lb).
 
 Inductive mirrorG2 {A : Type} : Tree A -> Tree A -> Prop :=
-  | mirrorG2' :
-      forall (x : A) (ts ts' : list (Tree A)),
-        mapG mirrorG2 ts ts' -> mirrorG2 (Node x ts) (Node x (rev ts')).
+| mirrorG2' :
+    forall (x : A) (ts ts' : list (Tree A)),
+      mapG mirrorG2 ts ts' -> mirrorG2 (Node x ts) (Node x (rev ts')).
 
 Lemma mirrorG2_correct :
   forall {A : Type} (t : Tree A),
@@ -2950,8 +2953,8 @@ Check div_eq.
 Inductive divG : nat -> nat -> nat -> Prop :=
 | divG_lt : forall {n m : nat}, n < S m -> divG n m 0
 | divG_ge :
-        forall n m r : nat,
-          n >= S m -> divG (n - S m) m r -> divG n m (S r).
+    forall n m r : nat,
+      n >= S m -> divG (n - S m) m r -> divG n m (S r).
 
 (** [div] jest funkcją typu [nat -> nat -> nat], więc jej wykres to relacja
     typu [nat -> nat -> nat -> Prop]. Dwa pierwsze argumenty relacji
@@ -3227,16 +3230,16 @@ end.
 Inductive splitG {A : Type} :
   nat -> list A -> option (list A * list A) -> Prop :=
 | splitG_0 :
-        forall l : list A, splitG 0 l (Some ([], l))
+    forall l : list A, splitG 0 l (Some ([], l))
 | splitG_1 :
-        forall n : nat, splitG (S n) [] None
+    forall n : nat, splitG (S n) [] None
 | splitG_2 :
-        forall (n' : nat) (h : A) (t : list A),
-          splitG n' t None -> splitG (S n') (h :: t) None
+    forall (n' : nat) (h : A) (t : list A),
+      splitG n' t None -> splitG (S n') (h :: t) None
 | splitG_3 :
-        forall (n' : nat) (h : A) (t l1 l2 : list A),
-          splitG n' t (Some (l1, l2)) ->
-            splitG (S n') (h :: t) (Some (h :: l1, l2)).
+    forall (n' : nat) (h : A) (t l1 l2 : list A),
+      splitG n' t (Some (l1, l2)) ->
+        splitG (S n') (h :: t) (Some (h :: l1, l2)).
 
 Lemma splitG_det :
   forall (A : Type) (n : nat) (l : list A) (r1 r2 : option (list A * list A)),
@@ -3412,8 +3415,8 @@ Qed.
 Inductive divD : nat -> nat -> Type :=
 | divD_lt : forall n m : nat, n < S m -> divD n m
 | divD_ge :
-        forall n m : nat,
-          n >= S m -> divD (n - S m) m -> divD n m.
+    forall n m : nat,
+      n >= S m -> divD (n - S m) m -> divD n m.
 
 (** Tak wygląda predykat dziedziny dla dzielenia. Zauważmy, że tak naprawdę
     to nie jest to predykat, bo bierze dwa argumenty i co więcej nie zwraca
@@ -3613,12 +3616,12 @@ Module rot.
 
 Inductive rotD {A : Type} (n : nat) : list A -> Type :=
 | rotD_None :
-        forall l : list A,
-          split (S n) l = None -> rotD n l
+    forall l : list A,
+      split (S n) l = None -> rotD n l
 | rotD_Some :
-        forall l l1 l2 : list A,
-          split (S n) l = Some (l1, l2) ->
-            rotD n l2 -> rotD n l.
+    forall l l1 l2 : list A,
+      split (S n) l = Some (l1, l2) ->
+        rotD n l2 -> rotD n l.
 
 Fixpoint rot_aux {A : Type} {n : nat} {l : list A} (d : rotD n l) : list A :=
 match d with
@@ -3646,12 +3649,12 @@ Compute rot 1 [1; 2; 3; 4; 5; 6; 7].
 
 Inductive rotG {A : Type} (n : nat) : list A -> list A -> Prop :=
 | rotG_None :
-        forall l : list A,
-          split (S n) l = None -> rotG n l l
+    forall l : list A,
+      split (S n) l = None -> rotG n l l
 | rotG_Some :
-        forall l l1 l2 r : list A,
-          split (S n) l = Some (l1, l2) ->
-            rotG n l2 r -> rotG n l (rev l1 ++ r).
+    forall l l1 l2 r : list A,
+      split (S n) l = Some (l1, l2) ->
+        rotG n l2 r -> rotG n l (rev l1 ++ r).
 
 Lemma rotG_det :
   forall {A : Type} (n : nat) (l r1 r2 : list A),
@@ -3790,9 +3793,8 @@ Module sieve.
 
 Inductive D {A : Type} (f : A -> A -> bool) : list A -> Type :=
 | D0 : D f []
-| D1 :
-        forall (h : A) (t : list A),
-          D f (filter (f h) t) -> D f (h :: t).
+| D1 : forall (h : A) (t : list A),
+         D f (filter (f h) t) -> D f (h :: t).
 
 Arguments D0 {A f}.
 Arguments D1 {A f} _ _ _.
@@ -4102,10 +4104,10 @@ Definition f_troll (n : nat) : nat :=
     bez modyfikacji. *)
 
 Fail Inductive fD : nat -> Type :=
-  | fD_gt100 : forall n : nat, 100 < n -> fD n
-  | fD_le100 :
-      forall n : nat, n <= 100 ->
-        fD (n + 11) -> fD (f (n + 11)) -> fD n.
+| fD_gt100 : forall n : nat, 100 < n -> fD n
+| fD_le100 :
+    forall n : nat, n <= 100 ->
+      fD (n + 11) -> fD (f (n + 11)) -> fD n.
 
 (* ===> The command has indeed failed with message:
         The reference f was not found in the current environment. *)
@@ -4129,10 +4131,10 @@ Fail Inductive fD : nat -> Type :=
 
 Inductive fG : nat -> nat -> Prop :=
 | fG_gt100 :
-        forall n : nat, 100 < n -> fG n (n - 10)
+    forall n : nat, 100 < n -> fG n (n - 10)
 | fG_le100 :
-        forall n r1 r2 : nat,
-          n <= 100 -> fG (n + 11) r1 -> fG r1 r2 -> fG n r2.
+    forall n r1 r2 : nat,
+      n <= 100 -> fG (n + 11) r1 -> fG r1 r2 -> fG n r2.
 
 (** Tak wygląda wykres funkcji [f]. Wywołanie rekurencyjne [f (f (n + 11)]
     możemy zareprezentować jako dwa argumenty, mianowicie [fG (n + 11) r1]
@@ -4159,10 +4161,10 @@ Defined.
 
 Inductive fD : nat -> Type :=
 | fD_gt100 :
-        forall n : nat, 100 < n -> fD n
+    forall n : nat, 100 < n -> fD n
 | fD_le100 :
-        forall n r : nat, n <= 100 ->
-          fG (n + 11) r -> fD (n + 11) -> fD r -> fD n.
+    forall n r : nat, n <= 100 ->
+      fG (n + 11) r -> fD (n + 11) -> fD r -> fD n.
 
 (** A tak wygląda definicja predykatu dziedziny. Zamiast [fD (f (n + 11))]
     mamy [fD r], gdyż [r] na mocy argumentu [fG (n + 11) r] reprezentuje
@@ -4524,8 +4526,8 @@ Module McCarthy'.
 Inductive fD : nat -> Type :=
 | fD_gt100 : forall n : nat, 100 < n -> fD n
 | fD_le100 :
-        forall n : nat, n <= 100 ->
-          forall d : fD (n + 11), fD (f' (n + 11) d) -> fD n
+    forall n : nat, n <= 100 ->
+      forall d : fD (n + 11), fD (f' (n + 11) d) -> fD n
 
 with Fixpoint f' (n : nat) (d : fD n) : nat :=
 match d with
@@ -4836,8 +4838,8 @@ Module again.
 Inductive divD : nat -> nat -> Prop :=
 | divD_lt : forall n m : nat, n < S m -> divD n m
 | divD_ge :
-        forall n m : nat,
-          n >= S m -> divD (n - S m) m -> divD n m.
+    forall n m : nat,
+      n >= S m -> divD (n - S m) m -> divD n m.
 
 (** Definicja dziedziny jest taka sama jak ostatnio, ale z tą drobną
     różnicą, że teraz faktycznie jest to predykat.

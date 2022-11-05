@@ -209,11 +209,11 @@ Inductive list_neq_ind {A : Type} : list A -> list A -> Prop :=
 | nil_cons : forall h t, list_neq_ind nil (cons h t)
 | cons_nil : forall h t, list_neq_ind (cons h t) nil
 | cons_cons1 :
-        forall h1 h2 t1 t2,
-          h1 <> h2 -> list_neq_ind (cons h1 t1) (cons h2 t2)
+    forall h1 h2 t1 t2,
+      h1 <> h2 -> list_neq_ind (cons h1 t1) (cons h2 t2)
 | cons_cons2 :
-        forall h1 h2 t1 t2,
-          list_neq_ind t1 t2 -> list_neq_ind (cons h1 t1) (cons h2 t2).
+    forall h1 h2 t1 t2,
+      list_neq_ind t1 t2 -> list_neq_ind (cons h1 t1) (cons h2 t2).
 
 Lemma list_neq_ind_spec :
   forall {A : Type} (l1 l2 : list A),
@@ -274,12 +274,12 @@ Module list_neq_ind.
 
 Inductive list_neq
   {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
-| nc : forall (h : A) (t : list A), list_neq R [] (h :: t)
-| cn : forall (h : A) (t : list A), list_neq R (h :: t) []
+| nc  : forall (h : A) (t : list A), list_neq R [] (h :: t)
+| cn  : forall (h : A) (t : list A), list_neq R (h :: t) []
 | cc1 : forall (h1 h2 : A) (t1 t2 : list A),
-              R h1 h2 -> list_neq R (h1 :: t1) (h2 :: t2)
+          R h1 h2 -> list_neq R (h1 :: t1) (h2 :: t2)
 | cc2 : forall (h1 h2 : A) (t1 t2 : list A),
-              list_neq R t1 t2 -> list_neq R (h1 :: t1) (h2 :: t2).
+          list_neq R t1 t2 -> list_neq R (h1 :: t1) (h2 :: t2).
 
 #[global] Hint Constructors list_neq : core.
 
@@ -333,11 +333,11 @@ Defined.
 Inductive Exists2
   {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
 | E2_here :
-        forall {h1 h2 : A} (t1 t2 : list A),
-          R h1 h2 -> Exists2 R (h1 :: t1) (h2 :: t2)
+    forall {h1 h2 : A} (t1 t2 : list A),
+      R h1 h2 -> Exists2 R (h1 :: t1) (h2 :: t2)
 | E2_there :
-        forall {h1 h2 : A} {t1 t2 : list A},
-          Exists2 R t1 t2 -> Exists2 R (h1 :: t1) (h2 :: t2).
+    forall {h1 h2 : A} {t1 t2 : list A},
+      Exists2 R t1 t2 -> Exists2 R (h1 :: t1) (h2 :: t2).
 
 Lemma Exists2_list_neq :
   forall {A : Type} {R : A -> A -> Prop} {l1 l2 : list A},
@@ -353,15 +353,15 @@ Qed.
 Inductive DifferentStructure
   {A : Type} : list A -> list A -> Type :=
 | DS_nc :
-        forall (h : A) (t : list A),
-          DifferentStructure [] (h :: t)
+    forall (h : A) (t : list A),
+      DifferentStructure [] (h :: t)
 | DS_cn :
-        forall (h : A) (t : list A),
-          DifferentStructure (h :: t) []
+    forall (h : A) (t : list A),
+      DifferentStructure (h :: t) []
 | DS_cc :
-        forall (h1 h2 : A) {t1 t2 : list A},
-          DifferentStructure t1 t2 ->
-            DifferentStructure (h1 :: t1) (h2 :: t2).
+    forall (h1 h2 : A) {t1 t2 : list A},
+      DifferentStructure t1 t2 ->
+        DifferentStructure (h1 :: t1) (h2 :: t2).
 
 (** Insajt, że o ja pierdole: [list_neq] to w sumie [Exists2] lub
     [DifferentStructure], czyli listy różnią się, gdy różnią się
@@ -470,15 +470,15 @@ Qed.
 Inductive DifferentStructure'
   {A : Type} : list A -> list A -> SProp :=
 | DS'_nc :
-        forall (h : A) (t : list A),
-          DifferentStructure' [] (h :: t)
+    forall (h : A) (t : list A),
+      DifferentStructure' [] (h :: t)
 | DS'_cn :
-        forall (h : A) (t : list A),
-          DifferentStructure' (h :: t) []
+    forall (h : A) (t : list A),
+      DifferentStructure' (h :: t) []
 | DS'_cc :
-        forall (h1 h2 : A) {t1 t2 : list A},
-          DifferentStructure' t1 t2 ->
-            DifferentStructure' (h1 :: t1) (h2 :: t2).
+    forall (h1 h2 : A) {t1 t2 : list A},
+      DifferentStructure' t1 t2 ->
+        DifferentStructure' (h1 :: t1) (h2 :: t2).
 
 Lemma DS_DS' :
   forall {A : Type} {l1 l2 : list A},
@@ -679,11 +679,11 @@ Import F2.
 
 Inductive conat_neq : conat -> conat -> Prop :=
 | cnzs :
-        forall c : conat, conat_neq zero (succ c)
+    forall c : conat, conat_neq zero (succ c)
 | cnsz :
-        forall c : conat, conat_neq (succ c) zero
+    forall c : conat, conat_neq (succ c) zero
 | cnss :
-        forall n m : conat, conat_neq n m -> conat_neq (succ n) (succ m).
+    forall n m : conat, conat_neq n m -> conat_neq (succ n) (succ m).
 
 Lemma conat_neq_spec :
   forall n m : conat,
@@ -715,11 +715,11 @@ Import F3.
 Inductive Stream_neq
   {A : Type} : Stream A -> Stream A -> Type :=
 | Stream_apart_hd' :
-        forall t1 t2 : Stream A,
-          hd t1 <> hd t2 -> Stream_neq t1 t2
+    forall t1 t2 : Stream A,
+      hd t1 <> hd t2 -> Stream_neq t1 t2
 | Stream_apart_tl' :
-        forall t1 t2 : Stream A,
-          Stream_neq (tl t1) (tl t2) -> Stream_neq t1 t2.
+    forall t1 t2 : Stream A,
+      Stream_neq (tl t1) (tl t2) -> Stream_neq t1 t2.
 
 Lemma Stream_neq_not_sim :
   forall {A : Type} {s1 s2 : Stream A},
@@ -752,11 +752,11 @@ Import F3 Stream_neq.
 Inductive Stream_apart
   {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Type :=
 | Stream_apart_hd :
-        forall (h1 h2 : A) (t1 t2 : Stream A),
-          R h1 h2 -> Stream_apart R (scons h1 t1) (scons h2 t2)
+    forall (h1 h2 : A) (t1 t2 : Stream A),
+      R h1 h2 -> Stream_apart R (scons h1 t1) (scons h2 t2)
 | Stream_apart_tl :
-        forall (h1 h2 : A) (t1 t2 : Stream A),
-          Stream_apart R t1 t2 -> Stream_apart R (scons h1 t1) (scons h2 t2).
+    forall (h1 h2 : A) (t1 t2 : Stream A),
+      Stream_apart R t1 t2 -> Stream_apart R (scons h1 t1) (scons h2 t2).
 
 Lemma Stream_apart_not_sim :
   forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
@@ -807,11 +807,11 @@ Import F3 Stream_apart.
 Inductive Stream_strong_apart
   {A : Type} (R : A -> A -> Type) : Stream A -> Stream A -> Type :=
 | Stream_strong_apart_hd :
-        forall s1 s2 : Stream A,
-          R (hd s1) (hd s2) -> Stream_strong_apart R s1 s2
+    forall s1 s2 : Stream A,
+      R (hd s1) (hd s2) -> Stream_strong_apart R s1 s2
 | Stream_strong_apart_tl :
-        forall s1 s2 : Stream A,
-          Stream_strong_apart R (tl s1) (tl s2) -> Stream_strong_apart R s1 s2.
+    forall s1 s2 : Stream A,
+      Stream_strong_apart R (tl s1) (tl s2) -> Stream_strong_apart R s1 s2.
 
 Lemma Stream_strong_apart_spec :
   forall {A : Type} {R : A -> A -> Prop} {s1 s2 : Stream A},
@@ -837,19 +837,19 @@ Import F4.
 
 Inductive CoList_apart {A : Type} (R : A -> A -> Type) (l1 l2 : CoList A) : Type :=
 | CLa_nil_cons :
-        uncons l1 = NilF -> uncons l2 <> NilF -> CoList_apart R l1 l2
+    uncons l1 = NilF -> uncons l2 <> NilF -> CoList_apart R l1 l2
 | CLa_cons_nil :
-        uncons l1 <> NilF -> uncons l2 = NilF -> CoList_apart R l1 l2
+    uncons l1 <> NilF -> uncons l2 = NilF -> CoList_apart R l1 l2
 | CLa_head :
-        forall
-          {h1 : A} {t1 : CoList A} (Hu1 : uncons l1 = ConsF h1 t1)
-          {h2 : A} {t2 : CoList A} (Hu2 : uncons l2 = ConsF h2 t2),
-            R h1 h2 -> CoList_apart R l1 l2
+    forall
+      {h1 : A} {t1 : CoList A} (Hu1 : uncons l1 = ConsF h1 t1)
+      {h2 : A} {t2 : CoList A} (Hu2 : uncons l2 = ConsF h2 t2),
+        R h1 h2 -> CoList_apart R l1 l2
 | CLa_tail :
-        forall
-          {h1 : A} {t1 : CoList A} (Hu1 : uncons l1 = ConsF h1 t1)
-          {h2 : A} {t2 : CoList A} (Hu2 : uncons l2 = ConsF h2 t2),
-            CoList_apart R t1 t2 -> CoList_apart R l1 l2.
+    forall
+      {h1 : A} {t1 : CoList A} (Hu1 : uncons l1 = ConsF h1 t1)
+      {h2 : A} {t2 : CoList A} (Hu2 : uncons l2 = ConsF h2 t2),
+        CoList_apart R t1 t2 -> CoList_apart R l1 l2.
 
 Lemma CoList_apart_spec :
   forall {A : Type} {R : A -> A -> Type} {l1 l2 : CoList A},
@@ -945,15 +945,17 @@ Print list_neq_ind.list_neq.
 
 Inductive ListDiffProtocol
   {A : Type} (R : A -> A -> Type) : list A -> list A -> Type :=
-| nn' : ListDiffProtocol R [] []
-| nc' : forall (h : A) (t : list A), ListDiffProtocol R [] (h :: t)
-| cn' : forall (h : A) (t : list A), ListDiffProtocol R (h :: t) []
-| cc1' : forall (h1 h2 : A) (t1 t2 : list A),
-              R h1 h2 -> ListDiffProtocol R t1 t2 ->
-                ListDiffProtocol R (h1 :: t1) (h2 :: t2)
-| cc2' : forall (h : A) (t1 t2 : list A),
-              ListDiffProtocol R t1 t2 ->
-                ListDiffProtocol R (h :: t1) (h :: t2).
+| nn'  : ListDiffProtocol R [] []
+| nc'  : forall (h : A) (t : list A), ListDiffProtocol R [] (h :: t)
+| cn'  : forall (h : A) (t : list A), ListDiffProtocol R (h :: t) []
+| cc1' :
+  forall (h1 h2 : A) (t1 t2 : list A),
+    R h1 h2 -> ListDiffProtocol R t1 t2 ->
+      ListDiffProtocol R (h1 :: t1) (h2 :: t2)
+| cc2' :
+  forall (h : A) (t1 t2 : list A),
+    ListDiffProtocol R t1 t2 ->
+      ListDiffProtocol R (h :: t1) (h :: t2).
 
 (** [ListDiffProtocol] to sprawozdanie mówiące, w których miejscach listy
     się różnią, a w których są takie same (i od którego miejsca jedna jest

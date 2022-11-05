@@ -1127,8 +1127,8 @@ Module rational.
 
 Inductive rational : Set :=
 | mk_rational :
-      forall (sign : bool) (numerator denominator : nat),
-        denominator <> 0 -> rational.
+    forall (sign : bool) (numerator denominator : nat),
+      denominator <> 0 -> rational.
 
 Axiom rational_eq :
   forall (s s' : bool) (p p' q q' : nat)
@@ -2647,8 +2647,9 @@ Inductive BTree (A : Type) : Type :=
 
 Inductive EBTree (A : Type) : nat -> Type :=
 | EBT_Empty : EBTree A 0
-| EBT_Node : forall n m : nat,
-        A -> EBTree A n -> EBTree A m -> EBTree A (max n m).
+| EBT_Node :
+    forall n m : nat,
+      A -> EBTree A n -> EBTree A m -> EBTree A (max n m).
 
 Inductive HBTree : Type :=
 | HBT_Empty : HBTree
@@ -2658,8 +2659,9 @@ Check HBT_Node _ 42 (HBT_Node _ true HBT_Empty HBT_Empty) HBT_Empty.
 
 Inductive EHBTree : nat -> Type :=
 | EHBT_Empty : EHBTree 0
-| EHBT_Node : forall (A : Type) (n m : nat),
-        A -> EHBTree n -> EHBTree m -> EHBTree (max n m).
+| EHBT_Node :
+    forall (A : Type) (n m : nat),
+      A -> EHBTree n -> EHBTree m -> EHBTree (max n m).
 (* end hide *)
 
 (** ** Indukcja wzajemna a indeksowane rodziny typów *)
@@ -2686,10 +2688,8 @@ with odd : nat -> Prop :=
 
 Inductive even_odd : bool -> nat -> Prop :=
 | even0' : even_odd true 0
-| evenS' :
-        forall n : nat, even_odd false n -> even_odd true (S n)
-| oddS' :
-        forall n : nat, even_odd true n -> even_odd false (S n).
+| evenS' : forall n : nat, even_odd false n -> even_odd true (S n)
+| oddS'  : forall n : nat, even_odd true n -> even_odd false (S n).
 
 Definition even' := even_odd true.
 Definition odd' := even_odd false.
@@ -3298,8 +3298,8 @@ Inductive slist {A : Type} (R : A -> A -> Prop) : Type :=
 with ok {A : Type} {R : A -> A -> Prop} : A -> slist R -> Prop :=
 | ok_snil : forall x : A, ok x snil
 | ok_scons :
-        forall (h : A) (t : slist A) (p : ok h t) (x : A),
-          R x h -> ok x (scons h t p).
+    forall (h : A) (t : slist A) (p : ok h t) (x : A),
+      R x h -> ok x (scons h t p).
 
 (* ===> The reference slist was not found in the current environment. *)
 
@@ -3585,8 +3585,8 @@ Inductive sorted {A : Type} (R : A -> A -> Prop) : list A -> Prop :=
 | sorted_nil : sorted R []
 | sorted_singl : forall x : A, sorted R [x]
 | sorted_cons :
-        forall (x y : A) (t : list A),
-          R x y -> sorted R (y :: t) -> sorted R (x :: y :: t).
+    forall (x y : A) (t : list A),
+      R x y -> sorted R (y :: t) -> sorted R (x :: y :: t).
 
 Arguments sorted_nil   {A R}.
 Arguments sorted_singl {A R} _.
@@ -3747,8 +3747,8 @@ Inductive BHeap {A : Type} (R : A -> A -> Prop) : Type :=
 with ok {A : Type} {R : A -> A -> Prop} : A -> BHeap R -> Prop :=
 | ok_E : forall v : A, ok v E
 | ok_N :
-        forall (v x : A) (l r : BHeap A) (pl : ok x l) (pr : ok x r),
-          R x v -> ok v (N x l r pl pr).
+    forall (v x : A) (l r : BHeap A) (pl : ok x l) (pr : ok x r),
+      R x v -> ok v (N x l r pl pr).
 
 Axioms
   (BHeap : forall {A : Type} (R : A -> A -> Prop), Type)
@@ -3859,14 +3859,14 @@ Inductive BST {A : Type} (R : A -> A -> Prop) : Type :=
 with ok {A : Type} {R : A -> A -> Prop} : A -> BST R -> BST R -> Prop :=
 | ok_EE : forall v : A, ok v E E
 | ok_EN :
-        forall (v vl : A) (ll lr : BST R),
-          R vl v -> ok v (N vl ll lr) E
+    forall (v vl : A) (ll lr : BST R),
+      R vl v -> ok v (N vl ll lr) E
 | ok_NE :
-        forall (v vr : A) (rl rr : BST R),
-          R v vr -> ok v E (N vr rl rr)
+    forall (v vr : A) (rl rr : BST R),
+      R v vr -> ok v E (N vr rl rr)
 | ok_NN :
-        forall (v vl vr : A) (ll lr rl rr : BST R),
-          R vl v -> R v vr -> ok v (N vl ll lr) (N vr rl rr).
+    forall (v vl vr : A) (ll lr rl rr : BST R),
+      R vl v -> R v vr -> ok v (N vl ll lr) (N vr rl rr).
 
 Fail
 
@@ -3877,14 +3877,14 @@ Inductive BST {A : Type} (R : A -> A -> Prop) : Type :=
 with okl {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
 | okl_E : forall v : A, okl v E
 | okl_N :
-        forall (v vl : A) (ll lr : BST R),
-          R vl v -> okl v (N vl ll lr)
+    forall (v vl : A) (ll lr : BST R),
+      R vl v -> okl v (N vl ll lr)
 
 with okr {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
 | okr_E : forall v : V, okr v E
 | okr_N :
-        forall (v vr : A) (rl rr : BST R),
-          R v vr -> okr v (N vr rl rr).
+    forall (v vr : A) (rl rr : BST R),
+      R v vr -> okr v (N vr rl rr).
 
 Definition inv {A : Type} (R : A -> A -> Prop) : A -> A -> Prop :=
   fun x y => R y x.
@@ -3894,13 +3894,12 @@ Fail
 Inductive BST {A : Type} (R : A -> A -> Prop) : Type :=
 | E : BST R
 | N : forall (v : A) (l r : BST R),
-            @ok A R v l -> @ok A (inv R) v r -> BST R
+        @ok A R v l -> @ok A (inv R) v r -> BST R
 
 with ok {A : Type} {R : A -> A -> Prop} : A -> BST R -> Prop :=
 | ok_E : forall v : A, ok v E
-| ok_N :
-        forall (v x : A) (l r : BST R),
-          R x v -> ok v (N x l r).
+| ok_N : forall (v x : A) (l r : BST R),
+           R x v -> ok v (N x l r).
 
 End BST.
 
@@ -3932,8 +3931,7 @@ Module ind_rec.
 (*
 Inductive slist {A : Type} (R : A -> A -> bool) : Type :=
 | snil : slist R
-| scons :
-        forall (h : A) (t : slist R), ok h t = true -> slist R
+| scons : forall (h : A) (t : slist R), ok h t = true -> slist R
 
 with
 
@@ -4172,8 +4170,7 @@ Module BHeap'.
 (*
 Inductive BHeap {A : Type} (R : A -> A -> bool) : Type :=
 | E : BHeap R
-| N :
-      forall (v : A) (l r : BHeap R),
+| N : forall (v : A) (l r : BHeap R),
         ok R v l = true -> ok R v r = true -> BHeap R
 
 with ok {A : Type} (R : A -> A -> bool) (x : A) (h : BHeap R) : bool :=
@@ -5517,12 +5514,12 @@ Inductive T1 : Type :=
 (*
 Inductive T2 : Type :=
 | T2_0 :
-        forall f : (forall g : (forall t : T2, nat), Prop), T2
+    forall f : (forall g : (forall t : T2, nat), Prop), T2
 | T2_1 :
-        (((((T2 -> T2) -> T2) -> T2) -> T2) -> T2) -> T2
+    (((((T2 -> T2) -> T2) -> T2) -> T2) -> T2) -> T2
 | T2_2 :
-      ((forall (n : nat) (P : T2 -> Prop),
-        (forall t : T2, nat)) -> T2) -> T2 -> T2 -> T2.
+  ((forall (n : nat) (P : T2 -> Prop),
+    (forall t : T2, nat)) -> T2) -> T2 -> T2 -> T2.
 *)
 
 (** Policz niedobrość każdego wystąpienia [T2] w powyższej definicji.

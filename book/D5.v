@@ -10878,10 +10878,12 @@ Qed.
 
 (* begin hide *)
 Inductive elem {A : Type} : A -> list A -> Prop :=
-| elem_head : forall (x : A) (l : list A),
-        elem x (x :: l)
-| elem_cons : forall (x h : A) (t : list A),
-        elem x t -> elem x (h :: t).
+| elem_head :
+    forall (x : A) (l : list A),
+      elem x (x :: l)
+| elem_cons :
+    forall (x h : A) (t : list A),
+      elem x t -> elem x (h :: t).
 (* end hide *)
 
 Lemma elem_not_nil :
@@ -12176,8 +12178,8 @@ Qed.
 Inductive NoDup {A : Type} : list A -> Prop :=
 | NoDup_nil : NoDup []
 | NoDup_cons :
-        forall (h : A) (t : list A),
-          ~ elem h t -> NoDup t -> NoDup (h :: t).
+    forall (h : A) (t : list A),
+      ~ elem h t -> NoDup t -> NoDup (h :: t).
 (* end hide *)
 
 Lemma NoDup_singl :
@@ -12584,11 +12586,11 @@ Abort. (* Ten [Abort] jest umyślny. *)
 (* begin hide *)
 Inductive Dup {A : Type} : list A -> Prop :=
 | Dup_elem :
-        forall (h : A) (t : list A),
-          elem h t -> Dup (h :: t)
+    forall (h : A) (t : list A),
+      elem h t -> Dup (h :: t)
 | Dup_tail :
-        forall (h : A) (t : list A),
-          Dup t -> Dup (h :: t).
+    forall (h : A) (t : list A),
+      Dup t -> Dup (h :: t).
 (* end hide *)
 
 Lemma Dup_nil :
@@ -13124,13 +13126,13 @@ Qed.
 (* begin hide *)
 Inductive Rep {A : Type} (x : A) : nat -> list A -> Prop :=
 | Rep_zero :
-        forall l : list A, Rep x 0 l
+    forall l : list A, Rep x 0 l
 | Rep_cons_1 :
-        forall (n : nat) (l : list A),
-          Rep x n l -> Rep x (S n) (x :: l)
+    forall (n : nat) (l : list A),
+      Rep x n l -> Rep x (S n) (x :: l)
 | Rep_cons_2 :
-        forall (n : nat) (l : list A) (y : A),
-          Rep x n l -> Rep x n (y :: l).
+    forall (n : nat) (l : list A) (y : A),
+      Rep x n l -> Rep x n (y :: l).
 (* end hide *)
 
 Lemma Rep_S_cons :
@@ -13534,9 +13536,9 @@ Admitted.
 (* begin hide *)
 Inductive Exists {A : Type} (P : A -> Prop) : list A -> Prop :=
 | Exists_head :
-        forall (h : A) (t : list A), P h -> Exists P (h :: t)
+    forall (h : A) (t : list A), P h -> Exists P (h :: t)
 | Exists_tail :
-        forall (h : A) (t : list A), Exists P t -> Exists P (h :: t).
+    forall (h : A) (t : list A), Exists P t -> Exists P (h :: t).
 (* end hide *)
 
 Lemma Exists_spec :
@@ -14099,7 +14101,7 @@ Qed.
 Inductive Forall {A : Type} (P : A -> Prop) : list A -> Prop :=
 | Forall_nil' : Forall P []
 | Forall_cons' :
-        forall (h : A) (t : list A), P h -> Forall P t -> Forall P (h :: t).
+    forall (h : A) (t : list A), P h -> Forall P t -> Forall P (h :: t).
 (* end hide *)
 
 Lemma Forall_spec :
@@ -14571,13 +14573,13 @@ Qed.
 (* begin hide *)
 Inductive AtLeast {A : Type} (P : A -> Prop) : nat -> list A -> Prop :=
 | AL_0 :
-        forall l : list A, AtLeast P 0 l
+    forall l : list A, AtLeast P 0 l
 | AL_S :
-        forall (n : nat) (h : A) (t : list A),
-          P h -> AtLeast P n t -> AtLeast P (S n) (h :: t)
+    forall (n : nat) (h : A) (t : list A),
+      P h -> AtLeast P n t -> AtLeast P (S n) (h :: t)
 | AL_skip :
-        forall (n : nat) (h : A) (t : list A),
-          AtLeast P n t -> AtLeast P n (h :: t).
+    forall (n : nat) (h : A) (t : list A),
+      AtLeast P n t -> AtLeast P n (h :: t).
 (* begin hide *)
 
 Lemma AtLeast_le :
@@ -15345,11 +15347,11 @@ Qed.
 Inductive Exactly {A : Type} (P : A -> Prop) : nat -> list A -> Prop :=
 | Ex_0 : Exactly P 0 []
 | Ex_S :
-        forall (n : nat) (h : A) (t : list A),
-          P h -> Exactly P n t -> Exactly P (S n) (h :: t)
+    forall (n : nat) (h : A) (t : list A),
+      P h -> Exactly P n t -> Exactly P (S n) (h :: t)
 | Ex_skip :
-        forall (n : nat) (h : A) (t : list A),
-          ~ P h -> Exactly P n t -> Exactly P n (h :: t).
+    forall (n : nat) (h : A) (t : list A),
+      ~ P h -> Exactly P n t -> Exactly P n (h :: t).
 (* end hide *)
 
 Lemma Exactly_0_cons :
@@ -15834,11 +15836,11 @@ Qed.
 Inductive AtMost  {A : Type} (P : A -> Prop) : nat -> list A -> Prop :=
 | AM_0 : forall n : nat, AtMost P n []
 | AM_S :
-        forall (n : nat) (h : A) (t : list A),
-          ~ P h -> AtMost P n t -> AtMost P n (h :: t)
+    forall (n : nat) (h : A) (t : list A),
+      ~ P h -> AtMost P n t -> AtMost P n (h :: t)
 | AM_skip :
-        forall (n : nat) (h : A) (t : list A),
-          AtMost P n t -> AtMost P (S n) (h :: t).
+    forall (n : nat) (h : A) (t : list A),
+      AtMost P n t -> AtMost P (S n) (h :: t).
 (* end hide *)
 
 Lemma AtMost_0 :
@@ -15959,10 +15961,10 @@ end.
 (* begin hide *)
 Inductive Sublist {A : Type} : list A -> list A -> Prop :=
 | Sublist_direct :
-        forall (h : A) (t : list A), Sublist t (h :: t)
+    forall (h : A) (t : list A), Sublist t (h :: t)
 | Sublist_cons :
-        forall (x : A) (l1 l2 : list A),
-          Sublist l1 l2 -> Sublist l1 (x :: l2).
+    forall (x : A) (l1 l2 : list A),
+      Sublist l1 l2 -> Sublist l1 (x :: l2).
 (* end hide *)
 
 Lemma Sublist_length :
@@ -16613,8 +16615,8 @@ Qed.
 Inductive Prefix {A : Type} : list A -> list A -> Prop :=
 | Prefix_nil : forall l : list A, Prefix [] l
 | Prefix_cons :
-        forall (x : A) (l1 l2 : list A),
-          Prefix l1 l2 -> Prefix (x :: l1) (x :: l2).
+    forall (x : A) (l1 l2 : list A),
+      Prefix l1 l2 -> Prefix (x :: l1) (x :: l2).
 (* end hide *)
 
 Lemma Prefix_spec :
@@ -17339,10 +17341,10 @@ Qed.
 (* begin hide *)
 Inductive Suffix {A : Type} : list A -> list A -> Prop :=
 | Suffix_refl :
-        forall l : list A, Suffix l l
+    forall l : list A, Suffix l l
 | Suffix_cons :
-        forall (x : A) (l1 l2 : list A),
-          Suffix l1 l2 -> Suffix l1 (x :: l2).
+    forall (x : A) (l1 l2 : list A),
+      Suffix l1 l2 -> Suffix l1 (x :: l2).
 (* end hide *)
 
 Lemma Suffix_spec :
@@ -17468,13 +17470,13 @@ Qed.
 (* begin hide *)
 Inductive Subseq {A : Type} : list A -> list A -> Prop :=
 | Subseq_nil :
-        forall l : list A, Subseq [] l
+    forall l : list A, Subseq [] l
 | Subseq_cons :
-        forall (x : A) (l1 l2 : list A),
-          Subseq l1 l2 -> Subseq (x :: l1) (x :: l2)
+    forall (x : A) (l1 l2 : list A),
+      Subseq l1 l2 -> Subseq (x :: l1) (x :: l2)
 | Subseq_skip :
-        forall (x : A) (l1 l2 : list A),
-          Subseq l1 l2 -> Subseq l1 (x :: l2).
+    forall (x : A) (l1 l2 : list A),
+      Subseq l1 l2 -> Subseq l1 (x :: l2).
 (* end hide *)
 
 Lemma Subseq_refl :
@@ -19403,11 +19405,11 @@ Require Import Coq.Classes.RelationClasses.
 Inductive Permutation {A : Type} : list A -> list A -> Prop :=
 | perm_nil : Permutation [] []
 | perm_skip : forall (x : A) (l l' : list A),
-        Permutation l l' -> Permutation (x :: l) (x :: l')
+    Permutation l l' -> Permutation (x :: l) (x :: l')
 | perm_swap : forall (x y : A) (l : list A),
-        Permutation (y :: x :: l) (x :: y :: l)
+    Permutation (y :: x :: l) (x :: y :: l)
 | perm_trans : forall l l' l'' : list A,
-        Permutation l l' -> Permutation l' l'' -> Permutation l l''.
+    Permutation l l' -> Permutation l' l'' -> Permutation l l''.
 
 #[global] Hint Constructors Permutation : core.
 (* end hide *)
@@ -19546,10 +19548,10 @@ Qed.
 
 Inductive Elem {A : Type} (x : A) : list A -> list A -> Prop :=
 | es_here :
-        forall l : list A, Elem x l (x :: l)
+    forall l : list A, Elem x l (x :: l)
 | es_there :
-        forall (y : A) (l1 l2 : list A),
-          Elem x l1 l2 -> Elem x (y :: l1) (y :: l2).
+    forall (y : A) (l1 l2 : list A),
+      Elem x l1 l2 -> Elem x (y :: l1) (y :: l2).
 
 Lemma Elem_spec :
   forall (A : Type) (x : A) (l1 l2 : list A),
@@ -20847,8 +20849,8 @@ Poza tym permutacje mają inny styl (można używać symmetry etc).
 Inductive Cycle {A : Type} : list A -> list A -> Prop :=
 | Cycle_refl : forall l : list A, Cycle l l
 | Cycle_cyc :
-        forall (x : A) (l1 l2 : list A),
-          Cycle l1 (snoc x l2) -> Cycle l1 (x :: l2).
+    forall (x : A) (l1 l2 : list A),
+      Cycle l1 (snoc x l2) -> Cycle l1 (x :: l2).
 (* end hide *)
 
 Lemma lt_plus_S :
@@ -21622,9 +21624,9 @@ Module IPartition.
 Inductive IPartition {A : Type} : list (list A) -> list A -> Prop :=
 | IP_nil : IPartition [] []
 | IP_cons :
-        forall {ll : list (list A)} {l1 l2 : list A},
-          l1 <> [] -> IPartition ll l2 ->
-            IPartition (l1 :: ll) (l1 ++ l2).
+    forall {ll : list (list A)} {l1 l2 : list A},
+      l1 <> [] -> IPartition ll l2 ->
+        IPartition (l1 :: ll) (l1 ++ l2).
 
 Lemma IPartition_spec :
   forall {A : Type} {ll : list (list A)} {l : list A},
@@ -21789,10 +21791,10 @@ Qed.
 Inductive Palindrome {A : Type} : list A -> Prop :=
 | Palindrome_nil : Palindrome []
 | Palindrome_singl :
-        forall x : A, Palindrome [x]
+    forall x : A, Palindrome [x]
 | Palindrome_1 :
-        forall (x : A) (l : list A),
-          Palindrome l -> Palindrome (x :: snoc x l).
+    forall (x : A) (l : list A),
+      Palindrome l -> Palindrome (x :: snoc x l).
 (* end hide *)
 
 Lemma Palindrome_inv :

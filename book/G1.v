@@ -17,8 +17,8 @@ Import ListNotations.
 Module Flatten.
 
 Inductive Star : Type :=
-  | Var : Type -> Star
-  | List : Star -> Star.
+| Var : Type -> Star
+| List : Star -> Star.
 
 Fixpoint interp (s : Star) : Type :=
 match s with
@@ -95,8 +95,8 @@ Module ZipWithN.
 Import D5.
 
 Inductive Code : Type :=
-  | Singl : Type -> Code
-  | Cons : Type -> Code -> Code.
+| Singl : Type -> Code
+| Cons : Type -> Code -> Code.
 
 Fixpoint cmap (F : Type -> Type) (c : Code) : Code :=
 match c with
@@ -757,9 +757,9 @@ Inductive IW
   (P : forall (i : I), S i -> Type)
   (r : forall (i : I) (s : S i), P i s -> I)
   : I -> Type :=
-  | isup :
-      forall (i : I) (s : S i),
-        (forall p : P i s, IW I S P r (r i s p)) -> IW I S P r i.
+| isup :
+    forall (i : I) (s : S i),
+      (forall p : P i s, IW I S P r (r i s p)) -> IW I S P r i.
 
 Arguments isup {I S P r} _ _ _.
 
@@ -783,8 +783,8 @@ Arguments isup {I S P r} _ _ _.
     Czas na przykład: *)
 
 Inductive Vec (A : Type) : nat -> Type :=
-  | vnil : Vec A 0
-  | vcons : forall n : nat, A -> Vec A n -> Vec A (S n).
+| vnil : Vec A 0
+| vcons : forall n : nat, A -> Vec A n -> Vec A (S n).
 
 Arguments vcons {A n} _ _.
 
@@ -998,8 +998,8 @@ Arguments position {S P} _ _.
 
 Inductive Finite {S : Type} {P : S -> Type} : M S P -> Prop :=
 | FiniteRec  :
-        forall m : M S P,
-          (forall p : P (shape m), Finite (position m p)) -> Finite m.
+    forall m : M S P,
+      (forall p : P (shape m), Finite (position m p)) -> Finite m.
 
 Set Warnings "-cannot-define-projection".
 CoInductive Infinite {S : Type} {P : S -> Type} (m : M S P) : Prop :=
@@ -2070,12 +2070,12 @@ Inductive ForallF
   (F : (A -> A -> Prop) -> CoList A -> CoList A -> Prop)
   : CoList A -> CoList A -> Prop :=
 | Nils  :
-        forall l1 l2 : CoList A,
-          uncons l1 = NilF -> uncons l2 = NilF -> ForallF R F l1 l2
+    forall l1 l2 : CoList A,
+      uncons l1 = NilF -> uncons l2 = NilF -> ForallF R F l1 l2
 | Conss :
-        forall (l1 l2 : CoList A) (h1 h2 : A) (t1 t2 : CoList A),
-          uncons l1 = ConsF h1 t1 -> uncons l2 = ConsF h2 t2 ->
-            R h1 h2 -> F R t1 t2 -> ForallF R F l1 l2.
+    forall (l1 l2 : CoList A) (h1 h2 : A) (t1 t2 : CoList A),
+      uncons l1 = ConsF h1 t1 -> uncons l2 = ConsF h2 t2 ->
+        R h1 h2 -> F R t1 t2 -> ForallF R F l1 l2.
 
 CoInductive CoForall {A : Type} (R : A -> A -> Prop) (l1 l2 : CoList A) : Prop :=
 {
@@ -2122,11 +2122,11 @@ Inductive ForallR
   (l1 l2 : R)
   : Prop :=
 | Nils  :
-        Unwrap l1 = NilR -> Unwrap l2 = NilR -> ForallR Unwrap RA RR l1 l2
+    Unwrap l1 = NilR -> Unwrap l2 = NilR -> ForallR Unwrap RA RR l1 l2
 | Conss :
-        forall (h1 h2 : A) (t1 t2 : R),
-          Unwrap l1 = ConsR h1 t1 -> Unwrap l2 = ConsR h2 t2 ->
-            RA h1 h2 -> RR t1 t2 -> ForallR Unwrap RA RR l1 l2.
+    forall (h1 h2 : A) (t1 t2 : R),
+      Unwrap l1 = ConsR h1 t1 -> Unwrap l2 = ConsR h2 t2 ->
+        RA h1 h2 -> RR t1 t2 -> ForallR Unwrap RA RR l1 l2.
 
 Definition uncons' {A : Type} (l : List A) : ListR A (List A) :=
 match l with
@@ -2149,13 +2149,13 @@ Inductive ExistsR
   (l1 l2 : L)
   : Prop :=
 | Here  :
-        forall (h1 h2 : A) (t1 t2 : L),
-          Uncons l1 = ConsR h1 t1 -> Uncons l2 = ConsR h2 t2 ->
-            RA h1 h2 -> ExistsR Uncons RA RL l1 l2
+    forall (h1 h2 : A) (t1 t2 : L),
+      Uncons l1 = ConsR h1 t1 -> Uncons l2 = ConsR h2 t2 ->
+        RA h1 h2 -> ExistsR Uncons RA RL l1 l2
 | There :
-        forall (h1 h2 : A) (t1 t2 : L),
-          Uncons l1 = ConsR h1 t1 -> Uncons l2 = ConsR h2 t2 ->
-            RL t1 t2 -> ExistsR Uncons RA RL l1 l2.
+    forall (h1 h2 : A) (t1 t2 : L),
+      Uncons l1 = ConsR h1 t1 -> Uncons l2 = ConsR h2 t2 ->
+        RL t1 t2 -> ExistsR Uncons RA RL l1 l2.
 
 Inductive Exists {A : Type} (R : A -> A -> Prop) (l1 l2 : List A) : Prop :=
 | InExists : ExistsR uncons' R (Exists R) l1 l2 -> Exists R l1 l2.

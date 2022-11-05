@@ -47,14 +47,14 @@ Qed.
 (* begin hide *)
 Inductive lsimF {A : Type} (l1 l2 : CoList A) (F : CoList A -> CoList A -> Prop) : Prop :=
 | conils  :
-        forall (H1 : uncons l1 = NilF) (H2 : uncons l2 = NilF), lsimF l1 l2 F
+    forall (H1 : uncons l1 = NilF) (H2 : uncons l2 = NilF), lsimF l1 l2 F
 | coconss :
-        forall
-          (h1 h2 : A) (t1 t2 : CoList A)
-          (H1 : uncons l1 = ConsF h1 t1)
-          (H2 : uncons l2 = ConsF h2 t2)
-          (heads : h1 = h2) (tails : F t1 t2),
-            lsimF l1 l2 F.
+    forall
+      (h1 h2 : A) (t1 t2 : CoList A)
+      (H1 : uncons l1 = ConsF h1 t1)
+      (H2 : uncons l2 = ConsF h2 t2)
+      (heads : h1 = h2) (tails : F t1 t2),
+        lsimF l1 l2 F.
 
 CoInductive lsim {A : Type} (l1 l2 : CoList A) : Prop :=
 {
@@ -133,21 +133,21 @@ Defined.
 Inductive CoList_neq
   {A : Type} : CoList A -> CoList A -> Prop :=
 | CoList_neq_nc :
-        forall l1 l2 : CoList A,
-          uncons l1 = NilF -> uncons l2 <> NilF -> CoList_neq l1 l2
+    forall l1 l2 : CoList A,
+      uncons l1 = NilF -> uncons l2 <> NilF -> CoList_neq l1 l2
 | CoList_neq_cn :
-        forall l1 l2 : CoList A,
-          uncons l1 <> NilF -> uncons l2 = NilF -> CoList_neq l1 l2
+    forall l1 l2 : CoList A,
+      uncons l1 <> NilF -> uncons l2 = NilF -> CoList_neq l1 l2
 | CoList_neq_cc_here :
-        forall (h1 h2 : A) (t1 t2 l1 l2 : CoList A),
-          uncons l1 = ConsF h1 t1 ->
-          uncons l2 = ConsF h2 t2 ->
-            h1 <> h2 -> CoList_neq l1 l2
+    forall (h1 h2 : A) (t1 t2 l1 l2 : CoList A),
+      uncons l1 = ConsF h1 t1 ->
+      uncons l2 = ConsF h2 t2 ->
+        h1 <> h2 -> CoList_neq l1 l2
 | CoList_neq_cc_there :
-        forall (h1 h2 : A) (t1 t2 l1 l2 : CoList A),
-          uncons l1 = ConsF h1 t1 ->
-          uncons l2 = ConsF h2 t2 ->
-            CoList_neq t1 t2 -> CoList_neq l1 l2.
+    forall (h1 h2 : A) (t1 t2 l1 l2 : CoList A),
+      uncons l1 = ConsF h1 t1 ->
+      uncons l2 = ConsF h2 t2 ->
+        CoList_neq t1 t2 -> CoList_neq l1 l2.
 
 Lemma CoList_neq_not_lsim :
   forall {A : Type} {l1 l2 : CoList A},
@@ -835,10 +835,10 @@ end.
 (* begin hide *)
 Inductive Finite {A : Type} : CoList A -> Prop :=
 | Finite_None :
-        forall l : CoList A, uncons l = NilF -> Finite l
+    forall l : CoList A, uncons l = NilF -> Finite l
 | Finite_Some :
-        forall (h : A) (t l : CoList A),
-          uncons l = ConsF h t -> Finite t -> Finite l.
+    forall (h : A) (t l : CoList A),
+      uncons l = ConsF h t -> Finite t -> Finite l.
 
 Set Warnings "-cannot-define-projection".
 CoInductive Infinite {A : Type} (l : CoList A) : Prop :=
@@ -1171,11 +1171,11 @@ Qed.
 
 Inductive Exists {A : Type} (P : A -> Prop) : CoList A -> Prop :=
 | Exists_hd :
-        forall (l : CoList A) (h : A) (t : CoList A),
-          uncons l = ConsF h t -> P h -> Exists P l
+    forall (l : CoList A) (h : A) (t : CoList A),
+      uncons l = ConsF h t -> P h -> Exists P l
 | Exists_tl :
-        forall (l : CoList A) (h : A) (t : CoList A),
-          uncons l = ConsF h t -> Exists P t -> Exists P l.
+    forall (l : CoList A) (h : A) (t : CoList A),
+      uncons l = ConsF h t -> Exists P t -> Exists P l.
 
 CoInductive All {A : Type} (P : A -> Prop) (l : CoList A) : Prop :=
 {

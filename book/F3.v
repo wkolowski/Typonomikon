@@ -707,10 +707,10 @@ Qed.
 (* begin hide *)
 Inductive Suffix {A : Type} : Stream A -> Stream A -> Prop :=
 | Suffix_refl :
-        forall s : Stream A, Suffix s s
+    forall s : Stream A, Suffix s s
 | Suffix_tl :
-        forall s1 s2 : Stream A,
-          Suffix (tl s1) s2 -> Suffix s1 s2.
+    forall s1 s2 : Stream A,
+      Suffix (tl s1) s2 -> Suffix s1 s2.
 (* end hide *)
 
 Fixpoint snoc {A : Type} (x : A) (l : list A) : list A :=
@@ -789,17 +789,17 @@ Definition scons {A : Type} (x : A) (s : Stream A) : Stream A :=
 (* begin hide *)
 Inductive SPermutation {A : Type} : Stream A -> Stream A -> Prop :=
 | SPerm_refl :
-        forall s : Stream A, SPermutation s s
+    forall s : Stream A, SPermutation s s
 | SPerm_skip :
-        forall (x : A) (s1 s2 : Stream A),
-          SPermutation s1 s2 -> SPermutation (scons x s1) (scons x s2)
+    forall (x : A) (s1 s2 : Stream A),
+      SPermutation s1 s2 -> SPermutation (scons x s1) (scons x s2)
 | SPerm_swap :
-        forall (x y : A) (s1 s2 : Stream A),
-          SPermutation s1 s2 ->
-            SPermutation (scons x (scons y s1)) (scons y (scons x s2))
+    forall (x y : A) (s1 s2 : Stream A),
+      SPermutation s1 s2 ->
+        SPermutation (scons x (scons y s1)) (scons y (scons x s2))
 | SPerm_trans :
-        forall s1 s2 s3 : Stream A,
-          SPermutation s1 s2 -> SPermutation s2 s3 -> SPermutation s1 s3.
+    forall s1 s2 s3 : Stream A,
+      SPermutation s1 s2 -> SPermutation s2 s3 -> SPermutation s1 s3.
 
 #[global] Hint Constructors SPermutation : core.
 (* end hide *)
@@ -1028,12 +1028,12 @@ End approx.
 
 Inductive Filter {A : Type} (f : A -> bool) : Stream A -> Stream A -> Prop :=
 | Filter_true :
-        forall s r r' : Stream A,
-          f (hd s) = true -> Filter f (tl s) r ->
-            hd r' = hd s -> tl r' = r -> Filter f s r'
+    forall s r r' : Stream A,
+      f (hd s) = true -> Filter f (tl s) r ->
+        hd r' = hd s -> tl r' = r -> Filter f s r'
 | Filter_false :
-        forall s r : Stream A,
-          f (hd s) = false -> Filter f (tl s) r -> Filter f s r.
+    forall s r : Stream A,
+      f (hd s) = false -> Filter f (tl s) r -> Filter f s r.
 
 Lemma Filter_bad :
   forall (A : Type) (f : A -> bool) (s r : Stream A),

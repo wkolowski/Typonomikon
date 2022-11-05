@@ -525,9 +525,8 @@ Inductive&nbsp;vec&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;nat&nbsp;-&gt;&nbsp;Typ
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">T</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="var">nat</span> -&gt; <span class="id" title="keyword">Type</span> :=<br/>
 | <span class="id" title="var">E</span> : <span class="id" title="var">T</span> <span class="id" title="var">A</span> 0<br/>
-| <span class="id" title="var">N</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">A</span> -&gt; <span class="id" title="var">T</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">T</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">T</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> (<span class="id" title="var">max</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>)).<br/>
+| <span class="id" title="var">N</span> : <span class="id" title="keyword">forall</span> {<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">A</span> -&gt; <span class="id" title="var">T</span> <span class="id" title="var">A</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">T</span> <span class="id" title="var">A</span> <span class="id" title="var">m</span> -&gt; <span class="id" title="var">T</span> <span class="id" title="var">A</span> (<span class="id" title="var">S</span> (<span class="id" title="var">max</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>)).<br/>
 
 <br/>
 </div>

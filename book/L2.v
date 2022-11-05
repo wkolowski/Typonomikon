@@ -771,7 +771,7 @@ Module Scott.
 Unset Positivity Checking.
 Inductive Scott (A : Type) : Type :=
 {
-    scott : forall X : Type, X -> (A -> Scott A -> X) -> X;
+  scott : forall X : Type, X -> (A -> Scott A -> X) -> X;
 }.
 Set Positivity Checking.
 

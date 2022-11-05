@@ -619,8 +619,8 @@ Inductive Rot2 {A : Type} : list A -> list A -> Prop :=
 | Rot2_nil : Rot2 [] []
 | Rot2_singl : forall x : A, Rot2 [x] [x]
 | Rot2_cons2 :
-        forall (x y : A) (l l' : list A),
-          Rot2 l l' -> Rot2 (x :: y :: l) (y :: x :: l').
+    forall (x y : A) (l l' : list A),
+      Rot2 l l' -> Rot2 (x :: y :: l) (y :: x :: l').
 
 Lemma Rot2_correct :
   forall (A : Type) (l : list A),
@@ -3134,9 +3134,9 @@ Module Transpositions.
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
 | Perm_refl : forall l : list A, Perm l l
 | Perm_transp :
-        forall (x y : A) (l1 l2 l3 l4 : list A),
-          Perm (l1 ++ x :: l2 ++ y :: l3) l4 ->
-            Perm (l1 ++ y :: l2 ++ x :: l3) l4.
+    forall (x y : A) (l1 l2 l3 l4 : list A),
+      Perm (l1 ++ x :: l2 ++ y :: l3) l4 ->
+        Perm (l1 ++ y :: l2 ++ x :: l3) l4.
 
 Lemma Perm_cons :
   forall {A : Type} (h : A) (t1 t2 : list A),
@@ -3212,21 +3212,21 @@ Module InductiveTranspositions.
 
 Inductive Transposition {A : Type} : list A -> list A -> Prop :=
 | Transposition' :
-        forall (l1 : list A) (x : A) (l2 : list A) (y : A) (l3 : list A),
-          Transposition (l1 ++ x :: l2 ++ y :: l3) (l1 ++ y :: l2 ++ x :: l3).
+    forall (l1 : list A) (x : A) (l2 : list A) (y : A) (l3 : list A),
+      Transposition (l1 ++ x :: l2 ++ y :: l3) (l1 ++ y :: l2 ++ x :: l3).
 
 Inductive Transposition2 {A : Type} : list A -> list A -> Prop :=
 | Transposition2' :
-        forall (l1 : list A) (x : A) (l2 : list A) (y : A) (l3 r1 r2: list A),
-          r1 = l1 ++ x :: l2 ++ y :: l3 ->
-          r2 = l1 ++ y :: l2 ++ x :: l3 ->
-            Transposition2 r1 r2.
+    forall (l1 : list A) (x : A) (l2 : list A) (y : A) (l3 r1 r2: list A),
+      r1 = l1 ++ x :: l2 ++ y :: l3 ->
+      r2 = l1 ++ y :: l2 ++ x :: l3 ->
+        Transposition2 r1 r2.
 
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
 | Perm_refl : forall l : list A, Perm l l
 | Perm_step_trans :
-        forall l1 l2 l3 : list A,
-          Transposition l1 l2 -> Perm l2 l3 -> Perm l1 l3.
+    forall l1 l2 l3 : list A,
+      Transposition l1 l2 -> Perm l2 l3 -> Perm l1 l3.
 
 Lemma Perm_cons :
   forall (A : Type) (x : A) (l1 l2 : list A),
@@ -3316,8 +3316,8 @@ Module AdjacentTranspositions.
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
 | Perm_refl : forall l : list A, Perm l l
 | Perm_steptrans :
-      forall (x y : A) (l1 l2 l3 : list A),
-        Perm (l1 ++ y :: x :: l2) l3 -> Perm (l1 ++ x :: y :: l2) l3.
+    forall (x y : A) (l1 l2 l3 : list A),
+      Perm (l1 ++ y :: x :: l2) l3 -> Perm (l1 ++ x :: y :: l2) l3.
 
 Lemma Perm_Permutation :
   forall (A : Type) (l1 l2 : list A),
@@ -3381,8 +3381,8 @@ Definition exchange {A : Type} (l1 l2 : list A) : Prop :=
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
 | Perm_refl : forall l : list A, Perm l l
 | Perm_step_trans :
-        forall l1 l2 l3 : list A,
-          exchange l1 l2 -> Perm l2 l3 -> Perm l1 l3.
+    forall l1 l2 l3 : list A,
+      exchange l1 l2 -> Perm l2 l3 -> Perm l1 l3.
 
 Lemma Perm_cons :
   forall (A : Type) (x : A) (l1 l2 : list A),
@@ -4437,13 +4437,13 @@ End Specs.
 Inductive SameSet {A : Type} : list A -> list A -> Prop :=
 | SameSet_nil   : SameSet [] []
 | SameSet_cons  :
-        forall (h : A) (t1 t2 : list A), SameSet t1 t2 -> SameSet (h :: t1) (h :: t2)
+    forall (h : A) (t1 t2 : list A), SameSet t1 t2 -> SameSet (h :: t1) (h :: t2)
 | SameSet_swap  :
-        forall (x y : A) (l : list A), SameSet (y :: x :: l) (x :: y :: l)
+    forall (x y : A) (l : list A), SameSet (y :: x :: l) (x :: y :: l)
 | SameSet_dedup :
-        forall (h : A) (t : list A), SameSet (h :: t) (h :: h :: t)
+    forall (h : A) (t : list A), SameSet (h :: t) (h :: h :: t)
 | SameSet_trans :
-        forall l1 l2 l3 : list A, SameSet l1 l2 -> SameSet l2 l3 -> SameSet l1 l3.
+    forall l1 l2 l3 : list A, SameSet l1 l2 -> SameSet l2 l3 -> SameSet l1 l3.
 
 Lemma SameSet_SetEquiv :
   forall {A : Type} {l1 l2 : list A},
@@ -4498,23 +4498,23 @@ Module SetTranspositionDedup.
 
 Inductive Transposition {A : Type} : list A -> list A -> Prop :=
 | Transposition' :
-        forall (x y : A) (l1 l2 l3 : list A),
-          Transposition (l1 ++ x :: l2 ++ y :: l3) (l1 ++ y :: l2 ++ x :: l3).
+    forall (x y : A) (l1 l2 l3 : list A),
+      Transposition (l1 ++ x :: l2 ++ y :: l3) (l1 ++ y :: l2 ++ x :: l3).
 
 Inductive Dedup {A : Type} : list A -> list A -> Prop :=
 | Dedup' :
-        forall (x : A) (l1 l2 l3 : list A),
-          Dedup (l1 ++ x :: l2 ++ x :: l3) (l1 ++ x :: l2 ++ l3).
+    forall (x : A) (l1 l2 l3 : list A),
+      Dedup (l1 ++ x :: l2 ++ x :: l3) (l1 ++ x :: l2 ++ l3).
 
 Inductive SameSetTD {A : Type} : list A -> list A -> Prop :=
 | SameSetTD_refl   :
-        forall l : list A, SameSetTD l l
+    forall l : list A, SameSetTD l l
 | SameSetTD_transp :
-        forall l1 l2 l3 : list A,
-          Transposition l1 l2 -> SameSetTD l2 l3 -> SameSetTD l1 l3
+    forall l1 l2 l3 : list A,
+      Transposition l1 l2 -> SameSetTD l2 l3 -> SameSetTD l1 l3
 | SameSetTD_dedup  :
-        forall l1 l2 l3 : list A,
-          Dedup l1 l2 -> SameSetTD l2 l3 -> SameSetTD l1 l3.
+    forall l1 l2 l3 : list A,
+      Dedup l1 l2 -> SameSetTD l2 l3 -> SameSetTD l1 l3.
 
 Lemma SameSetTD_SetEquiv :
   forall {A : Type} {l1 l2 : list A},
@@ -4537,23 +4537,23 @@ Module SetAdjacentTranspositionDedup.
 
 Inductive AdjacentTransposition {A : Type} : list A -> list A -> Prop :=
 | AdjacentTransposition' :
-        forall (x y : A) (l1 l2 : list A),
-          AdjacentTransposition (l1 ++ x :: y :: l2) (l1 ++ y :: x :: l2).
+    forall (x y : A) (l1 l2 : list A),
+      AdjacentTransposition (l1 ++ x :: y :: l2) (l1 ++ y :: x :: l2).
 
 Inductive AdjacentDedup {A : Type} : list A -> list A -> Prop :=
 | AdjacentDedup' :
-        forall (x : A) (l1 l2 : list A),
-          AdjacentDedup (l1 ++ x :: x :: l2) (l1 ++ x :: l2).
+    forall (x : A) (l1 l2 : list A),
+      AdjacentDedup (l1 ++ x :: x :: l2) (l1 ++ x :: l2).
 
 Inductive SameSetATD {A : Type} : list A -> list A -> Prop :=
 | SameSetATD_refl   :
-        forall l : list A, SameSetATD l l
+    forall l : list A, SameSetATD l l
 | SameSetATD_transp :
-        forall l1 l2 l3 : list A,
-          AdjacentTransposition l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3
+    forall l1 l2 l3 : list A,
+      AdjacentTransposition l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3
 | SameSetATD_dedup  :
-        forall l1 l2 l3 : list A,
-          AdjacentDedup l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3.
+    forall l1 l2 l3 : list A,
+      AdjacentDedup l1 l2 -> SameSetATD l2 l3 -> SameSetATD l1 l3.
 
 Lemma SameSetATD_trans :
   forall {A : Type} {l1 l2 : list A},
@@ -4650,13 +4650,13 @@ Admitted.
 
 Inductive SameSetATD' {A : Type} (l1 : list A) : list A -> Prop :=
 | SameSetATD'_refl   :
-        SameSetATD' l1 l1
+    SameSetATD' l1 l1
 | SameSetATD'_transp :
-        forall l2 l3 : list A,
-          SameSetATD' l1 l2 -> AdjacentTransposition l2 l3 -> SameSetATD' l1 l3
+    forall l2 l3 : list A,
+      SameSetATD' l1 l2 -> AdjacentTransposition l2 l3 -> SameSetATD' l1 l3
 | SameSetATD'_dedup  :
-        forall l2 l3 : list A,
-          SameSetATD' l1 l2 -> AdjacentDedup l2 l3 -> SameSetATD' l1 l3.
+    forall l2 l3 : list A,
+      SameSetATD' l1 l2 -> AdjacentDedup l2 l3 -> SameSetATD' l1 l3.
 
 Lemma SameSetATD'_trans :
   forall {A : Type} {l1 l2 : list A},

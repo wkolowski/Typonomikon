@@ -1070,8 +1070,9 @@ Compute collatz' 1000 2487.
 Inductive collatz : nat -> nat -> Prop :=
 | c_even : forall n : nat, collatz (2 * n) n
 | c_odd : forall n : nat, collatz (1 + 2 * n) (4 + 6 * n)
-| c_trans : forall a b c : nat,
-        collatz a b -> collatz b c -> collatz a c.
+| c_trans :
+    forall a b c : nat,
+      collatz a b -> collatz b c -> collatz a c.
 
 #[global] Hint Constructors collatz : core.
 
@@ -5899,9 +5900,9 @@ Proof. sc. Qed.
 
 Inductive sc' {A : Type} (R : rel A) : rel A :=
 | sc'_step :
-        forall x y : A, R x y -> sc' R x y
+    forall x y : A, R x y -> sc' R x y
 | sc'_symm :
-        forall x y : A, sc' R x y -> sc' R y x.
+    forall x y : A, sc' R x y -> sc' R y x.
 
 (* begin hide *)
 #[global] Hint Constructors sc' : core.
@@ -6045,10 +6046,10 @@ Qed.
 
 Inductive tc' {A : Type} (R : rel A) : rel A :=
 | tc'_step :
-        forall x y : A, R x y -> tc' R x y
+    forall x y : A, R x y -> tc' R x y
 | tc'_trans :
-        forall x y z : A,
-          tc' R x y -> tc' R y z -> tc' R x z.
+    forall x y z : A,
+      tc' R x y -> tc' R y z -> tc' R x z.
 
 (* begin hide *)
 #[global] Hint Constructors tc' : core.
@@ -6310,15 +6311,15 @@ Admitted.
     są równoważne oryginalnej. Która definicja jest najlepsza? *)
 
 Inductive equiv_clos {A : Type} (R : rel A) : rel A :=
-  | equiv_clos_step :
-      forall x y : A, R x y -> equiv_clos R x y
-  | equiv_clos_refl :
-      forall x : A, equiv_clos R x x
-  | equiv_clos_symm :
-      forall x y : A, equiv_clos R x y -> equiv_clos R y x
-  | equiv_clos_trans :
-      forall x y z : A,
-        equiv_clos R x y -> equiv_clos R y z -> equiv_clos R x z.
+| equiv_clos_step :
+    forall x y : A, R x y -> equiv_clos R x y
+| equiv_clos_refl :
+    forall x : A, equiv_clos R x x
+| equiv_clos_symm :
+    forall x y : A, equiv_clos R x y -> equiv_clos R y x
+| equiv_clos_trans :
+    forall x y z : A,
+      equiv_clos R x y -> equiv_clos R y z -> equiv_clos R x z.
 
 (* begin hide *)
 #[global] Hint Constructors equiv_clos : core.
@@ -6529,11 +6530,11 @@ Qed.
 
 Inductive CircularClosure {A : Type} (R : rel A) : rel A :=
 | CC_step  :
-        forall x y : A, R x y -> CircularClosure R x y
+    forall x y : A, R x y -> CircularClosure R x y
 | CC_circ :
-        forall x y z : A,
-          CircularClosure R x y -> CircularClosure R y z ->
-            CircularClosure R z x.
+    forall x y z : A,
+      CircularClosure R x y -> CircularClosure R y z ->
+        CircularClosure R z x.
 
 #[export]
 Instance Circular_CircularClosure
@@ -6557,9 +6558,9 @@ Qed.
 
 Inductive LeftQuasiReflexiveClosure {A : Type} (R : rel A) : rel A :=
 | LQRC_step :
-        forall x y : A, R x y -> LeftQuasiReflexiveClosure R x y
+    forall x y : A, R x y -> LeftQuasiReflexiveClosure R x y
 | LQRC_clos :
-        forall x y : A, R x y -> LeftQuasiReflexiveClosure R x x.
+    forall x y : A, R x y -> LeftQuasiReflexiveClosure R x x.
 
 #[export]
 Instance LeftQuasiReflexive_LeftQuasiReflexiveClosure
@@ -6588,7 +6589,7 @@ Axiom WRCC_equal :
 
 Inductive CoReflexiveClosure {A : Type} (R : rel A)
   : rel (CoReflexiveClosureCarrier R) :=
-  | step : forall x y : A, R x y -> CoReflexiveClosure R (embed x) (embed y).
+| step : forall x y : A, R x y -> CoReflexiveClosure R (embed x) (embed y).
 
 End CoReflexiveClosure.
 

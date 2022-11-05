@@ -818,9 +818,9 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="var"
 <br/>
 <span class="comment">(*&nbsp;Inductive&nbsp;Finite'&nbsp;:&nbsp;conat&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
 |&nbsp;Finite'_zero&nbsp;:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;conat,&nbsp;out&nbsp;n&nbsp;=&nbsp;Z&nbsp;-&gt;&nbsp;Finite'&nbsp;n<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;:&nbsp;conat,&nbsp;out&nbsp;n&nbsp;=&nbsp;Z&nbsp;-&gt;&nbsp;Finite'&nbsp;n<br/>
 |&nbsp;Finite'_succ&nbsp;:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;n'&nbsp;:&nbsp;conat,&nbsp;out&nbsp;n&nbsp;=&nbsp;S&nbsp;n'&nbsp;-&gt;&nbsp;Finite'&nbsp;n'&nbsp;-&gt;&nbsp;Finite'&nbsp;n.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;forall&nbsp;n&nbsp;n'&nbsp;:&nbsp;conat,&nbsp;out&nbsp;n&nbsp;=&nbsp;S&nbsp;n'&nbsp;-&gt;&nbsp;Finite'&nbsp;n'&nbsp;-&gt;&nbsp;Finite'&nbsp;n.<br/>
 <br/>
 [global] Hint Constructors Finite' : core. *)</span><br/>
 
@@ -863,15 +863,15 @@ Problem polega na tym, że <span class="inlinecode"><span class="id" title="var"
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Even2F</span> (<span class="id" title="var">n</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 | <span class="id" title="var">Even2_Z</span>  :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">Hn</span> : <span class="id" title="var">out</span> <span class="id" title="var">n</span> = <span class="id" title="var">Z</span>, <span class="id" title="var">Even2F</span> <span class="id" title="var">n</span> <span class="id" title="var">P</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">Hn</span> : <span class="id" title="var">out</span> <span class="id" title="var">n</span> = <span class="id" title="var">Z</span>, <span class="id" title="var">Even2F</span> <span class="id" title="var">n</span> <span class="id" title="var">P</span><br/>
 | <span class="id" title="var">Even2_SS</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n'</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">Hn</span> : <span class="id" title="var">out</span> <span class="id" title="var">n</span> = <span class="id" title="var">S</span> <span class="id" title="var">n'</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">n'</span> -&gt; <span class="id" title="var">Even2F</span> <span class="id" title="var">n</span> <span class="id" title="var">P</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n'</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">Hn</span> : <span class="id" title="var">out</span> <span class="id" title="var">n</span> = <span class="id" title="var">S</span> <span class="id" title="var">n'</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">P</span> <span class="id" title="var">n'</span> -&gt; <span class="id" title="var">Even2F</span> <span class="id" title="var">n</span> <span class="id" title="var">P</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Inductive</span> <span class="id" title="var">Odd2F</span> (<span class="id" title="var">n</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">conat</span> -&gt; <span class="id" title="keyword">Prop</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 | <span class="id" title="var">Odd2_S</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n'</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">Hn</span> : <span class="id" title="var">out</span> <span class="id" title="var">n</span> = <span class="id" title="var">S</span> <span class="id" title="var">n'</span>) (<span class="id" title="var">HOdd</span> : <span class="id" title="var">P</span> <span class="id" title="var">n'</span>), <span class="id" title="var">Odd2F</span> <span class="id" title="var">n</span> <span class="id" title="var">P</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">n'</span> : <span class="id" title="var">conat</span>) (<span class="id" title="var">Hn</span> : <span class="id" title="var">out</span> <span class="id" title="var">n</span> = <span class="id" title="var">S</span> <span class="id" title="var">n'</span>) (<span class="id" title="var">HOdd</span> : <span class="id" title="var">P</span> <span class="id" title="var">n'</span>), <span class="id" title="var">Odd2F</span> <span class="id" title="var">n</span> <span class="id" title="var">P</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Even2'</span> (<span class="id" title="var">n</span> : <span class="id" title="var">conat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
