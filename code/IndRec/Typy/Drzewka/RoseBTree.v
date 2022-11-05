@@ -12,42 +12,42 @@ Arguments N {A} _ _.
 
 Inductive SameShape {A : Type} : RBT A -> RBT A -> Prop :=
 | SameShape_L :
-        forall x y : A, SameShape (L x) (L y)
+    forall x y : A, SameShape (L x) (L y)
 | SameShape_N :
-        forall t1 t1' t2 t2' : RBT A,
-          SameShape t1 t1' -> SameShape t2 t2' ->
-            SameShape (N t1 t2) (N t1' t2').
+    forall t1 t1' t2 t2' : RBT A,
+      SameShape t1 t1' -> SameShape t2 t2' ->
+        SameShape (N t1 t2) (N t1' t2').
 
 Inductive DifferentShape {A : Type} : RBT A -> RBT A -> Prop :=
 | DifferentShape_LN :
-        forall (x : A) (t1 t2 : RBT A),
-          DifferentShape (L x) (N t1 t2)
+    forall (x : A) (t1 t2 : RBT A),
+      DifferentShape (L x) (N t1 t2)
 | DifferentShape_NL :
-        forall (x : A) (t1 t2 : RBT A),
-          DifferentShape (N t1 t2) (L x)
+    forall (x : A) (t1 t2 : RBT A),
+      DifferentShape (N t1 t2) (L x)
 | DifferentShape_N_rec_l :
-        forall t1 t1' t2 t2' : RBT A,
-          DifferentShape t1 t1' -> DifferentShape (N t1 t2) (N t1' t2')
+    forall t1 t1' t2 t2' : RBT A,
+      DifferentShape t1 t1' -> DifferentShape (N t1 t2) (N t1' t2')
 | DifferentShape_N_rec_r :
-        forall t1 t1' t2 t2' : RBT A,
-          DifferentShape t2 t2' -> DifferentShape (N t1 t2) (N t1' t2').
+    forall t1 t1' t2 t2' : RBT A,
+      DifferentShape t2 t2' -> DifferentShape (N t1 t2) (N t1' t2').
 
 Inductive RBTEq {A : Type} : RBT A -> RBT A -> Type :=
 | RBTEq_L :
-        forall x y : A, x = y -> RBTEq (L x) (L y)
+    forall x y : A, x = y -> RBTEq (L x) (L y)
 | RBTEq_N :
-        forall t1 t1' t2 t2' : RBT A,
-          RBTEq t1 t1' -> RBTEq t2 t2' -> RBTEq (N t1 t2) (N t1' t2').
+    forall t1 t1' t2 t2' : RBT A,
+      RBTEq t1 t1' -> RBTEq t2 t2' -> RBTEq (N t1 t2) (N t1' t2').
 
 Inductive RBTNeq {A : Type} : RBT A -> RBT A -> Type :=
 | RBTNeq_L :
-        forall x y : A, x <> y -> RBTNeq (L x) (L y)
+    forall x y : A, x <> y -> RBTNeq (L x) (L y)
 | RBTNeq_N_l :
-        forall t1 t1' t2 t2' : RBT A,
-          RBTNeq t1 t1' -> RBTNeq (N t1 t2) (N t1' t2')
+    forall t1 t1' t2 t2' : RBT A,
+      RBTNeq t1 t1' -> RBTNeq (N t1 t2) (N t1' t2')
 | RBTNeq_N_r :
-        forall t1 t1' t2 t2' : RBT A,
-          RBTNeq t2 t2' -> RBTNeq (N t1 t2) (N t1' t2').
+    forall t1 t1' t2 t2' : RBT A,
+      RBTNeq t2 t2' -> RBTNeq (N t1 t2) (N t1' t2').
 
 Ltac inv H := inversion H; subst; clear H.
 
@@ -60,31 +60,31 @@ Qed.
 
 Inductive Exists {A : Type} (P : A -> Prop) : RBT A -> Type :=
 | Exists_L :
-        forall x : A, P x -> Exists P (L x)
+    forall x : A, P x -> Exists P (L x)
 | Exists_NL :
-        forall t1 t2 : RBT A, Exists P t1 -> Exists P (N t1 t2)
+    forall t1 t2 : RBT A, Exists P t1 -> Exists P (N t1 t2)
 | Exists_NR :
-        forall t1 t2 : RBT A, Exists P t2 -> Exists P (N t1 t2). 
+    forall t1 t2 : RBT A, Exists P t2 -> Exists P (N t1 t2). 
 
 Inductive Forall {A : Type} (P : A -> Prop) : RBT A -> Prop :=
 | Forall_ L :
-        forall x : A, P x -> Forall P (L x)
+    forall x : A, P x -> Forall P (L x)
 | Forall_N :
-        forall t1 t2 : RBT A,
-          Forall P t1 -> Forall P t2 -> Forall P (N t1 t2).
+    forall t1 t2 : RBT A,
+      Forall P t1 -> Forall P t2 -> Forall P (N t1 t2).
 
 Inductive DirectSubterm {A : Type} : RBT A -> RBT A -> Prop :=
 | DS_L :
-        forall t1 t2 : RBT A, DirectSubterm t1 (N t1 t2)
+    forall t1 t2 : RBT A, DirectSubterm t1 (N t1 t2)
 | DS_R :
-        forall t1 t2 : RBT A, DirectSubterm t2 (N t1 t2).
+    forall t1 t2 : RBT A, DirectSubterm t2 (N t1 t2).
 
 Inductive Subterm {A : Type} : RBT A -> RBT A -> Prop :=
 | Subterm_DirectSubterm :
-        forall t1 t2 : RBT A, DirectSubterm t1 t2 -> Subterm t1 t2
+    forall t1 t2 : RBT A, DirectSubterm t1 t2 -> Subterm t1 t2
 | Subterm_step :
-        forall t1 t2 t3 : RBT A,
-          Subterm t1 t2 -> DirectSubterm t2 t3 -> Subterm t1 t3.
+    forall t1 t2 t3 : RBT A,
+      Subterm t1 t2 -> DirectSubterm t2 t3 -> Subterm t1 t3.
 
 Lemma Subterm_L :
   forall {A : Type} {t1 t2 : RBT A},
@@ -116,26 +116,26 @@ Defined.
 
 Inductive Dup {A : Type} : RBT A -> Type :=
 | Dup_both :
-        forall (x : A) (t1 t2 : RBT A),
-          Exists (fun y => x = y) t1 ->
-          Exists (fun y => x = y) t2 ->
-            Dup (N t1 t2)
+    forall (x : A) (t1 t2 : RBT A),
+      Exists (fun y => x = y) t1 ->
+      Exists (fun y => x = y) t2 ->
+        Dup (N t1 t2)
 | Dup_l :
-        forall t1 t2 : RBT A,
-          Dup t1 -> Dup (N t1 t2)
+    forall t1 t2 : RBT A,
+      Dup t1 -> Dup (N t1 t2)
 | Dup_r :
-        forall t1 t2 : RBT A,
-          Dup t2 -> Dup (N t1 t2).
+    forall t1 t2 : RBT A,
+      Dup t2 -> Dup (N t1 t2).
 
 Inductive Exactly {A : Type} (P : A -> Prop) : nat -> RBT A -> Type :=
 | Exactly_L_yes :
-        forall x : A, P x -> Exactly P 1 (L x)
+    forall x : A, P x -> Exactly P 1 (L x)
 | Exactly_L_no :
-        forall x : A, ~ P x -> Exactly P 0 (L x)
+    forall x : A, ~ P x -> Exactly P 0 (L x)
 | Exactly_N :
-        forall (t1 t2 : RBT A) (n1 n2 : nat),
-          Exactly P n1 t1 -> Exactly P n2 t2 ->
-            Exactly P (n1 + n2) (N t1 t2).
+    forall (t1 t2 : RBT A) (n1 n2 : nat),
+      Exactly P n1 t1 -> Exactly P n2 t2 ->
+        Exactly P (n1 + n2) (N t1 t2).
 
 Require Import Equality ProofIrrelevance.
 
@@ -178,13 +178,13 @@ Qed.
 
 Inductive AtLeast {A : Type} (P : A -> Prop) : nat -> RBT A -> Type :=
 | AtLeast_0 :
-        forall t : RBT A, AtLeast P 0 t
+    forall t : RBT A, AtLeast P 0 t
 | AtLeast_L :
-        forall x : A, P x -> AtLeast P 1 (L x)
+    forall x : A, P x -> AtLeast P 1 (L x)
 | AtLeast_N :
-        forall (t1 t2 : RBT A) (n1 n2 : nat),
-          AtLeast P n1 t1 -> AtLeast P n2 t2 ->
-            AtLeast P (n1 + n2) (N t1 t2).
+    forall (t1 t2 : RBT A) (n1 n2 : nat),
+      AtLeast P n1 t1 -> AtLeast P n2 t2 ->
+        AtLeast P (n1 + n2) (N t1 t2).
 
 Lemma Exactly_AtLeast :
   forall {A : Type} {P : A -> Prop} {n : nat} {t : RBT A},
@@ -198,13 +198,13 @@ Qed.
 
 Inductive AtMost {A : Type} (P : A -> Prop) : nat -> RBT A -> Type :=
 | AtMost_L :
-        forall x : A, AtMost P 1 (L x)
+    forall x : A, AtMost P 1 (L x)
 | AtMost_L_not :
-        forall x : A, ~ P x -> AtMost P 0 (L x)
+    forall x : A, ~ P x -> AtMost P 0 (L x)
 | AtMost_N :
-        forall (t1 t2 : RBT A) (n1 n2 : nat),
-          AtMost P n1 t1 -> AtMost P n2 t2 ->
-            AtMost P (n1 + n2) (N t1 t2).
+    forall (t1 t2 : RBT A) (n1 n2 : nat),
+      AtMost P n1 t1 -> AtMost P n2 t2 ->
+        AtMost P (n1 + n2) (N t1 t2).
 
 Fixpoint bind {A B : Type} (t : RBT A) (f : A -> RBT B) : RBT B :=
 match t with

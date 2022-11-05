@@ -147,24 +147,24 @@ Parameter unzipWith :
 
 Inductive Elem {B A : Type} (x : A) : InfTree B A -> Prop :=
 | Elem_here :
-        forall f : B -> InfTree B A, Elem x (N x f)
+    forall f : B -> InfTree B A, Elem x (N x f)
 | Elem_there :
-        forall (f : B -> InfTree B A) (b : B),
-          Elem x (f b) -> Elem x (N x f).
+    forall (f : B -> InfTree B A) (b : B),
+      Elem x (f b) -> Elem x (N x f).
 
 Inductive Exists {B A : Type} (P : A -> Prop) : InfTree B A -> Prop :=
 | Exists_here :
-        forall (x : A) (f : B -> InfTree B A),
-          P x -> Exists P (N x f)
+    forall (x : A) (f : B -> InfTree B A),
+      P x -> Exists P (N x f)
 | Exists_there :
-        forall (x : A) (f : B -> InfTree B A) (b : B),
-          Exists P (f b) -> Exists P (N x f).
+    forall (x : A) (f : B -> InfTree B A) (b : B),
+      Exists P (f b) -> Exists P (N x f).
 
 Inductive Forall {B A : Type} (P : A -> Prop) : InfTree B A -> Prop :=
 | Forall_E : Forall P E
 | Forall_N :
-        forall (x : A) (f : B -> InfTree B A),
-          (forall b : B, Forall P (f b)) -> Forall P (N x f).
+    forall (x : A) (f : B -> InfTree B A),
+      (forall b : B, Forall P (f b)) -> Forall P (N x f).
 
 (*
 Parameter Dup : forall A : Type, BTree A -> Prop.
@@ -178,34 +178,34 @@ Inductive SameShape
   {A B C : Type} : InfTree A B -> InfTree A C -> Prop :=
 | SS_E : SameShape E E
 | SS_N :
-        forall
-          (x : B) (y : C)
-          (f : A -> InfTree A B) (g : A -> InfTree A C),
-            (forall a : A, SameShape (f a) (g a)) ->
-              SameShape (N x f) (N y g).
+    forall
+      (x : B) (y : C)
+      (f : A -> InfTree A B) (g : A -> InfTree A C),
+        (forall a : A, SameShape (f a) (g a)) ->
+          SameShape (N x f) (N y g).
 
 Inductive InfTreeDirectSubterm
   {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
 | ITDS_E :
-        forall (x : A) (f : B -> InfTree B A) (b : B),
-          InfTreeDirectSubterm (f b) (N x f).
+    forall (x : A) (f : B -> InfTree B A) (b : B),
+      InfTreeDirectSubterm (f b) (N x f).
 
 Inductive InfTreeSubterm
   {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
 | ITS_refl :
-        forall t : InfTree B A, InfTreeSubterm t t
+    forall t : InfTree B A, InfTreeSubterm t t
 | ITS_step :
-        forall t1 t2 t3 : InfTree B A,
-          InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
-            InfTreeSubterm t1 t3.
+    forall t1 t2 t3 : InfTree B A,
+      InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
+        InfTreeSubterm t1 t3.
 
 Inductive InfTreeEq
   {B A : Type} : InfTree B A -> InfTree B A -> Prop :=
 | ITE_E : InfTreeEq E E
 | ITE_N :
-        forall (v1 v2 : A) (f1 f2 : B -> InfTree B A),
-          v1 = v2 -> (forall b : B, InfTreeEq (f1 b) (f2 b)) ->
-            InfTreeEq (N v1 f1) (N v2 f2).
+    forall (v1 v2 : A) (f1 f2 : B -> InfTree B A),
+      v1 = v2 -> (forall b : B, InfTreeEq (f1 b) (f2 b)) ->
+        InfTreeEq (N v1 f1) (N v2 f2).
 
 Require Import FunctionalExtensionality.
 

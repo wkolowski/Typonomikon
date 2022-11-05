@@ -14,10 +14,10 @@ end.
 
 Inductive fG : nat -> nat -> Prop :=
 | fG_gt100 :
-        forall n : nat, 100 < n -> fG n (n - 10)
+    forall n : nat, 100 < n -> fG n (n - 10)
 | fG_le100 :
-        forall n r1 r2 : nat,
-          n <= 100 -> fG (n + 11) r1 -> fG r1 r2 -> fG n r2.
+    forall n r1 r2 : nat,
+      n <= 100 -> fG (n + 11) r1 -> fG r1 r2 -> fG n r2.
 
 Definition F (f : nat -> nat) (n : nat) : nat :=
   if 100 <? n then n - 10 else f (f (11 + n)).
@@ -26,15 +26,15 @@ Definition Steps := nat.
 
 Inductive fAcc : nat -> Steps -> (nat -> nat) -> Type :=
 | fAcc_gt100 :
-        forall (n : nat) (k : Steps) (f : nat -> nat),
-          100 < n ->
-            fAcc n (S k) f
+    forall (n : nat) (k : Steps) (f : nat -> nat),
+      100 < n ->
+        fAcc n (S k) f
 | fAcc_le100 :
-        forall (n : nat) (k1 k2 : Steps) (f : nat -> nat),
-          n <= 100 ->
-          fAcc (11 + n) k1 f ->
-          fAcc (iter F k1 f (11 + n)) k2 f ->
-            fAcc n (S (k1 + k2)) f.
+    forall (n : nat) (k1 k2 : Steps) (f : nat -> nat),
+      n <= 100 ->
+      fAcc (11 + n) k1 f ->
+      fAcc (iter F k1 f (11 + n)) k2 f ->
+        fAcc n (S (k1 + k2)) f.
 
 Definition fDom (n : nat) : Type :=
   {k : Steps & (*forall f : nat -> nat,*) fAcc n k id}.

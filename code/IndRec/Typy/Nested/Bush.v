@@ -127,8 +127,9 @@ Require Import FunctionalExtensionality.
 Unset Positivity Checking.
 Inductive Bush' {A : Type} (P : A -> Type) : Bush A -> Type :=
 | Leaf' : Bush' P Leaf
-| Node' : forall (x : A) (b : Bush (Bush A)),
-                P x -> Bush' (Bush' P) b -> Bush' P (Node x b).
+| Node' :
+    forall (x : A) (b : Bush (Bush A)),
+      P x -> Bush' (Bush' P) b -> Bush' P (Node x b).
 Set Positivity Checking.
 
 Fixpoint Bush_ind_deep

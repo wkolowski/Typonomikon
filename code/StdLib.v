@@ -525,9 +525,9 @@ Set Warnings "require-in-module".
 
 Inductive Ex {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Prop :=
 | Ex_hd :
-        forall s1 s2 : Stream A, R (hd s1) (hd s2) -> Ex R s1 s2
+    forall s1 s2 : Stream A, R (hd s1) (hd s2) -> Ex R s1 s2
 | Ex_tl :
-        forall s1 s2 : Stream A, Ex R (tl s1) (tl s2) -> Ex R s1 s2.
+    forall s1 s2 : Stream A, Ex R (tl s1) (tl s2) -> Ex R s1 s2.
 
 #[refine]
 #[export]

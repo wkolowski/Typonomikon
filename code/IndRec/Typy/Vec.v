@@ -320,10 +320,12 @@ Qed.
 
 (* begin hide *)
 Inductive elem {A : Type} : A -> forall n : nat, vec A n -> Prop :=
-| elem_head : forall (n : nat) (x : A) (l : vec A n),
-        elem x (vcons x l)
-| elem_cons : forall (n : nat) (x h : A) (t : vec A n),
-        elem x t -> elem x (vcons h t).
+| elem_head :
+    forall (n : nat) (x : A) (l : vec A n),
+      elem x (vcons x l)
+| elem_cons :
+    forall (n : nat) (x h : A) (t : vec A n),
+      elem x t -> elem x (vcons h t).
 
 #[global] Hint Constructors elem : core.
 (* end hide *)

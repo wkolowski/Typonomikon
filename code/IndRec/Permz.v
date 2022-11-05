@@ -6,15 +6,15 @@ Module Insert.
 
 Inductive Insert {A : Type} (x : A) : list A -> list A -> Type :=
 | Insert_here :
-        forall l : list A, Insert x l (x :: l)
+    forall l : list A, Insert x l (x :: l)
 | Insert_there :
-        forall (h : A) (t t' : list A), Insert x t t' -> Insert x (h :: t) (h :: t').
+    forall (h : A) (t t' : list A), Insert x t t' -> Insert x (h :: t) (h :: t').
 
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
 | Perm_nil    : Perm [] []
 | Perm_Insert :
-        forall (x : A) (l1 l1' l2 l2' : list A),
-          Insert x l1 l1' -> Insert x l2 l2' -> Perm l1 l2 -> Perm l1' l2'.
+    forall (x : A) (l1 l1' l2 l2' : list A),
+      Insert x l1 l1' -> Insert x l2 l2' -> Perm l1 l2 -> Perm l1' l2'.
 
 #[global] Hint Constructors Insert Perm : core.
 
@@ -93,16 +93,16 @@ Module Insert2.
 
 (* Inductive Insert {A : Type} (x : A) : list A -> list A -> Type :=
 | Insert_here :
-        forall l : list A, Insert x l (x :: l)
+    forall l : list A, Insert x l (x :: l)
 | Insert_there :
-        forall (h : A) (t t' : list A), Insert x t t' -> Insert x (h :: t) (h :: t').
+    forall (h : A) (t t' : list A), Insert x t t' -> Insert x (h :: t) (h :: t').
  *)
 
 Inductive Perm {A : Type} : list A -> list A -> Prop :=
 | Perm_nil    : Perm [] []
 | Perm_insert :
-        forall (x : A) (l1 l2 r1 r2 : list A),
-          Perm (l1 ++ l2) (r1 ++ r2) -> Perm (l1 ++ x :: l2) (r1 ++ x :: r2).
+    forall (x : A) (l1 l2 r1 r2 : list A),
+      Perm (l1 ++ l2) (r1 ++ r2) -> Perm (l1 ++ x :: l2) (r1 ++ x :: r2).
 
 #[global] Hint Constructors Perm : core.
 
@@ -176,14 +176,14 @@ Inductive BTree (A : Type) : Type :=
 
 Inductive Position {A : Type} : BTree A -> Type :=
 | here :
-        forall (v : A) (l r : BTree A),
-          Position (N v l r)
+    forall (v : A) (l r : BTree A),
+      Position (N v l r)
 | left :
-        forall (v : A) (l r : BTree A),
-          Position l -> Position (N v l r)
+    forall (v : A) (l r : BTree A),
+      Position l -> Position (N v l r)
 | right :
-        forall (v : A) (l r : BTree A),
-          Position r -> Position (N v l r).
+    forall (v : A) (l r : BTree A),
+      Position r -> Position (N v l r).
 
 Fixpoint get {A : Type} {t : BTree A} (p : Position t) : A :=
 match p with

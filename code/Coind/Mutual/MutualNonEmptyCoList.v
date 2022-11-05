@@ -32,17 +32,17 @@ Inductive CoListSimF
   (G : NonEmptyCoList A -> NonEmptyCoList A -> Prop)
   (l1 l2 : CoList' A) : Prop :=
 | Empty'    :
-        CLOut l1 = Empty -> CLOut l2 = Empty -> CoListSimF F G l1 l2
+    CLOut l1 = Empty -> CLOut l2 = Empty -> CoListSimF F G l1 l2
 | NonEmpty' :
-        forall l1' l2' : NonEmptyCoList A,
-          G l1' l2' -> CoListSimF F G l1 l2.
+    forall l1' l2' : NonEmptyCoList A,
+      G l1' l2' -> CoListSimF F G l1 l2.
 
 Inductive NonEmptyCoListSimF
   {A : Type} (F : CoList' A -> CoList' A -> Prop)
   (l1 l2 : NonEmptyCoList A) : Prop :=
 | Cons' :
-        forall (h1 h2 : A) (t1 t2 : CoList' A),
-          h1 = h2 -> F t1 t2 -> NonEmptyCoListSimF F l1 l2.
+    forall (h1 h2 : A) (t1 t2 : CoList' A),
+      h1 = h2 -> F t1 t2 -> NonEmptyCoListSimF F l1 l2.
 
 Fail CoInductive CoListSim
   {A : Type} : CoList' A -> CoList' A -> Prop :=
@@ -62,14 +62,14 @@ Inductive CoListSimF
   {A : Type} (F : CoList' A -> CoList' A -> Prop)
   (l1 l2 : CoList' A) : Prop :=
 | Empty'    :
-        CLOut l1 = Empty ->
-        CLOut l2 = Empty ->
-          CoListSimF F l1 l2
+    CLOut l1 = Empty ->
+    CLOut l2 = Empty ->
+      CoListSimF F l1 l2
 | NonEmpty' :
-        forall (h1 h2 : A) (t1 t2 : CoList' A),
-          CLOut l1 = NonEmpty {| NECLOut := Cons h1 t1 |} ->
-          CLOut l2 = NonEmpty {| NECLOut := Cons h2 t2 |} ->
-            h1 = h2 -> F t1 t2 -> CoListSimF F l1 l2.
+    forall (h1 h2 : A) (t1 t2 : CoList' A),
+      CLOut l1 = NonEmpty {| NECLOut := Cons h1 t1 |} ->
+      CLOut l2 = NonEmpty {| NECLOut := Cons h2 t2 |} ->
+        h1 = h2 -> F t1 t2 -> CoListSimF F l1 l2.
 
 CoInductive CoListSim {A : Type} (l1 l2 : CoList' A) : Prop :=
 {

@@ -2,7 +2,7 @@ Require Import Recdef Nat String Coq.Program.Equality.
 From Typonomikon Require Import F4 D5.
 
 Inductive Cyclic (A : Type) : Type :=
-  | C : forall (start : list A) (cycle : list A), Cyclic A.
+| C : forall (start : list A) (cycle : list A), Cyclic A.
 
 Arguments C {A} _ _.
 

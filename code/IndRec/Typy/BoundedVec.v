@@ -4,10 +4,8 @@
     górne na długość? *)
 
 Inductive BVec (A : Type) : nat -> Type :=
-| Nil  :
-        forall n : nat, BVec A n
-| Cons :
-        forall (h : A) {n : nat} (t : BVec A n), BVec A (S n).
+| Nil  : forall n : nat, BVec A n
+| Cons : forall (h : A) {n : nat} (t : BVec A n), BVec A (S n).
 
 Arguments Nil {A n}.
 Arguments Cons {A} _ {n} _.

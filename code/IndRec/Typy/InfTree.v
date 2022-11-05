@@ -150,38 +150,38 @@ Parameter unzipWith :
 (** [Elem] jest głupie - po coma istnieć, skoro jest [Exists]? *)
 Inductive Elem {A : Type} (x : A) : InfTree A -> Prop :=
 | Elem_here :
-        forall (B : Type) (f : B -> InfTree A),
-          Elem x (N x B f)
+    forall (B : Type) (f : B -> InfTree A),
+      Elem x (N x B f)
 | Elem_there :
-        forall (B : Type) (f : B -> InfTree A) (b : B),
-          Elem x (f b) -> Elem x (N x B f).
+    forall (B : Type) (f : B -> InfTree A) (b : B),
+      Elem x (f b) -> Elem x (N x B f).
 
 Inductive Exists {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
 | Exists_here :
-        forall (x : A) (B : Type) (f : B -> InfTree A),
-          P x -> Exists P (N x B f)
+    forall (x : A) (B : Type) (f : B -> InfTree A),
+      P x -> Exists P (N x B f)
 | Exists_there :
-        forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
-          Exists P (f b) -> Exists P (N x B f).
+    forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
+      Exists P (f b) -> Exists P (N x B f).
 
 Inductive Forall {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
 | Forall_E : Forall P E
 | Forall_N :
-        forall (x : A) (B : Type) (f : B -> InfTree A),
-          (forall b : B, Forall P (f b)) -> Forall P (N x B f).
+    forall (x : A) (B : Type) (f : B -> InfTree A),
+      (forall b : B, Forall P (f b)) -> Forall P (N x B f).
 
 Inductive Dup {A : Type} (P : A -> Prop) : InfTree A -> Prop :=
 | Dup_here :
-        forall v : A, P v ->
-          forall (B : Type) (f : B -> InfTree A) (b : B),
-            Exists P (f b) -> Dup P (N v B f)
+    forall v : A, P v ->
+      forall (B : Type) (f : B -> InfTree A) (b : B),
+        Exists P (f b) -> Dup P (N v B f)
 | Dup_subtrees :
-        forall (v : A) (B : Type) (f : B -> InfTree A) (b1 b2 : B),
-          Exists P (f b1) -> Exists P (f b2) ->
-            b1 <> b2 -> Dup P (N v B f)
+    forall (v : A) (B : Type) (f : B -> InfTree A) (b1 b2 : B),
+      Exists P (f b1) -> Exists P (f b2) ->
+        b1 <> b2 -> Dup P (N v B f)
 | Dup_deeper :
-        forall (v : A) (B : Type) (f : B -> InfTree A) (b : B),
-          Dup P (f b) -> Dup P (N v B f).
+    forall (v : A) (B : Type) (f : B -> InfTree A) (b : B),
+      Dup P (f b) -> Dup P (N v B f).
 
 (*
 Parameter Exactly :
@@ -195,11 +195,11 @@ Parameter AtMost :
 Inductive SameStructure {A B : Type} : InfTree A -> InfTree B -> Prop :=
 | SS_E : SameStructure E E
 | SS_N :
-        forall
-          (x : A) (y : B) (C : Type)
-          (f : C -> InfTree A) (g : C -> InfTree B),
-            (forall c : C, SameStructure (f c) (g c)) ->
-              SameStructure (N x C f) (N y C g).
+    forall
+      (x : A) (y : B) (C : Type)
+      (f : C -> InfTree A) (g : C -> InfTree B),
+        (forall c : C, SameStructure (f c) (g c)) ->
+          SameStructure (N x C f) (N y C g).
 
 (*
 Parameter SameShape : forall A B : Type, BTree A -> BTree B -> Prop.
@@ -208,24 +208,24 @@ Parameter SameShape : forall A B : Type, BTree A -> BTree B -> Prop.
 Inductive InfTreeDirectSubterm
   {A : Type} : InfTree A -> InfTree A -> Prop :=
 | ITDS :
-        forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
-          InfTreeDirectSubterm (f b) (N x B f).
+    forall (x : A) (B : Type) (f : B -> InfTree A) (b : B),
+      InfTreeDirectSubterm (f b) (N x B f).
 
 Inductive InfTreeSubterm
   {A : Type} : InfTree A -> InfTree A -> Prop :=
 | ITS_refl :
-        forall t : InfTree A, InfTreeSubterm t t
+    forall t : InfTree A, InfTreeSubterm t t
 | ITS_step :
-        forall t1 t2 t3 : InfTree A,
-          InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
-            InfTreeSubterm t1 t3.
+    forall t1 t2 t3 : InfTree A,
+      InfTreeDirectSubterm t1 t2 -> InfTreeSubterm t2 t3 ->
+        InfTreeSubterm t1 t3.
 
 Inductive InfTreeEq {A : Type} : InfTree A -> InfTree A -> Prop :=
 | ITE_E : InfTreeEq E E
 | ITE_N :
-        forall {v1 v2 : A} {B : Type} {f1 f2 : B -> InfTree A},
-          v1 = v2 -> (forall b : B, InfTreeEq (f1 b) (f2 b)) ->
-            InfTreeEq (N v1 B f1) (N v2 B f2).
+    forall {v1 v2 : A} {B : Type} {f1 f2 : B -> InfTree A},
+      v1 = v2 -> (forall b : B, InfTreeEq (f1 b) (f2 b)) ->
+        InfTreeEq (N v1 B f1) (N v2 B f2).
 
 Arguments ITE_E {A}.
 Arguments ITE_N {A v1 v2 B f1 f2} _ _.
@@ -290,21 +290,21 @@ Qed.
 
 Inductive InfTreeNeq {A : Type} : InfTree A -> InfTree A -> Prop :=
 | InfTreeNeq_EN :
-        forall (v : A) {B : Type} (f : B -> InfTree A),
-          InfTreeNeq E (N v B f)
+    forall (v : A) {B : Type} (f : B -> InfTree A),
+      InfTreeNeq E (N v B f)
 | InfTreeNeq_NE :
-        forall (v : A) {B : Type} (f : B -> InfTree A),
-          InfTreeNeq (N v B f) E
+    forall (v : A) {B : Type} (f : B -> InfTree A),
+      InfTreeNeq (N v B f) E
 | InfTreeNeq_NN_here :
-        forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A),
-          v1 <> v2 -> InfTreeNeq (N v1 B f1) (N v2 B f2)
+    forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A),
+      v1 <> v2 -> InfTreeNeq (N v1 B f1) (N v2 B f2)
 | InfTreeNeq_NN_there :
-        forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A) (b : B),
-          InfTreeNeq (f1 b) (f2 b) -> InfTreeNeq (N v1 B f1) (N v2 B f2)
+    forall (v1 v2 : A) {B : Type} (f1 f2 : B -> InfTree A) (b : B),
+      InfTreeNeq (f1 b) (f2 b) -> InfTreeNeq (N v1 B f1) (N v2 B f2)
 | InfTreeNeq_branching :
-        forall (v1 v2 : A) (B1 B2 : Type)
-               (f1 : B1 -> InfTree A) (f2 : B2 -> InfTree A),
-                 B1 <> B2 -> InfTreeNeq (N v1 B1 f1) (N v2 B2 f2).
+    forall
+      (v1 v2 : A) (B1 B2 : Type) (f1 : B1 -> InfTree A) (f2 : B2 -> InfTree A),
+        B1 <> B2 -> InfTreeNeq (N v1 B1 f1) (N v2 B2 f2).
 
 Require Import Eqdep.
 

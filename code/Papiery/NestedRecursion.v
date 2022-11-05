@@ -38,63 +38,63 @@ end.
 
 Inductive cbnG : Term Var -> Var -> Term Var -> Term Var -> Type :=
 | cbnG_C :
-        forall (n : nat) (y : Var) (z : Term Var), cbnG (C n) y z (C n)
+    forall (n : nat) (y : Var) (z : Term Var), cbnG (C n) y z (C n)
 | cbnG_V_eq :
-        forall (y : Var) (z r : Term Var),
-          cbnhG z r -> cbnG (V y) y z r
+    forall (y : Var) (z r : Term Var),
+      cbnhG z r -> cbnG (V y) y z r
 | cbnG_V_neq :
-        forall (v y : Var) (z : Term Var),
-          v <> y -> cbnG (V v) y z (V v)
+    forall (v y : Var) (z : Term Var),
+      v <> y -> cbnG (V v) y z (V v)
 | cbnG_Add :
-        forall (t1 t2 : Term Var) (y : Var) (z r1 r2 : Term Var),
-          cbnG t1 y z r1 -> cbnG t2 y z r2 ->
-            cbnG (Add t1 t2) y z (Add r1 r2)
+    forall (t1 t2 : Term Var) (y : Var) (z r1 r2 : Term Var),
+      cbnG t1 y z r1 -> cbnG t2 y z r2 ->
+        cbnG (Add t1 t2) y z (Add r1 r2)
 | cbnG_App :
-        forall (t1 t2 : Term Var) (x y : Var) (z r1 r2 : Term Var),
-          cbnG t1 x t2 r1 -> cbnG r1 y z r2 ->
-            cbnG (App t1 x t2) y z r2
+    forall (t1 t2 : Term Var) (x y : Var) (z r1 r2 : Term Var),
+      cbnG t1 x t2 r1 -> cbnG r1 y z r2 ->
+        cbnG (App t1 x t2) y z r2
 
 with cbnhG : Term Var -> Term Var -> Type :=
 | cbnhG_C :
-        forall n : nat, cbnhG (C n) (C n)
+    forall n : nat, cbnhG (C n) (C n)
 | cbnhG_V :
-        forall x : Var, cbnhG (V x) (V x)
+    forall x : Var, cbnhG (V x) (V x)
 | cbnhG_Add :
-        forall t1 t2 r1 r2 : Term Var,
-          cbnhG t1 r1 -> cbnhG t2 r2 -> cbnhG (Add t1 t2) (Add r1 r2)
+    forall t1 t2 r1 r2 : Term Var,
+      cbnhG t1 r1 -> cbnhG t2 r2 -> cbnhG (Add t1 t2) (Add r1 r2)
 | cbnhG_App :
-        forall (t1 t2 : Term Var) (x : Var) (r : Term Var),
-          cbnG t1 x t2 r -> cbnhG (App t1 x t2) r.
+    forall (t1 t2 : Term Var) (x : Var) (r : Term Var),
+      cbnG t1 x t2 r -> cbnhG (App t1 x t2) r.
 
 Inductive cbnD : Term Var -> Var -> Term Var -> Type :=
 | cbnD_C :
-        forall (n : nat) (y : Var) (z : Term Var), cbnD (C n) y z
+    forall (n : nat) (y : Var) (z : Term Var), cbnD (C n) y z
 | cbnD_V_eq :
-        forall (y : Var) (z : Term Var),
-          cbnhD z -> cbnD (V y) y z
+    forall (y : Var) (z : Term Var),
+      cbnhD z -> cbnD (V y) y z
 | cbnD_V_neq :
-        forall (v y : Var) (z : Term Var),
-          v <> y -> cbnD (V v) y z
+    forall (v y : Var) (z : Term Var),
+      v <> y -> cbnD (V v) y z
 | cbnD_Add :
-        forall (t1 t2 : Term Var) (y : Var) (z : Term Var),
-          cbnD t1 y z -> cbnD t2 y z ->
-            cbnD (Add t1 t2) y z
+    forall (t1 t2 : Term Var) (y : Var) (z : Term Var),
+      cbnD t1 y z -> cbnD t2 y z ->
+        cbnD (Add t1 t2) y z
 | cbnD_App :
-        forall (t1 t2 : Term Var) (x y : Var) (z r : Term Var),
-          cbnG t1 x t2 r -> cbnD r y z ->
-            cbnD (App t1 x t2) y z
+    forall (t1 t2 : Term Var) (x y : Var) (z r : Term Var),
+      cbnG t1 x t2 r -> cbnD r y z ->
+        cbnD (App t1 x t2) y z
 
 with cbnhD : Term Var -> Type :=
 | cbnhD_C :
-        forall n : nat, cbnhD (C n)
+    forall n : nat, cbnhD (C n)
 | cbnhD_V :
-        forall x : Var, cbnhD (V x)
+    forall x : Var, cbnhD (V x)
 | cbnhD_Add :
-        forall t1 t2 : Term Var,
-          cbnhD t1 -> cbnhD t2 -> cbnhD (Add t1 t2)
+    forall t1 t2 : Term Var,
+      cbnhD t1 -> cbnhD t2 -> cbnhD (Add t1 t2)
 | cbnhD_App :
-        forall (t1 t2 : Term Var) (x : Var),
-          cbnD t1 x t2 -> cbnhD (App t1 x t2).
+    forall (t1 t2 : Term Var) (x : Var),
+      cbnD t1 x t2 -> cbnhD (App t1 x t2).
 
 Fixpoint cbn
   {t : Term Var} {y : Var} {z : Term Var} (d : cbnD t y z) : Term Var :=

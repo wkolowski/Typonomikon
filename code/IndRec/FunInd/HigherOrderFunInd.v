@@ -21,18 +21,18 @@ Fail Functional Scheme fmap_ind := Induction for fmap Sort Prop.
 Inductive R {A B : Type} (f : A -> B) : Tree A -> Tree B -> Prop :=
 | R_Empty : R f Empty Empty
 | R_Node  :
-        forall (x : A) (ts : list (Tree A)) (ts' : list (Tree B)),
-          Rs f ts ts' -> R f (Node x ts) (Node (f x) ts')
+    forall (x : A) (ts : list (Tree A)) (ts' : list (Tree B)),
+      Rs f ts ts' -> R f (Node x ts) (Node (f x) ts')
 
 with
   Rs {A B : Type} (f : A -> B)
     : list (Tree A) -> list (Tree B) -> Prop :=
 | Rs_nil  : Rs f [] []
 | Rs_cons :
-        forall
-          (ta : Tree A) (tb : Tree B)
-          (tsa : list (Tree A)) (tsb : list (Tree B)),
-            R f ta tb -> Rs f tsa tsb -> Rs f (ta :: tsa) (tb :: tsb).
+    forall
+      (ta : Tree A) (tb : Tree B)
+      (tsa : list (Tree A)) (tsb : list (Tree B)),
+        R f ta tb -> Rs f tsa tsb -> Rs f (ta :: tsa) (tb :: tsb).
 
 Fixpoint mirror {A : Type} (t : Tree A) : Tree A :=
 match t with

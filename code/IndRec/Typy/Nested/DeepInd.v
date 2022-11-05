@@ -4,8 +4,8 @@ Import ListNotations.
 Inductive ForallT {A : Type} (P : A -> Type) : list A -> Type :=
 | ForallT_nil  : ForallT P []
 | ForallT_cons :
-        forall (h : A) (t : list A),
-          P h -> ForallT P t -> ForallT P (h :: t).
+    forall (h : A) (t : list A),
+      P h -> ForallT P t -> ForallT P (h :: t).
 
 Fixpoint ForallT' {A : Type} (P : A -> Type) (l : list A) : Type :=
 match l with
@@ -55,7 +55,7 @@ Check RoseTree_ind'.
 Inductive RoseTree' {A : Type} (P : A -> Type) : RoseTree A -> Type :=
 | E' : RoseTree' P E
 | N' : forall (x : A) (ts : list (RoseTree A)),
-             P x -> ForallT (RoseTree' P) ts -> RoseTree' P (N x ts).
+         P x -> ForallT (RoseTree' P) ts -> RoseTree' P (N x ts).
 
 Arguments E' {A P}.
 Arguments N' {A P x ts} _ _.

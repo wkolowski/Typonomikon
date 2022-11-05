@@ -16,11 +16,11 @@ Arguments Out {A B} _.
 
 Inductive WF {A B : Type} : SP' A B -> Type :=
 | WF_Put :
-        forall (sp : SP' A B) (h : B) (t : SP' A B),
-          Out sp = PutX h t -> WF sp
+    forall (sp : SP' A B) (h : B) (t : SP' A B),
+      Out sp = PutX h t -> WF sp
 | wF_Get :
-        forall (sp : SP' A B) (get : A -> SP' A B),
-          Out sp = GetX get -> (forall a : A, WF (get a)) -> WF sp.
+    forall (sp : SP' A B) (get : A -> SP' A B),
+      Out sp = GetX get -> (forall a : A, WF (get a)) -> WF sp.
 
 Record SP (A B : Type) : Type :=
 {

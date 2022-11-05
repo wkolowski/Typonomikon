@@ -11,47 +11,47 @@ Arguments N {A} _ _ _.
 Inductive SameShape {A : Type} : BTree A -> BTree A -> Prop :=
 | SameShape_E : SameShape E E
 | SameShape_N :
-        forall (x y : A) (t1 t1' t2 t2' : BTree A),
-          SameShape t1 t1' -> SameShape t2 t2' ->
-            SameShape (N x t1 t2) (N y t1' t2').
+    forall (x y : A) (t1 t1' t2 t2' : BTree A),
+      SameShape t1 t1' -> SameShape t2 t2' ->
+        SameShape (N x t1 t2) (N y t1' t2').
 
 Inductive DifferentShape {A : Type} : BTree A -> BTree A -> Prop :=
 | DifferentShape_EN :
-        forall (x : A) (t1 t2 : BTree A),
-          DifferentShape E (N x t1 t2)
+    forall (x : A) (t1 t2 : BTree A),
+      DifferentShape E (N x t1 t2)
 | DifferentShape_NE :
-        forall (x : A) (t1 t2 : BTree A),
-          DifferentShape E (N x t1 t2)
+    forall (x : A) (t1 t2 : BTree A),
+      DifferentShape E (N x t1 t2)
 | DifferentShape_N_rec_l :
-        forall (x y : A) (t1 t1' t2 t2' : BTree A),
-          DifferentShape t1 t1' ->
-            DifferentShape (N x t1 t2) (N y t1' t2')
+    forall (x y : A) (t1 t1' t2 t2' : BTree A),
+      DifferentShape t1 t1' ->
+        DifferentShape (N x t1 t2) (N y t1' t2')
 | DifferentShape_N_rec_r :
-        forall (x y : A) (t1 t1' t2 t2' : BTree A),
-          DifferentShape t2 t2' ->
-            DifferentShape (N x t1 t2) (N y t1' t2').
+    forall (x y : A) (t1 t1' t2 t2' : BTree A),
+      DifferentShape t2 t2' ->
+        DifferentShape (N x t1 t2) (N y t1' t2').
 
 Inductive BTreeEq {A : Type} : BTree A -> BTree A -> Type :=
 | BTreeEq_E : BTreeEq E E
 | BTreeEq_N :
-        forall (x y : A) (t1 t1' t2 t2' : BTree A),
-          x = y -> BTreeEq t1 t1' -> BTreeEq t2 t2' ->
-            BTreeEq (N x t1 t2) (N y t1' t2').
+    forall (x y : A) (t1 t1' t2 t2' : BTree A),
+      x = y -> BTreeEq t1 t1' -> BTreeEq t2 t2' ->
+        BTreeEq (N x t1 t2) (N y t1' t2').
 
 Inductive BTreeNeq {A : Type} : BTree A -> BTree A -> Type :=
 | BTreeNeq_EN :
-        forall (v : A) (l r : BTree A), BTreeNeq E (N v l r)
+    forall (v : A) (l r : BTree A), BTreeNeq E (N v l r)
 | BTreeNeq_NE :
-        forall (v : A) (l r : BTree A), BTreeNeq (N v l r) E
+    forall (v : A) (l r : BTree A), BTreeNeq (N v l r) E
 | BTreeNeq_N_v :
-        forall (x y : A) (l1 r1 l2 r2 : BTree A),
-          x <> y -> BTreeNeq (N x l1 r1) (N y l2 r2)
+    forall (x y : A) (l1 r1 l2 r2 : BTree A),
+      x <> y -> BTreeNeq (N x l1 r1) (N y l2 r2)
 | BTreeNeq_N_l :
-        forall (x y : A) (l1 r1 l2 r2 : BTree A),
-          BTreeNeq l1 l2 -> BTreeNeq (N x l1 r1) (N y l2 r2)
+    forall (x y : A) (l1 r1 l2 r2 : BTree A),
+      BTreeNeq l1 l2 -> BTreeNeq (N x l1 r1) (N y l2 r2)
 | BTreeNeq_N_r :
-        forall (x y : A) (l1 r1 l2 r2 : BTree A),
-          BTreeNeq r1 r2 -> BTreeNeq (N x l1 r1) (N y l2 r2).
+    forall (x y : A) (l1 r1 l2 r2 : BTree A),
+      BTreeNeq r1 r2 -> BTreeNeq (N x l1 r1) (N y l2 r2).
 
 Ltac inv H := inversion H; subst; clear H.
 
@@ -64,33 +64,33 @@ Qed.
 
 Inductive Exists {A : Type} (P : A -> Prop) : BTree A -> Prop :=
 | Exists_N :
-        forall (x : A) (l r : BTree A),
-          P x -> Exists P (N x l r)
+    forall (x : A) (l r : BTree A),
+      P x -> Exists P (N x l r)
 | Exists_NL :
-        forall (x : A) (l r : BTree A),
-          Exists P l -> Exists P (N x l r)
+    forall (x : A) (l r : BTree A),
+      Exists P l -> Exists P (N x l r)
 | Exists_NR :
-        forall (x : A) (l r : BTree A),
-          Exists P r -> Exists P (N x l r).
+    forall (x : A) (l r : BTree A),
+      Exists P r -> Exists P (N x l r).
 
 Inductive Forall {A : Type} (P : A -> Prop) : BTree A -> Prop :=
 | Forall_E : Forall P E
 | Forall_N :
-        forall (x : A) (l r : BTree A),
-          P x -> Forall P l -> Forall P r -> Forall P (N x l r).
+    forall (x : A) (l r : BTree A),
+      P x -> Forall P l -> Forall P r -> Forall P (N x l r).
 
 Inductive DirectSubterm {A : Type} : BTree A -> BTree A -> Prop :=
 | DS_L :
-        forall (x : A) (l r : BTree A), DirectSubterm l (N x l r)
+    forall (x : A) (l r : BTree A), DirectSubterm l (N x l r)
 | DS_R :
-        forall (x : A) (l r : BTree A), DirectSubterm r (N x l r).
+    forall (x : A) (l r : BTree A), DirectSubterm r (N x l r).
 
 Inductive Subterm {A : Type} : BTree A -> BTree A -> Prop :=
 | Subterm_DirectSubterm :
-        forall t1 t2 : BTree A, DirectSubterm t1 t2 -> Subterm t1 t2
+    forall t1 t2 : BTree A, DirectSubterm t1 t2 -> Subterm t1 t2
 | Subterm_step :
-        forall t1 t2 t3 : BTree A,
-          Subterm t1 t2 -> DirectSubterm t2 t3 -> Subterm t1 t3.
+    forall t1 t2 t3 : BTree A,
+      Subterm t1 t2 -> DirectSubterm t2 t3 -> Subterm t1 t3.
 
 Lemma Subterm_E :
   forall {A : Type} {t1 t2 : BTree A},
@@ -118,11 +118,11 @@ Defined.
 
 Inductive Dup {A : Type} : BTree A -> Type :=
 | Dup_N_xl :
-        forall (x : A) (l r : BTree A),
-          Exists (fun y => x = y) l -> Dup (N x l r)
+    forall (x : A) (l r : BTree A),
+      Exists (fun y => x = y) l -> Dup (N x l r)
 | Dup_N_xr :
-        forall (x : A) (l r : BTree A),
-          Exists (fun y => x = y) r -> Dup (N x l r)
+    forall (x : A) (l r : BTree A),
+      Exists (fun y => x = y) r -> Dup (N x l r)
 | Dup_N_lr :
         forall (x' x : A) (l r : BTree A),
           Exists (fun y => x' = y) l -> Exists (fun y => x' = y) r -> Dup (N x l r)
@@ -136,13 +136,13 @@ Inductive Dup {A : Type} : BTree A -> Type :=
 Inductive Exactly {A : Type} (P : A -> Prop) : nat -> BTree A -> Type :=
 | Exactly_E : Exactly P 0 E
 | Exactly_N_yes :
-        forall (x : A) (l r : BTree A) (n m : nat),
-          Exactly P n l -> Exactly P m r -> P x ->
-            Exactly P (1 + n + m) (N x l r)
+    forall (x : A) (l r : BTree A) (n m : nat),
+      Exactly P n l -> Exactly P m r -> P x ->
+        Exactly P (1 + n + m) (N x l r)
 | Exactly_N_no :
-        forall (x : A) (l r : BTree A) (n m : nat),
-          Exactly P n l -> Exactly P m r -> ~ P x ->
-            Exactly P (n + m) (N x l r).
+    forall (x : A) (l r : BTree A) (n m : nat),
+      Exactly P n l -> Exactly P m r -> ~ P x ->
+        Exactly P (n + m) (N x l r).
 
 Require Import Equality.
 

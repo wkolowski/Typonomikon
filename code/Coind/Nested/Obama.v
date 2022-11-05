@@ -58,48 +58,48 @@ Set Positivity Checking.
 
 Inductive SubObama : forall {A B : Type}, Obama A -> Obama B -> Type :=
 | SubObama_hds :
-        forall {A : Type} (b1 b2 : Obama A),
-          hd b1 = hd b2 -> SubObama (tl b1) (tl b2) -> SubObama b1 b2
+    forall {A : Type} (b1 b2 : Obama A),
+      hd b1 = hd b2 -> SubObama (tl b1) (tl b2) -> SubObama b1 b2
 | SubObama_hd :
-        forall {A : Type} (b1 : Obama A) (b2 : Obama (Obama A)),
-          SubObama b1 (hd b2) -> SubObama b1 b2
+    forall {A : Type} (b1 : Obama A) (b2 : Obama (Obama A)),
+      SubObama b1 (hd b2) -> SubObama b1 b2
 | SubObama_tl :
-        forall {A : Type} (b1 b2 : Obama A),
-          SubObama b1 (tl b2) -> SubObama b1 b2.
+    forall {A : Type} (b1 b2 : Obama A),
+      SubObama b1 (tl b2) -> SubObama b1 b2.
 
 Inductive DirectSubterm : forall {A B : Type}, A -> B -> Type :=
 | DS_hd :
-        forall {A : Type} (b : Obama A),
-          DirectSubterm (hd b) b
+    forall {A : Type} (b : Obama A),
+      DirectSubterm (hd b) b
 | DS_tl :
-        forall {A : Type} (b : Obama A),
-          DirectSubterm (tl b) b.
+    forall {A : Type} (b : Obama A),
+      DirectSubterm (tl b) b.
 
 Inductive Subterm : forall {A B : Type}, Obama A -> Obama B -> Type :=
 | Subterm_step :
-        forall {A B : Type} (b1 : Obama A) (b2 : Obama B),
-          DirectSubterm b1 b2 -> Subterm b1 b2
+    forall {A B : Type} (b1 : Obama A) (b2 : Obama B),
+      DirectSubterm b1 b2 -> Subterm b1 b2
 | Subterm_trans :
-        forall {A B C : Type} (b1 : Obama A) (b2 : Obama B) (b3 : Obama C),
-          DirectSubterm b1 b2 -> Subterm b2 b3 -> Subterm b1 b3.
+    forall {A B C : Type} (b1 : Obama A) (b2 : Obama B) (b3 : Obama C),
+      DirectSubterm b1 b2 -> Subterm b2 b3 -> Subterm b1 b3.
 
 Inductive Swap : forall {A B : Type}, B -> Obama A -> B -> Obama A -> Type :=
 | Swap_hdtl :
-        forall {A : Type} (x : A) (b : Obama A),
-          Swap x b (hd b) {| hd := x; tl := tl b; |}
+    forall {A : Type} (x : A) (b : Obama A),
+      Swap x b (hd b) {| hd := x; tl := tl b; |}
 | Swap_hd :
-        forall {A : Type} (x y : A) (b : Obama (Obama A)) (r : Obama A),
-          Swap x (hd b) y r -> Swap x b y {| hd := r; tl := tl b; |}
+    forall {A : Type} (x y : A) (b : Obama (Obama A)) (r : Obama A),
+      Swap x (hd b) y r -> Swap x b y {| hd := r; tl := tl b; |}
 | Swap_tl :
-        forall {A : Type} (x y : A) (b : Obama A) (r : Obama (Obama A)),
-          Swap x (tl b) y r -> Swap x b y {| hd := hd b; tl := r; |}.
+    forall {A : Type} (x y : A) (b : Obama A) (r : Obama (Obama A)),
+      Swap x (tl b) y r -> Swap x b y {| hd := hd b; tl := r; |}.
 
 Fail Inductive Permutation : forall {A : Type}, Obama A -> Obama A -> Type :=
 | Permutation_refl :
-        forall {A : Type} (b : Obama A), Permutation b b
+    forall {A : Type} (b : Obama A), Permutation b b
 | Permutation_step :
-        forall {A : Type} (x y : A) (b1 b2 b2' b3 : Obama A),
-          Swap (hd b1) b1 y b1' -> Permutation {| hd := y; tl := tl b1'; |} b2 -> Permutation b1 b3.
+    forall {A : Type} (x y : A) (b1 b2 b2' b3 : Obama A),
+      Swap (hd b1) b1 y b1' -> Permutation {| hd := y; tl := tl b1'; |} b2 -> Permutation b1 b3.
 Set Positivity Checking.
 
 Axiom sim_eq :

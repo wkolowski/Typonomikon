@@ -193,9 +193,9 @@ Inductive vec (A : Type) : nat -> Type :=
 Inductive minlist {A : Type} (R : A -> A -> Prop) : A -> Type :=
 | msingl : forall x : A, minlist R x
 | mcons_le :
-        forall {min : A} (x : A), R x min -> minlist R min -> minlist R x
+    forall {min : A} (x : A), R x min -> minlist R min -> minlist R x
 | mcons_gt :
-        forall {min : A} (x : A), ~ R x min -> minlist R min -> minlist R min.
+    forall {min : A} (x : A), ~ R x min -> minlist R min -> minlist R min.
 
 (** Zdefiniuj typ list indeksowanych przez dowolny monoid. *)
 
@@ -204,8 +204,9 @@ Inductive minlist {A : Type} (R : A -> A -> Prop) : A -> Type :=
 
 Inductive hBTree (A : Type) : nat -> Type :=
 | hEmpty : hBTree A 0
-| hNode : A -> forall {n m : nat},
-                     hBTree A n -> hBTree A m -> hBTree A (S (max n m)).
+| hNode :
+    A -> forall {n m : nat},
+      hBTree A n -> hBTree A m -> hBTree A (S (max n m)).
 
 (** Zdefiniuj typ list, które mogą trzymać wartości różnych typów.
     Typ każdego elementu listy nie jest jednak dowolny - jest on

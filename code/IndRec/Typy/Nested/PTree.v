@@ -239,8 +239,9 @@ Qed.
 (*
 Inductive PTree' {A : Type} (P : A -> Type) : PTree A -> Type :=
 | L x' : PTree' P L x
-| Layer' : forall (x : A) (t : PTree (prod A A)),
-                 P x -> PTree' (fun '(x, y) => prod (P x) (P y)) t -> PTree' P (Layer x t).
+| Layer' :
+    forall (x : A) (t : PTree (prod A A)),
+      P x -> PTree' (fun '(x, y) => prod (P x) (P y)) t -> PTree' P (Layer x t).
 
 Fixpoint PTree_ind_deep
   (P : forall (A : Type) (Q : A -> Type), PTree A -> Type)

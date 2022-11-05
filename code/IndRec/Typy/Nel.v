@@ -91,10 +91,10 @@ end.
 
 Inductive Elem {A} : A -> nel A -> Prop :=
 | ElemZ :
-        forall h : A, Elem h [h]
+    forall h : A, Elem h [h]
 | ElemS :
-        forall (x h : A) (t : nel A),
-          Elem x t -> Elem x (h :: t).
+    forall (x h : A) (t : nel A),
+      Elem x t -> Elem x (h :: t).
 
 Fixpoint snoc {A : Type} (x : A) (l : nel A) : nel A :=
 match l with
@@ -269,17 +269,17 @@ Compute extrasperse 0 (1 :: 2 :: 3 :: 4 :: [5]).
 
 Inductive Exists {A : Type} (P : A -> Type) : nel A -> Type :=
 | ExZ  :
-        forall h : A, P h -> Exists P [h]
+    forall h : A, P h -> Exists P [h]
 | ExZ' :
-        forall (h : A) (t : nel A), P h -> Exists P (h :: t)
+    forall (h : A) (t : nel A), P h -> Exists P (h :: t)
 | ExS  :
-        forall (h : A) (t : nel A), Exists P t -> Exists P (h :: t).
+    forall (h : A) (t : nel A), Exists P t -> Exists P (h :: t).
 
 Inductive Forall {A : Type} (P : A -> Type) : nel A -> Type :=
 | FZ :
-        forall h : A, P h -> Forall P [h]
+    forall h : A, P h -> Forall P [h]
 | FS :
-        forall (h : A) (t : nel A), P h -> Forall P t -> Forall P (h :: t).
+    forall (h : A) (t : nel A), P h -> Forall P t -> Forall P (h :: t).
 
 Inductive DirectSubterm {A : Type} : nel A -> nel A -> Type :=
 | DS_cons  : forall (h : A) (t : nel A), DirectSubterm t (h :: t).

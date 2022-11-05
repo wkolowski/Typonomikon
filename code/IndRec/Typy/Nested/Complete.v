@@ -286,8 +286,9 @@ Parameter unzipWith :
 
 Inductive Complete' {A : Type} (P : A -> Type) : Complete A -> Type :=
 | Empty' : Complete' P Empty
-| Layer' : forall (x : A) (t : Complete (prod A A)),
-                 P x -> Complete' (fun '(x, y) => prod (P x) (P y)) t -> Complete' P (Layer x t).
+| Layer' :
+    forall (x : A) (t : Complete (prod A A)),
+      P x -> Complete' (fun '(x, y) => prod (P x) (P y)) t -> Complete' P (Layer x t).
 
 Fixpoint Complete_ind_deep
   (P : forall (A : Type) (Q : A -> Type), Complete A -> Type)

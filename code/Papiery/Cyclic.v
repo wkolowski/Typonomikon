@@ -39,18 +39,18 @@ Definition CoCons {A : Type} (h : A) (t : CoList A) : CoList A :=
 
 Inductive FiniteCoList {A : Type} (l : CoList A) : Type :=
 | FiniteCoNil :
-        uncons l = CoNilF -> FiniteCoList l
+    uncons l = CoNilF -> FiniteCoList l
 | FiniteCoCons :
-        forall (h : A) (t: CoList A),
-          uncons l = CoConsF h t ->
-            FiniteCoList t -> FiniteCoList l.
+    forall (h : A) (t: CoList A),
+      uncons l = CoConsF h t ->
+        FiniteCoList t -> FiniteCoList l.
 
 Inductive simF {A : Type} (l1 l2 : CoList A) (R : CoList A -> CoList A -> Type) : Type :=
 | CoNilsF (H1 : uncons l1 = CoNilF) (H2 : uncons l2 = CoNilF)
 | CoConssF :
-        forall (h1 h2 : A) (t1 t2 : CoList A),
-          uncons l1 = CoConsF h1 t1 -> uncons l2 = CoConsF h2 t2 ->
-            h1 = h2 -> R t1 t2 -> simF l1 l2 R.
+    forall (h1 h2 : A) (t1 t2 : CoList A),
+      uncons l1 = CoConsF h1 t1 -> uncons l2 = CoConsF h2 t2 ->
+        h1 = h2 -> R t1 t2 -> simF l1 l2 R.
 
 CoInductive sim {A : Type} (l1 l2 : CoList A) : Type :=
 {
@@ -96,8 +96,8 @@ end.
 Inductive FiniteCList {A : Type} : CList A -> Type :=
 | FNil  : FiniteCList Nil
 | FCons :
-        forall (h : A) (t : CList A),
-          FiniteCList t -> FiniteCList (Cons h t).
+    forall (h : A) (t : CList A),
+      FiniteCList t -> FiniteCList (Cons h t).
 
 Lemma Finite_check :
   forall {A : Type} (l : CList A),
@@ -221,8 +221,7 @@ Unset Positivity Checking.
 Inductive CList' (A : Type) : SProp -> Type :=
 | Nil  : CList' A Closed
 | Cons : forall {B : SProp} (h : A) (t : CList' A B), CList' A B
-| Rec  : forall (h : A) (r : forall {B : SProp}, CList' A B -> CList' A B),
-               CList' A Closed.
+| Rec  : forall (h : A) (r : forall {B : SProp}, CList' A B -> CList' A B), CList' A Closed.
 Set Positivity Checking.
 
 Arguments Nil  {A}.
@@ -558,7 +557,7 @@ Definition repeat {A V : Type} (x : A) : CList A V :=
 Inductive Finite {A V : Type} : CList A V -> Type :=
 | FNil   : Finite Nil
 | FRCons : forall (h : A) (t : CList A (option V)),
-                 Finite t -> Finite (RCons h t).
+             Finite t -> Finite (RCons h t).
 
 Lemma shift_replicate :
   forall (n : nat) {A V : Type} (x : A),
@@ -747,20 +746,20 @@ Fail Compute take 20 (intersperse 0 from1to5).
 
 Inductive Elem {A V : Type} (x : A) : CList A V -> Type :=
 | Zero :
-        forall l : CList A (option V), Elem x (RCons x l)
+    forall l : CList A (option V), Elem x (RCons x l)
 | Succ :
-        forall (h : A) (t : CList A (option V)),
-          Elem x t -> Elem x (RCons h t).
+    forall (h : A) (t : CList A (option V)),
+      Elem x t -> Elem x (RCons h t).
 
 Inductive Dup {A V : Type} : CList A V -> Type :=
 | DupVar :
-        forall v : V, Dup (Var v)
+    forall v : V, Dup (Var v)
 | DupHere :
-        forall (h : A) (t : CList A (option V)),
-          Elem h t -> Dup (RCons h t)
+    forall (h : A) (t : CList A (option V)),
+      Elem h t -> Dup (RCons h t)
 | DupThere :
-        forall (h : A) (t : CList A (option V)),
-          Dup t -> Dup (RCons h t).
+    forall (h : A) (t : CList A (option V)),
+      Dup t -> Dup (RCons h t).
 
 Lemma NoDup_Finite :
   forall {A V : Type} (l : CList A V),
@@ -784,11 +783,11 @@ Qed.
 
 Inductive Ex {A V : Type} (P : A -> Type) : CList A V -> Type :=
 | ExHere :
-        forall (x : A) (l : CList A (option V)),
-          P x -> Ex P (RCons x l)
+    forall (x : A) (l : CList A (option V)),
+      P x -> Ex P (RCons x l)
 | ExThere :
-        forall (h : A) (t : CList A (option V)),
-          Ex P t -> Ex P (RCons h t).
+    forall (h : A) (t : CList A (option V)),
+      Ex P t -> Ex P (RCons h t).
 
 Fixpoint takeWhile {A V : Type} (p : A -> bool) (l : CList A V) : CList A V :=
 match l with

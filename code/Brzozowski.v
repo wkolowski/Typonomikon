@@ -32,25 +32,25 @@ Inductive Matches {A : Type} : list A -> Regex A -> Prop :=
 | MEpsilon : Matches [] Epsilon
 | MChar : forall x : A, Matches [x] (Char x)
 | MSeq :
-        forall (l1 l2 : list A) (r1 r2 : Regex A),
-          Matches l1 r1 -> Matches l2 r2 ->
-            Matches (l1 ++ l2) (Seq r1 r2)
+    forall (l1 l2 : list A) (r1 r2 : Regex A),
+      Matches l1 r1 -> Matches l2 r2 ->
+        Matches (l1 ++ l2) (Seq r1 r2)
 | MOrL :
-        forall (l : list A) (r1 r2 : Regex A),
-          Matches l r1 -> Matches l (Or r1 r2)
+    forall (l : list A) (r1 r2 : Regex A),
+      Matches l r1 -> Matches l (Or r1 r2)
 | MOrR :
-        forall (l : list A) (r1 r2 : Regex A),
-          Matches l r2 -> Matches l (Or r1 r2)
+    forall (l : list A) (r1 r2 : Regex A),
+      Matches l r2 -> Matches l (Or r1 r2)
 | MStar :
-        forall (l : list A) (r : Regex A),
-          MatchesStar l r -> Matches l (Star r)
+    forall (l : list A) (r : Regex A),
+      MatchesStar l r -> Matches l (Star r)
 
 with MatchesStar {A : Type} : list A -> Regex A -> Prop :=
 | MS_Epsilon :
-        forall r : Regex A, MatchesStar [] r
+    forall r : Regex A, MatchesStar [] r
 | MS_Seq :
-        forall (h : A) (t l : list A) (r : Regex A),
-          Matches (h :: t) r -> MatchesStar l r -> MatchesStar ((h :: t) ++ l) r.
+    forall (h : A) (t l : list A) (r : Regex A),
+      Matches (h :: t) r -> MatchesStar l r -> MatchesStar ((h :: t) ++ l) r.
 
 #[global] Hint Constructors Matches MatchesStar : core.
 
