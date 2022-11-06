@@ -1395,19 +1395,19 @@ Arguments coer {A B} _.
 #[export]
 Instance iso_refl (A : Type) : iso A A :=
 {
-    coel := id;
-    coer := id;
-    coel_coer _ := eq_refl;
-    coer_coel _ := eq_refl;
+  coel := id;
+  coer := id;
+  coel_coer _ := eq_refl;
+  coer_coel _ := eq_refl;
 }.
 
 #[export]
 Instance iso_sym {A B : Type} (i : iso A B) : iso B A :=
 {
-    coel := coer i;
-    coer := coel i;
-    coel_coer := coer_coel;
-    coer_coel := coel_coer;
+  coel := coer i;
+  coer := coel i;
+  coel_coer := coer_coel;
+  coer_coel := coel_coer;
 }.
 
 #[refine]
@@ -1415,8 +1415,8 @@ Instance iso_sym {A B : Type} (i : iso A B) : iso B A :=
 Instance iso_trans
   {A B C : Type} (i : iso A B) (j : iso B C) : iso A C :=
 {
-    coel a := coel j (coel i a);
-    coer c := coer i (coer j c);
+  coel a := coel j (coel i a);
+  coer c := coer i (coer j c);
 }.
 Proof.
   intros. rewrite 2!coel_coer. reflexivity.
@@ -1428,8 +1428,8 @@ Defined.
 Instance iso_pres_prod
   {A A' B B' : Type} (i : iso A A') (j : iso B B') : iso (A * B) (A' * B') :=
 {
-    coel '(a, b) := (coel i a, coel j b);
-    coer '(a, b) := (coer i a, coer j b);
+  coel '(a, b) := (coel i a, coel j b);
+  coer '(a, b) := (coer i a, coer j b);
 }.
 Proof.
   destruct a. rewrite !coel_coer. reflexivity.
@@ -1442,8 +1442,8 @@ Defined.
 #[export]
 Instance prod_assoc (A B C : Type) : iso (A * (B * C)) ((A * B) * C) :=
 {
-    coel '(a, (b, c)) := ((a, b), c);
-    coer '((a, b), c) := (a, (b, c));
+  coel '(a, (b, c)) := ((a, b), c);
+  coer '((a, b), c) := (a, (b, c));
 }.
 Proof.
   intros [a [b c]]. reflexivity.
@@ -1454,8 +1454,8 @@ Defined.
 #[export]
 Instance prod_unit_l (A : Type) : iso (unit * A) A :=
 {
-    coel '(_, a) := a;
-    coer a := (tt, a);
+  coel '(_, a) := a;
+  coer a := (tt, a);
 }.
 Proof.
   intros [[]]. reflexivity.
@@ -1466,8 +1466,8 @@ Defined.
 #[export]
 Instance prod_unit_r (A : Type) : iso (A * unit) A :=
 {
-    coel '(a, _) := a;
-    coer a := (a, tt);
+  coel '(a, _) := a;
+  coer a := (a, tt);
 }.
 Proof.
   intros [a []]. reflexivity.
@@ -1478,8 +1478,8 @@ Defined.
 #[export]
 Instance prod_comm {A B : Type} : iso (A * B) (B * A) :=
 {
-    coel '(a, b) := (b, a);
-    coer '(b, a) := (a, b);
+  coel '(a, b) := (b, a);
+  coer '(b, a) := (a, b);
 }.
 Proof.
   destruct a. cbn. reflexivity.
@@ -1495,8 +1495,8 @@ Defined.
 #[export]
 Instance sum_empty_l (A : Type) : iso (Empty_set + A) A :=
 {
-    coel x := match x with | inl e => match e with end | inr a => a end;
-    coer := inr;
+  coel x := match x with | inl e => match e with end | inr a => a end;
+  coer := inr;
 }.
 Proof.
   destruct a as [[] | a]. reflexivity.
@@ -1507,8 +1507,8 @@ Defined.
 #[export]
 Instance sum_empty_r (A : Type) : iso (A + Empty_set) A :=
 {
-    coel x := match x with | inl a => a | inr e => match e with end end;
-    coer := inl;
+  coel x := match x with | inl a => a | inr e => match e with end end;
+  coer := inl;
 }.
 Proof.
   destruct a as [a | []]. reflexivity.
@@ -1557,8 +1557,8 @@ end.
 #[export]
 Instance iso_nat_option_nat : iso nat (option nat) :=
 {
-    coel n := match n with | 0 => None | S n' => Some n' end;
-    coer o := match o with | None => 0 | Some n => S n end;
+  coel n := match n with | 0 => None | S n' => Some n' end;
+  coer o := match o with | None => 0 | Some n => S n end;
 }.
 Proof.
   destruct a; reflexivity.
@@ -1583,16 +1583,16 @@ end.
 #[export]
 Instance list_char (A : Type) : iso (list A) (option (A * list A)) :=
 {
-    coel l :=
-      match l with
-      | []     => None
-      | h :: t => Some (h, t)
-      end;
-    coer o :=
-      match o with
-      | None        => []
-      | Some (h, t) => h :: t
-      end;
+  coel l :=
+    match l with
+    | []     => None
+    | h :: t => Some (h, t)
+    end;
+  coer o :=
+    match o with
+    | None        => []
+    | Some (h, t) => h :: t
+    end;
 }.
 Proof.
   destruct a; reflexivity.
@@ -1612,8 +1612,8 @@ From Typonomikon Require Import F3.
 #[export]
 Instance Stream_char (A : Type) : iso (Stream A) (A * Stream A) :=
 {
-    coel s := (hd s, tl s);
-    coer '(a, s) := {| hd := a; tl := s |}
+  coel s := (hd s, tl s);
+  coer '(a, s) := {| hd := a; tl := s |}
 }.
 Proof.
   destruct a. cbn. reflexivity.
@@ -1645,8 +1645,8 @@ end.
 #[export]
 Instance iso_nat_sum_nat_nat : iso nat (nat + nat) :=
 {
-    coel := div2;
-    coer := undiv2;
+  coel := div2;
+  coer := undiv2;
 }.
 Proof.
   intro. functional induction (div2 a); cbn.
@@ -1838,8 +1838,8 @@ Qed.
 #[export]
 Instance iso_nat_prod_nat_nat : iso nat (nat * nat) :=
 {
-    coel := goto;
-    coer := comefrom;
+  coel := goto;
+  coer := comefrom;
 }.
 Proof.
   apply comefrom_goto.
@@ -1899,8 +1899,8 @@ Qed.
 #[export]
 Instance iso_list_vlist (A : Type) : iso (list A) (vlist A) :=
 {
-    coel := vectorize;
-    coer := listize;
+  coel := vectorize;
+  coer := listize;
 }.
 Proof.
   induction a as [| h t]; cbn in *.
@@ -1941,8 +1941,8 @@ end.
 #[export]
 Instance vec_S (A : Type) (n : nat) : iso (vec A (S n)) (A * vec A n) :=
 {
-    coel v := (head v, tail v);
-    coer '(h, t) := vcons h t;
+  coel v := (head v, tail v);
+  coer '(h, t) := vcons h t;
 }.
 Proof.
   intro. refine (match a with vcons _ _ => _ end). cbn. reflexivity.
@@ -2003,8 +2003,8 @@ end.
 Instance iso_pres_option
   (A B : Type) (i : iso A B) : iso (option A) (option B) :=
 {
-    coel := fmap_option (coel i);
-    coer := fmap_option (coer i);
+  coel := fmap_option (coel i);
+  coer := fmap_option (coer i);
 }.
 Proof.
   destruct a; f_equal; cbn; f_equal. apply coel_coer.

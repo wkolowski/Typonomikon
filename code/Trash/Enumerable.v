@@ -16,27 +16,27 @@ Arguments enum _ {Enumerable} _.
 #[export]
 Instance Enumerable_Empty_set : Enumerable Empty_set :=
 {
-    enum n := []
+  enum n := []
 }.
 
 #[export]
 Instance Enumerable_unit : Enumerable unit :=
 {
-    enum n :=
-    match n with
-    | 1 => [tt]
-    | _ => []
-    end
+  enum n :=
+  match n with
+  | 1 => [tt]
+  | _ => []
+  end
 }.
 
 #[export]
 Instance Enumerable_bool : Enumerable bool :=
 {
-    enum n :=
-    match n with
-    | 1 => [false; true]
-    | _ => []
-    end
+  enum n :=
+  match n with
+  | 1 => [false; true]
+  | _ => []
+  end
 }.
 
 #[export]
@@ -44,25 +44,25 @@ Instance Enumerable_prod
   (A B : Type) (instA : Enumerable A) (instB : Enumerable B)
   : Enumerable (A * B)%type :=
 {
-    enum n := liftA2 pair (enum A n) (enum B n)
+  enum n := liftA2 pair (enum A n) (enum B n)
 }.
 
 #[export]
 Instance Enumerable_nat : Enumerable nat :=
 {
-    enum n := [n]
+  enum n := [n]
 }.
 
 #[export]
 Instance Enumerable_list
   (A : Type) (inst : Enumerable A) : Enumerable (list A) :=
 {
-    enum :=
-      fix f (n : nat) : list (list A) :=
-      match n with
-      | 0 => [[]]
-      | S n' => liftA2 cons (enum A n) (f n')
-      end
+  enum :=
+    fix f (n : nat) : list (list A) :=
+    match n with
+    | 0 => [[]]
+    | S n' => liftA2 cons (enum A n) (f n')
+    end
 }.
 
 #[export]
@@ -71,10 +71,10 @@ Instance Enumerable_sigma
   (instA : Enumerable A) (instP : forall x : A, Enumerable (P x)) :
     Enumerable {x : A & P x} :=
 {
-    enum n := do
-      x <- enum A n;
-      p <- enum (P x) n;
-      pure $ existT P x p
+  enum n := do
+    x <- enum A n;
+    p <- enum (P x) n;
+    pure $ existT P x p
 }.
 
 Fixpoint cumulative (A : Type) {inst : Enumerable A} (n : nat) : list A :=

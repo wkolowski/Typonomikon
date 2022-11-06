@@ -43,7 +43,7 @@ Class ExactlyFinite (A : Type) : Type :=
 #[export]
 Instance ExactlyFinite_False : ExactlyFinite False :=
 {
-    elems := [];
+  elems := [];
 }.
 Proof.
   all: destruct x.
@@ -53,7 +53,7 @@ Defined.
 #[export]
 Instance ExactlyFinite_unit : ExactlyFinite unit :=
 {
-    elems := [tt];
+  elems := [tt];
 }.
 Proof.
   destruct x. constructor.
@@ -105,13 +105,13 @@ Qed.
 #[export]
 Instance MerelyExactlyFinite_False : MerelyExactlyFinite False :=
 {
-    mef := truncated ExactlyFinite_False
+  mef := truncated ExactlyFinite_False
 }.
 
 #[export]
 Instance MerelyExactlyFinite_unit : MerelyExactlyFinite unit :=
 {
-    mef := truncated ExactlyFinite_unit
+  mef := truncated ExactlyFinite_unit
 }.
 
 End MerelyExactlyFinite.

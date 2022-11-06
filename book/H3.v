@@ -5634,11 +5634,6 @@ Proof.
 Qed.
 (* end hide *)
 
-
-
-
-
-
 #[export]
 Instance CoReflexive_Symmetric_WeaklyAntisymmetric :
   forall {A : Type} (R : rel A),
@@ -6618,7 +6613,7 @@ Class Closure
 #[export]
 Instance Closure_rc {A : Type} : Closure (@rc A) :=
 {
-    step := rc_step;
+  step := rc_step;
 }.
 (* begin hide *)
 Proof.

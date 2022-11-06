@@ -236,12 +236,12 @@ Nie będziemy po raz trzeci powtarzać (kulawej) definicji liczb
 #[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">EqDec_bool</span> : <span class="id" title="var">EqDec</span> <span class="id" title="var">bool</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dec</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> <span class="id" title="var">b'</span> : <span class="id" title="var">bool</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">b</span>, <span class="id" title="var">b'</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">true</span>, <span class="id" title="var">true</span> =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">false</span>, <span class="id" title="var">false</span> =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">eq_dec</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> <span class="id" title="var">b'</span> : <span class="id" title="var">bool</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">b</span>, <span class="id" title="var">b'</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">true</span>, <span class="id" title="var">true</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">false</span>, <span class="id" title="var">false</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 }.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span>, <span class="id" title="var">y</span>; <span class="id" title="tactic">split</span>; <span class="id" title="tactic">trivial</span>; <span class="id" title="tactic">inversion</span> 1.<br/>
@@ -251,8 +251,7 @@ Nie będziemy po raz trzeci powtarzać (kulawej) definicji liczb
 </div>
 
 <div class="doc">
-Instancje klas definiujemy przy pomocy słowa kluczowego <span class="inlinecode">#[<span class="id" title="tactic">refine</span>]</span>
-<span class="inlinecode"><span class="id" title="keyword">Instance</span></span>.
+Instancje klas definiujemy przy pomocy słowa kluczowego <span class="inlinecode"><span class="id" title="keyword">Instance</span></span>.
     Jeżeli używamy klasy jako interfejsu, który implementować mogą typy,
     to zazwyczaj będziemy potrzebować tylko jednej instancji, więc jej
     nazwa będzie niemal identyczna jak jej typ (dzięki temu łatwo będzie
@@ -393,12 +392,12 @@ Instancje klas definiujemy przy pomocy słowa kluczowego <span class="inlinecode
 #[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">EqDec_option</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">_</span> : <span class="id" title="var">EqDec</span> <span class="id" title="var">A</span>) : <span class="id" title="var">EqDec</span> (<span class="id" title="var">option</span> <span class="id" title="var">A</span>) :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eq_dec</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">opt1</span> <span class="id" title="var">opt2</span> : <span class="id" title="var">option</span> <span class="id" title="var">A</span> =&gt;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">opt1</span>, <span class="id" title="var">opt2</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">a</span>, <span class="id" title="var">Some</span> <span class="id" title="var">a'</span> =&gt; <span class="id" title="var">eq_dec</span> <span class="id" title="var">a</span> <span class="id" title="var">a'</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span>, <span class="id" title="var">None</span> =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">eq_dec</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">opt1</span> <span class="id" title="var">opt2</span> : <span class="id" title="var">option</span> <span class="id" title="var">A</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">opt1</span>, <span class="id" title="var">opt2</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">a</span>, <span class="id" title="var">Some</span> <span class="id" title="var">a'</span> =&gt; <span class="id" title="var">eq_dec</span> <span class="id" title="var">a</span> <span class="id" title="var">a'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span>, <span class="id" title="var">None</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 }.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span>, <span class="id" title="var">y</span>; <span class="id" title="tactic">split</span>; <span class="id" title="tactic">trivial</span>; <span class="id" title="tactic">try</span> (<span class="id" title="tactic">inversion</span> 1; <span class="id" title="tactic">fail</span>); <span class="id" title="tactic">intro</span>.<br/>

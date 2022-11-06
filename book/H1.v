@@ -122,7 +122,7 @@ Definition UA : Type :=
 #[export]
 Instance iso_id : iso bool bool :=
 {
-    f := fun b => b;
+  f := fun b => b;
 }.
 Proof.
   exists (fun b => b). reflexivity.
@@ -133,7 +133,7 @@ Defined.
 #[export]
 Instance iso_negb : iso bool bool :=
 {
-    f := negb;
+  f := negb;
 }.
 Proof.
   exists negb. destruct a; reflexivity.

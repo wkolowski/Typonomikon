@@ -124,7 +124,7 @@ end.
 #[export]
 Instance Searchable_conat : Searchable conat :=
 {
-    search := search_conat;
+  search := search_conat;
 }.
 Proof.
   intros p H c.
@@ -164,7 +164,7 @@ Instance Searchable_prod
   {A B : Type}
   (SA : Searchable A) (SB : Searchable B) : Searchable (A * B) :=
 {
-    search := @search_prod _ _ SA SB
+  search := @search_prod _ _ SA SB
 }.
 Proof.
   intros p H [a b].
@@ -183,10 +183,10 @@ Instance Searchable_sum
   {A B : Type}
   (SA : Searchable A) (SB : Searchable B) : Searchable (A + B) :=
 {
-    search p :=
-      let a := search (fun a => p (inl a)) in
-      let b := search (fun b => p (inr b)) in
-        if p (inl a) then inl a else inr b
+  search p :=
+    let a := search (fun a => p (inl a)) in
+    let b := search (fun b => p (inr b)) in
+      if p (inl a) then inl a else inr b
 }.
 Proof.
   intros p H x.

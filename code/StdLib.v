@@ -42,7 +42,7 @@ Print Graph.
 #[export]
 Instance Dec_Even (n : nat) : Dec (Even n) :=
 {
-    b := isEven n
+  b := isEven n
 }.
 Proof.
   apply isEven_spec.
@@ -69,8 +69,8 @@ Coercion cast (d : Dec) : bool := b.
 #[export]
 Instance Dec_Even (n : nat) : Dec :=
 {
-    P := Even n;
-    b := isEven n;
+  P := Even n;
+  b := isEven n;
 }.
 Proof.
   apply isEven_spec.
@@ -144,7 +144,7 @@ Arguments dec_spec _ {Dec}.
 #[export]
 Instance Dec_isEven (n : nat) : Dec (Even n) :=
 {
-    dec := isEven n;
+  dec := isEven n;
 }.
 Proof.
   apply isEven_spec.
@@ -159,7 +159,7 @@ Compute not_so_silly 6.
 #[export]
 Instance Dec_False : Dec False :=
 {
-    dec := false
+  dec := false
 }.
 Proof.
   constructor.
@@ -170,7 +170,7 @@ Defined.
 #[export]
 Instance Dec_True : Dec True :=
 {
-    dec := true
+  dec := true
 }.
 Proof.
   constructor.
@@ -181,7 +181,7 @@ Defined.
 #[export]
 Instance Dec_or {P Q : Prop} (DP : Dec P) (DQ : Dec Q) : Dec (P \/ Q) :=
 {
-    dec := dec P || dec Q
+  dec := dec P || dec Q
 }.
 Proof.
   destruct (dec_spec P), (dec_spec Q); cbn; constructor.
@@ -193,7 +193,7 @@ Defined.
 #[export]
 Instance Dec_and {P Q : Prop} (DP : Dec P) (DQ : Dec Q) : Dec (P /\ Q) :=
 {
-    dec := dec P && dec Q
+  dec := dec P && dec Q
 }.
 Proof.
   destruct (dec_spec P), (dec_spec Q); cbn; constructor.
@@ -205,7 +205,7 @@ Defined.
 #[export]
 Instance Dec_impl {P Q : Prop} (DP : Dec P) (DQ : Dec Q) : Dec (P -> Q) :=
 {
-    dec := negb (dec P) || dec Q
+  dec := negb (dec P) || dec Q
 }.
 Proof.
   destruct (dec_spec P), (dec_spec Q);
@@ -221,7 +221,7 @@ Defined.
 Instance Dec_not
   {P : Prop} (DP : Dec P) : Dec (~ P) :=
 {
-    dec := negb (dec P)
+  dec := negb (dec P)
 }.
 Proof.
   destruct (dec_spec P); constructor.
@@ -236,7 +236,7 @@ Instance Dec_exists
   (SA : Searchable A) (DP : forall x : A, Dec (P x))
   : Dec (exists x : A, P x) :=
 {
-    dec := dec (P (search (fun x : A => dec (P x))))
+  dec := dec (P (search (fun x : A => dec (P x))))
 }.
 Proof.
   destruct (@dec_spec _ (DP (search (fun x : A => dec (P x)))));
@@ -259,7 +259,7 @@ Instance Dec_forall
   (SA : Searchable A) (DP : forall x : A, Dec (P x))
   : Dec (forall x : A, P x) :=
 {
-    dec := negb (dec (~ P (search (fun x : A => dec (~ P x)))))
+  dec := negb (dec (~ P (search (fun x : A => dec (~ P x)))))
 }.
 Proof.
   destruct (dec_spec (~ P (search (fun x : A => dec (~ P x)))));
@@ -292,7 +292,7 @@ Notation "x ~=~ y" := (weq x y) (at level 50).
 #[export]
 Instance WeakEquality_Unit : WeakEquality unit :=
 {
-    weq := fun _ _ => True;
+  weq := fun _ _ => True;
 }.
 Proof.
   trivial.
@@ -302,7 +302,7 @@ Defined.
 #[export]
 Instance WeakEquality_Empty : WeakEquality False :=
 {
-    weq := fun _ _ => True;
+  weq := fun _ _ => True;
 }.
 Proof.
   trivial.
@@ -313,7 +313,7 @@ Defined.
 Instance WeakEquality_Fun
   {A B : Type} : WeakEquality (A -> B) :=
 {
-    weq := fun f g => forall x : A, f x = g x;
+  weq := fun f g => forall x : A, f x = g x;
 }.
 Proof.
   intros f g [] x. reflexivity.
@@ -324,7 +324,7 @@ Defined.
 Instance WeakEquality_Fun'
   {A B : Type} (WEB : WeakEquality B): WeakEquality (A -> B) :=
 {
-    weq := fun f g => forall x : A, weq (f x) (g x);
+  weq := fun f g => forall x : A, weq (f x) (g x);
 }.
 Proof.
   intros f g [] x. apply weq_spec. reflexivity.
@@ -335,12 +335,12 @@ Defined.
 Instance WeakEquality_Sum
   {A B : Type} (WEA : WeakEquality A) (WEB : WeakEquality B) : WeakEquality (A + B) :=
 {
-    weq := fun x y =>
-      match x, y with
-      | inl a1, inl a2 => weq a1 a2
-      | inr b1, inr b2 => weq b1 b2
-      | _     , _      => False
-      end
+  weq := fun x y =>
+    match x, y with
+    | inl a1, inl a2 => weq a1 a2
+    | inr b1, inr b2 => weq b1 b2
+    | _     , _      => False
+    end
 }.
 Proof.
   destruct x, y; intro H; inversion H; subst; clear H.
@@ -353,10 +353,10 @@ Defined.
 Instance WeakEquality_Prod
   {A B : Type} (WEA : WeakEquality A) (WEB : WeakEquality B) : WeakEquality (A * B) :=
 {
-    weq := fun x y =>
-      match x, y with
-      | (a1, b1), (a2, b2) => weq a1 a2 /\ weq b1 b2
-      end
+  weq := fun x y =>
+    match x, y with
+    | (a1, b1), (a2, b2) => weq a1 a2 /\ weq b1 b2
+    end
 }.
 Proof.
   destruct x, y.
@@ -372,12 +372,12 @@ Defined.
 Instance WeakEquality_List
   {A B : Type} (WEA : WeakEquality A) : WeakEquality (list A) :=
 {
-    weq := fix f (x y : list A) : Prop :=
-      match x, y with
-      | [], [] => True
-      | h1 :: t1, h2 :: t2 => weq h1 h2 /\ f t1 t2
-      | _, _ => False
-      end
+  weq := fix f (x y : list A) : Prop :=
+    match x, y with
+    | [], [] => True
+    | h1 :: t1, h2 :: t2 => weq h1 h2 /\ f t1 t2
+    | _, _ => False
+    end
 }.
 Proof.
   induction x as [| h1 t1]; destruct y as [| h2 t2]; cbn; intro H.
@@ -397,7 +397,7 @@ Set Warnings "require-in-module".
 Instance WeakEquality_Stream
   {A B : Type} (WEA : WeakEquality A) : WeakEquality (Stream A) :=
 {
-    weq := sim;
+  weq := sim;
 }.
 Proof.
   destruct 1. apply sim_refl.
@@ -420,7 +420,7 @@ Notation "x =/= y" := (sdeq x y) (at level 50).
 #[export]
 Instance StrongDisequality_Unit : StrongDisequality unit :=
 {
-    sdeq := fun _ _ => False;
+  sdeq := fun _ _ => False;
 }.
 Proof.
   destruct 1.
@@ -430,7 +430,7 @@ Defined.
 #[export]
 Instance StrongDisequality_Empty : StrongDisequality False :=
 {
-    sdeq := fun _ _ => True;
+  sdeq := fun _ _ => True;
 }.
 Proof.
   destruct x.
@@ -441,13 +441,13 @@ Defined.
 Instance StrongDisequality_Sum
   {A B : Type} (SDA : StrongDisequality A) (SDB : StrongDisequality B) : StrongDisequality (A + B) :=
 {
-    sdeq := fun x y =>
-      match x, y with
-      | inl a1, inl a2 => sdeq a1 a2
-      | inr b1, inr b2 => sdeq b1 b2
-      | inl _ , inr _  => True
-      | inr _ , inl _  => True
-      end
+  sdeq := fun x y =>
+    match x, y with
+    | inl a1, inl a2 => sdeq a1 a2
+    | inr b1, inr b2 => sdeq b1 b2
+    | inl _ , inr _  => True
+    | inr _ , inl _  => True
+    end
 }.
 Proof.
   destruct x, y; intros H1 H2;
@@ -461,10 +461,10 @@ Defined.
 Instance StrongDisequality_Prod
   {A B : Type} (SDA : StrongDisequality A) (SDB : StrongDisequality B) : StrongDisequality (A * B) :=
 {
-    sdeq := fun x y =>
-      match x, y with
-      | (a1, b1), (a2, b2) => sdeq a1 a2 \/ sdeq b1 b2
-      end
+  sdeq := fun x y =>
+    match x, y with
+    | (a1, b1), (a2, b2) => sdeq a1 a2 \/ sdeq b1 b2
+    end
 }.
 Proof.
   destruct x, y; intros H1 H2;
@@ -479,7 +479,7 @@ Defined.
 Instance StrongDisequality_Fun
   {A B : Type} : StrongDisequality (A -> B) :=
 {
-    sdeq := fun f g => exists x : A, f x <> g x;
+  sdeq := fun f g => exists x : A, f x <> g x;
 }.
 Proof.
   intros f g [x H] p. subst. contradiction.
@@ -490,7 +490,7 @@ Defined.
 Instance StrongDisequality_Fun'
   {A B : Type} (SDB : StrongDisequality B) : StrongDisequality (A -> B) :=
 {
-    sdeq := fun f g => exists x : A, sdeq (f x) (g x);
+  sdeq := fun f g => exists x : A, sdeq (f x) (g x);
 }.
 Proof.
   intros f g [x H] p. subst. apply sdeq_spec in H. contradiction.
@@ -501,12 +501,12 @@ Defined.
 Instance StrongDisequality_List
   {A B : Type} (SDA : StrongDisequality A) : StrongDisequality (list A) :=
 {
-    sdeq := fix f (x y : list A) : Prop :=
-      match x, y with
-      | [], [] => False
-      | h1 :: t1, h2 :: t2 => sdeq h1 h2 \/ f t1 t2
-      | _, _ => True
-      end
+  sdeq := fix f (x y : list A) : Prop :=
+    match x, y with
+    | [], [] => False
+    | h1 :: t1, h2 :: t2 => sdeq h1 h2 \/ f t1 t2
+    | _, _ => True
+    end
 }.
 Proof.
   induction x as [| h1 t1];
@@ -534,7 +534,7 @@ Inductive Ex {A : Type} (R : A -> A -> Prop) : Stream A -> Stream A -> Prop :=
 Instance StrongDisequality_Stream
   {A B : Type} (SDA : StrongDisequality A) : StrongDisequality (Stream A) :=
 {
-    sdeq := Ex sdeq;
+  sdeq := Ex sdeq;
 }.
 Proof.
   induction 1; inversion 1; subst.
@@ -561,13 +561,13 @@ Instance Inhabited_Pointed
   (A : Type) (inst : Pointed A)
   : Inhabited A :=
 {
-    inhabitant := point;
+  inhabitant := point;
 }.
 
 #[export]
 Instance Pointed_nat : Pointed nat :=
 {
-    point := 0
+  point := 0
 }.
 
 Module StrongNegation.
@@ -585,7 +585,7 @@ Arguments NOT A {StrongNegation}.
 Instance StrongNegation_Default
   (A : Type) : StrongNegation A | 999 :=
 {
-    NOT := A -> False;
+  NOT := A -> False;
 }.
 Proof.
   trivial.
@@ -597,7 +597,7 @@ Instance StrongNegation_Pointed
   (A : Type) (inst : Pointed A)
   : StrongNegation A :=
 {
-    NOT := False;
+  NOT := False;
 }.
 Proof.
   trivial.
@@ -609,7 +609,7 @@ Instance StrongNegation_Inhabited
   (A : Type) (inst : Inhabited A)
   : StrongNegation A :=
 {
-    NOT := False;
+  NOT := False;
 }.
 Proof.
   trivial.
@@ -620,7 +620,7 @@ Defined.
 Instance StrongNegation_True :
   StrongNegation True :=
 {
-    NOT := False;
+  NOT := False;
 }.
 Proof.
   trivial.
@@ -631,7 +631,7 @@ Defined.
 Instance StrongNegation_False :
   StrongNegation False :=
 {
-    NOT := True;
+  NOT := True;
 }.
 Proof.
   trivial.
@@ -643,7 +643,7 @@ Instance StrongNegation_or
   (P Q : Prop) (PSN : StrongNegation P) (QSN : StrongNegation Q)
   : StrongNegation (P \/ Q) :=
 {
-    NOT := NOT P * NOT Q;
+  NOT := NOT P * NOT Q;
 }.
 Proof.
   destruct 1, 1.
@@ -657,7 +657,7 @@ Instance StrongNegation_and
   (P Q : Prop) (PSN : StrongNegation P) (QSN : StrongNegation Q)
   : StrongNegation (P /\ Q) :=
 {
-    NOT := NOT P + NOT Q;
+  NOT := NOT P + NOT Q;
 }.
 Proof.
   destruct 1, 1.
@@ -671,7 +671,7 @@ Instance StrongNegation_impl
   (P Q : Prop) (QSN : StrongNegation Q)
   : StrongNegation (P -> Q) :=
 {
-    NOT := P * NOT Q;
+  NOT := P * NOT Q;
 }.
 Proof.
   destruct 1. intro pq. apply QSN.
@@ -686,7 +686,7 @@ Instance StrongNegation_forall
   (PSN : forall x : A, StrongNegation (P x))
   : StrongNegation (forall x : A, P x) :=
 {
-    NOT := {x : A & NOT (P x)};
+  NOT := {x : A & NOT (P x)};
 }.
 Proof.
   intros [x np] H.
@@ -702,7 +702,7 @@ Instance StrongNegation_exists
   (PSN : forall x : A, StrongNegation (P x))
   : StrongNegation (exists x : A, P x) :=
 {
-    NOT := forall x : A, NOT (P x);
+  NOT := forall x : A, NOT (P x);
 }.
 Proof.
   intros H [x np]. apply (PSN x).
@@ -717,7 +717,7 @@ Instance StrongNegation_subset
   (PSN : forall x : A, StrongNegation (P x))
   : StrongNegation {x : A | P x} :=
 {
-    NOT := forall x : A, NOT (P x);
+  NOT := forall x : A, NOT (P x);
 }.
 Proof.
   intros H [x np]. apply (PSN x).
@@ -732,7 +732,7 @@ Instance StrongNegation_sigma
   (PSN : forall x : A, StrongNegation (P x))
   : StrongNegation {x : A & P x} :=
 {
-    NOT := forall x : A, NOT (P x);
+  NOT := forall x : A, NOT (P x);
 }.
 Proof.
   intros H [x np]. apply (PSN x).
@@ -761,7 +761,7 @@ Arguments NOT A {StrongNegation}.
 Instance StrongNegation_Default
   (A : Prop) : StrongNegation A | 999 :=
 {
-    NOT := A -> False;
+  NOT := A -> False;
 }.
 Proof.
   trivial.
@@ -773,7 +773,7 @@ Instance StrongNegation_Pointed
   (A : Prop) (inst : Pointed A)
   : StrongNegation A :=
 {
-    NOT := False;
+  NOT := False;
 }.
 Proof.
   trivial.
@@ -785,7 +785,7 @@ Instance StrongNegation_Inhabited
   (A : Prop) (inst : Inhabited A)
   : StrongNegation A :=
 {
-    NOT := False;
+  NOT := False;
 }.
 Proof.
   trivial.
@@ -796,7 +796,7 @@ Defined.
 Instance StrongNegation_True :
   StrongNegation True :=
 {
-    NOT := False;
+  NOT := False;
 }.
 Proof.
   trivial.
@@ -807,7 +807,7 @@ Defined.
 Instance StrongNegation_False :
   StrongNegation False :=
 {
-    NOT := True;
+  NOT := True;
 }.
 Proof.
   trivial.
@@ -819,7 +819,7 @@ Instance StrongNegation_or
   (P Q : Prop) (PSN : StrongNegation P) (QSN : StrongNegation Q)
   : StrongNegation (P \/ Q) :=
 {
-    NOT := NOT P /\ NOT Q;
+  NOT := NOT P /\ NOT Q;
 }.
 Proof.
   destruct 1, 1.
@@ -833,7 +833,7 @@ Instance StrongNegation_and
   (P Q : Prop) (PSN : StrongNegation P) (QSN : StrongNegation Q)
   : StrongNegation (P /\ Q) :=
 {
-    NOT := NOT P \/ NOT Q;
+  NOT := NOT P \/ NOT Q;
 }.
 Proof.
   destruct 1, 1.
@@ -847,7 +847,7 @@ Instance StrongNegation_impl
   (P Q : Prop) (QSN : StrongNegation Q)
   : StrongNegation (P -> Q) :=
 {
-    NOT := P /\ NOT Q;
+  NOT := P /\ NOT Q;
 }.
 Proof.
   destruct 1. intro pq. apply QSN.
@@ -862,7 +862,7 @@ Instance StrongNegation_forall
   (PSN : forall x : A, StrongNegation (P x))
   : StrongNegation (forall x : A, P x) :=
 {
-    NOT := exists x : A, NOT (P x);
+  NOT := exists x : A, NOT (P x);
 }.
 Proof.
   intros [x np] H.
@@ -878,7 +878,7 @@ Instance StrongNegation_exists
   (PSN : forall x : A, StrongNegation (P x))
   : StrongNegation (exists x : A, P x) :=
 {
-    NOT := forall x : A, NOT (P x);
+  NOT := forall x : A, NOT (P x);
 }.
 Proof.
   intros H [x np]. apply (PSN x).
@@ -906,7 +906,7 @@ Arguments TNOT A {StrongNegation}.
 Instance StrongNegation_Default
   (A : Type) : StrongNegation A | 999 :=
 {
-    TNOT := A -> False;
+  TNOT := A -> False;
 }.
 Proof.
   trivial.
@@ -918,7 +918,7 @@ Instance StrongNegation_Pointed
   (A : Type) (inst : Pointed A)
   : StrongNegation A :=
 {
-    TNOT := False;
+  TNOT := False;
 }.
 Proof.
   trivial.
@@ -930,7 +930,7 @@ Instance StrongNegation_Inhabited
   (A : Type) (inst : Inhabited A)
   : StrongNegation A :=
 {
-    TNOT := False;
+  TNOT := False;
 }.
 Proof.
   trivial.
@@ -941,7 +941,7 @@ Defined.
 Instance StrongNegation_True :
   StrongNegation unit :=
 {
-    TNOT := False;
+  TNOT := False;
 }.
 Proof.
   trivial.
@@ -952,7 +952,7 @@ Defined.
 Instance StrongNegation_False :
   StrongNegation False :=
 {
-    TNOT := True;
+  TNOT := True;
 }.
 Proof.
   trivial.
@@ -964,7 +964,7 @@ Instance StrongNegation_or
   (A B : Type) (PSN : StrongNegation A) (QSN : StrongNegation B)
   : StrongNegation (A + B) :=
 {
-    TNOT := TNOT A * TNOT B;
+  TNOT := TNOT A * TNOT B;
 }.
 Proof.
   destruct 1, 1.
@@ -978,7 +978,7 @@ Instance StrongNegation_and
   (A B : Type) (PSN : StrongNegation A) (QSN : StrongNegation B)
   : StrongNegation (A * B) :=
 {
-    TNOT := TNOT A + TNOT B;
+  TNOT := TNOT A + TNOT B;
 }.
 Proof.
   destruct 1, 1.
@@ -992,7 +992,7 @@ Instance StrongNegation_fun
   (A B : Type) (QSN : StrongNegation B)
   : StrongNegation (A -> B) :=
 {
-    TNOT := A * TNOT B;
+  TNOT := A * TNOT B;
 }.
 Proof.
   destruct 1. intro pq. apply QSN.
@@ -1007,7 +1007,7 @@ Instance StrongNegation_pi
   (PSN : forall x : A, StrongNegation (P x))
   : StrongNegation (forall x : A, P x) :=
 {
-    TNOT := {x : A & TNOT (P x)};
+  TNOT := {x : A & TNOT (P x)};
 }.
 Proof.
   intros [x np] H.
@@ -1023,7 +1023,7 @@ Instance StrongNegation_subset
   (PSN : forall x : A, StrongNegation (P x))
   : StrongNegation {x : A | P x} :=
 {
-    TNOT := forall x : A, TNOT (P x);
+  TNOT := forall x : A, TNOT (P x);
 }.
 Proof.
   intros H [x np]. apply (PSN x).
@@ -1038,7 +1038,7 @@ Instance StrongNegation_sigma
   (PSN : forall x : A, StrongNegation (P x))
   : StrongNegation {x : A & P x} :=
 {
-    TNOT := forall x : A, TNOT (P x);
+  TNOT := forall x : A, TNOT (P x);
 }.
 Proof.
   intros H [x np]. apply (PSN x).
@@ -1078,16 +1078,16 @@ Class Natural (A : Type) : Type :=
 #[export]
 Instance Natural_nat : Natural nat :=
 {
-    zero := 0;
-    succ := S;
-    rect := nat_rect;
+  zero := 0;
+  succ := S;
+  rect := nat_rect;
 
-    add := plus;
-    sub := minus;
+  add := plus;
+  sub := minus;
 
-    mul := mult;
+  mul := mult;
 
-    pred n := match n with | 0 => None | S n' => Some n' end
+  pred n := match n with | 0 => None | S n' => Some n' end
 }.
 
 End Natural.
@@ -1111,14 +1111,14 @@ Class Integral (A : Type) : Type :=
 #[export]
 Instance Integral_Z : Integral Z :=
 {
-    zero := 0;
-    succ := Z.succ;
-    pred := Z.pred;
+  zero := 0;
+  succ := Z.succ;
+  pred := Z.pred;
 
-    add := Z.add;
-    sub := Z.sub;
+  add := Z.add;
+  sub := Z.sub;
 
-    mul := Z.mul;
+  mul := Z.mul;
 }.
 
 End Integral.
@@ -1141,12 +1141,12 @@ Class Rational (A : Type) : Type :=
 #[export]
 Instance Rational_Q : Rational Q :=
 {
-    zero := 0;
-    add := Qplus;
-    sub := Qminus;
+  zero := 0;
+  add := Qplus;
+  sub := Qminus;
 
-    mul := Qmult;
-    div p q := if Qeq_bool q 0 then None else Some (Qdiv p q);
+  mul := Qmult;
+  div p q := if Qeq_bool q 0 then None else Some (Qdiv p q);
 }.
 
 End Rational.

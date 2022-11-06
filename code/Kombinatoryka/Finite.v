@@ -8,7 +8,7 @@ Require Import Equality.
 #[export]
 Instance ExactlyFinite_bool : ExactlyFinite bool :=
 {|
-    elems := [false; true];
+  elems := [false; true];
 |}.
 Proof.
   destruct x; repeat constructor.
@@ -73,7 +73,7 @@ Admitted.
 Instance Finite_option
   {A : Type} (FA : ExactlyFinite A) : ExactlyFinite (option A) :=
 {|
-    elems := None :: map Some (@elems _ FA);
+  elems := None :: map Some (@elems _ FA);
 |}.
 Proof.
   all: destruct FA as [els H1 H2]; cbn.

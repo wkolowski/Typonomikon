@@ -176,7 +176,7 @@
 #[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_id</span> : <span class="id" title="var">iso</span> <span class="id" title="var">bool</span> <span class="id" title="var">bool</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> =&gt; <span class="id" title="var">b</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">f</span> := <span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> =&gt; <span class="id" title="var">b</span>;<br/>
 }.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">b</span> =&gt; <span class="id" title="var">b</span>). <span class="id" title="tactic">reflexivity</span>.<br/>
@@ -188,7 +188,7 @@
 #[<span class="id" title="var">export</span>]<br/>
 <span class="id" title="keyword">Instance</span> <span class="id" title="var">iso_negb</span> : <span class="id" title="var">iso</span> <span class="id" title="var">bool</span> <span class="id" title="var">bool</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f</span> := <span class="id" title="var">negb</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">f</span> := <span class="id" title="var">negb</span>;<br/>
 }.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">exists</span> <span class="id" title="var">negb</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">reflexivity</span>.<br/>

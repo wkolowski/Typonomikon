@@ -27,7 +27,7 @@ Inductive bin_equiv : bin -> bin -> Prop :=
 #[export]
 Instance bin_setoid : Setoid bin :=
 {
-    equiv := bin_equiv
+  equiv := bin_equiv
 }.
 Proof.
   split; red; eauto.

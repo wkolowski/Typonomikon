@@ -15,13 +15,13 @@ Arguments enum _ {Enumerable} _.
 #[export]
 Instance Enumerable_bool : Enumerable bool :=
 {
-    size b := 1;
-    enum n :=
-    match n with
-    | 0 => []
-    | 1 => [false; true]
-    | _ => []
-    end
+  size b := 1;
+  enum n :=
+  match n with
+  | 0 => []
+  | 1 => [false; true]
+  | _ => []
+  end
 }.
 Proof.
   destruct n as [| [| n']], x; compute; repeat split; auto; lia.
@@ -48,8 +48,8 @@ Compute all_lists (Enumerable_bool) 3.
 Instance Enumerable_list {A : Type} (FA : Enumerable A)
   : Enumerable (list A) :=
 {
-    size := @length A;
-    enum := all_lists FA
+  size := @length A;
+  enum := all_lists FA
 }.
 Proof.
   induction n as [| n']; cbn.

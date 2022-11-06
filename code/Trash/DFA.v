@@ -32,15 +32,15 @@ Require Import Bool.
 #[export]
 Instance product {Σ : Type} (A B : DFA Σ) : DFA Σ :=
 {|
-    State := State A * State B;
-    states :=
-      concat (
-          map (fun qa : State A =>
-            map (fun qb : State B => (qa, qb))
-              (states B)) (states A));
-    start := (start A, start B);
-    accepting '(qa, qb) := accepting A qa && accepting B qb;
-    transition x '(qa, qb) := (transition A x qa, transition B x qb);
+  State := State A * State B;
+  states :=
+    concat (
+        map (fun qa : State A =>
+          map (fun qb : State B => (qa, qb))
+            (states B)) (states A));
+  start := (start A, start B);
+  accepting '(qa, qb) := accepting A qa && accepting B qb;
+  transition x '(qa, qb) := (transition A x qa, transition B x qb);
 |}.
 (*
 Proof.

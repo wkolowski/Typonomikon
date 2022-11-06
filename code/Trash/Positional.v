@@ -45,9 +45,9 @@ Definition nvalue {sys : PNNS} (n : num sys) : nat :=
 #[export]
 Instance unary : PNNS :=
 {
-    digit := unit;
-    weight := fun _ => 1;
-    dvalue tt := 1
+  digit := unit;
+  weight := fun _ => 1;
+  dvalue tt := 1
 }.
 
 Lemma nvalue_aux_len :

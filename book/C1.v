@@ -143,19 +143,18 @@ Class EqDec (A : Type) : Type :=
 #[export]
 Instance EqDec_bool : EqDec bool :=
 {
-    eq_dec := fun b b' : bool =>
-      match b, b' with
-      | true, true => true
-      | false, false => true
-      | _, _ => false
-      end
+  eq_dec := fun b b' : bool =>
+    match b, b' with
+    | true, true => true
+    | false, false => true
+    | _, _ => false
+    end
 }.
 Proof.
   destruct x, y; split; trivial; inversion 1.
 Defined.
 
-(** Instancje klas definiujemy przy pomocy słowa kluczowego [#[refine]
-Instance].
+(** Instancje klas definiujemy przy pomocy słowa kluczowego [Instance].
     Jeżeli używamy klasy jako interfejsu, który implementować mogą typy,
     to zazwyczaj będziemy potrzebować tylko jednej instancji, więc jej
     nazwa będzie niemal identyczna jak jej typ (dzięki temu łatwo będzie
@@ -237,7 +236,7 @@ Instance].
 #[export]
 Instance EqDec_unit : EqDec unit :=
 {
-    eq_dec := fun _ _ => true
+  eq_dec := fun _ _ => true
 }.
 Proof.
   destruct x, y; split; trivial.
@@ -247,12 +246,12 @@ Defined.
 #[export]
 Instance EqDec_nat : EqDec nat :=
 {
-    eq_dec := fix f (n m : nat) :=
-      match n, m with
-      | 0, 0 => true
-      | S n', S m' => f n' m'
-      | _, _ => false
-      end
+  eq_dec := fix f (n m : nat) :=
+    match n, m with
+    | 0, 0 => true
+    | S n', S m' => f n' m'
+    | _, _ => false
+    end
 }.
 Proof.
   induction x.
@@ -290,12 +289,12 @@ Defined.
 #[export]
 Instance EqDec_option (A : Type) (_ : EqDec A) : EqDec (option A) :=
 {
-    eq_dec := fun opt1 opt2 : option A =>
-      match opt1, opt2 with
-      | Some a, Some a' => eq_dec a a'
-      | None, None => true
-      | _, _ => false
-      end
+  eq_dec := fun opt1 opt2 : option A =>
+    match opt1, opt2 with
+    | Some a, Some a' => eq_dec a a'
+    | None, None => true
+    | _, _ => false
+    end
 }.
 Proof.
   destruct x, y; split; trivial; try (inversion 1; fail); intro.
@@ -343,7 +342,7 @@ Require Import Bool.
 #[export]
 Instance EqDec_list (A : Type) (eq_dec_A : EqDec A) : EqDec (list A) :=
 {
-    eq_dec := eq_dec_list
+  eq_dec := eq_dec_list
 }.
 Proof.
   induction x as [| h t].

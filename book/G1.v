@@ -59,7 +59,7 @@ Class HasStar (A : Type) : Type :=
 #[export]
 Instance HasStar_any (A : Type) : HasStar A | 1 :=
 {
-    star := Var A;
+  star := Var A;
 }.
 Proof.
   cbn. reflexivity.
@@ -69,7 +69,7 @@ Defined.
 #[export]
 Instance HasStar_list (A : Type) (hs : HasStar A) : HasStar (list A) | 0 :=
 {
-    star := List star;
+  star := List star;
 }.
 Proof.
   cbn. rewrite no_kidding. reflexivity.
