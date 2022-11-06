@@ -1,8 +1,8 @@
 Record wut : Type :=
 {
-    w1 : nat;
-    w4 : nat;
-    w11 : nat * nat;
+  w1 : nat;
+  w4 : nat;
+  w11 : nat * nat;
 }.
 
 Goal wut -> False.

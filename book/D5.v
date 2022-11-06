@@ -21613,8 +21613,8 @@ Module OPartition.
 Record OPartition
   {A : Type} (ll : list (list A)) (l : list A) : Prop :=
 {
-    nonempty : forall l' : list A, elem l' ll -> l' <> [];
-    all : join ll = l;
+  nonempty : forall l' : list A, elem l' ll -> l' <> [];
+  all : join ll = l;
 }.
 
 End OPartition.

@@ -46,10 +46,10 @@ Module rational2.
 
 Record rational : Set :=
 {
-    sign : bool;
-    numerator : nat;
-    denominator : nat;
-    denominator_not_zero : denominator <> 0
+  sign : bool;
+  numerator : nat;
+  denominator : nat;
+  denominator_not_zero : denominator <> 0
 }.
 
 (** Z typem induktywnym o jednym konstruktorze już się zetknęliśmy,

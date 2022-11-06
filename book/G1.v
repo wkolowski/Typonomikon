@@ -639,8 +639,8 @@ Record recursive
   {A : Type} (f : nat -> A)
   (z : A) (s : A -> A) : Prop :=
 {
-    f_0 : f 0 = z;
-    f_S : forall n : nat, f (S n) = s (f n);
+  f_0 : f 0 = z;
+  f_S : forall n : nat, f (S n) = s (f n);
 }.
 
 Fixpoint nat_rec'
@@ -1164,8 +1164,8 @@ Record corecursive
   (h : X -> A) (t : X -> X)
   : Prop :=
 {
-    hd_f : forall x : X, hd (f x) = h x;
-    tl_f : forall x : X, tl (f x) = f (t x);
+  hd_f : forall x : X, hd (f x) = h x;
+  tl_f : forall x : X, tl (f x) = f (t x);
 }.
 
 CoFixpoint corec
@@ -1243,9 +1243,9 @@ Qed.
 
 Record tsim (A : Type) : Type :=
 {
-    t1 : Stream A;
-    t2 : Stream A;
-    sim : bisim t1 t2;
+  t1 : Stream A;
+  t2 : Stream A;
+  sim : bisim t1 t2;
 }.
 
 Arguments t1  {A} _.
@@ -1289,11 +1289,11 @@ Record corecursive
   {X : Type} (f : X -> M S P)
   (s : X -> S) (p : forall x : X, P (s x) -> X) : Prop :=
 {
-    shape_f :
-      forall x : X, shape (f x) = s x;
-    position_f :
-      forall (x : X) (psx : P (shape (f x))),
-        position (f x) psx = f (p x (transport (shape_f x) psx))
+  shape_f :
+    forall x : X, shape (f x) = s x;
+  position_f :
+    forall (x : X) (psx : P (shape (f x))),
+      position (f x) psx = f (p x (transport (shape_f x) psx))
 }.
 
 CoFixpoint corec
@@ -1330,9 +1330,9 @@ Definition sim_to_eq (S : Type) (P : S -> Type) : Prop :=
 
 Record I (S : Type) (P : S -> Type) : Type :=
 {
-    L : M S P;
-    R : M S P;
-    path : siM L R;
+  L : M S P;
+  R : M S P;
+  path : siM L R;
 }.
 
 Arguments L    {S P} _.

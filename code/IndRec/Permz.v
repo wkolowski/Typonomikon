@@ -201,9 +201,9 @@ end.
 
 Record transposition {A : Type} (t1 t2 : BTree A) : Type :=
 {
-    p1 : Position t1;
-    p2 : Position t1;
-    transposition_spec :
-      t2 = modify (fun _ => get p2) p1
+  p1 : Position t1;
+  p2 : Position t1;
+  transposition_spec :
+    t2 = modify (fun _ => get p2) p1
 }.
 Print BTree.

@@ -775,8 +775,8 @@ Skoro mamy regułę indukcji, to bez problemu jesteśmy w stanie pokazać,
 &nbsp;&nbsp;{<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">A</span>)<br/>
 &nbsp;&nbsp;(<span class="id" title="var">z</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">s</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_0</span> : <span class="id" title="var">f</span> 0 = <span class="id" title="var">z</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">f_S</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) = <span class="id" title="var">s</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">f_0</span> : <span class="id" title="var">f</span> 0 = <span class="id" title="var">z</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">f_S</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">f</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) = <span class="id" title="var">s</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>);<br/>
 }.<br/>
 
 <br/>
@@ -1428,8 +1428,8 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 &nbsp;&nbsp;(<span class="id" title="var">h</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">X</span>)<br/>
 &nbsp;&nbsp;: <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd_f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">X</span>, <span class="id" title="var">hd</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) = <span class="id" title="var">h</span> <span class="id" title="var">x</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl_f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">X</span>, <span class="id" title="var">tl</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) = <span class="id" title="var">f</span> (<span class="id" title="var">t</span> <span class="id" title="var">x</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd_f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">X</span>, <span class="id" title="var">hd</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) = <span class="id" title="var">h</span> <span class="id" title="var">x</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl_f</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">X</span>, <span class="id" title="var">tl</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) = <span class="id" title="var">f</span> (<span class="id" title="var">t</span> <span class="id" title="var">x</span>);<br/>
 }.<br/>
 
 <br/>
@@ -1518,9 +1518,9 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <br/>
 <span class="id" title="keyword">Record</span> <span class="id" title="var">tsim</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">t1</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">t2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">sim</span> : <span class="id" title="var">bisim</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">t1</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">t2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">sim</span> : <span class="id" title="var">bisim</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span>;<br/>
 }.<br/>
 
 <br/>
@@ -1571,11 +1571,11 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 &nbsp;&nbsp;{<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">M</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span>)<br/>
 &nbsp;&nbsp;(<span class="id" title="var">s</span> : <span class="id" title="var">X</span> -&gt; <span class="id" title="var">S</span>) (<span class="id" title="var">p</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">X</span>, <span class="id" title="var">P</span> (<span class="id" title="var">s</span> <span class="id" title="var">x</span>) -&gt; <span class="id" title="var">X</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">shape_f</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">X</span>, <span class="id" title="var">shape</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) = <span class="id" title="var">s</span> <span class="id" title="var">x</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">position_f</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">psx</span> : <span class="id" title="var">P</span> (<span class="id" title="var">shape</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>))),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">position</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) <span class="id" title="var">psx</span> = <span class="id" title="var">f</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span> (<span class="id" title="var">transport</span> (<span class="id" title="var">shape_f</span> <span class="id" title="var">x</span>) <span class="id" title="var">psx</span>))<br/>
+&nbsp;&nbsp;<span class="id" title="var">shape_f</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> : <span class="id" title="var">X</span>, <span class="id" title="var">shape</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) = <span class="id" title="var">s</span> <span class="id" title="var">x</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">position_f</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">psx</span> : <span class="id" title="var">P</span> (<span class="id" title="var">shape</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>))),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">position</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) <span class="id" title="var">psx</span> = <span class="id" title="var">f</span> (<span class="id" title="var">p</span> <span class="id" title="var">x</span> (<span class="id" title="var">transport</span> (<span class="id" title="var">shape_f</span> <span class="id" title="var">x</span>) <span class="id" title="var">psx</span>))<br/>
 }.<br/>
 
 <br/>
@@ -1617,9 +1617,9 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <br/>
 <span class="id" title="keyword">Record</span> <span class="id" title="var">I</span> (<span class="id" title="var">S</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">S</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">L</span> : <span class="id" title="var">M</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">R</span> : <span class="id" title="var">M</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">path</span> : <span class="id" title="var">siM</span> <span class="id" title="var">L</span> <span class="id" title="var">R</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">L</span> : <span class="id" title="var">M</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">R</span> : <span class="id" title="var">M</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">path</span> : <span class="id" title="var">siM</span> <span class="id" title="var">L</span> <span class="id" title="var">R</span>;<br/>
 }.<br/>
 
 <br/>

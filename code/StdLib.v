@@ -88,14 +88,14 @@ Module Dec.
 
 Record class (P : Prop) := Class
 {
-    b :> bool;
-    spec : reflect P b;
+  b :> bool;
+  spec : reflect P b;
 }.
 
 Structure type := Pack
 {
-    P : Prop;
-    class_of :> class P;
+  P : Prop;
+  class_of :> class P;
 }.
 
 Definition dec (t : type) : bool :=

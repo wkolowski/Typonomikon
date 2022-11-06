@@ -356,8 +356,8 @@ Module Z_NF.
 
 Record Z' : Type :=
 {
-    canonical : Z;
-    NF_canonical : Squash (NF canonical);
+  canonical : Z;
+  NF_canonical : Squash (NF canonical);
 }.
 
 End Z_NF.
@@ -366,8 +366,8 @@ Module Z_norm.
 
 Record Z' : Type :=
 {
-    canonical : Z;
-    norm_canonical : Squash (norm canonical = canonical);
+  canonical : Z;
+  norm_canonical : Squash (norm canonical = canonical);
 }.
 
 End Z_norm.
@@ -376,8 +376,8 @@ Module Z_isNormal.
 
 Record Z' : Type :=
 {
-    canonical : Z;
-    isNormal_canonical : Squash (isNormal canonical = true);
+  canonical : Z;
+  isNormal_canonical : Squash (isNormal canonical = true);
 }.
 
 End Z_isNormal.
@@ -386,8 +386,8 @@ Module Z_SmartConstructors.
 
 Record Z' : Type :=
 {
-    canonical : Z;
-    isNormal_canonical : Squash (isNormal canonical = true);
+  canonical : Z;
+  isNormal_canonical : Squash (isNormal canonical = true);
 }.
 
 Function abs' (k : Z) : Z :=

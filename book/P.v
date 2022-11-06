@@ -72,8 +72,8 @@ Module Z_classic.
 
 Record Z : Type :=
 {
-    L : nat;
-    R : nat;
+  L : nat;
+  R : nat;
 }.
 
 Definition Z_eq (k l : Z) : Prop :=
@@ -87,8 +87,8 @@ Module Z_norm.
 
 Record Z : Type := mkZ
 {
-    L : nat;
-    R : nat;
+  L : nat;
+  R : nat;
 }.
 
 Fixpoint norm' (l r : nat) : nat * nat :=
@@ -167,9 +167,9 @@ Module Q_naive.
 
 Record Q : Type :=
 {
-    numerator : Z;
-    denominator : nat;
-    _ : denominator <> 0;
+  numerator : Z;
+  denominator : nat;
+  _ : denominator <> 0;
 }.
 
 (** Warunek niezerowości można ulepszyć za pomocą sortu [SProp]. *)
@@ -186,8 +186,8 @@ Module Q_less_naive.
 
 Record Q : Type :=
 {
-    numerator : Z;
-    denominator : nat;
+  numerator : Z;
+  denominator : nat;
 }.
 
 Fail Definition Q_eq (q1 q2 : Q) : Prop :=

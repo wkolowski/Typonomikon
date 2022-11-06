@@ -16,8 +16,8 @@ Inductive NF {A : Type} : FM A -> Prop :=
 
 Record FM' (A : Type) : Type :=
 {
-    cf : FM A;
-    NF_cf : Squash (NF cf);
+  cf : FM A;
+  NF_cf : Squash (NF cf);
 }.
 
 Inductive Graph {A : Type} : FM A -> FM A -> Type :=

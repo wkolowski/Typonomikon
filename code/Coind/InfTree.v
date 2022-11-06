@@ -2,9 +2,9 @@ Set Implicit Arguments.
 
 CoInductive InfTree (A : Type) : Type :=
 {
-    root : A;
-    left : InfTree A;
-    right : InfTree A;
+  root : A;
+  left : InfTree A;
+  right : InfTree A;
 }.
 
 Arguments root  {A}.
@@ -15,9 +15,9 @@ Record corecursive
   {A X : Type} (f : X -> InfTree A)
   (rt : X -> A) (l : X -> X) (r : X -> X) : Prop :=
 {
-    root_f  : forall x : X, root  (f x) = rt x;
-    left_f  : forall x : X, left  (f x) = f (l x);
-    right_r : forall x : X, right (f x) = f (r x);
+  root_f  : forall x : X, root  (f x) = rt x;
+  left_f  : forall x : X, left  (f x) = f (l x);
+  right_r : forall x : X, right (f x) = f (r x);
 }.
 
 CoFixpoint corec
@@ -132,9 +132,9 @@ Qed.
 
 Record tsim (A : Type) : Type :=
 {
-    lt : InfTree A;
-    rt : InfTree A;
-    tsim' : sim lt rt;
+  lt : InfTree A;
+  rt : InfTree A;
+  tsim' : sim lt rt;
 }.
 
 Arguments lt    {A} _.

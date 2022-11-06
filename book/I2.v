@@ -1675,9 +1675,9 @@ Qed.
 
 Record and3 (P Q R : Prop) : Prop :=
 {
-    left : P;
-    mid : Q;
-    right : R;
+  left : P;
+  mid : Q;
+  right : R;
 }.
 
 Example firstorder_0 :

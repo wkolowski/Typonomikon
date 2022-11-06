@@ -78,12 +78,12 @@ Abort.
 (*
 Record MEpsilon {A : Type} (l : list A) : Type :=
 {
-    mepsilon : l = [];
+  mepsilon : l = [];
 }.
 
 Record MChar {A : Type} (l : list A) (c : A) : Type :=
 {
-    mchar : l = [c];
+  mchar : l = [c];
 }.
 
 Record MSeq
@@ -91,11 +91,11 @@ Record MSeq
   (l : list A) (r1 r2 : Regex A) (M : list A -> Regex A -> Type)
   : Type :=
 {
-    mseq_l1 : list A;
-    mseq_l2 : list A;
-    mseq_p  : l = mseq_l1 ++ mseq_l2;
-    mseq_m1 : M mseq_l1 r1;
-    mseq_m2 : M mseq_l2 r2;
+  mseq_l1 : list A;
+  mseq_l2 : list A;
+  mseq_p  : l = mseq_l1 ++ mseq_l2;
+  mseq_m1 : M mseq_l1 r1;
+  mseq_m2 : M mseq_l2 r2;
 }.
 
 Fixpoint Matches {A : Type} (l : list A) (r : Regex A) {struct r} : Type :=

@@ -24,8 +24,8 @@ Inductive WF {A B : Type} : SP' A B -> Type :=
 
 Record SP (A B : Type) : Type :=
 {
-    sp : SP' A B;
-    wf : WF sp;
+  sp : SP' A B;
+  wf : WF sp;
 }.
 
 Definition compSP {A B C : Type} (f : SP A B) (g : SP B C) : SP A C.

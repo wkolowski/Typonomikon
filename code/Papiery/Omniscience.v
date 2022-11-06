@@ -88,8 +88,8 @@ Definition is_decr (a : nat -> bool) : Prop :=
 
 Record conat : Type :=
 {
-    seq :> nat -> bool;
-    is_decr_seq : is_decr seq;
+  seq :> nat -> bool;
+  is_decr_seq : is_decr seq;
 }.
 
 Definition finite (n : nat) : conat.

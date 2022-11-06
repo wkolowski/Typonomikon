@@ -1,8 +1,8 @@
 Record Monoid : Type :=
 {
-    carrier : Type;
-    op : carrier -> carrier -> carrier;
-    id : carrier;
+  carrier : Type;
+  op : carrier -> carrier -> carrier;
+  id : carrier;
 }.
 
 Check carrier.

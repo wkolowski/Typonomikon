@@ -157,9 +157,9 @@ Module HierarchyTheoremUniverses.
 
 Record Embedding@{u} (X Y : Type@{u}) : Type@{u} :=
 {
-    coe : X -> Y;
-    uncoe : Y -> X;
-    law : forall x : X, uncoe (coe x) = x;
+  coe : X -> Y;
+  uncoe : Y -> X;
+  law : forall x : X, uncoe (coe x) = x;
 }.
 
 Arguments coe {X Y} _ _.

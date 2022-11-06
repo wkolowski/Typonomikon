@@ -16,8 +16,8 @@ end.
 
 Record Z' : Type :=
 {
-    num : Z;
-    norm_num : Squash (norm num = num);
+  num : Z;
+  norm_num : Squash (norm num = num);
 }.
 
 Lemma norm'_idempotent :

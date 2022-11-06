@@ -2,12 +2,8 @@ Module xd.
 
 Record R : Type := MkR
 {
-    field : unit;
+  field : unit;
 }.
-
-(* Add Printing Record Prestate.
-Add Printing Record Observation.
-Add Printing Record Premessage. *)
 
 Print Tables.
 Print Table Printing Record.
