@@ -8,7 +8,7 @@
 
 Fail CoInductive wut : Type :=
 {
-    haha : wut -> Prop;
+  haha : wut -> Prop;
 }.
 
 (** Ciężko mi jednak stwierdzić w tej chwili, czy jest jakiś odpowiednik
@@ -35,8 +35,8 @@ Require Import ZArith.
 
 CoInductive Stream (A : Type) : Type :=
 {
-    hd : A;
-    tl : Stream A;
+  hd : A;
+  tl : Stream A;
 }.
 
 Arguments hd {A}.
@@ -44,8 +44,8 @@ Arguments tl {A}.
 
 CoInductive bisim {A : Type} (s1 s2 : Stream A) : Prop :=
 {
-    hds : hd s1 = hd s2;
-    tls : bisim (tl s1) (tl s2);
+  hds : hd s1 = hd s2;
+  tls : bisim (tl s1) (tl s2);
 }.
 
 Lemma bisim_refl :
@@ -221,12 +221,12 @@ Compute stake 10 (rand' 1235 234567890 6652).
 
 CoInductive Conat : Type :=
 {
-    pred : option Conat;
+  pred : option Conat;
 }.
 
 CoInductive coList (A : Type) : Type :=
 {
-    uncons : option (A * coList A);
+  uncons : option (A * coList A);
 }.
 
 Arguments uncons {A}.
@@ -307,10 +307,10 @@ Inductive Finite {A : Type} : coList A -> Prop :=
 
 CoInductive Infinite {A : Type} (l : coList A) : Prop :=
 {
-    h : A;
-    t : coList A;
-    p : uncons l = Some (h, t);
-    inf' : Infinite t;
+  h : A;
+  t : coList A;
+  p : uncons l = Some (h, t);
+  inf' : Infinite t;
 }.
 
 Lemma empty_not_Infinite :
@@ -364,12 +364,12 @@ Qed.
 
 CoInductive bisim2 {A : Type} (l1 l2 : coList A) : Prop :=
 {
-    bisim2' :
-      uncons l1 = None /\ uncons l2 = None \/
-      exists (h1 : A) (t1 : coList A) (h2 : A) (t2 : coList A),
-        uncons l1 = Some (h1, t1) /\
-        uncons l2 = Some (h2, t2) /\
-          h1 = h2 /\ bisim2 t1 t2
+  bisim2' :
+    uncons l1 = None /\ uncons l2 = None \/
+    exists (h1 : A) (t1 : coList A) (h2 : A) (t2 : coList A),
+      uncons l1 = Some (h1, t1) /\
+      uncons l2 = Some (h2, t2) /\
+        h1 = h2 /\ bisim2 t1 t2
 }.
 
 #[global] Hint Constructors bisim2 : core.
@@ -437,7 +437,7 @@ Qed.
 
 CoInductive coBTree (A : Type) : Type :=
 {
-    root : option (coBTree A * A * coBTree A)
+  root : option (coBTree A * A * coBTree A)
 }.
 
 Arguments root {A} _.
@@ -477,12 +477,12 @@ Compute ttake 5 (ns 0).
 
 CoInductive tsim {A : Type} (t1 t2 : coBTree A) : Prop :=
 {
-    tsim' :
-      root t1 = None /\ root t2 = None \/
-      exists (v1 v2 : A) (l1 l2 r1 r2 : coBTree A),
-        root t1 = Some (l1, v1, r1) /\
-        root t2 = Some (l2, v2, r2) /\
-          tsim l1 l2 /\ tsim r1 r2
+  tsim' :
+    root t1 = None /\ root t2 = None \/
+    exists (v1 v2 : A) (l1 l2 r1 r2 : coBTree A),
+      root t1 = Some (l1, v1, r1) /\
+      root t2 = Some (l2, v2, r2) /\
+        tsim l1 l2 /\ tsim r1 r2
 }.
 
 CoFixpoint mirror {A : Type} (t : coBTree A) : coBTree A :=
@@ -509,7 +509,7 @@ Qed.
 (* begin hide *)
 CoInductive Div (A : Type) : Type :=
 {
-    call : A + Div A
+  call : A + Div A
 }.
 
 Fixpoint even (n : nat) : bool :=
@@ -605,11 +605,11 @@ Ltac inv H := inversion H; subst; clear H.
 (*
 CoInductive Rev {A : Type} (l r : coList A) : Prop :=
 {
-    Rev' :
-      (uncons l = None /\ uncons r = None)
-      \/
-      exists (h : A) (tl tr : coList A),
-        uncons l = Some (h, tl) /\ r = snoc tr h /\ Rev tl tr
+  Rev' :
+    (uncons l = None /\ uncons r = None)
+    \/
+    exists (h : A) (tl tr : coList A),
+      uncons l = Some (h, tl) /\ r = snoc tr h /\ Rev tl tr
 }.
 
 Lemma Rev_wut :
@@ -726,19 +726,19 @@ Module Zad1.
 
 CoInductive coBTree (A : Type) : Type :=
 {
-    tree : option (coBTree A * A * coBTree A)
+  tree : option (coBTree A * A * coBTree A)
 }.
 
 Arguments tree {A} _.
 
 CoInductive sim {A : Type} (t1 t2 : coBTree A) : Prop :=
 {
-    sim' :
-      tree t1 = None /\ tree t2 = None \/
-      exists (v1 v2 : A) (l1 l2 r1 r2 : coBTree A),
-        tree t1 = Some (l1, v1, r1) /\
-        tree t2 = Some (l2, v2, r2) /\
-          sim l1 l2 /\ sim r1 r2
+  sim' :
+    tree t1 = None /\ tree t2 = None \/
+    exists (v1 v2 : A) (l1 l2 r1 r2 : coBTree A),
+      tree t1 = Some (l1, v1, r1) /\
+      tree t2 = Some (l2, v2, r2) /\
+        sim l1 l2 /\ sim r1 r2
 }.
 
 Lemma sim_refl :
@@ -802,12 +802,12 @@ Inductive Finite {A : Type} : coBTree A -> Prop :=
 
 CoInductive Infinite {A : Type} (t : coBTree A) : Prop :=
 {
-    root : A;
-    left : coBTree A;
-    right : coBTree A;
-    p : tree t = Some (left, root, right);
-    Infinite_left : Infinite left;
-    Infinite_right : Infinite right;
+  root : A;
+  left : coBTree A;
+  right : coBTree A;
+  p : tree t = Some (left, root, right);
+  Infinite_left : Infinite left;
+  Infinite_right : Infinite right;
 }.
 
 Lemma Finite_mirror :
@@ -875,8 +875,8 @@ Module Zad2.
 
 CoInductive Stream (A : Type) : Type :=
 {
-    hd : A;
-    tl : Stream A;
+  hd : A;
+  tl : Stream A;
 }.
 
 Arguments hd {A}.
@@ -884,8 +884,8 @@ Arguments tl {A}.
 
 CoInductive sim {A : Type} (s1 s2 : Stream A) : Prop :=
 {
-    hds : hd s1 = hd s2;
-    tls : sim (tl s1) (tl s2);
+  hds : hd s1 = hd s2;
+  tls : sim (tl s1) (tl s2);
 }.
 
 Axiom sim_eq :
@@ -992,9 +992,9 @@ Module Zad5.
 
 CoInductive DecChain {A : Type} (R : A -> A -> Prop) (x : A) : Type :=
 {
-    hd : A;
-    R_hd_x : R hd x;
-    tl : DecChain R hd;
+  hd : A;
+  R_hd_x : R hd x;
+  tl : DecChain R hd;
 }.
 
 Lemma wf_no_DecChain :

@@ -45,9 +45,9 @@ Definition uniqueness (A : Type) : Prop :=
 
 CoInductive sim {A : Type} (t1 t2 : InfTree A) : Prop :=
 {
-    roots : root t1 = root t2;
-    lefts : sim (left t1) (left t2);
-    rights : sim (right t1) (right t2);
+  roots : root t1 = root t2;
+  lefts : sim (left t1) (left t2);
+  rights : sim (right t1) (right t2);
 }.
 
 Definition sim_to_eq (A : Type) : Prop :=

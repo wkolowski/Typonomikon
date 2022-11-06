@@ -9,7 +9,7 @@ Arguments N {X A} _ _.
 
 CoInductive CoRoseTree (A : Type) : Type :=
 {
-    Out : CoRoseTreeF (CoRoseTree A) A;
+  Out : CoRoseTreeF (CoRoseTree A) A;
 }.
 
 Arguments Out {A} _.

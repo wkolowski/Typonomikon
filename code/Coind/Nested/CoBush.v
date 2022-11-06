@@ -11,7 +11,7 @@ Arguments Node {F A} _ _.
 Unset Positivity Checking.
 CoInductive CoBush (A : Type) : Type :=
 {
-    Out : BushF CoBush A;
+  Out : BushF CoBush A;
 }.
 Set Positivity Checking.
 

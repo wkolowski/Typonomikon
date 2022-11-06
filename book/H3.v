@@ -4967,7 +4967,7 @@ Class WellFounded {A : Type} (R : rel A) : Prop :=
 
 CoInductive Inaccessible {A : Type} (R : rel A) (x : A) : Prop :=
 {
-    inaccessible : exists y : A, R y x /\ Inaccessible R y
+  inaccessible : exists y : A, R y x /\ Inaccessible R y
 }.
 
 Class IllFounded {A : Type} (R : rel A) : Prop :=

@@ -1,7 +1,7 @@
 CoInductive Stream (A : Type) : Type :=
 {
-    hd : A;
-    tl : Stream A;
+  hd : A;
+  tl : Stream A;
 }.
 
 Arguments hd {A} _.

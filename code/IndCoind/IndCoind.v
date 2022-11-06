@@ -7,7 +7,7 @@ Arguments N {A X} _ _ _.
 
 CoInductive Tree (A : Type) : Type :=
 {
-    Out : TreeF A (Tree A);
+  Out : TreeF A (Tree A);
 }.
 
 Arguments Out {A} _.

@@ -19,7 +19,7 @@ Arguments BInj     {C A} _.
 
 CoInductive ZipWith (A : Type) : Type :=
 {
-    Out : Base (ZipWith A) A Coind;
+  Out : Base (ZipWith A) A Coind;
 }.
 
 Arguments Out {A} _.

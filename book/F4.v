@@ -21,7 +21,7 @@ Arguments ConsF {A F} _ _.
 
 CoInductive CoList (A : Type) : Type :=
 {
-    uncons : CoListF A CoList
+  uncons : CoListF A CoList
 }.
 
 Arguments uncons {A}.
@@ -58,7 +58,7 @@ Inductive lsimF {A : Type} (l1 l2 : CoList A) (F : CoList A -> CoList A -> Prop)
 
 CoInductive lsim {A : Type} (l1 l2 : CoList A) : Prop :=
 {
-    lsim' : lsimF l1 l2 lsim
+  lsim' : lsimF l1 l2 lsim
 }.
 
 #[global] Hint Constructors lsim : core.
@@ -843,10 +843,10 @@ Inductive Finite {A : Type} : CoList A -> Prop :=
 Set Warnings "-cannot-define-projection".
 CoInductive Infinite {A : Type} (l : CoList A) : Prop :=
 {
-    h : A;
-    t : CoList A;
-    p : uncons l = ConsF h t;
-    inf' : Infinite t;
+  h : A;
+  t : CoList A;
+  p : uncons l = ConsF h t;
+  inf' : Infinite t;
 }.
 Set Warnings "cannot-define-projection".
 (* end hide *)
@@ -1179,10 +1179,10 @@ Inductive Exists {A : Type} (P : A -> Prop) : CoList A -> Prop :=
 
 CoInductive All {A : Type} (P : A -> Prop) (l : CoList A) : Prop :=
 {
-    All' :
-      uncons l = NilF \/
-      exists (h : A) (t : CoList A),
-        uncons l = ConsF h t /\ P h /\ All P t;
+  All' :
+    uncons l = NilF \/
+    exists (h : A) (t : CoList A),
+      uncons l = ConsF h t /\ P h /\ All P t;
 }.
 
 Lemma Exists_not_All :

@@ -22,7 +22,7 @@ Arguments SZipWithX {X A} _ _ _.
 
 CoInductive StreamZipWith (A : Type) : Type :=
 {
-    Out : TXY (StreamZipWith A) (SX (StreamZipWith A) A) A;
+  Out : TXY (StreamZipWith A) (SX (StreamZipWith A) A) A;
 }.
 
 Arguments Out {A} _.

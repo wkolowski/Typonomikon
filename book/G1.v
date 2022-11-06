@@ -963,8 +963,8 @@ From Typonomikon Require Import F1.
 
 CoInductive M (S : Type) (P : S -> Type) : Type :=
 {
-    shape : S;
-    position : P shape -> M S P
+  shape : S;
+  position : P shape -> M S P
 }.
 
 Arguments shape {S P}.
@@ -1004,8 +1004,8 @@ Inductive Finite {S : Type} {P : S -> Type} : M S P -> Prop :=
 Set Warnings "-cannot-define-projection".
 CoInductive Infinite {S : Type} {P : S -> Type} (m : M S P) : Prop :=
 {
-    p : P (shape m);
-    Infinite' : Infinite (position m p);
+  p : P (shape m);
+  Infinite' : Infinite (position m p);
 }.
 Set Warnings "cannot-define-projection".
 
@@ -1074,10 +1074,10 @@ end.
 
 CoInductive siM {S : Type} {P : S -> Type} (m1 m2 : M S P) : Prop :=
 {
-    shapes : shape m1 = shape m2;
-    positions :
-      forall p : P (shape m1),
-        siM (position m1 p) (position m2 (transport shapes p))
+  shapes : shape m1 = shape m2;
+  positions :
+    forall p : P (shape m1),
+      siM (position m1 p) (position m2 (transport shapes p))
 }.
 
 Definition P_Stream (A : Type) : A -> Type := fun _ => unit.
@@ -1154,8 +1154,8 @@ Print Stream.
 (* ===>
   CoInductive Stream (A : Type) : Type :=
   {
-      hd : A;
-      tl : Stream A
+    hd : A;
+    tl : Stream A
   }.
 *)
 
@@ -1415,7 +1415,7 @@ Arguments In {F} _.
 
 CoInductive Nu (F : Type -> Type) : Type :=
 {
-    Out : F (Nu F);
+  Out : F (Nu F);
 }.
 
 Arguments Out {F} _.
@@ -2079,7 +2079,7 @@ Inductive ForallF
 
 CoInductive CoForall {A : Type} (R : A -> A -> Prop) (l1 l2 : CoList A) : Prop :=
 {
-    uncons' : ForallF R CoForall l1 l2
+  uncons' : ForallF R CoForall l1 l2
 }.
 
 End CoList_ForallF.
@@ -2106,7 +2106,7 @@ Arguments In {A} _.
 
 CoInductive CoList (A : Type) : Type :=
 {
-    uncons : ListR A (CoList A);
+  uncons : ListR A (CoList A);
 }.
 
 Arguments uncons {A} _.
@@ -2138,7 +2138,7 @@ Inductive Forall {A : Type} (R : A -> A -> Prop) (l1 l2 : List A) : Prop :=
 
 CoInductive CoForall {A : Type} (R : A -> A -> Prop) (l1 l2 : CoList A) : Prop :=
 {
-    uncons'' : ForallR uncons R (CoForall R) l1 l2
+  uncons'' : ForallR uncons R (CoForall R) l1 l2
 }.
 
 Inductive ExistsR

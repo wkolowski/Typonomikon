@@ -52,7 +52,7 @@ Ten rozdział będzie o kolistach, czyli koinduktywnych odpowiednikach
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">CoList</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> : <span class="id" title="var">CoListF</span> <span class="id" title="var">A</span> <span class="id" title="var">CoList</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">uncons</span> : <span class="id" title="var">CoListF</span> <span class="id" title="var">A</span> <span class="id" title="var">CoList</span><br/>
 }.<br/>
 
 <br/>
@@ -767,10 +767,10 @@ Funkcji <span class="inlinecode"><span class="id" title="var">splitAt</span></sp
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="keyword">All</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">CoList</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">All'</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">NilF</span> \/<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">CoList</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">ConsF</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> /\ <span class="id" title="var">P</span> <span class="id" title="var">h</span> /\ <span class="id" title="keyword">All</span> <span class="id" title="var">P</span> <span class="id" title="var">t</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">All'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">NilF</span> \/<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">h</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t</span> : <span class="id" title="var">CoList</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">ConsF</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> /\ <span class="id" title="var">P</span> <span class="id" title="var">h</span> /\ <span class="id" title="keyword">All</span> <span class="id" title="var">P</span> <span class="id" title="var">t</span>;<br/>
 }.<br/>
 
 <br/>

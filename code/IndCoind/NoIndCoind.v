@@ -4,6 +4,6 @@ Fail Inductive Tree (A : Type) : Type :=
 
 with CoInductive StreamTree (A : Type) : Type :=
 {
-    hd : Tree A;
-    tl : StreamTree A;
+  hd : Tree A;
+  tl : StreamTree A;
 }.

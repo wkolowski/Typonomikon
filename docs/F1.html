@@ -48,8 +48,8 @@
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Stream</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hd</span> : <span class="id" title="var">A</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tl</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">hd</span> : <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tl</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>;<br/>
 }.<br/>
 
 <br/>
@@ -59,8 +59,8 @@
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">bisim</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">s1</span> <span class="id" title="var">s2</span> : <span class="id" title="var">Stream</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hds</span> : <span class="id" title="var">hd</span> <span class="id" title="var">s1</span> = <span class="id" title="var">hd</span> <span class="id" title="var">s2</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tls</span> : <span class="id" title="var">bisim</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">tl</span> <span class="id" title="var">s2</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">hds</span> : <span class="id" title="var">hd</span> <span class="id" title="var">s1</span> = <span class="id" title="var">hd</span> <span class="id" title="var">s2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">tls</span> : <span class="id" title="var">bisim</span> (<span class="id" title="var">tl</span> <span class="id" title="var">s1</span>) (<span class="id" title="var">tl</span> <span class="id" title="var">s2</span>);<br/>
 }.<br/>
 
 <br/>
@@ -263,13 +263,13 @@
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Conat</span> : <span class="id" title="keyword">Type</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">pred</span> : <span class="id" title="var">option</span> <span class="id" title="var">Conat</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">pred</span> : <span class="id" title="var">option</span> <span class="id" title="var">Conat</span>;<br/>
 }.<br/>
 
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">coList</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> : <span class="id" title="var">option</span> (<span class="id" title="var">A</span> * <span class="id" title="var">coList</span> <span class="id" title="var">A</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">uncons</span> : <span class="id" title="var">option</span> (<span class="id" title="var">A</span> * <span class="id" title="var">coList</span> <span class="id" title="var">A</span>);<br/>
 }.<br/>
 
 <br/>
@@ -365,10 +365,10 @@
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Infinite</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">h</span> : <span class="id" title="var">A</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">t</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">p</span> : <span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>);<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">inf'</span> : <span class="id" title="var">Infinite</span> <span class="id" title="var">t</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">h</span> : <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">t</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">p</span> : <span class="id" title="var">uncons</span> <span class="id" title="var">l</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h</span>, <span class="id" title="var">t</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">inf'</span> : <span class="id" title="var">Infinite</span> <span class="id" title="var">t</span>;<br/>
 }.<br/>
 
 <br/>
@@ -428,12 +428,12 @@
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">bisim2</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">bisim2'</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">None</span> /\ <span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">None</span> \/<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">h1</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t1</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) (<span class="id" title="var">h2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h1</span>, <span class="id" title="var">t1</span>) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h2</span>, <span class="id" title="var">t2</span>) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">h1</span> = <span class="id" title="var">h2</span> /\ <span class="id" title="var">bisim2</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">bisim2'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">None</span> /\ <span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">None</span> \/<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">h1</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t1</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>) (<span class="id" title="var">h2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">t2</span> : <span class="id" title="var">coList</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l1</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h1</span>, <span class="id" title="var">t1</span>) /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> <span class="id" title="var">l2</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">h2</span>, <span class="id" title="var">t2</span>) /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">h1</span> = <span class="id" title="var">h2</span> /\ <span class="id" title="var">bisim2</span> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span><br/>
 }.<br/>
 
 <br/>
@@ -515,7 +515,7 @@
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">coBTree</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> : <span class="id" title="var">option</span> (<span class="id" title="var">coBTree</span> <span class="id" title="var">A</span> * <span class="id" title="var">A</span> * <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="var">root</span> : <span class="id" title="var">option</span> (<span class="id" title="var">coBTree</span> <span class="id" title="var">A</span> * <span class="id" title="var">A</span> * <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span>)<br/>
 }.<br/>
 
 <br/>
@@ -563,12 +563,12 @@
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">tsim</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">t1</span> <span class="id" title="var">t2</span> : <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tsim'</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> <span class="id" title="var">t1</span> = <span class="id" title="var">None</span> /\ <span class="id" title="var">root</span> <span class="id" title="var">t2</span> = <span class="id" title="var">None</span> \/<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">v1</span> <span class="id" title="var">v2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> : <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> <span class="id" title="var">t1</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">l1</span>, <span class="id" title="var">v1</span>, <span class="id" title="var">r1</span>) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> <span class="id" title="var">t2</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">l2</span>, <span class="id" title="var">v2</span>, <span class="id" title="var">r2</span>) /\<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tsim</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> /\ <span class="id" title="var">tsim</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">tsim'</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> <span class="id" title="var">t1</span> = <span class="id" title="var">None</span> /\ <span class="id" title="var">root</span> <span class="id" title="var">t2</span> = <span class="id" title="var">None</span> \/<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">v1</span> <span class="id" title="var">v2</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span> : <span class="id" title="var">coBTree</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> <span class="id" title="var">t1</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">l1</span>, <span class="id" title="var">v1</span>, <span class="id" title="var">r1</span>) /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">root</span> <span class="id" title="var">t2</span> = <span class="id" title="var">Some</span> (<span class="id" title="var">l2</span>, <span class="id" title="var">v2</span>, <span class="id" title="var">r2</span>) /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tsim</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> /\ <span class="id" title="var">tsim</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span><br/>
 }.<br/>
 
 <br/>

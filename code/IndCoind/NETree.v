@@ -18,8 +18,8 @@ Arguments WFL_None {A t} _.
 
 CoInductive WF {A : Type} (t : NETree A) : Prop :=
 {
-    rootWF : WFL t;
-    rightWF : right t = None \/ exists t' : NETree A, right t = Some t' /\ WF t'
+  rootWF : WFL t;
+  rightWF : right t = None \/ exists t' : NETree A, right t = Some t' /\ WF t'
 }.
 
 (* TODO: fix *)

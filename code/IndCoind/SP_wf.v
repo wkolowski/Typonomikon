@@ -9,7 +9,7 @@ Arguments GetX {X Y A B} _.
 
 CoInductive SP' (A B : Type) : Type :=
 {
-    Out : SPXY (SP' A B) (SP' A B) A B;
+  Out : SPXY (SP' A B) (SP' A B) A B;
 }.
 
 Arguments Out {A B} _.

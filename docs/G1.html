@@ -1257,8 +1257,8 @@ Naszą motywacją do badania W-typów było to, że są one jedynym
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">M</span> (<span class="id" title="var">S</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">S</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">shape</span> : <span class="id" title="var">S</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">position</span> : <span class="id" title="var">P</span> <span class="id" title="var">shape</span> -&gt; <span class="id" title="var">M</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">shape</span> : <span class="id" title="var">S</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">position</span> : <span class="id" title="var">P</span> <span class="id" title="var">shape</span> -&gt; <span class="id" title="var">M</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span><br/>
 }.<br/>
 
 <br/>
@@ -1315,10 +1315,10 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">siM</span> {<span class="id" title="var">S</span> : <span class="id" title="keyword">Type</span>} {<span class="id" title="var">P</span> : <span class="id" title="var">S</span> -&gt; <span class="id" title="keyword">Type</span>} (<span class="id" title="var">m1</span> <span class="id" title="var">m2</span> : <span class="id" title="var">M</span> <span class="id" title="var">S</span> <span class="id" title="var">P</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">shapes</span> : <span class="id" title="var">shape</span> <span class="id" title="var">m1</span> = <span class="id" title="var">shape</span> <span class="id" title="var">m2</span>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">positions</span> :<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">p</span> : <span class="id" title="var">P</span> (<span class="id" title="var">shape</span> <span class="id" title="var">m1</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">siM</span> (<span class="id" title="var">position</span> <span class="id" title="var">m1</span> <span class="id" title="var">p</span>) (<span class="id" title="var">position</span> <span class="id" title="var">m2</span> (<span class="id" title="var">transport</span> <span class="id" title="var">shapes</span> <span class="id" title="var">p</span>))<br/>
+&nbsp;&nbsp;<span class="id" title="var">shapes</span> : <span class="id" title="var">shape</span> <span class="id" title="var">m1</span> = <span class="id" title="var">shape</span> <span class="id" title="var">m2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">positions</span> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">p</span> : <span class="id" title="var">P</span> (<span class="id" title="var">shape</span> <span class="id" title="var">m1</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">siM</span> (<span class="id" title="var">position</span> <span class="id" title="var">m1</span> <span class="id" title="var">p</span>) (<span class="id" title="var">position</span> <span class="id" title="var">m2</span> (<span class="id" title="var">transport</span> <span class="id" title="var">shapes</span> <span class="id" title="var">p</span>))<br/>
 }.<br/>
 
 <br/>
@@ -1417,8 +1417,8 @@ Zastanówmy się przez chwilę, dlaczego definicja <span class="inlinecode"><spa
 <span class="comment">(*&nbsp;===&gt;<br/>
 &nbsp;&nbsp;CoInductive&nbsp;Stream&nbsp;(A&nbsp;:&nbsp;Type)&nbsp;:&nbsp;Type&nbsp;:=<br/>
 &nbsp;&nbsp;{<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hd&nbsp;:&nbsp;A;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tl&nbsp;:&nbsp;Stream&nbsp;A<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;hd&nbsp;:&nbsp;A;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;tl&nbsp;:&nbsp;Stream&nbsp;A<br/>
 &nbsp;&nbsp;}.<br/>
 *)</span><br/>
 
@@ -1736,7 +1736,7 @@ Spójrzmy na <span class="inlinecode"><span class="id" title="var">Mu</span></sp
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">Nu</span> (<span class="id" title="var">F</span> : <span class="id" title="keyword">Type</span> -&gt; <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Out</span> : <span class="id" title="var">F</span> (<span class="id" title="var">Nu</span> <span class="id" title="var">F</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">Out</span> : <span class="id" title="var">F</span> (<span class="id" title="var">Nu</span> <span class="id" title="var">F</span>);<br/>
 }.<br/>
 
 <br/>
@@ -2680,7 +2680,7 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">CoForall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">CoList</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons'</span> : <span class="id" title="var">ForallF</span> <span class="id" title="var">R</span> <span class="id" title="var">CoForall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">uncons'</span> : <span class="id" title="var">ForallF</span> <span class="id" title="var">R</span> <span class="id" title="var">CoForall</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
 }.<br/>
 
 <br/>
@@ -2723,7 +2723,7 @@ Tym razem naszymi parametrami nie są już dwa typy <span class="inlinecode"><sp
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">CoList</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons</span> : <span class="id" title="var">ListR</span> <span class="id" title="var">A</span> (<span class="id" title="var">CoList</span> <span class="id" title="var">A</span>);<br/>
+&nbsp;&nbsp;<span class="id" title="var">uncons</span> : <span class="id" title="var">ListR</span> <span class="id" title="var">A</span> (<span class="id" title="var">CoList</span> <span class="id" title="var">A</span>);<br/>
 }.<br/>
 
 <br/>
@@ -2766,7 +2766,7 @@ We can halve the amount of work to define many useful type families by just
 <br/>
 <span class="id" title="keyword">CoInductive</span> <span class="id" title="var">CoForall</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">R</span> : <span class="id" title="var">A</span> -&gt; <span class="id" title="var">A</span> -&gt; <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">CoList</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
 {<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">uncons''</span> : <span class="id" title="var">ForallR</span> <span class="id" title="var">uncons</span> <span class="id" title="var">R</span> (<span class="id" title="var">CoForall</span> <span class="id" title="var">R</span>) <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;<span class="id" title="var">uncons''</span> : <span class="id" title="var">ForallR</span> <span class="id" title="var">uncons</span> <span class="id" title="var">R</span> (<span class="id" title="var">CoForall</span> <span class="id" title="var">R</span>) <span class="id" title="var">l1</span> <span class="id" title="var">l2</span><br/>
 }.<br/>
 
 <br/>

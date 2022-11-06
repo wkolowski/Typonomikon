@@ -11,12 +11,12 @@ Arguments Cons     {Y A} _ _.
 
 CoInductive CoList' (A : Type) : Type :=
 {
-    CLOut : ListX (NonEmptyCoList A) A;
+  CLOut : ListX (NonEmptyCoList A) A;
 }
 
 with NonEmptyCoList (A : Type) : Type :=
 {
-    NECLOut : NonEmptyListY (CoList' A) A;
+  NECLOut : NonEmptyListY (CoList' A) A;
 }.
 
 Arguments CLOut  {A} _.
@@ -47,13 +47,13 @@ Inductive NonEmptyCoListSimF
 Fail CoInductive CoListSim
   {A : Type} : CoList' A -> CoList' A -> Prop :=
 {
-    CLOut' : CoListSimF (NonEmptyCoListSim) l1 l2;
+  CLOut' : CoListSimF (NonEmptyCoListSim) l1 l2;
 }
 
 with NonEmptyCoListSim
   {A : Type} : NonEmptyCoList A -> NonEmptyCoList A -> Prop :=
 {
-    NECLOut' : NonEmptyCoListSimF CoListSim l1 l2;
+  NECLOut' : NonEmptyCoListSimF CoListSim l1 l2;
 }.
 
 End DoesntWork.
@@ -73,7 +73,7 @@ Inductive CoListSimF
 
 CoInductive CoListSim {A : Type} (l1 l2 : CoList' A) : Prop :=
 {
-    CLOut' : CoListSimF CoListSim l1 l2;
+  CLOut' : CoListSimF CoListSim l1 l2;
 }.
 
 Module TheSameAsOrdinary.

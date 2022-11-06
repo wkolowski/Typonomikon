@@ -1,13 +1,13 @@
 CoInductive Tree (A : Type) : Type :=
 {
-    root  : A;
-    trees : TreeStream A;
+  root  : A;
+  trees : TreeStream A;
 }
 
 with TreeStream (A : Type) : Type :=
 {
-    hd : Tree A;
-    tl : TreeStream A;
+  hd : Tree A;
+  tl : TreeStream A;
 }.
 
 Arguments root  {A} _.
@@ -30,20 +30,20 @@ with smap {A B : Type} (f : A -> B) (s : TreeStream A) : TreeStream B :=
 
 CoInductive TreeStreamSim {A : Type} (TS : Tree A -> Tree A -> Type) (s1 s2 : TreeStream A) : Type :=
 {
-    hds : TS (hd s1) (hd s2);
-    tls : TreeStreamSim TS (tl s1) (tl s2);
+  hds : TS (hd s1) (hd s2);
+  tls : TreeStreamSim TS (tl s1) (tl s2);
 }.
 
 CoInductive TreeSim {A : Type} (t1 t2 : Tree A) : Type :=
 {
-    roots  : root t1 = root t2;
-    treess : TreeStreamSim TreeSim (trees t1) (trees t2);
+  roots  : root t1 = root t2;
+  treess : TreeStreamSim TreeSim (trees t1) (trees t2);
 }.
 
 Fail CoInductive TreeSim {A : Type} (t1 t2 : Tree A) : Type :=
 {
-    roots  : root t1 = root t2;
-    treess : TreeStreamSim (trees t1) (trees t2);
+  roots  : root t1 = root t2;
+  treess : TreeStreamSim (trees t1) (trees t2);
 }
 
 with TreeStreamSim {A : Type} (s1 s2 : TreeStream A) : Type :=

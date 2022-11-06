@@ -13,7 +13,7 @@ Arguments S {X} _.
 
 CoInductive conat : Type :=
 {
-    out : NatF conat;
+  out : NatF conat;
 }.
 
 Inductive simF (n m : conat) (R : conat -> conat -> Prop) : Prop :=
@@ -25,7 +25,7 @@ Inductive simF (n m : conat) (R : conat -> conat -> Prop) : Prop :=
 
 CoInductive sim (n m : conat) : Prop :=
 {
-    sim' : simF n m sim;
+  sim' : simF n m sim;
 }.
 
 Axiom sim_eq :
@@ -618,7 +618,7 @@ Inductive leF (n m : conat) (R : conat -> conat -> Prop) : Prop :=
 
 CoInductive le (n m : conat) : Prop :=
 {
-    le' : leF n m le
+  le' : leF n m le
 }.
 (* end hide *)
 
@@ -1289,7 +1289,7 @@ Inductive InfiniteF (n : conat) (P : conat -> Prop) : Prop :=
 
 CoInductive Infinite (n : conat) : Prop :=
 {
-    Infinite' : InfiniteF n Infinite;
+  Infinite' : InfiniteF n Infinite;
 }.
 (* end hide *)
 
@@ -1352,7 +1352,7 @@ Inductive EvenF (n : conat) (P : conat -> Prop) : Prop :=
 
 CoInductive Even (n : conat) : Prop :=
 {
-    Even' : EvenF n Even
+  Even' : EvenF n Even
 }.
 
 Inductive OddF (n : conat) (P : conat -> Prop) : Prop :=
@@ -1364,7 +1364,7 @@ Inductive OddF (n : conat) (P : conat -> Prop) : Prop :=
 
 CoInductive Odd (n : conat) : Prop :=
 {
-    Odd' : OddF n Odd;
+  Odd' : OddF n Odd;
 }.
 (* end hide *)
 
@@ -1865,10 +1865,10 @@ Admitted.
 (* begin hide *)
 CoInductive Even2 (n : conat) : Prop :=
 {
-    Even2' :
-      out n = Z \/
-      exists n' : conat,
-        out n = S n' /\ Odd2 n';
+  Even2' :
+    out n = Z \/
+    exists n' : conat,
+      out n = S n' /\ Odd2 n';
 }
 
 with Odd2 (n : conat) : Prop :=
@@ -1894,12 +1894,12 @@ Inductive Odd2F (n : conat) (P : conat -> Prop) : Prop :=
 
 CoInductive Even2' (n : conat) : Prop :=
 {
-    Even2'' : Even2F n Odd2'
+  Even2'' : Even2F n Odd2'
 }
 
 with Odd2' (n : conat) : Prop :=
 {
-    Odd2'' : Odd2F n Even2'
+  Odd2'' : Odd2F n Even2'
 }.
 
 Lemma Even2_Even2' :

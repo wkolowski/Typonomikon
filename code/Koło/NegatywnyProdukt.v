@@ -1,7 +1,7 @@
 CoInductive product (A : Type) (B : Type) : Type :=
 {
-    fst : A;
-    snd : B;
+  fst : A;
+  snd : B;
 }.
 
 Definition swap {A B : Type} (p : product A B) : product B A :=

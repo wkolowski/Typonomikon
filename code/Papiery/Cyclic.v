@@ -22,7 +22,7 @@ Arguments CoConsF {A R} _ _.
 
 CoInductive CoList (A : Type) : Type :=
 {
-    uncons : CoListF A (CoList A);
+  uncons : CoListF A (CoList A);
 }.
 
 Arguments uncons {A} _.
@@ -54,7 +54,7 @@ Inductive simF {A : Type} (l1 l2 : CoList A) (R : CoList A -> CoList A -> Type) 
 
 CoInductive sim {A : Type} (l1 l2 : CoList A) : Type :=
 {
-    sim' : simF l1 l2 sim;
+  sim' : simF l1 l2 sim;
 }.
 
 Lemma sim_refl :

@@ -2,8 +2,8 @@ From Typonomikon Require Import F2.
 
 CoInductive Odd (c : conat) : Type :=
 {
-    Oz  : c = zero -> False;
-    Oss : forall {c' : conat}, c = succ (succ c') -> Odd c';
+  Oz  : c = zero -> False;
+  Oss : forall {c' : conat}, c = succ (succ c') -> Odd c';
 }.
 
 Lemma p0 : Odd zero -> False.

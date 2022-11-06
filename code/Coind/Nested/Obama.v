@@ -5,8 +5,8 @@ Set Universe Polymorphism.
 Unset Positivity Checking.
 CoInductive Obama (A : Type) : Type :=
 {
-    hd : A;
-    tl : Obama (Obama A);
+  hd : A;
+  tl : Obama (Obama A);
 }.
 
 Arguments hd {A} _.
@@ -14,20 +14,20 @@ Arguments tl {A} _.
 
 CoInductive sim' {A : Type} (b1 b2 : Obama A) : Type :=
 {
-    hds : hd b1 = hd b2;
-    tls : sim' (tl b1) (tl b2);
+  hds : hd b1 = hd b2;
+  tls : sim' (tl b1) (tl b2);
 }.
 
 CoInductive Forall {A : Type} (P : A -> Type) (b : Obama A) : Type :=
 {
-    Forall_hd : P (hd b);
-    Forall_tl : Forall (Forall P) (tl b);
+  Forall_hd : P (hd b);
+  Forall_tl : Forall (Forall P) (tl b);
 }.
 
 CoInductive Forall2 {A B : Type} (P : A -> B -> Type) (b1 : Obama A) (b2 : Obama B) : Type :=
 {
-    Forall2_hd : P (hd b1) (hd b2);
-    Forall2_tl : Forall2 (Forall2 P) (tl b1) (tl b2);
+  Forall2_hd : P (hd b1) (hd b2);
+  Forall2_tl : Forall2 (Forall2 P) (tl b1) (tl b2);
 }.
 
 Definition sim {A : Type} (b1 b2 : Obama A) : Type :=

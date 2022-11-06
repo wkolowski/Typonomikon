@@ -1,7 +1,7 @@
 CoInductive CoAczelT@{u} : Type@{u+1} :=
 {
-    branchingT : Type@{u};
-    subtreesT : branchingT -> CoAczelT;
+  branchingT : Type@{u};
+  subtreesT : branchingT -> CoAczelT;
 }.
 
 Definition AtomicT : CoAczelT :=
@@ -31,8 +31,8 @@ Definition SubtreeT (t1 t2 : CoAczelT) : Prop :=
 Set Warnings "-cannot-define-projection".
 CoInductive CoAczel : Prop :=
 {
-    branching : Prop;
-    subtrees : branching -> CoAczel;
+  branching : Prop;
+  subtrees : branching -> CoAczel;
 }.
 Set Warnings "cannot-define-projection".
 

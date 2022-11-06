@@ -9,8 +9,8 @@ Set Warnings "-cannot-define-projection".
 
 CoInductive Stream (A : Type) : Type :=
 {
-    hd : A;
-    tl : Stream A;
+  hd : A;
+  tl : Stream A;
 }.
 
 Arguments hd {A}.
@@ -20,8 +20,8 @@ Arguments tl {A}.
 
 CoInductive sim {A : Type} (s1 s2 : Stream A) : Prop :=
 {
-    hds : hd s1 = hd s2;
-    tls : sim (tl s1) (tl s2);
+  hds : hd s1 = hd s2;
+  tls : sim (tl s1) (tl s2);
 }.
 
 Lemma sim_refl :
@@ -520,8 +520,8 @@ Qed.
 (* begin hide *)
 CoInductive Forall {A : Type} (s : Stream A) (P : A -> Prop) : Prop :=
 {
-    Forall_hd : P (hd s);
-    Forall_tl : Forall (tl s) P;
+  Forall_hd : P (hd s);
+  Forall_tl : Forall (tl s) P;
 }.
 (* end hide *)
 
@@ -567,9 +567,9 @@ Qed.
 (* begin hide *)
 CoInductive Substream {A : Type} (s1 s2 : Stream A) : Prop :=
 {
-    n : nat;
-    p : hd s1 = nth n s2;
-    Substream' : Substream (tl s1) (drop (S n) s2);
+  n : nat;
+  p : hd s1 = nth n s2;
+  Substream' : Substream (tl s1) (drop (S n) s2);
 }.
 (* end hide *)
 
@@ -1048,10 +1048,10 @@ Qed.
 
 CoInductive Filter' {A : Type} (f : A -> bool) (s r : Stream A) : Prop :=
 {
-    Filter'_true :
-      f (hd s) = true -> hd s = hd r /\ Filter' f (tl s) (tl r);
-    Filter'_false :
-      f (hd s) = false -> Filter' f (tl s) r;
+  Filter'_true :
+    f (hd s) = true -> hd s = hd r /\ Filter' f (tl s) (tl r);
+  Filter'_false :
+    f (hd s) = false -> Filter' f (tl s) r;
 }.
 
 Lemma Filter'_const_false :

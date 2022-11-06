@@ -2,8 +2,8 @@ From Typonomikon Require Import F3.
 
 CoInductive StreamTree (A : Type) : Type :=
 {
-    root : A;
-    trees : Stream (StreamTree A);
+  root : A;
+  trees : Stream (StreamTree A);
 }.
 
 Arguments root  {A} _.
